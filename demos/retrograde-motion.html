@@ -1,0 +1,989 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Retrograde Motion and World Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the space pictures, the strip, the right hand panel and the sky strip */
+:root { --space: #0b1220; --space-ink: #dfe6ef; --space-muted: #8f9cb0; --space-line: #26324a; --sight: #ffd166; --trail: #ff8a5c; --real: #7fb7ff; --epi: #c4a5ff; --earthc: #5fa3ff; --sunc: #ffcf5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --space: #04070d; --space-line: #1d283b; } }
+:root[data-theme="dark"] { --space: #04070d; --space-line: #1d283b; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.86rem; color: var(--ink); font-weight: 600; }
+.views { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(250px, 1fr); grid-template-rows: minmax(380px, 1fr) 250px; flex: 1 1 auto; min-height: 0; }
+.pane { position: relative; min-width: 0; min-height: 0; background: var(--space); }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.pane.top { border-right: 1px solid var(--line); }
+.pane.top canvas.vd3d { z-index: 0; pointer-events: none; }
+.pane.top canvas#top { z-index: 1; }
+.pane.top.is3d canvas#top { pointer-events: none; }
+.pane.top.is3d canvas.vd3d { pointer-events: auto; }
+.pane .tag { position: absolute; z-index: 2; left: 10px; top: 8px; font-size: 0.74rem; font-weight: 700; color: var(--space-muted); letter-spacing: 0.02em; pointer-events: none; }
+.side { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow-y: auto; background: var(--surface); }
+.pane.scope { height: 196px; flex: none; border-bottom: 1px solid var(--line); }
+.setup-card { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick > label, .setup-card .pick > span { font-size: 0.8rem; color: var(--muted); }
+.setup-card select, .setup-card input[type="date"], .rail select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.setup-card .seg { flex-wrap: wrap; }
+.datebox { display: flex; gap: 6px; align-items: center; }
+.datebox input { flex: 1 1 auto; min-width: 0; }
+.pane.sky { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+.evrow { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.evrow select { flex: 1 1 140px; }
+.swatch.sight { border-color: var(--sight); } .swatch.trail { border-color: var(--trail); } .swatch.real { border-color: var(--real); border-top-style: dashed; }
+.swatch.epi { border-color: var(--epi); } .swatch.earth { border-color: var(--earthc); }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+@media (max-width: 820px) {
+  .views { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .side { overflow: visible; }
+  .pane.top { height: 360px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .pane.sky { height: 220px; grid-row: 2; }
+  .side { grid-row: 3; }
+  .pane.scope { height: 170px; }
+}
+@media (max-width: 420px) { .pane.top { height: 320px; } .pane.sky { height: 200px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Retrograde Motion and World Models</h1>
+      <p>Watch Earth pass Mars from above while Mars traces a loop against the stars. Then make the same sky with Ptolemy's epicycles and Copernicus's circles, and try Galileo's test: the phases of Venus.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">dates in UTC · angles in degrees · distances in AU</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/retrograde-motion.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/retrograde-motion.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM16 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM18 4h7v1h-7zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM17 5h1v1h-1zM20 5h2v1h-2zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h4v1h-4zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM15 9h2v1h-2zM18 9h8v1h-8zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h1v1h-1zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h1v1h-1zM25 10h2v1h-2zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h4v1h-4zM12 11h3v1h-3zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h5v1h-5zM34 11h4v1h-4zM2 12h4v1h-4zM8 12h3v1h-3zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM7 13h1v1h-1zM10 13h2v1h-2zM14 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h4v1h-4zM8 14h1v1h-1zM10 14h2v1h-2zM13 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM7 16h2v1h-2zM12 16h2v1h-2zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM11 17h4v1h-4zM16 17h2v1h-2zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM5 18h1v1h-1zM8 18h4v1h-4zM13 18h2v1h-2zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h3v1h-3zM6 19h1v1h-1zM10 19h1v1h-1zM14 19h3v1h-3zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM4 21h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM11 21h4v1h-4zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h1v1h-1zM8 22h3v1h-3zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM10 23h2v1h-2zM14 23h1v1h-1zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h4v1h-4zM12 24h1v1h-1zM15 24h1v1h-1zM17 24h3v1h-3zM22 24h4v1h-4zM28 24h2v1h-2zM33 24h4v1h-4zM2 25h2v1h-2zM6 25h2v1h-2zM9 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h6v1h-6zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM8 26h3v1h-3zM13 26h2v1h-2zM16 26h1v1h-1zM20 26h1v1h-1zM22 26h4v1h-4zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM6 27h1v1h-1zM11 27h2v1h-2zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM6 28h3v1h-3zM10 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h1v1h-1zM10 29h1v1h-1zM19 29h2v1h-2zM22 29h3v1h-3zM26 29h1v1h-1zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h1v1h-1zM12 31h4v1h-4zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h1v1h-1zM15 33h1v1h-1zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h3v1h-3zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h3v1h-3zM17 36h1v1h-1zM19 36h1v1h-1zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h8v1h-8zM22 37h5v1h-5zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="back" title="Back one day (Shift: ten days)" aria-label="Back one day">◀ 1 day</button>
+        <button type="button" class="btn" id="fwd" title="Forward one day (Shift: ten days)" aria-label="Forward one day">1 day ▶</button>
+        <div class="seg" role="group" aria-label="Days per second" id="speedSeg"><span class="seglabel">days/s</span>
+          <button type="button" data-s="2" aria-pressed="false">2</button><button type="button" data-s="8" aria-pressed="true">8</button><button type="button" data-s="30" aria-pressed="false">30</button><button type="button" data-s="120" aria-pressed="false">120</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="views">
+        <div class="pane top" id="topPane">
+          <canvas id="top" tabindex="0" role="img" aria-label="The solar system from above the North Pole: the Sun, Earth and the planet on their orbits, and the line of sight from Earth through the planet to the stars. Arrow keys step a day (Shift: ten days)."></canvas>
+          <span class="tag" id="topTag">From above the solar system</span>
+        </div>
+        <div class="side">
+          <div class="pane scope" id="scopePane">
+            <canvas id="scope" role="img" aria-label="The planet through a telescope: its phase and its size."></canvas>
+            <span class="tag">Through a telescope</span>
+          </div>
+          <div class="setup-card" id="setupCard" role="group" aria-label="Planet, world model and date">
+            <span class="card-title">Planet, world model and date</span>
+            <div class="pick"><label for="selPlanet">Planet</label><select id="selPlanet">
+              <option value="mercury">Mercury</option><option value="venus">Venus</option><option value="mars" selected>Mars</option><option value="jupiter">Jupiter</option><option value="saturn">Saturn</option></select></div>
+            <div class="pick"><span>World model</span><div class="seg" role="group" aria-label="World model" id="modelSeg">
+              <button type="button" data-m="kepler" aria-pressed="true" title="The real sky: Kepler's ellipses with JPL's elements">Kepler (real sky)</button><button type="button" data-m="copernicus" aria-pressed="false" title="Sun centered circles at steady speeds">Copernicus</button><button type="button" data-m="ptolemy" aria-pressed="false" title="Earth centered epicycles with an equant">Ptolemy</button></div></div>
+            <div class="pick" id="frameBox"><span>Hold still</span><div class="seg" role="group" aria-label="What the view from above holds still" id="frameSeg">
+              <button type="button" data-f="sun" aria-pressed="true">The Sun</button><button type="button" data-f="earth" aria-pressed="false" title="The same orbits seen with Earth held still: Tycho Brahe's system">Earth (Tycho)</button></div></div>
+            <div class="pick"><label for="date">Date</label><div class="datebox"><input type="date" id="date" min="1800-01-01" max="2050-12-31"></div></div>
+          </div>
+        </div>
+        <div class="pane sky" id="skyPane">
+          <canvas id="sky" tabindex="0" role="img" aria-label="The sky along the ecliptic as seen from Earth, east to the left: the stars, the constellations, the Sun and the planet's path. Drag sideways to look along the sky, wheel or plus and minus to zoom."></canvas>
+          <span class="tag">The sky from Earth, along the ecliptic (east to the left)</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-retrograde.html" target="intro-retrograde-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="mars" aria-pressed="true">Mars loops, 2024 to 2025</button>
+          <button type="button" data-p="mars2020" aria-pressed="false">Mars close up, 2020</button>
+          <button type="button" data-p="jupiter" aria-pressed="false">Jupiter, 2023</button>
+          <button type="button" data-p="saturn" aria-pressed="false">Saturn, 2024</button>
+          <button type="button" data-p="mercury" aria-pressed="false">Mercury's three loops a year</button>
+          <button type="button" data-p="synodic" aria-pressed="false">Oppositions of Mars, 2016 to 2033</button>
+          <button type="button" data-p="tycho" aria-pressed="false">Earth held still (Tycho)</button>
+          <button type="button" data-p="ptolemy" aria-pressed="false">Ptolemy's epicycle for Mars</button>
+          <button type="button" data-p="copernicus" aria-pressed="false">Copernicus's circles miss</button>
+          <button type="button" data-p="venus" aria-pressed="false">Phases of Venus</button>
+          <button type="button" data-p="galileo" aria-pressed="false">Galileo's test: Ptolemy's Venus</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Jump to</h2>
+        <div class="evrow"><select id="evKind" aria-label="Event to jump to"></select>
+          <button type="button" class="btn" id="evPrev" aria-label="Previous event">◀ Previous</button><button type="button" class="btn" id="evNext" aria-label="Next event">Next ▶</button></div>
+        <p class="hint" id="evNote" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
+          <label class="check"><input type="checkbox" id="chkSight" checked><span>Numbered lines of sight</span></label>
+          <label class="check"><input type="checkbox" id="chkAhead" checked><span>The path ahead (dashed)</span></label>
+          <label class="check"><input type="checkbox" id="chkReal" checked><span>The real sky beside a model's</span></label>
+          <label class="check"><input type="checkbox" id="chkLines" checked><span>Constellation figures</span></label>
+          <div class="key">
+            <span><i class="swatch sight"></i>Line of sight from Earth</span>
+            <span><i class="swatch trail"></i>The planet's path so far</span>
+            <span><i class="swatch real"></i>The real sky, when a model is on</span>
+            <span><i class="swatch epi"></i>Ptolemy's deferent and epicycle</span>
+            <span><i class="swatch earth"></i>Earth and its orbit</span>
+          </div>
+        </div></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-retrograde" data-title="Retrograde Motion and World Models" data-demo="retrograde-motion">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the periods and the model's error</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">synodic period S: 1/S = |1/P − 1/P⊕|, P⊕ = 365.256 d</p>
+          <p class="formula">lit fraction = (1 + cos α)/2, α the angle Sun–planet–Earth</p>
+          <p class="formula">angular size = 2 arcsin(R/Δ), R the planet's radius, Δ its distance</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Retrograde motion and world models. Runs in Node (curriculum/validation/test_retrograde-motion.cjs).
+     Real sky: heliocentric positions from JPL's approximate Keplerian elements, Table 1, valid 1800 to 2050 (E. M. Standish,
+     "Keplerian Elements for Approximate Positions of the Major Planets", JPL Solar System Dynamics,
+     https://ssd.jpl.nasa.gov/planets/approx_pos.html). Each element is its J2000 value plus a rate per Julian century; the planet
+     is placed on that ellipse by Kepler's equation, in the ecliptic and equinox of J2000. Standish quotes errors for this table
+     of at most 40″ in longitude for Mercury to Mars and up to 10′ for Saturn over the whole span. Earth is the Earth–Moon
+     barycenter of the table (the Earth itself is at most 4700 km from it, under 15″ as seen from Mars at its closest).
+     Geocentric direction: planet minus Earth, in ecliptic longitude λ and latitude β of J2000. Left out, and each smaller than the
+     table's own error except precession: light travel time (up to 0.5′ of Mars's motion), aberration (20″), nutation, and the
+     precession of the equinox (1.40° per century: dates far from 2000 show λ on the fixed J2000 star grid, so stars keep their
+     places). Times are Terrestrial Time, about 69 s ahead of UT in 2025: shown as calendar dates.
+     Copernicus's circles: each planet, Earth included, on a circle of radius a about the Sun at the steady rate of its mean
+     longitude L, tilted by the table's I about its node Ω (J2000 values). Copernicus's own book added small epicycles to these
+     circles; this is the bare idea.
+     Ptolemy's epicycles: Earth at rest. Each planet rides an epicycle of radius r whose center C moves on a deferent circle of
+     radius 1, centered e from Earth toward the apogee direction A; C moves at a steady angular rate as seen from the equant point,
+     2e from Earth (Ptolemy, Almagest IX to XI). Superior planets (Mars, Jupiter, Saturn): C moves at the planet's mean motion and
+     the line from C to the planet stays parallel to the line from Earth to the mean Sun. Inferior planets (Mercury, Venus): C
+     stays on the line to the mean Sun and the planet goes around the epicycle at the planet's mean motion. e, A and r are a fit,
+     not Ptolemy's numbers: least squares on λ against the real sky over 1900 to 2050, every 5 days (PTOL, refitted by the test).
+     Ptolemy's own values are close: Mars e = 0.100, r = 0.658; Venus 0.021, 0.719; Jupiter 0.046, 0.192; Saturn 0.057, 0.108
+     (Almagest X.7, XI.1, XI.5, X.2, G. J. Toomer's translation, 1984). His Mercury had a moving deferent center, left out here.
+     Latitude: the deferent (superior) or the epicycle (inferior) is tilted by the planet's I about Ω, which gives the same tilt as
+     the circles; Ptolemy's own latitude theory was more involved. Distances: Ptolemy nested the planets' spheres, so the farthest
+     a planet gets is set to the outer edge of its shell in Earth radii (Planetary Hypotheses; A. Van Helden, Measuring the
+     Universe, 1985): Mercury 166, Venus 1079, Sun 1210 (mean), Mars 8820, Jupiter 14 187, Saturn 19 865. Venus therefore stays
+     nearer than the Sun, which is what Galileo's phases test. */
+  const J2000 = 2451545.0, DEG = Math.PI / 180, AU_KM = 149597870.7;   /* IAU 2012 */
+  /* Standish Table 1: a (AU), e, I, L, ϖ (long. of perihelion), Ω (long. of node), each [value at J2000, rate per century]
+     (degrees). R: equatorial radius in km (NASA Planetary Fact Sheets). */
+  const EL = {
+    mercury: { name: 'Mercury', a: [0.38709927, 0.00000037], e: [0.20563593, 0.00001906], I: [7.00497902, -0.00594749], L: [252.25032350, 149472.67411175], w: [77.45779628, 0.16047689], N: [48.33076593, -0.12534081], R: 2439.7, inner: true },
+    venus: { name: 'Venus', a: [0.72333566, 0.00000390], e: [0.00677672, -0.00004107], I: [3.39467605, -0.00078890], L: [181.97909950, 58517.81538729], w: [131.60246718, 0.00268329], N: [76.67984255, -0.27769418], R: 6051.8, inner: true },
+    earth: { name: 'Earth', a: [1.00000261, 0.00000562], e: [0.01671123, -0.00004392], I: [-0.00001531, -0.01294668], L: [100.46457166, 35999.37244981], w: [102.93768193, 0.32327364], N: [0, 0], R: 6371.0 },
+    mars: { name: 'Mars', a: [1.52371034, 0.00001847], e: [0.09339410, 0.00007882], I: [1.84969142, -0.00813131], L: [-4.55343205, 19140.30268499], w: [-23.94362959, 0.44441088], N: [49.55953891, -0.29257343], R: 3396.2 },
+    jupiter: { name: 'Jupiter', a: [5.20288700, -0.00011607], e: [0.04838624, -0.00013253], I: [1.30439695, -0.00183714], L: [34.39644051, 3034.74612775], w: [14.72847983, 0.21252668], N: [100.47390909, 0.20469106], R: 71492 },
+    saturn: { name: 'Saturn', a: [9.53667594, -0.00125060], e: [0.05386179, -0.00050991], I: [2.48599187, 0.00193609], L: [49.95424423, 1222.49362201], w: [92.59887831, -0.41897216], N: [113.66242448, -0.28867794], R: 60268 },
+  };
+  const PLANETS = ['mercury', 'venus', 'mars', 'jupiter', 'saturn'];
+  const VALID = [2378496.5, 2470172.5];   /* 1800 Jan 1 to 2050 Dec 31 */
+  /* Ptolemy fit (see above): e, apogee A (deg, ecliptic of J2000), r. The shell is the farthest distance in Earth radii. */
+  const PTOL = {
+    mercury: { e: 0.0471, A: 248.35, r: 0.3803, shell: 166 },
+    venus: { e: 0.0132, A: 94.15, r: 0.7233, shell: 1079 },
+    mars: { e: 0.0995, A: 151.75, r: 0.6579, shell: 8820 },
+    jupiter: { e: 0.0485, A: 191.81, r: 0.1923, shell: 14187 },
+    saturn: { e: 0.0527, A: 272.45, r: 0.1049, shell: 19865 },
+  };
+  const SUN_ER = 1210;   /* Ptolemy's mean distance of the Sun, Earth radii */
+  const wrap = (x) => ((x % 360) + 540) % 360 - 180;      /* to −180..180 */
+  const norm = (x) => ((x % 360) + 360) % 360;            /* to 0..360 */
+  function elements(k, jd) {
+    const p = EL[k], T = (jd - J2000) / 36525, v = (q) => q[0] + q[1] * T;
+    return { a: v(p.a), e: v(p.e), I: v(p.I), L: v(p.L), w: v(p.w), N: v(p.N) };
+  }
+  function kepler(M, e) {   /* E − e sin E = M, radians; Newton's method from E = M + e sin M */
+    let E = M + e * Math.sin(M);
+    for (let i = 0; i < 30; i++) { const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-14) break; }
+    return E;
+  }
+  /* a vector in an orbit's plane (x toward the node, angle u from it) turned into the ecliptic by I and Ω */
+  function tilt(x, y, I, N) {
+    const cO = Math.cos(N * DEG), sO = Math.sin(N * DEG), cI = Math.cos(I * DEG), sI = Math.sin(I * DEG);
+    return [cO * x - sO * cI * y, sO * x + cO * cI * y, sI * y];
+  }
+  /* heliocentric ecliptic position (AU), Standish's recipe */
+  function helio(k, jd) {
+    const o = elements(k, jd), om = o.w - o.N, M = wrap(o.L - o.w) * DEG, E = kepler(M, o.e);
+    const xp = o.a * (Math.cos(E) - o.e), yp = o.a * Math.sqrt(1 - o.e * o.e) * Math.sin(E);
+    const c = Math.cos(om * DEG), s = Math.sin(om * DEG);
+    return tilt(c * xp - s * yp, s * xp + c * yp, o.I, o.N);
+  }
+  /* Copernicus's circle: radius a, steady mean longitude, J2000 tilt */
+  function circle(k, jd) {
+    const p = EL[k], T = (jd - J2000) / 36525, L = p.L[0] + p.L[1] * T, u = (L - p.N[0]) * DEG;
+    return tilt(p.a[0] * Math.cos(u), p.a[0] * Math.sin(u), p.I[0], p.N[0]);
+  }
+  const meanL = (k, jd) => EL[k].L[0] + EL[k].L[1] * (jd - J2000) / 36525;
+  /* Ptolemy: returns the geocentric planet (in units of the deferent radius) and the pieces of the picture */
+  function ptolemy(k, jd, P) {
+    const q = (P || PTOL)[k], inner = EL[k].inner, sunL = meanL('earth', jd) + 180, mL = meanL(k, jd);
+    const lc = inner ? sunL : mL, la = inner ? mL : sunL;   /* center's mean longitude, epicycle radius direction */
+    const ax = Math.cos(q.A * DEG), ay = Math.sin(q.A * DEG), wx = Math.cos(lc * DEG), wy = Math.sin(lc * DEG);
+    const dot = ax * wx + ay * wy, s = -q.e * dot + Math.sqrt(1 - q.e * q.e * (1 - dot * dot));
+    const C = [2 * q.e * ax + s * wx, 2 * q.e * ay + s * wy];
+    const ex = q.r * Math.cos(la * DEG), ey = q.r * Math.sin(la * DEG);
+    const p = EL[k], I = p.I[0], N = p.N[0];
+    const turn = (x, y) => { const c = Math.cos(N * DEG), sn = Math.sin(N * DEG), u = c * x + sn * y, v = -sn * x + c * y; return tilt(u, v, I, N); };
+    let Cv, Ev;
+    if (inner) { Cv = [C[0], C[1], 0]; Ev = turn(ex, ey); } else { Cv = turn(C[0], C[1]); Ev = [ex, ey, 0]; }
+    return { pos: [Cv[0] + Ev[0], Cv[1] + Ev[1], Cv[2] + Ev[2]], C: Cv, D: [q.e * ax, q.e * ay, 0], Q: [2 * q.e * ax, 2 * q.e * ay, 0], r: q.r, e: q.e, A: q.A,
+      far: 1 + q.e + q.r, near: 1 - q.e - q.r, scale: q.shell / (1 + q.e + q.r) };
+  }
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const len = (v) => Math.hypot(v[0], v[1], v[2]);
+  /* the Sun as seen from Earth: true in the two Sun centered models; in Ptolemy's, the true Sun at 1210 Earth radii (the mean Sun
+     only sets the epicycles) */
+  function sunGeo(model, k, jd) {
+    if (model === 'ptolemy') { const h = helio('earth', jd), d = len(h); return [-h[0] / d, -h[1] / d, -h[2] / d]; }
+    const h = model === 'copernicus' ? circle('earth', jd) : helio('earth', jd); return [-h[0], -h[1], -h[2]];
+  }
+  /* geocentric planet vector: AU in the Sun centered models; deferent radii in Ptolemy's */
+  function geo(model, k, jd) {
+    if (model === 'ptolemy') return ptolemy(k, jd).pos;
+    if (model === 'copernicus') return sub(circle(k, jd), circle('earth', jd));
+    return sub(helio(k, jd), helio('earth', jd));
+  }
+  function lonlat(v) { return { lam: norm(Math.atan2(v[1], v[0]) / DEG), beta: Math.atan2(v[2], Math.hypot(v[0], v[1])) / DEG, d: len(v) }; }
+  /* everything a reading needs at one moment */
+  function look(model, k, jd) {
+    const g = geo(model, k, jd), s = sunGeo(model, k, jd), P = lonlat(g), S = lonlat(s);
+    let gp = g, sp = s;   /* the phase needs both in the same units */
+    if (model === 'ptolemy') { const pt = ptolemy(k, jd), f = pt.scale; gp = g.map((x) => x * f); sp = s.map((x) => x * SUN_ER); }
+    const toSun = sub(sp, gp), toEarth = gp.map((x) => -x);
+    const cosA = (toSun[0] * toEarth[0] + toSun[1] * toEarth[1] + toSun[2] * toEarth[2]) / (len(toSun) * len(toEarth));
+    const alpha = Math.acos(Math.max(-1, Math.min(1, cosA))) / DEG;   /* phase angle at the planet */
+    const lit = (1 + cosA) / 2;
+    const far = model === 'ptolemy' ? 1 + PTOL[k].e + PTOL[k].r : EL[k].a[0] * (1 + EL[k].e[0]) + EL.earth.a[0] * (1 + EL.earth.e[0]);
+    const size = model === 'ptolemy' ? null : 2 * Math.asin(EL[k].R / (P.d * AU_KM)) / DEG * 3600;
+    return { lam: P.lam, beta: P.beta, d: model === 'ptolemy' ? null : P.d, dRel: P.d, elong: wrap(P.lam - S.lam), sunLam: S.lam, alpha, lit, size, rel: far / P.d,
+      sep: Math.acos(Math.max(-1, Math.min(1, (g[0] * s[0] + g[1] * s[1] + g[2] * s[2]) / (len(g) * len(s))))) / DEG };
+  }
+  /* daily motion in longitude (deg/day, positive eastward), centered difference over ±0.5 d */
+  const rate = (model, k, jd) => wrap(lonlat(geo(model, k, jd + 0.5)).lam - lonlat(geo(model, k, jd - 0.5)).lam);
+  const sidereal = (k) => 360 / (EL[k].L[1] / 36525);                         /* days, from the mean motion */
+  const synodic = (k) => 1 / Math.abs(1 / sidereal(k) - 1 / sidereal('earth'));
+  /* events: opposition (elongation 180°), conjunction (0°; for Mercury and Venus inferior when nearer than the Sun, superior when
+     farther), greatest elongation (|elongation| at a maximum, east or west), station (daily motion zero). Found by stepping a day at
+     a time and bisecting to 1 minute. dir = +1 next, −1 previous. Returns { jd, kind } or null outside 1800 to 2050. */
+  function events(model, k, kind) {
+    const el = (t) => look(model, k, t).elong;
+    if (kind === 'opposition') return { f: (t) => wrap(el(t) - 180), sign: 0 };
+    if (kind === 'conjunction') return { f: el, sign: 0 };
+    if (kind === 'inferior' || kind === 'superior') return { f: el, sign: 0, keep: (t) => isNearer(model, k, t) === (kind === 'inferior') };
+    if (kind === 'greatest') return { f: (t) => (Math.abs(el(t + 0.5)) - Math.abs(el(t - 0.5))), sign: -1 };
+    if (kind === 'station') return { f: (t) => rate(model, k, t), sign: 0 };
+    return null;
+  }
+  function isNearer(model, k, t) {   /* planet nearer than the Sun */
+    const g = geo(model, k, t), s = sunGeo(model, k, t);
+    if (model === 'ptolemy') return len(g) * ptolemy(k, t).scale < SUN_ER;
+    return len(g) < len(s);
+  }
+  function findEvent(model, k, kind, jd, dir) {
+    const ev = events(model, k, kind); if (!ev) return null;
+    const step = dir > 0 ? 1 : -1, f = ev.f;
+    let t0 = jd + step * 0.02, f0 = f(t0);
+    for (let n = 0; n < 4000; n++) {
+      const t1 = t0 + step, f1 = f(t1);
+      if (t1 < VALID[0] || t1 > VALID[1]) return null;
+      const cross = (f0 <= 0 && f1 > 0) || (f0 >= 0 && f1 < 0);
+      const ok = cross && Math.abs(f1 - f0) < 90 && (ev.sign === 0 || (ev.sign < 0 ? f0 * step > 0 : f0 * step < 0));
+      if (ok) {
+        let a = t0, b = t1, fa = f0;
+        for (let i = 0; i < 40 && Math.abs(b - a) > 1 / 1440 / 4; i++) { const m = (a + b) / 2, fm = f(m); if ((fa <= 0) === (fm <= 0)) { a = m; fa = fm; } else b = m; }
+        const t = (a + b) / 2;
+        if (!ev.keep || ev.keep(t)) return { jd: t, kind };
+      }
+      t0 = t1; f0 = f1;
+    }
+    return null;
+  }
+  /* calendar dates (proleptic Gregorian), J. Meeus, Astronomical Algorithms, 2nd ed. (1998), ch. 7 */
+  function toJD(y, m, d) {
+    if (m <= 2) { y -= 1; m += 12; }
+    const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+  }
+  function fromJD(jd) {
+    const z = Math.floor(jd + 0.5), f = jd + 0.5 - z, al = Math.floor((z - 1867216.25) / 36524.25), A = z + 1 + al - Math.floor(al / 4);
+    const B = A + 1524, C = Math.floor((B - 122.1) / 365.25), D = Math.floor(365.25 * C), E = Math.floor((B - D) / 30.6001);
+    const day = B - D - Math.floor(30.6001 * E) + f, m = E < 14 ? E - 1 : E - 13, y = m > 2 ? C - 4716 : C - 4715;
+    return { y, m, d: Math.floor(day), h: (day - Math.floor(day)) * 24 };
+  }
+  /* the constellation (IAU boundaries) at an ecliptic longitude and latitude: the boundaries are kept in J2000 right ascension and
+     declination, where their edges run along lines of constant RA or Dec */
+  const OBL = 23.4392911;   /* obliquity of J2000, IAU 2006 */
+  function raDec(lam, beta) {
+    const l = lam * DEG, b = beta * DEG, e = OBL * DEG, x = Math.cos(b) * Math.cos(l), y = Math.cos(b) * Math.sin(l), z = Math.sin(b);
+    const y2 = Math.cos(e) * y - Math.sin(e) * z, z2 = Math.sin(e) * y + Math.cos(e) * z;
+    return [norm(Math.atan2(y2, x) / DEG), Math.asin(Math.max(-1, Math.min(1, z2))) / DEG];
+  }
+  function constellationAt(lam, beta) {
+    const [ra, dec] = raDec(lam, beta);
+    for (const id in SKY.bounds) for (const p of SKY.bounds[id]) for (const off of [-720, -360, 0, 360]) {
+      let inside = false; const x = (ra + off) * 100, y = dec * 100;
+      for (let i = 0, j = p.length - 2; i < p.length; j = i, i += 2) {
+        const xi = p[i], yi = p[i + 1], xj = p[j], yj = p[j + 1];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+      }
+      if (inside) return SKY.names[id] ? SKY.names[id][0] : SKY.names[id.replace(/\d$/, '')] ? SKY.names[id.replace(/\d$/, '')][0] : id;
+    }
+    return '';
+  }
+  /* ==SKY START== written by tools/retrograde_sky.py: Hipparcos stars and IAU constellations via d3-celestial (BSD 3 clause, Olaf Frohn); ecliptic of J2000 in tenths of a degree, magnitudes and B − V in tenths.
+     Data from d3-celestial: Copyright (c) 2015, Olaf Frohn. All rights reserved. Used under the three clause BSD license, whose
+     conditions and disclaimer are reproduced in full in THIRD_PARTY_NOTICES.md. */
+  const SKY = { stars: [3592,-30,51,-1,3580,-57,44,16,3477,-273,50,-2,3538,-162,46,0,3568,-101,50,16,3589,-58,46,10,143,257,21,0,351,512,23,4,3396,-420,39,10,3563,-153,49,5,92,126,28,-2,2,-86,51,16,116,170,48,16,3555,-188,44,16,204,316,45,1,9,-100,36,12,3224,-577,42,6,3523,-285,52,10,3010,-648,28,6,3445,-418,39,2,3455,-406,24,11,136,136,50,16,193,242,52,3,3569,-247,52,1,3266,-574,44,-1,426,523,42,1,67,-68,52,6,227,271,43,-1,351,447,37,-2,209,230,43,9,218,244,33,13,378,466,22,12,3353,-545,44,0,26,-208,20,10,59,-141,48,10,325,393,45,-1,206,176,41,11,141,22,44,15,179,108,51,5,402,470,35,6,73,-147,52,5,117,-63,48,16,439,488,22,0,292,297,39,1,224,159,44,9,5,-325,43,-2,175,11,43,10,3504,-482,33,9,3424,-551,39,-1,118,-161,35,12,814,652,42,12,364,364,43,0,304,259,21,16,418,431,43,2,288,220,52,3,245,124,47,10,283,207,45,11,265,155,47,10,141,-146,51,4,3223,-645,42,5,193,-43,51,1,288,175,47,0,162,-158,36,11,139,-218,49,12,479,464,27,2,3581,-476,34,15,117,-286,51,0,231,-31,48,14,3536,-526,39,10,268,54,36,10,386,290,41,5,3453,-594,4,-2,424,354,36,13,405,315,50,9,389,279,50,-1,255,-47,44,13,401,297,50,6,224,-134,50,14,446,369,40,-1,178,-248,35,7,277,-16,43,9,214,-205,47,3,220,-203,37,11,369,168,34,5,332,72,39,0,275,-79,46,9,13,-526,44,16,548,475,34,-2,340,85,26,2,3562,-570,37,8,335,55,51,9,357,108,48,3,3421,-642,29,3,194,-310,40,16,619,532,45,2,294,-91,38,0,636,544,40,0,442,278,21,14,372,92,50,1,377,100,20,12,433,233,48,1,390,121,50,3,424,206,30,1,412,160,49,8,340,-43,44,9,468,289,48,15,10,-590,36,-1,436,193,48,6,435,189,40,0,3292,-698,41,0,297,-252,49,0,79,-570,42,-1,375,-59,43,-1,622,490,45,2,886,661,20,6,301,-285,47,5,474,201,52,15,384,-92,49,9,376,-145,41,-2,333,-260,48,4,3319,-712,41,-1,188,-517,41,10,508,232,49,6,394,-120,35,1,469,113,46,-1,338,-282,42,-1,547,316,41,5,419,-56,43,3,426,-33,52,2,321,-327,45,5,484,125,45,11,262,-459,44,10,482,104,36,-1,518,209,42,3,587,375,38,17,510,178,46,16,579,344,39,8,388,-245,39,11,405,-196,52,1,512,144,51,0,233,-537,29,1,539,217,47,1,525,174,49,12,485,42,46,0,451,-78,47,-1,443,-126,25,16,345,-389,41,2,600,345,29,7,549,206,33,15,562,224,21,0,593,306,40,6,577,261,38,10,564,210,46,11,509,18,44,10,346,-447,38,5,454,-184,51,6,519,29,49,0,438,-259,48,2,610,315,50,11,612,307,52,-1,563,154,48,15,612,306,50,-1,483,-145,48,7,401,-385,37,16,272,-581,43,7,552,103,45,16,595,240,50,1,536,21,51,12,621,301,18,5,512,-93,36,9,519,-88,37,-1,625,292,50,-1,666,395,42,4,629,296,47,-1,531,-74,51,0,626,280,44,14,488,-233,47,-1,536,-59,41,11,482,-277,37,9,442,-394,43,-1,637,280,43,-1,520,-184,43,6,611,139,50,0,648,273,30,-1,509,-287,35,9,3514,-761,38,11,611,122,38,0,594,42,37,-1,638,222,38,4,596,45,43,-1,597,44,39,-1,510,-311,44,16,597,40,41,-1,474,-419,42,4,3105,-768,33,16,600,41,28,-1,573,-86,51,-1,406,-556,43,0,604,39,36,-1,604,40,50,-1,418,-543,42,9,719,441,44,19,624,127,51,1,631,113,28,3,556,-227,45,7,657,191,29,-2,539,-332,30,16,650,149,40,0,606,-80,34,-1,50,-765,45,15,599,-145,39,0,635,13,44,11,698,289,42,0,649,66,52,-1,695,262,40,0,594,-275,40,3,633,-117,48,8,458,-617,38,11,593,-309,49,12,75,-780,33,9,691,189,47,10,708,267,41,9,602,-284,44,8,636,-122,43,-1,365,-701,43,3,196,-763,44,11,723,317,52,1,661,-8,49,3,525,-540,36,-1,718,284,46,0,658,-57,36,10,679,58,50,12,692,129,49,10,716,246,48,0,669,-40,38,10,633,-250,52,1,658,-120,51,1,545,-545,40,15,671,-41,48,2,682,6,42,1,675,-37,43,0,685,11,43,3,674,-60,45,3,673,-69,47,10,680,-53,50,11,680,-57,38,10,685,-26,35,10,680,-58,34,2,676,-86,50,2,685,-56,48,2,662,-217,49,13,595,-509,45,10,690,-70,46,3,378,-746,33,-1,653,-299,52,17,599,-518,38,10,688,-117,42,2,698,-55,9,15,668,-251,39,-2,736,190,42,12,698,-95,43,1,653,-360,39,11,705,-63,51,1,705,-62,47,1,762,306,51,11,647,-414,43,16,561,-630,44,3,722,7,43,-1,693,-254,40,-1,719,-154,32,5,757,149,49,14,724,-135,44,0,721,-168,37,-2,738,-36,51,2,735,-82,47,18,761,141,48,14,710,-278,44,3,810,434,43,0,725,-200,37,-2,737,-111,52,1,736,-124,46,1,743,-91,41,12,766,105,27,15,793,309,44,0,735,-209,45,14,776,151,49,0,732,-298,48,-2,788,209,30,5,786,182,37,12,768,-12,46,2,813,374,40,9,765,-74,46,-1,721,-450,32,15,794,183,32,-1,806,286,50,3,750,-274,51,-1,775,-42,49,7,753,-279,28,2,756,-273,51,5,752,-315,42,-2,778,-73,48,3,783,-69,52,15,758,-347,44,-1,754,-391,33,-1,759,-358,44,-1,776,-201,45,12,806,154,48,2,768,-311,2,0,805,96,50,2,819,229,1,8,778,-298,36,-1,811,103,45,13,818,169,47,6,806,-10,50,9,778,-362,43,-2,816,108,50,3,796,-235,47,-2,802,-196,50,-1,796,-309,41,9,815,-58,50,5,802,-255,34,-2,803,-240,51,10,828,142,50,14,805,-213,49,-2,809,-168,16,-2,826,54,16,-1,812,-201,46,-2,825,-13,49,-1,832,112,51,14,797,-439,28,8,817,-243,47,16,824,-173,42,-1,787,-586,39,11,819,-305,46,-3,824,-236,22,-2,834,-47,43,20,842,89,47,3,814,-411,26,2,521,-850,38,6,836,-138,44,-2,829,-293,48,-2,837,-134,34,-2,830,-287,50,6,830,-287,51,0,830,-287,50,-1,830,-281,46,-2,830,-292,28,-2,835,-245,17,-2,841,-140,41,10,848,-22,30,-1,841,-259,38,-2,839,-305,48,1,845,-192,45,-1,822,-574,26,-1,854,25,52,-2,847,-253,17,-2,847,-245,50,-2,855,-68,48,-1,853,-219,49,11,848,-458,36,5,264,-883,43,2,860,-382,36,1,825,-744,38,2,864,-331,21,-2,875,12,49,10,878,158,45,9,874,-108,49,-1,822,-795,45,11,864,-592,31,11,882,139,47,16,872,-443,38,10,883,157,40,11,880,-216,48,14,885,42,46,0,887,-32,44,6,888,-160,4,15,889,-376,37,3,890,-587,44,-2,895,25,48,-1,896,-663,40,11,899,308,37,10,899,215,19,1,899,138,26,-1,900,225,43,17,900,-265,45,12,906,-138,41,2,908,-37,51,-1,909,-33,46,2,909,-2,42,8,912,-301,52,-1,919,-87,44,-2,934,-300,51,-2,929,-92,44,-2,929,-73,50,-1,935,-42,52,4,942,-297,40,13,934,-9,33,16,934,61,43,10,941,-111,50,4,965,-585,44,10,931,356,44,0,956,-263,49,16,974,-534,30,-2,984,-567,38,9,972,-413,20,-2,953,-8,29,16,963,-187,44,2,1050,-758,-6,2,945,259,49,19,974,-230,52,12,979,-280,51,-2,1006,-558,45,-2,983,-303,38,-1,968,-31,41,-1,1007,-466,43,-2,985,-159,45,0,992,-244,51,-1,1118,-758,44,0,1017,-423,40,10,991,-67,19,0,1071,-661,32,-1,1020,-413,44,11,977,193,48,12,1004,-132,47,-2,1001,-54,52,1,982,214,50,15,999,21,31,14,1009,-98,45,12,1041,-396,-14,0,1012,-101,34,4,1021,-149,48,14,1039,-319,51,18,1028,-205,45,11,1441,-830,32,2,1086,-551,35,-1,1212,-757,44,9,1177,-729,29,12,1000,188,50,13,1011,110,36,1,1082,-468,39,17,1062,-347,41,14,1035,-96,47,3,1075,-396,44,-1,991,354,44,8,1009,222,49,0,1108,-514,15,-2,1116,-502,35,17,1042,15,52,10,1076,-267,50,-2,1110,-461,30,-1,1059,-116,51,14,1096,-380,41,-1,1050,-20,40,9,1134,-485,18,7,2199,-826,38,10,1096,-265,49,10,1054,78,44,13,1044,168,49,15,1095,-227,42,0,1247,-680,45,3,1077,-62,51,17,1234,-660,44,13,1153,-482,44,-2,1156,-486,40,-2,1994,-825,40,8,1203,-585,27,16,1088,-56,36,1,1042,270,50,1,1164,-466,44,-1,1085,-2,35,4,1092,-16,51,15,1069,145,51,11,1089,30,50,9,1195,-506,24,-1,1117,-126,50,10,1090,58,38,10,1057,269,46,0,1122,-135,29,-1,1103,-5,52,5,1123,-128,43,14,1091,98,42,3,1287,-638,32,15,1097,62,51,1,1123,-97,46,13,1098,60,50,11,1205,-433,44,5,1102,101,16,0,1113,52,41,15,1170,-253,51,4,1235,-474,38,-2,1107,129,49,4,1158,-160,4,4,1137,-37,50,16,1193,-305,39,10,2258,-794,39,10,1126,75,42,11,1259,-492,39,2,1137,31,36,9,1309,-577,36,17,1132,67,12,10,1151,-26,49,14,1117,161,52,16,1127,121,51,16,1261,-461,44,-1,1391,-652,41,-2,1260,-449,33,12,1196,-188,51,-1,1351,-597,37,10,1340,-581,45,-2,1425,-665,42,-1,1152,58,50,1,1507,-703,35,-2,1276,-426,42,7,1457,-671,45,-2,1230,-238,49,12,1228,-214,47,15,1222,-177,44,13,1172,72,49,11,1386,-583,22,-3,1206,-71,51,0,1314,-433,28,5,2042,-778,44,-1,1126,306,48,0,1251,-226,44,10,1300,-383,44,-2,1473,-645,18,-1,1408,-574,44,16,1213,-23,47,5,1423,-579,44,12,1243,-103,35,15,2393,-754,40,4,1411,-541,44,2,1210,75,51,5,2411,-751,43,12,1731,-727,19,12,1176,231,42,16,1299,-224,39,0,1952,-756,38,11,1269,-113,51,9,1130,402,34,9,1520,-583,41,1,1303,-124,41,0,1312,-146,44,12,1363,-297,50,14,1468,-512,40,9,1647,-663,36,-2,1783,-710,43,-1,1565,-611,38,7,1323,-143,43,-2,1275,32,47,0,1465,-489,37,-2,1355,-244,46,8,1537,-574,40,9,1287,1,39,11,1689,-672,19,0,1575,-601,39,0,1384,-303,43,9,1263,104,40,10,1733,-685,45,-2,1323,-111,34,7,1329,-116,44,0,1455,-433,40,13,1230,251,52,10,1837,-701,38,-1,1346,-110,31,10,1336,-51,43,1,1228,296,31,2,1570,-547,44,6,1253,237,40,5,2006,-722,40,1,1239,290,36,0,1638,-593,38,12,2213,-733,45,6,1374,-110,50,12,1275,209,46,10,1612,-559,22,17,1231,335,45,3,1332,54,52,10,1834,-675,34,-2,1909,-695,40,-2,2120,-722,17,1,1403,-131,39,-1,1818,-661,43,16,1853,-671,22,2,1306,201,38,1,1465,-262,48,9,1458,-238,48,9,1318,180,31,16,1789,-637,25,-1,1353,104,45,12,1473,-224,20,14,1456,-167,46,4,1647,-512,36,4,1842,-642,32,15,1208,452,36,4,1379,79,43,15,1416,-32,50,10,1422,-47,51,14,1457,-150,45,1,1273,349,32,5,1338,207,45,9,1887,-654,41,0,1274,354,45,0,1328,238,48,10,1748,-580,43,2,1045,607,43,15,1443,-70,50,11,1453,-89,47,13,1476,-143,39,13,1527,-266,51,-1,1442,-38,35,5,1971,-663,37,10,1407,97,30,8,2029,-675,29,3,1327,307,51,6,1263,427,38,3,1557,-261,41,9,1533,-197,51,0,1414,123,39,12,1583,-296,49,16,1859,-600,35,-1,1366,267,51,5,1493,-39,47,16,1583,-232,46,-1,1479,49,35,0,1410,221,45,2,1504,-14,44,14,1541,-111,45,0,1498,5,14,-1,1594,-220,36,10,2174,-674,33,-1,1770,-483,38,1,1476,119,34,3,2001,-626,34,15,1395,299,34,0,1497,84,48,5,1496,88,20,11,1928,-587,45,-1,1412,290,31,16,2281,-679,40,4,1454,222,47,3,1650,-247,38,15,1724,-374,43,14,1978,-599,38,3,1445,251,42,9,1601,-113,52,0,1595,-93,51,-1,2031,-614,33,-1,1564,1,38,-1,1439,289,47,2,1702,-302,51,16,1577,-19,51,9,2404,-681,41,16,1976,-583,44,16,1874,-511,38,3,1663,-204,49,20,1680,-235,49,9,1488,216,47,8,1957,-566,43,10,2092,-621,27,-2,1535,140,51,0,2457,-678,44,-2,1905,-511,27,9,1704,-218,31,12,1509,249,38,10,2024,-576,38,9,1555,165,43,0,1517,245,50,11,1491,311,50,6,1737,-227,41,11,1873,-438,44,1,1649,-25,48,11,1640,-2,50,2,1500,301,51,3,1676,-80,47,16,1394,451,23,0,1589,129,44,1,1352,497,18,11,1645,13,46,3,1793,-303,49,4,2051,-563,39,12,1488,355,30,11,1786,-256,45,0,1613,143,26,1,1634,97,33,0,1605,168,46,17,1715,-76,44,2,1694,-24,52,15,1573,247,38,6,1567,262,35,14,1542,308,48,1,1767,-176,36,11,2022,-518,39,-2,1687,17,40,-1,1794,-208,51,4,1676,61,40,4,1762,-135,48,16,1792,-197,41,2,1715,-6,50,10,1744,-57,48,15,1303,572,38,16,1864,-294,49,5,1875,-309,51,16,1880,-316,35,9,2145,-568,31,0,1786,-113,47,-1,1750,-30,43,10,1903,-313,52,15,1841,-183,47,10,1733,61,48,2,2210,-585,36,2,1742,46,40,15,1537,415,37,12,2138,-546,41,9,1690,173,45,5,1888,-255,51,16,1716,123,21,1,2175,-562,43,-1,1772,7,36,5,2001,-414,45,13,1934,-315,43,-1,1505,471,24,0,1861,-161,52,0,1776,62,46,1,2188,-548,43,3,1777,85,41,10,2209,-555,41,4,2074,-445,45,-2,2075,-445,26,-1,1922,-217,40,3,1917,-197,30,13,2094,-456,40,-2,2157,-504,28,-2,1511,517,33,1,1907,-145,26,-1,1776,152,51,1,1736,235,49,10,1691,316,50,11,2266,-570,41,16,2454,-636,42,-1,2217,-542,41,-2,1848,14,39,0,1834,51,50,12,1938,-183,52,-1,1774,183,47,10,1902,-104,51,10,2183,-512,36,14,1741,258,48,5,1744,262,52,1,1743,275,49,3,2219,-529,8,-2,1739,284,44,11,1746,271,50,1,2107,-424,39,-2,1935,-122,29,0,2167,-478,16,16,1938,-117,43,4,2340,-589,38,-2,1363,618,38,-1,1677,405,42,6,1974,-180,26,9,1784,241,48,0,1805,203,50,12,2304,-566,27,-2,2113,-401,38,0,1922,-35,47,12,1946,-79,52,4,2123,-402,22,0,1901,28,27,4,1855,135,49,1,2302,-552,30,-2,1839,198,51,13,2216,-486,12,-2,2057,-261,49,0,1799,302,49,7,2144,-392,43,13,1833,247,49,9,2094,-314,42,2,1589,543,18,0,1962,-34,48,16,2206,-461,40,-2,1915,86,34,16,1746,401,29,-1,1864,218,48,16,1899,162,28,9,2362,-568,36,12,2176,-389,43,-2,1834,318,48,15,1997,-33,52,11,2048,-146,49,10,1982,17,44,0,1889,230,43,5,1844,325,42,6,2028,-79,50,5,2119,-277,48,7,1940,162,52,6,2100,-216,51,10,1958,126,48,16,2050,-93,47,7,2070,-137,30,9,2131,-260,28,1,1657,564,22,1,2038,-21,10,-2,1659,566,40,2,2157,-283,51,12,2061,-63,48,11,1950,213,50,7,2165,-276,39,12,2036,31,47,16,2004,125,49,0,2021,86,34,1,2256,-396,23,-2,2067,17,50,16,2167,-206,42,4,2183,-235,52,0,1979,265,45,5,1769,544,18,-1,2180,-216,42,15,1992,252,40,15,2212,-283,34,-2,2215,-290,35,-2,1968,302,49,14,2120,-64,50,11,2179,-201,43,-1,2178,-190,48,-1,1993,281,27,6,2072,96,52,11,2250,-329,26,-2,2230,-280,38,-2,2163,-121,52,-1,2243,-305,39,-2,2077,131,42,1,2253,-310,43,6,2338,-441,6,-2,1575,664,37,0,2241,-266,44,-2,2186,-130,32,11,2223,-221,21,10,2160,-29,49,17,2100,148,50,-1,2202,-131,51,11,2145,29,42,13,2042,307,0,12,2138,72,41,5,1870,546,42,1,2170,5,45,1,2288,-302,36,-2,2134,110,51,10,2065,284,48,12,2340,-396,43,1,2257,-225,40,0,2287,-293,48,3,2268,-239,44,-2,2226,-128,48,13,2105,214,49,0,2117,190,51,1,1826,601,40,5,2297,-290,46,-1,2298,-291,43,4,2590,-623,43,13,1284,714,42,14,2243,-141,50,-1,2155,118,48,7,2028,425,36,13,1977,496,30,2,2331,-334,44,-2,2039,421,45,4,2302,-255,23,-2,2336,-322,40,-2,2395,-426,14,9,2395,-426,0,7,2119,304,45,0,2130,279,38,0,2152,227,49,10,2335,-300,23,-2,2299,-210,40,-2,2424,-462,32,3,2201,97,39,4,2294,-184,41,14,2297,-183,49,0,2081,406,24,10,2128,313,46,10,2268,-90,52,3,2185,171,37,0,2544,-582,38,14,2285,-111,44,14,2250,4,52,4,1333,730,21,15,2251,3,28,1,2210,135,49,10,2339,-259,43,-2,2321,-203,50,-2,2232,120,45,3,2350,-250,27,-2,2348,-240,31,-2,2253,82,49,0,2043,542,35,10,2226,185,44,10,2307,-76,32,17,2376,-284,39,-1,2356,-227,51,10,2288,12,52,16,2377,-265,41,-2,2395,-297,39,0,2310,-18,45,-1,2408,-328,34,9,2382,-256,48,-2,2347,-130,49,4,2132,490,35,10,2379,-225,52,6,2294,85,26,-1,2443,-389,41,1,2350,-115,44,11,2404,-285,43,-1,2494,-481,29,0,2269,194,50,5,1416,752,30,1,2387,-214,32,-2,2375,-172,36,15,2410,-284,50,5,2401,-252,34,-2,2379,-177,45,-2,2454,-392,45,2,2313,80,49,5,2132,534,43,3,1849,711,33,12,2389,-194,46,0,2191,461,37,3,2292,201,52,2,2195,486,41,-1,2337,89,46,10,2335,98,52,-1,2381,-85,51,13,2223,443,22,0,2283,289,38,3,2415,-212,28,-2,2351,44,39,10,2427,-249,46,-2,2505,-453,41,12,2386,-85,36,14,2424,-225,43,14,2394,-100,37,-2,2407,-145,47,10,2383,-41,50,13,2436,-243,46,4,2378,0,48,16,2414,-146,48,-2,2249,445,38,0,1174,751,43,0,2321,255,26,12,2299,343,36,1,2324,265,44,6,2298,371,41,16,2359,162,35,0,2343,240,37,1,2428,-132,40,0,2411,-55,46,-1,2363,167,51,1,2405,1,50,0,2416,-49,46,-1,2399,35,41,10,2518,-419,28,3,2328,352,38,5,2431,-86,39,-2,2442,-132,51,1,2291,461,41,12,2404,61,50,-1,2429,-55,29,-2,2464,-207,50,10,2458,-174,34,-2,2426,-20,23,-1,1967,744,40,5,2489,-279,46,9,2439,-50,50,12,2465,-175,49,-1,2413,92,42,5,2432,10,26,-1,2432,10,49,0,2485,-238,47,2,2467,-156,42,-2,2437,2,39,0,2438,1,43,8,2216,638,42,0,2462,-82,51,11,2446,16,40,1,2429,109,49,1,2462,-67,46,-2,2423,172,27,16,2506,-257,51,-1,2549,-416,39,11,2515,-283,50,8,2477,-71,48,0,2435,164,32,10,2244,658,39,-2,2521,-283,40,11,2474,-27,46,8,2478,-40,29,3,2392,400,37,3,2434,222,48,3,1945,784,27,9,2476,16,45,10,2484,-18,46,2,2480,32,42,2,2529,-255,45,-1,2466,132,46,2,2498,-46,11,19,2497,-32,48,-1,2411,427,28,9,2456,236,38,0,2487,52,43,9,2515,-127,42,-2,2496,4,44,1,2627,-560,39,9,2535,-218,49,0,2332,632,42,0,2515,-61,28,-2,2526,-131,42,15,2492,114,25,0,2415,531,28,6,2513,44,49,11,2388,603,35,9,2629,-545,42,11,2486,307,52,15,991,739,42,9,2609,-462,19,14,2589,-363,38,16,2524,116,46,5,2553,-117,23,11,2562,-154,30,-2,2562,-154,36,-2,2571,-197,47,4,2506,325,44,-1,2572,-196,36,14,2518,318,32,12,2598,-331,31,16,2596,-303,41,15,2483,532,39,0,2545,184,48,15,2576,-93,50,-1,2584,-112,48,3,1834,848,32,-1,2580,72,24,1,2606,-215,51,9,2607,-202,33,4,2562,373,28,12,2548,477,31,1,2521,596,32,14,2600,-35,43,9,2582,226,47,11,2604,-12,51,10,2603,103,43,0,2609,20,44,4,2614,-18,33,-2,2554,601,42,0,2631,-209,51,-1,2642,-323,28,15,2643,-331,33,-2,2639,-274,52,11,2623,-10,42,3,2606,273,43,15,2613,181,45,4,2629,-66,43,4,2520,753,28,10,2599,493,44,14,2640,-140,27,-2,2656,-374,36,-1,2635,-7,48,0,2649,-266,28,-1,912,699,44,0,2646,-138,16,-2,2624,358,21,2,2654,-232,46,0,2653,-153,43,11,2656,-196,19,4,2645,79,35,3,2643,152,46,1,2599,693,38,-2,2665,-260,48,4,2654,105,42,1,2665,-156,24,-2,2661,17,49,5,2653,279,28,12,2672,-284,51,7,2680,-413,36,12,2652,511,34,8,2672,-44,45,6,2675,-167,30,5,2666,261,38,0,2677,-83,48,0,2679,-136,32,12,2680,-167,48,3,2648,803,37,12,2685,607,39,14,2680,749,22,15,2694,-209,48,12,2692,527,37,9,2696,-183,49,16,2695,536,44,4,2698,137,33,10,2698,-68,50,17,2700,-4,47,0,2701,278,48,-1,2701,197,46,4,2702,264,39,0,2705,450,43,4,2705,247,44,0,2708,153,48,4,2711,-61,47,8,2715,259,40,9,2713,-70,30,10,2712,-267,36,-1,2713,-200,49,3,2722,330,37,2,2727,522,38,0,2718,-50,46,9,2712,-402,43,2,2729,442,44,-2,2721,-225,45,10,2727,-3,50,11,2732,23,38,2,2736,-134,31,16,2740,-37,47,16,2779,594,43,12,711,849,42,-1,2758,267,48,9,2746,-65,27,14,759,836,36,5,2757,204,32,9,2745,-153,51,15,2735,-381,44,15,2760,144,47,9,2778,450,38,12,2751,-111,18,0,2759,28,48,13,2751,-226,35,-2,2774,235,52,5,2763,-21,28,10,2752,-258,41,10,2771,87,47,1,2775,48,51,0,2760,-226,49,-1,2760,-225,51,-1,2765,-164,52,1,2765,-191,46,10,2788,122,51,9,2790,149,38,13,2853,617,0,0,2808,140,47,4,2751,-482,40,11,2811,147,49,11,2789,-152,51,1,2792,-126,49,-2,2881,603,43,2,2824,250,50,-1,2802,-40,32,-1,2848,434,42,5,2849,410,43,1,2824,182,42,11,2795,-174,52,8,2889,560,35,0,2778,-391,42,-2,2792,-291,52,10,2825,1,49,14,2917,593,42,16,2833,72,51,1,2827,2,50,13,2824,-34,20,-1,2952,662,41,14,2858,269,46,2,2858,269,50,2,2776,-442,44,5,2848,169,48,11,2834,21,50,1,2835,17,35,12,2801,-300,48,-1,2820,-143,48,4,2919,550,32,0,2883,376,40,11,2860,168,40,11,2836,-72,26,1,2823,-193,47,0,2850,9,38,10,2898,362,30,0,2873,176,34,-1,2816,-296,52,5,2836,-144,42,5,2848,-51,33,12,2836,-179,46,11,2841,-153,41,0,2863,14,29,4,2841,-168,41,12,172,829,31,10,2903,244,51,-1,3001,607,44,-2,2870,-29,49,6,550,807,44,13,3005,596,44,13,3149,738,38,10,2883,33,49,10,2914,231,51,11,2910,166,50,9,2895,42,39,2,2897,61,45,1,2858,-221,40,-1,2840,-320,50,0,2858,-225,43,4,2866,-184,40,-1,2893,-25,50,2,2936,248,34,3,2934,220,46,6,2995,459,44,15,3180,715,38,1,2940,188,50,18,3013,490,30,11,2968,287,44,12,2938,109,51,11,2875,-261,49,11,3186,696,45,4,2918,-33,46,-1,2958,200,44,-1,2949,143,49,0,2978,265,52,0,3011,388,44,8,3012,382,44,10,2947,51,51,3,3162,644,29,0,3009,312,27,15,2949,14,49,11,3034,389,37,13,327,795,38,9,3018,293,8,2,3022,308,51,6,3004,215,39,6,3026,287,47,10,2926,-207,41,11,3024,267,37,9,2959,-54,47,7,3129,543,39,10,2959,-63,45,15,2984,51,50,1,3070,392,35,16,2966,-55,48,9,2949,-144,44,-2,2835,-509,40,0,2971,-71,44,16,2951,-172,48,14,2965,-114,50,12,2920,-318,49,16,2876,-447,36,8,631,755,44,0,3049,187,32,-1,3434,716,43,1,3281,636,38,13,3298,643,40,15,3154,461,45,13,3038,70,43,9,3039,69,36,9,3044,66,48,0,3040,46,30,8,3248,571,22,7,3200,496,44,13,2938,-363,19,-1,3047,9,51,0,3052,12,48,4,3207,474,40,4,49,739,42,2,3091,156,49,12,3141,291,40,-1,2993,-249,51,10,3109,155,49,16,3163,319,36,4,2991,-278,31,10,3117,168,43,9,3153,275,51,7,3124,182,52,11,3174,330,38,-1,3077,2,52,16,3353,599,12,1,3181,319,44,3,2925,-460,34,2,47,718,34,9,3257,465,42,11,3072,-70,41,4,3277,494,25,10,3194,327,43,10,3117,81,38,0,3130,124,44,16,3022,-251,51,4,3017,-273,49,15,3056,-154,49,10,3080,-90,41,16,3131,82,47,3,2978,-392,37,12,3209,297,52,11,3361,549,39,0,3084,-147,47,9,3127,-30,48,2,3408,566,37,16,3138,-6,41,0,3095,-151,52,11,3118,-81,45,16,3164,48,45,9,3234,252,47,3,3330,437,32,10,3244,247,45,5,3386,506,37,4,3150,-45,52,12,3231,201,39,5,3403,515,42,1,3373,475,44,-1,3119,-157,47,1,128,689,24,3,3042,-358,44,2,3095,-240,48,0,3303,333,41,11,3177,-14,43,9,3254,210,52,1,2986,-470,42,5,3169,-70,38,10,355,712,32,-2,3176,-66,45,9,3234,86,29,8,3501,552,40,9,3202,-50,45,-2,3241,60,47,2,3280,153,51,10,3218,-26,37,3,2897,-578,37,10,3230,-2,52,7,3216,-48,47,9,97,642,42,20,3405,395,45,5,3319,221,24,15,3350,290,43,12,3389,366,41,4,3173,-183,44,-1,3254,42,51,11,143,655,42,5,3572,569,42,-1,3235,-26,28,2,3186,-166,50,0,3258,-7,51,4,3174,-231,30,-1,3098,-395,44,3,3321,92,47,-1,242,657,43,4,3353,157,49,14,3334,107,30,10,3189,-260,45,13,3287,-21,43,-1,3444,343,38,4,3159,-329,17,-1,3221,-201,45,1,3217,-211,50,15,3495,410,43,5,3227,-198,49,5,3368,163,35,1,140,611,34,16,3549,463,45,14,130,599,42,3,3200,-283,48,8,3540,444,41,14,3200,-287,51,9,3333,27,42,10,3097,-454,29,14,3420,209,48,-1,3293,-106,51,11,3367,82,39,-1,86,556,44,10,3386,105,48,-2,3405,133,48,10,3389,88,36,4,176,595,41,8,3216,-313,40,10,52,514,43,17,3216,-316,41,16,3354,-12,48,-1,81,533,38,0,3272,-214,43,0,3404,81,40,-1,3394,41,50,11,46,475,45,13,3313,-173,42,-1,3462,177,34,-1,3223,-354,21,16,3557,351,29,9,3254,-306,48,10,3352,-100,47,14,2880,-627,41,2,3531,288,40,11,3479,184,42,5,3207,-398,35,1,3386,-57,40,16,332,626,35,11,3544,294,35,9,3483,157,52,5,3313,-236,45,0,3416,-4,37,16,3389,-82,33,1,3486,145,49,0,3322,-236,42,10,3339,-211,12,1,3219,-420,41,10,78,438,36,-1,3327,-263,51,3,3594,311,24,17,3486,91,45,-1,3535,194,25,0,3383,-166,45,9,3288,-344,43,4,3516,139,45,16,3588,285,48,13,535,656,44,8,3400,-145,37,12,3519,130,50,15,3396,-157,47,7,3285,-363,39,10,3524,128,52,1,3471,-11,42,15,3463,-40,42,11,3471,-28,49,16,3515,73,37,9,3204,-478,40,4,3467,-43,44,-1,3370,-257,44,11,3468,-48,50,0,3453,-83,52,9,3453,-83,52,8,3530,89,50,12,11,256,46,2,3455,-101,52,2,3435,-148,40,11,3565,150,51,13,20,248,44,6,3439,-156,44,15,3529,44,50,0,3552,90,43,11,3581,148,45,9,3372,-317,44,-1,3454,-165,47,0,79,310,50,14,183,438,38,10,161,410,43,-1,601,647,32,10,3497,-110,50,3,3576,72,41,5,173,417,42,-1,3486,-145,48,8,3566,34,45,2,3502,-116,45,0,3,111,51,17,91,283,49,9,3583,46,50,20,3456,-246,46,0,3503,-164,52,-1,62,182,51,16,101,232,46,16,3583,-31,49,9,26,64,40,4,3188,-566,45,-1],
+    lines: {"And":[[442,278,304,259,218,244,143,257],[224,159,206,176,209,230,218,244,227,271,161,410,78,438],[161,410,173,417,183,438],[304,259,292,297,291,326,364,364,424,354],[173,417,199,429]],"Ant":[[1610,-474,1724,-374,1830,-398]],"Aps":[[2544,-582,2615,-560,2629,-545,2627,-560]],"Aqr":[[3117,81,3131,82,3234,86,3334,107,3367,82,3389,88,3404,81,3416,-4,3467,-43,3400,-145],[3234,86,3287,-21],[3334,107,3333,27],[3389,88,3386,105],[3435,-148,3467,-43,3486,-145]],"Aql":[[3009,312,3018,293,3024,267,3049,187,3004,215,2936,248,2898,362,3018,293,2936,248,2873,176]],"Ara":[[2643,-331,2656,-374,2589,-363,2598,-331,2596,-303,2649,-266,2642,-323]],"Ari":[[482,104,377,100,340,85,332,72]],"Aur":[[899,215,819,229,794,183,766,105,826,54,899,138,899,215,899,308,819,229,788,209,786,182]],"Boo":[[1979,265,1993,281,2042,307,2028,425,1977,496,2043,542,2132,490,2081,406,2042,307,2130,279],[1977,496,1870,546,1800,589,1826,601,1870,546]],"Cae":[[500,-653,561,-630,594,-585,684,-579]],"Cam":[[793,309,813,374,810,434,746,496,719,441,666,395],[810,434,924,459,957,538]],"Cnc":[[1336,-51,1287,1,1275,32,1263,104],[1287,1,1243,-103]],"CVn":[[1746,401,1677,405]],"CMa":[[972,-413,1041,-396,1110,-461,1134,-485,1116,-502,1108,-514,974,-534],[1195,-506,1134,-485],[1041,-396,1075,-396,1096,-380,1062,-347,1075,-396]],"CMi":[[1158,-160,1122,-135]],"Cap":[[3038,70,3040,46,3052,12,3072,-70,3080,-90,3169,-70,3235,-26,3218,-26,3177,-14,3138,-6,3038,70]],"Car":[[1071,-661,1050,-758,2120,-722,2174,-674,2092,-621,2031,-614,2001,-626,1853,-671,1731,-727,1507,-703,1473,-645,1689,-672,1853,-671],[2092,-621,2095,-589,2091,-584,2075,-569,2051,-563,2024,-576,2031,-614]],"Cas":[[548,475,479,464,439,488,378,466,351,512]],"Cen":[[2022,-518,2075,-445,2107,-424,2123,-402,2256,-396,2250,-329,2215,-290,2212,-283,2223,-221,2302,-255,2348,-240],[2212,-283,2131,-260],[2395,-426,2256,-396,2338,-441],[2107,-424,2094,-456,2095,-546]],"Cep":[[49,739,47,718,128,689,97,642,130,599,140,611,176,595,332,626,601,647,355,712,128,689],[355,712,332,626]],"Cet":[[394,-120,384,-92,375,-59,419,-56,451,-78,443,-126,394,-120,376,-145,315,-159,220,-203,178,-248,26,-208,9,-100,118,-161,162,-158,220,-203]],"Cha":[[2393,-754,2404,-681,2455,-678,2454,-636,2423,-639,2404,-681]],"Cir":[[2443,-389,2424,-462,2454,-392]],"Col":[[984,-567,864,-592,822,-574,787,-586],[864,-592,896,-663]],"Com":[[1889,230,1844,325,1739,284]],"CrA":[[2820,-143,2836,-144,2841,-153,2841,-168,2836,-179,2823,-193,2796,-204,2765,-191]],"CrB":[[2195,486,2191,461,2223,443,2249,445,2270,448,2291,461,2290,492]],"Crv":[[1922,-217,1917,-197,1907,-145,1935,-122,1974,-180,1917,-197]],"Crt":[[1786,-113,1762,-135,1767,-176,1737,-227,1786,-256,1794,-208,1792,-197,1841,-183,1861,-161],[1767,-176,1792,-197]],"Cru":[[2216,-486,2157,-504],[2219,-529,2167,-478]],"Cyg":[[3330,437,3277,494,3248,571,3162,644,3180,715,3149,738],[3353,599,3248,571,3129,543,3013,490]],"Del":[[3141,291,3163,319,3174,330,3194,327,3181,319,3163,319]],"Dor":[[365,-701,378,-746,521,-850,264,-883,791,-865,521,-850,487,-789,378,-746]],"Dra":[[2648,803,2680,749,2520,753,2504,781,2648,803,172,829,711,849,1834,848,1945,784,1967,744,1849,711,1575,664,1363,618,1303,572],[711,849,759,836],[172,829,327,795]],"Equ":[[3231,201,3244,247,3234,252]],"Eri":[[753,-279,693,-254,668,-251,594,-275,539,-332,510,-311,509,-287,482,-277,388,-245,338,-282,321,-327,345,-389,401,-385,442,-394,474,-419,599,-518,545,-545,525,-540,418,-543,349,-571,272,-581,233,-537,188,-517,79,-570,10,-590,3562,-570,3453,-594]],"For":[[346,-447,262,-459,163,-389]],"Gem":[[934,-9,953,-8,999,21,1054,78,1102,101,1132,67,1113,52,1085,-2,1050,-20,991,-67,1012,-101],[1085,-2,1088,-56]],"Gru":[[3219,-420,3207,-398,3223,-354,3216,-316,3159,-329,3223,-354],[3216,-313,3200,-283,3189,-260,3174,-231]],"Her":[[2392,400,2411,427,2415,531,2388,603,2332,632,2244,658,2216,638,2182,603],[2415,531,2483,532],[2388,603,2521,596],[2685,607,2554,601,2521,596,2483,532,2548,477,2652,511,2692,527,2727,522],[2562,373,2411,427]],"Hor":[[458,-617,82,-610,46,-618,25,-637,3581,-695,3463,-713]],"Hya":[[1323,-111,1329,-116,1323,-143,1312,-146,1303,-124,1323,-111,1346,-110,1403,-131,1476,-143,1473,-224,1557,-261,1594,-220,1650,-247,1704,-218,1880,-316,1934,-315,2070,-137,2186,-130,2285,-111]],"Hyi":[[3010,-648,3105,-768,3319,-712,3292,-698,3290,-671,3421,-642]],"Ind":[[2991,-278,2987,-325,2978,-392,3098,-395,3042,-358,2991,-278]],"Lac":[[86,556,81,533,52,514,23,513,14,475,46,475,52,514,59,533,86,556],[14,475,3549,463,3540,444]],"Leo":[[1498,5,1479,49,1496,88,1613,143,1716,123,1634,97,1498,5],[1496,88,1476,119,1414,123,1407,97]],"LMi":[[1410,221,1454,222,1509,249,1445,251,1410,221,1338,207]],"Lep":[[919,-384,889,-376,860,-382,814,-411,754,-391,721,-450,797,-439,848,-458,872,-443],[759,-358,754,-391,778,-362]],"Lib":[[2307,-76,2251,3,2294,85,2351,44,2386,-85,2394,-100],[2251,3,2351,44]],"Lup":[[2428,-132,2407,-145,2375,-172,2387,-214,2350,-250,2335,-300,2408,-328,2404,-285,2401,-252,2415,-212,2458,-174,2467,-156],[2387,-214,2415,-212]],"Lyn":[[931,356,991,354,1057,269,1176,231,1253,237,1306,201,1318,180]],"Lyr":[[2881,603,2886,623,2853,617,2881,603,2917,593,2919,550,2889,560,2881,603]],"Men":[[2653,-818,2796,-800,2951,-801,3107,-830]],"Mic":[[3056,-154,3022,-251,3095,-240,3119,-157,3084,-147,3056,-154]],"Mon":[[1193,-305,1251,-226,1095,-227,983,-303,942,-297],[1095,-227,1028,-205,963,-187,985,-159,1004,-132]],"Mus":[[2210,-585,2266,-570,2304,-566,2302,-552,2362,-568,2340,-589,2304,-566]],"Nor":[[2485,-238,2529,-255,2521,-283,2489,-279,2485,-238]],"Oct":[[2590,-623,2880,-627,2897,-578,2590,-623]],"Oph":[[2698,137,2666,261,2653,279,2624,358,2518,318,2456,236,2423,172,2435,164,2492,114,2580,72],[2518,318,2492,114,2487,52,2480,32,2476,16,2484,-18],[2653,279,2580,72,2614,-18,2629,-66]],"Ori":[[919,-87,887,-32,909,-33,929,-92,906,-138,888,-160,809,-168,736,-124],[735,-209,725,-200,721,-168,719,-154,724,-135,736,-124,743,-91,765,-74,778,-73],[768,-311,802,-255,824,-236,809,-168,837,-134,888,-160,847,-253,864,-331],[847,-253,835,-245,824,-236]],"Pav":[[2938,-363,2925,-460,2876,-447,2778,-391,2735,-381,2712,-402,2680,-413,2751,-482,2835,-509,2925,-460,2986,-470]],"Peg":[[3495,410,3557,351,3594,311,143,257,92,126,3535,194,3479,184,3462,177,3368,163,3319,221],[3535,194,3594,311,3544,294,3531,288,3444,343,3389,366]],"Per":[[611,122,631,113,650,149,657,191,638,222,648,273,637,280,621,301,600,345,587,375,579,344,593,306,577,261,562,224,564,210,549,206,539,217,545,230,562,224],[698,289,708,267,695,262,648,273],[593,306,547,316,446,369]],"Phe":[[3455,-406,3504,-482,3581,-476,3536,-526,3424,-551,3504,-482,3396,-420,3455,-406]],"Pic":[[1441,-830,822,-795,825,-744]],"Psc":[[265,155,283,207,288,175,265,155,245,124,268,54,277,-16,294,-91,275,-79,255,-47,231,-31,199,-2,175,11,141,22,26,64,3576,72,3552,90,3530,89,3515,73,3529,44,3566,34,3583,46,3576,72],[3515,73,3486,91]],"PsA":[[3313,-173,3339,-211,3322,-236,3313,-236,3272,-214,3221,-201,3173,-183,3186,-166,3221,-201,3313,-173]],"Pup":[[1071,-661,1203,-585,1229,-491,1235,-474,1260,-449,1276,-426,1314,-433,1386,-583,1473,-645],[1260,-449,1261,-461,1259,-492,1229,-491]],"Pyx":[[1386,-583,1468,-512,1465,-489,1455,-433]],"Ret":[[75,-780,196,-763,71,-759,3514,-761,75,-780]],"Sge":[[3011,388,3034,389,3070,392],[3012,382,3034,389]],"Sgr":[[2736,-134,2751,-111,2746,-65,2763,-21,2732,23],[2858,-221,2866,-184,2836,-72,2802,-40,2763,-21],[2926,-207,2949,-144,2959,-54,2918,-33,2893,-25,2870,-29,2824,-34,2802,-40,2746,-65,2713,-70,2751,-111,2836,-72,2848,-51,2824,-34,2850,9,2863,14,2883,33,2895,42,2897,61],[2850,9,2835,17,2825,1,2824,-34]],"Sco":[[2429,-55,2426,-20,2432,10],[2426,-20,2478,-40,2498,-46,2515,-61,2553,-117,2562,-154,2572,-196,2607,-202,2656,-196,2675,-167,2665,-156,2646,-138]],"Scl":[[5,-325,3456,-246,3370,-257,3372,-317]],"Sct":[[2790,149,2824,182,2808,140,2771,87,2790,149]],"Ser":[[2580,72,2645,79,2698,137,2708,153,2757,204,2858,269]],"Sex":[[1541,-111,1533,-197,1601,-113,1595,-93]],"Tau":[[848,-22,698,-55,680,-58,658,-57,669,-40,685,-26,826,54],[658,-57,606,-80,519,-88,599,-145],[519,-88,512,-93,520,-184]],"Tel":[[2721,-225,2751,-226,2752,-258]],"Tri":[[369,168,424,206,435,189,369,168]],"TrA":[[2609,-462,2518,-419,2494,-481,2609,-462]],"Tuc":[[3097,-454,3204,-478,3266,-574,3224,-577,3188,-566,3072,-499,3097,-454]],"UMa":[[1511,517,1352,497,1394,451,1505,471,1511,517,1589,543,1657,564,1769,544],[1505,471,1537,415,1567,262,1573,247],[1537,415,1488,355,1412,290],[1488,355,1395,299],[1352,497,1208,452,1130,402,1263,427,1394,451],[1394,451,1293,383,1273,349,1228,296],[1239,290,1273,349]],"UMi":[[1174,751,1203,778,1416,752,1333,730,1174,751,991,739,912,699,886,661]],"Vel":[[1689,-672,1789,-637,1859,-600,1905,-511,1770,-483,1647,-512,1612,-559,1473,-645]],"Vir":[[1742,46,1772,7,1848,14,1901,28,1982,17,2038,-21,2138,72,2201,97],[1899,162,1915,86,1901,28],[1982,17,2021,86,2077,131,2185,171]],"Vol":[[2006,-722,1952,-756,2042,-778,1994,-825,2199,-826,2042,-778,2006,-722]],"Vul":[[2947,432,2995,459,3070,439,3109,470,3154,461]]},
+    names: {"And":["Andromeda",24.0,32.1],"Ant":["Antlia",172.6,-41.9],"Aps":["Apus",260.5,-56.2],"Aqr":["Aquarius",334.8,2.6],"Aql":["Aquila",297.7,26.1],"Ara":["Ara",262.5,-32.7],"Ari":["Aries",38.2,9.1],"Aur":["Auriga",83.5,18.9],"Boo":["Boötes",199.9,44.2],"Cae":["Caelum",59.1,-61.3],"Cam":["Camelopardalis",80.0,43.4],"Cnc":["Cancer",128.2,-0.3],"CVn":["Canes Venatici",171.1,40.4],"CMa":["Canis Major",107.9,-44.5],"CMi":["Canis Minor",114.0,-14.8],"Cap":["Capricornus",311.4,-0.9],"Car":["Carina",191.7,-67.2],"Cas":["Cassiopeia",44.0,48.3],"Cen":["Centaurus",220.4,-37.4],"Cep":["Cepheus",22.3,66.9],"Cet":["Cetus",28.3,-14.4],"Cha":["Chamaeleon",242.5,-67.8],"Cir":["Circinus",244.1,-41.4],"Col":["Columba",86.9,-59.7],"Com":["Coma Berenices",182.5,28.1],"CrA":["Corona Austrina",282.0,-17.2],"CrB":["Corona Borealis",224.4,46.3],"Crv":["Corvus",192.9,-17.7],"Crt":["Crater",179.0,-18.5],"Cru":["Crux",218.9,-50.0],"Cyg":["Cygnus",321.4,58.4],"Del":["Delphinus",316.9,31.8],"Dor":["Dorado",42.5,-80.5],"Dra":["Draco",174.7,84.6],"Equ":["Equuleus",323.7,23.3],"Eri":["Eridanus",42.2,-44.0],"For":["Fornax",25.4,-43.4],"Gem":["Gemini",104.6,0.4],"Gru":["Grus",320.2,-32.6],"Her":["Hercules",247.3,55.0],"Hor":["Horologium",9.0,-66.0],"Hya":["Hydra",158.4,-20.1],"Hyi":["Hydrus",324.7,-69.6],"Ind":["Indus",301.3,-33.8],"Lac":["Lacerta",3.1,50.5],"Leo":["Leo",152.0,8.6],"LMi":["Leo Minor",142.7,22.9],"Lep":["Lepus",81.4,-40.5],"Lib":["Libra",232.3,-1.0],"Lup":["Lupus",240.3,-21.8],"Lyn":["Lynx",115.6,26.8],"Lyr":["Lyra",288.9,59.4],"Men":["Mensa",286.7,-81.6],"Mic":["Microscopium",307.3,-18.4],"Mon":["Monoceros",105.3,-23.0],"Mus":["Musca",229.8,-57.2],"Nor":["Norma",250.2,-25.9],"Oct":["Octans",274.5,-62.1],"Oph":["Ophiuchus",254.6,14.6],"Ori":["Orion",81.3,-16.7],"Pav":["Pavo",282.9,-43.9],"Peg":["Pegasus",351.8,26.6],"Per":["Perseus",60.4,25.8],"Phe":["Phoenix",348.0,-47.0],"Pic":["Pictor",94.3,-80.0],"Psc":["Pisces",11.6,5.7],"PsA":["Piscis Austrinus",326.7,-20.0],"Pup":["Puppis",126.6,-51.3],"Pyx":["Pyxis",144.6,-50.5],"Ret":["Reticulum",6.5,-77.0],"Sge":["Sagitta",303.2,38.8],"Sgr":["Sagittarius",283.1,-5.1],"Sco":["Scorpius",254.1,-10.5],"Scl":["Sculptor",344.9,-28.9],"Sct":["Scutum",279.6,14.1],"Ser":["Serpens Cauda",270.4,15.4],"Sex":["Sextans",156.8,-12.9],"Tau":["Taurus",64.3,-6.8],"Tel":["Telescopium",274.1,-23.7],"Tri":["Triangulum",39.9,18.3],"TrA":["Triangulum Australe",255.7,-45.7],"Tuc":["Tucana",315.8,-51.7],"UMa":["Ursa Major",141.5,42.2],"UMi":["Ursa Minor",111.1,74.1],"Vel":["Vela",172.6,-58.4],"Vir":["Virgo",197.3,6.4],"Vol":["Volans",202.2,-77.3],"Vul":["Vulpecula",305.4,45.5]},
+    bounds: {"And":[[34447,3517,34434,5317,35145,5319,35147,5069,35527,5069,35528,4869,36415,4869,36414,4669,37478,4668,37479,4868,37859,4866,37861,5066,38241,5065,38697,5063,38693,4763,39262,4759,39267,5109,39989,5104,39968,3729,39187,3735,39185,3560,38291,3565,38290,3365,37244,3368,37241,2443,37442,2443,37441,2168,36374,2170,36374,2270,36261,2270,36261,2870,36161,2870,36161,3203,35783,3203,35783,3278,35405,3277,35404,3519,34447,3517]],"Aqr":[[30960,44,30958,244,31408,248,32158,254,32358,255,32358,330,32658,333,32659,233,33159,236,33159,261,34284,266,34285,66,34286,-334,35910,-330,35910,-630,35911,-2480,34668,-2482,32977,-2490,32966,-840,32167,-846,32172,-1446,30974,-1456,30968,-856,30960,44]],"Aql":[[28035,12,28033,212,28458,217,28453,642,28146,638,28139,1213,28446,1217,28437,1866,28638,1869,28641,1636,29892,1650,29893,1608,30356,1613,30364,888,30601,890,30608,240,30958,244,30960,44,30968,-856,30169,-864,30173,-1168,28474,-1187,28465,-383,28040,-388,28035,12]],"Ari":[[3167,1051,2666,1054,2674,2563,3051,2561,3053,2786,3807,2780,3810,3122,4263,3119,5243,3110,5229,1943,5104,1945,5095,1036,3167,1051]],"Aur":[[6949,3092,6957,3625,7246,3622,7284,5272,7748,5267,7761,5616,9413,5597,9406,5397,10005,5389,9992,4989,10441,4984,10427,4434,11273,4424,11256,3524,10009,3539,9997,2789,9022,2801,9023,2851,7321,2871,7324,3021,6948,3026,6949,3092]],"Boo":[[22778,753,20406,736,20403,1436,20395,2786,21079,2790,21077,3015,21189,3015,21170,4790,21158,5490,21725,5494,22959,5504,22966,5255,23708,5262,23712,5112,23737,3962,23264,3957,23275,3257,22902,3254,22910,2554,22761,2552,22778,753]],"Cnc":[[14040,647,12292,663,12055,666,12058,965,11883,967,11887,1317,11895,1967,12007,1966,12017,2766,12192,2764,12199,3314,14065,3297,14040,647]],"CMi":[[12285,-37,10960,-22,10962,128,10687,131,10691,531,10666,531,10672,981,10675,1231,11424,1222,11425,1322,11887,1317,11883,967,12058,965,12055,666,12292,663,12285,-37]],"Cap":[[30968,-856,30169,-864,30173,-1168,30192,-2764,30690,-2759,32183,-2746,32181,-2496,32977,-2490,32966,-840,32167,-846,32172,-1446,30974,-1456,30968,-856]],"Cen":[[16648,-3567,16646,-4042,16634,-5717,17016,-5718,17008,-6468,17906,-6470,17907,-5570,19433,-5568,19444,-6468,20468,-6464,22052,-6454,22023,-5554,21466,-5558,21445,-4258,22580,-4249,22563,-2999,19042,-3019,19043,-3369,18539,-3369,18539,-3569,16648,-3567]],"Cet":[[660,69,660,269,3162,260,3167,1051,5095,1036,5085,45,5084,-130,4134,-122,4115,-2385,2647,-2376,2646,-2487,-89,-2480,-90,-630,659,-631,660,69]],"Com":[[17960,1330,17961,2830,18160,2830,18159,3330,18655,3331,18656,3131,20021,3134,20023,2784,20395,2786,20403,1436,19406,1432,19406,1332,17960,1330]],"CrA":[[26963,-3702,28960,-3678,28977,-4528,27231,-4549,26981,-4552,26963,-3702]],"Crv":[[19413,-1168,17910,-1170,17909,-2520,19040,-2519,19040,-2269,19417,-2268,19413,-1168]],"Crt":[[16283,-666,16281,-1166,16278,-1966,16403,-1967,16401,-2517,17909,-2520,17910,-1170,17910,-670,17434,-669,16283,-666]],"Del":[[30958,244,30608,240,30601,890,30364,888,30356,1613,30519,1614,30513,2089,30990,2094,30991,1994,31718,2000,31725,1234,31462,1232,31467,648,31405,648,31408,248,30958,244]],"Equ":[[31408,248,31405,648,31467,648,31462,1232,31725,1234,31825,1235,31824,1301,32150,1304,32158,254,31408,248]],"Eri":[[5535,40,7085,24,7160,23,7156,-377,7780,-384,7772,-1084,7522,-1081,7518,-1431,7393,-1430,7376,-2705,7176,-2702,7172,-2977,6998,-2975,6986,-3675,6513,-3670,6508,-3970,5911,-3964,5903,-4364,5233,-4357,5229,-4557,4609,-4551,4603,-4851,4109,-4847,4105,-5047,3734,-5044,3728,-5344,3358,-5342,3349,-5792,2121,-5785,2127,-5285,2497,-5287,2499,-5087,2869,-5089,2874,-4755,3615,-4760,3626,-3943,4619,-3951,4619,-3910,5364,-3917,5370,-3558,5743,-3562,5759,-2400,4115,-2385,4134,-122,5084,-130,5534,-135,5535,40]],"Gem":[[9637,1193,9644,1743,9507,1745,9512,2145,9013,2151,9014,2284,9022,2801,9997,2789,10009,3539,11256,3524,11829,3518,11826,3318,12199,3314,12192,2764,12017,2766,12007,1966,11895,1967,11887,1317,11425,1322,11424,1222,10675,1231,10672,981,10572,982,10574,1182,9637,1193]],"Hya":[[12285,-37,12292,663,14040,647,14540,643,14535,-57,14527,-1157,16281,-1166,16278,-1966,16403,-1967,16401,-2517,17909,-2520,19040,-2519,19040,-2269,19417,-2268,21551,-2257,21553,-2507,22558,-2500,22563,-2999,19042,-3019,19043,-3369,18539,-3369,18539,-3569,16648,-3567,16396,-3567,16398,-3183,16020,-3182,16021,-2982,15518,-2979,15520,-2713,14766,-2708,14768,-2458,14190,-2454,13764,-2451,13768,-1951,13016,-1944,13018,-1744,12693,-1741,12699,-1141,12273,-1137,12285,-37]],"Leo":[[16285,-66,16288,634,14540,643,14040,647,14065,3297,15008,3290,15004,2790,15924,2785,15921,2285,16294,2284,16295,2484,16668,2482,16669,2832,17961,2830,17960,1330,17960,1030,17437,1031,17435,-69,17434,-669,16283,-666,16285,-66]],"LMi":[[14065,3297,14072,3922,14568,3918,14571,4143,15438,4138,15436,3938,16352,3934,16349,3334,16671,3333,16669,2832,16668,2482,16295,2484,16294,2284,15921,2285,15924,2785,15004,2790,15008,3290,14065,3297]],"Lib":[[22785,-47,22160,-53,22167,-853,21541,-857,21551,-2257,21553,-2507,22558,-2500,22563,-2999,23693,-2989,23681,-2039,24057,-2035,24044,-835,24039,-360,22788,-372,22785,-47]],"Lup":[[21466,-5558,22023,-5554,22808,-5548,22806,-5448,23235,-5444,23221,-4844,23725,-4839,23712,-4239,24215,-4234,24195,-2984,23693,-2989,22563,-2999,22580,-4249,21445,-4258,21466,-5558]],"Lyn":[[11256,3524,11273,4424,10427,4434,10441,4984,9992,4989,10005,5389,9406,5397,9413,5597,9441,6196,10785,6180,10775,5980,12213,5964,12880,5958,12844,4658,13959,4648,13951,4148,14571,4143,14568,3918,14072,3922,14065,3297,12199,3314,11826,3318,11829,3518,11256,3524]],"Mic":[[30690,-2759,32183,-2746,32193,-3646,32204,-4496,30717,-4509,30690,-2759]],"Mon":[[9523,-5,9535,995,9635,993,9637,1193,10574,1182,10572,982,10672,981,10666,531,10691,531,10687,131,10962,128,10960,-22,12285,-37,12273,-1137,11197,-1125,9322,-1103,8897,-1098,8905,-398,9518,-405,9523,-5]],"Oph":[[24560,-30,24556,370,25281,379,25270,1262,26020,1271,26018,1421,27517,1439,27520,1205,28139,1213,28146,638,27527,630,27530,455,27792,459,27794,309,27531,306,27535,6,26910,-2,26915,-402,27115,-400,27122,-1000,26672,-1005,26674,-1172,26549,-1173,26547,-1007,25922,-1014,25930,-1614,26580,-1606,26600,-3006,25324,-3021,25316,-2480,24589,-2488,24582,-1955,24745,-1953,24744,-1853,24581,-1855,24569,-830,24044,-835,24039,-360,24564,-355,24560,-30]],"Ori":[[7085,24,7103,1574,7629,1568,7630,1618,8180,1611,8179,1561,8579,1556,8576,1256,8826,1253,8833,1803,8733,1804,8739,2288,9014,2284,9013,2151,9512,2145,9507,1745,9644,1743,9637,1193,9635,993,9535,995,9523,-5,9518,-405,8905,-398,8897,-1098,7772,-1084,7780,-384,7156,-377,7160,23,7085,24]],"Peg":[[32158,254,32150,1304,31824,1301,31825,1235,31725,1234,31718,2000,32019,2003,32015,2403,32266,2405,32262,2855,32740,2858,32732,3658,32946,3660,33135,3661,33136,3561,34371,3567,34371,3517,34447,3517,35404,3519,35405,3277,35783,3278,35783,3203,36161,3203,36161,2870,36261,2870,36261,2270,36374,2270,36374,2170,36373,1320,36160,1320,36160,1070,35910,1070,35910,820,34282,816,34284,266,33159,261,33159,236,32659,233,32658,333,32358,330,32358,255,32158,254]],"Per":[[4263,3119,4267,3452,4040,3454,4043,3729,3968,3729,3989,5104,3267,5109,3262,4759,2693,4763,2697,5063,2241,5065,2246,5465,2753,5462,2760,5812,3077,5810,3080,5910,3880,5905,3876,5755,4890,5747,4991,5746,4985,5546,5238,5544,5231,5294,7284,5272,7246,3622,6957,3625,6949,3092,5243,3110,4263,3119]],"Psc":[[34285,66,34284,266,34282,816,35910,820,35910,1070,36160,1070,36160,1320,36373,1320,36374,2170,37441,2168,37442,2443,37241,2443,37244,3368,38290,3365,38287,2865,38676,2863,38674,2563,38666,1054,39167,1051,39162,260,36660,269,36660,69,36659,-631,35910,-630,35910,-330,34286,-334,34285,66]],"PsA":[[34668,-2482,32977,-2490,32181,-2496,32183,-2746,32193,-3646,34673,-3633,34668,-2482]],"Sgr":[[28474,-1187,28479,-1583,27555,-1594,26580,-1606,26600,-3006,26950,-3002,26963,-3702,28960,-3678,28977,-4528,30717,-4509,30690,-2759,30192,-2764,30173,-1168,28474,-1187]],"Sco":[[24044,-835,24569,-830,24581,-1855,24744,-1853,24745,-1953,24582,-1955,24589,-2488,25316,-2480,25324,-3021,26600,-3006,26950,-3002,26963,-3702,26981,-4552,24857,-4577,24849,-4227,24215,-4234,24195,-2984,23693,-2989,23681,-2039,24057,-2035,24044,-835]],"Scl":[[34668,-2482,35911,-2480,38646,-2487,38635,-3937,36060,-3930,35169,-3931,35168,-3631,34673,-3633,34668,-2482]],"Sct":[[27555,-1594,28479,-1583,28474,-1187,28465,-383,28040,-388,27540,-394,27555,-1594]],"Ser":[[27535,6,27531,306,27794,309,27792,459,27530,455,27527,630,28146,638,28453,642,28458,217,28033,212,28035,12,28040,-388,27540,-394,27555,-1594,26580,-1606,25930,-1614,25922,-1014,26547,-1007,26549,-1173,26674,-1172,26672,-1005,27122,-1000,27115,-400,26915,-402,26910,-2,27535,6]],"Sex":[[14535,-57,14540,643,16288,634,16285,-66,16283,-666,16281,-1166,14527,-1157,14535,-57]],"Tau":[[5084,-130,5085,45,5095,1036,5104,1945,5229,1943,5243,3110,6949,3092,6948,3026,7324,3021,7321,2871,9023,2851,9022,2801,9014,2284,8739,2288,8733,1804,8833,1803,8826,1253,8576,1256,8579,1556,8179,1561,8180,1611,7630,1618,7629,1568,7103,1574,7085,24,5535,40,5534,-135,5084,-130]],"Tri":[[2674,2563,2676,2863,2287,2865,2290,3365,2291,3565,3185,3560,3187,3735,3968,3729,4043,3729,4040,3454,4267,3452,4263,3119,3810,3122,3807,2780,3053,2786,3051,2561,2674,2563]],"Vir":[[17435,-69,17437,1031,17960,1030,17960,1330,19406,1332,19406,1432,20403,1436,20406,736,22778,753,22785,-47,22160,-53,22167,-853,21541,-857,21551,-2257,19417,-2268,19413,-1168,17910,-1170,17910,-670,17434,-669,17435,-69]]},
+    named: [["Hamal",37.66,9.97],["Pleiades",59.99,4.05],["Aldebaran",69.79,-5.47],["Betelgeuse",88.75,-16.03],["Castor",110.24,10.1],["Procyon",115.79,-16.02],["Pollux",113.22,6.68],["Regulus",149.83,0.46],["Spica",203.84,-2.05],["Antares",249.76,-4.57],["Fomalhaut",333.86,-21.14]] };
+  /* ==SKY END== */
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const MODEL_NAME = { kepler: 'Kepler (real sky)', copernicus: 'Copernicus\'s circles', ptolemy: 'Ptolemy\'s epicycles' };
+  const COLOR = { mercury: '#b8b2a7', venus: '#f0dfae', mars: '#e0663a', jupiter: '#dcb98f', saturn: '#e6d095', earth: '#5fa3ff' };
+  const ZODIAC = ['Psc', 'Ari', 'Tau', 'Gem', 'Cnc', 'Leo', 'Vir', 'Lib', 'Sco', 'Sgr', 'Cap', 'Aqr'];   /* Ophiuchus, also on the ecliptic, is named on the sky strip */
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const D = (y, m, d) => toJD(y, m, d);
+  const iso = (jd) => { const c = fromJD(jd + 1e-9); return `${c.y}-${String(c.m).padStart(2, '0')}-${String(c.d).padStart(2, '0')}`; };
+  const nice = (jd) => { const c = fromJD(jd + 1e-9); return `${c.d} ${MON[c.m - 1]} ${c.y}`; };
+  const short = (jd) => { const c = fromJD(jd + 1e-9); return `${MON[c.m - 1]} ${c.d}`; };
+  const f = (v, d = 1) => (v == null || !isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  /* the setups: dates of the window [t0, t1] the paths cover, where the clock starts, days between numbered lines of sight */
+  const PRESETS = {
+    mars: { k: 'mars', m: 'kepler', fr: 'sun', t0: D(2024, 9, 1), t1: D(2025, 5, 31), step: 20, speed: 8,
+      hint: 'Mars from September 2024 to May 2025. Earth, on its faster inside orbit, catches up with Mars and passes it at opposition on 16 January 2025. For a few weeks either side the line of sight from Earth swings backward across the stars: Mars moves west (retrograde) from 7 December to 24 February. The numbered lines of sight, 20 days apart, match the numbered points on the sky.' },
+    mars2020: { k: 'mars', m: 'kepler', fr: 'sun', t0: D(2020, 6, 1), t1: D(2021, 2, 28), step: 20, speed: 8,
+      hint: 'The opposition of 13 October 2020 came near Mars\'s perihelion, so Mars was only 0.41 AU away: a large loop and a large disk in the telescope (22″). Compare the 2025 opposition, near aphelion, at 0.64 AU.' },
+    jupiter: { k: 'jupiter', m: 'kepler', fr: 'sun', t0: D(2023, 6, 15), t1: D(2024, 3, 15), step: 20, speed: 8,
+      hint: 'Jupiter, five times farther from the Sun than Earth, moves only about 30° a year against the stars. Earth passes it every 399 days, so Jupiter loops once a year, a smaller loop than Mars\'s because it is farther away. Opposition 3 November 2023.' },
+    saturn: { k: 'saturn', m: 'kepler', fr: 'sun', t0: D(2024, 4, 1), t1: D(2025, 2, 15), step: 20, speed: 8,
+      hint: 'Saturn loops every 378 days, a little more than a year, in a loop smaller still. Opposition 8 September 2024. In the telescope its rings are nearly edge on: Earth crossed the ring plane in March 2025.' },
+    mercury: { k: 'mercury', m: 'kepler', fr: 'sun', t0: D(2025, 1, 1), t1: D(2025, 12, 31), step: 30, speed: 30, follow: true,
+      hint: 'Mercury goes around the Sun in 88 days and Earth catches it every 116 days, so Mercury goes retrograde three times a year, each time near inferior conjunction, when it passes between Earth and the Sun. It never gets farther than 28° from the Sun.' },
+    synodic: { k: 'mars', m: 'kepler', fr: 'sun', t0: D(2016, 1, 1), t1: D(2033, 6, 1), marks: 'opposition', speed: 120, whole: true, trail: 780,
+      hint: 'Every opposition of Mars from 2016 to 2033, numbered. They come every 780 days on average (the synodic period), so Earth goes around the Sun a little more than twice between them, and each opposition happens about 49° farther east, in the next constellation or two. Close oppositions (2018, 2020, 2033) come where Mars is near perihelion.' },
+    tycho: { k: 'mars', m: 'kepler', fr: 'earth', t0: D(2024, 1, 1), t1: D(2026, 3, 1), step: 60, speed: 30,
+      hint: 'The same orbits with Earth held still: the Sun circles Earth, and Mars circles the Sun. This is Tycho Brahe\'s system (1588). Seen this way Mars traces a loop around Earth once per synodic period, exactly the loop Ptolemy\'s epicycle makes. Every line of sight and every phase is the same as in the Sun centered picture: only what is held still has changed.' },
+    ptolemy: { k: 'mars', m: 'ptolemy', fr: 'sun', t0: D(2024, 9, 1), t1: D(2025, 5, 31), step: 20, speed: 8,
+      hint: 'Ptolemy\'s model (about 150 CE) with Earth at rest. Mars rides a small circle, the epicycle, whose center goes around a larger one, the deferent. The epicycle center moves steadily as seen from the equant point (×), and the line from it to Mars stays parallel to the line from Earth to the Sun. When Mars is on the near side of its epicycle it moves backward: the loop. The fitted sizes, e = 0.0995 and r = 0.658, are almost Ptolemy\'s own, and the dashed blue path is the real sky.' },
+    copernicus: { k: 'mars', m: 'copernicus', fr: 'sun', t0: D(2020, 6, 1), t1: D(2021, 2, 28), step: 20, speed: 8,
+      hint: 'Copernicus put the Sun in the middle (1543). With plain circles at steady speeds, the loops come at about the right times and with the right shape, but near this close opposition of 2020 Mars lands up to 24° from where it really is, and the opposition comes 19 days early (up to 33° off between 1900 and 2050): Mars\'s orbit is an ellipse (e = 0.093). Copernicus added small epicycles to fix this; Kepler (1609) replaced the circles with ellipses.' },
+    venus: { k: 'venus', m: 'kepler', fr: 'sun', t0: D(2024, 11, 1), t1: D(2026, 1, 31), step: 40, speed: 8, follow: true,
+      hint: 'Venus through 2025. In the evening sky in January it shows a half disk; by March it is a thin crescent and 60″ across as it passes between Earth and the Sun (inferior conjunction 23 March); then it moves into the morning sky, shrinks and fills out, nearly full and only 10″ across as it goes behind the Sun in January 2026. Galileo saw this cycle in 1610.' },
+    galileo: { k: 'venus', m: 'ptolemy', fr: 'sun', t0: D(2024, 11, 1), t1: D(2026, 1, 31), step: 40, speed: 8, follow: true,
+      hint: 'Ptolemy kept Venus\'s epicycle between Earth and the Sun (Venus\'s sphere lay below the Sun\'s), so Venus always has the Sun behind it and can only show a crescent: never more than half lit, never full. Its size still changes a lot. Galileo saw Venus gibbous and nearly full (1610), which this arrangement cannot give, though Tycho\'s system can.' },
+  };
+  const S = { preset: 'mars', planet: 'mars', model: 'kepler', frame: 'sun', jd: PRESETS.mars.t0, t0: 0, t1: 0, step: 20, marks: null, run: false, speed: 8,
+    center: 0, span: 60, bc: 0, follow: false, blind: false, ev: null, lastEv: null };
+  const L = { sight: true, ahead: true, real: true, lines: true };
+  let T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { space: g('--space'), ink: g('--space-ink'), muted: g('--space-muted'), line: g('--space-line'), sight: g('--sight'), trail: g('--trail'), real: g('--real'), epi: g('--epi'),
+      earth: g('--earthc'), sun: g('--sunc'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* ---------- paths, cached per model, planet and window ---------- */
+  let cache = null, realCache = null;
+  function buildPath(model, k, t0, t1) {
+    const n = Math.min(2400, Math.max(200, Math.ceil(t1 - t0))), dt = (t1 - t0) / n, jd = new Float64Array(n + 1), lam = new Float64Array(n + 1), bet = new Float64Array(n + 1);
+    for (let i = 0; i <= n; i++) { const t = t0 + i * dt, q = lonlat(geo(model, k, t)); jd[i] = t; lam[i] = q.lam; bet[i] = q.beta; }
+    return { model, k, t0, t1, n, dt, jd, lam, bet };
+  }
+  function kinds(k) { return EL[k].inner ? ['inferior', 'superior', 'greatest', 'station'] : ['opposition', 'conjunction', 'station']; }
+  const KIND_NAME = { opposition: 'Opposition', conjunction: 'Conjunction with the Sun', inferior: 'Inferior conjunction', superior: 'Superior conjunction', greatest: 'Greatest elongation', station: 'Stationary point' };
+  function windowEvents(model, k, t0, t1) {
+    const out = [];
+    for (const kind of kinds(k)) { let t = t0 - 0.5, e; while ((e = findEvent(model, k, kind, t, 1)) && e.jd <= t1) { out.push(e); t = e.jd + 0.5; } }
+    return out.sort((a, b) => a.jd - b.jd);
+  }
+  function ensure() {
+    if (S.jd > S.t1) S.t1 = Math.min(VALID[1], S.jd + 0.25 * (S.t1 - S.t0));
+    if (S.jd < S.t0) S.t0 = Math.max(VALID[0], S.jd - 0.25 * (S.t1 - S.t0));
+    if (!cache || cache.model !== S.model || cache.k !== S.planet || cache.t0 !== S.t0 || cache.t1 !== S.t1) {
+      cache = buildPath(S.model, S.planet, S.t0, S.t1); cache.events = windowEvents(S.model, S.planet, S.t0, S.t1);
+    }
+    if (S.model !== 'kepler') { if (!realCache || realCache.k !== S.planet || realCache.t0 !== S.t0 || realCache.t1 !== S.t1) realCache = buildPath('kepler', S.planet, S.t0, S.t1); }
+  }
+  /* the sky strip's center and width from the window's path: wide enough for the whole path, in true proportion */
+  function frameSky() {
+    ensure(); const c = cache; let lo = Infinity, hi = -Infinity, u = c.lam[0], blo = Infinity, bhi = -Infinity;
+    for (let i = 0; i <= c.n; i++) { if (i) u += wrap(c.lam[i] - c.lam[i - 1]); lo = Math.min(lo, u); hi = Math.max(hi, u); blo = Math.min(blo, c.bet[i]); bhi = Math.max(bhi, c.bet[i]); }
+    if (S.whole) { S.follow = false; S.span = 360; S.center = 180; S.bc = 0; return; }
+    if (S.follow || hi - lo > 160) { S.follow = true; S.span = EL[S.planet].inner ? 110 : 150; S.center = lonlat(geo(S.model, S.planet, S.jd)).lam; S.bc = 0; return; }
+    S.follow = false; S.center = norm((lo + hi) / 2); S.span = clamp((hi - lo) * 1.45 + 6, 16, 160); S.bc = clamp((blo + bhi) / 2, -6, 6);
+  }
+  /* times of the numbered lines of sight */
+  function markTimes() {
+    if (S.marks) return (cache.events || []).filter((e) => e.kind === S.marks).map((e) => e.jd);
+    const out = []; if (!S.step) return out;
+    for (let t = S.t0; t <= S.t1 + 1e-6 && out.length < 14; t += S.step) out.push(t);
+    return out;
+  }
+
+  /* ---------- positions for the view from above ---------- */
+  function bodyPos(k, jd) { return S.model === 'copernicus' ? circle(k, jd) : helio(k, jd); }
+  function frameShift(jd) { return S.frame === 'earth' && S.model !== 'ptolemy' ? bodyPos('earth', jd) : [0, 0, 0]; }
+
+  /* ---------- the view from above (flat) ---------- */
+  const top = $('top'), tctx = top.getContext('2d'), sky = $('sky'), sctx = sky.getContext('2d'), scope = $('scope'), cctx = scope.getContext('2d');
+  const dims = { top: [0, 0], sky: [0, 0], scope: [0, 0] }; let dpr = 1;
+  let topGeo = null;   /* scale and center of the last flat drawing (for the ruler) */
+  function starfield(ctx, W, H, seed) {
+    let s = seed; const rn = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (let i = 0; i < 160; i++) { const a = 0.15 + 0.55 * rn() ** 2; ctx.fillStyle = `rgba(220,228,240,${a})`; ctx.fillRect(rn() * W, rn() * H, 1.2, 1.2); }
+  }
+  function arrowTo(ctx, x0, y0, ang, R, cx, cy) {   /* from (x0, y0) along screen angle ang until the circle of radius R about (cx, cy) */
+    const dx = Math.cos(ang), dy = Math.sin(ang), ox = x0 - cx, oy = y0 - cy, b = ox * dx + oy * dy, c = ox * ox + oy * oy - R * R, t = -b + Math.sqrt(Math.max(0, b * b - c));
+    return [x0 + dx * t, y0 + dy * t];
+  }
+  function drawZodiacRing(ctx, cx, cy, R, p) {
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const a = -nm[1] * DEG, r = R - 12 * p; ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.fillText(nm[0], 0, 0); ctx.restore(); }
+    for (let d = 0; d < 360; d += 30) { const a = -d * DEG; ctx.beginPath(); ctx.moveTo(cx + (R - 4) * Math.cos(a), cy + (R - 4) * Math.sin(a)); ctx.lineTo(cx + (R + 4) * Math.cos(a), cy + (R + 4) * Math.sin(a)); ctx.stroke(); }
+  }
+  function dot(ctx, x, y, r, col, glow) {
+    if (glow) { const g = ctx.createRadialGradient(x, y, 0, x, y, r * glow); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * glow, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+  }
+  function label(ctx, s, x, y, col, p, align) { ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = align || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); }
+  let tagsAt = [];   /* ring tags already placed in this drawing, so tags that land together do not pile up */
+  function ringTag(ctx, n, x, y, p, col) { if (tagsAt.some((q) => Math.hypot(q[0] - x, q[1] - y) < 15 * p)) return; tagsAt.push([x, y]); numberTag(ctx, n, x, y, p, col); }
+  function numberTag(ctx, n, x, y, p, col) {
+    ctx.font = `700 ${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(4,7,13,0.75)'; ctx.beginPath(); ctx.arc(x, y, 7.5 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = col; ctx.fillText(String(n), x, y + 0.5);
+  }
+  function drawTop() {
+    const [W, H] = dims.top; if (!W || !T) return;
+    const ctx = tctx, p = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (use3()) { ctx.clearRect(0, 0, W, H); labels3D(ctx, W, H, p); return; }
+    ctx.fillStyle = T.space; ctx.fillRect(0, 0, W, H); starfield(ctx, W, H, 11);
+    const cx = W / 2, cy = H / 2 + 6, R = Math.min(W, H) / 2 - 10; tagsAt = [];
+    drawZodiacRing(ctx, cx, cy, R, p);
+    if (S.model === 'ptolemy') drawPtolemy(ctx, W, H, cx, cy, R, p); else drawHelio(ctx, W, H, cx, cy, R, p);
+  }
+  function viewRadius() {
+    const k = S.planet, ap = EL[k].a[0] * (1 + EL[k].e[0]), ae = 1.0167;
+    return S.frame === 'earth' && S.model !== 'ptolemy' ? ap + ae : Math.max(ap, ae);
+  }
+  function orbitPts(k, jd, n) {   /* one turn of the orbit, from the elements at jd (or the circle) */
+    const pts = [];
+    if (S.model === 'copernicus') { const P = EL[k]; for (let i = 0; i <= n; i++) { const u = i / n * 2 * Math.PI; pts.push(tilt(P.a[0] * Math.cos(u), P.a[0] * Math.sin(u), P.I[0], P.N[0])); } return pts; }
+    const o = elements(k, jd), om = (o.w - o.N) * DEG, c = Math.cos(om), s = Math.sin(om);
+    for (let i = 0; i <= n; i++) { const E = i / n * 2 * Math.PI, xp = o.a * (Math.cos(E) - o.e), yp = o.a * Math.sqrt(1 - o.e * o.e) * Math.sin(E); pts.push(tilt(c * xp - s * yp, s * xp + c * yp, o.I, o.N)); }
+    return pts;
+  }
+  function drawHelio(ctx, W, H, cx, cy, R, p) {
+    const k = S.planet, jd = S.jd, sc = (R - 34 * p) / viewRadius(), sh = frameShift(jd);
+    const X = (v) => cx + (v[0] - sh[0]) * sc, Y = (v) => cy - (v[1] - sh[1]) * sc;
+    topGeo = { sc, cx, cy, R };
+    const sunV = [0, 0, 0], eV = bodyPos('earth', jd), pV = bodyPos(k, jd);
+    /* orbits: the planet's about the Sun (wherever the Sun is in this frame), Earth's (or, with Earth still, the Sun's about Earth) */
+    ctx.lineWidth = 1.2;
+    const path = (pts, col, dash) => { ctx.strokeStyle = col; ctx.setLineDash(dash || []); ctx.beginPath(); pts.forEach((v, i) => (i ? ctx.lineTo(X(v), Y(v)) : ctx.moveTo(X(v), Y(v)))); ctx.stroke(); ctx.setLineDash([]); };
+    if (S.frame === 'earth') {
+      path(orbitPts('earth', jd, 180).map((v) => [sh[0] - v[0], sh[1] - v[1], 0]), T.sun + '88', [4, 4]);   /* the Sun's yearly circuit about Earth */
+      path(orbitPts(k, jd, 240), COLOR[k] + 'aa');
+    } else { path(orbitPts('earth', jd, 180), T.earth + 'aa'); path(orbitPts(k, jd, 240), COLOR[k] + 'aa'); }
+    /* the planet's path in this frame from the start of the window (a loop when Earth is held still) */
+    ensure();
+    const tr = [];
+    for (let t = S.t0; t <= jd; t += Math.max(1, (S.t1 - S.t0) / 600)) { const s2 = frameShift(t), v = bodyPos(k, t); tr.push([v[0] - s2[0] + sh[0], v[1] - s2[1] + sh[1]]); }
+    { const s2 = frameShift(jd), v = bodyPos(k, jd); tr.push([v[0] - s2[0] + sh[0], v[1] - s2[1] + sh[1]]); }
+    if (S.frame === 'earth') { ctx.strokeStyle = T.trail; ctx.lineWidth = 1.8 * p; ctx.beginPath(); tr.forEach((v, i) => (i ? ctx.lineTo(X(v), Y(v)) : ctx.moveTo(X(v), Y(v)))); ctx.stroke(); }
+    /* numbered lines of sight */
+    if (L.sight) {
+      const ms = markTimes().filter((t) => t <= jd + 1e-6);
+      ms.forEach((t, i) => {
+        const s2 = frameShift(t), e = bodyPos('earth', t), q = bodyPos(k, t);
+        /* each past line of sight drawn from where Earth was, in that day's frame */
+        const pe = [X(sub(e, sub(s2, sh))), Y(sub(e, sub(s2, sh)))], pq = [X(sub(q, sub(s2, sh))), Y(sub(q, sub(s2, sh)))];
+        const ang = Math.atan2(pq[1] - pe[1], pq[0] - pe[0]), end = arrowTo(ctx, pe[0], pe[1], ang, R - 26 * p, cx, cy);
+        ctx.strokeStyle = 'rgba(255,209,102,0.28)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pe[0], pe[1]); ctx.lineTo(end[0], end[1]); ctx.stroke();
+        dot(ctx, pe[0], pe[1], 2.2 * p, T.earth); dot(ctx, pq[0], pq[1], 2.2 * p, COLOR[k]);
+        ringTag(ctx, i + 1, end[0], end[1], p, T.sight);
+      });
+    }
+    /* Sun, Earth, planet and today's line of sight */
+    const sx = X(sunV), sy = Y(sunV), ex = X(eV), ey = Y(eV), px = X(pV), py = Y(pV);
+    dot(ctx, sx, sy, 7 * p, T.sun, 3.2);
+    const ang = Math.atan2(py - ey, px - ex), end = arrowTo(ctx, ex, ey, ang, R - 26 * p, cx, cy);
+    ctx.strokeStyle = T.sight; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(end[0], end[1]); ctx.stroke();
+    ctx.fillStyle = T.sight; ctx.beginPath(); ctx.arc(end[0], end[1], 3.5 * p, 0, 2 * Math.PI); ctx.fill();
+    dot(ctx, ex, ey, 5 * p, T.earth); dot(ctx, px, py, (k === 'jupiter' || k === 'saturn' ? 6.5 : 5) * p, COLOR[k]);
+    label(ctx, 'Sun', sx + 11 * p, sy - 10 * p, T.sun, p); label(ctx, 'Earth', ex + 9 * p, ey + 11 * p, T.earth, p); label(ctx, EL[k].name, px + 9 * p, py - 10 * p, COLOR[k], p);
+    const L0 = look(S.model, k, jd), cn = constellationAt(L0.lam, L0.beta);
+    if (cn) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(cn).width, lx = clamp(end[0], tw / 2 + 6, W - tw / 2 - 6), ly = clamp(end[1] + (end[1] > cy ? -16 : 16) * p, 12, H - 10);
+      ctx.fillStyle = 'rgba(4,7,13,0.7)'; ctx.fillRect(lx - tw / 2 - 4, ly - 8 * p, tw + 8, 16 * p); label(ctx, cn, lx, ly, T.sight, p, 'center'); }
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(S.frame === 'earth' ? 'Earth held still (Tycho Brahe\'s system).' : 'Seen from above the North Pole.', 10, H - 22 * p); ctx.fillText('Distances to scale; stars only give directions.', 10, H - 8);
+  }
+  function drawPtolemy(ctx, W, H, cx, cy, R, p) {
+    const k = S.planet, jd = S.jd, pt = ptolemy(k, jd), sunR = SUN_ER / pt.scale, rmax = Math.max(pt.far, sunR), sc = (R - 34 * p) / rmax;
+    const X = (v) => cx + v[0] * sc, Y = (v) => cy - v[1] * sc;
+    topGeo = null;
+    /* the Sun on its own circle, at its distance in Ptolemy's nesting of the spheres */
+    const sg = sunGeo('ptolemy', k, jd), sV = [sg[0] * sunR, sg[1] * sunR, 0];
+    ctx.strokeStyle = T.sun + '55'; ctx.setLineDash([3, 5]); ctx.beginPath(); ctx.arc(cx, cy, sunR * sc, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    /* deferent, equant, epicycle */
+    const Dv = pt.D, Qv = pt.Q, C = pt.C, P = pt.pos;
+    ctx.strokeStyle = T.epi; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.ellipse(X(Dv), Y(Dv), sc, sc * (EL[k].inner ? 1 : 1), 0, 0, 2 * Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.arc(X(C), Y(C), pt.r * sc, 0, 2 * Math.PI); ctx.stroke();
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = T.epi + 'aa'; ctx.beginPath(); ctx.moveTo(X(Qv), Y(Qv)); ctx.lineTo(X(C), Y(C)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.epi; ctx.beginPath(); ctx.moveTo(X(C), Y(C)); ctx.lineTo(X(P), Y(P)); ctx.stroke();
+    const qx = X(Qv), qy = Y(Qv), m = 4 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(qx - m, qy - m); ctx.lineTo(qx + m, qy + m); ctx.moveTo(qx - m, qy + m); ctx.lineTo(qx + m, qy - m); ctx.stroke();
+    dot(ctx, X(Dv), Y(Dv), 2 * p, T.epi); dot(ctx, X(C), Y(C), 2.5 * p, T.epi);
+    /* the loop: the planet's path since the start of the window */
+    ensure(); ctx.strokeStyle = T.trail; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+    let first = true; for (let t = S.t0; t <= jd; t += Math.max(1, (S.t1 - S.t0) / 600)) { const v = ptolemy(k, t).pos; if (first) { ctx.moveTo(X(v), Y(v)); first = false; } else ctx.lineTo(X(v), Y(v)); }
+    ctx.lineTo(X(P), Y(P)); ctx.stroke();
+    if (L.sight) markTimes().filter((t) => t <= jd + 1e-6).forEach((t, i) => {
+      const v = ptolemy(k, t).pos, ang = Math.atan2(-v[1], v[0]), end = arrowTo(ctx, cx, cy, ang, R - 26 * p, cx, cy);
+      ctx.strokeStyle = 'rgba(255,209,102,0.28)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(end[0], end[1]); ctx.stroke();
+      dot(ctx, X(v), Y(v), 2.2 * p, COLOR[k]); ringTag(ctx, i + 1, end[0], end[1], p, T.sight);
+    });
+    /* Earth at rest, the line of sight, the planet, the Sun */
+    const ang = Math.atan2(-(P[1]), P[0]), end = arrowTo(ctx, cx, cy, ang, R - 26 * p, cx, cy);
+    ctx.strokeStyle = T.sight; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(end[0], end[1]); ctx.stroke();
+    dot(ctx, X(sV), Y(sV), 6 * p, T.sun, 3); dot(ctx, cx, cy, 5.5 * p, T.earth); dot(ctx, X(P), Y(P), 5 * p, COLOR[k]);
+    label(ctx, 'Earth', cx - 9 * p, cy + 13 * p, T.earth, p, 'right'); label(ctx, 'Sun', X(sV) + 10 * p, Y(sV) - 10 * p, T.sun, p); label(ctx, EL[k].name, X(P) + 9 * p, Y(P) - 10 * p, COLOR[k], p);
+    if (Math.hypot(qx - cx, qy - cy) > 18 * p) label(ctx, 'equant', qx - 7 * p, qy - 10 * p, T.muted, p * 0.9, 'right'); label(ctx, 'epicycle', X(C) + pt.r * sc * 0.72 + 4, Y(C) - pt.r * sc * 0.72 - 4, T.epi, p * 0.9);
+    label(ctx, 'deferent', X(Dv) - sc * 0.7, Y(Dv) + sc * 0.74, T.epi, p * 0.9, 'right');
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`Earth at rest. Ptolemy's distances: ${EL[k].name} out to`, 10, H - 22 * p); ctx.fillText(`${PTOL[k].shell.toLocaleString('en-US')} Earth radii, the Sun at ${SUN_ER.toLocaleString('en-US')}.`, 10, H - 8);
+  }
+
+  /* ---------- the sky strip ---------- */
+  const bvColor = (bv) => { const t = clamp((bv + 0.3) / 2.0, 0, 1); const r = Math.round(170 + 85 * Math.min(1, t * 1.6)), g = Math.round(195 + 40 * (1 - Math.abs(t - 0.45) * 1.6)), b = Math.round(255 - 135 * t); return `rgb(${r},${clamp(g, 150, 240)},${b})`; };
+  let skyMap = null;
+  function drawSky() {
+    const [W, H] = dims.sky; if (!W || !T) return;
+    ensure();
+    const ctx = sctx, p = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.space; ctx.fillRect(0, 0, W, H);
+    const now = look(S.model, S.planet, S.jd);
+    if (S.follow) S.center = norm(S.center + wrap(now.lam - S.center) * (S.run ? 0.2 : 1));
+    const pxd = W / S.span, X = (lam) => W / 2 - wrap(lam - S.center) * pxd, Y = (b) => H / 2 + 4 - (b - S.bc) * pxd;
+    skyMap = { pxd, X, Y };
+    const inX = (x) => x > -40 && x < W + 40;
+    /* grid: longitude every few degrees, the ecliptic */
+    const g = S.span > 200 ? 30 : S.span > 90 ? 15 : S.span > 40 ? 10 : 5;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    for (let d = 0; d < 360; d += g) { const x = X(d); if (!inX(x)) continue; ctx.beginPath(); ctx.moveTo(x, 18 * p); ctx.lineTo(x, H - 16 * p); ctx.stroke(); ctx.fillText(`${d}°`, x, H - 4); }
+    ctx.strokeStyle = 'rgba(255,207,90,0.35)'; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,207,90,0.6)'; ctx.textAlign = 'right'; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('ecliptic (the Sun\'s path)', W - 8, Y(0) + 13 * p);
+    /* constellation figures and names */
+    if (L.lines) {
+      ctx.strokeStyle = 'rgba(127,160,210,0.30)'; ctx.lineWidth = 1;
+      for (const id in SKY.lines) for (const seg of SKY.lines[id]) {
+        ctx.beginPath(); let px = null;
+        for (let i = 0; i < seg.length; i += 2) { const x = X(seg[i] / 10), y = Y(seg[i + 1] / 10); if (px == null || Math.abs(x - px) > W / 2) ctx.moveTo(x, y); else ctx.lineTo(x, y); px = x; }
+        ctx.stroke();
+      }
+    }
+    ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.55)'; ctx.textAlign = 'center';
+    const wide = S.span > 200;   /* the whole zodiac: only its own constellations are named */
+    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) ctx.fillText(nm[0].toUpperCase(), x, y); }
+    /* stars */
+    const st = SKY.stars, mlim = wide ? 4.2 : S.span > 120 ? 4.6 : 5.2;
+    for (let i = 0; i < st.length; i += 4) {
+      const m = st[i + 2] / 10; if (m > mlim) continue; const x = X(st[i] / 10), y = Y(st[i + 1] / 10); if (x < -4 || x > W + 4 || y < -4 || y > H + 4) continue;
+      const r = Math.max(0.55, (2.9 - 0.44 * m)) * (p > 1 ? 1.2 : 1); ctx.fillStyle = bvColor(st[i + 3] / 10); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(220,228,240,0.7)'; ctx.textAlign = 'left';
+    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) ctx.fillText(nm, x + 5, y - 5); }
+    /* the Sun */
+    { const x = X(now.sunLam), y = Y(0); if (inX(x)) { dot(ctx, x, y, Math.max(6, 0.27 * pxd) * p, T.sun, 3.4); label(ctx, 'Sun', x + 10 * p, y + 14 * p, T.sun, p); } }
+    const line = (c, from, to, col, w, dash) => {
+      ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.beginPath(); let px = null;
+      for (let i = 0; i <= c.n; i++) { const t = c.jd[i]; if (t < from - 1e-9 || t > to + c.dt) continue; const x = X(c.lam[i]), y = Y(c.bet[i]); if (px == null || Math.abs(x - px) > W / 3) ctx.moveTo(x, y); else ctx.lineTo(x, y); px = x; }
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+    if (S.model !== 'kepler' && L.real && realCache) { line(realCache, S.t0, S.t1, T.real + '99', 1.4, [5, 4]); const rn = look('kepler', S.planet, S.jd); ctx.strokeStyle = T.real; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(rn.lam), Y(rn.beta), 6 * p, 0, 2 * Math.PI); ctx.stroke(); }
+    if (L.ahead) line(cache, S.jd, S.t1, T.trail + '66', 1.4, [5, 5]);
+    line(cache, S.trail ? Math.max(S.t0, S.jd - S.trail) : S.t0, S.jd, T.trail, 2.2 * p);
+    /* events in the window */
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center';
+    const boxes = [];
+    for (const e of cache.events) {
+      if (e.kind === 'conjunction' || e.kind === 'superior' || (S.marks && e.kind !== S.marks)) continue;
+      if (!L.ahead && e.jd > S.jd) continue;
+      const q = lonlat(geo(S.model, S.planet, e.jd)), x = X(q.lam), y = Y(q.beta); if (!inX(x)) continue;
+      const up = e.kind !== 'station' ? -1 : 1; ctx.strokeStyle = 'rgba(223,230,239,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + up * 16 * p); ctx.stroke();
+      ctx.fillStyle = 'rgba(223,230,239,0.85)'; const nm = e.kind === 'station' ? 'stationary' : e.kind === 'greatest' ? 'greatest elong.' : e.kind === 'inferior' ? 'inferior conj.' : 'opposition';
+      const txt = S.marks ? String(fromJD(e.jd).y) : `${nm} ${short(e.jd)}`, tw = ctx.measureText(txt).width; let ty = y + up * 22 * p + (up > 0 ? 6 * p : 0);
+      for (let n = 0; n < 6 && boxes.some((b) => Math.abs(b[0] - x) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
+      boxes.push([x, ty, tw]); ctx.fillText(txt, x, ty);
+    }
+    /* numbered points, matching the lines of sight above */
+    if (L.sight) markTimes().filter((t) => t <= S.jd + 1e-6).forEach((t, i) => { const q = lonlat(geo(S.model, S.planet, t)); numberTag(ctx, i + 1, X(q.lam), Y(q.beta), p, T.sight); });
+    /* the planet now */
+    const px = X(now.lam), py = Y(now.beta);
+    dot(ctx, px, py, 5.5 * p, COLOR[S.planet], 2.6); label(ctx, EL[S.planet].name, px + 9 * p, py - 11 * p, COLOR[S.planet], p);
+    if (Math.abs(now.elong) < (S.planet === 'mercury' ? 10 : 12)) { ctx.fillStyle = T.sun; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('too near the Sun to see', px, py + 22 * p); }
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('◀ EAST', 8, 30 * p); ctx.textAlign = 'right'; ctx.fillText('WEST ▶', W - 8, 30 * p);
+  }
+
+  /* ---------- the telescope ---------- */
+  const SAT_POLE = raDecToEcl(40.589, 83.537);   /* Saturn's north pole, J2000 (IAU WGCCRE 2015) */
+  function raDecToEcl(ra, dec) { const a = ra * DEG, d = dec * DEG, e = OBL * DEG, x = Math.cos(d) * Math.cos(a), y = Math.cos(d) * Math.sin(a), z = Math.sin(d); return [x, Math.cos(e) * y + Math.sin(e) * z, -Math.sin(e) * y + Math.cos(e) * z]; }
+  function drawScope() {
+    const [W, H] = dims.scope; if (!W || !T) return;
+    const ctx = cctx, p = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.space; ctx.fillRect(0, 0, W, H);
+    const k = S.planet, q = look(S.model, k, S.jd), cx = W / 2, cy = H / 2 + 4, Rf = Math.min(W, H) / 2 - 22 * p, FIELD = 80;   /* arcseconds across */
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = 2; ctx.stroke();
+    const farSize = 2 * Math.asin(EL[k].R / ((EL[k].a[0] * (1 + EL[k].e[0]) + EL.earth.a[0] * (1 + EL.earth.e[0])) * AU_KM)) / DEG * 3600;
+    const size = q.size != null ? q.size : farSize * q.rel, r = Math.max(1.2, size / FIELD * Rf);
+    /* the bearing of the Sun from the planet on the sky, from ecliptic north toward east; east is left, north up */
+    const dl = (q.sunLam - q.lam) * DEG, b1 = q.beta * DEG, pa = Math.atan2(Math.sin(dl), Math.cos(b1) * 0 - Math.sin(b1) * Math.cos(dl));
+    const sxv = -Math.sin(pa), syv = -Math.cos(pa), rot = Math.atan2(syv, sxv);
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.clip();
+    /* Saturn's rings behind the globe */
+    let ring = null;
+    if (k === 'saturn') {
+      const g = geo(S.model, k, S.jd), u = g.map((x) => x / len(g)), lam = q.lam * DEG, bt = q.beta * DEG;
+      const E = [-Math.sin(lam), Math.cos(lam), 0], N = [-Math.sin(bt) * Math.cos(lam), -Math.sin(bt) * Math.sin(lam), Math.cos(bt)];
+      const n = SAT_POLE, a0 = [n[1], -n[0], 0], an = Math.hypot(a0[0], a0[1]), A = [a0[0] / an, a0[1] / an, 0], B = [n[1] * A[2] - n[2] * A[1], n[2] * A[0] - n[0] * A[2], n[0] * A[1] - n[1] * A[0]];
+      const dotp = (x, y) => x[0] * y[0] + x[1] * y[1] + x[2] * y[2];
+      ring = (rad, front) => { ctx.beginPath(); let started = false;
+        for (let i = 0; i <= 120; i++) { const th = i / 120 * 2 * Math.PI, P = [rad * (Math.cos(th) * A[0] + Math.sin(th) * B[0]), rad * (Math.cos(th) * A[1] + Math.sin(th) * B[1]), rad * (Math.cos(th) * A[2] + Math.sin(th) * B[2])];
+          const isFront = dotp(P, u) < 0; const x = cx - dotp(P, E) * r, y = cy - dotp(P, N) * r;
+          if (isFront === front) { if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y); } else started = false; }
+        ctx.stroke(); };
+      ctx.strokeStyle = 'rgba(214,196,150,0.85)'; ctx.lineWidth = Math.max(1, r * 0.28); ring(1.95, false);
+    }
+    /* the globe: the dark side faintly, the lit part bright */
+    const col = COLOR[k];
+    ctx.translate(cx, cy); ctx.rotate(rot);
+    ctx.fillStyle = 'rgba(70,78,92,0.35)'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill();
+    const c = Math.cos(q.alpha * DEG);
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2); ctx.ellipse(0, 0, Math.abs(c) * r, r, 0, Math.PI / 2, -Math.PI / 2, c < 0); ctx.closePath(); ctx.fill();
+    if (k === 'jupiter' && r > 4) { ctx.globalCompositeOperation = 'source-atop'; ctx.restore(); ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.clip(); }
+    ctx.restore();
+    if (k === 'jupiter' && r > 4) { ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r * 0.99, 0, 2 * Math.PI); ctx.clip(); ctx.fillStyle = 'rgba(150,100,70,0.45)'; for (const yb of [-0.28, 0.22]) ctx.fillRect(cx - r, cy + yb * r - 0.06 * r, 2 * r, 0.13 * r); ctx.restore(); }
+    if (ring) { ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.clip(); ctx.strokeStyle = 'rgba(224,206,160,0.95)'; ctx.lineWidth = Math.max(1, r * 0.28); ring(1.95, true); ctx.restore(); }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const phase = phaseName(q.lit, q.alpha);
+    ctx.fillText(`${EL[k].name}: ${f(q.lit * 100, 0)}% lit, ${phase}`, 10, H - 9 * p);
+    ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`;
+    ctx.fillText(q.size != null ? `${f(q.size, 1)}″ across · field 80″` : `drawn ${f(q.rel, 2)}× its smallest`, W - 8, 20 * p);
+    ctx.textAlign = 'left'; ctx.fillText('E', cx - Rf - 2 - 10 * p, cy + 4); ctx.fillText('N', cx - 4, cy - Rf - 4 * p);
+  }
+  function phaseName(lit, alpha) {
+    if (lit > 0.985) return 'full'; if (lit < 0.003) return 'new'; if (Math.abs(lit - 0.5) < 0.03) return 'half lit (quarter)';
+    return alpha < 90 ? 'gibbous' : 'crescent';
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const k = S.planet, q = look(S.model, k, S.jd), rt = rate(S.model, k, S.jd), cn = constellationAt(q.lam, q.beta);
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    const dir = Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'eastward (direct)' : 'westward (retrograde)';
+    const side = Math.abs(q.elong) > 179.5 ? 'opposite the Sun (up all night)' : q.elong >= 0 ? 'east of the Sun (evening sky)' : 'west of the Sun (morning sky)';
+    let h = dd('Date', nice(S.jd), 'wide big') + dd('Among the stars', `${cn || '—'}`, 'wide') + dd('Ecliptic longitude λ', `${f(q.lam, 2)}°`) + dd('Ecliptic latitude β', `${f(q.beta, 2)}°`)
+      + dd('Moving', `${dir}, ${f(rt, 3)}°/day`, 'wide') + dd('Elongation', `${f(Math.abs(q.elong), 1)}° ${side}`, 'wide')
+      + dd('Distance from Earth', q.d != null ? `${f(q.d, 3)} AU` : `${f(q.rel, 2)}× nearer than its farthest`) + dd('Lit', `${f(q.lit * 100, 0)}%, ${phaseName(q.lit, q.alpha)}`)
+      + dd('Angular size', q.size != null ? `${f(q.size, 1)}″` : '— (only relative)');
+    if (S.blind) h += '<div class="wide"><dt>Periods</dt><dd class="ok">hidden: measure them</dd></div>';
+    else {
+      h += dd('Sidereal period P', `${f(sidereal(k), 1)} d = ${f(sidereal(k) / 365.25, 3)} yr`, 'wide') + dd('Synodic period S', `${f(synodic(k), 1)} d`, 'wide');
+      if (S.model !== 'kepler') { const r = look('kepler', k, S.jd); h += dd('Off from the real sky', `${f(Math.abs(wrap(q.lam - r.lam)), 2)}° in λ`, 'wide'); }
+    }
+    $('out').innerHTML = h;
+    $('clock').textContent = `${nice(S.jd)} · ${MODEL_NAME[S.model]}`;
+    $('date').value = iso(S.jd);
+  }
+
+  /* ---------- controls ---------- */
+  function syncControls() {
+    $('selPlanet').value = S.planet;
+    for (const b of document.querySelectorAll('#modelSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.model));
+    for (const b of document.querySelectorAll('#frameSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.frame));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    $('frameBox').hidden = S.model === 'ptolemy';
+    const ev = $('evKind'), want = kinds(S.planet).join(',');
+    if (ev.dataset.k !== want) { const keep = ev.value; ev.innerHTML = kinds(S.planet).map((x) => `<option value="${x}">${KIND_NAME[x]}</option>`).join(''); ev.dataset.k = want; if (kinds(S.planet).includes(keep)) ev.value = keep; }
+    $('topTag').textContent = S.model === 'ptolemy' ? 'Ptolemy\'s epicycles, Earth at rest' : S.frame === 'earth' ? 'From above, Earth held still' : 'From above the solar system';
+    $('about').textContent = 'Model: ' + ABOUT[S.model];
+  }
+  const ABOUT = {
+    kepler: 'the real sky. Each planet on Kepler\'s ellipse with JPL\'s approximate elements (Standish, valid 1800 to 2050); against a full ephemeris the directions are good to 0.02° for Mercury and Venus, 0.05° for Mars and 0.2° for Jupiter and Saturn. Light travel time, aberration and nutation are left out, and the stars stay on the J2000 grid (precession, 1.4° a century, is left out). Dates are Terrestrial Time, about a minute from UTC.',
+    copernicus: 'Copernicus\'s idea at its simplest: every planet, Earth included, on a circle about the Sun at a steady speed, with the real sizes, periods and tilts. Copernicus himself added small epicycles to these circles to match the observations better; they are left out.',
+    ptolemy: 'Ptolemy\'s epicycles, deferents and equants, with Earth at rest. The sizes (deferent offset e, epicycle radius r) and directions are a least squares fit to the real sky over 1900 to 2050, not Ptolemy\'s own numbers, although for Mars, Venus, Jupiter and Saturn they come out close to his (Mars 0.0995 and 0.658 against his 0.100 and 0.658). Mercury needed an extra moving center in his model, left out here, so Mercury is off by up to 3°. Tilts for the latitudes are the modern ones; distances follow Ptolemy\'s nesting of the spheres.',
+  };
+  function hintFor() { const pr = PRESETS[S.preset]; $('presetHint').textContent = pr ? pr.hint : 'Your own setup: pick a planet, a model and a date, or jump to an event.'; }
+  function applyPreset(key, keepDate) {
+    const pr = PRESETS[key]; if (!pr) return;
+    Object.assign(S, { preset: key, planet: pr.k, model: pr.m, frame: pr.fr, t0: pr.t0, t1: pr.t1, step: pr.step || 0, marks: pr.marks || null, speed: pr.speed, follow: !!pr.follow, whole: !!pr.whole, trail: pr.trail || 0, lastEv: null });
+    L.ahead = !pr.whole; $('chkAhead').checked = L.ahead;
+    if (!keepDate) S.jd = pr.t0;
+    aim3D();
+    setRun(false); cache = null; ensure(); frameSky(); hintFor(); syncControls(); $('evNote').textContent = ''; dirty3 = true; redraw();
+  }
+  function custom(newWindow) {
+    S.preset = 'custom';
+    if (newWindow) { const syn = synodic(S.planet); S.t0 = Math.max(VALID[0], S.jd - 0.3 * syn); S.t1 = Math.min(VALID[1], S.jd + 0.45 * syn); S.step = Math.round(syn / 18); S.marks = null; cache = null; ensure(); frameSky(); }
+    hintFor(); syncControls(); dirty3 = true; redraw();
+  }
+  function redraw() { ensure(); drawTop(); drawSky(); drawScope(); readouts(); }
+  const card = { away() {} };
+  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); card.away(false); }
+  function stepDays(n) { setRun(false); S.jd = clamp(S.jd + n, VALID[0], VALID[1]); if (S.jd < S.t0 || S.jd > S.t1) { ensure(); if (S.follow) frameSky(); } dirty3 = true; redraw(); }
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('back').addEventListener('click', (e) => stepDays(e.shiftKey ? -10 : -1));
+  $('fwd').addEventListener('click', (e) => stepDays(e.shiftKey ? 10 : 1));
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncControls(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('selPlanet').addEventListener('change', (e) => { S.planet = e.target.value; custom(true); });
+  for (const b of document.querySelectorAll('#modelSeg button')) b.addEventListener('click', () => { if (S.model === b.dataset.m) return; S.model = b.dataset.m; S.preset = 'custom'; cache = null; ensure(); frameSky(); hintFor(); syncControls(); dirty3 = true; redraw(); });
+  for (const b of document.querySelectorAll('#frameSeg button')) b.addEventListener('click', () => { S.frame = b.dataset.f; S.preset = 'custom'; hintFor(); syncControls(); dirty3 = true; redraw(); });
+  $('date').addEventListener('change', (e) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(e.target.value); if (!m) return; const jd = toJD(+m[1], +m[2], +m[3]); if (jd < VALID[0] || jd > VALID[1]) { readouts(); return; } setRun(false); S.jd = jd; custom(jd < S.t0 || jd > S.t1); });
+  function jump(dir) {
+    setRun(false); const kind = $('evKind').value, e = findEvent(S.model, S.planet, kind, S.jd, dir);
+    if (!e) { $('evNote').textContent = 'No such event between 1800 and 2050 in that direction.'; return; }
+    S.jd = e.jd; S.lastEv = { kind, jd: e.jd };
+    if (S.jd < S.t0 || S.jd > S.t1) custom(true); else { dirty3 = true; redraw(); }
+    const q = look(S.model, S.planet, e.jd);
+    $('evNote').textContent = `${KIND_NAME[kind]}: ${nice(e.jd)}, ${String(Math.floor(fromJD(e.jd).h)).padStart(2, '0')}:${String(Math.floor((fromJD(e.jd).h % 1) * 60)).padStart(2, '0')} UTC, elongation ${f(Math.abs(q.elong), 1)}°.`;
+  }
+  $('evPrev').addEventListener('click', () => jump(-1));
+  $('evNext').addEventListener('click', () => jump(1));
+  $('chkSight').addEventListener('change', (e) => { L.sight = e.target.checked; dirty3 = true; redraw(); });
+  $('chkAhead').addEventListener('change', (e) => { L.ahead = e.target.checked; dirty3 = true; redraw(); });
+  $('chkReal').addEventListener('change', (e) => { L.real = e.target.checked; dirty3 = true; redraw(); });
+  $('chkLines').addEventListener('change', (e) => { L.lines = e.target.checked; dirty3 = true; redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); });
+  top.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { stepDays(e.shiftKey ? 10 : 1); e.preventDefault(); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { stepDays(e.shiftKey ? -10 : -1); e.preventDefault(); } else if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  /* the sky strip: drag to look along it, wheel or + and − to zoom */
+  let drag = null;
+  sky.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') return; drag = { x: e.clientX, c: S.center }; sky.setPointerCapture(e.pointerId); });
+  sky.addEventListener('pointermove', (e) => { if (!drag || !skyMap) return; S.follow = false; S.center = norm(drag.c + (e.clientX - drag.x) / skyMap.pxd); drawSky(); });
+  sky.addEventListener('pointerup', () => { drag = null; });
+  const zoom = (k) => { S.span = clamp(S.span * k, 10, 360); drawSky(); };
+  sky.addEventListener('wheel', (e) => { e.preventDefault(); zoom(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
+  sky.addEventListener('keydown', (e) => { if (e.key === '+' || e.key === '=') zoom(1 / 1.15); else if (e.key === '-') zoom(1.15); else if (e.key === 'ArrowLeft') { S.follow = false; S.center = norm(S.center + S.span * 0.05); drawSky(); } else if (e.key === 'ArrowRight') { S.follow = false; S.center = norm(S.center - S.span * 0.05); drawSky(); } else return; e.preventDefault(); });
+
+  /* ---------- the 3D view ---------- */
+  let view3 = null, g3 = null, dirty3 = true;
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  function init3D() {
+    const S3 = VD3K.stage($('topPane'), { before: top, fov: 40, near: 0.005, far: 400, sky: '#03060c' }); if (!S3) return false;
+    S3.el.classList.add('vd3d');
+    const sc = S3.scene, RS = 30, o = { th: -1.15, ph: 0.95, zoom: 1 };
+    const skyG = new THREE.Group(); sc.add(skyG);
+    /* the real stars on a sphere about Earth, in three brightness steps */
+    const bins = [[-2, 1.6, 4.2], [1.6, 3.2, 2.8], [3.2, 9, 1.7]];
+    for (const [lo, hi, size] of bins) {
+      const pos = [], col = []; const c = new THREE.Color();
+      for (let i = 0; i < SKY.stars.length; i += 4) { const m = SKY.stars[i + 2] / 10; if (m < lo || m >= hi || m > 4.8) continue; const l = SKY.stars[i] / 10 * DEG, b = SKY.stars[i + 1] / 10 * DEG;
+        pos.push(RS * Math.cos(b) * Math.cos(l), RS * Math.cos(b) * Math.sin(l), RS * Math.sin(b)); c.set(bvColor(SKY.stars[i + 3] / 10)); col.push(c.r, c.g, c.b); }
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+      skyG.add(new THREE.Points(g, new THREE.PointsMaterial({ size, sizeAttenuation: false, vertexColors: true, fog: false, depthWrite: false })));
+    }
+    const lp = []; for (const id in SKY.lines) for (const seg of SKY.lines[id]) for (let i = 0; i + 3 < seg.length; i += 2) {
+      for (const j of [i, i + 2]) { const l = seg[j] / 10 * DEG, b = seg[j + 1] / 10 * DEG; lp.push(RS * Math.cos(b) * Math.cos(l), RS * Math.cos(b) * Math.sin(l), RS * Math.sin(b)); } }
+    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
+    const figs = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x7fa0d2, transparent: true, opacity: 0.28, depthWrite: false })); skyG.add(figs);
+    const ecl = VD3K.ring(RS, { color: '#ffcf5a', dashed: true, opacity: 0.45, seg: 256 }); skyG.add(ecl);
+    const mkLine = (col, op, dashed) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(3 * 2600), 3)); g.setDrawRange(0, 0);
+      const m = dashed ? new THREE.LineDashedMaterial({ color: col, transparent: true, opacity: op, dashSize: 0.4, gapSize: 0.3, depthWrite: false }) : new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false });
+      const l = new THREE.Line(g, m); l.frustumCulled = false; l.set = (pts) => { const a = g.attributes.position.array, n = Math.min(pts.length, 2600); for (let i = 0; i < n; i++) a.set(pts[i], 3 * i); g.attributes.position.needsUpdate = true; g.setDrawRange(0, n); if (dashed) l.computeLineDistances(); }; return l; };
+    const skyPath = mkLine(0xff8a5c, 1), skyAhead = mkLine(0xff8a5c, 0.5, true), skyReal = mkLine(0x7fb7ff, 0.7, true); skyG.add(skyPath, skyAhead, skyReal);
+    const sun = VD3K.star(S3, { r: 0.045, glow: 7 }); sc.add(sun);
+    const earth = VD3K.planet(S3, { r: 0.028, color: '#4f8fdc' }); sc.add(earth);
+    const planet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshStandardMaterial({ color: COLOR.mars, roughness: 0.85 })); sc.add(planet);
+    const rings = new THREE.Mesh(new THREE.RingGeometry(1.25, 2.2, 64), new THREE.MeshBasicMaterial({ color: 0xd8c898, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })); planet.add(rings);
+    const orbE = mkLine(0x5fa3ff, 0.7), orbP = mkLine(0xffffff, 0.6), trail = mkLine(0xff8a5c, 0.95), sight = mkLine(0xffd166, 1), marks = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.3 }));
+    const defer = mkLine(0xc4a5ff, 0.9), epi = mkLine(0xc4a5ff, 0.9), qc = mkLine(0xc4a5ff, 0.6, true), sunOrb = mkLine(0xffcf5a, 0.35, true);
+    const equant = new THREE.Mesh(new THREE.OctahedronGeometry(0.018), new THREE.MeshBasicMaterial({ color: 0xdfe6ef }));
+    sc.add(orbE, orbP, trail, sight, marks, defer, epi, qc, sunOrb, equant);
+    S3.sun.position.set(0, 0, 3); S3.hemi.intensity = 0.25;
+    const light = new THREE.PointLight(0xffffff, 1.6, 0, 0); sc.add(light);
+    g3 = { S3, o, skyG, RS, skyPath, skyAhead, skyReal, sun, earth, planet, rings, orbE, orbP, trail, sight, marks, defer, epi, qc, sunOrb, equant, light, figs, labels: [] };
+    aim3D(); g3.ctl = S3.orbit(S3.el, o, () => { dirty3 = true; }, { zMin: 0.35, zMax: 3, phMin: 0.05, phMax: 1.6 });
+    return true;
+  }
+  /* the 3D camera looks from behind the Sun toward the planet's part of the sky, low enough that the stars there are in view */
+  function aim3D() {
+    if (!g3) return; const mid = lonlat(geo(S.model, S.planet, (S.t0 + S.t1) / 2)).lam;
+    Object.assign(g3.o, { th: (mid + 180) * DEG, ph: 1.3, zoom: 1 }); dirty3 = true;
+  }
+  function update3D() {
+    if (!use3()) return; const G = g3, S3 = G.S3, k = S.planet, jd = S.jd, pt = S.model === 'ptolemy';
+    const [W, H] = dims.top; S3.size(W, H);
+    let sc, sh = [0, 0, 0], E, P, Sun;
+    if (pt) { const q = ptolemy(k, jd), sunR = SUN_ER / q.scale; sc = 1 / Math.max(q.far, sunR); const sg = sunGeo('ptolemy', k, jd); E = [0, 0, 0]; P = q.pos; Sun = [sg[0] * sunR, sg[1] * sunR, sg[2] * sunR]; G.ptq = q; G.sunR = sunR; }
+    else { sc = 1 / viewRadius(); sh = frameShift(jd); E = sub(bodyPos('earth', jd), sh); P = sub(bodyPos(k, jd), sh); Sun = sub([0, 0, 0], sh); }
+    const w = (v) => [v[0] * sc, v[1] * sc, v[2] * sc];
+    const e3 = w(E), p3 = w(P), s3 = w(Sun);
+    G.sun.position.set(...s3); G.light.position.set(...s3); G.earth.position.set(...e3); G.planet.position.set(...p3);
+    const pr = k === 'jupiter' ? 0.05 : k === 'saturn' ? 0.04 : 0.03; G.planet.scale.setScalar(pr); G.planet.material.color.set(COLOR[k]);
+    G.rings.visible = k === 'saturn'; if (k === 'saturn') { const n = SAT_POLE; G.rings.lookAt(G.planet.position.x + n[0], G.planet.position.y + n[1], G.planet.position.z + n[2]); }
+    G.skyG.position.set(...e3);
+    const dir = (v) => { const L0 = len(v); return [v[0] / L0, v[1] / L0, v[2] / L0]; };
+    const gd = dir(sub(P, E)); G.sight.set([e3, [e3[0] + gd[0] * G.RS, e3[1] + gd[1] * G.RS, e3[2] + gd[2] * G.RS]]);
+    if (dirty3) {
+      ensure();
+      const onSky = (c, from, to) => { const pts = []; for (let i = 0; i <= c.n; i++) if (c.jd[i] >= from - 1e-9 && c.jd[i] <= to + c.dt) { const l = c.lam[i] * DEG, b = c.bet[i] * DEG, R = G.RS * 0.995; pts.push([R * Math.cos(b) * Math.cos(l), R * Math.cos(b) * Math.sin(l), R * Math.sin(b)]); } return pts; };
+      G.skyPath.set(onSky(cache, S.t0, jd)); G.skyAhead.set(L.ahead ? onSky(cache, jd, S.t1) : []); G.skyReal.set(!pt && S.model === 'kepler' || !L.real || !realCache ? [] : onSky(realCache, S.t0, S.t1));
+      G.figs.visible = L.lines;
+      if (pt) { G.orbE.set([]); G.orbP.set([]); }
+      else {
+        const shp = (pts, d) => pts.map((v) => w(sub(v, d)));
+        /* Earth's orbit, or with Earth held still the Sun's yearly circuit about it */
+        G.orbE.set(S.frame === 'earth' ? orbitPts('earth', jd, 180).map((v) => w([-v[0], -v[1], -v[2]])) : shp(orbitPts('earth', jd, 180), sh));
+        G.orbP.set(shp(orbitPts(k, jd, 240), sh)); G.orbP.material.color.set(COLOR[k]);
+      }
+      const tr = [];
+      for (let t = S.t0; t <= jd; t += Math.max(1, (S.t1 - S.t0) / 600)) tr.push(w(pt ? ptolemy(k, t).pos : sub(bodyPos(k, t), S.frame === 'earth' ? bodyPos('earth', t) : [0, 0, 0])));
+      tr.push(p3);
+      G.trail.set(pt || S.frame === 'earth' ? tr : []);
+      const mp = []; if (L.sight) markTimes().filter((t) => t <= jd + 1e-6).forEach((t) => {
+        let e, q; if (pt) { e = [0, 0, 0]; q = ptolemy(k, t).pos; } else { const s2 = S.frame === 'earth' ? bodyPos('earth', t) : [0, 0, 0]; e = sub(bodyPos('earth', t), s2); q = sub(bodyPos(k, t), s2); }
+        const d = dir(sub(q, e)), a = w(e); mp.push(...a, a[0] + d[0] * G.RS, a[1] + d[1] * G.RS, a[2] + d[2] * G.RS); });
+      G.marks.geometry.setAttribute('position', new THREE.Float32BufferAttribute(mp, 3));
+      [G.defer, G.epi, G.qc, G.sunOrb].forEach((x) => { x.visible = pt; }); G.equant.visible = pt;
+      if (pt) {
+        const q = G.ptq, inner = EL[k].inner, Ii = EL[k].I[0], Ni = EL[k].N[0];
+        const turn = (x, y) => { const c = Math.cos(Ni * DEG), s = Math.sin(Ni * DEG), u = c * x + s * y, v = -s * x + c * y; return tilt(u, v, Ii, Ni); };
+        const circ = (cx, cy, r, tilted) => { const pts = []; for (let i = 0; i <= 128; i++) { const a = i / 128 * 2 * Math.PI, x = cx + r * Math.cos(a), y = cy + r * Math.sin(a); pts.push(w(tilted ? turn(x, y) : [x, y, 0])); } return pts; };
+        G.defer.set(circ(q.D[0], q.D[1], 1, !inner));
+        const ep = []; for (let i = 0; i <= 96; i++) { const a = i / 96 * 2 * Math.PI, x = q.r * Math.cos(a), y = q.r * Math.sin(a), v = inner ? turn(x, y) : [x, y, 0]; ep.push(w([q.C[0] + v[0], q.C[1] + v[1], q.C[2] + v[2]])); } G.epi.set(ep);
+        const Qp = inner ? q.Q : turn(q.Q[0], q.Q[1]); G.qc.set([w(Qp), w(q.C)]); G.equant.position.set(...w(Qp));
+        G.sunOrb.set(circ(0, 0, G.sunR, false));
+      }
+      dirty3 = false;
+    }
+    const tgt = pt || S.frame === 'earth' ? e3 : [0, 0, 0];
+    S3.place(G.o, tgt, S3.fit(3.0, 1.2)); S3.render();
+  }
+  function labels3D(ctx, W, H, p) {
+    if (!g3) return; const G = g3, S3 = G.S3, k = S.planet;
+    const tag = (obj, s, col, dy, left) => { const q = S3.project([obj.position.x, obj.position.y, obj.position.z]); if (q[2] < 1 && q[2] > -1) label(ctx, s, q[0] + (left ? -9 : 9) * p, q[1] + (dy || -10) * p, col, p, left ? 'right' : 'left'); };
+    tag(G.sun, 'Sun', T.sun, 10); tag(G.earth, 'Earth', T.earth, 12, true); tag(G.planet, EL[k].name, COLOR[k]);
+    if (S.model === 'ptolemy' && G.equant.position.distanceTo(G.earth.position) > 0.05) tag(G.equant, 'equant', T.muted, -10, true);
+    const ep = G.skyG.position; ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.7)'; ctx.textAlign = 'center';
+    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const l = nm[1] * DEG, b = nm[2] * DEG, R = G.RS; const q = S3.project([ep.x + R * Math.cos(b) * Math.cos(l), ep.y + R * Math.cos(b) * Math.sin(l), ep.z + R * Math.sin(b)]); if (q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) ctx.fillText(nm[0].toUpperCase(), q[0], q[1]); }
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Drag to turn, wheel to zoom. Planet sizes not to scale; the stars are a sphere about Earth.', 10, H - 8);
+  }
+
+  /* ---------- readings ---------- */
+  window.vdVersion = 'retrograde-motion@2026-10-25';
+  window.vdShowCols = [['date', 'Date'], ['planet', 'Planet'], ['lambda_deg', 'λ (°)'], ['motion', 'Moving']];
+  window.vdReadingRow = () => {
+    const k = S.planet, q = look(S.model, k, S.jd), rt = rate(S.model, k, S.jd), rows = window.vdRows ? window.vdRows() : [];
+    const first = rows.length ? +rows[0].jd : S.jd;
+    const ev = S.lastEv && Math.abs(S.lastEv.jd - S.jd) < 1e-6 ? KIND_NAME[S.lastEv.kind].toLowerCase() : '';
+    const real = S.model !== 'kepler' ? Math.abs(wrap(q.lam - look('kepler', k, S.jd).lam)) : 0;
+    return { date: iso(S.jd), days: (S.jd - first).toFixed(1), planet: EL[k].name, model: MODEL_NAME[S.model], lambda_deg: q.lam.toFixed(2), beta_deg: q.beta.toFixed(2),
+      motion: Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'east (direct)' : 'west (retrograde)', rate_deg_day: rt.toFixed(3), elong_deg: q.elong.toFixed(1),
+      dist_AU: q.d != null ? q.d.toFixed(3) : '', lit_pct: (q.lit * 100).toFixed(1), size_arcsec: q.size != null ? q.size.toFixed(1) : '', size_rel: q.rel.toFixed(2),
+      phase: phaseName(q.lit, q.alpha), event: ev, constellation: constellationAt(q.lam, q.beta), off_real_deg: S.model !== 'kepler' ? real.toFixed(2) : '', jd: S.jd.toFixed(4) };
+  };
+
+  /* ---------- loop, sizes, theme ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { S.jd += S.speed * dt; if (S.jd >= VALID[1]) { S.jd = VALID[1]; setRun(false); } if (S.jd > S.t1) { ensure(); } dirty3 = true; redraw(); }
+    if (use3()) { update3D(); drawTop(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    for (const [c, pane, key] of [[top, 'topPane', 'top'], [sky, 'skyPane', 'sky'], [scope, 'scopePane', 'scope']]) { const r = $(pane).getBoundingClientRect(); dims[key] = [r.width, r.height]; c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr); }
+    dirty3 = true; redraw(); if (use3()) update3D();
+  }
+  const retheme = () => { tokens(); dirty3 = true; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/retrograde-motion.mp4', poster: 'media/how-this-works/retrograde-motion.jpg' });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'mars');
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { $('topPane').classList.toggle('is3d', on); if (g3) g3.S3.el.hidden = !on; dirty3 = true; drawTop(); if (on) update3D(); }, status: (m) => { $('evNote').textContent = m; }, start: 'flat' });
+  new ResizeObserver(resize).observe($('stage')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* Copy link carries the date, the window and where the sky strip looks */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('d', {
+    get: () => VD.share.pack({ j: +S.jd.toFixed(3), a: +S.t0.toFixed(2), b: +S.t1.toFixed(2), c: +S.center.toFixed(2), s: +S.span.toFixed(1), f: S.follow ? 1 : 0, st: S.step, mk: S.marks || '' }),
+    set: (str) => { const o = VD.share.unpack(str) || {}, ok = (v) => typeof v === 'number' && isFinite(v);
+      if (ok(o.j)) S.jd = clamp(o.j, VALID[0], VALID[1]); if (ok(o.a) && ok(o.b) && o.b > o.a) { S.t0 = clamp(o.a, VALID[0], VALID[1]); S.t1 = clamp(o.b, VALID[0], VALID[1]); }
+      if (ok(o.c)) S.center = norm(o.c); if (ok(o.s)) S.span = clamp(o.s, 10, 360); S.follow = o.f === 1; if (ok(o.st)) S.step = o.st; S.marks = o.mk || null;
+      cache = null; dirty3 = true; redraw(); },
+  });
+  VD.tools({ el: top, strip: '#strip', stage: '#topPane', time: () => S.jd - J2000, timeUnit: 'day', lengthUnit: 'AU',
+    scale: () => (use3() || !topGeo ? null : { el: top, m: AU_KM * 1000 / topGeo.sc, unit: 'AU' }) });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

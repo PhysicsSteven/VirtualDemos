@@ -1461,7 +1461,8 @@
           "sections": [],
           "demos": [
             "seasons",
-            "moon-phases"
+            "moon-phases",
+            "retrograde-motion"
           ]
         },
         {
@@ -1578,6 +1579,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "retrograde-motion",
             "kepler-orbits",
             "gravity-near-earth"
           ],
@@ -10448,6 +10450,23 @@
       ],
       "title": "Terminal Velocity",
       "url": "demos/terminal-velocity.html"
+    },
+    {
+      "demo": "retrograde-motion",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap 2 of the Astro 2203 plan (Topic 3). Planets from JPL's approximate Keplerian elements (Standish) seen from Earth against real stars (Hipparcos via d3-celestial) and IAU constellations; retrograde loops, stationary points, oppositions and conjunctions; Copernicus's circles and a least squares fit of Ptolemy's epicycles and equants for comparison; Earth held still (Tycho); the phases and sizes of Venus in each model (Galileo's test). Intro worksheet intro-retrograde with a key from a real run in TeacherKeys.",
+      "title": "Retrograde Motion and World Models",
+      "url": "demos/retrograde-motion.html",
+      "handouts": [
+        "intro-retrograde"
+      ]
     }
   ],
   "activities": [

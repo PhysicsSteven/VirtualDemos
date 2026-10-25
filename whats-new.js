@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-retrograde', date: '2026-10-25', title: 'Retrograde Motion and World Models',
+    text: 'A new astronomy demo with an Astro 2203 worksheet: watch Earth pass Mars from above while Mars loops backward against the real stars, then run the same sky through Ptolemy\'s epicycles, Copernicus\'s circles and Kepler\'s ellipses, and test them with the phases of Venus as Galileo did. Jump to any opposition, stationary point or greatest elongation from 1800 to 2050.', link: { href: 'demos/retrograde-motion.html', text: 'Open Retrograde Motion' } },
   { id: '2026-10-25-planet-temperatures', date: '2026-10-25', title: 'Planet Temperatures and Habitable Zones',
     text: 'A new Astro 2203 demo with its own worksheet: move a planet closer to its star or farther away, change its albedo and greenhouse, and see its temperature from a balance of sunlight and heat radiation. Match the measured temperatures of Venus, Earth and Mars, find the habitable zone around the Sun, Proxima Centauri and TRAPPIST-1, and see why the Moon and Mercury kept no air.', link: { href: 'demos/planet-temperatures.html', text: 'Open Planet Temperatures' } },
   { id: '2026-10-25-how-this-works-p2-thermo', date: '2026-10-25', title: 'How this works videos: Physics II and Thermo',

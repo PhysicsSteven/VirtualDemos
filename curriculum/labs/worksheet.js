@@ -503,11 +503,16 @@
   const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky',
     'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
   const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
+  INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
     'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
     'intro-gravity': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', null, null] },
+    /* Reading | Date | Days since the first reading | λ (°) | Direction of motion | Elongation (°) | Distance from Earth (AU) | Event; the
+       Venus readings (every row Venus) go to the third table: Reading | World model | Date | Elongation (°) | Lit (%) | Size compared with its smallest | Phase */
+    'intro-retrograde': { demo: 'Retrograde Motion and World Models', cols: ['row', 'date', 'days', 'lambda_deg', 'motion', 'elong_deg', 'dist_AU', 'event'],
+      alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.planet === 'Venus'), cols: ['row', 'model', 'date', 'elong_deg', 'lit_pct', 'size_rel', 'phase'] }] },
     'intro-kepler': { demo: 'Kepler Orbits', cols: [(r) => r.preset || 'custom launch', 'ruler_r1_AU', 'ruler_r2_AU', 'timer_T_yr', null, null, null, null] },
     /* Reading | Time from start (d) | Days since new moon | Elongation (°) | Illuminated (%) | Moonrise (h) | Moonset (h) | Sun to nearest node (°) | Moon above or below Earth's orbit β (°) | Eclipse */
     'intro-moon': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'set_h', 'node_dist_deg', 'beta_deg', 'eclipse'] },
@@ -535,11 +540,11 @@
      such as position against time at constant acceleration. Anything computed from the fit (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
-  const CURVE_TABLES = { 'franck-hertz': [0] };
+  const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };

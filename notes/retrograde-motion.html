@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Retrograde Motion and World Models: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Retrograde Motion and World Models</h1><ul class="meta"><li><a href="../demos/retrograde-motion.html">Open the demo</a></li><li>Intro astronomy (non majors and majors); Astro 2203, planetary motion and the Copernican revolution (OpenStax Astronomy 2e §§2.2 to 2.4 and 3.1)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A planet's position on the sky is where the line from Earth through the planet points. Mars drifts east among the stars for most of its 780 day synodic period and backs up for about 10 weeks around opposition, when Earth, on the faster inside track, passes it. Nothing about Mars changes; the loop comes from where we stand.</li>
+<li>The synodic period (opposition to opposition, or inferior conjunction to inferior conjunction) and the sidereal period (once around the Sun) are related by 1/S = |1/P − 1/P⊕|.</li>
+<li>Ptolemy's epicycles reproduce the loops, and with the equant they place Mars to about a degree, which is why the model lasted 1400 years. Copernicus's simple circles are tidier but no more accurate, and Kepler's ellipses beat both.</li>
+<li>Accuracy alone cannot pick between the Earth centered and Sun centered pictures. The phases of Venus can: in Ptolemy's arrangement Venus always lies between Earth and the Sun and is never more than half lit, but Galileo saw it gibbous and nearly full. That rules out Ptolemy, not Tycho, whose system has the same geometry as Copernicus's seen from Earth.</li>
+</ul>
+<h2>Before class</h2>
+<p>The top view shows the planets' orbits from above with the line of sight from Earth to the chosen planet; the sky strip below shows the planet's path against the stars and constellations, along the ecliptic, with the stationary points and oppositions marked; the telescope shows the planet's phase and size. The World model switch puts the same sky through Kepler's ellipses (JPL's approximate elements, valid 1800 to 2050), Copernicus's circles or Ptolemy's deferent, equant and epicycle, with the parameters fitted to the JPL positions. In the Kepler model the top view can be centered on the Sun or held on Earth (Tycho's picture). Presets: Mars 2024 to 2025, Mars 2020, Jupiter, Saturn, Mercury, three Mars oppositions in a row (the synodic period), Tycho's view, Ptolemy's Mars, Copernicus's Mars, Venus as Galileo saw it in each model. Jump to finds the next or previous opposition, station, conjunction or greatest elongation. Play runs at 2 to 120 days per second; Shift with the day buttons steps 10 days. The 3D switch shows the orbits tilted, with the sight line to the planet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Mars 2024 to 2025.</strong> Play and ask Q1 while Earth catches up with Mars. Pause at the first station (7 Dec 2024), then jump to the opposition (16 Jan 2025) and the second station (24 Feb 2025).</li>
+<li><strong>Three oppositions.</strong> Ask Q2. The oppositions fall about 26 months apart, but the gap varies from 764 to 811 days because the orbits are ellipses.</li>
+<li><strong>Venus as Galileo saw it (Kepler).</strong> Ask Q3. Venus swings no more than about 47° from the Sun. Watch the phase and size together.</li>
+<li><strong>Venus in Ptolemy's model.</strong> Ask Q4 and Q5. The sky positions are nearly the same, but the telescope never shows more than half lit.</li>
+<li><strong>Copernicus's Mars</strong> and <strong>Ptolemy's Mars.</strong> Ask Q6. The real sky is drawn faintly beside the model's, so the miss shows directly.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Mars moves backward among the stars from 7 December 2024 to 24 February 2025. Where are Earth and Mars in their orbits during those weeks, and why does Mars appear to move backward?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Mars's oppositions in the demo fall on 8 December 2022, 16 January 2025 and 19 February 2027. Find the synodic period and compare it with 1/S = 1/P⊕ − 1/P for P⊕ = 365.26 days and P = 686.98 days.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Venus's greatest elongation on 10 January 2025 is 47.2°. Use it to estimate the radius of Venus's orbit in AU, as Copernicus did. Why is Venus never seen at midnight?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In the Kepler model, Venus is 44 % lit and 28″ across two months before inferior conjunction, and 91 % lit and 11″ across 200 days before. In the Ptolemy model it is 27 % and 35 % lit at those dates. Why can Ptolemy's Venus never be gibbous?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Does Galileo's observation of a gibbous Venus prove that Earth goes around the Sun?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Copernicus's circles put the 2020 opposition of Mars on 24 September, 19 days early, and miss Mars by up to 33° over 1900 to 2050. Ptolemy's fitted model misses by at most 1.4°. Why did Copernicus's model win anyway, and what did Kepler have to change?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The planet really turns around and goes backward."</strong> Every planet moves the same way around the Sun all the time; the backward motion is in the direction we see it, not in its orbit.</li>
+<li><strong>"Copernicus's model was more accurate than Ptolemy's."</strong> With circles and no equant it was not; it was simpler to explain the loops and fixed the order and relative sizes of the orbits.</li>
+<li><strong>"Venus looks bigger because it is full."</strong> It is the other way round: Venus is largest when it is a thin crescent, close to Earth, and smallest when it is nearly full on the far side of the Sun.</li>
+<li><strong>"Retrograde motion happens because the planet comes close."</strong> Mars is closest at opposition, in the middle of its loop, but the loop comes from Earth overtaking it, which changes the direction we look; the distance only makes the loop bigger.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Kepler model: heliocentric ecliptic positions from the Keplerian elements and rates in JPL's Approximate Positions of the Planets (E. M. Standish, Table 1, valid 1800 to 2050), solving Kepler's equation to 1e−12, with Earth taken as the Earth–Moon barycenter. Positions are in J2000 ecliptic coordinates. Light time, aberration, nutation and precession are left out, so the longitudes are within 0.02° to 0.25° of astronomy-engine 2.1.19 (VSOP87), the table's own accuracy (curriculum/validation/test_retrograde-motion.cjs).</li>
+<li>Copernicus model: circles centered on the Sun with radius a and a steady mean longitude, in the J2000 tilted planes; the same rule applied to Earth.</li>
+<li>Ptolemy model: a deferent of radius 1 with its center offset by e toward the apogee A, an equant at 2e about which the epicycle center moves at a steady rate, and an epicycle of radius r. For Mars, Jupiter and Saturn the epicycle radius stays parallel to the mean Sun; for Mercury and Venus the epicycle center stays on the mean Sun line. The parameters are a least squares fit to the JPL longitudes from 1900 to 2050, not Ptolemy's numbers (his Mars, e = 0.100 and r = 0.658, matches the fit's 0.0995 and 0.6579). Distances use Ptolemy's nesting of the spheres in Earth radii (Van Helden, Measuring the Universe, 1985), which is why Ptolemy's Venus also changes size. Ptolemy's moving deferent center for Mercury is left out, so the fitted Mercury misses by up to 3.3°.</li>
+<li>Phase: the lit fraction is (1 + cos α)/2 with α the angle Sun–planet–Earth; size is 2 asin(R/Δ) with the IAU mean radii. Saturn's rings use the IAU pole.</li>
+<li>Events are found a day at a time and refined by bisection: oppositions and conjunctions from the elongation, stations where the rate in longitude changes sign, greatest elongations where the elongation peaks.</li>
+<li>Stars are the Hipparcos stars to magnitude 4.5, and to 5.2 within 32° of the ecliptic, with constellation figures and IAU boundaries from d3-celestial 0.7.35 (Olaf Frohn, BSD license).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Kepler's Laws</strong> for the ellipses themselves, and with Stellarium to watch Mars's 2024 to 2025 loop against the real sky.</li>
+<li>Hold the Kepler model on Earth (Tycho's view): the Sun goes around Earth and the planets go around the Sun, and the sky is exactly the same. Ask what observation would separate Tycho from Copernicus (stellar parallax, first measured in 1838).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

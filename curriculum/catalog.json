@@ -28,6 +28,17 @@
      ]
     },
     {
+     "demo": "retrograde-motion",
+     "title": "Retrograde Motion and World Models",
+     "desc": "Watch Earth pass Mars while Mars loops backward against the real stars, then make the same sky with Ptolemy's epicycles, Copernicus's circles and Tycho's system, and test them with the phases of Venus.",
+     "tags": [
+      "retrograde motion",
+      "synodic period",
+      "epicycles",
+      "phases of Venus"
+     ]
+    },
+    {
      "demo": "gravity-near-earth",
      "title": "Gravity Near Earth",
      "desc": "How g changes with height and latitude: from sea level to the space station and geostationary orbit, and how Earth's spin takes a little off at the equator.",
