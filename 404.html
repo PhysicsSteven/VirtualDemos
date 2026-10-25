@@ -191,14 +191,14 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
     .subject { padding-top: 28px; }
 }
-/* hero corner: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
-.hero-tools { position: absolute; top: 14px; right: max(16px, env(safe-area-inset-right, 0px)); z-index: 2; display: flex; align-items: center; gap: 10px; }
+/* hero tools, top left above the eyebrow: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
+.hero-tools { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -28px 0 22px; }
 .newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
   color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
 .newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
 .newbtn:hover { border-color: var(--accent); }
 .newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media (max-width: 640px) { .hero-tools { position: static; justify-content: flex-end; flex-wrap: wrap; margin: -20px 0 12px; } .newbtn { min-height: 36px; } }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
 @media print { .hero-tools { display: none; } }
 
 /* course pages */

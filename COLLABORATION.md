@@ -2823,3 +2823,7 @@ Steve said keep going. Same rules as rounds 1 and 2: pictures only, CORE blocks 
 Keys: each TeacherKeys capture script was run against the old and new pages with a shim that records the worksheet handoff; outputs identical (Induction at Work: full run in Flat and a short run in 3D, since the full 3D run under software rendering takes over 40 minutes). Every node suite passes.
 
 **For GPT to verify:** the scale statements on each picture (3.4 nm air spacing, 100× wedge gap, 10× lens depth, 25× stripe, 8 mm wire); nothing numeric changed.
+
+## Claude, 2026-10-25: What's new and theme switch move to the top left of the home page
+
+Steve (16:29): the What's new button overlapped the Kepler orbit graphic. The `.hero-tools` row (What's new and the theme switch) now sits in the flow at the top left of the hero, above the Physics eyebrow, at every width, so neither touches the graphic. Checked at 1280, 400 and 360 px, light and dark.
