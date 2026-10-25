@@ -1505,7 +1505,8 @@
             "exoplanets",
             "planet-temperatures",
             "resonances",
-            "solar-system-formation"
+            "solar-system-formation",
+            "giant-planets"
           ]
         },
         {
@@ -1718,6 +1719,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "giant-planets",
             "tides",
             "kepler-orbits"
           ],
@@ -1730,6 +1732,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "giant-planets",
             "resonances",
             "seasons",
             "kepler-orbits"
@@ -10575,6 +10578,23 @@
       "handouts": [
         "intro-craters",
         "intro-mars-ages"
+      ]
+    },
+    {
+      "demo": "giant-planets",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap 8 of the Astro 2203 plan (Topics 10 and 11). The four giants to scale from the NASA fact sheets with densities against water and flattening against spin; Saturn's, Jupiter's, Uranus's and Neptune's rings with the Roche limit for any moon density and a 200 ball rubble pile test moon that comes apart inside it; ring shear by Kepler's third law; shepherd moons and the Mimas 2:1 place with J2; the Galilean and Saturnian moons from JPL J2000 elements with the Laplace and Enceladus:Dione resonances and Kepler's third law; Io's tidal flexing and heating (k2/Q from Lainey 2009). Intro worksheet intro-giant-planets with a key from a real run in TeacherKeys.",
+      "title": "Giant Planets, Rings and Moons",
+      "url": "demos/giant-planets.html",
+      "handouts": [
+        "intro-giant-planets"
       ]
     }
   ],

@@ -80,6 +80,7 @@ OVERRIDES = {
     "rotational-dynamics": {"wait": 1800, "js": "document.querySelector('#objSeg [data-o=pair]').click(); document.getElementById('go').click();"},
     "gyroscope": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "viscometer": {"wait": 1500, "js": "document.querySelector('#speedSeg [data-s=\"10\"]').click(); document.getElementById('go').click();"},
+    "giant-planets": {"wait": 9000, "crop": ".scene", "js": "document.getElementById('setupCard').style.display = 'none'; window.dispatchEvent(new Event('resize')); window.__gp.applyPreset('tear'); setTimeout(() => window.__gp.setRun(false), 7000);"},
     "retrograde-motion": {"wait": 1500, "crop": ".views", "js": "document.querySelector('.views .side').style.display = 'none'; const v = document.querySelector('.views'); v.style.gridTemplateColumns = '1fr'; v.style.height = '600px'; v.style.width = '960px'; v.style.margin = '0 auto'; const d = document.getElementById('date'); d.value = '2025-03-20'; d.dispatchEvent(new Event('change')); window.dispatchEvent(new Event('resize'));"},
     "cart-launch": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "elevator": {"wait": 6000, "js": "document.querySelector('#trips [data-to=\"10\"]').click();"},

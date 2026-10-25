@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-giant-planets', date: '2026-10-25', title: 'Giant Planets, Rings and Moons',
+    text: 'A new astronomy demo with an Astro 2203 worksheet: Jupiter, Saturn, Uranus and Neptune to scale from NASA\'s data, a moon pulled apart inside Saturn\'s Roche limit, ring particles that shear as they orbit, Io, Europa and Ganymede in their 1:2:4 resonance, and the flexing tides that heat Io.', link: { href: 'demos/giant-planets.html', text: 'Open Giant Planets' } },
   { id: '2026-10-25-inside-a-planet', date: '2026-10-25', title: 'Inside a Planet',
     text: 'A new Astro 2203 demo with its own worksheet: weigh the iron cores of Mercury, Venus, Earth, the Moon and Mars from their mean densities and how they spin, watch a real model of a churning mantle break into plates on Earth or stay one stiff lid on Venus, and float continents on the mantle.', link: { href: 'demos/inside-a-planet.html', text: 'Open Inside a Planet' } },
   { id: '2026-10-25-craters', date: '2026-10-25', title: 'Craters, Cooling and Surface Ages',

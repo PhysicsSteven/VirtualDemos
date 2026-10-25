@@ -156,6 +156,17 @@
      ]
     },
     {
+     "demo": "giant-planets",
+     "title": "Giant Planets, Rings and Moons",
+     "desc": "Jupiter, Saturn, Uranus and Neptune to scale; push a moon inside Saturn's Roche limit and watch it come apart into a ring; follow Io, Europa and Ganymede in their 1:2:4 resonance and the tides that heat Io.",
+     "tags": [
+      "Roche limit",
+      "planetary rings",
+      "orbital resonance",
+      "tidal heating"
+     ]
+    },
+    {
      "demo": "distance-ladder",
      "title": "Cosmic Distance Ladder",
      "desc": "Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.",

@@ -1,0 +1,929 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Giant Planets, Rings and Moons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the planets' colors, the picture, the strip and the close up */
+:root { --jup: #c99a6b; --jup2: #e8d3b4; --sat: #d9c08a; --sat2: #efe2bf; --ura: #8fd0d8; --ura2: #c4ebef; --nep: #4a74d0; --nep2: #7fa2e8; --ear: #3f78c0; --ear2: #6fae6a;
+  --ring: #b8a47e; --roche: #c2410c; --rigid: #7c3aed; --moon: #5b6573; --sel: #c2410c; --debris: #b4321f; --water: #2b7bb9; --space: #0b0f16; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; } }
+:root[data-theme="dark"] { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.btn.sq { min-width: 32px; padding-inline: 8px; }
+.scene { position: relative; flex: 1 1 auto; min-height: 560px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; touch-action: pan-y; }
+.scene canvas.gp3 { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card .chips button { font-size: 0.8rem; padding: 3px 8px; }
+.mtable { width: 100%; border-collapse: collapse; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.mtable th { text-align: left; font-weight: 700; color: var(--muted); padding: 3px 4px; border-bottom: 1px solid var(--line); }
+.mtable td { padding: 3px 4px; border-bottom: 1px solid var(--grid); font-family: var(--font-mono); font-size: 0.78rem; }
+.mtable td:first-child { font-family: var(--font-ui); font-size: 0.82rem; }
+.mtable tr.on td { color: var(--sel); font-weight: 700; }
+.mtable button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+.readout .warn { color: var(--roche); }
+@media (min-width: 821px) { .stage { min-height: 720px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 380px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Giant Planets, Rings and Moons</h1>
+      <p>Jupiter, Saturn, Uranus and Neptune to scale, from NASA's data. See why Saturn would float, why rings lie close to their planets where a moon would be torn apart, how ring particles shear, and how Io, Europa and Ganymede keep step in a 1:2:4 rhythm whose tides heat Io.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">km · days · g/cm³</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/giant-planets.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/giant-planets.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM17 2h4v1h-4zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h2v1h-2zM17 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM17 4h2v1h-2zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM16 9h2v1h-2zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h3v1h-3zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM2 11h2v1h-2zM5 11h3v1h-3zM10 11h3v1h-3zM14 11h1v1h-1zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM6 12h1v1h-1zM8 12h2v1h-2zM13 12h1v1h-1zM15 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM9 13h1v1h-1zM13 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h5v1h-5zM8 14h2v1h-2zM12 14h5v1h-5zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h4v1h-4zM12 15h2v1h-2zM15 15h1v1h-1zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h1v1h-1zM8 16h1v1h-1zM13 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM29 16h7v1h-7zM38 16h1v1h-1zM2 17h5v1h-5zM11 17h1v1h-1zM14 17h2v1h-2zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM5 18h1v1h-1zM7 18h3v1h-3zM12 18h1v1h-1zM15 18h4v1h-4zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h5v1h-5zM9 19h2v1h-2zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h2v1h-2zM8 20h3v1h-3zM12 20h1v1h-1zM14 20h2v1h-2zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h3v1h-3zM6 21h2v1h-2zM13 21h1v1h-1zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM7 22h3v1h-3zM13 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM10 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM3 24h3v1h-3zM8 24h1v1h-1zM10 24h3v1h-3zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h2v1h-2zM6 25h2v1h-2zM12 25h4v1h-4zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h4v1h-4zM17 26h1v1h-1zM20 26h9v1h-9zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h3v1h-3zM9 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h5v1h-5zM10 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h3v1h-3zM10 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM30 29h5v1h-5zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h3v1h-3zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM26 30h3v1h-3zM30 30h9v1h-9zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM17 31h7v1h-7zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM14 32h1v1h-1zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h8v1h-8zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h5v1h-5zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h5v1h-5zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h2v1h-2zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="btn" id="restart" title="Put the clock back to the start and the test moon back together">Start again</button>
+        <label class="lbl" for="selSpeed">Time</label>
+        <select id="selSpeed"><option value="600">10 minutes a second</option><option value="3600" selected>1 hour a second</option><option value="21600">6 hours a second</option><option value="86400">1 day a second</option><option value="345600">4 days a second</option></select>
+        <div class="seg" role="group" aria-label="What the picture shows" id="modeSeg">
+          <button type="button" data-mode="planets" aria-pressed="true">Planets</button>
+          <button type="button" data-mode="rings" aria-pressed="false">Rings</button>
+          <button type="button" data-mode="moons" aria-pressed="false">Moons</button>
+          <button type="button" data-mode="io" aria-pressed="false">Io's tides</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
+        <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The giant planets to scale, their rings and moons. Click a planet or a moon to choose it."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Choose the planet and set up the picture">
+        <span class="card-title" id="cardTitle">Set up</span>
+        <div class="pick" id="planetBox"><label for="selPlanet">Planet</label><select id="selPlanet">
+          <option value="jupiter">Jupiter</option><option value="saturn" selected>Saturn</option><option value="uranus">Uranus</option><option value="neptune">Neptune</option></select></div>
+        <div id="boxPlanets">
+          <label class="check"><input type="checkbox" id="chkEarth" checked><span>Show Earth for scale</span></label>
+        </div>
+        <div id="boxRings" hidden>
+          <div><div class="slider-head"><label for="sRho">Test moon's density</label><output id="oRho" class="mono" for="sRho"></output></div><input type="range" id="sRho" min="300" max="3500" step="10"></div>
+          <div class="chips" role="group" aria-label="Test moon made of"><button type="button" data-rho="500" aria-pressed="false">Porous ice</button><button type="button" data-rho="920" aria-pressed="false">Ice</button><button type="button" data-rho="3000" aria-pressed="false">Rock</button></div>
+          <div><div class="slider-head"><label for="sDist">Test moon's distance</label><output id="oDist" class="mono" for="sDist"></output></div><input type="range" id="sDist" min="1.2" max="4" step="0.01"></div>
+          <p class="note">The test moon is a pile of 200 loose balls held together only by their own gravity. Start the clock and watch whether the planet's tide pulls it apart.</p>
+          <label class="check"><input type="checkbox" id="chkRoche" checked><span>Draw the Roche limits</span></label>
+          <label class="check"><input type="checkbox" id="chkRes"><span>Mark where ring particles go round twice per orbit of Mimas</span></label>
+          <button type="button" class="btn" id="btnStripe" title="Paint a straight line across the rings and watch the inner rings pull ahead">Paint a line across the rings</button>
+        </div>
+        <div id="boxMoons" hidden>
+          <div class="pick"><label for="selMoon">Moon</label><select id="selMoon"></select></div>
+          <label class="check"><input type="checkbox" id="chkConj" checked><span>Mark where pairs of moons line up</span></label>
+        </div>
+        <div id="boxIo" hidden>
+          <div><div class="slider-head"><label for="sEcc">Io's eccentricity e</label><output id="oEcc" class="mono" for="sEcc"></output></div><input type="range" id="sEcc" min="0" max="0.01" step="0.0005"></div>
+          <p class="note">Io's real orbit has e = 0.004, kept up by the pulls of Europa and Ganymede. With e = 0 the orbit is a circle and the tide never changes.</p>
+          <label class="check"><input type="checkbox" id="chkExag" checked><span>Exaggerate the orbit's shape and Io's stretch</span></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-giant-planets.html" target="intro-giant-planets-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="giants" aria-pressed="true">Four giants to scale</button>
+          <button type="button" data-p="float" aria-pressed="false">Saturn would float</button>
+          <button type="button" data-p="uranus" aria-pressed="false">Uranus on its side</button>
+          <button type="button" data-p="rings" aria-pressed="false">Saturn's rings and the Roche limit</button>
+          <button type="button" data-p="tear" aria-pressed="false">A moon torn into a ring</button>
+          <button type="button" data-p="rock" aria-pressed="false">A rock moon survives</button>
+          <button type="button" data-p="shear" aria-pressed="false">Rings shear</button>
+          <button type="button" data-p="gaps" aria-pressed="false">Gaps, shepherds and Mimas</button>
+          <button type="button" data-p="galilean" aria-pressed="false">Io, Europa, Ganymede 1:2:4</button>
+          <button type="button" data-p="saturnmoons" aria-pressed="false">Enceladus and Dione 2:1</button>
+          <button type="button" data-p="triton" aria-pressed="false">Triton goes backward</button>
+          <button type="button" data-p="io" aria-pressed="false">Io's tides heat it</button>
+          <button type="button" data-p="iocircle" aria-pressed="false">Io on a circle</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section id="moonsSec" hidden>
+        <h2>The moons</h2>
+        <table class="mtable" id="moonTable"><caption class="sr">The moons of the chosen planet</caption><thead></thead><tbody></tbody></table>
+        <p class="hint">The same kind of resonance, with Jupiter and Neptune doing the tugging, clears the Kirkwood gaps in the asteroid belt and holds Pluto in step with Neptune: see <a href="resonances.html">Orbital Resonances</a>.</p>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-giant-planets" data-title="Giant Planets, Rings and Moons" data-demo="giant-planets">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">ρ = M / (4/3 π R³) · T² = 4π² a³ / (GM) · Roche: d = 2.455 R (ρ_P/ρ)^(1/3) · Ė = (21/2)(k₂/Q) G M² R⁵ n e² / a⁶</p>
+          <p class="hint" id="modelText"></p>
+        </details>
+        <details class="more"><summary>Where the numbers come from</summary>
+          <p class="hint">Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on 1 January 2000 (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium (1969). Io's tidal response k₂/Q = 0.015 ± 0.003: V. Lainey and others, Nature 459, 957 (2009). Io's heat flow, more than 2.5 W/m²: G. J. Veeder and others, Journal of Geophysical Research 99, 17095 (1994). Earth's heat flow, 47 TW: J. H. Davies and D. R. Davies, Solid Earth 1, 5 (2010). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics (1999).</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Giant Planets, Rings and Moons: data and physics, runnable in Node (curriculum/validation/test_giant-planets.cjs).
+     Planets: NASA NSSDCA planetary fact sheets (D. R. Williams), Jupiter, Saturn, Uranus, Neptune and Earth, read 2026-10-25.
+     Moons: NSSDCA Jovian, Saturnian, Uranian and Neptunian satellite fact sheets (a, sidereal P, e, mean radius, density).
+     Starting places: JPL mean orbital elements, epoch 2000 Jan 1.5 TDB, each in its moon's Laplace plane (ssd.jpl.nasa.gov/sats/elem):
+     mean longitude λ0 = node + ω + M and longitude of periapsis ϖ = node + ω. Rings: NSSDCA Jovian, Saturnian, Uranian and
+     Neptunian ring fact sheets. Units: km, s, kg; densities in kg/m³. */
+  const G = 6.67430e-11;                       /* CODATA 2022, m³ kg⁻¹ s⁻² */
+  const DAY = 86400, HOUR = 3600;
+  /* M in kg, GM in km³/s², radii in km, rot in hours (negative: turns backward), tilt in degrees, aSun in 10⁶ km, moi = C/(M R²) */
+  const PLANETS = {
+    jupiter: { name: 'Jupiter', M: 1898.13e24, GM: 126.687e6, Req: 71492, Rpol: 66854, Rm: 69911, f: 0.06487, rho: 1326, rot: 9.9250, tilt: 3.13, aSun: 778.479, moi: 0.254, J2: 14736e-6, Tbb: 109.9 },
+    saturn: { name: 'Saturn', M: 568.32e24, GM: 37.931e6, Req: 60268, Rpol: 54364, Rm: 58232, f: 0.09796, rho: 687, rot: 10.656, tilt: 26.73, aSun: 1432.041, moi: 0.210, J2: 16298e-6, Tbb: 81.0 },
+    uranus: { name: 'Uranus', M: 86.811e24, GM: 5.7940e6, Req: 25559, Rpol: 24973, Rm: 25362, f: 0.02293, rho: 1270, rot: -17.24, tilt: 97.77, aSun: 2867.043, moi: 0.225, J2: 3343.43e-6, Tbb: 58.1 },
+    neptune: { name: 'Neptune', M: 102.409e24, GM: 6.8351e6, Req: 24764, Rpol: 24341, Rm: 24622, f: 0.01708, rho: 1638, rot: 16.11, tilt: 28.32, aSun: 4514.953, moi: null, J2: 3411e-6, Tbb: 46.6 },
+    earth: { name: 'Earth', M: 5.9722e24, GM: 0.39860e6, Req: 6378.137, Rpol: 6356.752, Rm: 6371.000, f: 0.003353, rho: 5513, rot: 23.9345, tilt: 23.44, aSun: 149.598, moi: 0.3308, J2: 1082.63e-6, Tbb: 254.0 },
+  };
+  const GIANTS = ['jupiter', 'saturn', 'uranus', 'neptune'];
+  const AU_KM = 149.598e6;   /* the fact sheets' Earth semimajor axis, so Earth reads 1.000 AU */
+  /* moons: a (km), P sidereal (days, negative: retrograde), e, R mean radius (km), rho (kg/m³), lam and peri: J2000 mean longitude and
+     longitude of periapsis (degrees, JPL mean elements; null where not used) */
+  const MOONS = {
+    jupiter: [
+      { name: 'Io', a: 421.8e3, P: 1.769138, e: 0.004, R: 1821.5, rho: 3530, lam: 20.0, peri: 49.1 },
+      { name: 'Europa', a: 671.1e3, P: 3.551181, e: 0.009, R: 1560.8, rho: 3010, lam: 214.4, peri: 229.0 },
+      { name: 'Ganymede', a: 1070.4e3, P: 7.154553, e: 0.001, R: 2631.2, rho: 1940, lam: 221.6, peri: 256.8 },
+      { name: 'Callisto', a: 1882.7e3, P: 16.689017, e: 0.007, R: 2410.3, rho: 1830, lam: 80.3, peri: 352.9 },
+    ],
+    saturn: [
+      { name: 'Mimas', a: 185.52e3, P: 0.9424218, e: 0.0202, R: 198.6, rho: 1150, lam: 141.9, peri: 226.6 },
+      { name: 'Enceladus', a: 238.02e3, P: 1.370218, e: 0.0045, R: 252, rho: 1610, lam: 176.5, peri: 119.5 },
+      { name: 'Tethys', a: 294.66e3, P: 1.887802, e: 0.0000, R: 531, rho: 985, lam: 248.3, peri: 248.3 },
+      { name: 'Dione', a: 377.40e3, P: 2.736915, e: 0.0022, R: 561, rho: 1480, lam: 328.0, peri: 116.0 },
+      { name: 'Rhea', a: 527.04e3, P: 4.517500, e: 0.0010, R: 763, rho: 1240, lam: 209.5, peri: 178.0 },
+      { name: 'Titan', a: 1221.87e3, P: 15.945421, e: 0.0292, R: 2575, rho: 1880, lam: 168.6, peri: 156.9 },
+      { name: 'Hyperion', a: 1500.93e3, P: 21.276609, e: 0.1042, R: 135, rho: 550, lam: 64.0, peri: 301.1 },
+      { name: 'Iapetus', a: 3560.85e3, P: 79.330183, e: 0.0283, R: 735, rho: 1090, lam: 55.8, peri: 341.0 },
+    ],
+    uranus: [
+      { name: 'Miranda', a: 129.90e3, P: 1.413479, e: 0.0013, R: 235.7, rho: 1200, lam: null },
+      { name: 'Ariel', a: 190.90e3, P: 2.520379, e: 0.0012, R: 578.9, rho: 1590, lam: null },
+      { name: 'Umbriel', a: 266.00e3, P: 4.144176, e: 0.0039, R: 584.7, rho: 1460, lam: null },
+      { name: 'Titania', a: 436.30e3, P: 8.705867, e: 0.0011, R: 788.9, rho: 1660, lam: null },
+      { name: 'Oberon', a: 583.50e3, P: 13.463234, e: 0.0014, R: 761.4, rho: 1560, lam: null },
+    ],
+    neptune: [
+      { name: 'Proteus', a: 117.647e3, P: 1.122315, e: 0.0004, R: 210, rho: null, lam: null },
+      { name: 'Triton', a: 354.76e3, P: -5.876854, e: 0.000016, R: 1353.4, rho: 2050, lam: null },
+    ],
+  };
+  /* small moons by the rings (NSSDCA): a (km), mean radius (km) = (abc)^(1/3) from the three axes, rho; role: what it does to the rings */
+  const RING_MOONS = {
+    jupiter: [{ name: 'Metis', a: 128.0e3, R: 22 }, { name: 'Adrastea', a: 129.0e3, R: 8 }, { name: 'Amalthea', a: 181.4e3, R: 84, rho: 3100 }, { name: 'Thebe', a: 221.9e3, R: 49 }],
+    saturn: [{ name: 'Pan', a: 133.583e3, R: 14, rho: 420, role: 'keeps the Encke gap open' }, { name: 'Daphnis', a: 136.500e3, R: 3.8, rho: 340, role: 'keeps the Keeler gap open' },
+      { name: 'Atlas', a: 137.670e3, R: 15, rho: 500 }, { name: 'Prometheus', a: 139.353e3, R: 43, rho: 480, role: 'shepherds the F ring from inside' },
+      { name: 'Pandora', a: 141.700e3, R: 41, rho: 490, role: 'shepherds the F ring from outside' }, { name: 'Janus', a: 151.472e3, R: 90, rho: 630 }, { name: 'Mimas', a: 185.52e3, R: 198.6, rho: 1150 }],
+    uranus: [{ name: 'Cordelia', a: 49.80e3, R: 20, role: 'shepherds the ε ring from inside' }, { name: 'Ophelia', a: 53.80e3, R: 21, role: 'shepherds the ε ring from outside' }, { name: 'Puck', a: 86.00e3, R: 81 }, { name: 'Miranda', a: 129.90e3, R: 235.7, rho: 1200 }],
+    neptune: [{ name: 'Naiad', a: 48.227e3, R: 33 }, { name: 'Thalassa', a: 50.075e3, R: 41 }, { name: 'Despina', a: 52.526e3, R: 75 }, { name: 'Galatea', a: 61.953e3, R: 88, role: 'holds the Adams ring arcs' }, { name: 'Larissa', a: 73.548e3, R: 97 }, { name: 'Proteus', a: 117.647e3, R: 210 }],
+  };
+  /* rings: [name, inner km, outer km, how bright they look in the picture (0 to 1, a drawing choice, not a measurement)] */
+  const RINGS = {
+    jupiter: [['Halo', 89400, 123000, 0.10], ['Main ring', 123000, 128940, 0.45], ['Amalthea gossamer ring', 128940, 181350, 0.07], ['Thebe gossamer ring', 181350, 221900, 0.05]],
+    saturn: [['D ring', 66900, 74510, 0.12], ['C ring', 74658, 91975, 0.38], ['B ring', 91975, 117507, 0.95], ['Cassini division', 117507, 122340, 0.10], ['A ring', 122340, 136780, 0.72],
+      ['F ring', 139826 - 25, 139826 + 25, 0.8], ['G ring', 166000, 173000, 0.12], ['E ring', 180000, 480000, 0.05]],
+    uranus: [['Ring 6', 41837, 41838.5, 0.6], ['Ring 5', 42234, 42236, 0.6], ['Ring 4', 42571, 42573, 0.6], ['α ring', 44718 - 4, 44718 + 4, 0.7], ['β ring', 45661 - 4, 45661 + 4, 0.7],
+      ['η ring', 47176, 47177.6, 0.5], ['γ ring', 47627 - 1, 47627 + 1, 0.6], ['δ ring', 48300 - 2.5, 48300 + 2.5, 0.7], ['λ ring', 50024, 50026, 0.4], ['ε ring', 51149 - 30, 51149 + 30, 0.9],
+      ['ν ring', 67300 - 1900, 67300 + 1900, 0.05], ['μ ring', 97700 - 8500, 97700 + 8500, 0.04]],
+    neptune: [['Galle ring', 41900 - 1000, 41900 + 1000, 0.12], ['Le Verrier ring', 53200 - 50, 53200 + 50, 0.5], ['Lassell ring', 53200, 57200, 0.08], ['Arago ring', 57200 - 50, 57200 + 50, 0.3], ['Adams ring', 62933 - 7.5, 62933 + 7.5, 0.6]],
+  };
+  /* gaps and edges marked by one radius (NSSDCA: features narrower than 1000 km are listed by their inner edge) */
+  const RING_MARKS = { saturn: [['Encke gap', 133410], ['Keeler gap', 136487]], jupiter: [], uranus: [], neptune: [] };
+
+  /* Roche limits. A fluid moon (no strength) in a circular orbit is torn apart where GM/d³ = 0.09009 πGρ (Chandrasekhar 1969,
+     Ellipsoidal Figures of Equilibrium, ch. 8, the Roche limit), so d = (4/(3 × 0.09009))^(1/3) R (ρ_P/ρ)^(1/3) = 2.455 R (ρ_P/ρ)^(1/3);
+     textbooks often round it to 2.44. A rigid round moon turning once per orbit loses a loose rock from the point facing the planet
+     where the tide plus the spin, 3GMr/d³, beats its gravity: d = 3^(1/3) R (ρ_P/ρ)^(1/3) = 1.442 R (ρ_P/ρ)^(1/3). */
+  const ROCHE_FLUID = Math.cbrt(4 / (3 * 0.09009)), ROCHE_RIGID = Math.cbrt(3);
+  /* R (ρ_P/ρ)^(1/3) = (3M / 4πρ)^(1/3) whichever radius R is used with the planet's density, so the limit (km) is taken from the mass */
+  const rocheUnit = (p, rhoM) => Math.cbrt(3 * p.M / (4 * Math.PI * rhoM)) / 1e3;
+  const rocheLimit = (p, rhoM, c) => (c || ROCHE_FLUID) * rocheUnit(p, rhoM);
+  /* a distance (km) in units of R (ρ_P/ρ)^(1/3): the only number that decides whether a moon held only by its gravity survives */
+  const rocheUnits = (d, p, rhoM) => d / rocheUnit(p, rhoM);
+
+  /* Kepler: circular speed and period round a planet (GM km³/s², r km); the period in s */
+  const kepPeriod = (GM, r) => 2 * Math.PI * Math.sqrt(r * r * r / GM);
+  const kepOmega = (GM, r) => Math.sqrt(GM / (r * r * r));
+  /* GM (km³/s²) from an orbit: Kepler's third law with the moon's mass left out, GM = 4π² a³ / P² (a km, P s) */
+  const gmFromOrbit = (a, P) => 4 * Math.PI * Math.PI * a * a * a / (P * P);
+  /* mean density from mass (kg) and mean radius (km) */
+  const density = (M, R) => M / (4 / 3 * Math.PI * Math.pow(R * 1e3, 3));
+  /* spin: q = ω² a³ / GM, centrifugal over gravity at the equator */
+  const spinQ = (p) => { const w = 2 * Math.PI / (Math.abs(p.rot) * HOUR); return w * w * Math.pow(p.Req, 3) / p.GM; };
+  /* the flattening a planet of uniform density would take for the same spin (a Maclaurin spheroid, to first order in q): f = 5q/4.
+     Real giants bulge less, because their mass is packed toward the center. */
+  const uniformFlattening = (q) => 1.25 * q;
+
+  /* The 2:1 inner Lindblad resonance of a moon (ring particles going round twice per moon orbit), with the planet's bulge (J2) included:
+     2Ω − κ = 2n_moon, Ω² = (GM/r³)(1 + (3/2)J2(R/r)²), κ² = (GM/r³)(1 − (3/2)J2(R/r)²), J4 and higher left out. n_moon from its period. */
+  function ilr21(p, Pmoon) {
+    const nM = 2 * Math.PI / (Math.abs(Pmoon) * DAY), g = (r) => { const k = p.GM / (r * r * r), e = 1.5 * p.J2 * (p.Req / r) * (p.Req / r);
+      return 2 * Math.sqrt(k * (1 + e)) - Math.sqrt(k * (1 - e)) - 2 * nM; };
+    let lo = p.Req, hi = 10 * p.Req; for (let i = 0; i < 200; i++) { const mid = 0.5 * (lo + hi); if (g(mid) > 0) lo = mid; else hi = mid; }
+    return 0.5 * (lo + hi);
+  }
+  /* the same with Kepler's law alone: r = a_moon × 2^(−2/3) */
+  const kepler21 = (a) => a * Math.pow(2, -2 / 3);
+
+  /* A moon on a fixed Kepler ellipse in the planet's equator plane: mean anomaly from λ0 − ϖ at J2000, M = M0 + n t; returns
+     { x, y, r, lam } in km, the angle in degrees measured round the planet (counterclockwise seen from the north). Precession of the
+     orbit, inclinations and the moons' pulls on each other are left out. Moons without a J2000 place start evenly spaced. */
+  function kepE(M, e) { let E = M; for (let i = 0; i < 30; i++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return E; }
+  function moonAt(m, t, i) {
+    const sg = m.P < 0 ? -1 : 1, lam0 = m.lam == null ? (i || 0) * 137.508 % 360 : m.lam, peri = m.peri == null ? lam0 : m.peri;
+    const M = ((lam0 - peri + 360 * t / (Math.abs(m.P) * DAY)) % 360 + 360) % 360, E = kepE(M * Math.PI / 180, m.e);
+    const f = 2 * Math.atan2(Math.sqrt(1 + m.e) * Math.sin(E / 2), Math.sqrt(1 - m.e) * Math.cos(E / 2)), r = m.a * (1 - m.e * Math.cos(E));
+    const th = sg * (peri * Math.PI / 180 + f);   /* a retrograde moon goes round the other way */
+    return { x: r * Math.cos(th), y: r * Math.sin(th), r, lam: ((th * 180 / Math.PI) % 360 + 360) % 360 };
+  }
+  /* mean longitude at time t (degrees) */
+  const meanLon = (m, t) => (((m.lam || 0) + 360 * t / (m.P * DAY)) % 360 + 360) % 360;   /* prograde moons with a J2000 place */
+  /* the Laplace angle of Io, Europa and Ganymede, λ_I − 3λ_E + 2λ_G (degrees, 0 to 360) */
+  const laplaceAngle = (lI, lE, lG) => (((lI - 3 * lE + 2 * lG) % 360) + 360) % 360;
+
+  /* Tidal heating of a moon turning once per orbit on an orbit of eccentricity e (Murray and Dermott 1999, eq. 4.192):
+     Ė = (21/2) (k₂/Q) G M_p² R⁵ n e² / a⁶  (SI units). For Io k₂/Q = 0.015 ± 0.003 (Lainey et al. 2009, Nature 459, 957). */
+  const IO_K2Q = 0.015;
+  function tidalHeat(k2Q, Mp, R, a, P, e) { const n = 2 * Math.PI / (P * DAY), Rm = R * 1e3, am = a * 1e3; return 10.5 * k2Q * G * Mp * Mp * Math.pow(Rm, 5) * n * e * e / Math.pow(am, 6); }
+  /* Io's measured heat flow: more than about 2.5 W/m² averaged over the globe (Veeder et al. 1994, JGR 99, 17095); Earth's 47 TW
+     (Davies and Davies 2010, Solid Earth 1, 5) */
+  const IO_FLUX_OBS = 2.5, EARTH_HEAT = 47e12;
+  /* the tide's stretch goes as 1/r³, so over one orbit it swings by ±3e (to first order in e); the direction of the planet seen from the
+     moon, which turns at a steady rate, swings by ±2e radians */
+  const tideSwing = (e) => ({ stretch: 3 * e, sway: 2 * e * 180 / Math.PI });
+
+  /* A rubble pile moon: N equal balls held together only by their own gravity, in Hill's frame that goes round the planet with the moon
+     (x away from the planet, y along the orbit, z north): ẍ = 2Ωẏ + 3Ω²x + F, ÿ = −2Ωẋ + F, z̈ = −Ω²z + F, the tide of the planet and
+     the turning of the frame to first order in the moon's size over its distance (Hill 1878). Units: G = 1, the balls' mass sums to 4π/3,
+     so a ball of radius 1 would have density 1. Balls touching push apart with a stiff spring and a damper (inelastic contacts, no
+     friction). Ω² = (4π/3) ρ_b / δ³, with ρ_b the moon's mean density inside its outer surface and δ its distance in Roche units. */
+  const PILE_N = 200, PILE_SEED = 7, PILE_DT = 0.004, PILE_TC = 0.08;
+  function rng(seed) { let s = seed >>> 0 || 1; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  function makePile(N, seed) {
+    N = N || PILE_N; const r = rng(seed || PILE_SEED), s = Math.cbrt(0.6 / N), m = 4 / 3 * Math.PI / N, x = new Float64Array(3 * N);
+    for (let i = 0; i < N; i++) { let a, b, c; do { a = 2 * r() - 1; b = 2 * r() - 1; c = 2 * r() - 1; } while (a * a + b * b + c * c > 1); x[3 * i] = 1.6 * a; x[3 * i + 1] = 1.6 * b; x[3 * i + 2] = 1.6 * c; }
+    return { N, s, m, x, v: new Float64Array(3 * N), f: new Float64Array(3 * N), t: 0, Om: 0, kc: m * Math.pow(Math.PI / PILE_TC, 2), gc: 2 * m * 0.6 / PILE_TC, R: 1 };
+  }
+  function pileForces(st, damp) {
+    const { N, s, m, x, v, f, kc, gc, Om } = st, d2 = 2 * s; f.fill(0);
+    for (let i = 0; i < N; i++) { const xi = x[3 * i], yi = x[3 * i + 1], zi = x[3 * i + 2];
+      for (let j = i + 1; j < N; j++) { let dx = x[3 * j] - xi, dy = x[3 * j + 1] - yi, dz = x[3 * j + 2] - zi; const r = Math.sqrt(dx * dx + dy * dy + dz * dz), rr = Math.max(r, d2);
+        let F = m / (rr * rr);
+        if (r < d2) { const vn = ((v[3 * j] - v[3 * i]) * dx + (v[3 * j + 1] - v[3 * i + 1]) * dy + (v[3 * j + 2] - v[3 * i + 2]) * dz) / r; F -= (kc * (d2 - r) - gc * vn) / m; }
+        dx /= r; dy /= r; dz /= r; f[3 * i] += F * dx; f[3 * i + 1] += F * dy; f[3 * i + 2] += F * dz; f[3 * j] -= F * dx; f[3 * j + 1] -= F * dy; f[3 * j + 2] -= F * dz; } }
+    for (let i = 0; i < N; i++) { f[3 * i] += 2 * Om * v[3 * i + 1] + 3 * Om * Om * x[3 * i]; f[3 * i + 1] -= 2 * Om * v[3 * i]; f[3 * i + 2] -= Om * Om * x[3 * i + 2];
+      if (damp) for (let d = 0; d < 3; d++) f[3 * i + d] -= damp * v[3 * i + d]; }
+  }
+  function pileStep(st, dt, damp) { const n = 3 * st.N, { x, v, f } = st; for (let i = 0; i < n; i++) { v[i] += 0.5 * dt * f[i]; x[i] += dt * v[i]; } pileForces(st, damp); for (let i = 0; i < n; i++) v[i] += 0.5 * dt * f[i]; st.t += dt; }
+  /* settle the pile with no tide and a drag, center it, and measure its outer radius R (ball centers plus one ball radius) */
+  function settlePile(st, steps) {
+    st.Om = 0; pileForces(st, 1); for (let i = 0; i < (steps || 3000); i++) pileStep(st, PILE_DT, 1);
+    const N = st.N, c = [0, 0, 0]; for (let i = 0; i < N; i++) for (let d = 0; d < 3; d++) c[d] += st.x[3 * i + d] / N;
+    let R = 0; for (let i = 0; i < N; i++) { for (let d = 0; d < 3; d++) st.x[3 * i + d] -= c[d]; R = Math.max(R, Math.hypot(st.x[3 * i], st.x[3 * i + 1], st.x[3 * i + 2])); }
+    st.R = R + st.s; st.v.fill(0); st.t = 0; return st;
+  }
+  /* put the settled pile at distance δ (Roche units), turning once per orbit (at rest in Hill's frame) */
+  function pileAt(st, delta) { st.rhoB = 1 / Math.pow(st.R, 3); st.Om = Math.sqrt(4 / 3 * Math.PI * st.rhoB / (delta * delta * delta)); st.v.fill(0); st.t = 0; pileForces(st, 0); return st; }
+  const pileClone = (st) => Object.assign({}, st, { x: Float64Array.from(st.x), v: Float64Array.from(st.v), f: Float64Array.from(st.f) });
+  /* the share of the balls in the largest piece: balls closer than 2.3 ball radii are counted as one piece */
+  function largestPiece(st) {
+    const { N, s, x } = st, L = Math.pow(2.3 * s, 2), lab = new Int32Array(N).fill(-1); let best = 0;
+    for (let i = 0; i < N; i++) { if (lab[i] >= 0) continue; const q = [i]; lab[i] = i; let c = 0;
+      while (q.length) { const a = q.pop(); c++; for (let j = 0; j < N; j++) { if (lab[j] >= 0) continue; const dx = x[3 * j] - x[3 * a], dy = x[3 * j + 1] - x[3 * a + 1], dz = x[3 * j + 2] - x[3 * a + 2]; if (dx * dx + dy * dy + dz * dz < L) { lab[j] = i; q.push(j); } } }
+      best = Math.max(best, c); }
+    return best / N;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), card = VD.setupCard($('setupCard'));
+  const MOON_KM = 250;          /* the test moon's outer radius in the pictures (its fate does not depend on its size) */
+  const MOON_X = 20;            /* moons drawn this many times larger than their size in the Moons view */
+  const VIEW_RINGS = { jupiter: 3.4, saturn: 3.3, uranus: 4.0, neptune: 3.2 }, VIEW_MOONS = { jupiter: 28, saturn: 22, uranus: 24.5, neptune: 16 };
+  const CONJ = { jupiter: [[0, 1], [1, 2]], saturn: [[1, 3], [0, 2]], uranus: [], neptune: [] };
+  const SPEED = { planets: 3600, rings: 3600, moons: 86400, io: 21600 };
+  const PRESETS = {
+    giants: { mode: 'planets', planet: 'jupiter', sel: 'jupiter', earth: true, hint: 'Jupiter, Saturn, Uranus and Neptune side by side at their true sizes, with Earth for scale, seen from a little above the plane of their orbits and each with its axis at its real tilt. The bars below compare their mean densities with water. Click a planet for its numbers.' },
+    float: { mode: 'planets', planet: 'saturn', sel: 'saturn', earth: true, hint: 'Saturn has 95 times Earth\'s mass but 764 times its volume, so its mean density is 0.687 g/cm³, less than water\'s 1.00 g/cm³. It is the only planet that would float, if there were a tub big enough. It also turns in 10.7 hours, and the fast spin and low density make it the flattest planet: its equator is 9.8 % wider than its poles.' },
+    uranus: { mode: 'planets', planet: 'uranus', sel: 'uranus', earth: true, hint: 'Uranus\'s axis is tipped 97.77° from upright, so it rolls on its side round the Sun. Each pole gets about 42 years of daylight and then 42 years of darkness in its 84 year orbit. Neptune, next door, is tipped 28.32°, close to Saturn\'s 26.73°.' },
+    rings: { mode: 'rings', planet: 'saturn', rho: 500, dist: 3.0, roche: true, res: false, speed: 3600, hint: 'Saturn\'s rings seen from above its north pole, to scale. The orange circle is the Roche limit for a moon of porous ice, 0.5 g/cm³ like the small moons near the rings (Pan 0.42, Prometheus 0.48), with no strength: inside it, 2.64 Saturn radii out, the planet\'s tide pulls the near and far sides apart harder than the moon\'s own gravity holds them together. The main rings lie inside; the big moons orbit outside, the nearest, Mimas, at 3.08 radii. The test moon sits at 3.0 Saturn radii, just outside the limit. Start the clock: it holds together.' },
+    tear: { mode: 'rings', planet: 'saturn', rho: 920, dist: 1.4, roche: true, res: false, speed: 3600, run: true, hint: 'A moon of solid ice, 0.92 g/cm³, at 1.4 Saturn radii, well inside its Roche limit of 2.15 radii. Within about one orbit the tide stretches it, it comes apart, and the pieces drift ahead and behind it along the orbit, because inner pieces go round faster than outer ones. After many orbits they spread into a ringlet.' },
+    rock: { mode: 'rings', planet: 'saturn', rho: 3000, dist: 1.5, roche: true, res: false, speed: 3600, run: true, hint: 'A moon of rock, 3.0 g/cm³, at 1.5 Saturn radii, deep inside the ice moon\'s limit. A denser moon holds itself together more tightly, so its Roche limit is closer to the planet: (0.92/3.0)^(1/3) = 0.67 times the ice moon\'s, 1.45 radii. At 1.5 radii it is outside its own limit and survives.' },
+    shear: { mode: 'rings', planet: 'saturn', rho: 920, dist: 2.6, roche: false, res: false, speed: 3600, stripe: true, run: true, hint: 'A straight line painted across the rings. Each ring particle is a tiny moon on its own orbit, and by Kepler\'s third law the inner ones go round faster: 4.9 hours at the inner edge of the faint D ring, 5.8 hours at the inner edge of the C ring and 14.3 hours at the outer edge of the A ring. The line winds into a spiral, which is why rings are made of many separate particles and not one solid sheet.' },
+    gaps: { mode: 'rings', planet: 'saturn', rho: 920, dist: 2.6, roche: false, res: true, speed: 3600, zoom: 1, hint: 'Small moons shape the rings. Pan orbits in the Encke gap and Daphnis in the Keeler gap and keep them clear; Prometheus inside and Pandora outside shepherd the narrow F ring. These small moons orbit inside the Roche limit for their own low densities and survive, because they are small enough for a little strength to hold them (Porco et al. 2007). The dashed line marks where a ring particle goes round exactly twice for each orbit of Mimas, so Mimas tugs it at the same place every other turn: 117 528 km with Saturn\'s bulge included, beside the outer edge of the B ring at 117 507 km, where the Cassini division begins.' },
+    galilean: { mode: 'moons', planet: 'jupiter', moon: 0, conj: true, speed: 86400, run: true, hint: 'Jupiter\'s four big moons, starting where they were at noon on 1 January 2000. Io goes round 2.007 times for each orbit of Europa, and Europa 2.015 times for each orbit of Ganymede: a 1:2:4 rhythm, the Laplace resonance. The lines mark where Io passes Europa and where Europa passes Ganymede; each pair always lines up near the same places. The three can never line up on one side of Jupiter together: λ(Io) − 3λ(Europa) + 2λ(Ganymede) stays at 180°. Kepler\'s third law with each moon gives Jupiter\'s mass.' },
+    saturnmoons: { mode: 'moons', planet: 'saturn', moon: 1, conj: true, speed: 86400, run: true, hint: 'Saturn\'s mid sized moons from noon on 1 January 2000. Enceladus goes round 1.997 times for each orbit of Dione, and Mimas 2.003 times for each orbit of Tethys. Dione\'s regular tugs keep Enceladus\'s orbit slightly out of round, and the flexing tides warm the ocean under its ice that feeds its geysers. Titan, the big one, holds most of the mass.' },
+    triton: { mode: 'moons', planet: 'neptune', moon: 1, conj: false, speed: 86400, run: true, hint: 'Triton goes round Neptune backward, against Neptune\'s spin, the only large moon in the solar system that does. A moon born from the disk round its planet would go the same way as the planet spins, so Triton was most likely captured, perhaps from the Kuiper belt. Its density, 2.05 g/cm³, is close to Pluto\'s 1.85 g/cm³ (NASA). (Their starting places are spread out for clarity, not taken from a date.)' },
+    io: { mode: 'io', planet: 'jupiter', e: 0.004, exag: true, speed: 21600, run: true, hint: 'Io on its slightly oval orbit (e = 0.004, drawn 60 times more oval). Its distance from Jupiter changes by ±0.4 %, so the tide that stretches it changes by ±1.2 %, and the direction of Jupiter seen from Io rocks back and forth by ±0.46°. The flexing heats Io: with Io\'s measured k₂/Q this gives about 9 × 10¹³ W, close to the more than 1.0 × 10¹⁴ W Io sends out, which keeps hundreds of volcanoes going.' },
+    iocircle: { mode: 'io', planet: 'jupiter', e: 0, exag: true, speed: 21600, run: true, hint: 'If Europa and Ganymede were taken away, Io\'s orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = 0.004 pumped up.' },
+  };
+  const S = { preset: 'giants', mode: 'planets', planet: 'saturn', sel: 'jupiter', earth: true, rho: 920, dist: 2.6, roche: true, res: false, conj: true, moon: 0,
+    e: 0.004, exag: true, t: 0, run: false, speed: 3600, zoom: { planets: 0, rings: 0, moons: 0, io: 0 }, blind: false, stripe: null, piece: 1, slow: false };
+  let W = 0, H = 0, dpr = 1, K = null, view3 = null, g3 = null;
+  const P = (k) => PLANETS[k], f = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const fmt = (v, d) => (!isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/,/g, ' ').replace('-', '−'));
+  const sci = (v, d) => { if (!isFinite(v) || v === 0) return v === 0 ? '0' : '—'; const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    return `${m.toFixed(d)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c])}`; };
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), surface: g('--surface'),
+      ring: g('--ring'), roche: g('--roche'), rigid: g('--rigid'), moon: g('--moon'), sel: g('--sel'), debris: g('--debris'), water: g('--water'),
+      jupiter: [g('--jup'), g('--jup2')], saturn: [g('--sat'), g('--sat2')], uranus: [g('--ura'), g('--ura2')], neptune: [g('--nep'), g('--nep2')], earth: [g('--ear'), g('--ear2')],
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3.dark() };
+  }
+
+  /* ---------- the test moon (rubble pile) ---------- */
+  const PL = { base: null, st: null, tau: 1, delta: 0, a: 0, Om: 0, last: 0 };
+  function pileReset() {
+    if (!PL.base) PL.base = settlePile(makePile(PILE_N, PILE_SEED));
+    const p = P(S.planet), d = S.dist * p.Req; PL.a = d; PL.delta = rocheUnits(d, p, S.rho);
+    PL.st = pileAt(pileClone(PL.base), PL.delta); PL.tau = Math.sqrt(1 / (Math.pow(PL.st.R, 3) * G * S.rho)); PL.Om = PL.st.Om / PL.tau; S.piece = 1; S.t = 0; S.stripe = S.stripe == null ? null : 0;
+  }
+  const kmPerUnit = () => MOON_KM / PL.st.R;
+  /* where ball i is, in km in the planet's equator plane (x, y) and above it (z): Hill's x out from the planet, y along the orbit */
+  function ballAt(i, th0) {
+    const st = PL.st, k = kmPerUnit(), r = PL.a + st.x[3 * i] * k, th = th0 + st.x[3 * i + 1] * k / PL.a;
+    return [r * Math.cos(th), r * Math.sin(th), st.x[3 * i + 2] * k];
+  }
+  const moonAngle = () => PL.Om * S.t + 0.35;
+
+  /* ---------- layout ---------- */
+  const narrow = () => W < 821;
+  const cardW = () => (narrow() || $('setupCard').hidden ? 0 : $('setupCard').offsetWidth + 28);
+  const zoomK = () => Math.pow(1.5, S.zoom[S.mode]);
+  function orbitView(R) { const avail = W - cardW(), s = 0.92 * Math.min(avail, H) / (2 * R) * zoomK(); return { cx: avail / 2, cy: H / 2, s }; }
+  const ringsView = () => { const p = P(S.planet); return orbitView(VIEW_RINGS[S.planet] * p.Req); };
+  const moonsView = () => { const p = P(S.planet); return orbitView(VIEW_MOONS[S.planet] * p.Req); };
+
+  /* ---------- drawing helpers ---------- */
+  function label(t, x, y, o) {
+    o = o || {}; const p = proj(); ctx.save(); ctx.font = `${o.w || 600} ${(o.size || 11) * p}px ${o.mono ? K.mono : K.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.b || 'middle';
+    if (o.halo !== false) { ctx.lineWidth = 3.5 * p; ctx.strokeStyle = K.canvas; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); }
+    ctx.fillStyle = o.col || K.ink; ctx.fillText(t, x, y); ctx.restore();
+  }
+  function scaleBar(s, x, y, kmWanted) {
+    const p = proj(), nice = [1e3, 2e3, 5e3, 1e4, 2e4, 5e4, 1e5, 2e5, 5e5, 1e6, 2e6]; let L = nice[0]; for (const n of nice) if (n * s <= kmWanted) L = n;
+    ctx.save(); ctx.strokeStyle = K.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + L * s, y); ctx.moveTo(x, y - 4 * p); ctx.lineTo(x, y + 4 * p); ctx.moveTo(x + L * s, y - 4 * p); ctx.lineTo(x + L * s, y + 4 * p); ctx.stroke(); ctx.restore();
+    label(`${fmt(L, 0)} km`, x + L * s / 2, y - 10 * p, { a: 'center', col: K.muted, w: 400, mono: true });
+  }
+  /* a planet's disk seen from above its pole: shading and the bands as rings at r = R cos(latitude) */
+  function poleDisk(k, cx, cy, R) {
+    const c = K[k], gr = ctx.createRadialGradient(cx - R * 0.25, cy - R * 0.25, R * 0.1, cx, cy, R);
+    gr.addColorStop(0, c[1]); gr.addColorStop(0.75, c[0]); gr.addColorStop(1, shade(c[0], -0.35));
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    ctx.save(); ctx.globalAlpha = 0.18; ctx.strokeStyle = shade(c[0], -0.4); ctx.lineWidth = Math.max(1, R * 0.05);
+    for (const lat of BANDS[k] || []) { ctx.beginPath(); ctx.arc(cx, cy, R * Math.cos(lat * Math.PI / 180), 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+  }
+  const BANDS = { jupiter: [-30, -20, -13, -7, 7, 13, 20, 30, 40], saturn: [-35, -20, -10, 10, 20, 35, 50], uranus: [-20, 20], neptune: [-25, 25], earth: [] };
+  function shade(hex, k) { const n = parseInt(hex.replace('#', ''), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, t = k < 0 ? 0 : 255, a = Math.abs(k);
+    const h = (v) => Math.round(v + (t - v) * a).toString(16).padStart(2, '0'); return `#${h(r)}${h(g)}${h(b)}`; }
+
+  /* ---------- Planets: side view, each axis at its tilt, from BETA above the orbit plane ---------- */
+  const BETA = 12 * Math.PI / 180, ORDER = ['jupiter', 'saturn', 'uranus', 'neptune', 'earth'];
+  const toScr = (q) => [q[0], q[1] * Math.sin(BETA) + q[2] * Math.cos(BETA), -(q[1] * Math.cos(BETA) - q[2] * Math.sin(BETA))];   /* x, up, toward the viewer */
+  function axes(k) { const e = P(k).tilt * Math.PI / 180, a = [Math.sin(e), 0, Math.cos(e)], u = [Math.cos(e), 0, -Math.sin(e)], w = [0, 1, 0]; return { a, u, w }; }
+  function surf(k, lat, lon) { const p = P(k), A = axes(k), c = Math.cos(lat), s = Math.sin(lat);
+    return [0, 1, 2].map((i) => p.Req * c * (Math.cos(lon) * A.u[i] + Math.sin(lon) * A.w[i]) + p.Rpol * s * A.a[i]); }
+  function planetsLayout() {
+    const show = ORDER.filter((k) => k !== 'earth' || S.earth), wid = (k) => 2 * (k === 'saturn' ? RINGS.saturn[4][2] : P(k).Req), gap = 30000;
+    const total = show.reduce((s, k) => s + wid(k), 0) + gap * (show.length - 1), avail = W - cardW() - 40, top = H * 0.6;
+    const s = Math.min(avail / total, (top - 70) / (2 * P('jupiter').Req * 1.05)) * zoomK();
+    let x = (W - cardW()) / 2 - total * s / 2; const out = {};
+    for (const k of show) { out[k] = { cx: x + wid(k) * s / 2, cy: top / 2 + 20, s }; x += (wid(k) + gap) * s; }
+    return { pos: out, s, top, show };
+  }
+  function drawPlanet(k, o) {
+    const p = P(k), A = axes(k), sa = toScr(A.a), ang = Math.atan2(sa[1], sa[0]), gam = Math.asin(Math.min(1, Math.abs(sa[2])));
+    const Rx = p.Req * o.s, Rap = Math.sqrt(Math.pow(p.Rpol * Math.cos(gam), 2) + Math.pow(p.Req * Math.sin(gam), 2)) * o.s, c = K[k];
+    const P2 = (q) => { const t = toScr(q); return [o.cx + t[0] * o.s, o.cy - t[1] * o.s, t[2]]; };
+    const ring = k === 'saturn' ? RINGS.saturn.filter((r) => r[2] <= 140000) : null;
+    const ringPath = (r, front) => { const pts = []; for (let i = 0; i <= 96; i++) { const t = i / 96 * 2 * Math.PI, q = [0, 1, 2].map((j) => r * (Math.cos(t) * A.u[j] + Math.sin(t) * A.w[j])), s2 = P2(q); pts.push(s2); }
+      return pts.filter((q) => (front ? q[2] >= 0 : q[2] < 0)); };
+    const rings = (front) => { if (!ring) return; ctx.save(); for (const r of ring) { const n = 6; for (let i = 0; i < n; i++) { const rr = r[1] + (r[2] - r[1]) * (i + 0.5) / n, pts = ringPath(rr, front); if (pts.length < 2) continue;
+      ctx.strokeStyle = K.ring; ctx.globalAlpha = 0.85 * r[3]; ctx.lineWidth = Math.max(0.6, (r[2] - r[1]) / n * o.s * 1.1); ctx.beginPath(); pts.forEach((q, j) => (j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); } } ctx.restore(); };
+    rings(false);
+    /* the disk: an oblate spheroid projects to an ellipse with half axes Req and √(Rpol² cos²γ + Req² sin²γ) */
+    ctx.save(); ctx.translate(o.cx, o.cy); ctx.rotate(-(ang - Math.PI / 2)); ctx.beginPath(); ctx.ellipse(0, 0, Rx, Rap, 0, 0, 2 * Math.PI); ctx.restore();
+    const gr = ctx.createRadialGradient(o.cx - Rx * 0.35, o.cy - Rx * 0.3, Rx * 0.05, o.cx, o.cy, Rx * 1.02); gr.addColorStop(0, c[1]); gr.addColorStop(0.7, c[0]); gr.addColorStop(1, shade(c[0], -0.45));
+    ctx.fillStyle = gr; ctx.fill(); ctx.save(); ctx.clip();
+    /* bands: latitude lines on the side facing us; and a spot on the equator that turns with the planet */
+    ctx.globalAlpha = 0.28; ctx.strokeStyle = shade(c[0], -0.45); ctx.lineWidth = Math.max(1, p.Req * o.s * 0.045);
+    for (const lat of BANDS[k]) { ctx.beginPath(); let on = false; for (let i = 0; i <= 120; i++) { const q = P2(surf(k, lat * Math.PI / 180, i / 120 * 2 * Math.PI)); if (q[2] < 0) { on = false; continue; } if (on) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); on = true; } ctx.stroke(); }
+    ctx.globalAlpha = 1; const lon = 2 * Math.PI * S.t / (p.rot * HOUR), sp = P2(surf(k, -0.25, lon));
+    if (sp[2] > 0) { ctx.fillStyle = shade(c[0], -0.5); ctx.beginPath(); ctx.ellipse(sp[0], sp[1], Math.max(1.5, p.Req * o.s * 0.09), Math.max(1, p.Req * o.s * 0.05), 0, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+    rings(true);
+    /* the spin axis */
+    const n1 = P2(A.a.map((v) => v * p.Rpol * 1.35)), s1 = P2(A.a.map((v) => -v * p.Rpol * 1.35));
+    ctx.save(); ctx.strokeStyle = K.muted; ctx.setLineDash([4, 3]); ctx.lineWidth = 1.2 * proj(); ctx.beginPath(); ctx.moveTo(s1[0], s1[1]); ctx.lineTo(n1[0], n1[1]); ctx.stroke(); ctx.restore();
+    const on = S.sel === k, y0 = o.cy + Math.max(P('jupiter').Req * o.s * 1.05, Rx + 10);
+    label(p.name, o.cx, y0 + 4, { a: 'center', col: on ? K.sel : K.ink, w: on ? 700 : 600, size: 12 });
+    label(`${f(p.tilt, 1)}°`, o.cx, y0 + 20 * proj(), { a: 'center', col: K.muted, w: 400, size: 10, mono: true });
+  }
+  function drawPlanets() {
+    const L = planetsLayout(), p = proj();
+    for (const k of L.show) drawPlanet(k, L.pos[k]);
+    /* densities against water */
+    const x0 = 46 * p, x1 = W - cardW() - 20, y0 = L.top + 34 * p, y1 = H - 34 * p, max = 6, ks = L.show, bw = Math.min(70, (x1 - x0) / ks.length * 0.55), Y = (v) => y1 - (y1 - y0) * v / max;
+    label('Mean density (g/cm³)', x0, y0 - 14 * p, { col: K.muted, w: 700, size: 11 });
+    ctx.save(); ctx.strokeStyle = K.grid; ctx.lineWidth = 1; for (let v = 0; v <= max; v++) { ctx.beginPath(); ctx.moveTo(x0, Y(v)); ctx.lineTo(x1, Y(v)); ctx.stroke(); label(String(v), x0 - 8, Y(v), { a: 'right', col: K.muted, w: 400, size: 10, mono: true }); } ctx.restore();
+    ks.forEach((k, i) => { const v = P(k).rho / 1000, cx = x0 + (i + 0.5) * (x1 - x0) / ks.length, c = K[k];
+      ctx.fillStyle = c[0]; ctx.globalAlpha = S.sel === k ? 1 : 0.8; ctx.fillRect(cx - bw / 2, Y(v), bw, y1 - Y(v)); ctx.globalAlpha = 1;
+      if (S.sel === k) { ctx.strokeStyle = K.sel; ctx.lineWidth = 2 * p; ctx.strokeRect(cx - bw / 2, Y(v), bw, y1 - Y(v)); }
+      label(f(v, 3), cx, Math.min(Y(v), Y(1.25)) - 9 * p, { a: 'center', mono: true, w: 600, size: 11 }); label(P(k).name, cx, y1 + 13 * p, { a: 'center', col: K.muted, size: 11 }); });
+    ctx.save(); ctx.strokeStyle = K.water; ctx.lineWidth = 2 * p; ctx.setLineDash([7, 4]); ctx.beginPath(); ctx.moveTo(x0, Y(1)); ctx.lineTo(x1, Y(1)); ctx.stroke(); ctx.restore();
+    label('water, 1.00', x1 - 4, Y(1) - 9 * p, { a: 'right', col: K.water, w: 700, size: 11 });
+    scaleBar(L.s, 16 * p, 24 * p, 160 * p);
+    label('True sizes and tilts (the angle under each name is its axial tilt). Bands and colors are a painting.', 16 * p, L.top + 6 * p, { col: K.muted, w: 400, size: 10 });
+    planetsHit = L;
+  }
+  let planetsHit = null;
+
+  /* ---------- Rings: from above the north pole ---------- */
+  function ringPts(r, o) { return [o.cx, o.cy, r * o.s]; }
+  function drawRings() {
+    const p = P(S.planet), o = ringsView(), pp = proj(), k = S.planet;
+    /* rings as annuli; brightness is a drawing choice */
+    ctx.save();
+    for (const r of RINGS[k]) { const r1 = r[1] * o.s, r2 = Math.max(r[1] * o.s + 0.8, r[2] * o.s); ctx.beginPath(); ctx.arc(o.cx, o.cy, r2, 0, 2 * Math.PI); ctx.arc(o.cx, o.cy, r1, 0, 2 * Math.PI, true);
+      ctx.fillStyle = K.ring; ctx.globalAlpha = 0.12 + 0.75 * r[3]; ctx.fill(); }
+    ctx.globalAlpha = 1; ctx.strokeStyle = K.canvas; ctx.lineWidth = 1.2;
+    for (const m of RING_MARKS[k]) { ctx.beginPath(); ctx.arc(o.cx, o.cy, m[1] * o.s, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.restore();
+    /* the painted line, wound by Kepler's law: θ(r) = θ₀ + Ω(r) t */
+    if (S.stripe != null) { const rr = RINGS[k].filter((r) => r[3] > 0.3), r0 = Math.min(...RINGS[k].map((r) => r[1])), r1 = Math.max(...rr.map((r) => r[2]));
+      ctx.save(); ctx.strokeStyle = K.sel; ctx.lineWidth = 2 * pp; ctx.beginPath();
+      for (let i = 0; i <= 300; i++) { const r = r0 + (r1 - r0) * i / 300, th = -Math.PI / 2 + kepOmega(p.GM, r) * (S.t - S.stripe); const x = o.cx + r * o.s * Math.cos(th), y = o.cy - r * o.s * Math.sin(th); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.restore(); }
+    poleDisk(k, o.cx, o.cy, p.Req * o.s);
+    /* Roche limits */
+    const showPred = !S.blind;
+    if (S.roche && showPred) for (const [c, col, dash, txt] of [[ROCHE_FLUID, K.roche, [8, 5], 'Roche limit, fluid moon'], [ROCHE_RIGID, K.rigid, [2, 4], 'rigid moon']]) {
+      const d = rocheLimit(p, S.rho, c); ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2 * pp; ctx.setLineDash(dash); ctx.beginPath(); ctx.arc(o.cx, o.cy, d * o.s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      /* labels on the left, clear of the close up (bottom right) and the caption (top left): the fluid limit above, the rigid one below */
+      const la = c === ROCHE_FLUID ? 2.45 : 3.75, lx = o.cx + d * o.s * Math.cos(la), ly = o.cy - d * o.s * Math.sin(la);
+      const lt = narrow() ? txt : `${txt} (${f(S.rho / 1000, 2)} g/cm³)`; ctx.font = `700 ${11 * pp}px ${K.ui}`; const fits = lx - 6 - ctx.measureText(lt).width > 4;
+      label(lt, fits ? lx - 6 : 4, ly + (c === ROCHE_FLUID ? -10 : 12) * pp, { a: fits ? 'right' : 'left', col, w: 700, size: 11 }); }
+    if (S.res && k === 'saturn') { const r = ilr21(p, MOONS.saturn[0].P); ctx.save(); ctx.strokeStyle = K.accent; ctx.lineWidth = 1.5 * pp; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(o.cx, o.cy, r * o.s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      label('2 turns per Mimas orbit', o.cx - r * o.s * 0.72, o.cy + r * o.s * 0.72 + 12, { a: 'right', col: K.accent, w: 700, size: 11 }); }
+    /* small moons by the rings: Kepler periods, spread starting places */
+    RING_MOONS[k].forEach((m, i) => { const th = i * 2.3999 + kepOmega(p.GM, m.a) * S.t, x = o.cx + m.a * o.s * Math.cos(th), y = o.cy - m.a * o.s * Math.sin(th), r = Math.max(2.2 * pp, m.R * o.s);
+      ctx.fillStyle = K.moon; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); label(m.name, x + r + 3, y, { size: 10, w: 600, col: K.muted }); });
+    /* the test moon and its pieces */
+    const th0 = moonAngle(), st = PL.st, km = kmPerUnit();
+    ctx.fillStyle = K.debris; const rb = Math.max(1.3 * pp, st.s * km * o.s);
+    for (let i = 0; i < st.N; i++) { const q = ballAt(i, th0); ctx.beginPath(); ctx.arc(o.cx + q[0] * o.s, o.cy - q[1] * o.s, rb, 0, 2 * Math.PI); ctx.fill(); }
+    const mx = o.cx + PL.a * o.s * Math.cos(th0), my = o.cy - PL.a * o.s * Math.sin(th0);
+    const mt = S.piece > 0.9 ? 'test moon' : 'pieces of the test moon', right = mx + 8 + mt.length * 6.5 * pp < W - cardW();
+    label(mt, right ? mx + 8 : mx - 8, my - 10, { a: right ? 'left' : 'right', col: K.debris, w: 700, size: 11 });
+    scaleBar(o.s, 16 * pp, H - 22 * pp, 150 * pp);
+    label(narrow() ? `${p.name} from above its north pole, to scale` : `${p.name} from above its north pole, to scale. Ring brightness is a drawing choice.`, 16 * pp, 18 * pp, { col: K.muted, w: 400, size: 10 });
+    drawCloseUp();
+  }
+  /* the close up: Hill's frame, moving with the moon; up is away from the planet, right is the way the moon moves */
+  function drawCloseUp() {
+    const pp = proj(), w = Math.min(230 * pp, W * 0.42), h = Math.min(170 * pp, w * 0.8), x0 = narrow() ? W - w - 10 : W - cardW() - w - 4, y0 = H - h - 10, st = PL.st;
+    ctx.save(); ctx.fillStyle = K.surface; ctx.globalAlpha = 0.92; ctx.fillRect(x0, y0, w, h); ctx.globalAlpha = 1; ctx.strokeStyle = K.line; ctx.strokeRect(x0, y0, w, h);
+    ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    let ext = 3; for (let i = 0; i < st.N; i++) ext = Math.max(ext, Math.abs(st.x[3 * i + 1]) * 0.6, Math.abs(st.x[3 * i]) * 1.1);
+    ext = Math.min(ext, 40); const sc = Math.min(w, h * 1.4) / (2 * ext * 1.1) , cx = x0 + w / 2, cy = y0 + h / 2 + 8 * pp;
+    ctx.fillStyle = K.debris; for (let i = 0; i < st.N; i++) { ctx.beginPath(); ctx.arc(cx + st.x[3 * i + 1] * sc, cy - st.x[3 * i] * sc, Math.max(1, st.s * sc), 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+    label('Moving with the moon', x0 + 8, y0 + 12 * pp, { col: K.muted, w: 700, size: 10 });
+    label(`${fmt(Math.round(ext * 1.1 * 2 * kmPerUnit() / 10) * 10, 0)} km across`, x0 + 8, y0 + 26 * pp, { col: K.muted, w: 400, size: 10, mono: true });
+    label(w < 200 * pp ? `↓ ${P(S.planet).name}   → motion` : `↓ to ${P(S.planet).name}   → direction of motion`, x0 + 8, y0 + h - 10 * pp, { col: K.muted, w: 400, size: 10 });
+  }
+
+  /* ---------- Moons ---------- */
+  function conjunctions(i, j, t, keep) {
+    const ms = MOONS[S.planet], a = ms[i], b = ms[j], ni = 360 / (a.P * DAY), nj = 360 / (b.P * DAY), d0 = a.lam - b.lam, rate = ni - nj, out = [];
+    const kHi = Math.floor((rate * t + d0) / 360); for (let kk = kHi; kk > kHi - keep; kk--) { const tk = (360 * kk - d0) / rate; if (tk < 0) break; out.push(meanLon(a, tk)); }
+    return out;
+  }
+  function drawMoons() {
+    const p = P(S.planet), o = moonsView(), pp = proj(), ms = MOONS[S.planet];
+    for (const r of RINGS[S.planet]) { if (r[3] < 0.3) continue; ctx.save(); ctx.strokeStyle = K.ring; ctx.globalAlpha = 0.7; ctx.lineWidth = Math.max(1, (r[2] - r[1]) * o.s); ctx.beginPath(); ctx.arc(o.cx, o.cy, (r[1] + r[2]) / 2 * o.s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+    poleDisk(S.planet, o.cx, o.cy, p.Req * o.s);
+    if (S.conj && ms[0].lam != null) CONJ[S.planet].forEach(([i, j], n) => { const ls = conjunctions(i, j, S.t, 6), r = ms[j].a * o.s * 1.06;
+      ls.forEach((l, q) => { const th = l * Math.PI / 180; ctx.save(); ctx.strokeStyle = n ? K.rigid : K.roche; ctx.globalAlpha = 0.85 - q * 0.12; ctx.lineWidth = 1.5 * pp; ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(o.cx + p.Req * o.s * Math.cos(th), o.cy - p.Req * o.s * Math.sin(th)); ctx.lineTo(o.cx + r * Math.cos(th), o.cy - r * Math.sin(th)); ctx.stroke(); ctx.restore(); });
+      if (ls.length) label(`${ms[i].name} passes ${ms[j].name}`, 16 * pp, H - (40 + 16 * n) * pp, { col: n ? K.rigid : K.roche, w: 700, size: 11 }); });
+    ms.forEach((m, i) => {
+      ctx.save(); ctx.strokeStyle = i === S.moon ? K.sel : K.line; ctx.lineWidth = (i === S.moon ? 1.6 : 1.1) * pp; ctx.beginPath();
+      for (let q = 0; q <= 180; q++) { const z = moonAt(m, q / 180 * Math.abs(m.P) * DAY, i), x = o.cx + z.x * o.s, y = o.cy - z.y * o.s; q ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.restore();
+      const z = moonAt(m, S.t, i), x = o.cx + z.x * o.s, y = o.cy - z.y * o.s, r = Math.max(2.5 * pp, m.R * MOON_X * o.s);
+      ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#d6dde6'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = i === S.moon ? K.sel : shade('#5b6573', 0); ctx.lineWidth = (i === S.moon ? 2.5 : 1) * pp; ctx.stroke();
+      label(m.name, x + r + 4, y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
+    });
+    scaleBar(o.s, 16 * pp, H - 14 * pp, 150 * pp);
+    const capL = narrow() ? [`${p.name}'s moons to scale, drawn ${MOON_X} times larger`, 'gold mostly rock, tan rock and ice, white mostly ice',
+      ms[0].lam != null ? 'Starting places: noon, 1 January 2000' : 'Starting places spread out, not from a date'] :
+      [`${p.name} and its orbits to scale, seen from above. Moons drawn ${MOON_X} times larger.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
+      ms[0].lam != null ? 'Starting places: noon, 1 January 2000 (JPL mean elements)' : 'Starting places spread out for clarity, not from a date'];
+    capL.forEach((t, i) => label(t, 16 * pp, (18 + 15 * i) * pp, { col: K.muted, w: 400, size: 10 }));
+    moonsHit = o;
+  }
+  let moonsHit = null;
+
+  /* ---------- Io's tides ---------- */
+  function ioState() {
+    const io = MOONS.jupiter[0], e = S.e, n = 2 * Math.PI / (io.P * DAY), M = n * S.t, E = kepE(M, e), fa = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+    return { M, f: fa, r: io.a * (1 - e * Math.cos(E)), lib: fa - M, stretch: Math.pow(io.a / (io.a * (1 - e * Math.cos(E))), 3) };
+  }
+  const exagE = () => (S.exag ? Math.min(0.6, S.e * 60) : S.e);
+  function drawIo() {
+    const pp = proj(), io = MOONS.jupiter[0], J = P('jupiter'), avail = W - cardW(), st = ioState(), ex = exagE();
+    /* left: the orbit, distances to scale (the shape exaggerated when chosen) */
+    const L = narrow() ? { cx: avail * 0.5, cy: H * 0.3, s: Math.min(avail * 0.45, H * 0.27) / (io.a * (1 + ex)) } : { cx: avail * 0.3, cy: H * 0.5, s: Math.min(avail * 0.26, H * 0.4) / (io.a * (1 + ex)) };
+    const aE = io.a, cF = aE * ex, b = aE * Math.sqrt(1 - ex * ex);
+    ctx.save(); ctx.strokeStyle = K.line; ctx.lineWidth = 1.2 * pp; ctx.beginPath(); ctx.ellipse(L.cx - cF * L.s, L.cy, aE * L.s, b * L.s, 0, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+    poleDisk('jupiter', L.cx, L.cy, J.Req * L.s);
+    const Ed = kepE(st.M, ex), fd = 2 * Math.atan2(Math.sqrt(1 + ex) * Math.sin(Ed / 2), Math.sqrt(1 - ex) * Math.cos(Ed / 2)), rd = aE * (1 - ex * Math.cos(Ed));
+    const ix = L.cx + rd * Math.cos(fd) * L.s, iy = L.cy - rd * Math.sin(fd) * L.s;
+    ctx.fillStyle = '#e7c85a'; ctx.beginPath(); ctx.arc(ix, iy, 5 * pp, 0, 2 * Math.PI); ctx.fill();
+    label('Io', ix + 8, iy - 8, { w: 700 }); label('closest', L.cx + aE * (1 - ex) * L.s - 4, L.cy + 14, { a: 'right', col: K.muted, w: 400, size: 10 }); label('farthest', L.cx - aE * (1 + ex) * L.s + 4, L.cy + 14, { col: K.muted, w: 400, size: 10 });
+    label(S.exag ? `Orbit drawn ${f(ex / Math.max(S.e, 1e-9), 0)} times more oval than it is` : 'Orbit to scale', 16 * pp, 18 * pp, { col: K.muted, w: 400, size: 10 });
+    if (S.exag && S.e === 0) label('e = 0: a circle', 16 * pp, 34 * pp, { col: K.muted, w: 400, size: 10 });
+    /* right: Io close up, its long axis toward Jupiter, its surface turning at a steady rate (a marked mountain) */
+    const R0 = narrow() ? Math.min(avail * 0.2, H * 0.14) : Math.min(avail * 0.16, H * 0.22), C = narrow() ? { x: avail * 0.5, y: H * 0.75 } : { x: avail * 0.72, y: H * 0.5 };
+    const k = S.exag ? 0.35 : 0.004, base = 1 + k, swing = S.exag ? 60 : 1, stretch = 1 + k * (1 + (st.stretch - 1) * swing);
+    const dirJ = Math.PI + st.f, lib = st.lib * swing, ang = st.M + Math.PI + 0;   /* Io's body turns with the mean motion */
+    const heat = Math.min(1, tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e) / 2e14);
+    ctx.save(); ctx.translate(C.x, C.y); ctx.rotate(-(Math.PI + st.M + lib));
+    const gr = ctx.createRadialGradient(-R0 * 0.3, -R0 * 0.3, R0 * 0.1, 0, 0, R0 * 1.4); gr.addColorStop(0, '#f7e7a0'); gr.addColorStop(0.6, '#e2c158'); gr.addColorStop(1, '#a8862c');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(0, 0, R0 * stretch / Math.sqrt(stretch), R0 / Math.sqrt(stretch) * Math.sqrt(1 / 1), 0, 0, 2 * Math.PI); ctx.fill();
+    if (heat > 0) { ctx.globalAlpha = 0.25 + 0.6 * heat; ctx.fillStyle = '#e8501f'; for (const [a, r] of [[0.4, 0.5], [2.1, 0.62], [3.6, 0.35], [5.0, 0.7], [1.2, 0.2]]) { ctx.beginPath(); ctx.arc(R0 * r * Math.cos(a), R0 * r * Math.sin(a) * 0.9, R0 * 0.07, 0, 2 * Math.PI); ctx.fill(); } ctx.globalAlpha = 1; }
+    ctx.restore();
+    /* the mountain, fixed on Io's surface: it faces where Jupiter would be on a circular orbit */
+    const mA = Math.PI + st.M, mx = C.x + R0 * 0.82 * Math.cos(mA), my = C.y - R0 * 0.82 * Math.sin(mA);
+    ctx.fillStyle = '#5b4a2a'; ctx.beginPath(); ctx.moveTo(mx, my - 6 * pp); ctx.lineTo(mx - 5 * pp, my + 4 * pp); ctx.lineTo(mx + 5 * pp, my + 4 * pp); ctx.fill();
+    /* arrow to Jupiter */
+    const jA = Math.PI + st.f + (S.exag ? (st.f - st.M) * (swing - 1) : 0), ax = C.x + R0 * 1.9 * Math.cos(jA), ay = C.y - R0 * 1.9 * Math.sin(jA);
+    ctx.save(); ctx.strokeStyle = K.accent; ctx.lineWidth = 2 * pp; ctx.beginPath(); ctx.moveTo(C.x + R0 * 1.3 * Math.cos(jA), C.y - R0 * 1.3 * Math.sin(jA)); ctx.lineTo(ax, ay); ctx.stroke(); ctx.restore();
+    label('to Jupiter', ax + 6 * Math.cos(jA), ay - 10 * Math.sin(jA) - 4, { a: Math.cos(jA) < 0 ? 'right' : 'left', col: K.accent, w: 700, size: 11 });
+    label(S.exag ? 'Io close up: stretch and sway exaggerated' : 'Io close up, to scale: the stretch is too small to see', C.x, C.y - R0 * 2.1 - 16, { a: 'center', col: K.muted, w: 400, size: 10 });
+    label('▲ a mountain fixed on Io', C.x, C.y - R0 * 2.1, { a: 'center', col: K.muted, w: 400, size: 10 });
+    void base; void dirJ; void ang;
+  }
+
+  function draw() {
+    if (!K || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const on3 = view3 && view3.is3d() && g3;
+    if (on3) { ctx.clearRect(0, 0, W, H); draw3(); return; }
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'planets') drawPlanets(); else if (S.mode === 'rings') drawRings(); else if (S.mode === 'moons') drawMoons(); else drawIo();
+  }
+
+  /* ---------- 3D ---------- */
+  function bandTex(k) {
+    const cv = document.createElement('canvas'); cv.width = 512; cv.height = 256; const c = cv.getContext('2d'), col = K[k], r = rng(k.length * 97 + 3);
+    c.fillStyle = col[0]; c.fillRect(0, 0, 512, 256);
+    for (let y = 0; y < 256; y++) { const lat = 90 - y / 256 * 180, near = BANDS[k].some((b) => Math.abs(b - lat) < 3.5); if (near) { c.fillStyle = shade(col[0], -0.25); c.globalAlpha = 0.55; c.fillRect(0, y, 512, 1); }
+      else if (Math.abs(lat) < 60 && (k === 'jupiter' || k === 'saturn')) { c.fillStyle = col[1]; c.globalAlpha = 0.18 + 0.12 * Math.sin(lat * 0.35); c.fillRect(0, y, 512, 1); } }
+    c.globalAlpha = 0.12; for (let i = 0; i < 400; i++) { c.fillStyle = r() < 0.5 ? col[1] : shade(col[0], -0.2); c.fillRect(r() * 512, r() * 256, 20 + r() * 60, 1 + r() * 2); }
+    if (k === 'jupiter') { c.globalAlpha = 0.85; c.fillStyle = '#b5583a'; c.beginPath(); c.ellipse(300, 128 + 22 / 180 * 256, 16, 7, 0, 0, 2 * Math.PI); c.fill(); }
+    c.globalAlpha = 1; return cv;
+  }
+  function ringTex(k, out) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 1024; const c = cv.getContext('2d'), R = 512;
+    for (const r of RINGS[k]) { if (r[1] > out) continue; c.beginPath(); c.arc(R, R, Math.min(out, Math.max(r[2], r[1] + out / 900)) / out * R, 0, 2 * Math.PI); c.arc(R, R, r[1] / out * R, 0, 2 * Math.PI, true);
+      c.fillStyle = `rgba(216,196,154,${(0.12 + 0.8 * r[3]).toFixed(3)})`; c.fill(); }
+    c.strokeStyle = 'rgba(0,0,0,0.7)'; c.lineWidth = 1.2; for (const m of RING_MARKS[k] || []) { c.beginPath(); c.arc(R, R, m[1] / out * R, 0, 2 * Math.PI); c.stroke(); }
+    const t = new THREE.CanvasTexture(cv); return t;
+  }
+  function makePlanet3(S3, k, R) {
+    const p = P(k), pl = VD3K.planet(S3, { r: R, color: '#ffffff', tilt: p.tilt * Math.PI / 180, seg: 64 }), tx = new THREE.CanvasTexture(bandTex(k));
+    pl.ball.material.map = tx; pl.ball.material.needsUpdate = true;
+    pl.ball.scale.set(1, p.Rpol / p.Req, 1);   /* the ball's own y is the pole (it is turned onto z) */
+    return pl;
+  }
+  function ringMesh(k, Rkm, out) {
+    const r0 = Math.min(...RINGS[k].map((r) => r[1])), g = new THREE.RingGeometry(r0 / Rkm, out / Rkm, 256, 1), m = new THREE.MeshBasicMaterial({ map: ringTex(k, out), transparent: true, side: THREE.DoubleSide, depthWrite: false });
+    /* RingGeometry's uv is planar: map the square texture over the disk of radius out */
+    const uv = g.attributes.uv, pos = g.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, pos.getX(i) / (out / Rkm) * 0.5 + 0.5, pos.getY(i) / (out / Rkm) * 0.5 + 0.5);
+    const mesh = new THREE.Mesh(g, m); mesh.renderOrder = 2; return mesh;
+  }
+  const G3o = { th: -1.25, ph: 1.12, zoom: 1 };
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, fov: 32, near: 0.01, far: 4000, sky: '#05070b' }); if (!S3) return false;
+    S3.el.classList.add('gp3'); S3.scene.add(VD3K.sky(S3, { r: 1500, n: 2600, milky: true }));
+    S3.sun.position.set(-6, -3, 2.4); S3.hemi.intensity = 0.25;
+    g3 = { S3, groups: {}, built: {} };
+    VD3.orbit(can, G3o, () => { if (view3 && view3.is3d()) draw(); }, { phMin: 0.2, phMax: 2.9, zMin: 0.3, zMax: 4 });
+    return true;
+  }
+  function build3(key) {
+    const S3 = g3.S3; for (const k in g3.groups) g3.groups[k].visible = false;
+    if (g3.built.key === key) { g3.groups.cur.visible = true; return g3.built; }
+    if (g3.groups.cur) S3.dispose(g3.groups.cur);
+    const grp = new THREE.Group(); S3.scene.add(grp); g3.groups.cur = grp; const b = { key, grp };
+    if (S.mode === 'planets') {
+      /* a row in units of 100 000 km */
+      const U = 1e5, show = ORDER.filter((k) => k !== 'earth' || S.earth); let x = 0; b.pl = {};
+      const wid = (k) => 2 * (k === 'saturn' ? RINGS.saturn[4][2] : P(k).Req) / U; const total = show.reduce((s, k) => s + wid(k), 0) + 0.22 * (show.length - 1);
+      x = -total / 2; for (const k of show) { const pl = makePlanet3(S3, k, P(k).Req / U); pl.position.set(x + wid(k) / 2, 0, 0); grp.add(pl); b.pl[k] = pl;
+        if (k === 'saturn') { const rm = ringMesh('saturn', U, 140000); pl.add(rm); }
+        const lab = VD3K.label(P(k).name, { size: 0.16, color: '#e3e8ef' }); lab.position.set(x + wid(k) / 2, 0, -1.75); grp.add(lab); x += wid(k) + 0.22; }
+      b.target = [0, 0, -0.2]; b.dist = Math.max(4.2, total * 1.9);
+    } else if (S.mode === 'rings') {
+      const p = P(S.planet), R = p.Req, out = Math.min(VIEW_RINGS[S.planet], Math.max(...RINGS[S.planet].map((r) => r[2])) / R) * R; b.pl = makePlanet3(S3, S.planet, 1); b.pl.rotation.y = 0; grp.add(b.pl);
+      grp.add(ringMesh(S.planet, R, out));
+      b.rm = RING_MOONS[S.planet].map((m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.012, m.R / R), 16, 10), new THREE.MeshStandardMaterial({ color: 0xb9c0c8, roughness: 0.9 })); grp.add(s); return s; });
+      b.roche = [ROCHE_FLUID, ROCHE_RIGID].map((c, i) => { const l = VD3K.ring(1, { color: i ? '#c4a5ff' : '#fb923c', dashed: true, opacity: 0.9, seg: 192 }); grp.add(l); return l; });
+      b.res = VD3K.ring(1, { color: '#69a0ff', dashed: true, opacity: 0.9, seg: 192 }); grp.add(b.res);
+      const g = new THREE.BufferGeometry(); b.debrisPos = new Float32Array(3 * PILE_N); g.setAttribute('position', new THREE.BufferAttribute(b.debrisPos, 3));
+      b.debris = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xff7a45, size: 3, sizeAttenuation: false, depthTest: false })); b.debris.renderOrder = 6; b.debris.frustumCulled = false; grp.add(b.debris);
+      const sg = new THREE.BufferGeometry(); b.stripePos = new Float32Array(3 * 201); sg.setAttribute('position', new THREE.BufferAttribute(b.stripePos, 3));
+      b.stripe = new THREE.Line(sg, new THREE.LineBasicMaterial({ color: 0xfb923c })); b.stripe.frustumCulled = false; grp.add(b.stripe);
+      b.target = [0, 0, 0]; b.dist = VIEW_RINGS[S.planet] * 3.6;
+    } else if (S.mode === 'moons') {
+      const p = P(S.planet), R = p.Req; b.pl = makePlanet3(S3, S.planet, 1); grp.add(b.pl);
+      const big = RINGS[S.planet].filter((r) => r[3] > 0.3), out = Math.max(...big.map((r) => r[2])); grp.add(ringMesh(S.planet, R, out));
+      b.moons = MOONS[S.planet].map((m, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(m.R * MOON_X / R, 24, 16), new THREE.MeshStandardMaterial({ color: m.rho == null ? 0xb9c0c8 : m.rho > 2800 ? 0xd9b45a : m.rho > 1400 ? 0xb3a996 : 0xe3e9f0, roughness: 0.85 }));
+        const pts = []; for (let q = 0; q <= 180; q++) { const z = moonAt(m, q / 180 * Math.abs(m.P) * DAY, i); pts.push(new THREE.Vector3(z.x / R, z.y / R, 0)); }
+        const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x7d8796, transparent: true, opacity: 0.7 }));
+        const lab = VD3K.label(m.name, { size: VIEW_MOONS[S.planet] * 0.06, color: '#e3e8ef' }); grp.add(s, ln, lab); return { s, ln, lab }; });
+      b.target = [0, 0, 0]; b.dist = VIEW_MOONS[S.planet] * 3.4;
+    } else {
+      b.pl = makePlanet3(S3, 'jupiter', 1); grp.add(b.pl);
+      b.orbit = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x7d8796 })); grp.add(b.orbit); b.orbitE = -1;
+      const io = new THREE.Mesh(new THREE.SphereGeometry(0.42, 48, 32), new THREE.MeshStandardMaterial({ color: 0xe2c158, roughness: 0.8, emissive: new THREE.Color(0xe8501f), emissiveIntensity: 0 }));
+      const mark = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.12, 12), new THREE.MeshStandardMaterial({ color: 0x5b4a2a })); mark.rotation.z = -Math.PI / 2; mark.position.set(0.44, 0, 0);
+      b.ioBody = new THREE.Group(); b.ioShape = new THREE.Group(); b.ioShape.add(io); b.ioBody.add(mark); b.io = new THREE.Group(); b.io.add(b.ioShape, b.ioBody); grp.add(b.io); b.ioMat = io.material;
+      b.target = [0, 0, 0]; b.dist = 22;
+    }
+    g3.built = b; return b;
+  }
+  function draw3() {
+    const key = S.mode + ':' + S.planet + ':' + (S.mode === 'planets' ? S.earth : ''), b = build3(key), S3 = g3.S3, c = cardW();
+    S3.size(W, H); S3.cam.setViewOffset(W, H, c / 2, 0, W, H);
+    S3.place(G3o, b.target, S3.fit(b.dist, 1.4) / zoomK());
+    if (S.mode === 'planets') { for (const k in b.pl) b.pl[k].spin(2 * Math.PI * S.t / (P(k).rot * HOUR)); }
+    else if (S.mode === 'rings') {
+      const p = P(S.planet), R = p.Req; b.pl.spin(2 * Math.PI * S.t / (p.rot * HOUR));
+      RING_MOONS[S.planet].forEach((m, i) => { const th = i * 2.3999 + kepOmega(p.GM, m.a) * S.t; b.rm[i].position.set(m.a / R * Math.cos(th), m.a / R * Math.sin(th), 0); });
+      [ROCHE_FLUID, ROCHE_RIGID].forEach((cc, i) => { const d = rocheLimit(p, S.rho, cc) / R; b.roche[i].scale.set(d, d, 1); b.roche[i].visible = S.roche && !S.blind; });
+      b.res.visible = S.res && S.planet === 'saturn'; if (b.res.visible) { const r = ilr21(p, MOONS.saturn[0].P) / R; b.res.scale.set(r, r, 1); }
+      const th0 = moonAngle(); for (let i = 0; i < PILE_N; i++) { const q = ballAt(i, th0); b.debrisPos.set([q[0] / R, q[1] / R, q[2] / R], 3 * i); } b.debris.geometry.attributes.position.needsUpdate = true;
+      b.stripe.visible = S.stripe != null; if (b.stripe.visible) { const r0 = Math.min(...RINGS[S.planet].map((r) => r[1])), r1 = Math.max(...RINGS[S.planet].filter((r) => r[3] > 0.3).map((r) => r[2]));
+        for (let i = 0; i <= 200; i++) { const r = r0 + (r1 - r0) * i / 200, th = -Math.PI / 2 + kepOmega(p.GM, r) * (S.t - S.stripe); b.stripePos.set([r / R * Math.cos(th), r / R * Math.sin(th), 0.002], 3 * i); }
+        b.stripe.geometry.attributes.position.needsUpdate = true; }
+    } else if (S.mode === 'moons') {
+      const p = P(S.planet), R = p.Req; b.pl.spin(2 * Math.PI * S.t / (p.rot * HOUR));
+      MOONS[S.planet].forEach((m, i) => { const z = moonAt(m, S.t, i), q = b.moons[i]; q.s.position.set(z.x / R, z.y / R, 0); q.lab.position.set(z.x / R, z.y / R, m.R * MOON_X / R + VIEW_MOONS[S.planet] * 0.03);
+        q.ln.material.color.set(i === S.moon ? 0xfb923c : 0x7d8796); q.lab.material.color.set(i === S.moon ? 0xfb923c : 0xffffff); });
+    } else {
+      const io = MOONS.jupiter[0], J = P('jupiter'), st = ioState(), ex = exagE(), aR = io.a / J.Req; b.pl.spin(2 * Math.PI * S.t / (J.rot * HOUR));
+      if (b.orbitE !== ex) { const pts = []; for (let q = 0; q <= 200; q++) { const E = q / 200 * 2 * Math.PI; pts.push(new THREE.Vector3(aR * (Math.cos(E) - ex), aR * Math.sqrt(1 - ex * ex) * Math.sin(E), 0)); } b.orbit.geometry.dispose(); b.orbit.geometry = new THREE.BufferGeometry().setFromPoints(pts); b.orbitE = ex; }
+      const Ed = kepE(st.M, ex), fd = 2 * Math.atan2(Math.sqrt(1 + ex) * Math.sin(Ed / 2), Math.sqrt(1 - ex) * Math.cos(Ed / 2)), rd = aR * (1 - ex * Math.cos(Ed));
+      b.io.position.set(rd * Math.cos(fd), rd * Math.sin(fd), 0);
+      const k = S.exag ? 0.35 : 0.004, swing = S.exag ? 60 : 1, s = 1 + k * (1 + (st.stretch - 1) * swing), dirJ = Math.atan2(-b.io.position.y, -b.io.position.x) + (S.exag ? (st.f - st.M) * (swing - 1) * 0 : 0);
+      b.ioShape.rotation.z = Math.PI + st.M + st.lib * swing; b.ioShape.scale.set(s / Math.sqrt(s), 1 / Math.sqrt(s), 1 / Math.sqrt(s)); b.ioBody.rotation.z = Math.PI + st.M;
+      b.ioMat.emissiveIntensity = Math.min(1, tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e) / 2e14) * 0.6; void dirJ;
+    }
+    S3.render();
+    /* words over the picture */
+    const pp = proj();
+    if (S.mode === 'rings') label(`${P(S.planet).name}'s rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+    if (S.mode === 'moons') label(`Orbits to scale; moons drawn ${MOON_X} times larger`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+    if (S.mode === 'planets') label('True sizes and tilts; bands and colors are a painting', 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+    if (S.mode === 'io') label(`Io drawn ${f(0.42 * P('jupiter').Req / MOONS.jupiter[0].R, 0)} times larger; ${S.exag ? 'its orbit and stretch exaggerated' : 'orbit to scale'}`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+  }
+
+  /* ---------- readouts ---------- */
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  const kind = (rho) => (rho == null ? '—' : rho > 2800 ? 'mostly rock' : rho > 1400 ? 'rock and ice' : 'mostly ice');
+  function readouts() {
+    const o = [], hid = '<span class="ok">hidden: work it out</span>';
+    if (S.mode === 'planets') {
+      const p = P(S.sel), E = PLANETS.earth, q = spinQ(p), vol = p.Req * p.Req * p.Rpol / (E.Req * E.Req * E.Rpol);
+      o.push(dd('Planet', p.name), dd('Mass', `${sci(p.M, 4)} kg`), dd('Mass (Earth = 1)', f(p.M / E.M, 2)), dd('Equatorial radius', `${fmt(p.Req, 0)} km`),
+        dd('Polar radius', `${fmt(p.Rpol, 0)} km`), dd('Radius (Earth = 1)', f(p.Req / E.Req, 3)), dd('Earths that fit inside', fmt(vol, 0)),
+        dd('Mean density', `${f(p.rho / 1000, 3)} g/cm³`, 'wide'), dd('Floats in water?', p.rho < 1000 ? 'yes' : 'no'),
+        dd('Turns once in', `${f(Math.abs(p.rot), 2)} h${p.rot < 0 ? ', backward' : ''}`), dd('Flattening', `${f(100 * p.f, 2)} %`),
+        dd('Uniform planet would flatten', S.blind ? hid : `${f(100 * uniformFlattening(q), 2)} %`), dd('Axial tilt', `${f(p.tilt, 2)}°`), dd('Distance from the Sun', `${f(p.aSun * 1e6 / AU_KM, 2)} AU`));
+    } else if (S.mode === 'rings') {
+      const p = P(S.planet), dF = rocheLimit(p, S.rho, ROCHE_FLUID), dR = rocheLimit(p, S.rho, ROCHE_RIGID), Pm = kepPeriod(p.GM, PL.a) / HOUR;
+      o.push(dd('Test moon density', `${f(S.rho / 1000, 2)} g/cm³`), dd('Its distance', `${fmt(PL.a, 0)} km = ${f(S.dist, 2)} R`),
+        dd('Roche limit, fluid moon', S.blind ? hid : `${fmt(dF, 0)} km = ${f(dF / p.Req, 2)} R`), dd('Rigid moon limit', S.blind ? hid : `${fmt(dR, 0)} km = ${f(dR / p.Req, 2)} R`),
+        dd('Its orbital period', `${f(Pm, 2)} h`), dd('Orbits so far', f(PL.Om * S.t / (2 * Math.PI), 2)),
+        dd('Largest piece', `${f(100 * S.piece, 0)} % of the moon`, S.piece < 0.9 ? 'warn' : ''), dd('Distance in Roche units', S.blind ? hid : f(PL.delta, 3)));
+      const main = RINGS[S.planet].filter((r) => r[3] > 0.3), r0 = Math.min(...main.map((r) => r[1])), r1 = Math.max(...main.map((r) => r[2]));
+      o.push(dd('Inner edge of the bright rings', `${fmt(r0, 0)} km, period ${f(kepPeriod(p.GM, r0) / HOUR, 2)} h`, 'wide'), dd('Outer edge', `${fmt(r1, 0)} km, period ${f(kepPeriod(p.GM, r1) / HOUR, 2)} h`, 'wide'));
+      if (S.planet === 'saturn' && S.res) o.push(dd('2 turns per Mimas orbit', S.blind ? hid : `${fmt(ilr21(p, MOONS.saturn[0].P), 0)} km (Kepler alone ${fmt(kepler21(MOONS.saturn[0].a), 0)} km)`, 'wide'));
+    } else if (S.mode === 'moons') {
+      const p = P(S.planet), ms = MOONS[S.planet], m = ms[S.moon], GM = gmFromOrbit(m.a, Math.abs(m.P) * DAY);
+      o.push(dd('Moon', m.name), dd('Distance a', `${fmt(m.a, 0)} km`), dd('a in planet radii', f(m.a / p.Req, 2)), dd('Period P', `${f(Math.abs(m.P), 4)} days${m.P < 0 ? ', backward' : ''}`),
+        dd('Planet mass from this orbit', S.blind ? hid : `${sci(GM * 1e9 / G, 4)} kg`), dd('Planet mass, NASA', `${sci(p.M, 4)} kg`),
+        dd('Density', m.rho == null ? '—' : `${f(m.rho / 1000, 2)} g/cm³`), dd('Made of (a rough guide)', kind(m.rho)));
+      if (S.moon > 0) o.push(dd(`Period ÷ ${ms[S.moon - 1].name}'s`, f(Math.abs(m.P / ms[S.moon - 1].P), 3)));
+      if (S.planet === 'jupiter') o.push(dd('λ(Io) − 3λ(Europa) + 2λ(Ganymede)', `${f(laplaceAngle(meanLon(ms[0], S.t), meanLon(ms[1], S.t), meanLon(ms[2], S.t)), 1)}°`, 'wide'));
+    } else {
+      const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e), A = 4 * Math.PI * Math.pow(io.R * 1e3, 2), sw = tideSwing(S.e), st = ioState();
+      o.push(dd('Eccentricity e', f(S.e, 4)), dd('Distance now', `${fmt(st.r, 0)} km`), dd('Tidal heating', S.blind ? hid : `${sci(Ed, 2)} W`), dd('Per square meter', S.blind ? hid : `${f(Ed / A, 2)} W/m²`),
+        dd('Io measured', `more than ${f(IO_FLUX_OBS, 1)} W/m², ${sci(IO_FLUX_OBS * A, 2)} W`, 'wide'), dd('Compared with all of Earth\'s heat', S.blind ? hid : `${f(Ed / EARTH_HEAT, 1)} times`),
+        dd('Tide swings by', `±${f(100 * sw.stretch, 2)} %`), dd('Jupiter\'s direction rocks by', `±${f(sw.sway, 2)}°`), dd('Stretch now (average = 1)', f(st.stretch, 4)));
+    }
+    $('out').innerHTML = o.join('');
+    if (S.mode === 'moons') moonTable();
+  }
+  function moonTable() {
+    const p = P(S.planet), ms = MOONS[S.planet], t = $('moonTable');
+    t.tHead.innerHTML = '<tr><th>Moon</th><th>a (R)</th><th>P (d)</th><th>÷ inner</th><th>g/cm³</th></tr>';
+    t.tBodies[0].innerHTML = ms.map((m, i) => `<tr class="${i === S.moon ? 'on' : ''}"><td><button type="button" data-moon="${i}">${m.name}</button></td><td>${f(m.a / p.Req, 2)}</td><td>${f(Math.abs(m.P), 3)}${m.P < 0 ? ' R' : ''}</td><td>${i ? f(Math.abs(m.P / ms[i - 1].P), 3) : ''}</td><td>${m.rho ? f(m.rho / 1000, 2) : '—'}</td></tr>`).join('');
+  }
+  function clock() {
+    const t = S.t, d = t / DAY;
+    $('clock').textContent = S.mode === 'moons' && MOONS[S.planet][0].lam != null ? `1 Jan 2000 noon + ${f(d, 2)} d` : d >= 2 ? `t = ${f(d, 2)} days` : `t = ${f(t / HOUR, 2)} h` + (S.slow ? ' · running slower than chosen' : '');
+  }
+
+  /* ---------- controls ---------- */
+  function sync() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('boxPlanets').hidden = S.mode !== 'planets'; $('boxRings').hidden = S.mode !== 'rings'; $('boxMoons').hidden = S.mode !== 'moons'; $('boxIo').hidden = S.mode !== 'io';
+    $('planetBox').hidden = S.mode === 'io' || S.mode === 'planets'; $('moonsSec').hidden = S.mode !== 'moons';
+    $('cardTitle').textContent = { planets: 'The four giants', rings: 'Rings and a test moon', moons: 'Moons', io: 'Io\'s tides' }[S.mode];
+    $('selPlanet').value = S.planet; $('chkEarth').checked = S.earth;
+    $('sRho').value = S.rho; $('oRho').textContent = `${f(S.rho / 1000, 2)} g/cm³`; $('sDist').value = S.dist; $('oDist').textContent = `${f(S.dist, 2)} R`;
+    for (const b of document.querySelectorAll('[data-rho]')) b.setAttribute('aria-pressed', String(+b.dataset.rho === S.rho));
+    $('chkRoche').checked = S.roche; $('chkRes').checked = S.res; $('chkRes').closest('label').hidden = S.planet !== 'saturn';
+    const sm = $('selMoon'), ms = MOONS[S.planet]; if (sm.dataset.p !== S.planet) { sm.innerHTML = ms.map((m, i) => `<option value="${i}">${m.name}</option>`).join(''); sm.dataset.p = S.planet; }
+    S.moon = Math.min(S.moon, ms.length - 1); sm.value = String(S.moon); $('chkConj').checked = S.conj; $('chkConj').closest('label').hidden = !CONJ[S.planet].length;
+    $('sEcc').value = S.e; $('oEcc').textContent = f(S.e, 4); $('chkExag').checked = S.exag; $('selSpeed').value = String(S.speed);
+    $('modelText').textContent = MODEL[S.mode];
+  }
+  const MODEL = {
+    planets: 'Sizes, masses, densities, spins, flattening and tilts are NASA\'s. Each planet is drawn as an oblate spheroid with its equatorial and polar radii, seen from 12° above the plane of its orbit with its axis tipped toward the right. A planet of uniform density spun as fast would flatten by 5q/4, with q = ω²a³/GM its spin compared with its gravity at the equator; the real giants flatten less because their mass is packed toward the center. Bands, colors and the turning spot are a painting.',
+    rings: 'Ring radii are NASA\'s; their brightness in the picture is a drawing choice. Every ring particle and moon goes round on a circle at its Kepler speed, ω = √(GM/r³), with the planet\'s bulge left out (it changes the periods by under 1 %). The test moon is a pile of 200 equal frictionless balls that bounce off each other with some loss and pull on each other by gravity, in Hill\'s frame moving with the moon; the planet\'s tide and the turning of the frame are taken to first order in the moon\'s size, and its pieces are placed along the orbit by their distance in that frame. Whether such a moon survives depends only on its distance in units of R(ρ_planet/ρ_moon)^(1/3), not on its size. This pile holds together for at least 8 orbits at 1.80 of those units and comes apart within 3 orbits at 1.78 or closer, between a rigid moon (1.44) and a fluid one (2.455, Chandrasekhar): a pile of touching balls resists being stretched a little, so it survives somewhat inside the fluid limit. A real moon\'s strength puts its breakup somewhere in that range. The density uses the volume inside the pile\'s outer surface. The 2:1 place with Mimas solves 2Ω − κ = 2n(Mimas) with Saturn\'s J₂ included and J₄ left out.',
+    moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.1 %). Pairs line up (conjunctions) where their mean longitudes agree.',
+    io: 'Io turns once per orbit at a steady rate, but on an oval orbit it speeds up and slows down, and its distance changes. The tide that stretches it goes as 1/r³, so it swings by ±3e over each orbit, and Jupiter seen from Io rocks back and forth by ±2e radians: the bulge moves through Io\'s rock and heats it. The heating is Ė = (21/2)(k₂/Q) G M² R⁵ n e²/a⁶ (Murray and Dermott 1999, eq. 4.192), for a moon locked to its planet, with Io\'s measured k₂/Q = 0.015 ± 0.003, so the answer carries that ±20 %. The heating goes as e², so e = 0 gives none. In the picture the orbit is drawn 60 times more oval and Io\'s stretch and sway are exaggerated; the readouts are not.',
+  };
+  function setMode(m) { S.mode = m; S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
+  const custom = () => { S.preset = 'custom'; };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.planet = c.planet || S.planet; if (c.sel) S.sel = c.sel; if (c.earth != null) S.earth = c.earth;
+    if (c.rho) S.rho = c.rho; if (c.dist) S.dist = c.dist; if (c.roche != null) S.roche = c.roche; if (c.res != null) S.res = c.res; if (c.moon != null) S.moon = c.moon; if (c.conj != null) S.conj = c.conj;
+    if (c.e != null) S.e = c.e; if (c.exag != null) S.exag = c.exag; S.speed = c.speed || SPEED[c.mode]; S.zoom[c.mode] = c.zoom || 0; S.stripe = c.stripe ? 0 : null; S.t = 0;
+    if (S.mode === 'rings') pileReset(); if (c.stripe) S.stripe = 0;
+    $('presetHint').textContent = c.hint; setRun(!!c.run); sync(); readouts(); clock(); draw();
+  }
+  function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { custom(); setRun(false); S.t = 0; setMode(b.dataset.mode); });
+  $('selPlanet').addEventListener('change', (e) => { custom(); S.planet = e.target.value; S.moon = 0; if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
+  $('chkEarth').addEventListener('change', (e) => { custom(); S.earth = e.target.checked; if (!S.earth && S.sel === 'earth') S.sel = 'jupiter'; readouts(); draw(); });
+  $('sRho').addEventListener('input', (e) => { custom(); S.rho = +e.target.value; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
+  for (const b of document.querySelectorAll('[data-rho]')) b.addEventListener('click', () => { custom(); S.rho = +b.dataset.rho; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
+  $('sDist').addEventListener('input', (e) => { custom(); S.dist = +e.target.value; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
+  $('chkRoche').addEventListener('change', (e) => { S.roche = e.target.checked; draw(); });
+  $('chkRes').addEventListener('change', (e) => { S.res = e.target.checked; readouts(); draw(); });
+  $('btnStripe').addEventListener('click', () => { S.stripe = S.t; if (!S.run) setRun(true); draw(); });
+  $('selMoon').addEventListener('change', (e) => { S.moon = +e.target.value; readouts(); draw(); });
+  $('moonTable').addEventListener('click', (e) => { const b = e.target.closest('[data-moon]'); if (b) { S.moon = +b.dataset.moon; sync(); readouts(); draw(); } });
+  $('chkConj').addEventListener('change', (e) => { S.conj = e.target.checked; draw(); });
+  $('sEcc').addEventListener('input', (e) => { custom(); S.e = +e.target.value; sync(); readouts(); draw(); });
+  $('chkExag').addEventListener('change', (e) => { S.exag = e.target.checked; draw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { S.t = 0; if (S.mode === 'rings') pileReset(); if (S.stripe != null) S.stripe = 0; setRun(false); readouts(); clock(); draw(); });
+  $('zIn').addEventListener('click', () => { S.zoom[S.mode] = Math.min(4, S.zoom[S.mode] + 1); draw(); });
+  $('zOut').addEventListener('click', () => { S.zoom[S.mode] = Math.max(-3, S.zoom[S.mode] - 1); draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); draw(); });
+  /* the picture: click a planet or a moon to choose it; in Rings, press and drag to move the test moon in or out */
+  let dragging = false;
+  const ptr = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => {
+    if (view3 && view3.is3d()) return; const [x, y] = ptr(e);
+    if (S.mode === 'planets' && planetsHit) { let best = null, bd = 1e9; for (const k of planetsHit.show) { const o = planetsHit.pos[k], d = Math.hypot(x - o.cx, y - o.cy) / Math.max(12, P(k).Req * o.s); if (d < bd) { bd = d; best = k; } } if (best && bd < 2.2) { S.sel = best; readouts(); draw(); } }
+    else if (S.mode === 'moons' && moonsHit) { let best = -1, bd = 1e9; MOONS[S.planet].forEach((m, i) => { const z = moonAt(m, S.t, i), d = Math.hypot(x - (moonsHit.cx + z.x * moonsHit.s), y - (moonsHit.cy - z.y * moonsHit.s)); if (d < bd) { bd = d; best = i; } });
+      if (best >= 0 && bd < 30) { S.moon = best; sync(); readouts(); draw(); } }
+    else if (S.mode === 'rings') { const o = ringsView(), th0 = moonAngle(), mx = o.cx + PL.a * o.s * Math.cos(th0), my = o.cy - PL.a * o.s * Math.sin(th0);
+      if (Math.hypot(x - mx, y - my) < 24) { dragging = true; can.setPointerCapture(e.pointerId); e.preventDefault(); } }
+  });
+  can.addEventListener('pointermove', (e) => { if (!dragging) return; const [x, y] = ptr(e), o = ringsView(), R = Math.hypot(x - o.cx, y - o.cy) / o.s / P(S.planet).Req;
+    S.dist = Math.round(Math.max(1.2, Math.min(4, R)) * 100) / 100; custom(); pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
+  can.addEventListener('pointerup', () => { dragging = false; });
+  can.addEventListener('keydown', (e) => {
+    if (S.mode === 'rings' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.dist = Math.max(1.2, Math.min(4, Math.round((S.dist + (e.key === 'ArrowUp' ? 0.05 : -0.05) * (e.shiftKey ? 4 : 1)) * 100) / 100)); custom(); pileReset(); setRun(false); sync(); readouts(); clock(); draw(); e.preventDefault(); }
+    else if (S.mode === 'moons' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { S.moon = (S.moon + (e.key === 'ArrowRight' ? 1 : -1) + MOONS[S.planet].length) % MOONS[S.planet].length; sync(); readouts(); draw(); e.preventDefault(); }
+    else if (S.mode === 'planets' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { const ks = ORDER.filter((k) => k !== 'earth' || S.earth), i = ks.indexOf(S.sel); S.sel = ks[(i + (e.key === 'ArrowRight' ? 1 : -1) + ks.length) % ks.length]; readouts(); draw(); e.preventDefault(); }
+  });
+
+  /* ---------- the clock ---------- */
+  let last = performance.now(), lastOut = 0, lastPiece = 0;
+  function frame(now) {
+    const dtr = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'rings') {
+        const want = S.speed * dtr / PL.tau, cap = 60; let n = Math.round(want / PILE_DT); S.slow = n > cap; n = Math.min(n, cap);
+        for (let i = 0; i < n; i++) pileStep(PL.st, PILE_DT, 0); S.t = PL.st.t * PL.tau;
+        if (now - lastPiece > 300) { lastPiece = now; S.piece = largestPiece(PL.st); }
+      } else { S.t += S.speed * dtr; S.slow = false; }
+      draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { const sc = $('setupCard'); sc.style.top = getComputedStyle(sc).position === 'absolute' ? `${$('strip').offsetHeight + 10}px` : '';
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); draw(); }
+  const retheme = () => { tokens(); if (g3) g3.built = {}; draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'giants');
+  new ResizeObserver(resize).observe($('scene')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !(view3 && view3.is3d()); draw(); }, status: (m) => { $('presetHint').textContent = m; }, start: 'flat' });
+
+  /* readings for the worksheet: one row of the view on show */
+  window.vdVersion = 'giant-planets@2026-10-25';
+  window.vdShowCols = [['mode', 'view'], ['object', 'object'], ['value', 'reading']];
+  window.vdReadingRow = () => {
+    if (S.mode === 'planets') { const p = P(S.sel), E = PLANETS.earth;
+      return { mode: 'Planets', object: p.name, value: `${f(p.rho / 1000, 3)} g/cm³`, M_earth: f(p.M / E.M, 2), R_earth: f(p.Req / E.Req, 3), rho_gcc: f(p.rho / 1000, 3), rot_h: f(Math.abs(p.rot), 2), f_pct: f(100 * p.f, 2), tilt_deg: f(p.tilt, 2) }; }
+    if (S.mode === 'moons') { const p = P(S.planet), m = MOONS[S.planet][S.moon];
+      return { mode: 'Moons', object: m.name, value: `a ${f(m.a / p.Req, 2)} R, P ${f(Math.abs(m.P), 3)} d`, planet: p.name, a_Rp: f(m.a / p.Req, 3), a_km: fmt(m.a, 0).replace(/ /g, ''), P_d: f(Math.abs(m.P), 4), rho_gcc: m.rho ? f(m.rho / 1000, 2) : '' }; }
+    if (S.mode === 'rings') { const p = P(S.planet);
+      return { mode: 'Rings', object: `${f(S.rho / 1000, 2)} g/cm³ moon`, value: `${f(S.dist, 2)} R: ${f(100 * S.piece, 0)} %`, planet: p.name, rho_moon_gcc: f(S.rho / 1000, 2), d_Rp: f(S.dist, 2), roche_Rp: f(rocheLimit(p, S.rho, ROCHE_FLUID) / p.Req, 2), orbits: f(PL.Om * S.t / (2 * Math.PI), 2), piece_pct: f(100 * S.piece, 0) }; }
+    const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e);
+    return { mode: 'Io', object: 'Io', value: `e ${f(S.e, 4)}`, e: f(S.e, 4), heat_W: Ed ? Ed.toExponential(3) : '0', flux_W_m2: f(Ed / (4 * Math.PI * Math.pow(io.R * 1e3, 2)), 3) };
+  };
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => S.t, timeUnit: 's',
+    scale: () => (view3 && view3.is3d() ? null : S.mode === 'rings' ? { el: can, m: 1e3 / ringsView().s, unit: 'km' } : S.mode === 'moons' ? { el: can, m: 1e3 / moonsView().s, unit: 'km' } : S.mode === 'planets' && planetsHit ? { el: can, m: 1e3 / planetsHit.s, unit: 'km', area: [0, 0, W, planetsHit.top] } : null) });
+  VD.howTo({ src: 'media/how-this-works/giant-planets.mp4', poster: 'media/how-this-works/giant-planets.jpg' });
+  window.__gp = { S, PL, applyPreset, setMode, setRun, sync, readouts, draw, pileReset, PRESETS, ringsView, moonsView, planetsLayout };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

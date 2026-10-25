@@ -507,6 +507,7 @@
   INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
   INTRO.push('intro-craters', 'intro-mars-ages'); /* Craters, Cooling and Surface Ages demo, 2026-10-25 */
   INTRO.push('intro-inside-a-planet');
+  INTRO.push('intro-giant-planets'); INTRO_GRAPHS.push('intro-giant-planets'); /* Giant Planets, Rings and Moons demo, 2026-10-25 */
   INTRO_GRAPHS.push('intro-inside-a-planet');
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
@@ -532,6 +533,12 @@
        Venus readings (every row Venus) go to the third table: Reading | World model | Date | Elongation (°) | Lit (%) | Size compared with its smallest | Phase */
     'intro-retrograde': { demo: 'Retrograde Motion and World Models', cols: ['row', 'date', 'days', 'lambda_deg', 'motion', 'elong_deg', 'dist_AU', 'event'],
       alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.planet === 'Venus'), cols: ['row', 'model', 'date', 'elong_deg', 'lit_pct', 'size_rel', 'phase'] }] },
+    /* Reading | Moon | Distance a (planet radii) | Period P (days) | Density (g/cm³) | a³ | P²; Planets, Rings and Io readings (every row
+       from that view) go to the Planets, Rings and Io tables */
+    'intro-giant-planets': { demo: 'Giant Planets, Rings and Moons', cols: ['row', (r) => `${r.object} (${r.planet || ''})`, 'a_Rp', 'P_d', 'rho_gcc', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Planets'), cols: ['row', 'object', 'M_earth', 'R_earth', 'rho_gcc', 'rot_h', 'f_pct', 'tilt_deg'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Rings'), cols: ['row', 'planet', 'rho_moon_gcc', 'd_Rp', 'roche_Rp', 'orbits', 'piece_pct'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Io'), cols: ['row', 'e', 'heat_W', 'flux_W_m2'] }] },
     'intro-kepler': { demo: 'Kepler Orbits', cols: [(r) => r.preset || 'custom launch', 'ruler_r1_AU', 'ruler_r2_AU', 'timer_T_yr', null, null, null, null] },
     /* Reading | Time from start (d) | Days since new moon | Elongation (°) | Illuminated (%) | Moonrise (h) | Moonset (h) | Sun to nearest node (°) | Moon above or below Earth's orbit β (°) | Eclipse */
     'intro-moon': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'set_h', 'node_dist_deg', 'beta_deg', 'eclipse'] },

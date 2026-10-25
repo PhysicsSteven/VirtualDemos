@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Giant Planets, Rings and Moons: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Giant Planets, Rings and Moons</h1><ul class="meta"><li><a href="../demos/giant-planets.html">Open the demo</a></li><li>Intro astronomy (non majors and majors); Astro 2203, Topics 10 and 11 (Jupiter and Saturn; Uranus, Neptune and the Kuiper belt); OpenStax Astronomy 2e chapters 11 and 12</li><li>15 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The giants are big and light: Jupiter has 318 Earth masses but a mean density of only 1.33 g/cm³, and Saturn, at 0.687 g/cm³, is less dense than water. They are mostly hydrogen and helium (Uranus and Neptune with more water, ammonia and methane), squeezed dense only near their centers.</li>
+<li>Fast spin and low density flatten a planet: Saturn turns in 10.7 h and is 9.8 % wider at the equator than pole to pole.</li>
+<li>A moon held together only by its own gravity is torn apart inside the Roche limit, about 2.46 R (ρ_planet/ρ_moon)^(1/3) for a fluid moon. Saturn's main rings lie inside the limit for ice and its big moons outside. Denser moons can go closer.</li>
+<li>Each ring particle is its own tiny moon, and inner ones go round faster (Kepler's third law), so a ring cannot be one solid sheet.</li>
+<li>Moons weigh planets: a³/P² is the same for every moon of one planet and gives the planet's mass.</li>
+<li>Io, Europa and Ganymede go round in a 1:2:4 resonance. The regular tugs keep Io's orbit oval, so Jupiter's tide on Io changes every orbit, and the flexing heats Io to the most volcanic world in the solar system. Enceladus and Dione (2:1) do the same on a smaller scale.</li>
+</ul>
+<h2>Before class</h2>
+<p>The strip across the top switches between four views, each flat or in 3D. <strong>Planets</strong> shows the four giants and Earth to scale, each at its axial tilt, with density bars against water. <strong>Rings</strong> looks down on a planet's rings to scale with the Roche limit for any moon density (fluid limit solid, rigid limit dashed) and a test moon, a pile of 200 balls held together only by gravity, at any distance from 1.2 to 4 planet radii; drag it in or out. Paint a line across the rings to watch it shear; show the Mimas 2:1 place and the ring moons that shepherd and clear gaps. <strong>Moons</strong> shows the main moons on their Kepler ellipses from their J2000 places (Jupiter and Saturn; Uranus's and Neptune's starting places are spread out for clarity), drawn 20 times larger than life and colored by density, with the lines where resonant pairs pass each other. <strong>Io</strong> follows Io on its oval orbit (eccentricity 0 to 0.01, drawn up to 60 times more oval) with a close up of the tidal bulge and its tidal heating. Thirteen setups, from Four giants to scale to Io on a circle. The test moon takes about 20 seconds of real time for three orbits.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Four giants to scale</strong>, then <strong>Saturn would float</strong>. Ask Q1 before showing the density bars.</li>
+<li><strong>Saturn's rings and the Roche limit</strong>, then <strong>A moon torn into a ring</strong> and <strong>A rock moon survives</strong>. Ask Q2 while the ice moon comes apart; the pieces string out along the orbit within a couple of orbits.</li>
+<li><strong>Rings shear</strong>. Ask Q3 as the line winds into a spiral.</li>
+<li><strong>Io, Europa, Ganymede 1:2:4</strong>. Ask Q4. Let it run a few weeks of moon time: the conjunction lines stay put.</li>
+<li><strong>Io's tides heat it</strong>, then <strong>Io on a circle</strong>. Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Saturn has 95.2 times Earth's mass and 764 times Earth's volume. What is its mean density, and what does it tell us about what Saturn is made of? Why is Saturn the flattest planet?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Saturn's A ring ends at 2.27 Saturn radii. The demo puts the Roche limit at 2.15 radii for a moon of solid ice (0.92 g/cm³) and 2.64 radii for porous ice (0.5 g/cm³). Mimas orbits at 3.08 radii. Why are there rings close in and moons farther out? The demo's ice moon, a pile of boulders, survives at 1.6 radii but comes apart at 1.5. Why does it survive inside the drawn limit?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> By Kepler's third law a particle at the inner edge of the C ring goes round in 5.78 h and one at the outer edge of the A ring in 14.34 h. How long does it take the inner one to gain a whole lap on the outer one? What does that mean for a ring made as a single solid sheet?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Io goes round Jupiter in 1.769 days, Europa in 3.551 days and Ganymede in 7.155 days. Show that Io passes Europa every 3.53 days and Europa passes Ganymede every 7.05 days, twice as long. Why can all three never line up on the same side of Jupiter?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The demo gives Io 8.9 × 10¹³ W of tidal heating at its real eccentricity, 0.004, and none on a circle. Compare that with Earth's whole internal heat flow, 47 TW, and explain why the heating would stop if Europa and Ganymede were taken away.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Saturn's rings are solid."</strong> They are countless separate pieces of ice, from dust to house sized, each on its own orbit; the inner ones go round faster.</li>
+<li><strong>"Gas giants are made of gas all the way through."</strong> Deep inside, the pressure turns hydrogen liquid and then metallic, and the centers are far denser than water. The mean density is low because most of the volume is the light outer layers.</li>
+<li><strong>"The Roche limit applies to everything, including spacecraft and people."</strong> It applies to bodies held together by their own gravity. A spacecraft or a small rock with strength is held by chemical bonds, far stronger than its gravity, and is not torn apart.</li>
+<li><strong>"Tidal heating comes from the tide itself."</strong> A steady tide stretches a moon once and stops. Heating needs the tide to change, which needs an oval orbit (or a moon not turning in step).</li>
+<li><strong>"Jupiter is almost a star."</strong> It would need about 80 times its mass to fuse hydrogen.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Planet data are the NASA planetary fact sheets (NSSDCA, D. Williams): masses, GM, equatorial, polar and mean radii, flattening, rotation periods, tilts, J₂. Moon distances, periods, eccentricities, radii and densities are from the NSSDCA satellite fact sheets and JPL's satellite mean elements; the J2000 places of Jupiter's and Saturn's moons are JPL mean longitudes and longitudes of periapsis (node + argument of periapsis + mean anomaly) for noon on 1 January 2000. Inclinations, precession and the moons' pulls on each other are left out, so the places drift from the real ones over years. Nereid (e = 0.75) is left out.</li>
+<li>Roche limits: d = 2.455 R (ρ_P/ρ)^(1/3) for a fluid moon, from Chandrasekhar's critical value GM/d³ = 0.09009 πGρ (Ellipsoidal Figures of Equilibrium, 1969, ch. 8); d = 3^(1/3) R (ρ_P/ρ)^(1/3) = 1.442 R (ρ_P/ρ)^(1/3) for a loose rock on a rigid round moon turning once per orbit. The unit R (ρ_P/ρ)^(1/3) is computed from the planet's mass, so it does not depend on which radius is used.</li>
+<li>The test moon is 200 equal frictionless balls with soft contact springs and restitution damping that attract each other by gravity, settled into a pile and then placed in Hill's frame (Coriolis, centrifugal and tidal terms to first order in the moon's size). Whether such a pile survives depends only on its distance in units of R (ρ_P/ρ)^(1/3): it holds for at least 8 orbits at 1.80 and comes apart within 3 orbits at 1.78 or closer (curriculum/validation/test_giant-planets.cjs). Its density is taken inside its outer surface.</li>
+<li>Rings: NASA ring radii; brightness in the picture is a drawing choice. Ring particles go round at Kepler speed √(GM/r³); the bulge changes the periods by under 1 %. The Mimas 2:1 place solves 2Ω − κ = 2n_Mimas with J₂ (117 528 km, beside the B ring's outer edge at 117 507 km; Kepler's law alone gives 116 870 km).</li>
+<li>Io's tidal heating: Ė = (21/2)(k₂/Q) G M_J² R⁵ n e² / a⁶ (Murray and Dermott, Solar System Dynamics, 1999, eq. 4.192), with k₂/Q = 0.015 ± 0.003 from Io's measured orbit (Lainey and others, Nature 459, 957, 2009). The measured heat flow is at least 2.5 W/m² (Veeder and others, JGR 99, 17095, 1994). Earth's 47 TW is from Davies and Davies (Solid Earth 1, 5, 2010).</li>
+<li>Flattening: a uniform planet would take f = 5q/4 for its spin (q = ω²a³/GM); every giant bulges less, because its mass is packed toward the center.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Tides</strong> for the tidal stretch on Earth and Moon, with <strong>Kepler Orbits</strong> for Kepler's third law around the Sun, and with <strong>Orbital Resonances</strong> for the same kind of resonance in the asteroid belt (the Kirkwood gaps) and the Kuiper belt (Pluto and Neptune).</li>
+<li>Saturn's small ring moons Pan (0.42 g/cm³) and Daphnis (0.34 g/cm³) orbit inside the Roche limit for their densities. They survive because they are small enough for a little strength to matter, and they have gathered ring material into equatorial ridges (Porco and others, Science 318, 1602, 2007).</li>
+<li>Triton goes round Neptune backward and was probably captured from the Kuiper belt. Its orbit is shrinking under Neptune's tides, and in a few billion years it will cross the Roche limit and may become a ring.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

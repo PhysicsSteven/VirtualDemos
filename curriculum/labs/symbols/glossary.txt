@@ -1403,6 +1403,11 @@ D | Diameter of the objective | cm
 S | Synodic period, from one opposition (or inferior conjunction) to the next | days
 P | Sidereal period, once around the Sun | days
 
+== intro-giant-planets ==
+a | A moon's average distance from the center of its planet | planet radii
+P | A moon's orbital period, once around its planet | days
+e | Eccentricity of Io's orbit, how far it is from a circle (0 is a circle) |
+
 == kundts-tube ==
 v_rod | Speed of longitudinal waves in the rod | m/s
 E | Young's modulus of the rod | Pa
