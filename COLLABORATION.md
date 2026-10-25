@@ -4182,3 +4182,28 @@ screen is from the take and was checked by hand:
     1432 free protons + 2 × 284 = 2000; 4 × 142/2000 = 0.284. Encoded at CRF 30 (CRF 24 gave 3.9 MB for the moving particles).
 
 vdcheck `--only after` on the three demos: 0 problems. No What's new entry (left for the batch entry).
+
+## 2026-10-25 · Claude · How this works videos: stars and light (Stellar Evolution, White Dwarf Cooling, Black Holes, Spectra, Radioactive Decay)
+
+Seven videos, one per worksheet, dark theme, each from one real run (`tools/howto/<name>.cjs`; readings checked by hand). These
+Modern and Astro demos are done now, so the later Modern video pass skips them (Steve, 2026-10-25). Blackbody already had its video.
+
+- **hr-diagram** (18.6 s): The Sun setup, Initial mass dragged to 0.50 M☉, Reset to age zero: L 0.045 L☉, T 3,760 K, R 0.5 R☉,
+  main sequence life 56.6 Gyr. Check: 0.50047² × (3758/5772)⁴ = 0.0450.
+- **white-dwarf-cooling** (19.1 s): Mestel cooling law, paused, cooling age 100 Myr: L 5.96 × 10⁻³ L☉, Tc 1.68 × 10⁷ K, Teff
+  14,225 K. Checks: (2/5)(3/2)NkTc/L with N 5.2388 × 10⁵⁵ gives 101 Myr; 4πR²σT⁴ with R 8841 km gives 14,225 K.
+- **black-holes** (18.8 s): Microlensing event, paused, lens mass 0.1 M☉, D_L 4 kpc, D_S 8 kpc: θ_E 0.319 mas (by hand 0.3191),
+  t_E 11.05 d at 200 km/s (by hand 11.05).
+- **spectra** (15.9 s): hydrogen, Explore, Visible, Blind on, the red line: 656.28518 nm, H I, intensity 180 (NIST's strongest Hα
+  component; Rydberg gives 656.47 nm in vacuum, 656.28 nm in air).
+- **intro-spectra** (19.3 s, ?ws=intro-spectra): the same line recorded in emission, then dark in absorption.
+- **radioactive-decay** (17.7 s): Coin flip nuclei, 400, Pause, Reset, record, Step, record: 400 then 217 parents (expected 200 ± 10).
+- **decay-chains** (24.0 s): Two step chain, 10,000 nuclei, Expected unticked, Pause, Reset, record, Step ×5 (1 d each), record at
+  5.00 d: ²¹⁰Bi 4946, ²¹⁰Po 4992, ²⁰⁶Pb 62 (Bateman: 5008, 4923, 69; within about 1.4σ). Composed at CRF 30 (the 10,000
+  nucleus grid made 4.5 MB at 24; now 2.3 MB).
+
+Spectra picks its video by worksheet (`VD.ws('spectra')`, since the intro worksheet opens the demo with ?ws=intro-spectra);
+Radioactive Decay by the setup (a two step chain shows the Parent and Daughter video), matching where Export sends the readings.
+whats-new.js not touched (one entry per batch comes later).
+
+Seen while recording, not changed: in White Dwarf Cooling's 3D slice the "Earth" scale label overlaps the "liquid C/O" label.

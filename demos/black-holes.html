@@ -1789,6 +1789,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const MAS = 206264.80625e3, DEG = 180 / Math.PI, g6 = (x) => (isFinite(x) ? String(+(+x).toPrecision(6)) : '');
   window.vdVersion = 'black-holes@2026-10-24';
   window.vdShowCols = [['view', 'view'], ['M_Msun', 'M (M☉)'], ['key', 'reading']];
+  VD.howTo({ src: 'media/how-this-works/black-holes.mp4', poster: 'media/how-this-works/black-holes.jpg' });
   window.vdReadingRow = () => {
     const Mv = M(), rs = rsOf(Mv), setup = S.preset ? SETUP[S.preset] : 'Own setup', base = { view: { lens: 'Lensing', ray: 'Ray traced', near: 'Near the hole' }[S.view], setup, M_Msun: g6(Mv), rs_km: g6(rs / 1e3) };
     if (S.view === 'lens') {

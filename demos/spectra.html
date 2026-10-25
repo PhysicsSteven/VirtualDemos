@@ -1314,6 +1314,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Readings: the line last read from the top strip, as NIST lists it (air wavelength)
   window.vdVersion = 'spectra@2026-10-24';
   window.vdShowCols = [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
+  /* How this works: the intro worksheet opens the demo with ?ws=intro-spectra */
+  const howVid = () => (VD.ws('spectra') === 'intro-spectra' ? 'intro-spectra' : 'spectra');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   window.vdReadingRow = () => {
     if (S.display === 'continuous' && S.mode !== 'mystery') return 'A continuous spectrum has no lines to read: choose Emission or Absorption.';
     if (!picked) return 'Click or tap a line in the top spectrum first, so its readout shows.';

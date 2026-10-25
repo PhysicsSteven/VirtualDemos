@@ -1432,6 +1432,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const g5 = (x) => (isFinite(x) ? String(+(+x).toPrecision(5)) : '');
   window.vdVersion = 'white-dwarf-cooling@2026-10-24';
   window.vdShowCols = [['M_Msun', 'M (M☉)'], ['age_yr', 't (yr)'], ['L_Lsun', 'L (L☉)']];
+  VD.howTo({ src: 'media/how-this-works/white-dwarf-cooling.mp4', poster: 'media/how-this-works/white-dwarf-cooling.jpg' });
   window.vdReadingRow = () => {
     const nw = now(), s = sel.s, st = nw.st, onset = S.cryst && sel.tOn < sel.t[sel.n - 1] && sel.Tm0 >= Math.pow(10, sel.lT[sel.n - 1]);
     const model = `${S.liquid === 'ideal' ? 'ideal gas ions' : 'Coulomb liquid'}, ${!S.cryst ? 'no freezing' : S.latent ? 'freezing with latent heat' : 'freezing, no latent heat'}`;

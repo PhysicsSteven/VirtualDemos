@@ -1417,6 +1417,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SETUP_NAME = { coin: 'Coin flip nuclei', c14: 'Carbon 14', i131: 'Iodine 131', bi210: 'Bismuth 210 to polonium 210', te132: 'Tellurium 132 to iodine 132' };
   window.vdVersion = 'radioactive-decay@2026-10-24';
   window.vdShowCols = [['t', 't'], ['parent', 'parents'], ['daughter', 'daughters']];
+  /* How this works: a two step chain shows the Parent and Daughter video, the others Measuring a Half Life */
+  const howVid = () => (nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   window.vdWorksheet = () => (nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   window.vdReadingRow = () => {
     if (!sim) return null;

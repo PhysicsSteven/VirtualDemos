@@ -1250,6 +1250,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const g5 = (x) => String(+(+x).toPrecision(5));
   window.vdVersion = 'hr-diagram@2026-10-24';
   window.vdShowCols = [['M', 'M (M☉)'], ['phase', 'phase'], ['L_Lsun', 'L (L☉)']];
+  VD.howTo({ src: 'media/how-this-works/hr-diagram.mp4', poster: 'media/how-this-works/hr-diagram.jpg' });
   window.vdReadingRow = () => {
     if (S.mode === 'cluster') {
       let nMS = 0, nG = 0, nWD = 0, nSN = 0;
