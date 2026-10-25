@@ -27,7 +27,7 @@
     for (const start of [0x1D400, 0x1D434, 0x1D468, 0x1D5A0, 0x1D5D4]) {   /* bold, italic, bold italic, sans, sans bold */
       if (cp >= start && cp < start + 52) { const i = cp - start; return String.fromCharCode(i < 26 ? 65 + i : 97 + i - 26); }
     }
-    if (cp >= 0x1D6FC && cp <= 0x1D714) return GREEK[cp - 0x1D6FC];   /* italic small Greek */
+    for (const start of [0x1D6C2, 0x1D6FC, 0x1D736]) if (cp >= start && cp <= start + 24) return GREEK[cp - start];   /* bold, italic, bold italic small Greek */
     if (cp >= 0x1D6E2 && cp <= 0x1D6FA) { const u = UPPER[cp - 0x1D6E2 + 0x391]; return u || null; }   /* italic capital Greek */
     if ((cp >= 48 && cp <= 57) || (cp >= 65 && cp <= 90) || (cp >= 97 && cp <= 122)) return String.fromCharCode(cp);
     return null;
@@ -43,6 +43,7 @@
     if (cp >= 65 && cp <= 122) return /TEX-C\b/.test(cls) ? 'cal' + String.fromCharCode(cp) : /TEX-(I|B|BI)\b/.test(cls) ? String.fromCharCode(cp) : null;
     if (cp === 0x210F) return 'hbar';
     if (cp === 0x210E) return 'h';
+    if (cp === 0x2113) return 'ell';
     if (cp < 0x1D400 && !UPPER[cp]) return null;   /* upright lowercase Greek is text (\mathrm{\mu}); other signs are not symbols */
     const n = name(cp);
     return n && (n.length === 1 || GREEK.includes(n) || Object.values(UPPER).includes(n)) ? n : null;
@@ -59,65 +60,106 @@
   const kids = (e) => Array.from(e.children).filter((k) => k.tagName !== 'MJX-SPACER');
   const isScript = (e) => /^MJX-(MSUB|MSUP|MSUBSUP)$/.test(e.tagName);
   const ARROW = new Set([0x2192, 0x20D7]);
-  /* the mi at the core of a base: itself, or inside a TeXAtom, or under a \vec arrow (any other accent: none) */
-  function coreMi(e) {
-    while (e && e.tagName === 'MJX-TEXATOM' && kids(e).length === 1) e = kids(e)[0];
+  /* the accent over a symbol, by its code point, named as tools/symbols.py names it ("hat n", "bar v", "tilde nu_0") */
+  const ACCENT = { 0x2C6: 'hat', 0x5E: 'hat', 0x302: 'hat', 0xAF: 'bar', 0x2C9: 'bar', 0x304: 'bar', 0x305: 'bar', 0x2015: 'bar', 0x2014: 'bar', 0x2013: 'bar', 0x203E: 'bar',
+    0x2DC: 'tilde', 0x7E: 'tilde', 0x303: 'tilde', 0x2D9: 'dot', 0x307: 'dot', 0xA8: 'ddot', 0x308: 'ddot', 0x2C7: 'check', 0x2D8: 'breve' };
+  const FUNCS = new Set('sin cos tan sinh cosh tanh arcsin arccos arctan sec csc cot ln log lg exp det'.split(' '));
+  const unwrap = (e) => { while (e && e.tagName === 'MJX-TEXATOM' && kids(e).length === 1) e = kids(e)[0]; return e; };
+  const climb = (e) => { while (e && e.tagName === 'MJX-TEXATOM' && kids(e).length === 1) e = e.parentElement; return e; };
+  const allPrimes = (e) => { const c = cps(e); return c.length > 0 && c.every((cp) => PRIME.has(cp)); };
+  const isSign = (e) => { const c = cps(e); return c.length === 1 && (c[0] === 0x2B || c[0] === 0x2D || c[0] === 0x2212); };
+  /* an accent over a symbol: its name, or '' for a \vec arrow (keyed by its letter), or null for anything else */
+  function accentOf(mo) {
+    const over = mo.querySelector(':scope > mjx-over'), base = mo.querySelector(':scope > mjx-base');
+    if (!over || !base) return null;
+    /* a wide accent is drawn stretched (\overline): its code point is on the mjx-stretchy-h, its pieces carry none */
+    const st = over.querySelector('mjx-stretchy-h'), sk = st && Array.from(st.classList).find((x) => /^mjx-c[0-9A-F]+$/.test(x));
+    const c = sk ? [parseInt(sk.slice(5), 16)] : cps(over).filter((cp) => cp >= 0);
+    if (c.length && c.every((cp) => ARROW.has(cp))) return '';
+    const names = new Set(c.map((cp) => ACCENT[cp]));
+    return names.size === 1 && !names.has(undefined) ? [...names][0] : null;
+  }
+  /* a base -> [element, key]: a letter, a letter under a \vec arrow (keyed by the letter), or an accented symbol ("hat n") */
+  function baseKey(e) {
+    e = unwrap(e);
     if (!e) return null;
-    if (e.tagName === 'MJX-MI') return e;
+    if (e.tagName === 'MJX-MI') { const b = baseName(e); return b && b !== 'pi' ? [e, b] : null; }
     if (e.tagName === 'MJX-MOVER') {
-      const over = e.querySelector(':scope > mjx-over'), base = e.querySelector(':scope > mjx-base');
-      if (over && base && cps(over).every((cp) => ARROW.has(cp))) return coreMi(kids(base)[0]);
+      const acc = accentOf(e), base = e.querySelector(':scope > mjx-base');
+      if (acc === '') return baseKey(kids(base)[0]);
+      if (acc) { const inner = cps(base).map(name).join(''); return inner ? [e, acc + ' ' + inner] : null; }
     }
     return null;
   }
-  const climb = (e) => { while (e && e.tagName === 'MJX-TEXATOM' && kids(e).length === 1) e = e.parentElement; return e; };
-  const allPrimes = (e) => { const c = cps(e); return c.length > 0 && c.every((cp) => PRIME.has(cp)); };
   /* a symbol with a subscript or prime: the whole of it is one key; with a power (T²) the key is the base's */
   function holderKey(holder) {
-    const base = coreMi(kids(holder)[0]);
-    if (!base) return null;
-    const b = baseName(base);
-    if (!b || b === 'pi') return null;
+    const bk = baseKey(kids(holder)[0]);
+    if (!bk) return null;
     const script = holder.querySelector(':scope > mjx-script'), parts = script ? kids(script) : [];
-    let sub = '', primes = 0;
+    let sub = '', primes = 0, power = false;
     if (holder.tagName === 'MJX-MSUB') sub = subText(script);
     else if (parts.length) {
       if (allPrimes(parts[0])) primes = cps(parts[0]).reduce((n, cp) => n + (cp === 0x2033 ? 2 : 1), 0);
+      else if (!isSign(parts[0])) power = cps(parts[0]).every((cp) => cp >= 48 && cp <= 57) ? 'number' : true;
       if (holder.tagName === 'MJX-MSUBSUP') sub = subText(parts[parts.length - 1]);
     }
-    const key = b + (sub ? '_' + sub : '') + "'".repeat(primes);
-    return [sub || primes ? holder : base, key];
+    return { el: sub || primes ? holder : bk[0], key: bk[1] + (sub ? '_' + sub : '') + "'".repeat(primes), power };
   }
   /* a symbol written after a Δ operator: "Delta X" when the handout gives ΔX a meaning of its own, else X */
-  function look(r) {
-    if (!r || !G) return null;
-    const pv = r[0].previousElementSibling;
-    if (pv && pv.tagName === 'MJX-MI' && baseName(pv) === 'Delta' && G['Delta ' + r[1]]) return [r[0], 'Delta ' + r[1]];
-    return G[r[1]] ? r : null;
+  function delta(r) {
+    if (!r) return null;
+    const pv = r.el.previousElementSibling;
+    if (G && pv && pv.tagName === 'MJX-MI' && baseName(pv) === 'Delta' && G['Delta ' + r.key]) r.key = 'Delta ' + r.key;
+    return r;
   }
-  /* the element a pointer is over -> [element to highlight, key], or null */
-  function keyAt(node) {
+  /* a whole label written as several letters (FP, the far point): the letters next to this one spell a label the handout has */
+  function compound(mi, b) {
+    for (const c of Object.keys(G || {})) {
+      if (!/^[A-Z]{2,}$/.test(c)) continue;
+      for (let i = c.indexOf(b); i >= 0; i = c.indexOf(b, i + 1)) {
+        const els = [mi];
+        let ok = true, e = mi;
+        for (let j = i - 1; ok && j >= 0; j--) { e = e.previousElementSibling; ok = !!e && e.tagName === 'MJX-MI' && baseName(e) === c[j]; if (ok) els.unshift(e); }
+        e = mi;
+        for (let j = i + 1; ok && j < c.length; j++) { e = e.nextElementSibling; ok = !!e && e.tagName === 'MJX-MI' && baseName(e) === c[j]; if (ok) els.push(e); }
+        if (ok) return { el: els[0], els, key: c, power: false };
+      }
+    }
+    return null;
+  }
+  /* the element a pointer is over -> { el (to highlight), els, key, power }, or null; the key may have no meaning here */
+  function keyOf(node) {
     if (!node || !node.closest || !node.closest('mjx-container')) return null;
     /* in a subscript, or on a prime: the hover belongs to the symbol they are attached to */
-    let s = node.closest('mjx-script');
+    /* a subscript of a subscript (E with n_f) belongs to the outer symbol; the limits of an integral or a sum to no symbol */
+    let s = node.closest('mjx-script'), hit = null;
     while (s && isScript(s.parentElement)) {
       const holder = s.parentElement, parts = kids(s);
       const inSup = holder.tagName === 'MJX-MSUP' || (holder.tagName === 'MJX-MSUBSUP' && parts[0] && parts[0].contains(node));
-      if (!inSup || allPrimes(parts[0])) return look(holderKey(holder));
-      break;   /* in a power: the symbols there are symbols in their own right (e^(−t/τ)) */
+      const op = unwrap(kids(holder)[0]);
+      if (op && op.tagName === 'MJX-MO' && /^MJX-MSUB/.test(holder.tagName)) return null;
+      if (inSup && !allPrimes(parts[0])) break;   /* in a power: the symbols there are symbols in their own right (e^(−t/τ)) */
+      hit = holder;
+      s = holder.parentElement && holder.parentElement.closest('mjx-script');
     }
+    if (hit) return delta(holderKey(hit));
     const mi = node.closest('mjx-mi');
     if (!mi) return null;
-    let up = climb(mi.parentElement);
-    if (up && up.tagName === 'MJX-BASE') up = climb(up.parentElement && up.parentElement.parentElement);
-    if (up && isScript(up) && coreMi(kids(up)[0]) === mi) return look(holderKey(up));
     const lim = mi.closest('mjx-script');   /* the i under a sum, set inline or below */
-    if (mi.closest('mjx-under, mjx-over') || (lim && /^MJX-(MUNDER|MOVER|MUNDEROVER)$/.test(lim.parentElement.tagName))) return null;
-    const mo = mi.closest('mjx-mover');   /* under a hat, bar, tilde or dot: not keyed; under a \vec arrow: keyed by its letter */
-    if (mo) {
-      const over = mo.querySelector(':scope > mjx-over'), base = mo.querySelector(':scope > mjx-base');
-      if (!over || !base || !cps(over).every((cp) => ARROW.has(cp)) || coreMi(kids(base)[0]) !== mi) return null;
+    if (mi.closest('mjx-under') || (lim && /^MJX-(MUNDER|MOVER|MUNDEROVER)$/.test(lim.parentElement.tagName))) return null;
+    if (mi.closest('mjx-over')) return null;
+    /* the element that stands for the symbol: the mi, or the accent over it (a \vec arrow leaves it the letter's) */
+    let E = mi;
+    const mo = mi.closest('mjx-mover');
+    if (mo && mo.querySelector(':scope > mjx-base') && mo.querySelector(':scope > mjx-base').contains(mi)) {
+      const acc = accentOf(mo);
+      if (acc === null) return null;
+      if (acc) E = mo; else if (unwrap(kids(mo.querySelector(':scope > mjx-base'))[0]) !== mi) return null;
     }
+    let up = climb(E === mi ? mi.parentElement : mo.parentElement);
+    if (E === mi && up && up.tagName === 'MJX-BASE') up = climb(up.parentElement && up.parentElement.parentElement);
+    if (up && isScript(up)) { const bk = baseKey(kids(up)[0]); if (bk && (bk[0] === E || bk[0] === mi)) return delta(holderKey(up)); }
+    if (E !== mi) { const bk = baseKey(E); return bk ? delta({ el: E, key: bk[1], power: false }) : null; }
     const b = baseName(mi);
     if (!b || b === 'pi') return null;
     /* µF, 10 Ω: a unit prefix or unit, not a symbol */
@@ -125,12 +167,58 @@
     if ((b === 'mu' || b === 'Omega') && upright(nx)) return null;
     if (b === 'mu' && nx && nx.tagName === 'MJX-MI' && nx.classList.contains('mjx-n')) return null;   /* \mathrm{\mu Pa} */
     if (b === 'Omega') { const pv = step(mi, 'previousElementSibling'); if (pv && (pv.tagName === 'MJX-MN' || upright(pv) || (pv.tagName === 'MJX-MSUP' && kids(pv)[0] && kids(pv)[0].tagName === 'MJX-MN'))) return null; }
-    /* Δt, dx, δx: an operator in front of a symbol */
+    /* Δt, dx, δx: an operator in front of a symbol (but the d of d sin θ is a spacing) */
     if (b === 'Delta' || b === 'd' || b === 'delta') {
-      const nx = mi.nextElementSibling;
-      if (nx && (/^MJX-(MI|MSUB|MSUP|MSUBSUP|TEXATOM|MOVER)$/.test(nx.tagName) || (nx.tagName === 'MJX-MO' && cps(nx)[0] === 0x27E8))) return null;
+      const n2 = mi.nextElementSibling;
+      const fn = n2 && n2.tagName === 'MJX-MI' && FUNCS.has(cps(n2).map((cp) => String.fromCharCode(cp)).join(''));
+      /* what follows is a symbol: a letter, one with a script or accent, a group holding a letter (not the / of d/v), or ⟨ */
+      const sym = n2 && (n2.tagName === 'MJX-MI' || n2.tagName === 'MJX-MOVER' || (n2.tagName === 'MJX-TEXATOM' && n2.querySelector('mjx-mi'))
+        || (isScript(n2) && baseKey(kids(n2)[0])) || (n2.tagName === 'MJX-MO' && cps(n2)[0] === 0x27E8));
+      if (!fn && sym) return null;
     }
-    return look([mi, b]);
+    return compound(mi, b) || delta({ el: mi, key: b, power: false });
+  }
+
+  /* what a symbol means where it stands: a "key [TeX]" line of the handout when its condition holds in this equation */
+  const TEX = new WeakMap();
+  function texOf(c) {
+    if (!TEX.has(c) && window.MathJax && MathJax.startup && MathJax.startup.document) {
+      for (const it of MathJax.startup.document.math) if (it.typesetRoot) TEX.set(it.typesetRoot, it.math);
+    }
+    return TEX.get(c) || '';
+  }
+  const nospace = (x) => x.replace(/\s+/g, '');
+  const words = (x) => x.replace(/[*_`]/g, '').toLowerCase().split(/\s+/).filter(Boolean).join(' ');
+  /* the words just before an equation, back to the previous equation or the start of its block ("eccentricity" for e) */
+  function leadOf(c) {
+    let t = '';
+    for (let n = c.previousSibling; n; n = n.previousSibling) {
+      if (n.nodeType === 1 && (n.matches('mjx-container, br') || n.querySelector('mjx-container'))) break;
+      t = n.textContent + t;
+    }
+    return words(t.split('\n').pop()).replace(/[ (,:]+$/, '');
+  }
+  function ctxMatch(spec, tex, power, before) {
+    const flat = nospace(tex);
+    return spec.split('&').every((c) => {
+      if (c.trim()[0] === '~') return before.endsWith(words(c.trim().slice(1)));
+      c = nospace(c);
+      return c === '^' ? power === true : c[0] === '=' ? flat === c.slice(1) : flat.includes(c);
+    });
+  }
+  function entryOf(r) {
+    const lines = G && G['@ctx'] && G['@ctx'][r.key];
+    if (lines) {
+      const c = r.el.closest('mjx-container'), tex = texOf(c), before = leadOf(c);
+      for (const l of lines) if (ctxMatch(l[0], tex, r.power, before)) return l[1] === '-' ? null : l.slice(1);
+    }
+    return (G && G[r.key]) || null;
+  }
+  function keyAt(node) {
+    const r = keyOf(node);
+    if (!r) return null;
+    r.entry = entryOf(r);
+    return r.entry ? r : null;
   }
 
   /* ---------- the tip ---------- */
@@ -160,12 +248,13 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     return false;
   }
   function hide() {
-    if (shown) shown.classList.remove('sym-on');
+    if (shown) shown.forEach((x) => x.classList.remove('sym-on'));
     shown = null; pinned = null;
     if (tip) { tip.hidden = true; tip.classList.remove('sym-pinned'); }
   }
-  function show(target, key, pin) {
-    const e = G[key];
+  /* r: what keyAt found, { el, els (a label of several letters), key, entry } */
+  function show(r, pin) {
+    const e = r.entry, els = r.els || [r.el];
     if (!tip) {
       tip = document.createElement('div');
       tip.className = 'sym-tip tex2jax_ignore';
@@ -173,16 +262,16 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
       tip.id = 'sym-tip';
       document.body.appendChild(tip);
     }
-    if (shown && shown !== target) shown.classList.remove('sym-on');
-    shown = target; target.classList.add('sym-on');
+    if (shown) shown.forEach((x) => x.classList.remove('sym-on'));
+    shown = els; els.forEach((x) => x.classList.add('sym-on'));
     tip.textContent = '';
     const head = document.createElement('div'); head.className = 'sym-head';
     /* the symbol as it looks in the equation: a copy of its MathJax output */
     const box = document.createElement('mjx-container');
     box.className = 'MathJax sym-math'; box.setAttribute('jax', 'CHTML');
     const mm = document.createElement('mjx-math'); mm.className = 'MJX-TEX';
-    const copy = target.cloneNode(true); copy.classList.remove('sym-on');
-    mm.appendChild(copy); box.appendChild(mm); head.appendChild(box);
+    els.forEach((x) => { const copy = x.cloneNode(true); copy.classList.remove('sym-on'); mm.appendChild(copy); });
+    box.appendChild(mm); head.appendChild(box);
     const nm = document.createElement('span'); nm.className = 'sym-name'; nm.textContent = e[0]; head.appendChild(nm);
     tip.appendChild(head);
     if (e[1]) { const u = document.createElement('div'); u.className = 'sym-unit'; u.textContent = 'Unit: ' + e[1]; tip.appendChild(u); }
@@ -190,12 +279,14 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     tip.hidden = false;
     tip.classList.toggle('sym-pinned', !!pin);
     tip.classList.toggle('sym-dark', darkPage());
-    pinned = pin ? target : null;
-    const r = target.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
-    let x = r.left + window.scrollX + r.width / 2 - w / 2;
+    pinned = pin ? r.el : null;
+    const a = els[0].getBoundingClientRect(), b = els[els.length - 1].getBoundingClientRect();
+    const box2 = { left: a.left, right: b.right, top: Math.min(a.top, b.top), bottom: Math.max(a.bottom, b.bottom) };
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = (box2.left + box2.right) / 2 + window.scrollX - w / 2;
     x = Math.max(window.scrollX + 12, Math.min(x, window.scrollX + document.documentElement.clientWidth - w - 12));
-    let y = r.bottom + window.scrollY + 8;
-    if (r.bottom + h + 16 > window.innerHeight && r.top - h - 8 > 0) y = r.top + window.scrollY - h - 8;
+    let y = box2.bottom + window.scrollY + 8;
+    if (box2.bottom + h + 16 > window.innerHeight && box2.top - h - 8 > 0) y = box2.top + window.scrollY - h - 8;
     tip.style.left = x + 'px'; tip.style.top = y + 'px';
   }
 
@@ -203,13 +294,13 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     css();
     document.addEventListener('mouseover', (ev) => {
       if (pinned) return;
-      const k = keyAt(ev.target);
-      if (k) show(k[0], k[1], false); else if (shown) hide();
+      const r = keyAt(ev.target);
+      if (r) show(r, false); else if (shown) hide();
     });
     document.addEventListener('click', (ev) => {
       if (tip && tip.contains(ev.target)) return;
-      const k = keyAt(ev.target);
-      if (k && pinned !== k[0]) { show(k[0], k[1], true); return; }
+      const r = keyAt(ev.target);
+      if (r && pinned !== r.el) { show(r, true); return; }
       if (pinned || shown) hide();
     });
     document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') hide(); });
@@ -230,11 +321,18 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     G = g;
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
   }).catch(() => {});
-  /* for tools: every key this page's equations show, to compare with tools/symbols.py */
-  window.vdSymbolKeys = () => {
-    const out = new Set(), keep = G; G = new Proxy({}, { get: (o, k) => !String(k).startsWith('Delta ') });
-    document.querySelectorAll('.markdown-body mjx-container mjx-c').forEach((c) => { const k = keyAt(c); if (k) out.add(k[1]); });
-    G = keep;
-    return Array.from(out);
-  };
+  /* for tools: every symbol this page's equations show, equation by equation, with the meaning its tip gives (tools/symcheck.cjs
+     compares them with what tools/symbols.py makes from the handout's TeX) */
+  window.vdSymbolOccurrences = () => Array.from(document.querySelectorAll('.markdown-body mjx-container')).map((c) => {
+    const seen = new Set(), occ = [];
+    c.querySelectorAll('mjx-c').forEach((x) => {
+      const r = keyOf(x);
+      if (!r || seen.has(r.el)) return;
+      seen.add(r.el);
+      const e = entryOf(r);
+      occ.push([r.key, e ? e[0] : null, e ? e[1] || '' : null]);
+    });
+    return { tex: texOf(c), before: leadOf(c), occ };
+  });
+  window.vdSymbolKeys = () => Array.from(new Set([].concat(...window.vdSymbolOccurrences().map((q) => q.occ.map((o) => o[0])))));
 })();

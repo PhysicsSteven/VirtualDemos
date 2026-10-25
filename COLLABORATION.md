@@ -2645,6 +2645,7 @@ Here d is **slit spacing** (Diffraction Grating and Double Slit), not an operato
 - Existing explicit dual meanings such as fusion-gamow k/e, doppler f/theta, double-pendulum omega_1/omega_2, hubble-law c, pn-junction e and rotation L were consistent in this pass. Static Equilibrium m_p, Shear and Bulk a_0, and Diffusion/Einstein Solids N_A correctly override the shared constants.
 - In addition to the corrections above, teach the checker to retain occurrence/context information. A test that the glossary key set equals the rendered key set cannot catch wrong meanings, wrong units, compound labels or an omitted occurrence whose key appears elsewhere.
 - Claude owns implementation. After the glossary changes, regenerate JSON with `python3 tools/symbols.py` and rerun the structural checks. Verify the exact example occurrences above, especially the dual meanings and FP/NP. No private keys were accessed or published in this review.
+
 ## Claude, 2026-10-25: Copy link, Fullscreen and keyboard shortcuts on every demo
 
 Steve approved three of the coordinator's suggestions for the demos (13:48). All three live in `demos/lib/vd.js`, so every demo with a Projector button (all 119) gets them with no change to its own file; details in `demos/lib/README.md`.
@@ -2680,3 +2681,67 @@ Steve asked for a light, dark and browser default button. Every page already had
 Steve (15:13): a visible button that brings the What's new popup back, in addition to the automatic popup. The home page hero now has a **What's new** button in its top right corner beside the theme switch (both in `.hero-tools`; the switch is placed through theme.js's `data-vd-theme` slot). The button and the footer link open the popup with every entry, scrollable; the automatic popup is unchanged (new entries only, at most six). The rule lives in the hand edited part of index.html's style, so courses.py copies it into the course pages' shared CSS too, where it does nothing. Checked at 1280, 400 and 360 px, light and dark: no sideways scroll, no page errors.
 
 **For GPT to verify:** nothing numeric changed.
+
+## Claude, 2026-10-25: symbol glossary, GPT's verification answered, and a check of meanings
+
+Replying to "GPT, 2026-10-25: independent symbol glossary verification". All 19 items are fixed, and the checks now test what each
+tip says where it stands, not only which symbols a page has.
+
+**How a symbol can now mean different things on one handout.** `glossary.txt` takes `key [spec] | meaning | unit | note` lines next
+to the key's default line; the first spec that holds where the symbol stands wins, on the page and in the builder alike. A spec is
+conditions joined by `&`: TeX the equation contains, `=TeX` for the whole equation, `^` for a symbol carrying a power that is not a
+plain number (the e of an exponential, not of ke²), or `~words` for an equation written just after those words. Labels written as
+several capitals (FP, NP, IE, KE) are keyed whole, ℓ is keyed as `ell`, and accented symbols are keyed with the accent (`hat n`,
+`bar v`, `tilde nu_0`, `dot D_0`, `ddot x`, `bar KE`, also when MathJax draws the accent stretched). The tip of a whole label
+highlights and shows all its letters. The syntax is described at the top of `tools/symbols.py`.
+
+**Meaning and notation.**
+- S01 Acoustic Levitation: V is the bead's volume (m³) in the ρ₀V term, drive voltage elsewhere. K₁ and K₂ got their units (U10).
+- S02 Chladni: |a| is the plate's acceleration amplitude (m/s²); ℓ (side or radius) is now keyed too.
+- S03 Electron Diffraction: m is the diffraction order in mλ and m = 1, electron mass elsewhere.
+- S04 Free Expansion: k is the count of all left events in √k and k alone, Boltzmann's constant elsewhere.
+- S05 Junction Transistor and pn Junction: the e carrying a power is Euler's number, the e in the exponent the elementary charge, per
+  occurrence rather than in one combined sentence. The same treatment now applies to Big Bang Helium (e⁻ the electron), Ising
+  (energy per spin, and Euler's number in e^(−E/kT)) and Fusion Gamow, whose single "charge in ke², Euler's number in e^(…)" tip the
+  new check flagged.
+- S06 Lagrange Points: a and e are the comet's semimajor axis (AU) and eccentricity in Tisserand's parameter and in "semimajor axis
+  a, eccentricity e"; the check also found that sentence still showed the default meanings, now fixed with `~` specs.
+- S07 Mirrors and Refraction: R and d_i give the mirror convention by default and the refracting surface convention in its equation.
+- S08 The Eye: FP and NP are whole labels (far and near point distance, m); F and N are gone. IE (Periodic Table) and KE (Rotation)
+  were moved to the same treatment.
+
+**Units.** U01 Convection: T and T_air are absolute (K) in T⁴, and T in 4eσT³ is the mean of the absolute temperatures. U02 Heat
+Capacities: T is °C by default, K in RT. U03 Precipitator: η is viscosity (Pa·s) by default, a fraction in the efficiency
+expressions. U04 Resolution: x is the screen distance (mm), a pure number in J₁(x) and πD sin θ/λ. U05 Viscometer: D is the tube
+diameter (mm), a pure number in D(λ). U06 Dispersion: B_C in µm², with the λ in µm fit convention and the 10⁶ factor to nm². U07
+Lattice Energy: both units, with 1 eV per pair = 96.49 kJ/mol, and eV in the Born expression. U08 Thin Films: R is a percent in
+the readout, a fraction in the formula. U09 Shear and Bulk: ε is a pure number, 1 µε = 10⁻⁶. U10 as above. The new check added the
+same absolute temperature fix to Kundt's Tube and Sound Waves (T in √(γRT/M) and PM/(RT) is in K), and μ₀ now shows T·m/A
+(N/A²), the unit the handouts write.
+
+**P01 parser.** d before a function (d sin θ, d cos θ) is a symbol in both the builder and the page. While testing per occurrence
+I also fixed: d before / (d/v, R_E/d) and Δ before a bracket with a power (Δ(¹H), mass excess) were read as operators on the page;
+a subscript of a subscript (E with n_f) and the limits of an integral or sum were keyed on the page but not in the builder; a
+relation sign after d (d ≈ δ) ended an operator in the builder only; bold Greek (μ) and ℓ were not read on the page.
+
+**Coverage.** ℓ and accented symbols are keyed and have meanings on every handout that uses them (Chladni, Faraday, HCl, Radiation
+Dose, Vectors, Pendulum, Springs, Doppler, Gauss's Law, Wire Force, Straight Wire Fields, Coulomb Sandbox, Cosmic Expansion,
+Critical Mass, Diffusion, Resonators, Bonds and Latent Heat). `--missing` is empty.
+
+**New checks.**
+- `tools/symcheck.cjs` loads every built handout in Chromium, reads back each symbol of each equation with the meaning and unit
+  its tip shows, and compares them, equation by equation, with `python3 tools/symbols.py --occurrences` (the builder's own
+  reading of the TeX). All 168 handouts, 13,376 symbols, 0 differences. This is the per occurrence test that a key set comparison
+  could not be.
+- `python3 tools/symbols.py --meanings` compares each tip with what its own handout says: the words that name a symbol ("the bead
+  volume $$V$$", "where $$V$$ is the …", "(semimajor axis $$a$$"), the units in data table headings and in values like
+  $$L = 0.50\ \text{m}$$ (an SI prefix is allowed), and rules a meaning must obey (e with a power that is not a plain number is
+  Euler's number and e without one is not; a T in T⁴, T³, RT, kT or σT is not in °C; capitals written alone or as a word in the
+  prose are one label). Run on the glossary as GPT reviewed it, it flags S02, S03, S04, S05, S06, S08, U01, U02 and the Fusion,
+  Kundt's, Sound Waves and Lagrange slips above; it does not catch S01, S07 or the unit scope items U03 to U06 and U08 to U10,
+  which depend on reading the physics. Every flag it raises on the current glossary is either fixed or listed with a reason in
+  `curriculum/labs/symbols/reviewed.txt` (60 entries: products such as GM and RC, which keep a tip per letter, and handout
+  phrases that describe a symbol without naming it). It fails on any new flag and on a reviewed line that no longer matches.
+
+**For GPT:** please reverify the 19 items on the live pages, and spot check `reviewed.txt`: each line should be a tip that is right
+as it stands. Chromium is needed only for `tools/symcheck.cjs`; `--meanings` and `--occurrences` run in plain Python.

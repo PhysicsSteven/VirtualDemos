@@ -1,0 +1,63 @@
+// Places where tools/symbols.py --meanings flags a tip that is right, each with the reason: handout | key | what the handout
+// says (as the check prints it) | why the tip stands. The check fails on any flag not listed here, and on a line here that no
+// longer matches a flag. Reviewed 2026-10-25.
+acoustic-levitation | z | Tracked trap | table heading "Tracked trap z": z is the position of the trap along the axis
+black-holes | GM | label GM | a product, G times M; each letter has its own tip
+black-holes | b | distance | the impact parameter is the distance named; the tip says how far the light passes
+camera | d_s | hand focused | "a hand focused d_s" describes how it was set, not what it is
+catenary | a | distance | a is a length (the catenary constant); the handout calls it a distance
+center-of-mass | x | Center of mass | table heading "Center of mass x": the x coordinate of the center of mass; x is the horizontal position
+center-of-mass | y | Center of mass | table heading "Center of mass y": the y coordinate of the center of mass; y is the vertical position
+cosmic-expansion | H | slope | the handout finds H as a slope; the tip says what H is
+critical-mass | bar nu | critical size if | sentence fragment, not a name for the symbol
+doppler-light | gamma | crests | sentence fragment ("the crests ... γ"), not a name for the symbol
+electron-diffraction | D | arc | "an arc D": D is the arc length across a ring, its diameter on the spherical screen
+exoplanets | K | top velocity | "top velocity K" is the largest line of sight speed, as the tip says
+exoplanets | M_J | demo's planet sliders read in | sentence fragment about the sliders, not a name for the symbol
+faraday | NBA | label NBA | a product, N times B times A; each letter has its own tip
+franck-hertz | Delta E | electron gain | "lets the electron gain ΔE": the energy gained is the excitation energy
+free-expansion | n | rows | sentence fragment about table rows, not a name for the symbol
+gauss-law | r | Charge positions or | table heading "Charge positions or r": r is the distance from the center
+gps-clocks | GM | label GM | a product, G times M; each letter has its own tip
+gravity-near-earth | GM | label GM | a product, G times M; each letter has its own tip
+gyroscope | I_s | rim | "the rim" and "the wheel" are what I_s belongs to; the tip names it
+hcl-spectrum | n | infrared band | sentence fragment ("In the infrared band n goes from 0 to 1"), not a name
+heat-engines | PV | label PV | a product, P times V; each letter has its own tip
+heat-engines | eta | Formula | table heading "Formula η": the efficiency from the formula
+heating-curve | m | Balance | the balance reading is the mass of the sample
+heating-curve | m | balance reading | the balance reading is the mass of the sample
+holography | z | Image | table heading "Image z": z of the image, a distance from the plate
+hubble-law | H_0 | slope | the handout finds H₀ as a slope; the tip says what H₀ is
+hubble-law | M | Leavitt law | "the Leavitt law M = ...": M is the absolute magnitude it gives
+ising | m | demo average | "the demo averages m": describes how m is measured
+ising | m | demo averages | "the demo averages m": describes how m is measured
+lagrange-points | e | euler e | e alone stands for Euler's number here ("a factor e")
+lagrange-points | e | factor | "grows by a factor e": Euler's number, as the tip says
+lattice-energy | alpha | number | the Madelung constant is the number (and running total) the handout describes
+lattice-energy | alpha | running total | the Madelung constant is the number (and running total) the handout describes
+mirrors-refraction | n_1 | water | "the water's n₁": the index of the water, the object's side
+orbital-magnetic-moment | L | cone | "the quantum L" and "the cone": L is the orbital angular momentum in both
+orbital-magnetic-moment | L | quantum | "the quantum L" and "the cone": L is the orbital angular momentum in both
+rc-circuits | RC | label RC | a product, R times C (the time constant); each letter has its own tip
+relativity-em | gamma_u | time | "a time γ_u times longer": γ_u is the factor, as the tip says
+resistivity | E | slope | the handout finds E as a slope; the tip says what E is
+resistivity | T | kelvin R=b+kT | k is the slope of the fit here, not the Boltzmann constant; T is in °C
+resistivity | alpha | near zero | "near zero α" describes its value, not what it is
+resolution | I_0 | central peak of one source | the central peak of one source is the intensity at the center
+resonators | L | Upper bracket | table heading "Upper bracket L": a length of the air column
+rlc-transients | LC | label LC | a product, L times C; each letter has its own tip
+rlc-transients | RC | label RC | a product, R times C (the time constant); each letter has its own tip
+room-acoustics | alpha | fraction | the absorption coefficient is the fraction absorbed
+room-acoustics | alpha_i | fraction | the absorption coefficient is the fraction absorbed
+rotation | theta | body shares | sentence fragment ("every point of the body shares θ"), not a name
+rutherford | theta | deflection | the deflection is the scattering angle
+shear-bulk | x | distance | the displacement is the distance named
+springs | omega | first | "its first ω": the first drive frequency of the sweep
+terminal-velocity | CA | label CA | a product, C times A (the drag area); each letter has its own tip
+thin-films | x | Part probe position | table heading "Probe x": the probe position, a distance from the edge
+thin-films | x | Probe | table heading "Probe x": the probe position, a distance from the edge
+vectors | AB | label AB | a product, A times B; each letter has its own tip
+wave-particle-duality | eta | fraction | the efficiency is the fraction named
+wave-power | b | force | "a force b times its velocity": b is the damping constant
+white-dwarf-cooling | Gamma_m | critical value | the critical value of the coupling is the one at which the ions freeze
+wire-force | LB | label LB | a product, L times B; each letter has its own tip
