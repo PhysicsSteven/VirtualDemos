@@ -3982,7 +3982,7 @@ transformers, ultrasound, and holography, resolution and gas-heat-capacity in Pr
 gradient with a negative radius while the picture had no room yet. `drawPlate` and the shared `Gr.shadow` (demos/lib/gear.js)
 now skip that frame.
 
-**Verified:** clip check over all 124 demos on main after the fixes: 0 cut off, except Planet Temperatures (below). Before and after, measured at
+**Verified:** clip check over all 125 demos on main after the fixes: 0 cut off, except Planet Temperatures (below). Before and after, measured at
 1920x1080, 2560x1440, 1440x900, 1280x720, 1024x768, 1100x900, 400x860, 360x780 and 1920x1080 Projector: no control moves; only
 stages that cut something off grow (Particles at 1920x1080 grew 890 to 1441 px: the particle filter chips were 484 px below
 the stage). `vdcheck --only after` on the 27 changed demos: 0 problems. No CORE changed.
