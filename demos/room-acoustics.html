@@ -334,7 +334,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(kind, rows, meta) {
     const L = [`# Room Acoustics virtual apparatus: ${kind === 'decay' ? 'reverberation times' : 'sound level against distance'} (simulated data)`, `# demo version,${meta.version}`,
-      '# model,"ray tracing, 4000 to 64000 rays, diffuse (Lambert) reflections, 0.5 m receiver sphere, exact direct sound, energies add; no air absorption"',
+      '# model,"ray tracing, 4000 to 64000 rays, diffuse (Lambert) reflections, receiver sphere 0.5 m in radius, exact direct sound, energies add; no air absorption"',
       '# absorption data,"pyroomacoustics materials database; wedges: R = 0.1 (fc/f)^2 at most 0.9, fc = c/(4d) (Beranek and Sleeper 1946)"', '# speed of sound,343.2 m/s'];
     if (kind === 'decay') {
       L.push('# T,"T20 from the Schroeder decay curve, -5 to -25 dB, extended to 60 dB"', 'row,band_Hz,room_L_m,room_W_m,room_H_m,walls,panels_n,panel_material,wedge_depth_m,floor,V_m3,S_m2,T_measured_s');

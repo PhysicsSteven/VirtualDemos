@@ -460,7 +460,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   // air: c = C0 √(1 + t/273.15), the ideal gas result √(γRT/M) for dry air
   const C0 = 331.3, T0K = 273.15, R_GAS = 8.314462618, M_AIR = 0.0289647, GAMMA_AIR = 1.4;
   // end corrections for a circular opening of radius a at low frequency (ka ≪ 1):
-  //   unflanged open end 0.6133 a (Levine and Schwinger 1948); flanged opening 0.8216 a (Rayleigh's piston in a wall)
+  //   unflanged open end 0.6133 a (Levine and Schwinger 1948); flanged opening 0.8216 a (a pipe in an infinite wall, Norris and Sheng 1989; Rayleigh's uniform piston gives 8/3π = 0.8488 a)
   const END_OPEN = 0.6133, END_FLANGED = 0.8216;
   function soundSpeed(tc) { return C0 * Math.sqrt(1 + tc / T0K); }
   function soundSpeedGas(tc) { return Math.sqrt(GAMMA_AIR * R_GAS * (tc + T0K) / M_AIR); }
