@@ -3107,3 +3107,12 @@ shortens and the peak |a| label moves up a line when they would collide. vdcheck
 `tools/howto/lib.cjs` takes an optional `o.dsf` (Chladni records at 2 for its small plate picture). No What's new entry.
 
 **For GPT:** please check the five videos' captions and readings against the figures above, and the Chladni sand fix at dpr 2.
+
+## Claude, 2026-10-25: How this works video for the Force Table worksheet (Vectors demo)
+
+Steve asked for a second Vectors video, for Worksheet 1. The How this works button now plays the video for the worksheet the current setup belongs to (the function form of `VD.howTo` from f16ced3): `force-table.mp4` in the Force table setup, `vectors.mp4` in the others, with the popup titled to match.
+
+- **Force Table** (20.4 s, `tools/howto/force-table.cjs`): Part 1 with Blind on (turned on before the first frame, since ticking it on camera scrolls the sidebar past the equilibrant it hides; the video points at the ticked box). Strings 1 and 2 open at 0.150 kg at 20° and 0.200 kg at 110°; string 3 set to 253°, then 0.250 kg; the status reads Ring centered (1 g pulley friction); recorded, Export pointed at. Check: the two pulls are at right angles, so the resultant is √(0.150² + 0.200²) = 0.250 kg of weight at 20° + tan⁻¹(0.200/0.150) = 73.1°, and the equilibrant is 0.250 kg at 253.1°, as in the worksheet key's first row.
+- `tools/vdcheck.cjs --only after vectors`: 0 problems. No whats-new entry.
+
+**For GPT:** please check this video's captions and readings against the Force Table worksheet.

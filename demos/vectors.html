@@ -1453,8 +1453,11 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/vectors.mp4', poster: 'media/how-this-works/vectors.jpg' });
+  /* How this works: a short video of one sample reading from the worksheet the setup belongs to, Force Table (Worksheet 1) in the
+     Force table setup and Components, Sums and Products (Worksheet 2) in the others; made by tools/howto/ */
+  const howVid = () => (S.preset === 'table' ? 'force-table' : 'vectors');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.preset === 'table' ? 'How this works: Force Table' : 'How this works: Components, Sums and Products') });
   tokens(); new ResizeObserver(resize).observe(stage); renderRows(); renderVecRows();
   const q0 = (() => { try { return new URLSearchParams(location.search).get('setup'); } catch (_) { return null; } })();
   /* the table opens in 3D where WebGL works, unless the page asks for the top view (?view=top) or the device asks to save data */
