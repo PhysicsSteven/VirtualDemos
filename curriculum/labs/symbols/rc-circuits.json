@@ -1,1 +1,1 @@
-{}
+{"C":["Capacitance","F"],"H":["Heat given off in the resistor","J"],"I":["Current","A"],"L":["Inductance","H"],"Q":["Charge on the capacitor","C"],"R":["Resistance","Ω"],"U_C":["Energy stored in the capacitor","J"],"V":["Voltage across the capacitor","V"],"V_C":["Voltage across the capacitor","V"],"V_C0":["Capacitor voltage when the discharge starts","V"],"W":["Work done by the battery","J"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"epsilon":["EMF of the battery","V"],"t":["Time","s"],"tau":["Time constant","s"]}

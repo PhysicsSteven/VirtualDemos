@@ -1,1 +1,1 @@
-{}
+{"N":["Number of parents left"],"N_0":["Starting number of parents"],"R":["Activity, decays per unit time","Bq"],"T_1/2":["Half life","s"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"f":["Expected fraction of parents left"],"lambda":["Decay constant","s⁻¹"],"n":["Number of steps (flips)"],"p":["Probability that a parent decays in one step"],"sigma":["Standard deviation of the count left"],"t":["Time","s"],"tau":["Mean life","s"]}

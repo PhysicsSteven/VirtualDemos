@@ -1,1 +1,1 @@
-{}
+{"A":["Cross section of the tube","mm²"],"L":["Length of the rod (ΔL: its change)","m"],"L_0":["Length at 20 °C","m"],"T":["Temperature (ΔT: its change)","°C"],"V":["Volume (ΔV: its change)","cm³"],"V_0":["Starting volume","cm³"],"alpha":["Coefficient of linear expansion","°C⁻¹"],"beta":["Coefficient of volume expansion","°C⁻¹"],"beta_flask":["Volume expansion coefficient of the flask","°C⁻¹"],"beta_liquid":["Volume expansion coefficient of the liquid","°C⁻¹"],"h":["Rise of the level in the tube","mm"]}

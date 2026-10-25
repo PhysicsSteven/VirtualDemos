@@ -1,1 +1,1 @@
-{}
+{"A":["Amplitude of the shake","m"],"B_r":["Remanence of the magnet","T"],"C":["Capacitance","F"],"N":["Number of turns in the coil"],"Phi":["Magnetic flux through the coil","Wb"],"V":["Voltage across the capacitor","V"],"epsilon":["Induced EMF","V"],"f":["Frequency of the shake","Hz"],"t":["Time","s"],"v":["Speed of the magnet","m/s"],"z":["Position of the magnet along the coil's axis","m"]}

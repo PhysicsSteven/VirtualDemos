@@ -1,1 +1,1 @@
-{}
+{"A":["Amplitude of the driver","mm"],"L":["Length of the string","m"],"P":["Average power carried","mW"],"T":["Tension","N"],"Z":["Impedance of the string, √(Tμ)","kg/s"],"b":["Damping constant of the absorber","kg/s"],"f":["Frequency","Hz"],"g":["Gravitational acceleration","m/s²"],"m":["Hanging mass, hanger included","kg"],"mu":["Linear mass density of the string","kg/m"],"omega":["Angular frequency, 2πf","rad/s"],"t":["Time","s"],"v":["Wave speed","m/s"]}

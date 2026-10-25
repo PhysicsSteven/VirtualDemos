@@ -1,1 +1,1 @@
-{}
+{"B":["Stiffness (inharmonicity) coefficient"],"L_n":["Level of harmonic n","dB"],"a_n":["Amplitude of harmonic n"],"a_ref":["Amplitude of the strongest partial (the 0 dB reference)"],"f":["Frequency (Δf: detuning of a harmonic)","Hz"],"f_1":["Fundamental frequency","Hz"],"f_n":["Frequency of harmonic n","Hz"],"k":["Number of semitones from A4"],"n":["Harmonic number"],"phi_n":["Phase of harmonic n","rad"],"t":["Time","s"],"x":["Signal, sum of the harmonics"],"x_rms":["rms value of the signal"]}

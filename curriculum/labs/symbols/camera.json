@@ -1,1 +1,1 @@
-{}
+{"A":["Aperture diameter, f/N","mm"],"H":["Hyperfocal distance","m"],"N":["f-number: focal length over aperture diameter"],"b":["Diameter of the blur spot on the sensor","mm"],"b_max":["Largest acceptable blur spot","mm"],"d":["Object distance","cm"],"d_i":["Image distance, from the thin lens equation","mm"],"d_s":["Lens to sensor distance","mm"],"f":["Focal length","mm"]}

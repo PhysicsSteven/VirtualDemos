@@ -1,1 +1,1 @@
-{"m_e":["Electron mass","kg","9.1093837139 × 10⁻³¹ kg (CODATA 2022)"]}
+{"E":["Photon energy","keV"],"E_C":["Energy of the Compton edge","keV"],"a":["Intercept of the energy calibration","keV"],"b":["Slope of the energy calibration","keV per channel"],"c":["Centroid channel of the photopeak; in mₑc², the speed of light"],"m_e":["Electron mass","kg","9.1093837139 × 10⁻³¹ kg (CODATA 2022)"]}

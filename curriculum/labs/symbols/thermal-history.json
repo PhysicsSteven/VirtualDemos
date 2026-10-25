@@ -1,1 +1,1 @@
-{}
+{"T":["Temperature of the radiation","K"],"T_0":["Temperature of the radiation today","K","2.7255 K"],"a":["Scale factor (1 today)"],"c":["Speed of light in vacuum","m/s","299 792 458 m/s, exact"],"g_ast":["Effective number of kinds of particles sharing the energy"],"k":["Boltzmann constant","J/K","1.380649 × 10⁻²³ J/K, exact"],"m":["Mass of a particle","kg"],"n":["Exponent of t in a ∝ tⁿ"],"t":["Time since the big bang","s"],"z":["Redshift"]}

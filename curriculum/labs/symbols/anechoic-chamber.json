@@ -1,1 +1,1 @@
-{}
+{"A":["Room's total absorption","m²"],"I":["Sound intensity","W/m²"],"L":["Sound level","dB"],"P":["Source power","W"],"R":["Fraction of the sound pressure the wedges reflect"],"alpha":["Absorption coefficient: the fraction of a ray's energy a surface absorbs"],"c":["Speed of sound in air","m/s"],"d":["Wedge length","m"],"f":["Frequency","Hz"],"f_c":["Wedge cutoff frequency","Hz"],"p_rms":["rms sound pressure","Pa"],"r":["Distance from the source","m"],"r_c":["Critical distance","m"],"rho":["Density of air","kg/m³"]}

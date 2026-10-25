@@ -1,1 +1,1 @@
-{}
+{"E":["Total energy","J"],"F_x":["Force along x","N"],"U":["Potential energy","J"],"U''":["Second derivative of U at the minimum","N/m"],"U_0":["Potential energy at the minimum","J"],"k":["Effective spring constant","N/m"],"m":["Mass of the particle","kg"],"omega_0":["Angular frequency of small oscillations","rad/s"],"v":["Speed","m/s"],"x":["Position","m"],"x_0":["Position of the minimum","m"],"x_1":["Starting position","m"],"x_2":["Final position","m"]}

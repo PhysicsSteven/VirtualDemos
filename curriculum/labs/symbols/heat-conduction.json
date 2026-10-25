@@ -1,1 +1,1 @@
-{}
+{"A":["Area","m²"],"P":["Heat flow","W"],"R":["R factor: a layer's resistance to heat flow per unit area, d/k","m²·K/W"],"R_layer":["R factor of one layer","m²·K/W"],"T":["Temperature","°C"],"T_in":["Temperature inside","°C"],"T_layer":["ΔT_layer: temperature drop across one layer","°C"],"T_out":["Temperature outside","°C"],"d":["Thickness of a layer","m"],"k":["Thermal conductivity","W/(m·K)"],"k_Al":["Thermal conductivity of aluminum","W/(m·K)"],"k_steel":["Thermal conductivity of steel","W/(m·K)"],"x":["Position through the wall or along the rod","mm"]}

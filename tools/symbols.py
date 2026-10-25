@@ -69,8 +69,8 @@ def strip(tex):
     return OPS.sub(' ', t)
 
 
-def keys_in(tex):
-    """every symbol key in one TeX expression, in order"""
+def keys_in(tex, deltas=None):
+    """every symbol key in one TeX expression, in order; a symbol after a Δ also goes into deltas as "Delta X" """
     subs = []
 
     def keep(m):   # subscripts are read before text groups are taken out, so I_{\rm rms} keeps its "rms"
@@ -83,10 +83,10 @@ def keys_in(tex):
     t = re.sub(r'\\mathcal\s*\{?\s*([A-Z])\s*\}?', r' \\cal\1', t)   # \mathcal E (an emf): its own symbol, "calE"
     t = re.sub(r'\\(?:vec|mathbf|boldsymbol|bm)\s*\{\s*(\\?[A-Za-z]+)\s*\}', r' \1', t)
     t = re.sub(r'\\(?:mu|Omega)\s*(?=\\(?:text|mathrm|rm|textrm)(?![A-Za-z]))', ' ', t)   # µs, µF: a unit prefix, not a symbol
-    t = re.sub(r'(\d\s*(?:\\[ ,;:!]|~)?\s*)\\Omega(?![A-Za-z])', r'\1 ', t)   # 10 Ω: a unit
+    t = re.sub(r'((?:\d|\}|\\(?:text|mathrm|rm)\s*\{[^{}]*\})\s*(?:\\[ ,;:!]|~)?\s*)\\Omega(?![A-Za-z])', r'\1 ', t)   # 10 Ω, kΩ, 10⁻⁸ Ω·m: a unit
     t = re.sub(r'\\(?:vec|mathbf|boldsymbol|bm)\s+(\\?[A-Za-z]+)', r' \1', t)
     t = re.sub(r'_\s*(' + TEXTY + r'\s*\{[^{}]*\}|\\rm\s*[A-Za-z]+|\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}|\\[A-Za-z]+|[A-Za-z0-9+\-*])', keep, t)
-    t, out = strip(t), []
+    t, out, after_delta = strip(t), [], False
     ms = list(SYM.finditer(t))
     for i, m in enumerate(ms):
         base = m.group(1).lstrip('\\')
@@ -96,6 +96,7 @@ def keys_in(tex):
         nxt = ms[i + 1] if i + 1 < len(ms) else None
         between = t[m.end():nxt.start()] if nxt else ''
         if base in ('Delta', 'd', 'delta') and not m.group('sub') and not m.group('p1') and not m.group('p2') and nxt and re.fullmatch(r'\s*', between):
+            after_delta = base == 'Delta'
             continue   # Δt, dx, δx: an operator, not a symbol
         if base == 'pi':
             continue
@@ -103,13 +104,16 @@ def keys_in(tex):
         sub = m.group('sub')
         sub = subs[int(sub[2:-2])] if sub and sub.startswith('{@') else norm_sub(sub) if sub else ''
         out.append(base + ('_' + sub if sub else '') + "'" * primes)
+        if after_delta and deltas is not None:
+            deltas.add('Delta ' + out[-1])
+        after_delta = False
     return out
 
 
-def used(md):
+def used(md, deltas=None):
     ks = []
     for m in MATH.finditer(md):
-        for k in keys_in(m.group(1)):
+        for k in keys_in(m.group(1), deltas):
             if k not in ks:
                 ks.append(k)
     return ks
@@ -134,15 +138,17 @@ def read_glossary():
     return sections
 
 
-def build(slug, keys, gl):
+def build(slug, keys, gl, deltas=()):
+    """the handout's glossary; "Delta X" lines (a quantity written ΔX that is not a change in X, such as a tidal ΔA) apply
+    where the page shows Δ in front of X, and X's own line everywhere else"""
     own, site, out = gl.get(slug, {}), gl.get('site', {}), {}
-    for k in keys:
+    for k in list(keys) + sorted(d for d in deltas if d in own):
         e = own.get(k) or site.get(k)
         if e and e[0].startswith('@'):   # "c | @" or "c | @c": a constant from the site section, used only where a handout asks
             ref = e[0] if len(e[0]) > 1 else '@' + k
-            if ref not in site:
+            e = site.get(ref) or site.get(ref[1:])
+            if not e:
                 sys.exit(f'glossary.txt: {slug} asks for {ref}, which the site section does not have')
-            e = site[ref]
         if e and e[0] != '-':
             e = list(e) + [''] * (3 - len(e))
             while e and not e[-1]:
@@ -171,7 +177,7 @@ def context(slug, md, n=2):
                         cell = [c for c in s.split('|') if m.group(0) in c]
                         snips.append('HEAD: ' + (cell[0].strip() if cell else s))
                     else:
-                        a, b = max(0, m.start() - 100), min(len(s), m.end() + 70)
+                        a, b = max(0, m.start() - 90), min(len(s), m.end() + 60)
                         snips.append(s[a:b])
                     break
             if len(snips) >= n:
@@ -191,7 +197,7 @@ def main():
         gl = read_glossary()
         for slug in args[1:]:
             print('==', slug, '==')
-            for k, snips in context(slug, (HANDOUTS / (slug + '.md')).read_text(), 3):
+            for k, snips in context(slug, (HANDOUTS / (slug + ".md")).read_text(), 2):
                 print('  ' + k + site_note(k, gl))
                 for s in snips:
                     print('      ' + s)
@@ -202,11 +208,12 @@ def main():
     for p in sorted(HANDOUTS.glob('*.md')):
         slug = p.stem
         slugs.add(slug)
-        keys = used(p.read_text())
+        deltas = set()
+        keys = used(p.read_text(), deltas)
         for k in gl.get(slug, {}):
-            if k not in keys:
+            if k not in keys and k not in deltas:
                 bad.append(f'{slug}: {k} is not in its equations')
-        out = build(slug, keys, gl)
+        out = build(slug, keys, gl, deltas)
         if missing:
             left = [k for k in keys if k not in out]
             if left:

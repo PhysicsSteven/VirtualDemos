@@ -1,1 +1,1 @@
-{}
+{"K_f":["Kinetic energy after the collision","J"],"K_i":["Kinetic energy before the collision","J"],"e":["Coefficient of restitution"],"m_1":["Mass of cart 1","kg"],"m_2":["Mass of cart 2","kg"],"mu":["Reduced mass, m₁m₂/(m₁ + m₂)","kg"],"u":["Velocity before the collision","m/s"],"u_1":["Velocity of cart 1 before the collision","m/s"],"u_2":["Velocity of cart 2 before the collision","m/s"],"v":["Velocity after the collision","m/s"],"v_1'":["Velocity of cart 1 after the collision","m/s"],"v_2'":["Velocity of cart 2 after the collision","m/s"]}

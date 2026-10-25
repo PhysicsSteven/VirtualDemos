@@ -1,1 +1,1 @@
-{}
+{"C":["Capacitance","F"],"I":["Current","A"],"I_in":["A current into a junction","A"],"I_out":["A current out of a junction","A"],"L":["Inductance","H"],"P":["Power","W"],"R":["Resistance","Ω"],"R_1":["Resistor 1","Ω"],"R_2":["Resistor 2 (in the divider, the one the output is taken across)","Ω"],"R_p":["Equivalent resistance in parallel","Ω"],"R_s":["Equivalent resistance in series","Ω"],"V":["Voltage","V"],"V_out":["Output voltage of the divider, across R₂","V"],"t":["Time","s"]}

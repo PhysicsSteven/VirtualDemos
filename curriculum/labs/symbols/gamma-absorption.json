@@ -1,1 +1,1 @@
-{}
+{"R":["Count rate","1/s"],"R_0":["Count rate with no absorber","1/s"],"d":["Distance from the source to the crystal's face","cm"],"d_0":["Extra depth in the crystal where the photons interact","cm"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"k":["Constant of the inverse square law","cm²/s"],"mu":["Attenuation coefficient (μ/ρ is the mass attenuation coefficient)","1/cm"],"rho":["Density of the absorber","g/cm³"],"x":["Mass thickness: density times thickness","g/cm²"],"x_1/2":["Half value layer: the mass thickness that halves the rate","g/cm²"]}

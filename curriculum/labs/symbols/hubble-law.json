@@ -1,1 +1,1 @@
-{}
+{"H_0":["Hubble constant","km/s/Mpc"],"M":["Absolute magnitude"],"P":["Cepheid pulsation period","days"],"a":["Cepheid zero point in the Leavitt law","mag"],"c":["Intercept of the fit of v against d, or (in v ≈ cz) the speed of light","km/s","speed of light 299 792 km/s"],"d":["Distance to the galaxy","Mpc"],"lambda_obs":["Observed wavelength of a line","nm"],"lambda_rest":["Rest wavelength of a line","nm"],"v":["Recession velocity","km/s"],"z":["Redshift"]}

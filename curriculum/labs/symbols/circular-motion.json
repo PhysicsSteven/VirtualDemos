@@ -1,1 +1,1 @@
-{}
+{"N":["Normal force","N"],"a":["Centripetal acceleration","m/s²"],"a_c":["Centripetal acceleration","m/s²"],"g":["Gravitational acceleration","m/s²"],"m":["Mass","kg"],"mu_s":["Coefficient of static friction"],"r":["Radius of the circle","m"],"theta":["Bank angle","°"],"v":["Speed","m/s"],"v_0":["Speed at the bottom of the loop","m/s"],"v_ideal":["Speed at which a banked curve needs no friction","m/s"],"v_max":["Fastest speed a flat curve holds","m/s"],"v_top":["Speed at the top of the loop","m/s"]}

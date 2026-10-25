@@ -1,1 +1,1 @@
-{}
+{"b":["Burn rate, fuel mass per second","kg/s"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"g":["Gravitational acceleration","m/s²"],"m":["Mass of the rocket at time t","kg"],"m_0":["Starting mass, rocket and fuel","kg"],"m_1":["Mass at lift off","kg"],"m_dry":["Mass without fuel","kg"],"m_fuel":["Fuel mass","kg"],"t":["Time","s"],"t_0":["Time of lift off","s"],"t_b":["Burn time","s"],"u":["Exhaust speed relative to the rocket","m/s"],"v":["Speed","m/s"]}

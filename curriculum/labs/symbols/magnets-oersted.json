@@ -1,1 +1,1 @@
-{"mu_0":["Permeability of free space","N/A²","1.25663706127 × 10⁻⁶ N/A² (CODATA 2022)"]}
+{"B_E":["Earth's horizontal field","μT"],"B_wire":["Wire's field at the needle","μT"],"I":["Current in the wire","A"],"h":["Height of the wire above the needle","cm"],"mu_0":["Permeability of free space","N/A²","1.25663706127 × 10⁻⁶ N/A² (CODATA 2022)"],"r":["Gap between the magnets","cm"],"theta":["Angle of the needle from north","°"]}

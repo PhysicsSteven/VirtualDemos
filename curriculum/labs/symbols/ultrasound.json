@@ -1,1 +1,1 @@
-{}
+{"D":["Depth of the boundary","mm"],"Z":["Acoustic impedance","kg/(m²·s)"],"Z_1":["Acoustic impedance of the first medium","kg/(m²·s)"],"Z_2":["Acoustic impedance of the second medium","kg/(m²·s)"],"c":["Speed of sound in tissue","m/s"],"f":["Frequency (Δf: Doppler shift)","Hz"],"f_0":["Transducer frequency","MHz"],"r":["Fraction of the pressure reflected at a boundary"],"rho":["Density","kg/m³"],"t":["Echo time","μs"],"theta":["Angle between the blood flow and the beam","°"],"u":["Speed of the blood along the beam","m/s"],"v":["Speed of the blood","m/s"]}

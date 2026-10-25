@@ -1,1 +1,1 @@
-{}
+{"C":["Capacitance","F"],"I":["Current through the inductor","A"],"I_rms":["rms current","A"],"L":["Inductance","H"],"P":["Average power","W"],"Q":["Quality factor, f₀/Δf"],"R":["Resistance","Ω"],"V":["Voltage across the capacitor","V"],"V_0":["Source's peak voltage","V"],"V_rms":["rms source voltage","V"],"X_C":["Capacitive reactance","Ω"],"X_L":["Inductive reactance","Ω"],"Z":["Impedance","Ω"],"f":["Source frequency","Hz"],"f_0":["Resonant frequency","Hz"],"phi":["Phase of the source voltage ahead of the current","°"],"t":["Time","s"]}

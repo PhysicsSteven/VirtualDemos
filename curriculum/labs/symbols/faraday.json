@@ -1,1 +1,1 @@
-{}
+{"A":["Area","m²"],"B":["Magnetic field","T"],"F":["Force on the bar","N"],"I":["Current","A"],"I_1":["Current in the primary coil","A"],"I_1peak":["Peak current in the primary coil","A"],"M":["Mutual inductance","H"],"N":["Number of turns"],"Phi_B":["Magnetic flux through each turn","Wb"],"R":["Resistance","Ω"],"calE":["Emf","V"],"calE_2":["Emf in the secondary coil","V"],"f":["Frequency","Hz"],"omega":["Angular frequency of the turning coil","rad/s"],"t":["Time","s"],"v":["Speed of the bar","m/s"]}

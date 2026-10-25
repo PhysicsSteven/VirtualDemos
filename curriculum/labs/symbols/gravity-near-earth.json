@@ -1,1 +1,1 @@
-{}
+{"G":["Gravitational constant","N·m²/kg²","6.67430 × 10⁻¹¹ N·m²/kg² (CODATA 2022)"],"M":["Mass of the planet","kg"],"R":["Radius of the planet","m"],"g":["Gravitational acceleration from gravity alone, GM/r²","m/s²"],"g_0":["Gravitational acceleration at the surface, GM/R²","m/s²"],"g_eff":["Effective g that a scale on the turning planet reads","m/s²"],"h":["Height above the surface","m"],"lambda":["Latitude","°"],"m":["Mass of a body on the scale","kg"],"omega":["Rotation rate of the planet","rad/s"],"r":["Distance from the planet's center","m"]}

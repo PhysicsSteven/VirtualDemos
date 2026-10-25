@@ -1,1 +1,1 @@
-{}
+{"C":["Molar heat capacity","J/(mol·K)"],"C_P":["Molar heat capacity at constant pressure","J/(mol·K)"],"C_V":["Molar heat capacity at constant volume","J/(mol·K)"],"P":["Pressure","kPa"],"Q":["Heat added","J"],"R":["Molar gas constant","J/(mol·K)","8.314462618… J/(mol·K), exact"],"T":["Temperature","°C"],"V":["Volume","L"],"W":["Work the gas does on the piston","J"],"gamma":["Ratio of heat capacities, C_P/C_V"],"n":["Amount of gas","mol"]}

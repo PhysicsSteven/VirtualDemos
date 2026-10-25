@@ -1,1 +1,1 @@
-{}
+{"A":["Position of cursor A","mm"],"B":["Position of cursor B","mm"],"Delta y":["Fringe spacing, (B − A)/n","mm"],"L":["Distance from the slits to the screen","m"],"a":["Slit width","m"],"d":["Distance between the slit centers","m"],"lambda":["Wavelength","nm"],"m":["Order of the bright fringe"],"n":["Number of fringe spacings between the cursors"],"theta":["Angle from the straight through direction","°"],"theta_m":["Angle of bright fringe m","°"],"y":["Distance from the center of the screen","m"],"y_m":["Position of bright fringe m","m"]}

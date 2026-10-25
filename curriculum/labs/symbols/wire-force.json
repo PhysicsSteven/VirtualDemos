@@ -1,1 +1,1 @@
-{}
+{"A":["Area of the loop","m²"],"B":["Magnetic field","T"],"F":["Force","N"],"F_bal":["Force read by the balance","N"],"F_wire":["Force on the wire","N"],"I":["Current","A"],"L":["Length of wire in the field","cm"],"N":["Number of turns in the loop"],"g":["Gravitational acceleration","m/s²"],"k":["Slope of F_bal against I","N/A"],"m":["Balance reading (Δm: apparent change in the magnet's mass)","g"],"psi":["Angle between the loop's normal and the field","°"],"theta":["Angle between the wire and the field","°"]}

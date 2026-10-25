@@ -1,1 +1,1 @@
-{}
+{"A":["Area of the box","nm²"],"N":["Number of atoms"],"P":["Pressure (two dimensional: force per length of wall)","mN/m"],"T":["Temperature","K"],"V":["Volume (in three dimensions)","m³"],"k":["Boltzmann constant","J/K","1.380649 × 10⁻²³ J/K, exact"],"m":["Mass of an atom","kg"],"v":["Speed of an atom","m/s"],"v_rms":["rms speed of the atoms","m/s"]}

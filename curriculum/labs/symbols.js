@@ -53,7 +53,8 @@
     while (x && (x.tagName === 'MJX-MSPACE' || (x.tagName === 'MJX-MTEXT' && cps(x).every((cp) => cp === 0x20 || cp === 0xA0)))) x = x[dir];
     return x;
   };
-  const upright = (e) => { const c = e && /^MJX-(MI|TEXATOM|MTEXT)$/.test(e.tagName) ? cps(e) : [];
+  /* text in a unit: \text{...}, or one upright letter (\mathrm k); a function name such as ln is not */
+  const upright = (e) => { const c = e && (/^MJX-(TEXATOM|MTEXT)$/.test(e.tagName) || (e.tagName === 'MJX-MI' && cps(e).length === 1)) ? cps(e) : [];
     return c.length > 0 && ((c[0] >= 65 && c[0] <= 90) || (c[0] >= 97 && c[0] <= 122)) && !e.querySelector('mjx-c.TEX-I'); };
   const kids = (e) => Array.from(e.children).filter((k) => k.tagName !== 'MJX-SPACER');
   const isScript = (e) => /^MJX-(MSUB|MSUP|MSUBSUP)$/.test(e.tagName);
@@ -87,6 +88,13 @@
     const key = b + (sub ? '_' + sub : '') + "'".repeat(primes);
     return [sub || primes ? holder : base, key];
   }
+  /* a symbol written after a Δ operator: "Delta X" when the handout gives ΔX a meaning of its own, else X */
+  function look(r) {
+    if (!r || !G) return null;
+    const pv = r[0].previousElementSibling;
+    if (pv && pv.tagName === 'MJX-MI' && baseName(pv) === 'Delta' && G['Delta ' + r[1]]) return [r[0], 'Delta ' + r[1]];
+    return G[r[1]] ? r : null;
+  }
   /* the element a pointer is over -> [element to highlight, key], or null */
   function keyAt(node) {
     if (!node || !node.closest || !node.closest('mjx-container')) return null;
@@ -95,14 +103,14 @@
     while (s && isScript(s.parentElement)) {
       const holder = s.parentElement, parts = kids(s);
       const inSup = holder.tagName === 'MJX-MSUP' || (holder.tagName === 'MJX-MSUBSUP' && parts[0] && parts[0].contains(node));
-      if (!inSup || allPrimes(parts[0])) { const r = holderKey(holder); return r && G && G[r[1]] ? r : null; }
+      if (!inSup || allPrimes(parts[0])) return look(holderKey(holder));
       break;   /* in a power: the symbols there are symbols in their own right (e^(−t/τ)) */
     }
     const mi = node.closest('mjx-mi');
     if (!mi) return null;
     let up = climb(mi.parentElement);
     if (up && up.tagName === 'MJX-BASE') up = climb(up.parentElement && up.parentElement.parentElement);
-    if (up && isScript(up) && coreMi(kids(up)[0]) === mi) { const r = holderKey(up); return r && G && G[r[1]] ? r : null; }
+    if (up && isScript(up) && coreMi(kids(up)[0]) === mi) return look(holderKey(up));
     const lim = mi.closest('mjx-script');   /* the i under a sum, set inline or below */
     if (mi.closest('mjx-under, mjx-over') || (lim && /^MJX-(MUNDER|MOVER|MUNDEROVER)$/.test(lim.parentElement.tagName))) return null;
     const mo = mi.closest('mjx-mover');   /* under a hat, bar, tilde or dot: not keyed; under a \vec arrow: keyed by its letter */
@@ -113,14 +121,16 @@
     const b = baseName(mi);
     if (!b || b === 'pi') return null;
     /* µF, 10 Ω: a unit prefix or unit, not a symbol */
-    if ((b === 'mu' || b === 'Omega') && upright(step(mi, 'nextElementSibling'))) return null;
-    if (b === 'Omega') { const pv = step(mi, 'previousElementSibling'); if (pv && pv.tagName === 'MJX-MN') return null; }
+    const nx = step(mi, 'nextElementSibling');
+    if ((b === 'mu' || b === 'Omega') && upright(nx)) return null;
+    if (b === 'mu' && nx && nx.tagName === 'MJX-MI' && nx.classList.contains('mjx-n')) return null;   /* \mathrm{\mu Pa} */
+    if (b === 'Omega') { const pv = step(mi, 'previousElementSibling'); if (pv && (pv.tagName === 'MJX-MN' || upright(pv) || (pv.tagName === 'MJX-MSUP' && kids(pv)[0] && kids(pv)[0].tagName === 'MJX-MN'))) return null; }
     /* Δt, dx, δx: an operator in front of a symbol */
     if (b === 'Delta' || b === 'd' || b === 'delta') {
       const nx = mi.nextElementSibling;
       if (nx && (/^MJX-(MI|MSUB|MSUP|MSUBSUP|TEXATOM|MOVER)$/.test(nx.tagName) || (nx.tagName === 'MJX-MO' && cps(nx)[0] === 0x27E8))) return null;
     }
-    return G && G[b] ? [mi, b] : null;
+    return look([mi, b]);
   }
 
   /* ---------- the tip ---------- */
@@ -222,7 +232,7 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
   }).catch(() => {});
   /* for tools: every key this page's equations show, to compare with tools/symbols.py */
   window.vdSymbolKeys = () => {
-    const out = new Set(), keep = G; G = new Proxy({}, { get: () => true });
+    const out = new Set(), keep = G; G = new Proxy({}, { get: (o, k) => !String(k).startsWith('Delta ') });
     document.querySelectorAll('.markdown-body mjx-container mjx-c').forEach((c) => { const k = keyAt(c); if (k) out.add(k[1]); });
     G = keep;
     return Array.from(out);

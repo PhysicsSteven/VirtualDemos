@@ -1,1 +1,1 @@
-{}
+{"E":["Energy of a line","eV"],"E_Kalpha":["Energy of the Kα line","eV"],"V":["Tube voltage","kV"],"Z":["Atomic number of the anode metal"],"c":["Speed of light in vacuum","m/s","299 792 458 m/s, exact"],"e":["Elementary charge","C","1.602176634 × 10⁻¹⁹ C, exact"],"h":["Planck constant","J·s","6.62607015 × 10⁻³⁴ J·s, exact"],"lambda_min":["Shortest wavelength from the tube","nm"]}

@@ -1,1 +1,1 @@
-{}
+{"D":["Distance from the plates to the paper","m"],"E":["Electric field between the plates","V/m"],"L":["Length of the plates","m"],"V":["Plate voltage","V"],"d":["Drop diameter","m"],"d_gap":["Gap between the plates","m"],"g":["Gravitational acceleration","m/s²"],"m":["Mass of the drop","kg"],"q":["Charge on the drop","pC"],"rho":["Density of the ink","kg/m³"],"t_1":["Time between the plates","s"],"t_2":["Time from the plates to the paper","s"],"v":["Drop speed","m/s"],"y":["Height on the paper","mm"],"y_1":["Sideways deflection on leaving the plates","m"]}

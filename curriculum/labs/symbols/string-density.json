@@ -1,1 +1,1 @@
-{}
+{"L":["Length of the vibrating string","m"],"T":["Tension","N"],"f":["Frequency","Hz"],"f_n":["Frequency of harmonic n","Hz"],"g":["Gravitational acceleration","m/s²"],"m":["Total suspended mass, hanger included","kg"],"mu":["Linear mass density","kg/m"],"n":["Harmonic number (number of loops)"],"s":["Slope of f against n","Hz"],"v":["Wave speed on the string","m/s"]}

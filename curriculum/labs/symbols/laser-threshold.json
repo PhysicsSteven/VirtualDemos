@@ -1,1 +1,1 @@
-{}
+{"L":["Length of the cavity","m"],"N_th":["Threshold inversion"],"P_abs":["Absorbed pump power","W"],"P_out":["Output power","W"],"P_th":["Threshold pump power","W"],"R":["Reflectance of the output mirror"],"W_p":["Pump rate per ground state ion","s⁻¹"],"c":["Speed of light in vacuum","m/s","299 792 458 m/s, exact"],"eta":["Slope efficiency"],"lambda_laser":["Laser wavelength","nm"],"lambda_pump":["Pump wavelength","nm"],"nu_q":["Frequency of cavity mode q","Hz"],"q":["Mode number, half wavelengths in the cavity"],"tau_c":["Photon lifetime in the cavity","s"]}

@@ -1,1 +1,1 @@
-{}
+{"N_0":["Number of parent nuclei at the start"],"N_D":["Number of daughter nuclei"],"N_P":["Number of parent nuclei"],"N_S":["Number of stable end product nuclei"],"R_D":["Activity of the daughter, λ_D N_D","1/h"],"R_P":["Activity of the parent, λ_P N_P","1/h"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"lambda_D":["Decay constant of the daughter","1/h"],"lambda_P":["Decay constant of the parent","1/h"],"t":["Time"],"t_max":["Time when the daughter count peaks"]}

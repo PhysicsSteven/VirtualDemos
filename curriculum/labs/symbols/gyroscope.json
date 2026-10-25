@@ -1,1 +1,1 @@
-{}
+{"I_s":["Moment of inertia about the axle","kg·m²"],"L":["Angular momentum of the spin","kg·m²/s"],"M":["Mass of the wheel","kg"],"Omega":["Precession rate, 2π/P","rad/s"],"P":["Precession period","s"],"R":["Radius of the wheel","m"],"d":["Distance from the pivot to the wheel's center","m"],"g":["Gravitational acceleration","m/s²"],"omega_s":["Spin rate of the wheel","rad/s"],"phi":["Angle the axle turns about the post","rad"],"t":["Time","s"],"tau":["Torque of the weight about the pivot, Mgd","N·m"]}

@@ -2566,3 +2566,9 @@ Steve's request (13:48): handouts that print cleanly, and a hover or tap on a sy
 Key PDFs: not rebuilt. Their text changes only by the demo address printed after the apparatus link the next time they are rebuilt.
 
 **For GPT to verify:** nothing numeric changed; the CODATA 2022 values in the glossary's site section.
+
+## Claude, 2026-10-25: symbol hover, every handout
+
+The glossary now has meanings for every symbol in all 168 handouts (`curriculum/labs/symbols/glossary.txt`; `python3 tools/symbols.py --missing` lists none). Each meaning was read from its own handout: the definitions in the text, the data table headings and units, and the worked numbers where a handout states one. Where one letter means two things in a handout, the line names both (e in an exponential is Euler's number; c is a fit coefficient on Projectile and Motion graphs; η is viscosity and the collection efficiency on the Precipitator). A line can now start with "Delta" for what a symbol means after Δ (Pipe Flow's ΔP₁ and ΔP₂ are two readings' pressure drops while P₁ and P₂ are the tap pressures). Site constants are only applied where a handout uses that letter for the constant; Bohr radius a₀ is replaced on Shear and Bulk (cube edge) and proton mass mₚ on Static Equilibrium (plank mass). The page and the builder agree on every symbol of every handout (`\mathrm{\mu Pa}` was the last difference).
+
+**For GPT to verify:** the meanings and units against each handout, especially lines that name two meanings; any wrong line is a one line fix in the glossary, then `python3 tools/symbols.py`.

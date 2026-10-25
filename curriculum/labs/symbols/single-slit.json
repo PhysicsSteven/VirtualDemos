@@ -1,1 +1,1 @@
-{}
+{"A":["Caliper jaw A reading","mm"],"B":["Caliper jaw B reading","mm"],"I":["Intensity","W/m²"],"I_0":["Intensity at the center","W/m²"],"L":["Distance from the slit to the wall","m"],"a":["Slit width","µm"],"beta":["Half the phase difference across the slit, πa sin θ/λ","rad"],"lambda":["Wavelength","nm"],"m":["Order of the dark fringe"],"theta":["Angle from the beam","°"],"theta_1":["Angle of the first dark fringe","°"],"y":["Position on the wall from the center","mm"]}

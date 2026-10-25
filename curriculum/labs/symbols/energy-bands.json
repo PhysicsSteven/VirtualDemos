@@ -1,1 +1,1 @@
-{}
+{"E_0":["Energy of the atomic level","eV"],"E_g":["Band gap","eV"],"E_j":["Energy of level j in the band","eV"],"N":["Number of atoms"],"T":["Temperature","K"],"d":["Spacing of the atoms","nm"],"e":["Euler's number, the base of natural logarithms","","2.71828…"],"j":["Level number in the band"],"k":["Boltzmann constant","J/K","1.380649 × 10⁻²³ J/K, exact"],"lambda":["How far the orbital reaches","nm"],"t":["Overlap energy between neighboring orbitals","eV"],"w":["Width of the band","eV"]}

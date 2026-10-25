@@ -1,1 +1,1 @@
-{}
+{"a":["Acceleration of the cart","m/s²"],"g":["Gravitational acceleration","m/s²"],"t":["Time in the air","s"],"theta":["Angle of the incline","°"],"u":["Launch speed, straight up relative to the cart","m/s"],"v":["Cart speed","m/s"],"v_BC":["Velocity of the ball relative to the cart","m/s"],"v_BG":["Velocity of the ball relative to the ground","m/s"],"v_CG":["Velocity of the cart relative to the ground","m/s"],"x":["Position along the track (Δx: where the ball lands relative to the launcher)","cm"]}

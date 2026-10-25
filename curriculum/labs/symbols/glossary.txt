@@ -36,3 +36,2787 @@ g | Gravitational acceleration | m/s²
 K | Complete elliptic integral of the first kind
 theta | Angle of the string from vertical | rad
 k | Slope of T² against L | s²/m
+
+== ac-circuits ==
+t | Time | s
+C | Capacitance | F
+V | Voltage across the capacitor | V
+L | Inductance | H
+I | Current through the inductor | A
+R | Resistance | Ω
+X_L | Inductive reactance | Ω
+f | Source frequency | Hz
+X_C | Capacitive reactance | Ω
+Z | Impedance | Ω
+I_rms | rms current | A
+V_0 | Source's peak voltage | V
+f_0 | Resonant frequency | Hz
+Q | Quality factor, f₀/Δf
+P | Average power | W
+V_rms | rms source voltage | V
+phi | Phase of the source voltage ahead of the current | °
+
+== ac-power ==
+V_0 | Source's peak voltage | V
+phi | Phase of the source voltage ahead of its current | °
+p | Power into a part at each instant | W
+v | Voltage at each instant | V
+i | Current at each instant | A
+Z | Impedance | Ω
+omega | Angular frequency, 2πf | rad/s
+t | Time | s
+I_0 | Peak current | A
+P_ave | Average power | W
+V_rms | rms voltage | V
+I_rms | rms current | A
+R | Resistance | Ω
+X | Reactance of the load | Ω
+C | Capacitance | F
+X_L | Inductive reactance | Ω
+f | Frequency | Hz
+
+== ac-reactance ==
+v | Voltage at each instant | V
+V_0 | Source's peak voltage | V
+f | Frequency | Hz
+t | Time | s
+I_0 | Peak current | A
+Z | Impedance the source sees | Ω
+phi | Phase of the source voltage ahead of its current | °
+p | Power at each instant | W
+i | Current at each instant | A
+omega | Angular frequency, 2πf | rad/s
+V_rms | rms voltage | V
+I_rms | rms current | A
+R | Resistance | Ω
+C | Capacitance | F
+L | Inductance | H
+X_C | Capacitive reactance | Ω
+X_L | Inductive reactance | Ω
+X | Reactance, V_rms/I_rms | Ω
+
+== acoustic-levitation ==
+c | Speed of sound in air | m/s
+rho_0 | Density of air | kg/m³
+lambda | Wavelength | m
+f | Frequency | Hz
+p | Sound pressure (complex) | Pa
+P_0 | Source strength: pressure amplitude per volt of drive, 1 m from the transducer | Pa·m/V
+V | Drive voltage | V
+D | Directivity of a transducer (a piston), 1 on its axis
+theta | Angle from the transducer's axis | rad
+e | @euler
+i | Imaginary unit, √−1
+k | Wavenumber, 2π/λ | rad/m
+d | Distance from the transducer | m
+phi | Drive phase | rad
+z | Position along the axis | m
+k_axis | Effective wavenumber along the axis | rad/m
+U | Gor'kov potential: the bead's acoustic potential energy | J
+K_1 | Coefficient of the pressure term in U
+K_2 | Coefficient of the velocity term in U
+a | Bead radius | m
+f_1 | Compressibility contrast factor, 1 − ρ₀c²/K_p
+f_2 | Density contrast factor
+omega | Angular frequency, 2πf | rad/s
+K_p | Bulk modulus of the bead | Pa
+rho_p | Density of the bead | kg/m³
+W | Bead's weight less buoyancy | N
+m | Bead mass | kg
+v | Bead velocity along the axis | m/s
+t | Time | s
+s | Spacing between neighboring traps | m
+F_acoustic | Acoustic force on the bead | N
+V_drive | Drive voltage | V
+F_max | Largest upward push of the sound | N
+
+== anechoic-chamber ==
+alpha | Absorption coefficient: the fraction of a ray's energy a surface absorbs
+I | Sound intensity | W/m²
+P | Source power | W
+r | Distance from the source | m
+R | Fraction of the sound pressure the wedges reflect
+f_c | Wedge cutoff frequency | Hz
+f | Frequency | Hz
+c | Speed of sound in air | m/s
+d | Wedge length | m
+rho | Density of air | kg/m³
+p_rms | rms sound pressure | Pa
+L | Sound level | dB
+r_c | Critical distance | m
+A | Room's total absorption | m²
+
+== apparent-weight ==
+m | Mass | kg
+g | Gravitational acceleration | m/s²
+N | Normal force from the scale | N
+a | Acceleration of the car, up positive | m/s²
+R | Scale reading, N/g | kg
+v | Velocity of the car, up positive | m/s
+
+== big-bang-helium ==
+k | @k_B
+T_f | Freeze out temperature (kT_f is its energy) | K
+tau | Neutron lifetime | s
+t_D | Time from which deuterium survives | s
+T | Temperature | K
+n | Neutrons; n/p is the ratio of neutrons to protons
+p | Protons
+nu_e | Electron neutrino
+e | Electron (e⁻), or in an exponential Euler's number, 2.71828…
+m | Δm: neutron mass less proton mass | kg
+c | @c
+t | Time since the Big Bang | s
+n_f | Neutrons at freeze out
+t_f | Time of freeze out | s
+Y | Helium mass fraction
+Y_p | Observed primordial helium mass fraction
+N | A count (its spread is about √N)
+
+== binding-energy ==
+B | Binding energy | MeV
+Z | Number of protons (atomic number)
+Delta | Mass excess, (m − A u)c² | MeV
+N | Number of neutrons
+n | The neutron
+A | Mass number, Z + N
+c | @c
+m | Atomic mass | u
+X | Chemical symbol of the nuclide
+u | @u
+Q | Energy released | MeV
+B_after | Total binding energy after the reaction | MeV
+B_before | Total binding energy before the reaction | MeV
+a_V | Volume term coefficient | MeV
+a_S | Surface term coefficient | MeV
+a_C | Coulomb term coefficient | MeV
+a_A | Asymmetry term coefficient | MeV
+a_P | Pairing term coefficient | MeV
+
+== black-holes ==
+r | Distance from the center of the hole | km
+t_E | Einstein crossing time: the time to cross one Einstein radius | days
+r_s | Schwarzschild radius, 2GM/c² | km
+z | Redshift; light arrives stretched by 1 + z
+M | Mass of the hole or the lens | M☉
+G | @G
+c | @c
+b | Impact parameter: how far from the mass the light passes | m
+D_L | Lens distance | kpc
+D_S | Source distance | kpc
+theta_E | Einstein radius, as an angle | mas
+u | Source offset from the lens, in Einstein radii
+A | Magnification
+Delta A | Tidal stretch: the difference in gravity from head to feet | m/s²
+u_0 | Offset at closest approach, in Einstein radii
+t_0 | Time of closest approach | days
+t | Time | days
+v | Speed of the source across the line of sight | km/s
+L | Length of the falling body | m
+b_c | Critical impact parameter: light passing closer falls in | r_s
+r_o | Distance of the hovering observer | r_s
+alpha | Angular radius of the shadow | °
+M_odot | Mass of the Sun | kg
+g | Gravitational acceleration at Earth's surface | m/s²
+x | Shorthand for u²
+D | Distance to the black hole | Mpc
+
+== blackbody ==
+B_lambda | Planck's spectral radiance per unit wavelength | W/(m²·sr·m)
+T | Temperature | K
+h | @h
+c | @c
+lambda | Wavelength | m
+e | @euler
+k | @k_B
+lambda_max | Peak wavelength | nm
+b | Wien's displacement constant | m·K
+F | Flux: power radiated per square meter of surface | W/m²
+sigma | @sigma
+
+== bonds-and-latent-heat ==
+P | Pressure | Pa
+V | Volume | m³
+k | @k_B
+T | Temperature | K
+R | @R
+U | Bond (potential) energy of the atoms | kJ/mol
+Q | Heat added | kJ/mol
+K | KE: kinetic energy of the atoms | kJ/mol
+E | KE: kinetic energy of the atoms | kJ/mol
+C | Molar heat capacity, dQ/dT | J/(mol·K)
+
+== camera ==
+f | Focal length | mm
+N | f-number: focal length over aperture diameter
+d_s | Lens to sensor distance | mm
+d_i | Image distance, from the thin lens equation | mm
+d | Object distance | cm
+A | Aperture diameter, f/N | mm
+b | Diameter of the blur spot on the sensor | mm
+H | Hyperfocal distance | m
+b_max | Largest acceptable blur spot | mm
+
+== capacitors ==
+s | Side of the square plates | m
+A | Plate area | m²
+y | Quantity on the fit's vertical axis
+a | Intercept of the fitted line
+b | Slope of the fitted line
+x | Quantity on the fit's horizontal axis
+u | Energy density of the field | J/m³
+kappa | Dielectric constant
+E | Electric field | V/m
+D | Electric displacement | C/m²
+C | Capacitance | F
+V | Voltage across the capacitor | V
+Q | Charge on the plates | C
+C_0 | Capacitance with nothing in the gap | F
+d | Plate separation | m
+U | Stored energy | J
+C_1 | Capacitance in series with the parallel pair | F
+C_2 | One capacitance of the parallel pair | F
+C_3 | The other capacitance of the parallel pair | F
+E_0 | Field without the dielectric | V/m
+
+== catenary ==
+S | Length of the chain | m
+d | Sag: depth of the chain below the line through the supports | m
+a | Catenary constant, H/(λg) | m
+H | Horizontal part of the tension (the same all along the chain) | N
+lambda | Mass per length of the chain | kg/m
+g | Gravitational acceleration | m/s²
+T | Tension | N
+s | Length of chain from the lowest point | m
+T_x | Horizontal part of the tension | N
+T_y | Vertical part of the tension | N
+y | Height above a line a distance a below the lowest point | m
+x | Horizontal distance from the lowest point | m
+T_A | Tension at support A | N
+T_B | Tension at support B | N
+y_A | Height of support A | m
+y_B | Height of support B | m
+
+== cavendish ==
+M | Mass of each large sphere | kg
+m | Mass of each small sphere | kg
+r | Center to center distance of a large and a small sphere | m
+F | Gravitational pull of a large sphere on a small one | N
+G | @G
+l | Half the beam's length: fiber to small sphere center | m
+tau | Torque on the beam | N·m
+kappa | Torsion constant of the fiber | N·m/rad
+theta | Angle the beam turns | rad
+T | Period of the beam's swing | s
+I | Moment of inertia of the two small spheres, 2ml² | kg·m²
+L | Distance from the mirror to the scale | m
+S | Spot position on the scale | cm
+beta | Share of the torque the far large sphere takes back
+G_corr | G corrected for the far sphere's pull | N·m²/kg²
+E | Resting position of the spot | cm
+q | Factor by which each turning point is closer to the resting position
+S_n | Spot position at turning point n | cm
+A | Size of the swing on the scale | cm
+n | Turning point number
+S_1 | First of three successive turning points | cm
+S_2 | Second of three successive turning points | cm
+S_3 | Third of three successive turning points | cm
+g | Free fall acceleration at Earth's surface | m/s²
+M_E | Mass of the Earth | kg
+R_E | Radius of the Earth | m
+t | Time of the turning point | s
+
+== center-of-mass ==
+f | Mass share of mass 2, m₂/M
+g | Gravitational acceleration | m/s²
+m_i | Mass of point i | kg
+x_i | Position of point i | m
+x_cm | Position of the center of mass | m
+M | Total mass | kg
+y | Vertical position | m
+m_2 | Mass 2 | kg
+x_1 | Position of mass 1 | m
+x_2 | Position of mass 2 | m
+a_cm | Acceleration of the center of mass | m/s²
+F_ext | Net external force | N
+m | Mass of the person | kg
+L | Distance the person walks along the boat | m
+M_b | Mass of the boat | kg
+x_boat | Position of the boat | m
+x | Horizontal position | m
+t | Time | s
+
+== chladni ==
+D | Flexural rigidity of the plate, Eh³/12(1 − ν²) | N·m
+w | Sideways displacement of the plate | m
+rho | Density of the plate material | kg/m³
+h | Plate thickness | mm
+t | Time | s
+E | Young's modulus of the plate material | Pa
+nu | Poisson's ratio
+k | Bending wavenumber | rad/m
+f | Frequency | Hz
+J_n | Bessel function of the first kind, order n
+lambda | Frequency parameter of a circular plate mode
+r | Distance from the plate's center | m
+a | Radius of the circular plate | m
+C | Constant fixed by the free edge
+I_n | Modified Bessel function of the first kind, order n
+n | Number of nodal diameters
+theta | Angle around the plate | rad
+F_0 | Amplitude of the drive force | N
+m_d | Moving mass of the wave driver | g
+Q | Quality factor of each mode
+g | Gravitational acceleration | m/s²
+f_j | Frequency of mode j | Hz
+
+== circular-motion ==
+r | Radius of the circle | m
+mu_s | Coefficient of static friction
+m | Mass | kg
+a | Centripetal acceleration | m/s²
+v | Speed | m/s
+g | Gravitational acceleration | m/s²
+N | Normal force | N
+a_c | Centripetal acceleration | m/s²
+v_max | Fastest speed a flat curve holds | m/s
+theta | Bank angle | °
+v_ideal | Speed at which a banked curve needs no friction | m/s
+v_top | Speed at the top of the loop | m/s
+v_0 | Speed at the bottom of the loop | m/s
+
+== collisions ==
+m_1 | Mass of cart 1 | kg
+m_2 | Mass of cart 2 | kg
+u_1 | Velocity of cart 1 before the collision | m/s
+u_2 | Velocity of cart 2 before the collision | m/s
+v_1' | Velocity of cart 1 after the collision | m/s
+v_2' | Velocity of cart 2 after the collision | m/s
+u | Velocity before the collision | m/s
+v | Velocity after the collision | m/s
+e | Coefficient of restitution
+mu | Reduced mass, m₁m₂/(m₁ + m₂) | kg
+K_i | Kinetic energy before the collision | J
+K_f | Kinetic energy after the collision | J
+
+== compton ==
+E | Energy of the incoming photon | keV
+theta | Scattering angle of the photon | °
+lambda | Wavelength of the incoming photon | pm
+Delta lambda | Compton shift, λ′ − λ | pm
+lambda' | Wavelength of the scattered photon | pm
+T | Kinetic energy of the recoil electron | keV
+phi | Angle of the recoil electron from the beam | °
+h | @h
+c | @c
+p | Momentum of the photon, h/λ | kg·m/s
+lambda_C | Compton wavelength of the electron, h/mₑc | pm
+E' | Energy of the scattered photon | keV
+p_e | Momentum of the recoil electron | kg·m/s
+gamma | Lorentz factor of the electron
+v | Speed of the recoil electron | m/s
+
+== convection ==
+h | Convection coefficient | W/(m²·K)
+T | Temperature of the object | °C
+T_air | Temperature of the air | °C
+P_conv | Rate of heat loss by convection | W
+A | Surface area | m²
+P_rad | Net rate of heat loss by radiation | W
+e | Emissivity of the surface
+sigma | @sigma
+h_rad | Radiation coefficient, 4eσT³ | W/(m²·K)
+m | Mass of the object | kg
+c | Specific heat of the metal | J/(kg·K)
+t | Time | s
+tau | Time constant of the cooling | s
+D | Diameter of the sphere | m
+rho | Density of the metal | kg/m³
+
+== cosmic-expansion ==
+a | Scale factor, 1 today
+t | Time | Gyr
+H_0 | Hubble constant: the Hubble parameter today | km/s/Mpc
+v | Recession speed | km/s
+d | Distance | Mpc
+chi | Fixed (comoving) distance: today's distance | Mpc
+H | Hubble parameter, ȧ/a | km/s/Mpc
+
+== coulomb-sandbox ==
+E | Electric field | V/m
+q | Charge | C
+r | Distance from the charge | m
+V | Electric potential | V
+E_x | x component of the field | V/m
+E_y | y component of the field | V/m
+x | Probe position, x | m
+y | Probe position, y | m
+W | Work to bring the charge in from far away | J
+U | Electric potential energy of the arrangement | J
+q_i | Charge i of a pair | C
+q_j | Charge j of a pair | C
+r_ij | Distance between charges i and j | m
+theta | Direction of the field, from the +x axis | °
+h | Step on either side of the point in the central difference | m
+
+== critical-mass ==
+k | Multiplication factor: new neutrons per neutron
+nu | Number of neutrons one fission releases
+R | Radius of the sphere | cm
+N | Neutrons in a generation
+g | Generation number
+N_g | Neutrons in generation g
+N_0 | Neutrons in the first generation
+L | Share of the neutrons that escape
+R_c | Critical radius, where k = 1 | cm
+M_c | Critical mass | kg
+M | Mass of the sphere | kg
+
+== dc-circuits ==
+t | Time | s
+C | Capacitance | F
+V | Voltage | V
+L | Inductance | H
+I | Current | A
+R | Resistance | Ω
+P | Power | W
+R_s | Equivalent resistance in series | Ω
+R_1 | Resistor 1 | Ω
+R_2 | Resistor 2 (in the divider, the one the output is taken across) | Ω
+R_p | Equivalent resistance in parallel | Ω
+I_in | A current into a junction | A
+I_out | A current out of a junction | A
+V_out | Output voltage of the divider, across R₂ | V
+
+== decay-chains ==
+lambda_P | Decay constant of the parent | 1/h
+lambda_D | Decay constant of the daughter | 1/h
+N_P | Number of parent nuclei
+N_0 | Number of parent nuclei at the start
+e | @euler
+t | Time
+N_D | Number of daughter nuclei
+R_P | Activity of the parent, λ_P N_P | 1/h
+R_D | Activity of the daughter, λ_D N_D | 1/h
+t_max | Time when the daughter count peaks
+N_S | Number of stable end product nuclei
+
+== diffraction-grating ==
+L | Distance from the grating to the wall | m
+N | Number of slits the beam lights
+y | Distance of a spot from the central spot on the wall, B − A | m
+m | Order number
+lambda | Wavelength | nm
+d | Slit spacing | m
+B | Reading of caliper jaw B | m
+A | Reading of caliper jaw A | m
+theta_m | Angle of order m from the straight through beam | °
+y_m | Position of the order m spot, from the central spot | m
+theta | Angle from the straight through beam | °
+n | Lines per millimeter of the grating; in the Balmer formula, the upper level's number
+R_H | Rydberg constant for hydrogen | m⁻¹
+
+== diffusion ==
+x | Horizontal position of a molecule (Δx: how far it has moved) | nm
+y | Vertical position of a molecule (Δy: how far it has moved) | nm
+lambda | Mean free path | nm
+r | In λ, a molecule's radius; in ⟨r²⟩, its displacement since time zero | nm
+n | Number of molecules per area (per volume in three dimensions); in the hole runs, molecules on the far side
+d | Diameter of a molecule (a disk) | nm
+D | Diffusion coefficient | nm²/ps
+t | Time | ps
+T | Temperature | K
+m | Mass of a molecule | kg
+w | Width of the opening | nm
+m_1 | Molecular mass of gas 1 | kg
+m_2 | Molecular mass of gas 2 | kg
+A_half | Area of each half of the box | nm²
+N | Molecules of the gas, all on one side at the start
+k | Rate constant of the flow through the hole | 1/ps
+n_A | Molecules of gas A on the right
+n_B | Molecules of gas B on the left
+N_A | Number of molecules of gas A
+L | Length of the box | nm
+e | @euler
+tau | Time constant, L²/(π²D) | ps
+m_A | Mass of a molecule of gas A | kg
+m_B | Mass of a molecule of gas B | kg
+
+== dispersion ==
+n | Index of refraction
+A | Apex angle of the prism | °
+delta | Deviation (at minimum deviation) | °
+v | Speed of light in the material | m/s
+c | @c
+lambda | Wavelength | nm
+A_C | Cauchy coefficient A
+B_C | Cauchy coefficient B | nm²
+
+== displacement-current ==
+C | Capacitance | pF
+E | Electric field between the plates | V/m
+B | Magnetic field on the loop | pT
+l | Position along the loop (d l: a short piece of it) | m
+r | Radius of the loop | cm
+I_d | Displacement current, ε₀ dΦ_E/dt | µA
+Phi_E | Electric flux through the surface | V·m
+t | Time | µs
+I_enc | Current through a surface bounded by the loop | µA
+I | Current in the circuit | µA
+A | Plate area | m²
+q | Charge on the plates | C
+R | Radius of the plates | m
+R_c | Resistance the capacitor charges through | Ω
+V | Battery voltage | V
+e | @euler
+d | Plate separation | m
+I_c | Conduction current through the surface | µA
+
+== doppler-light ==
+gamma | Time dilation factor
+c | @c
+v | Speed of the source | m/s
+beta | Speed of the source as a fraction of c, v/c
+theta | Angle at emission between the source's velocity and the line to the observer | °
+lambda | Wavelength in the source's own frame | nm
+lambda' | Wavelength received | nm
+z | Redshift, λ′/λ − 1
+
+== doppler ==
+v | Speed of sound | m/s
+f' | Frequency the observer hears | Hz
+f | Frequency: observed, in the data table; emitted, in the formula for f′ | Hz
+v_o | Velocity of the observer | m/s
+v_s | Velocity of the source | m/s
+theta | Angle: in f′, between the source's velocity and the line to the observer; for the Mach cone, its half angle | °
+theta_c | Half angle of the Mach cone | °
+f_obs | Observed frequency | Hz
+f_0 | Emitted frequency | Hz
+t | Time since a crest was emitted | s
+M | Mach number, v_s/v
+h | Height of the flight above the observer | m
+d | Distance past the point overhead when the cone arrives | m
+t_b | Time of the boom | s
+
+== double-pendulum ==
+theta_1 | Angle of the upper rod from vertical | rad
+theta_2 | Angle of the lower rod from vertical | rad
+g | Gravitational acceleration | m/s²
+k | Copy number
+delta | Extra turn of the upper rod from one copy to the next | rad
+d | Separation of two copies, in angles and angular velocities
+lambda | Lyapunov exponent | 1/s
+L | Rod length | m
+omega | Angular frequency | rad/s
+omega_1 | In the modes, the slow mode's angular frequency; in d, the upper rod's angular velocity | rad/s
+omega_2 | In the modes, the fast mode's angular frequency; in d, the lower rod's angular velocity | rad/s
+T | Measured period | s
+e | @euler
+t | Time | s
+L_1 | Length of the upper rod | m
+D | Separation size the copies reach at the time t_d
+t_d | Time for the copies to separate | s
+
+== double-slit ==
+a | Slit width | m
+d | Distance between the slit centers | m
+L | Distance from the slits to the screen | m
+y | Distance from the center of the screen | m
+Delta y | Fringe spacing, (B − A)/n | mm
+lambda | Wavelength | nm
+B | Position of cursor B | mm
+A | Position of cursor A | mm
+theta | Angle from the straight through direction | °
+m | Order of the bright fringe
+y_m | Position of bright fringe m | m
+theta_m | Angle of bright fringe m | °
+n | Number of fringe spacings between the cursors
+
+== e-over-m ==
+U | Accelerating voltage | V
+I | Current through the coils | A
+N | Number of turns on each coil
+a | Mean radius of the coils | mm
+B | Magnetic field at the center of the coils | mT
+e | @e
+m | Electron mass | kg
+F | Magnetic force on an electron | N
+v | Speed of the electrons | m/s
+r | Radius of the beam's circle | mm
+R | Radius of the coils | m
+
+== eddy-currents ==
+m | Magnetic dipole moment of the magnet | A·m²
+w | Wall thickness of the pipe | mm
+sigma | Electrical conductivity of the pipe | MS/m
+F | Drag force from the eddy currents | N
+k | Drag constant | kg/s
+v | Speed of the magnet | m/s
+a | Radius of the middle of the pipe's wall | m
+M | Mass of the magnet | kg
+v_T | Terminal speed, Mg/k | m/s
+g | Gravitational acceleration | m/s²
+tau | Time to reach terminal speed, M/k | s
+L | Length of the fall | m
+t | Fall time | s
+T | Temperature of the pipe | °C
+
+== einstein-solids ==
+epsilon | Energy of one quantum | J
+k | @k_B
+T | Temperature (shown in units of ε/k) | K
+S | Entropy | J/K
+U | Energy | J
+Omega | Multiplicity: the number of arrangements of the quanta
+N | Number of oscillators
+q | Number of quanta
+q_A | Quanta in solid A
+Omega_A | Multiplicity of solid A
+Omega_B | Multiplicity of solid B
+N_A | Number of oscillators in solid A
+N_B | Number of oscillators in solid B
+S_A | Entropy of solid A | J/K
+U_A | Energy of solid A | J
+S_B | Entropy of solid B | J/K
+U_B | Energy of solid B | J
+q_B | Quanta in solid B
+
+== electron-diffraction ==
+D_1 | Diameter of the inner ring | mm
+D_2 | Diameter of the outer ring | mm
+lambda | Wavelength of the electrons | pm
+L | Distance from the graphite to the screen | mm
+R | Radius of the bulb | mm
+h | @h
+p | Momentum of an electron | kg·m/s
+theta | Bragg angle | °
+V | Accelerating voltage (the meter reading) | kV
+e | @e
+m | Electron mass | kg
+c | @c
+d | Spacing of the planes of atoms | nm
+D | Diameter of a ring | mm
+d_1 | Plane spacing that makes the inner ring | nm
+d_2 | Plane spacing that makes the outer ring | nm
+a | Lattice constant of a graphite sheet (its rings repeat every a) | nm
+alpha | Angle the arc D spans at the center of the bulb | rad
+psi | Scattering angle, 2θ | °
+n | Number of rows
+
+== em-waves ==
+z | Direction the wave travels | m
+E | Electric field | V/m
+B | Magnetic field | T
+c | @c
+S | Poynting vector: the wave's energy flow | W/m²
+f | Frequency | Hz
+E_0 | Amplitude of the electric field | V/m
+x | A direction across the wave | m
+y | The other direction across the wave | m
+B_0 | Amplitude of the magnetic field | T
+I | Intensity | W/m²
+lambda | Wavelength | m
+u | Energy density | J/m³
+p | Radiation pressure | Pa
+theta | Angle from the antenna's axis | °
+I_max | Intensity in the strongest direction | W/m²
+
+== energy-bands ==
+N | Number of atoms
+t | Overlap energy between neighboring orbitals | eV
+E_0 | Energy of the atomic level | eV
+E_j | Energy of level j in the band | eV
+j | Level number in the band
+e | @euler
+d | Spacing of the atoms | nm
+lambda | How far the orbital reaches | nm
+w | Width of the band | eV
+k | @k_B
+T | Temperature | K
+E_g | Band gap | eV
+
+== energy-levels ==
+m | Electron mass | kg
+x | Position | nm
+L | Width of the well | nm
+V_0 | Height of the finite well's walls | eV
+V | Potential energy | eV
+omega | Angular frequency of the oscillator | rad/s
+n | Quantum number of the level
+lambda | Wavelength | nm
+p | Momentum | kg·m/s
+h | @h
+E_n | Energy of level n | eV
+psi | Wave function
+E_a | Energy of the lower level of the pair | eV
+E_b | Energy of the upper level of the pair | eV
+T | Period of the back and forth motion | fs
+c | @c
+
+== estimation-and-evidence ==
+N | Number of people
+f | Rate: actions per person per day
+L | Length | m
+W | Width | m
+
+== exoplanets ==
+R_p | Radius of the planet | R⊕
+R_s | Radius of the star | R☉
+delta | Transit depth: the fraction the starlight dips
+R_oplus | Radius of the Earth | m
+R_odot | Radius of the Sun | m
+K | Largest speed of the star along the line of sight | m/s
+G | @G
+P | Orbital period | days
+M_p | Mass of the planet | M⊕
+i | Inclination of the orbit (90° is edge on) | °
+M_s | Mass of the star | M☉
+a | Radius of the orbit | AU
+R_J | Radius of Jupiter | R⊕
+M_J | Mass of Jupiter | M⊕
+M_oplus | Mass of the Earth | kg
+M_odot | Mass of the Sun | kg
+N | Number of readings averaged
+sigma | Scatter of single readings
+
+== faraday ==
+N | Number of turns
+Phi_B | Magnetic flux through each turn | Wb
+calE | Emf | V
+t | Time | s
+B | Magnetic field | T
+A | Area | m²
+omega | Angular frequency of the turning coil | rad/s
+v | Speed of the bar | m/s
+calE_2 | Emf in the secondary coil | V
+M | Mutual inductance | H
+I_1 | Current in the primary coil | A
+I_1peak | Peak current in the primary coil | A
+R | Resistance | Ω
+f | Frequency | Hz
+F | Force on the bar | N
+I | Current | A
+
+== fluids ==
+D_1 | Diameter of the pipe at the inlet | m
+h | Depth | m
+Delta h | Difference between the standpipe heights | m
+g | Gravitational acceleration | m/s²
+P_0 | Atmospheric pressure | kPa
+P | Absolute pressure | Pa
+rho | Density of the liquid | kg/m³
+d | Depth below the surface | m
+rho_f | Density of the displaced liquid | kg/m³
+V_sub | Submerged volume | m³
+F_B | Buoyant force | N
+A_1 | Cross section at the inlet | m²
+v_1 | Flow speed at the inlet | m/s
+A_2 | Cross section at the throat | m²
+v_2 | Flow speed at the throat | m/s
+v | Flow speed | m/s
+y | Height | m
+D_2 | Diameter of the throat | m
+h_1 | Height of the liquid in the inlet standpipe | m
+h_2 | Height of the liquid in the throat standpipe | m
+Q | Volume flow rate | m³/s
+W_air | Weight of the block in air | N
+T | Spring scale reading with the block in the liquid | N
+rho_block | Density of the block | kg/m³
+rho_liquid | Density of the liquid | kg/m³
+A | Cross section of the pipe | m²
+
+== force-table ==
+m_1 | Mass hanging on string 1 | kg
+m_2 | Mass hanging on string 2 | kg
+m_3 | Mass hanging on string 3 | kg
+m_4 | Mass hanging on string 4 | kg
+theta_1 | Angle of string 1 | °
+theta_2 | Angle of string 2 | °
+theta_3 | Angle of string 3 | °
+theta_4 | Angle of string 4 | °
+g | Gravitational acceleration | m/s²
+F_i | Pull of string i on the ring, m_i g | N
+m_i | Mass hanging on string i | kg
+F_ix | x component of the pull of string i | N
+F_iy | y component of the pull of string i | N
+theta_i | Angle of string i, counterclockwise from the 0° mark | °
+E | Equilibrant: the force that balances the others | N
+i | String number
+F_x | x component of a force | N
+F_y | y component of a force | N
+R | Resultant of the forces | N
+R_x | x component of the resultant | N
+R_y | y component of the resultant | N
+theta_E | Angle of the equilibrant | °
+theta_R | Angle of the resultant | °
+m | Hanging mass | kg
+x | Along the 0° mark
+y | Along the 90° mark
+F | Pull of a hanging mass, mg | N
+theta | Angle, counterclockwise from the 0° mark | °
+
+== forces ==
+W | Work done by a force | J
+F | A force on the block (in the data, the applied push) | N
+s | Displacement of the block | m
+P | Power: the rate a force does work | W
+v | Velocity of the block | m/s
+a | Acceleration of the block | m/s²
+d | Distance the block slides | m
+t | Time to slide the distance d | s
+g | Gravitational acceleration | m/s²
+theta | Angle of the incline | °
+mu_k | Coefficient of kinetic friction
+m_2 | Hanging mass | kg
+m | Mass of the block | kg
+mu_s | Coefficient of static friction
+N | Normal force | N
+theta_c | Incline angle at which the block starts to slip | °
+
+== franck-hertz ==
+U | Accelerating voltage | V
+U_r | Retarding voltage | V
+I | Collector current | nA
+e | @e
+U_c | Contact potential between cathode and grid | V
+n | Peak order
+E_exc | First excitation energy of the atom | eV
+E | Energy | eV
+Delta E | First excitation energy of the atom | eV
+U_n | Voltage of peak n | V
+U_0 | Shift common to every peak | V
+lambda | Wavelength of the light the excited atom gives off | nm
+h | @h
+c | @c
+
+== free-expansion ==
+N | Number of molecules
+n | Number of molecules on the left; in nR ln 2, the number of moles
+Omega | Number of arrangements with n on the left
+S | Entropy | J/K
+k | @k_B
+R | @R
+V_2 | Final volume | m³
+V_1 | Starting volume | m³
+
+== fusion-gamow ==
+T | Temperature of the gas | K
+k | Boltzmann constant in kT; Coulomb constant in V_C (ke² = 1.44 MeV·fm)
+E_0 | Gamow peak energy | keV
+e | Elementary charge in Z₁e and ke²; the base of natural logarithms in e^(…)
+E | Collision energy | keV
+E_G | Gamow energy | MeV
+sigma | Fusion cross section | m²
+v | Relative speed of the two nuclei | m/s
+Z_1 | Atomic number of the first nucleus
+Z_2 | Atomic number of the second nucleus
+R_1 | Radius of the first nucleus | fm
+R_2 | Radius of the second nucleus | fm
+R | Radius of a nucleus | fm
+r_0 | Radius constant, 1.2 fm | fm
+A | Mass number
+V_C | Height of the Coulomb barrier | MeV
+mu | Reduced mass of the two nuclei | kg
+c | @c
+alpha | Fine structure constant, about 1/137
+
+== gamma-absorption ==
+R | Count rate | 1/s
+R_0 | Count rate with no absorber | 1/s
+e | @euler
+mu | Attenuation coefficient (μ/ρ is the mass attenuation coefficient) | 1/cm
+rho | Density of the absorber | g/cm³
+x | Mass thickness: density times thickness | g/cm²
+x_1/2 | Half value layer: the mass thickness that halves the rate | g/cm²
+d | Distance from the source to the crystal's face | cm
+d_0 | Extra depth in the crystal where the photons interact | cm
+k | Constant of the inverse square law | cm²/s
+
+== gamma-spectroscopy ==
+c | Centroid channel of the photopeak; in mₑc², the speed of light
+E | Photon energy | keV
+a | Intercept of the energy calibration | keV
+b | Slope of the energy calibration | keV per channel
+E_C | Energy of the Compton edge | keV
+
+== gas-thermometer ==
+P | Pressure | kPa
+n | Amount of gas | mmol
+R | @R
+V | Volume of the gas | m³
+T_K | Temperature in kelvins | K
+T_C | Temperature in degrees Celsius | °C
+T | Bath temperature | °C
+
+== gauss-law ==
+Q_enc | Charge enclosed by the surface | C
+E | Electric field | N/C
+A | Area (d A: a small patch of the surface) | m²
+z | Coordinate out of the plane of the charges | m
+Phi_E | Electric flux through the closed surface | N·m²/C
+Q | Total charge of the ball or sphere | C
+R | Radius of the ball or sphere | m
+r | Distance from the center | m
+q | A point charge | C
+
+== gps-clocks ==
+G | @G
+M | Mass of the Earth | kg
+r | Distance of the orbiting clock from Earth's center | m
+c | @c
+v | Speed of the clock, in a frame that does not turn with Earth | m/s
+v_g | Speed of the ground clock, in the same frame | m/s
+f | Tick rate of a clock (Δf/f: how much faster it runs) | Hz
+R | Distance of the ground clock from Earth's center | m
+t_gravity | Δt_gravity: time the orbiting clock gains per day from being higher up | s
+t_speed | Δt_speed: time it loses per day from its speed | s
+t_day | One day | s
+t | Time (Δt: a clock error) | s
+g | Gravitational acceleration | m/s²
+h | Height of the tower | m
+
+== gravity-near-earth ==
+G | @G
+M | Mass of the planet | kg
+r | Distance from the planet's center | m
+omega | Rotation rate of the planet | rad/s
+lambda | Latitude | °
+g | Gravitational acceleration from gravity alone, GM/r² | m/s²
+R | Radius of the planet | m
+h | Height above the surface | m
+g_0 | Gravitational acceleration at the surface, GM/R² | m/s²
+m | Mass of a body on the scale | kg
+g_eff | Effective g that a scale on the turning planet reads | m/s²
+
+== gyroscope ==
+d | Distance from the pivot to the wheel's center | m
+P | Precession period | s
+Omega | Precession rate, 2π/P | rad/s
+omega_s | Spin rate of the wheel | rad/s
+L | Angular momentum of the spin | kg·m²/s
+I_s | Moment of inertia about the axle | kg·m²
+M | Mass of the wheel | kg
+R | Radius of the wheel | m
+g | Gravitational acceleration | m/s²
+tau | Torque of the weight about the pivot, Mgd | N·m
+t | Time | s
+phi | Angle the axle turns about the post | rad
+
+== hcl-spectrum ==
+E | Energy of a level of the molecule | J
+n | Vibrational quantum number
+h | @h
+f | Vibration frequency | Hz
+l | Rotational quantum number
+I | Moment of inertia of the molecule, μr² | kg·m²
+mu | Reduced mass, m₁m₂/(m₁ + m₂) | kg
+r | Bond length | nm
+m_1 | Mass of the hydrogen atom | u
+m_2 | Mass of the chlorine atom | u
+lambda | Wavelength | µm
+c | @c
+B | Rotational constant | cm⁻¹
+m | Line number: l + 1 on the R branch, −l on the P branch
+B_1 | Rotational constant in the n = 1 level | cm⁻¹
+B_0 | Rotational constant in the n = 0 level | cm⁻¹
+k | Force constant of the bond | N/m
+mu_35 | Reduced mass of H³⁵Cl | u
+mu_37 | Reduced mass of H³⁷Cl | u
+omega_e | Harmonic vibration wavenumber | cm⁻¹
+
+== heat-capacities-of-gases ==
+R | @R
+Q | Heat added | J
+n | Amount of gas | mol
+T | Temperature | °C
+C | Molar heat capacity | J/(mol·K)
+C_V | Molar heat capacity at constant volume | J/(mol·K)
+W | Work the gas does on the piston | J
+P | Pressure | kPa
+V | Volume | L
+C_P | Molar heat capacity at constant pressure | J/(mol·K)
+gamma | Ratio of heat capacities, C_P/C_V
+
+== heat-conduction ==
+d | Thickness of a layer | m
+P | Heat flow | W
+k | Thermal conductivity | W/(m·K)
+A | Area | m²
+T | Temperature | °C
+x | Position through the wall or along the rod | mm
+R | R factor: a layer's resistance to heat flow per unit area, d/k | m²·K/W
+T_in | Temperature inside | °C
+T_out | Temperature outside | °C
+T_layer | ΔT_layer: temperature drop across one layer | °C
+R_layer | R factor of one layer | m²·K/W
+k_steel | Thermal conductivity of steel | W/(m·K)
+k_Al | Thermal conductivity of aluminum | W/(m·K)
+
+== heat-engines ==
+gamma | Ratio of heat capacities, C_P/C_V
+U | Internal energy of the gas | J
+Q | Heat into the gas | J
+W | Work done by the gas | J
+V_1 | Volume at the start of a leg | L
+V_2 | Volume at the end of a leg | L
+P | Pressure | kPa
+V | Volume | L
+n | Amount of gas | mol
+C_V | Molar heat capacity at constant volume | J/(mol·K)
+T | Temperature | K
+R | @R
+C_P | Molar heat capacity at constant pressure | J/(mol·K)
+Q_in | Heat taken in from the hot side | J
+Q_out | Heat given out to the cold side | J
+eta | Efficiency, W/Q_in
+T_c | Temperature of the cold side | K
+T_h | Temperature of the hot side | K
+r | Compression ratio, V₁/V₂
+eta_Otto | Efficiency of the Otto cycle
+Q_c | Heat a refrigerator takes from the cold side | J
+W_net | Net work done in one cycle | J
+
+== heating-curve ==
+Q | Heat delivered | J
+P | Heater power | W
+t | Time | s
+m | Mass of the sample | g
+c | Specific heat | J/(kg·K)
+T | Temperature | °C
+L_f | Latent heat of fusion | J/kg
+L_v | Latent heat of vaporization | J/kg
+
+== holography ==
+theta_r | Angle of the reference beam from the plate's normal | °
+theta_o | Angle of the object beam from the plate's normal | °
+I | Intensity of the light on the plate
+x | Position across the plate (Δx: span between the cursors) | μm
+lambda_2 | Wavelength of the light that lights the developed plate | nm
+z | Distance from the plate along its normal | mm
+theta | Angle between the two beams | °
+d | Fringe spacing | μm
+lambda | Wavelength | nm
+theta_i | Angle of the light that lights the developed plate | °
+lambda_1 | Wavelength the hologram was recorded with | nm
+theta_im | Angle of the image beam | °
+z_0 | Distance of an object point from the plate when recorded | mm
+N | Number of fringe periods between the cursors
+alpha | Direction the image beam actually leaves in | °
+
+== household-wiring ==
+R | Resistance of an appliance | Ω
+P | Power rating of an appliance | W
+rho | Resistivity of copper | Ω·m
+V | Voltage | V
+I | rms current | A
+R_w | Resistance of one wire | Ω
+L | Length of the wire | m
+A | Cross section of the wire | m²
+R_body | Resistance of a person's body | Ω
+
+== hr-diagram ==
+M_odot | Solar mass, the unit of stellar mass
+L | Luminosity | L☉
+R | Radius | R☉
+sigma | @
+T | Surface temperature | K
+L_odot | Solar luminosity, the unit of luminosity
+R_odot | Solar radius, the unit of radius
+T_odot | Surface temperature of the Sun | K | 5772 K
+M | Initial mass of a star | M☉
+a | Exponent of the mass and luminosity power law, L ∝ Mᵃ
+t | Time: a star's main sequence lifetime, or the cluster's age | yr
+M_to | Turnoff mass of the cluster | M☉
+N | Number of stars born
+x | Exponent of the initial mass function, dN/dM ∝ M⁻ˣ
+M_max | Mass of the heaviest star | M☉
+R_oplus | Earth radius | | R☉ = 109 R⊕
+N_left | Number of stars that have left the main sequence
+
+== hubble-law ==
+H_0 | Hubble constant | km/s/Mpc
+v | Recession velocity | km/s
+d | Distance to the galaxy | Mpc
+c | Intercept of the fit of v against d, or (in v ≈ cz) the speed of light | km/s | speed of light 299 792 km/s
+a | Cepheid zero point in the Leavitt law | mag
+M | Absolute magnitude
+P | Cepheid pulsation period | days
+z | Redshift
+lambda_obs | Observed wavelength of a line | nm
+lambda_rest | Rest wavelength of a line | nm
+
+== huygens ==
+theta_1 | Angle of incidence | °
+v | Speed of light in a material | m/s
+c | @
+n | Index of refraction
+theta_2 | Angle of refraction (or reflection) | °
+v_2 | Speed of light in the lower medium | m/s
+v_1 | Speed of light in the upper medium | m/s
+theta | Direction from the opening | °
+lambda | Wavelength | m
+a | Width of the opening | m
+L | Distance traveled | m
+t | Travel time | s
+n_1 | Index of refraction of the upper medium
+n_2 | Index of refraction of the lower medium
+theta_c | Critical angle | °
+
+== hydrogen-atom ==
+psi | Wave function of the electron
+R_nl | Radial part of the wave function
+r | Distance from the nucleus | a₀
+Y_lm | Angular part of the wave function (a spherical harmonic)
+theta | Polar angle
+phi | Azimuthal angle
+s | Standard deviation of single measurements of r | a₀
+N | Number of positions found
+V | Volume (dV: a small volume) | m³
+E_n | Energy of level n | eV
+n | Principal quantum number
+P | Radial probability density, P(r) dr the chance of finding the electron between r and r + dr | 1/a₀
+l | Orbital angular momentum quantum number
+E_A | Energy of the lower state | eV
+E_B | Energy of the higher state | eV
+h | @
+f | Frequency of the light given out | Hz
+c | @
+
+== ideal-gas ==
+P | Pressure (two dimensional: force per length of wall) | mN/m
+A | Area of the box | nm²
+N | Number of atoms
+k | @k_B
+T | Temperature | K
+m | Mass of an atom | kg
+v | Speed of an atom | m/s
+V | Volume (in three dimensions) | m³
+v_rms | rms speed of the atoms | m/s
+
+== impulse ==
+v_1 | Velocity before the bounce (positive toward the sensor) | m/s
+v_2 | Velocity after the bounce (positive toward the sensor) | m/s
+F | Force from the bumper | N
+t | Time | s
+J | Impulse | N·s
+p | Momentum (Δp: its change) | kg·m/s
+m | Mass of the cart | kg
+v_after | Velocity after the bounce | m/s
+v_before | Velocity before the bounce | m/s
+k | Stiffness of the bumper while it is compressed | N/m
+x | Compression of the bumper | m
+e | Coefficient of restitution
+J_cart | Impulse on the cart | N·s
+F_cart | Force on the cart | N
+A | Area under the sensor's force against time | N·s
+F_i | Force at sample i | N
+F_i+1 | Force at the next sample | N
+t_i+1 | Time of the next sample | s
+t_i | Time of sample i | s
+F_sensor | Force on the sensor (opposite to the force on the cart) | N
+
+== induced-electric-field ==
+I_0 | Starting current | A
+B | Magnetic field inside the solenoid | T
+t | Time | ms
+Phi | Magnetic flux through the path | Wb
+E | Induced electric field | V/m
+l | Position along the path (dl: a short piece of it) | m
+n | Turns per meter of the solenoid | m⁻¹
+I | Current in the solenoid | A
+r | Radius of the path | m
+R | Radius of the solenoid | m
+Phi_m | Magnetic flux through the path | Wb
+e | @euler
+alpha | Decay constant of the current | s⁻¹
+
+== induction-at-work ==
+B_r | Remanence of the magnet | T
+z | Position of the magnet along the coil's axis | m
+A | Amplitude of the shake | m
+f | Frequency of the shake | Hz
+t | Time | s
+Phi | Magnetic flux through the coil | Wb
+v | Speed of the magnet | m/s
+N | Number of turns in the coil
+epsilon | Induced EMF | V
+C | Capacitance | F
+V | Voltage across the capacitor | V
+
+== induction ==
+R | Radius of the sphere | cm
+d | Gap from the rod's tip to the sphere's surface | cm
+k | Coulomb constant, 1/(4πε₀) | N·m²/C² | 8.987551 × 10⁹ N·m²/C²
+q | Charge on the rod | nC
+D | Distance from the rod's tip to the sphere's center | cm
+Q | Charge on the sphere | nC
+V | Potential of the sphere | V
+Q_A | Charge on sphere A | nC
+Q_B | Charge on sphere B | nC
+R_B | Radius of sphere B | cm
+R_A | Radius of sphere A | cm
+
+== ink-jet-printer ==
+q | Charge on the drop | pC
+m | Mass of the drop | kg
+E | Electric field between the plates | V/m
+V | Plate voltage | V
+d_gap | Gap between the plates | m
+v | Drop speed | m/s
+t_1 | Time between the plates | s
+L | Length of the plates | m
+y_1 | Sideways deflection on leaving the plates | m
+t_2 | Time from the plates to the paper | s
+D | Distance from the plates to the paper | m
+y | Height on the paper | mm
+g | Gravitational acceleration | m/s²
+d | Drop diameter | m
+rho | Density of the ink | kg/m³
+
+== invariant-mass ==
+q | Charge of the particle | C
+p | Momentum of the particle | GeV/c
+B | Magnetic field | T
+r | Radius of the track | m
+e | @
+M | Invariant mass of the parent particle | GeV/c²
+p_1 | Momentum of the first track | GeV/c
+p_2 | Momentum of the second track | GeV/c
+theta | Angle between the two tracks | °
+m_1 | Mass guessed for the first particle | GeV/c²
+m_2 | Mass guessed for the second particle | GeV/c²
+E_i | Energy of particle i | GeV
+p_i | Momentum of particle i | GeV/c
+c | @
+m_i | Mass of particle i | GeV/c²
+E_1 | Energy of the first particle | GeV
+E_2 | Energy of the second particle | GeV
+p_+ | Momentum of the positive track | GeV/c
+p_- | Momentum of the negative track | GeV/c
+
+== ising ==
+T_c | Critical temperature | J/k | J/kT_c = 0.440687 (Onsager)
+J | Coupling between neighboring spins (the unit of energy here)
+k | Boltzmann constant, set to 1 in the model's units
+m | Magnetization per spin
+L | Lattice size (L × L sites)
+s | Spin of one site, +1 (up) or −1 (down)
+E | Energy of the arrangement | J
+s_i | Spin of site i
+s_j | Spin of a neighbor of site i
+h | Applied field | J
+N | Number of spins, L²
+e | Energy per spin (in e^(−E/kT), Euler's number, 2.71828…) | J
+T | Temperature | J/k
+S | Sum of a spin's four neighbors
+c | Heat capacity per spin | k
+chi | Susceptibility per spin | 1/J
+chi_resp | Response from the plain fluctuations of m | 1/J
+K_c | Critical coupling, J/kT_c | | 0.440687
+tau_int | Integrated autocorrelation time | sweeps
+n | Number of sweeps in a run
+z | Dynamic critical exponent | | 2.17 for Metropolis updates
+
+== junction-transistor ==
+I | Diode current | A
+I_s | Saturation current | nA
+e | @
+V | Voltage across the diode | V
+n | Ideality factor | | 1.906 for the 1N4148
+k | @k_B
+T | Temperature | K
+beta | Current gain
+I_C | Collector current | A
+I_B | Base current | A
+R_B | Base resistor | Ω
+V_CE | Collector to emitter voltage | V
+R_C | Collector resistor | Ω
+R_E | Emitter resistor | Ω
+
+== kepler-orbits ==
+t | Time | yr
+T | Period of the orbit | yr
+a | Semimajor axis | AU
+h | Angular momentum per unit mass, the size of r × v | AU²/yr
+r | Distance from the star | AU
+v | Speed of the planet | AU/yr
+P | Period of the orbit | yr
+M | Mass of the star | solar masses
+G | @
+E | Orbital energy | J
+m | Mass of the planet | kg
+r_p | Distance at perihelion | AU
+v_p | Speed at perihelion | AU/yr
+r_a | Distance at aphelion | AU
+v_a | Speed at aphelion | AU/yr
+
+== kundts-tube ==
+v_rod | Speed of longitudinal waves in the rod | m/s
+E | Young's modulus of the rod | Pa
+rho | Density of the rod | kg/m³
+n | Mode number, half wavelengths in the rod
+L | Length of the rod | m
+f | Frequency | Hz
+lambda_rod | Wavelength in the rod | m
+d | Spacing between dust heaps | m
+lambda_gas | Wavelength in the gas | m
+v_gas | Speed of sound in the gas | m/s
+gamma | Ratio of heat capacities, C_p/C_V
+R | @
+T | Temperature of the gas (in kelvin in the formula) | °C
+M | Molar mass of the gas | kg/mol
+v | Speed of sound | m/s
+j | Heap number
+x | Position of a heap | cm
+L_rod | Length of the rod | m
+
+== lagrange-points ==
+m_1 | Mass of the larger body | kg
+m_2 | Mass of the smaller body | kg
+mu | Mass ratio, m₂/(m₁ + m₂)
+e | Euler's number, 2.71828… (in Tisserand's parameter, the comet's eccentricity)
+C | Jacobi constant
+a | Separation of the two masses, the unit of length
+P | Orbital period of the two masses, the unit of time
+t | Time | P
+n | Angular speed of the rotating frame, 2π/P | rad/P
+r | Distance from the axis of rotation | a
+Omega | Effective potential (minus the potential energy per unit mass in the rotating frame)
+G | @
+x | Position along the line of the two masses | a
+y | Position across the line of the two masses | a
+r_1 | Distance to the larger mass | a
+r_2 | Distance to the smaller mass | a
+r_H | Hill radius of the smaller mass | a
+P_lib | Period of small librations about L4 or L5 | P
+v | Speed in the rotating frame | a/P
+T | Tisserand's parameter
+a_J | Semimajor axis of Jupiter's orbit | AU
+
+== laser-threshold ==
+W_p | Pump rate per ground state ion | s⁻¹
+N_th | Threshold inversion
+R | Reflectance of the output mirror
+P_out | Output power | W
+eta | Slope efficiency
+P_abs | Absorbed pump power | W
+P_th | Threshold pump power | W
+lambda_pump | Pump wavelength | nm
+lambda_laser | Laser wavelength | nm
+nu_q | Frequency of cavity mode q | Hz
+q | Mode number, half wavelengths in the cavity
+c | @
+L | Length of the cavity | m
+tau_c | Photon lifetime in the cavity | s
+
+== lattice-energy ==
+r_0 | Nearest neighbor distance | nm
+n | Born exponent of the repulsion
+m | Half width of the cube | ion spacings
+r | Separation of neighboring ions | nm
+alpha | Madelung constant | | 1.7476 (NaCl structure), 1.7627 (CsCl structure)
+U_coul | Coulomb energy of one ion pair | eV
+k | Coulomb constant, 1/(4πε₀) | N·m²/C² | ke² = 1.440 eV·nm
+e | @
+A | Strength of the short range repulsion | eV·nmⁿ
+U | Lattice energy | kJ/mol
+M | Molar mass | g/mol
+rho | Density | g/cm³
+
+== lenses-instruments ==
+f | Focal length (positive converging, negative diverging) | cm
+d_o | Object distance | cm
+d_i | Image distance (negative for a virtual image) | cm
+m | Lateral magnification
+theta_o | Angle the object fills at the near point | rad
+h | Height of the object | cm
+theta_i | Angle the image fills | rad
+h_i | Height of the image | cm
+M | Angular magnification
+m_obj | Lateral magnification of the objective
+M_eye | Angular magnification of the eyepiece
+f_eye | Focal length of the eyepiece | cm
+M_net | Net magnification of the microscope
+f_obj | Focal length of the objective | cm
+L | Tube length of the microscope | cm
+
+== loops-solenoids ==
+N | Number of turns
+L | Length of the winding | m
+n | Turns per unit length | m⁻¹
+I | Current | A
+R | Radius of the loop | m
+z | Distance along the axis from the loop's center | m
+B | Magnetic field | T
+theta_1 | Angle from the axis to the rim of one end
+theta_2 | Angle from the axis to the rim of the other end
+l | Position along the path (dl: a short piece of it) | m
+r | Radius of the circle inside the toroid | m
+
+== magnetic-force ==
+v | Speed of the particle | m/s
+c | @
+f_c | Cyclotron frequency | Hz
+K_max | Largest kinetic energy the cyclotron gives | J
+n | Density of charge carriers in the Hall strip | m⁻³
+R_H | Hall coefficient | m³/C
+v_d | Drift velocity of the carriers | m/s
+F | Magnetic force | N
+q | Charge of the particle or carrier | C
+B | Magnetic field | T
+r | Radius of the circular path | m
+m | Mass of the particle | kg
+T | Period of the circular motion | s
+V_H | Hall voltage | V
+I | Current in the strip | A
+t | Thickness of the strip | m
+V_top | Potential of the top edge of the strip | V
+V_bottom | Potential of the bottom edge of the strip | V
+B_z | Field component out of the page | T
+e | @
+
+== magnetism-in-matter ==
+B | Field inside the core | T
+B_0 | Field of the solenoid alone | T
+n | Turns per meter | m⁻¹
+I | Current | A
+chi | Magnetic susceptibility
+mu | Permeability of the core | T·m/A
+H_c | Coercive field | A/m
+
+== magnets-oersted ==
+theta | Angle of the needle from north | °
+I | Current in the wire | A
+h | Height of the wire above the needle | cm
+B_wire | Wire's field at the needle | μT
+B_E | Earth's horizontal field | μT
+r | Gap between the magnets | cm
+
+== measurement-and-units ==
+x_0 | Starting position | m
+v_0 | Starting speed | m/s
+a | Acceleration | m/s²
+x | Position | m
+t | Time | s
+
+== meissner-effect ==
+m | Magnetic moment of the sphere | mA·m²
+B_c | Critical field | mT
+T | Temperature | K
+B | Applied field | mT
+T_c | Critical temperature | K
+R | Radius of the sphere | m
+I | Current in the wire | A
+r | Radius of the wire | m
+
+== michelson ==
+n | Index of refraction of the gas in the cell
+d | Difference of the two arm lengths (Δd: how far a mirror moves) | μm
+m | Fringe order
+lambda | Wavelength of the laser | nm
+N | Number of fringes that pass a fixed point
+L | Length of the gas cell | m
+P | Pressure of the gas in the cell | kPa
+theta | Angle from the axis
+
+== mirrors-refraction ==
+R | Radius of curvature (positive for a concave mirror) | cm
+n_1 | Index of refraction on the object's side
+n_2 | Index of refraction on the far side
+f | Focal length (positive for a concave mirror) | cm
+d_o | Object distance | cm
+d_i | Image distance (negative behind the mirror) | cm
+m | Lateral magnification (negative when the image is inverted)
+n | Index of refraction
+
+== molecular-bonds ==
+r | Separation of the centers | nm
+E | Energy (ΔE: the cost of moving the electron from sodium to chlorine) | eV
+k | Coulomb constant, 1/(4πε₀) | N·m²/C² | ke² = 1.440 eV·nm
+e | @
+A | Strength of the model repulsion | eV·nmⁿ
+n | Exponent of the model repulsion
+U_ex | Repulsion from the exclusion principle | eV
+U | Energy of the pair | eV
+r_0 | Equilibrium separation of the ions | nm
+D | Dissociation energy of the ionic bond | eV
+r_e | Bond length | nm
+D_e | Depth of the energy curve | eV
+D_0 | Energy needed to break the bond, D_e less the zero point energy | eV
+E_0 | Zero point energy of vibration | eV
+
+== moon-phases ==
+E | Elongation, the angle between the Moon and the Sun seen from Earth | °
+f | Fraction of the Moon's disk that is lit
+P_sid | Sidereal month | d | 27.32 d
+P_syn | Synodic month, new moon to new moon | d
+P_year | Length of the year | d | 365.26 d
+beta | Height of the Moon above the ecliptic | °
+phi_N | Angle of the ascending node from the Sun | °
+d | Sun's angular distance from the nearest node | °
+
+== motion-graphs ==
+x | Position | m
+c_0 | Constant term of the fit | m
+c_1 | Linear coefficient of the fit | m/s
+t | Time | s
+c_2 | Quadratic coefficient of the fit | m/s²
+a | Acceleration | m/s²
+v_0 | Velocity at t = 0 | m/s
+v | Velocity | m/s
+x_0 | Position at t = 0 | m
+y | Height (upward positive) | m
+g | Gravitational acceleration | m/s²
+
+== neutral-attraction ==
+g | Gravitational acceleration | m/s²
+kappa | Dielectric constant of the ball
+a | Radius of the ball | cm
+E | Field of the rod's tip at the ball | V/m
+p | Induced dipole moment of the ball | C·m
+q | Charge on the rod's tip | nC
+D | Distance from the rod's tip to the ball's center | cm
+k | Coulomb constant, 1/(4πε₀) | N·m²/C² | 8.987551 × 10⁹ N·m²/C²
+F_dip | Force predicted from the induced dipole alone | µN
+F | Force on the ball (upward positive) | µN
+m | Balance reading | mg
+s | Gap between the rod's tip and the ball | cm
+
+== nuclear-reactions ==
+Sigma | Sum over the particles before or after the reaction
+Z | Charge number (atomic number)
+A | Nucleon number (mass number)
+K | Kinetic energy of the projectile | MeV
+theta | Angle of the detector | °
+Q | Reaction energy (positive when energy is released) | MeV
+m | Atomic mass | u
+c | @
+m_before | Mass of a particle before the reaction | u
+m_after | Mass of a particle after the reaction | u
+K_after | Kinetic energy of the products | MeV
+K_before | Kinetic energy before the reaction | MeV
+m_a | Mass of the projectile | u
+m_A | Mass of the target | u
+K_th | Threshold kinetic energy of the projectile | MeV
+alpha | Alpha particle, a ⁴He nucleus
+n | Neutron
+p | Proton
+A_before | Nucleon number of a particle before the reaction
+m_U | Mass of the uranium nucleus | u
+m_alpha | Mass of the alpha particle | u
+e | Positron (e⁺)
+nu | Neutrino
+
+== orbital-magnetic-moment ==
+r | Radius of the Bohr orbit | m
+n | Principal quantum number
+v | Speed of the electron | m/s
+alpha | Fine structure constant | | 7.2973525643 × 10⁻³ ≈ 1/137.036 (CODATA 2022)
+c | @
+m_l | Magnetic quantum number
+L | Orbital angular momentum | J·s
+mu | Magnetic moment | J/T
+e | @
+B | Magnetic field | T
+L_z | Component of L along the field | J·s
+T | Period of the orbit | s
+I | Current of the orbit | A
+A | Area of the orbit | m²
+l | Orbital quantum number
+mu_z | Component of the magnetic moment along the field | J/T
+U | Energy shift in the field | J
+theta | Angle between L and the field | °
+
+== particle-reactions ==
+B | Baryon number
+L_e | Electron lepton number
+L_mu | Muon lepton number
+L_tau | Tau lepton number
+S | Strangeness
+W | Energy in the center of mass frame | MeV
+K | Kinetic energy of the beam | MeV
+m_1 | Mass of a beam particle | MeV/c²
+m_2 | Mass of a target particle | MeV/c²
+c | @
+
+== periodic-table ==
+m_l | Magnetic quantum number
+n | Principal quantum number
+Z_eff | Effective nuclear charge seen by the outermost electron
+I | Ionization energy, written IE (one quantity, not a product) | eV
+E | Ionization energy, written IE (one quantity, not a product) | eV
+m_s | Spin quantum number, +1/2 or −1/2
+l | Orbital quantum number
+e | @
+
+== photoelectric ==
+V | Collector voltage | V
+K_max | Largest kinetic energy of the electrons | eV
+V_0 | Stopping voltage | V
+h | @
+f | Frequency of the light | Hz
+phi | Work function of the metal | eV
+e | @
+f_0 | Threshold frequency | Hz
+lambda | Wavelength of the light | nm
+
+== pipe-flow ==
+P | Pressure (ΔP: pressure drop between the taps) | Pa
+f | Darcy friction factor
+L | Length of the pipe between the taps | m
+D | Inside diameter of the pipe | m
+rho | Density of the liquid | kg/m³
+v | Mean speed of the flow | m/s
+N_R | Reynolds number
+eta | Viscosity of the liquid | mPa·s
+r | Inside radius of the pipe | m
+Q | Flow rate | mL/s
+P_1 | Pressure at the upstream tap | Pa
+P_2 | Pressure at the downstream tap | Pa
+Delta P_1 | Pressure drop in the first of two readings | Pa
+Delta P_2 | Pressure drop in the second of two readings | Pa
+n | Exponent in ΔP ∝ Qⁿ
+Q_2 | Flow rate in the second reading | mL/s
+Q_1 | Flow rate in the first reading | mL/s
+V | Volume collected | mL
+t | Collection time | s
+h | Height of liquid in a manometer tube (Δh: their difference) | m
+g | Gravitational acceleration | m/s²
+
+== pn-junction ==
+I | Current | A
+e | Elementary charge, 1.602176634 × 10⁻¹⁹ C (in e^(eV/kT), the first e is Euler's number, 2.71828…)
+k | @k_B
+V | Bias voltage (positive forward) | V
+T | Temperature | K
+I_0 | Saturation current | A
+h | @
+f | Frequency of the light | Hz
+c | @
+lambda | Peak wavelength of the LED | nm
+E_g | Band gap | eV
+n_i | Intrinsic carrier density | m⁻³
+
+== polarization ==
+I | Intensity after an element | W/m²
+I_0 | Intensity of the light going in | W/m²
+N | Number of polarizers
+r_s | Reflection coefficient for the s component
+n_1 | Index of refraction on the incident side
+theta_i | Angle of incidence | °
+n_2 | Index of refraction on the far side
+theta_t | Angle of refraction | °
+r_p | Reflection coefficient for the p component
+R_s | Reflectance for the s component
+R_p | Reflectance for the p component
+theta_B | Brewster angle | °
+theta | Angle between the light's polarization and the polarizer's axis | °
+E_0 | Amplitude of the electric field going in | V/m
+s | Component with the field perpendicular to the plane of incidence
+p | Component with the field in the plane of incidence
+n | Index of refraction
+R | Fraction of the intensity reflected
+
+== potential-curves ==
+U | Potential energy | J
+E | Total energy | J
+U_0 | Potential energy at the minimum | J
+U'' | Second derivative of U at the minimum | N/m
+x | Position | m
+x_0 | Position of the minimum | m
+k | Effective spring constant | N/m
+omega_0 | Angular frequency of small oscillations | rad/s
+m | Mass of the particle | kg
+F_x | Force along x | N
+v | Speed | m/s
+x_1 | Starting position | m
+x_2 | Final position | m
+
+== precipitator ==
+kappa | Dielectric constant of the dust
+q | Charge on a particle | C
+a | Radius of a particle | m
+E | Electric field | V/m
+w | Drift speed toward the plate | cm/s
+C_c | Cunningham slip correction
+eta | Viscosity of the gas, or (in the Deutsch equation and its uncertainty) the collection efficiency | Pa·s
+d | Diameter of a particle | μm
+s | Distance from the wire to a plate | m
+L | Plate length | m
+u | Gas speed | m/s
+N | Number of particles counted
+
+== projectile-drag ==
+t | Time since launch | s
+x | Horizontal distance from the launcher's foot | m
+y | Height above the ground | m
+R | Range, where the ball lands | m
+v_t | Terminal speed | m/s
+v_0 | Launch speed | m/s
+a | Constant term of the fit of y against t | m
+b | Linear coefficient of the fit | m/s
+c | Quadratic coefficient of the fit | m/s²
+g | Gravitational acceleration | m/s²
+F | Drag force | N
+rho | Density of the air | kg/m³
+C_d | Drag coefficient
+A | Cross section of the ball | m²
+v | Speed of the ball | m/s
+theta | Launch angle | °
+y_0 | Launch height | m
+
+== quantum-tunneling ==
+m | Mass of the electron | kg
+x_0 | Starting center of the packet | nm
+k_0 | Central wave number of the packet | nm⁻¹
+E_0 | Energy that goes with k₀ | eV
+E | Energy of the electron | eV
+sigma | Width of the packet | nm
+e | @euler
+kappa | Decay constant inside the barrier | nm⁻¹
+x | Position | nm
+V_0 | Height of the barrier or step | eV
+T | Transmission probability
+a | Width of the barrier | nm
+R | Reflection probability
+k_1 | Wave number before the step | nm⁻¹
+k_2 | Wave number after the step | nm⁻¹
+
+== quark-model ==
+I_3 | Third component of isospin, half of (u quarks − d quarks), antiquarks counted negative
+e | @
+Q | Charge | e
+B | Baryon number
+S | Strangeness
+
+== radiation-dose ==
+r | Distance from the source to the meter | m
+x | Thickness of the shield | cm
+e | @euler
+mu | Linear attenuation coefficient of the shield | cm⁻¹
+x_1/2 | Half value layer | cm
+rho | Density of the shield | g/cm³
+
+== radioactive-decay ==
+p | Probability that a parent decays in one step
+e | @euler
+lambda | Decay constant | s⁻¹
+t | Time | s
+N_0 | Starting number of parents
+N | Number of parents left
+T_1/2 | Half life | s
+tau | Mean life | s
+R | Activity, decays per unit time | Bq
+f | Expected fraction of parents left
+sigma | Standard deviation of the count left
+n | Number of steps (flips)
+
+== rc-circuits ==
+t | Time | s
+C | Capacitance | F
+V | Voltage across the capacitor | V
+L | Inductance | H
+I | Current | A
+epsilon | EMF of the battery | V
+R | Resistance | Ω
+Q | Charge on the capacitor | C
+V_C | Voltage across the capacitor | V
+e | @euler
+tau | Time constant | s
+V_C0 | Capacitor voltage when the discharge starts | V
+W | Work done by the battery | J
+U_C | Energy stored in the capacitor | J
+H | Heat given off in the resistor | J
+
+== relative-motion ==
+g | Gravitational acceleration | m/s²
+theta | Angle of the incline | °
+v_BG | Velocity of the ball relative to the ground | m/s
+v_BC | Velocity of the ball relative to the cart | m/s
+v_CG | Velocity of the cart relative to the ground | m/s
+u | Launch speed, straight up relative to the cart | m/s
+v | Cart speed | m/s
+t | Time in the air | s
+a | Acceleration of the cart | m/s²
+x | Position along the track (Δx: where the ball lands relative to the launcher) | cm
+
+== relativistic-energy ==
+V | Accelerating voltage | MV
+e | @
+K | Kinetic energy | MeV
+B | Magnetic field of the bending magnet | T
+r | Bend radius | cm
+m | Mass of the particle | MeV/c²
+v | Speed | c
+gamma | Lorentz factor, 1/√(1 − v²/c²)
+c | @
+L | Length of the flight path | m | 8.400 m
+t | Flight time | ns
+p | Momentum | MeV/c
+E | Total energy | MeV
+
+== relativistic-momentum ==
+F | Force on the particle | N
+q | Charge of the particle | C
+E | Electric field in the tube | V/m
+gamma | Lorentz factor, 1/√(1 − v²/c²)
+p | Relativistic momentum | kg·m/s
+m | Mass of the particle | kg
+v | Speed | c
+t | Time | ns
+c | @
+x | Distance traveled | m
+K | Kinetic energy | J
+
+== relativity-em ==
+lambda_0 | Line charge density of the ions in the lab (the electrons have −λ₀) | μC/m
+v | Drift speed of the electrons in the lab | m/s
+beta_v | Electrons' speed as a fraction of c
+c | @
+r | Distance of the test charge from the wire | m
+u | Speed of the test charge along the wire | m/s
+beta_u | Test charge's speed as a fraction of c
+E | Electric field at the charge | V/m
+B | Magnetic field at the charge | T
+gamma_u | Lorentz factor for speed u
+gamma | Lorentz factor, 1/√(1 − β²)
+lambda_rest | Line density in the line's own rest frame | μC/m
+w | Speed of a line of charge | m/s
+gamma_w | Lorentz factor for speed w
+gamma_v | Lorentz factor for speed v
+I | Current in the wire | A
+F | Magnetic force on the charge in the lab | N
+q | Charge of the test charge | C
+lambda' | Net line density in the test charge's frame | μC/m
+E' | Electric field in the test charge's frame | V/m
+F' | Electric force in the test charge's frame | N
+beta | Speed as a fraction of c
+
+== resistivity ==
+I | Current | A
+e | @
+E | Electric field in the wire | V/m
+rho | Resistivity | Ω·m
+A | Cross section of the wire | m²
+R | Resistance | Ω
+L | Length between the clips | m
+T | Temperature | °C
+alpha | Temperature coefficient of resistivity | °C⁻¹
+J | Current density | A/m²
+v_d | Drift speed | mm/s
+V | Voltage between the clips | V
+rho_20 | Resistivity at 20 °C | Ω·m
+n | Free electron density | m⁻³
+q | Charge of a carrier | C
+v_F | Fermi speed | m/s
+m | Electron mass | kg
+tau | Mean time between collisions | s
+rho_0 | Residual resistivity from impurities and defects | Ω·m
+rho_ph | Resistivity from lattice vibrations | Ω·m
+Theta | Debye temperature | K
+d | Wire diameter | mm
+R_20 | Resistance at 20 °C | Ω
+b | Intercept of the fit of R against T | Ω
+k | Slope of the fit of R against T | Ω/°C
+Q | Charge (ΔQ: charge through a cross section in time Δt) | C
+s | Drift so far | nm
+N | Net crossings of the ring
+t | Real time | μs
+
+== resolution ==
+I | Intensity | W/m²
+I_0 | Intensity at the center | W/m²
+J_1 | Bessel function of the first kind, order one
+x | Argument πD sin θ/λ, or (on the screen) distance from the center | mm
+D | Diameter of the hole or aperture | mm
+theta | Angle from the axis | rad
+lambda | Wavelength | nm
+L | Distance to the screen | m
+theta_1 | Angle of the first dark ring | rad
+theta_min | Smallest angle resolved (Rayleigh's criterion) | rad
+
+== resonators ==
+c | Speed of sound in dry air | m/s
+t_C | Air temperature | °C
+gamma | Ratio of heat capacities of air | | 1.400
+R | @
+T | Absolute temperature | K
+M | Molar mass of air | g/mol | 28.96 g/mol
+L | Length of the air column (ΔL: the end correction) | cm
+a | Inner radius of the tube | cm
+k | Resonance number (in ka, the wave number 2π/λ)
+L_k | Air column length at resonance k | cm
+lambda | Wavelength | cm
+f | Frequency | Hz
+i | Imaginary unit, √−1
+Q | Quality factor of the resonances
+sigma | Standard deviation of the reading scatter | mm
+L_k+1 | Air column length at the next resonance | cm
+x | (2k − 1)/(4f) | ms
+
+== rlc-transients ==
+t | Time | s
+C | Capacitance | F
+V | Voltage across the capacitor | V
+L | Inductance | H
+I | Current | A
+U_C | Energy in the capacitor | J
+Q | Charge on the capacitor | C
+U_L | Energy in the inductor | J
+omega_0 | Undamped angular frequency | rad/s
+d | Differential (d²Q/dt²: second derivative of Q with time)
+R | Resistance | Ω
+alpha | Damping rate | s⁻¹
+omega_d | Damped angular frequency | rad/s
+R_crit | Critical resistance | Ω
+V_C | Voltage across the capacitor | V
+I_L | Current through the inductor | A
+V_C0 | Capacitor voltage at the switch | V
+I_L0 | Inductor current at the switch | A
+T_d | Damped period | s
+delta | Logarithmic decrement
+V_n | Voltage at one positive maximum | V
+V_n+1 | Voltage at the next positive maximum | V
+R_fit | Resistance found from the decay | Ω
+
+== rocket ==
+u | Exhaust speed relative to the rocket | m/s
+m_0 | Starting mass, rocket and fuel | kg
+m_dry | Mass without fuel | kg
+b | Burn rate, fuel mass per second | kg/s
+g | Gravitational acceleration | m/s²
+m | Mass of the rocket at time t | kg
+v | Speed | m/s
+t | Time | s
+e | @euler
+t_b | Burn time | s
+m_fuel | Fuel mass | kg
+m_1 | Mass at lift off | kg
+t_0 | Time of lift off | s
+
+== room-acoustics ==
+T | Reverberation time, for the level to fall 60 dB | s
+alpha | Absorption coefficient of a surface
+A | Total absorption of the room | m²
+c | Speed of sound | m/s | 343.2 m/s
+S_i | Area of surface i | m²
+alpha_i | Absorption coefficient of surface i
+V | Volume of the room | m³
+S | Total surface area | m²
+L | Length of the room | m
+W | Width of the room | m
+H | Height of the room | m
+S_p | Area of the panels | m²
+alpha_p | Absorption coefficient of the panels
+alpha_wall | Absorption coefficient of the wall they cover
+
+== rotation-curves ==
+v | Orbital speed | km/s
+r | Radius of the orbit | kpc
+G | @
+M | Mass inside radius r | M☉
+c | @
+lambda | Wavelength (Δλ: the Doppler shift) | nm
+lambda_0 | Rest wavelength | nm
+f | Frequency (Δf: the Doppler shift) | MHz
+f_0 | Rest frequency | MHz
+M_odot | Solar mass | kg | 1.989 × 10³⁰ kg
+rho | Density | M☉/kpc³
+i | Inclination of the disk from face on | °
+
+== rotation ==
+m | Mass | kg
+g | Gravitational acceleration | m/s²
+h | Height dropped | m
+I | Moment of inertia | kg·m²
+R | Radius of the rolling object | m
+L | Angular momentum of the skater, or the door's length (door swing) | kg·m²/s or m
+K | Kinetic energy, written KE (one quantity, not a product) | J
+E | Kinetic energy, written KE (one quantity, not a product) | J
+omega | Angular velocity | rad/s
+x | Position of a block from the pivot (negative to the left) | m
+m_1 | Mass of block 1 | kg
+x_1 | Position of block 1 | m
+m_2 | Mass of block 2 | kg
+x_2 | Position of block 2 | m
+m_3 | Mass of block 3 | kg
+x_3 | Position of block 3 | m
+theta | Angle turned, or the angle between r and F | rad
+t | Time | s
+alpha | Angular acceleration | rad/s²
+r | Distance from the axis | m
+s | Arc length | m
+v | Speed | m/s
+a_t | Tangential acceleration | m/s²
+a_c | Centripetal acceleration | m/s²
+tau | Torque | N·m
+F | Force | N
+beta | Incline angle of the ramp | °
+D | Length of the ramp | m
+a | Acceleration down the ramp | m/s²
+I_initial | Moment of inertia before | kg·m²
+omega_initial | Angular velocity before | rad/s
+I_final | Moment of inertia after | kg·m²
+omega_final | Angular velocity after | rad/s
+
+== rotational-dynamics ==
+m | Hanging mass | kg
+r | Radius of the spool the string wraps on | m
+a | Downward acceleration of the hanging mass | m/s²
+h | Drop height | m
+t | Drop time | s
+alpha | Angular acceleration of the table | rad/s²
+tau | Torque from the string | N·m
+g | Gravitational acceleration | m/s²
+I | Moment of inertia of the table and its load | kg·m²
+T | String tension | N
+tau_f | Friction torque at the bearing | N·m
+I_0 | Moment of inertia of the bare turntable | kg·m² | 2.00 × 10⁻³ kg·m²
+M | Mass of the disk | kg
+R | Radius of the disk | m
+v | Speed at the end of the drop | m/s
+omega | Angular speed at the end of the drop | rad/s
+phi | Angle turned (Δφ: angular displacement) | rad
+
+== ruchardt ==
+gamma | Ratio of heat capacities, C_P/C_V
+c_P | Specific heat at constant pressure | J/(kg·K)
+c_V | Specific heat at constant volume | J/(kg·K)
+C_V | Molar heat capacity at constant volume | J/(mol·K)
+C_P | Molar heat capacity at constant pressure | J/(mol·K)
+x | Distance the ball moves down | m
+V | Flask volume | L
+A | Cross section of the tube | m²
+P | Gas pressure with the ball at rest (ΔP: its change) | Pa
+k | Effective spring constant of the gas | N/m
+T | Period of the oscillation | s
+m | Mass of the ball | kg
+P_atm | Atmospheric pressure | Pa
+g | Gravitational acceleration | m/s²
+R | @
+
+== rutherford ==
+e | @
+K | Kinetic energy of the alpha | MeV
+b | Impact parameter | fm
+theta | Scattering angle | °
+b_max | Beam radius | fm
+Omega | Solid angle (ΔΩ: the solid angle of a bin) | sr
+theta_1 | Lower edge of the angle bin | °
+theta_2 | Upper edge of the angle bin | °
+D | Head on distance of closest approach | fm
+Z | Charge number of the nucleus
+z | Charge number of the alpha, 2
+sigma | Cross section (dσ/dΩ: per unit solid angle) | fm²
+N_fired | Number of alphas fired
+N | Count in a bin
+Z_Ag | Charge number of silver, 47
+Z_Au | Charge number of gold, 79
+N_Ag | Number of silver alphas fired
+N_Au | Number of gold alphas fired
+
+== seasons ==
+epsilon | Tilt of Earth's axis | ° | 23.44°
+delta | Declination of the Sun | °
+phi | Latitude | °
+h_noon | Altitude of the Sun at noon | °
+H_0 | Hour angle of sunset | rad
+S | Intensity of the sunlight | W/m²
+theta | Angle of the sunlight from straight up | °
+E | Electric field (the flux analogy) | N/C
+A | Area | m²
+Q | Daily mean insolation at the top of the atmosphere | W/m²
+S_0 | Sunlight at 1 AU | W/m² | 1361 W/m²
+r | Distance from Earth to the Sun | AU
+e | Eccentricity of Earth's orbit | | 0.0167
+Q_max | Largest Q of the year | W/m²
+Q_min | Smallest Q of the year | W/m²
+
+== second-law ==
+Q_h | Heat from the hot reservoir | J
+W | Work done | J
+Q_c | Heat to the cold reservoir | J
+T | Temperature of a reservoir | K
+Q | Heat a reservoir gains | J
+S_universe | Entropy of the universe (ΔS: its change) | J/K
+T_h | Temperature of the hot reservoir | K
+T_c | Temperature of the cold reservoir | K
+
+== semiconductor-doping ==
+n | Density of conduction electrons | cm⁻³
+p | Density of holes | cm⁻³
+T | Temperature | K
+E_g | Band gap | eV
+n_i | Intrinsic carrier density | cm⁻³
+N_c | Effective density of states of the conduction band | cm⁻³
+N_v | Effective density of states of the valence band | cm⁻³
+e | @euler
+k | @k_B
+N_D | Donor density | cm⁻³
+E_d | Donor binding energy | eV
+
+== shear-bulk ==
+V | Volume (ΔV: its change) | cm³
+V_0 | Starting volume | cm³
+p | Pressure (Δp: its rise) | MPa
+B | Bulk modulus | Pa
+F_parallel | Shear force on a face | N
+L_0 | Height of the block | cm
+A | Area of a face, or of the piston | cm²
+x | Displacement (Δx: of the top face, or of the piston) | µm or mm
+S | Shear modulus | Pa
+k | Compressibility, 1/B | Pa⁻¹
+F | Force | kN
+h_0 | Depth of the liquid under the piston | cm
+a_0 | Edge of the metal cube | cm
+epsilon | Strain gauge reading, Δa/a₀ | µε
+a | Edge of the cube (Δa: its change) | cm
+Y | Young's modulus | Pa
+nu | Poisson's ratio
+
+== single-slit ==
+a | Slit width | µm
+L | Distance from the slit to the wall | m
+I | Intensity | W/m²
+I_0 | Intensity at the center | W/m²
+y | Position on the wall from the center | mm
+m | Order of the dark fringe
+lambda | Wavelength | nm
+B | Caliper jaw B reading | mm
+A | Caliper jaw A reading | mm
+beta | Half the phase difference across the slit, πa sin θ/λ | rad
+theta | Angle from the beam | °
+theta_1 | Angle of the first dark fringe | °
+
+== sound-intensity ==
+I | Intensity | W/m²
+P | Acoustic power of the source | W
+r | Distance from the source | m
+I_0 | Threshold of hearing | W/m² | 10⁻¹² W/m²
+beta | Sound level | dB
+
+== sound-waves ==
+v | Speed of sound | m/s
+lambda | Wavelength | m
+gamma | Ratio of specific heats
+R | @
+T | Temperature (in kelvin in the formula) | °C
+M | Molar mass of the gas | g/mol
+rho | Density | kg/m³
+P | Pressure of the gas | Pa
+t | Time (Δt: between the two microphones) | s
+L | Length of the bar | m
+x | Position along the wave | m
+s | Displacement of the air | m
+s_max | Displacement amplitude | m
+k | Wave number, 2π/λ | rad/m
+omega | Angular frequency, 2πf | rad/s
+p | Pressure (Δp: its variation from the mean) | Pa
+p_max | Pressure amplitude (with Δ) | Pa
+f | Frequency | Hz
+d | Spacing of the microphones | m
+B | Bulk modulus | Pa
+Y | Young's modulus | Pa
+t_air | Travel time through air over the same distance | s
+v_20 | Speed at 20 °C | m/s
+v_-10 | Speed at −10 °C | m/s
+T_20 | 20 °C in kelvin | K
+T_-10 | −10 °C in kelvin | K
+
+== spacetime ==
+c | @
+t | Time in frame S | yr
+x | Position in frame S | ly
+v | Speed of frame S′ relative to S | m/s
+beta | v/c
+t' | Time in frame S′ | yr
+x' | Position in frame S′ | ly
+gamma | Lorentz factor, 1/√(1 − β²)
+s | Spacetime interval (s²) | ly
+L_0 | Proper length of the rod | ly
+L | Length of the rod measured in the other frame | ly
+
+== spectra ==
+E_n | Energy of level n | eV
+n | Upper level
+n_f | Lower (final) level
+E_nf | Energy of the lower level | eV
+lambda | Wavelength | nm
+R_H | Rydberg constant for hydrogen | m⁻¹
+h | @
+c | @
+lambda_vac | Wavelength in vacuum | nm
+n_air | Index of refraction of air | | 1.00028
+lambda_air | Wavelength in air | nm
+Z | Charge number of the nucleus
+e | @
+R | Rydberg constant | m⁻¹
+R_infty | @
+
+== speed-of-light ==
+f_2 | Focal length of lens L2 | mm | 252 mm
+A | Distance from S to lens L2 | m
+B | Distance from L2 to the turning mirror | m
+D | Distance from the turning mirror to the fixed mirror | m
+c | Speed of light | m/s | 299 792 458 m/s, exact
+t | Time (Δt: the round trip time) | s
+f | Rotation rate of the mirror (signed) | rev/s
+omega | Angular speed of the mirror | rad/s
+theta | Angle of the mirror (Δθ: its turn while the light is away) | rad
+s | Micrometer reading (Δs: shift of the image) | mm
+k | Slope of s against f | mm/(rev/s)
+f_CW | Clockwise rotation rate | rev/s
+f_CCW | Counterclockwise rotation rate | rev/s
+s_CW | Reading with clockwise rotation | mm
+s_CCW | Reading with counterclockwise rotation | mm
+n | Index of refraction
+
+== spin-resonance ==
+B_20 | Field of the Zeeman magnet at 20 °C | mT
+B | Field at the sample | mT
+h | @
+nu | Frequency of the radio waves | MHz
+g | g factor | | 2.0036 for DPPH
+gamma | Gyromagnetic ratio | rad/(s·T)
+B_Z | Field of the Zeeman magnet | mT
+t | Thermometer reading | °C
+m_s | Spin quantum number
+B_max | Full scale of the scan field | mT
+t_R | Time of the peak after the ramp starts | s
+T | Length of the ramp | s
+B_scan | Field from the scan coils | mT
+k | Slope of B against frequency | T/Hz
+Gamma | γ/2π | Hz/T | 42.577478 MHz/T for ¹H
+beta | Temperature coefficient of the magnet | °C⁻¹ | 7.5 × 10⁻⁴ °C⁻¹
+
+== springs ==
+k_1 | Stiffness of the left outer spring | N/m
+k_2 | Stiffness of the right outer spring | N/m
+k_c | Stiffness of the middle (coupling) spring | N/m
+b | Damping constant of the oil | kg/s
+v | Velocity of the block | m/s
+zeta | Damping ratio
+k | Spring constant | N/m
+m | Mass of the block | kg
+X_w | Amplitude of the wall's motion | m
+omega | Drive angular frequency | rad/s
+t | Time | s
+F_0 | Amplitude of the equivalent driving force | N
+T | Period | s
+N | Number of periods timed
+omega_0 | Natural angular frequency | rad/s
+f_0 | Natural frequency | Hz
+x | Displacement from equilibrium | m
+E | Total energy | J
+A | Amplitude | m
+phi | Phase constant | rad
+a | Intercept of the fit of T² against m | s²
+s | Slope of the fit of T² against m | s²/kg
+
+== standing-waves ==
+v | Wave speed on the string | m/s
+T | Tension | N
+mu | Linear mass density | g/m
+f_n | Frequency of harmonic n | Hz
+n | Harmonic number
+L | Length of the string | m
+m | Hanging mass | kg
+g | Gravitational acceleration | m/s²
+F_0 | Amplitude of the driving force | N | 0.25 N
+f | Frequency | Hz
+t | Time | s
+x | Position along the string | m
+gamma | Damping rate | s⁻¹
+omega_1 | Angular frequency of the fundamental | rad/s
+Q | Quality factor
+y | Displacement (sum of the two tones) | m
+A_1 | Amplitude of the first tone
+f_1 | Frequency of the first tone | Hz
+A_2 | Amplitude of the second tone
+f_2 | Frequency of the second tone | Hz
+A | Amplitude of each tone
+f_beat | Beat frequency | Hz
+t_1 | Time of the first quiet moment | s
+t_N | Time of the last quiet moment | s
+N | Number of quiet moments counted
+
+== static-equilibrium ==
+mu_s | Coefficient of static friction
+F | Force | N
+tau | Torque | N·m
+g | Gravitational acceleration | m/s²
+F_x | Horizontal component of a force | N
+F_y | Vertical component of a force | N
+L | Length of the plank or strut | m
+m_p | Mass of the plank | kg
+x | Position of the load from the left end | m
+a | Position of the left support | m
+b | Position of the right support | m
+m | Mass of the painter or sign | kg
+F_2 | Force from the right support | N
+F_1 | Force from the left support | N
+m_s | Mass of the strut | kg
+d | Distance of the sign from the wall | m
+h | Height of the cable's wall end above the hinge | m
+theta | Angle of the cable to the strut, or of the ladder to the floor | °
+T | Cable tension | N
+H_x | Horizontal force from the hinge | N
+H_y | Vertical force from the hinge | N
+theta_min | Smallest angle before the ladder slips | °
+m_ell | Mass of the ladder | kg
+f | Fraction of the ladder's length the person has climbed
+
+== stern-gerlach ==
+L_2 | Drift distance from the magnet to the screen | cm
+m_J | Magnetic quantum number of the atom
+mu_z | Component of the magnetic moment along z | J/T
+g_J | Landé g factor of the atom
+v | Speed of the atom | m/s
+k | @k_B
+T | Oven temperature | K
+M | Mass of the atom | kg
+F_z | Force along z | N
+B | Magnetic field (dB/dz: its gradient) | T
+z | Vertical position (deflection on the screen) | mm
+L_1 | Length of the magnet | cm | 3.50 cm
+mu | Size of the magnetic moment | J/T
+J | Total angular momentum quantum number
+l | Orbital angular momentum quantum number
+s | Spin quantum number
+m_s | Spin magnetic quantum number
+g_s | Electron spin g factor | | 2.0023
+
+== straight-wire-fields ==
+B | Magnetic field | T
+l | Position along the path (dl: a short piece of wire or path) | m
+I | Current | A
+r | Distance from the wire | m
+d | Distance between two wires | m
+F | Force between two wires | N
+I_2 | Current in the second wire | A
+L | Length of the wire | m
+B_1 | Field of the first wire | T
+I_1 | Current in the first wire | A
+I_enc | Current through the loop | A
+
+== stress-strain ==
+F | Force from the load | N
+m | Hanging mass | kg
+g | Gravitational acceleration | m/s²
+L | Original length of the wire (ΔL: its stretch) | m
+Y | Young's modulus | Pa
+A | Cross section of the wire | m²
+sigma | Stress | Pa
+epsilon | Strain
+d | Diameter of the wire | mm
+
+== string-density ==
+L | Length of the vibrating string | m
+m | Total suspended mass, hanger included | kg
+T | Tension | N
+f | Frequency | Hz
+n | Harmonic number (number of loops)
+v | Wave speed on the string | m/s
+mu | Linear mass density | kg/m
+f_n | Frequency of harmonic n | Hz
+g | Gravitational acceleration | m/s²
+s | Slope of f against n | Hz
+
+== terminal-velocity ==
+D | Drag force | N
+rho | Density of the air | kg/m³
+C | Drag coefficient
+A | Cross section facing the air | m²
+v | Speed | m/s
+g | Gravitational acceleration | m/s²
+t | Time | s
+a | Acceleration (downward positive) | m/s²
+m | Mass | kg
+v_T | Terminal speed | m/s
+m_1 | Mass in the first case (one coffee filter: 0.86 g) | g
+y | Distance fallen | m
+n | Number of stacked filters
+m_2 | Mass in the second case | g
+C_1 | Drag coefficient in the first case
+A_1 | Cross section in the first case | m²
+C_2 | Drag coefficient in the second case
+A_2 | Cross section in the second case | m²
+
+== the-eye ==
+d_i | Distance from the lens to the retina | m
+d_o | Object distance | m
+P | Power of the lens (in FP, the P of "far point") | D
+f | Focal length | m
+s | Distance of the glasses in front of the eye | m
+F | The F of FP, the far point distance | m
+P_far | Power of glasses for far vision | D
+N | The N of NP, the near point distance | m
+P_read | Power of reading glasses | D
+
+== thermal-equilibrium ==
+P | Rate of heat flow through the bar | W
+k | Thermal conductivity of the bar | W/(m·K)
+A | Cross section of the bar | m²
+T_A | Temperature of body A | °C
+T_B | Temperature of body B | °C
+L | Length of the bar | m
+Q | Heat | J
+m | Mass | kg
+c | Specific heat | J/(kg·K)
+T | Temperature (ΔT: its change) | °C
+m_A | Mass of body A | kg
+c_A | Specific heat of body A | J/(kg·K)
+T_A0 | Starting temperature of body A | °C
+T_f | Final common temperature | °C
+m_B | Mass of body B | kg
+c_B | Specific heat of body B | J/(kg·K)
+T_B0 | Starting temperature of body B | °C
+e | @euler
+t | Time | s
+tau | Time constant | s
+m_w | Mass of the water | kg
+c_w | Specific heat of water | J/(kg·K)
+T_w0 | Starting temperature of the water | °C
+T_0 | Starting temperature of the metal | °C
+
+== thermal-expansion ==
+L | Length of the rod (ΔL: its change) | m
+L_0 | Length at 20 °C | m
+alpha | Coefficient of linear expansion | °C⁻¹
+T | Temperature (ΔT: its change) | °C
+beta | Coefficient of volume expansion | °C⁻¹
+V | Volume (ΔV: its change) | cm³
+V_0 | Starting volume | cm³
+A | Cross section of the tube | mm²
+h | Rise of the level in the tube | mm
+beta_liquid | Volume expansion coefficient of the liquid | °C⁻¹
+beta_flask | Volume expansion coefficient of the flask | °C⁻¹
+
+== thermal-history ==
+T | Temperature of the radiation | K
+k | @k_B
+z | Redshift
+m | Mass of a particle | kg
+c | @
+g_ast | Effective number of kinds of particles sharing the energy
+T_0 | Temperature of the radiation today | K | 2.7255 K
+a | Scale factor (1 today)
+t | Time since the big bang | s
+n | Exponent of t in a ∝ tⁿ
+
+== thin-films ==
+n_f | Index of refraction of the film
+t | Thickness of the film (or of the wedge's gap) | nm
+n_1 | Index of the medium above the film
+n_2 | Index of the medium below the film
+theta_1 | Angle of incidence | °
+lambda_0 | Wavelength in vacuum | nm
+x | Distance from the edge where the slides touch (Δx: fringe spacing) | mm
+R | Reflectance | %
+lambda | Wavelength | nm
+lambda_n | Wavelength in the film | nm
+m | Order
+h | Thickness of the spacer | mm
+L | Distance from the touching edge to the spacer | mm
+n | Index of refraction of the material below
+theta_t | Angle of the light inside the film | °
+
+== tides ==
+G | @
+M_Moon | Mass of the Moon | kg
+R_E | Radius of Earth | km | 6371 km
+d | Distance from Earth's center to the Moon or Sun | km
+M | Mass of the Moon or Sun | kg
+r | Distance from the Moon or Sun to the point | km
+h | Height of the water above the mean | m
+A | Height of the tide under the body | m
+theta | Angle from the point under the body | °
+M_E | Mass of Earth | kg
+a_tidal | Tidal acceleration | μm/s²
+A_Moon | Height of the Moon's tide | m
+A_Sun | Height of the Sun's tide | m
+M_Sun | Mass of the Sun | kg
+d_Moon | Distance to the Moon | km
+d_Sun | Distance to the Sun | km
+
+== timbre ==
+x | Signal, sum of the harmonics
+t | Time | s
+a_n | Amplitude of harmonic n
+f_n | Frequency of harmonic n | Hz
+phi_n | Phase of harmonic n | rad
+n | Harmonic number
+f_1 | Fundamental frequency | Hz
+a_ref | Amplitude of the strongest partial (the 0 dB reference)
+f | Frequency (Δf: detuning of a harmonic) | Hz
+k | Number of semitones from A4
+B | Stiffness (inharmonicity) coefficient
+x_rms | rms value of the signal
+L_n | Level of harmonic n | dB
+
+== transformers ==
+V_P | rms primary voltage | V
+v_P | Instantaneous primary voltage | V
+v_S | Instantaneous secondary voltage | V
+i_P | Instantaneous primary current | A
+i_S | Instantaneous secondary current | A
+k | Coupling coefficient (1 when all the flux links both coils)
+P | Power sent | W
+V | Transmission voltage | V
+R | Resistance of the load or the line | Ω
+Phi | Magnetic flux in the core | Wb
+N_P | Turns on the primary
+t | Time | s
+N_S | Turns on the secondary
+V_S | rms secondary voltage | V
+I_P | rms primary current | A
+I_S | rms secondary current | A
+I | Current in the line | A
+P_loss | Power lost in the line | W
+
+== two-speaker ==
+r_1 | Distance to speaker 1 | m
+r_2 | Distance to speaker 2 | m
+y | Position along the walk line | m
+r | Distance from a speaker (Δr: path difference r₂ − r₁) | m
+v | Speed of sound | m/s
+t_C | Air temperature | °C
+f | Frequency | Hz
+lambda | Wavelength | m
+m | Whole number counting loud or quiet spots
+d | Separation of the speakers | m
+beta | Sound level | dB
+p_rms | rms pressure | Pa
+x | Distance of the microphone from the speakers' wall | m
+n | Order, wavelengths in Δr
+
+== ultrasound ==
+r | Fraction of the pressure reflected at a boundary
+Z_2 | Acoustic impedance of the second medium | kg/(m²·s)
+Z_1 | Acoustic impedance of the first medium | kg/(m²·s)
+f_0 | Transducer frequency | MHz
+c | Speed of sound in tissue | m/s
+u | Speed of the blood along the beam | m/s
+v | Speed of the blood | m/s
+theta | Angle between the blood flow and the beam | °
+D | Depth of the boundary | mm
+t | Echo time | μs
+Z | Acoustic impedance | kg/(m²·s)
+rho | Density | kg/m³
+f | Frequency (Δf: Doppler shift) | Hz
+
+== uncertainty-principle ==
+m | Mass of the electron | kg
+psi | Wave function of the electron
+x | Position (Δx: the spread in position) | nm
+x_0 | Starting center of the packet | nm
+sigma | Starting width of the packet | nm
+i | Imaginary unit, √−1
+k_0 | Central wave number | nm⁻¹
+E_0 | Energy that goes with k₀ | eV
+E | Energy | eV
+p | Momentum (Δp: the spread in momentum) | eV/c
+c | @
+t | Time | fs
+v | Speed (Δv: the spread of speeds) | nm/fs
+
+== van-de-graaff ==
+R | Radius of the dome | cm
+I | Belt current | μA
+C | Capacitance of the dome | pF
+V | Potential of the dome | V
+k | Coulomb constant, 1/(4πε₀) | N·m²/C² | 8.987551 × 10⁹ N·m²/C²
+Q | Charge on the dome | C
+E | Field just outside the dome | V/m
+E_b | Breakdown field of air | MV/m | about 3.0 MV/m
+V_max | Highest voltage before a spark | V
+Q_max | Charge at the spark | C
+t | Time to charge from zero to a spark | s
+U | Energy released in each spark | J
+
+== vectors ==
+A | Vector A, or its magnitude
+B | Vector B, or its magnitude
+A_x | x component of A
+A_y | y component of A
+R | Resultant, A + B
+phi | Angle between A and B | °
+B_x | x component of B
+B_y | y component of B
+theta | Direction from the +x axis, counterclockwise | °
+R_x | x component of R
+R_y | y component of R
+z | Axis out of the page
+x | Horizontal axis, or the x component of a result
+y | Vertical axis, or the y component of a result
+theta_A | Direction of A from the +x axis | °
+D | Difference, A − B
+D_x | x component of D
+D_y | y component of D
+r_1 | Position at time t₁ | m
+t_1 | First time | s
+r_2 | Position at time t₂ | m
+t_2 | Second time | s
+r | Position (Δr: displacement) | m
+v_avg | Average velocity | m/s
+t | Time (Δt: the interval) | s
+a_avg | Average acceleration | m/s²
+v_2 | Velocity at time t₂ | m/s
+v_1 | Velocity at time t₁ | m/s
+v | Velocity (Δv: its change) | m/s
+W | Work | J
+F | Force | N
+tau | Torque | N·m
+
+== velocity-addition ==
+u' | Launch speed of the probe in the rocket's frame | c
+v | Speed of the rocket relative to the ground | c
+u | Ground speed of the probe | c
+c | @
+t | Time (Δt: the probe's time from beacon A to B) | s
+
+== viscometer ==
+v | Speed of the ball between the marks | m/s
+t | Time between the marks | s
+d | Diameter of the ball | mm
+eta | Viscosity of the liquid | Pa·s
+rho_b | Density of the ball | kg/m³
+rho_f | Density of the liquid | kg/m³
+g | Gravitational acceleration | m/s²
+F | Drag force | N
+r | Radius of the ball | m
+v_t | Terminal speed | m/s
+K | Wall correction factor
+D | Inside diameter of the tube (D(λ): the denominator of the wall correction) | mm
+C_D | Drag coefficient
+N_R | Reynolds number
+V | Volume of the ball | m³
+v_infty | Speed the ball would have in an unbounded liquid | m/s
+lambda | Diameter ratio, d/D
+c | Slope of Kv against d² | 1/(m·s)
+s | Spacing of the marks | m
+
+== wave-particle-duality ==
+a | Slit width | µm
+d | Spacing of the slit centers | µm
+L | Distance from the slits to the screen | m
+y | Position on the screen (Δy: fringe spacing) | mm
+V | Accelerating voltage | V
+v | Speed of the C₆₀ molecules | m/s
+eta | Efficiency of the which slit detector
+B | Position of cursor B | mm
+A | Position of cursor A | mm
+lambda | de Broglie wavelength | nm
+h | @
+p | Momentum | eV/c
+K | Kinetic energy | eV
+e | @
+c | @
+m | Mass of the particle (in y = (m + ½)λL/d, the fringe order)
+n | Number of fringe spacings measured
+I_1 | Pattern from slit 1 alone
+I_2 | Pattern from slit 2 alone
+I_12 | Pattern with both slits open
+N_max | Hits in a bright fringe
+N_min | Hits in a dark fringe
+calV | Fringe visibility (contrast)
+N | Number of hits
+
+== wave-power ==
+mu | Linear mass density of the string | kg/m
+v | Wave speed | m/s
+A | Amplitude of the driver | mm
+f | Frequency | Hz
+t | Time | s
+b | Damping constant of the absorber | kg/s
+Z | Impedance of the string, √(Tμ) | kg/s
+T | Tension | N
+m | Hanging mass, hanger included | kg
+g | Gravitational acceleration | m/s²
+omega | Angular frequency, 2πf | rad/s
+P | Average power carried | mW
+L | Length of the string | m
+
+== white-dwarf-cooling ==
+k | @k_B
+T | Temperature | K
+T_c | Core temperature | K
+L | Luminosity | L☉
+M | Mass of the white dwarf | M☉
+Gamma | Coulomb coupling of the ions
+N | Number of ions in the core
+U | Heat stored in the ions | J
+C | Constant of the envelope law L = C M T_c^3.5
+t | Cooling age | yr
+Z | Charge number of an ion
+e | @
+a_e | Radius of the sphere holding one electron | m
+mu_e | Mass per electron in atomic mass units | | 2
+m_u | Atomic mass unit | kg | 1.66053906892 × 10⁻²⁷ kg (CODATA 2022)
+rho | Density | g/cm³
+Gamma_m | Coupling at which the ions freeze | | 175
+L_odot | Solar luminosity | W | 3.828 × 10²⁶ W
+sigma | @
+M_odot | Solar mass, the unit of mass
+rho_c | Central density | g/cm³
+T_eff | Surface temperature | K
+R | Radius | km
+T_m | Temperature at which the center freezes | K
+n | Exponent in R ∝ Mⁿ
+
+== wire-force ==
+m | Balance reading (Δm: apparent change in the magnet's mass) | g
+F | Force | N
+g | Gravitational acceleration | m/s²
+I | Current | A
+L | Length of wire in the field | cm
+B | Magnetic field | T
+theta | Angle between the wire and the field | °
+F_wire | Force on the wire | N
+F_bal | Force read by the balance | N
+k | Slope of F_bal against I | N/A
+N | Number of turns in the loop
+A | Area of the loop | m²
+psi | Angle between the loop's normal and the field | °
+
+== x-ray-diffraction ==
+theta | Glancing angle of the crystal | °
+m | Order
+lambda | Wavelength | nm
+d | Spacing of the crystal planes | nm | 0.2820 nm for NaCl (200)
+h | @
+c | @
+e | @
+V | Tube voltage | kV
+Z | Atomic number of the anode metal
+a | Cube edge of the crystal | nm
+
+== x-ray-spectra ==
+lambda_min | Shortest wavelength from the tube | nm
+h | @
+c | @
+e | @
+V | Tube voltage | kV
+Z | Atomic number of the anode metal
+E_Kalpha | Energy of the Kα line | eV
+E | Energy of a line | eV
+
+== zeeman-effect ==
+D_2 | The D₂ of the term symbol ¹D₂ (L = 2, J = 2)
+P_1 | The P₁ of the term symbol ¹P₁ (L = 1, J = 1)
+g | Landé g factor
+m | Magnetic quantum number of a level (m_J)
+B | Magnetic field | T
+E | Energy (ΔE: the shift of a level) | eV
+S_1/2 | The S₁/₂ of the term symbol ²S₁/₂ (L = 0, J = 1/2)
+P_1/2 | The P₁/₂ of the term symbol ²P₁/₂ (L = 1, J = 1/2)
+P_3/2 | The P₃/₂ of the term symbol ²P₃/₂ (L = 1, J = 3/2)
+lambda | Wavelength (Δλ: the shift) | nm
+h | @
+c | @
+m_J | Magnetic quantum number for total angular momentum
+g_u | g factor of the upper level
+m_u | m_J of the upper level
+g_l | g factor of the lower level
+m_l | m_J of the lower level
+e | @
