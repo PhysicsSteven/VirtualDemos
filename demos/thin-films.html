@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -71,6 +73,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout .list dd { font-size: 0.88rem; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
+#viewSeg[hidden] { display: none; }
 .formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
 
 .swrow { display: flex; align-items: center; gap: 12px; }
@@ -125,6 +128,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="newton" aria-pressed="false">Newton's rings</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="tag" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
@@ -696,7 +700,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.beginPath(); c.rect(R.x, R.y, R.w, R.h); c.clip();
     c.fillStyle = T.med; c.globalAlpha = S.n1 > 1.001 ? tint(S.n1) : 0; c.fillRect(R.x, R.y, R.w, g.y1 - R.y);
     c.globalAlpha = S.n2 > 1.001 ? tint(S.n2) : 0; c.fillRect(R.x, g.y2, R.w, R.y + R.h - g.y2);
+    /* finish: a soft sheen in a denser medium, darker with depth */
+    if (S.n2 > 1.001) { const gr = c.createLinearGradient(0, g.y2, 0, R.y + R.h); gr.addColorStop(0, 'rgba(255,255,255,0.18)'); gr.addColorStop(1, 'rgba(0,0,0,0.06)'); c.globalAlpha = 1; c.fillStyle = gr; c.fillRect(R.x, g.y2, R.w, R.y + R.h - g.y2); }
     c.fillStyle = T.film; c.globalAlpha = 0.16 + tint(S.nf) * 0.6; c.fillRect(R.x, g.y1, R.w, g.hf); c.globalAlpha = 1;
+    if (g.hf > 3) { const gr = c.createLinearGradient(0, g.y1, 0, g.y2); gr.addColorStop(0, 'rgba(255,255,255,0.32)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.04)'); gr.addColorStop(1, 'rgba(0,0,0,0.07)'); c.fillStyle = gr; c.fillRect(R.x, g.y1, R.w, g.hf); }
     c.strokeStyle = T.frame; c.lineWidth = 1.4 * lw;
     c.beginPath(); c.moveTo(R.x, g.y1 + 0.5); c.lineTo(R.x + R.w, g.y1 + 0.5); c.stroke();
     c.beginPath(); c.moveTo(R.x, g.y2 + 0.5); c.lineTo(R.x + R.w, g.y2 + 0.5); c.stroke();
@@ -753,6 +760,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(`n₁ = ${S.n1.toFixed(2)}${nm(S.n1)}`, R.x + g.pad, R.y + 16 * ls, { size: 11.5 });
     lab(`n_f = ${S.nf.toFixed(2)}${nm(S.nf)}`, R.x + g.pad, g.hf > 18 * ls ? (g.y1 + g.y2) / 2 : g.y1 - 11 * ls, { size: 11.5, color: T.ink });
     lab(`n₂ = ${S.n2.toFixed(2)}${nm(S.n2)}`, R.x + g.pad, R.y + R.h - 14 * ls, { size: 11.5 });
+    lab('film drawn far thicker than scale', R.x + g.pad, R.y + R.h - 32 * ls, { size: 10, font: 'ui', color: T.muted });
     // thickness dimension and its grip on the bottom surface
     const xd = R.x + R.w - g.pad - 6 * ls;
     c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 1.2 * lw;
@@ -796,6 +804,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawWaves(f) {
     const Ly = mainLayout(), Wv = Ly.wave, c = ctx, ls = Ly.ls, ps = projScale(), lw = Math.min(ps, 1.25);
     c.save(); c.beginPath(); c.rect(Wv.x, Wv.y, Wv.w, Wv.h); c.clip();
+    if (window.VDGear) VDGear.panel(c, Wv.x + 8 * ls, Wv.y + 6 * ls, Wv.w - 14 * ls, Wv.h - 12 * ls);
     c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath();
     if (Ly.wide) { c.moveTo(Wv.x + 0.5, Wv.y + 10); c.lineTo(Wv.x + 0.5, Wv.y + Wv.h - 10); } else { c.moveTo(Wv.x + 10, Wv.y + 0.5); c.lineTo(Wv.x + Wv.w - 10, Wv.y + 0.5); }
     c.stroke();
@@ -842,6 +851,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- drawing: soap film ----------
   function soapGeom() {
     const [W, H] = dims.m, ls = labScale(W, H), pad = 18 * ls;
+    if (use3d()) {   /* 3D: the film is in the scene; the profile plot sits on a panel at the right, the probe line reaching out from it */
+      const top = 56 * ls, bot = H - 46 * ls, pw = Math.round(Math.min(W * (W < 560 ? 0.34 : 0.27), 250)), px = W - pw - (W < 560 ? 14 : 22) * ls;
+      return { W, H, ls, pad, top, bot, fx: px - (W < 560 ? 30 : 44) * ls, fw: 0, px, pw, tmax: niceUp(Math.max(S.soap.tbot, 200) * 1.08), d3: true };
+    }
     const top = 40 * ls, bot = H - 30 * ls;
     const fw = Math.round(Math.min(W * 0.42, 340, (bot - top) * 0.9)), plotW = Math.min(W * 0.36, 300);
     const gap = 44 * ls, total = fw + gap + plotW, fx = Math.max(pad, (W - total) / 2);
@@ -851,7 +864,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = soapGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
     S.light === 'mono' ? ensureMono() : ensureLUT();
     const h = g.bot - g.top, r = Math.min(26 * ls, g.fw * 0.12);
+    if (g.d3) { const nar = g.W < 560 ? 30 : 62; scene3(); if (window.VDGear) VDGear.panel(c, g.px - nar * ls, g.top - 32 * ls, g.pw + (nar + 14 - (g.W < 560 ? 6 : 0)) * ls, h + 70 * ls); }
     lab(`Vertical soap film in ${S.light === 'mono' ? `light of λ₀ = ${S.lam} nm` : `reflected white light, gain ${S.gain}×`}`, g.pad, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
+    if (!g.d3) {
     c.save(); c.beginPath(); c.roundRect ? c.roundRect(g.fx, g.top, g.fw, h, r) : c.rect(g.fx, g.top, g.fw, h); c.clip();
     for (let y = 0; y < h; y++) {
       const t = soapT((y + 0.5) / h, S.soap.ttop, S.soap.tbot, S.soap.p);
@@ -870,10 +885,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         c.fillStyle = '#e3e8ef'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, g.fx + g.fw / 2, g.top + 15.5 * ls);
       } else lab(`${txt} at the top`, g.fx + g.fw / 2, g.top - 10 * ls, { align: 'center', size: 10.5, font: 'ui' });
     }
+    }
     // thickness profile plot
     const X = (t) => g.px + t / g.tmax * g.pw;
     c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.px + 0.5, g.top + 0.5, g.pw, h);
-    const st = niceStep(g.tmax / 4);
+    const st = niceStep(g.tmax / (g.pw < 170 ? 2 : 4));
     c.fillStyle = T.muted; c.font = `${10 * ls}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
     for (let t = 0; t <= g.tmax + 1e-6; t += st) {
       const x = Math.round(X(t)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, g.top + 1); c.lineTo(x, g.bot); c.stroke();
@@ -900,7 +916,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     lab(`top ${fmtT(S.soap.ttop)}`, X(S.soap.ttop) + 10 * ls, g.top + 12 * ls, { size: 10.5 });
     lab(`bottom ${fmtT(S.soap.tbot)}`, Math.min(X(S.soap.tbot) - 10 * ls, g.px + g.pw - 4), g.bot - 16 * ls, { size: 10.5, align: 'right' });
-    if (drainDone) lab('Drained. Press New film to start again.', g.fx + g.fw / 2, g.bot - 16 * ls, { align: 'center', font: 'ui', size: 10.5 });
+    if (drainDone) lab('Drained. Press New film to start again.', g.d3 ? (g.px - 62 * ls) / 2 : g.fx + g.fw / 2, g.bot - 16 * ls, { align: 'center', font: 'ui', size: 10.5 });
     flushLabels(c, ls);
   }
 
@@ -913,6 +929,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { W, H, ls, pad, x0, x1, top, imgH, axisY, sideTop, sideBot, X: (mm) => x0 + mm / WEDGE_L * (x1 - x0) };
   }
   function drawWedge() {
+    if (use3d()) { S.light === 'mono' ? ensureMono() : ensureLUT(); scene3(); flushLabels(ctx, labScale(...dims.m)); return; }
     const g = wedgeGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
     S.light === 'mono' ? ensureMono() : ensureLUT();
     const hnm = S.wedge.hw * 1000;
@@ -968,6 +985,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let newtonImg = null, newtonKey = '';
   function newtonGeom() {
     const [W, H] = dims.m, ls = labScale(W, H), pad = 18 * ls, top = 38 * ls;
+    if (use3d()) {   /* 3D: the apparatus fills the picture and the view through the microscope sits at the right */
+      const narrow = W < 560, size = Math.floor(Math.max(60, Math.min(H - top - 70 * ls, W * (narrow ? 0.44 : 0.33))));
+      const cx = W - pad - size / 2 - 10 * ls, cy = top + 26 * ls + size / 2;
+      return { W, H, ls, pad, top, size, cx, cy, rad: size / 2, side: { x: 0, y: 0, w: 0, h: 0 }, wide: true, d3: true };
+    }
     const wide = W > H * 1.25;
     const size = Math.floor(wide ? Math.min(H - top - 26 * ls, W * 0.56) : Math.min(W - 2 * pad, (H - top) * 0.64));
     const cx = wide ? pad + size / 2 + 10 : W / 2, cy = top + size / 2;
@@ -978,6 +1000,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawNewton() {
     const g = newtonGeom(), c = ctx, ls = g.ls, ps = projScale(), lw = Math.min(ps, 1.25);
     S.light === 'mono' ? ensureMono() : ensureLUT();
+    if (g.d3) scene3();
     lab(`Newton's rings, ${S.light === 'mono' ? `λ₀ = ${S.lam} nm` : `white light, gain ${S.gain}×`}`, g.pad, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
     const key = [cfgKey(), S.light, S.lam, S.gain, S.newton.R, g.size, dpr].join('|');
     if (!newtonImg || newtonKey !== key) {
@@ -997,7 +1020,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       ox.putImageData(im, 0, 0); newtonImg = oc; newtonKey = key;
     }
+    if (g.d3) {   /* the eyepiece: a dark field stop round the image */
+      c.fillStyle = '#0b0d10'; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.fill();
+      c.strokeStyle = '#59626e'; c.lineWidth = 3 * ls; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.stroke();
+      lab(`Through the microscope, ${2 * NEWTON_RMAX} mm across`, g.cx, g.cy - g.rad - 22 * ls, { align: 'center', size: 10.5, font: 'ui', bold: true });
+    }
     c.drawImage(newtonImg, g.cx - g.rad, g.cy - g.rad, g.size, g.size);
+    if (g.d3) {   /* cross hairs */
+      c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(g.cx - g.rad, g.cy); c.lineTo(g.cx + g.rad, g.cy); c.moveTo(g.cx, g.cy - g.rad); c.lineTo(g.cx, g.cy + g.rad); c.stroke();
+    }
     c.strokeStyle = T.frame; c.lineWidth = 2 * lw; c.beginPath(); c.arc(g.cx, g.cy, g.rad, 0, 2 * Math.PI); c.stroke();
     lab(`${NEWTON_RMAX} mm`, g.cx + g.rad * 0.71 + 4, g.cy + g.rad * 0.71 + 8 * ls, { size: 10, color: T.muted });
     // probe ring
@@ -1020,9 +1051,294 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       lab('side view, gap exaggerated', sd.x, sd.y - 6 * ls, { size: 10, color: T.muted, font: 'ui', halo: false });
       lab(`R = ${S.newton.R.toFixed(1)} m`, scx, sd.y + sd.h * 0.25, { align: 'center', size: 10.5 });
     }
-    const lx = g.wide ? sd.x : g.pad, ly = g.wide ? sd.y + sd.h + 28 * ls : g.cy - g.rad + 4;
-    lab(`r = ${S.newton.r.toFixed(2)} mm, t = ${fmtT(pt)}`, lx, ly, { bold: true, color: T.accent });
+    const lx = g.d3 ? g.cx : g.wide ? sd.x : g.pad, ly = g.d3 ? g.cy + g.rad + 24 * ls : g.wide ? sd.y + sd.h + 28 * ls : g.cy - g.rad + 4;
+    lab(`r = ${S.newton.r.toFixed(2)} mm, t = ${fmtT(pt)}`, lx, ly, { bold: true, color: T.accent, align: g.d3 ? 'center' : 'left' });
     flushLabels(c, ls);
+  }
+
+  // ---------- 3D views of the apparatus (three.js through demos/lib/vd3.js and vd3kit.js) ----------
+  // Soap film: a wire frame held in a stand over a dish of solution, in front of a black card and lit by a light box, so the film is
+  // seen by its reflected light only. Wedge: two glass slides on a black mat with a spacer at one end, a lamp and a glass plate at 45°
+  // that sends its light straight down, and a millimeter rule along the slides. Newton's rings: a lens on a flat plate under a
+  // microscope, lit the same way. Every film color is filmRGB(t), the model's R(λ, t) integrated by the color code above, at the
+  // thickness each point has. Not to scale where the film would be invisible: the wedge gap and the lens curvature are magnified
+  // (stated on the picture). Sizes in meters, z up, the bench top at z = 0. The picture is redrawn from the same state as the flat view.
+  const D3 = { want: (() => { try { const q = new URLSearchParams(location.search).get('view'); if (q === 'flat' || q === '3d') return q; } catch (_) {} return window.VD3 && VD3.lowPower() ? 'flat' : '3d'; })(), ok: false, tried: false, loading: false };
+  let g3 = null, o3view = null;
+  const use3d = () => D3.ok && D3.want === '3d' && S.view !== 'rays';
+  const o3 = { th: 0, ph: 1, zoom: 1 };
+  const CAM3 = { soap: { th: -Math.PI / 2 + 0.32, ph: 1.4, zoom: 1 }, wedge: { th: -Math.PI / 2 - 0.32, ph: 1.0, zoom: 1 }, newton: { th: -Math.PI / 2 + 0.55, ph: 1.15, zoom: 1 } };
+  const SOAPW = 0.06, SOAPH = 0.08, SOAPZ = 0.215;           /* frame: width, height, top edge of the film */
+  const SLW = 0.025, SLT = 0.0012, MAGW = 100, ZB = 0.0032;   /* slides: width, thickness; the wedge gap is drawn 100 times thicker; top of the lower slide */
+  const LENSR = 0.02, MAGN = 10, PLZ = 0.016;                /* lens radius; its curvature drawn 10 times deeper; top of the flat plate */
+  function ensure3d() {
+    if (D3.want !== '3d' || S.view === 'rays' || D3.ok || D3.tried || D3.loading || !window.VD3 || !window.VD3K) return;
+    D3.loading = true;
+    VD3.load((ok) => {
+      D3.loading = false; D3.tried = true; D3.ok = !!(ok && init3());
+      if (!D3.ok) { D3.want = 'flat'; const b = document.querySelector('#viewSeg [data-dim="3d"]'); b.disabled = true; b.title = 'The 3D view needs WebGL, which this browser does not offer here.'; }
+      mark3(); newtonImg = null; touch();
+    });
+  }
+  function mark3() {
+    const vs = $('viewSeg'), hide = S.view === 'rays'; if (vs.hidden !== hide) vs.hidden = hide;
+    for (const b of vs.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dim === (D3.ok || D3.loading ? D3.want : D3.want === '3d' && !D3.tried ? '3d' : 'flat')));
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (!b || b.disabled) return; D3.want = b.dataset.dim; newtonImg = null; ensure3d(); mark3(); touch(); });
+  const lampHex = () => { if (S.light !== 'mono') return '#fbf6e9'; const c = specRGB(S.lam); return '#' + c.map((v) => Math.round(255 * gam(v)).toString(16).padStart(2, '0')).join(''); };
+  function init3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 30, near: 0.004, far: 30, shadow: 0.4 }); if (!st) return false;
+    const K = VD3K, scene = st.scene, mat = (o, c) => K.material(st, o, c), M = (o) => new THREE.MeshStandardMaterial(o);
+    st.el.hidden = true; st.el.style.pointerEvents = 'none'; st.sun.shadow.bias = -0.0004; st.sun.position.set(0.5, -0.9, 2.4);
+    const mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
+    // the room: floor, a painted wall with a skirting board, and a lab bench (worktop on a cabinet)
+    const FLOOR = -0.88;
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#c9cfd6', '#151b23']), false, true); floor.position.z = FLOOR;
+    const wallCv = document.createElement('canvas'); wallCv.width = 16; wallCv.height = 256; const wallTex = new THREE.CanvasTexture(wallCv);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 4), new THREE.MeshBasicMaterial({ map: wallTex })); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.62, FLOOR + 2);
+    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#0f141b' : '#d3dae3'); gr.addColorStop(0.6, dk ? '#17202a' : '#e7ebf0'); gr.addColorStop(1, dk ? '#131a23' : '#dfe4ea'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#232c38' : '#c0c8d2'; c.fillRect(0, 170, 16, 4); wallTex.needsUpdate = true; });
+    const topM = mat({ roughness: 0.78 }, ['#d6c4a4', '#3b3229']), edgeM = mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']);
+    const top = mesh(new THREE.BoxGeometry(2.4, 0.95, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(0, 0.12, -0.02);
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#68747f', '#2f3843']);
+    scene.add(floor, wall, K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#b9c0c8', '#252e39']), 0, 0.61, FLOOR), top,
+      K.box(2.3, 0.85, -0.04 - FLOOR - 0.08, cabM, 0, 0.13, FLOOR + 0.08), K.box(2.2, 0.8, 0.08, mat({ roughness: 0.8 }, ['#3b434d', '#12171d']), 0, 0.14, FLOOR));
+    // shared materials
+    const steelM = mat({ roughness: 0.3, metalness: 0.75 }, ['#c3cad2', '#8d97a2']), blackM = M({ color: 0x22272e, roughness: 0.45, metalness: 0.3 });
+    const velvetM = M({ color: 0x050607, roughness: 1, metalness: 0 }), caseM = mat({ roughness: 0.45, metalness: 0.25 }, ['#3d4753', '#36404b']);
+    const glassM = (op) => mat({ transparent: true, opacity: op, roughness: 0.06, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe6f2', '#a9cfe2']);
+    const accM = new THREE.MeshBasicMaterial({ color: 0x2b60b5 }), lampM = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    st.onTheme(() => { accM.color = new THREE.Color(T.accent || '#2b60b5'); });
+    g3 = { st, K, mat, M, mesh, steelM, blackM, velvetM, caseM, glassM, accM, lampM, rc: new THREE.Raycaster(), v2: new THREE.Vector2(), wa: 0, groups: {}, probeSeg: null, keys: {} };
+    // a lamp housing whose window faces +x (lamp light is the light the film is lit by: white D65, or λ₀ alone)
+    const lamp = (x, y, z, w, h, d, rot) => {
+      const gr = new THREE.Group(); gr.position.set(x, y, z); gr.rotation.z = rot || 0;
+      gr.add(K.box(d, w, h, caseM, 0, 0, -h / 2));
+      for (let k = 0; k < 4; k++) gr.add(K.box(d * 0.7, w * 0.8, 0.0025, blackM, -d * 0.05, 0, h / 2 + k * 0.0001 - 0.001 + 0.0005));
+      const win = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.72, h * 0.62).rotateY(Math.PI / 2), lampM); win.position.x = d / 2 + 0.0006; gr.add(win);
+      const glow = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.25, h * 1.15).rotateY(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18, depthWrite: false, blending: THREE.AdditiveBlending, map: glowTex() }));
+      glow.position.x = d / 2 + 0.002; gr.add(glow); g3.glows = (g3.glows || []).concat(glow);
+      return gr;
+    };
+    g3.lamp = lamp;
+    buildSoap3(); buildWedge3(); buildNewton3();
+    can.addEventListener('wheel', (e) => { if (!use3d()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, o3, () => { dirtyMain = true; }, { grab: (e) => !use3d() || !!handleAt('m', e), phMin: 0.3, phMax: 1.52, zMin: 0.5, zMax: 3, keys: true });
+    return true;
+  }
+  function glowTex() {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.5, 'rgba(255,255,255,0.35)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(cv);
+  }
+  // a canvas texture whose pixels are written from filmRGB
+  function filmTex(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = g3.st.r.capabilities.getMaxAnisotropy(); return { cv, t, c: cv.getContext('2d') }; }
+  // a retort stand: base, rod, boss and an arm along x to (ax, y, z)
+  function stand3(gr, x, y, z, ax) {
+    const g = g3, K = g.K;
+    gr.add(K.box(0.15, 0.1, 0.008, g.caseM, x + 0.02, y, 0), K.rod([x, y, 0.008], [x, y, z + 0.06], 0.005, g.steelM));
+    gr.add(K.box(0.018, 0.018, 0.022, g.blackM, x, y, z - 0.011), K.rod([x, y, z], [ax, y, z], 0.0035, g.steelM), K.rod([x + 0.009, y, z - 0.004], [x + 0.024, y, z - 0.004], 0.003, g.blackM));
+  }
+  function buildSoap3() {
+    const g = g3, K = g.K, gr = g.groups.soap = new THREE.Group(); g.st.scene.add(gr);
+    const zb = SOAPZ - SOAPH, wr = 0.0009;
+    // the film: one texture row for each height, colored from the thickness there
+    g.soapTex = filmTex(2, 512);
+    const film = new THREE.Mesh(new THREE.PlaneGeometry(SOAPW, SOAPH).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ map: g.soapTex.t, side: THREE.DoubleSide }));
+    film.position.set(0, 0, zb + SOAPH / 2); gr.add(film);
+    // the wire frame and its handle, held by a stand
+    const c = [[-SOAPW / 2, SOAPZ], [SOAPW / 2, SOAPZ], [SOAPW / 2, zb], [-SOAPW / 2, zb]];
+    for (let i = 0; i < 4; i++) { const a = c[i], b = c[(i + 1) % 4]; gr.add(K.rod([a[0], 0, a[1]], [b[0], 0, b[1]], wr, g.steelM)); }
+    for (const p of c) { const s = new THREE.Mesh(new THREE.SphereGeometry(wr, 10, 8), g.steelM); s.position.set(p[0], 0, p[1]); gr.add(s); }
+    gr.add(K.rod([0, 0, SOAPZ], [0, 0, SOAPZ + 0.05], wr * 1.3, g.steelM), K.box(0.016, 0.014, 0.014, g.blackM, 0, 0, SOAPZ + 0.042));
+    stand3(gr, 0.15, 0, SOAPZ + 0.05, 0);
+    // a black card behind the film, so only the film's reflected light is seen
+    gr.add(K.box(0.15, 0.004, 0.2, g.velvetM, 0, 0.07, 0.06), K.box(0.16, 0.04, 0.012, g.blackM, 0, 0.07, 0), K.box(0.15, 0.0005, 0.2, g.blackM, 0, 0.0725, 0.06));
+    // a dish of soap solution under the frame
+    const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.046, 0.022, 48, 1, true).rotateX(Math.PI / 2), g.glassM(0.28)); dish.position.set(0, 0, 0.011); dish.renderOrder = 2;
+    const liq = new THREE.Mesh(new THREE.CircleGeometry(0.047, 48), g.mat({ roughness: 0.1, metalness: 0.2, transparent: true, opacity: 0.8 }, ['#cfe0e8', '#4f6874'])); liq.position.z = 0.014;
+    const base = new THREE.Mesh(new THREE.CircleGeometry(0.046, 48), g.glassM(0.4)); base.position.z = 0.0008;
+    gr.add(dish, liq, base);
+    // a light box in front and to the left, facing the film
+    /* on the viewer's mirror side, so the film sends its light toward the viewer */
+    const lb = g.lamp(-0.115, -0.1, 0.15, 0.042, 0.05, 0.026, 0.85); gr.add(lb);
+    gr.add(K.rod([-0.115, -0.1, 0.0], [-0.115, -0.1, 0.125], 0.003, g.steelM), K.box(0.045, 0.045, 0.006, g.caseM, -0.115, -0.1, 0));
+    // the probe line across the film
+    g.soapProbe = new THREE.Mesh(new THREE.BoxGeometry(SOAPW + 0.012, 0.0006, 0.0007), g.accM); gr.add(g.soapProbe);
+    g.soapGrip = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 16, 12), g.accM); gr.add(g.soapGrip);
+  }
+  function buildWedge3() {
+    const g = g3, K = g.K, gr = g.groups.wedge = new THREE.Group(); g.st.scene.add(gr);
+    const L = WEDGE_L / 1000;
+    gr.add(K.box(0.085, 0.06, 0.002, g.velvetM, L / 2, 0.002, 0));
+    const slide = (op) => { const m = new THREE.Mesh(new THREE.BoxGeometry(L, SLW, SLT), g.glassM(op)); m.renderOrder = 3; return m; };
+    const low = slide(0.3); low.position.set(L / 2, 0, ZB - SLT / 2); gr.add(low);
+    // the upper slide turns about the edge where the slides touch
+    g.wTop = new THREE.Group(); g.wTop.position.set(0, 0, ZB); gr.add(g.wTop);
+    const up = slide(0.22); up.position.set(L / 2, 0, SLT / 2); g.wTop.add(up);
+    g.wedgeTex = filmTex(2048, 2); g.wedgeTex.t.minFilter = THREE.LinearFilter;
+    const fr = new THREE.Mesh(new THREE.PlaneGeometry(L, SLW * 0.999), new THREE.MeshBasicMaterial({ map: g.wedgeTex.t })); fr.position.set(L / 2, 0, 0.00003); g.wTop.add(fr);
+    g.spacer = new THREE.Mesh(new THREE.BoxGeometry(0.003, SLW, 1), g.mat({ roughness: 0.4, metalness: 0.3 }, ['#d9dde2', '#a6adb6'])); gr.add(g.spacer);
+    // a millimeter rule along the front edge, 0 at the touching edge
+    const rule = K.ruler(g.st, { len: L, from: 0, to: WEDGE_L, unit: 'mm', step: 1, w: 0.009 }), rg = new THREE.Group(); rg.add(rule); rg.position.set(0, -SLW / 2 - 0.007, 0.002); gr.add(rg);
+    // the lamp behind, and a glass plate at 45° above the slides that sends its light straight down
+    gr.add(g.lamp(L / 2, 0.07, 0.03, 0.044, 0.034, 0.04, -Math.PI / 2));
+    gr.add(K.box(0.026, 0.026, 0.013, g.caseM, L / 2, 0.07, 0.0));
+    gr.add(plate45(g, 0.052, 0.032, [L / 2, 0.004, 0.03], 'x'));
+    for (const sx of [-1, 1]) gr.add(K.rod([L / 2 + sx * 0.0265, 0.004 + 0.0113, 0.03 + 0.0113], [L / 2 + sx * 0.0265, 0.05, 0.042], 0.0009, g.steelM));
+    g.wProbe = new THREE.Mesh(new THREE.BoxGeometry(0.0004, SLW + 0.006, 0.0003), g.accM); gr.add(g.wProbe);
+    g.wGrip = new THREE.Mesh(new THREE.SphereGeometry(0.0011, 16, 12), g.accM); gr.add(g.wGrip);
+  }
+  function buildNewton3() {
+    const g = g3, K = g.K, gr = g.groups.newton = new THREE.Group(); g.st.scene.add(gr);
+    gr.add(K.box(0.1, 0.1, 0.01, g.velvetM, 0, 0, 0));
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.064, 0.064, 0.006), g.glassM(0.3)); plate.position.z = PLZ - 0.003; plate.renderOrder = 3; gr.add(plate);
+    g.ringTex = filmTex(512, 512);
+    const rings = new THREE.Mesh(new THREE.CircleGeometry(LENSR, 96), new THREE.MeshBasicMaterial({ map: g.ringTex.t, transparent: true })); rings.position.z = PLZ + 0.00004; gr.add(rings);
+    g.lensM = g.glassM(0.26); g.lens = null;
+    const cp = []; for (let i = 0; i < 96; i++) cp.push(new THREE.Vector3(Math.cos(i / 96 * 2 * Math.PI), Math.sin(i / 96 * 2 * Math.PI), 0));
+    g.nRing = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(cp), new THREE.LineBasicMaterial({ color: 0x2b60b5 })); g.nRing.position.z = PLZ + 0.00008; gr.add(g.nRing);
+    g.st.onTheme(() => { g.nRing.material.color = new THREE.Color(T.accent || '#2b60b5'); });
+    // the microscope: a pillar at the back, an arm, the tube with its objective, eyepiece and focus knob
+    const tz0 = 0.075, tz1 = 0.2;
+    gr.add(K.box(0.06, 0.05, 0.01, g.caseM, 0, 0.085, 0), K.rod([0, 0.085, 0.01], [0, 0.085, 0.24], 0.008, g.steelM));
+    gr.add(K.box(0.02, 0.085, 0.018, g.blackM, 0, 0.045, 0.165), K.rod([0, 0, tz0 + 0.012], [0, 0, tz1], 0.011, g.blackM), K.rod([0, 0, tz0], [0, 0, tz0 + 0.012], 0.006, g.steelM));
+    gr.add(K.rod([0, 0, tz1], [0, 0, tz1 + 0.03], 0.0075, g.blackM), K.rod([0, 0, tz1 + 0.03], [0, 0, tz1 + 0.034], 0.009, g.steelM));
+    gr.add(K.rod([-0.012, 0.045, 0.16], [-0.03, 0.045, 0.16], 0.009, g.steelM), K.rod([0.012, 0.045, 0.16], [0.03, 0.045, 0.16], 0.009, g.steelM));
+    // the lamp at the left, and a glass plate at 45° between the objective and the lens
+    gr.add(g.lamp(-0.1, 0, 0.045, 0.05, 0.05, 0.06, 0), K.box(0.03, 0.03, 0.02, g.caseM, -0.1, 0, 0));
+    gr.add(plate45(g, 0.04, 0.036, [0, 0, 0.045], 'y'));
+    gr.add(K.rod([0.014, 0.022, 0.058], [0.014, 0.022, 0.01], 0.0013, g.steelM), K.rod([0.014, -0.022, 0.058], [0.014, -0.022, 0.01], 0.0013, g.steelM));
+  }
+  // a glass plate at 45° with a dark rim, w along its tilt axis ('x': tilted about x, light from +y; 'y': about y, light from −x)
+  function plate45(g, w, h, at, ax) {
+    const gr = new THREE.Group(), pl = new THREE.Mesh(new THREE.PlaneGeometry(w, h), g.glassM(0.16)); pl.renderOrder = 4; gr.add(pl);
+    const c = [[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]];
+    for (let i = 0; i < 4; i++) { const a = c[i], b = c[(i + 1) % 4]; gr.add(g.K.rod([a[0], a[1], 0], [b[0], b[1], 0], 0.0005, g.blackM)); }
+    if (ax === 'x') gr.rotation.x = Math.PI / 4; else gr.rotation.y = Math.PI / 4;   /* normal (0, −1, 1)/√2 or (1, 0, 1)/√2: the lamp's light goes straight down */
+    gr.position.set(at[0], at[1], at[2]); return gr;
+  }
+  // the lens: a plano convex lens, convex side down, its curvature drawn MAGN times deeper (rebuilt when R changes)
+  function lens3() {
+    const g = g3, key = S.newton.R; if (g.lens && g.lensKey === key) return; g.lensKey = key;
+    if (g.lens) g.st.dispose(g.lens);
+    const sag = LENSR * LENSR / (2 * S.newton.R) * MAGN, pts = [new THREE.Vector2(0, 0)];
+    for (let i = 1; i <= 40; i++) { const r = LENSR * i / 40; pts.push(new THREE.Vector2(r, sag * (r / LENSR) ** 2)); }
+    pts.push(new THREE.Vector2(LENSR, sag + 0.003), new THREE.Vector2(0, sag + 0.003));
+    g.lens = new THREE.Mesh(new THREE.LatheGeometry(pts, 72).rotateX(Math.PI / 2), g.lensM); g.lens.position.z = PLZ + 0.00012; g.lens.renderOrder = 3; g.groups.newton.add(g.lens);
+  }
+  // film textures, rebuilt only when what they show changes
+  function soapTex3() {
+    const g = g3, key = [cfgKey(), S.light, S.lam, S.gain, S.soap.ttop, S.soap.tbot, S.soap.p].join('|'); if (g.keys.soap === key) return; g.keys.soap = key;
+    const T2 = g.soapTex, n = T2.cv.height, im = T2.c.createImageData(2, n);
+    for (let j = 0; j < n; j++) { const col = filmRGB(soapT((j + 0.5) / n, S.soap.ttop, S.soap.tbot, S.soap.p)); for (let i = 0; i < 2; i++) im.data.set([col[0], col[1], col[2], 255], 4 * (j * 2 + i)); }
+    T2.c.putImageData(im, 0, 0); T2.t.needsUpdate = true;
+  }
+  function wedgeTex3() {
+    const g = g3, key = [cfgKey(), S.light, S.lam, S.gain, S.wedge.hw].join('|'); if (g.keys.wedge === key) return; g.keys.wedge = key;
+    const T2 = g.wedgeTex, n = T2.cv.width, im = T2.c.createImageData(n, 2), hnm = S.wedge.hw * 1000, sub = 4;
+    for (let i = 0; i < n; i++) {
+      let r = 0, gg = 0, b = 0;
+      for (let k = 0; k < sub; k++) { const col = filmRGB(wedgeT((i + (k + 0.5) / sub) / n * WEDGE_L, WEDGE_L, hnm)); r += col[0]; gg += col[1]; b += col[2]; }
+      for (let j = 0; j < 2; j++) im.data.set([r / sub, gg / sub, b / sub, 255], 4 * (j * n + i));
+    }
+    T2.c.putImageData(im, 0, 0); T2.t.needsUpdate = true;
+  }
+  function ringTex3() {
+    const g = g3, key = [cfgKey(), S.light, S.lam, S.gain, S.newton.R].join('|'); if (g.keys.newton === key) return; g.keys.newton = key;
+    const T2 = g.ringTex, n = T2.cv.width, im = T2.c.createImageData(n, n), d = im.data, nr = n / 2 + 2, sub = 48, tab = new Float32Array(nr * 3);
+    /* radial table over the lens radius; rings finer than a texel are averaged, as an eye would see them */
+    for (let i = 0; i < nr; i++) {
+      let r = 0, gg = 0, b = 0;
+      for (let k = 0; k < sub; k++) { const col = filmRGB(lensT((i + (k + 0.5) / sub) / (n / 2) * LENSR, S.newton.R)); r += col[0]; gg += col[1]; b += col[2]; }
+      tab[3 * i] = r / sub; tab[3 * i + 1] = gg / sub; tab[3 * i + 2] = b / sub;
+    }
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const rr = Math.hypot(x + 0.5 - n / 2, y + 0.5 - n / 2), i = Math.min(nr - 2, Math.floor(rr)), u = rr - i, q = 4 * (y * n + x);
+      for (let c = 0; c < 3; c++) d[q + c] = tab[3 * i + c] * (1 - u) + tab[3 * i + 3 + c] * u;
+      d[q + 3] = 255;
+    }
+    T2.c.putImageData(im, 0, 0); T2.t.needsUpdate = true;
+  }
+  // the pointer's ray in the scene
+  function ray3(x, y) { const g = g3; g.v2.set(x / g.st.w * 2 - 1, 1 - y / g.st.h * 2); g.rc.setFromCamera(g.v2, g.st.cam); return g.rc.ray; }
+  // what a drag on the 3D probe means: the depth fraction on the soap film, or x in mm along the wedge
+  function pick3(x, y) {
+    if (!g3) return null;
+    const R = ray3(x, y), o = R.origin, d = R.direction;
+    if (S.view === 'soap') { if (Math.abs(d.y) < 1e-6) return null; const s = -o.y / d.y; if (s <= 0) return null; return Math.max(0, Math.min(1, (SOAPZ - (o.z + s * d.z)) / SOAPH)); }
+    if (S.view === 'wedge') {
+      const k = Math.tan(g3.wa), c0 = ZB + SLT / Math.cos(g3.wa), den = d.z - d.x * k; if (Math.abs(den) < 1e-9) return null;
+      const s = (c0 + o.x * k - o.z) / den; if (s <= 0) return null; return (o.x + s * d.x) * 1000;
+    }
+    return null;
+  }
+  // render the scene for the current view and queue its labels; the flat drawing code adds what sits on top
+  function scene3() {
+    const g = g3, st = g.st, [W, H] = dims.m, ls = labScale(W, H), v = S.view, short = W < 560;
+    st.size(W, H);
+    if (o3view !== v) { if (o3view) Object.assign(CAM3[o3view], o3); Object.assign(o3, CAM3[v]); o3view = v; }
+    for (const k in g.groups) g.groups[k].visible = k === v;
+    const lc = new THREE.Color(lampHex()); g.lampM.color = lc; for (const gl of g.glows) gl.material.color = lc;
+    const P = (x, y, z) => st.project([x, y, z]);
+    g.probeSeg = null;
+    if (v === 'soap') {
+      soapTex3();
+      const z = SOAPZ - S.soap.y * SOAPH; g.soapProbe.position.set(0.003, -0.0012, z); g.soapGrip.position.set(SOAPW / 2 + 0.009, -0.0012, z);
+      const pw = soapGeom(), aim = short ? 0.05 : 0.048;
+      st.place(o3, [aim, 0, 0.172], short ? 0.4 : st.fit(0.27, 1.5));
+      st.render();
+      const a = P(-SOAPW / 2 - 0.003, -0.0012, z), b = P(SOAPW / 2 + 0.009, -0.0012, z); g.probeSeg = [a[0], a[1], b[0], b[1]];
+      const pt = soapT(S.soap.y, S.soap.ttop, S.soap.tbot, S.soap.p), hot = isHot('probe');
+      if (hot) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.globalAlpha = 1; }
+      /* the probe line continues from the film to the plot */
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(b[0] + 6, b[1]); ctx.lineTo(pw.fx - 8 * ls, pw.top + S.soap.y * (pw.bot - pw.top)); ctx.stroke(); ctx.setLineDash([]);
+      if (!short) lab(`t = ${fmtT(pt)}`, Math.max(b[0] + 50 * ls, (b[0] + pw.fx) / 2), (b[1] + pw.top + S.soap.y * (pw.bot - pw.top)) / 2 - 13 * ls, { bold: true, color: T.accent, align: 'center' });
+      if (!short) {
+        const q = P(0, 0, SOAPZ + 0.004); lab(S.soap.ttop < 60 && S.light === 'white' ? 'black film at the top' : 'top of the film', q[0], q[1] - 10 * ls, { align: 'center', size: 10.5, font: 'ui' });
+        const lb = P(-0.115, -0.1, 0.184); if (lb[0] > 60 * ls && lb[1] > 30 * ls && lb[1] < H - 30 * ls) lab(S.light === 'mono' ? `lamp, λ₀ = ${S.lam} nm` : 'light box, white', lb[0], lb[1], { align: 'center', size: 10.5, font: 'ui' });
+        const ds = P(0, -0.05, 0.022); lab('soap solution', ds[0], ds[1] + 10 * ls, { align: 'center', size: 10.5, font: 'ui', color: T.muted });
+      }
+      cap3(`Wire frame ${SOAPW * 1000} × ${SOAPH * 1000} mm before a black card, lit from the front. Colors from the model at each thickness. Drag the probe line; drag elsewhere to turn.`, 'Colors from the model. Drag the probe; drag elsewhere to turn.', pw.px - 72 * ls);
+    } else if (v === 'wedge') {
+      wedgeTex3();
+      const L = WEDGE_L / 1000, hm = S.wedge.hw * 1e-6 * MAGW, a = g.wa = Math.atan2(hm, L);
+      g.wTop.rotation.y = -a; g.spacer.scale.z = hm; g.spacer.position.set(L - 0.0015, 0, ZB + hm / 2);
+      const x = S.wedge.x / 1000, zt = ZB + x * Math.tan(a) + SLT / Math.cos(a) + 0.00016;
+      g.wProbe.position.set(x, 0, zt); g.wGrip.position.set(x, -SLW / 2 - 0.0035, zt);
+      st.place(o3, [L / 2 + 0.002, 0.006, 0.01], st.fit(0.13, 1.5));
+      st.render();
+      const p0 = P(x, -SLW / 2 - 0.0035, zt), p1 = P(x, SLW / 2 + 0.003, zt); g.probeSeg = [p0[0], p0[1], p1[0], p1[1]];
+      if (isHot('probe')) { ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(p0[0], p0[1]); ctx.lineTo(p1[0], p1[1]); ctx.stroke(); ctx.globalAlpha = 1; }
+      lab(`Air wedge${S.light === 'mono' ? `, λ₀ = ${S.lam} nm` : `, white light, gain ${S.gain}×`}`, 18 * ls, 18 * ls, { size: 11.5, bold: true, font: 'ui' });
+      const right = p1[0] > W * 0.62;
+      lab(`x = ${S.wedge.x.toFixed(2)} mm, t = ${fmtT(wedgeT(S.wedge.x, WEDGE_L, S.wedge.hw * 1000))}`, p1[0] + (right ? -8 : 8) * ls, p1[1] - 12 * ls, { align: right ? 'right' : 'left', bold: true, color: T.accent });
+      const sp = P(L, SLW / 2, ZB + hm + SLT + 0.001); lab(`spacer h = ${S.wedge.hw.toFixed(1)} µm`, sp[0], sp[1] - 12 * ls, { align: 'right', size: 10.5 });
+      if (!short) {
+        const e0 = P(0, -SLW / 2, ZB + SLT); lab('slides touch', e0[0] - 10 * ls, e0[1], { align: 'right', size: 10.5, font: 'ui' });
+        const lp = P(L / 2, 0.07, 0.05); lab(S.light === 'mono' ? `lamp, λ₀ = ${S.lam} nm` : 'white lamp', lp[0], lp[1] - 8 * ls, { align: 'center', size: 10.5, font: 'ui' });
+        const gp = P(L / 2 + 0.027, 0.004, 0.04); lab('glass plate at 45°', gp[0] + 6 * ls, gp[1], { size: 10.5, font: 'ui', color: T.muted });
+      }
+      cap3(`Gap drawn ${MAGW} times thicker. Fringe colors from the model at each gap. Drag the probe line; drag elsewhere to turn the view.`, `Gap drawn ${MAGW}× thicker. Drag the probe; drag elsewhere to turn.`, W - 12 * ls);
+    } else {
+      ringTex3(); lens3();
+      const r = Math.max(1e-5, S.newton.r / 1000); g.nRing.scale.set(r, r, 1);
+      const ng = newtonGeom(), aimX = short ? 0.085 : 0.05;
+      st.place(o3, [aimX, 0, 0.115], st.fit(0.5, 1.5));
+      st.render();
+      if (!short) {
+        const ms = P(0.012, 0, 0.18); lab('microscope', ms[0] + 10 * ls, ms[1], { size: 10.5, font: 'ui' });
+        const lp = P(-0.1, 0, 0.08); lab(S.light === 'mono' ? `lamp, λ₀ = ${S.lam} nm` : 'white lamp', lp[0], lp[1] - 8 * ls, { align: 'center', size: 10.5, font: 'ui' });
+        const gp = P(0.02, -0.02, 0.06); lab('glass plate at 45°', gp[0] + 6 * ls, gp[1], { size: 10.5, font: 'ui', color: T.muted });
+      }
+      const ln = P(LENSR, -0.004, PLZ + 0.002); if (!short) lab(`lens, R = ${S.newton.R.toFixed(1)} m, on a flat plate`, ln[0] + 8 * ls, ln[1] + 12 * ls, { size: 10.5, font: 'ui' });
+      cap3(`Lens curvature drawn ${MAGN} times deeper; the rings on the plate are to scale. Drag the ring in the microscope view; drag elsewhere to turn.`, `Curvature drawn ${MAGN}× deeper. Drag the ring at the right.`, ng.cx - ng.rad - 20 * ls);
+    }
+  }
+  // a caption along the bottom of the 3D picture (the long text, or the short one when it does not fit)
+  function cap3(long, shortTxt, maxX) {
+    const [W, H] = dims.m, ls = labScale(W, H); ctx.font = `${10 * ls}px ${T.ui}`;
+    const fits = ctx.measureText(long).width < maxX - 14 * ls;
+    lab(fits ? long : shortTxt, 12 * ls, H - 14 * ls, { size: 10, font: 'ui', color: T.ink, bgA: 0.8 });
   }
 
   // ---------- spectrum pane ----------
@@ -1082,7 +1398,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- main draw ----------
   function drawMain() {
     const [W, H] = dims.m; if (!W || !H) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const on = use3d();
+    if (g3 && g3.st.el.hidden === on) g3.st.el.hidden = !on;
+    const ta = on ? 'pan-y' : 'none'; if (can.style.touchAction !== ta) can.style.touchAction = ta;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (on) ctx.clearRect(0, 0, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     if (S.view === 'rays') drawRays(); else if (S.view === 'soap') drawSoap(); else if (S.view === 'wedge') drawWedge(); else drawNewton();
   }
 
@@ -1168,7 +1488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pv = S.view !== 'rays';
     $('patNone').hidden = pv; $('lightRow').hidden = !pv; $('patRead').hidden = !pv;
     $('soapRows').hidden = S.view !== 'soap'; $('wedgeRows').hidden = S.view !== 'wedge'; $('newtonRows').hidden = S.view !== 'newton';
-    setOut(); playBtn();
+    setOut(); playBtn(); mark3(); ensure3d();
   }
   function changed() { syncT(); computeSpec(); syncSliders(); touch(); }
   function custom() { markPreset(null); $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known one.'; }
@@ -1248,6 +1568,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         out.push({ id: 'ttop', pt: [X(S.soap.ttop), g.top], cursor: 'ew-resize' });
         out.push({ id: 'tbot', pt: [X(S.soap.tbot), g.bot], cursor: 'ew-resize' });
         out.push({ id: 'probe', hseg: [g.fx - 8, g.px + g.pw, g.top + S.soap.y * h], cursor: 'ns-resize', grip: [g.fx + g.fw + 22 * g.ls, g.top + S.soap.y * h] });
+        if (g.d3 && g3 && g3.probeSeg) out.push({ id: 'probe', seg: g3.probeSeg, cursor: 'ns-resize', d3: true });
+      } else if (S.view === 'wedge' && use3d()) {
+        if (g3 && g3.probeSeg) out.push({ id: 'probe', seg: g3.probeSeg, cursor: 'ew-resize', d3: true });
       } else if (S.view === 'wedge') {
         const g = wedgeGeom(), px = g.X(S.wedge.x);
         const sh = g.sideBot - g.sideTop, slab = Math.max(6, sh * 0.16), baseY = g.sideBot - slab, gapMax = Math.min(sh * 0.46, sh - 2.3 * slab), gapPx = gapMax * Math.sqrt(S.wedge.hw / 40);
@@ -1273,6 +1596,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else if (h.hseg) { if (x >= h.hseg[0] - 4 && x <= h.hseg[1] + 4) d = Math.abs(y - h.hseg[2]); if (h.grip) d = Math.min(d, Math.hypot(x - h.grip[0], y - h.grip[1]) - 10); }
       else if (h.vseg) { if (y >= h.vseg[1] - 4 && y <= h.vseg[2] + 4) d = Math.abs(x - h.vseg[0]); }
       else if (h.ring) d = Math.abs(Math.hypot(x - h.ring[0], y - h.ring[1]) - h.ring[2]);
+      else if (h.seg) { const [x1, y1, x2, y2] = h.seg, L2 = (x2 - x1) ** 2 + (y2 - y1) ** 2 || 1, u = Math.max(0, Math.min(1, ((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1)) / L2)); d = Math.hypot(x - x1 - u * (x2 - x1), y - y1 - u * (y2 - y1)) - 3; }
       if (d < bd) { bd = d; best = h; }
     }
     return best;
@@ -1286,12 +1610,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else { const hf = Math.max(0, Math.min(g.hfMax, y - g.y1)); S.t = Math.round(TMAX_DRAW * (hf / g.hfMax) ** 3 * 10) / 10; }
     } else if (S.view === 'soap') {
       const g = soapGeom(), h = g.bot - g.top, tAt = (px) => (px - g.px) / g.pw * g.tmax;
-      if (id === 'probe') S.soap.y = Math.max(0, Math.min(1, (y - g.top) / h));
+      if (id === 'probe' && drag.d3) { const q = pick3(x, y); if (q) S.soap.y = q; }
+      else if (id === 'probe') S.soap.y = Math.max(0, Math.min(1, (y - g.top) / h));
       else if (id === 'ttop') S.soap.ttop = Math.max(0, Math.min(200, S.soap.tbot - 10, Math.round(tAt(x))));
       else { S.soap.tbot = Math.max(100, S.soap.ttop + 10, Math.min(3000, Math.round(tAt(x) / 10) * 10)); S.soap.tb0 = S.soap.tbot; S.soap.tau = 0; drainDone = false; }
     } else if (S.view === 'wedge') {
       const g = wedgeGeom();
-      if (id === 'probe') S.wedge.x = Math.max(0, Math.min(WEDGE_L, Math.round((x - g.x0) / (g.x1 - g.x0) * WEDGE_L * 100) / 100));
+      if (id === 'probe' && drag.d3) { const q = pick3(x, y); if (q != null) S.wedge.x = Math.max(0, Math.min(WEDGE_L, Math.round(q * 100) / 100)); }
+      else if (id === 'probe') S.wedge.x = Math.max(0, Math.min(WEDGE_L, Math.round((x - g.x0) / (g.x1 - g.x0) * WEDGE_L * 100) / 100));
       else { const hh = drag.geo, gp = hh.baseY - hh.slab - 10 * g.ls - y; S.wedge.hw = Math.max(1, Math.min(40, Math.round(40 * Math.max(0, gp / hh.gapMax) ** 2 * 2) / 2)); }
     } else {
       const g = newtonGeom(); S.newton.r = Math.max(0, Math.min(NEWTON_RMAX, Math.round(Math.hypot(x - g.cx, y - g.cy) / g.rad * NEWTON_RMAX * 1000) / 1000));
@@ -1310,11 +1636,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const h = handleAt(which, ev), id = h ? h.id : null;
       if (id !== hover) { hover = id; dirtyMain = dirtySpec = true; }
-      cv.style.cursor = h ? h.cursor : 'default';
+      cv.style.cursor = h ? h.cursor : which === 'm' && use3d() ? 'grab' : 'default';
     });
     cv.addEventListener('pointerdown', (ev) => {
       const h = handleAt(which, ev); if (!h) return;
-      drag = { which, id: h.id, geo: h.geo };
+      drag = { which, id: h.id, geo: h.geo, d3: !!h.d3 };
       if (h.id === 'angle') cv.style.cursor = 'grabbing';
       try { cv.setPointerCapture(ev.pointerId); } catch (_) {}
       ev.preventDefault(); cv.focus({ preventScroll: true });
@@ -1374,6 +1700,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
   window.__tf = { get S() { return S; }, probe: (x) => { if (S.view === 'wedge') { S.wedge.x = Math.max(0, Math.min(WEDGE_L, x)); changed(); } }, get frameMs() { return frameMs; }, get spec() { return spec; }, handles, rayGeom, applyPreset, setView: (v) => { setView(v); changed(); },
+    get g3() { return g3; }, get d3() { return use3d(); },
     canvasBox: (w) => { const r = (w === 's' ? sCan : can).getBoundingClientRect(); return [r.left, r.top]; } };
 
   // ---------- Readings (shared section): one row of what the student sees now ----------
