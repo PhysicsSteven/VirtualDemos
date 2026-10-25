@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -117,6 +119,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage.ph-on { height: 96vh; min-height: 720px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+/* the real system in 3D above the energy diagram (3D | Flat); Flat shows the diagram alone */
+.stage-ctl { z-index: 3; }
+#sPane { overflow: hidden; background: var(--canvas); }
+#sPane #sCan { pointer-events: none; z-index: 1; }
+.stage.d3 { grid-template-rows: minmax(0, 44fr) minmax(0, 56fr); }
+.stage.d3.ph-on { grid-template-rows: minmax(0, 36fr) minmax(0, 40fr) minmax(0, 24fr); }
+#dimNote:empty { display: none; }
+@media (max-width: 820px) {
+  .stage.d3 { height: auto; min-height: 0; grid-template-rows: 300px 470px; }
+  .stage.d3.ph-on { height: auto; min-height: 0; grid-template-rows: 300px 470px 300px; }
+}
+@media (max-width: 420px) {
+  .stage.d3 { grid-template-rows: 280px 460px; }
+  .stage.d3.ph-on { grid-template-rows: 280px 460px 300px; }
+}
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -138,18 +155,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="Speed" id="speedSeg">
+          <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="tclock mono" id="tclock">t = 0.00 s</span>
+      </div>
+      <div class="pane" id="sPane" hidden role="img" aria-label="The real system in 3D, moving with the simulation.">
+        <canvas id="sCan" aria-hidden="true"></canvas>
+      </div>
       <div class="pane" id="mPane">
         <canvas id="mCan" tabindex="0" role="application" aria-label="Energy diagram: the potential energy U(x), the total energy E as a dashed line, and the particle on the x axis below. Pointer: drag the energy line, the particle or the round grips on the curve. Keys: up and down arrows change E, left and right arrows move the starting point, shift for bigger steps, space plays or pauses, R resets. The round grips on the curve do the same as the sliders under Potential energy. In Draw your own, a digit key picks a control point, the arrows then move it, and Escape returns the arrows to E and the start."></canvas>
-        <div class="stage-ctl">
-          <button type="button" class="btn" id="play">Pause</button>
-          <button type="button" class="btn" id="reset">Reset</button>
-          <div class="seg" role="group" aria-label="Speed" id="speedSeg">
-            <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
-            <button type="button" data-s="1" aria-pressed="true">1×</button>
-            <button type="button" data-s="4" aria-pressed="false">4×</button>
-          </div>
-          <span class="tclock mono" id="tclock">t = 0.00 s</span>
-        </div>
       </div>
       <div class="pane" id="pPane" hidden>
         <canvas id="pCan" role="img" aria-label="Phase space: velocity against position. Each closed loop is one bound orbit. Show data table in the rail lists the speed on this orbit."></canvas>
@@ -216,6 +237,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="track" aria-pressed="false">Ball on a track</button>
         </div>
         <p class="hint" id="viewHint"></p>
+        <p class="hint" id="dimNote"></p>
         <details class="more"><summary>More about this</summary><p class="hint">Drag the dashed energy line, or drag the particle to a new starting point; dropped where U &gt; E, it starts from rest with E = U. Keys on the diagram: <kbd>↑</kbd> <kbd>↓</kbd> energy, <kbd>←</kbd> <kbd>→</kbd> starting point, <kbd>Space</kbd> play or pause, <kbd>R</kbd> reset.</p></details>
       </section>
 
@@ -983,7 +1005,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const msg = W < 640 ? 'ball: illustration only' : 'Ball on a track: an illustration. The exact motion is the particle below.';
       ctx.fillText(msg, R, top - 6 * ps);
     }
-    if (S.preset === 'pend') drawPendulumInset(ctx, ps, L, R, top);
+    if (S.preset === 'pend' && !on3d) drawPendulumInset(ctx, ps, L, R, top);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
 
     // ----- the particle's line -----
@@ -1298,8 +1320,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   function drawAll() {
     if (!P || !T || !st) return;
-    { const c = $('mPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    { const c = $('stage').querySelector('.stage-ctl'); ctlH = Math.max(0, c.offsetTop + c.offsetHeight - $('mPane').offsetTop); }
     drawMain(); drawPhase(); drawTChart();
+    if (on3d && G3) render3();
   }
 
   // ---------- readouts ----------
@@ -1567,6 +1590,326 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); }); } catch (_) {}
   new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // ---------- the real system in 3D (three.js through demos/lib/vd3kit.js), drawn from the same state as the diagram ----------
+  // Spring: a glider on an air track pulled by the spring. Roller coaster: the 500 kg car on the track h(x) = U/mg, to scale.
+  // Molecule: the two argon atoms about their center of mass. Pendulum: the bob on its rod. Double well, Draw your own and the
+  // Ball on a track picture: a ball on a track shaped like U(x). Flat shows the energy diagram alone. Pictures only: no physics here.
+  let G3 = null, on3d = false;
+  const o3 = { th: -Math.PI / 2 + 0.16, ph: 1.2, zoom: 1 };
+  const coarse = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
+  const sPane = $('sPane'), sCan = $('sCan'), sCtx = sCan.getContext('2d');
+  const TRK = { Lw: 1.6, Hw: 0.5, zb: 0.05 };
+  function sysKind() {
+    if (S.preset === 'coaster') return 'coaster';
+    if (S.preset === 'custom' || S.preset === 'dwell' || S.view === 'track') return 'track';
+    return S.preset;
+  }
+  function texCanvas(w, h, draw) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; draw(cv.getContext('2d'), w, h); const t = new THREE.CanvasTexture(cv); return t; }
+  function pinMesh(mat, r, h) { const g = new THREE.ConeGeometry(r, h, 20); g.translate(0, -h / 2, 0); g.rotateX(-Math.PI / 2); const m = new THREE.Mesh(g, mat); m.castShadow = true; return m; }
+  function dashLine(len, mat) {
+    const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-len / 2, 0, 0), new THREE.Vector3(len / 2, 0, 0)]);
+    const l = new THREE.Line(g, mat); l.computeLineDistances(); return l;
+  }
+  function init3() {
+    const S3 = VD3K.stage(sPane, { before: sCan, fov: 30, near: 0.01, far: 80, shadow: 1.6, fogAt: [1.5, 3.4] });
+    if (!S3) return false;
+    const K = VD3K, mat = (o, c) => K.material(S3, o, c);
+    const steel = mat({ roughness: 0.28, metalness: 0.8 }, ['#c3cad3', '#9aa4b0']);
+    const dark = mat({ roughness: 0.55, metalness: 0.2 }, ['#3a4552', '#2c3540']);
+    const red = mat({ roughness: 0.4, metalness: 0.15 }, ['#c23f2c', '#e0644f']);
+    const inkM = mat({ roughness: 0.6 }, ['#17202b', '#e3e8ef']);
+    const dashM = new THREE.LineDashedMaterial({ color: '#2b60b5', dashSize: 0.03, gapSize: 0.02 });
+    const grp = {};
+    /* the lab: bench and wall, shared by the spring, the pendulum and the track */
+    /* a lab bench (top 2.8 m by 1.3 m on four legs) on a floor, a plain wall behind that fades into the page */
+    const lab = new THREE.Group(), benchM = mat({ roughness: 0.8 }, ['#cdbb9d', '#3a3229']);
+    lab.add(K.box(2.8, 1.3, 0.05, benchM, 0, 0.25, -0.05));
+    for (const sx of [-1.3, 1.3]) for (const sy of [-0.3, 0.8]) lab.add(K.box(0.06, 0.06, 0.85, dark, sx, sy, -0.9));
+    const floorM = new THREE.MeshBasicMaterial(), wallM = new THREE.MeshBasicMaterial();
+    S3.onTheme((dk) => { const bg = VD3K.token('--canvas', dk ? '#10161e' : '#fcfdfe'), t = new THREE.Color(dk ? '#000000' : '#8a96a6'); wallM.color.copy(bg).lerp(t, dk ? 0.25 : 0.14); floorM.color.copy(bg).lerp(t, dk ? 0.45 : 0.3); });
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), floorM); floor.position.set(0, 6, -0.9);
+    const wallG = new THREE.PlaneGeometry(40, 12); wallG.rotateX(Math.PI / 2);
+    const wall = new THREE.Mesh(wallG, wallM); wall.position.set(0, 1.9, 5);
+    lab.add(floor, wall); grp.lab = lab;
+
+    /* spring: an air track 1.7 m long on two feet, the glider, the spring from the end bracket, and a meter rule */
+    const spr = new THREE.Group();
+    const alu = mat({ roughness: 0.35, metalness: 0.55 }, ['#c9d0d8', '#8f99a4']);
+    const holes = texCanvas(2048, 64, (c, w, h) => { c.fillStyle = '#c9d0d8'; c.fillRect(0, 0, w, h); c.fillStyle = '#4a525c'; for (let i = 0; i < 170; i++) for (const y of [0.3, 0.7]) { c.beginPath(); c.arc((i + 0.5) / 170 * w, y * h, 3.2, 0, 2 * Math.PI); c.fill(); } });
+    const topM = new THREE.MeshStandardMaterial({ map: holes, roughness: 0.35, metalness: 0.5 });
+    spr.add(K.box(1.7, 0.06, 0.045, [alu, alu, alu, alu, topM, alu], 0, 0, 0.055));
+    for (const sx of [-0.72, 0.72]) spr.add(K.box(0.05, 0.18, 0.055, dark, sx, 0, 0));
+    spr.add(K.box(0.03, 0.09, 0.085, dark, -0.835, 0, 0.1), K.box(0.03, 0.09, 0.06, dark, 0.835, 0, 0.1));
+    /* the air supply: a blower behind the track, its hose into the right end */
+    const blowM = mat({ roughness: 0.5 }, ['#5d6b7a', '#46525f']);
+    spr.add(K.box(0.2, 0.13, 0.12, blowM, 0.62, 0.36, 0), K.rod([0.62, 0.295, 0.06], [0.62, 0.28, 0.06], 0.04, dark));
+    spr.add(K.cable([0.85, 0.02, 0.075], [0.62, 0.28, 0.06], { via: [[0.95, 0.05, 0.06], [0.95, 0.24, 0.02], [0.75, 0.28, 0.05]], rad: 0.009, color: 0x30363d }));
+    const glider = new THREE.Group();
+    glider.add(K.box(0.12, 0.08, 0.012, red, 0, 0, 0.1), K.box(0.12, 0.006, 0.04, red, 0, -0.037, 0.068), K.box(0.12, 0.006, 0.04, red, 0, 0.037, 0.068));
+    glider.add(K.box(0.05, 0.003, 0.045, dark, 0, 0, 0.112));
+    spr.add(glider);
+    const helix = []; const NT = 24, NS = NT * 14; for (let i = 0; i <= NS; i++) { const t = i / NS; helix.push(new THREE.Vector3(t, 0.011 * Math.cos(2 * Math.PI * NT * t), 0.011 * Math.sin(2 * Math.PI * NT * t))); }
+    const coil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(helix), NS * 2, 0.0014, 6, false), steel); coil.castShadow = true; coil.position.set(-0.82, 0, 0.125); spr.add(coil);
+    const rule = K.ruler(S3, { len: 1.2, from: -60, to: 60, unit: 'cm', step: 1, w: 0.045 }); const ruleG = new THREE.Group(); ruleG.add(rule); ruleG.position.set(-0.6, -0.11, 0); spr.add(ruleG);
+    const sPins = [pinMesh(inkM, 0.009, 0.03), pinMesh(inkM, 0.009, 0.03)]; sPins.forEach((m) => spr.add(m));
+    const arF = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0xc23f2c, 0.03, 0.02), arV = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0x17202b, 0.03, 0.02);
+    spr.add(arF, arV); grp.spring = spr;
+
+    /* pendulum: a stand with an arm out to the pivot, the light rod and the 1 kg bob; the dashed circle is the bob's path */
+    const pen = new THREE.Group();
+    const pBase = K.box(0.3, 0.24, 0.03, dark, 0, 0.2, 0); pen.add(pBase);
+    const upr = K.rod([0, 0, 0], [0, 0, 1], 0.012, steel); pen.add(upr);
+    /* an L: the post stands clear of the bob's circle, the arm reaches over and a short boss comes forward to the pivot */
+    const arm = new THREE.Group(), armX = K.rod([-1, 0.2, 0], [0, 0.2, 0], 0.01, steel), elbow = VD3K.box(0.03, 0.03, 0.03, dark, 0, 0.2, -0.015);
+    arm.add(armX, K.rod([0, 0.2, 0], [0, -0.005, 0], 0.01, steel), elbow); pen.add(arm);
+    const axle = K.rod([0, 0.015, 0], [0, -0.03, 0], 0.006, dark); pen.add(axle);
+    const swing = new THREE.Group(); pen.add(swing);
+    const pRod = K.rod([0, 0, 0], [0, 0, -1], 0.004, mat({ roughness: 0.4, metalness: 0.5 }, ['#8a939e', '#aab3bd'])); pRod.position.y = -0.03; swing.add(pRod);
+    const bob = new THREE.Mesh(new THREE.SphereGeometry(0.0312, 32, 20), red); bob.castShadow = true; swing.add(bob);
+    const path = K.ring(1, { dashed: true, opacity: 0.55, color: '#5a6575' }); path.rotation.x = Math.PI / 2; path.position.y = -0.03; pen.add(path);
+    const pPins = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.011, 16, 10), inkM); pen.add(m); return m; });
+    grp.pend = pen;
+
+    /* molecule: two argon atoms, each drawn σ across, about their center of mass; a 0.1 nm bar for scale. Units: 1 = 1 nm */
+    const mol = new THREE.Group();
+    const slab = K.box(1.6, 0.9, 0.012, mat({ roughness: 0.9 }, ['#dfe5ec', '#1b232d']), 0, 0.05, -0.012); mol.add(slab);
+    const grid = new THREE.GridHelper(1.6, 16, 0x9aa6b4, 0xc2cad4); grid.rotation.x = Math.PI / 2; grid.position.set(0, 0.05, 0.001); grid.scale.z = 0.9 / 1.6; mol.add(grid);
+    const argon = mat({ roughness: 0.3, metalness: 0.05 }, ['#57a9c2', '#6cc0d8']);
+    const atoms = [0, 1].map(() => { const a = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), argon); a.castShadow = true; mol.add(a); return a; });
+    const bar = K.box(0.1, 0.012, 0.004, inkM, 0, -0.3, 0); mol.add(bar);
+    const rLines = [0, 1, 2, 3].map(() => { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0.6)]), dashM); l.computeLineDistances(); mol.add(l); return l; });
+    const dim = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.5, 0, 0), new THREE.Vector3(0.5, 0, 0)]), new THREE.LineBasicMaterial({ color: '#17202b' })); mol.add(dim);
+    grp.lj = mol;
+
+    /* roller coaster, in meters, shown at 1/60: rails, a spine, ties and white supports over grass, a station and the car */
+    const cst = new THREE.Group(); cst.scale.setScalar(1 / 60); cst.position.x = -66 / 60;
+    cst.add(new THREE.Mesh(new THREE.PlaneGeometry(1400, 900), mat({ roughness: 1 }, ['#a9c79a', '#26331f'])));
+    cst.children[0].receiveShadow = true; cst.children[0].position.set(66, 40, 0);
+    const trees = new THREE.Group(), trunk = mat({ roughness: 0.9 }, ['#7a5a3a', '#4d3a28']), leaf = mat({ roughness: 0.9 }, ['#5f8f4e', '#2f4a28']);
+    [[8, 30, 9], [26, 44, 12], [44, 26, 8], [61, 52, 13], [83, 33, 10], [101, 47, 12], [118, 28, 9], [-14, 46, 11], [138, 40, 10], [72, 70, 14], [20, 70, 12]].forEach(([x, y, h]) => {
+      const t = K.rod([x, y, 0], [x, y, h * 0.4], 0.5, trunk); const c = new THREE.Mesh(new THREE.ConeGeometry(h * 0.28, h * 0.75, 12), leaf); c.rotation.x = Math.PI / 2; c.position.set(x, y, h * 0.4 + h * 0.37); c.castShadow = true; trees.add(t, c);
+    });
+    cst.add(trees);
+    const cTrack = new THREE.Group(); cst.add(cTrack);
+    const car = new THREE.Group(), carM = mat({ roughness: 0.35, metalness: 0.2 }, ['#2b60b5', '#5b8ee0']);
+    car.add(K.box(2.8, 1.5, 0.75, carM, 0, 0, -0.35), K.box(0.25, 1.4, 0.7, dark, -0.5, 0, 0.35), K.box(0.25, 1.4, 0.7, dark, 0.7, 0, 0.35));
+    for (const sx of [-0.9, 0.9]) for (const sy of [-0.62, 0.62]) { const w = K.rod([sx, sy - 0.1, -0.45], [sx, sy + 0.1, -0.45], 0.28, dark); car.add(w); }
+    cst.add(car);
+    const cPins = [pinMesh(inkM, 0.7, 2.2), pinMesh(inkM, 0.7, 2.2)]; cPins.forEach((m) => cst.add(m));
+    const cE = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-4, -1.2, 0), new THREE.Vector3(140, -1.2, 0)]), new THREE.LineDashedMaterial({ color: '#2b60b5', dashSize: 2, gapSize: 1.3 })); cE.computeLineDistances(); cst.add(cE);
+    grp.coaster = cst;
+
+    /* a ball on a track shaped like U(x): a board cut to the curve with two rails on its edge, built when U changes */
+    const trk = new THREE.Group(), tBuilt = new THREE.Group(); trk.add(tBuilt);
+    const tBall = new THREE.Mesh(new THREE.SphereGeometry(0.022, 32, 20), steel); tBall.castShadow = true; trk.add(tBall);
+    const tPins = [pinMesh(inkM, 0.009, 0.03), pinMesh(inkM, 0.009, 0.03)]; tPins.forEach((m) => trk.add(m));
+    const tE = dashLine(TRK.Lw, dashM); tE.position.y = -0.03; trk.add(tE);
+    grp.track = trk;
+
+    for (const k in grp) S3.scene.add(grp[k]);
+    G3 = { S: S3, pBase, armX, elbow, grp, glider, coil, sPins, arF, arV, upr, arm, axle, swing, pRod, bob, path, pPins, atoms, bar, rLines, dim, cTrack, car, cPins, cE, tBuilt, tBall, tPins, tE, dashM,
+      wood: mat({ roughness: 0.75 }, ['#b88a57', '#7a5a3a']), railM: steel, cRail: mat({ roughness: 0.4, metalness: 0.3 }, ['#c23f2c', '#d9553f']), cSup: mat({ roughness: 0.6, metalness: 0.2 }, ['#eceae4', '#9aa1a8']),
+      tKey: '', cKey: '', obj: null, kind: '' };
+    S3.orbit(S3.el, o3, () => drawAll(), { grab: grab3, phMin: 0.35, phMax: 1.48, zMin: 0.5, zMax: 3 });
+    S3.el.addEventListener('pointermove', move3);
+    S3.el.addEventListener('pointerup', up3); S3.el.addEventListener('pointercancel', up3);
+    return true;
+  }
+  const trkX = (x) => { const v = curView(); return (x - v.x0) / (v.x1 - v.x0) * TRK.Lw - TRK.Lw / 2; };
+  const trkx = (X) => { const v = curView(); return v.x0 + (X + TRK.Lw / 2) / TRK.Lw * (v.x1 - v.x0); };
+  const trkZ = (u) => { const v = curView(); return TRK.zb + (Math.max(v.u0, Math.min(v.u1, u)) - v.u0) / (v.u1 - v.u0) * TRK.Hw; };
+  function clearGroup(g) { while (g.children.length) { const c = g.children[0]; G3.S.dispose(c); } }
+  function buildTrack() {
+    const v = curView(), key = S.preset + JSON.stringify(S.params) + JSON.stringify(v);
+    if (key === G3.tKey) return; G3.tKey = key; clearGroup(G3.tBuilt);
+    const N = 320, top = [];
+    for (let i = 0; i <= N; i++) { const x = v.x0 + (v.x1 - v.x0) * i / N; top.push([trkX(x), trkZ(P.U(x))]); }
+    const sh = new THREE.Shape(); sh.moveTo(-TRK.Lw / 2, 0); for (const [X, Z] of top) sh.lineTo(X, Z); sh.lineTo(TRK.Lw / 2, 0); sh.closePath();
+    const bg = new THREE.ExtrudeGeometry(sh, { depth: 0.026, bevelEnabled: false, curveSegments: 1 }); bg.rotateX(Math.PI / 2); bg.translate(0, 0.013, 0);
+    const board = new THREE.Mesh(bg, G3.wood); board.castShadow = true; board.receiveShadow = true; G3.tBuilt.add(board);
+    for (const y of [-0.011, 0.011]) { const r = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(top.map(([X, Z]) => new THREE.Vector3(X, y, Z + 0.003))), 640, 0.0028, 8, false), G3.railM); r.castShadow = true; G3.tBuilt.add(r); }
+    for (const sx of [-1, 1]) G3.tBuilt.add(VD3K.box(0.04, 0.12, 0.012, G3.railM, sx * (TRK.Lw / 2 - 0.03), 0, 0));
+  }
+  function buildCoaster() {
+    const key = JSON.stringify(S.params);
+    if (key === G3.cKey) return; G3.cKey = key; clearGroup(G3.cTrack);
+    const h = coasterH(S.params), pts = (y, dz) => { const a = []; for (let x = -4; x <= 140; x += 0.5) a.push(new THREE.Vector3(x, y, h.h(x) + dz)); return new THREE.CatmullRomCurve3(a); };
+    for (const y of [-0.55, 0.55]) { const r = new THREE.Mesh(new THREE.TubeGeometry(pts(y, 0), 900, 0.09, 8, false), G3.cRail); r.castShadow = true; G3.cTrack.add(r); }
+    const sp = new THREE.Mesh(new THREE.TubeGeometry(pts(0, -0.45), 900, 0.22, 8, false), G3.cSup); sp.castShadow = true; G3.cTrack.add(sp);
+    for (let x = -4; x <= 140; x += 1.5) { const a = Math.atan(h.h1(x)), t = VD3K.box(0.18, 1.2, 0.12, G3.cRail, 0, 0, -0.06); t.rotation.y = -a; t.position.set(x, 0, h.h(x) - 0.06); G3.cTrack.add(t); }
+    for (let x = -4; x <= 140; x += 6) { const z = h.h(x) - 0.6; if (z > 0.4) G3.cTrack.add(VD3K.rod([x, 0, 0], [x, 0, z], 0.22, G3.cSup)); }
+    /* the station on the flat stretch between the first and middle hills */
+    G3.cTrack.add(VD3K.box(9, 3, 4.6, G3.cSup, 27, 3, 0), VD3K.box(10, 5.4, 0.3, G3.cRail, 27, 1.2, 8.2));
+    for (const sx of [22.6, 31.4]) G3.cTrack.add(VD3K.rod([sx, -1.2, 4.6], [sx, -1.2, 8.2], 0.12, G3.cSup));
+  }
+  const pend = () => ({ L: S.params.L, Zp: S.params.L + 0.35 });
+  /* the moving object, in the visible group's own coordinates */
+  function objLocal(kind, x) {
+    if (kind === 'spring') return [x, 0, 0.11];
+    if (kind === 'coaster') return [x, 0, coasterH(S.params).h(x) + 1];
+    if (kind === 'pend') { const q = pend(); return [q.L * Math.sin(x), -0.03, q.Zp - q.L * Math.cos(x)]; }
+    if (kind === 'lj') return [x / 2, 0, 0.3];
+    return [trkX(x), 0, trkZ(P.U(x)) + 0.025];
+  }
+  const tmpV = () => new THREE.Vector3();
+  function pw(g, q) { const w = g.localToWorld(tmpV().set(q[0], q[1], q[2])); return G3.S.project(w); }
+  function render3() {
+    const g = G3, S3 = g.S, W = sPane.clientWidth, H = sPane.clientHeight;
+    if (!W || !H || !P || !st) return;
+    S3.size(W, H);
+    const kind = sysKind(), v = curView(), x = st.x, E = S.E, tp = info.tp, inV = (xx) => isFinite(xx) && xx >= v.x0 && xx <= v.x1;
+    const showTP = layers.turn && info.kind !== 'rest';
+    for (const k in g.grp) g.grp[k].visible = k === kind || (k === 'lab' && (kind === 'spring' || kind === 'pend' || kind === 'track'));
+    g.dashM.color.set(T.accent); g.kind = kind;
+    let tgt, dist, grpObj = g.grp[kind];
+    const labs = [];
+    if (kind === 'spring') {
+      g.glider.position.x = x; g.glider.visible = x > -0.8 && x < 0.8;
+      const left = Math.max(0.01, x - 0.06 + 0.82); g.coil.scale.x = left;
+      [tp.a, tp.b].forEach((xx, i) => { const m = g.sPins[i]; m.visible = showTP && inV(xx); if (m.visible) { m.position.set(xx, -0.11, 0.034); labs.push(['x' + '₁₂'[i], pw(grpObj, [xx, -0.11, 0.05]), T.ink, 'bottom']); } });
+      const ar = layers.arrows && g.glider.visible, F = -P.dU(x), Fl = Math.max(-0.4, Math.min(0.4, F / Math.max(1e-30, fRef()) * 0.12)), Vl = Math.max(-0.4, Math.min(0.4, st.v / vRef() * 0.2));
+      const setA = (a, l, z) => { a.visible = ar && Math.abs(l) > 0.012; if (!a.visible) return; a.position.set(x, 0, z); a.setDirection(tmpV().set(Math.sign(l), 0, 0)); a.setLength(Math.abs(l), Math.min(0.03, Math.abs(l) * 0.5), 0.018); };
+      setA(g.arF, Fl, 0.2); setA(g.arV, Vl, 0.25); g.arF.setColor(T.pos); g.arV.setColor(T.ink);
+      if (g.arF.visible) labs.push([units().Fs, pw(grpObj, [x + Fl + Math.sign(Fl) * 0.02, 0, 0.2]), T.pos, 'mid']);
+      if (g.arV.visible) labs.push([units().vs, pw(grpObj, [x + Vl + Math.sign(Vl) * 0.02, 0, 0.25]), T.ink, 'mid']);
+      labs.push([`glider, m = ${S.params.m.toFixed(2)} kg`, pw(grpObj, [x, 0, 0.29]), T.ink, 'bottom']);
+      labs.push([`spring, k = ${S.params.k} N/m`, pw(grpObj, [-0.84, 0, 0.2]), T.muted, 'bottom']);
+      tgt = [0.06, 0.08, 0.08]; dist = 1.42;
+      labs.push(['air supply', pw(grpObj, [0.62, 0.36, 0.15]), T.muted, 'bottom']);
+    } else if (kind === 'pend') {
+      const q = pend(), px = -(q.L + 0.12); g.upr.scale.y = q.Zp + 0.03; g.upr.position.set(px, 0.2, 0.03 + (q.Zp + 0.03) / 2);
+      g.pBase.position.x = px; g.armX.scale.y = -px; g.armX.position.x = px / 2; g.elbow.position.x = px;
+      g.arm.position.z = q.Zp; g.axle.position.z = q.Zp;
+      g.swing.position.set(0, 0, q.Zp); g.swing.rotation.y = -x; g.pRod.scale.y = q.L; g.pRod.position.z = -q.L / 2; g.bob.position.set(0, -0.03, -q.L);
+      g.path.scale.setScalar(q.L); g.path.position.z = q.Zp;
+      const ang = (t) => [q.L * Math.sin(t), -0.03, q.Zp - q.L * Math.cos(t)];
+      [tp.a, tp.b].forEach((t, i) => { const m = g.pPins[i]; m.visible = showTP && isFinite(t); if (m.visible) { m.position.set(...ang(t)); const o = ang(t), p2 = [o[0] * 1.13, o[1], q.Zp + (o[2] - q.Zp) * 1.13]; labs.push(['θ' + '₁₂'[i], pw(grpObj, p2), T.ink, 'mid']); } });
+      labs.push([`θ = ${(x * 180 / Math.PI).toFixed(1).replace('-', '−')}°`, pw(grpObj, ang(x).map((c, i) => (i === 2 ? c - 0.11 : c))), T.ink, 'mid']);
+      labs.push([`pivot, L = ${q.L.toFixed(2)} m`, pw(grpObj, [0, -0.03, q.Zp + 0.06]), T.muted, 'bottom']);
+      tgt = [-0.1 * q.L, 0, 0.5 * (q.Zp + q.L) - 0.05]; dist = 3.3 * q.L + 1.3;
+    } else if (kind === 'lj') {
+      const r = x, s2 = S.params.sig / 2;
+      g.atoms.forEach((a, i) => { a.scale.setScalar(s2); a.position.set((i ? 1 : -1) * r / 2, 0, 0.3); a.visible = r / 2 < 0.9; });
+      [-tp.a, -tp.b, tp.a, tp.b].forEach((xx, i) => { const l = g.rLines[i], ok = showTP && isFinite(xx) && Math.abs(xx) / 2 < 0.8; l.visible = ok; if (ok) l.position.set(xx / 2, 0, 0); });
+      if (showTP) [tp.a, tp.b].forEach((xx, i) => { if (isFinite(xx) && xx / 2 < 0.8) labs.push(['r' + '₁₂'[i], pw(grpObj, [(i ? 1 : -1) * xx / 2, -0.04, 0.02]), T.accent, 'mid']); });
+      g.dim.scale.x = Math.min(1.6, r); g.dim.position.set(0, -0.26, 0.3); g.dim.visible = r < 1.6; g.dim.material.color.set(T.ink);
+      if (r < 1.6) labs.push([`r = ${minus(fX(r))}`, pw(grpObj, [0, -0.26, 0.3]), T.ink, 'mid']);
+      g.bar.position.set(0.55, -0.32, 0); labs.push(['0.1 nm', pw(grpObj, [0.55, -0.32, 0.02]), T.muted, 'bottom']);
+      for (const i of [0, 1]) if (g.atoms[i].visible) labs.push(['Ar', pw(grpObj, [(i ? 1 : -1) * r / 2, 0, 0.3 + s2 + 0.03]), T.ink, 'bottom']);
+      tgt = [0, 0, 0.25]; dist = 2.0;
+    } else if (kind === 'coaster') {
+      buildCoaster();
+      const h = coasterH(S.params), a = Math.atan(h.h1(x)), z = h.h(x);
+      g.car.position.set(x - 0.9 * Math.sin(a), 0, z + 0.9 * Math.cos(a)); g.car.rotation.y = -a; g.car.visible = x > -4 && x < 140;
+      const hE = E / (0.5 * G); g.cE.position.z = hE; g.cE.visible = hE < 60;
+      [tp.a, tp.b].forEach((xx, i) => { const m = g.cPins[i]; m.visible = showTP && inV(xx); if (m.visible) { m.position.set(xx, -1.2, h.h(xx) + 0.3); labs.push(['x' + '₁₂'[i], pw(grpObj, [xx, -1.2, h.h(xx) + 3]), T.ink, 'bottom']); } });
+      if (g.cE.visible) labs.push([`E/mg = ${hE.toFixed(1)} m`, pw(grpObj, [134, -1.2, hE]), T.accent, 'bottom']);
+      if (g.car.visible) labs.push(['car, 500 kg', pw(grpObj, [x, 0, z + 2.6]), T.ink, 'bottom']);
+      if (Math.abs(x - 27) > 16) labs.push(['station', pw(grpObj, [27, 1.2, 8.6]), T.muted, 'bottom']);
+      tgt = [0.05, 0.2, 0.3]; dist = 3.1;
+    } else {
+      buildTrack();
+      const d = (v.x1 - v.x0) / 4000, sl = (trkZ(P.U(x + d)) - trkZ(P.U(x - d))) / (trkX(x + d) - trkX(x - d)), n = Math.hypot(sl, 1), rb = 0.022 + 0.004;
+      g.tBall.position.set(trkX(x) - rb * sl / n, 0, trkZ(P.U(x)) + rb / n); g.tBall.visible = x >= v.x0 && x <= v.x1;
+      g.tE.position.z = trkZ(E);
+      [tp.a, tp.b].forEach((xx, i) => { const m = g.tPins[i]; m.visible = showTP && inV(xx); if (m.visible) { m.position.set(trkX(xx), -0.03, trkZ(E) + 0.006); labs.push([units().xs + '₁₂'[i], pw(grpObj, [trkX(xx), -0.03, trkZ(E) + 0.045]), T.ink, 'bottom']); } });
+      labs.push(['E', pw(grpObj, [-TRK.Lw / 2 - 0.03, -0.03, trkZ(E)]), T.accent, 'mid']);
+      tgt = [0, 0, 0.2]; dist = 3.0;
+    }
+    S3.place(o3, tgt, S3.fit(dist, kind === 'pend' ? 1.1 : 2.2));   /* the pendulum is about as tall as it is wide */
+    S3.render();
+    g.obj = objLocal(kind, x); g.objPx = (kind !== 'lj' ? [pw(grpObj, g.obj)] : [pw(grpObj, [x / 2, 0, 0.3]), pw(grpObj, [-x / 2, 0, 0.3])]);
+    overlay3(kind, labs);
+  }
+  const CAPS = {
+    spring: 'A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm. Drag the glider to set x; drag elsewhere to turn.',
+    coaster: 'The 500 kg car on the track, to scale (track height h = U/mg). Drag the car to set x; drag elsewhere to turn.',
+    pend: 'A 1 kg bob on a light rigid rod, to scale; the dashed circle is its path. Drag the bob to set θ; drag elsewhere to turn.',
+    lj: 'Two argon atoms about their center of mass, each drawn σ across (1 unit = 1 nm). Classical picture. Drag an atom to set r; drag elsewhere to turn.',
+    track: 'Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram. Drag the ball; drag elsewhere to turn.'
+  };
+  function overlay3(kind, labs) {
+    const W = sPane.clientWidth, H = sPane.clientHeight, ps = projScale();
+    if (sCan.width !== Math.round(W * dpr) || sCan.height !== Math.round(H * dpr)) { sCan.width = Math.round(W * dpr); sCan.height = Math.round(H * dpr); sCan.style.width = W + 'px'; sCan.style.height = H + 'px'; }
+    const c = sCtx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    const ctl = $('stage').querySelector('.stage-ctl'), ctlB = ctl.offsetTop + ctl.offsetHeight;
+    const box = (txt, px, py, col, base, f) => {
+      c.font = f || `600 ${11 * ps}px ${T.mono}`; const tw = c.measureText(txt).width, h = 14 * ps;
+      let x0 = px - tw / 2, y0 = base === 'bottom' ? py - h - 2 : py - h / 2;
+      x0 = Math.max(4, Math.min(W - tw - 8, x0)); if (y0 < ctlB + 2 || y0 > H) return;
+      c.fillStyle = T.canvas; c.globalAlpha = 0.78; c.fillRect(x0 - 3, y0, tw + 6, h); c.globalAlpha = 1;
+      c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, x0, y0 + h / 2 + 0.5);
+    };
+    for (const [t, p, col, base] of labs) if (p[2] < 1) box(t, p[0], p[1], col, base);
+    /* the energy bar: U from the lowest U in view, K = E − U on top of it, up to E */
+    const v = curView(), umin = viewMinU().U, U = Math.max(umin, Math.min(v.u1, P.U(st.x))), E = S.E;
+    const bw = 16 * ps, bx = W - bw - 22 * ps, yT = Math.max(ctlB + 30 * ps, H * 0.2), yB = H - 18 * ps;
+    if (yB - yT > 50) {
+      const Yb = (u) => yB - (u - umin) / Math.max(1e-30, v.u1 - umin) * (yB - yT);
+      c.fillStyle = T.canvas; c.globalAlpha = 0.55; c.beginPath(); c.roundRect(bx - 26 * ps, yT - 22 * ps, bw + 34 * ps, yB - yT + 30 * ps, 6); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(bx + 0.5, yT + 0.5, bw, yB - yT);
+      c.fillStyle = T.potEdge; c.globalAlpha = 0.45; c.fillRect(bx, Yb(U), bw, yB - Yb(U)); c.globalAlpha = 1;
+      if (Yb(U) - Yb(E) > 0.5) { c.fillStyle = T.kin; c.globalAlpha = 0.55; c.fillRect(bx, Yb(E), bw, Yb(U) - Yb(E)); c.globalAlpha = 1; c.strokeStyle = T.kin; c.lineWidth = 1.4; c.strokeRect(bx, Yb(E), bw, Yb(U) - Yb(E)); }
+      c.strokeStyle = T.accent; c.lineWidth = 2; c.setLineDash([4, 3]); c.beginPath(); c.moveTo(bx - 6 * ps, Yb(E)); c.lineTo(bx + bw + 3, Yb(E)); c.stroke(); c.setLineDash([]);
+      c.font = `600 ${11 * ps}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillStyle = T.accent; c.fillText('E', bx - 8 * ps, Yb(E));
+      if (Yb(U) - Yb(E) > 14 * ps) { c.fillStyle = T.kin; c.fillText('K', bx - 8 * ps, 0.5 * (Yb(E) + Yb(U))); }
+      if (yB - Yb(U) > 14 * ps) { c.fillStyle = T.muted; c.fillText('U', bx - 8 * ps, 0.5 * (yB + Yb(U))); }
+      c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('energy', bx + bw / 2 - 6 * ps, yT - 5 * ps);
+    }
+    /* caption: what the picture is and what is to scale */
+    let cap = coarse ? VD3.turnText(CAPS[kind]) : CAPS[kind];   /* phones turn with two fingers */
+    if (W < 520) cap = cap.replace(/ Drag .*$/, '');   /* narrow: the Motion section says how to drag and turn */
+    c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    const maxW = W - 110 * ps, words = cap.split(' '), lines = [];
+    let ln = ''; for (const w of words) { const t = ln ? ln + ' ' + w : w; if (c.measureText(t).width > maxW && ln) { lines.push(ln); ln = w; } else ln = t; } if (ln) lines.push(ln);
+    const lh = 13.5 * ps, y0 = H - 6 - (lines.length - 1) * lh;
+    const cw = Math.max(...lines.map((l) => c.measureText(l).width));
+    c.fillStyle = T.canvas; c.globalAlpha = 0.72; c.fillRect(6, y0 - lh - 1, cw + 10, lines.length * lh + 4); c.globalAlpha = 1;
+    c.fillStyle = T.muted; lines.forEach((l, i) => c.fillText(l, 11, y0 + i * lh));
+    const al = CAPS[kind].replace(/ Drag.*$/, ''); if (sPane.getAttribute('aria-label') !== al) sPane.setAttribute('aria-label', al);
+  }
+  /* drag the object in the scene to set the release point; anywhere else turns the view */
+  function near3(e) {
+    if (!G3 || !G3.objPx || !on3d) return false;
+    const r = G3.S.el.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, tol = e.pointerType === 'touch' ? 34 : 24;
+    return G3.objPx.some((q) => q[2] < 1 && Math.hypot(px - q[0], py - q[1]) < tol);
+  }
+  function grab3(e) {
+    if (!near3(e)) return false;
+    drag = { id: 'P', kind: 'P', wasRunning: running, d3: e.pointerId }; setRunning(false);
+    try { G3.S.el.setPointerCapture(e.pointerId); } catch (_) {}
+    G3.S.el.style.cursor = 'grabbing'; e.preventDefault(); return true;
+  }
+  const ray = () => ({ rc: new THREE.Raycaster(), pl: new THREE.Plane() });
+  let R3 = null;
+  function move3(e) {
+    if (!G3) return;
+    if (!drag || drag.d3 !== e.pointerId) { if (!drag && e.pointerType !== 'touch') G3.S.el.style.cursor = near3(e) ? 'ew-resize' : 'grab'; return; }
+    R3 = R3 || ray();
+    const r = G3.S.el.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width * 2 - 1, ny = -((e.clientY - r.top) / r.height * 2 - 1);
+    R3.rc.setFromCamera({ x: nx, y: ny }, G3.S.cam);
+    const kind = G3.kind, grp = G3.grp[kind];
+    const n = tmpV().set(0, 1, 0), o = grp.localToWorld(tmpV().set(0, kind === 'pend' ? -0.03 : 0, 0));
+    R3.pl.setFromNormalAndCoplanarPoint(n, o);
+    const hit = tmpV(); if (!R3.rc.ray.intersectPlane(R3.pl, hit)) return;
+    const q = grp.worldToLocal(hit);
+    let x;
+    if (kind === 'spring' || kind === 'coaster') x = q.x;
+    else if (kind === 'pend') { const z = pend().Zp; x = Math.atan2(q.x, z - q.z); }
+    else if (kind === 'lj') x = Math.max(P.xmin || 0, 2 * Math.abs(q.x));
+    else x = trkx(q.x);
+    setStartUI(x);
+  }
+  function up3(e) { if (drag && drag.d3 === e.pointerId) { try { G3.S.el.releasePointerCapture(e.pointerId); } catch (_) {} G3.S.el.style.cursor = 'grab'; endDrag(); } }
+  const view3 = VD3K.view({ seg: '#dimSeg', init: init3, start: '3d',
+    status: (m) => { $('dimNote').textContent = m; },
+    change: (on) => {
+      on3d = on; sPane.hidden = !on; $('stage').classList.toggle('d3', on);
+      $('dimNote').textContent = on ? (coarse ? VD3.turnText : String)('3D: the real system above the energy diagram, moving with the simulation. Drag to turn, scroll to zoom, double click to reset the view.') : $('dimNote').textContent;
+      requestAnimationFrame(resize);
+    } });
+
   // ---------- loop ----------
   let last = performance.now(), lastRead = 0, frameMs = 0, lastTrail = 0;
   function advance(simTime) {
@@ -1589,13 +1932,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   window.__pc = { get frameMs() { return frameMs; }, get st() { return st; }, get info() { return info; }, get S() { return S; }, get eqs() { return eqs; },
-    get P() { return P; }, get dt() { return dt; }, get escaped() { return escaped; }, get handles() { return dragHandles(); }, get tCurve() { return tCurve; },
+    get P() { return P; }, get dt() { return dt; }, get escaped() { return escaped; }, get handles() { return dragHandles(); }, get tCurve() { return tCurve; }, get on3d() { return on3d; }, view3: () => view3, get objPx() { return G3 && G3.objPx; },
     pix: (x) => [X(x, G2.W), G2.Y(P.U(x))], advance, setRunning, applyPreset, place: (x, E, d) => { place(x, E, d); updateReadouts(true); } };
 
   tokens();
   applyPreset('spring');
   const ro = new ResizeObserver(resize);
   for (const k of ['m', 'p', 't']) ro.observe(boxes[k]);
+  ro.observe(sPane);
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
