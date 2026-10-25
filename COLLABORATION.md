@@ -2806,3 +2806,20 @@ Not fixed (older than today, noted only): on a 360 px phone a comma after inline
 Checks: test_main_lab_controls and test_browser (Chromium) pass; `vdcheck --only after` on pendulum, projectile-drag, doppler, faraday, ising, hr-diagram and collisions: 0 problems.
 
 **For GPT to verify:** nothing numeric changed.
+
+## Claude, 2026-10-25: visual standard sweep, round 3 (the last seven on the list)
+
+Steve said keep going. Same rules as rounds 1 and 2: pictures only, CORE blocks byte identical, no ids, readouts or exports renamed; 3D views on `demos/lib/vd3kit.js` with a 3D | Flat switch and `?view=flat` / `?view=3d`, Flat on low power devices.
+
+- **Sound Waves (opens 3D):** a 2 m glass tube on a bench in front of acoustic foam, loudspeaker at one end and an absorber at the other, 1500 air parcels moved by `displacement()`, a pressure band (red compression, blue rarefaction), signal generator and probe microphone LCDs. The picture says the dots are parcels, not molecules (real spacing 3.4 nm, computed as (kT/P)^1/3), and gives the displacement scale. Time of flight in 3D with clapper, microphones (drag in 3D), a 4 m rule and recorder. Race unchanged.
+- **Thin Films:** Soap film (wire frame on a stand before a black card), Wedge (two slides with a spacer, lamp and 45° plate; "gap drawn 100 times thicker") and Newton's rings (lens on a flat under a microscope; "lens curvature drawn 10 times deeper") open in 3D; every film color is `filmRGB(t)` from the model. Rays stays flat, with a "film drawn far thicker than scale" note.
+- **Entropy (opens 3D):** insulated box with a partition that lifts through the lid, molecules from the simulation's own positions, LCD meters; Einstein solids as oscillator squares with quanta cubes on a copper contact sheet (solid B really twice A's size); second law with glowing hot and frosted cold reservoirs, engine or refrigerator, arrow widths in proportion to energy.
+- **Magnetism from Relativity (opens 3D):** rebuilt on VD3K: cutaway copper wire with ions and drifting electrons on a bench, supports 20 cm apart in the lab that slide past contracted in the charge's frame. The tag says the wire is drawn 8 mm thick (a thin line in the model). three.js now loads lazily through VD3.load.
+- **Induction at Work (opens 3D):** one desk scene for all three setups: flashlight in saddles; graphics tablet with grid wires glowing by the sign and size of their EMF and a draggable pen; card reader with track 2 shown 25× along the stripe as N/S bar magnets under the head coil and a scope. Track 2's distance from the card edge (10.4 mm) is a drawing approximation noted in the code.
+- **Timbre (opens 3D):** monochord or glass pipe on a bench moving as the sum of the harmonics, microphone to an oscilloscope and spectrum analyzer whose screens are drawn by the existing plot code; the handout's drags (spectrum dots, period bracket) work on the 3D screens through the same hit tests. Displacement magnified and slowed so f₁ is drawn at 0.5 Hz, stated.
+- **Ultrasound (opens 3D):** tissue block cut open along the beam (painted by the flat view's `tissue()`), transducer in gel, a portable scanner whose screen is the existing `drawScreen()` and takes the cursor drag; Doppler artery with moving cells at the probe angle. Block, probe and scanner to scale; pulse timing and crest spacing magnified, stated.
+- Thumbnails refreshed for the seven; thin films thumbnail now shows the soap film.
+
+Keys: each TeacherKeys capture script was run against the old and new pages with a shim that records the worksheet handoff; outputs identical (Induction at Work: full run in Flat and a short run in 3D, since the full 3D run under software rendering takes over 40 minutes). Every node suite passes.
+
+**For GPT to verify:** the scale statements on each picture (3.4 nm air spacing, 100× wedge gap, 10× lens depth, 25× stripe, 8 mm wire); nothing numeric changed.

@@ -69,6 +69,7 @@ OVERRIDES = {
     "kundts-tube": {"wait": 5000, "hide": "#card, #tubeCard", "js": "const s = document.getElementById('sl'); s.value = 1.02; s.dispatchEvent(new Event('input')); document.getElementById('keep').click();"},
     "wave-power": {"wait": 1500, "js": "const a = document.getElementById('sA'); a.value = 3; a.dispatchEvent(new Event('input')); const f = document.getElementById('sF'); f.value = 50; f.dispatchEvent(new Event('input')); document.getElementById('play').click();"},
     "two-speaker": {"wait": 1200, "hide": "#card", "js": "document.querySelector('#viewSeg [data-v=waves]').click();"},
+    "thin-films": {"click": ['button[data-v="soap"]'], "wait": 4000},
     "ultrasound": {"wait": 1200, "js": "document.getElementById('run').click();"},
     "string-density": {"wait": 1200, "js": "document.querySelector('#presets [data-p=third]').click();"},
     "states-of-matter": {"wait": 2500, "crop": ".pane", "js": "window.__sm.fast(16000); window.__sm.setRun(false); const pn = document.querySelector('.pane'); pn.style.width = Math.round(pn.clientHeight * 1.6) + 'px'; pn.style.margin = '0 auto'; window.dispatchEvent(new Event('resize'));"},
