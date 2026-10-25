@@ -377,7 +377,7 @@ table.rows input:focus { border-color: var(--accent); }
   const setF = (v) => { const f = Math.min(200, Math.max(5, Math.round(v * 10) / 10)); if (f !== S.f) { S.f = f; changed(); } };
   /* the function generator's knobs: one click every KNOB_DEG of turn, 1 Hz (coarse) or 0.1 Hz (fine); the mark shows f */
   const KNOB_DEG = 12;
-  for (const [id, per] of [['knobC', 1], ['knobF', 0.1]]) VD.knob($(id), { deg: KNOB_DEG, turn: (n) => setF(S.f + n * per), home: () => setF(5), end: () => setF(200) });
+  for (const [id, per] of [['knobC', 1], ['knobF', 0.1]]) VD.knob($(id), { deg: KNOB_DEG, turn: (n) => setF(S.f + n * per), home: () => setF(5), end: () => setF(200), get: () => S.f, set: setF });
   VD.typeIn($('oF'), { get: () => S.f, set: setF, min: 5, max: 200, step: 0.1, unit: 'Hz', label: 'Driver frequency f', knobs: [$('knobC'), $('knobF')] });
   $('fineF').addEventListener('click', (e) => { const b = e.target.closest('[data-df]'); if (b) setF(S.f + +b.dataset.df); });
   function addMass(g) { if (massG() + g > MAX_G) { capStatus(`The hanger holds at most ${MAX_G} g.`); return; } S.masses.push(g); changed(); }

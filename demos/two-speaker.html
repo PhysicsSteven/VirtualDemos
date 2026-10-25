@@ -323,7 +323,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
   const setF = (v) => { if (S.mystery) return; const f = Math.min(2000, Math.max(100, Math.round(v))); if (f !== S.f) { S.f = f; changed(); } };
   $('sF').addEventListener('input', (e) => setF(+e.target.value));
-  for (const kd of KNOBS) VD.knob($(kd.id), { deg: KNOB_DEG, turn: (n) => setF(S.f + n * kd.per), home: () => setF(100), end: () => setF(2000) });
+  for (const kd of KNOBS) VD.knob($(kd.id), { deg: KNOB_DEG, turn: (n) => setF(S.f + n * kd.per), home: () => setF(100), end: () => setF(2000), get: () => (S.mystery ? '' : S.f), set: setF });
   VD.typeIn($('oF'), { get: () => S.f, set: setF, min: 100, max: 2000, step: 1, unit: 'Hz', label: 'Frequency f', can: () => !S.mystery, knobs: [$('knobC'), $('knobF')] });
   /* the microphone: drag it on the floor, or arrow keys */
   const clampMic = () => { S.mx = Math.min(ROOM_X - 0.05, Math.max(0.3, Math.round(S.mx * 1000) / 1000)); S.my = Math.min(ROOM_Y / 2 - 0.05, Math.max(-ROOM_Y / 2 + 0.05, Math.round(S.my * 1000) / 1000)); };

@@ -183,3 +183,6 @@
 @media (max-width: 420px) { .vd-crumbs .vd-step .vd-t { display: none; } .vd-crumbs .vd-prev::after { content: "Previous"; } .vd-crumbs .vd-next::before { content: "Next"; } }
 [data-projector="on"] .vd-crumbs { display: none; }
 @media print { .vd-crumbs { display: none; } }
+/* Copy link and Fullscreen beside Projector (vd.js headButtons): they take the Projector button's look from .proj */
+.vd-share-note { pointer-events: auto; z-index: 70; display: flex; flex-direction: column; gap: 4px; white-space: normal; max-width: min(92vw, 520px); }
+.vd-share-note input { font: 0.8rem/1.3 var(--font-mono, ui-monospace, monospace); width: min(86vw, 500px); padding: 3px 6px; border: 0; border-radius: 4px; }
