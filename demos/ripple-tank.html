@@ -811,8 +811,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.mid = clampT({ x: o.m[0], y: o.m[1] }); S.A = clampT({ x: o.a[0], y: o.a[1] }); S.B = clampT({ x: o.a[2], y: o.a[3] });
       rebuild(true); sync(); redraw();
     } });
+  VD.howTo({ src: 'media/how-this-works/ripple-tank.mp4', poster: 'media/how-this-works/ripple-tank.jpg' });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => T.t, scale: () => (use3() ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
-  window.__rt = { S, T, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
+  window.__rt = { S, T, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); },
+    px: (x, y) => { const b = can.getBoundingClientRect(); return [b.left + X(x), b.top + Y(y)]; } };
   requestAnimationFrame(frame);
 })();
 </script>

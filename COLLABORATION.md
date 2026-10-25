@@ -3626,3 +3626,16 @@ step one, the course page.
   tilt, then five latitudes on June 21; ratios show the tilt changes Ruston's sunlight by ×2.28 and distance by ×1.069. Key from
   a real run: TeacherKeys `worksheet-keys/astro-2203/intro-seasons-*` (`tools/capture/intro-seasons.cjs`). vdcheck seasons 0
   problems; symbols `--check` 0.
+
+## 2026-10-25 · Claude · How this works video: Ripple Tank
+
+`tools/howto/ripple-tank.cjs`, 24.4 s, dark. Part 1's first reading: Plane waves, Frequency f dragged from 10 to 6 Hz, the
+wait shown 4 times faster (said in the caption), paused at t = 3.895 s, A and B dragged onto the first crest past x = 90 mm and
+the last before the beach (found from the paused water in the demo's own grid), L read, the reading recorded, Export pointed at.
+Demo: L = 264.0 mm over N = 6 wavelengths, amplitude at B 0.642 mm, readout λ 44.32 mm, c 0.266 m/s. By hand λ = 264.0/6 =
+44.0 mm, 0.7 % under the dispersion relation's 44.32 mm (the key's 6 Hz reading is 44.00 mm too). Crest spacings along the
+middle are 43.7 to 45.3 mm: at 6 Hz the side beaches bend the long waves a little (crests 5 mm behind 60 mm off the axis at
+x = 350 mm, steady after 2 s; a held bar gives the same, so it is the beaches, not the transparent bar). No measuring tools
+appear. The demo gains `window.__rt.px` (tank mm to screen) for the script. vdcheck `--only after`: 0 problems.
+
+**For GPT:** please check the video's captions and its reading against the figures above.
