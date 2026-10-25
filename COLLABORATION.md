@@ -4005,3 +4005,38 @@ scrolled inside itself in Projector and in Flat at 1024×768 and 1280×720. Now 
 and the stage grows (inline `min-height`) by however far the card would reach past the bottom of the system view, so the card
 never covers the chart below. A ResizeObserver on the card reruns this when fonts load or the card changes. vdcheck
 `--only clip planet-temperatures`: 0 controls cut off; `--only after`: 0 problems; tests pass.
+
+## 2026-10-25 · Claude · New demo: Building a Solar System (Astro 2203 Topic 5, plan gap 3)
+
+`demos/solar-system-formation.html`: four stages chosen along the top of the picture, each with a 3D and a Flat view, 13
+presets, Copy link, readings panel, handout button, How this works video (21.1 s, Our solar nebula: 39.1 AU, 244 yr).
+
+- **1 Collapse**: Ulrich (1976) infall, 1400 parcels falling freely in the young Sun's pull from a cloud turning as one body.
+  A parcel crosses the midplane at the semi latus rectum (Ω₀ s r₀)²/GM, loses its up and down motion there, keeps j_z, and
+  settles at j_z²/GM; disk radius R_d = Ω₀² r₀⁴/GM, spin up (r₀/R_d)². Our solar nebula (5000 AU, 4 Myr): 39.06 AU, 244 yr,
+  16 383 times. No spin: all onto the Sun.
+- **2 Frost line**: Hayashi (1981) T = 280 K r^(−1/2) L^(1/4); Lodders (2003) 50% condensation temperatures at 1e-4 bar
+  (1653, 1336, 1334, 664, 182, 123, 40 K). Frost line 2.37 AU today, 4.73 AU for 4 L☉. Approximations stated on the page.
+- **3 Planets grow**: 900 planetesimals in the minimum mass nebula (solids 7.1 and 30 g/cm² at 1 AU, gas 1700); neighbors closer
+  than 10 mutual Hill radii join once the Kokubo and Ida (2002) growth time to their joint mass has passed, in time order
+  (the result is the same however the run is stepped: tested). Cores of 10 Earth masses (Mizuno 1980; Pollack 1996) that form
+  while the gas lasts become giants. Minimum mass: largest rocky 0.287 M⊕, no giant; three times heavier: one giant at 3.01 AU
+  (10 M⊕ at 1.30 Myr); gas gone at 1 Myr: none. Labelled a model; whole bodies joining end at 1 to 2 M_iso (stated).
+- **4 Iron cores**: ²⁶Al heating and conduction on 40 shells, implicit enthalpy steps, Johansen et al. (2023) values (H₀ 3e-7
+  W/kg, τ 1.05 Myr, c 1200, k 4, solidus 1661, liquidus 1982, L 4e5; density 3300 assumed); the iron sinks at half molten
+  (1822 K). 50 km: core if formed by 1.5 Myr, not at 2.0; 3 km at 0.5 Myr peaks at 387 K. Latest core for a big body 1.60 Myr.
+  Core drawn in Vesta's proportion (0.42 of the radius, Russell 2012).
+- Tests: `curriculum/validation/test_solar-system-formation.cjs`, 9 groups. vdcheck `--only after` 60 screenshots, 0 problems; `--only clip` 0 controls cut off;
+  symbols --check, --missing, --meanings clean; symcheck clean (no equations in the handout). Node suite passes (112 files; test_browser with BROWSER=chromium, Firefox not installed here).
+- **Worksheet** `intro-solar-system-formation` (Astro 2203, non majors): four tables (collapse, frost line, planets, iron
+  cores), routed by stage. Key from a real run: TeacherKeys `worksheet-keys/astro-2203/intro-solar-system-formation-*`
+  (`tools/capture/intro-solar-system-formation.cjs`). Notes `notes/src/solar-system-formation.md` (answers in TeacherKeys).
+- Two fixes found while capturing the key: the collapse could end while the tracked parcel was still swinging on its
+  epicycle (now it counts as settled only once on its circular orbit), and the growth result depended on frame size.
+- Mapped: astro-2203 unit formation (first) and the Astro module's gravitation unit; catalog (astronomy); thumbnails (heavy
+  disk at the end); What's new entry; Canvas cartridges rebuilt.
+
+**For GPT:** please check (1) the worksheet key numbers against the demo (spin up 16 400; frost line 2.37 and 4.73 AU; the
+three growth runs; the iron core table, 1.48 MJ/kg at 2.0 Myr); (2) the Lab text's formulas and citations (Ulrich 1976,
+Hayashi 1981, Lodders 2003, Kokubo and Ida 2002, Johansen et al. 2023); (3) wording for hyphens and American spelling in the
+worksheet, notes and the Lab text of the page.

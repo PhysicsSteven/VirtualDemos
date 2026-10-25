@@ -97,6 +97,17 @@
      ]
     },
     {
+     "demo": "solar-system-formation",
+     "title": "Building a Solar System",
+     "desc": "Watch a spinning cloud collapse into a disk, find the frost line where ice can form, grow planetesimals into rocky planets and giant cores, and see which early planetesimals melt and grow iron cores.",
+     "tags": [
+      "solar nebula",
+      "frost line",
+      "planetesimals",
+      "aluminum 26"
+     ]
+    },
+    {
      "demo": "exoplanets",
      "title": "Finding Exoplanets",
      "desc": "Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.",

@@ -137,6 +137,7 @@ OVERRIDES = {
     "chladni": {"click": ['[data-p="star"]'], "js": "__ch.tick(240)", "wait": 800},
     "capacitors": {"click": ['[data-p="energy"]'], "wait": 1500, "crop": "#dPane",
                    "js": "__cap.setRunning(false); __cap.setGeom({ A: 0.0225 }); __cap.setClean(true)"},
+    "solar-system-formation": {"wait": 2500, "js": "window.__ss.applyPreset('heavy'); window.__ss.toEnd(); window.__ss.setRun(false); window.__ss.redraw();"},
 }
 
 DEFAULT_CROP = """() => {

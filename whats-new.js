@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-solar-system-formation', date: '2026-10-25', title: 'Building a Solar System',
+    text: 'A new Astro 2203 demo and worksheet for Topic 5: watch a spinning cloud collapse into a disk, find the frost line where water ice can form, grow planets from 900 planetesimals and see which become giants, and melt an early planetesimal so its iron sinks to a core. Each stage has a 3D and a flat view, and a How this works video.', link: { href: 'demos/solar-system-formation.html', text: 'Open Building a Solar System' } },
   { id: '2026-10-25-laptop-controls', date: '2026-10-25', title: 'Every control on a laptop screen',
     text: 'On laptop sized windows (and in Projector on a short screen) some demos cut off the controls at the bottom of the picture, such as the particle filters, the Michelson fine moves and the Pendulum mass rack. The picture now grows to show them all, and the page scrolls to reach them.' },
   { id: '2026-10-25-resonances', date: '2026-10-25', title: 'Orbital Resonances',

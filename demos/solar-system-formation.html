@@ -1,0 +1,902 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Building a Solar System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the strip, the picture and the Set up card */
+:root { --gasc: #b9772f; --diskc: #c46a1a; --rock: #8a5a34; --ice: #2f7fc0; --giant: #c2862f; --probe: #c2410c; --cold: #2b4fa8; --pred: #7c3aed; --sun: #e0a020; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gasc: #e8b070; --diskc: #ffb86b; --rock: #d39a6a; --ice: #8cc8ff; --giant: #f0c27a; --probe: #fb923c; --cold: #8fb0ff; --pred: #c4a5ff; --sun: #ffd27a; } }
+:root[data-theme="dark"] { --gasc: #e8b070; --diskc: #ffb86b; --rock: #d39a6a; --ice: #8cc8ff; --giant: #f0c27a; --probe: #fb923c; --cold: #8fb0ff; --pred: #c4a5ff; --sun: #ffd27a; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 560px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; touch-action: pan-y; }
+#can.drag { cursor: ew-resize; }
+.scene canvas.ss3 { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .stage { min-height: 700px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 380px; } .stage-ctl .clock { margin-left: 0; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Building a Solar System</h1>
+      <p>A spinning cloud of gas and dust falls in on itself and flattens into a disk around the young Sun. Near the Sun the disk is hot and only metal and rock can be solid; far out it is cold enough for ice. Watch the solids clump into planetesimals, the biggest beyond the frost line grab gas, and early ones melt so their iron sinks to a core.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">AU · years · Earth masses</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/solar-system-formation.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/solar-system-formation.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h5v1h-5zM18 2h6v1h-6zM25 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h2v1h-2zM18 4h1v1h-1zM22 4h2v1h-2zM25 4h2v1h-2zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h1v1h-1zM15 5h2v1h-2zM19 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM19 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM17 7h2v1h-2zM23 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h3v1h-3zM21 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM18 10h2v1h-2zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM3 11h5v1h-5zM9 11h1v1h-1zM12 11h2v1h-2zM16 11h2v1h-2zM20 11h3v1h-3zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM7 12h2v1h-2zM11 12h2v1h-2zM16 12h5v1h-5zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h2v1h-2zM9 13h2v1h-2zM14 13h2v1h-2zM17 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM8 14h3v1h-3zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h5v1h-5zM30 14h9v1h-9zM4 15h4v1h-4zM12 15h1v1h-1zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h5v1h-5zM14 16h1v1h-1zM17 16h2v1h-2zM22 16h2v1h-2zM27 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM7 17h1v1h-1zM10 17h2v1h-2zM14 17h1v1h-1zM17 17h2v1h-2zM20 17h6v1h-6zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM3 18h2v1h-2zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM17 18h1v1h-1zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h2v1h-2zM12 19h1v1h-1zM14 19h1v1h-1zM16 19h3v1h-3zM20 19h6v1h-6zM28 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h2v1h-2zM15 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h4v1h-4zM9 21h1v1h-1zM11 21h1v1h-1zM18 21h1v1h-1zM20 21h6v1h-6zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM4 22h1v1h-1zM6 22h4v1h-4zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM13 23h1v1h-1zM15 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h3v1h-3zM8 24h3v1h-3zM12 24h1v1h-1zM16 24h2v1h-2zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h1v1h-1zM11 25h1v1h-1zM13 25h2v1h-2zM16 25h8v1h-8zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h1v1h-1zM8 26h1v1h-1zM10 26h4v1h-4zM15 26h4v1h-4zM21 26h1v1h-1zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h2v1h-2zM6 27h2v1h-2zM11 27h1v1h-1zM14 27h4v1h-4zM20 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h4v1h-4zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h2v1h-2zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h1v1h-1zM31 29h4v1h-4zM2 30h1v1h-1zM8 30h2v1h-2zM13 30h5v1h-5zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h13v1h-13zM10 31h1v1h-1zM12 31h7v1h-7zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h4v1h-4zM15 33h1v1h-1zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h1v1h-1zM20 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM16 35h3v1h-3zM21 35h2v1h-2zM25 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM15 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM15 37h2v1h-2zM18 37h1v1h-1zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h7v1h-7zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="Stage of the story" id="stageSeg">
+          <button type="button" data-st="collapse" aria-pressed="true">1 Collapse</button>
+          <button type="button" data-st="disk" aria-pressed="false">2 Frost line</button>
+          <button type="button" data-st="planets" aria-pressed="false">3 Planets grow</button>
+          <button type="button" data-st="melt" aria-pressed="false">4 Iron cores</button>
+        </div>
+        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="btn" id="restart" title="Put this stage back to its beginning">Start over</button>
+        <button type="button" class="btn" id="skip" title="Run this stage to its end at once">To the end</button>
+        <label class="lbl" for="selSpeed">Speed</label>
+        <select id="selSpeed"><option value="0.5">slow</option><option value="1" selected>normal</option><option value="2">fast</option><option value="4">fastest</option></select>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The forming solar system. In the frost line stage, the left and right arrow keys move the probe in or out (Shift for bigger steps)."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cloud, the disk and the planetesimals">
+        <span class="card-title" id="cardTitle">The cloud</span>
+        <div id="boxCollapse">
+          <div><div class="slider-head"><label for="sR0">Cloud radius r₀</label><output id="oR0" class="mono" for="sR0"></output></div><input type="range" id="sR0" min="1000" max="10000" step="250"></div>
+          <div><div class="slider-head"><label for="sP0">Cloud turns once every</label><output id="oP0" class="mono" for="sP0"></output></div><input type="range" id="sP0" min="1" max="30" step="0.5"></div>
+          <label class="check"><input type="checkbox" id="chkNoSpin"><span>No spin at all</span></label>
+        </div>
+        <div id="boxSun" hidden>
+          <div><div class="slider-head"><label for="sL">Young Sun's brightness</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0.5" max="10" step="0.1"></div>
+        </div>
+        <div id="boxDisk" hidden>
+          <div><div class="slider-head"><label for="sDist">Probe distance r</label><output id="oDist" class="mono" for="sDist"></output></div><input type="range" id="sDist" min="0" max="3000" step="1"></div>
+          <p class="note">Drag the probe in the picture too.</p>
+        </div>
+        <div id="boxPlanets" hidden>
+          <div><div class="slider-head"><label for="sF">Disk mass</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="0.5" max="10" step="0.5"></div>
+          <div><div class="slider-head"><label for="sGas">Gas lasts</label><output id="oGas" class="mono" for="sGas"></output></div><input type="range" id="sGas" min="1" max="10" step="0.5"></div>
+        </div>
+        <div id="boxMelt" hidden>
+          <div><div class="slider-head"><label for="sRad">Planetesimal radius R</label><output id="oRad" class="mono" for="sRad"></output></div><input type="range" id="sRad" min="0" max="2700" step="1"></div>
+          <div><div class="slider-head"><label for="sTf">Forms after the first solids</label><output id="oTf" class="mono" for="sTf"></output></div><input type="range" id="sTf" min="0" max="5" step="0.1"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-solar-system-formation.html" target="intro-solar-system-formation-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="nebula" aria-pressed="true">Our solar nebula</button>
+          <button type="button" data-p="slow" aria-pressed="false">Slow spin</button>
+          <button type="button" data-p="fast" aria-pressed="false">Fast spin</button>
+          <button type="button" data-p="nospin" aria-pressed="false">No spin</button>
+          <button type="button" data-p="today" aria-pressed="false">Frost line, today's Sun</button>
+          <button type="button" data-p="bright" aria-pressed="false">Frost line, bright young Sun</button>
+          <button type="button" data-p="mmsn" aria-pressed="false">Minimum mass disk</button>
+          <button type="button" data-p="heavy" aria-pressed="false">Three times heavier disk</button>
+          <button type="button" data-p="early" aria-pressed="false">Gas gone early</button>
+          <button type="button" data-p="melt" aria-pressed="false">Early planetesimal melts</button>
+          <button type="button" data-p="late" aria-pressed="false">Late planetesimal stays solid</button>
+          <button type="button" data-p="small" aria-pressed="false">Small planetesimal stays solid</button>
+          <button type="button" data-p="vesta" aria-pressed="false">Vesta sized</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-solar-system-formation" data-title="Building a Solar System" data-demo="solar-system-formation">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the predictions (disk radius, frost line, isolation mass)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">Collapse: R<sub>d</sub> = Ω₀² r₀⁴ / GM, spin up (r₀/R<sub>d</sub>)², Ω₀ = 2π/P₀</p>
+          <p class="formula">Disk: T = 280 K (r/1 AU)<sup>−1/2</sup> (L/L☉)<sup>1/4</sup>; solids 7.1 (inside the frost line) or 30 (beyond it) × (r/1 AU)<sup>−3/2</sup> g/cm², gas 1700 × (r/1 AU)<sup>−3/2</sup> g/cm²</p>
+          <p class="formula">Growth: M<sub>iso</sub> = (2π a² b Σ)<sup>3/2</sup> (2/3M☉)<sup>1/2</sup>, b = 10; T<sub>grow</sub> = 1.7 × 10⁵ yr (M/10²⁶ g)<sup>1/3</sup> (Σ₁/10 g cm⁻²)<sup>−1</sup> (a/1 AU)²</p>
+          <p class="formula">Melting: heating 3 × 10⁻⁷ W/kg × e<sup>−t/1.05 Myr</sup>; conduction to a surface at 180 K</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Building a Solar System. Runs in Node (curriculum/validation/test_solar-system-formation.cjs). Four stages, each a stated model.
+     Constants: AU = 1.495978707e11 m and the nominal GM of the Sun 1.3271244e20 m³/s² (IAU 2012 B2 and 2015 B3), G = 6.67430e-11
+     (CODATA 2022), Earth's mass 5.9722e24 kg (NASA planetary fact sheet), the Julian year 365.25 d. Work is in AU, years and Earth masses. */
+  const AU = 1.495978707e11, GM_SI = 1.3271244e20, G_SI = 6.67430e-11, M_SUN = GM_SI / G_SI, M_EARTH = 5.9722e24, YR = 365.25 * 86400;
+  const GM = GM_SI * YR * YR / (AU * AU * AU);   /* the Sun's GM in AU³/yr², 39.476 (4π² to 0.01 %) */
+  const orbitPeriod = (r) => 2 * Math.PI * Math.sqrt(r * r * r / GM);   /* years, for r in AU */
+
+  /* ---------- 1. Collapse: a spinning cloud falls in and flattens into a disk ----------
+     The infall model of Ulrich (1976, ApJ 210, 377; also Cassen and Moosman 1981): each parcel of gas falls freely toward the young
+     Sun as if all the mass were already at the center, keeping its spin (angular momentum j about the axis). The cloud starts
+     turning as one body, once every P₀, so a parcel a distance s from the axis has j = Ω₀ s², Ω₀ = 2π/P₀. Falling from rest in the
+     rotating cloud, a parcel is at the far end of an orbit whose plane holds the axis' tilt, and it crosses the midplane a quarter
+     turn later, at the orbit's semi latus rectum r = j²/GM, whatever its energy. There streams from above and below meet: their up
+     and down motions cancel, the gas keeps its spin and settles onto a circular orbit at r = j²/GM. So the disk's edge, from the
+     parcels at the cloud's equator (s = r₀), is R_d = Ω₀² r₀⁴/GM, and those parcels turn (r₀/R_d)² times faster than the cloud did.
+     Parcels with so little spin that they would pass within R_STAR of the center fall onto the young Sun. Left out: the cloud's own
+     gravity and pressure (the center really grows as the cloud falls in), magnetic fields that carry spin away, and the disk's
+     spreading and its flow onto the star afterward. */
+  const R_STAR = 0.05;   /* AU: a parcel coming this close joins the young Sun (a T Tauri star is a few solar radii, about 0.02 AU) */
+  const omegaOf = (P0Myr) => (P0Myr > 0 ? 2 * Math.PI / (P0Myr * 1e6) : 0);    /* per year */
+  const diskRadius = (r0, P0Myr) => { const w = omegaOf(P0Myr); return w * w * r0 ** 4 / GM; };   /* AU */
+  const spinUp = (r0, P0Myr) => { const rd = diskRadius(r0, P0Myr); return rd > 0 ? (r0 / rd) ** 2 : 0; };
+  const fallTime = (r0) => Math.PI * Math.sqrt(r0 ** 3 / (8 * GM));   /* years: from rest at r₀ to the center, straight in */
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* n parcels spread evenly through a ball of radius r0 (AU), the first one tracked: at the cloud's edge on its equator */
+  function makeCloud(n, r0, P0Myr, seed) {
+    const R = rng(seed || 2203), w = omegaOf(P0Myr), p = new Float64Array(n * 3), v = new Float64Array(n * 3), st = new Uint8Array(n);
+    for (let i = 0; i < n; i++) {
+      let x, y, z; if (i === 0) { x = r0; y = 0; z = 0.004 * r0; }
+      else { do { x = 2 * R() - 1; y = 2 * R() - 1; z = 2 * R() - 1; } while (x * x + y * y + z * z > 1); x *= r0; y *= r0; z *= r0; if (Math.abs(z) < 1e-6 * r0) z = 1e-6 * r0; }
+      p.set([x, y, z], 3 * i); v.set([-w * y, w * x, 0], 3 * i);
+    }
+    return { n, r0, P0: P0Myr, t: 0, p, v, st, land: new Float64Array(n), z0: Float64Array.from({ length: n }, (_, i) => p[3 * i + 2]) };   /* st: 0 falling, 1 settling in the disk, 2 onto the Sun, 3 on a circular orbit in the disk */
+  }
+  /* advance every parcel by dt years: leapfrog in the Sun's pull, with steps of at most 1/200 of the local orbit's time scale */
+  function stepCloud(C, dt) {
+    const { p, v, st } = C;
+    for (let i = 0; i < C.n; i++) {
+      if (st[i] === 2) continue; const k = 3 * i;
+      if (st[i] === 3) { turn(p, v, k, dt); continue; }
+      let left = dt;
+      while (left > 0) {
+        const x = p[k], y = p[k + 1], z = p[k + 2], r = Math.hypot(x, y, z);
+        if (r < R_STAR) { st[i] = 2; break; }
+        const h = Math.min(left, 0.005 * Math.sqrt(r * r * r / GM)), a = -GM / (r * r * r);
+        v[k] += 0.5 * h * a * x; v[k + 1] += 0.5 * h * a * y; v[k + 2] += 0.5 * h * a * z;
+        const zb = p[k + 2]; p[k] += h * v[k]; p[k + 1] += h * v[k + 1]; p[k + 2] += h * v[k + 2];
+        if (st[i] === 0 && zb * p[k + 2] <= 0) {   /* reached the midplane: up and down motion cancels, the spin stays */
+          const f = Math.abs(zb) / (Math.abs(zb) + Math.abs(p[k + 2]) || 1); p[k] -= (1 - f) * h * v[k]; p[k + 1] -= (1 - f) * h * v[k + 1];
+          p[k + 2] = 0; v[k + 2] = 0; st[i] = 1; C.land[i] = Math.hypot(p[k], p[k + 1]);   /* where it reached the disk */
+        }
+        const x2 = p[k], y2 = p[k + 1], z2 = p[k + 2], r2 = Math.hypot(x2, y2, z2), a2 = -GM / (r2 * r2 * r2);
+        v[k] += 0.5 * h * a2 * x2; v[k + 1] += 0.5 * h * a2 * y2; v[k + 2] += 0.5 * h * a2 * z2;
+        left -= h;
+        if (st[i] === 1) {   /* in the disk the gas's motion toward or away from the Sun dies out over about one orbit; its spin is kept */
+          const ux = x2 / r2, uy = y2 / r2, vr = v[k] * ux + v[k + 1] * uy, d = vr * (1 - Math.exp(-h / (0.16 * orbitPeriod(r2))));
+          v[k] -= d * ux; v[k + 1] -= d * uy; p[k + 2] = 0; v[k + 2] = 0;
+          const jz = x2 * v[k + 1] - y2 * v[k];
+          if (Math.abs(vr - d) < 1e-4 * Math.sqrt(GM / r2) && Math.abs(jz * jz / GM / r2 - 1) < 1e-4) { st[i] = 3; turn(p, v, k, left); break; }   /* circular: from here on, turn it analytically */
+        }
+      }
+    }
+    C.t += dt;
+  }
+  /* a parcel on a circular orbit in the disk, turned on by dt years (its radius s fixed, its speed the circular speed there) */
+  function turn(p, v, k, dt) {
+    const s = Math.hypot(p[k], p[k + 1]), om = Math.sqrt(GM / (s * s * s)), q = Math.atan2(p[k + 1], p[k]) + om * dt;
+    p[k] = s * Math.cos(q); p[k + 1] = s * Math.sin(q); p[k + 2] = 0; v[k] = -om * s * Math.sin(q); v[k + 1] = om * s * Math.cos(q); v[k + 2] = 0;
+  }
+  /* the tracked parcel (index 0): where it is, how fast it turns about the axis now, and whether it has settled */
+  function parcel(C) {
+    const x = C.p[0], y = C.p[1], z = C.p[2], vx = C.v[0], vy = C.v[1], s = Math.hypot(x, y), r = Math.hypot(x, y, z), om = (x * vy - y * vx) / (s * s);
+    return { r, s, period: om > 0 ? 2 * Math.PI / om : Infinity, landed: C.st[0] === 1 || C.st[0] === 3, settled: C.st[0] === 3, gone: C.st[0] === 2 };
+  }
+  function cloudCounts(C) { let fall = 0, disk = 0, sun = 0; for (let i = 0; i < C.n; i++) C.st[i] === 0 ? fall++ : C.st[i] === 2 ? sun++ : disk++; return { fall, disk, sun }; }
+
+  /* ---------- 2. The disk: hot near the Sun, cold far out, and what condenses where ----------
+     Temperature: the minimum mass solar nebula of Hayashi (1981, Prog. Theor. Phys. Suppl. 70, 35), T = 280 K (r/1 AU)^(−1/2) (L/L☉)^(1/4):
+     the temperature of a dark grain in full sunlight, as in a thin disk that the Sun's light reaches unblocked. A real disk is hotter
+     in its dense middle near the Sun (heat from the gas's own inward flow) and its shape changes how much light it catches, so this
+     is an approximation; it places the frost line within about a factor of two of where the asteroid belt shows it today.
+     Condensation: the temperature at which half of each element is in solids, from a gas of solar composition at a total pressure
+     of 10⁻⁴ bar (Lodders 2003, ApJ 591, 1220, Table 8; the same values in Lodders, Palme and Gail 2009, Table 1). The pressure in the
+     disk varies, which shifts these by tens of kelvins; that is left out. */
+  const T1 = 280;
+  const CONDENSE = [
+    { k: 'cai', name: 'Calcium and aluminum oxides', short: 'Ca, Al oxides', T: 1653, ice: false },
+    { k: 'rock', name: 'Silicate rock (olivine)', short: 'Rock', T: 1336, ice: false },
+    { k: 'metal', name: 'Iron nickel metal', short: 'Iron metal', T: 1334, ice: false },
+    { k: 'fes', name: 'Iron sulfide', short: 'Iron sulfide', T: 664, ice: false },
+    { k: 'water', name: 'Water ice', short: 'Water ice', T: 182, ice: true },
+    { k: 'nh3', name: 'Ammonia ice (in water ice)', short: 'Ammonia ice', T: 123, ice: true },
+    { k: 'ch4', name: 'Methane ice (in water ice)', short: 'Methane ice', T: 40, ice: true },
+  ];
+  const T_WATER = 182;
+  const diskT = (r, L) => T1 * Math.pow(L, 0.25) / Math.sqrt(r);                  /* K, r in AU, L in solar luminosities */
+  const lineAt = (Tc, L) => (T1 * Math.pow(L, 0.25) / Tc) ** 2;                  /* AU where the disk is at Tc */
+  const frostLine = (L) => lineAt(T_WATER, L);
+  const solidsAt = (r, L) => { const T = diskT(r, L); return CONDENSE.filter((c) => c.T >= T); };
+  /* surface densities of the minimum mass nebula (Hayashi 1981), g/cm², times the disk mass factor f: solids 7.1 (r/AU)^(−3/2)
+     inside the frost line and 30 (r/AU)^(−3/2) beyond it (ice adds 4.2 times as much solid), gas 1700 (r/AU)^(−3/2), from 0.35 to 36 AU */
+  const DISK_IN = 0.35, DISK_OUT = 36, ICE_FACTOR = 30 / 7.1;
+  const sigmaSolid = (r, f, L) => f * (r < frostLine(L) ? 7.1 : 30) * Math.pow(r, -1.5);
+  const sigmaGas = (r, f) => f * 1700 * Math.pow(r, -1.5);
+  /* the gas disk's mass from DISK_IN to DISK_OUT in solar masses (0.0130 for f = 1) */
+  const diskMass = (f) => 2 * Math.PI * f * 1700 * 10 * AU * AU * 2 * (Math.sqrt(DISK_OUT) - Math.sqrt(DISK_IN)) / M_SUN;
+
+  /* ---------- 3. Planetesimals grow: oligarchic growth to the isolation mass ----------
+     The model of Kokubo and Ida (2000, Icarus 143, 15; 2002, ApJ 581, 666): the largest bodies ("oligarchs") end up spaced about
+     b = 10 of their mutual Hill radii apart, r_H = a (2M/3M☉)^(1/3), and each sweeps up the solids in its own ring, so it stops at the
+     isolation mass M_iso = 2π a (b r_H) Σ = (2π a² b Σ)^(3/2) (2/3M☉)^(1/2), 0.16 Earth masses at 1 AU for Σ = 10 g/cm².
+     The time to grow to mass M is their T_grow = 1.7 × 10⁵ yr (M/10²⁶ g)^(1/3) (Σ₁/10 g cm⁻²)^(−1) (a/AU)², where Σ₁ is the solid
+     surface density scaled back to 1 AU (Σ = Σ₁ (a/AU)^(−3/2)); it assumes the planetesimals' random motions are kept low by the gas,
+     as in their standard case. The demo starts with N_START planetesimals spread through the disk and joins neighbors that are less
+     than b mutual Hill radii apart once the time to grow to their joint mass has passed. A core of CORE_GAS Earth masses or more that
+     forms while the gas is still there pulls the gas in and becomes a giant planet (Mizuno 1980; Pollack et al. 1996): how much gas
+     it gets is not modeled. Not modeled either: the giant impacts that join the inner oligarchs into planets over the next 100
+     million years, the giants' pull on their neighbors, and planets moving through the disk. */
+  const B_HILL = 10, CORE_GAS = 10, N_START = 900, T_END = 1e8;
+  const isoMass = (a, sig) => { const s = sig * 10, A = a * AU; return Math.pow(2 * Math.PI * A * A * B_HILL * s, 1.5) * Math.sqrt(2 / (3 * M_SUN)) / M_EARTH; };   /* Earth masses; Σ in g/cm² */
+  const growTime = (M, a, sig) => 1.7e5 * Math.cbrt(M * M_EARTH * 1000 / 1e26) / (sig * Math.pow(a, 1.5) / 10) * a * a;   /* years to grow to M Earth masses */
+  const hillGap = (m1, m2, a1, a2) => Math.abs(a2 - a1) / (0.5 * (a1 + a2) * Math.cbrt((m1 + m2) * M_EARTH / (3 * M_SUN)));
+  function makeGrowth(f, L, gas, seed) {
+    const R = rng(seed || 2203), n = N_START, d = Math.log(DISK_OUT / DISK_IN) / n, B = [];
+    for (let i = 0; i < n; i++) { const a = DISK_IN * Math.exp((i + 0.5) * d), sig = sigmaSolid(a, f, L);
+      B.push({ a, m: 2 * Math.PI * (a * AU) ** 2 * d * sig * 10 / M_EARTH, ice: a >= frostLine(L), ph: 2 * Math.PI * R(), giant: false, iceFrac: a >= frostLine(L) ? 1 - 1 / ICE_FACTOR : 0 }); }
+    return { f, L, gas, t: 0, tev: 0, B, merges: 0 };
+  }
+  /* advance the growth model to time t (years): join pairs of neighbors in the order they fall due, until none is due by t.
+     A pair closer than B_HILL mutual Hill radii falls due once the growth time to its joint mass has passed (or at once, if that
+     time is already behind the last join); taking the joins in time order makes the result the same however the run is stepped */
+  function growTo(D, t) {
+    D.t = Math.max(D.t, t); const B = D.B; if (D.tev == null) D.tev = 0;
+    for (;;) {
+      let best = -1, bt = Infinity, bg = B_HILL;
+      for (let i = 0; i + 1 < B.length; i++) { const p = B[i], q = B[i + 1], g = hillGap(p.m, q.m, p.a, q.a); if (g >= B_HILL) continue;
+        const m = p.m + q.m, a = (p.m * p.a + q.m * q.a) / m, due = Math.max(D.tev, growTime(m, a, sigmaSolid(a, D.f, D.L)));
+        if (due < bt || (due === bt && g < bg)) { best = i; bt = due; bg = g; } }
+      if (best < 0 || bt > D.t) break;
+      const p = B[best], q = B[best + 1], m = p.m + q.m, big = p.m >= q.m ? p : q;
+      /* the joined body keeps the pair's mass and angular momentum (m√a for circular orbits) */
+      const sa = (p.m * Math.sqrt(p.a) + q.m * Math.sqrt(q.a)) / m;
+      const b = { a: sa * sa, m, ice: p.ice || q.ice, iceFrac: (p.m * p.iceFrac + q.m * q.iceFrac) / m, ph: big.ph, giant: p.giant || q.giant, tGiant: Math.min(p.tGiant || Infinity, q.tGiant || Infinity) };
+      /* a core that reaches CORE_GAS while the disk still has gas pulls it in */
+      if (!b.giant && m >= CORE_GAS && bt <= D.gas * 1e6) { b.giant = true; b.tGiant = bt; }
+      B.splice(best, 2, b); D.tev = bt; D.merges++;
+    }
+    return D;
+  }
+  function growthSummary(D) {
+    let rock = null, ice = null, giants = 0;
+    for (const b of D.B) { if (b.giant) giants++; if (b.ice) { if (!ice || b.m > ice.m) ice = b; } else if (!rock || b.m > rock.m) rock = b; }
+    return { rock, ice, giants, n: D.B.length };
+  }
+
+  /* ---------- 4. Melting: heat from aluminum 26 and the iron core ----------
+     A planetesimal of radius R forms all at once at time t_f after the first solids (the calcium and aluminum rich inclusions,
+     4567 million years ago) and is heated throughout by the decay of ²⁶Al. Heat flows out by conduction to its surface, which stays
+     at the disk's temperature T_S. Values from the planetesimal model of Johansen et al. (2023, A&A 671, A74, §2.9): heating
+     H₀ = 3 × 10⁻⁷ W per kg of rock and metal at the start (²⁶Al/²⁷Al = 5 × 10⁻⁵, solar Al), falling as e^(−t/τ) with τ = 1.05 million
+     years (half life 0.73 million years); rock with c = 1200 J/(kg·K) and conductivity 4 W/(m·K); rock starts to melt at 1661 K and is
+     all molten at 1982 K, taking 4 × 10⁵ J/kg to melt; density 3300 kg/m³ (assumed, solid rock). The iron sinks to a core once half
+     the rock at the center is molten (taken here at 1822 K, halfway). Left out: the porous, poorly conducting dust a real
+     planetesimal starts as (it would melt more easily), the stirring of a molten interior and the rise of melt (here a cell that is
+     all molten loses any further heat, so no temperature passes 1982 K), the heat taken to melt the metal, other heat sources
+     (⁶⁰Fe, impacts) and growth that takes time. */
+  const MELT = { H0: 3e-7, tau: 1.05, c: 1200, k: 4, rho: 3300, Ts: 1661, Tl: 1982, Lf: 4e5, Tsurf: 180, Tcore: 1821.5, Tmetal: 1213, n: 40 };
+  const MYR_S = 1e6 * YR;
+  const heatLeft = (tf) => MELT.H0 * MELT.tau * MYR_S * Math.exp(-tf / MELT.tau);   /* J/kg still to come from ²⁶Al for a body that forms at tf Myr */
+  /* enthalpy per kg above the surface temperature, and back */
+  const hOfT = (T) => { const M = MELT; return T <= M.Ts ? M.c * (T - M.Tsurf) : T <= M.Tl ? M.c * (T - M.Tsurf) + M.Lf * (T - M.Ts) / (M.Tl - M.Ts) : M.c * (T - M.Tsurf) + M.Lf; };
+  const TofH = (h) => { const M = MELT, h1 = M.c * (M.Ts - M.Tsurf), h2 = M.c * (M.Tl - M.Tsurf) + M.Lf; return h <= h1 ? M.Tsurf + h / M.c : h <= h2 ? M.Ts + (h - h1) / (M.c + M.Lf / (M.Tl - M.Ts)) : M.Tl + (h - h2) / M.c; };
+  const meltFrac = (T) => Math.max(0, Math.min(1, (T - MELT.Ts) / (MELT.Tl - MELT.Ts)));
+  /* the whole history: n shells, implicit (backward Euler) conduction on the enthalpy, steps growing from 1 kyr; out to tf + 30 Myr */
+  function meltRun(Rkm, tf, opt) {
+    const M = MELT, n = (opt && opt.n) || M.n, R = Rkm * 1000, dr = R / n, kap = M.k, span = (opt && opt.span) || 30;
+    const h = new Float64Array(n), rf = Array.from({ length: n + 1 }, (_, i) => i * dr), vol = Array.from({ length: n }, (_, i) => (rf[i + 1] ** 3 - rf[i] ** 3) / 3);
+    const T = new Float64Array(n).fill(M.Tsurf), out = { R: Rkm, tf, t: [], Tc: [], prof: [], peak: M.Tsurf, peakAt: tf, core: false, coreAt: null, maxMelt: 0 };
+    let t = tf, dt = 1e-3;
+    const save = () => { out.t.push(t); out.Tc.push(T[0]); out.prof.push(Float32Array.from(T)); };
+    save();
+    while (t < tf + span) {
+      const step = Math.min(dt, tf + span - t), dts = step * MYR_S;
+      /* heat added this step: H₀ τ (e^(−t/τ) − e^(−(t+dt)/τ)) per kg, then implicit conduction with the heat capacity at the start of the step */
+      const q = M.H0 * M.tau * MYR_S * (Math.exp(-t / M.tau) - Math.exp(-(t + step) / M.tau));
+      for (let i = 0; i < n; i++) { h[i] = hOfT(T[i]) + q; }
+      const Tg = Array.from(h, (x) => TofH(x));
+      const ce = Tg.map((x, i) => { const dT = x - T[i]; return Math.abs(dT) > 1e-9 ? (h[i] - hOfT(T[i])) / dT : M.c; });
+      /* solve ρ c_e V (T' − T*) = Δt Σ k A ∂T/∂r with T* the heated temperature: tridiagonal, surface held at T_S */
+      const a = new Float64Array(n), b = new Float64Array(n), cc = new Float64Array(n), d = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        const C = M.rho * ce[i] * vol[i], gin = i > 0 ? kap * rf[i] ** 2 / dr : 0, gout = i < n - 1 ? kap * rf[i + 1] ** 2 / dr : kap * rf[n] ** 2 / (0.5 * dr);
+        a[i] = -gin * dts; cc[i] = i < n - 1 ? -gout * dts : 0; b[i] = C + (gin + gout) * dts; d[i] = C * Tg[i] + (i === n - 1 ? gout * dts * M.Tsurf : 0);
+      }
+      for (let i = 1; i < n; i++) { const w = a[i] / b[i - 1]; b[i] -= w * cc[i - 1]; d[i] -= w * d[i - 1]; }
+      T[n - 1] = d[n - 1] / b[n - 1]; for (let i = n - 2; i >= 0; i--) T[i] = (d[i] - cc[i] * T[i + 1]) / b[i];
+      for (let i = 0; i < n; i++) if (T[i] > M.Tl) T[i] = M.Tl;   /* a molten cell loses the rest (stirring, not modeled) */
+      t += step; dt = Math.min(dt * 1.04, 0.05);
+      if (T[0] > out.peak) { out.peak = T[0]; out.peakAt = t; }
+      if (!out.core && T[0] >= M.Tcore) { out.core = true; out.coreAt = t; }
+      out.maxMelt = Math.max(out.maxMelt, meltFrac(T[0]));
+      save();
+    }
+    /* how much of the body (by volume) got hot enough to join the core region, at its hottest */
+    let best = 0; for (const P of out.prof) { let v = 0; for (let i = 0; i < n; i++) if (P[i] >= M.Tcore) v += vol[i]; best = Math.max(best, v / (R ** 3 / 3)); }
+    out.coreVol = best;
+    return out;
+  }
+  const meltAt = (run, t) => { let i = 0; while (i + 1 < run.t.length && run.t[i + 1] <= t) i++; return i; };
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d');
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const narrowPhone = () => W < 520;
+  let W = 0, H = 0, dpr = 1, K = null;
+
+  /* ---------- formatting ---------- */
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const d = Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(v)))); return (d > 6 ? v.toPrecision(n) : v.toFixed(d)).replace('-', '−'); };
+  const grp = (v) => Math.round(v).toLocaleString('en-US');
+  const yrs = (t) => (t < 1e4 ? `${grp(t)} yr` : t < 1e6 ? `${grp(t / 1e3)} thousand yr` : `${sig(t / 1e6, 3)} million yr`);
+  const PLANETS = [   /* today's planets for comparison: semimajor axis (AU) and mass (Earth masses), NASA planetary fact sheets */
+    ['Mercury', 0.387, 0.0553], ['Venus', 0.723, 0.815], ['Earth', 1.000, 1.000], ['Mars', 1.524, 0.107],
+    ['Jupiter', 5.203, 317.8], ['Saturn', 9.537, 95.16], ['Uranus', 19.19, 14.54], ['Neptune', 30.07, 17.15]];
+
+  /* ---------- state ---------- */
+  const PRESETS = {
+    nebula: { st: 'collapse', r0: 5000, P0: 4, spin: true, hint: 'A cloud core 5000 AU in radius (about 0.02 parsec) turning once every 4 million years, a spin like those measured in dense cloud cores (Goodman et al. 1993, about 1.6 × 10⁻¹⁴ per second). Its equator ends up in a disk 39 AU across in radius, about the size of the planets\' realm.' },
+    slow: { st: 'collapse', r0: 5000, P0: 16, spin: true, hint: 'The same cloud turning four times more slowly: the disk comes out 4² = 16 times smaller, about 2.4 AU in radius.' },
+    fast: { st: 'collapse', r0: 5000, P0: 2, spin: true, hint: 'The same cloud turning twice as fast: the disk comes out 2² = 4 times larger, about 160 AU in radius.' },
+    nospin: { st: 'collapse', r0: 5000, P0: 4, spin: false, hint: 'A cloud with no spin at all: every parcel falls straight onto the young Sun and no disk forms. Spin is what makes the disk.' },
+    today: { st: 'disk', L: 1, r: 1, hint: 'The disk lit by a Sun as bright as today\'s. Rock and metal are solid almost everywhere; water freezes only beyond the frost line, 2.37 AU out in this model.' },
+    bright: { st: 'disk', L: 4, r: 1, hint: 'A young Sun four times as bright as today (young stars are brighter while they contract). The temperature everywhere rises by 4^(1/4) = 1.41 times, so the frost line moves out by 4^(1/2) = 2 times.' },
+    mmsn: { st: 'planets', L: 1, f: 1, gas: 3, hint: 'Hayashi\'s minimum mass solar nebula: just enough solids to make today\'s planets, with gas that lasts 3 million years, the middle of what young star clusters show (Haisch, Lada and Lada 2001). No core reaches 10 Earth masses in time, so no giant forms.' },
+    heavy: { st: 'planets', L: 1, f: 3, gas: 3, hint: 'Three times the minimum mass: cores beyond the frost line reach 10 Earth masses while the gas is still there and become giants. The rocky bodies inside the frost line stay small.' },
+    early: { st: 'planets', L: 1, f: 3, gas: 1, hint: 'The heavier disk, but its gas is blown away after 1 million years: the cores are not big enough in time, and no giant forms.' },
+    melt: { st: 'melt', R: 50, tf: 0.5, hint: 'A planetesimal 50 km in radius that forms half a million years after the first solids. Aluminum 26 is still plentiful: the inside melts and the iron sinks to a core, like the parent bodies of iron meteorites.' },
+    late: { st: 'melt', R: 50, tf: 3, hint: 'The same planetesimal formed 3 million years after the first solids: most of the aluminum 26 has decayed, the inside warms but never melts, like the parent bodies of chondrite meteorites.' },
+    small: { st: 'melt', R: 3, tf: 0.5, hint: 'A planetesimal only 3 km in radius, formed early: heat leaks out of a small body faster than aluminum 26 makes it, so it stays cool.' },
+    vesta: { st: 'melt', R: 263, tf: 1, hint: 'A body the size of the asteroid Vesta (mean radius 263 km), formed 1 million years after the first solids. Vesta did melt and has an iron core (Dawn mission, Russell et al. 2012).' },
+  };
+  const S = { st: 'collapse', preset: 'nebula', r0: 5000, P0: 4, spin: true, L: 1, r: 1, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
+  const NPARC = 1400;
+  const CL = { C: null, view: 1, done: false };          /* collapse */
+  const GR = { D: null, t: 1e3, tau: 0, done: false };     /* growth: t in years; tau a display clock for the orbits */
+  const ML = { run: null, t: 0, done: false };            /* melting: t in Myr after the first solids */
+  const T_MELT_END = 20;
+  const distOf = (v) => 0.1 * Math.pow(10, v / 1000), valOfDist = (r) => Math.round(1000 * Math.log10(r / 0.1));
+  const radOf = (v) => Math.pow(10, v / 1000), valOfRad = (R) => Math.round(1000 * Math.log10(R));
+
+  function resetCollapse() { CL.C = makeCloud(NPARC, S.r0, S.spin ? S.P0 : 0, 2203); CL.view = S.r0 * 1.15; CL.done = false; }
+  function resetGrowth() { GR.D = makeGrowth(S.f, S.L, S.gas, 2203); GR.t = 1e3; GR.done = false; growTo(GR.D, GR.t); }
+  function resetMelt() { ML.run = meltRun(S.R, S.tf); ML.t = S.tf; ML.done = false; }
+  const Rd = () => (S.spin ? diskRadius(S.r0, S.P0) : 0);
+
+  /* ---------- tokens ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), accent: g('--accent'), surface: g('--surface'),
+      gas: g('--gasc'), disk: g('--diskc'), rock: g('--rock'), ice: g('--ice'), giant: g('--giant'), probe: g('--probe'), cold: g('--cold'), pred: g('--pred'), sun: g('--sun'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'system-ui, sans-serif', dark: VD3 && VD3.dark ? VD3.dark() : false };
+  }
+  const P = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function label(c, t, x, y, o = {}) {
+    const p = P(); c.save(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo !== false) { c.lineWidth = 3.2 * p; c.strokeStyle = o.haloCol || K.canvas; c.lineJoin = 'round'; c.strokeText(t, x, y); }
+    c.fillStyle = o.col || K.ink; c.fillText(t, x, y); c.restore();
+  }
+  /* temperature colors for the disk, a fixed ramp (it is the disk's glow, not page chrome): 20 K deep blue to 2000 K yellow white */
+  const RAMP = [[0, [32, 44, 120]], [0.3, [96, 60, 160]], [0.5, [190, 60, 70]], [0.68, [235, 120, 40]], [0.85, [255, 190, 80]], [1, [255, 245, 215]]];
+  function heatRGB(T) {
+    const u = Math.max(0, Math.min(1, Math.log(T / 20) / Math.log(100)));
+    for (let i = 1; i < RAMP.length; i++) if (u <= RAMP[i][0]) { const [u0, a] = RAMP[i - 1], [u1, b] = RAMP[i], k = (u - u0) / (u1 - u0); return a.map((x, j) => Math.round(x + (b[j] - x) * k)); }
+    return RAMP[RAMP.length - 1][1];
+  }
+  const rgb = (a, al = 1) => `rgba(${a[0]},${a[1]},${a[2]},${al})`;
+
+  /* ---------- the flat views ---------- */
+  function frame2(x, y, w, h, title) {   /* a panel with a light border and a title */
+    const p = P(); ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    if (title) label(ctx, title, x + 10 * p, y + 14 * p, { col: K.muted, s: 11, w: 700 });
+  }
+  function drawCollapseFlat() {
+    const p = P(), C = CL.C, R = CL.view, pad = 10 * p, phone = W < 640;
+    const pw = phone ? W - 2 * pad : (W - 3 * pad) / 2, ph = phone ? (H - 3 * pad) / 2 : Math.min(H - 2 * pad, pw);
+    const boxes = phone ? [[pad, pad], [pad, 2 * pad + ph]] : [[pad, (H - ph) / 2], [2 * pad + pw, (H - ph) / 2]];
+    const titles = ['Seen edge on (the spin axis is up)', 'Seen from above'];
+    for (let b = 0; b < 2; b++) {
+      const [x0, y0] = boxes[b], cx = x0 + pw / 2, cy = y0 + ph / 2, s = Math.min(pw, ph) / 2 / R;
+      ctx.fillStyle = K.dark ? '#05070c' : '#0b1020'; ctx.fillRect(x0, y0, pw, ph);
+      frame2(x0, y0, pw, ph, '');
+      label(ctx, titles[b], x0 + 10 * p, y0 + 14 * p, { col: '#c9d3e0', s: 11, w: 700, halo: false });
+      for (let i = 1; i < C.n; i++) {
+        const st = C.st[i]; if (st === 2) continue; const k = 3 * i, u = C.p[k], v = b ? C.p[k + 1] : C.p[k + 2];
+        const X = cx + u * s, Y = cy - v * s; if (X < x0 || X > x0 + pw || Y < y0 || Y > y0 + ph) continue;
+        ctx.fillStyle = st === 0 ? 'rgba(214,160,104,0.75)' : 'rgba(255,214,150,0.9)'; ctx.fillRect(X - 1 * p, Y - 1 * p, 2 * p, 2 * p);
+      }
+      /* the young Sun, and the tracked parcel */
+      ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * p, 0, 2 * Math.PI); ctx.fill();
+      if (C.st[0] !== 2) { const X = cx + C.p[0] * s, Y = cy - (b ? C.p[1] : C.p[2]) * s;
+        ctx.strokeStyle = K.probe; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X, Y, 6 * p, 0, 2 * Math.PI); ctx.stroke(); ctx.fillStyle = K.probe; ctx.beginPath(); ctx.arc(X, Y, 2.2 * p, 0, 2 * Math.PI); ctx.fill(); }
+      /* scale bar */
+      const bar = niceLen(R * 0.5), bl = bar * s; ctx.strokeStyle = '#c9d3e0'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0 + 12 * p, y0 + ph - 14 * p); ctx.lineTo(x0 + 12 * p + bl, y0 + ph - 14 * p); ctx.stroke();
+      label(ctx, `${fmtAU(bar)}`, x0 + 12 * p + bl / 2, y0 + ph - 24 * p, { a: 'center', col: '#c9d3e0', s: 10.5, halo: false });
+    }
+  }
+  const niceLen = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  const fmtAU = (v) => `${v >= 1000 ? grp(v) : sig(v, 3)} AU`;
+
+  /* a log-log graph frame: returns the mapping */
+  function logAxes(x, y, w, h, xr, yr, o) {
+    const p = P(), lx = Math.log10(xr[0]), hx = Math.log10(xr[1]), ly = Math.log10(yr[0]), hy = Math.log10(yr[1]);
+    const X = (v) => x + (Math.log10(v) - lx) / (hx - lx) * w, Y = (v) => y + h - (Math.log10(v) - ly) / (hy - ly) * h;
+    ctx.save(); ctx.font = `${10.5 * p}px ${K.mono}`; ctx.lineWidth = 1;
+    for (let e = Math.ceil(lx); e <= Math.floor(hx); e++) { const v = Math.pow(10, e); ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(X(v), y); ctx.lineTo(X(v), y + h); ctx.stroke();
+      ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(o.fx ? o.fx(v) : String(v), X(v), y + h + 4 * p);
+      for (const m of [2, 3, 5]) { const q = m * v; if (q > xr[0] && q < xr[1]) { ctx.strokeStyle = K.grid; ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.moveTo(X(q), y); ctx.lineTo(X(q), y + h); ctx.stroke(); ctx.globalAlpha = 1; } } }
+    for (let e = Math.ceil(ly); e <= Math.floor(hy); e++) { const v = Math.pow(10, e); ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x + w, Y(v)); ctx.stroke();
+      ctx.fillStyle = K.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(o.fy ? o.fy(v) : String(v), x - 5 * p, Y(v)); }
+    ctx.strokeStyle = K.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
+    ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${11 * p}px ${K.ui}`; ctx.fillText(o.xl, x + w / 2, y + h + 34 * p);
+    ctx.translate(x - 48 * p, y + h / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText(o.yl, 0, 0); ctx.restore();
+    return { X, Y };
+  }
+  const fmtNum = (v) => (v >= 1 ? grp(v) : String(+v.toPrecision(3)));
+  let probeX = null;   /* the probe line's mapping in the flat disk graph, for dragging */
+  function graphBox() { const p = P(), phone = W < 640; return { x: (phone ? 58 : 74) * p, y: 36 * p, w: W - (phone ? 70 : 100) * p - (W > 820 ? 300 : 0), h: H - 96 * p }; }
+  function drawDiskFlat() {
+    const p = P(), b = graphBox(), A = logAxes(b.x, b.y, b.w, b.h, [0.03, 100], [10, 3000], { xl: 'distance from the Sun r (AU, on a log scale)', yl: 'temperature (K)', fx: fmtNum, fy: fmtNum });
+    const { X, Y } = A; probeX = { X, b };
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+    /* the background colored by the disk's temperature at each distance */
+    for (let i = 0; i < b.w; i += 2) { const r = 0.03 * Math.pow(100 / 0.03, i / b.w), c = heatRGB(diskT(r, S.L)); ctx.fillStyle = rgb(c, K.dark ? 0.32 : 0.22); ctx.fillRect(b.x + i, b.y, 2.5, b.h); }
+    /* each condensation temperature, and where the disk reaches it */
+    let prevY = -1e9;
+    for (const c of CONDENSE) { const y = Y(c.T), rl = lineAt(c.T, S.L); ctx.strokeStyle = c.ice ? K.ice : K.rock; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); ctx.stroke(); ctx.setLineDash([]);
+      const below = y - prevY < 14 * p; prevY = y;
+      label(ctx, `${narrowPhone() ? c.short : c.name} ${c.T} K`, b.x + b.w - 6 * p, below ? y + 9 * p : y - 8 * p, { a: 'right', col: c.ice ? K.ice : K.rock, s: 10.5 });
+      if (rl > 0.03 && rl < 100) { ctx.fillStyle = c.ice ? K.ice : K.rock; ctx.beginPath(); ctx.arc(X(rl), y, 3.5 * p, 0, 2 * Math.PI); ctx.fill(); } }
+    /* the disk's temperature */
+    ctx.strokeStyle = K.ink; ctx.lineWidth = 2.4 * p; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const r = 0.03 * Math.pow(100 / 0.03, i / 200), x = X(r), y = Y(diskT(r, S.L)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+    /* the frost line */
+    const fl = frostLine(S.L);
+    if (!S.blind) { ctx.strokeStyle = K.ice; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(fl), b.y); ctx.lineTo(X(fl), b.y + b.h); ctx.stroke();
+      label(ctx, `frost line ${sig(fl, 3)} AU`, X(fl) + 6 * p, b.y + 16 * p, { col: K.ice, w: 700 });
+      label(ctx, 'rock and metal only', X(fl) - 6 * p, b.y + 34 * p, { a: 'right', col: K.rock, s: 10.5 }); label(ctx, 'rock, metal and ice', X(fl) + 6 * p, b.y + 34 * p, { col: K.ice, s: 10.5 }); }
+    /* today's planets along the bottom */
+    for (const [n, a] of PLANETS) { const x = X(a); ctx.fillStyle = K.muted; ctx.beginPath(); ctx.arc(x, b.y + b.h - 8 * p, 3 * p, 0, 2 * Math.PI); ctx.fill();
+      if (!narrowPhone() || ['Earth', 'Jupiter', 'Neptune'].includes(n)) { ctx.save(); ctx.translate(x, b.y + b.h - 15 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: K.muted, s: 10, w: 400 }); ctx.restore(); } }
+    /* the probe */
+    const xp = X(S.r), Tp = diskT(S.r, S.L); ctx.strokeStyle = K.probe; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(xp, b.y); ctx.lineTo(xp, b.y + b.h); ctx.stroke();
+    ctx.fillStyle = K.probe; ctx.beginPath(); ctx.arc(xp, Y(Tp), 5 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    const flip = xp > b.x + b.w * 0.62;
+    label(ctx, `probe: ${sig(S.r, 3)} AU, ${sig(Tp, 3)} K`, flip ? xp - 9 * p : xp + 9 * p, Y(Tp) - 14 * p, { a: flip ? 'right' : 'left', col: K.probe, w: 700 });
+    label(ctx, 'drag the probe', xp + (flip ? -9 : 9) * p, b.y + b.h - 40 * p, { a: flip ? 'right' : 'left', col: K.probe, s: 10, w: 400 });
+  }
+  function timeBar(x, y, w, t, gas) {   /* a log time line from 1000 years to 100 million years with the gas marked */
+    const p = P(), L0 = 3, L1 = 8, X = (v) => x + (Math.log10(v) - L0) / (L1 - L0) * w;
+    ctx.save(); ctx.fillStyle = K.line; ctx.fillRect(x, y - 2 * p, w, 4 * p);
+    ctx.fillStyle = K.gas; ctx.globalAlpha = 0.55; ctx.fillRect(x, y - 4 * p, X(Math.min(gas * 1e6, 1e8)) - x, 8 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = K.accent; ctx.fillRect(x, y - 2 * p, X(Math.max(1e3, t)) - x, 4 * p);
+    ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const [v, s] of [[1e3, '1000 yr'], [1e4, '10⁴'], [1e5, '10⁵'], [1e6, '1 Myr'], [1e7, '10 Myr'], [1e8, '100 Myr']]) { ctx.fillRect(X(v) - 0.5, y + 3 * p, 1, 4 * p); ctx.fillText(s, X(v), y + 8 * p); }
+    ctx.restore(); label(ctx, `gas until ${sig(gas, 2)} million yr`, x, y - 14 * p, { col: K.gas, s: 10.5 });
+  }
+  function bodyColor(b) { return b.giant ? K.giant : b.ice ? K.ice : K.rock; }
+  function drawPlanetsFlat() {
+    const p = P(), b = graphBox(); b.y += 30 * p; b.h -= 30 * p;
+    timeBar(b.x, 26 * p, Math.min(b.w, 520 * p), GR.t, S.gas);
+    const { X, Y } = logAxes(b.x, b.y, b.w, b.h, [0.3, 40], [1e-4, 1e3], { xl: 'distance from the Sun a (AU, log scale)', yl: 'mass (Earth masses, log scale)', fx: fmtNum, fy: (v) => (v >= 1 ? grp(v) : v === 0.1 ? '0.1' : v === 0.01 ? '0.01' : `10${['⁻⁴', '⁻³'][Math.round(-Math.log10(v)) - 3] || ''}`) });
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+    const fl = frostLine(S.L);
+    ctx.fillStyle = K.ice; ctx.globalAlpha = 0.07; ctx.fillRect(X(fl), b.y, b.x + b.w - X(fl), b.h); ctx.globalAlpha = 1;
+    ctx.strokeStyle = K.ice; ctx.lineWidth = 1.5 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(fl), b.y); ctx.lineTo(X(fl), b.y + b.h); ctx.stroke(); ctx.setLineDash([]);
+    label(ctx, `frost line ${sig(fl, 3)} AU`, X(fl) + 6 * p, b.y + 14 * p, { col: K.ice, s: 10.5 });
+    /* enough to pull in gas */
+    ctx.strokeStyle = K.gas; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(b.x, Y(CORE_GAS)); ctx.lineTo(b.x + b.w, Y(CORE_GAS)); ctx.stroke();
+    label(ctx, `${CORE_GAS} Earth masses: enough to pull in gas`, b.x + 8 * p, Y(CORE_GAS) - 9 * p, { col: K.gas, s: 10.5 });
+    /* the isolation mass, the model's prediction */
+    if (!S.blind) { ctx.strokeStyle = K.pred; ctx.lineWidth = 1.6 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath();
+      for (let i = 0; i <= 300; i++) { const a = 0.35 * Math.pow(36 / 0.35, i / 300), y = Y(isoMass(a, sigmaSolid(a, S.f, S.L))); i ? ctx.lineTo(X(a), y) : ctx.moveTo(X(a), y); } ctx.stroke(); ctx.setLineDash([]);
+      const a1 = 0.5; label(ctx, 'isolation mass (prediction)', X(a1), Y(isoMass(a1, sigmaSolid(a1, S.f, S.L))) - 11 * p, { col: K.pred, s: 10.5 }); }
+    /* today's planets */
+    for (const [n, a, m] of PLANETS) { const x = X(a), y = Y(m); ctx.strokeStyle = K.muted; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.arc(x, y, 6 * p, 0, 2 * Math.PI); ctx.stroke(); label(ctx, n, x + 9 * p, y, { col: K.muted, s: 10, w: 400 }); }
+    /* the bodies */
+    for (const q of GR.D.B) { const m = q.m; if (m < 1e-4) continue; const x = X(q.a), y = Y(m), r = (1.6 + 2.4 * Math.max(0, Math.log10(m) + 4) / 3) * p;
+      ctx.fillStyle = bodyColor(q); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      if (q.giant) { ctx.strokeStyle = K.giant; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, r + 5 * p, 0, 2 * Math.PI); ctx.stroke(); label(ctx, 'giant', x, y - r - 12 * p, { a: 'center', col: K.giant, s: 10.5, w: 700 }); } }
+    ctx.restore();
+    const key = [['rocky', K.rock], ['icy', K.ice], ['giant (pulled in gas)', K.giant], ['today\'s planets', K.muted]];
+    let kx = b.x + 8 * p; for (const [t, c] of key) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(kx + 4 * p, b.y + b.h - 12 * p, 4 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, t, kx + 12 * p, b.y + b.h - 12 * p, { col: K.ink, s: 10.5 }); ctx.font = `${10.5 * p}px ${K.ui}`; kx += ctx.measureText(t).width + 26 * p; }
+  }
+  /* temperature colors inside a planetesimal: the same ramp as the disk */
+  function drawMeltFlat() {
+    const p = P(), run = ML.run, i = meltAt(run, ML.t), prof = run.prof[i], n = prof.length, phone = W < 640;
+    const cr = phone ? Math.min(W * 0.26, H * 0.2) : Math.min(H * 0.3, W * 0.17), cx = (phone ? W / 2 : 30 * p + cr), cy = phone ? 28 * p + cr : H / 2 - 20 * p;
+    for (let k = n - 1; k >= 0; k--) { ctx.fillStyle = rgb(heatRGB(prof[k])); ctx.beginPath(); ctx.arc(cx, cy, cr * (k + 1) / n, 0, 2 * Math.PI); ctx.fill(); }
+    const core = coreRadius(run, i); if (core > 0) { ctx.fillStyle = '#6f7884'; ctx.strokeStyle = '#d6dde6'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, cr * core, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); label(ctx, 'iron core', cx, cy, { a: 'center', col: '#ffffff', s: 10.5, w: 700, haloCol: '#3a4049' }); }
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 2 * Math.PI); ctx.stroke();
+    label(ctx, `R = ${sig(S.R, 3)} km, cut through the middle`, cx, cy + cr + 16 * p, { a: 'center', col: K.muted, s: 10.5 });
+    /* the center's temperature against time */
+    const gx = phone ? 58 * p : cx + cr + 70 * p, gy = phone ? cy + cr + 44 * p : 40 * p, gw = W - gx - (W > 820 ? 300 : 20 * p), gh = phone ? H - gy - 50 * p : H - 110 * p;
+    if (gw < 80 || gh < 60) return;
+    const X = (t) => gx + t / T_MELT_END * gw, Y = (T) => gy + gh - (T - 100) / (2100 - 100) * gh;
+    ctx.save(); ctx.font = `${10.5 * p}px ${K.mono}`; ctx.lineWidth = 1;
+    for (let t = 0; t <= T_MELT_END; t += 5) { ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(X(t), gy); ctx.lineTo(X(t), gy + gh); ctx.stroke(); ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(t), X(t), gy + gh + 4 * p); }
+    for (let T = 500; T <= 2000; T += 500) { ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(gx, Y(T)); ctx.lineTo(gx + gw, Y(T)); ctx.stroke(); ctx.fillStyle = K.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(T), gx - 5 * p, Y(T)); }
+    ctx.strokeStyle = K.line; ctx.strokeRect(gx + 0.5, gy + 0.5, gw, gh);
+    ctx.fillStyle = K.muted; ctx.font = `${11 * p}px ${K.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('time after the first solids (million years)', gx + gw / 2, gy + gh + 34 * p);
+    ctx.save(); ctx.translate(gx - 46 * p, gy + gh / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('temperature at the center (K)', 0, 0); ctx.restore();
+    for (const [T, t, c] of [[MELT.Tmetal, 'iron and iron sulfide melt 1213 K', K.muted], [MELT.Ts, 'rock starts to melt 1661 K', K.rock], [MELT.Tcore, 'half the rock molten: iron sinks 1822 K', K.probe], [MELT.Tl, 'all molten 1982 K', K.muted]]) {
+      ctx.strokeStyle = c; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(gx, Y(T)); ctx.lineTo(gx + gw, Y(T)); ctx.stroke(); ctx.setLineDash([]); label(ctx, t, gx + gw - 6 * p, Y(T) - 8 * p, { a: 'right', col: c, s: 10 }); }
+    ctx.restore();
+    ctx.strokeStyle = K.accent; ctx.lineWidth = 2.4 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tsurf)); ctx.lineTo(X(S.tf), Y(MELT.Tsurf));
+    for (let k = 0; k <= i; k++) ctx.lineTo(X(run.t[k]), Y(run.Tc[k])); ctx.stroke();
+    ctx.fillStyle = K.accent; ctx.beginPath(); ctx.arc(X(run.t[i]), Y(run.Tc[i]), 4.5 * p, 0, 2 * Math.PI); ctx.fill();
+    label(ctx, `forms at ${sig(S.tf, 2)} Myr`, X(S.tf) + 6 * p, Y(MELT.Tsurf) - 12 * p, { col: K.accent, s: 10.5 });
+  }
+  /* the iron core's drawn radius as a share of the body's: the iron of every shell that got half molten sinks; drawn in Vesta's
+     proportion (core radius 0.42 of the body's when all of it melts; Russell et al. 2012), not computed from a composition */
+  const VESTA_CORE = 0.42;
+  function coreRadius(run, i) { if (!run.core || run.t[i] < run.coreAt) return 0; let v = 0; const n = run.prof[0].length;
+    for (let j = 0; j <= i; j++) { let vj = 0; for (let k = 0; k < n; k++) if (run.prof[j][k] >= MELT.Tcore) vj = ((k + 1) / n) ** 3; v = Math.max(v, vj); }
+    return VESTA_CORE * Math.cbrt(v); }
+
+  /* ---------- the 3D views (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+     Space scenes keep a fixed dark sky in both themes. Collapse: the parcels at their true places, the picture scaled to follow
+     the infall. Disk and growth: the disk with its distances on a log scale (ρ ∝ log r from 0.1 to 100 AU, said on the picture),
+     so the inner planets and Neptune both show. Melting: the planetesimal with a quarter cut away, colored by temperature. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.5, ph: 1.08, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const RHO = (r) => Math.max(0, Math.min(1, Math.log10(r / 0.1) / 3));   /* 0.1 AU at the center to 100 AU at the edge */
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, fov: 34, near: 0.01, far: 400, sky: '#04060b' }); if (!S3) return false;
+    S3.el.classList.add('ss3');
+    const sc = S3.scene; sc.add(VD3K.sky(S3, { r: 300, n: 2600, milky: true }));
+    const sun = VD3K.star(S3, { r: 0.022, glow: 9, color: '#ffd27a' }); sc.add(sun);
+    /* collapse: the parcels */
+    const gC = new THREE.Group(); sc.add(gC);
+    const parts = VD3K.particles(S3, { n: NPARC, r: 0.006, seg: 6, color: '#d6a068', emissive: '#3a2210' }); gC.add(parts);
+    const mark = VD3K.marker(S3, { r: 0.035, color: '#fb923c' }); gC.add(mark);
+    /* the disk: a ring with the temperature painted on it */
+    const gD = new THREE.Group(); sc.add(gD);
+    const dcv = document.createElement('canvas'); dcv.width = dcv.height = 512; const dtex = new THREE.CanvasTexture(dcv);
+    const disk = new THREE.Mesh(new THREE.CircleGeometry(1, 160), new THREE.MeshBasicMaterial({ map: dtex, transparent: true, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+    gD.add(disk);
+    const rings = {}; for (const c of CONDENSE) { const rr = VD3K.ring(1, { color: c.ice ? '#8cc8ff' : '#d39a6a', opacity: 0.85, seg: 160 }); rings[c.k] = rr; gD.add(rr); }
+    const probe = new THREE.Group(); const pm = new THREE.MeshBasicMaterial({ color: '#fb923c' });
+    probe.add(new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.12, 8).rotateX(Math.PI / 2).translate(0, 0, 0.06), pm), new THREE.Mesh(new THREE.SphereGeometry(0.014, 16, 10).translate(0, 0, 0.12), pm));
+    const pring = VD3K.ring(1, { color: '#fb923c', dashed: true, opacity: 0.9, seg: 160 }); gD.add(probe, pring);
+    /* the bodies of the growth stage: spheres scaled per body */
+    const gB = new THREE.Group(); sc.add(gB);
+    const bodies = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshStandardMaterial({ roughness: 0.7, metalness: 0.05, color: 0xffffff }), N_START);
+    bodies.frustumCulled = false; { const c0 = new THREE.Color('#ffffff'); for (let i = 0; i < N_START; i++) bodies.setColorAt(i, c0); } bodies.count = 0; gB.add(bodies);
+    const halos = []; for (let i = 0; i < 8; i++) { const h = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshStandardMaterial({ color: '#f0c27a', transparent: true, opacity: 0.35, roughness: 0.9, depthWrite: false })); h.visible = false; halos.push(h); gB.add(h); }
+    /* the planetesimal cut open */
+    const gM = new THREE.Group(); sc.add(gM);
+    const ps0 = G3.o.th - 2.75 * Math.PI;   /* the missing quarter faces the camera as the view opens */
+    const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 48, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ color: '#6e5a48', roughness: 0.95, metalness: 0, side: THREE.DoubleSide }));
+    shell.rotation.x = Math.PI / 2; gM.add(shell);
+    const fcv = document.createElement('canvas'); fcv.width = fcv.height = 384; const ftex = new THREE.CanvasTexture(fcv);
+    const fm = new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.9, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: ftex, emissiveIntensity: 0.55 });
+    for (const ph of [ps0, ps0 + 1.5 * Math.PI]) { const f = new THREE.Mesh(new THREE.CircleGeometry(0.999, 72, -Math.PI / 2, Math.PI), fm); f.rotation.y = Math.PI + ph; const w = new THREE.Group(); w.add(f); w.rotation.x = Math.PI / 2; gM.add(w); }
+    const coreM = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ color: '#a3acb8', roughness: 0.4, metalness: 0.35, side: THREE.DoubleSide })); coreM.rotation.x = Math.PI / 2; gM.add(coreM);
+    S3.orbit(can, G3.o, () => { dirty3 = true; }, { zMin: 0.35, zMax: 4, grab: (e) => (S.st === 'disk' && grabProbe3(e)) });
+    g3 = { S3, sun, gC, parts, mark, gD, disk, dcv, dtex, rings, probe, pring, gB, bodies, halos, gM, fcv, ftex, coreM, shell, key: '' };
+    return true;
+  }
+  let dirty3 = true;
+  function paintDisk(alpha) {
+    const c = g3.dcv.getContext('2d'), n = g3.dcv.width, h = n / 2, img = c.createImageData(n, n), d = img.data;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const q = Math.hypot(x + 0.5 - h, y + 0.5 - h) / h, i = 4 * (y * n + x); if (q > 1) { d[i + 3] = 0; continue; }
+      const r = 0.1 * Math.pow(1000, q), col = heatRGB(diskT(r, S.L)), fade = Math.min(1, (1 - q) / 0.08) * Math.min(1, q / 0.03);
+      d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = Math.round(255 * alpha * fade * (0.55 + 0.35 * (1 - q)));
+    }
+    c.putImageData(img, 0, 0); g3.dtex.needsUpdate = true;
+  }
+  function paintFace(prof, core) {
+    const c = g3.fcv.getContext('2d'), n = g3.fcv.width, h = n / 2, m = prof.length; c.clearRect(0, 0, n, n);
+    for (let k = m - 1; k >= 0; k--) { c.fillStyle = rgb(heatRGB(prof[k])); c.beginPath(); c.arc(h, h, h * (k + 1) / m, 0, 2 * Math.PI); c.fill(); }
+    if (core > 0) { c.fillStyle = '#7d8693'; c.beginPath(); c.arc(h, h, h * core, 0, 2 * Math.PI); c.fill(); }
+    g3.ftex.needsUpdate = true;
+  }
+  function draw3() {
+    const g = g3, S3 = g.S3, p = P(); S3.size(W, H);
+    g.gC.visible = S.st === 'collapse'; g.gD.visible = S.st === 'disk' || S.st === 'planets'; g.gB.visible = S.st === 'planets'; g.gM.visible = S.st === 'melt'; g.sun.visible = S.st !== 'melt';
+    let dist = 3.3, target = [0, 0, 0];
+    if (S.st === 'collapse') {
+      const C = CL.C, s = 1 / CL.view, M4 = new THREE.Matrix4(), cF = new THREE.Color('#d6a068'), cD = new THREE.Color('#ffd28e'); let k = 0;
+      for (let i = 1; i < C.n; i++) { if (C.st[i] === 2) continue; const j = 3 * i; M4.makeTranslation(C.p[j] * s, C.p[j + 1] * s, C.p[j + 2] * s); g.parts.setMatrixAt(k, M4); g.parts.setColorAt(k, C.st[i] === 0 ? cF : cD); k++; }
+      g.parts.count = k; g.parts.instanceMatrix.needsUpdate = true; if (g.parts.instanceColor) g.parts.instanceColor.needsUpdate = true;
+      g.mark.visible = C.st[0] !== 2; g.mark.at(C.p[0] * s, C.p[1] * s, C.p[2] * s);
+      g.sun.scale.setScalar(1); dist = 3.6;
+    } else if (S.st === 'disk' || S.st === 'planets') {
+      const key = `${S.st}|${S.L}|${S.st === 'planets' ? Math.round(gasLeft() * 20) : 1}`;
+      if (key !== g.key) { g.key = key; paintDisk(S.st === 'planets' ? 0.25 + 0.6 * gasLeft() : 1); }
+      for (const c of CONDENSE) { const rl = lineAt(c.T, S.L), rr = g.rings[c.k]; rr.visible = rl > 0.1 && rl < 100 && (S.st === 'disk' || c.k === 'water') && !(S.blind && c.k === 'water'); rr.scale.setScalar(RHO(rl)); }
+      g.probe.visible = g.pring.visible = S.st === 'disk'; g.probe.position.set(RHO(S.r), 0, 0); g.pring.scale.setScalar(RHO(S.r));
+      if (S.st === 'planets') drawBodies3();
+      dist = 2.9;
+    } else {
+      const run = ML.run, i = meltAt(run, ML.t), cr = coreRadius(run, i); paintFace(run.prof[i], cr); g.coreM.visible = cr > 0; g.coreM.scale.setScalar(Math.max(0.001, cr * 0.995));
+      g.shell.material.color.set(K.dark ? '#5b4a3c' : '#6e5a48'); dist = 5.2;
+    }
+    S3.place(G3.o, target, S3.fit(dist, 1.3)); S3.render();
+    /* words drawn over the picture */
+    ctx.clearRect(0, 0, W, H);
+    const pr = (q) => S3.project(q), halo = '#04060b', lc = '#dbe4ef';
+    if (S.st === 'collapse') {
+      const C = CL.C; if (C.st[0] !== 2) { const q = pr([C.p[0] / CL.view, C.p[1] / CL.view, C.p[2] / CL.view]); label(ctx, 'tracked parcel', q[0] + 12 * p, q[1] - 10 * p, { col: '#fb923c', haloCol: halo, w: 700 }); }
+      label(ctx, `picture ${fmtAU(2 * CL.view)} across · drag to turn`, 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
+    } else if (S.st === 'disk' || S.st === 'planets') {
+      for (const c of CONDENSE) { const rr = g.rings[c.k]; if (!rr.visible || RHO(lineAt(c.T, S.L)) < 0.3) continue; const q = pr([0, -RHO(lineAt(c.T, S.L)), 0]); label(ctx, c.k === 'water' ? `frost line ${sig(frostLine(S.L), 3)} AU` : c.short, q[0], q[1] + 12 * p, { a: 'center', col: c.ice ? '#8cc8ff' : '#e0b08a', haloCol: halo, s: c.k === 'water' ? 11.5 : 10, w: c.k === 'water' ? 700 : 500 }); }
+      if (S.st === 'disk') { const q = pr([RHO(S.r), 0, 0.14]); label(ctx, `${sig(S.r, 3)} AU · ${sig(diskT(S.r, S.L), 3)} K`, q[0], q[1] - 12 * p, { a: 'center', col: '#fb923c', haloCol: halo, w: 700 }); }
+      for (const [n, a] of PLANETS) { if (narrowPhone() && !['Earth', 'Jupiter', 'Neptune'].includes(n)) continue; const az = G3.o.th - Math.PI / 2, q = pr([RHO(a) * Math.cos(az), RHO(a) * Math.sin(az), 0]); ctx.fillStyle = 'rgba(219,228,239,0.75)'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * p, 0, 2 * Math.PI); ctx.fill(); ctx.save(); ctx.translate(q[0], q[1] - 6 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: 'rgba(219,228,239,0.85)', haloCol: halo, s: 9.5, w: 400 }); ctx.restore(); }
+      label(ctx, narrowPhone() ? 'log scale: 0.1 AU (center) to 100 AU (edge)' : 'distances on a log scale: 0.1 AU at the center to 100 AU at the edge · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
+      if (S.st === 'planets') { label(ctx, narrowPhone() ? 'bodies drawn larger than to scale' : 'bodies drawn far larger than to scale; orbits shown turning, not to the time scale of growth', 14 * p, H - 36 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }); timeBar3(); }
+    } else {
+      const run = ML.run, i = meltAt(run, ML.t), q = pr([0, 0, 1.12]);
+      label(ctx, `R = ${sig(S.R, 3)} km · center ${grp(run.Tc[i])} K`, q[0], q[1] - 6 * p, { a: 'center', col: lc, haloCol: halo, w: 700 });
+      if (g.coreM.visible) { const c = pr([0, 0, 0]); label(ctx, 'iron core', c[0], c[1], { a: 'center', col: '#ffffff', haloCol: '#2a2f36', w: 700 }); }
+      label(ctx, 'a quarter cut away · inside colored by temperature · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
+      meltMini();
+    }
+  }
+  function timeBar3() { const p = P(); ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.55)'; ctx.fillRect(8 * p, 6 * p, Math.min(W - 16 * p, 540 * p), 46 * p); ctx.restore();
+    const k0 = K; K = Object.assign({}, K, { muted: '#b8c2d0', line: '#3a4656', canvas: '#04060b' }); timeBar(20 * p, 30 * p, Math.min(W - 40 * p, 500 * p), GR.t, S.gas); K = k0; }
+  function meltMini() {   /* a small graph of the center's temperature in the 3D view */
+    const p = P(), run = ML.run, i = meltAt(run, ML.t), w = Math.min(260 * p, W * 0.4), h = 110 * p, x = 12 * p, y = 12 * p;
+    ctx.fillStyle = 'rgba(4,6,11,0.6)'; ctx.fillRect(x, y, w, h); const X = (t) => x + 8 * p + t / T_MELT_END * (w - 16 * p), Y = (T) => y + h - 16 * p - (T - 100) / 2000 * (h - 30 * p);
+    ctx.strokeStyle = '#fb923c'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tcore)); ctx.lineTo(X(T_MELT_END), Y(MELT.Tcore)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = '#7ea2ff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tsurf)); ctx.lineTo(X(S.tf), Y(MELT.Tsurf)); for (let k = 0; k <= i; k++) ctx.lineTo(X(run.t[k]), Y(run.Tc[k])); ctx.stroke();
+    label(ctx, 'center temperature, 0 to 20 Myr', x + 8 * p, y + 10 * p, { col: '#dbe4ef', haloCol: '#04060b', s: 10, w: 600 });
+    label(ctx, 'iron sinks 1822 K', x + w - 8 * p, Y(MELT.Tcore) - 8 * p, { a: 'right', col: '#fb923c', haloCol: '#04060b', s: 9.5, w: 400 });
+  }
+  const gasLeft = () => (GR.t <= S.gas * 1e6 ? Math.min(1, (S.gas * 1e6 - GR.t) / (0.2 * S.gas * 1e6) + 0.15) : 0);
+  function drawBodies3() {
+    const g = g3, B = GR.D.B, M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3(), col = new THREE.Color(); let k = 0, h = 0;
+    const cR = new THREE.Color(K.dark ? '#d39a6a' : '#b07a4c'), cI = new THREE.Color('#bfe0ff'), cG = new THREE.Color('#e9b874');
+    for (const b of B) {
+      const rho = RHO(b.a), th = b.ph + 2 * Math.PI * GR.tau / 4 * Math.pow(b.a, -1.5), sz = Math.min(0.05, 0.0035 + 0.011 * Math.cbrt(b.m));
+      V.set(rho * Math.cos(th), rho * Math.sin(th), 0); Sc.setScalar(b.giant ? 0.03 : sz); M4.compose(V, Q, Sc); g.bodies.setMatrixAt(k, M4);
+      col.copy(b.giant ? cG : b.ice ? cI : cR); g.bodies.setColorAt(k, col); k++;
+      if (b.giant && h < g.halos.length) { const hm = g.halos[h++]; hm.visible = true; hm.position.copy(V); hm.scale.setScalar(0.05); }
+    }
+    for (; h < g.halos.length; h++) g.halos[h].visible = false;
+    g.bodies.count = k; g.bodies.instanceMatrix.needsUpdate = true; if (g.bodies.instanceColor) g.bodies.instanceColor.needsUpdate = true;
+  }
+  /* grab the probe in 3D: a press near the probe's ring drags it */
+  let dragging = false;
+  function grabProbe3(e) { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, q = g3.S3.project([RHO(S.r), 0, 0.12]); return Math.hypot(x - q[0], y - q[1]) < 26 * P() ? (dragging = '3d', true) : false; }
+  function probeFrom3(e) {
+    const b = can.getBoundingClientRect(), x = (e.clientX - b.left) / b.width * 2 - 1, y = -(e.clientY - b.top) / b.height * 2 + 1, ray = new THREE.Raycaster();
+    ray.setFromCamera({ x, y }, g3.S3.cam); const o = ray.ray.origin, d = ray.ray.direction; if (Math.abs(d.z) < 1e-6) return; const t = -o.z / d.z; if (t < 0) return;
+    const px = o.x + t * d.x, py = o.y + t * d.y, rho = Math.hypot(px, py); setProbe(0.1 * Math.pow(1000, Math.max(0, Math.min(1, rho))));
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind; let h = '';
+    if (S.st === 'collapse') {
+      const C = CL.C, q = parcel(C), n = cloudCounts(C), rd = Rd();
+      h += dd('Cloud radius r₀', `${grp(S.r0)} AU`) + dd('Cloud turns once every', S.spin ? `${sig(S.P0, 3)} million yr` : 'never (no spin)')
+        + dd('Time since the collapse began', yrs(C.t)) + dd('Free fall time from the edge', yrs(fallTime(S.r0)))
+        + dd('Tracked parcel: distance from the axis', q.gone ? 'fell onto the Sun' : fmtAU(q.s)) + dd('Tracked parcel goes around once every', q.gone || !isFinite(q.period) ? '—' : q.period > 1e6 ? `${sig(q.period / 1e6, 3)} million yr` : `${sig(q.period, 3)} yr`)
+        + dd('Tracked parcel', q.gone ? 'on the Sun' : q.settled ? 'settled in the disk' : q.landed ? 'in the disk, settling' : 'falling')
+        + dd('Parcels falling, in the disk, on the Sun', `${n.fall}, ${n.disk}, ${n.sun} (${Math.round(100 * n.sun / C.n)} % on the Sun)`, 'wide')
+        + dd('Predicted disk radius R<sub>d</sub> = Ω₀²r₀⁴/GM', B ? hide : S.spin ? fmtAU(rd) : 'no disk') + dd('Predicted spin up (r₀/R<sub>d</sub>)²', B ? hide : S.spin ? `${grp(spinUp(S.r0, S.P0))} times` : '—');
+    } else if (S.st === 'disk') {
+      const T = diskT(S.r, S.L), sol = solidsAt(S.r, S.L);
+      h += dd('Young Sun\'s brightness L', `${sig(S.L, 2)} × today's`) + dd('Probe distance r', `${sig(S.r, 3)} AU`) + dd('Temperature there', `${sig(T, 3)} K`)
+        + dd('Solids that form there', sol.length ? sol.map((c) => c.name).join(', ') : 'none: too hot for any solid', 'wide')
+        + dd('Frost line (water freezes beyond)', B ? hide : `${sig(frostLine(S.L), 3)} AU`) + dd('Solids in the disk there (minimum mass)', `${sig(sigmaSolid(S.r, 1, S.L), 3)} g/cm²`) + dd('Gas in the disk there', `${sig(sigmaGas(S.r, 1), 3)} g/cm²`);
+    } else if (S.st === 'planets') {
+      const s = growthSummary(GR.D), d = (b) => (b ? `${sig(b.m, 3)} Earth masses at ${sig(b.a, 3)} AU` : '—');
+      h += dd('Disk mass', `${sig(S.f, 2)} × the minimum (${sig(diskMass(S.f), 2)} solar masses of gas)`, 'wide') + dd('Gas lasts', `${sig(S.gas, 2)} million yr`) + dd('Time', yrs(GR.t))
+        + dd('Bodies', `${s.n} (from ${N_START} planetesimals)`) + dd('Largest rocky body', d(s.rock), 'wide') + dd('Largest icy body', d(s.ice), 'wide')
+        + dd('Giant planets (cores that pulled in gas)', String(s.giants)) + dd('Frost line', `${sig(frostLine(S.L), 3)} AU`)
+        + dd('Isolation mass at 1 AU, 5.2 AU', B ? hide : `${sig(isoMass(1, sigmaSolid(1, S.f, S.L)), 2)}, ${sig(isoMass(5.2, sigmaSolid(5.2, S.f, S.L)), 2)} Earth masses`, 'wide');
+    } else {
+      const run = ML.run, i = meltAt(run, ML.t);
+      h += dd('Radius R', `${sig(S.R, 3)} km`) + dd('Forms after the first solids', `${sig(S.tf, 2)} million yr`) + dd('Aluminum 26 heat still to come when it forms', `${sig(heatLeft(S.tf) / 1e6, 3)} MJ/kg`, 'wide')
+        + dd('Time', `${sig(ML.t, 3)} million yr`) + dd('Center temperature now', `${grp(run.Tc[i])} K`) + dd('Rock molten at the center now', `${Math.round(100 * meltFrac(run.Tc[i]))} %`)
+        + dd('Hottest center so far', `${grp(Math.max(...run.Tc.slice(0, i + 1)))} K`) + dd('Iron core', run.core && run.t[i] >= run.coreAt ? `formed at ${sig(run.coreAt, 3)} million yr` : 'not (yet)');
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    let t = '';
+    if (S.st === 'collapse') t = `t = ${yrs(CL.C.t)}`; else if (S.st === 'planets') t = `t = ${yrs(GR.t)}`; else if (S.st === 'melt') t = `t = ${sig(ML.t, 3)} million yr after the first solids`;
+    $('clock').textContent = t;
+  }
+
+  /* ---------- controls ---------- */
+  const CARD = { collapse: 'The cloud', disk: 'The disk and the probe', planets: 'The disk and its gas', melt: 'The planetesimal' };
+  function sync() {
+    const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
+    set('R0', S.r0, `${grp(S.r0)} AU`); set('P0', S.P0, `${sig(S.P0, 3)} Myr`); $('chkNoSpin').checked = !S.spin; $('sP0').disabled = !S.spin;
+    set('L', S.L, `${sig(S.L, 2)} × today`); set('Dist', valOfDist(S.r), `${sig(S.r, 3)} AU`); set('F', S.f, `${sig(S.f, 2)} × minimum`); set('Gas', S.gas, `${sig(S.gas, 2)} Myr`);
+    set('Rad', valOfRad(S.R), `${sig(S.R, 3)} km`); set('Tf', S.tf, `${sig(S.tf, 2)} Myr`);
+    $('boxCollapse').hidden = S.st !== 'collapse'; $('boxSun').hidden = !(S.st === 'disk' || S.st === 'planets'); $('boxDisk').hidden = S.st !== 'disk'; $('boxPlanets').hidden = S.st !== 'planets'; $('boxMelt').hidden = S.st !== 'melt';
+    $('cardTitle').textContent = CARD[S.st];
+    for (const b of document.querySelectorAll('#stageSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === S.st));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    const timed = S.st !== 'disk'; for (const id of ['play', 'restart', 'skip', 'selSpeed']) $(id).hidden = !timed; document.querySelector('label[for="selSpeed"]').hidden = !timed;
+    $('selSpeed').value = String(S.speed); can.classList.toggle('drag', S.st === 'disk');
+  }
+  const card = VD.setupCard($('setupCard'));
+  function finished() { return S.st === 'collapse' ? CL.done : S.st === 'planets' ? GR.done : S.st === 'melt' ? ML.done : true; }
+  function setRun(on) { S.run = on && S.st !== 'disk'; card.away(S.run); const started = S.st === 'collapse' ? CL.C.t > 0 : S.st === 'planets' ? GR.t > 1e3 : ML.t > S.tf;
+    $('play').textContent = S.run ? 'Pause' : finished() ? 'Done' : started ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run && !finished()); }
+  function resetStage(st) { if (st === 'collapse') resetCollapse(); else if (st === 'planets') resetGrowth(); else if (st === 'melt') resetMelt(); }
+  function goStage(st, keep) { S.st = st; if (!keep) S.run = false; dirty3 = true; if (g3) g3.key = ''; sync(); setRun(false); redraw(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'f', 'gas', 'R', 'tf']) if (c[key] != null) S[key] = c[key];
+    $('presetHint').textContent = c.hint; resetStage(c.st); S.st = c.st; sync(); goStage(c.st); if (c.st !== 'disk' && !reduce) setRun(true);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#stageSeg button')) b.addEventListener('click', () => { if (b.dataset.st !== S.st) goStage(b.dataset.st); });
+  const custom = () => { S.preset = 'custom'; };
+  const onSlider = (id, fn, st) => $(id).addEventListener('input', (e) => { fn(+e.target.value); custom(); if (st) resetStage(st); sync(); setRun(false); redraw(); });
+  onSlider('sR0', (v) => { S.r0 = v; }, 'collapse'); onSlider('sP0', (v) => { S.P0 = v; }, 'collapse');
+  $('chkNoSpin').addEventListener('change', (e) => { S.spin = !e.target.checked; custom(); resetCollapse(); sync(); setRun(false); redraw(); });
+  onSlider('sL', (v) => { S.L = v; if (S.st === 'planets') resetGrowth(); else GR.D = null; }); onSlider('sDist', (v) => { S.r = distOf(v); });
+  onSlider('sF', (v) => { S.f = v; }, 'planets'); onSlider('sGas', (v) => { S.gas = v; }, 'planets');
+  onSlider('sRad', (v) => { S.R = radOf(v); }, 'melt'); onSlider('sTf', (v) => { S.tf = v; }, 'melt');
+  $('play').addEventListener('click', () => { if (finished()) return; setRun(!S.run); });
+  $('restart').addEventListener('click', () => { resetStage(S.st); setRun(false); redraw(); });
+  $('skip').addEventListener('click', () => { toEnd(); setRun(false); redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; dirty3 = true; redraw(); });
+  function setProbe(r) { S.r = Math.max(0.1, Math.min(100, r)); custom(); sync(); redraw(); }
+  can.addEventListener('keydown', (e) => { if (S.st !== 'disk' || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const f = Math.pow(10, (e.shiftKey ? 0.1 : 0.01) * (e.key === 'ArrowRight' ? 1 : -1)); setProbe(S.r * f); e.preventDefault(); });
+  /* drag the probe in the flat graph */
+  can.addEventListener('pointerdown', (e) => {
+    if (S.st !== 'disk' || use3() || !probeX) return; const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, g = probeX.b;
+    if (y < g.y || y > g.y + g.h || x < g.x - 10 || x > g.x + g.w + 10) return; dragging = 'flat'; can.setPointerCapture(e.pointerId); moveProbe(e); e.preventDefault();
+  });
+  function moveProbe(e) { const b = can.getBoundingClientRect(), x = e.clientX - b.left, g = probeX.b; setProbe(0.03 * Math.pow(100 / 0.03, (x - g.x) / g.w)); }
+  can.addEventListener('pointermove', (e) => { if (dragging === 'flat') moveProbe(e); else if (dragging === '3d') probeFrom3(e); });
+  const endDrag = () => { dragging = false; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+
+  /* ---------- running ---------- */
+  function stepCollapse(fr) {
+    const C = CL.C, rd = Rd();
+    let rmax = 0; for (let i = 0; i < C.n; i++) if (C.st[i] === 0) { const k = 3 * i; rmax = Math.max(rmax, Math.hypot(C.p[k], C.p[k + 1], C.p[k + 2])); }
+    const want = Math.max(1.3 * rd, 1.12 * rmax, 1); CL.view += (want - CL.view) * Math.min(1, 0.08 * fr);
+    stepCloud(C, fr * S.speed * 0.0035 * Math.sqrt(CL.view ** 3 / GM));
+    const n = cloudCounts(C), q = parcel(C); if (!n.fall && (q.settled || q.gone) && C.t > fallTime(S.r0)) CL.done = true;
+  }
+  function stepGrowth(fr) { GR.t = Math.min(T_END, GR.t * Math.pow(10, 0.0075 * fr * S.speed)); growTo(GR.D, GR.t); if (GR.t >= T_END) GR.done = true; }
+  function stepMelt(fr) { ML.t = Math.min(T_MELT_END, ML.t + 0.03 * fr * S.speed); if (ML.t >= T_MELT_END) ML.done = true; }
+  function toEnd() {
+    if (S.st === 'collapse') { let k = 0; while (!CL.done && k++ < 4000) stepCollapse(4); }
+    else if (S.st === 'planets') { while (!GR.done) stepGrowth(8); }
+    else if (S.st === 'melt') { ML.t = T_MELT_END; ML.done = true; }
+  }
+  /* deterministic stepping for tests and key capture: n frames of 1/60 s */
+  function run(n) { for (let i = 0; i < n; i++) { if (S.st === 'collapse' && !CL.done) stepCollapse(1); else if (S.st === 'planets' && !GR.done) stepGrowth(1); else if (S.st === 'melt' && !ML.done) stepMelt(1); } redraw(); }
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'solar-system-formation@2026-10-25';
+  function showCols() { return S.st === 'collapse' ? [['r0_AU', 'r₀ (AU)'], ['P0_Myr', 'P₀ (Myr)'], ['rdisk_AU', 'disk (AU)'], ['Pdisk_yr', 'P (yr)']]
+    : S.st === 'disk' ? [['L_Lsun', 'L'], ['r_AU', 'r (AU)'], ['T_K', 'T (K)'], ['frost_AU', 'frost (AU)']]
+    : S.st === 'planets' ? [['f', 'disk ×'], ['t_Myr', 't (Myr)'], ['rock_Me', 'rocky (M⊕)'], ['ice_Me', 'icy (M⊕)']]
+    : [['R_km', 'R (km)'], ['tf_Myr', 'forms (Myr)'], ['peak_K', 'hottest (K)'], ['core', 'core']]; }
+  const STAGE_NAME = { collapse: '1 Collapse', disk: '2 Frost line', planets: '3 Planets grow', melt: '4 Iron cores' };
+  window.vdReadingRow = () => {
+    const had = typeof window.vdRows === 'function' ? window.vdRows() : [];
+    if (had.length && had[0].stage !== S.st) return `The readings so far are from stage ${STAGE_NAME[had[0].stage]}: export them to the worksheet and clear them before recording in this stage.`;
+    if (S.st === 'collapse') {
+      const C = CL.C, q = parcel(C);
+      if (q.gone) return 'The tracked parcel fell onto the Sun: with no spin there is no disk to measure.';
+      if (!q.settled) return 'The tracked parcel has not settled in the disk yet: let the collapse finish (or press To the end).';
+      return { stage: 'collapse', r0_AU: String(S.r0), P0_Myr: S.spin ? sig(S.P0, 3) : 'none', rdisk_AU: sig(q.s, 3), Pdisk_yr: sig(q.period, 3), t_yr: String(Math.round(C.t)) };
+    }
+    if (S.st === 'disk') { const sol = solidsAt(S.r, S.L);
+      return { stage: 'disk', L_Lsun: sig(S.L, 2), r_AU: sig(S.r, 3), T_K: sig(diskT(S.r, S.L), 3), solids: sol.length ? sol.map((c) => c.name.toLowerCase()).join(', ') : 'none', frost_AU: sig(frostLine(S.L), 3) }; }
+    if (S.st === 'planets') { const s = growthSummary(GR.D);
+      return { stage: 'planets', f: sig(S.f, 2), gas_Myr: sig(S.gas, 2), t_Myr: sig(GR.t / 1e6, 3), rock_Me: s.rock ? sig(s.rock.m, 3) : '', rock_AU: s.rock ? sig(s.rock.a, 3) : '', ice_Me: s.ice ? sig(s.ice.m, 3) : '', ice_AU: s.ice ? sig(s.ice.a, 3) : '', giants: String(s.giants) }; }
+    const run = ML.run;
+    if (!ML.done) return 'Let the run reach 20 million years first (or press To the end).';
+    return { stage: 'melt', R_km: sig(S.R, 3), tf_Myr: sig(S.tf, 2), heat_MJkg: sig(heatLeft(S.tf) / 1e6, 3), peak_K: String(Math.round(run.peak)), core: run.core ? `yes, at ${sig(run.coreAt, 3)} Myr` : 'no' };
+  };
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: showCols });
+  $('about').textContent = 'Four models, each stated on the page and in the notes. Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
+
+  /* ---------- run, size, theme ---------- */
+  const redraw = () => { draw(); readouts(); clock(); };
+  function draw() {
+    if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.st === 'planets' && !GR.D) resetGrowth();
+    if (use3()) { draw3(); return; }
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.st === 'collapse') drawCollapseFlat(); else if (S.st === 'disk') drawDiskFlat(); else if (S.st === 'planets') drawPlanetsFlat(); else drawMeltFlat();
+  }
+  let last = performance.now(), lastOut = 0;
+  function frame(now) {
+    const fr = Math.min(4, (now - last) / (1000 / 60)); last = now;
+    if (S.run) {
+      if (S.st === 'collapse') stepCollapse(fr); else if (S.st === 'planets') stepGrowth(fr); else if (S.st === 'melt') stepMelt(fr);
+      if (finished()) setRun(false);
+      draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+    } else if (S.st === 'planets' && !reduce) { draw(); }
+    if (S.st === 'planets' && !reduce) GR.tau += fr / 60;
+    else if (S.st === 'collapse' && CL.done && !reduce) { stepCloud(CL.C, fr * 0.004 * Math.sqrt(CL.view ** 3 / GM)); draw(); }
+    else if (use3() && dirty3) { dirty3 = false; draw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { const sc = $('setupCard'); sc.style.top = getComputedStyle(sc).position === 'absolute' ? `${$('strip').offsetHeight + 10}px` : '';
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); dirty3 = true; redraw(); }
+  const retheme = () => { tokens(); dirty3 = true; if (g3) g3.key = ''; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  resetCollapse(); resetGrowth(); resetMelt();
+  const qs = new URLSearchParams(location.search), first = PRESETS[qs.get('setup')] ? qs.get('setup') : 'nebula';
+  new ResizeObserver(resize).observe($('scene')); resize();
+  applyPreset(first);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {} });
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', timeUnit: 'yr', time: () => (S.st === 'collapse' ? CL.C.t : null) });
+  VD.howTo({ src: 'media/how-this-works/solar-system-formation.mp4', poster: 'media/how-this-works/solar-system-formation.jpg' });
+  window.__ss = { S, CL, GR, ML, applyPreset, goStage, resetStage, redraw, run, toEnd, setRun, sync, setProbe, PRESETS, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

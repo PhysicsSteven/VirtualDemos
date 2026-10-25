@@ -1504,7 +1504,8 @@
             "lagrange-points",
             "exoplanets",
             "planet-temperatures",
-            "resonances"
+            "resonances",
+            "solar-system-formation"
           ]
         },
         {
@@ -1625,6 +1626,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "solar-system-formation",
             "planet-temperatures",
             "rotation"
           ],
@@ -7530,6 +7532,23 @@
       ],
       "title": "Static Equilibrium",
       "url": "demos/equilibrium.html"
+    },
+    {
+      "demo": "solar-system-formation",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), Astro 2203 Topic 5 (plan gap 3). Four stages: a rotating cloud collapsing into a disk (Ulrich 1976 infall, disk radius Ω₀²r₀⁴/GM, spin up (r₀/R_d)²); the disk's temperature (Hayashi 1981, T = 280 K r^(−1/2) L^(1/4)) with the condensation temperatures of Lodders (2003) and the frost line; oligarchic growth of 900 planetesimals to the isolation mass with the Kokubo and Ida (2002) growth time, giant cores of 10 Earth masses that form while the gas lasts; aluminum 26 heating and conduction in a planetesimal (Johansen et al. 2023 values) deciding whether it melts and grows an iron core. Intro worksheet intro-solar-system-formation with a key from a real run.",
+      "title": "Building a Solar System",
+      "url": "demos/solar-system-formation.html",
+      "handouts": [
+        "intro-solar-system-formation"
+      ]
     },
     {
       "demo": "exoplanets",

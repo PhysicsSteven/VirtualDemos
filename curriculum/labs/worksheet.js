@@ -500,13 +500,19 @@
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
-  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky', 'intro-celestial-sphere',
+  const INTRO = ['intro-solar-system-formation', 'intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky', 'intro-celestial-sphere',
     'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
   const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures', 'intro-celestial-sphere'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
   INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
+    /* Reading | Cloud radius (AU) | Cloud turns once every (million years) | Disk radius (AU) | Disk edge goes around once every (years) | Spin up.
+       The other stages go to their own tables: frost line (table 2), planets grow (table 3), iron cores (table 4) */
+    'intro-solar-system-formation': { demo: 'Building a Solar System', cols: ['row', 'r0_AU', 'P0_Myr', 'rdisk_AU', 'Pdisk_yr', null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'disk'), cols: ['row', 'L_Lsun', 'r_AU', 'T_K', 'solids', 'frost_AU'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'planets'), cols: ['row', 'f', 'gas_Myr', 't_Myr', 'rock_Me', 'ice_Me', 'ice_AU', 'giants'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'melt'), cols: ['row', 'R_km', 'tf_Myr', 'heat_MJkg', 'peak_K', 'core'] }] },
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
     'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
     'intro-gravity': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', null, null] },
