@@ -2220,7 +2220,7 @@ table.rows button:hover { color: var(--pos); }
   // Pictures only: every height, level, reading and label below comes from the same state and functions as the flat view.
   // Sizes in meters, z up, the bench top at z = 0. To scale: the buoyancy tank, block, spout and beaker; the Shapes vessels;
   // the Torricelli tank, hole, jet and floor. Not to scale (said on the picture): the depth tank's width, the barometer and
-  // manometer widths, and the Venturi pipe and standpipe widths (1.5 times). The labels are drawn over the picture on #sCan.
+  // manometer widths, and the Venturi pipe and standpipe widths (2 times). The labels are drawn over the picture on #sCan.
   const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.34, ph: 1.27, zoom: 1 }, sc: {}, env: null, lastSc: '' };
   let handles3 = [];
   const on3 = () => G3.on && !!G3.S;
@@ -2726,7 +2726,7 @@ table.rows button:hover { color: var(--pos); }
         tag('open to the air', [sx, 0, gm.top], 'center', T.muted, 11, 400, null, 0, -10);
         tag('level with no pressure difference', [-gm.sep / 2 - 0.1, -0.02, I.zRest], 'right', T.muted, 10.5, 400, null, 0, 4);
         grips3();
-        note3(`Heights are to scale; the tube widths and the bulb are not. ${NOTE}`);
+        note3(`Heights are drawn in proportion but scaled to fit, with no rule, so read Δh from the label; the tube widths and the bulb are not to scale. ${NOTE}`);
       }
     }
     return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
@@ -2824,7 +2824,7 @@ table.rows button:hover { color: var(--pos); }
       drp = VD3K.particles(V, { n: 400, r: 0.0045 }); g.add(drp);
       for (let i = 0; i < 3; i++) { const l = VDK.dashed(); ghosts.push(l); g.add(l); const m = VDK.mesh(new THREE.TorusGeometry(0.005, 0.0012, 6, 20).rotateY(Math.PI / 2), VDK.std({ color: '#7a8592' })); gmarks.push(m); g.add(m); }
       splash = VDK.mesh(new THREE.RingGeometry(0.012, 0.022, 32), new THREE.MeshBasicMaterial({ color: T.pos, side: THREE.DoubleSide })); splash.position.z = -ZF + 0.002; g.add(splash);
-      const tape = VD3K.ruler(V, { len: 1.6, to: 160, unit: 'cm', w: 0.03 }); tape.position.set(0, -0.08, -ZF + 0.0005); g.add(tape);
+      const tape = VD3K.ruler(V, { len: 1.6, to: 160, unit: 'cm', w: 0.03 }); tape.position.set(GT + 0.8, -0.08, -ZF + 0.0005); g.add(tape);
       supply = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#2b3036', roughness: 0.75 }), true); g.add(supply);
       fall = VDK.mesh(new THREE.CylinderGeometry(0.004, 0.005, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), LQ.jet); g.add(fall);
       arrV = VDK.arrow(T.acol, 0.005); g.add(arrV);

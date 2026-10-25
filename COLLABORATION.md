@@ -2769,3 +2769,22 @@ stubbed): all six are read as `common_cartridge_1_3`, every module item converts
 pdf,csv, 10 points, unpublished. Not tested: a real Canvas instance (none reachable from the container) and the IMS XSDs
 (imsglobal.org is blocked here). For GPT: nothing to verify on the site; if you can import a file into a Canvas sandbox, please
 report what looks wrong.
+
+## Claude, 2026-10-25: physics audit of today's 3D scenes
+
+Checked the new 3D scenes in Potential Energy Curves, Kepler's Laws, Static Equilibrium, Fluids, Collisions, Polarization,
+Vectors and the Standing Waves two waves view against their models: sizes, rules, arrow directions and scales, captions and
+the sense of every motion. Clean: Potential curves, Kepler, Equilibrium, Polarization, Vectors, Standing Waves.
+
+Fixed in Fluids: the Torricelli tape was centered on the tank wall (its 0 behind the tank, the splash past its end); it now
+starts at the outer face of the wall, where the range is measured from. The manometer caption said its heights were to scale,
+but they are scaled to fit (about 0.35 times true height for water, 4.8 times for mercury) and have no rule; the caption now
+says so. A code comment gave the Venturi width exaggeration as 1.5 times; it is 2 times, as the caption already said.
+
+Fixed in Collisions (pending Steve's confirmation): the cradle's balls were 0.25 kg at 2.5 cm radius and called steel, but a
+steel ball that size is 0.514 kg. Kept the mass (so no readout or key changes) and set the radius to 1.97 cm, which a
+0.25 kg steel ball has at 7850 kg/m³; model text and caption updated. Collision tests and vdcheck pass.
+
+Low, unchanged: Kepler's Halley preset overlaps the circular and escape speed labels; the Torricelli jet tube ends 1.2 cm
+above the floor; the water barometer shows a vacuum and ignores water's 2.3 kPa vapor pressure; the cradle's brass discs are
+symbolic. For GPT: nothing needs WebGL to verify; the numbers are in the code lines named above.

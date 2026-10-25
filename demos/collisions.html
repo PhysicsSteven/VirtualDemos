@@ -629,7 +629,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const puckR = (m) => 0.04 + 0.02 * Math.cbrt(m);
   const TBL = { x: 1.0, y: 0.55 };                 // air table half widths, m
   const EXP = { comp: 0.05, Ls: 0.1, ts: 0.6 };    // explosion spring: compression, natural length, release time
-  const CR = { L: 0.3, R: 0.025, m: 0.25 };        // cradle: string length, ball radius, ball mass
+  const CR = { L: 0.3, R: 0.0197, m: 0.25 };        // cradle: string length, ball radius, ball mass
 
   // ---------- sliders per scene ----------
   const SLD = {
@@ -658,7 +658,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     track: 'Model: a frictionless air track, carts treated as rigid bodies that collide in an instant. The coefficient of restitution e fixes how fast they separate: v₂′ − v₁′ = −e(v₂ − v₁). Carts that leave the track ends simply slide out of view.',
     table: 'Model: smooth hard discs on a frictionless air table. The contact impulse is along the line of centers at the moment of contact, so the velocity components along the contact tangent do not change; e acts on the components along the line of centers. No spin, no table edges.',
     explode: 'Model: an ideal massless spring, compressed by 5 cm and held by a thread, pushes the carts apart when the thread is cut. Its force is internal, so the total momentum never changes; the spring’s energy E becomes kinetic energy. The push is computed exactly (the pieces move in simple harmonic motion relative to each other until the spring reaches its natural length).',
-    cradle: 'Model: identical steel balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.'
+    cradle: 'Model: identical steel balls (0.25 kg, so 3.9 cm across at the 7850 kg/m³ density of steel) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.'
   };
 
   // ---------- setups ----------
@@ -2720,7 +2720,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     return { t: [0, 0, 0.17], d: 0.82, ref: 1.55, ovl: () => {
       if (held) { const b = ball(p.k - 1, cr.th[p.k - 1]); tag(`${p.k} ball${p.k > 1 ? 's' : ''} at ${p.th}°`, [b[0] - CR.R, 0, b[2] + CR.R], 'right', T.ink, 11.5, 600, -6, -6); }
       grips3();
-      note3(OV.W < 520 ? `To scale: ${CR.R * 200} cm balls on ${CR.L * 100} cm strings. ${NOTE3S}` : `Balls, strings and frame to scale: ${CR.R * 200} cm steel balls on ${CR.L * 100} cm strings, each hung from two strings so it swings in one plane. ${NOTE3}`);
+      note3(OV.W < 520 ? `To scale: ${(CR.R * 200).toFixed(1)} cm balls on ${CR.L * 100} cm strings. ${NOTE3S}` : `Balls, strings and frame to scale: ${(CR.R * 200).toFixed(1)} cm steel balls on ${CR.L * 100} cm strings, each hung from two strings so it swings in one plane. ${NOTE3}`);
     } };
   }
 
