@@ -215,7 +215,7 @@ sub, sup { line-height: 0; }
 
       <!-- vd-readings --><section class="vd-readings" data-ws="franck-hertz" data-title="Franck–Hertz Experiment" data-demo="franck-hertz">
         <h2>Readings</h2>
-        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn" id="recCurve">Record the curve</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
         <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
       </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
@@ -1255,12 +1255,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // Readings: one row per marked peak, in order of voltage, with the settings of the curve they were marked on
   window.vdVersion = 'franck-hertz@2026-10-24';
-  window.vdShowCols = [['n', 'n'], ['U_V', 'Uₙ (V)'], ['T_C', 'Oven (°C)'], ['Ur_V', 'Uᵣ (V)']];
+  window.vdShowCols = [['n', 'Peak n'], ['U_V', 'U (V)'], ['I_nA', 'I (nA)'], ['T_C', 'Oven (°C)'], ['Ur_V', 'Uᵣ (V)']];
+  /* Record reading stores the marked peaks, or with no marks the current at the present U (a point is recorded wherever U stops);
+     Record the curve stores the recorded curve every 0.5 V (1 V for neon). A series holds peaks or curve points, not both, since
+     they go to different tables of the worksheet. */
+  let curveNext = false;
+  const nA = (v) => (Math.abs(v) < 0.005 ? 0 : v).toFixed(2); /* no "-0.00" */
+  const setting = () => { const hg = S.gas === 'hg'; return { gas: hg ? 'Mercury' : 'Neon', T_C: hg ? String(S.TC) : '20', Ur_V: S.Ur.toFixed(1), Uc_V: S.Uc.toFixed(1) }; };
   window.vdReadingRow = () => {
-    const m = S.marks.slice().sort((a, b) => a - b), hg = S.gas === 'hg';
-    if (!m.length) return 'Mark the maxima first: press Mark peaks and click each one in order.';
-    return m.map((u, i) => ({ gas: hg ? 'Mercury' : 'Neon', T_C: hg ? String(S.TC) : '20', Ur_V: S.Ur.toFixed(1), Uc_V: S.Uc.toFixed(1), n: String(i + 1), U_V: u.toFixed(2) }));
+    const g = G(), have = typeof window.vdRows === 'function' ? window.vdRows() : [], peaksIn = have.some((r) => r.n), pointsIn = have.some((r) => !r.n);
+    const m = S.marks.slice().sort((a, b) => a - b);
+    if (!curveNext && m.length) {
+      if (pointsIn) return 'These readings are points on the curve. Send them to the worksheet and Clear before recording peaks.';
+      return m.map((u, i) => Object.assign(setting(), { n: String(i + 1), U_V: u.toFixed(2) }));
+    }
+    if (peaksIn) return 'These readings are peaks. Send them to the worksheet and Clear before recording the curve.';
+    if (!curveNext) {
+      const v = data[Math.round(S.U / g.dU)];
+      if (!(v === v)) return 'No current is recorded at this U yet.';
+      return Object.assign(setting(), { U_V: S.U.toFixed(2), I_nA: nA(v) });
+    }
+    if (sweeping) return 'Let the sweep finish first.';
+    const step = S.gas === 'hg' ? 0.5 : 1, out = [];
+    for (let k = 0; k * step <= g.Umax + 1e-9; k++) { const v = data[Math.round(k * step / g.dU)]; if (v === v) out.push(Object.assign(setting(), { U_V: (k * step).toFixed(2), I_nA: nA(v) })); }
+    return out.length ? out : 'No curve recorded yet: sweep U first.';
   };
+  $('recCurve').addEventListener('click', () => { curveNext = true; try { document.querySelector('.vd-readings .vd-rec').click(); } finally { curveNext = false; } });
 
   tokens();
   newData();

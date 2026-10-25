@@ -327,8 +327,10 @@
     photoelectric: { demo: 'Photoelectric Effect', cols: ['row', 'metal', 'wavelength_nm', (r) => (+r.frequency_Hz / 1e14).toFixed(4), 'stopping_voltage_V', 'meter_reading_nA'] },
     /* Reading | Angle θ (°) | 1 − cos θ | Scattered wavelength λ′ (pm) | Shift Δλ (pm) | Electron energy T (keV) | Electron angle φ (°) */
     compton: { demo: 'Compton Scattering', cols: ['row', 'theta_deg', null, 'lamP_pm', null, 'T_keV', 'phi_deg'] },
-    /* Reading | Gas and settings | Peak order n | Peak voltage U_n (V) | Spacing to the previous peak (V) */
-    'franck-hertz': { demo: 'Franck–Hertz Experiment', cols: ['row', (r) => `${r.gas === 'Neon' ? 'Neon' : `Mercury, ${r.T_C} °C`}, retarding ${r.Ur_V} V, contact ${r.Uc_V} V`, 'n', 'U_V', null] },
+    /* Reading | Gas and settings | Accelerating voltage U (V) | Collector current I (nA); a series of marked peaks (every row has a
+       peak order) goes to the second table: Reading | Gas and settings | Peak order n | Peak voltage U_n (V) | Spacing to the previous peak (V) */
+    'franck-hertz': { demo: 'Franck–Hertz Experiment', cols: ['row', (r) => `${r.gas === 'Neon' ? 'Neon' : `Mercury, ${r.T_C} °C`}, retarding ${r.Ur_V} V, contact ${r.Uc_V} V`, 'U_V', 'I_nA'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.n), cols: ['row', (r) => `${r.gas === 'Neon' ? 'Neon' : `Mercury, ${r.T_C} °C`}, retarding ${r.Ur_V} V, contact ${r.Uc_V} V`, 'n', 'U_V', null] }] },
     /* Reading | Event | Speed β | ct (ly) | x (ly) | ct′ (ly) | x′ (ly) | (ct′)² (ly²) | (x′)² (ly²) */
     spacetime: { demo: 'Spacetime Diagrams', cols: ['row', 'event', 'beta', 'ct', 'x', 'ctp', 'xp', null, null] },
     /* Reading | Direction | Signed speed f (rev/s) | Micrometer reading s (mm) | D (m) | B (m) */
@@ -494,7 +496,10 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising'];
+  /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
+     and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
+  const CURVE_TABLES = { 'franck-hertz': [0] };
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
@@ -992,13 +997,16 @@ details.about[open] > summary { margin-bottom: 8px; }
     if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `No row has a number in both columns yet. Each row with a number for ${xName} and for ${yName} is a point.` })); return; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const sameX = xs.every((x) => x === xs[0]);
-    const f = sameX ? null : fitLine(xs, ys);
+    const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0;
+    const f = sameX || curve ? null : fitLine(xs, ys);
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
     const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
     const lab = (n, u) => (u ? `${n} (${u})` : n);
     const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
     if (f) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
-    pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: 4.5, fill: '#cf222e', stroke: '#fff', 'stroke-width': 1 })));
+    if (curve) svg.appendChild(sv('polyline', { points: pts.slice().sort((p, q) => p[0] - q[0]).map(([x, y]) => `${A.X(x)},${A.Y(y)}`).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.5 }));
+    const dot = curve && pts.length > 40 ? 2.5 : 4.5;
+    pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: dot, fill: '#cf222e', stroke: '#fff', 'stroke-width': dot > 3 ? 1 : 0.5 })));
     if (f) {
       const m = Math.max(...f.res.map(Math.abs)) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab('residual', P.yUnit), 4);
       svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
@@ -1006,6 +1014,7 @@ details.about[open] > summary { margin-bottom: 8px; }
     }
     box.appendChild(svg);
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
+    if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: `${pts.length} points, joined in order of ${P.xName}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.` })); return; }
     if (!f) return;
     const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
     const su = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');

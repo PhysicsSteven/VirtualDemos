@@ -16,14 +16,15 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.4. Access for free at https
 - The mercury tube sits in an oven, from 100 to 210 °C, which sets the vapor pressure (Huber, Laesecke and Friend, 2006). The neon tube is sealed at room temperature.
 - Each electron is followed across the tube. Once it has more than the excitation energy it hits an atom after a random distance and loses exactly that energy (mercury: the 6s6p ³P₁ level, NIST). The curve is a fresh random sample every sweep, with 0.02 nA of amplifier noise, so two sweeps never match exactly.
 - The electrons gain $$e(U - U_c)$$, not $$eU$$: the contact potential $$U_c$$ between the cathode and the grid metal shifts every peak.
-- Mark peaks lets you click the maxima on the curve; with Snap on, a mark moves to the top of a parabola through the smoothed curve nearby. Record reading stores every marked peak, in order, with the gas, oven temperature, $$U_r$$ and $$U_c$$. Export to worksheet sends the readings to the Data table below; Clear (under Readings) starts a new series, which goes into a new copy of the table.
+- Mark peaks lets you click the maxima on the curve; with Snap on, a mark moves to the top of a parabola through the smoothed curve nearby.
+- Record reading stores the current at the present $$U$$ or, once peaks are marked, every marked peak in order; Record the curve stores the recorded current every 0.5 V (1 V for neon). Each reading carries the gas, oven temperature, $$U_r$$ and $$U_c$$. Export to worksheet sends the readings below: points on the curve go to the first Data table, peaks to the second. Clear (under Readings) starts a new series, which goes into a new copy of the table; a series holds either points on the curve or peaks.
 - Blind (in the Measure section) hides the spacings, the fitted energy, the intercept and the NIST value, and turns off the lines at $$n \cdot E_\mathrm{exc}/e$$.
 
 </details>
 
 ## Goal
 
-Measure the voltages of the repeated maxima in the collector current of a Franck–Hertz tube and find from their spacing the energy a mercury atom can take from an electron.
+Record the collector current of a Franck–Hertz tube against the accelerating voltage, and find from the spacing of its repeated maxima the energy a mercury atom can take from an electron.
 
 ## Background
 
@@ -48,19 +49,31 @@ None for the virtual apparatus. A real tube runs in an oven near 180 °C and hol
 
 ## Procedure
 
-Turn Blind on before you start.
+Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.
 
-**Mercury at 180 °C.** Start with the Mercury tube at 180 °C setup and let the sweep finish. Mark every maximum you can find, in order from the lowest voltage, and record the peaks. Note $$U_r$$ and $$U_c$$.
+**Mercury at 180 °C: the current curve.** Start with the Mercury tube at 180 °C setup and let the sweep finish. Record the collector current $$I$$ against the accelerating voltage $$U$$ every 0.5 V from 0 to 35 V, and send it to the worksheet. Note $$U_r$$ and $$U_c$$.
 
-**Contact potential.** Clear the readings, raise the contact potential by 1.0 V and sweep again. Mark and record the maxima. Send this run to a new copy of the table.
+**Mercury at 180 °C: the peaks.** Clear the readings. On the same curve, mark every maximum you can find, in order from the lowest voltage, and record the peaks. They go to the peak table.
 
-**Temperature.** Clear the readings, put the contact potential back, and set the oven to 120 °C. Sweep, mark and record the maxima, and send them to a third copy of the table. Write down how the dips compare with those at 180 °C.
+**Contact potential.** Clear the readings, raise the contact potential by 1.0 V and sweep again. Mark and record the maxima, and send them to a new copy of the peak table.
 
-**Retarding voltage.** At 180 °C, sweep once with the retarding voltage at zero. Write down what happens to the maxima; there is nothing to record.
+**Temperature.** Clear the readings, put the contact potential back, and set the oven to 120 °C. Sweep, record the current curve every 0.5 V and send it to a second copy of the curve table. Clear the readings, then mark and record the maxima and send them to a third copy of the peak table.
+
+**Retarding voltage.** Set the oven back to 180 °C and the retarding voltage to zero. Sweep, record the current curve every 0.5 V and send it to a third copy of the curve table.
 
 **Neon.** Switch to the neon tube, sweep to 80 V and mark the maxima. Watch where the glowing layers form.
 
 ## Data
+
+**Current curve.**
+
+| Reading | Gas and settings | Accelerating voltage $$U$$ (V) | Collector current $$I$$ (nA) |
+|---|---|---|---|
+| | | | |
+| | | | |
+| | | | |
+
+**Peaks.**
 
 | Reading | Gas and settings | Peak order $$n$$ | Peak voltage $$U_n$$ (V) | Spacing to the previous peak (V) |
 |---|---|---|---|---|
@@ -70,15 +83,17 @@ Turn Blind on before you start.
 
 ## Analysis
 
-1. For the 180 °C run, find the spacings between neighboring maxima and their mean.
-2. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
-3. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
-4. Fit the 120 °C run. Compare its slope with the 180 °C one. Why are the dips shallower in the colder tube?
-5. Repeat the 180 °C fit without the first peak. Does the slope change by more than its uncertainty?
+1. Graph $$I$$ against $$U$$ for the 180 °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.
+2. For each maximum of the 180 °C and 120 °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.
+3. For the 180 °C peaks, find the spacings between neighboring maxima and their mean.
+4. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
+5. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
+6. Fit the 120 °C peaks. Compare their slope with the 180 °C one. Why are the dips shallower in the colder tube?
+7. Repeat the 180 °C fit without the first peak. Does the slope change by more than its uncertainty?
 
 ## Uncertainty
 
-Each peak is read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
+A maximum read from the current curve, sampled every 0.5 V, is good to about a quarter of a volt; marking it on the demo's finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
 
 ## Questions
 
@@ -90,4 +105,4 @@ Each peak is read from a noisy curve: estimate how far you could move a mark bef
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$\Delta E$$ and the wavelength with uncertainties, the comparison of the three runs, your notes on $$U_r = 0$$ and on neon, and answers to the questions. Identify simulated data.
+Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, $$\Delta E$$ and the wavelength with uncertainties, the comparison of the runs, your notes on neon, and answers to the questions. Identify simulated data.

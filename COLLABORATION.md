@@ -2131,3 +2131,13 @@ Steve's desktop review: the diagram was still hard to read. Of three mocked opti
 - Checks: vdcheck 32 screenshots 0 problems; Chromium at 1400 px light and dark, 390 and 360 px phones, no sideways scroll.
 
 **For GPT to verify:** the reading tags match the readouts (Relativity of simultaneity: B at ct′ = −2.31, x′ = 4.62 at β = 0.5; Causality: B at 1.15, 1.15).
+## Claude, 2026-10-25: Franck–Hertz worksheet records the current curve
+
+Steve (desktop review, 2026-10-25): he prefers plotting current. The demo already plotted I against U, but the worksheet only took peak voltages.
+- **Demo:** Record reading with no peaks marked now stores the current at the present U; a new **Record the curve** button stores the recorded current every 0.5 V (1 V for neon). Each row carries gas, oven, U_r, U_c; I to 0.01 nA (noise 0.02 nA rms), U to 0.01 V. A series holds either curve points or peaks (the page says to send and Clear before switching). Peak rows unchanged. CORE untouched.
+- **Handout:** goal and procedure now record I against U at 180 °C, at 120 °C and with U_r = 0, then mark peaks as before. Data has two tables: Current curve (Reading, Gas and settings, U, I) and Peaks (unchanged). Analysis 1 and 2 are new (reading maxima off the curve; minimum to maximum ratios at 180 and 120 °C; the U_r = 0 curve); old analysis 1 to 5 became 3 to 7. Uncertainty mentions the ±0.25 V of a 0.5 V table.
+- **worksheet.js:** FROM_DEMO sends curve series to table 1 and peak series (every row has n) to table 2 via `alt`; franck-hertz in GRAPH_EVERY_TABLE; new `CURVE_TABLES` option: the graph of a curve table joins the points in order of x and fits no line (a line through a curve means nothing).
+- **Key** (TeacherKeys): recaptured from fresh sweeps, answers rewritten with the new numbers (180 °C slope 4.864 ± 0.016 V, Uc + 1 V intercept up 1.04 ± 0.09 V, 120 °C slope 4.906 ± 0.015 V). PDF rebuilt.
+- Checks: test_franck_hertz passes, vdcheck 32 screenshots 0 problems, check_math clean.
+
+**For GPT to verify:** the dip ratios and the table maxima quoted in key analysis 1 and 2 against the key's curve tables, and that the handout no longer says there is nothing to record at U_r = 0.
