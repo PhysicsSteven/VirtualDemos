@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-celestial-sphere', date: '2026-10-25', title: 'The Sky and the Celestial Sphere',
+    text: 'A new astronomy demo with an Astro 2203 worksheet: the real night sky for any place and date from 3000 BC to AD 15000, seen from outside as a sphere around you and from the ground. See why the stars circle Polaris, why its height is your latitude, which stars never set, how the Sun and Moon move among the stars, the eclipses of 2024 and 2025, and how the pole star changes over thousands of years.', link: { href: 'demos/celestial-sphere.html', text: 'Open The Sky and the Celestial Sphere' } },
   { id: '2026-10-25-retrograde', date: '2026-10-25', title: 'Retrograde Motion and World Models',
     text: 'A new astronomy demo with an Astro 2203 worksheet: watch Earth pass Mars from above while Mars loops backward against the real stars, then run the same sky through Ptolemy\'s epicycles, Copernicus\'s circles and Kepler\'s ellipses, and test them with the phases of Venus as Galileo did. Jump to any opposition, stationary point or greatest elongation from 1800 to 2050.', link: { href: 'demos/retrograde-motion.html', text: 'Open Retrograde Motion' } },
   { id: '2026-10-25-planet-temperatures', date: '2026-10-25', title: 'Planet Temperatures and Habitable Zones',

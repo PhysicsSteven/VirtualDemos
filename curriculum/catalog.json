@@ -17,6 +17,20 @@
      ]
     },
     {
+     "demo": "celestial-sphere",
+     "title": "The Sky and the Celestial Sphere",
+     "desc": "The real night sky from any place and date, seen from outside as a sphere and from the ground: why the stars circle the pole, why the pole's height is your latitude, the Sun and Moon among the stars, eclipses and the wandering pole star.",
+     "tags": [
+      "celestial sphere",
+      "altitude and azimuth",
+      "right ascension and declination",
+      "circumpolar stars",
+      "ecliptic",
+      "precession",
+      "star chart"
+     ]
+    },
+    {
      "demo": "moon-phases",
      "title": "Moon Phases",
      "desc": "Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.",

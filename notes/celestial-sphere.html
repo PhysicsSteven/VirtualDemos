@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>The Sky and the Celestial Sphere: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>The Sky and the Celestial Sphere</h1><ul class="meta"><li><a href="../demos/celestial-sphere.html">Open the demo</a></li><li>Intro astronomy (non-majors and majors); Astro 2203 Topic 2</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The sky behaves like a sphere turning once a day about an axis through Earth's poles. Altitude and azimuth say where to look from one place at one moment; right ascension and declination are fixed on the sphere, like longitude and latitude.</li>
+<li>The north celestial pole stands as many degrees above the northern horizon as your latitude. Polaris is within 0.7° of it today.</li>
+<li>Stars within that many degrees of the pole never set (circumpolar); stars as close to the other pole never rise. A star on the celestial equator is up for half of each day, everywhere.</li>
+<li>The Sun moves along the ecliptic, tilted 23.4° to the celestial equator, so its noon height changes by 46.9° from June to December. The Moon moves about 13° east among the stars each day, within 5.1° of the ecliptic.</li>
+<li>Precession turns Earth's axis around a cone once in about 25,800 years, so the pole star and the constellation of the March equinox change.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need only latitude and longitude on Earth and the idea that Earth spins. The demo pairs well with Stellarium Web (free, in the browser): Stellarium shows the real sky; this demo shows the sphere from outside so students can see why the sky moves as it does. The demo opens paused on A winter night at Ruston. Turn on <strong>Projector</strong> for a large room; the Flat outside view is lighter on old laptops than 3D.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A winter night at Ruston.</strong> Press <strong>Play</strong> at 10 min/s. In the left view every star turns about the axis through the observer; in the right view stars rise in the east and set in the west, and the stars near Polaris circle it. Point out that the axis is tilted by 90° minus the latitude (Q1).</li>
+<li><strong>North Pole, then On the equator.</strong> At the pole the celestial equator lies on the horizon and nothing rises or sets; at the equator the axis lies along the horizon and every star is up 12 hours (Q3).</li>
+<li><strong>Southern sky, Sydney.</strong> The south celestial pole is 33.9° up with no bright star near it; Crux and the pointers never set; Polaris never rises (Q2).</li>
+<li><strong>June solstice Sun, December solstice Sun, Midnight Sun.</strong> Read the highest altitude of the Sun each time (Q4). Turn on <strong>Always up and never up zones</strong> to show the circumpolar caps.</li>
+<li><strong>The Moon through a month.</strong> One day each second at the same clock time: the Moon moves east among the stars, waxes and comes back to the same stars in 27.3 days (Q5).</li>
+<li><strong>Pole star in 2600 BC, Precession of the pole.</strong> The sky circles Thuban at Giza; then 500 years a second in 3D shows the axis sweeping its cone (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: how high above the northern horizon is Polaris seen from Ruston, at 32.5° N? Select Polaris in A winter night at Ruston and check. Why is it not exactly 32.5°?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> From Ruston, is Kochab (declination 74°) circumpolar? Is Capella (declination 46°)? From Sydney, at 33.9° S, does Acrux, in the Southern Cross (declination −63°), ever set?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> On the equator, where on the horizon does Mintaka, almost exactly on the celestial equator, rise? How long is it above the horizon each day?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Find the Sun's highest altitude at Ruston on June 21 and on December 21. Explain the difference using the tilt of Earth's axis. Why does the Sun not set at Tromsø, at 69.6° N, in late June?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Using The Moon through a month, how far east among the stars does the Moon move from one evening to the next? How many days until it is back among the same stars?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Which star was near the north celestial pole when the pyramids at Giza were built, about 2600 BC? Which will be near it in AD 14000? About when does the March equinox point leave Pisces for Aquarius?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Polaris is the brightest star in the sky."</strong> It is about the 48th brightest. What makes it special is its place within 0.7° of the north celestial pole.</li>
+<li><strong>"The stars are fixed; only the Sun moves."</strong> The whole sky turns once a day because Earth turns. Stars also rise about 4 minutes earlier each night, so the evening sky changes through the year.</li>
+<li><strong>"The Sun is straight overhead at noon."</strong> At Ruston the Sun is never overhead: its highest is 80.9° in June. It can be overhead only between 23.4° S and 23.4° N.</li>
+<li><strong>"The pole star is forever."</strong> Precession moves the pole: Thuban 4,600 years ago, Polaris now, Vega in about 12,000 years.</li>
+<li><strong>"Star signs match where the Sun is."</strong> The dates of the signs were set about 2,000 years ago; precession has since shifted the Sun's place by almost a whole constellation.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Star places: the Yale Bright Star Catalogue (Hoffleit and Warren 1991, CDS V/50), 2,887 stars to V = 5.5, J2000 positions moved along their proper motions. Constellation boundaries: IAU (Delporte 1930), looked up as tabulated by Roman (1987).</li>
+<li>Precession of the equator and the ecliptic: Vondrák, Capitaine and Wallace (2011), valid for ±200,000 years. The Earth turns by the Earth rotation angle (IERS Conventions 2010). Nutation (up to 17″) and the aberration of starlight for the stars (up to 20″) are left out.</li>
+<li>Sun: Meeus, Astronomical Algorithms, ch. 25 (about 0.01°). Moon: Meeus ch. 47 with the SOFA moon98 coefficients (about 10″), seen from the observer's place on the WGS84 ellipsoid. ΔT from Espenak and Meeus (2006).</li>
+<li>Highest and lowest altitude in a day: 90° − |φ − δ| and |φ + δ| − 90°. No refraction: in the real sky the air lifts objects at the horizon by about 0.5°, so real days are a few minutes longer and Polaris is a little higher near the horizon.</li>
+<li>Eclipses: the two disks seen from the observer (solar); the Moon against the Earth's shadow with the Explanatory Supplement (1961) radii (lunar). Contact times agree with NASA's within about a minute (Dallas totality, April 8, 2024: 18:41:05 to 18:45:10 UT here, 18:40:43 to 18:44:35 UT in NASA's tables).</li>
+<li>Tested against ERFA (precession, sidereal time, Moon), astropy (constellations) and NASA eclipse times in curriculum/validation/test_celestial-sphere.cjs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with the Astro 2203 activity Reading the Sky with Stellarium: find the same stars in Stellarium Web and compare altitude, azimuth, right ascension and declination.</li>
+<li>Homework: from a dark spot, estimate the altitude of Polaris with a fist at arm's length (about 10°) and compare with your latitude.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

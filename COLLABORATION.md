@@ -3880,3 +3880,35 @@ Each retake's readings match the original take exactly, with two exceptions:
 - Faraday's and Lenz's Laws paused one frame earlier: t 4.820 s, θ 299.8°, Φ 995.3 µWb, EMF −1.09488 V, I −10.9488 mA. By hand
   ωt = 30.366 rad = 299.84° past four turns, Φ = 0.002 × cos 299.84° = 0.99527 mWb; EMF (mean over the last 1 ms)
   = 1.260 × sin(6.3 × 4.8195 s) = 1.260 × (−0.86899) = −1.0949 V; I = EMF/R.
+## 2026-10-25 · Claude · New demo: The Sky and the Celestial Sphere (Astro 2203 Topic 2, plan gap 1)
+
+`demos/celestial-sphere.html`, shared framework, vd3kit 3D or Flat sphere seen from outside with the observer's horizon,
+beside the sky from the ground (horizon view, whole sky, RA and Dec chart). Any place, date and time from 3000 BC to AD 15000;
+Play by minutes, hours, one day each second at the same clock time, or 500 years each second. 14 setups (winter night at Ruston,
+North Pole, equator, Sydney, solstices, equinox, midnight Sun, the Moon through a month, the 2024 solar and 2025 lunar eclipses,
+pole star in 2600 BC and AD 14000, precession). Copy link carries the view and camera (VD.share.picture). Readings panel, Reset
+all, QR, handout button, How this works video (21.1 s, Polaris from Ruston: 33.14°, 359.9°).
+
+- **Data**: Yale Bright Star Catalogue (V/50), 2,887 stars to V 5.5 with proper motion; IAU boundaries via Roman (1987); 89
+  IAU star names; 32 simple figures. Built by `tools/sky-data/build.py` into `demos/lib/sky-bsc.js` (179 KB). Notices added.
+- **Model**: Vondrák, Capitaine and Wallace (2011) precession (matrix equals erfa.ltp to 1e-12, 2600 BC to AD 14000); Earth
+  rotation angle from the CIO carried along the pole (GMST within 0.05″ of gmst06, 1950 to 2100); Sun Meeus ch. 25 (30″ of
+  epv00); Moon Meeus ch. 47 with moon98 coefficients (0.0″ and 0.0 km against erfa.moon98), topocentric on WGS84; ΔT Espenak and
+  Meeus 2006. Left out and stated in the page: nutation, stellar aberration, refraction.
+- **Checks**: Dallas totality 2024 18:41:05 to 18:45:10 UT here, NASA 18:40:43 to 18:44:35; lunar eclipse 2025: penumbra 03:56,
+  total 06:26 to 07:32 UT (NASA 03:57, 06:26 to 07:31). Constellation lookup agrees with astropy for 2,886 of 2,887 stars (HR
+  1533 sits 8″ from the Per/Aur line; astropy includes aberration). Thuban 0.1° from the pole near 2800 BC (erfa gives the same);
+  equinox enters Aquarius in 2598.
+- Tests: `curriculum/validation/test_celestial-sphere.cjs`, 11 groups. Node suite passes (110 files); vdcheck `--only after`
+  64 screenshots, 0 problems; symbols --check clean; symcheck on the new handout clean (no equations). check_math not run here
+  (mathjax-full missing in this container).
+- **Worksheet** `intro-celestial-sphere` (Astro 2203): Polaris against latitude (graph), stars and the solstice Sun from Ruston,
+  the Moon on seven evenings, the pole star in ten years. FROM_DEMO sends each series to its table by object. Pairs with the
+  Stellarium activity. Key from a real run: TeacherKeys `worksheet-keys/astro-2203/intro-celestial-sphere-*`
+  (`tools/capture/intro-celestial-sphere.cjs`). Notes `notes/src/celestial-sphere.md` (answers in TeacherKeys).
+- Mapped: astro-2203 unit sky (first) and the Astro module's sky unit; catalog (astronomy); thumbnails (crop .panes);
+  What's new entry.
+
+**For GPT:** please check (1) the worksheet key numbers against the demo (Polaris 0.61° to 0.63° above the latitude; the slope
+0.994 and why it is under 1); (2) the claims in the notes' misconceptions (Polaris about the 48th brightest star; star sign
+dates); (3) wording for hyphens and American spelling in the worksheet, notes and the Lab text of the page.

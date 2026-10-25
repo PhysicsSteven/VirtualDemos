@@ -500,9 +500,9 @@
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
-  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky',
+  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky', 'intro-celestial-sphere',
     'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
-  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
+  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures', 'intro-celestial-sphere'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
@@ -518,6 +518,15 @@
     'intro-moon': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'set_h', 'node_dist_deg', 'beta_deg', 'eclipse'] },
     /* Reading | Wheel | Start | Spin (rpm) | Distance from the post d (m) | Time for one turn around the post (s) */
     'intro-precession': { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'spin_rpm', 'd_m', 'P_s'] },
+    /* The Sky and the Celestial Sphere: four tables, chosen by what the series recorded. Polaris: Reading | Place | φ (°) | Altitude (°) |
+       Azimuth (°) | δ (°). Other stars and the Sun: Reading | Object | Constellation | δ (°) | Highest (°) | Lowest (°) | Through a day.
+       The Moon: Reading | Date | RA (h) | δ (°) | Constellation | Lit (%) | Altitude (°). The pole: Reading | Year | Star nearest the
+       pole | Distance (°) | March equinox point in | ε (°) */
+    'intro-celestial-sphere': { demo: 'The Sky and the Celestial Sphere', cols: ['row', 'place', 'lat_deg', 'alt_deg', 'az_deg', 'dec_deg'],
+      alt: [
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.obj === 'North celestial pole'), cols: ['row', 'year', 'pole_star', 'pole_dist_deg', 'equinox_con', 'eps_deg'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.obj === 'Moon'), cols: ['row', 'date', 'ra_h', 'dec_deg', 'con', 'lit_pct', 'alt_deg'] },
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.obj !== 'Polaris' && r.obj !== 'Moon' && !/celestial pole/.test(r.obj)), cols: ['row', 'obj', 'con', 'dec_deg', 'hi_deg', 'lo_deg', 'status'] }] },
     /* Topic 4, telescopes and light. Reading | f₁ (cm) | f₂ (cm) | D (cm) | M | Exit pupil (mm) | Light from a star | True field (°) | D² (typed) */
     'intro-telescope': { demo: 'Build a Microscope or Telescope', cols: ['row', 'f_obj_cm', 'f_eye_cm', 'D_obj_cm', 'M', 'exit_pupil_mm', 'gather', 'true_field_deg', null] },
     /* Reading | Setup | λ (nm) | D (m) | Distance between the stars (ly) | Angle (µrad) | I/I₀ midway | 1.22 λ/D (typed) */

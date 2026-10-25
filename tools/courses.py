@@ -34,7 +34,7 @@ BLURB = {
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
 # handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
 # and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
-COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession',
+COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-celestial-sphere',
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
                                 'intro-retrograde'}}
 NO_BOOK = {'astro-2203'}
@@ -217,6 +217,7 @@ HANDOUT_TOPIC = {
     'intro-scale': 'How Big Is the Solar System? (Astro 2203)',
     'intro-moon': 'Phases of the Moon and Eclipse Seasons (Astro 2203)', 'intro-precession': 'A Spinning Top and the Wandering Pole Star (Astro 2203)',
     'intro-stellarium-sky': 'Reading the Sky with Stellarium (Astro 2203)',
+    'intro-celestial-sphere': 'The Sky and the Celestial Sphere (Astro 2203)',
     'intro-telescope': 'Building a Telescope (Astro 2203)', 'intro-resolution': 'Seeing Fine Detail (Astro 2203)',
     'intro-mirrors': 'Lenses, Mirrors and Color (Astro 2203)', 'intro-blackbody': 'Star Colors and Temperatures (Astro 2203)',
     'intro-spectra': 'Fingerprints of the Elements (Astro 2203)', 'intro-em-spectrum': 'The Electromagnetic Spectrum (Astro 2203)',

@@ -1460,6 +1460,7 @@
           "requirement": "module",
           "sections": [],
           "demos": [
+            "celestial-sphere",
             "seasons",
             "moon-phases",
             "retrograde-motion"
@@ -1563,6 +1564,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "celestial-sphere",
             "seasons",
             "moon-phases",
             "gyroscope"
@@ -8640,6 +8642,23 @@
         "moon-phases",
         "intro-moon"
       ]
+    },
+    {
+      "demo": "celestial-sphere",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude). The celestial sphere from outside (flat or 3D) with the observer's horizon, beside the sky from the ground (horizon view, whole sky, RA and Dec chart). Yale Bright Star Catalogue to V 5.5 (2887 stars) with proper motion, IAU boundaries (Roman 1987), Vondrák (2011) long term precession, Earth rotation angle (IERS 2010), Meeus Sun and Moon (moon98), topocentric eclipses; any place, date and time from 3000 BC to AD 15000. Tests in curriculum/validation/test_celestial-sphere.cjs against ERFA, astropy and NASA eclipse times. Astro 2203 Topic 2 worksheet intro-celestial-sphere.",
+      "handouts": [
+        "intro-celestial-sphere"
+      ],
+      "title": "The Sky and the Celestial Sphere",
+      "url": "demos/celestial-sphere.html"
     },
     {
       "demo": "motion-graphs",

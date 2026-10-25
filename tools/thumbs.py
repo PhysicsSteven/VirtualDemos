@@ -60,6 +60,7 @@ OVERRIDES = {
                    "js": "const st = document.querySelector('.stage'); st.style.width = Math.round(558 * 1.6) + 'px'; st.style.margin = '0 auto'; window.dispatchEvent(new Event('resize')); setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
+    "celestial-sphere": {"crop": ".panes", "wait": 1500},
     "magnetic-moments": {"wait": 1200, "js": "__mm.applyPreset('selector'); for (let i = 0; i < 4000; i++) __mm.S.sg.dots.push(__mm.sampleAtom()); __mm.redraw();"},
     "shells-and-x-rays": {"wait": 1000, "js": "__sx.applyPreset('copper');"},
     "sound-waves": {"wait": 1500, "hide": "#card"},
