@@ -218,6 +218,17 @@
       "Gaia Q branch",
       "cosmic clock"
      ]
+    },
+    {
+     "demo": "craters",
+     "title": "Craters, Cooling and Surface Ages",
+     "desc": "Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see its crater, from a bowl to a basin with a ring of peaks. Count craters to date lunar and Martian surfaces with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.",
+     "tags": [
+      "impact craters",
+      "crater counting",
+      "surface ages",
+      "planetary cooling"
+     ]
     }
    ]
   },

@@ -4040,3 +4040,45 @@ presets, Copy link, readings panel, handout button, How this works video (21.1 s
 three growth runs; the iron core table, 1.48 MJ/kg at 2.0 Myr); (2) the Lab text's formulas and citations (Ulrich 1976,
 Hayashi 1981, Lodders 2003, Kokubo and Ida 2002, Johansen et al. 2023); (3) wording for hyphens and American spelling in the
 worksheet, notes and the Lab text of the page.
+
+## 2026-10-25 · Claude · New demo: Craters, Cooling and Surface Ages (Astro 2203 gap demo 5)
+
+From the Astro 2203 plan (https://claude.ai/artifact/T3sRWCeRiojRhCBa1xhRoV), for Topic 6 (impacts and geology), Topic 7
+(Mercury and Venus) and Topic 8 (Mars). `demos/craters.html`, three modes, each with a 3D view (vd3kit) and a flat one:
+
+- **Make a crater.** Target Moon, Mercury, Venus, Earth or Mars; asteroid ice, porous rock, dense rock or iron; diameter
+  10 m to 400 km; speed 5 to 70 km/s; angle 15 to 90°. Collins, Melosh and Marcus (2005): D_tc = 1.161 (ρi/ρt)^(1/3)
+  L^0.78 v^0.44 g^−0.22 (sin θ)^(1/3); simple D = 1.25 D_tc (d ≈ 0.21 D); complex D = 1.17 D_tc^1.13 / D_c^0.13 with
+  D_c = 3.2 km × 9.81/g (19.4 km on the Moon); peak rings from 200 km × 1.62/g (Baker and others 2012, 2016). Complex
+  depths 0.4 km D^0.3 (Earth), Pike 1.044 km D^0.301 (Moon), (9.81/g)^0.533 between. Presets: Meteor Crater, Tycho,
+  Copernicus, Chicxulub, Mead (Venus), Orientale, Caloris (Mercury), Hellas (Mars), a 500 m asteroid; the first five land
+  within 5 % of the real diameters (tested). Left out and stated: the air, the planet's curvature, ejecta beyond the rim.
+- **Count craters.** Simulated surfaces (seeded): craters at random, sizes from the production function, times from the
+  clock; a new crater erases older smaller ones whose centers it covers, so old surfaces saturate. Clocks: Moon
+  N(1) = 5.44e−14 (e^(6.93T) − 1) + 8.38e−4 T (Neukum, Ivanov and Hartmann 2001); Mars 2.68e−14 (e^(6.93T) − 1) +
+  4.13e−4 T with Ivanov (2001) coefficients (Hartmann and Neukum 2001). Surfaces: lunar highlands 4.3, Mare
+  Tranquillitatis 3.7, Alphonsus floor 3.9, Copernicus floor 0.8, Tycho floor 0.11; Mars southern highlands 4.0, northern
+  plains 3.5, Tharsis 1.0, Olympus caldera 0.15 Gyr; a Mystery surface. Click to mark (the crater whose center is nearest
+  the click, in its own radius). Mercury and Venus have no counting surfaces: their clocks are not calibrated, so they
+  appear only in Make a crater (Caloris; Mead and Venus's young sparse craters, Schaber and others 1992, in the text).
+- **Cooling.** One mantle temperature per planet (Moon, Mars, Earth, same rock), boundary layer convection
+  Nu = (Ra/Ra_c)^(1/3), Ra_c = 1000, k 4, κ 1e−6, α 3e−5, c 1200, η 1e21 Pa·s at 1600 K with E = 300 kJ/mol; U, Th, K at
+  bulk silicate Earth levels (McDonough and Sun 1995; Turcotte and Schubert Table 4.2); RK4 in 5 Myr steps. Today: Moon lid
+  415 km, 11.4 mW/m²; Mars 249 km, 20.2; Earth 103 km, 49.5 (measured 92: the model leaves out core heat and the continents'
+  radioactive elements, stated on the page and in the notes).
+
+Readings panel (one row per crater, per count, or three rows per cooling time), Copy link (surface, seed, marks, mystery),
+nine to ten presets per mode, Blind. Two worksheets for Astro 2203: `intro-craters` (Craters and the Ages of the Moon's
+Surface) and `intro-mars-ages` (Dating the Surface of Mars), both on the course page (units earth-moon, inner-planets,
+mars-geology) and in a new Astro unit "Planets and their surfaces". Teaching notes, thumbnails, two How this works videos
+(one per worksheet), What's new entry.
+
+**Checks.** `curriculum/validation/test_craters.cjs`, 9 groups (formula term by term, transitions, presets against real
+craters, shapes, clocks and production functions, simulated counts within 3√N of the clock, radioactive heat 4.92 pW/kg
+today, cooling energy conserved). vdcheck `--only after`: 0 problems (44 screenshots). Symbols `--check`, `--missing`,
+`--meanings` all 0. Keys in TeacherKeys `worksheet-keys/astro-2203/intro-craters-*` and `intro-mars-ages-*` from a real run
+(counts are the perfect count, `__cr.markAll`): e.g. Moon 1 km at 18 km/s → 18.3 km complex; mare N = 40 in 3600 km² → 3.71 Gyr;
+Mars southern highlands N = 49 in 40,000 km² → 3.99 Gyr.
+
+**For GPT:** please check the scaling law and clock coefficients against the papers, the stated approximations, the two
+worksheets against the demo, and the key answers against their tables.

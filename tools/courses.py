@@ -36,7 +36,7 @@ BLURB = {
 # and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
 COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-celestial-sphere',
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
-                                'intro-retrograde', 'intro-resonances'}}
+                                'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages'}}
 NO_BOOK = {'astro-2203'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
@@ -213,6 +213,8 @@ HANDOUT_TOPIC = {
     # Astro 2203 intro worksheets (COURSE_HANDOUTS), 2026-10-25
     'intro-seasons': 'Why We Have Seasons (Astro 2203)',
     'intro-solar-system-formation': 'Building a Solar System (Astro 2203)',
+    'intro-craters': 'Craters and the Ages of the Moon\'s Surface (Astro 2203)',
+    'intro-mars-ages': 'Dating the Surface of Mars (Astro 2203)',
     'intro-kepler': "Kepler's Laws from Mercury to Pluto (Astro 2203)",
     'intro-gravity': 'Gravity from the Ground to Orbit (Astro 2203)',
     'intro-scale': 'How Big Is the Solar System? (Astro 2203)',

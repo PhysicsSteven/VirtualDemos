@@ -97,6 +97,7 @@ OVERRIDES = {
     "huygens": {"wait": 2500, "js": "document.querySelector('[data-p=refract]').click()"},
     "the-eye": {"wait": 2000, "js": "document.querySelector('[data-p=myopiaFix]').click()"},
     "instrument-builder": {"wait": 2000, "crop": ".stage", "anchor": "top"},
+    "craters": {"wait": 3000, "crop": ".scene", "js": "window.__cr.applyPreset('highlands');"},
     "resolution": {"wait": 800, "js": "document.querySelector('[data-p=eye]').click(); document.getElementById('gainToggle').click();"},
     "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('wandUp').click(); document.getElementById('motor').click()"},
     "eddy-currents": {"wait": 7000, "js": "const f = document.getElementById('tFollow'); if (f.checked) f.click(); document.getElementById('drop').click();"},

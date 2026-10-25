@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-craters', date: '2026-10-25', title: 'Craters, Cooling and Surface Ages',
+    text: 'Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and watch the crater form, from a small bowl to a basin with a ring of peaks, sized by the scaling law impact scientists use. Count the craters on simulated patches of the Moon and Mars to date them with the crater clock, and cool a Moon, a Mars and an Earth side by side to see why small worlds go quiet first. Two new Astro 2203 worksheets: Craters and the Ages of the Moon\'s Surface, and Dating the Surface of Mars.', link: { href: 'demos/craters.html', text: 'Open the demo' } },
   { id: '2026-10-25-solar-system-formation', date: '2026-10-25', title: 'Building a Solar System',
     text: 'A new Astro 2203 demo and worksheet for Topic 5: watch a spinning cloud collapse into a disk, find the frost line where water ice can form, grow planets from 900 planetesimals and see which become giants, and melt an early planetesimal so its iron sinks to a core. Each stage has a 3D and a flat view, and a How this works video.', link: { href: 'demos/solar-system-formation.html', text: 'Open Building a Solar System' } },
   { id: '2026-10-25-laptop-controls', date: '2026-10-25', title: 'Every control on a laptop screen',

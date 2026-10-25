@@ -505,7 +505,17 @@
   const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures', 'intro-celestial-sphere'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
   INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
+  INTRO.push('intro-craters', 'intro-mars-ages'); /* Craters, Cooling and Surface Ages demo, 2026-10-25 */
   ENABLED.push(...INTRO);
+  /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
+  const CR_IMPACT = ['row', 'body', 'L_km', 'v_km_s', 'D_km', 'form'], CR_COUNT = ['row', 'surface', 'D_km', 'N', 'area_km2', 'per_km2', 'age_Gyr'],
+    CR_COOL = ['row', 'planet', 'R_km', 't_Gyr', 'T_K', 'q_mW_m2', 'lid_km'], crAll = (m) => (rows) => rows.length > 0 && rows.every((r) => r.mode === m);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Target | Asteroid diameter L (km) | Speed (km/s) | Crater diameter D (km) | Shape; then the counts; then the cooling */
+    'intro-craters': { demo: 'Craters, Cooling and Surface Ages', cols: CR_IMPACT, alt: [{ table: 1, when: crAll('Count'), cols: CR_COUNT }, { table: 2, when: crAll('Cooling'), cols: CR_COOL }] },
+    /* Reading | Surface | Count craters at least (km) | Craters counted N | Area (km²) | Craters per km² | Age from the clock (Gyr); then impacts; then cooling */
+    'intro-mars-ages': { demo: 'Craters, Cooling and Surface Ages', cols: CR_COUNT, alt: [{ table: 1, when: crAll('Impact'), cols: CR_IMPACT }, { table: 2, when: crAll('Cooling'), cols: CR_COOL }] },
+  });
   Object.assign(FROM_DEMO, {
     /* Reading | Cloud radius (AU) | Cloud turns once every (million years) | Disk radius (AU) | Disk edge goes around once every (years) | Spin up.
        The other stages go to their own tables: frost line (table 2), planets grow (table 3), iron cores (table 4) */

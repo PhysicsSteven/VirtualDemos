@@ -1540,6 +1540,15 @@
           "demos": [
             "rotation-curves"
           ]
+        },
+        {
+          "id": "planets",
+          "title": "Planets and their surfaces",
+          "requirement": "module",
+          "sections": [],
+          "demos": [
+            "craters"
+          ]
         }
       ]
     },
@@ -1639,6 +1648,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "craters",
             "radioactive-decay",
             "fluids"
           ],
@@ -1651,6 +1661,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "craters",
             "planet-temperatures",
             "ideal-gas",
             "kepler-orbits"
@@ -1664,6 +1675,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "craters",
             "kepler-orbits"
           ],
           "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons."
@@ -10524,6 +10536,24 @@
       "url": "demos/retrograde-motion.html",
       "handouts": [
         "intro-retrograde"
+      ]
+    },
+    {
+      "demo": "craters",
+      "course": [
+        "astro",
+        "astro-2203"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap demo 5 of the Astro 2203 plan. Make a crater (Collins, Melosh and Marcus 2005 scaling on the Moon, Mercury, Venus, Earth and Mars: simple bowls, central peaks, peak rings), Count craters (simulated lunar and Martian surfaces dated with the Neukum, Ivanov and Hartmann 2001 lunar clock and the Hartmann and Neukum 2001 Mars clock, with erasing so old surfaces saturate) and Cooling (a boundary layer convection model of a Moon, a Mars and an Earth). Intro worksheets intro-craters (Topic 6) and intro-mars-ages (Topic 8) with keys from real runs in TeacherKeys.",
+      "title": "Craters, Cooling and Surface Ages",
+      "url": "demos/craters.html",
+      "handouts": [
+        "intro-craters",
+        "intro-mars-ages"
       ]
     }
   ],

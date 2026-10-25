@@ -1,0 +1,849 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Craters, Cooling and Surface Ages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the picture, the strip, the Set up card, the graph and the marks */
+:root { --mark: #c2410c; --gauge: #7c3aed; --hot: #e0602a; --lid: #8a8f98; --curve-moon: #6b7787; --curve-mars: #c2622d; --curve-earth: #2b60b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #9aa3ad; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; } }
+:root[data-theme="dark"] { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #9aa3ad; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 470px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; }
+.scene canvas.cr3 { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.plotctl { position: absolute; z-index: 2; right: 10px; top: 6px; }
+.cooltab { width: 100%; border-collapse: collapse; font-size: 0.8rem; font-family: var(--font-mono); }
+.cooltab th, .cooltab td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--line); vertical-align: bottom; }
+.cooltab thead th { font-family: var(--font-ui); font-weight: 400; font-size: 0.7rem; color: var(--muted); }
+.cooltab tbody th { text-align: left; font-family: var(--font-ui); }
+.chips-head { font-size: 0.74rem; font-weight: 700; color: var(--muted); margin: 6px 0 4px; }
+@media (min-width: 821px) { .stage { min-height: 780px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 220px; } }
+@media (max-width: 420px) { .scene { height: 320px; } }
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Craters, Cooling and Surface Ages</h1>
+      <p>Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see the crater it makes, from a small bowl to a basin with a ring of peaks. Count the craters on a surface to date it with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">km · km/s · billions of years (Gyr)</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/craters.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/craters.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h1v1h-1zM15 2h2v1h-2zM18 2h4v1h-4zM24 2h1v1h-1zM26 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM16 4h1v1h-1zM19 4h7v1h-7zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h5v1h-5zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h1v1h-1zM15 10h3v1h-3zM20 10h2v1h-2zM24 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h2v1h-2zM5 11h2v1h-2zM9 11h1v1h-1zM13 11h3v1h-3zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h6v1h-6zM13 12h2v1h-2zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h1v1h-1zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h3v1h-3zM7 14h2v1h-2zM11 14h1v1h-1zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h4v1h-4zM9 15h2v1h-2zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h3v1h-3zM12 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h1v1h-1zM11 17h2v1h-2zM14 17h4v1h-4zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM5 18h1v1h-1zM8 18h6v1h-6zM15 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM9 19h2v1h-2zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h2v1h-2zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM10 21h1v1h-1zM13 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h3v1h-3zM6 22h3v1h-3zM10 22h3v1h-3zM15 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM4 23h2v1h-2zM7 23h1v1h-1zM13 23h6v1h-6zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h8v1h-8zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h6v1h-6zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM7 26h2v1h-2zM10 26h1v1h-1zM12 26h4v1h-4zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h3v1h-3zM13 27h2v1h-2zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM6 28h5v1h-5zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h8v1h-8zM36 28h1v1h-1zM9 29h1v1h-1zM11 29h2v1h-2zM14 29h1v1h-1zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h8v1h-8zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h1v1h-1zM12 31h1v1h-1zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h3v1h-3zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h2v1h-2zM26 35h8v1h-8zM35 35h3v1h-3zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h4v1h-4zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM17 37h10v1h-10zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h3v1h-3zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="What to do" id="modeSeg">
+          <button type="button" data-mode="impact" aria-pressed="true">Make a crater</button>
+          <button type="button" data-mode="count" aria-pressed="false">Count craters</button>
+          <button type="button" data-mode="cool" aria-pressed="false">Cooling</button>
+        </div>
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Drop it</button>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The picture: a crater and the asteroid that made it, a cratered surface to count, or three planets cut open to show how hot they are inside."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the impact, the surface or the cooling planets">
+        <span class="card-title" id="cardTitle">The asteroid and the target</span>
+        <div id="impactBox">
+          <div class="pick"><label for="selBody">Target</label><select id="selBody">
+            <option value="moon">Moon</option><option value="mercury">Mercury</option><option value="venus">Venus</option><option value="earth">Earth</option><option value="mars">Mars</option></select></div>
+          <div class="pick" style="margin-top:6px"><label for="selRock">Asteroid made of</label><select id="selRock">
+            <option value="1000">Ice (1000 kg/m³)</option><option value="1500">Porous rock (1500 kg/m³)</option><option value="3000">Dense rock (3000 kg/m³)</option><option value="8000">Iron (8000 kg/m³)</option></select></div>
+          <div style="margin-top:6px"><div class="slider-head"><label for="sL">Asteroid diameter L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sV">Speed v</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="5" max="70" step="1"></div>
+          <div><div class="slider-head"><label for="sTh">Angle from the ground</label><output id="oTh" class="mono" for="sTh"></output></div><input type="range" id="sTh" min="15" max="90" step="5"></div>
+        </div>
+        <div id="countBox" hidden>
+          <p class="note" id="surfName"></p>
+          <div class="pick"><label for="selDc">Count craters at least this wide</label><select id="selDc">
+            <option value="0.1">0.1 km</option><option value="0.25">0.25 km</option><option value="0.5">0.5 km</option><option value="1">1 km</option><option value="2">2 km</option><option value="4">4 km</option><option value="8">8 km</option><option value="16">16 km</option></select></div>
+          <p class="note">Click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.</p>
+          <div class="btnrow"><button type="button" class="btn" id="clearMarks">Clear marks</button><button type="button" class="btn" id="showCount">Show the right count</button><button type="button" class="btn" id="newSurf" title="The same kind of surface, with a new random set of craters">New surface</button></div>
+        </div>
+        <div id="coolBox" hidden>
+          <div><div class="slider-head"><label for="sT">Time since the planets formed</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="0" max="4.5" step="0.05"></div>
+          <div class="pick"><label for="selStart">Starting temperature inside</label><select id="selStart"><option value="1800">1800 K</option><option value="2000" selected>2000 K</option><option value="2200">2200 K</option></select></div>
+          <p class="note">All three start equally hot and are made of the same rock with the same radioactive elements. Only their size and gravity differ.</p>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <div class="plotctl" id="coolPlotCtl" hidden><select id="selPlot" aria-label="What the graph shows" style="font:inherit;font-size:0.8rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:2px 4px">
+          <option value="lid">Thickness of the cold lid</option><option value="q">Heat flowing out (per square meter)</option><option value="T">Temperature inside</option></select></div>
+        <canvas id="plot" role="img" aria-label="Graph: the crater clock, or the cooling of the three planets."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/intro-craters.html" target="intro-craters-worksheet">Worksheet 1: Craters and the Ages of the Moon's Surface (Astro 2203)</a></li><li><a href="../curriculum/labs/students/intro-mars-ages.html" target="intro-mars-ages-worksheet">Worksheet 2: Dating the Surface of Mars (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div id="presets">
+          <div data-for="impact">
+            <div class="chips">
+              <button type="button" data-p="meteor" aria-pressed="false">Meteor Crater (Earth)</button>
+              <button type="button" data-p="tycho" aria-pressed="false">Tycho (Moon)</button>
+              <button type="button" data-p="copernicus" aria-pressed="false">Copernicus (Moon)</button>
+              <button type="button" data-p="chicxulub" aria-pressed="false">Chicxulub (Earth)</button>
+              <button type="button" data-p="mead" aria-pressed="false">Mead (Venus)</button>
+              <button type="button" data-p="orientale" aria-pressed="false">Orientale basin (Moon)</button>
+              <button type="button" data-p="caloris" aria-pressed="false">Caloris basin (Mercury)</button>
+              <button type="button" data-p="hellas" aria-pressed="false">Hellas basin (Mars)</button>
+              <button type="button" data-p="small" aria-pressed="true">A 500 m asteroid (Moon)</button>
+            </div>
+          </div>
+          <div data-for="count" hidden>
+            <div class="chips-head">The Moon</div>
+            <div class="chips">
+              <button type="button" data-p="highlands" aria-pressed="false">Highlands</button>
+              <button type="button" data-p="mare" aria-pressed="false">Mare Tranquillitatis</button>
+              <button type="button" data-p="alphonsus" aria-pressed="false">Alphonsus floor</button>
+              <button type="button" data-p="copfloor" aria-pressed="false">Copernicus floor</button>
+              <button type="button" data-p="tychofloor" aria-pressed="false">Tycho floor</button>
+            </div>
+            <div class="chips-head">Mars</div>
+            <div class="chips">
+              <button type="button" data-p="south" aria-pressed="false">Southern highlands</button>
+              <button type="button" data-p="north" aria-pressed="false">Northern plains</button>
+              <button type="button" data-p="tharsis" aria-pressed="false">Tharsis lava plains</button>
+              <button type="button" data-p="olympus" aria-pressed="false">Olympus Mons caldera</button>
+            </div>
+            <div class="chips-head">Either</div>
+            <div class="chips"><button type="button" data-p="mystery" aria-pressed="false">Mystery surface</button></div>
+          </div>
+          <div data-for="cool" hidden>
+            <div class="chips">
+              <button type="button" data-p="young" aria-pressed="false">Just formed</button>
+              <button type="button" data-p="maria" aria-pressed="false">When the lunar maria erupted</button>
+              <button type="button" data-p="today" aria-pressed="false">Today</button>
+            </div>
+          </div>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-craters" data-title="Craters, Cooling and Surface Ages" data-demo="craters">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the crater sizes, the true count and the ages</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">transient crater D<sub>tc</sub> = 1.161 (ρ<sub>i</sub>/ρ<sub>t</sub>)<sup>1/3</sup> L<sup>0.78</sup> v<sup>0.44</sup> g<sup>−0.22</sup> (sin θ)<sup>1/3</sup> (SI units)</p>
+          <p class="formula">simple: D = 1.25 D<sub>tc</sub>; complex (D &gt; D<sub>c</sub>): D = 1.17 D<sub>tc</sub><sup>1.13</sup>/D<sub>c</sub><sup>0.13</sup></p>
+          <p class="formula">crater clock: N(1 km) = a (e<sup>6.93 T</sup> − 1) + b T per km², T in Gyr</p>
+          <p class="formula">cooling: ρcV dT/dt = ρVH(t) − A q, q = k ΔT (ρ g α ΔT/(κ η Ra<sub>c</sub>))<sup>1/3</sup></p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Craters, cooling and surface ages. Runs in Node (curriculum/validation/test_craters.cjs).
+
+     1. Crater size. Collins, Melosh and Marcus (2005), "Earth Impact Effects Program", Meteoritics & Planetary Science 40, 817
+        (their eqs. for the transient and final crater, from pi group scaling of Schmidt and Housen 1987 for rock targets):
+          D_tc = 1.161 (ρi/ρt)^(1/3) L^0.78 v^0.44 g^−0.22 (sin θ)^(1/3)   (SI: m, m/s, m/s²)
+          simple crater (D_fr ≤ D_c): D_fr = 1.25 D_tc
+          complex crater:             D_fr = 1.17 D_tc^1.13 / D_c^0.13
+        D_c is the simple to complex transition, 3.2 km on Earth (Collins et al.). Elsewhere it scales as 1/g (Pike 1980), which gives
+        19.4 km on the Moon and 8.5 km on Mars and Mercury, close to what is seen (about 15 to 20 km on the Moon). Peak ring basins
+        begin near 200 km on the Moon (Baker et al. 2012) and near 100 km on Mars (Baker et al. 2016); the demo scales 200 km by 1/g too.
+        Depth: simple craters from Collins et al.'s breccia lens relations (d ≈ 0.21 D); complex craters 0.4 km (D/1 km)^0.3 on Earth
+        (Collins et al.) and 1.044 km (D/1 km)^0.301 on the Moon (Pike 1977); other bodies interpolate between the two as a power of
+        g, (9.81/g)^0.533. The shapes drawn (bowl, flat floor and central peak, ring of peaks) are schematic; the diameters are the law's.
+        The law is fitted to craters up to tens of km; for basins hundreds of km wide, the curvature of the planet and its hot interior
+        matter and the result is only a guide. An atmosphere that breaks up small asteroids (Venus, Earth) is left out.
+     2. The crater clock. Lunar chronology of Neukum, Ivanov and Hartmann (2001), Space Science Reviews 96, 55:
+          N(1) = 5.44e−14 (e^(6.93 T) − 1) + 8.38e−4 T   craters wider than 1 km per km² on a surface T Gyr old,
+        and their production function (the shape of the size distribution, log N = Σ aₙ (log D)ⁿ, 0.01 to 300 km).
+        Mars: Ivanov (2001), Space Science Reviews 96, 87, production function, and the chronology of Hartmann and Neukum (2001),
+        Space Science Reviews 96, 165: N(1) = 2.68e−14 (e^(6.93 T) − 1) + 4.13e−4 T. Craters wider than D: N(1) × 10^(P(log D) − a₀).
+        A surface is built crater by crater, oldest first, at random places, sizes from the production function and times from the
+        chronology; a new crater erases every older, smaller crater whose center it covers (a simple rule for wearing away, so old
+        surfaces saturate). Simulated data: the real Moon and Mars were only used to set the ages assumed for each surface.
+     3. Cooling. One temperature T for each planet's mantle (no core heat, no melting, no crust), losing heat through the top by
+        convection with the boundary layer law Nu = (Ra/Ra_c)^(1/3) (Turcotte and Schubert, Geodynamics, 3rd ed. 2014, §6.21),
+        heated by U, Th and K at bulk silicate Earth amounts (McDonough and Sun 1995: 20.3 ppb, 79.5 ppb, 240 ppm) with heat outputs
+        and half lives from Turcotte and Schubert Table 4.2. The same rock and the same rule for all three planets: the real Moon and
+        Mars have one rigid lid, which slows their cooling. The cold lid is the conducting layer that carries the heat flow, k ΔT/q. */
+  const RG = 8.314462618, YR = 3.15576e7;
+  const BODIES = {
+    moon: { name: 'Moon', g: 1.62, rhoT: 2550, v: 18 }, mercury: { name: 'Mercury', g: 3.70, rhoT: 2700, v: 30 },
+    venus: { name: 'Venus', g: 8.87, rhoT: 2700, v: 20 }, earth: { name: 'Earth', g: 9.81, rhoT: 2700, v: 20 }, mars: { name: 'Mars', g: 3.71, rhoT: 2700, v: 10 } };
+  const transitionD = (g) => 3200 * 9.81 / g;            /* m: simple to complex */
+  const peakRingD = (g) => 200e3 * 1.62 / g;              /* m: complex crater to peak ring basin */
+  function transientD(L, v, rhoI, rhoT, g, thDeg) { return 1.161 * Math.cbrt(rhoI / rhoT) * Math.pow(L, 0.78) * Math.pow(v, 0.44) * Math.pow(g, -0.22) * Math.cbrt(Math.sin(thDeg * Math.PI / 180)); }
+  function crater(L, v, rhoI, body, thDeg) {
+    const B = BODIES[body], g = B.g, Dtc = transientD(L, v, rhoI, B.rhoT, g, thDeg), Dc = transitionD(g), Dp = peakRingD(g), dtc = Dtc / (2 * Math.SQRT2);
+    let D, d, h, form;
+    if (1.25 * Dtc <= Dc) {
+      D = 1.25 * Dtc; h = 0.07 * Math.pow(Dtc, 4) / Math.pow(D, 3); const Vbr = 0.032 * D * D * D, tbr = 2.8 * Vbr * (dtc + h) / (dtc * D * D);
+      d = dtc + h - tbr; form = 'simple';
+    } else {
+      D = 1.17 * Math.pow(Dtc, 1.13) / Math.pow(Dc, 0.13); d = 400 * Math.pow(D / 1000, 0.3) * Math.pow(9.81 / g, 0.533); h = 0.07 * Math.pow(Dtc, 4) / Math.pow(D, 3);
+      form = D >= Dp ? 'ring' : 'complex';
+    }
+    const m = rhoI * Math.PI * L * L * L / 6, E = 0.5 * m * v * v;
+    return { L, v, rhoI, body, th: thDeg, g, Dtc, dtc, D, d, h, form, Dc, Dp, m, E, Mt: E / 4.184e15 };
+  }
+  /* the crater's height above the old ground at distance r from its center (m), schematic shapes with the law's sizes */
+  function craterHeight(c, r) {
+    const R = c.D / 2, x = r / R, rim = c.h;
+    if (x >= 1) return rim * Math.pow(x, -3);
+    if (c.form === 'simple') return rim - (c.d) * (1 - x * x);
+    const fl = 0.45, floor = rim - c.d;
+    let z = x < fl ? floor : floor + c.d * Math.pow((x - fl) / (1 - fl), 1.6);
+    if (c.form === 'complex') { const pr = 0.12; if (x < pr) z = floor + 0.45 * c.d * (1 + Math.cos(Math.PI * x / pr)) / 2; }
+    else { const rr = 0.5, w = 0.07; z += 0.3 * c.d * Math.exp(-Math.pow((x - rr) / w, 2)); }
+    return z;
+  }
+  /* during the impact: the transient bowl grows, then (complex craters) collapses to the final shape. s from 0 to 1 */
+  function craterAt(c, s, r) {
+    const Rt = c.Dtc / 2;
+    const bowl = (rr, a) => { const R = Rt * a, x = rr / R; return x < 1 ? -c.dtc * a * (1 - x * x) + c.h * a * x * x : c.h * a * Math.pow(Math.max(x, 1), -3); };
+    if (s <= 0) return 0;
+    if (s < 0.5) return bowl(r, Math.sin(s / 0.5 * Math.PI / 2));
+    const u = Math.min(1, (s - 0.5) / 0.5), e = u * u * (3 - 2 * u);
+    return (1 - e) * bowl(r, 1) + e * craterHeight(c, r);
+  }
+
+  const NEUKUM_MOON = [-3.0876, -3.557528, 0.781027, 1.021521, -0.156012, -0.444058, 0.019977, 0.086850, -0.005874, -0.006809, 8.25e-4, 5.54e-5];
+  const IVANOV_MARS = [-3.384, -3.197, 1.257, 0.7915, -0.4861, -0.3630, 0.1016, 6.756e-2, -1.181e-2, -4.753e-3, 6.233e-4, 5.805e-5];
+  /* N(≥D)/N(≥1 km) from the production function */
+  function pfRatio(body, D) { const a = body === 'mars' ? IVANOV_MARS : NEUKUM_MOON, x = Math.log10(D); let s = 0; for (let n = a.length - 1; n >= 1; n--) s = s * x + a[n]; return Math.pow(10, s * x); }
+  function N1(body, T) { return body === 'mars' ? 2.68e-14 * (Math.exp(6.93 * T) - 1) + 4.13e-4 * T : 5.44e-14 * (Math.exp(6.93 * T) - 1) + 8.38e-4 * T; }
+  function density(body, D, T) { return N1(body, T) * pfRatio(body, D); }
+  /* the age that gives n craters wider than D per km² (Gyr), or null past 4.5 Gyr */
+  function ageFrom(body, D, n) { if (!(n > 0)) return 0; if (density(body, D, 4.5) < n) return null; let a = 0, b = 4.5; for (let k = 0; k < 60; k++) { const m = (a + b) / 2; if (density(body, D, m) < n) a = m; else b = m; } return (a + b) / 2; }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* a simulated surface L km on a side, T Gyr old: every crater from Dmin to Dmax km (centers also in a margin around it) */
+  function surface(body, T, L, Dmin, Dmax, seed) {
+    const r = rng(seed), m = Dmax / 2, side = L + 2 * m, R0 = pfRatio(body, Dmin), R1 = pfRatio(body, Dmax), n = Math.min(80000, Math.round(N1(body, T) * (R0 - R1) * side * side));
+    const lo = Math.log10(Dmin), hi = Math.log10(Dmax), NT = N1(body, T), list = [];
+    for (let i = 0; i < n; i++) {
+      const want = R1 + r() * (R0 - R1); let a = lo, b = hi; for (let k = 0; k < 36; k++) { const c = (a + b) / 2; if (pfRatio(body, Math.pow(10, c)) > want) a = c; else b = c; }
+      const w = r() * NT; let ta = 0, tb = T; for (let k = 0; k < 36; k++) { const c = (ta + tb) / 2; if (N1(body, c) < w) ta = c; else tb = c; }
+      list.push({ x: r() * side - m, y: r() * side - m, D: Math.pow(10, (a + b) / 2), age: T - (ta + tb) / 2, gone: 0 });
+    }
+    list.sort((p, q) => q.age - p.age);
+    const cell = Math.max(Dmin * 4, side / 160), G = new Map(), key = (i, j) => i * 65536 + j;
+    for (const c of list) {
+      const R = c.D / 2, i0 = Math.floor((c.x - R) / cell), i1 = Math.floor((c.x + R) / cell), j0 = Math.floor((c.y - R) / cell), j1 = Math.floor((c.y + R) / cell);
+      for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) { const bin = G.get(key(i, j)); if (!bin) continue;
+        for (const o of bin) if (!o.gone && o.D < c.D && (o.x - c.x) ** 2 + (o.y - c.y) ** 2 < R * R) o.gone = 1; }
+      const k = key(Math.floor(c.x / cell), Math.floor(c.y / cell)); let bin = G.get(k); if (!bin) G.set(k, bin = []); bin.push(c);
+    }
+    return { body, T, L, Dmin, Dmax, n, list };
+  }
+  function countIn(s, D) { let n = 0; for (const c of s.list) if (!c.gone && c.D >= D && c.x >= 0 && c.x < s.L && c.y >= 0 && c.y < s.L) n++; return n; }
+
+  const ISO = [['U', 0.9928, 9.46e-5, 4.47e9], ['U', 0.0071, 5.69e-4, 7.04e8], ['Th', 1, 2.64e-5, 1.40e10], ['K', 1.19e-4, 2.92e-5, 1.25e9]];
+  const BSE = { U: 20.3e-9, Th: 79.5e-9, K: 240e-6 };
+  const MANTLE = { k: 4, kappa: 1e-6, alpha: 3e-5, c: 1200, Rac: 1000, E: 300e3, eta: 1e21, Tref: 1600, age: 4.5 };
+  const PLANETS = {
+    moon: { name: 'Moon', R: 1737.4e3, Rc: 330e3, g: 1.62, rho: 3300, Ts: 250 },
+    mars: { name: 'Mars', R: 3389.5e3, Rc: 1830e3, g: 3.71, rho: 3500, Ts: 210 },
+    earth: { name: 'Earth', R: 6371e3, Rc: 3480e3, g: 9.81, rho: 4500, Ts: 288 } };
+  /* radioactive heat per kg of rock (W/kg), tAgo years before today */
+  function heatAt(tAgo) { let h = 0; for (const [e, f, H, th] of ISO) h += BSE[e] * f * H * Math.pow(2, tAgo / th); return h; }
+  function viscosity(T) { return MANTLE.eta * Math.exp(MANTLE.E / RG * (1 / T - 1 / MANTLE.Tref)); }
+  function heatFlux(p, T) { const dT = T - p.Ts; if (dT <= 0) return 0; return MANTLE.k * Math.pow(dT, 4 / 3) * Math.cbrt(p.rho * p.g * MANTLE.alpha / (MANTLE.kappa * viscosity(T) * MANTLE.Rac)); }
+  /* RK4 in steps of dt Myr from formation (4.5 Gyr ago) to today; returns rows every step: t (Gyr since formation), T, q, lid, heat made and lost (W) */
+  function cooling(key, T0, dtMyr) {
+    const p = PLANETS[key], A = 4 * Math.PI * p.R * p.R, V = 4 / 3 * Math.PI * (p.R ** 3 - p.Rc ** 3), M = p.rho * V, ageY = MANTLE.age * 1e9, dY = (dtMyr || 5) * 1e6, out = [];
+    const f = (T, ty) => (heatAt(ageY - ty) * M - A * heatFlux(p, T)) / (M * MANTLE.c);
+    let T = T0;
+    for (let ty = 0; ty <= ageY + 1; ty += dY) {
+      const q = heatFlux(p, T); out.push({ t: ty / 1e9, T, q, lid: MANTLE.k * (T - p.Ts) / q, made: heatAt(ageY - ty) * M, lost: q * A });
+      const d = dY * YR, k1 = f(T, ty), k2 = f(T + k1 * d / 2, ty + dY / 2), k3 = f(T + k2 * d / 2, ty + dY / 2), k4 = f(T + k3 * d, ty + dY);
+      T += d * (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    }
+    return out;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), pl = $('plot'), pctx = pl.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, K = null, view3 = null, g3 = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); return e >= n || e < -3 ? v.toExponential(n - 1).replace('e+', ' × 10^').replace('e-', ' × 10^−') : v.toFixed(Math.max(0, n - 1 - e)); };
+  const sup = (s) => s.replace(/\^(−?\d+)/g, '<sup>$1</sup>');
+  const km = (m) => { const k = m / 1000; return k >= 100 ? `${k.toFixed(0)} km` : k >= 10 ? `${k.toFixed(1)} km` : k >= 1 ? `${k.toFixed(2)} km` : `${(m).toFixed(0)} m`; };
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), accent: g('--accent'), mark: g('--mark'), gauge: g('--gauge'), hot: g('--hot'), lid: g('--lid'),
+      moon: g('--curve-moon'), mars: g('--curve-mars'), earth: g('--curve-earth'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3.dark() }; }
+
+  /* ---------- state ---------- */
+  const LMIN = 10, LMAX = 400e3;   /* the diameter slider runs on a log scale from 10 m to 400 km */
+  const Lof = (s) => LMIN * Math.pow(LMAX / LMIN, s / 1000), sOf = (L) => Math.round(1000 * Math.log(L / LMIN) / Math.log(LMAX / LMIN));
+  const S = { mode: 'impact', preset: 'small', body: 'moon', rho: 3000, L: 500, v: 18, th: 45, anim: 1, run: false,
+    cBody: 'moon', surf: null, sKey: 'mare', Dc: 1, marks: new Set(), show: false, seed: 1, t: 4.5, T0: 2000, plot: 'lid', blind: false, mystery: null };
+  const L = () => S.L;
+  /* surfaces to count: the age assumed for each and where it comes from (simulated craters, so the age is the input, not a result) */
+  const SURF = {
+    highlands: { body: 'moon', T: 4.3, L: 200, Dmin: 2, Dc: 8, name: 'Lunar highlands', why: 'The highlands are the Moon\'s oldest crust; rocks from them are 3.9 to 4.4 Gyr old. This surface is set at 4.3 Gyr. So many craters have been made that new ones wipe out old ones: the count falls short of the clock, and the age you read comes out too young (the surface is saturated).' },
+    mare: { body: 'moon', T: 3.7, L: 60, Dmin: 0.5, Dc: 1, name: 'Mare Tranquillitatis (Apollo 11)', why: 'A dark lava plain. The basalts Apollo 11 brought back from it are 3.6 to 3.9 Gyr old; this surface is set at 3.7 Gyr, about the age Neukum and others gave this site in their calibration of the clock.' },
+    alphonsus: { body: 'moon', T: 3.9, L: 50, Dmin: 0.5, Dc: 1, name: 'Floor of Alphonsus crater', why: 'Alphonsus, 108 km wide, is older than the Imbrium basin (3.85 Gyr), whose ejecta scored it. Its floor is set at 3.9 Gyr here, an assumed age for an old crater.' },
+    copfloor: { body: 'moon', T: 0.8, L: 20, Dmin: 0.1, Dc: 0.25, name: 'Floor of Copernicus crater', why: 'Copernicus, 93 km wide, formed about 0.8 Gyr ago: Apollo 12 picked up pieces of its rays. Only a few small craters have formed on its floor since.' },
+    tychofloor: { body: 'moon', T: 0.11, L: 10, Dmin: 0.03, Dc: 0.1, name: 'Floor of Tycho crater', why: 'Tycho, 85 km wide, is about 0.11 Gyr old (a landslide its impact set off, sampled by Apollo 17). Its floor is nearly bare.' },
+    south: { body: 'mars', T: 4.0, L: 200, Dmin: 2, Dc: 4, name: 'Mars: southern highlands (Noachian)', why: 'The cratered south of Mars dates from the Noachian, before about 3.7 Gyr ago (Hartmann and Neukum 2001). Set at 4.0 Gyr.' },
+    north: { body: 'mars', T: 3.5, L: 150, Dmin: 0.5, Dc: 1, name: 'Mars: northern plains (Hesperian)', why: 'The smooth northern lowlands were resurfaced in the Hesperian, about 3.7 to 3.0 Gyr ago. Set at 3.5 Gyr.' },
+    tharsis: { body: 'mars', T: 1.0, L: 100, Dmin: 0.25, Dc: 0.5, name: 'Mars: Tharsis lava plains (Amazonian)', why: 'Crater counts date the Tharsis lava plains across much of the Amazonian, the last 3 Gyr, some under 0.1 Gyr (Hartmann 2005). Set at 1.0 Gyr.' },
+    olympus: { body: 'mars', T: 0.15, L: 12, Dmin: 0.05, Dc: 0.1, name: 'Mars: Olympus Mons summit caldera', why: 'The floors of the summit caldera of Olympus Mons count out at about 0.1 to 0.2 Gyr (Neukum and others 2004). Set at 0.15 Gyr: Mars had lava flowing in the last few percent of its history.' },
+  };
+  const PRESETS = {
+    small: { mode: 'impact', body: 'moon', rho: 3000, L: 500, v: 18, th: 45, hint: 'A rocky asteroid 500 m across hitting the Moon at 18 km/s. The crater is about 20 times wider than the asteroid: a simple bowl, about a fifth as deep as it is wide.' },
+    meteor: { mode: 'impact', body: 'earth', rho: 8000, L: 40, v: 12, th: 45, hint: 'Meteor Crater in Arizona is 1.2 km wide and about 50,000 years old. An iron asteroid 40 m across at 12 km/s makes a crater about that size here. Earth\'s air slows and breaks up small asteroids, which this demo leaves out.' },
+    tycho: { mode: 'impact', body: 'moon', rho: 3000, L: 6000, v: 18, th: 45, hint: 'Tycho is 85 km wide, with terraced walls and a central peak. On the Moon any crater wider than about 19 km has collapsed this way (complex crater).' },
+    copernicus: { mode: 'impact', body: 'moon', rho: 3000, L: 6500, v: 18, th: 45, hint: 'Copernicus is 93 km wide, 0.8 Gyr old, with a central peak and terraced walls.' },
+    chicxulub: { mode: 'impact', body: 'earth', rho: 3000, L: 15000, v: 20, th: 60, hint: 'Chicxulub, buried under Mexico\'s Yucatán, is about 180 km wide and 66 million years old; its impact ended the age of dinosaurs. A rocky asteroid about 15 km across at 20 km/s gives a crater that size here, with a ring of peaks inside.' },
+    mead: { mode: 'impact', body: 'venus', rho: 3000, L: 26000, v: 20, th: 45, hint: 'Mead, about 270 km wide, is the largest crater on Venus. Venus has only about 940 craters, none smaller than about 1.5 km: its thick air stops small asteroids, and its surface is young, about 0.5 Gyr on average (Schaber and others 1992).' },
+    orientale: { mode: 'impact', body: 'moon', rho: 3000, L: 86000, v: 18, th: 45, hint: 'Orientale, the Moon\'s youngest big basin (about 3.8 Gyr), has rings out to 930 km. Basins this big stretch the scaling law beyond what it was fitted to, so treat the size as a rough guide.' },
+    caloris: { mode: 'impact', body: 'mercury', rho: 3000, L: 132000, v: 30, th: 45, hint: 'Caloris, about 1550 km wide, is Mercury\'s largest well preserved basin, about 3.8 to 3.9 Gyr old. Mercury\'s asteroids hit fast, around 30 km/s here. A basin this size is far beyond the law\'s fitted range: a rough guide only.' },
+    hellas: { mode: 'impact', body: 'mars', rho: 3000, L: 385000, v: 10, th: 45, hint: 'Hellas, about 2300 km across, is the largest clearly visible basin on Mars and about 4 Gyr old. Asteroids reach Mars more slowly, around 10 km/s here. A rough guide only: the law was fitted to much smaller craters.' },
+    young: { mode: 'cool', t: 0.1, hint: 'Soon after they formed, all three are hot inside and lose heat fast through thin lids.' },
+    maria: { mode: 'cool', t: 1.0, hint: 'Most of the Moon\'s maria erupted 3.9 to 3.1 Gyr ago, that is 0.6 to 1.4 Gyr after the planets formed. Already the Moon\'s lid is thicker than Earth\'s and growing fast.' },
+    today: { mode: 'cool', t: 4.5, hint: 'Today, 4.5 Gyr on. Compare the lids: the Moon\'s is about four times Earth\'s. Measured heat flow: Earth about 92 mW/m² on average (Davies and Davies 2010); the Moon 21 and 14 mW/m² at the Apollo 15 and 17 sites (Langseth and others 1976); Mars has not been measured.' },
+  };
+  for (const k in SURF) PRESETS[k] = { mode: 'count', surf: k, hint: SURF[k].why };
+  PRESETS.mystery = { mode: 'count', surf: 'mystery', hint: 'A surface on the Moon or Mars at an age the demo keeps secret, until you show the right count. Count it, then read its age from the clock.' };
+
+  /* ---------- impact ---------- */
+  let C = null;   /* the current crater */
+  const recrater = () => { C = crater(L(), S.v * 1000, S.rho, S.body, S.th); };
+
+  /* ---------- count ---------- */
+  function buildSurface() {
+    let spec = SURF[S.sKey];
+    if (S.sKey === 'mystery') {
+      if (!S.mystery) { const r = rng(S.seed * 7919 + 13), body = r() < 0.5 ? 'moon' : 'mars', T = 0.2 + r() * 4.0;
+        /* pick a size to count and a field so that about 50 craters are wide enough to count */
+        const sizes = [0.1, 0.25, 0.5, 1, 2, 4, 8]; let best = null;
+        for (const Dc of sizes) { const Lf = Math.sqrt(50 / density(body, Dc, T)); if (Lf >= 8 * Dc && Lf <= 40 * Dc) { best = { Dc, Lf }; break; } }
+        if (!best) best = { Dc: 1, Lf: Math.sqrt(50 / density(body, 1, T)) };
+        S.mystery = { body, T, L: Math.round(best.Lf), Dmin: best.Dc / 2, Dc: best.Dc, name: 'Mystery surface', why: '' }; }
+      spec = S.mystery;
+    }
+    S.cBody = spec.body;
+    S.surf = surface(spec.body, spec.T, spec.L, spec.Dmin, spec.L / 2, S.seed * 101 + spec.L);
+    S.surf.name = spec.name; S.marks = new Set(); S.show = false; hf = null; dirty3 = true;
+  }
+  const inField = (c) => c.x >= 0 && c.x < S.surf.L && c.y >= 0 && c.y < S.surf.L;
+  const marked = () => S.marks.size;
+  const areaKm2 = () => S.surf.L * S.surf.L;
+  function trueCount() { return countIn(S.surf, S.Dc); }
+
+  /* ---------- heightfields and shading for the flat and 3D pictures ---------- */
+  let hf = null;   /* { n, h: Float32Array, scale (km per cell), kind } */
+  const PAL = { moon: [[58, 58, 60], [196, 194, 188]], mercury: [[60, 56, 52], [190, 182, 170]], venus: [[70, 50, 30], [214, 168, 112]], earth: [[52, 60, 44], [172, 160, 128]], mars: [[70, 34, 20], [214, 136, 86]] };
+  function surfHeights(n) {
+    const s = S.surf, sc = s.L / n, h = new Float32Array(n * n), r = rng(s.T * 1000 + s.L);
+    for (let i = 0; i < n * n; i++) h[i] = (r() - 0.5) * 0.002 * sc;
+    for (const c of s.list) {
+      const g = BODIES[s.body].g, Dc = transitionD(g), Dm = c.D * 1000;
+      const cc = { D: Dm, form: Dm <= Dc ? 'simple' : (Dm >= peakRingD(g) ? 'ring' : 'complex'), d: Dm <= Dc ? 0.2 * Dm : 400 * Math.pow(Dm / 1000, 0.3) * Math.pow(9.81 / g, 0.533), h: 0.04 * Dm * (Dm <= Dc ? 1 : Math.pow(Dc / Dm, 0.5)) };
+      const R = c.D / 2 / sc, cx = c.x / sc, cy = c.y / sc, reach = R * 2.2;
+      if (cx + reach < 0 || cy + reach < 0 || cx - reach > n || cy - reach > n) continue;
+      if (R < 0.6) continue;
+      const ci = Math.max(0, Math.min(n - 1, Math.round(cx))), cj = Math.max(0, Math.min(n - 1, Math.round(cy))), base = h[cj * n + ci];
+      const i0 = Math.max(0, Math.floor(cx - reach)), i1 = Math.min(n - 1, Math.ceil(cx + reach)), j0 = Math.max(0, Math.floor(cy - reach)), j1 = Math.min(n - 1, Math.ceil(cy + reach));
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        const rr = Math.hypot(i - cx, j - cy) / R; if (rr > 2.2) continue;
+        const z = craterHeight(cc, rr * cc.D / 2) / 1000, q = j * n + i;
+        if (rr < 1) { const w = rr < 0.85 ? 1 : (1 - rr) / 0.15; h[q] = w * (base + z) + (1 - w) * (h[q] + z); } else h[q] += z;
+      }
+    }
+    return { n, h, scale: sc, kind: 'count', body: s.body };
+  }
+  function impactHeights(n, s) {
+    const span = 1.6 * C.D, sc = span * 2 / n, h = new Float32Array(n * n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const r = Math.hypot((i + 0.5) * sc - span, (j + 0.5) * sc - span); h[j * n + i] = craterAt(C, s, r) / 1000; }
+    return { n, h, scale: sc / 1000, kind: 'impact', body: S.body };
+  }
+  function shade(H, exag, w, hgt) {
+    const n = H.n, img = new ImageData(n, n), P = PAL[H.body] || PAL.moon, sz = Math.cos(0.38), sx = -Math.sin(0.38) * 0.94, sy = -Math.sin(0.38) * 0.34;
+    let lo = Infinity, hi = -Infinity; for (let i = 0; i < n * n; i++) { const v = H.h[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const q = j * n + i, hx = (H.h[j * n + Math.min(n - 1, i + 1)] - H.h[j * n + Math.max(0, i - 1)]) / (2 * H.scale) * exag, hy = (H.h[Math.min(n - 1, j + 1) * n + i] - H.h[Math.max(0, j - 1) * n + i]) / (2 * H.scale) * exag;
+      const nl = Math.hypot(hx, hy, 1), lam = Math.max(0, (-hx * sx - hy * sy + sz) / nl) / sz, alb = 0.82 + 0.18 * (hi > lo ? (H.h[q] - lo) / (hi - lo) : 0.5);
+      const t = Math.min(1, lam * 0.78 * alb), o = q * 4;
+      img.data[o] = P[0][0] + (P[1][0] - P[0][0]) * t; img.data[o + 1] = P[0][1] + (P[1][1] - P[0][1]) * t; img.data[o + 2] = P[0][2] + (P[1][2] - P[0][2]) * t; img.data[o + 3] = 255;
+    }
+    void w; void hgt;
+    return img;
+  }
+  const off = document.createElement('canvas'), octx = off.getContext('2d');
+  let offKey = '';
+  function surfImage() {
+    if (!hf || hf.kind !== 'count') hf = surfHeights(512);
+    const key = 'c' + S.seed + S.sKey + S.surf.L;
+    if (offKey !== key) { off.width = hf.n; off.height = hf.n; octx.putImageData(shade(hf, 3), 0, 0); offKey = key; }
+    return off;
+  }
+
+  /* heights drawn larger by a round factor, chosen so the relief shows: depth about a tenth of the width */
+  const EXS = [1, 2, 3, 5, 10, 20, 50];
+  const exFor = (ratio) => EXS.find((e) => e * ratio >= 0.1) || 50;
+  const impactEx = () => exFor(C.d / C.D);
+  function reliefEx(Hf) { let lo = Infinity, hi = -Infinity; for (const v of Hf.h) { if (v < lo) lo = v; if (v > hi) hi = v; } return EXS.slice().reverse().find((e) => e * (hi - lo) / (Hf.scale * Hf.n) <= 0.06) || 1; }
+  /* ---------- the flat pictures ---------- */
+  let field = { x: 0, y: 0, s: 1 };   /* where the counting field is on the canvas: px per km */
+  function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    const lightHalo = o.halo === 'light' || (o.halo == null && !K.dark); if (o.halo !== false) { c.lineJoin = 'round'; c.lineWidth = 3 * p; c.strokeStyle = lightHalo ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'; c.strokeText(t, x, y); } c.fillStyle = o.col || (lightHalo ? '#17202b' : K.ink); c.fillText(t, x, y); }
+  function scaleBar(c, x, y, pxPerKm, maxPx) {
+    const p = proj(); let kmv = Math.pow(10, Math.floor(Math.log10(maxPx / pxPerKm))); for (const m of [5, 2, 1]) if (m * kmv * pxPerKm <= maxPx) { kmv *= m; break; }
+    const w = kmv * pxPerKm; c.strokeStyle = K.ink; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.moveTo(x, y - 4 * p); c.lineTo(x, y + 4 * p); c.moveTo(x + w, y - 4 * p); c.lineTo(x + w, y + 4 * p); c.stroke();
+    label(c, kmv >= 1 ? `${+kmv.toPrecision(3)} km` : `${Math.round(kmv * 1000)} m`, x + w / 2, y - 10 * p, { a: 'center' });
+  }
+  function cardW() { const sc = $('setupCard'); return getComputedStyle(sc).position === 'absolute' ? sc.offsetWidth + 28 : 0; }
+  function drawImpactFlat() {
+    const p = proj(), cw = cardW(), aw = W - cw, s = S.anim, top = 16 * p;
+    const planH = Math.min(aw * 0.62, H * 0.56), span = 1.6 * C.D;
+    /* top view from the crater's own heightfield */
+    const n = 200, Hh = impactHeights(n, s); off.width = n; off.height = n; octx.putImageData(shade(Hh, 1.5), 0, 0); offKey = '';
+    const ox = (aw - planH) / 2, oy = top; ctx.imageSmoothingEnabled = true; ctx.drawImage(off, ox, oy, planH, planH);
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(ox, oy, planH, planH);
+    const pxm = planH / (2 * span);
+    if (s >= 1 && !S.blind) { ctx.setLineDash([5 * p, 4 * p]); ctx.strokeStyle = K.accent; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(ox + planH / 2, oy + planH / 2, C.D / 2 * pxm, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx, `D = ${km(C.D)}`, ox + planH / 2, oy + planH / 2 - C.D / 2 * pxm - 10 * p, { a: 'center', col: '#1f4fa8', halo: 'light' }); }
+    scaleBar(ctx, ox + 10 * p, oy + planH - 14 * p, pxm * 1000, planH * 0.3);
+    label(ctx, 'from above, sunlight from the left', ox + planH - 8 * p, oy + 12 * p, { a: 'right', w: 400, s: 10.5, halo: 'light' });
+    /* the cross section, heights 2 times larger */
+    const y0 = oy + planH + 30 * p, ph = H - y0 - 24 * p; if (ph < 50 * p) return;
+    const ex = impactEx(), xs = aw * 0.9 / (2 * span), mid = aw / 2, zs = xs * ex, base = y0 + ph * 0.42;
+    ctx.fillStyle = K.dark ? '#3a3631' : '#d9d0c0'; ctx.strokeStyle = K.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(mid - span * xs, y0 + ph);
+    for (let k = 0; k <= 400; k++) { const x = -span + 2 * span * k / 400; ctx.lineTo(mid + x * xs, base - craterAt(C, s, Math.abs(x)) * zs); }
+    ctx.lineTo(mid + span * xs, y0 + ph); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); for (let k = 0; k <= 400; k++) { const x = -span + 2 * span * k / 400, yy = base - craterAt(C, s, Math.abs(x)) * zs; k ? ctx.lineTo(mid + x * xs, yy) : ctx.moveTo(mid + x * xs, yy); } ctx.stroke();
+    ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = K.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mid - span * xs, base); ctx.lineTo(mid + span * xs, base); ctx.stroke(); ctx.setLineDash([]);
+    /* the asteroid to the same scale, coming in along its path before the impact */
+    const rpx = Math.max(1.5 * p, C.L / 2 * xs), u = Math.min(1, s / 0.0001), th = S.th * Math.PI / 180;
+    if (s <= 0) { const dist = (1 - animPre) * Math.min(H, aw) * 0.8; const ax = mid - Math.cos(th) * dist, ay = base - Math.sin(th) * dist - rpx;
+      ctx.fillStyle = K.mark; ctx.beginPath(); ctx.arc(ax, Math.max(-rpx, ay), rpx, 0, 2 * Math.PI); ctx.fill(); }
+    else { ctx.fillStyle = K.mark; ctx.beginPath(); ctx.arc(mid + 1.6 * C.D * xs * 0.82, base - 14 * p - rpx, rpx, 0, 2 * Math.PI); ctx.fill();
+      label(ctx, `asteroid to scale: L = ${km(C.L)}`, mid + 1.6 * C.D * xs * 0.82 - rpx - 6 * p, base - 14 * p - rpx, { a: 'right', col: K.mark, s: 10.5 }); }
+    void u;
+    label(ctx, ex === 1 ? 'cross section, true shape' : `cross section, heights drawn ${ex} times larger`, 12 * p, y0 + 2 * p, { col: K.muted, w: 400, s: 10.5 });
+  }
+  function drawCountFlat() {
+    const p = proj(), cw = cardW(), aw = W - cw, side = Math.min(aw - 24 * p, H - 24 * p), ox = (aw - side) / 2, oy = (H - side) / 2;
+    field = { x: ox, y: oy, s: side / S.surf.L };
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(surfImage(), ox, oy, side, side);
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(ox, oy, side, side);
+    const X = (x) => ox + x * field.s, Y = (y) => oy + y * field.s;
+    ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, side, side); ctx.clip();
+    ctx.lineWidth = 2 * p; ctx.strokeStyle = K.mark;
+    for (const c of S.surf.list) if (S.marks.has(c)) { ctx.beginPath(); ctx.arc(X(c.x), Y(c.y), c.D / 2 * field.s + 2 * p, 0, 2 * Math.PI); ctx.stroke(); }
+    if (S.show) { ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = K.gauge; ctx.lineWidth = 1.4 * p;
+      for (const c of S.surf.list) if (!c.gone && c.D >= S.Dc && inField(c) && !S.marks.has(c)) { ctx.beginPath(); ctx.arc(X(c.x), Y(c.y), c.D / 2 * field.s + 2 * p, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.setLineDash([]); }
+    ctx.restore();
+    /* the gauge: a circle as wide as the smallest crater to count, and a scale bar */
+    const gr = S.Dc / 2 * field.s, gx = ox + 18 * p + gr, gy = oy + 34 * p + gr;
+    ctx.fillStyle = K.dark ? 'rgba(10,12,16,0.65)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(ox + 6 * p, oy + 6 * p, Math.max(150 * p, 2 * gr + 26 * p), 2 * gr + 66 * p);
+    label(ctx, `count if at least ${S.Dc} km wide`, ox + 12 * p, oy + 18 * p, { col: K.gauge, s: 10.5, halo: false });
+    ctx.strokeStyle = K.gauge; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(gx, gy, Math.max(1.5, gr), 0, 2 * Math.PI); ctx.stroke();
+    scaleBar(ctx, ox + 12 * p, gy + gr + 26 * p, field.s, Math.min(side * 0.3, 140 * p));
+    label(ctx, `${S.surf.name} · field ${S.surf.L} × ${S.surf.L} km · sunlight from the left`, ox + side - 8 * p, oy + side - 12 * p, { a: 'right', col: K.ink, w: 400, s: 10.5 });
+  }
+  /* cooling: the three planets cut open, to scale */
+  let cool = null;
+  function coolRows() { if (!cool || cool.T0 !== S.T0) cool = { T0: S.T0, moon: cooling('moon', S.T0, 5), mars: cooling('mars', S.T0, 5), earth: cooling('earth', S.T0, 5) }; return cool; }
+  function at(key, t) { const rows = coolRows()[key], i = Math.max(0, Math.min(rows.length - 1, Math.round(t / 0.005))); return rows[i]; }
+  function tempColor(T) { const u = Math.max(0, Math.min(1, (T - 1300) / 800)), s = [[90, 24, 18], [180, 44, 20], [238, 120, 32], [255, 214, 120]], k = Math.min(2, Math.floor(u * 3)), w = u * 3 - k;
+    return `rgb(${s[k].map((v, i) => Math.round(v + (s[k + 1][i] - v) * w)).join(',')})`; }
+  function drawCoolFlat() {
+    const p = proj(), cw = cardW(), aw = W - cw, keys = ['moon', 'mars', 'earth'], Rs = keys.map((k) => PLANETS[k].R), sum = Rs.reduce((a, b) => a + b, 0) * 2;
+    const sc = Math.min((aw - 60 * p) / sum, (H - 110 * p) / (2 * PLANETS.earth.R)), cy = H / 2 + 6 * p; let x = (aw - sum * sc - 40 * p) / 2;
+    keys.forEach((k, i) => {
+      const P = PLANETS[k], r = P.R * sc, row = at(k, S.t), cx = x + r; x += 2 * r + 20 * p;
+      const lid = Math.min(P.R - P.Rc, row.lid) * sc;
+      ctx.fillStyle = K.lid; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = tempColor(row.T); ctx.beginPath(); ctx.arc(cx, cy, Math.max(0, r - lid), 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = K.dark ? '#5d4a3a' : '#9b7f62'; ctx.beginPath(); ctx.arc(cx, cy, P.Rc * sc, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = K.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+      label(ctx, P.name, cx, cy - r - 30 * p, { a: 'center', w: 700 });
+      label(ctx, `lid ${Math.round(row.lid / 1000)} km`, cx, cy - r - 14 * p, { a: 'center', col: K.muted, s: 10.5 });
+      label(ctx, `${Math.round(row.T)} K inside`, cx, cy + r + 14 * p, { a: 'center', col: K.muted, s: 10.5 });
+      void i;
+    });
+    label(ctx, `${f(S.t, 2)} Gyr after forming · sizes to scale · gray: the cold lid, to scale · core in brown (not heated in the model)`, 12 * p, H - 12 * p, { col: K.muted, w: 400, s: 10.5 });
+  }
+
+  /* ---------- the graph under the picture ---------- */
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  function axes(c, o) {
+    const p = proj(), Lm = (o.lm || 64) * p, Rm = 14 * p, Tm = 26 * p, Bm = 34 * p, pw = PW - Lm - Rm, ph = PH2 - Tm - Bm;
+    const X = (v) => Lm + (v - o.x0) / (o.x1 - o.x0) * pw, Y = (v) => Tm + ph - (v - o.y0) / (o.y1 - o.y0) * ph;
+    c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const xt of o.xt) { const [v, t] = Array.isArray(xt) ? xt : [xt, String(xt)]; c.beginPath(); c.moveTo(X(v), Tm); c.lineTo(X(v), Tm + ph); c.stroke(); c.fillText(t, X(v), Tm + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const [v, t] of o.yt) { c.beginPath(); c.moveTo(Lm, Y(v)); c.lineTo(Lm + pw, Y(v)); c.stroke(); c.fillText(t, Lm - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${K.ui}`; c.fillText(o.xl, Lm + pw / 2, PH2 - 1);
+    c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(o.yl, 0, 0); c.restore();
+    return { X, Y, Lm, Tm, pw, ph };
+  }
+  function drawPlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH2);
+    if (S.mode === 'count') {
+      const body = S.cBody, D = S.Dc, lo = Math.floor(Math.log10(density(body, D, 0.1))), hi = Math.ceil(Math.log10(density(body, D, 4.5))), stp = hi - lo > 6 ? 2 : 1;
+      const SUPS = '⁰¹²³⁴⁵⁶⁷⁸⁹', pow10 = (e) => `10${String(e).split('').map((ch) => SUPS[+ch]).join('')}`;
+      const yt = []; for (let e = hi; e >= lo; e -= stp) yt.push([e, e >= 0 ? `${Math.pow(10, e)} per km²` : e === -1 ? '1 per 10 km²' : `1 per ${pow10(-e)} km²`]);
+      const A = axes(c, { lm: 104, x0: 0, x1: 4.5, y0: lo, y1: hi, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'age of the surface (billions of years)', yl: `craters ≥ ${D} km (log)` });
+      c.strokeStyle = body === 'mars' ? K.mars : K.moon; c.lineWidth = 2.2 * p; c.beginPath();
+      for (let k = 1; k <= 450; k++) { const T = k / 100, y = Math.log10(density(body, D, T)); k > 1 ? c.lineTo(A.X(T), A.Y(y)) : c.moveTo(A.X(T), A.Y(y)); } c.stroke();
+      const n = marked() / areaKm2();
+      if (n > 0) { const y = Math.log10(n), a = ageFrom(body, D, n);
+        c.strokeStyle = K.mark; c.setLineDash([5 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.Lm, A.Y(y)); c.lineTo(a == null ? A.Lm + A.pw : A.X(a), A.Y(y)); if (a != null) c.lineTo(A.X(a), A.Tm + A.ph); c.stroke(); c.setLineDash([]);
+        c.font = `600 ${10.5 * p}px ${K.ui}`; c.fillStyle = K.mark; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`your count: ${marked()} in ${areaKm2().toLocaleString('en-US')} km²`, A.Lm + 6 * p, A.Y(y) - 3 * p); }
+      if (S.show && !S.blind) { const T = S.surf.T; c.strokeStyle = K.gauge; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(A.X(T), A.Tm); c.lineTo(A.X(T), A.Tm + A.ph); c.stroke();
+        c.fillStyle = K.gauge; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `600 ${10.5 * p}px ${K.ui}`; c.fillText(`set age ${T.toFixed(2)} Gyr`, A.X(T) - 4 * p, A.Tm + 2 * p); }
+      c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(body === 'mars' ? 'the crater clock for Mars (Hartmann and Neukum 2001, Ivanov 2001)' : 'the crater clock for the Moon (Neukum, Ivanov and Hartmann 2001)', A.Lm, 12 * p);
+      return;
+    }
+    if (S.mode === 'cool') {
+      const R = coolRows(), what = S.plot, val = (r) => (what === 'lid' ? r.lid / 1000 : what === 'q' ? r.q * 1000 : r.T);
+      let top = 0, bot = what === 'T' ? 1300 : 0; for (const k of ['moon', 'mars', 'earth']) for (const r of R[k]) if (r.t > 0.02) top = Math.max(top, val(r));
+      if (what === 'q') top = Math.min(top, 250); top = Math.ceil(top / nice(top / 4)) * nice(top / 4);
+      const st = nice((top - bot) / 4), yt = []; for (let v = bot; v <= top + 1e-9; v += st) yt.push([v, String(+v.toPrecision(6))]);
+      const A = axes(c, { x0: 0, x1: 4.5, y0: bot, y1: top, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'time since the planets formed (billions of years); today is 4.5',
+        yl: what === 'lid' ? 'cold lid (km)' : what === 'q' ? 'heat flow (mW/m²)' : 'temperature inside (K)' });
+      c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();
+      for (const k of ['moon', 'mars', 'earth']) { c.strokeStyle = K[k]; c.lineWidth = 2.2 * p; c.beginPath(); R[k].forEach((r, i) => { const x = A.X(r.t), y = A.Y(val(r)); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); }
+      if (what === 'q') { /* measured today: Earth's average, the two Apollo sites */
+        c.fillStyle = K.earth; c.beginPath(); c.arc(A.X(4.5) - 4 * p, A.Y(92), 4 * p, 0, 2 * Math.PI); c.fill();
+        c.fillStyle = K.moon; for (const v of [21, 14]) { c.beginPath(); c.arc(A.X(4.5) - 4 * p, A.Y(v), 4 * p, 0, 2 * Math.PI); c.fill(); } }
+      c.restore();
+      c.strokeStyle = K.ink; c.lineWidth = 1; c.setLineDash([4 * p, 3 * p]); c.beginPath(); c.moveTo(A.X(S.t), A.Tm); c.lineTo(A.X(S.t), A.Tm + A.ph); c.stroke(); c.setLineDash([]);
+      c.font = `600 ${10.5 * p}px ${K.ui}`; c.textBaseline = 'middle'; c.textAlign = 'left'; let lx = A.Lm + 6 * p;
+      for (const k of ['moon', 'mars', 'earth']) { c.fillStyle = K[k]; c.fillText(PLANETS[k].name, lx, 12 * p); lx += c.measureText(PLANETS[k].name).width + 14 * p; }
+      if (what === 'q') { c.fillStyle = K.muted; c.font = `${10.5 * p}px ${K.ui}`; c.fillText('dots: measured today (Earth average; Moon at Apollo 15 and 17)', lx + 6 * p, 12 * p); }
+      return;
+    }
+    /* impact: crater size against asteroid size for this target, speed and rock, with this asteroid marked */
+    const xs = [[1, '10 m'], [2, '100 m'], [3, '1 km'], [4, '10 km'], [5, '100 km']], body = BODIES[S.body];
+    const yv = (Lm) => crater(Lm, S.v * 1000, S.rho, S.body, S.th).D;
+    const A = axes(c, { x0: 1, x1: Math.log10(LMAX), y0: 2, y1: 7, xt: xs, yt: [[2, '100 m'], [3, '1 km'], [4, '10 km'], [5, '100 km'], [6, '1000 km'], [7, '10⁴ km']], xl: 'asteroid diameter L (log scale)', yl: 'crater D (log)' });
+    c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();
+    for (const [lim, txt] of [[transitionD(body.g), 'simple bowls below'], [peakRingD(body.g), 'rings of peaks above']]) { const y = A.Y(Math.log10(lim)); c.strokeStyle = K.muted; c.setLineDash([4 * p, 4 * p]); c.lineWidth = 1; c.beginPath(); c.moveTo(A.Lm, y); c.lineTo(A.Lm + A.pw, y); c.stroke(); c.setLineDash([]);
+      c.fillStyle = K.muted; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(txt, A.Lm + A.pw - 4 * p, y - 2 * p); }
+    c.strokeStyle = K.accent; c.lineWidth = 2.2 * p; c.beginPath(); for (let k = 0; k <= 300; k++) { const lx = 1 + (Math.log10(LMAX) - 1) * k / 300, y = Math.log10(yv(Math.pow(10, lx))); k ? c.lineTo(A.X(lx), A.Y(y)) : c.moveTo(A.X(lx), A.Y(y)); } c.stroke();
+    c.restore();
+    if (!S.blind) { c.fillStyle = K.mark; c.beginPath(); c.arc(A.X(Math.log10(C.L)), A.Y(Math.log10(C.D)), 5 * p, 0, 2 * Math.PI); c.fill(); }
+    c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
+    c.fillText(`craters on ${body.name} from ${S.rho} kg/m³ asteroids at ${S.v} km/s, ${S.th}° (Collins, Melosh and Marcus 2005)`, A.Lm, 12 * p);
+  }
+
+  /* ---------- the 3D view ---------- */
+  let dirty3 = true;
+  const G3 = { o: { th: -0.35, ph: 1.0, zoom: 1.35 }, saved: { ground: { th: -0.35, ph: 1.0, zoom: 1.35 }, cool: { th: -Math.PI / 2 + 0.55, ph: 1.12, zoom: 1 } }, now: 'ground' };
+  function orbitFor(m) { const k = m === 'cool' ? 'cool' : 'ground'; if (k === G3.now) return; G3.saved[G3.now] = Object.assign({}, G3.o); Object.assign(G3.o, G3.saved[k]); G3.now = k; }
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, fov: 32, near: 0.01, far: 60, sky: '#03050a' }); if (!S3) return false;
+    S3.el.classList.add('cr3'); const sc = S3.scene;
+    S3.sun.position.set(-3, -0.8, 1.1); S3.sun.intensity = 1.1; S3.hemi.intensity = 0.25;
+    S3.onTheme(() => { S3.sun.intensity = 1.15; S3.hemi.intensity = 0.22; });
+    VD3K.sky(S3, { n: 1400, r: 30, seed: 5 });
+    const N = 160, geo = new THREE.PlaneGeometry(2, 2, N - 1, N - 1), col = new Float32Array(N * N * 3); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const ground = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 })); sc.add(ground);
+    const apShape = new THREE.Shape(); apShape.absarc(0, 0, 14, 0, 2 * Math.PI, false);
+    const apHole = new THREE.Path(); apHole.moveTo(-0.995, -0.995); apHole.lineTo(-0.995, 0.995); apHole.lineTo(0.995, 0.995); apHole.lineTo(0.995, -0.995); apHole.closePath(); apShape.holes.push(apHole);
+    /* the ground around the field, with a square hole where the field is so low ground inside is never covered */
+    const apron = new THREE.Mesh(new THREE.ShapeGeometry(apShape, 48), new THREE.MeshStandardMaterial({ color: 0x777777, roughness: 1 })); apron.position.z = -0.002; sc.add(apron);
+    const rock = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 2), new THREE.MeshStandardMaterial({ color: 0x7a6a58, roughness: 0.9, flatShading: true })); sc.add(rock);
+    const flash = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({ color: 0xffd28a, transparent: true, opacity: 0, depthWrite: false })); sc.add(flash);
+    const dust = VD3K.particles(S3, { n: 400, r: 0.008, color: '#b9aa94' });
+    /* cooling: three cut away planets */
+    const planets = new THREE.Group(); sc.add(planets); const P3 = {};
+    for (const k of ['moon', 'mars', 'earth']) {
+      /* the back half of each planet, and a cut face toward the camera painted with the core, the hot mantle and the cold lid to scale */
+      const g = new THREE.Group(); planets.add(g);
+      const lidM = new THREE.MeshStandardMaterial({ color: k === 'mars' ? 0xb2643a : k === 'earth' ? 0x5d7aa0 : 0x9a9a98, roughness: 0.9 });
+      const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32, Math.PI, Math.PI), lidM); shell.rotation.x = Math.PI / 2;
+      const cv = document.createElement('canvas'); cv.width = cv.height = 512; const tex = new THREE.CanvasTexture(cv);
+      const face = new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({ map: tex })); face.rotation.x = Math.PI / 2;
+      g.add(shell, face); P3[k] = { g, shell, face, cv, tex, key: '' };
+    }
+    g3 = { S3, geo, col, N, ground, apron, rock, flash, dust, planets, P3 };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.25, phMax: 1.45, zMin: 0.5, zMax: 3 });
+    return true;
+  }
+  function fillGround(H, exag) {
+    const g = g3, N = g.N, pos = g.geo.attributes.position.array, P = PAL[H.body] || PAL.moon, n = H.n;
+    let lo = Infinity, top = -Infinity; for (let i = 0; i < n * n; i++) { const v = H.h[i]; if (v < lo) lo = v; if (v > top) top = v; }
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const v = j * N + i, hi = Math.min(n - 1, Math.round(i / (N - 1) * (n - 1))), hj = Math.min(n - 1, Math.round((N - 1 - j) / (N - 1) * (n - 1))), h = H.h[hj * n + hi], z = h / (H.scale * n) * 2 * exag;
+      pos[v * 3 + 2] = z; const t = 0.6 + 0.3 * (top > lo ? (h - lo) / (top - lo) : 0.67);   /* lower ground a little darker, as in the flat view */
+      g.col[v * 3] = (P[0][0] + (P[1][0] - P[0][0]) * t) / 255; g.col[v * 3 + 1] = (P[0][1] + (P[1][1] - P[0][1]) * t) / 255; g.col[v * 3 + 2] = (P[0][2] + (P[1][2] - P[0][2]) * t) / 255;
+    }
+    g.geo.attributes.position.needsUpdate = true; g.geo.attributes.color.needsUpdate = true; g.geo.computeVertexNormals();
+    let e = Infinity; for (let i = 0; i < N; i++) e = Math.min(e, pos[i * 3 + 2], pos[((N - 1) * N + i) * 3 + 2], pos[(i * N) * 3 + 2], pos[(i * N + N - 1) * 3 + 2]); g.apron.position.z = e - 0.002;
+    g.apron.material.color.setRGB(g.col[0], g.col[1], g.col[2]);
+  }
+  let last3 = '';
+  function draw3() {
+    const g = g3, S3 = g.S3, p = proj(), cw = cardW(); S3.size(W, H); S3.cam.setViewOffset(W, H, cw / 2, 0, W, H);
+    orbitFor(S.mode); const surfOn = S.mode !== 'cool'; g.ground.visible = surfOn; g.apron.visible = surfOn; g.planets.visible = !surfOn; g.rock.visible = false; g.flash.visible = false; g.dust.show(0);
+    if (S.mode === 'impact') {
+      const s = S.anim, key = `i${C.D}|${C.form}|${s.toFixed(3)}|${S.body}`;
+      if (key !== last3 || dirty3) { fillGround(impactHeights(g.N, Math.max(0, s)), impactEx()); last3 = key; dirty3 = false; }
+      const span = 1.6 * C.D, u = 1 / span, th = S.th * Math.PI / 180;   /* scene units: the picture is 2 wide for 2 span */
+      if (s <= 0) { const dist = (1 - animPre) * 2.2, r = Math.max(0.006, C.L / 2 * u); g.rock.visible = true; g.rock.scale.setScalar(r); g.rock.position.set(-Math.cos(th) * dist, 0, Math.sin(th) * dist + r); }
+      if (s > 0 && s < 0.35) { const w = s / 0.35; g.flash.visible = true; g.flash.scale.setScalar(C.Dtc / 2 * u * (0.3 + 0.9 * w)); g.flash.material.opacity = 0.75 * (1 - w); }
+      if (s > 0 && s < 0.9) { const r = rng(7), n = 400; for (let i = 0; i < n; i++) { const a = r() * 2 * Math.PI, sp = 0.6 + r() * 0.6, tt = s / 0.9, R0 = C.Dtc / 2 * u * (0.4 + 0.6 * r());
+          const x = Math.cos(a) * (R0 + sp * tt * 1.2), y = Math.sin(a) * (R0 + sp * tt * 1.2), z = Math.max(0, sp * tt * 1.6 - 2.2 * tt * tt); g.dust.put(i, x, y, z); } g.dust.show(n); g.dust.done(); }
+      S3.place(G3.o, [0, 0, 0], S3.fit(3.1, 1.2));
+    } else if (S.mode === 'count') {
+      if (dirty3 || last3 !== 'c' + offKeyFor()) { if (!hf || hf.kind !== 'count') hf = surfHeights(512); g.ex = reliefEx(hf); fillGround(hf, g.ex); last3 = 'c' + offKeyFor(); dirty3 = false; }
+      S3.place(G3.o, [0, 0, 0], S3.fit(3.4, 1.2));
+    } else {
+      const keys = ['moon', 'mars', 'earth'], sc = 1 / PLANETS.earth.R; let x = -1.55;
+      for (const k of keys) { const P = PLANETS[k], o = g.P3[k], r = P.R * sc, row = at(k, S.t), lid = Math.min(P.R - P.Rc, row.lid) * sc; x += r;
+        o.g.position.set(x, 0, 0); o.g.scale.setScalar(r);
+        const key = `${Math.round(row.T)}|${Math.round(lid * 1e4)}`;
+        if (key !== o.key) { o.key = key; const c = o.cv.getContext('2d'), m = 256; c.clearRect(0, 0, 512, 512);
+          c.fillStyle = '#8f949b'; c.beginPath(); c.arc(m, m, m, 0, 2 * Math.PI); c.fill();
+          c.fillStyle = tempColor(row.T); c.beginPath(); c.arc(m, m, m * Math.max(0, 1 - lid / r), 0, 2 * Math.PI); c.fill();
+          c.fillStyle = '#6b5440'; c.beginPath(); c.arc(m, m, m * P.Rc / P.R, 0, 2 * Math.PI); c.fill(); o.tex.needsUpdate = true; }
+        x += r + 0.18; }
+      S3.place(G3.o, [0.05, 0, 0], 4.6 * Math.max(1, 1.7 / Math.max(0.3, (W - cw) / H)));
+    }
+    S3.render();
+    if (S.mode === 'count') label(ctx, `${g.ex === 1 ? 'true heights' : `heights drawn ${g.ex} times larger`} · drag to turn · switch to Flat to mark craters`, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 });
+    else if (S.mode === 'impact') { label(ctx, `${impactEx() === 1 ? 'true heights' : `heights drawn ${impactEx()} times larger`} · drag to turn${S.anim >= 1 && !S.blind ? ` · D = ${km(C.D)}` : ''}`, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 }); }
+    else { const pts = ['moon', 'mars', 'earth']; for (const k of pts) { const o = g.P3[k], q = S3.project([o.g.position.x, 0, PLANETS[k].R / PLANETS.earth.R + 0.06]); label(ctx, `${PLANETS[k].name}: lid ${Math.round(at(k, S.t).lid / 1000)} km`, q[0], q[1], { a: 'center' }); }
+      label(ctx, `${f(S.t, 2)} Gyr after forming · sizes to scale · drag to turn`, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 }); }
+  }
+  const offKeyFor = () => `${S.seed}|${S.sKey}|${S.surf ? S.surf.L : 0}`;
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind;
+    let h = '';
+    if (S.mode === 'impact') {
+      const FORM = { simple: 'simple bowl', complex: 'complex: flat floor, terraces, central peak', ring: 'basin with a ring of peaks' };
+      h += dd('Target', `${BODIES[S.body].name}, g = ${BODIES[S.body].g} m/s²`) + dd('Asteroid', `${km(C.L)}, ${S.rho} kg/m³, ${S.v} km/s, ${S.th}°`, 'wide')
+        + dd('Mass', sup(`${sig(C.m, 3)} kg`)) + dd('Energy', sup(`${sig(C.E, 3)} J = ${sig(C.Mt, 3)} Mt of TNT`), 'wide')
+        + dd('Transient crater D<sub>tc</sub>', B ? hide : km(C.Dtc)) + dd('Final crater D', B ? hide : km(C.D)) + dd('Depth (rim to floor)', B ? hide : km(C.d))
+        + dd('D ÷ L', B ? hide : f(C.D / C.L, 1)) + dd('Shape', B ? hide : FORM[C.form], 'wide')
+        + dd(`Bowls collapse above (${BODIES[S.body].name})`, km(C.Dc)) + dd('Rings of peaks above', km(C.Dp));
+    } else if (S.mode === 'count') {
+      const n = marked(), A = areaKm2(), dens = n / A, a = ageFrom(S.cBody, S.Dc, dens), tc = trueCount();
+      h += dd('Surface', S.surf.name, 'wide') + dd('Field', `${S.surf.L} × ${S.surf.L} km = ${A.toLocaleString('en-US')} km²`) + dd('Count craters at least', `${S.Dc} km`)
+        + dd('Craters you marked', String(n)) + dd('Per km²', n ? sup(sig(dens, 3)) : '—') + dd('Age from your count', B ? hide : n ? (a == null ? 'older than 4.5 Gyr: more than the clock allows' : `${f(a, 2)} Gyr`) : '—')
+        + dd('Right count', S.show && !B ? String(tc) : hide) + dd('Set age of this surface', (S.show || S.sKey !== 'mystery') && !B ? `${f(S.surf.T, 2)} Gyr` : hide)
+        + dd('Clock, no erasing', B ? hide : `${f(density(S.cBody, S.Dc, S.surf.T) * A, 1)} craters expected`, 'wide');
+    } else {
+      const rows = ['moon', 'mars', 'earth'].map((k) => { const P = PLANETS[k], r = at(k, S.t), AV = 3 * P.R * P.R / (P.R ** 3 - P.Rc ** 3);
+        return `<tr><th scope="row">${P.name}</th><td>${Math.round(P.R / 1000)}</td><td>${f(AV * 1e6, 2)}</td><td>${Math.round(r.T)}</td><td>${f(r.q * 1000, 1)}</td><td>${Math.round(r.lid / 1000)}</td></tr>`; }).join('');
+      h += dd('Time since the planets formed', `${f(S.t, 2)} Gyr`, 'wide')
+        + `<div class="wide"><table class="cooltab"><thead><tr><th></th><th>radius km</th><th>area ÷ volume*</th><th>inside K</th><th>heat flow mW/m²</th><th>cold lid km</th></tr></thead><tbody>${rows}</tbody></table><p class="hint" style="margin:4px 0 0">* km² of surface for each 1000 km³ of mantle</p></div>`;
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    $('clock').textContent = S.mode === 'impact' ? `${BODIES[S.body].name} · g = ${BODIES[S.body].g} m/s²` : S.mode === 'count' ? `${marked()} marked` : `t = ${f(S.t, 2)} Gyr after forming`;
+  }
+
+  /* ---------- controls ---------- */
+  function sync() {
+    $('selBody').value = S.body; $('selRock').value = String(S.rho); $('sL').value = sOf(S.L); $('oL').textContent = km(L()); $('sV').value = S.v; $('oV').textContent = `${S.v} km/s`; $('sTh').value = S.th; $('oTh').textContent = `${S.th}°`;
+    $('selDc').value = String(S.Dc); $('sT').value = S.t; $('oT').textContent = `${f(S.t, 2)} Gyr`; $('selStart').value = String(S.T0); $('selPlot').value = S.plot;
+    $('impactBox').hidden = S.mode !== 'impact'; $('countBox').hidden = S.mode !== 'count'; $('coolBox').hidden = S.mode !== 'cool'; $('coolPlotCtl').hidden = S.mode !== 'cool';
+    $('cardTitle').textContent = S.mode === 'impact' ? 'The asteroid and the target' : S.mode === 'count' ? 'Count the craters' : 'Three planets cooling';
+    if (S.surf) $('surfName').textContent = `${S.surf.name}${S.sKey === 'mystery' || /^(Mars|Lunar)/.test(S.surf.name) ? '' : `, ${S.surf.body === 'mars' ? 'Mars' : 'the Moon'}`}`;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const d of document.querySelectorAll('#presets [data-for]')) d.hidden = d.dataset.for !== S.mode;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('play').textContent = S.mode === 'impact' ? (S.run ? 'Falling…' : 'Drop it') : S.mode === 'cool' ? (S.run ? 'Pause' : S.t >= 4.5 ? 'Run again' : 'Run') : 'New surface';
+    $('play').hidden = S.mode === 'count';
+    $('showCount').textContent = S.show ? 'Hide the right count' : 'Show the right count';
+  }
+  const card = VD.setupCard($('setupCard'));
+  let animPre = 1, animT0 = 0;
+  function drop() { recrater(); S.anim = 0; animPre = 0; S.run = true; animT0 = performance.now(); card.away(false); sync(); }
+  function setMode(m, quiet) {
+    S.mode = m; S.run = false;
+    if (m === 'count' && !S.surf) { S.sKey = 'mare'; S.preset = 'mare'; S.Dc = SURF.mare.Dc; buildSurface(); $('presetHint').textContent = SURF.mare.why; }
+    if (m === 'cool' && !quiet) { S.preset = 'today'; S.t = 4.5; $('presetHint').textContent = PRESETS.today.hint; }
+    if (m === 'impact' && !quiet) { $('presetHint').textContent = (PRESETS[S.preset] && PRESETS[S.preset].mode === 'impact') ? PRESETS[S.preset].hint : ''; }
+    dirty3 = true; last3 = ''; sync(); redraw();
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; if (!c) return; S.preset = k; S.mode = c.mode; S.run = false;
+    if (c.mode === 'impact') { Object.assign(S, { body: c.body, rho: c.rho, L: c.L, v: c.v, th: c.th }); recrater(); S.anim = 1; animPre = 1; }
+    else if (c.mode === 'count') { S.sKey = c.surf; S.seed = 1; S.mystery = null; if (c.surf !== 'mystery') S.Dc = SURF[c.surf].Dc; buildSurface(); if (c.surf === 'mystery') S.Dc = S.mystery.Dc; }
+    else { S.t = c.t; }
+    $('presetHint').textContent = c.hint; dirty3 = true; last3 = ''; sync(); redraw();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-mode]'); if (b && b.dataset.mode !== S.mode) setMode(b.dataset.mode); });
+  const changedImpact = () => { if (S.preset !== 'custom' && PRESETS[S.preset] && PRESETS[S.preset].mode === 'impact') S.preset = 'custom'; recrater(); S.anim = 1; animPre = 1; S.run = false; dirty3 = true; sync(); redraw(); };
+  $('selBody').addEventListener('change', (e) => { S.body = e.target.value; S.v = BODIES[S.body].v; changedImpact(); });
+  $('selRock').addEventListener('change', (e) => { S.rho = +e.target.value; changedImpact(); });
+  $('sL').addEventListener('input', (e) => { S.L = +Lof(+e.target.value).toPrecision(2); changedImpact(); });
+  $('sV').addEventListener('input', (e) => { S.v = +e.target.value; changedImpact(); });
+  $('sTh').addEventListener('input', (e) => { S.th = +e.target.value; changedImpact(); });
+  $('selDc').addEventListener('change', (e) => { S.Dc = +e.target.value; S.marks = new Set(); sync(); redraw(); });
+  $('clearMarks').addEventListener('click', () => { S.marks = new Set(); redraw(); });
+  $('showCount').addEventListener('click', () => { S.show = !S.show; sync(); redraw(); });
+  $('newSurf').addEventListener('click', () => { S.seed++; S.mystery = null; buildSurface(); if (S.sKey === 'mystery') S.Dc = S.mystery.Dc; sync(); redraw(); });
+  $('sT').addEventListener('input', (e) => { S.t = +e.target.value; S.run = false; if (PRESETS[S.preset] && PRESETS[S.preset].mode === 'cool') S.preset = 'custom'; sync(); redraw(); });
+  $('selStart').addEventListener('change', (e) => { S.T0 = +e.target.value; sync(); redraw(); });
+  $('selPlot').addEventListener('change', (e) => { S.plot = e.target.value; redraw(); });
+  $('play').addEventListener('click', () => {
+    if (S.mode === 'impact') { if (!S.run) drop(); return; }
+    if (S.mode === 'cool') { if (S.run) S.run = false; else { if (S.t >= 4.5) S.t = 0; S.run = true; } sync(); }
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  /* marking craters: the smallest crater still showing whose rim holds the point */
+  can.addEventListener('click', (e) => {
+    if (S.mode !== 'count' || use3()) return;
+    const r = can.getBoundingClientRect(), x = (e.clientX - r.left - field.x) / field.s, y = (e.clientY - r.top - field.y) / field.s;
+    if (x < 0 || y < 0 || x > S.surf.L || y > S.surf.L) return;
+    const slack = 3 / field.s; let best = null;
+    let bs = 1;   /* the crater whose center is nearest the click, measured in its own radius */
+    for (const c of S.surf.list) { if (c.gone || !inField(c)) continue; const sc = Math.hypot(c.x - x, c.y - y) / (c.D / 2 + slack); if (sc <= bs) { bs = sc; best = c; } }
+    if (!best) return; if (S.marks.has(best)) S.marks.delete(best); else S.marks.add(best); redraw();
+  });
+
+  /* ---------- readings for the worksheets ---------- */
+  const PNAME = { small: 'A 500 m asteroid (Moon)', meteor: 'Meteor Crater', tycho: 'Tycho', copernicus: 'Copernicus', chicxulub: 'Chicxulub', mead: 'Mead', orientale: 'Orientale', caloris: 'Caloris', hellas: 'Hellas', custom: 'Changed by hand' };
+  window.vdVersion = 'craters@2026-10-25';
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.mode === 'impact' ? [['body', 'target'], ['L_km', 'L (km)'], ['D_km', 'D (km)'], ['form', 'shape']] : S.mode === 'count' ? [['surface', 'surface'], ['N', 'N'], ['per_km2', 'per km²'], ['age_Gyr', 'age (Gyr)']] : [['planet', 'planet'], ['t_Gyr', 't (Gyr)'], ['lid_km', 'lid (km)'], ['q_mW_m2', 'q (mW/m²)']]) });
+  window.vdReadingRow = () => {
+    if (S.mode === 'impact') { if (S.anim < 1) return 'Wait for the crater to finish forming.';
+      return { mode: 'Impact', setup: PNAME[S.preset] || S.preset, body: BODIES[S.body].name, rock_kg_m3: String(S.rho), L_km: sig(C.L / 1000, 3), v_km_s: String(S.v), angle_deg: String(S.th), Dtc_km: S.blind ? '' : sig(C.Dtc / 1000, 3), D_km: S.blind ? '' : sig(C.D / 1000, 3), depth_km: S.blind ? '' : sig(C.d / 1000, 3), form: S.blind ? '' : C.form, E_Mt: sig(C.Mt, 3) }; }
+    if (S.mode === 'count') { const n = marked(); if (!n) return 'Mark the craters first: click each one at least as wide as the purple circle.';
+      const A = areaKm2(), dens = n / A, a = ageFrom(S.cBody, S.Dc, dens);
+      return { mode: 'Count', surface: S.surf.name, body: S.cBody === 'mars' ? 'Mars' : 'Moon', D_km: String(S.Dc), area_km2: String(A), N: String(n), per_km2: sig(dens, 3), age_Gyr: S.blind ? '' : a == null ? '>4.5' : a.toFixed(2) }; }
+    return ['moon', 'mars', 'earth'].map((k) => { const P = PLANETS[k], r = at(k, S.t); return { mode: 'Cooling', planet: P.name, R_km: String(Math.round(P.R / 1000)), t_Gyr: S.t.toFixed(2), T_K: String(Math.round(r.T)), q_mW_m2: r.q < 0.1 ? (r.q * 1000).toFixed(1) : (r.q * 1000).toFixed(1), lid_km: String(Math.round(r.lid / 1000)) }; });
+  };
+  $('about').textContent = 'Model. Crater sizes: the scaling law of Collins, Melosh and Marcus (2005) for rock targets, with the simple to complex transition at 3.2 km on Earth and scaled as 1/g elsewhere (19.4 km on the Moon), and peak ring basins from 200 km on the Moon, scaled the same way. Depths: simple craters from Collins and others (about 0.21 D); complex craters 0.4 km (D/1 km)^0.3 on Earth and 1.044 km (D/1 km)^0.301 on the Moon (Pike 1977), other bodies in between as a power of g. The shapes are schematic, and the pictures draw heights larger by the factor printed under them. Target rock 2550 kg/m³ on the Moon, 2700 kg/m³ elsewhere. Left out: the air (which breaks up small asteroids at Earth and Venus), the curvature of the planet (which matters for basins hundreds of km wide, where the law is only a guide), and the ejecta beyond the rim. Crater clock: Neukum, Ivanov and Hartmann (2001) for the Moon, Ivanov (2001) and Hartmann and Neukum (2001) for Mars. The surfaces are simulated: craters placed at random, sizes from the production function and times from the clock, every crater fresh (real old craters are worn down), and a new crater erases older smaller ones whose centers it covers, so the oldest surfaces saturate. Counting statistics: a count of N is uncertain by about √N. Cooling: one mantle temperature per planet, the boundary layer convection law Nu = (Ra/Ra_c)^(1/3) with Ra_c = 1000, k = 4 W/(m·K), κ = 10^−6 m²/s, α = 3 × 10^−5 /K, c = 1200 J/(kg·K), viscosity 10^21 Pa·s at 1600 K changing with an activation energy of 300 kJ/mol, and radioactive heating by U, Th and K at bulk silicate Earth levels with half lives 4.47, 0.704, 14.0 and 1.25 Gyr. No heat from the cores, no melting, the same rock and the same convection rule for all three: the real Moon and Mars have a single rigid lid that slows their cooling further. The model gives Earth about 50 mW/m² today against a measured 92 mW/m², because it leaves out the heat from Earth\'s core and the radioactive elements gathered in the continents.';
+
+  /* ---------- run, size, theme ---------- */
+  const redraw = () => { draw(); drawPlot(); readouts(); clock(); };
+  function draw() {
+    if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); return; }
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'impact') drawImpactFlat(); else if (S.mode === 'count') drawCountFlat(); else drawCoolFlat();
+  }
+  /* deterministic stepping for tests, key capture and the video: finish the impact, or move the cooling clock */
+  function finish() { S.anim = 1; animPre = 1; S.run = false; sync(); redraw(); }
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run && S.mode === 'impact') {
+      const el = (now - animT0) / 1000, pre = 0.9, post = 2.4;
+      if (el < pre) { animPre = el / pre; S.anim = 0; } else { animPre = 1; S.anim = Math.min(1, (el - pre) / post); }
+      if (S.anim >= 1) { S.run = false; sync(); readouts(); }
+      draw(); drawPlot();
+    } else if (S.run && S.mode === 'cool') {
+      S.t = Math.min(4.5, S.t + dt * 0.3); if (S.t >= 4.5) S.run = false; sync(); redraw();
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { const sc = $('setupCard'); sc.style.top = getComputedStyle(sc).position === 'absolute' ? `${$('strip').offsetHeight + 10}px` : ''; dpr = window.devicePixelRatio || 1;
+    const r = $('scene').getBoundingClientRect(), q = pl.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); PW = q.width; PH2 = q.height; pl.width = Math.round(PW * dpr); pl.height = Math.round(PH2 * dpr); redraw(); }
+  const retheme = () => { tokens(); offKey = ''; dirty3 = true; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search), first = PRESETS[qs.get('setup')] ? qs.get('setup') : 'small';
+  recrater(); applyPreset(first);
+  new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; last3 = ''; redraw(); }, status: () => {}, start: '3d' });
+  /* Copy link carries the counting surface (which preset, its random set, the mystery) and the craters marked on it */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('c', {
+    get: () => { if (S.mode !== 'count' || !S.surf) return ''; const idx = []; S.surf.list.forEach((c, i) => { if (S.marks.has(c)) idx.push(i); });
+      return VD.share.pack({ k: S.sKey, s: S.seed, m: idx, q: S.mystery ? [S.mystery.body, +S.mystery.T.toFixed(4), S.mystery.L, S.mystery.Dmin, S.mystery.Dc] : null }); },
+    set: (str) => { const o = VD.share.unpack(str); if (!o || !SURF[o.k] && o.k !== 'mystery') return; S.mode = 'count'; S.sKey = o.k; S.preset = o.k; S.seed = Math.max(1, Math.round(+o.s || 1));
+      if (o.k === 'mystery' && Array.isArray(o.q) && o.q.length === 5) S.mystery = { body: o.q[0] === 'mars' ? 'mars' : 'moon', T: +o.q[1], L: +o.q[2], Dmin: +o.q[3], Dc: +o.q[4], name: 'Mystery surface', why: '' }; else S.mystery = null;
+      const keepDc = S.Dc; buildSurface(); S.Dc = keepDc; if (Array.isArray(o.m)) for (const i of o.m) if (S.surf.list[i]) S.marks.add(S.surf.list[i]);
+      $('presetHint').textContent = PRESETS[o.k].hint; sync(); redraw(); } });
+  /* one video per worksheet: Worksheet 2 (Mars) counts Martian craters, Worksheet 1 drops an asteroid on the Moon */
+  const howVid = () => { const ws = new URLSearchParams(location.search).get('ws'); return ws === 'intro-mars-ages' || (!ws && S.mode === 'count' && S.cBody === 'mars') ? 'craters-mars' : 'craters'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'craters-mars' ? 'How this works: Dating the Surface of Mars' : 'How this works: Craters and the Ages of the Moon\'s Surface') });
+  window.__cr = { S, PRESETS, SURF, applyPreset, setMode, drop, finish, redraw, sync, buildSurface, trueCount, crater, surface, density, ageFrom, at, cooling, field: () => field,
+    markAll: () => { S.marks = new Set(S.surf.list.filter((c) => !c.gone && c.D >= S.Dc && inField(c))); redraw(); }, set: (o) => { Object.assign(S, o); sync(); redraw(); },
+    px: (x, y) => { const b = can.getBoundingClientRect(); return [b.left + field.x + x * field.s, b.top + field.y + y * field.s]; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
