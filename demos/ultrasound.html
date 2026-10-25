@@ -162,7 +162,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-f0="7.5" aria-pressed="false">7.5 MHz</button>
         </div>
         <div id="echoSet">
-          <div class="slider-head"><label for="sW">Water depth, transducer to the air pocket</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="2" max="15" step="0.1">
+          <div class="slider-head"><label for="sW" id="sWlab">Water depth, transducer to the air pocket</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="2" max="15" step="0.1">
           <div class="btnrow" style="margin-top:6px"><button type="button" class="btn" id="Wm">−1 mm</button><button type="button" class="btn" id="Wp">+1 mm</button><button type="button" class="btn" id="newCyst">New hidden cyst</button></div>
         </div>
         <div id="flowSet">
@@ -198,6 +198,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="water" aria-pressed="false">Speed of sound in water</button>
           <button type="button" data-p="cyst" aria-pressed="false">Find the hidden cyst</button>
           <button type="button" data-p="thin" aria-pressed="false">Resolve a thin layer</button>
+          <button type="button" data-p="atten" aria-pressed="false">Attenuation in muscle</button>
           <button type="button" data-p="flow" aria-pressed="false">Doppler: blood flow</button>
           <button type="button" data-p="mystery" aria-pressed="false">Doppler: mystery flow</button>
         </div>
@@ -227,6 +228,8 @@ table.rows input:focus { border-color: var(--accent); }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the depths, speeds and predictions</span></label>
         <label class="check"><input type="checkbox" id="depthScale"><span>Show the scanner's depth for the cursor (it assumes c = 1540 m/s)</span></label>
+        <label class="check"><input type="checkbox" id="absorb"><span>Absorption in the tissue (dB per cm per MHz)</span></label>
+        <div class="pick"><label for="tgcSel">Time gain compensation</label><select id="tgcSel"><option value="0">off</option><option value="0.54">0.54 dB/(cm·MHz), soft tissue average</option><option value="1.09">1.09 dB/(cm·MHz), muscle</option></select></div>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The Doppler shift here is the same effect as in the <a href="doppler.html">Doppler Effect demo</a>, applied twice: the moving blood hears a shifted frequency, then sends it back as a moving source.</p>
@@ -252,16 +255,27 @@ table.rows input:focus { border-color: var(--accent); }
   const reflect = (Z1, Z2) => (Z2 - Z1) / (Z2 + Z1);
   /* layers [{ m: medium, d: thickness in m }] from the transducer down (gel couples the transducer to the first layer with no echo):
      one echo from each boundary, at t = Σ 2d/c over the layers above, with amplitude r Π(1 − r²) over the boundaries crossed twice */
-  function echoes(layers) {
-    const out = []; let t = 0, through = 1;
+  /* Absorption (Medical Physics module, 2026-10-25): attenuation coefficients at 1 MHz in dB/(cm·MHz) from Culjat et al., Ultrasound
+     Med. Biol. 36, 861 (2010), Table 1 (bone: cortical). In tissue the attenuation is taken as proportional to f (real tissue goes
+     as f to a power near 1 to 1.2); in water as f². The pulse is treated as one frequency f₀, so the downshift of its center
+     frequency with depth is left out. */
+  const ATTEN = { air: 1.64, water: 0.0022, blood: 0.2, fat: 0.48, muscle: 1.09, bone: 6.9 };
+  const SOFT_TISSUE_DB = 0.54;   /* the average for soft tissue in the same table; a scanner's time gain compensation is set from it */
+  const alphaDb = (m, fMHz) => ATTEN[m] * (m === 'water' ? fMHz * fMHz : fMHz);   /* dB per cm */
+  /* echoes; with fMHz given, each echo also loses 2 Σ α d dB (down and back) in the layers above its boundary */
+  function echoes(layers, fMHz) {
+    const out = []; let t = 0, through = 1, dB = 0;
     for (let i = 0; i + 1 < layers.length; i++) {
       t += 2 * layers[i].d / MEDIA[layers[i].m].c;
+      if (fMHz) dB += 2 * alphaDb(layers[i].m, fMHz) * layers[i].d * 100;
       const r = reflect(MEDIA[layers[i].m].Z, MEDIA[layers[i + 1].m].Z);
-      out.push({ t, a: r * through, r, depth: layers.slice(0, i + 1).reduce((s, l) => s + l.d, 0), from: layers[i].m, to: layers[i + 1].m });
+      out.push({ t, a: r * through * (fMHz ? Math.pow(10, -dB / 20) : 1), r, lossDb: dB, depth: layers.slice(0, i + 1).reduce((s, l) => s + l.d, 0), from: layers[i].m, to: layers[i + 1].m });
       through *= 1 - r * r;
     }
     return out;
   }
+  /* time gain compensation: amplification 2 α₀ f₀ d dB for the depth d = c t/2 the scanner assumes (1540 m/s) */
+  const tgcGain = (alpha0, fMHz, t) => Math.pow(10, 2 * alpha0 * fMHz * (C_SCANNER * t / 2 * 100) / 20);
   /* the received signal as a complex (analytic) sum of Gaussian pulses at f0 (Hz); envelope |s|, the radio frequency trace Re s */
   const sigmaFor = (f0) => CYCLES / f0 / (2 * Math.sqrt(2 * Math.LN2));
   function signal(ech, f0, t) {
@@ -300,28 +314,34 @@ table.rows input:focus { border-color: var(--accent); }
   const newCystDepth = () => (30 + Math.floor(Math.random() * 61)) / 10;   /* cm, 3.0 to 9.0, top of the cyst */
   const newFlowSpeed = () => (20 + Math.floor(Math.random() * 101)) / 100; /* m/s, 0.20 to 1.20 */
   const S = { preset: 'layers', mode: 'echo', f0: 3.5, water: 8, cyst: newCystDepth(), theta: 60, v: 0.5, prof: 'plug', mysteryV: 0, tb: 'full', gain: 1, range: 5000, curT: 20, curF: 1000,
-    running: false, blind: false, depth: false, phase: 0, rows: [], series: 0, listen: false };
+    running: false, blind: false, depth: false, phase: 0, rows: [], series: 0, listen: false, absorb: false, tgc: 0 };
   const PRESETS = {
     layers: { mode: 'echo', f0: 3.5, hint: 'Under the gel: 1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone and muscle again. Start the scanner and put the cursor on the middle (the peak) of each echo. Which boundary sends back the most, and why? Which echo comes back upside down (zoom in)?' },
     water: { mode: 'echo', f0: 3.5, water: 8, hint: 'A tank of water above a pocket of air, which sends back almost everything. Measure the echo time at six or more water depths from 2 to 14 cm. The slope of t against depth is 2/c: work out the speed of sound in water.' },
     cyst: { mode: 'echo', f0: 3.5, hint: 'Fat, then muscle with a fluid filled cyst (taken as water) somewhere in it. Find the two weak echoes from the cyst, and use the scanner’s 1540 m/s to find how deep it is and how thick. New hidden cyst moves it.' },
     thin: { mode: 'echo', f0: 2, hint: 'A layer of fat 1.0 mm thick lies 3 cm down in muscle. At 2 MHz its two echoes run together; zoom in and step up the transducer frequency until they separate. A shorter pulse resolves finer detail, but in real tissue it is also absorbed faster.' },
     flow: { mode: 'flow', f0: 5, theta: 60, v: 0.5, prof: 'plug', hint: 'An artery 3 cm down, with the beam at 60° to the flow and the blood moving at 0.50 m/s. Start the scanner, put the cursor on the peak of the spectrum and work out the speed from the shift. Then change θ: the shift changes, the speed does not. Try smooth flow: the spectrum spreads from 0 to the shift of the fastest blood.' },
+    atten: { mode: 'echo', f0: 2, water: 4, absorb: true, hint: 'Muscle with bone below it, and absorption in the muscle switched on. The echo from the bone gets weaker the deeper it lies and the higher the frequency. Put the cursor on the peak of the bone echo and read its level in dB at several depths and frequencies: the slope of level against depth is −2αf₀.' },
     mystery: { mode: 'flow', f0: 5, theta: 60, prof: 'plug', mystery: true, hint: 'The blood speed is hidden. Measure the shift at three or more angles and work out the speed from each; they should agree. New mystery flow picks another.' }
   };
-  $('modelHint').textContent = 'Model: speeds and acoustic impedances of air, water, blood, fat, muscle and bone are from OpenStax College Physics §17.7 (Ultrasound); bone varies from 5.7 to 7.8 × 10⁶ kg/(m²·s) and 7.8 × 10⁶ is chosen. A fluid filled cyst is taken as water. Each pulse is three cycles long at half height (chosen). Each boundary sends back a part r = (Z₂ − Z₁)/(Z₂ + Z₁) of the pressure (a negative r turns the echo upside down), and on the way down and back the pulse loses 1 − r² at each boundary above. Left out: echoes that bounce more than once, absorption in the tissue (in a real body deep echoes are much weaker, and scanners turn up the gain with depth), and the spreading of the beam. Gel couples the transducer to the skin with no echo. Doppler: the blood hears the shifted frequency f₀(c + u)/c and sends it back as a moving source, so the scanner receives f₀(c + u)/(c − u), with u = v cos θ and c = 1570 m/s in blood; the spectrum is taken over 20 ms of echo (chosen), which gives each line a width of about 50 Hz. The cells drawn in the vessel are slowed down; the sound you hear is the shift itself, as a scanner plays it. Simulated data, no noise.';
+  $('modelHint').textContent = 'Model: speeds and acoustic impedances of air, water, blood, fat, muscle and bone are from OpenStax College Physics §17.7 (Ultrasound); bone varies from 5.7 to 7.8 × 10⁶ kg/(m²·s) and 7.8 × 10⁶ is chosen. A fluid filled cyst is taken as water. Each pulse is three cycles long at half height (chosen). Each boundary sends back a part r = (Z₂ − Z₁)/(Z₂ + Z₁) of the pressure (a negative r turns the echo upside down), and on the way down and back the pulse loses 1 − r² at each boundary above. Left out: echoes that bounce more than once, absorption in the tissue (in a real body deep echoes are much weaker, and scanners turn up the gain with depth), and the spreading of the beam. Gel couples the transducer to the skin with no echo. Doppler: the blood hears the shifted frequency f₀(c + u)/c and sends it back as a moving source, so the scanner receives f₀(c + u)/(c − u), with u = v cos θ and c = 1570 m/s in blood; the spectrum is taken over 20 ms of echo (chosen), which gives each line a width of about 50 Hz. The cells drawn in the vessel are slowed down; the sound you hear is the shift itself, as a scanner plays it. Simulated data, no noise. Absorption, when switched on in Lab (and in the Attenuation in muscle setup): each echo also loses 2αd dB on the way down and back through every layer above it, with α in dB per cm per MHz at 1 MHz from Culjat et al., Ultrasound Med. Biol. 36, 861 (2010): water 0.0022, blood 0.2, fat 0.48, muscle 1.09, bone (cortical) 6.9. α is taken as proportional to f in tissue and to f² in water; the pulse is treated as one frequency, so the drop of its center frequency with depth is left out. Time gain compensation amplifies each moment of the echo by 2α₀f₀d dB for the depth d the scanner assumes at 1540 m/s.';
 
   /* the layers for each echo setup, from the transducer down */
   function layers() {
+    if (S.preset === 'atten') return [{ m: 'muscle', d: cm(S.water) }, { m: 'bone', d: cm(3) }];
     if (S.preset === 'water') return [{ m: 'water', d: cm(S.water) }, { m: 'air', d: cm(4) }];
     if (S.preset === 'cyst') return [{ m: 'fat', d: cm(1.0) }, { m: 'muscle', d: cm(S.cyst - 1.0) }, { m: 'water', d: cm(1.5) }, { m: 'muscle', d: cm(12) }];
     if (S.preset === 'thin') return [{ m: 'muscle', d: cm(3.0) }, { m: 'fat', d: cm(0.1) }, { m: 'muscle', d: cm(12) }];
     return [{ m: 'fat', d: cm(1.5) }, { m: 'muscle', d: cm(3.0) }, { m: 'bone', d: cm(1.0) }, { m: 'muscle', d: cm(10) }];
   }
   const vNow = () => (S.mysteryV || S.v);
+  const echoesNow = () => echoes(layers(), S.absorb ? S.f0 : 0);
+  const tgcNow = (t) => (S.tgc ? tgcGain(S.tgc, S.f0, t) : 1);
+  /* the echo level at the cursor: the envelope as a share of the pulse sent, in dB, before any gain or TGC */
+  const levelDb = () => { const s = signal(echoesNow(), S.f0 * 1e6, S.curT * 1e-6), a = Math.hypot(s[0], s[1]); return a > 0 ? 20 * Math.log10(a) : -Infinity; };
   const shiftNow = () => dopplerShift(S.f0 * 1e6, vNow(), S.theta, MEDIA.blood.c);
 
-  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.mode = c.mode; S.f0 = c.f0; if (c.water) S.water = c.water; if (c.theta) S.theta = c.theta; if (c.v) S.v = c.v; if (c.prof) S.prof = c.prof;
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.mode = c.mode; S.f0 = c.f0; if (c.water) S.water = c.water; S.absorb = !!c.absorb; S.tgc = 0; if (c.theta) S.theta = c.theta; if (c.v) S.v = c.v; if (c.prof) S.prof = c.prof;
     S.mysteryV = c.mystery ? newFlowSpeed() : 0; if (name === 'cyst') S.cyst = newCystDepth(); S.tb = 'full'; S.range = 5000; S.curT = 20; S.curF = 1000; upd(); }
   const can = $('can'), scene = $('scene'), shelf = $('shelf'), card = $('card'), GEO = {};
   let ctx = can.getContext('2d');   /* let: the 3D view points it at its textures while the same drawing code paints them */
@@ -342,8 +362,11 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function sync() {
     const echo = S.mode === 'echo';
-    $('echoSet').hidden = !echo || S.preset !== 'water'; $('newCyst').hidden = S.preset !== 'cyst'; $('echoSet').hidden = !echo || (S.preset !== 'water' && S.preset !== 'cyst');
-    $('sW').parentElement.querySelectorAll('#sW, #Wm, #Wp, label[for=sW], #oW').forEach((e) => { e.hidden = S.preset !== 'water'; });
+    const dep = S.preset === 'water' || S.preset === 'atten';
+    $('newCyst').hidden = S.preset !== 'cyst'; $('echoSet').hidden = !echo || (!dep && S.preset !== 'cyst');
+    $('sW').parentElement.querySelectorAll('#sW, #Wm, #Wp, label[for=sW], #oW').forEach((e) => { e.hidden = !dep; });
+    $('sWlab').textContent = S.preset === 'atten' ? 'Muscle depth, transducer to the bone' : 'Water depth, transducer to the air pocket';
+    $('absorb').checked = S.absorb; $('tgcSel').value = String(S.tgc);
     $('flowSet').hidden = echo; $('echoScope').hidden = !echo; $('flowScope').hidden = echo; $('newFlow').hidden = !S.mysteryV;
     $('sV').disabled = !!S.mysteryV;
     $('sW').value = S.water; $('oW').textContent = `${S.water.toFixed(1)} cm`; $('sTh').value = S.theta; $('oTh').textContent = `${S.theta}°`; $('sV').value = S.v; $('oV').textContent = S.mysteryV ? 'hidden' : `${S.v.toFixed(2)} m/s`;
@@ -363,6 +386,8 @@ table.rows input:focus { border-color: var(--accent); }
   $('f0s').addEventListener('click', (e) => { const b = e.target.closest('[data-f0]'); if (b) { S.f0 = +b.dataset.f0; changed(); } });
   const setW = (v) => { S.water = Math.min(15, Math.max(2, Math.round(v * 10) / 10)); changed(); };
   $('sW').addEventListener('input', (e) => setW(+e.target.value)); $('Wm').addEventListener('click', () => setW(S.water - 0.1)); $('Wp').addEventListener('click', () => setW(S.water + 0.1));
+  $('absorb').addEventListener('change', (e) => { S.absorb = e.target.checked; changed(); });
+  $('tgcSel').addEventListener('change', (e) => { S.tgc = +e.target.value; changed(); });
   $('newCyst').addEventListener('click', () => { const was = S.cyst; S.cyst = newCystDepth(); capStatus(`The last cyst's top was ${was.toFixed(1)} cm down. A new one is hidden.`); changed(); });
   const setTh = (v) => { S.theta = Math.min(85, Math.max(20, Math.round(v))); changed(); };
   $('sTh').addEventListener('input', (e) => setTh(+e.target.value)); $('Thm').addEventListener('click', () => setTh(S.theta - 1)); $('Thp').addEventListener('click', () => setTh(S.theta + 1));
@@ -407,10 +432,13 @@ table.rows input:focus { border-color: var(--accent); }
     const dd = (a, val, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${val}</dd></div>`, HID = '<span class="ok">hidden</span>';
     let h = dd('Transducer frequency f₀', `${S.f0} MHz`);
     if (S.mode === 'echo') {
-      const ech = echoes(layers()), hide = S.blind || S.preset === 'cyst';
+      const ech = echoesNow(), hide = S.blind || S.preset === 'cyst';
       h += dd('Pulse length (half height)', `${(CYCLES / S.f0).toFixed(2)} μs`) + dd('Cursor', `${S.curT.toFixed(2)} μs`);
       if (S.depth) h += dd('Scanner depth for the cursor, c t/2 with 1540 m/s', S.blind ? HID : `${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm`, true);
       if (S.preset === 'water') h += dd('Water depth (ruler)', `${S.water.toFixed(1)} cm`);
+      if (S.preset === 'atten') h += dd('Muscle depth (ruler)', `${S.water.toFixed(1)} cm`);
+      if (S.absorb || S.preset === 'atten') h += dd('Echo level at the cursor (share of the pulse sent)', `${isFinite(levelDb()) ? levelDb().toFixed(1).replace('-', '−') : '−∞'} dB`)
+        + dd('Absorption, round trip, at each boundary', S.absorb ? (hide ? HID : ech.map((e) => `${(e.depth * 100).toFixed(1)} cm: ${e.lossDb.toFixed(1)} dB`).join(', ')) : 'off');
       h += dd('Echoes: boundary, true depth, time, part of the pressure sent back', hide ? HID : ech.map((e) => `${MEDIA[e.from].name} to ${MEDIA[e.to].name}: ${(e.depth * 100).toFixed(2)} cm, ${(e.t * 1e6).toFixed(2)} μs, r = ${e.r.toFixed(3)}`).join('<br>'), true);
     } else {
       const fd = shiftNow();
@@ -423,9 +451,13 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
-  const SETUP_NAME = { layers: 'fat, muscle and bone', water: 'water tank', cyst: 'hidden cyst', thin: 'thin layer', flow: 'blood flow', mystery: 'mystery flow' };
+  const SETUP_NAME = { layers: 'fat, muscle and bone', water: 'water tank', cyst: 'hidden cyst', thin: 'thin layer', flow: 'blood flow', mystery: 'mystery flow', atten: 'attenuation in muscle' };
+  /* readings with absorption on go to the Medical Physics worksheet Attenuation in Tissue, with the echo level at the cursor */
+  const mpUS = () => S.mode === 'echo' && S.absorb;
   $('record').addEventListener('click', () => {
     if (!S.running) { capStatus('Start the scanner first.'); return; }
+    if (S.rows.some((r) => (r.level !== undefined) !== mpUS())) { capStatus(mpUS() ? 'These readings were taken without absorption: export them to their worksheet or clear them first.' : 'These readings were taken with absorption on: export them to their worksheet or clear them first.'); return; }
+    if (mpUS()) { S.rows.push({ mode: 'echo', setup: SETUP_NAME[S.preset], f0: String(S.f0), known: S.preset === 'atten' || S.preset === 'water' ? S.water.toFixed(1) : '', t: S.curT.toFixed(2), level: isFinite(levelDb()) ? levelDb().toFixed(2) : '', tgc: S.tgc ? String(S.tgc) : 'off' }); renderRows(); capStatus(`Row ${S.rows.length} recorded.`); return; }
     const echo = S.mode === 'echo';
     S.rows.push({ mode: echo ? 'echo' : 'Doppler', setup: SETUP_NAME[S.preset], f0: String(S.f0), known: S.preset === 'water' ? S.water.toFixed(1) : '', t: echo ? S.curT.toFixed(2) : '', th: echo ? '' : String(S.theta), df: echo ? '' : String(Math.round(S.curF)), prof: echo ? '' : S.prof === 'lam' ? 'laminar' : 'one speed' });
     renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
@@ -441,6 +473,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   $('exportWs').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    if (S.rows[0].level !== undefined) { exportMp(); return; }
     const txt = readingsCSV(S.rows, { version: US_VERSION });
     try { toWorksheet(txt, { scanner_c_m_per_s: C_SCANNER }, 'Simulated data from the Ultrasound: Echoes and Blood Flow demo.'); }
     catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
@@ -448,9 +481,19 @@ table.rows input:focus { border-color: var(--accent); }
     const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'ultrasound-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
     fetch(WORKSHEET, { method: 'HEAD' }).then((r) => { if (!r.ok) throw 0; }).catch(() => { a.remove(); const b = document.createElement('a'); b.href = '#'; b.textContent = 'The worksheet is not posted yet: download the CSV'; b.style.color = 'var(--accent)'; b.addEventListener('click', (e) => { e.preventDefault(); downloadCsv(txt); }); $('capStatus').appendChild(b); });
   });
+  function exportMp() {
+    const slug = 'mp-ultrasound-attenuation', cols = ['row', 'setup', 'f0_MHz', 'depth_cm', 'cursor_time_us', 'level_dB', 'tgc'];
+    const rows = S.rows.map((r, i) => [String(i + 1), r.setup, r.f0, r.known, r.t, r.level, r.tgc]);
+    const txt = ['# Ultrasound virtual apparatus: recorded readings with absorption (simulated data)', `# demo version,${US_VERSION}`, '# attenuation,"Culjat et al. 2010 Table 1, dB/(cm MHz) at 1 MHz, proportional to f in tissue"', cols.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
+    if (!S.series) S.series = Date.now();
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify({ v: 1, demo: 'ultrasound', series: S.series, sent: new Date().toISOString(), columns: cols, rows, note: 'Simulated data from the Ultrasound: Echoes and Blood Flow demo.', csv: txt, csvName: slug + '-readings.csv' })); }
+    catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${slug}.html`; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  }
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
-    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.setup}${r.known ? `, ${r.known} cm` : ''}${r.th ? `, θ ${r.th}°` : ''}, ${r.f0} MHz</td><td>${r.mode === 'echo' ? `${r.t} μs` : `${r.df} Hz`}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.setup}${r.known ? `, ${r.known} cm` : ''}${r.th ? `, θ ${r.th}°` : ''}, ${r.f0} MHz</td><td>${r.mode === 'echo' ? `${r.t} μs${r.level !== undefined ? `, ${r.level} dB` : ''}` : `${r.df} Hz`}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
       : '<tr><td class="empty" colspan="4">No readings yet. Start the scanner, place the cursor, then record.</td></tr>';
   }
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
@@ -521,7 +564,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = Gr.dark() ? 'rgba(150,200,240,0.35)' : 'rgba(150,200,240,0.55)'; ctx.beginPath(); ctx.ellipse(tx, y, 22 * p, 4 * p, 0, PI, 0); ctx.fill();
     probe(tx, y - 1 * p, 0, p, `${S.f0} MHz`);
     if (S.running && !reduce) drawPulses(L, y, h, ppm, tx, p);
-    if (S.preset === 'water') txt(`water depth ${S.water.toFixed(1)} cm (ruler)`, x + w - 6 * p, y + cm(S.water) * ppm - 9 * p, { a: 'right', s: 10, b: 1 });
+    if (S.preset === 'water' || S.preset === 'atten') txt(`${S.preset === 'water' ? 'water' : 'muscle'} depth ${S.water.toFixed(1)} cm (ruler)`, x + w - 6 * p, y + cm(S.water) * ppm - 9 * p, { a: 'right', s: 10, b: 1 });
     Gr.label(ctx, 'gel', tx + 26 * p, y - 5 * p, { s: 9 * p });
   }
   /* The pulse and its echoes in the body, slowed 20 000× (200 μs of echo time every 4 s, the same clock as the sweep on the
@@ -531,7 +574,7 @@ table.rows input:focus { border-color: var(--accent); }
      wavelength in muscle is 0.45 mm). Blue: the pulse and echoes the right way up; red: an echo turned upside down (r < 0). */
   /* the pulse and the echoes in the body at this moment of the slowed clock: depth (m), medium there, amplitude, going up, name */
   function pulsePackets(L) {
-    const tt = S.phase / TAU * 200e-6, ech = echoes(L), out = [];
+    const tt = S.phase / TAU * 200e-6, ech = echoes(L, S.absorb ? S.f0 : 0), out = [];
     /* depth (m) reached a time τ after leaving the probe, and the medium there */
     const at = (tau) => { let t = 0, d = 0; for (const l of L) { const dt = l.d / MEDIA[l.m].c; if (t + dt >= tau) return [d + (tau - t) * MEDIA[l.m].c, l.m]; t += dt; d += l.d; } return [Infinity, null]; };
     const add = (tau, a, up, name) => { const [dep, m] = at(tau); if (!m || dep > DEPTH_MAX || dep < 0) return; out.push({ dep, m, a, up, name }); };
@@ -593,13 +636,13 @@ table.rows input:focus { border-color: var(--accent); }
       for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#b9c3cf', m: 1 });
       txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
       if (S.running) {
-        const ech = echoes(layers()), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
+        const ech = echoesNow(), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
         /* the sweep: the spot crosses the screen on the same slowed clock as the pulse in the body; what it has not reached yet
            still shows the last sweep, dimmer, as on a phosphor screen */
         const sweep = !zoom && !reduce, sx = x + w * (S.phase / TAU * 200 - lo) / (hi - lo);
         /* the pulse sent (drawn at t = 0, off the scale) */
         ctx.strokeStyle = tr; ctx.lineWidth = 1.3 * p; const path = new Path2D(); let clipped = false;
-        for (let i = 0; i <= n; i++) { const t = (lo + (hi - lo) * i / n) * 1e-6, s = signal(ech, f0, t), v = zoom ? s[0] : Math.hypot(s[0], s[1]);
+        for (let i = 0; i <= n; i++) { const t = (lo + (hi - lo) * i / n) * 1e-6, s = signal(ech, f0, t), v = (zoom ? s[0] : Math.hypot(s[0], s[1])) * tgcNow(t);
           const send = Math.exp(-t * t / (2 * sigmaFor(f0) ** 2)) * (zoom ? Math.cos(TAU * f0 * t) : 1), vv = v + send;
           let yy = base - vv * amp; if (yy < y + 2) { yy = y + 2; clipped = true; } if (yy > y + h - 2) { yy = y + h - 2; clipped = true; }
           i ? path.lineTo(x + w * i / n, yy) : path.moveTo(x + w * i / n, yy); }
@@ -841,7 +884,7 @@ table.rows input:focus { border-color: var(--accent); }
         if (!(S.preset === 'cyst' && l.m !== 'fat') && (d1 - d) > 0.004) nameAt(MEDIA[l.m].name, (d + d1) / 2);
         d += l.d; }
       if (S.preset === 'cyst') nameAt('muscle (a cyst is somewhere in it)', cm(1.0) + 0.012); }
-    if (S.preset === 'water') { const [x, y] = P3(L.bx + BW / 2 + 0.02, -BT / 2, bh - cm(S.water)); tag(`water depth ${S.water.toFixed(1)} cm (ruler)`, x, y, { a: 'left' }); }
+    if (S.preset === 'water' || S.preset === 'atten') { const [x, y] = P3(L.bx + BW / 2 + 0.02, -BT / 2, bh - cm(S.water)); tag(`${S.preset === 'water' ? 'water' : 'muscle'} depth ${S.water.toFixed(1)} cm (ruler)`, x, y, { a: 'left' }); }
     const lam = flow ? MEDIA.blood.c / (S.f0 * 1e6) * 1000 : MEDIA.muscle.c / (S.f0 * 1e6) * 1000;
     const cap = L.nar ? [flow ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the pulse: 20 000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
       : flow ? [`Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).`, 'Drag the screen to move the cursor; drag elsewhere to turn.']

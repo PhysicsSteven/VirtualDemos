@@ -148,6 +148,10 @@
               <button type="button" data-sh="none" aria-pressed="true">none</button><button type="button" data-sh="lead" aria-pressed="false">lead</button><button type="button" data-sh="concrete" aria-pressed="false">concrete</button><button type="button" data-sh="water" aria-pressed="false">water</button>
             </div></div>
           <div><div class="slider-head"><label for="doX">Shield thickness x</label><output id="oX" class="mono" for="doX"></output></div><input type="range" id="doX" min="0" max="30" step="0.1"></div>
+          <div class="wide"><span class="lab">Beam</span>
+            <div class="seg" role="group" aria-label="Narrow or broad beam" id="doBeam">
+              <button type="button" data-b="narrow" aria-pressed="true">narrow</button><button type="button" data-b="broad" aria-pressed="false">broad, with buildup (¹⁸F)</button>
+            </div></div>
           <div><div class="slider-head"><label for="doT">Time spent at the meter</label><output id="oTt" class="mono" for="doT"></output></div><input type="range" id="doT" min="0" max="8" step="1"></div>
         </div>
       </div>
@@ -166,12 +170,28 @@
           <button type="button" data-p="fuDT" aria-pressed="false">D–T reactor</button>
           <button type="button" data-p="doCs" aria-pressed="false">¹³⁷Cs source</button>
           <button type="button" data-p="doTc" aria-pressed="false">⁹⁹ᵐTc patient</button>
+          <button type="button" data-p="doPet" aria-pressed="false">PET uptake room</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
+      </section>
+      <section id="barSec" hidden>
+        <h2>Barrier for a PET uptake room</h2>
+        <p class="hint">Uses the ¹⁸F source's activity A per patient and the distance r from the patient to the occupied spot beyond the wall.</p>
+        <div><div class="slider-head"><label for="barN">Patients per week</label><output id="oBarN" class="mono" for="barN"></output></div><input type="range" id="barN" min="5" max="100" step="5"></div>
+        <div><div class="slider-head"><label for="barT">Time in the room</label><output id="oBarT" class="mono" for="barT"></output></div><input type="range" id="barT" min="0.25" max="3" step="0.25"></div>
+        <div class="pick"><label for="barOcc">Beyond the wall</label><select id="barOcc"></select></div>
+        <div class="seg full" role="group" aria-label="Area beyond the wall" id="barArea">
+          <button type="button" data-a="uncontrolled" aria-pressed="true">Uncontrolled area</button><button type="button" data-a="controlled" aria-pressed="false">Controlled area</button>
+        </div>
+        <label class="check"><input type="checkbox" id="barBody" checked><span>The source is a patient (the body absorbs 64% of the 511 keV photons, TG-108)</span></label>
+        <dl class="readout" id="barOut"></dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Weekly dose with no barrier: N patients × the dose from each while it decays for t hours in the room, D = Ḋ₀ τ (1 − e<sup>−t/τ</sup>), times 0.36 for a patient. The barrier must transmit B = P/(T D), with P the shielding design goal (NCRP Report 147: 0.1 mSv a week for a controlled area, 0.02 for an uncontrolled one) and T the occupancy factor of the space beyond (NCRP Report 147, Table 4.1). The broad beam thickness inverts the TG-108 fit; the narrow beam thickness, ln(1/B)/μ, leaves out the scattered photons and comes out too thin.</p>
+        </details>
       </section>
       <!-- vd-readings --><section class="vd-readings" data-ws="nuclear-reactions" data-title="Nuclear Reactions, Fission and Fusion" data-demo="nuclear-reactions">
         <h2>Readings</h2>
@@ -433,10 +453,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const MEVG_GY = 1.602176634e-10; /* 1 MeV per gram in Gy */
   /* absorbed dose rate in soft tissue (Gy/h) at r meters from A becquerels, behind x cm of shield: narrow beam, no buildup,
      Ḋ = Σ (A y/4πr²) e^(−μx) E (μ_en/ρ)_tissue */
-  function doseRate(src, A, r, shield, x) {
-    let s = 0; const r2 = Math.pow(r * 100, 2);
-    for (const [E, y] of SOURCES[src].lines) s += A * y / (4 * Math.PI * r2) * Math.exp(-muLin(shield, E) * x) * E * logInterp(E, TISSUE_MUEN);
+  function doseRate(src, A, r, shield, x, broad) {
+    let s = 0; const r2 = Math.pow(r * 100, 2), bb = broad && hasBroad(src, shield);
+    for (const [E, y] of SOURCES[src].lines) s += A * y / (4 * Math.PI * r2) * (bb ? archerT(shield, x) : Math.exp(-muLin(shield, E) * x)) * E * logInterp(E, TISSUE_MUEN);
     return s * MEVG_GY * 3600;
+  }
+  /* Broad beam (Medical Physics module, 2026-10-25). Behind a thick shield the meter also counts photons scattered in the shield, so
+     the transmission is B(x) e^(−μx) with a buildup factor B ≥ 1. For the 511 keV photons of ¹⁸F, AAPM Task Group 108 (Madsen et al.,
+     Med. Phys. 33, 4 (2006)) fits the broad beam transmission with Archer's form T(x) = [(1 + β/α) e^(αγx) − β/α]^(−1/γ); its
+     parameters as tabulated by Ionactive from TG-108: lead α 1.543 /cm, β −0.4408 /cm, γ 2.136; concrete α 0.1539 /cm, β −0.1161 /cm,
+     γ 2.0752 for 2.25 g/cm³ (the demo's 2.30 g/cm³ concrete is scaled by density). Other sources and water: narrow beam only. */
+  const ARCHER_511 = { lead: { a: 1.543, b: -0.4408, g: 2.136, rho: 11.35 }, concrete: { a: 0.1539, b: -0.1161, g: 2.0752, rho: 2.25 } };
+  const hasBroad = (src, shield) => src === 'f18' && !!ARCHER_511[shield];
+  function archerT(shield, x) { const q = ARCHER_511[shield], X = x * SHIELDS[shield].rho / q.rho; return Math.pow((1 + q.b / q.a) * Math.exp(q.a * q.g * X) - q.b / q.a, -1 / q.g); }
+  /* the thickness (cm) whose broad beam transmission is B: x = ln[(B^(−γ) + β/α)/(1 + β/α)]/(αγ), scaled back by density */
+  function archerX(shield, B) { const q = ARCHER_511[shield]; return Math.log((Math.pow(B, -q.g) + q.b / q.a) / (1 + q.b / q.a)) / (q.a * q.g) * q.rho / SHIELDS[shield].rho; }
+  /* Barrier for a PET uptake room, the TG-108 method: weekly dose at the occupied point with no barrier, from N patients a week, each
+     t hours in the room with activity A at the start, decaying meanwhile, times 0.36 for absorption in the patient's body (TG-108).
+     The barrier must bring it down to P/T: P the shielding design goal, T the occupancy factor (NCRP Report 147, 2004). */
+  const BODY_511 = 0.36;
+  const NCRP_P = { controlled: 0.1, uncontrolled: 0.02 };   /* mSv per week; air kerma in NCRP 147, effective dose in TG-108 */
+  const OCCUPANCY = [[1, 'Offices, labs, nursing stations'], [1 / 2, 'Exam and treatment rooms'], [1 / 5, 'Corridors, patient rooms, staff lounges'],
+    [1 / 8, 'Corridor doors'], [1 / 20, 'Public toilets, storage, unattended waiting rooms'], [1 / 40, 'Stairways, unattended parking, outdoor areas with passing traffic']];
+  function shieldWall(A, r, nWeek, tHours, occ, area, patient) {
+    const rate = doseRate('f18', A, r, 'none', 0), week = nWeek * doseOver(rate, tHours * 3600, SOURCES.f18.half) * 1000 * (patient ? BODY_511 : 1);
+    const B = NCRP_P[area] / (occ * week), need = B < 1;
+    const narrow = (sh) => (need ? Math.log(1 / B) / muLin(sh, 0.511) : 0);
+    return { week, B, need, leadBroad: need ? archerX('lead', B) : 0, leadNarrow: narrow('lead'), concBroad: need ? archerX('concrete', B) : 0, concNarrow: narrow('concrete') };
   }
   /* dose over an exposure of t seconds while the source decays: Ḋ₀ τ (1 − e^(−t/τ)), τ = t½/ln 2 */
   const doseOver = (rate0_h, t, half) => { const tau = half / Math.LN2; return rate0_h / 3600 * tau * (-Math.expm1(-t / tau)); };
@@ -457,7 +500,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rx: { proj: 'a', T: [7, 14], ej: 'p', ejN: 1, R1: [8, 17], two: false, R2: [36, 92], K: 7.69, th: 30, pick: 'ruth', t: 0, fired: false },
     ch: { mode: 'sph', mat: 'u235', R: 8, N: 4000, k: 1.05, N0: 100, seed: 1, gseed: 1007 },
     fu: { pair: 'pp', lgT: Math.log10(1.57e7) },
-    do: { src: 'cs137', lgA: 9, r: 1, sh: 'none', x: 0, ti: 2 } };
+    do: { src: 'cs137', lgA: 9, r: 1, sh: 'none', x: 0, ti: 2, beam: 'narrow', nw: 40, th: 1, occ: 0, area: 'uncontrolled', patient: true } };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -924,7 +967,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- dose picture ----------
   const RUL = [0.1, 10];
   let phot = [];
-  function doNow() { const d = S.do, A = Math.pow(10, d.lgA), rate = doseRate(d.src, A, d.r, d.sh, d.sh === 'none' ? 0 : d.x), src = SOURCES[d.src];
+  const broadOn = () => S.do.beam === 'broad' && hasBroad(S.do.src, S.do.sh);
+  function doNow() { const d = S.do, A = Math.pow(10, d.lgA), rate = doseRate(d.src, A, d.r, d.sh, d.sh === 'none' ? 0 : d.x, d.beam === 'broad'), src = SOURCES[d.src];
     const E = src.lines.reduce((s, l) => s + l[0] * l[1], 0) / src.lines.reduce((s, l) => s + l[1], 0), [ts, tl] = TIMES[d.ti];
     const dose = doseOver(rate, ts, src.half); return { A, rate, src, E, ts, tl, dose, mu: muLin(d.sh, src.lines[0][0]), hvl: halfValue(d.sh, src.lines[0][0]) }; }
   function drawDo() {
@@ -1050,8 +1094,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const r of dist) if (+r.A_MBq === +sig(D.A / 1e6, 4)) dot(c, A, +r.r_m, +r.rate_uSv_h, T.ink, 3.5);
       if (d.sh === 'none' || d.x === 0) dot(c, A, d.r, D.rate * 1e6, T.proton, 4.5);
       const sh = d.sh === 'none' ? 'lead' : d.sh, hv = halfValue(sh, D.src.lines[0][0]), xmax = Math.min(sh === 'lead' ? 10 : 30, Math.max(0.3, Math.ceil(Math.max(10 * hv, d.sh === 'none' ? 0 : d.x) * 10) / 10)), r1 = (x) => doseRate(d.src, D.A, d.r, sh, x) * 1e6;
+      const bb = d.beam === 'broad' && hasBroad(d.src, sh), rb = (x) => doseRate(d.src, D.A, d.r, sh, x, true) * 1e6;
       const ylo = Math.max(r1(xmax), r1(0) * 1e-6), A2 = plotAxes(c, P2[0], P2[1], P2[2], P2[3], [0, xmax], [ylo / 2, r1(0) * 2], { ylog: true, xl: `${sh} thickness x (cm) at r = ${f(d.r, 2)} m`, yl: 'dose rate (µSv/h)', yoff: 50 });
       if (!S.blind) line(c, Array.from({ length: 61 }, (_, i) => [xmax * i / 60, r1(xmax * i / 60)]), T.theory, A2, 1.4, [5, 4]);
+      if (!S.blind && bb) { line(c, Array.from({ length: 61 }, (_, i) => [xmax * i / 60, rb(xmax * i / 60)]), T.gamma, A2, 1.8); note(c, 'solid: broad beam (TG-108) · dashed: narrow beam', P2[0] + 4, P2[1] + 2, T.muted); }
       for (const r of thick) dot(c, A2, +r.x_cm, +r.rate_uSv_h, T.ink, 3.5);
       if (d.sh !== 'none' && d.x <= xmax) dot(c, A2, d.x, D.rate * 1e6, T.proton, 4.5);
       if (S.blind) note(c, 'Blind: model curves hidden', P2[0] + P2[2] - 4, P2[1] + 2, T.muted, 'right');
@@ -1104,10 +1150,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       o = dd('Source', `${D.src.name}: ${D.src.lines.map((l) => `${f(l[0] * 1000, 1)} keV (${f(100 * l[1], 1)}%)`).join(', ')}`, 1) + dd('Activity', `${sci(D.A / 1e6, 3)} MBq (${sci(D.A / 3.7e10 * 1000, 3)} mCi)`)
         + dd('Distance r', `${f(d.r, 2)} m`) + dd('Shield', d.sh === 'none' || d.x === 0 ? 'none' : `${f(d.x, 1)} cm of ${SHIELDS[d.sh].name}`)
         + dd('Attenuation coefficient μ', B || d.sh === 'none' ? (d.sh === 'none' ? '—' : hide) : `${f(D.mu, 4)} /cm at ${f(D.src.lines[0][0] * 1000, 0)} keV`) + dd('Half value layer ln 2/μ', B || d.sh === 'none' ? (d.sh === 'none' ? '—' : hide) : `${f(D.hvl, 3)} cm`)
+        + (d.beam === 'broad' && d.sh !== 'none' ? dd('Buildup factor B', !broadOn() ? 'broad beam data for ¹⁸F in lead or concrete only' : B ? hide : f(archerT(d.sh, d.x) / Math.exp(-muLin(d.sh, 0.511) * d.x), 3)) : '')
         + dd('Absorbed dose rate (tissue)', `${sig(D.rate * 1e6, 4)} µGy/h`) + dd('Equivalent dose rate (w_R = 1)', `${sig(Hq * 1e6, 4)} µSv/h`)
         + dd(`Dose in ${D.tl} (source decaying)`, `${sci(D.dose * 1000, 3)} mSv`) + dd('Same as US background for', `${sci(D.dose * 1000 / BACKGROUND_mSv_y * 365.25, 3)} days`);
     }
     $('out').innerHTML = o;
+    $('barSec').hidden = !(S.view === 'do' && S.do.src === 'f18');
+    if (!$('barSec').hidden) barReadouts();
+  }
+  function barNow() { const d = S.do; return shieldWall(Math.pow(10, d.lgA), d.r, d.nw, d.th, OCCUPANCY[d.occ][0], d.area, d.patient); }
+  function barReadouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, q = barNow(), d = S.do, hide = '<span class="ok">hidden</span>', Bl = S.blind;
+    let o = dd('Weekly dose, no barrier', `${sig(q.week, 4)} mSv`) + dd('Design goal P, occupancy T', `${NCRP_P[d.area]} mSv/wk, ${OCCUPANCY[d.occ][0] === 1 ? '1' : '1/' + Math.round(1 / OCCUPANCY[d.occ][0])}`)
+      + dd('Transmission needed B', q.need ? sci(q.B, 3) : `${sig(q.B, 3)}: no barrier needed`);
+    if (q.need) o += dd('Lead, broad beam', Bl ? hide : `${f(q.leadBroad * 10, 1)} mm`) + dd('Lead, narrow beam', Bl ? hide : `${f(q.leadNarrow * 10, 1)} mm`)
+      + dd('Concrete, broad beam', Bl ? hide : `${f(q.concBroad, 1)} cm`) + dd('Concrete, narrow beam', Bl ? hide : `${f(q.concNarrow, 1)} cm`);
+    $('barOut').innerHTML = o;
   }
 
   // ---------- controls ----------
@@ -1131,7 +1189,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('chR').value = c.R; $('oR').textContent = `${f(c.R, 2)} cm (${f(sphereMass(MAT[c.mat], c.R), 1)} kg)`; $('chK').value = c.k; $('oKf').textContent = f(c.k, 2);
     $('chTitle').textContent = c.mode === 'sph' ? 'Neutrons are followed one by one through a bare sphere until they cause a fission or escape' : 'Each neutron causes a fission with probability k/ν̄; each fission releases ν neutrons';
     segSet('fuPair', 'f', S.fu.pair); $('fuT').value = S.fu.lgT; $('oT').textContent = `${sci(Math.pow(10, S.fu.lgT), 3)} K`;
-    segSet('doSrc', 'src', d.src); segSet('doSh', 'sh', d.sh); $('doA').value = d.lgA; const A = Math.pow(10, d.lgA); $('oA').textContent = A >= 1e9 ? `${sig(A / 1e9, 3)} GBq` : `${sig(A / 1e6, 3)} MBq`;
+    segSet('doSrc', 'src', d.src); segSet('doSh', 'sh', d.sh); segSet('doBeam', 'b', d.beam); segSet('barArea', 'a', d.area);
+    $('barN').value = d.nw; $('oBarN').textContent = d.nw; $('barT').value = d.th; $('oBarT').textContent = `${f(d.th, 2)} h`; $('barOcc').value = d.occ; $('barBody').checked = d.patient; $('doA').value = d.lgA; const A = Math.pow(10, d.lgA); $('oA').textContent = A >= 1e9 ? `${sig(A / 1e9, 3)} GBq` : `${sig(A / 1e6, 3)} MBq`;
     $('doR').value = d.r; $('oRd').textContent = `${f(d.r, 2)} m`; $('doX').max = d.sh === 'lead' ? 10 : 30; $('doX').value = d.x; $('oX').textContent = `${f(d.x, 1)} cm`; $('doX').disabled = d.sh === 'none'; $('doT').value = d.ti; $('oTt').textContent = TIMES[d.ti][1];
     segSet('speedSeg', 's', S.speed); segSet('presets', 'p', S.preset);
   }
@@ -1142,8 +1201,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     chGen: { view: 'ch', hint: 'A hundred neutrons, each causing a fission with probability k/ν̄. With k = 1.05 the numbers grow by 5% a generation on average, but chance makes each run different: Start over gives a new run. Try k below, at and above 1.', set: () => { Object.assign(S.ch, { mode: 'gen', k: 1.05, N0: 100 }); } },
     fuSun: { view: 'fu', hint: 'Protons at the temperature of the Sun\'s core, 1.57 × 10⁷ K. kT is only 1.35 keV, far below the 600 keV barrier, yet the Gamow peak near 6 keV lets a few tunnel through. Each proton waits billions of years to fuse.', set: () => { Object.assign(S.fu, { pair: 'pp', lgT: Math.log10(1.57e7) }); } },
     fuDT: { view: 'fu', hint: 'Deuterium and tritium at 1.5 × 10⁸ K, about ten times hotter than the Sun\'s core. D–T has the lowest barrier and a large reaction rate, which is why fusion reactors use it.', set: () => { Object.assign(S.fu, { pair: 'dt', lgT: Math.log10(1.5e8) }); } },
-    doCs: { view: 'do', hint: 'A 1 GBq ¹³⁷Cs source (0.662 MeV γ rays) and a dose rate meter at 1 m. Step back and watch the inverse square law, then add lead and find the thickness that halves the dose rate.', set: () => { Object.assign(S.do, { src: 'cs137', lgA: 9, r: 1, sh: 'none', x: 0, ti: 2 }); } },
-    doTc: { view: 'do', hint: 'A patient given 740 MBq (20 mCi) of ⁹⁹ᵐTc, treated as a point source, and someone sitting 1 m away for 8 hours. The 6 hour half life means the source fades as you sit there.', set: () => { Object.assign(S.do, { src: 'tc99m', lgA: Math.log10(7.4e8), r: 1, sh: 'none', x: 0, ti: 3 }); } },
+    doCs: { view: 'do', hint: 'A 1 GBq ¹³⁷Cs source (0.662 MeV γ rays) and a dose rate meter at 1 m. Step back and watch the inverse square law, then add lead and find the thickness that halves the dose rate.', set: () => { Object.assign(S.do, { src: 'cs137', lgA: 9, r: 1, sh: 'none', x: 0, ti: 2, beam: 'narrow' }); } },
+    doTc: { view: 'do', hint: 'A patient given 740 MBq (20 mCi) of ⁹⁹ᵐTc, treated as a point source, and someone sitting 1 m away for 8 hours. The 6 hour half life means the source fades as you sit there.', set: () => { Object.assign(S.do, { src: 'tc99m', lgA: Math.log10(7.4e8), r: 1, sh: 'none', x: 0, ti: 3, beam: 'narrow' }); } },
+    doPet: { view: 'do', hint: 'A PET uptake room: each patient is given 555 MBq (15 mCi) of ¹⁸F FDG and rests an hour before the scan. The wall is 2 m from the chair and an office is on the other side. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.', set: () => { Object.assign(S.do, { src: 'f18', lgA: Math.log10(5.55e8), r: 2, sh: 'lead', x: 0, ti: 2, beam: 'broad', nw: 40, th: 1, occ: 0, area: 'uncontrolled', patient: true }); } },
   };
   function pickRx(k) { const v = PICKS[k]; Object.assign(S.rx, { proj: v.proj, T: v.T.slice(), ej: v.ej, ejN: v.ejN, R1: v.R1.slice(), two: !!v.two, R2: v.R2 ? v.R2.slice() : S.rx.R2, K: v.K, pick: k, t: 0 }); }
   function setView(v) {
@@ -1188,6 +1248,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('chK').addEventListener('input', (e) => { S.ch.k = +e.target.value; chChanged(); });
   $('fuPair').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.fu.pair = b.dataset.f; fuChanged(); } });
   $('fuT').addEventListener('input', (e) => { S.fu.lgT = +e.target.value; fuChanged(); });
+  $('barOcc').innerHTML = OCCUPANCY.map((o, i) => `<option value="${i}">${o[0] === 1 ? 'T = 1' : 'T = 1/' + Math.round(1 / o[0])}: ${o[1]}</option>`).join('');
+  $('doBeam').addEventListener('click', (e) => { const b = e.target.closest('[data-b]'); if (b) { S.do.beam = b.dataset.b; doChanged(); } });
+  $('barArea').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b) { S.do.area = b.dataset.a; doChanged(); } });
+  $('barN').addEventListener('input', (e) => { S.do.nw = +e.target.value; doChanged(); });
+  $('barT').addEventListener('input', (e) => { S.do.th = +e.target.value; doChanged(); });
+  $('barOcc').addEventListener('change', (e) => { S.do.occ = +e.target.value; doChanged(); });
+  $('barBody').addEventListener('change', (e) => { S.do.patient = e.target.checked; doChanged(); });
   $('doSrc').addEventListener('click', (e) => { const b = e.target.closest('[data-src]'); if (b) { S.do.src = b.dataset.src; doChanged(); } });
   $('doSh').addEventListener('click', (e) => { const b = e.target.closest('[data-sh]'); if (b) { S.do.sh = b.dataset.sh; if (S.do.sh === 'lead') S.do.x = Math.min(S.do.x, 10); doChanged(); } });
   $('doA').addEventListener('input', (e) => { S.do.lgA = +e.target.value; doChanged(); });
@@ -1215,7 +1282,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SHOW = { rx: [['reaction', 'reaction'], ['K_MeV', 'K (MeV)'], ['K_out_MeV', 'K after (MeV)']], ch: [['R_cm', 'R (cm)'], ['k', 'k'], ['k_err', '±']], fu: [['pair', 'nuclei'], ['T_MK', 'T (MK)'], ['E0_keV', 'E₀ (keV)']], do: [['r_m', 'r (m)'], ['x_cm', 'x (cm)'], ['rate_uSv_h', 'µSv/h']] };
   const showCols = () => SHOW[S.view];
   window.vdShowCols = SHOW.rx;
-  window.vdWorksheet = () => ({ rx: 'nuclear-reactions', ch: 'critical-mass', fu: 'fusion-gamow', do: 'radiation-dose' })[S.view];
+  /* with the broad beam on, Dose readings go to the Medical Physics worksheet Shielding a PET Uptake Room */
+  const mpDose = () => S.view === 'do' && S.do.beam === 'broad';
+  window.vdWorksheet = () => (mpDose() ? 'mp-shielding-barrier' : { rx: 'nuclear-reactions', ch: 'critical-mass', fu: 'fusion-gamow', do: 'radiation-dose' }[S.view]);
   window.vdReadingRow = () => {
     const name = { rx: 'Reactions', ch: 'Chain reaction', fu: 'Fusion', do: 'Dose' };
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
@@ -1230,6 +1299,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return 'Record reading works in the Sphere model. In the Generations model, read the neutrons in each generation from the picture and the graph.'; }
     if (S.view === 'fu') { const F = fuNow(); return { view: 'fu', pair: F.P.name, T_MK: sig(F.Tk / 1e6, 4), kT_keV: f(F.kt * 1000, 4), E0_keV: f(F.m.E0 * 1000, 3), fwhm_keV: f(F.m.fwhm * 1000, 3), VC_keV: f(F.Vc * 1000, 1), sigv_cm3_s: isFinite(F.sv) ? F.sv.toPrecision(4) : '' }; }
     const d = S.do, D = doNow();
+    if (window.vdRows && window.vdRows().some((r) => (r.rate_narrow_uSv_h !== undefined) !== mpDose())) return mpDose() ? 'These readings were taken with a narrow beam: export them to the Radiation Dose worksheet or clear them first.' : 'These readings were taken with the broad beam: export them to their worksheet or clear them first.';
+    if (mpDose()) {
+      if (d.src !== 'f18') return 'The broad beam worksheet uses the ¹⁸F source.';
+      const q = barNow(), x = d.sh === 'none' ? 0 : d.x, nb = doseRate(d.src, D.A, d.r, d.sh, x) * 1e6;
+      window.vdShowCols = [['shield', 'shield'], ['x_cm', 'x (cm)'], ['rate_narrow_uSv_h', 'narrow'], ['rate_uSv_h', 'broad']];
+      return { view: 'do', source: D.src.name, A_MBq: sig(D.A / 1e6, 4), r_m: f(d.r, 2), shield: d.sh === 'none' || x === 0 ? 'none' : d.sh, x_cm: f(x, 1), rate_narrow_uSv_h: sig(nb, 4), rate_uSv_h: sig(D.rate * 1e6, 4),
+        buildup: x > 0 && hasBroad(d.src, d.sh) ? f(D.rate * 1e6 / nb, 4) : '1', patients_wk: d.nw, t_h: f(d.th, 2), T: sig(OCCUPANCY[d.occ][0], 3), P_mSv_wk: NCRP_P[d.area], patient: d.patient ? 'yes' : 'no',
+        week_mSv: sig(q.week, 4), B_needed: q.B.toPrecision(4), lead_broad_mm: q.need ? f(q.leadBroad * 10, 2) : '0', lead_narrow_mm: q.need ? f(q.leadNarrow * 10, 2) : '0', concrete_broad_cm: q.need ? f(q.concBroad, 2) : '0', concrete_narrow_cm: q.need ? f(q.concNarrow, 2) : '0' };
+    }
     return { view: 'do', source: D.src.name, A_MBq: sig(D.A / 1e6, 4), r_m: f(d.r, 2), shield: d.sh === 'none' || d.x === 0 ? 'none' : d.sh, x_cm: d.sh === 'none' ? '0.0' : f(d.x, 1), rate_uSv_h: sig(D.rate * 1e6, 4), time: D.tl, dose_mSv: sig(D.dose * 1000, 4) };
   };
 
@@ -1237,7 +1315,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutRx').textContent = 'Reactions: masses are AME2020 atomic masses (M. Wang et al., Chinese Physics C 45, 030003 (2021)), the table used in the Binding Energy demo. Each nucleus is a neutral atom, so when the charge balances the electrons balance too and their masses cancel in Q = (Σm before − Σm after)c² (1 u = 931.494 MeV/c², CODATA 2022). The atomic masses include the electrons\' binding energies (up to about 0.8 MeV for uranium), so Q is the energy released when the products end up as neutral atoms. All nuclei are in their ground states; a product left excited gives the excitation energy off as γ rays and the products share that much less kinetic energy. The target is at rest. The threshold is K_th = −Q(Σm before + Σm after)/(2m_target), exact in relativity; the nonrelativistic form −Q(1 + m_projectile/m_target) differs by less than 0.1% here. With two products, the energy of the light one at the detector angle comes from exact relativistic two body kinematics; with more products only their total kinetic energy, K + Q, is fixed. "Allowed by energy" says only that energy and momentum can be conserved: whether the reaction actually happens, and how often, depends on its cross section, which is not modeled. The Coulomb barrier is k Z₁Z₂e²/(R₁ + R₂) with R = 1.2 fm × A^(1/3) (OpenStax Vol 3 §10.1); charged projectiles below it can still tunnel through. A slow (thermal) neutron has K ≈ 0.025 eV, entered as 0. Cosmic ray neutrons striking nitrogen in the upper air make the carbon 14 used in radiocarbon dating.';
   $('aboutCh').textContent = 'Chain reaction, generations: each neutron causes a fission with probability k/ν̄ (it otherwise escapes or is captured), and each fission releases ν neutrons drawn at random from Terrell\'s distribution, P(ν ≤ n) = Φ((n − ν̄ + 1/2 + b)/σ) with σ = 1.08 (J. Terrell, Phys. Rev. 108, 783 (1957)), b chosen so the mean is ν̄ = 2.4355 for thermal fission of ²³⁵U (A. D. Carlson et al., Nucl. Data Sheets 148, 143 (2018)). The energy counts 200 MeV a fission (OpenStax Example 10.10): of the 207 MeV released, 168 MeV is the fragments\' kinetic energy, 5 MeV the neutrons, 7 MeV prompt γ rays, 8 MeV β and 7 MeV γ rays from the fission products, and 12 MeV neutrinos that escape (J. R. Lamarsh and A. J. Baratta, Introduction to Nuclear Engineering, 3rd ed., Table 3.6). Sphere: a teaching model, simulated. A bare sphere of pure metal, with neutrons of one speed (about 1.5 MeV) followed one at a time. One group constants from M. B. Chadwick, Nuclear Technology 207 (2021) (arXiv:2103.05727), Tables 1 and 2, ENDF/B-VIII.0 at 1.5 MeV: ²³⁵U, σ_F = 1.24 b, σ_T = 5.0 b, ν̄ = 2.57, ρ = 18.9 g/cm³; ²³⁹Pu (α phase), σ_F = 1.93 b, σ_T = 5.29 b, ν̄ = 3.09, ρ = 19.6 g/cm³ (the density Chadwick\'s calculations use; handbook α plutonium is 19.86 g/cm³, and since the critical radius scales as 1/ρ and the critical mass as 1/ρ², that would lower the critical mass by about 3%). Free paths are drawn from an exponential with mean 1/(nσ_T); at each collision the neutron causes a fission with probability σ_F/σ_T, and otherwise scatters in a random direction with no loss of energy (σ_T is the transport cross section, so isotropic scattering stands in for the real forward peaked scattering). Capture, the slowing of neutrons, the spread of their energies and any reflector are left out. k for a generation is the neutrons born divided by those followed; the next generation starts from a random sample of the fission sites, and the mean k leaves out the first 5 generations while that shape settles. Its uncertainty is the standard error of the generation values, which slightly understates it because successive generations are correlated. Chadwick quotes bare critical masses from a full transport calculation (MCNP6) of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. The neutron lifetime is the mean path length over the speed of a 1.5 MeV neutron, 1.69 × 10⁹ cm/s. The picture follows chains as they happen, with the same rules: a source fires a neutron into the sphere every 1.5 s, each nucleus a neutron is about to strike is drawn where the collision will be (the metal holds about 4.8 × 10²² nuclei per cm³, far too many to draw), a fission splits it into two fragments and releases ν new neutrons, and a scatter sends the neutron off in a new direction. Time is slowed: a neutron covers 0.9 R each second of the picture, so 1 s of the picture is a few nanoseconds. The heavy, highly charged fragments really stop almost where they are made, far closer than the picture can show; it moves them only a little apart. When more than 40 neutrons are in flight the chain has run away and the picture starts again. The picture is one sample of a chain; k, the meters and the readings come from the generations run.';
   $('aboutFu').textContent = 'Fusion: two bare nuclei at separation r feel the Coulomb potential kZ₁Z₂e²/r until they touch at R = 1.2 fm × (A₁^(1/3) + A₂^(1/3)); inside, the nuclear well is drawn with a schematic depth. In a gas at temperature T the chance of a collision at energy E falls as e^(−E/kT) (Maxwell–Boltzmann), while the chance of tunneling through the barrier rises as e^(−√(E_G/E)), with the Gamow energy E_G = 2μc²(παZ₁Z₂)² (μ the reduced mass, α the fine structure constant). Their product, the Gamow peak, sits at E₀ = (E_G(kT)²/4)^(1/3) with 1/e full width 4√(E₀kT/3) (C. E. Rolfs and W. S. Rodney, Cauldrons in the Cosmos (1988), ch. 4); the demo measures the peak and its full width at half maximum on the curve itself. Reaction rates: p + p from ⟨σv⟩ = √(8/πμ)(kT)^(−3/2) ∫ S e^(−E/kT − √(E_G/E)) dE with the S factor taken constant at S(0) = 4.01 × 10⁻²⁵ MeV b (E. G. Adelberger et al., Rev. Mod. Phys. 83, 195 (2011)); D + T from the fit of H.-S. Bosch and G. M. Hale, Nucl. Fusion 32, 611 (1992), valid for kT from 0.2 to 100 keV. Screening by electrons is left out. The Sun\'s core is taken from the standard solar model (J. N. Bahcall, A. M. Serenelli and S. Basu, ApJ 621, L85 (2005)): T ≈ 1.57 × 10⁷ K, ρ ≈ 150 g/cm³, hydrogen mass fraction 0.35, so about 3.1 × 10²⁵ protons per cm³; the mean time for one proton to fuse is 1/(n_p⟨σv⟩). OpenStax §10.6 gives D + T → ⁴He + n + 17.6 MeV.';
-  $('aboutDo').textContent = 'Dose: the source is a point emitting γ rays equally in all directions; the line energies and the photons per decay are from ENSDF via NuDat 3 (¹³⁷Cs 661.7 keV, 85.1%, through ¹³⁷ᵐBa; ⁶⁰Co 1173.2 and 1332.5 keV; ⁹⁹ᵐTc 140.5 keV, 89%; ¹⁸F two 511 keV annihilation photons per positron, 96.7% of decays). The β particles and positrons are taken to stop in the capsule. The photon flux at distance r is A y e^(−μx)/(4πr²): narrow beam attenuation in the shield with no buildup (in a thick shield, scattered photons add to the dose, so the real dose rate behind it is higher, by a factor of a few for many half value layers), and no attenuation in air or scattering from the room. Attenuation coefficients μ/ρ (lead 11.35 g/cm³, ordinary concrete 2.30 g/cm³, water) and the soft tissue (ICRU-44) mass energy absorption coefficient μ_en/ρ are from NIST (J. H. Hubbell and S. M. Seltzer, Standard Reference Database 126), interpolated log–log. The absorbed dose rate is the photon energy flux times μ_en/ρ of tissue, as for a small piece of tissue at the meter, all of whose absorbed energy stays there (1 Gy = 1 J/kg; OpenStax Vol 3 §10.7: 1 rad = 0.01 Gy). The equivalent dose is w_R times the absorbed dose with w_R = 1 for photons (ICRP Publication 103 (2007); OpenStax\'s RBE table gives 1 for γ and X-rays and up to 20 for α particles; ICRP 103 gives protons 2, α particles 20, neutrons 2.5 to 21 by energy). A whole body taken as uniformly exposed, so its effective dose equals this equivalent dose. The dose over a time t allows for the source decaying, D = Ḋ₀τ(1 − e^(−t/τ)) with τ = t½/ln 2. A patient is treated as a bare point source, ignoring the body\'s own absorption. Background: OpenStax §10.7 gives 3.5 mSv per year in the United States (2.8 mSv world average), including medical exposure.';
+  $('aboutDo').textContent = 'Dose: the source is a point emitting γ rays equally in all directions; the line energies and the photons per decay are from ENSDF via NuDat 3 (¹³⁷Cs 661.7 keV, 85.1%, through ¹³⁷ᵐBa; ⁶⁰Co 1173.2 and 1332.5 keV; ⁹⁹ᵐTc 140.5 keV, 89%; ¹⁸F two 511 keV annihilation photons per positron, 96.7% of decays). The β particles and positrons are taken to stop in the capsule. The photon flux at distance r is A y e^(−μx)/(4πr²): narrow beam attenuation in the shield with no buildup (in a thick shield, scattered photons add to the dose, so the real dose rate behind it is higher, by a factor of a few for many half value layers), and no attenuation in air or scattering from the room. Attenuation coefficients μ/ρ (lead 11.35 g/cm³, ordinary concrete 2.30 g/cm³, water) and the soft tissue (ICRU-44) mass energy absorption coefficient μ_en/ρ are from NIST (J. H. Hubbell and S. M. Seltzer, Standard Reference Database 126), interpolated log–log. The absorbed dose rate is the photon energy flux times μ_en/ρ of tissue, as for a small piece of tissue at the meter, all of whose absorbed energy stays there (1 Gy = 1 J/kg; OpenStax Vol 3 §10.7: 1 rad = 0.01 Gy). The equivalent dose is w_R times the absorbed dose with w_R = 1 for photons (ICRP Publication 103 (2007); OpenStax\'s RBE table gives 1 for γ and X-rays and up to 20 for α particles; ICRP 103 gives protons 2, α particles 20, neutrons 2.5 to 21 by energy). A whole body taken as uniformly exposed, so its effective dose equals this equivalent dose. The dose over a time t allows for the source decaying, D = Ḋ₀τ(1 − e^(−t/τ)) with τ = t½/ln 2. A patient is treated as a bare point source, ignoring the body\'s own absorption. Background: OpenStax §10.7 gives 3.5 mSv per year in the United States (2.8 mSv world average), including medical exposure. Broad beam (Medical Physics module): behind a thick shield the meter also counts photons scattered in the shield, so the transmission is a buildup factor B ≥ 1 times e^(−μx). For the 511 keV photons of ¹⁸F the demo uses the broad beam fits of AAPM Task Group 108 (Madsen et al., Med. Phys. 33, 4 (2006)) in Archer\'s form, T(x) = [(1 + β/α) e^(αγx) − β/α]^(−1/γ), with lead α = 1.543 /cm, β = −0.4408 /cm, γ = 2.136 and concrete α = 0.1539 /cm, β = −0.1161 /cm, γ = 2.0752 for 2.25 g/cm³ (as tabulated by Ionactive; the 2.30 g/cm³ concrete here is scaled by density); the buildup factor shown is T(x)/e^(−μx). Other sources and water have no broad beam data here. The barrier calculation follows TG-108: N patients a week, each in the room for t hours from injection, the source decaying meanwhile, and 0.36 for absorption in the patient\'s body; the required transmission is B = P/(T D) with the design goals P and occupancy factors T of NCRP Report 147 (2004). This demo\'s ¹⁸F dose rate at 1 m, 0.148 µGy/h per MBq, is 3.7% above TG-108\'s dose rate constant of 0.143 µSv m²/(MBq h). Workload, use factors for a fixed beam and the dose from the scanner room are left out.';
 
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
