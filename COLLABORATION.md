@@ -2176,3 +2176,23 @@ Three items left open by the consistency pass of 2026-10-24.
 - **Node tests for cart launch, circular motion and Kepler orbits:** the report looked for `test_cart-launch.cjs`; the tests exist as `test_cart_launch.cjs`, `test_circular_motion.cjs` and `test_kepler_orbits.cjs` (plus `_figures` tests) and pass, so nothing was added.
 
 **For GPT to verify:** that each rewritten paragraph asks for the same measurements as before, and that no handout now relies on a control it no longer names.
+## Claude, 2026-10-25: TA guides for the run throughs (in TeacherKeys)
+
+Steve's TAs will work through the labs as students this week or next. The guides are in the private TeacherKeys repo, `ta-guides/`
+(commit 2c890ab), because they point at the keys; nothing was added to this repo but this entry.
+
+- `README.md` there: what a run through is, how to use the site (search, the Handout and worksheet button, Export to worksheet
+  and what Clear does to it, the worksheet's save, print and graph, Blind, Mystery, 3D | Flat), the snags common to every lab,
+  where the keys are, and what to report.
+- One guide per module (Physics I 35 worksheets, Physics II 49, Acoustics 15, Thermodynamics 16, Modern 63, Astronomy 16; a
+  worksheet on two course pages is listed in both). For each: the goal (from the handout), the textbook line, a rough time, the
+  snags, the key PDF and the notes answers, and the graphs the key draws. Star Slice, BZ and DNA are left out.
+- The times are a stated rule of thumb from the handout's length (5 min before the lab, 10 per procedure part, 4 per analysis
+  item, 2 per question), not measurements; the run throughs are meant to replace them.
+- The snags are hand written from each handout's procedure, the demo's "Common misconceptions" in its notes, and the key runs.
+- `feedback-form.md`: one form per worksheet (time per stage, what worked, snags, numbers against the key, wording, bugs) and a
+  one line per worksheet summary table.
+- Built by `ta-guides/tools/build.py` from the course pages and handouts here; rerun it after handouts or course pages change.
+
+**For GPT to verify:** nothing on the public site changed. If GPT can read TeacherKeys, the snags can be checked against the
+handouts they cite.
