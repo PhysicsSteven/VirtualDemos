@@ -16,6 +16,7 @@ three.min.js are answered from the local file instead.
 """
 import argparse
 import io
+import os
 import sys
 from pathlib import Path
 
@@ -30,6 +31,8 @@ W, H = 640, 400          # thumbnail size (16:10, matches the card in index.html
 QUALITY = 80
 MAX_BYTES = 60_000       # lower the quality step by step until under this
 VIEW = {"width": 1440, "height": 900}
+# Behind an HTTPS proxy (cloud sessions) Google Fonts only load through it; its certificate is the proxy's own.
+PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 
 # Per demo overrides. Keys:
 #   wait     ms to let the demo run after load (default 1500)
@@ -38,8 +41,11 @@ VIEW = {"width": 1440, "height": 900}
 #   anchor   "center" (default), "top" or "bottom": where to keep when trimming to 16:10
 #   js       script to evaluate after the clicks
 #   keep_controls  True to leave buttons inside the stage visible
+#   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
+    "gas-heat-capacity": {"wait": 6000, "js": "document.getElementById('go').click();"},
+    "temperature": {"wait": 6000, "js": "document.getElementById('go').click();"},
     "cavendish": {"wait": 2500, "crop": ".stage"},
     "terminal-velocity": {"wait": 3000, "crop": ".stage", "js": "window.__tv.to(12); document.getElementById('setupCard').style.visibility = 'hidden';"},
     "superconductors": {"wait": 1200, "crop": ".scene", "js": "document.getElementById('setupCard').style.visibility = 'hidden';"},
@@ -49,32 +55,32 @@ OVERRIDES = {
     "molecules": {"wait": 1200, "js": "window.__mo.applyPreset('band');"},
     "relativistic-motion": {"wait": 1200, "anchor": "top", "js": "window.__rm.S.vel.t = 4.0; window.__rm.redraw();"},
     "holography": {"wait": 9000, "crop": "#pane", "js": "window.__ho && window.__ho.applyPreset('real'); setTimeout(() => window.__ho && window.__ho.finishMap(), 300)"},
-    "star-slice": {"wait": 9000,
-                   "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
+    "star-slice": {"wait": 9000, "crop": "#gl",
+                   "js": "const st = document.querySelector('.stage'); st.style.width = Math.round(558 * 1.6) + 'px'; st.style.margin = '0 auto'; window.dispatchEvent(new Event('resize')); setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
     "magnetic-moments": {"wait": 1200, "js": "__mm.applyPreset('selector'); for (let i = 0; i < 4000; i++) __mm.S.sg.dots.push(__mm.sampleAtom()); __mm.redraw();"},
     "shells-and-x-rays": {"wait": 1000, "js": "__sx.applyPreset('copper');"},
-    "sound-waves": {"wait": 1500},
+    "sound-waves": {"wait": 1500, "hide": "#card"},
     "transformers": {"crop": "#pane"},
     "michelson": {"crop": ".views", "js": "window.__mi.applyPreset('cell');"},
     "sound-intensity": {"wait": 1200, "js": "document.querySelector('#presets [data-p=two]').click(); const r = document.getElementById('sR'); r.value = 12; r.dispatchEvent(new Event('input')); document.getElementById('rack').style.display = 'none'; window.dispatchEvent(new Event('resize'));"},
     "room-acoustics": {"wait": 2200, "js": "document.getElementById('rack').style.display = 'none'; setTimeout(() => document.getElementById('go').click(), 600);"},
-    "kundts-tube": {"wait": 5000, "js": "const s = document.getElementById('sl'); s.value = 1.02; s.dispatchEvent(new Event('input')); document.getElementById('keep').click();"},
+    "kundts-tube": {"wait": 5000, "hide": "#card, #tubeCard", "js": "const s = document.getElementById('sl'); s.value = 1.02; s.dispatchEvent(new Event('input')); document.getElementById('keep').click();"},
     "wave-power": {"wait": 1500, "js": "const a = document.getElementById('sA'); a.value = 3; a.dispatchEvent(new Event('input')); const f = document.getElementById('sF'); f.value = 50; f.dispatchEvent(new Event('input')); document.getElementById('play').click();"},
-    "two-speaker": {"wait": 1200, "js": "document.querySelector('#viewSeg [data-v=waves]').click();"},
+    "two-speaker": {"wait": 1200, "hide": "#card", "js": "document.querySelector('#viewSeg [data-v=waves]').click();"},
     "ultrasound": {"wait": 1200, "js": "document.getElementById('run').click();"},
     "string-density": {"wait": 1200, "js": "document.querySelector('#presets [data-p=third]').click();"},
-    "states-of-matter": {"wait": 2500, "crop": ".pane", "js": "window.__sm.fast(16000); window.__sm.setRun(false);"},
-    "pendulum": {"wait": 2600, "js": "const s = document.getElementById('sA'); s.value = 35; s.dispatchEvent(new Event('input')); document.getElementById('go').click();"},
+    "states-of-matter": {"wait": 2500, "crop": ".pane", "js": "window.__sm.fast(16000); window.__sm.setRun(false); const pn = document.querySelector('.pane'); pn.style.width = Math.round(pn.clientHeight * 1.6) + 'px'; pn.style.margin = '0 auto'; window.dispatchEvent(new Event('resize'));"},
+    "pendulum": {"wait": 6000, "js": "const s = document.getElementById('sA'); s.value = 35; s.dispatchEvent(new Event('input')); document.getElementById('go').click();"},
     "rotational-dynamics": {"wait": 1800, "js": "document.querySelector('#objSeg [data-o=pair]').click(); document.getElementById('go').click();"},
     "gyroscope": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "viscometer": {"wait": 1500, "js": "document.querySelector('#speedSeg [data-s=\"10\"]').click(); document.getElementById('go').click();"},
     "cart-launch": {"wait": 1500, "js": "document.getElementById('go').click();"},
-    "elevator": {"wait": 1200, "js": "document.querySelector('#trips [data-to=\"10\"]').click();"},
+    "elevator": {"wait": 6000, "js": "document.querySelector('#trips [data-to=\"10\"]').click();"},
     "gravity-near-earth": {"wait": 600, "js": "const s = document.getElementById('sL'); s.value = 40; s.dispatchEvent(new Event('input'));"},
     "gps-clocks": {"wait": 1500, "js": "document.getElementById('go').click();"},
-    "impulse": {"wait": 2600, "js": "document.getElementById('go').click();"},
+    "impulse": {"wait": 5000, "js": "document.getElementById('go').click();"},
     "center-of-mass": {"wait": 600, "js": ""},
     "units": {"wait": 600, "js": "const s = document.getElementById('sZoom'); s.value = 20.6; s.dispatchEvent(new Event('input'));"},
     "energy-sources": {"wait": 600, "js": ""},
@@ -86,16 +92,16 @@ OVERRIDES = {
     "the-eye": {"wait": 2000, "js": "document.querySelector('[data-p=myopiaFix]').click()"},
     "resolution": {"wait": 800, "js": "document.querySelector('[data-p=eye]').click(); document.getElementById('gainToggle').click();"},
     "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('wandUp').click(); document.getElementById('motor').click()"},
-    "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
+    "eddy-currents": {"wait": 7000, "js": "const f = document.getElementById('tFollow'); if (f.checked) f.click(); document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
     "induction": {"wait": 2500, "js": "document.getElementById('next').click(); window.__ind.finish();"},
     "resistivity": {"wait": 500, "js": "const s = document.getElementById('sL'); s.value = 0.62; s.dispatchEvent(new Event('input'));"},
     "equilibrium": {"wait": 500, "js": "document.querySelector('#presets button[data-p=\"ladder\"]').click();"},
-    "stress-strain": {"wait": 600, "js": "const s = document.getElementById('sL'); for (const m of [7, 4, 7.6]) { s.value = m; s.dispatchEvent(new Event('input')); }"},
+    "stress-strain": {"wait": 1500, "js": "const b = [...document.querySelectorAll('#addMass button')]; for (const i of [b.length - 1, b.length - 1, b.length - 2, 0]) b[i] && b[i].click();"},
     "rocket": {"wait": 6000, "js": "document.querySelector('#presets button[data-p=\"earth\"]').click(); document.getElementById('go').click();"},
     "circular-motion": {"wait": 1200, "js": "document.querySelector('#presets button[data-p=\"bank\"]').click();"},
     "displacement-current": {"wait": 600, "js": "document.querySelector('#presets button[data-p=\"bag\"]').click();"},
-    "forces": {"wait": 1200, "js": "document.querySelector('#presets button[data-p=\"rampm\"]').click();"},
+    "forces": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"rampm\"]').click(); document.getElementById('go').click();"},
     "vectors": {"wait": 500, "js": "document.querySelector('#presets button[data-p=\"add\"]').click();"},
     "motion-graphs": {"wait": 600, "js": "document.querySelector('#presets button[data-p=\"stopgo\"]').click(); const c = document.getElementById('can'); c.focus(); for (let i = 0; i < 45; i++) c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));"},
     "bz-reaction": {"click": ['[data-p="spiral"]'], "wait": 800,
@@ -108,15 +114,15 @@ OVERRIDES = {
     "white-dwarf-cooling": {"click": ['[data-p="cryst"]'], "wait": 1500},
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
-    "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
-    "gauss-law": {"click": ['[data-p="outside"]', '#tPatch'], "wait": 1500},
+    "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000, "js": "document.getElementById('launch').click(); const st = document.getElementById('stepBtn'); for (let i = 0; i < 70; i++) st.click();"},
+    "gauss-law": {"wait": 1500, "js": "document.querySelector('[data-p=outside]').click(); document.getElementById('tPatch').click();"},
     "black-holes": {"click": ['[data-p="ring"]'], "wait": 2500},
-    "doppler": {"click": ['[data-p="jet"]'], "wait": 9000},
+    "doppler": {"click": ['[data-p="jet"]'], "wait": 9000, "hide": "#card"},
     "ising": {"crop": "#pLat", "wait": 2500},
     "polarization": {"click": ['[data-p="three"]'], "wait": 1500},
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
     "fluids": {"crop": "#sPane", "anchor": "bottom", "wait": 2500},
-    "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 9500},
+    "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 16000},
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},
     "diffraction-grating": {"click": ['[data-p="hydrogen"]'], "wait": 1500},
     "circuits": {"click": ['#modeSeg button[data-m="ac"]'], "wait": 2000},
@@ -188,9 +194,11 @@ def render(browser, demo, scheme, three_js):
     name = demo.stem
     opt = OVERRIDES.get(name, {})
     ctx = browser.new_context(viewport=VIEW, device_scale_factor=1, color_scheme=scheme,
-                              reduced_motion="no-preference")
+                              reduced_motion="no-preference", ignore_https_errors=bool(PROXY))
     # A stored theme or projector choice would override the scheme; start clean.
     ctx.add_init_script("try { localStorage.clear(); } catch (e) {}")
+    # VD3.lowPower() opens Flat on a machine with two cores or fewer; a thumbnail should show the 3D view.
+    ctx.add_init_script("try { Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 8 }); } catch (e) {}")
     page = ctx.new_page()
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
@@ -209,7 +217,10 @@ def render(browser, demo, scheme, three_js):
         # Buttons floating over the stage are noise in a small picture.
         page.add_style_tag(content=".stage button, .stage select, .stage input, .stage .seg, .stage .chips"
                                    " { visibility: hidden !important; }")
-        page.wait_for_timeout(100)
+    # The Set up card is for changing the run, not part of the picture.
+    page.add_style_tag(content=".setup-card" + (", " + opt["hide"] if opt.get("hide") else "")
+                               + " { visibility: hidden !important; transition: none !important; }")
+    page.wait_for_timeout(100)
     box = (page.evaluate(SELECTOR_CROP, opt["crop"]) if opt.get("crop")
            else page.evaluate(DEFAULT_CROP))
     if not box:
@@ -237,14 +248,19 @@ def main():
     total, failed = 0, []
     with sync_playwright() as p:
         # software WebGL only for the three.js demos: it slows 2D animation to a few frames per second
-        browser_gl = p.chromium.launch(args=flags)
-        browser_2d = p.chromium.launch()
+        proxy = {"server": PROXY} if PROXY else None
+        browser_gl = p.chromium.launch(args=flags, proxy=proxy)
+        browser_2d = p.chromium.launch(proxy=proxy)
         for demo in demos:
             text = demo.read_text(encoding="utf-8", errors="replace")
             if "</html>" not in text[-2000:]:
                 print(f"skip {demo.name}: looks unfinished")
                 continue
-            browser = browser_gl if "three" in text and "cdnjs" in text else browser_2d
+            if len(text) < 4000 and "location.replace" in text:
+                print(f"skip {demo.name}: forwards to another demo")
+                continue
+            # three.js comes from cdnjs directly or through demos/lib/vd3.js
+            browser = browser_gl if "cdnjs" in text and "three" in text or "vd3" in text else browser_2d
             for scheme in ("light", "dark"):
                 out = OUT / f"{demo.stem}-{scheme}.webp"
                 try:

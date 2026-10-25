@@ -2300,3 +2300,15 @@ and the result compared with the TeacherKeys key. No physics changed (CORE untou
 
 **For GPT to verify:** the new free expansion Uncertainty text and its key; that each edited procedure step still matches the order
 of copies in its key.
+## Claude, 2026-10-25: demo thumbnails refreshed after the visual passes
+
+Steve asked for new thumbnails, since the visual passes changed most demos. All 240 images in `thumbs/` (120 demos, light and dark) were taken again with `tools/thumbs.py`.
+
+- **3D views now render.** Demos that load three.js through `demos/lib/vd3.js` (most of the new 3D views) had been opened in the browser without software WebGL, so they showed Flat or a blank. The tool now opens every page that uses `vd3` with SwiftShader, and tells the page it has 8 cores so `VD3.lowPower()` does not choose Flat.
+- **Set up cards hidden.** A `.setup-card` over the picture is always hidden in a thumbnail (with its fade transition off, or it stayed visible), and a new `hide` override hides other cards over the picture (Doppler, Kundt's tube, Sound waves, Two speaker).
+- **Mid run, not an empty start:** longer runs or a start for Pendulums, Forces (released on the ramp), Impulse, Elevator, Franck–Hertz, Gas heat capacity, Temperature, Eddy currents (whole rig, magnets falling), Quantum waves (packet split at the barrier), Stress and strain (masses hung, the old slider is gone); Star Slice is cropped to the star; States of Matter's pane is narrowed so the heat panel is not cut. Gauss's law clicks its hidden checkbox by script (the old click timed out).
+- The old `double-pendulum.html` link page forwards to Pendulums, so it is skipped and has no thumbnail.
+- Behind an HTTPS proxy the tool now sends the browser through it, so Google Fonts load.
+- Checked: every light and dark thumbnail looked at in contact sheets, and the course pages in light and dark.
+
+**For GPT to verify:** nothing numerical; the thumbnails on the course pages.
