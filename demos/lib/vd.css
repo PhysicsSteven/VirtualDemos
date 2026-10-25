@@ -164,3 +164,22 @@
 .vd-typefloat .vd-typecap { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; white-space: nowrap; }
 .vd-typefloat .vd-typein { font-size: 1rem; }
 @media (pointer: coarse) { .vd-typefloat .vd-typein { font-size: 16px; } }
+
+/* course navigation above the title (demos/lib/nav.js): Home › course › unit › demo, then the previous and next demo in the course */
+.vd-crumbs { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 18px; margin: 0 0 4px; font-size: 0.8rem; line-height: 1.35; color: var(--muted); }
+.vd-crumbs ol { display: flex; flex-wrap: wrap; align-items: baseline; min-width: 0; margin: 0; padding: 0; list-style: none; }
+.vd-crumbs li { min-width: 0; }
+.vd-crumbs li + li::before { content: "›"; margin: 0 6px; color: var(--muted); }
+.vd-crumbs a { color: var(--accent); font-weight: 700; text-decoration: none; text-underline-offset: 3px; }
+.vd-crumbs a:hover, .vd-crumbs a:focus-visible { text-decoration: underline; }
+.vd-crumbs .vd-here { color: var(--muted); }
+.vd-crumbs .vd-step { display: flex; flex-wrap: wrap; gap: 2px 16px; }
+.vd-crumbs .vd-step a { display: inline-flex; gap: 4px; max-width: 26ch; white-space: nowrap; }
+.vd-crumbs .vd-step .vd-t { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 820px) {
+  .vd-crumbs .vd-here, .vd-crumbs .vd-unit { display: none; }
+  .vd-crumbs .vd-step a { max-width: 16ch; }
+}
+@media (max-width: 420px) { .vd-crumbs .vd-step .vd-t { display: none; } .vd-crumbs .vd-prev::after { content: "Previous"; } .vd-crumbs .vd-next::before { content: "Next"; } }
+[data-projector="on"] .vd-crumbs { display: none; }
+@media print { .vd-crumbs { display: none; } }

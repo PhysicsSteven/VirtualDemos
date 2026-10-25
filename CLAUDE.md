@@ -26,6 +26,11 @@ the two assistants share context. Log what you change there when you finish.
   several courses or modules (list each in its `course`); Misc is what is left (`later`: BZ and DNA, one heading). Moving a demo is a map change only.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 
+## What's new
+- When you finish something a student or TA would notice (a new demo, mode, worksheet or worksheet feature, a demo that now opens in
+  3D), add an entry at the TOP of `whats-new.js` in the same commit: unique id, date, a few word title, one or two plain sentences on
+  what they can now do. The home page shows new entries once in a popup. Leave out invisible fixes and anything about keys.
+
 ## Demos
 - One HTML file each, plus the shared library in `demos/lib/` (`vd.css`, `vd.js`; read `demos/lib/README.md`). Demos are being
   moved onto it in batches (Steve, 2026-10-23); the README lists which. A moved demo links the library and keeps only its physics,
@@ -66,7 +71,8 @@ the two assistants share context. Log what you change there when you finish.
 
 ## Tools
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
-- `python3 tools/courses.py` (course pages and index from the map and catalog; `--check` to verify).
+- `python3 tools/courses.py` (course pages and index from the map and catalog; `--check` to verify). It also writes `search.js`, `404.html`
+  and `demos/lib/nav.js` (the breadcrumb and previous and next demo links on every demo, in course page order), so rerun it after any map or catalog change.
 - `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
 - New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`
   (demo entry and the sections' demo lists), QR, Reset all, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.

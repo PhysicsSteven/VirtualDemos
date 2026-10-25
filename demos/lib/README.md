@@ -27,6 +27,7 @@ Runs by itself once the page has loaded:
 | `.vd-qr` button (from `tools/qr.py`) | shown in Projector mode; large on click, closes on click or Esc; removes itself when the page is not the hosted copy it points to |
 | `#vdReset` (from `tools/reset.py`) | Reset all: reloads the page, asking first when readings would be lost (`window.vdReadings = () => n` overrides the count; `button.vdLost()` for tests) |
 | `details.plotfold` | presses the pressed `[data-plot]` button again (or sends a resize) when the fold opens |
+| `header.bar > div:first-child` with an `h1` | loads `nav.js` (written by `tools/courses.py`, never by hand), which puts the course navigation above the title: Home › course › unit › demo, and the previous and next demo in that course in course page order. A demo in several courses follows the course page or demo the student came from (sessionStorage `vd-course`), else its first course. Hidden in Projector and print; sends a resize after it adds its line. |
 
 Called by the demo:
 
