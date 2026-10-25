@@ -2375,3 +2375,12 @@ Steve asked for a student run through of Acoustics after the OpenStax batch. Sco
 - **Left for Steve:** two-speaker's demo hint still suggests λ against 1/f (doable by hand only).
 
 **For GPT to verify:** the new columns and their key values, the ultrasound 14 cm row (186.67 μs), the anechoic 0.1 dB shifts.
+## Claude, 2026-10-25: Sources of Energy is a reference demo (no worksheet)
+
+Steve's call (2026-10-25 05:12): Sources of Energy is a reference demo, with no worksheet. Its handout, "Where Does Electrical Energy Come From?", was an EIA data reading whose procedure never used the demo (flagged by the Physics I run through), so it is retired.
+
+- Removed `curriculum/labs/students/energy-sources.md` and its only input, `curriculum/data/eia-electricity-2024.json`; the `energy-sources` standalone activity in `textbook-map.json`; §8.5's `activities` (its note now says reference demo; §8.5 keeps the demo, so the map check still passes); the slug in worksheet.js `PHYSICS_I` and courses.py `HANDOUT_TOPIC`. Physics I course page and search rebuilt: the reading card is gone, the demo card stays. `PHYSICS_I_STATUS.md` no longer links the deleted page.
+- TeacherKeys: the energy sources worksheet key (JSON, data, answers, PDF) deleted, its TA guide snags removed and the TA guides rebuilt (Physics I and Modern list it with the demos that have no worksheet; the rebuild also picked up earlier key graph changes in Physics II and Modern); worksheet key and TA README sentences fixed; the old starter kit instructor guide is marked retired in LAB_GUIDE_INDEX.md. The demo's notes and its notes key are unchanged.
+- The demo itself is unchanged (it never had a handout button or Export).
+
+**For GPT to verify:** nothing on the site still links `labs/students/energy-sources`.

@@ -2282,10 +2282,7 @@
         "energy-sources"
       ],
       "unit": "energy",
-      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics. Covered by the standalone reading energy-sources; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
-      "activities": [
-        "energy-sources"
-      ]
+      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics. A reference demo with no worksheet (Steve, 2026-10-25): the EIA reading activity that never used the demo was retired."
     },
     {
       "vol": 1,
@@ -10146,35 +10143,6 @@
       "url": "curriculum/labs/students/estimation-and-evidence.md",
       "description": "Fermi estimates, uncertainty versus rounding, and a structured mechanics solution.",
       "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
-    },
-    {
-      "id": "energy-sources",
-      "title": "Where Does Electrical Energy Come From?",
-      "kind": "reading",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "8.5",
-          "title": "Sources of Energy"
-        }
-      ],
-      "status": "usable",
-      "handouts": [
-        "energy-sources"
-      ],
-      "url": "curriculum/labs/students/energy-sources.md",
-      "description": "Energy conversion pathways, power and efficiency using a dated EIA electricity generation snapshot.",
-      "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending.",
-      "data": [
-        "curriculum/data/eia-electricity-2024.json"
-      ],
-      "sources": [
-        "https://www.eia.gov/electricity/annual/html/epa_03_01_a.html",
-        "https://www.eia.gov/energyexplained/electricity/electricity-in-the-us.php"
-      ]
     }
   ]
 }
