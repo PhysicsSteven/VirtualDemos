@@ -1682,7 +1682,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('etaOut').textContent = `${Math.round(S.eta * 100)}%`;
     $('rateOut').textContent = `${RATES[S.rate]} per second`;
     for (const i of [0, 1]) { const b = $('slit' + (i + 1)); b.setAttribute('aria-pressed', String(S.open[i])); b.textContent = `Slit ${i + 1} ${S.open[i] ? 'open' : 'closed'}`; }
-    $('etaRow').style.opacity = S.det ? 1 : 0.5; $('eta').disabled = !S.det;
+    $('etaRow').querySelectorAll('label, input').forEach((e) => { e.style.opacity = S.det ? 1 : 0.5; }); $('eta').disabled = !S.det; /* the value itself stays readable (contrast) */
   }
   function sci(v) { const e = Math.floor(Math.log10(Math.abs(v))); return `${(v / Math.pow(10, e)).toFixed(3)} × 10${sup(e)}`; }
   function sup(n) { const m = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }; return String(n).split('').map((ch) => m[ch]).join(''); }

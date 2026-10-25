@@ -489,7 +489,7 @@ SEARCH_BOX = ('<div class="filter" role="search">'
               '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>'
               '<path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
               '<input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" '
-              'autocomplete="off" spellcheck="false" aria-controls="hits" aria-expanded="false"><kbd>/</kbd>'
+              'autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd>'
               '<button type="button" class="clear" hidden aria-label="Clear search">✕</button>'
               '<div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>')
 

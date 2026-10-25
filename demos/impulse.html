@@ -159,7 +159,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
-        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>bumper</th><th>m (kg)</th><th>v₁ (m/s)</th><th>v₂ (m/s)</th><th>area (N·s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" tabindex="0" role="region" aria-label="Captured readings"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>bumper</th><th>m (kg)</th><th>v₁ (m/s)</th><th>v₂ (m/s)</th><th>area (N·s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Record stores one row per run (bumper, mass, velocities, rate, area, peak force, contact time); Export to worksheet sends the rows to the student worksheet, which can also save them as CSV; export a run's F(t) to integrate it yourself.</p>
         </details>

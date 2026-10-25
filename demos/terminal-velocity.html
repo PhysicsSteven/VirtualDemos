@@ -28,7 +28,7 @@
 .actbar { position: absolute; left: 10px; bottom: 30px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .actbar[hidden] { display: none; }
 .actbar .seg, .viewbar .seg { background: color-mix(in srgb, var(--surface) 90%, transparent); }
-#pull { background: var(--suit); color: #fff; border-color: transparent; font-weight: 700; }
+#pull { background: color-mix(in srgb, var(--suit) 75%, #000); color: #fff; border-color: transparent; font-weight: 700; }
 #pull:disabled { opacity: 0.45; cursor: default; }
 .setup-card { position: absolute; z-index: 3; right: 12px; top: 12px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }

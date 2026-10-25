@@ -217,7 +217,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <button type="button" class="btn" id="flipW">Reverse current</button>
           <button type="button" class="btn" id="delW">Remove wire</button>
         </div>
-        <ul class="qlist" id="wList" aria-label="Wires: current, position and the force per meter on each"></ul>
+        <ul class="qlist" id="wList" role="listbox" aria-label="Wires: current, position and the force per meter on each"></ul>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Positive current comes out of the page (<svg class="wi out" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>), negative goes into it (<svg class="wi in" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>). Drag a wire to move it; double click it to reverse its current.</p>
         </details>
@@ -1298,7 +1298,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const icon = w.I > 0 ? '<svg class="wi out" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>'
         : w.I < 0 ? '<svg class="wi in" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>'
         : '<svg class="wi off" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>';
-      return `<li tabindex="0" data-id="${w.id}" aria-selected="${w.id === S.wsel}">${icon}<span>Wire ${j + 1}</span><span class="qv">${fmtI(w.I)}</span><span class="qs">(${w.x.toFixed(1)}, ${w.y.toFixed(1)}) cm${ws.length > 1 ? ` · F/L ${fmtF(m)}` : ''}</span></li>`;
+      return `<li tabindex="0" role="option" data-id="${w.id}" aria-selected="${w.id === S.wsel}">${icon}<span>Wire ${j + 1}</span><span class="qv">${fmtI(w.I)}</span><span class="qs">(${w.x.toFixed(1)}, ${w.y.toFixed(1)}) cm${ws.length > 1 ? ` · F/L ${fmtF(m)}` : ''}</span></li>`;
     }).join('');
     const sw = wById(S.wsel);
     $('iCtl').hidden = !sw; $('flipW').disabled = !sw; $('delW').disabled = !sw;

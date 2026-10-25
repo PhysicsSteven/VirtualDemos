@@ -58,7 +58,7 @@
   K.view = function (o) {
     var seg = typeof o.seg === 'string' ? document.querySelector(o.seg) : o.seg, st = { on: false, ok: false, tried: false, loading: false };
     var NO = o.noText || 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
-    var mark = function (v) { if (seg) seg.querySelectorAll('[data-dim]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.dim === v)); }); };
+    var mark = function (v) { if (seg) seg.querySelectorAll('button[data-dim]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.dim === v)); }); };
     var say = function () { if (o.status) o.status(NO); };
     var set = function (v) {
       if (v === '3d' && !st.ok) {

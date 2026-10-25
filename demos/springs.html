@@ -36,8 +36,8 @@
   --equi: #a7740b;
   --accent: #2b60b5;
   --xcol: #7a45c0;
-  --vcol: #1d8a5a;
-  --acol: #c0601a;
+  --vcol: #1b8054;
+  --acol: #b35918;
   --wire: #3b4655;
   --block: #cdd6e1;
   --oil: #c99a1e;
@@ -1418,7 +1418,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const m = g3.mats, k = [T.equi, T.xcol, T.pos, T.neg, T.oil, T.vcol, T.gridStrong, T.muted, T.accent, T.canvas].join();
     if (G3.themeKey === k) return; G3.themeKey = k;
     const c = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    m.goldM.color = c(T.equi, '#a7740b'); m.oilM.color = c(T.oil, '#c99a1e'); m.xM.color = c(T.xcol, '#7a45c0'); m.fM.color = c(T.pos, '#c23f2c'); m.vM.color = c(T.vcol, '#1d8a5a');
+    m.goldM.color = c(T.equi, '#a7740b'); m.oilM.color = c(T.oil, '#c99a1e'); m.xM.color = c(T.xcol, '#7a45c0'); m.fM.color = c(T.pos, '#c23f2c'); m.vM.color = c(T.vcol, '#1b8054');
     m.peakM.color = c(T.equi, '#a7740b'); m.b1M.color = c(T.pos, '#c23f2c'); m.b2M.color = c(T.neg, '#2b60b5');
     m.traceM[0].color = c(T.xcol, '#7a45c0'); m.gridLM.color = c(T.gridStrong, '#cfd7e1'); m.timeLM.color = c(T.muted, '#5a6575'); m.eqLM.color = c(T.muted, '#5a6575');
     m.circLM.color = c(T.muted, '#5a6575'); m.circDM.color = c(T.gridStrong, '#cfd7e1'); m.armLM.color = c(T.xcol, '#7a45c0'); m.shadLM.color = c(T.xcol, '#7a45c0'); m.gBrLM.color = c(T.equi, '#a7740b');

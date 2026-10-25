@@ -358,7 +358,7 @@ table.rows input:focus { border-color: var(--accent); }
     let h = dd('x, from the wall', `${S.mx.toFixed(3)} m`) + dd('y, sideways', `${S.my.toFixed(3)} m`) + dd('r₁, to speaker 1', `${p.r1.toFixed(3)} m`) + dd('r₂, to speaker 2', `${p.r2.toFixed(3)} m`);
     h += dd('wavelength λ', S.blind || S.mystery ? 'hidden' : `${wavelength(fNow(), S.tC).toFixed(3)} m`);
     $('tape').innerHTML = h;
-    mic.setAttribute('aria-valuetext', `x ${S.mx.toFixed(2)} m, y ${S.my.toFixed(2)} m, ${L.toFixed(1)} dB`);
+    mic.setAttribute('aria-label', `Microphone at x ${S.mx.toFixed(2)} m, y ${S.my.toFixed(2)} m, ${L.toFixed(1)} dB: drag it, or use the arrow keys to move it 5 cm (Shift, 50 cm)`); /* a button cannot carry aria-valuetext */
     if (GEO.ppm) { mic.style.left = `${GEO.x0 + S.mx * GEO.ppm}px`; mic.style.top = `${GEO.yc - S.my * GEO.ppm}px`; }
   }
 

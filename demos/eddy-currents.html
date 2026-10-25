@@ -47,8 +47,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 10px; font-size: 0.9rem; }
 .readout .head { font-size: 0.78rem; color: var(--muted); font-weight: 700; }
-.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
-.readout dt { font-size: 0.78rem; color: var(--muted); grid-column: 1 / -1; margin-top: 4px; }
+.readout dd, .readout .dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.readout .dt { font-size: 0.78rem; color: var(--look-quiet, var(--muted)); grid-column: 1 / -1; margin-top: 4px; } /* row labels: divs, not dt, since the grid also holds the column heads */
 .ok { font-size: 0.85rem; color: var(--muted); }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
 @media (max-width: 820px) {
@@ -287,10 +287,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function readouts() {
     const k = ks(), tf = tFall(), bl = S.blind;
     let h = '<div class="head">Copper</div><div class="head">Aluminum</div><div class="head">Plastic</div>';
-    const row = (lab, vals) => `<dt>${lab}</dt>${vals.map((v) => `<dd>${v}</dd>`).join('')}`;
+    const row = (lab, vals) => `<div class="dt">${lab}</div>${vals.map((v) => `<div class="dd">${v}</div>`).join('')}`;
     h += row('Conductivity σ (MS/m)', PIPES.map((P) => f(sigmaAt(P, S.T) / 1e6, 1)));
     h += row('Time to fall 1.00 m, measured', tf.map((t) => (S.t >= t ? `${f(t, 2)} s` : '—')));
-    if (bl) h += '<dt>Drag constant, terminal speed, predicted times, heat</dt><dd class="ok" style="grid-column:1/-1">hidden in Blind</dd>';
+    if (bl) h += '<div class="dt">Drag constant, terminal speed, predicted times, heat</div><div class="dd ok" style="grid-column:1/-1">hidden in Blind</div>';
     else {
       h += row('Drag constant k (N·s/m)', k.map((x) => f(x, 3)));
       h += row('Terminal speed v_T (cm/s)', k.map((x) => (x > 0 ? f(MAG.mass * G / x * 100, 1) : '∞')));

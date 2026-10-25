@@ -2873,3 +2873,22 @@ Pendulum pilot's look and asked for one dark theme video only (the site's defaul
   demo changes (README there). The measuring tools never appear in a video.
 
 **For GPT:** please check the video's captions and the readings it shows against the demo (no WebGL needed: it is an mp4).
+
+## 2026-10-25 Claude: the rest of the automated accessibility flags (axe now at zero)
+
+Steve asked for all the remaining axe flags (WCAG 2.1 AA) to be fixed after the two shared colors. Nothing numeric changed.
+
+- Contrast: Shells and X Rays category colors darkened so white symbols reach 4.5:1, and the atomic numbers lost their 0.85
+  opacity; light theme tokens darkened slightly in Faraday (`--emf`, `--equi`), Springs (`--vcol`, `--acol`), Lagrange Points
+  (`--stable`) and Relativity EM (`--force`, `--efield`); Terminal Velocity's Pull button is a darker shade of the suit color;
+  Timbre's white key labels are darker; Double Slit dims only the efficiency slider and its label when the detector is off, so the
+  value stays readable.
+- Structure and ARIA: Eddy Currents readout rows are divs (the grid also holds the column heads, so `dt`/`dd` were invalid there);
+  the site search box is a combobox (`tools/courses.py`, course pages and 404 regenerated); Gauss's Law and Currents and Fields
+  lists are listboxes with options; `vd3kit.js` marks only the 3D | Flat buttons as pressed (it also marked the stage in Pendulum
+  and Double Pendulum); Two Speaker's microphone puts its position in its label instead of `aria-valuetext`, which a button cannot carry;
+  the scrolling readings tables in Doppler, Impulse and Gamma Spectroscopy are focusable named regions.
+
+axe-core 4.10.2 rerun on the 27 affected pages in light and dark: 0 flags. With the earlier pass (7b8e182), the whole site now
+scans clean. What automated tools cannot judge (picture and graph descriptions, 3D on touch, a real screen reader pass) waits,
+as Steve decided.

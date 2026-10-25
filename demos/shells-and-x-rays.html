@@ -16,8 +16,8 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
 :root { --up: #2b60b5; --down: #c0432a; --ka: #c0432a; --kb: #2b60b5; --brems: #6b7787; --diff: #b07a10;
-  --cat-alkali: #d0573f; --cat-alkaline: #d98a2b; --cat-transition: #5f7fa8; --cat-post: #6f8f72; --cat-metalloid: #8b7bb5; --cat-nonmetal: #3f9a8a;
-  --cat-halogen: #b5a42f; --cat-noble: #b55a9a; --cat-lanthanide: #4d9bc9; --cat-actinide: #a8745a; }
+  --cat-alkali: #c1513b; --cat-alkaline: #a36720; --cat-transition: #59779e; --cat-post: #5f7b62; --cat-metalloid: #7c6da1; --cat-nonmetal: #358174;
+  --cat-halogen: #827622; --cat-noble: #ae5694; --cat-lanthanide: #3d7a9f; --cat-actinide: #996a52; } /* dark enough for white symbols at 4.5:1 (WCAG AA) */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; } }
 :root[data-theme="dark"] { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
@@ -42,7 +42,7 @@
 .ptable-wrap { grid-column: 1 / -1; overflow-x: auto; }
 .ptable { display: grid; grid-template-columns: repeat(18, minmax(24px, 1fr)); gap: 2px; min-width: 470px; }
 .ptable button { font: inherit; font-size: 0.68rem; line-height: 1; padding: 1px 0; border: 1px solid transparent; border-radius: 4px; cursor: pointer; color: #fff; background: var(--c, #777); text-align: center; }
-.ptable button small { display: block; font-size: 0.5rem; opacity: 0.85; }
+.ptable button small { display: block; font-size: 0.5rem; }
 .ptable button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px; }
 .ptable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .ptable .gap { height: 6px; grid-column: 1 / -1; }
