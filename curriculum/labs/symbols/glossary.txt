@@ -1634,6 +1634,81 @@ x_0 | Position at t = 0 | m
 y | Height (upward positive) | m
 g | Gravitational acceleration | m/s²
 
+== mp-shielding-barrier ==
+e | @euler
+mu | Narrow beam linear attenuation coefficient at 511 keV | cm⁻¹
+x | Thickness of the shield | cm
+T [\frac{P}{T\,D}] | Occupancy factor of the space beyond the wall
+T | Broad beam transmission through a shield of thickness x
+beta | Fit parameter of Archer's form | cm⁻¹
+alpha | Fit parameter of Archer's form, the slope of −ln T in a thick shield | cm⁻¹
+gamma | Fit parameter of Archer's form
+b | Buildup factor, T(x)/e^(−μx)
+D | Weekly dose beyond the wall with no wall | mSv
+N | Number of patients a week
+Gamma | Dose rate constant of ¹⁸F | μSv m²/(MBq h)
+A_0 | Activity injected into each patient | MBq
+d [\,dt] | Differential (dt: a short time)
+d | Distance from the patient to the point beyond the wall | m
+lambda | Decay constant of ¹⁸F | h⁻¹
+t | Time since the injection | h
+t_U | Uptake time, how long each patient stays in the room | h
+B | Transmission the wall must have, P/(T D)
+P | Design goal for the area beyond the wall | mSv/week
+R_t | Decay factor over the uptake time
+t_1/2 | Half life of ¹⁸F | h
+
+== mp-technetium-generator ==
+e | @euler
+N_P | Number of ⁹⁹Mo nuclei (parent)
+lambda_P | Decay constant of ⁹⁹Mo | h⁻¹
+t | Time since the last elution | h
+N_D | Number of ⁹⁹ᵐTc nuclei (daughter)
+B | Share of ⁹⁹Mo decays that feed ⁹⁹ᵐTc
+lambda_D | Decay constant of ⁹⁹ᵐTc | h⁻¹
+A_D | Activity of ⁹⁹ᵐTc, λ_D N_D | h⁻¹
+A_P | Activity of ⁹⁹Mo, λ_P N_P | h⁻¹
+t_max | Time after an elution when the ⁹⁹ᵐTc count peaks | h
+Y | ⁹⁹ᵐTc nuclei on the column at a daily elution, per ⁹⁹Mo nucleus
+N | A number of counted nuclei
+
+== mp-ultrasound-attenuation ==
+e | @euler
+r | Share of the pressure a boundary reflects
+Z_2 | Acoustic impedance of the second medium | kg/(m² s)
+Z_1 | Acoustic impedance of the first medium | kg/(m² s)
+alpha_0 | Attenuation coefficient per unit frequency | dB/(cm MHz)
+f | Frequency of the pulse | MHz
+z | Depth the scanner assumes for an echo | m
+t | Time of the echo after the pulse is sent | μs
+p | Pressure amplitude of the wave | Pa
+x | Distance the wave has traveled | cm
+p_0 | Pressure amplitude where the wave starts | Pa
+a | Attenuation coefficient of the amplitude, in nepers | cm⁻¹
+I | Intensity of the wave | W/m²
+alpha | Attenuation coefficient | dB/cm
+L | Level of the echo relative to the pulse sent | dB
+d | Depth of the boundary below the transducer | cm
+c | Speed of sound in muscle | m/s
+
+== mp-x-ray-filtration ==
+e [^] | Euler's number, the base of natural logarithms | | 2.71828…
+e | @e
+Psi_E | Photon energy fluence per unit energy
+Z | Atomic number of the target
+E_0 | Highest photon energy, eV | keV
+E | Photon energy | keV
+V | Tube voltage | kV
+mu | Linear attenuation coefficient of aluminum | cm⁻¹
+rho | Density | g/cm³
+x | Thickness of aluminum sheets on the chamber | mm
+K | Air kerma the chamber reads behind the sheets
+T | Transmission of the filter
+mu_en | Mass energy absorption coefficient | cm²/g
+K_0 | Air kerma with no sheets
+k | Air kerma per unit photon energy before the sheets
+d | Differential (dE: a small range of photon energy)
+
 == neutral-attraction ==
 g | Gravitational acceleration | m/s²
 kappa | Dielectric constant of the ball

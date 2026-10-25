@@ -8952,7 +8952,8 @@
         "nuclear-reactions",
         "critical-mass",
         "fusion-gamow",
-        "radiation-dose"
+        "radiation-dose",
+        "mp-shielding-barrier"
       ],
       "title": "Nuclear Reactions, Fission and Fusion",
       "url": "demos/nuclear-reactions.html"
@@ -9315,7 +9316,8 @@
       "url": "demos/radioactive-decay.html",
       "handouts": [
         "radioactive-decay",
-        "decay-chains"
+        "decay-chains",
+        "mp-technetium-generator"
       ]
     },
     {
@@ -9724,7 +9726,8 @@
       "note": "New 2026-10-24 (Claude). Shells: orbital boxes for any element (Pauli, Hund), measured NIST ground states against the n + l rule (20 exceptions up to Lr), electrons per shell against 2n², first ionization energies for Z = 1 to 103. X-ray tube: Kramers continuum with the Duane–Hunt cutoff, Kα₁, Kα₂ and Kβ₁ from the NIST X-Ray Transition Energies Database above the K edge, K/L/M level diagram, mystery target for Moseley's law. Two worksheets with keys from real runs in TeacherKeys.",
       "handouts": [
         "periodic-table",
-        "x-ray-spectra"
+        "x-ray-spectra",
+        "mp-x-ray-filtration"
       ],
       "title": "Shells, the Periodic Table and X-Rays",
       "url": "demos/shells-and-x-rays.html"
@@ -10423,7 +10426,8 @@
       "title": "Ultrasound: Echoes and Blood Flow",
       "url": "demos/ultrasound.html",
       "handouts": [
-        "ultrasound"
+        "ultrasound",
+        "mp-ultrasound-attenuation"
       ]
     },
     {

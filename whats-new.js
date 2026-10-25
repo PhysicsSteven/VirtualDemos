@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-medical-physics', date: '2026-10-25', title: 'Medical Physics module',
+    text: 'A new module for the upper level medical physics track, with four worksheets that read cited data and carry uncertainties: milk a technetium 99m generator (Radioactive Decay, with new medical isotopes), filter an X-ray tube and measure its half value layers with an ion chamber, shield a PET uptake room with broad beam buildup and the NCRP design goals (Nuclear Reactions, Dose view), and measure how muscle absorbs ultrasound at four frequencies. More demos are on the way.', link: { href: 'medical-physics.html', text: 'Open Medical Physics' } },
   { id: '2026-10-25-photon-interactions', date: '2026-10-25', title: 'Photon Interactions in Matter',
     text: 'A new Medical Physics demo with its own worksheet: the NIST attenuation coefficients of any element or tissue from 1 keV to 100 MeV split into coherent, Compton, photoelectric and pair production, where each one wins as Z changes, a simulated beam through a slab to measure μ and the buildup factor, and an X-ray beam hardened by filters with its half value layers.', link: { href: 'demos/photon-interactions.html', text: 'Open Photon Interactions' } },
   { id: '2026-10-25-dosimetry', date: '2026-10-25', title: 'Dosimetry: Kerma, Equilibrium and the Ion Chamber',

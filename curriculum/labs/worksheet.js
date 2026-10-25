@@ -612,6 +612,27 @@
         { table: 4, when: PI_ALL('Hardening'), cols: ['row', 'kVp', 'al_mm', 'filter', 'hvl_in', 'hvl1_mm', 'hvl2_mm', 'h', 'Emean_keV', 'Eeff_keV', 'K_uGy_mAs'] }] },
   });
   /* ==MEDICAL PHYSICS photon interactions END== */
+  /* ==MEDICAL PHYSICS small additions START== Worksheets on existing demos for the Medical Physics module (medical-physics.html, 2026-10-25). Each demo sends its
+     readings here when its medical physics mode is on (the generator, filtration, the broad beam, absorption). */
+  const MP_SMALL = ['mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'];
+  MEDPHYS.push(...MP_SMALL); ENABLED.push(...MP_SMALL);
+  Object.assign(FROM_DEMO, {
+    /* Ingrowth: Reading | t (h) | ⁹⁹Mo | ⁹⁹ᵐTc | ln N_P, Bateman N_D, pull, A_D/A_P (typed). Daily elutions, the series whose every
+       reading follows an elution: Reading | Elution time | ⁹⁹Mo at the elution | ⁹⁹ᵐTc eluted | Y N_P, eluted/N_P (typed) */
+    'mp-technetium-generator': { demo: 'Radioactive Decay (generator)', cols: ['row', 't', 'parent', 'daughter', null, null, null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.eluted_last !== ''), cols: ['row', 'last_elution_t', 'parent', 'eluted_last', null, null] }] },
+    /* Attenuation curve: Reading | V (kV) | filtration (mm Al) | sheets (mm Al) | K/K₀ | ln (typed). Beam survey, a series whose beams
+       differ: Reading | V | Al | Cu | HVL₁ | HVL₂ | mean energy | HVL₁/HVL₂, minimum (typed) */
+    'mp-x-ray-filtration': { demo: 'Shells, the Periodic Table and X-Rays (filtration)', cols: ['row', 'V_kV', 'filter_Al_mm', 'absorber_Al_mm', 'chamber', null],
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => [r.V_kV, r.filter_Al_mm, r.filter_Cu_mm].join())).size > 1, cols: ['row', 'V_kV', 'filter_Al_mm', 'filter_Cu_mm', 'hvl1_mm', 'hvl2_mm', 'mean_keV', null, null] }] },
+    /* Transmission: Reading | shield | x | narrow | broad | buildup | ln T broad, ln T narrow (typed). Barrier, a series whose barrier
+       inputs differ: Reading | N | t | T | P | patient | weekly dose | B | lead broad | lead narrow */
+    'mp-shielding-barrier': { demo: 'Nuclear Reactions, Fission and Fusion (broad beam)', cols: ['row', 'shield', 'x_cm', 'rate_narrow_uSv_h', 'rate_uSv_h', 'buildup', null, null],
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => [r.patients_wk, r.t_h, r.T, r.P_mSv_wk, r.patient].join())).size > 1, cols: ['row', 'patients_wk', 't_h', 'T', 'P_mSv_wk', 'patient', 'week_mSv', 'B_needed', 'lead_broad_mm', 'lead_narrow_mm'] }] },
+    /* Reading | setup and frequency | muscle depth | cursor time | echo level | TGC | 2d (typed); Table 2 is typed from the fits */
+    'mp-ultrasound-attenuation': { demo: 'Ultrasound: Echoes and Blood Flow (absorption)', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz`, 'depth_cm', 'cursor_time_us', 'level_dB', 'tgc', null] },
+  });
+  /* ==MEDICAL PHYSICS small additions END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -621,6 +642,7 @@
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
+  GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */

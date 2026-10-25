@@ -19,12 +19,12 @@ group('buildup factor B = T_broad/e^(−μx) is above 1 and grows with thickness
   assert(c.hasBroad('f18', 'lead') && !c.hasBroad('cs137', 'lead') && !c.hasBroad('f18', 'water'));
 });
 group('¹⁸F dose rate at 1 m within 4% of TG-108’s 0.143 µSv m²/(MBq h)', () => near(c.doseRate('f18', 1e6, 1, 'none', 0) * 1e6, 0.143, 0.04));
-group('barrier: weekly dose follows TG-108’s 0.143 A t R_t 0.36 N/d² to 4%; thickness meets B exactly', () => {
+group('barrier: weekly dose follows TG-108’s 0.092 A t R_t N/d² (0.092 = 0.64 × 0.143) to 4%; thickness meets B exactly', () => {
   const q = c.shieldWall(5.55e8, 2, 40, 1, 1, 'uncontrolled', true), Th = 109.77 / 60, Rt = 1.443 * Th * (1 - Math.exp(-0.693 / Th));
-  near(q.week, 0.143e-3 * 555 * 1 * Rt * 0.36 * 40 / 4, 0.04, 'weekly dose');
+  near(q.week, 0.143e-3 * 555 * 1 * Rt * 0.64 * 40 / 4, 0.04, 'weekly dose');
   near(q.B, 0.02 / q.week, 1e-12); near(c.archerT('lead', q.leadBroad), q.B, 1e-9); near(Math.exp(-c.muLin('lead', 0.511) * q.leadNarrow), q.B, 1e-9);
   assert(q.leadBroad > q.leadNarrow && q.concBroad > q.concNarrow, 'narrow beam underestimates');
   assert(!c.shieldWall(5.55e8, 10, 1, 0.25, 1 / 40, 'controlled', true).need, 'far, rare, occupied little: no barrier');
 });
-group('NCRP 147 design goals and occupancy factors', () => { assert.equal(c.NCRP_P.controlled, 0.1); assert.equal(c.NCRP_P.uncontrolled, 0.02); assert.deepEqual(c.OCCUPANCY.map((o) => o[0]), [1, 1 / 2, 1 / 5, 1 / 8, 1 / 20, 1 / 40]); assert.equal(c.BODY_511, 0.36); });
+group('NCRP 147 design goals and occupancy factors', () => { assert.equal(c.NCRP_P.controlled, 0.1); assert.equal(c.NCRP_P.uncontrolled, 0.02); assert.deepEqual(c.OCCUPANCY.map((o) => o[0]), [1, 1 / 2, 1 / 5, 1 / 8, 1 / 20, 1 / 40]); assert.equal(c.BODY_511, 0.64); });
 console.log(`${n} groups passed`);

@@ -117,7 +117,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/periodic-table.html" target="periodic-table-worksheet">Worksheet 1: Shells and the Periodic Table</a></li><li><a href="../curriculum/labs/students/x-ray-spectra.html" target="x-ray-spectra-worksheet">Worksheet 2: X-Ray Spectra and Moseley's Law</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/periodic-table.html" target="periodic-table-worksheet">Worksheet 1: Shells and the Periodic Table</a></li><li><a href="../curriculum/labs/students/x-ray-spectra.html" target="x-ray-spectra-worksheet">Worksheet 2: X-Ray Spectra and Moseley's Law</a></li><li><a href="../curriculum/labs/students/mp-x-ray-filtration.html" target="mp-x-ray-filtration-worksheet">Worksheet 3: Filtration and Half Value Layer (Medical Physics)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -157,7 +157,7 @@ say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');
 window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
-        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the ionization graph, the line energies and the cutoff (read the spectrum with the cursor)</span></label>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the ionization graph, the line energies, the cutoff and the half value layers (read the spectrum with the cursor, the chamber with the sheets)</span></label>
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutShells"></p>
           <p class="hint" id="aboutXray"></p>
@@ -814,7 +814,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Z = xZ(), kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur), get = (n) => { const l = ln.find((q) => q.name === n); return l && !S.blind ? g6(l.E) : ''; };
     return { view: 'xray', target: myst ? 'mystery' : byZ(Z)[2], Z: myst ? '' : Z, V_kV: kV, cursor_pm: f(cl, 2), cursor_keV: f(ePm(cl) / 1000, 4), lambda_min_pm: S.blind ? '' : f(lamPm(kV * 1000), 3),
       Ka1_eV: get('Kα₁'), Ka2_eV: get('Kα₂'), Kb1_eV: get('Kβ₁'),
-      ...(mpBeam() ? { filter_Al_mm: f(S.xr.al, 1), filter_Cu_mm: f(S.xr.cu, 2), absorber_Al_mm: f(S.xr.abs, 1), chamber: f(chamber(Z, kV), 4) } : {}) };
+      ...(mpBeam() ? { filter_Al_mm: f(S.xr.al, 1), filter_Cu_mm: f(S.xr.cu, 2), absorber_Al_mm: f(S.xr.abs, 1), chamber: f(chamber(Z, kV), 4),
+        hvl1_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) ? '' : f(beamQ(Z, kV).h1, 2), hvl2_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) ? '' : f(beamQ(Z, kV).h2, 2), mean_keV: f(beamQ(Z, kV).Em / 1000, 1) } : {}) };
   };
 
   // ---------- about ----------
