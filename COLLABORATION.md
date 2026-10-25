@@ -3664,3 +3664,30 @@ appear. The demo gains `window.__rt.px` (tank mm to screen) for the script. vdch
   TeacherKeys `worksheet-keys/astro-2203/intro-gravity-*` (`tools/capture/intro-gravity.cjs`, a real run).
 - Fix: the demo's header line and notes gave the Moon's GM as 4.905 × 10¹²; the code uses 4.9028001 × 10¹², so 4.903.
   vdcheck gravity-near-earth 0 problems; test_gravity-near-earth passes.
+
+## 2026-10-25 · Claude · How this works videos: Thermo, The kinetic theory of gases (Gas in a Box ×2, Heat Capacities of Gases ×2)
+
+Following `tools/howto/README.md`. Gas in a Box picks by setup (the two gas setups play `diffusion`, the rest `ideal-gas`); Heat
+Capacities picks by view (Rüchardt plays `ruchardt`; Heat capacities and Watch the molecules, which has no worksheet, play
+`heat-capacities-of-gases`). Scripts `tools/howto/ideal-gas.cjs`, `diffusion.cjs`, `heat-capacities-of-gases.cjs`, `ruchardt.cjs`.
+Recorded in 3D with insulated walls, as the worksheets are. Readings checked by hand and against the keys:
+
+- Gas in a Box (23.2 s): Relax to equilibrium, 150 atoms, 1500 nm², T slider to 50.12 K: P ideal 69.2 µN/m
+  (150 × 1.380649e-23 × 50.12/1.5e-15), rms 144.5 m/s = √(2kT/m) for the 2D gas, mean 129 m/s (√(πkT/2m) = 128.0). P measured
+  wanders by about 10% at 50 K (few wall hits in the 1.2 s average), so the caption says so; recorded 0.06754 mN/m, ratio 0.976
+  (key 1.062; four takes gave 0.976 to 1.024; hard disks put the mean about 3.9% above ideal).
+- Diffusion (19.0 s): Two gases mix (150 of 40 u, 0.50 nm, 300 K each side), divider removed, paused at 401.9 ps, Record the run:
+  41 rows every 10 ps, A left + A right = 150 in every row. MSD slope 100 to 400 ps 3.33 (A) and 2.51 (B) nm²/ps against Enskog's
+  4D = 2.64 nm²/ps for hard disks (key about 2.69): within the scatter of 150 molecules.
+- Heat Capacities of Gases (21.8 s): argon, piston locked, 0.10 mol, 2.0 W. Row 1 0.0 J, 20.00 °C, 2.4055 L (nRT/P), 101.325 kPa,
+  as in the key; row 2 at 10.0 J (U up 9.98 J): 9.98/(0.1 × 1.5R) = 8.00 K, 28.01 °C, P = 101.325 × 301.16/293.15 = 104.092 kPa.
+- Rüchardt's Ball (19.8 s): dry air, 2 L, period 0.4749 s (2π√(mV/γPA²) = 0.47486 s, 0.47490 s with the 6 s damping), P at rest
+  101325 + mg/A = 102.135 kPa, γ 1.4078; key's first row 0.4749 s.
+
+**Demo fixes found while recording (visible to students):**
+- Heat Capacities of Gases: at desktop width under about 1000 px tall, the fixed 740 px stage with overflow hidden cut off up to
+  145 px of the shelf (Drop the ball, Heater power, Add heat). The stage now grows with its contents (`min-height: min-content`).
+- Gas in a Box, Record the run: pausing a little past 400 ps gave a row every 20 ps (`run.t / e <= 40`); it now counts whole
+  intervals (`Math.floor`), still at most 41 rows. CORE untouched in both; vdcheck `--only after`: 0 problems on both. No What's new entry.
+
+**For GPT:** please check the four videos' captions and readings against the worksheets and the figures above, and the two fixes.

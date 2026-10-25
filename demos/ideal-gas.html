@@ -1601,12 +1601,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!run.open) return 'Readings are timed from the moment the divider opens: choose Hole or Removed first.';
     return rowTwo(run.samples[run.samples.length - 1]);
   }
-  /* Record the run: a row every 2, 5, 10, 20, 50, 100 or 200 ps (the first that gives at most 40 rows), from t = 0 to now */
+  /* Record the run: a row every 2, 5, 10, 20, 50, 100 or 200 ps (the first that gives at most 40 rows after t = 0), from t = 0 to now,
+     so a run paused a little past 400 ps still gives a row every 10 ps */
   $('recRun').addEventListener('click', () => {
     const st = document.querySelector('.vd-readings .status');
     if (mixedRows(true)) { st.textContent = MIXED; return; }
     if (!run.open || run.t < 2) { st.textContent = 'Open the divider (Hole or Removed) and let the run go for a while first.'; return; }
-    const every = [2, 5, 10, 20, 50, 100, 200].find((e) => run.t / e <= 40) || 500;
+    const every = [2, 5, 10, 20, 50, 100, 200].find((e) => Math.floor(run.t / e) <= 40) || 500;   /* at most 41 rows, t = 0 included */
     const want = run.samples.filter((sm) => sm.t % every === 0).map(rowTwo);
     const save = window.vdReadingRow; window.vdReadingRow = () => want;
     document.querySelector('.vd-readings .vd-rec').click(); window.vdReadingRow = save;
@@ -1633,6 +1634,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   setRunning(running);
   applyPreset('relax');
   updateReadouts();
+  /* How this works: a short video of one sample reading for the worksheet the setup belongs to, Gas in a Box (150 atoms at 50 K)
+     or, in the two gas setups, Diffusion and Graham's Law (Two gases mix, recorded to 400 ps); made by tools/howto/ */
+  const howVid = () => (two ? 'diffusion' : 'ideal-gas');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (two ? "How this works: Diffusion and Graham's Law" : 'How this works: Gas in a Box') });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshTokens);
   requestAnimationFrame(frame);
 })();
