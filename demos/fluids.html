@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.more > p + p { margin-top: 6px; }
@@ -153,6 +155,7 @@ table.rows button:hover { color: var(--pos); }
       <div class="pane" id="sPane">
         <canvas id="sCan" tabindex="0" role="application" aria-label="Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again."></canvas>
         <div class="stage-ctl" id="stageCtl">
+          <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Drop again</button>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
@@ -1503,6 +1506,7 @@ table.rows button:hover { color: var(--pos); }
   function drawScene() {
     const [W, H] = dims.s; if (!W || !H) return;
     const ctx = ctxs.s; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (on3()) { handles = []; render3(ctx, W, H); return; }
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     if (window.VDGear) window.VDGear.wall(ctx, 0, 0, W, H, { tile: 0 });
     handles = [];
@@ -1657,7 +1661,7 @@ table.rows button:hover { color: var(--pos); }
     $('buoyToggles').hidden = sc !== 'buoy';
     $('pModeWrap').hidden = !(sc === 'press' || sc === 'venturi');
     const dyn = sc === 'buoy' || sc === 'venturi' || sc === 'torr';
-    $('stageCtl').hidden = !dyn;
+    for (const id of ['play', 'reset', 'tclock']) $(id).hidden = !dyn;
     $('stage').classList.toggle('cols', sc === 'buoy');
     $('timeSec').hidden = !dyn;
     $('reset').textContent = sc === 'buoy' ? 'Drop again' : 'Restart';
@@ -1786,13 +1790,21 @@ table.rows button:hover { color: var(--pos); }
     });
   }
   cans.s.addEventListener('pointermove', (ev) => {
-    if (drag) { dragTo(ev); return; }
-    const h = handleAt(ev); const id = h ? h.id : null;
+    if (drag) { if (drag.three) drag3To(ev); else dragTo(ev); return; }
+    const h = on3() ? pick3(ev) : handleAt(ev); const id = h ? h.id : null;
     if (id !== hoverId) { hoverId = id; drawAll(); }
-    cans.s.style.cursor = h ? h.cursor : 'default';
+    cans.s.style.cursor = h ? (h.cursor || 'pointer') : on3() ? 'grab' : 'default';
   });
   cans.s.addEventListener('pointerdown', (ev) => {
     cans.s.focus({ preventScroll: true });
+    if (on3()) {     /* 3D: a grip takes the pointer; anywhere else the view turns (VD3.orbit) or, for one finger, the page scrolls */
+      const h = pick3(ev); if (!h) return;
+      const r = cans.s.getBoundingClientRect(), pp = G3.S.project(h.at(h.v));
+      drag = { id: h.id, three: h, off: [ev.clientX - r.left - pp[0], ev.clientY - r.top - pp[1]] };
+      if (h.id === 'block') { held = true; bs.v = 0; }
+      try { cans.s.setPointerCapture(ev.pointerId); } catch (_) {}
+      ev.preventDefault(); drawAll(); return;
+    }
     const h = handleAt(ev); if (!h) return;
     const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, c = centerOf(h);
     drag = { id: h.id, off: [x - c[0], y - c[1]] };
@@ -2199,9 +2211,693 @@ table.rows button:hover { color: var(--pos); }
   window.__fl = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
     get running() { return running; }, get trace() { return trace; },
-    applyPreset, setScene, setParam, setRunning, buoyNow, bp, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; },
+    applyPreset, setScene, setParam, setRunning, buoyNow, bp, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; }, get g3() { return G3; }, h3pt(id) { const h = handles3.find((k) => k.id === id), r = cans.s.getBoundingClientRect(); if (!h) return null; const p = G3.S.project(h.at(h.v)); return [r.left + p[0], r.top + p[1]]; },
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); }
   };
+
+  // ---------- the 3D view (three.js through demos/lib/vd3.js and vd3kit.js); the flat view stays (Flat button, or ?view=flat) ----------
+  // Pictures only: every height, level, reading and label below comes from the same state and functions as the flat view.
+  // Sizes in meters, z up, the bench top at z = 0. To scale: the buoyancy tank, block, spout and beaker; the Shapes vessels;
+  // the Torricelli tank, hole, jet and floor. Not to scale (said on the picture): the depth tank's width, the barometer and
+  // manometer widths, and the Venturi pipe and standpipe widths (1.5 times). The labels are drawn over the picture on #sCan.
+  const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.34, ph: 1.27, zoom: 1 }, sc: {}, env: null, lastSc: '' };
+  let handles3 = [];
+  const on3 = () => G3.on && !!G3.S;
+  function init3() {
+    const V = VD3K.stage(panes.s, { before: cans.s, fov: 30, near: 0.02, far: 40, shadow: 1.6 }); if (!V) return false;
+    G3.S = V; V.el.style.pointerEvents = 'none';
+    V.sun.position.set(-0.9, -1.6, 3.2); V.sun.shadow.bias = -0.0005;
+    const fill = new THREE.DirectionalLight(0xffffff, 0.38); fill.position.set(0.6, -3, 1.1); V.scene.add(fill);   /* a soft front light, so faces turned to the viewer (rules, dials) read */
+    // a soft studio environment, so glass, liquid and metal catch highlights (pictures only)
+    const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128; const c = cv.getContext('2d');
+    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#f4f7fa'); gr.addColorStop(0.5, '#a9b3bd'); gr.addColorStop(1, '#5f574c');
+    c.fillStyle = gr; c.fillRect(0, 0, 256, 128);
+    for (const [x, y, w, h] of [[30, 18, 50, 22], [150, 14, 70, 16], [96, 52, 18, 40], [210, 56, 26, 36]]) { c.fillStyle = 'rgba(255,255,255,0.95)'; c.fillRect(x, y, w, h); }
+    const et = new THREE.CanvasTexture(cv); et.mapping = THREE.EquirectangularReflectionMapping;
+    const pm = new THREE.PMREMGenerator(V.r); G3.env = pm.fromEquirectangular(et).texture; pm.dispose();
+    V.scene.add(VDK.room());
+    // the switch and the strip: drags on grips first, then the view turns (VD3.orbit); in Flat these do nothing
+    for (const ev of ['pointerdown', 'wheel', 'touchstart', 'touchmove', 'dblclick']) cans.s.addEventListener(ev, (e) => { if (!on3()) e.stopImmediatePropagation(); }, { passive: false });
+    V.orbit(cans.s, G3.o, () => { if (on3()) drawAll(); }, { grab: (e) => !!pick3(e), phMin: 0.3, phMax: 1.5, zMin: 0.5, zMax: 3.2 });
+    return true;
+  }
+  // ---- small builders ----
+  const VDK = {
+    std: (o) => new THREE.MeshStandardMaterial(o),
+    mat: (o, c) => VD3K.material(G3.S, o, c),
+    seed: 11,
+    rnd() { VDK.seed = (VDK.seed * 16807) % 2147483647; return VDK.seed / 2147483647; },
+    mesh(g, m, cast, recv) { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; },
+    room() {
+      const g = new THREE.Group(), V = G3.S;
+      g.add(VD3K.bench(V, { w: 7, d: 5, y: 1.2 }));
+      const wall = VD3K.backdrop(V, { r: 2.5, h: 3.4, arc: Math.PI * 1.5 }); wall.position.y = 0.7; g.add(wall);
+      V.onTheme((dk) => wall.material.emissive.set(dk ? '#0c1117' : '#6a7078'));   /* the wall lit a little from within, so it reads as a pale backdrop */
+      return g;
+    },
+    glassM() {
+      return VDK.mat({ transparent: true, opacity: 0.17, roughness: 0.04, metalness: 0.05, side: THREE.DoubleSide, depthWrite: false, envMap: G3.env, envMapIntensity: 1.4 }, ['#e6f2f8', '#b8d2e2']);
+    },
+    edgeM() { const m = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }); G3.S.onTheme((dk) => m.color.set(dk ? '#9db7cb' : '#6d879c')); return m; },
+    // an open glass tank: inner x in ±w/2, y in ±d/2, z from 0 to h (setH changes the wall height); the base is t thick below z = 0
+    tank(w, d, h, t) {
+      const g = new THREE.Group(), m = VDK.glassM(), walls = new THREE.Group(), em = VDK.edgeM();
+      const unit = (ww, dd, x, y) => { const b = VDK.mesh(new THREE.BoxGeometry(ww, dd, 1).translate(0, 0, 0.5), m); b.position.set(x, y, 0); b.renderOrder = 3; walls.add(b); };
+      unit(w + 2 * t, t, 0, -d / 2 - t / 2); unit(w + 2 * t, t, 0, d / 2 + t / 2); unit(t, d, -w / 2 - t / 2, 0); unit(t, d, w / 2 + t / 2, 0);
+      const base = VDK.mesh(new THREE.BoxGeometry(w + 2 * t, d + 2 * t, t), VDK.mat({ transparent: true, opacity: 0.32, roughness: 0.05, depthWrite: false, envMap: G3.env }, ['#cfe6ee', '#9cbccc']), false, true);
+      base.position.z = -t / 2; base.renderOrder = 3;
+      const eg = new THREE.EdgesGeometry(new THREE.BoxGeometry(w + 2 * t, d + 2 * t, 1).translate(0, 0, 0.5)), edges = new THREE.LineSegments(eg, em);
+      const ig = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, d, 1).translate(0, 0, 0.5)), inner = new THREE.LineSegments(ig, em);
+      walls.add(edges, inner); g.add(walls, base);
+      g.setH = (hh) => { walls.scale.z = Math.max(0.001, hh); }; g.setH(h);
+      return g;
+    },
+    // the liquid in a box: unit cube scaled to (w, d, h), its top face lighter and shinier
+    liqBox() {
+      const m = VDK.mesh(new THREE.BoxGeometry(1, 1, 1).translate(0, 0, 0.5), [LQ.side, LQ.side, LQ.side, LQ.side, LQ.top, LQ.side]);
+      m.renderOrder = 1; m.set = (w, d, h) => { m.visible = h > 1e-5; m.scale.set(w, d, Math.max(1e-5, h)); }; return m;
+    },
+    // an arrow along a direction, drawn over the scene (like the flat view's arrows)
+    arrow(col, r) {
+      r = r || 0.006; const m = new THREE.MeshBasicMaterial({ color: col, depthTest: false, transparent: true });
+      const g = new THREE.Group(), sh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1, 12).rotateX(Math.PI / 2).translate(0, 0, 0.5), m), hd = new THREE.Mesh(new THREE.ConeGeometry(r * 2.8, 1, 16).rotateX(Math.PI / 2), m);
+      sh.renderOrder = hd.renderOrder = 7; g.add(sh, hd); g.mat = m;
+      const up = new THREE.Vector3(0, 0, 1), dir = new THREE.Vector3();
+      g.set = (p, d, len, color) => {
+        if (color) m.color.set(color);
+        g.visible = len > 1e-4; if (!g.visible) return; const hl = Math.min(r * 7, len * 0.5);
+        g.position.set(p[0], p[1], p[2]); dir.set(d[0], d[1], d[2]).normalize(); g.quaternion.setFromUnitVectors(up, dir);
+        sh.scale.z = Math.max(1e-4, len - hl); hd.scale.set(1, 1, hl); hd.position.z = len - hl / 2;
+      };
+      return g;
+    },
+    dashed(col) { const m = new THREE.LineDashedMaterial({ color: col || '#5a6575', dashSize: 0.015, gapSize: 0.01, transparent: true, opacity: 0.9 }); const l = new THREE.Line(new THREE.BufferGeometry(), m); l.renderOrder = 6;
+      l.pts = (pts) => { l.geometry.dispose(); l.geometry = new THREE.BufferGeometry().setFromPoints(pts.map((q) => new THREE.Vector3(q[0], q[1], q[2]))); l.computeLineDistances(); }; return l; },
+    // a vertical rule: printed from..to, 0 at its foot, face toward the viewer (−y); down: the numbers grow downward from the top
+    vrule(o, down) {
+      const r = VD3K.ruler(G3.S, o), g = new THREE.Group(); g.add(r);
+      const m = new THREE.Matrix4();
+      if (down) m.makeBasis(new THREE.Vector3(0, 0, -1), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, -1, 0));
+      else m.makeBasis(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, -1, 0));
+      g.quaternion.setFromRotationMatrix(m); return g;
+    },
+    lathe(prof, seg, closed) {   /* prof: [[r, z], ...] bottom to top; the solid of revolution about z */
+      const pts = prof.map(([r, z]) => new THREE.Vector2(Math.max(1e-4, r), z));
+      if (closed) { pts.unshift(new THREE.Vector2(1e-4, prof[0][1])); pts.push(new THREE.Vector2(1e-4, prof[prof.length - 1][1])); }
+      return new THREE.LatheGeometry(pts, seg || 48).rotateX(Math.PI / 2);
+    },
+    tex(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = G3.S.r.capabilities.getMaxAnisotropy(); return { cv, c: cv.getContext('2d'), t }; },
+    swap(mesh, geo) { if (mesh.geometry) mesh.geometry.dispose(); mesh.geometry = geo; }
+  };
+  // the liquid's look follows the chosen liquid and the theme: translucent water, seawater and oil; mercury opaque and mirror bright
+  const LQ = { side: null, top: null, key: '' };
+  function liqLook() {
+    if (!LQ.side) {
+      LQ.side = VDK.std({ transparent: true, opacity: 0.45, roughness: 0.12, metalness: 0.05, depthWrite: false, envMap: G3.env, side: THREE.DoubleSide });
+      LQ.top = VDK.std({ transparent: true, opacity: 0.55, roughness: 0.04, metalness: 0.1, depthWrite: false, envMap: G3.env, envMapIntensity: 1.6, side: THREE.DoubleSide });
+      LQ.jet = VDK.std({ transparent: true, opacity: 0.8, roughness: 0.05, metalness: 0.1, envMap: G3.env });
+    }
+    const col = T.liq[S.liq] || '#3f8fd8', hg = S.liq === 'hg', dk = VD3.dark(), k = col + hg + dk;
+    if (k === LQ.key) return; LQ.key = k;
+    const c = new THREE.Color(col), cl = c.clone().lerp(new THREE.Color('#ffffff'), 0.3);
+    for (const [m, cc, op] of [[LQ.side, c, hg ? 1 : (dk ? 0.5 : 0.42)], [LQ.top, cl, hg ? 1 : (dk ? 0.55 : 0.5)], [LQ.jet, c, hg ? 1 : 0.85]]) {
+      m.color.copy(cc); m.opacity = op; m.metalness = hg ? 0.92 : 0.05; m.roughness = hg ? 0.18 : 0.06;
+      if (m.transparent === hg) { m.transparent = !hg; m.depthWrite = hg; m.needsUpdate = true; }
+    }
+  }
+  // ---- picking and dragging the grips drawn over the 3D view ----
+  // A 3D grip: { id, at(v) -> [x, y, z], v, lo, hi, set(v), round } — dragging finds the value whose point lies nearest the pointer.
+  function pick3(ev) {
+    if (!on3()) return null;
+    const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, tol = (ev.pointerType === 'touch' ? 24 : 13) * projScale();
+    let best = null, bd = tol;
+    for (const h of handles3) { const p = G3.S.project(h.at(h.v)); if (p[2] > 1) continue; const d = Math.hypot(p[0] - x, p[1] - y); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  function solve3(h, x, y) {
+    const f = (v) => { const p = G3.S.project(h.at(v)); return Math.hypot(p[0] - x, p[1] - y); };
+    const n = 120; let bv = h.lo, bd = Infinity;
+    for (let i = 0; i <= n; i++) { const v = h.lo + (h.hi - h.lo) * i / n, d = f(v); if (d < bd) { bd = d; bv = v; } }
+    let a = Math.max(h.lo, bv - (h.hi - h.lo) / n), b = Math.min(h.hi, bv + (h.hi - h.lo) / n);
+    for (let k = 0; k < 24; k++) { const m1 = a + (b - a) / 3, m2 = b - (b - a) / 3; if (f(m1) < f(m2)) b = m2; else a = m1; }
+    return (a + b) / 2;
+  }
+  let q3 = null, q3Frame = false;
+  function drag3To(ev) {
+    const r = cans.s.getBoundingClientRect(); q3 = [ev.clientX - r.left - drag.off[0], ev.clientY - r.top - drag.off[1]];
+    if (q3Frame) return; q3Frame = true;
+    requestAnimationFrame(() => {
+      q3Frame = false; if (!drag || !drag.three || !q3) return;
+      const [x, y] = q3, h = handles3.find((k) => k.id === drag.id) || drag.three; q3 = null;
+      h.set(solve3(h, x, y)); P().__touched = true; if (!h.param) clearPreset();
+      syncSliders(); updateReadouts(); drawAll();
+    });
+  }
+  // ---- the scenes ----
+  const B3 = {};
+  // overlay helpers, set for each frame
+  let OV = null;
+  function tag(txt, q, al, col, size, wt, fam, dx, dy) {
+    const p = G3.S.project(q); if (p[2] > 1) return null; const ls = OV.ls;
+    const x = p[0] + (dx || 0) * ls, y = p[1] + (dy || 0) * ls;
+    if (y < 46 * ls || y > OV.H - 4) return null;
+    labelBox(OV.ctx, txt, x, y, al || 'left', col || T.ink, (size || 12) * ls, wt || 700, fam);
+    return [x, y];
+  }
+  function dim3(a, b, col) {    /* a double arrow between two points, drawn over the picture */
+    const p = G3.S.project(a), q = G3.S.project(b); if (p[2] > 1 || q[2] > 1 || Math.hypot(p[0] - q[0], p[1] - q[1]) < 10) return;
+    const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2, ps = projScale();
+    arrow(OV.ctx, mx, my, p[0], p[1], col || T.ink, 1.3 * ps, 6); arrow(OV.ctx, mx, my, q[0], q[1], col || T.ink, 1.3 * ps, 6);
+  }
+  function grips3() {
+    for (const h of handles3) {
+      const p = G3.S.project(h.at(h.v)); if (p[2] > 1) continue;
+      const dv = (h.hi - h.lo) * 0.02, q = G3.S.project(h.at(Math.min(h.hi, h.v + dv))), vert = Math.abs(q[1] - p[1]) >= Math.abs(q[0] - p[0]);
+      if (h.round) roundGrip(OV.ctx, p[0], p[1], isHot(h.id), h.col); else grip(OV.ctx, p[0], p[1], isHot(h.id), vert);
+    }
+  }
+  function note3(txt) {   /* a caption along the bottom of the picture: what is not to scale, and how to turn the view */
+    const ctx = OV.ctx, ls = OV.ls, fs = 10.5 * ls; ctx.font = `${fs}px ${T.ui}`;
+    const words = txt.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > OV.W - 24 * ls && cur) { lines.push(cur); cur = w; } else cur = t2; }
+    lines.push(cur);
+    lines.forEach((l, i) => labelBox(ctx, l, 10 * ls, OV.H - 8 * ls - (lines.length - 1 - i) * fs * 1.35, 'left', T.muted, fs, 400));
+  }
+  const NOTE = 'Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.';
+
+  // Buoyancy: the glass tank to scale on the bench, the block in its material, the spring scale on a stand, the overflow can and beaker
+  B3.buoy = (() => {
+    let g, tank, liq, block, mats = {}, ghost, rule, stand, boss, arm, cord, bal, balTex, str, spout, beaker, bliq, stream, scaleBase, arrows = {}, built = false;
+    const TB = 0.012, GT = 0.008;    /* glass base and wall thickness */
+    function blockMat(key) {
+      if (mats[key]) return mats[key];
+      const V = G3.S; let m;
+      if (key === 'cork' || key === 'wood') {
+        const T2 = VDK.tex(256, 256), c = T2.c;
+        if (key === 'cork') {
+          c.fillStyle = '#c29a6b'; c.fillRect(0, 0, 256, 256);
+          for (let i = 0; i < 2600; i++) { const x = VDK.rnd() * 256, y = VDK.rnd() * 256, r = 0.6 + VDK.rnd() * 2.2, k = VDK.rnd(); c.fillStyle = k < 0.55 ? 'rgba(90,58,30,0.55)' : k < 0.8 ? 'rgba(232,200,150,0.6)' : 'rgba(60,38,20,0.7)'; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); }
+        } else {
+          c.fillStyle = '#ddb47c'; c.fillRect(0, 0, 256, 256);
+          for (let y = 0; y < 256; y += 1) { const w = Math.sin(y * 0.21 + Math.sin(y * 0.031) * 4) * 0.5 + 0.5; c.fillStyle = `rgba(150,96,45,${0.08 + 0.32 * Math.pow(w, 6)})`; c.fillRect(0, y, 256, 1); }
+          for (let i = 0; i < 40; i++) { c.fillStyle = 'rgba(120,75,35,0.12)'; c.fillRect(0, VDK.rnd() * 256, 256, 1 + VDK.rnd() * 2); }
+        }
+        m = VDK.std({ map: T2.t, roughness: key === 'cork' ? 0.95 : 0.62, metalness: 0 });
+      } else if (key === 'ice') m = VDK.std({ color: '#c8ecf8', transparent: true, opacity: 0.8, roughness: 0.06, metalness: 0.05, envMap: G3.env, envMapIntensity: 1.5 });
+      else if (key === 'al') m = VDK.std({ color: '#cfd4da', metalness: 0.72, roughness: 0.3, envMap: G3.env });
+      else if (key === 'steel') m = VDK.std({ color: '#9ca3ab', metalness: 0.8, roughness: 0.36, envMap: G3.env });
+      else if (key === 'lead') m = VDK.std({ color: '#70757e', metalness: 0.42, roughness: 0.58, envMap: G3.env });
+      else m = VDK.std({ color: '#888', roughness: 0.6, metalness: 0.1 });
+      void V; return (mats[key] = m);
+    }
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g);
+      tank = VDK.tank(TANK.W, TANK.D, TANK.H, GT); g.add(tank);
+      liq = VDK.liqBox(); g.add(liq);
+      block = VDK.mesh(new THREE.BoxGeometry(1, 1, 1), blockMat('wood'), true, true); g.add(block);
+      ghost = VDK.dashed(); g.add(ghost);
+      rule = VDK.vrule({ len: 0.5, to: 50, unit: 'cm' }); rule.position.set(-TANK.W / 2 + 0.03, -TANK.D / 2 - GT - 0.002, 0); g.add(rule);
+      // the stand: base on the bench behind the tank, a rod, a boss and an arm out over the tank
+      const steel = VDK.mat({ roughness: 0.32, metalness: 0.6, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      stand = new THREE.Group(); g.add(stand);
+      const sx = -TANK.W / 2 - 0.1, sy = TANK.D / 2 + 0.1;
+      stand.add(VD3K.box(0.2, 0.14, 0.016, dark, sx, sy, -TB), VD3K.rod([sx, sy, -TB], [sx, sy, 1.02], 0.007, steel));
+      boss = VD3K.box(0.04, 0.04, 0.04, dark, sx, sy, 0); arm = VD3K.rod([sx, sy, 0], [0, 0, 0], 0.005, steel); stand.add(boss, arm);
+      const cordM = VDK.std({ color: '#2c2f33', roughness: 0.8 });
+      cord = VDK.mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5), cordM); stand.add(cord);
+      // the spring balance: a body with a printed newton scale and a red pointer, a ring on top, a hook below; the hook is its origin
+      bal = new THREE.Group(); stand.add(bal);
+      balTex = VDK.tex(160, 640);
+      const bodyM = VDK.mat({ roughness: 0.45, metalness: 0.1 }, ['#d9d2bf', '#a9a290']);
+      const body = VD3K.box(0.05, 0.022, 0.2, bodyM, 0, 0, 0.022); const face = new THREE.Mesh(new THREE.PlaneGeometry(0.042, 0.19), VDK.std({ map: balTex.t, roughness: 0.5 }));
+      face.rotation.x = Math.PI / 2; face.position.set(0, -0.0115, 0.122); bal.add(body, face);
+      const ring = VDK.mesh(new THREE.TorusGeometry(0.009, 0.002, 8, 24), steel); ring.rotation.x = Math.PI / 2; ring.position.z = 0.232; bal.add(ring);
+      bal.add(VD3K.rod([0, 0, 0.022], [0, 0, 0.006], 0.0018, steel));
+      const hook = VDK.mesh(new THREE.TorusGeometry(0.005, 0.0016, 8, 20, Math.PI * 1.5), steel); hook.rotation.x = Math.PI / 2; hook.position.z = 0.0; bal.add(hook);
+      str = VDK.mesh(new THREE.CylinderGeometry(0.0009, 0.0009, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5), cordM); g.add(str);
+      // the overflow spout and the catch beaker on a kitchen scale
+      spout = new THREE.Group(); g.add(spout);
+      const gl = VDK.glassM(); spout.add(VD3K.rod([TANK.W / 2, 0, TANK.spout - 0.004], [TANK.W / 2 + 0.11, 0, TANK.spout - 0.034], 0.011, gl));
+      scaleBase = new THREE.Group(); g.add(scaleBase);
+      const bx = TANK.W / 2 + 0.14 + BEAKER.W / 2;
+      scaleBase.add(VD3K.box(BEAKER.W + 0.04, BEAKER.D + 0.04, 0.06 - 0.006 + TB, VDK.mat({ roughness: 0.4, metalness: 0.2 }, ['#e3e7ec', '#4a5562']), bx, 0, -TB));
+      beaker = VDK.tank(BEAKER.W, BEAKER.D, BEAKER.H, 0.005); beaker.position.set(bx, 0, 0.06); scaleBase.add(beaker);
+      bliq = VDK.liqBox(); bliq.position.set(bx, 0, 0.06); scaleBase.add(bliq);
+      stream = VDK.mesh(new THREE.CylinderGeometry(0.004, 0.003, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), LQ.jet); g.add(stream);
+      for (const k of ['W', 'FB', 'T', 'N', 'D']) { arrows[k] = VDK.arrow(k === 'D' ? T.acol : T.pos, k === 'D' ? 0.004 : 0.0055); g.add(arrows[k]); }
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const b = buoyNow(), q = b.q, p = b.p, L = p.L, over = q.over;
+      g.position.set(over ? -(BEAKER.W + 0.3) / 2 : 0, 0, TB);
+      liq.set(TANK.W, TANK.D, b.hs);
+      const mk = q.mat || 'custom'; block.material = blockMat(mk);
+      if (mk === 'custom') block.material.color.set(blockColor(q.rho));
+      block.scale.set(L, L, L); block.position.set(q.xb, 0, bs.zb + L / 2);
+      const showGhost = S.layers.ghost && Math.abs(b.hs - b.hs0) > 0.0004;
+      ghost.visible = showGhost; if (showGhost) ghost.pts([[-TANK.W / 2, -TANK.D / 2 - GT - 0.003, b.hs0], [TANK.W / 2, -TANK.D / 2 - GT - 0.003, b.hs0]]);
+      ghost.material.color.set(T.muted);
+      // the spring balance hangs from the arm; its hook at zh, the string down to the block (bowed when slack)
+      stand.visible = q.scale; str.visible = q.scale;
+      handles3 = [];
+      if (q.scale) {
+        const zArm = q.zh + 0.27, sx = -TANK.W / 2 - 0.1, sy = TANK.D / 2 + 0.1;
+        boss.position.set(sx, sy, zArm - 0.02);
+        VDK.swap(arm, new THREE.CylinderGeometry(0.005, 0.005, Math.hypot(sx, sy), 12)); arm.position.set(sx / 2, sy / 2, zArm); arm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-sx, -sy, 0).normalize());
+        cord.position.set(0, 0, q.zh + 0.232); cord.scale.z = zArm - q.zh - 0.232;
+        bal.position.set(q.xb, 0, q.zh);
+        const top = bs.zb + L, slack = b.T === 0 && top < zTautOf(q) + L - 1e-4;
+        str.position.set(q.xb, 0, top); str.scale.z = Math.max(1e-4, q.zh - 0.006 - top); str.rotation.y = slack ? 0.25 : 0;
+        // the printed scale: 0 to Tmax newtons down the face, the pointer at T
+        const Tmax = nice(b.W * 1.05) * Math.ceil(b.W * 1.05 / nice(b.W * 1.05)), key = `${Tmax}|${fx(b.T, 2)}|${VD3.dark()}`;
+        if (balTex.key !== key) {
+          balTex.key = key; const c = balTex.c, Wc = 160, Hc = 640, g0 = 70, g1 = 600, st = nice(Tmax / 5);
+          c.fillStyle = '#f6f2e6'; c.fillRect(0, 0, Wc, Hc); c.fillStyle = '#20262d'; c.font = '700 34px ' + T.ui; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N', Wc / 2, 34);
+          c.strokeStyle = '#20262d'; c.lineWidth = 3; c.font = '600 26px ' + T.mono; c.textAlign = 'right';
+          for (let v = 0; v <= Tmax + 1e-9; v += st / 2) { const yy = g0 + (g1 - g0) * v / Tmax, maj = Math.abs(v / st - Math.round(v / st)) < 1e-6; c.beginPath(); c.moveTo(Wc - 10, yy); c.lineTo(Wc - (maj ? 46 : 30), yy); c.stroke(); if (maj) c.fillText(fx(v, st < 1 ? 1 : 0), Wc - 54, yy); }
+          const yp = g0 + (g1 - g0) * clamp(b.T / Tmax, 0, 1);
+          c.strokeStyle = '#8d96a0'; c.lineWidth = 4; c.beginPath(); c.moveTo(34, g0 - 20); for (let i = 1; i <= 16; i++) c.lineTo(i % 2 ? 22 : 46, g0 - 20 + (yp - g0 + 20) * i / 16); c.stroke();
+          c.fillStyle = '#c23f2c'; c.fillRect(12, yp - 4, Wc - 22, 8); balTex.t.needsUpdate = true;
+        }
+        handles3.push({ id: 'scale', v: q.zh, lo: zhMin(q), hi: zhMax(), at: (v) => [q.xb + 0.035 + g.position.x, -0.012, v + 0.12 + TB],
+          set: (v) => { q.zh = clamp(v, zhMin(q), zhMax()); clearPreset(); const h = hangState(p, zTautOf(q), bs.Vw); bs.zb = h.zb; bs.v = 0; spill(p); } });
+      } else {
+        handles3.push({ id: 'block', round: true, v: bs.zb, lo: 0, hi: TANK.H + TANK.top - L - 0.02, at: (v) => [q.xb + g.position.x, -L / 2, v + L / 2 + TB],
+          set: (v) => { q.z0 = v; clampBlock(q); bs.zb = q.z0; bs.v = 0; spill(p); trace = [[0, submerged(p, bs.zb, bs.Vw).s]]; } });
+      }
+      const Ld = SLDEF('L');
+      handles3.push({ id: 'size', param: 'L', v: q.L, lo: Ld[2], hi: Ld[3], at: (v) => [q.xb + v / 200 + g.position.x, -v / 200, bs.zb + v / 100 + TB], set: (v) => setParam('L', v) });
+      // overflow can
+      spout.visible = scaleBase.visible = over;
+      const hc = bs.caught / (BEAKER.W * BEAKER.D); bliq.set(BEAKER.W, BEAKER.D, hc);
+      stream.visible = over && spillT < 0.25;
+      if (stream.visible) { stream.position.set(TANK.W / 2 + 0.115, 0, TANK.spout - 0.04); stream.scale.z = Math.max(0.01, TANK.spout - 0.04 - (0.06 + hc)); }
+      // force arrows: weight at the center, buoyant force at the center of the submerged part (same scale and rules as the flat view)
+      const show = S.layers.forces && !S.blind, Fmax = Math.max(b.W, b.FB, 1e-9), k = 0.16 / Fmax, yf = -L / 2 - 0.006, off = Math.min(0.012, L * 0.25), zc = bs.zb + L / 2;
+      arrows.W.set([q.xb - off, yf, zc], [0, 0, -1], show ? b.W * k : 0, T.pos);
+      arrows.FB.set([q.xb + off, yf, bs.zb + b.s / 2], [0, 0, 1], show && b.FB > 1e-6 ? b.FB * k : 0, T.vcol);
+      arrows.T.set([Math.min(q.xb + L / 2 - 0.006, q.xb + off * 2.2), yf, bs.zb + L], [0, 0, 1], show && b.T > 1e-6 ? b.T * k : 0, T.xcol);
+      arrows.N.set([q.xb + off * 2.2, yf, bs.zb], [0, 0, 1], show && b.N > 1e-6 ? b.N * k : 0, T.xcol);
+      arrows.D.set([q.xb + L / 2 + 0.01, yf, zc], [0, 0, Math.sign(-b.Fd) || 1], show && Math.abs(b.Fd) > 0.02 * b.W ? Math.abs(b.Fd) * k : 0, T.acol);
+      const tx = g.position.x;
+      return { t: [tx + (q.scale ? -0.04 : 0), 0, q.scale ? 0.36 : 0.27], d: over ? 1.95 : q.scale ? 1.6 : 1.4, b, k, off, show };
+    }
+    function ovl(o) {
+      const { b, k, off, show } = o, q = b.q, L = b.p.L, X = g.position.x, Z = TB, yf = -L / 2 - 0.006;
+      const P3 = (x, y, z) => [x + X, y, z + Z];
+      if (show) {
+        tag(`W = ${fN(b.W)}`, P3(q.xb - off, yf, bs.zb + L / 2 - b.W * k), 'right', T.pos, 12, 700, null, -6, 4);
+        if (b.FB > 1e-6) tag(`F_B = ${fN(b.FB)}`, P3(q.xb + off, yf, bs.zb + b.s / 2 + b.FB * k), 'left', T.vcol, 12, 700, null, 6, 4);
+        if (b.T > 1e-6) tag(`T = ${fN(b.T)}`, P3(q.xb + off * 2.2, yf, bs.zb + L + b.T * k * 0.6), 'left', T.xcol, 12, 700, null, 8, 4);
+        if (b.N > 1e-6) tag(`N = ${fN(b.N)}`, P3(q.xb + off * 2.2, yf, bs.zb + b.N * k * 0.5), 'left', T.xcol, 12, 700, null, 8, 4);
+      } else if (L > 0.07) tag(`${fx(q.rho, 0)} kg/m³`, P3(q.xb, -L / 2, bs.zb + L / 2), 'center', T.ink, 10.5, 600, T.mono);
+      tag(`${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, 0.02), 'left', T.muted, 11, 400);
+      if (S.layers.ghost && Math.abs(b.hs - b.hs0) > 0.0004) {
+        const dh = b.hs - b.hs0; tag(`level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, Math.min(b.hs, b.hs0)), 'left', T.muted, 11, 400, null, 0, 16);
+      }
+      if (q.scale) {
+        tag(`scale ${fx(b.T, 2)} N`, P3(q.xb + 0.03, -0.012, q.zh + 0.12), 'left', T.xcol, 12.5, 700, T.mono, 8, 4);
+        const xr = q.xb - L / 2 - 0.035;
+        dim3(P3(xr, -TANK.D / 2 - 0.01, b.hs), P3(xr, -TANK.D / 2 - 0.01, bs.zb), T.ink);
+        tag(`d = ${fx((b.hs - bs.zb) * 100, 1)} cm`, P3(xr, -TANK.D / 2 - 0.01, (b.hs + bs.zb) / 2), 'right', T.ink, 12, 700, T.mono, -6, 4);
+      }
+      if (q.over) {
+        const bx = TANK.W / 2 + 0.14 + BEAKER.W / 2;
+        if (OV.W > 520) tag('displaced water', P3(bx, 0, 0.06 + BEAKER.H), 'center', T.muted, 11, 400, null, 0, -24);
+        tag(`${fx(bs.caught * 1000, 2)} L, ${fN(rhoF() * G * bs.caught)}`, P3(bx, 0, 0.06 + BEAKER.H), 'center', T.neg, 11.5, 700, T.mono, 0, -8);
+      }
+      grips3();
+      note3(`The tank, block and beaker are to scale. ${NOTE}`);
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // Depth: a tall glass tank, the probe on its tube to a dial gauge; depth to scale on the rule, the width schematic
+  B3.press = (() => {
+    let g, tank, liq, probe, tube, gauge, face, faceTex, rule, ruleKey = '', eqLine, arrs = [], built = false;
+    const WD = 0.62, DD = 0.36, GT = 0.01, HN = 1.0;    /* tank inner width and depth (schematic), wall, drawn height of the depth scale */
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.z = 0.014;
+      tank = VDK.tank(WD, DD, HN + 0.04, GT); g.add(tank);
+      liq = VDK.liqBox(); g.add(liq);
+      const steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#c3cad2', '#88929c']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      probe = new THREE.Group(); g.add(probe);
+      probe.add(VDK.mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 32).rotateX(Math.PI / 2), steel, true));
+      const mem = VDK.mesh(new THREE.CircleGeometry(0.019, 32), VDK.std({ color: '#2b60b5', roughness: 0.4 })); mem.position.z = -0.0151; mem.rotation.x = Math.PI; probe.add(mem);
+      tube = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#2a2d31', roughness: 0.7 }), true); g.add(tube);
+      // the dial gauge on a short post right of the tank
+      gauge = new THREE.Group(); g.add(gauge); gauge.position.set(WD / 2 + 0.26, 0, 0.78);
+      gauge.add(VD3K.rod([0, 0.03, -0.12], [0, 0.03, -0.8], 0.012, steel), VD3K.box(0.16, 0.16, 0.012, dark, 0, 0.03, -0.8 - 0.014));
+      const bez = VDK.mesh(new THREE.CylinderGeometry(0.125, 0.125, 0.04, 64), steel, true); gauge.add(bez);
+      faceTex = VDK.tex(512, 512); face = new THREE.Mesh(new THREE.CircleGeometry(0.112, 64), VDK.std({ map: faceTex.t, roughness: 0.35 }));
+      face.rotation.x = Math.PI / 2; face.position.y = -0.0205; gauge.add(face);
+      eqLine = VDK.dashed(); g.add(eqLine);
+      for (let i = 0; i < 8; i++) { const a = VDK.arrow(T.neg, 0.0035); arrs.push(a); g.add(a); }
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const q = S.P.press, rho = rhoF(), Zmax = depthScale(q.D), k = HN / Zmax, zs = q.D * k;
+      liq.set(WD, DD, zs);
+      const rk = q.D.toFixed(2);
+      if (rk !== ruleKey) { ruleKey = rk; if (rule) G3.S.dispose(rule); rule = VDK.vrule({ len: zs, to: q.D, unit: 'm' }, true); rule.position.set(-WD / 2 + 0.012, -DD / 2 - GT - 0.002, zs); g.add(rule); }
+      const px = -WD / 2 + q.px * WD, pz = zs - q.pd * k;
+      probe.position.set(px, 0, pz);
+      const tk = `${px.toFixed(4)}|${pz.toFixed(4)}`;
+      if (tube.key !== tk) {
+        tube.key = tk; const top = HN + 0.1, gx = WD / 2 + 0.26;
+        const pts = [[px, 0, pz + 0.015], [px, 0, (pz + top) / 2], [px, 0, top - 0.04], [px + 0.04, 0, top], [gx - 0.05, 0.03, top + 0.02], [gx, 0.03, top - 0.03], [gx, 0.03, 0.78 + 0.125]].map((a) => new THREE.Vector3(a[0], a[1], a[2]));
+        VDK.swap(tube, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 80, 0.0035, 8, false));
+      }
+      const Pabs = hydro(rho, q.pd), Pshow = S.gmode === 'abs' ? Pabs : Pabs - PATM, Pbot = hydro(rho, q.D) - (S.gmode === 'abs' ? 0 : PATM);
+      const Pmax = nice(Math.max(Pbot, 1) * 1.05) * Math.ceil(Math.max(Pbot, 1) * 1.05 / nice(Math.max(Pbot, 1) * 1.05));
+      const fk = `${fx(Pshow / 1000, 2)}|${Pmax}|${T.canvas}|${T.pos}`;
+      if (faceTex.key !== fk) { faceTex.key = fk; const c = faceTex.c; c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 512, 512); c.setTransform(2.4, 0, 0, 2.4, 0, 0); dial(c, 106.7, 106.7, 100, Pshow / 1000, Pmax / 1000, 'kPa', 1, T.pos); faceTex.t.needsUpdate = true; }
+      eqLine.pts([[-WD / 2, -DD / 2 - GT - 0.003, pz], [WD / 2, -DD / 2 - GT - 0.003, pz]]); eqLine.material.color.set(T.muted);
+      const aL = (0.02 + 0.06 * clamp(Pshow / Math.max(1, Pbot), 0, 1));
+      arrs.forEach((a, i) => { const an = i * Math.PI / 4, cx = Math.cos(an), cz = Math.sin(an), r0 = 0.03; a.set([px + cx * (r0 + aL), -0.025, pz + cz * (r0 + aL)], [-cx, 0, -cz], aL, T.neg); });
+      handles3 = [
+        { id: 'probe', round: true, v: q.pd, lo: 0, hi: q.D, at: (v) => [px, -0.025, 0.014 + zs - v * k], set: (v) => setParam('pd', v) },
+        { id: 'surf', v: q.D, lo: SLDEF('D')[2], hi: SLDEF('D')[3], at: (v) => [-WD / 2 + 0.12 * WD, -DD / 2, 0.014 + v * k], set: (v) => setParam('D', v) }
+      ];
+      return { t: [0.12, 0, 0.55], d: 2.6, zs, px, pz, Pshow, k };
+    }
+    function ovl(o) {
+      const q = S.P.press, Z = 0.014, gx = WD / 2 + 0.26;
+      tag(`P_0 = ${fx(PATM / 1000, 3)} kPa (air)`, [-WD / 2 + 0.16, -DD / 2, o.zs + Z], 'left', T.muted, 11, 400, null, 0, -10);
+      const lb = `P = ${fx(o.Pshow / 1000, 2)} kPa at h = ${fx(q.pd, 2)} m`;
+      tag(lb, [o.px + (q.px < 0.55 ? 0.12 : -0.12), -DD / 2, o.pz + Z], q.px < 0.55 ? 'left' : 'right', T.ink, 12, 700, null, 0, -8);
+      tag(LIQ[S.liq].name.toLowerCase(), [WD / 2 - 0.03, -DD / 2, Z + 0.03], 'right', T.muted, 11, 400);
+      tag(S.gmode === 'abs' ? 'absolute pressure' : 'gauge pressure', [gx, 0, 0.78 + Z - 0.125], 'center', T.muted, 11, 400, null, 0, 18);
+      tag(`${fx(o.Pshow / 1000, 2)} kPa`, [gx, 0, 0.78 + Z - 0.125], 'center', T.ink, 13, 700, T.mono, 0, 34);
+      tag('depth (m)', [-WD / 2 + 0.03, -DD / 2 - 0.02, o.zs + Z], 'right', T.muted, 10.5, 400, null, -6, -10);
+      grips3();
+      note3(`Depths are to scale on the rule; the tank's width is not to scale. ${NOTE}`);
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // Shapes: the four vessels to scale on one base plate, each filled to the same height
+  B3.pascal = (() => {
+    let g, liqs = [], centers = [], plate, line, built = false, key = '';
+    function vesselGeo(v, h, closed, inset) {
+      const n = 24, prof = [];
+      for (let i = 0; i <= n; i++) { const z = h * i / n; prof.push([vesselR(v, z) - inset, z]); }
+      const geo = VDK.lathe(prof, 56, closed);
+      if (v.shear) { const p = geo.attributes.position; for (let i = 0; i < p.count; i++) p.setX(i, p.getX(i) + v.shear * p.getZ(i)); p.needsUpdate = true; geo.computeVertexNormals(); }
+      return geo;
+    }
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g);
+      const ext = VESS.map((v) => [Math.min(-v.r0, -v.rt), Math.max(v.r0, v.rt) + v.shear * v.H]), gap = 0.12;
+      const totW = ext.reduce((s, e) => s + e[1] - e[0], 0) + gap * (VESS.length - 1);
+      let xc = -totW / 2;
+      const gm = VDK.glassM(), em = VDK.edgeM(); gm.opacity = 0.3;
+      VESS.forEach((v, i) => {
+        const cx = xc - ext[i][0]; centers.push(cx);
+        const ves = VDK.mesh(vesselGeo(v, v.H, false, 0), gm); ves.renderOrder = 3; ves.position.set(cx, 0, 0.02); g.add(ves);
+        const rim = new THREE.LineSegments(new THREE.EdgesGeometry(vesselGeo(v, v.H, false, 0), 30), em); rim.position.copy(ves.position); g.add(rim);
+        const bot = VDK.mesh(new THREE.CircleGeometry(v.r0, 48), gm); bot.position.set(cx, 0, 0.0201); g.add(bot);
+        const lq = VDK.mesh(new THREE.BufferGeometry(), LQ.side); lq.renderOrder = 1; lq.position.set(cx, 0, 0.02); g.add(lq); liqs.push(lq);
+        xc += ext[i][1] - ext[i][0] + gap;
+      });
+      plate = VD3K.box(totW + 0.16, 0.42, 0.02, VDK.mat({ roughness: 0.4, metalness: 0.3, envMap: G3.env }, ['#c9d0d8', '#4d5864']), 0, 0.05, 0); g.add(plate);
+      g.totW = totW;
+      line = VDK.dashed(); g.add(line);
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const h = S.P.pascal.hp;
+      if (key !== h.toFixed(4)) { key = h.toFixed(4); VESS.forEach((v, i) => VDK.swap(liqs[i], vesselGeo(v, h, true, 0.0015))); }
+      line.pts([[-g.totW / 2 - 0.08, -0.2, h + 0.02], [g.totW / 2 + 0.08, -0.2, h + 0.02]]); line.material.color.set(T.muted);
+      handles3 = [{ id: 'fill', v: h, lo: SLDEF('hp')[2], hi: SLDEF('hp')[3], at: (v) => [g.totW / 2 + 0.06, -0.2, v + 0.02], set: (v) => setParam('hp', v) }];
+      return { t: [0, 0, 0.2], d: 1.85 };
+    }
+    function ovl() {
+      const h = S.P.pascal.hp, rho = rhoF(), Pg = rho * G * h, d = pascalData(), xl = -g.totW / 2 - 0.05;
+      dim3([xl, -0.2, 0.02], [xl, -0.2, h + 0.02], T.ink);
+      tag(`h = ${fx(h * 100, 0)} cm`, [xl, -0.2, h / 2 + 0.02], 'right', T.ink, 12, 700, null, -6, 4);
+      d.forEach((e, i) => {
+        const q = [centers[i] + e.v.shear * 0.0, -0.2, 0.02];
+        tag(e.v.name, q, 'center', T.ink, 12, 700, null, 0, 22);
+        tag(`P = ${fx(Pg / 1000, 2)} kPa`, q, 'center', T.neg, 11, 400, T.mono, 0, 38);
+        tag(`W = ${sig(e.Wl, 3)} N`, q, 'center', T.pos, 11, 400, T.mono, 0, 52);
+      });
+      grips3();
+      note3(`The vessels are to scale; each base is 8 cm across. ${NOTE}`);
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // Barometer and manometer: heights to scale on the rule, widths not to scale
+  B3.baro = (() => {
+    let g, gb, gm, dish, dishLiq, tubeLiq, rule, ruleKey = '', air = [], uL, uR, uB, bulbGas, rest, built = false;
+    const HB = 1.0;
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g);
+      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.6, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      gb = new THREE.Group(); g.add(gb);
+      dish = VDK.mesh(VDK.lathe([[0.15, 0], [0.16, 0.09]], 64, false), glass); dish.renderOrder = 3; gb.add(dish);
+      gb.add(VDK.mesh(new THREE.CircleGeometry(0.15, 64), glass));
+      dishLiq = VDK.mesh(new THREE.CylinderGeometry(0.154, 0.15, 1, 64).rotateX(Math.PI / 2).translate(0, 0, 0.5), [LQ.side, LQ.top, LQ.side]); dishLiq.renderOrder = 1; dishLiq.scale.z = 0.055; gb.add(dishLiq);
+      const tube = VD3K.glass(V, { r: 0.022, len: HB + 0.02, axis: 'z' }); tube.position.set(0, 0, 0.02 + (HB + 0.02) / 2); gb.add(tube);
+      tubeLiq = VDK.mesh(new THREE.CylinderGeometry(0.019, 0.019, 1, 32).rotateX(Math.PI / 2).translate(0, 0, 0.5), [LQ.side, LQ.top, LQ.side]); tubeLiq.renderOrder = 1; tubeLiq.position.z = 0.03; gb.add(tubeLiq);
+      gb.add(VD3K.box(0.2, 0.16, 0.014, dark, -0.3, 0.12, 0), VD3K.rod([-0.3, 0.12, 0], [-0.3, 0.12, 1.15], 0.007, steel), VD3K.rod([-0.3, 0.12, 0.8], [0, 0, 0.8], 0.005, steel));
+      const clampR = VDK.mesh(new THREE.TorusGeometry(0.026, 0.005, 8, 24), dark); clampR.position.z = 0.8; gb.add(clampR);
+      for (let i = 0; i < 4; i++) { const a = VDK.arrow(T.neg, 0.004); air.push(a); gb.add(a); }
+      // manometer: a U tube with a gas bulb on its closed arm
+      gm = new THREE.Group(); g.add(gm);
+      const R = 0.016, sep = 0.24, zb0 = 0.08, top = zb0 + 0.9;
+      const U = new THREE.CatmullRomCurve3([[-sep / 2, 0, top], [-sep / 2, 0, zb0 + 0.04], [-sep / 2 + 0.01, 0, zb0 + 0.005], [-sep / 2 + 0.04, 0, zb0], [sep / 2 - 0.04, 0, zb0], [sep / 2 - 0.01, 0, zb0 + 0.005], [sep / 2, 0, zb0 + 0.04], [sep / 2, 0, top]].map((a) => new THREE.Vector3(...a)), false, 'catmullrom', 0.1);
+      const ut = VDK.mesh(new THREE.TubeGeometry(U, 160, R, 20, false), glass); ut.renderOrder = 3; gm.add(ut);
+      const mk = () => { const m = VDK.mesh(new THREE.CylinderGeometry(R - 0.003, R - 0.003, 1, 24).rotateX(Math.PI / 2).translate(0, 0, 0.5), [LQ.side, LQ.top, LQ.side]); m.renderOrder = 1; gm.add(m); return m; };
+      uL = mk(); uR = mk(); uL.position.set(-sep / 2, 0, zb0); uR.position.set(sep / 2, 0, zb0);
+      uB = VDK.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[-sep / 2, 0, zb0 + 0.04], [-sep / 2 + 0.04, 0, zb0], [sep / 2 - 0.04, 0, zb0], [sep / 2, 0, zb0 + 0.04]].map((a) => new THREE.Vector3(...a))), 60, R - 0.003, 16, false), LQ.side); uB.renderOrder = 1; gm.add(uB);
+      const bulb = VD3K.bulb(V, { r: 0.1 }); bulb.position.set(-sep / 2 - 0.26, 0, top - 0.06); gm.add(bulb);
+      bulbGas = VDK.mesh(new THREE.SphereGeometry(0.096, 40, 20), VDK.std({ transparent: true, opacity: 0.3, depthWrite: false, roughness: 0.6 })); bulbGas.position.copy(bulb.position); bulbGas.renderOrder = 2; gm.add(bulbGas);
+      const neck = VDK.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[-sep / 2 - 0.16, 0, top - 0.06], [-sep / 2 - 0.03, 0, top - 0.06], [-sep / 2, 0, top - 0.03], [-sep / 2, 0, top]].map((a) => new THREE.Vector3(...a))), 30, R, 16, false), glass); neck.renderOrder = 3; gm.add(neck);
+      gm.add(VD3K.box(0.62, 0.05, 0.02, VDK.mat({ roughness: 0.7 }, ['#c9a46a', '#6b5434']), -0.12, 0.04, 0));
+      rest = VDK.dashed(); gm.add(rest);
+      gm.sep = sep; gm.zb0 = zb0; gm.top = top;
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const q = S.P.baro, rho = rhoF(), isB = S.baro === 'baro';
+      gb.visible = isB; gm.visible = !isB; handles3 = [];
+      if (isB) {
+        const Lt = columnHeight(106000, rho) * 1.12, k = HB / Lt, zs = 0.055, hcol = columnHeight(q.Pa * 1000, rho), unitMM = hcol < 2;
+        tubeLiq.scale.z = Math.max(1e-4, zs + hcol * k - 0.03);
+        const rk = `${rho}`;
+        if (rk !== ruleKey) { ruleKey = rk; if (rule) G3.S.dispose(rule); rule = VDK.vrule({ len: Lt * k, to: unitMM ? Lt * 1000 : Lt, unit: unitMM ? 'mm' : 'm', w: 0.04 }); rule.position.set(0.08, -0.01, zs); gb.add(rule); }
+        air.forEach((a, i) => { const x = [-0.12, -0.075, 0.075, 0.12][i]; a.set([x, -0.06, zs + 0.13], [0, 0, -1], 0.12, T.neg); });
+        handles3.push({ id: 'col', v: q.Pa, lo: SLDEF('Pa')[2], hi: SLDEF('Pa')[3], at: (v) => [0, -0.025, zs + columnHeight(v * 1000, rho) * k], set: (v) => setParam('Pa', v) });
+        g.info = { k, zs, hcol, unitMM, Lt };
+        return { t: [-0.02, 0, 0.55], d: 2.5 };
+      }
+      const dP = q.Pg * 1000, dh = columnHeight(dP, rho), dhMax = columnHeight(20000, rho), armL = dhMax * 1.25, k = 0.9 / armL, zRest = gm.zb0 + 0.45;
+      const zl = zRest - dh / 2 * k, zr = zRest + dh / 2 * k;
+      uL.scale.z = Math.max(1e-4, zl - gm.zb0); uR.scale.z = Math.max(1e-4, zr - gm.zb0);
+      bulbGas.material.color.set(T.equi); bulbGas.material.opacity = 0.15 + 0.3 * clamp((q.Pg + 10) / 30, 0, 1);
+      rest.pts([[-gm.sep / 2 - 0.08, -0.02, zRest], [gm.sep / 2 + 0.08, -0.02, zRest]]); rest.material.color.set(T.muted);
+      handles3.push({ id: 'arm', v: q.Pg, lo: SLDEF('Pg')[2], hi: SLDEF('Pg')[3], at: (v) => [gm.sep / 2, -0.02, zRest + columnHeight(v * 1000, rho) / 2 * k], set: (v) => setParam('Pg', v) });
+      g.info = { k, zl, zr, zRest, dh, dhMax };
+      return { t: [-0.14, 0, 0.5], d: 2.2 };
+    }
+    function ovl() {
+      const q = S.P.baro, I = g.info;
+      if (S.baro === 'baro') {
+        tag('vacuum, P ≈ 0', [-0.03, 0, I.zs + (I.Lt + I.hcol) / 2 * I.k], 'right', T.muted, 11.5, 400, null, -8, 4);
+        tag(`h = ${I.unitMM ? fx(I.hcol * 1000, 1) + ' mm' : fx(I.hcol, 2) + ' m'}`, [-0.03, 0, I.zs + I.hcol * I.k], 'right', T.ink, 13, 700, null, -8, 4);
+        tag('ρgh = P_{atm}', [-0.03, 0, I.zs + I.hcol * I.k], 'right', T.muted, 11, 400, null, -8, 20);
+        tag(`air pushes with P_{atm} = ${fx(q.Pa, 1)} kPa`, [0.17, -0.06, I.zs + 0.1], 'left', T.neg, 11.5, 400, null, 6, 0);
+        grips3();
+        note3(`Heights are to scale on the rule; the tube and dish widths are not. ${NOTE}`);
+      } else {
+        const sx = gm.sep / 2, mx = sx + 0.08;
+        if (Math.abs(I.zr - I.zl) > 0.01) dim3([mx, -0.02, I.zl], [mx, -0.02, I.zr], T.ink);
+        const unitMM = I.dhMax < 0.5;
+        tag(`Δh = ${unitMM ? fx(I.dh * 1000, 1) + ' mm' : fx(I.dh * 100, 1) + ' cm'}`, [mx, -0.02, (I.zl + I.zr) / 2], 'left', T.ink, 13, 700, null, 8, 4);
+        tag('gas', [-gm.sep / 2 - 0.26, -0.1, gm.top - 0.06], 'center', T.ink, 12, 700, null, 0, -4);
+        tag(`P = ${fx(PATM / 1000 + q.Pg, 1)} kPa`, [-gm.sep / 2 - 0.26, -0.1, gm.top - 0.06], 'center', T.ink, 11, 400, T.mono, 0, 13);
+        tag('open to the air', [sx, 0, gm.top], 'center', T.muted, 11, 400, null, 0, -10);
+        tag('level with no pressure difference', [-gm.sep / 2 - 0.1, -0.02, I.zRest], 'right', T.muted, 10.5, 400, null, 0, 4);
+        grips3();
+        note3(`Heights are to scale; the tube widths and the bulb are not. ${NOTE}`);
+      }
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // Venturi: the glass pipe on cradles, three standpipes with rules behind them, flow tracers, a flow meter on the bench
+  B3.venturi = (() => {
+    let g, pipe, pliq, cols = [], meter, tr, arrV, h1line, built = false, key = '';
+    const EX = 2, ZC = 0.17, XO = -PIPE.L / 2, RS = 0.0085, TOPZ = 1.32;
+    const rad = (x, q) => pipeD(x, q) / 2 * EX;
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.x = XO;
+      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      pipe = VDK.mesh(new THREE.BufferGeometry(), glass); pipe.renderOrder = 3; g.add(pipe);
+      pliq = VDK.mesh(new THREE.BufferGeometry(), LQ.side); pliq.renderOrder = 1; g.add(pliq);
+      PIPE.taps.forEach((xt) => {
+        const tube = VD3K.glass(V, { r: RS, len: TOPZ, axis: 'z', ends: false }); tube.position.set(xt, 0, ZC + TOPZ / 2); g.add(tube);
+        const col = VDK.mesh(new THREE.CylinderGeometry(RS - 0.0015, RS - 0.0015, 1, 20).rotateX(Math.PI / 2).translate(0, 0, 0.5), [LQ.side, LQ.top, LQ.side]); col.renderOrder = 1; col.position.set(xt, 0, ZC); g.add(col); cols.push(col);
+        const r = VDK.vrule({ len: TOPZ - 0.02, to: 130, unit: 'cm', w: 0.034, wood: true }); r.position.set(xt + 0.03, 0.03, ZC); g.add(r);
+        g.add(VD3K.box(0.012, 0.012, TOPZ, dark, xt + 0.03, 0.045, ZC));
+      });
+      for (const x of [0.2, 1.4]) g.add(VD3K.box(0.08, 0.1, ZC - 0.06, dark, x, 0, 0), VD3K.box(0.1, 0.12, 0.012, steel, x, 0, 0));
+      for (const x of [0, PIPE.L]) { const fl = VDK.mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.018, 40).rotateZ(Math.PI / 2), steel, true); fl.position.set(x, 0, ZC); g.add(fl); }
+      const hose = VDK.std({ color: '#2b3036', roughness: 0.75 });
+      g.add(VD3K.cable([-0.01, 0, ZC], [-0.42, -0.25, 0.02], { via: [[-0.12, 0, ZC], [-0.25, -0.05, 0.1]], mat: hose, rad: 0.022 }));
+      g.add(VD3K.cable([PIPE.L + 0.01, 0, ZC], [PIPE.L + 0.4, 0.2, 0.02], { via: [[PIPE.L + 0.12, 0, ZC], [PIPE.L + 0.25, 0.08, 0.08]], mat: hose, rad: 0.022 }));
+      meter = VD3K.meter(V, { label: 'FLOW METER', sub: 'on the inlet hose', w: 0.3, h: 0.17 }); meter.position.set(-0.3, -0.42, 0); g.add(meter);
+      g.add(VD3K.cable([-0.3, -0.33, 0.04], [-0.2, -0.08, 0.06], { sag: 0.02, rad: 0.003 }));
+      tr = VD3K.particles(V, { n: 300, r: 0.0042 }); g.add(tr); tr.renderOrder = 2;
+      arrV = VDK.arrow(T.acol, 0.005); g.add(arrV);
+      h1line = VDK.dashed(); g.add(h1line);
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const q = S.P.venturi, r = venturi(vp());
+      const k = `${q.D1}|${q.D2}`;
+      if (k !== key) {
+        key = k; const n = 200, po = [], pi = [];
+        for (let i = 0; i <= n; i++) { const x = PIPE.L * i / n, rr = rad(x, q); po.push([rr + 0.003, x]); pi.push([rr - 0.0005, x]); }
+        const mk = (pr) => new THREE.LatheGeometry(pr.map(([a, b]) => new THREE.Vector2(a, b)), 48).rotateZ(-Math.PI / 2).translate(0, 0, ZC);
+        VDK.swap(pipe, mk(po)); VDK.swap(pliq, mk(pi));
+      }
+      const hs = [q.h1, r.h2, q.h1];
+      cols.forEach((c, i) => { c.visible = hs[i] > 0; c.scale.z = Math.max(1e-4, hs[i]); });
+      // tracers: each dot keeps its place across the section (the flat view's e), turned round the axis by its index
+      const dk = VD3.dark();
+      parts.forEach((pt, i) => { const a = i * 2.39996, rr = pt.e * (rad(pt.x, q) - 0.002); tr.put(i, pt.x, rr * Math.cos(a), ZC + rr * Math.sin(a)); });
+      if (tr.col !== dk) { tr.col = dk; for (let i = 0; i < 300; i++) tr.setColorAt(i, new THREE.Color(dk ? '#e3e9f0' : '#26303b')); tr.instanceColor.needsUpdate = true; }
+      tr.show(parts.length); tr.done();
+      arrV.set([0.04, 0, ZC], [1, 0, 0], q.v1 * 0.12, T.acol);
+      h1line.pts([[PIPE.taps[0] + 0.02, -0.01, ZC + q.h1], [PIPE.taps[2] - 0.02, -0.01, ZC + q.h1]]); h1line.material.color.set(T.muted);
+      meter.set(`${fx(r.Q * 1000, 3)} L/s`);
+      const X = (x) => x + XO;
+      handles3 = [
+        { id: 'v1', round: true, col: T.acol, v: q.v1, lo: SLDEF('v1')[2], hi: SLDEF('v1')[3], at: (v) => [X(0.04 + v * 0.12), 0, ZC], set: (v) => setParam('v1', v) },
+        { id: 'D1', v: q.D1, lo: SLDEF('D1')[2], hi: SLDEF('D1')[3], at: (v) => [X(0.1), -0.003, ZC - v / 200 * EX], set: (v) => setParam('D1', v) },
+        { id: 'D2', v: q.D2, lo: SLDEF('D2')[2], hi: q.D1, at: (v) => [X(0.8), -0.003, ZC - v / 200 * EX], set: (v) => setParam('D2', v) },
+        { id: 'h1', v: q.h1, lo: SLDEF('h1')[2], hi: SLDEF('h1')[3], at: (v) => [X(PIPE.taps[0]), -0.01, ZC + v], set: (v) => setParam('h1', v) }
+      ];
+      return { t: [0, 0, 0.66], d: 3.35, r };
+    }
+    function ovl(o) {
+      const q = S.P.venturi, r = o.r, X = (x) => x + XO, y = -0.012;
+      tag(`h_1 = ${fx(q.h1 * 100, 1)} cm`, [X(PIPE.taps[0]), y, ZC + q.h1], 'left', T.ink, 12, 700, null, 12, -6);
+      const x1 = X(PIPE.taps[1]);
+      if (r.cav) { /* the stage banner says it */ }
+      else if (r.h2 > 0) tag(`h_2 = ${fx(r.h2 * 100, 1)} cm`, [x1, y, ZC + r.h2], 'right', T.ink, 12, 700, null, -10, -6);
+      else { tag('below atmospheric pressure:', [x1, y, ZC + 0.9], 'right', T.pos, 12, 700, null, -10, 0); tag('air is sucked in', [x1, y, ZC + 0.9], 'right', T.pos, 12, 700, null, -10, 16); }
+      if (!r.cav && r.dh > 0.02) {
+        const mx = x1 + 0.05; dim3([mx, y, ZC + q.h1], [mx, y, ZC + Math.max(r.h2, rad(0.8, q))], T.ink);
+        if (!S.blind) { const dhs = r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 1)} m`; tag(`Δh = (v_2² − v_1²)/2g = ${dhs}`, [mx, y, ZC + (q.h1 + Math.max(0, r.h2)) / 2], 'left', T.muted, 11, 400, null, 10, 4); }
+      }
+      tag(`v_1 = ${fx(q.v1, 2)} m/s`, [X(0.04), y, ZC - rad(0, q)], 'left', T.acol, 12, 700, null, -30, 24);
+      if (!S.blind) tag(`v_2 = ${fx(r.v2, 2)} m/s`, [X(0.8), y, ZC - rad(0.8, q)], 'center', T.acol, 12, 700, null, 0, 18);
+      tag(`D_1 = ${fx(q.D1, 1)} cm`, [X(0.1), y, ZC - rad(0.1, q)], 'left', T.muted, 10.5, 400, T.mono, 12, 34);
+      tag(`D_2 = ${fx(q.D2, 1)} cm`, [X(0.8), y, ZC - rad(0.8, q)], 'center', T.muted, 10.5, 400, T.mono, 0, 34);
+      tag('flow →', [X(1.12), y, ZC + rad(1.12, q)], 'center', T.muted, 11, 400, null, 0, -8);
+      grips3();
+      note3(`The pipe and standpipe widths are drawn 2 times larger than to scale; lengths and heights are to scale (rules in cm from the pipe axis). ${NOTE}`);
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // Torricelli: the tank on the floor with its supply hose, the hole, the jet to scale, a tape along the floor
+  B3.torr = (() => {
+    let g, tank, liq, ring, jet, jetKey = '', drp, ghosts = [], gmarks = [], splash, supply, fall, arrV, built = false;
+    const DT = 0.3, GT = 0.008, ZF = 0.012;
+    function build() {
+      const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.set(-0.45, 0, ZF);
+      tank = VDK.tank(TT.W, DT, 1, GT); tank.position.x = -TT.W / 2; g.add(tank);
+      liq = VDK.liqBox(); liq.position.x = -TT.W / 2; g.add(liq);
+      ring = VDK.mesh(new THREE.TorusGeometry(0.006, 0.0022, 8, 24).rotateY(Math.PI / 2), VDK.std({ color: '#2b3036', roughness: 0.5 })); g.add(ring);
+      jet = VDK.mesh(new THREE.BufferGeometry(), LQ.jet); g.add(jet);
+      drp = VD3K.particles(V, { n: 400, r: 0.0045 }); g.add(drp);
+      for (let i = 0; i < 3; i++) { const l = VDK.dashed(); ghosts.push(l); g.add(l); const m = VDK.mesh(new THREE.TorusGeometry(0.005, 0.0012, 6, 20).rotateY(Math.PI / 2), VDK.std({ color: '#7a8592' })); gmarks.push(m); g.add(m); }
+      splash = VDK.mesh(new THREE.RingGeometry(0.012, 0.022, 32), new THREE.MeshBasicMaterial({ color: T.pos, side: THREE.DoubleSide })); splash.position.z = -ZF + 0.002; g.add(splash);
+      const tape = VD3K.ruler(V, { len: 1.6, to: 160, unit: 'cm', w: 0.03 }); tape.position.set(0, -0.08, -ZF + 0.0005); g.add(tape);
+      supply = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#2b3036', roughness: 0.75 }), true); g.add(supply);
+      fall = VDK.mesh(new THREE.CylinderGeometry(0.004, 0.005, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), LQ.jet); g.add(fall);
+      arrV = VDK.arrow(T.acol, 0.005); g.add(arrV);
+      built = true;
+    }
+    function upd() {
+      if (!built) build();
+      const q = S.P.torr, tr = torricelli(q.H, q.hh), zh = q.H - q.hh;
+      tank.setH(q.H + 0.08); liq.set(TT.W, DT, q.H);
+      ring.position.set(GT + 0.001, 0, zh);
+      const jk = `${q.H}|${q.hh}`;
+      if (jk !== jetKey) {
+        jetKey = jk;
+        const path = (h) => { const z0 = q.H - h, t2 = torricelli(q.H, h), pts = []; for (let i = 0; i <= 60; i++) { const a = t2.t * i / 60; pts.push([t2.v * a + GT, 0, z0 - 0.5 * G * a * a]); } return pts; };
+        jet.visible = q.hh > 0.002 && zh > 0;
+        if (jet.visible) VDK.swap(jet, new THREE.TubeGeometry(new THREE.CatmullRomCurve3(path(q.hh).map((a) => new THREE.Vector3(...a))), 80, 0.0032, 8, false));
+        [0.25, 0.5, 0.75].forEach((f, i) => { ghosts[i].pts(path(q.H * f).map((a) => [a[0], 0.0, a[2] - ZF * 0])); gmarks[i].position.set(GT + 0.001, 0, q.H * (1 - f)); });
+        const hx = -TT.W - 0.3;
+        VDK.swap(supply, new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[hx, 0.25, -ZF], [hx, 0.2, q.H * 0.5], [hx + 0.05, 0.1, q.H + 0.14], [-TT.W + 0.02, 0.0, q.H + 0.14], [-TT.W + 0.08, 0, q.H + 0.13]].map((a) => new THREE.Vector3(...a))), 60, 0.009, 10, false));
+      }
+      fall.position.set(-TT.W + 0.08, 0, q.H + 0.125); fall.scale.z = 0.125;
+      const cmp = S.layers.cmp && !S.blind; ghosts.forEach((l) => { l.visible = cmp; l.material.color.set(T.muted); }); gmarks.forEach((m) => { m.visible = cmp; });
+      let n = 0;
+      if (q.hh > 0.002) for (const d of drops) { const x = tr.v * d.a, z = zh - 0.5 * G * d.a * d.a; if (z < 0) continue; drp.put(n++, x + GT, 0, z, null); }
+      drp.show(n); drp.done(); if (drp.c !== T.liq[S.liq]) { drp.c = T.liq[S.liq]; for (let i = 0; i < 400; i++) drp.setColorAt(i, new THREE.Color(drp.c)); drp.instanceColor.needsUpdate = true; }
+      splash.visible = q.hh > 0.002; splash.position.x = tr.R + GT; splash.material.color.set(T.pos);
+      arrV.set([GT + 0.006, -0.012, zh], [1, 0, 0], q.hh > 0.002 ? Math.min(tr.v * 0.05, 0.25) : 0, T.acol);
+      const X = (x) => x + g.position.x, Z = (z) => z + ZF;
+      handles3 = [
+        { id: 'hole', v: q.hh, lo: 0, hi: q.H, at: (v) => [X(GT + 0.012), -0.01, Z(q.H - v)], set: (v) => setParam('hh', v) },
+        { id: 'Hs', v: q.H, lo: SLDEF('H')[2], hi: SLDEF('H')[3], at: (v) => [X(-TT.W * 0.38), -DT / 2, Z(v)], set: (v) => { const hold = q.H - q.hh; setParam('H', v); setParam('hh', Math.max(0, q.H - hold), { quiet: true }); } }
+      ];
+      return { t: [0.12, 0, 0.5 + q.H * 0.18], d: 2.4 + q.H * 0.9, tr, zh };
+    }
+    function ovl(o) {
+      const q = S.P.torr, tr = o.tr, X = (x) => x + g.position.x, Z = (z) => z + ZF, bx = X(-TT.W - 0.04), yf = -DT / 2 - 0.01;
+      if (q.hh > 0.01) dim3([bx, yf, Z(q.H)], [bx, yf, Z(o.zh)], T.ink);
+      tag(`h = ${fx(q.hh, 2)} m`, [bx, yf, Z((q.H + o.zh) / 2)], 'right', T.ink, 12, 700, null, -8, 4);
+      if (q.hh > 0.002) {
+        if (!S.blind) tag(`v = √(2gh) = ${fx(tr.v, 2)} m/s`, [X(0.02), 0, Z(o.zh)], 'left', T.acol, 12, 700, null, 10, -12);
+        dim3([X(GT), -0.12, 0.002], [X(GT + tr.R), -0.12, 0.002], T.pos);
+        tag(`R = ${fx(tr.R, 2)} m`, [X(GT + tr.R / 2), -0.12, 0.002], 'center', T.pos, 12, 700, null, 0, 20);
+      }
+      tag(`H = ${fx(q.H, 2)} m`, [X(-TT.W + 0.02), yf, Z(0.02)], 'left', T.muted, 11, 400);
+      if (S.layers.cmp && !S.blind && OV.W > 600) tag('dashed: holes at H/4, H/2 and 3H/4', [X(1.2), 0, Z(q.H * 0.5)], 'center', T.muted, 11, 400);
+      grips3();
+      note3(`The tank, hole height and jet are to scale; the tape on the floor is in cm from the wall. ${NOTE}`);
+    }
+    return { upd, ovl, show: (v) => { if (g) g.visible = v; } };
+  })();
+
+  // one frame of the 3D view: the scene's objects from the state, the camera, then the labels and grips over it
+  function render3(ctx, W, H) {
+    const V = G3.S; V.size(W, H); liqLook();
+    for (const k of Object.keys(B3)) B3[k].show(k === S.scene);
+    const sc = B3[S.scene], cam = sc.upd();
+    if (G3.lastSc !== S.scene) { G3.lastSc = S.scene; }
+    V.place(G3.o, cam.t, V.fit(cam.d, W < 520 ? 1.7 : 1.35));
+    V.render();
+    ctx.clearRect(0, 0, W, H);
+    OV = { ctx, W, H, ls: lsc(W, H) };
+    sc.ovl(cam);
+  }
+  function view3(on) {
+    G3.on = on && !!G3.S;
+    if (G3.S) G3.S.el.hidden = !G3.on;
+    cans.s.style.touchAction = G3.on ? 'pan-y' : 'none';
+    cans.s.style.cursor = G3.on ? 'grab' : 'default';
+    hoverId = null; drag = null; handles = []; handles3 = [];
+    $('stage').classList.toggle('three', G3.on);
+    drawAll();
+  }
+  const VIEW = VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStat(m); } });
+  void VIEW;
 
   tokens();
   buildSliders();
