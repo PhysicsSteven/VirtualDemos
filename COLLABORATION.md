@@ -3458,3 +3458,37 @@ those two strings changed; key JSON and PDF rebuilt (TeacherKeys). While buildin
 inserted as the first child of `.markdown-body`, so `.markdown-body > h1:first-child` no longer matched and every printed handout
 showed the Primer site title "VirtualDemos" at the top. theme.js now puts the switch after that title.
 **For GPT:** please check the recaptured resistivity key and a printed handout's first page.
+
+
+## 2026-10-25 · Claude · How this works videos: magnetism (Vol 2 ch 11 and 12), six worksheets
+
+Physics II group D, following `tools/howto/README.md`. Dark theme videos of the first reading in each worksheet, every number from
+the run and checked by hand (μ₀ = 1.25663706127 × 10⁻⁶ T·m/A, CODATA 2022 as the demos use). Magnetic Fields of Currents has three
+worksheets: its How this works button plays the video for the one the controls are on (the same choice as its Readings section:
+Magnets and Oersted's compass open, Straight wires, or Loop and solenoid), with the popup titled to match.
+
+- Magnets and Oersted's Compass (`magnets-oersted.mp4`, 18.2 s): two bar magnets, gap dragged to 1.0 cm; attraction toward A, ratio
+  1.00 (by definition at 1 cm), facing poles N of A and S of B; recorded.
+- Fields and Forces of Straight Wires (`straight-wire-fields.mp4`, 20.3 s): One wire, 5.0 A out of the page, probe dragged to
+  (1.0, 0.0) cm; B = μ₀I/(2πr) = 100.0 μT at 90° from +x (counterclockwise around the wire); demo 100 μT, row 100 μT, 90°.
+- Fields of Loops and Solenoids (`loops-solenoids.mp4`, 20.9 s): Current loop, 5.0 A, the top of the loop dragged down to R = 1.0 cm,
+  probe at the center; μ₀I/(2R) = 314.16 μT; demo 314.2 μT, row 314.16 μT.
+- Magnetic Motion and the Hall Effect (`magnetic-force.mp4`, 24.8 s): Circular motion, proton at 1.00 × 10⁵ m/s in 0.10 T, Blind on;
+  the demo's own ruler laid across a diameter reads 2.09 cm (2mv/|q|B = 2.088 cm), the timer started and stopped at the launch ring
+  for one turn reads 659 ns (2πm/|q|B = 655.9 ns; one frame is 5.5 ns of simulated time); captured row r 0.01045 m, T 6.59e-7 s.
+- Measuring a Magnetic Field with a Current Balance (`wire-force.mp4`, 19.6 s): Mystery magnet, current knob turned to −3.0 A,
+  4.0 cm at 90°; balance 4.77 g. The take's hidden B (logged from the demo's own random draw) was 0.390 T:
+  |I|LB/g = 3.0 × 0.040 × 0.390/9.81 kg = 4.77 g, positive because a negative current pushes the wire up and the magnet down.
+- Magnetism in Matter (`magnetism-in-matter.mp4`, 19.2 s): 20 turns per cm, 1.000 A, Empty core: B₀ = μ₀nI = 2.513 mT, B − B₀ = 0;
+  then aluminum: B − B₀ = 55 nT (χB₀ = 2.2 × 10⁻⁵ × 2.513 mT = 55.3 nT); both rows recorded, as in the worksheet key.
+
+**Demo fixes found while recording (visible to students):**
+- Magnetic Fields of Currents, Two bar magnets: compass needles were drawn over the "pulled toward A" label and its arrow above
+  magnet B (worst at small gaps); needles under the label are now left out.
+- Force on a Current: with the Mystery magnet on, the readouts hid B and the predicted force, but the picture (3D and Flat) still
+  labelled "F on the wire = … mN" and scaled the force arrow by it. The label and arrow now follow the Mystery magnet as they did Blind.
+
+vdcheck `--only after` on all four demos: 0 problems. No What's new entry. The measuring tools never appear (Charges in Magnetic
+Fields' Tools button is hidden in its take; the ruler and timer shown are the demo's own, which the handout uses).
+
+**For GPT:** please check the six videos' captions and readings against the figures above, and the two fixes.

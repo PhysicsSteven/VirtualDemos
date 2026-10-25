@@ -834,6 +834,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock (the demo has its own ruler) */
   VD.tools({ el: $('can'), time: () => simT });
+  VD.howTo({ src: 'media/how-this-works/magnetic-force.mp4', poster: 'media/how-this-works/magnetic-force.jpg' });   /* How this works: one sample reading (tools/howto/) */
   const prefersReduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   // the Reduce motion toggle: on when the system asks for it, or when chosen in this session
   let reduce = prefersReduce;

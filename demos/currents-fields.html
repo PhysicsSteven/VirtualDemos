@@ -1824,10 +1824,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const needle = (x, y, ang, len) => { const ux = Math.cos(ang), uy = Math.sin(ang); c.lineWidth = 2.6; c.lineCap = 'round'; c.strokeStyle = T.pos; c.beginPath(); c.moveTo(x, y); c.lineTo(x + ux * len, y + uy * len); c.stroke(); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(x, y); c.lineTo(x - ux * len, y - uy * len); c.stroke(); };
     if (MG.mode === 'bar') {
       const { a, b } = magnetPoles(), span = MG.gap + 14, sc = (W2 - 20) / span, cx = W2 / 2 - ((a[0][0] + b[b.length - 1][0]) / 2) * sc, cy = H2 / 2, X = (x) => cx + x * sc;
-      /* compass needles on a grid, pointing along B (screen y is down, so flip By) */
+      /* compass needles on a grid, pointing along B (screen y is down, so flip By); none under the force arrow and its label above magnet B */
+      const lbx = (X(b[0][0]) + X(b[b.length - 1][0])) / 2, lby = cy - 1.5 * sc;
       for (let j = 0; j < 7; j++) for (let i = 0; i < 11; i++) {
         const px = 12 + (W2 - 24) * (i + 0.5) / 11, py = 12 + (H2 - 24) * (j + 0.5) / 7, xx = (px - cx) / sc, yy = (cy - py) / sc;
         if (Math.abs(yy) < 1.0 && xx > a[0][0] - 0.3 && xx < b[b.length - 1][0] + 0.3) continue;
+        if (Math.abs(px - lbx) < 52 && py > lby - 28 && py < lby + 14) continue;
         const [bx, by] = poleB([...a, ...b], xx, yy); needle(px, py, Math.atan2(-by, bx), 8);
       }
       const bar = (x0, x1, nRight) => { const y0 = cy - 0.9 * sc, hgt = 1.8 * sc, xm = (X(x0) + X(x1)) / 2;
@@ -1932,6 +1934,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     requestAnimationFrame(magLoop);
   })(magLast);
+
+  /* How this works: a short video of one sample reading from the worksheet the controls are on (the same choice as the
+     Readings section's): Magnets and Oersted's compass open, Straight wires, or Loop and solenoid; made by tools/howto/ */
+  const HOW_TITLE = { 'magnets-oersted': 'Magnets and Oersted\'s Compass', 'straight-wire-fields': 'Fields and Forces of Straight Wires', 'loops-solenoids': 'Fields of Loops and Solenoids' };
+  VD.howTo({ src: () => `media/how-this-works/${wsNow()}.mp4`, poster: () => `media/how-this-works/${wsNow()}.jpg`, title: () => `How this works: ${HOW_TITLE[wsNow()]}` });
 
   tokens();
   new ResizeObserver(() => resize()).observe(pane);

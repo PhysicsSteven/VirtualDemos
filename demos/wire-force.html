@@ -279,10 +279,10 @@ table.rows input:focus { border-color: var(--accent); }
       const sg = Math.sign(S.I) || 1; arrow(cx - sg * dx * 0.6, cy - sg * dy * 0.6, sg * dx * 0.9, sg * dy * 0.9, T.ink, 2 * p, `I = ${f(Math.abs(S.I), 1)} A`);
       // force: out of the page (⊙) or into it (⊗); F = IL × B with B along +x and the wire at θ above +x on the page: z component = −IL B sin θ... sign
       const Fz = -S.I * Math.sin(th);   // (L × B)_z for L at angle θ (counterclockwise from +x on the page, y up) and B along +x is −L B sin θ
-      const F = Fwire(), r = bl ? 16 * p : Math.min(40, 6 + Math.abs(F) * 300) * p;
-      if (Math.abs(F) > 1e-9 || bl) { const fx = cx + 90 * p, fy = cy - h / 2 - 36 * p; ctx.strokeStyle = T.force; ctx.fillStyle = T.force; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(fx, fy, r, 0, 7); ctx.stroke();
+      const hf = hideB(), F = Fwire(), r = hf ? 16 * p : Math.min(40, 6 + Math.abs(F) * 300) * p;
+      if (Math.abs(F) > 1e-9 || hf) { const fx = cx + 90 * p, fy = cy - h / 2 - 36 * p; ctx.strokeStyle = T.force; ctx.fillStyle = T.force; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(fx, fy, r, 0, 7); ctx.stroke();
         if (Fz > 0) { ctx.beginPath(); ctx.arc(fx, fy, r * 0.22, 0, 7); ctx.fill(); } else { ctx.beginPath(); ctx.moveTo(fx - r * 0.6, fy - r * 0.6); ctx.lineTo(fx + r * 0.6, fy + r * 0.6); ctx.moveTo(fx + r * 0.6, fy - r * 0.6); ctx.lineTo(fx - r * 0.6, fy + r * 0.6); ctx.stroke(); }
-        ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(bl ? `force on the wire ${Fz > 0 ? 'up, out of the page' : 'down, into the page'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up (out of the page)' : 'down (into the page)'}`, fx + r + 8 * p, fy); }
+        ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(hf ? `force on the wire ${Fz > 0 ? 'up, out of the page' : 'down, into the page'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up (out of the page)' : 'down (into the page)'}`, fx + r + 8 * p, fy); }
       else { ctx.fillStyle = T.force; ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('No force: the current runs along B.', cx - gw / 2, cy - h / 2 - 40 * p); }
       // balance display under the magnet
       const by = cy + h / 2 + 30 * p; ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(cx - 120 * p, by, 240 * p, 54 * p); ctx.strokeRect(cx - 120 * p, by, 240 * p, 54 * p);
@@ -590,10 +590,10 @@ table.rows input:focus { border-color: var(--accent); }
     const bq = Q([0, -0.05, BAL_H + 0.006 + YOKE + PH + 0.004]);
     txt(hideB() ? 'B, from N to S' : `B = ${f(Bv, 2)} T, from N to S`, [bq[0], bq[1] + 12 * p], { w: 700, a: 'center', c: T.b, m: true, s: narrow ? 10 : 11.5 });
     if (!isLoop()) {
-      const F = Fwire(), Fz = -S.I * Math.sin(S.th * Math.PI / 180), len = fLen3(F, bl);
+      const F = Fwire(), Fz = -S.I * Math.sin(S.th * Math.PI / 180), hf = hideB(), len = fLen3(F, hf);
       const th = S.th * Math.PI / 180, hl = S.L / 200, end = Q([Math.cos(th) * hl, Math.sin(th) * hl, ZC]);
-      if (Math.abs(F) > 1e-9 || bl) {
-        const tip = Q([0, 0, ZC + (Fz > 0 ? len : -len)]), side = Q([GAP / 2 + PD + 0.01, -0.02, zp]), lab = bl ? `force on the wire, ${Fz > 0 ? 'up' : 'down'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up' : 'down'}`;
+      if (Math.abs(F) > 1e-9 || hf) {
+        const tip = Q([0, 0, ZC + (Fz > 0 ? len : -len)]), side = Q([GAP / 2 + PD + 0.01, -0.02, zp]), lab = hf ? `force on the wire, ${Fz > 0 ? 'up' : 'down'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up' : 'down'}`;
         const lx = narrow ? 10 * p : Math.max(side[0], tip[0] + 40 * p), ly = narrow ? 30 * p : Math.min(tip[1], side[1]) - 16 * p;
         ctx.save(); ctx.strokeStyle = T.force; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(tip[0], tip[1]); ctx.lineTo(narrow ? tip[0] : lx - 4 * p, narrow ? ly + 8 * p : ly); ctx.stroke(); ctx.restore();
         txt(lab, [lx, ly], { w: 700, c: T.force, bl: narrow ? 'top' : 'middle' });
@@ -632,6 +632,7 @@ table.rows input:focus { border-color: var(--accent); }
   VD.projector({ onChange: resize });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
+  VD.howTo({ src: 'media/how-this-works/wire-force.mp4', poster: 'media/how-this-works/wire-force.jpg' });   /* How this works: one sample reading (tools/howto/) */
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('balance'); renderRows(); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
