@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 </style>
 <title>Sound Waves and the Speed of Sound</title>
@@ -21,6 +22,8 @@
 .stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+/* the 3D picture of the sound wave and time of flight views: the orbit surface covers the 3D part only, so the graphs below scroll the page */
+.orb3 { position: absolute; left: 0; top: 0; z-index: 1; cursor: grab; }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
@@ -84,7 +87,7 @@ details.more[open] summary { margin-bottom: 6px; }
 .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; }
 .lanes label { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); min-width: 0; }
 .lanes select { flex: 1; min-width: 0; font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 3px; }
-@media (max-width: 820px) { .lanes select { min-height: 32px; } .stage[data-view="race"] .scene { height: 620px; max-height: 88vh; } }
+@media (max-width: 820px) { .stage[data-k3="true"] .scene { height: 600px; max-height: 88vh; } .lanes select { min-height: 32px; } .stage[data-view="race"] .scene { height: 620px; max-height: 88vh; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -107,7 +110,7 @@ details.more[open] summary { margin-bottom: 6px; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes."></canvas>
         <div class="viewbar">
           <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="wave" aria-pressed="true">Sound wave</button><button type="button" data-v="tof" aria-pressed="false">Time of flight</button><button type="button" data-v="race" aria-pressed="false">Race</button></div>
           <div class="seg" role="group" aria-label="3D or flat" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
@@ -118,6 +121,7 @@ details.more[open] summary { margin-bottom: 6px; }
         </div>
         <div class="mic" id="micA" role="slider" tabindex="0" aria-label="Clap to microphone A" aria-valuemin="0.1" aria-valuemax="1" title="Drag microphone A" hidden></div>
         <div class="mic" id="micB" role="slider" tabindex="0" aria-label="Distance between the microphones d" aria-valuemin="0.1" aria-valuemax="3" title="Drag microphone B" hidden></div>
+        <div class="orb3" id="orb3" hidden aria-hidden="true"></div>
         <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
       <div class="card" id="card" role="group" aria-labelledby="cardTitle">
@@ -343,7 +347,7 @@ details.more[open] summary { margin-bottom: 6px; }
 
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.view = c.view; if (c.gas === 'unknown' && S.gas !== 'unknown') S.unknown = newUnknown(); S.gas = c.gas; S.tC = c.tC;
     if (c.f) { S.f = c.f; S.s = c.s; } if (c.d) { S.xA = c.xA; S.d = c.d; } if (c.lanes) { S.lanes = c.lanes.slice(); S.L = c.L; S.pace = c.pace; }
-    S.clap = null; S.last = null; raceReset(); if (S.view === 'race') want3(); upd(); }
+    S.clap = null; S.last = null; raceReset(); want3(); upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -363,7 +367,7 @@ details.more[open] summary { margin-bottom: 6px; }
     for (const e of document.querySelectorAll('.waveOnly')) e.hidden = S.view !== 'wave';
     for (const e of document.querySelectorAll('.tofOnly')) e.hidden = S.view !== 'tof';
     for (const e of document.querySelectorAll('.raceOnly')) e.hidden = S.view !== 'race';
-    $('stage').dataset.view = S.view;
+    $('stage').dataset.view = S.view; $('stage').dataset.k3 = String(k3on());
     $('micA').hidden = $('micB').hidden = $('clap').hidden = S.view !== 'tof'; $('play').hidden = S.view !== 'wave';
     $('newUnknown').hidden = S.gas !== 'unknown' || S.view === 'race'; $('gases').hidden = S.view === 'race';
     syncRace();
@@ -377,7 +381,7 @@ details.more[open] summary { margin-bottom: 6px; }
   const changed = () => { S.preset = ''; S.last = null; if (S.view === 'race') raceReset(); upd(); };
   function upd() { sync(); readouts(); draw(); fit(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
-  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; S.clap = null; raceReset(); if (S.view === 'race') want3(); upd(); } });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; S.clap = null; raceReset(); want3(); upd(); } });
   $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; const was = S.gas; S.gas = b.dataset.g;
     if (was === 'unknown' && S.gas !== 'unknown') capStatus(`The unknown gas had v = ${soundSpeed(S.unknown, S.tC).toFixed(1)} m/s at ${S.tC} °C (γ = ${sig(S.unknown.gamma, 4)}, M = ${(S.unknown.M * 1000).toFixed(1)} g/mol).`);
     changed(); });
@@ -398,7 +402,7 @@ details.more[open] summary { margin-bottom: 6px; }
     const m = $(id); let dx = 0;
     m.addEventListener('pointerdown', (e) => { if (S.clap) return; m.setPointerCapture(e.pointerId); m.classList.add('drag'); dx = e.clientX - (can.getBoundingClientRect().left + (id === 'micA' ? GEO.xA : GEO.xB)); m.focus(); e.preventDefault(); });
     m.addEventListener('pointermove', (e) => { if (!m.classList.contains('drag')) return; const x = e.clientX - can.getBoundingClientRect().left - dx;
-      set(id === 'micA' ? (x - GEO.x0) / GEO.ppm : (x - GEO.xA) / GEO.ppm); });
+      const xm = GEO.m(x); set(id === 'micA' ? xm : xm - S.xA); });
     const end = () => m.classList.remove('drag'); m.addEventListener('pointerup', end); m.addEventListener('pointercancel', end);
     m.addEventListener('keydown', (e) => { const st = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 }[e.key];
       if (st) set(get() + st); else if (e.key === 'Home') set(lo); else if (e.key === 'End') set(hi); else return; e.preventDefault(); });
@@ -514,22 +518,25 @@ details.more[open] summary { margin-bottom: 6px; }
   /* rest positions of the dots in the tube: a jittered grid, fixed once */
   const DOTS = []; { let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1400; i++) DOTS.push([rnd(), rnd()]); }
   const SPAN = 2.0;   /* m of tube drawn */
-  function drawWave() {
+  /* the card stays on the picture in this view, so the tube and graphs use the width beside it */
+  function waveRight() { const p = ps(), cr = card.getBoundingClientRect(), over = getComputedStyle(card).position === 'absolute';
+    return over ? Math.max(W * 0.5, cr.left - can.getBoundingClientRect().left - 16 * p) : W - 16 * p; }
+  /* the flat picture: the tube and the two graphs; with L3 (the 3D layout) only the graphs, below the 3D picture, lined up with its tube */
+  function drawWave(L3) {
     const p = ps(), g = gasNow(), Wv = wave(g, S.tC, S.f, S.s * 1e-6), narrow = W < 620;
-    /* the card stays on the picture in this view, so the tube and graphs use the width beside it */
-    const cr = card.getBoundingClientRect(), over = getComputedStyle(card).position === 'absolute';
-    const x0 = 30 * p, x1 = over ? Math.max(W * 0.5, cr.left - can.getBoundingClientRect().left - 16 * p) : W - 16 * p, ppm = (x1 - x0) / SPAN, top = 58 * p;
+    const x0 = L3 ? L3.x0 : 30 * p, x1 = L3 ? L3.x1 : waveRight(), ppm = (x1 - x0) / SPAN, top = 58 * p;
     const tubeH = Math.max(70 * p, Math.min(150 * p, Hh * 0.26)), ty = top + 14 * p;
     /* the drawn wave runs at 0.5 Hz; phase = ωt of the real wave */
     const ph = S.t * TAU * 0.5, t = ph / Wv.w;
     /* displacement drawn so the largest swing is 0.6 of λ/2π on screen (so the dots never cross), but at most 6% of the tube; the scale X is shown */
     const lamPx = Wv.lambda * ppm, aPx = Math.min(0.6 * lamPx / TAU, 0.06 * (x1 - x0)), X = aPx / (S.s * 1e-6 * ppm);
+    const Gr = window.VDGear, dk = Gr.dark(), N = Math.max(60, Math.round((x1 - x0) / 3));
+    let ry = 0;
+    if (!L3) {
     /* tube */
-    const Gr = window.VDGear, dk = Gr.dark();
     Gr.shadow(ctx, (x0 + x1) / 2, ty + tubeH + 8 * p, (x1 - x0) * 0.55, 6 * p, 0.7);
     ctx.fillStyle = dk ? '#121820' : '#fbfcfd'; ctx.beginPath(); ctx.roundRect(x0, ty, x1 - x0, tubeH, 4 * p); ctx.fill();
     /* pressure shading: darker where the air is squeezed */
-    const N = Math.max(60, Math.round((x1 - x0) / 3));
     for (let i = 0; i < N; i++) { const xm = SPAN * (i + 0.5) / N, q = pressure(Wv, xm, t) / Wv.dpMax; ctx.fillStyle = q > 0 ? T.pos : T.neg; ctx.globalAlpha = 0.16 * Math.abs(q); ctx.fillRect(x0 + (x1 - x0) * i / N, ty, (x1 - x0) / N + 1, tubeH); }
     ctx.globalAlpha = 1;
     const nd = Math.min(DOTS.length, Math.round((x1 - x0) * tubeH / (narrow ? 70 : 55)));
@@ -548,11 +555,12 @@ details.more[open] summary { margin-bottom: 6px; }
     /* source: a speaker driver clamped to the left end */
     Gr.speaker(ctx, x0 - 30 * p, ty + tubeH * 0.1, 26 * p, tubeH * 0.8, { color: '#2e353f' });
     /* scale under the tube, 0 to 2 m */
-    const ry = ty + tubeH + 12 * p; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
+    ry = ty + tubeH + 12 * p; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
     for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.muted }); } ctx.globalAlpha = 1;
     Gr.label(ctx, `displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, x1, narrow ? Hh - 26 * p : Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    }
     /* graphs of s and Δp along the tube at this instant */
-    const gTop = ry + 30 * p, gH = Math.max(50 * p, (Hh - gTop - (narrow ? 48 : 34) * p) / 2 - 10 * p);
+    const gTop = L3 ? L3.h + 14 * p : ry + 30 * p, gH = Math.max(50 * p, (Hh - gTop - ((narrow ? 48 : 34) + (L3 && L3.foot ? L3.foot : 0)) * p) / 2 - 10 * p);
     const graph = (y0, label, unit, fn, col) => {
       const mid = y0 + gH / 2; ctx.fillStyle = dk ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 + 0.5, y0 + 0.5, x1 - x0, gH, 6 * p); ctx.fill(); ctx.stroke();
       ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x1, mid); ctx.stroke();
@@ -562,13 +570,17 @@ details.more[open] summary { margin-bottom: 6px; }
     graph(gTop, 'displacement s (right is positive)', `±${S.s.toFixed(1)} μm`, (xm) => displacement(Wv, 1, xm, t), T.accent);
     graph(gTop + gH + 16 * p, 'pressure change Δp', S.gas === 'unknown' ? '' : `±${sig(Wv.dpMax, 3)} Pa`, (xm) => pressure(Wv, xm, t) / Wv.dpMax, T.pos);
     /* mark one compression on both graphs: Δp largest, s zero there */
-    const kx = (ph + PI / 2) / Wv.k; for (let xm = ((kx % Wv.lambda) + Wv.lambda) % Wv.lambda; xm < SPAN; xm += Wv.lambda) { const x = x0 + xm * ppm; ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.5; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, gTop + 2 * gH + 16 * p); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
-    Gr.label(ctx, 'dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p, { s: 9 * p, alpha: 0.75 });
+    const kx = (ph + PI / 2) / Wv.k; for (let xm = ((kx % Wv.lambda) + Wv.lambda) % Wv.lambda; xm < SPAN; xm += Wv.lambda) { const x = x0 + xm * ppm; ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.5; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, L3 ? gTop : ty); ctx.lineTo(x, gTop + 2 * gH + 16 * p); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    if (L3) { /* the probe microphone's place on the pressure graph */
+      const xm = x0 + MIC_X * ppm, y0 = gTop + gH + 16 * p, ym = y0 + gH / 2 - pressure(Wv, MIC_X, t) / Wv.dpMax * gH * 0.42;
+      ctx.fillStyle = T.pos; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(xm, ym, 4.5 * p, 0, 7); ctx.fill(); ctx.stroke();
+      txt('probe mic', xm + 7 * p, ym - 9 * p, { s: 9, c: T.pos }); }
+    Gr.label(ctx, 'dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p - (L3 && L3.foot ? L3.foot * p : 0), { s: 9 * p, alpha: 0.75 });
   }
   function drawTof() {
     const p = ps(), g = gasNow(), v = soundSpeed(g, S.tC), c = S.clap || S.last;
     const x0 = 46 * p, x1 = W - 20 * p, ppm = (x1 - x0) / 4.0, benchY = Math.max(150 * p, Hh * 0.34);
-    const xA = x0 + S.xA * ppm, xB = xA + S.d * ppm; Object.assign(GEO, { x0, ppm, xA, xB });
+    const xA = x0 + S.xA * ppm, xB = xA + S.d * ppm; Object.assign(GEO, { x0, ppm, xA, xB, m: (x) => (x - x0) / ppm });
     /* bench and its scale, 0 at the clap */
     const Gr = window.VDGear, dk = Gr.dark();
     Gr.bench(ctx, x0 - 30 * p, benchY, x1 - x0 + 40 * p, 18 * p, 16 * p);
@@ -592,8 +604,11 @@ details.more[open] summary { margin-bottom: 6px; }
     const yy = benchY - 74 * p; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(xA, yy); ctx.lineTo(xB, yy); ctx.stroke(); for (const x of [xA, xB]) { ctx.beginPath(); ctx.moveTo(x, yy - 4 * p); ctx.lineTo(x, yy + 4 * p); ctx.stroke(); }
     txt(`d = ${S.d.toFixed(2)} m`, (xA + xB) / 2, yy - 9 * p, { a: 'center', s: 10, b: 1, c: T.accent });
     if (S.clap) Gr.label(ctx, `sound front slowed ×${Math.round(1 / SLOWNESS())}`, x1, 64 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
-    /* the recorder: both channels from the clap to just after B, filled in up to the time reached */
-    const sy = benchY + 56 * p, sh = Hh - sy - 16 * p, chH = (sh - 30 * p) / 2;
+    drawRecorder(x0, x1, benchY + 56 * p, Hh - benchY - 72 * p);
+  }
+  /* the recorder: both channels from the clap to just after B, filled in up to the time reached */
+  function drawRecorder(x0, x1, sy, sh) {
+    const p = ps(), c = S.clap || S.last, chH = (sh - 30 * p) / 2;
     Gr.box(ctx, x0 - 30 * p, sy, x1 - x0 + 40 * p, sh, { r: 9 * p, color: '#323c48' });
     ctx.fillStyle = '#081109'; ctx.beginPath(); ctx.roundRect(x0 - 22 * p, sy + 22 * p, x1 - x0 + 24 * p, sh - 30 * p, 4 * p); ctx.fill();
     const sx0 = x0 - 18 * p, sx1 = x1 + 2 * p;
@@ -620,6 +635,7 @@ details.more[open] summary { margin-bottom: 6px; }
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.view === 'race' && R3.on) { ctx.clearRect(0, 0, W, Hh); drawRace3(); return; }
+    if (k3on()) { ctx.clearRect(0, 0, W, Hh); if (S.view === 'wave') drawWave3(); else drawTof3(); return; }
     window.VDGear.backdrop(ctx, W, Hh);
     if (S.view === 'wave') drawWave(); else if (S.view === 'tof') drawTof(); else drawRaceFlat();
   }
@@ -685,7 +701,7 @@ details.more[open] summary { margin-bottom: 6px; }
   $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; S.cam = b.dataset.cam; Object.assign(R3.o, S.cam === 'near' ? R3.home : R3.homeC); R3.pan = { x: 0, y: 0 }; sync(); draw(); });
   function syncRace() {
     const race = S.view === 'race', on3 = race && R3.on;
-    $('strike').hidden = $('dimSeg').hidden = !race; $('camSeg').hidden = !on3;
+    $('strike').hidden = !race; $('dimSeg').hidden = false; $('camSeg').hidden = !on3;
     $('strike').textContent = S.race.run ? 'Racing…' : S.race.done ? 'Strike again' : 'Strike';
     for (const b of document.querySelectorAll('#course button')) b.setAttribute('aria-pressed', String(+b.dataset.l === S.L));
     for (const b of document.querySelectorAll('#pace button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.pace));
@@ -693,6 +709,7 @@ details.more[open] summary { margin-bottom: 6px; }
     for (const b of document.querySelectorAll('#camSeg button')) b.setAttribute('aria-pressed', String(b.dataset.cam === S.cam));
     for (let i = 0; i < 6; i++) laneSel(i).value = S.lanes[i] || '';
     if (g3) g3.el.hidden = !on3;
+    const onK = k3on(); if (K3.k) K3.k.el.hidden = !onK; $('orb3').hidden = !onK;
     can.style.touchAction = on3 ? 'none' : ''; can.style.cursor = on3 ? 'grab' : '';
   }
   const fmtT = (t) => (t < 1 ? `${(t * 1000).toPrecision(4)} ms` : `${t.toPrecision(4)} s`);
@@ -808,14 +825,20 @@ details.more[open] summary { margin-bottom: 6px; }
   const PERSON_H = 1.75;   /* m, the height of the people drawn for scale (chosen) */
   const LANE_GAP = 5;      /* m between the centers of neighboring lanes (chosen) */
   let g3 = null;
-  function want3() { if (S.dim === '3d' && !R3.on) setDim('3d'); }
+  /* the 3D | Flat switch serves every view: three.js loads once, then the race builds its scene (init3D) and the sound wave and
+     time of flight views share theirs (initK3), each the first time it is shown in 3D */
+  function want3() { if (S.dim === '3d') setDim('3d'); }
   function setDim(v) {
     S.dim = v;
-    if (v === '3d' && !R3.ok) {
-      if (R3.tried) { capStatus(NO3D); v = 'flat'; }
-      else { if (!R3.loading) { R3.loading = true; VD3.load((ok) => { R3.loading = false; R3.ok = ok && init3D(); if (!R3.ok) capStatus(NO3D); setDim(R3.ok ? '3d' : 'flat'); }); } return; }
+    if (v === '3d') {
+      if (!R3.three && window.VD3) { if (!R3.loading) { R3.loading = true; VD3.load((ok) => { R3.loading = false; R3.three = ok ? 1 : -1; if (!ok) capStatus(NO3D); setDim(ok ? S.dim : 'flat'); }); } return; }
+      const race = S.view === 'race';
+      if (R3.three !== 1) v = 'flat';
+      else if (race && !R3.ok && !R3.tried) { R3.ok = init3D(); if (!R3.ok) capStatus(NO3D); }
+      else if (!race && !K3.ok && !K3.tried) { K3.ok = initK3(); if (!K3.ok) capStatus(NO3D); }
+      if (race ? !R3.ok : !K3.ok) v = 'flat';
     }
-    R3.on = v === '3d'; sync(); draw();
+    R3.on = v === '3d'; if (K3.k) home3(); sync(); draw();
   }
   function init3D() {
     R3.tried = true;
@@ -1086,6 +1109,220 @@ details.more[open] summary { margin-bottom: 6px; }
     raceClock(p); raceBoard(ls, p);
     if (W >= 620) Gr.label(ctx, 'drag to move · right drag or Shift drag to turn · scroll to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
   }
+  // ---------- the sound wave and time of flight views in 3D (demos/lib/vd3kit.js on vd3.js) ----------
+  /* Pictures only, drawn from the same state as the flat views. Meters, z up: the bench top is z = 0, the camera looks from −y.
+     Sound wave: x runs along the tube from the loudspeaker (0 to 2 m, as on the flat view). Time of flight: x runs along the bench
+     from the clapper. In the starting view the tube (or the bench) spans the same pixels as the graphs (or the recorder) below. */
+  const K3 = { ok: false, tried: false, k: null, h: 0, o: { th: -PI / 2, ph: 1.2, zoom: 1 }, home: { th: -PI / 2, ph: 1.2, zoom: 1 }, cab: '' };
+  const TUBE_R = 0.1;     /* m, inner radius of the drawn glass tube (chosen) */
+  const ZT = 0.24;        /* m, height of the tube's axis above the bench */
+  const ZM = 0.3;         /* m, height of the clapper and the microphones above the bench */
+  const MIC_X = 1.0;      /* m, where the probe microphone samples the tube */
+  const NP = 1500;        /* tracer parcels drawn in the tube */
+  const K_B = 1.380649e-23;   /* J/K, exact in the SI */
+  /* rest positions of the parcels: x along the tube, y and z across it inside 0.9 of the radius (seeded, fixed once) */
+  const PR = []; { let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < NP; i++) { const r = 0.9 * TUBE_R * Math.sqrt(rnd()), a = rnd() * TAU; PR.push([rnd() * SPAN, r * Math.cos(a), r * Math.sin(a)]); } }
+  const k3on = () => S.view !== 'race' && R3.on && K3.ok;
+  /* the starting view: square on to the bench, so the picture lines up with the graphs; on a narrow screen, from the front left
+     and closer, so the tube (or the bench) is not a thin strip */
+  function home3() { const nw = W < 620; K3.nw = nw;
+    Object.assign(K3.o, !nw ? { th: -PI / 2, ph: 1.2, zoom: 1 } : S.view === 'wave' ? { th: -PI / 2 - 0.4, ph: 1.12, zoom: 1.25 } : { th: -PI / 2 - 0.45, ph: 1.1, zoom: 1.7 }); }
+  /* the 3D picture's height: the rest of the stage holds the graphs (sound wave) or the recorder's traces (time of flight) */
+  const k3h = () => Math.round(Hh * (S.view === 'wave' ? 0.56 : 0.56));
+  function initK3() {
+    K3.tried = true;
+    const k = VD3K.stage(scene, { before: can, fov: 30, near: 0.05, far: 80, shadow: 3.4 }); if (!k) return false;
+    K3.k = k; k.el.hidden = true;
+    const sc = k.scene, std = (o) => new THREE.MeshStandardMaterial(o), TM = (o, c) => VD3K.material(k, o, c), add = (o, ...q) => { o.position.set(...q); return o; };
+    k.sun.position.set(0.9, -2.8, 5.6); k.sun.target.position.set(1.8, 0.1, 0); k.sun.shadow.bias = -0.0004;
+    const cv = (w, h, fn) => { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = k.r.capabilities.getMaxAnisotropy(); return t; };
+    let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    /* the room: a wooden bench on steel legs, a floor, a painted wall with acoustic foam panels behind the bench */
+    const grain = cv(1024, 256, (c, w, h) => { c.fillStyle = '#f2ece2'; c.fillRect(0, 0, w, h);
+      for (let i = 0; i < 260; i++) { const y = rnd() * h; c.strokeStyle = `rgba(110,80,45,${0.05 + 0.12 * rnd()})`; c.lineWidth = 0.6 + 2 * rnd(); c.beginPath(); c.moveTo(0, y); for (let x = 0; x <= w; x += 64) c.lineTo(x, y + 3 * Math.sin(x / 90 + i)); c.stroke(); } });
+    grain.wrapS = grain.wrapT = THREE.RepeatWrapping; grain.repeat.set(3, 1);
+    const wood = TM({ map: grain, roughness: 0.62, metalness: 0 }, ['#d9bf97', '#6a5640']);
+    const top = VD3K.box(5.8, 1.3, 0.05, wood, 1.9, 0.08, -0.05); sc.add(top);
+    const legM = TM({ roughness: 0.4, metalness: 0.7 }, ['#59616b', '#3a4048']);
+    for (const x of [-0.9, 4.7]) for (const y of [-0.5, 0.66]) sc.add(VD3K.box(0.06, 0.06, 0.85, legM, x, y, -0.9));
+    sc.add(VD3K.box(5.7, 0.03, 0.08, legM, 1.9, -0.56, -0.14));
+    const floor = add(new THREE.Mesh(new THREE.PlaneGeometry(30, 12), TM({ roughness: 0.95 }, ['#b4ada2', '#1f2329'])), 1.9, 2, -0.9); floor.receiveShadow = true; sc.add(floor);
+    const wallG = new THREE.PlaneGeometry(30, 6); wallG.rotateX(PI / 2);
+    const wall = add(new THREE.Mesh(wallG, TM({ roughness: 1 }, ['#e3e6ea', '#1b222b'])), 1.9, 0.78, 2.1); wall.receiveShadow = true; sc.add(wall);
+    const foam = cv(256, 256, (c, w) => { const n = 8, a = w / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const x = i * a, y = j * a, m = a / 2;
+      for (const [sh, p1, p2] of [[0.95, [x, y], [x + a, y]], [0.7, [x + a, y], [x + a, y + a]], [0.45, [x + a, y + a], [x, y + a]], [0.62, [x, y + a], [x, y]]]) {
+        const v = Math.round(255 * sh); c.fillStyle = `rgb(${v},${v},${v})`; c.beginPath(); c.moveTo(...p1); c.lineTo(...p2); c.lineTo(x + m, y + m); c.closePath(); c.fill(); } } });
+    foam.wrapS = foam.wrapT = THREE.RepeatWrapping; foam.repeat.set(1, 1);
+    const foamM = TM({ map: foam, roughness: 1 }, ['#7b8591', '#38404b']);
+    for (let x = -1.2; x < 5.2; x += 0.62) for (const z of [0.5, 1.12]) { const f = VD3K.box(0.6, 0.06, 0.6, foamM, x, 0.74, z); f.castShadow = false; sc.add(f); }
+    /* ---- the sound wave apparatus ---- */
+    const gW = new THREE.Group(); sc.add(gW);
+    const steel = TM({ roughness: 0.32, metalness: 0.85 }, ['#b9c1ca', '#8c96a2']), dark = TM({ roughness: 0.5, metalness: 0.3 }, ['#2b3139', '#20252c']);
+    const glass = VD3K.glass(k, { r: TUBE_R, len: SPAN + 0.2, axis: 'x', ends: false, opacity: 0.16 }); glass.position.set(SPAN / 2 + 0.04, 0, ZT); gW.add(glass);
+    const ringG = new THREE.TorusGeometry(TUBE_R + 0.004, 0.009, 10, 56); ringG.rotateY(PI / 2);
+    for (const x of [-0.06, SPAN + 0.14]) gW.add(add(new THREE.Mesh(ringG, steel), x, 0, ZT));
+    /* the pressure band: the far half of a cylinder just inside the glass, colored by Δp along the tube each frame */
+    const NB = 160, bandG = new THREE.CylinderGeometry(TUBE_R * 0.97, TUBE_R * 0.97, SPAN, 32, NB, true); bandG.rotateZ(-PI / 2);
+    bandG.setAttribute('color', new THREE.BufferAttribute(new Float32Array(bandG.attributes.position.count * 3), 3));
+    const band = add(new THREE.Mesh(bandG, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.62, side: THREE.BackSide, depthWrite: false })), SPAN / 2, 0, ZT);
+    band.renderOrder = 1; gW.add(band);
+    const parts = VD3K.particles(k, { n: NP, r: 0.0048, color: '#ffffff', seg: 6 }); gW.add(parts);
+    k.onTheme((dk) => parts.material.color.set(dk ? '#d5dde7' : '#26303c'));
+    const tracerM = std({ roughness: 0.3, metalness: 0.1 }), tracers = [0.25, 0.75, 1.25, 1.75].map((xr) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.0125, 20, 14), tracerM); m.userData.xr = xr; gW.add(m); return m; });
+    const restM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55 }), restG = new THREE.TorusGeometry(TUBE_R + 0.002, 0.0017, 6, 48); restG.rotateY(PI / 2);
+    for (const xr of [0.25, 0.75, 1.25, 1.75]) gW.add(add(new THREE.Mesh(restG, restM), xr, 0, ZT));
+    k.onTheme((dk) => { tracerM.color.copy(VD3K.token('--accent', '#2b60b5')); tracerM.emissive = VD3K.token('--accent', '#2b60b5').multiplyScalar(dk ? 0.35 : 0.15); restM.color.copy(VD3K.token('--muted', '#5a6575')); });
+    /* the loudspeaker: a cabinet clamped to the left end, its driver facing into the tube (seen through the glass) */
+    const cabM = TM({ roughness: 0.55, metalness: 0.1 }, ['#2f3640', '#262c34']);
+    gW.add(VD3K.box(0.26, 0.38, 0.5, cabM, -0.22, 0, 0));
+    const cone = new THREE.CylinderGeometry(0.09, 0.034, 0.05, 40, 1, true); cone.rotateZ(-PI / 2);
+    gW.add(add(new THREE.Mesh(cone, std({ color: 0x1b1d21, roughness: 0.85, side: THREE.DoubleSide })), -0.065, 0, ZT));
+    const cap = new THREE.SphereGeometry(0.03, 24, 12, 0, TAU, 0, PI / 2); cap.rotateZ(-PI / 2);
+    gW.add(add(new THREE.Mesh(cap, std({ color: 0x30343a, roughness: 0.5 })), -0.09, 0, ZT));
+    gW.add(add(new THREE.Mesh(ringG, std({ color: 0x15171a, roughness: 0.9 })), -0.085, 0, ZT));
+    /* the absorber at the far end, so nothing comes back (the wave in the tube only moves right) */
+    const foamEnd = new THREE.CylinderGeometry(TUBE_R * 0.98, TUBE_R * 0.98, 0.14, 40); foamEnd.rotateZ(-PI / 2);
+    const plugT = foam.clone(); plugT.needsUpdate = true; plugT.repeat.set(3, 1);
+    gW.add(add(new THREE.Mesh(foamEnd, TM({ map: plugT, roughness: 1 }, ['#59626d', '#323942'])), SPAN + 0.07, 0, ZT));
+    const endCap = new THREE.CylinderGeometry(TUBE_R + 0.012, TUBE_R + 0.012, 0.02, 40); endCap.rotateZ(-PI / 2);
+    gW.add(add(new THREE.Mesh(endCap, steel), SPAN + 0.15, 0, ZT));
+    /* two stands with saddles under the tube */
+    for (const x of [0.32, 1.68]) { gW.add(VD3K.box(0.16, 0.26, 0.015, dark, x, 0, 0)); gW.add(VD3K.rod([x, 0, 0.015], [x, 0, ZT - TUBE_R - 0.03], 0.009, steel));
+      gW.add(VD3K.box(0.05, 0.2, 0.025, dark, x, 0, ZT - TUBE_R - 0.035)); for (const s of [-1, 1]) gW.add(VD3K.box(0.05, 0.03, 0.06, dark, x, s * 0.085, ZT - TUBE_R - 0.03)); }
+    /* the rule along the bench in front of the tube, 0 at the loudspeaker end */
+    const rule2 = VD3K.ruler(k, { len: SPAN, to: SPAN, unit: 'm', step: 0.01, w: 0.05 }); rule2.position.y = -TUBE_R - 0.07; gW.add(rule2);
+    /* the probe microphone: held from a post behind, its probe tube through a port in the top of the glass */
+    const zTop = ZT + TUBE_R;
+    gW.add(VD3K.rod([MIC_X + 0.22, 0.36, 0], [MIC_X + 0.22, 0.36, zTop + 0.26], 0.01, steel), VD3K.box(0.16, 0.16, 0.015, dark, MIC_X + 0.22, 0.36, 0));
+    gW.add(VD3K.rod([MIC_X + 0.22, 0.36, zTop + 0.23], [MIC_X, 0, zTop + 0.23], 0.007, steel));
+    gW.add(VD3K.rod([MIC_X, 0, zTop + 0.25], [MIC_X, 0, zTop + 0.07], 0.015, dark), VD3K.rod([MIC_X, 0, zTop + 0.07], [MIC_X, 0, zTop - 0.015], 0.004, steel));
+    const boss = new THREE.TorusGeometry(0.012, 0.004, 8, 24); gW.add(add(new THREE.Mesh(boss, steel), MIC_X, 0, zTop + 0.002));
+    /* the instruments on the front of the bench: the signal generator driving the loudspeaker, and the microphone's meter */
+    const gen = VD3K.meter(k, { w: 0.34, h: 0.17, label: 'SIGNAL GENERATOR', sub: 'sine wave' }); gen.position.set(0.22, -0.4, gen.position.z); gW.add(gen);
+    const micMeter = VD3K.meter(k, { w: 0.34, h: 0.17, label: 'PROBE MICROPHONE', sub: `pressure change at ${MIC_X.toFixed(2)} m` }); micMeter.position.set(1.32, -0.4, micMeter.position.z); gW.add(micMeter);
+    gW.add(VD3K.cable([0.22, -0.36, 0.02], [-0.2, -0.19, 0.08], { via: [[0.05, -0.3, 0.006], [-0.12, -0.24, 0.006]], rad: 0.004 }));
+    gW.add(VD3K.cable([MIC_X, 0, zTop + 0.25], [1.32, -0.36, 0.02], { via: [[MIC_X + 0.05, 0.05, zTop + 0.3], [MIC_X + 0.14, 0.3, 0.2], [MIC_X + 0.16, 0.26, 0.006], [MIC_X + 0.2, 0, 0.006], [1.3, -0.3, 0.006]], rad: 0.004 }));
+    /* ---- the time of flight apparatus ---- */
+    const gT = new THREE.Group(); sc.add(gT);
+    const rule4 = VD3K.ruler(k, { len: 4, to: 4, unit: 'm', step: 0.01, w: 0.05 }); rule4.position.y = -0.16; gT.add(rule4);
+    /* the clapper: two hinged boards on a stand at x = 0, open until the clap */
+    gT.add(VD3K.box(0.16, 0.22, 0.015, dark, 0, 0, 0), VD3K.rod([0, 0, 0.015], [0, 0, ZM - 0.135], 0.009, steel), VD3K.box(0.04, 0.11, 0.02, dark, 0, 0, ZM - 0.14));
+    const boardM = TM({ map: grain, roughness: 0.6 }, ['#c9a274', '#7a6142']), boards = [-1, 1].map((sd) => { const pv = new THREE.Group(); pv.position.set(sd * 0.009, 0, ZM - 0.12);
+      const b = VD3K.box(0.016, 0.1, 0.2, boardM, 0, 0, 0); pv.add(b); pv.userData.sd = sd; gT.add(pv); return pv; });
+    /* the microphones on stands, each capsule (the grille) at its distance on the line from the clapper */
+    const grilleM = std({ color: 0x9aa3ad, roughness: 0.45, metalness: 0.8 }), mics = [0, 1].map(() => { const m = new THREE.Group();
+      const base = new THREE.CylinderGeometry(0.06, 0.07, 0.016, 32); base.rotateX(PI / 2); m.add(add(new THREE.Mesh(base, dark), 0.06, 0, 0.008));
+      m.add(VD3K.rod([0.06, 0, 0.016], [0.06, 0, ZM - 0.02], 0.007, steel), VD3K.box(0.03, 0.03, 0.03, dark, 0.06, 0, ZM - 0.03));
+      const body = new THREE.CylinderGeometry(0.013, 0.017, 0.12, 24); body.rotateZ(PI / 2); m.add(add(new THREE.Mesh(body, dark), 0.075, 0, ZM));
+      m.add(add(new THREE.Mesh(new THREE.SphereGeometry(0.02, 24, 16), grilleM), 0, 0, ZM)); m.traverse((o) => { o.castShadow = true; }); gT.add(m); return m; });
+    const rec = VD3K.meter(k, { w: 0.46, h: 0.2, label: `RECORDER, ${FS / 1000} kHz`, sub: 'starts at A, stops at B' }); rec.position.set(2.0, -0.42, rec.position.z); gT.add(rec);
+    const cables = new THREE.Group(); gT.add(cables);
+    /* the sound front: part of a sphere around the clapper, and its bright edge on the line through the microphones */
+    const frontG = new THREE.SphereGeometry(1, 48, 12, PI - 1.25, 2.5, PI / 2 - 0.3, 0.6);
+    const frontM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.13, side: THREE.DoubleSide, depthWrite: false }), front = add(new THREE.Mesh(frontG, frontM), 0, 0, ZM);
+    front.renderOrder = 3; gT.add(front);
+    const edgeM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, depthWrite: false }), edge = add(new THREE.Mesh(new THREE.BufferGeometry(), edgeM), 0, 0, ZM); edge.renderOrder = 3; gT.add(edge);
+    k.onTheme(() => { const c = VD3K.token('--pos', '#c23f2c'); frontM.color.copy(c); edgeM.color.copy(c); });
+    sc.traverse((o) => { if (o.isMesh && !o.material.transparent) o.receiveShadow = true; });
+    Object.assign(K3, { gW, gT, band, bandG, parts, tracers, gen, micMeter, boards, mics, rec, cables, front, edge });
+    VD3.orbit($('orb3'), K3.o, () => draw(), { phMin: 0.45, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
+    $('orb3').addEventListener('dblclick', () => { home3(); draw(); });
+    return true;
+  }
+  /* sizes the 3D canvas to the top part of the stage, and frames the camera so that x = xa..xb lands on pixels px0..px1, with the
+     target point at height cyFrac of the 3D picture (in the starting view; turning or zooming moves away from it) */
+  function frame3(xa, xb, px0, px1, target, cyFrac) {
+    const k = K3.k, h = K3.h = k3h(); if (K3.nw !== (W < 620)) home3();
+    k.size(W, h); k.el.style.width = W + 'px'; k.el.style.height = h + 'px'; Object.assign($('orb3').style, { width: W + 'px', height: h + 'px' });
+    const ppm = (px1 - px0) / (xb - xa), cx = K3.nw ? W / 2 : px0 + (target[0] - xa) * ppm, D = h / (2 * ppm * Math.tan(k.cam.fov * PI / 360));
+    k.cam.setViewOffset(W, h, W / 2 - cx, h / 2 - h * cyFrac, W, h);
+    k.place(K3.o, target, D); k.cam.near = Math.max(0.02, D / 40); k.cam.far = D * 30; k.cam.updateProjectionMatrix();
+    return ppm;
+  }
+  /* a name tag drawn over the 3D picture */
+  function tag3(s, x, y, o = {}) {
+    const p = ps(); ctx.font = `${o.b ? '700 ' : ''}${(o.s || 10) * p}px ${T.ui}`; const w = ctx.measureText(s).width + 10 * p, h = 16 * p;
+    x = Math.max(w / 2 + 4 * p, Math.min(W - w / 2 - 4 * p, x));
+    ctx.fillStyle = Gr.dark() ? 'rgba(15,21,29,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, 4 * p); ctx.fill();
+    txt(s, x, y, { a: 'center', s: o.s || 10, b: o.b, c: o.c });
+  }
+  /* a few lines of caption on a frosted panel */
+  function caption3(lines, x, y, right) {
+    const p = ps(); ctx.font = `${9.5 * p}px ${T.ui}`; const w = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 16 * p, h = (lines.length * 14 + 8) * p, x0 = right ? x - w : x;
+    Gr.panel(ctx, x0, y, w, h, { r: 7 * p }); lines.forEach((l, i) => txt(l, x0 + 8 * p, y + (11 + 14 * i) * p, { s: 9.5, c: T.muted }));
+  }
+  const fmtDp = (q) => `${q < 0 ? '−' : '+'}${sig(Math.abs(q), 3)} Pa`;
+  function drawWave3() {
+    const k = K3.k, p = ps(), g = gasNow(), Wv = wave(g, S.tC, S.f, S.s * 1e-6), sM = S.s * 1e-6, narrow = W < 620;
+    K3.gW.visible = true; K3.gT.visible = false;
+    const x0 = Math.max(30 * p, Math.min(140 * p, W * 0.13)), x1 = waveRight(), h = k3h();
+    /* the graphs and their backdrop below the 3D picture */
+    ctx.save(); ctx.beginPath(); ctx.rect(0, h, W, Hh - h); ctx.clip(); Gr.backdrop(ctx, W, Hh); drawWave({ x0, x1, h, foot: narrow ? 46 : 0 }); ctx.restore();
+    frame3(0, SPAN, x0, x1, [K3.nw ? 0.75 : SPAN / 2, 0, ZT], K3.nw ? 0.64 : 0.62);
+    /* the same instant as the graphs: the drawn wave runs at 0.5 Hz, and the swing is drawn X times larger (as on the flat view) */
+    const ph = S.t * TAU * 0.5, t = ph / Wv.w, aM = Math.min(0.6 * Wv.lambda / TAU, 0.06 * SPAN), X = aM / sM, still = reduce && !S.running;
+    const P = K3.parts;
+    for (let i = 0; i < NP; i++) { const [xr, y, z] = PR[i], xs = xr + (still ? 0 : displacement(Wv, sM, xr, t) * X); if (xs < 0 || xs > SPAN) P.put(i, 0, 0, -50); else P.put(i, xs, y, ZT + z); }
+    P.show(NP); P.done();
+    for (const m of K3.tracers) m.position.set(m.userData.xr + displacement(Wv, sM, m.userData.xr, t) * X, -0.55 * TUBE_R, ZT);
+    /* the band: Δp/Δp_max along the tube, red for a compression, blue for a rarefaction, pale where Δp = 0 */
+    const pos = K3.bandG.attributes.position, col = K3.bandG.attributes.color, dk = VD3K.token('--canvas', '#fcfdfe'), cP = VD3K.token('--pos', '#c23f2c'), cN = VD3K.token('--neg', '#2b60b5'), c = new THREE.Color();
+    for (let i = 0; i < pos.count; i++) { const q = pressure(Wv, pos.getX(i) + SPAN / 2, t) / Wv.dpMax; c.copy(dk).lerp(q > 0 ? cP : cN, Math.min(1, Math.abs(q)) * 0.85); col.setXYZ(i, c.r, c.g, c.b); }
+    col.needsUpdate = true;
+    K3.gen.set(`${S.f} Hz`); K3.micMeter.set(S.gas === 'unknown' ? 'hidden' : fmtDp(pressure(Wv, MIC_X, t)));
+    k.render();
+    /* labels */
+    const at = (x, y, z) => k.project([x, y, z]), onPic = (q) => q[0] > 0 && q[0] < x1 + 8 * p && q[1] > 0 && q[1] < h && q[2] < 1;
+    const L = [[-0.22, -0.19, 0.4, 'loudspeaker'], [MIC_X, 0, ZT + TUBE_R + 0.33, 'probe microphone'], [SPAN / 2 - 0.4, 0, ZT + TUBE_R + 0.06, 'glass tube of air'], [SPAN + 0.07, 0, ZT + TUBE_R + 0.06, 'foam: no echo']];
+    for (const [x, y, z, s] of L) { const q = at(x, y, z); if (!onPic(q)) continue; if (s === 'probe microphone') { ctx.font = `${9.5 * p}px ${T.ui}`; q[0] += ctx.measureText(s).width / 2 + 14 * p; q[1] += 12 * p; } tag3(s, q[0], q[1], { s: 9.5 }); }
+    const sp = Math.cbrt(K_B * kelvin(S.tC) / P_ATM) * 1e9;
+    const cap = [`Dots stand for small parcels of air, not molecules (real molecules are ${sp.toFixed(1)} nm apart)`, `displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, 'red: compression (Δp > 0) · blue: rarefaction (Δp < 0)'];
+    if (!narrow) caption3(cap, 10 * p, barBottom(), false);
+    else { cap[0] = `dots: parcels of air, not molecules (${sp.toFixed(1)} nm apart)`; cap.forEach((l, i) => Gr.label(ctx, l, x0, Hh - (44 - 14 * i) * p, { s: 9 * p, alpha: 0.85 })); }
+    if (!narrow) Gr.label(ctx, 'drag to turn · scroll to zoom · double click to reset', x1, h - 10 * p, { a: 'right', s: 9 * p, alpha: 0.8 });
+  }
+  /* the cables from the microphones to the recorder follow the microphones */
+  function cables3(xA, xB) {
+    const key = xA + '|' + xB; if (K3.cab === key) return; K3.cab = key; const g = K3.cables;
+    while (g.children.length) { const o = g.children.pop(); o.geometry.dispose(); }
+    for (const [x, s] of [[xA, -1], [xB, 1]]) g.add(VD3K.cable([x + 0.13, 0, ZM], [2.0 + s * 0.12, -0.38, 0.03], { via: [[x + 0.2, 0.02, ZM - 0.06], [x + 0.22, 0.04, 0.006], [x + 0.25, -0.24, 0.006], [2.0 + s * 0.14, -0.33, 0.006]], rad: 0.004 }));
+  }
+  function drawTof3() {
+    const k = K3.k, p = ps(), c = S.clap || S.last, h = k3h();
+    K3.gW.visible = false; K3.gT.visible = true;
+    const x0 = 46 * p, x1 = W - 20 * p;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, h, W, Hh - h); ctx.clip(); Gr.backdrop(ctx, W, Hh); ctx.restore();
+    drawRecorder(x0, x1, h + 10 * p, Hh - h - 20 * p);
+    frame3(0, 4, x0, x1, [K3.nw ? 1.3 : 2, 0, ZM], K3.nw ? 0.6 : 0.5);
+    K3.mics[0].position.x = S.xA; K3.mics[1].position.x = S.xA + S.d; cables3(S.xA, S.xA + S.d);
+    for (const b of K3.boards) b.rotation.y = c ? 0 : b.userData.sd * 0.3;
+    const on = !!S.clap, r = on ? S.clap.t * S.clap.v : 0; K3.front.visible = K3.edge.visible = on && r > 0.01;
+    if (K3.front.visible) { K3.front.scale.setScalar(r); K3.edge.geometry.dispose(); const tg = new THREE.TorusGeometry(r, 0.011, 6, 72, 2.4); tg.rotateZ(-1.2); tg.rotateX(PI / 2); K3.edge.geometry = tg; }
+    K3.rec.set(S.clap ? 'timing…' : c ? `${(c.R.dt * 1000).toFixed(4)} ms` : '— ms');
+    k.render();
+    /* the microphones' handles (for dragging) and the meters of the picture */
+    const at = (x, y, z) => k.project([x, y, z]), headA = at(S.xA, 0, ZM), headB = at(S.xA + S.d, 0, ZM);
+    const toM = (px, py) => { const v = new THREE.Vector3(px / W * 2 - 1, 1 - py / h * 2, 0.5).unproject(k.cam), o = k.cam.position, dy = v.y - o.y; if (Math.abs(dy) < 1e-9) return S.xA; const s = -o.y / dy; return o.x + s * (v.x - o.x); };
+    Object.assign(GEO, { xA: headA[0], xB: headB[0], m: (px) => toM(px, headA[1]) });
+    for (const [id, x] of [['micA', S.xA], ['micB', S.xA + S.d]]) { const tp = at(x, 0, ZM + 0.05), bt = at(x, 0, 0); Object.assign($(id).style, { left: `${tp[0]}px`, top: `${tp[1]}px`, height: `${Math.max(44, bt[1] - tp[1])}px` }); }
+    /* labels: the clapper, A and B, and d between them */
+    const cl = at(0, 0, ZM + 0.16); tag3('clapper', cl[0], cl[1], { s: 9.5 });
+    const nw = W < 620, yy = Math.min(headA[1], headB[1]) - (nw ? 32 : 40) * p;
+    for (const [q, n] of [[headA, 'A'], [headB, 'B']]) tag3(n, q[0], q[1] - (nw ? 16 : 26) * p, { s: 11, b: 1 });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(headA[0], yy); ctx.lineTo(headB[0], yy); ctx.stroke(); for (const q of [headA, headB]) { ctx.beginPath(); ctx.moveTo(q[0], yy - 4 * p); ctx.lineTo(q[0], yy + 4 * p); ctx.stroke(); }
+    const dl = `d = ${S.d.toFixed(2)} m`; ctx.font = `700 ${10 * ps()}px ${T.ui}`; const dw = ctx.measureText(dl).width + 10 * p;
+    ctx.fillStyle = Gr.dark() ? 'rgba(15,21,29,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect((headA[0] + headB[0]) / 2 - dw / 2, yy - 17 * p, dw, 14 * p, 4 * p); ctx.fill();
+    txt(dl, (headA[0] + headB[0]) / 2, yy - 10 * p, { a: 'center', s: 10, b: 1, c: T.accent });
+    const lines = [S.clap ? `sound front slowed ×${Math.round(1 / SLOWNESS())}` : 'Clap, then watch the sound front reach A and then B', 'drag a microphone along the bench to move it'];
+    caption3(lines, 10 * p, nw ? h - (lines.length * 14 + 14) * p : barBottom(), false);
+    if (W >= 620) Gr.label(ctx, 'drag elsewhere to turn · scroll to zoom · double click to reset', W - 12 * p, h - 10 * p, { a: 'right', s: 9 * p, alpha: 0.8 });
+  }
+  can.addEventListener('keydown', (e) => {
+    if (!k3on()) return; const o = K3.o;
+    if (e.key === ',' || e.key === '.') o.th += e.key === ',' ? 0.12 : -0.12; else if (e.key === '-' || e.key === '=' || e.key === '+') o.zoom = Math.max(0.5, Math.min(3, o.zoom * (e.key === '-' ? 0.9 : 1.1))); else return;
+    e.preventDefault(); draw();
+  });
   function tick(dt) {
     if (S.view === 'wave') { if (S.running && !reduce) { S.t += dt; draw(); } }
     else if (S.view === 'tof') { if (S.clap) { S.clap.t += dt * SLOWNESS(); if (S.clap.t >= S.clap.tEnd) finishClap(); else draw(); } }
