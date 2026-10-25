@@ -4207,3 +4207,26 @@ Radioactive Decay by the setup (a two step chain shows the Parent and Daughter v
 whats-new.js not touched (one entry per batch comes later).
 
 Seen while recording, not changed: in White Dwarf Cooling's 3D slice the "Earth" scale label overlaps the "liquid C/O" label.
+
+
+
+## 2026-10-25 · Claude · Each course's own worksheets on shared demos
+
+Steve asked that a demo used in several modules link only the worksheets for the module it was opened from.
+
+- Before: course pages filtered only Astro 2203's intro worksheets (`COURSE_HANDOUTS`). Every other course page card, and the
+  demo's own Handout and worksheet button everywhere, listed every worksheet (Circuits on the Modern page listed all seven).
+- Now `tools/courses.py` `handout_courses(h)` reads the courses a handout is for from its second line (the course titles after
+  the ·, matched against the map's course titles, longest first), plus `COURSE_HANDOUTS`. `course_handouts(cid, demo)` gives
+  that course's own; a course with none on the demo falls back to all of them except worksheets written only for a
+  `COURSE_HANDOUTS` course (Astro 2203 never borrows). Course pages and Canvas (`tools/canvas.py`) use it. Changes on the
+  pages: Doppler (Acoustics: shock waves; Modern: light), Double Slit (Physics II: Young; Modern: wave particle duality),
+  Electron Diffraction on Modern (electron only), Circuits on Modern (junction transistor only).
+- Course page, Canvas and previous and next links carry `?course=<id>`. `demos/lib/nav.js` picks the course from it (then the
+  referrer course page, then the tab's remembered course) and swaps the static handout button for that course's list (the
+  `SHEETS` table, generated); a course with no worksheet on the demo hides the button. Opened directly, the button is unchanged.
+  The demo itself is untouched (vdcheck compare on circuits, doppler, blackbody, exoplanets, double slit, pendulum: pass).
+- How this works videos needed no change: each already follows the mode the student is in.
+- Medical Physics (`WARM_UPS`) keeps what its page did: its own worksheets first, then the demo's others marked (warm up); the
+  demo's button opened from that page shows the same list. A new course works with no code change: name its exact title on the
+  second line of its handouts.

@@ -80,7 +80,7 @@ def course_items(course, m, cards, notes):
                 names.append(d)
         items = []
         for n in names:
-            title, url = plain(cards[n]['title']), f'{SITE}demos/{n}.html'
+            title, url = plain(cards[n]['title']), f'{SITE}demos/{n}.html?course={cid}'   # the demo lists this course's worksheets
             items.append(('link', f'Demo: {title}', url))
             if n in seen:
                 continue
@@ -257,6 +257,7 @@ def verify(cid, files):
             errs.append(f'resource {rid} is not in any module')
     for name, text in files.items():
         for url in re.findall(r'(?:href=|&lt;a href=&quot;|href=")["\']?(https?://[^"\'&<> ]+)', text):
+            url = url.split('?')[0]
             if url.startswith(SITE) and not (ROOT / url[len(SITE):]).with_suffix('').with_suffix('.html').exists() \
                     and not (ROOT / url[len(SITE):].removesuffix('.html')).with_suffix('.md').exists():
                 errs.append(f'{name}: link to a page that is not in the repo: {url}')

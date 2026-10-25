@@ -33,8 +33,8 @@ BLURB = {
     'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
-# handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
-# and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
+# handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card
+# (with any whose second line names the course), and the other course pages leave them out. See course_handouts.
 COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-celestial-sphere',
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
                                 'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages', 'intro-giant-planets'}}
@@ -240,37 +240,67 @@ HANDOUT_TOPIC = {
 }
 
 
+def handout_courses(h):
+    """The courses a handout was written for: the course titles named after the · on its second line ("Student laboratory ·
+    Physics II and Modern Physics"), matched against the titles in the map, so a new course is picked up by its title; plus
+    any course whose COURSE_HANDOUTS lists it."""
+    if h not in _OWNERS:
+        titles = {c['title']: c['id'] for c in json.loads(MAP.read_text())['courses']}
+        p = ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md'
+        lines = p.read_text().split('\n') if p.exists() else []
+        line = lines[1].split('·', 1)[1] if len(lines) > 1 and '·' in lines[1] else ''
+        out = set()
+        for t in sorted(titles, key=len, reverse=True):   # longest first: Physics II before Physics I
+            if re.search(re.escape(t) + r'(?!\w)', line):
+                out.add(titles[t]); line = line.replace(t, '')
+        _OWNERS[h] = out | {c for c, hs in COURSE_HANDOUTS.items() if h in hs}
+    return _OWNERS[h]
+
+
+_OWNERS = {}
+
+
 def course_handouts(cid, demo):
-    """The demo's handouts (with a students/<h>.md) that course cid shows."""
+    """The demo's handouts (with a students/<h>.md) that course cid shows (Steve, 2026-10-25): the ones written for that course
+    (handout_courses). A course with none of its own on this demo shows them all, except those written only for a course
+    in COURSE_HANDOUTS (Astro 2203's intro worksheets); a course in COURSE_HANDOUTS never borrows another course's, unless it is
+    in WARM_UPS (Medical Physics), which lists its own and then the rest as warm ups.
+    The demo's Handout and worksheet menu shows the same list when the demo was opened from that course (demos/lib/nav.js)."""
     hs = [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
-    other = set().union(*COURSE_HANDOUTS.values())
-    if cid in COURSE_HANDOUTS:
-        return [h for h in hs if h in COURSE_HANDOUTS[cid]] + ([h for h in hs if h not in other] if cid in WARM_UPS else [])
-    return [h for h in hs if h not in other]
+    own = [h for h in hs if cid in handout_courses(h)]
+    rest = [h for h in hs if h not in own and not (handout_courses(h) and handout_courses(h) <= set(COURSE_HANDOUTS))]
+    if cid in WARM_UPS:   # its own first, then the rest as warm ups
+        return own + rest
+    return own if own or cid in COURSE_HANDOUTS else rest
 
 
 def handout_label(h, i=None):
     return f'Worksheet{f" {i}" if i else ""}: {HANDOUT_TOPIC[h]}'
 
 
+def course_label(cid, h, i=None):
+    """handout_label, marked (warm up) where a WARM_UPS course borrows another course's worksheet."""
+    return handout_label(h, i) + (' (warm up)' if cid in WARM_UPS and cid not in handout_courses(h) else '')
+
+
 def card(name, demo, unit_secs, cards, notes, cid=None):
     c = cards[name]
+    q = f'?course={cid}' if cid else ''   # the demo shows this course's worksheets and steps through this course (nav.js)
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
-    links = [f'<a class="go" href="demos/{name}.html">Open demo</a>']
+    links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
     hs = course_handouts(cid, demo)
     for i, h in enumerate(hs, 1):
-        warm = cid in WARM_UPS and h not in COURSE_HANDOUTS[cid]
-        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}{" (warm up)" if warm else ""}</a>')
+        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
     flag = DEMO_NOTE.get(demo['status'])
     return f'''      <li class="item">
-        <a class="pic" href="demos/{name}.html" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
+        <a class="pic" href="demos/{name}.html{q}" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
         <div class="body">
           <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
-          <h3><a href="demos/{name}.html">{esc(c['title'])}</a></h3>
+          <h3><a href="demos/{name}.html{q}">{esc(c['title'])}</a></h3>
           <p>{c['desc']}</p>{f'{chr(10)}          <ul class="secs" aria-label="Textbook sections">{chips}</ul>' if chips else ''}
           <p class="links">{' '.join(links)}</p>
         </div>
@@ -332,22 +362,14 @@ def course_page(course, m, cards, notes):
             def where(n):
                 refs = ', '.join(f'{s["vol"]}:{s["sec"]}' for s in sorted([x for x in demos[n]['sections'] if (x['vol'], x['sec']) in ukeys], key=sec_key))
                 return f'(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n]["title"])}</a>{"; " + refs if refs else ""})'
-            links = ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a> <span class="where">{where(n)}</span>' for n in seen)
+            links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a> <span class="where">{where(n)}</span>' for n in seen)
             items.append(f'      <li class="also">Also used in this unit: {links}</li>')
         if u.get('review'):   # a test week: link back to the demos of the units it covers
             rev = [x for x in course['units'] if x['id'] in u['review']]
             rlinks = ' · '.join(f'<a href="#{x["id"]}">{esc(x["title"])}</a>' for x in rev)
             back = list(dict.fromkeys(n for x in rev for n in x.get('demos', []) if n in cards and n in demos and cid in demos[n]['course']))
             items.append(f'      <li class="also">Review the units {rlinks}. Their demos: '
-                         + ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a>' for n in back) + '</li>')
-        for cm in u.get('coming', []):   # a demo still being built (Medical Physics, 2026-10-25): a placeholder card, no link
-            items.append(f'''      <li class="item coming">
-        <div class="body" style="grid-column: 1 / -1">
-          <p class="kind"><span class="role">Coming</span></p>
-          <h3>{esc(cm['title'])}</h3>
-          <p>{esc(cm['note'])}</p>
-        </div>
-      </li>''')
+                         + ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a>' for n in back) + '</li>')
         grid = '\n'.join(items) if items else '      <li class="none">No activity for this unit yet.</li>'
         gap_html = ''
         if gaps:
@@ -703,27 +725,42 @@ def nav_js(m, cards):
                             'o': [[d, u['id']] for d, u in order]}
     courses['misc'] = {'t': MISC['title'].rstrip('.'), 'u': {}, 'o': [[n, None] for _, names in index_subjects() for n in names if n in set(misc_names(m))]}
     titles = {n: plain(c['title']) for n, c in cards.items()}
+    # each course's own worksheets on a demo whose Handout and worksheet menu (tools/handout_button.py, every handout) lists more
+    sheets = {}
+    for d in m['demos']:
+        every = [h for h in d.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+        for c in d['course']:
+            hs = course_handouts(c, d)
+            mine = [[h, course_label(c, h, i if len(hs) > 1 else None)] for i, h in enumerate(hs, 1)]
+            if c in courses and d['demo'] in titles and mine != [[h, handout_label(h, i if len(every) > 1 else None)] for i, h in enumerate(every, 1)]:
+                sheets.setdefault(c, {})[d['demo']] = mine
     dump = lambda x: json.dumps(x, ensure_ascii=False, separators=(',', ':'))
-    return NAV_JS.replace('__COURSES__', dump(courses)).replace('__TITLES__', dump(titles))
+    return NAV_JS.replace('__COURSES__', dump(courses)).replace('__TITLES__', dump(titles)).replace('__SHEETS__', dump(sheets))
 
 
 NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py from curriculum/textbook-map.json and curriculum/catalog.json:
    edit the script, not this file. demos/lib/vd.js loads it on every demo that uses the shared library.
    Above the demo's title: Home › course › unit › demo, and the previous and next demo in that course, in course page order.
    A demo in several courses follows the course the student came from (the course page, or the course of the demo they stepped
-   from, kept for the tab in sessionStorage vd-course); opened any other way it uses the first course in its list. */
+   from, kept for the tab in sessionStorage vd-course); opened any other way it uses the first course in its list.
+   ?course=<id> in the address (course page and Canvas links, previous and next) names the course outright.
+   Worksheets (Steve, 2026-10-25): opened from a course, the Handout and worksheet menu lists only that course's worksheets
+   (SHEETS, the same list as the demo's card on the course page, so none for a demo that course uses without a worksheet);
+   opened directly, it keeps every worksheet. The demo is the same. */
 (() => {
   const COURSES = __COURSES__;
   const TITLES = __TITLES__;
+  const SHEETS = __SHEETS__;
   const run = () => {
   const bar = document.querySelector('header.bar > div:first-child'), h1 = bar && bar.querySelector('h1');
   const here = location.pathname.split('/').pop().replace(/\.html$/, '');
   if (!h1 || !TITLES[here] || bar.querySelector('.vd-crumbs')) return;
   const mine = Object.keys(COURSES).filter((c) => COURSES[c].o.some((x) => x[0] === here));
   let from = null, kept = null;
+  const asked = new URLSearchParams(location.search).get('course');
   try { const r = new URL(document.referrer); if (r.origin === location.origin) from = r.pathname.split('/').pop().replace(/\.html$/, ''); } catch (_) {}
   try { kept = sessionStorage.getItem('vd-course'); } catch (_) {}
-  const cid = mine.includes(from) ? from : mine.includes(kept) ? kept : mine[0];
+  const chosen = [asked, from, kept].find((c) => mine.includes(c)), cid = chosen || mine[0];
   if (cid) try { sessionStorage.setItem('vd-course', cid); } catch (_) {}
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const crumbs = ['<li><a href="../index.html">Home</a></li>'];
@@ -735,7 +772,7 @@ NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py f
     const link = (j, rel, arrow) => {
       const d = c.o[j] && c.o[j][0]; if (!d) return '';
       const t = esc(TITLES[d]), say = rel === 'prev' ? 'Previous' : 'Next';
-      return `<a class="vd-${rel}" rel="${rel}" href="${d}.html" title="${say} in ${esc(c.t)}: ${t}" aria-label="${say} in ${esc(c.t)}: ${t}">`
+      return `<a class="vd-${rel}" rel="${rel}" href="${d}.html?course=${cid}" title="${say} in ${esc(c.t)}: ${t}" aria-label="${say} in ${esc(c.t)}: ${t}">`
         + (rel === 'prev' ? `<span aria-hidden="true">${arrow}</span> <span class="vd-t">${t}</span>` : `<span class="vd-t">${t}</span> <span aria-hidden="true">${arrow}</span>`) + '</a>';
     };
     step = link(i - 1, 'prev', '←') + link(i + 1, 'next', '→');
@@ -745,6 +782,16 @@ NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py f
   nav.className = 'vd-crumbs'; nav.setAttribute('aria-label', 'Course navigation');
   nav.innerHTML = `<ol>${crumbs.join('')}</ol>` + (step ? `<span class="vd-step">${step}</span>` : '');
   bar.insertBefore(nav, bar.firstChild);
+  const ws = chosen && SHEETS[chosen] && SHEETS[chosen][here], old = ws && document.querySelector('.rail .handout-menu, .rail a.handout');
+  if (old && !ws.length) old.remove();   /* a course with no worksheet on this demo (its course page card has none either) */
+  else if (old) {
+    const icon = old.querySelector('svg'), svg = icon ? icon.outerHTML : '', url = (h) => `../curriculum/labs/students/${h}.html`;
+    const box = document.createElement('div');
+    box.innerHTML = ws.length === 1
+      ? `<a class="handout" href="${url(ws[0][0])}" target="${ws[0][0]}-worksheet">${svg}Handout and worksheet</a>`
+      : `<details class="handout-menu"><summary>${svg}Handouts and worksheets</summary><ul>${ws.map(([h, t]) => `<li><a href="${url(h)}" target="${h}-worksheet">${esc(t)}</a></li>`).join('')}</ul></details>`;
+    old.replaceWith(box.firstChild);
+  }
   window.dispatchEvent(new Event('resize'));   /* the header grew by a line: let the demo fit its picture again */
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();

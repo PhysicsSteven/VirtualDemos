@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-course-worksheets', date: '2026-10-25', title: 'Each course\'s own worksheets',
+    text: 'A demo used in more than one course, such as Doppler (Acoustics and Modern Physics) or Circuits (Physics II and Modern Physics), now lists only your course\'s worksheets on its course page card and in its Handout and worksheet button when you open it from your course page. Previous and next stay in your course. Opened any other way, the button still lists every worksheet.' },
   { id: '2026-10-25-giant-planets', date: '2026-10-25', title: 'Giant Planets, Rings and Moons',
     text: 'A new astronomy demo with an Astro 2203 worksheet: Jupiter, Saturn, Uranus and Neptune to scale from NASA\'s data, a moon pulled apart inside Saturn\'s Roche limit, ring particles that shear as they orbit, Io, Europa and Ganymede in their 1:2:4 resonance, and the flexing tides that heat Io.', link: { href: 'demos/giant-planets.html', text: 'Open Giant Planets' } },
   { id: '2026-10-25-inside-a-planet', date: '2026-10-25', title: 'Inside a Planet',
