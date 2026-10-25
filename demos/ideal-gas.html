@@ -297,13 +297,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <div class="slider-scale mono"><span>0.01 K</span><span>1 K</span><span>100 K</span><span>1000 K</span></div>
           </div>
           <div>
-            <div class="slider-head"><label for="accIn">Energy exchange per hit</label><output id="accOut" class="mono" for="accIn">1.00</output></div>
+            <div class="slider-head"><label for="accIn">Hits that trade energy</label><output id="accOut" class="mono" for="accIn">100%</output></div>
             <input type="range" id="accIn" min="0.05" max="1" step="0.05" value="1">
           </div>
         </div>
         <dl class="readout" id="wallRead" hidden><div><dt>Heat into the gas Q</dt><dd id="rQ">—</dd></div><div><dt id="rQwT">Q from this wall</dt><dd id="rQw">—</dd></div><div><dt>T left · right half</dt><dd id="rTh">—</dd></div></dl>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Insulated walls are perfect mirrors: every bounce is elastic, so the gas keeps its energy and T only changes when the piston moves. Pick All to set every wall at once, or one wall to set it alone. Walls held at a temperature are in contact with a large body at that temperature. A molecule that hits one trades energy with it, with the chance set by Energy exchange per hit (the accommodation coefficient), and leaves as if it came from a gas at the wall's temperature; otherwise it bounces like a mirror. So a hotter gas gives heat to the walls and a colder one takes heat from them until T reaches the wall temperature, faster when more hits exchange energy. With walls at different temperatures the gas never settles to one T: heat flows steadily through it from the warm walls to the cold ones, and the half of the box near the warm wall stays warmer. Q adds up the heat the walls give the gas since the start (negative when the gas gives heat away); 1 zJ is 10⁻²¹ J. The walls glow blue when they are colder than the gas and orange when warmer. Real surfaces exchange anywhere from a small fraction to nearly all of the energy, depending on the gas and how clean and rough the surface is.</p>
+          <p class="hint">Insulated walls are perfect mirrors: every bounce is elastic, so the gas keeps its energy and T only changes when the piston moves. Pick All to set every wall at once, or one wall to set it alone. Walls held at a temperature are in contact with a large body at that temperature. A molecule that hits one trades energy with it, on the fraction of hits set by Hits that trade energy (the accommodation coefficient α, from 5% to 100%), and leaves as if it came from a gas at the wall's temperature; otherwise it bounces like a mirror. So a hotter gas gives heat to the walls and a colder one takes heat from them until T reaches the wall temperature, faster when more hits exchange energy. With walls at different temperatures the gas never settles to one T: heat flows steadily through it from the warm walls to the cold ones, and the half of the box near the warm wall stays warmer. Q adds up the heat the walls give the gas since the start (negative when the gas gives heat away); 1 zJ is 10⁻²¹ J. The walls glow blue when they are colder than the gas and orange when warmer. Real surfaces exchange anywhere from a small fraction to nearly all of the energy, depending on the gas and how clean and rough the surface is.</p>
         </details>
       </section>
 
@@ -1505,7 +1505,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('wallCtl').hidden = !held;
     $('wallRead').hidden = !GS.wallT.some((t) => t > 0);
     $('wtIn').value = sliderFromT(wallKeep[w]); $('wtOut').textContent = fmtK(wallKeep[w]);
-    $('accIn').value = GS.acc[w]; $('accOut').textContent = GS.acc[w].toFixed(2);
+    $('accIn').value = GS.acc[w]; $('accOut').textContent = Math.round(GS.acc[w] * 100) + '%';
     $('rQwT').textContent = 'Q from the ' + (wallPicked === 'all' ? WALL_NAME[0] : WALL_NAME[w]);
   }
   function pickWall(k) { wallPicked = k; syncWallUI(); updateReadouts(); }
