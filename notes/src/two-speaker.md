@@ -22,7 +22,7 @@ Students need v = fλ, superposition (§16.5) and the decibel scale (§17.3). **
 2. **Speaker 2 off.** The dips vanish: one speaker gives a smooth level falling with distance.
 3. **Speakers close together.** d = 0.40 m < λ: one quiet line on each side only.
 4. **Wired backwards.** The center is quiet; the quiet lines are now at Δr = mλ.
-5. **Speed of sound.** At several frequencies, λ from the dips; λ against 1/f has slope v. Change the temperature and repeat.
+5. **Speed of sound.** At several frequencies, λ from the slope of the path difference against the order of the dips, then v = fλ at each. Change the temperature and repeat.
 
 ## Questions
 

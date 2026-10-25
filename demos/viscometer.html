@@ -185,8 +185,8 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η. In Flow in a pipe, Blind hides the flow rate, speed, Reynolds number, regime and η, leaving the cylinder, the stopwatch and the pressure gauge.</p>
-          <p class="hint">Flow in a pipe: a smooth horizontal glass pipe fed from a constant head tank; the outlet valve sets the flow rate (0 to 60 mL/s in the 6 mm pipe, 0 to 100 mL/s in the 10 mm pipe). Two taps 0.500 m apart, far enough downstream that the flow is fully developed (the pipe before them is drawn shortened), feed a differential pressure gauge (0.1 Pa) and two manometer tubes. The pressure drop is the Darcy–Weisbach ΔP = f (L/D) ρv²/2 with f = 64/Re below Re = 2000 (exactly Poiseuille's law, ΔP = 8ηLQ/(πr⁴)) and Blasius's f = 0.3164 Re^(−1/4) for a smooth pipe above Re = 3000; between them, the range OpenStax calls unstable, f is interpolated on logarithmic axes. Water: η = 1.002 mPa·s at 20 °C and 0.653 mPa·s at 40 °C (OpenStax Table 14.4), ρ = 998.2 and 992.2 kg/m³ (CRC Handbook). The Mystery liquid is a water and glycerol mix with its own hidden η. The dye's path is drawn to show the kind of flow (straight in laminar flow, puffs in the unstable range, mixed across the pipe when turbulent) and slowed down; the eddies are illustrative, and the flow rate and pressure drop come only from the formulas.</p>
-          <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
+          <p class="hint">Flow in a pipe: a smooth horizontal glass pipe fed from a constant head tank; the outlet valve sets the flow rate (0 to 60 mL/s in the 6 mm pipe, 0 to 100 mL/s in the 10 mm pipe). Two taps 0.500 m apart, far enough downstream that the flow is fully developed (the pipe before them is drawn shortened), feed a differential pressure gauge (0.1 Pa) and two manometer tubes. The pressure drop is the Darcy–Weisbach ΔP = f (L/D) ρv²/2 with f = 64/N_R below N_R = 2000 (exactly Poiseuille's law, ΔP = 8ηLQ/(πr⁴)) and Blasius's f = 0.3164 N_R^(−1/4) for a smooth pipe above N_R = 3000; between them, the range OpenStax calls unstable, f is interpolated on logarithmic axes. Water: η = 1.002 mPa·s at 20 °C and 0.653 mPa·s at 40 °C (OpenStax Table 14.4), ρ = 998.2 and 992.2 kg/m³ (CRC Handbook). The Mystery liquid is a water and glycerol mix with its own hidden η. The dye's path is drawn to show the kind of flow (straight in laminar flow, puffs in the unstable range, mixed across the pipe when turbulent) and slowed down; the eddies are illustrative, and the flow rate and pressure drop come only from the formulas.</p>
+          <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D N_R/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3N_R/16 below N_R = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher N_R the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers N_R up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
         </details>
         </div></details>
       </section>
@@ -272,7 +272,7 @@ table.rows input:focus { border-color: var(--accent); }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Falling Ball Viscometer virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# mark_spacing_m,${MARK2 - MARK1}`, `# g_m_per_s2,${G}`, '# temperature_C,20',
-      '# model,"Stokes drag times the Clift-Grace-Weber standard drag curve and the Haberman-Sayre wall factor, weakened at higher Re following Di Felice (1996); buoyancy and added mass included"',
+      '# model,"Stokes drag times the Clift-Grace-Weber standard drag curve and the Haberman-Sayre wall factor, weakened at higher N_R following Di Felice (1996); buoyancy and added mass included"',
       '# rounding,"t to 0.01 s between the marks; v computed from the row"', '# noise,none',
       'row,liquid,rho_liquid_kg_m3,ball,rho_ball_kg_m3,tube_D_mm,d_mm,t_s,v_m_per_s'];
     rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.liquid, r.rhoF, r.ball, r.rhoB, r.D, r.d, r.t, t > 0 ? +((MARK2 - MARK1) / t).toPrecision(6) : ''].map(csvCell).join(',')); });
@@ -300,7 +300,7 @@ table.rows input:focus { border-color: var(--accent); }
   const regime = (Re) => (Re <= RE_LAM ? 'laminar' : Re < RE_TURB ? 'unstable' : 'turbulent');
   function pipeCSV(rows, meta) {
     const L = ['# Falling Ball Viscometer, flow in a pipe: captured readings (simulated data)', `# demo version,${meta.version}`, `# tap_spacing_m,${PIPE_L}`, `# g_m_per_s2,${G}`,
-      '# model,"Darcy-Weisbach with f = 64/Re (Re <= 2000, Poiseuille) and Blasius f = 0.3164 Re^-0.25 (Re >= 3000), log interpolation between; smooth pipe, fully developed flow"',
+      '# model,"Darcy-Weisbach with f = 64/N_R (N_R <= 2000, Poiseuille) and Blasius f = 0.3164 N_R^-0.25 (N_R >= 3000), log interpolation between; smooth pipe, fully developed flow"',
       '# rounding,"cylinder to 1 mL, stopwatch to 0.01 s, pressure gauge to 0.1 Pa"', '# noise,none',
       'row,liquid,rho_kg_m3,pipe_D_mm,valve_percent,V_mL,t_s,dP_Pa,dye'];
     rows.forEach((r, i) => L.push([i + 1, r.liquid, r.rho, r.D, r.valve, r.V, r.t, r.dP, r.dye].map(csvCell).join(',')));
@@ -536,15 +536,15 @@ table.rows input:focus { border-color: var(--accent); }
     const fl = FL(), d = dm(), vt = terminal(d, rhoB(), fl, S.D), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Ball density', `${rhoB()} kg/m³`) + dd('Liquid density', `${fl.rho} kg/m³`);
     h += dd('Speed now', `${g3(Math.abs(S.s.v) * 1000)} mm/s`) + dd('Timer A to B', S.done ? `${S.gate.dt.toFixed(2)} s` : '—');
-    if (hidden()) h += `<div class="wide"><dt>η, terminal speed, Stokes prediction, Re</dt><dd class="ok">${S.myst && !S.blind ? 'Mystery liquid: hidden. Measure it.' : 'hidden in Blind'}</dd></div>`;
+    if (hidden()) h += `<div class="wide"><dt>η, terminal speed, Stokes prediction, N_R</dt><dd class="ok">${S.myst && !S.blind ? 'Mystery liquid: hidden. Measure it.' : 'hidden in Blind'}</dd></div>`;
     else {
       const vs = stokesV(d, rhoB(), fl), Re = reynolds(fl.rho, vt, d, fl.eta);
-      h += dd('Viscosity η', fl.eta >= 0.1 ? `${f(fl.eta, 3)} Pa·s` : `${f(fl.eta * 1000, 2)} mPa·s`) + dd('Reynolds number at v_t', g3(Re));
+      h += dd('Viscosity η', fl.eta >= 0.1 ? `${f(fl.eta, 3)} Pa·s` : `${f(fl.eta * 1000, 2)} mPa·s`) + dd('Reynolds number N_R at v_t', g3(Re));
       h += dd('Terminal speed v_t', `${g3(Math.abs(vt) * 1000)} mm/s`) + dd('Stokes\' law alone', `${g3(Math.abs(vs) * 1000)} mm/s`);
       h += dd('Wall factor on the drag at v_t', f(wallFactor(d / S.D, reynolds(fl.rho, vt, d, fl.eta)), 3)) + dd('Reaches v_t in about', `${g3(5 * respTime(d, rhoB(), fl, S.D) * 1000)} ms`);
       // where the method breaks down: inertia (Re), the end of the drag curve, and a ball still speeding up at mark A
       const ReT = reynolds(fl.rho, vt, d, fl.eta), gt = S.gate, lag = gt && isFinite(gt.dt) ? gt.dt * Math.abs(vt) / 0.2 - 1 : 0;
-      const verdict = ReT < 0.1 ? 'yes: inertia changes the drag by under 2%' : ReT < 1 ? `roughly: inertia adds about ${f(100 * (dragCorr(ReT) - 1), 0)}% to the drag` : ReT <= 1.2e4 ? `no: inertia dominates (drag ${g3(dragCorr(ReT))} times Stokes')` : 'no, and beyond the drag curve used here (held at its Re = 12,000 value)';
+      const verdict = ReT < 0.1 ? 'yes: inertia changes the drag by under 2%' : ReT < 1 ? `roughly: inertia adds about ${f(100 * (dragCorr(ReT) - 1), 0)}% to the drag` : ReT <= 1.2e4 ? `no: inertia dominates (drag ${g3(dragCorr(ReT))} times Stokes')` : 'no, and beyond the drag curve used here (held at its N_R = 12,000 value)';
       h += dd('Does Stokes\' law apply?', `<span style="font-family:var(--font-ui);font-size:0.85rem">${verdict}</span>`, true);
       if (lag > 0.002) h += dd('Terminal speed by mark A?', `<span style="font-family:var(--font-ui);font-size:0.85rem">not quite: the timed speed is ${f(100 * lag / (1 + lag), 1)}% below v_t</span>`, true);
     }

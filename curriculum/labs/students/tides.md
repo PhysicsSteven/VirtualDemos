@@ -34,7 +34,7 @@ The Moon pulls every part of Earth toward it, but not equally: the near side is 
 
 $$a_\text{tidal} = GM\left[\frac{1}{(d - R_E)^2} - \frac{1}{d^2}\right] \approx \frac{2GMR_E}{d^3} \quad (R_E \ll d),$$
 
-while the pull at the center is $$GM/d^2$$. So the tidal acceleration is the pull times $$2R_E/d$$, and it falls off as $$1/d^3$$. At the sides the tidal acceleration points toward Earth's center with half that size. If $$d$$ is measured in Earth radii, a graph of the pull against $$1/d^2$$ has slope $$GM/R_E^2$$, and a graph of the tidal acceleration against $$1/d^3$$ has slope $$2GM/R_E^2$$.
+while the pull at the center is $$GM/d^2$$. So the tidal acceleration is the pull times $$2R_E/d$$, and it falls off as $$1/d^3$$. At the sides the tidal acceleration points toward Earth's center with half that size. Written with the pure numbers $$(R_E/d)^2$$ and $$(R_E/d)^3$$, the pull is $$(GM/R_E^2)(R_E/d)^2$$ and the tidal acceleration is $$(2GM/R_E^2)(R_E/d)^3$$, so a graph of the pull against $$(R_E/d)^2$$ has slope $$GM/R_E^2$$, and a graph of the tidal acceleration against $$(R_E/d)^3$$ has slope $$2GM/R_E^2$$, both in the units of the acceleration. With $$d$$ in Earth radii, $$R_E/d$$ is just $$1/d$$.
 
 For an ocean that follows the tidal pull, the water stands highest under the body and opposite it, a height $$A$$ above the mean, and lowest at the sides, $$A/2$$ below it, so one body gives a daily range of $$1.5A$$. The Sun's tide adds to the Moon's at new and full moon (spring tides) and partly cancels it at the quarters (neap tides).
 
@@ -59,7 +59,7 @@ No physical apparatus is used. At a real shore, check tide tables before walking
 
 ## Data
 
-| Reading | Moon's distance d (Earth radii) | Pull at Earth's center (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) |
+| Reading | Moon's distance d (Earth radii) | Pull at Earth's center (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | (R_E/d)² | (R_E/d)³ |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 | | | | | | | | |
@@ -78,8 +78,8 @@ Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and th
 
 ## Analysis
 
-1. Fit the pull at Earth's center against $$1/d^2$$. From the slope find $$GM_\text{Moon}$$ and then the Moon's mass (use $$R_E$$ = 6371 km and $$G$$ from About the demo). Compare it with $$7.342 \times 10^{22}$$ kg.
-2. Fit the mean of the near and far side tidal pulls against $$1/d^3$$. Compare the slope with twice the slope from Analysis 1, and explain why it should be twice.
+1. Fit the pull at Earth's center against $$(R_E/d)^2$$. The slope is $$GM_\text{Moon}/R_E^2$$ in μm/s²; from it find $$GM_\text{Moon}$$ and then the Moon's mass (use $$R_E$$ = 6371 km and $$G$$ from About the demo). Compare it with $$7.342 \times 10^{22}$$ kg.
+2. Fit the mean of the near and far side tidal pulls against $$(R_E/d)^3$$. Compare the slope with twice the slope from Analysis 1, and explain why it should be twice.
 3. At each distance, find the ratio of the near side to the far side tidal pull. Show that it is close to $$1 + 3R_E/d$$, and say why the near side is larger.
 4. Using your data, by what factor did the pull and the tidal pull grow when the Moon came in from 60.34 to 40 Earth radii? Compare with $$(60.34/40)^2$$ and $$(60.34/40)^3$$.
 5. Find $$A_\text{Sun}/A_\text{Moon}$$ from your readings and compare it with $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^3$$. Then find the ratio of the Sun's pull to the Moon's, $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^2$$. Explain how the Sun can pull harder but raise the smaller tide.

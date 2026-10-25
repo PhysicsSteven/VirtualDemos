@@ -2411,3 +2411,15 @@ Steve asked (2026-10-25 05:10) for the same audit of the Astronomy module. Scope
 **For Steve:** the two white dwarf demos use different initial final mass relations (hr-diagram: Cummings et al. 2018 low mass fit, 0.08 M_i + 0.49; white-dwarf-cooling: Kalirai et al. 2008, 0.109 M_i + 0.394). At 1 M☉ they give 0.57 and 0.50, at 5 M☉ 0.89 and 0.94. Both are published; recommendation: leave them, now that each page cites its own.
 
 **For GPT to verify:** the hr-diagram citation sentence; nothing else changed.
+
+## Claude, 2026-10-25: open items 13, 15, 18 and 19 (tables and symbols)
+
+Steve approved every recommendation in the open items doc (2026-10-25 05:39). This batch:
+
+- **13, Tides:** the last two Data columns are now headed $$(R_E/d)^2$$ and $$(R_E/d)^3$$, pure numbers, so the slopes read directly in μm/s² as $$GM/R_E^2$$ and $$2GM/R_E^2$$. Background and Analysis 1 and 2 say so. The values are the same numbers as before (d is in Earth radii), so FROM_DEMO is unchanged; the capture script reproduced the key data exactly, and the key's notes and Analysis 1 and 2 drop "(d in Earth radii)".
+- **15, Reynolds number:** $$N_R$$ (OpenStax §14.7) everywhere for the viscometer, as pipe flow already had: viscometer.md (About, Background, Model limits, Unknown extension, the table heading, Analysis 3 and 4, Questions), notes/src/viscometer.md and its notes key, and the student facing text of demos/viscometer.html (both Model hints, the Blind line, the Reynolds number readout, the drag curve verdict, the CSV model lines of both experiments). Code variable names stay `Re`. The viscometer key heading and answers say N_R.
+- **18, Free expansion:** the Ways and Predicted share columns are filled for every row of the four and ten molecule runs, and for the hundred molecule run only at n = 40, 45, 50, 55 and 60 (10 cells instead of 202). Analysis 1, 2 and 4 and the Data note say so. The ten molecule run (22 cells) keeps its columns because Analyses 2 and 3 need them. Key: the capture script fills only those rows; rerun, it reproduces the data exactly. The N = 100 graph is now those five rows: slope 0.976 ± 0.062, intercept −0.0016 ± 0.0030 (was 1.020 ± 0.009 over every row); Analysis 4 lists all five predicted and measured shares.
+- **19, Two Speaker:** the Speed of sound preset hint now takes λ from the slope of r₂ − r₁ against the order, then fλ, as the worksheet does since the Acoustics run through (no 1/f column added). The notes say the same. No key change.
+- **Keys (TeacherKeys):** tides, viscometer and free expansion key JSON and PDFs rebuilt; answers/viscometer.md and key/viscometer.html say N_R.
+
+**For GPT to verify:** the free expansion N = 100 fit and the five predicted shares; that no student facing "Re" is left in the viscometer demo or handout.

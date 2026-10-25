@@ -65,14 +65,14 @@ No hazards in the virtual lab.
 | | | | | |
 | | | | | |
 
-Record N and the time counted for each copy of the table.
+Record N and the time counted for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows $$n$$ = 40, 45, 50, 55 and 60.
 
 ## Analysis
 
-1. Fill in the last two columns for each run.
-2. Plot the measured share against the predicted share for each run. What slope and intercept do you expect, and what do you find?
+1. Fill in the last two columns: every row of the four and ten molecule runs, and the rows $$n$$ = 40, 45, 50, 55 and 60 of the hundred molecule run.
+2. Plot the measured share against the predicted share for each run (for 100 molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?
 3. For four molecules, compare the share of time with all on the left with $$1/16$$. For ten molecules, compare it with $$1/1024$$.
-4. For 100 molecules, find the predicted share for $$n$$ = 40, 50 and 60. How does the spread of the counts compare with N?
+4. For 100 molecules, compare your predicted shares at $$n$$ = 40, 45, 50, 55 and 60 with the measured shares. How does the spread of the counts compare with N?
 5. Find the entropy change $$Nk\ln 2$$ for each run, and for one mole.
 
 ## Uncertainty
