@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.more > p + p { margin-top: 6px; }
 </style>
@@ -147,7 +149,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
 
 /* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
-@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } }
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } .stage.v3d:has(> .shelf) { min-height: 960px; } }
+/* the 3D bench sits over the harmonic bars: a taller picture on a phone */
+@media (max-width: 820px) { .stage.v3d:has(> .shelf) > .pane { height: 88vh; min-height: 680px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -178,6 +182,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-l="open" aria-pressed="false">Open pipe</button>
           <button type="button" data-l="closed" aria-pressed="false">Closed pipe</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="clock"></span>
       </div>
       <div class="pane" id="pane">
@@ -542,6 +547,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     'The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = (1 − w) aₙ(left) + w aₙ(right), w from 0 to 1. Real instruments change their spectrum with pitch and loudness; these do not. ' +
     'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar.';
 
+  const MODEL3 = 'The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder\'s modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at 0.5 Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.';
   // ---------- derived quantities ----------
   const f1 = () => etFreq(S.semi);
   const muted = (n) => (n === 1 && S.mute1) || (n === 2 && S.mute2);
@@ -576,7 +582,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- theme and canvas ----------
   let T = null, dpr = 1, W = 0, H = 0, ls = 1, G = null;
-  const can = $('can'), ctx = can.getContext('2d'), pane = $('pane');
+  const can = $('can'), pane = $('pane');
+  let ctx = can.getContext('2d');   /* swapped for a moment while the 3D instrument screens are drawn */
   const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
@@ -619,8 +626,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // ---------- layout: waveform and spectrum on top, ladder over the bars below; stacked on narrow screens ----------
   function layout() {
     const wide = W >= 680;
-    let wave, spec, lad, eq;
-    if (wide) {
+    let wave, spec, lad, eq, pic = null;
+    if (on3d()) {
+      /* 3D: the bench picture on top (instrument, oscilloscope, spectrum analyzer), the harmonic bars under it */
+      const hp = Math.round(H * (wide ? 0.66 : 0.58)), z = { x: 0, y: 0, w: W, h: 0 };
+      pic = { x: 0, y: 0, w: W, h: hp }; wave = z; spec = z; lad = z; eq = { x: 0, y: hp, w: W, h: H - hp };
+    } else if (wide) {
       const hTop = Math.round(H * 0.44), wW = Math.round(W * 0.58);
       wave = { x: 0, y: 0, w: wW, h: hTop }; spec = { x: wW, y: 0, w: W - wW, h: hTop };
       const hl = Math.round((H - hTop) * 0.4);
@@ -631,7 +642,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       lad = { x: 0, y: h1 + h2, w: W, h: h3 }; eq = { x: 0, y: h1 + h2 + h3, w: W, h: H - h1 - h2 - h3 };
     }
     const colL = 40 * ls, colR = W - 12 * ls, cw = (colR - colL) / NH;
-    G = { wide, wave, spec, lad, eq, colL, colR, cw, cx: (n) => colL + (n - 0.5) * cw };
+    G = { wide, wave, spec, lad, eq, pic, colL, colR, cw, cx: (n) => colL + (n - 0.5) * cw };
   }
 
   // ---------- waveform ----------
@@ -944,16 +955,334 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.warm; ctx.fillRect(0, 0, W, H);
     layout();
-    drawWave(); drawSpec(); drawLadder(); drawEq();
+    if (G.pic) { ctx.clearRect(G.pic.x, G.pic.y, G.pic.w, G.pic.h); draw3(G.pic); drawEq(); }
+    else { drawWave(); drawSpec(); drawLadder(); drawEq(); }
     dirty = false;
+  }
+
+  // ---------- 3D bench (demos/lib/vd3kit.js on vd3.js): the instrument, a microphone, an oscilloscope and a spectrum analyzer ----------
+  // The instrument is the ladder's model put together: an ideal string fixed at both ends, or an ideal pipe (no end correction), moving as
+  // the sum of the modes the bars set, Σ aₙ (mode shape)ₙ sin(2π fₙ t + φₙ), slowed as in the ladder so f₁ is drawn at 0.5 Hz. The
+  // displacement is magnified (scaled down when the bars add up to a lot, so the motion stays on the bench) and the length of the string
+  // or pipe stays the same at every f₁: nothing in the picture is to scale. The two screens are the flat view's waveform and spectrum,
+  // drawn by the same functions in screen colors.
+  const V3 = { o: { th: -PI / 2 - 0.1, ph: 1.08, zoom: 1 }, scrKey: ['', ''], poster: '', scrG: {} };
+  const XA = -0.45, XB = 0.45, LEN = XB - XA, YI = -0.2, ZS = 0.15, NSTR = 220, NSL = 64, RING = 8;
+  let g3 = null, view3 = null;
+  const on3d = () => !!(g3 && view3 && view3.is3d());
+  const in3 = (e) => !!(on3d() && G && G.pic && e.offsetY < G.pic.h);
+  const SCR = { w: 640, h: 400, s: 2 }, SCR_LS = 2.1;   /* each screen's drawing size (CSS px) and its pixel scale */
+  const SCREEN_T = { warm: '#07130e', ink: '#86f5b0', muted: '#74a98c', line: '#1d3a2e', grid: '#12291f', gridStrong: '#27503e', wood: '#07130e', woodEdge: '#27503e',
+    brass: '#f0c75e', pos: '#ff8f74', accent: '#8cc4ff', hl: '64%', hs: '80%', mono: '"JetBrains Mono", ui-monospace, monospace' };
+  const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
+
+  function init3() {
+    const St = VD3K.stage(pane, { before: can, fov: 28, near: 0.05, far: 40, shadow: 1.6 });
+    if (!St) return false;
+    const el = St.el; el.style.inset = 'auto'; el.style.left = '0px'; el.style.top = '0px'; el.hidden = true;
+    const sc = St.scene, M = (o, c) => VD3K.material(St, Object.assign({ roughness: 0.6, metalness: 0 }, o), c);
+    St.sun.position.set(0.9, -1.6, 2.8); St.sun.target.position.set(0, 0.05, 0); St.sun.shadow.bias = -0.0005;
+    const fill = new THREE.DirectionalLight(0xffffff, 0.28); fill.position.set(-1.5, -2.5, 1.2); sc.add(fill);
+    const tex = (w, h) => { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = St.r.capabilities.getMaxAnisotropy(); return { cv, t, c: cv.getContext('2d') }; };
+    // the room: a tiled floor, a painted wall with a skirting board, a lab bench with a wooden top on steel legs
+    const flT = tex(256, 256); flT.t.wrapS = flT.t.wrapT = THREE.RepeatWrapping; flT.t.repeat.set(12, 8);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), new THREE.MeshStandardMaterial({ map: flT.t, roughness: 0.8 })); floor.position.set(0, -2.6, -0.9); floor.receiveShadow = true; sc.add(floor);
+    const wallM = M({ roughness: 0.95 }, ['#dfe5ec', '#252d37']), wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallM);
+    wall.rotation.x = PI / 2; wall.position.set(0, 0.62, 1.1); wall.receiveShadow = true; sc.add(wall);
+    sc.add(VD3K.box(12, 0.02, 0.12, M({ roughness: 0.5 }, ['#f4f2ec', '#39414c']), 0, 0.6, -0.9));
+    const topT = tex(1024, 256), topM = new THREE.MeshStandardMaterial({ map: topT.t, roughness: 0.55 });
+    const edgeM = M({ roughness: 0.6 }, ['#8a6a45', '#4a3a28']);
+    const top = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.05, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM]); top.position.set(0, 0.06, -0.02); top.receiveShadow = true; top.castShadow = true; sc.add(top);
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#aab3be', '#7a8490']), dark = M({ roughness: 0.5, metalness: 0.25 }, ['#2e3640', '#262d36']);
+    for (const [x, y] of [[-1.22, -0.4], [1.22, -0.4], [-1.22, 0.52], [1.22, 0.52]]) sc.add(VD3K.box(0.05, 0.05, 0.86, steel, x, y, -0.9));
+    sc.add(VD3K.box(2.5, 0.03, 0.08, steel, 0, 0.54, -0.86));
+    // a framed poster on the wall: the instrument the spectrum is like, as a label only
+    const poT = tex(1024, 640), poster = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.3875), new THREE.MeshStandardMaterial({ map: poT.t, roughness: 0.7 }));
+    poster.rotation.x = PI / 2; poster.position.set(0, 0.6, 0.3); sc.add(poster);
+    const frM = M({ roughness: 0.4, metalness: 0.3 }, ['#3a3f46', '#9aa3ae']);
+    for (const [w, h, x, z] of [[0.66, 0.02, 0, 0.5], [0.66, 0.02, 0, 0.1], [0.02, 0.42, -0.32, 0.3], [0.02, 0.42, 0.32, 0.3]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(w, 0.02, h), frM); f.position.set(x, 0.6, z); f.castShadow = true; sc.add(f); }
+    // two bench instruments: a case, a screen drawn from the flat view, knobs, a name plate
+    const knobM = M({ roughness: 0.4, metalness: 0.2 }, ['#c9ced5', '#a9b0b9']);
+    const inst = (x, name) => {
+      const g = new THREE.Group(), cw = 0.5, ch = 0.32, cd = 0.32, sw = 0.39;
+      const body = VD3K.box(cw, cd, ch, dark, 0, 0, 0); g.add(body);
+      const bez = VD3K.box(cw - 0.02, 0.006, ch - 0.02, M({ roughness: 0.6 }, ['#1b2027', '#1b2027']), 0, -cd / 2 - 0.003, 0.01); bez.castShadow = false; g.add(bez);
+      const T2 = tex(Math.round(SCR.w * SCR.s), Math.round(SCR.h * SCR.s));
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(sw, sw * SCR.h / SCR.w), new THREE.MeshBasicMaterial({ map: T2.t, toneMapped: false }));
+      scr.rotation.x = PI / 2; scr.position.set(-0.04, -cd / 2 - 0.0075, ch / 2 + 0.025); g.add(scr);
+      for (let k = 0; k < 3; k++) { const kn = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.015, 0.018, 24), knobM); kn.position.set(0.205, -cd / 2 - 0.012, ch - 0.06 - k * 0.07); kn.castShadow = true; g.add(kn); }
+      const plT = tex(512, 64); plT.c.fillStyle = '#1b2027'; plT.c.fillRect(0, 0, 512, 64); plT.c.fillStyle = '#d7dde5'; plT.c.font = '700 34px "Atkinson Hyperlegible", system-ui, sans-serif'; plT.c.textBaseline = 'middle'; plT.c.fillText(name, 10, 34); plT.t.needsUpdate = true;
+      const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.0375), new THREE.MeshBasicMaterial({ map: plT.t, toneMapped: false })); pl.rotation.x = PI / 2; pl.position.set(-0.04, -cd / 2 - 0.0075, 0.022); g.add(pl);
+      g.position.set(x, 0.26, 0); g.rotation.z = x < 0 ? -0.16 : 0.16; sc.add(g);
+      return { g, T: T2, scr, sw, sh: sw * SCR.h / SCR.w };
+    };
+    const scope = inst(-0.53, 'OSCILLOSCOPE'), anal = inst(0.53, 'SPECTRUM ANALYZER');
+    // the monochord: a wooden sound box, two bridges, a steel string between them, a tuning peg at each end
+    const woodT = tex(512, 128), woodM = new THREE.MeshStandardMaterial({ map: woodT.t, roughness: 0.55 });
+    const mono = new THREE.Group(); sc.add(mono);
+    mono.add(VD3K.box(1.04, 0.13, 0.07, woodM, 0, YI, 0));
+    const hole = new THREE.Mesh(new THREE.CircleGeometry(0.03, 32), new THREE.MeshBasicMaterial({ color: 0x15100a })); hole.position.set(0.18, YI, 0.0705); mono.add(hole);
+    const brM = M({ roughness: 0.5 }, ['#efe6d2', '#bdb4a2']);
+    /* tall bridges hold the string ZS above the box, so the magnified motion has room */
+    for (const x of [XA, XB]) { mono.add(VD3K.box(0.02, 0.09, 0.07, brM, x, YI, 0.07)); const b = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.09, 12), brM); b.position.set(x, YI, ZS - 0.006); b.castShadow = true; mono.add(b); }
+    for (const x of [XA - 0.045, XB + 0.045]) { const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.06, 16), steel); pg.rotation.x = PI / 2; pg.position.set(x, YI, 0.1); pg.castShadow = true; mono.add(pg); }
+    const strM = M({ roughness: 0.3, metalness: 0.35, emissive: 0x222222 }, ['#d8dde4', '#e4e9ef']);
+    const str = tubeMesh3(NSTR, 8, strM); str.castShadow = true; mono.add(str);
+    const ends = [XA - 0.045, XA, XB, XB + 0.045].map((x) => v3(x, YI, x < XA || x > XB ? 0.1 : ZS));
+    mono.add(VD3K.rod(ends[0], ends[1], 0.0016, strM), VD3K.rod(ends[2], ends[3], 0.0016, strM));
+    const bandM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.26, side: THREE.DoubleSide, depthWrite: false });
+    const bandG = new THREE.BufferGeometry(); bandG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(65 * 6), 3));
+    { const bi = []; for (let i = 0; i < 64; i++) { const a = 2 * i; bi.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } bandG.setIndex(bi); }
+    const band = new THREE.Mesh(bandG, bandM); band.frustumCulled = false; band.renderOrder = 2; sc.add(band);
+    const ghosts = []; for (let n = 1; n <= NH; n++) { const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(new Float32Array((NSTR + 1) * 3), 3)); const l = new THREE.Line(gg, new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 })); l.frustumCulled = false; sc.add(l); ghosts.push(l); }
+    // the pipe: a glass tube on two cradles, air parcels inside, a stopper at the left end for the closed pipe
+    const pipe = new THREE.Group(); sc.add(pipe);
+    const ZP = 0.1, RP = 0.045;
+    const tube = VD3K.glass(St, { r: RP, len: LEN, axis: 'x', ends: false, opacity: 0.2 }); tube.position.set(0, YI, ZP); pipe.add(tube);
+    const rimM = M({ roughness: 0.3, metalness: 0.1, transparent: true, opacity: 0.55 }, ['#a9c6da', '#7fa8c4']);
+    for (const x of [XA, XB]) { const r = new THREE.Mesh(new THREE.TorusGeometry(RP, 0.0025, 8, 48), rimM); r.rotation.y = PI / 2; r.position.set(x, YI, ZP); pipe.add(r); }
+    for (const x of [XA + 0.12, XB - 0.12]) { pipe.add(VD3K.box(0.03, 0.1, ZP - RP, dark, x, YI, 0)); }
+    const stop = new THREE.Mesh(new THREE.CylinderGeometry(RP + 0.004, RP + 0.004, 0.025, 40), M({ roughness: 0.8 }, ['#7a4b2c', '#5d3a23'])); stop.rotation.z = PI / 2; stop.position.set(XA - 0.0125, YI, ZP); stop.castShadow = true; pipe.add(stop);
+    const air = VD3K.particles(St, { n: NSL * (RING + 1), r: 0.0042 }); pipe.add(air);
+    const curve = tubeMesh3(NSTR, 6, new THREE.MeshBasicMaterial()); pipe.add(curve);
+    const base = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v3(XA, YI, 0.21), v3(XB, YI, 0.21)]), new THREE.LineDashedMaterial({ dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.6 }));
+    base.computeLineDistances(); pipe.add(base);
+    // the microphone on a stand by the right end, with leads to the two instruments
+    const mic = new THREE.Group(); sc.add(mic);
+    mic.add(VD3K.box(0.08, 0.08, 0.012, dark, 0.66, YI - 0.02, 0), VD3K.rod([0.66, YI - 0.02, 0.012], [0.66, YI - 0.02, 0.15], 0.005, steel));
+    const mh = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.011, 0.07, 24), dark); mh.rotation.z = PI / 2; mh.position.set(0.635, YI - 0.02, 0.15); mh.castShadow = true; mic.add(mh);
+    const grill = new THREE.Mesh(new THREE.SphereGeometry(0.016, 24, 16), M({ roughness: 0.5, metalness: 0.5 }, ['#6d7680', '#9aa3ae'])); grill.position.set(0.595, YI - 0.02, 0.15); mic.add(grill);
+    mic.add(VD3K.cable([0.68, YI - 0.02, 0.006], [0.6, 0.12, 0.03], { sag: 0.02, rad: 0.004, via: [[0.78, YI + 0.05, 0.004], [0.74, 0.08, 0.004]] }));
+    mic.add(VD3K.cable([0.68, YI - 0.02, 0.006], [-0.5, 0.12, 0.03], { rad: 0.004, via: [[0.8, YI + 0.12, 0.004], [0.3, 0.06, 0.004], [-0.3, 0.07, 0.004]] }));
+    g3 = { St, el, band, bandM, flT, topT, poT, woodT, scope, anal, mono, str, ghosts, pipe, air, curve, base, stop, tube, wallM };
+    St.onTheme((dk) => {
+      let c = flT.c; c.fillStyle = dk ? '#2b3038' : '#c9ced4'; c.fillRect(0, 0, 256, 256);
+      c.fillStyle = dk ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.25)'; c.fillRect(0, 0, 128, 128); c.fillRect(128, 128, 128, 128);
+      c.strokeStyle = dk ? 'rgba(0,0,0,0.5)' : 'rgba(80,90,100,0.35)'; c.lineWidth = 2; c.strokeRect(1, 1, 126, 126); c.strokeRect(129, 1, 126, 126); c.strokeRect(1, 129, 126, 126); c.strokeRect(129, 129, 126, 126); flT.t.needsUpdate = true;
+      const grain = (T2, base, w, h, n) => { const c2 = T2.c; c2.fillStyle = base; c2.fillRect(0, 0, w, h);
+        for (let i = 0; i < n; i++) { const y = (i * 37.3) % h, a = 0.04 + 0.05 * ((i * 7) % 5) / 5; c2.strokeStyle = `rgba(${dk ? '0,0,0' : '90,55,25'},${a})`; c2.lineWidth = 1 + (i % 3); c2.beginPath(); c2.moveTo(0, y); c2.bezierCurveTo(w * 0.3, y + 6, w * 0.6, y - 6, w, y + 3); c2.stroke(); }
+        T2.t.needsUpdate = true; };
+      grain(topT, dk ? '#4a3c2c' : '#c8a678', 1024, 256, 60); grain(woodT, dk ? '#5a4128' : '#b98a55', 512, 128, 30);
+      g3.curve.material.color = VD3K.token('--accent', '#2b60b5'); g3.bandM.color = VD3K.token('--accent', '#2b60b5'); g3.base.material.color = VD3K.token('--muted', '#5a6575');
+      V3.poster = '';
+    });
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });   /* the wheel zooms only over the picture */
+    VD3.orbit(can, V3.o, () => { dirty = true; }, { phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3, grab: (e) => !in3(e) || !!hitAt(e) });
+    return true;
+  }
+  function tubeMesh3(n, rs, mat) {   /* a tube along x of n segments and rs sides; its vertices are set each frame by tubeSet3 */
+    const g = new THREE.BufferGeometry(), nv = (n + 1) * rs;
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nv * 3), 3)); g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(nv * 3), 3));
+    const idx = []; for (let i = 0; i < n; i++) for (let j = 0; j < rs; j++) { const a = i * rs + j, b = i * rs + (j + 1) % rs, c = a + rs, d = b + rs; idx.push(a, c, b, b, c, d); }
+    g.setIndex(idx); const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.n = n; m.rs = rs; return m;
+  }
+  function tubeSet3(m, xs, zs, y, rad) {
+    const n = m.n, rs = m.rs, pos = m.geometry.attributes.position.array, nor = m.geometry.attributes.normal.array;
+    for (let i = 0; i <= n; i++) {
+      const a = Math.max(0, i - 1), b = Math.min(n, i + 1), dx = xs[b] - xs[a], dz = zs[b] - zs[a], l = Math.hypot(dx, dz) || 1, ax = -dz / l, az = dx / l;
+      for (let j = 0; j < rs; j++) {
+        const th = TAU * j / rs, c = Math.cos(th), s = Math.sin(th), o = (i * rs + j) * 3, nx = ax * c, ny = s, nz = az * c;
+        pos[o] = xs[i] + rad * nx; pos[o + 1] = y + rad * ny; pos[o + 2] = zs[i] + rad * nz; nor[o] = nx; nor[o + 1] = ny; nor[o + 2] = nz;
+      }
+    }
+    m.geometry.attributes.position.needsUpdate = m.geometry.attributes.normal.needsUpdate = true;
+  }
+  // a screen: the flat view's waveform or spectrum drawn into the instrument's texture, in screen colors
+  function drawScreen(which, T2) {
+    const keep = { ctx, T, G, ls, W, H };
+    ctx = T2.c; T = SCREEN_T; W = SCR.w; H = SCR.h; ls = SCR_LS;
+    const r = { x: 0, y: 0, w: SCR.w, h: SCR.h };
+    G = { wide: true, wave: r, spec: r, lad: r, eq: r }; V3.scrG[which] = G;   /* kept: its period grip and spectrum dots are what a drag on the screen hits */
+    ctx.setTransform(SCR.s, 0, 0, SCR.s, 0, 0); ctx.fillStyle = T.warm; ctx.fillRect(0, 0, SCR.w, SCR.h);
+    try { if (which === 'wave') drawWave(); else drawSpec(); }
+    finally { ctx = keep.ctx; T = keep.T; G = keep.G; ls = keep.ls; W = keep.W; H = keep.H; }
+    T2.t.needsUpdate = true;
+  }
+  // run fn in a screen's drawing space (its layout, size and scale), so the flat view's hit tests and drag handlers work on it unchanged
+  function withScreen(which, fn) {
+    const keep = { T, G, ls, W, H };
+    T = SCREEN_T; G = V3.scrG[which]; W = SCR.w; H = SCR.h; ls = SCR_LS;
+    try { return fn(); } finally { T = keep.T; G = keep.G; ls = keep.ls; W = keep.W; H = keep.H; }
+  }
+  // where a pointer at (cx, cy) on the page meets a screen's plane, in that screen's drawing coordinates (strict: only on the screen itself)
+  const ray3 = { rc: null, pl: null, p: null };
+  function screenAt(which, cx, cy, strict) {
+    if (!g3 || !G || !G.pic || !V3.scrG[which]) return null;
+    if (!ray3.rc) { ray3.rc = new THREE.Raycaster(); ray3.pl = new THREE.Plane(); ray3.p = new THREE.Vector3(); }
+    const R = G.pic, rc = can.getBoundingClientRect(), I = which === 'wave' ? g3.scope : g3.anal, m = I.scr;
+    ray3.rc.setFromCamera({ x: (cx - rc.left - R.x) / R.w * 2 - 1, y: -((cy - rc.top - R.y) / R.h) * 2 + 1 }, g3.St.cam);
+    m.updateMatrixWorld();
+    const nrm = new THREE.Vector3(0, 0, 1).transformDirection(m.matrixWorld), at = new THREE.Vector3().setFromMatrixPosition(m.matrixWorld);
+    ray3.pl.setFromNormalAndCoplanarPoint(nrm, at);
+    if (!ray3.rc.ray.intersectPlane(ray3.pl, ray3.p)) return null;
+    const q = m.worldToLocal(ray3.p.clone()), u = q.x / I.sw + 0.5, v = q.y / I.sh + 0.5;
+    if (strict && (u < 0 || u > 1 || v < 0 || v > 1)) return null;
+    return { which, x: u * SCR.w, y: (1 - v) * SCR.h };
+  }
+  // the poster: the instrument the slider sits on (or nearest to), as a sketch and a name; a label, not a measurement
+  function posterText() {
+    if (morph !== null) { const p = morphPos(morph, NI), k = p.w < 0.5 ? p.i : p.j; return { k: INSTRUMENTS[k].id, name: morphText(morph), sub: 'illustrative spectrum, not a recording' }; }
+    if (presetId) { const name = $('presets').querySelector(`[data-p="${presetId}"]`).textContent; return { k: presetId, name, sub: presetId === 'clarinet' || presetId === 'flute' ? 'illustrative spectrum, not a recording' : idealKind() ? 'Fourier series cut off at 16 harmonics' : '' }; }
+    return { k: 'custom', name: 'Custom spectrum', sub: 'set by hand on the bars' };
+  }
+  function drawPoster(P) {
+    const T2 = g3.poT, c = T2.c, w = 1024, h = 640, dk = VD3.dark();
+    c.fillStyle = dk ? '#d9d4c8' : '#f7f3ea'; c.fillRect(0, 0, w, h);
+    c.fillStyle = '#2a2722'; c.strokeStyle = '#2a2722'; c.lineWidth = 6; c.lineCap = 'round'; c.lineJoin = 'round';
+    const cy = 445, id = P.k;   /* the name across the top, where it stays in view; the sketch under it */
+    const tubeH = (x0, x1, r0, r1, col) => { c.fillStyle = col; c.beginPath(); c.moveTo(x0, cy - r0); c.lineTo(x1, cy - r1); c.lineTo(x1, cy + r1); c.lineTo(x0, cy + r0); c.closePath(); c.fill(); };
+    if (id === 'flute') { tubeH(120, 900, 16, 16, '#9aa1aa'); c.fillStyle = '#2a2722'; c.beginPath(); c.ellipse(220, cy, 12, 8, 0, 0, TAU); c.fill(); for (let k = 0; k < 9; k++) { c.fillStyle = '#c4c9cf'; c.beginPath(); c.arc(420 + k * 50, cy, 13, 0, TAU); c.fill(); c.strokeStyle = '#6b727b'; c.lineWidth = 3; c.stroke(); } }
+    else if (id === 'clarinet' || id === 'oboe') {
+      const ob = id === 'oboe'; tubeH(150, 790, ob ? 12 : 18, ob ? 22 : 24, '#1f1c19'); c.beginPath(); c.moveTo(790, cy - (ob ? 22 : 24)); c.quadraticCurveTo(850, cy - 30, 890, cy - (ob ? 46 : 70)); c.lineTo(890, cy + (ob ? 46 : 70)); c.quadraticCurveTo(850, cy + 30, 790, cy + (ob ? 22 : 24)); c.fill();
+      if (ob) { c.fillStyle = '#b48a4f'; c.beginPath(); c.moveTo(150, cy - 8); c.lineTo(100, cy - 4); c.lineTo(100, cy + 4); c.lineTo(150, cy + 8); c.fill(); }
+      else { c.fillStyle = '#2e2b27'; c.beginPath(); c.moveTo(150, cy - 18); c.lineTo(90, cy - 8); c.lineTo(90, cy + 10); c.lineTo(150, cy + 18); c.fill(); }
+      for (let k = 0; k < 7; k++) { c.fillStyle = '#c0c4c9'; c.beginPath(); c.arc(330 + k * 62, cy, 9, 0, TAU); c.fill(); }
+    } else if (id === 'trumpet') {
+      c.strokeStyle = '#b8902f'; c.lineWidth = 16; c.beginPath(); c.moveTo(140, cy); c.lineTo(700, cy); c.stroke();
+      c.beginPath(); c.moveTo(330, cy); c.lineTo(330, cy + 70); c.lineTo(640, cy + 70); c.quadraticCurveTo(700, cy + 70, 700, cy); c.stroke();
+      for (let k = 0; k < 3; k++) { c.fillStyle = '#b8902f'; c.fillRect(420 + k * 46, cy - 60, 26, 140); c.fillStyle = '#d9b860'; c.fillRect(424 + k * 46, cy - 80, 18, 22); }
+      c.fillStyle = '#c99d36'; c.beginPath(); c.moveTo(700, cy - 9); c.quadraticCurveTo(820, cy - 14, 900, cy - 90); c.lineTo(900, cy + 90); c.quadraticCurveTo(820, cy + 14, 700, cy + 9); c.fill();
+      c.fillStyle = '#9b9ea3'; c.fillRect(110, cy - 12, 34, 24);
+    } else if (id === 'bowed') {
+      c.save(); c.translate(470, cy); c.fillStyle = '#9c5a24';
+      const bout = (s) => { c.beginPath(); c.moveTo(-250, 0); c.bezierCurveTo(-250, -s * 130, -120, -s * 125, -70, -s * 95); c.bezierCurveTo(-40, -s * 70, 30, -s * 70, 60, -s * 95); c.bezierCurveTo(120, -s * 130, 230, -s * 115, 230, 0); c.closePath(); c.fill(); };
+      bout(1); bout(-1); c.fillStyle = '#2a2722'; c.fillRect(150, -16, 300, 32); c.beginPath(); c.arc(470, 0, 26, 0, TAU); c.fill();
+      c.strokeStyle = '#2a2722'; c.lineWidth = 6; c.beginPath(); c.arc(-15, -45, 30, 0.5 * PI, 1.4 * PI); c.moveTo(-15, 45); c.arc(-15, 45, 30, 0.6 * PI, 1.5 * PI, true); c.stroke();
+      c.fillStyle = '#e6d6b0'; c.fillRect(-160, -45, 10, 90);
+      c.strokeStyle = '#6b4a2a'; c.lineWidth = 7; c.beginPath(); c.moveTo(-330, 120); c.lineTo(160, -150); c.stroke(); c.restore();
+    } else if (id === 'square' || id === 'saw' || id === 'triangle') {
+      c.strokeStyle = '#2b60b5'; c.lineWidth = 8; c.beginPath(); let prev = null;
+      for (let x = 140; x <= 884; x += 2) { const v = idealWave(id, TAU * 2 * (x - 140) / 744), y = cy - v * 110; if (prev !== null && Math.abs(y - prev) > 60) c.moveTo(x, y); else if (prev === null) c.moveTo(x, y); else c.lineTo(x, y); prev = y; }
+      c.stroke();
+    } else {
+      c.fillStyle = '#2a2722'; c.font = '700 180px "Atkinson Hyperlegible", system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(id === 'missing' ? 'f₁ ?' : '♪', w / 2, cy);
+    }
+    c.fillStyle = '#1f1c19'; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    let fs = 64; c.font = `700 ${fs}px "Atkinson Hyperlegible", system-ui, sans-serif`; while (c.measureText(P.name).width > w - 80 && fs > 30) { fs -= 4; c.font = `700 ${fs}px "Atkinson Hyperlegible", system-ui, sans-serif`; }
+    c.fillText(P.name, w / 2, 200);
+    if (P.sub) { c.fillStyle = '#5b554b'; c.font = '36px "Atkinson Hyperlegible", system-ui, sans-serif'; c.fillText(P.sub, w / 2, 255); }
+    T2.t.needsUpdate = true;
+  }
+  // the largest |Σ aₙ (mode shape)ₙ sin(…)| along the length over one slowed cycle, so the magnification stays put while the tone does not change
+  // (and, at 65 points along it, the widest it swings: the band; and the steepest slope, for the squeeze colors in a pipe)
+  let peakKey = '', peakVal = 1, slopeVal = 1;
+  const envAt = new Float64Array(65);
+  function shapePeak(kind) {
+    const key = [kind, D.a.join(), S.ph.join(), S.B, S.df, S.detN].join('|'); if (key === peakKey) return peakVal;
+    let m = 0, sl = 0; const r = (n) => F_VIS * fOf(n) / f1(), row = new Float64Array(65); envAt.fill(0);
+    for (let it = 0; it < 64; it++) { const t = it / 64 / F_VIS;
+      for (let j = 0; j <= 64; j++) { const s = j / 64; let v = 0; for (let n = 1; n <= NH; n++) { const a = kind === 'closed' && n % 2 === 0 ? 0 : D.a[n]; if (a) v += a * Math.sin(TAU * r(n) * t + S.ph[n]) * modeShape(kind, n, s); } row[j] = v; envAt[j] = Math.max(envAt[j], Math.abs(v)); m = Math.max(m, Math.abs(v)); }
+      for (let j = 0; j < 64; j++) sl = Math.max(sl, Math.abs(row[j + 1] - row[j]) * 64); }
+    peakKey = key; peakVal = m; slopeVal = sl; return m;
+  }
+  const L3even = () => { for (let n = 2; n <= NH; n += 2) if (D.a[n] > 0) return true; return false; };
+  const RED = [0.85, 0.25, 0.18], BLUE = [0.17, 0.38, 0.75], GREY = [0.62, 0.66, 0.7];
+  function draw3(R) {
+    const g = g3, St = g.St, kind = S.ladder;
+    St.size(R.w, R.h); St.theme();
+    const asp = R.w / Math.max(1, R.h);
+    const narrow = asp < 1.3;
+    /* a narrow (phone) picture: the two instruments move in side by side behind the instrument, so the camera can come closer */
+    [g.scope.g, g.anal.g].forEach((o, k) => { o.position.x = (k ? 1 : -1) * (narrow ? 0.265 : 0.53); o.rotation.z = narrow ? 0 : (k ? 0.16 : -0.16); });
+    St.place(narrow ? { th: V3.o.th, ph: Math.max(0.35, V3.o.ph - 0.2), zoom: V3.o.zoom } : V3.o, narrow ? [0.05, 0.0, 0.13] : [0, 0.08, 0.2], narrow ? St.fit(1.75, 1.25) : St.fit(1.62, 2.6));
+    g.mono.visible = kind === 'string'; g.pipe.visible = kind !== 'string'; g.stop.visible = kind === 'closed';
+    // the sum of the modes: the same mode shapes, amplitudes and slowed oscillation as the ladder
+    let sumA = 0, sumN = 0; const osc = [0];
+    for (let n = 1; n <= NH; n++) {
+      const a = kind === 'closed' && n % 2 === 0 ? 0 : D.a[n];
+      osc.push(a ? a * Math.sin(TAU * F_VIS * fOf(n) / f1() * tAnim + S.ph[n]) : 0);
+      sumA += a; sumN += a * n * (kind === 'closed' ? 0.5 : 1);
+    }
+    const disp = (s) => { let v = 0; for (let n = 1; n <= NH; n++) if (osc[n]) v += osc[n] * modeShape(kind, n, s); return v; };
+    const pk = shapePeak(kind), K = Math.min(0.06, 0.075 / Math.max(1e-9, pk));
+    if (kind === 'string') {
+      const xs = new Float32Array(NSTR + 1), zs = new Float32Array(NSTR + 1);
+      for (let i = 0; i <= NSTR; i++) { const s = i / NSTR; xs[i] = XA + LEN * s; zs[i] = ZS + K * disp(s); }
+      tubeSet3(g.str, xs, zs, YI, 0.0035);
+      g.ghosts.forEach((l, i) => {
+        const n = i + 1, show = S.showEach && osc[n] !== 0; l.visible = show; if (!show) return;
+        const p = l.geometry.attributes.position.array; l.material.color.set(hcol(n).replace(/hsla\(([^,]+), ([^,]+), ([^,]+), [^)]+\)/, 'hsl($1, $2, $3)'));
+        for (let k = 0; k <= NSTR; k++) { const s = k / NSTR; p.set([XA + LEN * s, YI - 0.006, ZS + K * osc[n] * modeShape('string', n, s)], k * 3); }
+        l.geometry.attributes.position.needsUpdate = true;
+      });
+    } else {
+      g.ghosts.forEach((l) => { l.visible = false; });
+      // air parcels: slices along the pipe moved along x by ξ, colored by the squeeze −dξ/ds (red compressed, blue stretched)
+      const KL = Math.min(0.035, 0.6 * LEN / Math.max(1e-9, slopeVal)), CB = Math.max(1e-9, 0.8 * slopeVal);
+      let i = 0;
+      for (let j = 0; j < NSL; j++) {
+        const s = (j + 0.5) / NSL, xi = disp(s), dd = (disp(Math.min(1, s + 0.002)) - disp(Math.max(0, s - 0.002))) / (Math.min(1, s + 0.002) - Math.max(0, s - 0.002));
+        const q = clamp(-dd / CB, -1, 1), base = q > 0 ? RED : BLUE, w = Math.abs(q), col = new THREE.Color(GREY[0] + (base[0] - GREY[0]) * w, GREY[1] + (base[1] - GREY[1]) * w, GREY[2] + (base[2] - GREY[2]) * w);
+        const x = XA + LEN * s + KL * xi;
+        g.air.put(i++, x, YI, 0.1, col);
+        for (let k = 0; k < RING; k++) { const th = TAU * (k + 0.5 * (j % 2)) / RING; g.air.put(i++, x, YI + 0.026 * Math.cos(th), 0.1 + 0.026 * Math.sin(th), col); }
+      }
+      g.air.show(i); g.air.done();
+      const xs = new Float32Array(NSTR + 1), zs = new Float32Array(NSTR + 1);
+      for (let k = 0; k <= NSTR; k++) { const s = k / NSTR; xs[k] = XA + LEN * s; zs[k] = 0.21 + 0.8 * K * disp(s); }
+      tubeSet3(g.curve, xs, zs, YI, 0.0022);
+    }
+    // the band: the widest the string (or the plotted ξ) swings at each point
+    { const z0 = kind === 'string' ? ZS : 0.21, kk = kind === 'string' ? K : 0.8 * K, y = kind === 'string' ? YI + 0.002 : YI, bp = g.band.geometry.attributes.position.array;
+      for (let j = 0; j <= 64; j++) { const x = XA + LEN * j / 64, e = kk * envAt[j]; bp.set([x, y, z0 - e, x, y, z0 + e], j * 6); }
+      g.band.geometry.attributes.position.needsUpdate = true; g.band.visible = sumA > 0; }
+    // the screens and the poster, redrawn only when what they show changes
+    const base = [S.a.join(), S.ph.join(), S.semi, S.B, S.df, S.detN, S.mute1, S.mute2, presetId, morph, yMax, St.key].join('|');
+    const hv = (drag ? drag.id + drag.n : '') + '|' + hoverKey, kw = [base, hv, S.periods, S.showEach, S.showIdeal, D.info.kind === 'drift' ? traceStart() : 0].join('|');
+    if (V3.scrKey[0] !== kw) { V3.scrKey[0] = kw; drawScreen('wave', g.scope.T); }
+    if (V3.scrKey[1] !== base + hv) { V3.scrKey[1] = base + hv; drawScreen('spec', g.anal.T); }
+    const P = posterText(), pKey = JSON.stringify(P) + St.key; if (V3.poster !== pKey) { V3.poster = pKey; drawPoster(P); }
+    St.render();
+    // words over the picture
+    ctx.save(); ctx.beginPath(); ctx.rect(R.x, R.y, R.w, R.h); ctx.clip();
+    const Pj = (x, y, z) => { const p = St.project([x, y, z]); return p[2] > 1 ? [-9999, -9999] : [R.x + p[0], R.y + p[1]]; };
+    const lab = (txt, q, col, al, bs) => {
+      if (q[0] < -999) return; ctx.font = font(10.5, true); const w = ctx.measureText(txt).width, a = al || 'center';
+      const lo = 8 * ls + (a === 'center' ? w / 2 : a === 'right' ? w : 0), hi = R.w - 8 * ls - (a === 'center' ? w / 2 : a === 'left' ? w : 0);
+      tag(txt, clamp(q[0], lo, Math.max(lo, hi)), Math.min(q[1], R.y + R.h - 40 * ls), col, a, bs || 'top', true, 10.5);
+    };
+    const nm = kind === 'string' ? ['string fixed at both ends', 'string'] : kind === 'open' ? ['pipe open at both ends', 'open pipe'] : ['pipe closed at the left end', 'closed pipe'];
+    lab(pick(nm, R.w * 0.4, 10.5, true), Pj(XA - 0.04, YI - 0.075, 0), T.ink, 'left');
+    if (kind !== 'string') {
+      const q = Pj(XA, YI, 0.275); lab(pick(['air displacement ξ along the pipe, drawn upward', 'displacement ξ'], R.w * 0.5, 10.5, true), q, T.accent, 'left', 'bottom');
+      const rb = pick(['red: squeezed  blue: stretched', 'red squeezed, blue stretched'], R.w * 0.42, 10.5, true);
+      if (kind === 'closed') { let ev = 0; for (let n = 2; n <= NH; n += 2) if (D.a[n] > 0) ev++; if (ev) tag(pick([`${ev} even harmonic${ev > 1 ? 's' : ''} on the bars: a closed pipe has no such mode, left out here`, `${ev} even harmonic${ev > 1 ? 's' : ''}: no such mode, left out`, 'even: left out'], narrow ? R.w - 24 * ls : R.w * 0.32, 10.5, true), 12 * ls, R.y + 32 * ls, T.pos, 'left', 'top', true, 10.5); }
+      /* a phone: the color key goes under the title, out of the way of the instrument */
+      if (narrow) tag(rb, 12 * ls, R.y + (kind === 'closed' && L3even() ? 54 : 32) * ls, T.muted, 'left', 'top', true, 10.5); else lab(rb, Pj(XB, YI - 0.05, 0.02), T.muted, 'right', 'top');
+    }
+    if (!narrow) lab('microphone', Pj(0.66, YI - 0.06, 0), T.muted);
+    tag(pick(['The bars below set the harmonics: the instrument moves as their sum, the microphone feeds both screens (drag a spectrum dot or the period bracket on them)', 'The bars below set the harmonics: the instrument moves as their sum, the microphone feeds both screens', 'Instrument = sum of the harmonics on the bars', 'Sum of the harmonics'], R.w - 24 * ls, 11.5, true), 12 * ls, R.y + 10 * ls, T.ink, 'left', 'top', true, 11.5);
+    const note = 'displacement magnified, slowed so f₁ is drawn at 0.5 Hz · not to scale · drag to turn';
+    tag(pick([note, 'magnified and slowed, not to scale · drag to turn', 'not to scale · drag to turn', 'not to scale'], R.w - 24 * ls, 10, false), R.w - 12 * ls, R.y + R.h - 8 * ls, T.muted, 'right', 'bottom', false, 10);
+    ctx.restore();
   }
 
   // ---------- pointer: bars, dials, spectrum dots, period grip ----------
   let drag = null, hoverKey = null;
   function hitAt(ev) {
     if (!G) return null;
+    // 3D: the period grip on the oscilloscope screen and the dots on the analyzer screen, tested in the screen's own drawing space
+    if (in3(ev)) {
+      for (const which of ['wave', 'spec']) {
+        const p = screenAt(which, ev.clientX, ev.clientY, true); if (!p) continue;
+        const h = withScreen(which, () => hitPlot(p.x, p.y, 8 * ls * (ev.pointerType === 'touch' ? 2 : 1)));
+        return h ? Object.assign(h, { scr: which }) : null;
+      }
+      return null;
+    }
     const rc = can.getBoundingClientRect(), x = ev.clientX - rc.left, y = ev.clientY - rc.top;
     const tol = 8 * ls * (ev.pointerType === 'touch' ? 2 : 1);
+    const hp = hitPlot(x, y, tol); if (hp) return hp;
+    // bars and dials
+    const e = G.eq, g = eqGeom();
+    if (x >= G.colL - 4 && x <= G.colR + 4 && y >= e.y) {
+      const n = clamp(Math.floor((x - G.colL) / G.cw) + 1, 1, NH);
+      if (S.showDials && Math.hypot(x - G.cx(n), y - g.dialY) < g.dr + tol * 0.8) return { id: 'dial', n, cursor: 'grab' };
+      if (y >= g.top - tol && y <= g.bot + tol && !muted(n)) return { id: 'bar', n, cursor: 'ns-resize' };
+    }
+    return null;
+  }
+  function hitPlot(x, y, tol) {
     // period grip
     if (G.periodGrip && Math.hypot(x - G.periodGrip[0], y - G.periodGrip[1]) < tol + 4 * ls) return { id: 'period', cursor: 'ew-resize' };
     // spectrum dots
@@ -961,13 +1290,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       let best = null, bd = tol + 3 * ls;
       for (const s of G.stems) { if (s.muted) continue; const d = Math.hypot(x - s.x, y - s.y); if (d < bd) { bd = d; best = s; } }
       if (best) return { id: 'spec', n: best.n, cursor: 'ns-resize' };
-    }
-    // bars and dials
-    const e = G.eq, g = eqGeom();
-    if (x >= G.colL - 4 && x <= G.colR + 4 && y >= e.y) {
-      const n = clamp(Math.floor((x - G.colL) / G.cw) + 1, 1, NH);
-      if (S.showDials && Math.hypot(x - G.cx(n), y - g.dialY) < g.dr + tol * 0.8) return { id: 'dial', n, cursor: 'grab' };
-      if (y >= g.top - tol && y <= g.bot + tol && !muted(n)) return { id: 'bar', n, cursor: 'ns-resize' };
     }
     return null;
   }
@@ -1009,23 +1331,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function queueDrag(ev) {
     const rc = can.getBoundingClientRect();
-    dragQueued = [ev.clientX - rc.left, ev.clientY - rc.top];
+    dragQueued = drag && drag.scr ? [ev.clientX, ev.clientY] : [ev.clientX - rc.left, ev.clientY - rc.top];
     if (dragFrame) return;
     dragFrame = true;
-    requestAnimationFrame(() => { dragFrame = false; if (dragQueued) { applyDrag(dragQueued[0], dragQueued[1]); dragQueued = null; } });
+    requestAnimationFrame(() => {
+      dragFrame = false; if (!dragQueued) return;
+      const q = dragQueued; dragQueued = null;
+      if (drag && drag.scr) { const sc = drag.scr, p = screenAt(sc, q[0], q[1], false); if (p) withScreen(sc, () => applyDrag(p.x, p.y)); }   /* a drag that began on a 3D screen, in that screen's space */
+      else applyDrag(q[0], q[1]);
+    });
   }
   can.addEventListener('pointermove', (ev) => {
     if (drag) { queueDrag(ev); return; }
     const h = hitAt(ev), k = keyOf(h);
-    can.style.cursor = h ? h.cursor : 'default';
+    can.style.cursor = h ? h.cursor : in3(ev) ? 'grab' : 'default';
     if (k !== hoverKey) { hoverKey = k; dirty = true; }
   });
   can.addEventListener('pointerdown', (ev) => {
     const h = hitAt(ev);
     if (!h) return;
-    drag = { id: h.id, n: h.n };
+    drag = { id: h.id, n: h.n, scr: h.scr };
     lastPaint = null; holdY = true;
-    if (h.id === 'period') holdSpan = waveGeom().span;
+    if (h.id === 'period') holdSpan = h.scr ? withScreen(h.scr, () => waveGeom().span) : waveGeom().span;
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
     ev.preventDefault();
@@ -1211,7 +1538,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ['hatch', 'Above 8 kHz, played 12 dB quieter'],
       ['ramp', ladTxt, grad]
     ].map(([c, t, bg]) => `<span><i class="swatch ${c}"${bg ? ` style="background:${bg}"` : ''}></i>${t}</span>`).join('');
-    $('modelHint').textContent = MODEL;
+    $('modelHint').textContent = MODEL + ' ' + MODEL3;
   }
 
   // ---------- play / pause ----------
@@ -1330,7 +1657,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (soundDirty && now - lastSnd > 35) { soundUpdate(); lastSnd = now; }
     requestAnimationFrame(loop);
   }
-  window.__tb = { S, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get presetId() { return presetId; }, get yMax() { return yMax; },
+  window.__tb = { S, get g3() { return g3; }, get o3() { return V3.o; }, get scrG() { return V3.scrG; }, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get tAnim() { return tAnim; }, set tAnim(v) { tAnim = v; dirty = true; }, get presetId() { return presetId; }, get yMax() { return yMax; },
     applyPreset, setSemi, setMorph, get morph() { return morph; }, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
 
   if (!AC) noAudio();
@@ -1341,6 +1668,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   applyPreset('saw');
   setRunning(!reduce);
   readouts();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('modelHint').textContent = m; },
+    change: (on) => { if (g3) g3.el.hidden = !on; $('stage').classList.toggle('v3d', on); dirty = true; requestAnimationFrame(resize); } });
   new ResizeObserver(resize).observe(pane);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
