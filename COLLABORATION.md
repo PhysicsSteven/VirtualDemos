@@ -4407,3 +4407,39 @@ Medical Physics course, with worksheet `mp-photon-interactions`, notes, tests an
 
 **For GPT:** please check the preset hints and the worksheet's Background against the tables (the K edge jumps, the crossings,
 the bone and soft tissue ratios), the key's fits, and hyphens.
+
+## 2026-10-25 · Claude · Medical Physics module page and the small additions (gap 7)
+
+Steve picked option A of the Medical Physics plan (22:48). Step 1: the course page and the four small additions to existing
+demos, each with an upper level worksheet (calculus, cited tables, uncertainties) and a key from a real run in TeacherKeys
+`worksheet-keys/medical-physics/` (capture scripts in `tools/capture/mp-*.cjs`).
+
+- Course `medical-physics` in `curriculum/textbook-map.json` and `tools/courses.py` (4bb1c0f): nine units, NO_BOOK, a home tile,
+  dashed "Coming" cards (unit field `coming`) where later demos land, and WARM_UPS: the course lists its own worksheets first,
+  then the shared demos' other worksheets marked "(warm up)". Dosimetry and Photon Interactions have since taken their places.
+- Radioactive Decay: presets Technetium 99m, Fluorine 18 (PET), Iridium 192, Cobalt 60 (ENSDF half lives) and a ⁹⁹Mo generator:
+  branching B = 0.886 to ⁹⁹ᵐTc (Ultra-TechneKow V4 prescribing information; compilations give 87 to 88.6 %), Elute now and Elute
+  every 24 h, expected values with elutions (multinomial, exact band). Worksheet `mp-technetium-generator`. Test
+  `test_radioactive-decay.cjs` (5 groups).
+- X-ray tube: aluminum and copper filters, aluminum sheets on an air kerma chamber, HVL₁, HVL₂, homogeneity, mean energy and the
+  21 CFR 1020.30(m) minimum (NIST SRD 126 μ/ρ and air μ_en/ρ, log–log). Blind now hides the HVLs too. Worksheet
+  `mp-x-ray-filtration`. Test `test_x-ray-filtration.cjs` (4 groups).
+- Dose view: broad beam for ¹⁸F in lead and concrete (TG-108 Archer fits, buildup factor shown), preset PET uptake room and a
+  TG-108 barrier calculation with NCRP 147 P and T. Worksheet `mp-shielding-barrier`. Test `test_shielding-barrier.cjs` (6).
+- Ultrasound: absorption (Culjat et al. 2010 Table 1, α ∝ f in tissue, f² in water), echo level at the cursor in dB, time gain
+  compensation, preset Attenuation in muscle. Worksheet `mp-ultrasound-attenuation`. Test `test_ultrasound-attenuation.cjs` (5).
+- Fixed before push: the patient body factor is 0.64 (TG-108's patient dose rate constant 0.092 = 0.64 × 0.143, the body absorbing
+  36 %), not 0.36 as first coded.
+- Existing keys unaffected (every addition is off by default): x-ray-spectra, radiation-dose, ultrasound, periodic-table,
+  nuclear-reactions, critical-mass and fusion-gamow recaptured cell for cell (only the random mystery target differs);
+  radioactive-decay and decay-chains captures run with the same tables (their counts are random).
+- Checks: vdcheck `--only after` and `--only clip` 0 on all four demos (the barrier's occupancy menu overflowed at 400 px; fixed),
+  symbols.py --check, --missing, --meanings 0 (glossary sections added, one reviewed line), symcheck 0 differences on the four
+  handouts, check_math 0 problems, courses.py --check.
+
+**For GPT:** please check (1) the TG-108 Archer parameters and the 0.64 body factor; (2) the 0.886 branching share and its cited
+range; (3) the Culjat attenuation values; (4) the Kramers tube's HVL at 80 kV with 2.5 mm Al, 2.20 mm, which fails the CFR
+minimum and is stated on the page as the model's limit: the Photon Interactions demo's SpekPy spectra give 2.74 mm for the same
+beam, so a student using both demos sees two values (worth a sentence in one of them, or moving the tube to SpekPy); (5) the
+Tc 99m and Co 60 half lives, ENSDF 6.0072 h and 5.2711 yr in Radioactive Decay against 6.0067 h and 5.2713 yr in the Dose view's
+sources (left alone because the radiation-dose key uses them); (6) the four keys' numbers.
