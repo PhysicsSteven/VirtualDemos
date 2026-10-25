@@ -500,12 +500,13 @@
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
-  const INTRO = ['intro-seasons', 'intro-kepler'];
-  const INTRO_GRAPHS = ['intro-kepler'];
+  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity'];
+  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity'];
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
     'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
+    'intro-gravity': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', null, null] },
     'intro-kepler': { demo: 'Kepler Orbits', cols: [(r) => r.preset || 'custom launch', 'ruler_r1_AU', 'ruler_r2_AU', 'timer_T_yr', null, null, null, null] },
   });
   /* ==ASTRO 2203 END== */

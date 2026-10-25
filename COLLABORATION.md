@@ -3653,3 +3653,14 @@ appear. The demo gains `window.__rt.px` (tank mm to screen) for the script. vdch
   section added (symbols `--check`, `--missing`, `--meanings` all clean). Key: TeacherKeys `worksheet-keys/astro-2203/intro-kepler-*`
   (`tools/capture/intro-kepler.cjs`: ruler points put exactly on the demo's apsides and the timer set to the demo's measured
   period, then the demo's own Capture and Export; the key says these are ideal readings).
+
+### Follow up: intro gravity worksheet
+
+- **`intro-gravity`, "Gravity from the Ground to Orbit"** (Astro 2203, on Gravity Near Earth, which already exported through
+  `window.vdWorksheet`, so `?ws=` needed no demo change): the six places at the equator, then sea level on Earth, the Moon and
+  Mars; students graph gravity alone against (6.371 / r)² (slope 9.8203 m/s², the surface value), see the scale read 0.0000 at
+  the geostationary height, and compute a 70 kg astronaut's weight on three worlds. Questions on floating in orbit, jumping on
+  the Moon, Newton's Moon test and Mars's g from its mass and radius. Glossary section added; symbols checks clean. Key:
+  TeacherKeys `worksheet-keys/astro-2203/intro-gravity-*` (`tools/capture/intro-gravity.cjs`, a real run).
+- Fix: the demo's header line and notes gave the Moon's GM as 4.905 × 10¹²; the code uses 4.9028001 × 10¹², so 4.903.
+  vdcheck gravity-near-earth 0 problems; test_gravity-near-earth passes.

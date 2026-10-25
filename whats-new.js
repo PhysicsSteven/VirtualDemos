@@ -13,7 +13,7 @@
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
   { id: '2026-10-25-astro-2203', date: '2026-10-25', title: 'Astro 2203 course page',
-    text: 'A new course page follows Astro 2203, Solar System Astronomy, topic by topic, with worksheets written for it: Why We Have Seasons, and Kepler\'s Laws from Mercury to Pluto. Kepler\'s Laws also has new orbits to try: the asteroids Vesta, Ceres and Apophis, and the dwarf planet Pluto.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
+    text: 'A new course page follows Astro 2203, Solar System Astronomy, topic by topic, with worksheets written for it: Why We Have Seasons, Kepler\'s Laws from Mercury to Pluto, and Gravity from the Ground to Orbit. Kepler\'s Laws also has new orbits to try: the asteroids Vesta, Ceres and Apophis, and the dwarf planet Pluto.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-ripple-tank', date: '2026-10-25', title: 'Ripple Tank',
     text: 'A new demo with its own worksheet: a tank of water with a straight bar, one dipper or two. Draw your own walls and shallow plates, then watch waves pass through one or two slits, reflect, bend where the water gets shallower and focus. Measure the wavelength, the speed and the angles of the quiet lines, in a flat view or in 3D.', link: { href: 'demos/ripple-tank.html', text: 'Open Ripple Tank' } },
   { id: '2026-10-25-instrument-builder', date: '2026-10-25', title: 'Build a microscope or telescope',

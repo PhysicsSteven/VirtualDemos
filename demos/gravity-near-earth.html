@@ -79,7 +79,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/gravity-near-earth.html" target="gravity-near-earth-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/gravity-near-earth.html" target="gravity-near-earth-worksheet">Worksheet 1: How g Changes with Height and Latitude</a></li><li><a href="../curriculum/labs/students/intro-gravity.html" target="intro-gravity-worksheet">Worksheet 2: Gravity from the Ground to Orbit (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Where</h2>
         <div class="chips" id="places">
@@ -179,7 +179,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const upd = () => { sync(); draw(); readouts(); };
   /* the header line names the chosen planet's GM and mean radius */
-  const UNITS = { earth: 'GM = 3.986 × 10¹⁴ m³/s² · R = 6371 km', moon: 'GM = 4.905 × 10¹² m³/s² · R = 1737.4 km', mars: 'GM = 4.283 × 10¹³ m³/s² · R = 3389.5 km' };
+  const UNITS = { earth: 'GM = 3.986 × 10¹⁴ m³/s² · R = 6371 km', moon: 'GM = 4.903 × 10¹² m³/s² · R = 1737.4 km', mars: 'GM = 4.283 × 10¹³ m³/s² · R = 3389.5 km' };
   /* Readings section: one row per Record, with the values the panel shows (g to 0.0001 m/s²) */
   window.vdVersion = GRV_VERSION;
   window.vdShowCols = [['planet', 'Planet'], ['h_km', 'h (km)'], ['lat_deg', 'Lat (°)'], ['g_grav_m_s2', 'GM/r²'], ['g_eff_m_s2', 'g eff']];

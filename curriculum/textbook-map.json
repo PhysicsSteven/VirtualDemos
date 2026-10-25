@@ -7892,7 +7892,8 @@
       "status": "usable",
       "note": "New 2026-10-22 (Claude). g against height from sea level to geostationary orbit, latitude and rotation, Earth/Moon/Mars, spring scale reading, near surface line and its error, orbit speed and period; Blind.",
       "handouts": [
-        "gravity-near-earth"
+        "gravity-near-earth",
+        "intro-gravity"
       ],
       "title": "Gravity Near Earth",
       "url": "demos/gravity-near-earth.html"

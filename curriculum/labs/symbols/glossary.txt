@@ -1010,6 +1010,11 @@ g_0 | Gravitational acceleration at the surface, GM/R² | m/s²
 m | Mass of a body on the scale | kg
 g_eff | Effective g that a scale on the turning planet reads | m/s²
 
+== intro-gravity ==
+W | Weight, the force of gravity on you | N
+m | Mass | kg
+g | Local gravity | m/s²
+
 == gyroscope ==
 d | Distance from the pivot to the wheel's center | m
 P | Precession period | s
