@@ -2141,3 +2141,15 @@ Steve (desktop review, 2026-10-25): he prefers plotting current. The demo alread
 - Checks: test_franck_hertz passes, vdcheck 32 screenshots 0 problems, check_math clean.
 
 **For GPT to verify:** the dip ratios and the table maxima quoted in key analysis 1 and 2 against the key's curve tables, and that the handout no longer says there is nothing to record at U_r = 0.
+## Claude, 2026-10-25: Star Slice visual and layout pass
+
+Star Slice was the one Astro demo left out of the visual passes. Edited in `tools/star-slice/star-slice.template.html` and rebuilt with `python3 tools/star-slice/build.py` (the build had fallen behind the page: the phone touch fix of 2026-10-24 was made in `demos/star-slice.html` only, so it is now in the template too, written the same way).
+
+- **Strip across the top of the picture**, as in the other Astro demos: Play, a new **Reset** (back to the first saved moment, paused), ½× 1× 2× 4× and the view switch, with the age of the moment at the right; the color modes (Glow, Elements, Temperature, Density, Burning, Phase, Gamma) and Log radius sit in a second row of the strip. The Timeline card keeps the moment slider, the moment count and Smooth playback. Play is a plain button like the other demos.
+- **3D | Flat switch on the shared kit.** three.js is no longer a script tag in the page: `VD3K.view` (demos/lib/vd3kit.js) loads it through `VD3.load` the first time 3D opens, so `?view=flat` never downloads it; `?view=3d` and `?view=flat` work, a low power device opens Flat, and the renderer comes from `VD3.renderer()`. The buttons read **3D** and **Flat** (were "3D cutaway" and "2D slice"; no handout, key or tool refers to them). The 3D scene itself is unchanged.
+- **Phones:** one finger scrolls the page, two fingers turn and pinch (`VD3.touch`), a tap still probes a layer; the hint under the picture says "Two fingers rotate and pinch to zoom" on a touch screen.
+- **Sidebar trimmed:** the long explanations fold behind "About the view" (View) and "How the picture is drawn" (Key, the convection, surface, true size and glow notes); Data notes is a folded section; the mixing_type codes that the run never uses fold behind "N more codes, not in this run". The shared `rail-details-more` and `rail-details-fold` rules are now on for this page. Nothing was removed.
+- No handout exists for Star Slice, so there is no handout button to fix.
+- CORE, data, readouts, presets and every number are unchanged. `vdcheck` differs only in the expected places (the five button labels and ids above, styles and screenshots); `--only after`: 24 screenshots, 0 problems (no page errors, no sideways scroll at 400 px). Checked in Chromium: Play, Reset, switching views, `?view=flat` (three.js not loaded), and a tap on the 3D view at 390 px with touch.
+
+**For GPT to verify:** nothing numerical. GPT can check the Flat view and the folded text; the 3D view needs WebGL.

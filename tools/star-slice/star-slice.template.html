@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="root-2 rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark html proj-body app bar-div-firstchild stage-canvas-focusvisible spin spin-attn rail rail-h2 formula btnrow seg seg-button inline button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench phone-html phone-app phone-rail wide-proj-stage bench pane btn btn-primary btn-disabled readout-dd toggles-label toggles-input readout-big-dd swatch projshort-proj-stage pane-canvas" lang="en">
+<html data-vd-off="root-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark html proj-body app bar-div-firstchild stage-canvas-focusvisible spin spin-attn rail rail-h2 formula btnrow seg seg-button inline button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench phone-html phone-app phone-rail wide-proj-stage bench pane btn btn-primary btn-disabled readout-dd toggles-label toggles-input readout-big-dd swatch projshort-proj-stage pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -98,8 +98,13 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
 .card h2, .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
 
-.stagebar { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
-.stage { position: relative; height: clamp(380px, 62vh, 760px); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--space); }
+/* the picture: Play, Reset, speed and the 3D | Flat switch in a strip across its top (as in the other Astro demos), the color modes under them */
+.pic { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 10px 0; }
+.stage-ctl.sub { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); justify-content: space-between; }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; font-family: var(--font-ui); }
+.stage { position: relative; height: clamp(380px, 62vh, 760px); overflow: hidden; background: var(--space); }
 .stage canvas { position: absolute; inset: 0; display: block; }
 #slice { touch-action: none; cursor: crosshair; outline: none; }
 #slice:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -120,7 +125,6 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .hoverbox sub { font-size: 0.72em; line-height: 0; }
 .sizebox { display: grid; gap: 6px; justify-items: start; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.stagebar-l { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
 #views button { padding: 5px 12px; }
 .hint3d {
   position: absolute; right: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); box-sizing: border-box;
@@ -266,12 +270,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="main">
-      <div class="stagebar">
-        <div class="stagebar-l">
-        <div class="seg" role="group" aria-label="View" id="views">
-          <button type="button" data-v="3d" aria-pressed="true">3D cutaway</button>
-          <button type="button" data-v="2d" aria-pressed="false">2D slice</button>
+      <div class="pic">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Back to the first saved moment">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speeds">
+          <button type="button" data-s="0.5" aria-pressed="false">½×</button>
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="2" aria-pressed="false">2×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
         </div>
+        <div class="seg" role="group" aria-label="View" id="views">
+          <button type="button" data-dim="3d" aria-pressed="true">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="false">Flat</button>
+        </div>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="stage-ctl sub">
         <div class="seg" role="group" aria-label="Color by" id="modes">
           <button type="button" data-m="glow" aria-pressed="true">Glow</button>
           <button type="button" data-m="comp" aria-pressed="false">Elements</button>
@@ -280,7 +295,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-m="burn" aria-pressed="false">Burning</button>
           <button type="button" data-m="phase" aria-pressed="false" hidden>Phase</button>
           <button type="button" data-m="gam" aria-pressed="false" hidden>Gamma</button>
-        </div>
         </div>
         <label class="inline-toggle"><input type="checkbox" id="tLog">Log radius</label>
       </div>
@@ -292,20 +306,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="sr-only" id="hoverLive" aria-live="polite"></p>
         <div class="msg" id="msg">Unpacking the MESA profiles…</div>
       </div>
+      </div>
       <p class="viewline mono" id="viewline"></p>
       <p class="hint" id="stageHint" style="margin-top:-6px">Hover or tap any layer to name it and probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.</p>
 
       <section class="card" aria-label="Timeline">
         <div class="tl-row">
-          <button type="button" class="btn primary" id="play">Play</button>
           <input type="range" id="scrub" min="0" max="0" step="1" value="0" aria-label="Moment">
           <span class="tl-pos mono" id="tlPos">1 / 1</span>
-          <div class="seg small" role="group" aria-label="Playback speed" id="speeds">
-            <button type="button" data-s="0.5" aria-pressed="false">½×</button>
-            <button type="button" data-s="1" aria-pressed="true">1×</button>
-            <button type="button" data-s="2" aria-pressed="false">2×</button>
-            <button type="button" data-s="4" aria-pressed="false">4×</button>
-          </div>
           <label class="inline-toggle" title="Draw display frames between saved models while playing; readouts always show the nearest saved model"><input type="checkbox" id="tSmooth" checked>Smooth playback</label>
         </div>
         <div class="tl-grid">
@@ -393,7 +401,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label id="tLatWrap" hidden><input type="checkbox" id="tLat" checked>Crystal layer</label>
           <label><input type="checkbox" id="tMove" checked>Moving cells</label>
         </div>
+        <details class="more"><summary>About the view</summary>
         <p class="hint" id="viewHint">Zoom sets the outer edge of the view; inside it radius is linear and to scale. Log radius stretches the inner layers so every layer shows at once; that view is not to scale. Hold scale keeps the same view size while you step through moments.</p>
+        </details>
       </section>
 
       <section>
@@ -420,22 +430,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Key</h2>
         <div id="legend"></div>
         <div class="key" id="mixKey"></div>
+        <details class="more"><summary>How the picture is drawn</summary>
         <p class="hint">Convection is drawn as tracer streaks circling counter rotating roll cells. Their extent comes from MESA's mixing_type and their relative speed from log_conv_vel (compressed so slow and fast regions both show); the roll pattern itself is illustrative, not computed. Overshoot shows as fainter, slower streaks; semiconvection as drifting layers; thermohaline mixing as thin radial fingers.</p>
         <p class="hint" id="surfHint">In the 3D cutaway the outside is drawn from the model's T<sub>eff</sub>: its color is the blackbody color at T<sub>eff</sub> (Planck spectrum through the CIE 1931 color matching functions), with a fixed saturation boost that keeps the hue, and drawn a little dimmer below about 6000 K so cool stars read orange red and hot ones blue white. Its brightness falls toward the edge by the linear limb darkening law I(μ) = 1 − u(1 − μ) with u = 0.65 (0.55 in red and 0.8 in blue, so the edge is redder, as in real stars), where μ is the cosine of the angle between the line of sight and the surface normal. Granulation shows only when MESA has a convective envelope reaching the surface, and never on a white dwarf. The cells are illustrative and far larger than real ones: their size follows d/R = 0.012 x<sup>0.75</sup>, kept between 0.008 and 0.5 (small cells are also drawn with lower contrast), with x = (T<sub>eff</sub>/5772 K)(R/R<sub>sun</sub>)(M<sub>sun</sub>/M), which grows with the surface pressure scale height over the radius. In the cutaway the two upright cut faces show the true colors; the floor of the cut is drawn 12% darker so the cut reads in 3D. The halo around the star and the background sky are decorative.</p>
         <p class="hint" id="gasHint">True size (3D): the view radius follows the star's radius with smooth easing in log scale, so the swelling to a giant and the shrinking to a white dwarf play out on screen; zoom out past the star with the wheel, a pinch or the Zoom slider. The faint rings are the orbits of Mercury, Venus, Earth and Mars at true scale (1 AU = 215.03 R<sub>sun</sub>). Lost gas: the mass of each shell is the drop in the model's total mass between saved moments (MESA star_mass), so a run without mass loss shows none. The shells' shape (a uniform spherical outflow), their speed (an assumed 15 km/s, typical of winds from giants), their brightness, their color (teal once the star is hotter than about 25,000 K and can ionize the gas, dull orange before) and their fading beyond about 2 pc are illustrative.</p>
         <p class="hint" id="burnHint">Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment's peak. Channel shares use MESA's pp, cno and tri_alpha columns; any remainder is other reactions.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Data notes</h2>
+        <details class="fold"><summary>Data notes</summary><div class="foldbody">
         <div class="datanote" id="notes"></div>
         <p class="evidence">Line of evidence: every number and every layer color on this page comes from the MESA profiles; the convective motion, element textures, granulation, sparkle and glow pulse are illustrative, and so are the 3D halo and the background stars and Milky Way.</p>
+        </div></details>
       </section>
     </aside>
   </main>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <script>
 (() => {
   'use strict';
@@ -2028,7 +2042,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- 3D cutaway (three.js r128, Z up, hand written orbit controls) ----------
-  let view = '3d';
+  let view = '2d';   // 3D once three.js has loaded (VD3K.view at boot)
   const V3 = { ok: false, failed: '' };
   const orbit = { az: ORBIT0.az, pol: ORBIT0.pol, zoom: 1, user: false, t0: 0 };
   const ov3 = $('ov3'), o3 = ov3.getContext('2d');
@@ -2251,7 +2265,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let renderer = null;
     try {
       if (!window.THREE) throw new Error('three.js could not be loaded');
-      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer = VD3.renderer();   // shared: null without WebGL; resize3D sets the pixel ratio
+      if (!renderer) throw new Error('WebGL is not available');
       renderer.setClearColor(SPACE_HEX, 1);
       const el = renderer.domElement;
       el.id = 'gl'; el.tabIndex = 0; el.setAttribute('role', 'application'); el.hidden = true;
@@ -2307,7 +2322,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       buildCut();
       bind3D(el);
       glc = el;
-      el.addEventListener('webglcontextlost', (e) => { e.preventDefault(); fail3D('The 3D view stopped (the browser dropped its WebGL context), so the 2D slice is shown.'); });
+      el.addEventListener('webglcontextlost', (e) => { e.preventDefault(); fail3D('The 3D view stopped (the browser dropped its WebGL context), so the flat slice is shown.'); });
       resize3D();
       return true;
     } catch (err) {
@@ -2319,7 +2334,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function fail3D(msg) {
     V3.ok = false; V3.failed = V3.failed || msg;
     if (glc) glc.hidden = true;
-    const b = document.querySelector('#views button[data-v="3d"]'); if (b) b.disabled = true;
+    const b = document.querySelector('#views button[data-dim="3d"]'); if (b) b.disabled = true;
     setView('2d');
     const n = $('note3d'); n.textContent = msg; n.hidden = false;
   }
@@ -2710,7 +2725,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function bind3D(el) {
     const ptr = new Map(); let drag = null, pinch = null;
     const stopAuto = () => { orbit.user = true; };
+    let tap = null;
+    VD3.touch(el, { hint: 'Use two fingers to turn the star', move: (dx, dy, k) => {
+      stopAuto(); tap = null; hoverHide();
+      const kk = 0.0085 / Math.sqrt(orbit.zoom);
+      orbit.az -= dx * kk; orbit.pol = clamp(orbit.pol - dy * kk, 0.06, Math.PI - 0.06);
+      orbit.zoom = clamp(orbit.zoom * k, zMin(), ZMAX); chartsDirty = true; schedule();
+    } });
     el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') { tap = e.isPrimary ? { id: e.pointerId, x: e.clientX, y: e.clientY } : null; return; }
       el.focus({ preventScroll: true }); stopAuto();
       ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
@@ -2718,6 +2741,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       drag = { x: e.clientX, y: e.clientY, moved: 0 }; el.classList.add('dragging');
     });
     el.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') { if (tap && tap.id === e.pointerId && Math.abs(e.clientX - tap.x) + Math.abs(e.clientY - tap.y) > 12) tap = null; return; }
       if (ptr.has(e.pointerId)) ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pinch && ptr.size === 2) {
         const q = [...ptr.values()], d = Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y);
@@ -2735,6 +2759,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     });
     el.addEventListener('pointerleave', () => { if (!hov.touch) hoverHide(); });
     const end = (e) => {
+      if (e.pointerType === 'touch') {
+        if (tap && tap.id === e.pointerId && e.type === 'pointerup') { const w = probe3(e); if (w) hoverShow(e.clientX, e.clientY, w === 'surf', true); else hoverHide(); }
+        tap = null; return;
+      }
       if (drag && drag.moved < (e.pointerType === 'touch' ? 12 : 5) && e.type === 'pointerup') {
         const w = probe3(e);
         if (w) hoverShow(e.clientX, e.clientY, w === 'surf', e.pointerType !== 'mouse'); else hoverHide();
@@ -2769,15 +2797,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- view switching ----------
   const HINT2D = 'Hover or tap any layer to name it and probe it · Scroll or pinch to zoom · Double click to reset · Arrow keys step moments and zoom.';
-  const HINT3D = 'Drag to rotate · Scroll or pinch to zoom · Hover or tap any part of the star to name it and probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.';
+  const COARSE = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
+  const HINT3D = (COARSE ? 'Two fingers rotate and pinch to zoom' : 'Drag to rotate · Scroll or pinch to zoom') + ' · Hover or tap any part of the star to name it and probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.';
   function setView(v) {
     if (v === '3d' && !init3D()) {
       v = '2d';
-      const b = document.querySelector('#views button[data-v="3d"]'); if (b) b.disabled = true;
-      const n = $('note3d'); n.textContent = 'The 3D view needs WebGL and three.js, which are not available here, so the 2D slice is shown.'; n.hidden = false;
+      const b = document.querySelector('#views button[data-dim="3d"]'); if (b) b.disabled = true;
+      const n = $('note3d'); n.textContent = 'The 3D view needs WebGL and three.js, which are not available here, so the flat slice is shown.'; n.hidden = false;
     }
     view = v;
-    for (const b of document.querySelectorAll('#views button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    for (const b of document.querySelectorAll('#views button')) b.setAttribute('aria-pressed', String((b.dataset.dim === '3d') === (v === '3d')));
     const is3 = v === '3d';
     cv.hidden = is3; ov3.hidden = !is3; if (glc) glc.hidden = !is3;
     $('cutBox').hidden = !is3; $('sizeBox').hidden = !is3;
@@ -2789,7 +2818,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (typeof hoverHide === 'function') try { hoverHide(); } catch (_) {}
     markAll();
   }
-  for (const b of document.querySelectorAll('#views button')) b.addEventListener('click', () => { if (!b.disabled) setView(b.dataset.v); });
   for (const b of document.querySelectorAll('#sizes button')) b.addEventListener('click', () => {
     S.size = b.dataset.s;
     for (const x of document.querySelectorAll('#sizes button')) x.setAttribute('aria-pressed', String(x === b));
@@ -3012,6 +3040,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const multiRun = new Set(D.moments.map((x) => x.run)).size > 1;
     $('stageLabel').innerHTML = mo.stage + ' <small>inferred</small>' + (multiRun && runName ? ' <small>· MESA stage: ' + runName + '</small>' : '');
     $('oAge').textContent = mo.age != null ? fmtAge(mo.age) : '—';
+    $('count').innerHTML = mo.age != null ? fmtAge(mo.age) + ' <small>age</small>' : '';
     $('oModel').textContent = mo.model != null ? grp(mo.model) : '—';
     $('oM').textContent = sci(mo.M, 4) + ' M☉';
     $('oR').textContent = fmtRsun(mo.R);
@@ -3151,10 +3180,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else {
       const rows = [[1, 'conv'], [2, 'faint'], [9, 'faint'], [10, 'psep'], [3, 'semi'], [4, 'thermo'], [5, 'dots'], [6, 'dots'], [7, 'dots'], [8, 'dots']];
       const extra = [...D.codes].filter((c) => !(c in MIX));
-      K.innerHTML = '<span><b style="color:var(--ink)">MESA mixing_type</b></span>' + rows.map(([c, t]) =>
-        `<span class="${D.codes.has(c) ? 'present' : ''}"><canvas data-t="${t}" aria-hidden="true"></canvas>${c} ${MIX[c]}${D.codes.has(c) ? '' : ' (not in this run)'}</span>`).join('') +
+      // the codes in this run first; the ones it never uses fold away under them
+      const row = ([c, t]) => `<span class="${D.codes.has(c) ? 'present' : ''}"><canvas data-t="${t}" aria-hidden="true"></canvas>${c} ${MIX[c]}${D.codes.has(c) ? '' : ' (not in this run)'}</span>`;
+      const absent = rows.filter(([c]) => !D.codes.has(c));
+      K.innerHTML = '<span><b style="color:var(--ink)">MESA mixing_type</b></span>' + rows.filter(([c]) => D.codes.has(c)).map(row).join('') +
         extra.map((c) => `<span class="present"><canvas data-t="dots" aria-hidden="true"></canvas>mixing code ${c}</span>`).join('') +
-        '<span>0 none: plain color</span>';
+        '<span>0 none: plain color</span>' +
+        (absent.length ? `<details class="more"><summary>${absent.length} more codes, not in this run</summary><div class="key">${absent.map(row).join('')}</div></details>` : '');
       for (const cvs of K.querySelectorAll('canvas')) swatch(cvs, cvs.dataset.t, T);
     }
     $('burnHint').hidden = !D.has.eps;
@@ -3456,6 +3488,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     S.xmode = b.dataset.x; for (const x of document.querySelectorAll('#xmodes button')) x.setAttribute('aria-pressed', String(x === b)); chartsDirty = true; schedule();
   });
   $('play').addEventListener('click', () => setPlaying(!S.playing));
+  $('restart').addEventListener('click', () => { if (!S.D) return; setPlaying(false); setMoment(0); });
   $('tSmooth').addEventListener('change', (e) => { S.smooth = e.target.checked; S.blendMo = null; markAll(); });
   $('scrub').addEventListener('input', (e) => { setPlaying(false); setMoment(+e.target.value); });
   $('zoom').addEventListener('input', (e) => {
@@ -3715,7 +3748,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   renderDatasetChips(); renderMassSlider();
   new ResizeObserver(() => renderMassSlider()).observe($('massBox'));
   resize();
-  setView('3d');
+  // the 3D | Flat switch (?view=flat or ?view=3d; a low power device opens Flat); three.js loads the first time 3D opens
+  VD3K.view({ seg: '#views', init: () => init3D(), change: (on) => setView(on ? '3d' : '2d'),
+    status: () => { const n = $('note3d'); n.textContent = V3.failed && !/three\.js|WebGL/.test(V3.failed) ? V3.failed : 'The 3D view needs WebGL and three.js, which are not available here, so the flat slice is shown.'; n.hidden = false; const b = document.querySelector('#views button[data-dim="3d"]'); if (b) b.disabled = true; } });
   if (S.datasets.length) {
     // open on the run closest to the Sun's mass when there are several
     const list = embedded(), first = list.length ? list.reduce((a, b) => (Math.abs(Math.log10(b.mass)) < Math.abs(Math.log10(a.mass)) ? b : a)) : S.datasets[0];
