@@ -2509,3 +2509,19 @@ Steve asked for item 20 of the open items list now rather than after the TA runs
 - **Keys (TeacherKeys a41146f):** both recaptured; every captured demo number is unchanged. The turning run and the ball thrown up (motion graphs) and the trajectory y against t (projectile drag) now graph the quadratic. Rebuilt pendulum and springs keys give the same text as before, so straight line graphs are unchanged.
 
 **For GPT to verify:** the quadratic coefficients and standard errors in the two keys against an independent least squares fit (checked here with numpy: trajectory a = 1.9992 ± 0.0031 m, b = 17.3198 ± 0.0042 m/s, c = −4.9043 ± 0.0011 m/s²; ball thrown up c = −4.9043 ± 0.0020 m/s²; turning run exact, −6 + 4t − 0.5t²).
+
+## Claude, 2026-10-25: visual standard sweep, four weakest demos brought to the resistivity bar
+
+Surveyed the 89 demos outside Steve's approved list (and DNA, BZ, Energy Sources, Star Slice) against the resistivity rework, from the thumbnails and live screenshots. The four furthest short got a pass: pictures only, CORE blocks byte identical, no control ids, readouts or exports renamed. Each now opens in a 3D view built on `demos/lib/vd3kit.js`, with a 3D | Flat switch (`#viewSeg` or `#dimSeg`, `?view=flat` / `?view=3d`), drags that work in 3D, and Flat as the fallback on low power devices.
+
+- **Static Equilibrium:** seesaw in a park, plank on sawhorses with the painter, sign on a strut and cable on a brick shop front, ladder against a wall; to scale in meters, people sized by mass (stated as a guide only), 3D force arrows, tipping and slipping shown. Flat view finished with VDGear.
+- **Kepler's Laws:** orbit plane in space at a tilt, glowing star, lit planet, swept area sectors, foci and apsides, speed circles, launch arrow; "Star and planets drawn far larger than to scale" on the picture. Flat view gets a lit planet and an optional space backdrop (Layers, off by default).
+- **Fluids:** all six scenes in 3D: glass tank with the block in its material, spring balance and overflow can on a kitchen scale, depth probe and dial gauge, the four shaped vessels, barometer and manometer, Venturi pipe with standpipes on cm rules and tracers, Torricelli jet. Each caption says what is not to scale (Venturi widths 2×, depth tank width, barometer widths).
+- **Potential Energy Curves:** a scene of the real system above the U(x) graph, moving with the same x: glider on an air track with its spring, the roller coaster track h = U/mg to scale with the 500 kg car, two argon atoms σ across, a pendulum on an L stand, and a ball on a board cut to U(x) for Double well, Draw your own and Ball on a track ("heights in proportion to U, not to scale"). Energy bar with U, K and E.
+- Thumbnails refreshed for the four; fluids thumbnail now shows the weighing setup.
+
+Keys: each TeacherKeys capture script was run against the old pages and the new ones (worksheet page shimmed, `send()` records the handoff) and the outputs are identical, so no key changed. Kepler was compared with reduced motion so the simulation stays paused (its live rR and rV readouts vary with run timing on the old page too). All node suites pass apart from `test_main_lab_controls.cjs`, which fails the same way on the unchanged tree locally (its server does not serve `vd3kit.js` here) and passes in CI.
+
+Left, in order of how far short they fall: collisions, motion graphs (an earlier pass left it: the graphs are the point), polarization (opens flat), vectors components, the standing waves Two waves view, sound waves plots, thin films, entropy, relativity from magnetism, induction at work, timbre, ultrasound scanner.
+
+**For GPT to verify:** the not to scale statements on each picture; nothing numeric changed.

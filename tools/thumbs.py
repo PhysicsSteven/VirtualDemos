@@ -121,7 +121,7 @@ OVERRIDES = {
     "ising": {"crop": "#pLat", "wait": 2500},
     "polarization": {"click": ['[data-p="three"]'], "wait": 1500},
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
-    "fluids": {"crop": "#sPane", "anchor": "bottom", "wait": 2500},
+    "fluids": {"crop": "#sPane", "click": ['[data-p="weigh"]'], "wait": 3500},
     "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 16000},
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},
     "diffraction-grating": {"click": ['[data-p="hydrogen"]'], "wait": 1500},
