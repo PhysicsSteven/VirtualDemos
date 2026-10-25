@@ -497,7 +497,8 @@
   /* ==ASTRO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
-     their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
+     their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
+     such as position against time at constant acceleration. Anything computed from the fit (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs'];
@@ -929,6 +930,7 @@ details.about[open] > summary { margin-bottom: 8px; }
 
   /* ---------- graphs ---------- */
   addEventListener('resize', () => replot());
+  let clipN = 0;
   function replot() { if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); }); }
   function graphBox(T, R, after) {
     R.axes = { x: '', y: '' };
@@ -937,13 +939,16 @@ details.about[open] > summary { margin-bottom: 8px; }
         [el('option', { value: '', text: 'choose a column' })].concat(T.cols.map((c, i) => el('option', { value: String(i), text: pretty(c) || 'Column ' + (i + 1) }))));
       R.axesSel = R.axesSel || {}; R.axesSel[k] = s; return s;
     };
+    const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0, fit = el('select', { class: 'ws-f ws-sel', 'aria-label': 'Kind of fit', on: { change: () => { R.axes.fit = fit.value; changed(); } } },
+      [el('option', { value: '', text: 'straight line' }), el('option', { value: 'quad', text: 'quadratic, y = a + bx + cx²' })]);
+    R.axesSel = R.axesSel || {}; R.axesSel.fit = fit;
     R.graph = el('div');
     const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
-      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])]),
+      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit])])),
       R.graph]);
     after.appendChild(box);
   }
-  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; };
+  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit === 'quad') R.axes.fit = 'quad'; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; };
   const numOf = (f) => { if (!f) return NaN; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
@@ -955,16 +960,36 @@ details.about[open] > summary { margin-bottom: 8px; }
     let a = my - b * mx; if (exact && Math.abs(a) < 1e-9 * ymax) a = 0;
     return { b, a, res, n, exact, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)) };
   }
+  /* least squares quadratic y = a + bx + cx², all three free, equal weights. Solved in u = (x − mean)/spread so the normal
+     equations stay well conditioned, then carried back to a, b, c with their covariance (n − 3 degrees of freedom) */
+  function fitQuad(xs, ys) {
+    const n = xs.length; if (new Set(xs).size < 3) return null;
+    const mx = xs.reduce((q, x) => q + x, 0) / n, sx = Math.sqrt(xs.reduce((q, x) => q + (x - mx) * (x - mx), 0) / n), us = xs.map((x) => (x - mx) / sx);
+    const M = [0, 1, 2].map((i) => [0, 1, 2].map((j) => us.reduce((q, u) => q + Math.pow(u, i + j), 0))), v = [0, 1, 2].map((i) => us.reduce((q, u, k) => q + ys[k] * Math.pow(u, i), 0));
+    const det = (m) => m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    const D = det(M); if (!(Math.abs(D) > 1e-12)) return null;
+    const C = [0, 1, 2].map((i) => [0, 1, 2].map((j) => { const r = [0, 1, 2].filter((k) => k !== j), c = [0, 1, 2].filter((k) => k !== i);
+      return ((i + j) % 2 ? -1 : 1) * (M[r[0]][c[0]] * M[r[1]][c[1]] - M[r[0]][c[1]] * M[r[1]][c[0]]) / D; }));   /* inverse of M (symmetric) */
+    const p = C.map((row) => row[0] * v[0] + row[1] * v[1] + row[2] * v[2]);
+    const J = [[1, -mx / sx, mx * mx / (sx * sx)], [0, 1 / sx, -2 * mx / (sx * sx)], [0, 0, 1 / (sx * sx)]];   /* (a, b, c) = J p */
+    const [a0, b, c] = J.map((row) => row[0] * p[0] + row[1] * p[1] + row[2] * p[2]);
+    let a = a0;
+    const res = xs.map((x, i) => ys[i] - (p[0] + p[1] * us[i] + p[2] * us[i] * us[i])), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 3 ? ss / (n - 3) : NaN;
+    const ymax = Math.max(...ys.map(Math.abs)), exact = n > 3 && ss <= 1e-24 * n * ymax * ymax;
+    if (exact && Math.abs(a) < 1e-9 * ymax) a = 0;
+    const se = J.map((row) => Math.sqrt(s2 * [0, 1, 2].reduce((q, i) => q + [0, 1, 2].reduce((r, j) => r + row[i] * C[i][j] * row[j], 0), 0)));
+    return { quad: true, a, b, c, res, n, exact, seA: se[0], seB: se[1], seC: se[2], at: (x) => a + b * x + c * x * x };
+  }
   /* value ± uncertainty: the uncertainty to 2 significant figures and the value to the same decimal place; powers of ten below
      0.001 and from 100000 up. exact: the points lie on the line to rounding error, so the standard error is zero */
   const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹';
   const sup = (k) => (k < 0 ? '⁻' : '') + String(Math.abs(k)).split('').map((c) => SUPD[+c]).join('');
-  function pm(v, e, unit, n, exact) {
-    const u = unit ? ' ' + unit : '', ok = n >= 3 && !exact && e > 0 && isFinite(e);
+  function pm(v, e, unit, n, exact, k3) {   /* k3: a quadratic, so three coefficients come from the points, not two */
+    const u = unit ? ' ' + unit : '', need = k3 ? 4 : 3, ok = n >= need && !exact && e > 0 && isFinite(e);
     const p = ok ? Math.floor(Math.log10(e)) - 1 : 0, vr = ok ? Math.round(v / Math.pow(10, p)) * Math.pow(10, p) : +v.toPrecision(exact ? 6 : 4);
     const big = Math.max(Math.abs(vr), ok ? e : 0);
     const k = big > 0 && (big < 1e-3 || big >= 1e5) ? +big.toExponential(3).split('e')[1] : 0, sc = Math.pow(10, k), tail = k ? ` × 10${sup(k)}` : '';
-    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? '± 0 (the points lie exactly on the line)' : '(uncertainty needs at least 3 points)'}`;
+    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? `± 0 (the points lie exactly on the ${k3 ? 'curve' : 'line'})` : `(uncertainty needs at least ${need} points)`}`;
     const d = Math.max(0, k - p), r = (x) => (x / sc).toFixed(d);
     return `(${r(vr)} ± ${r(Math.round(e / Math.pow(10, p)) * Math.pow(10, p))})${tail}${u}`;
   }
@@ -1004,12 +1029,17 @@ details.about[open] > summary { margin-bottom: 8px; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const sameX = xs.every((x) => x === xs[0]);
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0;
-    const f = sameX || curve ? null : fitLine(xs, ys);
+    const quad = !curve && R.axes.fit === 'quad', few = quad && !sameX && new Set(xs).size < 3;
+    const f = sameX || curve ? null : quad ? fitQuad(xs, ys) : fitLine(xs, ys);
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
     const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
     const lab = (n, u) => (u ? `${n} (${u})` : n);
     const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
-    if (f) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
+    if (f && !f.quad) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
+    if (f && f.quad) {   /* the curve, clipped to the plot box */
+      const id = 'wsclip' + (++clipN), cp = sv('clipPath', { id }); cp.appendChild(sv('rect', { x: 62, y: 10, width: W - 80, height: 210 })); svg.appendChild(cp);
+      svg.appendChild(sv('polyline', { points: Array.from({ length: 121 }, (_, i) => { const x = xr[0] + (xr[1] - xr[0]) * i / 120; return `${A.X(x)},${A.Y(f.at(x))}`; }).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 2, 'clip-path': `url(#${id})` }));
+    }
     if (curve) svg.appendChild(sv('polyline', { points: pts.slice().sort((p, q) => p[0] - q[0]).map(([x, y]) => `${A.X(x)},${A.Y(y)}`).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.5 }));
     const dot = curve && pts.length > 40 ? 2.5 : 4.5;
     pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: dot, fill: '#cf222e', stroke: '#fff', 'stroke-width': dot > 3 ? 1 : 0.5 })));
@@ -1021,14 +1051,20 @@ details.about[open] > summary { margin-bottom: 8px; }
     box.appendChild(svg);
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: `${pts.length} points, joined in order of ${P.xName}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.` })); return; }
+    if (few) { box.appendChild(el('p', { class: 'ws-warn2', text: `A quadratic needs points at three or more different values of ${P.xName}.` })); return; }
     if (!f) return;
     const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
     const su = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
-    const lines = [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
+    const sq = (u) => (/[\/\s²³]/.test(u) ? `(${u})²` : u + '²'); /* (m/s)², not m/s² */
+    const cu = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${sq(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${sq(P.xUnit)}` : '');
+    const lines = f.quad ? [['a', f.a, f.seA, P.yUnit], ['b', f.b, f.seB, su], ['c', f.c, f.seC, cu]] : [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
-    lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact))); });
+    if (f.quad) { res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${P.yName} = a + b·${P.xName} + c·${P.xName}²`)); }
+    lines.forEach(([name, v, e, u], i) => { if (i || f.quad) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact, f.quad))); });
     box.appendChild(res);
-    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
+    box.appendChild(el('p', { class: 'ws-pnote', text: f.quad
+      ? `${f.n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − 3 degrees of freedom). What the coefficients tell you is for you to work out.`
+      : `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
   }
 
   /* ---------- readings from the demo ---------- */

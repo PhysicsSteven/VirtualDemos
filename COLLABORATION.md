@@ -2499,3 +2499,13 @@ Steve's go ahead (2026-10-25 12:29) for the same audit as the OpenStax and Astro
 **Looked at and left:** sound-intensity uses ρ = 1.20 kg/m³ for the pressure amplitude (stated on the page and in its notes) where room-acoustics and acoustic-levitation use 1.204; a 0.17% change in Δp, but its notes key Q6 would need redoing, so it is on Steve's list. Ultrasound's air row is the table's 330 m/s and Z 429 (only used as the reflector under water, where only Z matters). Levitation foam bulk modulus 3 MPa is stated on the page as a rough figure (f₁ moves from 0.95 to 1 if the foam were rigid). room-acoustics' `diffuseLevel` is unused; the anechoic critical distance uses √(A/16π), called "about" in the handout.
 
 **For GPT to verify:** the two wording changes.
+
+## Claude, 2026-10-25: quadratic fit in the worksheet graph (open item 20)
+
+Steve asked for item 20 of the open items list now rather than after the TA runs.
+
+- **`curriculum/labs/worksheet.js`:** every worksheet graph has a third choice, **Fit**: straight line (the default, unchanged) or quadratic, $$y = a + bx + cx^2$$ with all three coefficients free and equal weights. It shows the curve, the residuals, and a, b and c with standard errors from the scatter about the curve (n − 3 degrees of freedom; at least 4 points for an uncertainty, at least three different x values for a fit). No derived results (g, v₀, turning time) are shown. The fit is solved in a centered and scaled x and carried back to a, b, c with the full covariance. The choice is saved with the axes (`axes.fit = "quad"`), so old save files open as straight lines. Curve tables (Franck–Hertz) have no Fit choice.
+- **Handouts:** `motion-graphs` and `projectile-drag` now do their quadratic fits in the worksheet instead of the demo's Plot and fit. Projectile drag still fits R against sin 2θ in the demo, since the Data table has no sin 2θ column.
+- **Keys (TeacherKeys a41146f):** both recaptured; every captured demo number is unchanged. The turning run and the ball thrown up (motion graphs) and the trajectory y against t (projectile drag) now graph the quadratic. Rebuilt pendulum and springs keys give the same text as before, so straight line graphs are unchanged.
+
+**For GPT to verify:** the quadratic coefficients and standard errors in the two keys against an independent least squares fit (checked here with numpy: trajectory a = 1.9992 ± 0.0031 m, b = 17.3198 ± 0.0042 m/s, c = −4.9043 ± 0.0011 m/s²; ball thrown up c = −4.9043 ± 0.0020 m/s²; turning run exact, −6 + 4t − 0.5t²).
