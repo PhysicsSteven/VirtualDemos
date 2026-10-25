@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §12.7 (ferromagnetism and the 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Cold: one domain; Hot: paramagnet; At $$T_c$$: fractal domains; Quench and coarsen; Hysteresis; Antiferromagnet.
+**Setups in the demo:** Cold: one domain; Hot: paramagnet; Near $$T_c$$ in a field; At $$T_c$$: fractal domains; Quench and coarsen; Hysteresis; Antiferromagnet.
 
 **Using the demo.**
 
@@ -73,7 +73,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-Keep the field at zero and the coupling ferromagnetic ($$J = +1$$) throughout.
+The demo opens with a small field, $$h = -0.2$$: set the field to zero first. Keep the field at zero and the coupling ferromagnetic ($$J = +1$$) throughout.
 
 **Heating through $$T_c$$.** On a $$64 \times 64$$ lattice with Metropolis updates, discard 1000 sweeps and average over 5000. Run a temperature scan from 1.5 to 3.6 and keep every reading.
 

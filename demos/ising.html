@@ -174,7 +174,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <div class="chips" id="presets">
           <button type="button" data-p="cold" aria-pressed="false">Cold: one domain</button>
           <button type="button" data-p="hot" aria-pressed="false">Hot: paramagnet</button>
-          <button type="button" data-p="tc" aria-pressed="true">At T<sub>c</sub>: fractal domains</button>
+          <button type="button" data-p="tcField" aria-pressed="true">Near T<sub>c</sub> in a field</button>
+          <button type="button" data-p="tc" aria-pressed="false">At T<sub>c</sub>: fractal domains</button>
           <button type="button" data-p="quench" aria-pressed="false">Quench and coarsen</button>
           <button type="button" data-p="hyst" aria-pressed="false">Hysteresis</button>
           <button type="button" data-p="af" aria-pressed="false">Antiferromagnet</button>
@@ -205,8 +206,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <div class="btnrow"><button type="button" class="btn small" id="toTc">Set T = T<sub>c</sub></button></div>
         <div>
           <div class="slider-head"><label for="hIn">Field h</label><output id="hOut" class="mono" for="hIn"></output></div>
-          <input type="range" id="hIn" min="-1" max="1" step="0.01" value="0">
+          <input type="range" id="hIn" min="-1" max="1" step="0.01" value="-0.2">
         </div>
+        <div class="btnrow"><button type="button" class="btn small" id="hZero">Set h = 0</button></div>
         <div class="inline">
           <label class="check"><input type="checkbox" id="hSweep">Sweep h between ±1</label>
           <select id="hRate" aria-label="Change in h per sweep">
@@ -616,9 +618,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const BUDGET_MS = 10;
 
   const S = {
-    T: TC, h: 0, J: 1, L: 128, method: 'wolff', speed: 3, seed: 2026, start: 'random',
+    T: TC, h: -0.2, J: 1, L: 128, method: 'metropolis', speed: 3, seed: 2026, start: 'random',
     playing: !reduce, blind: false, exact: true, showClu: false, stagger: false,
-    hSweep: false, hRate: 0.002, hDir: -1, preset: 'tc', tab: 'time',
+    hSweep: false, hRate: 0.002, hDir: -1, preset: 'tcField', tab: 'time',
     sweeps: 0, rows: [], result: null, captured: true, lastAct: NaN,
   };
   let lat = null, rng = null, tabM = null, tabH = null;
@@ -1317,6 +1319,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('tIn').addEventListener('input', (e) => { setT(+e.target.value); syncSliders(); });
   $('hIn').addEventListener('input', (e) => { S.hSweep = false; $('hSweep').checked = false; setH(+e.target.value); syncSliders(); });
   $('toTc').addEventListener('click', () => { setT(TC); syncSliders(); });
+  $('hZero').addEventListener('click', () => { setH(0); syncSliders(); });
   $('hSweep').addEventListener('change', (e) => {
     S.hSweep = e.target.checked;
     if (S.hSweep) { stopMeasure('setting'); if (S.method === 'wolff') { setMethod('metropolis'); methNote('Wolff needs h = 0, so the update switched to Metropolis.'); } loop.n = 0; loop.head = 0; S.tab = 'mh'; }
@@ -1364,6 +1367,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       set: { T: 1.5, h: 0, J: 1, L: 128, method: 'metropolis', start: 'up', speed: 5, tab: 'time', stagger: false } },
     hot: { hint: 'T = 4, far above T_c. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about 2/√N, less on a larger lattice.',
       set: { T: 4, h: 0, J: 1, L: 128, method: 'metropolis', start: 'random', speed: 4, tab: 'time', stagger: false } },
+    tcField: { hint: 'T_c with a small field, h = −0.2, that favors down spins (navy). The field breaks the tie between up and down, so the lattice settles mostly down, with small up islands that come and go, and there is no sharp transition. Set h = 0 to see the critical point itself, or choose At T_c.',
+      set: { T: TC, h: -0.2, J: 1, L: 128, method: 'metropolis', start: 'random', speed: 3, tab: 'time', stagger: false } },
     tc: { hint: 'Exactly at T_c = 2/ln(1 + √2). Domains of every size, inside each other: zoom in and it looks the same. Wolff updates flip whole clusters to beat critical slowing down; tick Show the last Wolff cluster to see one.',
       set: { T: TC, h: 0, J: 1, L: 256, method: 'wolff', start: 'random', speed: 3, tab: 'time', stagger: false } },
     quench: { hint: 'A random lattice (infinite T) dropped to T = 1.2. Domains coarsen: their size grows roughly as the square root of the sweeps. Sometimes stripes wrap around the lattice and last a very long time.',
@@ -1434,7 +1439,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const ro = new ResizeObserver(() => resize());
   ro.observe($('pLat')); ro.observe($('pcan'));
   resize();
-  applyPreset('tc');
+  applyPreset('tcField');
   setPlaying(!reduce);
   renderTable(); syncMeasureUI(); statusUI();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.lat = dirty.plot = true; });

@@ -231,10 +231,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const m of MOL) { const cx = x + r * 2 + m.x * (w - r * 4), cy = y + r * 2 + m.y * (h - r * 4), q = vib ? 1 + 0.15 * Math.sin(m.a * 5) : 1;
       ctx.fillStyle = col;
       if (shape === 'mono') { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); continue; }
-      const dx = Math.cos(m.a) * r * 1.3 * q, dy = Math.sin(m.a) * r * 1.3 * q;
-      if (shape === 'linear') { ctx.beginPath(); ctx.arc(cx - dx, cy - dy, r * 0.9, 0, 7); ctx.arc(cx + dx, cy + dy, r * 0.9, 0, 7); ctx.fill(); }
-      else if (shape === 'linear3') { ctx.beginPath(); ctx.arc(cx - 1.6 * dx, cy - 1.6 * dy, r * 0.8, 0, 7); ctx.arc(cx + 1.6 * dx, cy + 1.6 * dy, r * 0.8, 0, 7); ctx.fill(); ctx.fillStyle = col2; ctx.beginPath(); ctx.arc(cx, cy, r * 0.9, 0, 7); ctx.fill(); }
-      else { const b = 0.9; ctx.fillStyle = col2; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx + Math.cos(m.a + b) * r * 1.5, cy + Math.sin(m.a + b) * r * 1.5, r * 0.6, 0, 7); ctx.arc(cx + Math.cos(m.a - b + Math.PI) * r * 1.5, cy + Math.sin(m.a - b + Math.PI) * r * 1.5, r * 0.6, 0, 7); ctx.fill(); }
+      const dx = Math.cos(m.a) * r * 1.3 * q, dy = Math.sin(m.a) * r * 1.3 * q, b = 0.9;
+      /* atoms as [x, y, radius, color]; the first is the one the bonds start from (a ball and stick picture, atoms spread to show the bonds) */
+      const at = shape === 'linear' ? [[cx - 1.4 * dx, cy - 1.4 * dy, r * 0.8, col], [cx + 1.4 * dx, cy + 1.4 * dy, r * 0.8, col]]
+        : shape === 'linear3' ? [[cx, cy, r * 0.9, col2], [cx - 1.9 * dx, cy - 1.9 * dy, r * 0.8, col], [cx + 1.9 * dx, cy + 1.9 * dy, r * 0.8, col]]
+        : [[cx, cy, r, col2], [cx + Math.cos(m.a + b) * r * 2.2, cy + Math.sin(m.a + b) * r * 2.2, r * 0.6, col], [cx + Math.cos(m.a - b + Math.PI) * r * 2.2, cy + Math.sin(m.a - b + Math.PI) * r * 2.2, r * 0.6, col]];
+      ctx.strokeStyle = col; ctx.lineWidth = Math.max(1.2, r * 0.45); ctx.lineCap = 'round'; ctx.beginPath();
+      for (let k = 1; k < at.length; k++) { ctx.moveTo(at[0][0], at[0][1]); ctx.lineTo(at[k][0], at[k][1]); } ctx.stroke();
+      for (const [ax, ay, ra, cl] of at) { ctx.fillStyle = cl; ctx.beginPath(); ctx.arc(ax, ay, ra, 0, 7); ctx.fill(); }
     }
   }
   function lcdBox(x, y, w, h, text, name) {
@@ -338,6 +342,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rule = VD3K.ruler(S3, { len: 0.6, to: 600, unit: 'mm', step: 10, w: 0.03, wood: true }); const ruleG = new THREE.Group(); ruleG.add(rule); ruleG.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, -1, 0)));
     ruleG.position.set(-0.075, -0.035, BASE); heat.add(ruleG);   /* the rule stands up beside the cylinder, its 0 at the cylinder floor, printed side to the front */
     const atoms = VD3K.particles(S3, { n: MOL.length * 3, r: 0.0042, seg: 8 }); heat.add(atoms);
+    /* the bonds: unit cylinders along y, stretched and turned between two atoms */
+    const bondG = new THREE.CylinderGeometry(0.0013, 0.0013, 1, 8), bonds = new THREE.InstancedMesh(bondG, new THREE.MeshStandardMaterial({ color: '#9aa4b0', roughness: 0.45, metalness: 0.2 }), MOL.length * 2);
+    bonds.frustumCulled = false; bonds.count = 0; heat.add(bonds);
     /* meters on a rack */
     const rack = VD3K.box(0.2, 0.02, 0.36, dark3, 0.26, 0.04, 0); heat.add(rack);
     const mT = VD3K.meter(S3, { label: 'THERMOMETER', w: 0.17, h: 0.085, tilt: 0 }), mQ = VD3K.meter(S3, { label: 'HEAT DELIVERED', w: 0.17, h: 0.085, tilt: 0 }), mH = VD3K.meter(S3, { label: 'PISTON HEIGHT', w: 0.17, h: 0.085, tilt: 0 });
@@ -362,7 +369,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rack2 = VD3K.box(0.21, 0.02, 0.26, dark3, 0.3, 0.04, 0); ru.add(rack2, mP, mN); mP.position.set(0.3, 0.01, 0.2); mN.position.set(0.3, 0.01, 0.09);
     const gCab = { m: null };
     S3.scene.add(heat, ru);
-    G3 = { S: S3, heat, ru, tube, gas, gasM, pG, pin, coilM, atoms, mT, mQ, mH, seg, colTitle, flask, neckT, ring, ball, gate, led, mP, mN, gCab, hTop, glass };
+    G3 = { S: S3, heat, ru, tube, gas, gasM, pG, pin, coilM, atoms, bonds, mT, mQ, mH, seg, colTitle, flask, neckT, ring, ball, gate, led, mP, mN, gCab, hTop, glass };
     S3.orbit(S3.el, o3, () => redraw(), { zMin: 0.5, zMax: 3 });
     return true;
   }
@@ -382,17 +389,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.coilM.emissive = new THREE.Color(on ? '#ff5a1f' : '#000000'); g.coilM.emissiveIntensity = on ? 0.9 : 0; g.coilM.color.set(on ? '#ff8a5a' : '#5b6370');
       /* molecules: positions from the flat view's picture, inside the gas column */
       const Tk = s.T + C0, R0 = CYL_D / 2 * 0.82, ar = 0.0042;
-      let k = 0;
+      let k = 0, nb = 0; const BY = new THREE.Vector3(0, 1, 0), BD = new THREE.Vector3(), BP = new THREE.Vector3(), BS = new THREE.Vector3(), BQ = new THREE.Quaternion(), BM = new THREE.Matrix4();
       MOL.forEach((m, i) => {
         const dep = Math.sin(i * 2.399) * 0.8, xx = (m.x * 2 - 1) * R0 * Math.sqrt(1 - dep * dep), yy = dep * R0, zz = BASE + 0.012 + m.y * Math.max(0.001, s.h - 0.03);
         const c = VD3K.heat(Math.hypot(m.vx, m.vy) / 0.72 * Math.sqrt(Tk / 293) * 0.55);
         const q = gs.cvR - 1.5 > 1.05 ? 1 + 0.15 * Math.sin(m.a * 5) : 1, dx = Math.cos(m.a) * ar * 1.4 * q, dz = Math.sin(m.a) * ar * 1.4 * q;
-        if (gs.shape === 'mono') g.atoms.put(k++, xx, yy, zz, c);
-        else if (gs.shape === 'linear') { g.atoms.put(k++, xx - dx, yy, zz - dz, c); g.atoms.put(k++, xx + dx, yy, zz + dz, c); }
-        else if (gs.shape === 'linear3') { g.atoms.put(k++, xx - 1.7 * dx, yy, zz - 1.7 * dz, c); g.atoms.put(k++, xx, yy, zz, c); g.atoms.put(k++, xx + 1.7 * dx, yy, zz + 1.7 * dz, c); }
-        else { g.atoms.put(k++, xx, yy, zz, c); g.atoms.put(k++, xx + Math.cos(m.a + 0.9) * ar * 1.6, yy, zz + Math.sin(m.a + 0.9) * ar * 1.6, c); g.atoms.put(k++, xx + Math.cos(m.a - 0.9 + Math.PI) * ar * 1.6, yy, zz + Math.sin(m.a - 0.9 + Math.PI) * ar * 1.6, c); }
+        if (gs.shape === 'mono') { g.atoms.put(k++, xx, yy, zz, c); return; }
+        /* ball and stick: the atoms spread 1.5 times so the bond between them shows */
+        const at = gs.shape === 'linear' ? [[xx - 1.5 * dx, zz - 1.5 * dz], [xx + 1.5 * dx, zz + 1.5 * dz]]
+          : gs.shape === 'linear3' ? [[xx, zz], [xx - 2.4 * dx, zz - 2.4 * dz], [xx + 2.4 * dx, zz + 2.4 * dz]]
+          : [[xx, zz], [xx + Math.cos(m.a + 0.9) * ar * 2.8, zz + Math.sin(m.a + 0.9) * ar * 2.8], [xx + Math.cos(m.a - 0.9 + Math.PI) * ar * 2.8, zz + Math.sin(m.a - 0.9 + Math.PI) * ar * 2.8]];
+        for (const [ax, az] of at) g.atoms.put(k++, ax, yy, az, c);
+        const [x0, z0] = at[0];
+        for (let j = 1; j < at.length; j++) { const [x1, z1] = at[j], L = Math.hypot(x1 - x0, z1 - z0);
+          BQ.setFromUnitVectors(BY, BD.set((x1 - x0) / L, 0, (z1 - z0) / L)); BM.compose(BP.set((x0 + x1) / 2, yy, (z0 + z1) / 2), BQ, BS.set(1, L, 1)); g.bonds.setMatrixAt(nb++, BM); }
       });
-      g.atoms.show(k); g.atoms.done();
+      g.atoms.show(k); g.atoms.done(); g.bonds.count = nb; g.bonds.instanceMatrix.needsUpdate = true;
       g.mT.set(`${f(s.T, 2)} °C`); g.mQ.set(`${f(h.Q, 1)} J`); g.mH.set(`${f(s.h * 1000, 1)} mm`);
       /* the column */
       const Qcut = heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C), sp = split(gasKey(), h.n, h.mode, s.T - T0C), tot = Math.max(1e-12, sp.trans + sp.rot + sp.vib + sp.work);

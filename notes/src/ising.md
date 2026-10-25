@@ -13,7 +13,7 @@ time: 20 to 40 minutes
 
 ## Before class
 
-Students should know the Boltzmann factor; for the upper level version, also C = (⟨E²⟩ − ⟨E⟩²)/(k_B T²). Units: J = 1, k_B = 1, so T is in J/k_B and e is the energy per spin in units of J. Drag the thermometer beside the lattice to change T, the bar below it to change h, and drag on the lattice to paint spins. **Blind** hides every exact result if students should find T_c themselves. A 64 × 64 **Scan T** takes under a minute.
+Students should know the Boltzmann factor; for the upper level version, also C = (⟨E²⟩ − ⟨E⟩²)/(k_B T²). Units: J = 1, k_B = 1, so T is in J/k_B and e is the energy per spin in units of J. Drag the thermometer beside the lattice to change T, the bar below it to change h, and drag on the lattice to paint spins. **Blind** hides every exact result if students should find T_c themselves. A 64 × 64 **Scan T** takes under a minute. The page opens on **Near T_c in a field** (T_c, h = −0.2, Metropolis): the field picks down, so the lattice is calm, mostly navy; **Set h = 0** under the field slider removes it.
 
 ## Running it in class
 
