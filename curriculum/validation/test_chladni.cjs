@@ -123,10 +123,10 @@ test('chladni: driven response at resonance scales with Q; rigid modes give the 
 
 test('chladni: launch speed v_L = (g/ω)√(Γ² − 1): zero at the threshold, ∝ 1/f', () => {
   assert.equal(C.launchSpeed(1, 100), 0); assert.equal(C.launchSpeed(0.5, 100), 0);
-  close(C.launchSpeed(2, 100), 9.80665 / (2 * Math.PI * 100) * Math.sqrt(3), 1e-14);
+  close(C.launchSpeed(2, 100), 9.81 / (2 * Math.PI * 100) * Math.sqrt(3), 1e-14);
   close(C.launchSpeed(5, 1000) / C.launchSpeed(5, 100), 0.1, 1e-14);
   // the plate's velocity when its acceleration passes −g: A ω sin(ωt) with A ω² cos(ωt) = g, A ω² = Γ g
-  const G = 7, w = 2 * Math.PI * 300, ct = 1 / G; close(C.launchSpeed(G, 300), G * 9.80665 / w * Math.sqrt(1 - ct * ct), 1e-13);
+  const G = 7, w = 2 * Math.PI * 300, ct = 1 / G; close(C.launchSpeed(G, 300), G * 9.81 / w * Math.sqrt(1 - ct * ct), 1e-13);
 });
 
 test('chladni: sand model leaves grains alone below g and moves them off the antinodes (statistical)', () => {
@@ -155,10 +155,10 @@ test('chladni: sand model leaves grains alone below g and moves them off the ant
 test('chladni: hop rule: ballistic flight time, mean speed v_L at any frequency', () => {
   const tick = 1 / 60;
   // high frequency: flight shorter than a tick, a step every tick
-  const vH = C.launchSpeed(3, 1000); assert(2 * vH / 9.80665 < tick); close(C.hopLength(3, 1000, 1, tick, 0.99), vH * tick, 1e-14);
+  const vH = C.launchSpeed(3, 1000); assert(2 * vH / 9.81 < tick); close(C.hopLength(3, 1000, 1, tick, 0.99), vH * tick, 1e-14);
   // low frequency: one long hop per flight, landing on a fraction tick/t_f of ticks; the average over u is still v_L × tick
   for (const [G, f] of [[3, 30], [8, 20], [5, 50]]) {
-    const v = C.launchSpeed(G, f), tf = 2 * v / 9.80665; assert(tf > tick);
+    const v = C.launchSpeed(G, f), tf = 2 * v / 9.81; assert(tf > tick);
     close(C.hopLength(G, f, 1, tick, 0), v * tf, 1e-14); assert.equal(C.hopLength(G, f, 1, tick, 0.999), 0);
     let m = 0; const n = 200000; for (let i = 0; i < n; i++) m += C.hopLength(G, f, 1, tick, (i + 0.5) / n);
     close(m / n, v * tick, 2e-4);

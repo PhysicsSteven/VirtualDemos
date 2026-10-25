@@ -292,7 +292,7 @@ table.rows button:hover { color: var(--pos); }
 <script>
 (() => {
   // ==CORE START==
-  const G = 9.80665;            // standard gravity, m/s²
+  const G = 9.81;               // g, m/s² (the textbook value)
   const PATM = 101325;          // standard atmosphere, Pa
   const PVAP = 2339;            // vapor pressure of water at 20 °C, Pa
   // pv: vapor pressure in Pa near room temperature, used only to flag cavitation in the Venturi (oil's is tiny and taken as 0)
@@ -502,16 +502,16 @@ table.rows button:hover { color: var(--pos); }
     torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.'
   };
   const MODEL = {
-    press: 'Model: a liquid at rest with constant density (incompressible), g = 9.80665 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
+    press: 'Model: a liquid at rest with constant density (incompressible), g = 9.81 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
     pascal: 'Model: liquid at rest, open to the air. Each vessel is round with a base 8 cm across (area 50.3 cm²); the narrowing vessel ends 2.4 cm across, the flared one 34 cm. Gauge pressures are shown.',
-    baro: 'Model: incompressible liquid, g = 9.80665 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
-    buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per metre of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
+    baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
+    buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
     venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
     torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
   };
   const PRESETS = {
     depth: { scene: 'press', liq: 'water', p: { D: 2, pd: 1.2, px: 0.62 }, gmode: 'abs',
-      hint: 'Every metre of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to Gauge, then to mercury: the same depth adds 13.6 times as much.' },
+      hint: 'Every meter of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to Gauge, then to mercury: the same depth adds 13.6 times as much.' },
     float: { scene: 'buoy', liq: 'water', p: { rho: 500, L: 10, mat: 'wood', h0: 0.3, zeta: 0.12, scale: false, over: false, z0: 0.48, xb: 0 },
       hint: 'A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through 1000 kg/m³: the block sinks once it is denser than the water.' },
     iceberg: { scene: 'buoy', liq: 'sea', p: { rho: 917, L: 20, mat: 'ice', h0: 0.26, zeta: 0.1, scale: false, over: false, z0: 0.43, xb: 0 },
@@ -849,7 +849,7 @@ table.rows button:hover { color: var(--pos); }
     ctx.fillStyle = gr; ctx.globalAlpha = 0.18; ctx.fillRect(x0, ySurf, x1 - x0, bot - ySurf); ctx.globalAlpha = 1;
     surfaceLine(ctx, x0, x1, ySurf, 2 * ps);
     glassWalls(ctx, x0, top - 6 * ls, x1, bot, 2.4 * ps);
-    // depth ruler, metres below the surface
+    // depth ruler, meters below the surface
     ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     const st = nice(q.D / Math.max(2, Math.floor((bot - ySurf) / (34 * ls))));
@@ -1366,7 +1366,7 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'press') {
       const q = S.P.press, abs = S.gmode === 'abs', off = abs ? PATM : 0;
       const Pb = (hydro(rho, q.D) - PATM + off) / 1000;
-      const tb = gTitle(ctx, `${abs ? 'Absolute' : 'Gauge'} pressure against depth: a straight line with slope ρg = ${fx(rho * G / 1000, 2)} kPa per metre`, 12 * ls, 10 * ls, ls);
+      const tb = gTitle(ctx, `${abs ? 'Absolute' : 'Gauge'} pressure against depth: a straight line with slope ρg = ${fx(rho * G / 1000, 2)} kPa per meter`, 12 * ls, 10 * ls, ls);
       const xr = [abs ? 0 : 0, nice(Pb * 1.1) * Math.ceil(Pb * 1.1 / nice(Pb * 1.1))];
       const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, xr, [0, q.D], 'P (kPa)', 'depth (m), down', ls, { flipY: true });
       // other liquids, faint
@@ -1999,7 +1999,7 @@ table.rows button:hover { color: var(--pos); }
       const rho = rhoF();
       o = { title: `Your readings: ${S.gmode === 'abs' ? 'absolute' : 'gauge'} pressure against depth, ${LIQ[S.liq].name.toLowerCase()}`, xlab: 'depth h (m)', ylab: 'P (kPa)', ru: 'kPa',
         model: { a: S.gmode === 'abs' ? PATM / 1000 : 0, b: rho * G / 1000, txt: `model: slope ρg = ${fx(rho * G / 1000, 3)} kPa/m, intercept ${S.gmode === 'abs' ? fx(PATM / 1000, 3) : '0'} kPa` },
-        res: (f) => [`P = a + b·h: slope b = ${pm(f.b, f.sb)} kPa/m, intercept a = ${pm(f.a, f.sa)} kPa`, `so ρ = b/g = ${pm(f.b * 1000 / G, f.sb * 1000 / G)} kg/m³ (g = 9.80665 m/s²)`] };
+        res: (f) => [`P = a + b·h: slope b = ${pm(f.b, f.sb)} kPa/m, intercept a = ${pm(f.a, f.sa)} kPa`, `so ρ = b/g = ${pm(f.b * 1000 / G, f.sb * 1000 / G)} kg/m³ (g = 9.81 m/s²)`] };
     } else if (kind === 'buoy') {
       use = all.filter((r) => r.liq === S.liq);
       for (const r of use) { const d = derived(r); if (isFinite(d.Vs) && isFinite(d.FB)) { xs.push(d.Vs); ys.push(d.FB); } }

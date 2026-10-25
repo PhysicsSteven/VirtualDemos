@@ -113,7 +113,7 @@ test('velocity Verlet keeps E = K + U to O(Δt²), measures the period, and does
 });
 
 test('Lennard Jones units: reduced mass of argon and the preset period in the notes', () => {
-  close(m.AR_MU * m.LJ_MU, 39.948 / 2 * 1.66053906660e-27, 1e-12);
+  close(m.AR_MU * m.LJ_MU, 39.948 / 2 * 1.66053906892e-27, 1e-12);
   const Pp = P.lj, r0 = Math.pow(2, 1 / 6) * 0.34, T0 = 2 * PI * Math.sqrt(Pp.m / (72 * 10.4 / (r0 * r0)));
   close(T0, 1.26, 5e-3);                                  // ps, small oscillations
   const E = Pp.U(0.36), tp = m.turning(Pp, 0.36, E, VIEW.lj);

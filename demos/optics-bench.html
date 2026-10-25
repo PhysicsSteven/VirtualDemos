@@ -975,7 +975,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     top.addColorStop(0, T.railLo); top.addColorStop(1, T.railHi);
     ctx.fillStyle = top; ctx.fillRect(0, yBack, W, yFront - yBack);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fillRect(0, P3(0, R.y, 0.35)[1], W, Math.max(1, P3(0, R.y, -0.35)[1] - P3(0, R.y, 0.35)[1]));
-    // front face: brushed aluminium with a ruler
+    // front face: brushed aluminum with a ruler
     const fr = ctx.createLinearGradient(0, yFront, 0, yBot);
     fr.addColorStop(0, T.railHi); fr.addColorStop(0.55, T.railLo); fr.addColorStop(1, T.railHi);
     ctx.fillStyle = fr; ctx.fillRect(0, yFront, W, yBot - yFront);
@@ -1348,7 +1348,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // What lands on each screen, as disks in the card's own coordinates: y (cm, height) and z (cm, across).
   // Object arrows: every point of the arrow sends a bundle of rays through the optics; where the bundle lands
   // sets the center and the width of that point's blurred patch. Rays are traced in the drawing plane and the
-  // result is turned about the lens axis for points off that plane (exact for a lens or mirror centred on the axis).
+  // result is turned about the lens axis for points off that plane (exact for a lens or mirror centered on the axis).
   function screenLight(fr) {
     const out = new Map();
     for (const sc of screens()) out.set(sc, []);
@@ -1473,7 +1473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.addColorStop(0, '#5a616a'); g.addColorStop(1, '#474d55');
     ctx.fillStyle = g; ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'; ctx.lineWidth = 1; ctx.stroke();
-    // the light on the face, in the card's own coordinates (linearised perspective about the card centre)
+    // the light on the face, in the card's own coordinates (linearized perspective about the card center)
     const O = P3(sc.x, sc.y, 0), Ey = P3(sc.x, sc.y + 1, 0), Ez = P3(sc.x, sc.y, 1);
     const ey = [Ey[0] - O[0], Ey[1] - O[1]], ez = [Ez[0] - O[0], Ez[1] - O[1]];
     ctx.save(); quad(...c); ctx.clip();

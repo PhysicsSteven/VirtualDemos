@@ -54,7 +54,7 @@ $$\sin\alpha = \frac{b_c}{r_o}\sqrt{1 - \frac{r_s}{r_o}}\qquad (r_o \ge 1.5\,r_s
 
 Far away this becomes $$\alpha \approx b_c/r_o$$.
 
-Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$c = 2.9979\times10^8$$ m/s, 1 pc $$= 3.0857\times10^{16}$$ m, 1 mas $$= 4.8481\times10^{-9}$$ rad, $$g = 9.807$$ m/s².
+Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$c = 2.9979\times10^8$$ m/s, 1 pc $$= 3.0857\times10^{16}$$ m, 1 mas $$= 4.8481\times10^{-9}$$ rad, $$g = 9.81$$ m/s².
 
 ## Before the lab
 

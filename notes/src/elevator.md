@@ -45,6 +45,6 @@ Students need free body diagrams and Newton's second law. Up is positive through
 
 ## Physics behind the demo
 
-- The car's acceleration changes at a constant rate J (the jerk) up to ±a, holds, and changes back to zero; a short trip that cannot reach the top speed (or the full acceleration) does the same with lower peaks. Each piece has constant jerk and is integrated exactly, and every trip ends at rest exactly at the floor. With **Instant starts and stops** the acceleration jumps between 0 and ±a, the usual textbook idealisation. Real elevators also limit jerk and use about 1 m/s² or less.
+- The car's acceleration changes at a constant rate J (the jerk) up to ±a, holds, and changes back to zero; a short trip that cannot reach the top speed (or the full acceleration) does the same with lower peaks. Each piece has constant jerk and is integrated exactly, and every trip ends at rest exactly at the floor. With **Instant starts and stops** the acceleration jumps between 0 and ±a, the usual textbook idealization. Real elevators also limit jerk and use about 1 m/s² or less.
 - N = m(g + a), never negative (a scale cannot pull down).
 - Cable snaps: up to one second of free fall (less if needed to leave room), then a constant upward deceleration of at least g, more if needed to stop 1 m above the pit. Real safety gear works differently; this is for the force picture only.

@@ -241,7 +241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the chance of finding q_A quanta in A, out of all Ω(N_A + N_B, q) microstates */
   function solidDist(NA, NB, q) { const tot = lnOmega(NA + NB, q), P = []; for (let a = 0; a <= q; a++) P.push(Math.exp(lnOmega(NA, a) + lnOmega(NB, q - a) - tot)); return P; }
   function solidPeak(NA, NB, q) { let best = 0, bv = -Infinity; for (let a = 0; a <= q; a++) { const v = lnOmega(NA, a) + lnOmega(NB, q - a); if (v > bv) { bv = v; best = a; } } return best; }
-  /* temperature from 1/T = dS/dU, in units of ε/k, by the centred difference over one quantum each way; a solid with no
+  /* temperature from 1/T = dS/dU, in units of ε/k, by the centered difference over one quantum each way; a solid with no
      energy has a single microstate (S = 0, the third law) and is taken as T = 0 */
   const solidT = (N, q) => (q <= 0 ? 0 : 2 / (lnOmega(N, q + 1) - lnOmega(N, q - 1)));
 

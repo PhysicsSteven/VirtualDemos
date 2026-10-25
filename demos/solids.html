@@ -86,7 +86,7 @@
             </div>
           </div>
           <div id="boxCube"><div class="slider-head"><label for="sCube">Cube half width m (ion spacings)</label><output id="oCube" class="mono" for="sCube"></output></div><input type="range" id="sCube" min="1" max="8" step="1"></div>
-          <div id="boxShell" hidden><div class="slider-head"><label for="sShell">Shells of neighbours added</label><output id="oShell" class="mono" for="sShell"></output></div><input type="range" id="sShell" min="1" max="40" step="1"></div>
+          <div id="boxShell" hidden><div class="slider-head"><label for="sShell">Shells of neighbors added</label><output id="oShell" class="mono" for="sShell"></output></div><input type="range" id="sShell" min="1" max="40" step="1"></div>
           <div class="wide"><span class="lab" id="crNote"></span></div>
         </div>
         <div class="shelf-card" id="cardBd" role="group" aria-label="The chain of atoms" hidden>
@@ -110,7 +110,7 @@
           <div id="boxDon"><div class="slider-head"><label for="sND">Donors N<sub>D</sub></label><output id="oND" class="mono" for="sND"></output></div><input type="range" id="sND" min="11" max="18" step="0.5"></div>
           <div id="boxAcc"><div class="slider-head"><label for="sNA">Acceptors N<sub>A</sub></label><output id="oNA" class="mono" for="sNA"></output></div><input type="range" id="sNA" min="11" max="18" step="0.5"></div>
           <div class="pick" id="pickDon"><label for="selDon">Donor atom</label><select id="selDon"><option value="P">phosphorus (P)</option><option value="As">arsenic (As)</option><option value="Sb">antimony (Sb)</option></select></div>
-          <div class="pick" id="pickAcc"><label for="selAcc">Acceptor atom</label><select id="selAcc"><option value="B">boron (B)</option><option value="Al">aluminium (Al)</option><option value="Ga">gallium (Ga)</option></select></div>
+          <div class="pick" id="pickAcc"><label for="selAcc">Acceptor atom</label><select id="selAcc"><option value="B">boron (B)</option><option value="Al">aluminum (Al)</option><option value="Ga">gallium (Ga)</option></select></div>
           <div class="wide"><span class="lab" id="dpNote"></span></div>
         </div>
         <div class="shelf-card" id="cardDv" role="group" aria-label="The junction" hidden>
@@ -146,7 +146,7 @@
           <button type="button" data-p="dpIntr" aria-pressed="false">Pure silicon</button>
           <button type="button" data-p="dpN" aria-pressed="false">n type silicon</button>
           <button type="button" data-p="dvDiode" aria-pressed="false">Diode</button>
-          <button type="button" data-p="dvLed" aria-pressed="false">LED colours</button>
+          <button type="button" data-p="dvLed" aria-pressed="false">LED colors</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -198,21 +198,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      Sources: OpenStax University Physics Volume 3 (2016) §9.3 (ionic crystals: U = −α ke²/r₀ (1 − 1/n), the Madelung series
      6 − 12/√2 + 8/√3 − ..., Example 9.3 for NaCl, Table 9.2 lattice energies), §9.5 (N atoms give N levels that merge into bands;
      Table 9.4 band gaps at 300 K), §9.6 (donors, acceptors, holes) and §9.7 (the pn junction, Eq. 9.36 I = I₀(e^(eV/kT) − 1)).
-     Beyond the book: nearest neighbour distances r₀ of the NaCl structure halides from C. Kittel, Introduction to Solid State Physics,
+     Beyond the book: nearest neighbor distances r₀ of the NaCl structure halides from C. Kittel, Introduction to Solid State Physics,
      8th ed. (2005), Table 3.6, and of CsF, CsCl, CsBr, CsI from their lattice constants (R. W. G. Wyckoff, Crystal Structures, vol. 1,
      1963); Born exponents n from the ions' noble gas cores (He 5, Ne 7, Ar 9, Kr 10, Xe 12; L. Pauling, The Nature of the Chemical
      Bond, 3rd ed. 1960), averaged over the two ions; the Madelung constant by Ewald's method and by Evjen's neutral cubes
      (H. M. Evjen, Phys. Rev. 39, 675, 1932); the tight binding chain (N. W. Ashcroft and N. D. Mermin, Solid State Physics, 1976,
      ch. 10); effective densities of states, gaps, impurity levels, permittivities and the abrupt junction (S. M. Sze and K. K. Ng,
      Physics of Semiconductor Devices, 3rd ed. 2007, Appendix G, Fig. 1.12 (impurity levels in Si), §1.5 and §2.2); GaN's gap (I.
-     Vurgaftman, J. R. Meyer and L. R. Ram-Mohan, J. Appl. Phys. 89, 5815, 2001). Constants: CODATA 2018. */
-  const KB = 8.617333262e-5 /* eV/K */, KE2 = 1.439964548 /* ke² in eV·nm */, HC = 1239.84198 /* eV·nm */;
-  const QE = 1.602176634e-19 /* C */, EPS0 = 8.8541878128e-12 /* F/m */, NAV = 6.02214076e23, KJMOL_PER_EV = 96.4853321;
+     Vurgaftman, J. R. Meyer and L. R. Ram-Mohan, J. Appl. Phys. 89, 5815, 2001). Constants: CODATA 2022. */
+  const KB = 8.617333262e-5 /* eV/K */, KE2 = 1.439964546 /* ke² in eV·nm */, HC = 1239.84198 /* eV·nm */;
+  const QE = 1.602176634e-19 /* C */, EPS0 = 8.8541878188e-12 /* F/m */, NAV = 6.02214076e23, KJMOL_PER_EV = 96.4853321;
 
   /* ---------- ionic crystals (§9.3) ---------- */
   const BORN = { He: 5, Ne: 7, Ar: 9, Kr: 10, Xe: 12 };
   const ION = { Li: 'He', Na: 'Ne', K: 'Ar', Rb: 'Kr', Cs: 'Xe', F: 'Ne', Cl: 'Ar', Br: 'Kr', I: 'Xe' };
-  /* r0: nearest neighbour distance (nm); U: lattice energy from OpenStax Table 9.2 (kJ/mol); st: 'rs' NaCl structure, 'cs' CsCl structure */
+  /* r0: nearest neighbor distance (nm); U: lattice energy from OpenStax Table 9.2 (kJ/mol); st: 'rs' NaCl structure, 'cs' CsCl structure */
   const SALTS = [
     ['LiF', 'Li', 'F', 'rs', 0.2014, 1036], ['LiCl', 'Li', 'Cl', 'rs', 0.2570, 853], ['LiBr', 'Li', 'Br', 'rs', 0.2751, 807], ['LiI', 'Li', 'I', 'rs', 0.3000, 757],
     ['NaF', 'Na', 'F', 'rs', 0.2317, 923], ['NaCl', 'Na', 'Cl', 'rs', 0.2820, 787], ['NaBr', 'Na', 'Br', 'rs', 0.2989, 747], ['NaI', 'Na', 'I', 'rs', 0.3237, 704],
@@ -225,7 +225,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function erfc(x) { const z = Math.abs(x), t = 1 / (1 + 0.5 * z);
     const r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
     return x >= 0 ? r : 2 - r; }
-  /* the ions of each structure in a cubic cell of side 1: [x, y, z, charge]; r0 is the nearest neighbour distance in cell sides */
+  /* the ions of each structure in a cubic cell of side 1: [x, y, z, charge]; r0 is the nearest neighbor distance in cell sides */
   const BASIS = {
     rs: { r0: 0.5, ions: [[0, 0, 0, 1], [0, 0.5, 0.5, 1], [0.5, 0, 0.5, 1], [0.5, 0.5, 0, 1], [0.5, 0, 0, -1], [0, 0.5, 0, -1], [0, 0, 0.5, -1], [0.5, 0.5, 0.5, -1]] },
     cs: { r0: Math.sqrt(3) / 2, ions: [[0, 0, 0, 1], [0.5, 0.5, 0.5, -1]] },
@@ -273,13 +273,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- bands of a chain of N model atoms (§9.5) ---------- */
   /* A model atom (not a real element) with an s level at −9 eV and three p levels at −4 eV, in a straight chain with spacing d.
-     Each atomic orbital overlaps only the same orbital on its nearest neighbours (tight binding, no mixing of s and p); the
+     Each atomic orbital overlaps only the same orbital on its nearest neighbors (tight binding, no mixing of s and p); the
      overlap energy t falls off exponentially with spacing. The p orbital along the chain (σ) overlaps more than the two across it
      (π). An open chain of N atoms then has exactly N levels from each orbital, E_j = E_atom − 2t cos(jπ/(N + 1)), j = 1 ... N,
      which for large N fill the band E_atom − 2t to E_atom + 2t. */
   const BAND = { Es: -9, Ep: -4, d0: 0.25, ts0: 1.0, ls: 0.07, tsig0: 1.4, tpi0: 0.35, lp: 0.09 };
   const hop = (d) => ({ s: BAND.ts0 * Math.exp(-(d - BAND.d0) / BAND.ls), sig: BAND.tsig0 * Math.exp(-(d - BAND.d0) / BAND.lp), pi: BAND.tpi0 * Math.exp(-(d - BAND.d0) / BAND.lp) });
-  /* the bands for N → ∞: centre, overlap t, and electrons each level holds (2 spins, times 2 for the two π orbitals) */
+  /* the bands for N → ∞: center, overlap t, and electrons each level holds (2 spins, times 2 for the two π orbitals) */
   function bandSet(d) { const t = hop(d); return [{ id: 's', c: BAND.Es, t: t.s, g: 2 }, { id: 'pσ', c: BAND.Ep, t: t.sig, g: 2 }, { id: 'pπ', c: BAND.Ep, t: t.pi, g: 4 }]; }
   function chainLevels(N, d) {
     const out = []; for (const b of bandSet(d)) for (let j = 1; j <= N; j++) out.push({ band: b.id, E: b.c - 2 * b.t * Math.cos(j * Math.PI / (N + 1)), g: b.g });
@@ -444,7 +444,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(c, foot, 14 * p, H - 14 * p, { s: (narrow ? 9.5 : 10.5) * p });
     if (!narrow) { const mx = W - 162 * p, mw = 130 * p, mh = 28 * p;
       lcdBox(c, mx, 26 * p, mw, mh, f(crAlphaNow(), 4), crMethod() === 'cube' ? `alpha summed, m = ${S.cr.m}` : `alpha summed, ${S.cr.K} shells`);
-      lcdBox(c, mx, 92 * p, mw, mh, `${f(s.r0, 4)} nm`, 'nearest neighbour r0');
+      lcdBox(c, mx, 92 * p, mw, mh, `${f(s.r0, 4)} nm`, 'nearest neighbor r0');
       lcdBox(c, mx, 158 * p, mw, mh, `${s.n}`, 'Born exponent n');
       lab(c, 'drag to turn · scroll to zoom', mx + mw / 2, 230 * p, { a: 'center', s: 9.5 * p }); }
   }
@@ -454,7 +454,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (meth === 'cube') { const A = axes(c, L, Tp, half, ph, [0.5, 8.5], [1.40, 1.80], 'cube half width m', 'α summed');
       dashH(c, A, exact, L, L + half, T.theory); c.fillStyle = T.theory; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(`α = ${f(exact, 4)}`, L + half - 4, A.Y(exact) - 3);
       for (let m = 1; m <= 8; m++) { c.fillStyle = m === S.cr.m ? T.accent : T.muted; c.beginPath(); c.arc(A.X(m), A.Y(CUBE[m]), (m === S.cr.m ? 5 : 3.2) * p, 0, 7); c.fill(); } }
-    else { const v = SHSUM[s.st], ymin = Math.min(...v, 0) - 0.5, ymax = Math.max(...v) + 0.5, A = axes(c, L, Tp, half, ph, [0.5, 40.5], [ymin, ymax], 'shells of neighbours added', 'α summed');
+    else { const v = SHSUM[s.st], ymin = Math.min(...v, 0) - 0.5, ymax = Math.max(...v) + 0.5, A = axes(c, L, Tp, half, ph, [0.5, 40.5], [ymin, ymax], 'shells of neighbors added', 'α summed');
       dashH(c, A, exact, L, L + half, T.theory);
       c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); v.forEach((y, i) => (i ? c.lineTo(A.X(i + 1), A.Y(y)) : c.moveTo(A.X(1), A.Y(y)))); c.stroke();
       for (let k = 1; k <= 40; k++) { c.fillStyle = k === S.cr.K ? T.accent : T.muted; c.beginPath(); c.arc(A.X(k), A.Y(v[k - 1]), (k === S.cr.K ? 5 : 2.4) * p, 0, 7); c.fill(); }
@@ -473,7 +473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawBd() {
     const c = ctx, p = proj(), b = S.bd, narrow = W < 560;
     if (VG) VG.backdrop(c, W, H); else { c.fillStyle = T.canvas; c.fillRect(0, 0, W, H); }
-    /* the chain of atoms, drawn to scale: each atom's outer cloud (radius 0.15 nm) overlaps its neighbour's as d shrinks */
+    /* the chain of atoms, drawn to scale: each atom's outer cloud (radius 0.15 nm) overlaps its neighbor's as d shrinks */
     const nDraw = Math.min(b.N, narrow ? 8 : 14), k = (W - 60 * p) / (Math.max(nDraw - 1, 1) * 0.6 + 0.4), y0 = 34 * p;
     const x0 = W / 2 - (nDraw - 1) * b.d * k / 2;
     for (let i = 0; i < nDraw; i++) { const x = x0 + i * b.d * k, g = c.createRadialGradient(x, y0, 0, x, y0, 0.15 * k);
@@ -605,7 +605,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- Junction ----------
   const dvI0 = () => I0T(Math.pow(10, S.dv.i0), S.dv.T), dvI = (V) => diodeI(V == null ? S.dv.V : V, S.dv.T, dvI0());
   const ledEg = () => (S.dv.led === 'any' ? S.dv.Eg : LEDS[S.dv.led]);
-  /* the colour of light of wavelength λ (nm) for drawing, after Dan Bruton's approximation; outside 380 to 750 nm, null */
+  /* the color of light of wavelength λ (nm) for drawing, after Dan Bruton's approximation; outside 380 to 750 nm, null */
   function waveRGB(l) {
     if (l < 380 || l > 750) return null; let r = 0, g = 0, b = 0;
     if (l < 440) { r = (440 - l) / 60; b = 1; } else if (l < 490) { g = (l - 440) / 50; b = 1; } else if (l < 510) { g = 1; b = (510 - l) / 20; } else if (l < 580) { r = (l - 510) / 70; g = 1; } else if (l < 645) { r = 1; g = (645 - l) / 65; } else r = 1;
@@ -728,7 +728,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
     let o = '';
     if (S.view === 'cr') { const s = crSalt(), a = ALPHA[s.st], U = latticeU(a, s.r0, s.n);
-      o = dd('Salt', `${s.name}, ${s.st === 'rs' ? 'NaCl' : 'CsCl'} structure`) + dd('Nearest neighbour distance r₀', `${f(s.r0, 4)} nm`) + dd('Born exponent n', `${s.n} (${ION[s.cat]} and ${ION[s.an]} cores)`)
+      o = dd('Salt', `${s.name}, ${s.st === 'rs' ? 'NaCl' : 'CsCl'} structure`) + dd('Nearest neighbor distance r₀', `${f(s.r0, 4)} nm`) + dd('Born exponent n', `${s.n} (${ION[s.cat]} and ${ION[s.an]} cores)`)
         + dd(crMethod() === 'cube' ? `α summed, cube m = ${S.cr.m}` : `α summed, ${S.cr.K} shells`, f(crAlphaNow(), 4)) + dd('Madelung constant α (Ewald sum)', f(a, 4))
         + dd('Lattice energy, Table 9.2', `${s.U} kJ/mol = ${f(s.U / KJMOL_PER_EV, 3)} eV per ion pair`)
         + dd('Calculated α ke²/r₀ (1 − 1/n)', S.blind ? hide : `${f(U, 3)} eV = ${f(U * KJMOL_PER_EV, 0)} kJ/mol`) + dd('Calculated against table', S.blind ? hide : `${f(100 * (U * KJMOL_PER_EV / s.U - 1), 1)} %`); }
@@ -744,7 +744,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Donors ionized', nd ? `${f(100 * r.NDp / nd, 1)} %` : '—') + dd('Acceptors ionized', na ? `${f(100 * r.NAm / na, 1)} %` : '—')
         + dd('Fermi level above E_v', S.blind ? hide : `${f(r.EF, 3)} eV`) + `<div class="wide"><dt>Region</dt><dd>${S.blind ? hide : region(r, nd, na)}</dd></div>`; }
     else if (S.dv.kind === 'led') { const E = ledEg(), l = lambdaNm(E);
-      o = dd('LED material', S.dv.led === 'any' ? 'any band gap' : S.dv.led) + dd('Band gap E_g', `${f(E, 2)} eV`) + dd('Spectrometer peak', `${f(l, 0)} nm`) + dd('Colour', colourName(l)); }
+      o = dd('LED material', S.dv.led === 'any' ? 'any band gap' : S.dv.led) + dd('Band gap E_g', `${f(E, 2)} eV`) + dd('Spectrometer peak', `${f(l, 0)} nm`) + dd('Color', colourName(l)); }
     else { const d = S.dv, NA = Math.pow(10, d.ja), ND = Math.pow(10, d.jd), J = junction('Si', d.T, NA, ND, d.V), I = dvI();
       o = dd('Bias V', `${f(d.V, 2)} V (${d.V > 0 ? 'forward' : d.V < 0 ? 'reverse' : 'none'})`) + dd('Temperature', `${d.T} K`) + dd('Current I', ampText(I))
         + dd('Saturation current I₀ at this T', ampText(dvI0())) + dd('Thermal voltage kT/e', S.blind ? hide : `${f(KB * d.T * 1000, 3)} mV`)
@@ -776,8 +776,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const x of document.querySelectorAll('#presets button')) x.setAttribute('aria-pressed', String(x.dataset.p === S.preset));
   }
   const PRESETS = {
-    crNaCl: { view: 'cr', hint: 'Table salt. Each Na⁺ ion has 6 Cl⁻ neighbours at r₀ = 0.282 nm, 12 Na⁺ at √2 r₀, 8 Cl⁻ at √3 r₀, and so on. Grow the neutral cube and watch the sum settle on the Madelung constant 1.7476; then compare the lattice energy α ke²/r₀ (1 − 1/n) with the measured 787 kJ/mol.', set: () => Object.assign(S.cr, { salt: 'NaCl', method: 'cube', m: 2, K: 6 }) },
-    crCsCl: { view: 'cr', hint: 'Cesium chloride: each ion has 8 neighbours of the other kind at the corners of a cube. Add shells of neighbours one at a time, as in the book\'s series: the running total swings wildly and never settles, though the Madelung constant is a definite 1.7627.', set: () => Object.assign(S.cr, { salt: 'CsCl', method: 'shell', K: 6 }) },
+    crNaCl: { view: 'cr', hint: 'Table salt. Each Na⁺ ion has 6 Cl⁻ neighbors at r₀ = 0.282 nm, 12 Na⁺ at √2 r₀, 8 Cl⁻ at √3 r₀, and so on. Grow the neutral cube and watch the sum settle on the Madelung constant 1.7476; then compare the lattice energy α ke²/r₀ (1 − 1/n) with the measured 787 kJ/mol.', set: () => Object.assign(S.cr, { salt: 'NaCl', method: 'cube', m: 2, K: 6 }) },
+    crCsCl: { view: 'cr', hint: 'Cesium chloride: each ion has 8 neighbors of the other kind at the corners of a cube. Add shells of neighbors one at a time, as in the book\'s series: the running total swings wildly and never settles, though the Madelung constant is a definite 1.7627.', set: () => Object.assign(S.cr, { salt: 'CsCl', method: 'shell', K: 6 }) },
     bdForm: { view: 'bd', hint: 'Six model atoms far apart: each atomic level is six levels at the same energy. Bring the atoms closer and each level splits into six, spreading into a band as the atoms\' outer orbitals overlap.', set: () => Object.assign(S.bd, { N: 6, d: 0.55, Z: 1 }) },
     bdFill: { view: 'bd', hint: 'Forty atoms, two electrons each. The 40 s levels hold exactly 80 electrons, so the s band is full and a gap separates it from the empty p band: an insulator. Squeeze the atoms until the bands overlap and the solid becomes a metal; give each atom one electron and the band is half full.', set: () => Object.assign(S.bd, { N: 40, d: 0.28, Z: 2 }) },
     dpIntr: { view: 'dp', hint: 'Pure silicon. Every conduction electron leaves a hole behind, so n = p = n_i. Warm it from 300 K to 700 K and watch n rise by a factor of about a million.', set: () => Object.assign(S.dp, { mat: 'Si', T: 300, nd: 11, na: 11, don: 'P', acc: 'B' }) },
@@ -850,8 +850,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   // ---------- about ----------
-  $('aboutCr').textContent = 'Crystal (§9.3): an ion in a salt crystal feels the Coulomb pull of every other ion, which adds up to −α ke²/r per ion pair, where r is the nearest neighbour distance and α the Madelung constant of the structure. A short range repulsion A/rⁿ stops the ions merging; at the equilibrium spacing r₀ the energy is U = −α ke²/r₀ (1 − 1/n). The demo gets α by Ewald\'s method (1.7476 for NaCl, 1.7627 for CsCl) and shows two ways of adding the ions up: shell by shell, which never settles, and Evjen\'s neutral cubes, which settle quickly for the NaCl structure. r₀ is from measured lattice constants at room temperature (Kittel, Table 3.6; Wyckoff for the cesium salts); n is the average of Pauling\'s values for the two ions\' noble gas cores; lattice energies are the book\'s Table 9.2. The model leaves out the van der Waals attraction and the zero point energy, which is why it falls a few percent short of the table. Ions are drawn at 0.55 of their ionic radii (Shannon 1976) so the lattice shows through.';
-  $('aboutBd').textContent = 'Bands (§9.5): a chain of N model atoms, each with one s level at −9 eV and three p levels at −4 eV (a made up atom, not a real element). Each orbital overlaps only the same orbital on its nearest neighbours, with an overlap energy t that falls off exponentially as the spacing grows (the tight binding model, Ashcroft and Mermin ch. 10); s and p do not mix. Then each atomic level becomes exactly N levels, E = E_atom − 2t cos(jπ/(N + 1)), which fill a band of width 4t when N is large. Each level holds 2 electrons (spin), and the two p orbitals across the chain give two levels at each energy. Electrons fill the levels from the bottom (T = 0). A partly filled band makes a metal; a full band with a gap above it makes an insulator or, if the gap is small, a semiconductor. (When the atoms are far apart the band is so narrow that this simple rule no longer applies: electrons that repel each other then stay on their own atoms. The model leaves that out.) A real solid is three dimensional, so a real p band holds 6N electrons as the book says; the chain shows the same counting. Real gaps are the book\'s Table 9.4.';
+  $('aboutCr').textContent = 'Crystal (§9.3): an ion in a salt crystal feels the Coulomb pull of every other ion, which adds up to −α ke²/r per ion pair, where r is the nearest neighbor distance and α the Madelung constant of the structure. A short range repulsion A/rⁿ stops the ions merging; at the equilibrium spacing r₀ the energy is U = −α ke²/r₀ (1 − 1/n). The demo gets α by Ewald\'s method (1.7476 for NaCl, 1.7627 for CsCl) and shows two ways of adding the ions up: shell by shell, which never settles, and Evjen\'s neutral cubes, which settle quickly for the NaCl structure. r₀ is from measured lattice constants at room temperature (Kittel, Table 3.6; Wyckoff for the cesium salts); n is the average of Pauling\'s values for the two ions\' noble gas cores; lattice energies are the book\'s Table 9.2. The model leaves out the van der Waals attraction and the zero point energy, which is why it falls a few percent short of the table. Ions are drawn at 0.55 of their ionic radii (Shannon 1976) so the lattice shows through.';
+  $('aboutBd').textContent = 'Bands (§9.5): a chain of N model atoms, each with one s level at −9 eV and three p levels at −4 eV (a made up atom, not a real element). Each orbital overlaps only the same orbital on its nearest neighbors, with an overlap energy t that falls off exponentially as the spacing grows (the tight binding model, Ashcroft and Mermin ch. 10); s and p do not mix. Then each atomic level becomes exactly N levels, E = E_atom − 2t cos(jπ/(N + 1)), which fill a band of width 4t when N is large. Each level holds 2 electrons (spin), and the two p orbitals across the chain give two levels at each energy. Electrons fill the levels from the bottom (T = 0). A partly filled band makes a metal; a full band with a gap above it makes an insulator or, if the gap is small, a semiconductor. (When the atoms are far apart the band is so narrow that this simple rule no longer applies: electrons that repel each other then stay on their own atoms. The model leaves that out.) A real solid is three dimensional, so a real p band holds 6N electrons as the book says; the chain shows the same counting. Real gaps are the book\'s Table 9.4.';
   $('aboutDp').textContent = 'Doping (§9.6): the electron density n = N_c e^(−(E_c − E_F)/kT) and hole density p = N_v e^(−(E_F − E_v)/kT), with N_c and N_v the effective densities of states (Sze and Ng, Appendix G) growing as T^(3/2). The Fermi level is found from charge neutrality, n + N_A⁻ = p + N_D⁺, with the donors and acceptors only partly ionized (degeneracies 2 and 4). In a pure sample n = p = n_i = √(N_c N_v) e^(−E_g/2kT). Approximations: the gap is held at its 300 K value (1.12 eV for silicon; the book\'s Table 9.4 gives 1.14 eV); Boltzmann statistics, good below about 10¹⁸ cm⁻³; the impurity levels are those of silicon (Sze and Ng Fig. 1.12), so only silicon can be doped here. The Hall readings are the model\'s n and p, without noise. Simulated data.';
   $('aboutDv').textContent = 'Junction (§9.7): an ideal diode passes I = I₀(e^(eV/kT) − 1) (Eq. 9.36): forward bias lowers the barrier and the current grows exponentially; reverse bias leaves only −I₀. I₀ scales as n_i², so as T³ e^(−E_g/kT), from the value you set at 300 K; the slower changes of mobility and diffusion length are left out, and so are the series resistance that limits a real diode\'s current at high bias and the breakdown at large reverse bias. The depletion region and band diagram use an abrupt silicon junction in the depletion approximation (Sze and Ng §2.2), with V_bi = (kT/e) ln(N_A N_D/n_i²); it fails as V approaches V_bi. LEDs: the photon energy is taken as the band gap, E ≈ E_g, so λ = hc/E_g (gaps from the book\'s Table 9.4, GaN from Vurgaftman and coworkers 2001); a real LED\'s peak sits within a few kT of this. GaP has an indirect gap and is a weak emitter on its own. Simulated data.';
 

@@ -8,7 +8,7 @@
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
-<title>Shells, the Periodic Table and X Rays</title>
+<title>Shells, the Periodic Table and X-Rays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -57,8 +57,8 @@
 <div class="app">
   <header class="bar">
     <div>
-      <h1>Shells, the Periodic Table and X Rays</h1>
-      <p>No two electrons in an atom can share all four quantum numbers, so they fill shells and subshells one place at a time, and the periodic table follows. Knock an electron out of the innermost shell and the atom gives off an X ray whose energy grows as (Z − 1)².</p>
+      <h1>Shells, the Periodic Table and X-Rays</h1>
+      <p>No two electrons in an atom can share all four quantum numbers, so they fill shells and subshells one place at a time, and the periodic table follows. Knock an electron out of the innermost shell and the atom gives off an X-ray whose energy grows as (Z − 1)².</p>
     </div>
     <div class="bar-right">
       <div class="units mono" id="units">energies in eV</div>
@@ -73,7 +73,7 @@
       <div class="stage-ctl">
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="shells" aria-pressed="true">Shells</button>
-          <button type="button" data-v="xray" aria-pressed="false">X ray tube</button>
+          <button type="button" data-v="xray" aria-pressed="false">X-ray tube</button>
         </div>
         <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn" id="zDown" aria-label="One electron fewer (previous element)">− electron</button>
@@ -96,8 +96,8 @@
           </div>
           <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
         </div>
-        <div class="shelf-card" id="cardXray" role="group" aria-label="The X ray tube" hidden>
-          <span class="card-title">Electrons accelerated through a voltage V hit a target; a spectrometer measures the X rays</span>
+        <div class="shelf-card" id="cardXray" role="group" aria-label="The X-ray tube" hidden>
+          <span class="card-title">Electrons accelerated through a voltage V hit a target; a spectrometer measures the X-rays</span>
           <div class="pick"><label for="selTarget">Target</label><select id="selTarget"></select></div>
           <div><div class="slider-head"><label for="sV">Tube voltage V</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="5" max="100" step="0.5"></div>
           <div class="pick">
@@ -113,7 +113,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/periodic-table.html" target="periodic-table-worksheet">Worksheet 1: Shells and the Periodic Table</a></li><li><a href="../curriculum/labs/students/x-ray-spectra.html" target="x-ray-spectra-worksheet">Worksheet 2: X Ray Spectra and Moseley's Law</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/periodic-table.html" target="periodic-table-worksheet">Worksheet 1: Shells and the Periodic Table</a></li><li><a href="../curriculum/labs/students/x-ray-spectra.html" target="x-ray-spectra-worksheet">Worksheet 2: X-Ray Spectra and Moseley's Law</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -129,7 +129,7 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
-      <!-- vd-readings --><section class="vd-readings" data-ws="periodic-table" data-title="Shells, the Periodic Table and X Rays" data-demo="shells-and-x-rays">
+      <!-- vd-readings --><section class="vd-readings" data-ws="periodic-table" data-title="Shells, the Periodic Table and X-Rays" data-demo="shells-and-x-rays">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
@@ -167,7 +167,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  /* Shells, the Periodic Table and X Rays. Runnable in Node (curriculum/validation/test_shells-and-x-rays.cjs).
+  /* Shells, the Periodic Table and X-Rays. Runnable in Node (curriculum/validation/test_shells-and-x-rays.cjs).
      ELEMENTS: [Z, symbol, name, table row, table column, family, ground configuration, first ionization energy in eV].
      Configurations and ionization energies: NIST Atomic Spectra Database (Kramida, Ralchenko, Reader and NIST ASD Team), ionization
      energies for Z ≤ 103; configurations above Z = 103 are predicted. XRAY: NIST X-Ray Transition Energies Database (Deslattes et al.,
@@ -377,11 +377,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function lastElectron(Z) { const o = ruleConfig(Z); let s = null; for (const t of SUB_ORDER) if (o[t]) s = t; const k = o[s], l = L_OF[s[1]], nb = 2 * l + 1, i = k - 1;
     return { n: +s[0], l, sub: s, m: l - (i % nb), ms: i < nb ? 0.5 : -0.5 }; }
   /* hydrogen-like estimate for the outer electron: IE = 13.6 eV Z_eff²/n², so Z_eff = n√(IE/13.6 eV) */
-  const RY = 13.605693122994;
+  const RY = 13.605693122990;
   const zEff = (IE, n) => n * Math.sqrt(IE / RY);
-  /* X rays. Electrons of energy eV stop in the target. The continuous spectrum follows Kramers' law for a thick target: energy per
+  /* X-rays. Electrons of energy eV stop in the target. The continuous spectrum follows Kramers' law for a thick target: energy per
      unit photon energy ∝ Z(E₀ − E) up to E₀ = eV (the Duane–Hunt limit, λ_min = hc/eV). Per unit wavelength, I_λ = I_E hc/λ². */
-  const HC_EV_PM = 1239841.98;   /* hc in eV·pm (CODATA 2018) */
+  const HC_EV_PM = 1239841.98;   /* hc in eV·pm (CODATA 2022) */
   const lamPm = (EeV) => HC_EV_PM / EeV, ePm = (lam) => HC_EV_PM / lam;
   const XR = Object.fromEntries(XRAY.map((r) => [r[0], { ka1: r[1], ka2: r[2], kb1: r[3], kedge: r[4] }]));
   /* K lines appear only when the electrons can empty the K shell: eV above the K edge. Their heights are drawn, not measured:
@@ -471,12 +471,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Z = S.sh.Z; if (Z <= 103) { c.strokeStyle = T.accent; c.lineWidth = 2; c.beginPath(); c.arc(X(Z), Y(byZ(Z)[7]), 6 * p, 0, 7); c.stroke(); }
   }
 
-  // ---------- X ray view ----------
+  // ---------- X-ray view ----------
   function drawTube() {
     const p = proj(), Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', lines = xrayLines(Z, kV);
     backdrop();
     if (use3()) { ctx.clearRect(0, 0, W3(), Hh); drawTube3(Z, kV, myst, lines); } else {
-    /* the tube: glass envelope, hot filament, target tilted to send X rays down through a window */
+    /* the tube: glass envelope, hot filament, target tilted to send X-rays down through a window */
     const cx = W * 0.27, cy = Hh * 0.42, tw = Math.min(W * 0.42, 340 * p), th = 84 * p;
     ctx.save(); const gl = ctx.createLinearGradient(0, cy - th / 2, 0, cy + th / 2); gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(200,220,235,0.12)'); gl.addColorStop(1, 'rgba(150,170,190,0.35)');
     ctx.fillStyle = gl; ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.6)' : 'rgba(80,110,130,0.7)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - tw / 2, cy - th / 2, tw, th, th / 2) : ctx.rect(cx - tw / 2, cy - th / 2, tw, th); ctx.fill(); ctx.stroke(); ctx.restore();
@@ -488,7 +488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 3; k++) arrow(ctx, fx + 16 * p, cy - 10 * p + k * 10 * p, ax - 10 * p, cy - 10 * p + k * 10 * p, T.up, 1.2 * p);
     lbl(`electrons, ${f(kV, 1)} keV each`, (fx + ax) / 2, cy - 22 * p, { a: 'center', s: 10 * p, c: T.up });
     for (let k = -2; k <= 2; k++) { ctx.save(); ctx.globalAlpha = 0.6; arrow(ctx, ax - 2 * p, cy + 6 * p, ax - 2 * p + k * 16 * p, cy + th / 2 + 60 * p, T.ka, 1.2 * p); ctx.restore(); }
-    lbl('X rays to the spectrometer', ax, cy + th / 2 + 74 * p, { a: 'center', s: 10 * p });
+    lbl('X-rays to the spectrometer', ax, cy + th / 2 + 74 * p, { a: 'center', s: 10 * p });
     lbl(`high voltage ${f(kV, 1)} kV`, cx, cy - th / 2 - 28 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink }); }
     /* right: the K, L and M levels of the target, with the transitions that fill a K hole */
     const lx = W * 0.6, lw = W * 0.34, yK = Hh - 40 * p, yTop = 46 * p;
@@ -536,11 +536,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
 
-  // ---------- the X ray tube in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawn tube (or ?view=flat) ----------
+  // ---------- the X-ray tube in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawn tube (or ?view=flat) ----------
   /* A glass Coolidge tube on a stand: a hot filament in its focusing cup, a copper anode with the target set in its slanted face, cooling
-     fins outside the glass, and the high voltage supply. Proportions typical, not one particular tube. The electrons and X rays are
-     slowed down for the eye (a 30 keV electron crosses the gap in about 0.2 ns). Each X ray drawn has an energy picked from the
-     same spectrum as the graph below (photon number ∝ intensity / E), coloured as a Kα or Kβ line photon or as bremsstrahlung. */
+     fins outside the glass, and the high voltage supply. Proportions typical, not one particular tube. The electrons and X-rays are
+     slowed down for the eye (a 30 keV electron crosses the gap in about 0.2 ns). Each X-ray drawn has an energy picked from the
+     same spectrum as the graph below (photon number ∝ intensity / E), colored as a Kα or Kβ line photon or as bremsstrahlung. */
   const G3 = { o: { th: -Math.PI / 2 - 0.3, ph: 1.08, zoom: 1 }, key: '', cdf: null };
   let g3 = null, view3 = null;
   const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'xray');
@@ -578,7 +578,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tgt.rotation.z = -slant; tgt.position.set(XA + 0.0015, -0.0005, ZT); sc.add(tgt);
     const spotM = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, color: 0xffffff }), spot = new THREE.Sprite(spotM); spot.scale.set(0.01, 0.01, 1); spot.position.set(XA, -0.001, ZT); sc.add(spot);
     for (let i = 0; i < 5; i++) { const fin = mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.003, 32), copper, true); fin.rotation.z = Math.PI / 2; fin.position.set(0.14 + i * 0.009, 0, ZT); sc.add(fin); }
-    /* lead collimator in front of the focal spot: X rays that pass go on to the spectrometer */
+    /* lead collimator in front of the focal spot: X-rays that pass go on to the spectrometer */
     const yC = -0.075; sc.add(VD3K.box(0.012, 0.012, 0.03, lead, XA - 0.012, yC, ZT - 0.015), VD3K.box(0.012, 0.012, 0.03, lead, XA + 0.012, yC, ZT - 0.015), VD3K.rod([XA, yC, 0.004], [XA, yC, ZT - 0.016], 0.003, steel));
     /* the high voltage supply behind, with its meter and leads to both ends */
     sc.add(VD3K.box(0.13, 0.1, 0.075, dark3, -0.2, 0.14, 0));
@@ -594,7 +594,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const in3 = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left < W3(); };
   /* photon energies drawn from the graph's spectrum: a table of the photon number per energy, built when the target or voltage
      changes. The continuum is binned finely (energy spectrum divided by E); each K line is one entry holding the photon number of its
-     whole peak (peak area 3h·σ√(2π), divided by E), so a narrow line is drawn as often as the graph says even when no bin centre falls
+     whole peak (peak area 3h·σ√(2π), divided by E), so a narrow line is drawn as often as the graph says even when no bin center falls
      on it. Photons below 1 keV are left out (the tube window stops them), which also keeps the continuum divided by E finite. */
   const E_CUT = 1000;
   function photonTable(Z, kV) {
@@ -615,7 +615,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ne = 48; for (let i = 0; i < ne; i++) { const u = (t * 1.1 + i / ne) % 1, a = hash(i, 1) * 6.283, r0 = 0.0025 * (1 - 0.7 * u);
       g.els.put(i, XC + (XA - XC) * u * u, r0 * Math.cos(a), ZT + r0 * Math.sin(a)); }
     g.els.show(ne); g.els.done();
-    /* X rays from the focal spot, out of the slanted face toward the front, each with an energy from the spectrum */
+    /* X-rays from the focal spot, out of the slanted face toward the front, each with an energy from the spectrum */
     const cdf = photonTable(Z, kV), nx = 90, col = new THREE.Color();
     for (let i = 0; i < nx; i++) { const life = (t * 0.7 + i / nx) % 1, gen = Math.floor(t * 0.7 + i / nx), h1 = hash(i, gen), h2 = hash(i + 91, gen), h3 = hash(i + 7, gen);
       const ph3 = pickE(cdf, h3), th = (h1 - 0.5) * 1.5, ph = (h2 - 0.5) * 0.9, d = 0.14 * life, dx = Math.sin(th) * Math.cos(ph) - 0.25, dy = -Math.cos(th) * Math.cos(ph), dz = Math.sin(ph), nn = Math.hypot(dx, dy, dz);
@@ -626,14 +626,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Q = (q) => S3.project(q), lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 10.5 * p, c: T.ink }, o || {});
       ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.surface; ctx.globalAlpha = 0.75; ctx.strokeText(txt, q[0], q[1]); ctx.restore(); lbl(txt, q[0], q[1], o); };
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w3, Hh); ctx.clip();
-    if (narrow) { lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035])); lbl('electrons and X rays slowed down for the eye', 8 * p, 14 * p, { s: 9 * p }); ctx.restore(); return; }
+    if (narrow) { lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035])); lbl('electrons and X-rays slowed down for the eye', 8 * p, 14 * p, { s: 9 * p }); ctx.restore(); return; }
     lab('hot filament (cathode)', Q([XC - 0.01, -0.02, ZT - 0.03]));
     lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035]));
     lab(`electrons, ${f(kV, 1)} keV each`, Q([(XC + XA) / 2 - 0.01, 0, ZT + 0.055]), { c: T.up });
-    lab('X rays to the spectrometer (graph below)', Q([XA, -0.085, ZT - 0.045]));
+    lab('X-rays to the spectrometer (graph below)', Q([XA, -0.085, ZT - 0.045]));
     lab('copper anode, cooled', Q([0.155, 0, ZT + 0.035]));
     lab(`high voltage supply, ${f(kV, 1)} kV`, Q([-0.2, 0.14, 0.1]), { w: 700 });
-    lbl('electrons and X rays slowed down for the eye', 10 * p, 16 * p, { s: 10 * p });
+    lbl('electrons and X-rays slowed down for the eye', 10 * p, 16 * p, { s: 10 * p });
     ctx.restore();
   }
   (function spin() { if (use3() && !document.hidden) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawTube(); } requestAnimationFrame(spin); })();
@@ -682,12 +682,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PRESETS = {
     neon: { view: 'shells', hint: 'Neon, Z = 10: the first shell holds 2 electrons and the second 8, both full. Step down with − electron and up again: each new electron takes the lowest free place that leaves no two electrons with the same four quantum numbers.', set: () => Object.assign(S.sh, { Z: 10, fill: 'real' }) },
     chromium: { view: 'shells', hint: 'Chromium, Z = 24. The n + l rule puts four electrons in 3d and two in 4s; the measured ground state has five in 3d and one in 4s, a half full 3d subshell. Switch between the two fills, and look at copper (Z = 29) too.', set: () => Object.assign(S.sh, { Z: 24, fill: 'real' }) },
-    copper: { view: 'xray', hint: 'A copper target at 30 kV, the usual tube for X ray diffraction. The smooth curve is bremsstrahlung from electrons slowing in the target; it starts at a sharp shortest wavelength. The peaks are copper\'s Kα and Kβ lines. Change the voltage and see what moves and what stays.', set: () => Object.assign(S.xr, { target: '29', kV: 30, axis: 'lam', cur: 154 }) },
+    copper: { view: 'xray', hint: 'A copper target at 30 kV, the usual tube for X-ray diffraction. The smooth curve is bremsstrahlung from electrons slowing in the target; it starts at a sharp shortest wavelength. The peaks are copper\'s Kα and Kβ lines. Change the voltage and see what moves and what stays.', set: () => Object.assign(S.xr, { target: '29', kV: 30, axis: 'lam', cur: 154 }) },
     voltage: { view: 'xray', hint: 'Molybdenum at 15 kV: the electrons cannot knock out a K electron (molybdenum\'s K edge is at 20.0 keV), so there are no K lines yet. Raise the voltage past 20 kV and they appear.', set: () => Object.assign(S.xr, { target: '42', kV: 15, axis: 'lam', cur: 71 }) },
     mystery: { view: 'xray', hint: 'An unknown target at 70 kV. Measure the wavelength of its Kα₁ line and use Moseley\'s law to find its atomic number.', set: () => { Object.assign(S.xr, { target: 'mystery', kV: 70, axis: 'lam', cur: 60 }); newTarget(true); } } };
   const VIEW_LABEL = { shells: 'Orbital boxes for every subshell from 1s to 7p, filled with spin up and spin down electrons, and a bar for each shell showing how many electrons it holds out of 2n².',
-    xray: 'An X ray tube: a hot filament, electrons accelerated to a metal target, and X rays leaving through a window; beside it, the target atom\'s K, L and M levels with the Kα and Kβ transitions.' };
-  const CURVE_LABEL = { shells: 'Graph of the first ionization energy against atomic number, for Z = 1 to 103.', xray: 'The X ray spectrum, intensity against wavelength or photon energy. Drag or use the arrow keys to move the cursor.' };
+    xray: 'An X-ray tube: a hot filament, electrons accelerated to a metal target, and X-rays leaving through a window; beside it, the target atom\'s K, L and M levels with the Kα and Kβ transitions.' };
+  const CURVE_LABEL = { shells: 'Graph of the first ionization energy against atomic number, for Z = 1 to 103.', xray: 'The X-ray spectrum, intensity against wavelength or photon energy. Drag or use the arrow keys to move the cursor.' };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardShells').hidden = v !== 'shells'; $('cardXray').hidden = v !== 'xray';
@@ -728,7 +728,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdWorksheet = () => (S.view === 'shells' ? 'periodic-table' : 'x-ray-spectra');
   window.vdReadingRow = () => {
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
-    if (other) return `These readings are from the ${other.view === 'shells' ? 'Shells' : 'X ray tube'} view: export them to its worksheet or clear them first.`;
+    if (other) return `These readings are from the ${other.view === 'shells' ? 'Shells' : 'X-ray tube'} view: export them to its worksheet or clear them first.`;
     window.vdShowCols = SHOW[S.view];
     if (S.view === 'shells') { const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), os = outerShell(real);
       return { view: 'shells', element: e[2], symbol: e[1], Z, configuration: configText(real), rule_configuration: configText(ruleConfig(Z)), shells: shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(' '),
@@ -740,8 +740,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
-  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X rays move slowed down for the eye, and each X ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, grey for bremsstrahlung).';
-  $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2018). Element families and the table layout are those of the Spectra Explorer.';
+  $('aboutXray').textContent = 'X-ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X-rays move slowed down for the eye, and each X-ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, gray for bremsstrahlung).';
+  $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X-ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2022). Element families and the table layout are those of the Spectra Explorer.';
 
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }

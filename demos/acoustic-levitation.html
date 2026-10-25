@@ -265,7 +265,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <div><dt>Frequency f</dt><dd id="rF">40.0 kHz</dd></div>
           <div><dt>Wavelength λ = c/f</dt><dd id="rLam">—</dd></div>
           <div><dt>Plane wave node spacing λ/2</dt><dd id="rHalf">—</dd></div>
-          <div class="wide"><dt>Trap spacing at the centre, λ/(2⟨cos θ⟩)</dt><dd id="rSp">—</dd></div>
+          <div class="wide"><dt>Trap spacing at the center, λ/(2⟨cos θ⟩)</dt><dd id="rSp">—</dd></div>
           <div><dt>Largest |p| on the axis</dt><dd id="rP">—</dd></div>
           <div><dt>Largest upward push F<sub>max</sub></dt><dd id="rFmax">—</dd></div>
           <div><dt>Weight less buoyancy W</dt><dd id="rW">—</dd></div>
@@ -278,7 +278,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <tbody id="trapBody"></tbody>
         </table>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">A trap is a minimum of U + Wz along the axis; its depth is the energy needed to lift the bead over the lower of the two barriers beside it. Gravity pulls each trap below its pressure node (trap − node negative), by about asin(W/F<sub>max</sub>)/2k for a plane wave, so more for a denser bead. Away from the centre the converging beams also shift the traps by tens of µm either way.</p>
+          <p class="hint">A trap is a minimum of U + Wz along the axis; its depth is the energy needed to lift the bead over the lower of the two barriers beside it. Gravity pulls each trap below its pressure node (trap − node negative), by about asin(W/F<sub>max</sub>)/2k for a plane wave, so more for a denser bead. Away from the center the converging beams also shift the traps by tens of µm either way.</p>
         </details>
       </section>
       <section>
@@ -288,7 +288,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <button type="button" class="btn" id="toWs">Export to worksheet</button>
           <button type="button" class="btn" id="clearRec">Clear the readings</button>
         </div>
-        <p class="hint" id="capStatus" role="status">Each record is one row: setup and material, bead radius, drive, phase (left blank for one emitter, which has no phase control), the tracked trap, F<sub>max</sub>/W and whether the bead holds. The tracked trap is the one nearest the centre on the first record, then the one nearest the last recorded position, so it follows one trap as the phase moves it.</p>
+        <p class="hint" id="capStatus" role="status">Each record is one row: setup and material, bead radius, drive, phase (left blank for one emitter, which has no phase control), the tracked trap, F<sub>max</sub>/W and whether the bead holds. The tracked trap is the one nearest the center on the first record, then the one nearest the last recorded position, so it follows one trap as the phase moves it.</p>
       </section>
 
       <section>
@@ -308,7 +308,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
 
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
-        <p class="hint">The levitator follows TinyLev (A. Marzo, A. Barnes and B. W. Drinkwater, Rev. Sci. Instrum. 88, 085105, 2017): 72 transducers of 10 mm diameter at 40 kHz, 36 in each of two bowls in rings of 6, 12 and 18 on a sphere of radius 60 mm, with the centre position left open. The ring angles (10.5°, 21° and 31.5° from the axis) and the bowls sharing one centre are this page's choices. Because the waves meet the axis at angles θ, the phase along the axis advances at k⟨cos θ⟩ near the centre, so the traps there are λ/(2⟨cos θ⟩) = 4.76 mm apart rather than λ/2, closing toward λ/2 away from the centre.</p>
+        <p class="hint">The levitator follows TinyLev (A. Marzo, A. Barnes and B. W. Drinkwater, Rev. Sci. Instrum. 88, 085105, 2017): 72 transducers of 10 mm diameter at 40 kHz, 36 in each of two bowls in rings of 6, 12 and 18 on a sphere of radius 60 mm, with the center position left open. The ring angles (10.5°, 21° and 31.5° from the axis) and the bowls sharing one center are this page's choices. Because the waves meet the axis at angles θ, the phase along the axis advances at k⟨cos θ⟩ near the center, so the traps there are λ/(2⟨cos θ⟩) = 4.76 mm apart rather than λ/2, closing toward λ/2 away from the center.</p>
         <p class="hint">Each transducer is a piston of radius 5 mm in its far field: p = P₀V D(θ) e<sup>i(kd + φ)</sup>/d with D = 2J₁(ka sin θ)/(ka sin θ). The field is the sum over all 72, in free space: the bowls do not reflect or scatter sound, and there is no nonlinear acoustics. Within about 9 mm of a transducer face (its near field) this model fails, so that region is left blank. In the single emitter setup the flat reflector is rigid and infinite, replaced by the emitter's mirror image; sound reflected back off the emitter is left out, so there is no resonance build up.</p>
         <p class="hint">Calibration, illustrative: P₀ = 0.30 Pa·m per volt peak to peak, from the Murata MA40S4S data sheet rating of 120 dB SPL at 30 cm for 10 V rms. Real arrays fall short of this (spread between transducers, square wave drive, heating), so a real levitator needs more drive than shown here.</p>
         <p class="hint">Force: Gor'kov's potential for a small sphere, U = K₁|p|² − K₂|∇p|² with K₁ = πa³f₁/(3ρ₀c²) and K₂ = πa³f₂/(2ρ₀ω²), f₁ = 1 − ρ₀c²/K<sub>p</sub>, f₂ = 2(ρ<sub>p</sub> − ρ₀)/(2ρ<sub>p</sub> + ρ₀). It holds for ka ≪ 1 in an inviscid fluid; the page warns above a = λ/10. Beads are rigid spheres (a real droplet flattens) and move only along the axis, where the traps also hold them sideways; they pass through each other, and acoustic streaming and heating are left out. Motion: (m + ½ρ₀V) dv/dt = −dU/dz − W + drag (Schiller and Naumann). Air at 20 °C and 1 atm: c = 343.2 m/s, ρ₀ = 1.204 kg/m³. Bulk moduli: foam 3 MPa (a rough figure), water 2.19 GPa, steel 160 GPa. Bead motion is shown 20 times slower than real.</p>
@@ -332,7 +332,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   // ==CORE START==
   // SI units throughout (m, Pa, kg, s). Complex amplitudes: the real pressure is Re[p e^(−iωt)].
   const PI = Math.PI, TAU = 2 * PI;
-  const G_N = 9.80665;
+  const G_N = 9.81;
   const T_C = 20, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
   const C0 = 331.3 * Math.sqrt(1 + T_C / 273.15);                 // speed of sound in dry air at 20 °C, 343.2 m/s
   const RHO0 = P_ATM * M_AIR / (R_GAS * (T_C + 273.15));          // ideal gas, 1.204 kg/m³
@@ -384,7 +384,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   function fieldAt(sources, x, y, z, opt) { const o = [0, 0, 0, 0, 0, 0, 0, 0]; for (const s of sources) addSource(s, x, y, z, o, opt); return o; }
 
   // TinyLev style bowls (Marzo, Barnes and Drinkwater 2017): 36 transducers per side in rings of 6, 12 and 18 on a sphere of
-  // radius 60 mm, the centre position left open, both bowls aimed at the shared centre. Ring angles are this page's choice.
+  // radius 60 mm, the center position left open, both bowls aimed at the shared center. Ring angles are this page's choice.
   const BOWL_R = 0.060, RINGS = [[6, 10.5], [12, 21], [18, 31.5]];
   function bowl(side) {   // side = −1 bottom (emits up), +1 top (emits down)
     const out = [];
@@ -451,7 +451,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   // (k → k_axis for converging waves, below)
   const phaseShift = (phi, k) => phi / (2 * (k || K0));
   // axial wavenumber of a set of sources at a point on the axis: the rate the phase of p advances along z.
-  // For a bowl aimed at the centre it is k⟨cosθ⟩ there, so the nodes are λ/(2⟨cosθ⟩) apart, more than λ/2.
+  // For a bowl aimed at the center it is k⟨cosθ⟩ there, so the nodes are λ/(2⟨cosθ⟩) apart, more than λ/2.
   function kAxis(sources, z) { const h = 1e-6, a = fieldAt(sources, 0, 0, z - h), b = fieldAt(sources, 0, 0, z + h); let d = Math.atan2(b[1], b[0]) - Math.atan2(a[1], a[0]); d -= TAU * Math.round(d / TAU); return Math.abs(d) / (2 * h); }
 
   // ---- 3D grids for the volume views ----
@@ -513,7 +513,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   };
 
   // ---------- configurations: geometry, slice grid and axis grid, precomputed per unit drive ----------
-  // lev: slice x ∈ ±45 mm, z ∈ ±50 mm, masked beyond 50 mm from the centre (the transducer near fields start near 51 mm)
+  // lev: slice x ∈ ±45 mm, z ∈ ±50 mm, masked beyond 50 mm from the center (the transducer near fields start near 51 mm)
   const CFG = {
     lev: { X: 0.045, Z0: -0.050, Z1: 0.050, nx: 201, nz: 223, axis: [-0.048, 0.048], win: [-0.025, 0.025], fillWin: 0.0155, floor: -0.048,
       box: { x: 0.080, z0: -0.078, z1: 0.072 } },
@@ -681,7 +681,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         if (modeU) { const u = (PH.gk.K1 * absP2(o) - PH.gk.K2 * absG2(o)) / uRef; t = 0.5 + 0.5 * Math.max(-1, Math.min(1, u)); }
         else t = Math.min(1, Math.sqrt(absP2(o)) / pRef);
         const k = 3 * Math.round(t * 255);
-        // fade toward the edge of the slice (display only): from 28 to 50 mm off centre, or 14 to 25 mm off the axis for one emitter
+        // fade toward the edge of the slice (display only): from 28 to 50 mm off center, or 14 to 25 mm off the axis for one emitter
         const x = C.xs[i], z = C.zs[j], r = lev ? Math.hypot(x, z) : Math.abs(x);
         const f = lev ? Math.min(1, Math.max(0, (r - 0.028) / 0.022)) : Math.min(1, Math.max(0, (r - 0.014) / 0.011)), w = 0.8 * f * f * (3 - 2 * f);
         d[px] = ramp[k] + w * (bg[0] - ramp[k]); d[px + 1] = ramp[k + 1] + w * (bg[1] - ramp[k + 1]); d[px + 2] = ramp[k + 2] + w * (bg[2] - ramp[k + 2]); d[px + 3] = 255;
@@ -802,7 +802,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
 
   // ---------- trap pockets: the surface U = level, by marching tetrahedra ----------
   // Each grid cube is split into six tetrahedra around its diagonal from corner 0 to corner 7; every edge they use runs from a
-  // corner to one whose offset bits include its own, so neighbouring cubes agree on the split and share their surface points.
+  // corner to one whose offset bits include its own, so neighboring cubes agree on the split and share their surface points.
   // A surface point sits on each edge where U − level changes sign, linearly interpolated; it is stored once per grid edge
   // (indexed mesh). Normals are the interpolated gradient of U, which points out of the pocket.
   const TETS = [0, 1, 3, 7, 0, 3, 2, 7, 0, 2, 6, 7, 0, 6, 4, 7, 0, 4, 5, 7, 0, 5, 1, 7];
@@ -954,7 +954,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const std = (r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: 0x888888, roughness: r, metalness: m, side: THREE.DoubleSide });
     const mats = { bowl: std(0.6, 0.1), can: std(0.3, 0.75), mesh: std(0.9), frame: std(0.32, 0.75), refl: std(0.3, 0.7), bench: std(0.85) };
     const levGrp = new THREE.Group(), sglGrp = new THREE.Group(); scene.add(levGrp, sglGrp);
-    // bowls: shell behind the transducers and one can per transducer, aimed at the centre
+    // bowls: shell behind the transducers and one can per transducer, aimed at the center
     const canGeo = new THREE.CylinderGeometry(5, 5, 7, 24), faceGeo = new THREE.CircleGeometry(4.3, 24);
     for (const side of [-1, 1]) {
       const shell = new THREE.Mesh(new THREE.SphereGeometry(67.5, 56, 14, 0, TAU, 0, 37 * PI / 180), mats.bowl);
@@ -1000,7 +1000,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const haloMat = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(haloCv), transparent: true, depthWrite: false, depthTest: false });
     const halos = [];
     const mic = new THREE.Group(); scene.add(mic);
-    // a small stick microphone: the centre of its head is where |p| is sampled; the handle points down and out
+    // a small stick microphone: the center of its head is where |p| is sampled; the handle points down and out
     const micMat = new THREE.MeshBasicMaterial({ color: 0xa7740b, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
     const micDark = new THREE.MeshBasicMaterial({ color: 0x2a2e33, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
     { const d = new THREE.Vector3(0.55, 0, -0.835).normalize(), up = new THREE.Vector3(0, 1, 0);
@@ -1290,7 +1290,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.82; ctx.fillRect(lx - 3, y - fs * 0.7, w + 6, fs * 1.4); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(txt, x, y); };
     { const L = 10, bx = W - 14 * ps - L * s, by = H - 16 * ps; ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + L * s, by); ctx.stroke(); tag('10 mm', bx + L * s / 2, by - 10 * ps, 'center', T.ink); }
     if (C.name === 'lev') { tag('top bowl, phase Δφ', X(0), Y(70) - 4 * ps, 'center'); tag('bottom bowl, phase 0', X(0), Y(-70) + 6 * ps, 'center'); }
-    else { tag('emitter', X(7), Y(1000 * SINGLE_H / 2 + 4), 'left'); tag('flat reflector', X(28), Y(-1000 * SINGLE_H / 2 - 1.5), 'left'); tag('near field, not modelled', X(10), Y(1000 * SINGLE_H / 2 - 5), 'left'); }
+    else { tag('emitter', X(7), Y(1000 * SINGLE_H / 2 + 4), 'left'); tag('flat reflector', X(28), Y(-1000 * SINGLE_H / 2 - 1.5), 'left'); tag('near field, not modeled', X(10), Y(1000 * SINGLE_H / 2 - 5), 'left'); }
     placeMicTag();
   }
   // a stick microphone: the head (where |p| is read) at (x, y), the handle down and to the right
@@ -1452,7 +1452,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const holds = PH.traps.length > 0;
     recRows.push({ setup: `${C.name === 'lev' ? 'two bowls' : 'single emitter and reflector'} / ${MATS[S.mat].name}`, a: S.a.toFixed(2), V: S.V.toFixed(1), ph: C.name === 'lev' ? String(S.ph) : '',
       z: tr ? (tr.z * 1000).toFixed(2) : '', ratio: PH.Vpa === 0 ? '0' : String(+PH.ratio.toPrecision(4)),
-      notes: [holds ? 'holds' : 'falls', near.length ? `traps near the centre at ${near.map((z) => (z * 1000).toFixed(2)).join(' ')} mm` : ''].filter(Boolean).join('; ') });
+      notes: [holds ? 'holds' : 'falls', near.length ? `traps near the center at ${near.map((z) => (z * 1000).toFixed(2)).join(' ')} mm` : ''].filter(Boolean).join('; ') });
     lastZ = tr ? tr.z : lastZ; lastCfg = C.name;
     capStatus(`Row ${recRows.length} recorded${tr ? `: tracked trap at ${(tr.z * 1000).toFixed(2)} mm` : ': no trap, the bead falls'}.`);
   });
@@ -1473,8 +1473,8 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/acoustic-levitation.html'; a.target = 'levitation-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   });
   const HINTS = {
-    hold: 'One foam bead sits just below a pressure node near the centre. Lower the drive slowly: it sinks a little in its trap and then drops at about 1 V.',
-    stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the centre. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Open Trap pockets to see the wells in 3D, or the Slice colored by Potential U.',
+    hold: 'One foam bead sits just below a pressure node near the center. Lower the drive slowly: it sinks a little in its trap and then drops at about 1 V.',
+    stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the center. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Open Trap pockets to see the wells in 3D, or the Slice colored by Potential U.',
     steel: 'At 12 V water would float, but steel is 8 times denser and falls straight through. Raise the drive: in this model steel needs about 15 V.',
     move: 'The top bowl\'s phase sweeps back and forth. Each 360° moves the traps by one trap spacing, and the beads ride along: acoustic tweezers.',
     water: 'A water droplet is 33 times denser than foam. It still floats at 10 V, but sits further below its node, and its trap is shallower for its weight.',
@@ -1491,7 +1491,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     S.mic = C.name === 'lev' ? { x: 0.012, z: 0 } : { x: 0.008, z: -0.004 };
     physics();
     beads = [];
-    if (p === 'hold' || p === 'water') { const t = trapsIn(1).sort((a, b) => (Math.abs(Math.abs(a.z) - Math.abs(b.z)) < 1e-4 ? a.z - b.z : Math.abs(a.z) - Math.abs(b.z)))[0]; if (t) addBeadAt(t.z, 0.3e-3); }   // the trap just below the centre
+    if (p === 'hold' || p === 'water') { const t = trapsIn(1).sort((a, b) => (Math.abs(Math.abs(a.z) - Math.abs(b.z)) < 1e-4 ? a.z - b.z : Math.abs(a.z) - Math.abs(b.z)))[0]; if (t) addBeadAt(t.z, 0.3e-3); }   // the trap just below the center
     else if (p === 'steel') addBeadAt(-LAMBDA / 4 + 0.2e-3);
     else if (p === 'move') { const ts = trapsIn(1).sort((a, b) => Math.abs(a.z) - Math.abs(b.z)).slice(0, 3); for (const t of ts) addBeadAt(t.z); }
     else fillTraps(true);
@@ -1505,15 +1505,15 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     C = buildCfg(name); uScale = null; sliceImg = null;
     const lev = name === 'lev';
     $('ph').disabled = !lev; $('sweep').disabled = !lev; $('ph0').disabled = !lev;
-    $('phHint').textContent = lev ? `Every 360° of phase moves the traps by one trap spacing, ${(C.spacing * 1000).toFixed(2)} mm at the centre. Drag a trap ring in the drawing to do the same by hand.`
+    $('phHint').textContent = lev ? `Every 360° of phase moves the traps by one trap spacing, ${(C.spacing * 1000).toFixed(2)} mm at the center. Drag a trap ring in the drawing to do the same by hand.`
       : 'With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.';
     { const sp = VOL_SPEC[name], pk = PK_SPEC[name], n = (lo, hi, h) => Math.round((hi - lo) / h) + 1, mm = (v) => +(v * 1000).toFixed(2);
       const g = `${n(-sp.X, sp.X, sp.h)} × ${n(-sp.X, sp.X, sp.h)} × ${n(sp.Z0, sp.Z1, sp.h)}`, gp = `${n(-pk.X, pk.X, pk.h)} × ${n(-pk.X, pk.X, pk.h)} × ${n(pk.Z0, pk.Z1, pk.h)}`;
-      $('hint3d').textContent = (lev ? `The 3D grid has ${g} points ${mm(sp.h)} mm apart (λ/${(LAMBDA / sp.h).toFixed(1)}), x and y within ±${mm(sp.X)} mm, z within ±${mm(sp.Z1)} mm, inside 50 mm of the centre where the near fields begin. `
+      $('hint3d').textContent = (lev ? `The 3D grid has ${g} points ${mm(sp.h)} mm apart (λ/${(LAMBDA / sp.h).toFixed(1)}), x and y within ±${mm(sp.X)} mm, z within ±${mm(sp.Z1)} mm, inside 50 mm of the center where the near fields begin. `
         : `The 3D grid has ${g} points ${mm(sp.h)} mm apart, x and y within ±${mm(sp.X)} mm, between the reflector and the emitter, outside its near field. `)
         + 'Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. '
         + `Time runs 100 000 times slower than real: one 25 µs cycle takes ${WAVE_T} s. Opacity and color strength grow as |p|^${GAMMA3D}, a display choice so the weaker waves near the bowls still show. `
-        + `Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of ${gp} points ${mm(pk.h)} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's centre and, when it wins, drops the bead (see the trap table).`; }
+        + `Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of ${gp} points ${mm(pk.h)} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's center and, when it wins, drops the bead (see the trap table).`; }
     layout3D();
   }
   function markAll() { dirty.phys = dirty.slice = dirty.draw = dirty.plot = dirty.ui = dirty.legend = true; }
@@ -1665,7 +1665,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     micP, physics: () => { physics(); return PH; }, get use3D() { return G.ready; }, get gl2() { return !!G.gl2; }, get rafMs() { return rafMs; }, get q() { return G.q; },
     setField, fieldAt, grid(kind) { const tk = V3[C.name] && V3[C.name][kind]; return tk ? { done: tk.done, prog: tk.prog, ms: tk.ms, res: tk.res } : null; },
     get pockets() { return pockInfo; }, get texReady() { return !!(G.vol && G.vol.material.uniforms.uTex.value); },
-    trapScreen() { // screen position of the trap nearest the centre, in page coordinates, for tests
+    trapScreen() { // screen position of the trap nearest the center, in page coordinates, for tests
       const t = PH.traps.filter((q) => Math.abs(q.z) < 0.045).sort((a, b) => Math.abs(a.z) - Math.abs(b.z))[0]; if (!t) return null;
       if (S.view !== 'flat' && G.ready) { cam3D(); const p = project(0, 0, 1000 * t.z), r = G.el.getBoundingClientRect(); return [r.left + p[0], r.top + p[1], t.z]; }
       const r = flat.getBoundingClientRect(), g = flatGeom(); return [r.left + g.X(0), r.top + g.Y(1000 * t.z), t.z];

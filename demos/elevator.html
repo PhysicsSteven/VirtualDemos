@@ -274,7 +274,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`${f(tEnd, 0)} s`, x0 + w, y0 + h + 2);
   }
   // ---------- 3D view of the shaft (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
-  /* The building to scale (floors 3.0 m apart, z up, metres), cut open at the front; the camera rides with the car. The car, the
+  /* The building to scale (floors 3.0 m apart, z up, meters), cut open at the front; the camera rides with the car. The car, the
      person (1.7 m) and the scale are drawn life size; the counterweight moves opposite to the car, as in the flat view. The scale's
      display shows N/g. Drag to turn the view, wheel or pinch to zoom, double click to reset. This canvas keeps the arrows and words. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.42, ph: 1.36, zoom: 1 } };
@@ -456,7 +456,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const feet = floorY - sh, hip = feet - ph * 0.45, neck = feet - ph * 0.82;
     ctx.beginPath(); ctx.moveTo(px - 6 * p, feet); ctx.lineTo(px, hip); ctx.lineTo(px + 6 * p, feet); ctx.moveTo(px, hip); ctx.lineTo(px, neck); ctx.moveTo(px - 9 * p, neck + 10 * p); ctx.lineTo(px, neck + 3 * p); ctx.lineTo(px + 9 * p, neck + 10 * p); ctx.stroke();
     ctx.beginPath(); ctx.arc(px, neck - 7 * p, 6 * p, 0, 7); ctx.fill(); ctx.lineCap = 'butt';
-    // force arrows on the person (beside the figure): weight from the centre down, N from the feet up; 1 mg = 40 px
+    // force arrows on the person (beside the figure): weight from the center down, N from the feet up; 1 mg = 40 px
     const k = 40 * p / (S.m * G), N = scaleN(S.m, st.a), ax = cx + cw * 0.72;
     arrow(ax, hip, hip + S.m * G * k, T.Wc, 'mg', 1);
     if (!S.blind) arrow(ax + 22 * p, feet, feet - N * k, T.N, 'N', 1);

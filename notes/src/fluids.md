@@ -18,10 +18,10 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 
 ## Running it in class
 
-1. **Pressure grows with depth.** The probe at 1.20 m reads 113.09 kPa absolute, 1.116 atm. Drag it sideways: nothing changes. Switch to **Gauge** and to **Mercury**: the ρgh part is 13.6 times larger. Ask Q2.
+1. **Pressure grows with depth.** The probe at 1.20 m reads 113.10 kPa absolute, 1.116 atm. Drag it sideways: nothing changes. Switch to **Gauge** and to **Mercury**: the ρgh part is 13.6 times larger. Ask Q2.
 2. **Shapes** (scene button). Ask Q1 before you say anything about the vessels. At a fill height of 0.32 m all four bases feel 3.14 kPa and 15.8 N, though the vessels hold from 1.00 L to 7.27 L.
 3. **Floating and sinking.** The 10 cm pine cube settles half under; the level rises 3.33 mm. Try **Steel** or **Ice**, or slide **Block density ρ_obj** through 1000 kg/m³. Then switch the liquid to **Oil** and **Mercury** (Q3). Press **Iceberg** to see 89.5% of the ice under seawater.
-4. **Weighing in water (Archimedes).** Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.48 N to 16.67 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.
+4. **Weighing in water (Archimedes).** Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.49 N to 16.68 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.
 5. **Venturi tube.** Halving the diameter makes the throat flow 4 times faster, 3.20 m/s, and the throat standpipe stands 48.9 cm lower than the inlet one (Q6). Drag the throat grip to widen it back.
 6. **Torricelli's tank.** The hole 0.30 m below the surface sends water out at 2.43 m/s, landing 0.917 m from the wall. With **Compare holes** on, ask the class to predict which hole throws farthest, then drag the hole (Q7).
 
@@ -50,7 +50,7 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 
 ## Physics behind the demo
 
-- Hydrostatics: constant density (incompressible), g = 9.80665 m/s², standard air pressure P₀ = 101.325 kPa on the surface. The depth scale is to size; the tank width is schematic.
+- Hydrostatics: constant density (incompressible), g = 9.81 m/s², standard air pressure P₀ = 101.325 kPa on the surface. The depth scale is to size; the tank width is schematic.
 - Shapes: round open vessels with an 8 cm base (50.3 cm²); the narrowing one ends 2.4 cm across, the flared one 34 cm; every slice of the slanted tube is the same circle. Barometer: vacuum above the column, h = P/(ρg).
 - Buoyancy: a cube in a tank of floor area 0.15 m², so the level rises by V_sub/A. Vertical motion only, with linear drag on the wet block (damping ratio ζ) and no added mass, so real blocks bob a little more slowly. The scale is read with the block hanging still.
 - Venturi: ideal flow (incompressible, inviscid, steady), uniform speed across each section, horizontal pipe; each standpipe shows the gauge pressure at the axis. A real pipe also loses pressure to friction.
@@ -58,5 +58,5 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 
 ## Going further
 
-- The **Barometer** scene: at 101.3 kPa a mercury column stands 760 mm and a water column over 10 m, which is why Torricelli used mercury.
+- The **Barometer** scene: at 101.3 kPa a mercury column stands 760 mm (759.7 mm with g = 9.81 m/s²; the 760 mm of the mmHg definition uses standard gravity, 9.80665 m/s²) and a water column 10.33 m, which is why Torricelli used mercury.
 - Homework: a floating block bobs with k = ρ_f g A_block (ignoring the level change). Show that a 10 cm pine cube in water bobs with a period of about 0.45 s, and compare with the demo.

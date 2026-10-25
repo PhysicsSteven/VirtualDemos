@@ -10,9 +10,9 @@ Textbook: OpenStax *University Physics*, Vol. 3, §3.5 (with §1.1 for the index
 
 **Using the demo.**
 
-- The top view shows the interferometer on an optical table: a light source focused to a point just before the beam splitter, the compensator plate, the movable mirror M₁ on a micrometer stage, the fixed mirror M₂ with two tilt screws, a gas cell 5.00 cm long in the M₂ arm, and the screen. The second picture is the screen itself, 80 mm across, with a millimetre scale.
+- The top view shows the interferometer on an optical table: a light source focused to a point just before the beam splitter, the compensator plate, the movable mirror M₁ on a micrometer stage, the fixed mirror M₂ with two tilt screws, a gas cell 5.00 cm long in the M₂ arm, and the screen. The second picture is the screen itself, 80 mm across, with a millimeter scale.
 - The micrometer reads the mirror's position to 0.1 μm. Turn it with its slider, the step buttons, by dragging the drum in the picture, or with the arrow keys.
-- A fringe counter (a photodiode at the centre of the screen) adds one for each bright fringe that passes, whichever way it moves. Zero the counter starts it again and remembers the micrometer reading. A new light source, or putting the cell in or taking it out, cannot be counted.
+- A fringe counter (a photodiode at the center of the screen) adds one for each bright fringe that passes, whichever way it moves. Zero the counter starts it again and remembers the micrometer reading. A new light source, or putting the cell in or taking it out, cannot be counted.
 - The gas cell has a pump and a needle valve. Pump out takes it to 2 Pa; Let air in lets air back at about 1 kPa/s; Closed stops either. The gauge reads to 0.1 kPa.
 - Record reading stores the light source, the micrometer reading, where the counter was zeroed, the cell pressure and the fringe count. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Mystery laser hides the wavelength; New mystery laser picks another (and tells you the old one). Blind hides the wavelength and $$n - 1$$ readouts so you can make your own predictions.
@@ -21,7 +21,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §3.5 (with §1.1 for the index
 
 - Each mirror makes an image of the source point, so the screen sees two coherent point sources; the pattern drawn is exactly the two point interference pattern. Seen along the axis the images are $$2d$$ apart and the fringes are circles; tilting M₂ moves its image sideways and near equal paths the fringes become straight lines.
 - The room's air is dry, at 20.0 °C and 101.325 kPa. Air's index comes from Ciddor's formula (Applied Optics, 1996) and is taken in proportion to the gas density: at constant temperature, $$n - 1$$ is proportional to the pressure.
-- The laser lines are perfectly sharp. White light has a daylight spectrum, so its fringes appear only within about a micrometre of equal paths.
+- The laser lines are perfectly sharp. White light has a daylight spectrum, so its fringes appear only within about a micrometer of equal paths.
 
 </details>
 
@@ -45,13 +45,13 @@ $$N = \frac{2L\,(n - 1)}{\lambda}$$
 
 fringes. For a gas at constant temperature, $$n - 1$$ is proportional to the density and so to the pressure $$P$$: a graph of $$N$$ against $$P$$ is a straight line through the origin.
 
-Light off the axis at angle $$\theta$$ has path difference $$2d\cos\theta$$, so the fringes are rings around the axis. When $$d$$ grows, new rings appear at the centre and move outward.
+Light off the axis at angle $$\theta$$ has path difference $$2d\cos\theta$$, so the fringes are rings around the axis. When $$d$$ grows, new rings appear at the center and move outward.
 
 ## Before the lab
 
-1. A red He–Ne laser has $$\lambda = 632.8$$ nm. How far must M₁ move for 200 fringes to pass the centre?
+1. A red He–Ne laser has $$\lambda = 632.8$$ nm. How far must M₁ move for 200 fringes to pass the center?
 2. The textbook's Table 1.1 gives $$n = 1.000293$$ for air at 0 °C and 1 atm. At 20 °C, the same pressure, the density is lower by the ratio of the absolute temperatures. Predict $$n - 1$$ at 20 °C and the number of fringes that pass when a 5.00 cm cell of air is pumped out with the red laser.
-3. As M₁ moves to make the arms more unequal, do the rings appear at the centre and grow outward, or shrink into the centre? Explain from $$2d\cos\theta = m\lambda$$.
+3. As M₁ moves to make the arms more unequal, do the rings appear at the center and grow outward, or shrink into the center? Explain from $$2d\cos\theta = m\lambda$$.
 4. Why do white light fringes appear only when the two arms are almost exactly equal, while laser fringes appear at any setting?
 
 ## Safety
@@ -66,7 +66,7 @@ A real He–Ne laser is class II or IIIa: never look into the beam or its reflec
 
 **Part 3: The index of refraction of air.** Clear the readings and pick the Air in a gas cell setup (red He–Ne). Pump the cell out until the gauge reads 0.0 kPa and close the valves. Zero the counter, then let air in. Each time the counter reaches 5, 10, 15, … fringes, close the valve and record the pressure, then let air in again. Send the run to a new copy of the table. Then let the cell fill to room pressure (101.3 kPa) and write down the total count.
 
-**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes are straight, evenly spaced lines. Switch to white light and turn the micrometer slowly, in 0.1 μm steps, until coloured fringes appear. Record the reading where the centre fringe is white, and describe the colours on each side.
+**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes are straight, evenly spaced lines. Switch to white light and turn the micrometer slowly, in 0.1 μm steps, until colored fringes appear. Record the reading where the center fringe is white, and describe the colors on each side.
 
 ## Data
 
@@ -81,10 +81,10 @@ Mirror displacement is the micrometer reading minus the reading where you zeroed
 ## Analysis
 
 1. For Part 1, graph $$N$$ against $$\Delta d$$ and fit a straight line. From the slope find $$\lambda$$ and compare it with 632.8 nm. Why is the slope a better measure than the intercept, and why need the line not pass through the origin?
-2. Do the same for the mystery laser. What colour is it?
+2. Do the same for the mystery laser. What color is it?
 3. For Part 3, graph $$N$$ against $$P$$. Is it a straight line? Why can it miss the origin by up to one fringe? From the slope, find $$n - 1$$ of air at 101.3 kPa and 20 °C, and compare it with your prediction from Before the lab question 2. Compare also with $$n - 1$$ from the total count when the cell filled to room pressure.
 4. Use your result from Analysis 3 to find $$n - 1$$ for air at 0 °C and 1 atm, and compare it with the textbook's 1.000293. (The textbook's value is for 589 nm light; air's index is only a little higher at shorter wavelengths.)
-5. From Part 4, how many coloured fringes could you see on each side of the white one? Use that to estimate how close to equal the arms must be for white light fringes.
+5. From Part 4, how many colored fringes could you see on each side of the white one? Use that to estimate how close to equal the arms must be for white light fringes.
 
 ## Uncertainty
 

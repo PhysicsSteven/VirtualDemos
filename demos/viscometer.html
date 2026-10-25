@@ -171,7 +171,7 @@ table.rows input:focus { border-color: var(--accent); }
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th id="th1">d (mm)</th><th id="th2">t (s)</th><th id="th3">v (mm/s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
-        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line through the smallest balls and residuals."></canvas></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line (slope and intercept) and its residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <details class="more"><summary>More about this</summary>
           <p class="hint" id="capHow">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
@@ -240,7 +240,7 @@ table.rows input:focus { border-color: var(--accent); }
     const k1v = f(s.v), k2v = f(s.v + h / 2 * k1v), k3v = f(s.v + h / 2 * k2v), k4v = f(s.v + h * k3v);
     return { x: s.x + h / 6 * (s.v + 2 * (s.v + h / 2 * k1v) + 2 * (s.v + h / 2 * k2v) + (s.v + h * k3v)), v: s.v + h / 6 * (k1v + 2 * k2v + 2 * k3v + k4v) };
   }
-  // response time: time constant of the approach to terminal speed, linearised about v_t
+  // response time: time constant of the approach to terminal speed, linearized about v_t
   function respTime(d, rhoB, fl, D) { const vt = terminal(d, rhoB, fl, D), V = Math.PI * d ** 3 / 6, e = Math.abs(vt) * 1e-6 + 1e-12; const dF = (drag(Math.abs(vt) + e, d, fl, D) - drag(Math.abs(vt) - e, d, fl, D)) / (2 * e); return (rhoB + 0.5 * fl.rho) * V / dF; }
   // the run: released at rest at the top (x = 0), or at the bottom if it floats; returns gate crossing times
   function gateTimes(d, rhoB, fl, D) {
@@ -311,7 +311,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-  const HINT = { glycerol: 'Glycerol: thick and dense. Steel balls of a few millimetres fall slowly enough for Stokes\' law to work well.', castor: 'Castor oil: a little less viscous than glycerol and less dense.', oil: 'Motor oil: much thinner. Bigger balls start to fall too fast for Stokes\' law.', water: 'Water: about 1400 times less viscous than glycerol. Every ball here falls far too fast for Stokes\' law; see what the timings give.' };
+  const HINT = { glycerol: 'Glycerol: thick and dense. Steel balls of a few millimeters fall slowly enough for Stokes\' law to work well.', castor: 'Castor oil: a little less viscous than glycerol and less dense.', oil: 'Motor oil: much thinner. Bigger balls start to fall too fast for Stokes\' law.', water: 'Water: about 1400 times less viscous than glycerol. Every ball here falls far too fast for Stokes\' law; see what the timings give.' };
   const S = { exp: 'ball', fluid: 'glycerol', myst: null, D: 0.04, ball: 'steel', d: 3, speed: 1, run: false, done: false, t: 0, s: { x: 0, v: 0 }, gate: null, t1: null, blind: false, rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
@@ -411,7 +411,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (up()) { ctx.fillStyle = T.mark; ctx.fillText('lighter than the liquid: it rises', tx, ty + 38 * p); }
   }
   // ---------- 3D view of the falling ball tube (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
-  /* Metres, z up, the bench top at z = 0. The tube, its liquid column (0.45 m), the marks at 15 cm and 35 cm and the ball are to scale and
+  /* Meters, z up, the bench top at z = 0. The tube, its liquid column (0.45 m), the marks at 15 cm and 35 cm and the ball are to scale and
      the ball sits at the depth the model gives; a ring is drawn round it on the screen so a 1 mm ball still shows. Each light gate lights
      while the ball is inside its beam. The stand, clamps and beaker are scenery. Only the falling ball is in 3D; Flow in a pipe stays
      flat. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
@@ -650,15 +650,16 @@ table.rows input:focus { border-color: var(--accent); }
   function fit() {
     if (S.exp === 'pipe') { pFit(); return; }
     const pts = S.rows.filter((r) => r.key === key()).map((r) => { const d = cellNum(r.d), t = cellNum(r.t); return d > 0 && t > 0 ? [(d / 1000) ** 2, 0.2 / t] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
-    const F = pts.length >= 1 ? fitOrigin(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F || pts.length < 2) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two ball sizes with this liquid, ball and tube.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two ball sizes with this liquid, ball and tube.</dd></div>`;
     else {
       const eta = Math.abs(rhoB() - FL().rho) * G / (18 * F.b);
-      h = `<div class="wide"><dt>Slope of v against d² (through the origin)</dt><dd>${g3(F.b)} m⁻¹s⁻¹</dd></div>`;
+      h = `<div class="wide"><dt>Slope of v against d² (least squares line, ${F.n} points)</dt><dd>${g3(F.b)}${isFinite(F.seB) ? ` ± ${g3(F.seB)}` : ''} m⁻¹s⁻¹</dd></div>`;
+      h += `<div class="wide"><dt>Intercept</dt><dd>${g3(F.a * 1000).replace('-', '−')}${isFinite(F.seA) ? ` ± ${g3(F.seA * 1000)}` : ''} mm/s</dd></div>`;
       h += hidden() ? '<div class="wide"><dt>η = (ρ_b − ρ_f) g/(18 × slope)</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>η = (ρ_b − ρ_f) g/(18 × slope)</dt><dd>${eta >= 0.1 ? `${f(eta, 3)} Pa·s` : `${f(eta * 1000, 3)} mPa·s`}</dd></div>`;
     }
-    $('fitOut').innerHTML = h; drawFit(pts, F && pts.length >= 2 ? F : null);
+    $('fitOut').innerHTML = h; drawFit(pts, F);
   }
   function drawFit(pts, F) {
     const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
@@ -668,10 +669,10 @@ table.rows input:focus { border-color: var(--accent); }
     fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('d² (mm²)', (L + Rr) / 2, resB + 3);
     fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('v (mm/s)', 0, 0); fctx.restore();
     if (!pts.length) return;
-    const xh = Math.max(...pts.map((q) => q[0])) * 1.08, yh = Math.max(...pts.map((q) => q[1])) * 1.1, PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    const xh = Math.max(...pts.map((q) => q[0])) * 1.08, yh = Math.max(...pts.map((q) => q[1]), F ? F.a + F.b * xh : 0) * 1.1, PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
     fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(g3(yh * 1000), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
     fctx.textAlign = 'right'; fctx.textBaseline = 'bottom'; fctx.fillText(g3(xh * 1e6), Rr - 2, mainB - 2);
-    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(0)); fctx.lineTo(PX(xh), PY(F.b * xh)); fctx.stroke(); }
+    if (F) { fctx.save(); fctx.beginPath(); fctx.rect(L, top, Rr - L, mainB - top); fctx.clip(); fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); fctx.restore(); }
     fctx.fillStyle = T.ball; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
     if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-15), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.ball; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
   }
@@ -697,7 +698,7 @@ table.rows input:focus { border-color: var(--accent); }
     $('viewSeg').hidden = pipe;
     $('lede').textContent = LEDE[x]; $('unitsLine').textContent = UNITS[x];
     $('formula').textContent = pipe ? 'Poiseuille: Q = ΔP πr⁴/(8ηL) · Reynolds number N_R = ρvD/η · turbulent: ΔP = f (L/D) ρv²/2' : 'Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)';
-    $('capHow').textContent = pipe ? 'Capture stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from a line through the origin of ΔP against Q for the three lowest.'
+    $('capHow').textContent = pipe ? 'Capture stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from the slope of a least squares line (with an intercept) of ΔP against Q for the three lowest.'
       : 'Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes\' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.';
     if (pipe) { S.run = false; pSync(); }
     renderRows(); draw(); readouts();
@@ -771,7 +772,7 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.strokeStyle = T.glass; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x - 4 * p, mTop); ctx.lineTo(x - 4 * p, yT); ctx.moveTo(x + 4 * p, mTop); ctx.lineTo(x + 4 * p, yT); ctx.stroke();
       VG.label(ctx, lab, x, yB + 10 * p, { a: 'center', s: 9 * p });
     }
-    // manometer ruler: centimetres of head
+    // manometer ruler: centimeters of head
     const rx = x2 + 14 * p; ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     const cmStep = niceStep((base + dhMax) * 100 / 6);
     for (let c = 0; c <= (base + dhMax * 1.04) * 100 + 1e-9; c += cmStep) { const y = yT - c / 100 * mpx; ctx.beginPath(); ctx.moveTo(rx, y); ctx.lineTo(rx + 6 * p, y); ctx.stroke(); ctx.fillText(`${+c.toFixed(3)} cm`, rx + 9 * p, y); }
@@ -850,9 +851,10 @@ table.rows input:focus { border-color: var(--accent); }
     if (pts.length < 3) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least three flows with this liquid and pipe.</dd></div>';
     else {
       const lo = pts.slice(0, 3), hi = pts.slice(-3), ll = (a) => fitLine(a.map((q) => Math.log(q[0])), a.map((q) => Math.log(q[1])));
-      const nLo = ll(lo), nHi = ll(hi), F0 = fitOrigin(lo.map((q) => q[0]), lo.map((q) => q[1])), eta = F0.b * Math.PI * (P.D / 2) ** 4 / (8 * PIPE_L);
+      const nLo = ll(lo), nHi = ll(hi), F0 = fitLine(lo.map((q) => q[0]), lo.map((q) => q[1])), eta = F0 ? F0.b * Math.PI * (P.D / 2) ** 4 / (8 * PIPE_L) : NaN;
       h = `<div><dt>log ΔP against log Q, lowest three</dt><dd>slope ${nLo.b.toFixed(3)}</dd></div><div><dt>highest three</dt><dd>slope ${nHi.b.toFixed(3)}</dd></div>`;
-      h += pHidden() ? '<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd>${(eta * 1000).toFixed(3)} mPa·s</dd></div>`;
+      if (F0) h += `<div class="wide"><dt>ΔP against Q, lowest three: slope and intercept</dt><dd>${g3(F0.b / 1e6)} ± ${g3(F0.seB / 1e6)} Pa/(mL/s), ${g3(F0.a)} ± ${g3(F0.seA)} Pa</dd></div>`;
+      h += pHidden() ? '<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd>${isFinite(eta) ? (eta * 1000).toFixed(3) + ' mPa·s' : '—'}</dd></div>`;
     }
     $('fitOut').innerHTML = h; pDrawFit(pts);
   }

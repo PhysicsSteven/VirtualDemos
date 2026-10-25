@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.2. Access for free at http
 **Using the demo.**
 
 - A 1.000 kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn 100 times longer so it shows), and a graph of g against height.
-- The readouts give the distance from the centre r, gravity alone $$GM/r^2$$, and, with the planet's rotation included, the centrifugal term, the effective g (what the scale feels) and the tilt of a plumb line. At sea level on Earth they also give the real Earth's value from the WGS 84 standard formula.
+- The readouts give the distance from the center r, gravity alone $$GM/r^2$$, and, with the planet's rotation included, the centrifugal term, the effective g (what the scale feels) and the tilt of a plumb line. At sea level on Earth they also give the real Earth's value from the WGS 84 standard formula.
 - Readouts are to 0.0001 m/s². Record reading stores the planet, height, latitude, r and both values of g; Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides g, the scale reading and the percentages. Nothing can be recorded while Blind is on.
 
@@ -26,11 +26,11 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.2. Access for free at http
 
 ## Goal
 
-Measure how the acceleration due to gravity falls off with distance from Earth's centre, find GM from it, and measure how Earth's rotation lowers the effective g toward the equator.
+Measure how the acceleration due to gravity falls off with distance from Earth's center, find GM from it, and measure how Earth's rotation lowers the effective g toward the equator.
 
 ## Background
 
-Outside a spherical planet of mass $$M$$, gravity is the same as if all the mass were at the centre (§13.2):
+Outside a spherical planet of mass $$M$$, gravity is the same as if all the mass were at the center (§13.2):
 
 $$g = \frac{GM}{r^2}, \qquad r = R + h.$$
 
@@ -53,7 +53,7 @@ which drops a term of order $$(\omega^2 R)^2/g$$, smaller than 0.00002 m/s² on 
 
 ## Safety
 
-No physical apparatus is used. On a real bench, a precision spring scale or gravimeter must be levelled and handled gently; do not drop masses onto it.
+No physical apparatus is used. On a real bench, a precision spring scale or gravimeter must be leveled and handled gently; do not drop masses onto it.
 
 ## Procedure
 
@@ -90,7 +90,7 @@ The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settin
 
 1. A scale aboard the space station reads zero, although g there is close to 90% of its surface value. Explain.
 2. A geostationary satellite stays above one spot on the equator. Why does that mean a scale on an imaginary tower reaching up to it would read zero?
-3. A plumb line points straight at Earth's centre only at the equator and the poles. Why does it tilt everywhere else?
+3. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
 4. Where on Earth's surface would you weigh least, and which two effects add to make it so?
 
 ## What to hand in

@@ -28,7 +28,7 @@ Find the electron in a hydrogen atom many times over, use the finds to measure h
 
 ## Background
 
-An electron in hydrogen has no orbit. Its state is a wave function ψ, and $$\lvert\psi\rvert^2\,dV$$ is the probability of finding it in a small volume dV (§7.1). The states are labelled by n, l and m (§8.1), and their energies depend on n alone:
+An electron in hydrogen has no orbit. Its state is a wave function ψ, and $$\lvert\psi\rvert^2\,dV$$ is the probability of finding it in a small volume dV (§7.1). The states are labeled by n, l and m (§8.1), and their energies depend on n alone:
 
 $$E_n = -\frac{13.6\ \text{eV}}{n^2} .$$
 

@@ -16,7 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§6.4, 8.1 and 8.2. Access fo
 - The right half is the quantum picture for the same n with any allowed l and $$m_l$$: the orbital angular momentum $$\mathbf{L}$$ on its cone about the field, and the magnetic moment $$\boldsymbol{\mu}$$ pointing the other way. Spin is left out in this view.
 - The cone turns slowly so you can see it. The real precession, at the Larmor frequency $$eB/(4\pi m_e)$$, is 14 GHz at 1 T.
 - The graph under the picture shows the energy shift of each $$m_l$$ level against the field, up to 5 T.
-- Constants are CODATA 2018 values.
+- Constants are CODATA 2022 values.
 - Record reading stores n, l, $$m_l$$ and B, the Bohr orbit's radius, speed, period, current, area, moment and angular momentum, and the quantum $$\lvert\mathbf{L}\rvert$$, $$L_z$$, angle to the field and energy shift U.
 - Export to worksheet sends the readings to the Data table below. Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the computed moment, the angle and the energy on the picture.
@@ -46,7 +46,7 @@ $$U = -\mu_z B = m_l\,\mu_\mathrm{B}\,B .$$
 1. For n = 1, $$r = 5.29 \times 10^{-11}$$ m and $$v = 2.19 \times 10^{6}$$ m/s. Find the period, the current and the moment, and compare the moment with $$\mu_\mathrm{B} = 9.27 \times 10^{-24}$$ J/T.
 2. Show from $$I = e/T$$, $$A = \pi r^2$$ and $$L = m_e v r$$ that $$\mu/L = e/(2m_e)$$ for any circular orbit.
 3. For l = 2, list the allowed values of $$m_l$$, find $$\lvert\mathbf{L}\rvert$$ in units of $$\hbar$$, and find the smallest angle $$\mathbf{L}$$ can make with the z axis.
-4. Find the energy difference between neighbouring $$m_l$$ levels in a field of 1 T, in meV.
+4. Find the energy difference between neighboring $$m_l$$ levels in a field of 1 T, in meV.
 
 ## Safety
 

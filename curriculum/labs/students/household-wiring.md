@@ -26,12 +26,12 @@ Outlets on one circuit are in parallel, so each appliance gets the full voltage 
 
 $$I = \frac{P}{V},$$
 
-and the hot wire carries the sum. The copper wires have a small resistance, $$R_w = \rho L/A$$ each way, so the voltage at the outlet is lower than 120 V by $$2IR_w$$ (out on the hot, back on the neutral), and each metre of wire turns $$I^2\rho/A$$ into heat. A breaker opens when the current exceeds its rating, to keep the wires from overheating; it must be matched to the wire's gauge. Normally the hot and neutral currents are equal and the ground wire carries nothing. If the hot wire touches a metal case, the ground wire carries a large fault current back to the panel and the breaker trips. Without a ground the case sits at 120 V, and a person touching it carries a current $$I = V/R_{\text{body}}$$, far too small for a breaker to notice. A ground fault circuit interrupter (GFCI) compares the hot and neutral currents and opens the circuit when they differ by more than 5 mA. Effects of current through the body (OpenStax §10.6): sensation from about 1 mA, apparently harmless below 5 mA, sustained muscle contraction (unable to let go) from 5 to 30 mA and above, and above 300 mA through the heart, death may occur.
+and the hot wire carries the sum. The copper wires have a small resistance, $$R_w = \rho L/A$$ each way, so the voltage at the outlet is lower than 120 V by $$2IR_w$$ (out on the hot, back on the neutral), and each meter of wire turns $$I^2\rho/A$$ into heat. A breaker opens when the current exceeds its rating, to keep the wires from overheating; it must be matched to the wire's gauge. Normally the hot and neutral currents are equal and the ground wire carries nothing. If the hot wire touches a metal case, the ground wire carries a large fault current back to the panel and the breaker trips. Without a ground the case sits at 120 V, and a person touching it carries a current $$I = V/R_{\text{body}}$$, far too small for a breaker to notice. A ground fault circuit interrupter (GFCI) compares the hot and neutral currents and opens the circuit when they differ by more than 5 mA. Effects of current through the body (OpenStax §10.6): sensation from about 1 mA, apparently harmless below 5 mA, sustained muscle contraction (unable to let go) from 5 to 30 mA and above, and above 300 mA through the heart, death may occur.
 
 ## Before the lab
 
 1. Find the current drawn by the 100 W lamp, the 1200 W toaster and the 1500 W kettle at 120 V. What does the hot wire carry with the toaster and kettle together? Will a 15 A breaker hold?
-2. Find the resistance of 15 m of 14 gauge copper wire (diameter 1.628 mm). With a 12.5 A load, find the voltage drop over the hot and neutral together, and the heat per metre of hot wire.
+2. Find the resistance of 15 m of 14 gauge copper wire (diameter 1.628 mm). With a 12.5 A load, find the voltage drop over the hot and neutral together, and the heat per meter of hot wire.
 3. A person touches a live case at 120 V. Find the current with dry skin (200 kΩ) and with wet skin (10.0 kΩ). What does each feel like?
 4. Why does a GFCI protect the person in Question 3 when a 15 A breaker does not?
 
@@ -66,8 +66,8 @@ Before each part, predict what the currents will be and whether the breaker or t
 ## Analysis
 
 1. For Part 1, compare each hot current with the sum of $$P/V$$ for the appliances plugged in. Why is the measured current a little less, and why is the power a little less than the ratings?
-2. For Part 2, find the resistance of the wire for each length from the drop below 120 V, $$\Delta V = 2IR_w$$, and divide by the length. Compare the mean resistance per metre with $$\rho/A$$ for 14 gauge and for 12 gauge. Is the drop proportional to the length? Why not exactly? How much does 12 gauge improve the voltage and the heating at 30 m?
-3. For Part 3, explain which breakers trip and which do not, and why a 30 A breaker on 14 gauge wire is dangerous even though nothing trips. Use the heat per metre of wire.
+2. For Part 2, find the resistance of the wire for each length from the drop below 120 V, $$\Delta V = 2IR_w$$, and divide by the length. Compare the mean resistance per meter with $$\rho/A$$ for 14 gauge and for 12 gauge. Is the drop proportional to the length? Why not exactly? How much does 12 gauge improve the voltage and the heating at 30 m?
+3. For Part 3, explain which breakers trip and which do not, and why a 30 A breaker on 14 gauge wire is dangerous even though nothing trips. Use the heat per meter of wire.
 4. For Part 4, explain each result: which device acted, how large the current was, and whether the person was safe. Why does the ground wire make the breaker trip, and why can the GFCI act when the breaker cannot?
 
 ## Uncertainty
@@ -83,4 +83,4 @@ The simulation solves the circuit exactly, and readings are shown to three or fo
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the resistance per metre from Part 2, your explanations of each fault, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the resistance per meter from Part 2, your explanations of each fault, and answers to the questions. Identify simulated data.

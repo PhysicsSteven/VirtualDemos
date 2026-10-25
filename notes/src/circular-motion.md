@@ -15,7 +15,7 @@ time: 15 to 30 minutes
 1. **Ball on a string.** 0.5 kg at 3.0 m/s on a 1.0 m string: a = 9.00 m/s², T = 4.50 N. Ask Q1, then press **Cut the string**.
 2. **Car on a flat curve.** 1200 kg at 15 m/s on a 50 m radius needs 5400 N; dry road friction gives up to 8240 N (μs = 0.7). Top speed 18.5 m/s (67 km/h). Try μs = 0.4, a wet road.
 3. **Banked curve.** 25°, μs = 0.3: ideal speed 15.1 m/s (no friction needed); allowed 8.5 to 20.9 m/s. Watch friction flip from up the slope to down it. This setup opens in 3D, so students can see the road tilt and the car lean in (drag to turn the view; the **Flat** button, or `?view=flat`, gives the view from above).
-4. **Speeding up or braking.** Same road, radius 60 m, μs = 0.70, from rest at a_t = 2.0 m/s². At first the acceleration points along the road; as v²/r grows it swings toward the centre (40° from the centre at 12 m/s). The car slides off at 9.93 s at 19.9 m/s, below the 20.3 m/s it could hold cruising: the grip is shared between speeding up and turning. With a_t negative it brakes; a car already near the cruising limit slides at once.
+4. **Speeding up or braking.** Same road, radius 60 m, μs = 0.70, from rest at a_t = 2.0 m/s². At first the acceleration points along the road; as v²/r grows it swings toward the center (40° from the center at 12 m/s). The car slides off at 9.93 s at 19.9 m/s, below the 20.3 m/s it could hold cruising: the grip is shared between speeding up and turning. With a_t negative it brakes; a car already near the cruising limit slides at once.
 5. **Vertical loop.** r = 1.5 m: it needs 8.58 m/s at the bottom to keep contact at the top. Lower v₀ to 8 m/s and watch it leave the track.
 
 ## Questions
@@ -28,7 +28,7 @@ time: 15 to 30 minutes
 
 **Q4.** Show that a ball sliding without friction inside a vertical loop of radius r needs at least √(5gr) at the bottom to stay on the track at the top.
 
-**Q5.** Speeding up from rest at 2.0 m/s² on a 60 m curve, find v, a_c, the total acceleration and its angle from the direction to the centre at 6.0 s.
+**Q5.** Speeding up from rest at 2.0 m/s² on a 60 m curve, find v, a_c, the total acceleration and its angle from the direction to the center at 6.0 s.
 
 **Q6.** Show that a car speeding up slips when (v²/r)² + a_t² = (μs g)². Find the slip speed for μs = 0.70 and explain why it is lower than the cruising top speed. Why can easing off the brakes in a curve keep a car on the road?
 

@@ -159,7 +159,7 @@ HANDOUT_TOPIC = {
     'resolution': 'Circular Apertures and Resolution',
     'double-slit': "Young's Double Slit", 'diffraction-grating': 'Diffraction Grating', 'single-slit': 'Single Slit Diffraction',
     'thin-films': 'Thin Film Interference', 'electron-diffraction': 'Electron Diffraction and de Broglie Waves',
-    'x-ray-diffraction': 'X Ray Diffraction', 'em-waves': 'Electromagnetic Waves: Fields, Intensity and Pressure',
+    'x-ray-diffraction': 'X-Ray Diffraction', 'em-waves': 'Electromagnetic Waves: Fields, Intensity and Pressure',
     'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus", 'shear-bulk': 'Shear and Bulk Moduli',
@@ -195,7 +195,7 @@ HANDOUT_TOPIC = {
     'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl',
     # modern, Vol. 3 ch. 7 and 8
     'orbital-magnetic-moment': 'The Orbital Magnetic Moment', 'stern-gerlach': 'The Stern–Gerlach Experiment', 'zeeman-effect': 'The Zeeman Effect',
-    'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X Ray Spectra and Moseley's Law",
+    'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X-Ray Spectra and Moseley's Law",
     'meissner-effect': 'The Meissner Effect and the Critical Field',
     'exoplanets': 'Finding Exoplanets',
     # astro, 2026-10-24

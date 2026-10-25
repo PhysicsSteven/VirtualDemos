@@ -10,8 +10,8 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.1, 5.2 and 6.4. Access fo
 
 **Using the demo.**
 
-- Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative). Everything works by hand on the picture: drag the rod anywhere near the spheres, slide either sphere along the bench (pushed together, they touch), and touch a sphere with the ground wand to ground it. The colour on each sphere and the marks around it change as you move things, and moving dots show electrons flowing through the contact, a wire or the ground lead (drawn slowed down). Each setup also has a sequence of steps (Next step, Start over) that moves the apparatus for you; changing anything yourself leaves the steps. Changing a control keeps the charges the spheres already have.
-- The colour on each sphere and the marks around it show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
+- Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative). Everything works by hand on the picture: drag the rod anywhere near the spheres, slide either sphere along the bench (pushed together, they touch), and touch a sphere with the ground wand to ground it. The color on each sphere and the marks around it change as you move things, and moving dots show electrons flowing through the contact, a wire or the ground lead (drawn slowed down). Each setup also has a sequence of steps (Next step, Start over) that moves the apparatus for you; changing anything yourself leaves the steps. Changing a control keeps the charges the spheres already have.
+- The color on each sphere and the marks around it show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
 - Blind hides the net charges and potentials, leaving the marks. Keep it off for this lab.
 
 **What the demo models.**
@@ -28,11 +28,11 @@ Charge a metal sphere without touching it, measure how the charge it gets depend
 
 In a conductor, free electrons move until the field inside is zero, so a conductor in equilibrium is at one potential. A charged rod near a neutral sphere pulls charge of the opposite sign to the near side and pushes the same sign to the far side: the sphere is polarized but still neutral.
 
-If the sphere is connected to ground while the rod is near, charge flows to or from the Earth until the sphere is at zero potential. For a lone sphere of radius $$R$$ with a point charge $$q$$ at distance $$D = R + d$$ from its centre ($$d$$ from its surface), the sphere at zero potential carries exactly
+If the sphere is connected to ground while the rod is near, charge flows to or from the Earth until the sphere is at zero potential. For a lone sphere of radius $$R$$ with a point charge $$q$$ at distance $$D = R + d$$ from its center ($$d$$ from its surface), the sphere at zero potential carries exactly
 
 $$Q = -q\,\frac{R}{D} = -q\,\frac{R}{R+d}.$$
 
-(This is Kelvin's image charge: the field outside the grounded sphere is that of $$q$$ and a charge $$-qR/D$$ at distance $$R^2/D$$ from the centre.) If the ground is disconnected first and the rod is then removed, the sphere keeps this charge, which spreads evenly over it. Removing the rod first lets the charge flow back, and the sphere ends up neutral.
+(This is Kelvin's image charge: the field outside the grounded sphere is that of $$q$$ and a charge $$-qR/D$$ at distance $$R^2/D$$ from the center.) If the ground is disconnected first and the rod is then removed, the sphere keeps this charge, which spreads evenly over it. Removing the rod first lets the charge flow back, and the sphere ends up neutral.
 
 Two touching spheres are one conductor. Separated in the rod's field, they keep equal and opposite charges. When a charged sphere touches a neutral one, charge flows until both are at the same potential. Joined by a long wire far apart, each sphere has $$V = kQ/R$$, so the charges share in the ratio of the radii; touching, each sphere's charge pushes on the other's and the shares are different.
 
@@ -69,13 +69,13 @@ Keep Blind off: the readings are the net charges. Record each reading at the end
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-Keep each part in its own copy of the table, labelled with the part.
+Keep each part in its own copy of the table, labeled with the part.
 
 ## Analysis
 
 1. Part 1: plot $$Q_A$$ against $$R/(R+d)$$ and fit a line. Compare the slope with $$-q$$ and the intercept with zero.
 2. Part 2: plot $$Q_A$$ against the rod charge and fit a line. Compare the slope with $$-R/(R+d)$$. What did A end up with when the rod was removed first, and why?
-3. Part 3: compare $$Q_A$$ and $$Q_B$$ for each distance. Is charge conserved? Compare $$|Q_A|$$ with the grounded sphere's charge at the same $$d$$ from Part 1, and explain the difference.
+3. Part 3: compare $$Q_A$$ and $$Q_B$$ for each distance. Is charge conserved? Compare $$\lvert Q_A\rvert$$ with the grounded sphere's charge at the same $$d$$ from Part 1, and explain the difference.
 4. Parts 4 and 5: for each radius of B, calculate the fraction of the 10 nC that B ends up with. Plot it against $$R_B/(R_A + R_B)$$ for both parts. Which part follows the ratio of the radii? How does the other part differ when B is smaller than A, and when it is larger?
 
 ## Uncertainty

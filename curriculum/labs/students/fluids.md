@@ -19,7 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§14.1–14.6. Access for fre
 
 **What the demo models.**
 
-- $$g = 9.80665\ \text{m/s}^2$$ and standard air pressure $$P_0 = 101.325\ \text{kPa}$$ on every free surface. Liquids: water 1000, oil 920, seawater 1025 and mercury 13 595 kg/m³, all incompressible.
+- $$g = 9.81\ \text{m/s}^2$$ and standard air pressure $$P_0 = 101.325\ \text{kPa}$$ on every free surface. Liquids: water 1000, oil 920, seawater 1025 and mercury 13 595 kg/m³, all incompressible.
 - Pressure: a liquid at rest, $$P = P_0 + \rho g d$$; the gauge reads to 10 Pa.
 - Buoyancy: a cube in a tank 50 cm by 30 cm, pushed up by $$\rho_f V_{\rm sub} g$$, with a small linear drag so it settles; the spring scale reads the string tension.
 - Flow: ideal flow (incompressible, inviscid, steady, uniform across each section) in a horizontal pipe; each open standpipe shows the gauge pressure at the pipe axis. If the throat pressure would fall below the liquid's vapor pressure (2339 Pa for water) the demo flags cavitation and the ideal result no longer describes a real flow.

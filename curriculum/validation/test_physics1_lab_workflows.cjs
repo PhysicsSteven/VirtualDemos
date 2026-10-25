@@ -5,9 +5,9 @@ const {core,readDemo}=require('./demo_source.cjs');let n=0;
 function harness(name,S){
  const source=readDemo(name),start=source.indexOf('  function fit() {'),end=source.indexOf('  function drawFit(',start);assert(start>=0&&end>start);
  const result={html:'',pts:null,fit:null},ctx={S,$:()=>({set innerHTML(v){result.html=v;}}),f:(v,d=3)=>v.toFixed(d),sci:v=>String(v),drawFit:(pts,F)=>{result.pts=pts;result.fit=F;}};
- const names=name==='viscometer'?'cellNum,fitOrigin,G':name==='pendulum'?'cellNum,fitLine':'cellNum,fitLine,fromRow';Object.assign(ctx,core(name,names));
+ const names=name==='viscometer'?'cellNum,fitOrigin,fitLine,G':name==='pendulum'?'cellNum,fitLine':'cellNum,fitLine,fromRow';Object.assign(ctx,core(name,names));
  ctx.hideG=()=>S.blind||!!S.mystery;ctx.hidden=()=>S.blind||S.obj==='mystery'||!!S.myst;
- if(name==='viscometer'){Object.assign(ctx,core(name,'cellNum,fitOrigin,G,FLUIDS,BALLS'));ctx.FL=()=>S.myst||ctx.FLUIDS[S.fluid];ctx.rhoB=()=>ctx.BALLS[S.ball].rho;ctx.g3=String;}
+ if(name==='viscometer'){Object.assign(ctx,core(name,'cellNum,fitOrigin,fitLine,G,FLUIDS,BALLS'));ctx.FL=()=>S.myst||ctx.FLUIDS[S.fluid];ctx.rhoB=()=>ctx.BALLS[S.ball].rho;ctx.g3=String;}
  let prefix='';if(name==='rotational-dynamics'||name==='viscometer'){const a=source.indexOf(name==='viscometer'?'  const key =':'  const loadKey ='),b=source.indexOf("  $('capture')",a);assert(a>=0&&b>a);prefix=source.slice(a,b);}
  vm.runInNewContext(prefix+source.slice(start,end)+'\nfit();',ctx,{timeout:2000});return result;
 }

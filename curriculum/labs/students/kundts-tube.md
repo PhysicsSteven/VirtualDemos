@@ -10,9 +10,9 @@ Textbook: OpenStax *University Physics*, Vol. 1, §17.2 and §17.4. Access for f
 
 **Setups in the demo:** Steel rod, air; Steel rod, helium; Clamped at L/4; Brass rod, air; Unknown rod.
 
-**Using the demo.** A metal rod held in a clamp stand rings when stroked; a disc on its end drives the gas in a glass tube closed by a plunger. A frequency counter shows the rod's frequency while it rings, and a loudness bar shows how strongly the gas column responds. The rod, its length, the clamp position, the gas and its temperature are on the Set up card, which fades while the rod rings. The rod is quiet until you stroke it. The plunger and the pointer are on the Tube card, which stays in view while the rod rings: drag them on the picture, or use their sliders and the 1 mm and 1 cm step buttons. A close up of 16 cm of tube around the pointer has a millimetre scale. Blind hides the speeds, the heap spacing and the nearest resonance; the unknown rod always hides its speed.
+**Using the demo.** A metal rod held in a clamp stand rings when stroked; a disc on its end drives the gas in a glass tube closed by a plunger. A frequency counter shows the rod's frequency while it rings, and a loudness bar shows how strongly the gas column responds. The rod, its length, the clamp position, the gas and its temperature are on the Set up card, which fades while the rod rings. The rod is quiet until you stroke it. The plunger and the pointer are on the Tube card, which stays in view while the rod rings: drag them on the picture, or use their sliders and the 1 mm and 1 cm step buttons. A close up of 16 cm of tube around the pointer has a millimeter scale. Blind hides the speeds, the heap spacing and the nearest resonance; the unknown rod always hides its speed.
 
-**What the demo models.** A thin rod with free ends: longitudinal waves travel at $$v_{\text{rod}} = \sqrt{E/\rho}$$, with typical handbook values of $$E$$ and $$\rho$$ (chosen; real alloys vary by several percent). The clamp holds a node, so the rod rings with $$n = 1$$ half wavelength in it when clamped at the middle and $$n = 2$$ when clamped $$L/4$$ from an end. The gas is ideal at 101325 Pa, driven by the disc as a piston, with a rigid plunger and a small chosen loss of 0.10 per metre in amplitude. The dust is a picture: it drifts toward the displacement nodes while the gas motion is strong enough. The counter shows $$f$$ to 1 Hz. Simulated data with no noise.
+**What the demo models.** A thin rod with free ends: longitudinal waves travel at $$v_{\text{rod}} = \sqrt{E/\rho}$$, with typical handbook values of $$E$$ and $$\rho$$ (chosen; real alloys vary by several percent). The clamp holds a node, so the rod rings with $$n = 1$$ half wavelength in it when clamped at the middle and $$n = 2$$ when clamped $$L/4$$ from an end. The gas is ideal at 101325 Pa, driven by the disc as a piston, with a rigid plunger and a small chosen loss of 0.10 per meter in amplitude. The dust is a picture: it drifts toward the displacement nodes while the gas motion is strong enough. The counter shows $$f$$ to 1 Hz. Simulated data with no noise.
 
 </details>
 
@@ -49,7 +49,7 @@ On a real Kundt's tube, stroke the rod with a cloth or chamois dusted with rosin
 
 ## Procedure
 
-**Part 1: steel rod in air.** With a 1.00 m steel rod clamped at its middle and air at 20 °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the centre of every heap along the tube and record each one, numbering the heaps from the disc. Record the counter frequency.
+**Part 1: steel rod in air.** With a 1.00 m steel rod clamped at its middle and air at 20 °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the center of every heap along the tube and record each one, numbering the heaps from the disc. Record the counter frequency.
 
 **Part 2: helium.** Repeat Part 1 with helium in the tube, at 20 °C.
 
@@ -82,7 +82,7 @@ Record where the plunger was when the heaps formed.
 
 ## Uncertainty
 
-In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centres. Using all the heaps in a fit gives $$d$$ much more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
+In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using all the heaps in a fit gives $$d$$ much more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
 
 ## Questions
 

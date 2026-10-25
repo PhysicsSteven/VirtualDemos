@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §17.3. The wedge cutoff follow
 
 **Setups in the demo:** Bare room; Add absorbing panels; Room with an audience; Anechoic chamber; Below the cutoff; Mystery panels.
 
-**Using the demo.** A 3D view of a room (Plan switches to the view from above), with a loudspeaker and a microphone on its centre line, 1.5 m up; drag the microphone along the centre line in either view. Under it is a graph of the sound level against distance. The room's size, its walls (hard, with panels, or lined with wedges), the wedge depth, the floor and the microphone distance are on the Set up card (the arrow keys move the microphone in steps of 0.1 m, 1 m with Shift; the slider moves it in 0.05 m steps). Measure chooses Level against distance (this worksheet) or Reverberation time (the Reverberation Time worksheet), and the octave band from 125 Hz to 4 kHz. Blind hides the free field line, the predictions and the wedge cutoff; the level meter stays.
+**Using the demo.** A 3D view of a room (Plan switches to the view from above), with a loudspeaker and a microphone on its center line, 1.5 m up; drag the microphone along the center line in either view. Under it is a graph of the sound level against distance. The room's size, its walls (hard, with panels, or lined with wedges), the wedge depth, the floor and the microphone distance are on the Set up card (the arrow keys move the microphone in steps of 0.1 m, 1 m with Shift; the slider moves it in 0.05 m steps). Measure chooses Level against distance (this worksheet) or Reverberation time (the Reverberation Time worksheet), and the octave band from 125 Hz to 4 kHz. Blind hides the free field line, the predictions and the wedge cutoff; the level meter stays.
 
 **What the demo models.** A steady 10 mW source, the same in every direction, playing noise in the chosen band. Ray tracing gives the reflected sound: each surface keeps a fraction $$\alpha$$ of a ray's energy and sends the rest off in a random direction, and energies add, so there is no interference. The direct sound is exact, $$I = P/(4\pi r^2)$$. The wedges absorb all but a pressure fraction $$R = 0.1\,(f_c/f)^2$$ (at most 0.9) of the sound, with $$f_c = c/(4d)$$; the form of $$R$$ is this demo's stated model, not measured data. Air absorbs nothing, $$c = 343$$ m/s and $$\rho = 1.204\ \mathrm{kg/m^3}$$. The meter reads to 0.1 dB, with no noise. Simulated data.
 
@@ -22,7 +22,7 @@ Show that sound from a small source falls off as $$1/r^2$$ when nothing reflects
 
 ## Background
 
-In free space, a source of power $$P$$ spreads its sound over a sphere, so the intensity at distance $$r$$ is $$I = P/(4\pi r^2)$$. A sound level meter measures the pressure: in a travelling wave $$I = p_{\text{rms}}^2/(\rho c)$$, and the level is
+In free space, a source of power $$P$$ spreads its sound over a sphere, so the intensity at distance $$r$$ is $$I = P/(4\pi r^2)$$. A sound level meter measures the pressure: in a traveling wave $$I = p_{\text{rms}}^2/(\rho c)$$, and the level is
 
 $$L = 20\log_{10}\frac{p_{\text{rms}}}{20\ \mathrm{\mu Pa}}.$$
 
@@ -32,7 +32,7 @@ An anechoic chamber is lined with wedges of porous material that absorb almost a
 
 $$f_c = \frac{c}{4d},$$
 
-where $$d$$ is a quarter wavelength. Below $$f_c$$ they reflect more and more. In an ordinary room, the reflected sound fills the room at a nearly steady level, so far from the source the level stops falling. The critical distance, where the direct and reflected sound are equal, is about $$r_c = \sqrt{A/(16\pi)}$$, with $$A$$ the room's total absorption in square metres.
+where $$d$$ is a quarter wavelength. Below $$f_c$$ they reflect more and more. In an ordinary room, the reflected sound fills the room at a nearly steady level, so far from the source the level stops falling. The critical distance, where the direct and reflected sound are equal, is about $$r_c = \sqrt{A/(16\pi)}$$, with $$A$$ the room's total absorption in square meters.
 
 ## Before the lab
 

@@ -591,7 +591,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---- CSV ----
   const csvCell = (v) => { const t = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
   const tidy = (v) => String(nz(+v.toPrecision(12)));
-  // a typed centimetre cell in metres; text that is not a number passes through as typed
+  // a typed centimeter cell in meters; text that is not a number passes through as typed
   const cmToM = (t) => { const u = String(t).trim().replace(/−/g, '-'), n = Number(u); return u !== '' && isFinite(n) ? tidy(n / 100) : u; };
   // rows: [{ config, x, y, V, E, dir, inCore }] with x, y in cm (typed strings are fine)
   // configs: [{ name, charges: [{ x, y, q }] }] in cm and nC; row.config is its 1 based index

@@ -8,12 +8,12 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.5. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Levels become bands; Filling the bands (these two use the Bands view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Pure silicon; n type silicon (the Doping worksheet); Diode; LED colours (the pn junction worksheet).
+**Setups in the demo:** Levels become bands; Filling the bands (these two use the Bands view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Pure silicon; n type silicon (the Doping worksheet); Diode; LED colors (the pn junction worksheet).
 
 **Using the demo.**
 
 - The Bands view puts N model atoms, from 1 to 40, in a straight chain with spacing d from 0.20 nm to 0.60 nm. Each model atom has one s level at −9 eV and three p levels at −4 eV. It is a made up atom, chosen to show the physics clearly, not a real element.
-- Each orbital overlaps the same orbital on the neighbouring atoms. The overlap energy falls off exponentially as the atoms move apart, and the p orbital along the chain (pσ) overlaps more than the two across it (pπ).
+- Each orbital overlaps the same orbital on the neighboring atoms. The overlap energy falls off exponentially as the atoms move apart, and the p orbital along the chain (pσ) overlaps more than the two across it (pπ).
 - The left diagram shows every level against the spacing, with the shaded bands that a very long chain would have. The right diagram shows the levels at the chosen spacing, filled with electrons from the bottom, two to a level (four to a pπ level, which counts both pπ orbitals).
 - Choose 1 to 4 electrons per atom. The verdict under the levels says whether the highest band holding electrons is full, with a gap above it, or only partly full.
 - The graphs show how many orbitals lie in each 0.25 eV of energy, and the book's band gaps (Table 9.4) beside the model's gap.
@@ -30,7 +30,7 @@ Watch atomic energy levels split into bands as atoms are brought together, measu
 
 Two identical atoms far apart have the same energy levels. Brought close, their outer wave functions overlap and each level splits into two, one a little lower and one a little higher. With $$N$$ atoms each level splits into $$N$$ levels, and for the enormous $$N$$ of a solid these merge into a band, with forbidden energy gaps between the bands (§9.5).
 
-In the demo's chain each orbital overlaps only the same orbital on its two neighbours, with an overlap energy $$t$$. The $$N$$ levels from one atomic level $$E_0$$ are then
+In the demo's chain each orbital overlaps only the same orbital on its two neighbors, with an overlap energy $$t$$. The $$N$$ levels from one atomic level $$E_0$$ are then
 
 $$E_j = E_0 - 2t\cos\frac{j\pi}{N + 1}, \qquad j = 1, 2, \ldots, N,$$
 

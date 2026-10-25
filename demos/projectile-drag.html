@@ -575,6 +575,16 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const se = n > 1 ? Math.sqrt(res.reduce((s, r) => s + r * r, 0) / (n - 1) / sxx) : NaN;
     return { k, se, n, res, at: (x) => k * x };
   }
+  // least squares line with a free intercept, y = a + k x (the fit the page shows); standard errors with n − 2 degrees of freedom
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((s, v) => s + v, 0) / n, my = ys.reduce((s, v) => s + v, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null;
+    const k = sxy / sxx, a = my - k * mx, res = ys.map((y, i) => y - a - k * xs[i]);
+    const s2 = n > 2 ? res.reduce((s, r) => s + r * r, 0) / (n - 2) : NaN;
+    return { k, a, se: Math.sqrt(s2 / sxx), sa: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), n, res, at: (x) => a + k * x };
+  }
   // y = a + b t + c t², with standard errors from the residual variance (n − 3 degrees of freedom)
   function fitQuad(xs, ys) {
     const n = xs.length; if (n < 3) return null;
@@ -1845,7 +1855,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const Pl = PLOTS[LAB.plot], pts = [];
     for (const r of LAB.rows) { const x = Pl.fx(r), y = Pl.fy(r); if (isFinite(x) && isFinite(y)) pts.push({ x, y, r }); }
     const xs = pts.map((q) => q.x), ys = pts.map((q) => q.y);
-    return { Pl, pts, fit: LAB.plot === 'yt' ? fitQuad(xs, ys) : fitOrigin(xs, ys) };
+    return { Pl, pts, fit: LAB.plot === 'yt' ? fitQuad(xs, ys) : fitLine(xs, ys) };
   }
   // value ± error, both to the error's second significant figure, at most 4 decimals (0.1 mm, far below the 1 cm readings)
   const pm = (v, e) => {
@@ -1873,14 +1883,16 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       } else html += row('Fit', 'Capture three or more readings with the time cursor on different dots of one shot.', 'note');
     } else {
       if (f) {
-        html += row(`Slope of R against sin 2θ, line through the origin, ${f.n} point${f.n > 1 ? 's' : ''} (m)`, pm(f.k, f.se), 'big');
+        html += row(`Slope of R against sin 2θ, least squares line, ${f.n} point${f.n > 1 ? 's' : ''} (m)`, pm(f.k, f.se), 'big');
+        html += row('Intercept of the line (m)', pm(f.a, f.sa));
+        if (f.n < 3) html += row('Note', 'Three or more points give error bars.', 'note');
         const v = num(first.v), oneV = allSame(pts, 'v'), ground = pts.every((q) => num(q.r.h) === 0);
         if (oneV && v > 0) html += row(`g = v₀²/slope, v₀ = ${first.v} m/s (m/s²)`, pm(v * v / f.k, isFinite(f.se) ? v * v / f.k * f.se / f.k : NaN));
         if (!bl && oneV && v > 0) html += row('Model slope v₀²/g from the settings', (v * v / G).toFixed(2) + ' m');
         if (!oneV) html += row('Note', 'The rows have different launch speeds, so the slope mixes them.', 'note');
         if (!ground) html += row('Note', 'Some rows were launched above the ground. R = v₀² sin 2θ / g holds only from the ground.', 'note');
         if (dragOn) html += row('Note', 'Air resistance was on for some rows. R = v₀² sin 2θ / g holds only without drag.', 'note');
-      } else html += row('Fit', 'Capture the range of shots at three or more angles, same speed, from the ground, with Air resistance Off.', 'note');
+      } else html += row('Fit', 'Capture the range of shots at two or more angles (three give error bars), same speed, from the ground, with Air resistance Off.', 'note');
     }
     $('fitOut').innerHTML = html;
     drawFitPlot(F);
@@ -1924,7 +1936,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     if (f) { c.fillStyle = T.equi; F.pts.forEach((q, i) => { c.beginPath(); c.arc(Xp(q.x), Yr(f.res[i]), 3 * ps, 0, 2 * Math.PI); c.fill(); }); }
     c.fillStyle = T.muted; c.font = `${9.5 * ps}px ${mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(`residuals${f && rm > 0 ? `, strip ±${String(+rr.toPrecision(2))} ${Pl.yu}` : ''}`, L0, rTop - 2);
-    const kind = LAB.plot === 'yt' ? 'a least squares parabola y = a + b t + c t²' : 'a least squares line through the origin';
+    const kind = LAB.plot === 'yt' ? 'a least squares parabola y = a + b t + c t²' : 'a least squares line with slope and intercept';
     cv.setAttribute('aria-label', `Plot of ${Pl.y} against ${Pl.x} from your readings, ${F.pts.length} point${F.pts.length === 1 ? '' : 's'}, with ${kind}${f ? (LAB.plot === 'yt' ? `, c = ${f.c.toPrecision(4)} m/s²` : `, slope ${f.k.toPrecision(4)} m`) : ''}, and a strip of residuals underneath. Show data table lists the points.`);
   }
   function dataTable(F) {
@@ -1999,7 +2011,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
 
   // ---------- 3D field view: the same shots on a grass field (three.js through lib/vd3kit.js); Flat shows the view above ----------
   /* Pictures only. Every position comes from the recorded flights (sampleAt on each shot's samples) that the flat view and the
-     graphs use. Scene in metres: x downrange from the launcher's foot, z up, the flight plane is y = 0. Distances, heights, the
+     graphs use. Scene in meters: x downrange from the launcher's foot, z up, the flight plane is y = 0. Distances, heights, the
      field lines and the tape are to scale; the balls are drawn MAG times larger (the page says so), and the launcher, flags, arrows
      and labels are sized to be seen. Weight and drag arrows share one scale, so their lengths compare as the forces do. */
   let F3 = null, on3d = false, follow3 = true, drag3 = null;
@@ -2059,7 +2071,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     S.sun.shadow.bias = -0.0004; S.sun.shadow.mapSize.set(1024, 1024);
     const std = (o) => new THREE.MeshStandardMaterial(o);
     const sphere = new THREE.SphereGeometry(1, 40, 20); sphere.userData.keep = true;
-    /* the sky: a gradient behind everything, in the page's sky colours */
+    /* the sky: a gradient behind everything, in the page's sky colors */
     const skyCv = document.createElement('canvas'); skyCv.width = 4; skyCv.height = 256; const skyTex = new THREE.CanvasTexture(skyCv);
     const world = new THREE.Group(); S.scene.add(world);           /* the field: rebuilt when the scale changes */
     const shotG = new THREE.Group(); S.scene.add(shotG);           /* trails, flags and balls: rebuilt when the shots change */
@@ -2216,7 +2228,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       const trail = new THREE.Mesh(timeTube(s.pts, s.T, rad * (s.id === sel ? 1.45 : 1), 480), mat);
       const ball = new THREE.Mesh(g.sphere, g.matFor(s.look, col)); ball.castShadow = true; ball.scale.setScalar(s.p.d / 2 * mag);
       const bs = new THREE.Sprite(new THREE.SpriteMaterial({ map: badgeTex(s.n, col), depthWrite: false })); bs.scale.setScalar(span * 0.017); bs.renderOrder = 6;
-      /* the landing mark: a scuff, a flag pole and a pennant in the shot's colour */
+      /* the landing mark: a scuff, a flag pole and a pennant in the shot's color */
       const flag = new THREE.Group(), scuff = new THREE.Mesh(new THREE.CircleGeometry(Math.max(s.p.d / 2 * mag * 1.6, span * 0.004), 24), new THREE.MeshBasicMaterial({ color: '#3b2f1e', transparent: true, opacity: 0.55, depthWrite: false }));
       scuff.position.z = span * 0.0006; flag.add(scuff);
       const pl = new THREE.Mesh(new THREE.CylinderGeometry(span * 0.0012, span * 0.0012, 1, 8), new THREE.MeshStandardMaterial({ color: '#e9edf2', roughness: 0.5 })); pl.rotation.x = Math.PI / 2; pl.castShadow = true;

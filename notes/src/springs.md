@@ -59,7 +59,7 @@ For the lab, students time N oscillations with **Stopwatch** on the stage (press
 - Steady state: A = (F₀/m)/√((ω₀² − ω²)² + (bω/m)²), tan δ = (bω/m)/(ω₀² − ω²), with the peak at ω_r = √(ω₀² − b²/(2m²)). The drive is a wall moving as X_w cos ωt, equivalent to a force F₀ = kX_w on the block. During a sweep, ω rises slowly; for small b the block needs a time of order 2m/b to catch up, so the swept dots fall a little below the steady curve near the peak.
 - Two equal blocks between walls (k, k_c, k) move as normal coordinates q₁ = (x₁ + x₂)/2 at ω₁ = √(k/m) and q₂ = (x₁ − x₂)/2 at ω₂ = √((k + 2k_c)/m).
 - Energy bars: hanging, ½k(x + mg/k)² plus −mgx for gravity; driven, ½mv² + ½kx², with the drive's work ∫Fv dt and the heat ∫bv² dt.
-- Approximations: ideal massless springs that obey Hooke's law at any stretch (the drawing never shows a spring pressed solid), a frictionless track, damping exactly proportional to v, g = 9.80665 m/s².
+- Approximations: ideal massless springs that obey Hooke's law at any stretch (the drawing never shows a spring pressed solid), a frictionless track, damping exactly proportional to v, g = 9.81 m/s².
 
 ## Going further
 

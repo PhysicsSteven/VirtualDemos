@@ -44,18 +44,18 @@ Students should know the energy of a magnetic dipole in a field, U = −μ·B, a
 - **"The sample absorbs at every frequency, just more at some."** Absorption happens only within a narrow band around hν = gμ_B B. Away from it the probe sees nothing, which is why an out of tune probe shows a flat trace.
 - **"More SENS is always better."** The marginal oscillator is most sensitive just below the point where it stops oscillating; past that point the signal disappears entirely.
 - **"The peak is the electron flipping, so its height measures g."** The position of the peak in field gives g. The height depends on the number of spins, the line width and the oscillator setting.
-- **"Polystyrene has fewer hydrogens, so its peak is lower."** Per molecule it has the same 8 hydrogen atoms as glycerine, and only about a quarter fewer per cubic centimeter. The main reason the peak is lower is that it is wider: fixed neighbouring dipoles in a solid broaden the line, spreading the same absorption over a wider range of field.
+- **"Polystyrene has fewer hydrogens, so its peak is lower."** Per molecule it has the same 8 hydrogen atoms as glycerine, and only about a quarter fewer per cubic centimeter. The main reason the peak is lower is that it is wider: fixed neighboring dipoles in a solid broaden the line, spreading the same absorption over a wider range of field.
 - **"PTFE's peak is from protons."** PTFE contains no hydrogen; the resonance is from ¹⁹F nuclei, which have a different gyromagnetic ratio.
 
 ## Physics behind the demo
 
-- ESR: hν = gμ_B B with g = 2.0036 for DPPH. PSR: ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F. Chemical shielding, tens of ppm, is below this instrument's resolution and neglected.
+- ESR: hν = gμ_B B with g = 2.0036 for DPPH. PSR: ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2022) and 40.0776 MHz/T for ¹⁹F. Chemical shielding, tens of ppm, is below this instrument's resolution and neglected.
 - The scan field ramps linearly from 0 to B_max (3.67 mT for ESR, 3.2 mT for PSR); CH1 reads 0 to 1 V in proportion. So B = V_R·B_max/1 V or B = (t_R/t)·B_max, with t = 40 ms (FAST) or 25 s (SLOW). For PSR the total field adds the magnet: B_Z = B₂₀[1 − (t − 20 °C)·7.5×10⁻⁴].
 - Idealized: exact linear ramp, uniform field over the sample, no earth or stray fields, probe coil at right angles to the field.
-- Modeled, not computed: the line shapes are Lorentzians with illustrative widths (0.25 mT DPPH, 0.05 mT glycerine and water, 0.25 mT polystyrene, 0.20 mT PTFE), with heights chosen to resemble a real trace. The marginal oscillator is a behavioural model of gain rising toward a threshold. All noise is simulated and set by the instrument seed, which also sets small offsets in the LO/MID/HI frequencies, B₂₀ and room temperature.
+- Modeled, not computed: the line shapes are Lorentzians with illustrative widths (0.25 mT DPPH, 0.05 mT glycerine and water, 0.25 mT polystyrene, 0.20 mT PTFE), with heights chosen to resemble a real trace. The marginal oscillator is a behavioral model of gain rising toward a threshold. All noise is simulated and set by the instrument seed, which also sets small offsets in the LO/MID/HI frequencies, B₂₀ and room temperature.
 
 ## Going further
 
-- Have students fit the ESR data with and without the origin constraint and compare g. Then repeat on the real kit, where the earth's field and the orientation of the bench matter.
+- Have students fit the ESR data with a free intercept and read the intercept as the stray field: zero in the demo. Then repeat on the real kit, where the earth's field and the orientation of the bench matter.
 - The g factor of DPPH is close to the free electron value 2.0023; the small difference comes from spin–orbit coupling in the molecule. Proton g_I ≈ 5.586 shows the proton is not a point Dirac particle (which would have g = 2).
 - Lab connection: the same ν ∝ B relation, with spatially varying fields, is the basis of MRI.

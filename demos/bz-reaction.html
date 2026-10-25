@@ -446,8 +446,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const dg = 2 * par.q / ((u + par.q) * (u + par.q)), g = (u - par.q) / (u + par.q);
     return [[(1 - 2 * u - (par.f * v + phi) * dg) / par.eps, -par.f * g / par.eps], [1, -1]];
   }
-  // Circular dish of n x n cells: index lists and the four neighbour indices of each cell.
-  // A neighbour outside the dish points back at the cell itself, so no reactant crosses the wall
+  // Circular dish of n x n cells: index lists and the four neighbor indices of each cell.
+  // A neighbor outside the dish points back at the cell itself, so no reactant crosses the wall
   // (zero flux) and every link inside is used symmetrically: diffusion alone conserves Σu exactly.
   function rdDish(n, round) {
     const inside = new Uint8Array(n * n), r0 = n / 2 - 1, c = (n - 1) / 2;
@@ -738,8 +738,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- 4. Toy model (not BZ chemistry): A. Turner (2009), UCL ----------
-  // Three species a, b, c on a grid. Each step: average each species over the cell and its eight neighbours
-  // (neighbours outside the dish count as the cell itself), then
+  // Three species a, b, c on a grid. Each step: average each species over the cell and its eight neighbors
+  // (neighbors outside the dish count as the cell itself), then
   //   a' = ā + ā(α b̄ − γ c̄),  b' = b̄ + b̄(β c̄ − α ā),  c' = c̄ + c̄(γ ā − β b̄),  each clipped to [0, 1].
   function mooreDish(dish) {
     const n = dish.n, nb8 = new Int32Array(8 * n * n);
@@ -1235,7 +1235,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function curT() { return DS.medium === 'gf' ? DG.F.T : DS.st.T; }
   function curTime() { return DS.medium === 'gf' ? DG.F.t : DS.medium === 'toy' ? DT.s.gen : DS.st.t; }
   function dsResetProbe() { DS.tr = { t: [], u: [], v: [], w: [] }; DS.arr = []; DS.speed = NaN; DS.speedFor = -1; DS.lastT = DS.medium === 'toy' ? 0 : curT()[probeIdx()]; DS.peaks = []; }
-  // the steady state of the local kinetics (stable rest state, or the unstable centre of the oscillation)
+  // the steady state of the local kinetics (stable rest state, or the unstable center of the oscillation)
   function oreSteady(par) { const u = rdRest(par, par.phi); return Number.isFinite(u) ? u : 0.01; }
   function oreOscillates(par) { const u = oreSteady(par), J = rdJac(par, u, u, par.phi); return J[0][0] + J[1][1] > 0 || J[0][0] * J[1][1] - J[0][1] * J[1][0] < 0; }
   // a point on the limit cycle (just after the jump up), used to start a dish that oscillates in step
@@ -1268,7 +1268,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     dirtyAll();
   }
   function dsBroken() {
-    // a straight wave across the upper half of the dish, moving right, with a free end at the centre
+    // a straight wave across the upper half of the dish, moving right, with a free end at the center
     if (!isOre()) return;
     dsClear();
     const n = 256, st = DS.st;
@@ -1839,7 +1839,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (m === 'dish' && DS.medium === 'gf') el.innerHTML = `<p>The flow reactor's Györgyi–Field kinetics in every cell of a 128 × 128 dish, with x, z and v diffusing at D = 2 × 10⁻⁵ cm²/s (assumed equal for all three; bromide is in its fast steady state). Every cell is fed and drained at rate k<sub>f</sub> as in the stirred reactor: an idealization (think of a thin gel fed evenly from below), not an experiment you can buy.</p>
       <p>Kinetics: fourth order Runge–Kutta at a fixed step of 10⁻⁴ T₀ = ${(1e-4 * T0).toFixed(2)} s, then one explicit diffusion step (stable: Δt/Δx² ≪ 1/4 in units of √(D T₀) = ${(DLEN * 10).toFixed(2)} mm). Without diffusion one cell reproduces the stirred reactor (tested: same period doubling and chaos). The dish diameter sets how many diffusion lengths fit. The phase marker is z rising through 0.75.</p>`;
     else if (m === 'dish') el.innerHTML = `<p><b>Toy model, not BZ chemistry.</b> A. Turner, "A simple model of the Belousov–Zhabotinsky reaction from first principles" (Bartlett School of Graduate Studies, UCL, 2009). Three made up species a, b, c each eat the next in a cycle, a → b → c → a, like rock, paper, scissors.</p>
-      <p>Each generation every species is averaged over the cell and its eight neighbours (neighbours outside the dish count as the cell itself), then a′ = ā + ā(αb̄ − γc̄), b′ = b̄ + b̄(βc̄ − αā), c′ = c̄ + c̄(γā − βb̄), each clipped to [0, 1]. α = β = γ = 1 is Turner's default; the start is random. There are no rate constants, concentrations, units or diffusion coefficient: the averaging stands in for diffusion and one generation for an unspecified time. It makes spirals because it is a cyclic excitable rule, not because it describes bromate chemistry. Color: red a, green b, blue c.</p>`;
+      <p>Each generation every species is averaged over the cell and its eight neighbors (neighbors outside the dish count as the cell itself), then a′ = ā + ā(αb̄ − γc̄), b′ = b̄ + b̄(βc̄ − αā), c′ = c̄ + c̄(γā − βb̄), each clipped to [0, 1]. α = β = γ = 1 is Turner's default; the start is random. There are no rate constants, concentrations, units or diffusion coefficient: the averaging stands in for diffusion and one generation for an unspecified time. It makes spirals because it is a cyclic excitable rule, not because it describes bromate chemistry. Color: red a, green b, blue c.</p>`;
     else el.innerHTML = `<p>The three variable model of Györgyi and Field (Nature 355, 808, 1992) for the cerium catalyzed reaction in a continuously stirred flow reactor: x = [HBrO₂]/X₀, z = [Ce(IV)]/Z₀, v = [bromomalonic acid]/V₀, with [Br⁻] in its fast steady state. Fresh bromate, malonic acid, acid and Ce(III) flow in and the mixture flows out at rate k<sub>f</sub>.</p>
       <p>k₁ = 4.0 × 10⁶ M⁻² s⁻¹, k₂ = 2.0 M⁻³ s⁻¹, k₃ = 3000 M⁻¹ s⁻¹, k₄ = 55.2 M⁻⁵ᐟ² s⁻¹, k₅ = 7000 M⁻¹ s⁻¹, k₆ = 0.09 M⁻¹ s⁻¹, k₇ = 0.23 M⁻¹ s⁻¹; [BrO₃⁻] = 0.1 M, [malonic acid] = 0.25 M, [H⁺] = 0.26 M, [Ce] = 8.33 × 10⁻⁴ M, α = 666.7, β = 0.3478, as tabulated by Buchlovská Nagyová, Jansík and Lampart (Sci. Rep. 2020). Time unit T₀ = 1/(10k₂AHC) = ${T0.toFixed(0)} s.</p>
       <p>Integration: Dormand–Prince 5(4), adaptive, relative tolerance 10⁻⁸. Peaks found by Hermite interpolation inside each step. The largest Lyapunov exponent is a finite time estimate: a third copy is started 10⁻⁷ away and pulled back to that distance every 0.005 T₀ (Benettin et al. 1980). A scan starts each flow rate from the state left by the previous one. The yellow of Ce(IV) is exaggerated for display.</p>`;

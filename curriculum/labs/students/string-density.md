@@ -27,7 +27,7 @@ For a uniform string fixed at both ends,
 
 $$f_n=\frac{n}{2L}\sqrt{\frac{T}{\mu}},\qquad T=mg.$$
 
-Here $$n$$ is the number of loops, $$L$$ is the vibrating length, $$\mu$$ is mass per unit length and $$m$$ is the **total suspended mass**, including the hanger. The simulated apparatus uses $$g=9.80\ \mathrm{m/s^2}$$ and a 50 g hanger. At fixed tension, the slope $$s$$ of $$f_n$$ against $$n$$ gives $$\mu=T/(2Ls)^2$$. At fixed frequency, $$T=\mu(2Lf/n)^2$$.
+Here $$n$$ is the number of loops, $$L$$ is the vibrating length, $$\mu$$ is mass per unit length and $$m$$ is the **total suspended mass**, including the hanger. The simulated apparatus uses $$g=9.81\ \mathrm{m/s^2}$$ and a 50 g hanger. At fixed tension, the slope $$s$$ of $$f_n$$ against $$n$$ gives $$\mu=T/(2Ls)^2$$. At fixed frequency, $$T=\mu(2Lf/n)^2$$.
 
 ## Before the lab
 

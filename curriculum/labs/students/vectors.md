@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §2.1, §2.2, §2.4, §4.1 and 
 
 - The picture is a grid with the vectors drawn from the origin, at least 11 squares from the origin each way. Drag a vector's tip to change it. Keys on the picture: 1 or 2 picks $$\vec A$$ or $$\vec B$$, and the arrow keys move its tip by one grid step (with Shift by a tenth).
 - **Snap tips to the grid** is on when the page opens, so every component is a whole number of squares; with it off, tips move in tenths of a square. **Show components** draws each vector's shadows on the axes. In Adding, **Draw B** chooses **Head to tail** (B's tail on A's head) or **From the origin**; the sum is the same either way.
-- The readouts under Vectors change with the setup. Components: $$A_x$$ and $$A_y$$ to 2 decimals, $$|A|$$ to 3 decimals and θ from +x to 0.1°. Adding: $$\vec A$$, $$\vec B$$, $$\vec R = \vec A + \vec B$$, $$|R|$$, $$|A| + |B|$$ and θ of $$\vec R$$. Subtracting: $$\vec A - \vec B$$, $$|\vec A - \vec B|$$ and $$\vec B - \vec A$$. Dot and cross products: the angle φ between them, $$\vec A\cdot\vec B$$, $$|A||B|\cos\varphi$$, $$(\vec A\times\vec B)_z$$, $$|A||B|\sin\varphi$$ and $$(\vec B\times\vec A)_z$$.
+- The readouts under Vectors change with the setup. Components: $$A_x$$ and $$A_y$$ to 2 decimals, $$\lvert A\rvert$$ to 3 decimals and θ from +x to 0.1°. Adding: $$\vec A$$, $$\vec B$$, $$\vec R = \vec A + \vec B$$, $$\lvert R\rvert$$, $$\lvert A\rvert + \lvert B\rvert$$ and θ of $$\vec R$$. Subtracting: $$\vec A - \vec B$$, $$\lvert \vec A - \vec B\rvert$$ and $$\vec B - \vec A$$. Dot and cross products: the angle φ between them, $$\vec A\cdot\vec B$$, $$\lvert A\rvert\lvert B\rvert\cos\varphi$$, $$(\vec A\times\vec B)_z$$, $$\lvert A\rvert\lvert B\rvert\sin\varphi$$ and $$(\vec B\times\vec A)_z$$.
 - **Record these vectors** stores the setup and the components of the vectors you set, nothing computed from them, so the worksheet gets only what you chose. **Export to worksheet** sends trial, setup, $$A_x$$, $$A_y$$, $$B_x$$ and $$B_y$$ to the first six columns of this handout's Data table in order; the result columns stay yours. **Clear** starts a new series. The Dot and cross products setup is written as Products in the recorded rows.
 - Blind hides every computed result (components, magnitudes, angles, sums, products and the resultant arrow) and leaves the vectors you set and the grid, so you can work them out and then check.
 
@@ -63,7 +63,7 @@ $$(\vec A\times\vec B)_z = A_xB_y - A_yB_x,$$
 
 positive (out of the page) when $$\vec B$$ is counterclockwise from $$\vec A$$ by less than $$180^\circ$$. Reversing the order reverses the cross product, $$\vec B\times\vec A = -\vec A\times\vec B$$, but leaves the dot product unchanged.
 
-The demo draws vectors on a grid, and every component is a whole number of grid squares when the tips snap to the grid. The grid squares stand for whatever unit a part gives (metres, metres per second, or no unit). The demo works in a plane only, so every cross product here is along $$z$$.
+The demo draws vectors on a grid, and every component is a whole number of grid squares when the tips snap to the grid. The grid squares stand for whatever unit a part gives (meters, meters per second, or no unit). The demo works in a plane only, so every cross product here is along $$z$$.
 
 ## Before the activity
 
@@ -126,7 +126,7 @@ Note what each trial is (a position, a velocity, a sum) and give the unit of the
 
 ## Uncertainty
 
-With tips snapped to the grid every component is exact, and the demo's results are computed from those exact values, so any difference from your answers is arithmetic or rounding, not measurement. Give magnitudes to three significant figures and angles to 0.1°. On paper with a ruler and protractor, a scale drawing is good to about a millimetre and a degree, so components found from a drawing carry that uncertainty.
+With tips snapped to the grid every component is exact, and the demo's results are computed from those exact values, so any difference from your answers is arithmetic or rounding, not measurement. Give magnitudes to three significant figures and angles to 0.1°. On paper with a ruler and protractor, a scale drawing is good to about a millimeter and a degree, so components found from a drawing carry that uncertainty.
 
 ## Questions
 

@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.4. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Fill up to neon; Chromium breaks the rule (these two use the Shells view, the subject of this worksheet); Copper tube, 30 kV; Below the K edge; Mystery target (the X ray spectra worksheet).
+**Setups in the demo:** Fill up to neon; Chromium breaks the rule (these two use the Shells view, the subject of this worksheet); Copper tube, 30 kV; Below the K edge; Mystery target (the X-ray spectra worksheet).
 
 **Using the demo.**
 
@@ -79,7 +79,7 @@ Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.6\ \mathrm{eV}}$$ yourself.
 2. Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?
 3. Graph IE against n for the alkali metals and for the noble gases. How do the two families compare, and what trend do you see down each column?
 4. Find $$Z_\mathrm{eff}$$ for each alkali metal. If the inner electrons screened the nucleus completely, $$Z_\mathrm{eff}$$ would be 1. Is it? Explain why it grows down the column.
-5. For the four exceptions, describe what changed and suggest why a half full or full d subshell might be favoured.
+5. For the four exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
 
 ## Uncertainty
 

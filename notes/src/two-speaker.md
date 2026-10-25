@@ -21,16 +21,16 @@ Students need v = fλ, superposition (§16.5) and the decibel scale (§17.3). **
 1. **Walk across, 686 Hz.** λ = 0.500 m at 20 °C, d = 1.00 m, walk line at x = 4 m. Press **Walk** and watch the trace: dips near y = ±1.04 m (Δr = λ/2) and ±4.55 m (3λ/2, at the edge of the room). Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.
 2. **Speaker 2 off.** The dips vanish: one speaker gives a smooth level falling with distance.
 3. **Speakers close together.** d = 0.40 m < λ: one quiet line on each side only.
-4. **Wired backwards.** The centre is quiet; the quiet lines are now at Δr = mλ.
+4. **Wired backwards.** The center is quiet; the quiet lines are now at Δr = mλ.
 5. **Speed of sound.** At several frequencies, λ from the dips; λ against 1/f has slope v. Change the temperature and repeat.
 
 ## Questions
 
-**Q1.** The speakers play 686 Hz on a 20 °C day. Find the speed of sound from v = 331 m/s √(T/273 K) and the wavelength.
+**Q1.** The speakers play 686 Hz on a 20 °C day. Find the speed of sound from v = 331.3 m/s √(1 + t/273.15 °C) and the wavelength.
 
-**Q2.** With d = 1.00 m, where on the line x = 4.00 m is the first quiet spot from the centre? Find it two ways: exactly from r₂ − r₁ = λ/2, and from the far field rule sin θ = Δr/d with y = x tan θ.
+**Q2.** With d = 1.00 m, where on the line x = 4.00 m is the first quiet spot from the center? Find it two ways: exactly from r₂ − r₁ = λ/2, and from the far field rule sin θ = Δr/d with y = x tan θ.
 
-**Q3.** How many quiet lines are there on each side of the centre for d = 1.00 m at 686 Hz? For d = 0.40 m?
+**Q3.** How many quiet lines are there on each side of the center for d = 1.00 m at 686 Hz? For d = 0.40 m?
 
 **Q4.** Straight ahead at x = 4 m the meter reads 73.9 dB with both speakers, and at the first quiet spot 43.2 dB. One speaker alone gives 80 dB at 1 m. Explain the 73.9 dB, and why the quiet spot is not silent.
 
@@ -48,6 +48,6 @@ Students need v = fλ, superposition (§16.5) and the decibel scale (§17.3). **
 ## Physics behind the demo
 
 - Each speaker is a point source in free field: complex pressure amplitude a e^{−ikr}/r, with a set so that one speaker gives 80 dB (re 20 μPa rms) at 1 m (chosen). Speaker 2 can have phase π (wired backwards) or be off. The level is 20 log₁₀(|p|/√2 ÷ 20 μPa). This is exact for monopoles.
-- Left out: reflections from walls, floor and ceiling (as outdoors or in an anechoic room), the speakers' directivity, and absorption in air. The speed of sound is 331 m/s √(T/273 K) with T in kelvin (§17.2).
-- A quiet spot is not silent: the residual pressure is a(1/r₁ − 1/r₂), since the farther speaker is weaker (checked in the tests). On the centre line, wired backwards, the cancellation is exact.
+- Left out: reflections from walls, floor and ceiling (as outdoors or in an anechoic room), the speakers' directivity, and absorption in air. The speed of sound is 331.3 m/s √(1 + t/273.15 °C) with t the air temperature in °C, 343.2 m/s at 20 °C (§17.2 writes this as 331 m/s √(T/273 K)).
+- A quiet spot is not silent: the residual pressure is a(1/r₁ − 1/r₂), since the farther speaker is weaker (checked in the tests). On the center line, wired backwards, the cancellation is exact.
 - The walk moves the microphone along the walk line at 0.5 m/s and plots the level every 4 mm. The waves on the floor are slowed about a thousand times. Simulated data with no noise.

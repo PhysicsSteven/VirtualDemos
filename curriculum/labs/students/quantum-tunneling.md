@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§7.3 and 7.6. Access for fre
 **Using the demo.**
 
 - An electron moves in one dimension. Positions are in nm, energies in eV and times in fs, and $$\hbar^2/2m = 0.0381$$ eV·nm².
-- The electron starts as a Gaussian wave packet of width σ, centred at $$x_0$$, with central wave number $$k_0$$ and $$E_0 = \hbar^2k_0^2/2m$$, the energy that goes with $$k_0$$. The packet's mean energy is a little higher, $$\langle E\rangle = E_0 + \hbar^2/8m\sigma^2$$ (0.2011 eV for E₀ = 0.20 eV and σ = 3 nm), because its spread in k adds energy; the plane wave prediction is taken at E₀. Set these on the card over the picture, then press Launch packet and Play.
+- The electron starts as a Gaussian wave packet of width σ, centered at $$x_0$$, with central wave number $$k_0$$ and $$E_0 = \hbar^2k_0^2/2m$$, the energy that goes with $$k_0$$. The packet's mean energy is a little higher, $$\langle E\rangle = E_0 + \hbar^2/8m\sigma^2$$ (0.2011 eV for E₀ = 0.20 eV and σ = 3 nm), because its spread in k adds energy; the plane wave prediction is taken at E₀. Set these on the card over the picture, then press Launch packet and Play.
 - The time dependent Schrödinger equation is solved on a grid of points 25 pm apart (40 pm for two barriers; Crank–Nicolson steps). The packet carries a spread of energies, wider for a narrow packet.
 - Probability that reaches the edges of the view is absorbed and still counted. R is all the probability on the side the packet came from, T all of it on the far side, including what the edges have absorbed.
 - The Scattering readouts also show the plane wave T at $$E_0$$ and T averaged over the packet's energies, both from the formulas.
@@ -56,7 +56,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Barrier width.** Start with the Barrier setup. Set the height to 1.00 eV, and on the packet card set the centre to −15 nm, the width to 3 nm and the energy to 0.20 eV. (Starting far from the barrier keeps the tail of the packet from overlapping it at the start.) For barrier widths from 0.3 nm to 0.8 nm in steps of 0.1 nm, launch the packet, let it split and record a reading.
+**Barrier width.** Start with the Barrier setup. Set the height to 1.00 eV, and on the packet card set the center to −15 nm, the width to 3 nm and the energy to 0.20 eV. (Starting far from the barrier keeps the tail of the packet from overlapping it at the start.) For barrier widths from 0.3 nm to 0.8 nm in steps of 0.1 nm, launch the packet, let it split and record a reading.
 
 **Packet energy.** Clear the readings. With the barrier 0.30 nm wide, record a reading for packet energies of 0.20, 0.40, 0.60, 0.80, 1.00, 1.20, 1.50 and 2.00 eV. Send this run to a new copy of the table.
 

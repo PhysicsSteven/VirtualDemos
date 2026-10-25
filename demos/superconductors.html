@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* only what this demo needs beyond demos/lib/vd.css: its own colours, the picture, the graph and the Set up card's place */
+/* only what this demo needs beyond demos/lib/vd.css: its own colors, the picture, the graph and the Set up card's place */
 :root { --field: #2b60b5; --sc: #2f9e8f; --metal: #9aa3ad; --coil: #c87a4f; --crit: #d2452b; --onset: #a7740b; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; } }
 :root[data-theme="dark"] { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; }
@@ -141,14 +141,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      elements, and Equation 9.39, Bc(T) = Bc(0)[1 − (T/Tc)²]. Nb (type II in practice) and Th are left out.
      The sample is an ideal type I sphere of radius R in a uniform applied field Ba (along z). Inside it the field is uniform, B_in, and
      the sphere is uniformly magnetized: B_in = Ba + (2/3)μ0M. Outside, the field is Ba plus that of a point dipole m = (4π/3)R³M at the
-     centre. A superconductor (equilibrium, no hysteresis):
+     center. A superconductor (equilibrium, no hysteresis):
        Ba ≤ (2/3)Bc       Meissner state, B_in = 0, μ0M = −(3/2)Ba; the field at the equator is (3/2)Ba;
        (2/3)Bc < Ba < Bc  intermediate state: the equator field is held at Bc, B_in = 3Ba − 2Bc (an average over normal and
                           superconducting layers; the sphere's demagnetizing factor is 1/3);
        Ba ≥ Bc            normal, M = 0 (a normal metal's own magnetism is far smaller and is left out).
      A perfect conductor (zero resistance and nothing else) keeps the flux it had when its resistance vanished: B_in is frozen at
      the applied field at the moment it was cooled through Tc, whatever the applied field does afterwards. */
-  const MU0 = 4e-7 * Math.PI * 1.00000000055;   /* T·m/A, CODATA 2018 */
+  const MU0 = 1.25663706127e-6;                 /* T·m/A, CODATA 2022 */
   const R_SAMPLE = 5.00e-3;                     /* m, a sphere 10.00 mm across */
   const METALS = { /* Tc in K, Bc0 in mT, Table 9.5 */
     Pb: { name: 'Lead (Pb)', Tc: 7.2, Bc0: 80 }, Sn: { name: 'Tin (Sn)', Tc: 3.7, Bc0: 31 }, In: { name: 'Indium (In)', Tc: 3.4, Bc0: 29 },
@@ -276,7 +276,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const G3 = { o: { th: -Math.PI / 2 - 0.25, ph: 1.22, zoom: 1 }, key: '' };
   let g3 = null, view3 = null;
   const use3 = () => !!(g3 && view3 && view3.is3d());
-  const KR = 0.04, AS = 3.0, ZS = 3.4, CR = 2.2, xm3 = -(AS + 2.4) * KR;   /* metres per R in the picture; solenoid radius, its half length and the cryostat's radius (in R) */
+  const KR = 0.04, AS = 3.0, ZS = 3.4, CR = 2.2, xm3 = -(AS + 2.4) * KR;   /* meters per R in the picture; solenoid radius, its half length and the cryostat's radius (in R) */
   function init3D() {
     const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.35, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
     S3.el.classList.add('sc3');

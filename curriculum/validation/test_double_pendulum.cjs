@@ -33,15 +33,15 @@ test('Dormand–Prince at 10⁻¹¹ keeps the energy fixed, regular and chaotic 
     for (let k = 1; k <= 300; k++) { m.integTo(I, k * 0.1); worst = Math.max(worst, Math.abs(m.dpEnergy(p, I.y).E - E0) / E0); }
     assert(worst < 2e-8, `energy drift ${worst}`);
   }
-  // the chaos preset: E = 48.3 J against 58.8 J for both rods straight up (notes)
-  close(m.dpEnergy(p, [130 * DEG, 130 * DEG, 0, 0]).E, 48.3, 0, 0.05); close(m.dpTop(p), 58.8, 0, 0.05);
+  // the chaos preset: E = 48.3 J against 58.9 J for both rods straight up (notes)
+  close(m.dpEnergy(p, [130 * DEG, 130 * DEG, 0, 0]).E, 48.3, 0, 0.05); close(m.dpTop(p), 58.9, 0, 0.05);
 });
 
 test('normal modes: ω² = (g/L)(2 ∓ √2) for equal rods; eigenvectors; a small mode keeps its frequency and shape', () => {
   const p = { m1: 1, m2: 1, L1: 1, L2: 1, g: m.G0 }, nm = m.normalModes(p);
   close(nm.w1 ** 2, m.G0 * (2 - Math.SQRT2), 1e-12); close(nm.w2 ** 2, m.G0 * (2 + Math.SQRT2), 1e-12);
   close(nm.r1, Math.SQRT2, 1e-12); close(nm.r2, -Math.SQRT2, 1e-12);
-  close(2 * PI / nm.w1, 2.622, 0, 5e-4); close(2 * PI / nm.w2, 1.086, 0, 5e-4); close(nm.w1, 2.397, 0, 5e-4);   // notes
+  close(2 * PI / nm.w1, 2.621, 0, 5e-4); close(2 * PI / nm.w2, 1.086, 0, 5e-4); close(nm.w1, 2.397, 0, 5e-4);   // notes
   for (const q of [{ m1: 0.3, m2: 4, L1: 0.4, L2: 1.7, g: 3.7 }, { m1: 5, m2: 0.1, L1: 2, L2: 0.2, g: 24 }]) {
     const r = m.normalModes(q), M = q.m1 + q.m2;
     for (const [w, sh] of [[r.w1, r.r1], [r.w2, r.r2]]) {
@@ -81,7 +81,7 @@ test('simple pendulum: T = 4√(L/g)K(sin(θ₀/2)) at any amplitude; over the t
     const up = crossings(I, 5.3 * pk.T, 0); close((up[up.length - 1] - up[0]) / (up.length - 1), pk.T, 1e-8);
   }
   // the Big swings preset in the notes: L = 1 m from 150°: T = 3.536 s, T₀ = 2.006 s, ratio 1.762
-  close(m.periodExact(1, m.G0, 150 * DEG), 3.536, 0, 5e-4); close(2 * PI / Math.sqrt(m.G0), 2.006, 0, 5e-4);
+  close(m.periodExact(1, m.G0, 150 * DEG), 3.535, 0, 5e-4); close(2 * PI / Math.sqrt(m.G0), 2.006, 0, 5e-4);
   close(m.periodExact(1, m.G0, 150 * DEG) / (2 * PI / Math.sqrt(m.G0)), 1.762, 0, 5e-4);
 });
 

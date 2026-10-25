@@ -1868,7 +1868,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const WS_COLS = {
     'magnets-oersted': [['experiment', 'Experiment'], ['gap_cm', 'Gap (cm)'], ['I_A', 'I (A)'], ['angle_deg', 'Angle (°)']],
     'straight-wire-fields': [['setup', 'Setup'], ['r_cm', 'r (cm)'], ['B_uT', '|B| (μT)'], ['circ_uTm', '∮B·dl (μT·m)']],
-    'loops-solenoids': [['N', 'N'], ['z_cm', 'z (cm)'], ['Bz_uT', 'B_z (μT)'], ['Bc_uT', 'B centre (μT)']]
+    'loops-solenoids': [['N', 'N'], ['z_cm', 'z (cm)'], ['Bz_uT', 'B_z (μT)'], ['Bc_uT', 'B center (μT)']]
   };
   const wsNow = () => ($('magDet').open ? 'magnets-oersted' : S.scene === 'wires' ? 'straight-wire-fields' : 'loops-solenoids');
   let wsRows = 'straight-wire-fields';

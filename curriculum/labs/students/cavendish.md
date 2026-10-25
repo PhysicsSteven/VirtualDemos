@@ -10,15 +10,15 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.1 (Newton's law of univers
 
 **Using the demo.**
 
-- The picture is a top view of a torsion balance, to scale except that the beam's turn is drawn 20 times larger. Two small lead spheres on a light beam hang from a thin fibre inside a glass case. Two large lead spheres sit outside the case on a frame that swivels to position A, position B, or away from the beam.
-- A laser beside the scale shines on a mirror at the centre of the beam, and the reflected spot lands on a scale 5.000 m away, shown magnified on the right. The strip chart below records the spot against time.
+- The picture is a top view of a torsion balance, to scale except that the beam's turn is drawn 20 times larger. Two small lead spheres on a light beam hang from a thin fiber inside a glass case. Two large lead spheres sit outside the case on a frame that swivels to position A, position B, or away from the beam.
+- A laser beside the scale shines on a mirror at the center of the beam, and the reflected spot lands on a scale 5.000 m away, shown magnified on the right. The strip chart below records the spot against time.
 - The clock shows the real time of the experiment; ×10 and ×100 only make the wait shorter. One button runs the experiment until the spot reaches its next turning point and stops there. Start over puts the balance back, settled with the spheres in A, at t = 0.
 - Record reading stores the position of the spheres, the time and the spot; Export to worksheet sends the readings here. Blind hides the twist, the forces, the resting positions and G.
 
 **What the demo models.**
 
-- Small spheres of 20.0 g and large spheres of 1.500 kg, of lead (11 340 kg/m³). The beam is massless and 100.0 mm between the small spheres' centres. In A and B each large sphere's centre is 46.5 mm from the nearer small sphere's centre.
-- The torque is the exact sum over all four pairs of spheres, including the pull of each large sphere on the far small sphere, and it changes as the beam turns. The fibre gives an undamped period of 360.0 s, and air damping makes the swing die away by a factor of e every 720 s. G is the CODATA 2018 value.
+- Small spheres of 20.0 g and large spheres of 1.500 kg, of lead (11 340 kg/m³). The beam is massless and 100.0 mm between the small spheres' centers. In A and B each large sphere's center is 46.5 mm from the nearer small sphere's center.
+- The torque is the exact sum over all four pairs of spheres, including the pull of each large sphere on the far small sphere, and it changes as the beam turns. The fiber gives an undamped period of 360.0 s, and air damping makes the swing die away by a factor of e every 720 s. G is the CODATA 2022 value.
 - The spot is read to 1 mm and the clock to 1 s. There is no noise, drift or shaking from the building, which make the real experiment hard.
 
 </details>
@@ -29,15 +29,15 @@ Measure the universal gravitational constant G the way Henry Cavendish did in 17
 
 ## Background
 
-Newton's law of gravitation says that two spheres of masses $$M$$ and $$m$$ with centres a distance $$r$$ apart attract each other with
+Newton's law of gravitation says that two spheres of masses $$M$$ and $$m$$ with centers a distance $$r$$ apart attract each other with
 
 $$F = \frac{GMm}{r^2}.$$
 
-For laboratory masses this force is about a billionth of their weight, so it is measured with a **torsion balance**. A light beam of length $$2l$$ carries a small sphere of mass $$m$$ at each end and hangs from a thin fibre. When each large sphere is brought beside a small one, on opposite sides of the beam, both forces turn the beam the same way, with a torque $$\tau = 2Fl$$. The beam turns until the fibre's restoring torque $$\kappa\theta$$ balances it:
+For laboratory masses this force is about a billionth of their weight, so it is measured with a **torsion balance**. A light beam of length $$2l$$ carries a small sphere of mass $$m$$ at each end and hangs from a thin fiber. When each large sphere is brought beside a small one, on opposite sides of the beam, both forces turn the beam the same way, with a torque $$\tau = 2Fl$$. The beam turns until the fiber's restoring torque $$\kappa\theta$$ balances it:
 
 $$\kappa\theta = 2l\,\frac{GMm}{r^2}.$$
 
-The torsion constant $$\kappa$$ of the fibre is found from the period of the beam's swing, as for any torsion pendulum: $$T = 2\pi\sqrt{I/\kappa}$$, with $$I = 2ml^2$$ for the two small spheres. The angle is found with a light lever: a mirror on the beam reflects a laser onto a scale a distance $$L$$ away. When the mirror turns by $$\theta$$ the reflected beam turns by $$2\theta$$, and the spot moves by $$L\tan 2\theta \approx 2L\theta$$. Swinging the large spheres from position A to position B reverses the torque, so the resting spot moves by $$\Delta S = 4L\theta$$. Putting these together, $$m$$ cancels:
+The torsion constant $$\kappa$$ of the fiber is found from the period of the beam's swing, as for any torsion pendulum: $$T = 2\pi\sqrt{I/\kappa}$$, with $$I = 2ml^2$$ for the two small spheres. The angle is found with a light lever: a mirror on the beam reflects a laser onto a scale a distance $$L$$ away. When the mirror turns by $$\theta$$ the reflected beam turns by $$2\theta$$, and the spot moves by $$L\tan 2\theta \approx 2L\theta$$. Swinging the large spheres from position A to position B reverses the torque, so the resting spot moves by $$\Delta S = 4L\theta$$. Putting these together, $$m$$ cancels:
 
 $$G = \frac{\pi^2\, r^2\, l\, \Delta S}{M\, T^2\, L}.$$
 
@@ -53,7 +53,7 @@ $$E = \frac{S_1 S_3 - S_2^2}{S_1 + S_3 - 2S_2}.$$
 
 Once G is known, the mass of the Earth follows from the free fall acceleration at its surface, $$g = GM_E/R_E^2$$ (§13.2). This is why Cavendish's experiment was called weighing the Earth.
 
-**Apparatus constants.** $$M = 1.500$$ kg, $$m = 20.0$$ g, $$l = 50.0$$ mm, $$r = 46.5$$ mm, $$L = 5.000$$ m. For the Earth, $$g = 9.80$$ m/s² and $$R_E = 6.37\times10^6$$ m.
+**Apparatus constants.** $$M = 1.500$$ kg, $$m = 20.0$$ g, $$l = 50.0$$ mm, $$r = 46.5$$ mm, $$L = 5.000$$ m. For the Earth, $$g = 9.81$$ m/s² and $$R_E = 6.37\times10^6$$ m.
 
 ## Before the lab
 
@@ -98,15 +98,15 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 
 ## Uncertainty
 
-The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimetres, so a single reading carries an uncertainty of a few percent; using several sets of turning points brings it down. The clock reads to 1 s on a half period of about 180 s, and the slope of seven turning points does much better than that, but $$T$$ enters G squared. The formula leaves out the damping, which makes the swing about 0.3% slower than the undamped period, so G comes out about 0.6% low; you could correct for it from how fast the swing dies away. As the beam turns, the small spheres move closer to the large ones, so the pull grows: the beam turns about 0.7% further, but the square of the period grows by the same factor, and the two cancel in G as long as you use the period you measured. On real apparatus the biggest problems are air currents, temperature changes, shaking and the slow drift of the fibre, which is why Cavendish worked in a closed room and watched the balance through a telescope from outside.
+The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimeters, so a single reading carries an uncertainty of a few percent; using several sets of turning points brings it down. The clock reads to 1 s on a half period of about 180 s, and the slope of seven turning points does much better than that, but $$T$$ enters G squared. The formula leaves out the damping, which makes the swing about 0.3% slower than the undamped period, so G comes out about 0.6% low; you could correct for it from how fast the swing dies away. As the beam turns, the small spheres move closer to the large ones, so the pull grows: the beam turns about 0.7% further, but the square of the period grows by the same factor, and the two cancel in G as long as you use the period you measured. On real apparatus the biggest problems are air currents, temperature changes, shaking and the slow drift of the fiber, which is why Cavendish worked in a closed room and watched the balance through a telescope from outside.
 
 ## Questions
 
 1. Why are the spheres made of lead, and why is the balance kept in a closed case?
-2. Find the gravitational force between two people of 70 kg whose centres are 1.0 m apart. Why don't we notice it?
+2. Find the gravitational force between two people of 70 kg whose centers are 1.0 m apart. Why don't we notice it?
 3. Explain why measuring G was enough to find the mass of the Earth, and why Newton could not do it.
 4. If the large spheres were the same size but made of aluminum (2700 kg/m³), by what factor would $$\Delta S$$ change?
-5. A thinner fibre makes the period twice as long. By what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
+5. A thinner fiber makes the period twice as long. By what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
 
 ## What to hand in
 

@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css. The two pictures are a darkened optics room in both themes (laser light is
-   easiest to see on black), so they keep their own fixed colours; everything around them follows the theme. */
+   easiest to see on black), so they keep their own fixed colors; everything around them follows the theme. */
 :root { --room: #0b0f15; --room-ink: #dfe6ef; --room-muted: #8d99a8; --room-line: #253041; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -94,7 +94,7 @@
           <div id="boxZo" hidden><div class="slider-head"><label for="sZo">Object distance from the plate</label><output id="oZo" class="mono" for="sZo"></output></div><input type="range" id="sZo" min="12" max="24" step="0.5"></div>
           <fieldset><legend>Microscope on the developed plate</legend>
             <div><div class="slider-head"><label for="sFov">Field of view</label><output id="oFov" class="mono" for="sFov"></output></div><input type="range" id="sFov" min="0" max="100" step="1"></div>
-            <div><div class="slider-head"><label for="sXc">Centre of the view</label><output id="oXc" class="mono" for="sXc"></output></div><input type="range" id="sXc" min="-1500" max="1500" step="0.5"></div>
+            <div><div class="slider-head"><label for="sXc">Center of the view</label><output id="oXc" class="mono" for="sXc"></output></div><input type="range" id="sXc" min="-1500" max="1500" step="0.5"></div>
           </fieldset>
           <fieldset><legend>Cursors (drag them in the microscope)</legend>
             <div><div class="slider-head"><label for="sCa">Cursor A</label><output id="oCa" class="mono" for="sCa"></output></div><input type="range" id="sCa" min="-1500" max="1500" step="0.01"></div>
@@ -192,7 +192,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* The recording. p = { lam1 (m), thr (reference angle, degrees), obj: { kind: 'plane', tho } or { kind: 'points', pts: [{ x, z }] }
      with z < 0 (the object is on the side the light comes from), K (beam ratio: reference intensity over object intensity at the
-     plate's centre) }. The reference is a unit plane wave. Each object point gets the same amplitude at the plate's centre, and
+     plate's center) }. The reference is a unit plane wave. Each object point gets the same amplitude at the plate's center, and
      together they give intensity 1/K there (their amplitudes add as if incoherent: each 1/√(nK)). */
   function recording(p) {
     const k = TAU / p.lam1, sr = Math.sin(p.thr * RAD), cr = Math.cos(p.thr * RAD), o = p.obj;
@@ -255,11 +255,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let n = 0; n < N; n++) { const x = (n - N / 2) * dx; if (Math.abs(x) <= PLATE_W / 2) { I[n] = rec.intensity(x); if (I[n] > Imax) Imax = I[n]; } }
     for (let n = 0; n < N; n++) { const x = (n - N / 2) * dx; if (I[n]) { const t = I[n] / Imax, ph = k2 * si * x; re[n] = t * Math.cos(ph); im[n] = t * Math.sin(ph); } }
     fft(re, im, false);
-    /* bin m holds kx = 2π m'/WINDOW with m' = m (m < N/2) or m − N; x was measured from the window's centre, so undo that shift */
+    /* bin m holds kx = 2π m'/WINDOW with m' = m (m < N/2) or m − N; x was measured from the window's center, so undo that shift */
     const kx = new Float64Array(N), kz = new Float64Array(N);
     for (let m = 0; m < N; m++) {
       const mm = m < N / 2 ? m : m - N; kx[m] = TAU * mm / WINDOW; kz[m] = k2 * k2 > kx[m] * kx[m] ? Math.sqrt(k2 * k2 - kx[m] * kx[m]) : -1;
-      if (mm & 1) { re[m] = -re[m]; im[m] = -im[m]; }   /* the factor e^{iπ m'} from the centring (N/2 samples) */
+      if (mm & 1) { re[m] = -re[m]; im[m] = -im[m]; }   /* the factor e^{iπ m'} from the centering (N/2 samples) */
     }
     return { rec, lam2, thi, si, N, dx, k2, Ar: re, Ai: im, kx, kz, Imax };
   }
@@ -312,7 +312,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ang = (s) => (Math.abs(s) <= 1 ? Math.asin(s) / RAD : NaN);
     return { zero: thi, image: ang(si + mu * d), conj: ang(si - mu * d), mu };
   }
-  /* Point object at (x0, z0 < 0): where its images are, by tracing the rays that leave the plate's centre and their neighbours (exact
+  /* Point object at (x0, z0 < 0): where its images are, by tracing the rays that leave the plate's center and their neighbors (exact
      ray optics for the tangential focus, the only kind a 2D slice has). σ = +1 the image term (virtual: the rays diverge and seem to
      come from behind the plate), σ = −1 the conjugate term (it converges to a real image when its rays meet in front of the plate).
      Returns { x, z, alpha } (z < 0 virtual, z > 0 real) or null when that light does not leave the plate (evanescent). */
@@ -350,7 +350,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { room: g('--room'), ink: g('--room-ink'), muted: g('--room-muted'), line: g('--room-line'), accent: '#ffb547', mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
-  /* a display colour for a wavelength (for drawing only; after Bruton's approximation of the spectrum) */
+  /* a display color for a wavelength (for drawing only; after Bruton's approximation of the spectrum) */
   function lamRGB(nm) {
     let r = 0, g = 0, b = 0;
     if (nm < 440) { r = (440 - nm) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = (510 - nm) / 20; }
@@ -360,7 +360,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return [lift(r), lift(g), lift(b)];
   }
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
-  /* intensity 0..1 to a glow in a laser's colour: black, the colour, then white at the top */
+  /* intensity 0..1 to a glow in a laser's color: black, the color, then white at the top */
   function glow(c, t) { t = Math.max(0, Math.min(1, t)); if (t < 0.75) { const u = t / 0.75; return [c[0] * u, c[1] * u, c[2] * u]; } const u = (t - 0.75) / 0.25; return [c[0] + (255 - c[0]) * u, c[1] + (255 - c[1]) * u, c[2] + (255 - c[2]) * u]; }
 
   // ---------- the hologram and its reconstruction ----------
@@ -394,7 +394,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (SCREEN && SCREEN.z === S.rc.zs) return SCREEN;
     const R = ensureRecon(), I = fieldAt(R, S.rc.zs * 1e-3), N = R.N, lim = 9e-3; let best = 0, bi = N / 2;
     for (let n = 0; n < N; n++) { const x = (n - N / 2) * R.dx; if (Math.abs(x) <= lim && I[n] > best) { best = I[n]; bi = n; } }
-    /* refine the brightest point by a parabola through it and its neighbours */
+    /* refine the brightest point by a parabola through it and its neighbors */
     const a = I[bi - 1], b = I[bi], c = I[bi + 1], den = a - 2 * b + c, d = den ? 0.5 * (a - c) / den : 0;
     SCREEN = { z: S.rc.zs, I: Float64Array.from(I), N, dx: R.dx, peakX: (bi - N / 2 + d) * R.dx, peakI: b };
     return SCREEN;
@@ -429,7 +429,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = '#3a4554'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 10 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 10 * p);
     c.fillStyle = '#5a687a'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 2 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 2 * p);
   }
-  /* a plane beam of light as a band of the laser colour with wavefronts, arriving at the plate (sx, y0..y1) at angle th (degrees, + travels toward +x) */
+  /* a plane beam of light as a band of the laser color with wavefronts, arriving at the plate (sx, y0..y1) at angle th (degrees, + travels toward +x) */
   function beamBand(c, col, sx, y0, y1, th, len, sc, lamNm, phase, name) {
     const a = th * RAD, ux = Math.cos(a), uy = -Math.sin(a), p = proj();   /* screen: z to the right, x up */
     const back = (x, y) => [x - ux * len, y - uy * len];
@@ -542,7 +542,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- Reconstruct view ----------
   function rcGeom() {
-    const p = proj(), m = { l: 14 * p, r: 14 * p, t: 30 * p, b: 30 * p }, zr = 32e-3, sx = (W - m.l - m.r) / (2 * zr), xr = MAP ? MAP.xr : 9e-3, sy = Math.min((H - m.t - m.b) / (2 * xr), 2 * sx), top = m.t + (H - m.t - m.b - 2 * xr * sy) / 2;   /* stretched across at most 2×; on a narrow screen the map is centred */
+    const p = proj(), m = { l: 14 * p, r: 14 * p, t: 30 * p, b: 30 * p }, zr = 32e-3, sx = (W - m.l - m.r) / (2 * zr), xr = MAP ? MAP.xr : 9e-3, sy = Math.min((H - m.t - m.b) / (2 * xr), 2 * sx), top = m.t + (H - m.t - m.b - 2 * xr * sy) / 2;   /* stretched across at most 2×; on a narrow screen the map is centered */
     return { Z: (z) => m.l + (z + zr) * sx, X: (x) => top + (xr - x) * sy, sx, sy, m, zr, xr };
   }
   function mapImage() {
@@ -774,8 +774,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   // ---------- about ----------
-  $('aboutRec').textContent = 'Record view. A laser beam is split in two: the reference beam (a plane wave at angle θ_r) goes straight to the plate, and the object beam lights the object, whose scattered light also reaches the plate. Where the two overlap they interfere, and the plate records the intensity I(x) = |R + O|² along its surface (OpenStax University Physics Volume 3, section 4.7). Everything shown at the plate is computed exactly: the reference is a plane wave, a plane object wave comes from a mirror, and each object point sends out the exact cylindrical wave of the two dimensional slice (the Hankel function H₀(kr)). The beam ratio is the reference intensity over the object intensity at the plate\'s centre. For two plane waves the fringes on the plate are λ/|sin θ_r − sin θ_o| apart, which is λ/(2 sin(θ/2)) when the plate bisects the angle θ between the beams. The microscope shows the developed plate with its transmittance (light where little light fell); the curve above it is I(x). The cursors read to 0.01 μm, and the count is of the bright fringes (maxima of I) from cursor A to cursor B, counting one within 0.05 μm outside a cursor (a cursor set by eye on a bright fringe). The view of the beams is not to scale except for the angles and the positions of the object points; its wavefronts are drawn 2000 times farther apart than they are.';
-  $('aboutRc').textContent = 'Reconstruct view. The developed plate, with the object gone, is lit by a plane wave of wavelength λ₂ along the reference direction or from the other side of the normal. Just past the plate the light is u(x) = t(x) times the illuminating wave. It is split into plane waves with one FFT (the angular spectrum) and each plane wave is carried to any distance z exactly; behind the plate (z < 0) the same plane waves are traced back, which is what a camera focused there would see. The map shows the result between z = −32 and +32 mm, on a log scale (each colour step is a factor of 10, three steps shown). Waves too steep to leave the plate (evanescent) are dropped; so is light that would leave the 28 mm computing window before reaching z, rather than letting it wrap round, and none of it reaches the part shown. The detector takes the light leaving within ±0.025° of its angle, as a fraction of the light falling on the plate (counting the flow through the plate). Predicted image positions come from tracing the rays that leave the plate\'s centre and their neighbours (exact ray optics, the tangential focus); predicted beam angles from the grating equation sin θ = sin θ_i ± (λ₂/λ₁)(sin θ_o − sin θ_r).';
+  $('aboutRec').textContent = 'Record view. A laser beam is split in two: the reference beam (a plane wave at angle θ_r) goes straight to the plate, and the object beam lights the object, whose scattered light also reaches the plate. Where the two overlap they interfere, and the plate records the intensity I(x) = |R + O|² along its surface (OpenStax University Physics Volume 3, section 4.7). Everything shown at the plate is computed exactly: the reference is a plane wave, a plane object wave comes from a mirror, and each object point sends out the exact cylindrical wave of the two dimensional slice (the Hankel function H₀(kr)). The beam ratio is the reference intensity over the object intensity at the plate\'s center. For two plane waves the fringes on the plate are λ/|sin θ_r − sin θ_o| apart, which is λ/(2 sin(θ/2)) when the plate bisects the angle θ between the beams. The microscope shows the developed plate with its transmittance (light where little light fell); the curve above it is I(x). The cursors read to 0.01 μm, and the count is of the bright fringes (maxima of I) from cursor A to cursor B, counting one within 0.05 μm outside a cursor (a cursor set by eye on a bright fringe). The view of the beams is not to scale except for the angles and the positions of the object points; its wavefronts are drawn 2000 times farther apart than they are.';
+  $('aboutRc').textContent = 'Reconstruct view. The developed plate, with the object gone, is lit by a plane wave of wavelength λ₂ along the reference direction or from the other side of the normal. Just past the plate the light is u(x) = t(x) times the illuminating wave. It is split into plane waves with one FFT (the angular spectrum) and each plane wave is carried to any distance z exactly; behind the plate (z < 0) the same plane waves are traced back, which is what a camera focused there would see. The map shows the result between z = −32 and +32 mm, on a log scale (each color step is a factor of 10, three steps shown). Waves too steep to leave the plate (evanescent) are dropped; so is light that would leave the 28 mm computing window before reaching z, rather than letting it wrap round, and none of it reaches the part shown. The detector takes the light leaving within ±0.025° of its angle, as a fraction of the light falling on the plate (counting the flow through the plate). Predicted image positions come from tracing the rays that leave the plate\'s center and their neighbors (exact ray optics, the tangential focus); predicted beam angles from the grating equation sin θ = sin θ_i ± (λ₂/λ₁)(sin θ_o − sin θ_r).';
   $('aboutSimple').textContent = 'What is simplified: the demo is a two dimensional slice, so each "point" is a bright line perpendicular to the slice and the plate is a strip 3.0 mm wide; a real hologram is two dimensional and also stores the third direction. The plate is thin: it records only the light at its surface, so it acts as a grating that works at any wavelength (a thick plate would also select the wavelength and angle, as white light holograms do). The emulsion is linear: the amplitude transmittance is proportional to the light that fell on it, t = I/I_max (a positive transparency); a real emulsion is linear only over part of its range. The plate does not change the phase of the light, and the beams are perfectly coherent and steady during the exposure.';
 
   // ---------- size, theme, start ----------

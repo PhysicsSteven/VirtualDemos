@@ -8,10 +8,10 @@ const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w
 function group(name, f) { f(); n++; console.log('PASS', name); }
 const mu = c.STRINGS.B.mu, T = c.tension(0.200), L = 1.2;
 
-group('textbook power: String B, 200 g, 20 Hz, 1 mm gives ½ μ A² ω² v = 0.3829 mW', () => {
-  const v = Math.sqrt(1.96 / 1.2e-3), w = 2 * Math.PI * 20;
+group('textbook power: String B, 200 g, 20 Hz, 1 mm gives ½ μ A² ω² v = 0.3831 mW', () => {
+  const v = Math.sqrt(1.962 / 1.2e-3), w = 2 * Math.PI * 20;
   near(c.travelingPower(20, 1e-3, T, mu), 0.5 * 1.2e-3 * 1e-6 * w * w * v, 1e-12);
-  near(c.travelingPower(20, 1e-3, T, mu) * 1000, 0.38292, 1e-4);
+  near(c.travelingPower(20, 1e-3, T, mu) * 1000, 0.38312, 1e-4);
   near(c.travelingPower(20, 1e-3, T, mu), c.energyPerMetre(20, 1e-3, mu) * v, 1e-12, 'P = (E/L) v');
 });
 group('matched absorber: no reflection, meter = textbook power at every L, and P scales as A²f²', () => {

@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§10.3 and 11.4. Access for f
 
 **Using the demo.**
 
-- The bench is a teaching gamma spectrometer modelled on ORTEC's: a source in a lead castle, a 38 mm × 38 mm NaI(Tl) scintillation crystal on a photomultiplier, an amplifier and a 2048 channel multichannel analyzer (MCA). Each photon that deposits energy in the crystal makes a pulse whose height is proportional to that energy, and the MCA counts the pulses by height, one channel per small range of height.
+- The bench is a teaching gamma spectrometer modeled on ORTEC's: a source in a lead castle, a 38 mm × 38 mm NaI(Tl) scintillation crystal on a photomultiplier, an amplifier and a 2048 channel multichannel analyzer (MCA). Each photon that deposits energy in the crystal makes a pulse whose height is proportional to that energy, and the MCA counts the pulses by height, one channel per small range of height.
 - The spectra are simulated, not measured: a Monte Carlo calculation of how photons deposit energy in the crystal (photoelectric absorption, Compton scattering, pair production, backscatter from the castle), smeared by the detector's resolution and given random counting noise. Line energies and intensities are the ENSDF evaluated values.
 - Acquire runs the MCA; Preset live stops it after that much live time. The clock speed buttons run it 1, 10 or 100 times faster than real time. Clear empties the spectrum.
 - Drag across a peak to set a region of interest. The readouts give its net counts above a straight background, the centroid channel with its uncertainty, and the FWHM.

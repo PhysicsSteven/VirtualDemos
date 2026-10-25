@@ -7,8 +7,8 @@ let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
 
-group('speed of sound 331 m/s √(T/273 K): 343.0 m/s at 20 °C, so 686 Hz has λ = 0.500 m', () => {
-  near(c.soundSpeed(20), 343.0, 2e-4); near(c.soundSpeed(-0.15), 331, 1e-12); near(c.wavelength(686, 20), 0.5, 2e-4);
+group('speed of sound 331.3 m/s √(1 + t/273.15): 343.2 m/s at 20 °C, so 686 Hz has λ = 0.500 m', () => {
+  near(c.soundSpeed(20), 343.2, 2e-4); near(c.soundSpeed(0), 331.3, 1e-12); near(c.wavelength(686, 20), 0.5003, 2e-4);
 });
 group('one speaker: 80 dB at 1 m, 6.02 dB less for each doubling of distance', () => {
   for (const r of [1, 2, 4, 8]) near(c.level(c.pressure(r, 0.5, 686, 1, 20, 0, false)), 80 - 20 * Math.log10(r), 1e-9, `r = ${r}`);

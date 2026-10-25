@@ -32,7 +32,7 @@ A graphics tablet uses the same law: the moving pen magnet changes the flux thro
 
 ## Before the lab
 
-1. The magnet is shaken 3 times a second with a stroke of 3.0 cm from the centre to each end. What is its top speed?
+1. The magnet is shaken 3 times a second with a stroke of 3.0 cm from the center to each end. What is its top speed?
 2. If the EMF peaks at 2.8 V at that rate, about what peak would you expect at 6 shakes per second? With a 1.5 cm stroke at 3 shakes per second?
 3. How much energy does a 0.10 F capacitor store at 2.0 V? At 3.0 V?
 4. Why does a graphics tablet of this kind lose the pen when it is held still?

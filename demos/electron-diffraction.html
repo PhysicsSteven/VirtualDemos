@@ -157,7 +157,7 @@ table.rows tr.sim td.n { color: var(--pos); }
       <div class="stage-ctl">
         <div class="seg" role="group" aria-label="What goes through the crystal">
           <button type="button" id="bElec" aria-pressed="true" title="The electron diffraction tube">Electrons</button>
-          <button type="button" id="bXray" aria-pressed="false" title="An X ray Bragg spectrometer with a rotating crystal">X rays</button>
+          <button type="button" id="bXray" aria-pressed="false" title="An X-ray Bragg spectrometer with a rotating crystal">X-rays</button>
         </div>
         <div class="seg e-only" role="group" aria-label="Measuring tool">
           <button type="button" id="tArc" aria-pressed="true" title="A flexible ruler laid on the glass: measures the arc">Ruler</button>
@@ -184,7 +184,7 @@ table.rows tr.sim td.n { color: var(--pos); }
           <canvas id="scr" tabindex="0" aria-label="Close up of the fluorescent screen seen from the front, with the measuring tool. Drag the two marks of the ruler, or the two caliper jaws, onto the ring on each side of the central spot. Keys: 1 or 2 picks the ring, A or B picks the mark or jaw, left and right move it, with shift for bigger steps."></canvas>
         </div>
         <div class="pane" id="pX" hidden>
-          <canvas id="xr" tabindex="0" aria-label="X ray Bragg spectrometer seen from above: the X ray tube, the crystal on a turntable at the angle θ to the beam, the counter on an arm at 2θ, and the count rate against θ. Drag the counter arm or the crystal to turn them, or drag along the graph. Keys: left and right change θ by 0.05°, with shift by 1°."></canvas>
+          <canvas id="xr" tabindex="0" aria-label="X-ray Bragg spectrometer seen from above: the X-ray tube, the crystal on a turntable at the angle θ to the beam, the counter on an arm at 2θ, and the count rate against θ. Drag the counter arm or the crystal to turn them, or drag along the graph. Keys: left and right change θ by 0.05°, with shift by 1°."></canvas>
         </div>
         <div class="pane" id="pGeo">
           <canvas id="geo" tabindex="0" role="img" aria-label="Cross section through the tube axis: the graphite, the two cones of diffracted electrons and where they meet the spherical screen. Or a graphite sheet with the two sets of lattice rows."></canvas>
@@ -193,7 +193,7 @@ table.rows tr.sim td.n { color: var(--pos); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/electron-diffraction.html" target="electron-diffraction-worksheet">Worksheet 1: Electron Diffraction and de Broglie Waves</a></li><li><a href="../curriculum/labs/students/x-ray-diffraction.html" target="x-ray-diffraction-worksheet">Worksheet 2: X Ray Diffraction</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/electron-diffraction.html" target="electron-diffraction-worksheet">Worksheet 1: Electron Diffraction and de Broglie Waves</a></li><li><a href="../curriculum/labs/students/x-ray-diffraction.html" target="x-ray-diffraction-worksheet">Worksheet 2: X-Ray Diffraction</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -237,7 +237,7 @@ table.rows tr.sim td.n { color: var(--pos); }
           </div>
         </div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Hold the magnet above the neck. A magnetic field turns moving charges, so the whole pattern slides sideways. X rays would not be turned.</p>
+          <p class="hint">Hold the magnet above the neck. A magnetic field turns moving charges, so the whole pattern slides sideways. X-rays would not be turned.</p>
         </details>
       </section>
 
@@ -283,11 +283,11 @@ table.rows tr.sim td.n { color: var(--pos); }
       </section>
 
       <section class="x-only" id="secX" hidden>
-        <h2>X ray Bragg spectrometer</h2>
-        <p class="hint">X rays from a tube run at 35 kV are reflected by a crystal on a turntable. The counter sits on an arm at 2θ, so it catches the rays that leave the planes at the same glancing angle θ as they came in.</p>
+        <h2>X-ray Bragg spectrometer</h2>
+        <p class="hint">X-rays from a tube run at 35 kV are reflected by a crystal on a turntable. The counter sits on an arm at 2θ, so it catches the rays that leave the planes at the same glancing angle θ as they came in.</p>
         <div class="inline">
           <span class="lab">Tube anode</span>
-          <div class="seg" role="group" aria-label="X ray tube anode">
+          <div class="seg" role="group" aria-label="X-ray tube anode">
             <button type="button" id="xCu" aria-pressed="true">Copper</button>
             <button type="button" id="xMo" aria-pressed="false">Molybdenum</button>
           </div>
@@ -317,7 +317,7 @@ table.rows tr.sim td.n { color: var(--pos); }
         </details>
       </section>
 
-      <!-- vd-readings --><section class="vd-readings" data-ws="x-ray-diffraction" data-title="Electron Diffraction (X ray Bragg spectrometer)" data-demo="electron-diffraction">
+      <!-- vd-readings --><section class="vd-readings" data-ws="x-ray-diffraction" data-title="Electron Diffraction (X-ray Bragg spectrometer)" data-demo="electron-diffraction">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
@@ -373,7 +373,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Pure physics and instrument model; no DOM. Lengths of the tube in mm, wavelengths and spacings in m. Imported by node tests.
   const H_PLANCK = 6.62607015e-34;     // J s, exact
   const Q_E = 1.602176634e-19;         // C, exact
-  const M_E = 9.1093837015e-31;        // kg, CODATA 2018
+  const M_E = 9.1093837139e-31;        // kg, CODATA 2022
   const C_LIGHT = 299792458;           // m/s, exact
   const D_ACC = [0.213e-9, 0.123e-9];  // graphite (10) and (11) spacings, maker's values
   const A_LAT = 0.2461e-9;             // in-plane lattice constant: d10 = a√3/2, d11 = a/2
@@ -438,18 +438,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < n; i++) ss += (y[i] - k * x[i]) ** 2;
     return { k, se: n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN, n };
   }
-  // fit one ring from rows {V (kV), D: [D1, D2] (mm), tool}: small angle D = (2L/d) λ, or exact λ = d · 2 sin θ(D)
+  // least squares line with a free intercept, y = c + k x (the fit the page shows); standard errors with n − 2 degrees of freedom
+  function fitLine(x, y) {
+    const n = Math.min(x.length, y.length); if (n < 2) return null;
+    let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += x[i]; my += y[i]; } mx /= n; my /= n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); }
+    if (!(sxx > 0)) return null;
+    const k = sxy / sxx, c = my - k * mx; let ss = 0;
+    for (let i = 0; i < n; i++) ss += (y[i] - c - k * x[i]) ** 2;
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { k, c, se: Math.sqrt(s2 / sxx), sc: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), n };
+  }
+  // fit one ring from rows {V (kV), D: [D1, D2] (mm), tool}: small angle D = (2L/d) λ + c, or exact λ = d · 2 sin θ(D) + c; both least squares lines with a free intercept c
+  // (c in mm for the small angle fit, in m for the exact one), with the standard errors of d and c
   function fitRing(rows, i, method, rel, L, R) {
     const ok = rows.filter((r) => r.V > 0 && r.D[i] > 0);
     const lam = ok.map((r) => lambdaDB(r.V * 1000, rel));
     if (method === 'small') {
-      const f = fitOrigin(lam, ok.map((r) => r.D[i])); if (!f) return null;
-      const d = 2 * L / f.k; return { d, se: d * f.se / f.k, n: f.n };
+      const f = fitLine(lam, ok.map((r) => r.D[i])); if (!f) return null;
+      const d = 2 * L / f.k; return { d, se: d * f.se / f.k, n: f.n, c: f.c, sc: f.sc };
     }
     const g = ok.map((r) => 2 * Math.sin(twoThetaFromD(r.D[i], r.tool, L, R) / 2));
     if (g.some((v) => !isFinite(v))) return null;
-    const f = fitOrigin(g, lam); if (!f) return null;
-    return { d: f.k, se: f.se, n: f.n };
+    const f = fitLine(g, lam); if (!f) return null;
+    return { d: f.k, se: f.se, n: f.n, c: f.c, sc: f.sc };
   }
   function mulberry(seed) { let s = seed >>> 0; return () => { s += 0x6D2B79F5; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   function gauss(r) { return (r() + r() + r() - 1.5) * 2; }   // unit variance, bounded
@@ -469,7 +481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     return out;
   }
-  // ----- X ray Bragg spectrometer (rotating crystal, detector at 2θ). Wavelengths in nm. -----
+  // ----- X-ray Bragg spectrometer (rotating crystal, detector at 2θ). Wavelengths in nm. -----
   // hc = 1239.841984 eV nm (exact SI constants). Line energies: X-ray Data Booklet (LBNL), Table 1-2 (Bearden):
   // Cu Kα1 8047.78 eV, Kβ1 8905.29 eV; Mo Kα1 17479.34 eV, Kβ1 19608.3 eV. Crystal 2d spacings of the (200) planes,
   // X-ray Data Booklet crystal table: NaCl 0.5640 nm, LiF 0.4027 nm. Kα2 and the weaker lines are left out.
@@ -517,7 +529,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const lamTrue = () => lambdaDB(S.V * 1000, true);
   const tts = () => D_ACC.map((d) => twoTheta(d, lamTrue()));
   function glowParams() { const dl = deltaBase(); return { L: L_, R: R_, cd: Math.cos(dl), sd: Math.sin(dl), tt: tts(), bright: brightness(S.V * 1000) }; }
-  // the glow depends on the angle psi from the beam only: tabulate glow(psi) and the phosphor colour once per pattern
+  // the glow depends on the angle psi from the beam only: tabulate glow(psi) and the phosphor color once per pattern
   const LUT = { n: 4096, max: 1.2 };
   function glowLut(p, base) {
     const out = new Uint8ClampedArray(LUT.n * 3);
@@ -871,7 +883,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const x = a * (i + j / 2), y = a * h3 * j;
       atoms.push([x, y, 0], [x + a / 2, y + a / (2 * Math.sqrt(3)), 1]);
     }
-    // bonds: each A atom to its three B neighbours
+    // bonds: each A atom to its three B neighbors
     ctx.strokeStyle = T.roomInk; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
     const bl = a / Math.sqrt(3);
     for (const [x, y, s] of atoms) if (s === 0) for (const ang of [Math.PI / 6, 5 * Math.PI / 6, -Math.PI / 2]) {
@@ -951,14 +963,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const f = F.sel[i], o = F.other[i], sub = i ? '₂' : '₁';
       if (!f) continue;
       html += `<div class="wide big"><dt>d${sub} from ring ${i + 1}, ${S.method === 'exact' ? 'exact' : 'small angle'} (${f.n} reading${f.n > 1 ? 's' : ''})</dt><dd>${pm(f)} nm</dd></div>`;
+      html += S.method === 'exact' ? `<div class="wide"><dt>Intercept of λ against 2 sin θ, ring ${i + 1}</dt><dd>${(isFinite(f.sc) ? `${(f.c * 1e12).toFixed(2)} ± ${(f.sc * 1e12).toFixed(2)}` : (f.c * 1e12).toFixed(2)).replace('-', '−')} pm</dd></div>`
+        : `<div class="wide"><dt>Intercept of D${sub} against λ</dt><dd>${(isFinite(f.sc) ? `${f.c.toFixed(2)} ± ${f.sc.toFixed(2)}` : f.c.toFixed(2)).replace('-', '−')} mm</dd></div>`;
       if (o) { const df = (o.d - f.d) / f.d * 100; html += `<div class="wide"><dt>With the ${otherName} formula</dt><dd>${(o.d * 1e9).toFixed(4)} nm (${df >= 0 ? '+' : '−'}${Math.abs(df).toFixed(2)} %)</dd></div>`; }
       if (!S.blind) { const df = (f.d - D_ACC[i]) / D_ACC[i] * 100; html += `<div class="wide"><dt>Accepted d${sub} = ${(D_ACC[i] * 1e9).toFixed(3)} nm</dt><dd>yours ${df >= 0 ? '+' : '−'}${Math.abs(df).toFixed(2)} %</dd></div>`; }
     }
     if (F.sel[0] && F.sel[1]) html += `<div class="wide"><dt>Ratio d₁/d₂${S.blind ? '' : ' (√3 = 1.732 for a hexagonal sheet)'}</dt><dd>${(F.sel[0].d / F.sel[1].d).toFixed(3)}</dd></div>`;
     if (!html) html = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture D₁ and D₂ at several voltages</dd></div>`;
-    else if (F.sel[0] && F.sel[0].n === 1) html += `<div class="wide"><dt>Uncertainty</dt><dd class="ok">Needs two or more readings</dd></div>`;
+    else if (F.sel[0] && F.sel[0].n === 2) html += `<div class="wide"><dt>Uncertainty</dt><dd class="ok">Needs three or more readings</dd></div>`;
     dl.innerHTML = html;
-    $('fitKey').innerHTML = S.method === 'exact' ? '<i class="swatch" style="border-color:var(--muted)"></i>Fit: the exact sphere geometry, a slight curve' : '<i class="swatch" style="border-color:var(--muted)"></i>Fit: D = 2Lλ/d, a line through the origin';
+    $('fitKey').innerHTML = S.method === 'exact' ? '<i class="swatch" style="border-color:var(--muted)"></i>Fit: λ = 2d sin θ + c, the exact sphere geometry, a slight curve' : '<i class="swatch" style="border-color:var(--muted)"></i>Fit: D = 2Lλ/d + c, a least squares line';
     drawPlot(F);
   }
   function drawPlot(F) {
@@ -983,11 +997,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 2; i++) {
       const f = F.sel[i]; if (!f) continue;
       ctx.strokeStyle = col[i]; ctx.lineWidth = 1.6; ctx.beginPath();
-      if (S.method === 'small') { ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(x1), Y(2 * F.L * x1 * 1e-12 / f.d)); }
+      if (S.method === 'small') { ctx.moveTo(X(0), Y(f.c)); ctx.lineTo(X(x1), Y(f.c + 2 * F.L * x1 * 1e-12 / f.d)); }
       else {
         const tools = F.rows.filter((r) => r.D[i] > 0).map((r) => r.tool), tool = tools.filter((t) => t === 'arc').length >= tools.length / 2 ? 'arc' : 'chord';
         let first = true;
-        for (let v = 0.5; v <= x1; v += 0.5) { const D = diameterFromLambda(v * 1e-12, f.d, tool, F.L, F.R); if (!isFinite(D)) break; first ? ctx.moveTo(X(0), Y(0)) : 0; ctx.lineTo(X(v), Y(D)); first = false; }
+        for (let v = 0.5; v <= x1; v += 0.5) { const lamEff = v * 1e-12 - f.c; if (!(lamEff > 0)) continue; const D = diameterFromLambda(lamEff, f.d, tool, F.L, F.R); if (!isFinite(D)) break; first ? ctx.moveTo(X(v), Y(D)) : ctx.lineTo(X(v), Y(D)); first = false; }
       }
       ctx.stroke();
     }
@@ -1005,7 +1019,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const dd = [0, 1].map((k) => dFromReading(o.D[k], lam, r.tool, S.method, F.L, F.R));
       L.push([i + 1, r.sim ? 'yes' : 'no', r.tool, r.V, r.D1, r.D2, isFinite(lam) ? (lam * 1e12).toFixed(4) : '', ...dd.map((v) => isFinite(v) ? (v * 1e9).toFixed(5) : '')].join(','));
     });
-    for (let i = 0; i < 2; i++) { const f = F.sel[i]; if (f) L.push(`# fit d${i + 1}_nm,${(f.d * 1e9).toFixed(5)},se_nm,${isFinite(f.se) ? (f.se * 1e9).toFixed(5) : ''},n,${f.n}`); }
+    for (let i = 0; i < 2; i++) { const f = F.sel[i]; if (f) L.push(`# fit d${i + 1}_nm,${(f.d * 1e9).toFixed(5)},se_nm,${isFinite(f.se) ? (f.se * 1e9).toFixed(5) : ''},intercept${S.method === 'exact' ? '_pm' : '_mm'},${(S.method === 'exact' ? f.c * 1e12 : f.c).toFixed(4)},n,${f.n}`); }
     return L.join('\n') + '\n';
   }
   function download(name, text) {
@@ -1402,7 +1416,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       apply() { S.V = 3.5; S.sweep = !reduce; S.sweepT = 0; S.side = 'geo'; S.cones = false; if (!reduce) setPlaying(true); } },
     two: { hint: () => 'Two rings, two cones: each set of lattice planes in the graphite gives its own Bragg angle at the same λ. The inner ring comes from the wider spacing. The ratio of the diameters stays the same at every voltage.',
       apply() { S.V = 4.0; S.side = 'geo'; S.cones = true; } },
-    magnet: { hint: () => 'The bar magnet is held above the neck. The whole pattern slides sideways, less at higher voltage, and the other way with the other pole facing the neck. Light and X rays are not turned by a magnet, so the pattern is made by moving charges: the electrons.',
+    magnet: { hint: () => 'The bar magnet is held above the neck. The whole pattern slides sideways, less at higher voltage, and the other way with the other pole facing the neck. Light and X-rays are not turned by a magnet, so the pattern is made by moving charges: the electrons.',
       apply() { S.V = 4.0; S.mag.r = 40; S.mag.pole = 'N'; S.side = 'geo'; S.cones = true; } },
     measure: { hint: () => 'A table already filled by the procedure: both rings read with the flexible ruler at six voltages from 2.5 to 5 kV. These are simulated readings on this seed\'s tube, with about 0.5 mm scatter. The fit of D against λ gives d₁ and d₂. Try both formulas.',
       apply() { S.V = 4.0; S.tool = 'arc'; S.side = 'geo'; S.cones = false; S.rows = simulatedRows(inst, 'arc'); } },
@@ -1422,7 +1436,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { if (X.on) setBeam(false); applyPreset(b.dataset.p); }));
 
-  // ---------- X rays: a Bragg spectrometer with a rotating crystal ----------
+  // ---------- X-rays: a Bragg spectrometer with a rotating crystal ----------
   const X = { on: false, tube: 'Cu', xtal: 'NaCl', th: 10, trace: new Map(), scan: false, dirty: true, drag: null, geo: null };
   const XNAME = { Cu: 'copper', Mo: 'molybdenum' };
   const xRateNow = () => Math.round(xrayRate(X.th, X.tube, X.xtal));
@@ -1445,7 +1459,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('bElec').setAttribute('aria-pressed', String(!xray)); $('bXray').setAttribute('aria-pressed', String(xray));
     document.querySelectorAll('.e-only').forEach((e) => { e.hidden = xray; });
     document.querySelectorAll('.x-only').forEach((e) => { e.hidden = !xray; });
-    const rd = document.querySelector('.vd-readings'); if (rd) { rd.hidden = !xray; const h = rd.querySelector('h2'); if (h) h.textContent = 'X ray readings'; }
+    const rd = document.querySelector('.vd-readings'); if (rd) { rd.hidden = !xray; const h = rd.querySelector('h2'); if (h) h.textContent = 'X-ray readings'; }
     for (const id of ['p3d', 'pScr', 'pGeo']) $(id).hidden = xray;
     $('pX').hidden = !xray; document.querySelector('.panes').classList.toggle('xmode', xray);
     if (!xray && X.scan) setXScan(false);
@@ -1569,11 +1583,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('xTheta').addEventListener('input', (e) => setXTheta(+e.target.value));
   $('xScan').addEventListener('click', () => setXScan(!X.scan));
   $('xClearTrace').addEventListener('click', () => { X.trace = new Map(); xMark(); X.dirty = true; });
-  // X ray readings for the shared Readings section (worksheet x-ray-diffraction)
+  // X-ray readings for the shared Readings section (worksheet x-ray-diffraction)
   window.vdVersion = 'electron-diffraction@2026-10-24';
   window.vdShowCols = [['tube', 'Tube'], ['crystal', 'Crystal'], ['theta_deg', 'θ (°)'], ['rate_per_s', 'Rate (1/s)']];
   window.vdReadingRow = () => (X.on ? { tube: X.tube, crystal: X.xtal, theta_deg: X.th.toFixed(2), two_theta_deg: (2 * X.th).toFixed(2), rate_per_s: xRateNow(), tube_kV: XRAY.kV }
-    : 'Switch to X rays to record a reading here; electron readings use Capture reading.');
+    : 'Switch to X-rays to record a reading here; electron readings use Capture reading.');
 
   // ---------- electron readings to the worksheet (electron-diffraction), like the shared section's Export to worksheet ----------
   let edSeries = 0;

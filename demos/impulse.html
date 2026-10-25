@@ -63,7 +63,7 @@ table.rows input:focus { border-color: var(--accent); }
 
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
 .instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
-/* in the light theme the panel is a brushed aluminium faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
+/* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
 :root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
@@ -147,15 +147,15 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportRun">Export this run's F(t) CSV</button>
-          <button type="button" class="btn" id="exportCsv">Export readings CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>bumper</th><th>m (kg)</th><th>v₁ (m/s)</th><th>v₂ (m/s)</th><th>area (N·s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Capture stores one row per run; export a run's F(t) to integrate it yourself.</p>
+          <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Record stores one row per run (bumper, mass, velocities, rate, area, peak force, contact time); Export to worksheet sends the rows to the student worksheet, which can also save them as CSV; export a run's F(t) to integrate it yourself.</p>
         </details>
       </section>
 
@@ -196,7 +196,7 @@ table.rows input:focus { border-color: var(--accent); }
   // the sensor's samples (rounded to 0.01 N) from just before the hit to just after; trapezoid area
   function samples(m, v0, b, rate) {
     const c = contact(m, v0, b), tHit = GAP / v0, dt = 1 / rate, t0 = tHit - 0.02, n = Math.ceil((c.tc + 0.04) * rate), out = [];
-    const phase = (Math.round(tHit * 7919) % 1000) / 1000;   // the sampling clock is not synchronised with the hit
+    const phase = (Math.round(tHit * 7919) % 1000) / 1000;   // the sampling clock is not synchronized with the hit
     for (let i = 0; i <= n; i++) { const t = t0 + (i + phase) * dt; out.push([t, Math.round(force(c, t - tHit) * 100) / 100]); }
     return out;
   }
@@ -274,7 +274,7 @@ table.rows input:focus { border-color: var(--accent); }
     $('out').innerHTML = h;
   }
   // ---------- 3D view of the track (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
-  /* Metres, z up, x along the track with the bumper's resting face at x = 0 (the ruler's zero), as in the flat view. The cart's front
+  /* Meters, z up, x along the track with the bumper's resting face at x = 0 (the ruler's zero), as in the flat view. The cart's front
      sits at the model's x, so the spring or clay is pushed in by the model's compression to scale, and the camera closes in as the cart
      nears the bumper. The cart (0.17 m long), sensor and logger are scenery sizes; each bumper's rest length is chosen so that the
      largest compression the sliders allow (soft spring, 1.50 kg at 1.50 m/s: x = v√(m/k) = 9.2 cm) still fits.
@@ -303,7 +303,7 @@ table.rows input:focus { border-color: var(--accent); }
     const peg = texCanvas(64, 64), pg = peg.getContext('2d'); pg.fillStyle = '#fff'; pg.fillRect(0, 0, 64, 64); pg.fillStyle = '#9aa3ad'; pg.beginPath(); pg.arc(32, 32, 5, 0, 7); pg.fill();
     const pegT = new THREE.CanvasTexture(peg); pegT.wrapS = pegT.wrapT = THREE.RepeatWrapping; pegT.repeat.set(76, 28); wallM.map = pegT;
     const wall = mesh(new THREE.PlaneGeometry(1.9, 0.7), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(-0.25, 0.45, 0.3);
-    /* aluminium track with a ruler along its face (1 cm marks, measured from the bumper's resting face), grooves and an end stop */
+    /* aluminum track with a ruler along its face (1 cm marks, measured from the bumper's resting face), grooves and an end stop */
     const alM = M({ roughness: 0.4, metalness: 0.55 }), darkM = M({ roughness: 0.5, metalness: 0.4 });
     const track = box(TL1 - TL0, TW, TH, alM, (TL0 + TL1) / 2, 0, -TH / 2, true, true);
     const grooves = new THREE.Group(); for (const y of [-0.03, 0.03]) grooves.add(box(TL1 - TL0, 0.004, 0.0012, darkM, (TL0 + TL1) / 2, y, 0.0002, false, false));
@@ -369,7 +369,7 @@ table.rows input:focus { border-color: var(--accent); }
     const c = cv.getContext('2d'); c.clearRect(0, 0, cv.width, cv.height); if (bg) { c.fillStyle = bg; c.fillRect(0, 0, cv.width, cv.height); }
     c.fillStyle = fg; c.textAlign = 'center'; c.textBaseline = 'middle'; lines.forEach((t, i) => { c.font = font[i]; c.fillText(t, cv.width / 2, cv.height * (i + 0.5) / lines.length); }); tex.needsUpdate = true;
   }
-  /* draws the 3D picture into (x0, y0, w, h); returns a projector from model metres to this canvas */
+  /* draws the 3D picture into (x0, y0, w, h); returns a projector from model meters to this canvas */
   function draw3(x0, y0, w, h, cs, comp, Fnow) {
     const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), L0 = REST[S.bump];
     rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
@@ -445,7 +445,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (VG) { VG.wall(ctx, 0, 0, W, ty + 10 * p, { tile: 0 }); ctx.fillStyle = T.wallDot; ctx.globalAlpha = 0.6; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); } ctx.globalAlpha = 1; VG.bench(ctx, 0, ty + 13 * p, W, 3 * p, 33 * p, { top: T.benchEdge, front: T.bench }); }
     else { ctx.fillStyle = T.wallDot; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); }
       ctx.fillStyle = T.bench; ctx.fillRect(0, ty + 10 * p, W, 36 * p); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, ty + 10 * p, W, 3 * p); }
-    // aluminium track with a ruler along its face (1 cm marks, longer every 5 cm, measured from the bumper's resting face) and an end stop at the left
+    // aluminum track with a ruler along its face (1 cm marks, longer every 5 cm, measured from the bumper's resting face) and an end stop at the left
     { const tg = ctx.createLinearGradient(0, ty, 0, ty + 10 * p); tg.addColorStop(0, T.metal); tg.addColorStop(0.35, T.track); tg.addColorStop(1, T.metalDark); ctx.fillStyle = tg; }
     ctx.fillRect(16 * p, ty, x1 + 34 * p - 16 * p, 10 * p);
     ctx.fillStyle = T.metal; ctx.fillRect(16 * p, ty + 2 * p, x1 + 34 * p - 16 * p, 2 * p);
@@ -523,11 +523,29 @@ table.rows input:focus { border-color: var(--accent); }
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => {
     if (!S.done) { capStatus('Launch the cart and let it bounce off first.'); return; }
-    const st = stats(); S.rows.push({ bumper: S.bump, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: String(S.rate), area: st.area.toFixed(4), peak: st.peak.toFixed(2), tc: (st.c.tc * 1000).toFixed(1) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+    const st = stats(); S.rows.push({ bumper: B().name, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: String(S.rate), area: st.area.toFixed(4), peak: st.peak.toFixed(2), tc: (st.c.tc * 1000).toFixed(1) }); renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
   });
-  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
   function download(txt, name) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
-  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export.'); return; } download(readingsCSV(S.blind ? S.rows.map((r) => ({ ...r, area: '', peak: '' })) : S.rows, { version: IM_VERSION }), 'impulse-readings.csv'); capStatus(S.blind ? 'CSV exported without the area and peak force (Blind is on).' : 'CSV exported.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site, key vd-handoff:impulse), and the
+     worksheet offers to put them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks
+     storage. With Blind on, the area and peak force are left out, as the handout says. */
+  const WORKSHEET = '../curriculum/labs/students/impulse.html';
+  $('exportCsv').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const rows = S.blind ? S.rows.map((r) => ({ ...r, area: '', peak: '' })) : S.rows, txt = readingsCSV(rows, { version: IM_VERSION });
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };   /* CSV cells, quotes and all */
+    if (!S.series) S.series = Date.now(); /* a new series after each Clear, so the worksheet starts a new copy of its table */
+    const hand = { v: 1, demo: 'impulse', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
+      note: `Simulated data from the Impulse and Momentum demo${S.blind ? ' (Blind on: area and peak force left out)' : ''}.`, csv: txt, csvName: 'impulse-readings.csv' };
+    try { localStorage.setItem('vd-handoff:impulse', JSON.stringify(hand)); }
+    catch (_) {
+      download(txt, 'impulse-readings.csv');
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet${S.blind ? ' without the area and peak force (Blind is on)' : ''}. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'impulse-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
   $('exportRun').addEventListener('click', () => { if (!S.done) { capStatus('Launch the cart and let it bounce off first.'); return; } const st = stats(); download(runCSV(S.pts, { version: IM_VERSION, bumper: B().name, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: S.rate }), 'impulse-run.csv'); capStatus('Run exported: t_s, F_N.'); });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');

@@ -5,14 +5,16 @@ Textbook: OpenStax *University Physics*, Vol. 3, §2.6 (the camera) and §2.4 (t
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/the-eye.html)
 
+The demo opens as the eye. Choose **Camera** under **Instrument** to work with the camera; you can switch back to the eye at any time.
+
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
 **Using the demo.**
 
 - Choose Camera at the top of the panel. Pick the 50 mm lens or the phone camera, the aperture (f-number, 50 mm lens only), the object distance, and the distance from the lens to the sensor. Arrow keys on the picture move the object.
-- The top strip shows the object on a log scale of distance, with the range of distances that are in focus. The enlarged camera below is to scale; the rays come from the point of the object on the axis, and the coloured mark on the sensor is the blur spot. The photo on the right is what the sensor records, reduced to fit, with a 1:1 crop of the centre of the star (one screen pixel per sensor pixel).
-- The readouts give the blur spot's size on the sensor in micrometres and in pixels. Record reading stores the camera, the f-number, the object distance, the lens to sensor distance and the blur; Export to worksheet sends the readings here.
+- The top strip shows the object on a log scale of distance, with the range of distances that are in focus. The enlarged camera below is to scale; the rays come from the point of the object on the axis, and the colored mark on the sensor is the blur spot. The photo on the right is what the sensor records, reduced to fit, with a 1:1 crop of the center of the star (one screen pixel per sensor pixel).
+- The readouts give the blur spot's size on the sensor in micrometers and in pixels. Record reading stores the camera, the f-number, the object distance, the lens to sensor distance and the blur; Export to worksheet sends the readings here.
 - Blind hides the image distance from the lens equation, the range in focus and the sharp or blurred label, and turns off Autofocus, leaving the blur readings and the photo.
 
 **What the demo models.**
@@ -25,7 +27,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §2.6 (the camera) and §2.4 (t
 
 ## Goal
 
-Focus a camera by moving its lens, check the thin lens equation with the distances you find, see why a phone camera needs to move its lens only a few hundredths of a millimetre, and measure how the aperture controls which distances are in focus.
+Focus a camera by moving its lens, check the thin lens equation with the distances you find, see why a phone camera needs to move its lens only a few hundredths of a millimeter, and measure how the aperture controls which distances are in focus.
 
 ## Background
 
@@ -41,12 +43,12 @@ $$b = A\,\frac{\lvert d_s - d_i \rvert}{d_i} = \frac{f}{N}\,\Bigl\lvert 1 - \fra
 
 A picture looks sharp as long as $$b$$ is no bigger than a pixel or two. So a smaller aperture (a larger $$N$$) keeps a wider range of distances sharp at once: this range is the **depth of field**. A camera focused at infinity ($$d_s = f$$) keeps everything sharp from the **hyperfocal distance** $$H \approx f^2/(Nb_{\max})$$ out to infinity, where $$b_{\max}$$ is the largest acceptable blur.
 
-The textbook's example: a phone lens with $$f = 5$$ mm focuses a selfie at 50 cm at $$d_i = 5.05$$ mm and a person 5 m away at 5.005 mm. The whole range of focus is a few hundredths of a millimetre.
+The textbook's example: a phone lens with $$f = 5$$ mm focuses a selfie at 50 cm at $$d_i = 5.05$$ mm and a person 5 m away at 5.005 mm. The whole range of focus is a few hundredths of a millimeter.
 
 ## Before the lab
 
 1. The 50 mm lens photographs an object 2.00 m away. Where must the sensor be? How far has the lens moved from its position for a distant object?
-2. The 50 mm lens is focused on a distant object ($$d_s = 50.000$$ mm) at f/2, and the object is moved to 5.00 m. Predict the blur spot's diameter in micrometres and in pixels (6.0 µm each). Is the picture sharp?
+2. The 50 mm lens is focused on a distant object ($$d_s = 50.000$$ mm) at f/2, and the object is moved to 5.00 m. Predict the blur spot's diameter in micrometers and in pixels (6.0 µm each). Is the picture sharp?
 3. Estimate the phone camera's hyperfocal distance at f/1.8 with $$b_{\max}$$ = 2 pixels = 2.8 µm.
 
 ## Safety
@@ -89,15 +91,15 @@ Use $$1/d = 0$$ for an object far away.
 
 ## Uncertainty
 
-The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 µm for the phone, so a hand focused $$d_s$$ is within half a step of the best one, and the smallest blur you can reach is not quite zero. The demo's blur is exact for its thin lens; a real lens has aberrations and diffraction, which make a blur spot of a few micrometres even in perfect focus (at f/16 diffraction alone gives a spot about 20 µm across), so real cameras cannot use very small apertures to make everything sharp.
+The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 µm for the phone, so a hand focused $$d_s$$ is within half a step of the best one, and the smallest blur you can reach is not quite zero. The demo's blur is exact for its thin lens; a real lens has aberrations and diffraction, which make a blur spot of a few micrometers even in perfect focus (at f/16 diffraction alone gives a spot about 20 µm across), so real cameras cannot use very small apertures to make everything sharp.
 
 ## Questions
 
 1. Why does a camera move its lens away from the sensor to focus on a nearby object, while the eye makes its lens fatter?
 2. A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?
 3. Portrait photographers use a large aperture (small $$N$$) to blur the background. Explain with your Part 4 results.
-4. A 35 mm frame at 6.0 µm per pixel has 6000 pixels across, while the phone's sensor has 4000 across at 1.4 µm. Which camera's blur limit, in micrometres, is stricter, and how does that affect its depth of field?
-5. The phone in Part 2 needs to move its lens by only a few hundredths of a millimetre. Why does such a short focal length make focusing so easy?
+4. A 35 mm frame at 6.0 µm per pixel has 6000 pixels across, while the phone's sensor has 4000 across at 1.4 µm. Which camera's blur limit, in micrometers, is stricter, and how does that affect its depth of field?
+5. The phone in Part 2 needs to move its lens by only a few hundredths of a millimeter. Why does such a short focal length make focusing so easy?
 
 ## What to hand in
 

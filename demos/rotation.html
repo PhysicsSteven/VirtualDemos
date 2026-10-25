@@ -1677,7 +1677,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- drawing ----------
   // ---------- 3D view of the rolling race (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
-  /* Metres, z up. Each lane is a board D long at angle β, the boards side by side; each object has its real radius R and turns by
+  /* Meters, z up. Each lane is a board D long at angle β, the boards side by side; each object has its real radius R and turns by
      s/R as it rolls (the block slides without turning), at the distance s the model gives. The camera looks across the boards so the
      whole race shows. The torque, spin and seesaw scenes are below. Click an object or its name to select its lane; drag elsewhere to turn the view,
      wheel or pinch to zoom, double click to reset. */
@@ -1808,7 +1808,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     void foot;
   }
   /* ---------- 3D torque, spin and seesaw scenes ----------
-     Metres, z up, the same state as the flat drawings. Torque: the door (2 m tall, hinge on the z axis) or the wrench on its bolt, turned by
+     Meters, z up, the same state as the flat drawings. Torque: the door (2 m tall, hinge on the z axis) or the wrench on its bolt, turned by
      φ; r, F, the line of action and the lever arm r⊥ are drawn in the horizontal plane at the push height (the handle, or the wrench), on
      top of the picture, and the torque shows as a curved arrow round the pivot and as the vector τ = r × F along the axis (up is ccw from
      above, length in proportion to τ, full scale = L × 50 N). Spin: a skater, arms out to the masses at radius r, or a 1 m turntable with
@@ -1838,7 +1838,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const m of [tube, hd]) { m.renderOrder = 20; } gr.add(tube, hd); return gr;
   }
   /* sizes the renderer to the view pane, frames the spheres [x, y, z, r] between the controls and the bottom text as seen from the angles
-     in o, renders, and returns a projector from metres to the canvas */
+     in o, renders, and returns a projector from meters to the canvas */
   function frame3(o, balls, botPx) {
     const g = g3, dk = VD3.dark(), [W, H] = dims.v, W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(H));
     g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
@@ -2079,7 +2079,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (ghostOn) { const sd = 0.16 + 0.07 * Math.sqrt(ms[1].m); g.ghost.scale.set(sd, sd, sd); g.ghost.position.set(xb, 0, bt / 2 + sd / 2); g.ghost.computeLineDistances(); }
     const net = seesawTorque(liveMasses(), phi);
     g.seCurl.visible = Math.abs(net) > 1e-9; g.seCurl.position.set(0, -0.24, h);
-    g.seCurl.rotation.set(Math.PI / 2, 0, Math.PI / 2); g.seCurl.scale.set(1, net > 0 ? 1 : -1, 1);   /* round the pivot axis, centred on the top, ccw as seen from the front */
+    g.seCurl.rotation.set(Math.PI / 2, 0, Math.PI / 2); g.seCurl.scale.set(1, net > 0 ? 1 : -1, 1);   /* round the pivot axis, centered on the top, ccw as seen from the front */
     const balls = [[-half, 0, h, 0.3], [half, 0, h, 0.3], [0, 0, 0, 0.2], [0, 0, h + 1.1, 0.2], [-half, 0, 0, 0.1], [half, 0, 0, 0.1]];
     g.sun.position.set(-1.5, -3, 5); g.sun.target.position.set(0, 0, 0);
     const Q = frame3(G3.oe, balls, 40 * projScale()), [ctx, W, H, ps] = start2D(), QP = (x, up, y) => Q(...P(x, up, y));

@@ -12,11 +12,11 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§11.3 and 11.5. Access for f
 
 **Using the demo.**
 
-- Choose up to three quarks or antiquarks, each with a colour (red, green or blue; an antiquark carries an anticolour) and a spin, up or down. Make the colours neutral sets the colours to a neutral combination.
+- Choose up to three quarks or antiquarks, each with a color (red, green or blue; an antiquark carries an anticolor) and a spin, up or down. Make the colors neutral sets the colors to a neutral combination.
 - Only ground states are built: the quarks have no orbital motion, so the hadron's spin J is the sum of the quark spins.
 - The picture shows the quarks held by gluons, the quark content and, when the combination is a known hadron, its name, charge Q, baryon number B, strangeness S (and charm C or bottomness B′) and spin J. It explains why a combination is not a hadron.
 - The diagram beside it places each hadron of one family by its isospin $$I_3$$ (half of the number of u quarks minus the number of d quarks) and its strangeness, with dashed lines of equal charge. A hadron's mass appears on the diagram once you have built it.
-- Record reading stores the quarks, spins and colours, J, Q, B, S, $$I_3$$, whether it is colour neutral, the hadron and its mass. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading stores the quarks, spins and colors, J, Q, B, S, $$I_3$$, whether it is color neutral, the hadron and its mass. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the totals, the name of the hadron and its mass.
 
 </details>
@@ -29,7 +29,7 @@ Build mesons and baryons from quarks, check that their charge, baryon number and
 
 Hadrons are made of quarks (§11.3). A **baryon** is three quarks, an **antibaryon** three antiquarks, and a **meson** a quark and an antiquark. Each quark has spin ½ and baryon number ⅓; the up, charm and top quarks have charge $$+\tfrac{2}{3}e$$ and the down, strange and bottom quarks $$-\tfrac{1}{3}e$$; the strange quark has strangeness −1 (Table 11.3). An antiquark has the opposite charge, baryon number and strangeness.
 
-Each quark also carries a **colour** charge: red, green or blue. A hadron must be colour neutral: one quark of each colour in a baryon, or a colour and its anticolour in a meson. This is why quarks are never seen alone. Colour also lets three quarks of the same flavour, like the uuu of the Δ⁺⁺, sit in the same state with their spins lined up, which the exclusion principle would otherwise forbid.
+Each quark also carries a **color** charge: red, green or blue. A hadron must be color neutral: one quark of each color in a baryon, or a color and its anticolor in a meson. This is why quarks are never seen alone. Color also lets three quarks of the same flavor, like the uuu of the Δ⁺⁺, sit in the same state with their spins lined up, which the exclusion principle would otherwise forbid.
 
 Hadrons with the same spin and the same light quarks (u, d, s) form families: the baryon octet (spin ½), the baryon decuplet (spin 3/2) and the meson nonets. Their charges follow the Gell-Mann–Nishijima relation
 
@@ -58,7 +58,7 @@ No hazards in the virtual lab.
 
 **Mesons.** In a new copy of the table, record π⁺, π⁻, K⁺, K⁰, K⁻ and K̄⁰ with opposite spins (spin 0), then u d̄ and s s̄ with parallel spins (spin 1).
 
-**Not hadrons.** Record what the demo says for: u d; u u u with spin ½; u d s with two quarks of the same colour; u d̄ with a red u and an antigreen d̄; t ū.
+**Not hadrons.** Record what the demo says for: u d; u u u with spin ½; u d s with two quarks of the same color; u d̄ with a red u and an antigreen d̄; t ū.
 
 **Heavy quarks.** Record c c̄ (both spins), c ū, u d c and b b̄ (both spins).
 

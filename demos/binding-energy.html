@@ -277,8 +277,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SYM = ["n","H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc","Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr","Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Sb","Te","I","Xe","Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu","Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl","Pb","Bi","Po","At","Rn","Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Cn","Nh","Fl","Mc","Lv","Ts","Og"];
   const DH = 7288.971064, DN = 8071.3181;      // keV, mass excess of the ¹H atom and of the neutron (AME2020)
   const DNP = (DN - DH) / 1000;                 // MeV, (m_n − m_H)c² = 0.782 MeV
-  const U_MEV = 931.49410242;                   // MeV per u (CODATA 2018, as used by AME2020)
-  const U_KG = 1.66053906660e-27;               // kg per u (CODATA 2018)
+  const U_MEV = 931.49410372;                   // MeV per u (CODATA 2022, as used by AME2020)
+  const U_KG = 1.66053906892e-27;               // kg per u (CODATA 2022)
   const MEV_J = 1.602176634e-13;                // J per MeV (exact)
   const TNT = 4.184e6;                          // J/kg, the TNT equivalent convention
   const NUC = RAW.map(([Z, A, dm, st, lg]) => {
@@ -859,9 +859,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.selLab.set(`${nm(s)}  ${s.ba.toFixed(3)} MeV`); G3.selLab.position.set(s.N, s.Z, h + 6);
     st.place(G3.o, new THREE.Vector3(80, 50, 6), st.fit(285, 1.5));
     st.render();
-    /* words on top: the title and the colour key, as on the flat chart */
+    /* words on top: the title and the color key, as on the flat chart */
     c.font = `600 ${11.5 * ps}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'top';
-    c.fillText(S.col === 'ba' ? 'Chart of nuclides in 3D: height is B/A, colour too' : 'Chart of nuclides in 3D: height is B/A, colour is half life', 14 * ps, 10 * ps);
+    c.fillText(S.col === 'ba' ? 'Chart of nuclides in 3D: height is B/A, color too' : 'Chart of nuclides in 3D: height is B/A, color is half life', 14 * ps, 10 * ps);
     c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted;
     const sub = `height above ${BASE} MeV per nucleon, ${HZ} squares per MeV · dark caps: stable · drag to turn, click a column`;
     if (W >= 640) c.fillText(sub, 14 * ps, 28 * ps);

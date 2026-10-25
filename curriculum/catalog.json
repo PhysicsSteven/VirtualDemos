@@ -291,7 +291,7 @@
     {
      "demo": "particles",
      "title": "Particles, Quarks and Conservation Laws",
-     "desc": "The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from coloured quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.",
+     "desc": "The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from colored quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.",
      "tags": [
       "Standard Model",
       "conservation laws",
@@ -314,7 +314,7 @@
     {
      "demo": "compton",
      "title": "Compton Scattering",
-     "desc": "A photon bounces off a free electron and comes away with a longer wavelength. Drag the scattered photon around to see the shift, the electron's recoil and the momentum triangle, from Compton's 1923 x rays to cesium 137 gamma rays and the Compton edge.",
+     "desc": "A photon bounces off a free electron and comes away with a longer wavelength. Drag the scattered photon around to see the shift, the electron's recoil and the momentum triangle, from Compton's 1923 X-rays to cesium 137 gamma rays and the Compton edge.",
      "tags": [
       "Compton shift",
       "photon momentum",
@@ -325,7 +325,7 @@
     {
      "demo": "solids",
      "title": "Crystals, Bands and Semiconductors",
-     "desc": "Add up every ion in a salt crystal to find its lattice energy, squeeze a chain of atoms until its levels spread into bands, dope silicon and warm it from 20 K to 800 K, then measure a pn junction's current and the colours of LEDs.",
+     "desc": "Add up every ion in a salt crystal to find its lattice energy, squeeze a chain of atoms until its levels spread into bands, dope silicon and warm it from 20 K to 800 K, then measure a pn junction's current and the colors of LEDs.",
      "tags": [
       "Madelung constant",
       "energy bands",
@@ -452,12 +452,12 @@
     },
     {
      "demo": "shells-and-x-rays",
-     "title": "Shells, the Periodic Table and X Rays",
-     "desc": "Fill orbital boxes one electron at a time and watch the periodic table build up, see where the n + l rule fails, then fire electrons at a target and read its X ray lines, the Duane–Hunt cutoff and Moseley's law.",
+     "title": "Shells, the Periodic Table and X-Rays",
+     "desc": "Fill orbital boxes one electron at a time and watch the periodic table build up, see where the n + l rule fails, then fire electrons at a target and read its X-ray lines, the Duane–Hunt cutoff and Moseley's law.",
      "tags": [
       "Pauli principle",
       "periodic table",
-      "X rays",
+      "X-rays",
       "Moseley"
      ]
     }
@@ -686,9 +686,9 @@
     {
      "demo": "center-of-mass",
      "title": "Center of Mass",
-     "desc": "Find the centre of mass of masses on a plate, watch a firework's pieces keep its centre of mass on the original parabola, and walk along a boat that slides back.",
+     "desc": "Find the center of mass of masses on a plate, watch a firework's pieces keep its center of mass on the original parabola, and walk along a boat that slides back.",
      "tags": [
-      "centre of mass",
+      "center of mass",
       "momentum conservation",
       "internal forces",
       "explosion"
@@ -752,7 +752,7 @@
     {
      "demo": "cavendish",
      "title": "The Cavendish Experiment",
-     "desc": "Swing two large lead spheres beside a torsion balance and watch a laser spot 5 m away creep a few centimetres as gravity twists the fibre; time the swing, find G, and weigh the Earth.",
+     "desc": "Swing two large lead spheres beside a torsion balance and watch a laser spot 5 m away creep a few centimeters as gravity twists the fiber; time the swing, find G, and weigh the Earth.",
      "tags": [
       "universal gravitation",
       "torsion balance",
@@ -1070,7 +1070,7 @@
     {
      "demo": "eddy-currents",
      "title": "Eddy Currents: Magnet in a Pipe",
-     "desc": "Drop a strong magnet down copper, aluminium and plastic pipes side by side. Currents induced in the metal walls push back by Lenz's law, and the magnet drifts down at a slow terminal speed.",
+     "desc": "Drop a strong magnet down copper, aluminum and plastic pipes side by side. Currents induced in the metal walls push back by Lenz's law, and the magnet drifts down at a slow terminal speed.",
      "tags": [
       "eddy currents",
       "Lenz's law",
@@ -1111,7 +1111,7 @@
     {
      "demo": "string-density",
      "title": "Linear Density of a String",
-     "desc": "Hang masses on a string driven by a vibrator, or sweep the driving frequency with a fixed mass, find the resonances and count the loops, then get the string's mass per metre from the slope of f against n or T against 1/n².",
+     "desc": "Hang masses on a string driven by a vibrator, or sweep the driving frequency with a fixed mass, find the resonances and count the loops, then get the string's mass per meter from the slope of f against n or T against 1/n².",
      "tags": [
       "linear density",
       "T = mg",

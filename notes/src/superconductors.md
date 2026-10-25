@@ -42,7 +42,7 @@ Students should know Faraday's law and the idea of magnetic flux. The demo shows
 
 ## Physics behind the demo
 
-- The sphere is uniformly magnetized, so inside the field is uniform, B_in = B + (2/3)μ0M, and outside it is the applied field plus a point dipole m = (4π/3)R³M at the centre; field lines are contours of the Stokes stream function and are exact for this model.
+- The sphere is uniformly magnetized, so inside the field is uniform, B_in = B + (2/3)μ0M, and outside it is the applied field plus a point dipole m = (4π/3)R³M at the center; field lines are contours of the Stokes stream function and are exact for this model.
 - Meissner state (B ≤ 2B_c/3): B_in = 0, μ0M = −1.5B, m = −2πR³B/μ0. Intermediate state (2B_c/3 < B < B_c): the equator field stays at B_c, B_in = 3B − 2B_c on average (really normal and superconducting layers). Normal for B ≥ B_c.
 - Tc and B_c(0) are the textbook's Table 9.5 values (two or three figures), with Equation 9.39 for B_c(T). The state is taken in equilibrium, so the order of cooling and raising the field does not matter (no hysteresis or supercooling). A normal metal's own weak magnetism is left out.
 - The perfect conductor keeps B_in fixed at the applied field it had when cooled through T_c.

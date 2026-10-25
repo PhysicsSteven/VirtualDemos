@@ -140,7 +140,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 (() => {
   // ==CORE START==
   const G = 9.81;
-  // Seesaw on a central pivot (x = 0): beam mass mb centred; loads (m, x). Torque counterclockwise positive, x to the right.
+  // Seesaw on a central pivot (x = 0): beam mass mb centered; loads (m, x). Torque counterclockwise positive, x to the right.
   function seesaw(mb, loads) {
     const tau = loads.reduce((s, l) => s - l.m * G * l.x, 0), P = (mb + loads.reduce((s, l) => s + l.m, 0)) * G;
     return { tau, P, balanced: Math.abs(tau) < 1e-9 };

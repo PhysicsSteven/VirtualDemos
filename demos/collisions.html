@@ -317,7 +317,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 <script>
 (() => {
   // ==CORE START==
-  const G = 9.80665;
+  const G = 9.81;
   // One dimensional collision with coefficient of restitution e: momentum conserved and v₂′ − v₁′ = −e (v₂ − v₁).
   function collide1D(m1, m2, v1, v2, e) {
     const M = m1 + m2;
@@ -437,9 +437,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (let i = 0; i < n; i++) { const c = a + (i + 0.5) * h; for (const [xi, wi] of GL8) s += wi * h / 2 * f(c + xi * h / 2); }
     return s;
   }
-  // Newton's cradle: N equal balls of radius R on strings of length L, pivots 2R apart, so neighbours just touch at rest.
+  // Newton's cradle: N equal balls of radius R on strings of length L, pivots 2R apart, so neighbors just touch at rest.
   // Each ball is a full pendulum (RK4); a collision is an instant elastic exchange of velocities between two touching
-  // neighbours, which for equal masses is exact when the line of centers is horizontal (it is, at the bottom).
+  // neighbors, which for equal masses is exact when the line of centers is horizontal (it is, at the bottom).
   function cradleInit(N, k, th0) {
     const th = new Array(N).fill(0), om = new Array(N).fill(0);
     for (let i = 0; i < k; i++) th[i] = -th0;
@@ -649,7 +649,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     track: 'Model: a frictionless air track, carts treated as rigid bodies that collide in an instant. The coefficient of restitution e fixes how fast they separate: v₂′ − v₁′ = −e(v₂ − v₁). Carts that leave the track ends simply slide out of view.',
     table: 'Model: smooth hard discs on a frictionless air table. The contact impulse is along the line of centers at the moment of contact, so the velocity components along the contact tangent do not change; e acts on the components along the line of centers. No spin, no table edges.',
     explode: 'Model: an ideal massless spring, compressed by 5 cm and held by a thread, pushes the carts apart when the thread is cut. Its force is internal, so the total momentum never changes; the spring’s energy E becomes kinetic energy. The push is computed exactly (the pieces move in simple harmonic motion relative to each other until the spring reaches its natural length).',
-    cradle: 'Model: identical steel balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.80665 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbours, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.'
+    cradle: 'Model: identical steel balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.'
   };
 
   // ---------- setups ----------
@@ -996,7 +996,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.fillStyle = T.wire; ctx.globalAlpha = 0.75; ctx.fillRect(fx0, opts.flagTop, fw, y0 - opts.flagTop + 1); ctx.globalAlpha = 1;
       }
       if (opts.hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.2; roundRect(ctx, x0 - 5 * ps, y0 - 5 * ps, w + 10 * ps, h + 10 * ps, 8 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-      /* a glider on the air track: shaded body with a soft shadow, the coloured top band lit along its upper edge */
+      /* a glider on the air track: shaded body with a soft shadow, the colored top band lit along its upper edge */
       { const VG = window.VDGear, bg = ctx.createLinearGradient(0, y0, 0, y0 + h); bg.addColorStop(0, VG ? VG.mix(T.block, '#ffffff', 0.3) : T.block); bg.addColorStop(1, VG ? VG.mix(T.block, '#000000', 0.15) : T.block);
         ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 8 * ps; ctx.shadowOffsetY = 3 * ps; ctx.fillStyle = bg; roundRect(ctx, x0, y0, w, h, 5 * ps); ctx.fill(); ctx.restore(); }
       ctx.fillStyle = col; ctx.globalAlpha = 0.9; roundRect(ctx, x0, y0, w, Math.max(5 * ps, h * 0.22), 5 * ps); ctx.fill(); ctx.globalAlpha = 1;

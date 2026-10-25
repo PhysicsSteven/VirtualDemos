@@ -149,11 +149,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div>
           <div class="slider-head"><label for="en">Energy E</label><output id="enOut" class="mono" for="en"></output></div>
           <input type="range" id="en" min="-2.8" max="4" step="0.001" value="1.2417">
-          <div class="scale"><span>visible</span><span>UV</span><span>x ray</span><span>gamma</span></div>
+          <div class="scale"><span>visible</span><span>UV</span><span>X-ray</span><span>gamma</span></div>
         </div>
         <div class="chips" id="sources" role="group" aria-label="Photon source">
           <button type="button" data-s="green" aria-pressed="false">Green laser</button>
-          <button type="button" data-s="mo" aria-pressed="true">Mo Kα x ray</button>
+          <button type="button" data-s="mo" aria-pressed="true">Mo Kα X-ray</button>
           <button type="button" data-s="ann" aria-pressed="false">511 keV</button>
           <button type="button" data-s="cs" aria-pressed="false">¹³⁷Cs gamma</button>
         </div>
@@ -209,7 +209,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">The electron is free and at rest. Exact relativistic kinematics; the photon and the electron move in one plane, drawn here. In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width), and photons scattered by the atom as a whole keep their wavelength (the unshifted line).</p>
           <p class="hint">Wave packets: the drawn wavelengths keep the ratio λ′/λ to scale, but λ itself is not to scale (a 70 pm wave is far too small to see). The electron moves at its true speed relative to the photons.</p>
-          <p class="hint">Photon colors: visible light is drawn in its true color. X rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, 2λ<sub>C</sub> at 180°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.</p>
+          <p class="hint">Photon colors: visible light is drawn in its true color. X-rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, 2λ<sub>C</sub> at 180°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.</p>
           <p class="hint">Angular distribution: the Klein–Nishina formula for unpolarized photons on free electrons, summed over final polarizations. Photons are sampled from it by rejection.</p>
         </details>
         <div class="key">
@@ -308,13 +308,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const SOURCES = {
     green: { E: EOf(532e3), hint: 'A green laser pointer, 532 nm, E = 2.33 eV: a million times less than m<sub>e</sub>c², so the shift is lost in the width of the line.' },
-    mo: { E: EOf(71.07), hint: 'Molybdenum Kα x rays, λ = 71.07 pm (the weighted mean of the Kα₁ and Kα₂ lines), the radiation Compton used in 1923.' },
+    mo: { E: EOf(71.07), hint: 'Molybdenum Kα X-rays, λ = 71.07 pm (the weighted mean of the Kα₁ and Kα₂ lines), the radiation Compton used in 1923.' },
     ann: { E: MEC2, hint: 'A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = 511.0 keV, so its wavelength is λ<sub>C</sub> itself.' },
     cs: { E: 661.657, hint: '¹³⁷Cs decays to an excited state of ¹³⁷Ba, which emits a 661.657 keV gamma ray: the standard calibration source in gamma spectroscopy.' }
   };
   const PRESETS = {
     c1923: { E: SOURCES.mo.E, th: 90, tab: 'det', mc: false,
-      hint: 'Molybdenum Kα x rays on graphite, as in Compton\'s 1923 measurements at 45°, 90° and 135°. At 90° the scattered line sits λ<sub>C</sub> = 2.43 pm longer. Drag the scattered photon and watch the shifted peak move while the unshifted one stays put.' },
+      hint: 'Molybdenum Kα X-rays on graphite, as in Compton\'s 1923 measurements at 45°, 90° and 135°. At 90° the scattered line sits λ<sub>C</sub> = 2.43 pm longer. Drag the scattered photon and watch the shifted peak move while the unshifted one stays put.' },
     back: { E: SOURCES.mo.E, th: 180, tab: 'det', mc: false,
       hint: 'Straight back, θ = 180°: the shift reaches its largest value 2λ<sub>C</sub> = 4.85 pm, the same for every wavelength. The electron goes straight forward and takes the most energy it can.' },
     vis: { E: SOURCES.green.E, th: 90, tab: 'det', mc: false,
@@ -494,7 +494,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let clock = 0;          // animation time, s
   const PERIOD = 3.4, T_HIT = 1.25;
   // ---------- photon colors ----------
-  // Real light (380 to 750 nm) is drawn in its true color. X rays and gamma rays have no color, so they get a
+  // Real light (380 to 750 nm) is drawn in its true color. X-rays and gamma rays have no color, so they get a
   // false color scale: the incoming photon is blue, and the scattered one runs toward red in proportion to its
   // shift, from Δλ = 0 (blue) to the largest possible shift 2λ_C at 180° (red).
   function specRGB(nm) {
@@ -617,7 +617,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.restore();
   }
   // ---------- Compton's spectrometer in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the collision drawing (or ?view=flat) ----------
-  /* The X ray tube, a lead slit, the graphite scatterer on a turntable and the spectrometer arm at θ (calcite crystal and
+  /* The X-ray tube, a lead slit, the graphite scatterer on a turntable and the spectrometer arm at θ (calcite crystal and
      ionization chamber), as in Compton's 1923 bench. The arm turns with θ and can be dragged round. Sizes drawn, not measured. */
   const G3 = { o: { th: -Math.PI / 2 - 0.2, ph: 0.98, zoom: 1 }, rect: '' };
   let g3 = null, view3 = null;
@@ -631,7 +631,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.2 }), VD3K.backdrop(S3, { r: 1.3, h: 0.9, y: -0.4 }));
     const steel = M({ roughness: 0.35, metalness: 0.75 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.5, metalness: 0.3 }, ['#56606b', '#3a424c']);
     const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), brass = M({ roughness: 0.3, metalness: 0.85 }, ['#c9a24a', '#a8873c']);
-    /* the X ray tube: a glass bulb, the cathode neck and the molybdenum anode, in a lead housing open toward the graphite */
+    /* the X-ray tube: a glass bulb, the cathode neck and the molybdenum anode, in a lead housing open toward the graphite */
     const tube = new THREE.Group(); tube.position.set(XT, 0, ZB);
     tube.add(VD3K.box(0.11, 0.09, 0.1, lead, 0, 0, -0.05));
     const bulb = VD3K.bulb(S3, { r: 0.035, opacity: 0.25 }); bulb.position.set(0, 0, 0.075); tube.add(bulb);
@@ -644,11 +644,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const x of [-0.2, -0.13]) { const s = new THREE.Group(); s.add(VD3K.box(0.01, 0.04, 0.1, lead, 0, 0.0225, 0), VD3K.box(0.01, 0.04, 0.1, lead, 0, -0.0225, 0)); s.position.x = x; s.children.forEach((b) => { b.scale.y = 1; }); sc.add(s); }
     /* the beam to the scatterer */
     const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, depthWrite: false }), beam = mesh(alongX(0.0025, -XT - 0.04, 12), beamM); beam.position.set(XT / 2 + 0.02, 0, ZB); beam.renderOrder = 3; sc.add(beam);
-    /* the graphite block on a turntable, the centre of the arm */
+    /* the graphite block on a turntable, the center of the arm */
     sc.add(mesh(new THREE.CylinderGeometry(0.06, 0.065, 0.012, 48).rotateX(Math.PI / 2).translate(0, 0, 0.006), steel, true));
     sc.add(VD3K.rod([0, 0, 0.012], [0, 0, ZB - 0.02], 0.006, steel));
     const graphite = VD3K.box(0.02, 0.03, 0.04, M({ roughness: 0.9, metalness: 0.15 }, ['#3a3d42', '#2c2f34']), 0, 0, ZB - 0.02); sc.add(graphite);
-    /* the spectrometer arm: a rail from the centre, the slit, the calcite crystal on its table and the ionization chamber */
+    /* the spectrometer arm: a rail from the center, the slit, the calcite crystal on its table and the ionization chamber */
     const arm = new THREE.Group();
     arm.add(VD3K.box(ARM + 0.03, 0.022, 0.008, dark, (ARM + 0.03) / 2, 0, 0.004));
     const slit = new THREE.Group(); slit.add(VD3K.box(0.008, 0.016, 0.06, lead, 0, 0.014, ZB - 0.03), VD3K.box(0.008, 0.016, 0.06, lead, 0, -0.014, ZB - 0.03)); slit.position.x = 0.1; arm.add(slit);
@@ -710,7 +710,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Q = render3(box, s), PC = photonColors(s), sd = S.side, a = sd * S.th;
     c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
     const lab = (txt, q, col, al, bl) => { c.font = `600 ${11 * ps}px ${T.mono}`; const hw = c.measureText(txt).width / 2 + 6; const x = Math.max(box.x + hw, Math.min(box.x + box.w - hw, q[0])); label(c, txt, x, q[1], col, al || 'center', bl || 'middle', true); };
-    lab('X ray tube, Mo anode', Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
+    lab('X-ray tube, Mo anode', Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
     lab('graphite', Q([0, -0.03, ZB + 0.03]), T.ink, 'center', 'bottom');
     lab(`θ = ${fmtDeg(S.th)}`, Q([0.13 * Math.cos(a / 2), 0.13 * Math.sin(a / 2), 0.004]), PC.cout);
     lab('crystal and ionization chamber', Q([0.2 * Math.cos(a), 0.2 * Math.sin(a), ZB + 0.06]), T.muted, 'center', 'bottom');
@@ -720,7 +720,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
     label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
     c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : 'X rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : 'X rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
+    if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : 'X-rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : 'X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
     c.restore();
   }
   function armHandle() {
@@ -1028,7 +1028,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('cE').innerHTML = fmtRes(r.dE, S.E, 'keV');
     for (const b of document.querySelectorAll('#sources button')) b.setAttribute('aria-pressed', String(Math.abs(SOURCES[b.dataset.s].E / S.E - 1) < 1e-9));
     const src = Object.keys(SOURCES).find((k) => Math.abs(SOURCES[k].E / S.E - 1) < 1e-9);
-    $('srcHint').innerHTML = src ? SOURCES[src].hint : (s.lam > 380e3 && s.lam < 750e3 ? 'Visible light.' : s.lam >= 10e3 ? 'Ultraviolet.' : S.E < 100 ? 'X rays.' : 'Gamma rays.') + ' The shift Δλ does not depend on λ; only its size compared with λ does.';
+    $('srcHint').innerHTML = src ? SOURCES[src].hint : (s.lam > 380e3 && s.lam < 750e3 ? 'Visible light.' : s.lam >= 10e3 ? 'Ultraviolet.' : S.E < 100 ? 'X-rays.' : 'Gamma rays.') + ' The shift Δλ does not depend on λ; only its size compared with λ does.';
     if (blind) for (const id of ['rDl', 'rEp', 'rPe', 'rBeta', 'cX', 'cY', 'cE']) $(id).innerHTML = '<span class="ok">hidden</span>';
     plotText(s);
   }

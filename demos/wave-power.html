@@ -229,7 +229,7 @@ table.rows input:focus { border-color: var(--accent); }
 
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
-          <label class="check"><input type="checkbox" id="showEnergy" checked><span>Show the energy per metre along the string</span></label>
+          <label class="check"><input type="checkbox" id="showEnergy" checked><span>Show the energy per meter along the string</span></label>
           <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         </div></details>
       </section>
@@ -247,7 +247,7 @@ table.rows input:focus { border-color: var(--accent); }
   // ==CORE START==
   const PI = Math.PI, TAU = 2 * Math.PI;
   const WP_VERSION = 'wave-power@2026-10-23';
-  const G_LAB = 9.80;            /* m/s², the g students use for T = mg */
+  const G_LAB = 9.81;            /* m/s², the g students use for T = mg */
   const HANGER_G = 50;           /* g, the mass hanger */
   const MAX_G = 3000;            /* g, most the hanger may carry */
   const STRINGS = { A: { name: 'String A', mu: 0.40e-3 }, B: { name: 'String B', mu: 1.20e-3 }, C: { name: 'String C', mu: 3.60e-3 } };   /* kg/m, chosen (as in Linear Density of a String) */
@@ -260,7 +260,7 @@ table.rows input:focus { border-color: var(--accent); }
   const impedance = (T, mu) => Math.sqrt(T * mu);
   /* OpenStax University Physics Vol 1 §16.4: a sinusoidal wave on a string carries P_ave = ½ μ A² ω² v */
   const travelingPower = (f, A, T, mu) => 0.5 * mu * A * A * (TAU * f) ** 2 * waveSpeed(T, mu);
-  /* average energy per metre of that wave, half kinetic and half potential: ½ μ A² ω² (so P = (E/L) v) */
+  /* average energy per meter of that wave, half kinetic and half potential: ½ μ A² ω² (so P = (E/L) v) */
   const energyPerMetre = (f, A, mu) => 0.5 * mu * A * A * (TAU * f) ** 2;
   /* amplitude reflection at a dashpot end: r = (Z − b)/(Z + b) */
   const reflection = (bRel) => (1 - bRel) / (1 + bRel);
@@ -281,7 +281,7 @@ table.rows input:focus { border-color: var(--accent); }
   function powerAt(F, x) { const Y = Yat(F, x), D = dYat(F, x), a = [-F.T * D[0], -F.T * D[1]], v = [-F.w * Y[1], F.w * Y[0]]; return 0.5 * (a[0] * v[0] + a[1] * v[1]); }
   /* what the absorber takes: ½ b ω² |Y(L)|² */
   function absorberPower(F, L) { const Y = Yat(F, L); return 0.5 * F.b * F.w * F.w * (Y[0] * Y[0] + Y[1] * Y[1]); }
-  /* instantaneous energy per metre at x and phase φ = ωt: ½ μ y_t² + ½ T y_x² */
+  /* instantaneous energy per meter at x and phase φ = ωt: ½ μ y_t² + ½ T y_x² */
   function energyAt(F, x, phi, mu) {
     const Y = Yat(F, x), D = dYat(F, x), c = Math.cos(phi), s = Math.sin(phi);
     const yt = -F.w * (Y[1] * c + Y[0] * s), yx = D[0] * c - D[1] * s;
@@ -314,10 +314,10 @@ table.rows input:focus { border-color: var(--accent); }
     amp: { str: 'B', abs: 'matched', L: 1.2, f: 20, A: 0.5, masses: [100, 50], plot: 'A', hint: 'String B with 200 g hanging (the 50 g hanger plus 150 g), at 20 Hz. With the vibrator running, record the power at six or more amplitudes from 0.5 to 5 mm, keeping f and the mass fixed. Doubling A should multiply P by four.' },
     freq: { str: 'B', abs: 'matched', L: 1.2, f: 10, A: 1.0, masses: [100, 50], plot: 'f', hint: 'The same string and mass at A = 1.00 mm. Record the power at six or more frequencies from 10 to 60 Hz, keeping A fixed. Each frequency also changes the wavelength: count the waves on the string.' },
     tension: { str: 'B', abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [], plot: 'T', hint: 'Only the 50 g hanger hangs. At 20 Hz and 1.00 mm, add masses and record the power at each load. More tension makes a faster wave: P = ½ μ A² ω² v grows as √T.' },
-    mismatch: { str: 'B', abs: 'soft', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'f', hint: 'The absorber is too soft, so part of each wave comes back and a standing wave forms on top of the travelling one. Change L or f and watch the meter swing up and down, then switch back to Matched: the power no longer depends on L. A matched end is what makes the string act as if it were endless.' },
+    mismatch: { str: 'B', abs: 'soft', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'f', hint: 'The absorber is too soft, so part of each wave comes back and a standing wave forms on top of the traveling one. Change L or f and watch the meter swing up and down, then switch back to Matched: the power no longer depends on L. A matched end is what makes the string act as if it were endless.' },
     unknown: { str: 'U', abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'A2', hint: 'An unknown string with 200 g hanging: μ is hidden. Measure P against A² at one frequency; the slope is ½ μ ω² v = ½ ω² √(Tμ), which gives μ. New unknown string picks another.' }
   };
-  $('modelHint').textContent = 'Model: the string obeys the linear wave equation with no losses along it, so the power is the same at every point. The vibrator moves its end up and down as A cos 2πft. The far end is tied to a dashpot (the absorber) that pushes back with a force b times its velocity; the string’s impedance is Z = √(Tμ), and with b = Z (Matched) no wave comes back, as on an endless string. Too soft is b = Z/3 and too stiff b = 3Z; both send back half the amplitude (a quarter of the power) of each wave that reaches the end. The power meter reads the time average power the absorber takes, exactly. T = mg with g = 9.80 m/s²: the pulley has no friction, the hanging mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. The linear wave equation needs small slopes; the readout warns when the largest slope kA passes 0.2. Strings A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Shown is the steady state: the time the waves take to build up is skipped. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise.';
+  $('modelHint').textContent = 'Model: the string obeys the linear wave equation with no losses along it, so the power is the same at every point. The vibrator moves its end up and down as A cos 2πft. The far end is tied to a dashpot (the absorber) that pushes back with a force b times its velocity; the string’s impedance is Z = √(Tμ), and with b = Z (Matched) no wave comes back, as on an endless string. Too soft is b = Z/3 and too stiff b = 3Z; both send back half the amplitude (a quarter of the power) of each wave that reaches the end. The power meter reads the time average power the absorber takes, exactly. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. The linear wave equation needs small slopes; the readout warns when the largest slope kA passes 0.2. Strings A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Shown is the steady state: the time the waves take to build up is skipped. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise.';
   const muNow = () => (S.str === 'U' ? S.unknownMu : STRINGS[S.str].mu);
   const massG = () => HANGER_G + S.masses.reduce((a, b) => a + b, 0);
   const Tnow = () => tension(massG() / 1000);
@@ -417,7 +417,7 @@ table.rows input:focus { border-color: var(--accent); }
     h += dd('Linear density μ', hideMu() ? HID : `${(mu * 1000).toFixed(2)} g/m`) + dd('Wave speed v = √(T/μ)', hideMu() ? HID : `${v.toFixed(2)} m/s`);
     h += dd('Wavelength λ = v/f', hideMu() ? HID : `${(v / S.f).toFixed(3)} m`) + dd('Waves that fit in L', hideMu() ? HID : (S.L * S.f / v).toFixed(2));
     h += dd('Predicted P = ½ μ A² ω² v', S.blind || hideMu() ? HID : `${fmtP(travelingPower(S.f, S.A / 1000, Tn, mu))} mW`, true);
-    h += dd('Average energy per metre ½ μ A² ω²', S.blind || hideMu() ? HID : `${(energyPerMetre(S.f, S.A / 1000, mu) * 1000).toPrecision(4)} mJ/m`, true);
+    h += dd('Average energy per meter ½ μ A² ω²', S.blind || hideMu() ? HID : `${(energyPerMetre(S.f, S.A / 1000, mu) * 1000).toPrecision(4)} mJ/m`, true);
     h += dd('Part of each wave sent back by the absorber', S.abs === 'matched' ? 'none' : `amplitude ${Math.abs(F.r).toFixed(2)}, power ${(F.r * F.r).toFixed(2)}`, true);
     h += dd('Largest slope of the string, kA', kA > 0.2 ? `${kA.toFixed(3)}: too steep for the linear model, lower A or f` : kA.toFixed(3), true, kA > 0.2 ? 'warn' : '');
     $('out').innerHTML = h;
@@ -490,7 +490,7 @@ table.rows input:focus { border-color: var(--accent); }
     const sy = tableY - Math.max(74 * q, (tableY - 30 * q - top - 96 * p) / 2 + 30 * q);
     const edge = 20 * q, deck = 26 * q;
     Gr.bench(ctx, 0, tableY, px + pr * 0.6, deck, edge);
-    /* metre stick lying on the bench under the string, zero at the vibrator */
+    /* meter stick lying on the bench under the string, zero at the vibrator */
     const ry = tableY - 17 * q, rh = 12 * q;
     Gr.shadow(ctx, vx + S.L * ppm / 2, ry + rh + 1, S.L * ppm * 0.52, 3 * q, 0.7);
     let gr = ctx.createLinearGradient(0, ry, 0, ry + rh); gr.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); gr.addColorStop(1, T.rule);
@@ -516,7 +516,7 @@ table.rows input:focus { border-color: var(--accent); }
     const sx = (i) => vx + S.L * ppm * i / N, cl = (d) => Math.max(-clip, Math.min(clip, d));
     ctx.fillStyle = T.env; ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); for (let i = N; i >= 0; i--) ctx.lineTo(sx(i), sy + cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); ctx.closePath(); ctx.fill();
     const c = Math.cos(S.phase), s = Math.sin(S.phase), yAt = (i) => (reduce ? 0 : ys[i][0] * c - ys[i][1] * s);
-    /* where the energy is: a glow along the string, brighter where the energy per metre (½μy_t² + ½Ty_x²) is larger. In a matched
+    /* where the energy is: a glow along the string, brighter where the energy per meter (½μy_t² + ½Ty_x²) is larger. In a matched
        string the bright patches ride along with the crests into the absorber; with a mismatched end part of it stands still */
     if (on) {
       const eg = []; let egMax = 0; for (let i = 0; i <= N; i++) { const e = energyAt(F, S.L * i / N, reduce ? 0 : S.phase, mu); eg.push(e); egMax = Math.max(egMax, e); }
@@ -572,7 +572,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (GEO.dropOn) { ctx.strokeStyle = T.accent; ctx.lineWidth = (GEO.dropOn === 2 ? 3 : 1.5) * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.roundRect(GEO.stack.x0 - 8 * p, stackTop, GEO.stack.x1 - GEO.stack.x0 + 16 * p, y - stackTop + 6 * p, 6 * p); ctx.stroke(); ctx.setLineDash([]); }
     const ly = Math.min(Hh - 24 * p, y + 16 * p);
     txt(`${massG()} g`, hx, ly, { a: 'right', s: 11, b: 1, m: 1 });
-    /* energy per metre along the string, drawn in a lane at the top of the picture (seen once the card has faded) */
+    /* energy per meter along the string, drawn in a lane at the top of the picture (seen once the card has faded) */
     if (S.energy && on) {
       const laneT = top + 4 * p, laneB = laneT + 40 * p, mean = energyPerMetre(S.f, S.A / 1000, mu), es = [];
       if (laneT > 8 * p) {
@@ -581,7 +581,7 @@ table.rows input:focus { border-color: var(--accent); }
         ctx.fillStyle = T.env; ctx.beginPath(); ctx.moveTo(sx(0), laneB); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), laneB - es[i] * sc); ctx.lineTo(sx(N), laneB); ctx.closePath(); ctx.fill();
         ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx(0), laneB + 0.5); ctx.lineTo(sx(N), laneB + 0.5); ctx.stroke();
         if (S.abs === 'matched') { ctx.strokeStyle = T.equi; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(sx(0), laneB - mean * sc); ctx.lineTo(sx(N), laneB - mean * sc); ctx.stroke(); ctx.setLineDash([]); }
-        txt(S.abs === 'matched' ? 'energy per metre, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per metre, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
+        txt(S.abs === 'matched' ? 'energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per meter, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
       }
     }
     Gr.label(ctx, `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });

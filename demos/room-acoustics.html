@@ -84,7 +84,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       <p>Clap in a hard room and the sound keeps arriving from the walls long after the clap: the reverberation time T falls as you add absorption, as Sabine's formula T = 0.161 V/A predicts. Line every surface with wedges and the echoes vanish: in an anechoic chamber the level falls as 1/r², down to the wedges' cutoff frequency.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">c = 343 m/s, air at 20 °C</div>
+      <div class="units mono">c = 343.2 m/s, air at 20 °C</div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/room-acoustics.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/room-acoustics.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h1v1h-1zM16 2h1v1h-1zM18 2h2v1h-2zM21 2h2v1h-2zM24 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM15 4h3v1h-3zM19 4h2v1h-2zM23 4h3v1h-3zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h5v1h-5zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h3v1h-3zM19 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h6v1h-6zM21 7h2v1h-2zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h2v1h-2zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM18 10h1v1h-1zM21 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM5 11h2v1h-2zM12 11h2v1h-2zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM4 12h1v1h-1zM7 12h2v1h-2zM12 12h1v1h-1zM14 12h1v1h-1zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h2v1h-2zM6 13h1v1h-1zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h4v1h-4zM21 13h4v1h-4zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h3v1h-3zM8 14h1v1h-1zM14 14h2v1h-2zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h1v1h-1zM8 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM6 17h2v1h-2zM9 17h1v1h-1zM14 17h2v1h-2zM17 17h1v1h-1zM19 17h5v1h-5zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h2v1h-2zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM20 18h1v1h-1zM23 18h2v1h-2zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h4v1h-4zM9 19h2v1h-2zM12 19h3v1h-3zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h3v1h-3zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h4v1h-4zM8 20h1v1h-1zM10 20h2v1h-2zM13 20h4v1h-4zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM7 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h2v1h-2zM8 22h2v1h-2zM11 22h2v1h-2zM14 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h4v1h-4zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM11 23h1v1h-1zM14 23h6v1h-6zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h4v1h-4zM15 24h1v1h-1zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h2v1h-2zM25 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM13 25h3v1h-3zM17 25h1v1h-1zM21 25h4v1h-4zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h2v1h-2zM6 26h1v1h-1zM8 26h3v1h-3zM12 26h1v1h-1zM15 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM9 27h1v1h-1zM11 27h4v1h-4zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM34 27h2v1h-2zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h3v1h-3zM13 28h2v1h-2zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h3v1h-3zM10 29h4v1h-4zM15 29h1v1h-1zM17 29h8v1h-8zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM8 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h3v1h-3zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM15 32h5v1h-5zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h5v1h-5zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h2v1h-2zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h2v1h-2zM14 36h2v1h-2zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h1v1h-1zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
@@ -94,7 +94,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-      <canvas id="can" tabindex="0" role="application" aria-label="Plan view of a room with a loudspeaker and a microphone on its centre line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by 0.1 m (with Shift, 1 m); C claps."></canvas>
+      <canvas id="can" tabindex="0" role="application" aria-label="Plan view of a room with a loudspeaker and a microphone on its center line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by 0.1 m (with Shift, 1 m); C claps."></canvas>
       <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D room</button><button type="button" data-view="plan" aria-pressed="true">Plan</button></div><div class="seg" role="group" aria-label="Clap speed" id="speedSeg"><button type="button" data-slow="100" aria-pressed="true">Slow motion</button><button type="button" data-slow="1" aria-pressed="false">Real time</button></div><button type="button" class="spin attn" id="go">Clap</button></div>
       <div class="tag3" id="tagR" hidden></div><div class="tag3 big" id="tagL" hidden></div>
       </div>
@@ -181,7 +181,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
           <summary>Model</summary>
           <div class="foldbody">
             <p class="hint">Geometrical acoustics: N rays leave the loudspeaker in random directions, each carrying 1/N of the clap's energy (N = 4000 to 64000, more when T is short, so that every measurement collects about as many rays). At a surface a ray keeps (1 − α) of its energy and leaves in a random direction (Lambert's cosine law, a fully diffuse reflection). The microphone is a sphere 0.5 m in radius that adds up the energy of the rays crossing it; the direct sound is added exactly, 1/(4πr²). Energies add, so there is no interference: no room modes or standing waves, which matter in real rooms at low frequency. Air absorption is left out (it shortens T in large rooms above about 2 kHz).</p>
-            <p class="hint">The clap shows 1500 of these rays, by the same rules, each drawn fainter as its energy falls and gone at −40 dB. Slow motion runs the sound 100 times slower than life; Real time moves it at 343 m/s, so it crosses a 9 m room in 26 ms and dies away in about two thirds of T (the rays reach −40 dB at 40/60 of the time to fall 60 dB).</p>
+            <p class="hint">The clap shows 1500 of these rays, by the same rules, each drawn fainter as its energy falls and gone at −40 dB. Slow motion runs the sound 100 times slower than life; Real time moves it at 343.2 m/s, so it crosses a 9 m room in 26 ms and dies away in about two thirds of T (the rays reach −40 dB at 40/60 of the time to fall 60 dB).</p>
             <p class="hint">T is measured as in ISO 3382: the decay curve is the backward integral of the clap response (Schroeder's method), and a least squares line from −5 to −25 dB is extended to −60 dB (T20). A measured T scatters by about 1 to 3 % from run to run of the rays (each setup always gives the same run); the level meter by under 0.2 dB.</p>
             <p class="hint">Sabine: T = 24 ln 10 · V/(cA) = 0.161 V/A, A = Σ Sα. Eyring: T = 0.161 V/(−S ln(1 − ᾱ)), which goes to 0 as ᾱ → 1. Panels are 1.2 m × 0.6 m, spread evenly around the walls; the ceiling is the wall material.</p>
             <p class="hint">Wedges line all six surfaces (the floor is a wire net), and the room is the free space between their tips. Beranek and Sleeper (J. Acoust. Soc. Am. 18, 140, 1946) define the cutoff as the frequency where the pressure reflection rises to 10 % (α = 0.99) and find it where the wedge length is about a quarter wavelength: f_c = c/(4d). Around f_c this demo uses the stated model R = 0.1 (f_c/f)², at most 0.9, α = 1 − R²; the shape is a model, not measured data. The level meter reads the steady sound of a 10 mW source (sound power level 100 dB), with ρ = 1.204 kg/m³.</p>
@@ -196,7 +196,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
 (() => {
   // ==CORE START==
   const RA_VERSION = 'room-acoustics@2026-10-23';
-  const C_AIR = 343, RHO_AIR = 1.204, P_REF = 20e-6;   /* air at 20 °C */
+  const C_AIR = 343.2, RHO_AIR = 1.204, P_REF = 20e-6;   /* air at 20 °C */
   const BANDS = [125, 250, 500, 1000, 2000, 4000];
   /* Random incidence absorption coefficients in octave bands 125 Hz to 4 kHz, from the materials database of the pyroomacoustics
      library (LCAV, EPFL), keys in brackets. */
@@ -220,7 +220,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   const wedgeR = (f, d, c = C_AIR) => Math.min(0.9, 0.1 * (wedgeCutoff(d, c) / f) ** 2);
   const wedgeAlpha = (f, d, c = C_AIR) => 1 - wedgeR(f, d, c) ** 2;
   /* Room: a box. walls 'hard' | 'panels' | 'wedges'. With wedges, the free space is the box less the wedge depth on all six surfaces
-     (a wire net floor), and every surface absorbs wedgeAlpha. Panels hang on the four walls, centred 1.5 m up (or mid height). */
+     (a wire net floor), and every surface absorbs wedgeAlpha. Panels hang on the four walls, centered 1.5 m up (or mid height). */
   function roomModel(o) {
     const bi = BANDS.indexOf(o.band), f = o.band;
     const wed = o.walls === 'wedges', d = wed ? o.wedge : 0;
@@ -335,7 +335,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   function readingsCSV(kind, rows, meta) {
     const L = [`# Room Acoustics virtual apparatus: ${kind === 'decay' ? 'reverberation times' : 'sound level against distance'} (simulated data)`, `# demo version,${meta.version}`,
       '# model,"ray tracing, 4000 to 64000 rays, diffuse (Lambert) reflections, 0.5 m receiver sphere, exact direct sound, energies add; no air absorption"',
-      '# absorption data,"pyroomacoustics materials database; wedges: R = 0.1 (fc/f)^2 at most 0.9, fc = c/(4d) (Beranek and Sleeper 1946)"', '# speed of sound,343 m/s'];
+      '# absorption data,"pyroomacoustics materials database; wedges: R = 0.1 (fc/f)^2 at most 0.9, fc = c/(4d) (Beranek and Sleeper 1946)"', '# speed of sound,343.2 m/s'];
     if (kind === 'decay') {
       L.push('# T,"T20 from the Schroeder decay curve, -5 to -25 dB, extended to 60 dB"', 'row,band_Hz,room_L_m,room_W_m,room_H_m,walls,panels_n,panel_material,wedge_depth_m,floor,V_m3,S_m2,T_measured_s');
       rows.forEach((r, i) => L.push([i + 1, r.band, r.L, r.W, r.H, r.walls, r.n, r.panel, r.wedge, r.floor, r.V, r.S, r.T].map(csvCell).join(',')));
@@ -377,7 +377,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   const panelKey = () => (S.panel === 'mystery' ? S.mysteryKey : S.panel);
   const opts = () => ({ L: S.L, W: S.W, H: S.H, band: S.band, walls: S.walls, floor: S.floor, panel: panelKey(), nPanels: S.nPanels, wedge: S.wedge });
   const model = () => roomModel(opts());
-  /* loudspeaker and microphone on the room's centre line, 1.5 m up (or mid height); the speaker 1.5 m from the end (or a third of the way) */
+  /* loudspeaker and microphone on the room's center line, 1.5 m up (or mid height); the speaker 1.5 m from the end (or a third of the way) */
   const srcPos = (m) => [Math.min(1.5, m.L / 3), m.W / 2, Math.min(1.5, m.H / 2)];
   const rMax = (m) => Math.max(0.5, Math.floor((m.L - srcPos(m)[0] - 0.5) * 20) / 20);   /* the receiver sphere stays inside the room */
   const wedgeMax = () => Math.max(0.1, Math.floor((Math.min(S.L, S.W, S.H) - 2) / 2 * 20) / 20);
@@ -435,7 +435,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const Gm = window.VDGear.mix, dk = window.VDGear.dark(), rw = S.L * sc, rh = S.W * sc, rnd = mulberry(5), wt = 8 * p;
     ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
     ctx.fillStyle = T.floorc; ctx.fillRect(ox - wt, oy - wt, rw + 2 * wt, rh + 2 * wt); ctx.restore();
-    /* the floor: concrete, carpet, or an audience seated 2 per m² (rows 1 m apart, a centre aisle drawn clear, as in the 3D room) */
+    /* the floor: concrete, carpet, or an audience seated 2 per m² (rows 1 m apart, a center aisle drawn clear, as in the 3D room) */
     const fl = S.walls === 'wedges' ? 'wedges' : S.floor, fc = fl === 'carpet' ? Gm(T.floorc, dk ? '#3a4152' : '#7d8597', 0.4) : fl === 'audience' ? Gm(T.floorc, dk ? '#5a4634' : '#b58c62', 0.45) : T.floorc;
     ctx.fillStyle = fc; ctx.fillRect(ox, oy, rw, rh);
     ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, rw, rh); ctx.clip();
@@ -611,7 +611,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
 
   // ---------- the clap, in slow motion: 1500 rays drawn on the plan, by the same rules as the measurement ----------
   let anim = null; const NPART = 1500, card = VD.setupCard($('rack'));
-  /* clap speed: slow motion shows the sound 100 times slower; real time moves it at c = 343 m/s, so the clap dies in about T */
+  /* clap speed: slow motion shows the sound 100 times slower; real time moves it at c = 343.2 m/s, so the clap dies in about T */
   let SLOW = 100; const speedTxt = () => (SLOW === 1 ? 'real time' : `slow motion ×1/${SLOW}`);
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-slow]'); if (!b) return; SLOW = +b.dataset.slow;
     for (const x of $('speedSeg').querySelectorAll('button')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
@@ -642,7 +642,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   let last = performance.now();
   function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (anim) { stepAnim(dt); if (anim) draw(); } if (G3.on && G3.dirty) render3D(); requestAnimationFrame(frame); }
 
-  // drag the microphone along the centre line
+  // drag the microphone along the center line
   let drag = false; const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   can.addEventListener('pointerdown', (e) => { if (!geo || anim) return; const [x, y] = local(e), [sx, sy] = srcPos(geo.m);
     if (Math.hypot(x - geo.X(sx + S.r), y - geo.Y(sy)) < 24 * ps()) { drag = true; card.ghost(true); can.setPointerCapture(e.pointerId); } });
@@ -655,8 +655,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   can.addEventListener('keydown', keyNav);
 
   // ---------- the room in 3D (three.js r128, loaded the first time the 3D view opens) ----------
-  /* The same room as the plan, to scale in metres, seen from outside with the two nearest walls left out: painted brick walls and
-     ceiling, the floor's material (concrete, carpet, or an audience seated 2 per m², rows 1 m apart, with a centre aisle drawn
+  /* The same room as the plan, to scale in meters, seen from outside with the two nearest walls left out: painted brick walls and
+     ceiling, the floor's material (concrete, carpet, or an audience seated 2 per m², rows 1 m apart, with a center aisle drawn
      clear), the panels where the model hangs them, or wedges on all six surfaces with a wire net floor at their tips. The source
      is drawn as a dodecahedron loudspeaker, the usual omnidirectional source for room acoustics (ISO 3382), and the microphone
      with the 0.5 m receiver sphere the rays are counted in. During a clap the same 1500 rays as on the plan move through it. */
@@ -670,7 +670,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const renderer = window.VD3 && VD3.renderer(); if (!renderer) return false;
     const el = renderer.domElement; el.className = 'gl'; el.tabIndex = 0; el.hidden = true;
     el.setAttribute('role', 'application');
-    el.setAttribute('aria-label', 'The room in 3D, with the loudspeaker and the microphone on its centre line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by 0.1 m (with Shift, 1 m), comma and period turn the view, C claps.');
+    el.setAttribute('aria-label', 'The room in 3D, with the loudspeaker and the microphone on its center line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by 0.1 m (with Shift, 1 m), comma and period turn the view, C claps.');
     $('scene').insertBefore(el, $('scene').querySelector('.viewbar'));
     const shadows = !VD3.lowPower(); renderer.shadowMap.enabled = shadows; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.localClippingEnabled = true;
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.1, 400);
@@ -684,7 +684,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     el.addEventListener('keydown', keyNav);
     return true;
   }
-  function canvasTex(w, h, paint, sx, sy) {   /* a repeating texture whose tile is sx by sy metres */
+  function canvasTex(w, h, paint, sx, sy) {   /* a repeating texture whose tile is sx by sy meters */
     const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h);
     const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1 / sx, 1 / sy); t.anisotropy = 4; return t;
   }
@@ -710,7 +710,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const base = dk ? '#3b4048' : '#b9bcc0';   /* concrete */
     return canvasTex(256, 256, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); speckle(g, w, h, 3200, [Gm(base, '#000000', 0.18), Gm(base, '#ffffff', 0.2), Gm(base, '#6b5d4f', 0.2)], 1.6, rnd); }, 2, 2);
   }
-  function quad(o, u, v, mat) {   /* a rectangle from corner o along u and v, facing u × v, with uv in metres */
+  function quad(o, u, v, mat) {   /* a rectangle from corner o along u and v, facing u × v, with uv in meters */
     const a = Math.hypot(...u), c = Math.hypot(...v), P = [o, o.map((q, i) => q + u[i]), o.map((q, i) => q + u[i] + v[i]), o.map((q, i) => q + v[i])];
     const g = new THREE.BufferGeometry(), idx = [0, 1, 2, 0, 2, 3], UV = [[0, 0], [a, 0], [a, c], [0, c]];
     g.setAttribute('position', new THREE.Float32BufferAttribute(idx.flatMap((i) => P[i]), 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(idx.flatMap((i) => UV[i]), 2));
@@ -850,7 +850,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     tagAt($('tagR'), sx + S.r / 2, sy, sz + 0.35, `r = ${f(S.r, 2)} m`);
     tagAt($('tagL'), mx, sy, d, S.mode === 'level' ? (S.res ? `${f(S.res.Ldb, 1)} dB` : '…') : '');
   }
-  /* drag the microphone along the centre line in 3D: the point of the line nearest the pointer's ray */
+  /* drag the microphone along the center line in 3D: the point of the line nearest the pointer's ray */
   function micRay(e) { const r = g3.el.getBoundingClientRect(); g3.ray.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: 1 - (e.clientY - r.top) / r.height * 2 }, g3.cam); return g3.ray.ray; }
   function grabMic(e) {
     if (anim || !g3.mic) return false; const r = g3.el.getBoundingClientRect(), v = g3.mic.position.clone().project(g3.cam);

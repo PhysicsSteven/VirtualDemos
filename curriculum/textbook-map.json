@@ -3475,7 +3475,7 @@
         "resistivity"
       ],
       "unit": "current-resistance",
-      "note": "Resistivity of a Wire, Cold stage (2026-10-23, Claude): Cu, Al, Sn, Pb, YBCO cooled to 1 K; Bloch-Gruneisen plus residual resistivity (RRR slider), R = 0 below Tc from OpenStax Table 9.3; R against T full range and close view. BCS theory and applications are not modelled."
+      "note": "Resistivity of a Wire, Cold stage (2026-10-23, Claude): Cu, Al, Sn, Pb, YBCO cooled to 1 K; Bloch-Gruneisen plus residual resistivity (RRR slider), R = 0 below Tc from OpenStax Table 9.3; R against T full range and close view. BCS theory and applications are not modeled."
     },
     {
       "vol": 2,
@@ -3893,7 +3893,7 @@
         "eddy-currents"
       ],
       "unit": "induction",
-      "note": "Eddy Currents: magnet falling through copper, aluminium and plastic pipes; induced wall currents (Lenz), terminal speed, heat; point dipole, thin-wall model."
+      "note": "Eddy Currents: magnet falling through copper, aluminum and plastic pipes; induced wall currents (Lenz), terminal speed, heat; point dipole, thin-wall model."
     },
     {
       "vol": 2,
@@ -5262,9 +5262,10 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "resolution"
+        "resolution",
+        "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Circular Apertures and Resolution demo (2026-10-24): exact Airy pattern, first dark ring, Rayleigh criterion; pinhole and screen, two sources, the eye and headlights, Hubble, a camera lens, mystery pinhole.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Circular Apertures and Resolution demo (2026-10-24): exact Airy pattern, first dark ring, Rayleigh criterion; pinhole and screen, two sources, the eye and headlights, Hubble, a camera lens, mystery pinhole. The single slit worksheet of the Diffraction Grating demo points here for round openings (Steve, 2026-10-25).",
       "unit": "wave-optics"
     },
     {
@@ -5281,7 +5282,7 @@
       "demos": [
         "electron-diffraction"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Electron Diffraction demo, X rays view (added 2026-10-24): a Bragg spectrometer with a rotating crystal and the counter at 2θ; Cu or Mo tube at 35 kV, NaCl or LiF (200) planes; peaks at the exact Bragg angles of Kα₁ and Kβ₁ (X-ray Data Booklet energies) in every order, count rates illustrative. Worksheet x-ray-diffraction. The electron view is Bragg's law with electrons on graphite.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Electron Diffraction demo, X-rays view (added 2026-10-24): a Bragg spectrometer with a rotating crystal and the counter at 2θ; Cu or Mo tube at 35 kV, NaCl or LiF (200) planes; peaks at the exact Bragg angles of Kα₁ and Kβ₁ (X-ray Data Booklet energies) in every order, count rates illustrative. Worksheet x-ray-diffraction. The electron view is Bragg's law with electrons on graphite.",
       "unit": "wave-optics"
     },
     {
@@ -5666,7 +5667,7 @@
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunnelling through a barrier, reflected and transmitted parts.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunneling through a barrier, reflected and transmitted parts.",
       "unit": "quantum-mechanics"
     },
     {
@@ -5736,7 +5737,7 @@
       "demos": [
         "shells-and-x-rays"
       ],
-      "note": "Shells, the Periodic Table and X Rays (2026-10-24): Pauli filling of orbital boxes, 2(2l+1) and 2n², measured NIST ground states against the n + l rule, first ionization energies against Z.",
+      "note": "Shells, the Periodic Table and X-Rays (2026-10-24): Pauli filling of orbital boxes, 2(2l+1) and 2n², measured NIST ground states against the n + l rule, first ionization energies against Z.",
       "unit": "atomic-structure"
     },
     {
@@ -5755,7 +5756,7 @@
         "spectra",
         "electron-diffraction"
       ],
-      "note": "Shells, the Periodic Table and X Rays (2026-10-24): X ray tube with the Duane–Hunt cutoff, Kα and Kβ lines above the K edge (NIST), Moseley's law with a mystery target. Spectra covers the optical emission and absorption lines. Electron Diffraction, X rays view: Kα and Kβ wavelengths of copper and molybdenum measured with a Bragg spectrometer (worksheet x-ray-diffraction). (OpenStax recheck 2026-10-24, Claude)",
+      "note": "Shells, the Periodic Table and X-Rays (2026-10-24): X-ray tube with the Duane–Hunt cutoff, Kα and Kβ lines above the K edge (NIST), Moseley's law with a mystery target. Spectra covers the optical emission and absorption lines. Electron Diffraction, X-rays view: Kα and Kβ wavelengths of copper and molybdenum measured with a Bragg spectrometer (worksheet x-ray-diffraction). (OpenStax recheck 2026-10-24, Claude)",
       "unit": "atomic-structure"
     },
     {
@@ -6019,7 +6020,7 @@
         "star-slice",
         "nuclear-reactions"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: D–T and D–D Q values (worksheet nuclear-reactions); the Coulomb barrier, the Gamow peak from the Maxwell–Boltzmann tail and tunnelling, ⟨σv⟩ for p + p and D + T against temperature, why the Sun is 1.5 × 10⁷ K and reactors 10⁸ K (worksheet fusion-gamow). Binding energy curve and star slice as before.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: D–T and D–D Q values (worksheet nuclear-reactions); the Coulomb barrier, the Gamow peak from the Maxwell–Boltzmann tail and tunneling, ⟨σv⟩ for p + p and D + T against temperature, why the Sun is 1.5 × 10⁷ K and reactors 10⁸ K (worksheet fusion-gamow). Binding energy curve and star slice as before.",
       "unit": "nuclear",
       "unit_in": {
         "astro": "stars"
@@ -6091,7 +6092,7 @@
       "demos": [
         "particles"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Particles, Quarks and Conservation Laws (2026-10-24, Claude): a quark builder with colour, spin and the eightfold way diagrams; Example 11.4; predicting the Ω⁻ mass from the decuplet. Worksheet: quark-model.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Particles, Quarks and Conservation Laws (2026-10-24, Claude): a quark builder with color, spin and the eightfold way diagrams; Example 11.4; predicting the Ω⁻ mass from the decuplet. Worksheet: quark-model.",
       "unit": "particles-cosmology"
     },
     {
@@ -6110,7 +6111,7 @@
         "magnetic-force",
         "gamma-spectroscopy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Particles, Quarks and Conservation Laws (2026-10-24, Claude): a bubble chamber in a magnetic field, p = 0.3Br from fitted track radii and the invariant mass of V decays (worksheet invariant-mass); centre of mass energy and thresholds for fixed targets and colliders (Eq. 11.3, Example 11.7). Also cyclotron motion in charges in magnetic fields and a NaI(Tl) detector in gamma spectroscopy.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Particles, Quarks and Conservation Laws (2026-10-24, Claude): a bubble chamber in a magnetic field, p = 0.3Br from fitted track radii and the invariant mass of V decays (worksheet invariant-mass); center of mass energy and thresholds for fixed targets and colliders (Eq. 11.3, Example 11.7). Also cyclotron motion in charges in magnetic fields and a NaI(Tl) detector in gamma spectroscopy.",
       "unit": "particles-cosmology"
     },
     {
@@ -6826,6 +6827,11 @@
           "vol": 3,
           "sec": "4.4",
           "title": "Diffraction Gratings"
+        },
+        {
+          "vol": 3,
+          "sec": "4.5",
+          "title": "Circular Apertures and Resolution"
         }
       ],
       "role": "demo",
@@ -7057,7 +7063,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: NdFeB magnet dropped through copper, aluminium and PVC pipes side by side; drag k = 45 μ0² m² σ w/(1024 a⁴) (point dipole, thin wall), exact fall with linear drag, induced wall currents with Lenz sense, heat, liquid nitrogen cooling; Blind.",
+      "note": "New 2026-10-22 (Claude). Lecture demo: NdFeB magnet dropped through copper, aluminum and PVC pipes side by side; drag k = 45 μ0² m² σ w/(1024 a⁴) (point dipole, thin wall), exact fall with linear drag, induced wall currents with Lenz sense, heat, liquid nitrogen cooling; Blind.",
       "handouts": [
         "eddy-currents"
       ],
@@ -7090,7 +7096,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Volume 3 sections mapped 2026-10-24. 2026-10-24: X rays view (Bragg spectrometer, rotating NaCl or LiF crystal, Cu or Mo tube) for §4.6; Export to worksheet for the electron readings; worksheets electron-diffraction (ring diameters against λ = h/p for the graphite spacings) and x-ray-diffraction (sin θ against order for the Cu and Mo lines and the LiF spacing).",
+      "note": "Volume 3 sections mapped 2026-10-24. 2026-10-24: X-rays view (Bragg spectrometer, rotating NaCl or LiF crystal, Cu or Mo tube) for §4.6; Export to worksheet for the electron readings; worksheets electron-diffraction (ring diameters against λ = h/p for the graphite spacings) and x-ray-diffraction (sin θ against order for the Cu and Mo lines and the LiF spacing).",
       "handouts": [
         "electron-diffraction",
         "x-ray-diffraction"
@@ -7547,7 +7553,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "A simulated NaI(Tl) spectrometer modelled on the ORTEC teaching set: ENSDF lines, NIST XCOM attenuation, Monte Carlo energy deposition, MCA, regions of interest, calibration. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Calibrating a Detector and Absorbing Gamma Rays (lead and distance, toward dose reduction in §10.7), keys from real runs in TeacherKeys.",
+      "note": "A simulated NaI(Tl) spectrometer modeled on the ORTEC teaching set: ENSDF lines, NIST XCOM attenuation, Monte Carlo energy deposition, MCA, regions of interest, calibration. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Calibrating a Detector and Absorbing Gamma Rays (lead and distance, toward dose reduction in §10.7), keys from real runs in TeacherKeys.",
       "title": "Gamma Spectroscopy",
       "url": "demos/gamma-spectroscopy.html",
       "handouts": [
@@ -7647,7 +7653,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Ground clock vs a second clock in orbit or on a tower; gravity and speed parts of the rate difference, net μs/day, light travel distance, the cancelling radius, Schwarzschild radii; clocks run 1 h per second; Blind.",
+      "note": "New 2026-10-22 (Claude). Ground clock vs a second clock in orbit or on a tower; gravity and speed parts of the rate difference, net μs/day, light travel distance, the canceling radius, Schwarzschild radii; clocks run 1 h per second; Blind.",
       "handouts": [
         "gps-clocks"
       ],
@@ -8516,7 +8522,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-24 (Claude). Four views: the Standard Model and a particle table (PDG 2024); a reaction checker for the conservation laws of §11.2 with thresholds for fixed targets and colliders; a quark builder with colour, spin and the eightfold way; a simulated bubble chamber where students fit track radii, find p = 0.3Br and the invariant mass of K⁰ and Λ⁰ decays. Three worksheets with keys from real runs in TeacherKeys.",
+      "note": "New 2026-10-24 (Claude). Four views: the Standard Model and a particle table (PDG 2024); a reaction checker for the conservation laws of §11.2 with thresholds for fixed targets and colliders; a quark builder with color, spin and the eightfold way; a simulated bubble chamber where students fit track radii, find p = 0.3Br and the invariant mass of K⁰ and Λ⁰ decays. Three worksheets with keys from real runs in TeacherKeys.",
       "handouts": [
         "particle-reactions",
         "quark-model",
@@ -8860,7 +8866,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a metre rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a meter rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
       "handouts": [
         "resistivity"
       ],
@@ -9149,12 +9155,12 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-24 (Claude). Shells: orbital boxes for any element (Pauli, Hund), measured NIST ground states against the n + l rule (20 exceptions up to Lr), electrons per shell against 2n², first ionization energies for Z = 1 to 103. X ray tube: Kramers continuum with the Duane–Hunt cutoff, Kα₁, Kα₂ and Kβ₁ from the NIST X-Ray Transition Energies Database above the K edge, K/L/M level diagram, mystery target for Moseley's law. Two worksheets with keys from real runs in TeacherKeys.",
+      "note": "New 2026-10-24 (Claude). Shells: orbital boxes for any element (Pauli, Hund), measured NIST ground states against the n + l rule (20 exceptions up to Lr), electrons per shell against 2n², first ionization energies for Z = 1 to 103. X-ray tube: Kramers continuum with the Duane–Hunt cutoff, Kα₁, Kα₂ and Kβ₁ from the NIST X-Ray Transition Energies Database above the K edge, K/L/M level diagram, mystery target for Moseley's law. Two worksheets with keys from real runs in TeacherKeys.",
       "handouts": [
         "periodic-table",
         "x-ray-spectra"
       ],
-      "title": "Shells, the Periodic Table and X Rays",
+      "title": "Shells, the Periodic Table and X-Rays",
       "url": "demos/shells-and-x-rays.html"
     },
     {
@@ -9187,7 +9193,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-24 (Claude). Four views: Crystal (3D NaCl and CsCl lattices, Madelung sum by shells and Evjen neutral cubes, Ewald α, lattice energies of 20 alkali halides against Table 9.2), Bands (tight binding chain of N model atoms, s and p bands against spacing, filling and metal or insulator verdict), Doping (Si, Ge, GaAs carriers from charge neutrality with Sze and Ng Nc, Nv; P, As, Sb, B, Al, Ga in Si; freeze out, extrinsic, intrinsic), Junction (ideal diode I = I₀(e^(eV/kT) − 1) with I₀ ∝ n_i², abrupt junction depletion and band diagram, LED colours). Readings and Export to worksheet in every view but LED; Blind. Four worksheets with keys from real demo runs.",
+      "note": "New 2026-10-24 (Claude). Four views: Crystal (3D NaCl and CsCl lattices, Madelung sum by shells and Evjen neutral cubes, Ewald α, lattice energies of 20 alkali halides against Table 9.2), Bands (tight binding chain of N model atoms, s and p bands against spacing, filling and metal or insulator verdict), Doping (Si, Ge, GaAs carriers from charge neutrality with Sze and Ng Nc, Nv; P, As, Sb, B, Al, Ga in Si; freeze out, extrinsic, intrinsic), Junction (ideal diode I = I₀(e^(eV/kT) − 1) with I₀ ∝ n_i², abrupt junction depletion and band diagram, LED colors). Readings and Export to worksheet in every view but LED; Blind. Four worksheets with keys from real demo runs.",
       "handouts": [
         "lattice-energy",
         "energy-bands",

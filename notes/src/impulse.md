@@ -44,4 +44,4 @@ Students need momentum p = mv as a vector. Velocities are positive toward the se
 
 - Frictionless cart. The bumper pushes with F = kx while compressing (simple harmonic, ω = √(k/m)), then unloads along a steeper line of stiffness k/e², so the cart leaves at e times its speed. Each phase is a quarter of a simple harmonic oscillation, so F(t) and the motion are exact; the contact time is (π/2)√(m/k)(1 + e).
 - Stiff spring k = 4000 N/m and soft spring 400 N/m, both e = 0.90; clay 1500 N/m, e = 0.10. Some energy is lost in the unloading, as in real bumpers.
-- The sensor samples at the chosen rate with a clock not synchronised to the hit and rounds to 0.01 N. The motion detector rounds the velocities to 0.001 m/s. No noise is added.
+- The sensor samples at the chosen rate with a clock not synchronized to the hit and rounds to 0.01 N. The motion detector rounds the velocities to 0.001 m/s. No noise is added.

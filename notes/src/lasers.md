@@ -17,7 +17,7 @@ Students should know E = hν, the Boltzmann factor and energy levels. There are 
 
 ## Running it in class
 
-1. **Absorption vs stimulated emission.** Walk through the three panels: absorption, spontaneous emission in a random direction, and stimulated emission of a copy travelling with the incoming photon. Ask Q1 here.
+1. **Absorption vs stimulated emission.** Walk through the three panels: absorption, spontaneous emission in a random direction, and stimulated emission of a copy traveling with the incoming photon. Ask Q1 here.
 2. **No laser without inversion.** Drag the **Temperature T** up to 10⁵ K and watch **Thermal N₂/N₁** approach 1 but never pass it. Then drag **Pump light, W/A₂₁**: the pumped two level atom also stays below 1 (Q2, Q3).
 3. **Threshold.** In the **Laser** view, drag the operating point along the output curve. Below threshold the output is only spontaneous emission, far too small to see; above it the output rises in a straight line while **Inversion now, N/N_th** stays at 1 (Q4).
 4. **Turning on: relaxation oscillations.** The pump switches on at t = 0. Ask the class why nothing happens for the first 170 µs (Q5). Then the light overshoots in a train of spikes that ring down to the steady output. Press **Switch on again** to repeat.

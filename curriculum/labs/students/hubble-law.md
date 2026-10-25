@@ -15,7 +15,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §11.6. Access for free at http
 - The cosmic distance ladder is the chain of methods astronomers use to find distances: parallax for nearby stars calibrates Cepheid variables, Cepheids in nearby galaxies calibrate Type Ia supernovae, and supernovae reach galaxies far enough away to measure the expansion of the universe.
 - Rung 4 is a Hubble diagram of 34 galaxies: 10 with Cepheid distances (7 to 40 Mpc) and 24 with supernova distances (40 to 420 Mpc). The data are illustrative, simulated with $$H_0 = 70$$ km/s/Mpc, random peculiar velocities of 250 km/s, and distance errors of 0.10 mag (about 5%) for Cepheids and 0.15 mag (about 7%) for supernovae.
 - Click a galaxy to select it; its spectrum appears beside the diagram. Drag the comb of rest wavelengths (lab wavelengths in air: Ca II K 393.37 nm and H 396.85 nm, Hβ 486.13 nm, Mg b 517.3 nm, Na D 589.3 nm, Hα 656.28 nm and [N II] 658.35 nm) until it sits on the galaxy's lines; the readout says when the lines match. The arrow keys pick the next galaxy, and [ and ] move the comb.
-- The readouts give the least squares fit $$v = H_0 d$$ through the origin for every galaxy in the fit, the Hubble time $$1/H_0$$, and the selected galaxy's distance and catalog redshift. Dragging a galaxy sideways changes its distance; Restore distances undoes that.
+- The readouts give the least squares fit $$v = H_0 d + c$$ (slope $$H_0$$ and intercept $$c$$, each with its standard error) for every galaxy in the fit, the Hubble time $$1/H_0$$, and the selected galaxy's distance and catalog redshift. Dragging a galaxy sideways changes its distance; Restore distances undoes that.
 - The Calibration sliders set the Cepheid zero point $$a$$ (in the Leavitt law $$M = -2.43(\log P - 1) + a$$) and the supernova peak absolute magnitude. With the box ticked, the supernova calibration follows the Cepheids, as it does in real work.
 - Record reading stores the selected galaxy's distance, your comb redshift (only when the lines match) and the calibration. Export to worksheet sends the readings to the Data table below; Clear (under Readings) starts a new series, which goes into a new copy of the table.
 
@@ -37,11 +37,11 @@ In 1929 Hubble found that farther galaxies recede faster. Hubble's law (§11.6) 
 
 $$v = H_0\, d ,$$
 
-where $$H_0$$ is the Hubble constant, in km/s per megaparsec (1 Mpc = $$3.0857 \times 10^{19}$$ km). Every galaxy recedes from every other, as the dots on an inflating balloon all move apart, so there is no centre to the expansion.
+where $$H_0$$ is the Hubble constant, in km/s per megaparsec (1 Mpc = $$3.0857 \times 10^{19}$$ km). Every galaxy recedes from every other, as the dots on an inflating balloon all move apart, so there is no center to the expansion.
 
 If every galaxy had always moved at its present speed, they were all together a time $$d/v = 1/H_0$$ ago. This Hubble time is a rough age for the universe. It is not exact, since the expansion rate has changed over time.
 
-Each galaxy also has a peculiar velocity of a few hundred km/s from the pull of its neighbours, which adds scatter to the law. It matters most for nearby galaxies, whose recession velocities are small.
+Each galaxy also has a peculiar velocity of a few hundred km/s from the pull of its neighbors, which adds scatter to the law. It matters most for nearby galaxies, whose recession velocities are small.
 
 ## Before the lab
 
@@ -85,7 +85,7 @@ Estimate how well you can match the comb, as an uncertainty in $$z$$, and conver
 
 ## Questions
 
-1. Every galaxy recedes from us, faster the farther it is. Why does this not mean we are at the centre of the universe?
+1. Every galaxy recedes from us, faster the farther it is. Why does this not mean we are at the center of the universe?
 2. Why can't the distance to a galaxy 300 Mpc away be found from parallax or from Cepheids? Which measurements does your $$H_0$$ depend on?
 3. $$v = cz$$ is accurate only for small $$z$$. For your most distant galaxy, use the relativistic Doppler formula, $$v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]$$, and say by how much it differs from $$cz$$. (For distant galaxies the redshift comes from the stretching of space, and neither formula is exact.)
 4. Why is the Hubble time $$1/H_0$$ not exactly the age of the universe?

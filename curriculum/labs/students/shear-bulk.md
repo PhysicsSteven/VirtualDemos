@@ -62,7 +62,7 @@ since $$\varepsilon$$ is a few parts in ten thousand at most here and the terms 
 
 ## Before the lab
 
-1. A force of 30.0 kN acts along the top of the shear block. Find the shear stress in MPa. If the block is aluminum ($$S = 2.5\times10^{10}$$ Pa), how far does the top move, in micrometres?
+1. A force of 30.0 kN acts along the top of the shear block. Find the shear stress in MPa. If the block is aluminum ($$S = 2.5\times10^{10}$$ Pa), how far does the top move, in micrometers?
 2. Find the pressure rise in the cell when the press pushes the piston with 20.0 kN. By what fraction does water ($$B = 2.2\times10^{9}$$ Pa) shrink, and how far does the piston move?
 3. At the same pressure, how does the strain gauge reading on a steel cube ($$B = 1.6\times10^{11}$$ Pa) compare with the piston's fractional travel for water? Predict the ratio before you measure.
 

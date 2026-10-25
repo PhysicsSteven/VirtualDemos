@@ -339,7 +339,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else { const [K, E] = ellipKE(m); f = (2 / k - k) * K - 2 / k * E; }
     return MU0 * Math.sqrt(r * b) * f;
   }
-  // Field of a ring of radius b carrying 1 A, at cylindrical (r, z) from its centre: [Bz, Br]
+  // Field of a ring of radius b carrying 1 A, at cylindrical (r, z) from its center: [Bz, Br]
   function ringField(b, r, z) {
     const d2 = (b + r) * (b + r) + z * z, m = 4 * b * r / d2, q = (b - r) * (b - r) + z * z;
     if (m < 1e-7) {
@@ -359,7 +359,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // remanence Br, so M = Br/μ₀. Its field is exactly that of a finite solenoid with surface current M per length.
   const MAG = { b: 0.01, len: 0.06 };
   const magMoment = (Br) => Br / MU0 * Math.PI * MAG.b * MAG.b * MAG.len;
-  // flux per tesla of Br through a coaxial circle of radius r whose plane is at z from the magnet centre:
+  // flux per tesla of Br through a coaxial circle of radius r whose plane is at z from the magnet center:
   // ψ(r, z) = (1/μ₀) ∫ ringFlux(r, b, z − s) ds over the magnet length (composite Gauss-Legendre)
   function cylFluxUnit(r, z, panels) {
     const L = MAG.len, b = MAG.b, P = panels || 16, h = L / P, G = GL8;
@@ -383,9 +383,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     return sum / MU0;
   }
-  // flux through the coil (radius a) from the magnet, with the coil plane at zrel from the magnet centre: Φ = Br ψ(a, zrel)
+  // flux through the coil (radius a) from the magnet, with the coil plane at zrel from the magnet center: Φ = Br ψ(a, zrel)
   const coilFlux = (Br, a, zrel) => Br * cylFluxUnit(a, zrel, 16);
-  // Field of the magnet per tesla of Br at (r, z) from its centre, by integrating ring fields along it: [Bz, Br]
+  // Field of the magnet per tesla of Br at (r, z) from its center, by integrating ring fields along it: [Bz, Br]
   function cylFieldUnit(r, z, n) {
     const L = MAG.len, P = n || 32, h = L / P; let bz = 0, br = 0;
     for (let p = 0; p < P; p++) for (let i = 0; i < 8; i++) {
@@ -394,7 +394,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     return [bz / MU0, br / MU0];
   }
-  // Tilted magnet (for the flip): coil plane at zrel from the magnet centre, the magnet axis turned by θ in the
+  // Tilted magnet (for the flip): coil plane at zrel from the magnet center, the magnet axis turned by θ in the
   // drawing plane. By reciprocity, Φ = ∫ M·B_coil dV / I_coil over the magnet volume, with B_coil the field of
   // the coil per ampere. Gauss-Legendre along the magnet and across its radius, trapezoid rule in angle.
   function tiltFluxUnit(a, zrel, th) {
@@ -406,7 +406,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const rr = b * (GL8.x[j] + 1) / 2, wr = GL8.w[j] / 2 * b * rr;
         for (let q = 0; q < NP; q++) {
           const ph = 2 * Math.PI * (q + 0.5) / NP, cp = Math.cos(ph), sp = Math.sin(ph);
-          // point: centre + s û + rr (cos φ v̂ + sin φ ŵ), û = (cos θ, sin θ, 0) in (z, y, w), v̂ = (−sin θ, cos θ, 0), ŵ = (0, 0, 1)
+          // point: center + s û + rr (cos φ v̂ + sin φ ŵ), û = (cos θ, sin θ, 0) in (z, y, w), v̂ = (−sin θ, cos θ, 0), ŵ = (0, 0, 1)
           const pz = -zrel + s * c - rr * cp * sn, py = s * sn + rr * cp * c, pw = rr * sp;
           const rho = Math.hypot(py, pw), [bz, br] = ringField(a, rho, pz);
           const brY = rho > 0 ? br * py / rho : 0;
@@ -429,7 +429,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return { c, corr };
   }
   function seriesEval(ser, th) { let s = 0; for (let k = 0; k < ser.c.length; k++) s += ser.c[k] * Math.cos((2 * k + 1) * th); return s; }
-  // the swept circle of a magnet turning about its centre must clear the coil wire
+  // the swept circle of a magnet turning about its center must clear the coil wire
   const flipClear = (a, zrel) => Math.hypot(zrel, a) > Math.hypot(MAG.len / 2, MAG.b) + 0.004;
 
   // ---------- one circuit step ----------
@@ -444,7 +444,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function makeCircuit(N, R, phi) { if(![N,R,phi].every(Number.isFinite)||N<=0||R<=0)throw Error('Invalid circuit parameters'); return { N, R, phi, phi0: phi, emf: 0, I: 0, intEmf: 0, Q: 0, heat: 0 }; }
   function startMove(c) { c.phi0 = c.phi; c.intEmf = 0; c.Q = 0; c.heat = 0; }
-  // A magnet pushed at constant speed v from z0 to z1 (centre positions, coil at 0); returns the circuit and samples
+  // A magnet pushed at constant speed v from z0 to z1 (center positions, coil at 0); returns the circuit and samples
   function runMove(p, z0, z1, v, dt) {
     const c = makeCircuit(p.N, p.R, p.pol * coilFlux(p.Br, p.a, -z0)), out = [[0, c.phi, 0, 0]];
     const T = Math.abs(z1 - z0) / v, n = Math.ceil(T / dt - 1e-9);
@@ -487,14 +487,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return pts;
   }
   const DISK = diskRule(6, 12);
-  // Mutual inductance per pair of turns of two coaxial bundles (mean radii a1, a2, section radii c1, c2, centres d apart):
+  // Mutual inductance per pair of turns of two coaxial bundles (mean radii a1, a2, section radii c1, c2, centers d apart):
   // Maxwell's exact formula for two coaxial rings (ringFlux), averaged over both cross sections.
   function bundleM(a1, c1, a2, c2, d, rule) {
     const R = rule || DISK; let s = 0;
     for (const [x1, y1, w1] of R) for (const [x2, y2, w2] of R) s += w1 * w2 * ringFlux(a1 + c1 * x1, a2 + c2 * x2, d + c2 * y2 - c1 * y1);
     return s;
   }
-  // the smallest centre separation that keeps a 3 mm gap between the two windings, on the 5 mm grid of the separation control
+  // the smallest center separation that keeps a 3 mm gap between the two windings, on the 5 mm grid of the separation control
   const minSep = (c1, c2) => Math.ceil((c1 + c2 + 0.003) / 0.005 - 1e-9) * 0.005;
   // p: N1, N2, a1, a2 (m), d (m), RL (load resistor, Ω). R1 = source resistance + primary wire, R2 = load + secondary wire.
   function coilSystem(p) {
@@ -676,8 +676,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const COIL_A1 = 0.04;                // primary mean radius, m
   const DT = 1e-3;                     // physics step, s of the apparatus's own time
   const LEN = MAG.len, RB = MAG.b;
-  const DPSI = 4.5e-5;                 // flux between neighbouring drawn field lines, Wb
-  const ZLIM = 0.13;                   // how far the magnet centre can go from the coil, m
+  const DPSI = 4.5e-5;                 // flux between neighboring drawn field lines, Wb
+  const ZLIM = 0.13;                   // how far the magnet center can go from the coil, m
   const RAIL_END = 1.2, RAIL_X0 = 0.1;
   const TWS = [0.5, 1, 2, 4, 8, 16, 32];
   const MU_VALUES = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];   // core relative permeabilities on offer
@@ -933,7 +933,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return [bz / n, br / n];
   }
   let magPath = null, magArrows = [];
-  // both halves of the picture as one path, in metres of the given frame
+  // both halves of the picture as one path, in meters of the given frame
   function segPath(list) { const P2 = new Path2D(); for (const seg of list) for (const sg of [1, -1]) for (let k = 0; k < seg.length; k += 4) { P2.moveTo(seg[k], sg * seg[k + 1]); P2.lineTo(seg[k + 2], sg * seg[k + 3]); } return P2; }
   function buildMagLines() {
     const Br = S.magnet.Br, levels = [];
@@ -1197,7 +1197,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
   const MEAS_ROWS = {
     magnet: [['mPhi', 'Flux per turn Φ<sub>B</sub>', 'c-flux'], ['mLink', 'Flux linkage NΦ<sub>B</sub>', 'c-flux'], ['mEmf', 'EMF', 'c-emf'], ['mI', 'Current I', 'c-cur'],
-      ['mZ', 'Magnet centre z'], ['mV', 'Magnet speed'], ['mF', 'Force on the magnet'], ['mBind', 'Induced B at coil centre'], ['mP', 'Power in R, I²R'], ['mPF', 'Your power, −F·v']],
+      ['mZ', 'Magnet center z'], ['mV', 'Magnet speed'], ['mF', 'Force on the magnet'], ['mBind', 'Induced B at coil center'], ['mP', 'Power in R, I²R'], ['mPF', 'Your power, −F·v']],
     gen: [['mTh', 'Angle θ'], ['mW', 'Angular speed'], ['mPhi', 'Flux per turn Φ<sub>B</sub>', 'c-flux'], ['mEmf', 'EMF', 'c-emf'], ['mI', 'Current I', 'c-cur'], ['mF', 'Frequency f = ω/2π'],
       ['mPk', 'Peak EMF NBAω', 'c-emf'], ['mRms', 'rms EMF, NBAω/√2', 'c-emf'], ['mTq', 'Torque N I A B sin θ'], ['mP', 'Power I²R']],
     rails: [['mX', 'Bar position x'], ['mV', 'Bar speed v'], ['mPhi', 'Flux Φ<sub>B</sub> = BLx', 'c-flux'], ['mEmf', 'EMF = −BLv', 'c-emf'], ['mI', 'Current I', 'c-cur'], ['mF', 'Force on bar ILB'],
@@ -1278,7 +1278,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let sceneTxt = '', sceneLast = 0;
   function sceneState() {
     const m = S.mode, n = (v, d) => (+v).toFixed(d).replace('-', '−');
-    if (m === 'magnet') { const q = magP(); return `Now: coil of ${q.N} turns, radius ${n(S.magnet.a, 1)} cm, R = ${fmtR(q.R)}, magnet B_r = ${n(q.Br, 1)} T, its centre at z = ${n(W.z * 100, 1)} cm, move speed ${n(S.magnet.v, 2)} m/s.`; }
+    if (m === 'magnet') { const q = magP(); return `Now: coil of ${q.N} turns, radius ${n(S.magnet.a, 1)} cm, R = ${fmtR(q.R)}, magnet B_r = ${n(q.Br, 1)} T, its center at z = ${n(W.z * 100, 1)} cm, move speed ${n(S.magnet.v, 2)} m/s.`; }
     if (m === 'gen') { const G = S.gen; let deg = wrapPi(W.gth) * 180 / Math.PI; if (deg < 0) deg += 360; return `Now: ${G.N} turns, B = ${n(G.B, 2)} T, area ${G.A} cm², R = ${fmtR(Rnow())}, motor ${W.motor ? `on at ω = ${n(G.w, 1)} rad/s` : 'off'}, coil angle ${n(deg, 0)}°.`; }
     if (m === 'rails') { const r = railP(); return `Now: B = ${n(r.B, 2)} T, rail spacing ${n(S.rails.L, 0)} cm, R = ${fmtR(r.R)}, bar mass ${n(S.rails.m, 0)} g, bar at x = ${n(W.x * 100, 0)} cm.`; }
     if (m === 'self') { const p = S.self, sh = p.shape === 'tor' ? `toroid of ${p.N} turns, inner radius ${n(p.a, 1)} cm, outer ${n(p.b, 1)} cm, height ${n(p.h, 1)} cm` : `solenoid of ${p.N} turns, length ${n(p.l, 0)} cm, radius ${n(p.r, 1)} cm`; return `Now: ${sh}, core relative permeability ${MU_VALUES[p.mi]}, waveform ${WAVES.find((w) => w[0] === p.wave)[1]}, current ${fmtSI(circ.I, 'A', 3)}, back EMF ${fmtSI(circ.emf, 'V', 3)}.`; }
@@ -1499,7 +1499,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (th === 'dark') return true; if (th === 'light') return false;
     try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; }
   }
-  // colour helpers for shading painted and metal parts: mix two #rrggbb colours, or shade one toward white (f > 0) or black (f < 0)
+  // color helpers for shading painted and metal parts: mix two #rrggbb colors, or shade one toward white (f > 0) or black (f < 0)
   function rgbOf(c) { const h = (c || '#888').replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   function mixC(a, b, t) { const A = rgbOf(a), B = rgbOf(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',')})`; }
   const shade = (c, f) => (f >= 0 ? mixC(c, '#ffffff', f) : mixC(c, '#000000', -f));
@@ -1612,7 +1612,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return g;
   }
   const leadCol = (red) => (red ? (T.dark ? '#d0493b' : '#b8372b') : (T.dark ? '#5d636d' : '#2f343b'));
-  // a plastic insulated lead along a polyline: dark rim, coloured body, a soft highlight
+  // a plastic insulated lead along a polyline: dark rim, colored body, a soft highlight
   function insulated(ctx, pts, col, w) {
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     const path = () => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); };
@@ -1621,7 +1621,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.translate(-w * 0.16, -w * 0.16); path(); ctx.strokeStyle = shade(col, 0.5); ctx.globalAlpha *= 0.6; ctx.lineWidth = Math.max(0.8, w * 0.28); ctx.stroke();
     ctx.restore();
   }
-  // resistor colour code: two digits, a multiplier (gold ×0.1, silver ×0.01) and a 5 % gold band
+  // resistor color code: two digits, a multiplier (gold ×0.1, silver ×0.01) and a 5 % gold band
   const BANDS = ['#151515', '#7b4a22', '#cc2f28', '#ee8a25', '#f1d43a', '#2f9b4a', '#2f62c9', '#7c40b8', '#8b8b8b', '#f3f3f3'];
   function resBands(R) {
     let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
@@ -1676,7 +1676,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = shade(T.bench, T.dark ? 0.18 : 0.4); ctx.fillRect(0, y, W0, 2);
     ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, y + 2, W0, 1);
   }
-  // a centre zero galvanometer: case, cream dial, needle, glass and two binding posts; returns the posts
+  // a center zero galvanometer: case, cream dial, needle, glass and two binding posts; returns the posts
   function drawMeter(ctx, cx, top, mw, mh, sc, ps, FS, I) {
     const x0 = cx - mw / 2;
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 9 * sc; ctx.shadowOffsetY = 3 * sc;
@@ -2207,7 +2207,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
   }
-  // all contours Ψ = (k + ½)ΔΨ in one pass of marching squares, as a path in metres (z, r)
+  // all contours Ψ = (k + ½)ΔΨ in one pass of marching squares, as a path in meters (z, r)
   function coilLines(dpsi) {
     const { nz, nr, dz, zlo } = CZ, p = CPSI, path = new Path2D();
     for (let i = 0; i < nz - 1; i++) for (let j = 0; j < nr - 1; j++) {

@@ -39,7 +39,7 @@ The liquid drop model treats the nucleus as a drop of nuclear fluid:
 
 $$B = a_V A - a_S A^{2/3} - a_C\frac{Z(Z-1)}{A^{1/3}} - a_A\frac{(N-Z)^2}{A} \pm \frac{a_P}{A^{1/2}} .$$
 
-The terms are the bulk binding, the missing neighbours of surface nucleons, the protons' repulsion, the cost of unequal numbers of neutrons and protons, and pairing.
+The terms are the bulk binding, the missing neighbors of surface nucleons, the protons' repulsion, the cost of unequal numbers of neutrons and protons, and pairing.
 
 ## Before the lab
 
@@ -85,7 +85,7 @@ The AME2020 masses are known to a few keV or better for most stable nuclei, so t
 
 1. Why do both fusion of light nuclei and fission of heavy nuclei release energy, while fusing two medium nuclei, or splitting one, does not?
 2. Why does a massive star's core stop at iron group nuclei?
-3. Helium 4 has a much larger B/A than its neighbours lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
+3. Helium 4 has a much larger B/A than its neighbors lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
 4. Why do heavy stable nuclei have more neutrons than protons?
 
 ## What to hand in

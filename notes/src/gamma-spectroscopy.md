@@ -17,7 +17,7 @@ The demo is set up like the department's apparatus, ORTEC Experiment 3 (AN34): S
 
 ## Running it in class
 
-1. **Compton edge and backscatter** (Exp. 3.3). It starts acquiring at once: press **Stop**, ask Q1, then let it run. Drag a region of interest across the photopeak (centroid near channel 475) and put the cursor on the Compton edge and the backscatter bump. Switch **Behind source** to **Lead brick**: the bump shrinks and lead x-rays appear near 75 keV.
+1. **Compton edge and backscatter** (Exp. 3.3). It starts acquiring at once: press **Stop**, ask Q1, then let it run. Drag a region of interest across the photopeak (centroid near channel 475) and put the cursor on the Compton edge and the backscatter bump. Switch **Behind source** to **Lead brick**: the bump shrinks and lead X-rays appear near 75 keV.
 2. **HV and gain setup.** Drag the HV knob or the **PMT high voltage** slider and watch the spectrum slide; read **Pulse height for 662 keV**. Ask Q2. After step 3, change sources with the **Source** menu, not the presets, so the HV, gain and calibration stay fixed.
 3. **Energy calibration** (Exp. 3.1). Follow the preset hint: **Mark peak** on 661.7 keV, add the energy, switch to Co-60, **Clear**, acquire and mark 1173.2 and 1332.5 keV. Check the residuals on the **Calibration** plot and turn on the **keV** axis. Q3.
 4. **Resolution against energy** (Exp. 3.4). Add photopeak rows for Cs-137, Co-60, Na-22, Mn-54 and Ba-133 (356 and 81 keV) and open the **Resolution** plot. Ask Q4 before showing the slope.
@@ -29,7 +29,7 @@ The demo is set up like the department's apparatus, ORTEC Experiment 3 (AN34): S
 
 ## Questions
 
-**Q1.** Predict: ¹³⁷Cs gives off essentially one gamma ray, 661.7 keV (plus barium x-rays near 32 keV). Will the spectrum be a single narrow peak at 661.7 keV? Sketch it and say where counts below the peak come from.
+**Q1.** Predict: ¹³⁷Cs gives off essentially one gamma ray, 661.7 keV (plus barium X-rays near 32 keV). Will the spectrum be a single narrow peak at 661.7 keV? Sketch it and say where counts below the peak come from.
 
 **Q2.** At 900 V, coarse gain 10 and fine gain 1.39 the rail shows a pulse height of 2.30 V for 662 keV. The ADC's full scale is 10 V over 2048 channels. (a) About which channel holds the 662 keV photopeak? (b) Is the ⁶⁰Co sum peak at 2505.7 keV on scale at this gain? (c) Keeping the amplifier gain, what HV puts 2505.7 keV at full scale, given PMT gain ∝ V⁷? What does this say about HV stability?
 
@@ -49,14 +49,14 @@ The demo is set up like the department's apparatus, ORTEC Experiment 3 (AN34): S
 
 ## Common misconceptions
 
-- **"Every peak is a gamma ray from the source."** The Compton edge, backscatter peak, lead and iodine x-rays, escape peaks and sum peaks all come from the detector and its surroundings. Only photopeaks mark source lines.
+- **"Every peak is a gamma ray from the source."** The Compton edge, backscatter peak, lead and iodine X-rays, escape peaks and sum peaks all come from the detector and its surroundings. Only photopeaks mark source lines.
 - **"Turning up the HV gives more counts."** It makes each pulse bigger, so the spectrum moves to higher channels. The photopeak area stays the same as long as the peak stays on scale.
 - **"More channels means better resolution."** The FWHM in keV is set by the crystal and PMT; 2048 channels only spread the same peak over more bins than 1024.
 - **"Lead stops gamma rays."** It attenuates them exponentially; 2 cm (22.7 g/cm²) still passes about 8% at 662 keV.
 
 ## Physics behind the demo
 
-- Photons from a point source on the axis are followed through a bare cylindrical NaI crystal (38 mm × 38 mm by default; 2″ × 2″ and 3″ × 3″ also) with NIST XCOM cross sections: photoelectric absorption (iodine K x-rays can escape), Klein–Nishina Compton scattering on free electrons, and pair production. Electrons deposit their energy where they are made; coherent scattering in the crystal is left out. Lines are from ENSDF (NuDat 3); source decay is ignored.
-- Backscatter is single Compton scattering in a thick backing 5 cm behind the source (a lower estimate). Absorbers follow the narrow beam law e^(−μx) (XCOM for Al, Fe, Cu, Pb; Hubbell and Seltzer for Mo, Sn, Ta, which reproduce Table 3.4 of the ORTEC manual); Mo, Sn, Ta and Pb absorbers give their K x-rays; scattering in absorbers, walls and table, and buildup, are not modeled. Coincidence summing is included for ⁶⁰Co and ²²Na; chance pileup is not.
+- Photons from a point source on the axis are followed through a bare cylindrical NaI crystal (38 mm × 38 mm by default; 2″ × 2″ and 3″ × 3″ also) with NIST XCOM cross sections: photoelectric absorption (iodine K X-rays can escape), Klein–Nishina Compton scattering on free electrons, and pair production. Electrons deposit their energy where they are made; coherent scattering in the crystal is left out. Lines are from ENSDF (NuDat 3); source decay is ignored.
+- Backscatter is single Compton scattering in a thick backing 5 cm behind the source (a lower estimate). Absorbers follow the narrow beam law e^(−μx) (XCOM for Al, Fe, Cu, Pb; Hubbell and Seltzer for Mo, Sn, Ta, which reproduce Table 3.4 of the ORTEC manual); Mo, Sn, Ta and Pb absorbers give their K X-rays; scattering in absorbers, walls and table, and buildup, are not modeled. Coincidence summing is included for ⁶⁰Co and ²²Na; chance pileup is not.
 - Resolution: Gaussian, FWHM/E = a/√E + 0.01, a set by the 662 keV slider; light output exactly proportional to energy. Electronics: pulse height 0.25 mV per keV × (V/900 V)⁷ × coarse × fine into a 10 V ADC with an 18 mV zero offset; nonparalyzable dead time τ = 8 µs (see it with the 20 µCi ⁵⁷Co source at d = 1 cm). EASY-MCA-2K: 2048 channels over 10 V. The room background is assumed.
 - The crystal is bare (no can, reflector, photomultiplier or source holder) and electrons never escape or radiate, so the peak to total ratio comes out higher than on a real detector. For a 3″ × 3″ crystal at 10 cm it is 2 to 17% above Heath's measured values (IDO-16880, 1964), more at high energy: 0.568 against 0.536 at 662 keV, 0.328 against 0.280 at 1837 keV. For the 38 mm crystal the simulated ratio at 662 keV is 0.401 (2″ × 2″: 0.470); no published 38 mm value has been compared. Peak energies and spectral shapes are right; absolute efficiencies are not those of a particular detector, which is why activities are found against the standard.

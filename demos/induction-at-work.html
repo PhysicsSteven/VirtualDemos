@@ -54,7 +54,7 @@ table.rows input:focus { border-color: var(--accent); }
 .digits { font: inherit; font-family: var(--font-mono); width: 6em; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); color: var(--ink); }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
 .instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
-/* in the light theme the panel is a brushed aluminium faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
+/* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
 :root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
@@ -110,7 +110,7 @@ table.rows input:focus { border-color: var(--accent); }
 
     <div class="instr compact" id="instr" role="group" aria-label="Apparatus controls">
       <div class="kctl" id="kF"><label for="sF">Shakes per second</label><input type="range" id="sF" min="1" max="6" step="0.5"><output id="oF" for="sF"></output></div>
-      <div class="kctl" id="kA"><label for="sA">Stroke, centre to end</label><input type="range" id="sA" min="1" max="5" step="0.5"><output id="oA" for="sA"></output></div>
+      <div class="kctl" id="kA"><label for="sA">Stroke, center to end</label><input type="range" id="sA" min="1" max="5" step="0.5"><output id="oA" for="sA"></output></div>
       <div class="kctl" id="kV"><label for="sV">Swipe speed</label><input type="range" id="sV" min="0.1" max="1.5" step="0.05"><output id="oV" for="sV"></output></div>
     </div>
     <aside class="rail">
@@ -203,7 +203,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  const MU0 = 4e-7 * Math.PI, RHO_CU = 1.68e-8, IW_VERSION = 'induction-at-work@2026-10-23';
+  const MU0 = 1.25663706127e-6 /* T·m/A, CODATA 2022 */, RHO_CU = 1.68e-8, IW_VERSION = 'induction-at-work@2026-10-23';
   /* a uniformly magnetized cylinder (remanence Br, diameter d, length L) has moment m = Br V/μ0 */
   const magnetMoment = (Br, d, L) => Br * Math.PI * (d / 2) ** 2 * L / MU0;
   /* resistance of N turns of radius a of copper wire of diameter dw */
@@ -293,7 +293,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PRESETS = {
     flash: { m: 'flash', hint: 'Shaking slides the magnet back and forth through the coil. Each pass changes the flux through 1000 turns; the EMF peaks as the magnet enters and leaves the coil and changes sign in between. A rectifier turns those pulses into charge on the capacitor.', set() { Object.assign(S.fl, { st: flashState(), t0: 0, shaking: true, f: 3, A: 0.03, C: 0.1, led: false, ff: false, hist: [] }); } },
     flashled: { m: 'flash', hint: 'The capacitor starts at 3.0 V and the light is on, with no shaking. The light dims as the capacitor empties. Shake to keep it lit: the energy comes from the work your hand does against the coil’s push on the magnet.', set() { Object.assign(S.fl, { st: { ...flashState(), Vc: 3.0 }, t0: 0, shaking: false, f: 3, A: 0.03, C: 0.1, led: true, ff: false, hist: [] }); S.fl.st.Ecap = 0; } },
-    tablet: { m: 'tablet', hint: 'The pen’s tip is a tiny magnet. Moving it changes the flux enclosed by each wire’s circuit, most for the wires right under it, so they carry a small EMF. Comparing neighbouring wires pins down the pen to a fraction of the 5 mm spacing.', set() { Object.assign(S.tb, { x: 0.075, y: 0.05, px: 0.075, py: 0.05, vx: 0, vy: 0, est: [], tru: [], circle: true, ct: 0 }); } },
+    tablet: { m: 'tablet', hint: 'The pen’s tip is a tiny magnet. Moving it changes the flux enclosed by each wire’s circuit, most for the wires right under it, so they carry a small EMF. Comparing neighboring wires pins down the pen to a fraction of the 5 mm spacing.', set() { Object.assign(S.tb, { x: 0.075, y: 0.05, px: 0.075, py: 0.05, vx: 0, vy: 0, est: [], tru: [], circle: true, ct: 0 }); } },
     still: { m: 'tablet', hint: 'The pen is held still in the middle of the tablet. The field is strong under it, but it is not changing, so every wire reads zero and this tablet cannot tell where the pen is. Drag it and it reappears.', set() { Object.assign(S.tb, { x: 0.05, y: 0.05, px: 0.05, py: 0.05, vx: 0, vy: 0, est: [], tru: [], circle: false, ct: 0 }); } },
     card: { m: 'card', hint: 'The stripe holds tiny magnetized regions. As they pass the head, each flip of magnetization changes the flux in the head’s coil and gives a pulse. Swipe faster and the pulses are taller and closer together.', set() { Object.assign(S.cd, { v: 0.5, uneven: false, run: null, last: null }); startSwipe(); } },
     uneven: { m: 'card', hint: 'The swipe speeds up and slows down by 40 %. The pulses bunch and spread, yet the number still reads, because F2F carries its own clock: every bit starts with a flip.', set() { Object.assign(S.cd, { v: 0.5, uneven: true, run: null, last: null }); startSwipe(); } }
@@ -444,7 +444,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(xlab, X1, Y1 + 21 * p, { a: 'right', s: 9, c: T.muted }); txt(ylab, X0 + 4 * p, Y0 - 2 * p, { s: 9, c: T.muted, bl: 'bottom' });
     return { X, Y };
   }
-  /* ---------- 3D: the shake flashlight, in centimetres. The magnet slides at st.z inside a clear tube through the 1000 turn coil;
+  /* ---------- 3D: the shake flashlight, in centimeters. The magnet slides at st.z inside a clear tube through the 1000 turn coil;
      its field lines are the point dipole's (r = C sin²θ, the model the EMF is computed from), moving with it. The LED glows as the
      flat view's light does (from the LED current); the coil is tinted by the sign of the EMF. Board, capacitor and shell are pictures. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.38, ph: 1.12, zoom: 1 }, pane: [0, 0, 0, 0] };

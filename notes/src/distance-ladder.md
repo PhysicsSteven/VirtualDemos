@@ -21,7 +21,7 @@ Students should know what an arcsecond is and the magnitude scale (5 magnitudes 
 2. **2 Cepheids.** In the **LMC**, the preset markers sit on two peaks of a Cepheid with P = 11.40 d. Follow the readouts down: Leavitt law M_V = −4.19, mean m_V = 14.34, m − M = 18.53, d = 50.9 kpc. Have students pick other Cepheids, place the markers on two peaks themselves (or several cycles apart, with **Cycles between the markers**) and **Record this Cepheid**; the mean comes out near 50 kpc.
 3. **Inverse square law** (in the Cepheid rail). Drag the screen out to 2.00 d: the same light covers four times the area, so the flux is ×0.250, 1.51 mag fainter.
 4. **3 Type Ia.** Drag the line to the peak of **SN B**. With an assumed peak M = −19.3, m = 15.06 gives d = 74.5 Mpc. Point at "Brighter than a 30 day Cepheid by": 14.1 mag, about 430,000 times.
-5. **4 Hubble's law.** The least squares fit gives H₀ = 69.9 ± 0.8 km/s/Mpc from 34 galaxies, and 1/H₀ = 14.0 Gyr. Click a galaxy to see its spectrum and drag the comb of rest wavelengths until the lines match. Then move **Leavitt law zero point a** (with **Supernova calibration follows the Cepheids** checked): every point slides together (Q6).
+5. **4 Hubble's law.** The least squares fit gives H₀ = 69.4 ± 1.3 km/s/Mpc from 34 galaxies, with an intercept of 163 ± 305 km/s (zero within its uncertainty), and 1/H₀ = 14.1 Gyr. Click a galaxy to see its spectrum and drag the comb of rest wavelengths until the lines match. Then move **Leavitt law zero point a** (with **Supernova calibration follows the Cepheids** checked): every point slides together (Q6).
 6. **Whole ladder.** End here: the ringed dots are the measurements just made. Ask what each overlap is used for.
 
 ## Questions
@@ -36,7 +36,7 @@ Students should know what an arcsecond is and the magnitude scale (5 magnitudes 
 
 **Q5.** **SN B** peaks at m = 15.06 and its host galaxy has redshift z = 0.0179. Assuming M = −19.3 at peak, find its distance and its recession speed (c = 2.998 × 10⁵ km/s). What value of H₀ does this one supernova give?
 
-**Q6.** Suppose Cepheids are really 0.10 mag brighter than assumed (a = −4.15, not −4.05), and the supernova calibration, which comes from Cepheids, shifts by the same amount. By what factor does every distance on the Hubble diagram change, and what happens to H₀ = 69.9 km/s/Mpc? Check with **Leavitt law zero point a** in rung 4.
+**Q6.** Suppose Cepheids are really 0.10 mag brighter than assumed (a = −4.15, not −4.05), and the supernova calibration, which comes from Cepheids, shifts by the same amount. By what factor does every distance on the Hubble diagram change, and what happens to H₀ = 69.4 km/s/Mpc? Check with **Leavitt law zero point a** in rung 4.
 
 **Q7.** The fit gives 1/H₀ = 14.0 Gyr. Why is this a natural estimate of the age of the universe, and why is it not exactly the age? Separately: why measure parallaxes of nearby Milky Way Cepheids so carefully when the goal is galaxies hundreds of Mpc away?
 
@@ -52,7 +52,7 @@ Students should know what an arcsecond is and the magnitude scale (5 magnitudes 
 - Parallax: Earth on a circular 1 AU orbit, the star in the orbital plane with January and July at the extremes, so the shift is 2p and d = 1/p (a real star off the plane traces a small ellipse). Position uncertainties: 10 mas (Ground), 1 mas (Hipparcos), 0.02 mas (Gaia); σ_d/d = σ_p/p.
 - Cepheids: simulated from M_V = −2.43 (log₁₀P − 1) + a, default a = −4.05 (Benedict et al. 2007, from Hubble Space Telescope parallaxes of Milky Way Cepheids), with a 0.1 mag spread for the instability strip width, noisy nightly photometry and a schematic light curve. Distance moduli: LMC 18.48, M31 24.40, M100 30.91. No dust extinction.
 - Type Ia: peak M = −19.3 ± 0.12 mag, schematic light curve, no extinction, width, color or K corrections (fair at z < 0.1).
-- Hubble diagram: illustrative data simulated with H₀ = 70 km/s/Mpc, 250 km/s peculiar velocities and distance errors of 0.10 mag (Cepheids) and 0.15 mag (supernovae); least squares fit through the origin; v = cz (off by several percent at z = 0.1).
+- Hubble diagram: illustrative data simulated with H₀ = 70 km/s/Mpc, 250 km/s peculiar velocities and distance errors of 0.10 mag (Cepheids) and 0.15 mag (supernovae); least squares fit v = H₀d + c with a free intercept (slope and intercept with standard errors); v = cz (off by several percent at z = 0.1).
 - Galaxy pictures are drawings, the spectrum is schematic, overview ranges are approximate, and other rungs (such as the red giant branch tip) are not shown.
 
 ## Going further

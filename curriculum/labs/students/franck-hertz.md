@@ -70,7 +70,7 @@ Turn Blind on before you start.
 
 ## Analysis
 
-1. For the 180 °C run, find the spacings between neighbouring maxima and their mean.
+1. For the 180 °C run, find the spacings between neighboring maxima and their mean.
 2. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
 3. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
 4. Fit the 120 °C run. Compare its slope with the 180 °C one. Why are the dips shallower in the colder tube?
@@ -78,7 +78,7 @@ Turn Blind on before you start.
 
 ## Uncertainty
 
-Each peak is read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighbouring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
+Each peak is read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
 
 ## Questions
 

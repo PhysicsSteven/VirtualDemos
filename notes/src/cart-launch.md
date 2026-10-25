@@ -46,4 +46,4 @@ Students need projectile motion with x and y treated separately. The demo shows 
 - The ball after launch: velocity = cart velocity + launch velocity (perpendicular to the track); acceleration g, no air resistance, point ball.
 - Track coordinates: along the track the ball's acceleration is g sin θ, perpendicular to it −g cos θ. The flight back to the launcher's height lasts T = 2u/(g cos θ) and the highest point is u²/(2g cos θ) above the launcher.
 - The cart: constant speed on the level, or the set acceleration from the moment of launch (a braking cart stops and stays stopped); on the incline it rolls without friction at g sin θ. The launch pushes the cart into the track, not along it, so its speed is unchanged.
-- The ball counts as caught within 2 cm of the launcher's centre; otherwise it lands on the cart's top or on the track. The miss when only the cart accelerates is −½ a T² at the launcher's height.
+- The ball counts as caught within 2 cm of the launcher's center; otherwise it lands on the cart's top or on the track. The miss when only the cart accelerates is −½ a T² at the launcher's height.

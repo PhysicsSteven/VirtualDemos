@@ -719,7 +719,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.beginPath(); c.rect(g.x, g.y, g.w, g.h); c.clip();
     c.fillStyle = T.sky; c.fillRect(g.x, g.y, g.w, g.h);
     const ci = fg.ci, si = fg.si, tilted = si > 1e-6;
-    // the dark matter halo: round from every side, so drawn as a soft sphere (it gives no light; the colour is only a marker)
+    // the dark matter halo: round from every side, so drawn as a soft sphere (it gives no light; the color is only a marker)
     if (tilted && S.P.h.on) {
       const hr = S.rmax * fg.sc, gr = c.createRadialGradient(fg.cx, fg.cy, 0, fg.cx, fg.cy, hr);
       gr.addColorStop(0, 'rgba(150,120,255,0.20)'); gr.addColorStop(0.6, 'rgba(150,120,255,0.10)'); gr.addColorStop(1, 'rgba(150,120,255,0)');

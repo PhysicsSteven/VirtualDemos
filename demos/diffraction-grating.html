@@ -215,7 +215,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Whole numbers of d/a make orders go missing: the zero of one slit's pattern lands on a bright order. Turning the grating uses d(sin θ<sub>m</sub> − sin θ<sub>i</sub>) = mλ, angles from the grating's normal.</p>
-          <p class="hint">Single slit swaps the grating for one slit of width a (N = 1): the pattern is [sin β/β]² alone, with dark fringes where a sin θ = mλ. The slits here are a few micrometres wide so the pattern spreads across the wall; a slit ten times wider gives the same pattern ten times smaller.</p>
+          <p class="hint">Single slit swaps the grating for one slit of width a (N = 1): the pattern is [sin β/β]² alone, with dark fringes where a sin θ = mλ. The slits here are a few micrometers wide so the pattern spreads across the wall; a slit ten times wider gives the same pattern ten times smaller.</p>
         </details>
       </section>
 
@@ -635,7 +635,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
             const sd = Math.sin(th) + Math.sin(al), cp = Math.cos(psi);
             const I = intensity(sd, lam, d, a, N) / (N * N);
             const dphi = PI * d * Math.cos(th) / lam * cp * cp / L;     // dφ/dy
-            acc += (N / PI) * I * dphi;                                  // power per metre of wall; each order integrates to its envelope
+            acc += (N / PI) * I * dphi;                                  // power per meter of wall; each order integrates to its envelope
           }
           const pw = acc / 3 / s * c.w;
           colRGB[col * 3] += pw * lin[0]; colRGB[col * 3 + 1] += pw * lin[1]; colRGB[col * 3 + 2] += pw * lin[2];
@@ -1592,7 +1592,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function row(label, value, cls) { return `<div${cls ? ` class="${cls}"` : ''}><span>${label}</span><span>${value}</span></div>`; }
   function check() {
     const L = parseFloat($('inL').value), yc = parseFloat($('inY').value), m = parseInt($('inM').value, 10), box = $('result');
-    if (!(L > 0) || !(yc > 0) || !(m >= 1)) { box.innerHTML = '<p>Enter L in metres, y in centimetres (both positive) and a whole order number m ≥ 1.</p>'; return; }
+    if (!(L > 0) || !(yc > 0) || !(m >= 1)) { box.innerHTML = '<p>Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ 1.</p>'; return; }
     const one = single(), D = one ? 'a' : 'd', y = yc / 100, d = one ? S.aw * 1e-6 : dOf(S.lpm), sd = srcDef();
     let html = '';
     if (S.find === 'lam') {

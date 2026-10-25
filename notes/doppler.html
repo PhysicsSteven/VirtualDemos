@@ -81,11 +81,11 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: an ambulance siren approaches at constant speed, passes you and drives away. Sketch the pitch you hear against time. Does it rise as the ambulance gets closer, stay constant, or something else? When does it change fastest?</p></div>
 
-<div class="q"><p><strong>Q2.</strong> A 700 Hz siren moves at 30 m/s; sound travels at 343 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.</p></div>
+<div class="q"><p><strong>Q2.</strong> A 700 Hz siren moves at 30 m/s; sound travels at 343.2 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.</p></div>
 
 <div class="q"><p><strong>Q3.</strong> Explain why, for sound, it matters whether the source or the observer moves, at the same relative speed. Check with <strong>Source at rest, observer moving</strong>: note f′ early on. Then set the observer's <strong>Speed v_o/v</strong> to 0, give the source <strong>Mach number v_s/v</strong> 0.25 with <strong>Direction</strong> 180° (toward the observer), press <strong>Restart</strong> and compare. Why does this difference disappear for light?</p></div>
 
-<div class="q"><p><strong>Q4.</strong> A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?</p></div>
+<div class="q"><p><strong>Q4.</strong> A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343.2 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?</p></div>
 
 <div class="q"><p><strong>Q5.</strong> At exactly Mach 1, f′ = f/(1 − v_s/v) is infinite straight ahead. What is physically happening, and why does the observer ahead hear nothing at all until the wall arrives? Use the drawing in <strong>Mach 1: the sound barrier</strong>.</p></div>
 
@@ -102,7 +102,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
-<li>Sound: a point source in still air at v = 343 m/s. The program solves exactly for each emission time whose crest is arriving now, v(t − t_e) = |r_o − r_s(t_e)|, and applies f′ = f (v − v_o·n̂)/(v − v_s·n̂), with n̂ from the emission point to the observer.</li>
+<li>Sound: a point source in still air at v = 343.2 m/s. The program solves exactly for each emission time whose crest is arriving now, v(t − t_e) = |r_o − r_s(t_e)|, and applies f′ = f (v − v_o·n̂)/(v − v_s·n̂), with n̂ from the emission point to the observer.</li>
 <li>Faster than sound, two emission times reach each point inside the cone (the earlier one heard backward, with negative f′) and none reach points outside. sin θ_c = v/v_s.</li>
 <li>Light: special relativity in the observer's frame, f′ = f/(γ(1 − β cos θ)). Head on this is √((1 + β)/(1 − β)); at θ = 90° it is 1/γ. The Observer controls are hidden in light mode: the observer is at rest. Colors are approximate; outside 380 to 750 nm light is drawn gray.</li>
 <li>The Hubble line uses d = cz/H₀ (H₀ = 70 km/s/Mpc), only for 0 &lt; z ≤ 0.1. Only some crests are drawn; real 700 Hz crests are 0.49 m apart. Loudness falls as 1/r in the audio only. A real aircraft gives two booms (nose and tail shocks).</li>

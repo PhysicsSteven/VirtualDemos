@@ -25,9 +25,9 @@ Students need Faraday's law with flux and Lenz's law. **Blind** hides the field 
 
 ## Questions
 
-**Q1.** A long solenoid of radius 2.0 cm with 2000 turns per metre carries I = (2.0 A)e^(−αt) with α = 200 s⁻¹. Find dB/dt inside at t = 0 and the induced field at 1.0 cm, 2.0 cm and 6.0 cm from the axis. Which way does it circle if B points out of the page?
+**Q1.** A long solenoid of radius 2.0 cm with 2000 turns per meter carries I = (2.0 A)e^(−αt) with α = 200 s⁻¹. Find dB/dt inside at t = 0 and the induced field at 1.0 cm, 2.0 cm and 6.0 cm from the axis. Which way does it circle if B points out of the page?
 
-**Q2.** For the same solenoid at t = 0, find the EMF around a circle of radius 6.0 cm and around a circle of radius 9.0 cm, both centred on the axis. Why are they equal, when E is smaller at 9.0 cm?
+**Q2.** For the same solenoid at t = 0, find the EMF around a circle of radius 6.0 cm and around a circle of radius 9.0 cm, both centered on the axis. Why are they equal, when E is smaller at 9.0 cm?
 
 **Q3.** A circle of radius 2.0 cm lies entirely outside the solenoid. What is ∮E·dl around it? Is E zero on the circle? Reconcile your two answers.
 

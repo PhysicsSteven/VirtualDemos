@@ -25,7 +25,7 @@ Students need Faraday's law with flux, ε = −N dΦ/dt, and P = IV. **Blind** h
 
 ## Questions
 
-**Q1.** In the shake flashlight the magnet's peak speed is v = 2πfA. For f = 3 Hz and A = 3.0 cm, find v. The largest value of N dΦ/dz for this coil is 5.17 Wb/m, about 7 mm from the coil's centre. Estimate the peak EMF and explain why it is less than (5.17 Wb/m)v_max.
+**Q1.** In the shake flashlight the magnet's peak speed is v = 2πfA. For f = 3 Hz and A = 3.0 cm, find v. The largest value of N dΦ/dz for this coil is 5.17 Wb/m, about 7 mm from the coil's center. Estimate the peak EMF and explain why it is less than (5.17 Wb/m)v_max.
 
 **Q2.** The capacitor is 0.10 F. How much energy does it hold at 2.6 V, where the light starts to glow? If the bridge rectifier loses 0.60 V and the peak EMF is 2.84 V, what is the highest voltage the capacitor can reach? What could you change to charge it higher?
 

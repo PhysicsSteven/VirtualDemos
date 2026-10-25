@@ -13,9 +13,9 @@ Textbook: OpenStax *University Physics*, Vol. 3, §4.5. Access for free at https
 **Using the demo.**
 
 - The pattern is the exact far field diffraction pattern of a circular hole, $$I = I_0\left[2J_1(x)/x\right]^2$$ with $$x = \pi D\sin\theta/\lambda$$, where $$J_1$$ is a Bessel function. The lens, mirror or eye is taken to be perfect, so the only blur is diffraction.
-- Each setup shows the apparatus, the pattern it makes (on a screen, a sensor, or as angles in the focal plane) and a graph of the intensity along the line through the centre or through both sources. Intensities are given as $$I/I_0$$, where $$I_0$$ is the central peak of one source alone.
+- Each setup shows the apparatus, the pattern it makes (on a screen, a sensor, or as angles in the focal plane) and a graph of the intensity along the line through the center or through both sources. Intensities are given as $$I/I_0$$, where $$I_0$$ is the central peak of one source alone.
 - The cursor is the orange line. Drag it on the graph or the pattern, or use its slider or the arrow keys; it reads its position and the intensity there. Zoom in for a finer cursor: it moves in steps of 1/1000 of the view.
-- In the pinhole setups a laser lights the pinhole and a screen at distance $$L$$ catches the light; the cursor reads the distance $$x$$ from the centre of the screen in mm. In the other setups the cursor reads angles in µrad (1 µrad = 10⁻⁶ rad).
+- In the pinhole setups a laser lights the pinhole and a screen at distance $$L$$ catches the light; the cursor reads the distance $$x$$ from the center of the screen in mm. In the other setups the cursor reads angles in µrad (1 µrad = 10⁻⁶ rad).
 - Two sources are equally bright and independent, so their intensities add. **Show each source alone** draws each one's pattern as a dashed curve.
 - **Bring out the faint rings** gives the picture 30 times more exposure; it does not change the graph or the readings.
 - Record reading stores the setup, λ, D, L, the cursor reading, the separation of the sources and the intensity at the cursor. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -34,9 +34,9 @@ Light passing through a circular hole of diameter $$D$$ spreads out. A distant p
 
 $$\sin\theta_1 = 1.22\,\frac{\lambda}{D},$$
 
-and for small angles $$\theta_1 \approx 1.22\,\lambda/D$$ in radians. On a screen a distance $$L$$ away, a point $$x$$ from the centre is at the angle $$\theta = \arctan(x/L) \approx x/L$$.
+and for small angles $$\theta_1 \approx 1.22\,\lambda/D$$ in radians. On a screen a distance $$L$$ away, a point $$x$$ from the center is at the angle $$\theta = \arctan(x/L) \approx x/L$$.
 
-Two point sources make two Airy patterns, which overlap. **Rayleigh's criterion** says they are just resolved when the centre of one pattern falls on the first dark ring of the other, so the smallest angle between two sources that can be told apart is
+Two point sources make two Airy patterns, which overlap. **Rayleigh's criterion** says they are just resolved when the center of one pattern falls on the first dark ring of the other, so the smallest angle between two sources that can be told apart is
 
 $$\theta_{\min} = 1.22\,\frac{\lambda}{D}.$$
 
@@ -93,7 +93,7 @@ The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain
 1. The Hubble Space Telescope has a 2.40 m mirror. For 550 nm light, what is the smallest angle it can resolve, and how close can two stars 2.0 million light years away be and still be seen as two? Check with the Hubble and two stars setup.
 2. Why do astronomers build telescopes with ever larger mirrors, and why do radio telescopes have to be far larger than optical ones?
 3. A camera lens of focal length 50 mm is stopped down from f/4 to f/22. What happens to the size of the Airy disk on the sensor, and why can a photograph taken at f/22 look softer than one at f/8? Check with the Camera lens setup.
-4. Your answer to Before the lab question 3 is several kilometres, yet a real eye cannot tell two headlights apart that far away. Normal (20/20) vision resolves about one minute of arc. Give two reasons a real eye does worse than the diffraction limit.
+4. Your answer to Before the lab question 3 is several kilometers, yet a real eye cannot tell two headlights apart that far away. Normal (20/20) vision resolves about one minute of arc. Give two reasons a real eye does worse than the diffraction limit.
 5. Would two headlights be easier or harder to resolve if they were blue rather than red? Explain.
 
 ## What to hand in

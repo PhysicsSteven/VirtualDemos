@@ -23,7 +23,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§4.3 and 4.5. Access for fre
 - $$g = 9.81\ \text{m/s}^2$$, a point ball and no air resistance. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and does not change the cart's speed.
 - On the level track the cart keeps a constant speed, or has the set acceleration from the moment of launch (a motor push or a brake). A braking cart stops and stays stopped.
 - On the incline the cart rolls without friction, so its acceleration along the track is $$g\sin\theta$$.
-- The ball counts as caught if it comes down within 2 cm of the launcher's centre. Sizes are to scale.
+- The ball counts as caught if it comes down within 2 cm of the launcher's center. Sizes are to scale.
 
 </details>
 

@@ -5,9 +5,9 @@ time: 10 to 20 minutes
 ---
 ## What students should come away with
 
-- g = GM/r² with r measured from Earth's centre. Near the surface r ≈ R, so g barely changes with height: g ≈ g₀(1 − 2h/R).
+- g = GM/r² with r measured from Earth's center. Near the surface r ≈ R, so g barely changes with height: g ≈ g₀(1 − 2h/R).
 - At the space station's height (about 400 km) gravity is still about 89% of its surface value. Astronauts float because they are in free fall, not because gravity is gone.
-- Earth's rotation reduces the effective g by up to ω²R = 0.034 m/s² at the equator and tilts the plumb line slightly away from Earth's centre.
+- Earth's rotation reduces the effective g by up to ω²R = 0.034 m/s² at the equator and tilts the plumb line slightly away from Earth's center.
 - The measured sea level g (9.780 at the equator to 9.832 at the poles) also reflects Earth's flattening, which a sphere misses.
 
 ## Before class
@@ -28,7 +28,7 @@ Students need Newton's law of gravitation. The left panel shows the planet with 
 
 **Q2.** Find g at 400 km. Why do astronauts on the space station float?
 
-**Q3.** How much does Earth's rotation reduce g at the equator? At what latitude is the plumb line tilted most from the direction to Earth's centre?
+**Q3.** How much does Earth's rotation reduce g at the equator? At what latitude is the plumb line tilted most from the direction to Earth's center?
 
 **Q4.** A 1.000 kg mass on a spring scale reads 9.786 N at the equator and 9.820 N at the pole in the sphere model. The real values are about 9.780 and 9.832 N. What explains the difference?
 
@@ -43,7 +43,7 @@ Students need Newton's law of gravitation. The left panel shows the planet with 
 ## Physics behind the demo
 
 - A uniform sphere with GM = 3.986004418 × 10¹⁴ m³/s² and mean radius 6371 km (Moon 4.905 × 10¹² and 1737.4 km; Mars 4.283 × 10¹³ and 3389.5 km), turning at the sidereal rate.
-- Effective g at rest on the ground or on a tower turning with the planet: gravity GM/r² toward the centre plus ω²r cos(latitude) outward from the axis. The plumb line tilt is largest near 45° (5.9 arcmin on Earth).
+- Effective g at rest on the ground or on a tower turning with the planet: gravity GM/r² toward the center plus ω²r cos(latitude) outward from the axis. The plumb line tilt is largest near 45° (5.9 arcmin on Earth).
 - The real Earth comparison uses the WGS 84 normal gravity formula at sea level (Somigliana): it includes both rotation and flattening.
 - The GPS and geostationary presets set the orbit radius (26,560 km and 42,164 km), so the heights above the mean radius are 20,189 and 35,793 km. Geostationary altitude is usually quoted as 35,786 km above the equator, whose radius is 6378 km.
 - The height slider runs on a square root scale so small heights are reachable.

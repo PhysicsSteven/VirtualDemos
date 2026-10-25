@@ -72,7 +72,7 @@ Record the battery voltage and resistance. Fill the last column yourself for the
 2. Graph $$B$$ against $$r$$ for the Part 2 readings inside the plates. Compare the slope with $$\mu_0 I/(2\pi R^2)$$, using the current you recorded.
 3. Graph $$B$$ against $$1/r$$ for the Part 2 readings outside the plates. Compare the slope with $$\mu_0 I/2\pi$$.
 4. Graph $$B$$ against $$I$$ for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm. What does this tell you about the field in the gap compared with the field around the wire?
-5. From two neighbouring Part 3 readings, work out $$\varepsilon_0 A\,\Delta E/\Delta t$$ (with $$A = \pi R^2$$) and compare it with the current halfway between them.
+5. From two neighboring Part 3 readings, work out $$\varepsilon_0 A\,\Delta E/\Delta t$$ (with $$A = \pi R^2$$) and compare it with the current halfway between them.
 
 ## Uncertainty
 

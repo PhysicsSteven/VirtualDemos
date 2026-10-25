@@ -210,7 +210,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const Zx = (z) => geo.cx + z * geo.s, Ry = (r) => r * geo.s;   // cm to px; the gap is drawn from z = −0.6 to 0.6
 
-  /* ---------- 3D: the wire, the plates and the loop in perspective, in centimetres. Same numbers as the flat view: B rings at the
+  /* ---------- 3D: the wire, the plates and the loop in perspective, in centimeters. Same numbers as the flat view: B rings at the
      same places with the same brightness (fieldB), plate charges and E lines in proportion to q (E lines spread over the plate area,
      so their density goes as E), the loop and its surface from S.z, S.r and S.surf. The gap is drawn 1.2 cm wide (really 2 mm). */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.42, ph: 1.15, zoom: 1 }, pane: [0, 0, 0, 0], ph: 0, surfKey: '', lr: -1 };

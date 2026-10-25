@@ -315,7 +315,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // SI units unless stated. Lensing angles are in units of the Einstein radius θ_E; ray tracing lengths in units of r_s.
   const GM_SUN = 1.32712440018e20;     // m³/s² (IAU)
   const C = 299792458;                  // m/s
-  const PC = 3.0856775814913673e16, AU = 1.495978707e11, DAY = 86400, YEAR = 365.25 * DAY, G0 = 9.80665;
+  const PC = 3.0856775814913673e16, AU = 1.495978707e11, DAY = 86400, YEAR = 365.25 * DAY, G0 = 9.81;
   const BC = Math.sqrt(27) / 2;         // critical impact parameter, r_s units
   const rsOf = (M) => 2 * GM_SUN * M / (C * C);                         // M in solar masses → m
   const clockRate = (x) => Math.sqrt(1 - 1 / x);                         // x = r/r_s, static observer
@@ -330,7 +330,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const Apoint = (u) => (u * u + 2) / (u * Math.sqrt(u * u + 4));
   // Uniform disk source of radius ρ at offset d: (1/πρ²) ∫ A(r) × (arc of the circle r inside the disk) r dr; A(r) r is finite at r = 0
   function Adisk(d, rho, n = 800) {
-    // r = r₀ + (r₁ − r₀)(1 − cos t)/2 smooths the square root behaviour of the arc at both ends
+    // r = r₀ + (r₁ − r₀)(1 − cos t)/2 smooths the square root behavior of the arc at both ends
     const r0 = Math.max(0, d - rho), r1 = d + rho; let s = 0;
     for (let i = 0; i < n; i++) {
       const t = Math.PI * (i + 0.5) / n, r = r0 + (r1 - r0) * (1 - Math.cos(t)) / 2, dr = (r1 - r0) / 2 * Math.sin(t);
@@ -1023,7 +1023,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- the static observer's own sky (near view porthole) ----------
-  // A fisheye of the whole sky from the observer at r, centred on the hole: distance from the centre ∝ the local angle α, so the rim is
+  // A fisheye of the whole sky from the observer at r, centered on the hole: distance from the center ∝ the local angle α, so the rim is
   // straight away from the hole. Pixels with α ≤ α_c fall in (the shadow); the rest take the sky direction from the same exact
   // Schwarzschild table as the Ray traced view, built at the observer's r.
   let port = null;

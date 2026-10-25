@@ -47,7 +47,7 @@ Students should know the magnetic force qv × B, circular motion and energy cons
 
 ## Physics behind the demo
 
-- B = (4/5)^(3/2) μ₀NI/a ≈ 7.40 × 10⁻⁴ T/A × I for N = 130, a = 0.158 m. e/m = 2V/(B²r²); the fit is 2V against (Br)² through the origin, with slope e/m.
+- B = (4/5)^(3/2) μ₀NI/a ≈ 7.40 × 10⁻⁴ T/A × I for N = 130, a = 0.158 m. e/m = 2V/(B²r²); the fit is a least squares line of 2V against (Br)² with a free intercept: the slope is e/m and the intercept should come out near zero.
 - The beam is traced through the exact field of the two coils (computed with elliptic integrals), not a perfectly uniform one, so circles, helices and glass hits come from the computed motion. Off center the field is a little weaker, so e/m from the center field comes out slightly low for large circles (about 0.1% for a 3.7 cm circle, about 1% for a 5 cm circle).
 - The mirrored scale and the eye: the reading pointers are set by the student; the beam flickers by up to about 1 mm (simulated). Meter readings carry small seeded jitter.
 - Not simulated: energy lost by the electrons before they reach the circle (in the anode and in collisions with helium). The earth's field can be switched on or off.

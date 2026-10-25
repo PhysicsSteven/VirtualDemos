@@ -211,7 +211,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="inline"><span class="lab">Gravity</span>
           <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
         <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
-        <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
+        <div><div class="slider-head"><label for="sL">Length L (pivot to bob center, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
         <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button></div>
         <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
         <div class="btnrow"><button type="button" class="btn" data-step="A" data-d="-1">θ₀ −1°</button><button type="button" class="btn" data-step="A" data-d="1">θ₀ +1°</button></div>
@@ -486,7 +486,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return L.join('\n') + '\n';
   }
   // ---------- exact period and double pendulum ----------
-  const G0 = 9.80665;
+  const G0 = 9.81;
   const TAU = 2 * Math.PI;
   const wrapPi = (x) => x - TAU * Math.round(x / TAU);
   // complete elliptic integral of the first kind K(k) = π / (2 AGM(1, √(1 − k²)))
@@ -666,7 +666,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bDamp = () => (S.damp ? 0.02 : 0);
 
     function release() { S.st = { th: S.A * Math.PI / 180, w: 0 }; S.t = 0; S.trace = []; S.passes = []; S.lastT = null; }
-    /* pixels per metre: a 2 m pendulum and its swing fit the pendulum's half of the picture */
+    /* pixels per meter: a 2 m pendulum and its swing fit the pendulum's half of the picture */
     function scaleFor(A) { const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62, Lmax = 2;
       return Math.min((sh - 96 * p - 60 * p) / Lmax, (sw - 40 * p) / (2 * Lmax * Math.max(0.3, Math.sin(Math.min(A, 90) * Math.PI / 180)))); }
     function draw() {
@@ -749,7 +749,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       VG.box(ctx, px - 9 * p, py - 22 * p, 18 * p, 27 * p, { color: T.metalDark, r: 2.5 * p, shadow: false });   // pivot block; the axle is drawn on top later
     }
     // ---------- the lab in 3D (three.js through lib/vd3.js and lib/vd3kit.js); the flat drawing above stays (Flat, or ?view=flat) ----------
-    /* The same swing on a bench, to scale and in metres (z up, the swing in the x–z plane): a retort stand whose boss holds an arm with the
+    /* The same swing on a bench, to scale and in meters (z up, the swing in the x–z plane): a retort stand whose boss holds an arm with the
        pivot block, the string (or the uniform rod) and a steel bob whose size follows its mass, and a photogate on the bench whose beam crosses
        the bottom of the swing; its LED lights while the bob (or rod) is in the beam. The clamp sits L above the beam, as a student sets it.
        The timer, the numbers and the trace stay on the drawing canvas on top. Nothing here feeds the physics. */
@@ -796,7 +796,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the timer on the bench, wired to the gate; its LCD shows what the timer above the picture shows */
       const meter = VD3K.meter(S3, { w: 0.2, h: 0.11, label: 'PHOTOGATE TIMER', sub: 'period' }); meter.rotation.order = 'ZXY'; meter.rotation.z = 0.32; meter.position.x = -0.2; meter.position.y = 0.2; sc.add(meter);   /* behind the swing, left of the gate: clear of the trace strip */
       sc.add(VD3K.cable([0, GY + AT, ZB + 0.01], [-0.15, 0.22, 0.03], { sag: 0.03, color: 0x23282f }));
-      /* the fading arc the bob leaves: a ribbon in the swing plane, its colour fading with age */
+      /* the fading arc the bob leaves: a ribbon in the swing plane, its color fading with age */
       const NT = 600, trP = new Float32Array(NT * 6), trC = new Float32Array(NT * 8), idx = [];
       for (let i = 0; i < NT - 1; i++) { const a = 2 * i; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
       const trG = new THREE.BufferGeometry(); trG.setAttribute('position', new THREE.BufferAttribute(trP, 3)); trG.setAttribute('color', new THREE.BufferAttribute(trC, 4)); trG.setIndex(idx); trG.setDrawRange(0, 0);
@@ -857,7 +857,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!L3.tgt || reduce) { L3.tgt = want.slice(); L3.ppm = ppm; }
       else if (!L3.freeze) { for (let i = 0; i < 3; i++) L3.tgt[i] += (want[i] - L3.tgt[i]) * 0.16; L3.ppm *= Math.pow(ppm / L3.ppm, 0.16); }
       if (!L3.freeze && !L3.raf && (Math.abs(L3.ppm / ppm - 1) > 0.002 || Math.abs(L3.tgt[2] - want[2]) > 0.0005)) L3.raf = requestAnimationFrame(() => { L3.raf = 0; draw(); });
-      /* the target sits at (cx, cy), the middle of the pendulum's part of the picture, through an off centre view */
+      /* the target sits at (cx, cy), the middle of the pendulum's part of the picture, through an off center view */
       const FW = cx <= W / 2 ? 2 * (W - cx) : 2 * cx, FH = cy <= H / 2 ? 2 * (H - cy) : 2 * cy;
       cam.aspect = FW / FH; cam.setViewOffset(FW, FH, cx <= W / 2 ? FW - W : 0, cy <= H / 2 ? FH - H : 0, W, H);
       const dist = FH / (2 * Math.tan(cam.fov * Math.PI / 360) * L3.ppm);
@@ -1481,7 +1481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // ---------- the pendulum in 3D (three.js through lib/vd3.js and lib/vd3kit.js); the flat drawing stays (Flat, or ?view=flat) ----------
     /* The same state as rods and bobs in front of a board, in units of the reach (L₁ + L₂, or L), so the picture always fills the pane as the
        flat drawing does. The upper rod swings just in front of the board and the lower one in front of that, as on a real double pendulum. The
-       lower bob leaves a glowing trail of its last 10 s; copies are small bobs coloured as in the plots. Pointer positions on the picture are
+       lower bob leaves a glowing trail of its last 10 s; copies are small bobs colored as in the plots. Pointer positions on the picture are
        turned into the flat drawing's coordinates, so dragging works the same way. Words and grips stay on the drawing canvas on top. */
     const D3 = { o: { th: -Math.PI / 2 + 0.2, ph: 1.46, zoom: 1 }, k: 1, ampKey: '' };
     let d3 = null;
@@ -1546,7 +1546,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return true;
     }
     function dim3(on) { if (d3) d3.S3.el.hidden = !on; $('dpStage').dataset.dim = on ? '3d' : 'flat'; cans.p.style.touchAction = on ? 'pan-y' : 'none'; cans.p.style.cursor = ''; drawAll(); }
-    /* between the flat drawing's pixels and the scene: x right and y down in metres from the pivot, in reach units with z up in the scene */
+    /* between the flat drawing's pixels and the scene: x right and y down in meters from the pivot, in reach units with z up in the scene */
     const toW = (g, X, Y, yy) => [(X - g.cx) / g.sc / g.reach, yy, -(Y - g.cy) / g.sc / g.reach];
     function flatFrom3(x, y) {
       const g = pGeom(), r = cans.p.getBoundingClientRect(), v = new THREE.Vector2(x / r.width * 2 - 1, 1 - y / r.height * 2), q = new THREE.Vector3();
@@ -2426,7 +2426,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Photogate lab (lab), Exact period (phase: the simple pendulum at any amplitude, the phase portrait) and Double pendulum (double).
      A link can open a scene or a setup: ?scene=lab|phase|double, ?setup=<setup> (or ?p=, or #<setup>); old double-pendulum.html
      links come here through that page. Leaving a scene pauses it. */
-  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.80665 m/s²', double: 'SI units · angles from straight down · g = 9.80665 m/s²' };
+  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.81 m/s²', double: 'SI units · angles from straight down · g = 9.81 m/s²' };
   let scene = 'lab';
   function setScene(sc) {
     if (!UNITS[sc]) return;

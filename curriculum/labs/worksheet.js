@@ -30,6 +30,8 @@
   const sig = (v) => (isFinite(v) && v !== '' ? String(+(+v).toPrecision(6)) : '');
   const FROM_DEMO = {
     pendulum: { demo: 'Pendulums', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
+    /* Bumper | m (kg) | v_before (m/s) | v_after (m/s) | Rate (Hz) | Area A (N s) | Δp (kg m/s, the student's) | Peak (N) | Contact time (s, from the demo's ms) */
+    impulse: { demo: 'Impulse and Momentum', cols: [both('row', 'bumper'), 'm_kg', 'v_before_m_per_s', 'v_after_m_per_s', 'rate_Hz', 'area_N_s', null, 'peak_N', (r) => (r.contact_ms !== '' && r.contact_ms != null ? (+r.contact_ms / 1000).toFixed(4) : '')] },
     collisions: { demo: 'Collisions', cols: [both('row', 'bumper'), 'm1_kg', 'm2_kg', 'u1_m_per_s', 'u2_m_per_s', 'v1_after_m_per_s', 'v2_after_m_per_s'] },
     fluids: { demo: 'Fluids', cols: [(r) => [r.scene, r.liquid].concat(r.depth_d_m ? [`d = ${r.depth_d_m} m`] : []).filter(Boolean).join(', '),
       both('depth_h_m', 'D1_m', 'D2_m'), both('P_Pa', 'h1_m', 'h2_m'),
@@ -39,7 +41,7 @@
     'kepler-orbits': { demo: 'Kepler Orbits', cols: [both('row', 'preset'), 'M_Msun', 'ruler_d12_AU', 'a_AU', 'timer_T_yr', 'a3_AU3', 'T2_yr2'] },
     /* Reading | Planet | Height h (km) | Latitude (°) | r (Mm) | Gravity alone GM/r² (m/s²) | Effective g (m/s²) | Real Earth at sea level (m/s²) | 1/r² (1/Mm²) | cos² of latitude */
     'gravity-near-earth': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'lat_deg', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', 'g_wgs84_m_s2', null, null] },
-    /* Reading | Moon's distance d (Earth radii) | Pull at Earth's centre (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) */
+    /* Reading | Moon's distance d (Earth radii) | Pull at Earth's center (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) */
     tides: { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2', null, null, null] },
     /* Reading | Second clock | r (km) | Speed v (km/s) | Gravity part (μs/day) | Speed part (μs/day) | Net gain (μs/day) | 1/r (1/Mm) | v² (km²/s²) */
     'gps-clocks': { demo: 'GPS Clocks and Relativity', cols: ['row', (r) => r.second_clock + (r.ground_turns === 'no' ? ', ground clock at rest' : ''), 'r_km', 'v_km_s', 'grav_us_per_day', 'speed_us_per_day', 'net_us_per_day', null, null] },
@@ -149,7 +151,7 @@
       (r) => { const o = json(r.settings_SI_json); return o.speed_m_s != null ? `v = ${o.speed_m_s} m/s` : o.omega_rad_s != null ? `ω = ${sig(o.omega_rad_s)} rad/s` : o.f_Hz != null ? `f = ${sig(o.f_Hz)} Hz` : ''; }] },
     'gauss-law': { demo: "Gauss's Law", cols: [
       (r) => [r.row, r.surface, r.radius_m && `R = ${r.radius_m} m`, r.width_x_m && `width ${r.width_x_m} m`, r.height_y_m && `height ${r.height_y_m} m`,
-        r.depth_z_m && `depth ${r.depth_z_m} m`, `centre (${r.center_x_m}, ${r.center_y_m}) m`].filter(Boolean).join(', '),
+        r.depth_z_m && `depth ${r.depth_z_m} m`, `center (${r.center_x_m}, ${r.center_y_m}) m`].filter(Boolean).join(', '),
       (r) => String(r.charges_q_C_x_m_y_m || '').split(';').map((c) => c.trim().split(/\s+/)).filter((c) => c.length === 3).map(([q, x, y]) => `q = ${q} C at (${x}, ${y}) m`).join('; '),
       'Q_enc_C', 'flux_numerical_N_m2_per_C', 'flux_predicted_Q_enc_over_eps0_N_m2_per_C', null,
       (r) => `${r.tolerance_met === 'yes' ? 'tolerance met' : 'tolerance not met'}, ${r.field_evaluations} evaluations`] },
@@ -170,7 +172,7 @@
     /* Reading | Tool | Meter reading V (kV) | Wavelength λ (pm) | D₁ (mm) | D₂ (mm) */
     'electron-diffraction': { demo: 'Electron Diffraction', cols: [(r) => (r.simulated === 'yes' ? `${r.row} (simulated)` : r.row), (r) => (r.tool === 'arc' ? 'ruler (arc)' : 'caliper (chord)'), 'meter_kV', 'lambda_pm', 'D1_mm', 'D2_mm'] },
     /* Reading | Tube and crystal | Crystal angle θ (°) | Count rate (1/s) | Line, Order m, sin θ (typed) */
-    'x-ray-diffraction': { demo: 'Electron Diffraction (X ray Bragg spectrometer)', cols: ['row', (r) => `${r.tube} tube, ${r.crystal} crystal`, 'theta_deg', 'rate_per_s', null, null, null] },
+    'x-ray-diffraction': { demo: 'Electron Diffraction (X-ray Bragg spectrometer)', cols: ['row', (r) => `${r.tube} tube, ${r.crystal} crystal`, 'theta_deg', 'rate_per_s', null, null, null] },
     /* Reading | f (Hz) | E₀ (V/m) | B₀ (T) | E₀² (typed) | I (W/m²) | pressure absorbed (Pa) | pressure reflected (Pa) */
     'em-waves': { demo: 'Electromagnetic Waves', cols: [both('row', 'setup'), 'f_Hz', 'E0_V_per_m', 'B0_T', null, 'I_W_per_m2', 'p_abs_Pa', 'p_refl_Pa'] },
     /* Trial | Setup | Hot current (A) | Neutral current (A) | Ground current (A) | Current through the person (mA) | Outlet voltage (V) | Power (W) | Wire heat (W/m) | Protection */
@@ -183,7 +185,7 @@
     precipitator: { demo: 'Electrostatics at Work', cols: ['row', 'dp_um', 'particles', 'E_kV_cm', 'u_m_s', 'L_m', 'w_cm_s', 'eff_pred_pct', 'caught', 'through', 'eff_meas_pct'] },
     /* Trial | Core | Turns per cm | Current I (A) | B₀ (T) | B (T) | B − B₀ (T) | Notes */
     'magnetism-in-matter': { demo: 'Magnetism in Matter', cols: ['row', 'material', 'n_per_cm', 'I_A', 'B0_T', 'B_T', 'Bm_T', 'notes'] },
-    /* Trial | Current | Time t (ms) | dB/dt (T/s) | Path radius (cm) | Centre from the axis (cm) | Flux Φ (Wb) | −dΦ/dt (V) | ∮E·dl (V) | E on the path (V/m) */
+    /* Trial | Current | Time t (ms) | dB/dt (T/s) | Path radius (cm) | Center from the axis (cm) | Flux Φ (Wb) | −dΦ/dt (V) | ∮E·dl (V) | E on the path (V/m) */
     'induced-electric-field': { demo: 'Induced Electric Fields', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
     'induction-at-work': { demo: 'Induction at Work', cols: ['row', 'f_Hz', 'stroke_cm', 'C_F', 'light', 't_s', 'emf_peak_V', 'Vc_V', 'E_hand_J', 'E_cap_J', 'E_heat_J', 'E_diode_J', 'E_led_J'] },
     'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan'] },
@@ -403,7 +405,7 @@
   });
   /* Vol. 3 ch. 7 and 8 (quantum mechanics, atomic structure), kept in its own list so the chapter threads don't collide */
   const MODERN_7_8 = ['orbital-magnetic-moment', 'stern-gerlach', 'zeeman-effect' /* Atoms in a Magnetic Field demo, one per view */,
-    'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X Rays demo, one per view */,
+    'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X-Rays demo, one per view */,
     'quantum-tunneling', 'energy-levels', 'uncertainty-principle' /* Quantum Wave Packets demo, by setup */,
     'hydrogen-atom' /* Hydrogen Orbitals demo */, 'laser-threshold' /* Lasers demo */, 'spin-resonance' /* Spin Resonance bench */];
   MODERN.push(...MODERN_7_8); ENABLED.push(...MODERN_7_8);
@@ -415,9 +417,9 @@
     /* Reading | Line | Field B (T) | Seen | Cursor shift Δλ (pm) | Energy shift ΔE (μeV) */
     'zeeman-effect': { demo: 'Atoms in a Magnetic Field (Zeeman effect)', cols: ['row', 'line', 'B_T', (r) => `${r.look} the field`, 'cursor_pm', null] },
     /* Reading | Element | Z | Configuration | Outer shell n | Electrons in outer shell | Ionization energy IE (eV) | Z_eff */
-    'periodic-table': { demo: 'Shells, the Periodic Table and X Rays (Shells)', cols: ['row', 'element', 'Z', 'configuration', 'outer_n', 'outer_electrons', 'IE_eV', null] },
+    'periodic-table': { demo: 'Shells, the Periodic Table and X-Rays (Shells)', cols: ['row', 'element', 'Z', 'configuration', 'outer_n', 'outer_electrons', 'IE_eV', null] },
     /* Reading | Target | Z | Tube voltage V (kV) | Cursor wavelength λ (pm) | Cursor energy E (keV) | 1/V (1/kV) | √E (√keV) */
-    'x-ray-spectra': { demo: 'Shells, the Periodic Table and X Rays (X ray tube)', cols: ['row', 'target', 'Z', 'V_kV', 'cursor_pm', 'cursor_keV', null, null] },
+    'x-ray-spectra': { demo: 'Shells, the Periodic Table and X-Rays (X-ray tube)', cols: ['row', 'target', 'Z', 'V_kV', 'cursor_pm', 'cursor_keV', null, null] },
     /* Quantum Wave Packets: Reading | Setup | Height V₀ (eV) | Width a (nm) | Packet energy E₀ (eV) | Reflected R | Transmitted T | ln T */
     'quantum-tunneling': { demo: 'Quantum Wave Packets (scattering)', cols: ['row', 'setup', 'V0_eV', 'a_nm', 'E0_eV', 'R', 'T', null] },
     /* Reading | Well | Width L (nm) | Level spacing ħω (eV) | Level n | Energy E_n (eV) | n²/L² (1/nm²) */

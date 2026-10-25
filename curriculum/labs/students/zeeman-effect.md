@@ -54,7 +54,7 @@ No hazards in the virtual lab. Real discharge lamps run at high voltage, and som
 
 ## Procedure
 
-**Cadmium across the field.** Start with Zeeman: cadmium red line and turn Blind on. For fields from 0 to 2.00 T in steps of 0.25 T, set the cursor on the centre of the component at the longest wavelength and record a reading.
+**Cadmium across the field.** Start with Zeeman: cadmium red line and turn Blind on. For fields from 0 to 2.00 T in steps of 0.25 T, set the cursor on the center of the component at the longest wavelength and record a reading.
 
 **Along the field.** Clear the readings. At 1.00 T, look along the field. Note which components are left, and record the one at the longest wavelength.
 

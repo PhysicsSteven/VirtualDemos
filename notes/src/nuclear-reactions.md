@@ -35,7 +35,7 @@ Students should know E = mc², the atomic mass unit (931.5 MeV/c²), Z and A, an
 
 **Q5.** Where does the bare ²³⁵U sphere go critical in the demo, and what share of the neutrons escape there? How does that compare with a full calculation?
 
-**Q6.** At the Sun's centre (1.57 × 10⁷ K), compare kT, the Gamow peak energy and the p + p barrier. What temperature would make kT equal to the barrier?
+**Q6.** At the Sun's center (1.57 × 10⁷ K), compare kT, the Gamow peak energy and the p + p barrier. What temperature would make kT equal to the barrier?
 
 **Q7.** Why do fusion reactors burn D + T at about 1.5 × 10⁸ K rather than p + p at the Sun's temperature? Use ⟨σv⟩.
 

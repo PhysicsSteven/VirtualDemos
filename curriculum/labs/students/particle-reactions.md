@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§11.1, 11.2, 11.4 and 11.5. 
 
 - Choose Before or After, then add particles from the palette; × removes one. One particle on the Before side is a decay at rest; two are a collision. The Examples list holds the book's Examples 11.1 to 11.3 and 11.7 and more.
 - For a collision, choose a beam on a target at rest (set the beam's kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products.
-- The table adds up charge, baryon number, the three lepton numbers, strangeness and the number of particles with half integer spin on each side, and compares the energy available in the centre of mass frame, W, with the rest energy of the products.
+- The table adds up charge, baryon number, the three lepton numbers, strangeness and the number of particles with half integer spin on each side, and compares the energy available in the center of mass frame, W, with the rest energy of the products.
 - The verdict says whether the reaction is allowed and, if it is, which interaction can make it happen and why; or which laws it breaks.
 - My prediction stores your guess (strong, electromagnetic, weak or forbidden) with each reading.
 - Record reading stores the reaction, the energy, each conserved number before and after, the energy to spare, your prediction and the verdict. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -30,9 +30,9 @@ Test proposed decays and collisions against the conservation laws of particle ph
 
 Every reaction conserves energy, momentum, angular momentum and charge. Particle reactions also conserve **baryon number** $$B$$ (+1 for each baryon, −1 for each antibaryon) and, separately, the three **lepton numbers** $$L_e$$, $$L_\mu$$ and $$L_\tau$$ (+1 for each lepton of that family and its neutrino, −1 for their antiparticles) (§11.2, Table 11.2). **Strangeness** $$S$$ is kept by the strong and electromagnetic interactions but can change by one unit in a weak interaction.
 
-Which interaction acts tells you how fast a decay goes: strong decays take about 10⁻²³ s, electromagnetic ones (with a photon) about 10⁻²⁰ to 10⁻¹⁶ s, and weak ones (with a neutrino, or a change of quark flavour) 10⁻¹³ s or longer (§11.1, §11.5).
+Which interaction acts tells you how fast a decay goes: strong decays take about 10⁻²³ s, electromagnetic ones (with a photon) about 10⁻²⁰ to 10⁻¹⁶ s, and weak ones (with a neutrino, or a change of quark flavor) 10⁻¹³ s or longer (§11.1, §11.5).
 
-A decay at rest needs the parent's rest energy to be at least the total rest energy of the products. In a collision, only the energy in the centre of mass frame, $$W$$, can make new particles. For a beam of kinetic energy $$K$$ and mass $$m_1$$ on a target of mass $$m_2$$ at rest,
+A decay at rest needs the parent's rest energy to be at least the total rest energy of the products. In a collision, only the energy in the center of mass frame, $$W$$, can make new particles. For a beam of kinetic energy $$K$$ and mass $$m_1$$ on a target of mass $$m_2$$ at rest,
 
 $$W^2 = m_1^2c^4 + m_2^2c^4 + 2(K + m_1c^2)\,m_2c^2,$$
 
@@ -89,7 +89,7 @@ You found each threshold by trying beam energies. Give each threshold as a range
 1. Why is the proton stable, while the neutron decays?
 2. The neutrino in neutron decay was predicted by Pauli before anyone detected it. Which conservation laws would neutron decay break without it?
 3. Why can't a photon on its own turn into an electron and a positron in empty space, even if it has more than 1.022 MeV?
-4. The weak interaction is the only one that changes the flavour of a quark. How does that explain why strange particles live so long?
+4. The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?
 5. Why does it take more than 6 GeV of beam energy to make an antiproton, which has a rest energy of less than 1 GeV?
 
 ## What to hand in

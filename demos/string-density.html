@@ -108,7 +108,7 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>Linear Density of a String</h1>
-      <p>A string runs from a vibrator over a pulley to a hanging mass. Hang masses at a fixed frequency, or sweep the frequency with a fixed mass, find the resonances and count the loops. A straight line through your readings gives the string's mass per metre, μ.</p>
+      <p>A string runs from a vibrator over a pulley to a hanging mass. Hang masses at a fixed frequency, or sweep the frequency with a fixed mass, find the resonances and count the loops. A straight line through your readings gives the string's mass per meter, μ.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">fₙ = (n/2L)√(T/μ) · T = mg</div>
@@ -121,7 +121,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A metre rule runs under the string. Left and right arrows change the driver frequency by 0.1 Hz (with Shift, 1 Hz); up adds a 1 g mass, down takes off the last mass; space pauses."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by 0.1 Hz (with Shift, 1 Hz); up adds a 1 g mass, down takes off the last mass; space pauses."></canvas>
         <div class="viewbar"><button type="button" class="spin" id="play">Pause</button></div>
         <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <div class="vhandle" id="vib" role="slider" tabindex="0" aria-label="Length L, vibrator to pulley" aria-valuemin="0.5" aria-valuemax="2" aria-valuenow="1.2" title="Drag the vibrator to change L"><span class="grip" aria-hidden="true">⇆</span></div>
@@ -252,7 +252,7 @@ table.rows input:focus { border-color: var(--accent); }
   // ==CORE START==
   const PI = Math.PI, TAU = 2 * Math.PI;
   const SD_VERSION = 'string-density@2026-10-23';
-  const G_LAB = 9.80;            /* m/s², the g students use for T = mg */
+  const G_LAB = 9.81;            /* m/s², the g students use for T = mg */
   const HANGER_G = 50;           /* g, the mass hanger */
   const MAX_G = 3000;            /* g, most the hanger may carry */
   const DRIVE_A = 0.50e-3;       /* m, the vibrator's amplitude (chosen) */
@@ -331,7 +331,7 @@ table.rows input:focus { border-color: var(--accent); }
     unknownm: { method: 'm', str: 'U', L: 1.2, f: 60, masses: [], hint: 'An unknown string driven at 60 Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against 1/n² and work out μ from the slope.' }
   };
   const METHOD_HINT = { f: 'Keep the mass fixed and change f: resonances at fₙ = n f₁, evenly spaced.', m: 'Keep f fixed and change the mass: n loops when T = μ(2Lf/n)², so each extra loop needs much less mass.' };
-  $('modelHint').textContent = 'Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is 0.60 Hz wide at half power. The vibrator moves its end up and down 0.50 mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = 9.80 m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Damping lowers each resonance by less than 0.05% above 10 Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.';
+  $('modelHint').textContent = 'Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is 0.60 Hz wide at half power. The vibrator moves its end up and down 0.50 mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Damping lowers each resonance by less than 0.05% above 10 Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.';
   const muNow = () => (S.str === 'U' ? S.unknownMu : STRINGS[S.str].mu);
   const massG = () => HANGER_G + S.masses.reduce((a, b) => a + b, 0);
   const Tnow = () => tension(massG() / 1000);
@@ -547,7 +547,7 @@ table.rows input:focus { border-color: var(--accent); }
     const tableY = overlay ? Math.max(top + 150 * q, Math.min(Hh * 0.56, shelfR.top - sceneTop - 46 * p)) : Math.max(top + 70 * p, Hh * 0.42) + 74 * p, sy = tableY - 74 * q;
     GEO.px = px; GEO.ppm = ppm; GEO.vx = vx;
     ctx.fillStyle = T.wood; ctx.fillRect(0, tableY, px + pr * 0.4, 18 * q); ctx.fillStyle = T.woodLine; ctx.fillRect(0, tableY + 18 * q, px + pr * 0.4, 3 * q);
-    /* metre rule under the string, zero at the vibrator */
+    /* meter rule under the string, zero at the vibrator */
     const ry = tableY - 22 * q; ctx.fillStyle = T.rule; ctx.fillRect(vx, ry, S.L * ppm, 14 * q); ctx.strokeStyle = T.woodLine; ctx.lineWidth = 1; ctx.strokeRect(vx + 0.5, ry + 0.5, S.L * ppm, 14 * q);
     ctx.strokeStyle = T.ink; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 7 : 3) * q); ctx.stroke(); if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x, ry + 10.5 * q, { s: 8 * Math.sqrt(q / p), a: 'center', m: 1 }); }
     txt(`L = ${S.L.toFixed(2)} m`, (vx + px) / 2, tableY + 21 * q + 13 * p, { a: 'center', s: 11, b: 1 });
@@ -587,7 +587,7 @@ table.rows input:focus { border-color: var(--accent); }
     txt(`sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9, c: T.muted });
   }
 
-  /* ---------- 3D view: the bench in metres, z up, the string in the x z plane from the vibrator (x = −L) to the top of the pulley (x = 0) ---------- */
+  /* ---------- 3D view: the bench in meters, z up, the string in the x z plane from the vibrator (x = −L) to the top of the pulley (x = 0) ---------- */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', rkey: '', mkey: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.14, ph: 1.36, zoom: 1 }, fitL: 0 };
   const SH = 0.10, PR = 0.025, EX3 = 10, CLIP3 = 0.25, N3 = 160, DISC_R = 0.025, DISC_RHO = 8000, Z_HOOK = -0.20;   /* string height, pulley radius, drawn ×10, masses as 5 cm discs of 8 g/cm³ */
   let g3 = null;
@@ -610,7 +610,7 @@ table.rows input:focus { border-color: var(--accent); }
     const alongY = (geo) => geo.rotateX(Math.PI / 2);   /* a cylinder's axis from y to the y axis of the bench (depth) */
     /* table, with its edge just short of the pulley */
     const woodM = Ms({ roughness: 0.75 }), table = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.4, 0.035), woodM); table.position.set(-1.3 - 0.012, 0.08, -0.0175);
-    /* metre rule lying on the table in front of the string, zero at the vibrator */
+    /* meter rule lying on the table in front of the string, zero at the vibrator */
     const ruleCan = document.createElement('canvas'); ruleCan.width = 2048; ruleCan.height = 64; const ruleTex = new THREE.CanvasTexture(ruleCan);
     const rule = new THREE.Mesh(new THREE.BoxGeometry(1, 0.03, 0.003), [Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ map: ruleTex, roughness: 0.6 }), Ms({ color: 0xd9c98f })]);
     /* pulley on a rod clamped to the table's edge */
@@ -638,7 +638,7 @@ table.rows input:focus { border-color: var(--accent); }
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || onStack(e), phMin: 0.7, phMax: 1.5, zMin: 0.7, zMax: 3, keys: false });
     return true;
   }
-  /* the metre rule's face: centimetre ticks and every 10 cm labelled, for the rule's length L */
+  /* the meter rule's face: centimeter ticks and every 10 cm labeled, for the rule's length L */
   function rule3() {
     const g = g3, c = g.ruleCan, x = c.getContext('2d'), L = S.L, dk = VD3.dark(); x.fillStyle = dk ? '#4d4630' : '#f1e3b5'; x.fillRect(0, 0, c.width, c.height);
     x.fillStyle = dk ? '#e8e2cf' : '#2a2a2a'; x.font = '600 22px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';

@@ -13,7 +13,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know exponentials and logarithms; the RC discharge in PHYS 202 is the same mathematics. Parents are large balls, daughters smaller balls in a second colour, stable end products small grey balls; each decay flashes with a short track (beta, or alpha for polonium 210), and a Geiger counter under the tray counts every decay (taken as 100% efficient; its last step reading is the activity in one step). The N(t) plot has **Linear** and **Log** scales. Each run is a new random sample; **Earlier runs** keeps up to three as ghosts.
+Students should know exponentials and logarithms; the RC discharge in PHYS 202 is the same mathematics. Parents are large balls, daughters smaller balls in a second color, stable end products small gray balls; each decay flashes with a short track (beta, or alpha for polonium 210), and a Geiger counter under the tray counts every decay (taken as 100% efficient; its last step reading is the activity in one step). The N(t) plot has **Linear** and **Log** scales. Each run is a new random sample; **Earlier runs** keeps up to three as ghosts.
 
 ## Running it in class
 

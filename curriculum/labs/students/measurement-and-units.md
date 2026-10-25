@@ -22,7 +22,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§1.1–1.4. Access for free 
 
 - A conversion is a chain of factors through SI, each factor equal to 1: $$\text{value in new units} = \text{value}\times\frac{\text{SI units per old unit}}{\text{SI units per new unit}}.$$ The factors are the exact legal definitions, except where marked: 1 in = 0.0254 m, 1 ft = 0.3048 m, 1 mi = 1609.344 m, 1 lb = 0.45359237 kg, 1 cal = 4.184 J, 1 kWh = 3.6 × 10⁶ J, 1 h = 3600 s, 1 year = 31 557 600 s, and 1 km/h = 1000/3600 m/s.
 - Dimensions are kept as the powers of M, L and T: a length is [0 1 0], a speed [0 1 −1], an acceleration [0 1 −2], a force [1 1 −2]. The demo guesses the answer is a product of powers of the chosen quantities and solves for the powers that make the dimensions match; a pure number in front (like 2π) cannot be found this way, so the answer states it separately.
-- Sizes on the ruler and in the zoom are typical or approximate values, marked ≈ or about; ranges in nature are wide (a human hair is 20 to 180 μm). The named values come from the demo's Sources and approximations fold: proton radius 0.84075 fm (CODATA 2022), carbon 12 charge radius 2.4702 fm (Angeli and Marinova 2013), Mount Everest 8,849 m, planet positions for 23 October 2026 from the JPL approximate orbital elements, the Sun 26,670 ly from the centre of the Milky Way (GRAVITY 2019), the observable universe 8.8 × 10²⁶ m across; light travel distances use c = 299,792,458 m/s exactly. Nothing in this demo is a reading: it computes from exact factors and tabulated sizes.
+- Sizes on the ruler and in the zoom are typical or approximate values, marked ≈ or about; ranges in nature are wide (a human hair is 20 to 180 μm). The named values come from the demo's Sources and approximations fold: proton radius 0.84075 fm (CODATA 2022), carbon 12 charge radius 2.4702 fm (Angeli and Marinova 2013), Mount Everest 8,849 m, planet positions for 23 October 2026 from the JPL approximate orbital elements, the Sun 26,670 ly from the center of the Milky Way (GRAVITY 2019), the observable universe 8.8 × 10²⁶ m across; light travel distances use c = 299,792,458 m/s exactly. Nothing in this demo is a reading: it computes from exact factors and tabulated sizes.
 
 </details>
 
@@ -52,9 +52,9 @@ Measure only objects or indoor distances you can reach safely. Do not climb, blo
 
 **Ask a measurable question.** Choose a desk or another accessible object. Write one testable question about its size and one statement that is a preference rather than a physical measurement. Describe the system, quantity and measuring method.
 
-**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimetres using a ruler or tape; record the tool markings and how you read the endpoints. Repeat one length from the opposite end. Calculate area in cm², then convert both lengths to metres and calculate area again. Check agreement after converting area to m². Sketch where this object fits relative to a millimetre and a kilometre on a powers of ten scale.
+**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimeters using a ruler or tape; record the tool markings and how you read the endpoints. Repeat one length from the opposite end. Calculate area in cm², then convert both lengths to meters and calculate area again. Check agreement after converting area to m². Sketch where this object fits relative to a millimeter and a kilometer on a powers of ten scale.
 
-**Practice conversions.** Convert the supplied practice values 72.0 km/h to m/s, 250.0 cm² to m² and 2.50 in to metres. Show factors and cancellation. These are exercise inputs, not measurements of your object.
+**Practice conversions.** Convert the supplied practice values 72.0 km/h to m/s, 250.0 cm² to m² and 2.50 in to meters. Show factors and cancellation. These are exercise inputs, not measurements of your object.
 
 **Check an equation.** A cart starts at $$x_0$$ with speed $$v_0$$ and constant acceleration $$a$$. Check each proposed expression:
 

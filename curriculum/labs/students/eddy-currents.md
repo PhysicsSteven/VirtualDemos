@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §13.5, with Faraday's and Lenz
 
 **Using the demo.**
 
-- The same magnet is dropped down a copper pipe, an aluminium pipe and a plastic pipe, each 1.00 m long with a 9.5 mm inner radius, cut open so you can see the magnet and the currents induced in the walls. A graph shows each magnet's speed against time.
+- The same magnet is dropped down a copper pipe, an aluminum pipe and a plastic pipe, each 1.00 m long with a 9.5 mm inner radius, cut open so you can see the magnet and the currents induced in the walls. A graph shows each magnet's speed against time.
 - The Set up card on the picture sets the magnet's strength (its magnetic dipole moment $$m$$), the wall thickness $$w$$ and the temperature of the pipes. It fades away during a drop and comes back when the drop ends or is paused. Changing a setting starts over.
 - A timer under each pipe stops when its magnet reaches the bottom, to 0.01 s. The readouts give each pipe's conductivity $$\sigma$$ and, unless Blind is on, the drag constant, the terminal speed, the predicted fall time and the heat.
 - Record reading works once the magnets have reached the bottom of the metal pipes. It stores one row for each metal pipe: the settings, the pipe's conductivity and its fall time. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -19,7 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §13.5, with Faraday's and Lenz
 **What the demo models.**
 
 - The magnet is a 12.7 mm by 12.7 mm neodymium cylinder of mass 12.2 g, treated as a point dipole on the pipe's axis, and the wall is treated as thin compared with the pipe's radius. That gives a drag force in proportion to speed, $$F = kv$$, with $$k$$ from the formula below (Levin and coworkers, *Am. J. Phys.* 74, 815, 2006). A real magnet that nearly fills the pipe falls at the same order of speed, but not exactly this one. Air drag is ignored, and the magnet does not touch the wall.
-- Conductivities at 20 °C: copper 59.6 MS/m and aluminium 37.7 MS/m. The resistivity changes linearly with temperature, reaching the measured values at liquid nitrogen temperature (−196 °C), where copper conducts 7.2 times and aluminium 8 times better than at 20 °C.
+- Conductivities at 20 °C: copper 59.6 MS/m and aluminum 37.7 MS/m. The resistivity changes linearly with temperature, reaching the measured values at liquid nitrogen temperature (−196 °C), where copper conducts 7.2 times and aluminum 8 times better than at 20 °C.
 
 </details>
 
@@ -44,7 +44,7 @@ At terminal speed the magnet's kinetic energy no longer changes, so all of the g
 ## Before the lab
 
 1. Seen from above, which way does the current circulate in a ring of wall just below a magnet falling north pole down? In a ring just above it? Explain with Lenz's law.
-2. A copper pipe gives a fall time of 12.6 s. Predict the fall time for an aluminium pipe of the same size, using the conductivities above.
+2. A copper pipe gives a fall time of 12.6 s. Predict the fall time for an aluminum pipe of the same size, using the conductivities above.
 3. Predict the fall time in the copper pipe if the magnet were half as strong.
 4. Calculate the time for the magnet to fall 1.00 m through the plastic pipe.
 
@@ -70,11 +70,11 @@ Start with the magnet at 1.60 A·m² and the wall 1.6 mm thick. Let each drop ru
 | | | | | | | | |
 | | | | | | | | |
 
-In Part 2, work out $$m^2$$ for the copper rows only and leave it blank for the aluminium rows, so that the graph uses the copper pipe alone.
+In Part 2, work out $$m^2$$ for the copper rows only and leave it blank for the aluminum rows, so that the graph uses the copper pipe alone.
 
 ## Analysis
 
-1. Part 1: plot $$t$$ against $$\sigma$$ for all the rows, copper and aluminium together, and fit a line. Why do both metals fall on the same line?
+1. Part 1: plot $$t$$ against $$\sigma$$ for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?
 2. Calculate the slope you expect, $$Lk/(Mg\sigma)$$, from the formula for $$k$$, with $$a = 10.3\ \text{mm}$$ (the middle of a 1.6 mm wall), and compare it with your fitted slope. Is the intercept consistent with the small $$\tau$$ term?
 3. Part 2: plot $$t$$ against $$m^2$$ for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about $$\tau$$)?
 4. For the copper pipe at 20 °C with the 1.60 A·m² magnet, find the terminal speed and $$\tau$$. Was it fair to treat the whole fall as being at terminal speed?

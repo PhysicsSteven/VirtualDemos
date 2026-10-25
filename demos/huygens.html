@@ -196,7 +196,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { k1: [Math.sin(th1), -Math.cos(th1)], kr: [Math.sin(th1), Math.cos(th1)], k2: th2 === null ? null : [Math.sin(th2), -Math.cos(th2)], Dt: r * D, Dr: D, th2 };
   }
   const waveletRadius = (n1, n2, th1, D, x, medium) => { const d = D - x * Math.sin(th1); return d <= 0 ? 0 : medium === 2 ? n1 / n2 * d : d; };
-  /* 2D Huygens and Fresnel sum behind an opening of width a (in wavelengths) centred on y = 0 in a wall at x = 0:
+  /* 2D Huygens and Fresnel sum behind an opening of width a (in wavelengths) centered on y = 0 in a wall at x = 0:
      M point sources, circular wavelets of amplitude 1/√(kr); t in periods */
   function openingField(x, y, t, a, M) {
     const k = 2 * Math.PI; let s = 0;

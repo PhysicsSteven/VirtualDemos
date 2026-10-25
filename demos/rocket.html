@@ -204,7 +204,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), f = r / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
 
   // ---------- 3D view of the flight (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
-  /* The camera rides beside the rocket at its true height (z up, metres), so the ground falls away below it; the rocket, pad and tower
+  /* The camera rides beside the rocket at its true height (z up, meters), so the ground falls away below it; the rocket, pad and tower
      are drawn 14 m tall for any mass (scenery: the sliders set masses, not sizes). The plume's size follows the thrust u × (burn rate)
      and the orange window shows the fuel left, as in the flat view. Clouds sit at 2 km; the sky darkens with the same 15 km scale height.
      Drag to turn the view, wheel or pinch to zoom, double click to reset. */
@@ -439,7 +439,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else {
       h += dd('Rocket equation u ln(m₀/m_dry)', `${n0(F.dvIdeal)} m/s`, true) + dd('Speed at burnout', `${n0(F.vBurnout)} m/s`) + dd('Lost to gravity', S.p.g ? `${n0(F.dvIdeal - F.vBurnout)} m/s` : '0');
       if (S.p.g && F.t0 > 0) h += dd('Time waiting on the pad', F.lifts ? `${n0(F.t0, 1)} s` : 'the whole burn', true);
-      if (S.p.g && F.lifts) h += dd('Highest point (constant g, no air)', `${n0(F.yTop / 1000, 1)} km at ${n0(F.tTop, 0)} s`, true) + (F.yTop > 1e5 ? '<div class="wide"><dt>Note</dt><dd class="ok">At hundreds of kilometres gravity is noticeably weaker than 9.81 m/s², so this height is only a rough figure.</dd></div>' : '');
+      if (S.p.g && F.lifts) h += dd('Highest point (constant g, no air)', `${n0(F.yTop / 1000, 1)} km at ${n0(F.tTop, 0)} s`, true) + (F.yTop > 1e5 ? '<div class="wide"><dt>Note</dt><dd class="ok">At hundreds of kilometers gravity is noticeably weaker than 9.81 m/s², so this height is only a rough figure.</dd></div>' : '');
     }
     $('out').innerHTML = h;
   }

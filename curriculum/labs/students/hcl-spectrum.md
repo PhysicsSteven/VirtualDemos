@@ -41,7 +41,7 @@ A real molecule stretches a little more in $$n = 1$$, so its moment of inertia t
 
 $$\tilde\nu(m) = \tilde\nu_0 + (B_1 + B_0)m + (B_1 - B_0)m^2,$$
 
-and the spacing between neighbouring lines is
+and the spacing between neighboring lines is
 
 $$\tilde\nu(m+1) - \tilde\nu(m) = 2B_1 + 2(B_1 - B_0)m.$$
 
@@ -78,7 +78,7 @@ No hazards in the virtual lab.
 
 1. Name each line of the band run, R(0), R(1), ... above the gap and P(1), P(2), ... below it, and fill in $$m$$. How wide is the gap compared with the other spacings?
 2. Plot wavenumber against $$m$$. Find the slope and intercept, and look at the residuals. What does their shape tell you?
-3. Fill in the spacing column, the next line's wavenumber minus this one's, for every line whose neighbour at $$m + 1$$ is in the same branch. Plot the spacing against $$m$$ and find the slope and intercept. Use them to find $$B_1$$ and $$B_0$$.
+3. Fill in the spacing column, the next line's wavenumber minus this one's, for every line whose neighbor at $$m + 1$$ is in the same branch. Plot the spacing against $$m$$ and find the slope and intercept. Use them to find $$B_1$$ and $$B_0$$.
 4. From $$B_0$$, find the moment of inertia of HCl in $$n = 0$$ and its bond length. Do the same for $$n = 1$$. By how much does the bond stretch?
 5. Estimate the band center $$\tilde\nu_0$$ from the lines either side of the gap, using your values of $$B_0$$ and $$B_1$$. Find the force constant of the bond.
 6. For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Predict the shift of the band center from the reduced masses, $$\tilde\nu_0\left(1 - \sqrt{\mu_{35}/\mu_{37} }\right)$$, and compare. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl (75.76 %) and ³⁷Cl (24.24 %).

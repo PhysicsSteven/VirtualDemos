@@ -166,11 +166,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   /* Velocity, Momentum and Energy Near c. Runnable in Node (curriculum/validation/test_relativistic-motion.cjs).
      Special relativity in one dimension, exact (OpenStax University Physics Volume 3, §§5.6, 5.8 and 5.9). Speeds are in units of c.
-     c and e are exact SI values. Rest energies in MeV: CODATA 2018. */
+     c and e are exact SI values. Rest energies in MeV: CODATA 2022. */
   const C = 299792458, E_CH = 1.602176634e-19;
   const PARTICLES = {
-    e: { name: 'Electron', mc2: 0.51099895000, q: 1 }, mu: { name: 'Muon', mc2: 105.6583755, q: 1 },
-    p: { name: 'Proton', mc2: 938.27208816, q: 1 }, d: { name: 'Deuteron', mc2: 1875.61294257, q: 1 }, alpha: { name: 'Alpha particle', mc2: 3727.3794066, q: 2 } };
+    e: { name: 'Electron', mc2: 0.51099895069, q: 1 }, mu: { name: 'Muon', mc2: 105.6583755, q: 1 },
+    p: { name: 'Proton', mc2: 938.27208943, q: 1 }, d: { name: 'Deuteron', mc2: 1875.61294500, q: 1 }, alpha: { name: 'Alpha particle', mc2: 3727.3794118, q: 2 } };
   const MYSTERY_POOL = ['e', 'mu', 'p', 'd'];   /* all with a charge of magnitude e */
   const gammaOf = (b) => 1 / Math.sqrt(1 - b * b);
   /* §5.6: a probe launched at u′ (measured in the rocket's frame) from a rocket moving at v along the same line has ground speed
@@ -184,7 +184,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* §5.8: a steady force F on a particle from rest. dp/dt = F, so p = Ft exactly, with p = γmv. Then
      v/c = k t/√(1 + (k t)²) with k = F/(mc), and the distance gone is x = (mc²/F)(√(1 + (k t)²) − 1), so γ = 1 + Fx/(mc²)
      (the work done is the kinetic energy, §5.9). Newton's mechanics would give v = Ft/m without limit.
-     For a charge qe in a field of E megavolts per metre, F/(mc) = qEc/(mc² in MeV) per second. */
+     For a charge qe in a field of E megavolts per meter, F/(mc) = qEc/(mc² in MeV) per second. */
   function steady(part, E_MVm, t) {
     const P = PARTICLES[part], k = P.q * E_MVm * C / P.mc2, kt = k * t, s = Math.sqrt(1 + kt * kt);
     const F = P.q * E_CH * E_MVm * 1e6, mc2J = P.mc2 * 1e6 * E_CH;
@@ -470,7 +470,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Adding velocities: one scene unit is one light second along the track. The rocket, beacons and probe move exactly as in the flat
      view (x = −0.600 + vt and −0.600 + ut); the camera follows the stretch between the rocket and the probe. The rocket and the beacons
      are drawn far larger than to scale, and the rocket's length contraction is not shown, as in the flat view.
-     Electron flight: one scene unit is one metre. The pickups are 8.400 m apart on the beam line; in the magnet the path bends in a
+     Electron flight: one scene unit is one meter. The pickups are 8.400 m apart on the beam line; in the magnet the path bends in a
      half circle of the computed radius, drawn to scale up to 0.45 m (half the magnet); a larger radius is drawn at 0.45 m and says so. */
   const G3 = { st: null, view: null, o: { th: -1.38, ph: 1.18, zoom: 1 }, fol: null, bendNote: '' };
   const use3 = () => !!(S.view !== 'mom' && G3.view && G3.view.is3d() && G3.st);
@@ -689,8 +689,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutVel').textContent = 'Adding velocities: everything moves along one straight line in empty space. Two beacons, A and B, are at rest 3.000 light seconds apart (8.994 × 10⁸ m) in the ground frame. The rocket passes a launch mark 0.600 light seconds before A at t = 0 and fires the probe there, at a speed u′ measured by the crew in the rocket\'s own frame. The probe\'s ground speed is the exact relativistic sum u = (v + u′)/(1 + vu′/c²) from §5.6; a light pulse (u′ = c) always comes out at c. Each beacon is a ground clock: a timer shows the ground time between a body passing A and passing B, to 0.0001 s. The run plays in real time at 1× (a light second takes one second). The rocket is drawn at a fixed size; its length contraction is not shown. The mystery rocket\'s speed is a random value from 0.300c to 0.900c.';
-  $('aboutMom').textContent = 'Steady force: a particle starts from rest in a uniform electric field E inside a long straight vacuum tube, so the force F = qE on it is the same at every speed (the field is static; the energy the accelerated charge radiates is left out: at every time the Step button reaches it is less than 1 part in 10¹⁰ of the work done). Newton\'s second law in its momentum form, F = dp/dt, holds in relativity with p = γmv (§5.8), so p = Ft exactly. The speed follows v/c = kt/√(1 + (kt)²) with k = F/(mc), and the distance is x = (mc²/F)(√(1 + (kt)²) − 1). Readouts are the model\'s values at the clock time; the clock plays slowed down so the run lasts about 12 s at 1×. Rest energies are CODATA 2018 values.';
-  $('aboutEn').textContent = 'Electron flight: modelled on W. Bertozzi, "Speed and kinetic energy of relativistic electrons", Am. J. Phys. 32, 551 (1964), who timed electrons from 0.5 to 15 MeV over 8.4 m. A particle of charge qe accelerated from rest through V megavolts gains K = qV MeV (§5.9). Its speed follows from K = (γ − 1)mc², and the time of flight between the two pickups, 8.400 m apart, is shown to 0.01 ns. A magnet of uniform field B then bends it in a circle of radius r = p/(qeB), with pc = √(K² + 2Kmc²); the ruler reads r to 0.01 cm. The pictures of the bend and the bunch are not to scale. The particle is not slowed by anything in the tube. Muons are timed as if none decayed in flight: their mean life is 2.197 μs, so about 3% would decay over the 8.400 m at 10 MV, under 1% from 100 MV up, but 9% at 1 MV and more than half at 0.01 MV. The mystery particle is one of the electron, muon, proton or deuteron.';
+  $('aboutMom').textContent = 'Steady force: a particle starts from rest in a uniform electric field E inside a long straight vacuum tube, so the force F = qE on it is the same at every speed (the field is static; the energy the accelerated charge radiates is left out: at every time the Step button reaches it is less than 1 part in 10¹⁰ of the work done). Newton\'s second law in its momentum form, F = dp/dt, holds in relativity with p = γmv (§5.8), so p = Ft exactly. The speed follows v/c = kt/√(1 + (kt)²) with k = F/(mc), and the distance is x = (mc²/F)(√(1 + (kt)²) − 1). Readouts are the model\'s values at the clock time; the clock plays slowed down so the run lasts about 12 s at 1×. Rest energies are CODATA 2022 values.';
+  $('aboutEn').textContent = 'Electron flight: modeled on W. Bertozzi, "Speed and kinetic energy of relativistic electrons", Am. J. Phys. 32, 551 (1964), who timed electrons from 0.5 to 15 MeV over 8.4 m. A particle of charge qe accelerated from rest through V megavolts gains K = qV MeV (§5.9). Its speed follows from K = (γ − 1)mc², and the time of flight between the two pickups, 8.400 m apart, is shown to 0.01 ns. A magnet of uniform field B then bends it in a circle of radius r = p/(qeB), with pc = √(K² + 2Kmc²); the ruler reads r to 0.01 cm. The pictures of the bend and the bunch are not to scale. The particle is not slowed by anything in the tube. Muons are timed as if none decayed in flight: their mean life is 2.197 μs, so about 3% would decay over the 8.400 m at 10 MV, under 1% from 100 MV up, but 9% at 1 MV and more than half at 0.01 MV. The mystery particle is one of the electron, muon, proton or deuteron.';
 
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }

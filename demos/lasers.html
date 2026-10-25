@@ -408,7 +408,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const HENE = { lamVac: 632.991e-9, M: 20.1797 * AMU, T: 400 };
   const fsr = (L) => C0 / (2 * L);
   const doppler = (nu0, T, M) => nu0 * Math.sqrt(8 * KB * T * Math.LN2 / (M * C0 * C0));
-  // gain relative to threshold at offset dnu from line centre, Gaussian (Doppler) profile
+  // gain relative to threshold at offset dnu from line center, Gaussian (Doppler) profile
   const gainRel = (ratio, dnu, fwhm) => ratio * Math.exp(-4 * Math.LN2 * dnu * dnu / (fwhm * fwhm));
   // half width of the band where gain exceeds loss
   const bandHalf = (ratio, fwhm) => ratio > 1 ? 0.5 * fwhm * Math.sqrt(Math.log(ratio) / Math.LN2) : 0;
@@ -1387,7 +1387,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (las) { const hgt = (gr - 1) / Math.max(0.3, S.gain - 1) * (p.B - y1) * 0.85; c.fillStyle = T.pos; c.globalAlpha = 0.55; c.fillRect(x - 4 * ps, p.B - hgt, 8 * ps, hgt); c.globalAlpha = 1; }
     }
     c.restore();
-    // spacing arrow between the two modes nearest the centre
+    // spacing arrow between the two modes nearest the center
     const sorted = md.list.slice().sort((u, v) => Math.abs(u.d) - Math.abs(v.d));
     const m0 = sorted[0];
     const yA = p.T + 22 * ps;

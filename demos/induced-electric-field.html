@@ -105,7 +105,7 @@ table.rows input:focus { border-color: var(--accent); }
         <p class="formula" id="waveF"></p>
         <div><div class="slider-head"><label for="sI0">Current I₀</label><output id="oI0" for="sI0"></output></div><input type="range" id="sI0" min="0.5" max="5" step="0.1"></div>
         <div><div class="slider-head"><label for="sA" id="aLab">Decay constant α</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1.3" max="3.3" step="0.005"></div>
-        <div><div class="slider-head"><label for="sN">Turns per metre n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="500" max="5000" step="100"></div>
+        <div><div class="slider-head"><label for="sN">Turns per meter n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="500" max="5000" step="100"></div>
         <div><div class="slider-head"><label for="sR">Solenoid radius R</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="1" max="4" step="0.1"></div>
         <div class="btnrow"><button type="button" class="btn primary" id="playBtn">Pause</button><button type="button" class="btn" id="restartBtn">Restart</button></div>
       </section>
@@ -113,7 +113,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Closed path</h2>
         <div><div class="slider-head"><label for="sPa">Path radius</label><output id="oPa" for="sPa"></output></div><input type="range" id="sPa" min="0.5" max="9" step="0.1"></div>
-        <div><div class="slider-head"><label for="sPd">Path centre, distance from the axis</label><output id="oPd" for="sPd"></output></div><input type="range" id="sPd" min="0" max="9" step="0.1"></div>
+        <div><div class="slider-head"><label for="sPd">Path center, distance from the axis</label><output id="oPd" for="sPd"></output></div><input type="range" id="sPd" min="0" max="9" step="0.1"></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Or drag the path, or focus the picture and use the arrow keys. The path is followed counterclockwise; B out of the page counts as positive.</p>
         </details>
@@ -160,7 +160,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  const MU0 = 4e-7 * Math.PI, IE_VERSION = 'induced-electric-field@2026-10-23';
+  const MU0 = 1.25663706127e-6 /* T·m/A, CODATA 2022 */, IE_VERSION = 'induced-electric-field@2026-10-23';
   /* solenoid current and its rate of change. w: { kind: 'decay'|'ramp'|'ac'|'steady', I0, a } with a in s⁻¹.
      decay: I0 e^(−at); ramp: 0 until t0 = 0.5/a, then rises linearly to I0 in 1/a and stays; ac: I0 sin(at); steady: I0 */
   function current(w, t) {
@@ -182,7 +182,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c1 = Math.acos((d * d + R * R - a * a) / (2 * d * R)), c2 = Math.acos((d * d + a * a - R * R) / (2 * d * a));
     return R * R * c1 + a * a * c2 - 0.5 * Math.sqrt((-d + R + a) * (d + R - a) * (d - R + a) * (d + R + a));
   }
-  /* ∮E·dl counterclockwise around a circle of radius a centred at (cx, cy), added up in N pieces (midpoint rule) */
+  /* ∮E·dl counterclockwise around a circle of radius a centered at (cx, cy), added up in N pieces (midpoint rule) */
   function circulation(cx, cy, a, R, dBdt, N = 720) {
     let s = 0; const dth = 2 * Math.PI / N;
     for (let i = 0; i < N; i++) { const th = (i + 0.5) * dth, x = cx + a * Math.cos(th), y = cy + a * Math.sin(th), [ex, ey] = Evec(x, y, R, dBdt); s += (-ex * Math.sin(th) + ey * Math.cos(th)) * a * dth; }
@@ -196,7 +196,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const S = { w: { kind: 'decay', I0: 2, a: 200 }, n: 2000, R: 0.02, pa: 0.06, cx: 0, cy: 0, t: 0, playing: true, ring: false, blind: false, preset: 'outside', ringPhase: 0 };
   const PRESETS = {
-    outside: { w: { kind: 'decay', I0: 2, a: 200 }, pa: 0.06, cx: 0, hint: 'OpenStax Example 13.8 with numbers: R = 2.0 cm, n = 2000 turns per metre, I = (2.0 A)e^(−αt) with α = 200 s⁻¹. The path is a circle of radius 6.0 cm, outside the solenoid, where B is zero. Yet E is not zero there: at t = 0 it is 3.4 mV/m.' },
+    outside: { w: { kind: 'decay', I0: 2, a: 200 }, pa: 0.06, cx: 0, hint: 'OpenStax Example 13.8 with numbers: R = 2.0 cm, n = 2000 turns per meter, I = (2.0 A)e^(−αt) with α = 200 s⁻¹. The path is a circle of radius 6.0 cm, outside the solenoid, where B is zero. Yet E is not zero there: at t = 0 it is 3.4 mV/m.' },
     inside: { w: { kind: 'decay', I0: 2, a: 200 }, pa: 0.01, cx: 0, hint: 'Now the path is inside the solenoid. The flux through it is B times its own area, so E grows in proportion to r inside: E = (r/2)|dB/dt|.' },
     aside: { w: { kind: 'decay', I0: 2, a: 200 }, pa: 0.02, cx: 0.06, hint: 'This path does not go around the solenoid, so no flux passes through it. The field on the path is not zero, but it pushes forward on one side as much as it pushes back on the other: ∮E·dl = 0.' },
     partial: { w: { kind: 'decay', I0: 2, a: 200 }, pa: 0.02, cx: 0.025, hint: 'This path encloses part of the solenoid. ∮E·dl, added up around the path, still equals −dΦ/dt with Φ the flux through the part it encloses.' },
@@ -273,7 +273,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     h += dd('Flux through the path Φ', si(f.Phi, 'Wb')) + dd('−dΦ/dt', si(-f.dPhi, 'V'));
     h += dd('∮E·dl around the path, added up', hide ? HID : si(f.circ, 'V'), true);
     const conc = d < 1e-9, Eon = Ephi(S.pa, S.R, f.dB);
-    h += dd('E on the path', hide ? HID : conc ? `${si(Math.abs(Eon), 'V/m')}${Eon === 0 ? '' : Eon > 0 ? ', counterclockwise' : ', clockwise'}` : 'not the same all around: the path is off centre', true);
+    h += dd('E on the path', hide ? HID : conc ? `${si(Math.abs(Eon), 'V/m')}${Eon === 0 ? '' : Eon > 0 ? ', counterclockwise' : ', clockwise'}` : 'not the same all around: the path is off center', true);
     if (S.ring) h += dd('In a copper ring on the path', hide ? HID : Math.abs(f.circ) < 1e-15 ? 'no net push around the ring: no current' : `the field drives charge ${f.circ > 0 ? 'counterclockwise' : 'clockwise'} around the ring (the EMF is ${si(Math.abs(f.circ), 'V')})`, true);
     $('out').innerHTML = h;
   }
@@ -343,7 +343,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (pathD() < 1e-9) { const e = Ephi(S.pa, S.R, f.dB) * u[1]; ctx.fillStyle = T.path; ctx.beginPath(); ctx.arc(ax.X(S.pa * 100), ax.Y(e), 4.5 * p, 0, 7); ctx.fill(); }
   }
   /* ---------- 3D: the solenoid stands upright through a glass sheet; the induced E arrows lie in the sheet, the path too.
-     Same physics calls as the flat view (Ephi, the path's centre and radius); arrows scaled to the run's largest E exactly as there.
+     Same physics calls as the flat view (Ephi, the path's center and radius); arrows scaled to the run's largest E exactly as there.
      The winding is drawn with fewer turns than n; B lines are drawn inside only (the ideal long solenoid has B = 0 outside). */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.4, ph: 0.72, zoom: 1 }, R: -1, top: 0.012, Ls: 0.16, pane: [0, 0, 0, 0], curPh: 0 };
   const NARR = 220, NBL = 9;
@@ -383,7 +383,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return true;
   }
   const inPane = (e) => { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, [x0, y0, w, h] = G3.pane; return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h; };
-  /* where the pointer meets the sheet (z = 0), in metres */
+  /* where the pointer meets the sheet (z = 0), in meters */
   function sheetHit(e) {
     const g = g3, b = can.getBoundingClientRect(), [x0, y0, w, h] = G3.pane, nx = (e.clientX - b.left - x0) / w * 2 - 1, ny = -((e.clientY - b.top - y0) / h * 2 - 1);
     g.ray.setFromCamera({ x: nx, y: ny }, g.cam); const o = g.ray.ray.origin, d = g.ray.ray.direction; if (Math.abs(d.z) < 1e-6) return null; const t = -o.z / d.z; return t > 0 ? [o.x + d.x * t, o.y + d.y * t] : null;

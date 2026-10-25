@@ -122,9 +122,9 @@ test('length for a given midpoint height, the Gateway Arch formula, and the numb
   // Hanging chain: H = 55.0 N, T = 121 N at the supports, 108 N + 108 N, weight 216 N
   let k = m.solveCatenary(-4, 0, 4, 0, 11);
   assert.equal(round3(w * k.a), 55.0); assert.equal(round3(w * Math.hypot(k.a, k.sB)), 121); assert.equal(round3(w * k.sB), 108); assert.equal(round3(w * 11), 216);
-  // Tension along the chain: a = 2.34 m; Uneven supports: A carries 151 N, B 84.5 N
+  // Tension along the chain: a = 2.34 m; Uneven supports: A carries 151 N, B 84.6 N
   k = m.solveCatenary(-4, 0, 4, 0, 12.5); assert.equal(round3(k.a), 2.34);
-  k = m.solveCatenary(-5, 0.8, 3.5, -2.2, 12); assert.equal(round3(-w * k.sA), 151); assert.equal(round3(w * k.sB), 84.5);
+  k = m.solveCatenary(-5, 0.8, 3.5, -2.2, 12); assert.equal(round3(-w * k.sA), 151); assert.equal(round3(w * k.sB), 84.6);
   // Pull it tight: sag 1.25 m, H = 129 N, weight 167 N
   k = m.solveCatenary(-4, 0, 4, 0, 8.5); assert.equal(round3(m.sagOf(k).d), 1.25); assert.equal(round3(w * k.a), 129); assert.equal(round3(w * 8.5), 167);
   // Chain against parabola: gap 6.65 cm on a sag of 2.92 m

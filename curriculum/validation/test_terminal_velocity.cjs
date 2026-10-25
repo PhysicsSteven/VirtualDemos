@@ -9,7 +9,7 @@ function group(name, f) { f(); n++; console.log('PASS', name); }
 const sky = (o = {}) => Object.assign({ kind: 'sky', m: 85, h0: 4000, air: 'text', pos0: 'spread', moves: [], pull: null }, o);
 
 group("the textbook's two skydivers: 44 m/s spread eagle (Example 6.17) and 98 m/s head first; 34 m/s for 50 kg", () => {
-  near(c.vTerm(85, c.bodyCA('spread'), 1.21), Math.sqrt(2 * 85 * 9.80 / (1.21 * 1.0 * 0.70)), 1e-12);
+  near(c.vTerm(85, c.bodyCA('spread'), 1.21), Math.sqrt(2 * 85 * 9.81 / (1.21 * 1.0 * 0.70)), 1e-12);
   assert.strictEqual(Math.round(c.vTerm(85, c.bodyCA('spread'), c.RHO_TEXT)), 44);
   assert.strictEqual(Math.round(c.vTerm(75, c.bodyCA('head'), c.RHO_TEXT)), 98);
   assert.strictEqual(Math.round(c.vTerm(50, c.bodyCA('spread'), c.RHO_TEXT)), 34);

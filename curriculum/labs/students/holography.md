@@ -42,7 +42,7 @@ A point of the object recorded at distance $$z_0$$ makes curved fringes, a piece
 ## Before the lab
 
 1. Two beams of 633 nm light meet with 30° between them. Predict the fringe spacing. What happens to it as the angle between the beams shrinks to zero?
-2. The fringes on a hologram are about a micrometre apart. Why must the plate, the mirrors and the object stay still to a small fraction of a wavelength during the exposure?
+2. The fringes on a hologram are about a micrometer apart. Why must the plate, the mirrors and the object stay still to a small fraction of a wavelength during the exposure?
 3. A plane wave hologram is made with the object beam straight on ($$\theta_o = 0$$) and the reference at $$\theta_r = 25°$$, both 633 nm. Predict the fringe spacing and the angles of the three beams that leave the plate when it is lit at 25° with 633 nm light.
 4. If the same plate is lit at 25° with blue light instead, does the image beam turn toward the reference beam or away from it? Explain with the grating equation.
 

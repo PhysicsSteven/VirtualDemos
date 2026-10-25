@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §5.2 (polarization) and §8.5 
 
 **What the demo models.**
 
-- A uniform, linear dielectric ball with the dielectric constant of Table 8.1 of the textbook (the metal ball is a perfect conductor), and the rod's tip as a point charge on the line through the ball's centre.
+- A uniform, linear dielectric ball with the dielectric constant of Table 8.1 of the textbook (the metal ball is a perfect conductor), and the rod's tip as a point charge on the line through the ball's center.
 - The force is the exact solution for a ball and a point charge, summed over every multipole, not only the induced dipole. The balance converts force to mass with $$g = 9.81$$ m/s². The rest of the rod, the post and the balance are left out of the electrostatics.
 - The molecules in the picture are drawn huge and their stretching is exaggerated. The marks around the ball show the bound surface charge (free charge on the metal ball).
 
@@ -35,7 +35,7 @@ How strongly a material polarizes is measured by its **dielectric constant** $$\
 
 $$p = 4\pi\varepsilon_0\,a^3\,\frac{\kappa - 1}{\kappa + 2}\,E,$$
 
-a standard result for a dielectric sphere, which we take as given. For a metal ball the factor $$(\kappa - 1)/(\kappa + 2)$$ becomes 1. The field of the rod's tip, a charge $$q$$ at distance $$D$$ from the ball's centre, is $$E = kq/D^2$$. A dipole along a field that changes with distance feels a force $$p\,dE/dD$$, and $$dE/dD = -2kq/D^3$$, so the ball is pulled toward the rod with
+a standard result for a dielectric sphere, which we take as given. For a metal ball the factor $$(\kappa - 1)/(\kappa + 2)$$ becomes 1. The field of the rod's tip, a charge $$q$$ at distance $$D$$ from the ball's center, is $$E = kq/D^2$$. A dipole along a field that changes with distance feels a force $$p\,dE/dD$$, and $$dE/dD = -2kq/D^3$$, so the ball is pulled toward the rod with
 
 $$F_{\text{dip}} = \frac{2kq^2a^3}{D^5}\,\frac{\kappa - 1}{\kappa + 2}.$$
 
@@ -100,11 +100,11 @@ High voltage sources used to charge real rods can give painful shocks; discharge
 2. For Part 2, graph $$\ln F$$ against $$\ln D$$. Find the slope from the three readings with the largest gaps and from the three with the smallest. Which comes closer to −5, and why?
 3. For each Part 2 reading, find $$F_{\text{dip}}$$ and the ratio $$F/F_{\text{dip}}$$. How close must the rod be for the dipole formula to be off by more than 10%?
 4. For Part 3, graph $$F$$ against $$(\kappa - 1)/(\kappa + 2)$$ for the six known balls. Is the force nearly proportional to it? Why do strontium titanate and metal give almost the same force?
-5. Use the Part 3 graph as a calibration: read off the Mystery insulator's $$(\kappa - 1)/(\kappa + 2)$$ from its force, by interpolating between its neighbours, and find its $$\kappa$$. Which material in Table 8.1 could it be?
+5. Use the Part 3 graph as a calibration: read off the Mystery insulator's $$(\kappa - 1)/(\kappa + 2)$$ from its force, by interpolating between its neighbors, and find its $$\kappa$$. Which material in Table 8.1 could it be?
 
 ## Uncertainty
 
-The balance reads to 0.01 mg, about 0.1 µN. That is negligible for readings of tens of milligrams but large for the smallest ones (the far gaps of Part 2 and the small charges of Part 1), so weigh which points to trust in each fit. The geometry is exact in the model; on real apparatus the gap is hard to set to better than about a millimetre, and since $$F$$ varies roughly as $$1/D^5$$ a 1 mm error at $$D = 4$$ cm changes the force by about 12%. Real rods also carry their charge spread along their length, not at a point, and stray charge on the ball or post would add a Coulomb force that does depend on the sign of $$q$$.
+The balance reads to 0.01 mg, about 0.1 µN. That is negligible for readings of tens of milligrams but large for the smallest ones (the far gaps of Part 2 and the small charges of Part 1), so weigh which points to trust in each fit. The geometry is exact in the model; on real apparatus the gap is hard to set to better than about a millimeter, and since $$F$$ varies roughly as $$1/D^5$$ a 1 mm error at $$D = 4$$ cm changes the force by about 12%. Real rods also carry their charge spread along their length, not at a point, and stray charge on the ball or post would add a Coulomb force that does depend on the sign of $$q$$.
 
 ## Questions
 

@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §1.5 (and §1.4). Access for f
 
 **Using the demo.** A narrow beam of white light meets a 60° prism and spreads into colors. Every glass element (Glass block, Prism, Semicircle) has material chips at the top of its editor: Adjustable n, Crown, Flint, Fused silica, Water and Diamond. The editor lists the index at 400, 589 and 700 nm and, for a prism, how far 400 nm and 700 nm light is turned at minimum deviation and the spread between them. Drag the prism or the source, or rotate them, to follow the rays.
 
-**What the demo models.** Real materials use published Sellmeier formulas for the index against wavelength: Schott N-BK7 (crown) and F2 (flint), Malitson for fused silica, Daimon and Masumura for water at 20 °C and Peter for diamond. Adjustable n keeps the old behaviour, with the spread of colors exaggerated so it is easy to see. Rays follow Snell's law at each face; a reading gives the index at eight wavelengths and the deviation at minimum deviation for a 60° prism, $$n\sin(A/2) = \sin\!\big((A + \delta)/2\big)$$. Simulated data.
+**What the demo models.** Real materials use published Sellmeier formulas for the index against wavelength: Schott N-BK7 (crown) and F2 (flint), Malitson for fused silica, Daimon and Masumura for water at 20 °C and Peter for diamond. Adjustable n keeps the old behavior, with the spread of colors exaggerated so it is easy to see. Rays follow Snell's law at each face; a reading gives the index at eight wavelengths and the deviation at minimum deviation for a 60° prism, $$n\sin(A/2) = \sin\!\big((A + \delta)/2\big)$$. Simulated data.
 
 </details>
 
@@ -82,7 +82,7 @@ The model's indices come from the published Sellmeier formulas, which reproduce 
 ## Questions
 
 1. Why does a single glass lens bring red and violet light to a focus at different distances, and how does an achromatic doublet of crown and flint glass fix it?
-2. A pulse of white light enters a long optical fibre. Why is it longer when it comes out?
+2. A pulse of white light enters a long optical fiber. Why is it longer when it comes out?
 3. Why is the dispersion of air hard to notice, although air does have an index above 1?
 
 ## What to hand in

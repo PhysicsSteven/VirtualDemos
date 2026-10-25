@@ -266,7 +266,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-set="both" aria-pressed="true">Both</button>
         </div>
         <dl class="readout">
-          <div class="wide big"><dt>Fit v = H₀d (least squares, through the origin)</dt><dd id="hH">—</dd></div>
+          <div class="wide big"><dt>Fit v = H₀d + c (least squares): slope H₀</dt><dd id="hH">—</dd></div>
+          <div class="wide"><dt>Intercept c</dt><dd id="hC">—</dd></div>
           <div><dt>Hubble time 1/H₀</dt><dd id="hT">—</dd></div>
           <div><dt>Galaxies in the fit</dt><dd id="hN">—</dd></div>
         </dl>
@@ -369,6 +370,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let ss = 0; for (let i = 0; i < n; i++) { const r = ys[i] - H * xs[i]; ss += r * r; }
     const se = n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN;
     return { H, se, n };
+  }
+  // least squares line with a free intercept, v = H d + c (the fit the page shows); standard errors with n − 2 degrees of freedom
+  function fitHubble(xs, ys) {
+    const n = xs.length;
+    if (n < 2) return { H: NaN, se: NaN, c: NaN, sc: NaN, n };
+    let mx = 0, my = 0;
+    for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; }
+    mx /= n; my /= n;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return { H: NaN, se: NaN, c: NaN, sc: NaN, n };
+    const H = sxy / sxx, c = my - H * mx;
+    let ss = 0; for (let i = 0; i < n; i++) { const r = ys[i] - c - H * xs[i]; ss += r * r; }
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { H, se: Math.sqrt(s2 / sxx), c, sc: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), n };
   }
   const hubbleTimeGyr = (H) => HUBBLE_GYR / H;
   const velocityFromZ = (z) => C_KMS * z;                      // v ≈ cz, small z only
@@ -526,7 +542,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function hubFit() {
     const xs = [], ys = [];
     HUB.forEach((p, i) => { if (hubOn(i)) { xs.push(hubD(i)); ys.push(velocityFromZ(p.z)); } });
-    return fitOrigin(xs, ys);
+    return fitHubble(xs, ys);
   }
 
   // ---------- theme and canvas ----------
@@ -1148,7 +1164,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const [H0, lab] of [[67.4, 'Planck 67.4'], [73.0, 'SH0ES 73.0']]) {
       line(X(0), Y(0), X(dTop), Y(H0 * dTop), T.muted, 1, [1.5, 3]);
     }
-    if (isFinite(fit.H)) line(X(0), Y(0), X(dTop), Y(fit.H * dTop), T.ink, 2);
+    if (isFinite(fit.H)) line(X(0), Y(fit.c), X(dTop), Y(fit.c + fit.H * dTop), T.ink, 2);
     g.pts = [];
     HUB.forEach((p, i) => {
       if (!hubOn(i)) return;
@@ -1172,7 +1188,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (isFinite(fit.H)) {
       text(`H₀ = ${fit.H.toFixed(1)} ± ${fit.se.toFixed(1)} km/s/Mpc`, P[0] + 10 * ps, P[1] + 14 * ps, { font: F(12.5, 700), color: T.ink, bg: T.canvas });
-      text(`1/H₀ = ${hubbleTimeGyr(fit.H).toFixed(1)} Gyr`, P[0] + 10 * ps, P[1] + 32 * ps, { font: F(10.5), color: T.ink, bg: T.canvas });
+      text(`intercept ${fit.c.toFixed(0)} ± ${fit.sc.toFixed(0)} km/s, 1/H₀ = ${hubbleTimeGyr(fit.H).toFixed(1)} Gyr`.replace('-', '−'), P[0] + 10 * ps, P[1] + 32 * ps, { font: F(10.5), color: T.ink, bg: T.canvas });
     }
     g.plot = { P, X, Y, dTop };
 
@@ -1559,6 +1575,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setPressed('setSeg', 'set', S.hub.set);
     const fit = hubFit();
     $('hH').textContent = isFinite(fit.H) ? `${fit.H.toFixed(1)} ± ${fit.se.toFixed(1)} km/s/Mpc` : '—';
+    $('hC').textContent = isFinite(fit.H) ? `${fit.c.toFixed(0)} ± ${fit.sc.toFixed(0)} km/s`.replace('-', '−') : '—';
     $('hT').textContent = isFinite(fit.H) ? `${hubbleTimeGyr(fit.H).toFixed(1)} Gyr` : '—';
     $('hN').textContent = String(fit.n);
     const hp = HUB[S.hub.sel];
@@ -1669,7 +1686,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       z_comb: match ? S.hub.zc.toFixed(4) : '', z_catalog: p.z.toFixed(4), a: S.calA.toFixed(2), M_Ia: S.snM.toFixed(2), moved: S.hub.over[i] !== undefined ? 'yes' : 'no' };
   };
   window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
-    core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, hubbleTimeGyr } };
+    core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, fitHubble, hubbleTimeGyr } };
 
   tokens();
   buildCepChips();

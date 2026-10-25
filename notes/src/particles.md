@@ -7,12 +7,12 @@ time: 20 to 40 minutes, or one lab period per worksheet
 
 - The Standard Model in one picture: six quarks and six leptons in three generations (fermions, spin ½), the gauge bosons that carry the strong, electromagnetic and weak forces, and the Higgs boson. Hadrons are made of quarks: mesons are a quark and an antiquark, baryons three quarks.
 - Every reaction keeps charge, baryon number and the three lepton numbers, and has to have the energy. Strangeness is kept by the strong and electromagnetic interactions and changed (by one unit) only by the weak one, which is why strange particles live 10⁻¹⁰ s instead of 10⁻²³ s.
-- Quark content explains the charges, baryon numbers and strangeness of hadrons, and colour explains why only qqq, q̄q̄q̄ and qq̄ exist and why uuu must have spin 3/2.
+- Quark content explains the charges, baryon numbers and strangeness of hadrons, and color explains why only qqq, q̄q̄q̄ and qq̄ exist and why uuu must have spin 3/2.
 - A charged track's radius gives its momentum, p = 0.3Br; two tracks and the angle between them give the invariant mass of the neutral particle that made them, which identifies it.
 
 ## Before class
 
-Students should have read §§11.1 to 11.3 and know relativistic energy and momentum (E² = p²c² + m²c⁴). The demo has four views. **Particles**: the Standard Model chart, the four forces as the book gives them, and a table of leptons, mesons, baryons and bosons with PDG 2024 masses and mean lives. **Reactions**: build a decay or collision and check each conserved number, the energy, and which interaction could do it; Blind hides the verdicts. **Quarks**: up to three quarks or antiquarks with colours and spins, the hadron they make and its place in the eightfold way diagram. **Detector**: simulated bubble chamber pictures of π⁻ + p → K⁰ + Λ⁰ with V decays to measure.
+Students should have read §§11.1 to 11.3 and know relativistic energy and momentum (E² = p²c² + m²c⁴). The demo has four views. **Particles**: the Standard Model chart, the four forces as the book gives them, and a table of leptons, mesons, baryons and bosons with PDG 2024 masses and mean lives. **Reactions**: build a decay or collision and check each conserved number, the energy, and which interaction could do it; Blind hides the verdicts. **Quarks**: up to three quarks or antiquarks with colors and spins, the hadron they make and its place in the eightfold way diagram. **Detector**: simulated bubble chamber pictures of π⁻ + p → K⁰ + Λ⁰ with V decays to measure.
 
 ## Running it in class
 
@@ -46,15 +46,15 @@ Students should have read §§11.1 to 11.3 and know relativistic energy and mome
 
 - **"Quarks have been seen."** No free quark has ever been observed; their charges and spins are inferred from hadrons and from scattering. Quark masses are not masses of free particles.
 - **"A forbidden reaction just needs more energy."** Energy is one condition. A reaction that breaks charge, baryon number or a lepton number never happens at any energy.
-- **"The weak force is weak, so it does not matter."** It is the only interaction that changes quark flavour; without it the Sun would not burn and strange particles would not decay.
-- **"Colour is a real colour."** It is a label for the strong charge, which comes in three kinds that add up to neutral.
+- **"The weak force is weak, so it does not matter."** It is the only interaction that changes quark flavor; without it the Sun would not burn and strange particles would not decay.
+- **"Color is a real color."** It is a label for the strong charge, which comes in three kinds that add up to neutral.
 - **"The heavier track is the one that curves less."** Curvature depends on momentum, not mass: r = p/(qB).
 
 ## Physics behind the demo
 
 - **Data.** PDG 2024 (Phys. Rev. D 110, 030001): masses, mean lives (from the width as ħ/Γ for short lived states) and main decays. Quark masses are PDG running masses. Lepton numbers, baryon number and strangeness as in Table 11.2; quark content as in Tables 11.4 and 11.5.
-- **Reactions.** Sums of Q, B, L_e, L_μ, L_τ and S; the number of half integer spin particles must change by an even number; W from the parent's rest energy, from W² = m₁² + m₂² + 2(K + m₁)m₂ for a fixed target, or Eq. 11.3 for head on beams of equal energy; one particle from a collision only within its width of its mass. Interaction: weak with a neutrino, W, Z or a flavour change (|ΔS| ≤ 1); electromagnetic with a photon or charged lepton; otherwise strong. Other symmetries (C, P, isospin) are not checked.
-- **Quarks.** Ground states only (L = 0): J is the sum of the quark spins. Colour neutral: r g b, or a colour with its anticolour. Same flavour baryons must have J = 3/2. Flavourless mesons (π⁰, η, η′, ρ⁰, ω) are mixtures, so one quark content can give several.
+- **Reactions.** Sums of Q, B, L_e, L_μ, L_τ and S; the number of half integer spin particles must change by an even number; W from the parent's rest energy, from W² = m₁² + m₂² + 2(K + m₁)m₂ for a fixed target, or Eq. 11.3 for head on beams of equal energy; one particle from a collision only within its width of its mass. Interaction: weak with a neutrino, W, Z or a flavor change (|ΔS| ≤ 1); electromagnetic with a photon or charged lepton; otherwise strong. Other symmetries (C, P, isospin) are not checked.
+- **Quarks.** Ground states only (L = 0): J is the sum of the quark spins. Color neutral: r g b, or a color with its anticolor. Same flavor baryons must have J = 3/2. Flavorless mesons (π⁰, η, η′, ρ⁰, ω) are mixtures, so one quark content can give several.
 - **Detector.** π⁻ + p → K⁰ + Λ⁰ with exact two body kinematics, K⁰ = K⁰_S half the time; PDG branching fractions and mean lives; tracks are circles in the picture plane (no dip angle, no energy loss or multiple scattering, at most one turn); bubbles every 0.11β² cm, scattered by the chosen amount. p = 2.998 B r (MeV/c, T, cm). Only events with a visible V are shown.
 
 ## Going further

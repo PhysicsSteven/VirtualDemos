@@ -335,7 +335,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   // ---------- 3D view (three.js through demos/lib/vd3.js and the shared kit vd3kit.js): the same turntable and the same motion, in perspective ----------
   // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
-  // Sizes are to scale in metres where the model fixes them (platter 13 cm, spool r, disk, ring and the two masses, the 0.500 m drop
+  // Sizes are to scale in meters where the model fixes them (platter 13 cm, spool r, disk, ring and the two masses, the 0.500 m drop
   // between the light gates, the rule behind it); the load pieces are drawn as steel (7850 kg/m³) and the slotted masses as brass
   // (8500 kg/m³) for their thickness. The string is drawn thicker than a real thread. The bench, stand, timer and screen are scenery.
   // The camera follows the hanging mass down; every number on the timer, the screen and the labels comes from motion() above.
@@ -350,7 +350,7 @@ table.rows input:focus { border-color: var(--accent); }
     const st = VD3K.stage($('scene'), { before: can, fov: 30, near: 0.02, far: 20, shadow: 0.9 }); if (!st) return false;
     const { scene } = st, K = VD3K, M = (o) => new THREE.MeshStandardMaterial(o), mat = (o, c) => K.material(st, o, c);
     st.sun.position.set(-1.1, -0.35, 2.4); st.sun.shadow.bias = -0.0004; st.sun.shadow.mapSize.set(1024, 1024);
-    const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // along z, centred
+    const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // along z, centered
     const mesh = (g, m, cast, recv) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
     const box = (w, d, h, m, x, y, z) => K.box(w, d, h, m, x, y, z);
     // room: floor and a curved wall behind; a lab bench (worktop on a cabinet) whose right hand end the string runs over
@@ -516,7 +516,7 @@ table.rows input:focus { border-color: var(--accent); }
     g.table.rotation.z = -th;   // the string leaves the +y side of the spool towards +x, so the table turns clockwise seen from above
     for (const k in g.loads) g.loads[k].visible = S.obj === k;
     g.loads.pair.children.forEach((c) => { c.position.x = 0; c.position.y = c.userData.s * S.d; });
-    const sz = ZS - 0.05;   // spool centre height on the table: the string leaves it level
+    const sz = ZS - 0.05;   // spool center height on the table: the string leaves it level
     g.spoolCore.scale.set(S.r - RSTR, S.r - RSTR, 0.015); g.spoolCore.position.z = sz;
     g.flangeA.scale.set(S.r + 0.006, S.r + 0.006, 1); g.flangeA.position.z = sz + 0.0085; g.flangeB.scale.set(S.r + 0.006, S.r + 0.006, 1); g.flangeB.position.z = sz - 0.0085;
     g.flMark.scale.set(S.r + 0.005, 1, 1); g.flMark.position.set((S.r + 0.005) / 2, 0, sz + 0.0098);

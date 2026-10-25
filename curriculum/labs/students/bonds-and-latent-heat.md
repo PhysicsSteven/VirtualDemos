@@ -17,10 +17,10 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.5, with §§2.2–2.3 for t
 - The sample repeats sideways: an atom leaving one side comes back in at the other, as if the column were part of a wide sheet.
 - **Temperature** comes from the average kinetic energy of the atoms. **Bond energy U** is their potential energy, which is negative because bound atoms have less energy than separated ones. Both are averages over the last 0.02 ns. **Heat added Q** counts every joule the heater has delivered. All three are per mole of atoms.
 - The panel *Where the heat went* splits the heat added since the start into the kinetic energy of the atoms, their bond energy and the work done lifting the piston, $$P\,\Delta V$$.
-- The phase shares sort the atoms by their surroundings: an atom with three neighbours or fewer counts as vapor, an atom whose neighbours sit in the same ordered pattern as its own counts as solid, and the rest as liquid.
-- Colour atoms by Speed shows each atom's speed; by Phase shows the solid, liquid and vapor atoms. Show bonds draws a line between atoms closer than 0.51 nm. The flat view shows a slice 0.5 nm thick through the middle of the sample; the 3D view shows every atom and can be turned and zoomed.
+- The phase shares sort the atoms by their surroundings: an atom with three neighbors or fewer counts as vapor, an atom whose neighbors sit in the same ordered pattern as its own counts as solid, and the rest as liquid.
+- Color atoms by Speed shows each atom's speed; by Phase shows the solid, liquid and vapor atoms. Show bonds draws a line between atoms closer than 0.51 nm. The flat view shows a slice 0.5 nm thick through the middle of the sample; the 3D view shows every atom and can be turned and zoomed.
 - The heater power slider sets how fast heat goes in. A slower heater gives flatter plateaus but a longer run. Cool takes heat out instead.
-- Real argon melts at 83.8 K and boils at 87.3 K at 1 atm. The setups use 17 atm so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure, so the sample boils well above 87.3 K. At lower pressures the picture squeezes heights above 4 nm, marked by a dashed line, so the piston stays in view; Column height gives the true height. The sample is also only a few nanometres thick, and each atom feels only the atoms within 0.85 nm of it, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. A small sample can also overheat for a moment before the first vapor forms, then settle back; real liquids do this too (superheating).
+- Real argon melts at 83.8 K and boils at 87.3 K at 1 atm. The setups use 17 atm so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure, so the sample boils well above 87.3 K. At lower pressures the picture squeezes heights above 4 nm, marked by a dashed line, so the piston stays in view; Column height gives the true height. The sample is also only a few nanometers thick, and each atom feels only the atoms within 0.85 nm of it, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. A small sample can also overheat for a moment before the first vapor forms, then settle back; real liquids do this too (superheating).
 - Capture reading stores the readings shown. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the heating curve and the energy split.
 
@@ -87,7 +87,7 @@ The sample has only 432 atoms, so its temperature and bond energy wander by a fe
 2. Boiling took several times more heat per mole than melting. Use the bonds per atom in the solid, the liquid and the vapor to explain why.
 3. Why does a higher pressure raise the boiling temperature? Think about what the vapor has to do to lift the piston.
 4. When the vapor condenses on the cold floor, the temperature again holds still. Where does the heat that the floor takes out come from?
-5. At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use the speed colours to check.
+5. At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use the speed colors to check.
 
 ## What to hand in
 

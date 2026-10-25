@@ -46,7 +46,7 @@ one term for each pair, counted once. $$U$$ is negative when attraction wins: th
 
 1. Predict how $$E$$ and $$V$$ change if the distance from one charge doubles.
 2. Can $$V$$ be zero where the electric field is nonzero? Sketch an example.
-3. Why must a slope used to estimate $$E$$ have distance in metres?
+3. Why must a slope used to estimate $$E$$ have distance in meters?
 4. Find the potential energy of +2 nC and −2 nC that are 6.0 cm apart, and the work needed to pull them apart to 12.0 cm.
 
 ## Safety

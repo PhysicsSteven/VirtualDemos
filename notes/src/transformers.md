@@ -47,7 +47,7 @@ Students should know Faraday's law and rms values. The demo has two views. **Tra
 
 - **Ideal.** V_S = (N_S/N_P)V_P in phase with V_P, I_S = V_S/R, I_P = (N_S/N_P)I_S; the core flux is Φ = V_P/(jωN_P), so the peak field is B = √2 V_P/(ωN_P A).
 - **Real.** L = μ_r μ₀N²A/l for each coil, M = k√(L_P L_S), R = ρ_Cu N²(turn length)/(copper area) with each winding given the same copper area (so the referred resistances are equal). Bench core: A = 16 cm², l = 0.36 m, turns 0.22 m, 3.0 cm² copper per winding; pole core: A = 225 cm², l = 1.2 m, turns 0.80 m, 30 cm² copper. Solved exactly in steady AC; tested so that P_in = P_out + copper loss and so that it tends to the ideal model as k → 1, R → 0 and μ_r → ∞. Real distribution transformers have k above 0.999; at k = 0.98 the leakage is large enough to see easily.
-- **Not modelled.** Hysteresis and eddy current loss in the core, saturation (the readout flags peak fields above 1.6 T), winding capacitance, and three phase wiring on the line.
+- **Not modeled.** Hysteresis and eddy current loss in the core, saturation (the readout flags peak fields above 1.6 T), winding capacitance, and three phase wiring on the line.
 - **Line.** I = P/V, loss I²R, delivered P − I²R at V − IR; the town transformer has the fixed ratio V : 240 V, so the houses see 240(1 − PR/V²). Line inductance and capacitance are neglected.
 
 ## Going further

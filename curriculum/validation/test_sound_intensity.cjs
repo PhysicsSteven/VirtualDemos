@@ -16,7 +16,7 @@ test('sound intensity: incoherent levels add as intensities',()=>{
  assert(s.meterLevel(0.01,0,55,1000)-55<0.01);
 });
 test('sound intensity: pressure amplitude and CSV',()=>{
- close(s.pressureAmp(1),Math.sqrt(2*1.20*343));close(s.pressureAmp(s.I0),2.869e-5,1e-3);
+ close(s.pressureAmp(1),Math.sqrt(2*1.20*343.2));close(s.pressureAmp(s.I0),2.870e-5,1e-3);
  const csv=s.readingsCSV([{r:'1.0',pA:'0.01',pB:'',bg:'',L:'89.0'}],{version:'x'}).trim().split('\n');assert.equal(csv.at(-1),'1,1.0,0.01,,,89.0');assert.equal(csv.at(-2),'row,r_m,source_A_W,source_B_W,background_dB,L_dB');
 });
 console.log(`${n} test groups passed`);

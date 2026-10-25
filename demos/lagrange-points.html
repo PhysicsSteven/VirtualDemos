@@ -1445,7 +1445,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // 2Ω is smallest at L4 and L5, so they are the hilltops; L1, L2 and L3 are saddles (mountain passes); the two masses sit in
   // wells, cut off at a floor. The log keeps the tiny differences between the points visible beside the deep wells; the shape and
   // the order of heights are exact, the vertical scale is a choice. Ground where 2Ω < C (no particle with this C can reach it)
-  // takes the forbidden colour, as in the flat view. Particles ride on the surface at their exact (x, y). Flat stays the place to
+  // takes the forbidden color, as in the flat view. Particles ride on the surface at their exact (x, y). Flat stays the place to
   // throw particles and drag the launch and the zero velocity curve; here a click drops a particle at rest.
   const L3 = { on: false, S: null, mesh: null, key: '', ckey: '', dots: null, trails: null, b1: null, b2: null, marks: [], o: { th: -Math.PI / 2, ph: 0.72, zoom: 1 }, ext: 1, A: 0.1, cx: 0, cy: 0 };
   const L3N = 170;
@@ -1531,7 +1531,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     L3.dots.show(k); L3.dots.done();
     const tg = L3.trails.geometry; tg.setAttribute('position', new THREE.Float32BufferAttribute(segs, 3)); tg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); tg.computeBoundingSphere();
-    // camera on the flat view's centre and zoom
+    // camera on the flat view's center and zoom
     const tz = Math.max(floor * 0.5, hz(V.x0, V.y0));
     const dist = (Math.min(W, H) / 2 / V.s) / Math.tan(S3.cam.fov * Math.PI / 360) * 1.12 / Math.min(1, W / H);
     S3.place(L3.o, [V.x0, V.y0, tz], dist);

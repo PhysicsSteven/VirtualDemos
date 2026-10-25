@@ -15,7 +15,7 @@
 /* Layout: the moving object and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root { --w: #5a6575; --n: #2b60b5; --fr: #b0452f; --tn: #a7740b; --net: #2f7d4f; --vel: #6f4bb3; --road: #dfe5ec; }
-/* scenery: tabletop, grass, trees, kerbs, coaster, sky */
+/* scenery: tabletop, grass, trees, curbs, coaster, sky */
 :root { --table: #efe6d6; --table-grain: #e2d5bd; --table-edge: #cdbb98; --peg: #8a6a45; --grass: #e3ecd9; --tuft: #c2d4ae; --tree: #b5cfa6; --tree-dark: #8db27e;
   --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #59606b; --glass: #c4d8ec; --tyre: #2b2f36; --sky-top: #d3e6f6; --sky-bot: #f1f6fb; --cloud: #ffffff;
   --ground: #dbe7cf; --steel: #a3aebb; --shine: rgba(255, 255, 255, 0.6); --shadow: rgba(20, 30, 40, 0.16); }
@@ -105,7 +105,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sV" id="lV">Speed v</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="1" max="40" step="0.5"></div>
         <div><div class="slider-head"><label for="sR">Radius r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="100" step="0.5"></div>
         <div><div class="slider-head"><label for="sM">Mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.1" max="2000" step="0.1"></div>
-        <div id="muRow"><div class="slider-head"><label for="sMu">Static friction μs (tyres on road)</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="1.2" step="0.01"></div>
+        <div id="muRow"><div class="slider-head"><label for="sMu">Static friction μs (tires on road)</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="1.2" step="0.01"></div>
         <div id="atRow"><div class="slider-head"><label for="sAt">Rate of change of speed a_t (negative brakes)</label><output id="oAt" for="sAt"></output></div><input type="range" id="sAt" min="-5" max="5" step="0.5"></div>
         <div id="bankRow"><div class="slider-head"><label for="sB">Bank angle θ</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="45" step="0.5"></div>
       </section>
@@ -197,7 +197,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     string: { v: 3, r: 1, m: 0.5, mu: 0, b: 0, hint: 'A ball whirled on a frictionless table: the string\'s pull is the only horizontal force, so T = mv²/r. Cut the string and the ball does not fly outward: it goes straight, along the velocity it had.' },
     flat: { v: 15, r: 50, m: 1200, mu: 0.7, b: 0, hint: 'Static friction from the road is all that turns the car: it needs mv²/r and can give at most μs mg. Above √(μs g r) the car slides off along a nearly straight line. Try a wet road, μs = 0.4.' },
     bank: { v: 20, r: 50, m: 1200, mu: 0.3, b: 25, hint: 'Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.' },
-    speed: { v: 0, r: 60, m: 1200, mu: 0.7, b: 0, at: 2, hint: 'Speeding up or braking on the curve: the acceleration now has a part along the road, a_t, as well as v²/r toward the centre. The total is not toward the centre, and the road\'s grip must supply all of it, so a car that is speeding up or braking slides off at a lower speed than one cruising. Set a_t negative to brake.' },
+    speed: { v: 0, r: 60, m: 1200, mu: 0.7, b: 0, at: 2, hint: 'Speeding up or braking on the curve: the acceleration now has a part along the road, a_t, as well as v²/r toward the center. The total is not toward the center, and the road\'s grip must supply all of it, so a car that is speeding up or braking slides off at a lower speed than one cruising. Set a_t negative to brake.' },
     loop: { v: 9, r: 1.5, m: 0.5, mu: 0, b: 0, hint: 'A ball rolling without friction inside a loop (treated as sliding, so no rotational energy). It slows as it climbs. At the top gravity and the track both point to the center; below v = √(gr) there, gravity alone is too much and the ball falls away. That needs v ≥ √(5gr) at the bottom.' }
   };
   const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, angVel: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
@@ -285,12 +285,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(12 * p, sh); ctx.lineTo(W - 12 * p, sh); ctx.stroke(); drawFBD(0, sh, W, H - sh, q); }
   }
   // ---------- 3D view of the banked curve (three.js through demos/lib/vd3.js), Banked curve setup only ----------
-  // The road is a cone at the bank angle θ: its height rises by tan θ per metre outward. The car follows the same angle as the flat
+  // The road is a cone at the bank angle θ: its height rises by tan θ per meter outward. The car follows the same angle as the flat
   // view, at radius r, leaning in by θ. Road width, car and trees are scenery (the car is drawn up to 1.6 times life size so it can be seen, and shrunk on tight curves).
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', geo: '', w: 0, h: 0, o: { th: -0.45, ph: 1.12, zoom: 1.1 } };
   let g3 = null;
   const roadIn = (r) => r * 0.8, roadOut = (r) => r * 1.08, laneR = (r) => r - (r - roadIn(r)) * 10 / 31;   // the same proportions as the flat drawing
-  function zRoad(rho, r, th) {   // height of the ground at distance rho from the centre: the infield, the banked road, then an embankment down to the infield level
+  function zRoad(rho, r, th) {   // height of the ground at distance rho from the center: the infield, the banked road, then an embankment down to the infield level
     const t = Math.tan(th), ri = roadIn(r), ro = roadOut(r), zi = (ri - r) * t, zo = (ro - r) * t;
     if (rho <= ri) return zi; if (rho <= ro) return (rho - r) * t; return Math.max(zi, zo - (rho - ro) * Math.tan(35 * Math.PI / 180));
   }
@@ -304,7 +304,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scene.add(hemi, sun, sun.target);
     const groundM = M({ vertexColors: true, roughness: 0.95 }), ground = new THREE.Mesh(new THREE.BufferGeometry(), groundM); ground.receiveShadow = true; scene.add(ground);
     const field = new THREE.Mesh(new THREE.CircleGeometry(1, 64), M({ roughness: 1 })); field.receiveShadow = true; scene.add(field);
-    // the car: body, cabin, glass, wheels; its nose along +x, its left (towards the centre) along +y
+    // the car: body, cabin, glass, wheels; its nose along +x, its left (towards the center) along +y
     const car = new THREE.Group(); car.rotation.order = 'ZXY'; scene.add(car);
     const bodyM = M({ roughness: 0.35, metalness: 0.3 }), glassM = M({ roughness: 0.15, metalness: 0.2 }), tyreM = M({ roughness: 0.85 }), lampM = M({ roughness: 0.4, emissive: 0x332200 });
     const box = (w, d, h, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), m); b.position.set(x, y, z); b.castShadow = true; car.add(b); return b; };
@@ -329,7 +329,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const use3 = () => G3.on && !!g3 && S.preset === 'bank';
   const inScene = (e) => { const r = can.getBoundingClientRect(), g = geom(); return e.clientX - r.left < g.sw && e.clientY - r.top < g.sh; };
-  // the ground: infield edge, the banked road with kerbs and a dashed lane line, the embankment; rebuilt when r or θ changes
+  // the ground: infield edge, the banked road with curbs and a dashed lane line, the embankment; rebuilt when r or θ changes
   function build3(r, th) {
     const col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     const cRoad = col(T.road, '#dfe5ec').lerp(new THREE.Color(VD3.dark() ? '#3a414b' : '#8b939c'), 0.55), cK1 = col(T.kerb, '#c0392b'), cK2 = col(T.kerb2, '#ffffff'), cLane = col(T.lane, '#ffffff'), cGrass = col(T.grass, '#e3ecd9'), cBank = col(T.tuft, '#c2d4ae');
@@ -359,7 +359,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     a.visible = true; a.position.set(...o); a.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(dir[0] / n, dir[1] / n, dir[2] / n));
     const hl = Math.min(len * 0.4, rad * 5); a.userData.sh.scale.set(rad, rad, len - hl); a.userData.hd.scale.set(rad * 2.4, hl, rad * 2.4); a.userData.hd.position.z = len - hl / 2;
   }
-  // draws the banked curve into its canvas (w × h); X, Y in metres from the centre, heading in radians; returns metres → overlay pixels
+  // draws the banked curve into its canvas (w × h); X, Y in meters from the center, heading in radians; returns meters → overlay pixels
   function render3(X, Y, heading, w, h, showA) {
     const g = g3, r = S.r, th = S.b * Math.PI / 180;
     if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.rd.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
@@ -369,7 +369,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), 4.4 * r);
     const rho = Math.hypot(X, Y), onRoad = rho >= roadIn(r) && rho <= roadOut(r), k = Math.min(1.6, 0.09 * r / 4.4), z = zRoad(rho, r, th);
     g.car.position.set(X, Y, z); g.car.rotation.z = heading; g.car.rotation.x = onRoad ? -th : 0; g.car.scale.setScalar(k);
-    // v along the heading, a horizontal towards the centre (as in the flat view), from the car's centre of mass
+    // v along the heading, a horizontal towards the center (as in the flat view), from the car's center of mass
     const up = 1.0 * k, o = [X, Y, z + up], vL = Math.min(0.35 * r, r * (0.12 + 0.006 * S.v)), rad = 0.006 * r;
     setArrow(g.aV, o, [Math.cos(heading), Math.sin(heading), 0], vL, rad);
     setArrow(g.aA, o, showA ? [-X, -Y, 0] : [0, 0, 0], 0.25 * r, rad);
@@ -409,7 +409,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.restore();
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     } else if (S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed') {
-      // grass, a two lane road whose outer lane the car follows, red and white kerbs, trees outside
+      // grass, a two lane road whose outer lane the car follows, red and white curbs, trees outside
       const ri = R - 31 * p, ro = R + 11 * p;
       ctx.fillStyle = T.grass; ctx.fillRect(0, 0, rw, rh);
       tufts(rw, 70 * p, rh, p, (x, y) => { const d = Math.hypot(x - cx, y - cy); return d > ri - 8 * p && d < ro + 8 * p; });
@@ -466,7 +466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.kerb2; ctx.fillRect(L - 2.5 * p, -Wd + 1.5 * p, 2 * p, 2.5 * p); ctx.fillRect(L - 2.5 * p, Wd - 4 * p, 2 * p, 2.5 * p);
     ctx.restore();
   }
-  function skid(x0, y0, x1, y1, p) {   // tyre marks along the straight path the sliding car takes
+  function skid(x0, y0, x1, y1, p) {   // tire marks along the straight path the sliding car takes
     const L = Math.hypot(x1 - x0, y1 - y0); if (L < 1) return; const nx = -(y1 - y0) / L * 5 * p, ny = (x1 - x0) / L * 5 * p;
     ctx.strokeStyle = T.skid; ctx.globalAlpha = 0.45; ctx.lineWidth = 3 * p; ctx.beginPath();
     for (const sg of [1, -1]) { ctx.moveTo(x0 + sg * nx, y0 + sg * ny); ctx.lineTo(x1 + sg * nx, y1 + sg * ny); }
@@ -484,7 +484,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (Math.abs(fC) > 1e-6) items.push([fC > 0 ? 'f (down the slope)' : 'f (up the slope)', T.fr, -fC * Math.cos(th), -fC * Math.sin(th)]);
       // the road surface
       ctx.strokeStyle = T.road; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(cx - Rm * Math.cos(th), cy + 12 * p + Rm * Math.sin(th)); ctx.lineTo(cx + Rm * Math.cos(th), cy + 12 * p - Rm * Math.sin(th)); ctx.stroke(); }
-    else if (S.preset === 'speed') { if (!S.slid) { const fc = m * q.ac, ft = m * q.at, sc = q.ok ? 1 : 1; items = [['f to centre', T.fr, -fc * sc, 0], [ft >= 0 ? 'f forward' : 'f backward', T.fr, 0, ft * sc]]; }
+    else if (S.preset === 'speed') { if (!S.slid) { const fc = m * q.ac, ft = m * q.at, sc = q.ok ? 1 : 1; items = [['f to center', T.fr, -fc * sc, 0], [ft >= 0 ? 'f forward' : 'f backward', T.fr, 0, ft * sc]]; }
       ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Motion is up the page; mg and N cancel.', x0 + 14 * p, y0 + 42 * p); }
     else if (!q.stalls) { const ph = S.ang; items = [['mg', T.w, 0, -m * G]]; if (q.N > 0) items.push(['N', T.n, -Math.sin(ph) * q.N, Math.cos(ph) * q.N]); }
     const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : m * accel(S.v, S.r), 1e-9), k = Rm / big;
@@ -506,7 +506,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (P === 'flat') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('a = v²/r', `${f(q.a, 2)} m/s²`) + dd('Top speed √(μs g r)', `${f(q.vmax, 1)} m/s (${f(q.vmax * 3.6, 0)} km/h)`);
     else if (P === 'bank') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Normal force N', `${f(q.N, 0)} N`) + dd('Friction needed', `${f(Math.abs(q.f), 0)} N ${q.f > 1e-6 ? 'down the slope' : q.f < -1e-6 ? 'up the slope' : ''}`) + dd('Most friction μs N', `${f(S.mu * q.N, 0)} N`)
       + dd('Ideal speed √(rg tan θ)', `${f(q.vIdeal, 1)} m/s`) + dd('Allowed speeds', `${f(q.vmin, 1)} to ${f(q.vmax, 1)} m/s`);
-    else if (P === 'speed') h = dd('Speed now', `${f(S.slid ? S.slid.v : q.v, 2)} m/s`) + dd('Time', `${f(S.ts, 2)} s`) + dd('Along the road a_t', `${f(q.at, 2)} m/s²`) + dd('Toward the centre v²/r', `${f(q.ac, 2)} m/s²`) + dd('Total |a|', `${f(q.a, 2)} m/s²`) + dd('Angle of a from the centre', `${f(q.ang * 180 / Math.PI, 1)}°`)
+    else if (P === 'speed') h = dd('Speed now', `${f(S.slid ? S.slid.v : q.v, 2)} m/s`) + dd('Time', `${f(S.ts, 2)} s`) + dd('Along the road a_t', `${f(q.at, 2)} m/s²`) + dd('Toward the center v²/r', `${f(q.ac, 2)} m/s²`) + dd('Total |a|', `${f(q.a, 2)} m/s²`) + dd('Angle of a from the center', `${f(q.ang * 180 / Math.PI, 1)}°`)
       + dd('Friction needed m|a|', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('Predicted slip', q.tSlip == null ? 'never' : q.tSlip === 0 ? 'at once' : `at ${f(q.tSlip, 2)} s, at ${f(S.v + S.at * q.tSlip, 1)} m/s`) + dd('Cruising top speed √(μs g r)', `${f(flatMax(S.mu, S.r), 1)} m/s`);
     else h = dd('Speed here', q.stalls ? '0 m/s' : `${f(q.v, 2)} m/s`) + dd('Normal force N', q.stalls ? '—' : `${f(q.N, 2)} N`) + dd('Weight mg', `${f(S.m * G, 2)} N`) + dd('Least speed at the bottom √(5gr)', `${f(q.vmin, 2)} m/s`) + dd('At the top, needs v ≥ √(gr)', `${f(Math.sqrt(G * S.r), 2)} m/s`, true);
     $('out').innerHTML = h;

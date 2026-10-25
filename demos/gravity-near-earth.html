@@ -60,7 +60,7 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>Gravity Near Earth</h1>
-      <p>g = GM/r² falls off with distance from Earth's centre. Near the surface it barely changes, but it is not zero even where the space station flies. Earth's spin also takes a little off, most at the equator.</p>
+      <p>g = GM/r² falls off with distance from Earth's center. Near the surface it barely changes, but it is not zero even where the space station flies. Earth's spin also takes a little off, most at the equator.</p>
     </div>
     <div class="bar-right">
       <div class="units mono" id="units">GM = 3.986 × 10¹⁴ m³/s² · R = 6371 km</div>
@@ -143,7 +143,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const GRV_VERSION = 'gravity-near-earth@2026-10-22';
   const BODIES = { earth: { name: 'Earth', GM: 3.986004418e14, R: 6.371e6, w: 7.2921159e-5 }, moon: { name: 'Moon', GM: 4.9048695e12, R: 1.7374e6, w: 2.6617e-6 }, mars: { name: 'Mars', GM: 4.282837e13, R: 3.3895e6, w: 7.088218e-5 } };
   const gGrav = (b, h) => b.GM / (b.R + h) ** 2;
-  // effective g on something at rest on the rotating planet at latitude lat (rad): gravity toward the centre plus ω² r cos(lat) outward from the axis
+  // effective g on something at rest on the rotating planet at latitude lat (rad): gravity toward the center plus ω² r cos(lat) outward from the axis
   function gEff(b, h, lat, spin) {
     const g = gGrav(b, h), r = b.R + h, c = spin ? b.w * b.w * r * Math.cos(lat) : 0;
     const radial = g - c * Math.cos(lat), tang = c * Math.sin(lat);   // components: inward radial, and toward the equator
@@ -195,11 +195,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   function readouts() {
     const b = B(), E = gEff(b, S.h, lat(), S.spin), g0 = gGrav(b, 0), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
-    let h = dd('Distance from the centre r = R + h', `${(b.R + S.h) / 1000 >= 1e4 ? f((b.R + S.h) / 1e6, 1) + ' × 10³ km' : Math.round((b.R + S.h) / 1000).toLocaleString('en-US') + ' km'}`, true) + dd('r / R', f((b.R + S.h) / b.R, 4));
+    let h = dd('Distance from the center r = R + h', `${(b.R + S.h) / 1000 >= 1e4 ? f((b.R + S.h) / 1e6, 1) + ' × 10³ km' : Math.round((b.R + S.h) / 1000).toLocaleString('en-US') + ' km'}`, true) + dd('r / R', f((b.R + S.h) / b.R, 4));
     if (S.blind) h += dd('Height', hText(S.h)) + '<div class="wide"><dt>g, the scale and the percentages</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
     else {
       h += dd('Gravity alone GM/r²', `${f(E.grav, 4)} m/s²`) + dd('Fraction of surface value', `${f(100 * E.grav / g0, 2)}%`);
-      if (S.spin) h += dd('Centrifugal term ω²r cos(lat)', `${f(E.cent, 4)} m/s²`) + dd('Effective g (what a scale feels)', `${f(E.g, 4)} m/s²`) + dd('Plumb line tilt from the centre', `${f(E.tilt * 180 / Math.PI * 60, 2)} arcmin`);
+      if (S.spin) h += dd('Centrifugal term ω²r cos(lat)', `${f(E.cent, 4)} m/s²`) + dd('Effective g (what a scale feels)', `${f(E.g, 4)} m/s²`) + dd('Plumb line tilt from the center', `${f(E.tilt * 180 / Math.PI * 60, 2)} arcmin`);
       h += dd(S.h > 0 ? '1.000 kg on a spring scale held up on a tower at this height' : '1.000 kg on a spring scale', `${f(E.g, 3)} N`, S.h > 0);
       if (S.h <= 1e6) { const la = linearApprox(b, S.h); h += dd('Near surface line g₀(1 − 2h/R)', `${f(la, 4)} m/s²`) + dd('Its error', `${f(100 * (la - E.grav) / E.grav, 3)}%`); }
       if (S.body === 'earth' && S.h === 0) h += dd('Real Earth at sea level (WGS 84)', `${f(wgs84(lat()), 4)} m/s²`, true);
@@ -248,11 +248,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.ice; ctx.globalAlpha = 0.8; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, Rp * (1 - Math.sin(1.35))); ctx.globalAlpha = 1;
     }
     const sh = ctx.createRadialGradient(cx - Rp * 0.2, cy - Rp * 0.2, Rp * 0.55, cx, cy, Rp * 1.05); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, T.shade); ctx.fillStyle = sh; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp);
-    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modelled)
+    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modeled)
     ctx.restore();
     ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = Math.max(1, Rp * 0.012); ctx.beginPath(); ctx.arc(cx, cy, Rp, Math.PI * 0.95, Math.PI * 1.55); ctx.stroke();
   }
-  // a small icon beside the mass, standing with local "up" pointing away from the centre
+  // a small icon beside the mass, standing with local "up" pointing away from the center
   function placeIcon(cx, cy, r, la, sc) {
     const p = ps(), h = S.h, earth = S.body === 'earth';
     let kind = null; if (earth && h >= 1000 && h < 9500) kind = 'mountain'; else if (earth && h >= 9500 && h < 60000) kind = 'plane'; else if (h >= 1e5 && h < 2e6) kind = 'station'; else if (h >= 2e6) kind = 'sat';
@@ -276,7 +276,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 }, spin3 = 0, spinLast = 0;
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#e8eefc', muted: 'rgba(232,238,252,0.7)' };   /* label colours on the dark sky */
+  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#e8eefc', muted: 'rgba(232,238,252,0.7)' };   /* label colors on the dark sky */
   function init3D() {
     G3.tried = true;
     const rd = VD3.renderer(); if (!rd) return false;
@@ -306,7 +306,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
     return true;
   }
-  /* grab the scale and its mass and slide them along the line from the planet's centre: the height follows, in the slider's own steps,
+  /* grab the scale and its mass and slide them along the line from the planet's center: the height follows, in the slider's own steps,
      so every reading is one the slider could give. The pointer is read through the camera as it was when the drag began, since the
      view zooms out to keep the mass in sight and reading it through the moving camera would run away. */
   const DRG = { on: false, id: null, cam: null };
@@ -400,7 +400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.blind) lab(R3.top, `scale reads ${f(E.g, 3)} N`, LIT.ink, 'center', 'bottom');
       if (S.spin) lab(R3.pathPt, 'path in one day', LIT.cv, 'center', 'bottom');
       lab(R3.axisTop, S.spin ? 'axis (spinning)' : 'axis', LIT.muted, 'center', 'bottom');
-      ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(DRG.on ? 'drag out or in along the line from the centre to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn', pw / 2, h3 - 8 * p);
+      ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(DRG.on ? 'drag out or in along the line from the center to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn', pw / 2, h3 - 8 * p);
     } else {
     stars(0, 0, pw, wide ? Hh : ph + 14 * p);
     planet(cx, cy, Rp);

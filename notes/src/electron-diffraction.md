@@ -12,17 +12,17 @@ time: 20 to 40 minutes (a full lab period with the table and fit)
 
 ## Before class
 
-Students should know Bragg's law (from X ray diffraction or a grating) and the energy and momentum of a particle. Decide whether students will use the caliper (straight across, the chord) or the ruler on the glass (along the curve, the arc). Measure your own tube's graphite to screen distance L if you can: the maker gives 125 mm, but handouts quote 130 or 135 mm, and the value goes straight into d. Turn on **Blind** before projecting the table.
+Students should know Bragg's law (from X-ray diffraction or a grating) and the energy and momentum of a particle. Decide whether students will use the caliper (straight across, the chord) or the ruler on the glass (along the curve, the arc). Measure your own tube's graphite to screen distance L if you can: the maker gives 125 mm, but handouts quote 130 or 135 mm, and the value goes straight into d. Turn on **Blind** before projecting the table.
 
 ## Running it in class
 
 1. **Low voltage, big rings.** Ask Q1 first. Point out the bright central spot (electrons that went straight through) and the two rings.
 2. **Raise the voltage.** The rings shrink. Ask for the scaling before anyone measures (Q3).
 3. **Two rings, two spacings.** Use the cross section: each ring is a cone at its own Bragg angle. The ratio of the ring diameters stays near 1.73 at every voltage.
-4. **Is it the electrons?** Bring the magnet near the neck: the whole pattern moves. X rays would not be deflected.
+4. **Is it the electrons?** Bring the magnet near the neck: the whole pattern moves. X-rays would not be deflected.
 5. **Why only two rings.** The graphite sheet with its two families of rows of atoms, 0.213 nm and 0.123 nm apart.
 6. **Measure the spacings.** Six simulated readings fill the table; students add their own, choose exact or small angle geometry, and compare the fitted d with the accepted values.
-7. **X rays.** The X rays button (above the picture) turns the demo into a Bragg spectrometer: a copper or molybdenum tube at 35 kV, an NaCl or LiF crystal on a turntable and a counter on an arm at 2θ. Scan to show the pairs of Kβ and Kα peaks in each order, then compare with the electron rings: the same Bragg law, with a wave of either kind (Q8).
+7. **X-rays.** The X-rays button (above the picture) turns the demo into a Bragg spectrometer: a copper or molybdenum tube at 35 kV, an NaCl or LiF crystal on a turntable and a counter on an arm at 2θ. Scan to show the pairs of Kβ and Kα peaks in each order, then compare with the electron rings: the same Bragg law, with a wave of either kind (Q8).
 
 ## Questions
 
@@ -38,9 +38,9 @@ Students should know Bragg's law (from X ray diffraction or a grating) and the e
 
 **Q6.** A student uses L = 135 mm, but the tube's real distance is 125 mm. What happens to their values of d, and by how much? Which matters more here, an error in L or the difference between the exact and small angle formulas?
 
-**Q7.** How does the magnet test rule out the idea that the rings are made by X rays produced in the tube? What would change in the pattern if the electrons were replaced by neutrons of the same wavelength?
+**Q7.** How does the magnet test rule out the idea that the rings are made by X-rays produced in the tube? What would change in the pattern if the electrons were replaced by neutrons of the same wavelength?
 
-**Q8.** In the X rays view, copper Kα (0.15406 nm) is reflected by the (200) planes of NaCl at 15.85°. Find the plane spacing. At what voltage would electrons have the same wavelength, and why would they be reflected at the same angle?
+**Q8.** In the X-rays view, copper Kα (0.15406 nm) is reflected by the (200) planes of NaCl at 15.85°. Find the plane spacing. At what voltage would electrons have the same wavelength, and why would they be reflected at the same angle?
 
 ## Common misconceptions
 
@@ -54,7 +54,7 @@ Students should know Bragg's law (from X ray diffraction or a grating) and the e
 - λ = h/√(2meV(1 + eV/(2mc²))). The relativistic correction shortens λ by about 0.1 to 0.25% between 2 and 5 kV.
 - Bragg: 2d sin θ = λ; each ring is the cone at 2θ to the beam. The demo finds exactly where each cone meets the spherical screen (L = 125 mm from graphite to screen, bulb radius 65 mm). The caliper reads the straight chord across the ring, the ruler the arc along the glass.
 - The small angle formula λ ≈ dD/(2L) assumes a flat screen. With the arc it is within about 0.15%; with the chord it puts d high by 0.4 to 1% for the inner ring and 1.2 to 3% for the outer.
-- X rays view: the peaks are at the exact Bragg angles 2d sin θ = mλ of Cu and Mo Kα₁ and Kβ₁ (λ = hc/E with the X-ray Data Booklet energies) on the (200) planes of NaCl (2d = 0.5640 nm) and LiF (2d = 0.4027 nm). Peak heights, the 0.12° peak width, the fall with order, the Kramers continuum above hc/eV and the background are illustrative; Kα₂ and weaker lines are left out, and the rate is the expected one, without counting noise.
+- X-rays view: the peaks are at the exact Bragg angles 2d sin θ = mλ of Cu and Mo Kα₁ and Kβ₁ (λ = hc/E with the X-ray Data Booklet energies) on the (200) planes of NaCl (2d = 0.5640 nm) and LiF (2d = 0.4027 nm). Peak heights, the 0.12° peak width, the fall with order, the Kramers continuum above hc/eV and the background are illustrative; Kα₂ and weaker lines are left out, and the rate is the expected one, without counting noise.
 - Ring widths, brightness and the central spot are modeled to look like a real tube; the reading wander and meter jitter are simulated from the seed. The magnet's deflection is a behavioral model.
 
 ## Going further

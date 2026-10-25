@@ -44,7 +44,7 @@ Students should know the Lorentz factor γ and time dilation. The demo has three
 
 - Velocity addition is the exact one dimensional Lorentz rule. Beacons at rest in the ground frame time each body between them; the run plays in real time at 1×.
 - Steady force: p = Ft from rest, v/c = kt/√(1 + (kt)²) with k = F/(mc), x = (mc²/F)(√(1 + (kt)²) − 1). Radiation by the accelerated charge is left out (under 10⁻¹⁰ of the work done at every step the demo reaches).
-- Electron flight: K = qV, γ = 1 + K/mc², t = 8.400 m/v, r = p/(qB) with pc = √(K² + 2Kmc²). Rest energies are CODATA 2018 values. Muons are timed as if none decayed (about 3% would at 10 MV over 8.4 m).
+- Electron flight: K = qV, γ = 1 + K/mc², t = 8.400 m/v, r = p/(qB) with pc = √(K² + 2Kmc²). Rest energies are CODATA 2022 values. Muons are timed as if none decayed (about 3% would at 10 MV over 8.4 m).
 
 ## Going further
 

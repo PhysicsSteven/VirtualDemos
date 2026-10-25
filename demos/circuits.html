@@ -309,7 +309,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <input type="range" id="sF" min="0" max="400" step="1" aria-label="Frequency, log scale">
         </div>
         <label class="check" id="cRin" hidden><input type="checkbox" id="kRin">Internal resistance r</label>
-        <div class="seg full" role="group" aria-label="LED colour" id="cLed" hidden>
+        <div class="seg full" role="group" aria-label="LED color" id="cLed" hidden>
           <button type="button" data-c="red" aria-pressed="false">Red</button>
           <button type="button" data-c="green" aria-pressed="false">Green</button>
           <button type="button" data-c="blue" aria-pressed="false">Blue</button>
@@ -561,7 +561,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // probe (a scope probe: an ideal voltmeter whose reading goes to the scope), diode and led (end a is the anode),
   // bjt (junction transistor: base a, collector b, emitter c; pnp true for a PNP)
   const hasRint = (e) => e.type === 'bat' && !!e.rOn && e.r > 0;
-  // a two way switch is analysed as two legs that share the common end: leg id for a–b, −id for a–c.
+  // a two way switch is analyzed as two legs that share the common end: leg id for a–b, −id for a–c.
   // A transistor is two legs that share the emitter: id carries the collector current I_C from collector to emitter,
   // −id the base current I_B from base to emitter. Together they put the right current into each of the three ends.
   function expand(els) {
@@ -879,7 +879,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const GMIN = 1e-12;
   // 1N4148 small signal silicon diode, Nexperia SPICE model: IS = 4.352 nA, N = 1.906, RS = 0.6458 Ω
   const DIODE = { name: '1N4148', Is: 4.352e-9, n: 1.906, Rs: 0.6458 };
-  // 5 mm LEDs, Kingbright catalogue: typical forward voltage at the 20 mA test current. The model takes n = 2 and no
+  // 5 mm LEDs, Kingbright catalog: typical forward voltage at the 20 mA test current. The model takes n = 2 and no
   // series resistance (an assumption, not a data sheet value) and sets I_s so that 20 mA flows at that voltage.
   const LED_N = 2, LED_IF = 0.020;
   const LEDS = { red: { name: 'red', part: 'WP813SRC', lambda: 640, VF: 1.85 }, green: { name: 'green', part: 'WP7113ZGC', lambda: 525, VF: 3.2 },
@@ -1649,7 +1649,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     // starter circuits, in any mode
     ohm: { mode: 'dc', name: 'Ohm\'s law' },
     diodeIV: { mode: 'dc', name: 'Diode' },
-    leds: { mode: 'dc', name: 'LED colours' },
+    leds: { mode: 'dc', name: 'LED colors' },
     rectifier: { mode: 'time', name: 'Rectifier', ch: [['V1', 'V'], ['P1', 'V'], ['D1', 'I']], win: 0.1 },
     tswitch: { mode: 'dc', name: 'Transistor switch' },
     amp: { mode: 'time', name: 'Amplifier', ch: [['V1', 'V'], ['P1', 'V']], win: 0.004, start: 'dc' }
@@ -1905,7 +1905,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const TOOLS = ['select', 'wire', 'res', 'bulb', 'bat', 'ac', 'cap', 'ind', 'sw', 'sw2', 'diode', 'led', 'bjt', 'am', 'vm', 'probe'];
   const TOOL_KEYS = { 1: 'select', 2: 'wire', 3: 'res', 4: 'bulb', 5: 'bat', 6: 'ac', 7: 'cap', 8: 'ind', 9: 'sw', 0: 'sw2', d: 'diode', e: 'led', t: 'bjt', a: 'am', v: 'vm', o: 'probe' };
   const BETA_VALUES = [20, 30, 50, 70, 100, 150, 200, 300, 400, 500];
-  // LED colours on the drawing, near each LED's wavelength
+  // LED colors on the drawing, near each LED's wavelength
   const LED_RGB = { red: [255, 52, 40], green: [40, 230, 90], blue: [50, 110, 255] };
   const isDev = (e) => e.type === 'diode' || e.type === 'led' || e.type === 'bjt';
   const threeEnds = (e) => e.type === 'sw2' || e.type === 'bjt';
@@ -1941,7 +1941,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rectifier: 'The diode lets current through only when the source makes its anode positive, so the load sees only the positive half cycles, less the diode drop. With S1 closed the 100 µF capacitor charges on each peak and feeds the 1 kΩ load in between: the ripple falls about as e<sup>−t/RC</sup> over the 16.7 ms between peaks. Open S1 to see the bare half waves; raise C1 for less ripple.',
     tswitch: 'A small base current switches a larger collector current. With S1 closed about 0.83 mA flows into the base through R_B = 10 kΩ, more than enough to saturate Q1: the LED is fully on and V<sub>CE</sub> is below 0.1 V. Open S1 and the LED goes out. Raise R_B to 100 kΩ or more and Q1 is in its forward active region, where I<sub>C</sub> = βI<sub>B</sub> (§9.7).',
     amp: 'A common emitter amplifier. R1 and R2 hold the base near 1.1 V, so about 0.9 mA flows; C1 passes the 100 mV signal from V1 to the base without upsetting that. A small swing in V<sub>BE</sub> makes a large swing in I<sub>C</sub>, and R_C turns it into a large voltage swing at the collector, inverted. The gain is about 9.3, a little under R_C/R_E = 10 because the emitter junction itself adds about V<sub>T</sub>/I<sub>C</sub> = 30 Ω to R_E. Raise V1 to 0.5 V and the output clips (§9.7).',
-    outlet: 'A North American outlet: 120 V rms at 60 Hz, so the peak is V<sub>0</sub> = 120√2 = 169.7 V. The bulb is a 100 W bulb, modelled as its hot resistance, 144 Ω (a real filament has much less resistance when cold). The meters read rms values: 0.8333 A and 120 V, and V<sub>rms</sub>I<sub>rms</sub> = 100 W is the average power. Pick Power in time under Graphs: p = vi swings between 0 and 200 W twice each cycle, at 120 Hz, and never goes negative.',
+    outlet: 'A North American outlet: 120 V rms at 60 Hz, so the peak is V<sub>0</sub> = 120√2 = 169.7 V. The bulb is a 100 W bulb, modeled as its hot resistance, 144 Ω (a real filament has much less resistance when cold). The meters read rms values: 0.8333 A and 120 V, and V<sub>rms</sub>I<sub>rms</sub> = 100 W is the average power. Pick Power in time under Graphs: p = vi swings between 0 and 200 W twice each cycle, at 120 Hz, and never goes negative.',
     pfactor: 'A coil load (R = 10 Ω, L = 50 mH, a simple model of a motor) on 120 V rms at 60 Hz. X<sub>L</sub> = 18.85 Ω, so the current lags by 62.1°, the power factor is 0.469 and the source must supply 5.624 A for 316.3 W. A2 reads the load current, A1 the source current. Close S1 to put C1 = 100 µF across the load: the capacitor\'s current, which leads, cancels most of the coil\'s lagging current, so A1 falls to 2.673 A and the power factor rises to 0.986, while the load still takes 316.3 W. With C = X<sub>L</sub>/(ω(R<sup>2</sup> + X<sub>L</sub><sup>2</sup>)) = 109.8 µF the power factor would be exactly 1.',
     hiQ: 'R = 10 Ω gives Q = 10 and a tall, narrow peak. The gray curve is R = 100 Ω, Q = 1: a low, wide peak at the same f<sub>0</sub>. Press Sweep and watch the current through the peak; the half power width is Δf = f<sub>0</sub>/Q = R/(2πL). Then pick In time to switch the source on at t = 0 with the capacitor empty and no current: the current builds up to its steady amplitude as the transient dies away as e<sup>−Rt/2L</sup>, with time constant 2L/R = 2 ms for R = 10 Ω. Set R1 to 100 Ω and it dies away ten times faster.'
   };
@@ -1963,10 +1963,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     reso: 'In Blind mode this setup opens at 1 kHz, not at resonance. Find the frequency where the current is largest and the phase is zero.',
     hiQ: 'R = 10 Ω in a series RLC circuit, opening at 1 kHz in Blind mode. Find the peak and the half power frequencies, then compare with R = 100 Ω.',
     diodeIV: 'A 1N4148 silicon diode in series with 100 Ω. Step the EMF and record the diode voltage and the current each time.',
-    leds: 'Three LEDs, each with 470 Ω to limit its current. Read each LED\'s voltage and current and compare the colours.',
+    leds: 'Three LEDs, each with 470 Ω to limit its current. Read each LED\'s voltage and current and compare the colors.',
     tswitch: 'A transistor with a base resistor R_B and an LED in its collector. Change R_B and record the base current A1, the collector current A2 and V<sub>CE</sub>.',
     amp: 'A common emitter amplifier driven by a 100 mV signal. Compare the collector voltage with the input.',
-    outlet: 'A wall outlet, 120 V rms at 60 Hz, with a 100 W bulb modelled as its hot resistance. Record the meters and the average power, and compare the peak and rms values.',
+    outlet: 'A wall outlet, 120 V rms at 60 Hz, with a 100 W bulb modeled as its hot resistance. Record the meters and the average power, and compare the peak and rms values.',
     pfactor: 'A coil load (a resistor and an inductor in series) on 120 V rms at 60 Hz. A2 reads the load current, A1 the source current. Record them, the phase and the power with S1 open, then close S1 and change C1.'
   };
   const MODE_HINTS = {
@@ -2351,7 +2351,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
   // ---------- nets (points joined by plain wires) and loops ----------
   let netOf = new Map(), netPts = new Map(), wadj = new Map(), endCount = new Map();
-  let BR = [];                       // the analysed branches: every part, with a two way switch as two legs
+  let BR = [];                       // the analyzed branches: every part, with a two way switch as two legs
   function buildNets() {
     BR = expand(els);
     const par = new Map();
@@ -2520,7 +2520,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   function geoms() {
     const groups = new Map(), out = new Map();
     for (const e of els) { const k = [kp(e.a), kp(e.b)].sort().join('|'); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(e); }
-    // each separate circuit's centre, for choosing the side a label goes
+    // each separate circuit's center, for choosing the side a label goes
     const par = new Map(), find = (k) => { while (par.get(k) !== k) { par.set(k, par.get(par.get(k))); k = par.get(k); } return k; };
     for (const e of els) { const ks = endsOf(e).map(kp); for (const k of ks) if (!par.has(k)) par.set(k, k); for (const k of ks.slice(1)) par.set(find(k), find(ks[0])); }
     const comp = (e) => find(kp(e.a));
@@ -2603,7 +2603,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     }
     return { p: ptsU[0], d: [1, 0], len: 0 };
   }
-  // scope channel colours: by part type for voltages, gold and then orange for currents
+  // scope channel colors: by part type for voltages, gold and then orange for currents
   function chColor(ch, onScope) {
     const e = elById(ch.id); if (!e) return T.muted;
     if (ch.q === 'I') { const k = channels.filter((c) => c.q === 'I').indexOf(ch); return [T.equi, T.cur2, T.kir, T.neg][Math.max(0, k) % 4]; }
@@ -2930,7 +2930,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         return bx >= 2 && bx + bw <= dims[0] - 2 && by >= 2 && by + bh <= dims[1] - 2;
       };
       if (!place(sx, sy)) { const b0 = [bx, by, align]; if (!place(-sx, -sy)) [bx, by, align] = b0; }
-      // where that lands on another label or covers another part's centre (narrow phones), the first clear spot of: the other
+      // where that lands on another label or covers another part's center (narrow phones), the first clear spot of: the other
       // side, then (for an upright part or a transistor) below or above it, slid sideways to stay on the board
       const hits = () => labelBoxes.some(({ box: [x, y, w, h] }) => bx < x + w && bx + bw > x && by < y + h && by + bh > y);
       const inBox = (u, v) => { const x = geo.X(u), y = geo.Y(v); return x > bx && x < bx + bw && y > by && y < by + bh; };
@@ -3162,7 +3162,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   function upright(cx, cy, txt, size, col, weight) {
     ctx.font = `${weight || 700} ${size}px ${T.mono}`; ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, cx, cy);
   }
-  // a grey bench instrument box with a display and a + and − post on the sides that face the leads
+  // a gray bench instrument box with a display and a + and − post on the sides that face the leads
   function benchBox(ge, s, mx, my, drawDisplay, ps) {
     const ca = Math.cos(ge.ang), sa = Math.sin(ge.ang), horiz = Math.abs(ca) > 0.5, xs = 2 * ge.h * s;
     const w = Math.min(0.66 * s, horiz ? xs + 0.08 * s : 0.66 * s), hh = horiz ? 0.54 * s : Math.min(0.6 * s, xs + 0.06 * s);
@@ -3426,7 +3426,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     ctx.restore();
     body(); ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 0.8; ctx.stroke();
   }
-  // a 5 mm LED seen from above: a coloured dome with its flat edge on the cathode side, glowing with the current
+  // a 5 mm LED seen from above: a colored dome with its flat edge on the cathode side, glowing with the current
   function benchLed(e, ge, s) {
     const h = ge.h * s, r = Math.min(0.2 * s, h * 0.95), c = LED_RGB[e.color] || LED_RGB.red, gl = ledG(e);
     ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.4, 0.035 * s); ctx.lineCap = 'round';
@@ -3493,7 +3493,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       ctx.fillStyle = T.muted; ctx.font = `${Math.max(12, s * 0.2)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('Pick a part above, then drag from one dot to another to place it.', W / 2, g.Y(3.5));
     }
-    // bulb glow; on the bench its colour follows the filament
+    // bulb glow; on the bench its color follows the filament
     for (const e of els) {
       if (e.type !== 'bulb') continue;
       const gl = bulbG(e);
@@ -3503,7 +3503,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       grd.addColorStop(0, rgba(gc, 0.85 * gl)); grd.addColorStop(0.45, rgba(gc, 0.4 * gl)); grd.addColorStop(1, rgba(gc, 0));
       ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, R, 0, 2 * Math.PI); ctx.fill();
     }
-    // LED light: a halo in the LED's colour, brighter with more current
+    // LED light: a halo in the LED's color, brighter with more current
     for (const e of els) {
       if (e.type !== 'led') continue;
       const gl = ledG(e); if (gl < 0.002) continue;
@@ -4009,7 +4009,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rGeo = { x0, x1, y0, y1, X, inv: (x) => Math.pow(10, lf0 + (x - x0) / (x1 - x0) * (lf1 - lf0)) };
     const z0 = zSeen(els, src, src.f), blind = S.blind;
     const Pof = (I0, phi) => 0.5 * src.V0 * I0 * Math.cos(phi);
-    // the curves: [points [f, y], colour, label]
+    // the curves: [points [f, y], color, label]
     const curves = [];
     if (!blind && kind === 'P') curves.push([reso.curve.map((p) => [p.f, Pof(p.I, p.phi)]), T.equi, null]);
     if (!blind && kind === 'X') {
@@ -4315,7 +4315,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       }
       if (e.type === 'led') {
         const L = LEDS[e.color] || LEDS.red;
-        rows.push(['Colour', `${L.name}, λ = ${L.lambda} nm`], ['Photon energy hc/λ', `${(1239.84198 / L.lambda).toFixed(3)} eV`], ['Light', `${Math.round(ledG(e) * 100)}% <span class="ok">of full, at ${fmtSI(LED_IF, 'A', 2)}</span>`, true]);
+        rows.push(['Color', `${L.name}, λ = ${L.lambda} nm`], ['Photon energy hc/λ', `${(1239.84198 / L.lambda).toFixed(3)} eV`], ['Light', `${Math.round(ledG(e) * 100)}% <span class="ok">of full, at ${fmtSI(LED_IF, 'A', 2)}</span>`, true]);
         $('selFormula').innerHTML = `I = I<sub>s</sub>(e<sup>V/nV<sub>T</sub></sup> − 1) with n = ${LED_N} and I<sub>s</sub> = ${fmtSci(d.Is, 'A')}, set so that ${fmtSI(LED_IF, 'A', 2)} flows at ${L.VF} V (Kingbright ${L.part})`;
       } else $('selFormula').innerHTML = `I = I<sub>s</sub>(e<sup>V<sub>j</sub>/nV<sub>T</sub></sup> − 1), V = V<sub>j</sub> + IR<sub>s</sub>: ${DIODE.name} with I<sub>s</sub> = 4.352 nA, n = ${DIODE.n}, R<sub>s</sub> = ${DIODE.Rs} Ω, V<sub>T</sub> = kT/e = ${fmtSI(VT, 'V', 4)}`;
       return rows;

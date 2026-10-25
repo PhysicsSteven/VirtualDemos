@@ -89,7 +89,7 @@ The model is exact, and the angles are given to 0.01°, so the scatter is neglig
 1. Why does light bend toward the normal when it slows down? Answer using the wavelets, not the formula.
 2. A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?
 3. Why can you hear someone around a corner but not see them?
-4. Optical fibres guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?
+4. Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?
 
 ## What to hand in
 

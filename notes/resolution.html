@@ -63,7 +63,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Circular Apertures and Resolution</h1><ul class="meta"><li><a href="../demos/resolution.html">Open the demo</a></li><li>Intro physics (wave optics: circular apertures, the Rayleigh criterion)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
 <ul>
 <li>Light through a round hole does not make a point: it makes the Airy pattern, a bright central disk with faint rings. The first dark ring is at sin θ = 1.22 λ/D, so a larger hole or a shorter wavelength makes a smaller disk.</li>
-<li>Two point sources make two overlapping Airy patterns. By Rayleigh's criterion they are just resolved when the centre of one falls on the first dark ring of the other: θ_min = 1.22 λ/D. The intensity midway between them then dips to about 73.5% of the peaks.</li>
+<li>Two point sources make two overlapping Airy patterns. By Rayleigh's criterion they are just resolved when the center of one falls on the first dark ring of the other: θ_min = 1.22 λ/D. The intensity midway between them then dips to about 73.5% of the peaks.</li>
 <li>Every optical instrument has this limit: the pupil of the eye, a telescope's mirror, a camera lens. Bigger apertures resolve finer detail.</li>
 <li>The 1.22 is not a fudge factor: it is the first zero of the Bessel function J₁, 3.8317, divided by π.</li>
 </ul>
@@ -71,14 +71,14 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <p>Students should know single slit diffraction (sin θ = mλ/a for the dark fringes). The demo has six setups: <strong>Laser through a pinhole</strong> (a screen at distance L, positions in mm), <strong>Two point sources</strong> (an iris in front of a lens, angles in µrad), <strong>Headlights and the eye</strong>, <strong>Hubble and two stars</strong>, <strong>Camera lens</strong> (positions on the sensor in µm) and <strong>Mystery pinhole</strong>. The graph under the picture is the intensity along the line through the sources; the orange cursor reads position and intensity anywhere on it.</p>
 <h2>Running it in class</h2>
 <ol>
-<li><strong>Laser through a pinhole.</strong> Ask Q1. 632.8 nm, 200 µm, 2.00 m: the first dark ring is 7.72 mm from the centre. Tick <strong>Bring out the faint rings</strong> to see the rings, which are only 1.75% as bright as the centre. Change D and λ.</li>
+<li><strong>Laser through a pinhole.</strong> Ask Q1. 632.8 nm, 200 µm, 2.00 m: the first dark ring is 7.72 mm from the center. Tick <strong>Bring out the faint rings</strong> to see the rings, which are only 1.75% as bright as the center. Change D and λ.</li>
 <li><strong>Two point sources.</strong> Ask Q2. With a 5 mm iris at 550 nm the limit is 134 µrad; start at 160 µrad (resolved), then close the gap or the iris until the two merge. Tick <strong>Show each source alone</strong> to see each pattern as a dashed curve: at the limit one peak sits on the other's zero.</li>
 <li><strong>Headlights and the eye.</strong> Ask Q3. Move the car away: with a 3.00 mm pupil the headlights merge at 5.81 km. Open the pupil to 8 mm (night) and they stay separate to 15.5 km.</li>
 <li><strong>Hubble and two stars.</strong> Ask Q4. 2.40 m mirror, 550 nm: 2.80 × 10⁻⁷ rad, so stars at 2.0 million ly must be 0.56 ly apart.</li>
 <li><strong>Camera lens.</strong> Ask Q5. Step from f/4 to f/22 and watch the two points blur together as the Airy disk grows (2.44 λN: 5.4 µm at f/4, 29.5 µm at f/22).</li>
 </ol>
 <h2>Questions</h2>
-<div class="q"><p><strong>Q1.</strong> A 632.8 nm laser lights a pinhole 200 µm across. How far from the centre of a screen 2.00 m away is the first dark ring? What happens to it if the pinhole is made smaller?</p></div>
+<div class="q"><p><strong>Q1.</strong> A 632.8 nm laser lights a pinhole 200 µm across. How far from the center of a screen 2.00 m away is the first dark ring? What happens to it if the pinhole is made smaller?</p></div>
 
 <div class="q"><p><strong>Q2.</strong> Two point sources are seen through a 5.0 mm iris in 550 nm light. What is the smallest angle between them that can be resolved? What happens if the iris is closed to 2.5 mm?</p></div>
 
@@ -97,8 +97,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li><strong>Pattern.</strong> The exact Fraunhofer pattern of a uniformly lit circular hole, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ. J₁ comes from Bessel's integral by the trapezoid rule, good to about 13 digits; the tests check it against tabulated values and zeros (3.8317, 7.0156, 10.1735), the 1.75% first bright ring and the 83.8% of the power inside the first dark ring.</li>
-<li><strong>Two sources.</strong> Equal and incoherent, so intensities add; each pattern depends on the angle from its own centre (small angles). The lens or mirror is perfect: no aberrations, no turbulence, no central obstruction (a real Hubble has one, which changes the ring brightness a little).</li>
-<li><strong>Screen.</strong> A plane wave lights the pinhole and the screen is in the far field (D²/λL ≤ 0.22 here). A point x from the centre is at θ = arctan(x/L). The camera uses D = f/N with the marked f-numbers.</li>
+<li><strong>Two sources.</strong> Equal and incoherent, so intensities add; each pattern depends on the angle from its own center (small angles). The lens or mirror is perfect: no aberrations, no turbulence, no central obstruction (a real Hubble has one, which changes the ring brightness a little).</li>
+<li><strong>Screen.</strong> A plane wave lights the pinhole and the screen is in the far field (D²/λL ≤ 0.22 here). A point x from the center is at θ = arctan(x/L). The camera uses D = f/N with the marked f-numbers.</li>
 <li><strong>Numbers.</strong> Hubble from the textbook's Example 4.6 in §4.5 (2.40 m, 550 nm, 2.0 million ly); the eye from its Chapter 4 Problem 59 (3.00 mm pupil, headlights 1.30 m apart). Real eyes reach about one minute of arc (291 µrad, 20/20 vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.</li>
 </ul>
 <h2>Going further</h2>

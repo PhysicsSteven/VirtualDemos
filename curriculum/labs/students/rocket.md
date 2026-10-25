@@ -71,7 +71,7 @@ Hide the predictions (Blind) before you start. Let each flight run until the eng
 | | | | | | | | | | | |
 | | | | | | | | | | | |
 
-Keep each part in its own copy of the table, labelled with the part.
+Keep each part in its own copy of the table, labeled with the part.
 
 ## Analysis
 
@@ -89,7 +89,7 @@ The virtual flight computer logs exact values from the model (the demo rounds th
 1. Two rocket stages: why does dropping an empty tank before burning the rest of the fuel give a higher final speed than carrying the empty tank all the way?
 2. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
 3. Part 4 burned twice the fuel of Part 3. Why did it not end up twice as fast?
-4. Why is $$g$$ held constant a poor approximation for a flight that reaches a few hundred kilometres? Which way does it bias the predicted height?
+4. Why is $$g$$ held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?
 
 ## What to hand in
 

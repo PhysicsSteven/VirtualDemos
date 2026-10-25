@@ -512,7 +512,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.grille; ctx.beginPath(); ctx.ellipse(bx + bw, by + bh / 2, 3 * p, 8 * p, 0, -Math.PI / 2, Math.PI / 2); ctx.fill();
     ctx.strokeStyle = T.grille; ctx.lineWidth = 1; ctx.beginPath(); for (let i = -2; i <= 2; i++) { ctx.moveTo(bx + 4 * p, by + bh / 2 + i * 3 * p); ctx.lineTo(bx + bw - 4 * p, by + bh / 2 + i * 3 * p); } ctx.stroke();
   }
-  function sensorPings(p, tx0, ty, xTarget) {   // faint sound pulses travelling from the sensor to the cart while it runs
+  function sensorPings(p, tx0, ty, xTarget) {   // faint sound pulses traveling from the sensor to the cart while it runs
     if (reduce || !playing) return;
     const sx = tx0 - 6 * p + 3 * p, sy = ty + 1 * p, d = xTarget - sx; if (d < 16 * p) return;
     ctx.strokeStyle = T.ping; ctx.lineWidth = 1.2 * p;
@@ -542,7 +542,7 @@ table.rows input:focus { border-color: var(--accent); }
         const x0 = run.x0, v0 = run.v0;
         h += dd('Displacement Δx = x − x₀ = area under v', `${fx(q.x - x0, 2)} m`, true);
         h += dd('Change in velocity Δv = v − v₀ = area under a', `${fx(q.v - v0, 2)} m/s`, true);
-        h += dd('Speed |v|', `${fx(Math.abs(q.v), 2)} m/s`) + dd('Distance travelled', `${fx(distance(S.t), 2)} m`);
+        h += dd('Speed |v|', `${fx(Math.abs(q.v), 2)} m/s`) + dd('Distance traveled', `${fx(distance(S.t), 2)} m`);
       } else h += '<div class="wide"><dt>From the motion detector</dt><dd class="ok">v and a are estimated from position samples 0.02 s apart, smoothed over 0.4 s (v) and 0.6 s (a).</dd></div>';
     }
     $('readout').innerHTML = h;

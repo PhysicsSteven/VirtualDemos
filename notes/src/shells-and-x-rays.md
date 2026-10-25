@@ -1,5 +1,5 @@
 ---
-title: Shells, the Periodic Table and X Rays
+title: Shells, the Periodic Table and X-Rays
 level: Intro modern physics (atomic structure)
 time: 20 to 35 minutes
 ---
@@ -8,11 +8,11 @@ time: 20 to 35 minutes
 - The Pauli exclusion principle: no two electrons in an atom share all four quantum numbers n, l, m_l and m_s. So a subshell holds 2(2l + 1) electrons and a shell 2n², and atoms build up shell by shell.
 - The periodic table is that build up. Elements in a column have the same arrangement of outer electrons; the noble gases have closed shells and hold their electrons hardest, and the alkali metals have one electron outside a closed shell and lose it most easily.
 - Filling follows the n + l rule well but not perfectly: about twenty elements (chromium and copper among them) have measured ground states that break it.
-- An X ray tube gives a continuous spectrum that stops sharply at λ_min = hc/eV, plus lines that belong to the target: an electron falls into a hole in the K shell. Moseley found that the Kα line's frequency grows as (Z − 1)², which put the elements in order of atomic number.
+- An X-ray tube gives a continuous spectrum that stops sharply at λ_min = hc/eV, plus lines that belong to the target: an electron falls into a hole in the K shell. Moseley found that the Kα line's frequency grows as (Z − 1)², which put the elements in order of atomic number.
 
 ## Before class
 
-Students should know the four quantum numbers of the hydrogen atom and the Bohr energy levels E = −13.6 eV Z²/n². The demo has two views. **Shells**: pick an element on the periodic table (or add and remove electrons one at a time) and see its orbital boxes filled with spin up and spin down arrows, the count in each shell against 2n², and the first ionization energy of every element from H to Lr. A switch compares the measured ground state with the n + l rule. **X ray tube**: choose a target and a voltage, and read the spectrum (against wavelength or photon energy) with a cursor; beside the tube, the target's K, L and M levels show the transitions behind each line.
+Students should know the four quantum numbers of the hydrogen atom and the Bohr energy levels E = −13.6 eV Z²/n². The demo has two views. **Shells**: pick an element on the periodic table (or add and remove electrons one at a time) and see its orbital boxes filled with spin up and spin down arrows, the count in each shell against 2n², and the first ionization energy of every element from H to Lr. A switch compares the measured ground state with the n + l rule. **X-ray tube**: choose a target and a voltage, and read the spectrum (against wavelength or photon energy) with a cursor; beside the tube, the target's K, L and M levels show the transitions behind each line.
 
 ## Running it in class
 
@@ -41,7 +41,7 @@ Students should know the four quantum numbers of the hydrogen atom and the Bohr 
 ## Common misconceptions
 
 - **"Shells fill strictly in order of n."** 4s fills before 3d (n + l = 4 against 5), which is why potassium and calcium come before the transition metals.
-- **"The X ray lines come from the electrons in the beam."** The beam electrons only knock out an inner electron of a target atom; the line photon comes when another electron of the same atom falls into the hole.
+- **"The X-ray lines come from the electrons in the beam."** The beam electrons only knock out an inner electron of a target atom; the line photon comes when another electron of the same atom falls into the hole.
 - **"Raising the voltage moves the lines."** It moves the continuous spectrum's cutoff and makes everything brighter; the line wavelengths belong to the target and do not move.
 - **"Ionization energies rise smoothly across a period."** They dip after each filled or half filled subshell (boron after beryllium, oxygen after nitrogen).
 

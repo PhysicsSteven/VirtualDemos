@@ -1,4 +1,4 @@
-# X Ray Spectra and Moseley's Law
+# X-Ray Spectra and Moseley's Law
 Student laboratory · Modern Physics
 
 Textbook: OpenStax *University Physics*, Vol. 3, §8.5. Access for free at https://openstax.org/details/books/university-physics-volume-3.
@@ -8,11 +8,11 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.5. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Copper tube, 30 kV; Below the K edge; Mystery target (these three use the X ray tube view, the subject of this worksheet); Fill up to neon; Chromium breaks the rule (the shells and periodic table worksheet).
+**Setups in the demo:** Copper tube, 30 kV; Below the K edge; Mystery target (these three use the X-ray tube view, the subject of this worksheet); Fill up to neon; Chromium breaks the rule (the shells and periodic table worksheet).
 
 **Using the demo.**
 
-- Electrons from a hot filament are accelerated through a voltage V, from 5 to 100 kV, and stop in the target. A spectrometer measures the X rays. Plot the spectrum against wavelength or against photon energy.
+- Electrons from a hot filament are accelerated through a voltage V, from 5 to 100 kV, and stop in the target. A spectrometer measures the X-rays. Plot the spectrum against wavelength or against photon energy.
 - The smooth part is bremsstrahlung, the radiation of electrons slowing down in the target. Its shape follows Kramers' law for a thick target, and it ends at the photon energy eV.
 - If eV is above the target's K edge, the electrons can knock out K electrons, and the K lines appear: Kα₁ (from L₃), Kα₂ (from L₂) and Kβ₁ (from M₃). The line energies and K edges are measured values from the NIST X-Ray Transition Energies Database.
 - The heights of the lines are drawn, not computed, and only roughly follow real tubes. Absorption in the target and window, which cuts off the long wavelength end of a real spectrum, the weaker K lines and the L lines are left out.
@@ -25,11 +25,11 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.5. Access for free at https
 
 ## Goal
 
-Measure the shortest wavelength an X ray tube emits and use it to find Planck's constant, measure the Kα lines of a range of elements to test Moseley's law, and use the law to identify an unknown target.
+Measure the shortest wavelength an X-ray tube emits and use it to find Planck's constant, measure the Kα lines of a range of elements to test Moseley's law, and use the law to identify an unknown target.
 
 ## Background
 
-An electron accelerated through a voltage V arrives at the target with kinetic energy eV. As it slows down in the target it emits X rays with a continuous spread of energies, but no photon can carry more than eV. So the spectrum ends sharply at the shortest wavelength
+An electron accelerated through a voltage V arrives at the target with kinetic energy eV. As it slows down in the target it emits X-rays with a continuous spread of energies, but no photon can carry more than eV. So the spectrum ends sharply at the shortest wavelength
 
 $$\lambda_\mathrm{min} = \frac{hc}{eV},$$
 
@@ -50,7 +50,7 @@ This is Moseley's law: $$\sqrt{E_{K\alpha}}$$ grows in a straight line with Z. I
 
 ## Safety
 
-No hazards in the virtual lab. Real X ray tubes produce ionizing radiation and run at lethal voltages; they are used only inside interlocked shielding.
+No hazards in the virtual lab. Real X-ray tubes produce ionizing radiation and run at lethal voltages; they are used only inside interlocked shielding.
 
 ## Procedure
 
@@ -90,8 +90,8 @@ The spectrum has no noise, but the start of the bremsstrahlung and the peaks of 
 
 1. Why does the shortest wavelength depend on the voltage but not on the target, while the K lines depend on the target but not on the voltage?
 2. The Duane–Hunt limit gives h from $$\lambda_\mathrm{min}$$, V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?
-3. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X ray spectra settle the order?
-4. Why are X ray lines a better fingerprint of an element than its visible spectrum when the element is in a compound?
+3. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X-ray spectra settle the order?
+4. Why are X-ray lines a better fingerprint of an element than its visible spectrum when the element is in a compound?
 
 ## What to hand in
 

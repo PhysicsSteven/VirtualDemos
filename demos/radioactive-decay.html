@@ -153,7 +153,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="gPane">
-        <canvas id="gCan" tabindex="0" aria-label="Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second colour, stable end products small grey balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
+        <canvas id="gCan" tabindex="0" aria-label="Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="stepBtn">Step</button>
@@ -673,7 +673,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* what leaves the nucleus in each decay of the chain, for the track drawn at a flash: 'a' alpha, 'b' beta (the coin is drawn as beta) */
   function decayKinds() { return S.preset === 'bi210' && !S.custom ? ['b', 'a'] : ['b', 'b']; }
-  /* nucleus sprites, made once per cell size and theme: parent full size, intermediate a little smaller, stable end product small and grey */
+  /* nucleus sprites, made once per cell size and theme: parent full size, intermediate a little smaller, stable end product small and gray */
   let sprites = null;
   function nucleusSprites(cell) {
     const key = cell + '|' + T.sp.join(',');
@@ -706,7 +706,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.drawImage(im, x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell);
     }
   }
-  /* the Geiger counter under the sample: it counts every decay (taken as 100% efficient, a stated idealisation), so its total is the
+  /* the Geiger counter under the sample: it counts every decay (taken as 100% efficient, a stated idealization), so its total is the
      number of nuclei that have decayed and its last step reading is the activity histogram's last bar at one step a bin */
   function geiger(ctx, W, y, h, ps) {
     if (!window.VDGear || h < 20) return;

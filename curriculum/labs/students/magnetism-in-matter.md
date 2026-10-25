@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §12.7. Access for free at http
 
 **Setups in the demo:** Aluminum core; Bismuth core; Liquid oxygen; Floating water; Iron, Example 12.10; Iron hysteresis loop.
 
-**Using the demo.** A long solenoid with a core of one material. The Core material list has the materials of OpenStax Table 12.2 and a model iron. The Coil section sets the current (−1 to +1 A, in steps of 5 mA) and the turns per centimetre, and has Sweep the current (between +1 and −1 A, over and over), Demagnetize (iron only) and Clear the trace. The plot shows $$B$$ against $$B_0$$. Readouts give $$B_0$$, $$B$$ and $$B - B_0$$, the susceptibility of a linear material, and for iron the magnetization, the field left when the current last crossed zero, and the reverse current that last brought $$B$$ to zero. Blind hides $$B$$, $$B - B_0$$ and the plot.
+**Using the demo.** A long solenoid with a core of one material. The Core material list has the materials of OpenStax Table 12.2 and a model iron. The Coil section sets the current (−1 to +1 A, in steps of 5 mA) and the turns per centimeter, and has Sweep the current (between +1 and −1 A, over and over), Demagnetize (iron only) and Clear the trace. The plot shows $$B$$ against $$B_0$$. Readouts give $$B_0$$, $$B$$ and $$B - B_0$$, the susceptibility of a linear material, and for iron the magnetization, the field left when the current last crossed zero, and the reverse current that last brought $$B$$ to zero. Blind hides $$B$$, $$B - B_0$$ and the plot.
 
 **What the demo models.** The solenoid is long, so $$B_0 = \mu_0 nI$$ inside it, and a linear core gives $$B = (1 + \chi)B_0$$ with $$\chi$$ from OpenStax Table 12.2. Iron is not linear: it follows the Jiles and Atherton model of hysteresis with the saturation magnetization of iron, $$1.707\times10^6$$ A/m, and four values chosen so its first magnetization curve passes near OpenStax Figure 12.25 (1.41 T at the 0.20 A of Example 12.10, where the book reads 1.4 T). It is a model of a soft iron, not measured data. Simulated data.
 
@@ -22,7 +22,7 @@ Measure the magnetic susceptibility of paramagnetic and diamagnetic materials, a
 
 ## Background
 
-A long solenoid with $$n$$ turns per metre and current $$I$$ has the field $$B_0 = \mu_0 nI$$ inside it. Filling it with a material changes the field to
+A long solenoid with $$n$$ turns per meter and current $$I$$ has the field $$B_0 = \mu_0 nI$$ inside it. Filling it with a material changes the field to
 
 $$B = (1 + \chi)B_0 = \mu B_0/\mu_0,$$
 
@@ -30,9 +30,9 @@ where $$\chi$$ is the material's magnetic susceptibility. In a paramagnet, atomi
 
 ## Before the lab
 
-1. Find $$B_0$$ for 20 turns per centimetre and 1.00 A.
+1. Find $$B_0$$ for 20 turns per centimeter and 1.00 A.
 2. Aluminum has $$\chi = 2.2\times10^{-5}$$ and bismuth $$\chi = -1.7\times10^{-5}$$. Find $$B - B_0$$ for each in that solenoid.
-3. OpenStax Example 12.10: with 20 turns per centimetre and 0.20 A, an iron core gives about 1.4 T. Find $$B_0$$ and the effective $$B/B_0 - 1$$.
+3. OpenStax Example 12.10: with 20 turns per centimeter and 0.20 A, an iron core gives about 1.4 T. Find $$B_0$$ and the effective $$B/B_0 - 1$$.
 4. Why can a single number $$\chi$$ not describe iron?
 
 ## Safety
@@ -41,7 +41,7 @@ Real solenoids carrying a few amperes get warm; let them cool before handling. L
 
 ## Procedure
 
-**Part 1: linear materials.** With 20 turns per centimetre and 1.00 A, measure $$B$$ and $$B - B_0$$ with the coil empty and with each of aluminum, tungsten, liquid oxygen, copper, water and bismuth as the core.
+**Part 1: linear materials.** With 20 turns per centimeter and 1.00 A, measure $$B$$ and $$B - B_0$$ with the coil empty and with each of aluminum, tungsten, liquid oxygen, copper, water and bismuth as the core.
 
 **Part 2: field against current.** With a bismuth core, measure $$B - B_0$$ at currents from −1.00 to +1.00 A in steps of 0.50 A.
 

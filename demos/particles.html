@@ -216,9 +216,9 @@ table.ck td.num { font-family: var(--font-mono); }
           </div>
         </div>
         <div class="shelf-card" id="cardQk" role="group" aria-label="Choose the quarks" hidden>
-          <span class="card-title">Up to three quarks or antiquarks, each with a colour and a spin (ground states: no orbital motion)</span>
+          <span class="card-title">Up to three quarks or antiquarks, each with a color and a spin (ground states: no orbital motion)</span>
           <div class="wide" id="slots"></div>
-          <div class="wide"><button type="button" class="btn" id="qkColours">Make the colours neutral</button><button type="button" class="btn" id="qkClear">Clear</button></div>
+          <div class="wide"><button type="button" class="btn" id="qkColours">Make the colors neutral</button><button type="button" class="btn" id="qkClear">Clear</button></div>
         </div>
         <div class="shelf-card" id="cardDt" role="group" aria-label="The bubble chamber" hidden>
           <span class="card-title">A liquid hydrogen bubble chamber in a magnetic field into the page; a π⁻ beam enters from the left</span>
@@ -296,22 +296,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Particles, Quarks and Conservation Laws. Runnable in Node (curriculum/validation/test_particles.cjs).
      Sources: OpenStax University Physics Volume 3 (2016) §11.1 (fermions and bosons; the four forces, strong 1, electromagnetic
      1/100, weak 10⁻⁶, gravity 10⁻³⁸; Table 11.1), §11.2 (baryon number, the three lepton numbers and strangeness; Table 11.2;
-     Examples 11.1 to 11.3), §11.3 (quarks, Tables 11.3 to 11.5, colour; Example 11.4), §11.4 (Eq. 11.2, p = 0.3Br with p in GeV/c,
-     B in T and r in m; Eq. 11.3, the centre of mass energy W; Examples 11.6 and 11.7) and §11.5 (Table 11.6, the forces of the
+     Examples 11.1 to 11.3), §11.3 (quarks, Tables 11.3 to 11.5, color; Example 11.4), §11.4 (Eq. 11.2, p = 0.3Br with p in GeV/c,
+     B in T and r in m; Eq. 11.3, the center of mass energy W; Examples 11.6 and 11.7) and §11.5 (Table 11.6, the forces of the
      Standard Model with the weak force at 10⁻¹⁰; Eq. 11.10, the range of a force from the mass of its carrier).
      Masses, mean lives, widths and branching fractions: Particle Data Group, S. Navas et al., Review of Particle Physics,
      Phys. Rev. D 110, 030001 (2024). Quark masses are PDG's running masses (u, d, s at 2 GeV in the MS-bar scheme; c and b at their
      own mass; t from direct measurements). A mean life given as ħ/Γ comes from the PDG width Γ. ħ = 6.582119569 × 10⁻²² MeV s and
-     ħc = 197.3269804 MeV fm (CODATA 2018, exact from SI). */
+     ħc = 197.3269804 MeV fm (CODATA 2022, exact from SI). */
   const HBAR = 6.582119569e-22, HBARC = 197.3269804, C_CM = 2.99792458e10;
-  /* p = (e c) B r: 0.299792458 GeV/c for each tesla metre (the book rounds it to 0.3), or 2.99792458 MeV/c for each tesla centimetre */
+  /* p = (e c) B r: 0.299792458 GeV/c for each tesla meter (the book rounds it to 0.3), or 2.99792458 MeV/c for each tesla centimeter */
   const PBR_GEV = 0.299792458, PBR_MEV_CM = 2.99792458;
   /* a small seeded random number generator (mulberry32), so an event can be shown again exactly */
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
 
   /* Quarks (Table 11.3 for charge, spin, baryon number and strangeness; PDG 2024 for the masses, MeV/c²). Charm C, bottomness B′
-     and topness T follow the PDG sign convention, which the book does not use: like strangeness, a quark's flavour number has the
+     and topness T follow the PDG sign convention, which the book does not use: like strangeness, a quark's flavor number has the
      sign of its charge. */
   const QUARKS = {
     u: { name: 'up', Q: 2 / 3, m: 2.16, gen: 1 }, d: { name: 'down', Q: -1 / 3, m: 4.70, gen: 1 },
@@ -319,7 +319,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     b: { name: 'bottom', Q: -1 / 3, m: 4183, gen: 3 }, t: { name: 'top', Q: 2 / 3, m: 172570, gen: 3, tau: HBAR / 1420 },
   };
   const FL = ['u', 'd', 's', 'c', 'b', 't'];
-  /* flavour quantum numbers from the net count of each flavour (quarks minus antiquarks) */
+  /* flavor quantum numbers from the net count of each flavor (quarks minus antiquarks) */
   const flavourNumbers = (n) => ({ S: -(n.s || 0) || 0, C: n.c || 0, Bt: -(n.b || 0) || 0, T: n.t || 0 });
   const chargeOf = (n) => FL.reduce((a, f) => a + QUARKS[f].Q * (n[f] || 0), 0);
 
@@ -338,7 +338,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   def({ id: 'nutau', html: 'ν<sub>τ</sub>', txt: 'ν_τ', name: 'tau neutrino', cls: 'lepton', gen: 3, m: 0, mNote: '< 0.8 eV', spin: 0.5, Lt: 1, tau: Infinity, anti: 'nutaubar', aname: 'tau antineutrino', decay: 'stable' });
   /* gauge bosons and the Higgs boson */
   def({ id: 'gamma', html: 'γ', txt: 'γ', name: 'photon', cls: 'gauge', m: 0, spin: 1, tau: Infinity, self: true, force: 'electromagnetic', decay: 'stable' });
-  def({ id: 'gluon', html: 'g', txt: 'g', name: 'gluon (8 colour states)', cls: 'gauge', m: 0, spin: 1, tau: null, self: true, force: 'strong', decay: 'confined: never seen alone' });
+  def({ id: 'gluon', html: 'g', txt: 'g', name: 'gluon (8 color states)', cls: 'gauge', m: 0, spin: 1, tau: null, self: true, force: 'strong', decay: 'confined: never seen alone' });
   def({ id: 'W+', html: 'W<sup>+</sup>', txt: 'W⁺', name: 'W boson', cls: 'gauge', m: 80369.2, Q: 1, spin: 1, tau: HBAR / 2085, width: 2085, anti: 'W-', ahtml: 'W<sup>−</sup>', atxt: 'W⁻', aname: 'W boson', force: 'weak', decay: 'e⁺ ν_e, μ⁺ ν_μ, τ⁺ ν_τ (10.9% each), quark pairs (67%)' });
   def({ id: 'Z0', html: 'Z<sup>0</sup>', txt: 'Z⁰', name: 'Z boson', cls: 'gauge', m: 91188.0, spin: 1, tau: HBAR / 2495.5, width: 2495.5, self: true, force: 'weak', decay: 'quark pairs (69.9%), νν̄ (20.0%), e⁺e⁻, μ⁺μ⁻, τ⁺τ⁻ (3.37% each)' });
   def({ id: 'H0', html: 'H<sup>0</sup>', txt: 'H⁰', name: 'Higgs boson', cls: 'scalar', m: 125200, spin: 0, tau: HBAR / 3.7, width: 3.7, self: true, decay: 'b b̄ (≈ 58%), W W* (≈ 21%), γγ (0.23%), predicted' });
@@ -370,8 +370,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   def({ id: 'Ups', html: 'ϒ', txt: 'ϒ', name: 'upsilon, ϒ(1S)', cls: 'meson', m: 9460.40, spin: 1, quarks: 'b b̄', tau: HBAR / 0.05402, width: 0.05402, self: true, decay: 'hadrons, τ⁺τ⁻ (2.6%), μ⁺μ⁻ (2.48%), e⁺e⁻ (2.38%)' });
   def({ id: 'Ups4S', html: 'ϒ(4S)', txt: 'ϒ(4S)', name: 'upsilon (4S), an excited b b̄ state', cls: 'meson', m: 10579.4, spin: 1, quarks: 'b b̄', tau: HBAR / 20.5, width: 20.5, self: true, decay: 'B⁺B⁻ (51.4%), B⁰B̄⁰ (48.6%)', table: false });
   /* baryons (Table 11.4 for the quark content) */
-  def({ id: 'p', html: 'p', txt: 'p', name: 'proton', cls: 'baryon', m: 938.27208816, Q: 1, spin: 0.5, B: 1, n: { u: 2, d: 1 }, quarks: 'uud', tau: Infinity, tauNote: 'stable (no decay seen; τ > 10²⁹ years)', anti: 'pbar', ahtml: 'p̄', atxt: 'p̄', aname: 'antiproton', decay: 'stable' });
-  def({ id: 'n', html: 'n', txt: 'n', name: 'neutron', cls: 'baryon', m: 939.56542052, spin: 0.5, B: 1, n: { u: 1, d: 2 }, quarks: 'udd', tau: 878.4, anti: 'nbar', ahtml: 'n̄', atxt: 'n̄', aname: 'antineutron', decay: 'p e⁻ ν̄_e (100%)' });
+  def({ id: 'p', html: 'p', txt: 'p', name: 'proton', cls: 'baryon', m: 938.27208943, Q: 1, spin: 0.5, B: 1, n: { u: 2, d: 1 }, quarks: 'uud', tau: Infinity, tauNote: 'stable (no decay seen; τ > 10²⁹ years)', anti: 'pbar', ahtml: 'p̄', atxt: 'p̄', aname: 'antiproton', decay: 'stable' });
+  def({ id: 'n', html: 'n', txt: 'n', name: 'neutron', cls: 'baryon', m: 939.56542194, spin: 0.5, B: 1, n: { u: 1, d: 2 }, quarks: 'udd', tau: 878.4, anti: 'nbar', ahtml: 'n̄', atxt: 'n̄', aname: 'antineutron', decay: 'p e⁻ ν̄_e (100%)' });
   def({ id: 'Lambda', html: 'Λ<sup>0</sup>', txt: 'Λ⁰', name: 'lambda', cls: 'baryon', m: 1115.683, spin: 0.5, B: 1, n: { u: 1, d: 1, s: 1 }, quarks: 'uds', tau: 2.617e-10, anti: 'Lambdabar', ahtml: 'Λ̄<sup>0</sup>', atxt: 'Λ̄⁰', decay: 'p π⁻ (64.1%), n π⁰ (35.9%)' });
   def({ id: 'Sigma+', html: 'Σ<sup>+</sup>', txt: 'Σ⁺', name: 'sigma', cls: 'baryon', m: 1189.37, Q: 1, spin: 0.5, B: 1, n: { u: 2, s: 1 }, quarks: 'uus', tau: 8.018e-11, anti: 'Sigma+bar', ahtml: 'Σ̄<sup>−</sup>', atxt: 'Σ̄⁻', decay: 'p π⁰ (51.6%), n π⁺ (48.3%)' });
   def({ id: 'Sigma0', html: 'Σ<sup>0</sup>', txt: 'Σ⁰', name: 'neutral sigma', cls: 'baryon', m: 1192.642, spin: 0.5, B: 1, n: { u: 1, d: 1, s: 1 }, quarks: 'uds', tau: 7.4e-20, anti: 'Sigma0bar', ahtml: 'Σ̄<sup>0</sup>', atxt: 'Σ̄⁰', decay: 'Λ γ (100%)' });
@@ -421,7 +421,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const k of ['Q', 'B', 'S', 'C', 'Bt', 'T']) t[k] = Math.round(t[k] * 3) / 3;
     return t;
   }
-  /* centre of mass energy W (MeV) of what goes in. One particle: its rest energy (a decay at rest). Two: a beam of kinetic energy K on
+  /* center of mass energy W (MeV) of what goes in. One particle: its rest energy (a decay at rest). Two: a beam of kinetic energy K on
      a target at rest (W² = m₁² + m₂² + 2E₁m₂), or two beams of the same total energy E meeting head on, Eq. 11.3 with c = 1:
      W² = 2(E₁E₂ + p₁p₂) + m₁² + m₂². */
   function cmEnergy(ids, mode, en) {
@@ -460,24 +460,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (!out.decay && b.length === 1) {
       const p = BY[b[0]], tol = Math.max(p.width || 0, 1e-6 * p.m);
       out.res = true; if (Math.abs(out.W - p.m) > tol) out.reasons.push(`making one particle needs W equal to its mass energy, within its width (W = ${out.W.toFixed(1)} MeV, mc² = ${p.m} MeV)`);
-    } else if (out.spare < -1e-9) out.reasons.push(out.decay ? 'energy: the products have more rest mass than the parent' : 'energy: not enough energy in the centre of mass frame to make the products');
+    } else if (out.spare < -1e-9) out.reasons.push(out.decay ? 'energy: the products have more rest mass than the parent' : 'energy: not enough energy in the center of mass frame to make the products');
     if (!out.decay) out.threshold = threshold(a, b.length === 1 ? BY[b[0]].m : tb.m, r.mode);
-    /* flavour: the strong and electromagnetic interactions keep every quark flavour count; the weak interaction can change one
-       flavour into another, and changes strangeness by at most one unit at a time */
+    /* flavor: the strong and electromagnetic interactions keep every quark flavor count; the weak interaction can change one
+       flavor into another, and changes strangeness by at most one unit at a time */
     const dn = {}; let flav = false; for (const f of FL) { dn[f] = tb.n[f] - ta.n[f]; if (dn[f]) flav = true; }
     out.dS = tb.S - ta.S; out.dn = dn;
     const all = a.concat(b).map((id) => BY[id]);
     const nu = all.some(isNeutrino), wz = all.some((p) => p.id === 'W+' || p.id === 'W-' || p.id === 'Z0');
     const photon = all.some((p) => p.id === 'gamma'), lep = all.some(isChargedLepton);
-    if (Math.abs(out.dS) > 1 || Math.abs(tb.C - ta.C) > 1 || Math.abs(tb.Bt - ta.Bt) > 1) out.reasons.push('flavour: strangeness (or charm or bottomness) changes by more than one unit, which no single interaction can do');
+    if (Math.abs(out.dS) > 1 || Math.abs(tb.C - ta.C) > 1 || Math.abs(tb.Bt - ta.Bt) > 1) out.reasons.push('flavor: strangeness (or charm or bottomness) changes by more than one unit, which no single interaction can do');
     if (out.reasons.length) { out.verdict = 'forbidden'; return out; }
     out.ok = true; out.verdict = 'allowed';
     if (nu || wz || flav) out.force = 'weak';
     else if (photon || lep) out.force = 'electromagnetic';
     else out.force = 'strong';
-    out.why = out.force === 'weak' ? (nu ? 'a neutrino takes part' : wz ? 'a W or Z boson takes part' : `a quark changes flavour (strangeness changes by ${out.dS > 0 ? '+' : '−'}${Math.abs(out.dS)})`).replace(' by +0', '').replace(' by −0', '')
-      : out.force === 'electromagnetic' ? (photon ? 'a photon takes part' : 'charged leptons take part, and leptons do not feel the strong force') : 'only hadrons take part and every quark flavour is kept';
-    if (out.force === 'weak' && flav && !nu && !wz && !out.dS) out.why = 'a quark changes flavour';
+    out.why = out.force === 'weak' ? (nu ? 'a neutrino takes part' : wz ? 'a W or Z boson takes part' : `a quark changes flavor (strangeness changes by ${out.dS > 0 ? '+' : '−'}${Math.abs(out.dS)})`).replace(' by +0', '').replace(' by −0', '')
+      : out.force === 'electromagnetic' ? (photon ? 'a photon takes part' : 'charged leptons take part, and leptons do not feel the strong force') : 'only hadrons take part and every quark flavor is kept';
+    if (out.force === 'weak' && flav && !nu && !wz && !out.dS) out.why = 'a quark changes flavor';
     return out;
   }
   /* the book's examples and a few more, each a reaction with its beam set up */
@@ -526,14 +526,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (kind === 'meson') neutral = s[0].col === s[1].col;
     const I3 = (n.u - n.d) / 2;
     const out = { n, kind, Q, B, S: F.S, C: F.C, Bt: F.Bt, T: F.T, J, I3, neutral, count: s.length, matches: [], why: '' };
-    if (kind === 'none') { out.why = s.length === 1 ? 'A single quark is never seen: quarks are confined.' : `${nq} quark${nq === 1 ? '' : 's'} and ${na} antiquark${na === 1 ? '' : 's'} cannot be colour neutral. A hadron is three quarks (baryon), three antiquarks (antibaryon), or a quark and an antiquark (meson).`; return out; }
+    if (kind === 'none') { out.why = s.length === 1 ? 'A single quark is never seen: quarks are confined.' : `${nq} quark${nq === 1 ? '' : 's'} and ${na} antiquark${na === 1 ? '' : 's'} cannot be color neutral. A hadron is three quarks (baryon), three antiquarks (antibaryon), or a quark and an antiquark (meson).`; return out; }
     if (kind === 'empty') return out;
-    if (!neutral) out.why = kind === 'meson' ? 'Not colour neutral: the antiquark must carry the anticolour of the quark.' : 'Not colour neutral: the three must be red, green and blue.';
+    if (!neutral) out.why = kind === 'meson' ? 'Not color neutral: the antiquark must carry the anticolor of the quark.' : 'Not color neutral: the three must be red, green and blue.';
     if (n.t || s.some((x) => x.f === 't')) { out.why = (out.why ? out.why + ' ' : '') + 'The top quark decays (in about 5 × 10⁻²⁵ s) before it can form a hadron.'; out.top = true; return out; }
-    /* three quarks of one flavour in the ground state must have their spins lined up (J = 3/2): with the colours all different,
+    /* three quarks of one flavor in the ground state must have their spins lined up (J = 3/2): with the colors all different,
        the rest of the wavefunction must be symmetric (Pauli) */
     const flavs = s.map((x) => x.f);
-    if ((kind === 'baryon' || kind === 'antibaryon') && flavs[0] === flavs[1] && flavs[1] === flavs[2] && J < 1) { out.pauli = true; out.why = (out.why ? out.why + ' ' : '') + 'Three quarks of the same flavour cannot have spin 1/2 in the ground state (the exclusion principle): line all three spins up.'; }
+    if ((kind === 'baryon' || kind === 'antibaryon') && flavs[0] === flavs[1] && flavs[1] === flavs[2] && J < 1) { out.pauli = true; out.why = (out.why ? out.why + ' ' : '') + 'Three quarks of the same flavor cannot have spin 1/2 in the ground state (the exclusion principle): line all three spins up.'; }
     for (const p of P) {
       if (p.cls !== (kind === 'meson' ? 'meson' : 'baryon') || p.spin !== J) continue;
       if (kind === 'baryon' && p.isAnti) continue; if (kind === 'antibaryon' && !p.isAnti) continue;
@@ -543,7 +543,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return out;
   }
-  /* a meson's content: flavoured mesons by their net content; π⁰, η, η′, ρ⁰, ω are mixtures of uū and dd̄ (and ss̄ for η, η′),
+  /* a meson's content: flavored mesons by their net content; π⁰, η, η′, ρ⁰, ω are mixtures of uū and dd̄ (and ss̄ for η, η′),
      φ is ss̄, η_c and J/ψ are cc̄, η_b and ϒ are bb̄ */
   const MIX = { pi0: 'ud', eta: 'uds', etap: 'uds', rho0: 'ud', omega: 'ud', phi: 's', etac: 'c', Jpsi: 'c', etab: 'b', Ups: 'b' };
   function mesonContent(p, s) {
@@ -569,7 +569,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      particles, a V. Kinematics are exact special relativity; the approximations (stated on the page): every track lies in the
      plane of the picture (no dip angle), the production and decay angles are chosen uniformly in that plane, energy loss and
      multiple scattering in the hydrogen are left out (tracks are circles), and a track is drawn for at most one turn. */
-  const DET = { R: 50, mpi: 139.57039, mpi0: 134.9768, mp: 938.27208816, mK: 497.611, mL: 1115.683,
+  const DET = { R: 50, mpi: 139.57039, mpi0: 134.9768, mp: 938.27208943, mK: 497.611, mL: 1115.683,
     ctauKS: 8.954e-11 * C_CM, ctauL: 2.617e-10 * C_CM, brKS: 0.692, brL: 0.641, fKS: 0.5 };
   /* two body decay momentum in the parent's rest frame */
   function p2(M, m1, m2) { const a = (M * M - (m1 + m2) * (m1 + m2)) * (M * M - (m1 - m2) * (m1 - m2)); return a > 0 ? Math.sqrt(a) / (2 * M) : 0; }
@@ -617,7 +617,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the beam pion arrives moving along +x at the vertex; trace it backwards (direction reversed, so it turns the other way) */
       const rb = radiusCm(pBeam, B), beam = trace(vx, vy, Math.PI, rb, +1, bubbleGap(pBeam, mpi), sigma, rj);
       ev.tracks.push({ who: 'pi-', role: 'beam', q: -1, p: pBeam, r: rb, pts: beam.pts.reverse() });
-      /* production in the centre of mass frame, then boost along the beam */
+      /* production in the center of mass frame, then boost along the beam */
       const Eb = Math.hypot(pBeam, mpi), W = Math.sqrt(mpi * mpi + mp * mp + 2 * Eb * mp);
       if (W <= DET.mK + DET.mL) return null;
       const q = p2(W, DET.mK, DET.mL), th = 2 * Math.PI * rnd(), bx = pBeam / (Eb + mp);
@@ -652,7 +652,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return null;
   }
-  /* least squares circle through points (Kåsa's algebraic fit): centre and radius */
+  /* least squares circle through points (Kåsa's algebraic fit): center and radius */
   function fitCircle(pts) {
     const n = pts.length; if (n < 3) return null;
     let mx = 0, my = 0; for (const [x, y] of pts) { mx += x; my += y; } mx /= n; my /= n;
@@ -711,7 +711,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let h = ['I', 'II', 'III'].map((g, i) => `<span class="hdr" style="grid-row:1;grid-column:${i + 1}">generation ${g}</span>`).join('')
       + '<span class="hdr" style="grid-row:1;grid-column:5">force carriers</span><span class="hdr" style="grid-row:1;grid-column:6">Higgs</span>';
     for (const t of SM) {
-      const key = t.q ? 'q:' + t.q : t.id, sy = t.q ? t.q : BY[t.id].html, nm = t.q ? QUARKS[t.q].name : BY[t.id].name.replace(' (8 colour states)', ''),
+      const key = t.q ? 'q:' + t.q : t.id, sy = t.q ? t.q : BY[t.id].html, nm = t.q ? QUARKS[t.q].name : BY[t.id].name.replace(' (8 color states)', ''),
         m = t.q ? massShort(QUARKS[t.q].m) : BY[t.id].mNote || massShort(BY[t.id].m), cls = t.q ? 'quark' : BY[t.id].cls;
       const label = t.id === 'W+' ? 'W<sup>±</sup>' : sy;
       h += `<button type="button" class="tile" data-k="${key}" style="--c:var(${CLS_COL[cls]});grid-row:${t.r + 1}${t.span ? ' / span ' + t.span : ''};grid-column:${t.c}" aria-pressed="false" aria-label="${esc(nm)}"><span class="sy">${label}</span><span class="nm">${esc(nm)}</span><span class="mm">${esc(m)}</span></button>`;
@@ -794,7 +794,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let el = '';
     if (!r.a.length) el = 'Put one particle (a decay at rest) or two (a collision) on the Before side.';
     else if (r.a.length === 1) el = `A decay at rest: the energy available is the parent's rest energy, W = ${f(c.W, 3)} MeV.`;
-    else el = (r.mode === 'fixed' ? `A ${BY[r.a[0]].txt} beam with K = ${enTxt(r.en)} on a ${BY[r.a[1]].txt} at rest` : `Two beams of ${enTxt(r.en)} each, head on`) + `: centre of mass energy W = ${f(c.W, 1)} MeV.` + (c.threshold != null && r.b.length ? (bl ? ' Threshold: hidden (Blind).' : ` Threshold for these products: ${r.mode === 'fixed' ? 'K' : 'E'} = ${enTxt(c.threshold)}.`) : '');
+    else el = (r.mode === 'fixed' ? `A ${BY[r.a[0]].txt} beam with K = ${enTxt(r.en)} on a ${BY[r.a[1]].txt} at rest` : `Two beams of ${enTxt(r.en)} each, head on`) + `: center of mass energy W = ${f(c.W, 1)} MeV.` + (c.threshold != null && r.b.length ? (bl ? ' Threshold: hidden (Blind).' : ` Threshold for these products: ${r.mode === 'fixed' ? 'K' : 'E'} = ${enTxt(c.threshold)}.`) : '');
     $('rxEnergyLine').textContent = el;
     const ta = c.ta, tb = c.tb, row = (nm, x, y, ok, note) => `<tr><td>${nm}</td><td class="num">${bl ? '?' : x}</td><td class="num">${bl ? '?' : y}</td><td>${bl ? '' : `<span class="mark ${ok ? 'y' : 'n'}">${ok ? '✓ conserved' : '✗ ' + (note || 'changes')}</span>`}</td></tr>`;
     const eqv = (a, b) => Math.abs(a - b) < 1e-9, done = r.a.length && r.b.length;
@@ -808,8 +808,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + row('Energy: W against total rest energy after (MeV)', f(c.W, 1), f(c.need, 1), !(c.reasons.some((x) => /energy|one particle|one other/.test(x))), c.res ? 'not at the resonance' : 'not enough');
     } else h += '<tr><td colspan="4">Build a reaction to check it.</td></tr>';
     $('ckTable').innerHTML = h + '</tbody>';
-    if (done && !bl) { const fa = ta.n, fb = tb.n; $('rxFlav').textContent = 'Net quarks (quarks minus antiquarks) before → after: ' + ['u', 'd', 's', 'c', 'b'].filter((q) => fa[q] || fb[q]).map((q) => `${q} ${sgn(fa[q])} → ${sgn(fb[q])}`).join(', ') + '. Strong and electromagnetic interactions keep every count; only the weak interaction changes a flavour.'; }
-    else $('rxFlav').textContent = done ? 'Quark flavour counts: hidden (Blind).' : '';
+    if (done && !bl) { const fa = ta.n, fb = tb.n; $('rxFlav').textContent = 'Net quarks (quarks minus antiquarks) before → after: ' + ['u', 'd', 's', 'c', 'b'].filter((q) => fa[q] || fb[q]).map((q) => `${q} ${sgn(fa[q])} → ${sgn(fb[q])}`).join(', ') + '. Strong and electromagnetic interactions keep every count; only the weak interaction changes a flavor.'; }
+    else $('rxFlav').textContent = done ? 'Quark flavor counts: hidden (Blind).' : '';
     const v = $('rxVerdict'), pred = r.pred ? `Your prediction: ${r.pred}.` : 'Make a prediction under My prediction.';
     if (!done) { v.className = 'verdict'; v.innerHTML = '<b>Build a reaction</b><p>Choose Before or After, then add particles. Or pick one of the book\'s examples.</p>'; }
     else if (bl) { v.className = 'verdict'; v.innerHTML = `<b>Verdict hidden (Blind)</b><p>${esc(pred)}</p>`; }
@@ -843,7 +843,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function buildSlots() {
     $('slots').innerHTML = [0, 1, 2].map((i) => `<div class="slotrow" data-i="${i}"><span class="lab">Quark ${i + 1}</span>
       <select data-q="f" aria-label="Quark ${i + 1}">${FLAV_OPTS.map((q) => `<option value="${q}">${q ? q + ' (' + QUARKS[q].name + ')' : 'none'}</option>`).join('')}${FLAV_OPTS.slice(1).map((q) => `<option value="~${q}">${q}̄ (anti${QUARKS[q].name})</option>`).join('')}</select>
-      <select data-q="col" aria-label="Colour of quark ${i + 1}"><option value="r">red</option><option value="g">green</option><option value="b">blue</option></select>
+      <select data-q="col" aria-label="Color of quark ${i + 1}"><option value="r">red</option><option value="g">green</option><option value="b">blue</option></select>
       <button type="button" class="btn" data-q="spin" aria-label="Spin of quark ${i + 1}">spin ↑</button></div>`).join('');
   }
   function syncSlots() {
@@ -855,7 +855,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (e.target.dataset.q === 'f') { s.f = v.replace('~', ''); s.anti = v[0] === '~'; } else s.col = v; S.preset = 'custom'; qkChanged(); });
   $('slots').addEventListener('click', (e) => { const b = e.target.closest('[data-q=spin]'); if (!b) return; const s = S.qk.slots[+b.closest('[data-i]').dataset.i]; s.up = !s.up; S.preset = 'custom'; qkChanged(); });
   $('qkColours').addEventListener('click', () => { const live = S.qk.slots.filter((s) => s.f); const nq = live.filter((s) => !s.anti).length;
-    if (live.length === 2 && nq === 1) live[1].col = live[0].col; else live.forEach((s, i) => { s.col = COLOURS[i % 3]; }); qkChanged(); });
+    if (live.length === 2 && nq === 1) live[1].col = live[0].col; else live.forEach((s, i) => { s.col = COLORS[i % 3]; }); qkChanged(); });
   $('qkClear').addEventListener('click', () => { S.qk.slots.forEach((s) => { s.f = ''; s.anti = false; }); S.preset = 'custom'; qkChanged(); });
   function qkBuild() { return build(S.qk.slots); }
   function qkChanged() { const b = qkBuild(); if (!S.blind && b.neutral) b.matches.forEach((id) => S.qk.seen.add(id)); syncSlots(); sync(); redraw(); }
@@ -890,7 +890,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.blind) head = `${content}: hadron hidden (Blind)`;
       else if (b.matches.length && b.neutral) head = `${content}  →  ${b.matches.map((id) => `${BY[id].txt} (${BY[id].name})`).join(' or ')}`;
       else if (b.kind === 'none') head = `${content}: not a hadron`;
-      else head = `${content}: ${b.neutral ? (b.pauli ? 'not allowed' : 'no hadron in this list') : 'not colour neutral'}`;
+      else head = `${content}: ${b.neutral ? (b.pauli ? 'not allowed' : 'no hadron in this list') : 'not color neutral'}`;
       lab(head, bx, ty, { a: 'center', s: 13.5 * p, w: 700, c: T.ink });
       if (!S.blind && b.kind !== 'none') lab(`Q = ${sgn(b.Q)}   B = ${sgn(b.B)}   S = ${sgn(b.S)}${b.C ? '   C = ' + sgn(b.C) : ''}${b.Bt ? "   B′ = " + sgn(b.Bt) : ''}   J = ${spinTxt(b.J)}`, bx, ty + 20 * p, { a: 'center', s: 11 * p, m: true, c: T.ink });
       if (b.why && !(S.blind && b.neutral)) wrapLab(b.why, bx, ty + 40 * p, bw * 0.9, 10.5 * p);
@@ -1054,7 +1054,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const k = S.pt.sel;
       if (k.startsWith('q:')) { const q = QUARKS[k.slice(2)], fl = k.slice(2), F = flavourNumbers({ [fl]: 1 });
         o = dd('Quark', `${fl} (${q.name})`) + dd('Generation', q.gen) + dd('Mass', `${massShort(q.m)}/c²`) + dd('Charge', `${sgn(q.Q)} e`) + dd('Spin', '1/2') + dd('Baryon number', '+1/3')
-          + dd('Strangeness S', sgn(F.S)) + dd('Charm, bottomness, topness', `${sgn(F.C)}, ${sgn(F.Bt)}, ${sgn(F.T)}`) + dd('Colour', 'red, green or blue')
+          + dd('Strangeness S', sgn(F.S)) + dd('Charm, bottomness, topness', `${sgn(F.C)}, ${sgn(F.Bt)}, ${sgn(F.T)}`) + dd('Color', 'red, green or blue')
           + dd('Seen alone?', fl === 't' ? 'no: it decays (≈ 5 × 10⁻²⁵ s) before forming a hadron' : 'no: confined in hadrons', true)
           + dd('Mass note', fl === 't' ? 'from direct measurements (PDG 2024)' : 'a running mass (PDG 2024 MS-bar); a bound quark has no single mass', true);
       } else { const p = BY[k], q = qn(p);
@@ -1072,7 +1072,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const b = qkBuild(), bl = S.blind, live = S.qk.slots.filter((s) => s.f);
       o = dd('Quarks', live.length ? live.map((s) => s.f + (s.anti ? '̄' : '')).join(' ') : '—') + dd('Kind', b.kind === 'none' ? 'not a hadron' : b.kind)
         + dd('Charge Q', bl ? hide : `${sgn(b.Q)} e`) + dd('Baryon number B', bl ? hide : sgn(b.B)) + dd('Strangeness S', bl ? hide : sgn(b.S)) + dd('Spin J', bl ? hide : spinTxt(b.J))
-        + dd('Isospin I₃', bl ? hide : half(b.I3)) + dd('Colour neutral', b.kind === 'none' ? 'no' : b.neutral ? 'yes' : 'no')
+        + dd('Isospin I₃', bl ? hide : half(b.I3)) + dd('Color neutral', b.kind === 'none' ? 'no' : b.neutral ? 'yes' : 'no')
         + dd('Hadron', bl ? hide : b.matches.length && b.neutral ? b.matches.map((id) => `${BY[id].html} ${esc(BY[id].name)}`).join(' or ') : 'none', true)
         + dd('Mass', bl ? hide : b.matches.length && b.neutral ? b.matches.map((id) => `${BY[id].m} MeV/c²`).join(' or ') : '—', true);
     } else {
@@ -1115,9 +1115,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     beta: { view: 'rx', hint: 'Example 11.2a: a free neutron decays to a proton, an electron and an electron antineutrino. Check every conservation law, then say which interaction does it and why. Try removing the antineutrino.', set: () => loadExample('ex112a') },
     assoc: { view: 'rx', hint: 'A π⁻ beam on protons makes a K⁰ and a Λ⁰ together: strange particles are always made in pairs by the strong interaction, which keeps strangeness. Find the threshold beam energy. Then try making a Λ⁰ alone with a π⁰.', set: () => loadExample('assoc') },
     upsilon: { view: 'rx', hint: 'Example 11.7: electron and positron beams of equal energy collide head on to make an upsilon, ϒ(4S), of mass 10.58 GeV/c². The beam energy is set to the threshold, W/2. Change it and see the reaction fail.', set: () => loadExample('ex117') },
-    proton: { view: 'qk', hint: 'Two up quarks and a down quark, one of each colour, with two spins up and one down: the proton. Flip the down quark\'s spin to make the Δ⁺. Change one u to d to make the neutron.', set: () => { S.qk.slots = [{ f: 'u', anti: false, col: 'r', up: true }, { f: 'u', anti: false, col: 'g', up: true }, { f: 'd', anti: false, col: 'b', up: false }]; } },
+    proton: { view: 'qk', hint: 'Two up quarks and a down quark, one of each color, with two spins up and one down: the proton. Flip the down quark\'s spin to make the Δ⁺. Change one u to d to make the neutron.', set: () => { S.qk.slots = [{ f: 'u', anti: false, col: 'r', up: true }, { f: 'u', anti: false, col: 'g', up: true }, { f: 'd', anti: false, col: 'b', up: false }]; } },
     omega: { view: 'qk', hint: 'Three strange quarks with their spins lined up: the Ω⁻, whose mass Gell-Mann predicted in 1962 from the pattern of the baryon decuplet before it was found. Build the other members of the decuplet to see their masses, and find the pattern.', set: () => { S.qk.slots = [{ f: 's', anti: false, col: 'r', up: true }, { f: 's', anti: false, col: 'g', up: true }, { f: 's', anti: false, col: 'b', up: true }]; } },
-    lambdaV: { view: 'dt', hint: 'A practice event with the tracks labelled and no bubble scatter. A π⁻ makes a K⁰ and a Λ⁰ at the end of its track; the neutrals leave no tracks, and a Λ⁰ decays into a proton and a π⁻ (a V). Fit a circle to each track of the V, measure the opening angle, and find the Λ⁰ mass.', set: () => { Object.assign(D, { B: 1.5, pb: 1200, sig: 0, labels: true }); D.n = firstWith('Lambda'); } },
+    lambdaV: { view: 'dt', hint: 'A practice event with the tracks labeled and no bubble scatter. A π⁻ makes a K⁰ and a Λ⁰ at the end of its track; the neutrals leave no tracks, and a Λ⁰ decays into a proton and a π⁻ (a V). Fit a circle to each track of the V, measure the opening angle, and find the Λ⁰ mass.', set: () => { Object.assign(D, { B: 1.5, pb: 1200, sig: 0, labels: true }); D.n = firstWith('Lambda'); } },
     mystery: { view: 'dt', hint: 'Unlabelled events with 0.3 mm bubble scatter. Each V is a K⁰_S → π⁺ π⁻ or a Λ⁰ → p π⁻. Measure both tracks and the opening angle, work out the invariant mass with each mass hypothesis, and decide which parent it was.', set: () => { Object.assign(D, { B: 1.5, pb: 1200, sig: 0.03, labels: false }); D.n = 1; } },
   };
   /* the first event with a single V from this parent that the other mass hypothesis cannot mistake */
@@ -1175,10 +1175,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutPt').textContent = 'Particles: the Standard Model chart and the four forces follow §11.1 and Table 11.6 of the book; the groups (leptons, mesons, baryons; fermions with half integer spin, bosons with whole number spin) follow §11.1 and Table 11.1, and the conserved numbers Table 11.2. Masses, mean lives and decays are from the Particle Data Group\'s 2024 Review of Particle Physics. Quark masses are not measured on free quarks (none exist): they are PDG\'s running masses, which depend on the scheme. A mean life marked ħ/Γ is worked out from the measured width Γ of a very short lived particle.';
-  $('aboutRx').textContent = 'Reactions: the checker adds up charge, baryon number, the three lepton numbers and strangeness on each side (§11.2), counts particles of half integer spin (angular momentum can change only by whole units of ħ, so that count must change by an even number), and compares the energy available with the rest energy of the products. For a decay the energy is the parent\'s rest energy; for a beam of kinetic energy K on a target at rest, W² = m₁² + m₂² + 2(K + m₁)m₂ (c = 1); for two head on beams of energy E each, W² = 2(E² + p₁p₂) + m₁² + m₂² (Eq. 11.3). Making a single particle needs W at its mass, within its width. A reaction that passes is put down to the weak interaction if a neutrino, W or Z takes part or a quark changes flavour (the weak interaction changes strangeness by at most one unit), to the electromagnetic interaction if a photon or a charged lepton takes part, and otherwise to the strong interaction. These rules cover the book\'s conservation laws only: a few processes that pass are still forbidden by other symmetries (π⁰ → 3γ breaks charge conjugation) or are very rare.';
-  $('aboutQk').textContent = 'Quarks: charges, baryon numbers and strangeness from Table 11.3; quark content of hadrons from Tables 11.4 and 11.5 and PDG 2024. Only ground states are built (no orbital motion), so the spin is the sum of the quark spins. A hadron must be colour neutral (§11.3): red, green and blue for a baryon, a colour and its anticolour for a meson. Three quarks of one flavour can only have spin 3/2 in the ground state. The neutral mesons uū, dd̄ and ss̄ are mixtures, so one quark content can be several particles (π⁰, η, η′), and uds is either the Λ⁰ or the Σ⁰, which differ in how the u and d are combined. The eightfold way diagrams place each hadron by isospin I₃ = (number of u − number of d)/2 and strangeness, with dashed lines of equal charge, Q = I₃ + (B + S)/2. The quarks moving in the picture are only a picture.';
+  $('aboutRx').textContent = 'Reactions: the checker adds up charge, baryon number, the three lepton numbers and strangeness on each side (§11.2), counts particles of half integer spin (angular momentum can change only by whole units of ħ, so that count must change by an even number), and compares the energy available with the rest energy of the products. For a decay the energy is the parent\'s rest energy; for a beam of kinetic energy K on a target at rest, W² = m₁² + m₂² + 2(K + m₁)m₂ (c = 1); for two head on beams of energy E each, W² = 2(E² + p₁p₂) + m₁² + m₂² (Eq. 11.3). Making a single particle needs W at its mass, within its width. A reaction that passes is put down to the weak interaction if a neutrino, W or Z takes part or a quark changes flavor (the weak interaction changes strangeness by at most one unit), to the electromagnetic interaction if a photon or a charged lepton takes part, and otherwise to the strong interaction. These rules cover the book\'s conservation laws only: a few processes that pass are still forbidden by other symmetries (π⁰ → 3γ breaks charge conjugation) or are very rare.';
+  $('aboutQk').textContent = 'Quarks: charges, baryon numbers and strangeness from Table 11.3; quark content of hadrons from Tables 11.4 and 11.5 and PDG 2024. Only ground states are built (no orbital motion), so the spin is the sum of the quark spins. A hadron must be color neutral (§11.3): red, green and blue for a baryon, a color and its anticolor for a meson. Three quarks of one flavor can only have spin 3/2 in the ground state. The neutral mesons uū, dd̄ and ss̄ are mixtures, so one quark content can be several particles (π⁰, η, η′), and uds is either the Λ⁰ or the Σ⁰, which differ in how the u and d are combined. The eightfold way diagrams place each hadron by isospin I₃ = (number of u − number of d)/2 and strangeness, with dashed lines of equal charge, Q = I₃ + (B + S)/2. The quarks moving in the picture are only a picture.';
   $('aboutDt').textContent = 'Detector (simulated data): a liquid hydrogen bubble chamber, window 1 m across, in a uniform field B into the page. A π⁻ beam meets protons at rest; one beam pion makes π⁻ + p → K⁰ + Λ⁰ where its track ends. The K⁰ is a K⁰_S half the time (69.2% of those decay to π⁺ π⁻, the rest to two π⁰, which leave no tracks) or a K⁰_L, which escapes; the Λ⁰ decays to p π⁻ 64.1% of the time (PDG 2024). Flight distances follow the exponential decay law with the PDG mean lives, and the decays use exact two body relativistic kinematics. Approximations: all tracks lie in the plane of the picture (real chambers use stereo cameras to find the dip angle), the production and decay angles are chosen uniformly in that plane rather than over all directions, the particles lose no energy and do not scatter in the hydrogen (so tracks are exact circles; a real proton slows and spirals), tracks are drawn for at most one turn, bubble spacing goes roughly as β² (slow, heavy tracks are denser), and each bubble is scattered by the chosen amount about the true path. Only events with at least one V inside the window are shown, as a scanner would choose them; each event number always gives the same event. Your circle fit is a least squares (Kåsa) fit to the points you place, and p = 2.998 B r with p in MeV/c, B in T and r in cm (the book\'s Eq. 11.2, p = 0.3 B r in GeV/c, T and m, rounds 0.2998 to 0.3). For comparison, LHC dipoles of 8.33 T bend 7 TeV protons on a radius r = p/(0.2998 B) = ' + f(7000 / (PBR_GEV * 8.33) / 1000, 2) + ' km.';
-  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Volume 3, §§11.1 to 11.5; S. Navas et al. (Particle Data Group), Review of Particle Physics, Phys. Rev. D 110, 030001 (2024); CODATA 2018 for ħ and ħc.';
+  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Volume 3, §§11.1 to 11.5; S. Navas et al. (Particle Data Group), Review of Particle Physics, Phys. Rev. D 110, 030001 (2024); CODATA 2022 for ħ and ħc.';
 
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; if (W && H) { can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); } redraw(); }

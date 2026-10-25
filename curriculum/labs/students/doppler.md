@@ -8,11 +8,11 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.7 and 17.8. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Ambulance passing; Source at rest, observer moving; Mach 1: the sound barrier; Supersonic jet: Mach cone; Redshift and blueshift; Transverse Doppler. The last two are Light setups and go with the Doppler Effect for Light worksheet; this handout uses **Sound**. In Supersonic jet: Mach cone the source starts 200 m left of the centre of the view and 70 m above it at Mach 2 with f = 300 Hz, the observer stands 90 m left of centre and 70 m below, and the setup plays at 1/16 speed.
+**Setups in the demo:** Ambulance passing; Source at rest, observer moving; Mach 1: the sound barrier; Supersonic jet: Mach cone; Redshift and blueshift; Transverse Doppler. The last two are Light setups and go with the Doppler Effect for Light worksheet; this handout uses **Sound**. In Supersonic jet: Mach cone the source starts 200 m left of the center of the view and 70 m above it at Mach 2 with f = 300 Hz, the observer stands 90 m left of center and 70 m below, and the setup plays at 1/16 speed.
 
 **Using the demo.**
 
-- The picture shows the crests spreading from the source as circles, each centred where the source was when it emitted it, and the observer; below it is a plot of the received frequency f′ over time. **3D** shows the same simulation with each crest as a sphere, and **Flat** is the slice through them (the ground for the ambulance, the upright plane of the flight for the jet). Everything is to scale. The clock above the picture gives t to 0.01 s, and the Time fold's **Playback speed** runs from 1/32 to 4 times real: slow motion only slows the drawing, and the audio always plays the real pitch.
+- The picture shows the crests spreading from the source as circles, each centered where the source was when it emitted it, and the observer; below it is a plot of the received frequency f′ over time. **3D** shows the same simulation with each crest as a sphere, and **Flat** is the slice through them (the ground for the ambulance, the upright plane of the flight for the jet). Everything is to scale. The clock above the picture gives t to 0.01 s, and the Time fold's **Playback speed** runs from 1/32 to 4 times real: slow motion only slows the drawing, and the audio always plays the real pitch.
 - Drag the source or the observer to move them, and the round grip at the tip of an arrow to set that velocity. The card beside the picture holds the same values as sliders: for the source, **Mach number v<sub>s</sub>/v** (0 to 2.5), **Direction** and **Emitted frequency f** (100 to 1500 Hz in 10 Hz steps); for the observer, **Speed v<sub>o</sub>/v** (0 to 0.9) and **Direction**. **Restart** runs the setup again from its start.
 - Readouts under What the observer hears: **Received frequency f′**, **f′/f**, the **Angle θ at emission**, when the sound now arriving left the source, and, from Mach 1 up, the **Mach cone half angle**. When the cone reaches the observer the picture flashes "boom" and a red line marks that moment on the f′ plot.
 - **Record reading** stores the sound arriving now: which one moves, the emitted frequency, the part of that velocity along the line from where the sound left the source to the observer (the only part that shifts the frequency), whether it approaches or recedes, f′, f′/f and the angle θ. It refuses a reading while no sound has reached the observer, while two sounds arrive at once (supersonic), and in Light.
@@ -20,7 +20,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.7 and 17.8. Access for f
 
 **What the demo models.**
 
-- A point source in still, uniform air with $$v = 343\ \text{m/s}$$ (dry air at 20 °C). The medium picks out a frame, so only for sound does it matter which one moves.
+- A point source in still, uniform air with $$v = 343.2\ \text{m/s}$$ (dry air at 20 °C). The medium picks out a frame, so only for sound does it matter which one moves.
 - The received frequency comes from the geometry of the crests: the program finds the emission time whose crest reaches the observer now and uses $$f' = f\,\frac{v - \vec v_o\cdot\hat n}{v - \vec v_s\cdot\hat n},$$ where $$\hat n$$ points from where the source was when it emitted this sound to where the observer is now (the dashed line on the drawing). For an observer at rest this is $$f' = \frac{f}{1 - (v_s/v)\cos\theta}.$$
 - From Mach 1 up the crests touch two lines through the source, the Mach cone, with half angle $$\sin\theta_c = v/v_s.$$ Inside the cone two sounds arrive at once, one of them heard backward and drawn dashed at \|f′\| on the plot. A real aircraft is not a point: its nose and tail shocks give two booms close together.
 - Each drawn circle is one crest, or at high frequency every nth crest (the Time fold says which); loudness falls as 1/r in the audio but is not drawn. The readings are simulated: computed from this model, not measured.
@@ -41,7 +41,7 @@ where $$f_0$$ is emitted frequency, $$v$$ is sound speed and $$v_s$$ is source s
 
 $$f_{\mathrm{obs}}=f_0\frac{v+v_o}{v}.$$
 
-The virtual sound model uses $$v=343\ \mathrm{m/s}$$ at 20 °C. These one dimensional expressions assume subsonic motion along the line of sight; a passing source has a changing radial component.
+The virtual sound model uses $$v=343.2\ \mathrm{m/s}$$ at 20 °C. These one dimensional expressions assume subsonic motion along the line of sight; a passing source has a changing radial component.
 
 **Shock waves** (§17.8). A source faster than sound outruns its own crests. Each crest is a circle centered where it was emitted, and the circles touch two lines through the source, the **Mach cone** (in three dimensions a cone). In the time $$t$$ since a crest was emitted, the crest has spread to radius $$vt$$ while the source has moved $$v_s t$$, so the half angle $$\theta$$ of the cone obeys
 
@@ -66,7 +66,7 @@ For a real sound experiment, keep loudspeaker levels safe and moving equipment c
 
 ## Procedure
 
-**Moving source.** Choose a fixed emitted frequency and a stationary observer. Record observed frequency for at least six subsonic approach speeds, including zero. Use speeds sufficiently below 343 m/s that a clean direct approach can be identified. Compare with the source motion equation.
+**Moving source.** Choose a fixed emitted frequency and a stationary observer. Record observed frequency for at least six subsonic approach speeds, including zero. Use speeds sufficiently below 343.2 m/s that a clean direct approach can be identified. Compare with the source motion equation.
 
 **Moving observer.** Keep the source at rest and repeat at six observer approach speeds. Compare the two shifts at matched speeds.
 
@@ -101,9 +101,9 @@ Record which one moves for every reading.
 
 1. Plot $$f/f_0$$ against speed for source and observer scans on separate axes or clearly labeled series.
 2. Calculate predicted shifts from the equations and plot residuals.
-3. Infer sound speed from an appropriate rearrangement of each model and compare with 343 m/s.
+3. Infer sound speed from an appropriate rearrangement of each model and compare with 343.2 m/s.
 4. Explain why the source motion curve is nonlinear while the direct moving observer relation is linear.
-5. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line through the origin and compare its slope with that prediction, then compare each $$\theta$$ with the demo's half angle.
+5. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?), then compare each $$\theta$$ with the demo's half angle.
 
 ## Uncertainty
 

@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4, with the rotational dyn
 
 **Using the demo.**
 
-- Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob centre, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause, and you can drag it by its title to anywhere on the picture.
+- Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob center, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause, and you can drag it by its title to anywhere on the picture.
 - Capture stores $$L$$, $$\theta_0$$ and the last full period from the photogate. $$T^2$$ against $$L$$ uses bob rows with $$\theta_0 \le 10°$$: slope $$4\pi^2/g$$. $$T$$ against $$\theta_0$$ shows how far large swings depart from $$T_0$$.
 - Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.
 
@@ -29,7 +29,7 @@ Determine gravitational acceleration from pendulum timing, test whether mass mat
 
 ## Background
 
-For a point bob on a light string of length $$L$$, measured from pivot to bob centre, the tangential equation is
+For a point bob on a light string of length $$L$$, measured from pivot to bob center, the tangential equation is
 
 $$\ddot\theta=-\frac{g}{L}\sin\theta.$$
 
@@ -51,13 +51,13 @@ On a real bench, secure the pivot and keep people and fragile equipment out of t
 
 ## Procedure
 
-**Length scan.** Measure length from the pivot to the bob centre. Release from 5° without a push, keeping the same angle and mass for every length. Measure a full period at six lengths: 0.40, 0.60, 0.80, 1.00, 1.20 and 1.40 m. On a real bench, timing several complete oscillations can reduce reaction time error; record both the count and total time.
+**Length scan.** Measure length from the pivot to the bob center. Release from 5° without a push, keeping the same angle and mass for every length. Measure a full period at six lengths: 0.40, 0.60, 0.80, 1.00, 1.20 and 1.40 m. On a real bench, timing several complete oscillations can reduce reaction time error; record both the count and total time.
 
 **Mass check.** At $$L = 1.00\ \text{m}$$ and the same small angle, compare periods for at least three masses. Keep bob geometry fixed on real equipment so the effective length does not change.
 
 **Amplitude scan.** Keep $$L = 1.00\ \text{m}$$ and one mass. Measure periods at 5°, 15°, 30°, 45°, 60°, 75° and 90°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to 90° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.
 
-**Distributed mass.** Compare a uniform rod with a point bob at the same nominal length, small release angle and gravity. Use the rod's full length, not pivot to centre distance, in its formula.
+**Distributed mass.** Compare a uniform rod with a point bob at the same nominal length, small release angle and gravity. Use the rod's full length, not pivot to center distance, in its formula.
 
 **Using the virtual apparatus.** Use a simple pendulum with a bob on a string on Earth. Start at 5° with air drag off and predictions and answers hidden. For the length scan, measure six lengths at the same mass and release angle. For each trial, reset the bob to its release angle before starting again; pausing alone does not reset the motion. Record a full period after at least three bottom crossings. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table, and graph $$T^2$$ against $$L$$ and $$T$$ against $$\theta_0$$. Keep the release angle at 5° for the length fit, even though the fit accepts other angles up to 10°. Compare a uniform rod with the bob using the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.
 

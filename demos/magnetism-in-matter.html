@@ -113,7 +113,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Coil</h2>
         <div><div class="slider-head"><label for="sI">Current I</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="-1" max="1" step="0.005"></div>
-        <div><div class="slider-head"><label for="sN">Turns per centimetre</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="5" max="40" step="1"></div>
+        <div><div class="slider-head"><label for="sN">Turns per centimeter</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="5" max="40" step="1"></div>
         <div class="btnrow">
           <button type="button" class="btn primary" id="sweepBtn">Sweep the current</button>
           <button type="button" class="btn" id="demagBtn">Demagnetize</button>
@@ -166,7 +166,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  const MU0 = 4e-7 * Math.PI, G_ACC = 9.81, MM_VERSION = 'magnetism-in-matter@2026-10-23';
+  const MU0 = 1.25663706127e-6 /* T·m/A, CODATA 2022 */, G_ACC = 9.81, MM_VERSION = 'magnetism-in-matter@2026-10-23';
   /* OpenStax Table 12.2; densities (kg/m³) from the CRC Handbook at 20 °C, only where the floating readout uses them */
   const MATS = {
     vacuum: { name: 'Empty coil', chi: 0, kind: 'none' },

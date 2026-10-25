@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §16.4. Access for free at http
 
 **Using the demo.** The string runs from a mechanical wave driver to an absorber (a dashpot) and over a pulley to a hanger of slotted masses. The function generator sets the frequency and the driver's amplitude, and stays in view while the string vibrates. The string, the absorber and the length are on the Set up card; masses are added from the tray. The power meter reads the average power the absorber takes. Blind hides $$\mu$$, $$v$$ and the predicted power; the unknown string always hides its $$\mu$$.
 
-**What the demo models.** The linear wave equation with no losses along the string, so the power is the same everywhere along it. The driver moves its end as $$A\cos 2\pi f t$$. The absorber pushes back with a force $$b$$ times its velocity. When $$b$$ equals the string's impedance $$Z = \sqrt{T\mu}$$ (Matched), no wave comes back, as if the string went on for ever; Too soft is $$b = Z/3$$ and Too stiff $$b = 3Z$$. $$T = mg$$ with $$g = 9.80\ \mathrm{m/s^2}$$, and $$m$$ includes the 50 g hanger. The meter is exact: simulated data with no noise.
+**What the demo models.** The linear wave equation with no losses along the string, so the power is the same everywhere along it. The driver moves its end as $$A\cos 2\pi f t$$. The absorber pushes back with a force $$b$$ times its velocity. When $$b$$ equals the string's impedance $$Z = \sqrt{T\mu}$$ (Matched), no wave comes back, as if the string went on for ever; Too soft is $$b = Z/3$$ and Too stiff $$b = 3Z$$. $$T = mg$$ with $$g = 9.81\ \mathrm{m/s^2}$$, and $$m$$ includes the 50 g hanger. The meter is exact: simulated data with no noise.
 
 </details>
 

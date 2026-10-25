@@ -100,7 +100,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li><strong>Free expansion.</strong> Elastic hard disks in a box 2 × 1 with a time step of 0.004; radii shrink with N. The histogram starts counting only once the left count first falls to half, so the initial rush out does not skew the shares. Exact shares are binomial, C(N, n)/2^N; ΔS = Nk ln 2 (R ln 2 = 5.763 J/K per mole).</li>
-<li><strong>Einstein solids.</strong> Ω(N, q) = C(q + N − 1, q) for each solid; each step picks a random oscillator in either solid and, if it has a quantum, moves it to another random oscillator. The temperature readout is kT/ε = 1/(d ln Ω/dq) by a centred difference (0 at q = 0).</li>
+<li><strong>Einstein solids.</strong> Ω(N, q) = C(q + N − 1, q) for each solid; each step picks a random oscillator in either solid and, if it has a quantum, moves it to another random oscillator. The temperature readout is kT/ε = 1/(d ln Ω/dq) by a centered difference (0 at q = 0).</li>
 <li><strong>Second law.</strong> For an engine ΔS_universe = −Q_h/T_h + Q_c/T_c with Q_c = Q_h − W; for a refrigerator ΔS = Q_h/T_h − Q_c/T_c with Q_h = Q_c + W. The pairing partner is a reversible Carnot device between the same reservoirs.</li>
 </ul>
 <h2>Going further</h2>

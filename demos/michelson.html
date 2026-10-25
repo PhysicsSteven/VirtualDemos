@@ -190,7 +190,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     na: { name: 'Sodium lamp, D lines', lines: [{ lam: vacFromStdAir(588.995), w: 2 }, { lam: vacFromStdAir(589.592), w: 1 }] },
     white: { name: 'White light', white: true },
     mystery: { name: 'Mystery laser', lines: null } };
-  /* The layout, unfolded about the beam splitter (metres). The diverging lens brings the beam to a point a = 30 mm before the
+  /* The layout, unfolded about the beam splitter (meters). The diverging lens brings the beam to a point a = 30 mm before the
      beam splitter; the arms are 100 mm long when the micrometer reads M0 (equal paths); the screen is 150 mm from the beam
      splitter and 80 mm across. Each mirror makes an image of that point, and the screen sees two point sources: S1 behind M1 on
      the axis, and S2 behind M2, which moves sideways when M2 is tilted. The pattern is exactly that of two points. The beam
@@ -221,7 +221,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const l of lines) { s += l.w * (1 + Math.cos(2 * Math.PI * opd(g, l.lam, cell, P) / (l.lam * 1e-9))); w += l.w; }
     return s / (2 * w);
   }
-  /* the fringe order at the screen's centre (continuous): OPD/λ for one line. For two lines it is the phase of the summed
+  /* the fringe order at the screen's center (continuous): OPD/λ for one line. For two lines it is the phase of the summed
      fringe, arg Σ w e^{2πi·OPD/λ}, which stays continuous because one line is stronger: a counter follows it. */
   function order(lines, g, cell, P) {
     const l0 = lines[0], o0 = opd(g, l0.lam, cell, P) / (l0.lam * 1e-9);
@@ -230,9 +230,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const l of lines) { const ph = 2 * Math.PI * (opd(g, l.lam, cell, P) / (l.lam * 1e-9) - o0); re += l.w * Math.cos(ph); im += l.w * Math.sin(ph); }
     return o0 + Math.atan2(im, re) / (2 * Math.PI);
   }
-  /* a counter (photodiode at the centre) counts each bright fringe that passes, whichever way */
+  /* a counter (photodiode at the center) counts each bright fringe that passes, whichever way */
   const fringesPassed = (o1, o2) => Math.abs(Math.floor(o2) - Math.floor(o1));
-  /* white light: CIE D65 times the CIE 1931 colour matching functions (Wyman, Sloan and Shirley 2013 fit), 380 to 780 nm in
+  /* white light: CIE D65 times the CIE 1931 color matching functions (Wyman, Sloan and Shirley 2013 fit), 380 to 780 nm in
      5 nm bands. Each band's fringe is averaged over the band's width in 1/λ (the factor sin x/x), so the sum does not alias. */
   const D65_10 = [49.9755, 54.6482, 82.7549, 91.486, 93.4318, 86.6823, 104.865, 117.008, 117.812, 114.861, 115.923, 108.811, 109.354, 107.802,
     104.79, 107.689, 104.405, 104.046, 100, 96.3342, 95.788, 88.6856, 90.0062, 89.5991, 87.6987, 83.2886, 83.6992, 80.0268, 80.2146, 82.2778,
@@ -302,13 +302,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function zeroCounter() { S.N = 0; S.zeroAt = S.m; S.ord = centreOrder(); redraw(); }
 
-  // ---------- colours of light ----------
+  // ---------- colors of light ----------
   const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
   function xyzToLin(X, Y, Z) {
     X *= 0.95047 / WHITE.Xw; Z *= 1.08883 / WHITE.Zw;
     return [3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z, -0.9692660 * X + 1.8760108 * Y + 0.0415560 * Z, 0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z];
   }
-  function specLin(l) { /* a spectral colour at full brightness (desaturated into sRGB) */
+  function specLin(l) { /* a spectral color at full brightness (desaturated into sRGB) */
     const c = cie(l); let [r, g, b] = xyzToLin(c[0] * WHITE.Xw / 0.95047, c[1], c[2] * WHITE.Zw / 1.08883);
     const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
     const mx = Math.max(r, g, b) || 1; return [r / mx, g / mx, b / mx];
@@ -362,10 +362,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = '#05070a'; c.fillRect(x0, y0, side, side);
     c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(PAT, x0, y0, side, side);
     const fr = c.createRadialGradient(x0 + side * 0.3, y0 + side * 0.25, 0, x0 + side / 2, y0 + side / 2, side * 0.8); fr.addColorStop(0, 'rgba(255,255,255,0.05)'); fr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = fr; c.fillRect(x0, y0, side, side);
-    /* the detector's pinhole at the centre */
+    /* the detector's pinhole at the center */
     c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = 1; const cx = x0 + side / 2, cy = y0 + side / 2;
     c.beginPath(); c.arc(cx, cy, 4, 0, 7); c.stroke(); c.beginPath(); c.moveTo(cx - 9, cy); c.lineTo(cx - 5, cy); c.moveTo(cx + 5, cy); c.lineTo(cx + 9, cy); c.moveTo(cx, cy - 9); c.lineTo(cx, cy - 5); c.moveTo(cx, cy + 5); c.lineTo(cx, cy + 9); c.stroke();
-    /* a millimetre scale along the bottom edge */
+    /* a millimeter scale along the bottom edge */
     const yb = y0 + side + 14, mm = side / 80; c.strokeStyle = 'rgba(220,228,238,0.7)'; c.fillStyle = 'rgba(220,228,238,0.8)'; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
     for (let k = -40; k <= 40; k += 5) { const x = cx + k * mm, big = k % 20 === 0; c.beginPath(); c.moveTo(x, yb - 6); c.lineTo(x, yb - (big ? 0 : 3)); c.stroke();
       if (big) { c.textAlign = k === -40 ? 'left' : k === 40 ? 'right' : 'center'; c.fillText(k === 40 ? '40 mm' : `${k}`.replace('-', '−'), x, yb + 2); } }
@@ -379,7 +379,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawTop(now) {
     if (!T || !W) return;
     const c = ctx, p = proj(), d = dark(); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    /* the optical table: anodised breadboard with a 25 mm grid of tapped holes */
+    /* the optical table: anodized breadboard with a 25 mm grid of tapped holes */
     c.fillStyle = T.table; c.fillRect(0, 0, W, H);
     const xmin = -330, xmax = 250, ymin = -175, ymax = 185, k = Math.min((W - 20) / (xmax - xmin), (H - 30) / (ymax - ymin));
     const ox = (W - (xmax - xmin) * k) / 2 - xmin * k, oy = 24 + (H - 30 - (ymax - ymin) * k) / 2 - ymin * k;
@@ -490,8 +490,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hene: { src: 'red', m: 500, tx: 0, ty: 0, cell: false, hint: 'A red He–Ne laser (632.816 nm in standard air). Zero the counter, turn the micrometer, and note the reading each time the counter reaches 20, 40, 60, … fringes. Each fringe is half a wavelength of mirror travel: 2Δd = Nλ.' },
     mystery: { src: 'mystery', m: 500, tx: 0, ty: 0, cell: false, hint: 'A laser of unknown wavelength somewhere in the visible. Measure it the same way. New mystery laser picks another.' },
     cell: { src: 'red', m: 500, tx: 0, ty: 0, cell: true, hint: 'A 5.00 cm cell in the fixed arm, full of room air. Pump it out, zero the counter, then let air back in and count the fringes as the pressure rises: N = 2L(n − 1)/λ, with n − 1 in proportion to the pressure.' },
-    tilt: { src: 'red', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'M₂ tilted by half a minute of arc. Near equal paths the two images of the source sit side by side, and the fringes are nearly straight lines. Away from equal paths they curve into arcs of off centre rings.' },
-    white: { src: 'white', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'White light makes fringes only within about a micrometre of equal paths, where each colour\'s fringes still line up. Find the straight fringes with the red laser first, then switch to white light and turn the micrometer slowly.' },
+    tilt: { src: 'red', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'M₂ tilted by half a minute of arc. Near equal paths the two images of the source sit side by side, and the fringes are nearly straight lines. Away from equal paths they curve into arcs of off center rings.' },
+    white: { src: 'white', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'White light makes fringes only within about a micrometer of equal paths, where each color\'s fringes still line up. Find the straight fringes with the red laser first, then switch to white light and turn the micrometer slowly.' },
     sodium: { src: 'na', m: 200, tx: 0, ty: 0, cell: false, hint: 'Sodium\'s two yellow lines, 0.597 nm apart. Their fringes drift in and out of step, so the rings fade and come back every 0.29 mm of mirror travel.' } };
   function applyPreset(key) {
     const p = PRESETS[key]; S.preset = key; S.valve = 'closed';
@@ -546,8 +546,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('about1').textContent = 'The light comes to a point 30 mm before the beam splitter (a laser through a short diverging lens, or a lamp through a pinhole). The splitter sends half of it to the movable mirror M₁ and half to the fixed mirror M₂; each comes back and half of each reaches the screen, 150 mm from the splitter. The arms are 100 mm long. Each mirror makes an image of the point, so the screen sees two point sources, one behind the other on the axis, 2d apart when M₁ is d farther than M₂. The pattern drawn is exactly that of two equal coherent points: bright where the paths differ by a whole number of wavelengths. Seen this way the fringes are circles. Tilting M₂ moves its image sideways; near equal paths the fringes become nearly straight lines. The compensator is a plate identical to the splitter, so both beams pass the same glass. The splitter is taken as an ideal 50:50 one that gives both beams the same phase, so equal paths are bright. The brightness falls off toward the edge of the screen as a beam 50 mm in radius would (the same for both beams).';
-  $('about2').textContent = 'The micrometer reads the mirror\'s position directly, to 0.1 μm (in a real instrument a lever reduces the micrometer\'s motion so that one division is 1 μm), with no backlash. The arms are equal at a reading between 130 and 160 μm. The fringe counter is a photodiode at the screen\'s centre: it adds one for each bright fringe that passes, whichever way it moves, like a real one. It cannot follow a new light source or the cell being put in or taken out, so those do not count. With two lines (sodium) it follows the combined fringe. White light fringes cannot be counted.';
-  $('about3').textContent = 'Light: the lasers and lamp lines are treated as perfectly sharp (a He–Ne laser\'s coherence length is tens of centimetres, far longer than the 1 mm of travel here). Wavelengths are from the NIST Atomic Spectra Database, given in standard air: He–Ne red 632.816 nm, He–Ne green 543.365 nm, mercury green 546.074 nm, sodium D2 588.995 nm and D1 589.592 nm (D2 twice as bright). In the room\'s air (dry, 20.0 °C, 101.325 kPa, chosen values) each is a little longer. The mystery laser is between 450 and 680 nm. White light has the CIE D65 spectrum from 380 to 780 nm, seen through the CIE 1931 colour matching functions (the Wyman, Sloan and Shirley fit); each 5 nm band is averaged over its width so that distant fringes wash out to white as they should.';
+  $('about2').textContent = 'The micrometer reads the mirror\'s position directly, to 0.1 μm (in a real instrument a lever reduces the micrometer\'s motion so that one division is 1 μm), with no backlash. The arms are equal at a reading between 130 and 160 μm. The fringe counter is a photodiode at the screen\'s center: it adds one for each bright fringe that passes, whichever way it moves, like a real one. It cannot follow a new light source or the cell being put in or taken out, so those do not count. With two lines (sodium) it follows the combined fringe. White light fringes cannot be counted.';
+  $('about3').textContent = 'Light: the lasers and lamp lines are treated as perfectly sharp (a He–Ne laser\'s coherence length is tens of centimeters, far longer than the 1 mm of travel here). Wavelengths are from the NIST Atomic Spectra Database, given in standard air: He–Ne red 632.816 nm, He–Ne green 543.365 nm, mercury green 546.074 nm, sodium D2 588.995 nm and D1 589.592 nm (D2 twice as bright). In the room\'s air (dry, 20.0 °C, 101.325 kPa, chosen values) each is a little longer. The mystery laser is between 450 and 680 nm. White light has the CIE D65 spectrum from 380 to 780 nm, seen through the CIE 1931 color matching functions (the Wyman, Sloan and Shirley fit); each 5 nm band is averaged over its width so that distant fringes wash out to white as they should.';
   $('about4').textContent = 'Gas cell: 5.00 cm long inside, in the arm to M₂. Its windows add the same path whether it is full or empty, so they are left out. Air\'s index from Ciddor (Applied Optics, 1996) for dry air with 450 ppm CO₂: n − 1 = 2.7653 × 10⁻⁴ at 632.99 nm (vacuum wavelength), 15 °C and 101.325 kPa, which agrees with Edlén\'s 1966 formula to 5 parts in 10⁵. At other pressures n − 1 is scaled in proportion to the density of an ideal gas, P/T: linear in pressure at constant temperature (good to better than 5 parts in 10⁴). The cell stays at the room\'s 20.0 °C. The gauge reads to 0.1 kPa. The pump takes the cell to 2 Pa (time constant 4 s); the needle valve lets air in at 1.0 kPa/s, slowing over the last 2 kPa. Rays cross the cell within 6° of the axis, so the extra path in the cell is taken as 2L(n − 1) across the whole screen.';
 
   // ---------- size, theme, start ----------

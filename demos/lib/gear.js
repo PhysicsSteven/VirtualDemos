@@ -3,7 +3,7 @@
 window.VDGear = (function () {
   const dark = () => { const t = document.documentElement.getAttribute('data-theme');
     return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
-  /* blends two #rrggbb colours; anything else (a token written as rgb() or a name) comes back unchanged */
+  /* blends two #rrggbb colors; anything else (a token written as rgb() or a name) comes back unchanged */
   const mix = (a, b, t) => { if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return a; const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b);
     return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
   /* the room behind the apparatus: a wall that darkens a little towards the top and a soft floor glow */
@@ -95,7 +95,7 @@ window.VDGear = (function () {
     ctx.strokeStyle = '#4b535f'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, 7); ctx.stroke();
     g = ctx.createRadialGradient(cx - r * 0.1, cy - r * 0.12, 0, cx, cy, r * 0.3); g.addColorStop(0, '#8a929e'); g.addColorStop(1, '#2b3139'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r * 0.3, 0, 7); ctx.fill();
   }
-  /* quiet annotation: small, muted, never bold; o.c overrides the colour */
+  /* quiet annotation: small, muted, never bold; o.c overrides the color */
   function label(ctx, s, x, y, o = {}) {
     const cs = getComputedStyle(document.documentElement), muted = o.c || cs.getPropertyValue('--muted').trim() || '#5a6575';
     ctx.save(); ctx.fillStyle = muted; ctx.globalAlpha = o.alpha == null ? 0.9 : o.alpha;
@@ -147,7 +147,7 @@ window.VDGear = (function () {
     g = ctx.createLinearGradient(0, y1 - Math.min(40, h * 0.2), 0, y1); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, d ? 'rgba(0,0,0,0.35)' : 'rgba(30,40,55,0.08)');
     ctx.fillStyle = g; ctx.fillRect(x, y1 - Math.min(40, h * 0.2), w, Math.min(40, h * 0.2));
   }
-  /* a retort stand: a cast base resting on the bench at y (centre x), and an upright rod up to top. o.side: which way the base extends (1 right, -1 left) */
+  /* a retort stand: a cast base resting on the bench at y (center x), and an upright rod up to top. o.side: which way the base extends (1 right, -1 left) */
   function stand(ctx, x, y, top, o = {}) {
     const s = o.s || 1, side = o.side || 0, bw = 64 * s, bx = x - bw / 2 + side * bw * 0.3;
     shadow(ctx, bx + bw / 2, y, bw * 0.62, 5 * s, 1);

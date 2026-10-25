@@ -57,7 +57,7 @@ group('cooling: Churchill natural convection tends to Nu = 2 (pure conduction) f
   const air = (T, q) => { const i = Math.floor((T - 250) / 25), u = (T - 250 - 25 * i) / 25; return c.AIR[q][i] + (c.AIR[q][i + 1] - c.AIR[q][i]) * u; };
   const Re = U * D / air(Ta, 'nu'); near(f.Re, Re, 1e-12, 'Re');
   near(f.NuF, 2 + (0.4 * Math.sqrt(Re) + 0.06 * Math.pow(Re, 2 / 3)) * Math.pow(air(Ta, 'Pr'), 0.4) * Math.pow(air(Ta, 'mu') / air(Ts, 'mu'), 0.25), 1e-12, 'Nu_F');
-  const Tf = (Ta + Ts) / 2, Ra = 9.80665 / Tf * 60 * D ** 3 * air(Tf, 'Pr') / air(Tf, 'nu') ** 2; near(f.Ra, Ra, 1e-12, 'Ra');
+  const Tf = (Ta + Ts) / 2, Ra = 9.81 / Tf * 60 * D ** 3 * air(Tf, 'Pr') / air(Tf, 'nu') ** 2; near(f.Ra, Ra, 1e-12, 'Ra');
   near(f.NuN, 2 + 0.589 * Ra ** 0.25 / (1 + (0.469 / air(Tf, 'Pr')) ** (9 / 16)) ** (4 / 9), 1e-12, 'Nu_N');
   assert(f.h > c.film(80, 20, D, 0).h, 'a fan raises h');
 });

@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§5.8 and 5.9. Access for fre
 
 - A charged particle starts from rest in a uniform electric field inside a long vacuum tube. The force on it, $$F = qE$$, is the same at every speed. You choose the particle (electron, muon, proton, deuteron, alpha particle) and the field, from 0.1 to 10 MV/m.
 - The clock reads in nanoseconds and plays slowed down, so a run lasts about 12 s at 1×. Step moves the clock on by a fixed amount, shown under the controls; the run stops by itself. Changing the particle or the field starts again from rest.
-- The readouts give the time and the distance from the start to five significant figures, and the speed in units of c to six decimal places. Rest energies are the CODATA 2018 values.
+- The readouts give the time and the distance from the start to five significant figures, and the speed in units of c to six decimal places. Rest energies are the CODATA 2022 values.
 - The energy the particle radiates as it speeds up is left out; it is less than one part in 10¹⁰ of the work done.
 - Record reading stores the particle, the field, the force, the time, the distance and the speed. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the graph, Newton's prediction, the momentum and $$\gamma$$.
@@ -48,7 +48,7 @@ A plot of $$\gamma$$ against $$x$$ is a straight line with intercept 1, and its 
 
 ## Safety
 
-None for the virtual apparatus. Real accelerating fields of megavolts per metre are lethal and are kept inside shielded vacuum tubes.
+None for the virtual apparatus. Real accelerating fields of megavolts per meter are lethal and are kept inside shielded vacuum tubes.
 
 ## Procedure
 

@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.7, and Vol. 3, §5.3. Acce
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Places in the demo:** Lab tower, 22.5 m; Space station, about 400 km; GPS, r = 26,560 km; Geostationary, r = 42,164 km. The second clock can also be put in a circular orbit, or at rest on a tower, at any distance r from Earth's centre up to 50,000 km.
+**Places in the demo:** Lab tower, 22.5 m; Space station, about 400 km; GPS, r = 26,560 km; Geostationary, r = 42,164 km. The second clock can also be put in a circular orbit, or at rest on a tower, at any distance r from Earth's center up to 50,000 km.
 
 **Using the demo.**
 
@@ -20,7 +20,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.7, and Vol. 3, §5.3. Acce
 
 **What the demo models.**
 
-- Earth is a nonrotating spherical mass with GM = 3.986004 × 10¹⁴ m³/s². Each clock ticks, compared with a clock far away and at rest, at the rate $$\sqrt{1 - 2GM/(rc^2) - v^2/c^2}$$, where v is its speed in a frame that does not turn with Earth (the Schwarzschild field of general relativity, exact for a clock that moves along a circle about Earth's centre).
+- Earth is a nonrotating spherical mass with GM = 3.986004 × 10¹⁴ m³/s². Each clock ticks, compared with a clock far away and at rest, at the rate $$\sqrt{1 - 2GM/(rc^2) - v^2/c^2}$$, where v is its speed in a frame that does not turn with Earth (the Schwarzschild field of general relativity, exact for a clock that moves along a circle about Earth's center).
 - The ground clock sits on a sphere of radius 6371 km, at rest or carried round at the equator once per sidereal day (465 m/s). Earth's flattening, the shape of the sea level surface, eccentric orbits, and the Sun and Moon are left out. One day is 86,400 s.
 
 </details>
@@ -74,7 +74,7 @@ No physical apparatus is used.
 
 ## Analysis
 
-1. Fit the gravity part against $$1/r$$ for the orbit scan. From the slope find $$GM/c^2$$ in metres and compare it with half of Earth's Schwarzschild radius $$2GM/c^2$$ shown in the demo. What does the intercept divided by the size of the slope give?
+1. Fit the gravity part against $$1/r$$ for the orbit scan. From the slope find $$GM/c^2$$ in meters and compare it with half of Earth's Schwarzschild radius $$2GM/c^2$$ shown in the demo. What does the intercept divided by the size of the slope give?
 2. Fit the speed part against $$1/r$$ for the same scan. Compare its slope with the gravity part's slope, and explain the ratio from $$v^2 = GM/r$$.
 3. Fit the speed part against $$v^2$$. From the slope find the speed of light.
 4. Use your two fits to find the radius at which the net gain is zero, for the ground clock turning. Then use the ground clock at rest scan to find it again, and compare with $$r = 3R/2$$. Why does the ground clock's turning move it?

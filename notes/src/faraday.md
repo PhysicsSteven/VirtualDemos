@@ -9,7 +9,7 @@ time: 20 to 30 minutes
 - Lenz's law: the induced current's field opposes the change in flux, so the coil resists the motion; that work becomes heat in R.
 - The charge that flows depends only on the change in flux, Q = −NΔΦ_B/R, not on how fast.
 - A turning coil gives EMF = NBAω sin ωt, largest when the flux is zero; a sliding bar gives BLv and is braked by ILB.
-- Mutual induction: an alternating current in one coil induces an EMF in a neighbouring coil, EMF₂ = −M dI₁/dt when the second coil is open. Closed, its current opposes the change, pushes the coils apart and changes the current the source has to supply.
+- Mutual induction: an alternating current in one coil induces an EMF in a neighboring coil, EMF₂ = −M dI₁/dt when the second coil is open. Closed, its current opposes the change, pushes the coils apart and changes the current the source has to supply.
 - Self inductance: a coil's own flux linkage is NΦ_B = LI, so a changing current induces a back EMF ε = −L dI/dt in the coil itself. It opposes the change in I, not I itself, and the coil stores energy ½LI² in its field. For a long solenoid L = μ₀N²A/ℓ.
 
 ## Before class
@@ -53,7 +53,7 @@ Students need Φ_B = BA cos θ, the field of a bar magnet and the right hand rul
 - **"A generator's EMF peaks when the flux peaks."** The flux is then steady for an instant.
 - **"The back EMF opposes the current."** It opposes the change in current: when I falls, ε points along I and tries to keep it flowing.
 - **"A large current in an inductor means a large voltage across it."** Only a changing current does; a steady current needs no voltage across an ideal inductor.
-- **"Two coils with the same number of turns make a 1 : 1 transformer."** Only if all the flux of one passes through the other (k = 1, as on a shared iron core). Air coils a few centimetres apart have k well below 1.
+- **"Two coils with the same number of turns make a 1 : 1 transformer."** Only if all the flux of one passes through the other (k = 1, as on a shared iron core). Air coils a few centimeters apart have k well below 1.
 
 ## Physics behind the demo
 

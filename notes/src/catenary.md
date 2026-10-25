@@ -19,7 +19,7 @@ Students need free body diagrams and force components. Besides the chain, the pa
 
 1. **Hanging chain.** Ask Q1 first. **Color by tension** runs from low at the bottom to high at the supports. The rail: H = 55.0 N everywhere, T = 55.0 N at the lowest point and 121 N at A and B; the supports hold up 108 N + 108 N, the whole weight λgS = 216 N.
 2. **Tension along the chain.** The first marker sits at the lowest point. Slide the second: both ends have the same H, the vertical parts differ by the piece's weight, and the forces close into a triangle. The tension anywhere is λg times the height above the dashed directrix, a = 2.34 m below the lowest point.
-3. **Uneven supports.** Ask Q4 first. The lowest point shifts toward the lower support B; A carries 151 N of the weight and B only 84.5 N. Drag B up and in until the vertex leaves the span.
+3. **Uneven supports.** Ask Q4 first. The lowest point shifts toward the lower support B; A carries 151 N of the weight and B only 84.6 N. Drag B up and in until the vertex leaves the span.
 4. **Pull it tight.** Ask: with a strong enough rope, could you pull it perfectly straight? Here the sag is 1.25 m and H = 129 N, already more than half the chain's weight of 167 N. Drag the marker on the graph to the left: both curves shoot up. Then do Q5.
 5. **Chain vs parabola.** The gold parabola shares the supports and the lowest point. The largest gap is 6.65 cm on a sag of 2.92 m, about 2%. Pull the middle down and the gap grows. Turn on **Suspension bridge** and ask Q7.
 6. **Arch.** Each block pushes its neighbors along the curve; the **Thrust on each support** is 23.3 N sideways. Compare **Gateway Arch** (a weighted catenary) and **Semicircle**, then ask Q6.
@@ -28,7 +28,7 @@ Students need free body diagrams and force components. Besides the chain, the pa
 
 **Q1.** Predict: a chain hangs between two hooks at the same height. Where is the tension largest, and where smallest? Is it zero anywhere? Then check with **Color by tension**.
 
-**Q2.** In **Hanging chain** the chain is 11.0 m long with λ = 2.00 kg/m, the supports are level, and the demo says H = 55.0 N. Using g = 9.80665 m/s², as the demo does, find the vertical force each support supplies, the tension at each support, and the angle below the horizontal at which the chain leaves each support.
+**Q2.** In **Hanging chain** the chain is 11.0 m long with λ = 2.00 kg/m, the supports are level, and the demo says H = 55.0 N. Using g = 9.81 m/s², find the vertical force each support supplies, the tension at each support, and the angle below the horizontal at which the chain leaves each support.
 
 **Q3.** Draw a free body diagram of the chain from the lowest point to any point P. Use it to explain why the horizontal part of the tension at P equals the tension at the bottom, and why the vertical part equals the weight of that piece. Check with **End 1 (H, V)** and **End 2 (H, V)** in **Tension along the chain**.
 

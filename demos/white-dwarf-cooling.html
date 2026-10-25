@@ -357,9 +357,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  // SI units throughout (CODATA 2018), astronomy units only at the edges: M in M☉, L in L☉, t in yr.
-  const G = 6.67430e-11, CL = 299792458, H = 6.62607015e-34, ME = 9.1093837015e-31, MU = 1.66053906660e-27;
-  const KB = 1.380649e-23, QE = 1.602176634e-19, EPS0 = 8.8541878128e-12;
+  // SI units throughout (CODATA 2022), astronomy units only at the edges: M in M☉, L in L☉, t in yr.
+  const G = 6.67430e-11, CL = 299792458, H = 6.62607015e-34, ME = 9.1093837139e-31, MU = 1.66053906892e-27;
+  const KB = 1.380649e-23, QE = 1.602176634e-19, EPS0 = 8.8541878188e-12;
   const KE = QE * QE / (4 * Math.PI * EPS0);                         // e²/4πε₀, J·m
   const MSUN = 1.98841e30, RSUN = 6.957e8, LSUN = 3.828e26, REARTH = 6.371e6, YR = 3.15576e7, SIGMA = 5.670374419e-8;
   const GAMMA_M = 175;            // one component plasma melting value (Potekhin & Chabrier 2000)
@@ -944,7 +944,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- 3D cutaway of the star (three.js through demos/lib/vd3kit.js) ----------
   // The whole star with a quarter cut away, seen with an orthographic camera so it lines up with the labels drawn over it.
-  // The surface glows in the blackbody colour of T_eff; both cut faces show the same radial layers as the flat slice: the
+  // The surface glows in the blackbody color of T_eff; both cut faces show the same radial layers as the flat slice: the
   // liquid (brighter when the core is hot), the crystal core with its lattice out to the model's freezing radius, and the front.
   const W3 = { on: false, S: null, cam: null, shell: null, faces: [], tex: null, cv: null, key: '' };
   function init3D() {
@@ -952,7 +952,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S3) return false;
     W3.S = S3; S3.el.classList.add('vd3d');
     W3.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
-    const pc = Math.PI / 2 + 0.25, ps0 = pc - 1.75 * Math.PI;   /* the missing quarter is centred on phi = pc, toward the camera */
+    const pc = Math.PI / 2 + 0.25, ps0 = pc - 1.75 * Math.PI;   /* the missing quarter is centered on phi = pc, toward the camera */
     W3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 48, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0, side: THREE.DoubleSide }));
     W3.cv = document.createElement('canvas'); W3.cv.width = W3.cv.height = 384; W3.tex = new THREE.CanvasTexture(W3.cv);
     const fm = new THREE.MeshStandardMaterial({ map: W3.tex, roughness: 0.9, metalness: 0, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: W3.tex, emissiveIntensity: 0.7 });

@@ -11,9 +11,9 @@ const near = (a, b, tol, what) => assert(rel(a, b) <= tol, `${what || ''} expect
 const p = M.PARTICLES.p, e = M.PARTICLES.e;
 
 test('r = mv/(|q|B) for the Circular motion preset, by hand and by formula', () => {
-  // proton at 1.0e5 m/s in 0.10 T: r = 1.67262192369e-27 × 1e5 / (1.602176634e-19 × 0.1) = 1.04397 cm
-  near(M.radius(p.m, 1e5, p.q, 0.1), 1.67262192369e-27 * 1e5 / (1.602176634e-19 * 0.1), 1e-15);
-  near(M.radius(p.m, 1e5, p.q, 0.1), 0.01043968491, 1e-9, 'proton radius (Python by hand)');
+  // proton at 1.0e5 m/s in 0.10 T: r = 1.67262192595e-27 × 1e5 / (1.602176634e-19 × 0.1) = 1.04397 cm
+  near(M.radius(p.m, 1e5, p.q, 0.1), 1.67262192595e-27 * 1e5 / (1.602176634e-19 * 0.1), 1e-15);
+  near(M.radius(p.m, 1e5, p.q, 0.1), 0.010439684929, 1e-9, 'proton radius (Python by hand)');
   // sign of q and B does not change the size; r doubles with v and halves with B
   assert.equal(M.radius(e.m, 3e6, e.q, -0.01), M.radius(e.m, 3e6, -e.q, 0.01));
   near(M.radius(p.m, 2e5, p.q, 0.1), 2 * M.radius(p.m, 1e5, p.q, 0.1), 1e-15);
@@ -33,7 +33,7 @@ test('T = 2πm/(|q|B) does not depend on v: the integrated path closes after one
     near(Math.hypot(h.x, h.y), 2 * r, 1e-12, `diameter at v = ${v}`);
   }
   // an electron goes round 1836.15 times for each proton turn (Electron vs proton)
-  near(M.period(p.m, p.q, 1e-3) / M.period(e.m, e.q, 1e-3), 1836.15267343, 1e-9);
+  near(M.period(p.m, p.q, 1e-3) / M.period(e.m, e.q, 1e-3), 1836.152673426, 1e-9);
 });
 
 test('integrator conserves |v| and K in pure B and stays on the analytic circle', () => {

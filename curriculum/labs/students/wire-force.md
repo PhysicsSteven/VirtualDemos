@@ -41,7 +41,7 @@ A negative reading means the magnet has become lighter. It does not mean the fie
 
 $$B=\frac{|k|}{L\sin\theta}.$$
 
-Convert grams to kilograms and centimetres to metres. At $$\theta = 0$$, the force vanishes, so this method cannot determine $$B$$. For a loop, the magnetic moment is $$NIA\,\hat{\mathbf n}$$ and torque magnitude is $$NIAB\sin\psi$$, where $$\psi$$ is the angle between the loop normal and $$B$$. This $$\psi$$ is different from the straight wire angle $$\theta$$.
+Convert grams to kilograms and centimeters to meters. At $$\theta = 0$$, the force vanishes, so this method cannot determine $$B$$. For a loop, the magnetic moment is $$NIA\,\hat{\mathbf n}$$ and torque magnitude is $$NIAB\sin\psi$$, where $$\psi$$ is the angle between the loop normal and $$B$$. This $$\psi$$ is different from the straight wire angle $$\theta$$.
 
 ## Before the lab
 

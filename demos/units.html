@@ -144,14 +144,14 @@ table.grid th { color: var(--muted); font-weight: 700; }
         <h2>Zoom</h2>
         <div><div class="slider-head"><label for="sZoom">Width of the view</label><output id="oZoom" for="sZoom"></output></div><input type="range" id="sZoom" min="-15.3" max="27" step="0.01"></div>
         <div class="row go"><label for="sGo">Go to</label><select id="sGo"></select></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Each object is drawn at its true size. The view is centred on one carbon atom in the DNA of a skin cell on your fingertip. Zooming out passes the cell, your hand, the land around you, the sky, Earth, the planets, the stars and the galaxies; zooming in goes into the atom’s nucleus and a proton. Scroll or pinch on the picture, drag up and down, use the arrow keys, or pick a stop under Go to.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Each object is drawn at its true size. The view is centered on one carbon atom in the DNA of a skin cell on your fingertip. Zooming out passes the cell, your hand, the land around you, the sky, Earth, the planets, the stars and the galaxies; zooming in goes into the atom’s nucleus and a proton. Scroll or pinch on the picture, drag up and down, use the arrow keys, or pick a stop under Go to.</p></details>
         <details class="fold"><summary>Sources and approximations</summary><div class="foldbody">
           <p class="hint"><b>Atom and nucleus.</b> Proton radius 0.84075 fm (CODATA 2022). Carbon 12 charge radius 2.4702 fm (Angeli and Marinova 2013); the 12 nucleons are placed by hand, since nucleons have no fixed positions. The electron glow is the density from Slater orbitals with Clementi and Raimondi effective charges, an approximation; atom widths are van der Waals radii (Bondi 1964).</p>
           <p class="hint"><b>Inside the cell.</b> The DNA is a simplified B DNA model (0.34 nm per base pair, 10.5 base pairs a turn, 2 nm wide) with hydrogens left out. Nucleosome about 11 nm, nuclear pore about 120 nm, nucleus 6 μm, skin cell about 15 μm, flat surface cells about 35 μm: typical sizes, and the cells, chromatin and mitochondria are placed at random.</p>
           <p class="hint"><b>Hand and land.</b> Fingerprint ridges 0.48 mm apart and a 19 cm hand are typical adult values. The park, town and fields are an illustration. Mount Everest 8,849 m, Lhotse 8,516 m, Nuptse 7,861 m and Makalu 8,485 m are real heights; their ridgelines are drawn, not surveyed. Atmosphere layers are the usual round figures.</p>
           <p class="hint"><b>Earth.</b> NASA Blue Marble and Earth at Night images (public domain, NASA Earth Observatory), mapped onto a sphere in this page and seen from above northern Canada. The lighting is chosen to show the continents, not the true day and night of any date.</p>
           <p class="hint"><b>Solar system.</b> Planet positions for 23 October 2026 from the JPL approximate orbital elements (Standish), with every orbit drawn flat in one plane; asteroid, Kuiper belt and Oort cloud dots are placed at random. Voyager distances for 2026; heliopause drawn as a circle, its real shape is uncertain.</p>
-          <p class="hint"><b>Stars and galaxies.</b> Star directions and distances from standard catalogues (Wolfram StarData); the Milky Way is a model, with the Sun 26,670 ly from the centre (GRAVITY 2019). Galaxy, group and cluster distances are approximate published values; the view turns into the supergalactic frame (de Vaucouleurs) past the Local Group. The cosmic web pattern and the mottling of the cosmic microwave background are illustrations; the observable universe is 8.8 × 10²⁶ m across.</p>
+          <p class="hint"><b>Stars and galaxies.</b> Star directions and distances from standard catalogs (Wolfram StarData); the Milky Way is a model, with the Sun 26,670 ly from the center (GRAVITY 2019). Galaxy, group and cluster distances are approximate published values; the view turns into the supergalactic frame (de Vaucouleurs) past the Local Group. The cosmic web pattern and the mottling of the cosmic microwave background are illustrations; the observable universe is 8.8 × 10²⁶ m across.</p>
           <p class="hint"><b>For comparison.</b> Rounded sizes are marked ≈ or about; light travel distances use c = 299,792,458 m/s exactly.</p>
         </div></details>
       </section>
@@ -238,15 +238,15 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   const FERMI = {
     beats: { q: 'How many times does a heart beat in a lifetime?', f: [['heartbeats per minute', 60, 100], ['minutes per day (exact)', 1440, 1440], ['days per year', 365.25, 365.25], ['years in a lifetime', 70, 90]] },
     walk: { q: 'How many days would it take to walk around the equator (40,075 km)?', f: [['distance, km (Earth\'s equator)', 40075, 40075], ['÷ walking speed, km/h', 1 / 6, 1 / 4], ['÷ hours walked per day', 1 / 10, 1 / 6]] },
-    breaths: { q: 'How many litres of air do you breathe in a day?', f: [['breaths per minute at rest', 12, 20], ['litres per breath', 0.4, 0.6], ['minutes per day (exact)', 1440, 1440]] }
+    breaths: { q: 'How many liters of air do you breathe in a day?', f: [['breaths per minute at rest', 12, 20], ['liters per breath', 0.4, 0.6], ['minutes per day (exact)', 1440, 1440]] }
   };
   const fermi = (rows) => rows.reduce((q, r) => [q[0] * r[1], q[1] * r[2]], [1, 1]);
 
-  // the zoom: one nested path of objects at true size, in metres. The origin is one carbon atom in the DNA of a skin cell in the fingertip
+  // the zoom: one nested path of objects at true size, in meters. The origin is one carbon atom in the DNA of a skin cell in the fingertip
   // of a person holding up a hand, palm out; each object on the path contains the next one in, so zooming never jumps. Sources: the page.
-  const RE_ = 6.371e6, AU = 1.495978707e11, LY = 9.4607304725808e15, GROUND = -1.55, A0 = 5.29177210903e-11, FM = 1e-15, NM = 1e-9, UM = 1e-6;
+  const RE_ = 6.371e6, AU = 1.495978707e11, LY = 9.4607304725808e15, GROUND = -1.55, A0 = 5.29177210544e-11, FM = 1e-15, NM = 1e-9, UM = 1e-6;
   // carbon-12: rms charge radius 2.4702 fm (Angeli and Marinova 2013); 12 nucleons (proton charge radius 0.84075 fm, CODATA 2022) at the
-  // corners of an icosahedron 1.45 fm from the centre, turned so that no corner faces the viewer straight on
+  // corners of an icosahedron 1.45 fm from the center, turned so that no corner faces the viewer straight on
   const NUC = (() => { const f = (1 + Math.sqrt(5)) / 2, v = [], R = 1.45 / Math.hypot(1, f);
     for (const s1 of [-1, 1]) for (const s2 of [-1, 1]) v.push([0, s1, s2 * f], [s1, s2 * f, 0], [s2 * f, 0, s1]);
     const rot = ([x, y, z], a, b) => { const y1 = y * Math.cos(a) - z * Math.sin(a), z1 = y * Math.sin(a) + z * Math.cos(a); return [x * Math.cos(b) + z1 * Math.sin(b), y1, -x * Math.sin(b) + z1 * Math.cos(b)]; };
@@ -257,7 +257,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function carbonDensity(r) {   // electrons per m³
     let rho = 0; for (const [n, Z, occ] of STO) { const z = Z / n / A0, N2 = (2 * z) ** (2 * n + 1) / (n === 1 ? 2 : 24); rho += occ * N2 * r ** (2 * n - 2) * Math.exp(-2 * z * r) / (4 * Math.PI); }
     return rho; }
-  function carbonColumn(s) {   // electrons per m² seen through the atom at distance s from the centre (Simpson's rule along the line of sight)
+  function carbonColumn(s) {   // electrons per m² seen through the atom at distance s from the center (Simpson's rule along the line of sight)
     const L = 6e-10, n = 400, h = L / n; let t = 0; for (let i = 0; i <= n; i++) { const z = i * h, w = i === 0 || i === n ? 1 : i % 2 ? 4 : 2; t += w * carbonDensity(Math.hypot(s, z)); } return 2 * t * h / 3; }
   const R90_1S = (() => { const z = 5.6727 / A0; let lo = 0, hi = 1e-10; for (let i = 0; i < 60; i++) { const r = (lo + hi) / 2, x = 2 * z * r; (1 - Math.exp(-x) * (1 + x + x * x / 2) < 0.9 ? (lo = r) : (hi = r)); } return lo; })();
   // B-DNA, heavy atoms only (hydrogens left out), from a simplified template: rise 0.338 nm and 34.3° (10.5 base pairs) per step.
@@ -306,7 +306,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     ['Leo Triplet', 242.0, 64.0, 3.5e7], ['Virgo Cluster', 283.78, 74.49, 5.4e7], ['Fornax Cluster', 236.72, -53.64, 6.2e7], ['Hydra Cluster', 269.6, 26.5, 1.58e8], ['Centaurus Cluster', 302.4, 21.6, 1.7e8],
     ['Norma Cluster (Great Attractor)', 325.3, -7.3, 2.22e8], ['Perseus Cluster', 150.57, -13.26, 2.4e8], ['Coma Cluster', 58.08, 87.96, 3.21e8], ['Shapley Supercluster', 311.8, 30.7, 6.5e8]];
   const D2R = Math.PI / 180;
-  function eqToGal(ra, dec) {   // J2000 equatorial to galactic unit vector (x to the Galactic centre, y to l = 90°, z to the north Galactic pole)
+  function eqToGal(ra, dec) {   // J2000 equatorial to galactic unit vector (x to the Galactic center, y to l = 90°, z to the north Galactic pole)
     const c = [Math.cos(dec * D2R) * Math.cos(ra * D2R), Math.cos(dec * D2R) * Math.sin(ra * D2R), Math.sin(dec * D2R)];
     const M = [[-0.0548755604, -0.8734370902, -0.4838350155], [0.4941094279, -0.4448296300, 0.7469822445], [-0.8676661490, -0.1980763734, 0.4559837762]];
     return M.map((r) => r[0] * c[0] + r[1] * c[1] + r[2] * c[2]); }
@@ -338,7 +338,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     { id: 'helio', name: 'heliopause', lab: 'heliopause: Voyager 1 crossed it at 121.6 au', size: 2 * 121.6 * AU, x: SUN[0], y: SUN[1] },
     { id: 'oort', name: 'Oort cloud', lab: 'Oort cloud of comets, thought to reach about 100,000 au', size: 2e5 * AU, x: SUN[0], y: SUN[1], out: [30, 120] },
     { id: 'stars', name: 'nearest stars', lab: 'nearest stars: Proxima Centauri, 4.25 ly', size: 2 * 4.25 * LY, x: SUN[0], y: SUN[1], inn: [0.0002, 0.001], out: [200, 2000] },
-    { id: 'neigh', name: 'stars within 50 ly', lab: 'our neighbourhood: stars within 50 ly', size: 1e2 * LY, x: SUN[0], y: SUN[1] },
+    { id: 'neigh', name: 'stars within 50 ly', lab: 'our neighborhood: stars within 50 ly', size: 1e2 * LY, x: SUN[0], y: SUN[1] },
     { id: 'bright', name: 'the brightest stars in our sky', lab: 'the bright stars of our sky: almost all within 3,000 ly', size: 6e3 * LY, x: SUN[0], y: SUN[1] },
     { id: 'galaxy', name: 'Milky Way (disk)', size: 1e5 * LY, gal: [0, 0, R_SUN_GC], out: [2, 5] },
     { id: 'local', name: 'Local Group of galaxies', lab: 'Local Group of galaxies: about 10 million ly', size: 1e7 * LY, gal: [121.17, -21.57, 0.9e6], out: [8, 40] },
@@ -346,12 +346,12 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     { id: 'laniakea', name: 'Laniakea Supercluster', lab: 'Laniakea Supercluster: about 520 million ly', size: 5.2e8 * LY, gal: [325.3, -7.3, 2.0e8] },
     { id: 'web', name: 'cosmic web', lab: 'the cosmic web (illustration)', size: 1e10 * LY, x: 0, y: 0, out: [4, 40] },
     { id: 'universe', name: 'observable universe', size: 8.8e26, x: 0, y: 0 },
-    // backgrounds for some stages: drawn and faded the same way, but never labelled or followed by the camera
+    // backgrounds for some stages: drawn and faded the same way, but never labeled or followed by the camera
     { id: 'bgWater', bg: true, size: 1.4e-8, x: 0, y: 0 }, { id: 'bgPark', bg: true, size: 30, x: 0, y: GROUND + 4 }, { id: 'bgTown', bg: true, size: 600, x: 0, y: GROUND + 30 },
     { id: 'bgPeaks', bg: true, size: 4.5e4, x: 25000, y: GROUND + 4e3, out: [60, 240] }
   ];
   // things the same size, drawn beside the scene for comparison when they are 4% to 32% of the view; ≈ marks rounded values
-  const CMP = [['xray', 'X ray (copper Kα), wavelength 0.154 nm', 1.5406e-10], ['h', 'hydrogen atom, 2a₀ ≈ 0.106 nm', 2 * A0], ['las', 'light in 1 attosecond ≈ 0.30 nm', 2.99792458e-10],
+  const CMP = [['xray', 'X-ray (copper Kα), wavelength 0.154 nm', 1.5406e-10], ['h', 'hydrogen atom, 2a₀ ≈ 0.106 nm', 2 * A0], ['las', 'light in 1 attosecond ≈ 0.30 nm', 2.99792458e-10],
     ['ribo', 'ribosome ≈ 25 nm', 2.5e-8], ['virus', 'coronavirus, about 0.1 μm', 9.1e-8], ['lfs', 'light in 1 femtosecond ≈ 0.30 μm', 2.99792458e-7], ['green', 'green light, wavelength 550 nm', 5.5e-7],
     ['ecoli', 'E. coli bacterium ≈ 2 μm', 2e-6], ['rbc', 'red blood cell ≈ 8 μm', 8e-6], ['hair', 'human hair, about 70 μm wide', 7e-5], ['egg', 'human egg cell ≈ 0.12 mm', 1.2e-4],
     ['mite', 'house dust mite ≈ 0.3 mm', 3e-4], ['quarter', 'US quarter, 24.26 mm', 0.02426], ['ball', 'basketball ≈ 24 cm', 0.2385], ['lns', 'light in 1 ns ≈ 30 cm (29.98 cm)', 0.299792458],
@@ -470,7 +470,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   const rng = (seed) => () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
   const hex = (c) => (c[0] === '#' ? [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)] : c.match(/\d+/g).slice(0, 3).map(Number));
   const mixc = (c1, c2, t) => { const a = hex(c1), b = hex(c2); return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',')})`; };
-  // the colour behind everything, by log10 of the view width: dark below light's wavelength, stained tissue, skin, sky, space
+  // the color behind everything, by log10 of the view width: dark below light's wavelength, stained tissue, skin, sky, space
   const BGS = [[-16, '#05070e'], [-9.4, '#070c19'], [-8.7, '#0f1730'], [-7.6, '#1b1534'], [-6.5, '#2a1d3c'], [-6.2, '#ecc9d3'], [-4.45, '#efcbd4'], [-4.2, '#e7bfa5'], [-1.9, '#e2b89c'],
     [-1.4, '#b9d6f1'], [4.3, '#8fbbe9'], [4.85, '#3f6fb4'], [5.25, '#0d1c3c'], [5.7, '#04060d'], [27, '#04060d']];
   function bgAt(z) { if (z > -7.25 && z < -4.45) return z < -7.0 ? mixc('#1c1634', '#3a2730', smooth(-7.25, -7.0, z)) : z > -4.6 ? mixc('#f1c4cf', '#e7bfa5', smooth(-4.6, -4.45, z)) : mixc('#3a2730', '#f1c4cf', smooth(-6.45, -5.7, z));
@@ -504,7 +504,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const gcs = R(70, () => { const a = r() * 6.283, d = 1.5e7 + 3.4e8 * Math.sqrt(r()); return [d * Math.cos(a), d * Math.sin(a), (r() - 0.5) * 6e7, 2e6 + r() * 8e6]; }), gfill = R(4200, () => { const c = gcs[(r() * gcs.length) | 0], t = r() * 6.283, q = c[3] * Math.sqrt(-2 * Math.log(1 - r() * 0.999)); return r() < 0.7 ? [c[0] + q * Math.cos(t), c[1] + q * Math.sin(t), c[2] + (r() - 0.5) * c[3], r()] : [(r() - 0.5) * 7e8, (r() - 0.5) * 7e8, (r() - 0.5) * 1.4e8, r()]; });
     const grass = R(260, () => [(r() - 0.5) * 60, r(), r()]), clouds = R(14, () => [(r() - 0.5) * 9e4, 1500 + r() * 4500, 0.6 + r() * 1.4]);
     return { water, ions, sea, belt, trojans, kuiper, oort, filler, gfill, grass, clouds, r }; })();
-  // ---- chromatin: our linker DNA runs along x through the origin between two nucleosomes; other fibres wander nearby
+  // ---- chromatin: our linker DNA runs along x through the origin between two nucleosomes; other fibers wander nearby
   const CHROM = (() => { const r = rng(5), nucs = [], paths = [], RW = 4.2e-9, lim = PORE[1] - 45e-9;
     function fibre(c0, enterAng, dir, n, path) {   // wrap 1.65 turns around each core, then run straight to the next one
       let c = c0, ang = enterAng; for (let j = 0; j < n; j++) { nucs.push([c[0], c[1], r() * 6.3, j === 0 && paths.length < 2]);
@@ -527,7 +527,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const polys = voronoi(seeds, 1.3 * sp); TISSUE = seeds.map((s, i) => ({ s, poly: polys[i], nu: [s[0] + (r() - 0.5) * 3e-6, s[1] + (r() - 0.5) * 3e-6, 2.6e-6 + r() * 0.7e-6, r() * 3, 0.75 + r() * 0.25], mito: Array.from({ length: 9 }, () => [s[0] + (r() - 0.5) * 11e-6, s[1] + (r() - 0.5) * 11e-6, r() * 3.1, 0.7e-6 + r() * 1.2e-6]) })); return TISSUE; }
   function surface() { if (SURF) return SURF; const r = rng(23), sp = 35e-6, seeds = []; for (let i = -24; i <= 24; i++) for (let j = -24; j <= 24; j++) seeds.push([(i + (j % 2) * 0.5) * sp + (r() - 0.5) * 14e-6, j * sp * 0.87 + (r() - 0.5) * 14e-6]);
     const polys = voronoi(seeds, 1.3 * sp); SURF = seeds.map((s, i) => ({ s, poly: polys[i], lift: r() < 0.12, sh: r() })); return SURF; }
-  // fingerprint: a whorl centred on the index fingertip pad; ridge crests every 0.48 mm, one crest through the origin
+  // fingerprint: a whorl centered on the index fingertip pad; ridge crests every 0.48 mm, one crest through the origin
   const WH = [0.4e-3, 1.9e-3], WAY = 1.3, RID = 0.48e-3, wdist = (x, y) => Math.hypot(x - WH[0], (y - WH[1]) / WAY);
   const wob = (th) => 1 + 0.025 * Math.sin(3 * th) + 0.015 * Math.sin(5 * th), WTH = Math.atan2((0 - WH[1]) / WAY, 0 - WH[0]);
   const WPH = ((wdist(0, 0) / wob(WTH) - RID * WTH / (2 * Math.PI)) % RID + RID) % RID;   // a spiral whose crest passes through the origin
@@ -556,8 +556,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
       const city = Math.max(0, (tn.d[kn] + tn.d[kn + 1]) / 2 - 70) / 185 * (1 - day), dusk = Math.max(0, 1 - Math.abs(cosL) / 0.08) * 0.12 * w, edge = 0.75 + 0.25 * w, m = (j * D + i) * 4;
       o[m] = Math.min(255, (td.d[k] * lam + 255 * city * 1.0 + 255 * dusk * 0.6) * edge); o[m + 1] = Math.min(255, (td.d[k + 1] * lam + 205 * city + 110 * dusk * 0.6) * edge); o[m + 2] = Math.min(255, (td.d[k + 2] * lam + 120 * city + 40 * dusk) * edge); o[m + 3] = 255; }
     g.putImageData(out, 0, 0); IMG.globe = c; return c; }
-  // ---- the Milky Way, drawn once: a barred spiral 100,000 ly across, with the Sun 26,670 ly from the centre. Arms are logarithmic
-  // spirals of pitch 12° (Norma, Scutum-Centaurus, Sagittarius-Carina, Perseus); their positions, the bar and the colours are approximate
+  // ---- the Milky Way, drawn once: a barred spiral 100,000 ly across, with the Sun 26,670 ly from the center. Arms are logarithmic
+  // spirals of pitch 12° (Norma, Scutum-Centaurus, Sagittarius-Carina, Perseus); their positions, the bar and the colors are approximate
   let MW = null;
   function milkyWay() { if (MW) return MW; const D = 1400, c = document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'), r = rng(31), s = D / 1.3e5, cx = D / 2, cy = D / 2;
     g.fillStyle = '#000'; g.fillRect(0, 0, D, D); g.globalCompositeOperation = 'lighter';
@@ -574,7 +574,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     // the Orion Spur, a short arm segment through the Sun's place
     g.globalCompositeOperation = 'lighter'; for (let i = 0; i < 1400; i++) { const t = r(), R = 2.4e4 + t * 5e3, th = -0.3 + t * 0.55 + (r() - 0.5) * 0.06; g.fillStyle = 'rgba(180,205,255,0.45)'; g.fillRect(cx - R * Math.cos(th) * s, cy + R * Math.sin(th) * s, 1.1, 1.1); }
     MW = { c, D, s }; return MW; }
-  // where the Sun sits on that image: the Galactic centre lies to its left (−x), and l = 90° (the way we orbit) is down
+  // where the Sun sits on that image: the Galactic center lies to its left (−x), and l = 90° (the way we orbit) is down
   // ---- the cosmic web texture (an illustration): galaxies along the edges of Voronoi cells about 100 million ly across
   let WEB = null;
   function web() { if (WEB) return WEB; const D = 1024, c = document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'), r = rng(41), seeds = Array.from({ length: 90 }, () => [r() * D, r() * D]);
@@ -595,7 +595,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   const sunXY = (lon, au) => [SUN[0] + Math.cos(sunAngle(lon)) * au * AU, SUN[1] + Math.sin(sunAngle(lon)) * au * AU];
   const MOON_ELONG = 112 * D2R;   // the Moon's angle east of the Sun on 23 October 2026, about 112° (a waxing gibbous Moon, two days after first quarter)
 
-  // ---- each object's drawing: (x, y) its centre on screen, r its half size in pixels, a its opacity, F the frame (X, Y, k)
+  // ---- each object's drawing: (x, y) its center on screen, r its half size in pixels, a its opacity, F the frame (X, Y, k)
   const DRAW = {
     proton(x, y, r, a, F) { ctx.globalAlpha = a; glow(x, y, r * 1.3, '255,150,120', 0.35); sph(x, y, r, '#ffc6b6', '#c2462e'); if (r < 22) return;
       const Q = [[-0.34, -0.2, '#ff5a4a', 'u'], [0.36, -0.12, '#3cc46e', 'u'], [0.0, 0.38, '#4f7dff', 'd']]; ctx.lineWidth = Math.max(1, r * 0.035); ctx.strokeStyle = 'rgba(255,236,170,0.85)';
@@ -680,7 +680,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     ctx.strokeStyle = 'rgba(170,175,200,0.8)'; ctx.lineWidth = Math.max(1, 0.3 * nm); ctx.beginPath(); let lastBp = -1; for (const [x, y, nx, ny, sA] of vis) { const bp = Math.floor(sA / 0.338e-9); if (bp === lastBp) continue; lastBp = bp; const ph = 2 * Math.PI * sA / 3.57e-9, a1 = Math.cos(ph), a2 = Math.cos(ph + 2.4); ctx.moveTo(F.X(x + nx * a1 * 0.95e-9), F.Y(y + ny * a1 * 0.95e-9)); ctx.lineTo(F.X(x + nx * a2 * 0.95e-9), F.Y(y + ny * a2 * 0.95e-9)); } ctx.stroke();
     for (const front of [false, true]) for (const [off, cf, cb] of [[0, '#5f8cf0', '#2b4a9a'], [2.4, '#ee7a6c', '#97352c']]) { ctx.strokeStyle = front ? cf : cb; ctx.lineWidth = Math.max(1, 0.65 * nm); ctx.beginPath(); let pen = false;
       for (const [x, y, nx, ny, sA] of vis) { const ph = 2 * Math.PI * sA / 3.57e-9 + off, isF = Math.sin(ph) > 0; if (isF !== front) { pen = false; continue; } const c = Math.cos(ph), px = F.X(x + nx * c * 0.95e-9), py = F.Y(y + ny * c * 0.95e-9); pen ? ctx.lineTo(px, py) : ctx.moveTo(px, py); pen = true; } ctx.stroke(); } }
-  // the nucleus and its envelope: inner and outer membranes (lipid bilayers about 5 nm thick) 3.0 μm from the centre, with pores
+  // the nucleus and its envelope: inner and outer membranes (lipid bilayers about 5 nm thick) 3.0 μm from the center, with pores
   function bilayer(cx, cy, R, F, a0, a1, col) { const th = 5e-9 * F.k; ctx.strokeStyle = col; ctx.lineWidth = Math.max(1, th); ctx.beginPath(); ctx.arc(cx, cy, R * F.k, a0, a1, true); ctx.stroke();
     if (th > 4) { ctx.strokeStyle = 'rgba(255,240,200,0.9)'; ctx.lineWidth = th * 0.28; ctx.setLineDash([0.6 * 1e-9 * F.k, 0.5 * 1e-9 * F.k]); for (const d of [-0.36, 0.36]) { ctx.beginPath(); ctx.arc(cx, cy, R * F.k + d * th, a0, a1, true); ctx.stroke(); } ctx.setLineDash([]); } }
   const PORE_ANG = Array.from({ length: 64 }, (_, i) => Math.PI / 2 + i * 2 * Math.PI / 64 + (i ? Math.sin(i * 7.1) * 0.03 : 0));
@@ -710,7 +710,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
       if (cs > 120) { ctx.fillStyle = mixc('#e3c27a', '#8b3358', t); for (let j = 0; j < c.poly.length; j++) { const [u1, v1] = c.poly[j], [u2, v2] = c.poly[(j + 1) % c.poly.length], L = Math.hypot(u2 - u1, v2 - v1), n = Math.floor(L / 1.1e-6); for (let q = 1; q < n; q++) { const f = q / n; ctx.fillRect(F.X(u1 + (u2 - u1) * f) - 1, F.Y(v1 + (v2 - v1) * f) - 1, 2.4, 2.4); } } }
       if (cs > 90) { ctx.fillStyle = mixc('#4a2a3a', '#c76a7a', t); for (const [mx, my, mr, ml] of c.mito) { const px = F.X(mx), py = F.Y(my); if (i === 0 && Math.hypot(mx - NUCLEUS[0], my - NUCLEUS[1]) < 3.4e-6) continue; ctx.beginPath(); ctx.ellipse(px, py, ml / 2 * F.k, 0.25e-6 * F.k, mr, 0, 7); ctx.fill(); } }
       if (i) { ctx.fillStyle = nuc; ctx.beginPath(); ctx.ellipse(F.X(c.nu[0]), F.Y(c.nu[1]), c.nu[2] * F.k, c.nu[2] * c.nu[4] * F.k, c.nu[3], 0, 7); ctx.fill(); } }
-    if (labOK(cs / 2 * 3)) { const c = T[0]; tag('mitochondria', F.X(c.mito[2][0]) + 6, F.Y(c.mito[2][1]), { dark: false }); tag('desmosomes join neighbouring cells', F.X(CELL[0] + 6.5e-6), F.Y(CELL[1] + 6e-6), { dark: false }); } }
+    if (labOK(cs / 2 * 3)) { const c = T[0]; tag('mitochondria', F.X(c.mito[2][0]) + 6, F.Y(c.mito[2][1]), { dark: false }); tag('desmosomes join neighboring cells', F.X(CELL[0] + 6.5e-6), F.Y(CELL[1] + 6e-6), { dark: false }); } }
   function surfaceDraw(F, a) {   // the skin surface: flat dead cells, ridges and furrows, sweat pores
     ctx.globalAlpha = a; ctx.fillStyle = '#e2b79d'; ctx.beginPath(); ctx.ellipse(F.X(0), F.Y(0.002), 0.0085 * F.k, 0.0105 * F.k, 0, 0, 7); ctx.fill(); const cs = 35e-6 * F.k;
     if (cs > 10) { const Sf = surface(), lim = cs * 1.2; ctx.lineWidth = Math.max(0.6, cs * 0.03); for (const c of Sf) { const sx = F.X(c.s[0]), sy = F.Y(c.s[1]); if (!onScr(sx, sy, lim)) continue; ctx.beginPath(); c.poly.forEach(([u, v], j) => (j ? ctx.lineTo(F.X(u), F.Y(v)) : ctx.moveTo(F.X(u), F.Y(v)))); ctx.closePath();
@@ -764,7 +764,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     block(70, 24, 30, 10, '#b7a99a'); block(-150, 32, 150, 40, '#7f8ea3'); block(-115, 26, 96, 26, '#9aa3ad'); block(200, 20, 45, 12, '#c2b3a3');
     ctx.fillStyle = '#9aa0a8'; ctx.fillRect(X(300), gy - 32 * k, 1.5 * k, 32 * k); ctx.fillRect(X(309), gy - 32 * k, 1.5 * k, 32 * k); ctx.beginPath(); ctx.ellipse(X(305.5), gy - 38 * k, 8 * k, 6 * k, 0, 0, 7); ctx.fill();
     const ax = X(-260), ay = Y(GROUND + 600), L = 37.6 * k; ctx.fillStyle = '#e8edf3'; ctx.save(); ctx.translate(ax, ay); ctx.rotate(-0.18); ctx.beginPath(); ctx.ellipse(0, 0, L / 2, L * 0.055, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.moveTo(-L * 0.08, 0); ctx.lineTo(L * 0.1, L * 0.02); ctx.lineTo(-L * 0.18, L * 0.25); ctx.fill(); ctx.beginPath(); ctx.moveTo(-L * 0.42, 0); ctx.lineTo(-L * 0.5, -L * 0.2); ctx.lineTo(-L * 0.36, -L * 0.03); ctx.fill(); ctx.restore();
-    if (labOK(300 * k)) { tag('10 storeys, 30 m', X(70), gy - 31 * k); tag('40 storey tower, 150 m', X(-155), gy - 152 * k); tag('airliner, 38 m long, 600 m up', ax + L * 0.6, ay); tag('water tower', X(298), gy - 46 * k); } }
+    if (labOK(300 * k)) { tag('10 stories, 30 m', X(70), gy - 31 * k); tag('40 story tower, 150 m', X(-155), gy - 152 * k); tag('airliner, 38 m long, 600 m up', ax + L * 0.6, ay); tag('water tower', X(298), gy - 46 * k); } }
   // mountains: Everest (8,849 m) with Nuptse (7,861 m), the South Col (7,906 m) and Lhotse (8,516 m) beside it, Makalu (8,485 m) behind;
   // ridgelines between the real summits are generated (midpoint displacement), and the landscape around them is an illustration
   const MTN = (() => { const r = rng(71), DX = 22500;
@@ -831,8 +831,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     glow(sx, sy, 10, '255,224,138', 0.6); ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(sx, sy, 3, 0, 7); ctx.fill(); if (!S.blind && s < W) tag('the Sun', sx + 6, sy + 14, { c: '#ffe08a', b: true }); }
   function mwDraw(F, a) { const m = milkyWay(), gc = gx([R_SUN_GC, 0, 0]), K = LY * F.k / m.s; if (1e5 * LY * F.k < 3) return;
     ctx.save(); ctx.globalAlpha = a; ctx.globalCompositeOperation = 'lighter'; ctx.setTransform(dpr * BAS[0][0] * K, -dpr * BAS[1][0] * K, -dpr * BAS[0][1] * K, dpr * BAS[1][1] * K, dpr * F.X(gc[0]), dpr * F.Y(gc[1])); ctx.drawImage(m.c, -m.D / 2, -m.D / 2); ctx.restore(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const sx = F.X(SUN[0]), sy = F.Y(SUN[1]), D = 1e5 * LY * F.k; if (D > 0.25 * W && D < 8 * W) { ctx.globalAlpha = a; ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, 7); ctx.stroke(); tag('the Sun, 26,700 ly from the centre', sx + 8, sy + 4, { c: '#ffe08a', b: true });
-      if (D < 3 * W) { const arm = (R, lab) => { const q = gx([R_SUN_GC - R, 0, 0]); tag(lab, F.X(q[0]) + 6, F.Y(q[1]) - 6, {}); }; arm(30500, 'Perseus Arm'); arm(21900, 'Sagittarius Arm'); tag('the centre: a black hole of 4 million Suns', F.X(gc[0]) - 60, F.Y(gc[1]) + 34, {}); } } }
+    const sx = F.X(SUN[0]), sy = F.Y(SUN[1]), D = 1e5 * LY * F.k; if (D > 0.25 * W && D < 8 * W) { ctx.globalAlpha = a; ctx.strokeStyle = '#ffe08a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, 7); ctx.stroke(); tag('the Sun, 26,700 ly from the center', sx + 8, sy + 4, { c: '#ffe08a', b: true });
+      if (D < 3 * W) { const arm = (R, lab) => { const q = gx([R_SUN_GC - R, 0, 0]); tag(lab, F.X(q[0]) + 6, F.Y(q[1]) - 6, {}); }; arm(30500, 'Perseus Arm'); arm(21900, 'Sagittarius Arm'); tag('the center: a black hole of 4 million Suns', F.X(gc[0]) - 60, F.Y(gc[1]) + 34, {}); } } }
   function galaxyBlob(px, py, rr, col, tilt, rot) { const R = Math.max(2.4, rr); if (!onScr(px, py, R * 2)) return; ctx.save(); ctx.translate(px, py); ctx.rotate(rot); ctx.scale(1, tilt); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, R); g.addColorStop(0, `rgba(${col},0.95)`); g.addColorStop(0.35, `rgba(${col},0.45)`); g.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R, 0, 7); ctx.fill(); ctx.restore(); }
   function localDraw(F, a) { ctx.globalAlpha = a; const s = LY * F.k;
     if (5e4 * s < 0.02 * W) { const q = gx([R_SUN_GC, 0, 0]), px = F.X(q[0]), py = F.Y(q[1]); glow(px, py, Math.max(7, 1e5 * s), '255,236,205', 0.7); if (5e4 * s < 0.012 * W) tag('Milky Way (us)', px + 9, py - 6, { f: 10, c: '#ffe08a' }); }
@@ -882,23 +882,23 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     ctx.globalAlpha = 1; }
   // a caption for each stage, by log10 of the view width
   const MARBLE = 0.01 * 3.4e-10 / (2 * 2.4702 * FM);
-  const CAPS = [[-15.4, -14.45, 'A proton: three quarks (two up, one down) held together by gluons. The dots and springs are an illustration: quarks have no measured size, and their colours stand for "colour charge", not real colour.'],
+  const CAPS = [[-15.4, -14.45, 'A proton: three quarks (two up, one down) held together by gluons. The dots and springs are an illustration: quarks have no measured size, and their colors stand for "color charge", not real color.'],
     [-14.45, -13.4, 'The nucleus of a carbon atom: 6 protons and 6 neutrons packed into about 5 fm (5 × 10⁻¹⁵ m). Almost all of the atom\'s mass is here.'],
     [-13.4, -11.6, `Almost empty space, filled only by a faint haze where electrons might be. If the nucleus were a 1 cm marble, the whole atom would be about ${Math.round(MARBLE / 10) * 10} m across.`],
     [-11.6, -10.75, `Carbon's two inner electrons stay close: 90% of the chance of finding one is within ${(R90_1S * 1e9).toFixed(3)} nm of the nucleus.`],
-    [-10.75, -9.6, 'One carbon atom in DNA\'s sugar backbone, bonded to its neighbours. The glow is electron density from Slater orbitals (an approximation); the dashed circle is the van der Waals width, 0.34 nm.'],
-    [-9.6, -8.6, 'DNA: two sugar and phosphate backbones with base pairs between them, 0.34 nm apart and 10.5 to a turn. Carbon grey, oxygen red, nitrogen blue, phosphorus orange; hydrogens are left out and the water is thinned out so the DNA shows.'],
+    [-10.75, -9.6, 'One carbon atom in DNA\'s sugar backbone, bonded to its neighbors. The glow is electron density from Slater orbitals (an approximation); the dashed circle is the van der Waals width, 0.34 nm.'],
+    [-9.6, -8.6, 'DNA: two sugar and phosphate backbones with base pairs between them, 0.34 nm apart and 10.5 to a turn. Carbon gray, oxygen red, nitrogen blue, phosphorus orange; hydrogens are left out and the water is thinned out so the DNA shows.'],
     [-8.6, -7.6, 'In the nucleus, DNA wraps 1.65 times around a core of eight histone proteins, again and again along its length: chromatin, like beads on a string.'],
-    [-7.6, -6.6, 'A nuclear pore, about 120 nm wide, lets molecules in and out of the nucleus. Nothing this small can be seen with light: the colours down here are a code.'],
-    [-6.6, -5.15, 'The cell nucleus, about 6 μm across, holds about 2 m of DNA. Outside it are mitochondria and the rest of the cell. Colours from here up to the skin are like a stained microscope slide.'],
-    [-5.15, -4.0, 'Living skin cells, about 15 μm across, joined to their neighbours by desmosomes. They lie a few tenths of a millimetre below the surface.'],
+    [-7.6, -6.6, 'A nuclear pore, about 120 nm wide, lets molecules in and out of the nucleus. Nothing this small can be seen with light: the colors down here are a code.'],
+    [-6.6, -5.15, 'The cell nucleus, about 6 μm across, holds about 2 m of DNA. Outside it are mitochondria and the rest of the cell. Colors from here up to the skin are like a stained microscope slide.'],
+    [-5.15, -4.0, 'Living skin cells, about 15 μm across, joined to their neighbors by desmosomes. They lie a few tenths of a millimeter below the surface.'],
     [-4.0, -3.1, 'The surface of the skin: flat, dead cells about 35 μm across, stacked in layers and always flaking away.'],
     [-3.1, -2.4, 'Fingerprint ridges, about 0.48 mm apart, with sweat pores along them. A grain of sand is about one ridge wide.'],
     [-2.4, -1.35, 'A fingertip, about 1.6 cm wide; its ridges make a whorl.'],
     [-1.35, -0.55, 'A hand, about 19 cm from the wrist to the tip of the middle finger.'],
     [-0.55, 0.75, 'A person, 1.7 m tall. Every object from here up to the mountains is drawn at its true size; the landscape itself is an illustration.'],
     [0.75, 1.8, 'A house about 8 m wide, a car 4.5 m long, trees 5 to 15 m tall.'],
-    [1.8, 3.2, 'A 10 storey building is about 30 m tall; an airliner is about 38 m long.'],
+    [1.8, 3.2, 'A 10 story building is about 30 m tall; an airliner is about 38 m long.'],
     [3.2, 4.6, 'Mount Everest, 8,849 m above sea level. Airliners cruise at about 11 km, above most of the weather.'],
     [4.6, 5.9, 'The atmosphere: the weather and most of the air are in the lowest 12 km. Space begins, by convention, at 100 km; the space station orbits about 400 km up.'],
     [5.9, 6.85, `Earth's curve. The air up to 100 km is only ${(100 / 6371 * 100).toFixed(1)}% of Earth's radius deep.`],
@@ -909,12 +909,12 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     [13.85, 14.9, `The heliosphere, the bubble blown by the solar wind. Voyager 1, about 173 au away, sends signals that take about ${Math.round(173 * AU / 299792458 / 3600)} hours to arrive.`],
     [14.9, 16.4, 'The Oort cloud of comets is thought to reach about 100,000 au, more than a third of the way to the nearest star. No one has seen it directly; the dots are an illustration.'],
     [16.4, 17.6, 'The nearest stars: Proxima Centauri is 4.25 light years away. Star dots are far larger than true size.'],
-    [17.6, 19.2, 'Stars within about 50 ly. The grey dots are other stars placed at random, with about the right number for this volume; the named stars are real, at their true directions and distances, seen from above the Milky Way\'s plane.'],
+    [17.6, 19.2, 'Stars within about 50 ly. The gray dots are other stars placed at random, with about the right number for this volume; the named stars are real, at their true directions and distances, seen from above the Milky Way\'s plane.'],
     [19.2, 20.6, 'Most of the bright stars in our sky are within a few thousand light years: Betelgeuse is about 550 ly away, Deneb about 2,600 (distances this far are uncertain).'],
-    [20.6, 21.75, 'The Milky Way, about 100,000 ly across, seen from above: the Sun is 26,700 ly from the centre. No one has seen it from outside; the arms, bar and colours are a model from radio and star surveys.'],
+    [20.6, 21.75, 'The Milky Way, about 100,000 ly across, seen from above: the Sun is 26,700 ly from the center. No one has seen it from outside; the arms, bar and colors are a model from radio and star surveys.'],
     [21.75, 22.7, 'The Local Group: the Milky Way, Andromeda (2.5 million ly away), Triangulum and dozens of dwarf galaxies, at their real directions and distances.'],
     [22.7, 23.6, 'The view turns to look down on the Local Supercluster, about 110 million ly across. The Virgo Cluster, 54 million ly away, holds more than a thousand galaxies.'],
-    [23.6, 24.7, 'Laniakea, our supercluster, about 520 million ly across. Named clusters are real; the grey dots are galaxies placed at random to suggest the rest.'],
+    [23.6, 24.7, 'Laniakea, our supercluster, about 520 million ly across. Named clusters are real; the gray dots are galaxies placed at random to suggest the rest.'],
     [24.7, 26.25, 'The cosmic web: galaxies gather along filaments around voids about 100 million ly across. This pattern is an illustration of what galaxy surveys map.'],
     [26.25, 27.1, 'The observable universe, about 93 billion ly across. The farthest light we can see is the cosmic microwave background, released 380,000 years after the Big Bang.']];
   let CAPBOX = null;   // where last frame's caption sat, kept clear of labels
@@ -927,7 +927,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function drawZoom() {
     const p = ps(), view = 10 ** S.zoom, k = W / view, cx = W / 2, cy = Hh / 2 + 10 * p;
     if (S.zoom > 2) loadEarth(); BAS = basis(smooth(22.6, 23.4, S.zoom)); for (const o of ZOOM) if (o.gal) { const q = glb(...o.gal); o.x = q[0]; o.y = q[1]; }
-    // the camera drifts to centre whichever object on the path about fills the view (weights smooth in the zoom, so it glides)
+    // the camera drifts to center whichever object on the path about fills the view (weights smooth in the zoom, so it glides)
     let sw = 0, mx = 0, my = 0; for (const o of ZOOM) { if (o.bg || o.side) continue; const P = o.size * k, w = zoomAlpha(P, W) * Math.exp(-((Math.log10(P / (0.6 * W))) ** 2) / 0.18); sw += w; mx += w * o.x; my += w * o.y; }
     const camX = sw > 1e-12 ? mx / sw : 0, camY = sw > 1e-12 ? my / sw : 0, X = (x) => cx + (x - camX) * k, Y = (y) => cy - (y - camY) * k, F = { X, Y, k };
     ctx.fillStyle = bgAt(S.zoom); ctx.fillRect(0, 0, W, Hh); LABELS = CAPBOX ? [CAPBOX] : [];

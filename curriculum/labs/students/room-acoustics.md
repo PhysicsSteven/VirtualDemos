@@ -10,9 +10,9 @@ Textbook: OpenStax *University Physics*, Vol. 1, §17.3. Sabine's formula goes b
 
 **Setups in the demo:** Bare room; Add absorbing panels; Room with an audience; Anechoic chamber; Below the cutoff; Mystery panels.
 
-**Using the demo.** A 3D view of a room (Plan switches to the view from above), with a loudspeaker and a microphone on its centre line, 1.5 m up; drag the microphone along the centre line in either view. Under it is a graph of the decay of a clap at the microphone. The room's size, its walls (hard, with panels, or lined with wedges), the number and material of the panels, the floor and the microphone distance are on the Set up card, which fades during a clap. Nothing plays until you clap. Measure chooses Reverberation time (this worksheet) or Level against distance (the Anechoic Chamber worksheet), and the octave band from 125 Hz to 4 kHz. Clap, then record the measured $$T$$. The Absorption coefficients table lists every surface, its area and its $$\alpha$$ in the band. Blind hides $$A$$ and the predicted reverberation times; the mystery panels always hide their $$\alpha$$.
+**Using the demo.** A 3D view of a room (Plan switches to the view from above), with a loudspeaker and a microphone on its center line, 1.5 m up; drag the microphone along the center line in either view. Under it is a graph of the decay of a clap at the microphone. The room's size, its walls (hard, with panels, or lined with wedges), the number and material of the panels, the floor and the microphone distance are on the Set up card, which fades during a clap. Nothing plays until you clap. Measure chooses Reverberation time (this worksheet) or Level against distance (the Anechoic Chamber worksheet), and the octave band from 125 Hz to 4 kHz. Clap, then record the measured $$T$$. The Absorption coefficients table lists every surface, its area and its $$\alpha$$ in the band. Blind hides $$A$$ and the predicted reverberation times; the mystery panels always hide their $$\alpha$$.
 
-**What the demo models.** Ray tracing: thousands of rays leave the source, each surface keeps a fraction $$\alpha$$ of a ray's energy and sends the rest off in a random direction (diffuse reflection by Lambert's law), and the microphone is a 0.5 m sphere that adds up the energy of the rays crossing it. Energies add, so there is no interference. Absorption coefficients are measured values for octave bands from the materials database of the pyroomacoustics library; air absorbs nothing, and $$c = 343$$ m/s. $$T$$ is read as a real meter does: the decay curve from $$-5$$ to $$-25$$ dB is fitted with a straight line and extended to 60 dB (T20, ISO 3382). The ray trace is repeatable: the same room always gives the same $$T$$. Simulated data.
+**What the demo models.** Ray tracing: thousands of rays leave the source, each surface keeps a fraction $$\alpha$$ of a ray's energy and sends the rest off in a random direction (diffuse reflection by Lambert's law), and the microphone is a 0.5 m sphere that adds up the energy of the rays crossing it. Energies add, so there is no interference. Absorption coefficients are measured values for octave bands from the materials database of the pyroomacoustics library; air absorbs nothing, and $$c = 343.2$$ m/s. $$T$$ is read as a real meter does: the decay curve from $$-5$$ to $$-25$$ dB is fitted with a straight line and extended to 60 dB (T20, ISO 3382). The ray trace is repeatable: the same room always gives the same $$T$$. Simulated data.
 
 </details>
 
@@ -26,11 +26,11 @@ After a sound stops, it keeps bouncing between the walls, losing a fraction of i
 
 $$A = \sum_i S_i\,\alpha_i,$$
 
-measured in square metres: one square metre of a perfect absorber, such as an open window. If the sound is spread evenly through the room, the energy falls exponentially, and Sabine's formula gives
+measured in square meters: one square meter of a perfect absorber, such as an open window. If the sound is spread evenly through the room, the energy falls exponentially, and Sabine's formula gives
 
 $$T = \frac{24\ln 10}{c}\,\frac{V}{A} = 0.161\ \mathrm{s/m}\times\frac{V}{A},$$
 
-with $$V$$ the room's volume and $$c = 343$$ m/s. Doubling the absorption halves $$T$$; a larger room, with the same absorption, rings longer. Sabine's formula assumes the absorption is spread over the whole room and is small; when $$\alpha$$ is large, or all the absorption is on a few surfaces, the measured $$T$$ differs from it. Absorption coefficients depend on frequency: soft, porous materials absorb high frequencies much better than low ones.
+with $$V$$ the room's volume and $$c = 343.2$$ m/s. Doubling the absorption halves $$T$$; a larger room, with the same absorption, rings longer. Sabine's formula assumes the absorption is spread over the whole room and is small; when $$\alpha$$ is large, or all the absorption is on a few surfaces, the measured $$T$$ differs from it. Absorption coefficients depend on frequency: soft, porous materials absorb high frequencies much better than low ones.
 
 ## Before the lab
 

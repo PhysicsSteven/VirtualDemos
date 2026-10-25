@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* only what this demo needs beyond demos/lib/vd.css: its colours, the picture, the Set up card, the in picture controls and the graph */
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the picture, the Set up card, the in picture controls and the graph */
 :root { --weight: #c23f2c; --drag: #2b60b5; --vt: #2f9a52; --suit: #e8692c; --sky-hi: #5b8fd0; --sky-lo: #d9e8f6; --ghost: #9aa3ad; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --weight: #ff7660; --drag: #69a0ff; --vt: #4cc07f; --suit: #f07a3c; --sky-hi: #1b3150; --sky-lo: #4a6a8c; --ghost: #6c7683; } }
 :root[data-theme="dark"] { --weight: #ff7660; --drag: #69a0ff; --vt: #4cc07f; --suit: #f07a3c; --sky-hi: #1b3150; --sky-lo: #4a6a8c; --ghost: #6c7683; }
@@ -77,7 +77,7 @@
           <div data-for="lab"><div class="slider-head"><label for="sD">Release height above the detector</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.5" max="3" step="0.05"></div>
         </div>
       </div>
-      <div class="plotbox"><canvas id="chart" role="img" aria-label="Graph of the speed, the acceleration or the distance fallen against time, with earlier falls in grey"></canvas><div class="seg" role="group" aria-label="Graph" id="plotSeg"><button type="button" data-g="v" aria-pressed="true">v</button><button type="button" data-g="a" aria-pressed="false">a</button><button type="button" data-g="y" aria-pressed="false">y</button></div></div>
+      <div class="plotbox"><canvas id="chart" role="img" aria-label="Graph of the speed, the acceleration or the distance fallen against time, with earlier falls in gray"></canvas><div class="seg" role="group" aria-label="Graph" id="plotSeg"><button type="button" data-g="v" aria-pressed="true">v</button><button type="button" data-g="a" aria-pressed="false">a</button><button type="button" data-g="y" aria-pressed="false">y</button></div></div>
     </div>
 
     <aside class="rail">
@@ -130,7 +130,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))</p>
-          <p class="hint">Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. 1, §6.4). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = 9.80 m/s² everywhere. Uniform air has the textbook's ρ = 1.21 kg/m³; air that thins with height follows the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976: 288.15 K and 101 325 Pa at the ground, cooling 6.5 K per km), so ρ is 1.225 kg/m³ at the ground and 0.413 kg/m³ at 10 km.</p>
+          <p class="hint">Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. 1, §6.4). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = 9.81 m/s² everywhere. Uniform air has the textbook's ρ = 1.21 kg/m³; air that thins with height follows the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976: 288.15 K and 101 325 Pa at the ground, cooling 6.5 K per km), so ρ is 1.225 kg/m³ at the ground and 0.413 kg/m³ at 10 km.</p>
           <p class="hint">Skydiver: C = 1.0 and A = 0.70 m² spread eagle, C = 0.70 and A = 0.18 m² head first, the textbook's Table 6.2 and its two examples. A change of position takes 1.0 s, with the drag area CA changing at a steady rate. The round canopy is a flat circular one 10.0 m across when laid flat, with C = 0.81 on that flat area (Scher and Young, NASA TN D-6423, 1971), so CA = 63.6 m². After the pull the lines take 1.0 s to stretch, then the canopy fills in 3.0 s, its drag area growing in step with time; under it the body hangs upright with the head first values. The 10.0 m, 1.0 s and 3.0 s are model choices. The canopy is drawn with its open area in proportion to its drag area.</p>
           <p class="hint">Coffee filter: 0.86 g, 15.1 cm across the top, C = 0.71 on that circle (Boyle and Pantaleone, "The added mass of a falling coffee filter", arXiv:2206.14902, 2022, who measured 1.1 m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.</p>
           <p class="hint">The motion is integrated with fourth order Runge–Kutta in steps of at most 10 ms and a hundredth of v_T/g; from rest in uniform air it agrees with the exact v = v_T tanh(gt/v_T) to better than 1 part in 10⁹. Readings: t to 0.01 s, distances to 0.01 m, altitude to 0.1 m, v to 0.01 m/s and a to 0.01 m/s². No noise is added.</p>
@@ -147,7 +147,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   /* Falling through air with quadratic drag (OpenStax Vol 1 §6.4). Down is positive: y is the distance fallen and v the speed
      downward. The drag is D = ½ρ(CA)v², against the motion; buoyancy and the air carried along with the body are left out. */
-  const G = 9.80;                          // m/s², uniform: the textbook's value in §6.4
+  const G = 9.81;                          // m/s², uniform
   const RHO_TEXT = 1.21;                   // kg/m³, the textbook's air density in §6.4
   // The International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976): T falls 6.5 K per km from 288.15 K,
   // p = p₀(T/T₀)^(g₀M/(RL)), and ρ = pM/(RT).
@@ -224,7 +224,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const NAMES = { spread: 'spread eagle', head: 'head first' };
   const PRESETS = {
     spread: { kind: 'sky', m: 85, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'spread', label: 'Spread eagle, 85 kg',
-      hint: 'The textbook\'s Example 6.17: an 85 kg skydiver spread eagle, C = 1.0 and A = 0.70 m² in air of 1.21 kg/m³. v_T = √(2 × 85 × 9.80 / (1.21 × 1.0 × 0.70)) = 44.4 m/s, about 160 km/h. The parachute opens by itself at the pull altitude.' },
+      hint: 'The textbook\'s Example 6.17: an 85 kg skydiver spread eagle, C = 1.0 and A = 0.70 m² in air of 1.21 kg/m³. v_T = √(2 × 85 × 9.81 / (1.21 × 1.0 × 0.70)) = 44.4 m/s, about 160 km/h. The parachute opens by itself at the pull altitude.' },
     head: { kind: 'sky', m: 75, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'head', label: 'Head first, 75 kg',
       hint: 'The textbook\'s 75 kg skydiver head first: C = 0.70 and A = 0.18 m², less than a fifth of the spread eagle drag area, so v_T = 98.2 m/s, about 350 km/h. Switch to spread eagle on the way down and watch the speed fall back.' },
     canopy: { kind: 'sky', m: 85, h0: 2000, pullAlt: 1500, air: 'text', pos0: 'spread', label: 'Parachute at 1500 m',
@@ -302,7 +302,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     a.push([R * Math.cos(th), R * Math.sin(th), 2300 + r() * 700, 120 + r() * 260]); } return a; })();
 
   // ---------- 3D (three.js through demos/lib/vd3.js); the flat side view stays (Flat button, or ?view=flat) ----------
-  /* Metres, z up. Sky: the ground is z = 0 and the body falls along the z axis; lab: the detector's face is z = 0. Everything is to
+  /* Meters, z up. Sky: the ground is z = 0 and the body falls along the z axis; lab: the detector's face is z = 0. Everything is to
      scale: the skydiver about 1.8 m tall, the canopy as described in the model, the filter 15.1 cm across. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.55, ph: 1.5, zoom: 1 } };
   let g3 = null;
@@ -358,7 +358,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return { root, pose, suit, panel, helm, rig };
   }
-  /* the round canopy, inflated: a cap of a sphere 7.0 m across its skirt (about 0.7 of the flat 10.0 m), 24 coloured gores, lines to
+  /* the round canopy, inflated: a cap of a sphere 7.0 m across its skirt (about 0.7 of the flat 10.0 m), 24 colored gores, lines to
      a point 7.5 m below the skirt and risers to the shoulders. Before it fills, a pilot chute pulls out the line bundle */
   function buildCanopy(M) {
     const grp = new THREE.Group(), th = 1.25, R = 3.5 / Math.sin(th), gores = 24;
@@ -430,7 +430,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const wt = woodTex(); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(4, 4);
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), M({ map: wt, roughness: 0.75 })); floor.position.z = -0.075; floor.receiveShadow = true; lab.add(floor);
     const wallM = M({ roughness: 0.95 }), wall = new THREE.Mesh(new THREE.PlaneGeometry(8, 4.2).rotateX(Math.PI / 2), wallM); wall.position.set(0, 0.8, 2.025); wall.receiveShadow = true; lab.add(wall);
-    /* a metre rule on the wall behind the fall line, its zero level with the detector's face */
+    /* a meter rule on the wall behind the fall line, its zero level with the detector's face */
     const ruler = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 3.2).rotateX(Math.PI / 2), M({ map: rulerTex(), roughness: 0.8 })); ruler.position.set(-0.16, 0.79, 1.6); lab.add(ruler);
     const steel = M({ roughness: 0.35, metalness: 0.7, color: 0xa7b0ba }), dark = M({ roughness: 0.5, color: 0x2e353f });
     const det = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.14, 0.075), dark); det.position.z = -0.0375; det.castShadow = true; lab.add(det);

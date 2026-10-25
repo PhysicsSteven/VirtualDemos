@@ -241,7 +241,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <p class="hint" id="capStat" role="status" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured readings: semi major axis, period from the timer, ruler distance and star mass</caption><thead></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is T² = slope·a³ through the origin, using the rows with the present star mass.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is a least squares line T² = slope·a³ + intercept, using the rows with the present star mass; the intercept should come out near zero.</p></details>
       </section>
 
       <section>
@@ -548,6 +548,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let ss = 0;
     for (let i = 0; i < n; i++) { const r = ys[i] - b * xs[i]; res.push(r); ss += r * r; }
     return { a: 0, b, sb: n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN, sa: 0, res, n, origin: true };
+  }
+  // least squares line y = a + b x with a free intercept (the fit the page shows); standard errors with n − 2 degrees of freedom
+  function fitLine(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 2) return null;
+    let mx = 0, my = 0;
+    for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; }
+    mx /= n; my /= n;
+    let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, a = my - b * mx, res = [];
+    let ss = 0;
+    for (let i = 0; i < n; i++) { const r = ys[i] - a - b * xs[i]; res.push(r); ss += r * r; }
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { a, b, sb: Math.sqrt(s2 / sxx), sa: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n, origin: false };
   }
   function csvCell(t) { t = String(t == null ? '' : t); return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; }
   // a CSV file: comment lines "# ...", then one header row of column names, then the rows
@@ -942,7 +958,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const glow = ctx.createRadialGradient(sx, sy, sr * 0.5, sx, sy, sr * 3);
     glow.addColorStop(0, alpha(T.sun, 0.45)); glow.addColorStop(1, alpha(T.sun, 0));
     ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(sx, sy, sr * 3, 0, TAU); ctx.fill();
-    if (VG) {   // a lit photosphere: brighter at the centre and darker towards the limb (limb darkening, drawn, not computed)
+    if (VG) {   // a lit photosphere: brighter at the center and darker towards the limb (limb darkening, drawn, not computed)
       const ph = ctx.createRadialGradient(sx - sr * 0.2, sy - sr * 0.2, 0, sx, sy, sr);
       ph.addColorStop(0, VG.mix(T.sun, '#ffffff', 0.7)); ph.addColorStop(0.55, T.sun); ph.addColorStop(1, VG.mix(T.sun, '#b04a00', 0.45));
       ctx.fillStyle = ph; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill();
@@ -1390,9 +1406,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function fitSpec() {
     const Mn = +S.M.toFixed(2), use = rows.filter((r) => num(r.M) === Mn), xs = [], ys = [];
     for (const r of use) { const a = num(r.cells.a), Tt = num(r.cells.T); if (isFinite(a) && isFinite(Tt) && a > 0 && Tt > 0) { xs.push(a ** 3); ys.push(Tt * Tt); } }
-    const f = fitOrigin(xs, ys);
+    const f = fitLine(xs, ys);
     return { xs, ys, f, n: rows.length, Mn, model: 1 / S.M,
-      res: f ? [`T² = b·a³: slope b = ${pm(f.b, f.sb)} yr²/AU³`, `so GM = 4π²/b = ${pm(TAU * TAU / f.b, TAU * TAU * f.sb / (f.b * f.b))} AU³/yr², M = 1/b = ${pm(1 / f.b, f.sb / (f.b * f.b))} M☉`] : [] };
+      res: f ? [`T² = b·a³ + c: slope b = ${pm(f.b, f.sb)} yr²/AU³, intercept c = ${pm(f.a, f.sa)} yr²`, `so GM = 4π²/b = ${pm(TAU * TAU / f.b, TAU * TAU * f.sb / (f.b * f.b))} AU³/yr², M = 1/b = ${pm(1 / f.b, f.sb / (f.b * f.b))} M☉`] : [] };
   }
   function linTicks(ctx, T, ps, L, R, top, bot, xr, yr, showX, xlab, ylab) {
     const X = (v) => L + (v - xr[0]) / (xr[1] - xr[0]) * (R - L), Y = (v) => bot - (v - yr[0]) / (yr[1] - yr[0]) * (bot - top);
@@ -1429,16 +1445,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const stripH = Math.max(30 * ps, (bot - top) * 0.28), mainBot = bot - stripH - 18 * ps, stripTop = bot - stripH;
     const xs = F.xs, ys = F.ys, xmax = xs.length ? Math.max(...xs) : 1;
     const xr = [0, xmax * 1.08 || 1];
-    const cand = ys.slice(); if (f) cand.push(f.b * xr[1]); if (!S.blind) cand.push(F.model * xr[1]);
-    const yr = [0, (cand.length ? Math.max(...cand) : 1) * 1.1 || 1];
+    const cand = ys.slice(); if (f) cand.push(f.a, f.a + f.b * xr[1]); if (!S.blind) cand.push(F.model * xr[1]);
+    const yr = [Math.min(0, ...cand), (cand.length ? Math.max(...cand) : 1) * 1.1 || 1];
     const A = linTicks(ctx, T, ps, L, R, top, mainBot, xr, yr, false, '', 'T² (yr²)');
     ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, mainBot - top); ctx.clip();
     if (!S.blind) { ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(A.X(0), A.Y(0)); ctx.lineTo(A.X(xr[1]), A.Y(F.model * xr[1])); ctx.stroke(); ctx.setLineDash([]); }
-    if (f) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(A.X(0), A.Y(0)); ctx.lineTo(A.X(xr[1]), A.Y(f.b * xr[1])); ctx.stroke(); }
+    if (f) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(A.X(0), A.Y(f.a)); ctx.lineTo(A.X(xr[1]), A.Y(f.a + f.b * xr[1])); ctx.stroke(); }
     ctx.restore();
     ctx.fillStyle = T.neg; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(A.X(xs[i]), A.Y(ys[i]), 4.5 * ps, 0, TAU); ctx.fill(); }
-    if (!f) text(ctx, T, xs.length ? 'Fit needs a and T.' : 'No readings yet.', (L + R) / 2, (top + mainBot) / 2, 'center', 'middle', T.muted, 11 * ps, 600, true);
-    else text(ctx, T, S.blind ? 'dots: readings; line: fit through 0' : 'dots: readings; line: fit through 0; dashed: model', R - 4 * ps, mainBot - 4 * ps, 'right', 'bottom', T.muted, 9.5 * ps, 400);
+    if (!f) text(ctx, T, xs.length === 1 ? 'Capture another reading to fit a line.' : xs.length ? 'Fit needs a and T.' : 'No readings yet.', (L + R) / 2, (top + mainBot) / 2, 'center', 'middle', T.muted, 11 * ps, 600, true);
+    else text(ctx, T, S.blind ? 'dots: readings; line: least squares fit' : 'dots: readings; line: least squares fit; dashed: model', R - 4 * ps, mainBot - 4 * ps, 'right', 'bottom', T.muted, 9.5 * ps, 400);
     // residual axis: ±1.3 times the largest residual, but not narrower than 1% of the plotted y range (an exact fit shows a flat strip)
     const rmax = f && f.res.length ? Math.max(...f.res.map(Math.abs)) : 0, rh = Math.max(rmax * 1.3, 0.01 * yr[1]), rr = [-rh, rh];
     const B = linTicks(ctx, T, ps, L, R, stripTop, bot, xr, rr, true, 'a³ (AU³)', 'residual (yr²)');
@@ -1483,7 +1499,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
     for (const b of document.querySelectorAll('#chartSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === (fit ? 'fit' : 'law'))); b.disabled = S.blind && b.dataset.v === 'law'; }
     for (const id of ['rA', 'rE', 'rP', 'rPm', 'rEps', 'wDt', 'wTheory']) R[id].parentElement.hidden = S.blind;
-    chart.setAttribute('aria-label', (fit ? 'Plot of your captured readings, period squared against semi major axis cubed, with a least squares line through the origin and a residual strip below it.'
+    chart.setAttribute('aria-label', (fit ? 'Plot of your captured readings, period squared against semi major axis cubed, with a least squares line (slope and intercept) and a residual strip below it.'
       : "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.") + ' Show data table in the Lab section lists the plotted values.');
     // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
     if (S.hintFrom) $('presetHint').textContent = (S.blind && BLIND_HINT[S.hintFrom]) || PRESETS[S.hintFrom].hint;

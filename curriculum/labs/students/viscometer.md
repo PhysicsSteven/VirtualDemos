@@ -50,7 +50,7 @@ On a real bench, secure the tube, catch balls safely and wear the required eye p
 
 **Slow flow scan.** Measure ball and liquid densities, ball diameters and tube diameter. Time travel between marks 0.200 m apart after allowing enough distance for the ball to settle. In the simulation use glass balls in glycerol at diameters 1.0, 1.5, 2.0 and 2.5 mm. Begin with the 100 mm tube. Record every gate time and calculate $$v = 0.200/t$$.
 
-**Wall check.** Repeat the same ball sizes in the 40 mm tube. Fit uncorrected $$v$$ against $$d^2$$ for each tube, then calculate $$K$$ for every row and fit $$Kv$$ against $$d^2$$ through the origin. Compare the viscosities before and after correction. Keep liquid and ball material unchanged.
+**Wall check.** Repeat the same ball sizes in the 40 mm tube. Fit uncorrected $$v$$ against $$d^2$$ for each tube, then calculate $$K$$ for every row and fit $$Kv$$ against $$d^2$$. Compare the viscosities before and after correction. Keep liquid and ball material unchanged.
 
 **Model limits.** Record your estimates before revealing predictions. Use your inferred $$\eta$$ to estimate $$\mathrm{Re}$$ and retain only sufficiently slow flow points; $$\mathrm{Re} \le 0.01$$ is a conservative criterion here. Try a larger ball and then a steel ball in water as diagnostic runs. Do not include these automatically in the viscosity fit. Explain what evidence suggests a failure of the slow flow or terminal speed assumptions.
 

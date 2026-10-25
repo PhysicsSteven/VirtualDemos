@@ -8,12 +8,12 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.3. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Rock salt; Cesium chloride (these two use the Crystal view, the subject of this worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet); Diode; LED colours (the pn junction worksheet).
+**Setups in the demo:** Rock salt; Cesium chloride (these two use the Crystal view, the subject of this worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet); Diode; LED colors (the pn junction worksheet).
 
 **Using the demo.**
 
 - The Crystal view draws a salt crystal in 3D around one reference ion, ringed in gold. Drag to turn it, scroll or pinch to zoom, double click to reset the view.
-- Choose any of the 20 alkali halides in the book's Table 9.2. The meters show the nearest neighbour distance $$r_0$$ (measured lattice constants at room temperature) and the Born exponent $$n$$ of the salt.
+- Choose any of the 20 alkali halides in the book's Table 9.2. The meters show the nearest neighbor distance $$r_0$$ (measured lattice constants at room temperature) and the Born exponent $$n$$ of the salt.
 - Add up the ions in one of two ways. **Shells** adds the ions one shell of equal distance at a time, nearest first, as in the book's series. **Neutral cubes** adds every ion inside a cube of half width $$m$$ ion spacings, counting an ion on a face of the cube as 1/2, on an edge as 1/4 and on a corner as 1/8, so the cube carries no net charge (Evjen's method). Neutral cubes are offered for the NaCl structure only.
 - The graphs show the running total of the sum, with the exact Madelung constant as a dashed line, and the energy of one ion pair against the separation $$r$$.
 - Record reading stores the salt, its structure, $$r_0$$, $$n$$, the exact $$\alpha$$ for its structure and the measured lattice energy from Table 9.2. Export to worksheet sends the readings to the first Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -27,7 +27,7 @@ Add up the electric potential energy of one ion in the field of all the others t
 
 ## Background
 
-In a crystal of NaCl each Na⁺ ion has 6 Cl⁻ neighbours at the nearest neighbour distance $$r_0$$, 12 Na⁺ ions at $$\sqrt{2}\,r_0$$, 8 Cl⁻ ions at $$\sqrt{3}\,r_0$$, and so on. Its Coulomb energy is
+In a crystal of NaCl each Na⁺ ion has 6 Cl⁻ neighbors at the nearest neighbor distance $$r_0$$, 12 Na⁺ ions at $$\sqrt{2}\,r_0$$, 8 Cl⁻ ions at $$\sqrt{3}\,r_0$$, and so on. Its Coulomb energy is
 
 $$U_\text{coul} = -\frac{ke^2}{r_0}\left(6 - \frac{12}{\sqrt{2} } + \frac{8}{\sqrt{3} } - \cdots\right) = -\alpha\frac{ke^2}{r_0},$$
 

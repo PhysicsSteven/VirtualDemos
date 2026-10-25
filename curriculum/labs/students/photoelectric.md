@@ -52,7 +52,7 @@ None for the virtual apparatus. A real mercury lamp gives off ultraviolet light:
 
 Untick **Theory line and answers** before you start.
 
-**Threshold.** With sodium, find the longest wavelength, to the nearest nanometre, at which any current flows. Then set a wavelength 20 nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis 1.
+**Threshold.** With sodium, find the longest wavelength, to the nearest nanometer, at which any current flows. Then set a wavelength 20 nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis 1.
 
 **Cesium.** Choose cesium and a power of 40 µW. At 250 nm, 300 nm and each of the five mercury lines, lower the collector voltage until the meter just reads 0.00 nA, and record the stopping voltage. Note the last voltage that still gave a current too: the stopping voltage lies between the two.
 

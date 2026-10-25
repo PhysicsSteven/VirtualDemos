@@ -63,7 +63,7 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>Center of Mass</h1>
-      <p>The centre of mass is the mass weighted average position. Find it for masses on a plate, then see that it keeps moving as if all the mass were there: a firework's pieces scatter but their centre of mass follows the same parabola, and walking on a boat cannot move the centre of mass of you and the boat.</p>
+      <p>The center of mass is the mass weighted average position. Find it for masses on a plate, then see that it keeps moving as if all the mass were there: a firework's pieces scatter but their center of mass follows the same parabola, and walking on a boat cannot move the center of mass of you and the boat.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">g = 9.81 m/s²</div>
@@ -75,7 +75,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the centre of mass marked."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked."></canvas>
       <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Start over</button></div>
       <div class="viewbar" id="viewBar" style="left: auto; right: 10px;"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
@@ -149,7 +149,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Blind hides the centre of mass marker, its coordinates and the predicted boat shift.</p>
+          <p class="hint">Blind hides the center of mass marker, its coordinates and the predicted boat shift.</p>
         </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p></details>
         </div></details>
@@ -179,9 +179,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-  const HINT = { plate: 'Drag the masses on a 1.0 m × 0.6 m plate. Predict where the centre of mass is, then turn Blind off. A heavier mass pulls it toward itself.',
-    fire: 'Launch: at the top the firework splits in two. Each piece follows its own parabola, but their centre of mass carries on along the original one until a piece lands.',
-    boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the centre of mass of person and boat stays put and the boat slides back.' };
+  const HINT = { plate: 'Drag the masses on a 1.0 m × 0.6 m plate. Predict where the center of mass is, then turn Blind off. A heavier mass pulls it toward itself.',
+    fire: 'Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.',
+    boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the center of mass of person and boat stays put and the boat slides back.' };
   const S = { mode: 'plate', ms: [{ m: 2, x: 0.25, y: 0.3 }, { m: 1, x: 0.75, y: 0.45 }, { m: 1, x: 0.6, y: 0.12 }], sel: 0, ratio: 0.5, kick: 8, ang: 0, pm: 70, bm: 150, t: 0, run: false, blind: false };
   const V0 = 20, TH = 60 * Math.PI / 180, LB = 4.0, WALK = 1.0;
   const COLS = () => [T.m1, T.m2, T.m3, T.m4];
@@ -245,17 +245,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`; let h = '';
     if (S.mode === 'plate') {
       const C = centre(S.ms); S.ms.forEach((a, i) => { h += dd(`Mass ${i + 1}`, `${a.m.toFixed(1)} kg at (${a.x.toFixed(2)}, ${a.y.toFixed(2)}) m`, true); });
-      h += dd('Total mass', `${f(C.M, 1)} kg`) + (S.blind ? dd('Centre of mass', 'hidden in Blind') : dd('Centre of mass', `(${f(C.x, 3)}, ${f(C.y, 3)}) m`));
+      h += dd('Total mass', `${f(C.M, 1)} kg`) + (S.blind ? dd('Center of mass', 'hidden in Blind') : dd('Center of mass', `(${f(C.x, 3)}, ${f(C.y, 3)}) m`));
     } else if (S.mode === 'fire') {
       const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, cmx = S.ratio * pa.x + (1 - S.ratio) * pb.x, cmy = S.ratio * pa.y + (1 - S.ratio) * pb.y, wh = F.whole(Math.min(S.t, F.tWhole));
       h += dd('Time', `${f(S.t, 2)} s`) + dd('Split at', `${f(F.tTop, 2)} s, ${f(F.yTop, 2)} m up`);
-      h += S.blind ? dd('Centre of mass', 'hidden in Blind', true) : dd('Centre of mass of the pieces', `(${f(cmx, 2)}, ${f(cmy, 2)}) m`, true) + dd('Unexploded firework would be at', `(${f(wh.x, 2)}, ${f(wh.y, 2)}) m`, true);
+      h += S.blind ? dd('Center of mass', 'hidden in Blind', true) : dd('Center of mass of the pieces', `(${f(cmx, 2)}, ${f(cmy, 2)}) m`, true) + dd('Unexploded firework would be at', `(${f(wh.x, 2)}, ${f(wh.y, 2)}) m`, true);
       h += dd('Front piece lands at', `x = ${f(F.at(F.a, F.a.tLand).x, 2)} m`) + dd('Back piece lands at', `x = ${f(F.at(F.b, F.b.tLand).x, 2)} m`);
       if (!S.blind) h += dd('Unexploded range', `${f(F.whole(F.tWhole).x, 2)} m`) + dd('Mass weighted landing point', `${f(S.ratio * F.at(F.a, F.a.tLand).x + (1 - S.ratio) * F.at(F.b, F.b.tLand).x, 2)} m`);
     } else {
       const b = boatState(), cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm);
       h += dd('Person walked along the boat', `${f(b.s, 2)} m`) + dd('Boat has moved', `${f(b.xb, 3)} m`);
-      h += S.blind ? dd('Centre of mass and predicted shift', 'hidden in Blind', true) : dd('Centre of mass (person + boat)', `${f(cm, 3)} m`) + dd('Predicted boat shift −mL/(m + M)', `${f(boatShift(S.pm, S.bm, LB), 3)} m`);
+      h += S.blind ? dd('Center of mass and predicted shift', 'hidden in Blind', true) : dd('Center of mass (person + boat)', `${f(cm, 3)} m`) + dd('Predicted boat shift −mL/(m + M)', `${f(boatShift(S.pm, S.bm, LB), 3)} m`);
     }
     $('out').innerHTML = h;
   }
@@ -271,10 +271,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(x, y, r * 0.74, Math.PI * 1.95, Math.PI * 2.75); ctx.stroke();
   }
   // ---------- 3D view of the plate and the boat (three.js through demos/lib/vd3.js); the firework and the flat view stay 2D ----------
-  /* Plate: the 1.0 m × 0.6 m plate on a lab table, metres, z up, with the plate's corner (0, 0) at world (−0.5, −0.3). Each mass is a
+  /* Plate: the 1.0 m × 0.6 m plate on a lab table, meters, z up, with the plate's corner (0, 0) at world (−0.5, −0.3). Each mass is a
      painted steel cylinder as tall as it is wide, sized to scale from its mass (ρ = 7850 kg/m³, so d = (4m/πρ)^(1/3): 2.5 cm for
      0.1 kg, 9.3 cm for 5 kg). Drag a mass across the plate; drag elsewhere to turn the view. Boat: a 4.0 m boat on a lake with the
-     person walking along it, a dock post as the fixed reference and buoys every metre (the flat view's scale). Sizes other than the
+     person walking along it, a dock post as the fixed reference and buoys every meter (the flat view's scale). Sizes other than the
      plate, the masses and the boat's length are scenery. Wheel or pinch to zoom, double click to reset. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.35, ph: 0.95, zoom: 1 }, ob: { th: -Math.PI / 2 + 0.3, ph: 1.36, zoom: 1 } };
   const RHO = 7850, dia = (m) => Math.cbrt(4 * m / (Math.PI * RHO));
@@ -390,7 +390,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0.03, 0), Math.max(0.64 / (tv * g.cam.aspect), 0.46 / tv));
       g.ps3.updateMatrixWorld(); g.rd.render(g.ps3, g.cam); Q3 = Q;
       S.ms.forEach((a, i) => { const q = Q(a.x - 0.5, a.y - 0.3, dia(a.m) + 0.012); label(q, `${a.m.toFixed(1)} kg`, T.ink, i === S.sel); });
-      if (!S.blind) { const q = Q(C.x - 0.5, C.y - 0.3, 0.245); label(q, 'centre of mass', T.cm, true); }
+      if (!S.blind) { const q = Q(C.x - 0.5, C.y - 0.3, 0.245); label(q, 'center of mass', T.cm, true); }
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag a mass to move it, drag the table to turn', W - 10 * p, Hh - 8 * p);
       return;
     }
@@ -404,7 +404,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(Q(b.xp, 0, 1.85), `person ${S.pm} kg`, T.ink, true); label(Q(b.xb + 1.2, -0.7, 0.55), `boat ${S.bm} kg`, T.ink, true);
     label(Q(-3.6, 1.05, 1.98), 'post', T.muted, false);
     for (let k = -4; k <= 4; k++) { const q = Q(k, -1.5, -0.12); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${k} m`, q[0], q[1]); }
-    if (!S.blind) label(Q(cmx, 0, 2.78), 'centre of mass', T.cm, true);
+    if (!S.blind) label(Q(cmx, 0, 2.78), 'center of mass', T.cm, true);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, Hh - 8 * p);
   }
   function setView(v) {
@@ -492,7 +492,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind) { const cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm); cross(X(cm), wl - 90 * p, T.cm); ctx.strokeStyle = T.cm; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(cm), wl - 80 * p); ctx.lineTo(X(cm), wl + 28 * p); ctx.stroke(); ctx.setLineDash([]); }
   }
   /* Readings for the worksheet (tools/readings_panel.py): the readouts of the current setup at this moment. f is the share of the
-     total mass in mass 2 (plate, two masses), in the front piece (firework) or in the person (boat). Positions in metres to 1 mm. */
+     total mass in mass 2 (plate, two masses), in the front piece (firework) or in the person (boat). Positions in meters to 1 mm. */
   window.vdVersion = CM_VERSION;
   const SHOW = { plate: [['setup', 'setup'], ['f', 'f'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm']], fire: [['t_s', 't (s)'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm'], ['x_whole_m', 'unexploded x']],
     boat: [['f', 'f'], ['walked_m', 'walked (m)'], ['boat_m', 'boat moved (m)'], ['x_cm_m', 'x_cm']] };
@@ -500,7 +500,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = SHOW.plate;
   $('modeSeg').addEventListener('click', () => { if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[S.mode]; window.dispatchEvent(new Event('load')); } });   /* the Readings section redraws its headings on load */
   window.vdReadingRow = () => {
-    if (S.blind) return 'Blind hides the centre of mass: turn Blind off to record readings.';
+    if (S.blind) return 'Blind hides the center of mass: turn Blind off to record readings.';
     window.vdShowCols = SHOW[S.mode];
     if (S.mode === 'plate') {
       const C = centre(S.ms), m2 = S.ms[1] ? S.ms[1].m : 0;

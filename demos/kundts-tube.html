@@ -104,7 +104,7 @@ details.more[open] summary { margin-bottom: 6px; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a metre rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by 1 mm (Shift 1 cm)."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a meter rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by 1 mm (Shift 1 cm)."></canvas>
         <div class="viewbar">
           <button type="button" class="spin attn" id="stroke">Stroke the rod</button>
           <label class="check inbar"><input type="checkbox" id="keep"><span>Keep it ringing</span></label>
@@ -290,7 +290,7 @@ details.more[open] summary { margin-bottom: 6px; }
   const fNow = () => rodFreq(S.n, S.L, rodSpeed(rodNow()));
   const vGas = () => gasSpeed(GASES[S.gas], S.tC);
   const hide = () => S.blind || S.rod === 'unknown';
-  /* a preset puts the plunger 1 cm short of the resonance nearest 1.00 m, to the mm: the student tunes the last centimetre */
+  /* a preset puts the plunger 1 cm short of the resonance nearest 1.00 m, to the mm: the student tunes the last centimeter */
   const nearRes = () => { const f = fNow(), v = vGas(), half = v / f / 2, m = Math.max(1, Math.round(1.0 / half)); return Math.round((resonantL(m, f, v) - 0.01) * 1000) / 1000; };
   const PRESETS = {
     steel: { rod: 'steel', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'A 1.00 m steel rod clamped at its middle rings at f = v/2L = 2524 Hz (v = √(E/ρ) = 5048 m/s). In air at 20 °C λ = 13.6 cm, so the heaps should be 6.80 cm apart. The plunger starts 1 cm short of a resonance, where a stroke only makes the dust dance a little: keep the rod ringing and slide it until the heaps form.' },
@@ -299,7 +299,7 @@ details.more[open] summary { margin-bottom: 6px; }
     brass: { rod: 'brass', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'Brass is denser and less stiff than steel: v = √(E/ρ) = 3430 m/s, f = 1715 Hz, and the heaps in air are 10.0 cm apart.' },
     unknown: { rod: 'unknown', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'An unknown rod in air at 20 °C, where v = 343.2 m/s. Find the heap spacing, then the speed of sound in the rod two ways: from v_rod/v_air = (L/n)/d, and from the counter, v_rod = 2Lf/n. New unknown rod picks another.' }
   };
-  $('modelHint').textContent = "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel 200 GPa and 7850 kg/m³, aluminum 69 GPa and 2700, brass 100 GPa and 8500, copper 117 GPa and 8960, glass 72 GPa and 2500. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = 1 at the middle and n = 2 at L/4; the disc's mass and the clamp's width are left out. The counter shows f to 1 Hz. The gas is ideal at 101325 Pa, v = √(γRT/M) (air γ = 1.400, M = 28.96 g/mol; helium and argon γ = 5/3, 4.003 and 39.95 g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, 0.10 per metre in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture (numbers chosen): a grain at rest is shaken loose where the air there moves more than 1.5 times the disc does at a full stroke, and then slides toward the nearest node, faster where the motion is larger, until the air under it moves less than 0.4 times the disc's. Off resonance the tube is quieter, so only the dust in its loudest places dances and shifts a little; at resonance all of it gathers in sharp heaps at the nodes. Real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen). Simulated data with no noise.";
+  $('modelHint').textContent = "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel 200 GPa and 7850 kg/m³, aluminum 69 GPa and 2700, brass 100 GPa and 8500, copper 117 GPa and 8960, glass 72 GPa and 2500. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = 1 at the middle and n = 2 at L/4; the disc's mass and the clamp's width are left out. The counter shows f to 1 Hz. The gas is ideal at 101325 Pa, v = √(γRT/M) (air γ = 1.400, M = 28.96 g/mol; helium and argon γ = 5/3, 4.003 and 39.95 g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, 0.10 per meter in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture (numbers chosen): a grain at rest is shaken loose where the air there moves more than 1.5 times the disc does at a full stroke, and then slides toward the nearest node, faster where the motion is larger, until the air under it moves less than 0.4 times the disc's. Off resonance the tube is quieter, so only the dust in its loudest places dances and shifts a little; at resonance all of it gathers in sharp heaps at the nodes. Real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen). Simulated data with no noise.";
 
   function spreadDust() { S.dust = []; let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1500; i++) S.dust.push(rnd() * 1.4); S.act = new Float32Array(1500); }
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.rod === 'unknown' && S.rod !== 'unknown') S.unknown = newUnknown(); S.rod = c.rod; S.L = c.L; S.n = c.n; S.gas = c.gas; S.tC = c.tC;
@@ -547,7 +547,7 @@ details.more[open] summary { margin-bottom: 6px; }
     Gr.rod(ctx, GEO.xl + 6 * p, ry, xr + 30 * p, ry, 2 * p); Gr.box(ctx, GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p, { r: 1.5 * p, color: '#8b5a3c', shadow: false });
     ctx.fillStyle = dk ? 'rgba(220,235,250,0.18)' : 'rgba(255,255,255,0.75)'; ctx.fillRect(xd + 4 * p, tTop + 2 * p, xr - xd - 12 * p, 1.4 * p);
     Object.assign($('plunger').style, { left: `${GEO.xl - 6 * p}px`, top: `${tTop - 4 * p}px`, width: `${18 * p}px`, height: `${tBot - tTop + 8 * p}px` });
-    /* metre rule under the tube, 0 at the disc */
+    /* meter rule under the tube, 0 at the disc */
     const rl = tBot + 22 * p; Gr.shadow(ctx, xd + 0.7 * ppm, rl + 15 * p, 0.72 * ppm, 3 * p, 0.6);
     { const rg = ctx.createLinearGradient(0, rl, 0, rl + 14 * p); rg.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); rg.addColorStop(1, T.rule); ctx.fillStyle = rg; } ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
     for (let i = 0; i <= 140; i++) { const x = xd + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, rl); ctx.lineTo(x, rl + (big ? 7 : 3) * p); ctx.stroke(); if (big && (!narrow || i % 20 === 0)) txt(String(i), x, rl + 10.5 * p, { s: 8, a: 'center', m: 1 }); }
@@ -557,7 +557,7 @@ details.more[open] summary { margin-bottom: 6px; }
     ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(GEO.xx, tTop - 4 * p); ctx.lineTo(GEO.xx - 5 * p, tTop - 12 * p); ctx.lineTo(GEO.xx + 5 * p, tTop - 12 * p); ctx.fill();
     Object.assign($('pointerH').style, { left: `${GEO.xx - 8 * p}px`, top: `${tTop - 16 * p}px`, width: `${16 * p}px`, height: `${12 * p}px` });
     txt(`ℓ = ${(S.l * 100).toFixed(1)} cm`, GEO.xl + 8 * p, tTop - 10 * p, { s: 9, b: 1 });
-    /* close up of 16 cm of tube around the pointer, with a millimetre scale */
+    /* close up of 16 cm of tube around the pointer, with a millimeter scale */
     const zTop = rl + 34 * p, zH = Math.max(70 * p, Math.min(130 * p, Hh - zTop - 16 * p)), zL = 16 * p, zR = W - 16 * p, half = 0.08, zppm = (zR - zL) / (2 * half), zx0 = S.x - half;
     if (zH > 40 * p && zTop + zH < Hh) {
       ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.14)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = 4 * p;

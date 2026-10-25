@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§15.1 and 15.4. Access for f
 **Using the demo.**
 
 - Both setups run on a North American outlet: 120 V rms at 60 Hz, so the source's peak voltage is $$V_0 = 120\sqrt2 = 169.7$$ V. The parts and meters are ideal, and the circuit is solved exactly in its steady state with complex impedances.
-- In Wall outlet the bulb is a 100 W bulb modelled as its hot resistance, 144 Ω. A real filament's resistance is far lower when it is cold; that is left out.
+- In Wall outlet the bulb is a 100 W bulb modeled as its hot resistance, 144 Ω. A real filament's resistance is far lower when it is cold; that is left out.
 - In Power factor the load is a 10 Ω resistor in series with a 50 mH inductor, a simple model of a motor or other coil. Ammeter A1 reads the current from the source and A2 the current into the load. Closing switch S1 connects capacitor C1 across the load.
 - Meters read rms values. The readout under Source and frequency gives the phase $$\phi$$ of the source voltage ahead of its current (positive when the current lags), the power factor and the average power the source delivers.
 - Under Graphs, Power in time plots $$p = vi$$ into the selected part over two periods, with its average; with nothing selected it plots the power out of the source. Power, in the same place, plots the average power against frequency.

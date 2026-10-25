@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.1. Access for free at https
 
 **Using the demo.**
 
-- The Ionic bond view has a sodium and a chlorine atom on a scale in nanometres. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of 0.001 nm) to set the separation $$r$$ of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.
+- The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of 0.001 nm) to set the separation $$r$$ of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.
 - The model has three parts: the energy $$\Delta E$$ it costs to move the electron from sodium to chlorine, the Coulomb energy $$-ke^2/r$$ of the two ions, and a repulsion $$A/r^n$$ from the exclusion principle when the ions' electron clouds overlap. The repulsion exponent $$n$$ can be changed, and the repulsion turned off; $$A$$ is set so that the minimum stays at the measured separation.
 - The Covalent bond view shows two atoms sharing electrons. Choose the molecule; for H₂ you can also choose whether the two electrons have opposite or parallel spins. The curve is a Morse potential built from each molecule's measured bond length, vibration frequency and dissociation energy, and the lines in the well are its vibration levels.
 - Record reading stores the molecule, the separation and the energy. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.

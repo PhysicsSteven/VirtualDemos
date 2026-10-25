@@ -60,7 +60,7 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>GPS Clocks and Relativity</h1>
-      <p>General relativity: clocks higher in a gravitational field run faster. Special relativity: moving clocks run slower. A GPS satellite's clock gains about 38 microseconds a day on a clock on the ground; uncorrected, positions would drift by kilometres a day.</p>
+      <p>General relativity: clocks higher in a gravitational field run faster. Special relativity: moving clocks run slower. A GPS satellite's clock gains about 38 microseconds a day on a clock on the ground; uncorrected, positions would drift by kilometers a day.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">c = 299,792,458 m/s · GM = 3.986 × 10¹⁴ m³/s²</div>
@@ -88,7 +88,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-k="geo">Geostationary, r = 42,164 km</button>
         </div>
         <div class="seg" role="group" aria-label="Second clock" id="modeSeg"><button type="button" data-m="orbit" aria-pressed="true">In a circular orbit</button><button type="button" data-m="tower" aria-pressed="false">At rest on a tower</button></div>
-        <div><div class="slider-head"><label for="sR">Distance from Earth's centre r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0" max="1000" step="1"></div>
+        <div><div class="slider-head"><label for="sR">Distance from Earth's center r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0" max="1000" step="1"></div>
         <label class="check"><input type="checkbox" id="spin" checked><span>Ground clock turns with Earth (at the equator)</span></label>
       </section>
 
@@ -243,7 +243,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const poly of LAND) { ctx.beginPath(); poly.forEach(([a, c], i) => { const x = cx + Rp * c * Math.cos(rot + a), y = cy - Rp * c * Math.sin(rot + a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); ctx.fill(); }
     ctx.fillStyle = T.ice; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(cx, cy, Rp * Math.cos(80 * Math.PI / 180), 0, 7); ctx.fill(); ctx.globalAlpha = 1;
     const sh = ctx.createRadialGradient(cx, cy, Rp * 0.6, cx, cy, Rp * 1.02); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, T.shade); ctx.fillStyle = sh; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp);
-    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modelled)
+    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modeled)
     ctx.restore();
     ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = Math.max(1, Rp * 0.012); ctx.beginPath(); ctx.arc(cx, cy, Rp, Math.PI * 0.95, Math.PI * 1.55); ctx.stroke();
   }
@@ -256,7 +256,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.sat; ctx.beginPath(); ctx.moveTo(-5 * p, -2 * p); ctx.lineTo(-9 * p, 0); ctx.lineTo(-5 * p, 2 * p); ctx.fill();   // antenna dish facing Earth
     ctx.restore();
   }
-  // a small analogue dial for simulated time t (s)
+  // a small analog dial for simulated time t (s)
   function dial(x, y, r, t) {
     const p = ps(); ctx.fillStyle = T.dial; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.stroke();
     ctx.lineWidth = 1 * p; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.beginPath(); ctx.moveTo(x + Math.sin(a) * r * 0.78, y - Math.cos(a) * r * 0.78); ctx.lineTo(x + Math.sin(a) * r * 0.92, y - Math.cos(a) * r * 0.92); ctx.stroke(); }

@@ -47,7 +47,7 @@ Students should know heat engines, efficiency and the Carnot efficiency, and ide
 ## Physics behind the demo
 
 - **Free expansion.** Elastic hard disks in a box 2 × 1 with a time step of 0.004; radii shrink with N. The histogram starts counting only once the left count first falls to half, so the initial rush out does not skew the shares. Exact shares are binomial, C(N, n)/2^N; ΔS = Nk ln 2 (R ln 2 = 5.763 J/K per mole).
-- **Einstein solids.** Ω(N, q) = C(q + N − 1, q) for each solid; each step picks a random oscillator in either solid and, if it has a quantum, moves it to another random oscillator. The temperature readout is kT/ε = 1/(d ln Ω/dq) by a centred difference (0 at q = 0).
+- **Einstein solids.** Ω(N, q) = C(q + N − 1, q) for each solid; each step picks a random oscillator in either solid and, if it has a quantum, moves it to another random oscillator. The temperature readout is kT/ε = 1/(d ln Ω/dq) by a centered difference (0 at q = 0).
 - **Second law.** For an engine ΔS_universe = −Q_h/T_h + Q_c/T_c with Q_c = Q_h − W; for a refrigerator ΔS = Q_h/T_h − Q_c/T_c with Q_h = Q_c + W. The pairing partner is a reversible Carnot device between the same reservoirs.
 
 ## Going further

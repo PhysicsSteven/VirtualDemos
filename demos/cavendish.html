@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* only what this demo needs beyond demos/lib/vd.css: its colours, the picture and the strip chart */
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the picture and the strip chart */
 :root { --lead: #6f7a86; --lead-hi: #c3cad3; --laser: #e0322a; --force: #2b60b5; --equil: #2f9a52; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; } }
 :root[data-theme="dark"] { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; }
@@ -33,7 +33,7 @@
   <header class="bar">
     <div>
       <h1>The Cavendish Experiment</h1>
-      <p>Two small lead spheres on a beam hang from a thin fibre. Swing two large lead spheres up beside them and their gravity twists the fibre a few thousandths of a radian; a laser reflected from a mirror on the beam turns that into centimetres on a scale 5 m away. From the twist and the period of the swing, find G.</p>
+      <p>Two small lead spheres on a beam hang from a thin fiber. Swing two large lead spheres up beside them and their gravity twists the fiber a few thousandths of a radian; a laser reflected from a mirror on the beam turns that into centimeters on a scale 5 m away. From the twist and the period of the swing, find G.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">spot on the scale in cm · time in s</div>
@@ -46,7 +46,7 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fibre inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fiber inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses."></canvas>
         <div class="viewbar"><button type="button" class="spin attn" id="go">Run</button><button type="button" class="spin" id="turn">Run to the next turning point</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       </div>
       <div class="plotbox"><canvas id="chart" role="img" aria-label="Strip chart of the spot's position on the scale against time"></canvas></div>
@@ -95,7 +95,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">G = π² r² l ΔS / (M T² L)</p>
-          <p class="hint">Model: small spheres m = 20.0 g and large spheres M = 1.500 kg of lead (11 340 kg/m³), so their radii are 7.5 mm and 31.6 mm. The beam is 2l = 100.0 mm between the small spheres' centres and is taken as massless, with a massless mirror at its centre. In A and B each large sphere's centre is r = 46.5 mm from the nearer small sphere's centre, square to the beam, with the beam untwisted. The torque is the exact sum over all four pairs of spheres (uniform spheres attract as points), including the pull of each large sphere on the far small sphere, and changes as the beam turns. The fibre's torsion constant gives an undamped period of 360.0 s; air damping makes the swing die away by a factor of e every 720 s. G = 6.674 30 × 10⁻¹¹ N·m²/kg² (CODATA 2018). The scale is L = 5.000 m from the mirror, and the spot sits at 50.0 cm + L tan 2θ, read to 1 mm. The clock reads to 1 s. No noise, drift or seismic shaking is added.</p>
+          <p class="hint">Model: small spheres m = 20.0 g and large spheres M = 1.500 kg of lead (11 340 kg/m³), so their radii are 7.5 mm and 31.6 mm. The beam is 2l = 100.0 mm between the small spheres' centers and is taken as massless, with a massless mirror at its center. In A and B each large sphere's center is r = 46.5 mm from the nearer small sphere's center, square to the beam, with the beam untwisted. The torque is the exact sum over all four pairs of spheres (uniform spheres attract as points), including the pull of each large sphere on the far small sphere, and changes as the beam turns. The fiber's torsion constant gives an undamped period of 360.0 s; air damping makes the swing die away by a factor of e every 720 s. G = 6.674 30 × 10⁻¹¹ N·m²/kg² (CODATA 2022). The scale is L = 5.000 m from the mirror, and the spot sits at 50.0 cm + L tan 2θ, read to 1 mm. The clock reads to 1 s. No noise, drift or seismic shaking is added.</p>
           <p class="hint">Blind hides the twist angle, the forces, the predicted resting positions and the value of G, leaving the clock and the spot.</p>
         </details>
         </div></details>
@@ -107,7 +107,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  /* The torsion balance, top view: the fibre is the z axis, the beam turns by θ (counterclockwise positive). Small spheres m at
+  /* The torsion balance, top view: the fiber is the z axis, the beam turns by θ (counterclockwise positive). Small spheres m at
      ±l(cos θ, sin θ); the large spheres M on a swivel frame at radius ρ = √(l² + r²), at frame angle a and a + π. */
   const G_CODATA = 6.67430e-11, RHO_PB = 11340;
   const CAV = { m: 0.0200, M: 1.500, l: 0.0500, r: 0.0465, L: 5.000, T0: 360.0, tau: 720.0, swing: 5.0 };
@@ -117,7 +117,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const gamma = (c = CAV) => 1 / c.tau;                                       // amplitude decays as e^(−γt)
   const frameAngle = (pos, c = CAV) => { const a = Math.atan2(c.r, c.l); return pos === 'A' ? a : pos === 'B' ? Math.PI - a : Math.PI / 2; };
   function largeSpheres(a, c = CAV) { const rho = Math.hypot(c.l, c.r); return [[rho * Math.cos(a), rho * Math.sin(a)], [-rho * Math.cos(a), -rho * Math.sin(a)]]; }
-  // torque about the fibre on the beam (N·m), exact for point masses
+  // torque about the fiber on the beam (N·m), exact for point masses
   function torque(th, a, G = G_CODATA, c = CAV) {
     const big = largeSpheres(a, c), cs = Math.cos(th), sn = Math.sin(th); let t = 0;
     for (const s of [1, -1]) {
@@ -286,7 +286,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const dragEnd = (e) => { if (!DR.on || e.pointerId !== DR.id) return; DR.on = false; swingTo(nearestPos(DR.a)); all(); };
   can.addEventListener('pointerup', dragEnd); can.addEventListener('pointercancel', (e) => { if (DR.on && e.pointerId === DR.id) { DR.on = false; draw(); } });
   // ---------- 3D view of the balance (three.js through demos/lib/vd3.js); the flat top view stays (Flat button, or ?view=flat) ----------
-  /* Metres, z up, the fibre on the z axis: the same balance as the top view, to scale, with the beam's turn drawn ×20 as there. The fibre
+  /* Meters, z up, the fiber on the z axis: the same balance as the top view, to scale, with the beam's turn drawn ×20 as there. The fiber
      (really about 25 µm) is drawn 0.8 mm thick so it shows. The laser sits beside the scale's line; the reflected ray is drawn from the
      drawn mirror, so it turns by twice the drawn angle, and leaves the picture towards the scale 5.000 m away, shown magnified on the
      right. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
@@ -294,7 +294,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let g3 = null;
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  /* the mirror rides on the fibre's stem above the beam, higher than the tops of the large spheres (31.6 mm), so the light clears them at every frame angle */
+  /* the mirror rides on the fiber's stem above the beam, higher than the tops of the large spheres (31.6 mm), so the light clears them at every frame angle */
   const MIRROR_Z = 0.042, LASER = [0.1, -0.03, MIRROR_Z];
   function init3D() {
     G3.tried = true;
@@ -315,7 +315,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const arm = mesh(new THREE.BoxGeometry(2 * rho + 0.02, 0.012, 0.004), steelM); arm.position.z = zArm - 0.002; frame.add(arm);
     const bigs = [1, -1].map((s) => { const b = mesh(new THREE.SphereGeometry(RL, 40, 28), leadM); b.position.set(s * rho, 0, 0); frame.add(b);
       const cup = mesh(upZ(new THREE.CylinderGeometry(0.008, 0.01, -zArm - RL + 0.004, 16)).translate(0, 0, 0), steelM); cup.position.set(s * rho, 0, (zArm - RL + 0.004) / 2 + 0.0005); frame.add(cup); return b; });
-    /* the case, the fibre tube and the clamp at the top */
+    /* the case, the fiber tube and the clamp at the top */
     const cw = CAV.l + rs + 0.006, ch = rs + 0.005, cz = rs + 0.008;
     const glassM = new THREE.MeshPhysicalMaterial({ color: 0xbfe3f5, transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, depthWrite: false });
     const caseG = new THREE.BoxGeometry(2 * cw, 2 * ch, 2 * cz), cbox = mesh(caseG, glassM, false, false);
@@ -390,7 +390,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (DR.on) dragHint();
     { const lq = Q(LASER[0] + 0.02, LASER[1], LASER[2] - 0.012); txt(ctx, 'laser', lq[0], lq[1] + 8 * p, { a: 'center', s: 9, c: T.muted }); }
     { const oq = Q(out[0], out[1], out[2]); if (oq[0] > 0 && oq[0] < W) txt(ctx, 'to the scale, 5.000 m', Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), oq[1] - 12 * p, { a: 'right', s: 9, c: T.laser, b: 1 }); }
-    { const fq = Q(0, 0, 0.09); txt(ctx, 'fibre', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
+    { const fq = Q(0, 0, 0.09); txt(ctx, 'fiber', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
     txt(ctx, '3D, to scale · beam turn drawn ×20 · drag a large sphere to swing it, elsewhere to turn', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
     if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     const myq = Q(0, 0, MIRROR_Z);

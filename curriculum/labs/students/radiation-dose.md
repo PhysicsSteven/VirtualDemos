@@ -26,7 +26,7 @@ Measure how the dose rate from a γ ray source falls with distance and with shie
 
 ## Background
 
-The absorbed dose is the energy absorbed per kilogram of tissue, measured in grays (1 Gy = 1 J/kg; 1 rad = 0.01 Gy). Different radiations do different harm for the same absorbed dose, so the equivalent dose in sieverts is the absorbed dose times a weighting factor: 1 for γ rays and X rays, about 1 for β particles, and up to 20 for α particles (§10.7). A point source emits its γ rays equally in all directions, so they spread over a sphere of area $$4\pi r^2$$ and the dose rate falls as $$1/r^2$$. A shield removes photons from a narrow beam exponentially,
+The absorbed dose is the energy absorbed per kilogram of tissue, measured in grays (1 Gy = 1 J/kg; 1 rad = 0.01 Gy). Different radiations do different harm for the same absorbed dose, so the equivalent dose in sieverts is the absorbed dose times a weighting factor: 1 for γ rays and X-rays, about 1 for β particles, and up to 20 for α particles (§10.7). A point source emits its γ rays equally in all directions, so they spread over a sphere of area $$4\pi r^2$$ and the dose rate falls as $$1/r^2$$. A shield removes photons from a narrow beam exponentially,
 
 $$\dot D = \dot D_0\, e^{-\mu x}, \qquad x_{1/2} = \frac{\ln 2}{\mu},$$
 
@@ -67,7 +67,7 @@ Fill in the last two columns yourself, with the dose rate in µSv/h.
 
 1. Plot the dose rate against $$1/r^2$$ for the distance readings. Is it a straight line through the origin? Find the slope, the dose rate at 1 m.
 2. Plot $$\ln$$(dose rate) against $$x$$ for lead. Find $$\mu$$ from the slope and the half value layer $$x_{1/2}$$.
-3. Do the same for concrete. Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$. Which stops more photons per gram, and which per centimetre?
+3. Do the same for concrete. Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$. Which stops more photons per gram, and which per centimeter?
 4. For the ⁹⁹ᵐTc patient, compare the 8 hour dose at 1 m with the annual background of 3.5 mSv. How many days of background is it?
 
 ## Uncertainty

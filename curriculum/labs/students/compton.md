@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§6.3, 5.8 and 5.9. Access fo
 
 **Using the demo.**
 
-- A photon of energy $$E$$ scatters off a free electron at rest. You set the photon's energy (or pick a source: green laser, molybdenum Kα x rays at 71.07 pm, 511 keV, or the 661.657 keV gamma ray of cesium 137) and its scattering angle $$\theta$$, in 0.1° steps. You can also drag the scattered photon in the picture.
+- A photon of energy $$E$$ scatters off a free electron at rest. You set the photon's energy (or pick a source: green laser, molybdenum Kα X-rays at 71.07 pm, 511 keV, or the 661.657 keV gamma ray of cesium 137) and its scattering angle $$\theta$$, in 0.1° steps. You can also drag the scattered photon in the picture.
 - The readouts act as two detectors: a spectrometer that reads the incoming and scattered wavelengths $$\lambda$$ and $$\lambda'$$ (5 significant figures), and an electron detector that reads the recoil electron's kinetic energy $$T$$ (4 significant figures) and its angle $$\phi$$ from the beam (0.01°).
 - The kinematics are exact and relativistic. Real target electrons are bound and moving, which widens the shifted line; the demo leaves that out.
 - Record reading stores the source, the photon energy and wavelength, the angle, $$\lambda'$$, $$T$$ and $$\phi$$. Export to worksheet sends the readings to the Data table below; Clear (under Readings) starts a new series, which goes into a new copy of the table.
@@ -22,11 +22,11 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§6.3, 5.8 and 5.9. Access fo
 
 ## Goal
 
-Measure how the wavelength of scattered x rays and gamma rays grows with the scattering angle, find the Compton wavelength and Planck's constant from it, and check that energy and momentum are conserved when the electron's relativistic momentum is used.
+Measure how the wavelength of scattered X-rays and gamma rays grows with the scattering angle, find the Compton wavelength and Planck's constant from it, and check that energy and momentum are conserved when the electron's relativistic momentum is used.
 
 ## Background
 
-Compton (§6.3) treated an x ray as a photon of energy $$E = hc/\lambda$$ and momentum $$p = h/\lambda$$ colliding with a free electron at rest. Conservation of energy and of relativistic momentum (§§5.8, 5.9) give the shift of the scattered wavelength
+Compton (§6.3) treated an X-ray as a photon of energy $$E = hc/\lambda$$ and momentum $$p = h/\lambda$$ colliding with a free electron at rest. Conservation of energy and of relativistic momentum (§§5.8, 5.9) give the shift of the scattered wavelength
 
 $$\Delta\lambda = \lambda' - \lambda = \frac{h}{m_e c}\,(1 - \cos\theta),$$
 
@@ -40,20 +40,20 @@ Along the beam and across it, the photon's momentum before must equal the sum of
 
 ## Before the lab
 
-1. Find the photon energy of molybdenum Kα x rays (71.07 pm) and of the cesium gamma ray (661.657 keV) in the other unit (energy or wavelength).
-2. Using $$\lambda_C = 2.426$$ pm, predict the scattered wavelength of the molybdenum x rays at 90° and at 180°.
-3. Why is the shift easy to see for x rays and impossible to see for visible light (532 nm)?
+1. Find the photon energy of molybdenum Kα X-rays (71.07 pm) and of the cesium gamma ray (661.657 keV) in the other unit (energy or wavelength).
+2. Using $$\lambda_C = 2.426$$ pm, predict the scattered wavelength of the molybdenum X-rays at 90° and at 180°.
+3. Why is the shift easy to see for X-rays and impossible to see for visible light (532 nm)?
 4. A 662 keV photon scatters straight back. Find $$\lambda'$$, $$E'$$ and the electron's kinetic energy.
 
 ## Safety
 
-None for the virtual apparatus. Real x ray tubes and cesium 137 sources need shielding and a radiation safety course.
+None for the virtual apparatus. Real X-ray tubes and cesium 137 sources need shielding and a radiation safety course.
 
 ## Procedure
 
 Turn Blind on.
 
-**Molybdenum x rays.** Start with Compton's 1923 experiment. Record a reading at angles from 0° to 180° in 30° steps.
+**Molybdenum X-rays.** Start with Compton's 1923 experiment. Record a reading at angles from 0° to 180° in 30° steps.
 
 **Cesium gamma rays.** Clear the readings and pick the cesium 137 source. Record a reading at the same seven angles. Send this run to a new copy of the table.
 
@@ -75,7 +75,7 @@ Turn Blind on.
 
 ## Uncertainty
 
-The spectrometer gives $$\lambda'$$ to 5 significant figures (0.001 pm for the x rays, 0.0001 pm for gamma rays below 10 pm). How large an uncertainty does that put on each $$\Delta\lambda$$, and on your slope? Compare with the scatter of your residuals.
+The spectrometer gives $$\lambda'$$ to 5 significant figures (0.001 pm for the X-rays, 0.0001 pm for gamma rays below 10 pm). How large an uncertainty does that put on each $$\Delta\lambda$$, and on your slope? Compare with the scatter of your residuals.
 
 ## Questions
 

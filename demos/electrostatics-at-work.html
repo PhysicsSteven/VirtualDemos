@@ -199,9 +199,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qMax = (R, Eb = E_BREAK) => 4 * Math.PI * EPS0 * R * R * Eb;
   const timeToSpark = (R, I, Eb = E_BREAK) => qMax(R, Eb) / I;        /* charging from zero at constant belt current */
 
-  /* The grounded wand held near the dome. The dome (radius R, centre at s = 0, isolated, charge Q) and the wand's brass ball
-     (radius a, centre at s = D on the line of centres, joined to earth) are both conducting spheres, so the field outside them is
-     exactly that of Kelvin image charges on the line of centres. Start from the dome at 1 V: 4πε₀R at its centre; each charge
+  /* The grounded wand held near the dome. The dome (radius R, center at s = 0, isolated, charge Q) and the wand's brass ball
+     (radius a, center at s = D on the line of centers, joined to earth) are both conducting spheres, so the field outside them is
+     exactly that of Kelvin image charges on the line of centers. Start from the dome at 1 V: 4πε₀R at its center; each charge
      in the dome has an image −qa/(D − s) at D − a²/(D − s) in the ball (ball back to 0 V), and each charge in the ball an image
      −qR/s at R²/s in the dome (dome back to 1 V). The sums are the capacitance coefficients c₁₁ (dome) and c₂₁ (ball), so with
      charge Q the dome sits at V = Q/c₁₁ and the ball holds c₂₁V. Everything scales with Q, so one solve per position gives the
@@ -224,7 +224,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* field (E along the line, E across it) at a point s along the line and rho off it, from charges [q, s] on the line */
   function lineField(ch, s, rho) { let es = 0, er = 0; for (const [q, si] of ch) { const ds = s - si, r2 = ds * ds + rho * rho, f = KC * q / (r2 * Math.sqrt(r2)); es += f * ds; er += f * rho; } return [es, er]; }
-  /* outward normal field on a sphere (centre c, radius r) at angle th from the line of centres; th = 0 faces the ball for the dome,
+  /* outward normal field on a sphere (center c, radius r) at angle th from the line of centers; th = 0 faces the ball for the dome,
      and faces the dome for the ball (back), so both are measured from the gap. σ = ε₀ × this. */
   function normalField(ch, c, r, th, back) { const sg = back ? -1 : 1, s = c + sg * r * Math.cos(th), rho = r * Math.sin(th), [es, er] = lineField(ch, s, rho); return es * sg * Math.cos(th) + er * Math.sin(th); }
   /* the largest |normal field| on a sphere: every 1.5° from the gap round to the back, then narrowed down to 0.001° round the best */
@@ -241,7 +241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const dropMass = (d) => INK.rho * Math.PI * d * d * d / 6;
   function inkjet(d, q, v, V) {
     const m = dropMass(d), E = V / INK.gap, a = q * E / m, t1 = INK.L / v, t2 = INK.D / v;
-    const yAt = (x) => {   /* height of the drop centre (m) when it has travelled x past the plate entrance */
+    const yAt = (x) => {   /* height of the drop center (m) when it has traveled x past the plate entrance */
       const t = x / v, ye = x <= INK.L ? 0.5 * a * t * t : 0.5 * a * t1 * t1 + a * t1 * (t - t1);
       return ye - 0.5 * G * t * t;
     };
@@ -300,9 +300,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     esp: 'Blind hides the particle charge, the drift speed, the efficiency and its curve. The counters stay, so the efficiency can be measured.'
   };
   const MODELS = {
-    vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column and base are not part of the calculation. Hung up, the wand is far away and left out. Picked up, its brass ball (radius 3.0 cm, joined to earth) is part of the calculation wherever you drag it: the dome and the ball are both conducting spheres, so the field outside them is exactly that of Kelvin image charges on the line between their centres (worked out afresh at every position; the ball\'s rod, handle and lead are left out). The ball takes on an opposite charge, the field in the gap grows, and air breaks down where the field first reaches 3.0 MV/m, on the dome or on the small ball. That is the textbook rule and a good guide for a gap no wider than about the ball\'s radius; across a wider gap a real discharge starts as a faint glow (corona) at the ball and the voltage can climb further before a spark jumps, so the breakdown voltage shown is then a lower limit. A gap under 0.5 mm counts as touching: the dome is grounded through the wand. Blue dots in the lead are electrons, each 1/200 of the dome\'s Q_max, moving far slower than real ones.',
+    vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column and base are not part of the calculation. Hung up, the wand is far away and left out. Picked up, its brass ball (radius 3.0 cm, joined to earth) is part of the calculation wherever you drag it: the dome and the ball are both conducting spheres, so the field outside them is exactly that of Kelvin image charges on the line between their centers (worked out afresh at every position; the ball\'s rod, handle and lead are left out). The ball takes on an opposite charge, the field in the gap grows, and air breaks down where the field first reaches 3.0 MV/m, on the dome or on the small ball. That is the textbook rule and a good guide for a gap no wider than about the ball\'s radius; across a wider gap a real discharge starts as a faint glow (corona) at the ball and the voltage can climb further before a spark jumps, so the breakdown voltage shown is then a lower limit. A gap under 0.5 mm counts as touching: the dome is grounded through the wand. Blue dots in the lead are electrons, each 1/200 of the dome\'s Q_max, moving far slower than real ones.',
     ink: 'Model: a uniform field V/gap between the plates and none outside them (no fringing); the drop is a water sphere of density 1000 kg/m³ moving at constant horizontal speed. Gravity is included. Air drag is left out: for a single drop of 60 µm in still air, Stokes drag would slow it by about a tenth over this path (an underestimate at these speeds); real printers make up for it in their charge tables. The drop charge is limited well below the Rayleigh limit, where the drop would tear itself apart. Drawn to scale, in slow motion. The faint drops flying into the gutter are the uncharged jet that runs between printed drops; real drops follow each other much more closely.',
-    esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale. The grey haze between the plates fades as exp(−wx/(us)), the concentration the Deutsch equation gives along the channel; the small dots streaming from the wire are ions, drawn only to show where the charging happens.'
+    esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale. The gray haze between the plates fades as exp(−wx/(us)), the concentration the Deutsch equation gives along the channel; the small dots streaming from the wire are ions, drawn only to show where the charging happens.'
   };
   function setSetup(s) {
     S.setup = s;
@@ -310,7 +310,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== s;
     $('dimSeg').hidden = s !== 'vdg';
     $('setupHint').textContent = HINTS[s]; $('blindHint').textContent = BLINDS[s]; $('modelHint').textContent = MODELS[s];
-    can.setAttribute('aria-label', { vdg: 'A Van de Graaff generator: a belt in an insulating column charges a metal dome; a grounded wand stands beside it. Below, graphs of the dome voltage against time and of the field against distance from the centre.', ink: 'Side view of an ink jet printer: a nozzle, a charging electrode, two deflection plates, a gutter and the paper, with drops flying across. On the right, the paper seen face on with a millimetre ruler.', esp: 'Top view of one precipitator channel: gas carrying particles flows between two grounded plates with a charging wire down the middle; particles drift onto the plates. Below, the collection efficiency against particle diameter.' }[s]);
+    can.setAttribute('aria-label', { vdg: 'A Van de Graaff generator: a belt in an insulating column charges a metal dome; a grounded wand stands beside it. Below, graphs of the dome voltage against time and of the field against distance from the center.', ink: 'Side view of an ink jet printer: a nozzle, a charging electrode, two deflection plates, a gutter and the paper, with drops flying across. On the right, the paper seen face on with a millimeter ruler.', esp: 'Top view of one precipitator channel: gas carrying particles flows between two grounded plates with a charging wire down the middle; particles drift onto the plates. Below, the collection efficiency against particle diameter.' }[s]);
     upd();
   }
   $('setups').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) setSetup(b.dataset.s); });
@@ -345,8 +345,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- the grounded wand, held by hand ----------
   /* Hung up, the wand is far away and out of the calculation, so the dome is the isolated sphere of the model above. Picked up,
      its brass ball can be dragged anywhere in the plane of the picture and vdgWand gives the exact charges with the ball where it
-     is. Coordinates in metres: x across from the column's axis, z up from the floor. */
-  const ZD = (R) => 0.10 + 0.80 + R * 0.82;   /* height of the dome's centre: base 0.10 m and column 0.80 m (as drawn) */
+     is. Coordinates in meters: x across from the column's axis, z up from the floor. */
+  const ZD = (R) => 0.10 + 0.80 + R * 0.82;   /* height of the dome's center: base 0.10 m and column 0.80 m (as drawn) */
   const TOUCH = 0.0005;                        /* a gap under 0.5 mm counts as touching: the dome is then grounded through the wand */
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   S.wand = { on: false, x: 0, z: 0 }; S.qBall = 0; S.dots = []; S.dotAcc = 0;
@@ -412,7 +412,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('touchmove', (e) => { if (wdrag) e.preventDefault(); }, { passive: false });
   /* arrow keys move the wand 1 mm (Shift: 1 cm) when the picture has focus */
   can.addEventListener('keydown', (e) => { if (S.setup !== 'vdg' || !S.wand.on) return; const st = e.shiftKey ? 0.01 : 0.001, m = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[e.key]; if (!m) return; S.wand.x += m[0]; S.wand.z += m[1]; wandMoved(); e.preventDefault(); });
-  /* the field lines in a half plane through the line of centres, as [s, rho] points from the dome to the ball (or out to 2.6R).
+  /* the field lines in a half plane through the line of centers, as [s, rho] points from the dome to the ball (or out to 2.6R).
      The field outside two conducting spheres is the same in every such half plane, so one tracing serves every direction round the line. */
   function traceLine(w, th) {
     const R = w.R, a = WAND_A, D = w.D, pts = []; let s = R * 1.001 * Math.cos(th), r = R * 1.001 * Math.sin(th);
@@ -536,7 +536,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     S.parts = S.parts.filter((p) => p.st < 2);
     /* a caught particle is counted when it would have left the plates, so that each particle that entered is counted at the same
-       age whether it was caught or not (counting catches at once would favour them while the first particles are still in flight) */
+       age whether it was caught or not (counting catches at once would favor them while the first particles are still in flight) */
     S.pend = S.pend.map((x) => x + S.u * dt / S.L); const done = S.pend.filter((x) => x >= 1).length; if (done) { S.nCaught += done; S.pend = S.pend.filter((x) => x < 1); }
     if (S.dust.length > 1500) S.dust.splice(0, S.dust.length - 1500);
   }
@@ -550,7 +550,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function jag(x0, y0, x1, y1, n, amp) { ctx.beginPath(); ctx.moveTo(x0, y0); for (let i = 1; i < n; i++) { const f = i / n, nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, o = (Math.random() - 0.5) * 2 * amp; ctx.lineTo(x0 + (x1 - x0) * f + nx / L * o, y0 + (y1 - y0) * f + ny / L * o); } ctx.lineTo(x1, y1); ctx.stroke(); }
 
   let beltPhase = 0, inkPhase = 0, espPhase = 0, FL = null, WH = null;
-  /* the wand in metres: ball centre B, the joint J where the metal rod meets the rubber handle, the handle's end H, the lead's foot G
+  /* the wand in meters: ball center B, the joint J where the metal rod meets the rubber handle, the handle's end H, the lead's foot G
      on the floor, and the lead from G up to J and along the rod to the ball (the path the electrons take) */
   function wandParts(w) {
     const B = [S.wand.x, S.wand.z], sd = w.ux >= -0.05 ? 1 : -1; let rx = w.ux + sd * 0.7, rz = w.uz - 0.7; const m = Math.hypot(rx, rz); rx /= m; rz /= m;
@@ -640,14 +640,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(XR(w.R), jy0);
     if (w.s) for (let i = 0; i <= 200; i++) { const sv = w.R + (w.D - WAND_A - w.R) * i / 200; ctx.lineTo(XR(sv), YE(Math.abs(S.Q * lineField(w.s.ch, sv, 0)[0]))); }
     ctx.lineTo(XR(w.D - WAND_A), jy0); ctx.lineTo(jx1, jy0); ctx.stroke();
-    if (w.touching) txt('touching: no field', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 }); else if (!S.blind) txt('from the dome centre to the ball centre; E = 0 inside both', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 });
+    if (w.touching) txt('touching: no field', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 }); else if (!S.blind) txt('from the dome center to the ball center; E = 0 inside both', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 });
   }
   function drawVdg() {
     const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.56 : 0.62), R = S.R / 100, Qm = qMax(R), V = sphereV(S.Q, R), frac = S.Q / Qm; WH = null;
     if (use3()) vdg3(sceneH); else {
     /* floor and bench */
     const floorY = sceneH - 14 * p; ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, sceneH - floorY);
-    const scale = Math.min((sceneH - 40 * p) / 1.55, W * 0.6 / 1.3);   /* px per metre: the 0.80 m column plus the largest dome fit */
+    const scale = Math.min((sceneH - 40 * p) / 1.55, W * 0.6 / 1.3);   /* px per meter: the 0.80 m column plus the largest dome fit */
     const cx = narrow ? W * 0.42 : W * 0.38, colH = 0.80 * scale, baseH = 0.10 * scale, baseW = 0.36 * scale, topY = floorY - baseH - colH, rp = R * scale, domeY = topY - rp * 0.82;
     /* base box with motor */
     ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(cx - baseW / 2, floorY - baseH, baseW, baseH, 4 * p); ctx.fill();
@@ -703,9 +703,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
     for (const [t, v] of S.hist) { if (S.t - t > span) continue; const xx = X(t), yy = Y(v); if (first) { ctx.moveTo(xx, yy); first = false; } else ctx.lineTo(xx, yy); }
     ctx.stroke();
-    /* field against distance from the centre; with the wand, along the line of centres to the ball */
+    /* field against distance from the center; with the wand, along the line of centers to the ball */
     if (wP) { fieldPlotWand(wP, P2, p); return; }
-    plotFrame(P2.x, P2.y, P2.w, P2.h, 'Field against distance from the centre', 'r, 0 to 4R', S.blind ? '' : `0 to ${sci(E_BREAK * 1.15 / 1e6, 2)} MV/m`);
+    plotFrame(P2.x, P2.y, P2.w, P2.h, 'Field against distance from the center', 'r, 0 to 4R', S.blind ? '' : `0 to ${sci(E_BREAK * 1.15 / 1e6, 2)} MV/m`);
     const jx0 = P2.x + 8 * p, jx1 = P2.x + P2.w - 8 * p, jy0 = P2.y + P2.h - 18 * p, jy1 = P2.y + 32 * p, XR = (r) => jx0 + r / (4 * R) * (jx1 - jx0), YE = (e) => jy0 - e / (E_BREAK * 1.15) * (jy0 - jy1);
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(jx1, jy0); ctx.moveTo(XR(R), jy0); ctx.lineTo(XR(R), jy1); ctx.stroke(); txt('R', XR(R), jy0 + 8 * p, { a: 'center', c: T.muted, s: 10 });
     ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(jx0, YE(E_BREAK)); ctx.lineTo(jx1, YE(E_BREAK)); ctx.stroke(); ctx.setLineDash([]);
@@ -720,7 +720,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const INKX0 = -0.008;   /* nozzle position (m), relative to the plate entrance */
   function drawInk() {
     const p = ps(), narrow = W < 640, paneW = narrow ? 0 : Math.min(230 * p, W * 0.3), sideW = W - paneW - 24 * p, sideH = narrow ? Hh * 0.36 : Hh - 24 * p;
-    const xMin = INKX0 - 0.002, xMax = INK.L + INK.D + (narrow ? 0.0045 : 0.002), sc = Math.min(sideW / (xMax - xMin), (sideH - 60 * p) / 0.0068);   /* px per metre, same in x and y */
+    const xMin = INKX0 - 0.002, xMax = INK.L + INK.D + (narrow ? 0.0045 : 0.002), sc = Math.min(sideW / (xMax - xMin), (sideH - 60 * p) / 0.0068);   /* px per meter, same in x and y */
     const ox = 12 * p - xMin * sc, oy = 30 * p + (sideH - 40 * p) * 0.68, X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
     txt('Side view, to scale, slow motion', 12 * p, 22 * p, { b: 1 });
     /* nozzle and ink line */
@@ -913,14 +913,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const t = new THREE.Mesh(new THREE.TubeGeometry(cv, 40, 0.003, 8, false), g.leadM); t.castShadow = true; g.lead.add(t);
     return zd;
   }
-  /* a point on the dome (c = 0) or the ball, th from the gap and ph round the line of centres; u3 points from the dome to the ball */
+  /* a point on the dome (c = 0) or the ball, th from the gap and ph round the line of centers; u3 points from the dome to the ball */
   function onLine3(w, sv, r, ph) { const c = Math.cos(ph), s2 = Math.sin(ph); return [sv * w.ux + r * c * w.uz, r * s2, w.zd + sv * w.uz - r * c * w.ux]; }
   function render3(rh) {
     const g = g3; if (!g) return null;
     if (G3.w !== W || G3.h !== rh) { G3.w = W; G3.h = rh; g.r.setSize(W, Math.max(1, rh)); g.cam.aspect = W / Math.max(1, rh); g.cam.updateProjectionMatrix(); }
     const key = [T.canvas, T.pos, T.belt].join(); if (G3.key !== key) { G3.key = key; theme3(); }
     const R = S.R / 100, zd = geom3(), asp = W / Math.max(1, rh), top = zd + R + 0.05, wx = R + 0.35, w = wandNow();
-    /* frame the machine and the wand: centre between them, distance from the taller of the height and the width; with the wand in
+    /* frame the machine and the wand: center between them, distance from the taller of the height and the width; with the wand in
        hand, the whole region it can be dragged over (the framing eases between the two) */
     const cx0 = (wx - R) / 2 + (W < 640 ? 0 : -0.12), span0 = Math.max(top * 1.18, (wx + R + 0.25) / asp * 1.25);
     const cx1 = 0.175 + (W < 640 ? 0 : -0.1), span1 = Math.max((top + 0.2) * 1.12, (2 * R + 1.05) / asp * 1.12), f = G3.fw;
@@ -941,7 +941,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (nb) { const cb = w.cumB3 || (w.cumB3 = chargeAngles(w, true, false)); for (let i = 0; i < nb; i++) { const q = g.pts[Math.floor(i * NQ3 / nb) % NQ3], th = cb((1 - q[2]) / 2), ph = Math.atan2(q[1], q[0]), rr = WAND_A * 1.02, P = onLine3(w, w.D - rr * Math.cos(th), rr * Math.sin(th), ph);
       g.mat4.makeScale(bb, bb, bb).setPosition(P[0], P[1], P[2]); g.negB.setMatrixAt(i, g.mat4); } }
     g.negB.count = nb; g.negB.instanceMatrix.needsUpdate = true;
-    /* field lines: radial for the dome alone; with the wand, traced through the exact field (each line keeps to its half plane through the line of centres) */
+    /* field lines: radial for the dome alone; with the wand, traced through the exact field (each line keeps to its half plane through the line of centers) */
     const lp = g.lines.geometry.attributes.position; let k = 0;
     if (!ws && !(w && w.touching)) for (let i = 0; i < nl; i++) { const q = g.lpts[Math.floor(i * NL3 / Math.max(1, nl)) % NL3]; if (zd + q[2] * R * 2.6 < 0.02) continue; lp.setXYZ(k++, q[0] * R * 1.03, q[1] * R * 1.03, zd + q[2] * R * 1.03); lp.setXYZ(k++, q[0] * R * 2.6, q[1] * R * 2.6, zd + q[2] * R * 2.6); }
     else if (ws) { if (!w.l3) { const memo = {}; w.l3 = g.lpts.map((q) => { const th = cum((1 - q[2]) / 2), kk = th.toFixed(6); return { ph: Math.atan2(q[1], q[0]), pts: memo[kk] || (memo[kk] = traceLine(w, th)) }; }); }

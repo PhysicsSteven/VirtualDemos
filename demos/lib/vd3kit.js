@@ -1,6 +1,6 @@
 /* VirtualDemos shared 3D kit (window.VD3K), built on vd3.js for the deeper visual passes (2026-10-24). Lifted from the 3D views of
    resistivity, wire-force, string-density, doppler and tides, so a new 3D view starts from the same scene, theme, props and 3D | Flat
-   switch instead of a fresh copy. Pictures only: no physics here. Scenes are z up and in metres unless a demo chooses otherwise.
+   switch instead of a fresh copy. Pictures only: no physics here. Scenes are z up and in meters unless a demo chooses otherwise.
    Link it after vd3.js:  <script src="lib/vd3.js"></script><script src="lib/vd3kit.js"></script>
    Every helper except VD3K.view needs window.THREE, so call them from the init function that VD3K.view runs after three.js loads.
    Never change what an existing helper does: add an option or a new helper instead (see demos/lib/README.md).
@@ -14,12 +14,12 @@
                        shadow is a box half width in m). The canvas goes into host (before the element given), aria hidden.
                        Returns S with: r, el, scene, cam, hemi, sun, size(w, h), render(), project([x, y, z]) -> [px, py, depth],
                        place(o, target, dist) (VD3.place), fit(dist, ref) (dist backed off when the picture is taller than ref wide), orbit(el, o, onChange, opt) (VD3.orbit), theme(force), onTheme(fn), dispose(obj).
-   VD3K.token(name, fallback)   a CSS colour token of the page (--canvas, --accent, ...) as a THREE.Color.
+   VD3K.token(name, fallback)   a CSS color token of the page (--canvas, --accent, ...) as a THREE.Color.
    S.theme(force)      reapplies the page theme: background and fog from --canvas, light levels for light or dark, then every onTheme(fn)
                        (fn(dark)). Cheap to call each frame: it only works when the theme or the tokens changed, or force is true.
-   S.fog(near, far)    fog in the background colour, so a far edge fades into the page (or pass fog: [near, far] to stage,
+   S.fog(near, far)    fog in the background color, so a far edge fades into the page (or pass fog: [near, far] to stage,
                        or fogAt: [1.25, 2.6] for fog that starts and ends at those multiples of the camera distance, set by S.place). No fog otherwise.
-                       opt.sky: a fixed background colour (space scenes) instead of the page's --canvas.
+                       opt.sky: a fixed background color (space scenes) instead of the page's --canvas.
 
    Lab props (each returns a THREE object; materials follow the theme)
    VD3K.bench(S, { w, d, x, y, z })              wooden bench top that takes shadows
@@ -114,7 +114,7 @@
   };
 
   var std = function (o) { return new THREE.MeshStandardMaterial(o); };
-  /* a material whose colour follows the theme: c is [light, dark] */
+  /* a material whose color follows the theme: c is [light, dark] */
   var themed = function (S, o, c) { var m = std(o); S.onTheme(function (dk) { m.color.set(dk ? c[1] : c[0]); }); return m; };
   K.material = function (S, o, c) { return themed(S, o || {}, c); };
 

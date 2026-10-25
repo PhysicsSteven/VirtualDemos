@@ -281,7 +281,7 @@ table.rows td.b { font-size: 0.76rem; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
         </details>
-        <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of B against frequency from your readings, with a least squares line through the origin."></canvas></div>
+        <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of B against frequency from your readings, with a least squares line, slope and intercept."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <div class="key" id="plotKey"></div>
       </section>
@@ -305,7 +305,7 @@ table.rows td.b { font-size: 0.76rem; }
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
           <p class="hint">The bench is modeled on the common spin resonance teaching kit used in many modern physics labs: a console with a marginal oscillator and frequency meter, a cell mount with scan coils on steel cores, an electron probe, a proton probe and a permanent Zeeman magnet.</p>
-          <p class="hint">Exact: hν = gμ<sub>B</sub>B with g = 2.0036 held fixed for DPPH; ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F (γ = 25.18148×10⁷ rad s⁻¹ T⁻¹, IUPAC 2001). h, μ<sub>B</sub> and μ<sub>N</sub> are CODATA values. Chemical shielding, tens of ppm, is far below this instrument's resolution and is neglected.</p>
+          <p class="hint">Exact: hν = gμ<sub>B</sub>B with g = 2.0036 held fixed for DPPH; ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2022) and 40.0776 MHz/T for ¹⁹F (γ = 25.18148×10⁷ rad s⁻¹ T⁻¹, IUPAC 2001). h, μ<sub>B</sub> and μ<sub>N</sub> are CODATA values. Chemical shielding, tens of ppm, is far below this instrument's resolution and is neglected.</p>
           <p class="hint">Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp, 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet field; the earth's field and stray fields are left out. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]. The probe coil is taken at right angles to the field.</p>
           <p class="hint">Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT for the dipolar broadening of a solid, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and scale with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.</p>
           <p class="hint">The marginal oscillator is a behavioral model: the gain grows as (1 + ε)/(ε + 1 − s/s<sub>th</sub>) with ε = 0.08, the LED dims above 0.85 s<sub>th</sub>, oscillation stops at the threshold s<sub>th</sub>, and the noise rises with the gain and sharply just below the threshold. The frequency meter jitters by one count. All noise is simulated.</p>
@@ -322,9 +322,9 @@ table.rows td.b { font-size: 0.76rem; }
   // Pure physics and instrument model; no DOM. Imported by node tests.
   const H_PLANCK = 6.62607015e-34;       // J s, exact
   const MU_B = 9.2740100657e-24;         // J/T, CODATA 2022
-  const MU_N = 5.0507837461e-27;         // J/T, CODATA 2018
+  const MU_N = 5.0507837393e-27;         // J/T, CODATA 2022
   const G_DPPH = 2.0036;
-  const GAMMA_H = 42.577478e6;           // Hz/T, free proton gamma/2pi, CODATA 2018
+  const GAMMA_H = 42.577478e6;           // Hz/T, free proton gamma/2pi, CODATA 2022
   const GAMMA_F = 40.0776e6;             // Hz/T, 19F gamma/2pi from gamma = 25.18148e7 rad/s/T (IUPAC 2001)
   const BMAX = { esr: 3.67e-3, psr: 3.2e-3 };            // T, full scan field, 250 mA
   const FAST = { ramp: 0.040, flyback: 0.001, period: 0.050 };
@@ -399,6 +399,17 @@ table.rows td.b { font-size: 0.76rem; }
     for (let i = 0; i < n; i++) ss += (y[i] - k * x[i]) ** 2;
     const se = n > 1 ? Math.sqrt(ss / (n - 1) / sxx) : NaN;
     return { k, se, n };
+  }
+  // least squares line with a free intercept, y = c + k x (the fit the page shows); standard errors with n − 2 degrees of freedom
+  function fitLine(x, y) {
+    const n = Math.min(x.length, y.length); if (n < 2) return null;
+    let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += x[i]; my += y[i]; } mx /= n; my /= n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); }
+    if (!(sxx > 0)) return null;
+    const k = sxy / sxx, c = my - k * mx; let ss = 0;
+    for (let i = 0; i < n; i++) ss += (y[i] - c - k * x[i]) ** 2;
+    const s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { k, c, se: Math.sqrt(s2 / sxx), sc: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), n };
   }
   function gFromSlope(k) { return H_PLANCK / (MU_B * k); }           // k = B/nu in T/Hz
   function gammaFromSlope(k) { return 1 / k; }                       // Hz/T
@@ -853,7 +864,7 @@ table.rows td.b { font-size: 0.76rem; }
     const groups = S.cfg === 'esr' ? ['e'] : ['H', 'F'], out = {};
     for (const g of groups) {
       const rows = S.rows.filter((r) => r.exp === S.cfg && r.nuc === g && isFinite(rowB(r)) && isFinite(rowNu(r)));
-      out[g] = { rows, fit: fitOrigin(rows.map(rowNu), rows.map(rowB)) };
+      out[g] = { rows, fit: fitLine(rows.map(rowNu), rows.map(rowB)) };
     }
     return out;
   }
@@ -864,21 +875,23 @@ table.rows td.b { font-size: 0.76rem; }
     if (S.cfg === 'esr') {
       const f = F.e.fit;
       if (f) { const g = gFromSlope(f.k), eg = g * f.se / f.k;
-        html += `<div class="wide"><dt>Slope k = B/ν (${f.n} point${f.n > 1 ? 's' : ''})</dt><dd>${pm(f.k * 1e9, f.se * 1e9, 5)} mT/MHz</dd></div>`;
+        html += `<div class="wide"><dt>B = kν + c, least squares line (${f.n} point${f.n > 1 ? 's' : ''}): slope k</dt><dd>${pm(f.k * 1e9, f.se * 1e9, 5)} mT/MHz</dd></div>`;
+        html += `<div class="wide"><dt>Intercept c</dt><dd>${pm(f.c * 1e3, f.sc * 1e3, 4)} mT</dd></div>`;
         html += `<div class="wide big"><dt>g = h/(μ<sub>B</sub>k)</dt><dd>${pm(g, eg, 4)}</dd></div>`;
         if (!S.blind) html += `<div class="wide"><dt>Accepted for DPPH</dt><dd>2.0036</dd></div>`;
-      } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings at LO, MID and HI</dd></div>`;
+      } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings at LO, MID and HI (two or more points fit a line)</dd></div>`;
     } else {
       for (const [g, lab, acc, accg] of [['H', '¹H', '42.577', '5.586'], ['F', '¹⁹F', '40.078', '5.258']]) {
         const f = F[g].fit; if (!f) continue;
         const gam = gammaFromSlope(f.k), eg = gam * f.se / f.k, gi = gNuclearFromSlope(f.k), egi = gi * f.se / f.k;
         html += `<div><dt>${lab}: γ/2π = 1/k</dt><dd>${pm(gam / 1e6, eg / 1e6, 2)} MHz/T</dd></div><div><dt>${lab}: g<sub>I</sub> = hν/(μ<sub>N</sub>B)</dt><dd>${pm(gi, egi, 3)}</dd></div>`;
+        html += `<div class="wide"><dt>${lab}: B = kν + c, slope k and intercept c</dt><dd>${pm(f.k * 1e9, f.se * 1e9, 5)} mT/MHz, ${pm(f.c * 1e3, f.sc * 1e3, 2)} mT</dd></div>`;
         if (!S.blind) html += `<div class="wide"><dt>Accepted ${lab}: ${acc} MHz/T, g<sub>I</sub> ${accg}</dt><dd></dd></div>`;
       }
       if (!html) html = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings for glycerine and PTFE</dd></div>`;
     }
     dl.innerHTML = html;
-    $('plotKey').innerHTML = S.cfg === 'esr' ? '<span><i class="swatch dotE"></i>Your ESR readings, line through the origin</span>'
+    $('plotKey').innerHTML = S.cfg === 'esr' ? '<span><i class="swatch dotE"></i>Your ESR readings, least squares line (slope and intercept)</span>'
       : '<span><i class="swatch dotH"></i>¹H readings</span><span><i class="swatch dotF"></i>¹⁹F readings (PTFE)</span>';
     drawPlot(F);
   }
@@ -904,7 +917,7 @@ table.rows td.b { font-size: 0.76rem; }
     ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('ν (MHz)', R, H - 1);
     ctx.save(); ctx.translate(10, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('B (mT)', 0, 0); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
-    for (const g in F) { const f = F[g].fit; if (!f) continue; ctx.strokeStyle = col[g]; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(X(x0), Y(f.k * 1e9 * x0)); ctx.lineTo(X(x1), Y(f.k * 1e9 * x1)); ctx.stroke(); }
+    for (const g in F) { const f = F[g].fit; if (!f) continue; ctx.strokeStyle = col[g]; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(X(x0), Y(f.c * 1e3 + f.k * 1e9 * x0)); ctx.lineTo(X(x1), Y(f.c * 1e3 + f.k * 1e9 * x1)); ctx.stroke(); }
     for (const p of pts) { ctx.fillStyle = col[p[2]]; ctx.beginPath(); ctx.arc(X(p[0]), Y(p[1]), 3.5, 0, 2 * Math.PI); ctx.fill(); }
     ctx.restore();
     if (!pts.length) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('No readings yet', (L + R) / 2, (top + bot) / 2); }
@@ -999,7 +1012,7 @@ table.rows td.b { font-size: 0.76rem; }
     { const b = new THREE.Mesh(new THREE.BoxGeometry(23, 13, 2.6), std(0x9aa1a8, 0.45, 0.3)); b.position.set(MX, 0, 2.7); psrGrp.add(b); }
     const mag = mkTex(360, 380); const magMat = new THREE.MeshStandardMaterial({ map: mag.t, roughness: 0.5 });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(9, 9.5), magMat); p.rotation.x = Math.PI / 2; p.position.set(MX - 7, -6.53, 13.5); psrGrp.add(p); }
-    // ---- probes: body on a stand, rod into the gap, RF coil, phial with a coloured cap
+    // ---- probes: body on a stand, rod into the gap, RF coil, phial with a colored cap
     const probeGrp = new THREE.Group(); scene.add(probeGrp);
     const PB = { x: MX, y: -17, z: 10 };
     const probeBody = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 6), std(0x56677a, 0.5)); probeBody.position.set(PB.x, PB.y, PB.z); probeGrp.add(probeBody);

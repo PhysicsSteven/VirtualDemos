@@ -1155,7 +1155,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- wave function pane ----------
   /* ψ in 3D: x along the axis, Re ψ up and Im ψ toward the viewer, so a moving packet is a twisting ribbon (a helix whose turns are
-     the wavelength). The ribbon runs from the axis out to ψ and takes the same phase colours as the flat picture; |ψ| is its
+     the wavelength). The ribbon runs from the axis out to ψ and takes the same phase colors as the flat picture; |ψ| is its
      distance from the axis. Only the picture: ψ is the simulation's, sampled at 600 points across the view. */
   const G3 = { st: null, view: null, o: { th: -1.25, ph: 1.12, zoom: 1 }, rib: null, edge: null, pot: null, potKey: '', axis: null, n: 600 };
   const use3 = () => !!(G3.view && G3.view.is3d() && G3.st);
@@ -1204,9 +1204,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const ty = W < 700 ? 44 * ps : 10 * ps;
-    ctx.fillText(W < 560 ? 'ψ in 3D: Re up, Im toward you' : 'ψ in 3D: Re ψ up, Im ψ toward you, colour is the phase', 12 * ps, ty);
+    ctx.fillText(W < 560 ? 'ψ in 3D: Re up, Im toward you' : 'ψ in 3D: Re ψ up, Im ψ toward you, color is the phase', 12 * ps, ty);
     ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
-    ctx.fillText(W < 560 ? 'colour: phase · |ψ|: distance from the axis' : `|ψ| is the distance from the axis · grey wall: V(x) · x from ${f1(x0)} to ${f1(x1)} nm · drag to turn`, 12 * ps, ty + 16 * ps);
+    ctx.fillText(W < 560 ? 'color: phase · |ψ|: distance from the axis' : `|ψ| is the distance from the axis · gray wall: V(x) · x from ${f1(x0)} to ${f1(x1)} nm · drag to turn`, 12 * ps, ty + 16 * ps);
   }
   const f1 = (v) => (Math.round(v * 10) / 10).toString().replace('-', '−');
   function drawWave() {

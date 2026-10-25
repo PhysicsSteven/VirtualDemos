@@ -6,7 +6,7 @@ time: 15 to 25 minutes
 ## What students should come away with
 
 - A photon of energy E = hc/λ carries momentum p = E/c = h/λ. Treating its collision with a free electron as a particle collision, with energy and momentum both conserved, gives the Compton shift Δλ = λ′ − λ = λ_C(1 − cos θ), with λ_C = h/m_ec = 2.426 pm.
-- The shift depends only on the scattering angle, not on λ. It is the same 2.43 pm at 90° for x rays and for visible light, which is why it is obvious for x rays and invisible for light.
+- The shift depends only on the scattering angle, not on λ. It is the same 2.43 pm at 90° for X-rays and for visible light, which is why it is obvious for X-rays and invisible for light.
 - Classical waves scattered by a charge keep their wavelength. The shifted line, at exactly the predicted Δλ, was strong evidence that light carries energy and momentum in quanta.
 - The electron always recoils forward, and its kinetic energy T = E − E′ has a sharp upper limit at θ = 180°, the Compton edge seen in gamma ray spectra.
 - At high energy the scattering becomes strongly forward (Klein–Nishina); at low energy it is the symmetric Thomson pattern.
@@ -17,28 +17,28 @@ Students should know E = hc/λ, momentum conservation in two dimensions and E² 
 
 ## Running it in class
 
-1. **Compton's 1923 experiment.** Ask Q1 before anything moves. Molybdenum Kα x rays (71.07 pm) on graphite at θ = 90°. On the **Detector** plot the shifted line sits 2.43 pm above the unshifted one. Drag the scattered photon around and watch the shifted peak move while the unshifted one stays put; the dotted ticks mark Compton's angles 45°, 90° and 135° (Q2, Q4).
+1. **Compton's 1923 experiment.** Ask Q1 before anything moves. Molybdenum Kα X-rays (71.07 pm) on graphite at θ = 90°. On the **Detector** plot the shifted line sits 2.43 pm above the unshifted one. Drag the scattered photon around and watch the shifted peak move while the unshifted one stays put; the dotted ticks mark Compton's angles 45°, 90° and 135° (Q2, Q4).
 2. **Backscatter: biggest shift.** At 180° the shift is 2λ_C = 4.85 pm and the electron goes straight forward with the most energy it can take (Q6).
 3. **Visible light: no visible shift.** The shift is still 2.43 pm at 90°, five parts in a million of 532 nm. The two lines overlap completely (Q1, Q5).
 4. **Gamma ray from cesium 137.** Now λ = 1.87 pm is shorter than λ_C. At 90° the wavelength more than doubles and the photon keeps only 288 keV. Read **Electron speed v/c** (Q3).
 5. **Compton edge.** The **Electron energy** plot fills with sampled photons and piles up just below the edge at 477 keV (Q3).
-6. **Klein–Nishina: forward peaking.** At 2 MeV the **Angles** plot is strongly forward. Lower **Energy E** toward the x ray range and the pattern relaxes to the symmetric Thomson shape (Q7).
+6. **Klein–Nishina: forward peaking.** At 2 MeV the **Angles** plot is strongly forward. Lower **Energy E** toward the X-ray range and the pattern relaxes to the symmetric Thomson shape (Q7).
 
 ## Questions
 
-**Q1.** Predict: x rays of 71 pm and green light of 532 nm are each scattered through 90° by free electrons. Which has the larger change in wavelength, Δλ? Which has the larger fractional change, Δλ/λ? Which would you need a very good spectrometer to see?
+**Q1.** Predict: X-rays of 71 pm and green light of 532 nm are each scattered through 90° by free electrons. Which has the larger change in wavelength, Δλ? Which has the larger fractional change, Δλ/λ? Which would you need a very good spectrometer to see?
 
-**Q2.** Molybdenum Kα x rays (λ = 71.07 pm) scatter through 90°. Find the scattered wavelength, the energies of the incoming and scattered photons, and the kinetic energy of the recoil electron. Repeat the wavelength calculation for 135°. Check with the demo.
+**Q2.** Molybdenum Kα X-rays (λ = 71.07 pm) scatter through 90°. Find the scattered wavelength, the energies of the incoming and scattered photons, and the kinetic energy of the recoil electron. Repeat the wavelength calculation for 135°. Check with the demo.
 
 **Q3.** A 661.7 keV gamma ray from ¹³⁷Cs scatters from an electron. Find the scattered photon energy at 90° and at 180°, and the electron's kinetic energy in each case. A detector that absorbs only the electron sees a sharp edge in its spectrum; at what energy, and why can no Compton electron have more?
 
-**Q4.** Compton's scattered x rays showed two lines: one shifted by Δλ and one at the original wavelength. Where does the unshifted line come from? Estimate its shift by replacing the electron mass with the mass of a whole carbon atom (12 u).
+**Q4.** Compton's scattered X-rays showed two lines: one shifted by Δλ and one at the original wavelength. Where does the unshifted line come from? Estimate its shift by replacing the electron mass with the mass of a whole carbon atom (12 u).
 
-**Q5.** The shift formula contains no λ: every wavelength shifts by the same amount at a given angle. Explain why a collision with a particle of fixed mass gives a fixed shift in wavelength rather than a fixed fraction. Why did the shift count as evidence against a purely wave picture of x rays?
+**Q5.** The shift formula contains no λ: every wavelength shifts by the same amount at a given angle. Explain why a collision with a particle of fixed mass gives a fixed shift in wavelength rather than a fixed fraction. Why did the shift count as evidence against a purely wave picture of X-rays?
 
 **Q6.** Use momentum conservation to argue that the recoil electron can never move backward (φ > 90°) from a photon coming in along the beam. Then use the demo: what is φ for θ near 0°, and for θ = 180°? Where does the electron take the most energy?
 
-**Q7.** Predict, then check: for low energy x rays, are photons more likely to scatter forward or backward? And for 2 MeV gamma rays? Turn on **Sample photons** in the **Angles** plot at both energies and estimate the fraction scattered forward (θ < 90°).
+**Q7.** Predict, then check: for low energy X-rays, are photons more likely to scatter forward or backward? And for 2 MeV gamma rays? Turn on **Sample photons** in the **Angles** plot at both energies and estimate the fraction scattered forward (θ < 90°).
 
 ## Common misconceptions
 
@@ -59,4 +59,4 @@ Students should know E = hc/λ, momentum conservation in two dimensions and E² 
 ## Going further
 
 - Lab connection: a ¹³⁷Cs scintillation spectrum shows the 662 keV photopeak, the Compton edge near 477 keV and a backscatter peak near 184 keV from the surroundings.
-- History: Arthur Compton published the shifted x ray line and its explanation in 1923 and shared the 1927 Nobel Prize in Physics.
+- History: Arthur Compton published the shifted X-ray line and its explanation in 1923 and shared the 1927 Nobel Prize in Physics.

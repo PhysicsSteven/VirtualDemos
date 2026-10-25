@@ -5,7 +5,7 @@ time: 20 to 30 minutes
 ---
 ## What students should come away with
 
-- Space itself stretches: every distance between galaxies grows by the same factor a(t), so every galaxy sees every other recede with v = H d. There is no centre.
+- Space itself stretches: every distance between galaxies grows by the same factor a(t), so every galaxy sees every other recede with v = H d. There is no center.
 - The Hubble time 1/H₀ (14.5 Gyr for H₀ = 67.4 km/s/Mpc) sets the scale of the age, but the age depends on how the expansion has changed: 2/(3H₀) = 9.7 Gyr for matter alone, 13.8 Gyr for our universe, whose slowing down and later speeding up nearly cancel.
 - The radiation cools as T = T₀(1 + z). Run backwards, the universe gets hot enough to make any particle with mc² below about kT; each kind stops being made as kT falls past its rest energy.
 - Helium is a fossil of the first minutes: the neutron to proton ratio froze at about 1 to 5 when kT ≈ 0.8 MeV, neutrons decayed until deuterium could survive at about 3 minutes, and the rest went into helium, about a quarter of the mass.
@@ -29,7 +29,7 @@ Students should have met Hubble's law and redshift (§11.6), kT as a typical the
 
 **Q1.** In the Hubble's law today setup, galaxy A is 86.57 Mpc away and E is 373.45 Mpc away. After 0.1 Gyr, A is 87.16 Mpc and E is 376.02 Mpc away. Find each galaxy's speed in km/s, and H₀ from each. (1 Mpc/Gyr = 977.8 km/s.)
 
-**Q2.** Make another galaxy home. Do the galaxies still obey Hubble's law with the same H₀? What does that say about the centre of the universe?
+**Q2.** Make another galaxy home. Do the galaxies still obey Hubble's law with the same H₀? What does that say about the center of the universe?
 
 **Q3.** All four models have H₀ = 67.4 km/s/Mpc today. Why is the matter only universe 9.67 Gyr old, the empty one 14.51 Gyr and the Planck universe 13.79 Gyr?
 

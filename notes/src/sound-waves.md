@@ -6,7 +6,7 @@ time: 20 to 40 minutes
 ## What students should come away with
 
 - A sound wave in a gas is a longitudinal wave: each bit of gas swings back and forth along the direction the wave travels, s = s_max cos(kx − ωt), and returns to where it started.
-- The pressure change is Δp = −B ∂s/∂x: largest where neighbouring bits of gas move toward each other (a compression), zero where the displacement is largest. Pressure and displacement are 90° (a quarter wavelength) out of phase, and Δp_max = ρvω s_max.
+- The pressure change is Δp = −B ∂s/∂x: largest where neighboring bits of gas move toward each other (a compression), zero where the displacement is largest. Pressure and displacement are 90° (a quarter wavelength) out of phase, and Δp_max = ρvω s_max.
 - The speed of sound in an ideal gas is v = √(γRT/M): set by the temperature and the gas, not by the frequency or the loudness. v = fλ then fixes the wavelength.
 - The time of flight between two microphones, Δt = d/v, is a second way to measure v, independent of the resonance tube. A fit of Δt against d removes any delay common to both channels.
 - A digital timer counts whole samples; its resolution sets how far apart the microphones must be.
@@ -45,7 +45,7 @@ Students need v = fλ, k = 2π/λ, ω = 2πf and the idea of a longitudinal wave
 ## Common misconceptions
 
 - **"The air travels with the sound."** Each bit of air only swings back and forth about its place; the pattern travels.
-- **"Pressure is highest where the air moves most."** At the largest displacement the neighbouring air has moved the same way, so it is neither squeezed nor stretched: Δp = 0 there.
+- **"Pressure is highest where the air moves most."** At the largest displacement the neighboring air has moved the same way, so it is neither squeezed nor stretched: Δp = 0 there.
 - **"Higher notes travel faster."** In the ideal gas v does not depend on f; a higher f gives a shorter λ.
 - **"Louder sound travels faster."** v is the same for any small amplitude.
 - **"Sound is slower in dense materials."** Density alone would slow it, but stiffness matters more: water and steel are far denser than air and carry sound 4 and 17 times faster. Within one kind of material, the denser one is often slower (lead against aluminum).

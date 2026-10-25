@@ -508,7 +508,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- acoustic levitation ----------
   // Plane standing wave above a rigid reflector at z = 0: p = p₀ cos(kz) cos(ωt). The linearized Euler equation
   // ρ₀ ∂v/∂t = −∂p/∂z gives v = (p₀/ρ₀c) sin(kz) sin(ωt), zero at the reflector.
-  const G_N = 9.80665, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
+  const G_N = 9.81, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
   const airDensity = (Tc) => P_ATM * M_AIR / (R_GAS * (Tc + 273.15));                 // ideal gas, dry air at 1 atm
   const airViscosity = (Tc) => { const Tk = Tc + 273.15; return 1.716e-5 * Math.pow(Tk / 273.15, 1.5) * (273.15 + 110.4) / (Tk + 110.4); };   // Sutherland
   // f₁ = 1 − κ_p/κ₀ = 1 − ρ₀c²/K_p (K_p = ρ_p c_p² for a fluid), f₂ = 2(ρ_p − ρ₀)/(2ρ_p + ρ₀), Φ = f₁/3 + f₂/2
@@ -587,7 +587,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const MODEL = {
     waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale.',
-    string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated. The 3D view shows the same motion on a sonometer, sideways in the plane of the box top and magnified by the factor printed under it; lengths along the string are to scale, and the hanging mass is m = T/g with g = 9.80665 m/s². The string is drawn three times thicker than a 1.2 mm guitar string.',
+    string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated. The 3D view shows the same motion on a sonometer, sideways in the plane of the box top and magnified by the factor printed under it; lengths along the string are to scale, and the hanging mass is m = T/g with g = 9.81 m/s². The string is drawn three times thicker than a 1.2 mm guitar string.',
     beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
   };
 
@@ -1035,7 +1035,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 9; k++) { const n = mesh(new THREE.TorusGeometry(0.006, 0.0016, 10, 24).rotateY(Math.PI / 2), nodeM); scene.add(n); nodes.push(n); }
     const drvM = M({ color: 0x2c333c, roughness: 0.5, metalness: 0.2 }), drv = mesh(box(0.05, 0.05, 0.05), drvM, true, true), arm = mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 1, 10).translate(0, 0.5, 0), metal, true);
     const clip = mesh(new THREE.SphereGeometry(0.0045, 12, 10), metal, true); scene.add(drv, arm, clip);
-    // a metre stick along the front edge of the box top
+    // a meter stick along the front edge of the box top
     const rulCv = document.createElement('canvas'); rulCv.width = 2048; rulCv.height = 96; const rulTex = new THREE.CanvasTexture(rulCv); rulTex.anisotropy = r.capabilities.getMaxAnisotropy();
     const rul = mesh(box(1.0, 0.032, 0.004), [M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ map: rulTex, roughness: 0.6 }), M({ color: 0xd8c690 })], true, true);
     rul.position.set(0.5, -BOX.w / 2 + 0.02, BOX.h + 0.002); scene.add(rul);

@@ -357,7 +357,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <span><i class="swatch wall"></i>Wall motion X<sub>w</sub> cos ωt (driven)</span>
           <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
         </div>
-        <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.80665 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the 2 × 2 stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
+        <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.81 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the 2 × 2 stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
         </div></details>
       </section>
     </aside>
@@ -368,7 +368,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 <script>
 (() => {
   // ==CORE START==
-  const G = 9.80665;
+  const G = 9.81;
   // Free motion of m x'' + b x' + k x = 0 written as x'' + 2β x' + ω₀² x = 0, from x = y0, v = u0 at s = 0.
   // One formula for all three regimes, exact: with q = ω₀² − β², C = cos √q s or cosh √−q s, Sn = sin(√q s)/√q or sinh(√−q s)/√−q.
   function homog(y0, u0, beta, w0sq, s) {
@@ -893,7 +893,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     VG.box(ctx, x0, y - h, x1 - x0, h, { color: T.wire, r: 2.5 * ps, shadow: false });
     for (const xx of [x0 + 10 * ps, x1 - 10 * ps]) VG.screw(ctx, xx, y - h / 2, 2.6 * ps);
   }
-  /* the air track the cart rides on: an aluminium beam with a lit top edge */
+  /* the air track the cart rides on: an aluminum beam with a lit top edge */
   function rail(ctx, x0, x1, y) {
     const ps = projScale(), VG = window.VDGear, h = 7 * ps;
     if (!VG) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); return; }
@@ -1258,7 +1258,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* The same motion on a lab bench: an air track with a steel block, helical springs whose coils spread and close up with x, a clamp
      stand for the hanging spring, a motor and Scotch yoke for the drive (the yoke moves exactly as X_w cos ωt), an oil trough with a vane
      or a jar of oil for damping, a rule with the peak hold, and a chart recorder: the paper carries x against time away from the pen.
-     Lengths and positions are to scale in metres, and the block is a steel block of the size its mass would have; the arrows, the
+     Lengths and positions are to scale in meters, and the block is a steel block of the size its mass would have; the arrows, the
      coil count and the wire thickness are not to scale. Words and grips are drawn on the flat canvas on top. */
   const G3 = { o: { th: -Math.PI / 2 + 0.2, ph: 0.98, zoom: 1 }, tgt: null, dist: 0, snap: true, ruleKey: ['', ''], themeKey: '', lay: '' };
   let g3 = null, view3 = null;
@@ -1437,7 +1437,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const Xw = drv ? S.p.F0 / S.p.k : 0, xw = drv ? Xw * Math.cos(st.th) : 0, Lr = Math.max(0.07, Xw + 0.04), Rw = Xw + 0.014;
     const lay = `${ori()}|${drv}`; if (lay !== G3.lay) { if (G3.lay && G3.lay[0] !== lay[0]) { G3.o.ph = vert ? 1.3 : 0.98; G3.o.th = -Math.PI / 2 + (vert ? 0.12 : 0.2); G3.o.zoom = 1; } G3.lay = lay; G3.snap = true; }
     const V = R3.v, Lp = (x, y, z) => { V.set(x, y, z); AX.localToWorld(V); return S3.project(V); }, Q = (p) => S3.project(p);
-    const xa = cp ? st.x1 : st.x, xeq = L0 + d + bl / 2;          /* block (1) centre at equilibrium, axis frame */
+    const xa = cp ? st.x1 : st.x, xeq = L0 + d + bl / 2;          /* block (1) center at equilibrium, axis frame */
     let zTop = 0, xs = 0, box;                                     /* hanging: the spring's top; the stand rod's x */
     /* ---- frame and fixed parts ---- */
     if (vert) { zTop = 0.07 + half + bl + L0 + d; xs = -(bw / 2 + 0.16); AX.rotation.set(0, Math.PI / 2, 0); AX.position.set(0, 0, zTop); }

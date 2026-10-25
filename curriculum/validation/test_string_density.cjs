@@ -14,8 +14,8 @@ function peakF(f0, L, T, mu) {
   bf = (lo + hi) / 2; return [bf, c.maxAmplitude(bf, L, T, mu)];
 }
 
-group('tension and the standing wave formulas: 200 g gives 1.96 N, v = 40.41 m/s, f₁ = 16.84 Hz', () => {
-  near(T, 0.2 * 9.8, 1e-12); near(c.waveSpeed(T, mu), Math.sqrt(1.96 / 1.2e-3), 1e-12); near(c.resonantFreq(1, L, T, mu), 40.4145 / 2.4, 1e-5);
+group('tension and the standing wave formulas: 200 g gives 1.962 N, v = 40.44 m/s, f₁ = 16.85 Hz', () => {
+  near(T, 0.2 * 9.81, 1e-12); near(c.waveSpeed(T, mu), Math.sqrt(1.962 / 1.2e-3), 1e-12); near(c.resonantFreq(1, L, T, mu), 40.4351 / 2.4, 1e-5);
   near(c.resonantFreq(3, L, T, mu), 3 * c.resonantFreq(1, L, T, mu), 1e-12);
   for (let k = 1; k <= 8; k++) near(c.resonantFreq(k, L, c.resonantTension(k, L, 60, mu), mu), 60, 1e-12, 'T for n loops gives back f');
   near(c.resonantTension(3, L, 60, mu) / c.G_LAB, 0.2821, 1e-3, '282 g for 3 loops at 60 Hz');
@@ -61,7 +61,7 @@ group('fits recover μ: f against n at one mass, T against 1/n² at one frequenc
 group('readings CSV: header, columns and 1/n²', () => {
   const csv = c.readingsCSV([{ method: 'sweep f', L: '1.20', m: '0.200', T: '1.9600', f: '50.5', n: '3' }], { version: 'v', string: 'String B' });
   const lines = csv.trim().split('\n'), data = lines.filter((l) => l[0] !== '#');
-  assert(lines[0].includes('simulated data')); assert(csv.includes('# g used for T = mg,9.80 m/s2'));
+  assert(lines[0].includes('simulated data')); assert(csv.includes('# g used for T = mg,9.81 m/s2'));
   assert.equal(data[0], 'row,method,L_m,m_kg,T_N,f_Hz,n,inv_n2'); assert.equal(data[1], '1,sweep f,1.20,0.200,1.9600,50.5,3,0.111111');
 });
 console.log(`${n} groups passed`);

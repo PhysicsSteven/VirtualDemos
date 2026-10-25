@@ -51,7 +51,7 @@ The flow rate is measured the oldest way: collect the outflow in a measuring cyl
 
 ## Safety
 
-A real constant head tank holds a lot of water above the bench: secure it, keep electrical equipment away from spills, and mop up at once. The dye is a food colouring, but treat any dye as staining. The simulation has no hazards.
+A real constant head tank holds a lot of water above the bench: secure it, keep electrical equipment away from spills, and mop up at once. The dye is a food coloring, but treat any dye as staining. The simulation has no hazards.
 
 ## Procedure
 

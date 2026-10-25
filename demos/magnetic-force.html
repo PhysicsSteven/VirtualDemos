@@ -527,13 +527,13 @@ details.hall[open] > summary { margin-bottom: 8px; }
 <script>
 (() => {
   // ==CORE START==
-  // SI throughout. CODATA 2018 constants; atomic masses from AME2020.
+  // SI throughout. CODATA 2022 constants; atomic masses from AME2020.
   const QE = 1.602176634e-19;        // C
-  const ME = 9.1093837015e-31;       // kg
-  const MP = 1.67262192369e-27;      // kg
-  const MD = 3.3435837724e-27;       // kg, deuteron
-  const MA = 6.6446573357e-27;       // kg, alpha particle
-  const U = 1.66053906660e-27;       // kg, atomic mass unit
+  const ME = 9.1093837139e-31;       // kg
+  const MP = 1.67262192595e-27;      // kg
+  const MD = 3.3435837768e-27;       // kg, deuteron
+  const MA = 6.6446573450e-27;       // kg, alpha particle
+  const U = 1.66053906892e-27;       // kg, atomic mass unit
   const C = 299792458;               // m/s
   const PARTICLES = {
     p: { name: 'Proton', short: 'p', q: QE, m: MP },
@@ -786,7 +786,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   const specLanding = (m, V, q, B) => 2 * specRadius(m, V, q, B);         // distance from the slit, a half circle
   function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return +((m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p).toPrecision(12); }
   const roundSig = (v, n) => (isFinite(v) && v !== 0 ? +v.toPrecision(n) : v);
-  // the ruler reads to one screen pixel, rounded to a 1, 2 or 5 step in metres
+  // the ruler reads to one screen pixel, rounded to a 1, 2 or 5 step in meters
   const rulerResolution = (pxPerM) => niceStep(1 / pxPerM);
   const rulerReading = (d, res) => +(Math.round(d / res) * res).toPrecision(12);
   const measuredPeriod = (timer, turns) => timer / turns;
@@ -859,7 +859,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     cyc: { part: 'p', B: 1, V: 100, g: 1, R: 0.3, det: 1 }
   };
   let playing = !reduce, simT = 0, tScale = 1e-7;
-  // lab state: Blind, the ruler (ends in world metres), the timer (simulation seconds) and the captured rows
+  // lab state: Blind, the ruler (ends in world meters), the timer (simulation seconds) and the captured rows
   const DEMO_VERSION = 'magnetic-force@2026-10-22.2';
   const LAB = { blind: false, ruler: false, reads: 'd', ra: { x: 0, y: 0 }, rb: { x: 0.01, y: 0 }, tRun: false, tEl: 0, turns: 1, rows: [], plot: 'rv', table: false, kb: 'v0', kbFocus: false };
 
@@ -1162,7 +1162,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     h = h.replace('#', ''); if (h.length === 3) h = h.split('').map((x) => x + x).join(''); const n = parseInt(h.slice(0, 6), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
   const rgba = (c, a) => { const q = hex(c); return `rgba(${q[0]},${q[1]},${q[2]},${a})`; };
-  // shade a colour toward white (f > 0) or black (f < 0)
+  // shade a color toward white (f > 0) or black (f < 0)
   const shade = (c, f) => (f >= 0 ? mix(c, '#ffffff', f) : mix(c, '#000000', -f));
 
   // ---------- materials: small touches that make the apparatus look like lab hardware ----------
@@ -1220,7 +1220,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       const step = 34 * ps; for (let xx = x + step * 0.75; xx < x + w - step * 0.3; xx += step) { c.fillStyle = T.dark ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.7)'; c.fillRect(xx - h * 0.42, y + 1, h * 0.84, h - 2); c.fillStyle = col; c.fillText(sign, xx, y + h / 2 + 0.5); }
     }
   }
-  // a beam that glows like the trace in a gas filled tube: a soft halo, the coloured line and a pale hot core.
+  // a beam that glows like the trace in a gas filled tube: a soft halo, the colored line and a pale hot core.
   // build() makes the path once; it is stroked several times.
   function glowStroke(c, build, col, lw, alpha = 1) {
     c.save(); c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = col;
@@ -2349,10 +2349,10 @@ details.hall[open] > summary { margin-bottom: 8px; }
   }
   $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { LAB.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); fitAndPlot(); } });
   $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { LAB.rows.splice(+b.dataset.del, 1); status(`Row ${+b.dataset.del + 1} deleted.`); renderTable(); } });
-  // the points for the chosen plot, from the rows only
+  // the points for the chosen plot, from the rows only; every fit has a free intercept (Steve, 2026-10-25), so origin is false for all three
   const PLOTS = {
-    rv: { x: 'v⊥', xu: 'm/s', y: 'r', yu: 'm', origin: true, fx: (r) => +r.v, fy: (r) => +r.r, slope: 'm/(|q|B)', su: 's' },
-    rmq: { x: 'm/|q|', xu: 'kg/C', y: 'r', yu: 'm', origin: true, fx: (r) => r.m / Math.abs(r.q), fy: (r) => +r.r, slope: 'v/B', su: 'm C/kg' },
+    rv: { x: 'v⊥', xu: 'm/s', y: 'r', yu: 'm', origin: false, fx: (r) => +r.v, fy: (r) => +r.r, slope: 'm/(|q|B)', su: 's' },
+    rmq: { x: 'm/|q|', xu: 'kg/C', y: 'r', yu: 'm', origin: false, fx: (r) => r.m / Math.abs(r.q), fy: (r) => +r.r, slope: 'v/B', su: 'm C/kg' },
     Tv: { x: 'v⊥', xu: 'm/s', y: 'T', yu: 's', origin: false, fx: (r) => +r.v, fy: (r) => +r.T, slope: 'dT/dv', su: 's²/m' }
   };
   function fitData() {
@@ -2367,8 +2367,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const F = fitData(), P = F.P, f = F.fit, dl = $('fitOut'); let html = '';
     if (f) {
       const k = P.origin ? f.k : f.b, se = P.origin ? f.se : f.sb, first = F.pts[0].r;
-      html += `<div class="wide big"><dt>${P.origin ? `Slope of ${P.y} against ${P.x}, line through the origin` : `Slope of T against v⊥, line with an intercept`}, ${f.n} point${f.n > 1 ? 's' : ''} (${P.su})</dt><dd>${pm(k, se)}</dd></div>`;
-      if (!P.origin) html += `<div class="wide"><dt>Intercept (s)</dt><dd>${pm(f.a, f.sa)}</dd></div>`;
+      html += `<div class="wide big"><dt>${P.origin ? `Slope of ${P.y} against ${P.x}, line through the origin` : `Slope of ${P.y} against ${P.x}, line with an intercept`}, ${f.n} point${f.n > 1 ? 's' : ''} (${P.su})</dt><dd>${pm(k, se)}</dd></div>`;
+      if (!P.origin) html += `<div class="wide"><dt>Intercept (${P.yu})</dt><dd>${pm(f.a, f.sa)}</dd></div>`;
       if (LAB.plot === 'rv' && same(F.pts, 'B') && same(F.pts, 'particle') && first.B > 0) {
         const qm = 1 / (k * first.B);
         html += `<div class="wide"><dt>|q|/m = 1/(slope × B), B = ${first.B} T</dt><dd>${pm(qm, isFinite(se) ? qm * se / k : NaN)} C/kg</dd></div>`;
@@ -2379,7 +2379,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       } else if (LAB.plot === 'Tv' && !LAB.blind && same(F.pts, 'B') && same(F.pts, 'particle') && first.B > 0) {
         html += `<div class="wide"><dt>Model: slope 0, intercept 2πm/(|q|B)</dt><dd>${sci(2 * Math.PI * first.m / (Math.abs(first.q) * first.B), 3)} s</dd></div>`;
       } else if (F.pts.length > 1 && LAB.plot !== 'Tv') html += `<div class="wide"><dt>Note</dt><dd class="ok">The rows differ in ${LAB.plot === 'rv' ? 'particle or B' : 'v or B'}, so the slope mixes settings.</dd></div>`;
-    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${P.origin ? 'Capture a reading with a ruler value' : 'Capture two or more readings with timer values'}${LAB.plot === 'rmq' ? ', changing the particle (Custom sets q and m)' : ', changing the speed'}.</dd></div>`;
+    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${P.origin ? 'Capture a reading with a ruler value' : P.y === 'T' ? 'Capture two or more readings with timer values' : 'Capture two or more readings with ruler values'}${LAB.plot === 'rmq' ? ', changing the particle (Custom sets q and m)' : ', changing the speed'}.</dd></div>`;
     dl.innerHTML = html;
     drawFitPlot(F);
     dataTable(F);
@@ -2436,7 +2436,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const meta = ['Charges in Magnetic Fields (simulated data)', `demo version,${DEMO_VERSION}`,
       `setup at export,${S.preset ? document.querySelector(`#presets button[data-p="${S.preset}"]`).textContent : 'Your own setup'} (each row lists its own setup and settings)`,
       'model,nonrelativistic exact motion in uniform fields; B perpendicular to the page and E in the page; r = m v_perp/(|q| B) and T = 2 pi m/(|q| B) in pure B; sharp field edges; no radiation',
-      'constants,e = 1.602176634e-19 C; particle masses CODATA 2018',
+      'constants,e = 1.602176634e-19 C; particle masses CODATA 2022',
       'rounding,settings as displayed (q and m to 4 significant figures; v and B and E to 3); ruler to one screen pixel rounded to a 1 2 5 step (ruler_resolution_m); timer to 3 significant figures; r_measured = ruler/2 when the ruler was laid across a diameter; T_measured = timer/turns',
       'seed,none (no random noise is added; the scatter is your own reading)'];
     const header = ['row', 'setup', 'particle', 'q_C', 'm_kg', 'm_over_abs_q_kg_per_C', 'v_perp_m_per_s', 'v_parallel_m_per_s', 'launch_direction_deg', 'B_tesla', 'B_direction', 'E_V_per_m', 'E_direction_deg', 'fields_fill',

@@ -23,7 +23,7 @@ group('Landé g: S states give g_s, singlets 1, O ³P₂ 1.5, Fe ⁵D₄ 1.5, Na
   near(c.lande(1, 0.5, 1.5), 1.33411, 1e-5); near(c.lande(1, 0.5, 0.5), 0.66589, 1e-5);
 });
 group('Stern–Gerlach: 2J + 1 spots, symmetric; deflection formula; 1922 silver splits by about 0.1 mm at the deposit peak', () => {
-  for (const [k, ns] of [['Ag', 2], ['H', 2], ['O', 5], ['Cr', 7], ['Fe', 9], ['noSpin', 3]]) { const st = c.sgStates(k); assert.equal(st.length, ns, k); near(st.reduce((a, q) => a + q.muz, 0), 0, 1e-9, 'symmetric'); }
+  for (const [k, ns] of [['Ag', 2], ['H', 2], ['O', 5], ['Cr', 7], ['Fe', 9], ['noSpin', 3]]) { const st = c.sgStates(k); assert.equal(st.length, ns, k); assert(Math.abs(st.reduce((a, q) => a + q.muz, 0)) < 1e-9 * 9.2740100657e-24, 'symmetric'); }
   const mu = c.sgStates('Ag')[1].muz, z = c.sgZ(mu, 1000, 107.8682, 600, 0); near(z, mu * 1000 / (107.8682 * c.AMU) * c.SG_L1 * c.SG_L1 / 2 / 3.6e5, 1e-12);
   const v = c.peakSpeed(1320, 107.8682), sep = 2 * Math.abs(c.sgZ(mu, 1000, 107.8682, v, 0)); near(sep * 1000, 0.10402, 1e-4, 'separation in mm');
   near(Math.abs(c.sgZ(c.MU_B * c.G_S / 2, 1000, 107.8682, v, 0)), c.MU_B * c.G_S / 2 * 1000 * c.SG_L1 ** 2 / (12 * c.KB * 1320), 1e-9, 'z = μG L²/12kT at the peak');

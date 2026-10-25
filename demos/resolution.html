@@ -151,7 +151,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   /* Circular apertures and resolution. Everything here runs in Node (curriculum/validation/test_resolution.cjs).
      OpenStax University Physics Volume 3, section 4.5: light through a circular hole of diameter D makes the Airy pattern, whose
-     first dark ring is at sin θ = 1.22 λ/D, and two point sources are just resolved (Rayleigh's criterion) when the centre of one
+     first dark ring is at sin θ = 1.22 λ/D, and two point sources are just resolved (Rayleigh's criterion) when the center of one
      pattern falls on the first dark ring of the other: θ = 1.22 λ/D.
      The exact far field (Fraunhofer) intensity of a uniformly lit circular hole is I = I₀ [2 J₁(x)/x]², x = π D sin θ / λ.
      J₁ is computed from Bessel's integral J₁(x) = (1/π) ∫₀^π cos(τ − x sin τ) dτ with the trapezoid rule. The integrand is smooth and
@@ -179,14 +179,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const firstDark = (D, lam) => Math.asin(Math.min(1, RING_FACTOR * lam / D));
   const rayleigh = (D, lam) => 1.22 * lam / D;
   /* two equal, independent (incoherent) point sources an angle sep apart: their intensities add. theta is measured from the midpoint
-     along the line through both; each pattern depends on the angle from its own centre (small angles, so angles subtract). */
+     along the line through both; each pattern depends on the angle from its own center (small angles, so angles subtract). */
   const pair = (D, lam, sep, theta) => airyAt(D, lam, theta - sep / 2) + airyAt(D, lam, theta + sep / 2);
   /* the dip: intensity midway between the sources over the peak of the sum (the peak found by a fine search) */
   function dip(D, lam, sep) {
     let best = 0; for (let i = 0; i <= 2000; i++) { const t = sep * i / 2000; const v = pair(D, lam, sep, t); if (v > best) best = v; }
     return pair(D, lam, sep, 0) / best;
   }
-  /* on a screen a distance L from the hole, a point a distance r from the centre is at angle atan(r/L) */
+  /* on a screen a distance L from the hole, a point a distance r from the center is at angle atan(r/L) */
   const screenAngle = (r, L) => Math.atan2(r, L);
   /* real world numbers. The textbook's Hubble example (section 4.5): a 2.40 m mirror, light of 550 nm, and two stars at the 2 million
      light year distance of the Andromeda galaxy. Its Chapter 4 Problem 59 on the eye: a 3.00 mm pupil, 550 nm, and a car's two headlights
@@ -208,7 +208,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const dark = () => (VG ? VG.dark() : matchMedia('(prefers-color-scheme: dark)').matches);
 
   /* ---------- the setups ----------
-     kind 'screen': positions are on a screen or sensor a distance L from the aperture (metres); kind 'sky': positions are angles (radians).
+     kind 'screen': positions are on a screen or sensor a distance L from the aperture (meters); kind 'sky': positions are angles (radians).
      field: half the width of the view at zoom 1. unit, uk: the display unit and its factor. D slider in its own unit (Dk). */
   const LAMS = [[405, 'Violet laser diode, 405 nm'], [450, 'Blue laser diode, 450 nm'], [532, 'Green laser, 532 nm'], [550, 'Average visible light, 550 nm'],
     [589.3, 'Sodium lamp, 589.3 nm'], [632.8, 'Helium neon laser, 632.8 nm'], [650, 'Red laser diode, 650 nm']];
@@ -270,14 +270,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* positions of the first dark ring around a source (detector units) */
   const ring1 = () => { const th = firstDark(Dnow(), lamNow()); return ST().kind === 'screen' ? Lnow() * Math.tan(th) : th; };
 
-  /* ---------- colours ---------- */
+  /* ---------- colors ---------- */
   let T = null;
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
       cursor: g('--cursor'), mark: g('--mark'), compA: g('--compA'), fill: g('--profile-fill'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
-  /* the colour of a wavelength for the screen (an approximation after D. Bruton; a picture only) */
+  /* the color of a wavelength for the screen (an approximation after D. Bruton; a picture only) */
   function lamRGB(nm) {
     let r = 0, g = 0, b = 0;
     if (nm < 440) { r = -(nm - 440) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = -(nm - 510) / 20; }
@@ -485,7 +485,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let v = 0; v <= ymax + 1e-9; v += ymax > 1.5 ? 0.5 : 0.25) { const yy = Y(v); cctx.beginPath(); cctx.moveTo(l, yy); cctx.lineTo(l + w, yy); cctx.stroke(); cctx.fillText(f(v, 2), l - 6, yy); }
     cctx.strokeStyle = T.line; cctx.strokeRect(l, t, w, h);
     cctx.textAlign = 'left'; cctx.textBaseline = 'bottom'; cctx.fillStyle = T.muted; cctx.font = `${11 * p}px ${T.ui}`;
-    cctx.fillText(CW < 600 ? 'I/I₀ (I₀: one source\'s peak)' : `I/I₀ (I₀: one source's central peak) along the line through the ${nNow() === 2 ? 'sources' : 'centre'}`, l, t - 6);
+    cctx.fillText(CW < 600 ? 'I/I₀ (I₀: one source\'s peak)' : `I/I₀ (I₀: one source's central peak) along the line through the ${nNow() === 2 ? 'sources' : 'center'}`, l, t - 6);
     cctx.textAlign = 'right'; cctx.textBaseline = 'bottom'; cctx.fillText(`position (${ST().unit})`, l + w, CH - 2);
     /* each source alone */
     const N = Math.max(200, Math.round(w * 1.5));
@@ -567,8 +567,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.setAttribute('aria-label', `${st.title}. Beside it, the pattern ${st.place.toLowerCase()}.`);
   }
   const HINTS = {
-    pinhole: 'A helium neon laser (632.8 nm) lights a pinhole 200 µm across, and a screen 2.00 m away catches the light. Instead of a small spot you get a bright disk ringed by faint rings: the Airy pattern. Put the cursor on the first dark ring and read its distance from the centre; the angle is θ₁ = arctan(r/L). Change D and λ and see how the ring moves.',
-    two: 'Two equally bright, independent point sources far away, seen through a lens whose iris sets the aperture D. Each makes its own Airy pattern in the focal plane, and the intensities add. Close the gap between them, or close the iris, and the two blur into one. Rayleigh\'s criterion: they are just resolved when the centre of one pattern sits on the first dark ring of the other, Δθ = 1.22 λ/D.',
+    pinhole: 'A helium neon laser (632.8 nm) lights a pinhole 200 µm across, and a screen 2.00 m away catches the light. Instead of a small spot you get a bright disk ringed by faint rings: the Airy pattern. Put the cursor on the first dark ring and read its distance from the center; the angle is θ₁ = arctan(r/L). Change D and λ and see how the ring moves.',
+    two: 'Two equally bright, independent point sources far away, seen through a lens whose iris sets the aperture D. Each makes its own Airy pattern in the focal plane, and the intensities add. Close the gap between them, or close the iris, and the two blur into one. Rayleigh\'s criterion: they are just resolved when the center of one pattern sits on the first dark ring of the other, Δθ = 1.22 λ/D.',
     eye: 'A car\'s two headlights, 1.30 m apart, seen at night by an eye with a 3.00 mm pupil in light of 550 nm (the numbers of the textbook\'s Chapter 4 Problem 59 on the eye). Move the car away until the two lights merge. Diffraction at the pupil sets the best the eye could do; a real eye also has aberrations and a finite spacing of receptors.',
     telescope: 'The textbook\'s Hubble example: a 2.40 m mirror, light of 550 nm, and two stars at the 2.0 million light year distance it uses for the Andromeda galaxy. How close can the stars be and still be seen as two? Try a smaller mirror too.',
     camera: 'A 50 mm camera lens imaging two distant points that land 15 µm apart on the sensor. Its aperture is D = f/N, so stopping down to f/16 or f/22 makes the Airy disk on the sensor larger: the diameter of its first dark ring is 2.44 λN. That is why photographs get softer at very small apertures.',
@@ -620,9 +620,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   /* ---------- about ---------- */
-  $('about1').textContent = 'The pattern: the exact far field (Fraunhofer) diffraction of a plane wave by a uniformly lit circular hole of diameter D, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ (OpenStax University Physics Volume 3, section 4.5). J₁ is the Bessel function of order one, computed from its integral to about 13 digits. Its first zero, x = 3.8317, puts the first dark ring at sin θ₁ = 1.2197 λ/D, which the textbook rounds to θ₁ = 1.22 λ/D; the next dark rings are at x = 7.0156 and 10.1735. About 84% of the light falls inside the first dark ring, and the first bright ring is only 1.75% as bright as the centre, which is why it is hard to see without a longer exposure.';
-  $('about2').textContent = 'Two sources: equally bright and independent (incoherent), so their intensities add. Each pattern is centred on its own geometric image and depends on the angle from it; the angles are small, so they are treated as adding. Rayleigh\'s criterion calls two sources just resolved when the centre of one pattern falls on the first dark ring of the other, Δθ = 1.22 λ/D; then the intensity midway between them dips to about 73.5% of the peaks. The lens, mirror or eye is taken to be perfect: no aberrations, no air turbulence, no obstruction in front of the mirror, so the only blur is diffraction.';
-  $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; a nearer screen would need Fresnel diffraction, which is not modelled). A point r from the centre of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colours of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
+  $('about1').textContent = 'The pattern: the exact far field (Fraunhofer) diffraction of a plane wave by a uniformly lit circular hole of diameter D, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ (OpenStax University Physics Volume 3, section 4.5). J₁ is the Bessel function of order one, computed from its integral to about 13 digits. Its first zero, x = 3.8317, puts the first dark ring at sin θ₁ = 1.2197 λ/D, which the textbook rounds to θ₁ = 1.22 λ/D; the next dark rings are at x = 7.0156 and 10.1735. About 84% of the light falls inside the first dark ring, and the first bright ring is only 1.75% as bright as the center, which is why it is hard to see without a longer exposure.';
+  $('about2').textContent = 'Two sources: equally bright and independent (incoherent), so their intensities add. Each pattern is centered on its own geometric image and depends on the angle from it; the angles are small, so they are treated as adding. Rayleigh\'s criterion calls two sources just resolved when the center of one pattern falls on the first dark ring of the other, Δθ = 1.22 λ/D; then the intensity midway between them dips to about 73.5% of the peaks. The lens, mirror or eye is taken to be perfect: no aberrations, no air turbulence, no obstruction in front of the mirror, so the only blur is diffraction.';
+  $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; a nearer screen would need Fresnel diffraction, which is not modeled). A point r from the center of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colors of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
   $('about4').textContent = 'Numbers: the textbook\'s Example 4.6, Hubble (2.40 m mirror, 550 nm, stars at 2.0 million light years) and its Chapter 4 Problem 59 on the eye (3.00 mm pupil, 550 nm, headlights 1.30 m apart); 1 ly = 9.4607 × 10¹⁵ m. Real eyes do worse than diffraction allows: normal (20/20) acuity is about one minute of arc, 291 µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to 1/1000 of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.';
 
   /* ---------- size, theme, start ---------- */

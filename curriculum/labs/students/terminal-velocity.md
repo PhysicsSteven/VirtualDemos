@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §6.4 (Drag Force and Terminal 
 
 **Using the demo.**
 
-- A skydiver jumps and falls straight down, shown in 3D (drag to turn the view) or from the side. Arrows show the weight and the drag to the same scale, and streaks show how far the air moves past in 0.05 s. Below the picture a graph shows the speed, the acceleration or the distance fallen against time, with earlier falls in grey.
+- A skydiver jumps and falls straight down, shown in 3D (drag to turn the view) or from the side. Arrows show the weight and the drag to the same scale, and streaks show how far the air moves past in 0.05 s. Below the picture a graph shows the speed, the acceleration or the distance fallen against time, with earlier falls in gray.
 - During the fall the skydiver can change between spread eagle and head first, and pull the ripcord. The parachute also opens by itself at the pull altitude.
 - The Set up card on the picture sets the mass with gear, the exit and pull altitudes, and whether the air is uniform or thins with height. For the coffee filters it sets how many are stacked and the release height above a motion detector.
 - The clock is the real time of the fall; faster playback only shortens the wait. Step runs to the next whole step of the clock (1 s or 0.1 s for a skydiver, 0.05 s or 0.01 s for the filters) and stops there.
@@ -18,7 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §6.4 (Drag Force and Terminal 
 
 **What the demo models.**
 
-- The drag is $$D = \tfrac12\rho CAv^2$$ with constant $$C$$; buoyancy and the air carried along with the body are left out, and $$g = 9.80$$ m/s².
+- The drag is $$D = \tfrac12\rho CAv^2$$ with constant $$C$$; buoyancy and the air carried along with the body are left out, and $$g = 9.81$$ m/s².
 - Skydiver: $$C = 1.0$$, $$A = 0.70$$ m² spread eagle and $$C = 0.70$$, $$A = 0.18$$ m² head first, the textbook's values. A change of position takes 1.0 s.
 - Parachute: a round canopy with $$CA = 63.6$$ m²; after the pull the lines stretch for 1.0 s and the canopy fills in 3.0 s. Under it the body hangs upright.
 - Uniform air has $$\rho = 1.21$$ kg/m³. Air that thins with height follows the International Standard Atmosphere.
@@ -53,7 +53,7 @@ At $$t = v_T/g$$ the speed is $$\tanh 1 = 0.762$$ of $$v_T$$, and it takes about
 
 The density of the air falls with height. In the International Standard Atmosphere it is 1.225 kg/m³ at sea level, then 1.112, 1.006, 0.909, 0.819, 0.736, 0.660, 0.590, 0.525, 0.466 and 0.413 kg/m³ at 1, 2, 3, 4, 5, 6, 7, 8, 9 and 10 km.
 
-**Constants.** $$g = 9.80$$ m/s², $$\rho = 1.21$$ kg/m³ for uniform air. One coffee filter: $$m_1 = 0.86$$ g, top diameter 15.1 cm.
+**Constants.** $$g = 9.81$$ m/s², $$\rho = 1.21$$ kg/m³ for uniform air. One coffee filter: $$m_1 = 0.86$$ g, top diameter 15.1 cm.
 
 ## Before the lab
 
@@ -82,7 +82,7 @@ Turn Blind on before you start. Send the readings of each part to the worksheet,
 
 ## Data
 
-**Falling skydiver.** One copy of this table for each of Parts 1, 2, 3 and 5. $$D = m(g - a)$$ with $$g = 9.80$$ m/s².
+**Falling skydiver.** One copy of this table for each of Parts 1, 2, 3 and 5. $$D = m(g - a)$$ with $$g = 9.81$$ m/s².
 
 | Reading | Body | $$m$$ (kg) | $$t$$ (s) | Fallen $$y$$ (m) | $$v$$ (m/s) | $$a$$ (m/s²) | $$v^2$$ (m²/s²) | Drag $$D$$ (N) |
 |---|---|---|---|---|---|---|---|---|

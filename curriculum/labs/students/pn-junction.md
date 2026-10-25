@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§9.5 and 9.7. Access for fre
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Diode; LED colours (these two use the Junction view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet).
+**Setups in the demo:** Diode; LED colors (these two use the Junction view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet).
 
 **Using the demo.**
 
@@ -24,7 +24,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§9.5 and 9.7. Access for fre
 
 ## Goal
 
-Measure the current through a pn junction diode in forward and reverse bias, use the exponential rise of the forward current to find $$e/k$$, and relate the colour of an LED to its band gap.
+Measure the current through a pn junction diode in forward and reverse bias, use the exponential rise of the forward current to find $$e/k$$, and relate the color of an LED to its band gap.
 
 ## Background
 
@@ -53,7 +53,7 @@ No hazards in the virtual lab.
 
 **Other temperatures.** Clear the readings. At 250 K, record the forward current from 0.10 V to 0.70 V in steps of 0.05 V. Clear, and repeat at 350 K.
 
-**LEDs.** Pick LED colours. For each LED material, write the spectrometer's peak wavelength in the LED table. Then pick Any band gap and find the gaps that give the edges of the visible spectrum, near 380 nm and 750 nm.
+**LEDs.** Pick LED colors. For each LED material, write the spectrometer's peak wavelength in the LED table. Then pick Any band gap and find the gaps that give the edges of the visible spectrum, near 380 nm and 750 nm.
 
 ## Data
 

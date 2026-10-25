@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§11.2 and 11.4. Access for f
 
 **Using the demo.**
 
-- The Detector view shows simulated pictures from a liquid hydrogen bubble chamber, with a window 1 m across, in a uniform magnetic field into the page. A π⁻ beam enters from the left. Where one beam track stops, the reaction π⁻ + p → K⁰ + Λ⁰ took place; the neutral particles leave no tracks, and each may decay a few centimetres away into two charged particles that make a V.
+- The Detector view shows simulated pictures from a liquid hydrogen bubble chamber, with a window 1 m across, in a uniform magnetic field into the page. A π⁻ beam enters from the left. Where one beam track stops, the reaction π⁻ + p → K⁰ + Λ⁰ took place; the neutral particles leave no tracks, and each may decay a few centimeters away into two charged particles that make a V.
 - Fit a circle: choose Track + or Track −, then click three or more points along that track. A least squares circle is drawn through your points and its radius shown. More points spread along the track give a better fit. Undo point removes the last one.
 - Measure an angle: click the vertex of the V, then a point on each track. Pick points close to the vertex, where each track still points along its starting direction.
 - Zoom with the buttons or the mouse wheel and drag to move around. Arrow keys move a cross and Enter places a point there.
@@ -28,11 +28,11 @@ Measure the curvature of the two tracks of a V in a bubble chamber and the angle
 
 ## Background
 
-A particle of charge $$q$$ and momentum $$p$$ moving at right angles to a magnetic field $$B$$ travels in a circle of radius $$r = p/(qB)$$, at any speed. For a particle of charge $$\pm e$$, with $$p$$ in GeV/c, $$B$$ in tesla and $$r$$ in metres, this is the book's Eq. 11.2:
+A particle of charge $$q$$ and momentum $$p$$ moving at right angles to a magnetic field $$B$$ travels in a circle of radius $$r = p/(qB)$$, at any speed. For a particle of charge $$\pm e$$, with $$p$$ in GeV/c, $$B$$ in tesla and $$r$$ in meters, this is the book's Eq. 11.2:
 
 $$p = 0.3\,B\,r.$$
 
-The exact factor is 0.2998. In the units of this lab, $$p$$ in MeV/c and $$r$$ in centimetres, $$p = 2.998\,B\,r$$.
+The exact factor is 0.2998. In the units of this lab, $$p$$ in MeV/c and $$r$$ in centimeters, $$p = 2.998\,B\,r$$.
 
 A neutral particle of mass $$M$$ that decays into two particles conserves energy and momentum. If the two have momenta $$p_1$$ and $$p_2$$ at an angle $$\theta$$ to each other, and masses $$m_1$$ and $$m_2$$, then $$E_i = \sqrt{p_i^2c^2 + m_i^2c^4}$$ and
 
@@ -40,14 +40,14 @@ $$M^2c^4 = (E_1 + E_2)^2 - \left(p_1^2 + p_2^2 + 2p_1p_2\cos\theta\right)c^2.$$
 
 This **invariant mass** is the same in every frame (§11.4). The tracks give $$p_1$$, $$p_2$$ and $$\theta$$, but not $$m_1$$ and $$m_2$$: you have to guess which particles made them. Two neutral particles make V's in this chamber: the K⁰ (seen as the short lived K⁰_S) decays to π⁺ π⁻, and the Λ⁰ decays to p π⁻ (§11.2). Only the right guess gives the mass of a real particle.
 
-Strangeness is kept by the strong interaction, so the strong reaction π⁻ + p makes strange particles in pairs (associated production). Each then decays by the weak interaction, which changes strangeness, so they live long enough (about 10⁻¹⁰ s) to fly a few centimetres.
+Strangeness is kept by the strong interaction, so the strong reaction π⁻ + p makes strange particles in pairs (associated production). Each then decays by the weak interaction, which changes strangeness, so they live long enough (about 10⁻¹⁰ s) to fly a few centimeters.
 
 ## Before the lab
 
 1. A positive track has a radius of curvature of 50.0 cm in a field of 1.5 T. Find its momentum in MeV/c.
 2. A Λ⁰ at rest decays to a proton and a π⁻. Use conservation of energy and momentum, with the masses in the Particles view, to find the momentum of each. What radius would each track have in 1.5 T?
 3. Show that the invariant mass formula above gives $$M = m_1 + m_2$$ when the two particles have no momentum relative to each other.
-4. The beam is π⁻ at 1.20 GeV/c on protons at rest. Find the total energy available in the centre of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.
+4. The beam is π⁻ at 1.20 GeV/c on protons at rest. Find the total energy available in the center of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.
 
 ## Safety
 

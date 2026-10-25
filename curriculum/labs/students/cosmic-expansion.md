@@ -82,7 +82,7 @@ Fill the Speed column on the rows for the later time, from $$v = \Delta d/\Delta
 ## Analysis
 
 1. For each copy of the table, work out each galaxy's speed and plot $$v$$ against $$d$$. Is the graph a straight line through the origin? Find its slope $$H$$ in km/s/Mpc.
-2. Compare the slopes measured from the Milky Way and from the other galaxy. What does that tell you about whether we are at the centre of the expansion?
+2. Compare the slopes measured from the Milky Way and from the other galaxy. What does that tell you about whether we are at the center of the expansion?
 3. From your slope for Planck ΛCDM today, find the Hubble time $$1/H$$ in Gyr and compare it with the model's age.
 4. Matter only and Empty universes have the same $$H_0$$ today. Compare their ages with $$1/H_0$$ and with $$2/(3H_0)$$, and explain the difference using the shape of each curve on the scale factor graph.
 5. From the Half the size readings, find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc? Is the expansion of Planck ΛCDM speeding up or slowing down today? (Think about $$\dot a = aH$$.)
@@ -93,7 +93,7 @@ The distances are given to 0.01 Mpc, and each speed comes from a difference of t
 
 ## Questions
 
-1. Every galaxy sees every other moving away. Does that mean we are at the centre? Explain with the balloon picture.
+1. Every galaxy sees every other moving away. Does that mean we are at the center? Explain with the balloon picture.
 2. Galaxies themselves do not grow as the universe expands, and neither does the solar system. Why not?
 3. The Hubble time for our universe is 14.5 Gyr and its age is 13.8 Gyr. Why are they so close, when the matter only model gives an age of only two thirds of the Hubble time?
 4. A de Sitter universe has no beginning. What does its scale factor graph look like going back in time, and why?

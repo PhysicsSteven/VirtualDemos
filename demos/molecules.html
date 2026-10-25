@@ -66,7 +66,7 @@
         <span class="count mono" id="clock"></span>
       </div>
       <div class="pane" id="pane">
-        <canvas id="can" tabindex="0" role="img" aria-label="A sodium and a chlorine atom on a scale in nanometres. Drag the sodium, or use the arrow keys, to change their separation."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation."></canvas>
       </div>
       <div class="curvebox"><canvas id="curve" tabindex="0" role="img" aria-label="The graph for the view: energy against separation, the lines of the spectrum, or a close up of the spectrum around the cursor."></canvas></div>
       <div class="shelf" id="shelf">
@@ -204,8 +204,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      the NIST Chemistry WebBook (webbook.nist.gov, "Constants of diatomic molecules"); the HCl higher terms (ωe ze, the v dependence
      of B_v and D_v) are the WebBook's notes, from Rank, Rao et al. (1965). D₀ values: Huber and Herzberg (HF and Cl₂ as given in
      the WebBook notes). Atomic masses: AME2020 (Wang et al. 2021). Chlorine isotope abundances 75.76 % and 24.24 %: IUPAC (CIAAW).
-     Constants: CODATA 2018. */
-  const KE2 = 1.43996448, HC_EVNM = 1239.84198, CM_EV = 1.239841984e-4, U_KG = 1.66053906660e-27, EV_J = 1.602176634e-19;
+     Constants: CODATA 2022. */
+  const KE2 = 1.43996455, HC_EVNM = 1239.84198, CM_EV = 1.239841984e-4, U_KG = 1.66053906892e-27, EV_J = 1.602176634e-19;
   const H_PL = 6.62607015e-34, HBAR = H_PL / (2 * Math.PI), C_MS = 299792458, KB_EV = 8.617333262e-5, C2 = 1.438776877; /* second radiation constant hc/k in cm K */
   const MASS = { H: 1.00782503223, C: 12, N: 14.00307400443, O: 15.99491461957, F: 18.99840316273, Na: 22.9897692820, Cl35: 34.968852682, Cl37: 36.965902602 };
   const ABUND = { Cl35: 0.7576, Cl37: 0.2424 };
@@ -668,7 +668,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.view = v; press('#viewSeg button', (b) => b.dataset.v === v); $('stage').className = `stage v-${v}`;
     $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp';
     $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : 'wavenumber in cm⁻¹ · simulated spectrum';
-    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometres. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometres. Drag the right hand atom, or use the arrow keys, to change the bond length.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
+    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometers. Drag the right hand atom, or use the arrow keys, to change the bond length.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
     can.style.cursor = v === 'lev' ? 'default' : 'ew-resize';
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     sync(); redraw();
@@ -737,7 +737,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutCov').textContent = 'Covalent bond (OpenStax §9.1): two atoms share a pair of electrons. The curve is a Morse potential U = D_e(1 − e^(−a(r − r_e)))² − D_e, a model with three measured inputs: the bond length r_e, the vibration wavenumber ωe (which fixes a = 2πcωe√(μ/2D_e)) and the well depth D_e = D₀ + G(0), where D₀ is the measured dissociation energy and G(0) the zero point energy of the lowest vibration level (constants from Huber and Herzberg 1979 via the NIST Chemistry WebBook). The levels drawn in the well use the measured ωe and ωe xe. The parallel spin curve for H₂ is Sato\'s anti Morse form, a model of the repulsive (antibonding) state, shown for the idea only. OpenStax quotes 0.074 nm and 4.52 eV for H₂; the spectroscopic values are r_e = 0.0741 nm and D₀ = 4.478 eV (D_e = 4.747 eV).';
   $('aboutLev').textContent = 'Energy levels (OpenStax §9.2): in the book\'s model the molecule vibrates as a harmonic oscillator, E_vib = (n + 1/2)hf, and turns as a rigid rotor, E_rot = l(l + 1)ħ²/2I with I = μr² and μ the reduced mass. Here hf is the measured spacing of n = 0 and n = 1 and ħ²/2I = B₀ (the measured rotational constant of n = 0). A photon carries one unit of angular momentum, so l must change by 1 (Δl = ±1); in the harmonic model n changes by 1 or not at all, and only molecules with an electric dipole (HCl, HF, CO, not N₂) absorb. "Measured constants" uses the full term values: anharmonic vibration G(v) = ωe(v + 1/2) − ωe xe(v + 1/2)² + ..., a rotational constant B_v that falls as v rises, and centrifugal stretching D_v [l(l + 1)]². Wavenumbers are in cm⁻¹; 1 cm⁻¹ is 0.12398 meV.';
   $('aboutSp').textContent = 'HCl spectrum: the v = 0 → 1 band of HCl gas, simulated from the measured spectroscopic constants of H³⁵Cl (NIST WebBook, Huber and Herzberg 1979, with the higher terms of Rank, Rao et al. 1965). They reproduce the measured lines to about 0.01 cm⁻¹ (R(0) 2906.25, P(1) 2865.10 cm⁻¹). H³⁷Cl constants are scaled from H³⁵Cl by the reduced mass (Born–Oppenheimer). Line strengths follow the Boltzmann population of the lower level, the Hönl–London factors and the isotope abundances (75.76 % and 24.24 %); the slight difference in strength between the R and P branches from the stretching of the dipole (Herman–Wallis effect), pressure broadening and the weak hot band are left out. Each line is drawn as a Gaussian as wide as the spectrometer\'s resolution. Absorbance is relative to the strongest peak. The lock finds the top of the displayed peak, as you would by eye.';
-  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); constants CODATA 2018.';
+  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); constants CODATA 2022.';
 
   /* recorded readings are drawn on the graphs: redraw after Record, Clear or a deleted row */
   document.querySelector('.vd-readings').addEventListener('click', () => setTimeout(redraw, 0));

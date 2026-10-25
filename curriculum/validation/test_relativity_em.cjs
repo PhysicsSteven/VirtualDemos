@@ -5,12 +5,12 @@ const assert=require('node:assert/strict'),{core}=require('./demo_source.cjs');
 let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
 function close(a,b,rel=1e-12,abs=0){assert(Number.isFinite(a)&&Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`);}
 const R=core('relativity-em','C0,EPS0,MU0,QE,N_CU,K2,KC,gammaOf,gm1,relVel,wireInFrame,wireForce,labForce,copperWire,boostFields,invariants,coulomb,movingCharge,movingFromCoulomb,lineAngle,isoRadius');
-const c=299792458,eps0=8.8541878128e-12,mu0=1/(eps0*c*c),e=1.602176634e-19;
+const c=299792458,eps0=8.8541878188e-12,mu0=1/(eps0*c*c),e=1.602176634e-19;
 const g=(b)=>1/Math.sqrt(1-b*b);
 const SPEEDS=[[0.5,0.5],[0.8,-0.6],[0.9,0.9],[-0.9,0.9],[0.3,0.7],[0.01,0.02],[0.9,0.1]];
 
 test('constants: SI values, μ₀ from ε₀ and c, copper electron density',()=>{
- assert.equal(R.C0,c);close(R.EPS0,eps0);close(R.MU0,1.25663706212e-6,1e-10);close(R.QE,e);
+ assert.equal(R.C0,c);close(R.EPS0,eps0);close(R.MU0,1.25663706127e-6,1e-10);close(R.QE,e);
  close(R.N_CU,8960/0.063546*6.02214076e23);close(R.N_CU,8.491e28,1e-3);
 });
 
@@ -77,7 +77,7 @@ test("F′ = γᵤF at all speeds, including 0.9c and the low speed limit",()=>{
   close(Q.F,g(u)*L.F,1e-12);worst=Math.max(worst,Math.abs(Q.F/L.F/g(u)-1));
   assert(L.FE===0);close(Q.F,Q.FE,1e-14);
   // in every intermediate frame f the transverse force is F_rest/γ of q's speed there
-  for(const f of [-0.5,0.1,0.3,0.6,0.85]){const W=R.wireForce(lam0,v,u,q,r,f);close(W.F,Q.F/g(W.uq),1e-9);}
+  for(const f of [-0.5,0.1,0.3,0.6,0.85]){const W=R.wireForce(lam0,v,u,q,r,f);close(W.F,Q.F/g(W.uq),1e-8);}   // 1e-8: at u = v = 1e-6 the electric and magnetic parts cancel to one part in 3e6, so float rounding leaves about 1e-9
  }
  // 0.9c: γ = 2.294
  close(g(0.9),2.294157338705618,1e-14);

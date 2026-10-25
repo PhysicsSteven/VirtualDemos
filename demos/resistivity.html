@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: a wire on a metre rule with a sliding contact, a supply, ammeter and voltmeter on the left; the rail on the right. */
+/* Layout: a wire on a meter rule with a sliding contact, a supply, ammeter and voltmeter on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root { --wire: #b06a2c; --meter: #f2f4f7; --clip: #2b60b5; --ecol: #6f4bb3; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #1c2430; --clip: #69a0ff; --ecol: #b49bff; } }
@@ -97,7 +97,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   <main class="bench">
     <div class="stage" id="stage" data-view="bench">
-      <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a metre rule with a fixed clip at zero and a sliding clip, and a voltmeter on the clips. Above it, a piece of the wire magnified 200 times with its free electrons drifting in real time, and a graph of the potential along the wire. Drag the sliding clip, or use the left and right arrow keys."></canvas>
+      <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a meter rule with a fixed clip at zero and a sliding clip, and a voltmeter on the clips. Above it, a piece of the wire magnified 200 times with its free electrons drifting in real time, and a graph of the potential along the wire. Drag the sliding clip, or use the left and right arrow keys."></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       <div class="supply" id="supply" role="group" aria-labelledby="supTitle">
         <span class="sup-title" id="supTitle">Supply</span>
@@ -165,7 +165,7 @@ table.rows input:focus { border-color: var(--accent); }
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Choose <b>Inside the wire</b> above the picture to see the free electrons in a magnified piece of this wire. With <b>Follow the marked electron</b>, the view travels with the circled electron, so the ions stream past it: its zigzag is the random motion, and its slow creep to the left is the drift.</p>
           <p class="formula">I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d</p>
-          <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
+          <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centered cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
         </details>
       </section>
 
@@ -222,7 +222,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmotion"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope E of the potential (the Mystery wire hides E too).</p>
+          <p class="hint">Blind hides ρ, α, the wire's resistance per meter, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope E of the potential (the Mystery wire hides E too).</p>
           <p class="hint">Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.</p>
         </details>
         </div></details>
@@ -266,7 +266,7 @@ table.rows input:focus { border-color: var(--accent); }
     return L.join('\n') + '\n';
   }
   /* ---- Inside the wire: free electrons, drift speed, current density (OpenStax Vol 2, 9.1 and 9.2) ---- */
-  const QE = 1.602176634e-19, ME = 9.1093837015e-31, HBAR = 1.054571817e-34, NA = 6.02214076e23, C0 = 299792458;
+  const QE = 1.602176634e-19, ME = 9.1093837139e-31, HBAR = 1.054571817e-34, NA = 6.02214076e23, C0 = 299792458;
   const MOLAR = { Cu: 63.546, Ni: 58.693, Cr: 51.996, Mn: 54.938 };   /* g/mol */
   /* free electrons per m³ from the density (g/cm³), mass fractions and free electrons per atom */
   function nFromAlloy(dens, frac, perAtom) { let inv = 0; for (const k in frac) inv += frac[k] / MOLAR[k]; return perAtom * (dens * 1e6 / (1 / inv)) * NA; }
@@ -356,7 +356,7 @@ table.rows input:focus { border-color: var(--accent); }
     return GAUGES.map(([, dm], i) => { if (i === S.g) return null; const v = potential(M(), WIRE_A, dm, S.T, S.I);
       return v > vs ? { dm, x: WIRE_B - (WIRE_B - WIRE_A) * vs / v, v: vs, cut: true } : { dm, x: WIRE_A, v, cut: false }; }).filter(Boolean);
   }
-  /* the magnified piece: dots at random places through its volume (u along it in real metres, r a fraction of the radius, angle th),
+  /* the magnified piece: dots at random places through its volume (u along it in real meters, r a fraction of the radius, angle th),
      all carried along at the drift speed. MG.s is the shift so far; the ring is the plane at the middle of the piece. */
   const MG = { u: [], r: [], th: [], N: 0, s: 0, t: 0, count: 0, flash: 0, key: '' };
   function magReset() {
@@ -546,7 +546,7 @@ table.rows input:focus { border-color: var(--accent); }
     scene.add(bench, rule, wire, ...posts, clipA, clipB, dm, wall, wallEdge, wallTicks, wallScale, ghosts, tipA, tipB, mag, zoom, mark, leads);
     g3 = { r, el, scene, cam, hemi, sun, benchM, ruleCv, ruleTex, ruleTopM, ruleSideM, wireM, wire, clipM, clipA, clipB, dm, dmBodyM, dmCv, dmTex, wallG, wallM, wall, wallEdge, edgeLM, wallTicks, tickLM, wallScale, ghosts, scaleLM, dotM2, tipA, tipB,
       mag, shell, shellM, cap, capM, farM, far, ring, ringM, gaugeRings, gaugeLM, dots, dotM, zoom, zoomLM, mark, markM, redM, blackM, leads, mat4: new THREE.Matrix4(), lcd: '' };
-    /* the flat view and the other views keep the page's own wheel and pointer behaviour */
+    /* the flat view and the other views keep the page's own wheel and pointer behavior */
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || (geo && geo.near(e)), phMin: 0.35, phMax: 1.42, zMin: 0.6, zMax: 3 });
     can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
@@ -732,7 +732,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.font = `700 ${13 * p}px ${T.ui}`;
     let y = wrapText(`Inside the ${M().name.toLowerCase()} wire (${d().toFixed(3)} mm across)`, pad, 58 * p, mw, 17 * p);
     ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted;
-    y = wrapText(`A region 4 nm long, 2 nm high and 0.3 nm deep (its height is 1/${Math.round(d() * 1e-3 / BOX.h).toLocaleString('en-US')} of the wire's diameter): all ${EL.N} free electrons in it (blue) and the ions (grey).`, pad, y + 2 * p, mw, lh);
+    y = wrapText(`A region 4 nm long, 2 nm high and 0.3 nm deep (its height is 1/${Math.round(d() * 1e-3 / BOX.h).toLocaleString('en-US')} of the wire's diameter): all ${EL.N} free electrons in it (blue) and the ions (gray).`, pad, y + 2 * p, mw, lh);
     const notes = [
       [T.ink, `Net electrons carried across the dashed plane: ${EL.count} in ${fmtTime(EL.t)} of real time. Drift so far: ${sig(-EL.s, 3)} nm to the left.`],
       [T.muted, `Not to one time scale: the drift is shown 10⁶ times slower than real (1 s on screen is 1 μs), the random motion 10¹⁵ times slower. Compared with the drift, the real random motion is 10⁹ times faster than it looks here.`]];
@@ -744,7 +744,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = T.wire; ctx.fillRect(bx, by, bw, bh); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
     const a = Math.cbrt(FREE[S.mat].perAtom / nFree()) * 1e9, ri = Math.max(1.5, Math.min(6 * p, 0.05 * sc));
-    /* Follow: the view's centre rides with the marked electron (world point cx, cy in nm), so the lattice streams past; the region repeats, so every image is drawn */
+    /* Follow: the view's center rides with the marked electron (world point cx, cy in nm), so the lattice streams past; the region repeats, so every image is drawn */
     const fol = $('inFollow').checked && EL.N > 0, cxw = fol ? EL.ux + EL.s : BW / 2, cyw = fol ? EL.uy : BH / 2, SX = (x) => bx + bw / 2 + (x - cxw) * sc, SY = (y) => by + bh / 2 + (y - cyw) * sc;
     ctx.fillStyle = T.muted; ctx.globalAlpha = 0.28;
     if (fol) { const gx0 = a / 2 + a * Math.floor((cxw - BW / 2) / a) - a, gy0 = a / 2 + a * Math.floor((cyw - BH / 2) / a) - a;
@@ -799,8 +799,8 @@ table.rows input:focus { border-color: var(--accent); }
   function readouts() {
     const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, R = volts() / S.I;
     let h = dd('Current I (ammeter)', `${sig(S.I, 3)} A`) + dd('Voltage V (voltmeter)', `${vShown()} V`) + dd('R = V/I', `${sig(R, 4)} Ω`) + dd('Area A = πd²/4', `${sig(area(d()) * 1e6, 4)} mm²`);
-    if (hidden()) h += '<div class="wide"><dt>ρ, α and R per metre</dt><dd class="ok">hidden: work them out</dd></div>';
-    else h += dd('Resistivity ρ at this temperature', `${sci(rhoAt(M(), S.T), 4)} Ω·m`) + dd('α', `${sci(M().alpha, 3)} /K`) + dd('Resistance per metre', `${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m`, true);
+    if (hidden()) h += '<div class="wide"><dt>ρ, α and R per meter</dt><dd class="ok">hidden: work them out</dd></div>';
+    else h += dd('Resistivity ρ at this temperature', `${sci(rhoAt(M(), S.T), 4)} Ω·m`) + dd('α', `${sci(M().alpha, 3)} /K`) + dd('Resistance per meter', `${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m`, true);
     $('out').innerHTML = h;
     insideReadouts(); coldReadouts();
   }

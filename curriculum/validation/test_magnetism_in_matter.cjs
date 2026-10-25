@@ -13,13 +13,13 @@ group('Table 12.2 values and the signs of para and diamagnets', () => {
   for (const k in c.MATS) { const m = c.MATS[k]; if (m.kind === 'para') assert(m.chi > 0, k); if (m.kind === 'dia') assert(m.chi < 0, k); }
 });
 group('Example 12.10: B0 = μ0nI = 5.0 × 10⁻⁴ T; a linear core gives B = (1 + χ)B0 and μ = (1 + χ)μ0', () => {
-  const B0 = c.solenoidB0(2000, 0.20); near(B0, 4e-7 * Math.PI * 400, 1e-12); near(B0, 5.0e-4, 0.01);
+  const B0 = c.solenoidB0(2000, 0.20); near(B0, 1.25663706127e-6 * 400, 1e-12); near(B0, 5.0e-4, 0.01);
   near(c.linearB(2.2e-5, B0) - B0, 2.2e-5 * B0, 1e-6); assert(c.linearB(-1.7e-5, B0) < B0); near(c.permeability(-9.1e-6), (1 - 9.1e-6) * c.MU0, 1e-15);
   /* the book's iron answer: χ = B/B0 − 1 with B = 1.4 T */
   near(1.4 / B0 - 1, 2.8e3, 0.01);
 });
 group('floating a diamagnet: B dB/dz = μ0ρg/|χ|, about 1350 T²/m for water', () => {
-  near(c.levitationBdB(998.2, -9.1e-6), 4e-7 * Math.PI * 998.2 * 9.81 / 9.1e-6, 1e-12); near(c.levitationBdB(998.2, -9.1e-6), 1352, 0.002);
+  near(c.levitationBdB(998.2, -9.1e-6), 1.25663706127e-6 * 998.2 * 9.81 / 9.1e-6, 1e-12); near(c.levitationBdB(998.2, -9.1e-6), 1352, 0.002);
   /* force balance: (|χ|/μ0) B dB/dz per volume equals ρg */
   const BdB = c.levitationBdB(9780, -1.7e-5); near(1.7e-5 / c.MU0 * BdB, 9780 * 9.81, 1e-12);
 });

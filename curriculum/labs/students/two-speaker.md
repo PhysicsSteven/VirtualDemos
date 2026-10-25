@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §16.5 and §17.3. Access for f
 
 **Using the demo.** The room is seen from above, 10 m by 8 m, with two speakers on the left wall driven by one function generator (100 to 2000 Hz). The speaker separation, the wiring of speaker 2, whether speaker 2 is on, the distance of the walk line from the wall and the air temperature are on the Set up card, which fades during a walk. The microphone is dragged on the floor (or moved with the arrow keys); the meter shows the sound level and the tape distances $$r_1$$ and $$r_2$$ to the two speakers. Walking the microphone moves it along the walk line and plots the level against $$y$$. Blind hides the wavelength; the mystery frequency covers the generator's display.
 
-**What the demo models.** Each speaker is a point source in a free field: no walls, floor or ceiling reflect and the air absorbs nothing, as outdoors or in an anechoic room. The pressure from each falls as $$1/r$$, so at a quiet spot the two do not cancel exactly unless $$r_1 = r_2$$. One speaker gives 80 dB at 1 m (chosen). The speed of sound is $$331\ \mathrm{m/s}\,\sqrt{T/273\ \mathrm{K}}$$. Positions and distances are shown to 1 mm and the level to 0.1 dB, with no noise.
+**What the demo models.** Each speaker is a point source in a free field: no walls, floor or ceiling reflect and the air absorbs nothing, as outdoors or in an anechoic room. The pressure from each falls as $$1/r$$, so at a quiet spot the two do not cancel exactly unless $$r_1 = r_2$$. One speaker gives 80 dB at 1 m (chosen). The speed of sound is $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$ with $$t_{\rm C}$$ the air temperature in °C, 343.2 m/s at 20 °C. Positions and distances are shown to 1 mm and the level to 0.1 dB, with no noise.
 
 </details>
 
@@ -30,9 +30,9 @@ The points with the same $$\Delta r$$ lie on a hyperbola with the speakers at it
 
 ## Before the lab
 
-1. Find the wavelength of 686 Hz sound in air at 20 °C, using $$v = 331\ \mathrm{m/s}\,\sqrt{T/273\ \mathrm{K}}$$.
-2. The speakers are 1.00 m apart and in phase. What path differences give quiet spots at 686 Hz? How many quiet lines are there on each side of the centre line?
-3. Why is the centre line, equally far from both speakers, always loud when the speakers are in phase?
+1. Find the wavelength of 686 Hz sound in air at 20 °C, using $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
+2. The speakers are 1.00 m apart and in phase. What path differences give quiet spots at 686 Hz? How many quiet lines are there on each side of the center line?
+3. Why is the center line, equally far from both speakers, always loud when the speakers are in phase?
 4. At a quiet spot the two waves have opposite phase. Why is the sound not exactly zero there in this room?
 
 ## Safety
@@ -67,7 +67,7 @@ For each spot, work out $$\Delta r = r_2 - r_1$$ and the order $$m$$.
 
 1. For Part 1, list $$\Delta r$$ for every loud and quiet spot. Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$.
 2. Explain what happened when speaker 2 was switched off.
-3. For Part 2, find $$\lambda$$ at each frequency from the quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$331\ \mathrm{m/s}\,\sqrt{T/273\ \mathrm{K}}$$. If you plot $$\lambda$$ against $$1/f$$, the slope is $$v$$.
+3. For Part 2, find $$\lambda$$ at each frequency from the quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$. If you plot $$\lambda$$ against $$1/f$$, the slope is $$v$$.
 4. For Part 3, compare the quiet spots with Part 1 and explain the change.
 5. For Part 4, find the mystery wavelength and frequency.
 
@@ -77,7 +77,7 @@ The level changes slowly near a loud spot and very quickly near a quiet one, so 
 
 ## Questions
 
-1. Why do the quiet lines curve away from the centre line as you move farther from the speakers?
+1. Why do the quiet lines curve away from the center line as you move farther from the speakers?
 2. Why are there more quiet lines at a higher frequency, with the same speakers?
 3. Why must a pair of speakers in a home stereo be wired the same way round?
 4. Two speakers 0.40 m apart play 686 Hz. Can there be a quiet spot anywhere in the room with $$\Delta r = 3\lambda/2$$? Explain.

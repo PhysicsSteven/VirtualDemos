@@ -160,7 +160,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div id="flowSet">
           <div class="slider-head"><label for="sTh">Angle θ between the beam and the flow</label><output id="oTh" for="sTh"></output></div><input type="range" id="sTh" min="20" max="85" step="1">
           <div class="btnrow" style="margin:6px 0"><button type="button" class="btn" id="Thm">θ −1°</button><button type="button" class="btn" id="Thp">θ +1°</button></div>
-          <div class="slider-head"><label for="sV">Blood speed v (largest, at the vessel's centre)</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.05" max="1.5" step="0.01">
+          <div class="slider-head"><label for="sV">Blood speed v (largest, at the vessel's center)</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.05" max="1.5" step="0.01">
           <div class="seg" role="group" aria-label="Flow profile" id="profSeg" style="margin-top:6px"><button type="button" data-pr="plug" aria-pressed="true">All blood at one speed</button><button type="button" data-pr="lam" aria-pressed="false">Smooth (laminar) flow</button></div>
           <div class="btnrow" style="margin-top:6px"><button type="button" class="btn" id="newFlow">New mystery flow</button></div>
         </div>
@@ -463,7 +463,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (getComputedStyle(card).position === 'absolute') { card.style.left = narrow ? '12px' : `${Math.max(12, sx + sw - 340 * p)}px`; }
   }
   /* tissue drawn with a texture fixed to the panel (so a layer painted over another matches it exactly): fat as small lobules,
-     muscle as fibres, bone as a porous band, water clear. A picture only: the echoes come from the layer list. */
+     muscle as fibers, bone as a porous band, water clear. A picture only: the echoes come from the layer list. */
   const hash = (i, j) => { const v = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return v - Math.floor(v); };
   function tissue(m, px, py, x, y0, w, h, p) {
     ctx.fillStyle = T[m] || T.surface; ctx.fillRect(x, y0, w, h);
@@ -502,7 +502,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
     /* depth scale on the left edge */
     for (let c = 0; c <= 15; c++) { const yy = y + cm(c) * ppm; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + (c % 5 ? 4 : 8) * p, yy); ctx.stroke(); if (c % 5 === 0 && c) txt(`${c} cm`, x + 10 * p, yy, { s: 9, c: T.ink, m: 1 }); }
-    /* transducer and the pulse travelling down and back */
+    /* transducer and the pulse traveling down and back */
     ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 10 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke(); ctx.globalAlpha = 1;
     /* a blob of gel under the probe face */
     ctx.fillStyle = Gr.dark() ? 'rgba(150,200,240,0.35)' : 'rgba(150,200,240,0.55)'; ctx.beginPath(); ctx.ellipse(tx, y, 22 * p, 4 * p, 0, PI, 0); ctx.fill();

@@ -122,7 +122,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag on the picture, or focus it and use the arrow keys (Shift for bigger steps), to move the probe.</p>
         </details>
-        <canvas class="sigplot" id="sigPlot" role="img" aria-label="Graph of the surface charge density along the surface against the angle around the centre"></canvas>
+        <canvas class="sigplot" id="sigPlot" role="img" aria-label="Graph of the surface charge density along the surface against the angle around the center"></canvas>
         <p class="hint" id="plotHint"></p>
       </section>
 
@@ -176,8 +176,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p></details>
-        <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands, and the rod's charge as a point charge at its very tip, anywhere in the plane through the spheres' centres. Solved exactly with Kelvin image charges at every position as you move things (every image lies in that plane). Touching spheres are solved 0.5 mm apart and joined, so they are one conductor (B's share of a shared charge is within 2 % of true point contact for a 1 cm sphere B, and within 0.25 % from 3 cm up); a thin wire joins them the same way, its own charge neglected. A grounded sphere is held at zero potential, the potential far away. The bench, the stands, the wand, the leads and the rest of the rod are left out of the electrostatics: only their connections count. The colour on each sphere is the exact σ on the side facing you, full colour at ±1 µC/m² (its strength goes as the square root of |σ|); the + and − marks show σ around the rim in the plane of the drawing, darker for more charge per area. Real charge sits as a tiny excess or shortage of electrons, and only electrons move: each moving dot stands for 0.25 nC of electrons (1.6 × 10⁹), drawn slowed down (in metal the charge settles in far less than a microsecond), and the colour eases to the new σ in about half a second for the same reason. The guided steps move the rod and B at a steady hand's pace. The largest field at each surface is σ/ε₀ where |σ| is largest around the rim; where it passes air's breakdown field, about 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1), the picture marks where a spark would start but does not model the spark.</p>
-        <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's centre. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
+        <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands, and the rod's charge as a point charge at its very tip, anywhere in the plane through the spheres' centers. Solved exactly with Kelvin image charges at every position as you move things (every image lies in that plane). Touching spheres are solved 0.5 mm apart and joined, so they are one conductor (B's share of a shared charge is within 2 % of true point contact for a 1 cm sphere B, and within 0.25 % from 3 cm up); a thin wire joins them the same way, its own charge neglected. A grounded sphere is held at zero potential, the potential far away. The bench, the stands, the wand, the leads and the rest of the rod are left out of the electrostatics: only their connections count. The color on each sphere is the exact σ on the side facing you, full color at ±1 µC/m² (its strength goes as the square root of |σ|); the + and − marks show σ around the rim in the plane of the drawing, darker for more charge per area. Real charge sits as a tiny excess or shortage of electrons, and only electrons move: each moving dot stands for 0.25 nC of electrons (1.6 × 10⁹), drawn slowed down (in metal the charge settles in far less than a microsecond), and the color eases to the new σ in about half a second for the same reason. The guided steps move the rod and B at a steady hand's pace. The largest field at each surface is σ/ε₀ where |σ| is largest around the rim; where it passes air's breakdown field, about 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1), the picture marks where a spark would start but does not model the spark.</p>
+        <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's center. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
         </div></details>
       </section>
@@ -188,11 +188,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  // Electrostatics of two conducting spheres A and B with centres on the x axis and a point charge q0 (the rod's tip) anywhere in the
+  // Electrostatics of two conducting spheres A and B with centers on the x axis and a point charge q0 (the rod's tip) anywhere in the
   // plane z = 0, solved with Kelvin image charges. Every image lies in that plane too, so a charge is { q, x, y } (z = 0).
   const EPS0 = 8.8541878188e-12, K = 1 / (4 * Math.PI * EPS0);
-  // image of a point charge q at (x, y) in a grounded sphere (centre (c, 0), radius r): q' = −q r/d, on the line from the centre to the
-  // charge, at distance r²/d from the centre
+  // image of a point charge q at (x, y) in a grounded sphere (center (c, 0), radius r): q' = −q r/d, on the line from the center to the
+  // charge, at distance r²/d from the center
   function image(q, x, y, c, r) { const dx = x - c, dd2 = dx * dx + y * y, dd = Math.sqrt(dd2), k = r * r / dd2; return { q: -q * r / dd, x: c + k * dx, y: k * y }; }
   // all images produced in both spheres (kept at zero potential) by a list of seed charges outside them; the chain bounces until the charges are negligible
   function chain(seeds, A, B, into) {
@@ -254,10 +254,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---- Conductor shapes in a plane (2D cross-sections of long conductors), solved with a boundary element method ----
   // The surface is cut into straight panels, each with a uniform surface charge density σ. The unknowns are the σ of every panel and the
   // conductor's potential V; the equations are: potential = V at every panel midpoint, and the total charge per length = the chosen net charge.
-  // Lengths in metres; fields from a long strip (panel) are exact closed forms, so the field is exact for the panel charges.
+  // Lengths in meters; fields from a long strip (panel) are exact closed forms, so the field is exact for the panel charges.
   const TPE0 = 2 * Math.PI * EPS0;
   const SHAPES = ['circle', 'ellipse', 'teardrop', 'ring', 'box'], TIP_R = 0.0015;
-  // dense closed curves for each shape, in metres: outer boundary counterclockwise, cavity boundary clockwise
+  // dense closed curves for each shape, in meters: outer boundary counterclockwise, cavity boundary clockwise
   function shapeCurves(name) {
     const cm = 0.01, N = 2400;
     const arc = (cx, cy, r, a0, a1, n, out) => { for (let i = 0; i < n; i++) { const a = a0 + (a1 - a0) * i / n; out.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return out; };
@@ -297,7 +297,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       turn[i] = Math.abs(d); P += len[i]; Tt += turn[i];
     }
     /* weight of segment i: half its share of the length, half its share of the turning (turning split over the two segments at each vertex);
-       then the local panel length (1/density) may grow by at most 20 % of the distance along the curve, so neighbouring panels never differ much in size */
+       then the local panel length (1/density) may grow by at most 20 % of the distance along the curve, so neighboring panels never differ much in size */
     const hl = new Float64Array(m);
     for (let i = 0; i < m; i++) hl[i] = len[i] / (0.5 * len[i] / P + 0.25 * (turn[i] + turn[(i + 1) % m]) / Tt);
     /* hl / n is the panel length; limit it going round the curve both ways (twice, as the curve is closed) */
@@ -314,7 +314,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     while (ends.length < n) ends.push(pts[0]);
     return ends;
   }
-  // LU factorisation with partial pivoting (row major, in place)
+  // LU factorization with partial pivoting (row major, in place)
   function luFactor(A, n) {
     const piv = new Int32Array(n);
     for (let k = 0; k < n; k++) {
@@ -337,7 +337,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = n - 1; i >= 0; i--) { let s = b[i]; for (let j = i + 1; j < n; j++) s -= A[i * n + j] * b[j]; b[i] = s / A[i * n + i]; }
     return b;
   }
-  // a uniform strip (panel) of half width a, centre (mx, my), unit tangent (tx, ty), in local coordinates u along it and w along the normal (ty, −tx):
+  // a uniform strip (panel) of half width a, center (mx, my), unit tangent (tx, ty), in local coordinates u along it and w along the normal (ty, −tx):
   //   φ = −(σ/2πε0) ∫ ln r ds; this returns −∫ ln r ds, so φ = (σ/2πε0) × stripPot (cPanelField has the matching field)
   function stripPot(a, u, w) {
     const F = (t) => { const r2 = t * t + w * w; return (r2 > 0 ? 0.5 * t * Math.log(r2) : 0) - t; };
@@ -466,8 +466,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return { metal, cavity };
   }
-  // exact σ on a conducting circular cylinder of radius a (centre at the origin, isolated, net charge lamC per length) in a uniform field E0 along +x
-  // with a line charge lam at (xq, 0), xq < −a: images −lam at −a²/|xq| and lam + lamC at the centre; σ = ε0 E_r at the surface
+  // exact σ on a conducting circular cylinder of radius a (center at the origin, isolated, net charge lamC per length) in a uniform field E0 along +x
+  // with a line charge lam at (xq, 0), xq < −a: images −lam at −a²/|xq| and lam + lamC at the center; σ = ε0 E_r at the surface
   function cylSigma(a, th, src) {
     const px = a * Math.cos(th), py = a * Math.sin(th);
     let er = 2 * (src.E0 || 0) * Math.cos(th) + (src.lamC || 0) * 1e-9 / (TPE0 * a);
@@ -479,8 +479,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return EPS0 * er;
   }
 
-  // ---- A neutral ball (radius a, dielectric constant κ; κ = Infinity for metal) and a point charge q at distance D from its centre ----
-  // Exact solution in Legendre polynomials, with θ measured at the ball's centre from the direction toward the charge. Outside the ball the
+  // ---- A neutral ball (radius a, dielectric constant κ; κ = Infinity for metal) and a point charge q at distance D from its center ----
+  // Exact solution in Legendre polynomials, with θ measured at the ball's center from the direction toward the charge. Outside the ball the
   // charge's own potential is Σ c_l r^l P_l (c_l = kq/D^(l+1), for r < D); the ball adds Σ B_l r^-(l+1) P_l and inside it the potential is
   // Σ A_l r^l P_l. Continuity of the potential and of κ ∂φ/∂r at r = a give
   //   A_l = c_l (2l + 1)/(lκ + l + 1),   B_l = −c_l a^(2l+1) l(κ − 1)/(lκ + l + 1)   (metal: A_l = 0, B_l = −c_l a^(2l+1)).
@@ -542,11 +542,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const CM = 0.01, NC = 1e-9;
   // the state of the apparatus; charges QA, QB carry over whenever the connections change
   const S = { preset: 'induce', step: 0, rod: false, q: 10, d: 5, gap: 0.05, rB: 5, wire: true, gA: false, gB: false, QA: 0, QB: 0, blind: false, sol: null,
-    /* Conductor shapes (2D): shape, E0 in N/C, line charge lam in nC/m at distance ld (cm) left of the conductor, net charge lamC in nC/m, probe in metres */
+    /* Conductor shapes (2D): shape, E0 in N/C, line charge lam in nC/m at distance ld (cm) left of the conductor, net charge lamC in nC/m, probe in meters */
     shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0], sys: null, ssol: null, chk: null, lines: null, lineKey: '',
     /* Attracting a neutral insulator: ball material, rod lowered or raised, rod charge (nC), target gap and shown gap (cm), the force taken off by Tare (N) */
     pb: 'polystyrene', prod: false, pq: 20, ps: 3, pv: 25, tare: 0, myst: null, pol: null,
-    /* worked by hand: A's centre (m), the rod's direction from A's centre, which rod, the ground wand, motion, electrons in flight, σ shading, camera */
+    /* worked by hand: A's center (m), the rod's direction from A's center, which rod, the ground wand, motion, electrons in flight, σ shading, camera */
     xA: 0, ang: Math.PI, kind: 'glass', wand: { on: null, th: 0, p: null }, glide: null, dots: [], flow: { gA: 0, gB: 0, AB: 0 }, shade: { A: {}, B: {} }, cam: null, drag: null, view: null };
   const STEPS = {
     induce: [
@@ -624,7 +624,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return G;
   }
   const gReg = (G, k) => (G.reg[k] >= 0 ? G.reg[k] : (G.reg[k] = cRegion(S.sys, G.x0 + (k % G.nx) * G.h, G.y0 + Math.floor(k / G.nx) * G.h)));
-  /* a node is near the metal if it or any of its 8 neighbours is in the metal */
+  /* a node is near the metal if it or any of its 8 neighbors is in the metal */
   function gNear(G, k) {
     if (G.near[k] >= 0) return G.near[k];
     const i = k % G.nx, j = Math.floor(k / G.nx); let m = 0;
@@ -672,7 +672,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     computeSpheres();
   }
 
-  // the visible window in metres and the map to the canvas (above the step bar)
+  // the visible window in meters and the map to the canvas (above the step bar)
   function shapeView() {
     const p = ps(), sb = document.querySelector('.stepbar'), Hu = Math.max(120, (sb ? sb.offsetTop : H) - 6 * p);
     const rx0 = Math.min(-0.04, S.lam ? S.sys.left - 0.05 : 0), rx1 = 0.04, ry = 0.032, pad = 14 * p;
@@ -803,7 +803,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     drawPlot();
   }
-  // σ along each surface against the angle θ around the centre (measured from +x)
+  // σ along each surface against the angle θ around the center (measured from +x)
   function drawPlot() {
     const pc = $('sigPlot'), r = pc.getBoundingClientRect(); if (!r.width) return;
     const p = ps(), w = r.width, h = r.height; pc.width = Math.round(w * dpr); pc.height = Math.round(h * dpr);
@@ -821,7 +821,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ticks = [0]; if (dhi > 0.15 * (hi - lo)) ticks.push(dhi); if (dlo < -0.15 * (hi - lo)) ticks.push(dlo);
     for (const s of ticks) { g.strokeStyle = s === 0 ? T.gridStrong : T.grid; g.beginPath(); g.moveTo(padL, PY(s)); g.lineTo(w - padR, PY(s)); g.stroke(); g.fillText(f(s, Math.abs(s) < 10 ? 1 : 0), padL - 4 * p, PY(s)); }
     g.save(); g.translate(9 * p, (padT + h - padB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('σ (nC/m²)', 0, 0); g.restore();
-    g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText('θ around the centre', (padL + w) / 2, h - 1);
+    g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText('θ around the center', (padL + w) / 2, h - 1);
     for (const s of ser) {
       g.strokeStyle = s.cav ? T.equi : T.accent; g.lineWidth = 2 * p; g.beginPath();
       s.a.forEach((q, i) => (i ? g.lineTo(PX(q[0]), PY(q[1])) : g.moveTo(PX(q[0]), PY(q[1])))); g.stroke();
@@ -944,7 +944,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VG.label(ctx, `${S.pb === 'mystery' ? 'Mystery insulator' : sol.m.name} ball, 2.00 cm radius${W > 520 ? ' · side view to scale' : ''} · molecules drawn huge`, 10 * p, 14 * p, { s: 10 * p });
   }
   // ---- The three sphere setups: a scene on a bench, worked by hand ----
-  /* world coordinates in metres: x along the bench, y up, the spheres' centres at y = 0 and the bench top at Y_BENCH */
+  /* world coordinates in meters: x along the bench, y up, the spheres' centers at y = 0 and the bench top at Y_BENCH */
   const R_A = 0.05, Y_BENCH = -0.2, ROD_L = 0.34, ROD_GRIP = 0.1, ROD_R = 0.006, WAND_TIP = 0.025, WAND_L = 0.11, MIN_TIP = 0.01;
   const TOUCH = 0.05, QDOT = 0.25 * NC, SIG_FULL = 1e-6, SG = 44, B_SHOW = 25;
   const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar';
@@ -952,9 +952,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const A = { c: S.xA, r: R_A }, rB = S.rB * CM, B = { c: S.xA + R_A + S.gap * CM + rB, r: rB }, D = R_A + S.d * CM;
     return { A, B, x0: S.rod ? A.c + D * Math.cos(S.ang) : null, y0: S.rod ? D * Math.sin(S.ang) : 0 };
   }
-  /* the rod's tip at a world point: sets the distance d from A's surface and the direction from A's centre */
+  /* the rod's tip at a world point: sets the distance d from A's surface and the direction from A's center */
   function setTip(x, y) { const dx = x - S.xA; S.d = Math.hypot(dx, y) / CM - 5; S.ang = Math.atan2(y, dx); }
-  /* keep the tip outside both spheres by at least MIN_TIP (1 cm, the slider's least d), pushing it out from the centre it is too near */
+  /* keep the tip outside both spheres by at least MIN_TIP (1 cm, the slider's least d), pushing it out from the center it is too near */
   function fixTip() {
     if (!S.rod) return;
     const g = geomSI(); let x = g.x0, y = g.y0, moved = false;
@@ -962,7 +962,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (y < Y_BENCH + 0.02) { y = Y_BENCH + 0.02; moved = true; }
     if (moved) setTip(x, y);
   }
-  /* the rod's body runs from the tip away from the line between the centres */
+  /* the rod's body runs from the tip away from the line between the centers */
   function rodDir(g) {
     const px = Math.min(Math.max(g.x0, g.A.c), g.B.c), dx = g.x0 - px, dy = g.y0, m = Math.hypot(dx, dy);
     return m > 1e-6 ? [dx / m, dy / m] : [0, 1];
@@ -1116,7 +1116,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < SG * SG; k++) { const v = sh.cur[k], c = v > 0 ? P : N, a = shadeAlpha(v); im.data[4 * k] = c[0]; im.data[4 * k + 1] = c[1]; im.data[4 * k + 2] = c[2]; im.data[4 * k + 3] = Math.round(235 * a); }
     sx.putImageData(im, 0, 0);
     ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.clip(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(shadeCan, x - r, y - r, 2 * r, 2 * r);
-    /* the metal's sheen stays on top of the colour */
+    /* the metal's sheen stays on top of the color */
     const gl = ctx.createRadialGradient(x - r * 0.38, y - r * 0.42, 0, x - r * 0.38, y - r * 0.42, r * 0.36); gl.addColorStop(0, 'rgba(255,255,255,0.55)'); gl.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = gl; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
     const sd = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.4, x, y, r * 1.02); sd.addColorStop(0, 'rgba(0,0,0,0)'); sd.addColorStop(1, 'rgba(0,0,0,0.28)');
@@ -1203,7 +1203,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* its name, beside the rod a little way back from the tip, kept clear of the rod card */
       const nx = uy, ny = ux, side = ny > 0.2 || (Math.abs(ny) <= 0.2 && nx > 0) ? 1 : -1, bx = t0[0] + ux * 0.1 * sc + side * nx * 22 * p, by = t0[1] - uy * 0.1 * sc + side * ny * 22 * p;
       VG.label(ctx, `${glass ? 'glass' : 'rubber'} rod ${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'), Math.min(W - 110 * p, Math.max(6 * p, bx)), Math.min(v.benchPx - 10 * p, Math.max((W < 620 ? 124 : 62) * p, by)), { s: 11 * p, w: 600, c: T.ink });
-      /* the distance d from the tip to A's surface, drawn along the line to A's centre */
+      /* the distance d from the tip to A's surface, drawn along the line to A's center */
       const ax = X(g.A.c + g.A.r * Math.cos(S.ang)), ay = Y(g.A.r * Math.sin(S.ang));
       if (Math.hypot(ax - t0[0], ay - t0[1]) > 18 * p) {
         ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(t0[0], t0[1]); ctx.lineTo(ax, ay); ctx.stroke(); ctx.restore();
@@ -1231,7 +1231,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.save(); ctx.globalAlpha = a; ctx.shadowColor = T.neg; ctx.shadowBlur = 6 * p; ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(q[0], q[1], 3 * p, 0, 7); ctx.fill();
       ctx.shadowBlur = 0; ctx.strokeStyle = dk ? 'rgba(255,255,255,0.7)' : '#ffffff'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
     }
-    /* key: the colour scale for σ, and what a moving dot is */
+    /* key: the color scale for σ, and what a moving dot is */
     const narrow = W < 620, kw = narrow ? Math.min(200 * p, W - 40 * p) : Math.min(200 * p, W * 0.42), kx = W - kw - 18 * p, ky = narrow ? 58 * p : 14 * p;
     VG.panel(ctx, kx - 8 * p, ky - 4 * p, kw + 16 * p, 52 * p, { r: 8 });
     const bar = ctx.createLinearGradient(kx, 0, kx + kw, 0), P = rgb(T.pos), N = rgb(T.neg);
@@ -1344,7 +1344,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function readoutsPolar() {
     const o = S.pol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, myst = S.pb === 'mystery';
     let h = dd('Balance reading', `${(o.mg === 0 ? 0 : o.mg).toFixed(2).replace('-', '−')} mg${o.stable ? '' : ' (settling)'}`) + dd('Gap s', S.prod || S.pv < 24.95 ? `${f(S.pv, 1)} cm` : 'rod raised')
-      + dd('Rod tip to ball centre D', `${f(o.D / CM, 2)} cm`) + dd('Dielectric constant κ', myst ? 'hidden: measure it' : o.m.kappa === Infinity ? 'metal (free charges)' : String(o.m.kappa));
+      + dd('Rod tip to ball center D', `${f(o.D / CM, 2)} cm`) + dd('Dielectric constant κ', myst ? 'hidden: measure it' : o.m.kappa === Infinity ? 'metal (free charges)' : String(o.m.kappa));
     if (S.blind) h += '<div class="wide"><dt>Force</dt><dd class="ok">hidden in Blind: read the balance</dd></div>';
     else h += dd('Pull on the ball F', sci(o.F * 1e6, 'µN')) + dd('Dipole term alone', sci(o.Fd * 1e6, 'µN')) + dd('F ÷ dipole term', o.Fd > 0 ? f(o.F / o.Fd, 3) : '—')
       + dd('Taken off by Tare', sci(S.tare * 1e6, 'µN'));
@@ -1360,7 +1360,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the strongest field just outside each sphere, σ/ε₀ at the point of largest |σ|, against air's breakdown field */
     const ef = (pk) => { const E = Math.abs(pk.sigma) / EPS0; return `${f(E / 1e6, 2)} MV/m${E > E_BREAK ? ' (above 3 MV/m: air would spark)' : ''}`; };
     h += dd('Largest field at A\'s surface', ef(sol.peakA), true) + (S.gap > B_SHOW ? '' : dd('Largest field at B\'s surface', ef(sol.peakB), true));
-    if (S.rod) h += dd('Rod tip to A\'s surface d', `${f(S.d, 2)} cm${Math.abs(Math.sin(S.ang)) > 1e-3 ? `, ${f(180 - Math.abs(S.ang) * 180 / Math.PI, 0)}° off the line of centres` : ''}`, true);
+    if (S.rod) h += dd('Rod tip to A\'s surface d', `${f(S.d, 2)} cm${Math.abs(Math.sin(S.ang)) > 1e-3 ? `, ${f(180 - Math.abs(S.ang) * 180 / Math.PI, 0)}° off the line of centers` : ''}`, true);
     $('out').innerHTML = h;
   }
   function sync() {
@@ -1417,7 +1417,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rodRubber').addEventListener('click', () => pickRod('rubber'));
   $('rodAway').addEventListener('click', putRodDown);
   /* Readings for the worksheet (tools/readings_panel.py): the apparatus as it stands and the net charges on A and B (as an electrometer
-     would read them), from the exact image charge solution. R/(R + d) is sphere A's radius over the distance from its centre to the rod tip. */
+     would read them), from the exact image charge solution. R/(R + d) is sphere A's radius over the distance from its center to the rod tip. */
   window.vdVersion = 'induction@2026-10-24';
   window.vdShowCols = [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
   const SETUP = { induce: 'two spheres by induction', ground: 'one sphere by grounding', contact: 'sharing by contact' };

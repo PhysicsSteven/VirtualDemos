@@ -12,14 +12,14 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.6. Access for free at http
 
 **Using the demo.**
 
-- The **Pull on Earth** view shows the Moon's pull at points around Earth, or the tidal pull (the pull at a point minus the pull at Earth's centre). The Moon's distance runs from 40 to 120 Earth radii; today it is 60.34 Earth radii (384,400 km).
-- Its readouts give the pull at Earth's centre, the tidal acceleration along the Earth–Moon line from the formula $$2GM_\text{Moon}R_E/d^3$$, the exact values on the near and far sides, and the tidal acceleration across (at the sides).
+- The **Pull on Earth** view shows the Moon's pull at points around Earth, or the tidal pull (the pull at a point minus the pull at Earth's center). The Moon's distance runs from 40 to 120 Earth radii; today it is 60.34 Earth radii (384,400 km).
+- Its readouts give the pull at Earth's center, the tidal acceleration along the Earth–Moon line from the formula $$2GM_\text{Moon}R_E/d^3$$, the exact values on the near and far sides, and the tidal acceleration across (at the sides).
 - The **Ocean bulges** view shows an ocean covering the whole Earth, a city on the equator and the water level there over two days and over a month. Its readouts give the height of each body's tide, the city's water level, the day's range and when the next high tide comes. Time runs from the clock and the days since new moon.
 - Record reading works in the Pull on Earth view. It stores the Moon's distance and the accelerations in μm/s² (1 μm/s² = 10⁻⁶ m/s²) to four significant figures. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table. Read the water levels in the Ocean bulges view from the panel.
 
 **What the demo models.**
 
-- Point masses, with G = 6.674 × 10⁻¹¹ N·m²/kg² (CODATA 2018) and standard astronomical values (the textbook's tables give them to three figures): M_Moon = 7.342 × 10²² kg, M_Sun = 1.989 × 10³⁰ kg, M_E = 5.972 × 10²⁴ kg, R_E = 6371 km, Moon 384,400 km and Sun 1.496 × 10⁸ km away. The exact pulls come from $$GM/r^2$$ at each point.
+- Point masses, with G = 6.674 × 10⁻¹¹ N·m²/kg² (CODATA 2022) and standard astronomical values (the textbook's tables give them to three figures): M_Moon = 7.342 × 10²² kg, M_Sun = 1.989 × 10³⁰ kg, M_E = 5.972 × 10²⁴ kg, R_E = 6371 km, Moon 384,400 km and Sun 1.496 × 10⁸ km away. The exact pulls come from $$GM/r^2$$ at each point.
 - The ocean is the equilibrium tide: the water surface follows the tidal pull at once, with height $$h = A(3\cos^2\theta - 1)/2$$ and $$A = (M/M_E)(R_E/d)^3 R_E$$, where $$\theta$$ is measured from the point under the Moon or Sun. It leaves out the water's own gravity, Earth's elastic stretch, continents and ocean basins, and the time the water takes to respond. The Moon and Sun move in circles in the plane of Earth's equator. The synodic month is 29.53 days.
 
 </details>
@@ -30,11 +30,11 @@ Measure how the Moon's pull and its tidal pull fall off with distance, see why t
 
 ## Background
 
-The Moon pulls every part of Earth toward it, but not equally: the near side is pulled more than the centre, and the centre more than the far side. Relative to Earth's centre, the near side is pulled toward the Moon and the far side away from it, which stretches the oceans into two bulges (§13.6). Along the Earth–Moon line, the difference between the pull on the near side and the pull at the centre is
+The Moon pulls every part of Earth toward it, but not equally: the near side is pulled more than the center, and the center more than the far side. Relative to Earth's center, the near side is pulled toward the Moon and the far side away from it, which stretches the oceans into two bulges (§13.6). Along the Earth–Moon line, the difference between the pull on the near side and the pull at the center is
 
 $$a_\text{tidal} = GM\left[\frac{1}{(d - R_E)^2} - \frac{1}{d^2}\right] \approx \frac{2GMR_E}{d^3} \quad (R_E \ll d),$$
 
-while the pull at the centre is $$GM/d^2$$. So the tidal acceleration is the pull times $$2R_E/d$$, and it falls off as $$1/d^3$$. At the sides the tidal acceleration points toward Earth's centre with half that size. If $$d$$ is measured in Earth radii, a graph of the pull against $$1/d^2$$ has slope $$GM/R_E^2$$, and a graph of the tidal acceleration against $$1/d^3$$ has slope $$2GM/R_E^2$$.
+while the pull at the center is $$GM/d^2$$. So the tidal acceleration is the pull times $$2R_E/d$$, and it falls off as $$1/d^3$$. At the sides the tidal acceleration points toward Earth's center with half that size. If $$d$$ is measured in Earth radii, a graph of the pull against $$1/d^2$$ has slope $$GM/R_E^2$$, and a graph of the tidal acceleration against $$1/d^3$$ has slope $$2GM/R_E^2$$.
 
 For an ocean that follows the tidal pull, the water stands highest under the body and opposite it, a height $$A$$ above the mean, and lowest at the sides, $$A/2$$ below it, so one body gives a daily range of $$1.5A$$. The Sun's tide adds to the Moon's at new and full moon (spring tides) and partly cancels it at the quarters (neap tides).
 
@@ -59,7 +59,7 @@ No physical apparatus is used. At a real shore, check tide tables before walking
 
 ## Data
 
-| Reading | Moon's distance d (Earth radii) | Pull at Earth's centre (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) |
+| Reading | Moon's distance d (Earth radii) | Pull at Earth's center (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 | | | | | | | | |
@@ -78,7 +78,7 @@ Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and th
 
 ## Analysis
 
-1. Fit the pull at Earth's centre against $$1/d^2$$. From the slope find $$GM_\text{Moon}$$ and then the Moon's mass (use $$R_E$$ = 6371 km and $$G$$ from About the demo). Compare it with $$7.342 \times 10^{22}$$ kg.
+1. Fit the pull at Earth's center against $$1/d^2$$. From the slope find $$GM_\text{Moon}$$ and then the Moon's mass (use $$R_E$$ = 6371 km and $$G$$ from About the demo). Compare it with $$7.342 \times 10^{22}$$ kg.
 2. Fit the mean of the near and far side tidal pulls against $$1/d^3$$. Compare the slope with twice the slope from Analysis 1, and explain why it should be twice.
 3. At each distance, find the ratio of the near side to the far side tidal pull. Show that it is close to $$1 + 3R_E/d$$, and say why the near side is larger.
 4. Using your data, by what factor did the pull and the tidal pull grow when the Moon came in from 60.34 to 40 Earth radii? Compare with $$(60.34/40)^2$$ and $$(60.34/40)^3$$.
@@ -95,7 +95,7 @@ The accelerations are recorded to four significant figures and the distances are
 1. Why does the far side of Earth bulge away from the Moon?
 2. The Sun pulls about 180 times as hard as the Moon. Why is its tide less than half the Moon's?
 3. Why does high tide come about 50 minutes later each day?
-4. Real tidal ranges run from a few centimetres to over 15 m, while the model gives under 1 m everywhere. What does the model leave out that can make real tides so much larger in some places?
+4. Real tidal ranges run from a few centimeters to over 15 m, while the model gives under 1 m everywhere. What does the model leave out that can make real tides so much larger in some places?
 
 ## What to hand in
 

@@ -12,7 +12,7 @@ time: 30 to 50 minutes
 
 ## Before class
 
-Students need τ = rF, I for a disk and a hoop, and the rolling constraint a = αr. The demo opens in 3D: a turntable on a bench, the string running from the spool over a pulley at the bench edge, and the mass falling beside a metre stick with the two marks 0.500 m apart (drag to turn the view, scroll or pinch to zoom, double click to reset). The **Flat** button, or `?view=flat`, gives the older drawing, with the turntable seen from above and the falling mass from the side; it also opens on devices that ask to save data or lack WebGL. The timer stops when the mass has fallen 0.500 m. Bearing friction adds a constant 4.0 × 10⁻⁴ N·m torque against the motion. The **Mystery object** always hides its I; **Blind** hides every I, the accelerations, the tension and the energies.
+Students need τ = rF, I for a disk and a hoop, and the rolling constraint a = αr. The demo opens in 3D: a turntable on a bench, the string running from the spool over a pulley at the bench edge, and the mass falling beside a meter stick with the two marks 0.500 m apart (drag to turn the view, scroll or pinch to zoom, double click to reset). The **Flat** button, or `?view=flat`, gives the older drawing, with the turntable seen from above and the falling mass from the side; it also opens on devices that ask to save data or lack WebGL. The timer stops when the mass has fallen 0.500 m. Bearing friction adds a constant 4.0 × 10⁻⁴ N·m torque against the motion. The **Mystery object** always hides its I; **Blind** hides every I, the accelerations, the tension and the energies.
 
 ## Running it in class
 

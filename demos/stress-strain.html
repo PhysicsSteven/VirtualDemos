@@ -129,7 +129,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="chips" id="mats">
           <button type="button" data-m="steel" aria-pressed="true">Mild steel</button>
           <button type="button" data-m="copper" aria-pressed="false">Copper (annealed)</button>
-          <button type="button" data-m="aluminium" aria-pressed="false">Aluminium alloy</button>
+          <button type="button" data-m="aluminium" aria-pressed="false">Aluminum alloy</button>
           <button type="button" data-m="mystery" aria-pressed="false">Mystery metal</button>
         </div>
         <div><div class="slider-head"><label for="sD">Diameter d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.2" max="1.2" step="0.05"></div>
@@ -193,7 +193,7 @@ table.rows input:focus { border-color: var(--accent); }
   const MATS = {
     steel: { name: 'Mild steel', Y: 200e9, sy: 250e6, su: 400e6, eu: 0.15, ef: 0.25 },
     copper: { name: 'Copper (annealed)', Y: 120e9, sy: 70e6, su: 220e6, eu: 0.3, ef: 0.45 },
-    aluminium: { name: 'Aluminium alloy', Y: 70e9, sy: 270e6, su: 310e6, eu: 0.08, ef: 0.12 },
+    aluminium: { name: 'Aluminum alloy', Y: 70e9, sy: 270e6, su: 310e6, eu: 0.08, ef: 0.12 },
     mystery: { name: 'Mystery metal', Y: 110e9, sy: 300e6, su: 420e6, eu: 0.12, ef: 0.2 }   // a titanium-like alloy; kept hidden
   };
   // flow stress after plastic strain ep: rises smoothly from sy to su by ep = eu − su/Y, then stays at su (engineering curve, necking ignored)
@@ -280,7 +280,7 @@ table.rows input:focus { border-color: var(--accent); }
   const HINT = {
     steel: 'Mild steel: Y about 200 GPa, yield about 250 MPa, strength about 400 MPa. Stiff and strong; it stretches a lot before it breaks.',
     copper: 'Annealed copper: Y about 120 GPa but it yields early, about 70 MPa, then hardens a long way. Bend a copper wire and it stays bent.',
-    aluminium: 'An aluminium alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
+    aluminium: 'An aluminum alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
     mystery: 'An unknown metal. Find its Young\'s modulus from your readings, then load it until it yields. Its properties stay hidden.'
   };
   const S = { pieces: [], zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [],
@@ -385,7 +385,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- 3D view of the wire rig (three.js through demos/lib/vd3.js); the flat drawing stays (Flat button, or ?view=flat) ----------
   /* The same drawing as the flat view, built in 3D: the wire's drawn length is L0 (0.85 + 0.25 × the stretch factor − 1) with the same
-     exaggeration, the dial shows the extension now (large needle one turn per millimetre, small dial whole millimetres), and the
+     exaggeration, the dial shows the extension now (large needle one turn per millimeter, small dial whole millimeters), and the
      slotted masses stack on the hanger as there. Not to scale; only the tension test is in 3D, shear and bulk stay flat. Drag to turn
      the view, wheel or pinch to zoom, double click to reset. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.45, ph: 1.32, zoom: 1 } };
@@ -471,7 +471,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   /* renders the rig into (x0, y0, w, h) of the canvas and returns a projector */
   function draw3(x0, y0, w, h, q, bot) {
-    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), px = 1 / 400;   /* flat drawing pixels to metres */
+    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), px = 1 / 400;   /* flat drawing pixels to meters */
     rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
     if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
     const key = [T.wall, T.wire, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
@@ -531,7 +531,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = T.gaugeTick; ctx.lineWidth = 0.8 * p; ctx.beginPath();
     for (let k = 0; k < 50; k++) { const a = -Math.PI / 2 + k * Math.PI / 25, r0 = R * (k % 5 ? 0.86 : 0.74); ctx.moveTo(gx + r0 * Math.cos(a), gy + r0 * Math.sin(a)); ctx.lineTo(gx + R * 0.96 * Math.cos(a), gy + R * 0.96 * Math.sin(a)); }
     ctx.stroke();
-    // the small dial counts whole millimetres (10 to a turn); the large needle turns once per millimetre
+    // the small dial counts whole millimeters (10 to a turn); the large needle turns once per millimeter
     const cx = gx, cy = gy + R * 0.38, cr = R * 0.24, ac = -Math.PI / 2 + 2 * Math.PI * ((dLmm / 10) % 1), am = -Math.PI / 2 + 2 * Math.PI * (dLmm % 1);
     ctx.lineWidth = 0.8 * p; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 7); ctx.stroke();
     ctx.strokeStyle = T.gaugeTick; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + cr * 0.85 * Math.cos(ac), cy + cr * 0.85 * Math.sin(ac)); ctx.stroke();

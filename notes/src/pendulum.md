@@ -31,10 +31,10 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 
 **Exact period and Double pendulum scenes**
 
-1. **Exact period** (the Scene switch; it opens on **Phase portrait**). Ask Q6 first. A 1.00 m pendulum from 150° falls behind the dashed small angle model every swing: T = 3.536 s against T₀ = 2.006 s, a ratio of 1.762. Drag the marker on the top plot toward 180°. The Photogate lab's **Large swings** setup measures the same effect with a photogate.
-2. **Double pendulum** scene, **Normal mode 1.** Both rods swing together at one frequency; the angle path is a straight line along a gold mode line. The rail shows ω₁ = 2.397 rad/s (period 2.622 s) and shape θ₂/θ₁ = 1.414. The **Mode amplitude, larger angle** slider (6°) sets the larger starting angle, here the lower rod's, so θ₁ starts at 4.2° and θ₂ at 6.0°.
+1. **Exact period** (the Scene switch; it opens on **Phase portrait**). Ask Q6 first. A 1.00 m pendulum from 150° falls behind the dashed small angle model every swing: T = 3.535 s against T₀ = 2.006 s, a ratio of 1.762. Drag the marker on the top plot toward 180°. The Photogate lab's **Large swings** setup measures the same effect with a photogate.
+2. **Double pendulum** scene, **Normal mode 1.** Both rods swing together at one frequency; the angle path is a straight line along a gold mode line. The rail shows ω₁ = 2.397 rad/s (period 2.621 s) and shape θ₂/θ₁ = 1.414. The **Mode amplitude, larger angle** slider (6°) sets the larger starting angle, here the lower rod's, so θ₁ starts at 4.2° and θ₂ at 6.0°.
 3. **Normal mode 2.** The rods swing opposite ways, period 1.086 s. Ask Q8. Then raise **Mode amplitude, larger angle** to its 60° maximum and press **Mode 2**: the angle path spreads into a band around the gold line, because the large angle motion is no longer linear.
-4. **Double pendulum chaos.** Both rods start at 130°, with E = 48.3 J against 58.8 J needed to stand both rods straight up. The lower bob flips over the top at irregular times. Point to the **λ estimate** in **Copies and separation**; after half a minute it settles near 1.5 s⁻¹.
+4. **Double pendulum chaos.** Both rods start at 130°, with E = 48.3 J against 58.9 J needed to stand both rods straight up. The lower bob flips over the top at irregular times. Point to the **λ estimate** in **Copies and separation**; after half a minute it settles near 1.5 s⁻¹.
 5. **Butterfly effect: 100 copies.** Ask the class how long 100 pendulums started 10⁻⁶ rad apart will stay together. They move as one for several seconds, then fan out. On the log plot the separation rises along a straight line and levels off near d ≈ 1 to 5. Do Q10.
 6. **Poincaré section** (upper level). At E = 15 J each dot marks the lower rod passing straight down moving right. Click inside the curve to start orbits, then raise **Section energy E**: the islands shrink (Q12).
 
@@ -68,7 +68,7 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 
 - **"A heavier bob swings faster."** Mass cancels.
 - **"A bigger swing takes longer because it travels farther."** For small swings it also moves faster, and the two cancel; only large swings take noticeably longer.
-- **"Length is the string length."** It is to the bob's centre of mass (and for a rod, the effective length is 2L/3).
+- **"Length is the string length."** It is to the bob's center of mass (and for a rod, the effective length is 2L/3).
 - **"A pendulum's period never depends on its amplitude."** That holds only for small swings. At 30° the period is 1.7% longer than 2π√(L/g); at 150° it is 76% longer.
 - **"Chaos means random."** The equations have no randomness: the same start always gives the same motion. Nearby starts separate exponentially, so any tiny uncertainty grows.
 - **"Better measurements fix chaos."** The error grows like e^(λt), so each factor of 10 in starting accuracy adds only ln(10)/λ, about 1.5 s here.

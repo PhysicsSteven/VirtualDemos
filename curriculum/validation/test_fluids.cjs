@@ -9,10 +9,10 @@ const F = core('fluids', 'G,PATM,PVAP,LIQ,clamp,hydro,columnHeight,vesselR,vesse
 let n = 0;
 const close = (a, b, rel = 1e-12, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
-const g = 9.80665;
+const g = 9.81;
 
 test('standard gravity and standard atmosphere', () => {
-  assert.equal(F.G, 9.80665); assert.equal(F.PATM, 101325);
+  assert.equal(F.G, 9.81); assert.equal(F.PATM, 101325);
 });
 
 test('hydrostatic pressure P = P0 + rho g h, and column heights', () => {
@@ -22,10 +22,10 @@ test('hydrostatic pressure P = P0 + rho g h, and column heights', () => {
     close(F.hydro(rho, d, 0), rho * g * d);
     close(F.columnHeight(rho * g * d, rho), d);
   }
-  // 1 atm of mercury at 0 °C is 760 mm (the definition of the mmHg: 13595.1 kg/m³ and standard gravity)
-  close(F.columnHeight(101325, F.LIQ.hg.rho), 0.760, 2e-5);
-  // 1 atm of fresh water is 10.33 m
-  close(F.columnHeight(101325, 1000), 10.3323, 1e-4);
+  // 1 atm of mercury at 0 °C is 760 mm by the definition of the mmHg (13595.1 kg/m³ and standard gravity 9.80665); with g = 9.81 the column is 759.7 mm
+  close(F.columnHeight(101325, F.LIQ.hg.rho), 0.7597, 2e-4);
+  // 1 atm of fresh water is 10.33 m (10.329 m with g = 9.81)
+  close(F.columnHeight(101325, 1000), 10.3287, 1e-4);
 });
 
 test("Pascal's vessels: volumes of the cylinder, the frusta and the slanted tube", () => {
@@ -39,7 +39,7 @@ test("Pascal's vessels: volumes of the cylinder, the frusta and the slanted tube
     }
   }
   // the gauge pressure at the base, and so the force on every base, is rho g h whatever the shape
-  close(1000 * g * 0.32 * Math.PI * 0.04 * 0.04, 15.774, 2e-4);
+  close(1000 * g * 0.32 * Math.PI * 0.04 * 0.04, 15.779, 2e-4);
 });
 
 const tank = (L, rhoO, rhoF, spout) => ({ L, rhoO, rhoF, A: 0.15, zeta: 0.12, spout: spout === undefined ? null : spout });
@@ -105,8 +105,8 @@ test('spring scale and overflow can: T = W - F_B, and the beaker catches exactly
     close(caught, a * f.s, 1e-12, 1e-15);
     close(1000 * g * caught, f.FB, 1e-12, 1e-12);
   }
-  // fully under: 1 L of water, weight 9.80665 N (the guide's "9.81 N" is this to 3 figures)
-  close(1000 * g * caught, 9.80665, 1e-12);
+  // fully under: 1 L of water, weight 9.81 N
+  close(1000 * g * caught, 9.81, 1e-12);
   // a floater on a slack string reads zero
   const cork = F.hangState(tank(0.1, 240, 1000), 0.2, 0.045);
   assert.equal(cork.T, 0); assert.ok(cork.slack);
@@ -124,7 +124,7 @@ test('Venturi: continuity, Bernoulli and the standpipe drop', () => {
   }
   // preset: 6 cm to 3 cm at 0.8 m/s: 4 times faster, 48.9 cm drop
   const r = F.venturi({ D1: 0.06, D2: 0.03, v1: 0.8, h1: 0.8, rho: 1000 });
-  close(r.v2, 3.2); close(r.dh, 0.4895, 1e-4);
+  close(r.v2, 3.2); close(r.dh, 0.4893, 1e-4);
 });
 
 test('Venturi cavitation flag: P_atm + P2 below the vapor pressure', () => {
@@ -153,7 +153,7 @@ test('Torricelli: v = sqrt(2gh), R = 2 sqrt(h(H - h)), largest R = H at h = H/2'
     }
     close(F.torricelli(H, H / 2).R, H, 1e-12);
   }
-  close(F.torricelli(1, 0.3).v, 2.4257, 1e-4); close(F.torricelli(1, 0.3).R, 0.9165, 1e-4);
+  close(F.torricelli(1, 0.3).v, 2.4261, 1e-4); close(F.torricelli(1, 0.3).R, 0.9165, 1e-4);
 });
 
 test('least squares helpers: exact lines, standard errors, through the origin', () => {

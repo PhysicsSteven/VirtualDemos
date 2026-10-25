@@ -13,7 +13,7 @@ time: 20 to 45 minutes
 
 ## Before class
 
-Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from a point source (the Sound Intensity and Decibels demo). The picture is a 3D view of the room (Plan shows the floor plan) with the loudspeaker and the microphone on its centre line; the Set up card holds the room's size, its walls (hard, absorbing panels, or wedges), the floor and the microphone distance. Under **Measure**, **Reverberation time** shows the decay of a clap and **Level against distance** the steady level of a 10 mW noise source. **Clap** plays the clap in slow motion (×1/100): each dot is a ray of sound, and it fades as the surfaces absorb it. The **Absorption coefficients** fold lists the α of every surface in the chosen octave band.
+Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from a point source (the Sound Intensity and Decibels demo). The picture is a 3D view of the room (Plan shows the floor plan) with the loudspeaker and the microphone on its center line; the Set up card holds the room's size, its walls (hard, absorbing panels, or wedges), the floor and the microphone distance. Under **Measure**, **Reverberation time** shows the decay of a clap and **Level against distance** the steady level of a 10 mW noise source. **Clap** plays the clap in slow motion (×1/100): each dot is a ray of sound, and it fades as the surfaces absorb it. The **Absorption coefficients** fold lists the α of every surface in the chosen octave band.
 
 ## Running it in class
 
@@ -28,7 +28,7 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 
 **Q1.** Predict: you clap once in an empty concrete stairwell and once in a bedroom full of furniture and curtains. In which does the sound last longer, and why? What do you think happens to the sound energy?
 
-**Q2.** In the bare 9 m × 7 m × 3 m room at 500 Hz the demo measures T = 4.75 s. Use Sabine's formula to find the total absorption A, and compare with the A the readouts give from the table of coefficients. How many square metres of perfectly absorbing surface (an open window) would absorb as much?
+**Q2.** In the bare 9 m × 7 m × 3 m room at 500 Hz the demo measures T = 4.75 s. Use Sabine's formula to find the total absorption A, and compare with the A the readouts give from the table of coefficients. How many square meters of perfectly absorbing surface (an open window) would absorb as much?
 
 **Q3.** Twenty foam panels, 0.72 m² each with α = 0.83 at 500 Hz, replace painted brick with α = 0.02. By how much do they raise A? Predict T with Sabine, then measure it. If you plot T against 1/A for 0 to 40 panels, what should the graph look like, and what is its slope?
 
@@ -45,7 +45,7 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 ## Common misconceptions
 
 - **"Sound bounces off walls forever."** Each reflection takes away a fraction α; even painted brick (α = 0.02) soaks up the clap within seconds, because a ray meets a wall about 100 times a second in a room this size.
-- **"Absorbing panels block sound from getting out."** Absorption (less reflected back into the room) and insulation (less transmitted through the wall) are different properties; foam does little for the neighbours.
+- **"Absorbing panels block sound from getting out."** Absorption (less reflected back into the room) and insulation (less transmitted through the wall) are different properties; foam does little for the neighbors.
 - **"Adding absorption lowers the level everywhere."** Close to the source the direct sound dominates and absorption changes little; it lowers the reverberant level far from the source.
 - **"An anechoic chamber is silent."** It is free of echoes, not of sound: the direct sound is all you hear, and it falls off as 1/r².
 - **"Thicker foam absorbs better at every pitch."** The low frequency limit is set by the depth compared with the wavelength.
@@ -54,11 +54,11 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 
 - Ray tracing (geometrical acoustics). 4000 to 64000 rays leave the speaker in random directions with equal shares of the clap's energy. At a surface a ray keeps (1 − α) of its energy and leaves in a random direction (Lambert's cosine law: fully diffuse reflections). The microphone is a sphere 0.5 m in radius that adds the energy of the rays crossing it; the direct sound is added exactly as 1/(4πr²). Energies add, so there are no room modes or interference, which matter in real rooms at low frequency; air absorption is left out.
 - T is found as in ISO 3382: the decay curve is the backward integral of the clap's energy (Schroeder 1965), and a least squares line from −5 to −25 dB is extended to −60 dB (T20). A measured T scatters by about 1 to 3 % from one set of rays to another; the same setup always gives the same rays.
-- Sabine: T = 24 ln 10 · V/(cA) = 0.161 V/A in SI units (c = 343 m/s). Eyring: T = 0.161 V/(−S ln(1 − ᾱ)), with ᾱ = A/S. For small ᾱ the two agree; with uniform absorption the rays reproduce Eyring's T to within a few percent. With almost all the absorption on one surface (the audience) the measured T is shorter than both formulas, which assume the absorption is spread evenly; at 1 kHz it is 0.41 s against Eyring's 0.53 s.
+- Sabine: T = 24 ln 10 · V/(cA) = 0.161 V/A in SI units (c = 343.2 m/s). Eyring: T = 0.161 V/(−S ln(1 − ᾱ)), with ᾱ = A/S. For small ᾱ the two agree; with uniform absorption the rays reproduce Eyring's T to within a few percent. With almost all the absorption on one surface (the audience) the measured T is shorter than both formulas, which assume the absorption is spread evenly; at 1 kHz it is 0.41 s against Eyring's 0.53 s.
 - Absorption coefficients (random incidence, reverberation chamber measurements, octave bands 125 Hz to 4 kHz) come from the materials database of the pyroomacoustics library (LCAV, EPFL); the keys are listed in the demo. Panels are 1.2 m × 0.6 m on the walls; the ceiling is painted brick.
 - Wedges line all six surfaces and the room is the space between their tips. Beranek and Sleeper (J. Acoust. Soc. Am. 18, 140, 1946) define the cutoff as the frequency where the pressure reflection reaches 10 % (99 % of the energy absorbed) and found it where the wedge length is about a quarter wavelength, f_c = c/(4d). The demo's reflection R = 0.1 (f_c/f)², at most 0.9, is a model of the shape around the cutoff, not measured data.
 
 ## Going further
 
 - Sabine found his formula in the late 1890s while fixing the lecture hall of Harvard's Fogg Art Museum, timing how long an organ pipe stayed audible with seat cushions carried in from a theatre. Concert halls aim for T of about 2 s, lecture rooms under 1 s.
-- Beranek and Sleeper's Harvard chamber had glass fibre wedges about 1.4 m long; its cutoff was near 60 to 70 Hz.
+- Beranek and Sleeper's Harvard chamber had glass fiber wedges about 1.4 m long; its cutoff was near 60 to 70 Hz.

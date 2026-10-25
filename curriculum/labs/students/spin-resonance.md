@@ -24,10 +24,10 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.3. Access for free at https
 
 **What the demo models.**
 
-- Exact: $$h\nu = g\mu_B B$$ with $$g = 2.0036$$ for DPPH; $$\nu = (\gamma/2\pi)B$$ with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F (IUPAC 2001). $$h$$, $$\mu_B$$ and $$\mu_N$$ are CODATA values. Chemical shielding, tens of parts per million, is far below this instrument's resolution and is left out.
+- Exact: $$h\nu = g\mu_B B$$ with $$g = 2.0036$$ for DPPH; $$\nu = (\gamma/2\pi)B$$ with 42.577478 MHz/T for ¹H (free proton, CODATA 2022) and 40.0776 MHz/T for ¹⁹F (IUPAC 2001). $$h$$, $$\mu_B$$ and $$\mu_N$$ are CODATA values. Chemical shielding, tens of parts per million, is far below this instrument's resolution and is left out.
 - Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp and 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet's field; the earth's field and stray fields are left out; the probe coil is at right angles to the field. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law, $$B_Z = B_{20}[1 - 7.5\times10^{-4}\,(t - 20\,^{\circ}\mathrm{C})]$$, with $$t$$ in °C.
-- Modelled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and grow with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.
-- The marginal oscillator is a behavioural model: its gain grows as the sensitivity nears the stopping point, the LED dims above 85% of that point, and the noise rises with the gain and sharply just below it. The frequency meter jitters by one count. All noise is simulated.
+- Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and grow with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.
+- The marginal oscillator is a behavioral model: its gain grows as the sensitivity nears the stopping point, the LED dims above 85% of that point, and the noise rises with the gain and sharply just below it. The frequency meter jitters by one count. All noise is simulated.
 
 </details>
 
@@ -78,7 +78,7 @@ Before you start, note the instrument seed, turn on Blind, keep the expected res
 **Electron resonance.** Put DPPH in the electron probe.
 
 1. On MID, make the absorption peak clear. The oscillator is most sensitive just below the point where it stops; raise the sensitivity slowly, and if the signal disappears, back off.
-2. Measure the time from the start of the rising field ramp to the centre of the peak. The oscilloscope trigger is not the start of the ramp. Read the probe frequency from the meter, and capture the reading.
+2. Measure the time from the start of the rising field ramp to the center of the peak. The oscilloscope trigger is not the start of the ramp. Read the probe frequency from the meter, and capture the reading.
 3. Place the cursors again from scratch and take a second reading.
 4. Repeat on LO and HI. The sensitivity needs setting again on each range.
 5. On MID, also measure the field from the CH1 voltage at the time of the peak. Then check that reading with one slow sweep, measuring on the chart record from the start pulse to the peak.
@@ -99,13 +99,13 @@ Add rows for all frequencies and repeat readings. Record the seed and the scan c
 ## Analysis
 
 1. Convert each reading to scan field. FAST has a 40 ms ramp; SLOW has a 25 s ramp, and the chart paper moves at 5 mm/s. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance. Compare the CH1 voltage and the slow sweep with the time readings on MID.
-2. Plot the ESR field against frequency in Hz. Fit a line through the origin and find $$g$$. Also try a free intercept. Does it change your result appreciably?
+2. Plot the ESR field against frequency in Hz. Fit a line and find $$g$$ from its slope. Is the intercept zero within its uncertainty, as a stray field free magnet would give?
 3. For each nuclear reading, correct the permanent field for temperature and add the scan field. Fit hydrogen and fluorine separately to find their $$\Gamma$$ values.
 4. Compare line widths above the signal baseline. Record the sensitivity setting when comparing peak heights.
 
 ## Uncertainty
 
-Estimate how far you could move a cursor while still calling it the peak centre. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in $$g$$ or $$\Gamma$$.
+Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in $$g$$ or $$\Gamma$$.
 
 ## Questions
 

@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§11.2–11.4. Access for fre
 
 **Using the demo.**
 
-- A wheel spins on a light axle whose far end rests in a cup on top of a post. Set the spin rate, the distance $$d$$ from the pivot to the wheel's centre and the axle's tilt at release, then release it. Put back returns it to the release position.
+- A wheel spins on a light axle whose far end rests in a cup on top of a post. Set the spin rate, the distance $$d$$ from the pivot to the wheel's center and the axle's tilt at release, then release it. Put back returns it to the release position.
 - A gate on the floor times each full turn of the axle round the post, to 0.01 s. It needs two passes, so the first period appears after the second full turn. Capture stores the wheel, the start, the tilt, the spin, $$d$$ and the last period $$P$$; Export to worksheet sends the captured rows here, with $$\Omega = 2\pi/P$$ and $$1/\omega_s$$ worked out for each row.
 - The wheel can be released from rest (it dips and wobbles first) or given a sideways push at exactly the steady precession rate (no dip, no wobble).
 - While it runs, the spin rate and $$d$$ can be changed and act on the moving gyroscope at once (the tilt at release and the steady start only apply at release). The strip marks each change with a dashed line and shows the steady tilt for the present angular momentum as a gold line, which the axle wobbles about. The gate starts timing afresh after a change. While it is held, a change puts it back at the release position, as before.
@@ -72,7 +72,7 @@ On a real bench, a fast wheel stores a lot of energy. Keep fingers, hair and loo
 | | | | | | | | | |
 | | | | | | | | | |
 
-Keep each part in its own copy of the table, labelled with the part. For Part 4 write the value the mystery wheel showed when you turned it off in the table's notes.
+Keep each part in its own copy of the table, labeled with the part. For Part 4 write the value the mystery wheel showed when you turned it off in the table's notes.
 
 ## Analysis
 
@@ -88,7 +88,7 @@ The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s 
 ## Questions
 
 1. The spinning wheel does not fall. What holds it up? Find the vertical force from the pivot during steady precession.
-2. The wheel's centre moves in a circle of radius $$d$$ round the post. What supplies the force for this, and how big is it at 3000 rpm with $$d = 0.10\ \text{m}$$?
+2. The wheel's center moves in a circle of radius $$d$$ round the post. What supplies the force for this, and how big is it at 3000 rpm with $$d = 0.10\ \text{m}$$?
 3. What happens to the direction of precession if the spin is reversed? Explain with the vectors.
 4. Why is the steady start needed to test the formula at low spin, while at high spin a release from rest is almost as good?
 

@@ -20,7 +20,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (small angle pendulums; 
 
 **What the demo models.**
 
-- Point masses on rigid massless rods, frictionless pivots, no air drag, $$g = 9.80665\ \text{m/s}^2$$. The motion comes from the exact nonlinear equations of motion, integrated with an adaptive Dormand–Prince method at a tolerance of $$10^{-11}$$; the energy readout shows how little the total energy drifts.
+- Point masses on rigid massless rods, frictionless pivots, no air drag, $$g = 9.81\ \text{m/s}^2$$. The motion comes from the exact nonlinear equations of motion, integrated with an adaptive Dormand–Prince method at a tolerance of $$10^{-11}$$; the energy readout shows how little the total energy drifts.
 
 </details>
 

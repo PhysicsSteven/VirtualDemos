@@ -36,5 +36,5 @@ time: 15 to 25 minutes
 ## Physics behind the demo
 
 - Variable mass: m dv/dt = u b − mg (b = burn rate), exact solution v = u ln(m₁/m) − g(t − t₀) after lift off at t₀, height from its integral, coasting after burnout.
-- Constant g = 9.81 m/s² and no air drag. At hundreds of kilometres gravity is noticeably weaker, so the highest point shown is a rough figure (the readout says so).
+- Constant g = 9.81 m/s² and no air drag. At hundreds of kilometers gravity is noticeably weaker, so the highest point shown is a rough figure (the readout says so).
 - The animation is sped up so a flight takes about 25 s; the clock shows real time.

@@ -49,7 +49,7 @@ The total energy $$E = K + mc^2$$ and the momentum satisfy $$E^2 = (pc)^2 + (mc^
 
 ## Safety
 
-None for the virtual apparatus. Real electron beams of MeV energies produce X rays and are run behind shielding.
+None for the virtual apparatus. Real electron beams of MeV energies produce X-rays and are run behind shielding.
 
 ## Procedure
 

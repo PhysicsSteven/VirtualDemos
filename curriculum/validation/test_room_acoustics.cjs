@@ -5,9 +5,9 @@ const close=(a,b,r=1e-9,abs=1e-12)=>assert(Number.isFinite(a)&&Math.abs(a-b)<=ab
 const R=core('room-acoustics','C_AIR,BANDS,MATERIALS,roomModel,placePanels,sabineT,eyringT,wedgeCutoff,wedgeR,wedgeAlpha,traceRoom,schroeder,decayT,splFromW,steadyLevel,directDose,diffuseLevel,raysFor,PANEL_W,PANEL_H');
 const box=(L,W,H,a)=>({L,W,H,V:L*W*H,S:2*(L*W+L*H+W*H),aWall:a,aFloor:a,aPanel:0,panels:[]});
 test('room acoustics: Sabine constant, Eyring limits and the wedge rule',()=>{
- close(R.sabineT(1,1),24*Math.log(10)/343);assert.equal(R.sabineT(1,1).toFixed(3),'0.161');
+ close(R.sabineT(1,1),24*Math.log(10)/343.2);assert.equal(R.sabineT(1,1).toFixed(3),'0.161');
  close(R.eyringT(100,130,1e-4)/R.sabineT(100,130*1e-4),1,1e-4);assert(R.eyringT(100,130,0.999999)<0.01);
- for(const d of [0.1,0.3,0.5,1,1.5]){const fc=R.wedgeCutoff(d);close(fc*4*d,343);close(R.wedgeR(fc,d),0.1);close(R.wedgeAlpha(fc,d),0.99);assert(R.wedgeAlpha(2*fc,d)>0.99&&R.wedgeAlpha(fc/2,d)<0.99);}
+ for(const d of [0.1,0.3,0.5,1,1.5]){const fc=R.wedgeCutoff(d);close(fc*4*d,343.2);close(R.wedgeR(fc,d),0.1);close(R.wedgeAlpha(fc,d),0.99);assert(R.wedgeAlpha(2*fc,d)>0.99&&R.wedgeAlpha(fc/2,d)<0.99);}
  assert.equal(R.wedgeR(1,1),0.9);
  for(const k of Object.keys(R.MATERIALS)){const a=R.MATERIALS[k].a;assert.equal(a.length,R.BANDS.length);for(const v of a)assert(v>=0&&v<=1);}
 });

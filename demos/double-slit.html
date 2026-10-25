@@ -315,8 +315,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  // SI units throughout. CODATA 2018 exact and recommended values.
-  const H = 6.62607015e-34, QE = 1.602176634e-19, ME = 9.1093837015e-31, C = 299792458, U = 1.66053906660e-27;
+  // SI units throughout. CODATA 2022 exact and recommended values.
+  const H = 6.62607015e-34, QE = 1.602176634e-19, ME = 9.1093837139e-31, C = 299792458, U = 1.66053906892e-27;
   const M_C60 = 720 * U;   // twelve times sixty carbon 12 atoms
 
   function photon(lamNm) { const lam = lamNm * 1e-9; return { lam, p: H / lam }; }

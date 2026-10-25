@@ -21,7 +21,7 @@ Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has f
 2. **Mystery block.** Ask Q2. The block's specific heat is hidden; students time the run to equilibrium and work it out from the final temperature.
 3. **Gas thermometer.** Ask Q3. Put the bulb in **Ice water**, **Boiling water**, **Dry ice** and **Liquid nitrogen** in turn; each reading takes about a minute to settle (the bulb follows the bath with a 12 s time constant). Change **Gas in the bulb** and repeat: a different slope, the same zero.
 4. **Rod in a water bath**, then **Water near 4 °C.** Ask Q4 first. The rod's gauge moves 0.025 mm per degree; the water's level falls as it cools, turns near 4.5 °C and rises again.
-5. **House wall in winter.** Ask Q5. 13 mm plasterboard, 90 mm glass wool and 100 mm brick between 20 °C still air and −5 °C wind: 10.0 W through each square metre, and 21.5 °C of the 25 °C drop is across the glass wool. Drag **Probe position** through the wall. Then switch to **Window** (Q6) and **Rods in series**.
+5. **House wall in winter.** Ask Q5. 13 mm plasterboard, 90 mm glass wool and 100 mm brick between 20 °C still air and −5 °C wind: 10.0 W through each square meter, and 21.5 °C of the 25 °C drop is across the glass wool. Drag **Probe position** through the wall. Then switch to **Window** (Q6) and **Rods in series**.
 
 ## Questions
 
@@ -33,7 +33,7 @@ Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has f
 
 **Q4.** Predict how much a 1.000 m aluminum rod (α = 25 × 10⁻⁶ /°C) grows from 20 °C to 80 °C. Then predict what the level in the capillary does as water in the flask is cooled from 20 °C to 0 °C.
 
-**Q5.** For the house wall, the resistances per square metre are 0.12 (inside air), 0.013/0.16, 0.090/0.042, 0.100/0.84 and 0.030 (outside air), in m²·°C/W. Find the heat flow per square metre and the temperature drop across the glass wool. How much more heat would flow without the glass wool?
+**Q5.** For the house wall, the resistances per square meter are 0.12 (inside air), 0.013/0.16, 0.090/0.042, 0.100/0.84 and 0.030 (outside air), in m²·°C/W. Find the heat flow per square meter and the temperature drop across the glass wool. How much more heat would flow without the glass wool?
 
 **Q6.** A single pane of glass 4 mm thick (k = 0.84 W/(m·°C)) separates 20 °C still air from a −5 °C wind. Why does the glass itself contribute almost nothing to the resistance, and what does set the heat flow? Why does the inside of the glass feel so cold?
 

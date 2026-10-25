@@ -93,7 +93,7 @@ The levels come from solving the Schrödinger equation on a grid, so they carry 
 ## Questions
 
 1. Why can't an electron in a box have zero energy? Connect your answer to the uncertainty principle.
-2. A real electron in a molecule or a quantum dot a few nanometres across absorbs light when it jumps between levels. Would a bigger dot absorb redder or bluer light?
+2. A real electron in a molecule or a quantum dot a few nanometers across absorbs light when it jumps between levels. Would a bigger dot absorb redder or bluer light?
 3. Why are the levels of the oscillator evenly spaced while those of the box spread further apart as n grows?
 4. In the double well the two lowest levels are very close together. What would happen to their spacing, and to the period, if the barrier between the wells were made higher?
 

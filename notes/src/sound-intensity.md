@@ -34,7 +34,7 @@ Students should know what intensity is (OpenStax 17.3) and how to use logarithms
 
 **Q5.** With a steady 55 dB background, at what distance does the source alone give 55 dB? What does the meter read there? Explain why the 6 dB per doubling rule fails far from the source, and how you would correct a reading for the background.
 
-**Q6.** With the Mystery source, record the level at three or more distances. Find its power P from your graph. Then find the pressure amplitude Δp at 1.0 m, with I = Δp²/(2ρv), ρ = 1.20 kg/m³ and v = 343 m/s.
+**Q6.** With the Mystery source, record the level at three or more distances. Find its power P from your graph. Then find the pressure amplitude Δp at 1.0 m, with I = Δp²/(2ρv), ρ = 1.20 kg/m³ and v = 343.2 m/s.
 
 **Q7.** A 1.0 W source reads 109.0 dB at 1.0 m. How far away must you stand for it to read 85 dB, a common limit for an 8 hour working day? Is the inverse square law a good model inside a room? (See the Room Acoustics demo.)
 
@@ -47,10 +47,10 @@ Students should know what intensity is (OpenStax 17.3) and how to use logarithms
 
 ## Physics behind the demo
 
-- Each source is a point that radiates its power P equally in all directions in a free field: I = P/(4πr²), exactly, from 0.5 m out. Close to a real loudspeaker (within about its own size) and near the ground, where reflections arrive, the point source picture fails; neither is modelled.
+- Each source is a point that radiates its power P equally in all directions in a free field: I = P/(4πr²), exactly, from 0.5 m out. Close to a real loudspeaker (within about its own size) and near the ground, where reflections arrive, the point source picture fails; neither is modeled.
 - The sources play independent noise, so intensities add: I = I_A + I_B + I_background, and the meter shows β = 10 log(I/I₀) rounded to 0.1 dB. Two speakers playing the same tone would interfere instead (OpenStax 16.5). Source B is beside A, at the same distance from the meter.
 - No energy is lost in the air: absorption at 1 kHz, 20 °C and 50 % humidity is about 5 dB per km (ISO 9613-1), 0.15 dB over 32 m.
-- The pressure amplitude uses I = Δp²/(2ρv) with ρ = 1.20 kg/m³ and v = 343 m/s. The source powers run in 1, 2, 5 steps from 10 µW to 1 W; the Mystery source is between 0.5 mW and 50 mW.
+- The pressure amplitude uses I = Δp²/(2ρv) with ρ = 1.20 kg/m³ and v = 343.2 m/s. The source powers run in 1, 2, 5 steps from 10 µW to 1 W; the Mystery source is between 0.5 mW and 50 mW.
 
 ## Going further
 

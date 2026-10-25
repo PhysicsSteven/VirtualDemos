@@ -19,7 +19,7 @@ Students need B₀ = μ₀nI for a long solenoid and the idea of a magnetic dipo
 1. **Aluminum core.** At 1.000 A and 20 turns per cm, B₀ = 2.51 mT, and the bars for B₀ and B look the same. Ask: did the aluminum do anything? Point to B − B₀ = 55 nT, and the plot: a straight line whose slope is χ.
 2. **Bismuth core.** Now B − B₀ is negative. Flip the current with the arrow keys or the slider: B − B₀ flips too, so it always opposes B₀.
 3. **Liquid oxygen.** The same line, 160 times steeper than aluminum. Mention the classic demo: liquid oxygen poured between magnet poles hangs there.
-4. **Floating water.** Read off B dB/dz = 1352 T²/m. At 16 T the field would need to fall by about 85 T per metre: possible only with research magnets, which is how a frog was once floated.
+4. **Floating water.** Read off B dB/dz = 1352 T²/m. At 16 T the field would need to fall by about 85 T per meter: possible only with research magnets, which is how a frog was once floated.
 5. **Iron, Example 12.10.** At 0.200 A, B₀ = 503 µT and B = 1.41 T: the model reproduces the book's 1.4 T and χ ≈ 2.8 × 10³. Move the current: χ changes, so iron is not a linear material.
 6. **Iron hysteresis loop.** Let the sweep run. Stop at I = 0: B is still about 1.7 T. Ask what current brings B to zero (about −0.10 A). Then **Demagnetize**.
 

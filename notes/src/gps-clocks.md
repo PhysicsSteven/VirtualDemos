@@ -7,7 +7,7 @@ time: 10 to 20 minutes
 
 - In general relativity, clocks deeper in a gravitational field run slower: a clock higher up gains, by about ΔΦ/c² = (GM/c²)(1/R − 1/r) as a fraction.
 - In special relativity, a moving clock runs slower by about v²/(2c²).
-- For GPS satellites (r = 26,560 km, 3.87 km/s) gravity wins: +45.7 μs/day from height, −7.1 μs/day from speed, net +38.6 μs/day. Light goes 11.6 km in that time, so uncorrected positions would drift by kilometres a day. The satellite clocks are deliberately set slow before launch.
+- For GPS satellites (r = 26,560 km, 3.87 km/s) gravity wins: +45.7 μs/day from height, −7.1 μs/day from speed, net +38.6 μs/day. Light goes 11.6 km in that time, so uncorrected positions would drift by kilometers a day. The satellite clocks are deliberately set slow before launch.
 - The effect is tiny on the ground (a 22.5 m tower: 2.5 × 10⁻¹⁵, measured by Pound and Rebka in 1959) but everyday technology depends on it.
 
 ## Before class

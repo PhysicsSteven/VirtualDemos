@@ -166,7 +166,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 (() => {
   // ==CORE START==
   const RETINA = 0.0180, GLASS_GAP = 0.0150, PUPIL = 0.0040, SHARP = 2e-5, EYE_VERSION = 'the-eye@2026-10-23';
-  /* near and far points in metres (Infinity allowed); the far point of a farsighted eye lies "beyond infinity" (FP < 0: it can focus converging light) */
+  /* near and far points in meters (Infinity allowed); the far point of a farsighted eye lies "beyond infinity" (FP < 0: it can focus converging light) */
   const EYES = {
     normal: { name: 'Normal', NP: 0.25, amp: 4.0 },
     myopia: { name: 'Nearsighted', FP: 0.30, amp: 4.0 },
@@ -181,7 +181,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* near and far points from the range (far point Infinity or negative = beyond infinity) */
   const nearPoint = (r) => 1 / (r.Pmax - 1 / RETINA);
   const farPoint = (r) => { const v = r.Pmin - 1 / RETINA; return Math.abs(v) < 1e-9 ? Infinity : 1 / v; };
-  /* vergence of the light arriving at the eye (m⁻¹, negative for diverging light) from an object d metres in front of the eye,
+  /* vergence of the light arriving at the eye (m⁻¹, negative for diverging light) from an object d meters in front of the eye,
      through glasses of power Pg a gap s in front of the eye (Pg = null for none) */
   function vergenceAtEye(d, Pg, s = GLASS_GAP) {
     if (Pg == null) return isFinite(d) ? -1 / d : 0;
@@ -231,7 +231,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const fmtMM = (m) => `${(m * 1000).toFixed(S.cam === 'phone' ? 4 : 3)} mm`;
   const CAM_HINT = { slr: 'A 50 mm lens on a full frame camera. Focusing moves the lens away from the sensor: by 0 mm for a distant object, by 1.28 mm for one 2 m away, by 5.6 mm for one at 50 cm. A smaller aperture (larger f-number) makes the blur spots smaller, so more distances look sharp at once.',
-    phone: 'OpenStax §2.6: a phone lens of f = 5.00 mm. A selfie at 50 cm focuses 5.05 mm behind the lens, a person 5 m away at 5.005 mm: the whole focusing range is a few hundredths of a millimetre. Many phones still move the lens that little with a tiny motor; others keep it fixed and rely on the large depth of field.' };
+    phone: 'OpenStax §2.6: a phone lens of f = 5.00 mm. A selfie at 50 cm focuses 5.05 mm behind the lens, a person 5 m away at 5.005 mm: the whole focusing range is a few hundredths of a millimeter. Many phones still move the lens that little with a tiny motor; others keep it fixed and rely on the large depth of field.' };
   const PRESETS = {
     normal: { eye: 'normal', d: 0.25, wear: false, Pg: 0, hint: 'An object at the near point, 25 cm: the eye is at its strongest. Move the object closer than 25 cm: the eye cannot add more power and the image blurs. Move it far away: the eye relaxes.' },
     myopia: { eye: 'myopia', d: Infinity, wear: false, Pg: 0, hint: 'This eye has its far point at 30.0 cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than 30 cm and it becomes sharp.' },
@@ -375,7 +375,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.lensc; ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(xc, cy, rc * k, Math.PI - ang, Math.PI + ang); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
       ctx.strokeStyle = T.sclera; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(xc, cy, rc * k, Math.PI - ang, Math.PI + ang); ctx.stroke();
       if (w > 420) txt('cornea', xR - 2 * R - 0.0022 * k, cy - hc * k - 12 * p, { a: 'center', s: 9, c: T.muted }); }
-    /* ciliary muscle and zonule fibres (a picture only): to accommodate, the ring of muscle contracts, the fibres go slack and the lens rounds up.
+    /* ciliary muscle and zonule fibers (a picture only): to accommodate, the ring of muscle contracts, the fibers go slack and the lens rounds up.
        acc is the fraction of the eye's range of power in use now */
     { const acc = Math.max(0, Math.min(1, (st.Pt - st.r.Pmin) / Math.max(1e-9, st.r.Pmax - st.r.Pmin))), yw = Math.sqrt(R * R - (0.006 * k) ** 2);
       for (const sg of [-1, 1]) {
@@ -473,7 +473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
     const sky = g.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, '#9cc6ec'); sky.addColorStop(1, '#e6f0f8'); g.fillStyle = sky; g.fillRect(0, 0, w, h);
     g.fillStyle = '#6f9a5a'; g.fillRect(0, h * 0.78, w, h * 0.22);
-    /* a Siemens star: fine detail at its centre shows blur first */
+    /* a Siemens star: fine detail at its center shows blur first */
     const sx = w * 0.32, sy = h * 0.46, R = h * 0.34; g.fillStyle = '#f4f4f0'; g.beginPath(); g.arc(sx, sy, R * 1.04, 0, 7); g.fill();
     g.fillStyle = '#1d232b'; for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; g.beginPath(); g.moveTo(sx, sy); g.arc(sx, sy, R, a0, a0 + Math.PI / 18); g.closePath(); g.fill(); }
     /* a block of text and bars */
@@ -514,7 +514,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.drawImage(sc, px0 - 2 * sig, py0 - 2 * sig, pw + 4 * sig, ph + 4 * sig); ctx.restore(); ctx.filter = 'none';
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, pw, ph);
     txt('what the sensor records (reduced)', px0, py0 - 10 * p, { s: 10, c: T.muted, b: 1 });
-    /* a 1:1 crop of the star's centre: one screen pixel per sensor pixel, so blur of a few pixels shows */
+    /* a 1:1 crop of the star's center: one screen pixel per sensor pixel, so blur of a few pixels shows */
     const cw = Math.min(110 * p, pw * 0.36), cxp = px0 + pw - cw - 6 * p, cyp = py0 + ph - cw - 6 * p, Rs = 0.34 * (c.sensorW / c.pix) * 2 / 3, sg = q.px / 2.4;
     ctx.save(); ctx.beginPath(); ctx.rect(cxp, cyp, cw, cw); ctx.clip(); ctx.fillStyle = '#f4f4f0'; ctx.fillRect(cxp, cyp, cw, cw);
     if (sg > 0.15) ctx.filter = `blur(${Math.min(40, sg).toFixed(2)}px)`;

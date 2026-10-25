@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§10.3 and 10.7. Access for f
 
 **Using the demo.**
 
-- The bench is a teaching gamma spectrometer modelled on ORTEC's: a source in a lead castle, absorber sheets between the source and a 38 mm × 38 mm NaI(Tl) scintillation crystal, a photomultiplier, an amplifier and a 2048 channel multichannel analyzer (MCA).
+- The bench is a teaching gamma spectrometer modeled on ORTEC's: a source in a lead castle, absorber sheets between the source and a 38 mm × 38 mm NaI(Tl) scintillation crystal, a photomultiplier, an amplifier and a 2048 channel multichannel analyzer (MCA).
 - The spectra are simulated, not measured: a Monte Carlo calculation of how photons deposit energy in the crystal, smeared by the detector's resolution and given random counting noise. Attenuation coefficients are from NIST XCOM; line energies and intensities are the ENSDF values.
 - The lead absorbers are the four sheets of the ORTEC RAS20 set, 1124, 2066, 3448 and 7367 mg/cm²; pressing a sheet adds it to the stack. The distance slider moves the source from 1 cm to 30 cm from the face of the crystal.
 - Acquire runs the MCA; Preset live stops it after that much live time; the clock speed buttons run it 1, 10 or 100 times faster. Clear empties the spectrum. The region of interest (set by dragging across a peak) gives the net counts above a straight background and the net rate per live second with its uncertainty.

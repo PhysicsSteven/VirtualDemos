@@ -19,7 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§12.1 and 12.2 (the equilibr
 
 **What the demo models.**
 
-- A perfectly flexible chain that does not stretch, with uniform mass per length $$\lambda$$, at rest, with $$g = 9.80665\ \text{m/s}^2$$. The curve is the exact catenary through both supports with arc length $$S$$, found numerically to full machine precision; the links are drawn for looks only.
+- A perfectly flexible chain that does not stretch, with uniform mass per length $$\lambda$$, at rest, with $$g = 9.81\ \text{m/s}^2$$. The curve is the exact catenary through both supports with arc length $$S$$, found numerically to full machine precision; the links are drawn for looks only.
 - A chain exactly as long as the distance between its supports would need an infinite tension, so the demo stops the length at that distance.
 
 </details>
@@ -92,8 +92,8 @@ The recorded forces carry 5 significant figures and the sag is given to 1 mm, so
 ## Questions
 
 1. A suspension bridge's main cable carries a deck whose weight is spread evenly along the horizontal, not along the cable. Which shape does that cable take, and why is it so close to a catenary when the sag is small?
-2. Turn the chain upside down and it becomes an arch in which every block pushes on its neighbours. Why must the ground at the base of an arch push inward as well as up?
-3. If the chain were twice as heavy per metre, what would happen to its shape and to every force you recorded?
+2. Turn the chain upside down and it becomes an arch in which every block pushes on its neighbors. Why must the ground at the base of an arch push inward as well as up?
+3. If the chain were twice as heavy per meter, what would happen to its shape and to every force you recorded?
 4. On a hot day a power line expands and sags further. What happens to the tension in it, and why do engineers leave some sag on purpose?
 
 ## What to hand in

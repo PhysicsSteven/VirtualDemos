@@ -17,7 +17,7 @@ Students should know Hooke's law for springs. The wire is 2.000 m long; a dial g
 ## Running it in class
 
 1. **Mild steel, 0.50 mm.** Add 1, 2, 3 kg: the gauge reads 0.500, 0.999, 1.499 mm, in proportion. Take the load off: back to zero.
-2. Ask Q2, then switch to **Aluminium alloy**: 3 kg now stretches it 4.28 mm, since Y is about 2.9 times smaller.
+2. Ask Q2, then switch to **Aluminum alloy**: 3 kg now stretches it 4.28 mm, since Y is about 2.9 times smaller.
 3. **Copper (annealed).** It yields at only 1.4 kg on this wire. Load it to 5 kg and take the load off: it stays much longer. Load it again: it is elastic up to the new, higher point (work hardening).
 4. Steel again, load slowly past 5.0 kg (yield) toward 8.0 kg (the tensile strength): watch the curve bend over, then the wire snaps.
 5. Lab: on the **Mystery metal**, capture several elastic loads and fit for Y; then find roughly where it stops returning to zero.
@@ -26,7 +26,7 @@ Students should know Hooke's law for springs. The wire is 2.000 m long; a dial g
 
 **Q1.** A 0.50 mm steel wire 2.000 m long carries 3.0 kg. Find the stress, the strain and the extension (Y = 200 GPa). Check with the gauge.
 
-**Q2.** Predict the extension under the same 3.0 kg for (a) a wire of the same steel with twice the diameter, (b) twice the length, (c) aluminium alloy (Y = 70 GPa).
+**Q2.** Predict the extension under the same 3.0 kg for (a) a wire of the same steel with twice the diameter, (b) twice the length, (c) aluminum alloy (Y = 70 GPa).
 
 **Q3.** What mass would make the 0.50 mm steel wire yield (250 MPa), and what mass would break it (400 MPa)? Why doesn't a thicker wire have a higher yield stress?
 
@@ -36,7 +36,7 @@ Students should know Hooke's law for springs. The wire is 2.000 m long; a dial g
 
 ## Common misconceptions
 
-- **"A thicker wire is stiffer, so it has a larger Young's modulus."** It takes more force per millimetre, but Y (stress over strain) is the same: area is divided out.
+- **"A thicker wire is stiffer, so it has a larger Young's modulus."** It takes more force per millimeter, but Y (stress over strain) is the same: area is divided out.
 - **"Elastic means stretchy."** Steel is very elastic (it returns exactly) while stretching very little.
 - **"When the load is removed, the wire returns to its original length."** Only below yield.
 - **"The wire breaks at the highest point of the stress strain curve, and is weakest there."** It reaches its tensile strength there; real wires then neck and break a little later.
@@ -44,6 +44,6 @@ Students should know Hooke's law for springs. The wire is 2.000 m long; a dial g
 ## Physics behind the demo
 
 - Engineering stress and strain (original area and length). Curve: straight to the yield stress σ_y with slope Y; then smooth hardening to the tensile strength σ_u, reached at strain ε_u, held until fracture at ε_f. Unloading and reloading below the current flow stress are elastic with slope Y.
-- Typical values: mild steel Y 200 GPa, σ_y 250 MPa, σ_u 400 MPa; annealed copper 120 GPa, 70 MPa, 220 MPa; an aluminium alloy 70 GPa, 270 MPa, 310 MPa. Real samples vary with composition and treatment.
+- Typical values: mild steel Y 200 GPa, σ_y 250 MPa, σ_u 400 MPa; annealed copper 120 GPa, 70 MPa, 220 MPa; an aluminum alloy 70 GPa, 270 MPa, 310 MPa. Real samples vary with composition and treatment.
 - Ignored: necking, rate effects and creep, temperature, and the wire's own weight. The load is applied slowly (no dynamic overshoot).
 - The dial gauge reads to 0.001 mm with no noise; scatter in a fit comes only from rounding.

@@ -281,7 +281,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     h += dd('Current in the hot wire', hide ? HID : amps(r.Ihot)) + dd('Current in the neutral', hide ? HID : amps(r.Ineu));
     h += dd('Hot minus neutral (what a GFCI sees)', hide ? HID : amps(r.leak)) + dd('Current in the ground wire', hide ? HID : amps(r.Ignd));
     h += dd('Voltage at the outlet', S.tripped ? '0 V' : `${r.Vout.toFixed(1)} V`) + dd('Power to the appliances', `${S.loads.reduce((a, k) => a + (r.loadP[k] || 0), 0).toFixed(0)} W`);
-    h += dd('Heat in the hot wire, per metre', hide ? HID : `${+r.heatPerMetre.toPrecision(3)} W/m`) + dd('Wire resistance, one way', `${(pre.Rw * 1000).toFixed(1)} mΩ`);
+    h += dd('Heat in the hot wire, per meter', hide ? HID : `${+r.heatPerMetre.toPrecision(3)} W/m`) + dd('Wire resistance, one way', `${(pre.Rw * 1000).toFixed(1)} mΩ`);
     if (S.touch) { h += dd('Current through the person', hide ? HID : amps(r.Ibody)); h += dd('Effect', hide ? HID : shockEffect(r.Ibody), true, r.Ibody >= 5e-3 ? 'warn' : ''); }
     if (S.blind && !S.tripped) h += dd('Will a device trip?', HID, true);
     $('out').innerHTML = h;
@@ -319,7 +319,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const WIRE_RATED = { 14: 15, 12: 20 }, RED = '#ff3b12';
   const overheat = (I) => Math.max(0, Math.min(1, ((Math.abs(I) / WIRE_RATED[S.gauge]) ** 2 - 1) / 3));
   const pathOf = (pts) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); };
-  /* an insulated conductor: dark edge, its colour, a highlight; heat (0 to 1) reddens it and makes it glow */
+  /* an insulated conductor: dark edge, its color, a highlight; heat (0 to 1) reddens it and makes it glow */
   function cond(pts, col, w, heat) {
     const p = ps(); ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     if (heat > 0) { ctx.shadowColor = RED; ctx.shadowBlur = 16 * p * heat; }

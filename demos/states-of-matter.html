@@ -96,8 +96,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
               <button type="button" data-h="-1" aria-pressed="false">Cool</button>
             </div>
             <label class="check"><input type="checkbox" id="showBonds" checked><span>Show bonds</span></label>
-            <span class="lab">Colour atoms by</span>
-            <div class="seg" role="group" aria-label="Colour atoms by" id="colorSeg">
+            <span class="lab">Color atoms by</span>
+            <div class="seg" role="group" aria-label="Color atoms by" id="colorSeg">
               <button type="button" data-c="speed" aria-pressed="true">Speed</button>
               <button type="button" data-c="phase" aria-pressed="false">Phase</button>
             </div>
@@ -193,7 +193,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
      flows up through the sample as in a pot on a stove. Everything is in reduced units inside: lengths σ, energies ε, time τ.
      The enthalpy H = KE + U + PV (+ the piston's kinetic energy) changes only by the heat added: dH = dQ at constant pressure. */
   const AR = { epsK: 120, sigmaNm: 0.34, massU: 39.948 };
-  const KB = 1.380649e-23, NA = 6.02214076e23, AMU = 1.66053906660e-27;
+  const KB = 1.380649e-23, NA = 6.02214076e23, AMU = 1.66053906892e-27;
   const EPS_J = AR.epsK * KB, TAU_PS = AR.sigmaNm * 1e-9 * Math.sqrt(AR.massU * AMU / EPS_J) * 1e12;
   const KJMOL = EPS_J * NA / 1000;                                  /* 1 ε per atom in kJ/mol */
   const ATM = EPS_J / Math.pow(AR.sigmaNm * 1e-9, 3) / 101325;      /* 1 ε/σ³ in atm */
@@ -304,7 +304,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     }
     return n;
   }
-  /* each atom's phase: 0 solid, 1 liquid, 2 vapor. Vapor: 3 neighbours or fewer within 1.5σ. Solid: at least 5 neighbours whose local
+  /* each atom's phase: 0 solid, 1 liquid, 2 vapor. Vapor: 3 neighbors or fewer within 1.5σ. Solid: at least 5 neighbors whose local
      bond order (q6, P. R. ten Wolde, M. J. Ruiz-Montero and D. Frenkel, J. Chem. Phys. 104, 9932, 1996) matches its own (normalized
      dot product above 0.6). Everything else is liquid. */
   const Q6F = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600], Q6N = [0, 1, 2, 3, 4, 5, 6].map((m) => Math.sqrt(Q6F[6 - m] / Q6F[6 + m]));
@@ -365,7 +365,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     return r;
   }
   /* the covered beaker beside it: the same until it boils; then the vapor stays under the lid, condenses on it and runs back, so
-     nothing leaves and the balance keeps reading the whole mass. The lid passes the heat on to the room air (not modelled), so the
+     nothing leaves and the balance keeps reading the whole mass. The lid passes the heat on to the room air (not modeled), so the
      sample stays at the boiling point. */
   function coveredState(sub, m, T0, Q) {
     const r = beakerState(sub, m, T0, Q);
@@ -539,7 +539,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         ctx.strokeStyle = `rgba(${rgb},${(0.15 + 0.6 * s).toFixed(2)})`; ctx.lineWidth = Math.max(0.8, sc * (0.06 + 0.1 * s)); ctx.beginPath();
         for (let n = 0; n < L.length; n += 2) { ctx.moveTo(X(L[n]), Z(L[n])); ctx.lineTo(X(L[n + 1]), Z(L[n + 1])); } ctx.stroke(); });
     }
-    for (const i of order) {                                  /* the slice in full colour, the rest faint and smaller */
+    for (const i of order) {                                  /* the slice in full color, the rest faint and smaller */
       const k = S.color === 'phase' && S.ph ? sprites.phase[S.ph[i]] : sprites.speed[Math.round(atomColorIndex(i) * (SPRITES - 1))];
       if (inSlice(i)) { ctx.globalAlpha = 1; ctx.drawImage(k.c, X(i) - k.s / 2, Z(i) - k.s / 2, k.s, k.s); }
       else { ctx.globalAlpha = 0.13; ctx.drawImage(k.c, X(i) - k.s * 0.35, Z(i) - k.s * 0.35, k.s * 0.7, k.s * 0.7); }
@@ -1000,8 +1000,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows[S.view].splice(+b.dataset.del, 1); renderRows(); } });
 
   // ---------- about ----------
-  $('aboutAtoms').textContent = `Atoms view: ${432} argon atoms that attract each other at a distance and repel when they touch (the Lennard-Jones potential, with argon's bond strength ε/k = 120 K and size σ = 0.34 nm, cut off at 0.85 nm). Newton's second law moves every atom in steps of ${f(MD_DT * TAU_PS * 1000, 1)} fs. The sample repeats sideways, so an atom leaving one side comes back in at the other, as if it were part of a wide sheet. A free piston presses down with the pressure you set, and the heater adds energy to the atoms touching the floor. The piston is idealized: it pushes with exactly the set pressure (its gauge shows it), with no weights, from 0 to 30 atm. At low pressure the vapor needs far more room, so the picture squeezes heights above 4 nm (a dashed line marks where) to keep the piston in view; the Column height readout is the true height. The column stops at 680 nm, so at 0 atm the vapor fills it and then the volume stays fixed. Temperature is the average kinetic energy of the atoms (KE = 3/2 kT per atom); the bond energy U is their potential energy, negative because bound atoms have less energy than separated ones. The heat added equals the change in KE + U + PV: the first law at constant pressure. The run lasts nanoseconds, so the heater is far stronger than a stove. Two things move the temperatures away from real argon's 83.8 K (melting) and 87.3 K (boiling at 1 atm). The setups use 17 atm, not 1 atm, so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure: that is why boiling here comes well above 87.3 K. And the sample is only a few nanometres thick, with many atoms at a surface, and each atom feels only the atoms within 0.85 nm, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. The shape of the heating curve, and where the heat goes, are the same. A small sample can also overheat for a moment before the first vapor forms, then settle back to the boiling plateau; real liquids do this too (superheating). Temperatures and energies on screen are averages over the last 0.02 ns. The flat view shows a slice 0.5 nm thick through the middle of the sample, with the atoms behind it faint; the 3D view shows them all.`;
-  $('aboutBeaker').textContent = 'Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at 1 atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume 2, Tables 1.3 and 1.4: ice 2090 J/kg·°C, water 4186, ethanol 2450; water melts at 0 °C with Lf = 334 kJ/kg and boils at 100 °C with Lv = 2256 kJ/kg; ethanol boils at 78.3 °C with Lv = 854 kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only. The covered beaker beside it is the same sample on the same hot plate with a lid: until it boils the two match, then its vapor condenses on the lid and runs back, so nothing leaves and its balance keeps reading the whole mass (mass is conserved; only the open beaker loses the vapor). The lid passes the heat on to the room, which is not modelled, so the covered sample stays at the boiling point. Ice is drawn as cubes that shrink as they melt, their total volume following the mass of ice left.';
+  $('aboutAtoms').textContent = `Atoms view: ${432} argon atoms that attract each other at a distance and repel when they touch (the Lennard-Jones potential, with argon's bond strength ε/k = 120 K and size σ = 0.34 nm, cut off at 0.85 nm). Newton's second law moves every atom in steps of ${f(MD_DT * TAU_PS * 1000, 1)} fs. The sample repeats sideways, so an atom leaving one side comes back in at the other, as if it were part of a wide sheet. A free piston presses down with the pressure you set, and the heater adds energy to the atoms touching the floor. The piston is idealized: it pushes with exactly the set pressure (its gauge shows it), with no weights, from 0 to 30 atm. At low pressure the vapor needs far more room, so the picture squeezes heights above 4 nm (a dashed line marks where) to keep the piston in view; the Column height readout is the true height. The column stops at 680 nm, so at 0 atm the vapor fills it and then the volume stays fixed. Temperature is the average kinetic energy of the atoms (KE = 3/2 kT per atom); the bond energy U is their potential energy, negative because bound atoms have less energy than separated ones. The heat added equals the change in KE + U + PV: the first law at constant pressure. The run lasts nanoseconds, so the heater is far stronger than a stove. Two things move the temperatures away from real argon's 83.8 K (melting) and 87.3 K (boiling at 1 atm). The setups use 17 atm, not 1 atm, so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure: that is why boiling here comes well above 87.3 K. And the sample is only a few nanometers thick, with many atoms at a surface, and each atom feels only the atoms within 0.85 nm, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. The shape of the heating curve, and where the heat goes, are the same. A small sample can also overheat for a moment before the first vapor forms, then settle back to the boiling plateau; real liquids do this too (superheating). Temperatures and energies on screen are averages over the last 0.02 ns. The flat view shows a slice 0.5 nm thick through the middle of the sample, with the atoms behind it faint; the 3D view shows them all.`;
+  $('aboutBeaker').textContent = 'Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at 1 atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume 2, Tables 1.3 and 1.4: ice 2090 J/kg·°C, water 4186, ethanol 2450; water melts at 0 °C with Lf = 334 kJ/kg and boils at 100 °C with Lv = 2256 kJ/kg; ethanol boils at 78.3 °C with Lv = 854 kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only. The covered beaker beside it is the same sample on the same hot plate with a lid: until it boils the two match, then its vapor condenses on the lid and runs back, so nothing leaves and its balance keeps reading the whole mass (mass is conserved; only the open beaker loses the vapor). The lid passes the heat on to the room, which is not modeled, so the covered sample stays at the boiling point. Ice is drawn as cubes that shrink as they melt, their total volume following the mass of ice left.';
 
   // ---------- size, theme, start ----------
   function resize() {

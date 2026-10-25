@@ -27,11 +27,11 @@ Students should know v = fλ and what a wavefront is. Each ring is one crest, ce
 
 **Q1.** Predict: an ambulance siren approaches at constant speed, passes you and drives away. Sketch the pitch you hear against time. Does it rise as the ambulance gets closer, stay constant, or something else? When does it change fastest?
 
-**Q2.** A 700 Hz siren moves at 30 m/s; sound travels at 343 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.
+**Q2.** A 700 Hz siren moves at 30 m/s; sound travels at 343.2 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.
 
 **Q3.** Explain why, for sound, it matters whether the source or the observer moves, at the same relative speed. Check with **Source at rest, observer moving**: note f′ early on. Then set the observer's **Speed v_o/v** to 0, give the source **Mach number v_s/v** 0.25 with **Direction** 180° (toward the observer), press **Restart** and compare. Why does this difference disappear for light?
 
-**Q4.** A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?
+**Q4.** A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343.2 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?
 
 **Q5.** At exactly Mach 1, f′ = f/(1 − v_s/v) is infinite straight ahead. What is physically happening, and why does the observer ahead hear nothing at all until the wall arrives? Use the drawing in **Mach 1: the sound barrier**.
 
@@ -49,7 +49,7 @@ Students should know v = fλ and what a wavefront is. Each ring is one crest, ce
 
 ## Physics behind the demo
 
-- Sound: a point source in still air at v = 343 m/s. The program solves exactly for each emission time whose crest is arriving now, v(t − t_e) = |r_o − r_s(t_e)|, and applies f′ = f (v − v_o·n̂)/(v − v_s·n̂), with n̂ from the emission point to the observer.
+- Sound: a point source in still air at v = 343.2 m/s. The program solves exactly for each emission time whose crest is arriving now, v(t − t_e) = |r_o − r_s(t_e)|, and applies f′ = f (v − v_o·n̂)/(v − v_s·n̂), with n̂ from the emission point to the observer.
 - Faster than sound, two emission times reach each point inside the cone (the earlier one heard backward, with negative f′) and none reach points outside. sin θ_c = v/v_s.
 - Light: special relativity in the observer's frame, f′ = f/(γ(1 − β cos θ)). Head on this is √((1 + β)/(1 − β)); at θ = 90° it is 1/γ. The Observer controls are hidden in light mode: the observer is at rest. Colors are approximate; outside 380 to 750 nm light is drawn gray.
 - The Hubble line uses d = cz/H₀ (H₀ = 70 km/s/Mpc), only for 0 < z ≤ 0.1. Only some crests are drawn; real 700 Hz crests are 0.49 m apart. Loudness falls as 1/r in the audio only. A real aircraft gives two booms (nose and tail shocks).

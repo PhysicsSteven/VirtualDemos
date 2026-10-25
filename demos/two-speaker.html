@@ -235,8 +235,8 @@ table.rows input:focus { border-color: var(--accent); }
   const P_REF = 20e-6;           /* Pa, reference rms pressure for the sound level (0 dB) */
   const L1M = 80;                /* dB, level of one speaker 1 m away (chosen) */
   const ROOM_X = 10, ROOM_Y = 8; /* m, floor of the room (the microphone stays on it); speakers on the wall at x = 0, either side of y = 0 */
-  /* OpenStax University Physics Vol 1 §17.2: speed of sound in air v = 331 m/s √(T/273 K) */
-  const soundSpeed = (tC) => 331 * Math.sqrt((tC + 273.15) / 273);
+  /* speed of sound in dry air: v = 331.3 m/s √(1 + t_C/273.15), 343.2 m/s at 20 °C (OpenStax University Physics Vol 1 §17.2 writes 331 m/s √(T/273 K)) */
+  const soundSpeed = (tC) => 331.3 * Math.sqrt(1 + tC / 273.15);
   const wavelength = (f, tC) => soundSpeed(tC) / f;
   /* each speaker is a point source in free field: complex pressure amplitude a e^{−ikr}/r, with a set so one speaker gives L1M at 1 m */
   const AMP = P_REF * Math.SQRT2 * 10 ** (L1M / 20);   /* Pa·m, peak pressure amplitude times distance */
@@ -260,7 +260,7 @@ table.rows input:focus { border-color: var(--accent); }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Two speaker interference virtual apparatus: recorded readings (simulated data)', `# demo version,${meta.version}`,
-      '# model,"two point sources in free field (no walls, floor or air absorption), pressure a e^(-ikr)/r each; one speaker gives 80 dB at 1 m; speed of sound 331 m/s sqrt(T/273 K)"',
+      '# model,"two point sources in free field (no walls, floor or air absorption), pressure a e^(-ikr)/r each; one speaker gives 80 dB at 1 m; speed of sound 331.3 m/s sqrt(1 + t_C/273.15)"',
       '# positions,"x from the wall the speakers are on, y sideways from the point midway between them, speaker 1 at y = +d/2"',
       '# rounding,"positions and distances to 1 mm, level to 0.1 dB"', '# noise,none',
       'row,f_Hz,d_m,speaker2,temp_C,x_m,y_m,r1_m,r2_m,level_dB'];
@@ -281,7 +281,7 @@ table.rows input:focus { border-color: var(--accent); }
     speed: { f: 500, d: 1.5, ph: 0, on2: true, tC: 20, X: 3, hint: 'Find the quiet spots along the walk line at several frequencies. For each, work out λ from r₂ − r₁ = (m + ½)λ and plot λ against 1/f: the slope is the speed of sound. Try another air temperature.' },
     mystery: { f: 686, d: 1.2, ph: 0, on2: true, tC: 20, X: 4, mystery: true, hint: 'The generator display is covered. Find the quiet spots, work out the wavelength, and with the speed of sound at 20 °C find the frequency. New mystery frequency picks another.' }
   };
-  $('modelHint').textContent = 'Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as 1/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives 80 dB at 1 m (chosen). The speed of sound is 331 m/s √(T/273 K) (OpenStax University Physics Vol 1, §17.2), with T in kelvin. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker 1 is at y = +d/2. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.';
+  $('modelHint').textContent = 'Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as 1/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives 80 dB at 1 m (chosen). The speed of sound is 331.3 m/s √(1 + t/273.15 °C), 343.2 m/s at 20 °C (OpenStax University Physics Vol 1, §17.2), with t in °C. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker 1 is at y = +d/2. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.';
   const fNow = () => (S.mystery ? S.mystery : S.f);
   const P = (x, y) => pressure(x, y, fNow(), S.d, S.tC, S.ph * PI, S.on2);
 
@@ -436,7 +436,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh); ctx.restore();
     if (S.view !== 'none') {
       const gw = Math.max(40, Math.min(260, Math.round(fw / 3))), gh = Math.round(gw * ROOM_Y / ROOM_X), F = fieldGrid(gw, gh), d = F.img.data;
-      const cP = rgb(T.pos), cN = rgb(T.accent), cB = rgb(T.surface), ph = reduce ? 0 : S.phase, ref = 1 / 3;   /* colour saturates at the pressure one speaker gives 3 m away */
+      const cP = rgb(T.pos), cN = rgb(T.accent), cB = rgb(T.surface), ph = reduce ? 0 : S.phase, ref = 1 / 3;   /* color saturates at the pressure one speaker gives 3 m away */
       for (let m = 0; m < gw * gh; m++) {
         let t, c;
         if (S.view === 'waves') { const v = (F.a1[m] * Math.cos(ph - F.k1[m]) + F.a2[m] * Math.cos(ph - F.k2[m])) / ref; t = Math.min(1, Math.abs(v)) * 0.6; c = v > 0 ? cP : cN; }
@@ -445,7 +445,7 @@ table.rows input:focus { border-color: var(--accent); }
       }
       octx.putImageData(F.img, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(off, x0, fy, fw, fh);
     }
-    /* metre grid on the floor */
+    /* meter grid on the floor */
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.globalAlpha = 0.6;
     for (let i = 0; i <= ROOM_X; i++) { ctx.beginPath(); ctx.moveTo(x0 + i * ppm + 0.5, fy); ctx.lineTo(x0 + i * ppm + 0.5, fy + fh); ctx.stroke(); }
     for (let j = 0; j <= ROOM_Y; j++) { ctx.beginPath(); ctx.moveTo(x0, fy + j * ppm + 0.5); ctx.lineTo(x0 + fw, fy + j * ppm + 0.5); ctx.stroke(); }

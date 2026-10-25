@@ -8,12 +8,12 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§9.5 and 9.6. Access for fre
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Pure silicon; n type silicon (these two use the Doping view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Diode; LED colours (the pn junction worksheet).
+**Setups in the demo:** Pure silicon; n type silicon (these two use the Doping view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Diode; LED colors (the pn junction worksheet).
 
 **Using the demo.**
 
 - A sample sits in a cryostat that holds it at any temperature from 20 K to 800 K. A Hall probe reads the density of conduction electrons $$n$$ and of holes $$p$$, in cm⁻³.
-- Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminium or gallium), each from 10¹¹ to 10¹⁸ cm⁻³; slide a density to its left end for none. Germanium and gallium arsenide are pure here.
+- Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminum or gallium), each from 10¹¹ to 10¹⁸ cm⁻³; slide a density to its left end for none. Germanium and gallium arsenide are pure here.
 - The band diagram shows the conduction and valence bands, the donor and acceptor levels and the Fermi level. Its dots show the electrons and holes on a scale given at the top, the same for both.
 - The graphs show $$n$$ (solid) and $$p$$ (dashed) against temperature on a log scale, with your recorded readings as dots, and the Fermi level against temperature.
 - Record reading stores the sample, the temperature and the Hall readings of $$n$$ and $$p$$. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.

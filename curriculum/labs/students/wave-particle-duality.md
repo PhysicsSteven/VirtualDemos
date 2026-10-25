@@ -55,7 +55,7 @@ which is 1 for perfect fringes, 0 for none, and is expected to fall as $$1 - \et
 
 ## Safety
 
-None for the virtual apparatus. Real electron diffraction tubes run at several kilovolts and give off X rays when the beam hits metal: keep the shielding in place.
+None for the virtual apparatus. Real electron diffraction tubes run at several kilovolts and give off X-rays when the beam hits metal: keep the shielding in place.
 
 ## Procedure
 

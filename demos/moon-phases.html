@@ -768,7 +768,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const DARK3 = { ink: '#e3e8ef', muted: '#9aa7b8', field: '#dfe6ef', canvas: '#0b1018', line: '#2a3442', grid: '#1c2531', accent: '#69a0ff', equi: '#e2b350', pos: '#ff7660', neg: '#69a0ff', lit: '#f2ead0', unlit: '#2a3441', onCharge: '#0d1218' };
   const M3 = { S: null, on: false, r2: null, cam2: null, earth: null, moon: null, ring: [], orbit: null, orbitDash: null, cone: null, face: null, pin: null, o: { th: -Math.PI / 2, ph: 0.98, zoom: 1 }, tries: 0 };
   function moonTexture() {
-    // grey with darker smooth patches: an illustration, not a map of the Moon
+    // gray with darker smooth patches: an illustration, not a map of the Moon
     const c = document.createElement('canvas'); c.width = 512; c.height = 256; const g = c.getContext('2d');
     g.fillStyle = '#b9b5ac'; g.fillRect(0, 0, 512, 256);
     let sd = 5; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
@@ -864,7 +864,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       r2.render(S3.scene, c2);
     }
   }
-  // words and guides over the 3D picture, in the flat view's colours for a dark sky
+  // words and guides over the 3D picture, in the flat view's colors for a dark sky
   function drawMain3D() {
     const v = V.main, ctx = v.ctx, g = mainGeo(), { w, h, topH } = g, e = E(), pn = phiN();
     const keep = T; T = Object.assign({}, T, DARK3);

@@ -83,7 +83,7 @@ The shares come from a run of finite length, so they scatter about the predicted
 
 1. With four molecules the gas often gathers on the left by itself. Is the free expansion of four molecules irreversible?
 2. The laws of motion work the same forwards and backwards in time. Why, then, does a gas spread out but never gather back?
-3. A real gas has about $$10^{22}$$ molecules in a litre. Estimate how often all of them would be found in one half.
+3. A real gas has about $$10^{22}$$ molecules in a liter. Estimate how often all of them would be found in one half.
 4. Why does the gas's temperature stay the same in a free expansion, even though its entropy rises?
 
 ## What to hand in

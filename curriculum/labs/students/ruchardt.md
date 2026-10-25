@@ -68,7 +68,7 @@ A real Rüchardt apparatus uses a large glass flask under slight pressure. Handl
 ## Analysis
 
 1. Fit $$T^2$$ against $$V$$ for each gas. Is the intercept zero within its uncertainty?
-2. From each slope find $$\gamma = 4\pi^2 m/(P A^2\,\text{slope})$$. Remember to convert litres to cubic metres.
+2. From each slope find $$\gamma = 4\pi^2 m/(P A^2\,\text{slope})$$. Remember to convert liters to cubic meters.
 3. Compare your $$\gamma$$ for air with 1.40, and for argon with $$5/3$$.
 4. From your $$\gamma$$ for each gas find $$C_V = R/(\gamma - 1)$$ and compare with Table 2.3.
 5. Compare your $$\gamma$$ for air with the value you would find from the Heat a gas worksheet's results for nitrogen. Air is mostly nitrogen and oxygen; should they agree?

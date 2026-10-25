@@ -31,7 +31,7 @@ Light from the two slits reaches a point on the screen by paths that differ by $
 
 $$d\sin\theta = m\lambda, \qquad m = 0, \pm 1, \pm 2, \ldots$$
 
-and where it is a half number of wavelengths they cancel and the screen is dark. On a screen a distance $$L$$ away the $$m$$th bright fringe is at $$y_m = L\tan\theta_m$$. For small angles $$\sin\theta \approx \tan\theta \approx y/L$$, so $$y_m \approx m\lambda L/d$$ and neighbouring bright fringes are evenly spaced (§3.2):
+and where it is a half number of wavelengths they cancel and the screen is dark. On a screen a distance $$L$$ away the $$m$$th bright fringe is at $$y_m = L\tan\theta_m$$. For small angles $$\sin\theta \approx \tan\theta \approx y/L$$, so $$y_m \approx m\lambda L/d$$ and neighboring bright fringes are evenly spaced (§3.2):
 
 $$\Delta y = \frac{\lambda L}{d}.$$
 
@@ -41,7 +41,7 @@ Each slit also has a width $$a$$, and its own diffraction pattern multiplies the
 
 1. Red light of 650 nm passes through two slits 0.25 mm apart onto a screen 1.00 m away. Predict the fringe spacing.
 2. By what factor does the spacing change if the wavelength is halved? If $$d$$ is doubled? If $$L$$ is doubled?
-3. How far apart are bright fringe $$-3$$ and bright fringe $$+3$$, in fringe spacings? Why is it better to measure across several fringes than between two neighbours?
+3. How far apart are bright fringe $$-3$$ and bright fringe $$+3$$, in fringe spacings? Why is it better to measure across several fringes than between two neighbors?
 4. The slits are 0.05 mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?
 
 ## Safety

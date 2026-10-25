@@ -36,7 +36,7 @@ Below yield, stress is proportional to strain: $$\sigma = Y\epsilon$$. Therefore
 
 $$Y=\text{slope}\,\frac{L}{A}.$$
 
-Use metres for extension when applying that formula. After yielding, unloading can leave a permanent extension. A wire that has already yielded is not the same initial specimen as a fresh wire. This model uses an idealized engineering stress strain curve with smooth hardening; it does not model necking or every behavior of a real alloy. Shear and bulk moduli are the subject of Worksheet 2, Shear and Bulk Moduli, on the same demo.
+Use meters for extension when applying that formula. After yielding, unloading can leave a permanent extension. A wire that has already yielded is not the same initial specimen as a fresh wire. This model uses an idealized engineering stress strain curve with smooth hardening; it does not model necking or every behavior of a real alloy. Shear and bulk moduli are the subject of Worksheet 2, Shear and Bulk Moduli, on the same demo.
 
 ## Before the lab
 
@@ -70,7 +70,7 @@ Save each elastic series separately. For yield cycles, pair each peak load with 
 
 ## Analysis
 
-1. Convert masses to forces and fit $$F$$ against $$\Delta L$$ for each elastic series. Report slope, intercept and residuals. Convert extension to metres before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
+1. Convert masses to forces and fit $$F$$ against $$\Delta L$$ for each elastic series. Report slope, intercept and residuals. Convert extension to meters before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
 2. Compare the two estimates of $$Y$$. Test whether the slope ratio agrees with the squared diameter ratio.
 3. Convert the two peak loads bracketing permanent set to stresses. Report a yield onset interval rather than an exact material constant from a coarse step.
 4. Explain the difference between total extension under load and residual extension after unloading. Distinguish the operational detection threshold from an exact yield stress.

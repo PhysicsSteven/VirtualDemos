@@ -28,23 +28,23 @@ Find, by trying speeds, the fastest a car can take a flat curve, the speed a ban
 
 ## Background
 
-An object moving at speed $$v$$ on a circle of radius $$r$$ accelerates towards the centre with $$a_c = v^2/r$$, so the forces on it must add up to a net force $$mv^2/r$$ towards the centre.
+An object moving at speed $$v$$ on a circle of radius $$r$$ accelerates towards the center with $$a_c = v^2/r$$, so the forces on it must add up to a net force $$mv^2/r$$ towards the center.
 
 **Flat curve.** Static friction from the road is the only horizontal force on the car. It can be at most $$\mu_s N = \mu_s mg$$, so the car holds the curve only while $$mv^2/r \le \mu_s mg$$:
 
 $$v_\text{max} = \sqrt{\mu_s g r}, \qquad v_\text{max}^2 = \mu_s g\,r.$$
 
-**Banked curve.** On a road tilted at angle $$\theta$$, the normal force leans towards the centre. At one speed it supplies the whole centripetal force and no friction is needed: $$N\sin\theta = mv^2/r$$ and $$N\cos\theta = mg$$, so
+**Banked curve.** On a road tilted at angle $$\theta$$, the normal force leans towards the center. At one speed it supplies the whole centripetal force and no friction is needed: $$N\sin\theta = mv^2/r$$ and $$N\cos\theta = mg$$, so
 
 $$v_\text{ideal}^2 = r g \tan\theta.$$
 
 Slower than this, friction must point up the slope; faster, down the slope.
 
-**Vertical loop.** At the top of a loop of radius $$r$$, gravity and the track both push towards the centre, so the ball needs $$v_\text{top}^2 \ge g r$$ to stay on the track. Energy conservation from the bottom, $$v_0^2 = v_\text{top}^2 + 2g(2r)$$, then gives
+**Vertical loop.** At the top of a loop of radius $$r$$, gravity and the track both push towards the center, so the ball needs $$v_\text{top}^2 \ge g r$$ to stay on the track. Energy conservation from the bottom, $$v_0^2 = v_\text{top}^2 + 2g(2r)$$, then gives
 
 $$v_0^2 \ge 5 g r.$$
 
-A ball with $$v_0^2 \le 2gr$$ never rises past the level of the loop's centre: it stops and slides back. In between, the normal force reaches zero somewhere in the upper half and the ball leaves the track.
+A ball with $$v_0^2 \le 2gr$$ never rises past the level of the loop's center: it stops and slides back. In between, the normal force reaches zero somewhere in the upper half and the ball leaves the track.
 
 ## Before the lab
 
@@ -55,7 +55,7 @@ A ball with $$v_0^2 \le 2gr$$ never rises past the level of the loop's centre: i
 
 ## Safety
 
-There is no physical apparatus. On a real road, curve speed limits are set well below $$\sqrt{\mu_s g r}$$: wet roads, worn tyres and braking in the curve all lower the grip that is left.
+There is no physical apparatus. On a real road, curve speed limits are set well below $$\sqrt{\mu_s g r}$$: wet roads, worn tires and braking in the curve all lower the grip that is left.
 
 ## Procedure
 
@@ -75,7 +75,7 @@ Hide the predictions (Blind) before you start, so the limits are not shown. For 
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-Keep each series in its own copy of the table, labelled with the part. The speed recorded is on one side of the limit: note in each table which side.
+Keep each series in its own copy of the table, labeled with the part. The speed recorded is on one side of the limit: note in each table which side.
 
 ## Analysis
 
@@ -86,7 +86,7 @@ Keep each series in its own copy of the table, labelled with the part. The speed
 
 ## Uncertainty
 
-The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit lies between the recorded speed and the next step. It is a one sided error, not random scatter, so the standard error of a fitted slope does not describe it. Estimate its effect on $$v^2$$ at your smallest and largest speeds. On a real road, $$\mu_s$$ itself is uncertain by tens of per cent and changes with the surface, the tyres and the weather.
+The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit lies between the recorded speed and the next step. It is a one sided error, not random scatter, so the standard error of a fitted slope does not describe it. Estimate its effect on $$v^2$$ at your smallest and largest speeds. On a real road, $$\mu_s$$ itself is uncertain by tens of percent and changes with the surface, the tires and the weather.
 
 ## Questions
 

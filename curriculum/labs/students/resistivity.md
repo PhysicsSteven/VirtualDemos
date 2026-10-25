@@ -16,13 +16,13 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§9.1 to 9.4 and §9.6. Acces
 - Choose **Inside the wire** above the picture to see the free electrons in a magnified piece of this wire. With **Follow the marked electron along the wire**, the view travels with the circled electron, so the ions stream past it: its zigzag is the random motion and its slow creep to the left is the drift.
 - Choose **Cold stage** above the picture: a sample wire in a liquid helium cryostat, cooled from room temperature to 1 K while the four wire meters read it. The length and gauge are the ones set above; the current is the supply current.
 - Capture stores L, the meter readings (V to 4 significant figures, I as set to 3), the gauge and the temperature. $$R$$ against $$L$$ uses rows at one temperature and gauge: $$\rho = \text{slope}\times A$$. $$R$$ against $$T$$ uses rows at one length and gauge: $$\alpha = \text{slope}/R(20\ °\text{C})$$.
-- Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides $$J$$, $$v_d$$, the transit time, $$I/e$$, the expected count and the collision time; the count, the drift so far and the real time stay, so $$v_d$$ can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope $$E$$ of the potential (the Mystery wire hides $$E$$ too).
+- Blind hides ρ, α, the wire's resistance per meter, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides $$J$$, $$v_d$$, the transit time, $$I/e$$, the expected count and the collision time; the count, the drift so far and the real time stay, so $$v_d$$ can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope $$E$$ of the potential (the Mystery wire hides $$E$$ too).
 
 **What the demo models.**
 
 - $$R = V/I$$; $$R = \rho L/A$$; $$\rho(T) = \rho_{20}\left[1 + \alpha(T - 20\ °\text{C})\right]$$
 - $$I = nqAv_d$$; $$J = I/A = nqv_d$$; transit time $$= L/v_d$$
-- Model: free electrons in a metal (OpenStax 9.2). The drift speed $$v_d = I/(nqA)$$ uses the free electron density $$n$$ above; $$n$$ does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed $$v_F = \hbar(3\pi^2 n)^{1/3}/m$$ of the free electron model, and the mean time between collisions is $$\tau = m/(ne^2\rho)$$, so it follows $$\rho(T)$$. Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about $$n v_d t\times(2\ \text{nm}\times 0.3\ \text{nm})$$ like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.
+- Model: free electrons in a metal (OpenStax 9.2). The drift speed $$v_d = I/(nqA)$$ uses the free electron density $$n$$ above; $$n$$ does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed $$v_F = \hbar(3\pi^2 n)^{1/3}/m$$ of the free electron model, and the mean time between collisions is $$\tau = m/(ne^2\rho)$$, so it follows $$\rho(T)$$. Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centered cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about $$n v_d t\times(2\ \text{nm}\times 0.3\ \text{nm})$$ like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.
 - Model: normal metals follow Matthiessen's rule, $$\rho(T) = \rho_0 + \rho_{\text{ph}}(T)$$. The lattice part $$\rho_{\text{ph}}$$ uses the Bloch–Grüneisen formula with the Debye temperature $$\Theta$$ (Kittel, Table 5.1: Cu 343 K, Al 428 K, Sn 200 K, Pb 105 K), scaled so that $$\rho(293\ \text{K})$$ is the handbook value (Cu 1.68, Al 2.65, Sn 11.5, Pb 20.8 × 10⁻⁸ Ω·m); real curves differ from this one formula by up to tens of percent between about 10 K and 100 K. The residual part $$\rho_0 = \rho(293\ \text{K})/\text{RRR}$$ comes from impurities and defects and depends on the sample. Below the critical temperature (OpenStax Table 9.3: Al 1.20 K, Sn 3.72 K, Pb 7.19 K, YBa₂Cu₃O₇ 92 K) the resistance is exactly zero; the step is drawn sharp, while real transitions are from a millikelvin to about a kelvin wide. Copper does not become superconducting at any temperature reached so far. YBCO's normal state is drawn as $$\rho = 2.5\times10^{-6}\ \Omega\,\text{m}\times T/(300\ \text{K})$$, a typical value along its copper oxide planes; it varies from sample to sample. Thermal contraction is left out. The points are simulated readings, noise free.
 - Model: $$R = \rho L/A$$ with $$\rho$$ linear in temperature; the voltmeter is ideal (four wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.
 
@@ -44,7 +44,7 @@ $$R(T)=R_{20}[1+\alpha(T-20\,^{\circ}\mathrm C)].$$
 
 If $$R = b + kT$$ with $$T$$ in degrees Celsius, then $$R_{20} = b + 20k$$ and $$\alpha = k/R_{20}$$. Temperature differences have the same numerical value in kelvins and Celsius degrees. This experiment assumes uniform temperature, a uniform cross section and negligible contact resistance. The virtual Mystery wire has synthetic material properties; identifying a real alloy is not the goal.
 
-**Current and drift (§§9.1, 9.2).** Current is the rate at which charge passes through a cross section, $$I = \Delta Q/\Delta t$$; one ampere is $$1/e = 6.24\times10^{18}$$ electrons per second. In a metal the charge is carried by free electrons, $$n$$ of them per cubic metre, which drift slowly against the current with speed $$v_d$$. In a time $$t$$ the electrons within a distance $$v_d t$$ of a cross section of area $$A$$ pass through it, $$nAv_dt$$ of them, so
+**Current and drift (§§9.1, 9.2).** Current is the rate at which charge passes through a cross section, $$I = \Delta Q/\Delta t$$; one ampere is $$1/e = 6.24\times10^{18}$$ electrons per second. In a metal the charge is carried by free electrons, $$n$$ of them per cubic meter, which drift slowly against the current with speed $$v_d$$. In a time $$t$$ the electrons within a distance $$v_d t$$ of a cross section of area $$A$$ pass through it, $$nAv_dt$$ of them, so
 
 $$I = nqAv_d,\qquad J = \frac{I}{A} = nqv_d.$$
 
@@ -55,7 +55,7 @@ The same current in a thinner wire needs faster drift. The electrons also move a
 1. Predict what happens to resistance if length doubles or diameter doubles.
 2. Why would changing temperature during a length scan bias the result?
 3. In a fit of $$R$$ against $$T$$, why is the intercept at 0 °C different from $$R_{20}$$?
-4. Copper has $$n = 8.47\times10^{28}$$ free electrons per cubic metre. Find the drift speed for 1.00 A in a copper wire 0.405 mm across, and how long an electron takes to drift 1.00 m.
+4. Copper has $$n = 8.47\times10^{28}$$ free electrons per cubic meter. Find the drift speed for 1.00 A in a copper wire 0.405 mm across, and how long an electron takes to drift 1.00 m.
 
 ## Safety
 
@@ -118,7 +118,7 @@ The virtual voltmeter records four significant figures; current is the set value
 3. Why is four wire sensing useful for a low resistance specimen?
 4. Can a near zero $$\alpha$$ prove that a material is a perfect conductor?
 5. Why can the current in a superconducting magnet keep flowing for years with no power supply connected?
-6. Electrons drift at well under a millimetre per second, yet a lamp lights the moment its switch closes. Why?
+6. Electrons drift at well under a millimeter per second, yet a lamp lights the moment its switch closes. Why?
 
 ## What to hand in
 

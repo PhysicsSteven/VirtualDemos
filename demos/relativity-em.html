@@ -502,7 +502,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   // SI units. Speeds are β = v/c unless a name says otherwise.
   const C0 = 299792458;                 // m/s
-  const EPS0 = 8.8541878128e-12;        // F/m (CODATA 2018)
+  const EPS0 = 8.8541878188e-12;        // F/m (CODATA 2022)
   const MU0 = 1 / (EPS0 * C0 * C0);     // T·m/A
   const QE = 1.602176634e-19;           // C
   const NA = 6.02214076e23;             // 1/mol
@@ -590,7 +590,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Drawing only: the change in spacing raised to the power k (k = 1 is the true spacing)
   function drawnSpacing(sLab, ratio, k) { return sLab * Math.pow(ratio, k); }
   // ---- the test charge set free near the wire ----
-  const ME = 9.1093837015e-31;          // electron mass, kg
+  const ME = 9.1093837139e-31;          // electron mass, kg
   // Fields of the wire at distance r, seen from frame f: [E away from the wire, B along y] (the charge is above the wire, +z)
   function wireFields(lam0, v, f, r) { const W = wireInFrame(lam0, v, f); return [W.lamNet * K2 / r, -MU0 * W.I / (2 * Math.PI * r)]; }
   // Exact relativistic motion, dp/dt = q(E + v × B), of a charge q, mass m in the plane of the wire and the charge
@@ -1236,7 +1236,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     RUN.end = e.z <= o.rMin ? 'hits the wire' : e.z >= o.rMax ? 'is pushed 5.5 cm away' : 'leaves the view';
   }
   const fade = (x) => Math.max(0, Math.min(1, (HALF - 0.5 - Math.abs(x)) / 3.5));
-  const toD = (m) => m * 100 * RD;   // metres to display units
+  const toD = (m) => m * 100 * RD;   // meters to display units
   function layLine(mesh, xs, rad, z, bx0, bx1) {
     const d = G.W.dummy; let n = 0;
     for (const x of xs) {
@@ -1337,7 +1337,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       setArrow(a, [x, 0, up * r0], [0, 0, d], len * fa, 0.03);
     });
     if (len > 0.2) labels.push({ p: [-HALF + 1.4 + 3 * 1.05, 0, -0.4 - len], t: 'E', c: T.efield, a: 'l', dx: 6 });
-    // forces on the charge: electric (orange) and magnetic (purple), labelled by type
+    // forces on the charge: electric (orange) and magnetic (purple), labeled by type
     const Fr = Math.abs(P.q * wireFields(P.lam0, P.v, P.u, P.r)[0]) || 1e-300, fs = 2.0 / Fr, cap = (l) => Math.min(4.5, l);
     const lE = Math.hypot(...N.FE) * fs, lM = Math.hypot(...N.FM) * fs;
     setArrow(Wg.fE, [qx, 0, qz], [N.FE[0], 0, N.FE[1]], cap(lE), 0.075);

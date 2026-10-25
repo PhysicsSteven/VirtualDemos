@@ -27,11 +27,11 @@ Measure the angles of the bright orders of a grating for lasers of known wavelen
 
 ## Background
 
-A grating is a large number $$N$$ of equally spaced slits a distance $$d$$ apart. Light from neighbouring slits reaching the wall at angle $$\theta$$ has a path difference $$d\sin\theta$$, and every slit adds in step when that is a whole number of wavelengths (§§3.3 and 4.4):
+A grating is a large number $$N$$ of equally spaced slits a distance $$d$$ apart. Light from neighboring slits reaching the wall at angle $$\theta$$ has a path difference $$d\sin\theta$$, and every slit adds in step when that is a whole number of wavelengths (§§3.3 and 4.4):
 
 $$d\sin\theta = m\lambda, \qquad m = 0, \pm 1, \pm 2, \ldots$$
 
-With hundreds of slits these bright orders are very sharp, which is why a grating separates nearby wavelengths so well. A grating with $$n$$ lines per millimetre has $$d = (1\ \mathrm{mm})/n$$. On a wall a distance $$L$$ away, order $$m$$ lands at $$y$$ with $$\tan\theta = y/L$$, so
+With hundreds of slits these bright orders are very sharp, which is why a grating separates nearby wavelengths so well. A grating with $$n$$ lines per millimeter has $$d = (1\ \mathrm{mm})/n$$. On a wall a distance $$L$$ away, order $$m$$ lands at $$y$$ with $$\tan\theta = y/L$$, so
 
 $$\sin\theta = \frac{y}{\sqrt{y^2 + L^2}}.$$
 
@@ -58,7 +58,7 @@ Start from the Red laser through 600 lines/mm setup, switch to Measure and set $
 
 **Part 3: the hydrogen spectrum.** Pick the Hydrogen lamp spectrum setup, switch to Measure and set $$L = 0.50$$ m. Measure the first order position of each of the four visible lines (red, cyan, blue and violet). Send the readings.
 
-**Part 4: resolving power.** Back in Explore, choose the sodium lamp. The two D lines land less than half a millimetre apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
+**Part 4: resolving power.** Back in Explore, choose the sodium lamp. The two D lines land less than half a millimeter apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
 
 ## Data
 
@@ -85,7 +85,7 @@ Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ and, for the known lasers, $$m\lambd
 
 ## Uncertainty
 
-The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimetres wide. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$\lambda$$. Is the relative uncertainty in $$\lambda$$ smaller in first or in second order? A real grating's line count is known only to its manufacturer's tolerance, and a wall that is not square to the beam shifts the spots on one side outward; say how each would affect your results.
+The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimeters wide. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$\lambda$$. Is the relative uncertainty in $$\lambda$$ smaller in first or in second order? A real grating's line count is known only to its manufacturer's tolerance, and a wall that is not square to the beam shifts the spots on one side outward; say how each would affect your results.
 
 ## Questions
 

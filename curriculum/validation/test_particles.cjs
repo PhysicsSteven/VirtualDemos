@@ -9,7 +9,7 @@ function group(name, f) { f(); n++; console.log('PASS', name); }
 const ex = (k) => c.check(c.EXAMPLES.find((e) => e.k === k));
 
 group('particle data: PDG 2024 values, antiparticles mirror every additive number, quark content gives the charge', () => {
-  near(c.BY.p.m, 938.27208816, 1e-12); near(c.BY.n.m, 939.56542052, 1e-12); near(c.BY['e-'].m, 0.51099895, 1e-12); near(c.BY.Lambda.m, 1115.683, 1e-12);
+  near(c.BY.p.m, 938.27208943, 1e-12); near(c.BY.n.m, 939.56542194, 1e-12); near(c.BY['e-'].m, 0.51099895, 1e-12); near(c.BY.Lambda.m, 1115.683, 1e-12);
   near(c.BY.n.tau, 878.4, 1e-9); near(c.BY['mu-'].tau, 2.1969811e-6, 1e-9); near(c.BY['pi+'].tau, 2.6033e-8, 1e-9);
   for (const p of c.P) {
     if (p.self) assert.equal(p.anti, p.id, p.id); else { const a = c.BY[p.anti]; assert(a, `antiparticle of ${p.id}`); assert.equal(a.anti, p.id);

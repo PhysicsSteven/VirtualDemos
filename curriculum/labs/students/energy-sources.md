@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §8.5, with power from §7.4. A
 
 **Using the demo.**
 
-- The picture is a bar chart on a logarithmic scale (each grid line is ten times the last) of the mass of each source needed to deliver the chosen energy: uranium 235 (fissioned), natural gas, gasoline, food fat, coal, dry wood, sugar, TNT, a lithium ion battery, water falling through the dam and air through a wind turbine, sorted from least mass to most, each bar labelled with its mass.
+- The picture is a bar chart on a logarithmic scale (each grid line is ten times the last) of the mass of each source needed to deliver the chosen energy: uranium 235 (fissioned), natural gas, gasoline, food fat, coal, dry wood, sugar, TNT, a lithium ion battery, water falling through the dam and air through a wind turbine, sorted from least mass to most, each bar labeled with its mass.
 - **Energy delivered** runs from 1 Wh to 10,000 MWh; the four chips set it to the examples above. **Delivered as electricity (heat engines convert only part of the heat)** is on when the page opens, with **Power station efficiency (heat to electricity)** from 20% to 60%, opening at 35%; with it off, the energy is delivered as heat and fuels need no engine.
 - Under Renewables: **Dam height (water falls through)** from 10 to 300 m, **Wind speed** from 3 to 20 m/s and **Average sunlight on a panel, day and night** from 50 to 300 W/m² (opening at 100 m, 10 m/s and 200 W/m²).
 - Readouts: Energy delivered in MJ; As heat from a heat engine; Uranium 235 vs coal, per kilogram; Solar panel area to collect it in one day; Gasoline volume (0.74 kg/L); Water volume through the dam.

@@ -75,7 +75,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   <header class="bar">
     <div>
       <h1>Eddy Currents: Magnet in a Pipe</h1>
-      <p>Drop the same strong magnet down a copper pipe, an aluminium pipe and a plastic pipe. In the metal pipes the moving magnet's changing flux drives currents around the wall, and by Lenz's law those currents push back: the magnet drifts down at a slow, steady speed.</p>
+      <p>Drop the same strong magnet down a copper pipe, an aluminum pipe and a plastic pipe. In the metal pipes the moving magnet's changing flux drives currents around the wall, and by Lenz's law those currents push back: the magnet drifts down at a slow, steady speed.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">pipes 1.00 m long · g = 9.81 m/s²</div>
@@ -144,7 +144,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.</p></details>
-        <details class="more"><summary>More about this</summary><p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[1 + α(T − 20 °C)] down to −50 °C; below that the resistivity is taken as a straight line in T to the measured value at −196 °C (7.2 times the 20 °C value for copper, 8 for aluminium).</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[1 + α(T − 20 °C)] down to −50 °C; below that the resistivity is taken as a straight line in T to the measured value at −196 °C (7.2 times the 20 °C value for copper, 8 for aluminum).</p></details>
         </div></details>
       </section>
     </aside>
@@ -159,10 +159,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // conductivity at 20 °C (S/m) and temperature coefficient of resistivity (1/K), linear; copper at 77 K uses its measured ratio
   const PIPES = [
     { id: 'cu', name: 'Copper', sigma20: 5.96e7, alpha: 0.00393 },
-    { id: 'al', name: 'Aluminium', sigma20: 3.77e7, alpha: 0.00429 },
+    { id: 'al', name: 'Aluminum', sigma20: 3.77e7, alpha: 0.00429 },
     { id: 'pvc', name: 'Plastic (PVC)', sigma20: 0, alpha: 0 }
   ];
-  // resistivity ρ(T) = ρ20 [1 + α (T − 20)] above about −50 °C; at liquid nitrogen temperature use the measured ratio ρ(293 K)/ρ(77 K) ≈ 7.2 for copper and 8 for aluminium,
+  // resistivity ρ(T) = ρ20 [1 + α (T − 20)] above about −50 °C; at liquid nitrogen temperature use the measured ratio ρ(293 K)/ρ(77 K) ≈ 7.2 for copper and 8 for aluminum,
   // with ρ (not σ) linear in T in between, as it nearly is for these metals down to 77 K
   function sigmaAt(P, T) {
     if (!P.sigma20) return 0;
@@ -266,7 +266,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function readouts() {
     const k = ks(), tf = tFall(), bl = S.blind;
-    let h = '<div class="head">Copper</div><div class="head">Aluminium</div><div class="head">Plastic</div>';
+    let h = '<div class="head">Copper</div><div class="head">Aluminum</div><div class="head">Plastic</div>';
     const row = (lab, vals) => `<dt>${lab}</dt>${vals.map((v) => `<dd>${v}</dd>`).join('')}`;
     h += row('Conductivity σ (MS/m)', PIPES.map((P) => f(sigmaAt(P, S.T) / 1e6, 1)));
     h += row('Time to fall 1.00 m, measured', tf.map((t) => (S.t >= t ? `${f(t, 2)} s` : '—')));
@@ -311,7 +311,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   // ---------- the pipes in 3D (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
   /* Each pipe stands in a wooden base with its front quarter cut away so the magnet and the wall are seen. Lengths are to scale; the pipe and
-     magnet radii are drawn WX times larger, so they can be seen beside a metre of pipe. The rings in the wall carry the induced current: brighter
+     magnet radii are drawn WX times larger, so they can be seen beside a meter of pipe. The rings in the wall carry the induced current: brighter
      where it is larger (from ringEmf, the same as the flat view), with dots that circulate in its direction. Drag to turn the view. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.3, ph: 1.2, zoom: 1 }, ph: 0, lcd: '', follow: true };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
@@ -371,7 +371,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function render3(rw, rh, k, tf) {
     const g = g3; if (!g) return null;
     if (G3.w !== rw || G3.h !== rh || G3.W !== W || G3.H !== H) { G3.w = rw; G3.h = rh; G3.W = W; G3.H = H; g.r.setSize(W, Math.max(1, H)); g.cam.aspect = W / Math.max(1, H);
-      g.cam.setViewOffset(W, H, (W - rw) / 2, (H - rh) / 2, W, H); g.cam.updateProjectionMatrix(); }   /* the whole stage, with the pipes centred in their column */
+      g.cam.setViewOffset(W, H, (W - rw) / 2, (H - rh) / 2, W, H); g.cam.updateProjectionMatrix(); }   /* the whole stage, with the pipes centered in their column */
     const key = [T.canvas, T.cu, T.cur, T.mag].join(); if (G3.key !== key) { G3.key = key; theme3(); }
     const asp = rw / Math.max(1, rh), st0 = fall(MAG.mass, k[0], Math.min(S.t, tf[0])), zc = Z0 + LEN - Math.min(LEN, st0.y);
     if (G3.follow) VD3.place(g.cam, G3.o, new THREE.Vector3(PX3[0] + 0.07, 0, Math.min(zc, Z0 + LEN - 0.08)), 0.62 * Math.max(1, 0.9 / asp));
