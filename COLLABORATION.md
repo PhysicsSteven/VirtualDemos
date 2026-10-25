@@ -3827,3 +3827,38 @@ Centauri and TRAPPIST-1, the worksheet's wording for a non major online class, a
 
 - Reran the Blackbody, Dispersion, Mirrors and Refracting Surfaces, Lenses and Optical Instruments and Spectra key captures against dbf492f: data identical to the committed keys (only timestamps differ), so no key or PDF changed.
 - Rerecorded the How this works videos for Blackbody (handout button is now a drop-down) and Optics Bench Dispersion, Mirrors and Refracting Surfaces, Lenses and Optical Instruments (two new white light setups in the list; lens panel now has Ideal, Crown glass, Flint glass). Same steps and sample values as before.
+
+## 2026-10-25 · Claude · New demo: Retrograde Motion and World Models (Astro 2203 Topic 3, plan gap 2)
+
+`demos/retrograde-motion.html`, vd3kit 3D plus Flat, shared framework, Copy link (date, window, view), measuring tools. The top
+view shows the orbits with numbered sight lines from Earth; the sky strip below shows the path against Hipparcos stars and IAU
+constellations (d3-celestial 0.7.35 data, BSD, written into the page by `tools/retrograde_sky.py`); a telescope pane shows phase
+and size. 11 presets (Mars 2024 to 2025 and 2020, Jupiter, Saturn, Mercury, three Mars oppositions, Tycho's view, Ptolemy's
+Mars, Copernicus's Mars, Venus in Kepler and in Ptolemy). Jump to: opposition, conjunction, inferior and superior conjunction,
+greatest elongation, stationary point.
+
+- **Kepler**: JPL approximate elements (Standish Table 1, 1800 to 2050), Earth as the EM barycenter, J2000 ecliptic; light time,
+  aberration, nutation and precession left out (stated in the page). λ within 0.017° (Mercury) to 0.23° (Saturn) of
+  astronomy-engine 2.1.19.
+- **Copernicus**: Sun centered circles, radius a, steady mean longitude, J2000 tilts; his epicyclets left out (stated). Misses
+  Mars by up to 33.2° (1937), 24° in 2020, with the 2020 opposition 19 days early.
+- **Ptolemy**: deferent offset e toward apogee A, equant at 2e, epicycle r, least squares fit to the JPL longitudes 1900 to 2050
+  every 5 days (stated as a fit, not Ptolemy's numbers): Mars e 0.0995, A 151.75°, r 0.6579 (Ptolemy's own 0.100 and 0.658),
+  rms 0.30°, worst 1.38°; Venus rms 0.118°; Mercury worst 3.34° (moving deferent center left out). Distances from Ptolemy's
+  nested spheres (Van Helden 1985), so Ptolemy's Venus is never more than half lit.
+- Events match published dates: Mars stations 7 Dec 2024 and 24 Feb 2025, opposition 16 Jan 2025 02:36 UT; Venus inferior
+  conjunction 23 Mar 2025; Jupiter opposition 3 Nov 2023; Saturn 8 Sep 2024.
+- Tests: `curriculum/validation/test_retrograde-motion.cjs`, 10 groups. Full node suite passes; vdcheck `--only after`
+  52 screenshots, 0 problems; symbols checks clean; symcheck 184 handouts, 0 differences; check_math clean.
+- **Worksheet** `intro-retrograde`, "Retrograde Motion and World Models" (Astro 2203): Mars every 20 days with the stations and
+  the opposition; synodic periods typed by hand; Venus every 40 days in Kepler and in Ptolemy (Galileo's test). Readings go to
+  the third table when every row is Venus. Both graphs are curve tables (CURVE_TABLES). Key from a real run: TeacherKeys
+  `worksheet-keys/astro-2203/intro-retrograde-*` (`tools/capture/intro-retrograde.cjs`).
+- Notes `notes/src/retrograde-motion.md` (answers in TeacherKeys). How this works video 24.1 s
+  (`tools/howto/retrograde-motion.cjs`): 1 Sep 2024 λ 87.33°, 21 Sep 2024 λ 99.09°, stationary 7 Dec 2024. Thumbnails (override in
+  thumbs.py), What's new entry, THIRD_PARTY_NOTICES (d3-celestial BSD notice, Hipparcos). Mapped to astro-2203 unit
+  planetary-motion and the Astro module's sky unit (no worksheet there).
+
+**For GPT:** please check (1) the Ptolemy description and the claim that a gibbous Venus rules out Ptolemy but not Tycho;
+(2) the synodic arithmetic in the worksheet key (Mars 764 d measured against 779.9 d from the formula, and why the measured gap
+is shorter); (3) the worksheet and notes wording for hyphens and American spelling.
