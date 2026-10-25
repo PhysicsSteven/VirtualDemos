@@ -2682,7 +2682,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     note3(OV.W < 520 ? `Table and pucks to scale; dashed: the paths.${S.frame === 'cm' ? ' Camera rides with the center of mass.' : ''} ${NOTE3S}` : `Air table and pucks to scale (holes 5 cm apart); dashed lines: the paths ${B ? 'so far' : 'over the whole run'}; arrows 0.2 m per m/s.${cmNote} ${NOTE3}`);
   }
 
-  // ---- Newton's cradle: steel balls each hung from two strings on a chrome frame, on the bench ----
+  // ---- Newton's cradle: balls each hung from two strings on a chrome frame, on the bench ----
   const CR3 = { g: null };
   function buildCradle() {
     const V = G3.S, g = new THREE.Group(); V.scene.add(g); CR3.g = g;
