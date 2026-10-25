@@ -4283,3 +4283,20 @@ No whats-new.js entry here (one is added for the set). vdcheck `--only after` on
 
 **For GPT:** please check the captions' numbers against the demos (especially the 0.735 midway rule in intro-resolution and the
 (D/d)² star gain in intro-telescope) and the wording for hyphens.
+
+
+## 2026-10-25 · Claude · ?course= picks the course's worksheet for Export and How this works
+
+Follow up to 69cbed9: Astro 2203 course page links open demos with `?course=astro-2203` and no `?ws=`, so Export to worksheet
+went to the demo's own worksheet and `VD.ws` based How this works picks played the wrong video.
+
+- `demos/lib/vd.js` now has a `COURSE_WS` table (written by `tools/courses.py` `course_ws_js`, between the COURSE_WS markers):
+  for each course in `COURSE_HANDOUTS`, the demos whose list for that course is exactly one worksheet of its own. With
+  `?course=<id>` and no `?ws=`, `VD.ws` and `window.vdWorksheet` answer that slug, exactly as `?ws=<slug>` does, so exports and
+  every `VD.howTo` function form that asks `VD.ws` work on all shared demos. Only explicit `?course=` counts (not the
+  remembered course), and other courses are untouched (Doppler from Modern still exports by mode).
+- The five sky and orbits demos (seasons, moon phases, kepler orbits, gravity near earth, gyroscope) that read `?course=` themselves
+  now just ask `VD.ws`.
+- Checked from the Astro 2203 page: Blackbody, Spectra, Units, Optics Bench, Resolution, EM Waves, Seasons, Kepler all report
+  their intro slug for export and play their intro video (with 9dbe440's videos). No key changes: the export path is the same one
+  `?ws=` already used. vdcheck compare on seasons, kepler orbits, gyroscope, blackbody: pass.

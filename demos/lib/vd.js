@@ -18,6 +18,14 @@
      VD.ws(own) gives the slug to send to; the Readings panel asks window.vdWorksheet(), so while ?ws= is in the address that
      answers the slug, whatever function the demo sets. A demo with its own export code calls VD.ws('<its slug>'). */
   var wsMatch = /[?&]ws=([a-z0-9-]+)/.exec(location.search);
+  /* Opened from such a course's page (?course=<id>, no ?ws=), a demo with exactly one worksheet for that course sends to it the
+     same way. COURSE_WS is written by tools/courses.py: edit the script, not the table. */
+  /* COURSE_WS START */ var COURSE_WS = {"astro-2203":{"blackbody":"intro-blackbody","celestial-sphere":"intro-celestial-sphere","em-waves":"intro-em-spectrum","giant-planets":"intro-giant-planets","gravity-near-earth":"intro-gravity","gyroscope":"intro-precession","inside-a-planet":"intro-inside-a-planet","instrument-builder":"intro-telescope","kepler-orbits":"intro-kepler","moon-phases":"intro-moon","optics-bench":"intro-mirrors","planet-temperatures":"intro-planet-temperatures","resolution":"intro-resolution","resonances":"intro-resonances","retrograde-motion":"intro-retrograde","seasons":"intro-seasons","solar-system-formation":"intro-solar-system-formation","spectra":"intro-spectra","units":"intro-scale"}}; /* COURSE_WS END */
+  if (!wsMatch) {
+    var cm = /[?&]course=([a-z0-9-]+)/.exec(location.search), here0 = location.pathname.split('/').pop().replace(/\.html$/, '');
+    var cw = cm && COURSE_WS[cm[1]] && COURSE_WS[cm[1]][here0];
+    if (cw) wsMatch = [null, cw];
+  }
   VD.ws = function (own) { return wsMatch ? wsMatch[1] : own; };
   if (wsMatch) {
     try { Object.defineProperty(window, 'vdWorksheet', { configurable: true, get: function () { return function () { return wsMatch[1]; }; }, set: function () {} }); } catch (_) {}

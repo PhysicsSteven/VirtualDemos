@@ -1319,9 +1319,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   /* How this works: one video per worksheet; the Astro 2203 one (intro-seasons) when the demo was opened from that worksheet (?ws=) or from
-     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-seasons) (made by tools/howto/) */
-  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
-    return ws === 'intro-seasons' || (!ws && q.get('course') === 'astro-2203') ? 'intro-seasons' : 'seasons'; };
+     the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
+  const howVid = () => (VD.ws('seasons') === 'intro-seasons' ? 'intro-seasons' : 'seasons');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'intro-seasons' ? 'How this works: Why We Have Seasons' : 'How this works: Sunlight Through the Year') });
 
