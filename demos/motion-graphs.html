@@ -229,6 +229,8 @@ table.rows input:focus { border-color: var(--accent); }
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a short video of one reading at the time marker in the turning around run (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/motion-graphs.mp4', poster: 'media/how-this-works/motion-graphs.jpg' });
   VD.tools({ el: $('can'), strip: '.viewbar', time: () => S.t });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const r = sessionStorage.getItem('vd-mg-motion'); if (r) reduce = r === 'reduce'; } catch (_) {}
@@ -598,7 +600,7 @@ table.rows input:focus { border-color: var(--accent); }
   can.addEventListener('pointermove', (e) => { if (!drag) return; const [x] = local(e); if (drag === 'cart') moveCart(x); else scrub(x); });
   const endDrag = () => { drag = null; };
   can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
-  function scrub(px) { const L = LY, t = (px - L.left) / (L.right - L.left) * tMax(); S.t = Math.max(0, Math.min(S.preset === 'walk' ? Math.max(0, (S.walk.xs.length - 1) * WALK_DT) : tMax(), t)); draw(); readouts(); }
+  function scrub(px) { const L = LY, t = Math.round((px - L.left) / (L.right - L.left) * tMax() * 100) / 100; /* to 0.01 s, as shown and captured */ S.t = Math.max(0, Math.min(S.preset === 'walk' ? Math.max(0, (S.walk.xs.length - 1) * WALK_DT) : tMax(), t)); draw(); readouts(); }
   function moveCart(px) { const L = LY, R = ranges().x; S.walk.x = Math.max(-X_LIM, Math.min(X_LIM, R.lo + (R.hi - R.lo) * (px - L.left) / (L.right - L.left))); if (!S.walk.run) S.walk.xs = []; draw(); }
   can.addEventListener('keydown', (e) => {
     const k = e.key;

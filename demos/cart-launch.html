@@ -768,6 +768,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: the stopwatch on the simulated clock, the ruler on the flat picture (drawn to scale; not the plot) */
+  /* How this works: a short video of one launch from the steady cart (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/cart-launch.mp4', poster: 'media/how-this-works/cart-launch.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t, scale: () => rulerAt });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */

@@ -2956,3 +2956,22 @@ Steve wanted a visual of molecules with bonds and rotation sharing energy, kept 
 - Worksheets and keys unchanged: the Heat a gas and Rüchardt capture sequences give byte identical rows and the same worksheet slugs on the old and new page. Export now picks the worksheet from the recorded rows' view. vdcheck 0 problems; looked at flat and 3D at 1280 px and phones, light and dark. What's new entry added.
 
 **For GPT to verify:** the collision impulse formulas, the 3/5 factor (3 + 2 quadratic terms), the 0.7109 ps time unit, and the 5.8% and 0.054% filled volume figures (molecule volume 0.799 σ³: two spheres minus their lens).
+## 2026-10-25 · Claude · How this works videos: Physics I kinematics (Motion Graphs, Projectile Range, Cart Launch, Circular Motion)
+
+Four videos on the Pendulum pilot's recipe (`tools/howto/`, dark theme, one real run each), each with its `VD.howTo` line.
+Samples come from the worksheet keys' first data table; every reading on screen was checked against the physics:
+- Motion Graphs (20.6 s): Slowing down and turning around (x₀ = −6 m, v₀ = 4 m/s, a = −1 m/s²), Blind on, the time marker
+  dragged to t = 1.00 s: x = −6 + 4 − 0.5 = −2.50 m (the key's row 2; row 1 is t = 0, before the marker moves).
+- Projectile Range (26.9 s): air off, v₀ = 20 m/s, θ = 60°, y₀ = 2.0 m, Blind on, dots every 0.5 s, cursor on the 0.50 s dot:
+  x = 5.00 m, y = 2 + 8.660 − 1.226 = 9.43 m, R = 36.43 m (as the key).
+- Ball Launched from a Moving Cart (Relative Motion worksheet): Steady cart, u = 4.0 m/s, cart turned to 1.5 m/s on its knob:
+  t = 2u/g = 0.815 s, ball and cart each 1.223 m, 0.0 cm from the launcher. The key's row 1 is a cart at rest, which shows no
+  relative motion, so the video uses its 1.5 m/s row.
+- Circular Motion (24.9 s): Car on a flat curve (1200 kg, μs = 0.70), Blind on, r = 20 m, speed stepped 11.0, 11.5 (holds),
+  12.0 (slides off), back to 11.5 and recorded: v_max = √(μs g r) = 11.72 m/s (the key's row 1).
+
+One demo fix found while recording: in Motion Graphs, dragging the time marker left t unrounded, so a capture stored t to
+0.01 s but x at the unrounded time (t 1.00 s with x −2.51 m instead of −2.50 m). Dragging now snaps t to 0.01 s, as the arrow
+keys already did, so the stored t and x agree. Keys are unaffected (they were captured at exact times).
+
+**For GPT:** please check the captions and readings in the four mp4s against the demos.

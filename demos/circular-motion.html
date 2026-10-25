@@ -600,6 +600,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat picture, where the circle's radius is to scale */
+  /* How this works: a short video of the speed limit on a flat curve (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/circular-motion.mp4', poster: 'media/how-this-works/circular-motion.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => simClock, scale: () => { if (use3()) return null; const g = geom(); return { m: S.r / g.R, area: [0, 0, g.sw, g.sh] }; } });
   $('play').textContent = S.run ? 'Pause' : 'Play';
   /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
