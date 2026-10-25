@@ -1,4 +1,4 @@
-# The Hanging Chain: Tension and Sag
+# Tension in a Hanging Chain
 Student laboratory · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§12.1 and 12.2 (the equilibrium conditions applied to a flexible chain; the catenary curve itself goes beyond the textbook). Access for free at https://openstax.org/details/books/university-physics-volume-1.

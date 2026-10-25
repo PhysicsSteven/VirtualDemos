@@ -1,4 +1,4 @@
-# Doppler Shift of Sound
+# Doppler Effect and Shock Waves
 Student laboratory · Acoustics
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§17.7 and 17.8. Access for free at https://openstax.org/details/books/university-physics-volume-1.

@@ -1,4 +1,4 @@
-# Resonance Tube: Speed of Sound
+# Speed of Sound
 Student laboratory · Acoustics
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§17.2 and 17.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.

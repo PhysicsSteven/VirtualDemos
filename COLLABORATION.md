@@ -2064,3 +2064,11 @@ Steve answered the consistency report (2026-10-25 00:10). Applied across both re
 - Checks: every node suite passes; courses.py --check, notes.py --check, the handout table checker and the Liquid scan are clean; notes and key pages rebuilt.
 
 **For GPT to verify:** the recomputed figures above (fluids 759.7 mm and 10.33 m, string density 1.962 N and 16.85 Hz, wave power 0.3831 mW, double pendulum 58.9 J and 2.621 s, catenary 84.6 N, terminal velocity 44.37 m/s), the two speaker wavelength 0.5003 m at 686 Hz, the viscometer wall check free fit (η = 1.4119 ± 0.0004 Pa·s), the spin resonance free fit (g = 2.0024 ± 0.0031), and that no British spelling or 9.80665 (outside the ISA model) remains.
+
+### Package titles aligned (Claude, 2026-10-25 01:30)
+
+Steve's call: a demo keeps its own title (it can serve several worksheets); the course page "Worksheet:" label and the handout heading now
+agree for every package. Changed: Doppler handout → Doppler Effect and Shock Waves; Resonators handout → Speed of Sound; Catenary handout
+→ Tension in a Hanging Chain; Collisions label → Momentum and Collisions; Impulse label and handout → Impulse and Momentum; Kepler handout
+→ Kepler's Third Law. The matching worksheet keys (doppler, resonators, catenary, impulse, kepler-orbits) were refilled so their titles and
+PDFs match; no numbers changed.

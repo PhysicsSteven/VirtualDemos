@@ -1,4 +1,4 @@
-# Measuring Impulse from a Force Sensor
+# Impulse and Momentum
 Student laboratory · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§9.1–9.2. Access for free at https://openstax.org/details/books/university-physics-volume-1.

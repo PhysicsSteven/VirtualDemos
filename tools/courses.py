@@ -161,7 +161,7 @@ HANDOUT_TOPIC = {
     'thin-films': 'Thin Film Interference', 'electron-diffraction': 'Electron Diffraction and de Broglie Waves',
     'x-ray-diffraction': 'X-Ray Diffraction', 'em-waves': 'Electromagnetic Waves: Fields, Intensity and Pressure',
     'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
-    'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
+    'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse and Momentum', 'collisions': 'Momentum and Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus", 'shear-bulk': 'Shear and Bulk Moduli',
     'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'pipe-flow': 'Pipe Flow and Turbulence', 'cavendish': 'Measuring G', 'terminal-velocity': 'Terminal Velocity', 'springs': 'Spring Constant',
     'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops', 'rocket': 'The Rocket Equation', 'induction': 'Charging by Induction', 'neutral-attraction': 'Attracting a Neutral Insulator',

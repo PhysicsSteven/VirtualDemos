@@ -1,4 +1,4 @@
-# Measuring Orbits and Kepler's Third Law
+# Kepler's Third Law
 Student laboratory · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Access for free at https://openstax.org/details/books/university-physics-volume-1.
