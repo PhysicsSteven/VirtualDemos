@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Entropy and the Second Law</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +36,8 @@
 @media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 190px; } .shelf-card { flex: 1 1 100%; } }
 @media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
 @media (min-width: 821px) { .stage { min-height: 740px; } }
+.pane .cap3d { position: absolute; left: 8px; right: 8px; bottom: 6px; margin: 0; width: fit-content; max-width: calc(100% - 16px); padding: 3px 8px; border-radius: 6px; font-size: 0.76rem; line-height: 1.35; color: var(--muted); background: color-mix(in srgb, var(--canvas) 82%, transparent); pointer-events: none; }
+.pane .cap3d:empty { display: none; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -61,6 +65,7 @@
           <button type="button" data-v="es" aria-pressed="false">Einstein solids</button>
           <button type="button" data-v="sl" aria-pressed="false">Second law</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="spin attn" id="go">Start</button>
         <button type="button" class="btn" id="restart">Start over</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
@@ -72,6 +77,7 @@
       </div>
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" role="img" aria-label="A box of gas molecules with a partition down the middle. Space starts or pauses."></canvas>
+        <p class="cap3d" id="cap3d"></p>
       </div>
       <div class="curvebox"><canvas id="curve" role="img" aria-label="Graphs for the view: the count on the left over time and the share of time spent at each count, or the energy in solid A over time and the number of ways to share it."></canvas></div>
       <div class="shelf" id="shelf">
@@ -310,6 +316,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
   }
   const trail = { g: null, pts: [], t: -1 };
+  /* trails: where each molecule was over the last few frames (display only, kept outside the model; the 3D view uses them too) */
+  function trailTick(g) {
+    if (trail.g !== g) { trail.g = g; trail.pts = []; trail.t = -1; }
+    if (g.t !== trail.t) { trail.t = g.t; trail.pts.push([Float64Array.from(g.x), Float64Array.from(g.y)]); if (trail.pts.length > 18) trail.pts.shift(); }
+  }
   function drawFe() {
     const p = proj(), by = scene(), g = S.fe.g;
     const narrow = W < 560, bw = Math.min(W * (narrow ? 0.88 : 0.62), (by - 70 * p) * 2), bh = bw / 2, bx = W * 0.06, byy = (by - bh) / 2 + 6 * p, sc = bw / BOX_W;
@@ -319,9 +330,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the partition, or its dashed ghost once removed */
     if (g.wall) { ctx.fillStyle = dark() ? '#9aa6b6' : '#56616f'; ctx.fillRect(bx + bw / 2 - 3 * p, byy, 6 * p, bh); }
     else { ctx.save(); ctx.setLineDash([5 * p, 6 * p]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx + bw / 2, byy); ctx.lineTo(bx + bw / 2, byy + bh); ctx.stroke(); ctx.restore(); }
-    /* trails: where each molecule was over the last few frames (display only, kept outside the model) */
-    if (trail.g !== g) { trail.g = g; trail.pts = []; trail.t = -1; }
-    if (g.t !== trail.t) { trail.t = g.t; trail.pts.push([Float64Array.from(g.x), Float64Array.from(g.y)]); if (trail.pts.length > 18) trail.pts.shift(); }
+    trailTick(g);
     if (!reduce && trail.pts.length > 1) {
       ctx.save(); ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1.2, Math.min(3, g.r * sc * 0.6));
       for (let i = 0; i < g.N; i++) { ctx.strokeStyle = g.x[i] < 1 ? T.cold : T.hot;
@@ -418,15 +427,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.sl.pair) {
       const cx2 = W * (W < 560 ? 0.66 : 0.55), pinfo = Object.assign({ mode: r.mode === 'engine' ? 'fridge' : 'engine' }, pr.partner);
       drawDevice(cx2, top + rh, bot, rad, pinfo, 'Carnot', scale);
-      const bx = W * 0.74, bw = Math.min(W * 0.24, 220 * p), byy = (top + bot) / 2 - 10 * p;
-      if (W >= 560) {
+      if (W >= 560) slPanel(r, pr, W * 0.74, (top + bot) / 2 - 10 * p, Math.min(W * 0.24, 220 * p));
+    } else if (W >= 560) slPanel(r, pr, W * 0.62, (top + bot) / 2 - 50 * p, Math.min(W * 0.33, 280 * p));
+  }
+  /* the card beside the device: efficiency (or COP) and the verdict, or what the pair with the Carnot device does (flat and 3D) */
+  function slPanel(r, pr, bx, byy, bw) {
+    const p = proj();
+    if (S.sl.pair) {
       if (VG) VG.panel(ctx, bx, byy, bw, 96 * p, { r: 8 });
       lab(r.mode === 'engine' ? 'with the Carnot refrigerator' : 'with the Carnot engine', bx + 10 * p, byy + 16 * p, { w: 700 });
       lab(`net heat from hot: ${f(pr.fromHot, 1)} J`, bx + 10 * p, byy + 38 * p, { c: T.ink, m: true, s: 10 * p });
       lab(`net heat to cold: ${f(pr.toCold, 1)} J`, bx + 10 * p, byy + 58 * p, { c: T.ink, m: true, s: 10 * p });
-      lab(`net work out: ${f(pr.Wnet, 1)} J`, bx + 10 * p, byy + 78 * p, { c: T.ink, m: true, s: 10 * p }); }
-    } else if (W >= 560) {
-      const bx = W * 0.62, bw = Math.min(W * 0.33, 280 * p), byy = (top + bot) / 2 - 50 * p;
+      lab(`net work out: ${f(pr.Wnet, 1)} J`, bx + 10 * p, byy + 78 * p, { c: T.ink, m: true, s: 10 * p });
+    } else {
       if (VG) VG.panel(ctx, bx, byy, bw, 100 * p, { r: 8 });
       lab(r.mode === 'engine' ? 'efficiency' : 'coefficient of performance', bx + 10 * p, byy + 16 * p, { w: 700 });
       lab(r.mode === 'engine' ? `this engine W/Q_h = ${f(r.eff, 4)}` : `this fridge Q_c/W = ${f(r.cop, 3)}`, bx + 10 * p, byy + 40 * p, { c: T.ink, m: true, s: 10 * p });
@@ -493,7 +506,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('entropy change in one cycle (J/K)', zero, CH - 2);
     }
   }
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ fe: drawFe, es: drawEs, sl: drawSl })[S.view](); drawCurve(); readouts(); clock(); }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (on3d && G3) render3(); else ({ fe: drawFe, es: drawEs, sl: drawSl })[S.view](); drawCurve(); readouts(); clock(); }
   function clock() { $('clock').textContent = S.view === 'fe' ? `t = ${f(S.fe.g.tOpen, 1)} s` : S.view === 'es' ? `${S.es.s.steps} exchanges` : 'one cycle'; }
 
   // ---------- readouts ----------
@@ -555,6 +568,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('units').textContent = v === 'fe' ? "model gas · time on the model's clock" : v === 'es' ? 'energy in quanta ε · T in ε/k' : 'T in K · Q and W in J · S in J/K';
     can.setAttribute('aria-label', { fe: 'A box of gas molecules with a partition down the middle. Space starts or pauses.', es: 'Two solids drawn as grids of oscillators, each shaded by the energy quanta it holds. Space starts or pauses.', sl: 'A hot reservoir above, a cold reservoir below and a device between them, with arrows for the heat and work in one cycle.' }[v]);
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    home3(v);
     setRun(false); sync(); redraw();
   }
   function setRun(on) { S.run = on; const started = S.view === 'fe' ? S.fe.g.t > 0 : S.view === 'es' ? S.es.s.steps > 0 : false; $('go').textContent = on ? 'Pause' : started ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
@@ -593,8 +607,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (S.view === 'es') { const s = S.es.s, k = Math.max(1, Math.round(30 * dt * S.speed)); solidStep(s, k);
       const last = s.trace[s.trace.length - 1]; if (s.steps - last[0] >= Math.max(1, s.steps / 800)) s.trace.push([s.steps, s.qA]); if (s.trace.length > 3000) s.trace = s.trace.filter((_, i) => i % 2 === 0); }
   }
-  let last = performance.now();
-  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run && S.view !== 'sl') { advance(dt); redraw(); } requestAnimationFrame(frame); }
+  let last = performance.now(), last3 = 0;   /* last3: the second law's 3D motion (flywheel, beads) is drawn at most 20 times a second */
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run && S.view !== 'sl') { advance(dt); redraw(); } else if (on3d && G3 && S.view === 'sl' && !reduce && now - last3 > 50 && !document.hidden) { last3 = now; render3(); } requestAnimationFrame(frame); }
 
   // ---------- readings ----------
   window.vdVersion = 'entropy@2026-10-24';
@@ -620,6 +634,268 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutEs').textContent = 'Einstein solids (beyond the book): each solid is a set of identical quantum oscillators, each holding a whole number of energy quanta ε. A solid of N oscillators holding q quanta can arrange them in Ω = C(q + N − 1, q) ways, and Boltzmann\'s S = k ln Ω gives its entropy (Schroeder, An Introduction to Thermal Physics, §2.2 to §2.6). Each step the demo picks two oscillators at random and moves a quantum from the first to the second if it has one; in the long run every arrangement is equally likely. The temperature comes from 1/T = dS/dU, worked out over one quantum on each side. A solid with no energy has exactly one arrangement, so S = 0: the third law (§4.7).';
   $('aboutSl').textContent = 'Second law: a device runs one complete cycle between two reservoirs so large that their temperatures do not change. The first law fixes the third energy from the two you set. The device ends where it started, so only the reservoirs change entropy, by +Q/T for heat they gain and −Q/T for heat they lose (§4.6). A process is allowed if the total is zero (reversible) or positive. The Kelvin and Clausius statements (§4.4) are the special cases with no heat to the cold reservoir or no work. Pairing the device with a Carnot device between the same reservoirs (§4.4, §4.5) shows that any engine better than Carnot could be made into a perfect engine, and any refrigerator better than Carnot into a perfect refrigerator.';
 
+  // ---------- the 3D views (three.js r128 through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawings above ----------
+  /* Pictures only: every position, count and reading in 3D comes from the same state the flat drawings use. The room and bench
+     are in meters. The gas box is drawn 0.2 m per model unit, and the solids, reservoirs and devices are pictures, not to scale. */
+  let G3 = null, on3d = false;
+  const U3 = 0.2, D3 = 0.07, TW3 = 0.018, FX0 = -0.36, FZ0 = 0.068, ZQ = 0.15;   /* gas box: m per model unit, depth, wall, inner left x and floor z; height of the heat arrows */
+  const HOME3 = { fe: { th: -Math.PI / 2 + 0.2, ph: 1.22, t: [0.17, 0.02, 0.1], d: 1.08, ref: 2.45 }, es: { th: -Math.PI / 2 + 0.2, ph: 1.0, t: [0.13, 0.05, 0.05], d: 1.12, ref: 2.35 },
+    sl: { th: -Math.PI / 2 + 0.16, ph: 1.12, t: [0, 0.07, 0.24], d: 1.85, ref: 2.2 } };
+  const O3 = { th: HOME3.fe.th, ph: HOME3.fe.ph, zoom: 1 };
+  const CAP3 = { fe: 'Drag to turn, scroll to zoom, double click to go back. The disks move in the plane between the glass front and the back wall; the box is in model units, not to scale.',
+    es: 'Drag to turn, scroll to zoom, double click to go back. Each square on a solid is one oscillator and each cube one quantum ε; not to scale.',
+    sl: 'Drag to turn, scroll to zoom, double click to go back. Arrow widths are in proportion to the energy in one cycle; the reservoirs and devices are pictures, not to scale.' };
+  const SHORT3 = { fe: 'Model gas in model units, not to scale.', es: 'A square per oscillator, a cube per quantum; not to scale.', sl: 'Arrow widths in proportion to the energy; not to scale.' };
+  const coarse3 = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
+  const cap3 = (v) => { const t = W && W < 560 ? 'Drag to turn, double click to go back. ' + SHORT3[v] : CAP3[v]; return coarse3 ? VD3.turnText(t) : t; };
+  function home3(v) { const nar = W && W < 560; Object.assign(O3, { th: HOME3[v].th * (nar ? 0.97 : 1), ph: HOME3[v].ph - (nar ? 0.08 : 0), zoom: 1 }); if (on3d) $('cap3d').textContent = cap3(v); }
+  const col3 = (c) => new THREE.Color(c);
+  function tex3(V, w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = V.r.capabilities.getMaxAnisotropy(); return { cv, c: cv.getContext('2d'), t }; }
+  /* a label drawn over the 3D picture on the flat canvas, on a soft card so it reads against the scene */
+  function tag(s, x, y, o = {}) {
+    const p = proj(), fs = (o.s || 11) * p; ctx.save(); ctx.font = `${o.w || 600} ${fs}px ${o.m ? T.mono : T.ui}`;
+    const tw = ctx.measureText(s).width, pad = 6 * p; let x0 = (o.a || 'center') === 'center' ? x - tw / 2 : o.a === 'right' ? x - tw : x;
+    x0 = Math.max(pad + 2, Math.min(W - tw - pad - 2, x0)); y = Math.max(fs, Math.min(H - fs, y));
+    ctx.fillStyle = dark() ? 'rgba(18,24,32,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x0 - pad, y - fs * 0.78, tw + 2 * pad, fs * 1.56, 6 * p); ctx.fill();
+    ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x0, y + 0.5); ctx.restore();
+  }
+  const at3 = (q, dy = 0) => { const v = G3.S.project(q); return [v[0], v[1] + dy * proj()]; };
+
+  /* the room: a tiled floor, a wall with a dado panel, and a wooden lab bench with its top at z = 0 */
+  function room3(V) {
+    const g = new THREE.Group(), FL = -0.86, M = (o, c) => VD3K.material(V, o, c); let sd = 11; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    const ft = tex3(V, 256, 256); ft.c.fillStyle = '#dfe2e5'; ft.c.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 900; i++) { ft.c.fillStyle = `rgba(${rn() < 0.5 ? '255,255,255' : '90,96,104'},${0.05 + 0.06 * rn()})`; ft.c.fillRect(rn() * 256, rn() * 256, 2, 2); }
+    ft.c.fillStyle = '#b4bac1'; ft.c.fillRect(0, 0, 256, 3); ft.c.fillRect(0, 0, 3, 256); ft.t.wrapS = ft.t.wrapT = THREE.RepeatWrapping; ft.t.repeat.set(24, 16);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), M({ map: ft.t, roughness: 0.8 }, ['#ffffff', '#4a5260'])); floor.position.set(0, 2.5, FL); floor.receiveShadow = true;
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 3.4), M({ roughness: 0.95 }, ['#eef1f4', '#1d2530'])); wall.rotation.x = Math.PI / 2; wall.position.set(0, 1.05, FL + 1.7);
+    const dado = new THREE.Mesh(new THREE.PlaneGeometry(12, 0.95), M({ roughness: 0.9 }, ['#dde3e9', '#222b37'])); dado.rotation.x = Math.PI / 2; dado.position.set(0, 1.045, FL + 0.475);
+    const skirt = M({ roughness: 0.6 }, ['#8d96a1', '#11161d']);
+    g.add(floor, wall, dado, VD3K.box(12, 0.02, 0.012, skirt, 0, 1.04, FL + 0.95), VD3K.box(12, 0.02, 0.09, skirt, 0, 1.04, FL));
+    const wt = tex3(V, 1024, 256), c = wt.c; c.fillStyle = '#d4b182'; c.fillRect(0, 0, 1024, 256);
+    for (let y = 0; y < 256; y++) { const w = 0.5 + 0.5 * Math.sin(y * 0.19 + 3 * Math.sin(y * 0.023)); c.fillStyle = `rgba(140,92,48,${0.04 + 0.2 * Math.pow(w, 8)})`; c.fillRect(0, y, 1024, 1); }
+    for (let i = 0; i < 60; i++) { c.fillStyle = `rgba(120,78,40,${0.05 + 0.08 * rn()})`; c.fillRect(0, rn() * 256, 1024, 1 + 2 * rn()); }
+    const top = M({ map: wt.t, roughness: 0.62 }, ['#ffffff', '#6b5a47']), leg = M({ roughness: 0.45, metalness: 0.5 }, ['#5d6670', '#3a424c']);
+    const bt = VD3K.box(2.2, 0.9, 0.045, top, 0, 0.12, -0.045); bt.castShadow = false; g.add(bt);
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.05, 0.05, -FL - 0.045, leg, sx * 1.04, 0.12 + sy * 0.39, FL));
+    for (const sx of [-1, 1]) g.add(VD3K.box(0.04, 0.78, 0.04, leg, sx * 1.04, 0.12, FL + 0.12));
+    g.add(VD3K.box(2.04, 0.04, 0.04, leg, 0, 0.5, FL + 0.12));
+    return g;
+  }
+  /* a meter standing on the bench (or on a face when tilt is 0) */
+  function meter3(V, o, x, y, z) { const m = VD3K.meter(V, Object.assign({ w: 0.15, h: 0.088 }, o)); m.position.x = x; m.position.y = y; if (z != null) m.position.z = z; return m; }
+
+  /* ---- free expansion: an insulated box with a glass front and a partition that lifts out through a slot in the lid ---- */
+  function initFe(V) {
+    const g = new THREE.Group(), w = BOX_W * U3, h = BOX_H * U3, cx = FX0 + w / 2, ow = w + 2 * TW3, od = D3 + 2 * TW3, plH = FZ0 - TW3;
+    const foam = VD3K.material(V, { roughness: 0.95 }, ['#ece7dc', '#7d786d']), steel = VD3K.material(V, { roughness: 0.35, metalness: 0.6 }, ['#9aa3ad', '#6c7580']);
+    const plinth = VD3K.box(ow + 0.04, od + 0.04, plH, steel, cx, 0, 0);
+    const half = (ow - 0.012) / 2;
+    const lids = [VD3K.box(half, od, TW3, foam, cx - 0.006 - half / 2, 0, FZ0 + h), VD3K.box(half, od, TW3, foam, cx + 0.006 + half / 2, 0, FZ0 + h)]; lids.forEach((x) => { x.castShadow = false; });
+    g.add(plinth, VD3K.box(ow, od, TW3, foam, cx, 0, plH), ...lids);
+    for (const sgn of [-1, 1]) g.add(VD3K.box(TW3, od, h, foam, cx + sgn * (w / 2 + TW3 / 2), 0, FZ0));
+    /* the back wall's inner face: pale, the left half tinted as in the flat view, faint lines every 0.1 model units */
+    const bk = tex3(V, 1024, 512), backM = new THREE.MeshStandardMaterial({ map: bk.t, emissiveMap: bk.t, emissive: '#ffffff', emissiveIntensity: 0.45, roughness: 0.9 });
+    V.onTheme((dk) => { const c = bk.c; c.fillStyle = dk ? '#121a23' : '#f4f7fa'; c.fillRect(0, 0, 1024, 512); c.fillStyle = dk ? 'rgba(105,168,255,0.12)' : 'rgba(43,111,196,0.08)'; c.fillRect(0, 0, 512, 512);
+      c.strokeStyle = dk ? 'rgba(255,255,255,0.06)' : 'rgba(30,40,55,0.07)'; c.lineWidth = 2; for (let i = 1; i < 20; i++) { c.beginPath(); c.moveTo(i * 51.2, 0); c.lineTo(i * 51.2, 512); c.stroke(); } for (let i = 1; i < 10; i++) { c.beginPath(); c.moveTo(0, i * 51.2); c.lineTo(1024, i * 51.2); c.stroke(); }
+      bk.t.needsUpdate = true; });
+    const back = new THREE.Mesh(new THREE.BoxGeometry(w, TW3, h), [foam, foam, foam, backM, foam, foam]); back.position.set(cx, D3 / 2 + TW3 / 2, FZ0 + h / 2); back.receiveShadow = true; g.add(back);
+    const glass = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ color: '#d7e8f4', transparent: true, opacity: 0.13, roughness: 0.05, metalness: 0.1, depthWrite: false }));
+    glass.rotation.x = Math.PI / 2; glass.position.set(cx, -D3 / 2, FZ0 + h / 2); glass.renderOrder = 3; g.add(glass);
+    const rim = steel; for (const zz of [FZ0 - 0.004, FZ0 + h]) g.add(VD3K.box(ow, 0.006, 0.004, rim, cx, -od / 2 - 0.003, zz));
+    /* the partition and its handle; it rises out of the slot when removed */
+    const part = new THREE.Group(), sheet = new THREE.Mesh(new THREE.BoxGeometry(0.004, D3 + 0.01, h + TW3 + 0.012), steel);
+    sheet.position.set(cx, 0, FZ0 + (h + TW3 + 0.012) / 2); sheet.castShadow = true;
+    const knob = VD3K.rod([cx, -0.02, FZ0 + h + TW3 + 0.018], [cx, 0.02, FZ0 + h + TW3 + 0.018], 0.007, VD3K.material(V, { roughness: 0.5 }, ['#2b3644', '#1b222b']));
+    part.add(sheet, knob); g.add(part);
+    /* the molecules (one pool, scaled to the disk radius) and their trails */
+    const mol = VD3K.particles(V, { n: 200, r: 1, seg: 14 });
+    const tg = new THREE.BufferGeometry(), NT = 200 * 17 * 2; tg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NT * 3), 3)); tg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NT * 3), 3));
+    const trails = new THREE.LineSegments(tg, new THREE.LineBasicMaterial({ vertexColors: true })); trails.frustumCulled = false;
+    /* the count strip on the front of the plinth: the same split the flat view draws under the box */
+    const st = tex3(V, 1024, 64), strip = new THREE.Mesh(new THREE.PlaneGeometry(ow, plH * 0.62), new THREE.MeshBasicMaterial({ map: st.t }));
+    strip.rotation.x = Math.PI / 2; strip.position.set(cx, -od / 2 - 0.0205, plH / 2);
+    g.add(mol, trails, strip);
+    const MW = { w: 0.2, h: 0.1 }, meters = [meter3(V, Object.assign({ label: 'on the left now' }, MW), 0.27, -0.07), meter3(V, Object.assign({ label: 'time all on the left' }, MW), 0.485, -0.05), meter3(V, Object.assign({ label: 'time since opened' }, MW), 0.7, -0.03)];
+    meters.forEach((m) => g.add(m));
+    return { g, part, mol, trails, st, stKey: '', meters, cx, w, h, od, plH };
+  }
+  function fe3() {
+    const F = G3.fe, g = S.fe.g, rad = g.r * U3, nL = leftCount(g);
+    F.part.position.z = g.wall ? 0 : F.h * 0.86;
+    const cC = col3(T.cold), cH = col3(T.hot); F.mol.scale.setScalar(rad);
+    for (let i = 0; i < g.N; i++) F.mol.put(i, (FX0 + g.x[i] * U3) / rad, 0, (FZ0 + g.y[i] * U3) / rad, g.x[i] < BOX_W / 2 ? cC : cH);
+    F.mol.show(g.N); F.mol.done();
+    trailTick(g);
+    const pos = F.trails.geometry.attributes.position, colA = F.trails.geometry.attributes.color, n = trail.pts.length, bg = col3(dark() ? '#121a23' : '#f4f7fa'), cc = new THREE.Color(); let k = 0;
+    if (!reduce && n > 1) for (let i = 0; i < g.N; i++) { const base = g.x[i] < BOX_W / 2 ? cC : cH;
+      for (let j = 1; j < n; j++) { const a = trail.pts[j - 1], b = trail.pts[j];
+        for (const [q, jj] of [[a, j - 1], [b, j]]) { pos.setXYZ(k, FX0 + q[0][i] * U3, 0.004, FZ0 + q[1][i] * U3); cc.copy(bg).lerp(base, 0.55 * jj / n); colA.setXYZ(k, cc.r, cc.g, cc.b); k++; } } }
+    F.trails.geometry.setDrawRange(0, k); pos.needsUpdate = true; colA.needsUpdate = true;
+    const key = `${nL}|${g.N}|${T.cold}|${T.hot}`;
+    if (key !== F.stKey) { F.stKey = key; const c = F.st.c, Wd = 1024, Hd = 64, sx = Wd * nL / g.N;
+      c.fillStyle = '#20262e'; c.fillRect(0, 0, Wd, Hd); c.fillStyle = T.cold; c.fillRect(6, 8, sx - 6, Hd - 16); c.fillStyle = T.hot; c.fillRect(sx, 8, Wd - 6 - sx, Hd - 16);
+      c.fillStyle = '#ffffff'; c.fillRect(Wd / 2 - 2, 0, 4, Hd); c.font = `700 30px ${T.mono}`; c.textBaseline = 'middle';
+      if (sx > 150) { c.textAlign = 'left'; c.fillText(`${nL} left`, 20, Hd / 2 + 1); } if (Wd - sx > 160) { c.textAlign = 'right'; c.fillText(`${g.N - nL} right`, Wd - 20, Hd / 2 + 1); }
+      F.st.t.needsUpdate = true; }
+    F.meters[0].set(`${nL} of ${g.N}`); F.meters[1].set(g.tCount > 0 ? `${f(100 * g.hist[g.N] / g.tCount, 2)}%` : '—'); F.meters[2].set(`${f(g.tOpen, 1)} s`);
+  }
+  function fe3Labels() {
+    const F = G3.fe, g = S.fe.g, zt = FZ0 + F.h + TW3 + 0.012;
+    let q = at3([FX0 + F.w / 4, 0, zt], -12); tag('left half', q[0], q[1], { w: 400 }); q = at3([FX0 + 3 * F.w / 4, 0, zt], -12); tag('right half', q[0], q[1], { w: 400 });
+    q = at3([F.cx, 0, zt + (g.wall ? 0.02 : F.h * 0.86 + 0.03)], -12); tag(g.wall ? 'partition' : 'partition removed', q[0], q[1], { w: 700 });
+    q = at3([F.cx, -F.od / 2 - 0.02, 0], 14); tag(`${g.N} molecules; insulated box, no heat in or out`, q[0], q[1], { w: 400 });
+  }
+
+  /* ---- Einstein solids: two blocks in contact on an insulating pad; a square per oscillator, a stack of cubes for its quanta ---- */
+  function initEs(V) {
+    const g = new THREE.Group(), box1 = new THREE.BoxGeometry(1, 1, 1);
+    const cork = VD3K.material(V, { roughness: 1 }, ['#b48a5a', '#5c4630']), copper = new THREE.MeshStandardMaterial({ color: '#c47a45', roughness: 0.35, metalness: 0.7 });
+    const slabMA = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.15 }), slabMB = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.15 });
+    const mk = (m) => { const x = new THREE.Mesh(box1, m); x.castShadow = true; x.receiveShadow = true; g.add(x); return x; };
+    const pad = mk(cork), slabA = mk(slabMA), slabB = mk(slabMB), contact = mk(copper);
+    const tileM = new THREE.MeshStandardMaterial({ roughness: 0.6, color: '#ffffff' }), cubeMA = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05 }), cubeMB = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05 });
+    const inst = (m, n) => { const x = new THREE.InstancedMesh(box1, m, n); x.castShadow = true; x.receiveShadow = true; x.count = 0; x.frustumCulled = false; g.add(x); return x; };
+    const tiles = inst(tileM, 600); { const w = new THREE.Color('#ffffff'); tiles.count = 600; for (let i = 0; i < 600; i++) tiles.setColorAt(i, w); tiles.count = 0; } const cubesA = inst(cubeMA, 400), cubesB = inst(cubeMB, 400);
+    const stand = VD3K.box(0.4, 0.12, 0.05, VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#8b96a3', '#3a4552']), 0.56, 0.17, 0); g.add(stand);
+    const MW = { w: 0.17, h: 0.1 }, meters = [meter3(V, Object.assign({ label: 'quanta in A' }, MW), 0.465, -0.08), meter3(V, Object.assign({ label: 'exchanges tried' }, MW), 0.655, -0.08),
+      meter3(V, Object.assign({ label: 'temperature of A', sub: 'kT/ε' }, MW), 0.465, 0.17, 0.05 + 0.05), meter3(V, Object.assign({ label: 'temperature of B', sub: 'kT/ε' }, MW), 0.655, 0.17, 0.05 + 0.05)];
+    meters.forEach((m) => g.add(m));
+    return { g, pad, slabA, slabB, slabMA, slabMB, contact, tiles, tileM, cubesA, cubesB, cubeMA, cubeMB, meters, stand, L: null };
+  }
+  function es3() {
+    const E = G3.es, e = S.es, s = e.s, N = e.NA + e.NB, M = new THREE.Matrix4(), q = new THREE.Quaternion(), P = new THREE.Vector3(), Sc = new THREE.Vector3();
+    const R = Math.max(1, Math.ceil(Math.sqrt(Math.max(e.NA, e.NB) / 1.2))), cA = Math.ceil(e.NA / R), cB = Math.ceil(e.NB / R);
+    const c = Math.min(0.09, 0.7 / (cA + cB), 0.36 / R), wA = cA * c, wB = cB * c, dep = R * c, gap = 0.006, x0 = -0.12 - (wA + wB + gap) / 2, padH = 0.015, slH = 0.035, zT = padH + slH;
+    E.L = { x0, wA, wB, gap, dep, zT };
+    const put = (m, w, d, hh, x, y, z) => { m.scale.set(w, d, hh); m.position.set(x, y, z + hh / 2); };
+    put(E.pad, wA + wB + gap + 0.05, dep + 0.05, padH, x0 + (wA + wB + gap) / 2, 0, 0);
+    put(E.slabA, wA, dep, slH, x0 + wA / 2, 0, padH); put(E.slabB, wB, dep, slH, x0 + wA + gap + wB / 2, 0, padH); put(E.contact, gap, dep, slH + 0.004, x0 + wA + gap / 2, 0, padH);
+    const shade = (hex, k) => col3(hex).multiplyScalar(k);
+    E.slabMA.color.copy(shade(T.A, 0.62)); E.slabMB.color.copy(shade(T.B, 0.62)); E.cubeMA.color.set(T.A); E.cubeMB.color.set(T.B); const tA = col3(T.A).lerp(col3(dark() ? '#2a323c' : '#ffffff'), 0.72), tB = col3(T.B).lerp(col3(dark() ? '#2a323c' : '#ffffff'), 0.72);
+    let tall = 0; for (let k = 0; k < N; k++) tall = Math.max(tall, s.n[k]);
+    const stackMax = Math.max(4, Math.ceil(3 * e.q / N), tall), cw = c * 0.8, hc = Math.min(cw, 0.2 / stackMax);
+    let nt = 0, na = 0, nb = 0;
+    for (const [n0, cnt, cols, xs, mesh] of [[0, e.NA, cA, x0, E.cubesA], [e.NA, e.NB, cB, x0 + wA + gap, E.cubesB]]) {
+      for (let k = 0; k < cnt; k++) {
+        const i = k % cols, r = Math.floor(k / cols), x = xs + (i + 0.5) * c, y = -dep / 2 + (r + 0.5) * c;
+        M.compose(P.set(x, y, zT + 0.001), q, Sc.set(c * 0.9, c * 0.9, 0.002)); E.tiles.setColorAt(nt, n0 ? tB : tA); E.tiles.setMatrixAt(nt++, M);
+        for (let m = 0; m < s.n[n0 + k]; m++) { M.compose(P.set(x, y, zT + 0.002 + (m + 0.5) * hc), q, Sc.set(cw, cw, hc * 0.88)); mesh.setMatrixAt(mesh === E.cubesA ? na++ : nb++, M); }
+      }
+    }
+    E.tiles.count = nt; E.cubesA.count = na; E.cubesB.count = nb;
+    for (const m of [E.tiles, E.cubesA, E.cubesB]) m.instanceMatrix.needsUpdate = true; if (E.tiles.instanceColor) E.tiles.instanceColor.needsUpdate = true;
+    E.meters[0].set(`${s.qA}`); E.meters[1].set(`${s.steps}`);
+    E.meters[2].visible = E.meters[3].visible = E.stand.visible = !S.blind;
+    if (!S.blind) { E.meters[2].set(f(solidT(e.NA, s.qA), 2)); E.meters[3].set(f(solidT(e.NB, e.q - s.qA), 2)); }
+  }
+  function es3Labels() {
+    const L = G3.es.L, e = S.es, s = e.s;
+    for (const [x, name, qX, NX] of [[L.x0 + L.wA / 2, 'solid A', s.qA, e.NA], [L.x0 + L.wA + L.gap + L.wB / 2, 'solid B', e.q - s.qA, e.NB]]) {
+      const q = at3([x, -L.dep / 2 - 0.025, 0], 12), narrow = W < 560, dy = narrow && name === 'solid B' ? 40 * proj() : 0;
+      tag(`${name}: ${qX} quanta`, q[0], q[1] + dy, { w: 700 }); tag(`${NX} oscillators`, q[0], q[1] + dy + 20 * proj(), { w: 400 });
+    }
+    if (!S.blind) { const q = at3([0.56, 0.17, 0.2], -10); tag('temperatures in units of ε/k', q[0], q[1], { w: 400, s: 10 }); }
+  }
+
+  /* ---- second law: a hot reservoir and a cold one, a device between them, arrows as wide as the energy they carry ---- */
+  function arrow3() {
+    const m = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.05 }), g = new THREE.Group();
+    const sh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 20).rotateX(Math.PI / 2).translate(0, 0, 0.5), m), hd = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 24).rotateX(Math.PI / 2), m);
+    sh.castShadow = hd.castShadow = true; g.add(sh, hd); g.visible = false; const up = new THREE.Vector3(0, 0, 1), d = new THREE.Vector3();
+    g.set = (a, b, rad, col) => {
+      d.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const len = d.length(); g.visible = rad > 0 && len > 1e-6; if (!g.visible) return;
+      m.color.set(col); m.emissive.set(col); m.emissiveIntensity = 0.28; const hl = Math.min(len * 0.45, Math.max(0.03, rad * 2.2));
+      g.position.set(a[0], a[1], a[2]); g.quaternion.setFromUnitVectors(up, d.normalize());
+      sh.scale.set(rad, rad, len - hl); hd.scale.set(rad * 1.9 + 0.006, rad * 1.9 + 0.006, hl); hd.position.z = len - hl / 2; g.a = a; g.b = b; g.len = len; g.rad = rad;
+    };
+    return g;
+  }
+  function device3(V) {
+    const g = new THREE.Group(), steel = VD3K.material(V, { roughness: 0.32, metalness: 0.65 }, ['#aab3bd', '#7a838e']), dk = VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#3a4552', '#2a333e']);
+    const copper = new THREE.MeshStandardMaterial({ color: '#c47a45', roughness: 0.35, metalness: 0.7 });
+    const eng = new THREE.Group(); eng.add(VD3K.box(0.17, 0.17, 0.02, dk, 0, 0, 0), VD3K.rod([0, 0, 0.02], [0, 0, 0.25], 0.062, steel), VD3K.rod([0, 0, ZQ - 0.025], [0, 0, ZQ + 0.025], 0.065, copper), VD3K.rod([0, 0, 0.25], [0, 0, 0.27], 0.07, dk), VD3K.rod([0, 0, 0.27], [0, 0, 0.32], 0.008, steel));
+    const fr = new THREE.Group(), cab = VD3K.material(V, { roughness: 0.4, metalness: 0.2 }, ['#e9edf1', '#9aa4af']);
+    fr.add(VD3K.box(0.15, 0.15, 0.25, cab, 0, 0, 0), VD3K.rod([0, 0, 0.25], [0, 0, 0.29], 0.04, dk), VD3K.rod([0, 0, 0.29], [0, 0, 0.32], 0.008, steel));
+    for (const sx of [-1, 1]) for (let i = 0; i < 4; i++) fr.add(VD3K.rod([sx * 0.079, -0.06, 0.06 + i * 0.045], [sx * 0.079, 0.06, 0.06 + i * 0.045], 0.006, copper));
+    const wheel = new THREE.Group(), tor = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.009, 12, 40), dk); tor.castShadow = true; wheel.add(tor);
+    for (let i = 0; i < 3; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.008, 0.005), steel); sp.rotation.z = i * Math.PI / 3; wheel.add(sp); }
+    wheel.position.z = 0.32; g.add(eng, fr, wheel);
+    const A = { qh: arrow3(), qc: arrow3(), w: arrow3() }, beads = VD3K.particles(V, { n: 12, r: 1, seg: 8, color: '#ffffff' });
+    return { g, eng, fr, wheel, A, beads, extra: [A.qh, A.qc, A.w, beads] };
+  }
+  function initSl(V) {
+    const g = new THREE.Group();
+    const hotM = new THREE.MeshStandardMaterial({ color: '#b8442c', emissive: '#ff4a10', emissiveIntensity: 0.22, roughness: 0.75 }), coldM = new THREE.MeshStandardMaterial({ color: '#6fa6e3', emissive: '#1d4fa0', emissiveIntensity: 0.2, roughness: 0.3, metalness: 0.1 });
+    const glowM = new THREE.MeshStandardMaterial({ color: '#ffb070', emissive: '#ff6a20', emissiveIntensity: 0.9, roughness: 0.6 }), frostM = new THREE.MeshStandardMaterial({ color: '#f4f9ff', roughness: 0.9 });
+    const RW = 0.3, RD = 0.62, RH = 0.32, RX = 0.37 + RW / 2, RY = 0.05;
+    g.add(VD3K.box(RW, RD, RH, hotM, -RX, RY, 0), VD3K.box(RW, RD, RH, coldM, RX, RY, 0), VD3K.box(RW + 0.01, RD + 0.01, 0.02, frostM, RX, RY, RH));
+    for (let i = 0; i < 3; i++) g.add(VD3K.box(0.006, RD * 0.86, 0.012, glowM, -0.37 - 0.003, RY, 0.07 + i * 0.075));   /* heating elements on the face the heat leaves by */
+    for (let i = 0; i < 4; i++) g.add(VD3K.box(RW * 0.9, 0.012, 0.012, glowM, -RX, RY - RD / 2 - 0.006, 0.05 + i * 0.03));
+    const hotMeter = meter3(V, { label: 'hot reservoir', tilt: 0 }, -RX, RY - RD / 2 - 0.02, 0.21), coldMeter = meter3(V, { label: 'cold reservoir', tilt: 0 }, RX, RY - RD / 2 - 0.02, 0.2);
+    const d1 = device3(V), d2 = device3(V); g.add(hotMeter, coldMeter, d1.g, d2.g, ...d1.extra, ...d2.extra);
+    return { g, hotMeter, coldMeter, d: [d1, d2] };
+  }
+  function slDevice(D, info, x, y, big, show) {
+    D.g.visible = show; for (const x of D.extra) x.visible = show; if (!show) return;
+    const eng = info.mode === 'engine', rq = (q) => (q > 0 ? Math.max(0.003, 0.028 * q / big) : 0);
+    D.g.position.set(x, y, 0); D.eng.visible = eng; D.fr.visible = !eng;
+    const L = -0.37, R = 0.37, dl = x + (eng ? -0.066 : -0.077), dr = 2 * x - dl;
+    if (eng) { D.A.qh.set([L, y, ZQ], [dl, y, ZQ], rq(info.Qh), T.hot); D.A.qc.set([dr, y, ZQ], [R, y, ZQ], rq(info.Qc), T.cold); D.A.w.set([x, y, 0.34], [x, y, 0.5], rq(info.W), T.work); }
+    else { D.A.qh.set([dl, y, ZQ], [L, y, ZQ], rq(info.Qh), T.hot); D.A.qc.set([R, y, ZQ], [dr, y, ZQ], rq(info.Qc), T.cold); D.A.w.set([x, y, 0.5], [x, y, 0.34], rq(info.W), T.work); }
+    const t = performance.now() / 1000; D.wheel.rotation.z = reduce ? 0 : t * (eng ? 1.2 : -1.2);
+    let k = 0; D.beads.scale.setScalar(0.006);
+    if (!reduce) for (const a of [D.A.qh, D.A.qc, D.A.w]) { if (!a.visible) continue; for (let j = 0; j < 4; j++) { const fr = (t * 0.35 + j / 4) % 1, len = a.len - Math.min(a.len * 0.45, 0.03);
+      const u = fr * len / a.len, p = [a.a[0] + (a.b[0] - a.a[0]) * u, a.a[1] + (a.b[1] - a.a[1]) * u, a.a[2] + (a.b[2] - a.a[2]) * u];
+      const vert = a === D.A.w; D.beads.put(k++, p[0] / 0.006, (p[1] - y - (vert ? a.rad : 0)) / 0.006, (p[2] + (vert ? 0 : a.rad)) / 0.006); } }
+    D.beads.position.y = y; D.beads.show(k); D.beads.done();
+  }
+  function sl3() {
+    const Z = G3.sl, r = dev(), pr = pair(r), on = S.sl.pair;
+    const big = Math.max(r.Qh, r.Qc, r.W, on ? Math.max(pr.partner.Qh, pr.partner.Qc) : 0, 1);
+    Z.hotMeter.set(`${f(r.Th, 0)} K`); Z.coldMeter.set(`${f(r.Tc, 0)} K`);
+    slDevice(Z.d[0], r, on ? -0.09 : 0, on ? -0.12 : 0.02, big, true);
+    slDevice(Z.d[1], Object.assign({ mode: r.mode === 'engine' ? 'fridge' : 'engine' }, pr.partner), 0.11, 0.2, big, on);
+  }
+  function sl3Labels() {
+    const r = dev(), pr = pair(r), on = S.sl.pair, p = proj();
+    const one = (info, x, y, name, s) => {
+      let q = at3([(-0.37 + x - 0.07) / 2, y, ZQ + 0.06]); if (info.Qh > 0) tag(`Q_h = ${f(info.Qh, 0)} J`, q[0], q[1], { m: true, s, c: T.hot });
+      q = at3([(0.37 + x + 0.07) / 2, y, ZQ - 0.06]); if (info.Qc > 0) tag(`Q_c = ${f(info.Qc, 0)} J`, q[0], q[1], { m: true, s, c: T.cold });
+      q = at3([x + 0.02, y, 0.43]); if (info.W > 0) tag(`W = ${f(info.W, 0)} J`, q[0] + 14 * p, q[1], { m: true, s, a: 'left', c: T.work });
+      q = at3([x, y - 0.08, name === 'Carnot' ? 0.2 : 0.06]); tag(name, q[0], q[1], { w: 700, s: s - 0.5 });
+    };
+    for (const [x, nm] of [[-0.52, 'hot reservoir'], [0.52, 'cold reservoir']]) { const q = W < 560 ? at3([x, -0.26, 0], 12) : at3([x, 0.05, 0.36], -16); tag(nm, q[0], q[1], { w: 700 }); }
+    one(r, on ? -0.09 : 0, on ? -0.12 : 0.02, r.mode === 'engine' ? 'engine' : 'fridge', 11);
+    if (on) one(Object.assign({ mode: r.mode === 'engine' ? 'fridge' : 'engine' }, pr.partner), 0.11, 0.2, 'Carnot', 10);
+    if (W >= 560) slPanel(r, pr, W - Math.min(W * 0.3, 260 * p) - 14 * p, 14 * p, Math.min(W * 0.3, 260 * p));
+  }
+
+  function init3() {
+    const V = VD3K.stage($('pane'), { before: can, fov: 30, near: 0.02, far: 30, shadow: 1.1 }); if (!V) return false;
+    V.el.style.pointerEvents = 'none'; V.el.hidden = true;
+    V.sun.position.set(-0.9, -1.5, 3.2); V.sun.shadow.bias = -0.0005;
+    const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(0.8, -3, 1.2); V.scene.add(fill);
+    G3 = { S: V }; home3(S.view); G3.room = room3(V); G3.fe = initFe(V); G3.es = initEs(V); G3.sl = initSl(V);
+    V.scene.add(G3.room, G3.fe.g, G3.es.g, G3.sl.g);
+    /* in Flat these do nothing; in 3D the view turns (VD3.orbit) */
+    for (const ev of ['pointerdown', 'wheel', 'touchstart', 'touchmove', 'dblclick']) can.addEventListener(ev, (e) => { if (!on3d) e.stopImmediatePropagation(); }, { passive: false });
+    V.orbit(can, O3, () => { if (on3d) redraw3(); }, { phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    can.addEventListener('dblclick', () => { if (on3d) { home3(S.view); redraw3(); } });
+    return true;
+  }
+  /* the 3D picture and the words over it, without the graphs and readouts (used while turning and for the second law's motion) */
+  const redraw3 = () => render3();
+  function render3() {
+    const V = G3.S; if (!W || !H) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    V.size(W, H); const hm = HOME3[S.view]; V.place(O3, hm.t, V.fit(hm.d, hm.ref)); const cp = cap3(S.view); if ($('cap3d').textContent !== cp) $('cap3d').textContent = cp;
+    G3.fe.g.visible = S.view === 'fe'; G3.es.g.visible = S.view === 'es'; G3.sl.g.visible = S.view === 'sl';
+    ({ fe: fe3, es: es3, sl: sl3 })[S.view]();
+    V.render();
+    ({ fe: fe3Labels, es: es3Labels, sl: sl3Labels })[S.view]();
+  }
+
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
   const retheme = () => { tokens(); redraw(); };
@@ -632,6 +908,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'fe4');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let note3 = '';
+  VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { note3 = m; $('cap3d').textContent = m; },
+    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; $('cap3d').textContent = on ? cap3(S.view) : note3; redraw(); } });
   window.__en = { S, setView, applyPreset, setRun, redraw, sync, pull, advance, dev, newGas, newSolid };
   requestAnimationFrame(frame);
 })();
