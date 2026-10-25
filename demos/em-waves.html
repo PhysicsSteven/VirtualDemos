@@ -1183,6 +1183,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(() => resize()).observe(pane);
   resize();
   applyPreset('plane');
+  VD.howTo({ src: 'media/how-this-works/em-waves.mp4', poster: 'media/how-this-works/em-waves.jpg' });
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
   requestAnimationFrame(loop);

@@ -3416,3 +3416,36 @@ camera at the end of the instrument, pupils, field of view and brightness.
 
 **For GPT:** please check the physics and the numbers in the readouts and notes (microscope −100, exit pupil 1.14 mm at
 2.86 cm, Keplerian −10 and 5.00 mm, Galilean +5 with field 6.14°, terrestrial +10, brightness 8.1 % for the microscope).
+
+## 2026-10-25 · Claude · How this works videos: Transformers, Displacement Current, Electromagnetic Waves
+
+Physics II, ch 14 to 16 group, following `tools/howto/README.md`. Each demo has a `VD.howTo` button and a dark theme video of the
+first reading in its own worksheet; scripts are `tools/howto/transformers.cjs`, `displacement-current.cjs` and `em-waves.cjs`. No
+measuring tools appear (the Displacement Current script hides its Tools button). Every reading on screen comes from the run and was
+checked by hand:
+
+- Transformers (21.4 s): Part 1a's first row, Step down (120 V, 60 Hz, 400 primary turns, 40 secondary, ideal), the load slider
+  dragged from 10 Ω to 100 Ω. Meters: V_S 12.00 V, I_S 120.0 mA, I_P 12.00 mA; row 1.44 W in and out, peak core field 0.703372 T.
+  By hand V_S = 120 × 40/400 = 12 V, I_S = 12/100 = 0.12 A, I_P = 0.12 × 40/400 = 0.012 A, P = 1.44 W, B = √2 × 120/(2π × 60 × 400
+  × 0.04²) = 0.7034 T.
+- Displacement Current (20.8 s): Part 1's first row, 100 V, 1.0 MΩ, charged from the opening 12.2 µs and paused at 35.05 µs (one
+  time constant is 34.77 µs), the 3.0 cm loop around the wire with a flat disk. Demo: I 36.4936 µA, q 2.20814 nC, E 31.7532 kV/m,
+  B 243.291 pT, 2πrB = μ₀I_c = 4.58592 × 10⁻¹¹ T·m, I_d 0. By hand C = ε₀π(0.05)²/0.002 = 34.77 pF, I = 100 µA × e^(−35.0496/34.7703)
+  = 36.494 µA, B = μ₀I/(2π × 0.03) = 243.29 pT, E = q/(ε₀πR²) = 31 753 V/m.
+- Electromagnetic Waves (18.8 s): Part 1's first row, Plane wave (10 GHz), the logarithmic amplitude slider dragged to 300 V/m on
+  the readout (the slider's 0.001 decade steps give 10^2.477 = 299.916 V/m, which the table records, and the caption says so).
+  Demo: B₀ 1.00041 µT, I 119.382 W/m², ⟨u⟩ 398.216 nJ/m³, pressures 398.216 and 796.432 nPa. By hand B₀ = 299.916/299 792 458,
+  I = ½cε₀E₀² = 119.38 W/m², p = I/c and 2I/c.
+
+**Demo fixes found while recording (visible to students):**
+- Transformers: at 1280×720, 1024×768 and 1440×900 the bench's fixed 780 px stage with overflow hidden cut off the bottom of the
+  shelf, so the Load resistance slider (Part 1a and 1b) and the Core and Model switches could not be reached. The stage now grows
+  to its content (`min-height: min-content`); unchanged at 1920×1080. A sweep of every demo found 12 others with controls below
+  their stage's bottom edge at 1280×720 or 1440×900; passed to the coordinator for a thread of its own.
+- Displacement Current: if the stage was measured before it had its height, the scale came out negative and the flat view threw
+  in `ellipse()` during startup (seen once in vdcheck at 1280 light), which could stop the demo's setup. The scale is now kept
+  positive.
+
+vdcheck `--only after`: 0 problems on all three. Validation tests pass. No What's new entry.
+
+**For GPT:** please check the three videos' captions and readings against the figures above, and the Transformers shelf at 1280×720.
