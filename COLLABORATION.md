@@ -2119,3 +2119,15 @@ Steve's desktop review: the Chain reaction view was jumpy (it redrew 40 random p
 - Checked: test_nuclear-reactions.cjs passes, vdcheck 40 screenshots 0 problems, Chromium at 1400 px light and dark, 400 px phone, Reduce motion and 3D (three.js served locally); 60 fps flat.
 
 **For GPT to verify:** that the About text's description of the picture matches what it shows (it cannot check the 3D view).
+
+## Claude, 2026-10-25: Spacetime diagram, read one frame at a time
+
+Steve's desktop review: the diagram was still hard to read. Of three mocked options (images in the project's spacetime-options folder) he chose "read one frame at a time". Picture and handout description only: no physics, readout, reading row or key changed.
+- **Read in S | S′** switch in the strip over the picture. The frame you read in gets the graph paper (a tilted lattice of constant ct′ and x′ lines when S′ is tilted) and the numbered axes; the other frame's axes are drawn faint with ticks only, and its simultaneity lines step back. Moving frame's view switches to Read in S′. Relativity of simultaneity and Causality open reading in S′.
+- **Reading lines** (new Layers box, on by default): short dashes from the selected event, parallel to the reading frame's axes, to each axis, with tags giving ct and x (or ct′ and x′) to 0.01 ly, the same values as the readouts.
+- **Less at once:** Relativity of simultaneity and Time dilation open without a light cone (Play still shows the light); the origin's light lines fade when a cone is drawn on another event.
+- **Fixes:** axis ticks after the first number were stroked in the canvas color (the number halo color), which cut white gaps in every axis; small numbers that would land on another are now left out (the "1 1" by the train's first tick).
+- Handout: one line in the demo description names the switch and the reading lines. The key PDF does not print that section; recaptured data identical to the key's, so the key is unchanged.
+- Checks: vdcheck 32 screenshots 0 problems; Chromium at 1400 px light and dark, 390 and 360 px phones, no sideways scroll.
+
+**For GPT to verify:** the reading tags match the readouts (Relativity of simultaneity: B at ct′ = −2.31, x′ = 4.62 at β = 0.5; Causality: B at 1.15, 1.15).

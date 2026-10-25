@@ -14,6 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§5.1 to 5.5. Access for free
 
 - The diagram has time going up and position going across, in one space dimension. Time is drawn as $$ct$$ in light years (ly) and position $$x$$ in light years, so light travels along the 45° lines and one year of time is one light year up the diagram.
 - Frame S is drawn in blue. A second observer, S′, moves along $$x$$ at speed $$v = \beta c$$, set from −0.95 to 0.95 in steps of 0.01; its axes are drawn in red. "Moving frame's view" redraws the diagram in S′.
+- Read in S or S′ picks the frame whose graph paper and numbered axes are shown; the other frame's axes fade. Short dashed lines run from the selected event, parallel to that frame's axes, to each axis, and tags give the event's coordinates in that frame to 0.01 ly.
 - Click empty space to add an event; it snaps to a grid of 0.25 ly in the frame drawn. Drag an event to move it. The readouts give the last event you selected in S, $$(ct, x)$$, to 0.01 ly, and in S′, $$(ct', x')$$, to 0.001 ly. All coordinates come from the exact Lorentz transformation.
 - Worldlines can be switched on for a home clock at rest in S, a rocket at rest in S′, a traveling twin and a rod at rest in S′. Ticks on a worldline mark each year on that clock.
 - Record reading stores the selected event, $$\beta$$, and its coordinates in both frames. Export to worksheet sends the readings to the Data table below; Clear (under Readings) starts a new series, which goes into a new copy of the table.

@@ -73,6 +73,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   border-radius: 6px; padding: 5px 11px; cursor: pointer;
 }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.seg-lab { font-size: 0.8rem; font-weight: 700; color: var(--muted); padding: 0 6px 0 8px; }
 .verdict { margin: 0; font-size: 0.92rem; padding: 8px 10px; border-radius: 6px; background: var(--canvas); border: 1px solid var(--line); border-left-width: 4px; }
 .verdict.timelike { border-left-color: var(--neg); }
 .verdict.lightlike { border-left-color: var(--equi); }
@@ -140,6 +141,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div class="seg" role="group" aria-label="Diagram view">
           <button type="button" data-mode="both" aria-pressed="true">Both frames</button>
           <button type="button" data-mode="moving" aria-pressed="false">Moving frame's view</button>
+        </div>
+        <div class="seg" id="readSeg" role="group" aria-label="Frame whose grid, numbers and reading lines are shown">
+          <span class="seg-lab" aria-hidden="true">Read in</span>
+          <button type="button" data-read="S" aria-pressed="true" aria-label="Read in S">S</button>
+          <button type="button" data-read="P" aria-pressed="false" aria-label="Read in S′">S′</button>
         </div>
       </div>
     </div>
@@ -262,6 +268,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <label><input type="checkbox" id="lTicks" checked>Clock ticks</label>
           <label><input type="checkbox" id="lPrime" checked>S′ axes</label>
           <label><input type="checkbox" id="lTwinLines" checked>Twin's now lines</label>
+          <label><input type="checkbox" id="lRead" checked>Reading lines</label>
         </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The faint hyperbolas are (ct)² − x² = ±1, ±4, ±9 and so on. A Lorentz boost slides every event along its hyperbola, so each frame's tick n lands where its axis crosses the n² hyperbola. That is why the primed ticks look stretched.</p>
@@ -279,6 +286,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><i class="swatch tw"></i>Traveling twin</span>
           <span><i class="swatch hyp"></i>Invariant hyperbolas</span>
           <span><i class="swatch sim"></i>Dashed: lines of simultaneity</span>
+          <span><i class="swatch sim"></i>Short dashes from the selected event: its coordinates in the frame you read in</span>
         </div>
         </div></details>
       </section>
@@ -307,11 +315,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const LETTERS = 'ABCDEFGHJKLMNPQRSUVWXYZ';
   const MAXEV = 10;
   const S = {
-    beta: 0, mode: 'both', events: [], sel: [], blind: false,
+    beta: 0, mode: 'both', read: 'S', events: [], sel: [], blind: false,
     wl: { home: false, rocket: false, twin: false, rod: false },
     names: { home: 'Home', rocket: 'Rocket', twin: 'Twin' },
     Tend: 10, L0: 5, rodT: 2,
-    layers: { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true }
+    layers: { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true, read: true }
   };
   let preset = 'cone';
   let phiD = 0;                    // rapidity of the frame the diagram is drawn in (animated)
@@ -404,8 +412,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- drawing helpers ----------
   let ps = 1;
   function font(size, weight = 400) { return `${weight} ${size * ps}px ${C.mono}`; }
+  /* boxes of the small numbers already drawn this frame, so a number that would land on another is left out */
+  let labelBoxes = [];
   function text(str, x, y, color, opt = {}) {
     ctx.font = font(opt.size || 11, opt.weight || 400);
+    if (opt.avoid) {
+      const w = ctx.measureText(str).width, h = (opt.size || 11) * ps, al = opt.align || 'left';
+      const x0 = al === 'right' ? x - w : al === 'center' ? x - w / 2 : x, bx = [x0 - 3 * ps, y - h / 2 - 1, x0 + w + 3 * ps, y + h / 2 + 1];
+      if (labelBoxes.some((q) => bx[0] < q[2] && bx[2] > q[0] && bx[1] < q[3] && bx[3] > q[1])) return;
+      labelBoxes.push(bx);
+    }
     ctx.textAlign = opt.align || 'left'; ctx.textBaseline = opt.base || 'middle';
     ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * ps; ctx.strokeStyle = C.canvas;
     ctx.strokeText(str, x, y);
@@ -469,7 +485,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = C.canvas; ctx.fillRect(0, 0, W, H);
     const step = tickStep();
-    edgeLabels = [];
+    edgeLabels = []; labelBoxes = [];
     drawGrid(step);
     if (S.layers.hyper) drawHyperbolas(step);
     if (S.layers.cones) drawCones();
@@ -477,22 +493,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawLightLines();
     if (S.wl.twin && S.layers.twinlines) drawTwinLines();
     if (S.layers.simul) drawSimul();
-    const showPrime = Math.abs(S.beta) > 0.004 && (S.mode === 'moving' || S.layers.prime || Math.abs(phiD) > 1e-3);
+    const showPrime = primeShown();
     const etaP = Math.atanh(S.beta);
     const tk = S.layers.ticks;
-    drawAxes(0, C.neg, '', step, showPrime ? (etaP > 0 ? -1 : 1) : -1, tk && S.wl.home);
-    if (showPrime) drawAxes(etaP, C.pos, '′', step, etaP > 0 ? 1 : -1, tk && S.wl.rocket);
+    /* the frame you read in is drawn strong and numbered; the other is drawn faint, ticks only, underneath */
+    const sideS = showPrime ? (etaP > 0 ? -1 : 1) : -1, sideP = etaP > 0 ? 1 : -1;
+    if (readingPrime()) {
+      drawAxes(0, C.neg, '', step, sideS, tk && S.wl.home, true);
+      drawAxes(etaP, C.pos, '′', step, sideP, tk && S.wl.rocket, false);
+    } else {
+      if (showPrime) drawAxes(etaP, C.pos, '′', step, sideP, tk && S.wl.rocket, true);
+      drawAxes(0, C.neg, '', step, sideS, tk && S.wl.home, false);
+    }
     drawWorldlines();
     if (S.wl.rod) drawRodMeasure();
     if (nowOn) drawNow();
     drawPair();
+    drawReadLines();
     drawEvents();
     flushEdgeLabels();
     drawFrameTag();
     drawStrip();
   }
 
+  const primeShown = () => Math.abs(S.beta) > 0.004 && (S.mode === 'moving' || S.layers.prime || Math.abs(phiD) > 1e-3);
+  /* true when the grid, numbers and reading lines belong to S′ */
+  const readingPrime = () => S.read === 'P' && primeShown();
+  const readEta = () => (readingPrime() ? Math.atanh(S.beta) : 0);
   function drawGrid(step) {
+    const eta = readEta();
+    if (Math.abs(eta - phiD) > 1e-6) { drawTiltedGrid(eta, step); return; }
     const b = viewBounds();
     ctx.lineWidth = 1;
     for (let k = Math.ceil(b.x0 / step); k * step <= b.x1; k++) {
@@ -507,6 +537,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
 
+  /* graph paper of a frame whose axes are tilted in the drawn frame: lines of constant ct and of constant x in that frame */
+  function drawTiltedGrid(eta, step) {
+    const bt = Math.tanh(eta), ch = Math.cosh(eta), sh = Math.sinh(eta), vb = viewBounds();
+    let lo = Infinity, hi = -Infinity;
+    for (const [td, xd] of [[vb.t0, vb.x0], [vb.t0, vb.x1], [vb.t1, vb.x0], [vb.t1, vb.x1]]) {
+      const [tr, xr] = boost(...fromD(td, xd), bt);
+      lo = Math.min(lo, tr, xr); hi = Math.max(hi, tr, xr);
+    }
+    const col = Math.abs(eta) > 1e-9 ? C.pos : C.neg;
+    const k0 = Math.ceil(lo / step), k1 = Math.min(k0 + 400, Math.floor(hi / step));
+    for (let k = k0; k <= k1; k++) {
+      const v = k * step, c = alpha(col, k % 5 === 0 ? 0.24 : 0.11);
+      const l1 = labLine([v * ch, v * sh], [sh, ch]);   /* ct = v in that frame */
+      const l2 = labLine([v * sh, v * ch], [ch, sh]);   /* x = v in that frame */
+      line(l1[0], l1[1], c, 1); line(l2[0], l2[1], c, 1);
+    }
+  }
   function drawHyperbolas(step) {
     const b = viewBounds();
     const M = Math.max(Math.abs(b.x0), Math.abs(b.x1), Math.abs(b.t0), Math.abs(b.t1)) * 1.42;
@@ -581,20 +628,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawLightLines() {
     const R = BIG();
+    /* with a light cone drawn on an event away from the origin, the origin's light lines step back */
+    const e0 = S.layers.cones && evById(S.sel[0]), quiet = !!e0 && (Math.abs(e0.t) > 1e-9 || Math.abs(e0.x) > 1e-9);
     for (const sgn of [1, -1]) {
       const a = scr(-R, -sgn * R), b = scr(R, sgn * R);
-      line(a, b, alpha(C.equi, 0.9), 1.3 * ps, [6 * ps, 5 * ps]);
+      line(a, b, alpha(C.equi, quiet ? 0.45 : 0.9), (quiet ? 1 : 1.3) * ps, [6 * ps, 5 * ps]);
     }
-    for (const L of lightLabelSpots()) text(L.lab, L.px, L.py, C.equi, { align: L.align, size: 10 });
+    for (const L of lightLabelSpots()) text(L.lab, L.px, L.py, quiet ? alpha(C.equi, 0.7) : C.equi, { align: L.align, size: 10 });
   }
 
   // axes of a frame with rapidity eta, drawn in the display frame
-  function drawAxes(eta, color, prime, step, side, skipT) {
+  function drawAxes(eta, color, prime, step, side, skipT, faint) {
+    if (faint) color = alpha(color, 0.4);
     const er = eta - phiD, ch = Math.cosh(er), sh = Math.sinh(er);
     const R = BIG();
     const tA = scr(-R * ch, -R * sh), tB = scr(R * ch, R * sh);      // time axis: (t, x) = n (cosh, sinh)
     const xA = scr(-R * sh, -R * ch), xB = scr(R * sh, R * ch);      // space axis: (t, x) = n (sinh, cosh)
-    const lw = 1.7 * ps;
+    const lw = (faint ? 1.2 : 1.7) * ps;
     line(tA, tB, color, lw); line(xA, xB, color, lw);
     // screen unit vectors
     const tv = [sh, -ch], xv = [ch, -sh];
@@ -606,7 +656,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const b = viewBounds();
     const M = Math.max(Math.abs(b.x0), Math.abs(b.x1), Math.abs(b.t0), Math.abs(b.t1)) * 1.5;
     const nmax = Math.min(400, Math.ceil(M / step));
-    ctx.strokeStyle = color; ctx.lineWidth = 1.4 * ps;
     for (let n = -nmax; n <= nmax; n++) {
       if (!n) continue;
       const v = n * step;
@@ -614,12 +663,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const p = axis === 't' ? scr(v * ch, v * sh) : scr(v * sh, v * ch);
         if (p[0] < -20 || p[0] > W + 20 || p[1] < -20 || p[1] > H + 20) continue;
         const d = axis === 't' ? xu : tu;   // ticks run parallel to the other axis
+        /* set on every tick: the number labels below stroke their halo in the canvas color */
+        ctx.strokeStyle = color; ctx.lineWidth = 1.4 * ps;
         ctx.beginPath(); ctx.moveTo(p[0] - d[0] * tk, p[1] - d[1] * tk); ctx.lineTo(p[0] + d[0] * tk, p[1] + d[1] * tk); ctx.stroke();
+        if (faint) continue;   // only the frame you read in is numbered
         if (axis === 't' && skipT) continue;   // a worldline's clock ticks already label this axis
         if (n % every === 0 && p[1] > topPad && p[1] < H - 6 && p[0] > 6 && p[0] < W - 6) {
           // time axis numbers to one side, space axis numbers above or below
-          if (axis === 't') text(String(v), p[0] + side * 14 * ps, p[1], color, { align: side > 0 ? 'left' : 'right', size: 10 });
-          else text(String(v), p[0], p[1] - side * 14 * ps, color, { align: 'center', size: 10 });
+          if (axis === 't') text(String(v), p[0] + side * 14 * ps, p[1], color, { align: side > 0 ? 'left' : 'right', size: 10, avoid: true });
+          else text(String(v), p[0], p[1] - side * 14 * ps, color, { align: 'center', size: 10, avoid: true });
         }
       }
     }
@@ -660,13 +712,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const id of S.sel) {
       const e = S.events.find((v) => v.id === id); if (!e) continue;
       const [pt] = boost(e.t, e.x, b);
+      const rp = readingPrime();   // the other frame's line steps back
       const lab = labLine([e.t, e.x], [0, 1]);
-      line(lab[0], lab[1], alpha(C.neg, 0.75), 1.3 * ps, [7 * ps, 5 * ps]);
-      edgeLabel(lab[0], lab[1], `ct = ${fmt(e.t)}`, C.neg);
+      line(lab[0], lab[1], alpha(C.neg, rp ? 0.35 : 0.75), 1.3 * ps, [7 * ps, 5 * ps]);
+      edgeLabel(lab[0], lab[1], `ct = ${fmt(e.t)}`, rp ? alpha(C.neg, 0.6) : C.neg);
       if (Math.abs(b) > 0.004) {
         const pr = labLine([e.t, e.x], [b, 1]);
-        line(pr[0], pr[1], alpha(C.pos, 0.85), 1.3 * ps, [7 * ps, 5 * ps]);
-        edgeLabel(pr[0], pr[1], `ct′ = ${fmt(pt)}`, C.pos);
+        line(pr[0], pr[1], alpha(C.pos, rp ? 0.85 : 0.4), 1.3 * ps, [7 * ps, 5 * ps]);
+        edgeLabel(pr[0], pr[1], `ct′ = ${fmt(pt)}`, rp ? C.pos : alpha(C.pos, 0.65));
       }
     }
   }
@@ -728,7 +781,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           const last = Math.abs(k - total) < 1e-6;
           if (i % every === 0 && !last && P[1] > topPad && P[1] < H - 6) {
             const rn = nrm[0] >= 0 ? nrm : [-nrm[0], -nrm[1]];   // normal pointing to screen right
-            text(String(k), P[0] + w.side * rn[0] * 16 * ps, P[1] + w.side * rn[1] * 16 * ps, w.color, { align: 'center', size: 10 });
+            text(String(k), P[0] + w.side * rn[0] * 16 * ps, P[1] + w.side * rn[1] * 16 * ps, w.color, { align: 'center', size: 10, avoid: true });
           }
         }
       }
@@ -823,6 +876,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     line(a, b, alpha(C.ink, 0.7), 1.3 * ps, [2 * ps, 4 * ps]);
   }
 
+  /* the selected event's coordinates in the frame you read in: a dashed line along each of that frame's axis directions,
+     from the event to the other axis, ending in a tag with the value (the same numbers as the readouts, to 0.01 ly) */
+  function drawReadLines() {
+    if (!S.layers.read) return;
+    const e = evById(S.sel[S.sel.length - 1]); if (!e) return;
+    const rp = readingPrime(), b = rp ? S.beta : 0, eta = Math.atanh(b), ch = Math.cosh(eta), sh = Math.sinh(eta);
+    const [tr, xr] = boost(e.t, e.x, b);
+    const col = rp ? C.pos : C.neg, pr = rp ? '′' : '';
+    const E = scrLab(e.t, e.x), Ta = scrLab(tr * ch, tr * sh), Xa = scrLab(xr * sh, xr * ch);
+    for (const [A, str, axis] of [[Ta, `ct${pr} = ${fmt(tr)}`, 't'], [Xa, `x${pr} = ${fmt(xr)}`, 'x']]) {
+      if (Math.hypot(A[0] - E[0], A[1] - E[1]) > 12 * ps) {
+        line(E, A, alpha(col, 0.9), 1.4 * ps, [3 * ps, 3 * ps]);
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(A[0], A[1], 3.5 * ps, 0, Math.PI * 2); ctx.fill();
+      }
+      if (axis === 't') pill(str, A[0] + (E[0] >= A[0] ? -10 : 10) * ps, A[1], E[0] >= A[0] ? 'right' : 'left', col);
+      else pill(str, A[0], A[1] + (E[1] <= A[1] ? 18 : -18) * ps, 'center', col);
+    }
+  }
+  function pill(str, x, y, align, col) {
+    ctx.font = font(11, 600);
+    const w = ctx.measureText(str).width + 12 * ps, h = 19 * ps;
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = Math.max(6, Math.min(W - 6 - w, x0)); y = Math.max(topPad + h / 2, Math.min(H - 26 * ps, y));
+    labelBoxes.push([x0, y - h / 2, x0 + w, y + h / 2]);
+    ctx.fillStyle = col; ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x0, y - h / 2, w, h, 5 * ps); else ctx.rect(x0, y - h / 2, w, h);
+    ctx.fill();
+    ctx.fillStyle = C.canvas; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(str, x0 + 6 * ps, y + 0.5);
+  }
   function drawEvents() {
     const cur = S.sel[S.sel.length - 1];
     for (const e of S.events) {
@@ -839,7 +921,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function drawFrameTag() {
     const moving = S.mode === 'moving';
-    const str = moving ? 'Drawn in S′: its axes are square, S is tilted' : 'Drawn in S';
+    const rp = readingPrime();
+    const str = (moving ? 'Drawn in S′: its axes are square, S is tilted' : 'Drawn in S') + (rp === moving ? '' : rp ? ' · grid and numbers in S′' : ' · grid and numbers in S');
     text(str, 10, H - 12 * ps, moving ? C.pos : C.neg, { size: 10.5, weight: 600 });
   }
 
@@ -1071,7 +1154,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('wHome').checked = S.wl.home; $('wRocket').checked = S.wl.rocket; $('wTwin').checked = S.wl.twin; $('wRod').checked = S.wl.rod;
     $('lCones').checked = S.layers.cones; $('lHyper').checked = S.layers.hyper; $('lSimul').checked = S.layers.simul;
     $('lTicks').checked = S.layers.ticks; $('lPrime').checked = S.layers.prime; $('lTwinLines').checked = S.layers.twinlines;
-    for (const btn of document.querySelectorAll('.seg button')) btn.setAttribute('aria-pressed', String(btn.dataset.mode === S.mode));
+    for (const btn of document.querySelectorAll('.seg button[data-mode]')) btn.setAttribute('aria-pressed', String(btn.dataset.mode === S.mode));
+    for (const btn of document.querySelectorAll('#readSeg button')) btn.setAttribute('aria-pressed', String(btn.dataset.read === S.read));
+    $('lRead').checked = S.layers.read;
   }
   function changed() { dirty = true; updateReadouts(); }
 
@@ -1106,14 +1191,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Light from O travels along the gold 45° lines. A lies inside O\'s future light cone, so O can influence A. B lies outside: no signal from O can reach it. C sits on the cone itself, and D is in O\'s past. The readouts compare the last two events you click: click O, then B or C, or drag the events.'
     },
     simul: {
-      beta: 0.5, mode: 'both', events: [['A', 0, -4], ['B', 0, 4]], sel: ['A', 'B'],
+      beta: 0.5, mode: 'both', read: 'P', events: [['A', 0, -4], ['B', 0, 4]], sel: ['A', 'B'],
       wl: { home: true, rocket: true }, names: { home: 'Platform', rocket: 'Train' }, Tend: 9,
-      layers: { hyper: false, simul: true, prime: true, cones: true }, view: [-6.5, 7.5, -2, 11],
+      layers: { hyper: false, simul: true, prime: true, cones: false }, view: [-6.5, 7.5, -2, 11],
       hint: 'Lightning strikes the rear (A) and front (B) of a train at the same platform time. Both flashes reach the platform observer together. The middle of the train runs toward B\'s light and meets it first, so on the train B happened first. The red dashed lines of simultaneity show it: A and B do not share one in S′.'
     },
     dilate: {
       beta: 0.6, mode: 'both', events: [['R', 5, 3]], sel: ['R'],
-      wl: { home: true, rocket: true }, Tend: 10, layers: { hyper: true, simul: true, prime: false }, view: [-4, 9, -1, 11],
+      wl: { home: true, rocket: true }, Tend: 10, layers: { hyper: true, simul: true, prime: false, cones: false }, view: [-4, 9, -1, 11],
       hint: 'Each tick is one year on that clock. At R the rocket clock reads 4 years, but R happens at lab time 5: the rocket ticks are spread out in S. Over 10 lab years the rocket ages 8. Switch to the moving frame\'s view: now the home ticks are the spread out ones. Each observer finds the other\'s clock slow.'
     },
     length: {
@@ -1127,20 +1212,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'The traveler leaves at 0.8c and turns around at T, 5 years after leaving by the home clock. Home ages 10 years, the traveler 6. The purple lines are the traveler\'s lines of simultaneity, one per traveler year. At the turnaround they swing across the home worldline, skipping 6.4 years of home time. The turn breaks the symmetry.'
     },
     cause: {
-      beta: 0.5, mode: 'both', events: [['A', 1, -2], ['B', 2, 2], ['C', 5, -1]], sel: ['A', 'B'],
+      beta: 0.5, mode: 'both', read: 'P', events: [['A', 1, -2], ['B', 2, 2], ['C', 5, -1]], sel: ['A', 'B'],
       wl: {}, layers: { hyper: false, simul: true, prime: true, cones: true }, view: [-6, 7, -2.5, 8],
       hint: 'B is outside A\'s light cone: the pair is spacelike. In S, A happens first. For any observer moving right faster than 0.25c, B happens first. Slide β through 0.25 and watch the red simultaneity line through A sweep past B. Then select A and C: C is inside A\'s future cone, and no β can flip that order.'
     }
   };
   function applyPreset(name) {
     const p = PRESETS[name]; preset = name;
-    S.beta = p.beta; S.mode = p.mode;
+    S.beta = p.beta; S.mode = p.mode; S.read = p.read || (p.mode === 'moving' ? 'P' : 'S');
     S.events = p.events.map(([id, t, x]) => ({ id, t, x }));
     S.sel = p.sel.slice();
     S.wl = { home: false, rocket: false, twin: false, rod: false, ...p.wl };
     S.names = { home: 'Home', rocket: 'Rocket', twin: 'Twin', ...(p.names || {}) };
     S.Tend = p.Tend || 10; S.L0 = p.L0 || 5;
-    S.layers = { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true, ...p.layers };
+    S.layers = { cones: true, hyper: true, simul: true, ticks: true, prime: true, twinlines: true, read: true, ...p.layers };
     phiD = targetPhi();
     fitBox = p.view; userMoved = false; fitView();
     nowOn = false; setPlaying(false);
@@ -1158,10 +1243,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rodL').addEventListener('input', (e) => { S.L0 = +e.target.value; changed(); });
   const wmap = { wHome: 'home', wRocket: 'rocket', wTwin: 'twin', wRod: 'rod' };
   for (const [id, k] of Object.entries(wmap)) $(id).addEventListener('change', (e) => { S.wl[k] = e.target.checked; changed(); });
-  const lmap = { lCones: 'cones', lHyper: 'hyper', lSimul: 'simul', lTicks: 'ticks', lPrime: 'prime', lTwinLines: 'twinlines' };
+  const lmap = { lCones: 'cones', lHyper: 'hyper', lSimul: 'simul', lTicks: 'ticks', lPrime: 'prime', lTwinLines: 'twinlines', lRead: 'read' };
   for (const [id, k] of Object.entries(lmap)) $(id).addEventListener('change', (e) => { S.layers[k] = e.target.checked; changed(); });
-  function setMode(m) { S.mode = m; if (reduce) phiD = targetPhi(); if (!userMoved) fitView(); if (nowOn) nowT = Math.max(nowT, viewBounds().t0); changed(); }
-  for (const b of document.querySelectorAll('.seg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  function setMode(m) { S.mode = m; if (m === 'moving') S.read = 'P'; if (reduce) phiD = targetPhi(); if (!userMoved) fitView(); if (nowOn) nowT = Math.max(nowT, viewBounds().t0); changed(); }
+  for (const b of document.querySelectorAll('.seg button[data-mode]')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('#readSeg button')) b.addEventListener('click', () => { S.read = b.dataset.read; changed(); });
   $('evAdd').addEventListener('click', () => {
     // place near the view center, avoiding existing events
     let [td, xd] = [V.ct, V.cx];
