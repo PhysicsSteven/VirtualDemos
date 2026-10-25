@@ -1889,7 +1889,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- readings (the shared Readings section): the setup and the two cursors ----------
   const mm = (v) => String(Number((v * 1e3).toPrecision(6)));
   window.vdVersion = 'double-slit@2026-10-24';
-  window.vdShowCols = [['lam_nm', 'λ (nm)'], ['d_mm', 'd (mm)'], ['hits', 'Hits'], ['BA_mm', 'B − A (mm)']];
+  /* the table's columns follow the particle: light in nm and mm; electrons and C₆₀ by what the student sets, in µm, and never the
+     de Broglie wavelength, which the worksheet has them find (and Blind hides) */
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.kind === 'photon'
+    ? [['lam_nm', 'λ (nm)'], ['d_mm', 'd (mm)'], ['hits', 'Hits'], ['BA_mm', 'B − A (mm)']]
+    : [S.kind === 'electron' ? ['V_kV', 'V (kV)'] : ['v_m_s', 'v (m/s)'], ['eta_pct', 'η (%)'], ['hits', 'Hits'], ['BA_um', 'B − A (µm)']]) });
   /* light goes to the Young's double slit worksheet, electrons and molecules to the wave and particle one */
   window.vdWorksheet = () => (S.kind === 'photon' ? 'double-slit' : 'wave-particle-duality');
   window.vdReadingRow = () => {
@@ -1909,6 +1913,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     geom() { const g = appGeom(); return { xb: g.xb, slits: g.slits }; }, get view3d() { return view3d; }, setView, cam,
     geom3() { if (!v3 || !v3.P) return null; const xf = -B3.th; return { slits: v3.slits.map((sl) => ({ c: v3.P(xf, sl.c, 0), hi: v3.P(xf, sl.hi, 0), lo: v3.P(xf, sl.lo, 0) })), box: v3.box }; }, setRate(i) { S.rate = i; $('rate').value = i; physReadouts(); }, setStreaming, fire, commitMany(n) { for (let i = 0; i < n; i++) { const h = draw1(); if (h) commit(h, false); } } };
 
+  /* How this works: a short video of one sample reading from the worksheet the source belongs to, Young's Double Slit (Worksheet 1)
+     with photons and Wave and Particle Duality (Worksheet 2) with electrons or C₆₀; made by tools/howto/ */
+  const howVid = () => (S.kind === 'photon' ? 'double-slit' : 'wave-particle-duality');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.kind === 'photon' ? "How this works: Young's Double Slit" : 'How this works: Wave and Particle Duality') });
   tokens();
   syncSliders();
   applyPreset('electron');

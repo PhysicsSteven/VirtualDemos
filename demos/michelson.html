@@ -561,6 +561,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/michelson.mp4', poster: 'media/how-this-works/michelson.jpg' });
   tokens(); newMystery(true); S.mysN = 1;
   const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'hene';
   applyPreset(first);

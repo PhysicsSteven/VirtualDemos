@@ -3175,3 +3175,31 @@ its longest value, never below 7ch; a wider table scrolls in its `.twrap`. No co
 vdcheck `--only after circuits`: 32 screenshots, 0 problems; test_circuits, _readings, _devices and _ac_power pass. No What's new entry.
 
 **For GPT:** please check the seven videos' captions and readings against the figures above, and the readings table widths.
+## 2026-10-25 · Claude · How this works videos: Double Slit (two worksheets), Thin Films, Michelson
+
+Wave optics, Vol 3 ch 3 group. Scripts `tools/howto/double-slit.cjs`, `wave-particle-duality.cjs` (records `double-slit`),
+`thin-films.cjs` and `michelson.cjs`. The Double Slit button plays the video for the worksheet the source belongs to (function form
+of `VD.howTo`): `double-slit.mp4` with photons, `wave-particle-duality.mp4` with electrons or C₆₀. None of these demos has the
+measuring tools. Every reading on screen comes from the run and was checked by hand:
+
+- Young's Double Slit (21.9 s): Part 1's first reading. Light, red laser setup (a 0.05 mm, d 0.25 mm, L 1.00 m), λ dragged to 400 nm,
+  Fit (screen ±15 mm, cursor step 0.03 mm), stream rate 2000 per second, cursors dragged on the screen to bright fringes −3 and +3,
+  −4.71 and 4.71 mm; recorded at about 15 000 hits, B − A 9.42 mm. Check: λL/d = 1.600 mm; the pattern the demo samples from peaks
+  at ±4.717 mm for fringe 3 (the envelope pulls it in, as the handout's Uncertainty section says), so Δy = 9.42/6 = 1.570 mm (key 9.45).
+- Wave and Particle Duality (25.3 s): the first voltage reading. Blind on, Electrons setup, 5.00 kV, Fit (±50 µm, step 0.1 µm), rate 2000
+  per second, cursors on the dark fringes between ∓2 and ∓3, −15.1 and 15.1 µm, recorded after 20 000 hits, B − A 30.2 µm. Check:
+  pc = √(K² + 2K·mc²) = 71.66 keV, λ = hc/pc = 17.30 pm, λL/d = 6.06 µm, dark fringes at ±2.5 × 6.06 = ±15.14 µm (key 30.4).
+- Thin Film Interference (19.7 s): Part 1's first reading. Black film setup, λ₀ marker dragged to 400 nm, the bottom surface dragged
+  down from 10 nm past the peak and back, t 75.2 nm, R 7.71% (7.711 recorded). Check: one π shift, so the first maximum is
+  λ₀/4n_f = 75.19 nm with R = ((1 − 1.33²)/(1 + 1.33²))² = 7.71%, as in the key.
+- Michelson Interferometer (18.6 s): Part 1's first reading. Measure λ, red He–Ne; counter zeroed at 500.0 μm; drum dragged until the
+  counter first shows 20, at 506.2 μm (as in the key). Check: the center order went from 1127.65 to 1147.25, so 20 whole orders passed;
+  19.60 orders over 6.2 μm gives 2Δd/N = 632.8 nm, the He–Ne line in the room's air.
+
+**Demo fix found while recording (Double Slit, visible to students):** the Readings table always showed λ (nm), d (mm), Hits and
+B − A (mm). With electrons that printed the de Broglie wavelength (0.0173014 nm at 5 kV) even with Blind on, which is the number
+the worksheet asks students to find, and lengths of a few micrometers as 0.001 mm. The shown columns now follow the particle:
+photons as before; electrons V (kV), η (%), Hits, B − A (µm); C₆₀ v (m/s), η, Hits, B − A (µm). Export is unchanged (it sends every
+field). vdcheck `--only after`: 0 problems on all three demos. No What's new entry.
+
+**For GPT:** please check the four videos' captions and readings against the figures above, and the Double Slit table columns.
