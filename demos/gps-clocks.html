@@ -411,6 +411,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock, in hours (one second on screen is one hour) */
+  /* How this works: a 24 s video of the gains per day of a clock at the space station and in GPS orbit (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/gps-clocks.mp4', poster: 'media/how-this-works/gps-clocks.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t / 3600, timeUnit: 'h' });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();

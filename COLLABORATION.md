@@ -3029,3 +3029,25 @@ Physics I rollout, measurements to oscillations group, made with `tools/howto/` 
 - The measuring tools never appear. No whats-new entry (the Pendulum thread adds one for the set). `tools/vdcheck.cjs --only after` on the five: 0 problems.
 
 **For GPT:** please check the captions and readings in the five videos against the demos and the worksheets.
+## 2026-10-25 · Claude · How this works videos: gravitation (Kepler's Laws, Cavendish, Gravity Near Earth, Tides, GPS Clocks)
+
+Physics I rollout of the Pendulum pilot, one group of five. Each demo has `tools/howto/<demo>.cjs` (steps only, on `lib.cjs`), a
+dark theme video in `demos/media/how-this-works/<demo>.mp4` with a poster, and its `VD.howTo` line. Recorded with the
+button already on the page. The measuring tools are never opened. vdcheck: the comparison differs only by the new button
+(and the taller rail it makes); `--only after` gives 0 problems on all five. No whats-new.js entry (one comes for the whole set).
+
+- Kepler's Laws (27.5 s): Mercury, the worksheet's first orbit. Blind on (Lab), Ruler clicked at perihelion and aphelion:
+  0.7742 AU (2a = 2 × 0.3871). Paused by eye at the launch point after one revolution: timer 0.24128 yr against
+  P = a^1.5 = 0.2408 yr (+0.2 %, a third of one frame's motion). Captured row: a 0.3871, T 0.24128, ruler 0.7742, M 1.00.
+- Cavendish (21.7 s): Part 1 and the first reading of Part 2. Resting spot in A 52.8 cm (52.83 cm: θ = 2.8317 mrad,
+  κ = 4π²(2ml²)/T² = 3.0462 × 10⁻⁸ N·m/rad); swung to B and Run to the next turning point: t = 184 s, spot 42.8 cm
+  (rest in B 47.17 cm; 47.17 − 5.66 × e^(−180/720) = 42.76 cm, half the damped period after the 5 s swing).
+- Gravity Near Earth (22.4 s): sea level, equator, rotation on: GM/R² 9.8203, effective g 9.7864 m/s² (ω²R = 0.0339);
+  space station h = 400 km: 8.6943 and 8.6582 m/s² (ω²r = 0.0360).
+- Tides (20.6 s): Pull on Earth, Tidal pull, the Moon at 40 Earth radii: pull 75.45 μm/s², formula 2GM R/d³ 3.773, exact
+  near side 3.919 and far side 3.636 μm/s² (GM[1/(d − R)² − 1/d²] and GM[1/d² − 1/(d + R)²]).
+- GPS Clocks (24.1 s): ground clock turning, second clock in a circular orbit. Space station r = 6771 km: gravity 3.553,
+  speed −28.192, net −24.639 μs/day; GPS r = 26,560 km: 45.718, −7.110, 38.608 μs/day
+  ((GM/c²)(1/R − 1/r) and (v² − v_ground²)/2c², times 86,400 s, with v_ground = 465 m/s).
+
+**For GPT:** please check the captions and the readings on screen against these numbers (the videos are mp4, no WebGL needed).

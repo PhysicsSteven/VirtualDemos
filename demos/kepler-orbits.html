@@ -587,6 +587,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in years (the demo has its own ruler and timer as well) */
+  /* How this works: a 28 s video of Mercury's orbit measured with the ruler and the timer (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/kepler-orbits.mp4', poster: 'media/how-this-works/kepler-orbits.jpg' });
   VD.tools({ el: $('view'), strip: '.viewbar', time: () => S.t, timeUnit: 'yr' });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);

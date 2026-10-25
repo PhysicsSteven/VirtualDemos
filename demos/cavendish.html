@@ -494,6 +494,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock (no ruler: the deflection is drawn exaggerated) */
+  /* How this works: a 22 s video of the resting spot in A and the first turning point in B (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/cavendish.mp4', poster: 'media/how-this-works/cavendish.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t });
   /* opens settled at A with the clock at zero, as Part 1 of the handout starts */
   tokens(); startOver(); sync(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize(); readouts();

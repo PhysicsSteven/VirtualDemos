@@ -355,6 +355,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // PHYSICS-END
 
   const $ = (id) => document.getElementById(id);
+  /* How this works: a 21 s video of the Moon's tidal pull at 40 Earth radii (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/tides.mp4', poster: 'media/how-this-works/tides.jpg' });
   /* the measuring tools: in Ocean bulges, a stopwatch on the simulated clock, in hours */
   let simClock = 0;
   VD.tools({ el: document.querySelector('canvas'), time: () => (S.view === 'bulge' ? simClock : null), timeUnit: 'h' });
