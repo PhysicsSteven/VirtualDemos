@@ -4300,3 +4300,12 @@ went to the demo's own worksheet and `VD.ws` based How this works picks played t
 - Checked from the Astro 2203 page: Blackbody, Spectra, Units, Optics Bench, Resolution, EM Waves, Seasons, Kepler all report
   their intro slug for export and play their intro video (with 9dbe440's videos). No key changes: the export path is the same one
   `?ws=` already used. vdcheck compare on seasons, kepler orbits, gyroscope, blackbody: pass.
+
+## 2026-10-25 · Claude · Ripple Tank: R starts Draw your own over
+
+Steve: in Draw your own, R should reset the drawing, not just the water. R there now presses Clear tank (a wrapper on
+`VD.keyTarget('r')` while the setup is Draw your own), and Clear tank now stills the water as well as removing the drawn walls
+and plates. R also works while the picture has the focus (its own key handler passes R on, since the site's shortcuts stand
+aside there). Every other setup is unchanged: R stills the water. Checked in Chromium: a wall drawn with the mouse, then R with
+the focus on the page and on the picture, both back to the empty tank at t = 0; Double slit keeps its slits. No key or video
+uses Clear tank or R, so none moves. Tests 10 groups, vdcheck `--only after`: 0 problems.

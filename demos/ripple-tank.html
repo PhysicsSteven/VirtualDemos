@@ -706,7 +706,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; clock(); });
   $('selBrush').addEventListener('change', (e) => { S.brush = +e.target.value; });
   $('chkPred').addEventListener('change', (e) => { S.pred = e.target.checked; redraw(); });
-  $('clearDraw').addEventListener('click', () => { S.strokes = []; S.geo = null; custom(); rebuild(false); sync(); redraw(); });
+  $('clearDraw').addEventListener('click', () => { S.strokes = []; S.geo = null; custom(); rebuild(true); sync(); redraw(); });
+  /* R stills the water; in Draw your own it clears the tank too (Steve, 2026-10-25), so R starts the drawing over */
+  if (window.VD && VD.keyTarget) { const kt = VD.keyTarget; VD.keyTarget = (k) => (k === 'r' && S.preset === 'draw' ? $('clearDraw') : kt(k)); }
   $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-look]'); if (b) { S.look = b.dataset.look; sync(); redraw(); } });
   $('toolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-tool]'); if (b) { S.tool = b.dataset.tool; sync(); } });
   $('play').addEventListener('click', () => setRun(!S.run));
@@ -749,6 +751,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let dirtyShapes = false;
   can.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase(); if (k === 'a' || k === 'b') { S.sel = k.toUpperCase(); redraw(); e.preventDefault(); return; }
+    /* the site's R stands aside while the picture has the focus; here it means the same, so drawing then pressing R works */
+    if (k === 'r' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat && window.VD && VD.keyTarget) { const b = VD.keyTarget('r'); if (b) { b.click(); e.preventDefault(); } return; }
     const st = e.shiftKey ? 10 : 1, mv = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[e.key]; if (!mv) return;
     const P = S[S.sel]; S[S.sel] = clampT({ x: Math.round((P.x + mv[0]) * 10) / 10, y: Math.round((P.y + mv[1]) * 10) / 10 }); e.preventDefault(); redraw();
   });
