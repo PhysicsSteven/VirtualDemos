@@ -190,6 +190,15 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
     .subject { padding-top: 28px; }
 }
+/* hero corner: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
+.hero-tools { position: absolute; top: 14px; right: max(16px, env(safe-area-inset-right, 0px)); z-index: 2; display: flex; align-items: center; gap: 10px; }
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { position: static; justify-content: flex-end; flex-wrap: wrap; margin: -20px 0 12px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
 /* course tiles (tools/courses.py) */
 .courses { padding-top: 30px; }
 .courses h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -0.01em; }
@@ -241,6 +250,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <body>
 <header class="hero">
   <div class="wrap">
+    <div class="hero-tools"><button type="button" class="newbtn" data-whats-new title="See the recent changes to the site"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0.8l1.7 4.6 4.6 1.7-4.6 1.7L8 13.4 6.3 8.8 1.7 7.1l4.6-1.7z"/><path d="M13.2 10.6l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z"/></svg>What’s new</button><span data-vd-theme></span></div>
     <svg class="art" viewBox="40 20 400 260" aria-hidden="true">
       <line class="axis" x1="50" y1="150" x2="430" y2="150"/>
       <ellipse class="orbit" cx="220" cy="150" rx="150" ry="110"/>

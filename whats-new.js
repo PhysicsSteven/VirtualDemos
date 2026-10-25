@@ -2,7 +2,7 @@
    The first time someone opens the home page after an entry is added, a popup lists what changed since their last visit.
    It closes with ✕, Esc or a click outside, and remembers the newest entry seen in localStorage (vd-whats-new). Someone
    with nothing remembered (a first visit, or a cleared browser) sees only entries from the last 14 days. The "What's new"
-   link in the home page footer opens it again with the latest entries.
+   button at the top of the home page (and the footer link) opens it again with every entry.
 
    TO ADD AN ENTRY: put it at the TOP of the list below, newest first. Write for students and TAs in plain language: what
    they can now do and where, not how it was built. Leave out fixes nobody would notice and anything from the answer keys.
@@ -65,7 +65,7 @@ window.VD_WHATS_NEW = [
     d.innerHTML = `<div class="in"><header><h2 id="vd-new-h">What’s new</h2><button type="button" class="x" aria-label="Close">✕</button></header><ul>`
       + items.map((e) => `<li><time datetime="${esc(e.date)}">${esc(when(e.date))}</time><h3>${esc(e.title)}</h3><p>${esc(e.text)}`
         + (e.link ? ` <a href="${esc(e.link.href)}">${esc(e.link.text)}</a>` : '') + '</p></li>').join('')
-      + '</ul><p class="foot">Reopen this list from <b>What’s new</b> at the bottom of the home page.</p></div>';
+      + '</ul><p class="foot">Open this list again any time with <b>What’s new</b> at the top of the home page.</p></div>';
     const close = () => d.close();
     d.querySelector('.x').addEventListener('click', close);
     d.addEventListener('click', (e) => { if (e.target === d) close(); });   /* a click on the backdrop lands on the dialog itself */
@@ -80,7 +80,7 @@ window.VD_WHATS_NEW = [
   if (at >= 0) items = ALL.slice(0, at);
   else { const cut = Date.now() - FRESH_DAYS * 864e5; items = ALL.filter((e) => new Date(e.date + 'T23:59:59').getTime() >= cut); }
   const go = () => {
-    document.querySelectorAll('[data-whats-new]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(ALL.slice(0, MAX)); }));
+    document.querySelectorAll('[data-whats-new]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(ALL); }));   /* the button and footer link show every entry */
     if (items.length) open(items.slice(0, MAX)); else put();
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();

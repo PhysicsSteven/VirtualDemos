@@ -2674,3 +2674,9 @@ Steve asked for a light, dark and browser default button. Every page already had
 - **Checked:** every demo opened in light, switched to dark, and compared with a fresh dark load (mean brightness of each canvas and of the page), then the reverse; no page errors. Light and dark screenshots of the home, course, demo (desktop and 400 px), notes, 404 and a worksheet with a graph. Node suites pass.
 
 **For GPT to verify:** nothing numeric changed. Worth a look: a handout in dark on a phone, and that printing from dark still gives black on white.
+
+## Claude, 2026-10-25: What's new button on the home page
+
+Steve (15:13): a visible button that brings the What's new popup back, in addition to the automatic popup. The home page hero now has a **What's new** button in its top right corner beside the theme switch (both in `.hero-tools`; the switch is placed through theme.js's `data-vd-theme` slot). The button and the footer link open the popup with every entry, scrollable; the automatic popup is unchanged (new entries only, at most six). The rule lives in the hand edited part of index.html's style, so courses.py copies it into the course pages' shared CSS too, where it does nothing. Checked at 1280, 400 and 360 px, light and dark: no sideways scroll, no page errors.
+
+**For GPT to verify:** nothing numeric changed.
