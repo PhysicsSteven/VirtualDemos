@@ -11,15 +11,20 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* Layout: a grid with draggable vectors on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root { --s3col: #7a4bb0; --s4col: #0f7f86; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s3col: #c39bff; --s4col: #4fd1d9; } }
 :root[data-theme="dark"] { --s3col: #c39bff; --s4col: #4fd1d9; }
-:root { --acol: #2b60b5; --bcol: #b0452f; --rcol: #2f7d4f; --water: #cfe3f3; --bank: #d9cfb8; --water-deep: #b3d2ec; --ripple: rgba(255,255,255,0.85); --leaf: #6f9a3e; --grass: #7d9a4e; --dock: #a5835c; --hull: #e9e4d6; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; } }
-:root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; }
+:root { --acol: #2b60b5; --bcol: #b0452f; --rcol: #2f7d4f; --water: #cfe3f3; --bank: #bcc592; --water-deep: #b3d2ec; --ripple: rgba(255,255,255,0.85); --leaf: #6f9a3e; --grass: #7d9a4e; --dock: #a5835c; --hull: #e9e4d6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #2e3a25; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; } }
+:root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #2e3a25; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; }
+/* the drawing surface: graph paper on a wooden desk (vector setups), and the river banks */
+:root { --paper: #fbfaf4; --paper-line: #c4dbe4; --paper-major: #86b5c9; --paper-axis: #2e3b48; --desk: #b88f66; --desk-dark: #8c6744; --tree: #4d7a3f; --tree-dark: #2f5428; --soil: #c2a97f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #18212c; --paper-line: #243243; --paper-major: #36506a; --paper-axis: #b7c4d4; --desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; } }
+:root[data-theme="dark"] { --paper: #18212c; --paper-line: #243243; --paper-major: #36506a; --paper-axis: #b7c4d4; --desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -40,6 +45,15 @@
 .ftmass-lab { font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .ftmass-btns { display: flex; gap: 4px; }
 .ftmass .spin { min-width: 0; padding: 4px 8px; }
+.stage canvas.v3 { cursor: grab; }
+#riverBar { max-width: calc(100% - 96px); }
+.dimnote { position: absolute; top: 52px; left: 10px; z-index: 2; max-width: min(420px, calc(100% - 20px)); font-size: 0.8rem; color: var(--ink); background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+.v3key { position: absolute; top: 52px; right: 10px; z-index: 2; pointer-events: none; display: flex; flex-direction: column; gap: 3px; padding: 7px 10px; font-size: 0.78rem; font-weight: 700; color: var(--ink); background: color-mix(in srgb, var(--canvas) 86%, transparent); border: 1px solid var(--line); border-radius: 8px; max-width: calc(100% - 20px); }
+.v3key i { display: inline-block; width: 22px; height: 4px; border-radius: 2px; margin-right: 8px; vertical-align: middle; background: var(--c); }
+.v3key small { font-weight: 400; color: var(--muted); }
+.v3key .landed { margin-top: 3px; font-size: 0.85rem; }
+.v3cap { position: absolute; right: 10px; bottom: 8px; z-index: 2; pointer-events: none; max-width: min(560px, calc(100% - 90px)); font-size: 0.74rem; line-height: 1.35; color: var(--muted); background: color-mix(in srgb, var(--canvas) 80%, transparent); border-radius: 6px; padding: 3px 8px; text-align: right; }
+@media (max-width: 520px) { .v3key { top: auto; bottom: 8px; right: 8px; font-size: 0.72rem; } .v3cap { display: none; } }
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
@@ -89,6 +103,12 @@
         <button type="button" class="spin attn" id="go">Launch boat</button>
         <button type="button" class="spin" id="again">Back to the bank</button>
       </div>
+      <div class="viewbar" id="prodBar" hidden>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+      </div>
+      <p class="dimnote" id="dimNote" hidden></p>
+      <div class="v3key" id="v3Key" hidden></div>
+      <p class="v3cap" id="v3Cap" hidden></p>
       <div class="viewbar" id="tableBar" hidden>
         <div class="seg" role="group" aria-label="View of the table" id="ftViewSeg">
           <button type="button" data-v="top" aria-pressed="true">Top view</button>
@@ -321,12 +341,16 @@
   const RIPPLES = Array.from({ length: 70 }, () => [-60 + drng() * 180, 2 + drng() * (WIDTH - 4), 2 + drng() * 3]);
   const LEAVES = Array.from({ length: 7 }, () => [-60 + drng() * 180, 4 + drng() * (WIDTH - 8), drng() * 6]);
   const GRASS = Array.from({ length: 90 }, () => [-55 + drng() * 170, drng(), drng() < 0.5]);
+  /* trees on the banks (pictures only): x, y and canopy radius in m, from their own seeded sequence */
+  const TREES = (() => { let sd = 5; const r = () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }, out = [];
+    for (let i = 0; i < 44; i++) { const far = i < 30, x = -70 + r() * 200, y = far ? WIDTH + 8 + r() * 22 : -10 - r() * 18, rad = 2.6 + r() * 2.2; if (!far && (Math.abs(x) < 16 || (x > -50 && x < 110 && y > -22))) continue; out.push([x, y, rad]); }
+    return out; })();
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null, view = null;
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), s3: g('--s3col'), s4: g('--s4col'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), s3: g('--s3col'), s4: g('--s4col'), paper: g('--paper'), paperLine: g('--paper-line'), paperMajor: g('--paper-major'), paperAxis: g('--paper-axis'), desk: g('--desk'), deskDark: g('--desk-dark'), tree: g('--tree'), treeDark: g('--tree-dark'), soil: g('--soil'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
@@ -359,76 +383,169 @@
     const w = ctx.measureText(txt).width + 8 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x - w / 2, y - 9 * p, w, 18 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = col; ctx.fillText(txt, x, y);
   }
-  function vec(tail, v, col, name, lw) {
+  function vec(tail, v, col, name, lw, o) {
     const x0 = X(tail[0]), y0 = Y(tail[1]), x1 = X(tail[0] + v[0]), y1 = Y(tail[1] + v[1]);
-    arrow(x0, y0, x1, y1, col, lw || 3 * ps());
-    if (name) { const nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1; label(name, (x0 + x1) / 2 + nx / L * 14 * ps(), (y0 + y1) / 2 + ny / L * 14 * ps(), col, true); }
+    sArrow(ctx, x0, y0, x1, y1, col, lw || 3 * ps(), o);
+    if (name) { const nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, d = (name.length > 1 ? 22 : 16) * ps(); vname(name, (x0 + x1) / 2 + nx / L * d, (y0 + y1) / 2 + ny / L * d, col); }
   }
+  /* the grip on a tip: a raised knob, larger with a halo when it is the chosen one */
   function handle(pt, col, on) {
-    const p = ps(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.fillStyle = T.canvas;
-    ctx.beginPath(); ctx.arc(X(pt[0]), Y(pt[1]), (on ? 9 : 7) * p, 0, 7); ctx.fill(); ctx.stroke();
+    const p = ps(), x = X(pt[0]), y = Y(pt[1]), r = (on ? 8.5 : 7) * p;
+    if (on) { ctx.fillStyle = col; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.arc(x, y, r + 7 * p, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 4 * p; ctx.shadowOffsetY = 2 * p;
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r); g.addColorStop(0, '#ffffff'); g.addColorStop(1, T.paper);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = col; ctx.lineWidth = 2.6 * p; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * 0.32, 0, 7); ctx.fill();
   }
 
   // ---------- draw ----------
   function draw() {
-    glDirty = true;
+    glDirty = true; V3.dirty = true;
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     view = makeView();
     if (S.preset === 'river') { drawRiver(); return; }
     if (S.preset === 'table') { drawTable(); return; }
-    const p = ps(), x0 = Math.floor(ux(0)), x1 = Math.ceil(ux(W)), y0 = Math.floor(uy(H)), y1 = Math.ceil(uy(0));
-    for (let x = x0; x <= x1; x++) { ctx.strokeStyle = x === 0 ? T.gridStrong : T.grid; ctx.lineWidth = x === 0 ? 1.6 : 1; ctx.beginPath(); ctx.moveTo(X(x), 0); ctx.lineTo(X(x), H); ctx.stroke(); }
-    for (let y = y0; y <= y1; y++) { ctx.strokeStyle = y === 0 ? T.gridStrong : T.grid; ctx.lineWidth = y === 0 ? 1.6 : 1; ctx.beginPath(); ctx.moveTo(0, Y(y)); ctx.lineTo(W, Y(y)); ctx.stroke(); }
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let x = x0; x <= x1; x++) if (x && x % 2 === 0) ctx.fillText(String(x).replace('-', '−'), X(x), Y(0) + 4 * p);
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    for (let y = y0; y <= y1; y++) if (y && y % 2 === 0) ctx.fillText(String(y).replace('-', '−'), X(0) - 4 * p, Y(y));
-    ctx.textAlign = 'left'; ctx.fillText('x', W - 14 * p, Y(0) - 10 * p); ctx.textAlign = 'center'; ctx.fillText('y', X(0) + 10 * p, 14 * p);
-    const A = S.A, B = S.B, O = [0, 0], bl = S.blind;
+    const p = ps(), A = S.A, B = S.B, O = [0, 0], bl = S.blind;
+    drawPaper();
     if (S.preset === 'comp') {
       if (S.comp && !bl) {
-        arrow(X(0), Y(0), X(A[0]), Y(0), T.A, 2 * p, true); arrow(X(A[0]), Y(0), X(A[0]), Y(A[1]), T.A, 2 * p, true);
-        label(`A_x = ${f(A[0], 1)}`, X(A[0] / 2), Y(0) + (A[1] >= 0 ? 16 : -16) * p, T.A); label(`A_y = ${f(A[1], 1)}`, X(A[0]) + (A[0] >= 0 ? 40 : -40) * p, Y(A[1] / 2), T.A);
-      } else if (S.comp) { ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(A[0]), Y(0)); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(0), Y(A[1])); ctx.stroke(); ctx.setLineDash([]); }
-      if (!bl && mag(A) > 0) { const th = angleDeg(A) * Math.PI / 180, r = 34 * p; ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(0), Y(0), r, 0, -th, true); ctx.stroke(); label(`θ = ${f(angleDeg(A), 1)}°`, X(0) + (r + 30 * p) * Math.cos(th / 2), Y(0) - (r + 14 * p) * Math.sin(th / 2), T.equi); }
-      vec(O, A, T.A, 'A'); handle(A, T.A, S.sel === 'A');
+        shadowBand(O, [A[0], 0], T.A); shadowBand(O, [0, A[1]], T.A);
+        sArrow(ctx, X(0), Y(0), X(A[0]), Y(0), T.A, 2.4 * p, { dashed: true }); sArrow(ctx, X(A[0]), Y(0), X(A[0]), Y(A[1]), T.A, 2.4 * p, { dashed: true });
+        pill(`A_x = ${f(A[0], 1)}`, X(A[0] / 2), Y(0) + (A[1] >= 0 ? 18 : -18) * p, T.A); pill(`A_y = ${f(A[1], 1)}`, X(A[0]) + (A[0] >= 0 ? 44 : -44) * p, Y(A[1] / 2), T.A);
+      } else if (S.comp) { ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(A[0]), Y(0)); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(0), Y(A[1])); ctx.stroke(); ctx.setLineDash([]); }
+      if (!bl && mag(A) > 0) { const th = angleDeg(A) * Math.PI / 180, r = 36 * p; angleArc(X(0), Y(0), r, 0, th, T.equi); pill(`θ = ${f(angleDeg(A), 1)}°`, X(0) + (r + 34 * p) * Math.cos(th / 2), Y(0) - (r + 16 * p) * Math.sin(th / 2), T.equi); }
+      origin(); vec(O, A, T.A, 'A', 3.6 * p); handle(A, T.A, S.sel === 'A');
     } else if (S.preset === 'add') {
       const tailB = S.h2t ? A : O, R = add(A, B);
-      if (!bl) { ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(R[0]), Y(R[1])); ctx.lineTo(X(B[0]), Y(B[1])); if (S.h2t) { ctx.lineTo(X(0), Y(0)); } ctx.stroke(); ctx.setLineDash([]); }
-      if (S.comp && !bl) { arrow(X(0), Y(0), X(R[0]), Y(0), T.R, 2 * p, true); arrow(X(R[0]), Y(0), X(R[0]), Y(R[1]), T.R, 2 * p, true); }
-      if (!bl) vec(O, R, T.R, 'A + B', 3.5 * p);
-      vec(O, A, T.A, 'A'); vec(tailB, B, T.B, 'B');
+      if (!bl) { ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(R[0]), Y(R[1])); ctx.lineTo(X(B[0]), Y(B[1])); if (S.h2t) { ctx.lineTo(X(0), Y(0)); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      if (S.comp && !bl) { shadowBand(O, [R[0], 0], T.R); sArrow(ctx, X(0), Y(0), X(R[0]), Y(0), T.R, 2.4 * p, { dashed: true }); sArrow(ctx, X(R[0]), Y(0), X(R[0]), Y(R[1]), T.R, 2.4 * p, { dashed: true }); }
+      origin();
+      if (!bl) vec(O, R, T.R, 'A + B', 4.2 * p);
+      vec(O, A, T.A, 'A', 3.6 * p); vec(tailB, B, T.B, 'B', 3.6 * p);
       handle(A, T.A, S.sel === 'A'); handle(add(tailB, B), T.B, S.sel === 'B');
     } else if (S.preset === 'sub') {
       const D = sub(A, B);
-      vec(O, A, T.A, 'A'); vec(O, B, T.B, 'B');
-      if (!bl) { vec(A, scale(-1, B), T.B, '−B', 2 * p); vec(O, D, T.R, 'A − B', 3.5 * p); ctx.globalAlpha = 0.55; vec(B, D, T.R, '', 2 * p); ctx.globalAlpha = 1; }
+      origin(); vec(O, A, T.A, 'A', 3.6 * p); vec(O, B, T.B, 'B', 3.6 * p);
+      if (!bl) { vec(A, scale(-1, B), T.B, '−B', 2.4 * p, { dashed: true }); vec(O, D, T.R, 'A − B', 4.2 * p); vec(B, D, T.R, '', 2.4 * p, { alpha: 0.55 }); }
       handle(A, T.A, S.sel === 'A'); handle(B, T.B, S.sel === 'B');
     } else if (S.preset === 'prod') {
       const c = crossZ(A, B);
       if (!bl) {
-        ctx.fillStyle = c >= 0 ? T.R : T.B; ctx.globalAlpha = 0.13; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(A[0]), Y(A[1])); ctx.lineTo(X(A[0] + B[0]), Y(A[1] + B[1])); ctx.lineTo(X(B[0]), Y(B[1])); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+        const pg = [[0, 0], A, add(A, B), B].map((q) => [X(q[0]), Y(q[1])]);
+        ctx.fillStyle = c >= 0 ? T.R : T.B; ctx.globalAlpha = 0.14; ctx.beginPath(); pg.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = 0.55; ctx.strokeStyle = c >= 0 ? T.R : T.B; ctx.lineWidth = 1.3 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(pg[1][0], pg[1][1]); ctx.lineTo(pg[2][0], pg[2][1]); ctx.lineTo(pg[3][0], pg[3][1]); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
         const mb = mag(B);
         if (mb) { const pr = projection(A, B), foot = scale(pr / mb, B);
-          ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(foot[0]), Y(foot[1])); ctx.stroke(); ctx.setLineDash([]);
-          ctx.strokeStyle = T.equi; ctx.lineWidth = 5 * p; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(foot[0]), Y(foot[1])); ctx.stroke(); ctx.globalAlpha = 1;
-          label(`|A| cos φ = ${f(pr, 2)}`, X(foot[0] / 2) + 6 * p, Y(foot[1] / 2) + 18 * p, T.equi); }
-        const C = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
-        ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(C[0]), Y(C[1]), 9 * p, 0, 7); ctx.stroke();
-        if (c >= 0) { ctx.beginPath(); ctx.arc(X(C[0]), Y(C[1]), 2.6 * p, 0, 7); ctx.fill(); } else { const k = 6 * p; ctx.beginPath(); ctx.moveTo(X(C[0]) - k, Y(C[1]) - k); ctx.lineTo(X(C[0]) + k, Y(C[1]) + k); ctx.moveTo(X(C[0]) + k, Y(C[1]) - k); ctx.lineTo(X(C[0]) - k, Y(C[1]) + k); ctx.stroke(); }
-        label(`A × B ${c >= 0 ? 'out of' : 'into'} the page`, X(C[0]), Y(C[1]) - 22 * p, T.ink);
+          ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(foot[0]), Y(foot[1])); ctx.stroke(); ctx.setLineDash([]);
+          ctx.strokeStyle = T.equi; ctx.lineWidth = 7 * p; ctx.lineCap = 'round'; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(foot[0]), Y(foot[1])); ctx.stroke(); ctx.globalAlpha = 1; ctx.lineCap = 'butt';
+          const nb = [-B[1] / mb, B[0] / mb], side = c >= 0 ? 1 : -1, mx = X(foot[0] / 2), my = Y(foot[1] / 2), txt = `|A| cos φ = ${f(pr, 2)}`;   /* on the side of B away from A */
+          ctx.font = `700 ${12.5 * p}px ${T.ui}`; const d = (ctx.measureText(txt).width / 2 + 6 * p) * Math.abs(nb[0]) + 10 * p * Math.abs(nb[1]) + 9 * p;
+          pill(txt, mx + side * nb[0] * d, my - side * nb[1] * d, T.equi); }
+        const C = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], cx = X(C[0]), cy = Y(C[1]);
+        ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 4 * p; ctx.shadowOffsetY = 2 * p; ctx.fillStyle = T.paper; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.fill(); ctx.restore();
+        ctx.strokeStyle = T.s3; ctx.fillStyle = T.s3; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.stroke();
+        if (c >= 0) { ctx.beginPath(); ctx.arc(cx, cy, 3.2 * p, 0, 7); ctx.fill(); } else { const k = 7 * p; ctx.beginPath(); ctx.moveTo(cx - k, cy - k); ctx.lineTo(cx + k, cy + k); ctx.moveTo(cx + k, cy - k); ctx.lineTo(cx - k, cy + k); ctx.stroke(); }
+        ctx.font = `700 ${12.5 * p}px ${T.ui}`; const lw2 = ctx.measureText(`A × B ${c >= 0 ? 'out of' : 'into'} the page`).width / 2 + 6 * p;
+        const right = cx + 18 * p + 2 * lw2 < W - 8 * p;   /* beside the symbol where it fits, else in the sheet's corner */
+        pill(`A × B ${c >= 0 ? 'out of' : 'into'} the page`, right ? cx + 18 * p + lw2 : 16 * p + lw2, right ? cy : H - 44 * p, T.s3);
       }
-      vec(O, A, T.A, 'A'); vec(O, B, T.B, 'B');
+      origin(); vec(O, A, T.A, 'A', 3.6 * p); vec(O, B, T.B, 'B', 3.6 * p);
       handle(A, T.A, S.sel === 'A'); handle(B, T.B, S.sel === 'B');
     }
   }
+  // ---------- the drawing surface: a sheet of graph paper on a wooden desk ----------
+  const deco = (() => { let sd = 29; return () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }; })();
+  const GRAIN = Array.from({ length: 46 }, () => [deco(), 0.6 + deco() * 2.2, deco() * 6.3, 0.05 + deco() * 0.1, deco() < 0.25]);
+  function drawDesk() {
+    const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, T.desk); g.addColorStop(1, T.deskDark); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.lineWidth = 1;
+    for (const [fy, amp, ph, a, knot] of GRAIN) {
+      ctx.strokeStyle = T.deskDark; ctx.globalAlpha = a * 2.2; ctx.beginPath();
+      for (let x = -10; x <= W + 20; x += 18) { const y = fy * H + Math.sin(x * 0.006 + ph) * amp * 6 + Math.sin(x * 0.021 + ph * 2) * amp; x < 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      ctx.stroke();
+      if (knot) { ctx.globalAlpha = a * 2; ctx.beginPath(); ctx.ellipse((ph / 6.3) * W, fy * H, 14, 4, 0, 0, 7); ctx.stroke(); }
+    }
+    ctx.restore();
+  }
+  function drawPaper() {
+    const p = ps(), m = Math.max(6, (W < 520 ? 6 : 12) * p), px0 = m, py0 = m, pw = W - 2 * m, ph = H - 2 * m;
+    drawDesk();
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetX = 2 * p; ctx.shadowOffsetY = 5 * p;
+    ctx.fillStyle = T.paper; ctx.fillRect(px0, py0, pw, ph); ctx.restore();
+    const lg = ctx.createLinearGradient(px0, py0, px0 + pw, py0 + ph); lg.addColorStop(0, 'rgba(255,255,255,0.10)'); lg.addColorStop(1, 'rgba(0,0,0,0.04)'); ctx.fillStyle = lg; ctx.fillRect(px0, py0, pw, ph);
+    ctx.save(); ctx.beginPath(); ctx.rect(px0, py0, pw, ph); ctx.clip();
+    const x0 = Math.floor(ux(px0)), x1 = Math.ceil(ux(px0 + pw)), y0 = Math.floor(uy(py0 + ph)), y1 = Math.ceil(uy(py0));
+    const line = (x, y, xx, yy, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(xx, yy); ctx.stroke(); };
+    for (let x = x0; x <= x1; x++) for (let k = 1; k < 5 && view.s > 34; k++) line(X(x + k / 5), py0, X(x + k / 5), py0 + ph, T.paperLine, 0.5);
+    for (let y = y0; y <= y1; y++) for (let k = 1; k < 5 && view.s > 34; k++) line(px0, Y(y + k / 5), px0 + pw, Y(y + k / 5), T.paperLine, 0.5);
+    for (let x = x0; x <= x1; x++) if (x) line(X(x), py0, X(x), py0 + ph, x % 5 ? T.paperLine : T.paperMajor, x % 5 ? 1 : 1.5);
+    for (let y = y0; y <= y1; y++) if (y) line(px0, Y(y), px0 + pw, Y(y), y % 5 ? T.paperLine : T.paperMajor, y % 5 ? 1 : 1.5);
+    line(X(0), py0, X(0), py0 + ph, T.paperAxis, 1.6 * p); line(px0, Y(0), px0 + pw, Y(0), T.paperAxis, 1.6 * p);
+    ctx.fillStyle = T.paperAxis; ctx.globalAlpha = 0.75; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = x0; x <= x1; x++) if (x && x % 2 === 0) ctx.fillText(String(x).replace('-', '−'), X(x), Y(0) + 4 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = y0; y <= y1; y++) if (y && y % 2 === 0) ctx.fillText(String(y).replace('-', '−'), X(0) - 4 * p, Y(y));
+    ctx.globalAlpha = 1; ctx.font = `italic 700 ${14 * p}px Georgia, serif`;
+    ctx.textAlign = 'right'; ctx.fillText('x', px0 + pw - 8 * p, Y(0) - 11 * p); ctx.textAlign = 'left'; ctx.fillText('y', X(0) + 8 * p, py0 + 14 * p);
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('1 square = 1 unit', px0 + pw - 8 * p, py0 + ph - 6 * p);
+    ctx.restore();
+  }
+  /* a solid arrow: shaft and head as one shape, lifted off the paper with a soft shadow; dashed: a dashed shaft with a solid head */
+  function sArrow(c, x0, y0, x1, y1, col, w, o = {}) {
+    const p = ps(), L = Math.hypot(x1 - x0, y1 - y0); if (L < 1) return;
+    const ux = (x1 - x0) / L, uy = (y1 - y0) / L, nx = -uy, ny = ux;
+    const hl = Math.min(L * 0.6, Math.max(14 * p, w * 4.4)), hw = Math.max(6.5 * p, w * 2.1), sw = w / 2, bx = x1 - ux * hl, by = y1 - uy * hl, nb = hl * 0.2;
+    c.save(); if (o.alpha != null) c.globalAlpha = o.alpha;
+    c.fillStyle = col; c.strokeStyle = col;
+    const head = () => { c.beginPath(); c.moveTo(x1, y1); c.lineTo(bx + nx * hw, by + ny * hw); c.lineTo(bx + ux * nb, by + uy * nb); c.lineTo(bx - nx * hw, by - ny * hw); c.closePath(); };
+    if (o.dashed) {
+      c.lineWidth = w; c.setLineDash([6 * p, 4.5 * p]); c.beginPath(); c.moveTo(x0, y0); c.lineTo(bx + ux * nb, by + uy * nb); c.stroke(); c.setLineDash([]); head(); c.fill();
+    } else {
+      c.shadowColor = 'rgba(0,0,0,0.3)'; c.shadowBlur = 5 * p; c.shadowOffsetX = 1.5 * p; c.shadowOffsetY = 3 * p;
+      c.beginPath(); c.moveTo(x0 + nx * sw, y0 + ny * sw); c.lineTo(bx + ux * nb + nx * sw, by + uy * nb + ny * sw); c.lineTo(bx + nx * hw, by + ny * hw); c.lineTo(x1, y1);
+      c.lineTo(bx - nx * hw, by - ny * hw); c.lineTo(bx + ux * nb - nx * sw, by + uy * nb - ny * sw); c.lineTo(x0 - nx * sw, y0 - ny * sw); c.closePath(); c.fill();
+      c.shadowColor = 'transparent'; c.strokeStyle = 'rgba(0,0,0,0.22)'; c.lineWidth = 0.8; c.stroke();
+      c.strokeStyle = 'rgba(255,255,255,0.38)'; c.lineWidth = Math.max(0.8, w * 0.22); c.beginPath(); c.moveTo(x0 + nx * sw * 0.45, y0 + ny * sw * 0.45); c.lineTo(bx + nx * sw * 0.45, by + ny * sw * 0.45); c.stroke();
+    }
+    c.restore();
+  }
+  /* a value tag: rounded, on paper, edged in its color */
+  function pill(txt, x, y, col) {
+    const p = ps(); ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(txt).width + 12 * p, h = 20 * p;
+    x = Math.max(w / 2 + 6 * p, Math.min(W - w / 2 - 6 * p, x)); y = Math.max(h / 2 + 6 * p, Math.min(H - h / 2 - 6 * p, y));   /* kept on the sheet */
+    ctx.fillStyle = T.paper; ctx.globalAlpha = 0.94; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, 6 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = col; ctx.lineWidth = 1.2 * p; ctx.stroke(); ctx.fillStyle = col; ctx.fillText(txt, x, y + 0.5);
+  }
+  /* a vector's name in bold italic, with the arrow over a single letter */
+  function vname(txt, x, y, col) {
+    const p = ps(); ctx.font = `italic 700 ${17 * p}px Georgia, "Times New Roman", serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineWidth = 4 * p; ctx.strokeStyle = T.paper; ctx.lineJoin = 'round'; ctx.strokeText(txt, x, y); ctx.fillStyle = col; ctx.fillText(txt, x, y);
+    if (txt.length === 1) { const w = ctx.measureText(txt).width, ya = y - 12 * p; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(x - w / 2, ya); ctx.lineTo(x + w / 2 + 1 * p, ya); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x + w / 2 + 4 * p, ya); ctx.lineTo(x + w / 2, ya - 2.6 * p); ctx.lineTo(x + w / 2, ya + 2.6 * p); ctx.closePath(); ctx.fill(); }
+    ctx.lineJoin = 'miter';
+  }
+  /* a component's shadow: a pale band on the axis under it */
+  function shadowBand(a, b, col) { const p = ps(); ctx.strokeStyle = col; ctx.globalAlpha = 0.16; ctx.lineWidth = 9 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(X(a[0]), Y(a[1])); ctx.lineTo(X(b[0]), Y(b[1])); ctx.stroke(); ctx.globalAlpha = 1; ctx.lineCap = 'butt'; }
+  /* the angle from +x: a pale wedge and an arc with a small head at its end */
+  function angleArc(cx, cy, r, a0, a1, col) {
+    const p = ps(); ctx.fillStyle = col; ctx.globalAlpha = 0.12; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, -a0, -a1, true); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, r, -a0, -a1, true); ctx.stroke();
+    if (a1 - a0 > 0.25) { const e = -a1, tx = Math.sin(e), ty = -Math.cos(e), hx = cx + r * Math.cos(e), hy = cy + r * Math.sin(e), k = 6 * p; ctx.beginPath(); ctx.moveTo(hx + tx * k * 0.2, hy + ty * k * 0.2); ctx.lineTo(hx - tx * k + Math.cos(e) * k * 0.6, hy - ty * k + Math.sin(e) * k * 0.6); ctx.lineTo(hx - tx * k - Math.cos(e) * k * 0.6, hy - ty * k - Math.sin(e) * k * 0.6); ctx.closePath(); ctx.fill(); }
+  }
+  function origin() { const p = ps(); ctx.fillStyle = T.paperAxis; ctx.beginPath(); ctx.arc(X(0), Y(0), 3.2 * p, 0, 7); ctx.fill(); }
   function drawRiver() {
     const p = ps(), R = S.river, bl = S.blind, res = river(R.u, R.vb, R.th, WIDTH, R.profile);
     // banks with grass, the water, ripples and leaves drifting at the local current, the current profile at the left
-    ctx.fillStyle = T.bank; ctx.fillRect(0, Y(0), W, H - Y(0)); ctx.fillRect(0, 0, W, Y(WIDTH));
+    for (const [ya, yb] of [[Y(0), H], [0, Y(WIDTH)]]) { const g = ctx.createLinearGradient(0, ya, 0, yb), near = ya > 0; g.addColorStop(near ? 0 : 1, T.soil); g.addColorStop(near ? 0.06 : 0.94, T.bank); g.addColorStop(near ? 1 : 0, T.bank); ctx.fillStyle = g; ctx.fillRect(0, ya, W, yb - ya); }
+    for (const [tx, ty, tr] of TREES) { const x = X(tx), y = Y(ty), r = tr * view.s; if (x < -r || x > W + r || y < -r || y > H + r) continue;
+      ctx.fillStyle = 'rgba(20,30,10,0.22)'; ctx.beginPath(); ctx.ellipse(x + r * 0.35, y + r * 0.4, r, r * 0.9, 0, 0, 7); ctx.fill();
+      const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, T.tree); g.addColorStop(1, T.treeDark); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.beginPath(); ctx.arc(x - r * 0.3, y - r * 0.3, r * 0.45, 0, 7); ctx.fill(); }
     ctx.strokeStyle = T.grass; ctx.lineWidth = 1.5 * p; for (const [gx, gy, side] of GRASS) { const yb = side ? Y(WIDTH) - gy * 6 * p : Y(0) + gy * 6 * p; const x = X(gx); ctx.beginPath(); ctx.moveTo(x, yb); ctx.lineTo(x - 2 * p, yb - (side ? -1 : 1) * 0 - 5 * p); ctx.moveTo(x, yb); ctx.lineTo(x + 2 * p, yb - 5 * p); ctx.stroke(); }
     const wg = ctx.createLinearGradient(0, Y(WIDTH), 0, Y(0)); wg.addColorStop(0, T.water); wg.addColorStop(0.5, T.waterDeep); wg.addColorStop(1, T.water); ctx.fillStyle = wg; ctx.fillRect(0, Y(WIDTH), W, Y(0) - Y(WIDTH));
+    for (const [yy, dir] of [[Y(0), -1], [Y(WIDTH), 1]]) { const g = ctx.createLinearGradient(0, yy, 0, yy + dir * 10 * p); g.addColorStop(0, 'rgba(60,45,20,0.28)'); g.addColorStop(1, 'rgba(60,45,20,0)'); ctx.fillStyle = g; ctx.fillRect(0, Math.min(yy, yy + dir * 10 * p), W, 10 * p); ctx.strokeStyle = T.ripple; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(0, yy + dir * 2 * p); ctx.lineTo(W, yy + dir * 2 * p); ctx.stroke(); ctx.globalAlpha = 1; }
     const span = 180, xL = -60;
     ctx.strokeStyle = T.ripple; ctx.lineWidth = 1.2 * p;
     for (const [x0, y, len] of RIPPLES) { const u = currentAt(R.u, y, WIDTH, R.profile); let x = ((x0 + u * R.clock - xL) % span + span) % span + xL; ctx.beginPath(); ctx.moveTo(X(x), Y(y)); ctx.quadraticCurveTo(X(x + len / 2), Y(y) - 2.5 * p, X(x + len), Y(y)); ctx.stroke(); }
@@ -453,7 +570,8 @@
     ctx.save(); ctx.translate(X(pos[0]), Y(pos[1])); ctx.rotate(-hd);
     const bl2 = 18 * p, bw2 = 8 * p, moving = R.run || (R.t > 0 && !R.landed);
     if (moving) { ctx.strokeStyle = T.ripple; ctx.lineWidth = 1.5 * p; for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(-bl2 * 0.6, sgn * bw2 * 0.8); ctx.lineTo(-bl2 * 2.6, sgn * bw2 * 2.6); ctx.stroke(); } }   // wake behind the stern
-    ctx.fillStyle = T.hull; ctx.beginPath(); ctx.moveTo(bl2 * 1.15, 0); ctx.quadraticCurveTo(bl2 * 0.5, bw2, -bl2 * 0.8, bw2); ctx.lineTo(-bl2, bw2 * 0.7); ctx.lineTo(-bl2, -bw2 * 0.7); ctx.lineTo(-bl2 * 0.8, -bw2); ctx.quadraticCurveTo(bl2 * 0.5, -bw2, bl2 * 1.15, 0); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(10,30,50,0.25)'; ctx.beginPath(); ctx.ellipse(2 * p, 3 * p, bl2 * 1.1, bw2 * 1.05, 0, 0, 7); ctx.fill();
+    const hg = ctx.createLinearGradient(0, -bw2, 0, bw2); hg.addColorStop(0, '#ffffff'); hg.addColorStop(0.5, T.hull); hg.addColorStop(1, T.hull); ctx.fillStyle = hg; ctx.beginPath(); ctx.moveTo(bl2 * 1.15, 0); ctx.quadraticCurveTo(bl2 * 0.5, bw2, -bl2 * 0.8, bw2); ctx.lineTo(-bl2, bw2 * 0.7); ctx.lineTo(-bl2, -bw2 * 0.7); ctx.lineTo(-bl2 * 0.8, -bw2); ctx.quadraticCurveTo(bl2 * 0.5, -bw2, bl2 * 1.15, 0); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = T.canvas; ctx.fillRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2); ctx.strokeRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2);
     ctx.restore();
     // velocity triangle at the boat, 6 s of motion per arrow for scale
@@ -466,10 +584,10 @@
     const keys = [[T.A, 'boat relative to the water'], [T.B, 'water relative to the shore']].concat(bl ? [] : [[T.R, 'boat relative to the shore (the sum)']]);
     ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     const kw = Math.max(...keys.map((q) => ctx.measureText(q[1]).width)) + 40 * p, kx = W - kw - 10 * p;
-    const ky = W < 640 ? 54 * p : 8 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(kx - 6 * p, ky, kw + 6 * p, keys.length * 19 * p + 22 * p); ctx.globalAlpha = 1;
+    const ky = W < 640 ? 54 * p : 50 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect(kx - 8 * p, ky, kw + 8 * p, keys.length * 19 * p + 22 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
     keys.forEach(([c, t], i) => { const y = ky + 10 * p + i * 19 * p; ctx.strokeStyle = c; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(kx, y); ctx.lineTo(kx + 26 * p, y); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillText(t, kx + 34 * p, y); });
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('Arrows at the boat show 8 s of motion', kx, ky + 10 * p + keys.length * 19 * p);
-    if (R.landed && !bl) label(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
+    if (R.landed && !bl) pill(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
   }
   // ---------- force table ----------
   const FT = { n: 3, s: [{ g: 150, a: 20 }, { g: 200, a: 110 }, { g: 100, a: 230 }, { g: 100, a: 300 }], fric: 1, arrows: true, poly: false, sel: 0, rows: [], series: 1,
@@ -942,12 +1060,288 @@
   window.__ft = { FT, G3, orb, setFtView, ftSetPin, ftRest, ftRes };
   $('ftViewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setFtView(b.dataset.v); });
 
+  // ---------- 3D views of Dot and cross products and River crossing (VD3K on vd3.js, three.js loaded the first time one opens) ----------
+  /* Drawn from the same state as the flat views. Products: the graph paper printed on a clear plate (1 grid square = 1 unit of the
+     scene), A and B lying on it, A × B standing perpendicular to it from the origin, its length |A × B| at 1/k the scale of A and B
+     (k = 5, 10 or 20, the smallest that keeps it within 10 squares; the caption says which). River: to scale in meters, the river
+     60 m wide between grassy banks, the boat 4.6 m long, every arrow 8 s of motion as in the flat view. */
+  const V3 = { S: null, view: null, on: false, dirty: true, kind: '', o: { th: 0, ph: 0, zoom: 1 }, keep: {},
+    home: { prod: { th: -Math.PI / 2 + 0.5, ph: 0.86, zoom: 1 }, river: { th: -Math.PI / 2 - 0.12, ph: 0.86, zoom: 1 } },
+    pref: { prod: 'flat', river: 'flat' } };
+  const ZA = 0.3;   /* A and B float this far above the plate, in squares */
+  const crossK = (c) => (Math.abs(c) <= 50 ? 5 : Math.abs(c) <= 100 ? 10 : 20);
+  function arrow3(mat) { const g = new THREE.Group(), sh = new THREE.Mesh(V3.cyl, mat), hd = new THREE.Mesh(V3.cone, mat); sh.castShadow = hd.castShadow = true; g.add(sh, hd); g.sh = sh; g.hd = hd; return g; }
+  function setArrow3(g, a, b, r, hl) {
+    const A = new THREE.Vector3(a[0], a[1], a[2]), d = new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]), L = d.length();
+    if (L < 1e-6) { g.visible = false; return; } g.visible = true; d.divideScalar(L);
+    const h = Math.min(hl, L * 0.5), q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d), ls = L - h * 0.9;
+    g.sh.position.copy(A).addScaledVector(d, ls / 2); g.sh.scale.set(r, ls, r); g.sh.quaternion.copy(q);
+    g.hd.position.copy(A).addScaledVector(d, L - h / 2); g.hd.scale.set(r * 2.7, h, r * 2.7); g.hd.quaternion.copy(q);
+  }
+  const lineOf = (n, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); const l = new THREE.Line(g, mat); l.frustumCulled = false; return l; };
+  function setLine(l, pts, dashed) { const a = l.geometry.attributes.position, n = Math.min(pts.length, a.count); for (let i = 0; i < n; i++) a.setXYZ(i, pts[i][0], pts[i][1], pts[i][2]); a.needsUpdate = true; l.geometry.setDrawRange(0, n); if (dashed) l.computeLineDistances(); }
+  /* a flat strip along a path on the water (the trail, and the predicted track dashed): w wide, every other piece left out when dashed */
+  function ribbon(n, mat) { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 18), 3)); const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.n = n; return m; }
+  function setRibbon(m, pts, w, dashed) {
+    const a = m.geometry.attributes.position; let k = 0;
+    for (let i = 1; i < pts.length && k < m.n; i++) {
+      if (dashed && i % 2) continue;
+      const p0 = pts[i - 1], p1 = pts[i], dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L * w / 2, ny = dx / L * w / 2;
+      const v = [[p0[0] + nx, p0[1] + ny], [p0[0] - nx, p0[1] - ny], [p1[0] + nx, p1[1] + ny], [p1[0] + nx, p1[1] + ny], [p0[0] - nx, p0[1] - ny], [p1[0] - nx, p1[1] - ny]];
+      v.forEach((q, j) => a.setXYZ(k * 6 + j, q[0], q[1], 0)); k++;
+    }
+    a.needsUpdate = true; m.geometry.setDrawRange(0, k * 6); m.visible = k > 0;
+  }
+  function canvasTex(w, h, fn) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = 8; t.redraw = (...a) => { fn(cv.getContext('2d'), w, h, ...a); t.needsUpdate = true; }; t.redraw(); return t; }
+  function tag(txt, col, size, bg) { return VD3K.label(txt, { size, color: col, bg: bg || 'rgba(255,255,255,0.9)', weight: 700 }); }
+
+  function init3() {
+    const S3 = VD3K.stage(stage, { before: $('riverBar'), fov: 32, near: 0.2, far: 4000, shadow: 20 });
+    if (!S3) return false;
+    const K = VD3K, mat = (o, c) => K.material(S3, o, c), el = S3.el;
+    el.classList.add('v3'); el.tabIndex = 0; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'application');
+    V3.S = S3; V3.cyl = new THREE.CylinderGeometry(1, 1, 1, 20); V3.cone = new THREE.ConeGeometry(1, 1, 28);
+    const solid = (hex) => new THREE.MeshStandardMaterial({ color: hex, roughness: 0.4, metalness: 0.1 });
+    V3.mA = solid(T.A); V3.mB = solid(T.B); V3.mR = solid(T.R); V3.mC = solid(T.s3); V3.mE = new THREE.MeshStandardMaterial({ color: T.equi, roughness: 0.5, transparent: true, opacity: 0.75, depthWrite: false });
+
+    /* ---- products: a clear plate printed with graph paper on four posts above a desk, a wall behind ---- */
+    const P = new THREE.Group(), HALF = 12, DESK = -14;
+    const wood = mat({ roughness: 0.7 }, ['#b88f66', '#4a3a2c']), steel = mat({ roughness: 0.35, metalness: 0.3 }, ['#c3cad3', '#8e98a4']);
+    P.add(K.box(84, 50, 2, wood, 0, 7, DESK - 2));
+    for (const sx of [-39, 39]) for (const sy of [-15, 29]) P.add(K.box(2.4, 2.4, 30, mat({ roughness: 0.6 }, ['#3a4552', '#2c3540']), sx, sy, DESK - 32));
+    const floorM = new THREE.MeshBasicMaterial(), wallM = new THREE.MeshBasicMaterial();
+    S3.onTheme((dk) => { const bg = K.token('--canvas', dk ? '#10161e' : '#fcfdfe'), t = new THREE.Color(dk ? '#000000' : '#8a96a6'); wallM.color.copy(bg).lerp(t, dk ? 0.25 : 0.13); floorM.color.copy(bg).lerp(t, dk ? 0.45 : 0.3); });
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 300), floorM); floor.position.set(0, 60, DESK - 32);
+    const wallG = new THREE.PlaneGeometry(400, 160); wallG.rotateX(Math.PI / 2); const wall = new THREE.Mesh(wallG, wallM); wall.position.set(0, 34, 40);
+    P.add(floor, wall);
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) P.add(K.rod([sx * (HALF - 0.6), sy * (HALF - 0.6), DESK], [sx * (HALF - 0.6), sy * (HALF - 0.6), -0.25], 0.32, steel));
+    const edgeM = new THREE.MeshStandardMaterial({ color: 0xcfe6f2, transparent: true, opacity: 0.35, roughness: 0.1, metalness: 0.1, depthWrite: false });
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(2 * HALF + 0.6, 2 * HALF + 0.6, 0.25), edgeM); slab.position.z = -0.13; slab.renderOrder = 1; P.add(slab);
+    const paperTex = canvasTex(2048, 2048, (c, w) => {
+      const k = w / (2 * HALF), X0 = (x) => (x + HALF) * k, Y0 = (y) => (HALF - y) * k;
+      c.clearRect(0, 0, w, w); c.fillStyle = 'rgba(251,250,244,0.86)'; c.fillRect(0, 0, w, w);
+      for (let i = -HALF; i <= HALF; i++) for (let j = 1; j < 5; j++) { c.strokeStyle = 'rgba(134,181,201,0.35)'; c.lineWidth = 1.2; const u = i + j / 5; c.beginPath(); c.moveTo(X0(u), 0); c.lineTo(X0(u), w); c.moveTo(0, Y0(u)); c.lineTo(w, Y0(u)); c.stroke(); }
+      for (let i = -HALF; i <= HALF; i++) { c.strokeStyle = i % 5 ? 'rgba(134,181,201,0.9)' : '#5f9ab3'; c.lineWidth = i % 5 ? 2.2 : 4; c.beginPath(); c.moveTo(X0(i), 0); c.lineTo(X0(i), w); c.moveTo(0, Y0(i)); c.lineTo(w, Y0(i)); c.stroke(); }
+      c.strokeStyle = '#2e3b48'; c.lineWidth = 6; c.beginPath(); c.moveTo(X0(0), 0); c.lineTo(X0(0), w); c.moveTo(0, Y0(0)); c.lineTo(w, Y0(0)); c.stroke();
+      c.fillStyle = '#2e3b48'; c.font = `600 34px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let i = -10; i <= 10; i += 2) if (i) { c.fillText(String(i).replace('-', '−'), X0(i), Y0(0) + 10); }
+      c.textAlign = 'right'; c.textBaseline = 'middle'; for (let i = -10; i <= 10; i += 2) if (i) c.fillText(String(i).replace('-', '−'), X0(0) - 10, Y0(i));
+      c.font = 'italic 700 64px Georgia, serif'; c.textAlign = 'right'; c.fillText('x', w - 24, Y0(0) - 40); c.textAlign = 'left'; c.fillText('y', X0(0) + 22, 48);
+    });
+    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(2 * HALF, 2 * HALF), new THREE.MeshStandardMaterial({ map: paperTex, transparent: true, depthWrite: false, roughness: 0.7, side: THREE.DoubleSide }));
+    sheet.position.z = 0.01; sheet.receiveShadow = true; sheet.renderOrder = 2; P.add(sheet);
+    /* a pencil and an eraser on the desk */
+    const pen = new THREE.Group(), penL = 16, penB = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, penL, 6), new THREE.MeshStandardMaterial({ color: '#e8b923', roughness: 0.5 }));
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.6, 6), new THREE.MeshStandardMaterial({ color: '#e6c9a0', roughness: 0.8 })); tip.position.y = penL / 2 + 0.8;
+    const lead = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.5, 6), new THREE.MeshStandardMaterial({ color: '#333' })); lead.position.y = penL / 2 + 1.45;
+    const ferr = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 1, 12), steel); ferr.position.y = -penL / 2 - 0.5;
+    const rub = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.9, 12), new THREE.MeshStandardMaterial({ color: '#e58c8c', roughness: 0.8 })); rub.position.y = -penL / 2 - 1.4;
+    pen.add(penB, tip, lead, ferr, rub); pen.traverse((m) => { m.castShadow = true; }); pen.rotation.z = -1.1; pen.position.set(22, -6, DESK + 0.42); P.add(pen);
+    P.add(K.box(4, 2, 1.2, new THREE.MeshStandardMaterial({ color: '#f1efe6', roughness: 0.9 }), -22, -9, DESK));
+    /* the z axis through the origin, dashed, and its name */
+    const zl = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, DESK), new THREE.Vector3(0, 0, 9)]), new THREE.LineDashedMaterial({ color: '#5a6575', dashSize: 0.5, gapSize: 0.4 })); zl.computeLineDistances(); P.add(zl);
+    const zt = tag('z', '#2e3b48', 0.9); zt.position.set(0.6, 0, 9.3); P.add(zt);
+    V3.aA = arrow3(V3.mA); V3.aB = arrow3(V3.mB); V3.aC = arrow3(V3.mC); P.add(V3.aA, V3.aB, V3.aC);
+    V3.para = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ color: T.R, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false }));
+    V3.para.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(18), 3)); V3.para.position.z = 0.05; V3.para.renderOrder = 3; P.add(V3.para);
+    V3.paraEdge = lineOf(3, new THREE.LineDashedMaterial({ color: T.R, dashSize: 0.4, gapSize: 0.3 })); P.add(V3.paraEdge);
+    V3.band = new THREE.Mesh(V3.cyl, V3.mE); V3.band.renderOrder = 4; P.add(V3.band);
+    V3.drop = lineOf(2, new THREE.LineDashedMaterial({ color: T.A, dashSize: 0.35, gapSize: 0.3 })); P.add(V3.drop);
+    V3.curl = new THREE.Group(); V3.curlT = new THREE.Mesh(new THREE.BufferGeometry(), V3.mC); V3.curlH = new THREE.Mesh(V3.cone, V3.mC); V3.curl.add(V3.curlT, V3.curlH); P.add(V3.curl);
+    V3.tA = tag('A', '#2b60b5', 1.0); V3.tB = tag('B', '#b0452f', 1.0); V3.tC = tag('A × B', '#7a4bb0', 0.75); V3.tP = tag('', '#a7740b', 0.62);
+    [V3.tA, V3.tB, V3.tC, V3.tP].forEach((t) => { t.material.depthTest = false; t.renderOrder = 8; });   /* names stay readable in front of the arrows */
+    P.add(V3.tA, V3.tB, V3.tC, V3.tP);
+    V3.prod = P; S3.scene.add(P);
+
+    /* ---- river: water between grassy banks with trees, a dock on the near bank, a flag straight across, the boat ---- */
+    const Rg = new THREE.Group();
+    const waterTex = canvasTex(16, 256, (c, w, h, dk) => { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, dk ? '#1d4a63' : '#86bad3'); g.addColorStop(0.5, dk ? '#0f2c40' : '#3f86ad'); g.addColorStop(1, dk ? '#1d4a63' : '#86bad3'); c.fillStyle = g; c.fillRect(0, 0, w, h); });
+    S3.onTheme((dk) => waterTex.redraw(dk));
+    const water = new THREE.Mesh(new THREE.PlaneGeometry(900, WIDTH + 4), new THREE.MeshStandardMaterial({ map: waterTex, roughness: 0.18, metalness: 0.25 }));
+    water.position.set(30, WIDTH / 2, -0.05); water.receiveShadow = true; Rg.add(water);
+    const grass = mat({ roughness: 0.95 }, ['#8eaa5c', '#34482a']), sand = mat({ roughness: 0.95 }, ['#cdb88b', '#5a4c34']), bark = mat({ roughness: 0.9 }, ['#6b4a2f', '#3e2b1c']);
+    const leafM = [mat({ roughness: 0.9 }, ['#4f7d3d', '#2f4d27']), mat({ roughness: 0.9 }, ['#3f6c33', '#28431f']), mat({ roughness: 0.9 }, ['#628f45', '#36552a'])];
+    const bankH = 1.4;
+    Rg.add(K.box(900, 500, bankH + 3, grass, 30, -254, -3), K.box(900, 600, bankH + 3, grass, 30, WIDTH + 304, -3));
+    for (const [y0, dir] of [[0, -1], [WIDTH, 1]]) { const sl = new THREE.Mesh(new THREE.PlaneGeometry(900, 4.4), sand); sl.position.set(30, y0 + dir * 2, bankH / 2 - 0.4); sl.rotation.x = dir * Math.atan2(bankH + 0.8, 4); sl.receiveShadow = true; Rg.add(sl); }
+    for (const [tx, ty, tr] of TREES) {
+      const h = 4 + tr * 1.6, base = ty > 0 ? Math.max(ty, WIDTH + 7) : Math.min(ty, -8);
+      Rg.add(K.rod([tx, base, bankH], [tx, base, bankH + h * 0.55], 0.35, bark));
+      const crown = new THREE.Mesh(new THREE.SphereGeometry(tr, 14, 10), leafM[Math.floor((tx * 7 + ty * 3) % 3 + 3) % 3]); crown.scale.set(1, 1, 1.15); crown.position.set(tx, base, bankH + h * 0.55 + tr * 0.8); crown.castShadow = true; Rg.add(crown);
+    }
+    const plank = mat({ roughness: 0.8 }, ['#a5835c', '#6d5440']);
+    Rg.add(K.box(2.4, 9, 0.3, plank, 3.4, -3, bankH - 0.1));
+    for (const sy of [-1.5, 1.2]) for (const sx of [2.4, 4.4]) Rg.add(K.rod([sx, sy, -1], [sx, sy, bankH + 0.5], 0.16, plank));
+    Rg.add(K.rod([0, WIDTH + 1.5, bankH], [0, WIDTH + 1.5, bankH + 6], 0.08, steel));
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshStandardMaterial({ color: '#c23f2c', side: THREE.DoubleSide, roughness: 0.7 })); flag.rotation.x = Math.PI / 2; flag.position.set(1.2, WIDTH + 1.5, bankH + 5.2); flag.castShadow = true; Rg.add(flag);
+    for (let x = -40; x <= 100; x += 20) { Rg.add(K.box(0.3, 0.3, 1.2, new THREE.MeshStandardMaterial({ color: '#f2f2ea' }), x, -1.4, bankH - 0.1)); const t = tag(`${x} m`.replace('-', '−'), '#1f262f', 2.2, 'rgba(255,255,255,0.82)'); t.position.set(x, -7, bankH + 1.6); Rg.add(t); }
+    const ink = new THREE.LineDashedMaterial({ color: '#1f262f', dashSize: 1.2, gapSize: 1 });
+    const across = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0.08), new THREE.Vector3(0, WIDTH, 0.08)]), ink); across.computeLineDistances(); Rg.add(across);
+    const dim = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(88, 0, 0.1), new THREE.Vector3(88, WIDTH, 0.1)]), new THREE.LineBasicMaterial({ color: '#1f262f' })); Rg.add(dim);
+    for (const y of [0, WIDTH]) Rg.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(86.5, y, 0.1), new THREE.Vector3(89.5, y, 0.1)]), new THREE.LineBasicMaterial({ color: '#1f262f' })));
+    const wt = tag('60 m', '#1f262f', 2.6, 'rgba(255,255,255,0.85)'); wt.position.set(88, WIDTH / 2, 1.8); Rg.add(wt);
+    V3.track = ribbon(120, new THREE.MeshBasicMaterial({ color: T.R, transparent: true, opacity: 0.55, depthWrite: false })); V3.track.position.z = 0.1; Rg.add(V3.track);
+    V3.trail = ribbon(2000, new THREE.MeshBasicMaterial({ color: T.R })); V3.trail.position.z = 0.13; Rg.add(V3.trail);
+    /* the boat, 4.6 m long and 1.7 m wide: hull, seat and an outboard motor; x is forward */
+    const boat = new THREE.Group(), hs = new THREE.Shape(), BL = 2.3, BW = 0.85;
+    hs.moveTo(BL, 0); hs.quadraticCurveTo(BL * 0.45, BW, -BL * 0.75, BW); hs.lineTo(-BL, BW * 0.75); hs.lineTo(-BL, -BW * 0.75); hs.lineTo(-BL * 0.75, -BW); hs.quadraticCurveTo(BL * 0.45, -BW, BL, 0);
+    const hull = new THREE.Mesh(new THREE.ExtrudeGeometry(hs, { depth: 0.7, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.08, bevelSegments: 2 }), mat({ roughness: 0.45 }, ['#f1ede2', '#cfc8b6']));
+    hull.position.z = -0.3; hull.castShadow = true; boat.add(hull);
+    const inner = new THREE.Mesh(new THREE.ShapeGeometry(hs), new THREE.MeshStandardMaterial({ color: '#3a6b8c', roughness: 0.7 })); inner.scale.set(0.86, 0.8, 1); inner.position.z = 0.45; boat.add(inner);
+    boat.add(K.box(0.4, 1.4, 0.18, plank, 0.2, 0, 0.4), K.box(0.4, 1.3, 0.18, plank, -1.3, 0, 0.4), K.box(0.45, 0.4, 0.7, new THREE.MeshStandardMaterial({ color: '#2a2f36', roughness: 0.5 }), -2.45, 0, 0.3));
+    V3.wake = new THREE.Group(); const wakeM = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.32, depthWrite: false });
+    for (const sg of [1, -1]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(6, 0.3), wakeM); w.position.set(-2.2 - 2.8, sg * 1.1, 0.05); w.rotation.z = -sg * 0.38; V3.wake.add(w); }
+    boat.add(V3.wake); V3.boat = boat; Rg.add(boat);
+    V3.rA = arrow3(V3.mA); V3.rB = arrow3(V3.mB); V3.rR = arrow3(V3.mR); Rg.add(V3.rA, V3.rB, V3.rR);
+    V3.prof = Array.from({ length: 7 }, () => { const a = arrow3(V3.mB); Rg.add(a); return a; });
+    V3.profLine = lineOf(61, new THREE.LineBasicMaterial({ color: T.B, transparent: true, opacity: 0.6 })); Rg.add(V3.profLine);
+    const ripM = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.55, depthWrite: false });
+    V3.rip = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 0.22), ripM, RIPPLES.length); V3.rip.frustumCulled = false; Rg.add(V3.rip);
+    V3.leaf = new THREE.InstancedMesh(new THREE.CircleGeometry(0.5, 10), new THREE.MeshStandardMaterial({ color: '#6f9a3e', roughness: 0.8 }), LEAVES.length); V3.leaf.frustumCulled = false; Rg.add(V3.leaf);
+    V3.river = Rg; S3.scene.add(Rg);
+
+    S3.orbit(el, V3.o, () => { V3.dirty = true; }, { grab: grab3, phMin: 0.05, phMax: 1.42, zMin: 0.5, zMax: 3.2 });
+    el.addEventListener('dblclick', () => { Object.assign(V3.o, V3.home[V3.kind] || V3.home.prod); V3.dirty = true; });
+    el.addEventListener('pointermove', move3); el.addEventListener('pointerup', up3); el.addEventListener('pointercancel', up3);
+    el.addEventListener('keydown', vecKeys);
+    return true;
+  }
+  /* products in 3D: drag a tip on the plate */
+  let drag3 = null;
+  function pick3(e) {
+    if (S.preset !== 'prod' || !V3.on) return null;
+    const r = V3.S.el.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    let best = null, bd = e.pointerType === 'touch' ? 34 : 24;
+    for (const [k, pt] of tips()) { const q = V3.S.project([pt[0], pt[1], ZA]), d = Math.hypot(q[0] - px, q[1] - py); if (d < bd) { bd = d; best = k; } }
+    return best;
+  }
+  function grab3(e) {
+    const k = pick3(e); if (!k) return false;
+    drag3 = { k, id: e.pointerId }; S.sel = k; try { V3.S.el.setPointerCapture(e.pointerId); } catch (_) {}
+    V3.S.el.focus(); V3.S.el.style.cursor = 'grabbing'; e.preventDefault(); draw(); return true;
+  }
+  function move3(e) {
+    if (!drag3 || drag3.id !== e.pointerId) { if (!drag3 && e.pointerType !== 'touch' && !e.buttons) V3.S.el.style.cursor = pick3(e) ? 'move' : 'grab'; return; }
+    const r = V3.S.el.getBoundingClientRect(), rc = V3.ray || (V3.ray = new THREE.Raycaster());
+    rc.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: -((e.clientY - r.top) / r.height * 2 - 1) }, V3.S.cam);
+    const o = rc.ray.origin, d = rc.ray.direction; if (Math.abs(d.z) < 1e-6) return; const t = (ZA - o.z) / d.z; if (t <= 0) return;
+    setTip(drag3.k, o.x + t * d.x, o.y + t * d.y);
+  }
+  function up3(e) { if (drag3 && drag3.id === e.pointerId) { drag3 = null; V3.S.el.style.cursor = 'grab'; } }
+
+  function upProd() {
+    const A = S.A, B = S.B, bl = S.blind, c = crossZ(A, B), k = crossK(c);
+    V3.mA.color.set(T.A); V3.mB.color.set(T.B); V3.mC.color.set(T.s3); V3.mE.color.set(T.equi);
+    setArrow3(V3.aA, [0, 0, ZA], [A[0], A[1], ZA], 0.13, 0.95); setArrow3(V3.aB, [0, 0, ZA], [B[0], B[1], ZA], 0.13, 0.95);
+    const off = (v, d) => { const m = mag(v) || 1; return [v[0] * 0.72 - v[1] / m * d, v[1] * 0.72 + v[0] / m * d]; };
+    const la = off(A, crossZ(A, B) > 0 ? -0.9 : 0.9), lb = off(B, crossZ(A, B) > 0 ? 0.9 : -0.9);
+    V3.tA.position.set(la[0], la[1], ZA + 0.9); V3.tB.position.set(lb[0], lb[1], ZA + 0.9);
+    const show = !bl; V3.para.visible = V3.paraEdge.visible = V3.aC.visible = V3.tC.visible = V3.curl.visible = V3.band.visible = V3.drop.visible = V3.tP.visible = show;
+    if (show) {
+      const col = c >= 0 ? T.R : T.B, q = [[0, 0], A, add(A, B), B], pa = V3.para.geometry.attributes.position;
+      [0, 1, 2, 0, 2, 3].forEach((i, j) => pa.setXYZ(j, q[i][0], q[i][1], 0)); pa.needsUpdate = true; V3.para.geometry.computeBoundingSphere(); V3.para.material.color.set(col);
+      setLine(V3.paraEdge, [[A[0], A[1], 0.06], [A[0] + B[0], A[1] + B[1], 0.06], [B[0], B[1], 0.06]], true); V3.paraEdge.material.color.set(col);
+      const h = c / k; setArrow3(V3.aC, [0, 0, 0], [0, 0, h], 0.16, 1.1); V3.aC.visible = Math.abs(h) > 1e-6;
+      V3.tC.set(`A × B, ${c >= 0 ? 'out of' : 'into'} the page (1/${k} scale)`); V3.tC.position.set(0, 0, h + (h >= 0 ? 1.3 : -1.3));
+      const mb = mag(B);
+      if (mb) {
+        const pr = projection(A, B), foot = scale(pr / mb, B), L = Math.abs(pr);
+        V3.band.visible = L > 1e-6; if (L > 1e-6) { const d = new THREE.Vector3(foot[0], foot[1], 0).normalize(); V3.band.position.set(foot[0] / 2, foot[1] / 2, 0.1); V3.band.scale.set(0.3, L, 0.04); V3.band.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d); }
+        setLine(V3.drop, [[A[0], A[1], ZA], [foot[0], foot[1], 0.1]], true);
+        const nb = [-B[1] / mb, B[0] / mb], side = c >= 0 ? 1 : -1; V3.tP.set(`|A| cos φ = ${f(pr, 2)}`); V3.tP.position.set(foot[0] / 2 + side * nb[0] * 2.4, foot[1] / 2 + side * nb[1] * 2.4, 0.4);
+      } else { V3.band.visible = V3.drop.visible = V3.tP.visible = false; }
+      /* the turn from A to B through φ, the sense the right hand curls for A × B */
+      const a0 = Math.atan2(A[1], A[0]), ph = between(A, B) * Math.PI / 180, key = `${a0.toFixed(4)}|${ph.toFixed(4)}|${Math.sign(c)}`;
+      if (mag(A) && mag(B) && ph > 0.05 && ph < Math.PI - 0.05) {
+        if (V3.curlKey !== key) {
+          V3.curlKey = key; const rr = Math.min(2.2, 0.45 * Math.min(mag(A), mag(B))), s = c >= 0 ? 1 : -1, sweep = ph - 0.5 / rr;
+          V3.curlT.geometry.dispose(); V3.curlT.geometry = new THREE.TorusGeometry(rr, 0.07, 8, 40, Math.max(0.05, sweep));
+          V3.curlT.scale.set(1, s, 1); V3.curlT.rotation.set(0, 0, a0);
+          const e = a0 + s * sweep, tg = [-Math.sin(e) * s, Math.cos(e) * s];
+          V3.curlH.position.set(rr * Math.cos(e) + tg[0] * 0.25, rr * Math.sin(e) + tg[1] * 0.25, 0); V3.curlH.scale.set(0.22, 0.6, 0.22);
+          V3.curlH.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(tg[0], tg[1], 0));
+        }
+        V3.curl.position.z = ZA + 0.05;
+      } else V3.curl.visible = false;
+    }
+  }
+  function upRiver() {
+    const R = S.river, bl = S.blind, res = river(R.u, R.vb, R.th, WIDTH, R.profile), pos = boatPos(), hd = Math.atan2(res.vbw[1], res.vbw[0]), kk = 8, z = 2.4;
+    V3.mA.color.set(T.A); V3.mB.color.set(T.B); V3.mR.color.set(T.R);
+    V3.boat.position.set(pos[0], pos[1], 0); V3.boat.rotation.z = hd; V3.wake.visible = R.run || (R.t > 0 && !R.landed);
+    const tipA = add(pos, scale(kk, res.vbw)), uHere = [currentAt(R.u, pos[1], WIDTH, R.profile), 0], tipB = add(tipA, scale(kk, uHere));
+    setArrow3(V3.rA, [pos[0], pos[1], z], [tipA[0], tipA[1], z], 0.32, 2.6); setArrow3(V3.rB, [tipA[0], tipA[1], z], [tipB[0], tipB[1], z], 0.32, 2.6);
+    if (!bl) setArrow3(V3.rR, [pos[0], pos[1], z + 0.05], [tipB[0], tipB[1], z + 0.05], 0.38, 2.8); else V3.rR.visible = false;
+    V3.prof.forEach((a, i) => { const y = 6 + 8 * i, u = currentAt(R.u, y, WIDTH, R.profile); if (u < 0.02) { a.visible = false; return; } setArrow3(a, [-46, y, 0.5], [-46 + kk * u, y, 0.5], 0.22, 1.8); });
+    V3.profLine.visible = R.profile === 'banks'; if (V3.profLine.visible) setLine(V3.profLine, Array.from({ length: 61 }, (_, i) => [-46 + kk * currentAt(R.u, i, WIDTH, 'banks'), i, 0.5]));
+    const trackOn = !bl && isFinite(res.t); if (!trackOn) { V3.track.visible = false; V3.trackKey = ''; }
+    if (trackOn) { const key = `${R.u}|${R.vb}|${R.th}|${R.profile}`; if (V3.trackKey !== key) { V3.trackKey = key; setRibbon(V3.track, Array.from({ length: 121 }, (_, i) => riverPos(R.u, R.vb, R.th, WIDTH, R.profile, res.t * i / 120)), 0.5, true); } }
+    const tr = R.trail, n = tr.length, st = Math.max(1, Math.ceil(n / 1900)), pts = []; for (let i = 0; i < n; i += st) pts.push(tr[i]); if (n) pts.push(tr[n - 1]);
+    setRibbon(V3.trail, pts, 0.7);
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), Sv = new THREE.Vector3(), Pv = new THREE.Vector3(), span = 180, xL = -60;
+    RIPPLES.forEach(([x0, y, len], i) => { const u = currentAt(R.u, y, WIDTH, R.profile), x = ((x0 + u * R.clock - xL) % span + span) % span + xL; M.compose(Pv.set(x + len / 2, y, 0.03), Q.identity(), Sv.set(len, 1, 1)); V3.rip.setMatrixAt(i, M); });
+    V3.rip.instanceMatrix.needsUpdate = true;
+    LEAVES.forEach(([x0, y, rot], i) => { const u = currentAt(R.u, y, WIDTH, R.profile), x = ((x0 + u * R.clock - xL) % span + span) % span + xL; Q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), rot + R.clock * 0.05); M.compose(Pv.set(x, y, 0.04), Q, Sv.set(1.6, 0.8, 1)); V3.leaf.setMatrixAt(i, M); });
+    V3.leaf.instanceMatrix.needsUpdate = true;
+    const keys = [[T.A, 'boat relative to the water'], [T.B, 'water relative to the shore']].concat(bl ? [] : [[T.R, 'boat relative to the shore (the sum)']]);
+    const kh = keys.map(([c, t]) => `<span><i style="--c:${c}"></i>${t}</span>`).join('') + '<small>Arrows show 8 s of motion</small>' + (R.landed && !bl ? `<span class="landed">landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s</span>` : '');
+    if (V3.keyHtml !== kh) { V3.keyHtml = kh; $('v3Key').innerHTML = kh; }
+  }
+  const coarse3 = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
+  function cap3() {
+    let t;
+    if (S.preset === 'prod') t = (S.blind ? 'Graph paper printed on a clear plate, 1 square = 1 unit. ' : `Graph paper printed on a clear plate, 1 square = 1 unit. A × B stands perpendicular to the plate, its length |A × B| drawn at 1/${crossK(crossZ(S.A, S.B))} the scale of A and B. `) + 'Drag a tip to change a vector; drag elsewhere to turn, scroll to zoom, double click to reset the view.';
+    else t = 'To scale: the river is 60 m wide and the boat 4.6 m long. Drag to turn, scroll to zoom, double click to reset the view.';
+    return coarse3 ? VD3.turnText(t) : t;
+  }
+  function show3() {
+    const kind = S.preset === 'prod' || S.preset === 'river' ? S.preset : '', on = !!(kind && V3.view && V3.view.is3d() && V3.S);
+    V3.on = on;
+    const seg = $('dimSeg'), bar = kind === 'river' ? $('riverBar') : $('prodBar'); if (seg.parentNode !== bar) bar.appendChild(seg);
+    $('prodBar').hidden = S.preset !== 'prod';
+    if (S.preset !== 'table') can.style.visibility = on ? 'hidden' : '';
+    if (V3.S) V3.S.el.hidden = !on;
+    $('v3Key').hidden = !(on && kind === 'river'); $('v3Cap').hidden = !on;
+    if (on) {
+      if (V3.kind !== kind) { if (V3.kind) V3.keep[V3.kind] = Object.assign({}, V3.o); Object.assign(V3.o, V3.keep[kind] || V3.home[kind]); V3.kind = kind; }
+      V3.prod.visible = kind === 'prod'; V3.river.visible = kind === 'river';
+      const sh = V3.S.sun.shadow.camera, b = kind === 'prod' ? 20 : 120, s = kind === 'prod' ? 16 : 60, c = kind === 'prod' ? [0, 0, 0] : [30, 30, 0];
+      Object.assign(sh, { left: -b, right: b, top: b, bottom: -b, near: 0.1, far: 12 * b + 4 }); sh.updateProjectionMatrix();
+      V3.S.sun.target.position.set(c[0], c[1], c[2]); V3.S.sun.position.set(c[0] + 0.5 * s, c[1] - 1.1 * s, c[2] + 2.6 * s);
+      V3.S.el.setAttribute('aria-label', kind === 'prod' ? 'Vectors A and B on graph paper in 3D, with A × B perpendicular to the paper. Drag a tip to change a vector, drag elsewhere to turn the view. Keys: 1 or 2 picks A or B, the arrow keys move its tip, comma and period turn the view.' : 'The river crossing in 3D: the boat, the banks and the velocity arrows. Space starts or stops the boat; drag to turn the view, comma and period turn it.');
+    }
+    V3.dirty = true;
+  }
+  function v3Frame() {
+    if (!V3.on) return;
+    const S3 = V3.S, w0 = S3.w, h0 = S3.h; S3.size(W, H); if (S3.w !== w0 || S3.h !== h0) V3.dirty = true;
+    if (!V3.dirty) return; V3.dirty = false;
+    tokens3();
+    if (S.preset === 'prod') upProd(); else upRiver();
+    const cp = cap3(); if ($('v3Cap').textContent !== cp) $('v3Cap').textContent = cp;
+    const dd = S.preset === 'prod' ? S3.fit(31, 1.0) : S3.fit(185, 1.1);
+    if (S.preset === 'prod') S3.place(V3.o, [0, 0.5, 1.5], dd); else S3.place(V3.o, [27, 24, 0], dd);
+    const d = dd / V3.o.zoom; S3.fog(d * 1.5, d * 3.4);
+    S3.render();
+  }
+  let themeKey3 = '';
+  function tokens3() { const k = T.A + T.paper; if (k === themeKey3) return; themeKey3 = k; V3.drop.material.color.set(T.A); V3.track.material.color.set(T.R); V3.trackKey = ''; V3.trail.material.color.set(T.R); V3.profLine.material.color.set(T.B); }
+  V3.view = VD3K.view({ seg: '#dimSeg', init: init3, start: 'flat',
+    status: (m) => { const n = $('dimNote'); n.textContent = m; n.hidden = false; setTimeout(() => { n.hidden = true; }, 6000); },
+    change: () => show3() });
+  (() => { let q = null; try { q = new URLSearchParams(location.search).get('view'); } catch (_) {}
+    if (q === 'flat' || q === '3d') V3.pref.prod = V3.pref.river = q; else if (!VD3.lowPower()) V3.pref.river = '3d'; })();
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b && (S.preset === 'prod' || S.preset === 'river')) V3.pref[S.preset] = b.dataset.dim; });
+  window.__v3 = { V3, S, show3 };
+
   // ---------- presets ----------
   function applyPreset(p) {
     S.preset = p; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === p));
     const c = PRESETS[p]; $('presetHint').textContent = c.hint;
     const rv = p === 'river', tb = p === 'table'; $('secVec').hidden = rv || tb; $('secRiver').hidden = !rv; $('secTable').hidden = !tb; $('riverBar').hidden = !rv;
     $('addStyleRow').hidden = p !== 'add'; ftShowView();
+    if ((p === 'prod' || p === 'river') && (V3.pref[p] === '3d') !== V3.view.is3d()) V3.view.set(V3.pref[p]);
+    show3();
     if (tb) { /* the table keeps its strings between visits */ ftSet(true); if (!G3.tried && FT.view3dFirst) setFtView('3d'); }
     else if (!rv) { S.A = c.A.slice(); S.B = c.B ? c.B.slice() : null; S.sel = 'A'; }
     else resetBoat();
@@ -984,6 +1378,7 @@
       if (d > 0) { if (d < 1e-5 || reduce) FT.ringNow = b.slice(); else { const k = Math.min(1, dt * 7); FT.ringNow = add(a, scale(k, sub(b, a))); } draw(); }
       glFrame();
     }
+    v3Frame();
     requestAnimationFrame(frame);
   }
 
@@ -1034,7 +1429,8 @@
     else return;
     e.preventDefault(); ftSet();
   }
-  can.addEventListener('keydown', (e) => {
+  can.addEventListener('keydown', vecKeys);
+  function vecKeys(e) {
     const k = e.key;
     if (S.preset === 'table') { ftKey(e); return; }
     if (S.preset === 'river') { if (k === ' ') { $('go').click(); e.preventDefault(); } return; }
@@ -1045,7 +1441,7 @@
     e.preventDefault();
     const pt = tips().find((t) => t[0] === S.sel)[1], was = S.snap; if (e.shiftKey) S.snap = false;
     setTip(S.sel, pt[0] + map[0], pt[1] + map[1]); S.snap = was;
-  });
+  }
 
   // ---------- Blind, motion, theme, projector, boot ----------
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
