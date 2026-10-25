@@ -3912,3 +3912,36 @@ all, QR, handout button, How this works video (21.1 s, Polaris from Ruston: 33.1
 **For GPT:** please check (1) the worksheet key numbers against the demo (Polaris 0.61° to 0.63° above the latitude; the slope
 0.994 and why it is under 1); (2) the claims in the notes' misconceptions (Polaris about the 48th brightest star; star sign
 dates); (3) wording for hyphens and American spelling in the worksheet, notes and the Lab text of the page.
+## 2026-10-25 · Claude · New demo: Orbital Resonances (Astro 2203 gap demo 7)
+
+`demos/resonances.html`, from the Astro 2203 plan (Topics 9 and 11). Three scenes. Asteroid belt: the Sun, Jupiter and asteroids,
+with a yellow dot wherever Jupiter passed the body, beside the real counts of 881,333 numbered asteroids (JPL Small Body Database
+Query API, 0.02 AU bins, queried 2026-10-25) with the resonances marked; setups 3:1, 5:2, 2:1, Between the gaps, Hildas at 3:2,
+Whole belt (271 asteroids). Kuiper belt: Neptune and 6,620 known objects from 30 to 56 AU; setups Pluto, Pluto's orbit with bad
+timing, Plutinos, Classical belt, Whole Kuiper belt. Finding Neptune: Uranus's leftover drift from the best fitting orbit,
+1690 to 1846, with no planet X, Le Verrier's planet, the real Neptune, or one set by hand. 3D (vd3kit) and flat views, Turns with
+the planet frame, Copy link, readings panel.
+
+Physics, in the CORE and `curriculum/validation/test_resonances.cjs` (7 groups pass):
+- Planar restricted three body problem, planet on its J2000 Kepler ellipse (Standish table 1), IAU 2009 mass ratios, GM = k²
+  (Gauss). Wisdom–Holman steps (0.1 yr belt, 0.5 yr Kuiper belt); the drift is exact (100 orbits to 1e-9 AU in the test).
+- Removal: perihelion inside Mars's aphelion 1.666 AU, or within one Hill radius (Jupiter 0.355 AU, Neptune 0.776 AU).
+- Results: 3:1 setup crosses Mars's orbit at 4,157 yr (largest e 0.333), 5:2 at 11,921 yr; 2:1, Between the gaps, Hildas and the
+  3:1 moved to 2.55 AU stay in for 20,000 yr. Pluto from its J2000 elements never comes within 17.57 AU of Neptune; the same orbit
+  60° further round is thrown out at 3,621 yr. Whole belt: the 3:1 and 5:2 asteroids out at 4,834 and 12,997 yr.
+- Finding Neptune: Jupiter, Saturn, Uranus and Neptune integrated together (RK4, 0.05 yr) from J2000 back to 1690 stand in for the
+  observations (heliocentric longitudes, no measuring error); Uranus's 1781 state fitted by least squares. Alone 7.34″ rms (old
+  sightings off by up to 231″); Le Verrier's elements (Laskar 2017; 326°32′ on 1847.0 reproduced in the test) 3.69″; the real
+  Neptune 0.1″; planet X at 30 AU, 17 Earths: smallest at 330° (0.44″), the model's Neptune at 328.5°.
+- Stated limits (About and notes): one planet, flat orbits, no Yarkovsky drift, thousands of years against the millions the real
+  gaps took; the real 2:1 gap needs Saturn and longer times.
+
+Also: worksheet `intro-resonances` (Astro 2203 intro level, four parts, four tables; Kuiper and Neptune readings routed to tables
+3 and 4), key from a real run in TeacherKeys `worksheet-keys/astro-2203/`, notes `notes/src/resonances.md`, glossary section,
+map (astro-2203 units minor-planets and uranus-neptune-kuiper; astro gravitation), catalog, courses.py, thumbnails, How this works
+video `tools/howto/resonances.cjs` (19.1 s, the 3:1 run to 4,157 yr), What's new entry. vdcheck `--only after`: 0 problems;
+symbols `--check`, `--missing`, `--meanings` 0. The Io–Europa–Ganymede Laplace resonance is left to gap demo 8 (Giant Planets),
+as the plan places it. Lagrange Points and Kepler's Laws untouched.
+
+**For GPT:** please check the resonance distances and the JPL counts (sums in the test), the Le Verrier numbers against Laskar
+2017, the worksheet's wording for a non major online class, and the video's captions against its reading.

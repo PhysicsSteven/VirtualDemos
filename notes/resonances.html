@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Orbital Resonances: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Orbital Resonances</h1><ul class="meta"><li><a href="../demos/resonances.html">Open the demo</a></li><li>Astro 2203, Topics 9 and 11 (no textbook section); Astronomy module, gravitation and orbits</li><li>10 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Kepler's third law ties each distance from the Sun to one period, so a period that is a simple fraction of Jupiter's (1/3, 2/5, 1/2) belongs to one distance: 2.50, 2.82, 3.28 AU.</li>
+<li>At a resonance the planet passes the body at the same places on its orbit time after time, so its small tugs add up like pushes on a swing given at the same point of every swing. Elsewhere the passes move round the orbit and the tugs cancel.</li>
+<li>The added up tugs stretch an asteroid's orbit until it crosses Mars's, and close passes by the inner planets then remove it: the Kirkwood gaps sit exactly at Jupiter's resonances in the real counts of more than 880,000 numbered asteroids.</li>
+<li>A resonance can also protect. The Hildas at Jupiter's 3:2 and Pluto and the plutinos at Neptune's 3:2 are timed so the planet always passes when they are far away: Pluto crosses Neptune's orbit but never comes within 17 AU of Neptune.</li>
+<li>An unseen planet can be found from its pull: Uranus's drift from any orbit that fits it pointed Le Verrier to Neptune, and the direction comes out much better than the distance or the mass.</li>
+</ul>
+<h2>Before class</h2>
+<p>The demo opens on the asteroid belt with the 3:1 resonance. Three scenes: Asteroid belt (the Sun, Jupiter and asteroids), Kuiper belt (the Sun, Neptune and icy bodies) and Finding Neptune (Uranus's sightings from 1690 to 1846). The large view, 3D or flat, shows the orbits with a yellow dot wherever the planet passed the body; Turns with the planet holds the planet still so the pattern of the passes stands out. A card sets the starting distance, eccentricity and angle ahead of the planet, and shows the period ratio. Below, the real counts from the JPL Small Body Database with the resonances marked (click a bar to start a body there; Blind hides the marks), with a dot per simulated body at its largest eccentricity, and a chart of the eccentricity or the distance from Neptune over time. Asteroids are stopped when their orbits reach Mars's. In Finding Neptune the chart shows Uranus's leftover drift from the best fitting orbit, and a card adds a planet X. The student worksheet is the Astro 2203 intro worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>3:1 resonance.</strong> Ask Q1, then run it with Turns with the planet: the passes pile up at two places and the orbit stretches until it crosses Mars's orbit, at 4,157 years. Point out the gap at 2.50 AU in the real counts.</li>
+<li><strong>Between the gaps</strong>, then the 3:1 setup moved to 2.55 AU. Ask Q2. The passes spread round the orbit and nothing grows.</li>
+<li><strong>Whole belt.</strong> Ask Q3. 271 asteroids from 2.10 to 3.45 AU, run for 20,000 years: the ones at the 3:1 and 5:2 cross Mars's orbit (at 4,834 and 12,997 years) and turn to crosses; the rest stay near e = 0.15, except beyond 3.2 AU, near the 2:1 and closer to Jupiter, where e swings higher.</li>
+<li><strong>Hildas at 3:2</strong> and the Kuiper belt's <strong>Pluto</strong>. Ask Q4. Then <strong>Pluto's orbit, bad timing</strong>: the same orbit started 60° further round is thrown out by Neptune at 3,621 years.</li>
+<li><strong>Finding Neptune.</strong> Uranus alone (7.3″ rms leftover), Le Verrier's planet (3.7″), then Hunt for it yourself. Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Jupiter takes 11.86 years to go round the Sun. Where would an asteroid be that goes round exactly three times for each turn of Jupiter?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> An asteroid at 2.55 AU is only 0.05 AU from the 3:1 resonance. Why does Jupiter not clear it too?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The real gaps took millions of years to clear, and the demo runs only thousands. What does the demo show, and why can we trust it to explain the gaps?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Pluto's orbit crosses Neptune's. Why can they never collide?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Le Verrier's planet was 6 AU too far out and twice too heavy, yet Galle found Neptune within a degree of the predicted place. Why does the direction come out well when the distance does not?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The gaps are empty rings in space."</strong> The gaps are in the distribution of average distances a. Asteroids on stretched orbits cross the gap distances all the time, so a picture of the belt at one moment shows no clear gaps.</li>
+<li><strong>"Jupiter's pull is strongest at the gaps."</strong> The pull is no stronger there; it is better timed. A body at 2.55 AU feels nearly the same tugs, but they cancel.</li>
+<li><strong>"Resonances always clear things out."</strong> The Hildas (3:2 with Jupiter), the Trojans (1:1) and Pluto (3:2 with Neptune) are crowded resonances where the timing keeps the bodies away from the planet.</li>
+<li><strong>"Neptune was found by searching the sky."</strong> It was found by mathematics first: Le Verrier predicted where to look, and Galle found it the first night.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Kepler: P = a^(3/2) in years and AU, so a resonance with period ratio r sits at a = a_planet × r^(−2/3): Jupiter's 4:1 at 2.06 AU, 3:1 at 2.50, 5:2 at 2.82, 7:3 at 2.96, 2:1 at 3.28, 3:2 at 3.97; Neptune's 4:3 at 36.4, 3:2 at 39.4, 5:3 at 42.3, 7:4 at 43.7, 2:1 at 47.7, 5:2 at 55.4 AU.</li>
+<li>Model: the planar restricted three body problem. The planet moves on its J2000 Kepler ellipse (Standish, JPL, table 1); masses from the IAU 2009 constants (Jupiter 1/1047.348644, Neptune 1/19412.26 of the Sun); GM☉ = k² with Gauss's k, 39.4769 AU³/yr². The bodies are stepped with the Wisdom–Holman method (Wisdom and Holman 1991, AJ 102, 1528), heliocentric, with exact Kepler drifts and the planet's direct and indirect pull as kicks; 0.1 yr steps in the asteroid belt, 0.5 yr in the Kuiper belt.</li>
+<li>A body is removed when its perihelion falls inside Mars's aphelion, 1.666 AU (close passes by Mars and Earth then remove real asteroids within millions of years; Gladman et al. 1997, Science 277, 197), or when it comes within one Hill radius of the planet, a(m/3M)^(1/3): 0.355 AU for Jupiter, 0.776 AU for Neptune.</li>
+<li>Times: the 3:1 setup (a = 2.502 AU, e = 0.15, 60° ahead of Jupiter) crosses Mars's orbit at 4,157 years, the 5:2 at 11,921 years. Wisdom (1983, Icarus 56, 51) showed that 3:1 orbits jump to e above 0.3 after quiet stretches; the demo's preset starts are chosen to show the growth within a class period. The 2:1 asteroid swings to e = 0.29 but is not removed in 20,000 years: clearing the real 2:1 gap needs Saturn and much longer times.</li>
+<li>Real counts: JPL Small Body Database Query API, 2026-10-25: 881,333 numbered asteroids with a from 1.80 to 4.10 AU in 0.02 AU bins, and all 6,620 known objects with a from 30 to 56 AU in 0.5 AU bins. They count objects found so far; faint distant ones are missing.</li>
+<li>Finding Neptune: Jupiter, Saturn, Uranus and Neptune integrated together (Runge–Kutta, 0.05 yr) back from J2000 to 1690; this model's Uranus, seen once a year from 1781 to 1845 and at the pre discovery sightings of 1690, 1748, 1750, 1753, 1756, 1764 and 1769, stands in for the observations. Uranus's position and velocity in 1781 are fitted by least squares with Jupiter and Saturn pulling, with no Neptune (7.3″ rms, up to 18″ in 1781 to 1845 and 231″ for the old sightings) or with a planet X on a fixed ellipse. Le Verrier's elements (a = 36.154 AU, e = 0.10761, mass 1/9300) from Laskar 2017 (Comptes Rendus Physique 18, 504) leave 3.7″ and put planet X 0.36° from the model's Neptune on 1846 September 23; the real Neptune's elements leave 0.1″. Longitudes are heliocentric, J2000 equinox.</li>
+<li>Checks: curriculum/validation/test_resonances.cjs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Kepler's Laws</strong> for P² = a³ and with <strong>Lagrange Points</strong> for the Trojans at Jupiter's 1:1 resonance.</li>
+<li>Blind hides the resonance marks: let students find the gaps in the real counts first, then predict their places from Kepler's third law.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -2052,6 +2052,14 @@ d | Distance of the planet from its star | AU
 S | Starlight falling on each square meter at the planet | W/m²
 e | Share of the ground's heat radiation that escapes to space (1 means no greenhouse)
 
+== intro-resonances ==
+a | Average distance of the body from the Sun (half the long axis of its orbit) | AU
+e | Eccentricity of the orbit: 0 is a circle, the bigger e the more stretched
+P | Period: the time the body takes to go round the Sun once | yr
+P_Jupiter | Period of Jupiter, the time it takes to go round the Sun once, 11.86 years | yr
+P_Neptune | Period of Neptune, the time it takes to go round the Sun once, 164.8 years | yr
+r | Period ratio: how many times the asteroid goes round for each turn of Jupiter
+
 == ripple-tank ==
 f | Frequency of the wave maker | Hz
 lambda | Wavelength | mm

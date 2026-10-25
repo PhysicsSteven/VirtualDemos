@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-resonances', date: '2026-10-25', title: 'Orbital Resonances',
+    text: 'A new Astro 2203 demo with its own worksheet: watch Jupiter tug an asteroid at the same place orbit after orbit until its path crosses Mars\'s, beside the real counts of 881,333 asteroids that show the Kirkwood gaps. See why Pluto never meets Neptune though their orbits cross, and find Neptune from its pull on Uranus as Le Verrier did in 1846.', link: { href: 'demos/resonances.html', text: 'Open Orbital Resonances' } },
   { id: '2026-10-25-celestial-sphere', date: '2026-10-25', title: 'The Sky and the Celestial Sphere',
     text: 'A new astronomy demo with an Astro 2203 worksheet: the real night sky for any place and date from 3000 BC to AD 15000, seen from outside as a sphere around you and from the ground. See why the stars circle Polaris, why its height is your latitude, which stars never set, how the Sun and Moon move among the stars, the eclipses of 2024 and 2025, and how the pole star changes over thousands of years.', link: { href: 'demos/celestial-sphere.html', text: 'Open The Sky and the Celestial Sphere' } },
   { id: '2026-10-25-retrograde', date: '2026-10-25', title: 'Retrograde Motion and World Models',

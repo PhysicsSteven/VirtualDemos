@@ -43,6 +43,7 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   keep_controls  True to leave buttons inside the stage visible
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
+    "resonances": {"crop": ".scene", "wait": 2000, "js": "document.getElementById('setupCard').style.display = 'none'; window.__res.applyPreset('r31'); window.__res.run(3000);"},
     "planet-temperatures": {"crop": "#sysPane", "wait": 1500},
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
     "gas-heat-capacity": {"wait": 6000, "js": "document.getElementById('go').click();"},

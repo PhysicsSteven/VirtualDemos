@@ -120,6 +120,18 @@
      ]
     },
     {
+     "demo": "resonances",
+     "title": "Orbital Resonances",
+     "desc": "Watch Jupiter tug an asteroid at the same place orbit after orbit until its path crosses Mars's, beside the real counts that show the Kirkwood gaps. See how the same timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did.",
+     "tags": [
+      "Kirkwood gaps",
+      "mean motion resonance",
+      "Kepler's third law",
+      "Pluto and the plutinos",
+      "discovery of Neptune"
+     ]
+    },
+    {
      "demo": "distance-ladder",
      "title": "Cosmic Distance Ladder",
      "desc": "Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.",

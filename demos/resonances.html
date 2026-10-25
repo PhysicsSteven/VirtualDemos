@@ -1,0 +1,861 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Orbital Resonances</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the picture, the strip, the Set up card and the two graphs */
+:root { --sun: #e0a020; --jup: #b9783f; --sat: #b89a52; --ura: #3f9fb0; --nep: #2f5fd0; --px: #c2410c; --body: #2b60b5; --mark: #d9480f; --mars: #b8382a; --bar: #9aa8b8; --barhi: #5b6b7d; --gone: #b8382a; --ok: #2f8a4a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #4d5a69; --barhi: #8a9aad; --gone: #ff7a5c; --ok: #6fd18d; } }
+:root[data-theme="dark"] { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #4d5a69; --barhi: #8a9aad; --gone: #ff7a5c; --ok: #6fd18d; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.scene { position: relative; flex: 1 1 auto; min-height: 460px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; }
+.scene canvas.r3 { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 58px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 72px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.setup-card details > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); }
+.setup-card details[open] > summary { margin-bottom: 6px; }
+.plots { position: relative; flex: none; display: grid; grid-template-columns: 1.25fr 1fr; height: 230px; border-top: 1px solid var(--line); }
+.plots.one { grid-template-columns: 1fr; }
+.plots > div { position: relative; min-width: 0; }
+.plots > div + div { border-left: 1px solid var(--line); }
+.plots.one > div + div { display: none; }
+.plots canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#hist { cursor: crosshair; }
+@media (min-width: 821px) { .stage { min-height: 780px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; }
+  .plots { grid-template-columns: 1fr; height: auto; } .plots > div { height: 200px; } .plots > div + div { border-left: 0; border-top: 1px solid var(--line); } }
+@media (max-width: 420px) { .scene { height: 320px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Orbital Resonances</h1>
+      <p>When an asteroid goes round the Sun exactly three times for each turn of Jupiter, Jupiter tugs it at the same place again and again and its orbit stretches until it crosses Mars's. Watch the kicks beside the real counts of asteroids, see how the same kind of timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did in 1846.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">distances in AU · time in years</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/resonances.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/resonances.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h2v1h-2zM15 2h4v1h-4zM21 2h5v1h-5zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM13 3h1v1h-1zM17 3h2v1h-2zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h1v1h-1zM17 4h2v1h-2zM21 4h1v1h-1zM23 4h3v1h-3zM27 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM12 5h1v1h-1zM16 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM15 6h3v1h-3zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h2v1h-2zM16 7h1v1h-1zM24 7h2v1h-2zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM13 9h5v1h-5zM19 9h2v1h-2zM24 9h1v1h-1zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h1v1h-1zM16 10h1v1h-1zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h1v1h-1zM11 11h1v1h-1zM13 11h3v1h-3zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM7 12h3v1h-3zM11 12h2v1h-2zM14 12h2v1h-2zM17 12h2v1h-2zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM7 13h1v1h-1zM10 13h1v1h-1zM15 13h2v1h-2zM18 13h5v1h-5zM24 13h2v1h-2zM30 13h9v1h-9zM4 14h5v1h-5zM14 14h1v1h-1zM16 14h3v1h-3zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM11 15h3v1h-3zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h3v1h-3zM10 16h2v1h-2zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h3v1h-3zM27 16h3v1h-3zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h2v1h-2zM6 17h1v1h-1zM15 17h1v1h-1zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM4 18h2v1h-2zM7 18h4v1h-4zM12 18h2v1h-2zM16 18h2v1h-2zM19 18h3v1h-3zM23 18h5v1h-5zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM3 19h2v1h-2zM7 19h1v1h-1zM13 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h2v1h-2zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h2v1h-2zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM9 21h3v1h-3zM15 21h1v1h-1zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h2v1h-2zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h1v1h-1zM5 22h1v1h-1zM8 22h2v1h-2zM11 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM2 23h1v1h-1zM4 23h1v1h-1zM9 23h1v1h-1zM11 23h4v1h-4zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h9v1h-9zM16 24h2v1h-2zM23 24h1v1h-1zM25 24h6v1h-6zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM6 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM14 25h2v1h-2zM20 25h3v1h-3zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h3v1h-3zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h2v1h-2zM12 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM11 28h5v1h-5zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM11 29h1v1h-1zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM4 30h1v1h-1zM8 30h2v1h-2zM12 30h2v1h-2zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h9v1h-9zM10 31h1v1h-1zM13 31h3v1h-3zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM17 32h5v1h-5zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h2v1h-2zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h3v1h-3zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM15 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM16 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="btn" id="reset" title="Put the bodies back where this setup starts them">Start over</button>
+        <label class="lbl" for="selSpeed">Speed</label>
+        <select id="selSpeed"><option value="1">1</option><option value="10" selected>10</option><option value="100">100</option></select>
+        <div class="seg" role="group" aria-label="Frame of the picture" id="frameSeg"><button type="button" data-frame="fixed" aria-pressed="true" title="Seen from the stars: the planet goes round">Fixed stars</button><button type="button" data-frame="rot" aria-pressed="false" title="Turning with the planet, so the planet stays put and the pattern of the kicks shows">Turns with the planet</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The solar system seen from above the plane of the planets: the Sun, the planet that does the pulling, and the small bodies it pulls on, with the orbit of the body being followed and orange marks where the planet has passed it."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">Start an asteroid</span>
+        <div id="oneBox">
+          <div><div class="slider-head"><label for="sA">Starting distance a</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="2" max="4.1" step="0.001"></div>
+          <div><div class="slider-head"><label for="sE">Starting eccentricity e</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="0" max="0.35" step="0.01"></div>
+          <div><div class="slider-head"><label for="sPh" id="lPh">Start angle ahead of Jupiter</label><output id="oPh" class="mono" for="sPh"></output></div><input type="range" id="sPh" min="0" max="359" step="1"></div>
+          <p class="note" id="ratioNote"></p>
+        </div>
+        <p class="note" id="manyNote" hidden></p>
+        <div id="nepBox" hidden>
+          <label class="check"><input type="checkbox" id="chkX"><span>Add a planet X</span></label>
+          <div id="xBox">
+            <div><div class="slider-head"><label for="sXa">Its distance a</label><output id="oXa" class="mono" for="sXa"></output></div><input type="range" id="sXa" min="20" max="45" step="0.05"></div>
+            <div><div class="slider-head"><label for="sXm">Its mass</label><output id="oXm" class="mono" for="sXm"></output></div><input type="range" id="sXm" min="1" max="60" step="0.5"></div>
+            <div><div class="slider-head"><label for="sXl">Where it is on 1846 Sep 23</label><output id="oXl" class="mono" for="sXl"></output></div><input type="range" id="sXl" min="0" max="360" step="0.1"></div>
+            <details id="shapeBox"><summary>The shape of its orbit</summary>
+              <div><div class="slider-head"><label for="sXe">Eccentricity e</label><output id="oXe" class="mono" for="sXe"></output></div><input type="range" id="sXe" min="0" max="0.2" step="0.001"></div>
+              <div><div class="slider-head"><label for="sXw">Direction of its perihelion</label><output id="oXw" class="mono" for="sXw"></output></div><input type="range" id="sXw" min="0" max="359.9" step="0.1"></div>
+            </details>
+          </div>
+          <label class="check"><input type="checkbox" id="chkOld"><span>Fit the old sightings (1690 to 1769) too</span></label>
+          <label class="check"><input type="checkbox" id="chkNep"><span>Show the real Neptune</span></label>
+        </div>
+      </div>
+      <div class="plots" id="plots">
+        <div><canvas id="hist" tabindex="0" role="img" aria-label="Bar chart: how many real asteroids there are at each distance from the Sun, with the places of Jupiter's resonances marked, and a dot for each simulated asteroid at its starting distance and the largest eccentricity it has reached. Click a bar to start an asteroid at that distance."></canvas></div>
+        <div><canvas id="plot" role="img" aria-label="Graph against time for the body being followed: its eccentricity, or its distance from the planet."></canvas></div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-resonances.html" target="intro-resonances-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Scene</h2>
+        <div class="seg" role="group" aria-label="Scene" id="sceneSeg"><button type="button" data-scene="belt" aria-pressed="true">Asteroid belt</button><button type="button" data-scene="kuiper" aria-pressed="false">Kuiper belt</button><button type="button" data-scene="neptune" aria-pressed="false">Finding Neptune</button></div>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets"></div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-resonances" data-title="Orbital Resonances" data-demo="resonances">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the resonance marks and period ratios</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">Kepler's third law: P² = a³ (P in years, a in AU)</p>
+          <p class="formula">a body that goes round p times while the planet goes round q times: a = a_planet × (q/p)^(2/3)</p>
+          <p class="formula">Jupiter's 3:1 → 2.50 AU, 5:2 → 2.82 AU, 7:3 → 2.96 AU, 2:1 → 3.28 AU; Neptune's 3:2 → 39.4 AU, 2:1 → 47.7 AU</p>
+          <p class="hint" id="about"></p></details>
+        <details class="more"><summary>Where the counts come from</summary><p class="hint" id="dataNote"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Orbital resonances. Runs in Node (curriculum/validation/test_resonances.cjs).
+     Units: AU, years (Julian, 365.25 days), the Sun's GM from the Gaussian gravitational constant k = 0.01720209895 AU^(3/2)/day,
+     GM = (365.25 k)² = 39.4769 AU³/yr². Everything is in one plane, the ecliptic (the real orbits tilt by up to 17°, Pluto's).
+     Planets: J2000 orbital elements from E. M. Standish, "Keplerian Elements for Approximate Positions of the Major Planets"
+     (JPL Solar System Dynamics, table 1, 1800 to 2050): a, e, mean longitude L and longitude of perihelion ϖ; masses as Sun/planet
+     ratios of the IAU 2009 system of astronomical constants (Luzum et al. 2011, Celest. Mech. Dyn. Astr. 110, 293).
+     Asteroid belt and Kuiper belt: the planar restricted three body problem. The planet (Jupiter or Neptune) moves on its fixed
+     Kepler ellipse round the Sun; the small bodies feel the Sun and that one planet and pull on nothing. This is the model in which
+     Wisdom (1983, Icarus 56, 51) found the chaos that empties the 3:1 gap. Leaving out the other planets (Saturn above all) is the
+     main approximation: it is why the 2:1 gap is only partly emptied here.
+     Integrator: Wisdom–Holman (1991, AJ 102, 1528) for test particles in heliocentric coordinates: half a Kepler orbit round the
+     Sun (solved exactly with f and g functions), a kick from the planet (its direct pull plus the indirect term, the Sun being
+     pulled by the planet), half a Kepler orbit. Symplectic, so the energy error stays bounded however long it runs.
+     Removal: a body whose orbit reaches inside Mars's farthest distance from the Sun (q < 1.666 AU, Mars's a(1 + e) from the same
+     table) crosses Mars's orbit; close passes by Mars, Earth and Venus (not in this model) then throw it out within a few million
+     years (Gladman et al. 1997, Science 277, 197), so the demo stops it there and says so. A body that comes within one Hill radius
+     of the planet, a(m/3M)^(1/3) (0.355 AU for Jupiter, 0.776 AU for Neptune: inside it the planet's pull beats the Sun's), is scattered
+     by it, and the demo stops it there too. */
+  const DAYS = 365.25, KG = 0.01720209895, GM = Math.pow(KG * DAYS, 2), D2R = Math.PI / 180;
+  const ME_SUN = 1 / 332946.0487;   /* Earth's mass over the Sun's (IAU 2009) */
+  const PLANETS = {
+    mars: { a: 1.52371034, e: 0.09339410, L: -4.55343205, w: -23.94362959, mr: 3098703.59 },
+    jupiter: { a: 5.20288700, e: 0.04838624, L: 34.39644051, w: 14.72847983, mr: 1047.348644 },
+    saturn: { a: 9.53667594, e: 0.05386179, L: 49.95424423, w: 92.59887831, mr: 3497.9018 },
+    uranus: { a: 19.18916464, e: 0.04725744, L: 313.23810451, w: 170.95427630, mr: 22902.98 },
+    neptune: { a: 30.06992276, e: 0.00859048, L: -55.12002969, w: 44.96476227, mr: 19412.26 },
+    pluto: { a: 39.48211675, e: 0.24882730, L: 238.92903833, w: 224.06891629, mr: 136566000 },
+  };
+  const MARS_Q = PLANETS.mars.a * (1 + PLANETS.mars.e);   /* 1.666 AU */
+  const wrapPi = (x) => { x %= 2 * Math.PI; return x > Math.PI ? x - 2 * Math.PI : x <= -Math.PI ? x + 2 * Math.PI : x; };
+  function kepE(M, e) { M = wrapPi(M); let E = e < 0.8 ? M : Math.PI * Math.sign(M || 1); for (let i = 0; i < 50; i++) { const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-15) break; } return E; }
+  /* position and velocity from a, e, longitude of perihelion w and mean anomaly M (radians), for gravitational parameter mu */
+  function kepState(a, e, w, M, mu) {
+    const E = kepE(M, e), c = Math.cos(E), s = Math.sin(E), b = Math.sqrt(1 - e * e), r = a * (1 - e * c), v = Math.sqrt(mu * a) / r;
+    const xp = a * (c - e), yp = a * b * s, vxp = -v * s, vyp = v * b * c, cw = Math.cos(w), sw = Math.sin(w);
+    return [xp * cw - yp * sw, xp * sw + yp * cw, vxp * cw - vyp * sw, vxp * sw + vyp * cw];
+  }
+  /* a planet's (or a test body's) state t years after J2000 from its elements in degrees */
+  function stateAt(el, t, mu) { const n = Math.sqrt(mu / Math.pow(el.a, 3)); return kepState(el.a, el.e, el.w * D2R, (el.L - el.w) * D2R + n * t, mu); }
+  /* osculating elements of a heliocentric state: a, e, longitude of perihelion w, true anomaly f, longitude lam, perihelion q, aphelion Q */
+  function elements(x, y, vx, vy, mu) {
+    const r = Math.hypot(x, y), v2 = vx * vx + vy * vy, a = 1 / (2 / r - v2 / mu), h = x * vy - y * vx;
+    const ex = vy * h / mu - x / r, ey = -vx * h / mu - y / r, e = Math.hypot(ex, ey), w = Math.atan2(ey, ex), lam = Math.atan2(y, x);
+    return { a, e, w, lam, f: wrapPi(lam - w), q: a * (1 - e), Q: a * (1 + e), P: Math.pow(a, 1.5) * 2 * Math.PI / Math.sqrt(mu) };
+  }
+  /* Kepler drift of the body at offset i of the state array s for time dt round mu (f and g functions in the eccentric anomaly).
+     Returns false for an orbit that is no longer an ellipse. */
+  function drift(s, i, mu, dt) {
+    const x = s[i], y = s[i + 1], vx = s[i + 2], vy = s[i + 3], r0 = Math.hypot(x, y), a = 1 / (2 / r0 - (vx * vx + vy * vy) / mu);
+    if (!(a > 0)) return false;
+    const n = Math.sqrt(mu / (a * a * a)), C = 1 - r0 / a, Sg = (x * vx + y * vy) / (n * a * a), M = n * dt;   /* dt is a small part of an orbit */
+    let dE = M; for (let it = 0; it < 40; it++) { const sn = Math.sin(dE), cs = Math.cos(dE), fn = dE - C * sn + Sg * (1 - cs) - M, d = fn / (1 - C * cs + Sg * sn); dE -= d; if (Math.abs(d) < 1e-14) break; }
+    const sn = Math.sin(dE), cs = Math.cos(dE), r = a * (1 - C * cs + Sg * sn), F = 1 - a / r0 * (1 - cs), G = dt - (dE - sn) / n, Fd = -a * a * n * sn / (r * r0), Gd = 1 - a / r * (1 - cs);
+    s[i] = F * x + G * vx; s[i + 1] = F * y + G * vy; s[i + 2] = Fd * x + Gd * vx; s[i + 3] = Fd * y + Gd * vy; return true;
+  }
+  /* the semimajor axis where a body goes round p times while the planet goes round q times (P/P_planet = q/p), by Kepler's third law */
+  const resonanceA = (aP, p, q) => aP * Math.pow(q / p, 2 / 3);
+
+  /* ---------- the restricted problem: one planet on its ellipse, many massless bodies ---------- */
+  function makeSystem(planetKey, bodies, dt) {
+    const pl = PLANETS[planetKey], m = 1 / pl.mr, mu = GM * (1 + m), n = bodies.length, s = new Float64Array(4 * n);
+    bodies.forEach((b, i) => { s.set(b.state || kepState(b.a, b.e, b.w, b.M, GM), 4 * i); });
+    const el0 = bodies.map((b, i) => elements(s[4 * i], s[4 * i + 1], s[4 * i + 2], s[4 * i + 3], GM));
+    return { key: planetKey, pl, m, mu, GMp: GM * m, rHill: pl.a * Math.cbrt(m / 3), t: 0, dt, n, s, bodies,
+      a0: el0.map((e) => e.a), e0: el0.map((e) => e.e), emax: el0.map((e) => e.e), emin: el0.map((e) => e.e), dmin: new Float64Array(n).fill(Infinity),
+      gone: new Array(n).fill(null), rel: el0.map((e, i) => null), conj: bodies.map(() => []), steps: 0 };
+  }
+  const planetAt = (sys, t) => stateAt(sys.pl, t, sys.mu);
+  /* one Wisdom–Holman step for every body still in play; conjunctions (the planet passing a body, as seen from the Sun) are
+     recorded with the body's true anomaly, so the demo can show where on its orbit the kicks fall */
+  function stepSystem(sys, removeMars) {
+    const dt = sys.dt, h = dt / 2, P = planetAt(sys, sys.t + h), px = P[0], py = P[1], rp3 = Math.pow(px * px + py * py, 1.5), lp = Math.atan2(py, px);
+    const s = sys.s, k = sys.GMp, lim = sys.rHill;
+    for (let j = 0; j < sys.n; j++) {
+      if (sys.gone[j]) continue; const i = 4 * j;
+      if (!drift(s, i, GM, h)) { sys.gone[j] = { why: 'escape', t: sys.t }; continue; }
+      const dx = s[i] - px, dy = s[i + 1] - py, d2 = dx * dx + dy * dy, d3 = d2 * Math.sqrt(d2);
+      s[i + 2] -= dt * k * (dx / d3 + px / rp3); s[i + 3] -= dt * k * (dy / d3 + py / rp3);
+      const rel = wrapPi(Math.atan2(s[i + 1], s[i]) - lp), d = Math.sqrt(d2);
+      if (sys.rel[j] != null && Math.abs(rel) < 1 && Math.sign(rel) !== Math.sign(sys.rel[j]) && rel !== 0) {
+        const el = elements(s[i], s[i + 1], s[i + 2], s[i + 3], GM); sys.conj[j].push({ t: sys.t + h, f: el.f, d });
+        if (sys.conj[j].length > 400) sys.conj[j].shift();
+      }
+      sys.rel[j] = rel;
+      if (d < sys.dmin[j]) sys.dmin[j] = d;
+      if (!drift(s, i, GM, h)) { sys.gone[j] = { why: 'escape', t: sys.t + dt }; continue; }
+      if (d < lim) { sys.gone[j] = { why: 'planet', t: sys.t + h }; continue; }
+      if ((sys.steps & 7) === 0) {
+        const el = elements(s[i], s[i + 1], s[i + 2], s[i + 3], GM);
+        if (el.e > sys.emax[j]) sys.emax[j] = el.e; if (el.e < sys.emin[j]) sys.emin[j] = el.e;
+        if (removeMars && el.q < MARS_Q) sys.gone[j] = { why: 'mars', t: sys.t + dt };
+      }
+    }
+    sys.t += dt; sys.steps++;
+  }
+  const bodyEl = (sys, j) => elements(sys.s[4 * j], sys.s[4 * j + 1], sys.s[4 * j + 2], sys.s[4 * j + 3], GM);
+  /* a small random generator, so a setup always starts the same way */
+  function rng(seed) { let x = seed % 2147483647; if (x <= 0) x += 2147483646; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
+
+  /* ---------- finding Neptune ----------
+     The full model: Jupiter, Saturn, Uranus and Neptune pull on each other and on the Sun (heliocentric equations of motion with
+     the indirect terms), started from the J2000 elements above and integrated back to 1690 with fourth order Runge–Kutta, steps of
+     0.05 yr. Its Uranus is the "observed" one: one sighting a year from 1781 (Herschel's discovery) to 1845, and seven old sightings
+     made before anyone knew it was a planet (Flamsteed 1690; Bradley 1748, 1750, 1753; Mayer 1756; Le Monnier, between 1750 and 1769,
+     put at 1764 and 1769 here). Heliocentric longitudes, with no measuring error: real ones carried errors of a few arcseconds.
+     The astronomer's model: the same Sun, Jupiter and Saturn (their tracks taken from the full model), Uranus, and no Neptune, or a
+     trial planet X on a fixed Kepler ellipse. Uranus's starting position and velocity (in 1781) are fitted to the sightings by least
+     squares (Gauss–Newton), as Bouvard did for his 1821 tables and Le Verrier and Adams did in 1845 and 1846. What is left over, the
+     residuals, is what an unknown planet would have to explain. */
+  const NF = { h: 0.05, t0: 1690, t1: 1847, OLD: [1690, 1748, 1750, 1753, 1756, 1764, 1769], NEW: [], GALLE: 1846.73 };
+  for (let y = 1781; y <= 1845; y++) NF.NEW.push(y);
+  /* heliocentric accelerations for bodies with Sun/planet mass ratios m (as fractions of the Sun) */
+  function accN(m, Y, out, nb) {
+    for (let i = 0; i < nb; i++) {
+      const xi = Y[4 * i], yi = Y[4 * i + 1], ri = Math.hypot(xi, yi), r3 = ri * ri * ri; let ax = -GM * (1 + m[i]) * xi / r3, ay = -GM * (1 + m[i]) * yi / r3;
+      for (let j = 0; j < nb; j++) { if (j === i) continue; const xj = Y[4 * j], yj = Y[4 * j + 1], dx = xj - xi, dy = yj - yi, d = Math.hypot(dx, dy), d3 = d * d * d, rj = Math.hypot(xj, yj), rj3 = rj * rj * rj;
+        ax += GM * m[j] * (dx / d3 - xj / rj3); ay += GM * m[j] * (dy / d3 - yj / rj3); }
+      out[4 * i] = Y[4 * i + 2]; out[4 * i + 1] = Y[4 * i + 3]; out[4 * i + 2] = ax; out[4 * i + 3] = ay;
+    }
+  }
+  /* the full model, tabulated every h from 1690 to 1847: Jupiter, Saturn, Uranus, Neptune (x, y) and Uranus's velocity */
+  function neptuneTruth() {
+    const keys = ['jupiter', 'saturn', 'uranus', 'neptune'], m = keys.map((k) => 1 / PLANETS[k].mr), nb = 4, h = NF.h;
+    let Y = new Float64Array(16); keys.forEach((k, i) => Y.set(stateAt(PLANETS[k], 0, GM * (1 + m[i])), 4 * i));
+    const N = Math.round((NF.t1 - NF.t0) / h), K0 = Math.round((2000 - NF.t1) / h), tab = new Float64Array((N + 1) * 16);
+    const k1 = new Float64Array(16), k2 = new Float64Array(16), k3 = new Float64Array(16), k4 = new Float64Array(16), Z = new Float64Array(16);
+    const rk = (dt) => { accN(m, Y, k1, nb); for (let i = 0; i < 16; i++) Z[i] = Y[i] + dt / 2 * k1[i]; accN(m, Z, k2, nb); for (let i = 0; i < 16; i++) Z[i] = Y[i] + dt / 2 * k2[i];
+      accN(m, Z, k3, nb); for (let i = 0; i < 16; i++) Z[i] = Y[i] + dt * k3[i]; accN(m, Z, k4, nb); for (let i = 0; i < 16; i++) Y[i] += dt / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]); };
+    for (let k = 0; k < K0; k++) rk(-h);   /* 2000 back to 1847 */
+    for (let k = N; k >= 0; k--) { tab.set(Y, 16 * k); if (k) rk(-h); }
+    const at = (t) => Math.round((t - NF.t0) / h);
+    const lonU = (t) => { const o = 16 * at(t); return Math.atan2(tab[o + 9], tab[o + 8]); };
+    const obsT = NF.OLD.concat(NF.NEW), obs = obsT.map(lonU);
+    return { tab, h, N, at, m, obsT, obs, nOld: NF.OLD.length };
+  }
+  /* planet X on a fixed Kepler ellipse: a (AU), e, perihelion longitude w (°), its longitude lon (°) on Galle's date (1846 Sep 23,
+     1846.73) and mass mx (fraction of the Sun). Returns t -> [x, y]. */
+  function planetX(o) {
+    const mu = GM * (1 + o.m), n = Math.sqrt(mu / Math.pow(o.a, 3)), w = o.w * D2R, f = o.lon * D2R - w, e = o.e;
+    const E = 2 * Math.atan2(Math.sqrt(1 - e) * Math.sin(f / 2), Math.sqrt(1 + e) * Math.cos(f / 2)), M0 = E - e * Math.sin(E);
+    return (t) => { const s = kepState(o.a, e, w, M0 + n * (t - NF.GALLE), mu); return [s[0], s[1]]; };
+  }
+  /* Uranus alone in the astronomer's model, from state p at 1781.0, sampled at the sighting times (RK4, steps 2h = 0.1 yr) */
+  function uranusRun(tr, p, X) {
+    const h2 = 2 * tr.h, mU = tr.m[2], mJ = tr.m[0], mS = tr.m[1], tab = tr.tab, out = new Float64Array(tr.obsT.length);
+    const pert = (k, xU, yU, a) => {   /* the pulls of Jupiter and Saturn (from the table, index k) and of X at that moment */
+      const o = 16 * k; let ax = 0, ay = 0;
+      const add = (x, y, m) => { const dx = x - xU, dy = y - yU, d = Math.hypot(dx, dy), r = Math.hypot(x, y); ax += GM * m * (dx / (d * d * d) - x / (r * r * r)); ay += GM * m * (dy / (d * d * d) - y / (r * r * r)); };
+      add(tab[o], tab[o + 1], mJ); add(tab[o + 4], tab[o + 5], mS);
+      if (X) { const q = X.pos(NF.t0 + k * tr.h); add(q[0], q[1], X.m); }
+      a[0] = ax; a[1] = ay;
+    };
+    const A = [0, 0], f = (k, y, d) => { const r = Math.hypot(y[0], y[1]), r3 = r * r * r; pert(k, y[0], y[1], A); d[0] = y[2]; d[1] = y[3]; d[2] = -GM * (1 + mU) * y[0] / r3 + A[0]; d[3] = -GM * (1 + mU) * y[1] / r3 + A[1]; };
+    const k1 = [0, 0, 0, 0], k2 = [0, 0, 0, 0], k3 = [0, 0, 0, 0], k4 = [0, 0, 0, 0], z = [0, 0, 0, 0];
+    const go = (dir, targets) => {   /* targets: indexes into obsT in the order they are reached */
+      let y = p.slice(), k = tr.at(1781), ti = 0;
+      while (ti < targets.length) {
+        const kt = tr.at(tr.obsT[targets[ti]]);
+        if (k === kt) { out[targets[ti]] = Math.atan2(y[1], y[0]); ti++; continue; }
+        const dt = dir * h2;
+        f(k, y, k1); for (let i = 0; i < 4; i++) z[i] = y[i] + dt / 2 * k1[i]; f(k + dir, z, k2); for (let i = 0; i < 4; i++) z[i] = y[i] + dt / 2 * k2[i];
+        f(k + dir, z, k3); for (let i = 0; i < 4; i++) z[i] = y[i] + dt * k3[i]; f(k + 2 * dir, z, k4);
+        for (let i = 0; i < 4; i++) y[i] += dt / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]); k += 2 * dir;
+      }
+    };
+    const idx = tr.obsT.map((_, i) => i), fw = idx.filter((i) => tr.obsT[i] >= 1781), bw = idx.filter((i) => tr.obsT[i] < 1781).reverse();
+    go(1, fw); go(-1, bw); return out;
+  }
+  /* least squares fit of Uranus's 1781 state to the sightings (the old ones only when useOld); residuals in arcseconds */
+  function fitUranus(tr, X, useOld, start) {
+    const o = 16 * tr.at(1781); let p = start ? start.slice() : [tr.tab[o + 8], tr.tab[o + 9], tr.tab[o + 10], tr.tab[o + 11]];
+    const wt = tr.obsT.map((t) => (t < 1781 && !useOld ? 0 : 1)), nO = tr.obsT.length, step = [1e-6, 1e-6, 1e-7, 1e-7];
+    const res = (m) => tr.obs.map((v, i) => wrapPi(v - m[i]));
+    for (let it = 0; it < 4; it++) {
+      const m0 = uranusRun(tr, p, X), r = res(m0), J = [];
+      for (let k = 0; k < 4; k++) { const q = p.slice(); q[k] += step[k]; const m1 = uranusRun(tr, q, X); J.push(m1.map((v, i) => wrapPi(v - m0[i]) / step[k])); }
+      const A = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], b = [0, 0, 0, 0];
+      for (let i = 0; i < nO; i++) if (wt[i]) for (let a = 0; a < 4; a++) { b[a] += J[a][i] * r[i]; for (let c = 0; c < 4; c++) A[a][c] += J[a][i] * J[c][i]; }
+      const dp = solve4(A, b); let big = 0; for (let k = 0; k < 4; k++) { p[k] += dp[k]; big = Math.max(big, Math.abs(dp[k] / step[k])); }
+      if (big < 1e-3) break;
+    }
+    const r = res(uranusRun(tr, p, X)).map((v) => v / D2R * 3600), use = r.filter((_, i) => wt[i]);
+    return { p, r, rms: Math.sqrt(use.reduce((s, v) => s + v * v, 0) / use.length), maxNew: Math.max(...r.slice(tr.nOld).map(Math.abs)), maxOld: Math.max(...r.slice(0, tr.nOld).map(Math.abs)) };
+  }
+  function solve4(A, b) {
+    const n = 4; A = A.map((r) => r.slice()); b = b.slice();
+    for (let i = 0; i < n; i++) { let mx = i; for (let j = i + 1; j < n; j++) if (Math.abs(A[j][i]) > Math.abs(A[mx][i])) mx = j;
+      [A[i], A[mx]] = [A[mx], A[i]]; [b[i], b[mx]] = [b[mx], b[i]];
+      for (let j = i + 1; j < n; j++) { const f = A[j][i] / A[i][i]; for (let k = i; k < n; k++) A[j][k] -= f * A[i][k]; b[j] -= f * b[i]; } }
+    const x = [0, 0, 0, 0]; for (let i = n - 1; i >= 0; i--) { let s = b[i]; for (let k = i + 1; k < n; k++) s -= A[i][k] * x[k]; x[i] = s / A[i][i]; } return x;
+  }
+  /* Le Verrier's planet (Comptes rendus 23, 428, 31 August 1846, as given by J. Laskar 2017, Comptes Rendus Physique 18, 504):
+     a = 36.154 AU, e = 0.10761, perihelion longitude 284°45′, mean longitude 318°47′ on 1847 January 1, mass 1/9300 of the Sun.
+     His longitudes are from the mean equinox of 1847; the demo's are from J2000, 2.137° further on (general precession 5029.10″
+     per century over 153.0 years). */
+  const LEVERRIER = (() => { const pr = 5029.0966 / 3600 * 1.53, a = 36.154, e = 0.10761, w = 284.75 + pr, L = 318 + 47 / 60 + pr, m = 1 / 9300;
+    const n = Math.sqrt(GM * (1 + m) / Math.pow(a, 3)), s = kepState(a, e, w * D2R, (L - w) * D2R + n * (NF.GALLE - 1847.0), GM * (1 + m));
+    return { a, e, w, m, lon: ((Math.atan2(s[1], s[0]) / D2R) % 360 + 360) % 360, prec: pr }; })();
+
+  /* ---------- the real counts ----------
+     Counts from the JPL Small Body Database Query API (ssd-api.jpl.nasa.gov/sbdb_query.api), queried 2026-10-25: the number of
+     objects whose osculating semimajor axis a lies in each bin. Asteroid belt: numbered asteroids only (well determined orbits),
+     bins of 0.02 AU from 1.80 to 4.10 AU. Kuiper belt: all asteroids and Kuiper belt objects, numbered or not, bins of 0.5 AU from
+     30 to 56 AU. The totals were queried separately and equal the sums of the bins. */
+  const BELT_HIST = { from: 1.80, bin: 0.02, total: 881333, date: '2026-10-25', n: [324, 644, 1261, 2079, 2970, 3490, 3303, 2484, 1909, 1045, 378, 129, 52, 54, 117, 341, 1033, 2591, 4807, 7297, 9467, 11423, 12822, 15148, 17482, 19304, 20373, 21563, 21955, 21978, 19468, 15979, 12495, 7929, 2374, 2912, 14442, 21214, 24509, 24769, 25246, 25023, 23865, 22654, 22095, 19156, 20452, 20800, 21987, 18231, 10686, 2704, 6885, 9061, 5964, 6449, 6091, 4290, 10602, 13591, 14598, 14804, 19139, 20638, 22954, 23764, 23811, 23308, 23808, 16350, 11025, 6220, 2530, 311, 129, 172, 256, 342, 493, 458, 467, 554, 399, 244, 173, 120, 85, 174, 124, 9, 10, 9, 13, 11, 8, 7, 4, 1, 3, 3, 5, 10, 11, 9, 10, 123, 496, 1140, 1220, 788, 217, 25, 1, 3, 1] };
+  const KB_HIST = { from: 30, bin: 0.5, total: 6620, date: '2026-10-25', n: [47, 11, 10, 6, 14, 15, 19, 17, 18, 44, 22, 25, 45, 68, 31, 48, 74, 104, 482, 332, 114, 132, 139, 196, 240, 379, 446, 602, 475, 256, 260, 310, 240, 179, 173, 174, 116, 49, 43, 45, 47, 47, 43, 57, 44, 42, 45, 42, 45, 42, 90, 76] };
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), hc = $('hist'), hx = hc.getContext('2d'), pc = $('plot'), px = pc.getContext('2d');
+  let W = 0, H = 0, HW = 0, HH = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const fx = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const fint = (v) => Math.round(v).toLocaleString('en-US');
+  const deg = (r) => ((r / D2R) % 360 + 360) % 360;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'sun', 'jup', 'sat', 'ura', 'nep', 'px', 'body', 'mark', 'mars', 'bar', 'barhi', 'gone', 'ok']) K[n] = g('--' + n);
+    K.mono = g('--font-mono') || 'JetBrains Mono, monospace'; K.ui = g('--font-ui') || 'Atkinson Hyperlegible, sans-serif'; }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* ---------- scenes and setups ---------- */
+  const aJ = PLANETS.jupiter.a, aN = PLANETS.neptune.a;
+  const SCENES = {
+    belt: { planet: 'jupiter', pname: 'Jupiter', body: 'asteroid', dt: 0.1, mars: true, R: 5.75, base: 100, hist: BELT_HIST,
+      res: [[4, 1], [3, 1], [5, 2], [7, 3], [2, 1], [3, 2]], aMin: 2.0, aMax: 4.1, aStep: 0.001 },
+    kuiper: { planet: 'neptune', pname: 'Neptune', body: 'body', dt: 0.5, mars: false, R: 60, base: 1000, hist: KB_HIST,
+      res: [[4, 3], [3, 2], [5, 3], [7, 4], [2, 1], [5, 2]].map(([p, q]) => [q, p]), aMin: 34, aMax: 56, aStep: 0.01 },
+    neptune: { planet: null, base: 4 },
+  };
+  const pl = PLANETS.pluto, nep = PLANETS.neptune, plutoPh = ((pl.L - nep.L) % 360 + 360) % 360, plutoM = pl.L - pl.w;
+  const PRESETS = {
+    r31: { scene: 'belt', name: '3:1 resonance', a: 2.502, e: 0.15, ph: 60,
+      hint: 'An asteroid at 2.502 AU goes round the Sun 3.00 times for each turn of Jupiter. Jupiter passes it at the same two places on its orbit, again and again, and the kicks add up: in this run its orbit stretches until it crosses Mars\'s orbit after about 4,200 years. Real asteroids here were cleared the same way, which is why the 3:1 gap at 2.50 AU is nearly empty.' },
+    r52: { scene: 'belt', name: '5:2 resonance', a: 2.825, e: 0.15, ph: 60,
+      hint: 'At 2.825 AU an asteroid goes round 5 times while Jupiter goes round twice, so the kicks repeat at three places on its orbit. The eccentricity climbs past 0.40 and the orbit crosses Mars\'s after about 12,000 years. Compare the deep gap at 2.82 AU in the real counts.' },
+    r21: { scene: 'belt', name: '2:1 resonance', a: 3.278, e: 0.15, ph: 60,
+      hint: 'At 3.278 AU an asteroid goes round twice for each turn of Jupiter. Its eccentricity swings widely, from 0.03 to 0.29 in this run, but with Jupiter alone it is not thrown out. The real 2:1 gap (the Hecuba gap) needs Saturn\'s pull as well, over many millions of years, which this model leaves out.' },
+    calm: { scene: 'belt', name: 'Between the gaps', a: 2.65, e: 0.15, ph: 60,
+      hint: 'At 2.65 AU the period ratio is 4.24, not a ratio of small whole numbers, so Jupiter passes the asteroid at a different place each time and the kicks cancel out. Its eccentricity only wobbles. This is where the real belt is crowded.' },
+    hilda: { scene: 'belt', name: 'Hildas at 3:2', a: 3.97, e: 0.15, ph: 0,
+      hint: 'At 3.97 AU an asteroid goes round 3 times while Jupiter goes round twice, and here the resonance protects it: Jupiter always passes it when it is near perihelion, as far from Jupiter\'s orbit as it gets. The real counts show a crowd here, the Hilda group. Change the start angle and it can meet Jupiter instead.' },
+    belt: { scene: 'belt', name: 'Whole belt', many: { from: 2.10, to: 3.45, step: 0.005, e: 0.15, seed: 2203 },
+      hint: '271 asteroids, one every 0.005 AU from 2.10 to 3.45 AU, each with e = 0.15 and a random start angle. Below, each one is a dot at its starting distance, as high as the largest eccentricity it has reached; it turns into a cross when it crosses Mars\'s orbit. The tall spikes line up with the gaps in the real counts. The real gaps took millions of years to empty; the first steps show here within about 20,000 years.' },
+    pluto: { scene: 'kuiper', name: 'Pluto', a: +pl.a.toFixed(3), e: +pl.e.toFixed(3), ph: Math.round(plutoPh), M: plutoM, pluto: true,
+      hint: 'Pluto (from its J2000 orbit) goes round twice while Neptune goes round 3 times. Its orbit crosses inside Neptune\'s, but Neptune always passes it when Pluto is near aphelion, far away on the other side. In 100,000 years it never comes closer to Neptune than about 17 AU.' },
+    plutoTurn: { scene: 'kuiper', name: 'Pluto\'s orbit, bad timing', a: +pl.a.toFixed(3), e: +pl.e.toFixed(3), ph: (Math.round(plutoPh) + 60) % 360, M: plutoM,
+      hint: 'The same orbit as Pluto\'s, started 60° further round. Now Neptune comes by when the body is near perihelion, inside Neptune\'s orbit: it meets Neptune and is scattered after about 3,600 years. Without the resonance Pluto would not have survived.' },
+    plutinos: { scene: 'kuiper', name: 'Plutinos', many: { from: 39.0, to: 39.9, n: 24, e: [0.1, 0.3], seed: 32 },
+      hint: '24 bodies near 39.4 AU with eccentricities from 0.1 to 0.3 and random start angles. Some are caught in the 3:2 resonance and stay far from Neptune; the others meet Neptune and are scattered. The real counts show the survivors: the plutinos, piled up at 39.4 AU.' },
+    classical: { scene: 'kuiper', name: 'Classical belt', a: 44.0, e: 0.05, ph: 0,
+      hint: 'A body at 44 AU on a nearly round orbit, between Neptune\'s resonances, never comes near Neptune and needs no protection. Most real Kuiper belt objects from 42 to 47 AU are like this.' },
+    kbelt: { scene: 'kuiper', name: 'Whole Kuiper belt', many: { from: 34, to: 50, n: 200, e: [0, 0.3], seed: 1930 },
+      hint: '200 bodies from 34 to 50 AU with eccentricities from 0 to 0.3. Those whose orbits reach in near Neptune are scattered unless a resonance protects them, so after some tens of thousands of years the survivors with large eccentricities sit at the 3:2 (39.4 AU) and 2:1 (47.7 AU) resonances, as in the real counts.' },
+    alone: { scene: 'neptune', name: 'Uranus alone', X: null,
+      hint: 'In 1821 Bouvard could not make one orbit fit both the old sightings of Uranus and the new ones. Here Uranus\'s orbit is fitted, with Jupiter and Saturn pulling on it, to the sightings from 1781 to 1845. With no Neptune the best orbit still misses some years by up to 18″, and the old sightings from before 1781 by up to 231″, nearly 4′. Fit the old ones too and the misfit is shared out: up to 49″.' },
+    leverrier: { scene: 'neptune', name: 'Le Verrier\'s planet', X: 'leverrier',
+      hint: 'Le Verrier\'s prediction of 31 August 1846: 36.154 AU (he started from the Titius–Bode rule), e = 0.108 and a mass of 1/9300 of the Sun (36 Earths). Too far and twice too heavy, yet it removes much of the drift, and on the night Galle looked it sat less than half a degree from where this model\'s Neptune was. Galle found Neptune 52′ from the predicted place.' },
+    real: { scene: 'neptune', name: 'The real Neptune', X: 'neptune',
+      hint: 'Planet X with Neptune\'s orbit (from this model on 1846 Sep 23) and mass (17.1 Earths): nearly all of Uranus\'s drift goes away, and what is left (under 2″) comes from treating Neptune as moving on a fixed ellipse.' },
+    own: { scene: 'neptune', name: 'Hunt for it yourself', X: { a: 25, e: 0, w: 0, lon: 270, mE: 15 },
+      hint: 'Move planet X (its distance, mass and where it is in 1846) to make Uranus\'s leftover drift as small as you can. The direction comes out well even when the distance is wrong.' },
+  };
+  const PRESET_ORDER = { belt: ['r31', 'r52', 'r21', 'calm', 'hilda', 'belt'], kuiper: ['pluto', 'plutoTurn', 'plutinos', 'classical', 'kbelt'], neptune: ['alone', 'leverrier', 'real', 'own'] };
+  const S = { scene: 'belt', preset: 'r31', a: 2.502, e: 0.15, ph: 60, M: 0, speed: 10, frame: 'fixed', run: false, blind: false,
+    X: null, xa: 30, xm: 17, xl: 300, xe: 0, xw: 0, useOld: false, showNep: false, year: 1690, rate: 0 };
+  let sys = null, T = null, trail = [], hist = { t: [], v: [], every: 1, k: 0 }, many = false, msg = '';
+  let NT = null, fit = null, fitStart = null, fitAlone = null;
+
+  /* ---------- building a run ---------- */
+  function bodiesFor() {
+    const sc = SCENES[S.scene], P0 = stateAt(PLANETS[sc.planet], 0, GM * (1 + 1 / PLANETS[sc.planet].mr)), lp = Math.atan2(P0[1], P0[0]), c = PRESETS[S.preset];
+    if (c && c.many) {
+      const m = c.many, r = rng(m.seed), out = [];
+      const n = m.n || Math.round((m.to - m.from) / m.step) + 1;
+      for (let i = 0; i < n; i++) {
+        const a = m.step ? m.from + i * m.step : m.from + (m.to - m.from) * r(), e = Array.isArray(m.e) ? m.e[0] + (m.e[1] - m.e[0]) * r() : m.e, L = lp + 2 * Math.PI * r();
+        out.push({ a, e, w: L, M: 0 });
+      }
+      if (!m.step) out.sort((u, v) => u.a - v.a);
+      return out;
+    }
+    const L = lp + S.ph * D2R, M = (S.M || 0) * D2R;
+    return [{ a: S.a, e: S.e, w: L - M, M }];
+  }
+  function build() {
+    if (S.scene === 'neptune') { sys = null; return; }
+    const sc = SCENES[S.scene], b = bodiesFor(); many = b.length > 1;
+    sys = makeSystem(sc.planet, b, sc.dt); trail = []; hist = { t: [], v: [], every: 1, k: 0 }; msg = ''; sample(true);
+  }
+  /* the history graph keeps at most 1500 points, thinning itself as the run goes on */
+  function sample(force) {
+    if (!sys) return; hist.k++; if (!force && hist.k % hist.every) return;
+    let v;
+    if (many) v = sys.gone.filter(Boolean).length;
+    else if (sys.gone[0]) return;
+    else if (S.scene === 'belt') v = bodyEl(sys, 0).e;
+    else { const P = planetAt(sys, sys.t); v = Math.hypot(sys.s[0] - P[0], sys.s[1] - P[1]); }
+    hist.t.push(sys.t); hist.v.push(v);
+    if (hist.t.length > 1500) { hist.t = hist.t.filter((_, i) => i % 2 === 0); hist.v = hist.v.filter((_, i) => i % 2 === 0); hist.every *= 2; }
+  }
+  /* the planet's direction at time t, for the frame that turns with it */
+  const lamP = (t) => { const P = planetAt(sys, t); return Math.atan2(P[1], P[0]); };
+  function stepRun(n) {
+    const sc = SCENES[S.scene];
+    for (let k = 0; k < n; k++) {
+      stepSystem(sys, sc.mars);
+      if (!many && !sys.gone[0] && (sys.steps % 2 === 0)) { trail.push(sys.s[0], sys.s[1], lamP(sys.t)); if (trail.length > 3 * 2400) trail.splice(0, 3 * 600); }
+      sample(false);
+      if (!many && sys.gone[0]) { stopNote(); setRun(false); break; }
+      if (many && sys.gone.every(Boolean)) { setRun(false); break; }
+    }
+  }
+  function stopNote() {
+    const g = sys.gone[0], sc = SCENES[S.scene];
+    msg = g.why === 'mars' ? `Crossed Mars's orbit after ${fint(g.t)} years. Close passes by Mars, Earth or Venus (not in this model) would throw it out of the belt from here, so the run stops.`
+      : g.why === 'planet' ? `Came within one Hill radius of ${sc.pname} (${fx(sys.rHill, 3)} AU) after ${fint(g.t)} years and was scattered. The run stops here.`
+      : `Thrown out of the solar system after ${fint(g.t)} years.`;
+  }
+
+  /* ---------- finding Neptune: fits ---------- */
+  function nepSetup() {
+    if (!NT) {
+      NT = neptuneTruth();
+      const o = 16 * NT.at(NF.GALLE), el = elements(NT.tab[o + 12], NT.tab[o + 13], NT.tab[o + 14], NT.tab[o + 15], GM * (1 + 1 / nep.mr));
+      NT.nepX = { a: el.a, e: el.e, w: deg(el.w), lon: deg(el.lam), m: 1 / nep.mr };
+    }
+  }
+  const Xobj = () => (S.X ? { pos: planetX({ a: S.xa, e: S.xe, w: S.xw, lon: S.xl, m: S.xm * ME_SUN }), m: S.xm * ME_SUN } : null);
+  function refit() { nepSetup(); fit = fitUranus(NT, Xobj(), S.useOld, null); if (!fitAlone || fitAlone.old !== S.useOld) { fitAlone = fitUranus(NT, null, S.useOld, null); fitAlone.old = S.useOld; } }
+  let fitPending = false;
+  const refitSoon = () => { if (fitPending) return; fitPending = true; requestAnimationFrame(() => { fitPending = false; refit(); redraw(); }); };
+  const nepPos = (k, t) => { const o = 16 * NT.at(Math.max(NF.t0, Math.min(NF.t1, t))); return [NT.tab[o + 4 * k], NT.tab[o + 4 * k + 1]]; };
+
+  /* ---------- presets and controls ---------- */
+  function presetChips() {
+    $('presets').innerHTML = PRESET_ORDER[S.scene].map((k) => `<button type="button" data-p="${k}" aria-pressed="${k === S.preset}">${PRESETS[k].name}</button>`).join('');
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; if (!c) return; S.preset = k; S.scene = c.scene;
+    if (c.scene === 'neptune') {
+      nepSetup();
+      if (!c.X) S.X = null;
+      else { const x = c.X === 'leverrier' ? { a: LEVERRIER.a, e: LEVERRIER.e, w: LEVERRIER.w, lon: LEVERRIER.lon, mE: LEVERRIER.m / ME_SUN } : c.X === 'neptune' ? { ...NT.nepX, mE: NT.nepX.m / ME_SUN } : c.X;
+        S.X = c.X; Object.assign(S, { xa: x.a, xe: x.e, xw: x.w, xl: x.lon, xm: x.mE }); }
+      S.showNep = c.X === 'neptune'; S.year = 1690; refit();
+    } else if (!c.many) Object.assign(S, { a: c.a, e: c.e, ph: c.ph, M: c.M || 0 });
+    $('presetHint').textContent = c.hint; build(); setRun(false); presetChips(); sync(); redraw();
+  }
+  function setScene(sc) { if (sc === S.scene) return; applyPreset(PRESET_ORDER[sc][0]); }
+  const custom = () => { if (S.scene === 'neptune') { if (S.preset !== 'own') S.preset = 'own'; } else if (PRESETS[S.preset] && !PRESETS[S.preset].many) S.preset = 'custom'; presetChips(); };
+  function sync() {
+    const sc = SCENES[S.scene], nepS = S.scene === 'neptune';
+    for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.scene === S.scene));
+    for (const b of document.querySelectorAll('#frameSeg button')) b.setAttribute('aria-pressed', String(b.dataset.frame === S.frame));
+    $('frameSeg').hidden = nepS;
+    $('oneBox').hidden = nepS || many; $('manyNote').hidden = nepS || !many; $('nepBox').hidden = !nepS;
+    $('plots').classList.toggle('one', nepS);
+    $('cardTitle').textContent = nepS ? 'Planet X and the fit' : many ? 'The bodies' : S.scene === 'belt' ? 'Start an asteroid' : 'Start a body beyond Neptune';
+    if (!nepS) {
+      const sA = $('sA'); sA.min = sc.aMin; sA.max = sc.aMax; sA.step = sc.aStep; sA.value = S.a; $('oA').textContent = `${fx(S.a, S.scene === 'belt' ? 3 : 2)} AU`;
+      $('sE').value = S.e; $('oE').textContent = fx(S.e, 2); $('sPh').value = S.ph; $('oPh').textContent = `${S.ph}°`; $('lPh').textContent = `Start angle ahead of ${sc.pname}`;
+      const r = S.scene === 'belt' ? Math.pow(aJ / S.a, 1.5) : Math.pow(S.a / aN, 1.5);
+      $('ratioNote').textContent = S.blind ? 'Period ratio hidden (Blind).' : S.scene === 'belt' ? `It goes round ${fx(r, 3)} times for each turn of Jupiter (P_Jupiter / P).` : `Neptune goes round ${fx(r, 3)} times for each turn it makes (P / P_Neptune).`;
+      const c = PRESETS[S.preset]; if (c && c.many) $('manyNote').textContent = c.hint.split('. ')[0] + '.';
+    } else {
+      $('chkX').checked = !!S.X; $('xBox').hidden = !S.X; $('chkOld').checked = S.useOld; $('chkNep').checked = S.showNep;
+      $('sXa').value = S.xa; $('oXa').textContent = `${fx(S.xa, 2)} AU`; $('sXm').value = S.xm; $('oXm').textContent = `${fx(S.xm, 1)} Earths`;
+      $('sXl').value = S.xl; $('oXl').textContent = `${fx(S.xl, 1)}°`; $('sXe').value = S.xe; $('oXe').textContent = fx(S.xe, 3); $('sXw').value = S.xw; $('oXw').textContent = `${fx(S.xw, 1)}°`;
+    }
+    const sel = $('selSpeed'), base = sc.base;
+    for (const o of sel.options) o.textContent = nepS ? `${fint(base * o.value / 10 * 2.5)} yr per s` : `${fint(base * o.value)} yr per s`;
+    sel.value = String(S.speed); showCols();
+    $('hist').setAttribute('aria-label', nepS ? 'Graph: how far Uranus is from where the fitted orbit puts it, in arcseconds, for each sighting from 1690 to 1845.' : S.scene === 'belt'
+      ? 'Bar chart: how many real numbered asteroids there are at each distance from the Sun (JPL), with Jupiter\'s resonances marked, and a dot for each simulated asteroid at its starting distance, as high as the largest eccentricity it has reached. Click a bar to start an asteroid at that distance.'
+      : 'Bar chart: how many real Kuiper belt objects there are at each distance from the Sun (JPL), with Neptune\'s resonances marked, and a dot for each simulated body. Click a bar to start a body at that distance.');
+  }
+  for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.scene));
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('frameSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-frame]'); if (b) { S.frame = b.dataset.frame; sync(); redraw(); } });
+  const restart = () => { custom(); build(); setRun(false); sync(); redraw(); };
+  $('sA').addEventListener('input', (e) => { S.a = +e.target.value; restart(); });
+  $('sE').addEventListener('input', (e) => { S.e = +e.target.value; restart(); });
+  $('sPh').addEventListener('input', (e) => { S.ph = +e.target.value; restart(); });
+  const xin = (id, k) => $(id).addEventListener('input', (e) => { S[k] = +e.target.value; if (!S.X || typeof S.X === 'string') S.X = 'own'; custom(); sync(); refitSoon(); });
+  xin('sXa', 'xa'); xin('sXm', 'xm'); xin('sXl', 'xl'); xin('sXe', 'xe'); xin('sXw', 'xw');
+  $('chkX').addEventListener('change', (e) => { S.X = e.target.checked ? 'own' : null; custom(); sync(); refit(); redraw(); });
+  $('chkOld').addEventListener('change', (e) => { S.useOld = e.target.checked; refit(); redraw(); });
+  $('chkNep').addEventListener('change', (e) => { S.showNep = e.target.checked; redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : (S.scene === 'neptune' ? S.year > 1690 : sys && sys.t > 0) ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => {
+    if (!S.run && S.scene !== 'neptune' && sys && !many && sys.gone[0]) { build(); }
+    if (!S.run && S.scene === 'neptune' && S.year >= NF.GALLE) S.year = 1690;
+    setRun(!S.run); redraw(); });
+  $('reset').addEventListener('click', () => { if (S.scene === 'neptune') S.year = 1690; else build(); setRun(false); redraw(); });
+  /* click a bar of the real counts to start a body there */
+  hc.addEventListener('click', (e) => {
+    if (S.scene === 'neptune') return; const r = hc.getBoundingClientRect(), g = histGeom(), a = g.a0 + (e.clientX - r.left - g.x0) / g.w * (g.a1 - g.a0);
+    if (a < g.a0 || a > g.a1) return; const sc = SCENES[S.scene];
+    S.a = Math.max(sc.aMin, Math.min(sc.aMax, Math.round(a / (S.scene === 'belt' ? 0.005 : 0.05)) * (S.scene === 'belt' ? 0.005 : 0.05)));
+    S.a = +S.a.toFixed(3); if (many || !PRESETS[S.preset] || PRESETS[S.preset].many) { S.e = S.scene === 'belt' ? 0.15 : 0.1; S.ph = 60; S.M = 0; }
+    S.preset = 'custom'; presetChips(); build(); setRun(false); sync(); redraw();
+  });
+
+  /* ---------- drawing: the flat picture ---------- */
+  const view = { s: 1, cx: 0, cy: 0 };
+  function layout() {
+    const narrow = W < 821, cardW = narrow ? 0 : $('setupCard').offsetWidth + 28, R = S.scene === 'neptune' ? 34 : SCENES[S.scene].R;
+    const w = W - cardW; view.s = Math.min(w, H) / (2 * R) * 0.96; view.cx = w / 2; view.cy = H / 2;
+  }
+  let rot = 0;
+  const P2 = (x, y) => { const c = Math.cos(rot), s = Math.sin(rot), u = x * c - y * s, v = x * s + y * c; return [view.cx + u * view.s, view.cy - v * view.s]; };
+  function ellipse(a, e, w, col, wid, dash) {
+    ctx.beginPath(); for (let i = 0; i <= 180; i++) { const E = i / 180 * 2 * Math.PI, xp = a * (Math.cos(E) - e), yp = a * Math.sqrt(1 - e * e) * Math.sin(E), c = Math.cos(w), s = Math.sin(w);
+      const q = P2(xp * c - yp * s, xp * s + yp * c); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+    ctx.strokeStyle = col; ctx.lineWidth = wid; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+  }
+  const dot = (q, r, col) => { ctx.beginPath(); ctx.arc(q[0], q[1], r, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); };
+  function label(q, t, col, dx = 8, dy = -8, align = 'left') { const p = proj(); ctx.font = `${12 * p}px ${K.ui}`; ctx.fillStyle = col; ctx.textAlign = align; ctx.textBaseline = 'middle'; ctx.fillText(t, q[0] + dx * p, q[1] + dy * p); }
+  function sunDot() { const p = proj(), q = P2(0, 0), g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], 16 * p); g.addColorStop(0, K.sun); g.addColorStop(0.35, K.sun); g.addColorStop(1, 'rgba(255,200,80,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q[0], q[1], 16 * p, 0, 2 * Math.PI); ctx.fill(); }
+  function scaleBar(au) { const p = proj(), L = au * view.s, x = 16 * p, y = H - 18 * p; ctx.strokeStyle = K.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + L, y); ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 4); ctx.moveTo(x + L, y - 4); ctx.lineTo(x + L, y + 4); ctx.stroke();
+    ctx.font = `${11 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`${au} AU`, x, y - 6); }
+  const heat = (e) => { const t = Math.max(0, Math.min(1, e / 0.4)), h = 220 - 220 * t; return `hsl(${h}, 75%, ${VD3.dark && VD3.dark() ? 62 : 46}%)`; };
+  function drawFlat() {
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.scene === 'neptune') return drawNepFlat();
+    const sc = SCENES[S.scene], p = proj(); rot = S.frame === 'rot' ? -lamP(sys.t) : 0;
+    if (sc.mars) { const m = PLANETS.mars; ellipse(m.a, m.e, m.w * D2R, K.mars, 1.2, [4, 4]); const q = P2(m.a * Math.cos(2.3), m.a * Math.sin(2.3)); label(q, 'Mars\'s orbit', K.mars, 6, 10); }
+    const P = sys.pl; ellipse(P.a, P.e, P.w * D2R, K.line, 1.2);
+    sunDot();
+    /* every body: a dot colored by its eccentricity now */
+    if (many) for (let j = 0; j < sys.n; j++) { if (sys.gone[j]) continue; const e = bodyEl(sys, j).e; dot(P2(sys.s[4 * j], sys.s[4 * j + 1]), 2.4 * p, heat(e)); }
+    else {
+      /* the trail, in whichever frame */
+      if (trail.length > 6) { ctx.beginPath(); for (let i = 0; i < trail.length; i += 3) { let x = trail[i], y = trail[i + 1]; if (S.frame === 'rot') { const r0 = -trail[i + 2], c = Math.cos(r0), s = Math.sin(r0); const u = x * c - y * s, v = x * s + y * c; x = u; y = v; rot = 0; }
+        const q = P2(x, y); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+        ctx.strokeStyle = K.body; ctx.globalAlpha = 0.35; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; rot = S.frame === 'rot' ? -lamP(sys.t) : 0; }
+      { /* a body that has gone out keeps its last orbit and passes on the picture, in the color for gone */
+        const out = !!sys.gone[0], el = bodyEl(sys, 0); ellipse(el.a, el.e, el.w, out ? K.gone : K.body, 1.6);
+        /* where the planet has passed it: marks on its present orbit at the true anomaly of each pass (the last 24) */
+        const cj = sys.conj[0].slice(-24);
+        cj.forEach((c, i) => { const f = c.f, r = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(f)), th = el.w + f; ctx.globalAlpha = 0.25 + 0.75 * (i + 1) / cj.length; dot(P2(r * Math.cos(th), r * Math.sin(th)), 4 * p, K.mark); });
+        ctx.globalAlpha = 1;
+        const q = P2(sys.s[0], sys.s[1]); dot(q, 5 * p, out ? K.gone : K.body); ctx.strokeStyle = K.canvas; ctx.lineWidth = 1.5; ctx.stroke();
+        label(q, `${S.preset.startsWith('pluto') ? 'Pluto' : sc.body}${out ? ' (out)' : ''}`, out ? K.gone : K.body);
+        if (cj.length) { const c = cj[cj.length - 1], r = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(c.f)), th = el.w + c.f; label(P2(r * Math.cos(th), r * Math.sin(th)), `${sc.pname} passed here`, K.mark, 8, 12); }
+      }
+    }
+    const Pp = planetAt(sys, sys.t), qp = P2(Pp[0], Pp[1]); dot(qp, (S.scene === 'belt' ? 8 : 6) * p, S.scene === 'belt' ? K.jup : K.nep); label(qp, sc.pname, S.scene === 'belt' ? K.jup : K.nep, 11, -11);
+    scaleBar(S.scene === 'belt' ? 1 : 10);
+    if (msg) { ctx.font = `${13 * p}px ${K.ui}`; ctx.fillStyle = K.gone; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; wrapText(msg, 14 * p, 12 * p, Math.min(W - 40, view.cx * 2 - 30), 17 * p); }
+  }
+  function wrapText(t, x, y, w, lh) { const words = t.split(' '); let line = ''; for (const wd of words) { const tt = line ? line + ' ' + wd : wd; if (ctx.measureText(tt).width > w && line) { ctx.fillText(line, x, y); y += lh; line = wd; } else line = tt; } if (line) ctx.fillText(line, x, y); }
+  function drawNepFlat() {
+    const p = proj(); rot = 0; nepSetup();
+    const y = S.year, N = NT, orbit = (k, col, dash) => { const o = 16 * N.at(Math.max(NF.t0, Math.min(NF.t1, y))), el = elements(N.tab[o + 4 * k], N.tab[o + 4 * k + 1], N.tab[o + 4 * k + 2], N.tab[o + 4 * k + 3], GM); ellipse(el.a, el.e, el.w, col, 1.1, dash); };
+    orbit(0, K.line); orbit(1, K.line); orbit(2, K.ura, null); if (S.showNep) orbit(3, K.nep, [6, 5]);
+    sunDot();
+    const names = [['Jupiter', K.jup, 5], ['Saturn', K.sat, 5], ['Uranus', K.ura, 6], ['Neptune', K.nep, 6]];
+    for (let k = 0; k < 4; k++) { if (k === 3 && !S.showNep) continue; const q = P2(...nepPos(k, y)); dot(q, names[k][2] * p, names[k][1]); if (k === 0) label(q, names[k][0], names[k][1], -9, 9, 'right'); else label(q, names[k][0], names[k][1], 9, -9); }
+    const U = nepPos(2, y), qU = P2(U[0], U[1]);
+    if (S.X) { const xs = { a: S.xa, e: S.xe, w: S.xw, lon: S.xl, m: S.xm * ME_SUN }; ellipse(xs.a, xs.e, xs.w * D2R, K.px, 1.2, [3, 4]); const X = planetX(xs)(y), q = P2(X[0], X[1]); dot(q, 6 * p, K.px); label(q, 'planet X', K.px, 9, 12);
+      /* X's pull on Uranus, compared with the Sun's pull on Uranus: the arrow shows its direction */
+      const dx = X[0] - U[0], dy = X[1] - U[1], d = Math.hypot(dx, dy), L = 34 * p; ctx.strokeStyle = K.px; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(qU[0], qU[1]); const tip = [qU[0] + L * dx / d, qU[1] - L * dy / d]; ctx.lineTo(tip[0], tip[1]); ctx.stroke();
+      const an = Math.atan2(-(dy), dx); ctx.beginPath(); ctx.moveTo(tip[0], tip[1]); ctx.lineTo(tip[0] - 8 * p * Math.cos(an - 0.4), tip[1] - 8 * p * Math.sin(an - 0.4)); ctx.lineTo(tip[0] - 8 * p * Math.cos(an + 0.4), tip[1] - 8 * p * Math.sin(an + 0.4)); ctx.closePath(); ctx.fillStyle = K.px; ctx.fill(); }
+    ctx.font = `700 ${22 * p}px ${K.mono}`; ctx.fillStyle = K.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(y >= NF.GALLE - 0.001 ? '1846 Sep 23' : String(Math.floor(y)), 14 * p, 12 * p);
+    ctx.font = `${12 * p}px ${K.ui}`; ctx.fillStyle = K.muted; ctx.fillText(y < 1781 ? 'Uranus not yet known as a planet' : y < 1846 ? 'Uranus watched every year since 1781' : 'Galle finds Neptune', 14 * p, 40 * p);
+    scaleBar(10);
+  }
+
+  /* ---------- the real counts, with the simulated bodies ---------- */
+  function histGeom() { const p = proj(), sc = SCENES[S.scene], h = sc.hist; return { x0: 54 * p, y0: 18 * p, w: HW - 54 * p - 52 * p, h: HH - 18 * p - 34 * p, a0: h.from, a1: h.from + h.bin * h.n.length, hd: h }; }
+  function axisText(t, x, y, al, bl, col) { hx.fillStyle = col || K.muted; hx.textAlign = al; hx.textBaseline = bl; hx.fillText(t, x, y); }
+  function drawHist() {
+    hx.setTransform(dpr, 0, 0, dpr, 0, 0); hx.fillStyle = K.canvas; hx.fillRect(0, 0, HW, HH);
+    if (S.scene === 'neptune') return drawResid();
+    const p = proj(), g = histGeom(), h = g.hd, mx = Math.max(...h.n), X = (a) => g.x0 + (a - g.a0) / (g.a1 - g.a0) * g.w, Yn = (n) => g.y0 + g.h * (1 - n / mx), EM = S.scene === 'belt' ? 0.5 : 0.4, Ye = (e) => g.y0 + g.h * (1 - e / EM);
+    hx.font = `${10.5 * p}px ${K.mono}`;
+    for (let i = 0; i < h.n.length; i++) { const x = X(g.a0 + i * h.bin); hx.fillStyle = K.bar; hx.fillRect(x + 0.5, Yn(h.n[i]), Math.max(1, g.w / h.n.length - 1), g.y0 + g.h - Yn(h.n[i])); }
+    /* axes */
+    hx.strokeStyle = K.line; hx.lineWidth = 1; hx.beginPath(); hx.moveTo(g.x0, g.y0); hx.lineTo(g.x0, g.y0 + g.h); hx.lineTo(g.x0 + g.w, g.y0 + g.h); hx.lineTo(g.x0 + g.w, g.y0); hx.stroke();
+    const step = S.scene === 'belt' ? 0.25 : 2;
+    for (let a = Math.ceil(g.a0 / step) * step; a <= g.a1 + 1e-9; a += step) { const x = X(a); hx.beginPath(); hx.moveTo(x, g.y0 + g.h); hx.lineTo(x, g.y0 + g.h + 4); hx.stroke(); axisText(fx(a, S.scene === 'belt' ? 2 : 0), x, g.y0 + g.h + 6 * p, 'center', 'top'); }
+    axisText(`distance from the Sun a (AU) · real ${S.scene === 'belt' ? 'asteroids per 0.02 AU' : 'objects per 0.5 AU'}`, g.x0 + g.w / 2, HH - 2, 'center', 'bottom');
+    const nt = mx > 10000 ? 5000 : mx > 2000 ? 1000 : 100;
+    for (let n = 0; n <= mx; n += nt) { const y = Yn(n); axisText(n >= 1000 ? `${n / 1000}k` : String(n), g.x0 - 5, y, 'right', 'middle'); }
+    for (let e = 0; e <= EM + 1e-9; e += 0.1) { const y = Ye(e); axisText(fx(e, 1), g.x0 + g.w + 5, y, 'left', 'middle', K.body); }
+    hx.save(); hx.translate(HW - 2 * p, g.y0 + g.h / 2); hx.rotate(Math.PI / 2); axisText('largest e (dots)', 0, 0, 'center', 'bottom', K.body); hx.restore();
+    /* the resonances */
+    if (!S.blind) { const sc = SCENES[S.scene]; let lastX = -1e9, row = 0; for (const [pp, qq] of sc.res) { const a = resonanceA(sc.hist === BELT_HIST ? aJ : aN, pp, qq); if (a < g.a0 || a > g.a1) continue; const x = X(a);
+      hx.strokeStyle = K.accent; hx.setLineDash([3, 3]); hx.beginPath(); hx.moveTo(x, g.y0 + 10 * p); hx.lineTo(x, g.y0 + g.h); hx.stroke(); hx.setLineDash([]); row = x - lastX < 24 * p ? 1 - row : 0; lastX = x; axisText(`${Math.max(pp, qq)}:${Math.min(pp, qq)}`, x, g.y0 + row * 11 * p, 'center', 'top', K.accent); } }
+    /* the simulated bodies: starting a against the largest e so far; a cross for one that has gone */
+    if (sys) for (let j = 0; j < sys.n; j++) { const x = X(sys.a0[j]), y = Ye(Math.min(EM, sys.emax[j])); if (x < g.x0 || x > g.x0 + g.w) continue;
+      if (sys.gone[j]) { hx.strokeStyle = K.gone; hx.lineWidth = 1.6; const r = 3.2 * p; hx.beginPath(); hx.moveTo(x - r, y - r); hx.lineTo(x + r, y + r); hx.moveTo(x - r, y + r); hx.lineTo(x + r, y - r); hx.stroke(); }
+      else { hx.beginPath(); hx.arc(x, y, (many ? 2.2 : 4) * p, 0, 2 * Math.PI); hx.fillStyle = K.body; hx.fill(); } }
+    if (sys && !many) { const x = X(sys.a0[0]); hx.strokeStyle = K.body; hx.globalAlpha = 0.5; hx.beginPath(); hx.moveTo(x, g.y0); hx.lineTo(x, g.y0 + g.h); hx.stroke(); hx.globalAlpha = 1; }
+  }
+  /* the time graph: eccentricity, distance from Neptune, or how many bodies are left */
+  function drawPlot() {
+    px.setTransform(dpr, 0, 0, dpr, 0, 0); px.fillStyle = K.canvas; px.fillRect(0, 0, PW, PH);
+    if (S.scene === 'neptune' || !sys) return;
+    const p = proj(), x0 = 48 * p, y0 = 22 * p, w = PW - x0 - 14 * p, h = PH - y0 - 34 * p, tmax = Math.max(1000, sys.t);
+    let ymax, title;
+    if (many) { ymax = Math.max(10, Math.ceil(Math.max(...hist.v, 0) * 1.25 / 5) * 5); title = `bodies thrown out so far (of ${sys.n})`; }
+    else if (S.scene === 'belt') { ymax = 0.5; title = 'eccentricity e of the asteroid'; }
+    else { ymax = 75; title = 'distance from Neptune (AU)'; }
+    const X = (t) => x0 + t / tmax * w, Y = (v) => y0 + h * (1 - v / ymax);
+    px.font = `${10.5 * p}px ${K.mono}`; px.strokeStyle = K.line; px.lineWidth = 1; px.beginPath(); px.moveTo(x0, y0); px.lineTo(x0, y0 + h); px.lineTo(x0 + w, y0 + h); px.stroke();
+    const tick = (v, d) => { const y = Y(v); px.fillStyle = K.muted; px.textAlign = 'right'; px.textBaseline = 'middle'; px.fillText(fx(v, d), x0 - 5, y); };
+    if (many) for (let v = 0; v <= ymax; v += ymax / 5) tick(v, 0); else if (S.scene === 'belt') for (let v = 0; v <= 0.5 + 1e-9; v += 0.1) tick(v, 1); else for (let v = 0; v <= 75; v += 25) tick(v, 0);
+    const nMax = Math.max(2, Math.floor(w / (58 * p))); let ts = Math.pow(10, Math.floor(Math.log10(tmax / nMax))); for (const k of [2, 2.5, 2]) if (tmax / ts > nMax) ts *= k;
+    for (let t = 0; t <= tmax; t += ts) { const lb = fint(t), x = Math.min(X(t), PW - 2 - px.measureText(lb).width / 2); px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'top'; px.fillText(lb, x, y0 + h + 5 * p); }
+    px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'bottom'; px.fillText('time (years)', x0 + w / 2, PH - 2);
+    px.textAlign = 'left'; px.textBaseline = 'top'; px.fillStyle = K.ink; px.font = `${11.5 * p}px ${K.ui}`; px.fillText(title, x0 + 6, 4 * p);
+    if (!many && S.scene === 'belt') { const eM = 1 - MARS_Q / sys.a0[0]; if (eM > 0 && eM < 0.5) { const y = Y(eM); px.strokeStyle = K.mars; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);
+      px.fillStyle = K.mars; px.textAlign = 'right'; px.textBaseline = 'bottom'; px.font = `${10.5 * p}px ${K.ui}`; px.fillText('above this it crosses Mars\'s orbit', x0 + w, y - 2); } }
+    if (!many && S.scene === 'kuiper' && isFinite(sys.dmin[0])) { const y = Y(sys.dmin[0]); px.strokeStyle = K.mark; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);
+      px.fillStyle = K.mark; px.textAlign = 'right'; px.textBaseline = 'bottom'; px.font = `${10.5 * p}px ${K.ui}`; px.fillText(`closest so far ${fx(sys.dmin[0], 1)} AU`, x0 + w, y - 2); }
+    px.beginPath(); hist.t.forEach((t, i) => { const x = X(t), y = Y(Math.min(ymax, hist.v[i])); if (i) px.lineTo(x, y); else px.moveTo(x, y); }); px.strokeStyle = K.body; px.lineWidth = 1.3; px.stroke();
+  }
+  /* finding Neptune: the residuals of the fit */
+  function drawResid() {
+    const p = proj(), x0 = 56 * p, y0 = 24 * p, w = HW - x0 - 18 * p, h = HH - y0 - 34 * p, t0 = 1685, t1 = 1850, F = fit, A = fitAlone;
+    const fitted = (r) => r.filter((_, i) => S.useOld || NT.obsT[i] >= 1781).map(Math.abs), lim = Math.max(10, ...fitted(F.r), ...(S.X && A ? fitted(A.r) : [])), ym = lim > 120 ? Math.ceil(lim / 60) * 60 : lim > 40 ? Math.ceil(lim / 20) * 20 : Math.ceil(lim / 5) * 5;
+    const X = (t) => x0 + (t - t0) / (t1 - t0) * w, Y = (v) => y0 + h / 2 * (1 - v / ym);
+    hx.font = `${10.5 * p}px ${K.mono}`; hx.strokeStyle = K.line; hx.lineWidth = 1; hx.beginPath(); hx.moveTo(x0, y0); hx.lineTo(x0, y0 + h); hx.moveTo(x0, Y(0)); hx.lineTo(x0 + w, Y(0)); hx.stroke();
+    for (const v of [-ym, -ym / 2, 0, ym / 2, ym]) { hx.fillStyle = K.muted; hx.textAlign = 'right'; hx.textBaseline = 'middle'; hx.fillText(`${v > 0 ? '+' : v < 0 ? '−' : ''}${fint(Math.abs(v))}″`, x0 - 5, Y(v)); }
+    for (let t = 1700; t <= 1840; t += 20) { const x = X(t); hx.fillStyle = K.muted; hx.textAlign = 'center'; hx.textBaseline = 'top'; hx.fillText(String(t), x, y0 + h + 5 * p); }
+    hx.fillStyle = K.ink; hx.textAlign = 'left'; hx.textBaseline = 'top'; hx.font = `${11.5 * p}px ${K.ui}`;
+    hx.fillText(`Where Uranus is seen minus where its fitted orbit puts it (arcseconds)${S.X ? ', with planet X' : ', no planet X'}`, x0 + 6, 4 * p);
+    /* the year being shown */
+    const xs = X(Math.min(S.year, NF.GALLE)); hx.strokeStyle = K.muted; hx.globalAlpha = 0.5; hx.beginPath(); hx.moveTo(xs, y0); hx.lineTo(xs, y0 + h); hx.stroke(); hx.globalAlpha = 1;
+    /* points off the scale sit on its edge as a triangle; only the main series names their values, inside the plot and never on top of each other */
+    const pts = (r, col, rad, tag) => { let lastX = -1e9; NT.obsT.forEach((t, i) => { const old = t < 1781, v = r[i], off = Math.abs(v) > ym, y = Y(Math.max(-ym, Math.min(ym, v))), x = X(t);
+      hx.beginPath(); if (off) { const s = (v > 0 ? 1 : -1) * 5 * p; hx.moveTo(x, y - s); hx.lineTo(x - 4 * p, y); hx.lineTo(x + 4 * p, y); hx.closePath(); } else hx.arc(x, y, rad * p, 0, 2 * Math.PI);
+      if (old && !S.useOld && !off) { hx.strokeStyle = col; hx.lineWidth = 1.3; hx.stroke(); } else { hx.fillStyle = col; hx.fill(); }
+      if (off && tag && x - lastX > 34 * p) { lastX = x; hx.fillStyle = col; hx.textAlign = 'center'; hx.textBaseline = v > 0 ? 'top' : 'bottom'; hx.fillText(`${fint(v).replace('-', '−')}″`, x, y + (v > 0 ? 7 : -7) * p); } }); };
+    if (S.X && A) { hx.globalAlpha = 0.35; pts(A.r, K.muted, 2.2, false); hx.globalAlpha = 1; }
+    pts(F.r, S.X ? K.px : K.ura, 3, true);
+    hx.font = `${10.5 * p}px ${K.ui}`; hx.fillStyle = K.muted; hx.textAlign = 'right'; hx.textBaseline = 'bottom';
+    hx.fillText(`${S.useOld ? 'all sightings fitted' : 'open circles: old sightings, not fitted'}${S.X ? ' · gray: no planet X' : ''}`, x0 + w, HH - 2);
+  }
+
+  /* ---------- readouts ---------- */
+  const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function readouts() {
+    let h = '';
+    if (S.scene === 'neptune') {
+      const y = S.year, r1845 = fit.r[NT.obsT.indexOf(1845)];
+      h += dd('Year', y >= NF.GALLE - 0.001 ? '1846 Sep 23' : String(Math.floor(y)));
+      h += dd('Leftover drift (rms)', `${fx(fit.rms, 1)}″`) + dd('Leftover in 1845', `${fx(r1845, 1)}″`);
+      h += dd('Largest, 1781 to 1845', `${fx(fit.maxNew, 1)}″`) + dd('Largest, old sightings', `${fx(fit.maxOld, 1)}″${S.useOld ? '' : ' (not fitted)'}`);
+      if (S.X) { const dl = ((S.xl - NT.nepX.lon + 540) % 360) - 180;
+        h += S.blind ? dd('Planet X against Neptune', 'hidden (Blind)', true) : dd('Planet X is this far from Neptune\'s direction in 1846', `${fx(Math.abs(dl), 2)}° ${dl > 0 ? 'ahead' : 'behind'}`, true); }
+      h += dd('Without any planet X', `${fx(fitAlone.rms, 1)}″ rms`, true);
+    } else {
+      const sc = SCENES[S.scene];
+      h += dd('Time', `${fint(sys.t)} yr`);
+      if (many) { const left = sys.gone.filter((g) => !g).length, mars = sys.gone.filter((g) => g && g.why === 'mars').length, pl2 = sys.gone.filter((g) => g && g.why === 'planet').length;
+        h += dd('Still in play', `${left} of ${sys.n}`) + (sc.mars ? dd('Crossed Mars\'s orbit', String(mars)) : '') + dd(`Scattered by ${sc.pname}`, String(pl2)); }
+      else {
+        const g = sys.gone[0], el = g ? null : bodyEl(sys, 0), Pp = 2 * Math.PI * Math.pow(sys.pl.a, 1.5) / Math.sqrt(sys.mu);
+        if (el) { h += dd('Distance a now', `${fx(el.a, S.scene === 'belt' ? 3 : 2)} AU`) + dd('Eccentricity e now', fx(el.e, 3));
+          h += S.blind ? '' : dd(S.scene === 'belt' ? 'P_Jupiter / P now' : 'P / P_Neptune now', fx(S.scene === 'belt' ? Pp / el.P : el.P / Pp, 3)); }
+        h += dd('Largest e so far', fx(sys.emax[0], 3)) + dd(`Closest to ${sc.pname}`, `${fx(sys.dmin[0], 2)} AU`);
+        if (el) h += dd('Perihelion q', `${fx(el.q, 2)} AU`);
+        const cj = sys.conj[0]; if (cj.length) { const f = deg(cj[cj.length - 1].f), fr = f > 180 ? 360 - f : f; h += dd(`${sc.pname} last passed it`, `${fx(fr, 0)}° from its perihelion${fr > 135 ? ' (near aphelion)' : fr < 45 ? ' (near perihelion)' : ''}`, true); }
+        if (g) h += dd('Status', g.why === 'mars' ? `crossed Mars's orbit at ${fint(g.t)} yr` : g.why === 'planet' ? `scattered by ${sc.pname} at ${fint(g.t)} yr` : 'escaped', true);
+      }
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    const t = S.scene === 'neptune' ? '' : `t = ${fint(sys.t)} yr`;
+    $('clock').textContent = S.scene === 'neptune' ? (S.year >= NF.GALLE - 0.001 ? '1846 Sep 23' : `year ${Math.floor(S.year)}`) : t + (S.run && S.rate ? ` · ${fint(S.rate)} yr per s` : '');
+  }
+
+  /* ---------- 3D ---------- */
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const G3 = { o: { th: -Math.PI / 2, ph: 0.62, zoom: 1 } };
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, fov: 34, near: 0.01, far: 4000, sky: '#04070d' }); if (!S3) return false;
+    S3.el.classList.add('r3'); const sc = S3.scene;
+    sc.add(VD3K.sky(S3, { n: 2600, r: 1500, milky: true }));
+    const sun = VD3K.star(S3, { r: 0.045, glow: 7 }); sc.add(sun);
+    const mk = (r, col) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 16), new THREE.MeshStandardMaterial({ color: col, roughness: 0.8, emissive: new THREE.Color(col).multiplyScalar(0.18) })); sc.add(m); return m; };
+    const light = new THREE.PointLight(0xffffff, 1.6, 0, 0); sc.add(light);
+    const orbitLine = (col, op, dash) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(181 * 3), 3));
+      const l = new THREE.Line(g, dash ? new THREE.LineDashedMaterial({ color: col, transparent: true, opacity: op, dashSize: 0.02, gapSize: 0.015 }) : new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op })); sc.add(l); return l; };
+    const lab = (t, col) => { const l = VD3K.label(t, { size: 0.065, color: col, font: '"Atkinson Hyperlegible", sans-serif' }); sc.add(l); return l; };
+    const parts = VD3K.particles(S3, { n: 300, r: 0.009, seg: 8 }); sc.add(parts);
+    const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(2400 * 3), 3));
+    const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: 0x8fb8ff, transparent: true, opacity: 0.4 })); sc.add(trailL);
+    const marks = VD3K.particles(S3, { n: 24, r: 0.012, seg: 8, color: '#ff8a4c', emissive: '#ff6a2c' }); sc.add(marks);
+    g3 = { S3, sun, light, planet: mk(0.03, '#d9a066'), body: mk(0.016, '#8fb8ff'), orbits: { mars: orbitLine(0xff7a5c, 0.6, true), pl: orbitLine(0xa8b4c4, 0.5), body: orbitLine(0x8fb8ff, 0.9), x: orbitLine(0xfb923c, 0.8, true), j: orbitLine(0xe0a874, 0.4), s: orbitLine(0xdcc283, 0.4), u: orbitLine(0x79d2e0, 0.7), n: orbitLine(0x7aa2ff, 0.6, true) },
+      ura: mk(0.022, '#79d2e0'), nepB: mk(0.022, '#7aa2ff'), jup: mk(0.026, '#e0a874'), sat: mk(0.024, '#dcc283'), xB: mk(0.022, '#fb923c'),
+      parts, trailL, trailG, marks, labels: { planet: lab('Jupiter', '#f2d2b0'), body: lab('asteroid', '#cfe0ff'), mark: lab('passed here', '#ffb48a'), mars: lab('Mars\'s orbit', '#ff9a80'), ura: lab('Uranus', '#a8e8f2'), nep: lab('Neptune', '#b4caff'), x: lab('planet X', '#ffc08a'), jup: lab('Jupiter', '#f2d2b0'), sat: lab('Saturn', '#ecdcae') } };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.05, phMax: 1.5, zMin: 0.5, zMax: 4 });
+    return true;
+  }
+  function setOrbit(line, a, e, w, sc) { const pos = line.geometry.attributes.position.array; for (let i = 0; i <= 180; i++) { const E = i / 180 * 2 * Math.PI, xp = a * (Math.cos(E) - e), yp = a * Math.sqrt(1 - e * e) * Math.sin(E), c = Math.cos(w + rot), s = Math.sin(w + rot);
+    pos[3 * i] = (xp * c - yp * s) * sc; pos[3 * i + 1] = (xp * s + yp * c) * sc; pos[3 * i + 2] = 0; } line.geometry.attributes.position.needsUpdate = true; line.geometry.computeBoundingSphere(); if (line.computeLineDistances) line.computeLineDistances(); line.visible = true; }
+  const R2 = (x, y) => { const c = Math.cos(rot), s = Math.sin(rot); return [x * c - y * s, x * s + y * c]; };
+  function draw3() {
+    const g = g3, S3 = g.S3, narrow = W < 821, cardW = narrow ? 0 : $('setupCard').offsetWidth + 28;
+    S3.size(W, H); S3.cam.setViewOffset(W, H, cardW / 2, 0, W, H);
+    S3.place(G3.o, [0, 0, 0], S3.fit(2.9, 1.3));
+    const nepS = S.scene === 'neptune', R = nepS ? Math.max(35, S.X ? S.xa * (1 + S.xe) + 3 : 0) : SCENES[S.scene].R, k = 1 / R;
+    Object.values(g.orbits).forEach((l) => { l.visible = false; }); Object.values(g.labels).forEach((l) => { l.visible = false; });
+    for (const m of [g.planet, g.body, g.ura, g.nepB, g.jup, g.sat, g.xB]) m.visible = false;
+    g.parts.show(0); g.marks.show(0); g.trailL.visible = false;
+    const put = (m, x, y, l, dz) => { const q = R2(x, y); m.position.set(q[0] * k, q[1] * k, 0); m.visible = true; if (l) { l.position.set(q[0] * k, q[1] * k, dz || 0.06); l.visible = true; } };
+    if (nepS) { rot = 0; const y = S.year, N = NT;
+      const orb = (kk, line) => { const o = 16 * N.at(Math.max(NF.t0, Math.min(NF.t1, y))), el = elements(N.tab[o + 4 * kk], N.tab[o + 4 * kk + 1], N.tab[o + 4 * kk + 2], N.tab[o + 4 * kk + 3], GM); setOrbit(line, el.a, el.e, el.w, k); };
+      orb(0, g.orbits.j); orb(1, g.orbits.s); orb(2, g.orbits.u); put(g.jup, ...nepPos(0, y), g.labels.jup); put(g.sat, ...nepPos(1, y), g.labels.sat); put(g.ura, ...nepPos(2, y), g.labels.ura);
+      if (S.showNep) { orb(3, g.orbits.n); put(g.nepB, ...nepPos(3, y), g.labels.nep); }
+      if (S.X) { setOrbit(g.orbits.x, S.xa, S.xe, S.xw * D2R, k); const X = planetX({ a: S.xa, e: S.xe, w: S.xw, lon: S.xl, m: S.xm * ME_SUN })(y); put(g.xB, X[0], X[1], g.labels.x, -0.06); }
+    } else {
+      const sc = SCENES[S.scene]; rot = S.frame === 'rot' ? -lamP(sys.t) : 0;
+      if (sc.mars) { const m = PLANETS.mars; setOrbit(g.orbits.mars, m.a, m.e, m.w * D2R, k); const q = R2(m.a * Math.cos(2.3), m.a * Math.sin(2.3)); g.labels.mars.position.set(q[0] * k, q[1] * k, 0.03); g.labels.mars.visible = true; }
+      setOrbit(g.orbits.pl, sys.pl.a, sys.pl.e, sys.pl.w * D2R, k);
+      const Pp = planetAt(sys, sys.t); g.planet.material.color.set(S.scene === 'belt' ? '#d9a066' : '#5b84f0'); g.planet.material.emissive.set(S.scene === 'belt' ? '#2a1a08' : '#0a1430');
+      g.planet.scale.setScalar(S.scene === 'belt' ? 1 : 0.8); put(g.planet, Pp[0], Pp[1], g.labels.planet, 0.07); g.labels.planet.set(sc.pname);
+      if (many) { let n = 0; for (let j = 0; j < sys.n; j++) { if (sys.gone[j]) continue; const q = R2(sys.s[4 * j], sys.s[4 * j + 1]); g.parts.put(n++, q[0] * k, q[1] * k, 0, VD3K.heat(bodyEl(sys, j).e / 0.4)); } g.parts.show(n); g.parts.done(); }
+      else {
+        const el = bodyEl(sys, 0); setOrbit(g.orbits.body, el.a, el.e, el.w, k); put(g.body, sys.s[0], sys.s[1], g.labels.body, 0.05); g.labels.body.set(`${S.preset.startsWith('pluto') ? 'Pluto' : sc.body}${sys.gone[0] ? ' (out)' : ''}`);
+        const cj = sys.conj[0].slice(-24); cj.forEach((c, i) => { const r = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(c.f)), th = el.w + c.f, q = R2(r * Math.cos(th), r * Math.sin(th)); g.marks.put(i, q[0] * k, q[1] * k, 0); }); g.marks.show(cj.length); g.marks.done();
+        if (cj.length) { const c = cj[cj.length - 1], r = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(c.f)), th = el.w + c.f, q = R2(r * Math.cos(th), r * Math.sin(th)); g.labels.mark.position.set(q[0] * k, q[1] * k, -0.05); g.labels.mark.visible = true; g.labels.mark.set(`${sc.pname} passed here`); }
+        const pos = g.trailG.attributes.position.array, n = Math.min(2400, trail.length / 3), off = trail.length / 3 - n;
+        for (let i = 0; i < n; i++) { let x = trail[3 * (off + i)], y = trail[3 * (off + i) + 1]; if (S.frame === 'rot') { const r0 = -trail[3 * (off + i) + 2], c = Math.cos(r0), s = Math.sin(r0); const u = x * c - y * s, v = x * s + y * c; x = u; y = v; } else { const q = R2(x, y); x = q[0]; y = q[1]; }
+          pos[3 * i] = x * k; pos[3 * i + 1] = y * k; pos[3 * i + 2] = 0; }
+        g.trailG.setDrawRange(0, n); g.trailG.attributes.position.needsUpdate = true; g.trailG.computeBoundingSphere(); g.trailL.visible = n > 1;
+      }
+    }
+    S3.render();
+  }
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'resonances@2026-10-25';
+  const setupName = () => (PRESETS[S.preset] ? PRESETS[S.preset].name : 'Set by hand');
+  function showCols() { window.vdShowCols = S.scene === 'neptune' ? [['X_a_AU', 'X a (AU)'], ['X_mass_ME', 'X mass'], ['X_lon_deg', 'X in 1846 (°)'], ['rms_arcsec', 'rms (″)']]
+    : S.scene === 'belt' ? [['a0_AU', 'a₀ (AU)'], ['t_yr', 'years'], ['emax', 'largest e'], ['out_yr', 'crossed Mars (yr)']] : [['a0_AU', 'a₀ (AU)'], ['t_yr', 'years'], ['dmin_AU', 'closest (AU)'], ['out_yr', 'scattered (yr)']]; }
+  window.vdReadingRow = () => {
+    if (S.scene === 'neptune') return { setup: setupName(), X: S.X ? 'yes' : 'none', X_a_AU: S.X ? fx(S.xa, 2) : '', X_mass_ME: S.X ? fx(S.xm, 1) : '', X_lon_deg: S.X ? fx(S.xl, 1) : '', X_e: S.X ? fx(S.xe, 3) : '', X_peri_deg: S.X ? fx(S.xw, 1) : '',
+      rms_arcsec: fx(fit.rms, 1), r1845_arcsec: fx(fit.r[NT.obsT.indexOf(1845)], 1), old: S.useOld ? 'fitted' : 'not fitted' };
+    if (many) return 'Record takes one body. Choose a setup with one asteroid (or Pluto), or click a bar of the real counts to start one there.';
+    if (sys.t <= 0) return 'Start the run first, then record when it has run as long as you want.';
+    const sc = SCENES[S.scene], g = sys.gone[0], Pp = 2 * Math.PI * Math.pow(sys.pl.a, 1.5) / Math.sqrt(sys.mu), P0 = 2 * Math.PI * Math.pow(sys.a0[0], 1.5) / Math.sqrt(GM);
+    return { setup: setupName(), planet: sc.pname, a0_AU: fx(sys.a0[0], S.scene === 'belt' ? 3 : 2), e0: fx(sys.e0[0], 3), start_deg: String(S.ph), ratio: fx(S.scene === 'belt' ? Pp / P0 : P0 / Pp, 3),
+      t_yr: String(Math.round(g ? g.t : sys.t)), emax: fx(sys.emax[0], 3), dmin_AU: fx(sys.dmin[0], 2), out_yr: g ? String(Math.round(g.t)) : 'no', out_why: g ? g.why : '' };
+  };
+  $('about').textContent = `Model: the Sun, one planet on its fixed Kepler ellipse, and massless bodies, all in one plane, stepped with the Wisdom–Holman method (steps of ${SCENES.belt.dt} yr for the asteroid belt, ${SCENES.kuiper.dt} yr for the Kuiper belt). Planet orbits are the J2000 elements of Standish (JPL) and masses from the IAU 2009 constants. Left out: every other planet (above all Saturn, which the real 2:1 gap needs), the tilts of the orbits, collisions, and the Yarkovsky drift that feeds real asteroids into the resonances. A body is stopped when it crosses Mars's orbit (q < ${fx(MARS_Q, 3)} AU), since close passes by the inner planets then remove it, or when it comes within one Hill radius of the planet. The real gaps took millions of years to clear; the demo shows the first kicks. Finding Neptune: Jupiter, Saturn, Uranus and Neptune pull on each other in a full model integrated back from 2000 to 1690 (Runge–Kutta, 0.05 yr); its Uranus is "seen" once a year from 1781 to 1845 and at seven older sightings (1690 to 1769), heliocentric longitudes with no measuring error. A model without Neptune, or with a planet X on a fixed ellipse, is fitted to them by least squares (Uranus's 1781 position and velocity).`;
+  $('dataNote').textContent = `Asteroid belt: numbered asteroids (${fint(BELT_HIST.total)} with a from 1.80 to 4.10 AU) counted in bins of 0.02 AU with the JPL Small Body Database Query API on ${BELT_HIST.date}. Kuiper belt: every object in the same database with a from 30 to 56 AU, numbered or not (${fint(KB_HIST.total)}), in bins of 0.5 AU. The counts are of objects found so far: small, faint ones far from the Sun are missing, which is why the far Kuiper belt looks thin, but the gaps and piles do not depend on that.`;
+
+  /* ---------- run, size, theme ---------- */
+  const redraw = () => { if (!K || !W) return; draw(); drawHist(); drawPlot(); readouts(); clock(); };
+  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); }
+  /* deterministic stepping for tests, key capture and the video: advance the run by years (or the year counter in Finding Neptune) */
+  function run(years) { if (S.scene === 'neptune') { S.year = Math.min(NF.GALLE, S.year + years); redraw(); return; } const n = Math.round(years / sys.dt); stepRun(n); redraw(); }
+  let last = performance.now(), perStep = 0.002, lastOut = 0, rr = { sim: 0, real: 0 };
+  function frame(now) {
+    const dtr = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.scene === 'neptune') { S.year = Math.min(NF.GALLE, S.year + dtr * SCENES.neptune.base * S.speed / 10 * 2.5); if (S.year >= NF.GALLE) setRun(false); redraw(); }
+      else {
+        const want = dtr * SCENES[S.scene].base * S.speed, live = Math.max(1, sys.gone.filter((g) => !g).length);
+        let n = Math.round(want / sys.dt); const cap = Math.max(1, Math.floor(13 / (perStep * live)));
+        if (n > cap) n = cap;
+        const t0 = performance.now(), ty = sys.t; stepRun(n); if (n) perStep = 0.8 * perStep + 0.2 * (performance.now() - t0) / (n * live);
+        rr.sim += sys.t - ty; rr.real += dtr; if (rr.real > 0.7) { S.rate = rr.sim / rr.real; rr.sim = 0; rr.real = 0; }
+        draw(); if (now - lastOut > 200 || !S.run) { lastOut = now; drawHist(); drawPlot(); readouts(); clock(); }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), a = hc.parentElement.getBoundingClientRect(), b = pc.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    HW = a.width; HH = a.height; hc.width = Math.round(HW * dpr); hc.height = Math.round(HH * dpr); PW = b.width; PH = b.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search), q0 = qs.get('setup');
+  applyPreset(PRESETS[q0] ? q0 : 'r31'); showCols();
+  const ro = new ResizeObserver(resize); [$('scene'), hc.parentElement, pc.parentElement].forEach((el) => ro.observe(el)); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.scene === 'neptune' ? null : sys.t), timeUnit: 'yr' });
+  VD.howTo({ src: 'media/how-this-works/resonances.mp4', poster: 'media/how-this-works/resonances.jpg' });
+  window.__res = { S, get sys() { return sys; }, get fit() { return fit; }, get NT() { return NT; }, applyPreset, setScene, run, setRun, sync, redraw, build, refit, PRESETS, histGeom,
+    set: (o) => { Object.assign(S, o); if (S.scene === 'neptune') refit(); else build(); sync(); redraw(); } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

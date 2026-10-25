@@ -504,6 +504,7 @@
     'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
   const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures', 'intro-celestial-sphere'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
+  INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
@@ -541,6 +542,13 @@
     'intro-em-spectrum': { demo: 'Electromagnetic Waves', cols: ['row', 'band', 'f_Hz', 'lambda_m', null] },
     /* Reading | Planet | Distance d (AU) | 1/d² (1/AU²) | Starlight S (W/m²) | Albedo | Temperature, no greenhouse (K) | Surface temperature in the model (K) | Measured temperature (K) */
     'intro-planet-temperatures': { demo: 'Planet Temperatures and Habitable Zones', cols: ['row', 'body', 'd_AU', 'inv_d2', 'S_W_m2', 'albedo', 'T_bare_K', 'T_surf_K', 'T_meas_K'] },
+    /* Run | Setup | Starting a (AU) | P_Jupiter/P | Years run | Largest e | Crossed Mars's orbit (year). The Gaps table is typed by hand.
+       Kuiper belt readings (the planet is Neptune): Run | Setup | Starting a | P/P_Neptune | Years run | Closest to Neptune (AU) | Thrown out (year).
+       Finding Neptune readings: Trial | Setup | Planet X distance (AU) | mass (Earths) | position on 1846 Sep 23 (°) | Leftover drift rms (″) */
+    'intro-resonances': { demo: 'Orbital Resonances', cols: ['row', 'setup', 'a0_AU', 'ratio', 't_yr', 'emax', 'out_yr'],
+      alt: [
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.planet === 'Neptune'), cols: ['row', 'setup', 'a0_AU', 'ratio', 't_yr', 'dmin_AU', 'out_yr'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.rms_arcsec !== undefined && r.rms_arcsec !== ''), cols: ['row', 'setup', 'X_a_AU', 'X_mass_ME', 'X_lon_deg', 'rms_arcsec'] }] },
   });
   /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

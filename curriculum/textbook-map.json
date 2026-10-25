@@ -1503,7 +1503,8 @@
           "demos": [
             "lagrange-points",
             "exoplanets",
-            "planet-temperatures"
+            "planet-temperatures",
+            "resonances"
           ]
         },
         {
@@ -1686,6 +1687,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "resonances",
             "kepler-orbits",
             "lagrange-points"
           ],
@@ -1710,6 +1712,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "resonances",
             "seasons",
             "kepler-orbits"
           ],
@@ -7561,6 +7564,23 @@
       ],
       "title": "Planet Temperatures and Habitable Zones",
       "url": "demos/planet-temperatures.html"
+    },
+    {
+      "demo": "resonances",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap demo 7 of the Astro 2203 plan (Topics 9 and 11). The planar restricted three body problem (Sun, one planet on its J2000 Kepler ellipse, massless bodies) stepped with the Wisdom–Holman method: Jupiter's 3:1, 5:2 and 2:1 resonances kick an asteroid at the same place each time and stretch its orbit until it crosses Mars's (4,157 and 11,921 yr for the presets), beside the real counts of 881,333 numbered asteroids and 6,620 Kuiper belt objects from the JPL Small Body Database (queried 2026-10-25); Pluto in Neptune's 3:2 never comes closer than 17.6 AU, the same orbit with bad timing is scattered. Finding Neptune: Uranus's orbit fitted to yearly positions from a four planet model, 1781 to 1845, with and without a planet X; Le Verrier's 1846 elements from Laskar 2017. Intro worksheet intro-resonances with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "intro-resonances"
+      ],
+      "title": "Orbital Resonances",
+      "url": "demos/resonances.html"
     },
     {
       "demo": "faraday",
