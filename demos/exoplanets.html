@@ -70,9 +70,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 @media (max-height: 820px) and (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; } }
 .stage {
   position: relative; min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
-  display: grid; grid-template-rows: minmax(0, 1fr) 160px 160px;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) 160px 160px;
 }
-@media (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 500px; grid-template-rows: minmax(0, 1fr) 150px 150px; } }
+@media (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 500px; grid-template-rows: auto minmax(0, 1fr) 150px 150px; } }
+/* time and view controls in a strip across the top of the picture, as in the other demos */
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .btn { min-width: 72px; }
 .views { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
 .pane { position: relative; min-height: 0; min-width: 0; }
 .views .pane + .pane { border-left: 1px solid var(--line); }
@@ -133,7 +136,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { min-height: 0; grid-template-rows: auto 205px 170px; }
+  .stage { min-height: 0; grid-template-rows: auto auto 205px 170px; }
   .views { grid-template-columns: minmax(0, 1fr); }
   .views .pane.topv { height: 320px; }
   .views .pane.side { height: 230px; }
@@ -166,16 +169,23 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="Animation speed" id="speedSeg">
+          <button type="button" data-s="0.25" aria-pressed="false">0.25×</button>
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+        </div>
+      </div>
       <div class="views">
         <div class="pane topv">
           <canvas id="top" tabindex="0" role="application" aria-label="The orbit, in 3D or from above. Drag the planet to move it along its orbit; in 3D drag elsewhere to turn the view. Left and right arrows step time, up and down change the inclination, space plays or pauses."></canvas>
           <div class="tag" id="topTag">Top view, looking down on the orbit</div>
-          <div class="viewbar">
-            <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
-              <button type="button" data-dim="3d" aria-pressed="false">3D</button>
-              <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
-            </div>
-          </div>
         </div>
         <div class="pane side">
           <canvas id="side" tabindex="0" role="application" aria-label="What a distant telescope sees: the star disk and the planet. Up and down arrows change the inclination."></canvas>
@@ -222,17 +232,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
       <section>
         <h2>Time</h2>
-        <div class="row2">
-          <button type="button" class="btn primary" id="play">Pause</button>
-          <button type="button" class="btn" id="reset">Reset</button>
-        </div>
-        <div class="slider-head" style="align-items: center"><span>Speed</span>
-          <div class="seg" role="group" aria-label="Animation speed" id="speedSeg">
-            <button type="button" data-s="0.25" aria-pressed="false">0.25×</button>
-            <button type="button" data-s="1" aria-pressed="true">1×</button>
-            <button type="button" data-s="4" aria-pressed="false">4×</button>
-          </div>
-        </div>
         <div class="toggles">
           <label><input type="checkbox" id="tSlow" checked>Slow motion in transit</label>
           <label><input type="checkbox" id="tModel" checked>True curves</label>

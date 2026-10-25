@@ -78,10 +78,15 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 @media (max-height: 820px) and (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; } }
 .stage {
   position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
-  display: grid; grid-template-rows: minmax(0, 1fr) 160px;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) 160px;
 }
-:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 220px; }
-@media (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 520px; grid-template-rows: minmax(0, 1fr) 170px; } }
+:root[data-projector="on"] .stage { grid-template-rows: auto minmax(0, 1fr) 220px; }
+@media (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 520px; grid-template-rows: auto minmax(0, 1fr) 170px; } }
+/* time controls in a strip across the top of the picture, as in the other demos */
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .btn { min-width: 72px; }
+.count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 /* pictures, not controls: let a finger on them scroll the page */
@@ -102,8 +107,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.timerow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.timerow .btn { flex: 1 1 0; min-width: 72px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout .big dd { font-size: 1.25rem; }
 .readout .phase dd { font-family: var(--font-ui); font-size: 1.12rem; font-weight: 700; }
@@ -127,10 +130,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { min-height: 0; grid-template-rows: auto auto; }
+  .stage { min-height: 0; grid-template-rows: auto auto auto; }
   .pane.main { height: 62vh; min-height: 360px; }
   .pane.strip { height: 220px; }
-  :root[data-projector="on"] .stage { grid-template-rows: auto auto; }
+  :root[data-projector="on"] .stage { grid-template-rows: auto auto auto; }
   :root[data-projector="on"] .pane.strip { height: 280px; }
 }
 /* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
@@ -157,6 +160,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn" id="play" aria-pressed="false">Play</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speed">
+          <button type="button" data-v="0.5" aria-pressed="false">½×</button>
+          <button type="button" data-v="1" aria-pressed="true">1×</button>
+          <button type="button" data-v="2" aria-pressed="false">2×</button>
+        </div>
+        <span class="count mono" id="count" aria-live="off"></span>
+      </div>
       <div class="pane main">
         <canvas id="hr" tabindex="0" role="application" aria-label="Hertzsprung Russell diagram. Drag the star along its track to change its age. Left and right arrow keys change the age, up and down change the mass, space plays or pauses."></canvas>
       </div>
@@ -193,15 +206,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div id="cageBox" hidden>
           <div class="slider-head"><label for="cage">Cluster age</label><output id="cageOut" class="mono" for="cage"></output></div>
           <input type="range" id="cage" min="0" max="1000" step="1" value="500">
-        </div>
-        <div class="timerow">
-          <button type="button" class="btn" id="play" aria-pressed="false">Play</button>
-          <button type="button" class="btn" id="reset">Reset</button>
-          <div class="seg" role="group" aria-label="Playback speed" id="speed">
-            <button type="button" data-v="0.5" aria-pressed="false">½×</button>
-            <button type="button" data-v="1" aria-pressed="true">1×</button>
-            <button type="button" data-v="2" aria-pressed="false">2×</button>
-          </div>
         </div>
         <p class="hint" id="timeHint">The stage slider and Play stretch the short late phases so you can watch them. The age readout is always the real age. Drag the star on the diagram, or focus it and use <kbd>←</kbd> <kbd>→</kbd> for age and <kbd>↑</kbd> <kbd>↓</kbd> for mass.</p>
       </section>
@@ -1007,6 +1011,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('ageOut').textContent = fmtAge(st.age);
       $('rPhase').textContent = st.p.name;
       $('rAge').textContent = fmtAge(st.age);
+      $('count').innerHTML = fmtAge(st.age) + ' <small>age</small>';
       $('rLeft').textContent = st.p.wd ? 'cools forever' : st.p.gone ? '—' : fmtAge(st.left);
       $('rL').textContent = st.p.gone ? '—' : fmtL(st.L);
       $('rT').textContent = st.p.gone ? '—' : fmtT(st.Te);
@@ -1042,6 +1047,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const c of CL) { const k = c.st.p.key; if (k === 'ms') nMS++; else if (c.st.p.gone) nSN++; else if (k === 'wd' || k === 'knee') nWD++; else nG++; }
       $('cageOut').textContent = fmtAge(S.cAge);
       $('cAge').textContent = fmtAge(S.cAge);
+      $('count').innerHTML = fmtAge(S.cAge) + ' <small>cluster age</small>';
       $('cTo').textContent = toM > 25 ? '> 25 M☉' : fmtM(toM);
       $('cToT').textContent = toM > 25 ? '—' : fmtT(10 ** msPoint(Math.max(toM, 0.4), 1).lt);
       $('cMS').textContent = nMS; $('cGi').textContent = nG; $('cWD').textContent = nWD; $('cSN').textContent = nSN;

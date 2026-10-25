@@ -2095,3 +2095,17 @@ Steve asked for search (2026-10-25 01:34). The home page has a "Find a demo" box
 - Checks: test_springs, test_ising, test_gas-heat-capacity pass; vdcheck on all three (desktop and phone, light and dark) 0 problems; check_math on the Ising handout clean. 3D views looked at in Chromium (three.js served locally).
 
 **For GPT to verify:** the springs caption numbers (d = mg/k with g = 9.81), and the Ising handout's new first procedure line.
+## Claude, 2026-10-25: Astro time controls on the picture strip, and throwing particles in Lagrange 3D
+
+From Steve's desktop review (2026-10-25 01:19): Stellar Evolution's Play and Reset were not where the other demos put them.
+- **Checked every Astro demo** (Star Slice left for its own pass). Most already had the strip across the top of the picture (`.stage-ctl`: Play or Pause, Reset, speed, view switches, a readout at the right), as in Ising, White Dwarf Cooling and the Thermo and Modern demos. Four kept their time controls in the sidebar and one floated them on the picture; all five now use the strip, with every id, name and label unchanged:
+  - **Stellar Evolution** (`hr-diagram`): Play, Reset and ½× 1× 2× move to the strip, which also shows the age (or cluster age) at the right.
+  - **Moon Phases**: Pause, Reset, days/s and 3D | Flat move to the strip; the Days since new moon slider stays in Time.
+  - **Finding Exoplanets**: Pause, Reset, speed and 3D | Flat move to the strip; Slow motion in transit and True curves stay in Time. Play is a plain button like the other demos (was dark filled).
+  - **Tides**: Pull on Earth | Ocean bulges, then (in Ocean bulges) Pause, Reset and hours/s, then 3D | Flat. The sidebar section that held the view switches is now "The Moon" (arrows, distance, Real distance).
+  - **Reasons for Seasons**: Pause, Reset, speed, Whole orbit | Follow Earth and 3D | Flat move from two floating bars on the orbit picture to the strip.
+  - **Lagrange Points**: units line shortened ("lengths in a · time in P · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = 1"; separation a and period P are named in the readouts, and n = 1 follows) so Reset all and Projector sit at the right as elsewhere.
+- **Lagrange Points 3D, adding particles.** A click on the surface already dropped a particle at rest; it now follows the same rule as Flat (a circular orbit when "A click starts a circular orbit" is ticked). New: a **Drag: Turns the view | Throws a particle** switch in the strip, shown only in 3D, and Shift drag throws in either setting. A throw starts where the pointer hits the surface and the arrow lies in the level plane through that point, so its length is the distance covered in 0.1 P exactly as in Flat (`throw3State` mirrors `throwState` for the rotating frame, the only frame 3D shows); the speed label (km/s, × circular, bound or unbound) is the same. Phones: with Throws chosen, one finger throws. Handout "About the demo" line says so.
+- No CORE or readings changed. Tests (lagrange points, tides) pass; `vdcheck --only after` on all six: no page errors, no sideways scroll at 400 px, light and dark; checked by hand in Chromium (throw, Shift throw, click, turn drag adds nothing).
+
+**For GPT to verify:** nothing numerical; the 3D throw uses the same ARW = 0.1·2π scaling as Flat.

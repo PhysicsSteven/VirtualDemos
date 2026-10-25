@@ -72,8 +72,13 @@ sub { font-size: 0.72em; line-height: 0; }
 :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 360px; }
 .stage {
   position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
-  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(200px, 0.5fr);
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) minmax(200px, 0.5fr);
 }
+/* view and time controls in a strip across the top of the picture, as in the other demos */
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .btn { min-width: 72px; }
+.stage-ctl .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.stage-ctl .grp[hidden] { display: none; }
 :root[data-projector="on"] .stage { min-height: 760px; }
 /* projector on a short screen: let the stage shrink so it stays above the fold */
 @media (min-width: 821px) { :root[data-projector="on"] .stage { min-height: 500px; } }
@@ -122,7 +127,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   html, body { height: auto; }
   .app { height: auto; }
   .bench, :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage, :root[data-projector="on"] .stage { min-height: 0; grid-template-rows: auto auto; }
+  .stage, :root[data-projector="on"] .stage { min-height: 0; grid-template-rows: auto auto auto; }
   .pane.main { height: 58vh; min-height: 380px; }
   .pane.plot { height: 250px; }
   .stage[data-view="bulge"] .pane.plot { height: 440px; }
@@ -156,6 +161,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   <main class="bench">
     <div class="stage" id="stage" data-view="pull">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="pull" aria-pressed="true">Pull on Earth</button>
+          <button type="button" data-v="bulge" aria-pressed="false">Ocean bulges</button>
+        </div>
+        <div class="grp" id="timeCtl" hidden>
+          <button type="button" class="btn" id="play">Pause</button>
+          <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg" role="group" aria-label="Animation speed" id="speed">
+            <span class="seglabel">hours/s</span>
+            <button type="button" data-s="1" aria-pressed="false">1</button>
+            <button type="button" data-s="3" aria-pressed="true">3</button>
+            <button type="button" data-s="12" aria-pressed="false">12</button>
+            <button type="button" data-s="48" aria-pressed="false">48</button>
+          </div>
+        </div>
+        <div class="seg" role="group" aria-label="Picture" id="view3Seg">
+          <button type="button" data-view="3d" aria-pressed="false">3D</button>
+          <button type="button" data-view="flat" aria-pressed="true">Flat</button>
+        </div>
+      </div>
       <div class="pane main">
         <canvas id="main" tabindex="0" role="application" aria-label="Main view. In the pull view, drag the Moon left or right to change its distance; arrow keys change the distance. In the ocean view, drag the Moon around its orbit or drag the city around Earth; left and right arrows move the Moon a day, up and down arrows change the time by 15 minutes. Space plays or pauses. In the 3D picture, drag anywhere else to turn the view; the wheel or a pinch zooms."></canvas>
       </div>
@@ -180,16 +206,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>View</h2>
-        <div class="seg full" role="group" aria-label="View" id="viewSeg">
-          <button type="button" data-v="pull" aria-pressed="true">Pull on Earth</button>
-          <button type="button" data-v="bulge" aria-pressed="false">Ocean bulges</button>
-        </div>
-        <div class="seg" role="group" aria-label="Picture" id="view3Seg">
-          <span class="seglabel">Picture</span>
-          <button type="button" data-view="3d" aria-pressed="false">3D</button>
-          <button type="button" data-view="flat" aria-pressed="true">Flat</button>
-        </div>
+        <h2>The Moon</h2>
         <div class="seg full" role="group" aria-label="Arrows" id="arrowSeg">
           <button type="button" data-a="total" aria-pressed="false">Total pull</button>
           <button type="button" data-a="tidal" aria-pressed="true">Tidal pull</button>
@@ -203,17 +220,6 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
       <section id="timeSec" hidden>
         <h2>Time</h2>
-        <div class="row2">
-          <button type="button" class="btn" id="play">Pause</button>
-          <button type="button" class="btn" id="reset">Reset</button>
-        </div>
-        <div class="seg" role="group" aria-label="Animation speed" id="speed">
-          <span class="seglabel">hours/s</span>
-          <button type="button" data-s="1" aria-pressed="false">1</button>
-          <button type="button" data-s="3" aria-pressed="true">3</button>
-          <button type="button" data-s="12" aria-pressed="false">12</button>
-          <button type="button" data-s="48" aria-pressed="false">48</button>
-        </div>
         <div>
           <div class="slider-head"><label for="hour">City's local solar time</label><output id="hourOut" class="mono" for="hour">09:00</output></div>
           <input type="range" id="hour" min="0" max="24" step="0.05" value="9">
@@ -1276,6 +1282,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('arrowSeg').hidden = v !== 'pull';
     $('timeSec').hidden = v !== 'bulge';
+    $('timeCtl').hidden = v !== 'bulge';
     $('pullRead').hidden = v !== 'pull';
     $('bulgeRead').hidden = v !== 'bulge';
     $('keyPull').hidden = v !== 'pull';
