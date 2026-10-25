@@ -3590,3 +3590,24 @@ less than a²/λ, which Analysis 6 now asks about. Part 4 uses 50, 45, 40, 35 an
 
 **For GPT:** please check the dispersion numbers (λ at 6 to 20 Hz, 1.5 to 12 mm), the bar calibration (S = 2C sin κ), the two
 stated approximations, and the key's answers against its tables.
+
+## 2026-10-25 · Claude · New course page: Astro 2203 (Steve's solar system course)
+
+Steve teaches Astro 2203 next quarter (asynchronous online, three tests; inherited from Dr. John Shaw, who taught it as Physics
+220). Plan with Steve's pick (the whole plan, in schedule order): https://claude.ai/artifact/T3sRWCeRiojRhCBa1xhRoV. This is
+step one, the course page.
+
+- `astro-2203.html`, from a new course `astro-2203` in `curriculum/textbook-map.json`: 15 units in the course schedule order,
+  Topic 1 to 12 plus a review unit before each test (`review`: the units it covers, rendered as links back to them and their
+  demos). Every unit lists `demos` only (no textbook); each has a `note` (one line on the topic) and a `short` jump label.
+  20 existing demos list `astro-2203` last in their `course`, so their breadcrumbs keep their first course.
+- `tools/courses.py`: `NO_BOOK` courses get their own how line and no textbook fact or "Not in the textbook" label; empty section
+  chips are no longer written on any page; "Also used in this unit" drops the empty "; " when a demo has no sections there.
+  `COURSE_HANDOUTS['astro-2203']` (empty for now) will hold the intro level worksheets: that page shows only those on each card
+  and the other pages leave them out (`course_handouts`, also used by `tools/canvas.py`). The demos' own Handout and worksheet
+  menus still list every worksheet.
+- The physics level worksheets are deliberately not linked from the Astro 2203 page: they use log graphs and fitted slopes. Intro
+  worksheets come next (Topics 1 to 4 first), then the new demos in schedule order (celestial sphere, retrograde motion, ...).
+- `test_textbook_map.cjs` accepts `astro-2203`. Canvas: `tools/canvas.py` now builds `virtualdemos-astro-2203.imscc` (links only
+  until the worksheets exist).
+- Steve's slides are teaching material only: nothing from them goes on the site.

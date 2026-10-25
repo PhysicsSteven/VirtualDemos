@@ -29,7 +29,13 @@ BLURB = {
     'thermo': ('Heat and the laws of thermodynamics', 'Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.'),
     'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
     'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
+    'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, in the order of the Astro 2203 schedule, with a review before each of the three tests. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
 }
+# A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
+# handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
+# and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
+COURSE_HANDOUTS = {'astro-2203': set()}
+NO_BOOK = {'astro-2203'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
@@ -206,16 +212,25 @@ HANDOUT_TOPIC = {
 }
 
 
+def course_handouts(cid, demo):
+    """The demo's handouts (with a students/<h>.md) that course cid shows."""
+    hs = [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+    if cid in COURSE_HANDOUTS:
+        return [h for h in hs if h in COURSE_HANDOUTS[cid]]
+    other = set().union(*COURSE_HANDOUTS.values())
+    return [h for h in hs if h not in other]
+
+
 def handout_label(h, i=None):
     return f'Worksheet{f" {i}" if i else ""}: {HANDOUT_TOPIC[h]}'
 
 
-def card(name, demo, unit_secs, cards, notes):
+def card(name, demo, unit_secs, cards, notes, cid=None):
     c = cards[name]
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     links = [f'<a class="go" href="demos/{name}.html">Open demo</a>']
-    hs = [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+    hs = course_handouts(cid, demo)
     for i, h in enumerate(hs, 1):
         links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>')
     if name in notes:
@@ -227,8 +242,7 @@ def card(name, demo, unit_secs, cards, notes):
         <div class="body">
           <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
           <h3><a href="demos/{name}.html">{esc(c['title'])}</a></h3>
-          <p>{c['desc']}</p>
-          <ul class="secs" aria-label="Textbook sections">{chips}</ul>
+          <p>{c['desc']}</p>{f'{chr(10)}          <ul class="secs" aria-label="Textbook sections">{chips}</ul>' if chips else ''}
           <p class="links">{' '.join(links)}</p>
         </div>
       </li>'''
@@ -279,16 +293,24 @@ def course_page(course, m, cards, notes):
         covered = sum(1 for s in us if s['status'] == 'usable')
         gaps = [s for s in sorted(us, key=sec_key) if s['status'] != 'usable']
         opt = u['requirement'] == 'optional'
-        jump.append(f'<li><a href="#{u["id"]}"{" class=\"opt\"" if opt else ""}>{esc(u["title"])}</a></li>')
+        jump.append(f'<li><a href="#{u["id"]}"{" class=\"opt\"" if opt else ""}>{esc(u.get("short", u["title"]))}</a></li>')   # short: a shorter jump label
         fresh = [n for n in names if n not in first_unit]
         seen = [n for n in names if n in first_unit]
         for n in fresh: first_unit[n] = u
-        items = [card(n, demos[n], ukeys, cards, notes) for n in fresh]
+        items = [card(n, demos[n], ukeys, cards, notes, cid) for n in fresh]
         items.extend(activity_card(activities[a], ukeys) for a in activity_names)
         if seen:
-            links = ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a> <span class="where">(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n]["title"])}</a>; '
-                               + ', '.join(f'{s["vol"]}:{s["sec"]}' for s in sorted([x for x in demos[n]['sections'] if (x['vol'], x['sec']) in ukeys], key=sec_key)) + ')</span>' for n in seen)
+            def where(n):
+                refs = ', '.join(f'{s["vol"]}:{s["sec"]}' for s in sorted([x for x in demos[n]['sections'] if (x['vol'], x['sec']) in ukeys], key=sec_key))
+                return f'(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n]["title"])}</a>{"; " + refs if refs else ""})'
+            links = ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a> <span class="where">{where(n)}</span>' for n in seen)
             items.append(f'      <li class="also">Also used in this unit: {links}</li>')
+        if u.get('review'):   # a test week: link back to the demos of the units it covers
+            rev = [x for x in course['units'] if x['id'] in u['review']]
+            rlinks = ' · '.join(f'<a href="#{x["id"]}">{esc(x["title"])}</a>' for x in rev)
+            back = list(dict.fromkeys(n for x in rev for n in x.get('demos', []) if n in cards and n in demos and cid in demos[n]['course']))
+            items.append(f'      <li class="also">Review the units {rlinks}. Their demos: '
+                         + ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a>' for n in back) + '</li>')
         grid = '\n'.join(items) if items else '      <li class="none">No activity for this unit yet.</li>'
         gap_html = ''
         if gaps:
@@ -302,7 +324,7 @@ def course_page(course, m, cards, notes):
         units.append(f'''  <section class="unit{" optional" if opt else ""}" id="{u['id']}" aria-labelledby="{u['id']}-h">
     {'<p class="optnote">Optional, after the required sequence</p>' if opt else ''}
     <h2 id="{u['id']}-h">{esc(u['title'])}</h2>
-    <p class="meta">{f'<span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span>' if us else '<span>Not in the textbook</span>'}</p>
+    <p class="meta">{f'<span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span>' if us else ('<span>Test review</span>' if u.get('review') else '' if cid in NO_BOOK else '<span>Not in the textbook</span>')}</p>{f'{chr(10)}    <p class="unote">{esc(u["note"])}</p>' if u.get('note') else ''}
     <ul class="list">
 {grid}
     </ul>{gap_html}
@@ -310,10 +332,12 @@ def course_page(course, m, cards, notes):
     vols = sorted({x['vol'] for u in course['units'] for x in u['sections']})
     books = ' · '.join(f'<a href="{BOOK_URL[v]}">{BOOK[v]}</a>' for v in vols)
     facts = (f'<li><span><strong>{len(course["units"])}</strong> units</span></li><li><span><strong>{len(n_demo)}</strong> demos and labs</span></li>'
-             f'<li><span>Free textbook: {books}</span></li>')
+             + (f'<li><span>Free textbook: {books}</span></li>' if vols else ''))
     if n_activity:
         facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
-    return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units),
+    how = ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
+           'it has one card, in the first unit that uses it, and later units link to it.') if cid in NO_BOOK else None
+    return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), how or
                       ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
 
@@ -381,6 +405,8 @@ COURSE_CSS = '''
 .unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }

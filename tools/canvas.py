@@ -85,7 +85,7 @@ def course_items(course, m, cards, notes):
             if n in seen:
                 continue
             seen.add(n)
-            hs = [h for h in demos[n].get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+            hs = C.course_handouts(cid, demos[n])
             for i, h in enumerate(hs, 1):
                 label = C.handout_label(h, i if len(hs) > 1 else None)
                 items.append(('link', label, f'{SITE}curriculum/labs/students/{h}.html'))

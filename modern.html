@@ -208,6 +208,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -462,7 +464,6 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/e-over-m.html">e/m of the Electron</a></h3>
           <p>Bend an electron beam into a glowing circle with Helmholtz coils, read its radius on the mirrored scale without parallax, and measure the charge to mass ratio.</p>
-          <ul class="secs" aria-label="Textbook sections"></ul>
           <p class="links"><a class="go" href="demos/e-over-m.html">Open demo</a> <a href="curriculum/labs/students/e-over-m.html">Worksheet: Charge to Mass Ratio of the Electron</a> <a href="notes/e-over-m.html">Notes</a></p>
         </div>
       </li>

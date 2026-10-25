@@ -9,7 +9,7 @@ const activities = new Map((map.activities || []).map(a => [a.id, a]));
 assert.equal(activities.size, (map.activities || []).length, 'duplicate standalone activity');
 for (const a of activities.values()) {
  assert(status.has(a.status)); assert(['worksheet', 'reading'].includes(a.kind));
- assert(a.course.length && a.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'thermo', 'modern', 'astro', 'later'].includes(c)));
+ assert(a.course.length && a.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'thermo', 'modern', 'astro', 'astro-2203', 'later'].includes(c)));
  assert.equal(a.url, `curriculum/labs/students/${a.id}.md`); assert(fs.existsSync(path.join(root, a.url)));
  assert(a.handouts.includes(a.id));
  for (const r of a.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); assert((sections.get(key(r)).activities || []).includes(a.id)); }
@@ -23,7 +23,7 @@ assert.deepEqual([...demos.keys()].sort(), catalog.sort());
 assert.equal(sections.size, map.sections.length);
 for (const d of map.demos) {
  assert(status.has(d.status)); assert(['lab', 'demo'].includes(d.role));
- assert(d.course.length && d.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'thermo', 'modern', 'astro', 'later'].includes(c)));
+ assert(d.course.length && d.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'thermo', 'modern', 'astro', 'astro-2203', 'later'].includes(c)));
  assert.equal(d.url, `demos/${d.demo}.html`); assert(fs.existsSync(path.join(root, d.url)));
  assert.equal(typeof d.beyond_book, 'boolean');
  for (const r of d.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); }

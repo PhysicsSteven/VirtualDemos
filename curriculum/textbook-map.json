@@ -1537,6 +1537,202 @@
           ]
         }
       ]
+    },
+    {
+      "id": "astro-2203",
+      "title": "Astro 2203",
+      "metadata": {},
+      "units": [
+        {
+          "id": "intro",
+          "title": "Topic 1 · Intro material",
+          "short": "1 · Intro",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "units"
+          ],
+          "note": "The size of the solar system: distances in astronomical units, light travel times and powers of ten."
+        },
+        {
+          "id": "sky",
+          "title": "Topic 2 · Star charts and motion of the Sun and Moon",
+          "short": "2 · The sky",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "seasons",
+            "moon-phases",
+            "gyroscope"
+          ],
+          "note": "Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession."
+        },
+        {
+          "id": "planetary-motion",
+          "title": "Topic 3 · Planetary motion, the Copernican revolution and gravity",
+          "short": "3 · Planetary motion",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "kepler-orbits",
+            "gravity-near-earth"
+          ],
+          "note": "From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits."
+        },
+        {
+          "id": "telescopes-light",
+          "title": "Topic 4 · Telescopes, light and the electromagnetic spectrum",
+          "short": "4 · Telescopes and light",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "instrument-builder",
+            "optics-bench",
+            "resolution",
+            "blackbody",
+            "spectra",
+            "em-waves"
+          ],
+          "note": "How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines."
+        },
+        {
+          "id": "test-1",
+          "title": "Test 1",
+          "short": "Test 1",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "review": [
+            "intro",
+            "sky",
+            "planetary-motion",
+            "telescopes-light"
+          ]
+        },
+        {
+          "id": "formation",
+          "title": "Topic 5 · Formation of planetary systems",
+          "short": "5 · Formation",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "rotation"
+          ],
+          "note": "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone."
+        },
+        {
+          "id": "earth-moon",
+          "title": "Topic 6 · The Earth and Moon system",
+          "short": "6 · Earth and Moon",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "radioactive-decay",
+            "fluids"
+          ],
+          "note": "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth."
+        },
+        {
+          "id": "inner-planets",
+          "title": "Topic 7 · Inner planets to Mars I",
+          "short": "7 · Inner planets",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "ideal-gas",
+            "kepler-orbits"
+          ],
+          "note": "Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces."
+        },
+        {
+          "id": "mars-geology",
+          "title": "Topic 8 · Mars II, geology",
+          "short": "8 · Mars geology",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "kepler-orbits"
+          ],
+          "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons."
+        },
+        {
+          "id": "test-2",
+          "title": "Test 2",
+          "short": "Test 2",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "review": [
+            "formation",
+            "earth-moon",
+            "inner-planets",
+            "mars-geology"
+          ]
+        },
+        {
+          "id": "minor-planets",
+          "title": "Topic 9 · Minor planets and the asteroid belt",
+          "short": "9 · Asteroids",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "kepler-orbits",
+            "lagrange-points"
+          ],
+          "note": "The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits."
+        },
+        {
+          "id": "jupiter-saturn",
+          "title": "Topic 10 · Outer planets: Jupiter and Saturn",
+          "short": "10 · Jupiter and Saturn",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "tides",
+            "kepler-orbits"
+          ],
+          "note": "The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings."
+        },
+        {
+          "id": "uranus-neptune-kuiper",
+          "title": "Topic 11 · Uranus, Neptune and the Kuiper belt",
+          "short": "11 · Uranus, Neptune, Kuiper belt",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "seasons",
+            "kepler-orbits"
+          ],
+          "note": "The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets."
+        },
+        {
+          "id": "exoplanets",
+          "title": "Topic 12 · Exoplanets",
+          "short": "12 · Exoplanets",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "exoplanets",
+            "distance-ladder",
+            "kepler-orbits"
+          ],
+          "note": "Finding planets around other stars by their pull and their shadows, and what they are made of."
+        },
+        {
+          "id": "test-3",
+          "title": "Test 3",
+          "short": "Test 3",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "review": [
+            "minor-planets",
+            "jupiter-saturn",
+            "uranus-neptune-kuiper",
+            "exoplanets"
+          ]
+        }
+      ]
     }
   ],
   "sections": [
@@ -6272,7 +6468,8 @@
       "demo": "blackbody",
       "course": [
         "thermo",
-        "modern"
+        "modern",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -6888,7 +7085,8 @@
       "demo": "distance-ladder",
       "course": [
         "modern",
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -7170,7 +7368,8 @@
     {
       "demo": "em-waves",
       "course": [
-        "physics-2"
+        "physics-2",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -7319,7 +7518,8 @@
     {
       "demo": "exoplanets",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",
@@ -7387,7 +7587,8 @@
     {
       "demo": "fluids",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -7676,7 +7877,8 @@
       "demo": "gravity-near-earth",
       "course": [
         "physics-1",
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -7698,7 +7900,8 @@
     {
       "demo": "gyroscope",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -7969,7 +8172,8 @@
     {
       "demo": "ideal-gas",
       "course": [
-        "thermo"
+        "thermo",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -8143,7 +8347,8 @@
       "demo": "kepler-orbits",
       "course": [
         "physics-1",
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -8207,7 +8412,8 @@
     {
       "demo": "lagrange-points",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",
@@ -8389,7 +8595,8 @@
     {
       "demo": "moon-phases",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",
@@ -8492,7 +8699,8 @@
     {
       "demo": "optics-bench",
       "course": [
-        "physics-2"
+        "physics-2",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -8825,7 +9033,8 @@
     {
       "demo": "radioactive-decay",
       "course": [
-        "modern"
+        "modern",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -8962,7 +9171,8 @@
     {
       "demo": "resolution",
       "course": [
-        "physics-2"
+        "physics-2",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -9056,7 +9266,8 @@
     {
       "demo": "rotation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -9208,7 +9419,8 @@
     {
       "demo": "seasons",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",
@@ -9405,7 +9617,8 @@
     {
       "demo": "spectra",
       "course": [
-        "modern"
+        "modern",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -9758,7 +9971,8 @@
     {
       "demo": "instrument-builder",
       "course": [
-        "physics-2"
+        "physics-2",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -9811,7 +10025,8 @@
       "demo": "tides",
       "course": [
         "physics-1",
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -9941,7 +10156,8 @@
     {
       "demo": "units",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro-2203"
       ],
       "sections": [
         {

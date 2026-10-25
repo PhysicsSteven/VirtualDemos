@@ -209,6 +209,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -310,7 +312,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   </section>
   <section class="lost" aria-labelledby="courses-h">
     <h2 id="courses-h">Courses</h2>
-    <ul class="clinks"><li><a href="physics-1.html">Physics I</a></li><li><a href="physics-2.html">Physics II</a></li><li><a href="acoustics.html">Acoustics</a></li><li><a href="thermo.html">Thermodynamics</a></li><li><a href="modern.html">Modern Physics</a></li><li><a href="astro.html">Astronomy</a></li><li><a href="misc.html">Misc</a></li></ul>
+    <ul class="clinks"><li><a href="physics-1.html">Physics I</a></li><li><a href="physics-2.html">Physics II</a></li><li><a href="acoustics.html">Acoustics</a></li><li><a href="thermo.html">Thermodynamics</a></li><li><a href="modern.html">Modern Physics</a></li><li><a href="astro.html">Astronomy</a></li><li><a href="astro-2203.html">Astro 2203</a></li><li><a href="misc.html">Misc</a></li></ul>
   </section>
   <p class="more"><a href="index.html">Go to the home page</a></p>
 </main>
