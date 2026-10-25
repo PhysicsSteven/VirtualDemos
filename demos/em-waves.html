@@ -1183,7 +1183,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(() => resize()).observe(pane);
   resize();
   applyPreset('plane');
-  VD.howTo({ src: 'media/how-this-works/em-waves.mp4', poster: 'media/how-this-works/em-waves.jpg' });
+  /* How this works: Astro 2203's spectrum worksheet (?ws=intro-em-spectrum) has its own video; otherwise Part 1 of Electromagnetic Waves */
+  const howVid = () => (VD.ws('') === 'intro-em-spectrum' ? 'intro-em-spectrum' : 'em-waves');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'em-waves' ? 'How this works' : 'How this works: the spectrum') });
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
   requestAnimationFrame(loop);

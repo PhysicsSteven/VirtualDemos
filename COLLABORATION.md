@@ -4259,3 +4259,25 @@ sends to the demo's own worksheet slug. Lagrange Points and Exoplanets have one 
 Fix found: Exoplanets showed the cursor time as "4.042e−15 h" when it landed exactly on mid transit (rounding noise); times
 under a microsecond now show 0. vdcheck `--only after` on the seven demos: 0 problems. No whats-new.js entry (one for the set
 comes later).
+## 2026-10-25 · Claude · How this works videos: Astro 2203 telescopes and scale (6 videos)
+
+One video per worksheet, dark only, each from one real run (scripts in `tools/howto/`, readings printed by `r.check` and checked
+by hand). The demos pick the video by the worksheet in the address (`?ws=`, which the Astro 2203 course links carry):
+- `intro-em-spectrum` (Electromagnetic Waves, 17.6 s): Plane wave dragged to 10⁶ Hz (slider value exactly 6), λ 300 m, radio,
+  λ × f = c. Without `?ws=` the demo keeps em-waves.mp4.
+- `intro-mirrors` (Optics Bench, 16.9 s): Lens in white light, the violet fringed spot on the screen, seven rows from 19.011 cm
+  at 400 nm to 20.238 cm at 700 nm (equal to f(589.3) (n₀ − 1)/(n − 1) from the F2 Sellmeier terms to the last figure).
+- `intro-resolution` (Circular Apertures and Resolution, 22.3 s): Hubble and two stars, stepped with the arrow keys: 0.55 ly
+  gives 0.7613 midway (too bright), 0.56 ly gives 0.7322, Δθ 0.280 µrad against 1.22 λ/D = 0.2796 µrad.
+- `intro-telescope` (Build a Microscope or Telescope, its first video, 21.9 s): Keplerian, eye pupil 7 mm, M −10, exit pupil
+  5.00 mm, light from a star 51.02 = (50/7)². The demo now has the How this works button.
+- `intro-scale` (Units, Scales and Estimates, 21.0 s): zoom out, Go to Earth's orbit, Mercury's label 0.3871 au (JPL a =
+  0.38709927), then on past Neptune. Typed by hand, so no Export step.
+- `estimation-and-evidence` (Units, 23.1 s): the worksheet needs no simulation; the video does its supplied reporting task in
+  Significant figures: 12.4 + 0.56 → 13.0 and 3.20 × 0.0450 → 0.144. Units picks it from `?ws=` or when Significant figures
+  or Fermi estimates is open; units.mp4 (72.0 km/h → 20.0 m/s) stays the Measuring, Converting and Checking Units video.
+
+No whats-new.js entry here (one is added for the set). vdcheck `--only after` on the five demos: 0 problems.
+
+**For GPT:** please check the captions' numbers against the demos (especially the 0.735 midway rule in intro-resolution and the
+(D/d)² star gain in intro-telescope) and the wording for hyphens.

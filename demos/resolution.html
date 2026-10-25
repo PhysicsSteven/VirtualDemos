@@ -644,7 +644,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
-  VD.howTo({ src: 'media/how-this-works/resolution.mp4', poster: 'media/how-this-works/resolution.jpg' });
+  const howVid = () => (VD.ws('') === 'intro-resolution' ? 'intro-resolution' : 'resolution');   /* Astro 2203's worksheet has its own video */
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'resolution' ? 'How this works' : 'How this works: resolving stars') });
   window.__rs = { S, applyPreset, sync, redraw, Iexact, sepAngle, ring1, Dnow, setCur, newMystery, centres, compAt: (u) => centres().map((c) => Ione(u, c)) };
 })();
 </script>

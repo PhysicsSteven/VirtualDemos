@@ -1189,6 +1189,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   VD.tools({ el: can, scale: () => (view3 && view3.is3d() ? null : 0.01 / view.s) });
+  /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/intro-telescope.mp4', poster: 'media/how-this-works/intro-telescope.jpg' });
   tokens(); new ResizeObserver(resize).observe($('pane'));
   let first = 'microscope'; try { const q = new URLSearchParams(location.search).get('setup'); if (q && PRESETS[q]) first = q; } catch (_) {}
   applyPreset(first); resize();

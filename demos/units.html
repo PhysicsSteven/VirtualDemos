@@ -975,7 +975,11 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/units.mp4', poster: 'media/how-this-works/units.jpg' });
+  /* How this works, one video per worksheet: the one in the address (?ws=), else Estimating and Reporting on Significant figures or
+     Fermi estimates, else Measuring, Converting and Checking Units (units.mp4) */
+  const HOW = { units: 'How this works', 'estimation-and-evidence': 'How this works: reporting a result', 'intro-scale': 'How this works: the scale of the solar system' };
+  const howVid = () => { const w = VD.ws(''); return HOW[w] ? w : w === 'measurement-and-units' ? 'units' : S.tab === 'sig' || S.tab === 'fermi' ? 'estimation-and-evidence' : 'units'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`, title: () => HOW[howVid()] });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
