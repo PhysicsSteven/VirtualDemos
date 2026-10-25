@@ -3691,3 +3691,43 @@ Recorded in 3D with insulated walls, as the worksheets are. Readings checked by 
   intervals (`Math.floor`), still at most 41 rows. CORE untouched in both; vdcheck `--only after`: 0 problems on both. No What's new entry.
 
 **For GPT:** please check the four videos' captions and readings against the worksheets and the figures above, and the two fixes.
+## 2026-10-25 · Claude · Astro 2203 intro worksheets for Topics 1 and 2 (sky and scale)
+
+Four more intro level worksheets for Astro 2203 (plan: https://claude.ai/artifact/T3sRWCeRiojRhCBa1xhRoV), on the pattern of
+`intro-seasons`: algebra and ratios, at most one straight line graph, no math blocks.
+
+- **`intro-scale`, "How Big Is the Solar System?"** on Units, Scales and Estimates (Topic 1). Students read each planet's average
+  distance from the Sun in the zoom, add Voyager 1 (173 au), convert to km (× 1.496 × 10⁸) and to light minutes (× 8.317), and
+  graph light time against au. Typed by hand (the zoom has no Export). Demo change: each planet's label in the zoom now gives its
+  average distance, the semimajor axis of the Standish elements the zoom already uses ("Mars, 1.524 au on average"); a label that
+  would cover another or run off the picture moves below, above or to the left of its dot (Earth's had been hidden behind Venus's,
+  which is near inferior conjunction on 23 October 2026). Sources fold says so.
+- **`intro-moon`, "Phases of the Moon and Eclipse Seasons"** on Moon Phases (Topic 2): eight evenly spaced points through the month,
+  then the Eclipse season setup stepped through 14 new and full moons. Synodic month 29.531 d, moonrise 48.8 min later a day,
+  largest β 5.117°, eclipse possible new moons 177.2 d apart; Question 4 compares with NASA's 2027 eclipses (eclipse.gsfc.nasa.gov:
+  Feb 6 annular, Feb 20 penumbral, Jul 18 penumbral, Aug 2 total, Aug 17 penumbral). Demo unchanged (its Readings code already asks
+  window.vdWorksheet()).
+- **`intro-precession`, "A Spinning Top and the Wandering Pole Star"** on Gyroscope Precession (Topic 2): no spin falls; steady start,
+  six spins at d = 0.10 m (time per turn proportional to spin, 1.21 to 7.24 s); three lever arms at 3000 rpm (doubling d halves it).
+  Then Earth: bulge 43 km (WGS84 radii), general precession 50.29″ a year, 25,772 years (IAU 2006 rate 5028.796″ per century),
+  Thuban around 2800 BC, Vega in about 12,000 years. Demo change: its own export now writes `vd-handoff:` + `VD.ws('gyroscope')`
+  and links that worksheet, so `?ws=` routing works there.
+- **`intro-stellarium-sky`, "Reading the Sky with Stellarium"** (Topic 2): links only to stellarium-web.org and stellarium.org,
+  nothing copied. Ruston, 15 Jan 2027 8 pm CST: Polaris against latitude, Betelgeuse over two hours (alt/az change, RA/Dec do not),
+  Dubhe, Kochab, Capella and Vega against the 57.5° circumpolar limit, the Sun's constellation and declination on five dates of
+  2027 (Sagittarius, Pisces, Taurus, Virgo, Sagittarius). It is a standalone activity in `activities` of the map, listed on the
+  Topic 2 unit through a new `unit.activities` (rendered by `tools/courses.py` and `tools/canvas.py`, checked in
+  `test_textbook_map.cjs`); an activity card with no sections no longer writes an empty chip list.
+- Wiring: `INTRO` (+ `INTRO_GRAPHS` for scale and precession), `FROM_DEMO` for moon and precession, map `handouts`,
+  `COURSE_HANDOUTS` and `HANDOUT_TOPIC`, handout buttons, course page, search, Canvas cartridge (Astro 2203: 5 worksheet assignments),
+  What's new entry.
+- **Keys** (TeacherKeys `worksheet-keys/astro-2203/intro-{scale,moon,precession,stellarium-sky}-*`): moon and precession from real
+  runs with Export to worksheet (`tools/capture/intro-moon.cjs`, `intro-precession.cjs`); scale reads the drawn labels during a real
+  zoom (`intro-scale.cjs`); Stellarium needs WebGL, so `intro-stellarium-sky.py` computes what Stellarium shows with astropy from
+  Hipparcos J2000 coordinates (Wolfram StarData) and standard refraction, and the key says a student's readings agree within a few
+  tenths of a degree. JPL Horizons and SIMBAD are blocked from the container, so the Sun was not checked against Horizons.
+- Checks: vdcheck `--only after` units 0, moon-phases 0, gyroscope 0 problems; test_units, test_gyroscope, test_textbook_map pass;
+  courses `--check` 0; symbols `--check` 0 (the new handouts have no math).
+
+**For GPT:** please check the light time arithmetic (8.317 min per au), the precession numbers (50.29″ a year, 25,772 years, 43 km
+bulge), the circumpolar limits (57.5° Ruston, 28.8° Anchorage) and the Sun's constellations on the five dates.

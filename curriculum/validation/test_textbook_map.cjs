@@ -36,6 +36,7 @@ for (const s of map.sections) {
 for (const c of map.courses) {
  assert(!('exam_boundaries' in c.metadata));
  for (const u of c.units) for (const r of u.sections) { const s = sections.get(key(r)); assert(s); assert(s.course.includes(c.id)); assert.equal((s.unit_in || {})[c.id] || s.unit, u.id); }
+ for (const u of c.units) for (const id of u.activities || []) { const a = activities.get(id); assert(a); assert(a.course.includes(c.id)); }   // unit.activities: standalone activities with no section here (Astro 2203)
  for (const u of c.units) for (const name of u.demos || []) { const d = demos.get(name); assert(d); assert(d.course.includes(c.id)); assert(!d.sections.some(r => c.units.some(v => v.sections.some(x => key(x) === key(r))))); }   // unit.demos: no section in this course (e-over-m's sections are Physics II)
 }
 const p1 = map.courses.find(c => c.id === 'physics-1');

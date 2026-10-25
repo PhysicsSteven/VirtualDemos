@@ -500,14 +500,18 @@
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
-  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity'];
-  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity'];
+  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky'];
+  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
     'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
     'intro-gravity': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', null, null] },
     'intro-kepler': { demo: 'Kepler Orbits', cols: [(r) => r.preset || 'custom launch', 'ruler_r1_AU', 'ruler_r2_AU', 'timer_T_yr', null, null, null, null] },
+    /* Reading | Time from start (d) | Days since new moon | Elongation (°) | Illuminated (%) | Moonrise (h) | Moonset (h) | Sun to nearest node (°) | Moon above or below Earth's orbit β (°) | Eclipse */
+    'intro-moon': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'set_h', 'node_dist_deg', 'beta_deg', 'eclipse'] },
+    /* Reading | Wheel | Start | Spin (rpm) | Distance from the post d (m) | Time for one turn around the post (s) */
+    'intro-precession': { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'spin_rpm', 'd_m', 'P_s'] },
   });
   /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

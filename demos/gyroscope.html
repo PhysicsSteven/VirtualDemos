@@ -99,7 +99,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/gyroscope.html" target="gyroscope-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/gyroscope.html" target="gyroscope-worksheet">Worksheet 1: Gyroscope Precession</a></li><li><a href="../curriculum/labs/students/intro-precession.html" target="intro-precession-worksheet">Worksheet 2: A Spinning Top and the Wandering Pole Star (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -707,11 +707,11 @@ table.rows input:focus { border-color: var(--accent); }
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
     const hand = { v: 1, demo: 'gyroscope', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
       note: 'Simulated data from the Gyroscope Precession demo.', csv: txt, csvName: 'gyroscope-readings.csv' };
-    try { localStorage.setItem('vd-handoff:gyroscope', JSON.stringify(hand)); }
+    try { localStorage.setItem('vd-handoff:' + VD.ws('gyroscope'), JSON.stringify(hand)); }
     catch (_) { download('gyroscope-readings.csv', txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/gyroscope.html'; a.target = 'gyroscope-worksheet'; a.textContent = 'Open the worksheet';
+    const ws = VD.ws('gyroscope'), a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {

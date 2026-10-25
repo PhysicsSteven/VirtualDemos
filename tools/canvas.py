@@ -92,7 +92,7 @@ def course_items(course, m, cards, notes):
                 items.append(('assignment', label, h, title, url))   # titled "Hand in: <topic>", so it differs from the link
             if n in notes:
                 items.append(('link', f'Notes: {title}', f'{SITE}notes/{n}.html'))
-        for a in dict.fromkeys(a for s in us for a in s.get('activities', [])):
+        for a in dict.fromkeys([a for s in us for a in s.get('activities', [])] + u.get('activities', [])):   # unit.activities: no textbook section
             act = activities.get(a)
             if not act or cid not in act['course'] or set(act.get('handouts', [])) <= on_cards or a in seen:
                 continue

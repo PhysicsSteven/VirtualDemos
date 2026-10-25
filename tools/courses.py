@@ -34,7 +34,7 @@ BLURB = {
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
 # handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
 # and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
-COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-kepler', 'intro-gravity'}}
+COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession'}}
 NO_BOOK = {'astro-2203'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
@@ -212,6 +212,9 @@ HANDOUT_TOPIC = {
     'intro-seasons': 'Why We Have Seasons (Astro 2203)',
     'intro-kepler': "Kepler's Laws from Mercury to Pluto (Astro 2203)",
     'intro-gravity': 'Gravity from the Ground to Orbit (Astro 2203)',
+    'intro-scale': 'How Big Is the Solar System? (Astro 2203)',
+    'intro-moon': 'Phases of the Moon and Eclipse Seasons (Astro 2203)', 'intro-precession': 'A Spinning Top and the Wandering Pole Star (Astro 2203)',
+    'intro-stellarium-sky': 'Reading the Sky with Stellarium (Astro 2203)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 
@@ -264,7 +267,7 @@ def activity_card(activity, unit_secs):
           <p class="kind"><span class="role">{role}</span></p>
           <h3><a href="{esc(href)}">{esc(activity['title'])}</a></h3>
           <p>{esc(activity['description'])}</p>
-          <ul class="secs" aria-label="Textbook sections">{chips}</ul>
+          {f'<ul class="secs" aria-label="Textbook sections">{chips}</ul>' if chips else ''}
           <p class="links"><a class="go" href="{esc(href)}">{esc(label)}</a></p>
         </div>
       </li>'''
@@ -289,7 +292,7 @@ def course_page(course, m, cards, notes):
         for d in [d for s in sorted(us, key=sec_key) for d in s['demos']] + u.get('demos', []):   # unit.demos: demos with no textbook section
             if d not in names and d in demos and cid in demos[d]['course'] and d in cards:
                 names.append(d)
-        activity_names = list(dict.fromkeys(a for s in sorted(us, key=sec_key) for a in s.get('activities', [])
+        activity_names = list(dict.fromkeys(a for a in [a for s in sorted(us, key=sec_key) for a in s.get('activities', [])] + u.get('activities', [])
                                             if a in activities and cid in activities[a]['course']
                                             and not set(activities[a].get('handouts', [])) <= on_cards))
         n_demo.update(names)

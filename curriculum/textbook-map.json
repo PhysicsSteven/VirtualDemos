@@ -1565,7 +1565,10 @@
             "moon-phases",
             "gyroscope"
           ],
-          "note": "Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession."
+          "note": "Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.",
+          "activities": [
+            "intro-stellarium-sky"
+          ]
         },
         {
           "id": "planetary-motion",
@@ -7921,7 +7924,8 @@
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Wheel on an axle pivoted at one end; spin 0 to 6000 rpm, pivot distance, release tilt, solid or rim heavy wheel, Mystery wheel; exact symmetric top equations (RK4) show the dip and nutation from rest or a steady start; L, τ and Mg arrows; gate times each precession turn to 0.01 s; Capture, CSV, Ω against 1/ω_s fit gives I_s; Blind. 2026-10-24: student worksheet gyroscope (spin scan, release from rest, lever arm scan, mystery wheel) with Export to worksheet.",
       "handouts": [
-        "gyroscope"
+        "gyroscope",
+        "intro-precession"
       ],
       "title": "Gyroscope Precession",
       "url": "demos/gyroscope.html"
@@ -8608,7 +8612,8 @@
       "title": "Moon Phases",
       "url": "demos/moon-phases.html",
       "handouts": [
-        "moon-phases"
+        "moon-phases",
+        "intro-moon"
       ]
     },
     {
@@ -10205,7 +10210,8 @@
       "note": "New 2026-10-22 (Claude). Tabs: Scale of things (Zoom through: true size models from the observable universe to a proton, Fly in / Fly out; or a log ruler), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
       "handouts": [
         "measurement-and-units",
-        "estimation-and-evidence"
+        "estimation-and-evidence",
+        "intro-scale"
       ],
       "title": "Units, Scales and Estimates",
       "url": "demos/units.html"
@@ -10485,6 +10491,22 @@
       "url": "curriculum/labs/students/estimation-and-evidence.md",
       "description": "Fermi estimates, uncertainty versus rounding, and a structured mechanics solution.",
       "note": "Standalone student activity with private instructor guide and checked references; no simulation claimed. Browser/course-page integration and classroom acceptance pending."
+    },
+    {
+      "id": "intro-stellarium-sky",
+      "title": "Reading the Sky with Stellarium",
+      "kind": "worksheet",
+      "course": [
+        "astro-2203"
+      ],
+      "sections": [],
+      "status": "usable",
+      "handouts": [
+        "intro-stellarium-sky"
+      ],
+      "url": "curriculum/labs/students/intro-stellarium-sky.md",
+      "description": "Find stars by altitude and azimuth and by right ascension and declination in the free Stellarium planetarium, see which stars never set from Ruston, and follow the Sun through the zodiac.",
+      "note": "2026-10-25 (Claude): Astro 2203 Topic 2 activity using Stellarium Web (links only, nothing copied). Key in TeacherKeys worksheet-keys/astro-2203/ with positions computed from Hipparcos coordinates (astropy)."
     }
   ]
 }

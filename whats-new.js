@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-astro-2203-sky-scale', date: '2026-10-25', title: 'Astro 2203: sky and scale worksheets',
+    text: 'Four new worksheets for Astro 2203, Topics 1 and 2: the size of the solar system in au and light travel times, the phases of the Moon and eclipse seasons, why Earth\'s axis slowly circles the sky (with the gyroscope), and reading the sky in the free Stellarium planetarium. The planets in the Units, Scales and Estimates zoom now show their average distance from the Sun.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-astro-2203', date: '2026-10-25', title: 'Astro 2203 course page',
     text: 'A new course page follows Astro 2203, Solar System Astronomy, topic by topic, with worksheets written for it: Why We Have Seasons, Kepler\'s Laws from Mercury to Pluto, and Gravity from the Ground to Orbit. Kepler\'s Laws also has new orbits to try: the asteroids Vesta, Ceres and Apophis, and the dwarf planet Pluto.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-ripple-tank', date: '2026-10-25', title: 'Ripple Tank',
