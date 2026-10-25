@@ -1290,6 +1290,17 @@
      ]
     },
     {
+     "demo": "instrument-builder",
+     "title": "Build a Microscope or Telescope",
+     "desc": "Put lenses and stops on a rail and look through them with an eye or a camera: find each image, the magnification, the exit pupil, the field of view and how bright the view is, for a magnifier, a microscope or a telescope of your own design.",
+     "tags": [
+      "angular magnification",
+      "compound microscope",
+      "telescope",
+      "exit pupil"
+     ]
+    },
+    {
      "demo": "polarization",
      "title": "Polarization",
      "desc": "Send light through polarizers and wave plates and watch the electric field after each one: Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and glare at Brewster's angle.",

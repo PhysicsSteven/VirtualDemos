@@ -91,6 +91,7 @@ OVERRIDES = {
     "induction-at-work": {"wait": 2500, "js": "document.querySelector('[data-p=tablet]').click()"},
     "huygens": {"wait": 2500, "js": "document.querySelector('[data-p=refract]').click()"},
     "the-eye": {"wait": 2000, "js": "document.querySelector('[data-p=myopiaFix]').click()"},
+    "instrument-builder": {"wait": 2000, "crop": ".stage", "anchor": "top"},
     "resolution": {"wait": 800, "js": "document.querySelector('[data-p=eye]').click(); document.getElementById('gainToggle').click();"},
     "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('wandUp').click(); document.getElementById('motor').click()"},
     "eddy-currents": {"wait": 7000, "js": "const f = document.getElementById('tFollow'); if (f.checked) f.click(); document.getElementById('drop').click();"},
@@ -197,7 +198,8 @@ def render(browser, demo, scheme, three_js):
     ctx = browser.new_context(viewport=VIEW, device_scale_factor=1, color_scheme=scheme,
                               reduced_motion="no-preference", ignore_https_errors=bool(PROXY))
     # A stored theme or projector choice would override the scheme; start clean.
-    ctx.add_init_script("try { localStorage.clear(); } catch (e) {}")
+    # Since the site opens in Dark when nothing is saved (theme.js), save Browser default so the scheme decides.
+    ctx.add_init_script("try { localStorage.clear(); localStorage.setItem('vd-theme', 'auto'); } catch (e) {}")
     # VD3.lowPower() opens Flat on a machine with two cores or fewer; a thumbnail should show the 3D view.
     ctx.add_init_script("try { Object.defineProperty(navigator, 'hardwareConcurrency', { get: () => 8 }); } catch (e) {}")
     page = ctx.new_page()

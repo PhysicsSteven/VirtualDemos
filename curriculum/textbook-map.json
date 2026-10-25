@@ -4300,7 +4300,8 @@
       "status": "usable",
       "demos": [
         "optics-bench",
-        "the-eye"
+        "the-eye",
+        "instrument-builder"
       ],
       "unit": "optics"
     },
@@ -4351,7 +4352,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "optics-bench"
+        "optics-bench",
+        "instrument-builder"
       ],
       "unit": "optics"
     },
@@ -4367,7 +4369,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "optics-bench"
+        "optics-bench",
+        "instrument-builder"
       ],
       "unit": "optics",
       "note": "Optics bench: Microscope preset (m_obj, M_eye = 25 cm/f_eye, net M measured from traced rays and the -(16 cm)(25 cm)/(f_obj f_eye) estimate) and Telescope with M = -f_obj/f_eye measured. Added by Claude 2026-10-23."
@@ -9697,6 +9700,36 @@
       ],
       "title": "The Eye",
       "url": "demos/the-eye.html"
+    },
+    {
+      "demo": "instrument-builder",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "2.4",
+          "title": "Thin Lenses"
+        },
+        {
+          "vol": 3,
+          "sec": "2.7",
+          "title": "The Simple Magnifier"
+        },
+        {
+          "vol": 3,
+          "sec": "2.8",
+          "title": "Microscopes and Telescopes"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude). Build your own instrument: ideal thin lenses and round stops on a rail, viewed by the reduced eye of The Eye demo or a 50 mm camera. Image chain from the lens equation, angular magnification from traced rays against the textbook formulas, aperture stop, entrance and exit pupils, eye relief, field of view and brightness from 3D ray tracing; views of what the eye and camera see traced backward ray by ray. Presets: magnifier, compound microscope, Keplerian, Galilean and terrestrial telescopes, start from scratch. Worksheet to follow.",
+      "handouts": [],
+      "title": "Build a Microscope or Telescope",
+      "url": "demos/instrument-builder.html"
     },
     {
       "demo": "thin-films",

@@ -3380,3 +3380,39 @@ was checked by hand:
 vdcheck `--only after`: 0 problems on all four. No demo bugs found. No What's new entry (one comes for the set).
 
 **For GPT:** please check the four videos' captions and readings against the demos and the figures above.
+## 2026-10-25 · Claude · New demo: Build a Microscope or Telescope (`instrument-builder`)
+
+Steve asked for a build your own optics setup to design a microscope or telescope. It is a new demo rather than a mode of
+Optics Bench: the bench is already a free 2D sandbox (with Microscope and Telescope presets and three worksheets whose control
+names must stay put, and its videos were being recorded today); the new demo is built around what the bench lacks, an eye or a
+camera at the end of the instrument, pupils, field of view and brightness.
+
+- **Physics (CORE, Node tested):** ideal thin lenses and round stops on one axis; skew rays traced in 3D (slope form, u → u − x/f,
+  which images planes exactly; no aberrations, stated on the page). Image chain from the lens equation (virtual objects
+  included), image heights from the ray matrices. Angular magnification from the ray through the center of the eye's lens:
+  M = 25 cm/B (near object) or 1/A (far), against the textbook formulas with the eye relaxed (m₁…m₍ₙ₋₁₎ × 25 cm/fₙ and
+  −(f₁/fₙ) m₂…m₍ₙ₋₁₎); the readout says when the final image is not at infinity, so they differ. Aperture stop, entrance and
+  exit pupils, eye relief; field of view where the light reaching the eye halves (3D ray sampling); brightness as the fraction
+  of the viewer's pupil filled. Diffraction limit quoted (1.22λ/D or 0.61λ/NA at 550 nm) for the whole system with the
+  viewer's pupil, not drawn.
+- **Viewer:** the reduced eye of The Eye demo (retina 1.80 cm, 4 D accommodation, near point 25 cm, pupil 2 to 7 mm) or a
+  50 mm camera (36 × 24 mm sensor, focuses 45 cm to infinity, f/1.4 to f/11).
+- **Views:** what the eye (or camera) sees, traced backward pixel by pixel through 24 pupil samples and every lens to the
+  object, with box filtered textures (no aliasing); beside it the same object without the instrument at the same angular
+  scale. Objects: a backlit slide (letter F on a 5 × 5 grid), a far sign, the Moon (0.518°, from 1737.4 km / 384 400 km).
+- **Pictures:** flat view to scale on a rail (drag parts, focal points and rims; pan and zoom; F points, real and virtual
+  images, "would form" for an image the next lens intercepts, exit pupil), and a 3D view with VD3K (rail, holders, glass
+  lenses, stops, slide and lamp, eye or camera, skew ray bundles).
+- **Presets:** Magnifier (M = 5), Compound microscope (1.6 cm and 2.5 cm, L = 16 cm, field stop 1.8 mm: M = −100, exit pupil
+  1.14 mm at 2.86 cm), Keplerian (50 and 5 cm: −10, exit pupil 5.00 mm), Galilean (50 and −10 cm: +5, virtual exit pupil),
+  Terrestrial (erector at 2f: +10), Start from scratch.
+- Tests: `curriculum/validation/test_instrument_builder.cjs` (12 groups: perfect imaging, forward/backward tracing, all five
+  instruments against the §2.7 and §2.8 formulas, pupils, field, eye and camera focus). vdcheck --only after: 0 problems.
+- Catalog (Optics, after The Eye), map (Vol 3 §§2.4, 2.7, 2.8), course pages, notes (`notes/src/instrument-builder.md`, six
+  questions) with answers in TeacherKeys `answers/instrument-builder.md`, thumbnails, What's new entry. No worksheet yet
+  (Steve to decide).
+- `tools/thumbs.py`: since Dark became the default with nothing saved, both thumbnails came out dark; it now saves Browser
+  default before loading so the light one is light. (Light thumbnails made after 16:30 today may be dark; rerun them.)
+
+**For GPT:** please check the physics and the numbers in the readouts and notes (microscope −100, exit pupil 1.14 mm at
+2.86 cm, Keplerian −10 and 5.00 mm, Galilean +5 with field 6.14°, terrestrial +10, brightness 8.1 % for the microscope).

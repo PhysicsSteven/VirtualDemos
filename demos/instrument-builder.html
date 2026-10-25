@@ -1,0 +1,1172 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Build a Microscope or Telescope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --ray-a: #c98a00; --ray-b: #0f8fa8; --img: #c2410c; --pupil: #2f8a3a; --sel: #2b60b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #69a0ff; } }
+:root[data-theme="dark"] { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #69a0ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .seg { flex-wrap: wrap; }
+.stage-ctl .grow { flex: 1; }
+.stage-ctl .btn { padding: 4px 10px; }
+.pane { position: relative; flex: 1 1 auto; min-height: 300px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { touch-action: pan-y; }
+.views { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; padding: 10px 12px; border-top: 1px solid var(--line); background: var(--surface); }
+.view { display: flex; flex-direction: column; gap: 4px; }
+.view .vt { width: 0; min-width: 100%; font-size: 0.74rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.view canvas { display: block; width: 190px; height: 190px; border-radius: 8px; background: #000; border: 1px solid var(--line); }
+.view.cam canvas { width: 285px; }
+.view .vs { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); width: 0; min-width: 100%; }
+.vnum { flex: 1 1 200px; min-width: 190px; display: flex; flex-direction: column; gap: 8px; }
+.vnum .readout { grid-template-columns: 1fr 1fr; }
+.elist { display: flex; flex-wrap: wrap; gap: 6px; }
+.elist button { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+.elist button[aria-pressed="true"] { border-color: var(--sel); box-shadow: inset 0 0 0 1px var(--sel); color: var(--sel); font-weight: 700; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head output { font-family: var(--font-mono); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+table.chain { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+table.chain th { font-family: var(--font-ui); font-weight: 700; color: var(--muted); text-align: right; padding: 2px 4px; font-size: 0.74rem; }
+table.chain th:first-child, table.chain td:first-child { text-align: left; }
+table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(--line); white-space: nowrap; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; overflow-wrap: anywhere; }
+.readout dd.warn { color: var(--pos); }
+.readout dd.note { font-family: var(--font-ui); font-size: 0.86rem; font-weight: 400; }
+.key { display: flex; flex-direction: column; gap: 5px; font-size: 0.84rem; }
+.key span { display: flex; align-items: center; gap: 8px; }
+.sw { flex: none; width: 26px; height: 0; border-top: 3px solid var(--c); }
+.sw.d { border-top-style: dashed; border-top-width: 2px; }
+.blindtag { position: absolute; right: 10px; top: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+@media (min-width: 821px) { :root[data-projector="on"] .view canvas { width: 240px; height: 240px; } :root[data-projector="on"] .view.cam canvas { width: 360px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { min-height: 0; }
+  .pane { flex: none; height: 360px; }
+  .chips button, .btn, .seg button, .proj, .elist button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  .view canvas { width: 150px; height: 150px; }
+  .view.cam canvas { width: 225px; height: 150px; }
+}
+@media (max-width: 420px) { .view canvas { width: 138px; height: 138px; } .view.cam canvas { width: 300px; height: 200px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Build a Microscope or Telescope</h1>
+      <p>Put lenses and stops on an optical rail and look through them with an eye or a camera. Every ray is traced: see where each image forms, how much bigger things look, how much light gets through and how wide the view is.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in cm · ideal thin lenses · near point 25 cm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/instrument-builder.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/instrument-builder.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM18 2h2v1h-2zM23 2h1v1h-1zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM15 4h3v1h-3zM23 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h2v1h-2zM19 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h3v1h-3zM18 7h2v1h-2zM23 7h2v1h-2zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h2v1h-2zM18 9h7v1h-7zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h2v1h-2zM16 10h3v1h-3zM24 10h6v1h-6zM32 10h5v1h-5zM5 11h2v1h-2zM10 11h3v1h-3zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h2v1h-2zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h1v1h-1zM6 12h3v1h-3zM15 12h1v1h-1zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM6 13h2v1h-2zM10 13h4v1h-4zM17 13h1v1h-1zM20 13h4v1h-4zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h1v1h-1zM8 14h1v1h-1zM10 14h3v1h-3zM15 14h3v1h-3zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h15v1h-15zM3 15h1v1h-1zM6 15h2v1h-2zM10 15h2v1h-2zM13 15h1v1h-1zM18 15h1v1h-1zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h4v1h-4zM12 16h2v1h-2zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM27 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM3 17h3v1h-3zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h2v1h-2zM17 17h2v1h-2zM21 17h3v1h-3zM25 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM3 18h6v1h-6zM17 18h1v1h-1zM20 18h2v1h-2zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM9 19h2v1h-2zM12 19h1v1h-1zM14 19h5v1h-5zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h1v1h-1zM8 20h2v1h-2zM12 20h3v1h-3zM16 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM9 21h3v1h-3zM14 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h3v1h-3zM26 21h1v1h-1zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM5 22h1v1h-1zM7 22h6v1h-6zM15 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM11 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM11 24h5v1h-5zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h1v1h-1zM5 25h2v1h-2zM11 25h2v1h-2zM17 25h7v1h-7zM25 25h1v1h-1zM29 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h1v1h-1zM5 26h2v1h-2zM8 26h6v1h-6zM15 26h1v1h-1zM17 26h2v1h-2zM21 26h1v1h-1zM24 26h4v1h-4zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h5v1h-5zM10 27h1v1h-1zM12 27h2v1h-2zM15 27h1v1h-1zM17 27h1v1h-1zM20 27h4v1h-4zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM12 28h2v1h-2zM17 28h2v1h-2zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM14 29h2v1h-2zM17 29h1v1h-1zM22 29h2v1h-2zM29 29h6v1h-6zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h3v1h-3zM11 30h2v1h-2zM14 30h4v1h-4zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h2v1h-2zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h7v1h-7zM20 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM15 33h1v1h-1zM17 33h2v1h-2zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h2v1h-2zM20 34h2v1h-2zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h4v1h-4zM16 35h3v1h-3zM21 35h2v1h-2zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h3v1h-3zM16 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM25 37h2v1h-2zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM19 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <div class="seg" role="group" aria-label="Rays drawn" id="raySeg">
+          <button type="button" data-r="both" aria-pressed="true">Both bundles</button>
+          <button type="button" data-r="axis" aria-pressed="false">From the axis</button>
+          <button type="button" data-r="edge" aria-pressed="false">From the top</button>
+        </div>
+        <span class="grow"></span>
+        <button type="button" class="btn" id="zoomOut" aria-label="Zoom out">−</button>
+        <button type="button" class="btn" id="zoomIn" aria-label="Zoom in">+</button>
+        <button type="button" class="btn" id="zoomFit">Fit</button>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="application" aria-label="The optical rail seen from the side, drawn to scale. Drag a lens, stop, the object or the eye along the rail; drag a selected lens's focal points to change its focal length and its rim to change its size. Drag empty space to pan, the wheel to zoom. Keys: Page Up and Page Down choose a part, arrows move it (Shift for 1 cm), [ and ] change a lens's focal length, Delete removes it."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="views" id="views">
+        <div class="view" id="viewThru">
+          <span class="vt" id="thruTitle">Through the instrument</span>
+          <canvas id="vThru" width="190" height="190" role="img" aria-label="What the eye sees through the instrument"></canvas>
+          <span class="vs" id="thruNote"></span>
+        </div>
+        <div class="view" id="viewBare">
+          <span class="vt" id="bareTitle">Without it, same scale</span>
+          <canvas id="vBare" width="190" height="190" role="img" aria-label="What the eye sees without the instrument, at the same angular scale"></canvas>
+          <span class="vs" id="bareNote"></span>
+        </div>
+        <div class="vnum">
+          <dl class="readout">
+            <div class="big"><dt>Angular magnification M</dt><dd id="qM">—</dd></div>
+            <div class="big"><dt>Exit pupil</dt><dd id="qXP">—</dd></div>
+            <div><dt>Apparent field of view</dt><dd id="qFov">—</dd></div>
+            <div><dt>Image brightness</dt><dd id="qBright">—</dd></div>
+            <div class="wide"><dt id="qFocusL">The eye</dt><dd id="qFocus" class="note">—</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="magnifier" aria-pressed="false">Magnifier</button>
+          <button type="button" data-p="microscope" aria-pressed="true">Compound microscope</button>
+          <button type="button" data-p="kepler" aria-pressed="false">Keplerian telescope</button>
+          <button type="button" data-p="galileo" aria-pressed="false">Galilean telescope</button>
+          <button type="button" data-p="terrestrial" aria-pressed="false">Terrestrial telescope</button>
+          <button type="button" data-p="scratch" aria-pressed="false">Start from scratch</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section>
+        <h2>Build</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="addLens">Add a lens</button>
+          <button type="button" class="btn" id="addStop">Add a stop</button>
+        </div>
+        <div class="elist" id="elist" role="group" aria-label="Parts on the rail"></div>
+        <div id="edLens">
+          <div class="slider-head"><label for="sZ" id="sZL">Position z</label><output id="oZ" for="sZ"></output></div>
+          <input type="range" id="sZ" min="-30" max="150" step="0.01">
+          <div id="edF">
+            <div class="seg" role="group" aria-label="Kind of lens" id="kindSeg" style="margin:8px 0 4px"><button type="button" data-k="1" aria-pressed="true">Converging</button><button type="button" data-k="-1" aria-pressed="false">Diverging</button></div>
+            <div class="slider-head"><label for="sF">Focal length |f|</label><output id="oF" for="sF"></output></div>
+            <input type="range" id="sF" min="-0.301" max="2" step="0.001">
+          </div>
+          <div id="edD">
+            <div class="slider-head"><label for="sD" id="sDL">Clear diameter D</label><output id="oD" for="sD"></output></div>
+            <input type="range" id="sD" min="0.1" max="8" step="0.01">
+          </div>
+          <div id="edH">
+            <div class="slider-head"><label for="sH" id="sHL">Object height h</label><output id="oH" for="sH"></output></div>
+            <input type="range" id="sH" min="0.01" max="2" step="0.005">
+          </div>
+          <button type="button" class="btn" id="remove" style="margin-top:8px">Remove it</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Object</h2>
+        <div class="chips" id="objSeg" role="group" aria-label="Object">
+          <button type="button" data-o="slide" aria-pressed="true">Slide, near</button>
+          <button type="button" data-o="sign" aria-pressed="false">Far sign</button>
+          <button type="button" data-o="moon" aria-pressed="false">The Moon</button>
+        </div>
+        <p class="hint" id="objHint"></p>
+      </section>
+
+      <section>
+        <h2>Viewer</h2>
+        <div class="seg" role="group" aria-label="Viewer" id="viewerSeg"><button type="button" data-v="eye" aria-pressed="true">Eye</button><button type="button" data-v="camera" aria-pressed="false">Camera</button></div>
+        <div id="edPupil">
+          <div class="slider-head"><label for="sP">Eye pupil diameter</label><output id="oP" for="sP"></output></div>
+          <input type="range" id="sP" min="2" max="7" step="0.1" value="4">
+        </div>
+        <div id="edN" hidden>
+          <div class="slider-head"><label for="sN">Camera f-number N (50 mm lens)</label><output id="oN" for="sN"></output></div>
+          <input type="range" id="sN" min="0" max="6" step="1" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sE" id="sEL">Eye behind the last part</label><output id="oE" for="sE"></output></div>
+          <input type="range" id="sE" min="0.2" max="30" step="0.01">
+        </div>
+        <button type="button" class="btn" id="toPupil">Put it at the exit pupil</button>
+      </section>
+
+      <section>
+        <h2>Images, from the lens equation</h2>
+        <table class="chain" id="chain"><thead><tr><th>Lens</th><th>d<sub>o</sub></th><th>d<sub>i</sub></th><th>m</th></tr></thead><tbody></tbody></table>
+        <p class="hint">1/d<sub>o</sub> + 1/d<sub>i</sub> = 1/f, m = −d<sub>i</sub>/d<sub>o</sub>, in cm. Each image is the object of the next lens; d<sub>o</sub> &lt; 0 is a virtual object (the light converges toward a point past the lens). For a distant object d<sub>o</sub> = ∞ and the image height is −f × (the object's angle).</p>
+        <dl class="readout">
+          <div class="wide"><dt>Final image</dt><dd id="rFinal" class="note">—</dd></div>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Magnification</h2>
+        <dl class="readout">
+          <div class="wide big"><dt>M from the traced rays, θ<sub>seen</sub>/θ<sub>without</sub></dt><dd id="rM">—</dd></div>
+          <div class="wide"><dt id="rFormL">Textbook formula (eye relaxed)</dt><dd id="rForm" class="formula">—</dd></div>
+          <div class="wide"><dt>Check</dt><dd id="rCheck" class="note">—</dd></div>
+        </dl>
+        <details class="more"><summary>How M is found</summary><p class="hint">θ<sub>seen</sub> is the angle at which the eye sees the top of the object: the direction of the ray from the top of the object that passes through the center of the eye's lens. θ<sub>without</sub> is the angle the object fills with no instrument: h/(25 cm) for a near object held at the near point, or its own angle for a distant one. M &lt; 0 means the view is upside down. The textbook formulas take the final image at infinity (the eye relaxed); they and the traced M agree when it is.</p></details>
+      </section>
+
+      <section>
+        <h2>Light and field</h2>
+        <dl class="readout">
+          <div class="wide"><dt>Aperture stop (limits the light from the axis)</dt><dd id="rStop" class="note">—</dd></div>
+          <div><dt>Entrance pupil</dt><dd id="rEn">—</dd></div>
+          <div><dt>Exit pupil</dt><dd id="rEx">—</dd></div>
+          <div><dt id="rReliefL">Eye relief (last lens to exit pupil)</dt><dd id="rRelief">—</dd></div>
+          <div><dt id="rVPL">Eye pupil</dt><dd id="rVP">—</dd></div>
+          <div><dt id="rTrueL">True field</dt><dd id="rTrue">—</dd></div>
+          <div><dt>Apparent field</dt><dd id="rApp">—</dd></div>
+          <div class="wide"><dt id="rDiffL">Diffraction limit (not in the ray picture)</dt><dd id="rDiff">—</dd></div>
+        </dl>
+        <details class="more"><summary>What these mean</summary><p class="hint">The aperture stop is the opening that limits the cone of light from the middle of the object. The entrance pupil is that stop as seen from the object, and the exit pupil is the stop's image after the last lens: every ray that gets through passes through it, so that is where the eye's pupil belongs. The fields are full angles (or, for a near object, the width of the object you can see) out to where half the light still reaches the eye. Brightness compares the light per area of the picture on the retina with the unaided eye looking at the same object: it falls when the exit pupil is smaller than the eye's pupil. No lens or mirror can make an extended object look brighter than it does to the bare eye.</p></details>
+      </section>
+
+      <section>
+        <details class="fold"><summary>Key and model</summary><div class="foldbody">
+        <div class="key">
+          <span><i class="sw" style="--c:var(--ray-a)"></i>Rays from the middle of the object (on the axis)</span>
+          <span><i class="sw" style="--c:var(--ray-b)"></i>Rays from the top of the object</span>
+          <span><i class="sw d" style="--c:var(--ray-b)"></i>Traced back to a virtual image</span>
+          <span><i class="sw" style="--c:var(--img)"></i>Real image (dashed: virtual)</span>
+          <span><i class="sw" style="--c:var(--pupil)"></i>Exit pupil</span>
+        </div>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the magnification and the image readouts</span></label>
+        <details class="more"><summary>The model</summary><p class="hint">Lenses are ideal thin lenses: a ray at height x leaves with its slope changed by −x/f, so every point of a plane is imaged exactly to a point (1/d<sub>o</sub> + 1/d<sub>i</sub> = 1/f), with no aberrations; they are drawn with some thickness, but the light bends at the middle plane. Angles are handled as slopes (tan θ). Rays are traced in three dimensions and stopped at the rim of each lens and stop. The eye is the reduced eye of The Eye demo: a thin lens 1.80 cm in front of the retina that accommodates from infinity in to 25 cm, so it sees sharply only when the final image lies 25 cm or more in front of it. The camera has a 50 mm lens, a 36 × 24 mm sensor and focuses from 45 cm to infinity. The pictures of what the eye and camera see are traced backward ray by ray from the retina or sensor through the pupil and every lens to the object, so blur, the edge of the field and dimming are all from the rays; the view through the instrument is brightened to fill the picture (the eye adapts), and the brightness readout says by how much. Light is one color (no chromatic aberration) and diffraction is left out; its limit is quoted.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Instruments built from ideal thin lenses and round stops on one optical axis (OpenStax University Physics Vol 3, sections
+     2.4, 2.5, 2.7 and 2.8). Lengths in cm along the rail (z grows in the direction the light travels), heights in cm, angles as
+     slopes (tan θ). An ideal thin lens takes a ray at height x with slope u to slope u − x/f, which images every point of a plane
+     sharply onto a plane (1/d_o + 1/d_i = 1/f exactly): no thickness, no aberrations. Rays are skew rays in 3D; with ideal thin
+     lenses the x and y parts trace independently, and a ray is stopped where its distance from the axis exceeds a clear radius.
+     Geometric optics only: no diffraction (its limit is quoted, not drawn). No DOM: the tests run this in Node. */
+  const NEAR_POINT = 25;                       /* the near point for magnifiers and microscopes, and for the unaided eye, cm */
+  const EYE_RET = 1.80;                        /* reduced eye: thin lens to retina, cm (the same eye as The Eye demo) */
+  const EYE_AMP = 0.04;                        /* accommodation 4 diopters (0.04 per cm): focuses from infinity in to 25 cm */
+  const LAMBDA_CM = 550e-7;                    /* green light, for the diffraction limit */
+  const CAM = { f: 5.0, w: 3.6, h: 2.4, near: 45 };   /* camera: 50 mm lens, 36 × 24 mm sensor, focuses from 45 cm to infinity */
+  const F_NUMBERS = [1.4, 2, 2.8, 4, 5.6, 8, 11];
+  /* thin lens: 1/d_o + 1/d_i = 1/f (d_o = Infinity for a distant object, d_o < 0 for a virtual object), m = −d_i/d_o */
+  function thinLens(f, dO) {
+    const v = 1 / f - (isFinite(dO) ? 1 / dO : 0), dI = Math.abs(v) < 1e-12 ? Infinity : 1 / v;
+    return { dI, m: isFinite(dO) && isFinite(dI) ? -dI / dO : NaN };
+  }
+  /* 2 × 2 ray matrices [A, B, C, D] acting on [x, u]: P(d) moves the ray a distance d, L(f) is a thin lens */
+  const mul = (a, b) => [a[0] * b[0] + a[1] * b[2], a[0] * b[1] + a[1] * b[3], a[2] * b[0] + a[3] * b[2], a[2] * b[1] + a[3] * b[3]];
+  const P = (d) => [1, d, 0, 1];
+  const L = (f) => [1, 0, -1 / f, 1];
+  const sorted = (els) => els.slice().sort((a, b) => a.z - b.z);
+  /* the matrix from the plane z0 to the plane z1 (z1 ≥ z0), through every lens with z0 < z ≤ z1 */
+  function sysMatrix(els, z0, z1) {
+    let M = [1, 0, 0, 1], z = z0;
+    for (const e of sorted(els)) {
+      if (e.kind !== 'lens' || e.z <= z0 || e.z > z1) continue;
+      M = mul(L(e.f), mul(P(e.z - z), M)); z = e.z;
+    }
+    return mul(P(z1 - z), M);
+  }
+  /* The object: { kind: 'near', z, h } (a plane at z whose top is h above the axis) or { kind: 'far', a } (far to the left,
+     its top a above the axis as a slope: its rays arrive with slope −a). Parts at or before a near object are ignored. */
+  const usable = (els, obj) => sorted(els).filter((e) => obj.kind !== 'near' || e.z > obj.z);
+  const startZ = (els, obj) => obj.kind === 'near' ? obj.z : (els.length ? Math.min(...els.map((e) => e.z)) : 0) - 1;
+  /* The chain of images, one per lens, each found from the last with the lens equation. Each entry: the lens, d_o, d_i,
+     m = −d_i/d_o, the image's z, its height h (from the ray matrix: the image plane is conjugate to the object), real or not. */
+  function imageChain(els, obj) {
+    els = usable(els, obj); const out = [], z0 = startZ(els, obj); let zIm = obj.kind === 'near' ? obj.z : -Infinity;
+    for (const e of els) {
+      if (e.kind !== 'lens') continue;
+      const dO = isFinite(zIm) ? e.z - zIm : Infinity, t = thinLens(e.f, dO), z = e.z + t.dI;
+      let h = NaN;
+      if (isFinite(z)) { const M = mul(P(z - e.z), sysMatrix(els, z0, e.z)); h = obj.kind === 'near' ? M[0] * obj.h : M[1] * -obj.a; }
+      out.push({ lens: e, dO, dI: t.dI, m: t.m, z, h, real: isFinite(t.dI) && t.dI > 0 });
+      zIm = z;
+    }
+    return out;
+  }
+  /* Angular magnification: the angle at which the eye (its lens at zEye) sees the top of the object through the instrument,
+     over the angle without it (a near object at the near point, a far object as it is). The ray from the top of the object
+     through the center of the eye's lens has, with [A B; C D] from the object to the eye, near: M = (25 cm)/B; far: M = 1/A. */
+  function angularM(els, obj, zEye) {
+    els = usable(els, obj); const M = sysMatrix(els, startZ(els, obj), zEye);
+    return obj.kind === 'near' ? NEAR_POINT / M[1] : 1 / M[0];
+  }
+  /* the textbook formula with the eye relaxed (final image at infinity): near: M = m₁ m₂ … m₍ₙ₋₁₎ (25 cm/fₙ);
+     far: M = −(f₁/fₙ) m₂ … m₍ₙ₋₁₎ (one lens and a far object: M = 1) */
+  function textbookM(chain, obj) {
+    const n = chain.length; if (!n) return 1;
+    const last = chain[n - 1].lens.f;
+    if (obj.kind === 'near') { let m = 1; for (let i = 0; i < n - 1; i++) m *= chain[i].m; return m * NEAR_POINT / last; }
+    if (n === 1) return 1;
+    let m = -chain[0].lens.f / last; for (let i = 1; i < n - 1; i++) m *= chain[i].m; return m;
+  }
+  /* Trace one skew ray r = { x, y, ux, uy } forward from the plane z0 to zEnd through sorted elements (lenses, stops, and
+     the viewer's lens if given). Returns the points [z, x, y] and the index of the element that stopped it (−1: none). */
+  function traceRay(els, z0, r, zEnd) {
+    let { x, y, ux, uy } = r, z = z0; const pts = [[z, x, y]];
+    for (let i = 0; i < els.length; i++) {
+      const e = els[i]; if (e.z <= z0 || e.z > zEnd) continue;
+      const d = e.z - z; x += ux * d; y += uy * d; z = e.z; pts.push([z, x, y]);
+      if (x * x + y * y > e.D * e.D / 4) return { pts, stop: i };
+      if (e.kind === 'lens') { ux -= x / e.f; uy -= y / e.f; }
+    }
+    const d = zEnd - z; x += ux * d; y += uy * d; pts.push([zEnd, x, y]);
+    return { pts, stop: -1, x, y, ux, uy };
+  }
+  /* Trace one ray backward from the plane z1 (arriving there at x, y with slopes ux, uy) through every sorted element with
+     z0 < z < z1, to the plane z0. null when an element stops it. */
+  function traceBack(els, z1, r, z0) {
+    let { x, y, ux, uy } = r, z = z1;
+    for (let i = els.length - 1; i >= 0; i--) {
+      const e = els[i]; if (e.z >= z1 || e.z <= z0) continue;
+      const d = e.z - z; x += ux * d; y += uy * d; z = e.z;
+      if (x * x + y * y > e.D * e.D / 4) return null;
+      if (e.kind === 'lens') { ux += x / e.f; uy += y / e.f; }
+    }
+    const d = z0 - z; return { x: x + ux * d, y: y + uy * d, ux, uy };
+  }
+  /* The aperture stop: the part that limits the cone of rays from the axial point of the object (for a far object, a beam
+     parallel to the axis), found with a ray of unit slope (or unit height): the smallest clear radius over ray height. Then the
+     entrance pupil (the stop's image through the parts before it) and the exit pupil (its image through the parts after it):
+     z and diameter. ratio is the marginal ray's slope at a near object, or the beam's radius for a far one. */
+  function pupils(els, obj) {
+    els = usable(els, obj); if (!els.length) return null;
+    const z0 = startZ(els, obj), r0 = obj.kind === 'near' ? [0, 1] : [1, 0];
+    let best = -1, ratio = Infinity;
+    els.forEach((e, i) => { const M = sysMatrix(els, z0, e.z), xh = Math.abs(M[0] * r0[0] + M[1] * r0[1]), q = e.D / 2 / xh; if (q < ratio) { ratio = q; best = i; } });
+    const S = els[best], first = els[0].z, last = els[els.length - 1].z;
+    const A = sysMatrix(els, first - 1e-9, S.z), flat = Math.abs(A[0]) < 1e-12;
+    const en = { z: flat ? -Infinity : Math.min(S.z, first + A[1] / A[0]), D: flat ? Infinity : S.D / Math.abs(A[0]) };
+    if (S === els[0]) en.z = S.z;
+    const Q = sysMatrix(els, S.z, last), afoc = Math.abs(Q[3]) < 1e-12;
+    const ex = { z: afoc ? Infinity : last - Q[1] / Q[3], D: afoc ? Infinity : S.D / Math.abs(Q[3]) };
+    if (S === els[els.length - 1]) ex.z = S.z;
+    return { stop: S, ratio, en, ex, last };
+  }
+  /* The reduced eye: power P (per cm) between 1/EYE_RET (relaxed, focused at infinity) and 1/EYE_RET + EYE_AMP (focused at
+     25 cm). V is the vergence of the light reaching it (per cm; negative for light spreading from a point in front). */
+  function eyeFocus(V) {
+    const want = 1 / EYE_RET - V, P = Math.min(1 / EYE_RET + EYE_AMP, Math.max(1 / EYE_RET, want));
+    return { P, sharp: Math.abs(P - want) < 1e-9, want };
+  }
+  /* the vergence at a viewer at zV of the light from the final image at zF (±Infinity: parallel light) */
+  const vergence = (zF, zV) => (isFinite(zF) ? -1 / (zV - zF) : 0);
+  /* the camera focuses by moving its sensor: 1/d_s = 1/f + V, within f ≤ d_s ≤ the distance that focuses an object at CAM.near */
+  function cameraFocus(V) {
+    const dsMax = 1 / (1 / CAM.f - 1 / CAM.near), inv = 1 / CAM.f + V, want = inv > 0 ? 1 / inv : Infinity;
+    const ds = Math.min(dsMax, Math.max(CAM.f, want));
+    return { ds, sharp: Math.abs(ds - want) < 1e-9, want, P: 1 / CAM.f };
+  }
+  /* Of the rays from one point of the object (near: height y; far: angle y) that enter the first part, the fraction that
+     pass every part and the viewer's pupil (diameter pupilD at zV). The rays are spread evenly over the first part's opening. */
+  function passFraction(els, obj, y, zV, pupilD, n) {
+    els = usable(els, obj);
+    const all = els.concat([{ kind: 'stop', z: zV, D: pupilD }]), e0 = all[0], R = e0.D / 2;
+    let tot = 0, ok = 0;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const px = R * (2 * (i + 0.5) / n - 1), py = R * (2 * (j + 0.5) / n - 1);
+      if (px * px + py * py > R * R) continue;
+      tot++;
+      const d = obj.kind === 'near' ? e0.z - obj.z : 0;
+      const r = obj.kind === 'near' ? { x: px, y: py, ux: px / d, uy: (py - y) / d } : { x: px, y: py, ux: 0, uy: -y };
+      if (traceRay(all, e0.z - 1e-9, r, zV + 1e-9).stop === -1) ok++;
+    }
+    return tot ? ok / tot : 0;
+  }
+  /* The field of view: the object height (near) or angle (far) at which the light reaching the viewer has fallen to half of
+     that from the axial point, by bisection. { field, f0 } (f0: the axial fraction), or null when no light gets through. */
+  function halfField(els, obj, zV, pupilD, n = 40) {
+    const f0 = passFraction(els, obj, 0, zV, pupilD, n); if (f0 <= 0) return null;
+    const first = usable(els, obj)[0];
+    let lo = 0, hi = obj.kind === 'near' ? 2 * first.D : 1.5;
+    if (passFraction(els, obj, hi, zV, pupilD, n) >= 0.5 * f0) return { field: hi, f0, open: true };
+    for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (passFraction(els, obj, m, zV, pupilD, n) >= 0.5 * f0) lo = m; else hi = m; }
+    return { field: (lo + hi) / 2, f0 };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const MOON_A = 1737.4 / 384400;               /* the Moon's radius over its mean distance (NASA fact sheet): 0.259° */
+  const MAX_PARTS = 7;
+  let nextId = 1;
+  const lens = (name, z, f, D) => ({ id: nextId++, kind: 'lens', name, z, f, D });
+  const stop = (name, z, D) => ({ id: nextId++, kind: 'stop', name, z, D });
+  /* microscope: object 1.76 cm from a 1.6 cm objective puts its image 17.6 cm away (tube length 16 cm) */
+  const MIC_DO = 1 / (1 / 1.6 - 1 / 17.6);
+  const PRESETS = {
+    magnifier: { obj: { kind: 'near', tex: 'slide', z: -5, h: 0.5 }, parts: () => [lens('Magnifier', 0, 5, 4)], eye: 2, view: 'eye',
+      hint: 'One 5.0 cm lens with the object, a 5 mm letter, at its focal point: the light leaves parallel, the eye relaxes, and the letter looks 25/5 = 5 times bigger than at the near point. Bring the object a little closer to the lens: the image moves in toward 25 cm and M grows a little.' },
+    microscope: { obj: { kind: 'near', tex: 'slide', z: -MIC_DO, h: 0.05 },
+      parts: () => [lens('Objective', 0, 1.6, 0.8), stop('Field stop', 17.6, 1.8), lens('Eyepiece', 20.1, 2.5, 2.4)], eye: 'pupil', view: 'eye',
+      hint: 'A 1.6 cm objective and a 2.5 cm eyepiece with a 16 cm tube length. The object (a 0.5 mm letter on a 0.1 mm grid) sits 1.76 cm from the objective, which makes a real image 17.6/1.76 = 10 times bigger, upside down, at the eyepiece\'s focal point. The eyepiece magnifies it 25/2.5 = 10 times more: M = −100. The field stop at that image gives the view its sharp round edge.' },
+    kepler: { obj: { kind: 'far', tex: 'moon', a: MOON_A }, parts: () => [lens('Objective', 0, 50, 5), lens('Eyepiece', 55, 5, 2.5)], eye: 'pupil', view: 'eye',
+      hint: 'A 50 cm objective, 5 cm across, and a 5 cm eyepiece, 55 cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −10, upside down. The exit pupil is the objective\'s image, 5.0 mm across, 5.5 cm behind the eyepiece.' },
+    galileo: { obj: { kind: 'far', tex: 'moon', a: MOON_A }, parts: () => [lens('Objective', 0, 50, 5), lens('Eyepiece', 40, -10, 2)], eye: 1, view: 'eye',
+      hint: 'A 50 cm objective and a −10 cm eyepiece, 40 cm apart (f₁ + f₂ with f₂ < 0): M = −f₁/f₂ = +5, upright, and short. Its exit pupil is virtual, inside the tube, so the eye cannot reach it: the eye\'s own pupil limits the field, which is why Galileo\'s telescope saw so little sky at once.' },
+    terrestrial: { obj: { kind: 'far', tex: 'sign', a: Math.tan(0.6 * Math.PI / 180) },
+      parts: () => [lens('Objective', 0, 50, 5), lens('Erector', 60, 5, 3), lens('Eyepiece', 75, 5, 2.5)], eye: 'pupil', view: 'eye',
+      hint: 'A Keplerian telescope with a 5 cm erecting lens between: it takes the objective\'s image 10 cm in front of it (2f) to a copy the same size, turned over, 10 cm behind it (m = −1). The eyepiece views that copy, so M = (−f₁/f₃)(m₂) = +10: the sign reads the right way up. The price is 20 cm of extra length.' },
+    scratch: { obj: { kind: 'near', tex: 'slide', z: 0, h: 0.2 }, parts: () => [], eyeAt: 40, view: 'eye',
+      hint: 'A 2 mm letter, 40 cm from the eye, and no lenses. Add lenses and stops and build your own: a magnifier, a microscope (a short focal length lens near the object, a longer one near the eye) or a telescope (choose the far sign or the Moon).' }
+  };
+  const OBJ_HINT = {
+    slide: 'A backlit slide: a letter F on a grid. Drag it along the rail; set its height when it is selected.',
+    sign: 'A sign with a letter F, far away: its light arrives as parallel beams. Its angle is set when it is selected.',
+    moon: 'The full Moon, 0.518° across (its diameter over its mean distance), far away: its light arrives as parallel beams. The face is drawn roughly, enough to see which way up it is.'
+  };
+  const S = { preset: 'microscope', obj: null, els: [], viewer: 'eye', zV: 0, pupil: 0.4, Ni: 1, sel: null, rays: 'both', blind: false };
+  const view = { s: 30, z0: 0, user: false, cy: 0 };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, model = null, dragging = false, refineT = 0;
+  const minus = (t) => String(t).replace(/-/g, '−');
+  const sub = (n) => String(n).replace(/\d/g, (d) => '₀₁₂₃₄₅₆₇₈₉'[d]);
+  const fx = (v, d = 2) => (!isFinite(v) ? (v > 0 ? '∞' : '−∞') : minus(v.toFixed(d)));
+  const fcm = (v, d = 2) => (!isFinite(v) ? '∞' : fx(v, d) + ' cm');
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '∞'; const a = Math.abs(v), d = a >= 100 ? 1 : a >= 10 ? Math.max(0, n - 2) : a >= 1 ? n - 1 : n; return minus(v.toFixed(d)); };
+  const deg = (t) => Math.atan(t) * 180 / Math.PI;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    const dark = (VD3 && VD3.dark) ? VD3.dark() : false;
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), a: g('--ray-a'), b: g('--ray-b'),
+      img: g('--img'), pupil: g('--pupil'), sel: g('--sel'), mono: g('--font-mono') || 'monospace', dark, halo: dark ? 'rgba(12,16,22,0.78)' : 'rgba(252,253,254,0.85)' };
+  }
+
+  /* ---------- the model: everything the pictures and readouts need, from the core ---------- */
+  const parts = () => sorted(S.els);
+  const objNow = () => S.obj;
+  const lastZ = () => { const p = usable(S.els, S.obj); return p.length ? p[p.length - 1].z : (S.obj.kind === 'near' ? S.obj.z : 0); };
+  function viewerOptics(zF) {
+    const V = vergence(zF, S.zV);
+    if (S.viewer === 'eye') { const e = eyeFocus(V); return { V, P: e.P, sharp: e.sharp, want: e.want, back: EYE_RET, D: S.pupil, f: 1 / e.P }; }
+    const c = cameraFocus(V), N = F_NUMBERS[S.Ni]; return { V, P: 1 / CAM.f, sharp: c.sharp, want: c.want, back: c.ds, D: CAM.f / N, f: CAM.f, N };
+  }
+  function compute(fast) {
+    const obj = objNow(), els = usable(S.els, obj), chain = imageChain(els, obj);
+    const zF = chain.length ? chain[chain.length - 1].z : (obj.kind === 'near' ? obj.z : -Infinity);
+    const vo = viewerOptics(zF), M = angularM(els, obj, S.zV), Mt = textbookM(chain, obj), pu = pupils(els, obj);
+    const hf = els.length ? halfField(els, obj, S.zV, vo.D, fast ? 18 : 40) : null;
+    /* brightness: the fraction of the viewer's pupil that light from the middle of the object fills (backward rays), over the unaided eye */
+    let fill = 0, K = 0; const st = fast ? 31 : 81;
+    for (let i = 0; i < st; i++) for (let j = 0; j < st; j++) {
+      const px = (2 * (i + 0.5) / st - 1) * vo.D / 2, py = (2 * (j + 0.5) / st - 1) * vo.D / 2; if (px * px + py * py > vo.D * vo.D / 4) continue; K++;
+      const r = { x: px, y: py, ux: px * vo.P - px / vo.back, uy: py * vo.P - py / vo.back };
+      const z0 = obj.kind === 'near' ? obj.z : startZ(els, obj) - 1, t = traceBack(els, S.zV, r, z0);
+      if (t) fill++;
+    }
+    model = { obj, els, chain, zF, vo, M, Mt, pu, hf, bright: K ? fill / K : 0 };
+    return model;
+  }
+
+  /* ---------- the views: traced backward from the retina or sensor, through the pupil and every lens, to the object ---------- */
+  /* Box filtered textures: each pixel of a view averages the pattern over its footprint w (the pixel's width carried back to
+     the object), so fine detail too small to see blends to gray instead of aliasing into false stripes. */
+  const span1 = (a, b, lo, hi) => Math.max(0, Math.min(b, hi) - Math.max(a, lo));
+  /* the letter F, base on the axis, 1 tall: the fraction of the square [u ± w/2] × [v ± w/2] it covers */
+  function fCover(u, v, w) {
+    const a = u - w / 2, b = u + w / 2, c = v - w / 2, d = v + w / 2, A = w * w;
+    const box = (x0, x1, y0, y1) => span1(a, b, x0, x1) * span1(c, d, y0, y1);
+    return Math.min(1, (box(0, 0.17, 0, 1) + box(0.17, 0.64, 0.83, 1) + box(0.17, 0.5, 0.45, 0.6)) / A);
+  }
+  /* lines of width lw every 1 (in units of the period): the fraction of [a, b] they cover */
+  const lineInt = (t, lw) => Math.floor(t) * lw + Math.min(t - Math.floor(t), lw);
+  const lineCover = (t, w, lw) => (lineInt(t + w / 2 + lw / 2, lw) - lineInt(t - w / 2 + lw / 2, lw)) / w;
+  const mixc = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+  function texSlide(x, y, h, w) {             /* backlit slide: a letter F (base on the axis, height h) on a grid of h/5 squares */
+    const u = x / h, v = y / h, ww = Math.max(1e-6, w / h);
+    const gx = lineCover(u * 5, ww * 5, 0.06), gy = lineCover(v * 5, ww * 5, 0.06), grid = Math.min(1, gx + gy - gx * gy);
+    const bg = mixc([0.97, 0.94, 0.86], [0.55, 0.57, 0.60], grid);
+    return mixc(bg, [0.10, 0.14, 0.28], fCover(u, v, ww));
+  }
+  function texSign(ax, ay, a, w) {            /* a far sign: the same F, a tall, on a board, against sky and ground */
+    const u = ax / a, v = ay / a, ww = Math.max(1e-6, w / a);
+    if (u > -0.5 && u < 1.15 && v > -0.35 && v < 1.3) return mixc([0.93, 0.92, 0.86], [0.08, 0.10, 0.16], fCover(u, v, ww));
+    if (v < -1.2) return [0.30, 0.42, 0.24];
+    return [0.55 - 0.05 * Math.min(4, v) / 4, 0.70, 0.88];
+  }
+  const MARIA = [[-0.32, 0.38, 0.30, 0.22], [0.12, 0.40, 0.17, 0.15], [0.25, 0.12, 0.22, 0.17], [0.62, 0.26, 0.12, 0.10], [-0.58, 0.02, 0.24, 0.42], [-0.18, -0.28, 0.18, 0.14], [0.30, -0.22, 0.13, 0.12], [-0.42, -0.45, 0.12, 0.08]];
+  function texMoon(ax, ay, a) {                /* the full Moon, drawn roughly: highlands, dark maria and the bright crater Tycho */
+    const u = ax / a, v = ay / a, r2 = u * u + v * v;
+    if (r2 > 1) return [0.015, 0.02, 0.045];
+    let k = 0.86 - 0.12 * r2;
+    for (const [mx, my, rx, ry] of MARIA) { const q = ((u - mx) / rx) ** 2 + ((v - my) / ry) ** 2; if (q < 1) k -= 0.30 * (1 - q * q) ** 0.5; }
+    const t = ((u + 0.1) ** 2 + (v + 0.70) ** 2); if (t < 0.004) k += 0.25;
+    k = Math.max(0.2, Math.min(1, k)); return [k, k * 0.98, k * 0.94];
+  }
+  function texAt(obj, x, y, w) {
+    if (obj.kind === 'near') return texSlide(x, y, obj.h, w);
+    return obj.tex === 'moon' ? texMoon(x, y, obj.a) : texSign(x, y, obj.a, w);
+  }
+  /* pupil samples: a sunflower spread over a disk of radius 1 */
+  const SUN = (n) => Array.from({ length: n }, (_, i) => { const r = Math.sqrt((i + 0.5) / n), t = i * 2.39996323; return [r * Math.cos(t), r * Math.sin(t)]; });
+  const SAMPLES = { slow: SUN(24), fast: SUN(7) };
+  /* Render one view into canvas cv: pixel → the apparent direction (ax, ay) → the point on the retina or sensor → for each
+     pupil sample, the ray back through the instrument to the object. Returns the axial brightness. */
+  function renderView(cv, els, obj, vo, zV, Wx, Wy, fast, gain, Mabs) {
+    const n = fast ? 70 : 150, nx = Math.round(n * Math.max(1, Wx / Wy)), ny = Math.round(n * Math.max(1, Wy / Wx));
+    const g = cv.getContext('2d'), img = g.createImageData(nx, ny), d = img.data, smp = fast ? SAMPLES.fast : SAMPLES.slow, R = vo.D / 2;
+    const near = obj.kind === 'near', z0 = near ? obj.z : startZ(els, obj) - 1;
+    /* a pixel's width carried back to the object: its angle over |M|, times 25 cm for a near object */
+    const fw = (2 * Wx / nx) / Math.max(1e-9, Mabs) * (near ? NEAR_POINT : 1);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const ax = ((i + 0.5) / nx * 2 - 1) * Wx, ay = (1 - (j + 0.5) / ny * 2) * Wy;
+      const sx = -ax * vo.back, sy = -ay * vo.back;   /* where the ray through the lens center lands */
+      let r = 0, gg = 0, b = 0;
+      for (const [qx, qy] of smp) {
+        const px = qx * R, py = qy * R;
+        const ray = { x: px, y: py, ux: (sx - px) / vo.back + px * vo.P, uy: (sy - py) / vo.back + py * vo.P };
+        const t = traceBack(els, zV, ray, z0); if (!t) continue;
+        const c = near ? texAt(obj, t.x, t.y, fw) : texAt(obj, -t.ux, -t.uy, fw);
+        r += c[0]; gg += c[1]; b += c[2];
+      }
+      const k = gain / smp.length, o = (j * nx + i) * 4;
+      d[o] = Math.min(255, 255 * Math.pow(r * k, 1 / 1.1)); d[o + 1] = Math.min(255, 255 * Math.pow(gg * k, 1 / 1.1)); d[o + 2] = Math.min(255, 255 * Math.pow(b * k, 1 / 1.1)); d[o + 3] = 255;
+    }
+    const off = document.createElement('canvas'); off.width = nx; off.height = ny; off.getContext('2d').putImageData(img, 0, 0);
+    const r = cv.getBoundingClientRect(), k = window.devicePixelRatio || 1; cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k));
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(off, 0, 0, cv.width, cv.height);
+    return { nx, ny };
+  }
+  function scaleBar(cv, Wx, label) {
+    const g = cv.getContext('2d'), k = window.devicePixelRatio || 1, w = cv.width, h = cv.height;
+    g.save(); g.font = `${10 * k}px ${T.mono}`; g.fillStyle = 'rgba(0,0,0,0.55)'; const tw = g.measureText(label).width;
+    g.fillRect(4 * k, h - 18 * k, tw + 8 * k, 14 * k); g.fillStyle = '#e8edf3'; g.textBaseline = 'middle'; g.fillText(label, 8 * k, h - 11 * k); g.restore();
+  }
+  function drawViews(fast) {
+    const m = model, obj = m.obj, cam = S.viewer === 'camera';
+    let Wx, Wy;
+    const objAng = obj.kind === 'near' ? obj.h / NEAR_POINT : obj.a;
+    if (cam) { Wx = CAM.w / 2 / m.vo.back; Wy = CAM.h / 2 / m.vo.back; }
+    else {
+      const app = m.hf && !m.hf.open ? Math.abs(m.M) * (obj.kind === 'near' ? m.hf.field / NEAR_POINT : m.hf.field) : 0;
+      const want = Math.max(app * 1.12, Math.abs(m.M) * objAng * 1.5, objAng * 1.5);
+      Wx = Wy = Math.min(0.75, Math.max(0.003, want));
+    }
+    const gain = m.bright > 0 ? Math.min(40, 1 / m.bright) : 1;
+    renderView($('vThru'), m.els, obj, m.vo, S.zV, Wx, Wy, fast, gain, Math.abs(m.M));
+    const span = 2 * deg(Wx);
+    scaleBar($('vThru'), Wx, `${sig(span, 2)}° across`);
+    /* without: a near object held at the near point, a far one as it is; the same eye or camera, focused on it */
+    const bareObj = obj.kind === 'near' ? Object.assign({}, obj, { z: S.zV - NEAR_POINT }) : obj;
+    const bvo = Object.assign({}, m.vo);
+    if (cam) { const c = cameraFocus(obj.kind === 'near' ? -1 / NEAR_POINT : 0); bvo.back = c.ds; }
+    else { const e = eyeFocus(obj.kind === 'near' ? -1 / NEAR_POINT : 0); bvo.P = e.P; }
+    if (!fast || !drawViews.bareKey || drawViews.bareKey !== [Wx, Wy, obj.kind, obj.h, obj.a, obj.tex, cam, bvo.D].join()) {
+      renderView($('vBare'), [], bareObj, bvo, S.zV, Wx, Wy, fast, 1, 1);
+      scaleBar($('vBare'), Wx, `${sig(span, 2)}° across`);
+      drawViews.bareKey = fast ? null : [Wx, Wy, obj.kind, obj.h, obj.a, obj.tex, cam, bvo.D].join();
+    }
+    $('thruTitle').textContent = cam ? 'The camera\'s photo' : 'Through the instrument';
+    $('bareTitle').textContent = cam ? 'Without it, same lens' : 'Without it, same scale';
+    $('thruNote').textContent = m.bright <= 0 ? 'no light reaches the viewer' : gain > 1.05 ? `brightened ×${sig(gain, 2)} to show it` : '';
+    $('bareNote').textContent = obj.kind === 'near' ? (cam ? 'the object 25 cm from the camera' : 'the object at the near point, 25 cm') : 'the same object, no instrument';
+    $('viewThru').classList.toggle('cam', cam); $('viewBare').classList.toggle('cam', cam);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const m = model, obj = m.obj, cam = S.viewer === 'camera', blind = S.blind;
+    const tb = $('chain').tBodies[0];
+    tb.innerHTML = m.chain.length ? m.chain.map((c) => `<tr><td>${c.lens.name} <span style="color:var(--muted)">f ${fx(c.lens.f, 2)}</span></td><td>${blind ? '?' : fx(c.dO, 2)}</td><td>${blind ? '?' : fx(c.dI, 2)}</td><td>${blind || !isFinite(c.m) ? (blind ? '?' : '—') : fx(c.m, 3)}</td></tr>`).join('')
+      : '<tr><td colspan="4" style="color:var(--muted)">No lenses yet.</td></tr>';
+    const dist = S.zV - m.zF, last = m.chain[m.chain.length - 1];
+    let fin;
+    if (!m.chain.length) fin = obj.kind === 'near' ? `The object itself, ${fx(dist, 1)} cm in front of the ${cam ? 'camera' : 'eye'}.` : 'The object itself, far away.';
+    else if (!isFinite(m.zF)) fin = 'At infinity: the light leaves the last lens parallel.';
+    else fin = `${last.real ? 'Real' : 'Virtual'}, ${dist > 0 ? fx(dist, 1) + ' cm in front of' : fx(-dist, 1) + ' cm behind'} the ${cam ? 'camera' : 'eye'}${!last.real ? '' : dist < 0 ? ' (the light is still converging when it gets there)' : ''}${isFinite(last.h) ? `, ${fx(last.h * 10, 2)} mm tall` : ''}.`;
+    $('rFinal').textContent = blind ? 'hidden: find it' : fin;
+    /* the eye or camera */
+    const vo = m.vo;
+    let fs;
+    if (cam) fs = vo.sharp ? `Camera focused, sensor ${fx(vo.back * 10, 1)} mm behind the lens.` : (vo.want > vo.back ? `Too close to focus: the camera focuses no nearer than ${CAM.near} cm.` : 'The light is converging: the camera cannot focus it.');
+    else if (vo.sharp) fs = Math.abs(vo.V) < 1e-9 ? 'Relaxed: focused at infinity.' : `Focused ${fx(-1 / vo.V, 1)} cm away (accommodating).`;
+    else fs = vo.want > 1 / EYE_RET ? 'Blurred: the image is closer than 25 cm.' : 'Blurred: the light is converging, and no eye can focus beyond infinity.';
+    $('qFocusL').textContent = cam ? 'The camera' : 'The eye'; $('qFocus').textContent = fs;
+    /* magnification */
+    const Ms = blind ? 'hidden' : `${sig(m.M, 3)}×`;
+    $('qM').textContent = Ms; $('rM').textContent = Ms;
+    let form = '—', check = '';
+    const n = m.chain.length;
+    if (n) {
+      const ms = m.chain.slice(obj.kind === 'near' ? 0 : 1, n - 1).map((c) => `(${fx(c.m, 3)})`);
+      const fN = m.chain[n - 1].lens.f;
+      if (obj.kind === 'near') form = `M = ${n > 1 ? 'm₁' + (n > 2 ? '…m' + sub(n - 1) : '') + ' × ' : ''}25 cm/f${n > 1 ? sub(n) : ''} = ${ms.join(' × ')}${ms.length ? ' × ' : ''}25/${fx(fN, 2)} = ${sig(m.Mt, 3)}×`;
+      else if (n === 1) form = 'One lens and a distant object: nothing is magnified, M = 1';
+      else form = `M = −f₁/f${sub(n)}${n > 2 ? ' × m₂' + (n > 3 ? '…m' + sub(n - 1) : '') : ''} = −${fx(m.chain[0].lens.f, 2)}/${fx(fN, 2)}${ms.length ? ' × ' + ms.join(' × ') : ''} = ${sig(m.Mt, 3)}×`;
+      const rel = Math.abs(m.M - m.Mt) / Math.max(1e-9, Math.abs(m.Mt));
+      check = !isFinite(m.zF) ? `Final image at infinity: the formula and the traced rays agree${rel < 1e-6 ? ' exactly' : ` to ${sig(100 * rel, 2)} %`}.`
+        : `The final image is not at infinity, so they differ by ${sig(100 * rel, 2)} %. ${obj.kind === 'near' && n === 1 ? 'With the image at the near point and the eye at the lens, M = 1 + 25/f.' : 'Move a lens to send the final image to infinity.'}`;
+    } else form = 'No lenses: M = ' + (obj.kind === 'near' ? '25 cm/(distance to the eye)' : '1');
+    $('rForm').textContent = blind ? 'hidden' : form; $('rCheck').textContent = blind ? 'hidden' : check;
+    /* pupils and field */
+    const pu = m.pu;
+    if (!pu) { ['rStop', 'rEn', 'rEx', 'rRelief', 'rTrue', 'rApp', 'rDiff'].forEach((id) => { $(id).textContent = '—'; }); $('qXP').textContent = '—'; }
+    else {
+      $('rStop').textContent = `${pu.stop.name}, ${fx(pu.stop.D * 10, 1)} mm across`;
+      $('rEn').textContent = isFinite(pu.en.D) ? `${fx(pu.en.D * 10, 2)} mm` : '∞';
+      $('rEx').textContent = isFinite(pu.ex.D) ? `${fx(pu.ex.D * 10, 2)} mm` : '∞';
+      $('qXP').textContent = isFinite(pu.ex.D) ? `${fx(pu.ex.D * 10, 2)} mm` : '∞';
+      const rel = pu.ex.z - pu.last;
+      $('rRelief').textContent = !isFinite(rel) ? '∞' : rel >= 0 ? fcm(rel) : `${fcm(rel)} (virtual: inside)`;
+    }
+    $('rVPL').textContent = cam ? `Camera lens opening (f/${F_NUMBERS[S.Ni]})` : 'Eye pupil';
+    $('rVP').textContent = `${fx(vo.D * 10, 1)} mm`;
+    const hf = m.hf;
+    if (hf) {
+      const trueF = obj.kind === 'near' ? `${fx(20 * hf.field, 2)} mm across` : `${sig(2 * deg(hf.field), 3)}°`;
+      const appT = obj.kind === 'near' ? Math.abs(m.M) * hf.field / NEAR_POINT : Math.abs(m.M) * hf.field;
+      $('rTrue').textContent = (hf.open ? 'over ' : '') + trueF; $('rTrueL').textContent = obj.kind === 'near' ? 'True field (object width seen)' : 'True field';
+      $('rApp').textContent = blind ? 'hidden' : `${hf.open ? 'over ' : ''}${sig(2 * deg(appT), 3)}°`;
+      $('qFov').textContent = blind ? 'hidden' : `${hf.open ? 'over ' : ''}${sig(2 * deg(appT), 3)}°`;
+    } else { $('rTrue').textContent = m.els.length ? 'no light gets through' : '—'; $('rApp').textContent = '—'; $('qFov').textContent = m.els.length ? 'no light' : '—'; }
+    $('qBright').textContent = `${m.bright >= 0.995 ? '100' : sig(100 * m.bright, 2)} % of the bare ${cam ? 'camera' : 'eye'}`;
+    /* diffraction: the stop of the whole system, the viewer's pupil included (it is the stop when the exit pupil is bigger) */
+    const ps = pupils(m.els.concat([{ kind: 'stop', name: cam ? 'the camera lens' : 'the eye\'s pupil', z: S.zV, D: vo.D }]), obj);
+    if (ps && m.els.length) {
+      const who = ps.stop.z === S.zV ? ` (${ps.stop.name} sets it)` : '';
+      if (obj.kind === 'near') {
+        const NA = Math.sin(Math.atan(ps.ratio)), dmin = 0.61 * LAMBDA_CM / NA;
+        $('rDiffL').textContent = 'Diffraction limit 0.61λ/NA at 550 nm (not in the ray picture)';
+        $('rDiff').textContent = `NA ${fx(NA, 3)}: details ${sig(dmin * 1e4, 2)} µm apart${who}`;
+      } else {
+        const th = 1.22 * LAMBDA_CM / ps.en.D;
+        $('rDiffL').textContent = 'Diffraction limit 1.22λ/D at 550 nm (not in the ray picture)';
+        $('rDiff').textContent = `${sig(th * 206265, 3)}″ (arcseconds), entrance pupil D = ${fx(ps.en.D * 10, 1)} mm${who}`;
+      }
+    } else $('rDiff').textContent = '—';
+    $('blindTag').hidden = !blind;
+  }
+
+  /* ---------- the flat view: the rail from the side, to scale ---------- */
+  function contentRange() {
+    const o = S.obj, ps = parts(), zs = ps.map((e) => e.z);
+    let a = o.kind === 'near' ? o.z - 2 : (zs.length ? Math.min(...zs) : 0) - 8;
+    const endV = S.zV + (S.viewer === 'eye' ? 3.2 : 9);
+    let b = endV;
+    for (const c of model.chain) if (isFinite(c.z) && c.z > a - 10 && c.z < b + 10) { a = Math.min(a, c.z - 1); b = Math.max(b, c.z + 1); }
+    let hMax = 1.2;
+    for (const e of ps) hMax = Math.max(hMax, e.D / 2 + 0.6);
+    for (const c of model.chain) if (isFinite(c.h) && isFinite(c.z) && c.z > a && c.z < b) hMax = Math.max(hMax, Math.abs(c.h) + 0.4);
+    if (o.kind === 'near') hMax = Math.max(hMax, o.h + 0.4);
+    return { a, b, hMax };
+  }
+  function fit() {
+    const r = contentRange(), mx = 30 * proj(), sx = (W - 2 * mx) / (r.b - r.a), sy = (H * 0.66) / (2 * r.hMax);
+    view.s = Math.max(2, Math.min(sx, sy)); view.z0 = r.a - (W / view.s - (r.b - r.a)) / 2; view.user = false;
+  }
+  const X = (z) => (z - view.z0) * view.s;
+  const Y = (y) => view.cy - y * view.s;
+  const Zof = (px) => view.z0 + px / view.s;
+  function tag(text, x, y, color, o = {}) {
+    const ps = proj(), fs = (o.size || 11) * ps;
+    ctx.save(); ctx.font = `${o.weight || 600} ${fs}px ${T.mono}`; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(text).width, x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+    ctx.fillStyle = T.halo; ctx.beginPath(); ctx.rect(x0 - 3 * ps, y - fs / 2 - 2 * ps, w + 6 * ps, fs + 4 * ps); ctx.fill();
+    ctx.fillStyle = color; ctx.fillText(text, x, y + 0.5); ctx.restore();
+  }
+  function arrow(x1, y1, x2, y2, color, width, dashed) {
+    const ps = proj(); ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width * ps; if (dashed) ctx.setLineDash([5 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+    const a = Math.atan2(y2 - y1, x2 - x1), hs = 7 * ps; ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hs * Math.cos(a - 0.4), y2 - hs * Math.sin(a - 0.4)); ctx.lineTo(x2 - hs * Math.cos(a + 0.4), y2 - hs * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function railY() { return Math.min(H - 34 * proj(), view.cy + Math.max(60 * proj(), (H - view.cy) * 0.62)); }
+  function drawRail() {
+    const ps = proj(), y = railY(), h = 22 * ps, G = window.VDGear;
+    if (G && G.bench) G.bench(ctx, 0, y + h + 8 * ps, W, 6 * ps, H - y - h, {});
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.dark ? '#5d6670' : '#c9d0d8'); g.addColorStop(0.5, T.dark ? '#3a4149' : '#9aa4af'); g.addColorStop(1, T.dark ? '#262b31' : '#7d8792');
+    ctx.fillStyle = g; ctx.fillRect(0, y, W, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(0, y, W, 1);
+    /* the scale along the rail: 1 cm ticks, labels every 5 or 10 cm */
+    const step = view.s >= 6 ? 1 : view.s >= 2 ? 5 : 10, lab = view.s * 5 >= 40 * ps ? 5 : view.s * 10 >= 40 * ps ? 10 : 50;
+    ctx.strokeStyle = T.dark ? '#d8dee6' : '#1d242c'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1; ctx.beginPath();
+    for (let z = Math.ceil(Zof(0) / step) * step; z <= Zof(W); z += step) {
+      const x = Math.round(X(z)) + 0.5, big = Math.abs(z % lab) < 1e-9; ctx.moveTo(x, y + 1); ctx.lineTo(x, y + (big ? 9 : 5) * ps);
+    }
+    ctx.stroke(); ctx.font = `600 ${9 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (let z = Math.ceil(Zof(0) / lab) * lab; z <= Zof(W); z += lab) ctx.fillText(minus(String(Math.round(z))), X(z), y + h - 2 * ps);
+  }
+  function post(z, top) {                       /* a post from the rail up to a part, on a carrier */
+    const ps = proj(), x = X(z), y = railY(), w = 6 * ps;
+    if (top > y - 4) return;
+    const g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0); g.addColorStop(0, '#4a5058'); g.addColorStop(0.4, '#d5dae0'); g.addColorStop(1, '#30353b');
+    ctx.fillStyle = g; ctx.fillRect(x - w / 2, top, w, y - top);
+    ctx.fillStyle = T.dark ? '#22272d' : '#3d434c'; ctx.fillRect(x - 11 * ps, y - 7 * ps, 22 * ps, 7 * ps);
+    ctx.fillStyle = '#f2f4f7'; ctx.beginPath(); ctx.moveTo(x, y + 2 * ps); ctx.lineTo(x - 3 * ps, y - 2); ctx.lineTo(x + 3 * ps, y - 2); ctx.closePath(); ctx.fill();
+  }
+  function drawLens(e, selected) {
+    const ps = proj(), x = X(e.z), r = e.D / 2 * view.s, t0 = Math.max(2 * ps, Math.min(0.16 * r, 9 * ps)), conv = e.f > 0;
+    ctx.save(); ctx.beginPath();
+    const n = 20;
+    for (let i = 0; i <= n; i++) { const yy = -r + 2 * r * i / n, q = (yy / r) ** 2, th = conv ? 1.2 * ps + t0 * (1 - q) : 1.8 * ps + t0 * q; i ? ctx.lineTo(x + th, view.cy + yy) : ctx.moveTo(x + th, view.cy + yy); }
+    for (let i = n; i >= 0; i--) { const yy = -r + 2 * r * i / n, q = (yy / r) ** 2, th = conv ? 1.2 * ps + t0 * (1 - q) : 1.8 * ps + t0 * q; ctx.lineTo(x - th, view.cy + yy); }
+    ctx.closePath();
+    const g = ctx.createLinearGradient(x - t0, 0, x + t0, 0); g.addColorStop(0, 'rgba(150,200,240,0.30)'); g.addColorStop(0.5, 'rgba(210,235,255,0.45)'); g.addColorStop(1, 'rgba(120,170,220,0.30)');
+    ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = selected ? T.sel : (T.dark ? 'rgba(190,220,250,0.75)' : 'rgba(60,110,160,0.75)'); ctx.lineWidth = (selected ? 2 : 1.2) * ps; ctx.stroke();
+    /* the mount: clamps at the rim */
+    ctx.fillStyle = T.dark ? '#2a3038' : '#3d434c';
+    for (const sg of [-1, 1]) ctx.fillRect(x - t0 - 3 * ps, view.cy + sg * r - (sg > 0 ? 0 : 5 * ps), 2 * t0 + 6 * ps, 5 * ps);
+    /* thin lens mark */
+    ctx.globalAlpha = 0.55; ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(x, view.cy - r); ctx.lineTo(x, view.cy + r); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.restore();
+    /* focal points */
+    for (const sg of [-1, 1]) {
+      const fxp = X(e.z + sg * Math.abs(e.f)); if (fxp < -20 || fxp > W + 20) continue;
+      ctx.fillStyle = selected ? T.sel : T.muted; ctx.beginPath(); ctx.arc(fxp, view.cy, (selected ? 4.5 : 3) * ps, 0, 7); ctx.fill();
+      if (selected || view.s * Math.abs(e.f) > 26 * ps) tag(sg > 0 ? (e.f > 0 ? 'F′' : 'F') : (e.f > 0 ? 'F' : 'F′'), fxp, view.cy + 13 * ps, selected ? T.sel : T.muted, { size: 10 });
+    }
+    tag(e.name, x, view.cy - r - 14 * ps, selected ? T.sel : T.muted, { size: 10, weight: selected ? 700 : 600 });
+  }
+  function drawStop(e, selected) {
+    const ps = proj(), x = X(e.z), r = e.D / 2 * view.s, ext = Math.max(10 * ps, 0.6 * view.s);
+    ctx.fillStyle = T.dark ? '#0b0e12' : '#1f252c';
+    ctx.fillRect(x - 2.5 * ps, view.cy - r - ext, 5 * ps, ext); ctx.fillRect(x - 2.5 * ps, view.cy + r, 5 * ps, ext);
+    if (selected) { ctx.strokeStyle = T.sel; ctx.lineWidth = 2 * ps; ctx.strokeRect(x - 4 * ps, view.cy - r - ext, 8 * ps, 2 * r + 2 * ext); }
+    tag(e.name, x, view.cy - r - ext - 10 * ps, selected ? T.sel : T.muted, { size: 10 });
+  }
+  function drawObject(selected) {
+    const ps = proj(), o = S.obj;
+    if (o.kind === 'near') {
+      const x = X(o.z), top = Y(o.h);
+      /* the lamp and slide holder behind the object */
+      ctx.fillStyle = T.dark ? '#2b3139' : '#46505b'; ctx.fillRect(x - 26 * ps, view.cy - 14 * ps, 18 * ps, 28 * ps);
+      const lg = ctx.createRadialGradient(x - 8 * ps, view.cy, 0, x - 8 * ps, view.cy, 30 * ps); lg.addColorStop(0, 'rgba(255,236,190,0.55)'); lg.addColorStop(1, 'rgba(255,236,190,0)');
+      ctx.fillStyle = lg; ctx.fillRect(x - 40 * ps, view.cy - 30 * ps, 60 * ps, 60 * ps);
+      ctx.fillStyle = 'rgba(200,225,245,0.35)'; ctx.fillRect(x - 1.5 * ps, view.cy - 18 * ps, 3 * ps, 36 * ps);
+      arrow(x, view.cy, x, Math.min(top, view.cy - 1), selected ? T.sel : T.a, 2.4, false);
+      tag('object', x, view.cy + 26 * ps, selected ? T.sel : T.muted, { size: 10 });
+      post(o.z, view.cy + 18 * ps);
+    } else {
+      const x = X(Math.min(...parts().map((e) => e.z), S.zV)) - 60 * ps;
+      tag(o.tex === 'moon' ? '← light from the Moon' : '← light from a far sign', Math.max(70 * ps, x), view.cy + Math.max(...parts().map((e) => e.D / 2), 1) * view.s + 22 * ps, T.muted, { size: 10 });
+    }
+  }
+  function drawViewer(selected) {
+    const ps = proj(), x = X(S.zV), s = view.s, col = selected ? T.sel : (T.dark ? '#cfd6de' : '#3b4450');
+    if (S.viewer === 'eye') {
+      const R = 1.2 * s, cxp = x + 1.0 * s;     /* an eyeball 2.4 cm across: cornea at the front, retina 1.80 cm behind the lens */
+      ctx.save(); ctx.beginPath(); ctx.arc(cxp, view.cy, R, 0, 7);
+      const g = ctx.createRadialGradient(cxp - R * 0.3, view.cy - R * 0.3, R * 0.1, cxp, view.cy, R); g.addColorStop(0, T.dark ? 'rgba(235,240,245,0.20)' : 'rgba(255,255,255,0.9)'); g.addColorStop(1, T.dark ? 'rgba(160,175,190,0.12)' : 'rgba(205,214,224,0.7)');
+      ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.3 * ps; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cxp, view.cy, R, -0.55, 0.55); ctx.strokeStyle = '#d0503a'; ctx.lineWidth = 3 * ps; ctx.stroke();
+      /* iris with the pupil */
+      const pr = S.pupil / 2 * s, ir = Math.min(R * 0.62, Math.max(pr + 3 * ps, 0.55 * s));
+      ctx.strokeStyle = '#3f7fb0'; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(x, view.cy - ir); ctx.lineTo(x, view.cy - pr); ctx.moveTo(x, view.cy + pr); ctx.lineTo(x, view.cy + ir); ctx.stroke();
+      ctx.restore();
+      tag('eye', cxp, view.cy - R - 12 * ps, selected ? T.sel : T.muted, { size: 10 });
+      tag('retina', X(S.zV + EYE_RET) + 6 * ps, view.cy + R * 0.5 + 6 * ps, T.muted, { size: 9, align: 'left' });
+    } else {
+      const ds = model.vo.back, bodyW = Math.max(ds * s + 10 * ps, 30 * ps), bh = Math.max(1.6 * CAM.h * s, 30 * ps);
+      ctx.fillStyle = T.dark ? 'rgba(45,52,60,0.85)' : 'rgba(60,68,78,0.85)';
+      ctx.fillRect(x - 0.4 * s - 6 * ps, view.cy - (CAM.f / F_NUMBERS[S.Ni]) / 2 * s - 6 * ps, 0.4 * s + 6 * ps, (CAM.f / F_NUMBERS[S.Ni]) * s + 12 * ps);
+      ctx.strokeStyle = col; ctx.lineWidth = 1.3 * ps; ctx.strokeRect(x, view.cy - bh / 2, bodyW, bh);
+      ctx.fillStyle = '#1a1e24'; ctx.fillRect(X(S.zV + ds) - 2 * ps, view.cy - CAM.h / 2 * s, 4 * ps, CAM.h * s);
+      tag('camera', x + bodyW / 2, view.cy + bh / 2 + 12 * ps, selected ? T.sel : T.muted, { size: 10 });
+      tag('sensor', X(S.zV + ds) + 6 * ps, view.cy - CAM.h / 2 * s - 8 * ps, T.muted, { size: 9, align: 'left' });
+    }
+    post(S.zV + (S.viewer === 'eye' ? 1.0 : 1.5), view.cy + (S.viewer === 'eye' ? 1.2 * view.s : Math.max(0.8 * CAM.h * view.s, 15 * ps)));
+  }
+  /* meridional bundles (in the plane of the drawing): from the axial point and from the top of the object */
+  function bundle(which) {
+    const o = S.obj, els = usable(S.els, o), vo = model.vo;
+    const all = els.concat([{ kind: 'lens', z: S.zV, f: 1 / vo.P, D: vo.D, viewer: true }]), zEnd = S.zV + vo.back;
+    const e0 = all[0], R = e0.D / 2, n = 11, out = [];
+    const yTop = which === 'edge' ? (o.kind === 'near' ? o.h : o.a) : 0;
+    for (let i = 0; i < n; i++) {
+      const yy = R * (2 * i / (n - 1) - 1) * 0.999;
+      let r, z0;
+      if (o.kind === 'near') { const d = e0.z - o.z; r = { x: 0, y: yTop, ux: 0, uy: (yy - yTop) / d }; z0 = o.z; }
+      else { const zs = view.z0 - 1; r = { x: 0, y: yy + yTop * (e0.z - zs), ux: 0, uy: -yTop }; z0 = zs; }
+      out.push(traceRay(all, z0, r, zEnd));
+    }
+    return { out, all };
+  }
+  function strokePath(pts, color, alpha, width, upTo) {
+    ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath();
+    pts.forEach((p, i) => { const x = X(p[0]), y = Y(p[2]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke();
+  }
+  function drawRays() {
+    const ps = proj(), list = S.rays === 'both' ? ['axis', 'edge'] : [S.rays];
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = T.dark ? 'lighter' : 'source-over';
+    for (const w of list) {
+      const { out } = bundle(w), col = w === 'axis' ? T.a : T.b;
+      for (const r of out) {
+        if (r.stop >= 0) { strokePath(r.pts, col, 0.22, 1 * ps); continue; }
+        strokePath(r.pts, col, T.dark ? 0.10 : 0.07, 5 * ps); strokePath(r.pts, col, 0.85, 1.3 * ps);
+      }
+    }
+    ctx.restore();
+    /* traced back to a virtual final image: dashed, from the last lens */
+    const m = model, last = m.chain[m.chain.length - 1];
+    if (last && !last.real && isFinite(last.z) && X(last.z) > -50 && list.includes('edge')) {
+      const { out } = bundle('edge'); ctx.save(); ctx.setLineDash([5 * ps, 5 * ps]);
+      for (const r of out) {
+        if (r.stop >= 0) continue;
+        const k = r.pts.findIndex((p) => Math.abs(p[0] - last.lens.z) < 1e-9); if (k < 0 || k + 1 >= r.pts.length) continue;
+        const a = r.pts[k], b = r.pts[k + 1], u = (b[2] - a[2]) / (b[0] - a[0]), yb = a[2] + u * (last.z - a[0]);
+        strokePath([[a[0], 0, a[2]], [last.z, 0, yb]], T.b, 0.45, 1 * ps);
+      }
+      ctx.restore();
+    }
+  }
+  function drawImages() {
+    const ps = proj(), m = model, Blind = S.blind;
+    if (Blind) return;
+    m.chain.forEach((c, i) => {
+      if (!isFinite(c.z) || !isFinite(c.h)) return;
+      const x = X(c.z); if (x < -10 || x > W + 10) return;
+      /* a real image the light never reaches (the next lens, or the viewer, takes the light first) is only where it would form */
+      const nextZ = i + 1 < m.chain.length ? m.chain[i + 1].lens.z : S.zV, formed = !c.real || c.z <= nextZ;
+      arrow(x, view.cy, x, Y(c.h), T.img, 2.4, !c.real || !formed);
+      tag(`image ${i + 1}${!c.real ? ', virtual' : formed ? '' : ' (would form)'}`, x, Y(c.h) + (c.h > 0 ? -12 : 12) * ps, T.img, { size: 10 });
+    });
+    if (m.chain.length && !isFinite(m.zF)) tag('final image at infinity', X(m.chain[m.chain.length - 1].lens.z) + 6 * ps, view.cy - 38 * ps, T.img, { size: 10, align: 'left' });
+    /* the exit pupil */
+    const pu = m.pu;
+    if (pu && isFinite(pu.ex.z) && isFinite(pu.ex.D)) {
+      const x = X(pu.ex.z), r = pu.ex.D / 2 * view.s;
+      if (x > -10 && x < W + 10) {
+        ctx.save(); ctx.strokeStyle = T.pupil; ctx.lineWidth = 2.2 * ps;
+        for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(x - 4 * ps, view.cy + sg * (r + 3 * ps)); ctx.lineTo(x, view.cy + sg * r); ctx.lineTo(x + 4 * ps, view.cy + sg * (r + 3 * ps)); ctx.stroke(); }
+        ctx.restore();
+        tag('exit pupil', x, view.cy + r + 34 * ps, T.pupil, { size: 10 });
+      }
+    }
+  }
+  function draw() {
+    if (!T || !W || !model) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const G = window.VDGear; if (G && G.backdrop) G.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const ps = proj();
+    /* the axis */
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([6 * ps, 5 * ps]); ctx.beginPath(); ctx.moveTo(0, view.cy + 0.5); ctx.lineTo(W, view.cy + 0.5); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    drawRail();
+    for (const e of parts()) post(e.z, view.cy + e.D / 2 * view.s + (e.kind === 'stop' ? Math.max(10 * ps, 0.6 * view.s) : 5 * ps));
+    drawObject(S.sel === 'obj');
+    drawRays();
+    for (const e of parts()) (e.kind === 'lens' ? drawLens : drawStop)(e, S.sel === e.id);
+    drawViewer(S.sel === 'viewer');
+    drawImages();
+    /* scale bar */
+    const L = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20].find((v) => v * view.s >= 50 * ps) || 50;
+    ctx.fillStyle = T.muted; ctx.fillRect(14 * ps, 16 * ps, L * view.s, 2 * ps);
+    tag(L >= 1 ? `${L} cm` : `${L * 10} mm`, 14 * ps + L * view.s / 2, 28 * ps, T.muted, { size: 10 });
+  }
+
+  /* ---------- editing ---------- */
+  function partList() {
+    const items = [{ id: 'obj', name: S.obj.kind === 'near' ? 'Object' : (S.obj.tex === 'moon' ? 'The Moon' : 'Far sign') }]
+      .concat(parts().map((e) => ({ id: e.id, name: e.name }))).concat([{ id: 'viewer', name: S.viewer === 'eye' ? 'Eye' : 'Camera' }]);
+    $('elist').innerHTML = items.map((it) => `<button type="button" data-id="${it.id}" aria-pressed="${String(S.sel === it.id)}">${it.name}</button>`).join('');
+  }
+  const selPart = () => S.els.find((e) => e.id === S.sel);
+  const fFromSlider = (v) => Math.pow(10, v);
+  function editor() {
+    const e = selPart(), o = S.obj, isObj = S.sel === 'obj', isV = S.sel === 'viewer';
+    $('edLens').hidden = !e && !isObj;
+    $('edF').hidden = !(e && e.kind === 'lens'); $('edD').hidden = !e; $('edH').hidden = !isObj; $('remove').hidden = !e;
+    const zRow = [$('sZ'), $('oZ').parentElement];
+    zRow.forEach((n) => { n.hidden = isObj && o.kind === 'far'; });
+    if (e) {
+      $('sZL').textContent = `${e.name}: position z`; $('sZ').value = e.z; $('oZ').textContent = fcm(e.z);
+      if (e.kind === 'lens') { $('sF').value = Math.log10(Math.abs(e.f)); $('oF').textContent = fcm(Math.abs(e.f)); for (const b of $('kindSeg').children) b.setAttribute('aria-pressed', String(+b.dataset.k === Math.sign(e.f))); }
+      $('sD').value = e.D; $('oD').textContent = fcm(e.D);
+    } else if (isObj) {
+      $('sZL').textContent = 'Object: position z'; $('sZ').value = o.z || 0; $('oZ').textContent = fcm(o.z || 0);
+      if (o.kind === 'near') { $('sHL').textContent = 'Object height h'; $('sH').min = 0.01; $('sH').max = 2; $('sH').step = 0.005; $('sH').value = o.h; $('oH').textContent = `${fx(o.h * 10, 2)} mm`; }
+      else { $('sHL').textContent = 'Angle of its top above the axis'; $('sH').min = 0.05; $('sH').max = 5; $('sH').step = 0.01; $('sH').value = deg(o.a); $('oH').textContent = `${fx(deg(o.a), 3)}°`; }
+    }
+    $('addLens').disabled = $('addStop').disabled = S.els.length >= MAX_PARTS;
+    $('sP').value = S.pupil * 10; $('oP').textContent = `${fx(S.pupil * 10, 1)} mm`;
+    $('sN').value = S.Ni; $('oN').textContent = `f/${F_NUMBERS[S.Ni]} (opening ${fx(CAM.f / F_NUMBERS[S.Ni] * 10, 1)} mm)`;
+    $('edPupil').hidden = S.viewer !== 'eye'; $('edN').hidden = S.viewer !== 'camera';
+    const gap = S.zV - lastZ(); $('sE').value = Math.min(30, gap); $('oE').textContent = fcm(gap);
+    $('sEL').textContent = `${S.viewer === 'eye' ? 'Eye' : 'Camera'} behind the last part`;
+    for (const b of $('viewerSeg').children) b.setAttribute('aria-pressed', String(b.dataset.v === S.viewer));
+    for (const b of $('raySeg').children) b.setAttribute('aria-pressed', String(b.dataset.r === S.rays));
+    const ok = S.obj.kind === 'near' ? 'slide' : S.obj.tex;
+    for (const b of $('objSeg').children) b.setAttribute('aria-pressed', String(b.dataset.o === ok));
+    $('objHint').textContent = OBJ_HINT[ok];
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    void isV;
+    partList();
+  }
+  /* keep the order sensible: parts after a near object, the viewer after every part */
+  function clampAll() {
+    const o = S.obj;
+    for (const e of S.els) { if (o.kind === 'near') e.z = Math.max(o.z + 0.05, e.z); e.z = Math.round(e.z * 100) / 100; }
+    S.zV = Math.max(S.zV, lastZ() + 0.2);
+  }
+  let pending = 0;
+  function update(o = {}) {
+    clampAll(); compute(!!o.fast);
+    if (!view.user && !o.keepView) fit();
+    readouts(); if (!o.noEditor) editor(); draw(); draw3();
+    cancelAnimationFrame(pending); pending = requestAnimationFrame(() => drawViews(!!o.fast));
+    clearTimeout(refineT); if (o.fast) refineT = setTimeout(() => { compute(false); readouts(); drawViews(false); }, 220);
+  }
+  const changed = (o) => { S.preset = 'custom'; update(o); };
+  function applyPreset(k) {
+    const p = PRESETS[k]; S.preset = k; S.obj = Object.assign({}, p.obj); S.els = p.parts(); S.viewer = p.view; S.sel = null;
+    compute(true);
+    if (p.eye === 'pupil') { const pu = pupils(S.els, S.obj); S.zV = pu.ex.z; }
+    else if (p.eyeAt != null) S.zV = p.eyeAt; else S.zV = lastZ() + p.eye;
+    S.zV = Math.round(S.zV * 100) / 100;
+    $('presetHint').textContent = p.hint; view.user = false; update(); S.preset = k; editor();
+  }
+  function addPart(kind) {
+    if (S.els.length >= MAX_PARTS) return;
+    const ps = usable(S.els, S.obj), a = S.obj.kind === 'near' ? S.obj.z : (ps.length ? ps[0].z - 10 : 0), zs = [a].concat(ps.map((e) => e.z)).concat([S.zV]);
+    let best = 0, at = (zs[0] + zs[1]) / 2;
+    for (let i = 0; i + 1 < zs.length; i++) if (zs[i + 1] - zs[i] > best) { best = zs[i + 1] - zs[i]; at = (zs[i] + zs[i + 1]) / 2; }
+    const nL = S.els.filter((e) => e.kind === kind).length + 1;
+    const e = kind === 'lens' ? lens(`Lens ${nL}`, at, 10, 3) : stop(`Stop ${nL}`, at, 1);
+    if (best < 0.4) e.z = S.zV - 0.1;
+    S.els.push(e); S.sel = e.id; changed();
+  }
+
+  /* ---------- pointer and keys on the flat view ---------- */
+  function hit(px, py) {
+    const ps = proj(), s = view.s;
+    const e = selPart();
+    if (e && e.kind === 'lens') for (const sg of [-1, 1]) { const x = X(e.z + sg * Math.abs(e.f)); if (Math.hypot(px - x, py - view.cy) < 10 * ps) return { kind: 'f', e, sg }; }
+    if (e) { const x = X(e.z), y = view.cy - e.D / 2 * s; if (Math.hypot(px - x, py - y) < 10 * ps) return { kind: 'D', e }; }
+    if (S.viewer === 'eye' ? (px > X(S.zV) - 8 * ps && px < X(S.zV + 2.2) + 8 * ps && Math.abs(py - view.cy) < 1.3 * s + 10 * ps)
+      : (px > X(S.zV) - 10 * ps && px < X(S.zV) + Math.max(model.vo.back * s + 10 * ps, 30 * ps) && Math.abs(py - view.cy) < Math.max(0.8 * CAM.h * s, 15 * ps) + 6 * ps)) return { kind: 'viewer' };
+    let best = null, bd = 12 * ps;
+    for (const p of parts()) { const x = X(p.z), r = p.D / 2 * s + 14 * ps; if (Math.abs(py - view.cy) < r && Math.abs(px - x) < bd) { bd = Math.abs(px - x); best = p; } }
+    if (best) return { kind: 'part', e: best };
+    if (S.obj.kind === 'near') { const x = X(S.obj.z); if (Math.abs(px - x) < 14 * ps && py < view.cy + 30 * ps && py > Math.min(Y(S.obj.h), view.cy - 14 * ps) - 10 * ps) return { kind: 'obj', top: Math.abs(py - Y(S.obj.h)) < 9 * ps && S.sel === 'obj' }; }
+    return null;
+  }
+  let drag = null;
+  can.addEventListener('pointerdown', (ev) => {
+    const r = can.getBoundingClientRect(), px = ev.clientX - r.left, py = ev.clientY - r.top, h = hit(px, py);
+    can.focus({ preventScroll: true });
+    if (!h) { if (ev.pointerType === 'touch') return; drag = { kind: 'pan', x0: px, z00: view.z0, y0: py, cy0: view.cy }; can.setPointerCapture(ev.pointerId); return; }
+    ev.preventDefault(); can.setPointerCapture(ev.pointerId); dragging = true;
+    if (h.kind === 'part' || h.kind === 'f' || h.kind === 'D') S.sel = h.e.id; else if (h.kind === 'viewer') S.sel = 'viewer'; else if (h.kind === 'obj') S.sel = 'obj';
+    drag = Object.assign(h, { x0: px, y0: py, z0: h.e ? h.e.z : h.kind === 'viewer' ? S.zV : S.obj.z });
+    view.user = true; editor(); draw();
+  });
+  can.addEventListener('pointermove', (ev) => {
+    const r = can.getBoundingClientRect(), px = ev.clientX - r.left, py = ev.clientY - r.top;
+    if (!drag) { const h = hit(px, py); can.style.cursor = h ? (h.kind === 'D' || (h.kind === 'obj' && h.top) ? 'ns-resize' : 'ew-resize') : 'grab'; return; }
+    if (drag.kind === 'pan') { view.z0 = drag.z00 - (px - drag.x0) / view.s; view.cy = drag.cy0 + (py - drag.y0); view.user = true; draw(); return; }
+    const dz = (px - drag.x0) / view.s, snap = (v) => Math.round(v * 100) / 100;
+    if (drag.kind === 'part') drag.e.z = snap(drag.z0 + dz);
+    else if (drag.kind === 'f') { const f = Math.max(0.5, Math.min(100, Math.abs(Zof(px) - drag.e.z))); drag.e.f = Math.sign(drag.e.f) * snap(f); }
+    else if (drag.kind === 'D') drag.e.D = Math.max(0.1, Math.min(8, snap(2 * Math.abs(view.cy - py) / view.s)));
+    else if (drag.kind === 'viewer') S.zV = snap(drag.z0 + dz);
+    else if (drag.kind === 'obj') { if (drag.top) S.obj.h = Math.max(0.01, Math.min(2, Math.round(((view.cy - py) / view.s) * 1000) / 1000)); else S.obj.z = snap(Math.min(drag.z0 + dz, (usable(S.els, { kind: 'far' })[0] || { z: S.zV }).z - 0.05)); }
+    changed({ fast: true, keepView: true });
+  });
+  const endDrag = () => { if (drag && drag.kind !== 'pan') { dragging = false; changed({ keepView: true }); } drag = null; };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('wheel', (ev) => {
+    ev.preventDefault(); const r = can.getBoundingClientRect(), px = ev.clientX - r.left, py = ev.clientY - r.top, z = Zof(px), yv = (view.cy - py) / view.s;
+    view.s = Math.max(1, Math.min(4000, view.s * Math.exp(-ev.deltaY * 0.0015))); view.z0 = z - px / view.s; view.cy = py + yv * view.s; view.user = true; draw();
+  }, { passive: false });
+  function zoomBy(k) { const z = Zof(W / 2); view.s = Math.max(1, Math.min(4000, view.s * k)); view.z0 = z - W / 2 / view.s; view.user = true; draw(); }
+  $('zoomIn').addEventListener('click', () => zoomBy(1.5)); $('zoomOut').addEventListener('click', () => zoomBy(1 / 1.5));
+  $('zoomFit').addEventListener('click', () => { view.cy = H * 0.46; fit(); draw(); });
+  can.addEventListener('keydown', (ev) => {
+    const ids = ['obj'].concat(parts().map((e) => e.id)).concat(['viewer']);
+    if (ev.key === 'PageDown' || ev.key === 'PageUp') { const i = ids.indexOf(S.sel); S.sel = ids[(i + (ev.key === 'PageDown' ? 1 : ids.length - 1) + (i < 0 ? 1 : 0)) % ids.length]; editor(); draw(); ev.preventDefault(); return; }
+    const e = selPart(), step = ev.shiftKey ? 1 : 0.1;
+    if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+      const d = ev.key === 'ArrowLeft' ? -step : step;
+      if (e) e.z += d; else if (S.sel === 'viewer') S.zV += d; else if (S.sel === 'obj' && S.obj.kind === 'near') S.obj.z += d; else return;
+      ev.preventDefault(); changed({ keepView: true }); return;
+    }
+    if (e && e.kind === 'lens' && (ev.key === '[' || ev.key === ']')) { e.f = Math.sign(e.f) * Math.max(0.5, Math.min(100, Math.round(Math.abs(e.f) * (ev.key === ']' ? 1.02 : 1 / 1.02) * 100) / 100)); ev.preventDefault(); changed({ keepView: true }); return; }
+    if (e && (ev.key === 'Delete' || ev.key === 'Backspace')) { $('remove').click(); ev.preventDefault(); }
+  });
+
+  /* ---------- the sidebar controls ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('addLens').addEventListener('click', () => addPart('lens')); $('addStop').addEventListener('click', () => addPart('stop'));
+  $('elist').addEventListener('click', (ev) => { const b = ev.target.closest('[data-id]'); if (!b) return; const id = b.dataset.id; S.sel = id === 'obj' || id === 'viewer' ? id : +id; editor(); draw(); });
+  $('sZ').addEventListener('input', () => { const v = +$('sZ').value, e = selPart(); if (e) e.z = v; else if (S.sel === 'obj') S.obj.z = Math.min(v, (usable(S.els, { kind: 'far' })[0] || { z: S.zV }).z - 0.05); changed({ fast: true, keepView: true }); });
+  $('sF').addEventListener('input', () => { const e = selPart(); if (!e) return; e.f = Math.sign(e.f) * Math.round(fFromSlider(+$('sF').value) * 100) / 100; changed({ fast: true, keepView: true }); });
+  $('kindSeg').addEventListener('click', (ev) => { const b = ev.target.closest('[data-k]'), e = selPart(); if (!b || !e) return; e.f = +b.dataset.k * Math.abs(e.f); changed({ keepView: true }); });
+  $('sD').addEventListener('input', () => { const e = selPart(); if (!e) return; e.D = +$('sD').value; changed({ fast: true, keepView: true }); });
+  $('sH').addEventListener('input', () => { if (S.obj.kind === 'near') S.obj.h = +$('sH').value; else S.obj.a = Math.tan(+$('sH').value * Math.PI / 180); changed({ fast: true, keepView: true }); });
+  ['sZ', 'sF', 'sD', 'sH', 'sE', 'sP'].forEach((id) => $(id).addEventListener('change', () => update({ keepView: true })));
+  $('remove').addEventListener('click', () => { const e = selPart(); if (!e) return; S.els = S.els.filter((x) => x !== e); S.sel = null; changed(); });
+  $('objSeg').addEventListener('click', (ev) => {
+    const b = ev.target.closest('[data-o]'); if (!b) return; const k = b.dataset.o, ps = usable(S.els, { kind: 'far' });
+    if (k === 'slide') S.obj = { kind: 'near', tex: 'slide', z: (ps.length ? ps[0].z : S.zV) - 10, h: 0.2 };
+    else S.obj = { kind: 'far', tex: k, a: k === 'moon' ? MOON_A : Math.tan(0.6 * Math.PI / 180) };
+    view.user = false; changed();
+  });
+  $('viewerSeg').addEventListener('click', (ev) => { const b = ev.target.closest('[data-v]'); if (!b) return; S.viewer = b.dataset.v; changed({ keepView: true }); });
+  $('raySeg').addEventListener('click', (ev) => { const b = ev.target.closest('[data-r]'); if (!b) return; S.rays = b.dataset.r; editor(); draw(); draw3(); });
+  $('sP').addEventListener('input', () => { S.pupil = +$('sP').value / 10; changed({ fast: true, keepView: true }); });
+  $('sN').addEventListener('input', () => { S.Ni = +$('sN').value; changed({ keepView: true }); });
+  $('sE').addEventListener('input', () => { S.zV = lastZ() + +$('sE').value; changed({ fast: true, keepView: true }); });
+  $('toPupil').addEventListener('click', () => { const pu = pupils(S.els, S.obj); if (pu && isFinite(pu.ex.z) && pu.ex.z > lastZ()) { S.zV = Math.round(pu.ex.z * 100) / 100; changed({ keepView: true }); } else { $('rCheck').textContent = 'The exit pupil is virtual (inside the instrument), so the eye cannot reach it: it goes as close as it can.'; S.zV = lastZ() + 0.2; changed({ keepView: true }); } });
+  $('labBlind').addEventListener('change', (ev) => { S.blind = ev.target.checked; readouts(); draw(); });
+  /* typed values on the readouts beside the sliders */
+  const typed = (out, o) => VD.typeIn($(out), Object.assign({ can: () => true }, o));
+  typed('oZ', { label: 'Position z', unit: 'cm', min: -30, max: 150, step: 0.01, get: () => (selPart() ? selPart().z : S.obj.z || 0), set: (v) => { const e = selPart(); if (e) e.z = v; else if (S.sel === 'obj' && S.obj.kind === 'near') S.obj.z = v; changed({ keepView: true }); } });
+  typed('oF', { label: 'Focal length |f|', unit: 'cm', min: 0.5, max: 100, step: 0.01, get: () => Math.abs(selPart() ? selPart().f : 10), set: (v) => { const e = selPart(); if (e) { e.f = Math.sign(e.f) * v; changed({ keepView: true }); } } });
+  typed('oD', { label: 'Clear diameter D', unit: 'cm', min: 0.1, max: 8, step: 0.01, get: () => (selPart() ? selPart().D : 1), set: (v) => { const e = selPart(); if (e) { e.D = v; changed({ keepView: true }); } } });
+  typed('oE', { label: 'Distance behind the last part', unit: 'cm', min: 0.2, max: 200, step: 0.01, get: () => S.zV - lastZ(), set: (v) => { S.zV = lastZ() + v; changed({ keepView: true }); } });
+
+  /* ---------- 3D: the rail on a bench, real size, with bundles of skew rays ---------- */
+  let g3 = null, view3 = null;
+  const CM = 0.01, AXH = 0.16;                 /* scene in meters; the optical axis 16 cm above the bench */
+  function init3D() {
+    const pane = $('pane'), S3 = VD3K.stage(pane, { before: can, shadow: 0.6, fov: 30, fogAt: [2.2, 4.5] }); if (!S3) return false;
+    const M = (o, c) => VD3K.material(S3, o, c), sc = S3.scene;
+    sc.add(VD3K.bench(S3, { w: 6, d: 3, y: 0.3 }), VD3K.backdrop(S3, { r: 2.2, h: 1.4, y: -0.6 }));
+    const mats = { rail: M({ roughness: 0.4, metalness: 0.4 }, ['#b9c1ca', '#7d8792']), dark: M({ roughness: 0.5, metalness: 0.3 }, ['#4a525c', '#3a414a']),
+      steel: M({ roughness: 0.32, metalness: 0.45 }, ['#d5dbe2', '#aab3bd']), glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe6f7, transparent: true, opacity: 0.32, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false }),
+      black: M({ roughness: 0.7, metalness: 0.1 }, ['#1b1f24', '#111418']), white: M({ roughness: 0.4, metalness: 0 }, ['#f2f2ee', '#d8d8d2']),
+      iris: M({ roughness: 0.6, metalness: 0 }, ['#3f7fb0', '#3f7fb0']), slide: new THREE.MeshBasicMaterial({ color: 0xffffff }) };
+    const group = new THREE.Group(); sc.add(group);
+    const rays = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+    sc.add(rays);
+    const o = { th: -1.25, ph: 1.2, zoom: 1 };
+    S3.orbit(S3.el, o, () => draw3(), {});
+    g3 = { S3, mats, group, rays, o, key: '' };
+    S3.el.style.position = 'absolute'; S3.el.style.inset = '0';
+    return true;
+  }
+  /* a lens body: a lathe of its outline, thick in the middle (converging) or at the rim (diverging) */
+  function lensMesh(e, m) {
+    const r = e.D / 2 * CM, t0 = Math.min(0.18 * r, 0.006), pts = [];
+    for (let i = 0; i <= 16; i++) { const y = r * i / 16, q = (y / r) ** 2, th = e.f > 0 ? 0.0006 + t0 * (1 - q) : 0.0009 + t0 * q; pts.push(new THREE.Vector2(y, th)); }
+    for (let i = 16; i >= 0; i--) { const y = r * i / 16, q = (y / r) ** 2, th = e.f > 0 ? 0.0006 + t0 * (1 - q) : 0.0009 + t0 * q; pts.push(new THREE.Vector2(y, -th)); }
+    const g = new THREE.LatheGeometry(pts, 48); g.rotateZ(-Math.PI / 2);   /* the lathe axis becomes x, the rail */
+    const mesh = new THREE.Mesh(g, m.glass); mesh.renderOrder = 3; return mesh;
+  }
+  function holder(z, top, m, g) {
+    const x = z * CM; g.add(VD3K.rod([x, 0, 0.012], [x, 0, top], 0.0035, m.steel));
+    g.add(VD3K.box(0.024, 0.045, 0.012, m.dark, x, 0, 0.0));
+  }
+  function slideTexture() {
+    const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), img = g.createImageData(128, 128);
+    for (let j = 0; j < 128; j++) for (let i = 0; i < 128; i++) { const t = texSlide((i / 127) * 1.4 - 0.4, (1 - j / 127) * 1.4 - 0.2, 1, 0.011), o = (j * 128 + i) * 4; img.data[o] = t[0] * 255; img.data[o + 1] = t[1] * 255; img.data[o + 2] = t[2] * 255; img.data[o + 3] = 255; }
+    g.putImageData(img, 0, 0); const tx = new THREE.CanvasTexture(c); return tx;
+  }
+  function build3() {
+    const { S3, mats: m, group } = g3; S3.dispose(group); const g = new THREE.Group(); g3.group = g; S3.scene.add(g);
+    const ps = parts(), o = S.obj, zs = ps.map((e) => e.z).concat([S.zV + 3]); if (o.kind === 'near') zs.push(o.z - 3); else zs.push(Math.min(...zs) - 10);
+    const z0 = Math.min(...zs), z1 = Math.max(...zs), tags = [];
+    g.add(VD3K.box((z1 - z0) * CM + 0.06, 0.05, 0.02, m.rail, (z0 + z1) / 2 * CM, 0, 0));
+    for (const e of ps) {
+      const x = e.z * CM, r = e.D / 2 * CM;
+      if (e.kind === 'lens') {
+        const L = lensMesh(e, m); L.position.set(x, 0, AXH); g.add(L);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.0025, 0.0028, 10, 48), m.dark); ring.rotation.y = Math.PI / 2; ring.position.set(x, 0, AXH); g.add(ring);
+      } else {
+        const plate = new THREE.Mesh(new THREE.RingGeometry(r, r + Math.max(0.012, r * 0.8), 48), m.black); plate.material.side = THREE.DoubleSide; plate.rotation.y = Math.PI / 2; plate.position.set(x, 0, AXH); g.add(plate);
+      }
+      holder(e.z, AXH - r - 0.004, m, g);
+      tags.push([e.name, x, AXH + r + 0.012]);
+    }
+    if (o.kind === 'near') {
+      const x = o.z * CM, hh = Math.max(o.h * CM * 1.4, 0.004);
+      const sl = new THREE.Mesh(new THREE.PlaneGeometry(hh, hh), new THREE.MeshBasicMaterial({ map: slideTexture(), side: THREE.DoubleSide }));
+      sl.rotation.y = -Math.PI / 2; sl.rotation.z = 0; sl.position.set(x, -o.h * CM * 0.25 + hh * 0.25, AXH + hh * 0.3); g.add(sl);
+      const glassS = new THREE.Mesh(new THREE.BoxGeometry(0.001, 0.025, 0.075), m.glass); glassS.position.set(x, 0, AXH); g.add(glassS);
+      const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.025, 0.025), m.dark); lamp.position.set(x - 0.022, 0, AXH); g.add(lamp);
+      const glow = new THREE.Mesh(new THREE.CircleGeometry(0.008, 24), new THREE.MeshBasicMaterial({ color: 0xffe9b8 })); glow.rotation.y = Math.PI / 2; glow.position.set(x - 0.0118, 0, AXH); g.add(glow);
+      holder(o.z - 3, AXH - 0.02, m, g);
+    }
+    /* the viewer */
+    const xv = S.zV * CM;
+    if (S.viewer === 'eye') {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.012, 32, 20), m.white); eye.position.set(xv + 0.010, 0, AXH); g.add(eye);
+      const iris = new THREE.Mesh(new THREE.RingGeometry(S.pupil / 2 * CM, 0.0058, 32), m.iris); iris.material.side = THREE.DoubleSide; iris.rotation.y = Math.PI / 2; iris.position.set(xv - 0.0012, 0, AXH); g.add(iris);
+      const pup = new THREE.Mesh(new THREE.CircleGeometry(S.pupil / 2 * CM, 24), m.black); pup.rotation.y = -Math.PI / 2; pup.position.set(xv - 0.0010, 0, AXH); g.add(pup);
+    } else {
+      const ds = model.vo.back * CM, body = VD3K.box(0.06, 0.09, 0.06, m.dark, xv + ds + 0.025, 0, AXH - 0.03); g.add(body);
+      const barrel = VD3K.rod([xv, 0, AXH], [xv + ds, 0, AXH], 0.022, m.black); g.add(barrel);
+      holder(S.zV + 3, AXH - 0.03, m, g);
+    }
+    /* intermediate real images: small arrows */
+    if (!S.blind) model.chain.forEach((c, i) => { const nz = i + 1 < model.chain.length ? model.chain[i + 1].lens.z : S.zV; if (!(c.real && isFinite(c.z) && isFinite(c.h) && c.z <= nz)) return;
+      const x = c.z * CM, h = c.h * CM, mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(T.img) });
+      g.add(VD3K.rod([x, 0, AXH], [x, 0, AXH + h * 0.85], Math.max(0.0006, Math.abs(h) * 0.04), mat));
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(Math.max(0.0015, Math.abs(h) * 0.12), Math.abs(h) * 0.15 + 0.001, 16), mat);
+      cone.rotation.x = h > 0 ? Math.PI / 2 : -Math.PI / 2; cone.position.set(x, 0, AXH + h * 0.925); g.add(cone);
+    });
+    const lsz = Math.max(0.008, (z1 - z0) * CM * 0.028), lc = T.dark ? '#e3e8ef' : '#17202b';
+    tags.push([S.viewer === 'eye' ? 'eye' : 'camera', xv + 0.01, AXH + 0.03]);
+    if (o.kind === 'near') tags.push(['object', o.z * CM, AXH + 0.04]);
+    for (const [t, x, z] of tags) { const L = VD3K.label(t, { size: lsz, color: lc }); L.position.set(x, 0, z + lsz); g.add(L); }
+    g3.span = [z0, z1];
+  }
+  function rays3() {
+    const o = S.obj, els = usable(S.els, o), vo = model.vo, all = els.concat([{ kind: 'lens', z: S.zV, f: 1 / vo.P, D: vo.D }]), zEnd = S.zV + vo.back;
+    const pos = [], col = [], e0 = all[0], R = e0.D / 2 * 0.98;
+    const ca = new THREE.Color(T.a), cb = new THREE.Color(T.b), list = S.rays === 'both' ? ['axis', 'edge'] : [S.rays];
+    const z0 = o.kind === 'near' ? o.z : g3.span[0];
+    for (const w of list) {
+      const yt = w === 'edge' ? (o.kind === 'near' ? o.h : o.a) : 0, c = w === 'axis' ? ca : cb;
+      for (let k = 0; k < 25; k++) {
+        const rr = k === 0 ? 0 : R * (k <= 8 ? 0.5 : 1), t = k <= 8 ? (k - 1) / 8 * 2 * Math.PI : (k - 9) / 16 * 2 * Math.PI;
+        const px = rr * Math.cos(t), py = rr * Math.sin(t);
+        let r;
+        if (o.kind === 'near') { const d = e0.z - o.z; r = { x: 0, y: yt, ux: px / d, uy: (py - yt) / d }; }
+        else r = { x: px, y: py + yt * (e0.z - z0), ux: 0, uy: -yt };
+        const tr = traceRay(all, z0, r, zEnd), fade = tr.stop >= 0 ? 0.25 : 1;
+        for (let i = 0; i + 1 < tr.pts.length; i++) {
+          const a = tr.pts[i], b = tr.pts[i + 1];
+          pos.push(a[0] * CM, a[1] * CM, AXH + a[2] * CM, b[0] * CM, b[1] * CM, AXH + b[2] * CM);
+          for (let q = 0; q < 2; q++) col.push(c.r * fade, c.g * fade, c.b * fade);
+        }
+      }
+    }
+    const gm = g3.rays.geometry; gm.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); gm.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); gm.computeBoundingSphere();
+    g3.rays.material.blending = T.dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+  }
+  function draw3() {
+    if (!g3 || !view3 || !view3.is3d() || !model) return;
+    const r = $('pane').getBoundingClientRect(); g3.S3.size(r.width, r.height);
+    const key = JSON.stringify([S.els, S.obj, S.zV, S.viewer, S.pupil, S.Ni, S.blind, T.dark]);
+    if (key !== g3.key) { build3(); g3.key = key; }
+    rays3();
+    const [a, b] = g3.span, mid = (a + b) / 2 * CM, len = (b - a) * CM;
+    g3.S3.place(g3.o, [mid, 0, AXH], g3.S3.fit(Math.max(0.24, len * 1.0), 1.6));
+    g3.S3.render();
+  }
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: 'flat', change: (on) => { if (g3) g3.S3.el.hidden = !on; can.style.visibility = on ? 'hidden' : 'visible'; ['zoomIn', 'zoomOut', 'zoomFit'].forEach((id) => { $(id).hidden = on; }); if (on) draw3(); else draw(); },
+    status: (msg) => { $('rCheck').textContent = msg; } });
+
+  /* ---------- size, theme, start ---------- */
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); const first = !W;
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    if (first || !view.user) { view.cy = H * 0.46; if (model) fit(); }
+    draw(); draw3(); if (model) drawViews(false);
+  }
+  const retheme = () => { tokens(); draw(); if (g3) { g3.key = ''; draw3(); } if (model) drawViews(false); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.tools({ el: can, scale: () => (view3 && view3.is3d() ? null : 0.01 / view.s) });
+  tokens(); new ResizeObserver(resize).observe($('pane'));
+  let first = 'microscope'; try { const q = new URLSearchParams(location.search).get('setup'); if (q && PRESETS[q]) first = q; } catch (_) {}
+  applyPreset(first); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.vdModel = () => model;
+})();
+</script>
+</body>
+</html>

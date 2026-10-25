@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Build a Microscope or Telescope: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Build a Microscope or Telescope</h1><ul class="meta"><li><a href="../demos/instrument-builder.html">Open the demo</a></li><li>PHYS 202</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An instrument is a chain of images: each lens images the image of the one before, with 1/d_o + 1/d_i = 1/f and m = −d_i/d_o at every step (OpenStax Vol 3 §2.4). An image the next lens intercepts before it forms is a virtual object for that lens (d_o &lt; 0).</li>
+<li>What an eye judges is angle, not size. Angular magnification compares the angle the eye sees through the instrument with the angle the object fills without it: at the near point, 25 cm, for something small and near; as it is, for something far away.</li>
+<li>With the eye relaxed (final image at infinity): magnifier M = 25 cm/f (§2.7); compound microscope M = m_obj × (25 cm/f_eye) (§2.8); telescope M = −f_obj/f_eye, with the lenses f_obj + f_eye apart (§2.8). M &lt; 0 means the view is upside down.</li>
+<li>The exit pupil is where all the light leaving the instrument passes: the image of the aperture stop (usually the objective) made by the lenses after it. The eye belongs there; the distance from the last lens is the eye relief.</li>
+<li>An instrument cannot make an extended object look brighter than it does to the bare eye. If the exit pupil is smaller than the eye's pupil, the view is dimmer by (exit pupil/eye pupil)².</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the thin lens equation with its signs. The views at the bottom of the picture are traced backward ray by ray from the retina (or sensor) through the pupil and every lens to the object, so blur, the edge of the field and dimming come from the rays themselves. <strong>Blind</strong> hides the magnification, the image chain and the final image, so students can predict them first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Magnifier.</strong> Object at the focal point: M = 25/5.00 = 5.00, and the eye is relaxed. Drag the eye back and forth: M does not change. Drag the object a little closer to the lens: the image moves in, the eye accommodates, and M grows toward 1 + 25/f = 6.</li>
+<li><strong>Compound microscope.</strong> Read the chain: the objective makes a real, inverted image 10 times the object at the eyepiece's focal point (image 1 sits in the field stop). The eyepiece adds 25/2.50 = 10: M = −100. Compare the two views: without the microscope the 0.5 mm letter is a speck.</li>
+<li><strong>Exit pupil.</strong> Drag the eye away from the exit pupil (or press the button to put it back) and watch the view through the microscope shrink to a small circle: the eye is now cutting off the edge of the field.</li>
+<li><strong>Keplerian telescope.</strong> The Moon fills 0.518° to the eye; through the telescope it is 10 times bigger and upside down. Show both bundles of rays: they leave the eyepiece parallel, at a steeper angle.</li>
+<li><strong>Galilean telescope.</strong> M = +5, upright and short, but the exit pupil is virtual (eye relief −8.00 cm) so the eye cannot get to it: the apparent field is only 6.1° against 25.5° for the Keplerian telescope.</li>
+<li><strong>Terrestrial telescope.</strong> The erecting lens turns the image over (m₂ = −1) and costs 20 cm of tube.</li>
+<li><strong>Start from scratch.</strong> Have students build an instrument to a specification (below), then switch to Camera to photograph through it.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the Compound microscope setup, use the image chain to check m_obj, then M = m_obj × (25 cm/f_eye). Why does the textbook estimate M ≈ −(16 cm)(25 cm)/(f_obj f_eye) come out exactly here?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The microscope's exit pupil is 1.14 mm across, 2.86 cm behind the eyepiece. Find both from the lens equation (the objective is the aperture stop). Why does the view through the microscope read only about 8 % as bright as the bare eye with a 4.0 mm pupil?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In the Keplerian telescope, explain why the lenses must be f_obj + f_eye = 55 cm apart for the eye to be relaxed. What happens to the final image and to the eye if you slide the eyepiece 1 cm closer to the objective?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The Keplerian telescope's exit pupil is 5.00 mm. Set the eye pupil to 7.0 mm (a dark adapted eye). What does the brightness readout say, and why? Is the Moon's image now dimmer than to the bare eye?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Compare the Galilean and Keplerian telescopes: magnification, which way up, length, exit pupil, apparent field. Why does the Galilean telescope show so little sky at once?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In Start from scratch, build a compound microscope with M = −40 and the eye relaxed, using lenses from 1 to 10 cm. Give your lens positions and focal lengths and check M with the formula before you look.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Magnification means the image is bigger."</strong> A telescope's final image is at infinity and has no size; what grows is the angle it fills at the eye.</li>
+<li><strong>"A bigger eyepiece focal length gives more magnification."</strong> M goes as 1/f_eye: shorter eyepieces magnify more.</li>
+<li><strong>"A telescope makes faint objects brighter."</strong> It collects more light, so point sources (stars) brighten, but the surface brightness of an extended object can never exceed what the bare eye sees.</li>
+<li><strong>"The eye should go right against the eyepiece."</strong> It belongs at the exit pupil; anywhere else it clips the field.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ideal thin lenses: a ray at height x leaves with its slope changed by −x/f, which images planes perfectly; no aberrations, no thickness. Angles are handled as slopes (tan θ). Rays are traced in 3D and stopped at the rim of each lens and stop.</li>
+<li>Angular magnification from the ray through the center of the eye's lens: with the ray matrix [A B; C D] from the object to the eye, M = (25 cm)/B for a near object and 1/A for a far one. The textbook formulas assume the final image at infinity; the readout says when that holds.</li>
+<li>Pupils from imaging the stop with the same matrices; field of view where the light reaching the eye falls to half of that from the middle of the object; brightness from the fraction of the eye's pupil that light from the object fills.</li>
+<li>The eye is the reduced eye of The Eye demo (retina 1.80 cm behind a thin lens, accommodation 4 D, near point 25 cm, pupil 2 to 7 mm). The camera has a 50 mm lens and a 36 × 24 mm sensor, focusing from 45 cm to infinity.</li>
+<li>The Moon's angular diameter 0.518° is its mean radius 1737.4 km over its mean distance 384 400 km, doubled. Its face is drawn roughly. Diffraction is not drawn; its limit, 1.22λ/D or 0.61λ/NA at 550 nm, is quoted for the whole system with the viewer's pupil included.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

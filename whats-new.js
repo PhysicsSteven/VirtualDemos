@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-instrument-builder', date: '2026-10-25', title: 'Build a microscope or telescope',
+    text: 'A new Physics II demo: put lenses and stops on an optical rail and look through them with an eye or a camera. It shows each image the lenses make, the magnification, the exit pupil and the field of view, and pictures what the eye sees with and without your instrument. Start from a magnifier, a microscope or three kinds of telescope, or from an empty rail.', link: { href: 'demos/instrument-builder.html', text: 'Open Build a Microscope or Telescope' } },
   { id: '2026-10-25-energy-phase', date: '2026-10-25', title: 'Energy bars and a phase plot',
     text: 'Projectile Range and Kepler\'s Laws have Energy bars in the sidebar: kinetic, potential, and for the ball the energy drag has taken, with a total that never changes. Springs has a Phase plot of velocity against position: an ellipse without damping, a spiral with it.', link: { href: 'demos/springs.html', text: 'Open Springs' } },
   { id: '2026-10-25-links-picture', date: '2026-10-25', title: 'Links keep what you built',
