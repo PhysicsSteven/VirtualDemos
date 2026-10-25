@@ -3313,3 +3313,44 @@ Optics Bench's `window.__ob` gains `px(x, y)`, the page position of a bench poin
 `--only after`: 0 problems on all four demos. No What's new entry.
 
 **For GPT:** please check the seven videos' captions and readings against the figures above.
+## 2026-10-25 · Claude · How this works videos: Diffraction Grating, Single Slit, Resolution, Electron Diffraction, X-Ray Diffraction, Holography
+
+Physics II, Vol 3 ch 4 group, following `tools/howto/README.md`. Four demos get a `VD.howTo` button; Diffraction Grating and Electron
+Diffraction use the function form, so the button plays the video for the worksheet the demo is on (Single Slit with the Single slit
+aperture, X-Ray Diffraction in X-rays mode). Dark theme, silent, no measuring tools (none of these demos has them). Scripts are
+`tools/howto/<video>.cjs`; every reading on screen comes from the run and was checked by hand:
+
+- Diffraction Grating (19.6 s): He-Ne 632.8 nm, 600 lines/mm, Measure, grating dragged to L = 0.50 m, jaw B on the m = 1 spot.
+  d = 1.6667 µm, sin θ = 0.37968, θ = 22.31°, y = L tan θ = 20.52 cm; the caliper (1 mm) reads 20.5 cm.
+- Single Slit (18.8 s): a = 5.0 µm, He-Ne, L = 1.00 m, jaw B dragged out to the first dark fringe. sin θ = λ/a = 0.12656,
+  y = 12.76 cm; the caliper reads 12.8 cm, where the light meter is lowest (1.0e-5, against 2.0e-5 at 12.7 and 1.2e-4 at 12.9 cm).
+- Circular Apertures and Resolution (22.9 s): Blind on, pinhole set to 100 µm, 632.8 nm, L = 2.00 m, zoom 2×, cursor dragged on the
+  graph to the first dark ring. sin θ₁ = 1.2197 λ/D = 0.0077181, r = L tan θ₁ = 15.437 mm; the cursor reads 15.440 mm, I/I₀ 0.0000.
+- Electron Diffraction (22.1 s): seed 1924, Blind on, sweep stopped, 2.50 kV, both rings with the flexible ruler. λ = 24.50 pm
+  (relativistic, CODATA); 2θ₁ = 6.594°, 2θ₂ = 11.431°; the cones from the graphite (60 mm behind the center of the 65 mm bulb) meet the
+  glass 12.68° and 21.97° from the axis, arcs D₁ = 28.77 mm, D₂ = 49.85 mm. Marks on the true crossings (0.5 mm ruler) read
+  30.0 and 58.5 → 28.5 mm, 19.0 and 69.0 → 50.0 mm; meter 2.50 kV.
+- X-Ray Diffraction (23.1 s): X-rays, copper on NaCl, a full scan (shown 4× faster, said in the caption), then the crystal turned to the
+  top of the first Kα peak. λ = hc/8047.78 eV = 0.15406 nm, sin θ = λ/0.5640 nm, θ = 15.85°, 2605 counts/s (2381 at 15.80°, 2415 at
+  15.90°). The first peak in the scan, 14.29°, is Kβ.
+- Holography (24.3 s): Two beams, reference 5.0° and object −5.0° (10° apart), microscope field of view 44 µm, cursors on bright
+  fringes at ±5d. d = 633 nm/(2 sin 5°) = 3.6314 µm; A −18.16, B 18.16 µm, span 36.32 µm, 11 bright fringes (N = 10).
+
+`tools/howto/lib.cjs` gains `r.dragWhile(dx, dy, more)` (drag while a page check says to go on) and `r.speed` (runs the demo faster per
+frame, for a long scan; say so in the caption).
+
+**Demo fixes found while recording (visible to students):**
+- Resolution and Holography: the stage clipped everything below its own height (overflow hidden). On a 1280×720 window Resolution
+  hid its intensity graph and the whole setup card (D, L, cursor sliders); Holography hid the cursor and microscope sliders even on a
+  1080 px tall screen. Both stages now have `min-height: min-content`, so the page scrolls instead; layouts that already fit are
+  unchanged.
+- Electron Diffraction, X-rays: "Scan θ from 2° to 65°" started from wherever the crystal was (10° on opening). It now starts at 2°,
+  except when it carries on after Stop the scan; turning the crystal by hand or changing tube or crystal starts the next scan at 2°.
+
+A quick check of every demo at 1280×720 for controls clipped by an overflow hidden stage also flags early-universe, entropy,
+gas-heat-capacity, michelson, molecules, nuclear-reactions, particles, relativistic-motion, shells-and-x-rays, solids, temperature and
+transformers (some may be hidden tabs, not real); not changed here.
+
+vdcheck `--only after`: 0 problems on all four demos. No What's new entry.
+
+**For GPT:** please check the six videos' captions and readings against the figures above, and the two layout fixes at 1280×720.

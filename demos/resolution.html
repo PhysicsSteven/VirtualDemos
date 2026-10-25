@@ -16,7 +16,7 @@
 :root { --cursor: #c2410c; --mark: #1f6fd1; --compA: #6b7787; --profile-fill: rgba(31, 111, 209, 0.10); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); } }
 :root[data-theme="dark"] { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); }
-.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }   /* min-content: never clip the graph and the controls under the picture on a short window */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .check { font-size: 0.84rem; }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -642,6 +642,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   applyPreset(first);
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/resolution.mp4', poster: 'media/how-this-works/resolution.jpg' });
   window.__rs = { S, applyPreset, sync, redraw, Iexact, sepAngle, ring1, Dnow, setCur, newMystery, centres, compAt: (u) => centres().map((c) => Ione(u, c)) };
 })();
 </script>

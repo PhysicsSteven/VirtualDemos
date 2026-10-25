@@ -7,7 +7,9 @@
 //   r.state.zoom     [x, y, w, h] in CSS px to zoom to (keep 16:9), or null for the whole page
 //   r.state.arrow    { rect: [x, y, w, h] } to ring and point at, or null
 // Helpers: r.box(sel), r.text(sel), r.tick(frames), r.secs(s), r.moveTo(x, y, s), r.click(sel), r.dragUntil(dx, dy, sel, want),
-// r.dragTo(x, y, s), r.findDrag(sel, cardSel), r.scrollRail(sel), r.p (the Playwright page), r.check (readings to print and save).
+// r.dragTo(x, y, s), r.dragWhile(dx, dy, more), r.findDrag(sel, cardSel), r.scrollRail(sel), r.p (the Playwright page), r.check (readings
+// to print and save). r.speed (1 by default) runs the demo that many times faster per frame, for a long scan shown sped up (say so in
+// the caption).
 // Options: o.query (appended to the demo's URL), o.dsf (device scale factor, 1.5 by default; more for a small picture zoomed far in).
 const { chromium } = require('playwright');
 const fs = require('fs');
@@ -29,7 +31,7 @@ module.exports = async function record(o, steps) {
   r.box = s => p.evaluate(s => { const e = document.querySelector(s); if (!e) throw new Error('no ' + s); const q = e.getBoundingClientRect(); return [q.x, q.y, q.width, q.height]; }, s);
   r.text = s => p.evaluate(s => document.querySelector(s).textContent.trim(), s);
   r.tick = async (k = 1) => { for (let i = 0; i < k; i++) {
-    await p.clock.runFor(DT);
+    await p.clock.runFor(DT * (r.speed || 1));
     const name = `f${String(frames.length).padStart(5, '0')}.jpg`;
     await p.screenshot({ path: `${OUT}/frames/${name}`, type: 'jpeg', quality: 93 });
     frames.push({ name, ...JSON.parse(JSON.stringify(state)) });
@@ -45,6 +47,12 @@ module.exports = async function record(o, steps) {
     await p.mouse.down(); state.down = true; await r.tick(4);
     for (let i = 0; i < 400 && (await r.text(sel)) !== want; i++) { state.ptr = [state.ptr[0] + dx, state.ptr[1] + dy]; await p.mouse.move(...state.ptr); await r.tick(); }
     const got = await r.text(sel); await r.tick(6); await p.mouse.up(); state.down = false; await r.tick(); return got;
+  };
+  // the same, but drag while more() (async, reading the page) says to go on: for a target no single readout shows
+  r.dragWhile = async (dx, dy, more) => {
+    await p.mouse.down(); state.down = true; await r.tick(4);
+    for (let i = 0; i < 400 && (await more()); i++) { state.ptr = [state.ptr[0] + dx, state.ptr[1] + dy]; await p.mouse.move(...state.ptr); await r.tick(); }
+    await r.tick(6); await p.mouse.up(); state.down = false; await r.tick();
   };
   // drag from where the pointer is to (x, y)
   r.dragTo = async (x, y, s = 0.8) => { await p.mouse.down(); state.down = true; await r.tick(3); await r.moveTo(x, y, s); await r.tick(4); await p.mouse.up(); state.down = false; await r.tick(); };

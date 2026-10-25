@@ -1444,6 +1444,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function xMark() { X.trace.set(Math.round(X.th * 20), xRateNow()); }
   function setXTheta(v, keepScan) {
     v = clamp(Math.round(v * 20) / 20, 2, 65); if (!keepScan && X.scan) setXScan(false);
+    if (!keepScan) X.resume = false;   /* the crystal turned by hand: the next scan starts again from 2° */
     X.th = v; $('xTheta').value = v; xMark(); xOuts(); X.dirty = true;
   }
   function xOuts() {
@@ -1453,8 +1454,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('xScan').setAttribute('aria-pressed', String(X.scan)); $('xScan').textContent = X.scan ? 'Stop the scan' : 'Scan θ from 2° to 65°';
     $('status').innerHTML = X.on ? `${xRateNow()} <small>counts/s at θ = ${X.th.toFixed(2)}°</small>` : $('status').innerHTML;
   }
-  function setXScan(on) { X.scan = on; if (on && X.th >= 64.99) setXTheta(2, true); xOuts(); }
-  function setXSource(tube, xtal) { X.tube = tube || X.tube; X.xtal = xtal || X.xtal; X.trace = new Map(); xMark(); xOuts(); X.dirty = true; }
+  /* a scan starts from 2°, as its button says, unless it carries on from where Stop the scan left it */
+  function setXScan(on) { if (on && (!X.resume || X.th >= 64.99)) setXTheta(2, true); X.resume = !on && X.scan && X.th < 64.99; X.scan = on; xOuts(); }
+  function setXSource(tube, xtal) { X.tube = tube || X.tube; X.xtal = xtal || X.xtal; X.trace = new Map(); X.resume = false; xMark(); xOuts(); X.dirty = true; }
   function setBeam(xray) {
     X.on = xray;
     $('bElec').setAttribute('aria-pressed', String(!xray)); $('bXray').setAttribute('aria-pressed', String(xray));
@@ -1652,6 +1654,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
+  /* How this works: a short video of one sample reading from the worksheet the beam belongs to, Electron Diffraction with electrons
+     and X-Ray Diffraction with X-rays; made by tools/howto/ */
+  const howVid = () => (X.on ? 'x-ray-diffraction' : 'electron-diffraction');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (X.on ? 'How this works: X-Ray Diffraction' : 'How this works: Electron Diffraction and de Broglie Waves') });
   window.__ed = { get frameMs() { return frameMs; }, S, get inst() { return inst; }, setV, setMag, setTool, setRing, setSide, applyPreset, capture, fits, csvTable, scrHandles, trueD, markD, delta, get gl() { return G.ready; }, setPlaying, placeMarks: (off) => { placeMarks(off); marksChanged(); }, X, setBeam, setXTheta, setXSource, setXScan, exportWorksheet,
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; },
     scrToClient(h) { const r = cans.scr.getBoundingClientRect(); return [r.left + h.pt[0], r.top + h.pt[1]]; } };

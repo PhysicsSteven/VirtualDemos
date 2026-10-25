@@ -1788,6 +1788,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
+  /* How this works: a short video of one sample reading from the worksheet the aperture belongs to, Diffraction Grating with the
+     grating and Single Slit Diffraction with one slit; made by tools/howto/ */
+  const howVid = () => (single() ? 'single-slit' : 'diffraction-grating');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (single() ? 'How this works: Single Slit Diffraction' : 'How this works: Diffraction Grating') });
+
   // ---------- boot ----------
   if (reduce) { $('tHaze').checked = false; S.haze = false; }
   buildSourceChips();
