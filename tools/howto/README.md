@@ -7,7 +7,7 @@ Videos are dark theme only (Steve, 2026-10-25).
 Rules for a video:
 - One real run of the demo, nothing staged or edited in: every number on screen comes from the demo. Pick the sample from
   the demo's own worksheet (the first data table's first measurement) and check what the demo shows against the physics.
-- The measuring tools (Tools button, stopwatch, ruler) never appear.
+- The measuring tools (Tools button, stopwatch, ruler) never appear. `lib.cjs` hides the Tools button on every take (visibility hidden, so the layout stays the live one).
 - Captions: the opening line says what the sample is; then one numbered caption per step, saying the task and, since this
   is a video about the controls, how it is done ("Set the length: drag the bob up the string to 0.80 m"). Plain words, no
   hyphens in compound modifiers, American spelling. End on what comes next (repeat, then send to the worksheet).

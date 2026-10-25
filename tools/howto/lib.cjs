@@ -26,7 +26,7 @@ module.exports = async function record(o, steps) {
   await p.route('**/three.min.js', r => r.fulfill({ path: process.env.VD_THREE, contentType: 'application/javascript' }));
   await p.clock.install({ time: new Date('2026-01-01T00:00:00Z') }); await p.clock.pauseAt(new Date('2026-01-01T00:00:05Z'));
   await p.goto(URL);
-  await p.addStyleTag({ content: "#vdTools { display: none !important; }" });   /* the measuring tools never appear in a video */
+  await p.addStyleTag({ content: '#vdTools { visibility: hidden !important; }' });   /* the measuring tools never appear; hidden, not removed, so the layout is the live one */
   await p.clock.runFor(3000);
   const frames = [], state = { caption: null, zoom: null, arrow: null, ptr: [W / 2, H / 2], down: false, click: -1 };
   const r = { p, W, H, FPS, state, check: {}, get frame() { return frames.length; } };
