@@ -107,7 +107,7 @@ def caption(d, i):
     pw, ph = tw + numw + 48 * S, 58 * S
     x0, y0 = (OW * S - pw) / 2, OH * S - ph - 26 * S
     if n == 0:                                        # the opening line gets a heading above it
-        hdr = 'HOW THIS WORKS  ·  PENDULUMS'
+        hdr = ('HOW THIS WORKS  ·  ' + D.get('title', '')).upper().rstrip(' ·')
         hw = d.textlength(hdr, font=fhead)
         d.rounded_rectangle([(OW * S - hw) / 2 - 16 * S, y0 - 44 * S, (OW * S + hw) / 2 + 16 * S, y0 - 10 * S], radius=17 * S, fill=ACC + (int(245 * al),))
         d.text((OW * S / 2, y0 - 27 * S), hdr, font=fhead, fill=(255, 255, 255, int(255 * al)), anchor='mm')

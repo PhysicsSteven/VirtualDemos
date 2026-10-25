@@ -2868,7 +2868,7 @@ Pendulum pilot's look and asked for one dark theme video only (the site's defaul
   is a modal `<dialog>`, so the demo's keyboard shortcuts stay off while it is open. The video loads only on open.
 - Pendulum: `demos/media/how-this-works/pendulum.mp4` (22.4 s, 1.2 MB) and a poster. The sample: L = 0.80 m, θ₀ = 5°, Earth,
   drag off; the photogate reads 1.795 s, which matches the exact period at 5° (T₀ = 2π√(L/g) = 1.794 s, +0.05 %).
-- `tools/howto/`: `record.cjs` drives the demo on Playwright's paused fake clock, one frame per 1/30 s, so the swing plays at
+- `tools/howto/`: `lib.cjs` (with a short `<demo>.cjs` of steps; `pendulum.cjs` is the model) drives the demo on Playwright's paused fake clock, one frame per 1/30 s, so the swing plays at
   true speed; `compose.py` draws the zooms, arrows, pointer and captions from the recorded timeline. Rerun both when the
   demo changes (README there). The measuring tools never appear in a video.
 
