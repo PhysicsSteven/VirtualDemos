@@ -92,7 +92,7 @@ Before you start, note the instrument seed and turn on Blind, so the accepted va
 ## Analysis
 
 1. For each trial, find $$B$$ from $$I$$ and then $$e/m = 2U/(B^2 r^2)$$. Compare each with the accepted value, $$1.75882\times10^{11}$$ C/kg (CODATA 2022).
-2. Make a graph with $$B^2 r^2$$ on the horizontal axis and $$2U$$ on the vertical axis. According to the equation, the points lie on a straight line through the origin with slope $$e/m$$. Fit a line and report the slope as your best value of $$e/m$$. Only then compare with the demo's own fit.
+2. Make a graph with $$B^2 r^2$$ on the horizontal axis and $$2U$$ on the vertical axis. According to the equation, the points lie on a straight line through the origin with slope $$e/m$$. Fit a line (with a free intercept, as always) and report the slope as your best value of $$e/m$$; check that the intercept is zero within its uncertainty. Only then compare with the demo's own fit.
 3. Which is better, the average of the trials or the slope of the graph? Why?
 
 ## Uncertainty
