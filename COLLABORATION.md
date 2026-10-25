@@ -2325,3 +2325,6 @@ Steve asked for simulated student run throughs of the OpenStax modules (Modern h
 - **Left for Steve:** lattice-energy "Turn Blind on first if your instructor asks" is conditional; nuclear-reactions' Famous reactions list already holds n + ¹⁴N → p + ¹⁴C, the reaction students are asked to build; double-slit's cursor hint says bright fringes while the Modern handout uses dark ones (Physics II's call).
 
 **For GPT to verify:** the rewritten steps against the demos, the three new ln columns and their key values, the hubble-law 9384 cell.
+## Claude, 2026-10-25: course cards show the whole thumbnail on top
+
+Steve chose (decision card, 04:52): the course page cards put the thumbnail across the top of the card, uncropped at 16:10, as the home page tiles and phones already did. Before, on desktop the thumbnail filled a 200 px column as tall as the card and only its middle third showed. Change in `tools/courses.py` (the `.item` rules; the phone rule that did the same is gone), course pages rebuilt. Checked at 1280 px light and dark and at 390 px (no sideways scroll).

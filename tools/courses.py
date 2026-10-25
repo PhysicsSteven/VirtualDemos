@@ -384,10 +384,9 @@ COURSE_CSS = '''
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
 .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
-.item { display: grid; grid-template-columns: 200px 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-.item .pic { display: block; border-right: 1px solid var(--line); }
-.item .thumb { height: 100%; aspect-ratio: auto; border-bottom: 0; }
-.item .thumb img { min-height: 125px; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
 .item .body { padding: 12px 14px 14px; gap: 5px; }
 .item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
 .item h3 a { text-decoration: none; }
@@ -417,9 +416,6 @@ COURSE_CSS = '''
 .more a { color: var(--accent); font-weight: 700; }
 @media (max-width: 700px) {
   html { scroll-padding-top: 64px; }
-  .item { grid-template-columns: 1fr; }
-  .item .pic { border-right: 0; border-bottom: 1px solid var(--line); }
-  .item .thumb { aspect-ratio: 16 / 10; height: auto; }
   .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
   .gaps li { flex-wrap: wrap; }
   .st { margin-left: 0; }
