@@ -244,6 +244,14 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .gaps li { display: flex; align-items: baseline; gap: 4px; }
 .st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
 .st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
 .more { margin: 40px 0 0; color: var(--muted); }
 .more a { color: var(--accent); font-weight: 700; }
 @media (max-width: 700px) {
@@ -314,7 +322,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   </section>
   <section class="lost" aria-labelledby="courses-h">
     <h2 id="courses-h">Courses</h2>
-    <ul class="clinks"><li><a href="physics-1.html">Physics I</a></li><li><a href="physics-2.html">Physics II</a></li><li><a href="acoustics.html">Acoustics</a></li><li><a href="thermo.html">Thermodynamics</a></li><li><a href="modern.html">Modern Physics</a></li><li><a href="astro.html">Astronomy</a></li><li><a href="astro-2203.html">Astro 2203</a></li><li><a href="medical-physics.html">Medical Physics</a></li><li><a href="misc.html">Misc</a></li></ul>
+    <ul class="clinks"><li><a href="physics-1.html">Physics I</a></li><li><a href="physics-2.html">Physics II</a></li><li><a href="acoustics.html">Acoustics</a></li><li><a href="thermo.html">Thermodynamics</a></li><li><a href="modern.html">Modern Physics</a></li><li><a href="astro.html">Astronomy</a></li><li><a href="medical-physics.html">Medical Physics</a></li><li><a href="misc.html">Misc</a></li></ul>
   </section>
   <p class="more"><a href="index.html">Go to the home page</a></p>
 </main>

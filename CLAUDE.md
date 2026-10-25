@@ -21,8 +21,9 @@ the two assistants share context. Log what you change there when you finish.
 - Textbook: OpenStax University Physics (Vol 1 mechanics, Vol 2 E&M, Vol 3 optics/modern). Physics I = Vol 1 ch 1–15; Physics II
   (PHYS 202) syllabus is in `COLLABORATION.md`. `curriculum/textbook-map.json` maps every section to demos and activities.
 - Modules (textbook chapters, not a syllabus): Acoustics = Vol 1 ch 16–17, Thermodynamics (`thermo.html`) = Vol 2 ch 1–4, Modern
-  Physics (`modern.html`) = Vol 3 ch 5–11, Astronomy (`astro.html`) = every astronomy demo in four units (Vol 1 ch 13
-  and Vol 3 §§10.6, 11.6, 11.7 where they apply). Wave optics (Vol 3 ch 3–4) is a Physics II unit like any other (nothing is optional, Steve 2026-10-24). A demo may sit in
+  Physics (`modern.html`) = Vol 3 ch 5–11, Astronomy (`astro.html`) = every astronomy demo in topic units (Vol 1 ch 13
+  and Vol 3 §§10.6, 11.6, 11.7 where they apply), with Astro 2203 folded in (its schedule at the bottom; `MERGED` in `tools/courses.py`,
+  empty it to split the two again). Wave optics (Vol 3 ch 3–4) is a Physics II unit like any other (nothing is optional, Steve 2026-10-24). A demo may sit in
   several courses or modules (list each in its `course`); Misc is what is left (`later`: BZ and DNA, one heading). Moving a demo is a map change only.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 

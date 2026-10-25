@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="demos/lib/theme.js"></script>
 <title>Astronomy · Virtual Physics Demos</title>
-<meta name="description" content="Astronomy: Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.">
+<meta name="description" content="Astronomy: The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -243,6 +243,14 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .gaps li { display: flex; align-items: baseline; gap: 4px; }
 .st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
 .st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
 .more { margin: 40px 0 0; color: var(--muted); }
 .more a { color: var(--accent); font-weight: 700; }
 @media (max-width: 700px) {
@@ -289,15 +297,15 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <div class="wrap">
     <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Sky, planets, stars and galaxies</b></p>
     <h1>Astronomy</h1>
-    <p class="lede">Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.</p>
-    <ul class="facts"><li><span><strong>5</strong> units</span></li><li><span><strong>23</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a> · <a href="https://openstax.org/details/books/university-physics-volume-3">University Physics Volume 3</a></span></li></ul>
+    <p class="lede">The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.</p>
+    <ul class="facts"><li><span><strong>6</strong> units</span></li><li><span><strong>35</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a> · <a href="https://openstax.org/details/books/university-physics-volume-3">University Physics Volume 3</a></span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
-  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="#sky">The sky from Earth</a></li><li><a href="#gravitation">Gravitation and orbits</a></li><li><a href="#stars">Stars</a></li><li><a href="#galaxies-cosmology">Galaxies and cosmology</a></li><li><a href="#planets">Planets and their surfaces</a></li></ul></div>
+  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="#sky">The sky from Earth</a></li><li><a href="#gravitation">Gravitation and orbits</a></li><li><a href="#telescopes-light">Telescopes and light</a></li><li><a href="#stars">Stars</a></li><li><a href="#galaxies-cosmology">Galaxies and cosmology</a></li><li><a href="#planets">Planets and their surfaces</a></li><li><a href="#astro-2203">Astro 2203 schedule</a></li></ul></div>
 </nav>
 <main class="wrap">
-  <p class="how">Units follow the textbook chapters. Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.</p>
+  <p class="how">Units follow the topics, and a demo from another course or module is listed where it fits. At the bottom, the Astro 2203 schedule lists the same demos topic by topic with that course’s introductory worksheets. Section numbers are volume:section in OpenStax University Physics.</p>
   <section class="unit" id="sky" aria-labelledby="sky-h">
     
     <h2 id="sky-h">The sky from Earth</h2>
@@ -309,7 +317,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/celestial-sphere.html?course=astro">The Sky and the Celestial Sphere</a></h3>
           <p>The real night sky from any place and date, seen from outside as a sphere and from the ground: why the stars circle the pole, why the pole's height is your latitude, the Sun and Moon among the stars, eclipses and the wandering pole star.</p>
-          <p class="links"><a class="go" href="demos/celestial-sphere.html?course=astro">Open demo</a> <a href="notes/celestial-sphere.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/celestial-sphere.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-celestial-sphere.html">Worksheet: The Sky and the Celestial Sphere (Astro 2203)</a> <a href="notes/celestial-sphere.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -318,7 +326,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/seasons.html?course=astro">Reasons for Seasons</a></h3>
           <p>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</p>
-          <p class="links"><a class="go" href="demos/seasons.html?course=astro">Open demo</a> <a href="curriculum/labs/students/seasons.html">Worksheet: Sunlight Through the Year</a> <a href="notes/seasons.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/seasons.html?course=astro">Open demo</a> <a href="curriculum/labs/students/seasons.html">Worksheet 1: Sunlight Through the Year</a> <a href="curriculum/labs/students/intro-seasons.html">Worksheet 2: Why We Have Seasons (Astro 2203)</a> <a href="notes/seasons.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -327,7 +335,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/moon-phases.html?course=astro">Moon Phases</a></h3>
           <p>Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.</p>
-          <p class="links"><a class="go" href="demos/moon-phases.html?course=astro">Open demo</a> <a href="curriculum/labs/students/moon-phases.html">Worksheet: Phases and the Lunar Month</a> <a href="notes/moon-phases.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/moon-phases.html?course=astro">Open demo</a> <a href="curriculum/labs/students/moon-phases.html">Worksheet 1: Phases and the Lunar Month</a> <a href="curriculum/labs/students/intro-moon.html">Worksheet 2: Phases of the Moon and Eclipse Seasons (Astro 2203)</a> <a href="notes/moon-phases.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -336,7 +344,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/retrograde-motion.html?course=astro">Retrograde Motion and World Models</a></h3>
           <p>Watch Earth pass Mars while Mars loops backward against the real stars, then make the same sky with Ptolemy's epicycles, Copernicus's circles and Tycho's system, and test them with the phases of Venus.</p>
-          <p class="links"><a class="go" href="demos/retrograde-motion.html?course=astro">Open demo</a> <a href="notes/retrograde-motion.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/retrograde-motion.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-retrograde.html">Worksheet: Retrograde Motion and World Models (Astro 2203)</a> <a href="notes/retrograde-motion.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/gyroscope.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gyroscope-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gyroscope-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/gyroscope.html?course=astro">Gyroscope Precession</a></h3>
+          <p>A spinning wheel held up at one end swings round instead of falling. See the torque turn the angular momentum, and measure how the precession rate depends on the spin.</p>
+          <p class="links"><a class="go" href="demos/gyroscope.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-precession.html">Worksheet: A Spinning Top and the Wandering Pole Star (Astro 2203)</a> <a href="notes/gyroscope.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/units.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/units.html?course=astro">Units, Scales and Estimates</a></h3>
+          <p>The first week toolkit: zoom through 42 powers of ten from the observable universe to a proton, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.</p>
+          <p class="links"><a class="go" href="demos/units.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-scale.html">Worksheet: How Big Is the Solar System? (Astro 2203)</a> <a href="notes/units.html">Notes</a></p>
         </div>
       </li>
     </ul>
@@ -353,7 +379,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <h3><a href="demos/kepler-orbits.html?course=astro">Kepler&#x27;s Laws</a></h3>
           <p>Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.</p>
           <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.1</span> Newton&#x27;s Law of Universal Gravitation</li><li><span class="sec">1:13.3</span> Gravitational Potential Energy and Total Energy</li><li><span class="sec">1:13.4</span> Satellite Orbits and Energy</li><li><span class="sec">1:13.5</span> Kepler&#x27;s Laws of Planetary Motion</li></ul>
-          <p class="links"><a class="go" href="demos/kepler-orbits.html?course=astro">Open demo</a> <a href="curriculum/labs/students/kepler-orbits.html">Worksheet: Kepler&#x27;s Third Law</a> <a href="notes/kepler-orbits.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/kepler-orbits.html?course=astro">Open demo</a> <a href="curriculum/labs/students/kepler-orbits.html">Worksheet 1: Kepler&#x27;s Third Law</a> <a href="curriculum/labs/students/intro-kepler.html">Worksheet 2: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <a href="notes/kepler-orbits.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -363,7 +389,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <h3><a href="demos/gravity-near-earth.html?course=astro">Gravity Near Earth</a></h3>
           <p>How g changes with height and latitude: from sea level to the space station and geostationary orbit, and how Earth's spin takes a little off at the equator.</p>
           <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.2</span> Gravitation Near Earth&#x27;s Surface</li></ul>
-          <p class="links"><a class="go" href="demos/gravity-near-earth.html?course=astro">Open demo</a> <a href="curriculum/labs/students/gravity-near-earth.html">Worksheet: How g Changes with Height and Latitude</a> <a href="notes/gravity-near-earth.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/gravity-near-earth.html?course=astro">Open demo</a> <a href="curriculum/labs/students/gravity-near-earth.html">Worksheet 1: How g Changes with Height and Latitude</a> <a href="curriculum/labs/students/intro-gravity.html">Worksheet 2: Gravity from the Ground to Orbit (Astro 2203)</a> <a href="notes/gravity-near-earth.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -420,7 +446,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/planet-temperatures.html?course=astro">Planet Temperatures and Habitable Zones</a></h3>
           <p>Move a planet nearer or farther from its star, change how much light it reflects and how much heat its air traps, and match the measured temperatures of Mercury, Venus, Earth, the Moon and Mars. Then find the habitable zone around the Sun and two red dwarfs, and see which worlds can keep their air.</p>
-          <p class="links"><a class="go" href="demos/planet-temperatures.html?course=astro">Open demo</a> <a href="notes/planet-temperatures.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/planet-temperatures.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-planet-temperatures.html">Worksheet: Planet Temperatures and Habitable Zones (Astro 2203)</a> <a href="notes/planet-temperatures.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -429,7 +455,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/resonances.html?course=astro">Orbital Resonances</a></h3>
           <p>Watch Jupiter tug an asteroid at the same place orbit after orbit until its path crosses Mars's, beside the real counts that show the Kirkwood gaps. See how the same timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did.</p>
-          <p class="links"><a class="go" href="demos/resonances.html?course=astro">Open demo</a> <a href="notes/resonances.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/resonances.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-resonances.html">Worksheet: Orbital Resonances (Astro 2203)</a> <a href="notes/resonances.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -438,7 +464,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/solar-system-formation.html?course=astro">Building a Solar System</a></h3>
           <p>Watch a spinning cloud collapse into a disk, find the frost line where ice can form, grow planetesimals into rocky planets and giant cores, and see which early planetesimals melt and grow iron cores.</p>
-          <p class="links"><a class="go" href="demos/solar-system-formation.html?course=astro">Open demo</a> <a href="notes/solar-system-formation.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/solar-system-formation.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-solar-system-formation.html">Worksheet: Building a Solar System (Astro 2203)</a> <a href="notes/solar-system-formation.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -447,7 +473,77 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/giant-planets.html?course=astro">Giant Planets, Rings and Moons</a></h3>
           <p>Jupiter, Saturn, Uranus and Neptune to scale; push a moon inside Saturn's Roche limit and watch it come apart into a ring; follow Io, Europa and Ganymede in their 1:2:4 resonance and the tides that heat Io.</p>
-          <p class="links"><a class="go" href="demos/giant-planets.html?course=astro">Open demo</a> <a href="notes/giant-planets.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/giant-planets.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-giant-planets.html">Worksheet: Giant Planets, Rings and Moons (Astro 2203)</a> <a href="notes/giant-planets.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/rotation.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/rotation.html?course=astro">Rotation and Torque</a></h3>
+          <p>Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.</p>
+          <p class="links"><a class="go" href="demos/rotation.html?course=astro">Open demo</a> <a href="notes/rotation.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="telescopes-light" aria-labelledby="telescopes-light-h">
+    
+    <h2 id="telescopes-light-h">Telescopes and light</h2>
+    <p class="meta"><span>Not in the textbook</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/blackbody.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/blackbody-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/blackbody-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/blackbody.html?course=astro">Blackbody Radiation</a></h3>
+          <p>Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.</p>
+          <p class="links"><a class="go" href="demos/blackbody.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-blackbody.html">Worksheet: Star Colors and Temperatures (Astro 2203)</a> <a href="notes/blackbody.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/em-waves.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/em-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/em-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/em-waves.html?course=astro">Electromagnetic Waves</a></h3>
+          <p>A plane wave in 3D with E, B and the Poynting vector, polarization from linear to circular, the energy and pressure of sunlight and a laser, the full spectrum, and a dipole antenna launching waves with exact field lines.</p>
+          <p class="links"><a class="go" href="demos/em-waves.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-em-spectrum.html">Worksheet: The Electromagnetic Spectrum (Astro 2203)</a> <a href="notes/em-waves.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/optics-bench.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/optics-bench-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/optics-bench-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/optics-bench.html?course=astro">Optics Bench</a></h3>
+          <p>Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.</p>
+          <p class="links"><a class="go" href="demos/optics-bench.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-mirrors.html">Worksheet: Lenses, Mirrors and Color (Astro 2203)</a> <a href="notes/optics-bench.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/resolution.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/resolution-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/resolution-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/resolution.html?course=astro">Circular Apertures and Resolution</a></h3>
+          <p>Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.</p>
+          <p class="links"><a class="go" href="demos/resolution.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-resolution.html">Worksheet: Seeing Fine Detail (Astro 2203)</a> <a href="notes/resolution.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/spectra.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/spectra-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/spectra-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/spectra.html?course=astro">Spectra Explorer</a></h3>
+          <p>Click any of 99 elements to see its emission or absorption lines, measured by NIST. Includes the Bohr model of hydrogen and a mystery spectrum game, including a star.</p>
+          <p class="links"><a class="go" href="demos/spectra.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-spectra.html">Worksheet: Fingerprints of the Elements (Astro 2203)</a> <a href="notes/spectra.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/instrument-builder.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/instrument-builder-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/instrument-builder-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/instrument-builder.html?course=astro">Build a Microscope or Telescope</a></h3>
+          <p>Put lenses and stops on a rail and look through them with an eye or a camera: find each image, the magnification, the exit pupil, the field of view and how bright the view is, for a magnifier, a microscope or a telescope of your own design.</p>
+          <p class="links"><a class="go" href="demos/instrument-builder.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-telescope.html">Worksheet: Building a Telescope (Astro 2203)</a> <a href="notes/instrument-builder.html">Notes</a></p>
         </div>
       </li>
     </ul>
@@ -534,7 +630,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/craters.html?course=astro">Craters, Cooling and Surface Ages</a></h3>
           <p>Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see its crater, from a bowl to a basin with a ring of peaks. Count craters to date lunar and Martian surfaces with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.</p>
-          <p class="links"><a class="go" href="demos/craters.html?course=astro">Open demo</a> <a href="notes/craters.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/craters.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-craters.html">Worksheet 1: Craters and the Ages of the Moon&#x27;s Surface (Astro 2203)</a> <a href="curriculum/labs/students/intro-mars-ages.html">Worksheet 2: Dating the Surface of Mars (Astro 2203)</a> <a href="notes/craters.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -543,10 +639,59 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/inside-a-planet.html?course=astro">Inside a Planet</a></h3>
           <p>Weigh a planet's iron core from its mean density and moment of inertia, watch a mantle churn into moving plates or under one stiff lid, and float continents on the mantle.</p>
-          <p class="links"><a class="go" href="demos/inside-a-planet.html?course=astro">Open demo</a> <a href="notes/inside-a-planet.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/inside-a-planet.html?course=astro">Open demo</a> <a href="curriculum/labs/students/intro-inside-a-planet.html">Worksheet: Inside a Planet (Astro 2203)</a> <a href="notes/inside-a-planet.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/fluids.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/fluids-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/fluids-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/fluids.html?course=astro">Fluids: Pressure, Buoyancy and Flow</a></h3>
+          <p>Drag a pressure probe down a tank, drop blocks that float or sink, weigh one in an overflow can like Archimedes, see an iceberg float 89% under, watch a Venturi tube trade pressure for speed, and aim Torricelli's jet.</p>
+          <p class="links"><a class="go" href="demos/fluids.html?course=astro">Open demo</a> <a href="notes/fluids.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/ideal-gas.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ideal-gas-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ideal-gas-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/ideal-gas.html?course=astro">Gas in a Box</a></h3>
+          <p>Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas. Then let two gases mix through a divider: measure diffusion from the mean square displacement and test Graham's law through a small hole.</p>
+          <p class="links"><a class="go" href="demos/ideal-gas.html?course=astro">Open demo</a> <a href="notes/ideal-gas.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/radioactive-decay.html?course=astro" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/radioactive-decay-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/radioactive-decay-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/radioactive-decay.html?course=astro">Radioactive Decay</a></h3>
+          <p>A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.</p>
+          <p class="links"><a class="go" href="demos/radioactive-decay.html?course=astro">Open demo</a> <a href="notes/radioactive-decay.html">Notes</a></p>
         </div>
       </li>
     </ul>
+  </section>
+  <section class="unit schedule" id="astro-2203" aria-labelledby="astro-2203-h">
+    <h2 id="astro-2203-h">Astro 2203 schedule</h2>
+    <p class="meta"><span>12 topics</span><span>3 test reviews</span></p>
+    <p class="unote">For the Astro 2203 class: the topics in the order of the course, each with its demos and the introductory worksheets written for it. These links open the demos with the Astro 2203 worksheets.</p>
+    <ol class="topics">
+    <li class="topic" id="a2203-intro"><h3>Topic 1 · Intro material</h3><p class="unote">The size of the solar system: distances in astronomical units, light travel times and powers of ten.</p><ul><li><a href="demos/units.html?course=astro-2203">Units, Scales and Estimates</a> <a class="ws" href="curriculum/labs/students/intro-scale.html">Worksheet: How Big Is the Solar System? (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-sky"><h3>Topic 2 · Star charts and motion of the Sun and Moon</h3><p class="unote">Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.</p><ul><li><a href="demos/celestial-sphere.html?course=astro-2203">The Sky and the Celestial Sphere</a> <a class="ws" href="curriculum/labs/students/intro-celestial-sphere.html">Worksheet: The Sky and the Celestial Sphere (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li><li><a href="demos/seasons.html?course=astro-2203">Reasons for Seasons</a> <a class="ws" href="curriculum/labs/students/intro-seasons.html">Worksheet: Why We Have Seasons (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li><li><a href="demos/moon-phases.html?course=astro-2203">Moon Phases</a> <a class="ws" href="curriculum/labs/students/intro-moon.html">Worksheet: Phases of the Moon and Eclipse Seasons (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li><li><a href="demos/gyroscope.html?course=astro-2203">Gyroscope Precession</a> <a class="ws" href="curriculum/labs/students/intro-precession.html">Worksheet: A Spinning Top and the Wandering Pole Star (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-planetary-motion"><h3>Topic 3 · Planetary motion, the Copernican revolution and gravity</h3><p class="unote">From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.</p><ul><li><a href="demos/retrograde-motion.html?course=astro-2203">Retrograde Motion and World Models</a> <a class="ws" href="curriculum/labs/students/intro-retrograde.html">Worksheet: Retrograde Motion and World Models (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/gravity-near-earth.html?course=astro-2203">Gravity Near Earth</a> <a class="ws" href="curriculum/labs/students/intro-gravity.html">Worksheet: Gravity from the Ground to Orbit (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-telescopes-light"><h3>Topic 4 · Telescopes, light and the electromagnetic spectrum</h3><p class="unote">How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.</p><ul><li><a href="demos/instrument-builder.html?course=astro-2203">Build a Microscope or Telescope</a> <a class="ws" href="curriculum/labs/students/intro-telescope.html">Worksheet: Building a Telescope (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li><li><a href="demos/optics-bench.html?course=astro-2203">Optics Bench</a> <a class="ws" href="curriculum/labs/students/intro-mirrors.html">Worksheet: Lenses, Mirrors and Color (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li><li><a href="demos/resolution.html?course=astro-2203">Circular Apertures and Resolution</a> <a class="ws" href="curriculum/labs/students/intro-resolution.html">Worksheet: Seeing Fine Detail (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li><li><a href="demos/blackbody.html?course=astro-2203">Blackbody Radiation</a> <a class="ws" href="curriculum/labs/students/intro-blackbody.html">Worksheet: Star Colors and Temperatures (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li><li><a href="demos/spectra.html?course=astro-2203">Spectra Explorer</a> <a class="ws" href="curriculum/labs/students/intro-spectra.html">Worksheet: Fingerprints of the Elements (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li><li><a href="demos/em-waves.html?course=astro-2203">Electromagnetic Waves</a> <a class="ws" href="curriculum/labs/students/intro-em-spectrum.html">Worksheet: The Electromagnetic Spectrum (Astro 2203)</a> <span class="where">(card under <a href="#telescopes-light">Telescopes and light</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-test-1"><h3>Test 1</h3><p class="unote">Review the topics <a href="#a2203-intro">Topic 1 · Intro material</a> · <a href="#a2203-sky">Topic 2 · Star charts and motion of the Sun and Moon</a> · <a href="#a2203-planetary-motion">Topic 3 · Planetary motion, the Copernican revolution and gravity</a> · <a href="#a2203-telescopes-light">Topic 4 · Telescopes, light and the electromagnetic spectrum</a>.</p></li>
+    <li class="topic" id="a2203-formation"><h3>Topic 5 · Formation of planetary systems</h3><p class="unote">A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.</p><ul><li><a href="demos/solar-system-formation.html?course=astro-2203">Building a Solar System</a> <a class="ws" href="curriculum/labs/students/intro-solar-system-formation.html">Worksheet: Building a Solar System (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/planet-temperatures.html?course=astro-2203">Planet Temperatures and Habitable Zones</a> <a class="ws" href="curriculum/labs/students/intro-planet-temperatures.html">Worksheet: Planet Temperatures and Habitable Zones (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/rotation.html?course=astro-2203">Rotation and Torque</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-earth-moon"><h3>Topic 6 · The Earth and Moon system</h3><p class="unote">The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.</p><ul><li><a href="demos/craters.html?course=astro-2203">Craters, Cooling and Surface Ages</a> <a class="ws" href="curriculum/labs/students/intro-craters.html">Worksheet 1: Craters and the Ages of the Moon&#x27;s Surface (Astro 2203)</a> <a class="ws" href="curriculum/labs/students/intro-mars-ages.html">Worksheet 2: Dating the Surface of Mars (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/radioactive-decay.html?course=astro-2203">Radioactive Decay</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/fluids.html?course=astro-2203">Fluids: Pressure, Buoyancy and Flow</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/inside-a-planet.html?course=astro-2203">Inside a Planet</a> <a class="ws" href="curriculum/labs/students/intro-inside-a-planet.html">Worksheet: Inside a Planet (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-inner-planets"><h3>Topic 7 · Inner planets to Mars I</h3><p class="unote">Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.</p><ul><li><a href="demos/craters.html?course=astro-2203">Craters, Cooling and Surface Ages</a> <a class="ws" href="curriculum/labs/students/intro-craters.html">Worksheet 1: Craters and the Ages of the Moon&#x27;s Surface (Astro 2203)</a> <a class="ws" href="curriculum/labs/students/intro-mars-ages.html">Worksheet 2: Dating the Surface of Mars (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/planet-temperatures.html?course=astro-2203">Planet Temperatures and Habitable Zones</a> <a class="ws" href="curriculum/labs/students/intro-planet-temperatures.html">Worksheet: Planet Temperatures and Habitable Zones (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/inside-a-planet.html?course=astro-2203">Inside a Planet</a> <a class="ws" href="curriculum/labs/students/intro-inside-a-planet.html">Worksheet: Inside a Planet (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/ideal-gas.html?course=astro-2203">Gas in a Box</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-mars-geology"><h3>Topic 8 · Mars II, geology</h3><p class="unote">Volcanoes, canyons, old water and crater counts on Mars, and its two small moons.</p><ul><li><a href="demos/craters.html?course=astro-2203">Craters, Cooling and Surface Ages</a> <a class="ws" href="curriculum/labs/students/intro-craters.html">Worksheet 1: Craters and the Ages of the Moon&#x27;s Surface (Astro 2203)</a> <a class="ws" href="curriculum/labs/students/intro-mars-ages.html">Worksheet 2: Dating the Surface of Mars (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/inside-a-planet.html?course=astro-2203">Inside a Planet</a> <a class="ws" href="curriculum/labs/students/intro-inside-a-planet.html">Worksheet: Inside a Planet (Astro 2203)</a> <span class="where">(card under <a href="#planets">Planets and their surfaces</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-test-2"><h3>Test 2</h3><p class="unote">Review the topics <a href="#a2203-formation">Topic 5 · Formation of planetary systems</a> · <a href="#a2203-earth-moon">Topic 6 · The Earth and Moon system</a> · <a href="#a2203-inner-planets">Topic 7 · Inner planets to Mars I</a> · <a href="#a2203-mars-geology">Topic 8 · Mars II, geology</a>.</p></li>
+    <li class="topic" id="a2203-minor-planets"><h3>Topic 9 · Minor planets and the asteroid belt</h3><p class="unote">The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits.</p><ul><li><a href="demos/resonances.html?course=astro-2203">Orbital Resonances</a> <a class="ws" href="curriculum/labs/students/intro-resonances.html">Worksheet: Orbital Resonances (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/lagrange-points.html?course=astro-2203">Lagrange Points</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-jupiter-saturn"><h3>Topic 10 · Outer planets: Jupiter and Saturn</h3><p class="unote">The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.</p><ul><li><a href="demos/giant-planets.html?course=astro-2203">Giant Planets, Rings and Moons</a> <a class="ws" href="curriculum/labs/students/intro-giant-planets.html">Worksheet: Giant Planets, Rings and Moons (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/tides.html?course=astro-2203">Tides</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-uranus-neptune-kuiper"><h3>Topic 11 · Uranus, Neptune and the Kuiper belt</h3><p class="unote">The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.</p><ul><li><a href="demos/giant-planets.html?course=astro-2203">Giant Planets, Rings and Moons</a> <a class="ws" href="curriculum/labs/students/intro-giant-planets.html">Worksheet: Giant Planets, Rings and Moons (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/resonances.html?course=astro-2203">Orbital Resonances</a> <a class="ws" href="curriculum/labs/students/intro-resonances.html">Worksheet: Orbital Resonances (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/seasons.html?course=astro-2203">Reasons for Seasons</a> <a class="ws" href="curriculum/labs/students/intro-seasons.html">Worksheet: Why We Have Seasons (Astro 2203)</a> <span class="where">(card under <a href="#sky">The sky from Earth</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-exoplanets"><h3>Topic 12 · Exoplanets</h3><p class="unote">Finding planets around other stars by their pull and their shadows, and what they are made of.</p><ul><li><a href="demos/exoplanets.html?course=astro-2203">Finding Exoplanets</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/planet-temperatures.html?course=astro-2203">Planet Temperatures and Habitable Zones</a> <a class="ws" href="curriculum/labs/students/intro-planet-temperatures.html">Worksheet: Planet Temperatures and Habitable Zones (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li><li><a href="demos/distance-ladder.html?course=astro-2203">Cosmic Distance Ladder</a> <span class="where">(card under <a href="#galaxies-cosmology">Galaxies and cosmology</a>)</span></li><li><a href="demos/kepler-orbits.html?course=astro-2203">Kepler&#x27;s Laws</a> <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Mercury to Pluto (Astro 2203)</a> <span class="where">(card under <a href="#gravitation">Gravitation and orbits</a>)</span></li></ul></li>
+    <li class="topic" id="a2203-test-3"><h3>Test 3</h3><p class="unote">Review the topics <a href="#a2203-minor-planets">Topic 9 · Minor planets and the asteroid belt</a> · <a href="#a2203-jupiter-saturn">Topic 10 · Outer planets: Jupiter and Saturn</a> · <a href="#a2203-uranus-neptune-kuiper">Topic 11 · Uranus, Neptune and the Kuiper belt</a> · <a href="#a2203-exoplanets">Topic 12 · Exoplanets</a>.</p></li>
+    </ol>
   </section>
   <p class="more"><a href="index.html">Back to all courses</a></p>
 </main>

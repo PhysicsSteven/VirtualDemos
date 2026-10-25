@@ -439,7 +439,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* How this works: one video per worksheet; the Astro 2203 one (intro-gravity) when the demo was opened from that worksheet (?ws=) or from
-     the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
+     the Astro 2203 schedule on the Astronomy page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
   const howVid = () => (VD.ws('gravity-near-earth') === 'intro-gravity' ? 'intro-gravity' : 'gravity-near-earth');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'intro-gravity' ? 'How this works: Gravity from the Ground to Orbit' : 'How this works: How g Changes with Height and Latitude') });

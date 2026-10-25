@@ -4309,3 +4309,30 @@ and plates. R also works while the picture has the focus (its own key handler pa
 aside there). Every other setup is unchanged: R stills the water. Checked in Chromium: a wall drawn with the mouse, then R with
 the focus on the page and on the picture, both back to the empty tank at t = 0; Double slit keeps its slits. No key or video
 uses Clear tank or R, so none moves. Tests 10 groups, vdcheck `--only after`: 0 problems.
+
+## 2026-10-25 · Claude · Astro 2203 folded into the Astronomy module
+
+Steve (23:25): "for now combine them". He may split them again, so the map is unchanged and the fold lives in one place:
+`MERGED = {'astro-2203': 'astro'}` in `tools/courses.py`. `load_map()` gives every generator (course pages, tiles, search, 404,
+nav.js, vd.js COURSE_WS, canvas.py) the folded map. To split again: `MERGED = {}`, rerun `tools/courses.py` and `tools/canvas.py`.
+
+- `astro.html`: the five topic units plus a new **Telescopes and light** unit. The twelve Astro 2203 demos the module lacked are
+  placed by `MERGE_PLACE` (units and gyroscope in The sky from Earth, rotation in Gravitation, instrument builder, optics bench,
+  resolution, EM waves, blackbody and spectra in Telescopes and light, radioactive decay, fluids and ideal gas in Planets).
+  Each card lists the Astronomy worksheets and then the Astro 2203 ones (`course_handouts` unions the two courses' lists), so
+  no worksheet was lost from either page. Bottom of the page: **Astro 2203 schedule** (`#astro-2203`, topics `#a2203-<unit>`),
+  each demo linked with `?course=astro-2203` plus its intro worksheets, and the three test reviews.
+- `astro-2203.html` is now a generated redirect to `astro.html#astro-2203` (a hash like `#sky` goes to `#a2203-sky`).
+- `?course=astro-2203` still works: nav.js keeps that course in schedule order (breadcrumb Astro 2203 → the schedule on
+  astro.html), its SHEETS list only the Astro 2203 worksheets, and COURSE_WS still sends Export and How this works to the intro
+  worksheet (table unchanged). `?course=astro` (cards) has its own COURSE_WS entries where a card's only worksheet is an intro one
+  (optics bench, units, blackbody, ...), so Export and the videos reach it; multi worksheet demos (seasons, kepler) behave as
+  before from a card, and their worksheet links carry `?ws=`.
+- Canvas: `virtualdemos-astro.imscc` is the folded module (topic units, 37 assignments). `virtualdemos-astro-2203.imscc` is still
+  built, unchanged byte for byte, for importing into the Astro 2203 Canvas course in schedule order.
+- Home page: one Astronomy tile, 8 courses counted. whats-new.js entry added. CLAUDE.md modules line updated.
+
+Checked: courses.py --check, test_textbook_map, Playwright on astro.html (desktop, 360 px no sideways scroll), the redirect, and
+VD.ws, breadcrumbs and worksheet menus on seven demo and course combinations. vdcheck compare on seasons, kepler orbits,
+gyroscope, units: pass; optics bench fails at 400 px on presets that change from run to run, and fails the same way on main
+with no changes (timing), so not from this.

@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-astro-combined', date: '2026-10-25', title: 'Astronomy and Astro 2203 in one place',
+    text: 'The Astronomy page now holds every astronomy demo, with a new Telescopes and light unit, and each card lists the Astro 2203 worksheets too. The Astro 2203 schedule is at the bottom of the page, topic by topic, and old Astro 2203 links land there.' },
   { id: '2026-10-25-course-worksheets', date: '2026-10-25', title: 'Each course\'s own worksheets',
     text: 'A demo used in more than one course, such as Doppler (Acoustics and Modern Physics) or Circuits (Physics II and Modern Physics), now lists only your course\'s worksheets on its course page card and in its Handout and worksheet button when you open it from your course page. Previous and next stay in your course. Opened any other way, the button still lists every worksheet.' },
   { id: '2026-10-25-giant-planets', date: '2026-10-25', title: 'Giant Planets, Rings and Moons',
