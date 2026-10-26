@@ -1423,7 +1423,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   setRunning(running);
   if (!running) { for (let i = 0; i < 90; i++) step(1 / 60); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyCharts = true; });
-  window.__pe = { P3, S, get g3() { return g3; }, get knobs() { return knobs; }, get electrons() { return electrons; }, applyPreset, drawApp, step };
+  window.__pe = { P3, S, get g3() { return g3; }, get knobs() { return knobs; }, get electrons() { return electrons; }, applyPreset, drawApp, step, current };
+  VD.howTo({ src: 'media/how-this-works/photoelectric.mp4', poster: 'media/how-this-works/photoelectric.jpg' });
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, status: (m) => { $('viewMsg').textContent = m; },
     change: (on) => { if (g3) g3.S3.el.hidden = !on; appC.style.touchAction = on ? 'pan-y' : ''; appC.style.cursor = on ? 'grab' : 'default'; drawApp(); } });
   requestAnimationFrame(loop);

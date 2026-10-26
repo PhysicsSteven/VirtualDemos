@@ -1244,6 +1244,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   applyPreset('c1923');
+  VD.howTo({ src: 'media/how-this-works/compton.mp4', poster: 'media/how-this-works/compton.jpg' });
   setPlaying(!reduce);
   if (reduce) { clock = T_HIT + 0.55; drawAll(); }   // a still picture: both packets clear of the electron
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });

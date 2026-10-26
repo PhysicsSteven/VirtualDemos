@@ -2040,6 +2040,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : '3dz2'); }
   curFit = targetFit;
   setView('3d');
+  VD.howTo({ src: 'media/how-this-works/hydrogen-atom.mp4', poster: 'media/how-this-works/hydrogen-atom.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.radial = true; dirty.slice = true; schedule(); });
 })();
 </script>

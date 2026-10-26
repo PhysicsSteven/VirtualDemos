@@ -1892,6 +1892,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       fwhm_ch: st.fwhm.toFixed(1), E_keV: cOK ? chToE(st.cen).toFixed(1) : '' };
   };
 
+  const howWs = () => window.vdWorksheet(), HOW = { 'gamma-spectroscopy': 'Gamma Spectroscopy: Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays: Shielding and Distance' };
+  VD.howTo({ src: () => `media/how-this-works/${howWs()}.mp4`, poster: () => `media/how-this-works/${howWs()}.jpg`, title: () => `How this works: ${HOW[howWs()]}` });
   tokens(); lineList();
   const ro = new ResizeObserver(() => resize());
   ro.observe(pane); ro.observe(ana);

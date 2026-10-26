@@ -1810,6 +1810,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const ro = new ResizeObserver(resize);
   for (const k of ['e', 'w', 'k']) ro.observe(panes[k]);
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'barrier'); }
+  const HOWQ = { 'uncertainty-principle': 'The Uncertainty Principle', 'energy-levels': 'Energy Levels in a Box and a Spring', 'quantum-tunneling': 'Quantum Tunneling' };
+  VD.howTo({ src: () => `media/how-this-works/${wsFor(S.preset)}.mp4`, poster: () => `media/how-this-works/${wsFor(S.preset)}.jpg`, title: () => `How this works: ${HOWQ[wsFor(S.preset)]}` });
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);

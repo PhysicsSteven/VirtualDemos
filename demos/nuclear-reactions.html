@@ -1328,6 +1328,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__nr = { S, CHN, setView, applyPreset, setRun, redraw, sync, chNew, chStep, rxCalc, fire, pickRx, eqText, fuNow, doNow };
+  const HOW = { rx: ['nuclear-reactions', 'Nuclear Reactions: Balancing and Weighing'], ch: ['critical-mass', 'Chain Reactions and the Critical Size'], fu: ['fusion-gamow', 'Fusion and the Gamow Peak'], do: ['radiation-dose', 'Radiation Dose: Distance and Shielding'] };
+  VD.howTo({ src: () => `media/how-this-works/${HOW[S.view][0]}.mp4`, poster: () => `media/how-this-works/${HOW[S.view][0]}.jpg`, title: () => `How this works: ${HOW[S.view][1]}` });
   requestAnimationFrame(frame);
 })();
 </script>

@@ -1759,6 +1759,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   applyPreset('one');
+  VD.howTo({ src: 'media/how-this-works/rutherford.mp4', poster: 'media/how-this-works/rutherford.jpg' });
   setPlaying(false);
   if (reduce && single) single.pausedAt = single.dur * 0.62;   // a meaningful still picture: the alpha just past closest approach
   view3 = VD3K.view({ seg: '#dimSeg', start: 'flat', init: init3D, change: () => drawAll(), status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });

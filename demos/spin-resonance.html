@@ -1534,6 +1534,7 @@ table.rows td.b { font-size: 0.76rem; }
   resize();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'esr'); }
   renderTable();
+  VD.howTo({ src: 'media/how-this-works/spin-resonance.mp4', poster: 'media/how-this-works/spin-resonance.jpg' });
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { G.panelDirty = true; dirtyAll(); });
   requestAnimationFrame(loop);

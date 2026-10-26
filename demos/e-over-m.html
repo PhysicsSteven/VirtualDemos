@@ -1167,6 +1167,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; } };
 
   // ---------- start ----------
+  VD.howTo({ src: 'media/how-this-works/e-over-m.mp4', poster: 'media/how-this-works/e-over-m.jpg' });
   tokens();
   const use3D = init3D();
   if (!use3D) { cans.flat.hidden = false; $('tip').textContent = 'Drag the V and I knobs up or down.'; }
