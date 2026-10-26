@@ -12,6 +12,9 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-26-proton-qa', date: '2026-10-26', title: 'Proton Therapy QA',
+    text: 'A new Medical Physics demo with its own worksheet: run the morning QA of a pencil beam scanning proton machine (output, range, spot position and spot size against their tolerances), follow a machine that drifts over the weeks, and check a patient plan with a 2D chamber array and gamma analysis.',
+    link: { href: 'demos/proton-qa.html', text: 'Open Proton Therapy QA' } },
   { id: '2026-10-26-radiobiology', date: '2026-10-26', title: 'Radiobiology: Cell Survival and Fractionation',
     text: 'A new Medical Physics demo with its own worksheet: survival curves of two cell lines in air and without oxygen, a simulated clonogenic assay whose colonies you count and fit, a course of radiotherapy split into 1 to 40 fractions with BED and EQD2 for tumors and normal tissue, and how the RBE of protons rises with LET and as the dose per fraction falls.', link: { href: 'demos/radiobiology.html', text: 'Open Radiobiology' } },
   { id: '2026-10-25-bragg-peak', date: '2026-10-25', title: 'The Bragg Peak',

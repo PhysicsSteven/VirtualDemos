@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Proton Therapy QA: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Proton Therapy QA</h1><ul class="meta"><li><a href="../demos/proton-qa.html">Open the demo</a></li><li>Medical Physics, proton therapy (upper level, calculus)</li><li>15 to 50 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A proton machine is checked every morning against its commissioning baseline: output within ±3 %, range (R90) within ±1 mm and spot position within ±2 mm (AAPM TG-224), and spot size, which many centers trend at about ±10 %.</li>
+<li>Each check sees its own faults. The output check at 2 cm sits in the flat plateau, so it does not see an energy error; the range check does, and more at high energy, since ΔR/R = p ΔE/E. A scanning magnet gain error moves only the spots away from the axis.</li>
+<li>The reading noise is far inside the tolerances, so a failed check means a real change. A drift is found in the trend long before a morning fails.</li>
+<li>Patient QA compares a measured plane with the plan by gamma analysis. It catches lateral errors larger than the distance criterion, but a plane in the middle of a spread out peak cannot see a range error, and a modest spot size error passes.</li>
+</ul>
+<h2>Before class</h2>
+<p>Three modes. <strong>Daily QA</strong> runs four checks at the QA energy (70 to 226.7 MeV, the Proteus ONE energies): output at 2 cm depth in a water equivalent phantom, R90 from a stack of chambers every 2 mm, and nine spots on a scintillating screen. Six fault sliders set what is wrong with the machine. <strong>Drift over weeks</strong> runs the QA one morning at a time on a machine with a chosen fault, or a Mystery; the graph trends the chosen check against the tolerance. <strong>Patient QA</strong> delivers a plan for a target 8 to 14 cm deep to a 32 × 32 chamber array under water equivalent slabs, with delivery errors, and shows the plan, the measured points and the gamma map at 3 %/3 mm, 3 %/2 mm or 2 %/2 mm. The room shows the device for the chosen check, the lasers, and the beam scanning spot by spot.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Daily QA, all good.</strong> Run it a few times. Output stays within about 0.2 % of baseline, R90 within hundredths of a millimeter, the spots within a few tenths of a millimeter.</li>
+<li><strong>Output 4 % high</strong>, then <strong>Energy 0.5 % high, at 150 MeV.</strong> Ask Q1. The output fails at 103.9 %; the energy error leaves the output alone and moves R90 by 1.38 mm.</li>
+<li><strong>Same error, at 100 MeV.</strong> Ask Q2. Now R90 moves 0.71 mm and passes; at 70 MeV it would be 0.37 mm.</li>
+<li><strong>Steering off 2.5 mm</strong>, then <strong>Scanning magnet gain 3 % high.</strong> The gain error leaves the central spot in place and moves the corners 2.4 mm.</li>
+<li><strong>Output drifting.</strong> Ask Q3. The line through 30 mornings climbs about 0.14 % a day and reaches 103 % near day 23, where the first morning fails.</li>
+<li><strong>Patient QA, clean delivery</strong>, then <strong>spots shifted 2 mm</strong>. Every point passes at 3 %/3 mm; at 3 %/2 mm about 90 % pass, and the failures sit on the shifted edges.</li>
+<li><strong>Range error, measured at the edge.</strong> Ask Q4. At 14.2 cm, on the distal falloff, only about a quarter of the points pass at 3 %/3 mm; move the depth to 11 cm and every point passes.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Why does the output check, at 2 cm depth, not see a 0.5 % energy error?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The same energy error passes at 100 MeV and fails at 150 MeV. Which energy should a center check?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> When should the physicist act on this drifting machine, and why not wait until the QA fails?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A 3 mm range error passes patient QA at 11 cm and fails badly at 14.2 cm. What does that say about where to measure?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"If the morning QA passes, every plan is right."</strong> The checks use one energy and one field; errors at other energies, in the plan or in the patient are not tested.</li>
+<li><strong>"Gamma passing means the dose is right."</strong> Gamma is a tolerance in one plane. It forgives lateral shifts smaller than the distance criterion and sees nothing along the beam in the flat part of a spread out peak.</li>
+<li><strong>"A noisy reading can fail a healthy machine."</strong> Here the tolerances are 17 to 80 standard deviations of the reading noise wide.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Machine: modeled on the IBA Proteus ONE at Willis-Knighton (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018): C230 cyclotron with a degrader, 70 to 226.7 MeV, pencil beam scanning, range defined at R90, output at 2 cm depth.</li>
+<li>Depth doses: the shared core (demos/lib/vdstop.js), with Bethe stopping powers and NIST PSTAR data, Bohr straggling and Bortfeld's nuclear losses, and no energy spread from the degrader. An energy calibration error scales the beam energy.</li>
+<li>Range stack: readings every 2 mm of water equivalent depth, the first at 1 mm, with noise of 0.3 % of the peak. Its R90 is the baseline R90 plus the shift that best fits the readings (deeper than half the range) with the commissioning curve; this recovers the true shift within 0.02 mm, where reading R90 straight off 2 mm points would err by up to a millimeter at low energy (curriculum/validation/test_proton-qa.cjs).</li>
+<li>Spots: the sizes in air at isocenter are Langner et al.'s ProBeam values (J. Appl. Clin. Med. Phys. 18(3), 96, 2017), linear in energy between 70, 160 and 245 MeV, since Pidikiti gives the Proteus ONE sizes only in a figure. In water each spot adds Fermi–Eyges scattering in quadrature, weighted over the plan's energy layers by the dose each gives at the measurement depth.</li>
+<li>The reading noise (output 0.2 %, range chambers 0.3 %, spot centroids 0.1 mm, spot size 1 %), the drift mode's day to day variation (output 0.5 %, energy 0.035 %, steering 0.15 mm, spot size 1.5 %) and the drift rates are the demo's choices. A steady machine stays inside Pidikiti's "under 2 %" over a year.</li>
+<li>Patient QA: a spread out peak over 8 to 14 cm (layers 0.3 cm apart in range, non negative least squares weights), spots on a 5 mm grid over the target, the plan on a 1 mm grid, and a 32 × 32 array of 4.5 mm chambers 7.62 mm apart (Arjomandy et al. 2008), each reading the mean over its face with 0.3 % noise. Gamma is global (Low et al. 1998) with a 10 % threshold, searched in 0.2 mm steps out to 2Δd with the plan interpolated. Tolerances: Pidikiti's 95 % at 3 %/3 mm, and TG-218's 3 %/2 mm (Miften et al. 2018).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>The Bragg Peak</strong> for the spread out peak the patient plan uses, and with <strong>Charged Particles in Matter</strong> for the stopping power behind the range.</li>
+<li>Have students choose Mystery drift with New mystery several times and write a short QA log for each machine, as they will on the seniors' QA runs.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

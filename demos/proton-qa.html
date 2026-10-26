@@ -1,0 +1,690 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdstop.js"></script>
+<title>Proton Therapy QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the treatment room, the QA graphs and the strip */
+:root { --beam: #c2410c; --pass: #15803d; --fail: #b91c1c; --band: rgba(21, 128, 61, 0.12); --det: #7c3aed; --base: #64748b; --grid: rgba(60, 70, 85, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff;
+  --base: #94a3b8; --grid: rgba(200, 210, 225, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff; --base: #94a3b8; --grid: rgba(200, 210, 225, 0.12); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 330px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; border-top: 1px solid var(--line); padding-top: 6px; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label, .setup-card .pick .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card .seg { align-self: flex-start; }
+.setup-card .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.plotbox { position: relative; flex: none; height: 300px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.readout .pass { color: var(--pass); font-weight: 700; }
+.readout .fail { color: var(--fail); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(800px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } .bench > .stage.tall { min-height: max(900px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 330px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 270px; } }
+@media (max-width: 420px) { .scene { height: 290px; } .plotbox { height: 250px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Proton Therapy QA</h1>
+      <p>Run the morning QA on a pencil beam scanning proton machine modeled on the IBA Proteus ONE: output, range, spot position and spot size against their tolerances. Then follow a machine as it drifts over weeks, and check a patient plan with a 2D chamber array and gamma analysis.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">E in MeV · R90 in cm · spots in mm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/proton-qa.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/proton-qa.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM13 2h4v1h-4zM18 2h3v1h-3zM22 2h3v1h-3zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM17 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h2v1h-2zM16 4h1v1h-1zM21 4h3v1h-3zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM17 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h4v1h-4zM20 7h1v1h-1zM24 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h2v1h-2zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h3v1h-3zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM12 11h1v1h-1zM14 11h1v1h-1zM17 11h2v1h-2zM31 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM8 12h1v1h-1zM10 12h5v1h-5zM16 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM25 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM5 13h3v1h-3zM10 13h3v1h-3zM15 13h2v1h-2zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM11 14h1v1h-1zM13 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM3 15h1v1h-1zM6 15h2v1h-2zM10 15h1v1h-1zM14 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM12 16h1v1h-1zM14 16h1v1h-1zM17 16h3v1h-3zM22 16h2v1h-2zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM6 17h1v1h-1zM9 17h2v1h-2zM12 17h3v1h-3zM17 17h9v1h-9zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM5 18h5v1h-5zM11 18h3v1h-3zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM6 19h2v1h-2zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h2v1h-2zM13 20h2v1h-2zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h1v1h-1zM13 21h2v1h-2zM16 21h2v1h-2zM20 21h5v1h-5zM28 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM5 22h4v1h-4zM10 22h4v1h-4zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM10 23h1v1h-1zM13 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h4v1h-4zM7 24h3v1h-3zM12 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM11 25h2v1h-2zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h1v1h-1zM4 26h2v1h-2zM7 26h2v1h-2zM11 26h1v1h-1zM15 26h3v1h-3zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM13 27h2v1h-2zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM9 29h1v1h-1zM12 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h6v1h-6zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM7 30h5v1h-5zM13 30h2v1h-2zM16 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h11v1h-11zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM15 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h4v1h-4zM17 33h4v1h-4zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h4v1h-4zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM14 36h5v1h-5zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h2v1h-2zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Run QA</button>
+        <div class="seg" role="group" aria-label="Which QA" id="viewSeg">
+          <button type="button" data-view="daily" aria-pressed="true">Daily QA</button>
+          <button type="button" data-view="drift" aria-pressed="false">Drift over weeks</button>
+          <button type="button" data-view="patient" aria-pressed="false">Patient QA</button>
+        </div>
+        <span class="clock mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The treatment room: the gantry's nozzle points down at the couch, where the QA device sits (a water equivalent phantom with an ion chamber for output, a stack of chambers for range, a scintillating screen and camera for the spots, or a 2D chamber array under water equivalent slabs for patient QA), cabled to the electrometer on a cart."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The QA energy, the machine faults and the patient plan">
+        <span class="card-title" id="cardTitle">QA run</span>
+        <div id="eBox"><div class="slider-head"><label for="sE">QA energy</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="70" max="226.7" step="0.1" data-unit="MeV"></div>
+        <div class="pick" id="chkBox"><span class="lbl" id="chkLbl">The graph shows</span><div class="seg" role="group" aria-labelledby="chkLbl" id="chkSeg">
+          <button type="button" data-chk="output" aria-pressed="true">Output</button><button type="button" data-chk="range" aria-pressed="false">Range</button><button type="button" data-chk="spots" aria-pressed="false">Spots</button></div></div>
+        <div id="faultBox">
+          <span class="sub">Machine faults (the physicist does not know them)</span>
+          <div><div class="slider-head"><label for="sFe">Energy calibration error</label><output id="oFe" class="mono" for="sFe"></output></div><input type="range" id="sFe" min="-1" max="1" step="0.01" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sFo">Output error</label><output id="oFo" class="mono" for="sFo"></output></div><input type="range" id="sFo" min="-5" max="5" step="0.1" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sFx">Spot offset, x</label><output id="oFx" class="mono" for="sFx"></output></div><input type="range" id="sFx" min="-3" max="3" step="0.1" data-unit="mm"></div>
+          <div><div class="slider-head"><label for="sFy">Spot offset, y</label><output id="oFy" class="mono" for="sFy"></output></div><input type="range" id="sFy" min="-3" max="3" step="0.1" data-unit="mm"></div>
+          <div><div class="slider-head"><label for="sFg">Scanning magnet gain error</label><output id="oFg" class="mono" for="sFg"></output></div><input type="range" id="sFg" min="-4" max="4" step="0.1" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sFs">Spot size error</label><output id="oFs" class="mono" for="sFs"></output></div><input type="range" id="sFs" min="-25" max="25" step="1" data-unit="%"></div>
+        </div>
+        <div id="driftBox">
+          <span class="sub">The machine over the weeks</span>
+          <div class="pick"><label for="selFault">What is happening to it</label><select id="selFault">
+            <option value="steady">Nothing: steady</option><option value="output">Output drifting up</option><option value="energy">Energy drifting down</option>
+            <option value="steering">Steering drifting</option><option value="size">Spots growing</option><option value="step">Output jumps after a repair</option><option value="mystery">Mystery</option></select></div>
+          <div class="btnrow"><button type="button" class="btn" id="bDay">Next day</button><button type="button" class="btn" id="bTen">Next 10 days</button><button type="button" class="btn" id="bOver">Start over</button></div>
+          <div class="btnrow" id="mystRow"><button type="button" class="btn" id="bNew">New mystery</button><button type="button" class="btn" id="bReveal" aria-pressed="false">Show the answer</button></div>
+        </div>
+        <div id="planBox">
+          <span class="sub">The patient plan (target 8 to 14 cm deep in water)</span>
+          <div class="pick"><label for="selShape">Target seen from the beam</label><select id="selShape">
+            <option value="square">Square, 8 × 8 cm</option><option value="disc">Disc, 7 cm across</option><option value="ell">L shape, 8 × 8 cm</option></select></div>
+          <div><div class="slider-head"><label for="sZm">Measurement depth</label><output id="oZm" class="mono" for="sZm"></output></div><input type="range" id="sZm" min="2" max="16" step="0.1" data-unit="cm"></div>
+          <div class="pick"><span class="lbl" id="critLbl">Gamma criteria</span><div class="seg" role="group" aria-labelledby="critLbl" id="critSeg">
+            <button type="button" data-crit="3/3" aria-pressed="true">3 %/3 mm</button><button type="button" data-crit="3/2" aria-pressed="false">3 %/2 mm</button><button type="button" data-crit="2/2" aria-pressed="false">2 %/2 mm</button></div></div>
+          <span class="sub">Delivery errors</span>
+          <div><div class="slider-head"><label for="sPx">Spot shift, x</label><output id="oPx" class="mono" for="sPx"></output></div><input type="range" id="sPx" min="-3" max="3" step="0.1" data-unit="mm"></div>
+          <div><div class="slider-head"><label for="sPo">Output error</label><output id="oPo" class="mono" for="sPo"></output></div><input type="range" id="sPo" min="-5" max="5" step="0.1" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sPs">Spot size error</label><output id="oPs" class="mono" for="sPs"></output></div><input type="range" id="sPs" min="-25" max="25" step="1" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sPr">Range error</label><output id="oPr" class="mono" for="sPr"></output></div><input type="range" id="sPr" min="-5" max="5" step="0.1" data-unit="mm"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="The QA results: in daily QA and drift, the chosen check (the output chamber's depth dose, the range stack's readings against the baseline, or the spots on the scintillating screen, or the trend over the days) beside gauges of output, range, spot position and spot size against their tolerances; in patient QA, the planned dose, the measured dose at each chamber and the gamma map."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-proton-qa.html" target="mp-proton-qa-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="ok" aria-pressed="true">Daily QA, all good</button>
+          <button type="button" data-p="out4" aria-pressed="false">Output 4 % high</button>
+          <button type="button" data-p="e150" aria-pressed="false">Energy 0.5 % high, at 150 MeV</button>
+          <button type="button" data-p="e100" aria-pressed="false">Same error, at 100 MeV</button>
+          <button type="button" data-p="steer" aria-pressed="false">Steering off 2.5 mm</button>
+          <button type="button" data-p="gain" aria-pressed="false">Scanning magnet gain 3 % high</button>
+          <button type="button" data-p="fat" aria-pressed="false">Spots 15 % larger</button>
+          <button type="button" data-p="drOut" aria-pressed="false">Output drifting</button>
+          <button type="button" data-p="drMyst" aria-pressed="false">Mystery drift</button>
+          <button type="button" data-p="pqa" aria-pressed="false">Patient QA, clean delivery</button>
+          <button type="button" data-p="pshift" aria-pressed="false">Patient QA, spots shifted 2 mm</button>
+          <button type="button" data-p="prange" aria-pressed="false">Range error, measured at the edge</button>
+          <button type="button" data-p="psize" aria-pressed="false">Patient QA, spots 20 % larger</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-proton-qa" data-title="Proton Therapy QA" data-demo="proton-qa">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="formula">R90: the depth past the peak where the dose falls to 90 % of the peak, read from a stack of chambers every 2 mm</p>
+          <p class="formula">σ(z)² = σ_air² + σ_MCS(z)² (spot size in air, then Fermi–Eyges scattering in water)</p>
+          <p class="formula">Γ = min √(r²/Δd² + δ²/ΔD²) over the plan; a point passes if Γ ≤ 1 (Low et al. 1998)</p>
+          <p class="hint" id="about"></p></details>
+        <details class="more"><summary>Tolerances</summary><div class="twrap"><table class="rows" id="tolTable"><caption class="sr">QA tolerances</caption></table></div>
+          <p class="hint">Daily output, range and spot position: AAPM TG-224 (Arjomandy et al., Med. Phys. 46(8), e678, 2019). TG-224 sets no daily spot size check; ±10 % is the value used by the auto trending daily QA program of a ProBeam center (J. Appl. Clin. Med. Phys., 2021, PMC7856486). Patient QA: 3 %/3 mm with at least 95 % passing (Pidikiti et al. 2018, Proteus ONE), and 3 %/2 mm with 95 % passing and action below 90 % (AAPM TG-218, Miften et al., Med. Phys. 45(4), e53, 2018), both with a 10 % low dose threshold.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* the demo's own physics, runnable in Node (curriculum/validation/test_proton-qa.cjs). Depth doses, ranges and the lateral spread
+     come from the shared stopping power core in lib/vdstop.js (VDStop), passed in as V. */
+  /* spot size in air (1σ, mm) at isocenter, x and y: Langner et al., J. Appl. Clin. Med. Phys. 18(3), 96 (2017), measured on a Varian
+     ProBeam. The Proteus ONE commissioning paper (Pidikiti et al., JACMP 19(1), 94, 2018) gives its spot sizes only in a figure, so
+     these published values stand in for the size of the spots; every check here is against the baseline, not the absolute size. */
+  const SIG_AIR = { E: [70, 160, 245], x: [5.75, 4.37, 3.61], y: [6.15, 4.27, 3.86] };
+  function sigmaAir(E) { const t = SIG_AIR, i = E <= t.E[1] ? 0 : 1, u = (E - t.E[i]) / (t.E[i + 1] - t.E[i]); return { x: t.x[i] + u * (t.x[i + 1] - t.x[i]), y: t.y[i] + u * (t.y[i + 1] - t.y[i]) }; }
+  /* tolerances: TG-224 daily output ±3 %, range ±1 mm, spot position ±2 mm; spot size ±10 % (see the Tolerances fold) */
+  const TOL = { out: 3, range: 1, pos: 2, size: 10 };
+  /* reading noise of one QA run (this demo's choice, stated in the handout): output 0.2 %, each range chamber 0.3 % of the peak,
+     spot centroid 0.1 mm, spot sigma 1 % */
+  const NOISE = { out: 0.2, mlic: 0.003, pos: 0.1, size: 1 };
+  /* a seeded generator (mulberry32), so a run can be repeated */
+  function rng32(s) { let a = s >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gaussOf(r) { let u = 0; while (!u) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  function readAt(z, d, x) { const dz = z[1] - z[0], i = Math.floor(x / dz); if (i < 0) return d[0]; if (i >= d.length - 1) return d[d.length - 1]; const f = x / dz - i; return d[i] + f * (d[i + 1] - d[i]); }
+  /* the depth past the largest reading where the readings fall to 90 % of it, by linear interpolation between neighbors */
+  function r90(z, d) { let im = 0; for (let i = 1; i < d.length; i++) if (d[i] > d[im]) im = i; const lev = 0.9 * d[im];
+    for (let i = im; i < d.length - 1; i++) if (d[i] >= lev && d[i + 1] < lev) return z[i] + (z[i + 1] - z[i]) * (d[i] - lev) / (d[i] - d[i + 1]); return NaN; }
+  /* the pristine depth dose in water at energy E (cached), and the range stack: chambers every 2 mm of water equivalent depth,
+     the first at 1 mm; each reading is the dose there, with noise as a fraction of the largest reading */
+  const curves = new Map();
+  function pristine(V, E) { const k = E.toFixed(4); if (curves.has(k)) return curves.get(k); const R = V.range(E, 'water'), zmax = Math.ceil((R * 1.12 + 0.6) * 10) / 10;
+    const c = V.dose({ T: E, dz: 0.01, zmax, ns: 96 }); let pk = 0; for (const v of c.d) pk = Math.max(pk, v); const out = { z: Array.from(c.z), d: Array.from(c.d, (v) => v / pk), R };
+    if (curves.size > 60) curves.clear(); curves.set(k, out); return out; }
+  function mlic(V, E, r) { const c = pristine(V, E), zs = [], ds = []; for (let zz = 0.1; zz <= c.z[c.z.length - 1]; zz += 0.2) { zs.push(+zz.toFixed(4)); ds.push(readAt(c.z, c.d, zz)); }
+    if (r) { const m = Math.max(...ds); for (let i = 0; i < ds.length; i++) ds[i] += NOISE.mlic * m * gaussOf(r); } return { z: zs, d: ds }; }
+  /* the stack's software: chambers 2 mm apart are too coarse to read R90 straight off a peak a few millimeters wide, so it fits
+     today's readings (deeper than half the range) with the commissioning curve B, shifted by s and scaled, by least squares; today's
+     R90 is the baseline R90 plus s (cm) */
+  function fitShift(m, B) {
+    const cost = (s) => { let ab = 0, bb = 0, aa = 0; for (let k = 0; k < m.z.length; k++) { if (m.z[k] < 0.5 * B.R) continue; const b = readAt(B.z, B.d, m.z[k] - s); ab += m.d[k] * b; bb += b * b; aa += m.d[k] * m.d[k]; } return aa - ab * ab / bb; };
+    let best = 0, bc = Infinity; for (let s = -1.2; s <= 1.2001; s += 0.01) { const v = cost(s); if (v < bc) { bc = v; best = s; } }
+    let lo = best - 0.01, hi = best + 0.01; for (let it = 0; it < 40; it++) { const m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3; if (cost(m1) < cost(m2)) hi = m2; else lo = m1; }
+    return (lo + hi) / 2; }
+  /* the nine spots the screen checks, on a grid 8 cm apart about isocenter (mm) */
+  const SPOTS = []; for (const y of [80, 0, -80]) for (const x of [-80, 0, 80]) SPOTS.push([x, y]);
+  /* one morning's QA at energy E with machine faults f = { fe (%), fo (%), fx, fy (mm), fg (%), fs (%) }; r gives the reading noise
+     (leave it out for the commissioning baseline) */
+  function dailyQA(V, E, f, r) {
+    const g = () => (r ? gaussOf(r) : 0), Et = E * (1 + (f.fe || 0) / 100);
+    const out = 100 * (1 + (f.fo || 0) / 100) * (1 + NOISE.out / 100 * g());
+    const B = pristine(V, E), R90b = r90(B.z, B.d), m = mlic(V, Et, r), sh = fitShift(m, B), dR = 10 * sh;
+    const s0 = sigmaAir(E), k = 1 + (f.fs || 0) / 100, gain = 1 + (f.fg || 0) / 100;
+    const spots = SPOTS.map(([x, y]) => ({ xn: x, yn: y, x: x * gain + (f.fx || 0) + NOISE.pos * g(), y: y * gain + (f.fy || 0) + NOISE.pos * g(),
+      sx: s0.x * k * (1 + NOISE.size / 100 * g()), sy: s0.y * k * (1 + NOISE.size / 100 * g()) }));
+    let err = 0, mx = 0, my = 0; for (const s of spots) { err = Math.max(err, Math.abs(s.x - s.xn), Math.abs(s.y - s.yn)); mx += s.sx / 9; my += s.sy / 9; }
+    const dsx = 100 * (mx / s0.x - 1), dsy = 100 * (my / s0.y - 1), ds = Math.abs(dsx) > Math.abs(dsy) ? dsx : dsy;
+    const pass = { out: Math.abs(out - 100) <= TOL.out, range: Math.abs(dR) <= TOL.range, pos: err <= TOL.pos, size: Math.abs(ds) <= TOL.size };
+    return { E, out, R90: R90b + sh, R90b, dR, m, B, spots, err, sx: mx, sy: my, s0, dsx, dsy, ds, pass, ok: pass.out && pass.range && pass.pos && pass.size };
+  }
+  /* the machine over the weeks: the faults on day d. Every day the machine varies a little by itself (output 0.5 %, energy 0.035 %,
+     steering 0.15 mm, spot size 1.5 %, all 1σ, this demo's choice, so a steady machine stays within Pidikiti's "under 2 %" over a
+     year), and a fault adds a trend or, after a repair, a step. sc = { kind, rate, d0, seed } */
+  const KINDS = ['steady', 'output', 'energy', 'steering', 'size', 'step'];
+  function scenario(kind, seed) { const r = rng32(seed * 7919 + 13), u = r();
+    if (kind === 'mystery') kind = KINDS[Math.floor(r() * KINDS.length)];
+    const rate = { steady: 0, output: 0.06 + 0.09 * u, energy: -(0.006 + 0.009 * u), steering: 0.03 + 0.05 * u, size: 0.15 + 0.25 * u, step: 2.5 + u }[kind];
+    return { kind, rate, d0: 12 + Math.floor(r() * 28), seed }; }
+  function dayFaults(sc, d) { const r = rng32(sc.seed * 104729 + d * 31 + 7), g = () => gaussOf(r);
+    const f = { fe: 0.035 * g(), fo: 0.5 * g(), fx: 0.15 * g(), fy: 0.15 * g(), fg: 0, fs: 1.5 * g() };
+    if (sc.kind === 'output') f.fo += sc.rate * d; else if (sc.kind === 'energy') f.fe += sc.rate * d; else if (sc.kind === 'steering') f.fx += sc.rate * d;
+    else if (sc.kind === 'size') f.fs += sc.rate * d; else if (sc.kind === 'step' && d >= sc.d0) f.fo += sc.rate;
+    return f; }
+  function driftDay(V, sc, d, E) { return dailyQA(V, E, dayFaults(sc, d), rng32(sc.seed * 7 + d * 977 + 3)); }
+  /* ---- patient QA ---- */
+  /* the plan's energy layers, as in The Bragg Peak: ranges from one straggling width past the target's far end down to its near end
+     every 0.3 cm, weighted by non negative least squares (Lee and Seung's update) for a flat dose over 8 to 14 cm */
+  function sobp(V, zp, zd) {
+    const sd = V.sigmaR(V.energy(zd, 'water'), 'water'), L = []; for (let R = zd + sd; R >= zp - 1e-9; R -= 0.3) L.push({ R, E: V.energy(R, 'water') });
+    const zmax = zd + 4, C = L.map((l) => V.dose({ T: l.E, dz: 0.05, zmax, ns: 64 })), z = Array.from(C[0].z), n = L.length, idx = [];
+    for (let i = 0; i < z.length; i++) if (z[i] >= zp && z[i] <= zd) idx.push(i);
+    const A = C.map((c) => c.d), w = new Float64Array(n).fill(1), Atb = A.map((a) => idx.reduce((s, i) => s + a[i], 0)), AtA = A.map((a) => A.map((b) => idx.reduce((s, i) => s + a[i] * b[i], 0)));
+    for (let it = 0; it < 3000; it++) for (let j = 0; j < n; j++) { let s = 0; for (let k = 0; k < n; k++) s += AtA[j][k] * w[k]; w[j] *= Atb[j] / (s + 1e-300); }
+    const d = z.map((_, i) => A.reduce((s, a, j) => s + w[j] * a[i], 0)); let mn = 0; for (const i of idx) mn += d[i]; mn /= idx.length;
+    return { L: L.map((l, j) => ({ ...l, w: w[j] / mn, d: Array.from(A[j]) })), z, d: d.map((v) => v / mn), zp, zd };
+  }
+  /* the spread of the field's spots at depth z (mm): each layer adds σ_air² + σ_MCS² weighted by the dose it gives there; k scales σ_air */
+  function sigmaAt(V, P, z, k) { let c = 0, sx = 0, sy = 0; for (const l of P.L) { const w = l.w * readAt(P.z, l.d, z); if (!(w > 0)) continue;
+      const a = sigmaAir(l.E), m = 10 * V.sigmaX({ T: l.E }, z); c += w; sx += w * ((a.x * k) ** 2 + m * m); sy += w * ((a.y * k) ** 2 + m * m); }
+    return c > 0 ? { x: Math.sqrt(sx / c), y: Math.sqrt(sy / c) } : { x: NaN, y: NaN }; }
+  /* the spots of the plan: a 5 mm grid (this demo's choice) over the target seen from the beam, all of one weight */
+  const SHAPES = { square: (x, y) => Math.abs(x) <= 40 && Math.abs(y) <= 40, disc: (x, y) => x * x + y * y <= 35 * 35,
+    ell: (x, y) => (x >= -40 && x <= -10 && Math.abs(y) <= 40) || (Math.abs(x) <= 40 && y >= -40 && y <= -10) };
+  function planSpots(shape) { const out = []; for (let y = -40; y <= 40; y += 5) for (let x = -40; x <= 40; x += 5) if (SHAPES[shape](x, y)) out.push([x, y]); return out; }
+  /* the dose in a plane on a 1 mm grid from −130 to 130 mm: each spot put on the grid (bilinear), then a Gaussian in x and in y */
+  const GN = 261, G0 = -130;
+  function plane(spots, dx, sg) {
+    const a = new Float64Array(GN * GN), t = new Float64Array(GN * GN);
+    for (const [x0, y0] of spots) { const x = x0 + dx - G0, y = y0 - G0, i = Math.floor(x), j = Math.floor(y), u = x - i, v = y - j; if (i < 0 || j < 0 || i >= GN - 1 || j >= GN - 1) continue;
+      a[j * GN + i] += (1 - u) * (1 - v); a[j * GN + i + 1] += u * (1 - v); a[(j + 1) * GN + i] += (1 - u) * v; a[(j + 1) * GN + i + 1] += u * v; }
+    const ker = (s) => { const h = Math.ceil(4 * s), k = []; for (let q = -h; q <= h; q++) k.push(Math.exp(-0.5 * (q / s) ** 2) / (s * Math.sqrt(2 * Math.PI))); return { h, k }; };
+    const kx = ker(sg.x), ky = ker(sg.y);
+    for (let j = 0; j < GN; j++) for (let i = 0; i < GN; i++) { const v = a[j * GN + i]; if (!v) continue; for (let q = -kx.h; q <= kx.h; q++) { const ii = i + q; if (ii >= 0 && ii < GN) t[j * GN + ii] += v * kx.k[q + kx.h]; } }
+    a.fill(0);
+    for (let j = 0; j < GN; j++) for (let i = 0; i < GN; i++) { const v = t[j * GN + i]; if (!v) continue; for (let q = -ky.h; q <= ky.h; q++) { const jj = j + q; if (jj >= 0 && jj < GN) a[jj * GN + i] += v * ky.k[q + ky.h]; } }
+    return a;
+  }
+  const atPlane = (a, x, y) => { const u = x - G0, v = y - G0, i = Math.floor(u), j = Math.floor(v); if (i < 0 || j < 0 || i >= GN - 1 || j >= GN - 1) return 0; const fu = u - i, fv = v - j;
+    return a[j * GN + i] * (1 - fu) * (1 - fv) + a[j * GN + i + 1] * fu * (1 - fv) + a[(j + 1) * GN + i] * (1 - fu) * fv + a[(j + 1) * GN + i + 1] * fu * fv; };
+  /* the 2D array: 32 × 32 parallel plate chambers 7.62 mm apart, each 4.5 mm across (MatriXX; Arjomandy et al., Med. Phys. 35, 3889,
+     2008); a chamber reads the mean over its face (seven points), with noise of 0.3 % of the plan's maximum (this demo's choice) */
+  const CH = []; for (let j = 0; j < 32; j++) for (let i = 0; i < 32; i++) CH.push([(i - 15.5) * 7.62, (15.5 - j) * 7.62]);
+  const FACE = [[0, 0, 0.25]]; for (let k = 0; k < 6; k++) FACE.push([1.5 * Math.cos(k * Math.PI / 3), 1.5 * Math.sin(k * Math.PI / 3), 0.125]);
+  /* the whole patient QA: plan and delivery at depth zm (cm) with errors e = { px (mm), po (%), ps (%), pr (mm) } */
+  function patientQA(V, P, shape, zm, e, seed) {
+    const sp = planSpots(shape), sP = sigmaAt(V, P, zm, 1), sD = sigmaAt(V, P, zm, 1 + (e.ps || 0) / 100);
+    const dP = readAt(P.z, P.d, zm), dD = readAt(P.z, P.d, Math.max(0, zm - (e.pr || 0) / 10)) * (1 + (e.po || 0) / 100);
+    const plan = plane(sp, 0, sP), del = plane(sp, e.px || 0, sD); let mx = 0; for (const v of plan) mx = Math.max(mx, v);
+    const k = 100 / mx; for (let i = 0; i < plan.length; i++) plan[i] *= k; const kd = k * dD / dP; for (let i = 0; i < del.length; i++) del[i] *= kd;
+    const r = rng32(seed || 1), meas = CH.map(([x, y]) => FACE.reduce((s, [u, v, w]) => s + w * atPlane(del, x + u, y + v), 0) + 0.3 * gaussOf(r));
+    return { plan, meas, sP, sD, dP, dD, spots: sp, depthScale: dP };
+  }
+  /* global gamma (Low et al., Med. Phys. 25, 656, 1998): each chamber reading above the threshold against the plan, searched out to
+     2Δd in steps of 0.2 mm with the plan interpolated between its 1 mm grid points (a coarser search overstates Γ on steep edges);
+     ΔD is a percentage of the plan's maximum (100) */
+  function gamma(Q, dd, dta, thr) {
+    const h = 0.2, K = Math.ceil(2 * dta / h), out = []; let n = 0, ok = 0;
+    for (let c = 0; c < CH.length; c++) { const [x, y] = CH[c], m = Q.meas[c]; if (!(m >= (thr == null ? 10 : thr))) { out.push(NaN); continue; }
+      let best = Math.pow((m - atPlane(Q.plan, x, y)) / dd, 2);
+      for (let q = -K; q <= K; q++) for (let p = -K; p <= K; p++) { const rx = p * h, ry = q * h, r2 = (rx * rx + ry * ry) / (dta * dta); if (r2 >= best) continue;
+        const dv = (m - atPlane(Q.plan, x + rx, y + ry)) / dd, g2 = r2 + dv * dv; if (g2 < best) best = g2; }
+      const gv = Math.sqrt(best); out.push(gv); n++; if (gv <= 1) ok++; }
+    return { g: out, n, pass: n ? 100 * ok / n : NaN };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const V = window.VDStop;
+  const $ = (id) => document.getElementById(id);
+  const F0 = { fe: 0, fo: 0, fx: 0, fy: 0, fg: 0, fs: 0 }, E0 = { px: 0, po: 0, ps: 0, pr: 0 };
+  const PRESETS = {
+    ok: { view: 'daily', e: 150, chk: 'output', hint: 'The morning QA at 150 MeV on a healthy machine: output at 2 cm depth in a water equivalent phantom, R90 from the range stack, and the nine spots on the scintillating screen. Every check falls inside its tolerance. Run it a few times: each run reads a little differently, and the spread is the reading noise.' },
+    out4: { view: 'daily', e: 150, chk: 'output', f: { fo: 4 }, hint: 'The output is 4 % high: every monitor unit now gives 4 % more dose, as if the monitor chamber\'s calibration had shifted. The range and spots are untouched. TG-224 allows ±3 % on the daily output check, so this fails, and the machine is not used until the output is understood and fixed.' },
+    e150: { view: 'daily', e: 150, chk: 'range', f: { fe: 0.5 }, hint: 'The energy is 0.5 % higher than it should be, as if the energy selection had drifted. At 150 MeV that puts R90 about 1.4 mm deeper, past the 1 mm tolerance. The output at 2 cm hardly changes: the plateau is nearly flat.' },
+    e100: { view: 'daily', e: 100, chk: 'range', f: { fe: 0.5 }, hint: 'The same 0.5 % energy error checked at 100 MeV: the range moves by only about 0.7 mm and passes. A range error from an energy error grows with the range (R ∝ E^1.77), which is why the range is checked at more than one energy.' },
+    steer: { view: 'daily', e: 150, chk: 'spots', f: { fx: 2.5 }, hint: 'Every spot lands 2.5 mm to one side, as if the beam steering or the scanning magnet\'s zero had shifted. TG-224 allows ±2 mm on the daily spot position check.' },
+    gain: { view: 'daily', e: 150, chk: 'spots', f: { fg: 3 }, hint: 'The scanning magnets deflect 3 % too far: the central spot is in place, but the spots 8 cm out land 2.4 mm too far out. A check of the central spot alone would miss it; the corners show it.' },
+    fat: { view: 'daily', e: 150, chk: 'spots', f: { fs: 15 }, hint: 'Every spot is 15 % wider than at commissioning, as if something had been left in the beam line or the beam tune had changed. Wider spots blur the edges of every field. The spot size check (±10 %) catches it; the position check does not.' },
+    drOut: { view: 'drift', e: 150, chk: 'output', fault: 'output', seed: 3, days: 30, hint: 'The QA results of 30 mornings on a machine whose output creeps up by about a tenth of a percent a day, on top of its day to day wobble. Fit a line to the output against the day, and predict the day it will cross the 3 % tolerance. A trend found early is fixed on a planned day, not on the morning the QA fails.' },
+    drMyst: { view: 'drift', e: 150, chk: 'output', fault: 'mystery', seed: 11, days: 0, hint: 'Something may be happening to this machine, or nothing at all. Run the mornings, look at every check, and find out which quantity is changing, how fast, and when it will leave its tolerance. New mystery picks another machine; Show the answer tells you what it was.' },
+    pqa: { view: 'patient', shape: 'square', zm: 11, crit: '3/3', hint: 'A patient plan delivered to a water phantom, measured at 11 cm depth (the middle of the 8 to 14 cm target) with a 2D array of 1020 ion chambers. Gamma analysis compares each chamber with the plan: within 3 % of the maximum dose, or within 3 mm of a point that has that dose. With a clean delivery every point passes, even at 2 %/2 mm, although each 4.5 mm chamber averages the dose over its face and so reads a little low on the steep edges.' },
+    pshift: { view: 'patient', shape: 'square', zm: 11, crit: '3/3', pe: { px: 2 }, hint: 'Every spot is delivered 2 mm to one side. At 3 %/3 mm every point still passes; at 3 %/2 mm (TG-218) about 90 % pass, below the 95 % tolerance, and the failing points sit on the two edges the shift moved. Gamma is a tolerance, not a measure of how wrong the delivery is.' },
+    prange: { view: 'patient', shape: 'square', zm: 14.2, crit: '3/3', pe: { pr: 3 }, hint: 'The beam goes 3 mm deeper than planned, measured at 14.2 cm, on the steep distal edge of the spread out peak, where the planned dose is about 57 % of the dose in the target. There the dose changes by about 20 % per millimeter, and the plane fails badly. Measured in the middle of the target (11 cm) the same error is invisible: the spread out peak is flat there. Gamma\'s distance to agreement is in the plane, so it forgives no error along the beam.' },
+    psize: { view: 'patient', shape: 'ell', zm: 11, crit: '2/2', pe: { ps: 20 }, hint: 'Spots 20 % larger in air, in an L shaped target. At 11 cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at 2 %/2 mm. The daily spot size check catches this fault; patient QA in one plane does not.' },
+  };
+  const S = { preset: 'ok', view: 'daily', e: 150, chk: 'output', f: { ...F0 }, res: null, runs: 0, rng: rng32(2026), busy: 0, parts: [],
+    fault: 'output', seed: 3, sc: null, days: [], reveal: false, shape: 'square', zm: 11, crit: '3/3', pe: { ...E0 }, P: null, Q: null, G: null };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sgn = (v, d) => { if (!isFinite(v)) return '—'; const t = Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v; return (t > 0 ? '+' : '') + f(t, d); };
+  const sig = (v, n = 4) => (!isFinite(v) ? '—' : (+v.toPrecision(n)).toString());
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), beam: g('--beam'), pass: g('--pass'), fail: g('--fail'),
+      band: g('--band'), det: g('--det'), base: g('--base'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const dark = () => window.VDGear.dark();
+  const reduced = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const CRIT = { '3/3': [3, 3], '3/2': [3, 2], '2/2': [2, 2] };
+
+  /* ---------- the model ---------- */
+  function runQA(instant) {
+    if (S.view === 'daily') { S.res = dailyQA(V, S.e, S.f, S.rng); S.runs++; }
+    else if (S.view === 'drift') { stepDays(1); }
+    else { S.Q = null; patient(); }
+    if (!instant && !reduced()) S.busy = performance.now() + 1500; else S.busy = 0;
+    full();
+  }
+  function stepDays(n) { if (!S.sc) S.sc = scenario(S.fault, S.seed); for (let k = 0; k < n && S.days.length < 120; k++) S.days.push(driftDay(V, S.sc, S.days.length + 1, S.e)); }
+  let recDays = 0;
+  function newDrift() { S.sc = scenario(S.fault, S.seed); S.days = []; recDays = 0; S.reveal = false; }
+  function patient() {
+    if (!S.P) S.P = sobp(V, 8, 14);
+    const key = [S.shape, S.zm, S.pe.px, S.pe.po, S.pe.ps, S.pe.pr].join();
+    if (!S.Q || S.Q.key !== key) { S.Q = patientQA(V, S.P, S.shape, S.zm, S.pe, 77); S.Q.key = key; }
+    const [dd, dta] = CRIT[S.crit]; S.G = gamma(S.Q, dd, dta, 10);
+    S.GA = {}; for (const c in CRIT) S.GA[c] = c === S.crit ? S.G : gamma(S.Q, CRIT[c][0], CRIT[c][1], 10);
+  }
+  const latest = () => (S.view === 'daily' ? S.res : S.view === 'drift' ? S.days[S.days.length - 1] || null : null);
+
+  /* ---------- drawing: the treatment room ---------- */
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  function roomBox() { const p = proj(), cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0, x0 = 12 * p, x1 = Math.max(x0 + 280, W - cardW - 12 * p); return { x0, x1, p }; }
+  /* a label beside the device, left out when it would run off a narrow picture */
+  function sideLabel(s, x, y, p) { ctx.font = `${10 * p}px ${T.ui}`; if (x + ctx.measureText(s).width > W - 4) return; window.VDGear.label(ctx, s, x, y, { s: 10 * p }); }
+  function drawRoom() {
+    const G = window.VDGear, d = dark(), b = roomBox(), p = b.p, cx = (b.x0 + b.x1) / 2 + Math.min(70 * p, (b.x1 - b.x0) * 0.12), floorY = H - 30 * p;
+    G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H });
+    G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#2b3138' : '#c9ced5', front: d ? '#1d2228' : '#a7aeb8' });
+    /* the back wall: panels with seams */
+    ctx.strokeStyle = d ? 'rgba(255,255,255,0.04)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1; for (let x = 60 * p; x < W; x += 120 * p) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, floorY); ctx.stroke(); }
+    /* the gantry: a ring behind the couch, its nozzle pointing straight down */
+    const gr = Math.min((b.x1 - b.x0) * 0.42, H * 0.62), gcy = H * 0.42;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, floorY); ctx.clip();
+    ctx.lineWidth = 34 * p; ctx.strokeStyle = d ? '#2c3440' : '#d5dae1'; ctx.beginPath(); ctx.arc(cx, gcy, gr, 0, 7); ctx.stroke();
+    ctx.lineWidth = 2 * p; ctx.strokeStyle = d ? '#3d4756' : '#bcc3cc'; for (const rr of [gr - 17 * p, gr + 17 * p]) { ctx.beginPath(); ctx.arc(cx, gcy, rr, 0, 7); ctx.stroke(); }
+    ctx.restore();
+    const nzTop = Math.max(0, gcy - gr - 10 * p), nzBot = H * 0.3, nw = 56 * p;
+    G.box(ctx, cx - nw / 2, nzTop, nw, nzBot - nzTop, { color: d ? '#4a5563' : '#566273', r: 6 * p });
+    G.box(ctx, cx - nw * 0.36, nzBot - 2 * p, nw * 0.72, 14 * p, { color: d ? '#6b7786' : '#7b8796', r: 3 * p, shadow: false });
+    G.plate(ctx, 'nozzle', cx, nzTop + 14 * p, { s: 7 * p });
+    /* the couch */
+    const couchY = H * 0.66, cw = Math.min((b.x1 - b.x0) * 0.62, 420 * p);
+    G.shadow(ctx, cx, floorY - 2 * p, cw * 0.42, 6 * p, 0.8);
+    G.box(ctx, cx - 22 * p, couchY + 12 * p, 44 * p, floorY - couchY - 12 * p, { color: d ? '#3a4552' : '#8d97a3', r: 3 * p, shadow: false });
+    G.box(ctx, cx - cw / 2, couchY, cw, 13 * p, { color: d ? '#5c6673' : '#e5e7eb', r: 4 * p });
+    /* the device on the couch */
+    const dev = S.view === 'patient' ? 'array' : S.chk === 'output' ? 'phantom' : S.chk === 'range' ? 'mlic' : 'lynx', dw = Math.min(cw * 0.55, 210 * p);
+    let dTop = couchY, lcdText = '—';
+    const r = latest(), busy = S.busy > performance.now();
+    if (dev === 'phantom') {
+      const n = 6, sh = 9 * p; dTop = couchY - n * sh;
+      for (let i = 0; i < n; i++) G.box(ctx, cx - dw / 2, dTop + i * sh, dw, sh - 1, { color: d ? '#c9c2a8' : '#ece4c8', r: 1.5 * p, shadow: false });
+      ctx.fillStyle = T.det; ctx.beginPath(); ctx.roundRect(cx - 9 * p, dTop + 2 * sh - 3 * p, 18 * p, 6 * p, 3 * p); ctx.fill();
+      sideLabel('chamber at 2 cm', cx + dw / 2 + 6 * p, dTop + 2 * sh, p);
+      if (r) lcdText = `${f(r.out, 1)} %`;
+    } else if (dev === 'mlic') {
+      const hh = 42 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#334a73' : '#2f4a7d', r: 5 * p });
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; for (let i = 1; i < 14; i++) { const y = dTop + 6 * p + i * (hh - 12 * p) / 14; ctx.beginPath(); ctx.moveTo(cx - dw / 2 + 10 * p, y); ctx.lineTo(cx + dw / 2 - 10 * p, y); ctx.stroke(); }
+      G.plate(ctx, 'range stack', cx, dTop + hh / 2, { s: 7 * p });
+      if (r) lcdText = `R90 ${f(r.R90, 2)} cm`;
+    } else if (dev === 'lynx') {
+      const hh = 30 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#3b4250' : '#4b5563', r: 4 * p });
+      const glow = ctx.createLinearGradient(cx - dw / 2, 0, cx + dw / 2, 0); glow.addColorStop(0, 'rgba(120,255,170,0.15)'); glow.addColorStop(0.5, busy ? 'rgba(140,255,180,0.9)' : 'rgba(120,255,170,0.35)'); glow.addColorStop(1, 'rgba(120,255,170,0.15)');
+      ctx.fillStyle = glow; ctx.fillRect(cx - dw / 2 + 8 * p, dTop + 3 * p, dw - 16 * p, 4 * p);
+      G.plate(ctx, 'screen and camera', cx, dTop + hh / 2 + 4 * p, { s: 7 * p });
+      if (r) lcdText = `${f(r.err, 1)} mm`;
+    } else {
+      const n = Math.round(S.zm * 2), sh = Math.min(5.5 * p, (couchY - nzBot - 60 * p) / Math.max(1, n)), ah = 16 * p; dTop = couchY - ah - n * sh;
+      G.box(ctx, cx - dw / 2, couchY - ah, dw, ah, { color: d ? '#334a73' : '#2f4a7d', r: 3 * p });
+      for (let i = 0; i < n; i++) ctx.fillStyle = i % 2 ? (d ? '#bdb59b' : '#e6dcbc') : (d ? '#c9c2a8' : '#efe7cb'), ctx.fillRect(cx - dw / 2, dTop + i * sh, dw, sh - 0.6);
+      sideLabel(`water equivalent slabs, ${f(S.zm, 1)} cm`, cx + dw / 2 + 6 * p, dTop + n * sh / 2, p);
+      sideLabel('2D chamber array', cx + dw / 2 + 6 * p, couchY - ah / 2, p);
+      if (S.G) lcdText = `${f(S.G.pass, 1)} %`;
+    }
+    /* the room lasers, green lines that cross at isocenter, where the device is set up */
+    ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = d ? 'rgba(90,255,140,0.55)' : 'rgba(22,163,74,0.6)'; ctx.lineWidth = 1.2 * p;
+    ctx.beginPath(); ctx.moveTo(cx - cw / 2 - 20 * p, dTop); ctx.lineTo(cx + cw / 2 + 20 * p, dTop); ctx.stroke();
+    ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(cx, nzBot + 14 * p); ctx.lineTo(cx, dTop); ctx.stroke(); ctx.restore();
+    /* the beam on lamp above the room */
+    const lx = cx - nw / 2 - 30 * p, ly = nzTop + 22 * p; G.box(ctx, lx - 13 * p, ly - 9 * p, 26 * p, 18 * p, { color: d ? '#2a313b' : '#4b5563', r: 3 * p, shadow: false });
+    ctx.fillStyle = busy ? '#f59e0b' : d ? '#3f2f12' : '#7c5a1a'; if (busy) { ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 12 * p; }
+    ctx.beginPath(); ctx.roundRect(lx - 9 * p, ly - 5 * p, 18 * p, 10 * p, 2 * p); ctx.fill(); ctx.shadowBlur = 0;
+    G.label(ctx, 'beam on', lx, ly + 18 * p, { a: 'center', s: 9 * p });
+    /* the beam: a pencil beam scanning across the device, spot by spot */
+    if (busy) {
+      const t = performance.now() / 1000, sx = Math.sin(t * 9) * dw * 0.4, x = cx + sx;
+      ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; const g = ctx.createLinearGradient(0, nzBot, 0, dTop);
+      g.addColorStop(0, G.mix(T.beam, '#ffffff', 0.3)); g.addColorStop(1, T.beam); ctx.strokeStyle = g; ctx.lineWidth = 3 * p; ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.moveTo(cx, nzBot + 12 * p); ctx.lineTo(x, dTop); ctx.stroke(); ctx.fillStyle = '#ffd08a'; ctx.beginPath(); ctx.arc(x, dTop, 4 * p, 0, 7); ctx.fill(); ctx.restore();
+      lcdText = 'measuring';
+    }
+    /* the cart with the electrometer */
+    const ew = 128 * p, eh = 46 * p, ex = b.x0 + 4 * p, ey = couchY - 70 * p;
+    G.box(ctx, ex + 10 * p, ey + eh, ew - 20 * p, floorY - ey - eh - 8 * p, { color: d ? '#29313c' : '#9aa3ae', r: 3 * p, shadow: false });
+    for (const xx of [ex + 16 * p, ex + ew - 16 * p]) { ctx.fillStyle = d ? '#0b0f14' : '#2a3038'; ctx.beginPath(); ctx.arc(xx, floorY - 5 * p, 5 * p, 0, 7); ctx.fill(); }
+    G.cable(ctx, ex + ew, ey + eh * 0.6, cx - dw / 2, dTop + 6 * p, 24 * p, { w: 2.2 * p, color: d ? '#0b0f14' : '#2a3038' });
+    G.box(ctx, ex, ey, ew, eh, { color: d ? '#333c47' : '#3b4552', r: 5 * p });
+    G.plate(ctx, S.view === 'patient' ? 'array software' : dev === 'lynx' ? 'spot analysis' : 'electrometer', ex + ew / 2, ey + 7 * p, { s: 6.5 * p });
+    G.lcd(ctx, ex + 7 * p, ey + 13 * p, ew - 14 * p, eh - 19 * p, lcdText);
+    /* the verdict */
+    const ok = S.view === 'patient' ? (S.G ? S.G.pass >= 95 : null) : r ? r.ok : null;
+    if (ok != null && !busy) { const tx = S.view === 'patient' ? (ok ? 'PASS (≥ 95 %)' : 'FAIL (< 95 %)') : ok ? 'ALL CHECKS PASS' : 'OUT OF TOLERANCE';
+      ctx.font = `700 ${12 * p}px ${T.ui}`; const tw = ctx.measureText(tx).width + 18 * p; ctx.fillStyle = ok ? T.pass : T.fail; ctx.globalAlpha = 0.92;
+      ctx.beginPath(); ctx.roundRect(ex, ey - 30 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, ex + 9 * p, ey - 19 * p); }
+    G.label(ctx, (W < 560 ? '' : 'IBA Proteus ONE style room, ') + (S.view === 'patient' ? 'patient plan' : `${sig(S.e, 4)} MeV`), b.x0 + 4 * p, 16 * p, { s: 10.5 * p, c: T.ink, alpha: 0.85 });
+  }
+
+  /* ---------- drawing: the graphs ---------- */
+  function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
+  function axes(c, L, R, top, bot, xa, xb, ya, yb, xl, yl, p) {
+    const X = (v) => L + (v - xa) / (xb - xa) * (R - L), Y = (v) => bot - (v - ya) / (yb - ya) * (bot - top);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`;
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const v of niceTicks(ya, yb, 5)) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(R, Y(v)); c.stroke(); c.fillText(String(v).replace('-', '−'), L - 5 * p, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of niceTicks(xa, xb, 6)) c.fillText(String(v).replace('-', '−'), X(v), bot + 4 * p);
+    c.font = `${11 * p}px ${T.ui}`; c.fillText(xl, (L + R) / 2, bot + 17 * p);
+    c.save(); c.translate(L - 34 * p, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+  function title(c, s, x, y, p) { c.fillStyle = T.ink; c.font = `700 ${11 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(s, x, y); }
+  /* a gauge: the reading on a scale with its tolerance band */
+  function gauge(c, x, y, w, name, v, tol, unit, span, p, hide) {
+    const X = (u) => x + (u + span) / (2 * span) * w, ok = Math.abs(v) <= tol;
+    c.fillStyle = T.ink; c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(name, x, y - 4 * p);
+    c.textAlign = 'right'; c.font = `600 ${10.5 * p}px ${T.mono}`; c.fillStyle = hide || !isFinite(v) ? T.muted : ok ? T.pass : T.fail; c.fillText(hide || !isFinite(v) ? '—' : `${sgn(v, unit === '%' ? 1 : 2)} ${unit}`, x + w, y - 4 * p);
+    c.fillStyle = T.grid; c.fillRect(x, y, w, 8 * p); c.fillStyle = T.band; c.fillRect(X(-tol), y, X(tol) - X(-tol), 8 * p);
+    c.strokeStyle = T.pass; c.lineWidth = 1; for (const u of [-tol, tol]) { c.beginPath(); c.moveTo(X(u), y - 1); c.lineTo(X(u), y + 8 * p + 1); c.stroke(); }
+    c.strokeStyle = T.muted; c.beginPath(); c.moveTo(X(0), y); c.lineTo(X(0), y + 8 * p); c.stroke();
+    if (!hide && isFinite(v)) { const xv = X(Math.max(-span, Math.min(span, v))); c.fillStyle = ok ? T.pass : T.fail; c.beginPath(); c.moveTo(xv, y + 8 * p); c.lineTo(xv - 5 * p, y + 15 * p); c.lineTo(xv + 5 * p, y + 15 * p); c.fill(); }
+  }
+  function gauges(c, x, top, w, r, p, busy) {
+    title(c, 'Against tolerance (green band)', x, top, p); const hide = !r || busy, gap = 40 * p;
+    gauge(c, x, top + 30 * p, w, 'Output − baseline', r ? r.out - 100 : NaN, TOL.out, '%', 6, p, hide);
+    gauge(c, x, top + 30 * p + gap, w, 'R90 − baseline', r ? r.dR : NaN, TOL.range, 'mm', 2, p, hide);
+    gauge(c, x, top + 30 * p + 2 * gap, w, 'Largest spot position error', r ? r.err : NaN, TOL.pos, 'mm', 4, p, hide);
+    gauge(c, x, top + 30 * p + 3 * gap, w, 'Spot size − baseline', r ? r.ds : NaN, TOL.size, '%', 25, p, hide);
+  }
+  function drawOutputPanel(c, L, R, top, bot, r, p) {
+    const pc = pristine(V, S.e), zmax = pc.z[pc.z.length - 1], A = axes(c, L, R, top, bot, 0, zmax, 0, 1.1, 'depth in water (cm)', 'dose (of peak)', p);
+    c.strokeStyle = T.beam; c.lineWidth = 2 * p; c.beginPath(); pc.z.forEach((zz, i) => (i ? c.lineTo(A.X(zz), A.Y(pc.d[i])) : c.moveTo(A.X(zz), A.Y(pc.d[i])))); c.stroke();
+    const y2 = readAt(pc.z, pc.d, 2); c.fillStyle = T.det; c.beginPath(); c.arc(A.X(2), A.Y(y2), 5 * p, 0, 7); c.fill();
+    c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillStyle = T.ink; c.fillText('output chamber at 2 cm, in the plateau', A.X(2) + 8 * p, A.Y(y2) - 6 * p);
+    title(c, `Output check: ${r && !(S.busy > performance.now()) ? `${f(r.out, 1)} % of baseline` : 'run the QA'}`, L, top - 12 * p, p);
+  }
+  function drawRangePanel(c, L, R, top, bot, r, p) {
+    const b = pristine(V, S.e), R0 = r90(b.z, b.d), xa = Math.max(0, R0 - 4), xb = R0 + 1.5, A = axes(c, L, R, top, bot, xa, xb, 0, 1.1, 'water equivalent depth (cm)', 'reading (of peak)', p);
+    const busy = S.busy > performance.now();
+    c.strokeStyle = T.base; c.lineWidth = 1.5 * p; c.setLineDash([5 * p, 4 * p]); c.beginPath(); let st = false;
+    b.z.forEach((zz, i) => { if (zz < xa || zz > xb) return; st ? c.lineTo(A.X(zz), A.Y(b.d[i])) : (c.moveTo(A.X(zz), A.Y(b.d[i])), st = true); }); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = T.pass; c.globalAlpha = 0.5; c.beginPath(); c.moveTo(L, A.Y(0.9)); c.lineTo(R, A.Y(0.9)); c.stroke(); c.globalAlpha = 1;
+    if (r && !busy) { const m = r.m, mm = Math.max(...m.d); c.fillStyle = T.det; m.z.forEach((zz, i) => { if (zz < xa || zz > xb) return; c.beginPath(); c.arc(A.X(zz), A.Y(m.d[i] / mm), 3.2 * p, 0, 7); c.fill(); });
+      c.strokeStyle = T.det; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.X(r.R90), top); c.lineTo(A.X(r.R90), bot); c.stroke(); }
+    c.strokeStyle = T.base; c.lineWidth = 1 * p; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(A.X(R0), top); c.lineTo(A.X(R0), bot); c.stroke(); c.setLineDash([]);
+    c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = T.muted; c.fillText('90 %', L + 4 * p, A.Y(0.9) - 8 * p);
+    c.fillStyle = T.base; c.fillText('baseline', L + 4 * p, A.Y(1.04)); c.fillStyle = T.det; c.fillText('today: chambers 2 mm apart, R90 from a fit', L + 70 * p, A.Y(1.04));
+    title(c, `Range check: R90 ${r && !busy ? `${f(r.R90, 2)} cm against ${f(R0, 2)} cm, ${sgn(r.dR, 2)} mm` : `baseline ${f(R0, 2)} cm`}`, L, top - 12 * p, p);
+  }
+  function drawSpotPanel(c, L, R, top, bot, r, p) {
+    const side = Math.min(R - L, bot - top), x0 = L + (R - L - side) / 2, y0 = top, k = side / 240, busy = S.busy > performance.now();
+    const X = (mm) => x0 + (mm + 120) * k, Y = (mm) => y0 + (120 - mm) * k;
+    c.fillStyle = dark() ? '#05110a' : '#0b1a12'; c.fillRect(x0, y0, side, side);
+    c.strokeStyle = 'rgba(160,255,200,0.18)'; c.lineWidth = 1; for (let v = -100; v <= 100; v += 20) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + side); c.stroke(); c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + side, Y(v)); c.stroke(); }
+    if (r && !busy) for (const s of r.spots) {
+      const g = c.createRadialGradient(X(s.x), Y(s.y), 0, X(s.x), Y(s.y), 2.5 * Math.max(s.sx, s.sy) * k); g.addColorStop(0, 'rgba(190,255,210,0.95)'); g.addColorStop(0.45, 'rgba(90,220,140,0.45)'); g.addColorStop(1, 'rgba(40,160,90,0)');
+      c.fillStyle = g; c.beginPath(); c.ellipse(X(s.x), Y(s.y), 2.5 * s.sx * k, 2.5 * s.sy * k, 0, 0, 7); c.fill();
+      const ex = (s.x - s.xn) * 5, ey = (s.y - s.yn) * 5, bad = Math.max(Math.abs(s.x - s.xn), Math.abs(s.y - s.yn)) > TOL.pos;
+      c.strokeStyle = bad ? T.fail : '#fde68a'; c.lineWidth = 1.6 * p; c.beginPath(); c.moveTo(X(s.xn), Y(s.yn)); c.lineTo(X(s.xn + ex), Y(s.yn + ey)); c.stroke(); }
+    c.strokeStyle = 'rgba(255,255,255,0.7)'; c.lineWidth = 1; for (const [x, y] of SPOTS) { c.beginPath(); c.moveTo(X(x) - 6 * p, Y(y)); c.lineTo(X(x) + 6 * p, Y(y)); c.moveTo(X(x), Y(y) - 6 * p); c.lineTo(X(x), Y(y) + 6 * p); c.stroke(); }
+    c.font = `${10 * p}px ${T.ui}`; c.fillStyle = 'rgba(220,255,230,0.85)'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('24 × 24 cm; crosses: planned; lines: error × 5', x0 + 5 * p, y0 + 4 * p);
+    if (side < R - L - 150 * p && r && !busy) { const tx = x0 + side + 12 * p; c.fillStyle = T.ink; c.font = `${10.5 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+      [`σx ${f(r.sx, 2)} mm`, `   (base ${f(r.s0.x, 2)})`, `σy ${f(r.sy, 2)} mm`, `   (base ${f(r.s0.y, 2)})`, `worst ${f(r.err, 2)} mm`].forEach((s, i) => c.fillText(s, tx, top + 18 * p + i * 15 * p)); }
+    title(c, 'Spot check on the scintillating screen', L, top - 12 * p, p);
+  }
+  function drawTrend(c, L, R, top, bot, p) {
+    const q = { output: ['output − baseline (%)', (r) => r.out - 100, TOL.out], range: ['R90 − baseline (mm)', (r) => r.dR, TOL.range], spots: ['largest spot error (mm)', (r) => r.err, TOL.pos], size: ['spot size − baseline (%)', (r) => r.ds, TOL.size] }[S.chk];
+    const ys = S.days.map(q[1]), n = Math.max(30, Math.ceil((S.days.length + 1) / 10) * 10), lim = Math.max(q[2] * 1.6, ...ys.map((v) => Math.abs(v) * 1.15));
+    const A = axes(c, L, R, top, bot, 0, n, S.chk === 'spots' ? 0 : -lim, lim, 'day', q[0], p);
+    c.fillStyle = T.band; c.fillRect(L, A.Y(q[2]), R - L, A.Y(S.chk === 'spots' ? 0 : -q[2]) - A.Y(q[2]));
+    c.strokeStyle = T.pass; c.lineWidth = 1; for (const u of S.chk === 'spots' ? [q[2]] : [q[2], -q[2]]) { c.beginPath(); c.moveTo(L, A.Y(u)); c.lineTo(R, A.Y(u)); c.stroke(); }
+    S.days.forEach((r, i) => { const v = ys[i], ok = Math.abs(v) <= q[2]; c.fillStyle = ok ? T.det : T.fail; c.beginPath(); c.arc(A.X(i + 1), A.Y(v), 3.2 * p, 0, 7); c.fill(); });
+    const sc = S.sc || scenario(S.fault, S.seed);
+    title(c, S.days.length ? `${S.days.length} mornings at ${sig(S.e, 4)} MeV` + (S.fault === 'mystery' && !S.reveal ? '' : `: ${faultName(sc)}`) : 'Press Next day (or Next 10 days) to run the mornings', L, top - 12 * p, p);
+  }
+  const faultName = (sc) => ({ steady: 'steady', output: `output drifting ${sgn(sc.rate, 3)} % a day`, energy: `energy drifting ${sgn(sc.rate, 4)} % a day`, steering: `steering drifting ${sgn(sc.rate, 3)} mm a day in x`,
+    size: `spots growing ${sgn(sc.rate, 2)} % a day`, step: `output jumps ${sgn(sc.rate, 2)} % on day ${sc.d0}` })[sc.kind];
+  const WASH = [[0.1, [40, 60, 230]], [0.3, [0, 170, 230]], [0.5, [20, 190, 90]], [0.7, [230, 220, 40]], [0.9, [250, 140, 20]], [1.0, [230, 30, 30]], [1.2, [220, 40, 200]]];
+  function washColor(u) { if (u < 0.05) return null; let i = 0; while (i < WASH.length - 2 && u > WASH[i + 1][0]) i++; const a = WASH[i], b = WASH[i + 1], t = Math.max(0, Math.min(1, (u - a[0]) / (b[0] - a[0])));
+    return a[1].map((v, k) => Math.round(v + t * (b[1][k] - v))); }
+  let planCan = null, planKey = '';
+  function drawPatient(c, p) {
+    const pad = 12 * p, top = 30 * p, side = Math.max(60, Math.min((PW - 4 * pad) / 3, PH2 - top - 40 * p)), x0 = (PW - 3 * side - 2 * pad) / 2, half = 122;
+    const xs = [x0, x0 + side + pad, x0 + 2 * (side + pad)], M = (mm, X0) => X0 + (mm + half) / (2 * half) * side, N = (mm) => top + (half - mm) / (2 * half) * side, cell = 7.62 / (2 * half) * side;
+    const bg = dark() ? '#0d1218' : '#f4f6f8';
+    for (const X0 of xs) { c.fillStyle = bg; c.fillRect(X0, top, side, side); c.strokeStyle = T.line; c.strokeRect(X0 + 0.5, top + 0.5, side - 1, side - 1); }
+    if (!S.Q) return;
+    /* the plan, on its 1 mm grid */
+    const key = [S.Q.key, Math.round(side), dark()].join();
+    if (key !== planKey) { planKey = key; planCan = planCan || document.createElement('canvas'); const n = 244; planCan.width = n; planCan.height = n; const pc = planCan.getContext('2d'), img = pc.createImageData(n, n);
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const v = atPlane(S.Q.plan, i - half + 0.5, half - j - 0.5) / 100, col = washColor(v), q = 4 * (j * n + i); if (!col) continue; img.data[q] = col[0]; img.data[q + 1] = col[1]; img.data[q + 2] = col[2]; img.data[q + 3] = 230; }
+      pc.putImageData(img, 0, 0); }
+    c.imageSmoothingEnabled = true; c.drawImage(planCan, xs[0], top, side, side);
+    /* the chambers: measured dose, and gamma */
+    const busy = S.busy > performance.now();
+    CH.forEach(([x, y], k) => { const m = S.Q.meas[k], col = washColor(m / 100);
+      if (col && !busy) { c.fillStyle = `rgb(${col})`; c.fillRect(M(x, xs[1]) - cell * 0.42, N(y) - cell * 0.42, cell * 0.84, cell * 0.84); }
+      const g = S.G.g[k]; if (busy) return;
+      if (!isFinite(g)) { c.fillStyle = T.grid; c.fillRect(M(x, xs[2]) - cell * 0.2, N(y) - cell * 0.2, cell * 0.4, cell * 0.4); return; }
+      c.fillStyle = g <= 1 ? G2(g) : T.fail; c.fillRect(M(x, xs[2]) - cell * 0.42, N(y) - cell * 0.42, cell * 0.84, cell * 0.84); });
+    const [dd, dta] = CRIT[S.crit];
+    const nar = side < 170;
+    title(c, 'Plan', xs[0], top - 12 * p, p); title(c, nar ? 'Measured' : 'Measured (1020 chambers)', xs[1], top - 12 * p, p);
+    title(c, busy ? 'Gamma' : nar ? `Γ: ${f(S.G.pass, 1)} %` : `Gamma ${dd} %/${dta} mm: ${f(S.G.pass, 1)} % pass`, xs[2], top - 12 * p, p);
+    c.font = `${10 * p}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    const notes = [`depth ${f(S.zm, 1)} cm · 24.4 cm across · colors: 10 → 100 % → 120 % of the plan's maximum`, `gamma ${dd} %/${dta} mm: green Γ ≤ 1 (paler: Γ ≤ 0.5), red Γ > 1, gray below 10 %`];
+    if (nar) notes.splice(0, 2, `depth ${f(S.zm, 1)} cm, 24.4 cm across`, `gamma ${dd} %/${dta} mm: green pass, red fail`);
+    notes.forEach((t, i) => c.fillText(t, xs[0], top + side + (6 + 14 * i) * p));
+  }
+  const G2 = (g) => (g <= 0.5 ? (dark() ? '#166534' : '#86efac') : (dark() ? '#22c55e' : '#16a34a'));
+  function drawPlot() {
+    if (!PW) return; const p = proj(); pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, PW, PH2);
+    if (S.view === 'patient') { drawPatient(pctx, p); return; }
+    const narrow = PW < 620, top = 30 * p, gw = narrow ? 0 : Math.min(260 * p, PW * 0.34), L = 56 * p, R = PW - gw - (narrow ? 14 : 30) * p, bot = PH2 - 36 * p, r = latest(), busy = S.busy > performance.now();
+    if (S.view === 'drift') drawTrend(pctx, L, R, top, bot, p);
+    else if (S.chk === 'output') drawOutputPanel(pctx, L, R, top, bot, r, p);
+    else if (S.chk === 'range') drawRangePanel(pctx, L, R, top, bot, r, p);
+    else drawSpotPanel(pctx, L, R, top, bot, r, p);
+    if (!narrow) gauges(pctx, PW - gw - 10 * p, top - 12 * p, gw - 10 * p, r, p, busy);
+  }
+  function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawRoom(); drawPlot(); }
+
+  /* ---------- readouts ---------- */
+  const pf = (ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'pass' : 'fail'}</span>`;
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = ''; const busy = S.busy > performance.now();
+    if (S.view === 'patient') {
+      if (!S.G) h = dd('Patient QA', 'press Run QA', true);
+      else if (busy) h = dd('Patient QA', 'measuring', true);
+      else { const [a, b2] = CRIT[S.crit];
+        h += dd(`Plan: ${$('selShape').selectedOptions[0].textContent}, 8 to 14 cm deep`, `${S.P.L.length} layers × ${S.Q.spots.length} spots, ${sig(S.P.L[S.P.L.length - 1].E, 4)} to ${sig(S.P.L[0].E, 4)} MeV`, true);
+        h += dd('Spot size here, 1σ: plan, delivered', `${f(S.Q.sP.x, 2)} × ${f(S.Q.sP.y, 2)}, ${f(S.Q.sD.x, 2)} × ${f(S.Q.sD.y, 2)} mm`, true);
+        h += dd('Points above 10 %', String(S.G.n)) + dd(`Passing at ${a} %/${b2} mm`, `${f(S.G.pass, 1)} % ${pf(S.G.pass >= 95)}`);
+        h += dd('3 %/3 mm, 3 %/2 mm, 2 %/2 mm', Object.keys(CRIT).map((c) => `${f(S.GA[c].pass, 1)} %`).join(', '), true); }
+    } else {
+      const r = latest();
+      if (S.view === 'drift') h += dd('Mornings run', `${S.days.length}` + (S.fault === 'mystery' && !S.reveal ? '' : ` (${faultName(S.sc || scenario(S.fault, S.seed))})`), true);
+      if (!r) h += dd('QA', S.view === 'daily' ? 'press Run QA' : 'press Next day', true);
+      else if (busy) h += dd('QA', 'measuring', true);
+      else {
+        h += dd(`Output at 2 cm (${sig(r.E, 4)} MeV)`, `${f(r.out, 1)} % of baseline ${pf(r.pass.out)}`, true);
+        h += dd(`R90 (baseline ${f(r.R90b, 2)} cm)`, `${f(r.R90, 2)} cm, ${sgn(r.dR, 2)} mm ${pf(r.pass.range)}`, true);
+        h += dd('Largest spot position error', `${f(r.err, 2)} mm ${pf(r.pass.pos)}`, true);
+        h += dd(`Spot size, 1σ (baseline ${f(r.s0.x, 2)} × ${f(r.s0.y, 2)} mm)`, `${f(r.sx, 2)} × ${f(r.sy, 2)} mm, ${sgn(r.ds, 1)} % ${pf(r.pass.size)}`, true);
+      }
+    }
+    $('out').innerHTML = h;
+    $('count').textContent = S.view === 'daily' ? `run ${S.runs}` : S.view === 'drift' ? `day ${S.days.length}` : '';
+  }
+  function sync() {
+    const v = S.view;
+    $('sE').value = S.e; $('oE').textContent = `${sig(S.e, 4)} MeV`;
+    for (const [id, k, d, u] of [['Fe', 'fe', 2, '%'], ['Fo', 'fo', 1, '%'], ['Fx', 'fx', 1, 'mm'], ['Fy', 'fy', 1, 'mm'], ['Fg', 'fg', 1, '%'], ['Fs', 'fs', 0, '%']]) { $('s' + id).value = S.f[k]; $('o' + id).textContent = `${sgn(S.f[k], d)} ${u}`; }
+    for (const [id, k, d, u] of [['Px', 'px', 1, 'mm'], ['Po', 'po', 1, '%'], ['Ps', 'ps', 0, '%'], ['Pr', 'pr', 1, 'mm']]) { $('s' + id).value = S.pe[k]; $('o' + id).textContent = `${sgn(S.pe[k], d)} ${u}`; }
+    $('sZm').value = S.zm; $('oZm').textContent = `${f(S.zm, 1)} cm`; $('selShape').value = S.shape; $('selFault').value = S.fault;
+    $('eBox').hidden = v === 'patient'; $('chkBox').hidden = v === 'patient'; $('faultBox').hidden = v !== 'daily'; $('driftBox').hidden = v !== 'drift'; $('planBox').hidden = v !== 'patient';
+    $('mystRow').hidden = S.fault !== 'mystery'; $('bReveal').setAttribute('aria-pressed', String(S.reveal));
+    $('cardTitle').textContent = v === 'daily' ? 'Morning QA' : v === 'drift' ? 'Morning QA, day after day' : 'Patient specific QA';
+    $('play').textContent = v === 'drift' ? 'Run today\'s QA' : 'Run QA';
+    for (const b of document.querySelectorAll('#chkSeg button')) b.setAttribute('aria-pressed', String(b.dataset.chk === S.chk));
+    for (const b of document.querySelectorAll('#critSeg button')) b.setAttribute('aria-pressed', String(b.dataset.crit === S.crit));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    window.vdShowCols = v === 'daily' ? [['E_MeV', 'E (MeV)'], ['output_pct', 'output (%)'], ['dR90_mm', 'ΔR90 (mm)'], ['spot_err_mm', 'spot (mm)'], ['dsigma_pct', 'Δσ (%)']]
+      : v === 'drift' ? [['day', 'day'], ['output_pct', 'output (%)'], ['dR90_mm', 'ΔR90 (mm)'], ['spot_err_mm', 'spot (mm)'], ['dsigma_pct', 'Δσ (%)']]
+        : [['depth_cm', 'z (cm)'], ['pass_3_3', '3/3 (%)'], ['pass_3_2', '3/2 (%)'], ['pass_2_2', '2/2 (%)']];
+  }
+  const card = VD.setupCard($('setupCard'));
+  function full() { if (S.view === 'patient' && S.G) patient(); sync(); readouts(); draw(); }
+  const changed = (rerun) => { S.preset = 'custom'; if (rerun) { if (S.view === 'daily') S.res = null; if (S.view === 'patient' && S.G) { S.Q = null; patient(); } } full(); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; S.e = c.e || 150; S.chk = c.chk || 'output'; S.f = { ...F0, ...(c.f || {}) }; S.res = null; S.runs = 0; S.rng = rng32(2026); S.busy = 0;
+    S.fault = c.fault || 'output'; S.seed = c.seed || 3; newDrift(); if (c.days) stepDays(c.days);
+    S.shape = c.shape || 'square'; S.zm = c.zm || 11; S.crit = c.crit || '3/3'; S.pe = { ...E0, ...(c.pe || {}) }; S.Q = null; S.G = null;
+    $('presetHint').textContent = c.hint;
+    if (S.view === 'daily') S.res = dailyQA(V, S.e, S.f, S.rng), S.runs = 1;
+    if (S.view === 'patient') patient();
+    full(); resize();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (S.view === b.dataset.view) return; S.view = b.dataset.view; S.preset = 'custom'; S.busy = 0;
+    if (S.view === 'patient' && !S.G) patient(); full(); resize(); });
+  for (const b of document.querySelectorAll('#chkSeg button')) b.addEventListener('click', () => { S.chk = b.dataset.chk; full(); });
+  for (const b of document.querySelectorAll('#critSeg button')) b.addEventListener('click', () => { S.crit = b.dataset.crit; S.preset = 'custom'; if (S.G) patient(); full(); });
+  $('sE').addEventListener('input', (e) => { S.e = +e.target.value; if (S.view === 'drift') { newDrift(); } changed(true); });
+  for (const [id, k] of [['Fe', 'fe'], ['Fo', 'fo'], ['Fx', 'fx'], ['Fy', 'fy'], ['Fg', 'fg'], ['Fs', 'fs']]) $('s' + id).addEventListener('input', (e) => { S.f[k] = +e.target.value; changed(true); });
+  let pend = 0; const later = () => { if (pend) return; pend = requestAnimationFrame(() => { pend = 0; changed(true); }); };
+  for (const [id, k] of [['Px', 'px'], ['Po', 'po'], ['Ps', 'ps'], ['Pr', 'pr']]) $('s' + id).addEventListener('input', (e) => { S.pe[k] = +e.target.value; sync(); later(); });
+  $('sZm').addEventListener('input', (e) => { S.zm = +e.target.value; sync(); later(); });
+  $('selShape').addEventListener('change', (e) => { S.shape = e.target.value; changed(true); });
+  $('selFault').addEventListener('change', (e) => { S.fault = e.target.value; S.preset = 'custom'; newDrift(); full(); });
+  $('bDay').addEventListener('click', () => { stepDays(1); S.preset = 'custom'; full(); });
+  $('bTen').addEventListener('click', () => { stepDays(10); S.preset = 'custom'; full(); });
+  $('bOver').addEventListener('click', () => { newDrift(); full(); });
+  $('bNew').addEventListener('click', () => { S.seed++; newDrift(); full(); });
+  $('bReveal').addEventListener('click', () => { S.reveal = !S.reveal; full(); });
+  $('play').addEventListener('click', () => runQA(false));
+  const TI = (o, id, get, set, min, max, step, unit, label) => VD.typeIn($(id), { get, set: (v) => { set(v); changed(true); }, min, max, step, unit, label });
+  TI(0, 'oE', () => S.e, (v) => { S.e = v; if (S.view === 'drift') newDrift(); }, 70, 226.7, 0.1, 'MeV', 'QA energy');
+  TI(0, 'oZm', () => S.zm, (v) => { S.zm = v; }, 2, 16, 0.1, 'cm', 'Measurement depth');
+  $('tolTable').innerHTML = '<thead><tr><th>check</th><th>tolerance</th></tr></thead><tbody>'
+    + [['Output, daily', '±3 %'], ['Range (R90), daily', '±1 mm'], ['Spot position, daily', '±2 mm'], ['Spot size', '±10 %'], ['Patient QA, gamma', '≥ 95 % of points']].map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('') + '</tbody>';
+  $('about').textContent = 'The machine is modeled on the IBA Proteus ONE at Willis-Knighton (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018): a C230 cyclotron with a degrader, 70 to 226.7 MeV, pencil beam scanning, range defined at R90, output measured at 2 cm depth, daily output and spot position within 2 % over a year. '
+    + 'Depth doses come from the shared stopping power model (Bethe stopping powers with NIST PSTAR data, Bohr straggling, Bortfeld\'s nuclear losses), with no energy spread from the degrader. An energy calibration error scales the energy; an output error scales the dose per monitor unit and leaves the range alone; an energy error barely moves the output at 2 cm, which this model leaves out entirely. '
+    + 'Spot sizes in air are Langner et al. 2017\'s measured values for a ProBeam, since Pidikiti gives the Proteus ONE values only in a figure; in water each spot spreads further by Fermi–Eyges multiple scattering. '
+    + 'The reading noise (output 0.2 %, range chambers 0.3 %, spot centroids 0.1 mm, spot sigma 1 %), the day to day variation of the drift mode (output 0.5 %, energy 0.035 %, steering 0.15 mm, spot size 1.5 %, all 1σ) and the 5 mm spot grid of the plan are this demo\'s choices, not measured values. '
+    + 'Patient QA: a spread out peak over 8 to 14 cm (energy layers 0.3 cm apart, weights fitted flat), measured with a 32 × 32 array of 4.5 mm chambers 7.62 mm apart (Arjomandy et al. 2008), each reading the mean over its face; the plan is computed on a 1 mm grid, and gamma (Low et al. 1998) is global with a 10 % threshold. A range error moves the whole depth dose.';
+
+  /* readings: a morning's results, the mornings since the last record, or a patient QA result */
+  window.vdReadingRow = () => {
+    const ftx = (o) => { const a = []; if (o.fe) a.push(`energy ${sgn(o.fe, 2)} %`); if (o.fo) a.push(`output ${sgn(o.fo, 1)} %`); if (o.fx) a.push(`x ${sgn(o.fx, 1)} mm`); if (o.fy) a.push(`y ${sgn(o.fy, 1)} mm`); if (o.fg) a.push(`gain ${sgn(o.fg, 1)} %`); if (o.fs) a.push(`size ${sgn(o.fs, 0)} %`); return a.length ? a.join(', ') : 'no faults'; };
+    const z = (v, d) => f(Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v, d);
+    const row = (r) => ({ E_MeV: sig(r.E, 4), output_pct: f(r.out, 2), R90_cm: f(r.R90, 3), R90_base_cm: f(r.R90b, 3), dR90_mm: z(r.dR, 2), spot_err_mm: f(r.err, 2), sigma_x_mm: f(r.sx, 2), sigma_y_mm: f(r.sy, 2), dsigma_pct: z(r.ds, 1) });
+    if (S.busy > performance.now()) return 'Wait for the measurement to finish.';
+    if (S.view === 'daily') { if (!S.res) return 'Press Run QA first.'; return { view: 'daily QA', faults: ftx(S.f), run: String(S.runs), ...row(S.res) }; }
+    if (S.view === 'drift') { if (!S.days.length) return 'Run some mornings first (Next day).'; if (recDays > S.days.length) recDays = 0; if (recDays === S.days.length) return 'Every morning so far is recorded; run more.';
+      const out = S.days.slice(recDays).map((r, i) => ({ view: 'drift', machine: S.fault === 'mystery' ? `mystery ${S.seed}` : S.fault, day: String(recDays + i + 1), ...row(r) })); recDays = S.days.length; return out; }
+    if (!S.G) return 'Press Run QA first.';
+    return { view: 'patient QA', target: S.shape, depth_cm: f(S.zm, 1), shift_mm: f(S.pe.px, 1), output_err_pct: f(S.pe.po, 1), size_err_pct: f(S.pe.ps, 0), range_err_mm: f(S.pe.pr, 1),
+      points: String(S.G.n), pass_3_3: f(S.GA['3/3'].pass, 1), pass_3_2: f(S.GA['3/2'].pass, 1), pass_2_2: f(S.GA['2/2'].pass, 1) };
+  };
+
+  /* ---------- the animation of a run ---------- */
+  function frame() { if (S.busy) { if (S.busy <= performance.now()) { S.busy = 0; readouts(); } draw(); } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; $('setupCard').style.top = innerWidth > 820 ? `${$('strip').offsetHeight + 14}px` : ''; $('stage').classList.toggle('tall', S.view === 'patient'); $('plotbox').style.height = S.view === 'patient' ? (innerWidth > 820 ? '340px' : `${Math.round(Math.min(($('stage').clientWidth - 48) / 3, 300) + 76)}px`) : '';
+    const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = plot.getBoundingClientRect(); PW = q.width; PH2 = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH2 * dpr); planKey = ''; draw(); }
+  const retheme = () => { tokens(); planKey = ''; draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'ok'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
+  window.vdDemo = { S, V, full, applyPreset, runQA, stepDays, patient, dailyQA, sobp, patientQA, gamma, sigmaAir };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

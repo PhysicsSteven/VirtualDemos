@@ -615,6 +615,19 @@
       "depth dose",
       "photons"
      ]
+    },
+    {
+     "demo": "proton-qa",
+     "title": "Proton Therapy QA",
+     "desc": "Run the morning QA of a pencil beam scanning proton machine (output, range, spot position and size against TG-224 tolerances), follow a drifting machine over weeks, and check a patient plan with a 2D chamber array and gamma analysis.",
+     "tags": [
+      "proton therapy",
+      "quality assurance",
+      "TG-224",
+      "gamma analysis",
+      "pencil beam scanning",
+      "R90"
+     ]
     }
    ]
   },

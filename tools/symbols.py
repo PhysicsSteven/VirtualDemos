@@ -602,7 +602,7 @@ def main():
                     bad.append(f'glossary.txt line {n}: {slug} has no equation with {k} and "{c}"')
         out = build(slug, keys, gl, deltas)
         if missing:
-            left = [k for k in keys if k not in out]
+            left = [k for k in keys if k not in out and 'Delta ' + k not in out]   # a letter written only as ΔX is covered by its "Delta X" line
             if left:
                 print(f'{slug}: ' + ' '.join(left))
             continue

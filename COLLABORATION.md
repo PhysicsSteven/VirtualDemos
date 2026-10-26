@@ -4502,3 +4502,29 @@ Medical Physics plan gap 4, unit `radiobiology` (its Coming card is gone). `demo
 **For GPT:** please check (1) the V79 and T1 values against the table in Wenzl and Wilkens 2011; (2) the McNamara parameters; (3) the
 preset hints' numbers (OER 2.63 and 3.02, EQD2 756 and 350, 31.95 Gy and 43.6 Gy, 77.1 against 74, RBE 1.07, 1.53, 1.85);
 (4) the key's fits (mystery 7: α 0.297 ± 0.024, β 0.0288 ± 0.0029) and hyphens.
+## 2026-10-26 · Claude · Medical Physics: Proton Therapy QA
+
+New demo `proton-qa` (worksheet `mp-proton-qa`, gap 4 of the Medical Physics plan), with a key from a real run in TeacherKeys
+(`worksheet-keys/medical-physics/`), notes, tests (`curriculum/validation/test_proton-qa.cjs`, 7 groups), glossary and the
+course entry (unit 7, the "coming" placeholder removed). No How this works video yet (Steve: visual pass first).
+
+- **Daily QA**, modeled on the IBA Proteus ONE (Pidikiti et al. 2018): output at 2 cm, R90 from a stack of chambers every 2 mm,
+  nine spots on a scintillating screen, each against TG-224 daily tolerances (output ±3 %, range ±1 mm, spot position ±2 mm) and
+  spot size ±10 % (TG-224 sets none; the PMC7856486 auto trending program's value). Six machine faults.
+- The range stack's R90 is the baseline R90 plus the shift that best fits the readings with the commissioning curve: reading R90
+  straight off 2 mm points erred by up to 1 mm at low energy; the fit recovers the true shift within 0.02 mm (tested).
+- Spot sizes in air are Langner et al. 2017's ProBeam values, stated as such: Pidikiti gives the Proteus ONE values only in a
+  figure (Fig. 6), and I could not find them in text. Every check is relative to the baseline.
+- **Drift over weeks**: a seeded machine with day to day variation and a fault (drifting output, energy, steering, spot size, or a
+  step after a repair), or a Mystery. **Patient QA**: an 8 to 14 cm spread out peak, MatriXX style 32 × 32 array (Arjomandy 2008),
+  global gamma (Low 1998) with a 10 % threshold at 3 %/3 mm, 3 %/2 mm (TG-218) and 2 %/2 mm, searched in 0.2 mm steps with the plan
+  interpolated (a search on the 1 mm grid alone overstated Γ on edges).
+- Stated as the demo's choices, not measured: the reading noise, the day to day variation, the drift rates, the 5 mm spot grid.
+- `tools/symbols.py --missing` now counts a letter written only as ΔX as covered by its "Delta X" line (the gamma criteria Δd and
+  ΔD); symcheck reads the tips back correctly.
+
+**For GPT:** please check:
+- the tolerances and their sources against TG-224, TG-218 and Pidikiti et al. 2018;
+- the key's Bragg–Kleeman exponent from the range table (1.69 ± 0.01 with curved residuals; local exponent 1.83 to 1.71);
+- the drift and mystery crossing days (22.6 ± 1.0 and 26.6 ± 0.7) from the captured tables;
+- the handout for hyphens in compound modifiers.

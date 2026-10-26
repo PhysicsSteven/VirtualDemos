@@ -666,6 +666,16 @@
       { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'protons and photons'),
         cols: ['row', (r) => `${r.from_cm} to ${r.to_cm} cm`, 'depth_cm', 'proton_pct', 'photon_pct'] }] },
   });
+  /* Proton Therapy QA: daily QA runs, the mornings of a drift, and patient QA gamma results each fill their own table. */
+  MED_CP.push('mp-proton-qa'); ENABLED.push('mp-proton-qa');
+  Object.assign(FROM_DEMO, {
+    'mp-proton-qa': { demo: 'Proton Therapy QA', cols: ['row', 'faults', 'E_MeV', 'output_pct', 'dR90_mm', 'spot_err_mm', 'dsigma_pct'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'drift'),
+        cols: ['row', (r) => `${r.machine}, ${r.E_MeV} MeV`, 'day', 'output_pct', 'dR90_mm', 'spot_err_mm', 'dsigma_pct'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'patient QA'),
+        cols: ['row', (r) => { const a = []; if (+r.shift_mm) a.push(`shift ${r.shift_mm} mm`); if (+r.output_err_pct) a.push(`output ${r.output_err_pct} %`); if (+r.size_err_pct) a.push(`spot size ${r.size_err_pct} %`); if (+r.range_err_mm) a.push(`range ${r.range_err_mm} mm`); return `${r.target}: ${a.length ? a.join(', ') : 'none'}`; },
+          'depth_cm', 'pass_3_3', 'pass_3_2', 'pass_2_2'] }] },
+  });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
@@ -678,7 +688,7 @@
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
-  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak');
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */

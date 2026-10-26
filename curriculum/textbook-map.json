@@ -1859,15 +1859,10 @@
           "sections": [],
           "demos": [
             "charged-particles",
-            "bragg-peak"
+            "bragg-peak",
+            "proton-qa"
           ],
-          "note": "Preparation for the seniors' QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system.",
-          "coming": [
-            {
-              "title": "Proton Therapy QA",
-              "note": "Machine QA (output, range from R80 and R90, spot position and size against AAPM TG-224 tolerances, a drifting machine to catch), patient QA by gamma analysis, and the physics behind them: spread out Bragg peaks, energy layers and range uncertainty."
-            }
-          ]
+          "note": "Preparation for the seniors' QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system."
         },
         {
           "id": "linac",
@@ -10833,6 +10828,22 @@
       "url": "demos/radiobiology.html",
       "handouts": [
         "mp-radiobiology"
+      ]
+    },
+    {
+      "demo": "proton-qa",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-26 (Claude), Medical Physics, gap 4: machine QA modeled on the IBA Proteus ONE (Pidikiti et al. 2018) with TG-224 daily tolerances, a drift mode with a mystery fault, and patient QA by global gamma (Low 1998) at 3 %/3 mm (Pidikiti) and 3 %/2 mm (TG-218) on a MatriXX style array. Depth doses from demos/lib/vdstop.js. Spot sizes in air from Langner et al. 2017 (ProBeam), since Pidikiti gives the Proteus ONE values only in a figure. Worksheet mp-proton-qa with a key from a real run in TeacherKeys.",
+      "title": "Proton Therapy QA",
+      "url": "demos/proton-qa.html",
+      "handouts": [
+        "mp-proton-qa"
       ]
     }
   ],
