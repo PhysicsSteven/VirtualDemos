@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -67,6 +69,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+.g3elute { position: absolute; z-index: 3; padding: 4px 10px; font-size: 0.84rem; transform: translate(-50%, -100%); white-space: nowrap; }
 .plot-ctl { position: absolute; top: 8px; right: 10px; z-index: 3; }
 .plot-ctl .seg button { font-size: 0.78rem; padding: 3px 9px; }
 
@@ -130,6 +133,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { min-height: 0; grid-template-rows: 440px 300px 240px; }
+  .stage.g3on { grid-template-rows: 560px 300px 240px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -165,8 +169,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-s="4" aria-pressed="false">4×</button>
             <button type="button" data-s="16" aria-pressed="false">16×</button>
           </div>
+          <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0</span>
         </div>
+        <button type="button" class="btn g3elute" id="eluteScene" hidden title="Elute the generator now (the same as Elute now under Parent and daughter)">Elute</button>
       </div>
       <div class="pane" id="nPane">
         <canvas id="nCan" tabindex="0" aria-label="Number of nuclei of each kind against time, with the expected curves dashed and a one sigma band. Drag a half life marker sideways to change that half life; left and right arrows nudge the parent half life, up and down the daughter's."></canvas>
@@ -689,7 +695,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gp = cell * n;
     const blockTop = top + Math.max(0, (avail - gp / dpr) / 2);
     const x0 = Math.round((W * dpr - gp) / 2), y0 = Math.round(blockTop * dpr);
-    const legTop = blockTop + gp / dpr + 8 * ps;
+    const g3 = on3(), legTop = g3 ? H0 - legH - IR - 2 * ps : blockTop + gp / dpr + 8 * ps;
+    if (g3) {
+      /* the 3D generator: the WebGL picture sits under this canvas, which keeps only the words, the legend and the counter */
+      gGeom = null; ctx.clearRect(0, 0, cans.g.width, cans.g.height);
+      const nl = noteLines(W, ps), nh = nl.length * 13 * ps + 8 * ps;
+      draw3(W, H0, top, legTop - top - nh - 6 * ps, ps);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 0.84; ctx.fillStyle = T.canvas; ctx.fillRect(0, legTop - nh - 4 * ps, W, H0 - legTop + nh + 4 * ps); ctx.globalAlpha = 1;
+      note3(W, legTop - 6 * ps, ps, nl);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    } else {
     gGeom = { x0, y0, cell, n, gp };
     // the sample: nuclei in a shallow metal tray (a planchet), each drawn as a small shaded ball; kept on a canvas of its own and
     // only the nuclei that changed are drawn again, since redrawing all 10,000 every frame dropped frames
@@ -733,6 +748,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.moveTo(fx + cell / 2, y0 - 3); ctx.lineTo(fx + cell / 2 - tk / 2, y0 - 3 - tk); ctx.lineTo(fx + cell / 2 + tk / 2, y0 - 3 - tk); ctx.closePath();
       ctx.moveTo(x0 - 3, fy + cell / 2); ctx.lineTo(x0 - 3 - tk, fy + cell / 2 - tk / 2); ctx.lineTo(x0 - 3 - tk, fy + cell / 2 + tk / 2); ctx.closePath();
       ctx.fill();
+    }
     }
     // legend
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -861,6 +877,251 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = Math.max(0, Math.min(gGeom.n - 1, Math.floor(x / gGeom.cell))), rr = Math.max(0, Math.min(gGeom.n - 1, Math.floor(y / gGeom.cell)));
     return rr * gGeom.n + c;
   }
+
+  // ---------- the generator in 3D (⁹⁹Mo generator setup) ----------
+  /* A ⁹⁹Mo/⁹⁹ᵐTc generator on the bench, its lead shield cut open at the front. The alumina column holds one ball per simulated
+     nucleus, in the tray's colors; saline comes in from the vial on the left, and an elution carries every ⁹⁹ᵐTc nucleus down the
+     column and up the tubing into the eluate vial in its lead shield on the right. Pictures only: it reads sim.sp, the decay
+     flashes and the elutions, nothing else. The column is drawn much larger than a real one (about 1 cm across), as said on it. */
+  const G = { view: null, S: null, o: { th: -1.86, ph: 1.16, zoom: 1 } };
+  const on3 = () => !!(G.view && G.view.is3d() && G.S && cfg().generator);
+  const RO = 0.07, RI = 0.027, HL = 0.2, ZB = 0.035, ZT = 0.172, W2 = 0.95;   /* lead shield: radii, height, cavity floor and top, half the cut */
+  const NR = 0.0165, CZ0 = 0.06, CZ1 = 0.158;                                  /* where the nuclei sit in the column */
+  const PIN = [-0.036, 0.034], POUT = [0.04, 0.034], VR = 0.0092, VZ0 = HL + 0.016;   /* saline and eluate ports; eluate vial inside */
+  function leadPot(o) {
+    /* a lead pot cut open at the front (toward −y): outer wall and lid, the cavity, and the two cut faces */
+    const g = new THREE.Group(), S3 = G.S, V2 = (r, z) => new THREE.Vector2(r, z);
+    const lead = VD3K.material(S3, { roughness: 0.55, metalness: 0.35, side: THREE.DoubleSide }, ['#8d939c', '#6f7680']);
+    const cutM = VD3K.material(S3, { roughness: 0.35, metalness: 0.6, side: THREE.DoubleSide }, ['#c3c9d1', '#a3aab4']);
+    const lathe = (pts) => { const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 48, o.w2, 2 * Math.PI - 2 * o.w2), lead); m.rotation.x = Math.PI / 2; m.castShadow = m.receiveShadow = true; return m; };
+    g.add(lathe([V2(0, 0), V2(o.ro, 0), V2(o.ro, o.h), V2(0, o.h)]), lathe([V2(0, o.zt), V2(o.ri, o.zt), V2(o.ri, o.zb), V2(0, o.zb)]));
+    const sh = new THREE.Shape([V2(0, 0), V2(o.ro, 0), V2(o.ro, o.h), V2(0, o.h), V2(0, o.zt), V2(o.ri, o.zt), V2(o.ri, o.zb), V2(0, o.zb)]);
+    for (const ph of [o.w2, -o.w2]) {
+      const f = new THREE.Mesh(new THREE.ShapeGeometry(sh), cutM); f.rotation.set(Math.PI / 2, 0, 0);
+      const w = new THREE.Group(); w.add(f); w.rotation.z = ph - Math.PI / 2; g.add(w);
+    }
+    return g;
+  }
+  function vial(S3, h, tint) {
+    /* a glass vial standing upside down on its port needle: aluminum crimp cap at the bottom, the liquid against it */
+    const g = new THREE.Group(), gl = VD3K.glass(S3, { r: VR + 0.0012, len: h - 2 * (VR + 0.0012), axis: 'z', opacity: 0.25 });
+    gl.position.z = 0.006 + h / 2; g.add(gl);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(VR * 0.8, VR * 0.8, 0.006, 24), new THREE.MeshStandardMaterial({ color: '#c3c9d0', metalness: 0.7, roughness: 0.3 }));
+    cap.rotation.x = Math.PI / 2; cap.position.z = 0.003; g.add(cap);
+    const liq = new THREE.Mesh(new THREE.CylinderGeometry(VR, VR, 1, 32), new THREE.MeshStandardMaterial({ color: tint, transparent: true, opacity: 0.4, roughness: 0.1, depthWrite: false }));
+    liq.rotation.x = Math.PI / 2; liq.renderOrder = 1; g.add(liq);
+    g.level = (f) => { const L = Math.max(1e-4, f * (h - 0.006)); liq.scale.y = L; liq.position.z = 0.007 + L / 2; liq.visible = f > 0.002; };
+    return g;
+  }
+  function init3() {
+    const S3 = VD3K.stage(panes.g, { before: cans.g, fov: 30, near: 0.02, far: 20, shadow: 0.4 }); if (!S3) return false;
+    G.S = S3; const sc = S3.scene;
+    sc.add(VD3K.bench(S3, { w: 2.4, d: 1.6 }), VD3K.backdrop(S3, { r: 0.6, h: 0.7, y: -0.28 }));
+    sc.add(leadPot({ ro: RO, ri: RI, h: HL, zb: ZB, zt: ZT, w2: W2 }));
+    const lamp = new THREE.PointLight(0xffffff, 0.55, 1.2); lamp.position.set(-0.08, -0.32, 0.26); sc.add(lamp);   /* lights the cut */
+    /* the alumina column: a glass tube with the alumina bed, a little white, so the nuclei show through */
+    const col = VD3K.glass(S3, { r: 0.019, len: 0.082, axis: 'z', opacity: 0.2 }); col.position.z = 0.11; sc.add(col);
+    const bed = new THREE.Mesh(new THREE.CylinderGeometry(NR + 0.0012, NR + 0.0012, CZ1 - CZ0 + 0.006, 40, 1, true), VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.9, depthWrite: false, side: THREE.DoubleSide }, ['#ffffff', '#e6ebf0']));
+    bed.rotation.x = Math.PI / 2; bed.position.z = (CZ0 + CZ1) / 2; bed.renderOrder = 3; sc.add(bed);
+    /* saline vial on the inlet port, the eluate vial in its own cut open lead shield on the outlet port */
+    G.saline = vial(S3, 0.056, '#9fd3f2'); G.saline.position.set(PIN[0], PIN[1], HL); sc.add(G.saline);
+    const es = leadPot({ ro: 0.0225, ri: 0.0125, h: 0.074, zb: 0.004, zt: 0.068, w2: 0.9 }); es.position.set(POUT[0], POUT[1], HL); sc.add(es);
+    G.eluate = vial(S3, 0.056, '#9fd3f2'); G.eluate.position.set(POUT[0], POUT[1], HL + 0.004); sc.add(G.eluate);
+    const steel = new THREE.MeshStandardMaterial({ color: '#cfd5dc', metalness: 0.8, roughness: 0.25 }), tubeM = VD3K.material(S3, { roughness: 0.3, transparent: true, opacity: 0.8 }, ['#e9eef2', '#c9d2da']);
+    sc.add(VD3K.rod([PIN[0], PIN[1], HL - 0.004], [PIN[0], PIN[1], HL + 0.01], 0.0009, steel), VD3K.rod([POUT[0], POUT[1], HL - 0.004], [POUT[0], POUT[1], HL + 0.014], 0.0009, steel));
+    G.inPts = [[PIN[0], PIN[1], HL - 0.002], [PIN[0] * 0.75, PIN[1] * 0.6, ZT - 0.004], [0, 0, 0.178], [0, 0, 0.165]].map((q) => new THREE.Vector3(...q));
+    G.outPts = [[0, 0, 0.055], [0, 0, ZB + 0.006], [0.0135, 0.0175, ZB + 0.008], [0.0165, 0.0165, 0.07], [0.0165, 0.0165, ZT - 0.006], [POUT[0] * 0.8, POUT[1] * 0.85, HL - 0.006], [POUT[0], POUT[1], HL + 0.012]].map((q) => new THREE.Vector3(...q));
+    G.outCurve = new THREE.CatmullRomCurve3(G.outPts);
+    sc.add(VD3K.cable(G.inPts[0], G.inPts[3], { via: G.inPts.slice(1, 3), rad: 0.0016, mat: tubeM }), VD3K.cable(G.outPts[0], G.outPts[6], { via: G.outPts.slice(1, 6), rad: 0.0016, mat: tubeM }));
+    /* the nuclei: one instanced pool, a fine and a coarse sphere (10,000 nuclei use the coarse one) */
+    G.geoF = new THREE.SphereGeometry(1, 12, 9); G.geoC = new THREE.SphereGeometry(1, 7, 5);
+    G.nuc = new THREE.InstancedMesh(G.geoF, new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0.1, color: 0xffffff }), 10000);
+    const c0 = new THREE.Color('#888'); for (let i = 0; i < 10000; i++) G.nuc.setColorAt(i, c0);
+    G.nuc.count = 0; G.nuc.frustumCulled = false; G.nuc.castShadow = false; sc.add(G.nuc);
+    /* decay flashes (glow points) and the tracks that leave them: β short, γ to the lead wall, where it stops */
+    const gl = document.createElement('canvas'); gl.width = gl.height = 64; { const c = gl.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); }
+    const NF = 3000, fg = new THREE.BufferGeometry(); fg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NF * 3), 3)); fg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NF * 3), 3));
+    G.fl = new THREE.Points(fg, new THREE.PointsMaterial({ size: 0.01, map: new THREE.CanvasTexture(gl), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    G.fl.frustumCulled = false; G.fl.renderOrder = 6; sc.add(G.fl);
+    const tg = new THREE.BufferGeometry(); tg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NF * 6), 3)); tg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NF * 6), 3));
+    G.tr = new THREE.LineSegments(tg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    G.tr.frustumCulled = false; G.tr.renderOrder = 6; sc.add(G.tr);
+    G.mark = VD3K.marker(S3, { r: 0.004, color: '#e0a020' }); G.mark.visible = false; sc.add(G.mark);
+    G.ccol = [new THREE.Color(), new THREE.Color(), new THREE.Color()];
+    /* turning and picking happen on the 3D canvas itself (the words canvas over it lets pointers through in 3D), so the flat
+       tray keeps its own click and touch handling */
+    VD3.orbit(S3.el, G.o, () => {}, { phMin: 0.45, phMax: 1.5, zMin: 0.6, zMax: 3.5, keys: false });
+    let down = null;
+    S3.el.addEventListener('pointerdown', (e) => { down = [e.clientX, e.clientY]; });
+    S3.el.addEventListener('pointerup', (e) => {
+      if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 5) { const i = pick3(e); if (i >= 0) { setFollow(i); cans.g.focus({ preventScroll: true }); } }
+      down = null;
+    });
+    return true;
+  }
+  /* where nucleus k sits in the column (layers of sunflower discs), and slot s in the eluate vial, for the spacing d */
+  function layout3() {
+    const N = S.N0, hc = CZ1 - CZ0, d = Math.cbrt(Math.PI * NR * NR * hc / N), L = Math.max(1, Math.round(hc / d)), m = Math.ceil(N / L);
+    const pos = new Float32Array(N * 3);
+    for (let k = 0; k < N; k++) {
+      const l = Math.floor(k / m), j = k % m, r = NR * Math.sqrt((j + 0.5) / m), a = j * 2.399963 + l * 0.7;
+      pos.set([r * Math.cos(a), r * Math.sin(a), CZ0 + (l + 0.5) * hc / L], 3 * k);
+    }
+    const mv = Math.max(1, Math.floor(0.9 * Math.PI * VR * VR / (d * d)));
+    G.L = { N, sim, d, R: 0.45 * d, pos, mv, prev: new Uint8Array(sim.sp.subarray(0, N)), key: '' };
+    G.vial = null; G.nuc.geometry = N > 2000 ? G.geoC : G.geoF; G.nuc.count = N;
+    G.fl.material.size = Math.max(0.006, 3.2 * d);
+  }
+  const vialSlot = (s, out) => {
+    const L = G.L, l = Math.floor(s / L.mv), j = s % L.mv, r = L.mv === 1 ? 0 : (VR - L.R) * Math.sqrt((j + 0.5) / L.mv), a = j * 2.399963 + l * 0.7;
+    out.set(POUT[0] + r * Math.cos(a), POUT[1] + r * Math.sin(a), VZ0 + (l + 0.5) * L.d * 0.95); return out;
+  };
+  let m4 = null, v3a = null, v3b = null;
+  function putNuc(k, x, y, z, sc) { m4.makeScale(sc, sc, sc); m4.setPosition(x, y, z); G.nuc.setMatrixAt(k, m4); }
+  function setNuc(k) {
+    const L = G.L, v = sim.sp[k], R = L.R;
+    if (v <= 2) putNuc(k, L.pos[3 * k], L.pos[3 * k + 1], L.pos[3 * k + 2], R * (v === 0 ? 1 : v === 1 ? 0.87 : 0.56));
+    else putNuc(k, 0, 0, 0, 0);   /* eluted: drawn by the vial below */
+    G.nuc.setColorAt(k, G.ccol[Math.min(2, v)]);
+  }
+  /* an eluted nucleus on its way: down the column, along the outlet tubing, into its slot in the vial (u from 0 to 1) */
+  function travel(k, s, u, out) {
+    const L = G.L, x = L.pos[3 * k], y = L.pos[3 * k + 1], z = L.pos[3 * k + 2];
+    if (u < 0.3) { const f = u / 0.3, e = f * f; out.set(x * (1 - e), y * (1 - e), z + (G.outPts[0].z - z) * e); return out; }
+    if (u < 0.85) return G.outCurve.getPoint((u - 0.3) / 0.55, out);
+    const f = (u - 0.85) / 0.15; vialSlot(s, v3b); return out.copy(G.outPts[6]).lerp(v3b, f);
+  }
+  function draw3(W, H0, top, avail, ps) {
+    const S3 = G.S; if (!m4) { m4 = new THREE.Matrix4(); v3a = new THREE.Vector3(); v3b = new THREE.Vector3(); }
+    S3.size(W, H0);
+    if (!G.L || G.L.sim !== sim || G.L.N !== S.N0) layout3();
+    const L = G.L, sp = sim.sp, now = performance.now();
+    /* colors from the page's species tokens, so the column matches the tray, the legend and the plots */
+    const key = T.sp.join(',');
+    let all = key !== L.key; if (all) { L.key = key; for (let i = 0; i < 3; i++) G.ccol[i].set(/^#[0-9a-f]{6}$/i.test(T.sp[i]) ? T.sp[i] : ['#1f57b0', '#e08414', '#a3adba'][i]); }
+    if (all) for (let k = 0; k < L.N; k++) setNuc(k);
+    /* nuclei that changed since the last frame; ⁹⁹ᵐTc that went from the column to "eluted" start their trip to the vial */
+    let fresh = null;
+    for (let k = 0; k < L.N; k++) {
+      const v = sp[k]; if (v === L.prev[k]) continue;
+      if (L.prev[k] === 1 && v === 3) (fresh || (fresh = [])).push(k);
+      L.prev[k] = v; setNuc(k); all = true;
+    }
+    if (fresh) G.vial = { ks: fresh, t0: now, n: fresh.length, t: lastElution ? lastElution.t : tNow() };
+    const dur = reduce ? 0 : 1600;
+    let flowing = 0;
+    if (G.vial) {
+      const ks = G.vial.ks, age = now - G.vial.t0;
+      for (let s = 0; s < ks.length; s++) {
+        const k = ks[s], z = L.pos[3 * ks[s] + 2], delay = dur * 0.35 * (1 - (z - CZ0) / (CZ1 - CZ0)), u = dur ? Math.min(1, Math.max(0, (age - delay) / (dur * 0.65))) : 1;
+        if (u < 1) flowing++;
+        if (u >= 1 && G.vial.done) continue;
+        const p = u >= 1 ? vialSlot(s, v3a) : travel(k, s, u, v3a);
+        putNuc(k, p.x, p.y, p.z, L.R * 0.87); G.nuc.setColorAt(k, G.ccol[1]); all = true;
+      }
+      if (!flowing) G.vial.done = true;
+      const f = dur ? Math.min(1, age / dur) : 1;
+      G.saline.level(f < 1 ? 0.75 * (1 - f) : 0.75); G.eluate.level(0.62 * f);
+    } else { G.saline.level(0.75); G.eluate.level(0); }
+    if (all) { G.nuc.instanceMatrix.needsUpdate = true; if (G.nuc.instanceColor) G.nuc.instanceColor.needsUpdate = true; }
+    /* decays of the last step: a flash at the nucleus and its track (β short, γ out to the lead wall) */
+    const fp = G.fl.geometry.attributes.position, fc = G.fl.geometry.attributes.color, tp = G.tr.geometry.attributes.position, tc = G.tr.geometry.attributes.color;
+    const kind = decayKinds(), fdur = 520, NF = fp.count; let keep = 0, nf = 0;
+    for (let j = 0; j < flashes.length; j++) {
+      const f = flashes[j], a = 1 - (now - f.t0) / fdur; if (a <= 0) continue; flashes[keep++] = f;
+      if (f.i >= L.N || nf >= NF || sp[f.i] > 2) continue;
+      const x = L.pos[3 * f.i], y = L.pos[3 * f.i + 1], z = L.pos[3 * f.i + 2], k = kind[Math.max(0, sp[f.i] - 1)] || 'b';
+      fp.setXYZ(nf, x, y, z); fc.setXYZ(nf, a, a * 0.97, a * 0.84);
+      const h1 = ((f.i * 2654435761) >>> 0) / 4294967296, h2 = ((f.i * 2246822519 + 7) >>> 0) / 4294967296, ph = 2 * Math.PI * h1, ct = 2 * h2 - 1, st = Math.sqrt(1 - ct * ct);
+      const ux = st * Math.cos(ph), uy = st * Math.sin(ph), uz = ct, grow = reduce ? 1 : Math.min(1, (1 - a) * 1.6);
+      let len;
+      if (k === 'g') { const A = ux * ux + uy * uy, B = x * ux + y * uy, C = x * x + y * y - RI * RI; len = A > 1e-9 ? (-B + Math.sqrt(B * B - A * C)) / A : 1; len = Math.min(len, uz > 0 ? (ZT - z) / uz : uz < 0 ? (ZB - z) / uz : len); }
+      else len = 2.6 * L.d + 0.004;
+      len *= grow;
+      tp.setXYZ(2 * nf, x, y, z); tp.setXYZ(2 * nf + 1, x + ux * len, y + uy * len, z + uz * len);
+      const col = k === 'g' ? [1, 0.86, 0.4] : [0.5, 0.89, 1], b = Math.min(1, a * 1.4);
+      tc.setXYZ(2 * nf, col[0] * b, col[1] * b, col[2] * b); tc.setXYZ(2 * nf + 1, col[0] * b * 0.3, col[1] * b * 0.3, col[2] * b * 0.3);
+      nf++;
+    }
+    flashes.length = keep;
+    G.fl.geometry.setDrawRange(0, nf); G.tr.geometry.setDrawRange(0, 2 * nf); fp.needsUpdate = fc.needsUpdate = tp.needsUpdate = tc.needsUpdate = true;
+    /* the followed nucleus: a ring round it, in the column or in the vial */
+    let fpos = null;
+    if (follow >= 0 && follow < L.N) {
+      if (sp[follow] <= 2) fpos = v3a.set(L.pos[3 * follow], L.pos[3 * follow + 1], L.pos[3 * follow + 2]);
+      else if (G.vial) { const s = G.vial.ks.indexOf(follow); if (s >= 0) { m4.identity(); G.nuc.getMatrixAt(follow, m4); fpos = v3a.setFromMatrixPosition(m4); } }
+    }
+    G.mark.visible = !!fpos; if (fpos) { G.mark.scale.setScalar(Math.max(1, L.R / 0.0018)); G.mark.at(fpos.x, fpos.y, fpos.z); }
+    /* camera: the generator and its vials fill the picture above the legend, at any pane shape */
+    const tanH = Math.tan(15 * Math.PI / 180), dist = Math.max(0.3 * H0 / Math.max(80, avail), (W < 470 ? 0.24 : 0.3) * H0 / W) / (2 * tanH);
+    S3.place(G.o, [0, 0.01, 0.135], dist);
+    /* the picture is drawn again only when something in it changed (the words canvas is redrawn every frame) */
+    const rk = [sim.step, L.N, W, H0, top, avail, G.o.th, G.o.ph, G.o.zoom, follow, key, VD3.dark(), elutions.length].join('|');
+    if (rk !== G.rk || nf || flowing || all) {
+      G.rk = rk;
+      S3.cam.setViewOffset(W, H0, 0, H0 / 2 - (top + avail / 2), W, H0);
+      S3.render();
+    }
+    labels3(W, H0, top, avail, ps);
+  }
+  /* words over the picture, from the scene's own points */
+  function labels3(W, H0, top, avail, ps) {
+    const ctx = ctxs.g, S3 = G.S, L = G.L; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const fs = 11.5 * ps, small = W < 470;
+    const tag = (p, txt, side, col) => {
+      const q = S3.project(p); ctx.font = `700 ${fs}px ${T.ui}`; const tw = ctx.measureText(txt).width;
+      let x = side < 0 ? q[0] - tw - 10 * ps : side > 0 ? q[0] + 10 * ps : q[0] - tw / 2; x = Math.max(6, Math.min(W - tw - 6, x));
+      const y = Math.max(top + 8 * ps, Math.min(top + avail - 6 * ps, q[1]));
+      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; roundRect(ctx, x - 4 * ps, y - fs * 0.75, tw + 8 * ps, fs * 1.5, 4 * ps); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = col || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y + 0.5);
+      return [x, y];
+    };
+    tag([-RO, 0, HL * 0.62], small ? 'Lead' : 'Lead shield', -1, T.muted);
+    tag([NR + 0.004, -0.012, CZ1 - 0.012], small ? 'Alumina column' : 'Alumina column, ⁹⁹Mo bound', 1);
+    tag([PIN[0] - VR, PIN[1], HL + 0.03], small ? 'Saline' : 'Saline in', -1, T.muted);
+    const ev = G.vial ? `${fmtInt(G.vial.n)} ⁹⁹ᵐTc${small ? '' : ', eluted at ' + fmtT(G.vial.t)}` : (small ? 'Eluate vial' : 'Eluate vial, empty');
+    tag([POUT[0] + 0.024, POUT[1], HL + 0.05], ev, 1, G.vial ? T.sp[1] : T.muted);
+    /* the scene's Elute button sits by the saline vial */
+    const b = $('eluteScene'), q = S3.project([PIN[0], PIN[1], HL + 0.085]);
+    const bx = Math.max(40 * ps, Math.min(W - 40 * ps, q[0])), by = Math.max(top + 34 * ps, Math.min(top + avail, q[1]));
+    b.style.left = bx + 'px'; b.style.top = by + 'px';
+    void L;
+  }
+  /* what is exaggerated or left out, in the strip over the legend, wrapped to the pane: returns the lines */
+  function noteLines(W, ps) {
+    const ctx = ctxs.g, words = ('Column drawn far larger than a real one (about 1 cm): one ball per simulated nucleus. ' + (G.vial ? 'Eluted nuclei are not followed after they leave. ' : '') + 'Drag to turn.').split(' ');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = `${10 * ps}px ${T.ui}`;
+    const out = ['']; for (const w of words) { const t = out[out.length - 1] ? out[out.length - 1] + ' ' + w : w; if (ctx.measureText(t).width > W - 20 && out[out.length - 1]) out.push(w); else out[out.length - 1] = t; }
+    return out;
+  }
+  function note3(W, y, ps, lines) {
+    const ctx = ctxs.g; ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    lines.forEach((t, i) => ctx.fillText(t, W / 2, y - (lines.length - 1 - i) * 13 * ps));
+  }
+  function pick3(ev) {
+    if (!G.L) return -1;
+    const r = cans.g.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, L = G.L, S3 = G.S;
+    let best = -1, bz = Infinity; const tol = Math.max(8, 1.2 * (S3.project([0, 0, CZ0])[1] - S3.project([0, 0, CZ0 + L.d])[1]));
+    for (let k = 0; k < L.N; k++) {
+      if (sim.sp[k] > 2) continue;
+      const q = S3.project([L.pos[3 * k], L.pos[3 * k + 1], L.pos[3 * k + 2]]); if (Math.abs(q[0] - x) > tol || Math.abs(q[1] - y) > tol) continue;
+      if (q[2] < bz) { bz = q[2]; best = k; }
+    }
+    return best;
+  }
+  function show3() {
+    const gen = !!cfg().generator;
+    /* the switch is made the first time the generator opens, so other setups never load three.js */
+    if (gen && G.view === null && window.VD3K) { G.view = 0; G.view = VD3K.view({ seg: '#dimSeg', init: init3, change: () => show3(), status: (m) => { $('fLive').textContent = m; } }); }
+    const on = on3();
+    $('dimSeg').hidden = !gen || !G.view;
+    if (G.S) G.S.el.hidden = !on;
+    $('eluteScene').hidden = !on;
+    cans.g.style.pointerEvents = on ? 'none' : '';
+    stageEl.classList.toggle('g3on', on);
+    drawAll();
+  }
+  $('eluteScene').addEventListener('click', () => doElute());
 
   // ---------- plots ----------
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
@@ -1358,6 +1619,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     buildSliders();
     staticText();
     if (c.dating && !dTask) newTask();
+    show3();
   }
 
   // ---------- controls ----------
