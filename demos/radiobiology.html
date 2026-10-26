@@ -689,6 +689,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/mp-radiobiology.mp4', poster: 'media/how-this-works/mp-radiobiology.jpg' });
   tokens();
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'survAir');
   if (qs.get('view') && ['surv', 'assay', 'frac', 'rbe'].includes(qs.get('view'))) { S.view = qs.get('view'); sync(); }

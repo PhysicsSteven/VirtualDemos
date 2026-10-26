@@ -1173,6 +1173,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  const HOW = (v) => (v === 'kerma' ? ['mp-kerma-equilibrium', 'Kerma, Dose and Charged Particle Equilibrium'] : ['proton-calibration', 'Calibrating a Proton Beam']);   /* one video per worksheet, picked by the view as wsOf does */
+  VD.howTo({ src: () => `media/how-this-works/${HOW(S.view)[0]}.mp4`, poster: () => `media/how-this-works/${HOW(S.view)[0]}.jpg`, title: () => `How this works: ${HOW(S.view)[1]}` });
 
   /* ---------- readings for the worksheets ---------- */
   const wsOf = (v) => (v === 'kerma' ? 'mp-kerma-equilibrium' : 'mp-proton-calibration');

@@ -899,8 +899,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
   window.__sx = { S, setView, applyPreset, redraw, sync, setZ, newTarget, xrayLines, lamPm, xZ };
-  const HOW = { shells: ['periodic-table', 'Shells and the Periodic Table'], xray: ['x-ray-spectra', "X-Ray Spectra and Moseley's Law"] };
-  VD.howTo({ src: () => `media/how-this-works/${HOW[S.view][0]}.mp4`, poster: () => `media/how-this-works/${HOW[S.view][0]}.jpg`, title: () => `How this works: ${HOW[S.view][1]}` });
+  const HOW = { 'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X-Ray Spectra and Moseley's Law", 'mp-x-ray-filtration': 'Filtration and Half Value Layers' };   /* one video per worksheet, picked as vdWorksheet picks */
+  VD.howTo({ src: () => `media/how-this-works/${window.vdWorksheet()}.mp4`, poster: () => `media/how-this-works/${window.vdWorksheet()}.jpg`, title: () => `How this works: ${HOW[window.vdWorksheet()]}` });
 })();
 </script>
 </body>

@@ -4743,3 +4743,29 @@ Four Medical Physics videos (dark only, Tools hidden, no What's new entry), each
   photons and dose videos thread; its Ion chamber and Calibration views point at this file.
 
 **For GPT:** nothing new in the numbers; spot check the captions for hyphens in compound modifiers.
+
+## 2026-10-26 · Claude · How this works videos: photons and dose (Medical Physics)
+
+Four new videos, one per worksheet, dark only, Tools hidden, scripts in `tools/howto/` (each script's top comment has the
+expected numbers and their sources). No What's new entry (Steve). Every reading on screen matches the key.
+- **Photon Interactions in Matter** (`mp-photon-interactions`, 19.4 s): Coefficients view, water, cm²/g, energy dragged to 10 keV;
+  the readouts split μ/ρ 5.330 cm²/g into coherent 0.2306, Compton 0.1550 and photoelectric 4.944 (92.8 %); recorded row matches
+  key row 1 to every digit (μ_tr/ρ 4.948, μ_en/ρ 4.944, g 0.000737). Mean free path 0.1876 cm and HVL 0.1300 cm = ln 2/μ check.
+- **Dosimetry, Kerma and Equilibrium** (`mp-kerma-equilibrium`, 22.5 s, 3D view): ⁶⁰Co buildup, Start, paused at 2.83 million
+  histories, probe dragged to 0.050 cm: K_col 0.059193 Gy (Φ E μ_en/ρ e^(−μz) with NIST 0.02965 and 0.06323 cm²/g), model dose
+  0.012412 Gy, D/K_col 0.2097, all as key row 1; Monte Carlo 0.01252 ± 0.00015 Gy against the key's 0.01243 ± 0.00017 (a new
+  run, within one standard uncertainty). `dosimetry.html` now picks the video by view: Kerma and dose plays this one, Ion chamber
+  and Calibration play `proton-calibration.mp4` (the proton thread's).
+- **X-ray filtration** (`mp-x-ray-filtration`, 23.1 s, 3D bench): Half value layer setup (tungsten, 80 kV, 2.5 mm Al), Blind on,
+  K/K₀ 1.0000 with no sheets, then 0.8566 with 0.5 mm of sheets: key rows 1 and 2. −ln(0.8566)/0.05 cm gives μ/ρ 1.15 cm²/g in
+  aluminum, the NIST value near 30 keV. `shells-and-x-rays.html` now picks its video with `vdWorksheet()`, so the filtration
+  readings get this one and Periodic Table and X-Ray Spectra keep theirs.
+- **Radiobiology** (`mp-radiobiology`, 19.7 s): V79 in air, dose dragged to 3 Gy (rather than the table's first row, 0 Gy where
+  S = 1): S 0.5001 = exp(−0.135·3 − 0.0320·9), without oxygen 0.8130, OER 2.731 (8.193 Gy/3 Gy): key row 4.
+- vdcheck `--only after` clean on all four demos; each How this works button opens the right video for its worksheet (checked).
+
+Found while recording (not changed): in Dosimetry the Set up card comes back over the histories counter whenever the run is
+paused, so the count is readable only in the readouts (Histories). Worth a look in the polish week.
+
+**For GPT:** please check the captions for hyphens in compound modifiers and that each caption's numbers agree with the key rows
+named above.
