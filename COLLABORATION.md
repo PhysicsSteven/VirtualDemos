@@ -4579,3 +4579,34 @@ Notes and findings:
   label says so. Video retaken.
 
 **For GPT:** please check the new spin resonance answers against the data, and the uncertainty wording.
+
+## 2026-10-26 · Claude · Medical Physics visual pass (3D views on every Medical Physics demo)
+
+Drawing only: every CORE block that existed is byte identical, controls were only added, readings and exports unchanged, so no
+worksheet key moves (none recaptured). vdcheck `--only after` and `--only clip` 0 on all ten demos; Node tests pass. Before and
+after composites in the project files, medical-visual/. Each 3D view has a Flat fallback (`?view=flat`, no WebGL, low power).
+
+- **The Bragg Peak, new view Why it peaks** (Steve wanted to see why the peak happens): one proton into water in 3D, with a window
+  12 nm long around it. Bohr's picture, in new CORE functions with tests: an electron at distance b gets Δp = 2e²/(4πε₀ b v), so
+  its energy goes as 1/v²; electrons beyond b_max = γv/ω (ħω = I) keep none; the bracket L of the shared Bethe core is read back as
+  L = (S/ρ)β²/(K Z/A), close to ln(b_max/b_min) with b_min = ħ/2γmₑv (within 4 % above 10 MeV, tested). The graph shows 1/β², L
+  and S against depth on a log axis (S is their product). Each kicked electron's arrow follows its impulse so far, sideways part
+  ½(1 − x/r) and along track part −b/2r, shown from the moment the proton passes, so it swings round after the proton and ends
+  sideways (Steve's request). Last 1 MeV: average charge from Barkas's 1 − exp(−125β), paced for viewing, off the Bethe graph.
+  Stated: log distance scale, sample of electrons at rest, drift drawn far faster than real, time slowed (factors printed),
+  straight track. Readings: none in this view.
+- **Charged Particles in Matter**: 3D tank with the Monte Carlo tracks (each track's side view turned to its own plane, stated),
+  chamber on its carriage, electrometer meter. **Proton Therapy QA**: 3D treatment room (gantry, couch, slab phantom, range stack,
+  scintillating screen with the nine spots, 2D array) for Daily QA, Drift and Patient QA.
+- **Dosimetry**: buildup region magnified in a 3D phantom with the Monte Carlo points and electron tracks; a cut open Farmer
+  chamber (6× life size) with ions; the calibration tank with meters. **Photon Interactions**: 3D slab with every kept history
+  (Narrow and broad beam) and an X-ray tube with filter plates (Beam hardening). **Radiobiology**: the clonogenic dishes in 3D,
+  colony for colony as the flat view.
+- **Medical additions**: ⁹⁹Mo generator in 3D (Radioactive Decay, mo99 setup only); Nuclear Reactions Dose view as a 3D room;
+  Shells and X-rays HVL bench and Ultrasound attenuation readable in their existing 3D scenes.
+- The Modern How this works video for radiation-dose (tools/howto/radiation-dose.cjs) now shows a flat Dose view while the demo
+  opens in 3D: it needs a retake. No other Modern video changes.
+
+**For GPT:** please check (1) the Why it peaks numbers: b_max 1.546 nm at 150 MeV in water, the 93 keV maximum of ln(2mv²/I)/v²,
+the Barkas formula, and the claim that the measured stopping power of water peaks below about 0.2 MeV; (2) the stated
+exaggerations on each 3D view read correctly; (3) hyphens in compound modifiers in the new picture notes.
