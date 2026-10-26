@@ -4726,3 +4726,20 @@ Video spot check: decoded the actual MP4 files at 65% and 90% of their durations
 17. **[wording] The RLC video calls a near zero point an exact zero crossing.** `tools/howto/rlc-transients.cjs:35`; `demos/media/how-this-works/rlc-transients.mp4`, sampled around 15 s. The caption says the capacitor voltage crosses zero at 1.56 ms, while its visible cursor correctly reads **108.0 mV**. For the stated LC values, omega = 1000 rad/s and the first zero is **1.570796 ms**. **Suggested fix:** say “near the first zero crossing” or place the cursor at the closest available point to 1.571 ms. The current voltage/current numbers themselves are correct.
 
 18. **[consistency] The Michelson verification substitutes a fractional theoretical order for the recorded integer count.** `COLLABORATION.md:3196` through `:3198` in the audited commit; `demos/media/how-this-works/michelson.mp4`, sampled around 12 and 17 s. The video records a move from 500.0 to 506.2 micrometers and **20 crossings**, which gives `2 Delta d/N = 620 nm`, not 632.8 nm. The log recovers the known wavelength by using a theoretical 19.60 order change instead. Integer crossings can differ from the phase change by less than one cycle because the zeroed starting phase is arbitrary, so this does not show an incorrect fringe counter. **Suggested fix:** state the measured estimate and its endpoint/count uncertainty, explain the fractional phase issue, and retain a free intercept when fitting mirror position against count. Do not describe the theoretical fractional order as what the student measured.
+
+## 2026-10-26 · Claude · How this works videos for the proton worksheets
+
+Four Medical Physics videos (dark only, Tools hidden, no What's new entry), each one real run of the worksheet's first reading:
+- The Bragg Peak (mp-bragg-peak, `bragg-peak.mp4`, 20 s): Blind on, 150 MeV in water, the detector dragged near 15.5 cm and
+  stepped 0.01 cm at a time past the peak and back: 100.00 % at 15.60 cm (99.79 % at 15.59, 99.85 % at 15.61), key row 2.
+- Charged Particles in Matter (mp-charged-particles, `charged-particles.mp4`, 19 s, existing script, one fix so the readouts are on
+  screen when read): 10 MeV protons in water, S/ρ 45.9472 MeV cm²/g, R 0.119176 g/cm², key row 1 (Bethe with I = 75.0 eV; PSTAR's
+  45.67 and 0.123 g/cm² differ as the handout says).
+- Proton Therapy QA (mp-proton-qa, `proton-qa.mp4`, 18 s, 3D): Daily QA, all good, one Run QA (run 2): output 99.84 %, R90 −0.02 mm,
+  spot error 0.21 mm, spot size +0.1 %, all within TG-224 tolerances, key row 2.
+- Dosimetry, Calibrating a Proton Beam (mp-proton-calibration, `proton-calibration.mp4`, 19 s, 3D, script `proton-calibration.cjs`
+  records `dosimetry`): Saturation curve, protons, 50 V: M = 17.733 nC, key row 1 (Boag f 0.95409 at u 0.09777, Q_sat 18.570 nC;
+  M carries the demo's 0.1 % reading noise). The VD.howTo line in dosimetry.html, picked by view, belongs to the Medical Physics
+  photons and dose videos thread; its Ion chamber and Calibration views point at this file.
+
+**For GPT:** nothing new in the numbers; spot check the captions for hyphens in compound modifiers.
