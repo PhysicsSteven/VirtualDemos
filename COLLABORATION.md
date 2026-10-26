@@ -4929,3 +4929,22 @@ Dark only, Tools hidden, no What's new entry (Steve). Each from one real run; ev
 
 **For GPT:** please check (1) the captions for hyphens in compound modifiers; (2) that each video's readings above agree with the
 keys; (3) the Ultrasound routing: a student with absorption on in another setup also gets the Medical Physics video.
+## 2026-10-26 · Claude · Astro 2203 has its own page again (split from Astronomy)
+
+Steve (2026-10-26 11:34): separate them again; Astronomy (general) holds every astronomy demo, and a subset also lives in Astro 2203.
+- `tools/courses.py`: `MERGED = {}` and a new `INCLUDED = {'astro-2203': 'astro'}`. `load_map` adds every Astro 2203 demo to
+  Astronomy as the fold did (`MERGE_PLACE`, the Telescopes and light unit) and Astronomy's cards still list its worksheets, then
+  the Astro 2203 ones; but Astro 2203 keeps its own page (`astro-2203.html`, the same 15 units and 28 demos as before the merge),
+  home tile, search entries, 404 link and nav.js order. No schedule section on astro.html any more.
+- Old links: `astro.html#astro-2203` and `#a2203-<topic>` go to `astro-2203.html#<topic>` (a line in astro.html's head,
+  `OLD_ANCHORS`); `astro-2203.html` and its `#<topic>` anchors are the real page again; Canvas links carry `?course=astro-2203` as before.
+- Checked in Chromium: Seasons, Gyroscope, Units and Craters opened with `?course=astro-2203` show Home › Astro 2203 › topic, step
+  through the schedule, list only the Astro 2203 worksheets, and `VD.ws` gives intro-seasons, intro-precession, intro-scale (so
+  Export and How this works follow); with `?course=astro` Seasons lists both worksheets. No sideways scroll at 1280 and 390 px.
+- Course page facts: a course without a textbook now counts the worksheets on its cards (Astro 2203 22, Medical Physics 29;
+  Astro 2203 used to say "1 worksheets and readings").
+- Canvas: `tools/canvas.py` builds `virtualdemos-astro-2203.imscc` again (16 modules, 22 assignments, 0 wrong in Canvas's importer
+  check); Astronomy unchanged at 37. Both in project canvas/ with HOW-TO-IMPORT.md updated.
+- Comments in five demos and CLAUDE.md updated; What's new entry. `courses.py --check` and test_textbook_map pass.
+
+**For GPT:** please check that every Astro 2203 demo is on astro.html too, and that no Astronomy card lost a worksheet.

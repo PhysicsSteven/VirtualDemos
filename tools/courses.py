@@ -30,6 +30,7 @@ BLURB = {
     'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
     'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+2203': ('Sky, planets, stars and galaxies', 'The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
+    'astro+incl': ('Sky, planets, stars and galaxies', 'Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro 2203 introductory worksheets too. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, in the order of the Astro 2203 schedule, with a review before each of the three tests. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
     'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
@@ -47,12 +48,16 @@ COURSE_HANDOUTS['medical-physics'].add('mp-radiobiology')
 # Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
 WARM_UPS = {'medical-physics'}
 NO_BOOK = {'astro-2203', 'medical-physics'}
-# Astro 2203 folded into Astronomy (Steve, 2026-10-25: "for now combine them"). The map still holds Astro 2203 as its own course;
-# load_map gives every tool the folded version: one Astronomy page whose units take in the Astro 2203 demos (MERGE_PLACE) and
-# whose cards list both courses' worksheets, then the Astro 2203 schedule at the bottom, topic by topic. astro-2203.html sends
-# old links there, and ?course=astro-2203 still steps through the schedule (nav.js) and picks its worksheets (COURSE_WS).
-# To split them again: MERGED = {}, then rerun tools/courses.py and tools/canvas.py.
-MERGED = {'astro-2203': 'astro'}
+# Two ways one course can sit inside another (tools read the map through load_map, which applies them):
+# MERGED folds a course into another: one page whose units take in its demos (MERGE_PLACE) and whose cards list both courses'
+# worksheets, then its schedule at the bottom, topic by topic; <src>.html redirects there. Astro 2203 was folded into Astronomy
+# 2026-10-25 ("for now combine them") and split again 2026-10-26.
+# INCLUDED (Steve, 2026-10-26): the target holds every demo and worksheet of the source the same way (MERGE_PLACE, cards list
+# both courses' worksheets), and the source keeps its own page, tile and Canvas file, listing only its subset in schedule order.
+# Astronomy (general) holds every astronomy demo; Astro 2203 is the course's own page. Old links to the folded page's schedule
+# (astro.html#astro-2203, #a2203-<topic>) are sent to astro-2203.html by a line on the Astronomy page (OLD_ANCHORS).
+MERGED = {}
+INCLUDED = {'astro-2203': 'astro'}
 MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
                'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light',
                'em-waves': 'telescopes-light', 'blackbody': 'telescopes-light', 'spectra': 'telescopes-light',
@@ -60,20 +65,25 @@ MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
 MERGE_UNITS = {'telescopes-light': ('gravitation', {'id': 'telescopes-light', 'title': 'Telescopes and light', 'short': 'Telescopes and light',
                                                      'requirement': 'required', 'sections': [], 'demos': []})}   # new unit, after the named one
 SCHEDULE_PREFIX = 'a2203-'
-BLURB['astro'] = BLURB['astro+2203'] if MERGED.get('astro-2203') == 'astro' else BLURB['astro']
+BLURB['astro'] = (BLURB['astro+2203'] if MERGED.get('astro-2203') == 'astro' else BLURB['astro+incl'] if INCLUDED.get('astro-2203') == 'astro'
+                  else BLURB['astro'])
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
 
 
 def load_map():
-    """curriculum/textbook-map.json with each MERGED course folded into its target (see MERGED). Demos keep their own course
-    list as '_course', which course_handouts uses to list both courses' worksheets on a folded card."""
+    """curriculum/textbook-map.json with each MERGED course folded into its target and each INCLUDED course's demos added to its
+    target (see MERGED). Demos keep their own course list as '_course', which course_handouts uses to list both courses'
+    worksheets on the target's cards."""
     m = json.loads(MAP.read_text())
-    if not MERGED:
+    fold = {**MERGED, **INCLUDED}
+    if not fold:
         return m
     by_id = {c['id']: c for c in m['courses']}
-    for src, dst in MERGED.items():
+    for d in m['demos']:
+        d['_course'] = list(d['course'])
+    for src, dst in fold.items():
         tgt = by_id[dst]
         for key, (after, unit) in MERGE_UNITS.items():
             if not any(u['id'] == key for u in tgt['units']):
@@ -84,14 +94,16 @@ def load_map():
         for d in m['demos']:
             if src in d['course'] and d['demo'] not in have:
                 units[MERGE_PLACE[d['demo']]].setdefault('demos', []).append(d['demo'])   # a new Astro 2203 demo needs a MERGE_PLACE entry
-        for u in by_id[src]['units']:   # the schedule, at the bottom of the page
-            tgt['units'].append(dict(u, id=SCHEDULE_PREFIX + u['id'], schedule=src,
-                                     review=[SCHEDULE_PREFIX + r for r in u.get('review', [])] or None))
+        if src in MERGED:
+            for u in by_id[src]['units']:   # the schedule, at the bottom of the page
+                tgt['units'].append(dict(u, id=SCHEDULE_PREFIX + u['id'], schedule=src,
+                                         review=[SCHEDULE_PREFIX + r for r in u.get('review', [])] or None))
         for d in m['demos']:
-            d['_course'] = list(d['course'])
-            d['course'] = list(dict.fromkeys(MERGED.get(c, c) for c in d['course']))
-        for a in m.get('activities', []):
-            a['course'] = list(dict.fromkeys(MERGED.get(c, c) for c in a['course']))
+            if src in d['course']:
+                d['course'] = list(dict.fromkeys(dst if c == src and src in MERGED else c for c in d['course'] + [dst]))
+        if src in MERGED:
+            for a in m.get('activities', []):
+                a['course'] = list(dict.fromkeys(MERGED.get(c, c) for c in a['course']))
     m['_merged_from'] = [by_id[src] for src in MERGED]
     m['courses'] = [c for c in m['courses'] if c['id'] not in MERGED]
     return m
@@ -318,11 +330,12 @@ _OWNERS = {}
 
 
 def course_handouts(cid, demo):
-    """As _course_handouts; a course that MERGED folds others into lists each folded course's worksheets on the card in turn
-    (its own first), as the separate pages did, without repeats."""
-    if '_course' in demo and cid in MERGED.values():
+    """As _course_handouts; a course that MERGED folds others into (or INCLUDED adds others to) lists each such course's
+    worksheets on the card in turn (its own first), without repeats."""
+    fold = {**MERGED, **INCLUDED}
+    if '_course' in demo and cid in fold.values():
         out = []
-        for c in [cid] + [s for s, t in MERGED.items() if t == cid]:
+        for c in [cid] + [s for s, t in fold.items() if t == cid]:
             if c in demo['_course']:
                 out += [h for h in _course_handouts(c, demo) if h not in out]
         return out
@@ -468,13 +481,26 @@ def course_page(course, m, cards, notes):
     books = ' · '.join(f'<a href="{BOOK_URL[v]}">{BOOK[v]}</a>' for v in vols)
     facts = (f'<li><span><strong>{len(course["units"]) - len(sched)}</strong> units</span></li><li><span><strong>{len(n_demo)}</strong> demos and labs</span></li>'
              + (f'<li><span>Free textbook: {books}</span></li>' if vols else ''))
+    if cid in NO_BOOK:   # no textbook readings: count the worksheets on its cards (and any standalone ones)
+        n_activity = n_activity | {h for d in n_demo for h in course_handouts(cid, demos[d])}
     if n_activity:
-        facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
+        facts += (f'<li><span><strong>{len(n_activity)}</strong> worksheet{"s" if len(n_activity) != 1 else ""}'
+                  f'{"" if cid in NO_BOOK else " and readings"}</span></li>')
     how = ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
            'it has one card, in the first unit that uses it, and later units link to it.') if cid in NO_BOOK else None
     if cid == 'medical-physics':
         how = ('Units follow the radiation physics topics, from sources to imaging. A demo can appear in more than one unit: it has one card, in the first '
                'unit that uses it, and later units link to it. Cards marked Coming are demos being built for this module.')
+    inc = [x for x, t in INCLUDED.items() if t == cid]
+    if inc:
+        how = ('Units follow the topics, and a demo from another course or module is listed where it fits. Each card lists this module’s '
+               'worksheets, then the introductory ' + ' and '.join(f'<a href="{x}.html">{esc(TITLE[x])}</a>' for x in inc) + ' worksheets. '
+               'Section numbers are volume:section in OpenStax University Physics.')
+    if cid in INCLUDED:
+        t = next(x['title'] for x in m['courses'] if x['id'] == INCLUDED[cid])
+        how = ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
+               f'it has one card, in the first unit that uses it, and later units link to it. Every demo here is also on the <a href="{INCLUDED[cid]}.html">{esc(t)}</a> page, '
+               'with the other astronomy demos.')
     if sched:
         how = (f'Units follow the topics, and a demo from another course or module is listed where it fits. At the bottom, the '
                f'{TITLE[sched[0]["schedule"]]} schedule lists the same demos topic by topic with that course\u2019s introductory worksheets. '
@@ -892,7 +918,7 @@ def course_ws_js(m, cards):
     for d in m['demos']:
         for c in dict.fromkeys(d['course'] + d.get('_course', [])):
             hs = course_handouts(c, d)
-            folded = {s for s, x in MERGED.items() if x == c}   # a course with others folded in answers their single worksheet too
+            folded = {s for s, x in {**MERGED, **INCLUDED}.items() if x == c}   # a course with others folded in (or included) answers their single worksheet too
             if (c in COURSE_HANDOUTS or folded) and d['demo'] in cards and len(hs) == 1 and ({c} | folded) & handout_courses(hs[0]) \
                     and (c in COURSE_HANDOUTS or hs[0] in set().union(*(COURSE_HANDOUTS.get(x, set()) for x in folded))):
                 t.setdefault(c, {})[d['demo']] = hs[0]
@@ -908,7 +934,7 @@ NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py f
    A demo in several courses follows the course the student came from (the course page, or the course of the demo they stepped
    from, kept for the tab in sessionStorage vd-course); opened any other way it uses the first course in its list.
    ?course=<id> in the address (course page and Canvas links, previous and next) names the course outright.
-   A course folded into another (tools/courses.py MERGED: Astro 2203 into Astronomy) keeps its schedule order here, with p the
+   A course folded into another (tools/courses.py MERGED; none since 2026-10-26) keeps its schedule order here, with p the
    page it now lives on. 
    Worksheets (Steve, 2026-10-25): opened from a course, the Handout and worksheet menu lists only that course's worksheets
    (SHEETS, the same list as the demo's card on the course page, so none for a demo that course uses without a worksheet);
@@ -1066,6 +1092,11 @@ REDIRECT = '''<!doctype html>
 '''
 
 
+OLD_ANCHORS = ("<script>/* __SRC__ was folded into this page 2026-10-25: its old schedule links (#__SRC__, #__PREFIX__<topic>) open "
+               "__SRC__.html (tools/courses.py INCLUDED) */ (function () { var h = location.hash.slice(1), p = '__PREFIX__'; "
+               "if (h === '__SRC__' || h.indexOf(p) === 0) location.replace('__SRC__.html' + (h.indexOf(p) === 0 ? '#' + h.slice(p.length) : '')); })();</script>")
+
+
 def build():
     m = load_map()
     cards = index_cards()
@@ -1073,6 +1104,10 @@ def build():
     out = {}
     for c in m['courses']:
         out[ROOT / f'{c["id"]}.html'] = course_page(c, m, cards, notes)
+    for src, dst in INCLUDED.items():   # old links to the schedule on the folded page (2026-10-25 to 26) go to the course's own page
+        f = ROOT / f'{dst}.html'
+        out[f] = out[f].replace('<script src="demos/lib/theme.js"></script>\n', '<script src="demos/lib/theme.js"></script>\n'
+                                + OLD_ANCHORS.replace('__SRC__', src).replace('__PREFIX__', SCHEDULE_PREFIX) + '\n', 1)
     for c in m.get('_merged_from', []):
         dst = MERGED[c['id']]
         out[ROOT / f'{c["id"]}.html'] = (REDIRECT.replace('__SRC__', c['id']).replace('__DST__', dst).replace('__PREFIX__', SCHEDULE_PREFIX)

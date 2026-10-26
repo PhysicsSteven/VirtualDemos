@@ -271,8 +271,8 @@ def build(only=None):
     m = C.load_map()
     cards = C.index_cards()
     notes = {p.stem for p in (ROOT / 'notes').glob('*.html')}
-    # a course folded into another on the site (courses.py MERGED: Astro 2203 into Astronomy) gets no file of its own
-    # (Steve, 2026-10-26: one Astronomy file for now)
+    # a course folded into another on the site (courses.py MERGED) gets no file of its own; an INCLUDED one (Astro 2203, split from
+    # Astronomy again 2026-10-26) has its own file, in its schedule order, and Astronomy's file holds its demos too
     return {c['id']: cartridge(c, m, cards, notes) for c in m['courses'] if not only or c['id'] in only}
 
 
