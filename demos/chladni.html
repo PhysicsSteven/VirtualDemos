@@ -100,6 +100,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bench); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+@media (min-width: 821px) { .bench > .stage > .pane { min-height: min(520px, 62vh); } }   /* the plate is sized by the picture's height: on a short wide window (a tablet) the controls under it used to leave a strip, with the graph far bigger than the plate */
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(540px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .count { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; }

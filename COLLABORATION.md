@@ -5025,3 +5025,24 @@ The import asked for Kepler presets: Mars from Phobos, Pluto from Charon, a bina
 - Keys in TeacherKeys `worksheet-keys/astro-2203/`. test_ideal-gas passes; vdcheck `--only after` 0 problems on both demos.
 
 **For GPT:** please check the atmospheres ratio table against the Part 2 readings, and the parallax ruler readings.
+## 2026-10-26 · Claude · Picture size: no squashed pictures on tablets, and a resize grip on every demo
+
+Steve, after Chladni on a Surface Pro drew its graph much bigger than the plate. Cause: on a short wide window (1368x780,
+a Surface Pro in landscape) the controls under the picture took the stage's height, so Chladni's picture was 1032 x 168 px
+and its plate (sized by the height) tiny beside the plot. A sweep of all 138 demos at 1368x780 found 27 pictures under
+330 px tall or wider than 2.6:1; none in portrait (912x1368).
+- `demos/lib/vd.js` `VD.pictureSize` (wired on every demo with `.bench > .stage`, nothing to call): from 821 px wide the
+  picture (the stage row with the most canvas and svg area, or the stage where one drawing fills it) keeps at least a third
+  of its width in height, up to 400 px and 60 % of the window, never below its CSS. At 1920x1080 only 3 demos change
+  (shells-and-x-rays, nuclear-reactions, temperature, each under 400 px); at 1100x900 (key captures) only Chladni.
+- A grip (`.vd-size`, in vd.css) on the stage's bottom edge: drag with mouse or finger, arrow keys (Shift for big steps),
+  Home or double click for the default. Kept per demo in localStorage `vd-size:<demo>`; Reset all clears it. On 134 of 138
+  demos (not spectra, star-slice, double-pendulum, particles, whose stages have no measurable drawing at load).
+- `chladni.html`: its pane keeps `min(520px, 62vh)` from 821 px, so the plate is bigger than the graph (it was 64 px tall at
+  1100x900 before). Physics untouched; test_chladni passes.
+- vdcheck `--only clip` on all 138 demos: 0 new problems. Two already fail the same way on main (not from this change):
+  craters Projector `#selPlot` (1024 to 1440) and inside-a-planet Projector set up card (17 controls, 1024 to 1440).
+  `--only after` 0 problems on chladni, pendulum, exoplanets, shells-and-x-rays, cart-launch, quantum-waves.
+- Key captures: the capture scripts run at 1100x900, where only Chladni's picture changes (taller); its capture drives
+  buttons only, and the Chladni capture script fails the same way on main here (the worksheet page needs vendored MathJax).
+- What's new entry added.
