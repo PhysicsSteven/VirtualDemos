@@ -1,7 +1,8 @@
 // How this works: Nuclear Reactions, Fission and Fusion, worksheet "Radiation Dose: Distance and Shielding". The first readings: the
 // ¹³⁷Cs source setup (1 GBq, no shield), the meter at 0.50 m and then 1.00 m, each recorded. Expected (key rows 1 and 2): 333.6 and
 // 83.41 µSv/h, a factor of 4 for twice the distance (inverse square law).
-require('./lib.cjs')({ demo: 'nuclear-reactions', title: 'Nuclear Reactions, Fission and Fusion' }, async (r) => {
+// Recorded with ?view=3d: the Dose view opens as a 3D room (2026-10-26), and VD3.lowPower would open it flat in a container.
+require('./lib.cjs')({ demo: 'nuclear-reactions', title: 'Nuclear Reactions, Fission and Fusion', query: '?view=3d' }, async (r) => {
   const { state, p, W } = r;
   const record = async (s) => {
     await r.scrollRail('.vd-readings');

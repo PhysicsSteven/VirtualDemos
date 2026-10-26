@@ -4903,3 +4903,29 @@ says "allowed", the tip says "Magnetic quantum number").
 **For GPT:** please check the materials table against NIST ESTAR (weights, densities, I), the Schneider fit algebra in Analysis 2
 of the key, the prelab L = 8.20 arithmetic, and the claim that the curve's soft tissue slope predicts the brain's 0.0537 mm/HU
 range error slope within 3 %. Hyphens in compound modifiers in captions and handout, as always.
+## 2026-10-26 · Claude · How this works videos: technetium generator, PET room shielding, ultrasound attenuation, Double Pendulum; radiation dose retaken
+
+Dark only, Tools hidden, no What's new entry (Steve). Each from one real run; every reading checked against the physics and the key.
+- **technetium-generator** (Radioactive Decay, ⁹⁹Mo generator, worksheet A Technetium Generator; recorded with `?view=3d`, the
+  shielded column): pause, 10 000 nuclei, expected curve and band off, read at 0 and after four 0.5 h steps. At 2 h the run gave
+  ⁹⁹Mo 9806 and ⁹⁹ᵐTc 153; expected 9792 ± 14 and Bateman 164.6 ± 13 (B 0.886), so both within 1σ (key run: 9799, 155).
+- **shielding-barrier** (Nuclear Reactions Dose view, PET uptake room, worksheet Shielding a PET Uptake Room; 3D room): no lead
+  20.57 µSv/h, then 0.2 cm lead 16.19 broad and 14.42 narrow (buildup 1.123), identical to key rows 1 and 2. Narrow check:
+  e^(−1.7765 × 0.2) = 0.701. The video shows the room again after the second reading, with the sheet in place.
+- **ultrasound-attenuation** (Ultrasound, Attenuation in muscle, worksheet Attenuation of Ultrasound in Tissue; 3D bench): 2 MHz,
+  2.0 cm, cursor on the bone echo peak at 25.16 µs (2d/c with c 1590 m/s), echo level −12.57 dB, identical to key row 1. Check:
+  absorption 1.09 dB/(cm·MHz) × 2 MHz × 4 cm round trip = 8.72 dB, plus the 3.85 dB intercept every depth shares.
+- **double-pendulum** (Pendulums, Double pendulum scene, worksheet Normal Modes and Chaos in a Double Pendulum; it had none): mode 1,
+  1.00 kg masses, rods 0.25 m, mode amplitude 2° (in the Small oscillations fold), measured θ₁ period 1.311 s, as key row 1;
+  2π/√((2 − √2) g/L) = 1.310 s.
+- **radiation-dose** retaken with `?view=3d`, since the Dose view now opens as a 3D room: 333.6 and 83.41 µSv/h, as before.
+- Checked, no retake needed: periodic-table, x-ray-spectra, nuclear-reactions, critical-mass, fusion-gamow. The visual pass changed
+  only the Dose view of Nuclear Reactions and the filtered (HVL) beam of the X-ray tube; first frames and mid run frames of each
+  video match the current pages.
+- Routing: `VD.howTo` picks by state. Radioactive Decay: the mo99 setup → technetium-generator. Nuclear Reactions: Dose view with ¹⁸F
+  → shielding-barrier, other sources → radiation-dose. Ultrasound: absorption on (the readings that go to the Medical Physics
+  worksheet) → ultrasound-attenuation. Pendulums: Double pendulum scene → double-pendulum, other scenes → pendulum. Node tests and
+  vdcheck `--only after` pass on all four demos.
+
+**For GPT:** please check (1) the captions for hyphens in compound modifiers; (2) that each video's readings above agree with the
+keys; (3) the Ultrasound routing: a student with absorption on in another setup also gets the Medical Physics video.

@@ -1030,8 +1030,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the camera in the 3D view: the whole pendulum, or a close up at the photogate */
     $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; L3.cam = b.dataset.cam; for (const x of $('camSeg').querySelectorAll('[data-cam]')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
     stage.dataset.dim = 'flat';
-    /* How this works: a 22 s video of one sample reading in the photogate lab (made by tools/howto/) */
-    VD.howTo({ src: 'media/how-this-works/pendulum.mp4', poster: 'media/how-this-works/pendulum.jpg' });
+    /* How this works: a video of one sample reading (made by tools/howto/): the photogate lab's, or the Double pendulum scene's */
+    const howVid = () => (scene === 'double' ? 'double-pendulum' : 'pendulum');
+    VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
     /* the measuring tools: a stopwatch on the simulated clock, and a ruler on the flat picture's pendulum half, which is drawn to scale */
     VD.tools({ el: can, strip: '#dimbar', stage: '#scene', time: () => (can.getClientRects().length ? S.t : null),
       scale: () => { if (use3() || !geo) return null; const wide = W > 640; return { m: 1 / geo.sc, area: [0, 0, wide ? W * 0.55 : W, wide ? H : H * 0.62] }; } });

@@ -1764,7 +1764,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'radioactive-decay@2026-10-24';
   window.vdShowCols = [['t', 't'], ['parent', 'parents'], ['daughter', 'daughters']];
   /* How this works: a two step chain shows the Parent and Daughter video, the others Measuring a Half Life */
-  const howVid = () => (nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  const howVid = () => (S.preset === 'mo99' ? 'technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   window.vdWorksheet = () => (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   window.vdReadingRow = () => {
