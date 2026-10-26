@@ -842,14 +842,27 @@ table.rows input:focus { border-color: var(--accent); }
     if (g3.shelfB) g3.shelfB.visible = L.nar;
     /* the screen: the flat view's drawScreen, painted into the texture */
     { const save = ctx, sv = TXS; ctx = g3.scrCv.getContext('2d'); TXS = 2.5 / p; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#2d3540'; ctx.fillRect(0, 0, SCW, SCH);
-      drawScreen(30, 26, SCW - 60, SCH - 26 - 76, 2.5); ctx = save; TXS = sv; g3.scrTex.needsUpdate = true; }
+      drawScreen(30, 26, SCW - 60, SCH - 26 - 76, 2.5);
+      if (S.mode === 'echo' && (S.absorb || S.tgc)) {   /* the scanner's settings line: time gain compensation and the echo level at the cursor */
+        const xr = SCW - 30 - 6 * 2.5, lv = levelDb();
+        txt(S.tgc ? `TGC ${S.tgc} dB/(cm·MHz)` : 'TGC off', xr, 26 + 24 * 2.5, { a: 'right', s: 9, c: '#ffd36b', m: 1, b: 1 });
+        if (S.running) txt(`echo at cursor ${isFinite(lv) ? lv.toFixed(1).replace('-', '−') : '−∞'} dB`, xr, 26 + 36 * 2.5, { a: 'right', s: 9, c: '#ffd36b', m: 1 });
+      }
+      ctx = save; TXS = sv; g3.scrTex.needsUpdate = true; }
     /* pulse and echoes on the cut face (echo setups), wavefronts and cells (Doppler) */
     const bh = blockH(), yf = -(S.mode === 'echo' ? BT : FT) / 2 - 0.0007, show = S.running && !reduce, pk = S.mode === 'echo' && show ? pulsePackets(layers()) : [], acc = new THREE.Color(T.accent), neg = new THREE.Color(T.pos);
     const lamOf = (m) => Math.max(0.0015, MEDIA[m].c / (S.f0 * 1e6));
+    /* with absorption the packets fade as they travel: the pulse has lost loss(d) dB one way at depth d, an echo from depth D has
+       lost 2 loss(D) − loss(d) on its way back up (its amplitude e.a already holds the whole 2 loss(D)) */
+    if (S.absorb && pk.length) {
+      const LS = layers(), loss = (d) => { let s0 = 0, top = 0; for (const l of LS) { s0 += alphaDb(l.m, S.f0) * Math.max(0, Math.min(l.d, d - top)) * 100; top += l.d; } return s0; };
+      pk.forEach((k) => { k.a *= Math.pow(10, (k.up ? 1 : -1) * loss(k.dep) / 20); k.db = 20 * Math.log10(Math.abs(k.a)); });
+    }
+    const alOf = (a) => (S.absorb ? 0.12 + 0.88 * Math.min(1, Math.abs(a)) : Math.min(1, 0.3 + 2.2 * Math.abs(a)));
     g3.packs.forEach((P, i) => { const k = pk[i]; P.glow.visible = !!k; P.crests.forEach((c, j) => { c.visible = !!k; if (!k) return;
-        const al = Math.min(1, 0.3 + 2.2 * Math.abs(k.a)), z = bh - k.dep + (k.up ? -j : j) * lamOf(k.m); c.visible = z > 0 && z < bh;
-        c.position.set(L.bx, yf, z); c.material.color.copy(k.a < 0 ? neg : acc); c.material.opacity = al * (1 - 0.25 * j); });
-      if (k) { const al = Math.min(1, 0.3 + 2.2 * Math.abs(k.a)); P.glow.position.set(L.bx, yf - 0.002, bh - k.dep + (k.up ? -1 : 1) * lamOf(k.m)); P.glow.scale.set(0.042, 0.016, 1); P.glow.material.color.copy(k.a < 0 ? neg : acc); P.glow.material.opacity = 0.75 * al; } });
+        const al = alOf(k.a), z = bh - k.dep + (k.up ? -j : j) * lamOf(k.m); c.visible = z > 0 && z < bh;
+        c.position.set(L.bx, yf, z); c.scale.x = S.absorb ? 0.35 + 0.65 * Math.min(1, Math.abs(k.a)) : 1; c.material.color.copy(k.a < 0 ? neg : acc); c.material.opacity = al * (1 - 0.25 * j); });
+      if (k) { const al = alOf(k.a); P.glow.position.set(L.bx, yf - 0.002, bh - k.dep + (k.up ? -1 : 1) * lamOf(k.m)); P.glow.scale.set(0.042, 0.016, 1); P.glow.material.color.copy(k.a < 0 ? neg : acc); P.glow.material.opacity = 0.75 * al; } });
     const flow = S.mode === 'flow', b = beam3();
     g3.wf.visible = flow && show; g3.cells.visible = flow && !reduce;
     if (g3.wf.visible) {
@@ -864,7 +877,7 @@ table.rows input:focus { border-color: var(--accent); }
       g3.cells.show(N); g3.cells.done();
     }
     /* camera: the block and the scanner side by side (or the scanner on a shelf above on a tall picture) */
-    const fl = S.mode === 'flow', tgt = L.nar ? [0, 0.1, 0.235] : [(L.bx + L.cx) / 2 + (fl ? 0 : 0.02), 0.03, fl ? 0.12 : 0.125];
+    const fl = S.mode === 'flow', tgt = L.nar ? [0, 0.1, 0.235] : [(L.bx + L.cx) / 2 + (fl ? 0 : S.preset === 'atten' ? -0.005 : 0.02), 0.03, fl ? 0.12 : 0.125];
     st.place(G3.o, tgt, L.nar ? st.fit(1.12, 0.95) : st.fit(fl ? 0.94 : 1.04, 1.45));
     st.render();
     /* labels on the flat canvas over the scene */
@@ -876,7 +889,7 @@ table.rows input:focus { border-color: var(--accent); }
     { const tq = g3.probe.localToWorld(new THREE.Vector3(0, 0, PL * 0.7)), [x, y] = P3(tq.x, tq.y, tq.z); tag(`transducer, ${S.f0} MHz`, x + 14 * p, y, { a: 'left' }); }
     { const [x, y] = P3(L.bx + b.ex + 0.02, -(flow ? FT : BT) / 2, bh + 0.003); tag('gel', x, y, { a: 'left', b: false }); }
     if (!S.blind) { const ys = []; for (const k of pk) { const [x, y0] = P3(L.bx + 0.009, yf, bh - k.dep); let y = y0; while (ys.some((u) => Math.abs(u - y) < 15 * p)) y += 15 * p; ys.push(y);   /* keep tags apart */
-      tag(`${k.name} ${k.up ? '↑' : '↓'}`, x, y, { a: 'left', s: 10, c: k.a < 0 ? T.pos : T.accent }); } }
+      tag(`${k.name} ${k.up ? '↑' : '↓'}${k.db != null ? ` ${k.db.toFixed(1).replace('-', '−')} dB` : ''}`, x, y, { a: 'left', s: 10, c: k.a < 0 ? T.pos : T.accent }); } }
     const bw3 = flow ? FW : BW, yc = -(flow ? FT : BT) / 2, nameAt = (s0, d, o) => { const [x, y] = P3(L.bx - bw3 / 2 + 0.008, yc, bh - d); tag(s0, x, y, Object.assign({ a: 'left', s: 10 }, o)); };
     if (flow) { if (!L.nar) { nameAt('fat', cm(0.5)); nameAt('muscle', cm(1.7)); } { const [x, y] = P3(L.bx + FW / 2 - 0.006, yc, bh - cm(L.nar ? 5 : 3.75)); tag(L.nar ? 'artery: flow ←' : 'artery: blood flows ←', x, y, { a: 'right', s: 10 }); }
       { const [x, y] = P3(L.bx + XH - 0.014, yc, bh - cm(3) + 0.006); tag(`θ = ${S.theta}°`, x, y, { a: 'right' }); } }
@@ -884,11 +897,19 @@ table.rows input:focus { border-color: var(--accent); }
         if (!(S.preset === 'cyst' && l.m !== 'fat') && (d1 - d) > 0.004) nameAt(MEDIA[l.m].name, (d + d1) / 2);
         d += l.d; }
       if (S.preset === 'cyst') nameAt('muscle (a cyst is somewhere in it)', cm(1.0) + 0.012); }
-    if (S.preset === 'water' || S.preset === 'atten') { const [x, y] = P3(L.bx + BW / 2 + 0.02, -BT / 2, bh - cm(S.water)); tag(`${S.preset === 'water' ? 'water' : 'muscle'} depth ${S.water.toFixed(1)} cm (ruler)`, x, y, { a: 'left' }); }
+    /* Attenuation in muscle: the depth and the absorption go on the left of the block, clear of the scanner card */
+    const leftTags = S.preset === 'atten', sideAt = (z) => (leftTags ? P3(L.bx - BW / 2 - 0.012, -BT / 2, z) : P3(L.bx + BW / 2 + 0.02, -BT / 2, z));
+    if (S.preset === 'water' || S.preset === 'atten') { const [x, y] = sideAt(bh - cm(S.water)); tag(leftTags ? `muscle ${S.water.toFixed(1)} cm` : `${S.preset === 'water' ? 'water' : 'muscle'} depth ${S.water.toFixed(1)} cm (ruler)`, x, y, { a: leftTags ? 'right' : 'left' }); }
+    if (S.mode === 'echo' && (S.absorb || S.preset === 'atten')) {   /* what the absorption is, beside the block */
+      const [x, y] = sideAt(bh - Math.min(bh * 0.25, cm(1.2))), am = alphaDb('muscle', S.f0);
+      tag(S.absorb ? (S.preset === 'atten' ? `absorbs ${am.toFixed(2)} dB/cm` : 'absorption on, each tissue its own') : 'absorption off', x, y, { a: leftTags ? 'right' : 'left', s: 10, b: false, c: S.absorb ? T.ink : T.muted });
+    }
     const lam = flow ? MEDIA.blood.c / (S.f0 * 1e6) * 1000 : MEDIA.muscle.c / (S.f0 * 1e6) * 1000;
     const cap = L.nar ? [flow ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the pulse: 20 000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
       : flow ? [`Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).`, 'Drag the screen to move the cursor; drag elsewhere to turn.']
       : [`Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown 20 000× slower, their crests at least 1.5 mm apart (really c/f₀ = ${lam.toFixed(2)} mm in muscle).`, 'Drag the screen to move the cursor; drag elsewhere to turn.'];
+    if (S.preset === 'atten' && S.absorb && !L.nar) { const eb = echoesNow().find((e) => e.to === 'bone'), am = alphaDb('muscle', S.f0);
+      if (eb) cap.splice(1, 0, `Absorption in muscle ${ATTEN.muscle} dB/(cm·MHz) × ${S.f0} MHz = ${am.toFixed(2)} dB/cm, so the bone echo loses 2 × ${am.toFixed(2)} × ${S.water.toFixed(1)} = ${eb.lossDb.toFixed(1)} dB down and back.`); }
     ctx.font = `${10 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     const cardOn = getComputedStyle(card).position === 'absolute' && !card.classList.contains('away'), maxw = L.nar ? W - 24 * p : Math.min((cardOn ? W - 360 * p : W) - 24 * p, W * 0.42), lines = []; for (const s0 of cap) { let line = ''; for (const w of s0.split(' ')) { const t2 = line ? line + ' ' + w : w; if (ctx.measureText(t2).width > maxw && line) { lines.push(line); line = w; } else line = t2; } lines.push(line); }
     lines.forEach((s0, i) => ctx.fillText(s0, 12 * p, L.nar ? Hh - (lines.length - i) * 14 * p : 58 * p + i * 14 * p));
