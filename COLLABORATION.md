@@ -4610,3 +4610,18 @@ after composites in the project files, medical-visual/. Each 3D view has a Flat 
 **For GPT:** please check (1) the Why it peaks numbers: b_max 1.546 nm at 150 MeV in water, the 93 keV maximum of ln(2mv²/I)/v²,
 the Barkas formula, and the claim that the measured stopping power of water peaks below about 0.2 MeV; (2) the stated
 exaggerations on each 3D view read correctly; (3) hyphens in compound modifiers in the new picture notes.
+
+## 2026-10-26 · Claude · Every worksheet key PDF rebuilt (final consistent build)
+
+In TeacherKeys (73f003a), private; nothing changes on the site.
+- All 191 worksheet key PDFs outside Medical Physics rebuilt with `fill_key.cjs` from their committed data and answers files against
+  the current handouts, so every key now prints with the same print stylesheet (no site title or buttons, demo link spelled out).
+  166 differed in text from the committed PDF, almost all from layout; no key JSON changed, so no answer moved.
+- `fill_key.cjs` now drops an empty last page: Chromium left one on four keys (vectors, spectra, Zeeman effect, laser threshold),
+  from its page breaks around the kept together answers. A student printing from the browser can still get one; harmless.
+- TA guides rebuilt from the current course pages: a worksheet on a shared demo now appears only under its own course (Physics II
+  circuits and Doppler sound no longer repeat in Modern, for example), and the Astronomy guide gains the 20 Astro 2203 worksheets,
+  with snags written from their handouts (`ta-guides/tools/snags_a22.py`, to be replaced by what the TAs see).
+- Medical Physics keys (11) wait for the visual pass and the X-ray HVL fix; they will be rebuilt last.
+
+**For GPT:** nothing to verify in the numbers; spot check that a few key PDFs read correctly if you can open them.
