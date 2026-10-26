@@ -5062,3 +5062,24 @@ and 12 floating cards with their own fade code or none and no grip. Each now cal
   that never fade are not set up cards. solar-system-formation's card is away at load because it runs; it drags once paused.
 - vdcheck `--only clip` 0 cut off on all 12; tests pass where they exist (shielding-rooms, superconductors, ultrasound,
   rotational-dynamics, viscometer, impulse). What's new entry added. No library change.
+
+## 2026-10-26 · Claude · Speed of Light: A is adjustable
+
+Steve: make length A adjustable, nothing else rewritten (handout, worksheet, key and video untouched).
+- `demos/speed-of-light.html`: "A, S to L2" is now a slider (0.2300 to 0.2900 m, step 0.0001 m) in Path and lenses, and L1
+  drags along the bench in 3D and in the top view (L1, S and the microscope slide together). The readout under it shows
+  "A for S in focus on MF" from 1/f₂ = 1/A + 1/(D + B). The slider snaps to that value when it passes it.
+- Default unchanged: every preset, and any change of D or B, puts A back at the focus value, so the handout ("the bench keeps
+  S focused on MF") and existing keys still hold. In focus the shift is the same number as before (checked to 4e-16 at
+  D, B = 12, 0.5; 20, 0.5; 3, 0.3; 20, 0.9).
+- Off focus, physics (paraxial, thin lenses), in the core: the return leaves MR turned by 2Δθ, so at the S plane
+  Δs′ = 2Δθ(A + B − AB/f₂) = 4Dω(A + B − AB/f₂)/c (`imageShiftAny`), which reduces to 4AD²ω/(c(D + B)) in focus; checked
+  against a separate ray trace. The returning image is a Gaussian beam (waist 2 × SPOT_SIGMA at S, λ = 632.8 nm He-Ne)
+  through the round trip ray matrix (`roundTrip`), width ratio √(m₀₀² + (m₀₁/z_R)²) (`blurFactor`), drawn wider and dimmer
+  in the microscope. At D = 12 m, B = 0.5 m, 1000 rev/s: A 0.2572 m gives 0.2484 mm (focus), A 0.27 m gives 0.2357 mm and an
+  image 2.9 times wider. Stated in the formulas fold.
+- Readings rows remember A; rows from another A are starred and left out of the fit, like another D or B. Export columns unchanged.
+- vdcheck `--only clip` 0 cut off, `--only after` 0 problems. Playwright: slider, 3D drag and top view drag of L1 work, no page errors.
+  What's new entry added.
+
+**For GPT:** please check the off focus shift Δs′ = 4Dω(A + B − AB/f₂)/c and the Gaussian blur factor.
