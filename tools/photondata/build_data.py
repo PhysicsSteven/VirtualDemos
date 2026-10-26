@@ -78,11 +78,20 @@ for Z in [1,3,6,7,8,9,11,12,13,14,15,16,17,18,19,20,26,29,74,82]:
 # ---- SpekPy tube spectra ----
 import spekpy as sp
 spec={}
-for kvp in range(50,151,10):
+char={}
+# every 0.5 kV from 20 to 100 kVp (the X-ray tube in Shells and X-rays), then 110 to 150 in steps of 10 (Photon Interactions)
+KVPS=[20+0.5*i for i in range(161)]+list(range(110,151,10))
+for kvp in KVPS:
+    key=f'{kvp:g}'
     s=sp.Spek(kvp=kvp,th=12,dk=1); s.filter('Be',0.8)
     k,f=s.get_spectrum()
-    spec[kvp]=','.join(m4(v) if v>1e-30 else '0' for v in f)
-    spec[str(kvp)+'k']=round(s.get_kerma(),5)  # air kerma uGy per mAs at 1 m, SpekPy's own
-json.dump({'mats':mats,'tab1':tab1,'atom':atom,'xg':XG,'ff':ffz,'spec':spec},open(os.path.join(HERE, 'other.json'),'w'),separators=(',',':'))
-print('other bytes',len(json.dumps({'mats':mats,'tab1':tab1,'atom':atom,'xg':XG,'ff':ffz,'spec':spec},separators=(',',':'))))
+    # bins are 1 keV wide and the last one ends at the kVp: centers kVp - 0.5, kVp - 1.5, ... down to 1.5 or 2 keV
+    assert abs(k[-1]-(kvp-0.5))<1e-9 and len(k)==len(f)
+    spec[key]=','.join(m4(v) if v>1e-30 else '0' for v in f)
+    if kvp%10==0 and kvp>=50: spec[key+'k']=round(s.get_kerma(),5)  # air kerma uGy per mAs at 1 m, SpekPy's own
+    k,fb=s.get_spectrum(char=False)
+    # characteristic (K and L line) part of each bin, sparse: "bin index:fluence" for bins where it is over 0.1 % of the bin
+    char[key]=';'.join(f'{i}:{m4(f[i]-fb[i])}' for i in range(len(f)) if f[i]>0 and f[i]-fb[i]>1e-3*f[i])
+json.dump({'mats':mats,'tab1':tab1,'atom':atom,'xg':XG,'ff':ffz,'spec':spec,'char':char},open(os.path.join(HERE, 'other.json'),'w'),separators=(',',':'))
+print('other bytes',len(json.dumps({'mats':mats,'tab1':tab1,'atom':atom,'xg':XG,'ff':ffz,'spec':spec,'char':char},separators=(',',':'))))
 print(atom[82], atom[8], atom[53])

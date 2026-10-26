@@ -1,8 +1,9 @@
 'use strict';
 // Shells, the Periodic Table and X Rays: Pauli capacities, the n + l rule and its exceptions, NIST data sanity, Duane–Hunt limit,
-// K lines and Moseley's law.
+// K lines and Moseley's law, and the tube's half value layers against SpekPy and the Photon Interactions demo.
 const assert = require('node:assert');
-const { core } = require('./demo_source.cjs');
+const vm = require('node:vm');
+const { core, readLib } = require('./demo_source.cjs');
 const c = core('shells-and-x-rays', 'ELEMENTS,XRAY,XR,SUB_ORDER,cap,ruleConfig,realConfig,configText,shellCounts,outerShell,boxes,lastElectron,zEff,RY,HC_EV_PM,lamPm,ePm,xrayLines,kramersE,moseleyE');
 let n = 0;
 const je = (a, b) => assert.equal(JSON.stringify(a), JSON.stringify(b));
@@ -48,5 +49,20 @@ group("Moseley: √f against Z is a straight line with slope near √(3/4 · 13.
   const m = (N * sxy - sx * sy) / (N * sxx - sx * sx), b = (sy - m * sx) / N, pred = Math.sqrt(0.75 * c.RY * eV / H);
   near(m, pred, 0.03, 'slope within 3% of the Bohr model'); near(-b / m, 1, 0.5, 'intercept near Z = 1');
   near(c.moseleyE(29), 0.75 * 13.605693122994 * 784, 1e-12); near(c.moseleyE(29) / c.XR[29].ka1, 0.994, 0.01, 'Cu within 1%');
+});
+group('half value layers: SpekPy 2.5.4 within 0.3 %, and the same numbers as Photon Interactions in Matter (shared photondata.js)', () => {
+  const dctx = {}; vm.runInNewContext(readLib('photondata.js'), dctx, { timeout: 5000 }); const D = dctx.VDPHOTON;
+  const t = core('shells-and-x-rays', 'useData,beamOK,hvl,meanEnergy,airKerma'), p = core('photon-interactions', 'useData,tubeSpectrum,filtered,hvl,meanEnergy');
+  t.useData(D); p.useData(D);
+  /* SpekPy's own get_hvl1, get_hvl2, get_emean: tungsten, 12°, 0.8 mm Be, dk = 1 keV, then the filters */
+  for (const [kV, al, cu, h1, h2, em] of [[30, 2.5, 0, 0.9606, 1.1033, 23.362], [50, 2.5, 0, 1.7548, 2.3238, 32.242], [60.5, 2.5, 0, 2.1039, 2.9288, 36.156],
+    [80, 2.5, 0, 2.7426, 4.0944, 42.936], [80, 1, 0, 1.609, 2.8093, 38.967], [80, 2.5, 0.1, 4.411, 5.6881, 47.921], [100, 2.5, 0, 3.4702, 5.4125, 49.19]]) {
+    const h = t.hvl(74, kV, al, cu); near(h.h1, h1, 0.003, `HVL1 ${kV} kV`); near(h.h2, h2, 0.003, `HVL2 ${kV} kV`); near(t.meanEnergy(74, kV, al, cu), em, 0.002, `mean E ${kV} kV`);
+    if (kV % 10 === 0 && kV >= 50) { const s = p.filtered(p.tubeSpectrum(kV), [{ mat: 'al', mm: al }, { mat: 'cu', mm: cu }]), q = p.hvl(s, 'al');
+      near(h.h1, q.hvl1, 1e-9, 'same HVL1 as Photon Interactions'); near(h.h2, q.hvl2, 1e-9, 'same HVL2'); near(t.meanEnergy(74, kV, al, cu), p.meanEnergy(s), 1e-12, 'same mean energy'); }
+  }
+  assert.equal(t.hvl(74, 80, 2.5, 0).h1.toFixed(2), '2.74');
+  assert(!t.beamOK(74, 19.5) && t.beamOK(74, 20) && t.beamOK(74, 99.5) && !t.beamOK(29, 80) && !t.beamOK(74, 110), 'tungsten, 20 to 100 kV only');
+  assert(t.hvl(74, 80, 2.5, 0).h2 > t.hvl(74, 80, 2.5, 0).h1, 'the beam hardens');
 });
 console.log(`${n} groups passed`);

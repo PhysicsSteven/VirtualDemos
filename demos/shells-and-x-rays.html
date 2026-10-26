@@ -9,6 +9,7 @@
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
+<script src="lib/photondata.js"></script>
 <title>Shells, the Periodic Table and X-Rays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -396,49 +397,55 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const kramersE = (Z, kV, E) => Math.max(0, Z * (kV * 1000 - E));
   /* Moseley's law in the textbook's Bohr model (§8.5): E_Kα ≈ (3/4)(13.6 eV)(Z − 1)² */
   const moseleyE = (Z) => 0.75 * RY * (Z - 1) * (Z - 1);
-  /* Filtration and half value layer (Medical Physics module, 2026-10-25). Mass attenuation μ/ρ of aluminum and copper and the mass
-     energy absorption μ_en/ρ of dry air, cm²/g against photon energy in keV: J. H. Hubbell and S. M. Seltzer, NIST Standard Reference
-     Database 126 (X-Ray Mass Attenuation Coefficients), retrieved 2026-10-25. An absorption edge is two rows at the same energy. */
-  const MU_AL = [[1, 1185], [1.5, 402.2], [1.5596, 362.1], [1.5596, 3957], [2, 2263], [3, 788.0], [4, 360.5], [5, 193.4], [6, 115.3], [8, 50.33], [10, 26.23],
-    [15, 7.955], [20, 3.441], [30, 1.128], [40, 0.5685], [50, 0.3681], [60, 0.2778], [80, 0.2018], [100, 0.1704], [150, 0.1378]];
-  const MU_CU = [[1, 10570], [1.04695, 9307], [1.0961, 8242], [1.0961, 9347], [1.5, 4418], [2, 2154], [3, 748.8], [4, 347.3], [5, 189.9], [6, 115.6], [8, 52.55],
-    [8.9789, 38.29], [8.9789, 278.4], [10, 215.9], [15, 74.05], [20, 33.79], [30, 10.92], [40, 4.862], [50, 2.613], [60, 1.593], [80, 0.7630], [100, 0.4584], [150, 0.2217]];
-  const MUEN_AIR = [[1, 3599], [1.5, 1188], [2, 526.2], [3, 161.4], [3.2029, 133.0], [3.2029, 146.0], [4, 76.36], [5, 39.31], [6, 22.70], [8, 9.446], [10, 4.742],
-    [15, 1.334], [20, 0.5389], [30, 0.1537], [40, 0.06833], [50, 0.04098], [60, 0.03041], [80, 0.02407], [100, 0.02325], [150, 0.02496]];
-  const RHO_AL = 2.699, RHO_CU = 8.96;   /* g/cm³ */
-  /* log–log interpolation, as NIST recommends; at an edge the row above the edge is used for energies above it */
-  function tabLL(T, keV) {
-    let i = 0; while (i < T.length - 2 && (keV > T[i + 1][0] || (keV === T[i + 1][0] && T[i + 2][0] === keV))) i++;
-    if (T[i][0] === T[i + 1][0]) i++;
-    const [e0, y0] = T[i], [e1, y1] = T[i + 1];
-    return Math.exp(Math.log(y0) + Math.log(keV / e0) / Math.log(e1 / e0) * Math.log(y1 / y0));
-  }
+  /* Filtration and half value layer (Medical Physics module; since 2026-10-26 on the shared data). The beam is SpekPy's tungsten
+     spectrum, the filters' μ/ρ the XCOM sums and air's μ_en/ρ NIST SRD 126, all from lib/photondata.js (its header lists the sources),
+     computed the same way as in Photon Interactions in Matter (log–log interpolation, each 1 keV bin at its center), so the two demos
+     give the same half value layers. SpekPy has a tungsten anode only (12°, 0.8 mm Be), from 20 kV in steps of 0.5 kV; other targets
+     and lower voltages get no beam quality numbers. The browser calls useData(window.VDPHOTON); the tests pass the same object. */
+  let PDATA = null;
+  const PDC = {};
+  function useData(d) { PDATA = d; for (const k in PDC) delete PDC[k]; }
+  const rowsOf = (t) => t.split(';').map((r) => r.split(',').map(Number));
+  function lastLE(xs, v) { let lo = 0, hi = xs.length - 1; if (v <= xs[0]) return 0; if (v >= xs[hi]) return hi - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (xs[m] <= v) lo = m; else hi = m; } return lo; }
+  function interpLL(xs, ys, v) { /* log–log between table points; the row above an edge from the edge energy up */
+    let i = lastLE(xs, v); if (i >= xs.length - 1) i = xs.length - 2; while (i > 0 && xs[i + 1] === xs[i]) i--;
+    if (xs[i + 1] === xs[i]) i++;
+    const a = ys[i], b = ys[i + 1], t = Math.log(v / xs[i]) / Math.log(xs[i + 1] / xs[i]);
+    return a > 0 && b > 0 ? Math.exp(Math.log(a) + t * Math.log(b / a)) : a + t * (b - a); }
+  /* μ/ρ (cm²/g) of element Z at E keV: the five XCOM parts, each interpolated, then summed */
+  function muRhoZ(Z, E) { const k = 'x' + Z; if (!PDC[k]) { const R = rowsOf(PDATA.xcom[Z]); PDC[k] = { E: R.map((r) => r[0]), c: [1, 2, 3, 4, 5].map((j) => R.map((r) => r[j])) }; }
+    const t = PDC[k]; E = Math.min(1e5, Math.max(1, E)); return t.c.reduce((s, ys) => s + interpLL(t.E, ys, E), 0); }
+  /* μ_en/ρ (cm²/g) of dry air at E keV, NIST SRD 126 */
+  function muEnAir(E) { if (!PDC.air) { const m = PDATA.mats.find((q) => q.key === 'air'), R = rowsOf(m.en); PDC.air = { E: R.map((r) => r[0]), y: R.map((r) => r[2]) }; } return interpLL(PDC.air.E, PDC.air.y, E); }
+  const RHO_AL = 2.699, RHO_CU = 8.96;   /* g/cm³, NIST SRD 126 Table 1 */
   /* the share of photons of energy E (eV) through alMm of aluminum and cuMm of copper */
-  const filterT = (E, alMm, cuMm) => Math.exp(-(tabLL(MU_AL, E / 1000) * RHO_AL * alMm + tabLL(MU_CU, E / 1000) * RHO_CU * cuMm) / 10);
-  /* air kerma from the continuous spectrum, in arbitrary units: K ∝ ∫ Ψ_E(E) T(E) (μ_en/ρ)_air dE, with Ψ_E the Kramers energy
-     spectrum. From 1 keV (the bottom of the table; any filter removes what lies below) to E₀. The K lines are left out: their
-     strengths are drawn, not measured. Midpoint rule on 1500 steps. */
-  function airKerma(Z, kV, alMm, cuMm) {
-    const E0 = kV * 1000, n = 1500, dE = (E0 - 1000) / n; let s = 0;
-    for (let i = 0; i < n; i++) { const E = 1000 + dE * (i + 0.5); s += kramersE(Z, kV, E) * filterT(E, alMm, cuMm) * tabLL(MUEN_AIR, E / 1000); }
-    return s * dE;
-  }
-  /* half value layer in mm of aluminum for the beam behind alMm and cuMm: K(al + x)/K(al) = 1/2, by bisection; the second HVL
-     halves it again; mean photon energy of the filtered continuum, weighted by photon number */
-  function hvl(Z, kV, alMm, cuMm, frac) {
-    const K0 = airKerma(Z, kV, alMm, cuMm), want = frac || 0.5; let a = 0, b = 60;
-    for (let k = 0; k < 50; k++) { const m = (a + b) / 2; if (airKerma(Z, kV, alMm + m, cuMm) > want * K0) a = m; else b = m; }
-    return (a + b) / 2;
-  }
-  function meanEnergy(Z, kV, alMm, cuMm) {
-    const E0 = kV * 1000, n = 1500, dE = (E0 - 1000) / n; let sn = 0, se = 0;
-    for (let i = 0; i < n; i++) { const E = 1000 + dE * (i + 0.5), w = kramersE(Z, kV, E) / E * filterT(E, alMm, cuMm); sn += w; se += w * E; }
-    return se / sn;
-  }
+  const filterT = (E, alMm, cuMm) => Math.exp(-(muRhoZ(13, E / 1000) * RHO_AL * alMm + muRhoZ(29, E / 1000) * RHO_CU * cuMm) / 10);
+  /* SpekPy's tungsten spectrum at kV, or null: E (keV, bin centers; the last bin ends at the kVp), f photons per keV per mAs at 1 m,
+     ch the part of f in the K and L lines */
+  function wSpectrum(Z, kV) {
+    if (Z !== 74 || !PDATA || !PDATA.spec[String(kV)] || kV > 100) return null; const k = 'w' + kV; if (PDC[k]) return PDC[k];
+    const f = PDATA.spec[String(kV)].split(',').map(Number), n = f.length, ch = f.map(() => 0);
+    for (const q of (PDATA.char[String(kV)] || '').split(';')) if (q) { const [i, v] = q.split(':'); ch[+i] = +v; }
+    return (PDC[k] = { kV, E: f.map((_, i) => kV - n + i + 0.5), f, ch }); }
+  const beamOK = (Z, kV) => !!wSpectrum(Z, kV);
+  /* air kerma, relative: Σ Φ(E) T(E) E (μ_en/ρ)_air over the bins */
+  function airKerma(Z, kV, alMm, cuMm) { const sp = wSpectrum(Z, kV); let k = 0;
+    for (let i = 0; i < sp.E.length; i++) k += sp.f[i] * filterT(sp.E[i] * 1000, alMm, cuMm) * sp.E[i] * muEnAir(sp.E[i]); return k; }
+  /* aluminum on top of alMm (and cuMm) that brings the air kerma down to the share q, by bisection */
+  function alFor(Z, kV, alMm, cuMm, q) { const K0 = airKerma(Z, kV, alMm, cuMm); let lo = 0, hi = 1;
+    while (airKerma(Z, kV, alMm + hi, cuMm) > q * K0) hi *= 2;
+    for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2; if (airKerma(Z, kV, alMm + mid, cuMm) > q * K0) lo = mid; else hi = mid; } return (lo + hi) / 2; }
+  /* first and second half value layers in mm Al: the second is the extra aluminum from a half to a quarter */
+  function hvl(Z, kV, alMm, cuMm) { const h1 = alFor(Z, kV, alMm, cuMm, 0.5), q = alFor(Z, kV, alMm, cuMm, 0.25); return { h1, h2: q - h1 }; }
+  /* mean photon energy (keV) of the filtered beam, weighted by photon number */
+  function meanEnergy(Z, kV, alMm, cuMm) { const sp = wSpectrum(Z, kV); let a = 0, b = 0;
+    for (let i = 0; i < sp.E.length; i++) { const w = sp.f[i] * filterT(sp.E[i] * 1000, alMm, cuMm); a += w * sp.E[i]; b += w; } return a / b; }
   /* minimum first HVL, 21 CFR 1020.30(m)(1) Table 1, systems made on or after June 10, 2006 (other than intraoral dental): kVp → mm Al */
   const CFR_HVL = { 30: 0.3, 40: 0.4, 50: 0.5, 51: 1.3, 60: 1.5, 70: 1.8, 71: 2.5, 80: 2.9, 90: 3.2, 100: 3.6 };
   // ==CORE END==
   if (typeof document === 'undefined') return;
+  useData(window.VDPHOTON);
 
   const $ = (id) => document.getElementById(id);
   const VG = window.VDGear;
@@ -559,11 +566,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const RES = 0.0015;   /* the spectrometer's FWHM as a fraction of the photon energy */
   function spectrum(Z, kV, Ex, raw) {
+    if (filtered() && beamOK(Z, kV)) return spekI(Z, kV, Ex, raw);
     let I = kramersE(Z, kV, Ex) / (Z * kV * 1000);
     for (const l of xrayLines(Z, kV)) { const sg = RES * l.E / 2.3548; I += 3 * l.h * Math.exp(-0.5 * Math.pow((Ex - l.E) / sg, 2)); }
     return raw || !filtered() ? I : I * filterT(Math.max(Ex, 1000), S.xr.al + S.xr.abs, S.xr.cu);   /* filtration and the absorber in the beam */
   }
   const filtered = () => S.xr.al > 0 || S.xr.cu > 0 || S.xr.abs > 0;
+  /* with filtration or sheets in a tungsten beam the graph shows the beam the chamber measures: SpekPy's spectrum, energy per unit E
+     (photons per keV times E), straight between the 1 keV bin centers and down to zero at E₀; the K lines are inside their bins */
+  function spekI(Z, kV, Ex, raw) {
+    const sp = wSpectrum(Z, kV), E = Ex / 1000, n = sp.E.length, at = (i) => sp.f[i] * sp.E[i] * (raw ? 1 : filterT(sp.E[i] * 1000, S.xr.al + S.xr.abs, S.xr.cu));
+    if (E >= kV || E < sp.E[0] - 0.5) return 0;
+    if (E >= sp.E[n - 1]) return at(n - 1) * (kV - E) / 0.5;
+    if (E < sp.E[0]) return at(0);
+    const i = Math.floor(E - sp.E[0]), t = E - sp.E[i]; return at(i) * (1 - t) + at(i + 1) * t;
+  }
   function xRange() { const Z = xZ(), kV = S.xr.kV, x = XR[Z], lmin = lamPm(kV * 1000);
     if (S.xr.axis === 'lam') return [0, Math.max(lmin * 3, x ? lamPm(x.ka2) * 1.2 : 0)]; return [0, kV * 1000 * 1.05]; }
   function drawXspec() {
@@ -571,8 +588,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Z = xZ(), kV = S.xr.kV, lam = S.xr.axis === 'lam', [x0, x1] = xRange(), L = 52 * p, Rr = 16 * p, Tp = 14 * p, Bt = 36 * p, pw = CW - L - Rr, ph = CH - Tp - Bt;
     const X = (v) => L + (v - x0) / (x1 - x0) * pw;
     const N = 900, ys = [], y0s = []; let ymax = 0;
-    /* with filtration the unfiltered spectrum is drawn dashed on the same scale, so the filtered one shows what the filter removed */
-    for (let i = 0; i <= N; i++) { const v = x0 + (x1 - x0) * i / N; let y = 0, y0 = 0; if (v > 0) { const E = lam ? ePm(v) : v, jac = lam ? HC_EV_PM / (v * v) : 1; y = spectrum(Z, kV, E) * jac; y0 = spectrum(Z, kV, E, true) * jac; } ys.push(y); y0s.push(y0); ymax = Math.max(ymax, filtered() ? y0 : y); }
+    /* with filtration the unfiltered spectrum is drawn dashed on the same scale (scaled to the filtered one, so the dashed curve runs off the top where the filter removed most) */
+    for (let i = 0; i <= N; i++) { const v = x0 + (x1 - x0) * i / N; let y = 0, y0 = 0; if (v > 0) { const E = lam ? ePm(v) : v, jac = lam ? HC_EV_PM / (v * v) : 1; y = spectrum(Z, kV, E) * jac; y0 = spectrum(Z, kV, E, true) * jac; } ys.push(y); y0s.push(y0); ymax = Math.max(ymax, y); }
     c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.lineWidth = 1; c.textAlign = 'center'; c.textBaseline = 'top';
     const scale = lam ? 1 : 1000, st = niceStep((x1 - x0) / scale / 6) * scale;
     for (let v = Math.ceil(x0 / st) * st; v <= x1 + 1e-9; v += st) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+(v / scale).toFixed(3)), X(v), Tp + ph + 4); }
@@ -672,6 +689,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function photonTable(Z, kV) {
     const k = Z + ',' + kV; if (G3.key === k) return G3.cdf; G3.key = k;
     const E0 = kV * 1000, n = 2000, dE = (E0 - E_CUT) / n, cdf = []; let sum = 0;
+    if (filtered() && beamOK(Z, kV)) {   /* the measured tungsten beam: each bin's continuum and its line photons (Kα, Kβ by energy; L lines drawn as continuum) */
+      const sp = wSpectrum(Z, kV);
+      sp.E.forEach((E, i) => { const tr = filterT(E * 1000, S.xr.al + S.xr.abs, S.xr.cu), c0 = (sp.f[i] - sp.ch[i]) * tr, c1 = sp.ch[i] * tr;
+        if (c0 > 0) { sum += c0; cdf.push([sum, E * 1000, null]); } if (c1 > 0) { sum += c1; cdf.push([sum, E * 1000, E < 50 ? null : E < 63 ? 'Kα₁' : 'Kβ₁']); } });
+      cdf.forEach((q) => { q[0] /= sum; }); return (G3.cdf = cdf);
+    }
     for (let i = 0; i < n; i++) { const E = E_CUT + dE * (i + 0.5); const tr = filtered() ? filterT(E, S.xr.al + S.xr.abs, S.xr.cu) : 1; sum += kramersE(Z, kV, E) / (Z * E0) / E * dE * tr; cdf.push([sum, E, null]); }
     for (const l of xrayLines(Z, kV)) { const sg = RES * l.E / 2.3548; sum += 3 * l.h * sg * Math.sqrt(2 * Math.PI) / l.E * (filtered() ? filterT(l.E, S.xr.al + S.xr.abs, S.xr.cu) : 1); cdf.push([sum, l.E, l.name]); }
     cdf.forEach((q) => { q[0] /= sum; }); return (G3.cdf = cdf);
@@ -686,7 +709,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hq.sheets.forEach((o, i) => { const t = bq && i < n ? Math.min(1, xq.abs - i) / 1000 : 0; hq.put(o, end - i * 0.001 - t, t); });
       hq.chamber3.visible = hq.stand.visible = hq.elec.visible = hq.lead3.visible = bq;
     }
-    if (bq) hq.elec.set(f(chamber(Z, kV), 4));
+    if (bq) hq.elec.set(beamOK(Z, kV) ? f(chamber(Z, kV), 4) : '-');
     if (bq !== G3.bq) { G3.bq = bq; Object.assign(G3.o, bq ? { th: -0.5, ph: 1.12 } : { th: -Math.PI / 2 - 0.3, ph: 1.08 }); }   /* the beam bench is seen from the side */
     S3.size(w3, Hh); const narrow = W < 560, mid = hq.beamAt(narrow ? 0.13 : 0.11);
     S3.place(G3.o, bq ? [mid[0] - 0.01, mid[1] - 0.03, ZT - 0.05] : narrow ? [0, 0.01, ZT - 0.02] : [-0.02, 0.03, ZT - 0.04], (narrow ? (bq ? 0.5 : 0.45) : bq ? 0.6 : 0.72) * Math.max(1, 1.45 / asp));
@@ -738,16 +761,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let BQ = { key: '' };
   function beamQ(Z, kV) {
     const x = S.xr, k = [Z, kV, x.al, x.cu].join();
-    if (BQ.key !== k) { const h1 = hvl(Z, kV, x.al, x.cu), h2 = hvl(Z, kV, x.al + h1, x.cu); BQ = { key: k, h1, h2, Em: meanEnergy(Z, kV, x.al, x.cu), K0: airKerma(Z, kV, x.al, x.cu) }; }
+    if (BQ.key !== k) BQ = beamOK(Z, kV) ? { key: k, ...hvl(Z, kV, x.al, x.cu), Em: meanEnergy(Z, kV, x.al, x.cu), K0: airKerma(Z, kV, x.al, x.cu) } : { key: k, none: true };
     return BQ;
   }
-  const chamber = (Z, kV) => airKerma(Z, kV, S.xr.al + S.xr.abs, S.xr.cu) / beamQ(Z, kV).K0;
+  const chamber = (Z, kV) => (beamOK(Z, kV) ? airKerma(Z, kV, S.xr.al + S.xr.abs, S.xr.cu) / beamQ(Z, kV).K0 : NaN);
   function beamReadouts(Z, kV) {
     const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', x = S.xr, q = beamQ(Z, kV), on = x.al > 0 || x.cu > 0;
-    let o = dd('Filtration', `${f(x.al, 1)} mm Al${x.cu ? ` + ${f(x.cu, 2)} mm Cu` : ''}`) + dd(`Chamber reading K/K₀, ${f(x.abs, 1)} mm sheets`, f(chamber(Z, kV), 4));
+    let o = dd('Filtration', `${f(x.al, 1)} mm Al${x.cu ? ` + ${f(x.cu, 2)} mm Cu` : ''}`);
+    if (q.none) return o + dd('Chamber and half value layers', '<span class="ok">need the tungsten target at 20 kV or more</span>');
+    o += dd(`Chamber reading K/K₀, ${f(x.abs, 1)} mm sheets`, f(chamber(Z, kV), 4));
     if (!on) return o + dd('Half value layer', '<span class="ok">add filtration first</span>');
     o += dd('First HVL', S.blind ? hide : `${f(q.h1, 2)} mm Al`) + dd('Second HVL', S.blind ? hide : `${f(q.h2, 2)} mm Al`)
-      + dd('Homogeneity HVL₁/HVL₂', S.blind ? hide : f(q.h1 / q.h2, 3)) + dd('Mean photon energy', `${f(q.Em / 1000, 1)} keV`);
+      + dd('Homogeneity HVL₁/HVL₂', S.blind ? hide : f(q.h1 / q.h2, 3)) + dd('Mean photon energy', `${f(q.Em, 1)} keV`);
     if (CFR_HVL[kV] !== undefined) o += dd('Minimum first HVL, 21 CFR 1020.30', `${CFR_HVL[kV]} mm Al`);
     return o;
   }
@@ -853,13 +878,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Z = xZ(), kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur), get = (n) => { const l = ln.find((q) => q.name === n); return l && !S.blind ? g6(l.E) : ''; };
     return { view: 'xray', target: myst ? 'mystery' : byZ(Z)[2], Z: myst ? '' : Z, V_kV: kV, cursor_pm: f(cl, 2), cursor_keV: f(ePm(cl) / 1000, 4), lambda_min_pm: S.blind ? '' : f(lamPm(kV * 1000), 3),
       Ka1_eV: get('Kα₁'), Ka2_eV: get('Kα₂'), Kb1_eV: get('Kβ₁'),
-      ...(mpBeam() ? { filter_Al_mm: f(S.xr.al, 1), filter_Cu_mm: f(S.xr.cu, 2), absorber_Al_mm: f(S.xr.abs, 1), chamber: f(chamber(Z, kV), 4),
-        hvl1_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) ? '' : f(beamQ(Z, kV).h1, 2), hvl2_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) ? '' : f(beamQ(Z, kV).h2, 2), mean_keV: f(beamQ(Z, kV).Em / 1000, 1) } : {}) };
+      ...(mpBeam() ? { filter_Al_mm: f(S.xr.al, 1), filter_Cu_mm: f(S.xr.cu, 2), absorber_Al_mm: f(S.xr.abs, 1), chamber: beamOK(Z, kV) ? f(chamber(Z, kV), 4) : '',
+        hvl1_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) || !beamOK(Z, kV) ? '' : f(beamQ(Z, kV).h1, 2), hvl2_mm: S.blind || !(S.xr.al > 0 || S.xr.cu > 0) || !beamOK(Z, kV) ? '' : f(beamQ(Z, kV).h2, 2), mean_keV: beamOK(Z, kV) ? f(beamQ(Z, kV).Em, 1) : '' } : {}) };
   };
 
   // ---------- about ----------
   $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
-  $('aboutXray').textContent = 'X-ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X-rays move slowed down for the eye, and each X-ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, gray for bremsstrahlung). Filtration and half value layer (for the Medical Physics module): aluminum and copper filters remove photons as e^(−μx), with μ/ρ from Hubbell and Seltzer, NIST Standard Reference Database 126, interpolated log–log (densities 2.699 and 8.96 g/cm³). The ion chamber reads air kerma, K ∝ ∫ Ψ_E T(E) (μ_en/ρ)_air dE over the continuous spectrum from 1 keV to eV, with μ_en/ρ for dry air from the same database; the K lines are left out of it because their strengths are drawn, not measured. The half value layer is the aluminum that halves this reading, found by bisection, and the second one halves it again. Because Kramers\' law has no absorption in the target itself, this model\'s beam is softer than a real tube\'s: with 2.5 mm Al at 80 kV it gives a first HVL of 2.20 mm Al, below the 2.9 mm Al minimum that 21 CFR 1020.30(m) sets for systems made since June 2006.';
+  $('aboutXray').textContent = 'X-ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X-rays move slowed down for the eye, and each X-ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, gray for bremsstrahlung). Filtration and half value layer (for the Medical Physics module): with a filter or sheets in the beam of the tungsten target, from 20 to 100 kV, the graph and the chamber use a full tube model instead of Kramers\' law: the spectrum of SpekPy 2.5.4 (Poludniowski et al. 2021, Med. Phys. 48, 3630; validated against measured spectra and half value layers by Bujila, Omar and Poludniowski 2020, Phys. Med. 75, 44), a tungsten anode at 12° behind a 0.8 mm beryllium window, in 1 keV bins with its K and L lines. That spectrum includes the absorption of the X-rays in the target itself, which Kramers\' law leaves out and which removes much of the low energy end. It is the same spectrum, and the same coefficients, that Photon Interactions in Matter uses, so the two demos give the same half value layers. The filters remove photons as e^(−μx), with μ/ρ of aluminum and copper the sums of the NIST XCOM cross sections, interpolated log–log (densities 2.699 and 8.96 g/cm³). The ion chamber reads air kerma, K ∝ Σ Φ(E) T(E) E (μ_en/ρ)_air over the bins, each taken at its center energy, with μ_en/ρ for dry air from NIST Standard Reference Database 126; the reading is relative to no sheets. The half value layer is the aluminum that halves this reading, found by bisection, and the second one is the extra aluminum that halves it again; the mean photon energy is weighted by photon number. These agree with SpekPy\'s own to 0.3 %. The tube has no glass envelope or oil in the model, so with 2.5 mm Al at 80 kV it gives a first HVL of 2.74 mm Al, below the 2.9 mm Al minimum that 21 CFR 1020.30(m) sets for systems made since June 2006; a real tube\'s inherent filtration adds to it. Other targets and lower voltages draw the filtered Kramers spectrum but give no chamber reading or half value layers, since the shared SpekPy spectra are for tungsten from 20 kV only. In 3D each X-ray of the filtered tungsten beam has an energy picked from the SpekPy spectrum (red for Kα, blue for Kβ, gray for the continuum and the L lines).';
   $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X-ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2022). Element families and the table layout are those of the Spectra Explorer.';
 
   // ---------- size, theme, start ----------

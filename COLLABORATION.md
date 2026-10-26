@@ -4625,3 +4625,32 @@ In TeacherKeys (73f003a), private; nothing changes on the site.
 - Medical Physics keys (11) wait for the visual pass and the X-ray HVL fix; they will be rebuilt last.
 
 **For GPT:** nothing to verify in the numbers; spot check that a few key PDFs read correctly if you can open them.
+
+## 2026-10-26 · Claude · X-ray tube half value layers now agree with Photon Interactions (Steve: "the X-Ray fix")
+
+The open mismatch from the Medical Physics module: the Shells and X-rays tube gave HVL₁ 2.20 mm Al at 80 kV behind 2.5 mm Al
+(Kramers's thick target law), Photon Interactions in Matter 2.74 mm (SpekPy). SpekPy 2.5.4 run directly gives 2.743 mm (HVL₂
+4.094), and it is validated against measured spectra and HVLs (Bujila, Omar and Poludniowski 2020, Phys. Med. 75, 44). Kramers's
+law has no absorption in the target or window, so its beam is too soft: 2.74 is the right number for this tube.
+- The tube's beam quality (graph with a filter or sheets in, chamber reading, HVL₁, HVL₂, homogeneity, mean energy, the 3D photons
+  of the filtered beam) now uses the shared `demos/lib/photondata.js`: SpekPy tungsten spectra (12°, 0.8 mm Be, 1 keV bins with
+  the K and L lines), XCOM sums for aluminum and copper, SRD 126 μ_en/ρ of air, with the same interpolation and bin center sums as
+  Photon Interactions. The tube's own SRD 126 tables are gone. Same numbers in both demos, to every digit (test).
+- `tools/photondata/build_data.py` now also writes SpekPy spectra every 0.5 kV from 20 to 100 kV (the tube's slider) and a sparse
+  `char` table, the line part of each bin, for the 3D colors; the 50 to 150 kV spectra Photon Interactions uses are byte for byte
+  unchanged. photondata.js grows from 286 to 365 kB; the tube page now loads it.
+- Beam quality needs the tungsten target at 20 kV or more (SpekPy is validated from 20 kV; the shared data are tungsten only).
+  Other targets with a filter still draw the filtered Kramers curve but give no chamber reading or HVLs, and say why. Without a
+  filter nothing changes, so the Modern worksheets, their keys and the Modern How this works video are untouched.
+- With a filter the graph is scaled to the filtered curve; the dashed unfiltered one runs off the top where the filter took most.
+- Handout mp-x-ray-filtration: About the demo describes the SpekPy beam; Question 1 now asks which parts of the inherent
+  filtration the model includes (target and beryllium window) and which it leaves out (glass, oil, mirror). Glossary updated
+  (Φ in, Ψ_E, Z and E₀ out); symbols --check, --missing, --meanings and symcheck clean.
+- Key recaptured from a real run and reworked (TeacherKeys c2843c0): 80 kV row 2.74, 4.09, 43.0 keV, 0.670; voltage scan 1.75 to
+  3.47 mm (still fails the 21 CFR minimum at 80, 90, 100 kV); 2.9 mm needs about 2.8 mm Al; 0.1 mm Cu adds 1.66 mm. Tests:
+  `test_shells-and-x-rays.cjs` gains a group checking seven setups against SpekPy's own HVLs and mean energy (within 0.3 %) and
+  against Photon Interactions exactly.
+
+**For GPT:** please check (1) the key's new numbers against its tables (fit −0.177 ± 0.006 per mm, effective energies 30.5 and
+43.5 keV from the NIST aluminum table, interpolated HVLs 2.744 and 4.092); (2) the reworded Question 1 and its answer; (3) the
+about text and handout for hyphens in compound modifiers.

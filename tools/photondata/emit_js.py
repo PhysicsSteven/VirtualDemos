@@ -20,8 +20,12 @@ hdr='''/* © 2026 Steven Anderson. All rights reserved. Not licensed for copying
    ff[Z]: [atomic form factor F, incoherent scattering function S] at x = sin(θ/2)/λ (1/Å) on the grid xg, Hubbell et al. 1975
      (J. Phys. Chem. Ref. Data 4, 471), the functions XCOM itself uses, as tabulated in xraylib 4.3.
    spec[kVp]: tungsten anode X-ray spectra, 12° anode angle, 0.8 mm beryllium window, fluence per keV per mAs at 1 m (photons/cm²),
-     1 keV bins centered at 1.5, 2.5, ... keV, from SpekPy 2.5.4 (Poludniowski et al. 2021, Med. Phys. 48, 3630) with its default
-     physics; spec['80k'] is SpekPy's own air kerma (µGy per mAs at 1 m), kept to check the kerma computed here. */
+     from SpekPy 2.5.4 (Poludniowski et al. 2021, Med. Phys. 48, 3630) with its default
+     physics, every 0.5 kVp from 20 to 100 kVp and 110 to 150 kVp in steps of 10. The bins are 1 keV wide and the last one ends at the
+     kVp, so bin i of n is centered at kVp − n + i + 0.5 keV. spec['80k'] (each 10 kVp from 50) is SpekPy's own air kerma (µGy per
+     mAs at 1 m), kept to check the kerma computed here.
+   char[kVp]: the characteristic (K and L line) part of those bins, "bin index:fluence" where it is over 0.1 % of the bin, from the
+     same SpekPy runs (total minus bremsstrahlung only). */
 '''
 body='(function (g) { g.VDPHOTON = '+json.dumps({'xcom':xc,**o},separators=(',',':'),ensure_ascii=False)+'; })(typeof window !== \'undefined\' ? window : globalThis);\n'
 open(os.path.join(HERE, '..', '..', 'demos', 'lib', 'photondata.js'),'w').write(hdr+body)

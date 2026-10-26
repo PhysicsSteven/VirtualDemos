@@ -1759,9 +1759,7 @@ c | Speed of sound in muscle | m/s
 == mp-x-ray-filtration ==
 e [^] | Euler's number, the base of natural logarithms | | 2.71828…
 e | @e
-Psi_E | Photon energy fluence per unit energy
-Z | Atomic number of the target
-E_0 | Highest photon energy, eV | keV
+Phi | Photon fluence in one 1 keV bin of the tube spectrum
 E | Photon energy | keV
 V | Tube voltage | kV
 mu | Linear attenuation coefficient of aluminum | cm⁻¹
