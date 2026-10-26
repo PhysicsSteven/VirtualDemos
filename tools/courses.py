@@ -31,7 +31,7 @@ BLURB = {
     'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+2203': ('Sky, planets, stars and galaxies', 'The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+incl': ('Sky, planets, stars and galaxies', 'Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro 2203 introductory worksheets too. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
-    'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, in the order of the Astro 2203 schedule, with a review before each of the three tests. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
+    'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
     'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
@@ -365,15 +365,27 @@ def course_label(cid, h, i=None):
     return handout_label(h, i) + (' (warm up)' if cid in WARM_UPS and cid not in handout_courses(h) else '')
 
 
-def card(name, demo, unit_secs, cards, notes, cid=None):
+def unit_dates(cid, u):
+    """A course week's class days and its required worksheet (unit 'dates', 'required'; Astro 2203, 2026-10-26), for the meta row."""
+    out = f'<span>{esc(u["dates"])}</span>' if u.get('dates') else ''
+    if u.get('required'):
+        out += f'<span>Required: {esc(course_label(cid, u["required"]))}</span>'
+    elif u.get('dates') and not u.get('review'):
+        out += '<span>No required worksheet</span>'
+    return out
+
+
+def card(name, demo, unit_secs, cards, notes, cid=None, required=None):
+    """required: the handout this unit requires (a course week, unit 'required'): listed first and marked Required."""
     c = cards[name]
     q = f'?course={cid}' if cid else ''   # the demo shows this course's worksheets and steps through this course (nav.js)
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
     hs = course_handouts(cid, demo)
-    for i, h in enumerate(hs, 1):
-        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
+    for i, h in sorted(enumerate(hs, 1), key=lambda x: x[1] != required):
+        tag = '<strong class="req">Required</strong> ' if h == required else ''
+        links.append(f'<a href="curriculum/labs/students/{h}.html">{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
@@ -439,7 +451,7 @@ def course_page(course, m, cards, notes):
         jump.append(f'<li><a href="#{u["id"]}"{" class=\"opt\"" if opt else ""}>{esc(u.get("short", u["title"]))}</a></li>')   # short: a shorter jump label
         fresh = [n for n in names if home[n] is u]
         seen = [n for n in names if home[n] is not u]
-        items = [card(n, demos[n], ukeys, cards, notes, cid) for n in fresh]
+        items = [card(n, demos[n], ukeys, cards, notes, cid, u.get('required')) for n in fresh]
         items.extend(activity_card(activities[a], ukeys) for a in activity_names)
         if seen:
             def where(n):
@@ -469,7 +481,7 @@ def course_page(course, m, cards, notes):
         units.append(f'''  <section class="unit{" optional" if opt else ""}" id="{u['id']}" aria-labelledby="{u['id']}-h">
     {'<p class="optnote">Optional, after the required sequence</p>' if opt else ''}
     <h2 id="{u['id']}-h">{esc(u['title'])}</h2>
-    <p class="meta">{f'<span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span>' if us else ('<span>Test review</span>' if u.get('review') else '' if cid in NO_BOOK else '<span>Not in the textbook</span>')}</p>{f'{chr(10)}    <p class="unote">{esc(u["note"])}</p>' if u.get('note') else ''}
+    <p class="meta">{f'<span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span>' if us else ('<span>Test review</span>' if u.get('review') else '' if cid in NO_BOOK else '<span>Not in the textbook</span>')}{unit_dates(cid, u)}</p>{f'{chr(10)}    <p class="unote">{esc(u["note"])}</p>' if u.get('note') else ''}
     <ul class="list">
 {grid}
     </ul>{gap_html}
@@ -479,7 +491,10 @@ def course_page(course, m, cards, notes):
         units.append(schedule_section(sched, demos, cards, first_unit))
     vols = sorted({x['vol'] for u in course['units'] for x in u['sections']})
     books = ' · '.join(f'<a href="{BOOK_URL[v]}">{BOOK[v]}</a>' for v in vols)
-    facts = (f'<li><span><strong>{len(course["units"]) - len(sched)}</strong> units</span></li><li><span><strong>{len(n_demo)}</strong> demos and labs</span></li>'
+    weeks = [u for u in course['units'] if u.get('dates') and not u.get('review')]
+    first = (f'<li><span><strong>{len(weeks)}</strong> weeks</span></li><li><span><strong>{sum(1 for u in course["units"] if u.get("review"))}</strong> tests</span></li>'
+             if weeks else f'<li><span><strong>{len(course["units"]) - len(sched)}</strong> units</span></li>')
+    facts = (first + f'<li><span><strong>{len(n_demo)}</strong> demos and labs</span></li>'
              + (f'<li><span>Free textbook: {books}</span></li>' if vols else ''))
     if cid in NO_BOOK:   # no textbook readings: count the worksheets on its cards (and any standalone ones)
         n_activity = n_activity | {h for d in n_demo for h in course_handouts(cid, demos[d])}
@@ -496,11 +511,15 @@ def course_page(course, m, cards, notes):
         how = ('Units follow the topics, and a demo from another course or module is listed where it fits. Each card lists this module’s '
                'worksheets, then the introductory ' + ' and '.join(f'<a href="{x}.html">{esc(TITLE[x])}</a>' for x in inc) + ' worksheets. '
                'Section numbers are volume:section in OpenStax University Physics.')
+    if any(u.get('required') for u in course['units']):   # a course laid out by weeks (Astro 2203, 2026-10-26)
+        how = ('Units follow the weeks of the course, with each test where it falls. Each week\u2019s required worksheet is marked Required and '
+               'comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one '
+               'week: it has one card, in the week that needs it most, and other weeks link to it.')
     if cid in INCLUDED:
         t = next(x['title'] for x in m['courses'] if x['id'] == INCLUDED[cid])
-        how = ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
-               f'it has one card, in the first unit that uses it, and later units link to it. Every demo here is also on the <a href="{INCLUDED[cid]}.html">{esc(t)}</a> page, '
-               'with the other astronomy demos.')
+        how = (how or ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
+               'it has one card, in the first unit that uses it, and later units link to it.')) + (
+               f' Every demo here is also on the <a href="{INCLUDED[cid]}.html">{esc(t)}</a> page, with the other astronomy demos.')
     if sched:
         how = (f'Units follow the topics, and a demo from another course or module is listed where it fits. At the bottom, the '
                f'{TITLE[sched[0]["schedule"]]} schedule lists the same demos topic by topic with that course\u2019s introductory worksheets. '
@@ -631,6 +650,7 @@ COURSE_CSS = '''
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
 .links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
 .links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
 .also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
 .also a { font-weight: 700; }
 .also .where, .also .where a { font-weight: 400; }
@@ -695,7 +715,10 @@ def tiles(m, cards):
                     if d not in names and d in cards and c['id'] in m_demos[d]['course']: names.append(d)
             for d in u.get('demos', []):
                 if d not in names and d in cards: names.append(d)
-        out.append(tile(c['id'], c['title'], BLURB[c['id']][0], f"{sum(1 for u in c['units'] if not u.get('schedule'))} units · {len(names)} demos", BLURB[c['id']][1], names))
+        weeks = [u for u in c['units'] if u.get('dates') and not u.get('review')]   # a course laid out by weeks
+        count = (f"{len(weeks)} weeks · {sum(1 for u in c['units'] if u.get('review'))} tests" if weeks
+                 else f"{sum(1 for u in c['units'] if not u.get('schedule'))} units")
+        out.append(tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names))
     mn = misc_names(m)
     out.append(tile('misc', MISC['title'], MISC['sub'], f'{len(mn)} demos', MISC['lede'], [n for n in ['star-slice', 'hydrogen-orbitals', 'ising', 'black-holes'] if n in mn] or mn))
     return f'''{TILE_START}
@@ -1092,6 +1115,8 @@ REDIRECT = '''<!doctype html>
 '''
 
 
+ALIASES = ("<script>/* old unit addresses (tools/courses.py, unit aliases) */ (function () { var a = __MAP__, h = location.hash.slice(1); "
+           "if (a[h]) document.addEventListener('DOMContentLoaded', function () { location.replace('#' + a[h]); }); })();</script>")
 OLD_ANCHORS = ("<script>/* __SRC__ was folded into this page 2026-10-25: its old schedule links (#__SRC__, #__PREFIX__<topic>) open "
                "__SRC__.html (tools/courses.py INCLUDED) */ (function () { var h = location.hash.slice(1), p = '__PREFIX__'; "
                "if (h === '__SRC__' || h.indexOf(p) === 0) location.replace('__SRC__.html' + (h.indexOf(p) === 0 ? '#' + h.slice(p.length) : '')); })();</script>")
@@ -1104,6 +1129,12 @@ def build():
     out = {}
     for c in m['courses']:
         out[ROOT / f'{c["id"]}.html'] = course_page(c, m, cards, notes)
+    for c in m['courses']:   # unit 'aliases': old unit ids (Astro 2203's topics before the weeks, 2026-10-26) still land on their unit
+        al = {a: u['id'] for u in c['units'] for a in u.get('aliases', [])}
+        if al:
+            f = ROOT / f'{c["id"]}.html'
+            out[f] = out[f].replace('<script src="demos/lib/theme.js"></script>\n', '<script src="demos/lib/theme.js"></script>\n'
+                                    + ALIASES.replace('__MAP__', json.dumps(al, separators=(',', ':'))) + '\n', 1)
     for src, dst in INCLUDED.items():   # old links to the schedule on the folded page (2026-10-25 to 26) go to the course's own page
         f = ROOT / f'{dst}.html'
         out[f] = out[f].replace('<script src="demos/lib/theme.js"></script>\n', '<script src="demos/lib/theme.js"></script>\n'

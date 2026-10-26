@@ -4948,3 +4948,17 @@ Steve (2026-10-26 11:34): separate them again; Astronomy (general) holds every a
 - Comments in five demos and CLAUDE.md updated; What's new entry. `courses.py --check` and test_textbook_map pass.
 
 **For GPT:** please check that every Astro 2203 demo is on astro.html too, and that no Astronomy card lost a worksheet.
+## 2026-10-26 · Claude · Astro 2203 page by weeks (from Steve's course import)
+
+Steve's Astro 2203 project sent its course plan (10 weeks, Winter Quarter Dec 2, 2026 to Mar 2, 2027, one required worksheet a
+week except the review Weeks 7 and 10). Steve chose to lay the page out by weeks now.
+- Map: Astro 2203 units are now week-1 to week-10 plus test-1 (before Week 4), test-2 (after Week 7), test-3 (after Week 10),
+  each test reviewing its weeks. New unit fields: `dates` (shown in the meta row), `required` (that handout is marked Required and
+  listed first on its card; "No required worksheet" on review weeks), `aliases` (old topic ids `#sky`, `#earth-moon` and so on
+  still land on their week). Inside a Planet carded in Week 6 and Orbital Resonances in Week 9 (`cards`), so each required
+  worksheet sits on a card in its own week. Tides added to Week 5, as the plan lists it.
+- Course page how text, home tile ("10 weeks · 3 tests") and facts follow the weeks. Course blurb updated.
+- Canvas (`tools/canvas.py`): a course with `required` units makes a hand in only for each week's required worksheet (8), the
+  other worksheets are links. Canvas importer check: 14 modules, 8 assignments, 0 wrong. Astronomy unchanged (37).
+- Checked in Chromium at 1280 and 390 px, light and dark: no sideways scroll; `#sky` → `#week-1`, `astro.html#a2203-earth-moon`
+  → `astro-2203.html#week-5`; Craters from Astro 2203 shows Week 5 in its breadcrumb.

@@ -73,6 +73,9 @@ def course_items(course, m, cards, notes):
                 if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
     seen, out = set(), []
     home = C.card_homes(course, m, cards)   # a demo's worksheets go in the module of the unit that holds its card, as on the course page
+    # a course laid out by weeks (unit 'required', Astro 2203 2026-10-26) hands in only each week's required worksheet; the others are links
+    weekly = any(u.get('required') for u in course['units'])
+    due = lambda u, h: not weekly or h == u.get('required')
     for u in [u for u in course['units'] if not u.get('schedule')]:   # a folded course's schedule is on the course page only
         us = sorted((secs[(x['vol'], x['sec'])] for x in u['sections']), key=C.sec_key)
         names = []
@@ -89,10 +92,11 @@ def course_items(course, m, cards, notes):
                 continue
             seen.add(n)
             hs = C.course_handouts(cid, demos[n])
-            for i, h in enumerate(hs, 1):
+            for i, h in sorted(enumerate(hs, 1), key=lambda x: x[1] != u.get('required')):
                 label = C.handout_label(h, i if len(hs) > 1 else None)
-                items.append(('link', label, f'{SITE}curriculum/labs/students/{h}.html'))
-                items.append(('assignment', label, h, title, url))   # titled "Hand in: <topic>", so it differs from the link
+                items.append(('link', ('Required: ' if weekly and due(u, h) else '') + label, f'{SITE}curriculum/labs/students/{h}.html'))
+                if due(u, h):
+                    items.append(('assignment', label, h, title, url))   # titled "Hand in: <topic>", so it differs from the link
             if n in notes:
                 items.append(('link', f'Notes: {title}', f'{SITE}notes/{n}.html'))
         for a in dict.fromkeys([a for s in us for a in s.get('activities', [])] + u.get('activities', [])):   # unit.activities: no textbook section
@@ -104,7 +108,8 @@ def course_items(course, m, cards, notes):
             if act['kind'] == 'worksheet':
                 label = C.handout_label(a)
                 items.append(('link', label, href))
-                items.append(('assignment', label, a, None, None))
+                if due(u, a):
+                    items.append(('assignment', label, a, None, None))
             else:
                 items.append(('link', f'Reading: {C.HANDOUT_TOPIC[a]}', href))
         out.append((u, items))

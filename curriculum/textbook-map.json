@@ -1557,53 +1557,56 @@
     {
       "id": "astro-2203",
       "title": "Astro 2203",
-      "metadata": {},
+      "metadata": {
+        "term": "Winter Quarter 2026-27, Dec 2, 2026 to Mar 2, 2027"
+      },
       "units": [
         {
-          "id": "intro",
-          "title": "Topic 1 · Intro material",
-          "short": "1 · Intro",
-          "requirement": "required",
-          "sections": [],
-          "demos": [
-            "units"
-          ],
-          "note": "The size of the solar system: distances in astronomical units, light travel times and powers of ten."
-        },
-        {
-          "id": "sky",
-          "title": "Topic 2 · Star charts and motion of the Sun and Moon",
-          "short": "2 · The sky",
+          "id": "week-1",
+          "title": "Week 1 · Topics 1 and 2: Intro, star charts, the Sun and the Moon",
+          "short": "Week 1",
           "requirement": "required",
           "sections": [],
           "demos": [
             "celestial-sphere",
+            "units",
             "seasons",
             "moon-phases",
             "gyroscope"
           ],
-          "note": "Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.",
+          "dates": "Dec 2 to 7",
+          "required": "intro-celestial-sphere",
+          "note": "The size of the solar system: distances in astronomical units, light travel times and powers of ten. Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.",
+          "aliases": [
+            "intro",
+            "sky"
+          ],
           "activities": [
             "intro-stellarium-sky"
           ]
         },
         {
-          "id": "planetary-motion",
-          "title": "Topic 3 · Planetary motion, the Copernican revolution and gravity",
-          "short": "3 · Planetary motion",
+          "id": "week-2",
+          "title": "Week 2 · Topic 3: Planetary motion, the Copernican revolution and gravity",
+          "short": "Week 2",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "retrograde-motion",
             "kepler-orbits",
+            "retrograde-motion",
             "gravity-near-earth"
           ],
-          "note": "From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits."
+          "dates": "Dec 9 to 14",
+          "required": "intro-kepler",
+          "note": "From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.",
+          "aliases": [
+            "planetary-motion"
+          ]
         },
         {
-          "id": "telescopes-light",
-          "title": "Topic 4 · Telescopes, light and the electromagnetic spectrum",
-          "short": "4 · Telescopes and light",
+          "id": "week-3",
+          "title": "Week 3 · Topic 4: Telescopes, light and the electromagnetic spectrum",
+          "short": "Week 3",
           "requirement": "required",
           "sections": [],
           "demos": [
@@ -1614,7 +1617,12 @@
             "spectra",
             "em-waves"
           ],
-          "note": "How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines."
+          "dates": "Dec 16 to Jan 4, with the Christmas break inside",
+          "required": "intro-telescope",
+          "note": "How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.",
+          "aliases": [
+            "telescopes-light"
+          ]
         },
         {
           "id": "test-1",
@@ -1623,59 +1631,78 @@
           "requirement": "required",
           "sections": [],
           "demos": [],
+          "dates": "Wed Jan 6",
           "review": [
-            "intro",
-            "sky",
-            "planetary-motion",
-            "telescopes-light"
+            "week-1",
+            "week-2",
+            "week-3"
           ]
         },
         {
-          "id": "formation",
-          "title": "Topic 5 · Formation of planetary systems",
-          "short": "5 · Formation",
+          "id": "week-4",
+          "title": "Week 4 · Topic 5: Formation of planetary systems",
+          "short": "Week 4",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "solar-system-formation",
             "planet-temperatures",
+            "solar-system-formation",
             "rotation"
           ],
-          "note": "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone."
+          "dates": "Jan 6 to 11, after Test 1",
+          "required": "intro-planet-temperatures",
+          "note": "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.",
+          "aliases": [
+            "formation"
+          ]
         },
         {
-          "id": "earth-moon",
-          "title": "Topic 6 · The Earth and Moon system",
-          "short": "6 · Earth and Moon",
+          "id": "week-5",
+          "title": "Week 5 · Topic 6: The Earth and Moon system",
+          "short": "Week 5",
           "requirement": "required",
           "sections": [],
           "demos": [
             "craters",
             "radioactive-decay",
             "fluids",
+            "tides",
             "inside-a-planet"
           ],
-          "note": "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth."
+          "dates": "Jan 13 to 20",
+          "required": "intro-craters",
+          "note": "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.",
+          "aliases": [
+            "earth-moon"
+          ]
         },
         {
-          "id": "inner-planets",
-          "title": "Topic 7 · Inner planets to Mars I",
-          "short": "7 · Inner planets",
+          "id": "week-6",
+          "title": "Week 6 · Topic 7: Inner planets to Mars I",
+          "short": "Week 6",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "craters",
-            "planet-temperatures",
             "inside-a-planet",
+            "planet-temperatures",
             "ideal-gas",
-            "kepler-orbits"
+            "kepler-orbits",
+            "craters"
           ],
-          "note": "Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces."
+          "dates": "Jan 22 to 27",
+          "required": "intro-inside-a-planet",
+          "note": "Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.",
+          "aliases": [
+            "inner-planets"
+          ],
+          "cards": [
+            "inside-a-planet"
+          ]
         },
         {
-          "id": "mars-geology",
-          "title": "Topic 8 · Mars II, geology",
-          "short": "8 · Mars geology",
+          "id": "week-7",
+          "title": "Week 7 · Topic 8: Mars II, geology",
+          "short": "Week 7",
           "requirement": "required",
           "sections": [],
           "demos": [
@@ -1683,7 +1710,14 @@
             "kepler-orbits",
             "inside-a-planet"
           ],
-          "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons."
+          "dates": "Jan 29 to Feb 3, a review week ending with Test 2",
+          "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons.",
+          "aliases": [
+            "mars-geology"
+          ],
+          "worksheets": [
+            "intro-mars-ages"
+          ]
         },
         {
           "id": "test-2",
@@ -1692,57 +1726,61 @@
           "requirement": "required",
           "sections": [],
           "demos": [],
+          "dates": "Wed Feb 3",
           "review": [
-            "formation",
-            "earth-moon",
-            "inner-planets",
-            "mars-geology"
+            "week-4",
+            "week-5",
+            "week-6",
+            "week-7"
           ]
         },
         {
-          "id": "minor-planets",
-          "title": "Topic 9 · Minor planets and the asteroid belt",
-          "short": "9 · Asteroids",
+          "id": "week-8",
+          "title": "Week 8 · Topics 9 and 10: Minor planets, Jupiter and Saturn",
+          "short": "Week 8",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "resonances",
+            "giant-planets",
             "kepler-orbits",
-            "lagrange-points"
-          ],
-          "note": "The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits."
-        },
-        {
-          "id": "jupiter-saturn",
-          "title": "Topic 10 · Outer planets: Jupiter and Saturn",
-          "short": "10 · Jupiter and Saturn",
-          "requirement": "required",
-          "sections": [],
-          "demos": [
-            "giant-planets",
+            "lagrange-points",
             "tides",
-            "kepler-orbits"
+            "resonances"
           ],
-          "note": "The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings."
+          "dates": "Feb 5 to 15, with Mardi Gras inside",
+          "required": "intro-giant-planets",
+          "note": "The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits. The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.",
+          "aliases": [
+            "minor-planets",
+            "jupiter-saturn"
+          ]
         },
         {
-          "id": "uranus-neptune-kuiper",
-          "title": "Topic 11 · Uranus, Neptune and the Kuiper belt",
-          "short": "11 · Uranus, Neptune, Kuiper belt",
+          "id": "week-9",
+          "title": "Week 9 · Topic 11: Uranus, Neptune and the Kuiper belt",
+          "short": "Week 9",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "giant-planets",
             "resonances",
             "seasons",
-            "kepler-orbits"
+            "kepler-orbits",
+            "giant-planets"
           ],
-          "note": "The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets."
+          "dates": "Feb 17 to 19",
+          "required": "intro-resonances",
+          "note": "The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.",
+          "aliases": [
+            "uranus-neptune-kuiper"
+          ],
+          "cards": [
+            "resonances"
+          ]
         },
         {
-          "id": "exoplanets",
-          "title": "Topic 12 · Exoplanets",
-          "short": "12 · Exoplanets",
+          "id": "week-10",
+          "title": "Week 10 · Topic 12: Exoplanets",
+          "short": "Week 10",
           "requirement": "required",
           "sections": [],
           "demos": [
@@ -1751,7 +1789,11 @@
             "distance-ladder",
             "kepler-orbits"
           ],
-          "note": "Finding planets around other stars by their pull and their shadows, and what they are made of."
+          "dates": "Feb 22 to 26, a review week ending with Test 3",
+          "note": "Finding planets around other stars by their pull and their shadows, and what they are made of.",
+          "aliases": [
+            "exoplanets"
+          ]
         },
         {
           "id": "test-3",
@@ -1760,11 +1802,11 @@
           "requirement": "required",
           "sections": [],
           "demos": [],
+          "dates": "Fri Feb 26",
           "review": [
-            "minor-planets",
-            "jupiter-saturn",
-            "uranus-neptune-kuiper",
-            "exoplanets"
+            "week-8",
+            "week-9",
+            "week-10"
           ]
         }
       ]
