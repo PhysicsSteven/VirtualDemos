@@ -22,7 +22,7 @@ Students should have met Coulomb potential energy, the Boltzmann factor and the 
 4. **Filling the bands.** Forty atoms, two electrons each: a filled s band with a gap of 1.69 eV. Squeeze to 0.24 nm and the bands overlap: a metal. One electron per atom: half filled, a metal at any spacing (Q5).
 5. **Pure silicon.** Warm it from 300 K to 600 K: n rises by about 1.4 × 10⁵ (Q6).
 6. **n type silicon.** At 300 K n ≈ 10¹⁵ cm⁻³, set by the phosphorus. Cool it to 40 K (freeze out) and heat it to 700 K (intrinsic) (Q7).
-7. **Diode.** Step the bias from −1 V to 0.6 V; the current changes from −1 pA to over 10 mA. Show the straight line of ln I against V (Q8). **LED colors**: GaP gives 549 nm, green; GaAs 867 nm, infrared (Q9).
+7. **Diode.** Step the bias from −2 V to 0.6 V; the current changes from −1 pA to over 10 mA. Show the straight line of ln I against V (Q8). **LED colors**: GaP gives 549 nm, green; GaAs 867 nm, infrared (Q9).
 
 ## Questions
 

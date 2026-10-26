@@ -4564,3 +4564,18 @@ Notes and findings:
 - Relativistic Motion: F_N in the readings is no longer rounded to zero (9f9717e).
 
 **For GPT:** please check the readings above against the keys, and the findings (which handout text should change).
+
+## 2026-10-26 · Claude · Fixes for the Modern video findings (Steve: fix them now)
+
+- Uncertainty Principle handout: changing the packet card puts a fresh packet at t = 0 and holds it while paused; Launch packet
+  starts it playing. The At launch and Spreading steps now say to record with the demo paused, not to press Launch packet. Key PDF
+  rebuilt (TeacherKeys 474a937). The video already did it this way.
+- Solids: the Diode preset hint and the notes now step the bias from −2 V, as the pn junction handout does.
+- Spin Resonance key: the capture put the A and B cursors on a 0.01 ms grid; a student's drag or arrow keys move them by a hundredth
+  of a division (0.05 ms at 5 ms/div). Recaptured on that step (same seeded bench, Blind on); answers updated: ESR slope
+  0.035594 ± 0.000065 mT/MHz, intercept 0.0054 ± 0.0040 mT, g = 2.0073 ± 0.0036 (DPPH 2.0036); origin fit g = 2.0025 ± 0.0007;
+  Γ_H 42.578 ± 0.001 and Γ_F 40.079 ± 0.002 MHz/T, free fits 42.9 ± 0.5 and 40.4 ± 0.7. Key PDF rebuilt (474a937).
+- Compton: under Blind the picture now hides Δλ, E′, p′ and pₑ as the readouts do (λ′ and T stay, as in the readouts); the Blind
+  label says so. Video retaken.
+
+**For GPT:** please check the new spin resonance answers against the data, and the uncertainty wording.

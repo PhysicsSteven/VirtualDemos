@@ -206,7 +206,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
-        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the shift Δλ, the scattered energy E′, the electron's momentum and speed, and the conservation check in the readouts</span></label>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the shift Δλ, the scattered energy E′, the electron's momentum and speed, and the conservation check, in the readouts and on the picture</span></label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The electron is free and at rest. Exact relativistic kinematics; the photon and the electron move in one plane, drawn here. In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width), and photons scattered by the atom as a whole keep their wavelength (the unshifted line).</p>
           <p class="hint">Wave packets: the drawn wavelengths keep the ratio λ′/λ to scale, but λ itself is not to scale (a 70 pm wave is far too small to see). The electron moves at its true speed relative to the photons.</p>
@@ -474,6 +474,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.stroke();
   }
 
+  /* Blind hides the shift, E′ and the momenta on the picture as in the readouts (the checkbox is read directly: drawing can run before the Blind code below) */
+  const hideDl = () => { const b = document.getElementById('labBlind'); return !!(b && b.checked); };
   function drawAll() {
     if (!T || !LY) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -600,7 +602,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = box.x + 12 * ps; let y = box.y + 16 * ps;
     label(c, `λ  = ${fmtL(s.lam)}`, x0, y, PC.cin, 'left', 'middle', true, 12); y += 18 * ps;
     label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
-    label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12); y += 20 * ps;
+    label(c, `Δλ = ${hideDl() ? 'hidden' : fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12); y += 20 * ps;
     // color key: true color for light, otherwise the false color scale with this photon's place on it
     c.font = `${10 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = T.muted;
     if (PC.real) c.fillText('colors: true color of the light', x0, y);
@@ -719,7 +721,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = box.x + 12 * ps; let y = box.y + 16 * ps;
     label(c, `λ  = ${fmtL(s.lam)}`, x0, y, PC.cin, 'left', 'middle', true, 12); y += 18 * ps;
     label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
-    label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
+    label(c, `Δλ = ${hideDl() ? 'hidden' : fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
     c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
     if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : 'X-rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : 'X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
     c.restore();
@@ -773,12 +775,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const deg = Math.abs(a[1] - cc[1]) < 3 * ps;   // flat triangle at 0° or 180°
       if (deg) {
         label(c, `p = ${fmtP(s.E)}`, (a[0] + b[0]) / 2, a[1] + 16 * ps, PC.cin, 'center', 'middle', true, 10.5);
-        label(c, `p′ = ${fmtP(s.Ep)}`, Math.min(a[0], cc[0]) - 4 * ps, a[1] - 16 * ps, PC.cout, 'right', 'middle', true, 10.5);
-        label(c, `pₑ = ${fmtP(s.pe)}`, Math.max(b[0], cc[0]) + 4 * ps, a[1] - 16 * ps, T.elec, 'left', 'middle', true, 10.5);
+        label(c, `p′ = ${hideDl() ? 'hidden' : fmtP(s.Ep)}`, Math.min(a[0], cc[0]) - 4 * ps, a[1] - 16 * ps, PC.cout, 'right', 'middle', true, 10.5);
+        label(c, `pₑ = ${hideDl() ? 'hidden' : fmtP(s.pe)}`, Math.max(b[0], cc[0]) + 4 * ps, a[1] - 16 * ps, T.elec, 'left', 'middle', true, 10.5);
       } else {
         side(a, b, cc, `p = ${fmtP(s.E)}`, PC.cin);
-        side(a, cc, b, `p′ = ${fmtP(s.Ep)}`, PC.cout);
-        side(cc, b, a, `pₑ = ${fmtP(s.pe)}`, T.elec);
+        side(a, cc, b, `p′ = ${hideDl() ? 'hidden' : fmtP(s.Ep)}`, PC.cout);
+        side(cc, b, a, `pₑ = ${hideDl() ? 'hidden' : fmtP(s.pe)}`, T.elec);
       }
     }
     // energy bars
@@ -807,7 +809,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     seg(x0, y1, wE, PC.cin, `E ${fmtE(s.E, 3)}`);
     seg(x0 + wE, y1, wM, T.muted, 'mₑc²', 0.45);
     const wEp = wE * s.Ep / s.E, wT = wE - wEp;
-    seg(x0, y2, wEp, PC.cout, `E′ ${fmtE(s.Ep, 3)}`);
+    seg(x0, y2, wEp, PC.cout, `E′ ${hideDl() ? 'hidden' : fmtE(s.Ep, 3)}`);
     const fitT = seg(x0 + wEp, y2, wT, T.elec, `T ${fmtE(s.T, 3)}`);
     seg(x0 + wE, y2, wM, T.muted, 'mₑc²', 0.45);
     if (!toScale) {   // break marks on the rest energy segments
@@ -890,8 +892,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const ya = yTop + 8 * ps;
       c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps;
       arrow(c, xu + 1, ya, xs - 1, ya, T.ink, 1.2 * ps);
-      label(c, `Δλ = ${fmtL(s.dlam, 3)}`, (xu + xs) / 2, ya - 10 * ps, T.ink, 'center', 'middle', true, 10.5);
-    } else label(c, `Δλ = ${fmtL(s.dlam, 3)}, ${sci(s.dlam / s.lam, 2)} of λ`, Math.min(p.R - 4 * ps, xu + 8 * ps), yTop - 4 * ps, T.ink, xu > (p.L + p.R) / 2 ? 'right' : 'left', 'middle', true, 10.5);
+      label(c, `Δλ = ${hideDl() ? 'hidden' : fmtL(s.dlam, 3)}`, (xu + xs) / 2, ya - 10 * ps, T.ink, 'center', 'middle', true, 10.5);
+    } else label(c, hideDl() ? 'Δλ = hidden' : `Δλ = ${fmtL(s.dlam, 3)}, ${sci(s.dlam / s.lam, 2)} of λ`, Math.min(p.R - 4 * ps, xu + 8 * ps), yTop - 4 * ps, T.ink, xu > (p.L + p.R) / 2 ? 'right' : 'left', 'middle', true, 10.5);
     label(c, 'unshifted λ', xu - 4 * ps, Y(sh.au) < yTop + 30 * ps || xs - xu < 30 * ps ? p.B - 12 * ps : Y(sh.au) - 10 * ps, T.muted, 'right', 'middle', false, 10);
     if (xs - xu > 30 * ps) label(c, 'shifted λ′', xs + 5 * ps, Y(sh.as) - 10 * ps, T.pos, 'left', 'middle', false, 10);
     c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
@@ -1227,7 +1229,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // ---------- Blind and readings (tools/readings_panel.py) ----------
   let blind = false;
-  $('labBlind').addEventListener('change', (e) => { blind = e.target.checked; readouts(); });
+  $('labBlind').addEventListener('change', (e) => { blind = e.target.checked; readouts(); drawAll(); });
   window.vdVersion = 'compton@2026-10-24';
   window.vdShowCols = [['theta_deg', 'θ (°)'], ['lamP_pm', 'λ′ (pm)'], ['T_keV', 'T (keV)']];
   window.vdReadingRow = () => {
