@@ -972,6 +972,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const E = src.lines.reduce((s, l) => s + l[0] * l[1], 0) / src.lines.reduce((s, l) => s + l[1], 0), [ts, tl] = TIMES[d.ti];
     const dose = doseOver(rate, ts, src.half); return { A, rate, src, E, ts, tl, dose, mu: muLin(d.sh, src.lines[0][0]), hvl: halfValue(d.sh, src.lines[0][0]) }; }
   function drawDo() {
+    if (useDo3()) { drawDo3(); return; }
     const p = proj(), by = scene(), d = S.do, D = doNow(), narrow = W < 620;
     const x0 = W * (narrow ? 0.12 : 0.1), x1 = W * (narrow ? 0.9 : 0.88), sy = by - 70 * p;
     const XR = (r) => x0 + (Math.log10(r) - Math.log10(RUL[0])) / (Math.log10(RUL[1]) - Math.log10(RUL[0])) * (x1 - x0);
@@ -1000,6 +1001,140 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view !== 'do') return; const d = S.do, src = SOURCES[d.src], tr = Math.exp(-muLin(d.sh, src.lines[0][0]) * (d.sh === 'none' ? 0 : d.x)), p = proj();
     const n = reduce ? 0 : Math.min(12, Math.round(360 * dt)); for (let i = 0; i < n; i++) phot.push({ d: 0, s: (Math.random() - 0.5) * 0.16, dead: Math.random() > tr });
     phot.forEach((q) => { q.d += 260 * p * dt; }); phot = phot.filter((q) => q.d < W); if (reduce) phot = [];
+  }
+
+  /* The Dose view in 3D: a room with the source (a sealed capsule on a stand, or a patient for ⁹⁹ᵐTc and ¹⁸F), the shield slab
+     between them at its true thickness, the dose rate meter on a tripod at distance r, a tape on the floor and γ photons flying out
+     in all directions. Lengths in meters, to scale; the photons are slowed down and only a few are drawn. The numbers on the meter
+     come from doNow(), as in the flat view; the photons only show what happens to them in the shield. */
+  const D3 = { st: null, o: { th: -1.78, ph: 1.2, zoom: 1 }, ph: [], dist: 0, tgt: null, hit: 0, last: 0 };
+  const DH0 = 0.9;   /* height of the source point and of the meter's detector (m) */
+  const useDo3 = () => !!(S.view === 'do' && G3.view && G3.view.is3d() && D3.st);
+  function initDo3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 30, near: 0.05, far: 80, shadow: 3, fogAt: [2.2, 5] }); if (!st) return false;
+    D3.st = st; const sc = st.scene, M = (o, c) => VD3K.material(st, o, c);
+    st.el.style.visibility = 'hidden';
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), M({ roughness: 0.9 }, ['#d5d9de', '#262c34'])); floor.position.set(5, 0, 0); floor.receiveShadow = true; sc.add(floor);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 3.2), M({ roughness: 1 }, ['#eceff2', '#222a35'])); wall.rotation.x = Math.PI / 2; wall.position.set(5, 2.6, 1.6); wall.receiveShadow = true; sc.add(wall);
+    const tape = VD3K.ruler(st, { len: 10, from: 0, to: 10, unit: 'm', step: 0.1, w: 0.09 }); tape.position.set(0, 0.32, 0.002); sc.add(tape);
+    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#a9b2bc', '#8d97a3']), dk = M({ roughness: 0.6, metalness: 0.2 }, ['#3b434d', '#2c333b']);
+    /* the sealed source on a lab stand */
+    const stand = D3.stand = new THREE.Group();
+    stand.add(VD3K.box(0.22, 0.16, 0.012, dk, 0, 0, 0), VD3K.rod([-0.06, 0, 0.012], [-0.06, 0, DH0 + 0.05], 0.007, steel), VD3K.rod([-0.06, 0, DH0], [-0.012, 0, DH0], 0.004, steel));
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.03, 20), steel); cap.rotation.z = Math.PI / 2; cap.position.set(0, 0, DH0); stand.add(cap);
+    sc.add(stand);
+    /* a seated patient (the source point is in the body), in a chair or the uptake room's recliner */
+    const pat = D3.patient = new THREE.Group(), skin = M({ roughness: 0.8 }, ['#d9a98a', '#b98d71']), gown = M({ roughness: 0.85, transparent: true, opacity: 0.88 }, ['#8fb3d9', '#5f84ad']), chairM = D3.chairM = M({ roughness: 0.7 }, ['#6d7680', '#4b535c']);
+    const cyl = (a, b, r, m) => VD3K.rod(a, b, r, m), ball = (p, r, m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), m); s.position.set(...p); s.castShadow = true; return s; };
+    pat.add(VD3K.box(0.5, 0.5, 0.06, chairM, 0.12, 0, 0.42), VD3K.box(0.08, 0.5, 0.62, chairM, -0.2, 0, 0.42));
+    for (const [x, y] of [[-0.1, -0.2], [-0.1, 0.2], [0.33, -0.2], [0.33, 0.2]]) pat.add(cyl([x, y, 0], [x, y, 0.42], 0.015, steel));
+    pat.add(cyl([-0.04, 0, 0.5], [-0.07, 0, 1.08], 0.15, gown), ball([-0.07, 0, 1.08], 0.15, gown), ball([-0.08, 0, 1.3], 0.1, skin));
+    for (const s of [-1, 1]) { pat.add(cyl([0, s * 0.09, 0.53], [0.42, s * 0.09, 0.53], 0.07, gown), cyl([0.42, s * 0.09, 0.53], [0.44, s * 0.09, 0.05], 0.055, skin), cyl([-0.07, s * 0.19, 1.04], [0.02, s * 0.21, 0.78], 0.045, gown), cyl([0.02, s * 0.21, 0.78], [0.26, s * 0.17, 0.74], 0.04, skin)); }
+    sc.add(pat);
+    /* the glow of the source point, seen through the body */
+    const gl = document.createElement('canvas'); gl.width = gl.height = 64; { const c = gl.getContext('2d'), g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(255,255,255,0.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, 64, 64); }
+    D3.tex = new THREE.CanvasTexture(gl);
+    D3.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: D3.tex, color: '#ffe17a', depthTest: false, transparent: true, blending: THREE.AdditiveBlending })); D3.glow.position.set(0, 0, DH0); D3.glow.renderOrder = 7; sc.add(D3.glow);
+    /* the shield slab, scaled to its thickness each frame (unit box) */
+    D3.mats = { lead: M({ roughness: 0.5, metalness: 0.4 }, ['#9aa1aa', '#6b727c']), concrete: M({ roughness: 0.95 }, ['#b9b4aa', '#8c877e']), water: M({ roughness: 0.1, transparent: true, opacity: 0.45, depthWrite: false }, ['#6fb3e6', '#4f93c8']) };
+    D3.slab = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), D3.mats.lead); D3.slab.castShadow = D3.slab.receiveShadow = true; sc.add(D3.slab);
+    D3.tank = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), M({ roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.18, depthWrite: false }, ['#dfeaf2', '#a9c3d6'])); D3.tank.renderOrder = 2; sc.add(D3.tank);
+    /* the dose rate meter on a tripod: the reading on its face is the one in the readouts */
+    const tri = D3.meter = new THREE.Group();
+    for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3 + 0.4; tri.add(VD3K.rod([0.22 * Math.cos(a), 0.22 * Math.sin(a), 0], [0, 0, DH0 - 0.12], 0.008, dk)); }
+    tri.add(VD3K.rod([0, 0, DH0 - 0.13], [0, 0, DH0 - 0.05], 0.012, dk));
+    D3.face = VD3K.meter(st, { w: 0.2, h: 0.11, label: 'DOSE RATE', sub: 'µSv/h' }); D3.face.position.set(0.05, -0.03, DH0 - 0.05); D3.face.rotation.z = 0.25; tri.add(D3.face);
+    const probe = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.12, 24), M({ roughness: 0.4, metalness: 0.3 }, ['#e2c23a', '#c9a92a'])); probe.rotation.z = Math.PI / 2; probe.position.set(-0.02, 0, DH0); probe.castShadow = true; tri.add(probe);
+    D3.click = new THREE.Sprite(new THREE.SpriteMaterial({ map: D3.tex, color: '#9ff0bf', depthTest: false, transparent: true, blending: THREE.AdditiveBlending })); D3.click.position.set(-0.02, 0, DH0); D3.click.renderOrder = 7; tri.add(D3.click);
+    sc.add(tri);
+    /* photons: glowing points */
+    const NP = 900, g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NP * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NP * 3), 3));
+    D3.pts = new THREE.Points(g, new THREE.PointsMaterial({ size: 0.03, map: D3.tex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    D3.pts.frustumCulled = false; D3.pts.renderOrder = 6; sc.add(D3.pts);
+    st.orbit(st.el, D3.o, () => redraw(), { phMin: 0.5, phMax: 1.52, zMin: 0.5, zMax: 3, keys: false });
+    D3.tgt = new THREE.Vector3(0.5, 0, DH0);
+    return true;
+  }
+  /* the slab: where it stands and how big it is (m); centered between source and meter, its true thickness unless that is more
+     than 80% of the gap, when it is drawn thinner and says so */
+  function slab3() {
+    const d = S.do; if (d.sh === 'none' || !(d.x > 0)) return null;
+    const t = d.x / 100, tmax = 0.8 * d.r, squeezed = t > tmax, w = squeezed ? tmax : t, cx = d.r / 2;
+    /* the uptake room's wall runs from the back wall and is cut away 0.6 m in front of the line from source to meter */
+    const size = d.src === 'f18' ? [-0.6, 2.6, 2.6, 0] : d.sh === 'concrete' ? [-0.7, 0.7, 1.9, 0] : d.sh === 'water' ? [-0.35, 0.35, 0.9, DH0 - 0.45] : [-0.4, 0.4, 1.1, DH0 - 0.55];
+    return { x0: cx - w / 2, x1: cx + w / 2, cx, w, y0: size[0], y1: size[1], wy: size[1] - size[0], yc: (size[0] + size[1]) / 2, z0: size[3], z1: size[3] + size[2], squeezed };
+  }
+  function doPhot3(dt, tr, trB, sl) {
+    /* new photons from the source point, isotropic; each decides its fate when it reaches the slab: through, scattered
+       (broad beam: the extra share the buildup factor adds) or absorbed at a random depth */
+    const d = S.do, v = Math.max(0.8, d.r) * 0.9, n = reduce ? 0 : Math.min(30, Math.round(380 * dt));
+    for (let i = 0; i < n && D3.ph.length < 880; i++) {
+      /* isotropic, but only those heading toward the meter's side (a cone of half angle 40° round the line to it) are drawn */
+      const c = 1 - Math.random() * (1 - Math.cos(0.7)), a = 2 * Math.PI * Math.random(), s = Math.sqrt(1 - c * c);
+      D3.ph.push({ p: [0, 0, DH0], u: [c, s * Math.cos(a), s * Math.sin(a)], fate: null, age: 0, sc: false });
+    }
+    const mx = d.r, lim = d.r * 1.15 + 0.35;   /* drawn a little past the meter, then dropped */
+    D3.ph = D3.ph.filter((q) => {
+      q.age += dt; const p = q.p, u = q.u;
+      if (q.stop != null) { q.stop -= dt; return q.stop > 0; }
+      const nx = p[0] + u[0] * v * dt, ny = p[1] + u[1] * v * dt, nz = p[2] + u[2] * v * dt;
+      if (sl && q.fate == null && u[0] > 0 && p[0] < sl.x0 && nx >= sl.x0) {
+        const k = (sl.x0 - p[0]) / u[0], yy = p[1] + u[1] * k, zz = p[2] + u[2] * k;
+        if (yy > sl.y0 && yy < sl.y1 && zz > sl.z0 && zz < sl.z1) { const r = Math.random(); q.fate = r < tr ? 'through' : r < trB ? 'scatter' : 'absorb'; q.depth = sl.x0 + Math.random() * sl.w; }
+      }
+      p[0] = nx; p[1] = ny; p[2] = nz;
+      if (q.fate === 'absorb' && p[0] >= q.depth) { q.stop = 0.35; q.fate = 'done'; return true; }
+      if (q.fate === 'scatter' && p[0] >= q.depth) { const z = Math.random(), a = 2 * Math.PI * Math.random(), s = Math.sqrt(1 - z * z); q.u = [z, s * Math.cos(a), s * Math.sin(a)]; q.fate = 'done'; q.sc = true; }
+      if (Math.hypot(p[0] - mx, p[1], p[2] - DH0) < 0.07) D3.hit = 0.15;
+      return p[2] > 0 && p[2] < 3 && Math.hypot(p[0], p[1], p[2] - DH0) < lim;
+    });
+  }
+  function drawDo3() {
+    const st = D3.st, p = proj(), d = S.do, D = doNow(), now = performance.now(), dt = Math.min(0.1, (now - (D3.last || now)) / 1000); D3.last = now;
+    st.size(W, H);
+    const pat = d.src === 'tc99m' || d.src === 'f18'; D3.stand.visible = !pat; D3.patient.visible = pat;
+    D3.chairM.color.set(d.src === 'f18' ? (dark() ? '#3e5a52' : '#5e8a7c') : (dark() ? '#4b535c' : '#6d7680'));
+    const sl = slab3();
+    D3.slab.visible = !!sl; D3.tank.visible = !!sl && d.sh === 'water';
+    if (sl) {
+      D3.slab.material = D3.mats[d.sh]; D3.slab.scale.set(sl.w, sl.wy, sl.z1 - sl.z0); D3.slab.position.set(sl.cx, sl.yc, (sl.z0 + sl.z1) / 2);
+      if (d.sh === 'water') { D3.tank.scale.set(sl.w + 0.012, sl.wy + 0.012, sl.z1 - sl.z0 + 0.03); D3.tank.position.set(sl.cx, sl.yc, (sl.z0 + sl.z1) / 2 + 0.012); }
+    }
+    D3.meter.position.set(d.r, 0, 0);
+    D3.face.set(sig(D.rate * 1e6, 3));
+    /* the photons' fates: narrow beam transmission e^(−μx) of the main line, and with the broad beam the TG-108 transmission */
+    const x = sl ? d.x : 0, E = D.src.lines[0][0], tr = Math.exp(-muLin(d.sh, E) * x), trB = d.beam === 'broad' && hasBroad(d.src, d.sh) ? Math.max(tr, archerT(d.sh, x)) : tr;
+    if (!reduce) doPhot3(dt, tr, trB, sl); else D3.ph = [];
+    const pos = D3.pts.geometry.attributes.position, col = D3.pts.geometry.attributes.color, gc = new THREE.Color(/^#[0-9a-f]{6}$/i.test(T.gamma) ? T.gamma : '#66d38c'), sc2 = new THREE.Color('#ffd166');
+    let k = 0;
+    const dk = dark(); if (!dk) { sc2.set('#c98a00'); gc.set('#1f7a3e'); }
+    for (const q of D3.ph) { if (Math.abs(q.p[1]) > 0.3) continue;   /* only a slab of space round the line to the meter, so photons do not fly at the camera */
+      const c = q.sc ? sc2 : gc, a = dk ? (q.stop != null ? q.stop / 0.35 : Math.min(1, q.age * 6)) : 1; pos.setXYZ(k, q.p[0], q.p[1], q.p[2]); col.setXYZ(k, c.r * a, c.g * a, c.b * a); k++; }
+    D3.pts.geometry.setDrawRange(0, k); pos.needsUpdate = col.needsUpdate = true;
+    D3.hit = Math.max(0, D3.hit - dt); D3.click.visible = D3.hit > 0; D3.click.scale.setScalar(0.12);
+    D3.glow.scale.setScalar(Math.max(0.08, 0.05 * Math.max(1, d.r)));
+    /* camera: frames the source and the meter, easing when r changes */
+    const span = d.r + 1.1, asp = W / Math.max(1, H), tn = Math.tan(15 * Math.PI / 180), want = Math.max(Math.min(0.9, 0.5 + 0.2 * d.r) / tn, span * 0.58 / (tn * asp));
+    D3.dist = D3.dist && !reduce ? D3.dist + (want - D3.dist) * Math.min(1, dt * 6) : want;
+    D3.tgt.x = D3.tgt.x && !reduce ? D3.tgt.x + (d.r / 2 - D3.tgt.x) * Math.min(1, dt * 6) : d.r / 2; D3.tgt.z = Math.max(0.66, 0.84 - 0.09 * d.r);
+    D3.pts.material.size = (dark() ? 0.012 : 0.016) * D3.dist / D3.o.zoom;
+    { const bl = dark() ? THREE.AdditiveBlending : THREE.NormalBlending; for (const m of [D3.pts.material, D3.glow.material, D3.click.material]) if (m.blending !== bl) { m.blending = bl; m.needsUpdate = true; } }
+    st.place(D3.o, D3.tgt, D3.dist);
+    st.render();
+    /* words over the picture, each on a chip of the page color so it reads over the room */
+    const at = (q) => st.project(q);
+    const chip = (t, x, y, o) => { const fs = o.s || 10.5 * p; ctx.font = `${o.w || 400} ${fs}px ${o.m ? T.mono : T.ui}`; const tw = ctx.measureText(t).width, x0 = o.a === 'center' ? x - tw / 2 : o.a === 'right' ? x - tw : x;
+      ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x0 - 5 * p, y - fs * 0.8, tw + 10 * p, fs * 1.6, 4 * p); ctx.fill(); ctx.restore(); lab(t, x, y, o); };
+    const sp = at([0, 0, pat ? 1.5 : DH0 + 0.12]); sp[1] = Math.max(24 * p, sp[1]);
+    chip(`${D.src.name}, ${D.A >= 1e9 ? sig(D.A / 1e9, 3) + ' GBq' : sig(D.A / 1e6, 3) + ' MBq'}${pat ? (d.src === 'f18' ? ', a patient resting after the injection' : ', a patient after the injection') : ''}`, Math.max(8 * p, Math.min(W - 8 * p, sp[0])), sp[1] - 12 * p, { a: sp[0] < W * 0.3 ? 'left' : 'center', c: T.ink, w: 700 });
+    if (sl) { const below = sl.z0 > 0.2, q = at([sl.cx, 0, below ? sl.z0 - 0.05 : Math.min(sl.z1, 1.5) + 0.06]); chip(`${f(d.x, 1)} cm ${d.sh}${sl.squeezed ? ' (drawn thinner than it is)' : ''}`, q[0], below ? Math.min(H - 60 * p, q[1] + 10 * p) : Math.max(44 * p, q[1] - 8 * p), { a: 'center', c: T.ink }); }
+    const rq = at([d.r / 2, 0.32, 0.02]); chip(`r = ${f(d.r, 2)} m`, rq[0], Math.min(H - 44 * p, rq[1] + 16 * p), { a: 'center', c: T.ink, m: true, w: 700 });
+    const mq = at([d.r, 0, DH0 + 0.12]), lw = 116 * p, lx = Math.min(W - lw - 10 * p, Math.max(8 * p, mq[0] + 24 * p)), ly = Math.max(10 * p, Math.min(H - 80 * p, mq[1] - 70 * p));
+    lcdBox(lx, ly, lw, 26 * p, `${sig(D.rate * 1e6, 3)} µSv/h`, 'dose rate meter');
+    const nt = W < 620 ? ['To scale. Photons slowed down; a few of those', 'heading for the meter drawn' + (trB > tr ? ' (gold: scattered)' : '') + '. Drag to turn.']
+      : [`Distances and thicknesses to scale. The photons are slowed down, and only a few of those heading toward the meter are drawn${trB > tr ? ' (gold: scattered in the shield, broad beam)' : ''}. Drag to turn.`];
+    ctx.save(); ctx.globalAlpha = 0.82; ctx.fillStyle = T.canvas; ctx.fillRect(0, H - (nt.length * 15 + 8) * p, W, (nt.length * 15 + 8) * p); ctx.restore();
+    nt.forEach((s, i) => lab(s, 12 * p, H - (nt.length - i) * 15 * p + 3 * p, { c: T.muted, s: 10 * p }));
   }
 
   // ---------- graphs ----------
@@ -1104,7 +1239,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ rx: drawRx, ch: drawCh, fu: drawFu, do: drawDo })[S.view](); drawCurve(); readouts(); clock();
-    $('pane').classList.toggle('in3d', use3()); if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden'; }
+    $('pane').classList.toggle('in3d', use3() || useDo3()); if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden'; if (D3.st) D3.st.el.style.visibility = useDo3() ? 'visible' : 'hidden'; }
   function picture() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); drawCh(); }
   function clock() { $('clock').textContent = S.view === 'ch' ? (S.ch.mode === 'sph' ? `generation ${CHN.gen}` : `generation ${CHN.g.sizes.length - 1}`) : S.view === 'fu' ? `T = ${sci(Math.pow(10, S.fu.lgT), 3)} K` : S.view === 'do' ? `${f(S.do.r, 2)} m` : eqText(true); }
 
@@ -1184,8 +1319,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cc = rxCalc(); $('rxBalance').innerHTML = `ΣZ ${cc.Zin} → ${cc.Zout} <span class="${cc.Zin === cc.Zout ? 'good' : 'bad'}">${cc.Zin === cc.Zout ? '✓' : '✗'}</span> · ΣA ${cc.Ain} → ${cc.Aout} <span class="${cc.Ain === cc.Aout ? 'good' : 'bad'}">${cc.Ain === cc.Aout ? '✓' : '✗'}</span>${cc.missing.length ? ` · <span class="bad">no mass for ${cc.missing.join(', ')}</span>` : ''}`;
     segSet('chMode', 'm', c.mode); segSet('chMat', 'mat', c.mat); segSet('chNs', 'n', c.N); segSet('chN0', 'n0', c.N0);
     for (const el of document.querySelectorAll('[data-ch]')) el.hidden = el.dataset.ch !== c.mode;
-    $('dimSeg').hidden = !(S.view === 'ch' && c.mode === 'sph');
-    if (!$('dimSeg').hidden && !G3.view && window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: initCh3, change: () => redraw(), status: () => {} });   /* three.js loads the first time the sphere opens */
+    $('dimSeg').hidden = !((S.view === 'ch' && c.mode === 'sph') || S.view === 'do');
+    if (!$('dimSeg').hidden && !G3.view && window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: () => initCh3() !== false && initDo3() !== false, change: () => redraw(), status: () => {} });   /* three.js loads the first time the sphere or the Dose view opens */
     $('chR').value = c.R; $('oR').textContent = `${f(c.R, 2)} cm (${f(sphereMass(MAT[c.mat], c.R), 1)} kg)`; $('chK').value = c.k; $('oKf').textContent = f(c.k, 2);
     $('chTitle').textContent = c.mode === 'sph' ? 'Neutrons are followed one by one through a bare sphere until they cause a fission or escape' : 'Each neutron causes a fission with probability k/ν̄; each fission releases ν neutrons';
     segSet('fuPair', 'f', S.fu.pair); $('fuT').value = S.fu.lgT; $('oT').textContent = `${sci(Math.pow(10, S.fu.lgT), 3)} K`;
