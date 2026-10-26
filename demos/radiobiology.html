@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Radiobiology: Cell Survival and Fractionation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,8 +48,13 @@
   .setup-card { border-right: 0; border-top: 1px solid var(--line); }
   .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
-  .pane[data-v="assay"] { height: 620px; } .pane[data-v="rbe"] { height: 820px; } .pane[data-v="surv"][data-one="1"] { height: 470px; }
+  .pane[data-v="assay"] { height: 620px; } .pane[data-v="assay"][data-d3="1"] { height: 680px; } .pane[data-v="rbe"] { height: 820px; } .pane[data-v="surv"][data-one="1"] { height: 470px; }
 }
+/* the 3D picture (lib/vd3kit.js) sits under the chart canvas, which stays clear over it and carries the words and the chart */
+.pane canvas.d3 { inset: auto; z-index: 0; }
+.pane #plot { z-index: 1; }
+.stage-ctl .msg3 { flex-basis: 100%; font-size: 0.8rem; color: var(--muted); margin: 0; }
+.stage-ctl .msg3:empty { display: none; }
 </style>
 </head>
 <body>
@@ -75,6 +82,8 @@
           <button type="button" data-v="rbe" aria-pressed="false">Proton RBE</button>
         </div>
         <button type="button" class="spin attn" id="plateBtn" data-vd-key="play" hidden>Plate and count</button>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <p class="msg3" id="msg3" aria-live="polite"></p>
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cells, the dose and the schedule">
         <div id="survBox">
@@ -393,11 +402,76 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const g of gs) { const s = g.counts.reduce((a, b) => a + b, 0), mean = s / g.counts.length, sf = out.pe > 0 ? mean / (g.N * out.pe) : NaN, rel = s > 0 && s0 > 0 ? Math.sqrt(1 / s + (g.D === 0 ? 0 : 1 / s0)) : NaN;
       out.pts.push({ D: g.D, N: g.N, counts: g.counts, sum: s, mean, sf, se: sf * rel, rel }); }
     return out; }
+  /* ---------- the 3D assay (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawing above (or ?view=flat) ----------
+     Three culture dishes on the bench after staining, with exactly the colonies the simulation counted, at the same places and sizes as
+     the flat drawing (the same picture random numbers, never the counting stream). Picture only: the counts come from plate() above. */
+  let g3 = null, view3 = null, box3 = null;
+  const O3 = { th: -Math.PI / 2 - 0.18, ph: 0.82, zoom: 1 };
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'assay');
+  const RD = 0.03, GAP = 0.082, CAP3 = 4000;   /* dish inner radius (m), spacing, most colonies drawn per dish (as flat) */
+  function in3(e) { if (!use3() || !box3) return false; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= box3.x && x <= box3.x + box3.w && y >= box3.y && y <= box3.y + box3.h; }
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.5, fov: 30, far: 20 }); if (!S3) return false;
+    S3.el.className = 'd3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), DS = THREE.DoubleSide, tok = (n, fb) => VD3K.token(n, fb);
+    sc.add(VD3K.bench(S3, { w: 4, d: 3, y: 0.5 }), VD3K.backdrop(S3, { r: 1.6, h: 2.4, y: 0.2, arc: Math.PI * 1.1 }));
+    const plastic = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.22, roughness: 0.1, metalness: 0, side: DS, depthWrite: false, color: 0xdfe8ef });
+    const agarM = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0 }), stainM = new THREE.MeshStandardMaterial({ roughness: 0.7, metalness: 0, color: 0xffffff });
+    const colG = new THREE.CylinderGeometry(1, 1, 1, 10); colG.rotateX(Math.PI / 2);
+    const dishes = [];
+    for (let k = 0; k < 3; k++) { const x = (k - 1) * GAP, gd = new THREE.Group(); gd.position.set(x, 0, 0);
+      const floor = new THREE.Mesh(new THREE.CylinderGeometry(RD + 0.0015, RD + 0.0015, 0.0012, 64), plastic); floor.rotation.x = Math.PI / 2; floor.position.z = 0.0006; gd.add(floor);
+      const wall = new THREE.Mesh(new THREE.CylinderGeometry(RD + 0.0015, RD + 0.0015, 0.014, 64, 1, true), plastic); wall.rotation.x = Math.PI / 2; wall.position.z = 0.007; wall.renderOrder = 2; gd.add(wall);
+      const agar = new THREE.Mesh(new THREE.CylinderGeometry(RD, RD, 0.003, 64), agarM); agar.rotation.x = Math.PI / 2; agar.position.z = 0.0027; agar.receiveShadow = true; gd.add(agar);
+      const col = new THREE.InstancedMesh(colG, stainM, CAP3); col.count = 0; col.frustumCulled = false; const c0 = new THREE.Color(1, 1, 1); for (let i = 0; i < CAP3; i++) col.setColorAt(i, c0); gd.add(col);
+      sc.add(gd); dishes.push({ col, key: '' }); }
+    /* a stain bottle and a marker pen, for scale on the bench */
+    const glassB = M({ transparent: true, opacity: 0.55, roughness: 0.15, metalness: 0.1 }, ['#5b3d8c', '#4b3275']);
+    sc.add(VD3K.rod([0.158, 0.04, 0], [0.158, 0.04, 0.06], 0.017, glassB), VD3K.rod([0.158, 0.04, 0.06], [0.158, 0.04, 0.072], 0.009, M({ roughness: 0.6 }, ['#2b2f36', '#22262c'])));
+    const pen = VD3K.rod([-0.17, 0.05, 0.005], [-0.1, 0.062, 0.005], 0.005, M({ roughness: 0.5 }, ['#2f3a46', '#2a333e'])); sc.add(pen);
+    S3.onTheme(() => { agarM.color.copy(tok('--agar', '#f4e7c8')); stainM.color.copy(tok('--stain', '#6b2fa3')); dishes.forEach((d) => { d.key = ''; }); });
+    g3 = { S3, dishes };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, O3, () => { if (use3()) draw(); }, { grab: (e) => !in3(e), phMin: 0.2, phMax: 1.35, zMin: 0.6, zMax: 3 });
+    can.style.cursor = '';
+    return true;
+  }
+  function tag3(b, s, q, o = {}) {   /* a word over the picture on a soft pill, kept inside the box */
+    if (!q || q[2] > 1) return; const p = proj(), sz = (o.s || 11) * p; ctx.save(); ctx.font = `${o.w || 600} ${sz}px ${o.m ? T.mono : T.ui}`;
+    const w = ctx.measureText(s).width, x = Math.max(b.x + 6, Math.min(b.x + b.w - w - 6, q[0] - w / 2)), y = Math.max(b.y + sz + 2, Math.min(b.y + b.h - 6, q[1]));
+    ctx.globalAlpha = 0.82; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x - 4, y - sz * 0.8 - 2, w + 8, sz + 5, 5); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(s, x, y); ctx.restore();
+  }
+  function assay3(b, g, narrow) {
+    const G = g3, S3 = G.S3, p = proj(), _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _v = new THREE.Vector3(), col = new THREE.Color(), bg = new THREE.Color(T.agar), st = new THREE.Color(T.stain);
+    for (let k = 0; k < 3; k++) { const d = G.dishes[k], key = g ? `${g.seed}|${g.counts[k]}|${T.stain}|${T.agar}` : 'none';
+      if (d.key === key) continue; d.key = key;
+      if (!g) { d.col.count = 0; continue; }
+      /* the same picture stream and draw order as the flat view: radius, angle, size, shade */
+      const n = g.counts[k], rnd = rngOf(g.seed + 101 * (k + 1)), shown = Math.min(n, CAP3);
+      for (let i = 0; i < shown; i++) { const rr2 = RD * 0.94 * Math.sqrt(rnd()), th = 2 * Math.PI * rnd(), sz = RD * (0.012 + 0.022 * rnd()), a = 0.55 + 0.4 * rnd();
+        _v.set(rr2 * Math.cos(th), -rr2 * Math.sin(th), 0.0043 + i * 1e-7); _s.set(sz, sz, 0.0004); _m.compose(_v, _q, _s); d.col.setMatrixAt(i, _m); d.col.setColorAt(i, col.copy(bg).lerp(st, a)); }
+      d.col.count = shown; d.col.instanceMatrix.needsUpdate = true; if (d.col.instanceColor) d.col.instanceColor.needsUpdate = true; }
+    box3 = b; ctx.clearRect(b.x, b.y, b.w, b.h);
+    Object.assign(S3.el.style, { left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px' });
+    S3.size(b.w, b.h); S3.theme(); S3.place(O3, [0, 0.004, 0], S3.fit(narrow ? 0.36 : 0.3, narrow ? 1.6 : 2.6)); S3.render();
+    const Q = (q) => { const r = S3.project(q); return [b.x + r[0], b.y + r[1], r[2]]; };
+    for (let k = 0; k < 3; k++) { const x = (k - 1) * GAP, q = Q([x, -RD - 0.012, 0]);
+      if (g) { const n = g.counts[k], tooMany = n > 300, few = n < 20; tag3(b, `${n} colonies`, q, { s: 11.5, w: 700, c: tooMany || few ? T.hyp : T.ink });
+        if (tooMany || few) tag3(b, tooMany ? 'too many to count well' : 'few: large counting error', [q[0], q[1] + 15 * p, q[2]], { s: 9.5, w: 400, m: true, c: T.hyp }); }
+      else { tag3(b, `Flask ${k + 1}`, q, { c: T.muted }); tag3(b, 'not plated yet', Q([x, 0, 0.01]), { s: 10, w: 400, m: true, c: T.muted }); } }
+    ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = T.canvas; ctx.fillRect(b.x, b.y, b.w, 34 * p); ctx.restore();
+    const y = b.y + b.h - 8 * p; ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = T.canvas; ctx.fillRect(b.x, y - 11 * p, b.w, 15 * p); ctx.restore();
+    text(narrow ? 'Each dot is one simulated colony. Drag to turn.' : 'Stained after 10 to 14 days: each dot is one simulated colony, at the place the flat view draws it. Drag to turn.', b.x + 8 * p, y, T.muted, 'left', 'alphabetic', 10);
+  }
+
   function drawAssay(box) { const p = proj(), narrow = box.w < 560, dishH = Math.min(narrow ? box.h * 0.36 : box.h * 0.44, box.w / 3 + 30 * p), g = current();
     const top = { x: box.x, y: box.y + 16 * p, w: box.w, h: dishH - 16 * p }, ch = { x: box.x, y: top.y + top.h + 64 * p, w: box.w, h: box.h - dishH - 64 * p - 30 * p };
+    if (use3()) assay3({ x: 0, y: 0, w: W, h: ch.y - 34 * p }, g, narrow);
     title(top, narrow ? `${fx(S.aD, 1)} Gy, ${S.aN.toLocaleString('en-US')} cells per flask` : `${lineName()}: ${fx(S.aD, 1)} Gy, ${S.aN.toLocaleString('en-US')} cells seeded per flask`);
     const R = Math.min(top.w / 3 / 2 - 12 * p, (top.h - 34 * p) / 2), cyD = top.y + R + 8 * p;
-    for (let k = 0; k < 3; k++) { const cx = top.x + top.w * (k + 0.5) / 3;
+    if (!use3()) for (let k = 0; k < 3; k++) { const cx = top.x + top.w * (k + 0.5) / 3;
       ctx.fillStyle = T.dish; ctx.beginPath(); ctx.arc(cx, cyD, R + 4 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.dishedge; ctx.lineWidth = 1.5 * p; ctx.stroke();
       ctx.fillStyle = T.agar; ctx.beginPath(); ctx.arc(cx, cyD, R, 0, 7); ctx.fill();
       if (g) { const n = g.counts[k], rnd = rngOf(g.seed + 101 * (k + 1)), shown = Math.min(n, 4000); ctx.fillStyle = T.stain;
@@ -481,6 +555,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- draw ---------- */
   let LAST = null;
   function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (g3) { g3.S3.el.hidden = !use3(); $('pane').dataset.d3 = use3() ? '1' : ''; if (!use3()) box3 = null; }
     const p = proj(), box = { x: 62 * p, y: 20 * p, w: W - 80 * p, h: H - 60 * p };
     LAST = S.view === 'surv' ? drawSurv(box) : S.view === 'assay' ? drawAssay(box) : S.view === 'frac' ? drawFrac(box) : drawRBE(box); }
 
@@ -514,7 +589,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const [id, v] of [['survBox', 'surv'], ['assayBox', 'assay'], ['fracBox', 'frac'], ['rbeBox', 'rbe']]) $(id).hidden = S.view !== v;
-    $('plateBtn').hidden = S.view !== 'assay'; $('simTag').hidden = S.view !== 'assay';
+    $('plateBtn').hidden = S.view !== 'assay'; $('dimSeg').hidden = S.view !== 'assay'; $('simTag').hidden = S.view !== 'assay';
     $('selCell').value = S.cell; $('custBox').hidden = S.cell !== 'custom'; $('oxBox').hidden = S.cell === 'custom';
     $('sA').value = S.ca; $('oA').textContent = `${fx(S.ca, 3)} /Gy`; $('sB').value = S.cb; $('oB').textContent = `${fx(S.cb, 3)} /Gy²`;
     $('sP').value = uFromP(S.p); $('oP').textContent = `${fx(S.p, 1)} mmHg`; $('sD').value = S.D; $('oD').textContent = `${fx(S.D, 2)} Gy`;
@@ -576,7 +651,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function valAt(e) { if (!LAST || !LAST.X) return null; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, b = LAST.box;
     if (x < b.x - 10 || x > b.x + b.w + 10 || y < b.y - 10 || y > b.y + b.h + 10) return null; const f = Math.min(1, Math.max(0, (x - b.x) / b.w)); return f; }
   function setFrom(f) { if (S.view === 'surv') S.D = +(f * DMAX).toFixed(2); else if (S.view === 'rbe') S.L = Math.max(0.5, +(f * LMAX).toFixed(1)); else if (S.view === 'frac') S.fn = Math.max(1, Math.min(40, Math.round(1 + f * 39))); else if (S.view === 'assay') S.aD = Math.round(f * 20) / 2; changed(); }
-  can.addEventListener('pointerdown', (e) => { const f = valAt(e); if (f == null) return; dragging = true; can.setPointerCapture(e.pointerId); setFrom(f); });
+  can.addEventListener('pointerdown', (e) => { if (in3(e)) return; const f = valAt(e); if (f == null) return; dragging = true; can.setPointerCapture(e.pointerId); setFrom(f); });
   can.addEventListener('pointermove', (e) => { if (!dragging) return; const f = valAt(e); if (f != null) setFrom(f); });
   const endDrag = () => { dragging = false; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
   can.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (!k) return; const big = e.shiftKey;
@@ -618,6 +693,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'survAir');
   if (qs.get('view') && ['surv', 'assay', 'frac', 'rbe'].includes(qs.get('view'))) { S.view = qs.get('view'); sync(); }
   new ResizeObserver(resize).observe($('pane')); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { sync(); redraw(); }, status: (msg) => { $('msg3').textContent = msg; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__rb = { S, PRESETS, applyPreset, sync, redraw, plateNow, analysis, groups: () => GROUPS.slice(), set: (o) => { Object.assign(S, o); sync(); redraw(); } };
 })();

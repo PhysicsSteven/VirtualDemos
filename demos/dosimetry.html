@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Dosimetry: Kerma, Equilibrium and the Ion Chamber</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +45,12 @@
 :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); }
 @media (max-width: 820px) { .scene { min-height: 0; height: 470px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; } }
 @media (max-width: 420px) { .scene { height: 420px; } }
+/* the 3D picture (lib/vd3kit.js) sits under the drawing canvas, which stays clear over it and carries the words and the graph */
+.scene canvas.d3 { inset: auto; z-index: 0; }
+.scene #can { z-index: 1; }
+.stage-ctl .msg3 { flex-basis: 100%; font-size: 0.8rem; color: var(--muted); margin: 0; }
+.stage-ctl .msg3:empty { display: none; }
+@media (max-width: 820px) { .scene[data-d3="kerma"], .scene[data-d3="chamber"] { height: 640px; } .scene[data-d3="cal"] { height: 520px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -72,7 +80,9 @@
           <button type="button" data-view="chamber" aria-pressed="false">Ion chamber</button>
           <button type="button" data-view="cal" aria-pressed="false">Calibration</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="clock mono" id="clock" aria-live="off"></span>
+        <p class="msg3" id="msg3" aria-live="polite"></p>
       </div>
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe."></canvas>
@@ -518,7 +528,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const B = plotBox(), p = B.p, x0 = B.x0, x1 = B.x1, zm = zMax();
     const X = (z) => x0 + z / zm * (x1 - x0);
     /* the water and the beam */
-    const py0 = 56 * p, py1 = Math.max(py0 + 120, H * 0.36);
+    const py0 = 56 * p, py1 = use3() ? Math.max(py0 + 190 * p, H * 0.47) : Math.max(py0 + 120, H * 0.36);
+    if (use3()) kerma3({ x: 0, y: 0, w: W, h: py1 + 16 * p }, p, zm);
+    else {
     const gw = ctx.createLinearGradient(0, py0, 0, py1); gw.addColorStop(0, T.water2); gw.addColorStop(1, T.water2);
     ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = gw; ctx.fillRect(x0, py0, x1 - x0, py1 - py0); ctx.restore();
     ctx.strokeStyle = T.water; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, py0 - 4); ctx.lineTo(x0, py1 + 4); ctx.stroke();
@@ -540,6 +552,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.restore(); ctx.globalAlpha = 1;
     if (!S.run && !tracks.length) text('Start to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).', x0 + 10 * p, py1 - 14 * p, { s: 11 * p });
+    }
     /* the graph */
     const gy0 = py1 + 34 * p, gy1 = H - (W < 600 ? 86 : 54) * p;
     const kc0 = kcol(S.E, S.phi, 0), ymax = kc0 * (S.range === 'deep' ? 1.12 : Math.max(1.12, K.beta * 1.08));
@@ -565,8 +578,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (isFinite(b.u)) { ctx.beginPath(); ctx.moveTo(x, Y(b.D - b.u)); ctx.lineTo(x, Y(b.D + b.u)); ctx.stroke(); } }
     }
     /* the probe */
-    const xp = X(S.z); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(xp, py0 - 6); ctx.lineTo(xp, gy1); ctx.stroke();
-    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(xp - 6, py0 - 12); ctx.lineTo(xp + 6, py0 - 12); ctx.lineTo(xp, py0 - 4); ctx.fill();
+    const xp = X(S.z), pt = use3() ? gy0 : py0; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(xp, pt - 6); ctx.lineTo(xp, gy1); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(xp - 6, pt - 12); ctx.lineTo(xp + 6, pt - 12); ctx.lineTo(xp, pt - 4); ctx.fill();
     const pr = probeK(); ctx.fillStyle = T.kerma; ctx.beginPath(); ctx.arc(xp, Y(pr.kc), 4 * p, 0, 7); ctx.fill();
     if (!S.blind) { ctx.fillStyle = T.dose; ctx.beginPath(); ctx.arc(xp, Y(pr.d), 4 * p, 0, 7); ctx.fill(); }
     /* key */
@@ -574,13 +587,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const key = (c, s, dash) => { ctx.font = `${11.5 * p}px ${T.ui}`; const wd = (36 * p) + ctx.measureText(s).width; if (kx > x0 && kx + wd > W - 8) { kx = x0; ky += 16 * p; }
       ctx.strokeStyle = c; ctx.lineWidth = 2.4; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx + 22 * p, ky); ctx.stroke(); ctx.setLineDash([]); text(s, kx + 28 * p, ky, { s: 11.5 * p }); kx += wd + 10 * p; };
     key(T.kerma, 'collision kerma K_col (NIST μ_en/ρ)', [7, 5]); if (!S.blind) key(T.dose, 'absorbed dose D (model)'); key(T.mc, 'Monte Carlo dose ± 1 standard uncertainty');
-    S.geomK = { x0, x1, zm, py0, gy1 };
+    S.geomK = { x0, x1, zm, py0, gy0, gy1 };
   }
 
   function drawChamber() {
     const B = plotBox(), p = B.p, x0 = B.x0, x1 = B.x1;
     /* the chamber, seen cut along its axis */
     const cy = 56 * p + Math.max(70, H * 0.15), L = Math.min(x1 - x0 - 100 * p, 520 * p), R = Math.min(56 * p, H * 0.09), xl = x0 + 20 * p, xr = xl + L;
+    const hb = Math.max(250 * p, H * 0.5);
+    if (use3()) { S.ionGeom = { xl, xr, cy, R, eb: Math.max(2, R * 0.18) }; chamber3({ x: 0, y: 0, w: W, h: hb }, p); }
+    else {
     ctx.fillStyle = T.water2; ctx.globalAlpha = 0.8; ctx.fillRect(x0 - 30 * p, cy - R - 26 * p, x1 - x0 + 30 * p, 2 * R + 52 * p); ctx.globalAlpha = 1;
     text('water', x1 - 6 * p, cy - R - 14 * p, { a: 'right', s: 11 * p, c: T.water });
     /* wall (graphite inside a PMMA sleeve), domed tip at the left */
@@ -605,8 +621,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     text('● positive ion', xl, ly, { s: 10.5 * p, c: T.ion }); text('● negative ion', xl + 110 * p, ly, { s: 10.5 * p, c: T.neg });
     text('● pair lost to recombination', nar ? xl : xl + 220 * p, nar ? ly + 15 * p : ly, { s: 10.5 * p, c: T.beam });
     text(nar ? 'Slowed down, not to scale.' : 'Slowed down and not to scale: the share that recombines is the model\'s.', nar ? xl + 180 * p : xl, nar ? ly + 15 * p : cy + R + 58 * p, { s: 10.5 * p });
+    }
     /* the graph */
-    const gy0 = cy + R + 86 * p, gy1 = H - 56 * p, tr = (V) => chamberTrue(V, S.pol), Qs = tr(400).Qsat * 1e9 * (1 + S.pol * DELTA[S.beamC]);
+    const gy0 = use3() ? hb + 30 * p : cy + R + 86 * p, gy1 = H - 56 * p, tr = (V) => chamberTrue(V, S.pol), Qs = tr(400).Qsat * 1e9 * (1 + S.pol * DELTA[S.beamC]);
     const pts = S.pts.filter((q) => q.pol === S.pol);
     if (S.plot === 'sat') {
       const lo = Math.min(tr(25).M * S.pol * 1e9, ...pts.map((q) => q.M * S.pol)) * 0.995, hi = Qs * 1.004;
@@ -635,6 +652,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function drawCal() {
     const B = plotBox(), p = B.p, x0 = B.x0, x1 = Math.max(B.x1, x0 + 300), b = calBeam(), co = b.kind === 'co60';
+    if (use3()) { cal3({ x: 0, y: 0, w: W, h: H }, p, b); return; }
     VDGear.backdrop(ctx, W, H);
     /* the water phantom: 0 to 35 cm of water drawn to scale */
     const narrow = x1 - x0 < 480, tx0 = x0, tx1 = x0 + Math.min(360 * p, (x1 - x0) * (narrow ? 0.5 : 0.58)), ty0 = 150 * p, ty1 = H - 70 * p, depth = 35, pxcm = (ty1 - ty0) / depth;
@@ -682,9 +700,271 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mystery) text('Mystery machine: its output has drifted', tx0, ty1 + 40 * p, { s: 11 * p, c: T.neg, w: 700 });
   }
 
+  /* ---------- the 3D views (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawings above (or ?view=flat) ----------
+     Kerma and dose: a water phantom on the bench in a photon beam, and above it the first few millimeters of the water magnified, with
+     the Monte Carlo interactions and electron tracks to scale inside it. Ion chamber: a Farmer chamber cut open in water, its ions
+     drifting, cabled to the electrometer. Calibration: the water tank under the nozzle, the chamber at z_ref, the electrometer,
+     thermometer and barometer. Pictures only: every number comes from the code above. */
+  let g3 = null, view3 = null, box3 = null;
+  const O3 = { th: -Math.PI / 2 - 0.42, ph: 1.12, zoom: 1 };
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const rand3 = rng32(4242);   /* picture only (where a track sits sideways, which way it turns): never the physics stream RNG */
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Kerma view: tank, source and the magnified block (m, z up) */
+  const TK = { x0: -0.08, len: 0.30, w: 0.30, h: 0.30, water: 0.28, zb: 0.14 }, BLK = { x0: -0.27, len: 0.48, w: 0.17, y: -0.02, z: 0.5 };
+  /* Ion chamber view: drawn 6 times life size (cavity 23 mm long, radius 3.05 mm, central electrode 0.55 mm, wall about 0.45 mm) */
+  const CH = { mag: 6, zc: 0.11 }; CH.L = 0.023 * CH.mag; CH.R = CAV.a * CH.mag; CH.Ro = (CAV.a + 0.00045) * CH.mag; CH.rb = CAV.b * CH.mag;
+  /* Calibration view: the tank to scale (35 cm of water below the surface) */
+  const CT = { x: 0.40, y: 0.36, zs: 0.39, h: 0.43, nz: 0.58 };
+  function in3(e) { if (!use3() || !box3) return false; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= box3.x && x <= box3.x + box3.w && y >= box3.y && y <= box3.y + box3.h; }
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.9, fov: 30, far: 30 }); if (!S3) return false;
+    S3.el.className = 'd3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), DS = THREE.DoubleSide;
+    const tok = (n, fb) => VD3K.token(n, fb);
+    const basic = (o) => new THREE.MeshBasicMaterial(Object.assign({ transparent: true, depthWrite: false }, o));
+    const at = (o, x, y, z) => { o.position.set(x, y, z); return o; };
+    const edges = (w, d, h, mat) => new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, d, h)), mat);
+    const glassM = M({ transparent: true, opacity: 0.13, roughness: 0.08, metalness: 0.1, side: DS, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
+    const waterM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.32, roughness: 0.15, metalness: 0, depthWrite: false, side: DS });
+    const blockM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0, depthWrite: false, side: DS });
+    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.55, metalness: 0.25 }, ['#56606b', '#3a424c']);
+    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), head = M({ roughness: 0.5, metalness: 0.2 }, ['#6b7787', '#4f5a68']);
+    const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), accLineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 });
+    const photonM = basic({ opacity: 0.12 }), arrowM = basic({ opacity: 0.85 }), accM = basic({ opacity: 0.2, side: DS });
+    S3.onTheme(() => { waterM.color.copy(tok('--water', '#2f7fc1')); blockM.color.copy(tok('--water', '#2f7fc1')); lineM.color.copy(tok('--muted', '#5a6575'));
+      accLineM.color.copy(tok('--accent', '#2b60b5')); photonM.color.copy(tok('--photon', '#c2410c')); arrowM.color.copy(tok('--photon', '#c2410c')); accM.color.copy(tok('--accent', '#2b60b5')); });
+    sc.add(VD3K.bench(S3, { w: 6, d: 5, y: 0.6 }), VD3K.backdrop(S3, { r: 2.4, h: 3.2, y: -0.1, arc: Math.PI * 1.15 }));
+    const ROD = new THREE.CylinderGeometry(1, 1, 1, 8, 1, true), UP = new THREE.Vector3(0, 1, 0), _q = new THREE.Quaternion(), _v = new THREE.Vector3(), _p = new THREE.Vector3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4();
+    const rods = (n) => { const m = new THREE.InstancedMesh(ROD, new THREE.MeshBasicMaterial({ color: 0xffffff }), n), c = new THREE.Color(1, 1, 1); for (let i = 0; i < n; i++) m.setColorAt(i, c); m.count = 0; m.frustumCulled = false; return m; };
+    const putRod = (m, i, a, b, r) => { _v.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const len = _v.length() || 1e-7; _q.setFromUnitVectors(UP, _v.multiplyScalar(1 / len)); _p.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2); _s.set(r, len, r); _m.compose(_p, _q, _s); m.setMatrixAt(i, _m); };
+    const lines = (n, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 6), 3)); const l = new THREE.LineSegments(g, mat); l.frustumCulled = false; return l; };
+    const setLines = (l, segs) => { const a = l.geometry.attributes.position; segs.forEach((s, i) => a.array.set([...s[0], ...s[1]], i * 6)); a.needsUpdate = true; l.geometry.setDrawRange(0, segs.length * 2); };
+
+    /* ---- Kerma and dose ---- */
+    const GK = new THREE.Group();
+    { const t = TK, cx = t.x0 + t.len / 2;
+      GK.add(VD3K.box(t.len, t.w, t.h, glassM, cx, 0, 0.001)); GK.add(at(edges(t.len, t.w, t.h, lineM), cx, 0, t.h / 2));
+      const wat = new THREE.Mesh(new THREE.BoxGeometry(t.len - 0.008, t.w - 0.008, t.water - 0.004), waterM); wat.position.set(cx, 0, t.water / 2 + 0.002); wat.renderOrder = 1; GK.add(wat);
+      /* the source head on its yoke, the collimator open toward the water */
+      const paint = M({ roughness: 0.45, metalness: 0.2 }, ['#c9d0d8', '#7d8794']);
+      GK.add(VD3K.rod([-0.6, 0, t.zb], [-0.42, 0, t.zb], 0.1, paint), VD3K.rod([-0.42, 0, t.zb], [-0.38, 0, t.zb], 0.085, lead));
+      const hole = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.1), new THREE.MeshBasicMaterial({ color: 0x0b0d10 })); hole.rotation.y = Math.PI / 2; hole.position.set(-0.3795, 0, t.zb); GK.add(hole);
+      GK.add(VD3K.rod([-0.51, 0, 0], [-0.51, 0, t.zb - 0.09], 0.02, steel), VD3K.box(0.22, 0.22, 0.014, dark, -0.51, 0, 0));
+      /* the beam: rays in air, then in the water in pieces whose brightness follows e^(−μx) */
+      const slices = []; for (let i = 0; i < 6; i++) slices.push(basic({ opacity: 0.5 }));
+      for (let iy = -1; iy <= 1; iy++) for (let iz = -1; iz <= 1; iz++) { const y = iy * 0.035, z = t.zb + iz * 0.035;
+        GK.add(VD3K.rod([-0.378, y, z], [t.x0, y, z], 0.0016, arrowM));
+        for (let i = 0; i < 6; i++) GK.add(VD3K.rod([t.x0 + i * t.len / 6, y, z], [t.x0 + (i + 1) * t.len / 6, y, z], 0.0016, slices[i])); }
+      GK.userData.slices = slices; }
+    /* the region of the water the block magnifies (to scale on the tank) and the lines from it to the block */
+    const region = edges(1, 1, 1, accLineM); GK.add(region);
+    const links = lines(4, lineM); GK.add(links);
+    const blk = new THREE.Group(); blk.position.set(BLK.x0, BLK.y, BLK.z); GK.add(blk);
+    { const b = BLK, w = new THREE.Mesh(new THREE.BoxGeometry(b.len, b.w, b.w), blockM); w.position.x = b.len / 2; w.renderOrder = 1; blk.add(w);
+      const e = edges(b.len, b.w, b.w, lineM); e.position.x = b.len / 2; blk.add(e);
+      for (let i = 0; i < 5; i++) { const yy = (i - 2) * b.w / 5.5, zz = ((i * 3) % 5 - 2) * b.w / 5.5, ar = new THREE.Mesh(new THREE.ConeGeometry(0.006, 0.018, 12), arrowM);
+        ar.rotation.z = -Math.PI / 2; ar.position.set(-0.012, yy, zz); blk.add(ar, VD3K.rod([-0.07, yy, zz], [-0.02, yy, zz], 0.0015, arrowM)); } }
+    /* the back wall of the block: the Monte Carlo dose in each depth bin */
+    const histCv = document.createElement('canvas'); histCv.width = 512; histCv.height = 256; const histTex = new THREE.CanvasTexture(histCv);
+    { const pl = new THREE.Mesh(new THREE.PlaneGeometry(BLK.len, BLK.w), new THREE.MeshBasicMaterial({ map: histTex, transparent: true, depthWrite: false })); pl.rotation.x = Math.PI / 2; pl.position.set(BLK.len / 2, BLK.w / 2 - 0.001, 0); blk.add(pl); }
+    const probe = new THREE.Mesh(new THREE.PlaneGeometry(BLK.w, BLK.w), accM); probe.rotation.y = Math.PI / 2; probe.renderOrder = 3; blk.add(probe);
+    const probeE = edges(0.0002, BLK.w, BLK.w, accLineM); blk.add(probeE);
+    const eTr = rods(64), pTr = rods(64), dots = VD3K.particles(S3, { n: 64, r: 0.0032 }); dots.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); blk.add(eTr, pTr, dots);
+    sc.add(GK);
+
+    /* ---- Ion chamber: cut open along its axis, in a slab of water cut the same way ---- */
+    const GC = new THREE.Group();
+    { const c = CH, L = c.L, zc = c.zc;
+      const wat = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.1, 0.196), waterM); wat.position.set(-0.005, 0.05, 0.1); wat.renderOrder = 1; GC.add(wat);
+      GC.add(at(edges(0.27, 0.1, 0.2, lineM), -0.005, 0.05, 0.1));
+      const ch = new THREE.Group(); ch.position.set(0, 0, zc); ch.rotation.z = -Math.PI / 2; GC.add(ch);   /* built along y, turned to lie along x: tip at −x, stem at +x */
+      const outer = M({ roughness: 0.5, metalness: 0.05, side: DS }, ['#5a6270', '#4a525e']), graphite = M({ roughness: 0.9, metalness: 0.1, side: DS }, ['#2b2e33', '#25282c']);
+      ch.add(new THREE.Mesh(new THREE.CylinderGeometry(c.Ro, c.Ro, L, 48, 1, true, Math.PI, Math.PI), outer));
+      ch.add(new THREE.Mesh(new THREE.CylinderGeometry(c.R, c.R, L, 48, 1, true, Math.PI, Math.PI), graphite));
+      for (const [r, m] of [[c.Ro, outer], [c.R, graphite]]) { const d = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 12, -Math.PI / 2, Math.PI, Math.PI / 2, Math.PI / 2), m); d.position.y = -L / 2; ch.add(d); }
+      for (const s of [-1, 1]) { const lip = new THREE.Mesh(new THREE.BoxGeometry(c.Ro - c.R, L, 0.0006), outer); lip.position.set(0, 0, s * (c.R + c.Ro) / 2); lip.rotation.y = Math.PI / 2; lip.position.set(0, 0, s * (c.R + c.Ro) / 2); ch.add(lip); }
+      const alu = M({ roughness: 0.3, metalness: 0.85 }, ['#c9cfd6', '#9aa3ad']);
+      GC.add(VD3K.rod([-L / 2 + 0.008, 0, zc], [L / 2 + 0.01, 0, zc], c.rb, alu));
+      GC.add(VD3K.rod([L / 2, 0, zc], [L / 2 + 0.1, 0, zc], c.Ro * 0.75, outer), VD3K.rod([L / 2 + 0.1, 0, zc], [L / 2 + 0.125, 0, zc], c.Ro * 0.6, steel));
+      GC.add(VD3K.cable([L / 2 + 0.125, 0, zc], [0.29, -0.03, 0.03], { color: 0x23282f, rad: 0.003, sag: 0.05 }));
+      GC.add(VD3K.box(0.04, 0.05, zc - c.Ro, dark, L / 2 + 0.06, 0, 0)); }
+    const elec = VD3K.meter(S3, { label: 'ELECTROMETER', sub: 'charge, nC' }); elec.position.x = 0.3; elec.position.y = -0.06; GC.add(elec);
+    const bias = VD3K.meter(S3, { label: 'BIAS', sub: 'chamber voltage', w: 0.12 }); bias.position.x = 0.3; bias.position.y = 0.09; GC.add(bias);
+    GC.add(VD3K.cable([0.33, -0.04, 0.02], [0.33, 0.07, 0.02], { sag: 0.01 }));
+    const beamC = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.1, 0.36), basic({ opacity: 0.06 })); beamC.position.set(0, 0, 0.22); beamC.renderOrder = 2; GC.add(beamC);
+    const ionsP = VD3K.particles(S3, { n: 1400, r: 0.0016 }), flash = VD3K.particles(S3, { n: 300, r: 0.0028 }); flash.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); GC.add(ionsP, flash);
+    sc.add(GC);
+
+    /* ---- Calibration: tank, nozzle, chamber, electrometer, thermometer, barometer ---- */
+    const GL = new THREE.Group();
+    { const t = CT;
+      GL.add(VD3K.box(t.x, t.y, t.h, glassM, 0, 0, 0.001)); GL.add(at(edges(t.x, t.y, t.h, lineM), 0, 0, t.h / 2));
+      const wat = new THREE.Mesh(new THREE.BoxGeometry(t.x - 0.008, t.y - 0.008, t.zs - 0.004), waterM); wat.position.set(0, 0, t.zs / 2 + 0.002); wat.renderOrder = 1; GL.add(wat);
+      const rg = new THREE.Group(), rule = VD3K.ruler(S3, { len: 0.35, to: 35, unit: 'cm', step: 1, w: 0.03 }); rg.add(rule); rg.rotation.order = 'YXZ'; rg.rotation.set(Math.PI / 2, Math.PI / 2, 0); rg.position.set(-t.x / 2 + 0.03, -t.y / 2 - 0.0035, t.zs); GL.add(rg);
+      /* the chamber holder: a rod from the rim down to the stem */
+      GL.add(VD3K.box(0.06, 0.04, 0.02, dark, 0.14, 0, t.h)); }
+    const calCh = new THREE.Group(); GL.add(calCh);
+    { const r = CAV.a + 0.0005, L = 0.023, chM = M({ roughness: 0.5, metalness: 0.05 }, ['#3d434c', '#353a42']);
+      calCh.add(VD3K.rod([-L / 2, 0, 0], [L / 2, 0, 0], r, chM), VD3K.rod([L / 2, 0, 0], [0.14, 0, 0], r * 0.8, chM));
+      const tip = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 10), chM); tip.position.x = -L / 2; calCh.add(tip); }
+    const calHold = VD3K.rod([0, 0, 0], [0, 0, 1], 0.004, steel); GL.add(calHold);
+    const calCable = new THREE.Group(); GL.add(calCable);
+    const nozP = new THREE.Group(), nozC = new THREE.Group();
+    { const n = CT.nz, paint = M({ roughness: 0.45, metalness: 0.2 }, ['#c9d0d8', '#7d8794']);
+      nozP.add(VD3K.rod([0, 0, n + 0.05], [0, 0, n + 0.3], 0.09, paint), VD3K.rod([0, 0, n + 0.3], [0, 0, n + 0.34], 0.11, dark), VD3K.box(0.15, 0.15, 0.05, dark, 0, 0, n));
+      nozC.add(VD3K.box(0.34, 0.3, 0.24, paint, 0, 0, n + 0.06), VD3K.box(0.18, 0.18, 0.06, lead, 0, 0, n)); }
+    GL.add(nozP, nozC);
+    const fieldM = basic({ opacity: 0.05 }), field = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 1), fieldM); field.renderOrder = 2; GL.add(field);
+    const rpLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[-0.05, -0.05], [0.05, -0.05], [0.05, 0.05], [-0.05, 0.05]].map((q) => new THREE.Vector3(q[0], q[1], 0))), new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 })); GL.add(rpLine);
+    const pencil = rods(2), spot = new THREE.Mesh(new THREE.SphereGeometry(0.006, 16, 10), new THREE.MeshBasicMaterial({ color: 0xffffff })); GL.add(pencil, spot);
+    const cElec = VD3K.meter(S3, { label: 'ELECTROMETER', sub: 'charge, nC', w: 0.2, h: 0.11 }); cElec.position.x = 0.39; cElec.position.y = -0.1;
+    const cBias = VD3K.meter(S3, { label: 'BIAS', sub: 'chamber voltage', w: 0.13 }); cBias.position.x = 0.59; cBias.position.y = -0.1;
+    const cTh = VD3K.meter(S3, { label: 'THERMOMETER', sub: 'in the water', w: 0.15 }); cTh.position.x = 0.39; cTh.position.y = 0.13; cTh.position.z += 0.1;
+    const cBa = VD3K.meter(S3, { label: 'BAROMETER', sub: 'room', w: 0.15 }); cBa.position.x = 0.59; cBa.position.y = 0.13; cBa.position.z += 0.1;
+    GL.add(cElec, cBias, cTh, cBa, VD3K.box(0.44, 0.12, 0.1, dark, 0.49, 0.14, 0));
+    GL.add(VD3K.rod([-0.15, 0.13, CT.h + 0.01], [-0.15, 0.13, CT.zs - 0.1], 0.003, steel), VD3K.cable([-0.15, 0.13, CT.h + 0.01], [0.39, 0.15, 0.13], { color: 0x6b7280, rad: 0.002, via: [[-0.1, 0.2, CT.h + 0.08], [0.25, 0.17, 0.2]] }));
+    sc.add(GL);
+    S3.onTheme(() => { rpLine.material.color.copy(tok('--photon', '#c2410c')); fieldM.color.copy(tok('--beam', '#f59e0b')); beamC.material.color.copy(tok('--beam', '#f59e0b')); spot.material.color.copy(tok('--beam', '#f59e0b')); flash.material.color.copy(tok('--beam', '#f59e0b')); });
+
+    g3 = { S3, GK, GC, GL, region, links, blk, histCv, histTex, histKey: '', probe, probeE, eTr, pTr, dots, setLines, putRod, ionsP, flash, beamC, elec, bias,
+      calCh, calHold, calCable, calCableKey: '', nozP, nozC, field, fieldM, rpLine, pencil, spot, cElec, cBias, cTh, cBa };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, O3, () => { if (use3()) draw(); }, { grab: (e) => !in3(e), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    can.style.cursor = '';
+    return true;
+  }
+  /* place the 3D canvas under box b of the drawing canvas, show one view's group, aim the camera and render */
+  function render3(b, which, target, dist) {
+    const g = g3, S3 = g.S3; box3 = b; ctx.clearRect(b.x, b.y, b.w, b.h);
+    Object.assign(S3.el.style, { left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px' });
+    S3.size(b.w, b.h); g.GK.visible = which === 'kerma'; g.GC.visible = which === 'chamber'; g.GL.visible = which === 'cal';
+    /* on a wide page the setup card covers the right of the picture: aim the camera at the middle of what is left */
+    const off = W > 820 ? 150 : 0; if (off) S3.cam.setViewOffset(b.w + 2 * off, b.h, 2 * off, 0, b.w, b.h); else S3.cam.clearViewOffset();
+    S3.theme(); S3.place(O3, target, S3.fit(dist, 1.5)); S3.render();
+    return (q) => { const r = S3.project(q); return [b.x + r[0], b.y + r[1], r[2]]; };
+  }
+  /* a word over the picture on a soft pill, kept inside the box */
+  function tag3(b, s, q, o = {}) {
+    if (!q || q[2] > 1) return; const p = PROJ() ? 1.25 : 1, sz = (o.s || 11) * p; ctx.save(); ctx.font = `${o.w || 600} ${sz}px ${o.m ? T.mono : T.ui}`;
+    const w = ctx.measureText(s).width, a = o.a || 'center', x0 = a === 'center' ? q[0] - w / 2 : a === 'right' ? q[0] - w : q[0], x = Math.max(b.x + 6, Math.min(b.x + b.w - w - 6, x0)), y = Math.max(b.y + sz, Math.min(b.y + b.h - 6, q[1]));
+    ctx.globalAlpha = 0.78; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x - 4, y - sz * 0.75 - 3, w + 8, sz + 5, 5); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(s, x, y); ctx.restore();
+  }
+  function note3(b, s, line = 0, c) { const p = PROJ() ? 1.25 : 1, y = b.y + b.h - (10 + 15 * line) * p;
+    ctx.save(); ctx.globalAlpha = 0.72; ctx.fillStyle = T.canvas; ctx.fillRect(b.x, y - 12 * p, b.w, 16 * p); ctx.restore(); text(s, b.x + 12 * p, y, { s: 10.5 * p, b: 'alphabetic', c: c || T.muted }); }
+  const lenText = (cm) => (cm < 1 ? `${f(cm * 10, 1)} mm` : `${f(cm, cm < 10 ? 1 : 0)} cm`);
+  function clipBox(a, b2, lo, hi) {   /* the part of segment a b inside the box lo..hi (Liang–Barsky), or null */
+    let t0 = 0, t1 = 1;
+    for (let k = 0; k < 3; k++) { const d = b2[k] - a[k];
+      for (const [pp, qq] of [[-d, a[k] - lo[k]], [d, hi[k] - a[k]]]) { if (pp === 0) { if (qq < 0) return null; continue; } const r = qq / pp; if (pp < 0) { if (r > t1) return null; if (r > t0) t0 = r; } else { if (r < t0) return null; if (r < t1) t1 = r; } } }
+    return [a.map((v, k) => v + t0 * (b2[k] - a[k])), a.map((v, k) => v + t1 * (b2[k] - a[k]))];
+  }
+  function kerma3(b, p, zm) {
+    const g = g3, t = TK, B = BLK, mag = B.len / (zm / 100), wl = B.w / mag, xe = t.x0 + zm / 100;
+    /* the magnified region on the tank and the lines to the block */
+    g.region.scale.set(zm / 100, wl, wl); g.region.position.set(t.x0 + zm / 200, 0, t.zb);
+    const bz = B.z - B.w / 2, by = B.y;
+    g.setLines(g.links, [[[t.x0, -wl / 2, t.zb + wl / 2], [B.x0, by - B.w / 2, bz]], [[t.x0, wl / 2, t.zb + wl / 2], [B.x0, by + B.w / 2, bz]],
+      [[xe, -wl / 2, t.zb + wl / 2], [B.x0 + B.len, by - B.w / 2, bz]], [[xe, wl / 2, t.zb + wl / 2], [B.x0 + B.len, by + B.w / 2, bz]]]);
+    const mu = muRho(S.E); g.GK.userData.slices.forEach((m, i) => { m.color.set(T.photon); m.opacity = 0.85 * Math.exp(-mu * (i + 0.5) * t.len * 100 / 6); });
+    /* the probe plane */
+    const inside = S.z <= zm; g.probe.visible = g.probeE.visible = inside; g.probe.position.x = g.probeE.position.x = S.z / zm * B.len;
+    /* tracks: the photon's path to its interaction, the dot, and the electron, all to scale inside the block */
+    const lo = [0, -B.w / 2, -B.w / 2], hi = [B.len, B.w / 2, B.w / 2], bg = g.S3.scene.background || new THREE.Color(T.canvas);
+    const cE = new THREE.Color(T.elec), cP = new THREE.Color(T.photon), col = new THREE.Color(); let n = 0;
+    for (const tr of tracks) {
+      const a = Math.max(0, 1 - tr.age / 1.6); if (a <= 0 || n >= 64) continue;
+      if (tr.w == null) { tr.w = rand3(); tr.ph = 2 * Math.PI * rand3(); }
+      const x = tr.z / zm * B.len, y = (tr.y - 0.5) * B.w * 0.94, w = (tr.w - 0.5) * B.w * 0.94, s = Math.sqrt(Math.max(0, 1 - tr.c * tr.c)), L = tr.L / zm * B.len;
+      if (x > B.len) continue;
+      const seg = clipBox([x, y, w], [x + L * tr.c, y + L * s * Math.cos(tr.ph), w + L * s * Math.sin(tr.ph)], lo, hi);
+      g.putRod(g.pTr, n, [0, y, w], [x, y, w], 0.0007); g.pTr.setColorAt(n, col.copy(bg).lerp(cP, 0.55 * a));
+      if (seg) { g.putRod(g.eTr, n, seg[0], seg[1], 0.0016); g.eTr.setColorAt(n, col.copy(bg).lerp(cE, a)); } else g.putRod(g.eTr, n, [x, y, w], [x, y, w + 1e-6], 1e-6);
+      g.dots.put(n, x, y, w, col.copy(bg).lerp(cP, a)); n++;
+    }
+    for (const m of [g.eTr, g.pTr]) { m.count = n; m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true; }
+    g.dots.show(n); g.dots.done();
+    /* the back wall: Monte Carlo dose in each bin, as bars */
+    const md = MC && MC.batches >= 2 ? mcDose(MC, S.phi) : null, key = `${md ? MC.batches : 0}|${zm}|${T.mc}|${T.canvas}`;
+    if (key !== g.histKey) { g.histKey = key; const c = g.histCv.getContext('2d'), Wc = 512, Hc = 256; c.clearRect(0, 0, Wc, Hc);
+      if (md) { const mx = Math.max(...md.map((q) => q.D)) || 1; c.fillStyle = T.mc; c.globalAlpha = 0.5;
+        for (const q of md) { if (q.z > zm) break; const x0 = (q.z - MC.h / 2) / zm * Wc, bw = MC.h / zm * Wc, hh = q.D / mx * Hc * 0.82; c.fillRect(x0 + 1, Hc - hh, Math.max(1, bw - 2), hh); } c.globalAlpha = 1; }
+      g.histTex.needsUpdate = true; }
+    const Q = render3(b, 'kerma', [-0.04, 0, 0.36], 1.2);
+    /* words over the picture */
+    const nar = b.w < 560;
+    tag3(b, 'water phantom', Q([t.x0 + t.len, -t.w / 2, t.h + 0.02]), { c: T.water, a: 'right' });
+    tag3(b, `${f(S.E, 3)} MeV photons`, Q([-0.5, 0, t.zb + 0.14]), { c: T.photon });
+    tag3(b, nar ? `the first ${lenText(zm)}, magnified ${f(mag, 0)}×` : `The first ${lenText(zm)} of the water, magnified ${f(mag, 0)}×`, Q([B.x0 + B.len / 2, B.y, B.z + B.w / 2 + 0.03]), { w: 700 });
+    if (inside) tag3(b, `z = ${f(S.z, 3)} cm`, Q([B.x0 + S.z / zm * B.len, B.y - B.w / 2, B.z - B.w / 2 - 0.02]), { c: T.accent, m: true });
+    if (!S.run && !tracks.length) note3(b, 'Press Start to send photons in.', 1);
+    else if (md) note3(b, nar ? 'Back wall: Monte Carlo dose by depth.' : 'The back wall of the block shows the Monte Carlo dose in each depth bin: watch it build up.', 1, T.mc);
+    note3(b, nar ? 'In the block all to scale: dots are interactions, lines the electrons.' : 'Inside the block all is to scale: each dot is an interaction, each purple line the electron it sets moving. Drag to turn.');
+  }
+  function chamber3(b, p) {
+    const g = g3, c = CH, gi = S.ionGeom, now = performance.now();
+    /* ions: the flat view's pairs, placed round the electrode in the back half of the cavity */
+    let ni = 0, nf = 0; const cp = new THREE.Color(T.ion), cn = new THREE.Color(T.neg);
+    if (gi) for (const q of ions) {
+      if (q.a3 == null) q.a3 = 0.2 + Math.random() * (Math.PI - 0.4);
+      const u = (q.x - (gi.xl + gi.R)) / Math.max(1, gi.xr - gi.xl - gi.R), x = -c.L / 2 + Math.max(0, Math.min(1, u)) * c.L, rr = (r) => c.rb + (r - gi.eb) / Math.max(1, gi.R - gi.eb) * (c.R - c.rb);
+      const cy = Math.cos(q.a3), sy = Math.sin(q.a3);
+      if (q.rec) { if (nf < 300) g.flash.put(nf++, x, rr(q.r0) * sy, c.zc + rr(q.r0) * cy); continue; }
+      if (ni < 1398) { g.ionsP.put(ni++, x, rr(q.rp) * sy, c.zc + rr(q.rp) * cy, cp); g.ionsP.put(ni++, x + 0.002, rr(q.rn) * sy, c.zc + rr(q.rn) * cy, cn); }
+    }
+    g.ionsP.show(ni); g.ionsP.done(); g.flash.show(nf); g.flash.done();
+    const pulse = S.beamC === 'proton' ? Math.max(0, 1 - (now - (S.lastBurst || 0)) / 250) : 0.5;
+    g.beamC.material.opacity = 0.05 + 0.14 * pulse;
+    g.elec.set(S.lastC ? f(S.lastC.M, 3) : '—'); g.bias.set(`${S.pol > 0 ? '+' : '−'}${S.V} V`);
+    const Q = render3(b, 'chamber', [0.09, -0.02, 0.08], 0.7), nar = b.w < 560, sign = S.pol > 0 ? '+' : '−';
+    tag3(b, `central electrode ${sign}${S.V} V`, Q([0.02, 0, c.zc + c.Ro + 0.012]), { c: T.ink });
+    tag3(b, 'air cavity, 0.6 cm³', Q([-c.L / 2 + 0.01, 0, c.zc - c.Ro - 0.012]), { s: 10.5 });
+    tag3(b, 'graphite wall, earthed', Q([-0.03, 0.02, c.zc + c.Ro + 0.035]), { s: 10.5 });
+    tag3(b, 'water (cut away)', Q([-0.13, 0.0, 0.03]), { c: T.water, s: 10.5, a: 'left' });
+    tag3(b, S.beamC === 'proton' ? 'proton pulses, 1 kHz' : 'cobalt 60, continuous', Q([0, 0, 0.42]), { c: T.beam, s: 10.5 });
+    tag3(b, 'electrometer', Q([0.3, -0.06, 0.12]), { s: 10.5 });
+    let ky = b.y + 18 * p; const kx = b.x + 12 * p;
+    for (const [s2, col] of [['● positive ion', T.ion], ['● negative ion', T.neg], ['● pair lost to recombination', T.beam]]) { text(s2, kx, ky, { s: 10.5 * p, c: col }); ky += 15 * p; }
+    note3(b, nar ? 'Drawn 6× life size and cut open; slowed down.' : 'The chamber is drawn 6 times life size and cut open; the ions are slowed down, and the share that recombines is the model\'s.');
+  }
+  function cal3(b, p, cb) {
+    const g = g3, t = CT, co = cb.kind === 'co60', zr = t.zs - cb.zref / 100, on = !!S.deliver, now = performance.now();
+    g.nozP.visible = !co; g.nozC.visible = co;
+    /* the chamber at z_ref, its holder and cable */
+    g.calCh.position.set(0, 0, zr); g.calHold.scale.set(1, t.h - zr, 1); g.calHold.position.set(0.14, 0, (zr + t.h) / 2);
+    const ck = String(zr); if (g.calCableKey !== ck) { g.calCableKey = ck; while (g.calCable.children.length) g.S3.dispose(g.calCable.children[0]);
+      g.calCable.add(VD3K.cable([0.14, 0, t.h], [0.39, -0.08, 0.03], { color: 0x23282f, rad: 0.0025, via: [[0.17, -0.02, t.h + 0.07], [0.3, -0.06, 0.1]] })); }
+    /* the field: 10 cm × 10 cm, down to R_p for protons, through the tank for cobalt */
+    const bottom = co ? 0.005 : t.zs - cb.Rp / 100, top = co ? t.nz : t.zs;
+    g.field.scale.set(1, 1, top - bottom); g.field.position.set(0, 0, (top + bottom) / 2); g.fieldM.opacity = co ? (on ? 0.2 : 0.05) : (on ? 0.07 : 0.04);
+    g.rpLine.visible = !co; g.rpLine.position.set(0, 0, bottom);
+    /* pencil beam scanning: during a delivery a spot steps across the layer; each pencil stops at R_p */
+    g.pencil.count = 0; g.spot.visible = false;
+    if (!co && on) { const k = Math.min(1, (now - S.deliver.t0) / S.deliver.dur), row = Math.min(7, Math.floor(k * 8)), cx = ((row % 2 ? 1 - (k * 8 - row) : k * 8 - row) - 0.5) * 0.09, cy = (row / 7 - 0.5) * 0.09;
+      g.putRod(g.pencil, 0, [0, 0, t.nz], [cx, cy, t.zs], 0.003); g.putRod(g.pencil, 1, [cx, cy, t.zs], [cx, cy, bottom], 0.003); g.pencil.count = 2;
+      const bc = new THREE.Color(T.beam); g.pencil.setColorAt(0, bc); g.pencil.setColorAt(1, bc); g.pencil.instanceMatrix.needsUpdate = true; if (g.pencil.instanceColor) g.pencil.instanceColor.needsUpdate = true;
+      g.spot.visible = true; g.spot.position.set(cx, cy, bottom); }
+    let shown = '— nC'; if (S.deliver) shown = `${f(S.deliver.M * Math.min(1, (now - S.deliver.t0) / S.deliver.dur), 3)} nC`; else if (S.lastR) shown = `${f(S.lastR.M, 3)} nC`;
+    g.cElec.set(shown); g.cBias.set(`${S.polc > 0 ? '+' : '−'}${S.Vc} V`); g.cTh.set(`${f(S.room.T, 1)} °C`); g.cBa.set(`${f(S.room.P, 2)} kPa`);
+    const Q = render3(b, 'cal', b.w < 560 ? [0.2, 0, 0.24] : [0.2, 0, 0.3], b.w < 560 ? 1.35 : 2.7), nar = b.w < 560;
+    tag3(b, co ? 'cobalt 60 unit' : 'scanning nozzle', Q([0, 0, t.nz + (co ? 0.34 : 0.38)]));
+    tag3(b, `z_ref = ${cb.zref} g/cm²`, Q([-0.07, 0, zr + 0.01]), { c: T.accent, m: true, a: 'right' });
+    { const c0 = Q([0, 0, zr]); if (c0[2] < 1) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(c0[0], c0[1], 11 * p, 0, 7); ctx.stroke(); } }
+    tag3(b, 'chamber', Q([0.07, 0, zr - 0.03]), { s: 10 });
+    if (!co) tag3(b, nar ? `R_p ${f(cb.Rp, 2)}` : `R_p ≈ ${f(cb.Rp, 2)} g/cm² (PSTAR CSDA range)`, Q([0.05, -0.05, bottom - 0.015]), { c: T.photon, s: 10.5, a: 'left' });
+    tag3(b, 'depth in water (cm = g/cm²)', Q([-t.x / 2 + 0.03, -t.y / 2, t.zs - 0.37]), { s: 10, w: 400 });
+    if (!co && on) tag3(b, 'each spot stops at R_p', Q([0.06, 0.05, t.zs - 0.03]), { c: T.beam, s: 10, a: 'left' });
+    note3(b, co ? (nar ? '10 cm × 10 cm; source drawn nearer than 100 cm.' : 'Field 10 cm × 10 cm, 100 cm from the source to the chamber. Tank and chamber to scale; the head is drawn nearer than it is.')
+      : (nar ? 'Scanned layer, 10 cm × 10 cm. Tank to scale.' : 'Scanned layer, 10 cm × 10 cm. Tank and chamber to scale; the nozzle is drawn nearer than it is. Drag to turn.'));
+    if (S.mystery) text('Mystery machine: its output has drifted', b.x + 12 * p, b.y + 20 * p, { s: 11 * p, c: T.neg, w: 700 });
+  }
+
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (g3) { g3.S3.el.hidden = !use3(); $('scene').dataset.d3 = use3() ? S.view : ''; }
     if (S.view === 'kerma') drawKerma(); else if (S.view === 'chamber') drawChamber(); else drawCal();
   }
 
@@ -842,7 +1122,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* drag the depth probe in the Kerma view */
   let drag = false;
   const probeAt = (e) => { const g = S.geomK; if (!g) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left; S.z = Math.max(0, Math.min(g.zm, (x - g.x0) / (g.x1 - g.x0) * g.zm)); S.z = Math.round(S.z * 1e4) / 1e4; kermaChanged(false); };
-  can.addEventListener('pointerdown', (e) => { if (S.view !== 'kerma' || !S.geomK) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left; if (x < S.geomK.x0 - 10 || x > S.geomK.x1 + 10) return; drag = true; card.ghost(true); can.setPointerCapture(e.pointerId); probeAt(e); });
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'kerma' || !S.geomK || in3(e)) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left; if (x < S.geomK.x0 - 10 || x > S.geomK.x1 + 10) return; drag = true; card.ghost(true); can.setPointerCapture(e.pointerId); probeAt(e); });
   can.addEventListener('pointermove', (e) => { if (drag) probeAt(e); });
   const endDrag = () => { if (drag) { drag = false; card.ghost(false); } };
   can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
@@ -858,6 +1138,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const r = chamberTrue(S.V, S.pol), lose = 1 - r.f, speed = 30 * S.V / 400;
     pulseT += dt;
     const burst = S.beamC === 'proton' ? (pulseT > 0.7 ? (pulseT = 0, 26) : 0) : (Math.random() < dt * 30 ? 1 : 0);
+    if (burst) S.lastBurst = performance.now();
     for (let i = 0; i < burst; i++) {
       const r0 = g.eb + 3 + Math.random() * (g.R - g.eb - 6), x = g.xl + g.R + Math.random() * (g.xr - g.xl - g.R - 6);
       ions.push({ x, r0, rp: r0, rn: r0, side: Math.random() < 0.5 ? -1 : 1, rec: Math.random() < Math.min(0.9, lose * (S.beamC === 'proton' ? 6 : 1)), age: 0, done: 0 });
@@ -923,6 +1204,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const qs = new URLSearchParams(location.search);
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'co60'); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => draw(), status: (m) => { $('msg3').textContent = m; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
