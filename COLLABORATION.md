@@ -5046,3 +5046,19 @@ and its plate (sized by the height) tiny beside the plot. A sweep of all 138 dem
 - Key captures: the capture scripts run at 1100x900, where only Chladni's picture changes (taller); its capture drives
   buttons only, and the Chladni capture script fails the same way on main here (the worksheet page needs vendored MathJax).
 - What's new entry added.
+
+## 2026-10-26 · Claude · Every floating control card drags by a grip
+
+Steve: the Speed of Sound card faded while running but had nothing to grab. A sweep of every demo with a card over its
+picture found 27 already on `VD.setupCard` (grip ⠿ in the title; all drag with mouse and touch at 1280x800 and 1180x820)
+and 12 floating cards with their own fade code or none and no grip. Each now calls `VD.setupCard` for the drag only
+(their own fade code is unchanged), so the card drags by its title, arrow keys move it, double click puts it back:
+- `sound-waves` (Set up), `kundts-tube` (Set up and Tube cards), `doppler`, `two-speaker`, `ultrasound`, `wave-power`,
+  `shielding-rooms`, `superconductors`, `rotational-dynamics` (mass tray), `viscometer` (ball box).
+- `cart-launch`, `impulse`: the fading knob panel gets a title (Set up the launch, Set up the cart) as its grip, and stays
+  inside the picture (`within: '#stage'`), since it sits on the bench.
+- Not changed: cards that sit beside or under the picture rather than over it (acoustic-levitation, chladni,
+  photon-interactions, radiobiology, retrograde-motion, spectra) and star-slice (built from its template). Knob panels
+  that never fade are not set up cards. solar-system-formation's card is away at load because it runs; it drags once paused.
+- vdcheck `--only clip` 0 cut off on all 12; tests pass where they exist (shielding-rooms, superconductors, ultrasound,
+  rotational-dynamics, viscometer, impulse). What's new entry added. No library change.

@@ -588,6 +588,8 @@ details.more[open] summary { margin-bottom: 6px; }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.setupCard($('card'));   /* the card drags by its title (grip), wherever it floats over the picture */
+  VD.setupCard($('tubeCard'));   /* the card drags by its title (grip), wherever it floats over the picture */
   VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; fade(); draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);

@@ -476,6 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.setupCard($('setupCard'));   /* the card drags by its title (grip), wherever it floats over the picture */
   tokens(); newMystery(); S.mysN = 0;
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'meissner');
   new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();

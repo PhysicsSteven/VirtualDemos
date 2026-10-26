@@ -66,6 +66,7 @@ table.rows input:focus { border-color: var(--accent); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
 .instr > [hidden] { display: none !important; }
+.instr-title { flex-basis: 100%; font-size: 0.72rem; font-weight: 700; opacity: 0.8; line-height: 1.2; }
 .instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
 .instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
 .instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
@@ -112,6 +113,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <div class="instr compact" id="instr" role="group" aria-label="Apparatus controls">
+      <div class="instr-title">Set up the launch</div>
       <div class="kctl"><label for="sV">Cart speed at launch</label><input type="range" id="sV" min="0" max="3" step="0.1"><output id="oV" for="sV"></output></div>
       <div class="kctl"><label for="sU">Launch speed (relative to the cart)</label><input type="range" id="sU" min="2" max="6" step="0.1"><output id="oU" for="sU"></output></div>
       <div id="rowA" class="kctl"><label for="sA">Cart acceleration after launch (negative brakes)</label><input type="range" id="sA" min="-3" max="3" step="0.1"><output id="oA" for="sA"></output></div>
@@ -767,6 +769,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.setupCard($('instr'), { within: '#stage' });   /* the card drags by its title (grip), wherever it floats over the picture */
   /* the measuring tools: the stopwatch on the simulated clock, the ruler on the flat picture (drawn to scale; not the plot) */
   /* How this works: a short video of one launch from the steady cart (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/cart-launch.mp4', poster: 'media/how-this-works/cart-launch.jpg' });

@@ -895,6 +895,7 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.setupCard($('tray'));   /* the card drags by its title (grip), wherever it floats over the picture */
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); reset(); renderRows(); resize();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
