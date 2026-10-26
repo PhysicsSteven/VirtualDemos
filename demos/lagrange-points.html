@@ -173,7 +173,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/lagrange-points.html" target="lagrange-points-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/lagrange-points.html" target="lagrange-points-worksheet">Worksheet 1: Orbits Near the Lagrange Points</a></li><li><a href="../curriculum/labs/students/intro-lagrange.html" target="intro-lagrange-worksheet">Worksheet 2: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -1671,7 +1671,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   /* How this works: a short video of the first reading, the Lagrange points at μ = 10⁻⁶ (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/lagrange-points.mp4', poster: 'media/how-this-works/lagrange-points.jpg' });
+  /* one video per worksheet: the Astro 2203 one (intro-lagrange) when opened from it (?ws=) or from the Astro 2203 course page (?course=, which VD.ws reads too) */
+  const howVid = () => (VD.ws('lagrange-points') === 'intro-lagrange' ? 'intro-lagrange' : 'lagrange-points');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-lagrange' ? 'How this works: Lagrange Points, Trojan Asteroids and Parking Spots in Space' : 'How this works') });
   window.__lp = { get frameMs() { return frameMs; }, get S() { return S; }, get t() { return t; }, get parts() { return parts; }, get sel() { return sel; }, get L() { return LPT; }, get CL() { return CL; },
     get V() { return V; }, get grip() { return zvcGrip; }, get labels() { return placedLabels; }, get fieldBusy() { return !!field.job; }, toPx, P, sunXY, setFrame, lockView, fitView,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll(),

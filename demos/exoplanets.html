@@ -208,7 +208,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet">Worksheet 1: Finding Exoplanets</a></li><li><a href="../curriculum/labs/students/intro-exoplanets.html" target="intro-exoplanets-worksheet">Worksheet 2: Finding Planets Around Other Stars (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Systems</h2>
         <div class="chips" id="presets">
@@ -1273,8 +1273,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       P_d: +(D.Per / DAY).toPrecision(6), t_h: (m.t / 3600).toFixed(4), drop_ppm: ((1 - m.f) * 1e6).toFixed(1), v_m_s: m.v.toFixed(3), t_v_h: (m.tv / 3600).toFixed(4) };
   };
 
-  /* How this works: a short video of the first reading, the Hot Jupiter transit depth (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/exoplanets.mp4', poster: 'media/how-this-works/exoplanets.jpg' });
+  /* How this works: one video per worksheet (made by tools/howto/): the Hot Jupiter transit depth, or for the Astro 2203 worksheet
+     (intro-exoplanets, opened from it with ?ws= or from the Astro 2203 course page with ?course=, which VD.ws reads too) Earth's transit */
+  const howVid = () => (VD.ws('exoplanets') === 'intro-exoplanets' ? 'intro-exoplanets' : 'exoplanets');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-exoplanets' ? 'How this works: Finding Planets Around Other Stars' : 'How this works: Finding Exoplanets') });
 
   // exposed for testing
   window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying };

@@ -7788,7 +7788,8 @@
       "title": "Finding Exoplanets",
       "url": "demos/exoplanets.html",
       "handouts": [
-        "exoplanets"
+        "exoplanets",
+        "intro-exoplanets"
       ]
     },
     {
@@ -8720,7 +8721,8 @@
       "title": "Lagrange Points",
       "url": "demos/lagrange-points.html",
       "handouts": [
-        "lagrange-points"
+        "lagrange-points",
+        "intro-lagrange"
       ]
     },
     {
@@ -10370,7 +10372,8 @@
       "status": "usable",
       "note": "Vol. 1 §13.6 lecture illustration of differential gravitational acceleration and equilibrium tides. Ideal ocean, circular coplanar source orbits, no basin dynamics; not a quantitative real-tide forecast. Promoted only for this direct syllabus topic.",
       "handouts": [
-        "tides"
+        "tides",
+        "intro-tides"
       ],
       "title": "Tides",
       "url": "demos/tides.html"

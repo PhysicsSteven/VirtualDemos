@@ -2229,6 +2229,14 @@ d | Distance of the planet from its star | AU
 S | Starlight falling on each square meter at the planet | W/m²
 e | Share of the ground's heat radiation that escapes to space (1 means no greenhouse)
 
+== intro-exoplanets ==
+K | Top speed of the star toward or away from us as the planet pulls it around | m/s
+M_s | Mass of the star, compared with the Sun | Sun = 1
+P | Period: the time the planet takes to go round its star once | yr
+a | Size of the orbit: the planet's average distance from its star | AU
+L | Luminosity of the star: the total power it gives out, in units of the Sun's
+x | Any number, in the calculator hint
+
 == intro-resonances ==
 a | Average distance of the body from the Sun (half the long axis of its orbit) | AU
 e | Eccentricity of the orbit: 0 is a circle, the bigger e the more stretched

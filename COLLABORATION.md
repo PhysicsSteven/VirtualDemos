@@ -4962,3 +4962,21 @@ week except the review Weeks 7 and 10). Steve chose to lay the page out by weeks
   other worksheets are links. Canvas importer check: 14 modules, 8 assignments, 0 wrong. Astronomy unchanged (37).
 - Checked in Chromium at 1280 and 390 px, light and dark: no sideways scroll; `#sky` → `#week-1`, `astro.html#a2203-earth-moon`
   → `astro-2203.html#week-5`; Craters from Astro 2203 shows Week 5 in its breadcrumb.
+## 2026-10-26 · Claude · Astro 2203 intro worksheets: Exoplanets, Tides, Lagrange Points
+
+From the course import's still to make list (items 1 to 3), chosen by Steve on 2026-10-26.
+- `intro-exoplanets` (Finding Exoplanets, Week 10): Part 1 transit depth against (Rp/Rs)² for four systems (slope 1.215 from limb
+  darkening), Part 2 the star's top speed K, Part 3 a noisy mystery planet. Recipes in the handout: R = 109.2 Rs √(drop/1.21),
+  M = (K/0.0895 m/s) P^(1/3) Ms^(2/3), a = (Ms P²)^(1/3), ρ = 5.51 M/R³, L ≈ Ms⁴, habitable zone 0.36 to 1.11 times Earth's
+  starlight (Kopparapu et al. 2014), T = 255 K S^(1/4). Key mystery (Math.random pinned): R 3.26 R⊕ (true 3.30), M 11.4 M⊕,
+  a 0.0510 AU, ρ 1.81 g/cm³ (true 1.75), S 264, T about 1030 K.
+- `intro-tides` (Tides, Week 5): pull and tidal pull at 40, 60.34, 80, 120 R⊕; Moon's tide 0.357 m, Sun's 0.164 m, spring range
+  0.78 m, neap 0.29 m; high tides 12.42 h apart (`__tides.findHighs`).
+- `intro-lagrange` (Lagrange Points): three real pairs and μ 0.001 to 0.1. Sun–Earth L2 0.0100782 a (1.508 million km), drift
+  23.4 d; Earth–Moon L2 64 500 km, drift 2.0 d; Trojans' wobble 12.428 P (147 yr); L4 goes unstable between μ 0.03 and 0.04
+  (Routh 0.0385).
+- Each demo picks its How this works video by `VD.ws`; three new videos; glossary section for intro-exoplanets; handout buttons,
+  course pages and Canvas cartridges rebuilt. Keys in TeacherKeys `worksheet-keys/astro-2203/`.
+
+**For GPT:** please check (1) the recipes above against the demo's readouts for one system; (2) the Lagrange key's μ bracket against
+Routh's value; (3) the handouts for hyphens in compound modifiers.

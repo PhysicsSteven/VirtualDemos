@@ -192,7 +192,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/tides.html" target="tides-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/tides.html" target="tides-worksheet">Worksheet 1: Tidal Forces</a></li><li><a href="../curriculum/labs/students/intro-tides.html" target="intro-tides-worksheet">Worksheet 2: Tides: Two Bulges, the Moon and the Sun (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -356,7 +356,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const $ = (id) => document.getElementById(id);
   /* How this works: a 21 s video of the Moon's tidal pull at 40 Earth radii (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/tides.mp4', poster: 'media/how-this-works/tides.jpg' });
+  /* one video per worksheet: the Astro 2203 one (intro-tides) when opened from it (?ws=) or from the Astro 2203 course page (?course=, which VD.ws reads too) */
+  const howVid = () => (VD.ws('tides') === 'intro-tides' ? 'intro-tides' : 'tides');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-tides' ? 'How this works: Tides, Two Bulges, the Moon and the Sun' : 'How this works: Tidal Forces') });
   /* the measuring tools: in Ocean bulges, a stopwatch on the simulated clock, in hours */
   let simClock = 0;
   VD.tools({ el: document.querySelector('canvas'), time: () => (S.view === 'bulge' ? simClock : null), timeUnit: 'h' });

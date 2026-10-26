@@ -509,6 +509,13 @@
   INTRO.push('intro-inside-a-planet');
   INTRO.push('intro-giant-planets'); INTRO_GRAPHS.push('intro-giant-planets'); /* Giant Planets, Rings and Moons demo, 2026-10-25 */
   INTRO_GRAPHS.push('intro-inside-a-planet');
+  INTRO.push('intro-exoplanets'); INTRO_GRAPHS.push('intro-exoplanets'); /* Finding Exoplanets demo, 2026-10-26 */
+  /* Reading | System | Star mass | Star radius | Planet radius | Planet mass | Period | Time from mid transit | Brightness drop | Star velocity | (ratio)² typed */
+  INTRO.push('intro-tides'); /* Tides demo, 2026-10-26: Reading | Moon's distance | Pull | Tidal near | Tidal far; the second table typed */
+  FROM_DEMO['intro-tides'] = { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2'] };
+  INTRO.push('intro-lagrange'); /* Lagrange Points demo, 2026-10-26 */
+  FROM_DEMO['intro-lagrange'] = { demo: 'Lagrange Points', cols: ['row', 'system', 'mu', 'L1_a', 'L2_a', 'L2_efold_P', (r) => (r.L4 === 'stable' ? 'yes' : 'no'), 'L4_lib_P', 'L4_efold_P'] };
+  FROM_DEMO['intro-exoplanets'] = { demo: 'Finding Exoplanets', cols: ['row', 'system', 'Ms_Msun', 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 'P_d', 't_h', 'drop_ppm', 'v_m_s', null] };
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
   const CR_IMPACT = ['row', 'body', 'L_km', 'v_km_s', 'D_km', 'form'], CR_COUNT = ['row', 'surface', 'D_km', 'N', 'area_km2', 'per_km2', 'age_Gyr'],
