@@ -731,6 +731,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => redraw(), status: () => {} });
   window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom, zeeman };
+  const HOW = { orbit: 'The Orbital Magnetic Moment', sg: 'The Stern–Gerlach Experiment', zee: 'The Zeeman Effect' };
+  VD.howTo({ src: () => `media/how-this-works/${WS[S.view]}.mp4`, poster: () => `media/how-this-works/${WS[S.view]}.jpg`, title: () => `How this works: ${HOW[S.view]}` });
   requestAnimationFrame(frame);
 })();
 </script>

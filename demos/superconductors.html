@@ -482,6 +482,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); draw(); }, status: () => {} });
   window.__sc = { S, now, setT, setB, applyPreset, redraw, sync, METALS, sample, bc, G3 };
+  VD.howTo({ src: 'media/how-this-works/meissner-effect.mp4', poster: 'media/how-this-works/meissner-effect.jpg' });
 })();
 </script>
 </body>

@@ -4528,3 +4528,39 @@ course entry (unit 7, the "coming" placeholder removed). No How this works video
 - the key's Bragg–Kleeman exponent from the range table (1.69 ± 0.01 with curved residuals; local exponent 1.83 to 1.71);
 - the drift and mystery crossing days (22.6 ± 1.0 and 26.6 ± 0.7) from the captured tables;
 - the handout for hyphens in compound modifiers.
+
+## 2026-10-26 · Claude · How this works videos: Modern (40 worksheets)
+
+Every Modern worksheet that lacked one now has a "How this works" video (dark only, 30 s or less, measuring tools hidden), recorded
+with `tools/howto/` and its script per worksheet. Relativity group and Binding Energy in 9f9717e, 23 in 457cd61, the rest in this
+commit. Skipped as already done in the Astro passes: radioactive-decay ×2, spectra ×2, intro-blackbody. No What's new entry (Steve).
+Copies in the project files under `how-this-works/modern-*`. Readings shown, each checked against the key in TeacherKeys
+`worksheet-keys/modern/` (random runs within their uncertainty):
+- Photons: Compton (retake), photoelectric V₀ 2.82 V, Franck–Hertz, Rutherford 39507 in the 15° to 20° bin of 201,812 fired (key
+  39368 of 200k), e/m at 100.1 V, 1.00 A, both edges 4.55 and 4.60 cm.
+- Quantum and atoms: uncertainty 0.296 nm and 333.311 eV/c (key row 1), energy levels, tunneling T 0.158 (plane wave 0.1575,
+  packet 0.1581), hydrogen 1s N 12003, mean r 1.5064 ± 0.0078 a₀ (1.5 exact), orbital moment μ_B at n = 1 and 2μ_B at n = 2,
+  Stern–Gerlach 0.2740 mm at 250 T/m (theory and key), Zeeman 4.840 pm at 0.25 T, spin resonance ΔT 23.80 ms and 2.184 mT at
+  61.27 kHz (key row 4), periodic table H 13.5984 and He 24.5874 eV, Duane–Hunt 123.98 pm at 10 kV, Nd:YAG 0.2863 and 0.5764 W.
+- Condensed matter: NaCl ion pair 48.707 and 13.697 eV, HCl P(8) 2703.01 and P(7) 2727.78 cm⁻¹, LiF and LiCl lattice rows, bands
+  −9.490 and −8.510 eV for N = 2, n_i 1.066e10 and 2.965e11 cm⁻³, diode −1.000e−12 A at −2.00 and −1.50 V, lead above Tc.
+- Nuclear and particles: Cs-137 centroid 474.02 (key 473.94), shielding ratio 0.868 through 1124 mg/cm² (XCOM narrow beam 0.884),
+  Cockcroft–Walton 17.8462 and Chadwick 11.0020 MeV, critical mass k 0.7394 ± 0.0025 and 0.8568 ± 0.0028 (key 0.7430, 0.8518),
+  Gamow 5.012 MK E₀ 2.844 keV and 10 MK 4.507 keV (key exact), dose 333.6 and 83.41 µSv/h, the 11.1a and 11.1b reactions (spare
+  389.39 MeV), n and p from quarks, Λ event 18 M(pπ⁻) 1121 MeV/c² (PDG 1115.68; key 1118 to 1120).
+
+Notes and findings:
+- Function form of VD.howTo by view on magnetic-moments, shells-and-x-rays, molecules, solids, nuclear-reactions and particles. The
+  Medical Physics modes on nuclear-reactions and shells-and-x-rays show the Modern video for their view until they get their own.
+  Doppler: `doppler.mp4` (sound) or `doppler-light.mp4`, by mode or `?ws=`.
+- Recorder: `r.slide` (drag then arrow keys to a readout, outSel may be a function); `r.scrollRail` also scrolls the page when the
+  rail runs past the window.
+- Gamma Spectroscopy draws each RSS8 source's activity between 0.8 and 1.2 times its label once per visit (stated in the code), so
+  absolute rates in a video or a student run differ from the key's by up to about 20%; ratios do not. Worth a line in the handout?
+- Uncertainty handout: it says to launch the packet and record before pressing Play, but Launch packet starts playing.
+- Solids Diode preset hint steps the bias from −1 V; the handout starts at −2.0 V.
+- Spin resonance key cursor values are finer than the 0.05 ms step a student can set at 5 ms/div.
+- Compton: under Blind the canvas labels still show Δλ.
+- Relativistic Motion: F_N in the readings is no longer rounded to zero (9f9717e).
+
+**For GPT:** please check the readings above against the keys, and the findings (which handout text should change).

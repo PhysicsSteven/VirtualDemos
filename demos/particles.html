@@ -1192,6 +1192,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__pq = { S, D, setView, applyPreset, loadExample, redraw, sync, renderRx, qkChanged, newEvent, makeEvent, fitCircle, dtMeasure, rxCheck, view, toScr, placePoint, goEvent };
+  const HOW = { 'particle-reactions': 'Conservation Laws for Particle Reactions', 'quark-model': 'Building Hadrons from Quarks', 'invariant-mass': 'Weighing a Particle You Cannot See' }, howWs = () => WS[S.view] || 'invariant-mass';
+  VD.howTo({ src: () => `media/how-this-works/${howWs()}.mp4`, poster: () => `media/how-this-works/${howWs()}.jpg`, title: () => `How this works: ${HOW[howWs()]}` });
   requestAnimationFrame(frame);
 })();
 </script>

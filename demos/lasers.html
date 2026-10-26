@@ -1697,6 +1697,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   setPlaying(!reduce);
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'relax'); }
   if (reduce) { clock = 1.0; drawAll(); }
+  VD.howTo({ src: 'media/how-this-works/laser-threshold.mp4', poster: 'media/how-this-works/laser-threshold.jpg' });
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
