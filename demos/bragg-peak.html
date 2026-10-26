@@ -819,6 +819,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
   window.vdDemo = { S, V, recompute, full, applyPreset, photonPDD, sobpFacts, pristineFacts, W3 };
+  VD.howTo({ src: 'media/how-this-works/bragg-peak.mp4', poster: 'media/how-this-works/bragg-peak.jpg' });
   requestAnimationFrame(frame);
 })();
 </script>

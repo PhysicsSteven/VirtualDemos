@@ -30,6 +30,7 @@ require('./lib.cjs')({ demo: 'charged-particles', title: 'Charged Particles in M
   state.zoom = null;
 
   state.caption = 'Read the mass stopping power S/ρ and the CSDA range R';
+  await r.scrollRail('#out > :nth-child(4)');
   r.check.S = await p.evaluate(() => window.vdReadingRow().S_MeV_cm2_g);
   r.check.R = await p.evaluate(() => window.vdReadingRow().R_g_cm2);
   const a = await row(4), b = await row(6);

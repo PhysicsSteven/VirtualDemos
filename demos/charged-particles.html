@@ -707,6 +707,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
     change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
   window.vdDemo = { S, V, fireOne, recompute, full, applyPreset };
+  VD.howTo({ src: 'media/how-this-works/charged-particles.mp4', poster: 'media/how-this-works/charged-particles.jpg' });
   requestAnimationFrame(frame);
 })();
 </script>
