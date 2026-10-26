@@ -3221,3 +3221,29 @@ K_1 | Kerma carried by the first energy in the beam (no absorber)
 K_2 | Kerma carried by the second energy in the beam (no absorber)
 d | Derivative: d/dx is the rate of change with depth x
 T | Narrow beam transmission: share of photons that never interacted
+
+== mp-shielding-rooms ==
+B | Transmission the barrier may allow, the fraction of the unshielded dose that may pass |
+B_pri | Transmission the primary barrier may allow |
+B_leak | Transmission a secondary wall may allow for the head leakage |
+P | Design goal for the area beyond the wall | mGy or mSv per week | 0.02 for the public, 0.1 for radiation workers
+T | Occupancy factor of the area beyond the wall |
+D_0 | Weekly dose at the point beyond the wall with no wall | mGy or mSv per week
+kappa | Scatter air kerma at 1 m per unit DLP of one scan | cm⁻¹ | 9 × 10⁻⁵ head, 1.2 × 3 × 10⁻⁴ body (NCRP 147)
+x | Barrier thickness |
+alpha | Archer fit parameter, the attenuation coefficient deep in the wall | mm⁻¹
+beta | Archer fit parameter | mm⁻¹
+gamma | Archer fit exponent |
+e | @euler
+n | Number of tenth value layers, log₁₀(1/B) |
+d | Distance from the linac target to the point 0.3 m beyond the wall | m
+W | Workload, the weekly dose at isocenter, 1 m from the target | Gy per week
+U | Use factor, the fraction of the beam time aimed at that wall |
+W_L | Leakage workload, W counted three times for the IMRT treatments | Gy per week
+f | Fraction of the treatments given as IMRT |
+H | Weekly neutron dose equivalent beyond the proton room wall | mSv per week
+H_0 | Neutron dose equivalent at 1 m per proton with no wall | Sv m² per proton | 0.0166 pSv m² (FLUKA, 250 MeV)
+N | Protons delivered in a week |
+lambda | Attenuation length of the neutrons in concrete | cm | 52 cm
+r | Distance from the patient to the point beyond the wall | m
+Z | Atomic number |

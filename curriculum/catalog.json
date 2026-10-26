@@ -628,6 +628,20 @@
       "pencil beam scanning",
       "R90"
      ]
+    },
+    {
+     "demo": "shielding-rooms",
+     "title": "Shielding Rooms",
+     "desc": "Design the walls of a CT room, a linear accelerator vault with its maze door, and a proton therapy room, and compare how lead, steel, concrete and polyethylene do at each energy.",
+     "tags": [
+      "shielding",
+      "NCRP 147",
+      "NCRP 151",
+      "tenth value layer",
+      "maze",
+      "neutrons",
+      "radiation protection"
+     ]
     }
    ]
   },

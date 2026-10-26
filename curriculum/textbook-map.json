@@ -1852,6 +1852,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "shielding-rooms",
             "nuclear-reactions",
             "photon-interactions",
             "gamma-spectroscopy"
@@ -10865,6 +10866,22 @@
       "url": "demos/proton-qa.html",
       "handouts": [
         "mp-proton-qa"
+      ]
+    },
+    {
+      "demo": "shielding-rooms",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-26 (Claude), Medical Physics, unit 6: barrier design for a CT room (NCRP 147, DLP method and Archer fits for lead and concrete), a linac vault's primary and secondary walls (NCRP 151 tenth value layers, IMRT factor 3), an 18 MV maze door (NCRP 151 neutron fluence, modified Kersey, capture gammas) and a proton room's forward wall (Ipe, FLUKA fit for 250 MeV). 3D rooms and transmission against thickness or mass per area. Worksheet mp-shielding-rooms with a key from a real run in TeacherKeys.",
+      "title": "Shielding Rooms",
+      "url": "demos/shielding-rooms.html",
+      "handouts": [
+        "mp-shielding-rooms"
       ]
     }
   ],

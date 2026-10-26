@@ -42,7 +42,7 @@ COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation
 COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
-COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa'}
+COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms'}
 COURSE_HANDOUTS['medical-physics'].add('mp-radiobiology')
 # Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
 WARM_UPS = {'medical-physics'}
@@ -291,6 +291,7 @@ HANDOUT_TOPIC = {
     'mp-charged-particles': 'Stopping Power, Range and the Bragg Peak (Medical Physics)',
     'mp-bragg-peak': 'The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)',
     'mp-proton-qa': 'Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)',
+    'mp-shielding-rooms': 'Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

@@ -1,0 +1,638 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Shielding Rooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the floor plan, the rooms in 3D and the transmission graph */
+:root { --ray: #c2410c; --pass: #15803d; --fail: #b91c1c; --lead: #4f6fa8; --conc: #b8a98a; --steel: #57534e; --gyp: #e7e2d6; --bpe: #0f766e; --grid: rgba(60, 70, 85, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); } }
+:root[data-theme="dark"] { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.scene { position: relative; flex: 1 1 auto; min-height: 340px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; border-top: 1px solid var(--line); padding-top: 6px; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label, .setup-card .pick .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card .seg { align-self: flex-start; flex-wrap: wrap; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.plotbox { position: relative; flex: none; height: 300px; border-top: 1px solid var(--line); }
+@media (min-width: 821px) { .plotbox { margin-right: 296px; } }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.readout .pass { color: var(--pass); font-weight: 700; }
+.readout .fail { color: var(--fail); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(820px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(460px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 340px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 270px; } }
+@media (max-width: 420px) { .scene { height: 300px; } .plotbox { height: 250px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Shielding Rooms</h1>
+      <p>Design the walls of three treatment and imaging rooms: a CT scanner room, a linear accelerator vault with its maze and door, and a proton therapy room. Find how thick each wall must be in lead, steel, concrete or gypsum, and see why each room is built the way it is.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">doses per week · thickness in mm or cm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/shielding-rooms.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/shielding-rooms.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM16 2h5v1h-5zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM15 4h2v1h-2zM18 4h1v1h-1zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM15 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM3 11h2v1h-2zM6 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM17 11h2v1h-2zM24 11h3v1h-3zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM5 12h2v1h-2zM8 12h1v1h-1zM11 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h2v1h-2zM6 13h2v1h-2zM9 13h2v1h-2zM12 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h2v1h-2zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h3v1h-3zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h13v1h-13zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h4v1h-4zM14 16h1v1h-1zM16 16h4v1h-4zM22 16h3v1h-3zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h3v1h-3zM6 18h4v1h-4zM11 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM7 19h1v1h-1zM9 19h2v1h-2zM13 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h1v1h-1zM11 20h4v1h-4zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM5 21h2v1h-2zM9 21h2v1h-2zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM6 22h4v1h-4zM11 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h4v1h-4zM9 23h5v1h-5zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM7 24h2v1h-2zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h2v1h-2zM10 25h2v1h-2zM14 25h1v1h-1zM16 25h3v1h-3zM21 25h5v1h-5zM28 25h2v1h-2zM32 25h3v1h-3zM37 25h1v1h-1zM2 26h1v1h-1zM6 26h3v1h-3zM10 26h1v1h-1zM12 26h2v1h-2zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h5v1h-5zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM10 27h2v1h-2zM14 27h2v1h-2zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM7 29h1v1h-1zM9 29h4v1h-4zM14 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM29 29h6v1h-6zM37 29h1v1h-1zM2 30h1v1h-1zM4 30h6v1h-6zM12 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h14v1h-14zM10 31h2v1h-2zM14 31h2v1h-2zM17 31h6v1h-6zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h5v1h-5zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h1v1h-1zM16 33h5v1h-5zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM13 36h3v1h-3zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h4v1h-4zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h3v1h-3zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="Which room" id="viewSeg">
+          <button type="button" data-view="ct" aria-pressed="true">CT room</button>
+          <button type="button" data-view="linac" aria-pressed="false">Linac vault</button>
+          <button type="button" data-view="proton" aria-pressed="false">Proton room</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The room seen from above or in 3D: the source in the middle (a CT scanner, a linear accelerator or a proton gantry), its walls drawn to scale with the thickness each material needs, the person in the area beyond the chosen wall, and the path of the radiation through it."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The room, its workload and the area beyond the wall">
+        <span class="card-title" id="cardTitle">CT room</span>
+        <div id="ctBox">
+          <div><div class="slider-head"><label for="sNb">Body scans a week</label><output id="oNb" class="mono" for="sNb"></output></div><input type="range" id="sNb" min="0" max="400" step="5"></div>
+          <div><div class="slider-head"><label for="sNh">Head scans a week</label><output id="oNh" class="mono" for="sNh"></output></div><input type="range" id="sNh" min="0" max="200" step="5"></div>
+          <div><div class="slider-head"><label for="sDb">DLP of a body scan</label><output id="oDb" class="mono" for="sDb"></output></div><input type="range" id="sDb" min="100" max="1500" step="25" data-unit="mGy cm"></div>
+          <div><div class="slider-head"><label for="sDh">DLP of a head scan</label><output id="oDh" class="mono" for="sDh"></output></div><input type="range" id="sDh" min="200" max="2500" step="50" data-unit="mGy cm"></div>
+          <div><div class="slider-head"><label for="sCf">Scanned again with contrast</label><output id="oCf" class="mono" for="sCf"></output></div><input type="range" id="sCf" min="0" max="100" step="5" data-unit="%"></div>
+          <div class="pick"><span class="lbl" id="kvLbl">Tube voltage</span><div class="seg" role="group" aria-labelledby="kvLbl" id="kvSeg"><button type="button" data-kv="120" aria-pressed="true">120 kV</button><button type="button" data-kv="140" aria-pressed="false">140 kV</button></div></div>
+        </div>
+        <div id="linBox">
+          <div class="pick"><span class="lbl" id="mvLbl">Beam energy</span><div class="seg" role="group" aria-labelledby="mvLbl" id="mvSeg"><button type="button" data-mv="6" aria-pressed="true">6 MV</button><button type="button" data-mv="10" aria-pressed="false">10 MV</button><button type="button" data-mv="15" aria-pressed="false">15 MV</button><button type="button" data-mv="18" aria-pressed="false">18 MV</button></div></div>
+          <div class="pick"><span class="lbl" id="barLbl">Barrier</span><div class="seg" role="group" aria-labelledby="barLbl" id="barSeg"><button type="button" data-bar="pri" aria-pressed="true">Primary</button><button type="button" data-bar="sec" aria-pressed="false">Secondary</button><button type="button" data-bar="door" aria-pressed="false">Maze door</button></div></div>
+          <div><div class="slider-head"><label for="sW">Workload at isocenter</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="50" max="1000" step="10" data-unit="Gy/week"></div>
+          <div><div class="slider-head"><label for="sFi">Of it given as IMRT</label><output id="oFi" class="mono" for="sFi"></output></div><input type="range" id="sFi" min="0" max="100" step="5" data-unit="%"></div>
+          <div id="uBox"><div class="slider-head"><label for="sU">Use factor of this wall</label><output id="oU" class="mono" for="sU"></output></div><input type="range" id="sU" min="0.05" max="1" step="0.01"></div>
+          <div id="mazeBox">
+            <div><div class="slider-head"><label for="sD2">Maze length</label><output id="oD2" class="mono" for="sD2"></output></div><input type="range" id="sD2" min="2" max="14" step="0.1" data-unit="m"></div>
+            <div><div class="slider-head"><label for="sBp">Door: borated polyethylene</label><output id="oBp" class="mono" for="sBp"></output></div><input type="range" id="sBp" min="0" max="20" step="0.1" data-unit="cm"></div>
+            <div><div class="slider-head"><label for="sPb">Door: lead</label><output id="oPb" class="mono" for="sPb"></output></div><input type="range" id="sPb" min="0" max="10" step="0.1" data-unit="cm"></div>
+          </div>
+        </div>
+        <div id="proBox">
+          <div><div class="slider-head"><label for="sNp">Patients a day</label><output id="oNp" class="mono" for="sNp"></output></div><input type="range" id="sNp" min="5" max="60" step="1"></div>
+          <div><div class="slider-head"><label for="sTb">Beam on time per patient</label><output id="oTb" class="mono" for="sTb"></output></div><input type="range" id="sTb" min="0.5" max="6" step="0.1" data-unit="min"></div>
+          <div><div class="slider-head"><label for="sUp">Time the beam points at this wall</label><output id="oUp" class="mono" for="sUp"></output></div><input type="range" id="sUp" min="0.05" max="1" step="0.01"></div>
+        </div>
+        <span class="sub">Beyond the wall</span>
+        <div><div class="slider-head"><label for="sA">Source to the inside of the wall</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="1.5" max="8" step="0.1" data-unit="m"></div>
+        <div class="pick"><label for="selT">Who is there (occupancy factor)</label><select id="selT">
+          <option value="1">Office, lab, control room: 1</option><option value="0.5">Treatment or exam room: 1/2</option><option value="0.2">Corridor, staff lounge: 1/5</option>
+          <option value="0.125">Corridor door: 1/8</option><option value="0.025">Outdoors, parking: 1/40</option></select></div>
+        <div class="pick"><span class="lbl" id="pLbl">Area</span><div class="seg" role="group" aria-labelledby="pLbl" id="pSeg"><button type="button" data-p="0.02" aria-pressed="true">Public</button><button type="button" data-p="0.1" aria-pressed="false">Radiation workers</button></div></div>
+        <div class="pick" id="matBox"><span class="lbl" id="matLbl">Wall material in the picture</span><div class="seg" role="group" aria-labelledby="matLbl" id="matSeg"></div></div>
+        <div class="pick"><span class="lbl" id="axLbl">Graph against</span><div class="seg" role="group" aria-labelledby="axLbl" id="axSeg"><button type="button" data-ax="t" aria-pressed="true">Thickness</button><button type="button" data-ax="m" aria-pressed="false">Mass per area</button></div></div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="The transmission of each wall material against its thickness (or its mass per area), on a log scale, with the transmission the wall needs drawn across and each material's required thickness marked; for the maze door, the neutron and capture gamma doses at the door against the maze length."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-shielding-rooms.html" target="mp-shielding-rooms-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="ct" aria-pressed="true">CT room, office next door</button>
+          <button type="button" data-p="ctCorr" aria-pressed="false">CT room, corridor</button>
+          <button type="button" data-p="ct140" aria-pressed="false">CT room at 140 kV</button>
+          <button type="button" data-p="pri6" aria-pressed="false">6 MV primary barrier</button>
+          <button type="button" data-p="pri6lead" aria-pressed="false">Same barrier in lead</button>
+          <button type="button" data-p="pri18" aria-pressed="false">18 MV primary barrier</button>
+          <button type="button" data-p="sec6" aria-pressed="false">Secondary wall with IMRT</button>
+          <button type="button" data-p="door18" aria-pressed="false">18 MV maze door</button>
+          <button type="button" data-p="doorShort" aria-pressed="false">Short maze</button>
+          <button type="button" data-p="proton" aria-pressed="false">Proton room, forward wall</button>
+          <button type="button" data-p="protonBusy" aria-pressed="false">Twice the patients</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-shielding-rooms" data-title="Shielding Rooms" data-demo="shielding-rooms">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="formula">B = P d² / (K₁ N T) &nbsp;(the transmission the wall must allow)</p>
+          <p class="formula">CT: B(x) = [(1 + β/α) e^{αγx} − β/α]^(−1/γ) &nbsp;(Archer)</p>
+          <p class="formula">Linac: x = TVL₁ + (log₁₀(1/B) − 1) TVLₑ</p>
+          <p class="formula">Proton: H = H₀ N U e^(−x/λ) / r²</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* the demo's own physics, runnable in Node (curriculum/validation/test_shielding-rooms.cjs). Every room follows the same steps:
+     the dose (or air kerma) a week at the occupied point with no wall, the transmission B the wall must allow so the point gets no
+     more than the design goal P (divided by the occupancy T), and the thickness of each material that gives that B. */
+  /* densities (g/cm³): lead and iron from NIST SRD 126 Table 1 (steel taken as iron); standard concrete 2.35 (147 lb/ft³, the NCRP
+     151 standard concrete). Gypsum wallboard and borated polyethylene have no density here: they are compared by thickness only. */
+  const RHO = { lead: 11.35, steel: 7.874, concrete: 2.35, gypsum: null, bpe: null };
+  const MAT_NAME = { lead: 'lead', steel: 'steel', concrete: 'concrete', gypsum: 'gypsum wallboard', bpe: 'borated polyethylene' };
+
+  /* ---- CT room: NCRP Report 147 (2004), section 5.6 ---- */
+  /* broad beam transmission of CT scatter through lead and concrete, Archer fits [α, β (per mm), γ] (Simpkin's data refit in NCRP 147
+     Figs. A.2 and A.3). Checks: B = 3.87 × 10⁻³ needs 1.54 mm lead at 120 kV, and 53 mm concrete transmits 0.09 (both from the CT
+     shielding example in M. C. Martin's AAPM refresher course, 2007). */
+  const CT_FIT = { 120: { lead: [2.246, 5.73, 0.547], concrete: [0.0383, 0.0142, 0.658] }, 140: { lead: [2.009, 3.99, 0.342], concrete: [0.0336, 0.0122, 0.519] } };
+  /* NCRP 147 Table 4.8: for a typical room, steel needs 8 times the lead thickness and gypsum wallboard 3.2 times the concrete */
+  const CT_EQUIV = { steel: ['lead', 8], gypsum: ['concrete', 3.2] };
+  /* unshielded scatter air kerma at 1 m per scan: κ × DLP, κ = 9 × 10⁻⁵ cm⁻¹ for a head scan and 3 × 10⁻⁴ cm⁻¹ for a body scan,
+     times 1.2 for a body scan (NCRP 147 section 5.6) */
+  const CT_K = { head: 9e-5, body: 3e-4, bodyFactor: 1.2 };
+  function archerB(p, x) { const [a, b, g] = p; if (!(x > 0)) return 1; return Math.pow((1 + b / a) * Math.exp(a * g * x) - b / a, -1 / g); }
+  function archerX(p, B) { const [a, b, g] = p; if (!(B < 1)) return 0; return Math.log((Math.pow(B, -g) + b / a) / (1 + b / a)) / (a * g); }
+  /* transmission of x mm of a CT wall material, and the mm that give B */
+  function ctB(kv, mat, mm) { const e = CT_EQUIV[mat]; return e ? archerB(CT_FIT[kv][e[0]], mm / e[1]) : archerB(CT_FIT[kv][mat], mm); }
+  function ctX(kv, mat, B) { const e = CT_EQUIV[mat]; return e ? e[1] * archerX(CT_FIT[kv][e[0]], B) : archerX(CT_FIT[kv][mat], B); }
+  /* o = { nBody, nHead (scans a week), dlpBody, dlpHead (mGy cm), contrast (fraction scanned twice), kv, a (m, scanner to the wall),
+     T, P (mGy a week) }. The point is 0.3 m past the wall (NCRP 147), and a wall of a few millimeters does not move it. */
+  function ctRoom(o) {
+    const again = 1 + o.contrast, Kbody = again * o.nBody * CT_K.bodyFactor * CT_K.body * o.dlpBody, Khead = again * o.nHead * CT_K.head * o.dlpHead;
+    const K1 = Kbody + Khead, d = o.a + 0.3, K = K1 / (d * d), B = o.P / (o.T * K), x = {};
+    for (const m of ['lead', 'steel', 'concrete', 'gypsum']) x[m] = ctX(o.kv, m, B);
+    return { K1, Kbody, Khead, d, K, B, x, unit: 'mm' };
+  }
+
+  /* ---- Linac vault: NCRP Report 151 (2005) ---- */
+  /* tenth value layers (cm), first and equilibrium: primary beam, Table B.2; leakage at 90°, Table B.7 (lead and steel leakage
+     from McGinley, given to 15 MV; 18 MV uses the 15 MV values). As tabulated in P. J. Biggs, AAPM review course (2014). */
+  const TVL = {
+    6: { pri: { concrete: [37, 33], steel: [10, 10], lead: [5.7, 5.7] }, sec: { concrete: [34, 29], steel: [8.5, 8.5], lead: [4.6, 4.6] } },
+    10: { pri: { concrete: [41, 37], steel: [11, 11], lead: [5.7, 5.7] }, sec: { concrete: [35, 31], steel: [8.7, 8.7], lead: [4.7, 4.7] } },
+    15: { pri: { concrete: [44, 41], steel: [11, 11], lead: [5.7, 5.7] }, sec: { concrete: [36, 33], steel: [8.7, 8.7], lead: [4.7, 4.7] } },
+    18: { pri: { concrete: [45, 43], steel: [11, 11], lead: [5.7, 5.7] }, sec: { concrete: [36, 34], steel: [8.7, 8.7], lead: [4.7, 4.7] } } };
+  function tvlX(B, t1, te) { if (!(B < 1)) return 0; const n = Math.log10(1 / B); return n <= 1 ? n * t1 : t1 + (n - 1) * te; }
+  function tvlB(x, t1, te) { if (!(x > 0)) return 1; return x <= t1 ? Math.pow(10, -x / t1) : Math.pow(10, -1 - (x - t1) / te); }
+  /* leakage is 0.1 % of the useful beam (IEC limit, NCRP 151); IMRT needs C = 3 times the monitor units per Gy, so the leakage
+     workload is W (1 − f) + C f W (Richardson's 2007 report for a Varian iX, NCRP 151 section 3.1.3) */
+  const LEAK = 1e-3, IMRT_C = 3;
+  /* o = { mv, bar ('pri' or 'sec'), W (Gy a week at isocenter), fI (IMRT fraction), U, a (m, isocenter to the inside of the wall),
+     T, P (mSv a week) }. The target is 1 m from isocenter, so a primary point is 1 + a + x + 0.3 m from it; a leakage point is
+     a + x + 0.3 m from isocenter. The thickness moves the point, so each material is solved by iteration. */
+  function linacWall(o, mat) {
+    const WL = o.W * (1 - o.fI + IMRT_C * o.fI), tv = TVL[o.mv][o.bar][mat], P = o.P / 1000; let x = 0, d = 0, B = 1;
+    for (let i = 0; i < 60; i++) { d = (o.bar === 'pri' ? 1 : 0) + o.a + x / 100 + 0.3;
+      B = o.bar === 'pri' ? P * d * d / (o.W * o.U * o.T) : P * d * d / (LEAK * WL * o.T); const xn = tvlX(B, tv[0], tv[1]); if (Math.abs(xn - x) < 1e-7) { x = xn; break; } x = xn; }
+    const H0 = 1000 * (o.bar === 'pri' ? o.W * o.U : LEAK * WL) / (d * d);
+    return { x, d, B, H0, WL, tv };
+  }
+  function linacRoom(o) { const out = { x: {}, w: {}, unit: 'cm' }; for (const m of ['concrete', 'steel', 'lead']) { const r = linacWall(o, m); out.x[m] = r.x; out.w[m] = r; }
+    const c = out.w.concrete; Object.assign(out, { B: c.B, d: c.d, H: c.H0, WL: c.WL }); return out; }
+  /* the maze door at 18 MV (NCRP 151 section 2.4.5, equations 2.17 to 2.20, as written out in M. C. Martin's and H. T. Vu's 2007
+     AAPM talks). Neutron fluence at the inner maze entrance per Gy at isocenter:
+       φ_A = β Q_n / (4π d₁²) + 5.4 β Q_n / (2π S_r) + 1.3 Q_n / (2π S_r)
+     (direct, scattered, thermal), Q_n = 1.22 × 10¹² neutrons per Gy for a Varian 18 MV head (β = 1, lead shielding in the head).
+     Neutron dose equivalent at the door (modified Kersey): 2.4 × 10⁻¹⁵ φ_A √(S₀/S₁) [1.64 × 10^(−d₂/1.9) + 10^(−d₂/TVD)], TVD = 2.06 √S₁ m.
+     Capture gammas at the door: 6.9 × 10⁻¹⁶ φ_A 10^(−d₂/5.4 m). Both in Sv per Gy of leakage workload.
+     Door: borated polyethylene, neutron TVL 4.5 cm; lead, capture gamma TVL 6.1 cm (NCRP 151, via Martin).
+     This demo's room: square, 2a across, 3.5 m high, the maze 2 m wide and 3 m high (S₁ = S₀ = 6 m²), opening at the middle of a
+     wall (d₁ = a). */
+  const MAZE = { Qn: 1.22e12, beta: 1, h: 3.5, S1: 6, S0: 6, tvlBpe: 4.5, tvlPb: 6.1 };
+  function mazeDoor(o) {
+    const a = o.a, Sr = 8 * a * a + 8 * a * MAZE.h, d1 = a, Q = MAZE.Qn, b = MAZE.beta;
+    const phi = b * Q / (4 * Math.PI * d1 * d1) + 5.4 * b * Q / (2 * Math.PI * Sr) + 1.3 * Q / (2 * Math.PI * Sr);
+    const tvdN = 2.06 * Math.sqrt(MAZE.S1), d2 = o.d2;
+    const hn = 2.4e-15 * phi * Math.sqrt(MAZE.S0 / MAZE.S1) * (1.64 * Math.pow(10, -d2 / 1.9) + Math.pow(10, -d2 / tvdN));
+    const hg = 6.9e-16 * phi * Math.pow(10, -d2 / 5.4);
+    const WL = o.W * (1 - o.fI + IMRT_C * o.fI), Hn = 1000 * WL * hn, Hg = 1000 * WL * hg;
+    const Hn1 = Hn * Math.pow(10, -o.bpe / MAZE.tvlBpe), Hg1 = Hg * Math.pow(10, -o.pb / MAZE.tvlPb), goal = o.P / o.T;
+    return { phi, Sr, tvdN, Hn, Hg, Hn1, Hg1, H: Hn1 + Hg1, goal, ok: Hn1 + Hg1 <= goal, WL };
+  }
+
+  /* ---- Proton room: neutrons from the beam stopping in the patient ---- */
+  /* H = H₀ N U e^(−x/λ) / r² for the forward direction (0 to 10°) behind thick concrete: H₀ = 0.0166 pSv m² per proton and
+     λ = 52 cm (1/0.0192 cm), a FLUKA fit for 250 MeV protons stopping in tissue (N. E. Ipe, PTCOG 53 and 54 educational talks).
+     λρ = 122 g/cm², the high energy attenuation length of about 120 g/cm² PTCOG Report 1 gives for concrete. The fit holds for thick
+     walls; its value at x = 0 is an extrapolation, not the dose with no wall.
+     Protons a week: the beam current at the patient, 17.36 − 16.87 = 0.49 nA for pencil beam scanning at 160 MeV (IBA data in
+     Ipe's talk: the cyclotron makes 17.36 nA and 16.87 nA is lost on the way, mostly in the degrader), times the beam on time.
+     Using the 250 MeV source term for every patient overstates the neutrons, which errs on the safe side. */
+  const PRO = { H0: 1.66e-14, lam: 52, I: 0.49e-9, Icyc: 17.36e-9, days: 5 };
+  const QE = 1.602176634e-19;
+  function protonRoom(o) {
+    const N = PRO.I * o.np * o.tb * 60 * PRO.days / QE, goal = o.P / 1000 / o.T, S = PRO.H0 * N * o.U; let x = 0, r = 0;
+    for (let i = 0; i < 80; i++) { r = o.a + x / 100 + 0.3; const xn = Math.max(0, PRO.lam * Math.log(S / (r * r) / goal)); if (Math.abs(xn - x) < 1e-7) { x = xn; break; } x = xn; }
+    const H0r = 1000 * S / (r * r), B = goal * 1000 / H0r;
+    return { N, x: { concrete: x }, r, d: r, H: H0r, B, unit: 'cm', lost: PRO.Icyc - PRO.I };
+  }
+  function protonB(x) { return Math.exp(-x / PRO.lam); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const $ = (id) => document.getElementById(id);
+  const ROOM_MATS = { ct: ['lead', 'steel', 'concrete', 'gypsum'], linac: ['concrete', 'steel', 'lead'], proton: ['concrete'] };
+  const BASE = { view: 'ct', nBody: 150, nHead: 30, dlpBody: 550, dlpHead: 1200, contrast: 0.4, kv: 120, mv: 6, bar: 'pri', W: 450, fI: 0, U: 0.25, d2: 8, bpe: 0, pb: 0,
+    np: 30, tb: 1.5, Up: 0.25, a: 3, T: 1, P: 0.02, mat: 'lead', ax: 't' };
+  const PRESETS = {
+    ct: { hint: 'A CT room with 150 body and 30 head scans a week, 40 % of them scanned again with contrast, at 120 kV. The office beyond the wall is a public area used all day (P = 0.02 mGy a week, T = 1), 3 m from the scanner. The scatter from the patient is all the wall has to stop: about 1.5 mm of lead, a sheet laminated onto ordinary wallboard. The same wall in concrete would be about 13 cm, and in plain wallboard about 41 cm.' },
+    ctCorr: { T: 0.2, hint: 'The same CT room, but the wall faces a corridor (occupancy 1/5): people pass through but do not stay. The wall may let five times as much through, and the lead thins to about 0.9 mm. Occupancy is why corridors and waiting rooms are placed beside the scanner rooms.' },
+    ct140: { kv: 140, hint: 'The same room with every scan at 140 kV. The scatter is more penetrating: concrete needs about 1.5 cm more, while lead needs almost the same, since lead absorbs these photons mostly by the photoelectric effect, which stays strong up to its K edge at 88 keV.' },
+    pri6: { view: 'linac', mat: 'concrete', hint: 'A 6 MV linac with 450 Gy a week at isocenter. The primary barrier is the band of wall the beam can point at as the gantry turns; it takes a quarter of the beam time (U = 1/4). An office beyond it (public, T = 1) needs about 1.75 m of concrete. That is why linacs live in concrete bunkers, often below ground.' },
+    pri6lead: { view: 'linac', mat: 'lead', hint: 'The same primary barrier in lead: about 31 cm instead of about 1.75 m. Lead saves space, but at megavolt energies the photons interact by Compton scattering, which depends on electrons per gram, nearly the same in every material. Graph the walls against mass per area: lead needs no less mass than concrete, and concrete costs far less. Lead and steel are used where space is short.' },
+    pri18: { view: 'linac', mv: 18, mat: 'concrete', hint: 'An 18 MV beam: more penetrating, so the tenth value layer of concrete grows from 37 to 45 cm and the primary barrier grows by about half a meter. Above 10 MV the beam also makes neutrons in the head, which set the design of the maze door.' },
+    sec6: { view: 'linac', bar: 'sec', fI: 0.8, U: 1, mat: 'concrete', hint: 'A secondary wall, which only head leakage reaches (0.1 % of the beam, in every direction, so U = 1). With 80 % of the patients treated with IMRT, which needs about three times the monitor units per Gy, the leakage workload is 2.6 times the dose workload. Even so the wall needs about 1.06 m of concrete, well under the primary barrier.' },
+    door18: { view: 'linac', bar: 'door', mv: 18, d2: 8, bpe: 10, pb: 7, mat: 'concrete', hint: 'The door at the end of an 8 m maze in an 18 MV vault. Neutrons and the gammas from neutron capture travel down the maze. Each bend and meter of maze takes the place of door thickness: 10 cm of borated polyethylene (hydrogen slows the neutrons, boron captures them) and 7 cm of lead for the capture gammas keep the door below the goal. With no maze the door would need the whole secondary barrier, more than a meter of concrete.' },
+    doorShort: { view: 'linac', bar: 'door', mv: 18, d2: 4, bpe: 10, pb: 7, mat: 'concrete', hint: 'The same door at the end of a 4 m maze: the neutron dose at the door grows nearly seven times. Find the polyethylene and lead that bring it back under the goal.' },
+    proton: { view: 'proton', mat: 'concrete', a: 4, hint: 'A proton gantry room with 30 patients a day and 1.5 minutes of beam each. The protons stop in the patient, and the neutrons they knock out go mostly forward, through several meters of concrete. Each 52 cm of concrete cuts them by a factor of e; the wall in the forward direction needs about 2.7 m.' },
+    protonBusy: { view: 'proton', mat: 'concrete', a: 4, np: 60, hint: 'Twice the patients: twice the neutrons, and the wall needs only about 31 cm more concrete: λ ln 2 = 36 cm, a little less because the thicker wall also puts the person farther away. Exponential attenuation makes thick walls forgiving of the workload.' },
+  };
+  const S = { preset: 'ct', ...BASE };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); if (a >= 1e5 || a < 1e-3) { const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e); return `${(+m.toPrecision(n)).toString()} × 10${String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c])}`; } return (+v.toPrecision(n)).toString(); };
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), ray: g('--ray'), pass: g('--pass'), fail: g('--fail'),
+      lead: g('--lead'), concrete: g('--conc'), steel: g('--steel'), gypsum: g('--gyp'), bpe: g('--bpe'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const dark = () => window.VDGear.dark();
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+
+  /* ---------- the model for the current setup ---------- */
+  let R = null;
+  function compute() {
+    if (S.view === 'ct') R = ctRoom({ nBody: S.nBody, nHead: S.nHead, dlpBody: S.dlpBody, dlpHead: S.dlpHead, contrast: S.contrast, kv: S.kv, a: S.a, T: S.T, P: S.P });
+    else if (S.view === 'proton') R = protonRoom({ np: S.np, tb: S.tb, U: S.Up, a: S.a, T: S.T, P: S.P });
+    else if (S.bar === 'door') { R = mazeDoor({ a: S.a, d2: S.d2, W: S.W, fI: S.fI, bpe: S.bpe, pb: S.pb, T: S.T, P: S.P }); R.door = true;
+      R.wall = linacRoom({ mv: S.mv, bar: 'sec', W: S.W, fI: S.fI, U: 1, a: S.a, T: S.T, P: S.P }); }
+    else R = linacRoom({ mv: S.mv, bar: S.bar, W: S.W, fI: S.fI, U: S.U, a: S.a, T: S.T, P: S.P });
+    /* the other walls of the vault, for the picture: primary and secondary in the chosen material at the same distance and goal */
+    if (S.view === 'linac') { const o = { mv: S.mv, W: S.W, fI: S.fI, a: S.a, T: S.T, P: S.P }; R.pri = linacRoom({ ...o, bar: 'pri', U: S.bar === 'pri' ? S.U : 0.25 }); R.sec = linacRoom({ ...o, bar: 'sec', U: 1 }); }
+  }
+  const doorMode = () => S.view === 'linac' && S.bar === 'door' && S.mv === 18;
+  const thick = (m) => (R && R.x ? R.x[m] : NaN);
+  /* the wall thickness in meters of the picture's material for the chosen wall */
+  function wallM(m) { if (S.view === 'ct') return thick(m) / 1000; if (S.view === 'proton') return thick('concrete') / 100; return thick(m) / 100; }
+
+  /* ---------- drawing: the floor plan ---------- */
+  const MATC = (m) => (T ? T[m] || T.concrete : '#999');
+  function layout() {
+    /* room geometry in meters: inner half size a, wall thicknesses (the chosen wall is +x) */
+    const m = S.view === 'proton' ? 'concrete' : S.mat, a = S.a;
+    let tx = wallM(m), tOther = tx, tPri = tx, tSec = tx;
+    if (S.view === 'linac') { tPri = R.pri.x[m] / 100; tSec = R.sec.x[m] / 100; tx = S.bar === 'pri' ? tPri : tSec; tOther = tSec; }
+    if (S.view === 'linac' && S.bar === 'door') tx = tSec;
+    return { a, tx, tPri, tSec, tOther, m };
+  }
+  function drawPlan() {
+    const G = window.VDGear, p = proj(), d = dark(), L = layout(), cardW = W > 820 ? 300 : 0, fw = W - cardW;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const lin = S.view === 'linac', span = L.a + Math.max(L.tx, L.tPri) + (lin ? 2.8 : 1.6), sc = Math.min((fw - 40 * p) / (2 * span + 0.6), (H - 70 * p) / (2 * (L.a + Math.max(L.tSec, L.tOther) + (lin ? 3.4 : 0.8)))), cx = fw / 2 - 0.3 * sc, cy = H / 2 + 8 * p;
+    const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, minT = (t) => Math.max(t * sc, 3 * p);
+    /* the floor of the room */
+    ctx.fillStyle = d ? '#1c2229' : '#eef0f3'; ctx.fillRect(X(-L.a), Y(L.a), 2 * L.a * sc, 2 * L.a * sc);
+    ctx.strokeStyle = d ? 'rgba(255,255,255,0.05)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1;
+    for (let g = -Math.floor(L.a); g <= L.a; g++) { ctx.beginPath(); ctx.moveTo(X(g), Y(L.a)); ctx.lineTo(X(g), Y(-L.a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(X(-L.a), Y(g)); ctx.lineTo(X(L.a), Y(g)); ctx.stroke(); }
+    const wall = (x0, y0, x1, y1, m, hl) => { const xa = Math.min(X(x0), X(x1)), ya = Math.min(Y(y0), Y(y1)), w = Math.max(Math.abs(X(x1) - X(x0)), 3 * p), h = Math.max(Math.abs(Y(y1) - Y(y0)), 3 * p);
+      ctx.fillStyle = MATC(m); ctx.globalAlpha = hl ? 1 : 0.75; ctx.fillRect(xa, ya, w, h); ctx.globalAlpha = 1; if (hl) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(xa, ya, w, h); } };
+    const ct = S.view === 'ct', tO = L.tOther, tX = L.tx;
+    if (lin) {
+      /* the vault: primary bands on +x and −x (the gantry turns in the x z plane), secondary walls elsewhere, the maze along −y */
+      const tp = L.tPri, ts = L.tSec, band = 2.6;   /* band width (m): the 0.5 m collimated field at the wall plus 0.3 m each side, rounded up for the drawing */
+      wall(L.a, -L.a - ts, L.a + ts, L.a + ts, S.mat, S.bar === 'sec'); wall(-L.a - ts, -L.a - ts, -L.a, L.a + ts, S.mat, false);
+      wall(L.a, -band / 2, L.a + tp, band / 2, S.mat, S.bar === 'pri'); wall(-L.a - tp, -band / 2, -L.a, band / 2, S.mat, false);
+      wall(-L.a - ts, L.a, L.a + ts, L.a + ts, S.mat, false);
+      /* the maze: an inner wall along −y with a corridor 2 m wide to the door at the −x end */
+      const mz = 2, iw = Math.max(ts * 0.55, 0.6);
+      wall(-L.a + 2.2, -L.a - iw, L.a + ts, -L.a, S.mat, false); wall(-L.a - ts, -L.a - iw - mz - ts, L.a + ts, -L.a - iw - mz, S.mat, false);
+      wall(L.a, -L.a - iw - mz, L.a + ts, -L.a - iw, S.mat, false);
+      ctx.fillStyle = d ? '#1c2229' : '#eef0f3'; ctx.fillRect(X(-L.a), Y(-L.a - iw), (2 * L.a + 0.001) * sc, mz * sc);
+      /* the door at the −x end of the maze */
+      const dx = -L.a - ts, dw = Math.max(0.25, (S.bpe + S.pb) / 100); ctx.fillStyle = S.bar === 'door' ? T.bpe : (d ? '#4b5563' : '#9aa3ae'); ctx.fillRect(X(dx) - dw * sc, Y(-L.a - iw), dw * sc, mz * sc);
+      if (S.bar === 'door') { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(X(dx) - dw * sc, Y(-L.a - iw), dw * sc, mz * sc); }
+      G.label(ctx, 'maze', X(0), Y(-L.a - iw - mz / 2), { a: 'center', s: 10 * p });
+      G.label(ctx, 'door', X(dx) - dw * sc - 4 * p, Y(-L.a - iw - mz / 2), { a: 'right', s: 10 * p });
+      /* the linac: gantry and couch */
+      ctx.fillStyle = d ? '#5c6673' : '#8d97a3'; ctx.fillRect(X(-0.4), Y(1.9), 0.8 * sc, 1.2 * sc); ctx.fillStyle = d ? '#c3c9d1' : '#e5e7eb'; ctx.fillRect(X(-0.28), Y(0.6), 0.56 * sc, 2.4 * sc);
+      G.label(ctx, `linac, ${S.mv} MV`, X(0.5), Y(1.5), { s: 10 * p });
+    } else {
+      wall(L.a, -L.a - tO, L.a + tX, L.a + tO, L.m, true); wall(-L.a - tO, -L.a - tO, -L.a, L.a + tO, L.m, false);
+      wall(-L.a - tO, L.a, L.a + tX, L.a + tO, L.m, false); wall(-L.a - tO, -L.a - tO, L.a + tX, -L.a, L.m, false);
+      if (ct) { /* the CT gantry and table */ ctx.fillStyle = d ? '#c3c9d1' : '#dfe3e8'; ctx.strokeStyle = d ? '#6b7786' : '#9aa3ae'; ctx.lineWidth = 1.5 * p;
+        ctx.beginPath(); ctx.roundRect(X(-0.45), Y(1.0), 0.9 * sc, 2.0 * sc, 0.2 * sc); ctx.fill(); ctx.stroke(); ctx.fillStyle = d ? '#5c6673' : '#b0b8c2'; ctx.fillRect(X(-0.25), Y(-0.6), 0.5 * sc, 2.3 * sc);
+        G.label(ctx, `CT scanner, ${S.kv} kV`, X(0.6), Y(0.9), { s: 10 * p }); }
+      else { /* the proton gantry: a drum about 10 m long seen from above, the couch at isocenter */ ctx.fillStyle = d ? '#3b4553' : '#c3c9d1'; ctx.beginPath(); ctx.roundRect(X(-2), Y(L.a * 0.9), 4 * sc, L.a * 0.75 * sc, 0.3 * sc); ctx.fill();
+        ctx.fillStyle = d ? '#c3c9d1' : '#e5e7eb'; ctx.fillRect(X(-0.28), Y(0.2), 0.56 * sc, 2.2 * sc); G.label(ctx, 'proton gantry', X(0), Y(L.a * 0.55), { a: 'center', s: 10 * p }); }
+    }
+    /* the radiation: from the source through the chosen wall to the person 0.3 m beyond it */
+    const tx = S.view === 'linac' && S.bar === 'door' ? null : L.tx, px = tx == null ? -L.a - L.tSec - 0.9 : L.a + tx + 0.3, py = tx == null ? -L.a - 0.3 - 1 : 0;
+    ctx.save(); ctx.strokeStyle = T.ray; ctx.lineWidth = 2.5 * p; ctx.setLineDash([7 * p, 5 * p]);
+    ctx.beginPath(); if (tx == null) { const iw = Math.max(L.tSec * 0.55, 0.6); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(-L.a + 1.1), Y(-L.a + 0.5)); ctx.lineTo(X(-L.a + 1.1), Y(-L.a - iw - 1)); ctx.lineTo(X(px + 0.4), Y(-L.a - iw - 1)); } else { ctx.moveTo(X(S.view === 'linac' && S.bar === 'pri' ? -1 : 0), Y(0)); ctx.lineTo(X(px), Y(py)); }
+    ctx.stroke(); ctx.restore();
+    /* the person */
+    const hx = tx == null ? X(px) : X(px) + 8 * p, hy = tx == null ? Y(-L.a - Math.max(L.tSec * 0.55, 0.6) - 1) : Y(py);
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(hx, hy, 7 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.surface; ctx.beginPath(); ctx.arc(hx, hy, 3 * p, 0, 7); ctx.fill();
+    /* the thickness label on the chosen wall */
+    const lab = labelText();
+    ctx.font = `600 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(lab).width;
+    const lx = Math.min(fw - tw - 10 * p, Math.max(8 * p, (tx == null ? X(px) - tw / 2 : X(L.a + (tx || 0) / 2) - tw / 2))), ly = tx == null ? Y(-L.a - Math.max(L.tSec * 0.55, 0.6) - 2.3) + 14 * p : Y(L.a + L.tOther) - 12 * p;
+    ctx.globalAlpha = 0.9; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(lx - 5 * p, Math.max(6 * p, ly - 10 * p), tw + 10 * p, 20 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(lab, lx, Math.max(16 * p, ly));
+    /* scale bar and title */
+    const one = S.view === 'ct' ? 1 : 1, bx = 14 * p, by = H - 16 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + one * sc, by); ctx.stroke();
+    G.label(ctx, '1 m', bx + one * sc + 6 * p, by, { s: 10 * p });
+    titleBox(fw, S.view === 'ct' ? 'Floor plan, to scale (a lead sheet this thin is drawn 3 px wide)' : 'Floor plan, to scale');
+  }
+  function labelText() {
+    if (!R) return '';
+    if (S.view === 'linac' && S.bar === 'door') return `door: ${f(S.bpe, 1)} cm polyethylene + ${f(S.pb, 1)} cm lead → ${sig(R.H * 1000, 3)} µSv/week (goal ${sig(R.goal * 1000, 3)})`;
+    const m = S.view === 'proton' ? 'concrete' : S.mat, x = thick(m), u = S.view === 'ct' ? 'mm' : 'cm';
+    return `${MAT_NAME[m]}: ${x >= 100 && u === 'cm' ? `${f(x / 100, 2)} m` : `${f(x, S.view === 'ct' ? 2 : 1)} ${u}`}`;
+  }
+  function titleBox(fw, sub) { const p = proj(); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const lines = [S.view === 'ct' ? 'CT scanner room' : S.view === 'linac' ? `Linear accelerator vault, ${S.mv} MV` : 'Proton gantry room', sub];
+    const lw = Math.max(...lines.map((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 11) * p}px ${T.ui}`; return ctx.measureText(s).width; }));
+    ctx.globalAlpha = 0.85; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(6 * p, 5 * p, Math.min(lw + 10 * p, fw - 12 * p), 34 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+    lines.forEach((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 11) * p}px ${T.ui}`; ctx.fillStyle = i ? T.muted : T.ink; ctx.fillText(s, 11 * p, (9 + 14 * i) * p); }); }
+
+  /* ---------- the rooms in 3D (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+     The same rooms as the floor plan, to scale, without their ceilings so the inside shows: walls the thickness the chosen material
+     needs, the source (CT scanner, linac with its couch, or proton gantry), the maze and door of the vault, the person beyond the
+     chosen wall, and the radiation's path drawn as a dashed line. Sizes in meters, z up, the floor at z = 0. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.75, ph: 0.95, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  function init3() {
+    const st = VD3K.stage($('scene'), { before: can, shadow: 9, fov: 32, far: 120, fogAt: [2.2, 4.5] }); if (!st) return false;
+    st.el.hidden = true; st.sun.position.set(6, -9, 16); st.sun.shadow.bias = -0.0006;
+    const K = VD3K, M = (o, c) => K.material(st, o, c);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), M({ roughness: 0.95 }, ['#c9ced5', '#20262d'])); floor.receiveShadow = true; st.scene.add(floor);
+    const mats = { lead: M({ roughness: 0.5, metalness: 0.35 }, ['#8a96a6', '#6b7686']), steel: M({ roughness: 0.4, metalness: 0.55 }, ['#5b6878', '#4a5666']), concrete: M({ roughness: 0.95 }, ['#cfc4ab', '#8f866f']),
+      gypsum: M({ roughness: 0.9 }, ['#f1eee6', '#bdb8ac']), bpe: M({ roughness: 0.6 }, ['#14857a', '#1c9d90']), hl: M({ roughness: 0.6, emissive: '#000000' }, ['#e2e8f0', '#334155']) };
+    const room = new THREE.Group(); st.scene.add(room);
+    const rayM = new THREE.LineDashedMaterial({ dashSize: 0.25, gapSize: 0.18, transparent: true, depthTest: false }); const ray = new THREE.Line(new THREE.BufferGeometry(), rayM); ray.renderOrder = 9; st.scene.add(ray);
+    const person = new THREE.Group(), pM = M({ roughness: 0.6 }, ['#2563eb', '#60a5fa']); person.add(K.rod([0, 0, 0], [0, 0, 1.35], 0.18, pM)); const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 20, 14), pM); head.position.z = 1.55; head.castShadow = true; person.add(head); st.scene.add(person);
+    g3 = { st, room, mats, ray, rayM, person, key: '' };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.35, phMax: 1.45, zMin: 0.45, zMax: 2.8, grab: () => !use3() });
+    return true;
+  }
+  function build3() {
+    const g = g3, st = g.st, K = VD3K, L = layout(), lin = S.view === 'linac', h = S.view === 'ct' ? 3 : S.view === 'linac' ? 3.5 : 4.5, a = L.a;
+    while (g.room.children.length) st.dispose(g.room.children[0]);
+    const add = (o) => { o.traverse((c) => { if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; } }); g.room.add(o); return o; };
+    const box = (x0, y0, x1, y1, z0, z1, m) => add(K.box(Math.max(Math.abs(x1 - x0), 0.004), Math.max(Math.abs(y1 - y0), 0.004), z1 - z0, g.mats[m] || g.mats.concrete, (x0 + x1) / 2, (y0 + y1) / 2, z0));
+    if (S.view === 'ct') {
+      /* the walls: 16 cm of wallboard on studs everywhere, with the chosen material as a sheet on the +x wall (drawn at its true
+         thickness, so a lead sheet is a sliver); concrete would replace the stud wall */
+      const t = Math.max(L.tx, 0.002), sl = S.mat === 'gypsum' || S.mat === 'concrete' ? t : 0.16;
+      box(a, -a - 0.16, a + Math.max(sl, t), a + 0.16, 0, h, S.mat === 'gypsum' || S.mat === 'concrete' ? S.mat : 'gypsum');
+      if (!(S.mat === 'gypsum' || S.mat === 'concrete')) box(a + 0.16, -a - 0.16, a + 0.16 + t, a + 0.16, 0, h, S.mat);
+      box(-a - 0.16, -a - 0.16, -a, a + 0.16, 0, h, 'gypsum'); box(-a, a, a, a + 0.16, 0, h, 'gypsum'); box(-a, -a - 0.16, a, -a, 0, 1.0, 'gypsum');
+      /* the scanner: a gantry with its bore, the table */
+      const gan = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.32, 20, 48), K.material(st, { roughness: 0.5 }, ['#e5e7eb', '#9aa3ae'])); gan.rotation.y = Math.PI / 2; gan.rotation.x = 0; gan.position.set(0, 0.3, 1.05); gan.rotation.set(Math.PI / 2, 0, 0); add(gan);
+      add(K.box(0.6, 2.4, 0.08, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -0.9, 0.85)); add(K.box(0.35, 1.2, 0.85, K.material(st, { roughness: 0.6 }, ['#9ca3af', '#4b5563']), 0, -1.2, 0));
+    } else if (lin) {
+      const tp = L.tPri, ts = L.tSec, band = 2.6, iw = Math.max(ts * 0.55, 0.6), mz = 2, m = S.mat;
+      box(a, -a - iw - mz - ts, a + ts, a + ts, 0, h, m); box(a + ts, -band / 2, a + tp, band / 2, 0, h, m);
+      box(-a - ts, -a - iw - mz - ts, -a, a + ts, 0, h, m); box(-a - tp, -band / 2, -a - ts, band / 2, 0, h, m);
+      box(-a, a, a, a + ts, 0, h, m); box(-a + 2.2, -a - iw, a, -a, 0, h, m); box(-a, -a - iw - mz - ts, a, -a - iw - mz, 0, h * 0.5, m);
+      const dw = Math.max(0.05, (S.bpe + S.pb) / 100); box(-a - ts - dw, -a - iw - mz, -a - ts, -a - iw, 0, 2.3, S.bar === 'door' ? 'bpe' : 'steel');
+      /* the linac: a gantry stand, the arm and head over the couch */
+      const gm = K.material(st, { roughness: 0.45, metalness: 0.15 }, ['#e5e7eb', '#6b7684']); add(K.box(1.0, 1.0, 2.6, gm, 0, 1.9, 0)); add(K.box(0.7, 1.5, 0.5, gm, 0, 0.9, 2.1));
+      add(K.box(0.55, 0.55, 0.55, gm, 0, 0, 1.75)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -1.1, 0.95)); add(K.box(0.3, 0.4, 0.95, gm, 0, -1.6, 0));
+    } else {
+      const t = L.tx; box(a, -a - t, a + t, a + t, 0, h, 'concrete'); box(-a - t, -a - t, -a, a + t, 0, h, 'concrete'); box(-a, a, a, a + t, 0, h, 'concrete'); box(-a, -a - t, a, -a, 0, h * 0.35, 'concrete');
+      /* the gantry: a drum around the couch, its axis along y, and the nozzle */
+      const dm = K.material(st, { roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide }, ['#d6dbe1', '#3b4553']);
+      const rd = Math.min(2, a * 0.5), drum = new THREE.Mesh(new THREE.CylinderGeometry(rd, rd, 1.2, 48, 1, true), dm); drum.position.set(0, 1.4, rd + 0.1); add(drum);
+      add(K.box(0.5, 0.5, 0.9, K.material(st, { roughness: 0.45, metalness: 0.3 }, ['#566273', '#4a5563']), 0, 1.0, 2.2)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -0.6, 1.0));
+    }
+  }
+  function draw3() {
+    const g = g3, st = g.st, p = proj(), L = layout(), key = [S.view, S.mat, S.mv, S.bar, S.a, f(L.tx, 4), f(L.tPri, 4), f(L.tSec, 4), S.bpe, S.pb].join();
+    if (key !== g.key) { g.key = key; build3(); }
+    /* the person beyond the chosen wall (or past the door) and the path of the radiation */
+    const a = L.a, door = S.view === 'linac' && S.bar === 'door', iw = Math.max(L.tSec * 0.55, 0.6), pos = door ? [-a - L.tSec - 0.9, -a - iw - 1, 0] : [a + L.tx + 0.6, 0, 0];
+    g.person.position.set(...pos);
+    const src = S.view === 'ct' ? [0, 0.3, 1.05] : S.view === 'linac' ? (S.bar === 'pri' ? [0, 0, 2.0] : [0, 0, 1.75]) : [0, -0.6, 1.1];
+    const pts = door ? [src, [-a + 1.1, -a + 0.5, 1.2], [-a + 1.1, -a - iw - 1, 1.2], [pos[0] + 0.3, pos[1], 1.2]] : [src, [pos[0], 0, 1.2]];
+    g.ray.geometry.dispose(); g.ray.geometry = new THREE.BufferGeometry().setFromPoints(pts.map((q) => new THREE.Vector3(...q))); g.ray.computeLineDistances();
+    g.rayM.color.set(T.ray);
+    const cardW = W > 820 ? 300 : 0, fw = W - cardW, span = a + Math.max(L.tx, L.tPri || 0) + (S.view === 'linac' ? 4 : 2), k = Math.max(1, 1.3 / (fw / H));
+    st.size(W, H); st.place(G3.o, [0.6, -0.6, 0.6], span * (S.view === 'proton' ? 3 : 2.6) * k);
+    if (cardW) st.cam.setViewOffset(W, H, cardW / 2, 0, W, H); else st.cam.clearViewOffset();
+    st.render();
+    /* words over the picture */
+    const lab = labelText(), [x, y] = st.project(door ? [pos[0], pos[1], 2.4] : [a + L.tx / 2, -1.2, (S.view === 'ct' ? 3 : 3.6) + 0.3]);
+    ctx.font = `600 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(lab).width, x0 = Math.max(6 * p, Math.min(fw - tw - 10 * p, x - tw / 2)), y0 = Math.max(52 * p, Math.min(H - 20 * p, y));
+    ctx.globalAlpha = 0.9; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(x0 - 5 * p, y0 - 10 * p, tw + 10 * p, 20 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(lab, x0, y0);
+    titleBox(fw, fw < 520 ? 'To scale, no ceiling. Drag to turn.' : 'Walls to scale, ceiling left off. Drag to turn the view.');
+  }
+
+  /* ---------- the graph ---------- */
+  const pow10 = (e) => '10' + String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
+  function drawPlot() {
+    const c = pctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.surface; c.fillRect(0, 0, PW, PH); if (!R) return;
+    const L = 58 * p, Rr = PW - 16 * p, top = 30 * p, bot = PH - 40 * p;
+    c.fillStyle = T.ink; c.font = `700 ${11 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    if (S.view === 'linac' && S.bar === 'door') return drawDoorPlot(c, L, Rr, top, bot, p);
+    const mats = ROOM_MATS[S.view], byMass = S.ax === 'm', unit = S.view === 'ct' ? 'mm' : 'cm';
+    /* transmission curve of each material against thickness (cm or mm) or mass per area (kg/m²) */
+    const trans = (m, x) => S.view === 'ct' ? ctB(S.kv, m, x) : S.view === 'proton' ? protonB(x) : tvlB(x, ...TVL[S.mv][S.bar][m]);
+    const toM = (m, x) => (RHO[m] ? RHO[m] * x * (unit === 'mm' ? 1 : 10) : NaN);   /* g/cm³ × mm = kg/m²; × cm = 10 kg/m² */
+    const shown = byMass ? mats.filter((m) => RHO[m]) : mats;
+    let xmax = 0; for (const m of shown) { const v = byMass ? toM(m, thick(m)) : thick(m); if (isFinite(v)) xmax = Math.max(xmax, v); } xmax = Math.max(xmax * 1.3, byMass ? 10 : unit === 'mm' ? 2 : 20);
+    const Bmin = Math.min(R.B, 1) / 30, ylo = Math.floor(Math.log10(Math.max(Bmin, 1e-12))), X = (v) => L + v / xmax * (Rr - L), Y = (b) => top + (0 - Math.log10(b)) / (0 - ylo) * (bot - top);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right';
+    const step = Math.max(1, Math.ceil(-ylo / 6)); for (let e = 0; e >= ylo; e -= step) { c.beginPath(); c.moveTo(L, Y(Math.pow(10, e))); c.lineTo(Rr, Y(Math.pow(10, e))); c.stroke(); c.fillText(e === 0 ? '1' : pow10(e), L - 5 * p, Y(Math.pow(10, e))); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of niceTicks(0, xmax, 6)) c.fillText(String(v), X(v), bot + 4 * p);
+    c.font = `${11 * p}px ${T.ui}`; c.fillText(byMass ? 'mass per area of wall (kg/m²)' : `thickness (${unit})`, (L + Rr) / 2, bot + 18 * p);
+    c.save(); c.translate(L - 44 * p, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('transmission', 0, 0); c.restore();
+    /* the transmission the wall needs */
+    c.strokeStyle = T.fail; c.setLineDash([6 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(L, Y(R.B)); c.lineTo(Rr, Y(R.B)); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`needed: B = ${sig(R.B, 3)}`, Rr, Y(R.B) - 3 * p);
+    for (const m of shown) { c.strokeStyle = MATC(m); c.lineWidth = (m === S.mat ? 3 : 2) * p; c.beginPath(); let first = true;
+      for (let i = 0; i <= 200; i++) { const xv = xmax * i / 200, th = byMass ? xv / (RHO[m] * (unit === 'mm' ? 1 : 10)) : xv, b = trans(m, th); if (!(b > 0)) break; const yy = Y(Math.max(b, Math.pow(10, ylo))); if (first) { c.moveTo(X(xv), yy); first = false; } else c.lineTo(X(xv), yy); if (b < Math.pow(10, ylo)) break; }
+      c.stroke(); const xr = byMass ? toM(m, thick(m)) : thick(m); if (isFinite(xr)) { c.fillStyle = MATC(m); c.beginPath(); c.arc(X(xr), Y(R.B), 5 * p, 0, 7); c.fill(); } }
+    /* legend */
+    let lx = L + 8 * p; c.textAlign = 'left'; c.textBaseline = 'middle'; c.font = `${10.5 * p}px ${T.ui}`;
+    for (const m of shown) { const xr = thick(m), s = `${MAT_NAME[m]} ${unit === 'mm' ? f(xr, xr < 10 ? 2 : 1) : xr >= 100 ? f(xr / 100, 2) + ' m' : f(xr, 1)}${unit === 'mm' || xr < 100 ? ' ' + unit : ''}`; const w = c.measureText(s).width + 26 * p; if (lx + w > Rr) break;
+      c.fillStyle = MATC(m); c.fillRect(lx, top - 16 * p, 14 * p, 4 * p); c.fillStyle = T.ink; c.fillText(s, lx + 18 * p, top - 14 * p); lx += w; }
+    if (byMass && shown.length < mats.length) { c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText('gypsum wallboard has no density here', Rr, bot - 8 * p); }
+  }
+  function drawDoorPlot(c, L, Rr, top, bot, p) {
+    /* the dose at the door with no door shielding against maze length, neutrons and capture gammas, and the goal */
+    const pts = [], lo = 2, hi = 14; for (let i = 0; i <= 120; i++) { const d2 = lo + (hi - lo) * i / 120; const r = mazeDoor({ a: S.a, d2, W: S.W, fI: S.fI, bpe: 0, pb: 0, T: S.T, P: S.P }); pts.push([d2, r.Hn, r.Hg]); }
+    const goal = R.goal, yhi = Math.ceil(Math.log10(Math.max(pts[0][1], pts[0][2]))), ylo = Math.floor(Math.log10(goal)) - 1;
+    const X = (v) => L + (v - lo) / (hi - lo) * (Rr - L), Y = (v) => top + (yhi - Math.log10(v)) / (yhi - ylo) * (bot - top);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let e = yhi; e >= ylo; e--) { c.beginPath(); c.moveTo(L, Y(Math.pow(10, e))); c.lineTo(Rr, Y(Math.pow(10, e))); c.stroke(); c.fillText(e === 0 ? '1' : pow10(e), L - 5 * p, Y(Math.pow(10, e))); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of niceTicks(lo, hi, 6)) c.fillText(String(v), X(v), bot + 4 * p);
+    c.font = `${11 * p}px ${T.ui}`; c.fillText('maze length (m)', (L + Rr) / 2, bot + 18 * p);
+    c.save(); c.translate(L - 44 * p, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('mSv a week at the door', 0, 0); c.restore();
+    const line = (k, col, dash) => { c.strokeStyle = col; c.lineWidth = 2.5 * p; c.setLineDash(dash || []); c.beginPath(); pts.forEach((q, i) => { const y = Y(Math.max(q[k], Math.pow(10, ylo))); i ? c.lineTo(X(q[0]), y) : c.moveTo(X(q[0]), y); }); c.stroke(); c.setLineDash([]); };
+    line(1, T.bpe); line(2, T.ray);
+    c.strokeStyle = T.fail; c.setLineDash([6 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(L, Y(goal)); c.lineTo(Rr, Y(goal)); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`goal P/T = ${sig(goal, 3)} mSv`, Rr, Y(goal) - 3 * p);
+    c.strokeStyle = T.muted; c.setLineDash([3 * p, 3 * p]); c.beginPath(); c.moveTo(X(S.d2), top); c.lineTo(X(S.d2), bot); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.font = `${10.5 * p}px ${T.ui}`;
+    c.fillStyle = T.bpe; c.fillRect(L + 8 * p, top - 16 * p, 14 * p, 4 * p); c.fillStyle = T.ink; c.fillText('neutrons, no door', L + 26 * p, top - 14 * p);
+    c.fillStyle = T.ray; c.fillRect(L + 140 * p, top - 16 * p, 14 * p, 4 * p); c.fillStyle = T.ink; c.fillText('capture gammas, no door', L + 158 * p, top - 14 * p);
+  }
+  function draw() { if (!T || !W) return; const three = use3(); if (g3) g3.st.el.hidden = !three; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (three) { ctx.clearRect(0, 0, W, H); draw3(); } else drawPlan(); drawPlot(); }
+
+  /* ---------- readouts ---------- */
+  const pf = (ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'meets the goal' : 'over the goal'}</span>`;
+  function thickTxt(m) { const x = thick(m), u = S.view === 'ct' ? 'mm' : 'cm'; if (!isFinite(x)) return '—'; const kg = RHO[m] ? RHO[m] * x * (u === 'mm' ? 1 : 10) : NaN;
+    return `${u === 'mm' ? f(x, 2) : f(x, 1)} ${u}` + (isFinite(kg) ? ` (${sig(kg, 3)} kg/m²)` : ''); }
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`; let h = '';
+    if (!R) { $('out').innerHTML = ''; return; }
+    if (S.view === 'ct') {
+      h += dd('Scatter air kerma at 1 m, a week', `${f(R.K1, 1)} mGy (body ${f(R.Kbody, 1)}, head ${f(R.Khead, 1)})`, true);
+      h += dd(`At the point (${f(R.d, 2)} m), no wall`, `${f(R.K, 2)} mGy a week`) + dd('Goal P/T', `${sig(S.P / S.T, 3)} mGy a week`);
+      h += dd('Transmission needed, B', sig(R.B, 3), true);
+      for (const m of ROOM_MATS.ct) h += dd(`Thickness of ${MAT_NAME[m]}`, thickTxt(m), true);
+    } else if (S.view === 'proton') {
+      h += dd('Protons a week at the patient', `${sig(R.N, 3)} (0.49 nA)`, true);
+      h += dd(`Forward dose at ${f(R.r, 2)} m, fit at zero wall`, `${sig(R.H, 3)} mSv a week`, true) + dd('Goal P/T', `${sig(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sig(R.B, 3));
+      h += dd('Concrete needed', thickTxt('concrete'), true);
+      h += dd('Lost before the room, mostly in the degrader', `${f(R.lost * 1e9, 2)} nA, ${f(R.lost / PRO.I, 0)} times the treatment beam`, true);
+    } else if (S.bar === 'door') {
+      if (S.mv !== 18) h += dd('Maze door', 'neutrons are made above 10 MV; this demo computes the door at 18 MV only (choose 18 MV)', true);
+      else { h += dd('Neutron fluence at the maze entrance', `${sig(R.phi, 3)} per m² per Gy`, true);
+        h += dd('At the door, no shielding', `neutrons ${sig(R.Hn, 3)}, capture gammas ${sig(R.Hg, 3)} mSv a week`, true);
+        h += dd('Behind the door', `neutrons ${sig(R.Hn1, 3)}, capture gammas ${sig(R.Hg1, 3)} mSv a week`, true);
+        h += dd('Total, against the goal', `${sig(R.H, 3)} mSv, goal ${sig(R.goal, 3)} mSv ${pf(R.ok)}`, true);
+        h += dd('With no maze, a secondary wall in its place (head leakage)', `${f(R.wall.x.concrete, 1)} cm of concrete, or ${f(R.wall.x.lead, 1)} cm of lead`, true); }
+    } else {
+      h += dd(S.bar === 'pri' ? `Primary beam at ${f(R.d, 2)} m, no wall` : `Head leakage at ${f(R.d, 2)} m, no wall`, `${sig(R.H, 3)} mSv a week`, true);
+      if (S.bar === 'sec') h += dd('Leakage workload (IMRT counted)', `${f(R.WL, 0)} Gy a week`, true);
+      h += dd('Goal P/T', `${sig(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sig(R.B, 3));
+      for (const m of ROOM_MATS.linac) h += dd(`Thickness of ${MAT_NAME[m]}`, thickTxt(m), true);
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    const v = S.view, lin = v === 'linac', door = lin && S.bar === 'door';
+    const set = (id, val, txt) => { $('s' + id).value = val; $('o' + id).textContent = txt; };
+    set('Nb', S.nBody, String(S.nBody)); set('Nh', S.nHead, String(S.nHead)); set('Db', S.dlpBody, `${S.dlpBody} mGy cm`); set('Dh', S.dlpHead, `${S.dlpHead} mGy cm`); set('Cf', S.contrast * 100, `${f(S.contrast * 100, 0)} %`);
+    set('W', S.W, `${S.W} Gy/week`); set('Fi', S.fI * 100, `${f(S.fI * 100, 0)} %`); set('U', S.U, f(S.U, 2)); set('D2', S.d2, `${f(S.d2, 1)} m`); set('Bp', S.bpe, `${f(S.bpe, 1)} cm`); set('Pb', S.pb, `${f(S.pb, 1)} cm`);
+    set('Np', S.np, String(S.np)); set('Tb', S.tb, `${f(S.tb, 1)} min`); set('Up', S.Up, f(S.Up, 2)); set('A', S.a, `${f(S.a, 1)} m`);
+    $('selT').value = String(S.T);
+    $('ctBox').hidden = v !== 'ct'; $('linBox').hidden = !lin; $('proBox').hidden = v !== 'proton'; $('uBox').hidden = !lin || S.bar !== 'pri'; $('mazeBox').hidden = !door;
+    $('matBox').hidden = v === 'proton' || door;
+    $('cardTitle').textContent = v === 'ct' ? 'CT room: scans a week' : lin ? 'Linac vault' : 'Proton room: beam a week';
+    $('matSeg').innerHTML = ROOM_MATS[v].map((m) => `<button type="button" data-mat="${m}" aria-pressed="${m === S.mat}">${MAT_NAME[m] === 'gypsum wallboard' ? 'gypsum' : MAT_NAME[m]}</button>`).join('');
+    for (const b of document.querySelectorAll('#matSeg button')) b.addEventListener('click', () => { S.mat = b.dataset.mat; full(); });
+    const pr = (sel, k) => { for (const b of document.querySelectorAll(sel + ' button')) b.setAttribute('aria-pressed', String(b.dataset[k] === String(S[{ view: 'view', kv: 'kv', mv: 'mv', bar: 'bar', p: 'P', ax: 'ax' }[k]]))); };
+    pr('#viewSeg', 'view'); pr('#kvSeg', 'kv'); pr('#mvSeg', 'mv'); pr('#barSeg', 'bar'); pr('#pSeg', 'p'); pr('#axSeg', 'ax');
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    window.vdShowCols = v === 'ct' ? [['B', 'B'], ['lead_mm', 'lead (mm)'], ['concrete_mm', 'concrete (mm)'], ['gypsum_mm', 'gypsum (mm)']]
+      : door ? [['maze_m', 'maze (m)'], ['bpe_cm', 'BPE (cm)'], ['lead_cm', 'lead (cm)'], ['door_mSv', 'door (mSv)']]
+        : lin ? [['MV', 'MV'], ['B', 'B'], ['concrete_cm', 'concrete (cm)'], ['lead_cm', 'lead (cm)']] : [['patients', 'patients'], ['protons', 'protons'], ['B', 'B'], ['concrete_cm', 'concrete (cm)']];
+  }
+  function full() { if (!ROOM_MATS[S.view].includes(S.mat)) S.mat = ROOM_MATS[S.view][0]; compute(); sync(); readouts(); draw(); }
+  const changed = () => { S.preset = 'custom'; full(); };
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, BASE, c); S.preset = k; delete S.hint; $('presetHint').textContent = c.hint; full(); resize(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (S.view === b.dataset.view) return; const v = b.dataset.view;
+    applyPreset(v === 'ct' ? 'ct' : v === 'linac' ? 'pri6' : 'proton'); });
+  for (const b of document.querySelectorAll('#kvSeg button')) b.addEventListener('click', () => { S.kv = +b.dataset.kv; changed(); });
+  for (const b of document.querySelectorAll('#mvSeg button')) b.addEventListener('click', () => { S.mv = +b.dataset.mv; changed(); });
+  for (const b of document.querySelectorAll('#barSeg button')) b.addEventListener('click', () => { S.bar = b.dataset.bar; if (S.bar === 'sec') S.U = 1; else if (S.bar === 'pri') S.U = 0.25; else S.mv = 18; changed(); });
+  for (const b of document.querySelectorAll('#pSeg button')) b.addEventListener('click', () => { S.P = +b.dataset.p; changed(); });
+  for (const b of document.querySelectorAll('#axSeg button')) b.addEventListener('click', () => { S.ax = b.dataset.ax; full(); });
+  $('selT').addEventListener('change', (e) => { S.T = +e.target.value; changed(); });
+  const SL = { Nb: ['nBody', 1], Nh: ['nHead', 1], Db: ['dlpBody', 1], Dh: ['dlpHead', 1], Cf: ['contrast', 0.01], W: ['W', 1], Fi: ['fI', 0.01], U: ['U', 1], D2: ['d2', 1], Bp: ['bpe', 1], Pb: ['pb', 1], Np: ['np', 1], Tb: ['tb', 1], Up: ['Up', 1], A: ['a', 1] };
+  for (const id in SL) $('s' + id).addEventListener('input', (e) => { S[SL[id][0]] = +e.target.value * SL[id][1]; changed(); });
+  const TI = (id, k, scale, min, max, step, unit, label) => VD.typeIn($('o' + id), { get: () => S[k] / scale, set: (v) => { S[k] = v * scale; changed(); }, min, max, step, unit, label });
+  TI('A', 'a', 1, 1.5, 8, 0.1, 'm', 'Source to the inside of the wall'); TI('W', 'W', 1, 50, 1000, 10, 'Gy/week', 'Workload'); TI('D2', 'd2', 1, 2, 14, 0.1, 'm', 'Maze length');
+  TI('Bp', 'bpe', 1, 0, 20, 0.1, 'cm', 'Borated polyethylene'); TI('Pb', 'pb', 1, 0, 10, 0.1, 'cm', 'Lead in the door'); TI('Np', 'np', 1, 5, 60, 1, '', 'Patients a day'); TI('Tb', 'tb', 1, 0.5, 6, 0.1, 'min', 'Beam on time');
+  TI('Nb', 'nBody', 1, 0, 400, 5, '', 'Body scans a week'); TI('Nh', 'nHead', 1, 0, 200, 5, '', 'Head scans a week');
+  $('about').textContent = 'Every room is designed the same way: the weekly dose at a point 0.3 m beyond the wall with no wall, the design goal P (0.02 mGy or mSv a week for the public, 0.1 for radiation workers) divided by the occupancy factor T, and the transmission B = (P/T)/dose that the wall must allow. '
+    + 'CT room (NCRP Report 147, 2004): scatter air kerma at 1 m per scan is κ × DLP with κ = 9 × 10⁻⁵ cm⁻¹ for a head scan and 1.2 × 3 × 10⁻⁴ cm⁻¹ for a body scan; a scan repeated with contrast counts twice. Transmission through lead and concrete from Archer fits to Simpkin\'s CT scatter data (NCRP 147 Figs. A.2, A.3); steel as 8 times the lead and gypsum wallboard as 3.2 times the concrete (NCRP 147 Table 4.8, typical rooms). '
+    + 'Linac vault (NCRP Report 151, 2005): primary B = P d²/(W U T), leakage B = P d²/(0.001 W_L T) with the IMRT workload counted three times; thickness from the first and equilibrium tenth value layers (Tables B.2 and B.7); the target is 1 m from isocenter. Patient scatter on the secondary walls, wall scatter, the laminated barriers and the photoneutrons a metal primary barrier makes at 18 MV are left out. '
+    + 'Maze door at 18 MV: neutron fluence at the maze entrance (NCRP 151 eq. 2.17, Q_n = 1.22 × 10¹² per Gy), the modified Kersey method for the neutron dose equivalent down the maze, and the capture gamma rays (tenth value distance 5.4 m); door tenth value layers 4.5 cm of borated polyethylene for neutrons and 6.1 cm of lead for capture gammas. The scattered photons down the maze are left out; at 18 MV the neutrons and capture gammas set the door. This demo\'s vault is 3.5 m high with a maze 2 m wide and 3 m high. '
+    + 'Proton room: forward neutrons behind concrete, H₀ = 0.0166 pSv m² per proton, λ = 52 cm (FLUKA, 250 MeV protons stopping in tissue; N. E. Ipe, PTCOG educational talks), 0.49 nA at the patient for pencil beam scanning (IBA data in the same talk), 5 treatment days a week. The fit is for thick walls; real designs use site specific source terms and the actual concrete. '
+    + 'Densities: lead 11.35, steel (as iron) 7.874, standard concrete 2.35 g/cm³.';
+
+  /* readings: the current room's result */
+  window.vdReadingRow = () => {
+    if (!R) return null;
+    const base = { room: S.view === 'ct' ? 'CT' : S.view === 'linac' ? `linac ${S.mv} MV` : 'proton', area: S.P === 0.02 ? 'public' : 'workers', T: String(S.T), a_m: f(S.a, 1) };
+    if (S.view === 'ct') return { view: 'ct', ...base, kV: String(S.kv), body: String(S.nBody), head: String(S.nHead), K1_mGy: f(R.K1, 2), K_mGy: f(R.K, 3), B: sig(R.B, 3),
+      lead_mm: f(R.x.lead, 2), steel_mm: f(R.x.steel, 2), concrete_mm: f(R.x.concrete, 1), gypsum_mm: f(R.x.gypsum, 1) };
+    if (S.view === 'proton') return { view: 'proton', ...base, patients: String(S.np), beam_min: f(S.tb, 1), U: f(S.Up, 2), protons: sig(R.N, 3), lnN: f(Math.log(R.N / 1e13), 3), H_mSv: sig(R.H, 3), B: sig(R.B, 3), concrete_cm: f(R.x.concrete, 1) };
+    if (S.bar === 'door') { if (S.mv !== 18) return 'The maze door is computed at 18 MV only.';
+      return { view: 'door', ...base, MV: '18', W_Gy: String(S.W), IMRT_pct: f(S.fI * 100, 0), maze_m: f(S.d2, 1), neutrons_mSv: sig(R.Hn, 3), log10_n: f(Math.log10(R.Hn), 3), gammas_mSv: sig(R.Hg, 3), bpe_cm: f(S.bpe, 1), lead_cm: f(S.pb, 1), door_mSv: sig(R.H, 3), goal_mSv: sig(R.goal, 3) }; }
+    return { view: S.bar === 'pri' ? 'primary' : 'secondary', ...base, MV: String(S.mv), W_Gy: String(S.W), IMRT_pct: f(S.fI * 100, 0), U: f(S.bar === 'pri' ? S.U : 1, 2), H_mSv: sig(R.H, 3), B: sig(R.B, 3),
+      concrete_cm: f(R.x.concrete, 1), steel_cm: f(R.x.steel, 1), lead_cm: f(R.x.lead, 1) };
+  };
+
+  function resize() { dpr = window.devicePixelRatio || 1; $('setupCard').style.top = innerWidth > 820 ? `${$('strip').offsetHeight + 14}px` : '';
+    const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = plot.getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'ct'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
+  VD.howTo({ src: 'media/how-this-works/shielding-rooms.mp4', poster: 'media/how-this-works/shielding-rooms.jpg' });
+  /* opens in 3D; ?view=flat, a low power device or no WebGL keep the flat floor plan */
+  view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
+    change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
+  window.vdDemo = { S, full, applyPreset, ctRoom, linacRoom, mazeDoor, protonRoom, get R() { return R; } };
+})();
+</script>
+</body>
+</html>

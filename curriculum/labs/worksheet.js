@@ -676,6 +676,17 @@
         cols: ['row', (r) => { const a = []; if (+r.shift_mm) a.push(`shift ${r.shift_mm} mm`); if (+r.output_err_pct) a.push(`output ${r.output_err_pct} %`); if (+r.size_err_pct) a.push(`spot size ${r.size_err_pct} %`); if (+r.range_err_mm) a.push(`range ${r.range_err_mm} mm`); return `${r.target}: ${a.length ? a.join(', ') : 'none'}`; },
           'depth_cm', 'pass_3_3', 'pass_3_2', 'pass_2_2'] }] },
   });
+  /* Shielding Rooms: CT rooms fill Table 1, linac walls Table 2, maze doors Table 3, proton rooms Table 4. */
+  MED_CP.push('mp-shielding-rooms'); ENABLED.push('mp-shielding-rooms');
+  Object.assign(FROM_DEMO, {
+    'mp-shielding-rooms': { demo: 'Shielding Rooms', cols: ['row', (r) => `${r.kV} kV, ${r.body} body and ${r.head} head scans, ${r.area} T = ${r.T}, ${r.a_m} m`, 'B', 'lead_mm', 'steel_mm', 'concrete_mm', 'gypsum_mm'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'primary' || r.view === 'secondary'),
+        cols: ['row', (r) => `${r.MV} MV ${r.view}` + (+r.IMRT_pct ? `, ${r.IMRT_pct} % IMRT` : ''), 'B', 'concrete_cm', 'steel_cm', 'lead_cm'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'door'),
+        cols: ['row', (r) => (+r.bpe_cm || +r.lead_cm ? `${r.bpe_cm} cm polyethylene, ${r.lead_cm} cm lead` : 'none'), 'maze_m', 'neutrons_mSv', 'log10_n', 'gammas_mSv', 'door_mSv'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'proton'),
+        cols: ['row', 'patients', 'protons', 'lnN', 'B', 'concrete_cm'] }] },
+  });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
@@ -688,7 +699,7 @@
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
-  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa');
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */

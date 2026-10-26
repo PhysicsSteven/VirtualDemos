@@ -4771,3 +4771,30 @@ paused, so the count is readable only in the readouts (Histories). Worth a look 
 
 **For GPT:** please check the captions for hyphens in compound modifiers and that each caption's numbers agree with the key rows
 named above.
+
+## 2026-10-26 · Claude · New demo: Shielding Rooms (Steve: "see how effective different shielding is and why the real rooms are built the way they are")
+
+New demo `demos/shielding-rooms.html`, Medical Physics unit 6 (first card), worksheet `mp-shielding-rooms`, How this works video,
+key from a real run in TeacherKeys (`worksheet-keys/medical-physics/mp-shielding-rooms-*`, capture script
+`worksheet-keys/tools/capture/mp-shielding-rooms.cjs`; notes key `answers/shielding-rooms.md`). Three rooms, 3D or floor plan:
+- CT room (NCRP Report 147): scatter air kerma κ·DLP (head 9 × 10⁻⁵, body 1.2 × 3 × 10⁻⁴ per cm, contrast repeats counted),
+  Archer fits for lead and concrete at 120 and 140 kV (the test reproduces the report's 1.54 mm of lead for B = 3.87 × 10⁻³),
+  steel 8 × lead and gypsum 3.2 × concrete (Table 4.8).
+- Linac vault (NCRP Report 151): primary and secondary walls from the Table B.2 and B.7 tenth value layers at 6, 10, 15, 18 MV,
+  IMRT factor 3 on the leakage workload; maze door at 18 MV (neutron fluence eq. 2.17, modified Kersey, capture gammas, door
+  TVLs 4.5 cm borated polyethylene and 6.1 cm lead). Patient scatter, wall scatter, laminated barriers, photoneutrons from metal
+  barriers and scattered photons down the maze are left out, and the page says so.
+- Proton room: forward neutrons behind concrete, H₀ = 0.0166 pSv m² per proton, λ = 52 cm (FLUKA fit, 250 MeV, N. E. Ipe),
+  0.49 nA at the patient, 5 days a week. λρ = 122 g/cm², close to PTCOG Report 1's about 120.
+- Graph of each material's transmission against thickness or mass per area. Tests `curriculum/validation/test_shielding-rooms.cjs`
+  (10 groups). vdcheck: 52 screenshots, 0 problems; 0 controls cut off. Symbol glossary section added (symbols --check clean).
+- Map, catalog, course page (unit 6 card), nav.js, search, notes, thumbnails, What's new and the Medical Physics Canvas cartridge
+  (Canvas import code: 10 modules, 76 links, 28 assignments, 0 problems) updated.
+- Fixed before release: the maze door readout "With no maze" always showed a dash; it now gives the secondary wall in its place.
+
+**For GPT:** please check (1) the handout's prelab numbers against the key (46.12 mGy at 1 m, B = 4.72 × 10⁻³, 1.46 mm of
+lead, 175 cm of concrete at 6 MV, 64.7 against 87.0 g/cm²); (2) the four tables of the key against the demo (CT corridor 0.87 mm
+lead, 6 MV primary 175.2 cm concrete, 18 MV secondary with 80 % IMRT 119.7 cm, door at 6 m 1.36 mSv/wk of neutrons, proton room
+268.7 cm at 30 patients); (3) the door fit (slope −0.1985 per m from 8 to 12 m against −1/(2.06√6) = −0.1982) and the proton fit
+(45.20 ± 0.07 cm against λ = 52 cm, explained by r growing with the wall); (4) the about text, notes and handout for hyphens in
+compound modifiers.
