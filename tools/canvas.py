@@ -72,7 +72,7 @@ def course_items(course, m, cards, notes):
     on_cards = {h for u in course['units'] for x in u['sections'] for d in secs[(x['vol'], x['sec'])]['demos']
                 if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
     seen, out = set(), []
-    for u in [u for u in course['units'] if not u.get('schedule')]:   # a folded course's schedule has its own file (build)
+    for u in [u for u in course['units'] if not u.get('schedule')]:   # a folded course's schedule is on the course page only
         us = sorted((secs[(x['vol'], x['sec'])] for x in u['sections']), key=C.sec_key)
         names = []
         for d in [d for s in us for d in s['demos']] + u.get('demos', []):
@@ -268,14 +268,9 @@ def build(only=None):
     m = C.load_map()
     cards = C.index_cards()
     notes = {p.stem for p in (ROOT / 'notes').glob('*.html')}
-    out = {c['id']: cartridge(c, m, cards, notes) for c in m['courses'] if not only or c['id'] in only}
-    # a course folded into another on the site (courses.py MERGED: Astro 2203 into Astronomy) keeps its own file, in its own
-    # schedule order, for importing into that class's Canvas course; its links still open the demos with ?course=<its id>
-    orig = json.loads(C.MAP.read_text())
-    for c in m.get('_merged_from', []):
-        if not only or c['id'] in only:
-            out[c['id']] = cartridge(c, orig, cards, notes)
-    return out
+    # a course folded into another on the site (courses.py MERGED: Astro 2203 into Astronomy) gets no file of its own
+    # (Steve, 2026-10-26: one Astronomy file for now)
+    return {c['id']: cartridge(c, m, cards, notes) for c in m['courses'] if not only or c['id'] in only}
 
 
 def main():

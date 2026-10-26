@@ -4328,8 +4328,8 @@ nav.js, vd.js COURSE_WS, canvas.py) the folded map. To split again: `MERGED = {}
   worksheet (table unchanged). `?course=astro` (cards) has its own COURSE_WS entries where a card's only worksheet is an intro one
   (optics bench, units, blackbody, ...), so Export and the videos reach it; multi worksheet demos (seasons, kepler) behave as
   before from a card, and their worksheet links carry `?ws=`.
-- Canvas: `virtualdemos-astro.imscc` is the folded module (topic units, 37 assignments). `virtualdemos-astro-2203.imscc` is still
-  built, unchanged byte for byte, for importing into the Astro 2203 Canvas course in schedule order.
+- Canvas: `virtualdemos-astro.imscc` is the folded module (topic units, 37 assignments). No separate Astro 2203 file
+  (Steve, 2026-10-26: drop it for now; the Astro 2203 course is still being built in its own project).
 - Home page: one Astronomy tile, 8 courses counted. whats-new.js entry added. CLAUDE.md modules line updated.
 
 Checked: courses.py --check, test_textbook_map, Playwright on astro.html (desktop, 360 px no sideways scroll), the redirect, and
