@@ -1,6 +1,7 @@
 // How this works: The Bragg Peak, worksheet mp-bragg-peak. The first table's peak reading: 150 MeV protons in water, Blind on,
-// the depth of largest dose found with the detector to 0.01 cm. Expected (key row 2): 100.00 % at 15.60 cm, with 99.79 % at
-// 15.59 cm and 99.85 % at 15.61 cm; R80 15.76 cm sits at the CSDA range (PSTAR 15.77 g/cm²), as it should for no energy spread.
+// the depth of largest dose found with the detector to 0.01 cm. Expected (key row 2, since the last 1 MeV is put down at the end
+// of range, 2026-10-26): 99.96 % at 15.62 cm, with 99.89 % at 15.61 cm and 99.84 % at 15.63 cm; R80 15.77 cm sits at the CSDA
+// range (PSTAR 15.77 g/cm²), as it should for no energy spread.
 require('./lib.cjs')({ demo: 'bragg-peak', title: 'The Bragg Peak' }, async (r) => {
   const { state, p, W } = r;
   const z = () => p.evaluate(() => +document.getElementById('sZ').value);
@@ -32,10 +33,10 @@ require('./lib.cjs')({ demo: 'bragg-peak', title: 'The Bragg Peak' }, async (r) 
   state.caption = 'Step it 0.01 cm at a time with the arrow keys: the dose rises, then falls past the peak';
   state.zoom = null;
   state.arrow = { rect: await atDet() };
-  for (let i = 0; i < 40 && (await z()) < 15.625; i++) { await p.keyboard.press('ArrowRight'); await r.tick(5); }
+  for (let i = 0; i < 40 && (await z()) < 15.645; i++) { await p.keyboard.press('ArrowRight'); await r.tick(5); }
   await r.secs(0.4);
-  state.caption = 'Step back to the largest dose: 100.0 % of the peak at 15.60 cm';
-  for (let i = 0; i < 10 && (await z()) > 15.605; i++) { await p.keyboard.press('ArrowLeft'); await r.tick(6); }
+  state.caption = 'Step back to the largest dose: 100.0 % of the peak at 15.62 cm';
+  for (let i = 0; i < 10 && (await z()) > 15.625; i++) { await p.keyboard.press('ArrowLeft'); await r.tick(6); }
   state.arrow = { rect: await r.box('#oZ') };
   await r.secs(0.9);
   state.arrow = { rect: await atDet() };

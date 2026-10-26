@@ -1,7 +1,8 @@
 // How this works: Proton Therapy QA, worksheet mp-proton-qa. The first reading: Daily QA, all good (150 MeV), one morning's QA run
 // and recorded. Each run draws its own small measurement noise from a fixed seed, so the numbers match the key's runs one for one:
 // run 1 gives output 99.91 %, R90 change 0.00 mm, spot error 0.29 mm, spot size +0.5 %; run 2 gives 99.84 %, −0.02 mm, 0.21 mm,
-// +0.1 % (key rows 1 and 2), all inside the TG-224 daily tolerances (output ±3 %, range ±1 mm, spot position 2 mm, size ±10 %).
+// +0.1 % (key rows 1 and 2), all inside the TG-224 daily tolerances (output ±3 %, range ±1 mm, spot position ±2 mm absolute and
+// ±1 mm relative, size ±10 %).
 // Recorded in 3D (?view=3d), since the treatment room is the point and VD3.lowPower is set in the container.
 require('./lib.cjs')({ demo: 'proton-qa', title: 'Proton Therapy QA', query: '?view=3d' }, async (r) => {
   const { state, p, W } = r;
