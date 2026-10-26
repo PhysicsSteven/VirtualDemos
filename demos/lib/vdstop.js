@@ -14,8 +14,9 @@
 
    Range straggling: Bohr's energy straggling with the relativistic factor (1 − β²/2)/(1 − β²),
      dσ_E²/dx = K mₑc² z² (Z/A) ρ (1 − β²/2)/(1 − β²),  σ_R² = ∫ (dσ_E²/dx) / (dE/dx)³ dE.
-   Nuclear interactions (protons): Bortfeld 1997 (Med. Phys. 24, 2024): primary fluence falls by β = 0.012 per cm of water,
-   and γ = 0.6 of the energy those protons carry is put down locally; the rest leaves (neutrons, gammas). Ions: left out.
+   Nuclear interactions (protons): Bortfeld 1997 (Med. Phys. 24, 2024): primary fluence falls linearly with depth,
+   Φ = Φ₀ [1 + β(R₀ − w)]/(1 + βR₀) with β = 0.012 per cm of water, and γ = 0.6 of the energy those protons
+   carry is put down locally; the rest leaves (neutrons, gammas). Ions: left out.
    Multiple scattering: Highland's formula (PDG) for a slab; for the spread with depth, Fermi–Eyges moments with the scattering
    power T = (13.6 MeV / pv)² / X₀ times Highland's log factor at the depth reached (stated approximation).
 
@@ -35,7 +36,7 @@
      track(o, rng)         one Monte Carlo history: { pts: [[z, x, E]], end, absorbed } in cm, for drawing and for range histograms */
 (function (g) {
   'use strict';
-  const K = 0.307075, ME = 0.51099895, MU = 931.49410242;
+  const K = 0.307075, ME = 0.51099895, MU = 931.49410372;
   /* NIST PSTAR/ESTAR material data: density (g/cm³), I (eV), and Z/A worked out from the composition by weight with the standard
      atomic weights; X0 radiation length (g/cm²): the PDG value for water, air, PMMA and the elements, and for the tissues
      the elements' PDG values combined by weight (1/X₀ = Σ wᵢ/X₀ᵢ) */
@@ -53,7 +54,7 @@
     copper: { name: 'Copper', rho: 8.96, I: 322.0, ZA: 0.45636, X0: 12.86 },
     lead: { name: 'Lead', rho: 11.35, I: 823.0, ZA: 0.39575, X0: 6.37 },
   };
-  /* rest energies from CODATA 2022 (proton) and the AME 2020 atomic masses less the electrons (alpha, carbon 12) */
+  /* rest energies from CODATA 2022 (proton; 1 u = 931.49410372 MeV) and the AME 2020 atomic masses less the electrons (alpha, carbon 12) */
   const PARTS = {
     proton: { name: 'Proton', z: 1, A: 1, M: 938.27208943 },
     alpha: { name: 'Alpha particle', z: 2, A: 4, M: 3727.3794118 },
@@ -138,7 +139,9 @@
      fluence). Depth is turned into water equivalent depth w layer by layer (each layer's stopping power ratio taken at the energy
      the beam has there). The primaries' end points spread as a Gaussian of σ = √(σ_R² + (spread · T / S)²) about the CSDA range R₀
      (range straggling and the beam's energy spread), and at w the electronic dose is ∫ p(w + r) S(r) dr over the residual range r,
-     with S(r) the stopping power of a proton with CSDA range r (r = s² keeps the integrand smooth at the end). Protons (Bortfeld 1997):
+     with S(r) the stopping power of a proton with CSDA range r (r = s² keeps the integrand smooth at the end). The range table starts at
+     1 MeV per nucleon, so that last energy, A × 1 MeV, is put down where each particle stops: A p(w) per unit depth (unsmeared, in the
+     step where w passes R₀), which keeps ∫ d dw = T without nuclear losses. Protons (Bortfeld 1997):
      primaries fall as Φ = Φ₀ [1 + β(R₀ − w)]/(1 + βR₀), and the energy taken by nuclear reactions, β Φ₀/(1 + βR₀) times the mean
      energy, is put down with the fraction γ. Doses in a layer are scaled by its mass stopping power ratio to water. */
   const BETA = 0.012, GAMMA = 0.6;
@@ -170,16 +173,19 @@
     const R0 = range(o.T, 'water', P), sStr = o.straggle === false ? 0 : sigmaR(o.T, 'water', P), sE = (o.spread || 0) * o.T / S(o.T, 'water', P);
     const sig = Math.max(1e-4, Math.sqrt(sStr * sStr + sE * sE)), nuc = o.nuclear !== false && P.z === 1, ns = o.ns || 160;
     const pdf = (R) => Math.exp(-0.5 * Math.pow((R - R0) / sig, 2)) / (sig * Math.sqrt(2 * Math.PI));
+    let wPrev = -Infinity;
     for (let i = 0; i <= nz; i++) {
       const zz = i * dz, at = wAt(zz), w = at.w, top = R0 + 6 * sig - w;
       let el = 0, en = 0;
-      if (o.straggle === false && !(o.spread > 0)) { const r = R0 - w; if (r > 0) { const q = resid(r, P); el = q.S; en = q.E; } }
+      if (o.straggle === false && !(o.spread > 0)) { const r = R0 - w; if (r > 0) { const q = resid(r, P); el = q.S; en = q.E; } else if (wPrev < R0) el = P.A / (w - wPrev > 0 && isFinite(wPrev) ? w - wPrev : dz); }
       else if (top > 0) {
         /* only residual ranges within 6σ of R₀ − w count; near r = 0 the stopping power diverges, so there the variable is s = √r */
         const lo = Math.max(0, R0 - 6 * sig - w);
         if (lo > 0) { const hr = (top - lo) / ns; for (let k = 0; k < ns; k++) { const r = lo + (k + 0.5) * hr, q = resid(r, P), wt = hr * pdf(w + r); el += wt * q.S; en += wt * q.E; } }
         else { const smax = Math.sqrt(top), hs = smax / ns; for (let k = 0; k < ns; k++) { const s = (k + 0.5) * hs, r = s * s, q = resid(r, P), wt = 2 * s * hs * pdf(w + r); el += wt * q.S; en += wt * q.E; } }
+        el += P.A * pdf(w);   /* the last A × 1 MeV, put down where the particles stop */
       }
+      wPrev = w;
       const live = o.straggle === false && !(o.spread > 0) ? (w < R0 ? 1 : 0) : 0.5 * erfc((w - R0) / (sig * SQ2)), surv = nuc ? (1 + BETA * Math.max(0, R0 - w)) / (1 + BETA * R0) : 1;
       z[i] = zz; phi[i] = live * surv; e[i] = live > 1e-9 ? en / live : 0;
       d[i] = at.ratio * (el * surv + (nuc ? GAMMA * BETA / (1 + BETA * R0) * en : 0));
@@ -211,7 +217,9 @@
   }
   /* one Monte Carlo history in the layers then water: steps of o.step cm (0.5 mm) or a fifth of the residual range, whichever is
      shorter; mean loss from S at the middle of the step, Bohr straggling (Gaussian) per step, Highland scattering per step, and
-     (protons) removal by a nuclear reaction with probability β per cm of water equivalent. It stops at 1 MeV per nucleon. */
+     (protons) removal by a nuclear reaction with probability β dw/(1 + β r) over a step of dw cm of water equivalent, r the residual
+     range in water, which is Bortfeld's linear fluence law: a proton survives to residual range r with probability
+     (1 + β r)/(1 + β R₀), as in dose(). It stops at 1 MeV per nucleon. */
   function track(o, rng) {
     const P = part(o.p), layers = (o.layers || []).filter((l) => l.t > 0), step = o.step || 0.05, zmax = o.zmax || 40;
     const gauss = () => { let u = 0; while (!u) u = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rng()); };
@@ -222,7 +230,7 @@
       const M = matAt(zz), rr = range(E, M, P) / M.rho, dl = Math.min(step, Math.max(rr / 5, 2e-4)), dx = dl * M.rho;
       const Em = E - S(E, M, P) * dx / 2, st = S(Math.max(Em, Emin), M, P), k = kin(Math.max(Em, Emin), P);
       const sE = Math.sqrt(K * ME * P.z * P.z * M.ZA * (1 - k.b2 / 2) / (1 - k.b2) * dx), th = theta0(dx, M, Math.max(Em, Emin), P);
-      if (nuc && rng() < BETA * dx * rsp(M, Math.max(Em, Emin), P) / M.rho) { absorbed = true; break; }
+      if (nuc && rng() < BETA * dx * rsp(M, Math.max(Em, Emin), P) / M.rho / (1 + BETA * range(Math.max(Em, Emin), 'water', P))) { absorbed = true; break; }
       E -= Math.max(0, st * dx + sE * gauss());
       ang += th * gauss(); x += dl * Math.sin(ang); zz += dl * Math.cos(ang);
       pts.push([zz, x, Math.max(0, E)]);

@@ -95,4 +95,15 @@ group('scattering: Highland angle and the lateral spread at the end of range', (
   assert(s / V.range(150, 'water') > 0.018 && s / V.range(150, 'water') < 0.026, `σx at the end ≈ 2 % of R: ${s}`);
 });
 
+group('energy is conserved: without nuclear losses the depth dose integrates to T (the last 1 MeV per nucleon included), and track() survives as dose()', () => {
+  for (const T of [10, 70, 150]) { const o = V.dose({ T, nuclear: false, zmax: V.range(T, 'water') + 2, dz: 0.0005, ns: 400 });
+    let s = 0; for (let i = 1; i < o.z.length; i++) s += (o.d[i] + o.d[i - 1]) / 2 * (o.z[i] - o.z[i - 1]); near(s, T, 2e-5, `∫ d dz at ${T} MeV`); }
+  const A = V.dose({ T: 600, p: 'alpha', nuclear: false, zmax: V.range(600, 'water', 'alpha') + 2, dz: 0.001, ns: 400 });
+  let sa = 0; for (let i = 1; i < A.z.length; i++) sa += (A.d[i] + A.d[i - 1]) / 2 * 0.001; near(sa, 600, 1e-3, 'alpha');
+  const P = V.dose({ T: 100, straggle: false, nuclear: false, zmax: 9, dz: 0.001 }); let sp = 0; for (let i = 0; i < P.z.length; i++) sp += P.d[i] * 0.001; near(sp, 100, 2e-3, 'unsmeared');
+  let r = 7; const rng = () => (r = (r * 16807) % 2147483647) / 2147483647;
+  for (const T of [150, 230]) { let k = 0; const n = 3000; for (let i = 0; i < n; i++) if (!V.track({ T }, rng).absorbed) k++;
+    const want = 1 / (1 + V.BETA * V.range(T, 'water')); within(k / n, want, 4 * Math.sqrt(want * (1 - want) / n), `track survival at ${T} MeV`); }
+});
+
 console.log(`${n} groups passed`);
