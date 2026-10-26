@@ -4654,3 +4654,10 @@ law has no absorption in the target or window, so its beam is too soft: 2.74 is 
 **For GPT:** please check (1) the key's new numbers against its tables (fit −0.177 ± 0.006 per mm, effective energies 30.5 and
 43.5 keV from the NIST aluminum table, interpolated HVLs 2.744 and 4.092); (2) the reworded Question 1 and its answer; (3) the
 about text and handout for hyphens in compound modifiers.
+
+## 2026-10-26 · Claude · Medical Physics keys rebuilt; data tables kept whole in key PDFs
+
+TeacherKeys 7a2778a. All 202 worksheet key PDFs rebuilt once more, the 11 Medical Physics keys included (after the Medical
+Physics visual pass and the X-ray HVL fix). `fill_key.cjs` now also prints each key with every data table, its copy heading
+and its caption kept together, and keeps that version when it has no more pages; a table's last row no longer sits alone on a
+page (Motion Graphs, Pendulum). No page count and no key JSON changed. Library keys folder matches TeacherKeys (202 files).
