@@ -72,6 +72,7 @@ def course_items(course, m, cards, notes):
     on_cards = {h for u in course['units'] for x in u['sections'] for d in secs[(x['vol'], x['sec'])]['demos']
                 if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
     seen, out = set(), []
+    home = C.card_homes(course, m, cards)   # a demo's worksheets go in the module of the unit that holds its card, as on the course page
     for u in [u for u in course['units'] if not u.get('schedule')]:   # a folded course's schedule is on the course page only
         us = sorted((secs[(x['vol'], x['sec'])] for x in u['sections']), key=C.sec_key)
         names = []
@@ -82,7 +83,9 @@ def course_items(course, m, cards, notes):
         for n in names:
             title, url = plain(cards[n]['title']), f'{SITE}demos/{n}.html?course={cid}'   # the demo lists this course's worksheets
             items.append(('link', f'Demo: {title}', url))
-            if n in seen:
+            if home[n] is not u:
+                for h in [h for h in C.course_handouts(cid, demos[n]) if h in u.get('worksheets', [])]:   # named on the course page too
+                    items.append(('link', C.course_label(cid, h), f'{SITE}curriculum/labs/students/{h}.html'))
                 continue
             seen.add(n)
             hs = C.course_handouts(cid, demos[n])

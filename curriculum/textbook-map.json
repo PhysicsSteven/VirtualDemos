@@ -1786,7 +1786,10 @@
             "nuclear-reactions",
             "shells-and-x-rays"
           ],
-          "note": "Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer."
+          "note": "Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer.",
+          "worksheets": [
+            "nuclear-reactions"
+          ]
         },
         {
           "id": "photons",
@@ -1826,7 +1829,10 @@
             "nuclear-reactions",
             "gamma-spectroscopy"
           ],
-          "note": "Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution."
+          "note": "Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution.",
+          "worksheets": [
+            "radiation-dose"
+          ]
         },
         {
           "id": "radiobiology",
@@ -1847,9 +1853,16 @@
           "sections": [],
           "demos": [
             "nuclear-reactions",
+            "photon-interactions",
             "gamma-spectroscopy"
           ],
-          "note": "Time, distance and shielding; broad beam transmission and buildup; a barrier calculation with workload, occupancy and the NCRP design goals (Dose view of Nuclear Reactions)."
+          "note": "Time, distance and shielding: dose rate from a point source, broad beam transmission and buildup in lead, concrete and water, and a barrier calculation for a PET uptake room with workload, occupancy and the NCRP design goals (Dose view of Nuclear Reactions).",
+          "cards": [
+            "nuclear-reactions"
+          ],
+          "worksheets": [
+            "gamma-absorption"
+          ]
         },
         {
           "id": "proton-therapy",
@@ -1858,11 +1871,19 @@
           "requirement": "required",
           "sections": [],
           "demos": [
-            "charged-particles",
             "bragg-peak",
-            "proton-qa"
+            "proton-qa",
+            "charged-particles",
+            "dosimetry",
+            "radiobiology"
           ],
-          "note": "Preparation for the seniors' QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system."
+          "note": "Preparation for the seniors’ QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system: the spread out Bragg peak, the morning QA and patient plan checks, a TRS-398 beam calibration and the RBE of protons.",
+          "cards": [
+            "bragg-peak"
+          ],
+          "worksheets": [
+            "mp-proton-calibration"
+          ]
         },
         {
           "id": "linac",

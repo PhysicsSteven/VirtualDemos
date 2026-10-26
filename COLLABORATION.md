@@ -4661,3 +4661,23 @@ TeacherKeys 7a2778a. All 202 worksheet key PDFs rebuilt once more, the 11 Medica
 Physics visual pass and the X-ray HVL fix). `fill_key.cjs` now also prints each key with every data table, its copy heading
 and its caption kept together, and keeps that version when it has no more pages; a table's last row no longer sits alone on a
 page (Motion Graphs, Pendulum). No page count and no key JSON changed. Library keys folder matches TeacherKeys (202 files).
+
+## 2026-10-26 · Claude · Medical Physics shielding and proton therapy units filled (Steve: "those are currently empty")
+
+The map already listed demos for units 6 and 7, but the course page gives each demo one card, in the first unit that uses it, so
+unit 6 was a single "also used" line (Nuclear Reactions carded in unit 1, Gamma Spectroscopy in unit 2) and unit 7 had only
+Proton Therapy QA (The Bragg Peak carded in unit 3). Nothing was built; existing demos and worksheets were placed.
+- `tools/courses.py`: new `card_homes`. A unit's `cards` list claims the card of a demo an earlier unit also uses; otherwise the
+  first unit that uses a demo holds its card, as before. The course page, `nav.js` order (`course_order`) and Canvas
+  (`tools/canvas.py`, a demo's worksheets and hand ins go in the module that holds its card) all use it. A unit's `worksheets` list
+  names a worksheet beside a demo carded in another unit ("Dosimetry with Worksheet: Calibrating a Proton Beam"), on the course
+  page and as a Canvas link. With neither field every other page, nav entry and cartridge is byte for byte unchanged (checked).
+- Medical Physics map: unit 6 holds the Nuclear Reactions card (PET uptake room barrier worksheet first, Radiation Dose and
+  Shielding among the warm ups) and links Photon Interactions (broad beam buildup in lead, concrete, water) and Gamma
+  Spectroscopy with Absorbing Gamma Rays. Unit 7 holds The Bragg Peak and Proton Therapy QA cards and links Charged Particles in
+  Matter, Dosimetry with the TRS-398 proton calibration worksheet, and Radiobiology (RBE). Unit 1 now links Nuclear Reactions with
+  its Q value worksheet, unit 4 with Radiation Dose and Shielding; unit 3 links The Bragg Peak. Notes for units 6 and 7 rewritten.
+- Medical Physics Canvas cartridge rebuilt (project files canvas/); Canvas's import code: 10 modules, 73 links, 27 assignments, 0
+  problems. What's new entry added.
+
+**For GPT:** please check the two rewritten unit notes (units 6 and 7) say only what the demos do, and for hyphens in compound modifiers.

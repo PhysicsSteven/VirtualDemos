@@ -400,7 +400,8 @@ def course_page(course, m, cards, notes):
     title, lede = course['title'], BLURB[cid][1]
     jump, units = [], []
     n_demo, n_activity = set(), set()
-    first_unit = {}   # each demo gets one full card, in the first unit that uses it; later units link to it in one line
+    # each demo gets one full card, in the unit that holds it (card_homes); other units link to it in one line
+    first_unit = home = card_homes(course, m, cards)
     # a standalone worksheet already linked from a demo card on this page gets no second card of its own (units, 2026-10-24)
     on_cards = {h for u in course['units'] for x in u['sections'] for d in secs[(x['vol'], x['sec'])]['demos']
                 if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
@@ -421,16 +422,18 @@ def course_page(course, m, cards, notes):
         gaps = [s for s in sorted(us, key=sec_key) if s['status'] != 'usable']
         opt = u['requirement'] == 'optional'
         jump.append(f'<li><a href="#{u["id"]}"{" class=\"opt\"" if opt else ""}>{esc(u.get("short", u["title"]))}</a></li>')   # short: a shorter jump label
-        fresh = [n for n in names if n not in first_unit]
-        seen = [n for n in names if n in first_unit]
-        for n in fresh: first_unit[n] = u
+        fresh = [n for n in names if home[n] is u]
+        seen = [n for n in names if home[n] is not u]
         items = [card(n, demos[n], ukeys, cards, notes, cid) for n in fresh]
         items.extend(activity_card(activities[a], ukeys) for a in activity_names)
         if seen:
             def where(n):
                 refs = ', '.join(f'{s["vol"]}:{s["sec"]}' for s in sorted([x for x in demos[n]['sections'] if (x['vol'], x['sec']) in ukeys], key=sec_key))
                 return f'(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n]["title"])}</a>{"; " + refs if refs else ""})'
-            links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a> <span class="where">{where(n)}</span>' for n in seen)
+            def sheets(n):   # unit.worksheets: a worksheet on a demo carded elsewhere that this unit is about, named on the line
+                hs = [h for h in course_handouts(cid, demos[n]) if h in u.get('worksheets', [])]
+                return ''.join(f' with <a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h))}</a>' for h in hs)
+            links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a>{sheets(n)} <span class="where">{where(n)}</span>' for n in seen)
             items.append(f'      <li class="also">Also used in this unit: {links}</li>')
         if u.get('review'):   # a test week: link back to the demos of the units it covers
             rev = [x for x in course['units'] if x['id'] in u['review']]
@@ -821,16 +824,36 @@ def search_js(m, cards):
 
 # Course navigation (Steve, 2026-10-25): every demo gets a breadcrumb (Home, course, unit, demo) and previous and next links
 # that step through its course in the order of the course page. demos/lib/vd.js loads demos/lib/nav.js, written here.
-def course_order(course, m, cards):
-    """[(demo, unit)] in the order of the demo cards on the course page: each demo once, in the first unit that uses it."""
+def unit_demos(course, u, m, cards):
+    """The demos unit u of course uses, in order: its sections' demos, then unit.demos (demos with no textbook section)."""
     secs = {(s['vol'], s['sec']): s for s in m['sections']}
     demos = {d['demo']: d for d in m['demos']}
-    out, seen = [], set()
+    us = sorted((secs[(x['vol'], x['sec'])] for x in u['sections']), key=sec_key)
+    return list(dict.fromkeys(d for d in [d for s in us for d in s['demos']] + u.get('demos', [])
+                              if d in demos and course['id'] in demos[d]['course'] + demos[d].get('_course', []) and d in cards))
+
+
+def card_homes(course, m, cards):
+    """{demo: unit} where each demo has its one full card: the unit whose `cards` names it (a unit can claim the card of a demo an
+    earlier unit also uses, as Medical Physics shielding does for Nuclear Reactions, 2026-10-26), else the first unit that uses it."""
+    units = [u for u in course['units'] if not u.get('schedule')]
+    home = {}
+    for u in units:
+        for d in u.get('cards', []):
+            home.setdefault(d, u)
+    for u in units:
+        for d in unit_demos(course, u, m, cards):
+            home.setdefault(d, u)
+    return home
+
+
+def course_order(course, m, cards):
+    """[(demo, unit)] in the order of the demo cards on the course page: each demo once, in the unit that holds its card."""
+    home, out = card_homes(course, m, cards), []
     for u in course['units']:
-        us = sorted((secs[(x['vol'], x['sec'])] for x in u['sections']), key=sec_key)
-        for d in [d for s in us for d in s['demos']] + u.get('demos', []):
-            if d not in seen and d in demos and course['id'] in demos[d]['course'] + demos[d].get('_course', []) and d in cards:
-                seen.add(d); out.append((d, u))
+        for d in unit_demos(course, u, m, cards):
+            if home.get(d, u) is u and d not in {x for x, _ in out}:
+                out.append((d, u))
     return out
 
 
