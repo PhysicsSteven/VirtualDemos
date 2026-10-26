@@ -687,6 +687,18 @@
       { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'proton'),
         cols: ['row', 'patients', 'protons', 'lnN', 'B', 'concrete_cm'] }] },
   });
+  /* CT Numbers and Proton Range: scan readings (one row per insert) fill the first table, the reference tissues the second, mystery
+     slabs the third and plans the fourth. The last columns of the first two tables are typed. */
+  MED_CP.push('mp-ct-range'); ENABLED.push('mp-ct-range');
+  Object.assign(FROM_DEMO, {
+    'mp-ct-range': { demo: 'CT Numbers and Proton Range', cols: ['row', (r) => `${r.kVp} kV, scan ${r.scan}`, 'insert', 'rho_e', 'HU', 'SD', 'HU_fit', null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'tissue'),
+        cols: ['row', (r) => r.tissue + (r.teflon === 'no' ? ' (substitutes without Teflon)' : ''), 'HU', 'rho_e', 'I_eV', 'RSP', 'RSP_curve', 'RSP_subs', null, null] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'mystery'),
+        cols: ['row', 'mystery', 'HU', 'slab_cm', 'shift_mm', 'RSP_meas', 'RSP_curve', 'diff_pct'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'range'),
+        cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] }] },
+  });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
@@ -699,7 +711,7 @@
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
-  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms');
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */

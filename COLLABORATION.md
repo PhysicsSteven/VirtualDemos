@@ -4865,3 +4865,41 @@ the source should get that line before notes are next rebuilt.
 **For GPT:** please check (1) the vdstop endpoint deposit and the track hazard against Bortfeld 1997 (energy balance and survival);
 (2) the four recaptured keys' answers against their data; (3) the TG-224 relative check definition (spot places relative to the
 central spot) against TG-224 itself, which this container could not open; (4) the new wording for hyphens in compound modifiers.
+
+## 2026-10-26 · Claude · New demo: CT Numbers and Proton Range (Medical Physics, unit 7)
+
+Steve asked for the two unbuilt Medical Physics gaps; this is the proton one: how a CT scan becomes stopping powers, and the
+range uncertainty that sets plan margins. New page `demos/ct-range.html`, worksheet `mp-ct-range`, notes, tests, key, video.
+- **Model** (CORE, runs in Node; `curriculum/validation/test_ct-range.cjs`, 7 groups): NIST ESTAR compositions, densities and I
+  values (ICRP and ICRU tissues, eight phantom plastics), inflated lung at 0.26 g/cm³ (ICRU 46), mixtures by volume with Bragg's
+  rule. Scanner: SpekPy tungsten spectra from `lib/photondata.js` behind 6 mm Al, hardened by 20 cm of water, XCOM coefficients,
+  detected energy weighting, H = 1000(μ̄/μ̄_w − 1); pixel noise 16/12/10/9 HU at 80 to 140 kV and 490 pixel regions are the
+  demo's choices. Schneider, Pedroni and Lomax 1996 fit (linear least squares in k_coh and k_ph); RSP from Bethe through
+  `lib/vdstop.js` at 150 MeV (not edited). Curves: continuous broken lines, stoichiometric knots −1000, −750, −120, 60, 1600 HU;
+  substitutes −1000, −100, 100, 1600 HU. Slab range shift = VDStop's WET at 150 MeV with 0.1 mm reading noise (slabs 1 to 6 cm,
+  so cortical bone still leaves a peak in the tank). Plans: R = WET(1 + a) + b on sketched tissue layers (brain, prostate
+  through a femoral head, lung), error split into curve, CT number and I value parts by recomputing with one error at a time.
+- **Checked numbers:** water 0 HU and air −999 at every kV; on noiseless inserts the fit gives every insert within 3 HU and every
+  reference tissue within 4 HU at 120 kV; stoichiometric curve within 2 % of every tissue but skin (−3.5 %); substitute curve
+  +22.6 % on cortical bone (−4.0 % without Teflon); ∂ln S/∂ln I = −0.122 (−1/L, L = 8.20 for water at 150 MeV by hand);
+  ICRU compact bone (Mystery 1) −9.3 % off the curve. Brain plan with 3.5 % + 1 mm: margin 4.3 mm, R90 4.0 mm past the target;
+  lung margin 15.8 mm; lung +10 HU → +4.5 mm; prostate I −10 % → −2.2 mm; prostate on the substitute curve +11.2 mm.
+- **Sources:** Schneider et al., PMB 41, 111 (1996); Paganetti, PMB 57, R99 (2012) for the budget table in the Lab fold and the
+  3.5 % + 1 mm margin; Yang et al., PMB 57, 4095 (2012). The budget table lists the entries only, no totals (I could not check
+  Paganetti's totals against an accessible copy).
+- **Worksheet:** `curriculum/labs/students/mp-ct-range.md` (calculus level: derive ∂ln S/∂ln I = −1/L, WET as an integral, the
+  range error slope from the curve's slope), four export tables keyed on `view` in `worksheet.js`, graphs on every table. Glossary
+  section added; symbols.py --check/--missing/--meanings and check_math clean. Key from a real run in TeacherKeys
+  (`worksheet-keys/medical-physics/mp-ct-range-*`, capture script `tools/capture/mp-ct-range.cjs`), Library copy updated.
+- **Site:** unit 7 (Proton therapy) lists the demo; courses.py rerun (nav.js, search.js, index count 136, medical-physics.html),
+  thumbnails, Medical Physics Canvas cartridge rebuilt (Canvas importer check: 28 assignments, 0 wrong). What's new entry.
+  vdcheck `--only after` 0 problems, `--only clip` 0 cut off (the range card hides the kV choice; the plan says its kV in the title).
+- **How this works** (`ct-range.mp4`, 21 s, 3D): the 120 kV calibration scan and its record; B-100 804.9 ± 10.1 HU, fitted
+  805.3 HU, k_coh 1.399×10⁻³, k_ph 3.805×10⁻⁵, 76.7 keV, key rows 1 to 9.
+
+Found while checking (not mine, not changed): `tools/symbols.py --meanings` now flags orbital-magnetic-moment.md:61 (m_l: the handout
+says "allowed", the tip says "Magnetic quantum number").
+
+**For GPT:** please check the materials table against NIST ESTAR (weights, densities, I), the Schneider fit algebra in Analysis 2
+of the key, the prelab L = 8.20 arithmetic, and the claim that the curve's soft tissue slope predicts the brain's 0.0537 mm/HU
+range error slope within 3 %. Hyphens in compound modifiers in captions and handout, as always.

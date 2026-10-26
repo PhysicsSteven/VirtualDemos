@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>CT Numbers and Proton Range: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>CT Numbers and Proton Range</h1><ul class="meta"><li><a href="../demos/ct-range.html">Open the demo</a></li><li>Medical Physics, proton therapy (upper level, calculus)</li><li>20 to 50 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A CT number measures X-ray attenuation, not stopping power. Photon attenuation at CT energies depends on electron density and also, through the photoelectric effect (about Z⁴ per atom), on the elements; proton stopping power depends on electron density and, only logarithmically, on the mean excitation energy I.</li>
+<li>The stoichiometric calibration (Schneider, Pedroni and Lomax 1996) scans plastics of known composition, fits two constants of the scanner, then computes the CT numbers of real tissues from their compositions. A curve built directly from the plastics misses bone badly, because the plastics' elements are not the body's.</li>
+<li>The curve is tested by measuring the range shift of a real tissue slab. A tissue whose composition differs from the reference set sits off the curve.</li>
+<li>Every plan carries a range uncertainty, so the distal edge is placed beyond the target by a margin such as 3.5 % of the range plus 1 mm (Paganetti 2012). The margin is in water equivalent depth; in lung it stretches to centimeters.</li>
+</ul>
+<h2>Before class</h2>
+<p>Three views. <strong>Scan the phantom</strong> scans a 20 cm water cylinder with eight inserts (polyethylene, polystyrene, MS20, A-150, PMMA, B-100, Teflon and air) at 80 to 140 kV, plots CT number against electron density, and fits the Schneider constants k_coh and k_ph. <strong>CT number to stopping power</strong> plots the stoichiometric and tissue substitute curves with the reference tissues, and puts a slab of a chosen tissue, or a Mystery, in a 150 MeV beam in front of a water tank to measure its range shift. <strong>Range and margins</strong> plans one beam to a target in the brain, the prostate (through a femoral head) or a lung tumor, with a CT number error, an error in the tissues' I values and the margin as sliders the planner does not see, and splits the range error into its parts.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Calibration scan, 120 kV.</strong> Polyethylene sits below the line HU = 1000 (ρₑ − 1) and B-100 far above it (805 HU against a line value of 378). Ask Q1.</li>
+<li><strong>Same phantom, 80 kV.</strong> B-100 rises to about 1081 HU, the fit constants change, and the mean detected photon energy falls from 76.7 to 58.6 keV.</li>
+<li><strong>Both curves</strong>, then <strong>Bone on the substitute curve.</strong> Ask Q2. Muscle is off by +2.7 % on the substitute curve and +0.1 % on the stoichiometric one; cortical bone by +22.6 % and −0.4 %.</li>
+<li><strong>Substitute curve without Teflon.</strong> The bone error falls to −4.0 %: one insert set the whole bone end of the curve.</li>
+<li><strong>Mystery tissue.</strong> Measure the range shift; Mystery 1 is about 9 % below the curve. Ask Q3, then New mystery for the others, which sit within about 2 %.</li>
+<li><strong>Brain, 3.5 % + 1 mm</strong>, then <strong>Brain, no margin.</strong> With the margin the real R90 lands 4.0 mm past the target; without it the far edge is missed by 0.3 mm.</li>
+<li><strong>Lung tumor</strong>, then <strong>Lung, CT numbers 10 HU high.</strong> Ask Q4. The same rule gives a 15.8 mm margin, and a 10 HU error moves the real R90 4.5 mm deeper.</li>
+<li><strong>Prostate, tissue I values 10 % low</strong>, then <strong>Prostate planned on the substitute curve.</strong> Ask Q5. The I value error costs −2.2 mm; the substitute curve sends the beam 11.2 mm too deep, so the distal falloff lands about 2 cm into the tissue beyond the target.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Polyethylene and B-100 fall on opposite sides of the line HU = 1000 (ρₑ − 1). Why, and why does lowering the kV spread them further?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Why does the curve built straight from the plastics miss cortical bone by over 20 %, when the plastics were made to imitate tissue?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The Mystery 1 slab sits about 9 % below the stoichiometric curve. What could make a real tissue miss a curve built from real tissue compositions?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Why is the lung margin 15.8 mm when the brain margin, from the same 3.5 % + 1 mm rule, is 4.3 mm?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Rank the range errors you found (curve, CT number, I values, substitute curve) and say which ones a margin is meant to cover.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The CT number is a density."</strong> It is attenuation relative to water, and it depends on the elements and the kV. Two materials with the same electron density can differ by hundreds of HU.</li>
+<li><strong>"Tissue equivalent plastic behaves like tissue for both beams."</strong> A plastic made to match tissue for one purpose (here, X-ray attenuation or density) need not match it for the other.</li>
+<li><strong>"The margin is a fixed distance in the patient."</strong> It is a fraction of the water equivalent range; in low density tissue it is a much longer distance.</li>
+<li><strong>"The I value hardly matters because stopping power depends on ln I."</strong> d ln S / d ln I = −1/L with L about 8 at 150 MeV, so a 10 % error in I is about a 1.2 % error in stopping power, a couple of millimeters at depth.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Materials: compositions by weight, densities and I values from NIST ESTAR (ICRP and ICRU tissues, the plastics); inflated lung at 0.26 g/cm³ (ICRU Report 46). Mixtures (cortical bone in soft tissue from 10 % to 90 % by volume, spongy and marbled tissues) add masses and use Bragg's rule for I.</li>
+<li>Scanner: not any one model. A SpekPy tungsten spectrum (as in lib/photondata.js) behind 6 mm Al, hardened by 20 cm of water, weighted by the detected energy, with XCOM attenuation coefficients; HU = 1000 (μ̄/μ̄_water − 1). Pixel noise 16, 12, 10 and 9 HU at 80, 100, 120 and 140 kV, regions of 490 pixels: the demo's choices.</li>
+<li>Fit: Schneider et al. 1996 (Phys. Med. Biol. 41, 111), μ ∝ ρ Σ (wᵢ/Aᵢ)(Zᵢ + k_coh Zᵢ^2.86 + k_ph Zᵢ^4.62), linear least squares in k_coh and k_ph. On noiseless inserts it reproduces every insert within 3 HU and every reference tissue within 4 HU at 120 kV.</li>
+<li>Stopping power ratios: Bethe, through the shared core (lib/vdstop.js), at 150 MeV. Curves: continuous broken lines fitted by least squares through fixed knots (−1000, −750, −120, 60 and 1600 HU for the stoichiometric curve; −1000, −100, 100 and 1600 HU for the substitutes, since the phantom has no lung insert).</li>
+<li>Slab: the range shift is VDStop's water equivalent thickness at 150 MeV, read with 0.1 mm noise (a multilayer chamber's repeatability, the demo's choice).</li>
+<li>Plans: one beam along a sketched path of tissue layers (not anatomy); the planned distal R90 = WET(1 + a) + b, where WET is the integral of the planned stopping power ratio to the target's far edge. The range error is the difference between where that R90 lands in the real and the planned stopping powers, and is split by recomputing it with one error at a time.</li>
+<li>Uncertainty budget: Paganetti 2012 (Phys. Med. Biol. 57, R99), with the margin rule 3.5 % + 1 mm; Yang et al. 2012 (Phys. Med. Biol. 57, 4095) for the stoichiometric method's own uncertainty. Tested in curriculum/validation/test_ct-range.cjs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Charged Particles in Matter</strong> for the Bethe formula and I, with <strong>Photon Interactions in Matter</strong> for why the photoelectric effect grows with Z, and with <strong>The Bragg Peak</strong> for R90 and the distal falloff.</li>
+<li>Dual energy CT separates electron density from effective Z by scanning twice. Have students compare the 80 and 120 kV scans of the same inserts and argue why two scans give more than one.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

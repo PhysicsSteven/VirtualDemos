@@ -1874,6 +1874,7 @@
           "demos": [
             "bragg-peak",
             "proton-qa",
+            "ct-range",
             "charged-particles",
             "dosimetry",
             "radiobiology"
@@ -10882,6 +10883,22 @@
       "url": "demos/shielding-rooms.html",
       "handouts": [
         "mp-shielding-rooms"
+      ]
+    },
+    {
+      "demo": "ct-range",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-26 (Claude), Medical Physics, proton therapy gap: CT numbers to stopping power. A model scanner (SpekPy spectrum, XCOM) scans a phantom of eight inserts, the Schneider et al. 1996 stoichiometric fit and a tissue substitute curve are compared on ICRP and ICRU tissues (NIST compositions and I values), a Mystery slab is measured in a 150 MeV beam, and plans to brain, prostate and lung split the range error into curve, CT number and I value parts against a 3.5 % + 1 mm margin (Paganetti 2012). Stopping powers from demos/lib/vdstop.js. Worksheet mp-ct-range with a key from a real run in TeacherKeys.",
+      "title": "CT Numbers and Proton Range",
+      "url": "demos/ct-range.html",
+      "handouts": [
+        "mp-ct-range"
       ]
     }
   ],

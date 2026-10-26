@@ -1454,6 +1454,40 @@ Delta d | Distance criterion of the gamma analysis | mm | 3 mm or 2 mm here
 delta | Difference between the measured dose and the plan's dose at that plan point | %
 Delta D | Dose criterion of the gamma analysis, a percentage of the plan's maximum dose | % | 3 % or 2 % here
 
+== mp-ct-range ==
+H | CT number, the linear attenuation coefficient relative to water's | HU | water 0, air about −1000
+mu | Linear attenuation coefficient of the material for the scanner's X-rays | cm⁻¹
+mu_w | Linear attenuation coefficient of water for the same X-rays | cm⁻¹
+rho | Density of the material | g/cm³
+w_i | Fraction by weight of element i in the material
+A_i | Molar mass of element i | g/mol
+Z_i | Atomic number of element i
+Z | Atomic number
+i | Index of the elements in the material
+K | The scanner's three constants K_KN, K_coh and K_ph, which belong to its spectrum
+K_KN | Scanner constant of Compton scattering (Klein–Nishina, per electron)
+K_coh | Scanner constant of coherent scattering
+K_ph | Scanner constant of the photoelectric effect
+k_coh | Ratio K_coh/K_KN, fitted from the phantom scan
+k_ph | Ratio K_ph/K_KN, fitted from the phantom scan
+beta | Speed of the protons as a fraction of the speed of light
+c | @c
+gamma | Lorentz factor of the protons, 1/√(1 − β²)
+S | Stopping power of the material for the protons | MeV/cm
+C | Constant of the Bethe formula
+rho_e | Electron density of the material, relative to water in the tables
+rho_ew | Electron density of water
+L | Stopping number of the material in the Bethe formula
+L_w | Stopping number of water
+I | Mean excitation energy of the material | eV
+z | Depth along the beam's path through the patient | cm
+z' | Depth along the path, the variable of integration | cm
+t | Thickness of the slab | cm
+R | Water equivalent depth at which the plan places the distal R90 | cm
+z_target | Depth of the target's far edge along the path | cm
+a | Fraction of the range added as margin | | 3.5 % in the usual margin
+b | Fixed distance added as margin | mm | 1 mm in the usual margin
+
 == mp-bragg-peak ==
 S | Stopping power, the rate a proton loses energy per unit path, −dE/dx | MeV/cm
 beta | Speed of the proton as a fraction of the speed of light, v/c |

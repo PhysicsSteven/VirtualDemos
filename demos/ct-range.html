@@ -1,0 +1,883 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdstop.js"></script>
+<script src="lib/photondata.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>CT Numbers and Proton Range</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the scanner, the beam line, the patient path and their graphs */
+:root { --beam: #c2410c; --plan: #2563eb; --pass: #15803d; --fail: #b91c1c; --band: rgba(37, 99, 235, 0.10); --sub: #7c3aed; --tis: #0f766e; --myst: #c026d3; --grid: rgba(60, 70, 85, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff;
+  --tis: #5eead4; --myst: #f0abfc; --grid: rgba(200, 210, 225, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff; --tis: #5eead4; --myst: #f0abfc; --grid: rgba(200, 210, 225, 0.12); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 330px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; border-top: 1px solid var(--line); padding-top: 6px; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label, .setup-card .pick .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card .seg { align-self: flex-start; flex-wrap: wrap; }
+.setup-card .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.setup-card .chk { display: flex; gap: 6px; align-items: center; font-size: 0.82rem; color: var(--ink); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.plotbox { position: relative; flex: none; height: 300px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.readout .pass { color: var(--pass); font-weight: 700; }
+.readout .fail { color: var(--fail); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(820px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 330px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 280px; } }
+@media (max-width: 420px) { .scene { height: 290px; } .plotbox { height: 260px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>CT Numbers and Proton Range</h1>
+      <p>A proton plan reads its stopping powers off a CT scan. Calibrate a CT scanner with a phantom of known materials, turn CT numbers into stopping powers the way Schneider did in 1996, test the curve on a mystery tissue with a proton beam, and see how the errors that remain set the margins round every target.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">CT numbers in HU · depths in cm · range errors in mm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ct-range.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ct-range.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h1v1h-1zM17 2h3v1h-3zM23 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h3v1h-3zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h4v1h-4zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h4v1h-4zM19 7h1v1h-1zM23 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h2v1h-2zM17 9h8v1h-8zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h2v1h-2zM5 11h3v1h-3zM10 11h3v1h-3zM14 11h4v1h-4zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM4 12h2v1h-2zM8 12h2v1h-2zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h2v1h-2zM7 13h1v1h-1zM11 13h1v1h-1zM14 13h2v1h-2zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM7 14h2v1h-2zM10 14h1v1h-1zM12 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM3 15h5v1h-5zM9 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h4v1h-4zM9 17h3v1h-3zM14 17h1v1h-1zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h2v1h-2zM12 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h5v1h-5zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM16 19h3v1h-3zM23 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h3v1h-3zM6 20h3v1h-3zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h2v1h-2zM22 20h5v1h-5zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h2v1h-2zM9 21h2v1h-2zM12 21h3v1h-3zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h2v1h-2zM8 22h2v1h-2zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM6 23h2v1h-2zM10 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h3v1h-3zM13 24h3v1h-3zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h7v1h-7zM37 24h2v1h-2zM2 25h2v1h-2zM5 25h1v1h-1zM9 25h3v1h-3zM14 25h12v1h-12zM29 25h1v1h-1zM32 25h3v1h-3zM37 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h4v1h-4zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM32 26h3v1h-3zM36 26h2v1h-2zM2 27h1v1h-1zM7 27h1v1h-1zM9 27h2v1h-2zM12 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h2v1h-2zM8 28h3v1h-3zM12 28h2v1h-2zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h1v1h-1zM14 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM31 29h4v1h-4zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h2v1h-2zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM15 34h2v1h-2zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM15 35h4v1h-4zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h3v1h-3zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Scan</button>
+        <div class="seg" role="group" aria-label="Which step" id="viewSeg">
+          <button type="button" data-view="scan" aria-pressed="true">Scan the phantom</button>
+          <button type="button" data-view="curve" aria-pressed="false">CT number to stopping power</button>
+          <button type="button" data-view="range" aria-pressed="false">Range and margins</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="clock mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The step in progress: the CT scanner with the calibration phantom and its image, the proton beam line with a slab of tissue in front of a water tank, or the beam's path through a patient to the target."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The scan, the curve and the plan">
+        <span class="card-title" id="cardTitle">Calibration scan</span>
+        <div class="pick" id="kvPick"><span class="lbl" id="kvLbl">Tube voltage of the CT scan</span><div class="seg" role="group" aria-labelledby="kvLbl" id="kvSeg">
+          <button type="button" data-kv="80" aria-pressed="false">80 kV</button><button type="button" data-kv="100" aria-pressed="false">100 kV</button><button type="button" data-kv="120" aria-pressed="true">120 kV</button><button type="button" data-kv="140" aria-pressed="false">140 kV</button></div></div>
+        <div id="scanBox">
+          <div class="pick"><label for="selIns">Region of interest on</label><select id="selIns"></select></div>
+          <div class="pick"><span class="lbl" id="winLbl">Display window</span><div class="seg" role="group" aria-labelledby="winLbl" id="winSeg">
+            <button type="button" data-win="wide" aria-pressed="true">Wide</button><button type="button" data-win="soft" aria-pressed="false">Soft tissue</button></div></div>
+        </div>
+        <div id="curveBox">
+          <div class="pick"><label for="selTis">Tissue</label><select id="selTis"></select></div>
+          <div class="pick"><span class="lbl" id="curveLbl">Curves on the graph</span><div class="seg" role="group" aria-labelledby="curveLbl" id="showSeg">
+            <button type="button" data-show="both" aria-pressed="true">Both</button><button type="button" data-show="stoich" aria-pressed="false">Stoichiometric</button><button type="button" data-show="subs" aria-pressed="false">Tissue substitutes</button></div></div>
+          <label class="chk"><input type="checkbox" id="chkTef" checked> Teflon in the tissue substitute curve</label>
+          <div><div class="slider-head"><label for="sT">Slab thickness</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="1" max="6" step="0.5" data-unit="cm"></div>
+          <div class="btnrow" id="mystRow"><button type="button" class="btn" id="bNew">New mystery</button><button type="button" class="btn" id="bReveal" aria-pressed="false">Show the answer</button></div>
+        </div>
+        <div id="rangeBox">
+          <div class="pick"><label for="selSite">Patient</label><select id="selSite"></select></div>
+          <div class="pick"><span class="lbl" id="planLbl">The plan's curve</span><div class="seg" role="group" aria-labelledby="planLbl" id="planSeg">
+            <button type="button" data-plan="stoich" aria-pressed="true">Stoichiometric</button><button type="button" data-plan="subs" aria-pressed="false">Tissue substitutes</button></div></div>
+          <span class="sub">Errors (the planner does not know them)</span>
+          <div><div class="slider-head"><label for="sHU">CT number error</label><output id="oHU" class="mono" for="sHU"></output></div><input type="range" id="sHU" min="-30" max="30" step="1" data-unit="HU"></div>
+          <div><div class="slider-head"><label for="sI">Tissue I values off by</label><output id="oI" class="mono" for="sI"></output></div><input type="range" id="sI" min="-15" max="15" step="0.5" data-unit="%"></div>
+          <span class="sub">Distal margin</span>
+          <div><div class="slider-head"><label for="sA">Percentage of the range</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="0" max="6" step="0.1" data-unit="%"></div>
+          <div><div class="slider-head"><label for="sB">Plus a fixed distance</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0" max="5" step="0.1" data-unit="mm"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="The graph of the step: CT number against electron density for the phantom's inserts, stopping power ratio against CT number with both calibration curves, or the planned and delivered dose along the beam."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-ct-range.html" target="mp-ct-range-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="scan120" aria-pressed="true">Calibration scan, 120 kV</button>
+          <button type="button" data-p="scan80" aria-pressed="false">Same phantom, 80 kV</button>
+          <button type="button" data-p="curves" aria-pressed="false">Both curves</button>
+          <button type="button" data-p="bone" aria-pressed="false">Bone on the substitute curve</button>
+          <button type="button" data-p="noTef" aria-pressed="false">Substitute curve without Teflon</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery tissue</button>
+          <button type="button" data-p="brain" aria-pressed="false">Brain, 3.5 % + 1 mm</button>
+          <button type="button" data-p="prostate" aria-pressed="false">Prostate through the femoral head</button>
+          <button type="button" data-p="lung" aria-pressed="false">Lung tumor</button>
+          <button type="button" data-p="lungHU" aria-pressed="false">Lung, CT numbers 10 HU high</button>
+          <button type="button" data-p="ivals" aria-pressed="false">Prostate, tissue I values 10 % low</button>
+          <button type="button" data-p="subsPlan" aria-pressed="false">Prostate planned on the substitute curve</button>
+          <button type="button" data-p="noMargin" aria-pressed="false">Brain, no margin</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-ct-range" data-title="CT Numbers and Proton Range" data-demo="ct-range">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+window.vdReadRender=function(){render();};function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="formula">HU = 1000 (μ/μ_water − 1)</p>
+          <p class="formula">μ = ρ N_A Σ (wᵢ/Aᵢ)(Zᵢ K_KN + Zᵢ^2.86 K_coh + Zᵢ^4.62 K_ph) (Schneider et al. 1996)</p>
+          <p class="formula">RSP = S_tissue/S_water (Bethe; I from NIST, mixtures by Bragg's rule)</p>
+          <p class="formula">R_plan = WET (1 + a) + b, a = 3.5 %, b = 1 mm (Paganetti 2012)</p>
+          <p class="hint" id="about"></p></details>
+        <details class="more"><summary>Range uncertainty budget (Paganetti 2012)</summary><div class="twrap"><table class="rows" id="budget"><caption class="sr">Sources of range uncertainty</caption></table></div>
+          <p class="hint">H. Paganetti, Phys. Med. Biol. 57, R99 (2012), Table 2, as he presented it (AAPM CAMPS, Yale, 2012): estimated uncertainties of the range in a patient for treatment planning with an analytical dose calculation, each at 1.5 standard deviations. The percentages add in quadrature to 2.7 % + 1.2 mm without the last line and 4.6 % + 1.2 mm with it; with Monte Carlo dose calculation the lateral inhomogeneity term nearly vanishes and the total is about 2.4 % + 1.2 mm. Margins of 3.5 % + 1 mm come from this kind of sum.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* the demo's own physics, runnable in Node (curriculum/validation/test_ct-range.cjs). Photon cross sections and the X-ray tube
+     spectra come from lib/photondata.js (VDPHOTON, passed to useData), stopping powers and ranges from the shared core in
+     lib/vdstop.js (VDStop, passed in as V).
+
+     Materials: NIST ESTAR/PSTAR compositions by weight, densities and mean excitation energies I (physics.nist.gov/cgi-bin/Star/
+     compos.pl), except inflated lung: the ICRP lung composition at 0.26 g/cm³, the density of healthy inflated lung in ICRU Report 46
+     (NIST lists the tissue at 1.05 g/cm³, without the air). Two materials mixed by volume (cortical bone in soft tissue, and so on)
+     add their masses, and their I by Bragg's rule, ln I = Σ wᵢ (Z/A)ᵢ ln Iᵢ / Σ wᵢ (Z/A)ᵢ. */
+  const MATS = {
+    air: { name: 'Air', rho: 1.20479e-3, I: 85.7, w: { 6: 0.000124, 7: 0.755267, 8: 0.231781, 18: 0.012827 } },
+    water: { name: 'Water', rho: 1.0, I: 75.0, w: { 1: 0.111894, 8: 0.888106 } },
+    pe: { name: 'Polyethylene', rho: 0.94, I: 57.4, w: { 1: 0.143711, 6: 0.856289 } },
+    ps: { name: 'Polystyrene', rho: 1.06, I: 68.7, w: { 1: 0.077418, 6: 0.922582 } },
+    pmma: { name: 'PMMA (acrylic)', rho: 1.19, I: 74.0, w: { 1: 0.080538, 6: 0.599848, 8: 0.319614 } },
+    a150: { name: 'A-150 tissue equivalent plastic', rho: 1.127, I: 65.1, w: { 1: 0.101327, 6: 0.775501, 7: 0.035057, 8: 0.052316, 9: 0.017422, 20: 0.018378 } },
+    ms20: { name: 'MS20 tissue substitute', rho: 1.0, I: 75.1, w: { 1: 0.081192, 6: 0.583442, 7: 0.017798, 8: 0.186381, 12: 0.130287, 17: 0.0009 } },
+    b100: { name: 'B-100 bone equivalent plastic', rho: 1.45, I: 85.9, w: { 1: 0.065471, 6: 0.536945, 7: 0.0215, 8: 0.032085, 9: 0.167411, 20: 0.176589 } },
+    teflon: { name: 'Teflon (PTFE)', rho: 2.2, I: 99.1, w: { 6: 0.240183, 9: 0.759817 } },
+    lung: { name: 'Lung, inflated (ICRP)', rho: 0.26, I: 75.3, w: { 1: 0.101278, 6: 0.10231, 7: 0.02865, 8: 0.757072, 11: 0.00184, 12: 0.00073, 15: 0.0008, 16: 0.00225, 17: 0.00266, 19: 0.00194, 20: 0.00009, 26: 0.00037, 30: 0.00001 } },
+    adipose: { name: 'Adipose tissue (ICRP)', rho: 0.92, I: 63.2, w: { 1: 0.119477, 6: 0.63724, 7: 0.00797, 8: 0.232333, 11: 0.0005, 12: 0.00002, 15: 0.00016, 16: 0.00073, 17: 0.00119, 19: 0.00032, 20: 0.00002, 26: 0.00002, 30: 0.00002 } },
+    soft: { name: 'Soft tissue (ICRP)', rho: 1.0, I: 72.3, w: { 1: 0.104472, 6: 0.23219, 7: 0.02488, 8: 0.630238, 11: 0.00113, 12: 0.00013, 15: 0.00133, 16: 0.00199, 17: 0.00134, 19: 0.00199, 20: 0.00023, 26: 0.00005, 30: 0.00003 } },
+    brain: { name: 'Brain (ICRP)', rho: 1.03, I: 73.3, w: { 1: 0.110667, 6: 0.12542, 7: 0.01328, 8: 0.737723, 11: 0.00184, 12: 0.00015, 15: 0.00354, 16: 0.00177, 17: 0.00236, 19: 0.0031, 20: 0.00009, 26: 0.00005, 30: 0.00001 } },
+    muscle: { name: 'Skeletal muscle (ICRP)', rho: 1.04, I: 75.3, w: { 1: 0.100637, 6: 0.10783, 7: 0.02768, 8: 0.754773, 11: 0.00075, 12: 0.00019, 15: 0.0018, 16: 0.00241, 17: 0.00079, 19: 0.00302, 20: 0.00003, 26: 0.00004, 30: 0.00005 } },
+    blood: { name: 'Blood (ICRP)', rho: 1.06, I: 75.2, w: { 1: 0.101866, 6: 0.10002, 7: 0.02964, 8: 0.759414, 11: 0.00185, 12: 0.00004, 14: 0.00003, 15: 0.00035, 16: 0.00185, 17: 0.00278, 19: 0.00163, 20: 0.00006, 26: 0.00046, 30: 0.00001 } },
+    skin: { name: 'Skin (ICRP)', rho: 1.1, I: 72.7, w: { 1: 0.100588, 6: 0.22825, 7: 0.04642, 8: 0.619002, 11: 0.00007, 12: 0.00006, 15: 0.00033, 16: 0.00159, 17: 0.00267, 19: 0.00085, 20: 0.00015, 26: 0.00001, 30: 0.00001 } },
+    cort: { name: 'Cortical bone (ICRP)', rho: 1.85, I: 106.4, w: { 1: 0.047234, 6: 0.14433, 7: 0.04199, 8: 0.446096, 12: 0.0022, 15: 0.10497, 16: 0.00315, 20: 0.20993, 30: 0.0001 } },
+    bonec: { name: 'Compact bone (ICRU)', rho: 1.85, I: 91.9, w: { 1: 0.063984, 6: 0.278, 7: 0.027, 8: 0.410016, 12: 0.002, 15: 0.07, 16: 0.002, 20: 0.147 } },
+    muscleS: { name: 'Striated muscle (ICRU)', rho: 1.04, I: 74.7, w: { 1: 0.101997, 6: 0.123, 7: 0.035, 8: 0.729003, 11: 0.0008, 12: 0.0002, 15: 0.002, 16: 0.005, 19: 0.003 } },
+    soft4: { name: 'Soft tissue, four components (ICRU)', rho: 1.0, I: 74.9, w: { 1: 0.101172, 6: 0.111, 7: 0.026, 8: 0.761828 } },
+  };
+  /* the calibration phantom's inserts (water is the phantom itself), and the reference tissues of the stoichiometric calibration:
+     ICRP tissues, and cortical bone mixed into soft tissue by volume from 10 % to 90 %, standing in for the spongy bones between */
+  const INSERTS = ['air', 'pe', 'ps', 'ms20', 'water', 'a150', 'pmma', 'b100', 'teflon'];
+  const TISSUES = ['air', 'lung', 'adipose', 'soft', 'brain', 'muscle', 'blood', 'skin', 'b10', 'b20', 'b30', 'b40', 'b50', 'b60', 'b70', 'b80', 'b90', 'cort'];
+  /* the mystery tissues: real tissues the curve was not built from, and two mixtures that are not on it */
+  const MYSTERY = ['bonec', 'muscleS', 'soft4', 'spongy', 'marbled'];
+  let D = null; const ELC = {}, MC = {};
+  function useData(d) { D = d; for (const k in ELC) delete ELC[k]; for (const k in MC) delete MC[k]; }
+  const rowsOf = (s) => s.split(';').map((r) => r.split(',').map(Number));
+  function lastLE(xs, v) { let lo = 0, hi = xs.length - 1; if (v <= xs[0]) return 0; if (v >= xs[hi]) return hi - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (xs[m] <= v) lo = m; else hi = m; } return lo; }
+  /* log–log between XCOM table points; the row above an edge from the edge energy up (as in Photon Interactions in Matter) */
+  function interp(xs, ys, v) {
+    let i = lastLE(xs, v); if (i >= xs.length - 1) i = xs.length - 2; while (i > 0 && xs[i + 1] === xs[i]) i--;
+    if (xs[i + 1] === xs[i]) i++;
+    const a = ys[i], b = ys[i + 1], t = Math.log(v / xs[i]) / Math.log(xs[i + 1] / xs[i]);
+    return a > 0 && b > 0 ? Math.exp(Math.log(a) + t * Math.log(b / a)) : a + t * (b - a); }
+  function elem(Z) { if (ELC[Z]) return ELC[Z]; const R = rowsOf(D.xcom[Z]);
+    return ELC[Z] = { E: R.map((r) => r[0]), tot: R.map((r) => r[1] + r[2] + r[3] + r[4] + r[5]), ZA: D.tab1[Z][1] }; }
+  /* the mixture of a and b with volume fraction f of a */
+  function mix(a, b, f, name) {
+    const A = mat(a), B = mat(b), ma = f * A.rho, mb = (1 - f) * B.rho, rho = ma + mb, wa = ma / rho, w = {};
+    for (const z in A.w) w[z] = (w[z] || 0) + wa * A.w[z];
+    for (const z in B.w) w[z] = (w[z] || 0) + (1 - wa) * B.w[z];
+    const ea = wa * za(A), eb = (1 - wa) * za(B);
+    return { name: name || `${Math.round(f * 100)} % ${A.name.toLowerCase()} in ${B.name.toLowerCase()}`, rho, I: Math.exp((ea * Math.log(A.I) + eb * Math.log(B.I)) / (ea + eb)), w };
+  }
+  function mat(k) {
+    if (typeof k !== 'string') return k;
+    if (MC[k]) return MC[k];
+    let m = MATS[k];
+    if (!m && /^b\d0$/.test(k)) m = mix('cort', 'soft', +k.slice(1) / 100, `Spongy bone model, ${+k.slice(1)} % cortical bone`);
+    if (!m && k === 'spongy') m = mix('cort', 'adipose', 0.3, '30 % cortical bone in adipose tissue (fatty marrow)');
+    if (!m && k === 'marbled') m = mix('muscle', 'adipose', 0.5, 'Half muscle, half adipose tissue');
+    if (!m && k === 'femur') m = mix('cort', 'soft', 0.4, 'Femoral head, 40 % cortical bone');
+    if (m) m = { ...m, key: k };
+    return MC[k] = m;
+  }
+  /* Z/A of the material, from each element's Z/A (NIST SRD 126 Table 1, in photondata.js) */
+  function za(m) { m = mat(m); if (m.ZA) return m.ZA; let s = 0; for (const z in m.w) s += m.w[z] * elem(+z).ZA; return m.ZA = s; }
+  const ZA_W = () => za('water');
+  /* electron density relative to water */
+  const rhoE = (m) => { m = mat(m); return m.rho * za(m) / (MATS.water.rho * ZA_W()); };
+  /* linear attenuation coefficient (1/cm) from XCOM, coherent scattering included */
+  function mu(m, E) { m = mat(m); let s = 0; for (const z in m.w) { const e = elem(+z); s += m.w[z] * interp(e.E, e.tot, E); } return s * m.rho; }
+
+  /* The scanner. A stand in for a real CT, not any one model: the tube spectrum from SpekPy (tungsten, 12°, as in photondata.js),
+     through 6 mm of aluminum (the tube's own and the bowtie filter's filtration, this demo's choice) and hardened by 20 cm of water
+     (an insert at the center of the phantom), seen by an energy integrating detector (each photon counts in proportion to its
+     energy). The scanner's effective attenuation coefficient is the detected energy weighted mean of μ, and the beam hardening
+     correction makes water read 0: HU = 1000 (μ̄/μ̄_water − 1). Real scanners differ in all of this, which is why each one is
+     calibrated. */
+  const KVS = [80, 100, 120, 140], AL_MM = 6, WATER_CM = 20;
+  /* image noise, the standard deviation of one pixel (HU), and the pixels in a region of interest (2 cm across on 0.8 mm pixels):
+     this demo's choice, larger at lower kV where fewer photons get through */
+  const NOISE = { 80: 16, 100: 12, 120: 10, 140: 9 }, ROI_N = 490;
+  const SPC = {};
+  function spectrum(kv) {
+    if (SPC[kv]) return SPC[kv];
+    const s = D.spec[String(kv)].split(',').map(Number), n = s.length, out = [], al = { rho: 2.699, w: { 13: 1 } };
+    for (let i = 0; i < n; i++) { const E = kv - n + i + 0.5; if (E < 10) continue;
+      out.push([E, s[i] * E * Math.exp(-mu(al, E) * AL_MM / 10 - mu('water', E) * WATER_CM)]); }
+    const W = out.reduce((a, q) => a + q[1], 0); return SPC[kv] = out.map(([E, w]) => [E, w / W]);
+  }
+  const meanE = (kv) => spectrum(kv).reduce((a, [E, w]) => a + E * w, 0);
+  const muEff = (m, kv) => spectrum(kv).reduce((a, [E, w]) => a + w * mu(m, E), 0);
+  const huTrue = (m, kv) => 1000 * (muEff(m, kv) / muEff('water', kv) - 1);
+
+  /* Schneider, Pedroni and Lomax 1996 (Phys. Med. Biol. 41, 111): μ = ρ N_A Σᵢ (wᵢ/Aᵢ)(Zᵢ K_KN + Zᵢ^2.86 K_coh + Zᵢ^4.62 K_ph), a Compton
+     (Klein–Nishina) term, coherent scattering and the photoelectric effect. Relative to water, only k_coh = K_coh/K_KN and
+     k_ph = K_ph/K_KN are left; the scan of inserts of known composition gives them. The three sums per unit volume: */
+  function terms(m) { m = mat(m); let a = 0, b = 0, c = 0;
+    for (const z in m.w) { const Z = +z, n = m.w[z] * elem(Z).ZA / Z; a += n * Z; b += n * Math.pow(Z, 2.86); c += n * Math.pow(Z, 4.62); }
+    return [m.rho * a, m.rho * b, m.rho * c]; }
+  /* the least squares fit: r = μ/μ_w = (a + k_coh b + k_ph c)/(a_w + k_coh b_w + k_ph c_w) is linear in the k once multiplied out,
+     k_coh (b − r b_w) + k_ph (c − r c_w) = r a_w − a; each insert is weighted by 1/r², so the fit is in relative error */
+  function fitSchneider(meas) {
+    const tw = terms('water'); let A11 = 0, A12 = 0, A22 = 0, B1 = 0, B2 = 0, n = 0;
+    for (const q of meas) { if (q.key === 'water') continue; const r = q.hu / 1000 + 1, t = terms(q.key), x1 = t[1] - r * tw[1], x2 = t[2] - r * tw[2], y = r * tw[0] - t[0], w = 1 / Math.max(r, 0.05) ** 2;
+      A11 += w * x1 * x1; A12 += w * x1 * x2; A22 += w * x2 * x2; B1 += w * x1 * y; B2 += w * x2 * y; n++; }
+    const det = A11 * A22 - A12 * A12;
+    return { kc: (B1 * A22 - B2 * A12) / det, kp: (A11 * B2 - A12 * B1) / det, n };
+  }
+  function huModel(m, fit) { const t = terms(m), tw = terms('water'); return 1000 * ((t[0] + fit.kc * t[1] + fit.kp * t[2]) / (tw[0] + fit.kc * tw[1] + fit.kp * tw[2]) - 1); }
+
+  /* stopping power relative to water at T MeV (Bethe, VDStop), with the tissue's I scaled by iScale (1 = the tabulated I) */
+  const T_RSP = 150;
+  function rsp(V, m, iScale, T) { m = mat(m); return V.rsp({ name: m.name + (iScale || 1), rho: m.rho, I: m.I * (iScale || 1), ZA: za(m) }, T || T_RSP); }
+
+  /* a continuous broken line through fixed knots, fitted by least squares (the hat functions of the knots are the basis); beyond
+     the last knot it carries on along the last segment */
+  function plfit(pts, K) {
+    const n = K.length, A = Array.from({ length: n }, () => new Float64Array(n + 1));
+    const hat = (x) => { const h = new Float64Array(n); let i = 0; while (i < n - 2 && x > K[i + 1]) i++; const t = (x - K[i]) / (K[i + 1] - K[i]); h[i] = 1 - t; h[i + 1] = t; return h; };
+    for (const [x, y] of pts) { const h = hat(x); for (let i = 0; i < n; i++) { A[i][n] += h[i] * y; for (let j = 0; j < n; j++) A[i][j] += h[i] * h[j]; } }
+    for (let i = 0; i < n; i++) A[i][i] += 1e-12;
+    for (let i = 0; i < n; i++) { let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r; [A[i], A[p]] = [A[p], A[i]];
+      for (let r = 0; r < n; r++) { if (r === i) continue; const f = A[r][i] / A[i][i]; for (let c = i; c <= n; c++) A[r][c] -= f * A[i][c]; } }
+    const y = A.map((r, i) => r[n] / r[i]);
+    return { K: K.slice(), y, at: (x) => { const h = hat(x); let s = 0; for (let i = 0; i < n; i++) s += h[i] * y[i]; return Math.max(0, s); } };
+  }
+  /* knots: air, inflated lung, fat, soft tissue, bone */
+  const KNOTS = [-1000, -750, -120, 60, 1600];
+  /* the stoichiometric curve: the reference tissues' HU from the fitted model, against their stopping power ratio (Bethe) */
+  function curveStoich(V, fit) { const pts = TISSUES.map((k) => [huModel(k, fit), rsp(V, k)]); const c = plfit(pts, KNOTS); c.pts = pts; c.keys = TISSUES; return c; }
+  /* the direct curve: the inserts' measured HU against their own stopping power ratio, as if they were tissue */
+  const SUB_KNOTS = [-1000, -100, 100, 1600];   /* the phantom has no lung insert, so no knot at lung */
+  function curveSubs(V, meas) { const pts = meas.map((q) => [q.hu, rsp(V, q.key)]); const c = plfit(pts, SUB_KNOTS); c.pts = pts; c.keys = meas.map((q) => q.key); return c; }
+
+  /* a seeded generator (mulberry32), so a run can be repeated */
+  function rng32(s) { let a = s >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gaussOf(r) { let u = 0; while (!u) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  /* one scan of the phantom: each insert's region of interest, its mean and the pixels' standard deviation (simulated noise) */
+  function scan(kv, seed) {
+    const r = rng32(seed * 7919 + kv), sd = NOISE[kv];
+    return INSERTS.map((k) => { const t = huTrue(k, kv), m = t + gaussOf(r) * sd / Math.sqrt(ROI_N), s = sd * (1 + gaussOf(r) / Math.sqrt(2 * (ROI_N - 1)));
+      return { key: k, name: mat(k).name, rhoE: rhoE(k), true: t, hu: m, sd: s }; });
+  }
+  /* a region of interest on one material (the mystery slab), same noise */
+  function roi(m, kv, seed) { const r = rng32(seed * 104729 + kv), sd = NOISE[kv]; return { hu: huTrue(m, kv) + gaussOf(r) * sd / Math.sqrt(ROI_N), sd: sd * (1 + gaussOf(r) / Math.sqrt(2 * (ROI_N - 1))) }; }
+  /* the range shift of a slab t cm thick in front of the water tank, for a beam of T MeV: its water equivalent thickness (VDStop's
+     wet, the range difference in water), read to a reading noise of 0.1 mm (this demo's choice, a multilayer chamber's repeatability). Slabs go up to 6 cm, so even
+     cortical bone (about 10 cm of water) leaves the 150 MeV beam (15.8 cm range in water) a peak in the tank. */
+  const WET_NOISE_MM = 0.1, T_WET = 150;
+  function wetShift(V, m, t, seed) { const r = rng32(seed * 15485863 + Math.round(t * 100)); const truth = 10 * V.wet(t, rspMat(m), T_WET);
+    return { truth, mm: truth + WET_NOISE_MM * gaussOf(r) }; }
+  const rspMat = (m, iScale) => { m = mat(m); return { name: m.name + '|' + (iScale || 1), rho: m.rho, I: m.I * (iScale || 1), ZA: za(m), X0: 36 }; };
+
+  /* Three beam paths through a patient, from the skin to beyond the target, in cm along the beam (sketches, not anatomy):
+     a lateral beam to a brain tumor through the skull, a lateral beam to the prostate through a femoral head, and a beam through the
+     chest wall and lung to a lung tumor (taken as muscle). */
+  const SITES = {
+    brain: { name: 'Brain, lateral beam through the skull', layers: [['skin', 0.2], ['cort', 0.7], ['brain', 4.6]], target: ['brain', 3.5], beyond: 'brain', behind: 'brainstem side of the brain', half: 7.5 },
+    prostate: { name: 'Prostate, lateral beam through a femoral head', layers: [['skin', 0.2], ['adipose', 2.8], ['muscle', 3.0], ['femur', 4.5], ['muscle', 5.5]], target: ['soft', 4.0], beyond: 'muscle', behind: 'the far side of the pelvis', half: 18 },
+    lung: { name: 'Lung tumor, beam through the chest wall', layers: [['skin', 0.2], ['adipose', 1.0], ['muscle', 1.5], ['cort', 0.8], ['lung', 6.5]], target: ['muscle', 3.0], beyond: 'lung', behind: 'lung, then the mediastinum', half: 15 },
+  };
+  /* the margin recipes in use (Paganetti 2012, Phys. Med. Biol. 57, R99): a percentage of the range plus a fixed distance */
+  const RECIPES = { mgh: [3.5, 1], none: [0, 0] };
+  /* the path as segments [z0, z1, material], the target last before the tissue beyond it (drawn and computed 6 cm past the target) */
+  function path(site) { const s = SITES[site], seg = []; let z = 0;
+    for (const [m, t] of s.layers) { seg.push({ z0: z, z1: z + t, m }); z += t; }
+    const zt0 = z; seg.push({ z0: z, z1: z + s.target[1], m: s.target[0], target: true }); z += s.target[1];
+    seg.push({ z0: z, z1: z + 6, m: s.beyond, beyond: true }); return { seg, zt0, zt1: z, zEnd: z + 6 }; }
+  /* water equivalent depth (cm) at z with stopping power ratios per segment, and its inverse */
+  function wetAt(seg, rs, z) { let w = 0; for (let i = 0; i < seg.length; i++) { const s = seg[i]; if (z <= s.z0) break; w += rs[i] * (Math.min(z, s.z1) - s.z0); } return w; }
+  function zAtWet(seg, rs, w) { let acc = 0; for (let i = 0; i < seg.length; i++) { const s = seg[i], dw = rs[i] * (s.z1 - s.z0); if (acc + dw >= w) return s.z0 + (w - acc) / rs[i]; acc += dw; } const L = seg.length - 1; return seg[L].z1 + (w - acc) / rs[L]; }
+  /* the plan and what the beam really does. o: { curve (a fitted curve), kv, dHU (a CT number error added to every voxel),
+     iErr (the tissues' true I values differ from the tabulated ones by this percentage), a, b (margin: % of the range, mm) }.
+     The planning system turns each segment's CT number into a stopping power ratio with the curve and puts the distal edge of the
+     spread out peak (its R90, in water) at the target's far edge plus the margin. The protons stop where the true water equivalent
+     depth reaches that range. Stopping power ratios are taken at 150 MeV (they change by under 0.7 % from 70 to 230 MeV here). */
+  function plan(V, site, o) {
+    const P = path(site), seg = P.seg, iS = 1 + (o.iErr || 0) / 100;
+    const huT = seg.map((s) => huTrue(s.m, o.kv)), huP = huT.map((h) => h + (o.dHU || 0));
+    const rT = seg.map((s) => rsp(V, s.m, iS)), rP = huP.map((h) => o.curve.at(h)), rTab = seg.map((s) => rsp(V, s.m));
+    const wT = wetAt(seg, rT, P.zt1), wP = wetAt(seg, rP, P.zt1);
+    const R = wP * (1 + (o.a || 0) / 100) + (o.b || 0) / 10;
+    const zPlan = zAtWet(seg, rP, R), zTrue = zAtWet(seg, rT, R);
+    const Rp0 = wetAt(seg, rP, P.zt0) * (1 - (o.a || 0) / 100) - (o.b || 0) / 10;
+    const E = V.energy(R, 'water'), sig = V.sigmaR(E, 'water');
+    /* the same plan with one error source at a time, to split the range error: the curve alone, the CT number error alone, I alone */
+    const one = (rp, rt) => { const w = wetAt(seg, rp, P.zt1), RR = w * (1 + (o.a || 0) / 100) + (o.b || 0) / 10; return 10 * (zAtWet(seg, rt, RR) - zAtWet(seg, rp, RR)); };
+    const rCurve = huT.map((h) => o.curve.at(h));
+    return { P, seg, huT, huP, rT, rP, rTab, wT, wP, R, Rp0, zPlan, zTrue, err: 10 * (zTrue - zPlan), errWet: 10 * (wT - wP), over: 10 * (zTrue - P.zt1), margin: 10 * (zPlan - P.zt1),
+      covered: zTrue >= P.zt1, E, sigma: sig, parts: { curve: one(rCurve, rTab), hu: one(rP, rCurve), iv: one(rTab, rT) } };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const V = window.VDStop; useData(window.VDPHOTON);
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    scan120: { view: 'scan', kv: 120, ins: 'b100', win: 'wide', hint: 'The calibration phantom, a 20 cm water cylinder with eight inserts of known composition (polyethylene, polystyrene, MS20, A-150, PMMA, B-100, Teflon and an air hole), scanned at 120 kV. Each region of interest gives a mean CT number and the pixels\' spread. On the graph, a material with water\'s mix of elements would sit on the dashed line HU = 1000 (ρₑ − 1); the hydrogen rich plastics fall below it and the calcium in B-100 lifts it far above: the photoelectric effect grows as Z to about the fourth power per atom. The fit finds the scanner\'s two constants.' },
+    scan80: { view: 'scan', kv: 80, ins: 'b100', win: 'wide', hint: 'The same phantom at 80 kV. The lower energy photons are absorbed more by the photoelectric effect, so B-100 (calcium) and Teflon read much higher than at 120 kV, while water and the plastics barely move. The calibration belongs to one scanner at one tube voltage: change the protocol and it must be redone.' },
+    curves: { view: 'curve', kv: 120, tis: 'muscle', show: 'both', tef: true, t: 5, hint: 'Stopping power ratio against CT number. The stoichiometric curve (teal) runs through the reference tissues: their CT numbers come from the scanner\'s fitted constants and their real compositions, their stopping powers from the Bethe formula. The tissue substitute curve (violet) runs through the phantom\'s inserts as measured, as if the plastics were tissue. In the soft tissues the two differ by 2 to 3 %; look at bone.' },
+    bone: { view: 'curve', kv: 120, tis: 'cort', show: 'both', tef: true, t: 5, hint: 'Cortical bone. On the tissue substitute curve its stopping power ratio comes out about 23 % too high: the curve\'s bone end is set by Teflon, whose fluorine gives it a high stopping power for its CT number. Many phantoms carry Teflon, and it is a poor bone substitute. The stoichiometric curve, built from real bone, is within half a percent.' },
+    noTef: { view: 'curve', kv: 120, tis: 'cort', show: 'both', tef: false, t: 5, hint: 'The same curve without Teflon: B-100 alone sets the bone end, and cortical bone\'s error falls but is still several percent. A direct calibration depends on which inserts the phantom happens to have, and no plastic matches every tissue in both its photon and its proton physics. That is Schneider\'s argument for the stoichiometric method.' },
+    mystery: { view: 'curve', kv: 120, tis: 'mystery', show: 'stoich', tef: true, t: 5, hint: 'A slab of an unknown tissue, 5 cm thick. Its CT number gives the stopping power ratio the planning system would use. Measure the range shift it gives a 150 MeV beam in the water tank: that is its water equivalent thickness, and dividing by the thickness gives its real stopping power ratio. Do they agree? New mystery picks another tissue; Show the answer names it.' },
+    brain: { view: 'range', kv: 120, site: 'brain', plan: 'stoich', dHU: 0, iErr: 0, a: 3.5, b: 1, hint: 'A lateral beam to a brain tumor: skin, 7 mm of skull, then brain. The plan reads each tissue\'s stopping power ratio off the stoichiometric curve and puts the distal edge (R90) 3.5 % of the range plus 1 mm beyond the far side of the target. With no errors the beam stops where planned, give or take the curve\'s own error, and the margin is pure overshoot into the brain behind the target.' },
+    prostate: { view: 'range', kv: 120, site: 'prostate', plan: 'stoich', dHU: 0, iErr: 0, a: 3.5, b: 1, hint: 'The prostate from the side: skin, fat, muscle, 4.5 cm of femoral head, muscle, then the target, about 21 cm of water equivalent deep. The same 3.5 % is now more than 7 mm: deep targets carry the largest margins.' },
+    lung: { view: 'range', kv: 120, site: 'lung', plan: 'stoich', dHU: 0, iErr: 0, a: 3.5, b: 1, hint: 'A lung tumor behind the chest wall and 6.5 cm of inflated lung, with lung beyond it. The margin is set in water equivalent millimeters, but in lung of density 0.26 each of those is almost 4 mm of real distance: the distal margin here is well over a centimeter of lung.' },
+    lungHU: { view: 'range', kv: 120, site: 'lung', plan: 'stoich', dHU: 10, iErr: 0, a: 3.5, b: 1, hint: 'The scanner reads every CT number 10 HU high, as after a drift since its calibration. In soft tissue that is a 1 % error in stopping power; in lung, whose stopping power ratio is only about 0.26, the same 10 HU is a 4 % error, and the beam falls short by several millimeters of lung.' },
+    ivals: { view: 'range', kv: 120, site: 'prostate', plan: 'stoich', dHU: 0, iErr: -10, a: 3.5, b: 1, hint: 'Suppose the real mean excitation energies of the tissues are 10 % lower than the tabulated values the curve was built from. The stopping power goes as ln(2mₑc²β²γ²/I), so each tissue stops protons about 1.3 % harder, and a 21 cm deep plan falls short by almost 3 mm. Paganetti put the uncertainty from I values at about 1.5 % of the range.' },
+    subsPlan: { view: 'range', kv: 120, site: 'prostate', plan: 'subs', dHU: 0, iErr: 0, a: 3.5, b: 1, tef: true, hint: 'The same prostate plan computed with the tissue substitute curve (Teflon in it). The femoral head\'s stopping power is overestimated by over a tenth and the soft tissues by about 2.5 %, so the plan believes the target is deeper than it is, and the beam runs far past it, well beyond the margin.' },
+    noMargin: { view: 'range', kv: 120, site: 'brain', plan: 'stoich', dHU: 0, iErr: 0, a: 0, b: 0, hint: 'The brain plan with no distal margin: the distal edge is put exactly at the far side of the target. Any error that makes the beam fall short now leaves part of the target underdosed. Try a few millimeters of range error with the sliders.' },
+  };
+  const S = { preset: 'scan120', view: 'scan', kv: 120, ins: 'b100', win: 'wide', tis: 'muscle', show: 'both', tef: true, t: 5, site: 'brain', plan: 'stoich', dHU: 0, iErr: 0, a: 3.5, b: 1,
+    scans: 0, seed: 1, meas: null, fit: null, cS: null, cU: null, myst: 0, mSeed: 1, wet: null, reveal: false, P: null, busy: 0, busyKind: '' };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sgn = (v, d) => { if (!isFinite(v)) return '—'; const t = Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v; return (t > 0 ? '+' : '') + f(t, d); };
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), beam: g('--beam'), plan: g('--plan'), pass: g('--pass'), fail: g('--fail'),
+      band: g('--band'), sub: g('--sub'), tis: g('--tis'), myst: g('--myst'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const dark = () => window.VDGear.dark();
+  const reduced = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const busy = () => S.busy > performance.now();
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+
+  /* ---------- the model ---------- */
+  const SHORT = { air: 'Air', pe: 'Polyethylene', ps: 'Polystyrene', ms20: 'MS20', water: 'Water', a150: 'A-150', pmma: 'PMMA', b100: 'B-100', teflon: 'Teflon' };
+  const mystKey = () => MYSTERY[S.myst % MYSTERY.length];
+  function doScan() { S.meas = scan(S.kv, S.seed); S.fit = fitSchneider(S.meas); recurve(); }
+  function recurve() { S.cS = curveStoich(V, S.fit); S.cU = curveSubs(V, S.tef ? S.meas : S.meas.filter((q) => q.key !== 'teflon')); S.wet = null; rePlan(); }
+  function curveOf(which) { return which === 'subs' ? S.cU : S.cS; }
+  function rePlan() { S.P = plan(V, S.site, { curve: curveOf(S.plan), kv: S.kv, dHU: S.dHU, iErr: S.iErr, a: S.a, b: S.b }); }
+  function measureWet() { const k = mystOrTis(); S.wet = { key: k, t: S.t, ...wetShift(V, k, S.t, S.mSeed * 31 + S.myst), roi: roi(k, S.kv, S.mSeed * 17 + S.myst) }; }
+  const mystOrTis = () => (S.tis === 'mystery' ? mystKey() : S.tis);
+  function act(instant) {
+    if (S.view === 'scan') { S.seed++; S.scans++; doScan(); }
+    else if (S.view === 'curve') measureWet();
+    else rePlan();
+    S.busyKind = S.view; S.busy = !instant && !reduced() ? performance.now() + (S.view === 'range' ? 1800 : 1500) : 0; full();
+  }
+
+  /* ---------- colors of the tissues ---------- */
+  const TC = { air: ['#d6e6f5', '#1f2b38'], lung: ['#f3c7cf', '#7a4652'], adipose: ['#f2d68a', '#8a7330'], soft: ['#dd9aa0', '#9c5a62'], brain: ['#e8b3b6', '#a7737a'], muscle: ['#c75b63', '#a5505a'],
+    blood: ['#a52a35', '#8c2a33'], skin: ['#e9bca1', '#a07763'], bone: ['#efe7d2', '#c9c0a7'], water: ['#bcdcf4', '#2d5b7e'], plastic: ['#d9dde3', '#5b6573'] };
+  function tcol(k) { const d = dark() ? 1 : 0; if (/^b\d0$|cort|femur|bonec|spongy/.test(k)) return TC.bone[d]; if (k === 'muscleS' || k === 'marbled') return TC.muscle[d]; if (k === 'soft4') return TC.soft[d];
+    return (TC[k] || TC.plastic)[d]; }
+  const gray = (hu, win) => { const [lo, hi] = win === 'soft' ? [-160, 240] : [-1000, 1400]; const v = Math.max(0, Math.min(1, (hu - lo) / (hi - lo))); return Math.round(v * 255); };
+
+  /* ---------- the phantom's layout (cm from its center) and its CT image ---------- */
+  const PH_R = 10, INS_R = 1.4, RING = 6.2;
+  const insAt = (i) => { const k = INSERTS[i]; if (k === 'water') return [0, 0]; const j = INSERTS.filter((q) => q !== 'water').indexOf(k), a = -Math.PI / 2 + j * 2 * Math.PI / 8; return [RING * Math.cos(a), RING * Math.sin(a)]; };
+  let ctCan = null, ctKey = '';
+  function ctImage() {
+    const key = [S.kv, S.seed, S.win].join(); if (key === ctKey && ctCan) return ctCan; ctKey = key;
+    const n = 220, fov = 24, px = fov / n; ctCan = ctCan || document.createElement('canvas'); ctCan.width = ctCan.height = n;
+    const c = ctCan.getContext('2d'), img = c.createImageData(n, n), r = rng32(S.seed * 131 + S.kv), sd = NOISE[S.kv], hw = huTrue('water', S.kv), ha = huTrue('air', S.kv);
+    const hus = INSERTS.map((k) => huTrue(k, S.kv)), pos = INSERTS.map((_, i) => insAt(i));
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const x = -fov / 2 + (i + 0.5) * px, y = -fov / 2 + (j + 0.5) * px, rr = Math.hypot(x, y); let h = ha;
+      if (rr <= PH_R) { h = hw; for (let q = 0; q < INSERTS.length; q++) { if (INSERTS[q] === 'water') continue; const [cx, cy] = pos[q]; if (Math.hypot(x - cx, y - cy) <= INS_R) { h = hus[q]; break; } } }
+      if (rr < PH_R + 1.2 && y > PH_R - 0.2 && Math.abs(x) < 9) h = 300;   /* the couch top under the phantom */
+      const g = gray(h + gaussOf(r) * sd * (rr <= PH_R + 0.3 ? 1 : 0.4), S.win), q = 4 * (j * n + i); img.data[q] = img.data[q + 1] = img.data[q + 2] = g; img.data[q + 3] = 255; }
+    c.putImageData(img, 0, 0); return ctCan;
+  }
+
+  /* ---------- drawing: flat pictures ---------- */
+  function tag(c, s, x, y, o = {}) { const p = proj(); c.font = `${o.w || 600} ${(o.s || 10.5) * p}px ${T.ui}`; const tw = c.measureText(s).width, x0 = o.a === 'right' ? x - tw : o.a === 'center' ? x - tw / 2 : x;
+    if (x0 < 2 || x0 + tw > (o.maxX || W) - 2) return false; c.globalAlpha = 0.85; c.fillStyle = T.surface; c.beginPath(); c.roundRect(x0 - 4 * p, y - 8 * p, tw + 8 * p, 16 * p, 4 * p); c.fill(); c.globalAlpha = 1;
+    c.fillStyle = o.c || T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(s, x0, y + 0.5); return true; }
+  const cardW = () => (W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0);
+  function drawScanFlat() {
+    const G = window.VDGear, d = dark(), p = proj(), fw = W - cardW(), floorY = H - 26 * p;
+    G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H }); G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#2b3138' : '#c9ced5', front: d ? '#1d2228' : '#a7aeb8' });
+    /* the gantry seen from the front, the phantom in its bore, and the image beside it */
+    const big = fw > 640, cx = big ? fw * 0.28 : fw / 2, cy = H * 0.47, R = Math.min(big ? fw * 0.24 : fw * 0.42, H * 0.4), bore = R * 0.52;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, floorY); ctx.clip();
+    G.box(ctx, cx - R * 0.9, cy + R * 0.55, R * 1.8, floorY - cy - R * 0.55, { color: d ? '#29313c' : '#c3c9d1', r: 6 * p, shadow: false });
+    ctx.fillStyle = d ? '#323b48' : '#e3e7ec'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.moveTo(cx + bore, cy); ctx.arc(cx, cy, bore, 0, 2 * Math.PI, true); ctx.fill('evenodd');
+    ctx.strokeStyle = d ? '#46505e' : '#b5bdc7'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, bore, 0, 7); ctx.stroke();
+    /* the tube and the detector arc going round inside the ring while it scans */
+    const t = performance.now() / 1000, ang = busy() && S.busyKind === 'scan' ? t * 4.2 : -Math.PI / 2, rt = (R + bore) / 2;
+    const tx = cx + rt * Math.cos(ang), ty = cy + rt * Math.sin(ang);
+    if (busy() && S.busyKind === 'scan') { ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,190,90,0.18)'; ctx.beginPath(); ctx.moveTo(tx, ty);
+      ctx.arc(cx, cy, rt, ang + Math.PI - 0.55, ang + Math.PI + 0.55); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    ctx.fillStyle = d ? '#6b7786' : '#566273'; ctx.beginPath(); ctx.arc(tx, ty, 9 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = d ? '#8b96a5' : '#7b8796'; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.arc(cx, cy, rt, ang + Math.PI - 0.5, ang + Math.PI + 0.5); ctx.stroke();
+    ctx.restore();
+    /* the phantom: water with its inserts, in the bore */
+    const k = bore * 0.78 / PH_R;
+    ctx.fillStyle = d ? '#2d5b7e' : '#bcdcf4'; ctx.beginPath(); ctx.arc(cx, cy, PH_R * k, 0, 7); ctx.fill(); ctx.strokeStyle = d ? '#7fb2d8' : '#5b8db5'; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    INSERTS.forEach((key, i) => { if (key === 'water') return; const [x, y] = insAt(i); const g = gray(huTrue(key, S.kv), 'wide'); ctx.fillStyle = `rgb(${g},${g},${g})`; ctx.beginPath(); ctx.arc(cx + x * k, cy + y * k, INS_R * k, 0, 7); ctx.fill();
+      if (key === S.ins) { ctx.strokeStyle = T.beam; ctx.lineWidth = 2.2 * p; ctx.stroke(); } });
+    if (S.ins === 'water') { ctx.strokeStyle = T.beam; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.arc(cx, cy, INS_R * k, 0, 7); ctx.stroke(); }
+    G.label(ctx, 'CT gantry with the calibration phantom', cx, Math.max(14 * p, cy - R - 10 * p), { a: 'center', s: 10 * p });
+    /* the image on the console */
+    if (big) { const side = Math.min(fw * 0.4, H * 0.72), x0 = fw * 0.56, y0 = (H - side) / 2 - 6 * p;
+      G.box(ctx, x0 - 8 * p, y0 - 8 * p, side + 16 * p, side + 16 * p, { color: d ? '#1b2129' : '#2a3038', r: 6 * p });
+      ctx.imageSmoothingEnabled = true; ctx.drawImage(ctImage(), x0, y0, side, side); drawRoiMarks(ctx, x0, y0, side);
+      G.label(ctx, `the image, ${S.kv} kV, window ${S.win === 'soft' ? '−160 to 240' : '−1000 to 1400'} HU`, x0 + side / 2, y0 + side + 20 * p, { a: 'center', s: 10 * p }); }
+    else { const side = Math.min(fw * 0.32, H * 0.36); ctx.drawImage(ctImage(), fw - side - 10 * p, 10 * p, side, side); drawRoiMarks(ctx, fw - side - 10 * p, 10 * p, side); }
+  }
+  function drawRoiMarks(c, x0, y0, side) { const p = proj(), k = side / 24, i = INSERTS.indexOf(S.ins), [x, y] = insAt(i);
+    c.strokeStyle = '#facc15'; c.lineWidth = 1.6 * p; c.beginPath(); c.arc(x0 + (12 + x) * k, y0 + (12 + y) * k, INS_R * 0.8 * k, 0, 7); c.stroke();
+    if (side > 200) { c.font = `${9.5 * p}px ${T.ui}`; c.fillStyle = 'rgba(250,250,210,0.9)'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      INSERTS.forEach((key, q) => { if (key === 'water') return; const [a, b] = insAt(q), rr = Math.hypot(a, b), lx = a / rr * (RING + 2.6), ly = b / rr * (RING + 2.6); c.fillText(SHORT[key], x0 + (12 + lx) * k, y0 + (12 + ly) * k); }); } }
+
+  /* the beam line: nozzle, the slab, the water tank, and where the peak falls with and without the slab */
+  function wetState() { const k = mystOrTis(), t = S.t, R0 = V.range(T_WET, 'water'), w = S.wet && S.wet.key === k && S.wet.t === t ? S.wet : null; return { k, t, R0, w }; }
+  function drawCurveFlat() {
+    const G = window.VDGear, d = dark(), p = proj(), fw = W - cardW(), floorY = H - 26 * p, q = wetState();
+    G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H }); G.bench(ctx, 0, floorY, W, 8 * p, H - floorY);
+    const x0 = 16 * p, x1 = fw - 16 * p, by = H * 0.5, tank0 = x0 + (x1 - x0) * 0.36, cm = (x1 - tank0 - 10 * p) / 22, th = Math.min(H * 0.42, 150 * p);
+    /* the nozzle */
+    G.box(ctx, x0, by - 26 * p, 70 * p, 52 * p, { color: d ? '#4a5563' : '#566273', r: 6 * p }); G.plate(ctx, 'nozzle', x0 + 35 * p, by - 34 * p, { s: 7 * p });
+    /* the slab, drawn to the tank's scale */
+    const sw = Math.max(6 * p, q.t * cm), sx = tank0 - 20 * p - sw;
+    ctx.fillStyle = tcol(q.k); ctx.fillRect(sx, by - th * 0.42, sw, th * 0.84); ctx.strokeStyle = d ? '#0b0f14' : '#4b5563'; ctx.lineWidth = 1; ctx.strokeRect(sx + 0.5, by - th * 0.42 + 0.5, sw - 1, th * 0.84 - 1);
+    tag(ctx, S.tis === 'mystery' ? `mystery tissue, ${f(q.t, 1)} cm` : `${mat(q.k).name.replace(/ \(.*\)/, '')}, ${f(q.t, 1)} cm`, sx + sw / 2, by - th * 0.42 - 14 * p, { a: 'center', maxX: fw });
+    /* the tank */
+    const ty0 = by - th / 2; ctx.fillStyle = d ? 'rgba(80,140,200,0.28)' : 'rgba(150,200,240,0.45)'; ctx.fillRect(tank0, ty0, x1 - tank0, th);
+    ctx.strokeStyle = d ? '#7fb2d8' : '#5b8db5'; ctx.lineWidth = 2 * p; ctx.strokeRect(tank0, ty0, x1 - tank0, th);
+    ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let z = 0; z <= 22; z += 2) { const x = tank0 + z * cm; ctx.fillRect(x, ty0 + th - 6 * p, 1, 6 * p); if (z % 4 === 0) ctx.fillText(String(z), x, ty0 + th + 3 * p); }
+    G.label(ctx, 'water tank, depth in cm', tank0 + 4 * p, ty0 - 10 * p, { s: 10 * p });
+    /* the beam and its peak: without the slab (ghost), and with it */
+    const zNo = q.R0, zWith = q.w ? q.R0 - q.w.mm / 10 : NaN, b = busy() && S.busyKind === 'curve', prog = b ? Math.min(1, 1 - (S.busy - performance.now()) / 1500) : 1;
+    ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(tank0 + zNo * cm, by, 8 * p, 0, 7); ctx.stroke(); ctx.restore();
+    tag(ctx, `no slab: ${f(zNo, 2)} cm`, tank0 + zNo * cm, by + 26 * p, { a: 'center', w: 400, maxX: fw });
+    if (q.w || b) { const zEnd = isFinite(zWith) ? zWith : zNo, xe = tank0 + zEnd * cm, xs = x0 + 70 * p, xx = xs + (xe - xs) * prog;
+      ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = T.beam; ctx.lineWidth = 3 * p; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.moveTo(xs, by); ctx.lineTo(xx, by); ctx.stroke();
+      if (prog >= 1) { const g = ctx.createRadialGradient(xe, by, 0, xe, by, 16 * p); g.addColorStop(0, 'rgba(255,220,140,1)'); g.addColorStop(1, 'rgba(255,140,40,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(xe, by, 16 * p, 0, 7); ctx.fill(); }
+      ctx.restore();
+      if (prog >= 1 && q.w) tag(ctx, `with slab: ${f(zWith, 2)} cm, shift ${f(q.w.mm, 2)} mm`, xe, by - 24 * p, { a: 'center', maxX: fw }); }
+    else tag(ctx, 'press Measure to send the beam', (tank0 + x1) / 2, by - 24 * p, { a: 'center', w: 400, maxX: fw });
+    G.label(ctx, `${T_WET} MeV pencil beam`, x0, by + 40 * p, { s: 10 * p });
+  }
+
+  /* the patient: the path's layers along the beam inside an outline, the target, and the dose of the plan and of the delivery */
+  function drawRangeFlat() {
+    const G = window.VDGear, d = dark(), p = proj(), fw = W - cardW(), P = S.P, seg = P.seg, zEnd = P.P.zEnd;
+    G.backdrop(ctx, W, H, { horizon: 0.98 }); ctx.save(); ctx.beginPath(); ctx.rect(0, 0, fw, H); ctx.clip();
+    const x0 = 34 * p, x1 = fw - 16 * p, cm = (x1 - x0) / zEnd, cy = H * 0.5, bh = Math.min(H * 0.5, 170 * p);
+    /* the body outline: skin to the far side */
+    const half = SITES[S.site].half, ex = x0 + half * cm, rx = half * cm, ry = Math.min(H * 0.42, rx * (S.site === 'brain' ? 1.2 : 0.62));
+    ctx.fillStyle = d ? '#3a2f2c' : '#f3e1d6'; ctx.beginPath(); ctx.ellipse(ex, cy, rx, ry, 0, 0, 7); ctx.fill(); ctx.strokeStyle = d ? '#6b5650' : '#c9a796'; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    /* the layers in the beam's band */
+    for (const s of seg) { ctx.fillStyle = tcol(s.m); ctx.fillRect(x0 + s.z0 * cm, cy - bh / 2, (s.z1 - s.z0) * cm + 0.5, bh); }
+    ctx.strokeStyle = d ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1; for (const s of seg) { ctx.beginPath(); ctx.moveTo(x0 + s.z0 * cm, cy - bh / 2); ctx.lineTo(x0 + s.z0 * cm, cy + bh / 2); ctx.stroke(); }
+    /* the target */
+    const tx0 = x0 + P.P.zt0 * cm, tx1 = x0 + P.P.zt1 * cm; ctx.save(); ctx.setLineDash([5 * p, 3 * p]); ctx.strokeStyle = d ? '#fde68a' : '#7c2d12'; ctx.lineWidth = 2 * p;
+    ctx.beginPath(); ctx.ellipse((tx0 + tx1) / 2, cy, (tx1 - tx0) / 2, Math.min(bh * 0.42, (tx1 - tx0) / 2 * 1.4), 0, 0, 7); ctx.stroke(); ctx.restore();
+    /* the dose: the plan in the top half, the delivery in the bottom, as an orange wash */
+    const b = busy() && S.busyKind === 'range', prog = b ? Math.min(1, 1 - (S.busy - performance.now()) / 1800) : 1;
+    const wash = (top, rs, alpha) => { const g = ctx.createLinearGradient(x0, 0, x1, 0), n = 160;
+      for (let i = 0; i <= n; i++) { const z = zEnd * i / n, D = z > zEnd * prog ? 0 : doseAt(z, rs); g.addColorStop(i / n, `rgba(${d ? '255,150,60' : '234,88,12'},${(alpha * D).toFixed(3)})`); }
+      ctx.fillStyle = g; ctx.fillRect(x0, top, x1 - x0, bh / 2); };
+    wash(cy - bh / 2, P.rP, 0.55); wash(cy, P.rT, 0.75);
+    ctx.strokeStyle = d ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.moveTo(x0, cy); ctx.lineTo(x1, cy); ctx.stroke();
+    tag(ctx, 'plan', x0 + 4 * p, cy - bh / 2 + 10 * p, { w: 700, maxX: fw }); tag(ctx, 'delivered', x0 + 4 * p, cy + bh / 2 - 10 * p, { w: 700, maxX: fw });
+    /* the edges */
+    const vline = (z, col, dash, txt, y) => { const x = x0 + z * cm; ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; if (dash) ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, cy - bh / 2 - 8 * p); ctx.lineTo(x, cy + bh / 2 + 8 * p); ctx.stroke(); ctx.restore(); if (txt) tag(ctx, txt, x, y, { a: 'center', maxX: fw }); };
+    vline(P.P.zt1, d ? '#fde68a' : '#7c2d12', true, null);
+    if (prog >= 1) { vline(P.zPlan, T.plan, true, `planned R90 ${f(P.zPlan, 2)} cm`, cy - bh / 2 - 18 * p); vline(P.zTrue, T.beam, false, `real R90 ${f(P.zTrue, 2)} cm`, cy + bh / 2 + 18 * p); }
+    /* the beam coming in */
+    ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; ctx.strokeStyle = T.beam; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(4 * p, cy); ctx.lineTo(x0 - 2 * p, cy); ctx.stroke();
+    ctx.fillStyle = T.beam; ctx.beginPath(); ctx.moveTo(x0 - 2 * p, cy); ctx.lineTo(x0 - 10 * p, cy - 5 * p); ctx.lineTo(x0 - 10 * p, cy + 5 * p); ctx.fill(); ctx.restore();
+    G.label(ctx, SITES[S.site].name, 8 * p, 14 * p, { s: 10.5 * p, c: T.ink });
+    G.label(ctx, `layers to scale along the beam; ${f(zEnd, 1)} cm shown`, 8 * p, 30 * p, { s: 9.5 * p });
+    ctx.restore();
+  }
+  /* the dose along the beam (cm) for stopping power ratios rs: a flat spread out peak from the planned proximal to the distal edge, each
+     edge falling as an error function of the range straggling σ (Bohr), in water equivalent depth; the entrance dose is sketched */
+  function doseAt(z, rs) { const P = S.P, w = wetAt(P.seg, rs, z), sg = Math.max(0.05, P.sigma), Rd = P.R, Rp = Math.max(0, P.Rp0);
+    const dist = 0.5 * erfc((w - Rd) / (Math.SQRT2 * sg)), prox = w >= Rp ? 1 : 0.45 + 0.55 * Math.pow(w / Math.max(Rp, 0.01), 2);
+    return dist * prox; }
+  const erfc = (x) => V.erfc(x);
+
+  /* ---------- the 3D views (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+     Scan: the CT room roughly to scale: the gantry ring (its covers see through, so the tube and the detector arc show as they turn), the
+     couch, the 20 cm phantom with its inserts in the bore, and the console showing the image. Curve: the beam line, the slab and the
+     water tank, the peak where the protons stop (to scale). Range: the patient's outline see through, the layers on the beam's path,
+     the target, and the dose of the plan and of the delivery, to scale along the beam. Sizes in meters, z up. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.45, ph: 1.12, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  function init3() {
+    const st = VD3K.stage($('scene'), { before: can, shadow: 2.2, fov: 30, far: 40, fogAt: [2.2, 4.5] }); if (!st) return false;
+    st.el.hidden = true; st.sun.position.set(1.2, -2.4, 5); st.sun.shadow.bias = -0.0006;
+    const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#c9ced5', '#2b323b'])), K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
+    const g = { scan: new THREE.Group(), curve: new THREE.Group(), range: new THREE.Group() }; for (const k in g) sc.add(g[k]);
+    /* the CT room */
+    const GC = 1.05, RO = 0.95, RI = 0.36, DEP = 0.7;
+    { const G = g.scan, shell = M({ roughness: 0.6, metalness: 0.1 }, ['#e3e7ec', '#3b4553']), cover = new THREE.MeshStandardMaterial({ color: 0xdfe5ec, transparent: true, opacity: 0.28, roughness: 0.3, depthWrite: false, side: THREE.DoubleSide });
+      st.onTheme((dk) => cover.color.set(dk ? '#5a6878' : '#dfe5ec'));
+      const ring = new THREE.Group(); ring.position.set(0, 0, GC); G.add(ring);
+      const outer = mesh(new THREE.CylinderGeometry(RO, RO, DEP, 72, 1, true), shell, true), inner = mesh(new THREE.CylinderGeometry(RI, RI, DEP, 72, 1, true), shell);
+      ring.add(outer, inner); for (const y of [-DEP / 2, DEP / 2]) { const c = new THREE.Mesh(new THREE.RingGeometry(RI, RO, 72), cover); c.rotation.x = Math.PI / 2; c.position.y = y; c.renderOrder = 3; ring.add(c); }
+      G.add(K.box(1.5, DEP, GC - RO + 0.25, shell, 0, 0, 0));
+      /* the rotating tube and detector arc */
+      const rot = new THREE.Group(); rot.position.set(0, 0, GC); G.add(rot);
+      const tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#6b7786', '#8b96a5']); const tube = K.box(0.16, 0.22, 0.12, tubeM, 0, 0, 0); tube.position.set(0, 0, 0.62); rot.add(tube);
+      const arc = mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.12, 40, 1, true, Math.PI - 0.5, 1.0), M({ roughness: 0.5, metalness: 0.3, side: THREE.DoubleSide }, ['#4b5563', '#9aa3ae'])); arc.rotation.x = Math.PI / 2; rot.add(arc);
+      const fanM = new THREE.MeshBasicMaterial({ color: 0xffbe5a, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide });
+      const fg = new THREE.BufferGeometry(), pts = [0, 0, 0.62]; for (let i = 0; i <= 16; i++) { const a = -Math.PI / 2 - 0.5 + i / 16; pts.push(0.8 * Math.cos(a), 0, 0.8 * Math.sin(a)); }
+      const idx = []; for (let i = 1; i <= 16; i++) idx.push(0, i, i + 1); fg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); fg.setIndex(idx);
+      const fan = new THREE.Mesh(fg, fanM); fan.renderOrder = 4; rot.add(fan);
+      /* the couch and the phantom */
+      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+      G.add(K.box(0.4, 0.9, 0.03, colM, 0, -1.35, 0), K.box(0.26, 0.4, GC - 0.13 - 0.03 - 0.12, colM, 0, -1.35, 0.03), K.box(0.42, 2.0, 0.04, couchM, 0, -0.75, GC - 0.13 - 0.12));
+      const phM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.38, roughness: 0.2, depthWrite: false }); st.onTheme((dk) => phM.color.set(dk ? '#4f86b3' : '#9ccbee'));
+      const ph = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.16, 64), phM); ph.position.set(0, 0, GC); ph.renderOrder = 2; G.add(ph);
+      const insG = new THREE.Group(); insG.position.set(0, 0, GC); G.add(insG); const insM = [];
+      INSERTS.forEach((k, i) => { if (k === 'water') return; const [x, y] = insAt(i), m = new THREE.MeshStandardMaterial({ roughness: 0.4 }), c = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.162, 24), m); c.position.set(x / 100, 0, -y / 100); insG.add(c); insM.push([k, m]); });
+      /* the console with the image */
+      const ctTex = new THREE.CanvasTexture(document.createElement('canvas')), desk = M({ roughness: 0.7 }, ['#cdbb9d', '#3a3229']);
+      G.add(K.box(0.9, 0.5, 0.04, desk, -1.6, -0.6, 0.74)); for (const [x, y] of [[-0.4, -0.2], [0.4, -0.2], [-0.4, 0.2], [0.4, 0.2]]) G.add(K.rod([-1.6 + x, -0.6 + y, 0], [-1.6 + x, -0.6 + y, 0.74], 0.015, colM));
+      const mon = K.box(0.5, 0.03, 0.42, M({ roughness: 0.4 }, ['#2a3038', '#1b2129']), -1.6, -0.55, 0.85); G.add(mon, K.rod([-1.6, -0.55, 0.78], [-1.6, -0.55, 0.85], 0.02, colM));
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.4), new THREE.MeshBasicMaterial({ map: ctTex })); scr.rotation.x = Math.PI / 2; scr.position.set(-1.6, -0.567, 1.06); G.add(scr);
+      Object.assign(g, { rot, fan, insM, ctTex, scrKey: '', GC }); }
+    /* the beam line */
+    const BZ = 1.0;
+    { const G = g.curve, desk = M({ roughness: 0.6, metalness: 0.15 }, ['#9aa3ae', '#29313c']);
+      G.add(K.box(1.5, 0.6, 0.06, desk, 0.05, 0, BZ - 0.18));
+      for (const [x, y] of [[-0.65, -0.25], [0.75, -0.25], [-0.65, 0.25], [0.75, 0.25]]) G.add(K.rod([x, y, 0], [x, y, BZ - 0.18], 0.02, desk));
+      const noz = K.box(0.16, 0.16, 0.16, M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), -0.66, 0, BZ - 0.08); G.add(noz);
+      const slabM = new THREE.MeshStandardMaterial({ roughness: 0.6 }), slab = mesh(new THREE.BoxGeometry(1, 0.16, 0.16), slabM, true); slab.position.z = BZ; G.add(slab);
+      const tankM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.3, roughness: 0.1, depthWrite: false }); st.onTheme((dk) => tankM.color.set(dk ? '#4f86b3' : '#9ccbee'));
+      const T0 = -0.25, TL = 0.24; const tank = new THREE.Mesh(new THREE.BoxGeometry(TL, 0.22, 0.24), tankM); tank.position.set(T0 + TL / 2, 0, BZ - 0.03); tank.renderOrder = 2; G.add(tank);
+      const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(TL, 0.22, 0.24)), new THREE.LineBasicMaterial({ color: 0x5b8db5 })); frame.position.copy(tank.position); G.add(frame);
+      const rule = K.ruler(st, { len: 0.2, to: 20, unit: 'cm' }); rule.position.set(T0, -0.115, BZ - 0.145); G.add(rule);
+      const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 10), beamM); beam.rotation.z = Math.PI / 2; beam.renderOrder = 5; G.add(beam);
+      const gcv = document.createElement('canvas'); gcv.width = gcv.height = 64; { const c = gcv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); }
+      const glowTex = new THREE.CanvasTexture(gcv), peak = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffd08a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); peak.scale.set(0.05, 0.05, 1); peak.renderOrder = 6; G.add(peak);
+      const ghost = new THREE.Mesh(new THREE.TorusGeometry(0.012, 0.0015, 8, 32), new THREE.MeshBasicMaterial({ color: 0x8892a0 })); ghost.rotation.y = Math.PI / 2; G.add(ghost);
+      Object.assign(g, { slab, slabM, beam, beamM, peak, ghost, T0, BZ, glowTex }); }
+    /* the patient */
+    { const G = g.range, skinM = new THREE.MeshStandardMaterial({ color: 0xf0d5c4, transparent: true, opacity: 0.22, roughness: 0.6, depthWrite: false, side: THREE.DoubleSide });
+      st.onTheme((dk) => skinM.color.set(dk ? '#8a6a5c' : '#f0d5c4'));
+      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+      const body = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), skinM); body.renderOrder = 3; G.add(body);
+      const table = K.box(0.5, 1.9, 0.04, couchM, 0, -0.2, 0.86); G.add(table, K.box(0.3, 0.4, 0.83, colM, 0, -0.6, 0.03));
+      const lay = new THREE.Group(); G.add(lay);
+      const tgtM = new THREE.MeshStandardMaterial({ color: 0xfde68a, transparent: true, opacity: 0.35, roughness: 0.5, depthWrite: false }), tgt = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), tgtM); tgt.renderOrder = 4; G.add(tgt);
+      const doseM = new THREE.MeshBasicMaterial({ color: 0xff8a3d, transparent: true, opacity: 0.32, depthWrite: false }), dose = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), doseM); dose.renderOrder = 5; G.add(dose);
+      const edge = (col) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide })); m.rotation.y = Math.PI / 2; m.renderOrder = 6; G.add(m); return m; };
+      const ePlan = edge(0x2563eb), eTrue = edge(0xea580c);
+      const noz = K.box(0.14, 0.14, 0.14, M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), 0, 0, 0); G.add(noz);
+      const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 10), beamM); beam.rotation.z = Math.PI / 2; beam.renderOrder = 7; G.add(beam);
+      Object.assign(g, { body, lay, tgt, tgtM, dose, doseM, ePlan, eTrue, rNoz: noz, rBeam: beam, rBeamM: beamM, layKey: '' }); }
+    g3 = { st, g };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.45, phMax: 1.5, zMin: 0.5, zMax: 2.6, grab: () => !use3() });
+    return true;
+  }
+  const TABLE_Z = 0.9 + 0.04;
+  function draw3() {
+    const { st, g } = g3, p = proj(), dk = dark(), fw = W - cardW(), t = performance.now() / 1000, b = busy();
+    for (const k of ['scan', 'curve', 'range']) g[k].visible = S.view === k;
+    let target = [0, 0, 1], dist = 3.6;
+    if (S.view === 'scan') {
+      const sp = b && S.busyKind === 'scan'; g.rot.rotation.y = sp ? t * 4.2 : 0; g.fan.visible = sp;
+      for (const [k, m] of g.insM) { const v = gray(huTrue(k, S.kv), 'wide') / 255; m.color.setRGB(v, v, v); m.emissive = new THREE.Color(k === S.ins ? (dk ? 0x7a3a10 : 0x5a2a00) : 0x000000); }
+      const key = [ctKey, S.kv, S.seed, S.win, S.ins].join(); if (key !== g.scrKey) { g.scrKey = key; const cv = g.ctTex.image; cv.width = cv.height = 256; const c = cv.getContext('2d'); c.imageSmoothingEnabled = true; c.drawImage(ctImage(), 0, 0, 256, 256); drawRoiMarks(c, 0, 0, 256); g.ctTex.needsUpdate = true; }
+      target = [-0.35, -0.3, 1.0]; dist = 2.7;
+    } else if (S.view === 'curve') {
+      const q = wetState(), cm = 0.01, sx = g.T0 - 0.03 - q.t * cm / 2; g.slab.scale.set(q.t * cm, 1, 1); g.slab.position.set(sx, 0, g.BZ); g.slabM.color.set(tcol(q.k));
+      const zNo = q.R0, zW = q.w ? q.R0 - q.w.mm / 10 : NaN, sp = b && S.busyKind === 'curve', prog = sp ? Math.min(1, 1 - (S.busy - performance.now()) / 1500) : 1;
+      g.ghost.position.set(g.T0 + zNo * cm, 0, g.BZ);
+      const on = !!q.w || sp, xe = g.T0 + (isFinite(zW) ? zW : zNo) * cm, xs = -0.58, xx = xs + (xe - xs) * prog;
+      g.beam.visible = on; g.peak.visible = on && prog >= 1; if (on) { g.beam.scale.set(1, Math.max(0.001, xx - xs), 1); g.beam.position.set((xs + xx) / 2, 0, g.BZ); g.beamM.color.set(T.beam); g.beamM.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; g.peak.position.set(xe, 0, g.BZ); }
+      target = [-0.3, 0, 0.98]; dist = 1.25;
+    } else {
+      const P = S.P, s = SITES[S.site], cm = 0.01, half = s.half * cm, x0 = -half, zc = TABLE_Z + (S.site === 'brain' ? 0.1 : 0.12);
+      const r = S.site === 'brain' ? [half, 0.095, 0.095] : [half, 0.3, S.site === 'prostate' ? 0.12 : 0.11];
+      g.body.scale.set(r[0], r[1], r[2]); g.body.position.set(0, 0, zc);
+      const key = [S.site, dk].join(); if (key !== g.layKey) { g.layKey = key; while (g.lay.children.length) st.dispose(g.lay.children[0]);
+        for (const sgm of P.seg) { const m = new THREE.MeshStandardMaterial({ color: tcol(sgm.m), roughness: 0.6, transparent: sgm.beyond, opacity: sgm.beyond ? 0.5 : 1 }), bx = new THREE.Mesh(new THREE.BoxGeometry((sgm.z1 - sgm.z0) * cm, 0.045, 0.045), m);
+          bx.position.set(x0 + (sgm.z0 + sgm.z1) / 2 * cm, 0, zc); g.lay.add(bx); } }
+      const tr = (P.P.zt1 - P.P.zt0) / 2 * cm; g.tgt.scale.set(tr, tr * 1.3, tr * 1.2); g.tgt.position.set(x0 + (P.P.zt0 + P.P.zt1) / 2 * cm, 0, zc);
+      const sp = b && S.busyKind === 'range', prog = sp ? Math.min(1, 1 - (S.busy - performance.now()) / 1800) : 1;
+      const zp = Math.max(0, zAtWet(P.seg, P.rT, Math.max(0, P.Rp0))), ze = P.zTrue, zz = zp + (ze - zp) * prog;
+      g.dose.visible = true; g.dose.scale.set(Math.max(0.001, (zz - zp) * cm), 0.06, 0.06); g.dose.position.set(x0 + (zp + zz) / 2 * cm, 0, zc);
+      g.ePlan.position.set(x0 + P.zPlan * cm, 0, zc); g.ePlan.scale.set(0.09, 0.09, 1); g.eTrue.position.set(x0 + P.zTrue * cm, 0, zc); g.eTrue.scale.set(0.09, 0.09, 1); g.eTrue.visible = prog >= 1;
+      g.rNoz.position.set(x0 - 0.3, 0, zc - 0.07); g.rBeam.scale.set(1, 0.23, 1); g.rBeam.position.set(x0 - 0.115, 0, zc); g.rBeamM.color.set(T.beam);
+      target = [x0 * 0.35, 0, zc]; dist = S.site === 'brain' ? 0.62 : S.site === 'lung' ? 0.95 : 1.1;
+    }
+    const k = Math.max(1, 1.45 / (fw / H)); st.size(W, H); st.place(G3.o, target, dist * k);
+    if (cardW()) st.cam.setViewOffset(W, H, cardW() / 2, 0, W, H); else st.cam.clearViewOffset();
+    st.render();
+    /* words over the picture */
+    const Q = (x, y, z) => st.project([x, y, z]);
+    if (S.view === 'scan') { { const [x, y] = Q(0, -0.36, g.GC + 0.42); tag(ctx, 'CT gantry: tube and detector inside the ring', x, y, { a: 'center', maxX: fw }); }
+      { const [x, y] = Q(0.12, -0.1, g.GC - 0.12); tag(ctx, 'phantom', x, y, { maxX: fw }); } { const [x, y] = Q(-1.6, -0.6, 1.3); tag(ctx, `console: the image, ${S.kv} kV`, x, y, { a: 'center', maxX: fw }); } }
+    else if (S.view === 'curve') { const q = wetState(); { const [x, y] = Q(g.T0 - 0.03, 0, g.BZ + 0.11); tag(ctx, S.tis === 'mystery' ? `mystery tissue, ${f(q.t, 1)} cm` : `${mat(q.k).name.replace(/ \(.*\)/, '')}, ${f(q.t, 1)} cm`, x, y, { a: 'center', maxX: fw }); }
+      { const [x, y] = Q(g.T0 + 0.12, 0, g.BZ + 0.14); tag(ctx, 'water tank', x, y, { a: 'center', maxX: fw }); }
+      if (q.w) { const [x, y] = Q(g.T0 + (q.R0 - q.w.mm / 10) * 0.01, 0, g.BZ - 0.05); tag(ctx, `peak ${f(q.R0 - q.w.mm / 10, 2)} cm (no slab ${f(q.R0, 2)})`, x, y + 14 * p, { a: 'center', maxX: fw }); } }
+    else { const P = S.P, x0 = -SITES[S.site].half * 0.01, zc = g.tgt.position.z; { const [x, y] = Q(g.tgt.position.x, 0, zc + 0.06); tag(ctx, 'target', x, y, { a: 'center', maxX: fw }); }
+      { const [x, y] = Q(x0 + P.zPlan * 0.01, 0, zc - 0.06); tag(ctx, 'planned R90', x, y + 6 * p, { a: 'center', c: T.plan, maxX: fw }); }
+      if (g.eTrue.visible) { const [x, y] = Q(x0 + P.zTrue * 0.01, 0, zc + 0.06); tag(ctx, 'real R90', x, y - 6 * p, { a: 'center', c: T.beam, maxX: fw }); } }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const lines = [S.view === 'scan' ? `CT scan at ${S.kv} kV` : S.view === 'curve' ? `${T_WET} MeV beam, water tank` : SITES[S.site].name,
+      S.view === 'range' ? 'To scale along the beam; the layers are a strip on the beam\'s path.' : 'Roughly to scale; the beam drawn as a line.', fw < 520 ? 'Drag to turn.' : 'Drag to turn the view.'];
+    const lw = Math.max(...lines.map((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 10.5) * p}px ${T.ui}`; return ctx.measureText(s).width; }));
+    if (lw + 20 * p < fw) { ctx.globalAlpha = 0.8; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(6 * p, 5 * p, lw + 10 * p, 47 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+      lines.forEach((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 10.5) * p}px ${T.ui}`; ctx.fillStyle = i ? T.muted : T.ink; ctx.fillText(s, 11 * p, (9 + 14 * i) * p); }); }
+  }
+
+  /* ---------- the graphs ---------- */
+  function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
+  function axes(c, L, R, top, bot, xa, xb, ya, yb, xl, yl, p, nx = 6) {
+    const X = (v) => L + (v - xa) / (xb - xa) * (R - L), Y = (v) => bot - (v - ya) / (yb - ya) * (bot - top);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`;
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const v of niceTicks(ya, yb, 5)) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(R, Y(v)); c.stroke(); c.fillText(String(v).replace('-', '−'), L - 5 * p, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of niceTicks(xa, xb, nx)) { c.beginPath(); c.moveTo(X(v), top); c.lineTo(X(v), bot); c.stroke(); c.fillText(String(v).replace('-', '−'), X(v), bot + 4 * p); }
+    c.font = `${11 * p}px ${T.ui}`; c.fillText(xl, (L + R) / 2, bot + 17 * p);
+    c.save(); c.translate(L - 40 * p, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+  function title(c, s, x, y, p) { c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; let fs = 11; c.font = `700 ${fs * p}px ${T.ui}`;
+    while (fs > 7.5 && c.measureText(s).width > PW - x - 8 * p) { fs -= 0.5; c.font = `700 ${fs * p}px ${T.ui}`; } c.fillText(s, x, y); }
+  const dot = (c, x, y, r, col, open) => { c.beginPath(); c.arc(x, y, r, 0, 7); if (open) { c.strokeStyle = col; c.lineWidth = 1.5; c.stroke(); } else { c.fillStyle = col; c.fill(); } };
+  function legend(c, items, x, y, p) { c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; let xx = x;
+    for (const [s, col, kind] of items) { const need = (kind === 'line' || kind === 'dash' ? 20 : 12) * p + c.measureText(s).width; if (xx > x && xx + need > PW - 8 * p) { xx = x; y += 13 * p; } if (kind === 'line') { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(xx, y); c.lineTo(xx + 16 * p, y); c.stroke(); xx += 20 * p; } else if (kind === 'dash') { c.save(); c.setLineDash([4 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(xx, y); c.lineTo(xx + 16 * p, y); c.stroke(); c.restore(); xx += 20 * p; } else { dot(c, xx + 4 * p, y, 3.5 * p, col, kind === 'open'); xx += 12 * p; }
+      c.fillStyle = T.ink; c.fillText(s, xx, y); xx += c.measureText(s).width + 14 * p; } }
+  /* where each insert's name goes beside its point: [align, dx, dy] */
+  const LBL = { air: ['left', 8, -10], pe: ['right', -8, 10], ps: ['right', -8, -10], ms20: ['left', 6, 12], a150: ['left', 8, 10], pmma: ['right', -8, -12], b100: ['left', 8, 0], teflon: ['right', -8, 0] };
+  function drawScanPlot(c, p) {
+    const L = 58 * p, R = PW - 16 * p, top = 34 * p, bot = PH2 - 38 * p, hmax = (S.kv <= 80 ? 1200 : 1100) + (PW < 520 ? 300 : 0), A = axes(c, L, R, top, bot, 0, 2, -1000, hmax, 'electron density relative to water, ρₑ', 'CT number (HU)', p);
+    c.save(); c.setLineDash([4 * p, 3 * p]); c.strokeStyle = T.muted; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(A.X(0), A.Y(-1000)); c.lineTo(A.X(2), A.Y(1000)); c.stroke(); c.restore();
+    if (!S.meas) return; const sb = busy() && S.busyKind === 'scan';
+    for (const q of S.meas) { const x = A.X(q.rhoE), hf = huModel(q.key, S.fit); dot(c, x, A.Y(hf), 5 * p, T.tis, true); if (!sb) dot(c, x, A.Y(q.hu), 3.6 * p, q.key === S.ins ? T.beam : T.ink);
+      const o = LBL[q.key]; if (!o) continue; c.font = `${9.5 * p}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = o[0]; c.textBaseline = 'middle'; c.fillText(SHORT[q.key], x + o[1] * p, A.Y(q.hu) + o[2] * p); }
+    title(c, sb ? 'Scanning…' : `Scan ${S.scans + 1} at ${S.kv} kV: fit k_coh = ${f(S.fit.kc * 1e3, 3)}×10⁻³, k_ph = ${f(S.fit.kp * 1e5, 3)}×10⁻⁵`, L, top - 18 * p, p);
+    legend(c, [['measured (ROI mean)', T.ink, 'dot'], ['Schneider fit', T.tis, 'open'], ['HU = 1000 (ρₑ − 1)', T.muted, 'dash']], L + 8 * p, top + 10 * p, p);
+  }
+  function drawCurvePanel(c, L, R, top, bot, xa, xb, ya, yb, p, small) {
+    const A = axes(c, L, R, top, bot, xa, xb, ya, yb, 'CT number (HU)', small ? 'RSP' : 'stopping power ratio to water', p, small ? 4 : 6);
+    c.save(); c.beginPath(); c.rect(L, top, R - L, bot - top); c.clip();
+    const line = (cv, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); for (let i = 0; i <= 200; i++) { const h = xa + (xb - xa) * i / 200, y = A.Y(cv.at(h)); i ? c.lineTo(A.X(h), y) : c.moveTo(A.X(h), y); } c.stroke(); };
+    const showS = S.show !== 'subs', showU = S.show !== 'stoich';
+    if (showU) { line(S.cU, T.sub); S.cU.pts.forEach(([h, r], i) => dot(c, A.X(h), A.Y(r), 3.4 * p, T.sub, true)); }
+    if (showS) { line(S.cS, T.tis); S.cS.pts.forEach(([h, r]) => dot(c, A.X(h), A.Y(r), 3.2 * p, T.tis)); }
+    /* the chosen tissue at its real CT number, and the mystery's measured point */
+    const k = mystOrTis(), q = wetState();
+    if (S.tis !== 'mystery') { const h = huTrue(k, S.kv), r = rsp(V, k); dot(c, A.X(h), A.Y(r), 6 * p, T.beam, true); }
+    else { const h = q.w ? q.w.roi.hu : roi(k, S.kv, S.mSeed * 17 + S.myst).hu; c.strokeStyle = T.myst; c.lineWidth = 1 * p; c.setLineDash([3 * p, 3 * p]); c.beginPath(); c.moveTo(A.X(h), bot); c.lineTo(A.X(h), A.Y(S.cS.at(h))); c.stroke(); c.setLineDash([]);
+      if (q.w) { const r = q.w.mm / 10 / q.t, e = WET_NOISE_MM / 10 / q.t; c.strokeStyle = T.myst; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.X(h), A.Y(r - e)); c.lineTo(A.X(h), A.Y(r + e)); c.stroke(); dot(c, A.X(h), A.Y(r), 5 * p, T.myst); } }
+    c.restore(); return A;
+  }
+  function drawCurvePlot(c, p) {
+    const top = 34 * p, bot = PH2 - 38 * p, two = PW > 640, L = 58 * p, R = two ? PW * 0.6 : PW - 16 * p;
+    drawCurvePanel(c, L, R, top, bot, -1000, 1700, 0, 2.2, p, false);
+    if (two) { const L2 = R + 64 * p; drawCurvePanel(c, L2, PW - 16 * p, top, bot, -150, 150, 0.9, 1.12, p, true); title(c, 'Zoom: soft tissue', L2, top - 18 * p, p); }
+    title(c, `Stopping power ratio against CT number (${S.kv} kV)`, L, top - 18 * p, p);
+    const items = []; if (S.show !== 'subs') items.push(['stoichiometric: reference tissues', T.tis, 'line']); if (S.show !== 'stoich') items.push([`tissue substitutes${S.tef ? '' : ', no Teflon'}`, T.sub, 'line']);
+    items.push(S.tis === 'mystery' ? ['mystery: measured', T.myst, 'dot'] : [mat(S.tis).name.replace(/ \(.*\)/, ''), T.beam, 'open']); legend(c, items, L + 8 * p, top + 10 * p, p);
+  }
+  function drawRangePlot(c, p) {
+    const P = S.P, zEnd = P.P.zEnd, L = 58 * p, R = PW - 16 * p, top = 34 * p, bot = PH2 - 38 * p, A = axes(c, L, R, top, bot, 0, zEnd, 0, 1.15, 'depth along the beam (cm)', 'dose (of the prescription)', p);
+    for (const s of P.seg) { c.globalAlpha = 0.28; c.fillStyle = tcol(s.m); c.fillRect(A.X(s.z0), top, A.X(s.z1) - A.X(s.z0), bot - top); c.globalAlpha = 1; }
+    c.fillStyle = T.band; c.fillRect(A.X(P.P.zt0), top, A.X(P.P.zt1) - A.X(P.P.zt0), bot - top);
+    const curve = (rs, col, dash) => { c.save(); if (dash) c.setLineDash([6 * p, 4 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); for (let i = 0; i <= 600; i++) { const z = zEnd * i / 600, y = A.Y(doseAt(z, rs)); i ? c.lineTo(A.X(z), y) : c.moveTo(A.X(z), y); } c.stroke(); c.restore(); };
+    curve(P.rP, T.plan, true); if (!(busy() && S.busyKind === 'range')) curve(P.rT, T.beam, false);
+    c.save(); c.strokeStyle = T.ink; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(A.X(P.P.zt1), top); c.lineTo(A.X(P.P.zt1), bot); c.stroke(); c.restore();
+    c.font = `${9.5 * p}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    for (const s of P.seg) { const w = A.X(s.z1) - A.X(s.z0); const nm = s.target ? 'target' : (s.m === 'femur' ? 'femoral head' : s.m === 'cort' ? 'bone' : mat(s.m).name.replace(/ \(.*\)/, '').replace('Skeletal ', '').toLowerCase()); c.font = `${9.5 * p}px ${T.ui}`; if (c.measureText(nm).width < w - 4) c.fillText(nm, (A.X(s.z0) + A.X(s.z1)) / 2, bot - 4 * p); }
+    title(c, `Along the beam: ${P.covered ? 'the target is covered' : 'part of the target is missed'}, real R90 ${sgn(P.over, 1)} mm past its far edge`, L, top - 18 * p, p);
+    legend(c, [['plan', T.plan, 'dash'], ['delivered', T.beam, 'line']], L + 8 * p, top + 10 * p, p);
+  }
+  function drawPlot() {
+    if (!PW) return; const p = proj(); pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, PW, PH2);
+    if (S.view === 'scan') drawScanPlot(pctx, p); else if (S.view === 'curve') drawCurvePlot(pctx, p); else drawRangePlot(pctx, p);
+  }
+  function draw() { if (!T || !W) return; const three = use3(); if (g3) g3.st.el.hidden = !three; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (three) { ctx.clearRect(0, 0, W, H); draw3(); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); if (S.view === 'scan') drawScanFlat(); else if (S.view === 'curve') drawCurveFlat(); else drawRangeFlat(); }
+    drawPlot(); }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`; let h = '';
+    if (S.view === 'scan') { const q = S.meas.find((x) => x.key === S.ins);
+      if (busy()) h = dd('Scan', 'scanning', true);
+      else { h += dd(`${mat(S.ins).name}: ROI mean ± pixel SD`, `${f(q.hu, 1)} ± ${f(q.sd, 1)} HU`, true) + dd('Electron density, ρₑ', f(q.rhoE, 4)) + dd('Fitted CT number', `${f(huModel(S.ins, S.fit), 1)} HU`);
+        h += dd('Fit constants', `k_coh ${f(S.fit.kc * 1e3, 3)}×10⁻³, k_ph ${f(S.fit.kp * 1e5, 3)}×10⁻⁵`, true) + dd('Mean detected photon energy', `${f(meanE(S.kv), 1)} keV`, true); } }
+    else if (S.view === 'curve') { const q = wetState(), k = q.k;
+      if (S.tis !== 'mystery') { const hT = huTrue(k, S.kv), r = rsp(V, k), a = S.cS.at(hT), u = S.cU.at(hT);
+        h += dd(mat(k).name, `${f(hT, 1)} HU, ρₑ ${f(rhoE(k), 4)}`, true) + dd('Stopping power ratio (Bethe)', f(r, 4)) + dd('Mean excitation energy I', `${f(mat(k).I, 1)} eV`);
+        h += dd('Stoichiometric curve', `${f(a, 4)} (${sgn(100 * (a / r - 1), 2)} %)`) + dd('Substitute curve', `${f(u, 4)} (${sgn(100 * (u / r - 1), 2)} %)`); }
+      else { const rr = roi(k, S.kv, S.mSeed * 17 + S.myst), cv = S.cS.at(rr.hu);
+        h += dd(`Mystery ${S.myst + 1}${S.reveal ? `: ${mat(k).name}` : ''}`, `${f(rr.hu, 1)} ± ${f(rr.sd, 1)} HU`, true) + dd('Curve says', f(cv, 4));
+        h += q.w && !busy() ? dd('Range shift, measured', `${f(q.w.mm, 2)} mm`) + dd('Measured RSP', `${f(q.w.mm / 10 / q.t, 4)} ± ${f(WET_NOISE_MM / 10 / q.t, 4)}`) + dd('Curve against measured', `${sgn(100 * (cv / (q.w.mm / 10 / q.t) - 1), 2)} %`)
+          : dd('Range shift', 'press Measure') ;
+        if (S.reveal) h += dd('Its real stopping power ratio', f(rsp(V, k), 4)); } }
+    else { const P = S.P, sb = busy();
+      h += dd('Target\'s far edge', `${f(P.P.zt1, 2)} cm deep; WET: real ${f(P.wT, 2)}, planned ${f(P.wP, 2)} cm`, true);
+      h += dd('Planned range R90 (water)', `${f(P.R, 2)} cm, ${f(P.E, 1)} MeV`, true) + dd('Margin beyond the target', `${f(P.margin, 1)} mm`);
+      h += sb ? dd('Delivery', 'beam on') : dd('Real R90 against planned', `${sgn(P.err, 2)} mm`) + dd('Real R90 past the target', `${sgn(P.over, 1)} mm <span class="${P.covered ? 'pass' : 'fail'}">${P.covered ? 'covered' : 'missed'}</span>`, true);
+      if (!sb) h += dd('Range error from: curve, CT numbers, I values', `${sgn(P.parts.curve, 2)}, ${sgn(P.parts.hu, 2)}, ${sgn(P.parts.iv, 2)} mm`, true); }
+    $('out').innerHTML = h;
+    $('count').textContent = S.view === 'scan' ? `scan ${S.scans + 1}` : S.view === 'curve' ? (S.tis === 'mystery' ? `mystery ${S.myst + 1}` : '') : '';
+  }
+  function sync() {
+    const v = S.view;
+    for (const b of document.querySelectorAll('#kvSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.kv === S.kv));
+    for (const b of document.querySelectorAll('#winSeg button')) b.setAttribute('aria-pressed', String(b.dataset.win === S.win));
+    for (const b of document.querySelectorAll('#showSeg button')) b.setAttribute('aria-pressed', String(b.dataset.show === S.show));
+    for (const b of document.querySelectorAll('#planSeg button')) b.setAttribute('aria-pressed', String(b.dataset.plan === S.plan));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('selIns').value = S.ins; $('selTis').value = S.tis; $('selSite').value = S.site; $('chkTef').checked = S.tef;
+    $('sT').value = S.t; $('oT').textContent = `${f(S.t, 1)} cm`; $('sHU').value = S.dHU; $('oHU').textContent = `${sgn(S.dHU, 0)} HU`; $('sI').value = S.iErr; $('oI').textContent = `${sgn(S.iErr, 1)} %`;
+    $('sA').value = S.a; $('oA').textContent = `${f(S.a, 1)} %`; $('sB').value = S.b; $('oB').textContent = `${f(S.b, 1)} mm`;
+    $('scanBox').hidden = v !== 'scan'; $('curveBox').hidden = v !== 'curve'; $('rangeBox').hidden = v !== 'range'; $('mystRow').hidden = S.tis !== 'mystery'; $('bReveal').setAttribute('aria-pressed', String(S.reveal));
+    $('cardTitle').textContent = v === 'scan' ? 'Calibration scan' : v === 'curve' ? 'The curve, and a slab in the beam' : `The plan (CT at ${S.kv} kV)`; $('kvPick').hidden = v === 'range';
+    $('play').textContent = v === 'scan' ? 'Scan' : v === 'curve' ? 'Measure the range shift' : 'Deliver';
+    window.vdShowCols = v === 'scan' ? [['insert', 'insert'], ['rho_e', 'ρₑ'], ['HU', 'HU'], ['HU_fit', 'fit']] : v === 'curve' ? [['tissue', 'tissue'], ['HU', 'HU'], ['RSP', 'RSP'], ['RSP_curve', 'curve']]
+      : [['site', 'site'], ['err_mm', 'error (mm)'], ['over_mm', 'past target (mm)']];
+    if (window.vdReadRender && sync.lastView !== v) { sync.lastView = v; window.vdReadRender(); }
+  }
+  const card = VD.setupCard($('setupCard'));
+  function full() { sync(); readouts(); draw(); }
+  const changed = () => { S.preset = 'custom'; full(); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; const kvWas = S.kv; S.kv = c.kv || 120; if (c.ins) S.ins = c.ins; if (c.win) S.win = c.win; if (c.tis) S.tis = c.tis; if (c.show) S.show = c.show;
+    if (c.tef !== undefined) S.tef = c.tef; if (c.t) S.t = c.t; if (c.site) S.site = c.site; if (c.plan) S.plan = c.plan;
+    if (c.view === 'range') { S.dHU = c.dHU || 0; S.iErr = c.iErr || 0; S.a = c.a; S.b = c.b; }
+    S.busy = 0; if (!S.meas || kvWas !== S.kv) doScan(); else recurve();
+    $('presetHint').textContent = c.hint; full(); resize();
+  }
+  /* the selects */
+  $('selIns').innerHTML = INSERTS.map((k) => `<option value="${k}">${mat(k).name}</option>`).join('');
+  $('selTis').innerHTML = TISSUES.map((k) => `<option value="${k}">${mat(k).name}</option>`).join('') + '<option value="mystery">Mystery tissue</option>';
+  $('selSite').innerHTML = Object.keys(SITES).map((k) => `<option value="${k}">${SITES[k].name}</option>`).join('');
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (S.view === b.dataset.view) return; S.view = b.dataset.view; S.preset = 'custom'; S.busy = 0; full(); resize(); });
+  for (const b of document.querySelectorAll('#kvSeg button')) b.addEventListener('click', () => { S.kv = +b.dataset.kv; S.scans = 0; doScan(); changed(); });
+  for (const b of document.querySelectorAll('#winSeg button')) b.addEventListener('click', () => { S.win = b.dataset.win; changed(); });
+  for (const b of document.querySelectorAll('#showSeg button')) b.addEventListener('click', () => { S.show = b.dataset.show; changed(); });
+  for (const b of document.querySelectorAll('#planSeg button')) b.addEventListener('click', () => { S.plan = b.dataset.plan; rePlan(); changed(); });
+  $('selIns').addEventListener('change', (e) => { S.ins = e.target.value; changed(); });
+  $('selTis').addEventListener('change', (e) => { S.tis = e.target.value; S.wet = null; changed(); });
+  $('selSite').addEventListener('change', (e) => { S.site = e.target.value; rePlan(); changed(); });
+  $('chkTef').addEventListener('change', (e) => { S.tef = e.target.checked; recurve(); changed(); });
+  $('sT').addEventListener('input', (e) => { S.t = +e.target.value; S.wet = null; changed(); });
+  for (const [id, k] of [['sHU', 'dHU'], ['sI', 'iErr'], ['sA', 'a'], ['sB', 'b']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; rePlan(); changed(); });
+  $('bNew').addEventListener('click', () => { S.myst = (S.myst + 1) % MYSTERY.length; if (S.myst === 0) S.mSeed++; S.wet = null; S.reveal = false; changed(); });
+  $('bReveal').addEventListener('click', () => { S.reveal = !S.reveal; full(); });
+  $('play').addEventListener('click', () => act(false));
+  const TI = (id, get, set, min, max, step, unit, label) => VD.typeIn($(id), { get, set: (v) => { set(v); rePlan(); changed(); }, min, max, step, unit, label });
+  TI('oT', () => S.t, (v) => { S.t = v; S.wet = null; }, 1, 10, 0.5, 'cm', 'Slab thickness');
+  TI('oHU', () => S.dHU, (v) => { S.dHU = v; }, -30, 30, 1, 'HU', 'CT number error'); TI('oI', () => S.iErr, (v) => { S.iErr = v; }, -15, 15, 0.5, '%', 'Tissue I values off by');
+  TI('oA', () => S.a, (v) => { S.a = v; }, 0, 6, 0.1, '%', 'Percentage of the range'); TI('oB', () => S.b, (v) => { S.b = v; }, 0, 5, 0.1, 'mm', 'Plus a fixed distance');
+  $('budget').innerHTML = '<thead><tr><th>source</th><th>range uncertainty</th></tr></thead><tbody>'
+    + [['Measurement in water at commissioning', '±0.3 mm'], ['Compensator design', '±0.2 mm'], ['Beam reproducibility', '±0.2 mm'], ['Patient setup', '±0.7 mm'], ['Biology (always positive)', '+0.8 %'],
+      ['CT imaging and calibration', '±0.5 %'], ['CT conversion to tissue (I values aside)', '±0.5 %'], ['CT grid size', '±0.3 %'], ['Mean excitation energies (I values)', '±1.5 %'], ['Complex inhomogeneities', '−0.7 %'],
+      ['Local lateral inhomogeneities', '±2.5 %']].map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('') + '</tbody>';
+  $('about').textContent = 'Materials are NIST\'s (ESTAR/PSTAR compositions, densities and I values); inflated lung is the ICRP lung composition at 0.26 g/cm³ (ICRU Report 46), and mixtures add by volume with I from Bragg\'s rule. '
+    + 'The scanner is a stand in for a real CT: SpekPy tungsten spectra behind 6 mm of aluminum, hardened by the 20 cm phantom, an energy integrating detector, and a beam hardening correction that makes water read 0, with XCOM attenuation coefficients. Its image noise (16, 12, 10 and 9 HU a pixel at 80 to 140 kV) and the 490 pixel regions of interest are this demo\'s choices. '
+    + 'Schneider, Pedroni and Lomax (Phys. Med. Biol. 41, 111, 1996) fit the scanner\'s two constants to the inserts, then compute the CT numbers of real tissues of known composition; each tissue\'s stopping power ratio comes from the Bethe formula (VDStop) at 150 MeV, and the curve is a broken line fitted through the tissues with knots at −1000, −750, −120, 60 and 1600 HU (−1000, −100, 100 and 1600 HU for the substitute curve, which has no lung insert). The reference tissues are ICRP\'s, with cortical bone mixed into soft tissue standing in for the spongy bones. '
+    + 'The range shift of a slab is its water equivalent thickness for a 150 MeV beam (VDStop), read with a 0.1 mm reading noise. The patient paths are sketches with stated layers; their stopping power ratios are taken at 150 MeV (within 0.7 % from 70 to 230 MeV for these tissues), and the drawn dose is a flat spread out peak whose edges fall with Bohr range straggling, with a sketched entrance. Range uncertainty budget: Paganetti (Phys. Med. Biol. 57, R99, 2012); Yang et al. (Phys. Med. Biol. 57, 4095, 2012) analyse the stoichiometric method\'s own uncertainties in detail.';
+
+  /* readings: every insert of the scan, every reference tissue, the mystery slab, or the plan */
+  window.vdReadingRow = () => {
+    if (busy()) return 'Wait for the measurement to finish.';
+    if (S.view === 'scan') return S.meas.map((q) => ({ view: 'scan', kVp: String(S.kv), scan: String(S.scans + 1), insert: q.name, rho_e: f(q.rhoE, 4), HU: f(q.hu, 1), SD: f(q.sd, 1), HU_fit: f(huModel(q.key, S.fit), 1), RSP: f(rsp(V, q.key), 4) }));
+    if (S.view === 'curve') {
+      if (S.tis === 'mystery') { const q = wetState(); if (!q.w) return 'Press Measure the range shift first.'; const cv = S.cS.at(q.w.roi.hu), rm = q.w.mm / 10 / q.t;
+        return { view: 'mystery', kVp: String(S.kv), mystery: `mystery ${S.myst + 1}` + (S.mSeed > 1 ? ` (set ${S.mSeed})` : ''), HU: f(q.w.roi.hu, 1), SD: f(q.w.roi.sd, 1), slab_cm: f(q.t, 1), shift_mm: f(q.w.mm, 2), RSP_meas: f(rm, 4), RSP_curve: f(cv, 4), diff_pct: f(100 * (cv / rm - 1), 2) }; }
+      return TISSUES.map((k) => { const h = huTrue(k, S.kv), r = rsp(V, k); return { view: 'tissue', kVp: String(S.kv), tissue: mat(k).name, HU: f(h, 1), rho_e: f(rhoE(k), 4), I_eV: f(mat(k).I, 1), RSP: f(r, 4), RSP_curve: f(S.cS.at(h), 4), RSP_subs: f(S.cU.at(h), 4), teflon: S.tef ? 'yes' : 'no' }; }); }
+    const P = S.P;
+    return { view: 'range', site: S.site, curve: S.plan === 'subs' ? (S.tef ? 'substitutes' : 'substitutes, no Teflon') : 'stoichiometric', kVp: String(S.kv), dHU: sgn(S.dHU, 0), iErr_pct: f(S.iErr, 1), a_pct: f(S.a, 1), b_mm: f(S.b, 1),
+      target_cm: f(P.P.zt1, 2), WET_true_cm: f(P.wT, 3), WET_plan_cm: f(P.wP, 3), R_cm: f(P.R, 3), err_mm: f(P.err, 2), margin_mm: f(P.margin, 2), over_mm: f(P.over, 2), covered: P.covered ? 'yes' : 'no' };
+  };
+
+  /* ---------- the animation ---------- */
+  function frame() { if (S.busy) { if (S.busy <= performance.now()) { S.busy = 0; readouts(); } draw(); } else if (use3() && S.view === 'scan') { /* still */ } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; $('setupCard').style.top = innerWidth > 820 ? `${$('strip').offsetHeight + 14}px` : '';
+    const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = plot.getBoundingClientRect(); PW = q.width; PH2 = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH2 * dpr); draw(); }
+  const retheme = () => { tokens(); ctKey = ''; if (g3) g3.g.layKey = ''; draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/ct-range.mp4', poster: 'media/how-this-works/ct-range.jpg' });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'scan120'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
+  view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
+    change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
+  window.vdDemo = { S, V, full, applyPreset, act, doScan, plan, scan, fitSchneider, huTrue, huModel, rsp, mat, wetShift, roi, curveStoich, curveSubs };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -642,6 +642,19 @@
       "neutrons",
       "radiation protection"
      ]
+    },
+    {
+     "demo": "ct-range",
+     "title": "CT Numbers and Proton Range",
+     "desc": "Calibrate a CT scanner for proton planning: scan a phantom of known plastics, turn CT numbers into stopping power ratios with Schneider's stoichiometric method, test the curve with a mystery tissue in a proton beam, and see how CT number and I value errors move the range in a patient against a 3.5 % + 1 mm margin.",
+     "tags": [
+      "proton therapy",
+      "CT numbers",
+      "Hounsfield units",
+      "stopping power ratio",
+      "range uncertainty",
+      "treatment planning"
+     ]
     }
    ]
   },
