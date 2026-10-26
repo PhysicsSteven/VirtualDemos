@@ -12,6 +12,7 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-26-medical-3d-cp-qa', date: '2026-10-26', title: 'Charged Particles and Proton QA in 3D', text: 'Charged Particles in Matter now opens on a 3D water tank with the tracks, the scanning chamber and the electrometer, and Proton Therapy QA in a 3D treatment room with the gantry, couch and the phantom or detector for each check. Flat keeps the old picture.' },
   { id: '2026-10-26-bragg-why', date: '2026-10-26', title: 'Why the Bragg peak happens', text: 'The Bragg Peak has a new view, Why it peaks: follow one proton into water in 3D and watch the electrons it passes get bigger kicks as it slows, while a graph shows the energy lost per centimeter climbing to the peak.', link: { href: 'demos/bragg-peak.html?setup=why', text: 'Open Why it peaks' } },
   { id: '2026-10-26-proton-qa', date: '2026-10-26', title: 'Proton Therapy QA',
     text: 'A new Medical Physics demo with its own worksheet: run the morning QA of a pencil beam scanning proton machine (output, range, spot position and spot size against their tolerances), follow a machine that drifts over the weeks, and check a patient plan with a 2D chamber array and gamma analysis.',

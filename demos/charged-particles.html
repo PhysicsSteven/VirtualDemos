@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vdstop.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Charged Particles in Matter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,6 +75,7 @@
           <button type="button" data-view="stop" aria-pressed="false">Stopping power</button>
           <button type="button" data-view="range" aria-pressed="false">Range</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="clock mono" id="count" aria-live="off"></span>
       </div>
       <div class="scene" id="scene">
@@ -230,9 +233,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const opts = () => ({ T: T0(), p: S.p, spread: S.sp / 100, layers: layers(), straggle: S.str, nuclear: S.nuc });
 
   /* energy to color: from deep red at rest through orange and yellow to pale blue at full energy */
-  function heat(u) { u = Math.max(0, Math.min(1, u)); const stops = [[0, [150, 20, 30]], [0.25, [220, 60, 30]], [0.5, [245, 150, 40]], [0.75, [250, 220, 90]], [1, [120, 180, 255]]];
+  function heatRGB(u) { u = Math.max(0, Math.min(1, u)); const stops = [[0, [150, 20, 30]], [0.25, [220, 60, 30]], [0.5, [245, 150, 40]], [0.75, [250, 220, 90]], [1, [120, 180, 255]]];
     let i = 0; while (i < stops.length - 2 && u > stops[i + 1][0]) i++; const a = stops[i], b = stops[i + 1], t = (u - a[0]) / (b[0] - a[0]);
-    return `rgb(${a[1].map((v, k) => Math.round(v + t * (b[1][k] - v))).join(',')})`; }
+    return a[1].map((v, k) => Math.round(v + t * (b[1][k] - v))); }
+  const heat = (u) => `rgb(${heatRGB(u).join(',')})`;
 
   /* ---------- the model curve, recomputed on any change ---------- */
   function recompute() {
@@ -250,6 +254,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- tracks ---------- */
   function fireOne() {
     const o = opts(), t = V.track(Object.assign({}, o, { zmax: S.zmax * 1.05, step: Math.min(0.05, S.zmax / 400) }), rng);
+    t.phi = (S.n * 0.6180339887 % 1) * 2 * Math.PI;   /* the 3D view's plane for this track: the golden angle times its number (no draw from rng) */
     depositTrack(t, S.bins, S.binDz, V.GAMMA); S.n++;
     if (t.absorbed) S.absorbed++; else S.ends.push(t.end);
     S.tracks.push(t); if (S.tracks.length > 400) S.tracks.shift();
@@ -345,6 +350,145 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const kx = b.x0 + 10 * p, ky0 = b.y1 - 16 * p; for (let i = 0; i < 60; i++) { ctx.fillStyle = heat(i / 59); ctx.fillRect(kx + i * 1.5 * p, ky0, 1.6 * p, 7 * p); }
     G.label(ctx, 'track energy: 0 → full · glow: model dose', kx, ky0 - 7 * p, { s: 10 * p, c: T.ink, alpha: 0.85 });
   }
+
+  /* ---------- the 3D view (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+     The same apparatus on a bench: the nozzle, a glass water tank as long as the depth range shown (the steel rule in front of it reads
+     the depth), the Bragg peak chamber on its scanning carriage and the electrometer. The tracks are the same Monte Carlo histories as
+     the flat view, drawn as 3D lines colored by energy, to the rule's scale in every direction (×5 sideways when chosen). The model
+     scatters a track in one plane, so each is drawn in its own plane round the beam (t.phi, a picture choice). The glow is the model
+     dose, as wide as the beam spreads, as in the flat view. Sizes in meters, z up, the bench top at z = 0, the beam along +x. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.3, ph: 1.08, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const TL = 0.5, TW = 0.26, TH = 0.28, TB = 0.03, X0 = -0.14;   /* tank length, width, height; its plinth; the entrance window at x = X0 */
+  const WZ0 = TB + 0.004, WZ1 = TB + TH - 0.022, ZC = (WZ0 + WZ1) / 2, HZ = (WZ1 - WZ0) / 2, RZ = TB + TH + 0.04;   /* the water, the beam axis, the rail */
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'beam');
+  const sc3 = () => TL / S.zmax;   /* meters of the picture per cm of depth */
+  const chamberR = () => Math.min(4.2 * sc3(), HZ * 0.9);
+  function init3() {
+    const st = VD3K.stage($('scene'), { before: can, shadow: 0.6, fov: 30, fogAt: [1.8, 3.8] }); if (!st) return false;
+    st.el.hidden = true; st.sun.shadow.bias = -0.0005;
+    const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, add = (...a) => { sc.add(...a); return a[0]; };
+    sc.add(K.bench(st, { w: 4, d: 3, y: 0.5 }), K.backdrop(st, { r: 1.8, h: 1.4, y: -0.2 }));
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#a3acb7', '#6f7884']), base = M({ roughness: 0.55, metalness: 0.25 }, ['#7d8794', '#323a45']);
+    /* the tank: a plinth, glass walls, the water */
+    add(K.box(TL + 0.05, TW + 0.05, TB, base, X0 + TL / 2, 0, 0)).castShadow = false;   /* its shadow on the bench, seen through the water, came out in steps */
+    const water = new THREE.Mesh(new THREE.BoxGeometry(TL - 0.006, TW - 0.006, WZ1 - WZ0), new THREE.MeshStandardMaterial({ transparent: true, roughness: 0.15, metalness: 0, depthWrite: false }));
+    water.position.set(X0 + TL / 2, 0, ZC); water.renderOrder = 1; sc.add(water);
+    const glassM = M({ transparent: true, opacity: 0.13, roughness: 0.05, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
+    const tank = new THREE.Mesh(new THREE.BoxGeometry(TL, TW, TH), glassM); tank.position.set(X0 + TL / 2, 0, TB + TH / 2); tank.renderOrder = 6; sc.add(tank);
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(tank.geometry), new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 })); edges.position.copy(tank.position); sc.add(edges);
+    st.onTheme((dk) => { water.material.color.set(dk ? '#1f5478' : '#a9d6f0'); water.material.opacity = dk ? 0.5 : 0.42; edges.material.color.set(dk ? '#6d9cc0' : '#5f87a6'); });
+    /* the slab before the water (scaled to its thickness on each change) */
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0 })); slab.renderOrder = 2; slab.castShadow = true; sc.add(slab);
+    /* the nozzle: a housing on a pedestal, a snout and its exit window, the beam in air drawn dashed */
+    const nozM = M({ roughness: 0.5, metalness: 0.25 }, ['#9aa6b5', '#5a6575']), snM = M({ roughness: 0.4, metalness: 0.45 }, ['#7b8796', '#6b7786']);
+    add(K.box(0.12, 0.12, ZC - 0.1, base, X0 - 0.21, 0, 0)); add(K.box(0.2, 0.18, 0.2, nozM, X0 - 0.21, 0, ZC - 0.1));
+    add(K.rod([X0 - 0.111, 0, ZC], [X0 - 0.045, 0, ZC], 0.034, snM)); add(K.rod([X0 - 0.046, 0, ZC], [X0 - 0.043, 0, ZC], 0.02, M({ roughness: 0.3, metalness: 0.2 }, ['#d7e3ef', '#9fb7d0'])));
+    const air = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(X0 - 0.043, 0, ZC), new THREE.Vector3(X0, 0, ZC)]), new THREE.LineDashedMaterial({ dashSize: 0.004, gapSize: 0.004, transparent: true, opacity: 0.6 }));
+    air.computeLineDistances(); sc.add(air); st.onTheme((dk) => air.material.color.set(dk ? '#8cbeff' : '#285aaa'));
+    /* the scanning carriage: a rail on two posts over the tank, a carriage, its stem and the chamber (a disk across the beam) */
+    for (const x of [X0 - 0.02, X0 + TL + 0.02]) add(K.rod([x, 0, TB], [x, 0, RZ], 0.005, base));
+    add(K.rod([X0 - 0.03, 0, RZ], [X0 + TL + 0.03, 0, RZ], 0.0055, steel));
+    const det = M({ roughness: 0.4, metalness: 0.15 }, ['#6b4fc0', '#9b82e0']), carriage = new THREE.Group(); sc.add(carriage);
+    carriage.add(K.box(0.05, 0.045, 0.03, M({ roughness: 0.5, metalness: 0.2 }, ['#5b3fa6', '#6a4fb0']), 0, 0, RZ - 0.014));
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0032, 1, 12).rotateX(Math.PI / 2), steel); carriage.add(stem);
+    const cham = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48).rotateZ(Math.PI / 2), det); cham.position.z = ZC; carriage.add(cham);
+    /* the electrometer in front of the nozzle, its cable to the rail, and a lead along the rail to the carriage */
+    const meter = K.meter(st, { label: 'ELECTROMETER', sub: 'Bragg peak chamber', w: 0.17, h: 0.09 }); meter.position.set(X0 - 0.13, -0.27, meter.position.z); sc.add(meter);
+    sc.add(K.cable([X0 - 0.08, -0.255, 0.03], [X0 - 0.02, 0.01, RZ + 0.004], { via: [[X0 - 0.05, -0.22, 0.004], [X0 - 0.035, -0.12, 0.004], [X0 - 0.03, 0.01, TB + 0.02]] }));
+    /* the dose glow: three crossed planes along the beam carrying the flat view's glow, drawn into a texture on each change */
+    const glowCv = document.createElement('canvas'); glowCv.width = 1024; glowCv.height = 256; const glowTex = new THREE.CanvasTexture(glowCv);
+    const glowM = new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, side: THREE.DoubleSide }), glow = new THREE.Group();
+    for (let k = 0; k < 3; k++) { const pl = new THREE.Mesh(new THREE.PlaneGeometry(TL - 0.006, 2 * HZ), glowM); pl.rotation.x = Math.PI / 2 + k * Math.PI / 3; pl.renderOrder = 2; glow.add(pl); }
+    glow.position.set(X0 + TL / 2, 0, ZC); sc.add(glow);
+    /* the tracks (line segments colored by energy) and the points where a proton was lost to a nuclear reaction */
+    const trM = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false }), trG = new THREE.BufferGeometry(), tracks = new THREE.LineSegments(trG, trM);
+    tracks.renderOrder = 3; tracks.frustumCulled = false; sc.add(tracks);
+    const ends = K.particles(st, { n: 400, r: 0.0022 }); ends.renderOrder = 4; sc.add(ends);
+    g3 = { st, water, slab, carriage, stem, cham, meter, glowCv, glowTex, glowM, trG, trM, tracks, ends, cap: 0, rule: null, mark: null, lead: null, keyA: '', keyZ: '', keyT: '' };
+    /* drag the chamber (or its stem) along the tank; drag elsewhere to turn the view */
+    let drag3 = false;
+    const at3 = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const hit3 = (e) => { if (!use3()) return false; const [x, y] = at3(e), xd = X0 + S.z * sc3(), a = st.project([xd, 0, RZ + 0.02]), b = st.project([xd, 0, ZC - chamberR()]);
+      const dx = b[0] - a[0], dy = b[1] - a[1], u = Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+      return Math.hypot(x - a[0] - u * dx, y - a[1] - u * dy) < (e.pointerType === 'touch' ? 26 : 14); };
+    const dragZ3 = (e) => { const [x, y] = at3(e), a = st.project([X0, 0, ZC]), b = st.project([X0 + TL, 0, ZC]), dx = b[0] - a[0], dy = b[1] - a[1];
+      const u = ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy || 1), stp = +$('sZ').step; S.z = Math.max(0, Math.min(S.zmax, Math.round(u * S.zmax / stp) * stp)); sync(); readouts(); draw(); };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+    can.addEventListener('pointermove', (e) => { if (drag3) dragZ3(e); else if (use3() && e.pointerType !== 'touch') can.style.cursor = hit3(e) ? 'ew-resize' : 'grab'; });
+    const up3 = () => { drag3 = false; }; can.addEventListener('pointerup', up3); can.addEventListener('pointercancel', up3);
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.35, phMax: 1.5, zMin: 0.5, zMax: 3,
+      grab: (e) => { if (!use3()) return true; if (!hit3(e)) return false; drag3 = true; try { can.setPointerCapture(e.pointerId); } catch (_) {} dragZ3(e); return true; } });
+    return true;
+  }
+  /* the rule's ticks: about 100 to 250 small divisions, a number every 10 */
+  function ruleSpec() { const u = unitOf(S.zmax), to = +(u === 'cm' ? S.zmax : u === 'mm' ? S.zmax * 10 : S.zmax * 1e4).toPrecision(8); let step = Math.pow(10, Math.floor(Math.log10(to)) - 2); if (to / step > 250) step *= 2; return { to, unit: u, step }; }
+  function glowTexture() {
+    const cv = g3.glowCv, c = cv.getContext('2d'), w = cv.width, h = cv.height, pk = peak(), dk = dark(), col = dk ? [255, 150, 70] : [236, 96, 24], ky = sc3() * (S.wide ? 5 : 1), n = 256;
+    c.clearRect(0, 0, w, h);
+    for (let i = 0; i < n; i++) { const z0 = i / n * S.zmax, z1 = (i + 1) / n * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (u < 0.01) continue;
+      const hw = Math.min(h / 2, Math.max(4, 3 * spreadAt((z0 + z1) / 2) * ky / HZ * h / 2)), g = c.createLinearGradient(0, h / 2 - hw, 0, h / 2 + hw), a = (dk ? 0.55 : 0.4) * Math.min(1, u);
+      g.addColorStop(0, `rgba(${col},0)`); g.addColorStop(0.5, `rgba(${col},${a})`); g.addColorStop(1, `rgba(${col},0)`);
+      const xa = Math.floor(i / n * w), xb = Math.ceil((i + 1) / n * w); c.fillStyle = g; c.fillRect(xa, h / 2 - hw, xb - xa, 2 * hw); }
+    g3.glowTex.needsUpdate = true; g3.glowM.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; g3.glowM.needsUpdate = true;
+  }
+  function tracks3() {
+    const sc = sc3(), ky = sc * (S.wide ? 5 : 1), E0 = T0(), dk = dark(); let nseg = 0;
+    for (const t of S.tracks) nseg += t.pts.length - 1;
+    if (nseg > g3.cap) { g3.cap = Math.ceil(nseg * 1.3) + 1000; g3.trG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(g3.cap * 6), 3)); g3.trG.setAttribute('color', new THREE.BufferAttribute(new Float32Array(g3.cap * 6), 3)); }
+    let k = 0, ne = 0; const pos = g3.cap ? g3.trG.attributes.position.array : null, col = g3.cap ? g3.trG.attributes.color.array : null, ink = new THREE.Color(T.ink);
+    for (const t of S.tracks) { const q = t.pts, cs = Math.cos(t.phi || 0), sn = Math.sin(t.phi || 0);
+      for (let i = 1; i < q.length; i++) { const la = q[i - 1][1] * ky, lb = q[i][1] * ky; if (Math.abs(la) > HZ || Math.abs(lb) > HZ) continue;
+        const c3 = heatRGB(q[i][2] / E0), o = k * 6;
+        pos[o] = X0 + q[i - 1][0] * sc; pos[o + 1] = la * cs; pos[o + 2] = ZC + la * sn; pos[o + 3] = X0 + q[i][0] * sc; pos[o + 4] = lb * cs; pos[o + 5] = ZC + lb * sn;
+        for (let j = 0; j < 6; j++) col[o + j] = c3[j % 3] / 255; k++; }
+      if (t.absorbed && ne < 400) { const e = q[q.length - 1], l = e[1] * ky; if (Math.abs(l) <= HZ) g3.ends.put(ne++, X0 + e[0] * sc, l * cs, ZC + l * sn, ink); } }
+    if (g3.cap) { g3.trG.attributes.position.needsUpdate = true; g3.trG.attributes.color.needsUpdate = true; }
+    g3.trG.setDrawRange(0, k * 2); g3.ends.show(ne); g3.ends.done();
+    const many = S.tracks.length > 60; g3.trM.opacity = many ? 0.7 : 0.95; g3.trM.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; g3.trM.needsUpdate = true;
+  }
+  /* a label on a pale pill, so it reads over the picture */
+  function tag(s, x, y, o = {}) { const p = proj(); ctx.font = `${o.w || 600} ${(o.s || 10.5) * p}px ${o.m === false ? T.ui : T.mono}`; const tw = ctx.measureText(s).width, a = o.a || 'center', x0 = a === 'center' ? x - tw / 2 : a === 'right' ? x - tw : x;
+    ctx.globalAlpha = 0.85; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(x0 - 4 * p, y - 8 * p, tw + 8 * p, 16 * p, 4 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x0, y + 0.5); }
+  function draw3() {
+    const g = g3, st = g.st, sc = sc3(), p = proj(), tSlab = S.slab === 'none' ? 0 : Math.min(S.t, S.zmax), dk = dark();
+    /* what changes with the set up: the rule, the slab, the glow, the chamber's size */
+    const keyA = [S.zmax, S.slab, S.t, S.wide, dk, S.D.d.length, peak().d].join();
+    if (keyA !== g.keyA) { g.keyA = keyA;
+      if (g.rule) st.dispose(g.rule); const rs = ruleSpec(); g.rule = VD3K.ruler(st, { len: TL, from: 0, to: rs.to, unit: rs.unit, step: rs.step, w: 0.04 }); g.rule.position.set(X0 + TL / 2, -TW / 2 - 0.06, 0); st.scene.add(g.rule);
+      if (!g.mark) { g.mark = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.046, 0.002), VD3K.material(st, { roughness: 0.5 }, ['#6b4fc0', '#b49cff'])); st.scene.add(g.mark); }
+      g.slab.visible = tSlab > 0; if (tSlab > 0) { const lk = SLAB_LOOK[S.slab] || [T.slab, T.sedge]; g.slab.scale.set(tSlab * sc, TW - 0.008, WZ1 - WZ0 + 0.012); g.slab.position.set(X0 + tSlab * sc / 2, 0, ZC + 0.006);
+        g.slab.material.color.set(lk[0]); g.slab.material.transparent = S.slab === 'pmma'; g.slab.material.opacity = S.slab === 'pmma' ? 0.55 : 1; g.slab.material.needsUpdate = true; }
+      const R = chamberR(); g.cham.scale.set(Math.max(0.006, Math.min(0.012, 1 * sc)), R, R);
+      glowTexture(); g.keyT = ''; g.keyZ = ''; }
+    /* the chamber at the detector depth, its stem and the lead to it along the rail */
+    const xd = X0 + S.z * sc, keyZ = [S.z, keyA].join();
+    if (keyZ !== g.keyZ) { g.keyZ = keyZ; g.carriage.position.x = xd; const R = chamberR(), top = RZ - 0.014, bot = ZC + R * 0.98; g.stem.scale.z = top - bot; g.stem.position.z = (top + bot) / 2;
+      g.mark.position.set(xd, -TW / 2 - 0.06 + 0.002, 0.0045);
+      if (g.lead) st.dispose(g.lead); g.lead = VD3K.cable([X0 - 0.02, 0.012, RZ + 0.006], [xd - 0.02, 0.012, RZ + 0.004], { sag: Math.min(0.02, 0.06 * (xd - X0)), rad: 0.0018 }); st.scene.add(g.lead); }
+    const keyT = [S.n, S.tracks.length, keyA].join(); if (keyT !== g.keyT) { g.keyT = keyT; tracks3(); }
+    const pk = peak(); g.meter.set(`${f(100 * doseAt(S.D, S.z) / pk.d, 1)} %`);
+    /* the camera: the apparatus centered in the part of the picture the Set up card leaves free */
+    const cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0, fw = W - cardW;
+    st.size(W, H); st.place(G3.o, [X0 + TL / 2 - 0.12, -0.03, ZC * 0.8 + (fw < 520 ? 0.07 : 0)], (fw < 520 ? 1.4 : 1.55) * Math.max(1, 1.5 / (fw / H)));
+    if (cardW) st.cam.setViewOffset(W, H, cardW / 2, 0, W, H); else st.cam.clearViewOffset();
+    st.render();
+    /* words over the picture */
+    const Q = (x, y, z) => st.project([x, y, z]);
+    { const [x, y] = Q(xd, 0, RZ + 0.03); tag(`z = ${lenTxt(S.z)}`, x, y - 8 * p); }
+    { const [x, y] = Q(X0 - 0.21, -0.09, ZC + 0.1); tag(`nozzle: ${P().name.toLowerCase()} beam`, x, y - 10 * p, { w: 600, m: false }); }
+    if (tSlab > 0) { const [x, y] = Q(X0 + tSlab * sc / 2, -TW / 2, WZ1 + 0.012); tag(`${V.mat(S.slab).name}, ${lenTxt(S.t)}`, x, y - 10 * p, { a: 'left', m: false }); }
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const small = 4.2 * sc > HZ * 0.9, notes = fw < 520 ? [S.wide ? 'Tracks stretched sideways ×5; depth on the rule.' : small ? 'Tracks to the rule\'s scale; chamber drawn smaller.' : 'Tracks and chamber to the rule\'s scale.', 'Each track drawn in its own plane round the beam.', 'Drag the chamber; drag elsewhere to turn.']
+      : [(S.wide ? 'Depth on the rule; tracks stretched sideways ×5' : 'Depth on the rule; tracks drawn to the same scale') + (small ? '; the 8.4 cm chamber drawn smaller.' : S.wide ? '; the 8.4 cm chamber to the rule\'s scale.' : ', and the 8.4 cm chamber.'),
+        'The model scatters each track in one plane: each is drawn in its own plane round the beam.', 'Drag the chamber to move it; drag elsewhere to turn the view.'];
+    const nw = Math.max(...notes.map((s) => ctx.measureText(s).width)); ctx.globalAlpha = 0.8; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(6 * p, 5 * p, nw + 8 * p, (notes.length * 14 + 5) * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.muted; notes.forEach((s, i) => ctx.fillText(s, 10 * p, (8 + 14 * i) * p));
+    const kr = fw - 12 * p, kx = kr - 90 * p, ky0 = H - 16 * p; for (let i = 0; i < 60; i++) { ctx.fillStyle = heat(i / 59); ctx.fillRect(kx + i * 1.5 * p, ky0, 1.6 * p, 7 * p); }
+    window.VDGear.label(ctx, fw < 520 ? 'track energy: 0 → full · glow: dose' : 'track energy: 0 → full · glow: model dose', kr, ky0 - 7 * p, { a: 'right', s: 10 * p, c: T.ink, alpha: 0.85 });
+  }
   function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
   const unitOf = (zmax) => (zmax >= 1 ? 'cm' : zmax >= 0.1 ? 'mm' : 'μm');
   const tickLabel = (v) => { const u = unitOf(S.zmax), x = u === 'cm' ? v : u === 'mm' ? v * 10 : v * 1e4; return String(+x.toPrecision(6)); };
@@ -435,8 +579,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    if (S.view === 'beam') { drawTank(); drawDose(); } else if (S.view === 'stop') drawStop(); else drawRange();
+    const three = use3(); if (g3) g3.st.el.hidden = !three;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (three) ctx.clearRect(0, 0, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (S.view === 'beam') { if (three) draw3(); else drawTank(); drawDose(); } else if (S.view === 'stop') drawStop(); else drawRange();
     $('count').textContent = S.view === 'beam' ? `${S.n} tracks` : '';
   }
   function readouts() {
@@ -473,7 +618,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const beam = S.view === 'beam';
     for (const id of ['sSp', 'selSlab', 'sZ', 'chkStr', 'chkNuc', 'chkWide']) { const el = $(id).closest('div.pick, div:not(.setup-card), label.check'); if (el) el.hidden = !beam; }
     $('slabBox').hidden = !beam || S.slab === 'none'; $('matBox').hidden = beam; $('elecBox').hidden = S.view !== 'stop'; $('pstarBox').hidden = S.view !== 'range';
-    $('plotbox').hidden = !beam; $('play').hidden = !beam; $('restart').hidden = !beam; $('selRate').hidden = !beam; document.querySelector('label[for="selRate"]').hidden = !beam;
+    $('plotbox').hidden = !beam; $('dimSeg').hidden = !beam; $('play').hidden = !beam; $('restart').hidden = !beam; $('selRate').hidden = !beam; document.querySelector('label[for="selRate"]').hidden = !beam;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === S.view));
     /* the Readings table shows the columns of the view the readings come from */
@@ -513,7 +658,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function dragZ(e, el) { const r = el.getBoundingClientRect(), b = tankBox(), z = ((e.clientX - r.left) - b.x0) / (b.x1 - b.x0) * S.zmax; S.z = Math.max(0, Math.min(S.zmax, Math.round(z / +$('sZ').step) * +$('sZ').step)); sync(); readouts(); draw(); }
   for (const el of [can, plot]) {
     let down = false;
-    el.addEventListener('pointerdown', (e) => { if (S.view !== 'beam') return; down = true; el.setPointerCapture(e.pointerId); dragZ(e, el); });
+    el.addEventListener('pointerdown', (e) => { if (S.view !== 'beam' || (el === can && use3())) return; down = true; el.setPointerCapture(e.pointerId); dragZ(e, el); });
     el.addEventListener('pointermove', (e) => { if (down) dragZ(e, el); });
     el.addEventListener('pointerup', () => { down = false; });
   }
@@ -557,7 +702,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'p150'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => (S.view === 'beam' && !S.wide ? (() => { const b = tankBox(); return { el: can, m: S.zmax / 100 / (b.x1 - b.x0), area: [b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0] }; })() : null) });
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => (S.view === 'beam' && !S.wide && !use3() ? (() => { const b = tankBox(); return { el: can, m: S.zmax / 100 / (b.x1 - b.x0), area: [b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0] }; })() : null) });
+  /* opens in 3D; ?view=flat, a low power device or no WebGL keep the flat picture (the graph views are always flat) */
+  view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
+    change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
   window.vdDemo = { S, V, fireOne, recompute, full, applyPreset };
   requestAnimationFrame(frame);
 })();

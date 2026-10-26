@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vdstop.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Proton Therapy QA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +72,7 @@
           <button type="button" data-view="drift" aria-pressed="false">Drift over weeks</button>
           <button type="button" data-view="patient" aria-pressed="false">Patient QA</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="clock mono" id="count" aria-live="off"></span>
       </div>
       <div class="scene" id="scene">
@@ -446,6 +449,127 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.label(ctx, (W < 560 ? '' : 'IBA Proteus ONE style room, ') + (S.view === 'patient' ? 'patient plan' : `${sig(S.e, 4)} MeV`), b.x0 + 4 * p, 16 * p, { s: 10.5 * p, c: T.ink, alpha: 0.85 });
   }
 
+  /* ---------- the 3D room (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+     The same room as the flat picture, roughly to scale: the gantry (a drum round the couch, its lower half below the floor), its
+     nozzle pointing straight down, the couch with the QA device of the chosen check on it (the slab phantom with its chamber at 2 cm, the
+     range stack, the scintillating screen showing the same nine spots as the graph, or the 2D array under as many centimeters of water
+     equivalent slabs as the measurement depth), the room lasers, the beam on lamp and the cart with the electrometer and the QA status.
+     The beam is drawn as a visible line that scans while the QA runs. Sizes in meters, z up, the floor at z = 0, the couch along y. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.4, ph: 1.1, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const GC = 1.2, BORE = 1.5, CT = 0.95, NZ = 1.55;   /* gantry axis height, bore radius, couch top, nozzle snout end */
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const devOf = () => (S.view === 'patient' ? 'array' : S.chk === 'output' ? 'phantom' : S.chk === 'range' ? 'mlic' : 'lynx');
+  function stripes(w, h, n, a, b, o = {}) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const c = cv.getContext('2d');
+    for (let i = 0; i < n; i++) { c.fillStyle = i % 2 ? b : a; c.fillRect(0, i * h / n, w, h / n + 1); }
+    if (o.line) { c.fillStyle = o.line; for (let i = 1; i < n; i++) c.fillRect(0, i * h / n - 1, w, 2); }
+    if (o.text) { c.fillStyle = 'rgba(255,255,255,0.85)'; c.font = `700 ${h * 0.09}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillRect(w * 0.3, h * 0.42, w * 0.4, h * 0.16); c.fillStyle = '#1f2833'; c.fillText(o.text, w / 2, h / 2); }
+    return new THREE.CanvasTexture(cv); }
+  function init3() {
+    const st = VD3K.stage($('scene'), { before: can, shadow: 2.2, fov: 30, far: 40, fogAt: [2.2, 4.5] }); if (!st) return false;
+    st.el.hidden = true; st.sun.position.set(1.2, -2.4, 5); st.sun.shadow.bias = -0.0006;
+    const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    /* the room: floor and a curved wall */
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#c9ced5', '#2b323b'])); sc.add(floor, K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
+    /* the gantry: a drum round the couch (outer shell, bore and two covers) and the nozzle hanging from the top of the bore */
+    const cover = M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#dfe3e8', '#3b4553']), shell = M({ roughness: 0.7, metalness: 0.15, side: THREE.DoubleSide }, ['#c3c9d1', '#323b48']);
+    const gan = new THREE.Group(); gan.position.set(0, 0, GC); sc.add(gan);
+    gan.add(mesh(new THREE.CylinderGeometry(1.95, 1.95, 0.7, 72, 1, true), shell, true), mesh(new THREE.CylinderGeometry(BORE, BORE, 0.7, 72, 1, true), cover));
+    for (const y of [-0.35, 0.35]) { const r = mesh(new THREE.RingGeometry(BORE, 1.95, 72), cover); r.rotation.x = Math.PI / 2; r.position.y = y; gan.add(r);
+      const e = mesh(new THREE.TorusGeometry(1.95, 0.02, 8, 96), shell); e.rotation.x = Math.PI / 2; e.position.y = y; gan.add(e); }
+    const nozM = M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), snM = M({ roughness: 0.4, metalness: 0.4 }, ['#7b8796', '#6b7786']);
+    sc.add(K.box(0.42, 0.42, GC + BORE - 1.75, nozM, 0, 0, 1.75), K.box(0.26, 0.26, 1.75 - NZ, snM, 0, 0, NZ));
+    /* the beam on lamp on the front cover */
+    const lamp = new THREE.Group(), lampM = new THREE.MeshBasicMaterial({ color: 0x3f2f12 }); lamp.position.set(-1.45, -0.37, GC + 0.75);
+    lamp.add(K.box(0.24, 0.04, 0.12, M({ roughness: 0.6 }, ['#4b5563', '#2a313b']), 0, 0, -0.06)); const lf = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.07), lampM); lf.rotation.x = Math.PI / 2; lf.position.y = -0.021; lamp.add(lf); sc.add(lamp);
+    /* the couch: a base, a column and the table top running into the bore */
+    const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+    sc.add(K.box(0.7, 0.9, 0.03, colM, 0, -1.25, 0), K.box(0.3, 0.42, CT - 0.09, colM, 0, -1.25, 0.03), K.box(0.52, 2.2, 0.06, couchM, 0, -0.55, CT - 0.06));
+    /* the cart with the electrometer and the QA status panel */
+    const cartM = M({ roughness: 0.55, metalness: 0.2 }, ['#9aa3ae', '#29313c']), cx = -1.4, cy = -0.9;
+    sc.add(K.box(0.86, 0.46, 0.06, cartM, cx, cy, 0.12), K.box(0.86, 0.46, 0.04, cartM, cx, cy, 0.8));
+    for (const [x, y] of [[-0.4, -0.2], [0.4, -0.2], [-0.4, 0.2], [0.4, 0.2]]) { sc.add(K.rod([cx + x, cy + y, 0.12], [cx + x, cy + y, 0.8], 0.012, cartM)); const w = mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.03, 20), M({ roughness: 0.8 }, ['#2a3038', '#0b0f14']), true); w.rotation.z = Math.PI / 2; w.position.set(cx + x, cy + y, 0.05); sc.add(w); }
+    const mE = K.meter(st, { label: 'ELECTROMETER', w: 0.36, h: 0.15 }), mS = K.meter(st, { label: 'QA STATUS', w: 0.36, h: 0.15 });
+    mE.position.set(cx - 0.2, cy, 0.84 + 0.075); mS.position.set(cx + 0.2, cy, 0.84 + 0.075); sc.add(mE, mS);
+    /* the devices, one group each, shown by the chosen check */
+    const dev = {}, det = M({ roughness: 0.4, metalness: 0.15 }, ['#6b4fc0', '#9b82e0']);
+    { const g = new THREE.Group(), tex = stripes(64, 384, 6, '#efe7cb', '#e4dab8', { line: 'rgba(120,100,60,0.5)' }), side = new THREE.MeshStandardMaterial({ map: tex, transparent: true, opacity: 0.62, roughness: 0.5, depthWrite: false }), top = new THREE.MeshStandardMaterial({ color: '#efe7cb', transparent: true, opacity: 0.62, roughness: 0.5, depthWrite: false });
+      const b = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.06), [side, side, side, side, top, top]); b.position.z = CT + 0.03; b.renderOrder = 2; g.add(b);
+      const ch = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.006, 32).rotateX(Math.PI / 2), det); ch.position.z = CT + 0.04; g.add(ch, K.rod([-0.012, 0, CT + 0.04], [-0.16, 0, CT + 0.04], 0.003, det));
+      dev.phantom = { g, top: CT + 0.06, w: 0.3, port: [-0.16, 0, CT + 0.04] }; }
+    { const g = new THREE.Group(), body = new THREE.MeshStandardMaterial({ map: stripes(256, 160, 28, '#2f4a7d', '#33507f', { line: 'rgba(255,255,255,0.18)', text: 'RANGE STACK' }), roughness: 0.45, metalness: 0.1 }), lid = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#334a73']);
+      const b = mesh(new THREE.BoxGeometry(0.3, 0.3, 0.16), [body, body, body, body, lid, lid], true); b.position.z = CT + 0.08; g.add(b); dev.mlic = { g, top: CT + 0.16, w: 0.3, port: [-0.15, 0, CT + 0.05] }; }
+    const scrCv = document.createElement('canvas'); scrCv.width = scrCv.height = 512; const scrTex = new THREE.CanvasTexture(scrCv);
+    { const g = new THREE.Group(), bodyM = M({ roughness: 0.5, metalness: 0.2 }, ['#4b5563', '#3b4250']); g.add(K.box(0.34, 0.34, 0.16, bodyM, 0, 0, CT));
+      const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.24), new THREE.MeshBasicMaterial({ map: scrTex })); scr.position.z = CT + 0.1605; g.add(scr); dev.lynx = { g, top: CT + 0.16, w: 0.34, port: [-0.17, 0, CT + 0.05] }; }
+    { const g = new THREE.Group(), arr = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#334a73']); g.add(K.box(0.36, 0.36, 0.04, arr, 0, 0, CT)); const sl = new THREE.Group(); g.add(sl);
+      dev.array = { g, top: CT + 0.04, w: 0.36, port: [-0.18, 0, CT + 0.02], sl }; }
+    for (const k in dev) sc.add(dev[k].g);
+    /* the room lasers and the beam */
+    const lasM = new THREE.LineBasicMaterial({ transparent: true }), lasers = new THREE.Group(); sc.add(lasers);
+    lasers.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.55, 0, 0), new THREE.Vector3(0.55, 0, 0)]), lasM), new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(0, 0.5, 0)]), lasM));
+    const vlas = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 1)]), new THREE.LineDashedMaterial({ dashSize: 0.02, gapSize: 0.03, transparent: true })); vlas.computeLineDistances(); sc.add(vlas);
+    st.onTheme((dk) => { lasM.color.set(dk ? '#5aff8c' : '#16a34a'); lasM.opacity = dk ? 0.6 : 0.7; vlas.material.color.copy(lasM.color); vlas.material.opacity = lasM.opacity; lasM.blending = vlas.material.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; lasM.needsUpdate = vlas.material.needsUpdate = true; });
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 1, 10), beamM); beam.renderOrder = 5; sc.add(beam);
+    const gcv = document.createElement('canvas'); gcv.width = gcv.height = 64; { const c = gcv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); }
+    const spot = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(gcv), color: 0xffd08a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); spot.scale.set(0.08, 0.08, 1); spot.renderOrder = 6; sc.add(spot);
+    g3 = { st, dev, lampM, lasers, vlas, beam, beamM, spot, scrCv, scrTex, mE, mS, cable: null, keyD: '', keyS: '', cart: [cx, cy] };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.5, phMax: 1.5, zMin: 0.5, zMax: 2.6, grab: () => !use3() });
+    return true;
+  }
+  function draw3() {
+    const g = g3, st = g.st, p = proj(), dk = dark(), d = devOf(), r = latest(), busy = S.busy > performance.now();
+    /* the device and its cable; the array's slabs follow the measurement depth (0.5 cm each) */
+    const keyD = [d, S.zm].join();
+    if (keyD !== g.keyD) { g.keyD = keyD; for (const k in g.dev) g.dev[k].g.visible = k === d; const D = g.dev[d];
+      if (d === 'array') { while (D.sl.children.length) st.dispose(D.sl.children[0]); const n = Math.round(S.zm * 2), mA = VD3K.material(st, { roughness: 0.6 }, ['#efe7cb', '#c9c2a8']), mB = VD3K.material(st, { roughness: 0.6 }, ['#e2d7b4', '#b7b097']);
+        for (let i = 0; i < n; i++) D.sl.add(VD3K.box(0.3, 0.3, 0.005, i % 2 ? mB : mA, 0, 0, CT + 0.04 + i * 0.005)); D.top = CT + 0.04 + n * 0.005; }
+      if (g.cable) st.dispose(g.cable); const [cx, cy] = g.cart, q = D.port;
+      g.cable = VD3K.cable([cx + 0.3, cy + 0.12, 0.84], q, { via: [[cx + 0.42, cy + 0.2, 0.55], [-0.55, -0.35, 0.45], [-0.35, -0.1, CT - 0.02], [q[0] - 0.04, 0, q[2]]], rad: 0.006 }); st.scene.add(g.cable); g.keyS = ''; }
+    const D = g.dev[d], top = D.top;
+    g.lasers.position.z = top + 0.002; g.vlas.position.z = top; g.vlas.scale.z = NZ - top;
+    /* the spots on the screen: the graph's own spot picture, drawn into the screen's texture */
+    if (d === 'lynx') { const keyS = [busy, dk, r ? r.spots.map((s) => s.x.toFixed(3) + s.y.toFixed(3) + s.sx.toFixed(3)).join() : ''].join('|');
+      if (keyS !== g.keyS) { g.keyS = keyS; const c = g.scrCv.getContext('2d'); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 512, 512); drawSpotPanel(c, 0, 512, 0, 512, busy ? null : r, 1.9); g.scrTex.needsUpdate = true; } }
+    /* the beam, scanning across the device while the QA runs */
+    g.beam.visible = g.spot.visible = busy;
+    if (busy) { const t = performance.now() / 1000, x = Math.sin(t * 9) * D.w * 0.4, y = Math.sin(t * 2.3) * D.w * 0.3, a = new THREE.Vector3(0, 0, NZ), b = new THREE.Vector3(x, y, top + 0.002), dv = b.clone().sub(a);
+      g.beam.position.copy(a).addScaledVector(dv, 0.5); g.beam.scale.set(1, dv.length(), 1); g.beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dv.normalize());
+      g.beamM.color.set(T.beam); g.beamM.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; g.spot.position.copy(b); }
+    g.lampM.color.set(busy ? '#f59e0b' : dk ? '#3f2f12' : '#7c5a1a');
+    /* the meters: the same reading as the flat electrometer, and how many checks pass */
+    let lcd = '—', stat = '—';
+    if (busy) lcd = stat = 'beam on';
+    else if (S.view === 'patient') { if (S.G) { lcd = `Γ ${f(S.G.pass, 1)} %`; stat = S.G.pass >= 95 ? 'PASS' : 'FAIL'; } }
+    else if (r) { lcd = d === 'phantom' ? `${f(r.out, 1)} %` : d === 'mlic' ? `R90 ${f(r.R90, 2)}` : `${f(r.err, 1)} mm`; stat = `${['out', 'range', 'pos', 'size'].filter((k) => r.pass[k]).length} of 4 pass`; }
+    g.mE.set(lcd); g.mS.set(stat);
+    /* the camera: the whole room, or close over the screen when it shows the spots */
+    const cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0, fw = W - cardW, near = d === 'lynx', k = Math.max(1, 1.45 / (fw / H));
+    st.size(W, H); st.place(G3.o, near ? [-0.2, -0.2, 1.15] : [-0.45, -0.35, 1.2], (near ? 2.3 : 4.3) * k);
+    if (cardW) st.cam.setViewOffset(W, H, cardW / 2, 0, W, H); else st.cam.clearViewOffset();
+    st.render();
+    /* words over the picture */
+    const Q = (x, y, z) => st.project([x, y, z]), tag = (s, x, y, o = {}) => { ctx.font = `${o.w || 600} ${10.5 * p}px ${T.ui}`; const tw = ctx.measureText(s).width, x0 = o.a === 'right' ? x - tw : o.a === 'center' ? x - tw / 2 : x;
+      if (x0 < 4 || x0 + tw > fw - 4) return; ctx.globalAlpha = 0.85; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(x0 - 4 * p, y - 8 * p, tw + 8 * p, 16 * p, 4 * p); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x0, y + 0.5); };
+    { const [x, y] = Q(D.w / 2 + 0.03, -D.w / 2, top - 0.01); tag(d === 'phantom' ? 'chamber at 2 cm' : d === 'mlic' ? 'range stack' : d === 'lynx' ? 'scintillating screen and camera' : `water equivalent slabs, ${f(S.zm, 1)} cm`, x, y); }
+    if (d === 'array') { const [x, y] = Q(D.w / 2 + 0.03, -D.w / 2, CT + 0.02); tag('2D chamber array', x, y + 6 * p); }
+    { const [x, y] = Q(0.21, -0.21, 1.85); tag('nozzle', x + 6 * p, y); }
+    { const [x, y] = Q(-1.45, -0.4, GC + 0.63); tag('beam on', x, y + 4 * p, { a: 'center', w: 400 }); }
+    const ok = S.view === 'patient' ? (S.G ? S.G.pass >= 95 : null) : r ? r.ok : null;
+    if (ok != null && !busy) { const tx = S.view === 'patient' ? (ok ? 'PASS (≥ 95 %)' : 'FAIL (< 95 %)') : ok ? 'ALL CHECKS PASS' : 'OUT OF TOLERANCE', [x, y0] = Q(g.cart[0], g.cart[1], 1.12), y = Math.max(64 * p, Math.min(H - 16 * p, y0));
+      ctx.font = `700 ${12 * p}px ${T.ui}`; const tw = ctx.measureText(tx).width + 18 * p, x0 = Math.max(6 * p, x - tw / 2); ctx.fillStyle = ok ? T.pass : T.fail; ctx.globalAlpha = 0.92;
+      ctx.beginPath(); ctx.roundRect(x0, y - 11 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, x0 + 9 * p, y); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `600 ${10.5 * p}px ${T.ui}`;
+    const lines = [(W < 560 ? '' : 'IBA Proteus ONE style room, ') + (S.view === 'patient' ? 'patient plan' : `${sig(S.e, 4)} MeV`),
+      fw < 520 ? 'Roughly to scale; beam drawn as a line.' : 'Room and devices roughly to scale; the beam is drawn as a visible line.', fw < 520 ? 'Drag to turn.' : 'Drag to turn the view.'];
+    const lw = Math.max(...lines.map((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 10.5) * p}px ${T.ui}`; return ctx.measureText(s).width; }));
+    ctx.globalAlpha = 0.8; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(6 * p, 5 * p, lw + 10 * p, 47 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+    lines.forEach((s, i) => { ctx.font = `${i ? 400 : 600} ${(i ? 10 : 10.5) * p}px ${T.ui}`; ctx.fillStyle = i ? T.muted : T.ink; ctx.fillText(s, 11 * p, (9 + 14 * i) * p); });
+  }
+
   /* ---------- drawing: the graphs ---------- */
   function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
   function axes(c, L, R, top, bot, xa, xb, ya, yb, xl, yl, p) {
@@ -566,7 +690,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else drawSpotPanel(pctx, L, R, top, bot, r, p);
     if (!narrow) gauges(pctx, PW - gw - 10 * p, top - 12 * p, gw - 10 * p, r, p, busy);
   }
-  function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawRoom(); drawPlot(); }
+  function draw() { if (!T || !W) return; const three = use3(); if (g3) g3.st.el.hidden = !three; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (three) { ctx.clearRect(0, 0, W, H); draw3(); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawRoom(); } drawPlot(); }
 
   /* ---------- readouts ---------- */
   const pf = (ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'pass' : 'fail'}</span>`;
@@ -682,6 +807,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'ok'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
+  /* opens in 3D; ?view=flat, a low power device or no WebGL keep the flat picture */
+  view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
+    change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
   window.vdDemo = { S, V, full, applyPreset, runQA, stepDays, patient, dailyQA, sobp, patientQA, gamma, sigmaAir };
   requestAnimationFrame(frame);
 })();
