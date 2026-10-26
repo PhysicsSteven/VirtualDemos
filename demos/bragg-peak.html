@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vdstop.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>The Bragg Peak</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +36,9 @@
 .setup-card .seg { align-self: flex-start; }
 .setup-card.away { opacity: 0; visibility: hidden; }
 .setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.why-note { margin: 0; padding: 6px 12px; font-size: 0.74rem; line-height: 1.4; color: var(--muted); border-top: 1px solid var(--line); background: var(--surface); }
+.stage[data-why="1"] .plotbox { height: 240px; }
+.dim-msg { font-size: 0.78rem; color: var(--muted); }
 .plotbox { position: relative; flex: none; height: 290px; border-top: 1px solid var(--line); }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
@@ -67,7 +72,10 @@
           <button type="button" data-view="pristine" aria-pressed="true">One energy</button>
           <button type="button" data-view="sobp" aria-pressed="false">Spread out peak</button>
           <button type="button" data-view="compare" aria-pressed="false">Protons and photons</button>
+          <button type="button" data-view="why" aria-pressed="false">Why it peaks</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="dim-msg" id="dimMsg" aria-live="polite"></span>
         <span class="clock mono" id="count" aria-live="off"></span>
       </div>
       <div class="scene" id="scene">
@@ -87,9 +95,11 @@
           <button type="button" data-w="fit" aria-pressed="true">Fitted flat</button><button type="button" data-w="equal" aria-pressed="false">All equal</button></div></div>
         <div class="pick" id="showBox"><span class="lbl" id="showLbl">In the phantom</span><div class="seg" role="group" aria-labelledby="showLbl" id="showSeg">
           <button type="button" data-show="protons" aria-pressed="true">Protons</button><button type="button" data-show="photons" aria-pressed="false">6 MV photons</button></div></div>
-        <div><div class="slider-head"><label for="sZ">Detector depth</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="40" step="0.01" data-unit="cm"></div>
+        <div id="wuBox"><div class="slider-head"><label for="sWu">Follow one proton</label><output id="oWu" class="mono" for="sWu"></output></div><input type="range" id="sWu" min="0" max="1000" step="1" aria-describedby="wuHint"><p class="hint" id="wuHint">The last tenth of the slider is the last 1 MeV.</p></div>
+        <div id="zBox"><div class="slider-head"><label for="sZ">Detector depth</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="40" step="0.01" data-unit="cm"></div>
         <label class="check" id="layersBox"><input type="checkbox" id="chkLayers" checked><span>Show each energy layer</span></label>
       </div>
+      <p class="why-note" id="whyNote" hidden></p>
       <div class="plotbox" id="plotbox">
         <canvas id="plot" role="img" aria-label="Graph of the dose against depth: the proton depth dose, the energy layers of a spread out peak, the 6 MV photon depth dose and the target, with the detector depth marked. Drag on the graph to move the detector."></canvas>
       </div>
@@ -111,6 +121,8 @@
           <button type="button" data-p="deep" aria-pressed="false">Deep target, 20 to 28 cm</button>
           <button type="button" data-p="vsph" aria-pressed="false">Protons against photons</button>
           <button type="button" data-p="photons" aria-pressed="false">6 MV photons alone</button>
+          <button type="button" data-p="why" aria-pressed="false">Why it peaks: follow one proton</button>
+          <button type="button" data-p="whyEnd" aria-pressed="false">The last centimeter</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -199,6 +211,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the depth on the far side of the maximum where the curve falls to a level, and on the near side where it first reaches it */
   function distalAt(z, d, lev) { let im = 0; for (let i = 1; i < d.length; i++) if (d[i] > d[im]) im = i; for (let i = im; i < d.length - 1; i++) if (d[i] >= lev && d[i + 1] < lev) return z[i] + (z[i + 1] - z[i]) * (d[i] - lev) / (d[i] - d[i + 1]); return NaN; }
   function proximalAt(z, d, lev) { for (let i = 1; i < d.length; i++) if (d[i - 1] < lev && d[i] >= lev) return z[i - 1] + (z[i] - z[i - 1]) * (lev - d[i - 1]) / (d[i] - d[i - 1]); return NaN; }
+
+  /* why the peak happens (the "Why it peaks" view), in Bohr's picture of a fast proton passing electrons. An electron a distance b from
+     the straight track feels the proton's pull for a time of about 2b/v, so it is left with the sideways kick Δp = 2 z e²/(4πε₀ b v)
+     and the energy Δp²/2mₑ: a slower proton spends longer near each electron and leaves it more energy, as 1/v². An electron farther
+     away than b_max = γv/ω, with ħω = I, sees the field change so slowly that it is pushed aside and let go with no energy kept (Bohr's
+     adiabatic limit, gradual in fact); the nearest distance that counts is b_min = ħ/(2γmₑv). Bethe's bracket, the log of their ratio,
+     is read here straight off the shared core: L = (S/ρ) β² / (K Z/A), so S ∝ L/β² holds exactly. Constants: CODATA 2022. */
+  const WHY = { mec2: 0.51099895069, hbarc: 197.3269804, e2: 197.3269804 / 137.035999177, K: 0.307075, NA: 6.02214076e23 };
+  function whyAt(V, T, m) {
+    const M = V.part('proton').M, g = 1 + T / M, beta = Math.sqrt(1 - 1 / (g * g)), Mm = V.mat(m);
+    return { T, beta, gamma: g,
+      bmax: g * beta * WHY.hbarc / Mm.I,                        /* nm: γβ ħc / I with ħc in MeV fm and I in eV (1 nm = 10⁶ fm) */
+      bmin: WHY.hbarc / (2 * WHY.mec2 * g * beta) * 1e-6,       /* nm */
+      L: T >= 1 ? V.S(T, m) * beta * beta / (WHY.K * Mm.ZA) : NaN,
+      Sl: T >= 1 ? V.S(T, m) * Mm.rho : NaN };                  /* MeV per cm */
+  }
+  /* the kick on one electron b nm from the track (MeV/c, as Δp c in MeV) and the energy it takes (eV), for charge q */
+  function kickAt(b, beta, q) { const dpc = 2 * (q == null ? 1 : q) * WHY.e2 / (b * 1e6 * beta); return { dpc, eV: dpc * dpc / (2 * WHY.mec2) * 1e6 }; }
+  /* a slow proton picks up electrons and loses them again: its average charge, Barkas's formula for z = 1 */
+  function zEff(beta) { return 1 - Math.exp(-125 * beta); }
+  /* electrons per nm³ in the medium */
+  function eDensity(V, m) { const Mm = V.mat(m); return Mm.rho * Mm.ZA * WHY.NA * 1e-21; }
   // ==CORE END==
   if (typeof document === 'undefined') return;
   const V = window.VDStop;
@@ -214,9 +248,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     coarse: { view: 'sobp', m: 'water', zp: 10, zd: 15, step: 1, wmode: 'fit', z: 12.5, hint: 'Layers 1 cm apart in range (the other setups use 0.3 cm): each peak is only a few millimeters wide at this depth, so the best weights still leave ripples across the target. The layers have to be closer than the width of one peak.' },
     deep: { view: 'sobp', m: 'water', zp: 20, zd: 28, step: 0.3, wmode: 'fit', z: 24, hint: 'A deep target, 20 to 28 cm: the peaks are wider here (straggling grows with the range), so the layers blend more smoothly, and the distal edge falls off less steeply.' },
     vsph: { view: 'compare', m: 'water', zp: 10, zd: 15, step: 0.3, wmode: 'fit', show: 'protons', z: 12.5, hint: 'One proton field and one 6 MV photon field, both scaled to give the target the same mean dose. Photons give their highest dose near the surface and keep going out the far side; protons give less in front of the target and nothing beyond it. Real photon plans use several fields from different directions to spare the entrance.' },
+    why: { view: 'why', m: 'water', e: 150, z: 15, wu: 0, hint: 'One 150 MeV proton in water, with a window magnified onto the track around it. Each electron it passes is pulled toward its path while it goes by, for a time of about 2b/v, so the sideways kick is Δp = FΔt ∝ 1/v and the energy the electron takes, Δp²/2mₑ, grows as 1/v². Everyday drag grows with speed; this loss grows as the proton slows. Press Send a proton and watch the arrows and colors grow, while the reach b_max, beyond which electrons are only nudged and let go, closes in. The graph multiplies the two.' },
+    whyEnd: { view: 'why', m: 'water', e: 150, z: 15, wu: 0.86, hint: 'The same proton with 1 cm to go. Its speed falls fast here, so each kick, and the dose, rises steeply: the Bragg peak. In the last 1 MeV (under 0.04 mm) the proton starts to catch electrons and lose them again, so its average charge drops, and the reach b_max shrinks toward the closest distance b_min: the loss per cm peaks and then falls, and the proton stops as a hydrogen atom.' },
     photons: { view: 'compare', m: 'water', zp: 10, zd: 15, step: 0.3, wmode: 'fit', show: 'photons', z: 1.5, hint: 'A 6 MV photon beam, 10 × 10 cm², SSD 100 cm, in water. The dose builds up over the first 1.5 cm as the electrons set in motion by the photons travel forward, then falls slowly, by about 3.6 % per cm, through the whole patient.' },
   };
-  const S = { preset: 'p150', view: 'pristine', m: 'water', e: 150, sp: 0, zp: 10, zd: 15, step: 0.3, wmode: 'fit', show: 'protons', z: 15, layers: true,
+  const S = { preset: 'p150', view: 'pristine', m: 'water', e: 150, sp: 0, zp: 10, zd: 15, step: 0.3, wmode: 'fit', show: 'protons', z: 15, layers: true, wu: 0,
     run: false, blind: false, zmax: 20, D: null, P: null, L: [], parts: [], acc: 0 };
   const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
   let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, T = null, seed = 4242;
@@ -237,7 +273,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- the model, recomputed on any change ---------- */
   function recompute() {
     const Mm = M();
-    if (S.view === 'pristine') {
+    if (S.view === 'pristine' || S.view === 'why') {
       const R = V.range(S.e, S.m) / Mm.rho; S.zmax = Math.max(6, Math.ceil(R * 1.22));
       S.D = V.dose({ T: S.e, layers: lay(), spread: S.sp / 100, dz: S.zmax / 800, zmax: S.zmax }); S.L = []; S.P = null;
       let pk = 0; for (const v of S.D.d) pk = Math.max(pk, v); S.D.n = Array.from(S.D.d, (v) => v / pk);
@@ -255,7 +291,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.P = { z: pz, n: pd.map((v) => v / pm), pdd: pd };
     }
     /* the lateral spread by multiple scattering of the deepest beam, for the edges of the dose wash */
-    const E0 = S.view === 'pristine' ? S.e : S.L[0].E, ratio = V.range(E0, 'water') / (V.range(E0, S.m) / Mm.rho);
+    const E0 = S.view === 'pristine' || S.view === 'why' ? S.e : S.L[0].E, ratio = V.range(E0, 'water') / (V.range(E0, S.m) / Mm.rho);
     S.sxz = []; for (let i = 0; i <= 60; i++) S.sxz.push(Math.max(0.15, V.sigmaX({ T: E0 }, i / 60 * S.zmax * ratio)));
     /* speed of a proton against its residual range, for the moving dots */
     S.beta = []; const Rm = V.range(E0, S.m) / Mm.rho; for (let i = 0; i <= 100; i++) { const E = V.energy(Math.max(1e-4, i / 100 * Rm) * Mm.rho, S.m); S.beta.push(Math.sqrt(1 - Math.pow(938.272 / (E + 938.272), 2))); }
@@ -410,6 +446,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W) return;
+    if (S.view === 'why') { W3.draw(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     drawTank(); drawDose();
   }
@@ -423,7 +460,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = (a) => `<div><dt>${a}</dt><dd class="ok">hidden: measure it</dd></div>`;
     const B = (a, b, wide) => (S.blind ? hid(a) : dd(a, b, wide));
     let h = '';
-    if (S.view === 'pristine') {
+    if (S.view === 'why') {
+      const q = W3.st, w = q.w, k = kickAt(0.3, w.beta, 1), k0 = kickAt(0.3, q.b0, 1);
+      h += dd('Proton', `${sig(S.e, 4)} MeV into ${M().name.toLowerCase()}`, true);
+      h += dd('Depth', lenTxt(q.z)) + dd('Energy left', q.end ? `${f(q.T * 1000, 0)} keV` : `${sig(q.T, 4)} MeV`);
+      h += dd('Speed v/c', f(w.beta, w.beta < 0.1 ? 4 : 3)) + dd('Reach b_max = γv/ω', `${sig(w.bmax, 3)} nm`);
+      h += dd('Kick on an electron 0.3 nm away', `${sig(k.dpc * 1e6, 3)} eV/c, ${f(k.dpc / k0.dpc, 1)} × the entrance's`, true);
+      h += dd('Energy that electron takes', w.bmax >= 0.3 ? `${sig(k.eV * 1000, 3)} meV, ${f(k.eV / k0.eV, 1)} × the entrance's` : 'none: it is beyond the reach now', true);
+      h += q.end ? dd('Average charge (Barkas)', `${f(zEff(w.beta), 2)} e`) + dd('Energy lost per cm', 'off the graph: Bethe fails below 1 MeV')
+        : dd('Energy lost per cm (Bethe)', `${sig(w.Sl, 4)} MeV/cm`) + dd('Bethe\'s log L', f(w.L, 2));
+    } else if (S.view === 'pristine') {
       const q = pristineFacts(), Mm = M();
       h += dd('Beam', `protons, ${sig(S.e, 4)} MeV, in ${Mm.name.toLowerCase()}`, true);
       h += B('CSDA range', lenTxt(V.range(S.e, S.m) / Mm.rho)) + B('Depth of 80 % (distal), R80', lenTxt(q.R80));
@@ -452,12 +498,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sZp').min = String(Math.ceil(rLo() * 10) / 10); $('sZp').max = String(Math.floor((rHi() - 1.5) * 10) / 10); $('sZd').min = String(Math.ceil((rLo() + 1) * 10) / 10); $('sZd').max = String(Math.floor((rHi() - 0.5) * 10) / 10);
     $('sZp').value = S.zp; $('oZp').textContent = lenTxt(S.zp); $('sZd').value = S.zd; $('oZd').textContent = lenTxt(S.zd); $('selStep').value = String(S.step);
     $('sZ').value = S.z; $('oZ').textContent = lenTxt(S.z); $('chkLayers').checked = S.layers;
-    $('eBox').hidden = !pr; $('medBox').hidden = cmp; for (const id of ['zpBox', 'zdBox', 'stepBox', 'wBox', 'layersBox']) $(id).hidden = pr; $('showBox').hidden = !cmp;
+    const why = S.view === 'why';
+    $('eBox').hidden = !(pr || why); $('medBox').hidden = cmp; $('wuBox').hidden = !why; $('zBox').hidden = why; $('spBox').hidden = why; $('presetHint').closest('details').hidden = false;
+    $('sWu').value = String(Math.round(S.wu * 1000)); $('oWu').textContent = why ? W3.wuText() : ''; for (const id of ['zpBox', 'zdBox', 'stepBox', 'wBox', 'layersBox']) $(id).hidden = pr || why; $('showBox').hidden = !cmp;
     for (const b of document.querySelectorAll('#wSeg button')) b.setAttribute('aria-pressed', String(b.dataset.w === S.wmode));
     for (const b of document.querySelectorAll('#showSeg button')) b.setAttribute('aria-pressed', String(b.dataset.show === S.show));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === S.view));
-    window.vdShowCols = pr ? [['E_MeV', 'E (MeV)'], ['medium', 'medium'], ['depth_cm', 'z (cm)'], ['dose_pct', 'dose (%)']]
+    window.vdShowCols = pr || why ? [['E_MeV', 'E (MeV)'], ['medium', 'medium'], ['depth_cm', 'z (cm)'], ['dose_pct', 'dose (%)']]
       : cmp ? [['depth_cm', 'z (cm)'], ['proton_pct', 'protons (%)'], ['photon_pct', 'photons (%)']] : [['to_cm', 'target to (cm)'], ['weights', 'weights'], ['depth_cm', 'z (cm)'], ['dose_pct', 'dose (%)']];
     $('about').textContent = 'Protons: the broad beam depth dose of the shared stopping power model (Bethe stopping powers with NIST PSTAR material data, CSDA ranges within 0.2 mm of PSTAR in water), '
       + 'with Bohr range straggling, the beam\'s energy spread, and nuclear losses of 1.2 % per cm of water (Bortfeld 1997). A tissue is converted to water equivalent depth with its stopping power ratio to water. '
@@ -465,17 +513,227 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       + 'weighted by non negative least squares for a flat dose over the target. Photons: a curve fitted through measured points for 6 MV, 10 × 10 cm², SSD 100 cm (Chowdhury et al. 2024), within 0.05 % of each point, extrapolated past 15.2 cm. '
       + 'The dose wash\'s field edges use the Fermi–Eyges lateral spread for protons and a fixed 3 mm blur for photons (a picture: only the central axis curve is computed). Dose here is physical dose; proton plans multiply it by an RBE of 1.1.';
   }
+  /* ---------- Why it peaks: one proton passing electrons, in 3D (vd3kit) with a flat fallback; the physics is whyAt, kickAt and zEff in the CORE ---------- */
+  const W3 = (() => {
+    const XW = 6, NPER = 6, BLO = 1e-4, BHI = 2.5, CW = 9;        /* window: ±6 nm of track, 6 dots per nm, b from 10⁻⁴ to 2.5 nm on a log scale, 9 nm/s per unit β */
+    const C_NM = 2.99792458e17, C_CM = 2.99792458e10;
+    const rm = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lg = (b) => Math.max(0, Math.min(1, Math.log10(b / BLO) / Math.log10(BHI / BLO)));   /* display radius, 0 at the axis to 1 at the glass */
+    let es = [], acc = 0, q = 1, qT = 0, view = null, S3 = null, dirty = true, o = { th: -Math.PI / 2 + 0.32, ph: 1.12, zoom: 1 };
+    let sd = 99; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    /* where the proton is: u from 0 to 0.9 walks the depth to the CSDA range (where 1 MeV is left), 0.9 to 1 the last 1 MeV */
+    const st = { R: 1, b0: 0.5, CZ: 1, z: 0, T: 150, w: null, end: false, s: 0 };
+    function setup() {
+      const Mm = M(); st.R = V.range(S.e, S.m) / Mm.rho; st.b0 = whyAt(V, S.e, S.m).beta; st.CZ = st.R / (12 * st.b0);
+      st.zmax = 5 * Math.ceil((st.R * 1.1 + 0.5) / 5); st.Sl0 = whyAt(V, S.e, S.m).Sl; st.L0 = whyAt(V, S.e, S.m).L;
+      st.curve = []; for (let i = 0; i <= 240; i++) { const z = st.R * (1 - Math.pow(1 - i / 240, 2.5)), T = Math.max(1, V.energy(Math.max(0, st.R - z) * Mm.rho, S.m)), w = whyAt(V, T, S.m); st.curve.push({ z, T, b: w.beta, L: w.L, Sl: w.Sl }); }
+      st.SlMax = st.curve[st.curve.length - 1].Sl; place(); dirty = true; trailKey = '';
+    }
+    function place() {
+      const u = S.wu;
+      if (u <= 0.9) { st.end = false; st.s = 0; st.z = u / 0.9 * st.R; st.T = Math.max(1, V.energy(Math.max(0, st.R - st.z) * M().rho, S.m)); }
+      else { st.end = true; st.s = (u - 0.9) / 0.1; st.z = st.R; st.T = Math.pow(1 - st.s, 2); }
+      st.w = whyAt(V, Math.max(st.T, 1e-6), S.m); st.stopped = u >= 1;
+    }
+    /* the curve point at or just before depth z */
+    const at = (z) => { const C = st.curve; let a = 0, b = C.length - 1; while (b - a > 1) { const m = (a + b) >> 1; if (C[m].z <= z) a = m; else b = m; } return z >= C[b].z ? C[b] : C[a]; };
+    const ratio = () => st.b0 / Math.max(st.w.beta, 1e-6);          /* each kick against the kick at the same distance at the entrance */
+    function spawn(x) { const b = BLO * Math.pow(BHI / BLO, rnd()), ph = 2 * Math.PI * rnd(); return { x, b, ph, k: 0, f: 0.5 * (1 - x / Math.hypot(x, b)), kept: false, out: false, age: 0 }; }
+    function reset() { es = []; acc = 0; sd = 99; for (let x = -XW; x < XW; x += 1 / NPER) { const e = spawn(x + rnd() / NPER); if (e.x < 0) { e.f = 1; e.k = e.b <= st.w.bmax ? ratio() : 0; e.kept = e.k > 0; e.out = !e.kept; } es.push(e); } }
+    /* one step: the depth moves on while running; the window always shows the proton passing electrons at its speed */
+    function step(dt) {
+      if (S.run && !st.stopped) {
+        if (!st.end) { S.wu = Math.min(0.9 + 1e-9, S.wu + 0.9 * st.CZ * st.w.beta * dt / st.R); if (S.wu >= 0.9) S.wu = 0.9 + 1e-6; }
+        else S.wu = Math.min(1, S.wu + dt / 7 * 0.1);
+        place(); if (st.stopped) { S.run = false; setRun(false); }
+        $('sWu').value = String(Math.round(S.wu * 1000)); $('oWu').textContent = wuText();
+      }
+      if (!S.run && rm()) return;
+      const vw = st.stopped ? 0 : CW * st.w.beta;
+      qT -= dt; if (qT <= 0) { qT = 0.25; q = st.stopped ? 0 : (rnd() < zEff(st.w.beta) ? 1 : 0); }
+      for (const e of es) {
+        e.x -= vw * dt; const f = 0.5 * (1 - e.x / Math.hypot(e.x, e.b)), df = Math.max(0, f - e.f); e.f = f;
+        if (e.b <= st.w.bmax) { e.k += df * q * ratio(); if (e.k > 0) e.kept = true; } if (!e.kept && f > 0.5) e.out = true;
+        if (e.x < 0) e.age += dt;
+      }
+      es = es.filter((e) => e.x > -XW);
+      acc += vw * dt; while (acc >= 1 / NPER) { acc -= 1 / NPER; es.push(spawn(XW + acc)); }
+      dirty = true;
+    }
+    const heatCss = (t) => { t = Math.max(0, Math.min(1, t)); const h = 240 - 240 * t; return `hsl(${h}, 80%, ${52 + 6 * Math.sin(t * Math.PI)}%)`; };
+    const eT = (k) => Math.min(1, Math.log10(1 + k * k) / 3);           /* color: energy taken, k², on a log scale up to 10³ times the entrance */
+    const wuText = () => (st.end ? `${f(st.T * 1000, 0)} keV left` : `${lenTxt(st.z)}, ${sig(st.T, 4)} MeV`);
+    function sci(x) { const e = Math.floor(Math.log10(x)), m = Math.round(x / Math.pow(10, e)); const sup = String(e).split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join(''); return `${m} × 10${sup}`; }
+    function note() {
+      return `Not to scale. The window is ${2 * XW} nm of the track, with the distance from it on a log scale (10⁻⁴ to 2.5 nm), so every ring of distance gets the same number of dots: a sample of the electrons, each drawn at rest. `
+        + `Arrows: each kick against the kick at the same distance at the entrance (length in proportion, capped at 10 times); colors: the energy the electron takes. Time is slowed about ${sci(C_CM / st.CZ)} times in the tank and ${sci(C_NM / CW)} times in the window. `
+        + `The track is drawn straight: no scattering, straggling or nuclear reactions. The last 1 MeV, under 0.04 mm, is paced for viewing.`;
+    }
+    /* ---------- 3D ---------- */
+    let G3 = null, trailKey = '';
+    function init() {
+      S3 = VD3K.stage($('scene'), { before: can, shadow: 0.6, fov: 30, far: 30 }); if (!S3) return false;
+      S3.el.style.zIndex = '0'; can.style.zIndex = '1';
+      const sc = S3.scene, g = G3 = {};
+      sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.25 }), VD3K.backdrop(S3, { r: 1.25, y: 0.1 }));
+      const glassM = VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0.1, depthWrite: false, side: THREE.DoubleSide }, ['#b9d3e6', '#7fa6c2']);
+      const waterM = VD3K.material(S3, { transparent: true, opacity: 0.34, roughness: 0.2, metalness: 0, depthWrite: false }, ['#7fb6dc', '#2c6a96']);
+      g.tank = VD3K.box(0.372, 0.13, 0.135, glassM, 0, 0, 0); g.water = VD3K.box(0.36, 0.118, 0.118, waterM, 0, 0, 0.004); g.tank.castShadow = false; g.water.castShadow = false;
+      sc.add(g.tank, g.water);
+      const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.55 }, ['#8d97a3', '#5d6773']), dark = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#4c5866', '#3a4450']);
+      g.nozzle = VD3K.box(0.11, 0.12, 0.11, dark, -0.265, 0, 0.01); const snout = VD3K.rod([-0.21, 0, 0.065], [-0.188, 0, 0.065], 0.022, steel); sc.add(g.nozzle, snout);
+      const ped = VD3K.box(0.11, 0.12, 0.01, steel, -0.265, 0, 0); sc.add(ped);
+      g.rule = VD3K.ruler(S3, { len: 0.36, to: 10, unit: 'cm', step: 0.1 }); g.rule.position.set(-0.18, -0.085, 0); sc.add(g.rule);
+      /* the dose trail: small spheres along the track, colored by the energy lost per cm there */
+      g.trail = VD3K.particles(S3, { n: 260, r: 0.0026, emissive: '#331100' }); sc.add(g.trail);
+      g.pmac = new THREE.Mesh(new THREE.SphereGeometry(0.0055, 20, 12), new THREE.MeshBasicMaterial({ color: '#ffb066' })); sc.add(g.pmac);
+      /* the magnified window */
+      const WC = [0, 0.03, 0.33]; g.WC = WC;
+      g.win = VD3K.glass(S3, { r: 0.104, len: 0.45, axis: 'x', ends: false, opacity: 0.1 }); g.win.position.set(...WC); sc.add(g.win);
+      const ringM = new THREE.MeshBasicMaterial({ color: T.det, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
+      g.reach = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.44, 48, 1, true), ringM); g.reach.rotation.z = Math.PI / 2; g.reach.position.set(...WC); g.reach.renderOrder = 3; sc.add(g.reach); S3.onTheme(() => ringM.color.set(T.det));
+      const minM = new THREE.MeshBasicMaterial({ color: '#f59e0b', transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false });
+      g.bmin = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.44, 32, 1, true), minM); g.bmin.rotation.z = Math.PI / 2; g.bmin.position.set(...WC); g.bmin.renderOrder = 3; sc.add(g.bmin);
+      g.axis = VD3K.rod([WC[0] - 0.225, WC[1], WC[2]], [WC[0] + 0.225, WC[1], WC[2]], 0.0009, new THREE.MeshBasicMaterial({ color: '#ffb066', transparent: true, opacity: 0.5 })); sc.add(g.axis);
+      g.el = VD3K.particles(S3, { n: 200, r: 0.0055 }); sc.add(g.el);
+      g.arrows = VD3K.particles(S3, { n: 1400, r: 0.0028, seg: 6 }); sc.add(g.arrows);
+      g.p = new THREE.Mesh(new THREE.SphereGeometry(0.014, 32, 16), new THREE.MeshStandardMaterial({ color: '#ff8a3d', emissive: '#c2410c', emissiveIntensity: 0.9, roughness: 0.3 })); g.p.position.set(...WC); sc.add(g.p);
+      g.pe = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 16, 10), new THREE.MeshStandardMaterial({ color: '#7ea2ff', emissive: '#2b60b5', emissiveIntensity: 0.6 })); sc.add(g.pe);
+      const lg2 = new THREE.BufferGeometry(); lg2.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
+      g.link = new THREE.LineSegments(lg2, new THREE.LineDashedMaterial({ color: '#8090a0', dashSize: 0.008, gapSize: 0.006, transparent: true, opacity: 0.8 })); g.link.frustumCulled = false; sc.add(g.link);
+      g.mT = VD3K.meter(S3, { label: 'ENERGY LEFT', w: 0.15, h: 0.085 }); g.mT.position.set(-0.3, -0.15, 0); g.mT.rotation.z = -0.2; sc.add(g.mT);
+      g.mV = VD3K.meter(S3, { label: 'SPEED', sub: 'of the proton', w: 0.15, h: 0.085 }); g.mV.position.set(0.3, -0.15, 0); g.mV.rotation.z = 0.2; sc.add(g.mV);
+      S3.orbit(S3.el, o, () => { dirty = true; }, { zMin: 0.5, zMax: 2.5 });
+      return true;
+    }
+    const X3 = (z) => -0.18 + z / st.zmax * 0.36;
+    function render3() {
+      const g = G3, sc = $('scene'); S3.size(sc.clientWidth, sc.clientHeight); S3.theme();
+      const WC = g.WC, sxw = 0.44 / (2 * XW), RD = 0.098;
+      /* trail up to the proton */
+      const key = [st.R, st.zmax, S.m, Math.round(st.z * 400)].join();
+      if (key !== trailKey) { trailKey = key; let n = 0; const N = 260;
+        for (let i = 0; i < N; i++) { const z = i / (N - 1) * st.R; if (z > st.z) break; const c = at(z);
+          g.trail.put(n++, X3(z), 0, 0.065, VD3K.heat(Math.log(c.Sl / st.Sl0) / Math.log(st.SlMax / st.Sl0))); }
+        g.trail.show(n); g.trail.done(); }
+      g.pmac.position.set(X3(st.z), 0, 0.065);
+      if (g.rule.userData.zmax !== st.zmax) { S3.scene.remove(g.rule); g.rule = VD3K.ruler(S3, { len: 0.36, to: st.zmax, unit: 'cm', step: st.zmax / 100 }); g.rule.position.set(-0.18, -0.085, 0); g.rule.userData.zmax = st.zmax; S3.scene.add(g.rule); S3.theme(true); }
+      g.reach.scale.set(Math.max(1e-4, RD * lg(st.w.bmax)), 1, Math.max(1e-4, RD * lg(st.w.bmax)));
+      g.bmin.scale.set(Math.max(1e-4, RD * lg(st.w.bmin)), 1, Math.max(1e-4, RD * lg(st.w.bmin)));
+      const grey = new THREE.Color(VD3.dark() ? '#4d5663' : '#c3cad3'), cold = new THREE.Color('#a8b4c4');
+      let n = 0, na = 0;
+      for (const e of es) {
+        const r = RD * lg(e.b), x = WC[0] + e.x * sxw, y = WC[1] + r * Math.cos(e.ph), zz = WC[2] + r * Math.sin(e.ph);
+        let col = cold, wob = 0;
+        if (e.kept) col = VD3K.heat(eT(e.k)); else if (e.out) col = grey;
+        if (!e.kept && e.b > st.w.bmax) wob = 0.006 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3);
+        const rr = Math.max(0, r - wob);
+        g.el.put(n++, x, WC[1] + rr * Math.cos(e.ph), WC[2] + rr * Math.sin(e.ph), col);
+        if (e.kept) { const L = Math.min(0.09, 0.009 * e.k), a = Math.max(0, 1 - e.age / 2.2), cc = VD3K.heat(eT(e.k)), m = Math.max(2, Math.round(L / 0.004));
+          if (a > 0.02) for (let i = 1; i <= m && na < 1400; i++) { const t = i / m * L * Math.min(1, e.f * 1.6); g.arrows.put(na++, x, y - t * Math.cos(e.ph), zz - t * Math.sin(e.ph), cc.clone().multiplyScalar(0.35 + 0.65 * a)); } }
+      }
+      g.el.show(n); g.el.done(); g.arrows.show(na); g.arrows.done();
+      const t = performance.now() / 1000; g.pe.visible = q === 0; if (q === 0) g.pe.position.set(WC[0] + 0.02 * Math.cos(t * 5), WC[1] + 0.02 * Math.sin(t * 5), WC[2] + 0.008 * Math.sin(t * 3));
+      g.p.material.emissiveIntensity = q ? 0.9 : 0.35;
+      const lp = g.link.geometry.attributes.position.array, pm = [X3(st.z), 0, 0.075];
+      lp.set([...pm, WC[0] - 0.22, WC[1], WC[2] - 0.104, ...pm, WC[0] + 0.22, WC[1], WC[2] - 0.104]); g.link.geometry.attributes.position.needsUpdate = true; g.link.computeLineDistances();
+      g.mT.set(st.end ? `${f(st.T * 1000, 0)} keV` : `${f(st.T, 1)} MeV`); g.mV.set(`${f(st.w.beta, st.w.beta < 0.1 ? 4 : 3)} c`);
+      S3.place(o, [0, 0.0, 0.235], S3.fit(1.08, 1.6)); S3.scene.updateMatrixWorld(); S3.r.render(S3.scene, S3.cam);
+      return { WC, RD, sxw };
+    }
+    function pill(c, txt, x, y, o2 = {}) {
+      const p = proj(); c.save(); c.font = `${o2.w || 600} ${(o2.s || 11) * p}px ${T.ui}`; const w = c.measureText(txt).width + 12 * p, h = 18 * p;
+      let x0 = o2.a === 'right' ? x - w : o2.a === 'center' ? x - w / 2 : x; x0 = Math.max(4, Math.min(W - w - 4, x0));
+      c.fillStyle = dark() ? 'rgba(15,20,27,0.78)' : 'rgba(255,255,255,0.85)'; c.beginPath(); c.roundRect(x0, y - h / 2, w, h, 6 * p); c.fill();
+      c.fillStyle = o2.c || T.ink; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillText(txt, x0 + 6 * p, y + 0.5); c.restore();
+    }
+    function labels3(L) {
+      const pr = (v) => S3.project(v), WC = L.WC, RD = L.RD, p = proj();
+      const top = pr([WC[0], WC[1], WC[2] + 0.118]), pp = pr([WC[0], WC[1], WC[2]]), tank = pr([0.05, -0.065, 0.14]), tr = pr([X3(st.z), 0, 0.07]);
+      pill(ctx, `Magnified: ${2 * XW} nm of the track around the proton`, top[0], top[1] - 6 * p, { a: 'center' });
+      const rb = pr([WC[0] - 0.15, WC[1] + RD * lg(st.w.bmax) * Math.cos(-0.9), WC[2] + RD * lg(st.w.bmax) * Math.sin(-0.9)]);
+      pill(ctx, `reach b_max = ${sig(st.w.bmax, 3)} nm`, rb[0], rb[1] + 14 * p, { a: 'right', c: T.det });
+      pill(ctx, st.stopped ? 'stopped: a hydrogen atom' : q ? 'proton' : 'proton carrying an electron', pp[0] + 14 * p, pp[1] - 20 * p, { c: T.proton });
+      const bn = pr([WC[0] + 0.18, WC[1], WC[2] - RD * lg(st.w.bmin)]); pill(ctx, `b_min ${sig(st.w.bmin * 1000, 2)} pm`, bn[0], bn[1] + 12 * p, { a: 'center', c: '#f59e0b', s: 10 });
+      pill(ctx, `depth ${lenTxt(st.z)}`, tr[0], tr[1] + 26 * p, { a: 'center' });
+      pill(ctx, S.m === 'water' ? 'water phantom' : M().name, tank[0], tank[1], { a: 'center', w: 400 });
+    }
+    /* ---------- flat ---------- */
+    function drawFlat() {
+      const Gr = window.VDGear, d = dark(), p = proj(), cardW = W > 820 && !$('setupCard').classList.contains('away') ? 300 : 0;
+      const x0 = 24 * p, x1 = Math.max(x0 + 200, W - cardW - 24 * p), wy0 = 46 * p, wy1 = Math.max(wy0 + 120, H * 0.6), cy = (wy0 + wy1) / 2, hh = (wy1 - wy0) / 2;
+      Gr.backdrop(ctx, W, H, { horizon: 0.86 }); Gr.bench(ctx, 0, H - 22 * p, W, 8 * p, 22 * p);
+      ctx.fillStyle = d ? 'rgba(126,162,255,0.06)' : 'rgba(43,96,181,0.05)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0, wy0, x1 - x0, wy1 - wy0, 10 * p); ctx.fill(); ctx.stroke();
+      const Y = (r, s) => cy - s * r * hh * 0.92, X = (x) => (x0 + x1) / 2 + x / XW * (x1 - x0) / 2;
+      ctx.fillStyle = T.det; ctx.globalAlpha = 0.12; const rb = lg(st.w.bmax); ctx.fillRect(x0, Y(rb, 1), x1 - x0, Y(rb, -1) - Y(rb, 1)); ctx.globalAlpha = 0.18; ctx.fillStyle = '#f59e0b'; const rn = lg(st.w.bmin); ctx.fillRect(x0, Y(rn, 1), x1 - x0, Y(rn, -1) - Y(rn, 1)); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.proton; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(x0, cy); ctx.lineTo(x1, cy); ctx.stroke(); ctx.globalAlpha = 1;
+      for (const e of es) {
+        const s = Math.cos(e.ph) >= 0 ? 1 : -1, x = X(e.x); let r = lg(e.b);
+        if (!e.kept && e.b > st.w.bmax) r = Math.max(0, r - 0.08 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3));
+        const y = Y(r, s), col = e.kept ? heatCss(eT(e.k)) : e.out ? (d ? '#5d6775' : '#c3cad3') : '#a8b4c4';
+        if (e.kept) { const a = Math.max(0, 1 - e.age / 2.2), L = 0.9 * hh * Math.min(10, e.k) / 10 * Math.min(1, e.f * 1.6); if (a > 0.02) { ctx.globalAlpha = a; ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + s * L); ctx.stroke(); ctx.globalAlpha = 1; } }
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 3.2 * p, 0, 7); ctx.fill();
+      }
+      const pxc = X(0); ctx.fillStyle = T.proton; ctx.beginPath(); ctx.arc(pxc, cy, 8 * p, 0, 7); ctx.fill();
+      if (!q) { const t = performance.now() / 1000; ctx.fillStyle = '#5b8def'; ctx.beginPath(); ctx.arc(pxc + 14 * p * Math.cos(t * 5), cy + 14 * p * Math.sin(t * 5), 3.2 * p, 0, 7); ctx.fill(); }
+      pill(ctx, `Magnified: ${2 * XW} nm of the track; distance from it on a log scale`, x0 + 8 * p, wy0 + 14 * p);
+      pill(ctx, `reach b_max = ${sig(st.w.bmax, 3)} nm`, x1 - 8 * p, Y(rb, 1) + 12 * p, { a: 'right', c: T.det });
+      pill(ctx, st.stopped ? 'stopped: a hydrogen atom' : q ? 'proton' : 'proton carrying an electron', pxc + 12 * p, cy - 18 * p, { c: T.proton });
+      /* the tank strip */
+      const ty0 = wy1 + 22 * p, ty1 = H - 34 * p, tcy = (ty0 + ty1) / 2, X2 = (z) => x0 + 50 * p + z / st.zmax * (x1 - x0 - 60 * p);
+      Gr.box(ctx, x0, tcy - 14 * p, 44 * p, 28 * p, { color: d ? '#4a5563' : '#566273', r: 4 * p, shadow: false });
+      ctx.fillStyle = Gr.mix(T.water, d ? '#000' : '#5a9cc4', 0.2); ctx.fillRect(X2(0), ty0, X2(st.zmax) - X2(0), ty1 - ty0);
+      for (let i = 0; i < 240; i++) { const c = st.curve[i], c2 = st.curve[i + 1]; if (c.z > st.z) break; ctx.fillStyle = heatCss(Math.log(c.Sl / st.Sl0) / Math.log(st.SlMax / st.Sl0)); ctx.fillRect(X2(c.z), tcy - 2 * p, X2(c2.z) - X2(c.z) + 0.7, 4 * p); }
+      ctx.fillStyle = '#ffb066'; ctx.beginPath(); ctx.arc(X2(st.z), tcy, 4.5 * p, 0, 7); ctx.fill();
+      ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X2(st.z), ty0); ctx.lineTo(pxc, wy1); ctx.stroke(); ctx.setLineDash([]);
+      pill(ctx, `depth ${lenTxt(st.z)} · ${st.end ? f(st.T * 1000, 0) + ' keV' : sig(st.T, 4) + ' MeV'} · v = ${f(st.w.beta, st.w.beta < 0.1 ? 4 : 3)} c`, X2(0), ty1 + 13 * p);
+    }
+    /* ---------- the graph: kick energy (1/v²), reach (Bethe's log) and their product, the energy lost per cm, all against the entrance ---------- */
+    function graph() {
+      if (!PW) return; const p = proj(), Gr = window.VDGear; pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, PW, PH2);
+      const L = 58 * p, R = PW - 18 * p, top = 30 * p, bot = PH2 - 34 * p, y0 = Math.log(0.2), y1 = Math.log(300), X = (z) => L + z / st.zmax * (R - L), Y = (v) => bot - (Math.log(v) - y0) / (y1 - y0) * (bot - top);
+      pctx.strokeStyle = T.grid; pctx.lineWidth = 1; pctx.fillStyle = T.muted; pctx.font = `${10 * p}px ${T.mono}`; pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+      for (const v of [0.3, 1, 3, 10, 30, 100, 300]) { const y = Y(v); pctx.beginPath(); pctx.moveTo(L, y); pctx.lineTo(R, y); pctx.stroke(); pctx.fillText(String(v), L - 6 * p, y); }
+      pctx.textAlign = 'center'; pctx.textBaseline = 'top'; for (const v of niceTicks(0, st.zmax, 8)) pctx.fillText(String(v), X(v), bot + 5 * p); pctx.fillText('depth (cm)', (L + R) / 2, bot + 18 * p);
+      pctx.save(); pctx.translate(13 * p, (top + bot) / 2); pctx.rotate(-Math.PI / 2); pctx.textAlign = 'center'; pctx.font = `${11 * p}px ${T.ui}`; pctx.fillText('times its value at the entrance (log)', 0, 0); pctx.restore();
+      const C = st.curve, b0 = C[0].b, ser = [[(c) => (b0 / c.b) ** 2, '#38bdf8', 'energy per kick, ∝ 1/v²'], [(c) => c.L / st.L0, T.det, 'reach, Bethe\'s log ln(b_max/b_min)'], [(c) => c.Sl / st.Sl0, T.proton, 'energy lost per cm = their product']];
+      for (const [fn, col, , ] of ser) for (const done of [false, true]) {
+        pctx.beginPath(); let started = false; for (const c of C) { if (done && c.z > st.z) break; const x = X(c.z), y = Y(Math.max(0.2, fn(c))); started ? pctx.lineTo(x, y) : pctx.moveTo(x, y); started = true; }
+        pctx.strokeStyle = col; pctx.lineWidth = (done ? (col === T.proton ? 3 : 2) : 1.2) * p; pctx.globalAlpha = done ? 1 : 0.28; pctx.setLineDash(done ? [] : [4 * p, 4 * p]); pctx.stroke(); }
+      pctx.globalAlpha = 1; pctx.setLineDash([]);
+      const c = at(Math.min(st.z, st.R));
+      for (const [fn, col] of ser) { pctx.fillStyle = col; pctx.beginPath(); pctx.arc(X(c.z), Y(Math.max(0.2, fn(c))), 4 * p, 0, 7); pctx.fill(); }
+      pctx.textAlign = 'left'; pctx.textBaseline = 'middle'; pctx.font = `${11 * p}px ${T.ui}`; let lx = L + 4 * p; const ly = top - 15 * p;
+      for (const [, col, txt] of ser) { const t2 = PW < 560 ? txt.split(',')[0].split(' =')[0] : txt; pctx.strokeStyle = col; pctx.lineWidth = 2.5 * p; pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 16 * p, ly); pctx.stroke(); pctx.fillStyle = T.ink; pctx.fillText(t2, lx + 20 * p, ly); lx += 30 * p + pctx.measureText(t2).width; }
+      if (st.end) { pctx.fillStyle = T.muted; pctx.textAlign = 'right'; pctx.fillText('the last 1 MeV (under 0.04 mm) is off this graph: Bethe\'s formula fails there', R, bot - 12 * p); }
+    }
+    function draw() {
+      if (!st.w) return;
+      const on3 = view && view.is3d() && S3;
+      if (on3) { const Lb = render3(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); labels3(Lb); }
+      else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawFlat(); }
+      graph(); dirty = false;
+    }
+    function enter(on) {
+      $('dimSeg').hidden = !on; $('whyNote').hidden = !on; $('stage').dataset.why = on ? '1' : '';
+      if (on && !view) view = VD3K.view({ seg: '#dimSeg', init, status: (m) => { $('dimMsg').textContent = m; },
+        change: (v3) => { if (S3) S3.el.hidden = !v3; can.style.pointerEvents = v3 ? 'none' : ''; dirty = true; draw(); } });
+      if (S3) S3.el.hidden = !(on && view && view.is3d()); can.style.pointerEvents = on && view && view.is3d() ? 'none' : '';
+      if (on) { setup(); reset(); $('whyNote').textContent = note(); }
+    }
+    return { setup, place, reset, step, draw, enter, note, st, wuText, isDirty: () => dirty, setU: (u) => { S.wu = Math.max(0, Math.min(1, u)); place(); dirty = true; } };
+  })();
   const card = VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Beam off' : 'Beam on'; $('play').classList.toggle('attn', !on); if (!on) S.parts = []; }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = S.view === 'why' ? (on ? 'Pause' : S.wu >= 1 ? 'Send another' : S.wu > 0 ? 'Go on' : 'Send a proton') : on ? 'Beam off' : 'Beam on'; $('play').classList.toggle('attn', !on); if (!on) S.parts = []; }
   let pend = 0;
-  function full() { recompute(); sync(); readouts(); draw(); }
+  function full() { recompute(); if (S.view === 'why') { W3.enter(true); } sync(); readouts(); draw(); }
   /* the spread out peak takes a few hundred milliseconds: while a slider moves, redo it at most once a frame */
   const later = () => { if (pend) return; pend = requestAnimationFrame(() => { pend = 0; full(); }); };
   const changed = (slow) => { S.preset = 'custom'; if (slow) later(); else full(); };
-  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, view: c.view, m: c.m, e: c.e || S.e, z: c.z, zp: c.zp || S.zp, zd: c.zd || S.zd, step: c.step || S.step, wmode: c.wmode || 'fit', show: c.show || 'protons', sp: 0 });
+  function applyPreset(k) { const c = PRESETS[k]; W3.enter(c.view === 'why'); Object.assign(S, { wu: c.wu || 0, preset: k, view: c.view, m: c.m, e: c.e || S.e, z: c.z, zp: c.zp || S.zp, zd: c.zd || S.zd, step: c.step || S.step, wmode: c.wmode || 'fit', show: c.show || 'protons', sp: 0 });
     $('presetHint').textContent = c.hint; setRun(false); full(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.view; S.preset = 'custom'; if (S.view === 'compare') S.m = 'water';
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.view; S.preset = 'custom'; if (S.view === 'compare') S.m = 'water'; W3.enter(S.view === 'why'); if (S.view === 'why') S.wu = 0;
     if (S.view !== 'pristine' && !(S.z >= 0 && S.z <= 40)) S.z = (S.zp + S.zd) / 2; setRun(false); full(); resize(); });
   for (const b of document.querySelectorAll('#wSeg button')) b.addEventListener('click', () => { S.wmode = b.dataset.w; changed(); });
   for (const b of document.querySelectorAll('#showSeg button')) b.addEventListener('click', () => { S.show = b.dataset.show; S.preset = 'custom'; S.parts = []; washKey = ''; sync(); readouts(); draw(); });
@@ -487,21 +745,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('selStep').addEventListener('change', (e) => { S.step = +e.target.value; changed(); });
   $('sZ').addEventListener('input', (e) => { S.z = +e.target.value; $('oZ').textContent = lenTxt(S.z); readouts(); draw(); });
   $('chkLayers').addEventListener('change', (e) => { S.layers = e.target.checked; draw(); });
-  $('play').addEventListener('click', () => setRun(!S.run));
+  $('play').addEventListener('click', () => { if (S.view === 'why' && !S.run && S.wu >= 1) { W3.setU(0); W3.reset(); } setRun(!S.run); });
+  $('sWu').addEventListener('input', (e) => { W3.setU(+e.target.value / 1000); $('oWu').textContent = W3.wuText(); S.preset = 'custom'; setRun(false); readouts(); draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); draw(); });
   VD.typeIn($('oE'), { get: () => S.e, set: (v) => { S.e = v; changed(); }, min: 70, max: 230, step: 0.1, unit: 'MeV', label: 'Beam energy' });
   VD.typeIn($('oZ'), { get: () => S.z, set: (v) => { S.z = v; sync(); readouts(); draw(); }, min: 0, max: () => S.zmax, step: 0.01, unit: 'cm', label: 'Detector depth' });
   VD.typeIn($('oZp'), { get: () => S.zp, set: (v) => { S.zp = Math.min(v, S.zd - 1); changed(); }, min: () => +$('sZp').min, max: () => +$('sZp').max, step: 0.1, unit: 'cm', label: 'Target starts at' });
   VD.typeIn($('oZd'), { get: () => S.zd, set: (v) => { S.zd = Math.max(v, S.zp + 1); changed(); }, min: () => +$('sZd').min, max: () => +$('sZd').max, step: 0.1, unit: 'cm', label: 'Target ends at' });
   /* drag the detector along the phantom or the graph */
-  function dragZ(e, el) { const r = el.getBoundingClientRect(), b = tankBox(), z = ((e.clientX - r.left) - b.x0) / (b.x1 - b.x0) * S.zmax; S.z = Math.max(0, Math.min(S.zmax, Math.round(z * 100) / 100)); sync(); readouts(); draw(); }
+  function dragZ(e, el) { if (S.view === 'why') { if (el !== plot) return; const r0 = el.getBoundingClientRect(), p = proj(), L = 58 * p, R = r0.width - 18 * p, z = (e.clientX - r0.left - L) / (R - L) * W3.st.zmax;
+      W3.setU(Math.max(0, Math.min(0.9, z / W3.st.R * 0.9))); setRun(false); sync(); readouts(); draw(); return; }
+    const r = el.getBoundingClientRect(), b = tankBox(), z = ((e.clientX - r.left) - b.x0) / (b.x1 - b.x0) * S.zmax; S.z = Math.max(0, Math.min(S.zmax, Math.round(z * 100) / 100)); sync(); readouts(); draw(); }
   for (const el of [can, plot]) {
     let down = false;
     el.addEventListener('pointerdown', (e) => { down = true; el.setPointerCapture(e.pointerId); dragZ(e, el); });
     el.addEventListener('pointermove', (e) => { if (down) dragZ(e, el); });
     el.addEventListener('pointerup', () => { down = false; });
   }
-  can.addEventListener('keydown', (e) => { const st = e.shiftKey ? 1 : 0.1;
+  can.addEventListener('keydown', (e) => { if (S.view === 'why') { const d = (e.key === 'ArrowRight' || e.key === 'ArrowUp') ? 1 : (e.key === 'ArrowLeft' || e.key === 'ArrowDown') ? -1 : 0; if (!d) return;
+      e.preventDefault(); W3.setU(S.wu + d * (e.shiftKey ? 0.05 : 0.005)); setRun(false); sync(); readouts(); draw(); return; }
+    const st = e.shiftKey ? 1 : 0.1;
     if (e.key === 'ArrowRight' || e.key === 'ArrowUp') S.z = Math.min(S.zmax, +(S.z + st).toFixed(4)); else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') S.z = Math.max(0, +(S.z - st).toFixed(4)); else return;
     e.preventDefault(); sync(); readouts(); draw(); });
   $('pddTable').innerHTML = '<thead><tr><th>depth (cm)</th><th>measured (%)</th><th>fitted curve (%)</th></tr></thead><tbody>'
@@ -509,6 +772,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* readings: the detector's dose, with the setup it was read in */
   window.vdReadingRow = () => {
+    if (S.view === 'why') return 'This view shows why the peak happens and records nothing: switch to One energy to record readings.';
     const r4 = (v) => (isFinite(v) ? String(+v.toPrecision(6)) : '');
     if (S.view === 'pristine') return { view: 'one energy', medium: M().name, E_MeV: r4(S.e), spread_pct: f(S.sp, 1), depth_cm: f(S.z, 2), dose_pct: f(detDose(S.D), 2) };
     if (S.view === 'sobp') return { view: 'spread out peak', medium: M().name, from_cm: f(S.zp, 1), to_cm: f(S.zd, 1), step_cm: String(S.step), weights: S.wmode === 'fit' ? 'fitted' : 'equal', layers: String(S.L.length), depth_cm: f(S.z, 2), dose_pct: f(detDose(S.D), 2) };
@@ -525,7 +789,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.run) {
+    if (S.view === 'why') { W3.step(dt); if (W3.isDirty()) { draw(); if (S.run) readouts(); } }
+    else if (S.run) {
       const speed = S.zmax * 0.55; S.acc += dt * 90; while (S.acc >= 1) { S.parts.push(spawn()); S.acc -= 1; }
       for (const q of S.parts) { if (q.z < 0 || q.ph) { q.z += dt * speed; continue; } const u = Math.max(0, Math.min(100, (q.end - q.z) / S.Rm * 100)), i = Math.min(99, Math.floor(u)), b = S.beta[i] + (u - i) * (S.beta[i + 1] - S.beta[i]);
         q.z += dt * speed * Math.max(0.04, b / S.beta[100]); }
@@ -544,7 +809,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'p150'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
-  window.vdDemo = { S, V, recompute, full, applyPreset, photonPDD, sobpFacts, pristineFacts };
+  window.vdDemo = { S, V, recompute, full, applyPreset, photonPDD, sobpFacts, pristineFacts, W3 };
   requestAnimationFrame(frame);
 })();
 </script>

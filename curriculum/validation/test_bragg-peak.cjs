@@ -4,7 +4,7 @@ const assert = require('node:assert');
 const path = require('node:path');
 const { core } = require('./demo_source.cjs');
 const V = require(path.join(__dirname, '../../demos/lib/vdstop.js'));
-const c = core('bragg-peak', 'PDD_PTS,PH,photonPDD,layerList,sobpWeights,meanOver,readAt,distalAt,proximalAt');
+const c = core('bragg-peak', 'PDD_PTS,PH,photonPDD,layerList,sobpWeights,meanOver,readAt,distalAt,proximalAt,WHY,whyAt,kickAt,zEff,eDensity');
 
 let n = 0;
 const within = (a, b, d, w) => assert(Math.abs(a - b) <= d, `${w || ''}: expected ${b} ± ${d}, got ${a}`);
@@ -52,6 +52,29 @@ group('reading helpers: interpolation, mean, distal and proximal levels', () => 
   const z = [0, 1, 2, 3, 4], d = [0.2, 0.6, 1.0, 0.5, 0];
   within(c.readAt(z, d, 1.5), 0.8, 1e-12, 'readAt'); within(c.meanOver(z, d, 0, 2), 0.6, 1e-12, 'meanOver');
   within(c.distalAt(z, d, 0.75), 2.5, 1e-12, 'distal'); within(c.proximalAt(z, d, 0.8), 1.5, 1e-12, 'proximal');
+});
+
+group('why it peaks: kicks grow as 1/v, energy as 1/v², reach as γv, and S ∝ L/β² exactly', () => {
+  within(c.WHY.e2, 1.4399645464, 1e-9, 'e²/4πε₀ = αħc (MeV fm)');
+  const a = c.whyAt(V, 150, 'water'), b = c.whyAt(V, 10, 'water');
+  /* b_max = γβħc/I: 1.546 nm at 150 MeV in water (I = 75 eV) */
+  within(a.bmax, a.gamma * a.beta * 197.3269804 / 75, 1e-12, 'b_max'); within(a.bmax, 1.546, 0.001, 'b_max at 150 MeV (nm)');
+  within(a.bmin, 197.3269804e-6 / (2 * 0.51099895069 * a.gamma * a.beta), 1e-15, 'b_min');
+  /* Bethe's bracket against ln(b_max/b_min) = ln(2mc²β²γ²/I): within 4 % above 10 MeV (the full W_max and the −β² term make the difference) */
+  for (const T of [10, 50, 150, 230]) { const w = c.whyAt(V, T, 'water'); within(w.L / Math.log(w.bmax / w.bmin), 1, 0.04, `L at ${T} MeV`); }
+  /* the stopping power is K Z/A L/β² per g/cm² */
+  for (const T of [2, 20, 200]) { const w = c.whyAt(V, T, 'bone'); within(w.Sl, 0.307075 * V.mat('bone').ZA * w.L / (w.beta * w.beta) * V.mat('bone').rho, 1e-9, `S = K Z/A L/β² at ${T} MeV`); }
+  /* a kick at fixed b scales as 1/β and its energy as 1/β² */
+  const k1 = c.kickAt(0.3, a.beta), k2 = c.kickAt(0.3, b.beta); within(k2.dpc / k1.dpc, a.beta / b.beta, 1e-12, 'Δp ∝ 1/v'); within(k2.eV / k1.eV, (a.beta / b.beta) ** 2, 1e-9, 'ΔE ∝ 1/v²');
+  /* Δp c = 2 e²/(b β): 0.3 nm, β = 0.5 gives 19.2 eV */
+  within(c.kickAt(0.3, 0.5).dpc * 1e6, 2 * 1.4399645464 / (0.3e6 * 0.5) * 1e6, 1e-9, 'Δp c (eV)');
+  /* Barkas: fully stripped at therapy speeds, partly neutral near 0.1 MeV */
+  assert(c.zEff(a.beta) > 0.999999); within(c.zEff(0.0146), 1 - Math.exp(-1.825), 1e-12, 'Barkas at 0.1 MeV');
+  /* electrons per nm³ in water: ρ Z/A N_A = 334 */
+  within(c.eDensity(V, 'water'), 334.28, 0.01, 'electron density');
+  /* the simple Bethe log over v² peaks where 2mv² = e·I: near 93 keV for water */
+  let best = 0, Tb = 0; for (let T = 0.01; T < 0.5; T += 0.0005) { const g = 1 + T / 938.27208943, b2 = 1 - 1 / (g * g), y = Math.log(2 * 0.51099895069e6 * b2 * g * g / 75) / b2; if (y > best) { best = y; Tb = T; } }
+  within(Tb, 0.093, 0.002, 'energy of the peak of ln(2mv²/I)/v² (MeV)');
 });
 
 console.log(`${n} groups passed`);
