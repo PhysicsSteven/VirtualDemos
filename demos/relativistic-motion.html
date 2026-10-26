@@ -685,7 +685,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (S.view === 'mom') {
       if (S.mom.t <= 0) return 'Start the clock or step it first.';
-      const s = mState(); return { view: 'mom', particle: PARTICLES[S.mom.part].name, E_MV_m: f(S.mom.E, 1), F_N: sig(s.F, 6), t_ns: sig(S.mom.t, 5), x_m: sig(s.x, 5), v_c: f(s.beta, 6) };
+      const s = mState(); return { view: 'mom', particle: PARTICLES[S.mom.part].name, E_MV_m: f(S.mom.E, 1), F_N: String(+s.F.toPrecision(6)), t_ns: sig(S.mom.t, 5), x_m: sig(s.x, 5), v_c: f(s.beta, 6) };
     }
     if (!S.en.shots) return 'Fire a bunch first, so the pickups can time it.';
     const s = eState(); return { view: 'en', particle: S.en.mystery ? 'mystery' : PARTICLES[ePart()].name, V_MV: VOLTS[S.en.vi], B_T: f(S.en.B, 2), t_ns: f(s.t_ns, 2), r_cm: f(s.r_m * 100, 2) };
@@ -708,6 +708,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__rm = { S, setView, applyPreset, setRun, redraw, sync, finishVel, stepMom, fire, newRocket, newPart, momEnd, momStep };
+  const HOW = { vel: 'Adding Velocities Near c', mom: 'Momentum Under a Steady Force', en: "Bertozzi's Electrons" };
+  VD.howTo({ src: () => `media/how-this-works/${WS[S.view]}.mp4`, poster: () => `media/how-this-works/${WS[S.view]}.jpg`, title: () => `How this works: ${HOW[S.view]}` });
   requestAnimationFrame(frame);
 })();
 </script>

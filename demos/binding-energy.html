@@ -1145,6 +1145,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   window.__be.select = (Z, A) => { const n = get(Z, A); if (n) { S.sel = n; readouts(); drawAll(); } return !!n; };
   window.__be.applyPreset = applyPreset; window.__be.setRx = setRx;
+  VD.howTo({ src: 'media/how-this-works/binding-energy.mp4', poster: 'media/how-this-works/binding-energy.jpg' });
 
   buildCoefs();
   tokens();

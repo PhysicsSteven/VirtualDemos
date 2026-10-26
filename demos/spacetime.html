@@ -1408,7 +1408,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // Readings: the last selected event, in S and in S′, at the current β
-  window.__st = { S, applyPreset, changed, select };
+  window.__st = { S, applyPreset, changed, select, scrLab };
   window.vdVersion = 'spacetime@2026-10-24';
   window.vdShowCols = [['event', 'Event'], ['beta', 'β'], ['ctp', 'ct′'], ['xp', 'x′']];
   window.vdReadingRow = () => {
@@ -1418,6 +1418,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { event: e.id, beta: fmt(S.beta).replace('−', '-'), ct: fmt(e.t).replace('−', '-'), x: fmt(e.x).replace('−', '-'), ctp: fmt(tp, 3).replace('−', '-'), xp: fmt(xp, 3).replace('−', '-') };
   };
 
+  VD.howTo({ src: 'media/how-this-works/spacetime.mp4', poster: 'media/how-this-works/spacetime.jpg' });
   tokens();
   new ResizeObserver(resize).observe($('stage'));
   new ResizeObserver(() => { const tp = padTop(); if (tp !== topPad) { topPad = tp; if (!userMoved) fitView(); dirty = true; } }).observe($('stageTop'));

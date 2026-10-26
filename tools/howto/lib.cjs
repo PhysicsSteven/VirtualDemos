@@ -8,7 +8,8 @@
 //   r.state.arrow    { rect: [x, y, w, h] } to ring and point at, or null
 //   r.state.capTop   true puts a numbered caption at the top, when what the step shows sits at the bottom of the page
 // Helpers: r.box(sel), r.text(sel), r.tick(frames), r.secs(s), r.moveTo(x, y, s), r.click(sel), r.dragUntil(dx, dy, sel, want),
-// r.dragTo(x, y, s), r.dragWhile(dx, dy, more), r.findDrag(sel, cardSel), r.scrollRail(sel), r.p (the Playwright page), r.check (readings
+// r.dragTo(x, y, s), r.dragWhile(dx, dy, more), r.slide(sel, outSel, want, tol) (outSel may be an async function giving the number), r.findDrag(sel, cardSel), r.scrollRail(sel) (the page too, when the
+// rail runs past the window), r.p (the Playwright page), r.check (readings
 // to print and save). r.speed (1 by default) runs the demo that many times faster per frame, for a long scan shown sped up (say so in
 // the caption).
 // Options: o.query (appended to the demo's URL), o.dsf (device scale factor, 1.5 by default; more for a small picture zoomed far in).
@@ -56,6 +57,17 @@ module.exports = async function record(o, steps) {
     for (let i = 0; i < 400 && (await more()); i++) { state.ptr = [state.ptr[0] + dx, state.ptr[1] + dy]; await p.mouse.move(...state.ptr); await r.tick(); }
     await r.tick(6); await p.mouse.up(); state.down = false; await r.tick();
   };
+  // set a range input by dragging its thumb, then the arrow keys for the last steps: until the number in outSel (its readout) is
+  // within tol of want. coarse (default 3 tol) is where the drag hands over to the keys. Returns the readout's text.
+  r.slide = async (sel, outSel, want, tol, coarse) => {
+    const num = typeof outSel === 'function' ? outSel : async () => parseFloat((await r.text(outSel)).replace('−', '-').replace(/[^0-9.eE+-].*$/, ''));
+    const b = await r.box(sel), q = await p.evaluate(s => { const e = document.querySelector(s); return [+e.value, +e.min, +e.max]; }, sel);
+    await r.moveTo(b[0] + 8 + (b[2] - 16) * (q[0] - q[1]) / (q[2] - q[1]), b[1] + b[3] / 2, 0.6);
+    const dir = (await num()) > want ? -1 : 1, c = coarse || 3 * tol;
+    if (((await num()) - want) * dir < -c) await r.dragWhile(3 * dir, 0, async () => ((await num()) - want) * dir < -c);
+    for (let i = 0; i < 80; i++) { const x = await num(); if (Math.abs(x - want) <= tol) break; await p.keyboard.press(x > want ? 'ArrowLeft' : 'ArrowRight'); await r.tick(1); }
+    await r.tick(2); return typeof outSel === 'function' ? String(await outSel()) : r.text(outSel);
+  };
   // drag from where the pointer is to (x, y)
   r.dragTo = async (x, y, s = 0.8) => { await p.mouse.down(); state.down = true; await r.tick(3); await r.moveTo(x, y, s); await r.tick(4); await p.mouse.up(); state.down = false; await r.tick(); };
   // where a drag on a canvas would start: probe it with pointer events and see where cardSel turns 'ghost' (VD.setupCard)
@@ -70,6 +82,14 @@ module.exports = async function record(o, steps) {
   }, [sel, cardSel]);
   // scroll the sidebar so sel sits about 140 px below its top
   r.scrollRail = async (sel) => { await p.evaluate(sel => { const rl = document.querySelector('.rail'), c = document.querySelector(sel); rl.scrollTop += c.getBoundingClientRect().top - rl.getBoundingClientRect().top - 140; }, sel); await r.tick(2); };
+  // where the rail runs past the bottom of the window (a page taller than the window), the page itself scrolls, smoothly, to bring
+  // sel into view
+  const railScroll = r.scrollRail;
+  r.scrollRail = async (sel) => { await railScroll(sel);
+    const [t, h] = await p.evaluate(sel => { const q = document.querySelector(sel).getBoundingClientRect(); return [q.top, q.height]; }, sel);
+    if (t >= 60 && t + Math.min(h, 120) <= H - 40) return;
+    const y0 = await p.evaluate(() => scrollY), y1 = Math.max(0, y0 + t - 200), n = 12;
+    for (let i = 1; i <= n; i++) { const u = i / n, e = u < 0.5 ? 2 * u * u : 1 - (-2 * u + 2) ** 2 / 2; await p.evaluate(v => scrollTo(0, v), y0 + (y1 - y0) * e); await r.tick(); } };
   await p.mouse.move(...state.ptr);
   await steps(r);
   fs.writeFileSync(`${OUT}/timeline.json`, JSON.stringify({ W, H, DSF, FPS, title: o.title, frames, check: r.check }));

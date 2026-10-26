@@ -1354,6 +1354,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     pickScreen() { if (!G.ready) return null; render3D(); const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); const s = G.screenOf(v); o[p.id] = [r.left + s[0], r.top + s[1]]; } return o; } };
 
   // ---------- start ----------
+  VD.howTo({ src: 'media/how-this-works/speed-of-light.mp4', poster: 'media/how-this-works/speed-of-light.jpg' });
   tokens();
   const use3D = init3D();
   if (!use3D) { cans.flat.hidden = false; $('tip').textContent = 'Drag L2 along the bench or MF along the path; the speed and micrometer are in the rail and the microscope.'; }

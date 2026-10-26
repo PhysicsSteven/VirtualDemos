@@ -1982,6 +1982,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resize();
   if (!playing) { $('play').textContent = 'Play'; $('play').classList.remove('primary'); }
   applyPreset('lab');
+  VD.howTo({ src: 'media/how-this-works/relativity-em.mp4', poster: 'media/how-this-works/relativity-em.jpg' });
   requestAnimationFrame(loop);
 
   // hooks for automated checks
