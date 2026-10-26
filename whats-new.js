@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-26-radiobiology', date: '2026-10-26', title: 'Radiobiology: Cell Survival and Fractionation',
+    text: 'A new Medical Physics demo with its own worksheet: survival curves of two cell lines in air and without oxygen, a simulated clonogenic assay whose colonies you count and fit, a course of radiotherapy split into 1 to 40 fractions with BED and EQD2 for tumors and normal tissue, and how the RBE of protons rises with LET and as the dose per fraction falls.', link: { href: 'demos/radiobiology.html', text: 'Open Radiobiology' } },
   { id: '2026-10-25-bragg-peak', date: '2026-10-25', title: 'The Bragg Peak',
     text: 'A new Medical Physics demo with its own worksheet: move a proton beam\'s Bragg peak with its energy in water, muscle, fat or bone, stack weighted energy layers into a spread out peak that covers a target, and set it against a measured 6 MV photon beam aimed at the same target.',
     link: { href: 'demos/bragg-peak.html', text: 'Open The Bragg Peak' } },

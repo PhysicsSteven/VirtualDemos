@@ -43,6 +43,7 @@ COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak'}
+COURSE_HANDOUTS['medical-physics'].add('mp-radiobiology')
 # Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
 WARM_UPS = {'medical-physics'}
 NO_BOOK = {'astro-2203', 'medical-physics'}
@@ -281,6 +282,7 @@ HANDOUT_TOPIC = {
     'intro-retrograde': 'Retrograde Motion and World Models (Astro 2203)',
     'intro-giant-planets': 'Giant Planets, Rings and Moons (Astro 2203)',
     'mp-photon-interactions': 'Photon Interactions in Matter',
+    'mp-radiobiology': 'Radiobiology: Cell Survival and Fractionation',
     'intro-resonances': 'Orbital Resonances (Astro 2203)',
     'intro-inside-a-planet': 'Inside a Planet (Astro 2203)',
     'mp-kerma-equilibrium': 'Kerma, Dose and Charged Particle Equilibrium (Medical Physics)', 'mp-proton-calibration': 'Calibrating a Proton Beam: TRS-398 Step by Step (Medical Physics)',

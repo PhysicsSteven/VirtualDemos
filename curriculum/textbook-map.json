@@ -1834,14 +1834,10 @@
           "short": "5 · Radiobiology",
           "requirement": "required",
           "sections": [],
-          "demos": [],
-          "note": "Cell survival, fractionation and the relative biological effectiveness of protons.",
-          "coming": [
-            {
-              "title": "Radiobiology: Cell Survival and Fractionation",
-              "note": "The linear quadratic model fitted to a simulated clonogenic assay, BED and EQD2 for different fractionations, oxygen enhancement, and proton RBE."
-            }
-          ]
+          "demos": [
+            "radiobiology"
+          ],
+          "note": "Cell survival, fractionation and the relative biological effectiveness of protons."
         },
         {
           "id": "shielding",
@@ -10821,6 +10817,22 @@
       "url": "demos/bragg-peak.html",
       "handouts": [
         "mp-bragg-peak"
+      ]
+    },
+    {
+      "demo": "radiobiology",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-26 (Claude), Medical Physics plan gap 4. Linear quadratic survival of V79 and T1 cells in air and hypoxia (Wenzl and Wilkens 2011) with an Alper and Howard-Flanders oxygen curve and the OER against dose; a simulated clonogenic assay with Poisson counts and mystery lines; BED and EQD2 for 1 to 40 fractions, with the late effect held fixed if wanted; proton RBE from McNamara 2015 against LET_d and dose. Worksheet mp-radiobiology with a key from a real run in TeacherKeys.",
+      "title": "Radiobiology: Cell Survival and Fractionation",
+      "url": "demos/radiobiology.html",
+      "handouts": [
+        "mp-radiobiology"
       ]
     }
   ],

@@ -612,6 +612,20 @@
         { table: 4, when: PI_ALL('Hardening'), cols: ['row', 'kVp', 'al_mm', 'filter', 'hvl_in', 'hvl1_mm', 'hvl2_mm', 'h', 'Emean_keV', 'Eeff_keV', 'K_uGy_mAs'] }] },
   });
   /* ==MEDICAL PHYSICS photon interactions END== */
+  /* ==MEDICAL PHYSICS radiobiology START== Radiobiology: Cell Survival and Fractionation (medical-physics.html, 2026-10-26). One table per view,
+     picked by the mode the rows were recorded in; Survival readings at one dose and several oxygen pressures go to the oxygen table. */
+  const RB_ALL = (mode) => (rows) => rows.length > 0 && rows.every((r) => r.mode === mode);
+  ENABLED.push('mp-radiobiology'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
+  Object.assign(FROM_DEMO, {
+    /* Reading | Cells | pO₂ | D | S air | ln S air | S anoxic | ln S anoxic | OER; then Oxygen, Assay, Fractionation, RBE */
+    'mp-radiobiology': { demo: 'Radiobiology: Cell Survival and Fractionation', cols: ['row', 'cells', 'pO2_mmHg', 'D_Gy', 'SF_air', 'lnSF_air', 'SF_anoxic', 'lnSF_anoxic', 'OER'],
+      alt: [
+        { table: 1, when: (rows) => RB_ALL('Survival')(rows) && new Set(rows.map((r) => r.pO2_mmHg)).size > 1, cols: ['row', 'pO2_mmHg', 'D_Gy', 'SF_pO2', 'lnSF_pO2', 'OER_pO2'] },
+        { table: 2, when: RB_ALL('Assay'), cols: ['row', 'cells', 'D_Gy', 'N_seeded', 'c1', 'c2', 'c3', 'mean', 'PE', 'SF', 'SF_se', 'lnSF', 'lnSF_se'] },
+        { table: 3, when: RB_ALL('Fractionation'), cols: ['row', 'n', 'd_Gy', 'D_Gy', 'BED_10', 'EQD2_10', 'BED_3', 'EQD2_3', 'BED_1_5', 'EQD2_1_5', 'late_fixed'] },
+        { table: 4, when: RB_ALL('RBE'), cols: ['row', 'LET', 'D_Gy', 'ab_x', 'RBE_max', 'RBE_min', 'RBE', 'D_RBE', 'D_11'] }] },
+  });
+  /* ==MEDICAL PHYSICS radiobiology END== */
   /* ==MEDICAL PHYSICS small additions START== Worksheets on existing demos for the Medical Physics module (medical-physics.html, 2026-10-25). Each demo sends its
      readings here when its medical physics mode is on (the generator, filtration, the broad beam, absorption). */
   const MP_SMALL = ['mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'];
@@ -662,13 +676,15 @@
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
+  GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
   GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-radiobiology'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };

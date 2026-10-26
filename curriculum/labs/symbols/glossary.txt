@@ -3142,6 +3142,38 @@ s | Standard deviation of the readings | nC
 n | Number of readings
 k | Coverage factor
 
+== mp-radiobiology ==
+D | Absorbed dose given at once (for protons, the proton dose) | Gy
+S | Surviving fraction: the share of cells that can still form a colony
+e | @euler
+alpha | Linear quadratic coefficient for single track (lethal) damage | Gy⁻¹
+beta | Linear quadratic coefficient for two track (repairable) damage | Gy⁻²
+D_hypoxic | Dose without oxygen that gives the same survival | Gy
+D_air | Dose in air (160 mmHg) | Gy
+D_p | Dose at oxygen pressure p that gives the same survival as D in air | Gy
+D_x | Photon dose that gives the same effect as the proton dose D | Gy
+D_10 | Dose that leaves 10 % of the cells surviving | Gy
+n | Number of equal fractions
+d | Dose per fraction | Gy
+E | Biological effect, −ln S summed over the fractions
+B | Biologically effective dose aimed at | Gy
+alpha_p | α for the protons | Gy⁻¹
+alpha_x | α for photons (the reference radiation) | Gy⁻¹
+beta_p | β for the protons | Gy⁻²
+beta_x | β for photons (the reference radiation) | Gy⁻²
+alpha_air | α in air | Gy⁻¹
+alpha_hyp | α without oxygen (hypoxic) | Gy⁻¹
+beta_air | β in air | Gy⁻²
+beta_hyp | β without oxygen (hypoxic) | Gy⁻²
+c | Colonies counted in a flask at dose D
+c [a+bD+cD^2] | Quadratic coefficient of the fit | Gy⁻²
+c_0 | Colonies counted in a control (0 Gy) flask
+N | Cells seeded in a flask at dose D
+N_0 | Cells seeded in a control flask
+p | Oxygen partial pressure | mmHg
+a | Intercept of the fit (ln S at D = 0)
+b | Linear coefficient of the fit | Gy⁻¹
+
 == mp-photon-interactions ==
 mu | Linear attenuation coefficient: the chance per unit length that a photon interacts | cm⁻¹
 rho | Density of the material | g/cm³

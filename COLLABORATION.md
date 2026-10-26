@@ -4476,3 +4476,29 @@ videos yet (Steve: visual pass first).
 - both handouts for hyphens in compound modifiers.
 
 notes.py again rewrites notes/ideal-gas.html from an older src; I reverted it, so someone should update notes/src/ideal-gas.md.
+
+## 2026-10-26 · Claude · Radiobiology: Cell Survival and Fractionation (Medical Physics demo, worksheet, key, notes, tests)
+
+Medical Physics plan gap 4, unit `radiobiology` (its Coming card is gone). `demos/radiobiology.html`, four views:
+
+- Survival and oxygen: LQ survival of V79 and T1 cells in air and without oxygen, the mean literature α and β of Wenzl and Wilkens
+  2011 (Radiat. Oncol. 6, 171), or your own α and β; α and β parts; OER bracket at the dose cursor; dose modifying factor against
+  pO₂ (square root axis); OER against dose with its α_a/α_h and √(β_a/β_h) limits. Oxygen: α and √β each scaled by
+  1 + (m − 1)·p/(p + K)·(160 + K)/160, K = 3.8 mmHg (Alper and Howard-Flanders form as in Zhu et al., arXiv:2201.02278); the last
+  factor makes air give the aerobic values exactly (without it β at 160 mmHg was 3 % low).
+- Clonogenic assay: three flasks per dose, Poisson colonies with mean N·PE·S, drawn on dishes; PE from the 0 Gy flasks,
+  SF ± √(1/c + 1/c₀). PEs 0.70 and 0.50 chosen for the simulation; mystery lines (code 1 to 99) α 0.10 to 0.40, β 0.010 to 0.060,
+  PE 0.50 to 0.80, made up. Labelled Simulated counts.
+- Fractionation: calendar, BED staircase and EQD2 against n for α/β 10, 3, 1.5 Gy and your own; Keep the late effect fixed holds
+  the α/β 3 BED of the schedule at the moment it was ticked. No repopulation; LQ caveat above 8 to 10 Gy per fraction stated.
+- Proton RBE: McNamara 2015 (PMB 60, 8399; parameters as in matRad and PyTRiP: 0.999064, 0.35605, 1.1012, −0.0038703) against
+  LET_d and dose, RBE_max and RBE_min, 1.1, Paganetti 2014 averages as ticks.
+- Worksheet `mp-radiobiology` (five tables, picked by the reading's mode; the oxygen and fractionation tables are curve tables),
+  key from a real run in TeacherKeys `worksheet-keys/medical-physics/mp-radiobiology-*` (capture `tools/capture/mp-radiobiology.cjs`),
+  notes `notes/src/radiobiology.md` with answers in TeacherKeys, glossary section, tests `test_radiobiology.cjs` (6 groups).
+- Checks: vdcheck `--only after` (64 screenshots, 0) and `--only clip` (0), symbols --check and --meanings 0, symcheck 0 differences,
+  textbook map test passes. No How this works video: Steve wants a visual pass on the Medical Physics demos first.
+
+**For GPT:** please check (1) the V79 and T1 values against the table in Wenzl and Wilkens 2011; (2) the McNamara parameters; (3) the
+preset hints' numbers (OER 2.63 and 3.02, EQD2 756 and 350, 31.95 Gy and 43.6 Gy, 77.1 against 74, RBE 1.07, 1.53, 1.85);
+(4) the key's fits (mystery 7: α 0.297 ± 0.024, β 0.0288 ± 0.0029) and hyphens.

@@ -1,0 +1,626 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Radiobiology: Cell Survival and Fractionation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: one color per curve and tissue, the dishes and the stage with its card and chart */
+:root { --air: #2b60b5; --hyp: #c2410c; --now: #7c3aed; --comp: #8a96a6; --tumor: #c2410c; --late: #2b60b5; --prost: #1f9a4a; --cust: #7c3aed; --dish: #eef2f6; --dishedge: #9aa6b5; --agar: #f3e9d2; --stain: #5b2a86; --phys: #8a96a6; --clin: #b45309; --bio: #be185d; --fx: #2b60b5; --band: rgba(43, 96, 181, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #7d8899; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #1b232e; --dishedge: #5d6878; --agar: #2a2620; --stain: #c9a2f2; --phys: #7d8899; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --band: rgba(105, 160, 255, 0.08); } }
+:root[data-theme="dark"] { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #7d8899; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #1b232e; --dishedge: #5d6878; --agar: #2a2620; --stain: #c9a2f2; --phys: #7d8899; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --band: rgba(105, 160, 255, 0.08); }
+.stage { position: relative; display: grid; grid-template-columns: 272px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .seg { flex-wrap: wrap; }
+.pane { grid-area: main; position: relative; min-width: 0; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+.setup-card { grid-area: card; display: flex; flex-direction: column; gap: 6px; padding: 9px 10px; font-size: 0.86rem; border-right: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.setup-card hr { border: 0; border-top: 1px solid var(--line); margin: 3px 0; width: 100%; }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 7px; }
+.setup-card .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .row2 { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.setup-card .note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; line-height: 1.25; }
+.slider-head output { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.readout dd.note { font-family: var(--font-ui); font-size: 0.86rem; font-weight: 400; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
+.srcs { margin: 0; padding-left: 18px; font-size: 0.8rem; color: var(--muted); }
+.simtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: "ctl" "main" "card"; }
+  .pane { height: 860px; }
+  .setup-card { border-right: 0; border-top: 1px solid var(--line); }
+  .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+  .pane[data-v="assay"] { height: 620px; } .pane[data-v="rbe"] { height: 820px; } .pane[data-v="surv"][data-one="1"] { height: 470px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Radiobiology: Cell Survival and Fractionation</h1>
+      <p>How many cells survive a dose of radiation, and what changes that number. Read the linear quadratic survival curves of two cell lines in air and without oxygen, run a simulated clonogenic assay and count the colonies, split a course of radiotherapy into 1 to 40 fractions to compare biologically effective doses in tumors and in late responding tissue, and see how the relative biological effectiveness of protons rises with LET and as the dose per fraction falls.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">Gy · mmHg · keV/µm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/radiobiology.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/radiobiology.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h5v1h-5zM17 2h3v1h-3zM23 2h1v1h-1zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h1v1h-1zM17 4h1v1h-1zM23 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM16 5h2v1h-2zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM18 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h3v1h-3zM19 7h1v1h-1zM23 7h2v1h-2zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h5v1h-5zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h1v1h-1zM16 10h3v1h-3zM23 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM2 11h2v1h-2zM5 11h3v1h-3zM12 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM4 12h3v1h-3zM8 12h2v1h-2zM11 12h3v1h-3zM15 12h1v1h-1zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM6 13h1v1h-1zM9 13h2v1h-2zM12 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h5v1h-5zM13 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM7 15h1v1h-1zM9 15h5v1h-5zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM6 17h2v1h-2zM11 17h8v1h-8zM21 17h2v1h-2zM25 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h10v1h-10zM20 18h5v1h-5zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h1v1h-1zM9 19h1v1h-1zM11 19h3v1h-3zM15 19h4v1h-4zM23 19h1v1h-1zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM4 20h2v1h-2zM7 20h4v1h-4zM12 20h2v1h-2zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM6 21h2v1h-2zM9 21h1v1h-1zM12 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM6 22h1v1h-1zM8 22h6v1h-6zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM5 23h1v1h-1zM10 23h5v1h-5zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h4v1h-4zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h5v1h-5zM32 24h4v1h-4zM37 24h2v1h-2zM2 25h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h5v1h-5zM15 25h11v1h-11zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h3v1h-3zM8 26h2v1h-2zM11 26h1v1h-1zM13 26h2v1h-2zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM9 27h1v1h-1zM11 27h3v1h-3zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h4v1h-4zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h4v1h-4zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h3v1h-3zM10 29h3v1h-3zM17 29h1v1h-1zM21 29h3v1h-3zM25 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h4v1h-4zM11 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h4v1h-4zM30 30h9v1h-9zM10 31h5v1h-5zM16 31h3v1h-3zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h2v1h-2zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h5v1h-5zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM15 34h1v1h-1zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h1v1h-1zM17 35h2v1h-2zM25 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h1v1h-1zM16 37h1v1h-1zM18 37h1v1h-1zM23 37h1v1h-1zM26 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="surv" aria-pressed="true">Survival and oxygen</button>
+          <button type="button" data-v="assay" aria-pressed="false">Clonogenic assay</button>
+          <button type="button" data-v="frac" aria-pressed="false">Fractionation</button>
+          <button type="button" data-v="rbe" aria-pressed="false">Proton RBE</button>
+        </div>
+        <button type="button" class="spin attn" id="plateBtn" data-vd-key="play" hidden>Plate and count</button>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cells, the dose and the schedule">
+        <div id="survBox">
+          <span class="card-title">Cells</span>
+          <select id="selCell" aria-label="Cell line"><option value="v79">V79 (hamster lung)</option><option value="t1">T1 (human kidney)</option><option value="custom">Your own α and β</option></select>
+          <div id="custBox" hidden>
+            <div><div class="slider-head"><label for="sA">α</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="0.01" max="1" step="0.005" value="0.3"></div>
+            <div><div class="slider-head"><label for="sB">β</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="0.15" step="0.001" value="0.03"></div>
+          </div>
+          <div id="oxBox"><div class="slider-head"><label for="sP">Oxygen pO₂</label><output id="oP" for="sP"></output></div><input type="range" id="sP" min="0" max="1" step="0.001" value="1"></div>
+          <hr>
+          <span class="card-title">Dose</span>
+          <div><div class="slider-head"><label for="sD">Dose D</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0" max="12" step="0.05" value="2"></div>
+          <p class="note">Low LET radiation (X-rays or gamma rays) given at once. Drag across the chart, or use the arrow keys, to move the dose.</p>
+        </div>
+        <div id="assayBox" hidden>
+          <span class="card-title">Cells</span>
+          <select id="selLine" aria-label="Cell line for the assay"><option value="v79">V79 (hamster lung)</option><option value="t1">T1 (human kidney)</option><option value="mystery">A mystery cell line</option></select>
+          <div id="codeBox" hidden><div class="slider-head"><label for="sCode">Mystery line code</label><output id="oCode" for="sCode"></output></div><input type="range" id="sCode" min="1" max="99" step="1" value="7"></div>
+          <hr>
+          <span class="card-title">Flasks</span>
+          <div><div class="slider-head"><label for="sAD">Dose D</label><output id="oAD" for="sAD"></output></div><input type="range" id="sAD" min="0" max="10" step="0.5" value="0"></div>
+          <div class="row2"><label class="lbl" for="selN">Cells seeded per flask</label><select id="selN" style="width:auto"><option>50</option><option>100</option><option selected>200</option><option>400</option><option>1000</option><option>2000</option><option>4000</option><option>10000</option><option>20000</option><option>50000</option><option>100000</option></select></div>
+          <div class="row2"><span class="lbl">Experiment <span class="mono" id="seedOut"></span></span><button type="button" class="btn" id="newSeed">New experiment</button><button type="button" class="btn" id="clearDishes">Clear plates</button></div>
+          <p class="note">Three flasks at each dose. Plate the 0 Gy flasks first: their colonies give the plating efficiency that every surviving fraction is measured against.</p>
+        </div>
+        <div id="fracBox" hidden>
+          <span class="card-title">Course of treatment</span>
+          <div><div class="slider-head"><label for="sFD">Total dose</label><output id="oFD" for="sFD"></output></div><input type="range" id="sFD" min="5" max="90" step="0.5" value="60"></div>
+          <div><div class="slider-head"><label for="sFn">Fractions n</label><output id="oFn" for="sFn"></output></div><input type="range" id="sFn" min="1" max="40" step="1" value="30"></div>
+          <label class="check"><input type="checkbox" id="chkIso"><span>Keep the late effect fixed</span></label>
+          <p class="note" id="isoNote" hidden></p>
+          <hr>
+          <div><div class="slider-head"><label for="sCab">Your tissue α/β</label><output id="oCab" for="sCab"></output></div><input type="range" id="sCab" min="0.5" max="20" step="0.1" value="5"></div>
+          <p class="note">Equal fractions, five a week, with full repair between them and no repopulation.</p>
+        </div>
+        <div id="rbeBox" hidden>
+          <span class="card-title">Proton beam</span>
+          <div><div class="slider-head"><label for="sL">LET_d</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.5" max="15" step="0.1" value="2"></div>
+          <div><div class="slider-head"><label for="sRD">Proton dose per fraction</label><output id="oRD" for="sRD"></output></div><input type="range" id="sRD" min="0.25" max="10" step="0.05" value="2"></div>
+          <hr>
+          <span class="card-title">Tissue</span>
+          <div><div class="slider-head"><label for="sAB">(α/β)ₓ for photons</label><output id="oAB" for="sAB"></output></div><input type="range" id="sAB" min="0.5" max="20" step="0.1" value="10"></div>
+          <p class="note">LET_d is the dose averaged linear energy transfer, which rises toward the end of a proton's range.</p>
+        </div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="plot" tabindex="0" role="img" aria-label="Survival curves"></canvas>
+        <span class="simtag" id="simTag" hidden>Simulated counts</span>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-radiobiology.html" target="mp-radiobiology-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="survAir" aria-pressed="true">V79 in air and without oxygen</button>
+          <button type="button" data-p="survHigh" aria-pressed="false">OER at a high dose</button>
+          <button type="button" data-p="survLowOx" aria-pressed="false">A little oxygen goes a long way</button>
+          <button type="button" data-p="survT1" aria-pressed="false">Human kidney cells</button>
+          <button type="button" data-p="survShoulder" aria-pressed="false">A curve with a shoulder</button>
+          <button type="button" data-p="assayV79" aria-pressed="false">Clonogenic assay of V79</button>
+          <button type="button" data-p="assayMystery" aria-pressed="false">A mystery cell line</button>
+          <button type="button" data-p="frac30" aria-pressed="false">60 Gy in 30 fractions</button>
+          <button type="button" data-p="frac1" aria-pressed="false">60 Gy at once</button>
+          <button type="button" data-p="hypo5" aria-pressed="false">Five fractions, same late effect</button>
+          <button type="button" data-p="prostate" aria-pressed="false">Prostate in 20 fractions</button>
+          <button type="button" data-p="rbePlateau" aria-pressed="false">Protons at low LET</button>
+          <button type="button" data-p="rbeDistal" aria-pressed="false">End of range, low α/β</button>
+          <button type="button" data-p="rbeLowDose" aria-pressed="false">Smaller fractions, higher RBE</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-radiobiology" data-title="Radiobiology: Cell Survival and Fractionation" data-demo="radiobiology">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labTrue"><span>Show the true curve behind the assay (V79 and T1 only)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">S = e^(−αD − βD²), ln S = −αD − βD², SF2 = S(2 Gy)</p>
+          <p class="formula">αD = βD² at D = α/β</p>
+          <p class="formula">OER(D) = D_anoxic / D_air for the same survival; low dose α_air/α_anoxic, high dose √(β_air/β_anoxic)</p>
+          <p class="formula">oxygen: m(p) = 1 + (m − 1) · p/(p + K) · (160 + K)/160, K = 3.8 mmHg, on α and on √β</p>
+          <p class="formula">PE = colonies / cells seeded (0 Gy); SF = colonies / (cells seeded × PE)</p>
+          <p class="formula">BED = n d (1 + d/(α/β)), EQD2 = BED / (1 + 2/(α/β))</p>
+          <p class="formula">RBE_max = 0.999064 + 0.35605 LET_d/(α/β)ₓ, RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d</p>
+          <p class="formula">RBE = [√((α/β)² + 4D(α/β)RBE_max + 4D²RBE_min²) − α/β] / (2D)</p>
+          <p class="hint" id="about"></p>
+        </details>
+        <details class="more"><summary>Where the numbers come from</summary>
+          <ul class="srcs">
+            <li>Linear quadratic model, α/β of 10 Gy for tumors and early responding tissue and 3 Gy for late responding tissue, the oxygen effect and the clonogenic assay: E. J. Hall and A. J. Giaccia, Radiobiology for the Radiologist, 8th ed. (Wolters Kluwer, 2019).</li>
+            <li>V79 and T1 α and β in air and in hypoxia, the means of the published values: J. Wenzl and J. J. Wilkens 2011, Radiat. Oncol. 6, 171 (doi:10.1186/1748-717X-6-171).</li>
+            <li>Oxygen dependence, K = 3.8 mmHg: the Alper and Howard-Flanders form as used by H. Zhu, J. Schuemann, Q. Zhang and L. Gerweck, arXiv:2201.02278 (2022), after Koch 1988 and others.</li>
+            <li>Prostate α/β 1.5 Gy (0.8 to 2.2): D. J. Brenner and E. J. Hall 1999, Int. J. Radiat. Oncol. Biol. Phys. 43, 1095. 60 Gy in 20 fractions against 74 Gy in 37: the CHHiP trial, D. Dearnaley et al. 2016, Lancet Oncol. 17, 1047.</li>
+            <li>Proton RBE model: A. L. McNamara, J. Schuemann and H. Paganetti 2015, Phys. Med. Biol. 60, 8399 (doi:10.1088/0031-9155/60/21/8399), parameters as in matRad. Clinical RBE of 1.1 and the averages along a spread out Bragg peak: H. Paganetti 2014, Phys. Med. Biol. 59, R419.</li>
+            <li>Assay counting: N. A. P. Franken et al. 2006, Nat. Protoc. 1, 2315. Air 160 mmHg (21 % of 760 mmHg); arterial blood 95 and venous blood 40 mmHg: Guyton and Hall, Textbook of Medical Physiology.</li>
+          </ul>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* Radiobiology: Cell Survival and Fractionation. Runs in Node (curriculum/validation/test_radiobiology.cjs).
+     Linear quadratic survival S = exp(−αD − βD²). Cell lines: V79 (Chinese hamster lung fibroblasts) and T1 (human kidney cells),
+     aerobic and hypoxic α and β for low LET radiation as given by Wenzl and Wilkens 2011 (Radiat. Oncol. 6, 171: means of the
+     literature values). Between hypoxic and aerobic the Alper and Howard-Flanders form sets each parameter's sensitization,
+     RR(p) − 1 ∝ p/(p + K), with K = 3.8 mmHg (the baseline of Zhu et al. 2022, from Koch 1988 and others) and scaled so that air,
+     160 mmHg, gives the aerobic values: RR = 1 + (m − 1)(p/(p + K))((160 + K)/160), applied to α with m = α_aer/α_hyp and to √β
+     with m = √(β_aer/β_hyp). Fractionation: n equal fractions of d with full repair between them and no repopulation, BED = nd(1 + d/(α/β)),
+     EQD2 = BED/(1 + 2/(α/β)). Proton RBE: McNamara, Schuemann and Paganetti 2015 (Phys. Med. Biol. 60, 8399):
+     RBE_max = 0.999064 + 0.35605 LET_d/(α/β)x, RBE_min = 1.1012 − 0.0038703 √((α/β)x) LET_d, with LET_d in keV/µm, and
+     RBE = [√((α/β)² + 4 D (α/β) RBE_max + 4 D² RBE_min²) − α/β]/(2D) for a proton dose D per fraction. The clonogenic assay is
+     simulated: colonies in each flask are Poisson with mean N × PE × S. */
+  const CELLS = {
+    v79: { name: 'V79 (hamster lung)', aer: { a: 0.135, b: 0.032 }, hyp: { a: 0.06, b: 0.003 }, pe: 0.70 },
+    t1: { name: 'T1 (human kidney)', aer: { a: 0.10, b: 0.047 }, hyp: { a: 0.02, b: 0.009 }, pe: 0.50 },
+  };
+  const TISSUES = [
+    { key: 'tumor', name: 'Tumor or early responding tissue', ab: 10 },
+    { key: 'late', name: 'Late responding normal tissue', ab: 3 },
+    { key: 'prostate', name: 'Prostate cancer', ab: 1.5 },
+  ];
+  const K_O2 = 3.8, P_AIR = 160;
+  const MCN = { p0: 0.999064, p1: 0.35605, p2: 1.1012, p3: -0.0038703 };
+  function survival(a, b, D) { return Math.exp(-a * D - b * D * D); }
+  function rr(m, p) { return 1 + (m - 1) * (p / (p + K_O2)) * ((P_AIR + K_O2) / P_AIR); }
+  /* α and β of a cell line at oxygen pressure p (mmHg, 0 to 160): 0 gives the hypoxic values, 160 (air) the aerobic ones */
+  function lqAt(cell, p) { const c = CELLS[cell], ma = c.aer.a / c.hyp.a, mb = Math.sqrt(c.aer.b / c.hyp.b);
+    if (p >= P_AIR) return { a: c.aer.a, b: c.aer.b };
+    const r = rr(mb, p); return { a: c.hyp.a * rr(ma, p), b: c.hyp.b * r * r }; }
+  /* the dose that gives the effect E = αD + βD² */
+  function doseFor(a, b, E) { return b > 0 ? (-a + Math.sqrt(a * a + 4 * b * E)) / (2 * b) : E / a; }
+  /* OER at aerobic dose D: the hypoxic dose for the same survival over D */
+  function oer(cell, D, p = 0) { const A = lqAt(cell, P_AIR), H = lqAt(cell, p), E = A.a * D + A.b * D * D; return doseFor(H.a, H.b, E) / D; }
+  function d10(a, b) { return doseFor(a, b, Math.log(10)); }
+  function bed(n, d, ab) { return n * d * (1 + d / ab); }
+  function eqd2(n, d, ab) { return bed(n, d, ab) / (1 + 2 / ab); }
+  /* the dose per fraction in n fractions that gives a BED of B */
+  function dPerFraction(B, n, ab) { return ab / 2 * (-1 + Math.sqrt(1 + 4 * B / (n * ab))); }
+  function rbeMax(L, ab) { return MCN.p0 + MCN.p1 * L / ab; }
+  function rbeMin(L, ab) { return MCN.p2 + MCN.p3 * Math.sqrt(ab) * L; }
+  function rbe(D, L, ab) { const M = rbeMax(L, ab), m = rbeMin(L, ab); if (D <= 0) return M;
+    return (Math.sqrt(ab * ab + 4 * D * ab * M + 4 * D * D * m * m) - ab) / (2 * D); }
+  /* the simulated assay */
+  function rngOf(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function poisson(lam, rnd) { let n = 0; while (lam > 0) { const l = Math.min(lam, 400); lam -= l; const L = Math.exp(-l); let k = 0, p = rnd(); while (p > L) { k++; p *= rnd(); } n += k; } return n; }
+  /* a mystery line from its code: α 0.10 to 0.40 /Gy, β 0.010 to 0.060 /Gy², plating efficiency 0.50 to 0.80 (made up for the exercise) */
+  function mystery(code) { const r = rngOf(9973 * code + 17); r(); return { a: +(0.10 + 0.30 * r()).toFixed(3), b: +(0.010 + 0.050 * r()).toFixed(4), pe: +(0.50 + 0.30 * r()).toFixed(2) }; }
+  function lineParams(cell, code) { if (cell === 'mystery') return mystery(code); const c = CELLS[cell]; return { a: c.aer.a, b: c.aer.b, pe: c.pe }; }
+  /* plate N cells in each of k flasks after a dose D and count colonies; seed fixes the counts */
+  function plate(par, D, N, k, seed) { const rnd = rngOf(seed), lam = N * par.pe * survival(par.a, par.b, D), out = [];
+    for (let i = 0; i < k; i++) out.push(poisson(lam, rnd)); return { counts: out, expected: lam }; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+  const $ = (id) => document.getElementById(id);
+  const can = $('plot'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const S = { view: 'surv', cell: 'v79', ca: 0.3, cb: 0.03, p: 160, D: 2, line: 'v79', code: 7, aD: 0, aN: 200, seed: 1, showTrue: false,
+    fD: 60, fn: 30, iso: false, isoD: 60, isoN: 30, cab: 5, L: 2, rD: 2, ab: 10, preset: 'survAir' };
+  const PRESETS = {
+    survAir: { view: 'surv', cell: 'v79', p: 160, D: 2, hint: 'V79 hamster cells in air (blue) and without oxygen (orange). At 2 Gy 67 % of the aerated cells survive and 88 % of the hypoxic ones; the hypoxic cells need 2.6 times the dose for the same survival. That ratio is the oxygen enhancement ratio.' },
+    survHigh: { view: 'surv', cell: 'v79', p: 160, D: 10, hint: 'At 10 Gy the OER of V79 cells has risen to 3.0. It tends to α_air/α_hypoxic = 2.25 at low dose and to √(β_air/β_hypoxic) = 3.27 at high dose, so for V79 oxygen matters most when the dose is large.' },
+    survLowOx: { view: 'surv', cell: 'v79', p: 3.8, D: 4, hint: 'At 3.8 mmHg, about 2 % of the oxygen in air, the cells already have about half of the full oxygen effect (the purple curve lies about midway). Sensitivity changes fastest between 0 and about 20 mmHg and hardly at all from venous blood (40 mmHg) to air.' },
+    survT1: { view: 'surv', cell: 't1', p: 160, D: 2, hint: 'T1 human kidney cells. Their hypoxic α is a fifth of the aerobic one, so the OER is 5.0 at low dose and falls toward √(β_air/β_hypoxic) = 2.29 at high dose, the reverse of V79. The mean literature values for different cell lines disagree on how OER changes with dose.' },
+    survShoulder: { view: 'surv', cell: 'custom', ca: 0.15, cb: 0.05, D: 3, hint: 'α = 0.15 /Gy and β = 0.05 /Gy² give α/β = 3 Gy, like late responding tissue: the curve bends strongly, and at 3 Gy the αD and βD² parts kill equally. Try α = 0.3 and β = 0.03 (α/β = 10 Gy) for a straighter curve.' },
+    assayV79: { view: 'assay', line: 'v79', aD: 0, aN: 200, plate: true, hint: 'Simulated V79 colonies 10 to 14 days after plating 200 cells per flask without radiation. About 70 % of the cells make a colony (the plating efficiency used for the simulation). Raise the dose and seed more cells, so that each flask still holds a countable 50 to 300 colonies.' },
+    assayMystery: { view: 'assay', line: 'mystery', code: 7, aD: 0, aN: 200, plate: true, hint: 'A cell line whose α, β and plating efficiency are hidden. Plate the controls, then flasks at 1, 2, 4, 6 and 8 Gy with more cells at the higher doses, and fit ln SF against D to find α and β.' },
+    frac30: { view: 'frac', fD: 60, fn: 30, iso: false, hint: '60 Gy in 30 fractions of 2 Gy, six weeks of treatment: the EQD2 is 60 Gy in every tissue, by definition. Lower n with the same total dose and the late responding tissue (α/β 3 Gy) gains much more effect than the tumor.' },
+    frac1: { view: 'frac', fD: 60, fn: 1, iso: false, hint: 'The same 60 Gy at once. With α/β = 3 Gy the late responding tissue would get the effect of 756 Gy in 2 Gy fractions, the tumor that of 350 Gy. Splitting the dose spares the late responding tissue most. The linear quadratic model is not reliable at doses per fraction this large.' },
+    hypo5: { view: 'frac', fn: 5, iso: true, isoD: 60, isoN: 30, hint: 'Five fractions that give the late responding tissue the same effect as 60 Gy in 30: only 32.0 Gy in all (6.4 Gy each), and the tumor (α/β 10 Gy) gets an EQD2 of only 43.6 Gy. For a tumor with a high α/β, fewer and larger fractions lose tumor effect at the same late effect.' },
+    prostate: { view: 'frac', fD: 60, fn: 20, iso: false, hint: '60 Gy in 20 fractions of 3 Gy, the hypofractionated arm of the CHHiP trial. With α/β = 1.5 Gy for prostate cancer its EQD2 is 77.1 Gy, more than the 74 Gy in 37 fractions it was compared with, while the late responding tissue (α/β 3 Gy) gets 72 Gy against 74. The trial found 60 Gy in 20 fractions no worse than 74 Gy in 37.' },
+    rbePlateau: { view: 'rbe', L: 2, rD: 2, ab: 10, hint: 'Protons at LET_d = 2 keV/µm, as in the entrance plateau, on tissue with (α/β)ₓ = 10 Gy at 2 Gy per fraction: the model gives an RBE of 1.07, close to the 1.1 used in the clinic. Paganetti 2014 found averages of about 1.1 at the entrance, 1.15 in the middle of a spread out Bragg peak, 1.35 at its distal edge and 1.7 in the distal falloff.' },
+    rbeDistal: { view: 'rbe', L: 10, rD: 2, ab: 2, hint: 'LET_d = 10 keV/µm, as near the end of the proton range, on late responding tissue with (α/β)ₓ = 2 Gy: the RBE is 1.53, so 2 Gy of protons acts like 3.06 Gy of photons, not the 2.2 Gy that RBE 1.1 assumes. This is why the RBE at the end of the range matters for organs just behind a target.' },
+    rbeLowDose: { view: 'rbe', L: 8, rD: 0.5, ab: 2, hint: 'At 0.5 Gy per fraction the RBE at LET_d = 8 keV/µm and (α/β)ₓ = 2 Gy is 1.85, against 1.45 at 2 Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.' },
+  };
+  const sig = (v, n = 4) => (!isFinite(v) ? '—' : Number(v).toPrecision(n).replace(/e\+?(-?\d+)/, (m, e) => ` × 10^${e}`).replace('-', '−'));
+  const sup = (s) => s.replace(/\^(−?\d+)/g, (m, e) => e.replace(/./g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)] || (c === '−' ? '⁻' : c)));
+  const nice = (v, n = 4) => sup(sig(v, n));
+  const fx = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const plainNum = (v, n = 4) => (!isFinite(v) ? '' : String(+Number(v).toPrecision(n)));
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'surface', 'accent', 'air', 'hyp', 'now', 'comp', 'tumor', 'late', 'prost', 'cust', 'dish', 'dishedge', 'agar', 'stain', 'phys', 'clin', 'bio', 'fx', 'band']) T[k] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif'; }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+
+  /* ---------- chart helpers ---------- */
+  function logAx(lo, hi, a, b) { const L0 = Math.log10(lo), L1 = Math.log10(hi); return (v) => a + (Math.log10(v) - L0) / (L1 - L0) * (b - a); }
+  function linAx(lo, hi, a, b) { return (v) => a + (v - lo) / (hi - lo) * (b - a); }
+  function text(s, x, y, col, align = 'left', base = 'alphabetic', size = 11, bold = false) { const p = proj(); ctx.fillStyle = col; ctx.font = `${bold ? 700 : 400} ${size * p}px ${T.ui}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y); }
+  function mono(s, x, y, col, align = 'left', base = 'alphabetic', size = 10.5) { const p = proj(); ctx.fillStyle = col; ctx.font = `${size * p}px ${T.mono}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y); }
+  function tw(s, size = 11, bold = false) { ctx.font = `${bold ? 700 : 400} ${size * proj()}px ${T.ui}`; return ctx.measureText(s).width; }
+  const pow10 = (v) => { const e = Math.round(Math.log10(v)); return e === 0 ? '1' : e === 1 ? '10' : e === 2 ? '100' : e === 3 ? '1000' : e === -1 ? '0.1' : e === -2 ? '0.01' : sup(`10^${String(e).replace('-', '−')}`); };
+  function frame(b) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(b.x, b.y, b.w, b.h); }
+  function logY(b, Y, lo, hi, label) { const p = proj(); ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    for (let d = Math.floor(Math.log10(lo)); d <= Math.ceil(Math.log10(hi)); d++) for (let k = 1; k < 10; k++) { const v = k * 10 ** d; if (v < lo * 0.9999 || v > hi * 1.0001) continue;
+      const q = Y(v); ctx.globalAlpha = k === 1 ? 0.9 : 0.3; ctx.beginPath(); ctx.moveTo(b.x, q); ctx.lineTo(b.x + b.w, q); ctx.stroke(); ctx.globalAlpha = 1;
+      if (k === 1) mono(pow10(v), b.x - 4 * p, q, T.muted, 'right', 'middle'); }
+    if (label) yLabel(b, label); }
+  function linY(b, Y, lo, hi, step, label, dec = 0) { const p = proj(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; while (Math.abs(Y(lo) - Y(lo + step)) < 20 * p) step *= 2; /* no closer than 20 px */
+    for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + 1e-9; v += step) { const q = Y(v); ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(b.x, q); ctx.lineTo(b.x + b.w, q); ctx.stroke(); ctx.globalAlpha = 1; mono(v.toFixed(dec), b.x - 4 * p, q, T.muted, 'right', 'middle'); }
+    if (label) yLabel(b, label); }
+  function linX(b, X, lo, hi, step, label, dec = 0, fmt) { const p = proj(); ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + 1e-9; v += step) { const q = X(v); ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(q, b.y); ctx.lineTo(q, b.y + b.h); ctx.stroke(); ctx.globalAlpha = 1; mono(fmt ? fmt(v) : v.toFixed(dec), q, b.y + b.h + 13 * p, T.muted, 'center'); }
+    if (label) text(label, b.x + b.w / 2, b.y + b.h + 28 * p, T.muted, 'center', 'alphabetic', 10.5); }
+  function yLabel(b, label) { const p = proj(); ctx.save(); ctx.translate(b.x - 40 * p, b.y + b.h / 2); ctx.rotate(-Math.PI / 2); text(label, 0, 0, T.muted, 'center', 'middle', 10.5); ctx.restore(); }
+  function title(b, s) { text(s, b.x, b.y - 8 * proj(), T.ink, 'left', 'alphabetic', 11.5, true); }
+  function curve(b, xs, f, X, Y, col, w = 2, dash = null) { const p = proj(); ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = w * p; ctx.setLineDash(dash ? dash.map((d) => d * p) : []);
+    ctx.beginPath(); let on = false; for (const x of xs) { const v = f(x); if (!isFinite(v)) { on = false; continue; } const px = X(x), py = Y(v); if (on) ctx.lineTo(px, py); else ctx.moveTo(px, py); on = true; } ctx.stroke(); ctx.restore(); }
+  function legend(items, x, y, align = 'left', size = 10.5) { const p = proj(), lh = 15 * p, wmax = Math.max(...items.map((it) => tw(it[0], size))) + 34 * p, x0 = align === 'right' ? x - wmax : x;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88; ctx.fillRect(x0 - 4 * p, y - 11 * p, wmax + 8 * p, items.length * lh + 4 * p); ctx.globalAlpha = 1;
+    items.forEach(([s, c, w, d], i) => { const yy = y + i * lh; ctx.strokeStyle = c; ctx.lineWidth = (w || 2) * p; ctx.setLineDash(d ? d.map((q) => q * p) : []); ctx.beginPath(); ctx.moveTo(x0, yy - 4 * p); ctx.lineTo(x0 + 24 * p, yy - 4 * p); ctx.stroke(); ctx.setLineDash([]); text(s, x0 + 30 * p, yy, T.ink, 'left', 'alphabetic', size); }); }
+  function dot(x, y, col, r = 4) { const p = proj(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r * p, 0, 7); ctx.fill(); }
+  function cursorX(b, x) { const p = proj(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, b.y); ctx.lineTo(x, b.y + b.h); ctx.stroke(); ctx.globalAlpha = 1; }
+  const range = (a, b, n) => Array.from({ length: n + 1 }, (_, i) => a + (b - a) * i / n);
+  /* a layout: one big chart on top and two small ones below, side by side or (narrow) stacked */
+  function layout(box, topShare) { const p = proj(), narrow = box.w < 560;
+    if (narrow) { const gap = 74 * p, th = box.h * topShare * 0.8, rest = box.h - th - 2 * gap, h2 = rest / 2;
+      const top = { x: box.x, y: box.y + 16 * p, w: box.w, h: th - 16 * p }, a = { x: box.x, y: top.y + top.h + gap, w: box.w, h: h2 }, b = { x: box.x, y: a.y + a.h + gap, w: box.w, h: h2 };
+      return { top, a, b, narrow }; }
+    const gap = 76 * p, top = { x: box.x, y: box.y + 16 * p, w: box.w, h: box.h * topShare - 16 * p }, h2 = box.h - top.h - 16 * p - gap,
+      a = { x: box.x, y: top.y + top.h + gap, w: box.w * 0.45, h: h2 }, b = { x: box.x + box.w * 0.55, y: a.y, w: box.w * 0.45, h: h2 };
+    return { top, a, b, narrow }; }
+
+  /* ---------- survival and oxygen ---------- */
+  const DMAX = 12, SFMIN = 1e-4;
+  const cellLQ = (p) => (S.cell === 'custom' ? { a: S.ca, b: S.cb } : lqAt(S.cell, p));
+  const sqrtAx = (lo, hi, a, b) => (v) => a + (Math.sqrt(v) - Math.sqrt(lo)) / (Math.sqrt(hi) - Math.sqrt(lo)) * (b - a);
+  function drawSurv(box) { const p = proj(), one = S.cell === 'custom', L = one ? { top: { x: box.x, y: box.y + 16 * p, w: box.w, h: box.h - 46 * p } } : layout(box, 0.58), top = L.top;
+    const X = linAx(0, DMAX, top.x, top.x + top.w), Y = logAx(SFMIN, 1, top.y + top.h, top.y), Ds = range(0, DMAX, 240);
+    logY(top, Y, SFMIN, 1, 'Surviving fraction S'); linX(top, X, 0, DMAX, 2, 'Dose D (Gy)'); frame(top);
+    const A = cellLQ(P_AIR), Hh = one ? null : lqAt(S.cell, 0), P = one ? null : lqAt(S.cell, S.p), mid = !one && S.p > 0 && S.p < P_AIR;
+    title(top, one ? `α = ${fx(S.ca, 3)} /Gy, β = ${fx(S.cb, 3)} /Gy²: α/β = ${S.cb > 0 ? fx(S.ca / S.cb, 2) + ' Gy' : 'no β'}` : `${CELLS[S.cell].name}: surviving fraction against dose`);
+    /* the α and β parts of the aerobic curve */
+    curve(top, Ds, (d) => Math.exp(-A.a * d), X, Y, T.comp, 1.3, [6, 4]); if (A.b > 0) curve(top, Ds, (d) => Math.exp(-A.b * d * d), X, Y, T.comp, 1.3, [2, 3]);
+    if (!one) curve(top, Ds, (d) => survival(Hh.a, Hh.b, d), X, Y, T.hyp, 2.4);
+    if (mid) curve(top, Ds, (d) => survival(P.a, P.b, d), X, Y, T.now, 2.2);
+    curve(top, Ds, (d) => survival(A.a, A.b, d), X, Y, one ? T.cust : T.air, 2.6);
+    /* where αD = βD² */
+    if (A.b > 0 && A.a / A.b <= DMAX) { const d = A.a / A.b, y = Y(survival(A.a, A.b, d)); ctx.strokeStyle = T.comp; ctx.lineWidth = 1 * p; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(d), y); ctx.lineTo(X(d), top.y + top.h); ctx.stroke(); ctx.setLineDash([]);
+      mono(`α/β ${fx(d, 2)} Gy`, X(d) + 4 * p, y + 16 * p, T.muted, 'left'); }
+    /* the cursor and the OER bracket */
+    const xd = X(S.D); cursorX(top, xd);
+    const sA = survival(A.a, A.b, S.D); dot(xd, Y(Math.max(sA, SFMIN)), one ? T.cust : T.air);
+    if (!one) { dot(xd, Y(Math.max(survival(Hh.a, Hh.b, S.D), SFMIN)), T.hyp); if (mid) dot(xd, Y(Math.max(survival(P.a, P.b, S.D), SFMIN)), T.now);
+      if (S.D > 0.05 && sA > SFMIN) { const dh = doseFor(Hh.a, Hh.b, A.a * S.D + A.b * S.D * S.D), y = Y(sA), x2 = Math.min(X(dh), top.x + top.w);
+        ctx.strokeStyle = T.hyp; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(xd, y); ctx.lineTo(x2, y); ctx.stroke();
+        if (X(dh) <= top.x + top.w) { ctx.beginPath(); ctx.moveTo(x2, y - 5 * p); ctx.lineTo(x2, y + 5 * p); ctx.stroke(); }
+        const lab = `OER ${fx(dh / S.D, 2)}`, lx = Math.min((xd + x2) / 2, top.x + top.w - tw(lab, 10.5, true) / 2 - 4 * p); text(lab, lx, y - 6 * p, T.hyp, 'center', 'alphabetic', 10.5, true); } }
+    const items = one ? [['S = e^(−αD − βD²)', T.cust, 2.6]] : [['In air, 160 mmHg', T.air, 2.6]].concat(mid ? [[`At ${fx(S.p, 1)} mmHg`, T.now, 2.2]] : []).concat([['Without oxygen (hypoxic)', T.hyp, 2.4]]);
+    items.push(['e^(−αD), the α part', T.comp, 1.3, [6, 4]]); if (A.b > 0) items.push(['e^(−βD²), the β part', T.comp, 1.3, [2, 3]]);
+    legend(items, top.x + 10 * p, top.y + top.h - items.length * 15 * p + 2 * p, 'left', L.narrow ? 9.5 : 10.5); /* bottom left, where the curves never go */
+    if (one) return { X, box: top };
+    /* oxygen: how much more effective the dose is than without oxygen, against pO₂ */
+    const a = L.a, Xo = sqrtAx(0, P_AIR, a.x, a.x + a.w), oerAt = (pp) => (S.D > 0.02 ? (() => { const Q = lqAt(S.cell, pp), E = Q.a * S.D + Q.b * S.D * S.D; return doseFor(Hh.a, Hh.b, E) / S.D; })() : lqAt(S.cell, pp).a / Hh.a);
+    const omax = Math.max(oerAt(P_AIR), 1.2) * 1.12, Yo = linAx(1, omax, a.y + a.h, a.y); frame(a);
+    linY(a, Yo, 1, omax, omax > 4 ? 1 : 0.5, 'Dose modifying factor', 1);
+    ctx.strokeStyle = T.line; for (const v of [0, 1, 4, 10, 25, 50, 100, 160]) { const q = Xo(v); ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(q, a.y); ctx.lineTo(q, a.y + a.h); ctx.stroke(); ctx.globalAlpha = 1; mono(String(v), q, a.y + a.h + 13 * p, T.muted, 'center'); }
+    text('Oxygen pO₂ (mmHg, square root scale)', a.x + a.w / 2, a.y + a.h + 28 * p, T.muted, 'center', 'alphabetic', 10.5);
+    title(a, L.narrow ? `Effect of oxygen at ${fx(S.D, 2)} Gy` : `Effect of oxygen at ${fx(S.D, 2)} Gy, against no oxygen`);
+    for (const [v, s] of [[K_O2, 'K'], [40, 'venous'], [95, 'arterial']]) { const q = Xo(v); ctx.strokeStyle = T.muted; ctx.setLineDash([3, 3]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(q, a.y + 14 * p); ctx.lineTo(q, a.y + a.h); ctx.stroke(); ctx.setLineDash([]); mono(s, q, a.y + 10 * p, T.muted, 'center', 'alphabetic', 9.5); }
+    curve(a, range(0, P_AIR, 320).map((u) => u * u / P_AIR), oerAt, Xo, Yo, T.now, 2.4);
+    dot(Xo(S.p), Yo(oerAt(S.p)), T.now, 5);
+    /* OER against dose */
+    const b = L.b, Xd = linAx(0, DMAX, b.x, b.x + b.w), lo = Hh ? A.a / Hh.a : 1, hi = Math.sqrt(A.b / Hh.b), Ds2 = range(0.02, DMAX, 200), oerD = (d) => oer(S.cell, d, 0), oerP = (d) => (S.p > 0 && S.p < P_AIR ? oer(S.cell, d, S.p) : NaN);
+    const ymax = Math.max(lo, hi, oerD(DMAX)) * 1.15, Yd = linAx(1, ymax, b.y + b.h, b.y); frame(b);
+    linY(b, Yd, 1, ymax, ymax > 4 ? 1 : 0.5, 'OER', 1); linX(b, Xd, 0, DMAX, L.narrow ? 2 : 4, 'Dose in air (Gy)');
+    title(b, 'Oxygen enhancement ratio against dose');
+    for (const [v, s] of [[lo, `α ratio ${fx(lo, 2)}`], [hi, `√β ratio ${fx(hi, 2)}`]]) { const y = Yd(v); ctx.strokeStyle = T.muted; ctx.setLineDash([5, 4]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); ctx.stroke(); ctx.setLineDash([]); mono(s, b.x + b.w - 4 * p, y + (v === Math.max(lo, hi) ? -4 : 12) * p, T.muted, 'right', 'alphabetic', 9.5); }
+    curve(b, Ds2, oerD, Xd, Yd, T.hyp, 2.4); curve(b, Ds2, oerP, Xd, Yd, T.now, 1.8, [6, 3]);
+    cursorX(b, Xd(S.D)); if (S.D > 0.02) dot(Xd(S.D), Yd(oerD(S.D)), T.hyp);
+    return { X, box: top }; }
+
+  /* ---------- the clonogenic assay (simulated) ---------- */
+  let GROUPS = [];  /* plated dose groups: { line, code, D, N, seed, counts } */
+  const lineKey = () => (S.line === 'mystery' ? 'mystery:' + S.code : S.line);
+  const lineName = () => (S.line === 'mystery' ? `Mystery line ${S.code}` : CELLS[S.line].name);
+  function groupSeed(D, N) { let h = (S.seed * 2654435761) >>> 0; for (const v of [lineKey().length * 977 + (S.line === 'mystery' ? S.code : S.line === 'v79' ? 1 : 2), Math.round(D * 100), N]) { h = Math.imul(h ^ v, 2246822519) >>> 0; h ^= h >>> 13; } return h >>> 0; }
+  function plateNow() { const par = lineParams(S.line, S.code), seed = groupSeed(S.aD, S.aN), r = plate(par, S.aD, S.aN, 3, seed), key = lineKey();
+    GROUPS = GROUPS.filter((g) => !(g.key === key && g.seedSet === S.seed && Math.abs(g.D - S.aD) < 1e-9));
+    GROUPS.push({ key, seedSet: S.seed, D: S.aD, N: S.aN, seed, counts: r.counts }); GROUPS.sort((x, y) => x.D - y.D); }
+  const myGroups = () => GROUPS.filter((g) => g.key === lineKey() && g.seedSet === S.seed);
+  const current = () => myGroups().find((g) => Math.abs(g.D - S.aD) < 1e-9 && g.N === S.aN) || null;
+  /* the plating efficiency from the 0 Gy flasks, and each group's surviving fraction with its counting (Poisson) standard error */
+  function analysis() { const gs = myGroups(), c0 = gs.find((g) => g.D === 0), out = { pe: null, pts: [] };
+    if (!c0) return out; const s0 = c0.counts.reduce((a, b) => a + b, 0); out.pe = s0 / (c0.N * c0.counts.length); out.s0 = s0;
+    for (const g of gs) { const s = g.counts.reduce((a, b) => a + b, 0), mean = s / g.counts.length, sf = out.pe > 0 ? mean / (g.N * out.pe) : NaN, rel = s > 0 && s0 > 0 ? Math.sqrt(1 / s + (g.D === 0 ? 0 : 1 / s0)) : NaN;
+      out.pts.push({ D: g.D, N: g.N, counts: g.counts, sum: s, mean, sf, se: sf * rel, rel }); }
+    return out; }
+  function drawAssay(box) { const p = proj(), narrow = box.w < 560, dishH = Math.min(narrow ? box.h * 0.36 : box.h * 0.44, box.w / 3 + 30 * p), g = current();
+    const top = { x: box.x, y: box.y + 16 * p, w: box.w, h: dishH - 16 * p }, ch = { x: box.x, y: top.y + top.h + 64 * p, w: box.w, h: box.h - dishH - 64 * p - 30 * p };
+    title(top, narrow ? `${fx(S.aD, 1)} Gy, ${S.aN.toLocaleString('en-US')} cells per flask` : `${lineName()}: ${fx(S.aD, 1)} Gy, ${S.aN.toLocaleString('en-US')} cells seeded per flask`);
+    const R = Math.min(top.w / 3 / 2 - 12 * p, (top.h - 34 * p) / 2), cyD = top.y + R + 8 * p;
+    for (let k = 0; k < 3; k++) { const cx = top.x + top.w * (k + 0.5) / 3;
+      ctx.fillStyle = T.dish; ctx.beginPath(); ctx.arc(cx, cyD, R + 4 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.dishedge; ctx.lineWidth = 1.5 * p; ctx.stroke();
+      ctx.fillStyle = T.agar; ctx.beginPath(); ctx.arc(cx, cyD, R, 0, 7); ctx.fill();
+      if (g) { const n = g.counts[k], rnd = rngOf(g.seed + 101 * (k + 1)), shown = Math.min(n, 4000); ctx.fillStyle = T.stain;
+        for (let i = 0; i < shown; i++) { const rr2 = R * 0.94 * Math.sqrt(rnd()), th = 2 * Math.PI * rnd(), sz = R * (0.012 + 0.022 * rnd()); ctx.globalAlpha = 0.55 + 0.4 * rnd();
+          ctx.beginPath(); ctx.arc(cx + rr2 * Math.cos(th), cyD + rr2 * Math.sin(th), sz, 0, 7); ctx.fill(); }
+        ctx.globalAlpha = 1; const tooMany = n > 300, few = n < 20;
+        text(`${n} colonies`, cx, cyD + R + 20 * p, tooMany || few ? T.hyp : T.ink, 'center', 'alphabetic', 11.5, true);
+        if (tooMany || few) mono(tooMany ? 'too many to count well' : 'few: large counting error', cx, cyD + R + 33 * p, T.hyp, 'center', 'alphabetic', 9.5); }
+      else { mono('not plated yet', cx, cyD, T.muted, 'center', 'middle'); text(`Flask ${k + 1}`, cx, cyD + R + 20 * p, T.muted, 'center', 'alphabetic', 11); } }
+    /* surviving fraction against dose */
+    const an = analysis(), X = linAx(0, 10, ch.x, ch.x + ch.w), lo = Math.min(1e-3, ...an.pts.filter((q) => q.sf > 0).map((q) => (q.sf - q.se > 0 ? q.sf - q.se : q.sf) * 0.5)), ylo = 10 ** Math.floor(Math.log10(Math.max(lo, 1e-6))), Y = logAx(ylo, 2, ch.y + ch.h, ch.y);
+    logY(ch, Y, ylo, 2, 'Surviving fraction'); linX(ch, X, 0, 10, 1, 'Dose D (Gy)'); frame(ch);
+    title(ch, an.pe == null ? (narrow ? 'Plate the 0 Gy flasks first' : 'Surviving fraction: plate the 0 Gy flasks first') : narrow ? `Surviving fraction, PE ${fx(an.pe, 3)}` : `Surviving fraction, plating efficiency ${fx(an.pe, 3)} from the 0 Gy flasks`);
+    if (S.showTrue && S.line !== 'mystery') { const c = CELLS[S.line]; curve(ch, range(0, 10, 200), (d) => survival(c.aer.a, c.aer.b, d), X, Y, T.comp, 1.4, [6, 4]); }
+    for (const q of an.pts) { if (!(q.sf > 0)) { const x = X(q.D); ctx.strokeStyle = T.stain; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, ch.y + ch.h - 20 * p); ctx.lineTo(x, ch.y + ch.h - 4 * p); ctx.lineTo(x - 4 * p, ch.y + ch.h - 9 * p); ctx.moveTo(x, ch.y + ch.h - 4 * p); ctx.lineTo(x + 4 * p, ch.y + ch.h - 9 * p); ctx.stroke(); continue; }
+      const x = X(q.D), y = Y(q.sf); ctx.strokeStyle = T.stain; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, Y(q.sf + q.se)); ctx.lineTo(x, Y(Math.max(q.sf - q.se, ylo))); ctx.stroke();
+      dot(x, y, Math.abs(q.D - S.aD) < 1e-9 ? T.accent : T.stain, 4.5); }
+    cursorX(ch, X(S.aD));
+    if (S.showTrue && S.line !== 'mystery') legend([['the model behind the simulation', T.comp, 1.4, [6, 4]]], ch.x + ch.w - 8 * p, ch.y + 18 * p, 'right', 10);
+    return { box: ch, X }; }
+
+  /* ---------- fractionation ---------- */
+  const tissues = () => TISSUES.map((t) => ({ ...t, col: T[t.key === 'tumor' ? 'tumor' : t.key === 'late' ? 'late' : 'prost'] })).concat([{ key: 'cust', name: 'Your tissue', ab: S.cab, col: T.cust }]);
+  const lateRef = () => bed(S.isoN, S.isoD / S.isoN, 3);
+  const totalFor = (n) => (S.iso ? n * dPerFraction(lateRef(), n, 3) : S.fD);
+  const fTotal = () => totalFor(S.fn);
+  function drawFrac(box) { const p = proj(), L = layout(box, 0.34), top = L.top, n = S.fn, Dt = fTotal(), d = Dt / n, tis = tissues();
+    /* the calendar: one bar per fraction, Monday to Friday */
+    const days = Math.floor((n - 1) / 5) * 7 + ((n - 1) % 5) + 1, dmax = Math.max(d, 2) * 1.25, X = linAx(-0.5, Math.max(days, 5) - 0.5, top.x, top.x + top.w), Y = linAx(0, dmax, top.y + top.h, top.y);
+    frame(top); const weeks = Math.ceil(n / 5); title(top, `${n} × ${fx(d, 2)} Gy = ${fx(Dt, 1)} Gy, ${n === 1 ? 'one day' : `${weeks} week${weeks > 1 ? 's' : ''}${L.narrow ? '' : ', five fractions a week'}`}`);
+    for (let wk = 0; wk < weeks; wk++) { const x0 = X(wk * 7 + 4.5), x1 = X(wk * 7 + 6.5); if (wk < weeks - 1) { ctx.fillStyle = T.band; ctx.fillRect(x0, top.y, x1 - x0, top.h); } mono(`week ${wk + 1}`, X(wk * 7 + 2), top.y + top.h + 13 * p, T.muted, 'center', 'alphabetic', 9.5); }
+    const bw = Math.min((X(1) - X(0)) * 0.7, 40 * p); ctx.fillStyle = T.fx;
+    for (let i = 0; i < n; i++) { const day = Math.floor(i / 5) * 7 + (i % 5), x = X(day); ctx.fillRect(x - bw / 2, Y(d), bw, Y(0) - Y(d)); }
+    { const y = Y(2); ctx.strokeStyle = T.muted; ctx.setLineDash([4, 3]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(top.x, y); ctx.lineTo(top.x + top.w, y); ctx.stroke(); ctx.setLineDash([]); mono('2 Gy', top.x + 4 * p, y - 4 * p, T.muted, 'left', 'alphabetic', 9.5); }
+    linY(top, Y, 0, dmax, dmax > 30 ? 10 : dmax > 12 ? 5 : dmax > 5 ? 2 : 1, 'Dose per fraction (Gy)');
+    /* BED staircase */
+    const a = L.a, bmax = Math.max(...tis.map((t) => bed(n, d, t.ab))) * 1.1, Xa = linAx(0, Math.max(n, 5), a.x, a.x + a.w), Ya = linAx(0, bmax, a.y + a.h, a.y); frame(a);
+    const st = bmax > 600 ? 200 : bmax > 300 ? 100 : bmax > 120 ? 50 : bmax > 50 ? 20 : 10; linY(a, Ya, 0, bmax, st, 'BED (Gy)');
+    const xs = n > 20 ? 10 : n > 8 ? 5 : n > 3 ? 2 : 1; linX(a, Xa, 0, Math.max(n, 5), xs, 'Fractions given');
+    title(a, 'Biologically effective dose, fraction by fraction');
+    for (const t of tis) { const per = d * (1 + d / t.ab); ctx.save(); ctx.beginPath(); ctx.rect(a.x, a.y, a.w, a.h); ctx.clip(); ctx.strokeStyle = t.col; ctx.lineWidth = (t.key === 'cust' ? 1.6 : 2.2) * p; ctx.setLineDash(t.key === 'cust' ? [5, 3] : []); ctx.beginPath(); ctx.moveTo(Xa(0), Ya(0));
+      for (let k = 1; k <= n; k++) { ctx.lineTo(Xa(k), Ya((k - 1) * per)); ctx.lineTo(Xa(k), Ya(k * per)); } /* each fraction adds its BED when it is given */ ctx.stroke(); ctx.restore(); }
+    legend(tis.map((t) => [`α/β ${fx(t.ab, 1)} Gy: ${t.name.toLowerCase()}`, t.col, t.key === 'cust' ? 1.6 : 2.2, t.key === 'cust' ? [5, 3] : null]), a.x + 8 * p, a.y + 16 * p, 'left', L.narrow ? 9.5 : 9.5);
+    /* EQD2 against the number of fractions, under the current rule */
+    const b = L.b, ns = range(1, 40, 39), Xb = linAx(1, 40, b.x, b.x + b.w), vals = ns.map((k) => tis.map((t) => eqd2(k, totalFor(k) / k, t.ab))).flat();
+    const vmin = Math.min(...vals), vmax = Math.max(...vals), useLog = vmax / vmin > 6; let Yb;
+    if (useLog) { const ylo = vmin / 1.3, yhi = vmax * 1.3; Yb = logAx(ylo, yhi, b.y + b.h, b.y); logY(b, Yb, ylo, yhi, 'EQD2 (Gy)'); }
+    else { const span = vmax - vmin, st = span > 60 ? 20 : span > 25 ? 10 : 5, ylo = Math.max(0, Math.floor(vmin * 0.9 / st) * st), yhi = Math.ceil(vmax * 1.05 / st) * st; Yb = linAx(ylo, yhi, b.y + b.h, b.y); linY(b, Yb, ylo, yhi, st, 'EQD2 (Gy)'); }
+    frame(b); linX(b, Xb, 0, 40, 10, 'Fractions n'); title(b, S.iso ? 'EQD2 at the same late effect' : `EQD2 of ${fx(Dt, 1)} Gy against n`);
+    for (const t of tis) curve(b, ns, (k) => eqd2(k, totalFor(k) / k, t.ab), Xb, Yb, t.col, t.key === 'cust' ? 1.6 : 2.2, t.key === 'cust' ? [5, 3] : null);
+    cursorX(b, Xb(n)); for (const t of tis) dot(Xb(n), Yb(eqd2(n, d, t.ab)), t.col, 4);
+    return { box: b, X: Xb }; }
+
+  /* ---------- proton RBE ---------- */
+  const LMAX = 15;
+  function drawRBE(box) { const p = proj(), L = layout(box, 0.56), top = L.top, Ls = range(0, LMAX, 150);
+    const Mx = rbeMax(LMAX, S.ab), ymax = Math.min(Math.max(2, rbe(S.rD, LMAX, S.ab) * 1.15, rbe(0.25, LMAX, Math.max(S.ab, 1)) * 0.8), 6), X = linAx(0, LMAX, top.x, top.x + top.w), Y = linAx(0.8, ymax, top.y + top.h, top.y);
+    frame(top); linY(top, Y, 1, ymax, ymax > 3 ? 0.5 : 0.2, 'RBE', 1); linX(top, X, 0, LMAX, L.narrow ? 3 : 1, 'LET_d (keV/µm)');
+    title(top, L.narrow ? `RBE against LET_d, ${fx(S.rD, 2)} Gy` : `RBE against LET_d at ${fx(S.rD, 2)} Gy per fraction, (α/β)ₓ = ${fx(S.ab, 1)} Gy`);
+    { const y = Y(1.1); ctx.strokeStyle = T.clin; ctx.lineWidth = 1.6 * p; ctx.setLineDash([8, 4]); ctx.beginPath(); ctx.moveTo(top.x, y); ctx.lineTo(top.x + top.w, y); ctx.stroke(); ctx.setLineDash([]); }
+    curve(top, Ls, (l) => rbeMax(l, S.ab), X, Y, T.comp, 1.3, [6, 4]); curve(top, Ls, (l) => rbeMin(l, S.ab), X, Y, T.comp, 1.3, [2, 3]);
+    curve(top, Ls, (l) => rbe(S.rD, l, S.ab), X, Y, T.bio, 2.8);
+    /* Paganetti's averages along a spread out Bragg peak, on the right edge */
+    const pg = [[1.1, 'entrance'], [1.15, 'SOBP center'], [1.35, 'distal edge'], [1.7, 'distal falloff']], rx = top.x + top.w;
+    for (const [v, s] of pg) { if (v > ymax) continue; const y = Y(v); ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(rx - 10 * p, y); ctx.lineTo(rx, y); ctx.stroke(); }
+    cursorX(top, X(S.L)); dot(X(S.L), Y(rbe(S.rD, S.L, S.ab)), T.bio, 5);
+    legend([['RBE, McNamara et al. 2015', T.bio, 2.8], ['RBE_max (very low dose)', T.comp, 1.3, [6, 4]], ['RBE_min (very high dose)', T.comp, 1.3, [2, 3]], ['1.1, the clinical constant', T.clin, 1.6, [8, 4]], ['Paganetti 2014 averages (ticks, right)', T.ink, 2]], top.x + 8 * p, top.y + 18 * p, 'left', L.narrow ? 9.5 : 10.5);
+    { const lab = pg.filter(([v]) => v <= ymax).map(([v, s]) => `${s} ${v}`).join(' · '); if (!L.narrow) mono(lab, rx - 14 * p, top.y + top.h - 8 * p, T.muted, 'right', 'alphabetic', 9.5); }
+    /* RBE against dose per fraction */
+    const a = L.a, ds = range(0.1, 10, 200), Xa = linAx(0, 10, a.x, a.x + a.w), abs = [[2, T.late], [10, T.tumor]], ya = Math.max(...abs.map(([ab]) => rbe(0.1, S.L, ab)), rbe(0.1, S.L, S.ab)) * 1.08, Ya = linAx(0.9, Math.max(ya, 1.3), a.y + a.h, a.y);
+    frame(a); linY(a, Ya, 1, Math.max(ya, 1.3), ya > 3 ? 0.5 : ya > 1.9 ? 0.2 : 0.1, 'RBE', 1); linX(a, Xa, 0, 10, 2, 'Proton dose per fraction (Gy)'); title(a, `RBE against dose at LET_d ${fx(S.L, 1)} keV/µm`);
+    for (const [ab, c] of abs) curve(a, ds, (q) => rbe(q, S.L, ab), Xa, Ya, c, 1.8, [5, 3]);
+    curve(a, ds, (q) => rbe(q, S.L, S.ab), Xa, Ya, T.bio, 2.6); cursorX(a, Xa(S.rD)); dot(Xa(S.rD), Ya(rbe(S.rD, S.L, S.ab)), T.bio, 4.5);
+    legend([[`(α/β)ₓ ${fx(S.ab, 1)} Gy`, T.bio, 2.6], ['(α/β)ₓ 2 Gy', T.late, 1.8, [5, 3]], ['(α/β)ₓ 10 Gy', T.tumor, 1.8, [5, 3]]], a.x + a.w - 8 * p, a.y + 16 * p, 'right', 9.5);
+    /* the dose per fraction as photons would need it */
+    const b = L.b, r = rbe(S.rD, S.L, S.ab), bars = [['Proton dose', S.rD, T.phys], ['× 1.1', 1.1 * S.rD, T.clin], [`× ${fx(r, 3)}`, r * S.rD, T.bio]], bmax = Math.max(...bars.map((q) => q[1])) * 1.2, Yb = linAx(0, bmax, b.y + b.h, b.y);
+    frame(b); linY(b, Yb, 0, bmax, bmax > 20 ? 5 : bmax > 8 ? 2 : bmax > 3 ? 1 : 0.5, 'Gy', bmax > 3 ? 0 : 1); title(b, 'Photon dose for the same effect');
+    bars.forEach(([s, v, c], i) => { const w = b.w / 3, x = b.x + w * i + w * 0.18; ctx.fillStyle = c; ctx.fillRect(x, Yb(v), w * 0.64, Yb(0) - Yb(v)); mono(fx(v, 2), x + w * 0.32, Yb(v) - 5 * p, T.ink, 'center'); text(s, x + w * 0.32, b.y + b.h + 14 * p, T.muted, 'center', 'alphabetic', 10.5); });
+    return { box: top, X }; }
+
+  /* ---------- draw ---------- */
+  let LAST = null;
+  function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = proj(), box = { x: 62 * p, y: 20 * p, w: W - 80 * p, h: H - 60 * p };
+    LAST = S.view === 'surv' ? drawSurv(box) : S.view === 'assay' ? drawAssay(box) : S.view === 'frac' ? drawFrac(box) : drawRBE(box); }
+
+  /* ---------- readouts ---------- */
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function readouts() { const out = $('out'); let h = '';
+    if (S.view === 'surv') { const A = cellLQ(P_AIR);
+      if (S.cell === 'custom') h += dd('α', `${fx(S.ca, 3)} /Gy`) + dd('β', `${fx(S.cb, 4)} /Gy²`) + dd('α/β', S.cb > 0 ? `${fx(S.ca / S.cb, 2)} Gy` : '—') + dd('Dose', `${fx(S.D, 2)} Gy`) + dd('Surviving fraction', nice(survival(A.a, A.b, S.D), 4)) + dd('SF2', fx(survival(A.a, A.b, 2), 4)) + dd('D₁₀, 10 % survive', `${fx(d10(A.a, A.b), 3)} Gy`);
+      else { const Hh = lqAt(S.cell, 0), P = lqAt(S.cell, S.p);
+        h += dd('Cell line', CELLS[S.cell].name, 'wide') + dd('Dose', `${fx(S.D, 2)} Gy`) + dd('pO₂', `${fx(S.p, 1)} mmHg`)
+          + dd('α, β in air', `${fx(A.a, 3)} /Gy, ${fx(A.b, 4)} /Gy²`) + dd('α, β without oxygen', `${fx(Hh.a, 3)} /Gy, ${fx(Hh.b, 4)} /Gy²`) + (S.p > 0 && S.p < P_AIR ? dd(`α, β at ${fx(S.p, 1)} mmHg`, `${fx(P.a, 4)} /Gy, ${fx(P.b, 4)} /Gy²`) : '')
+          + dd('S in air', nice(survival(A.a, A.b, S.D), 4)) + dd('S without oxygen', nice(survival(Hh.a, Hh.b, S.D), 4)) + (S.p > 0 && S.p < P_AIR ? dd(`S at ${fx(S.p, 1)} mmHg`, nice(survival(P.a, P.b, S.D), 4)) : '')
+          + dd('OER at this dose', S.D > 0.02 ? fx(oer(S.cell, S.D, 0), 3) : '—') + dd('α/β in air', `${fx(A.a / A.b, 2)} Gy`) + dd('SF2 in air', fx(survival(A.a, A.b, 2), 4)) + dd('D₁₀ in air, without', `${fx(d10(A.a, A.b), 3)}, ${fx(d10(Hh.a, Hh.b), 3)} Gy`); } }
+    else if (S.view === 'assay') { const an = analysis(), g = current();
+      h += dd('Cells', lineName(), 'wide') + dd('Dose', `${fx(S.aD, 1)} Gy`) + dd('Seeded per flask', S.aN.toLocaleString('en-US')) + dd('Experiment', String(S.seed));
+      if (g) { const q = an.pts.find((x) => Math.abs(x.D - g.D) < 1e-9); h += dd('Colonies', g.counts.join(', ')) + dd('Mean', fx(g.counts.reduce((a, b) => a + b, 0) / 3, 1));
+        h += an.pe == null ? dd('Surviving fraction', 'plate 0 Gy first', 'note') : dd('Plating efficiency', fx(an.pe, 4)) + dd('Surviving fraction', q && q.sf > 0 ? `${nice(q.sf, 3)} ± ${nice(q.se, 2)}` : 'no colonies'); }
+      else h += dd('Flasks', 'Plate and count to see colonies', 'note');
+      if (an.pts.length) h += dd('Plated so far', an.pts.map((q) => `${fx(q.D, 1)} Gy`).join(', '), 'wide'); }
+    else if (S.view === 'frac') { const Dt = fTotal(), d = Dt / S.fn;
+      h += dd('Schedule', `${S.fn} × ${fx(d, 3)} Gy`) + dd('Total dose', `${fx(Dt, 2)} Gy`) + (S.iso ? dd('Late effect held at', `${fx(S.isoD, 1)} Gy in ${S.isoN}`) : '');
+      for (const t of tissues()) h += dd(`α/β ${fx(t.ab, 1)} Gy: BED, EQD2`, `${fx(bed(S.fn, d, t.ab), 1)}, ${fx(eqd2(S.fn, d, t.ab), 1)} Gy`, 'wide'); }
+    else { const r = rbe(S.rD, S.L, S.ab);
+      h += dd('LET_d', `${fx(S.L, 1)} keV/µm`) + dd('Proton dose', `${fx(S.rD, 2)} Gy`) + dd('(α/β)ₓ', `${fx(S.ab, 1)} Gy`) + dd('RBE_max', fx(rbeMax(S.L, S.ab), 4)) + dd('RBE_min', fx(rbeMin(S.L, S.ab), 4)) + dd('RBE', fx(r, 4))
+        + dd('RBE weighted dose', `${fx(r * S.rD, 3)} Gy(RBE)`) + dd('With RBE 1.1', `${fx(1.1 * S.rD, 3)} Gy(RBE)`) + dd('Difference', `${fx(100 * (r / 1.1 - 1), 1)} %`); }
+    out.innerHTML = h; }
+
+  /* ---------- controls ---------- */
+  const pFromU = (u) => +(P_AIR * u * u).toFixed(2), uFromP = (pp) => Math.sqrt(pp / P_AIR);
+  function sync() { const pane = $('pane'); pane.dataset.v = S.view; pane.dataset.one = S.view === 'surv' && S.cell === 'custom' ? '1' : '0';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const [id, v] of [['survBox', 'surv'], ['assayBox', 'assay'], ['fracBox', 'frac'], ['rbeBox', 'rbe']]) $(id).hidden = S.view !== v;
+    $('plateBtn').hidden = S.view !== 'assay'; $('simTag').hidden = S.view !== 'assay';
+    $('selCell').value = S.cell; $('custBox').hidden = S.cell !== 'custom'; $('oxBox').hidden = S.cell === 'custom';
+    $('sA').value = S.ca; $('oA').textContent = `${fx(S.ca, 3)} /Gy`; $('sB').value = S.cb; $('oB').textContent = `${fx(S.cb, 3)} /Gy²`;
+    $('sP').value = uFromP(S.p); $('oP').textContent = `${fx(S.p, 1)} mmHg`; $('sD').value = S.D; $('oD').textContent = `${fx(S.D, 2)} Gy`;
+    $('selLine').value = S.line; $('codeBox').hidden = S.line !== 'mystery'; $('sCode').value = S.code; $('oCode').textContent = String(S.code);
+    $('sAD').value = S.aD; $('oAD').textContent = `${fx(S.aD, 1)} Gy`; $('selN').value = String(S.aN); $('seedOut').textContent = String(S.seed);
+    $('plateBtn').textContent = current() ? 'Plate again' : 'Plate and count'; $('plateBtn').classList.toggle('attn', !current());
+    const Dt = fTotal(); $('sFD').value = Math.min(90, Math.max(5, Dt)); $('sFD').disabled = S.iso; $('oFD').textContent = `${fx(Dt, 1)} Gy`; $('sFn').value = S.fn; $('oFn').textContent = String(S.fn);
+    $('chkIso').checked = S.iso; $('isoNote').hidden = !S.iso; $('isoNote').textContent = `The total dose follows n so that late responding tissue (α/β 3 Gy) gets the effect of ${fx(S.isoD, 1)} Gy in ${S.isoN} fractions.`;
+    $('sCab').value = S.cab; $('oCab').textContent = `${fx(S.cab, 1)} Gy`;
+    $('sL').value = S.L; $('oL').textContent = `${fx(S.L, 1)} keV/µm`; $('sRD').value = S.rD; $('oRD').textContent = `${fx(S.rD, 2)} Gy`; $('sAB').value = S.ab; $('oAB').textContent = `${fx(S.ab, 1)} Gy`;
+    $('labTrue').checked = S.showTrue;
+    can.setAttribute('aria-label', S.view === 'surv' ? 'Surviving fraction against dose in air and without oxygen, with the effect of oxygen against its pressure and the oxygen enhancement ratio against dose. Drag across the top chart, or use the left and right arrow keys, to move the dose.'
+      : S.view === 'assay' ? 'Three culture dishes with the colonies that grew from the seeded cells, and the measured surviving fraction against dose with counting error bars.'
+      : S.view === 'frac' ? 'The treatment calendar with one bar per fraction, the biologically effective dose of each tissue fraction by fraction, and the EQD2 of each tissue against the number of fractions. Left and right arrow keys change the number of fractions.'
+      : 'Proton RBE against LET with its low and high dose limits, RBE against dose per fraction, and the photon dose that gives the same effect. Left and right arrow keys move the LET.'); }
+  const redraw = () => { draw(); readouts(); };
+  function changed(keepPreset) { if (!keepPreset) S.preset = 'custom'; sync(); redraw(); }
+  function applyPreset(k) { const c = PRESETS[k]; if (!c) return; Object.assign(S, { preset: k, view: c.view });
+    for (const f of ['cell', 'ca', 'cb', 'p', 'D', 'line', 'code', 'aD', 'aN', 'fD', 'fn', 'iso', 'isoD', 'isoN', 'L', 'rD', 'ab']) if (c[f] !== undefined) S[f] = c[f];
+    if (c.view === 'frac' && c.iso === undefined) S.iso = false;
+    if (c.plate) plateNow(); $('presetHint').textContent = c.hint; sync(); redraw(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; S.view = b.dataset.v; changed(true); });
+  $('selCell').addEventListener('change', (e) => { S.cell = e.target.value; changed(); });
+  $('sA').addEventListener('input', (e) => { S.ca = +e.target.value; changed(); });
+  $('sB').addEventListener('input', (e) => { S.cb = +e.target.value; changed(); });
+  $('sP').addEventListener('input', (e) => { S.p = pFromU(+e.target.value); changed(); });
+  $('sD').addEventListener('input', (e) => { S.D = +e.target.value; changed(); });
+  $('selLine').addEventListener('change', (e) => { S.line = e.target.value; changed(); });
+  $('sCode').addEventListener('input', (e) => { S.code = +e.target.value; changed(); });
+  $('sAD').addEventListener('input', (e) => { S.aD = +e.target.value; changed(); });
+  $('selN').addEventListener('change', (e) => { S.aN = +e.target.value; changed(); });
+  $('newSeed').addEventListener('click', () => { S.seed = 1 + Math.floor(Math.random() * 9998); changed(); });
+  $('clearDishes').addEventListener('click', () => { GROUPS = GROUPS.filter((g) => !(g.key === lineKey() && g.seedSet === S.seed)); changed(true); });
+  $('plateBtn').addEventListener('click', () => { plateNow(); changed(true); });
+  $('sFD').addEventListener('input', (e) => { S.fD = +e.target.value; changed(); });
+  $('sFn').addEventListener('input', (e) => { S.fn = +e.target.value; changed(); });
+  $('chkIso').addEventListener('change', (e) => { S.iso = e.target.checked; if (S.iso) { S.isoD = S.fD; S.isoN = S.fn; } else S.fD = +fTotal().toFixed(2); changed(); });
+  $('sCab').addEventListener('input', (e) => { S.cab = +e.target.value; changed(); });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
+  $('sRD').addEventListener('input', (e) => { S.rD = +e.target.value; changed(); });
+  $('sAB').addEventListener('input', (e) => { S.ab = +e.target.value; changed(); });
+  $('labTrue').addEventListener('change', (e) => { S.showTrue = e.target.checked; redraw(); });
+  const typed = (id, o) => VD.typeIn($(id), Object.assign({ can: () => true }, o));
+  typed('oA', { get: () => S.ca, set: (v) => { S.ca = v; changed(); }, min: 0.01, max: 1, step: 0.001, unit: '/Gy', label: 'α (per gray)' });
+  typed('oB', { get: () => S.cb, set: (v) => { S.cb = v; changed(); }, min: 0, max: 0.15, step: 0.0001, unit: '/Gy²', label: 'β (per gray squared)' });
+  typed('oP', { get: () => S.p, set: (v) => { S.p = v; changed(); }, min: 0, max: 160, step: 0.01, unit: 'mmHg', label: 'Oxygen pressure (mmHg)' });
+  typed('oD', { get: () => S.D, set: (v) => { S.D = v; changed(); }, min: 0, max: 12, step: 0.01, unit: 'Gy', label: 'Dose (Gy)' });
+  typed('oAD', { get: () => S.aD, set: (v) => { S.aD = Math.round(v * 2) / 2; changed(); }, min: 0, max: 10, step: 0.5, unit: 'Gy', label: 'Assay dose (Gy)' });
+  typed('oCode', { get: () => S.code, set: (v) => { S.code = Math.round(v); changed(); }, min: 1, max: 99, step: 1, label: 'Mystery line code' });
+  typed('oFD', { get: () => fTotal(), set: (v) => { if (S.iso) return; S.fD = v; changed(); }, min: 5, max: 90, step: 0.1, unit: 'Gy', label: 'Total dose (Gy)' });
+  typed('oFn', { get: () => S.fn, set: (v) => { S.fn = Math.round(v); changed(); }, min: 1, max: 40, step: 1, label: 'Number of fractions' });
+  typed('oCab', { get: () => S.cab, set: (v) => { S.cab = v; changed(); }, min: 0.5, max: 20, step: 0.1, unit: 'Gy', label: 'Your tissue α/β (Gy)' });
+  typed('oL', { get: () => S.L, set: (v) => { S.L = v; changed(); }, min: 0.5, max: 15, step: 0.1, unit: 'keV/µm', label: 'LET_d (keV/µm)' });
+  typed('oRD', { get: () => S.rD, set: (v) => { S.rD = v; changed(); }, min: 0.25, max: 10, step: 0.01, unit: 'Gy', label: 'Proton dose per fraction (Gy)' });
+  typed('oAB', { get: () => S.ab, set: (v) => { S.ab = v; changed(); }, min: 0.5, max: 20, step: 0.1, unit: 'Gy', label: '(α/β)ₓ (Gy)' });
+  /* drag across the chart to move the dose (survival) or the LET (RBE); arrow keys too */
+  let dragging = false;
+  function valAt(e) { if (!LAST || !LAST.X) return null; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, b = LAST.box;
+    if (x < b.x - 10 || x > b.x + b.w + 10 || y < b.y - 10 || y > b.y + b.h + 10) return null; const f = Math.min(1, Math.max(0, (x - b.x) / b.w)); return f; }
+  function setFrom(f) { if (S.view === 'surv') S.D = +(f * DMAX).toFixed(2); else if (S.view === 'rbe') S.L = Math.max(0.5, +(f * LMAX).toFixed(1)); else if (S.view === 'frac') S.fn = Math.max(1, Math.min(40, Math.round(1 + f * 39))); else if (S.view === 'assay') S.aD = Math.round(f * 20) / 2; changed(); }
+  can.addEventListener('pointerdown', (e) => { const f = valAt(e); if (f == null) return; dragging = true; can.setPointerCapture(e.pointerId); setFrom(f); });
+  can.addEventListener('pointermove', (e) => { if (!dragging) return; const f = valAt(e); if (f != null) setFrom(f); });
+  const endDrag = () => { dragging = false; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (!k) return; const big = e.shiftKey;
+    if (S.view === 'surv') S.D = Math.min(DMAX, Math.max(0, +(S.D + k * (big ? 1 : 0.1)).toFixed(2)));
+    else if (S.view === 'rbe') S.L = Math.min(LMAX, Math.max(0.5, +(S.L + k * (big ? 1 : 0.1)).toFixed(1)));
+    else if (S.view === 'frac') S.fn = Math.min(40, Math.max(1, S.fn + k * (big ? 5 : 1)));
+    else S.aD = Math.min(10, Math.max(0, S.aD + k * 0.5));
+    e.preventDefault(); changed(); });
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'radiobiology@2026-10-26';
+  window.vdShowCols = [['mode', 'view'], ['D_Gy', 'D (Gy)'], ['main', 'result']];
+  window.vdReadingRow = () => {
+    if (S.view === 'surv') { const A = cellLQ(P_AIR), one = S.cell === 'custom', Hh = one ? null : lqAt(S.cell, 0), P = one ? null : lqAt(S.cell, S.p), sA = survival(A.a, A.b, S.D), sH = one ? null : survival(Hh.a, Hh.b, S.D), sP = one ? null : survival(P.a, P.b, S.D);
+      return { mode: 'Survival', cells: one ? `α ${plainNum(S.ca)}, β ${plainNum(S.cb)}` : CELLS[S.cell].name, pO2_mmHg: one ? '' : plainNum(S.p, 4), D_Gy: plainNum(S.D, 4), SF_air: plainNum(sA, 4), lnSF_air: plainNum(Math.log(sA), 4),
+        SF_anoxic: one ? '' : plainNum(sH, 4), lnSF_anoxic: one ? '' : plainNum(Math.log(sH), 4), SF_pO2: one ? '' : plainNum(sP, 4), OER: one || S.D <= 0.02 ? '' : plainNum(oer(S.cell, S.D, 0), 4), lnSF_pO2: one ? '' : plainNum(Math.log(sP), 4), OER_pO2: one || S.D <= 0.02 ? '' : S.p >= P_AIR ? '1' : plainNum(oer(S.cell, S.D, S.p), 4),
+        main: `S ${plainNum(sA, 4)}` }; }
+    if (S.view === 'assay') { const g = current(); if (!g) return 'Plate and count these flasks first.'; const an = analysis(); if (an.pe == null) return 'Plate the 0 Gy flasks first: the surviving fraction needs the plating efficiency.';
+      const q = an.pts.find((x) => Math.abs(x.D - g.D) < 1e-9);
+      return { mode: 'Assay', cells: lineName(), experiment: String(S.seed), D_Gy: plainNum(g.D, 3), N_seeded: String(g.N), c1: String(g.counts[0]), c2: String(g.counts[1]), c3: String(g.counts[2]), mean: plainNum(q.mean, 4), PE: plainNum(an.pe, 4),
+        SF: q.sf > 0 ? plainNum(q.sf, 4) : '0', SF_se: q.sf > 0 ? plainNum(q.se, 2) : '', lnSF: q.sf > 0 ? plainNum(Math.log(q.sf), 4) : '', lnSF_se: q.sf > 0 ? plainNum(q.rel, 2) : '', main: `${g.counts.join(', ')} colonies` }; }
+    if (S.view === 'frac') { const Dt = fTotal(), d = Dt / S.fn;
+      return { mode: 'Fractionation', n: String(S.fn), d_Gy: plainNum(d, 4), D_Gy: plainNum(Dt, 4), BED_10: plainNum(bed(S.fn, d, 10), 4), EQD2_10: plainNum(eqd2(S.fn, d, 10), 4), BED_3: plainNum(bed(S.fn, d, 3), 4), EQD2_3: plainNum(eqd2(S.fn, d, 3), 4),
+        BED_1_5: plainNum(bed(S.fn, d, 1.5), 4), EQD2_1_5: plainNum(eqd2(S.fn, d, 1.5), 4), ab_own: plainNum(S.cab, 3), EQD2_own: plainNum(eqd2(S.fn, d, S.cab), 4), late_fixed: S.iso ? `${plainNum(S.isoD, 4)} Gy in ${S.isoN}` : 'no', main: `${S.fn} × ${plainNum(d, 4)} Gy` }; }
+    const r = rbe(S.rD, S.L, S.ab);
+    return { mode: 'RBE', LET: plainNum(S.L, 3), D_Gy: plainNum(S.rD, 4), ab_x: plainNum(S.ab, 3), RBE_max: plainNum(rbeMax(S.L, S.ab), 4), RBE_min: plainNum(rbeMin(S.L, S.ab), 4), RBE: plainNum(r, 4), D_RBE: plainNum(r * S.rD, 4), D_11: plainNum(1.1 * S.rD, 4), main: `RBE ${plainNum(r, 4)}` }; };
+  $('about').textContent = 'Model: the linear quadratic model for low LET radiation given at once (no repair during the exposure). Between no oxygen and air, α and √β each scale with the Alper and Howard-Flanders form, so the oxygen effect is half done near 3.8 mmHg; the two cell lines\' parameters are averages of published values, and real lines vary. '
+    + 'The clonogenic assay is simulated: each flask\'s colonies are Poisson with mean (cells seeded) × (plating efficiency) × S, so the scatter is counting noise only, while real assays scatter more (cell clumps, uneven plating, colonies that merge); the plating efficiencies of V79 (0.70) and T1 (0.50) were chosen for the simulation, and a mystery line\'s α, β and plating efficiency are made up from its code. '
+    + 'Fractionation assumes equal fractions with full repair between them and no repopulation, so overall treatment time does not count; the model is least reliable at large doses per fraction (above about 8 to 10 Gy). '
+    + 'Proton RBE follows McNamara and others (2015), a fit to published cell survival experiments, with the photon α/β of the tissue; LET_d is set by hand here rather than computed along a beam.';
+
+  /* ---------- size, theme ---------- */
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'survAir');
+  if (qs.get('view') && ['surv', 'assay', 'frac', 'rbe'].includes(qs.get('view'))) { S.view = qs.get('view'); sync(); }
+  new ResizeObserver(resize).observe($('pane')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__rb = { S, PRESETS, applyPreset, sync, redraw, plateNow, analysis, groups: () => GROUPS.slice(), set: (o) => { Object.assign(S, o); sync(); redraw(); } };
+})();
+</script>
+</body>
+</html>

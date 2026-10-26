@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Radiobiology: Cell Survival and Fractionation: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Radiobiology: Cell Survival and Fractionation</h1><ul class="meta"><li><a href="../demos/radiobiology.html">Open the demo</a></li><li>Junior and senior medical physics track (calculus); beside the radiation physics class, radiobiology unit</li><li>20 to 50 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In the linear quadratic model the surviving fraction after a dose $$D$$ given at once is $$S = e^{-\alpha D - \beta D^2}$$. The initial slope of ln $$S$$ is $$-\alpha$$, and $$\alpha/\beta$$ is the dose at which single track and two track killing are equal: 4.2 Gy for V79 cells in air.</li>
+<li>Oxygen fixes radiation damage. Cells without oxygen need 2.3 to 3.3 times the dose (V79) for the same survival, and the oxygen enhancement ratio can rise or fall with dose depending on the cell line (T1: 5.0 at low dose falling to 2.3). Half the effect is reached at a few mmHg, so it is tumor hypoxia, not the difference between venous and arterial blood, that matters.</li>
+<li>A clonogenic assay measures survival as colonies per seeded cell, relative to the plating efficiency of unirradiated controls; counting errors are about $$\sqrt{c}$$, so the seeding rises with dose to keep every flask countable.</li>
+<li>Splitting a dose into $$n$$ fractions of $$d$$ gives $$\mathrm{BED} = nd(1 + d/(\alpha/\beta))$$. Tissues with a small α/β (late responding normal tissue, about 3 Gy) are spared most by small fractions; a tumor with a large α/β (about 10 Gy) loses effect when the same late effect is given in fewer fractions, a prostate cancer with α/β 1.5 Gy gains.</li>
+<li>The proton RBE is not a constant 1.1: it rises with LET toward the end of the range, as the dose per fraction falls, and as α/β falls. At 10 keV/µm and 2 Gy per fraction on tissue with α/β 2 Gy the model gives 1.53.</li>
+</ul>
+<h2>Before class</h2>
+<p>The strip across the top switches between four views. <strong>Survival and oxygen</strong> draws survival against dose for V79 hamster lung cells, T1 human kidney cells (mean literature α and β in air and in hypoxia, Wenzl and Wilkens 2011) or an α and β of your own, with the α and β parts, an oxygen pressure slider from 0 to 160 mmHg, the effect of oxygen against its pressure, and the OER against dose with its low and high dose limits. <strong>Clonogenic assay</strong> seeds three flasks, irradiates them and draws the colonies; the counts are simulated Poisson counts, and a mystery line hides its α, β and plating efficiency behind a code. <strong>Fractionation</strong> draws the treatment calendar, a BED staircase for α/β 10, 3 and 1.5 Gy and one of your choosing, and the EQD2 against the number of fractions; Keep the late effect fixed makes the total dose follow $$n$$. <strong>Proton RBE</strong> draws the McNamara 2015 RBE against LET_d with its RBE_max and RBE_min limits and Paganetti's 2014 averages, the RBE against dose, and the photon dose for the same effect. Fourteen setups.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>V79 in air and without oxygen</strong>: drag the dose and watch the OER bracket. Then <strong>OER at a high dose</strong> and <strong>Human kidney cells</strong>. Ask Q1.</li>
+<li><strong>A little oxygen goes a long way</strong>: move the pO₂ slider from 0 to 20 mmHg and then on to 160. Ask Q2.</li>
+<li><strong>A mystery cell line</strong>: have each group plate a different code at 0, 1, 2, 4, 6 and 8 Gy, raising the seeding with dose, and compare their α and β. Ask Q3.</li>
+<li><strong>60 Gy in 30 fractions</strong>, then <strong>60 Gy at once</strong> and <strong>Five fractions, same late effect</strong>. Ask Q4. Then <strong>Prostate in 20 fractions</strong>.</li>
+<li><strong>Protons at low LET</strong>, <strong>End of range, low α/β</strong> and <strong>Smaller fractions, higher RBE</strong>. Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> V79 cells have an OER of 2.63 at 2 Gy and 3.02 at 10 Gy, but T1 cells have 2.77 at 2 Gy and 2.41 at 10 Gy. Use the low and high dose limits $$\alpha_{air}/\alpha_{hyp}$$ and $$\sqrt{\beta_{air}/\beta_{hyp}}$$ to explain why the two go opposite ways.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At 4 Gy the V79 dose ratio is 2.81 without oxygen, 1.44 at 4 mmHg and 1.04 at 40 mmHg. Why does tumor hypoxia matter so much for radiotherapy while the difference between venous and arterial blood hardly does?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A group plates 200 cells at 8 Gy and counts 2, 0 and 3 colonies. What went wrong, and how should they plate instead?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> 60 Gy in one fraction gives late responding tissue (α/β 3 Gy) the effect of 756 Gy in 2 Gy fractions and a tumor (α/β 10 Gy) that of 350 Gy. Keeping the late effect of 60 Gy in 30 fixed, five fractions give only 32 Gy in all and a tumor EQD2 of 43.6 Gy. Why does fractionation spare late responding tissue, and when would fewer fractions be better?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> At LET_d 10 keV/µm and 2 Gy per fraction the model gives RBE 1.53 for α/β 2 Gy but 1.24 for α/β 10 Gy. Why does a low α/β tissue's RBE depend more on LET, and why does that matter for an organ just behind the end of a proton beam's range?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Survival curves are straight lines on a log plot."</strong> Only the α part is; the β part bends them down, and the shoulder is what fractionation exploits.</li>
+<li><strong>"OER is a constant 3."</strong> It depends on the dose and the cell line, and it falls off steeply with oxygen pressure only below about 20 mmHg.</li>
+<li><strong>"The same total dose has the same effect."</strong> Not unless it is given the same way: 60 Gy at once and 60 Gy in 30 fractions differ by a factor of more than ten in late effect.</li>
+<li><strong>"Hypofractionation is always worse for the tumor."</strong> Only when the tumor's α/β is larger than that of the surrounding late responding tissue; for prostate cancer it is smaller.</li>
+<li><strong>"Protons have an RBE of 1.1."</strong> That is the clinical convention, an average; the measured RBE varies along the beam and with dose and tissue.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>LQ model, α/β 10 and 3 Gy, oxygen effect and clonogenic assay: Hall and Giaccia, Radiobiology for the Radiologist, 8th ed. (2019). Cell line α and β: Wenzl and Wilkens 2011, Radiat. Oncol. 6, 171, the means of the published values for V79 (air 0.135 /Gy, 0.032 /Gy²; hypoxia 0.06, 0.003) and T1 (air 0.10, 0.047; hypoxia 0.02, 0.009).</li>
+<li>Between hypoxia and air each of α and √β scales by $$1 + (m - 1)\frac{p}{p + K}\frac{160 + K}{160}$$ with K = 3.8 mmHg (the Alper and Howard-Flanders form as used by Zhu and others 2022, arXiv:2201.02278); the last factor makes air, 160 mmHg, give the aerobic values exactly. Real cells vary from this form.</li>
+<li>The assay is simulated: each flask's colonies are Poisson with mean (cells seeded) × PE × S. The plating efficiencies of V79 (0.70) and T1 (0.50) were chosen for the simulation, and a mystery line's α (0.10 to 0.40 /Gy), β (0.010 to 0.060 /Gy²) and PE (0.50 to 0.80) are made up from its code. Real assays scatter more than counting alone (Franken and others 2006, Nat. Protoc. 1, 2315).</li>
+<li>Fractionation: equal fractions with full repair between them and no repopulation, so overall time does not count; the LQ model is least reliable above about 8 to 10 Gy per fraction. Prostate α/β 1.5 Gy (0.8 to 2.2): Brenner and Hall 1999. 60 Gy in 20 against 74 Gy in 37: the CHHiP trial, Dearnaley and others 2016, Lancet Oncol. 17, 1047.</li>
+<li>Proton RBE: McNamara, Schuemann and Paganetti 2015, Phys. Med. Biol. 60, 8399, with RBE_max = 0.999064 + 0.35605 LET_d/(α/β)ₓ and RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d (as implemented in matRad). Averages along a spread out Bragg peak (about 1.1 at the entrance, 1.15 in the middle, 1.35 at the distal edge and 1.7 in the distal falloff): Paganetti 2014, Phys. Med. Biol. 59, R419. LET_d is set by hand, not computed along a beam.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Dosimetry</strong> for how the dose itself is measured, and with <strong>Photon Interactions in Matter</strong> for why megavoltage photon dose hardly depends on tissue type.</li>
+<li>Give each group a different mystery code and pool the α/β values: how widely do they spread, and how well does each group's uncertainty describe its error?</li>
+<li>Ask how a course should change if a tumor repopulates quickly after the third week.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>
