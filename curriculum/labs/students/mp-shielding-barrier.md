@@ -83,7 +83,7 @@ Work out ln(T) = ln(rate/rate at x = 0) for both beams in Table 1.
 2. Graph the buildup factor against x for lead. How large is it at the thickness your wall needs? What error does a narrow beam design make there, in dose and in millimeters of lead?
 3. Repeat Analysis 1 for concrete, and find the broad beam tenth value layer at large thickness, ln 10/α scaled to the demo's density. Compare with the narrow beam tenth value layer, ln 10/μ.
 4. Check the first row of Table 2 against your Before the lab answers 2 and 3. Explain any difference in the weekly dose from the demo's dose rate constant.
-5. Which input in Table 2 changes the lead needed the most per factor of change? Explain from the logarithm in Before the lab question 3 why doubling the patient load adds the same thickness wherever you start.
+5. Which input in Table 2 changes the lead needed the most per factor of change? From the logarithm in Before the lab question 3, show that doubling the patient load (halving B) adds a thickness that approaches ln 2/α once $$B^{-\gamma} \gg \beta/\alpha$$, and compare that limit with the extra lead your rows give for a doubled load. Why is the step larger for a thin wall?
 
 ## Uncertainty
 

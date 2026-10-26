@@ -449,9 +449,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function wallHit(G, i, w, a, sg, wv) {
     const mi = G.m[i], vn = a ? G.vy : G.vx, vt = a ? G.vx : G.vy, vin = sg * (wv - vn[i]);   /* vin > 0: speed into the wall */
     if (G.wallT[w] > 0 && G.rand() < G.acc[w]) {
-      const e0 = vn[i] * vn[i] + vt[i] * vt[i], [out, along] = wallEmit(G, mi, G.wallT[w]);
+      /* heat is the energy change in the wall's own frame; a moving wall (the piston) also does work wv × (momentum it gives),
+         which is not heat */
+      const e0 = (vn[i] - wv) * (vn[i] - wv) + vt[i] * vt[i], [out, along] = wallEmit(G, mi, G.wallT[w]);
       vn[i] = wv + sg * out; vt[i] = along;
-      G.heat[w] += 0.5 * mi * (vn[i] * vn[i] + vt[i] * vt[i] - e0);
+      G.heat[w] += 0.5 * mi * (out * out + along * along - e0);
       return mi * (vin + out);
     }
     vn[i] = 2 * wv - vn[i];

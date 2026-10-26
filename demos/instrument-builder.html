@@ -363,7 +363,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* The aperture stop: the part that limits the cone of rays from the axial point of the object (for a far object, a beam
      parallel to the axis), found with a ray of unit slope (or unit height): the smallest clear radius over ray height. Then the
      entrance pupil (the stop's image through the parts before it) and the exit pupil (its image through the parts after it):
-     z and diameter. ratio is the marginal ray's slope at a near object, or the beam's radius for a far one. */
+     z and diameter (either may be virtual: an entrance pupil can lie behind the stop). ratio is the marginal ray's slope at a near object, or the beam's radius for a far one. */
   function pupils(els, obj) {
     els = usable(els, obj); if (!els.length) return null;
     const z0 = startZ(els, obj), r0 = obj.kind === 'near' ? [0, 1] : [1, 0];
@@ -371,7 +371,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     els.forEach((e, i) => { const M = sysMatrix(els, z0, e.z), xh = Math.abs(M[0] * r0[0] + M[1] * r0[1]), q = e.D / 2 / xh; if (q < ratio) { ratio = q; best = i; } });
     const S = els[best], first = els[0].z, last = els[els.length - 1].z;
     const A = sysMatrix(els, first - 1e-9, S.z), flat = Math.abs(A[0]) < 1e-12;
-    const en = { z: flat ? -Infinity : Math.min(S.z, first + A[1] / A[0]), D: flat ? Infinity : S.D / Math.abs(A[0]) };
+    const en = { z: flat ? -Infinity : first + A[1] / A[0], D: flat ? Infinity : S.D / Math.abs(A[0]) };
     if (S === els[0]) en.z = S.z;
     const Q = sysMatrix(els, S.z, last), afoc = Math.abs(Q[3]) < 1e-12;
     const ex = { z: afoc ? Infinity : last - Q[1] / Q[3], D: afoc ? Infinity : S.D / Math.abs(Q[3]) };

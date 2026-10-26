@@ -193,7 +193,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="formula">oxygen: m(p) = 1 + (m − 1) · p/(p + K) · (160 + K)/160, K = 3.8 mmHg, on α and on √β</p>
           <p class="formula">PE = colonies / cells seeded (0 Gy); SF = colonies / (cells seeded × PE)</p>
           <p class="formula">BED = n d (1 + d/(α/β)), EQD2 = BED / (1 + 2/(α/β))</p>
-          <p class="formula">RBE_max = 0.999064 + 0.35605 LET_d/(α/β)ₓ, RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d</p>
+          <p class="formula">RBE_max = 0.99064 + 0.35605 LET_d/(α/β)ₓ, RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d</p>
           <p class="formula">RBE = [√((α/β)² + 4D(α/β)RBE_max + 4D²RBE_min²) − α/β] / (2D)</p>
           <p class="hint" id="about"></p>
         </details>
@@ -203,7 +203,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
             <li>V79 and T1 α and β in air and in hypoxia, the means of the published values: J. Wenzl and J. J. Wilkens 2011, Radiat. Oncol. 6, 171 (doi:10.1186/1748-717X-6-171).</li>
             <li>Oxygen dependence, K = 3.8 mmHg: the Alper and Howard-Flanders form as used by H. Zhu, J. Schuemann, Q. Zhang and L. Gerweck, arXiv:2201.02278 (2022), after Koch 1988 and others.</li>
             <li>Prostate α/β 1.5 Gy (0.8 to 2.2): D. J. Brenner and E. J. Hall 1999, Int. J. Radiat. Oncol. Biol. Phys. 43, 1095. 60 Gy in 20 fractions against 74 Gy in 37: the CHHiP trial, D. Dearnaley et al. 2016, Lancet Oncol. 17, 1047.</li>
-            <li>Proton RBE model: A. L. McNamara, J. Schuemann and H. Paganetti 2015, Phys. Med. Biol. 60, 8399 (doi:10.1088/0031-9155/60/21/8399), parameters as in matRad. Clinical RBE of 1.1 and the averages along a spread out Bragg peak: H. Paganetti 2014, Phys. Med. Biol. 59, R419.</li>
+            <li>Proton RBE model: A. L. McNamara, J. Schuemann and H. Paganetti 2015, Phys. Med. Biol. 60, 8399 (doi:10.1088/0031-9155/60/21/8399), with its fitted parameters (p₀ = 0.99064; some software, matRad among them, has 0.999064). Clinical RBE of 1.1 and the averages along a spread out Bragg peak: H. Paganetti 2014, Phys. Med. Biol. 59, R419.</li>
             <li>Assay counting: N. A. P. Franken et al. 2006, Nat. Protoc. 1, 2315. Air 160 mmHg (21 % of 760 mmHg); arterial blood 95 and venous blood 40 mmHg: Guyton and Hall, Textbook of Medical Physiology.</li>
           </ul>
         </details>
@@ -223,7 +223,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      160 mmHg, gives the aerobic values: RR = 1 + (m − 1)(p/(p + K))((160 + K)/160), applied to α with m = α_aer/α_hyp and to √β
      with m = √(β_aer/β_hyp). Fractionation: n equal fractions of d with full repair between them and no repopulation, BED = nd(1 + d/(α/β)),
      EQD2 = BED/(1 + 2/(α/β)). Proton RBE: McNamara, Schuemann and Paganetti 2015 (Phys. Med. Biol. 60, 8399):
-     RBE_max = 0.999064 + 0.35605 LET_d/(α/β)x, RBE_min = 1.1012 − 0.0038703 √((α/β)x) LET_d, with LET_d in keV/µm, and
+     RBE_max = 0.99064 + 0.35605 LET_d/(α/β)x, RBE_min = 1.1012 − 0.0038703 √((α/β)x) LET_d, with LET_d in keV/µm, and
      RBE = [√((α/β)² + 4 D (α/β) RBE_max + 4 D² RBE_min²) − α/β]/(2D) for a proton dose D per fraction. The clonogenic assay is
      simulated: colonies in each flask are Poisson with mean N × PE × S. */
   const CELLS = {
@@ -236,7 +236,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { key: 'prostate', name: 'Prostate cancer', ab: 1.5 },
   ];
   const K_O2 = 3.8, P_AIR = 160;
-  const MCN = { p0: 0.999064, p1: 0.35605, p2: 1.1012, p3: -0.0038703 };
+  const MCN = { p0: 0.99064, p1: 0.35605, p2: 1.1012, p3: -0.0038703 };
   function survival(a, b, D) { return Math.exp(-a * D - b * D * D); }
   function rr(m, p) { return 1 + (m - 1) * (p / (p + K_O2)) * ((P_AIR + K_O2) / P_AIR); }
   /* α and β of a cell line at oxygen pressure p (mmHg, 0 to 160): 0 gives the hypoxic values, 160 (air) the aerobic ones */
@@ -287,7 +287,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     prostate: { view: 'frac', fD: 60, fn: 20, iso: false, hint: '60 Gy in 20 fractions of 3 Gy, the hypofractionated arm of the CHHiP trial. With α/β = 1.5 Gy for prostate cancer its EQD2 is 77.1 Gy, more than the 74 Gy in 37 fractions it was compared with, while the late responding tissue (α/β 3 Gy) gets 72 Gy against 74. The trial found 60 Gy in 20 fractions no worse than 74 Gy in 37.' },
     rbePlateau: { view: 'rbe', L: 2, rD: 2, ab: 10, hint: 'Protons at LET_d = 2 keV/µm, as in the entrance plateau, on tissue with (α/β)ₓ = 10 Gy at 2 Gy per fraction: the model gives an RBE of 1.07, close to the 1.1 used in the clinic. Paganetti 2014 found averages of about 1.1 at the entrance, 1.15 in the middle of a spread out Bragg peak, 1.35 at its distal edge and 1.7 in the distal falloff.' },
     rbeDistal: { view: 'rbe', L: 10, rD: 2, ab: 2, hint: 'LET_d = 10 keV/µm, as near the end of the proton range, on late responding tissue with (α/β)ₓ = 2 Gy: the RBE is 1.53, so 2 Gy of protons acts like 3.06 Gy of photons, not the 2.2 Gy that RBE 1.1 assumes. This is why the RBE at the end of the range matters for organs just behind a target.' },
-    rbeLowDose: { view: 'rbe', L: 8, rD: 0.5, ab: 2, hint: 'At 0.5 Gy per fraction the RBE at LET_d = 8 keV/µm and (α/β)ₓ = 2 Gy is 1.85, against 1.45 at 2 Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.' },
+    rbeLowDose: { view: 'rbe', L: 8, rD: 0.5, ab: 2, hint: 'At 0.5 Gy per fraction the RBE at LET_d = 8 keV/µm and (α/β)ₓ = 2 Gy is 1.84, against 1.44 at 2 Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.' },
   };
   const sig = (v, n = 4) => (!isFinite(v) ? '—' : Number(v).toPrecision(n).replace(/e\+?(-?\d+)/, (m, e) => ` × 10^${e}`).replace('-', '−'));
   const sup = (s) => s.replace(/\^(−?\d+)/g, (m, e) => e.replace(/./g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)] || (c === '−' ? '⁻' : c)));

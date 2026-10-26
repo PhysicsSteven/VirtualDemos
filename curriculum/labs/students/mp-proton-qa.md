@@ -29,7 +29,7 @@ A proton plan is only as good as the machine that delivers it. Every morning, be
 
 - output: within ±3 % of the baseline
 - range: within ±1 mm of the baseline
-- spot position: within ±2 mm
+- spot position: within ±2 mm of where it was planned (absolute), and within ±1 mm relative to the other spots (here, each spot's place measured from the central spot), which a scanning magnet gain error moves while a steering error does not
 
 TG-224 sets no daily spot size check; centers that trend it use about ±10 % of the baseline (auto trending daily QA program of a ProBeam center, J. Appl. Clin. Med. Phys., 2021, PMC7856486).
 

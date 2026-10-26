@@ -3195,7 +3195,9 @@ measuring tools. Every reading on screen comes from the run and was checked by h
   λ₀/4n_f = 75.19 nm with R = ((1 − 1.33²)/(1 + 1.33²))² = 7.71%, as in the key.
 - Michelson Interferometer (18.6 s): Part 1's first reading. Measure λ, red He–Ne; counter zeroed at 500.0 μm; drum dragged until the
   counter first shows 20, at 506.2 μm (as in the key). Check: the center order went from 1127.65 to 1147.25, so 20 whole orders passed;
-  19.60 orders over 6.2 μm gives 2Δd/N = 632.8 nm, the He–Ne line in the room's air.
+  19.60 orders over 6.2 μm gives 2Δd/N = 632.8 nm, the He–Ne line in the room's air. [Correction 2026-10-26, GPT finding 18: what the
+  video records is 20 counted crossings over 6.2 μm, so the reading gives 2Δd/N = 620 nm, within a count (5 %) of 632.8 nm; the
+  19.60 is the model's phase change, not a measurement. The handout's fit of mirror position against count keeps a free intercept.]
 
 **Demo fix found while recording (Double Slit, visible to students):** the Readings table always showed λ (nm), d (mm), Hits and
 B − A (mm). With electrons that printed the de Broglie wavelength (0.0173014 nm at 5 kV) even with Blind on, which is the number

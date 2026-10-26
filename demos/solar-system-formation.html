@@ -173,12 +173,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- 1. Collapse: a spinning cloud falls in and flattens into a disk ----------
      The infall model of Ulrich (1976, ApJ 210, 377; also Cassen and Moosman 1981): each parcel of gas falls freely toward the young
-     Sun as if all the mass were already at the center, keeping its spin (angular momentum j about the axis). The cloud starts
-     turning as one body, once every P₀, so a parcel a distance s from the axis has j = Ω₀ s², Ω₀ = 2π/P₀. Falling from rest in the
-     rotating cloud, a parcel is at the far end of an orbit whose plane holds the axis' tilt, and it crosses the midplane a quarter
-     turn later, at the orbit's semi latus rectum r = j²/GM, whatever its energy. There streams from above and below meet: their up
-     and down motions cancel, the gas keeps its spin and settles onto a circular orbit at r = j²/GM. So the disk's edge, from the
-     parcels at the cloud's equator (s = r₀), is R_d = Ω₀² r₀⁴/GM, and those parcels turn (r₀/R_d)² times faster than the cloud did.
+     Sun as if all the mass were already at the center, keeping its angular momentum. The cloud starts turning as one body, once
+     every P₀ (Ω₀ = 2π/P₀), so a parcel at r₀ from the center and s from the axis moves at Ω₀ s, square to its radius: its specific
+     angular momentum is h = Ω₀ s r₀ in all, and j_z = Ω₀ s² about the axis. Falling from rest in the rotating cloud, it is at the
+     far end of an orbit whose plane is tilted to the midplane, and it crosses the midplane a quarter turn later, at the orbit's
+     semi latus rectum r = h²/GM, whatever its energy (Ulrich's r_c sin²θ₀). There streams from above and below meet: their up and
+     down motions cancel, the gas keeps only j_z and settles onto a circular orbit at r = j_z²/GM. The two agree for the parcels at
+     the cloud's equator (s = r₀), which set the disk's edge, R_d = Ω₀² r₀⁴/GM; those parcels turn (r₀/R_d)² times faster than the
+     cloud did. The trajectories below are integrated, so these formulas only describe them.
      Parcels with so little spin that they would pass within R_STAR of the center fall onto the young Sun. Left out: the cloud's own
      gravity and pressure (the center really grows as the cloud falls in), magnetic fields that carry spin away, and the disk's
      spreading and its flow onto the star afterward. */

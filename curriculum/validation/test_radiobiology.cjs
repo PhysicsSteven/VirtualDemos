@@ -43,11 +43,11 @@ group('fractionation: BED and EQD2 identities, 2 Gy fractions give EQD2 = total,
 });
 
 group('proton RBE: the McNamara 2015 parameters, RBE_max at zero dose, RBE_min at large dose, a low LET RBE near 1', () => {
-  same(c.MCN, { p0: 0.999064, p1: 0.35605, p2: 1.1012, p3: -0.0038703 });
+  same(c.MCN, { p0: 0.99064, p1: 0.35605, p2: 1.1012, p3: -0.0038703 });
   for (const ab of [1, 2, 10]) for (const L of [0.5, 2, 8, 15]) { near(c.rbe(1e-9, L, ab), c.rbeMax(L, ab), 1e-6, 'low dose'); near(c.rbe(1e6, L, ab), c.rbeMin(L, ab), 1e-4, 'high dose');
     /* RBE is the photon dose for the same effect over the proton dose, with α_p = RBE_max α_x and √β_p = RBE_min √β_x */
     const ax = 0.1, bx = ax / ab, D = 2, E = ax * c.rbeMax(L, ab) * D + bx * (c.rbeMin(L, ab) * D) ** 2; near(c.doseFor(ax, bx, E) / D, c.rbe(D, L, ab), 1e-10, 'definition'); }
-  abs(c.rbe(2, 2, 10), 1.072, 0.001); abs(c.rbe(2, 10, 2), 1.531, 0.001); abs(c.rbe(0.5, 8, 2), 1.849, 0.001);
+  abs(c.rbe(2, 2, 10), 1.066, 0.001); abs(c.rbe(2, 10, 2), 1.529, 0.001); abs(c.rbe(0.5, 8, 2), 1.844, 0.001);
   let prev = 0; for (let L = 0.5; L <= 15; L += 0.5) { const r = c.rbe(2, L, 2); assert(r > prev, 'rises with LET'); prev = r; }
 });
 

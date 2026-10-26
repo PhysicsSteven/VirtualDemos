@@ -2,7 +2,7 @@
 // Gas in a Box: the hard disk gas and the two gas setups (masses, sizes, divider, hole, unfolded mean square displacement).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D');
+const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,wallHit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1e-300, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -132,4 +132,16 @@ group('left wall at 400 K, piston at 100 K, top and bottom insulated: a steady f
   assert(G.heat[2] === 0 && G.heat[3] === 0, 'insulated walls pass no heat');
   assert(tl > tr + 30 && tl < 400 && tr > 100, `left half ${tl.toFixed(0)} K, right half ${tr.toFixed(0)} K`);
 });
+group('a moving thermal wall: heat is the energy change in the wall frame, and heat plus the wall\'s work is the lab energy change', () => {
+  /* GPT's 2026-10-26 case: argon like mass, 200 m/s into a wall moving at −100 m/s, wall at 300 K, full accommodation, rand 0.5 */
+  const mi = 6.6421562664e-26, G = { vx: new Float64Array([200]), vy: new Float64Array([0]), m: new Float64Array([mi]), wallT: [0, 300, 0, 0], acc: [1, 1, 1, 1], heat: [0, 0, 0, 0], rand: () => 0.5 };
+  const e0 = 0.5 * mi * 200 * 200, wv = -100, J = c.wallHit(G, 0, 1, 0, -1, wv), e1 = 0.5 * mi * (G.vx[0] * G.vx[0] + G.vy[0] * G.vy[0]);
+  const [out, along] = c.wallEmit({ rand: () => 0.5 }, mi, 300), Qwall = 0.5 * mi * (out * out + along * along) - 0.5 * mi * (300 * 300);
+  near(G.heat[1], Qwall, 1e-12, 'heat in the wall frame');
+  near(e1 - e0, G.heat[1] + J * -wv, 1e-9, 'lab energy change = Q + work done by the wall');
+  /* a wall at rest: no work, all of it heat, as before */
+  const H = { vx: new Float64Array([200]), vy: new Float64Array([0]), m: new Float64Array([mi]), wallT: [0, 300, 0, 0], acc: [1, 1, 1, 1], heat: [0, 0, 0, 0], rand: () => 0.5 };
+  c.wallHit(H, 0, 1, 0, -1, 0); near(H.heat[1], 0.5 * mi * (H.vx[0] ** 2 + H.vy[0] ** 2) - e0, 1e-12, 'wall at rest');
+});
+
 console.log(`${n} groups passed`);

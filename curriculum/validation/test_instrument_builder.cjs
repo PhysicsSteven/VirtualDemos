@@ -98,4 +98,9 @@ group('light from a star (Astro 2203): (D_en/d)² with the eye pupil as a stop; 
   near(c.passFraction(kep, MOON, 0, zE, 0.4, 120) * Math.pow(5 / 0.4, 2), 100, 0.01, 'traced');
   for (const D of [2, 3, 4, 6, 7]) near(gather([lens(0, 50, D), lens(55, 5, 2.5)], 0.7), Math.pow(D / 0.7, 2), 1e-9, 'D ' + D);
 });
+group('a virtual entrance pupil behind the stop: lens f = 5 cm, then a 1 cm stop 2 cm behind it images to 3.33 cm, 1.667 cm across', () => {
+  const els = [{ kind: 'lens', z: 0, f: 5, D: 5 }, { kind: 'stop', z: 2, D: 1 }], pu = c.pupils(els, { kind: 'far' });
+  near(pu.stop.z, 2, 0); near(pu.en.z, 10 / 3, 1e-9); near(pu.en.D, 1 / 0.6, 1e-9);
+});
+
 console.log(`${n} groups passed`);

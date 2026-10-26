@@ -33,7 +33,7 @@ The strip across the top switches between four views. **Survival and oxygen** dr
 
 **Q4.** 60 Gy in one fraction gives late responding tissue (α/β 3 Gy) the effect of 756 Gy in 2 Gy fractions and a tumor (α/β 10 Gy) that of 350 Gy. Keeping the late effect of 60 Gy in 30 fixed, five fractions give only 32 Gy in all and a tumor EQD2 of 43.6 Gy. Why does fractionation spare late responding tissue, and when would fewer fractions be better?
 
-**Q5.** At LET_d 10 keV/µm and 2 Gy per fraction the model gives RBE 1.53 for α/β 2 Gy but 1.24 for α/β 10 Gy. Why does a low α/β tissue's RBE depend more on LET, and why does that matter for an organ just behind the end of a proton beam's range?
+**Q5.** At LET_d 10 keV/µm and 2 Gy per fraction the model gives RBE 1.53 for α/β 2 Gy but 1.23 for α/β 10 Gy. Why does a low α/β tissue's RBE depend more on LET, and why does that matter for an organ just behind the end of a proton beam's range?
 
 ## Common misconceptions
 
@@ -49,7 +49,7 @@ The strip across the top switches between four views. **Survival and oxygen** dr
 - Between hypoxia and air each of α and √β scales by $$1 + (m - 1)\frac{p}{p + K}\frac{160 + K}{160}$$ with K = 3.8 mmHg (the Alper and Howard-Flanders form as used by Zhu and others 2022, arXiv:2201.02278); the last factor makes air, 160 mmHg, give the aerobic values exactly. Real cells vary from this form.
 - The assay is simulated: each flask's colonies are Poisson with mean (cells seeded) × PE × S. The plating efficiencies of V79 (0.70) and T1 (0.50) were chosen for the simulation, and a mystery line's α (0.10 to 0.40 /Gy), β (0.010 to 0.060 /Gy²) and PE (0.50 to 0.80) are made up from its code. Real assays scatter more than counting alone (Franken and others 2006, Nat. Protoc. 1, 2315).
 - Fractionation: equal fractions with full repair between them and no repopulation, so overall time does not count; the LQ model is least reliable above about 8 to 10 Gy per fraction. Prostate α/β 1.5 Gy (0.8 to 2.2): Brenner and Hall 1999. 60 Gy in 20 against 74 Gy in 37: the CHHiP trial, Dearnaley and others 2016, Lancet Oncol. 17, 1047.
-- Proton RBE: McNamara, Schuemann and Paganetti 2015, Phys. Med. Biol. 60, 8399, with RBE_max = 0.999064 + 0.35605 LET_d/(α/β)ₓ and RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d (as implemented in matRad). Averages along a spread out Bragg peak (about 1.1 at the entrance, 1.15 in the middle, 1.35 at the distal edge and 1.7 in the distal falloff): Paganetti 2014, Phys. Med. Biol. 59, R419. LET_d is set by hand, not computed along a beam.
+- Proton RBE: McNamara, Schuemann and Paganetti 2015, Phys. Med. Biol. 60, 8399, with RBE_max = 0.99064 + 0.35605 LET_d/(α/β)ₓ and RBE_min = 1.1012 − 0.0038703 √(α/β)ₓ LET_d (as implemented in matRad). Averages along a spread out Bragg peak (about 1.1 at the entrance, 1.15 in the middle, 1.35 at the distal edge and 1.7 in the distal falloff): Paganetti 2014, Phys. Med. Biol. 59, R419. LET_d is set by hand, not computed along a beam.
 
 ## Going further
 

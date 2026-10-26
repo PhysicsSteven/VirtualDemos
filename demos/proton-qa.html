@@ -189,8 +189,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      these published values stand in for the size of the spots; every check here is against the baseline, not the absolute size. */
   const SIG_AIR = { E: [70, 160, 245], x: [5.75, 4.37, 3.61], y: [6.15, 4.27, 3.86] };
   function sigmaAir(E) { const t = SIG_AIR, i = E <= t.E[1] ? 0 : 1, u = (E - t.E[i]) / (t.E[i + 1] - t.E[i]); return { x: t.x[i] + u * (t.x[i + 1] - t.x[i]), y: t.y[i] + u * (t.y[i + 1] - t.y[i]) }; }
-  /* tolerances: TG-224 daily output ±3 %, range ±1 mm, spot position ±2 mm; spot size ±10 % (see the Tolerances fold) */
-  const TOL = { out: 3, range: 1, pos: 2, size: 10 };
+  /* tolerances: TG-224 daily output ±3 %, range ±1 mm, spot position ±2 mm absolute and ±1 mm relative (each spot's place measured
+     from the central spot, so a steering error that moves them all together does not count, and a scan gain error does); spot size
+     ±10 % (see the Tolerances fold) */
+  const TOL = { out: 3, range: 1, pos: 2, rel: 1, size: 10 };
   /* reading noise of one QA run (this demo's choice, stated in the handout): output 0.2 %, each range chamber 0.3 % of the peak,
      spot centroid 0.1 mm, spot sigma 1 % */
   const NOISE = { out: 0.2, mlic: 0.003, pos: 0.1, size: 1 };
@@ -228,10 +230,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const s0 = sigmaAir(E), k = 1 + (f.fs || 0) / 100, gain = 1 + (f.fg || 0) / 100;
     const spots = SPOTS.map(([x, y]) => ({ xn: x, yn: y, x: x * gain + (f.fx || 0) + NOISE.pos * g(), y: y * gain + (f.fy || 0) + NOISE.pos * g(),
       sx: s0.x * k * (1 + NOISE.size / 100 * g()), sy: s0.y * k * (1 + NOISE.size / 100 * g()) }));
-    let err = 0, mx = 0, my = 0; for (const s of spots) { err = Math.max(err, Math.abs(s.x - s.xn), Math.abs(s.y - s.yn)); mx += s.sx / 9; my += s.sy / 9; }
+    let err = 0, rel = 0, mx = 0, my = 0; const c0 = spots[4];
+    for (const s of spots) { err = Math.max(err, Math.abs(s.x - s.xn), Math.abs(s.y - s.yn)); rel = Math.max(rel, Math.abs(s.x - c0.x - s.xn), Math.abs(s.y - c0.y - s.yn)); mx += s.sx / 9; my += s.sy / 9; }
     const dsx = 100 * (mx / s0.x - 1), dsy = 100 * (my / s0.y - 1), ds = Math.abs(dsx) > Math.abs(dsy) ? dsx : dsy;
-    const pass = { out: Math.abs(out - 100) <= TOL.out, range: Math.abs(dR) <= TOL.range, pos: err <= TOL.pos, size: Math.abs(ds) <= TOL.size };
-    return { E, out, R90: R90b + sh, R90b, dR, m, B, spots, err, sx: mx, sy: my, s0, dsx, dsy, ds, pass, ok: pass.out && pass.range && pass.pos && pass.size };
+    const pass = { out: Math.abs(out - 100) <= TOL.out, range: Math.abs(dR) <= TOL.range, pos: err <= TOL.pos && rel <= TOL.rel, size: Math.abs(ds) <= TOL.size };
+    return { E, out, R90: R90b + sh, R90b, dR, m, B, spots, err, rel, sx: mx, sy: my, s0, dsx, dsy, ds, pass, ok: pass.out && pass.range && pass.pos && pass.size };
   }
   /* the machine over the weeks: the faults on day d. Every day the machine varies a little by itself (output 0.5 %, energy 0.035 %,
      steering 0.15 mm, spot size 1.5 %, all 1σ, this demo's choice, so a steady machine stays within Pidikiti's "under 2 %" over a
@@ -317,8 +320,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     out4: { view: 'daily', e: 150, chk: 'output', f: { fo: 4 }, hint: 'The output is 4 % high: every monitor unit now gives 4 % more dose, as if the monitor chamber\'s calibration had shifted. The range and spots are untouched. TG-224 allows ±3 % on the daily output check, so this fails, and the machine is not used until the output is understood and fixed.' },
     e150: { view: 'daily', e: 150, chk: 'range', f: { fe: 0.5 }, hint: 'The energy is 0.5 % higher than it should be, as if the energy selection had drifted. At 150 MeV that puts R90 about 1.4 mm deeper, past the 1 mm tolerance. The output at 2 cm hardly changes: the plateau is nearly flat.' },
     e100: { view: 'daily', e: 100, chk: 'range', f: { fe: 0.5 }, hint: 'The same 0.5 % energy error checked at 100 MeV: the range moves by only about 0.7 mm and passes. A range error from an energy error grows with the range (R ∝ E^1.77), which is why the range is checked at more than one energy.' },
-    steer: { view: 'daily', e: 150, chk: 'spots', f: { fx: 2.5 }, hint: 'Every spot lands 2.5 mm to one side, as if the beam steering or the scanning magnet\'s zero had shifted. TG-224 allows ±2 mm on the daily spot position check.' },
-    gain: { view: 'daily', e: 150, chk: 'spots', f: { fg: 3 }, hint: 'The scanning magnets deflect 3 % too far: the central spot is in place, but the spots 8 cm out land 2.4 mm too far out. A check of the central spot alone would miss it; the corners show it.' },
+    steer: { view: 'daily', e: 150, chk: 'spots', f: { fx: 2.5 }, hint: 'Every spot lands 2.5 mm to one side, as if the beam steering or the scanning magnet\'s zero had shifted. TG-224 allows ±2 mm on the daily spot position check. The spots keep their places relative to each other (0.00 mm relative), so only the absolute check fails.' },
+    gain: { view: 'daily', e: 150, chk: 'spots', f: { fg: 3 }, hint: 'The scanning magnets deflect 3 % too far: the central spot is in place, but the spots 8 cm out land 2.4 mm too far out. A check of the central spot alone would miss it; the corners show it. TG-224 also allows only ±1 mm in the spots\' places relative to each other, so a 2 % gain error (1.6 mm at 8 cm) already fails that check while passing the ±2 mm one.' },
     fat: { view: 'daily', e: 150, chk: 'spots', f: { fs: 15 }, hint: 'Every spot is 15 % wider than at commissioning, as if something had been left in the beam line or the beam tune had changed. Wider spots blur the edges of every field. The spot size check (±10 %) catches it; the position check does not.' },
     drOut: { view: 'drift', e: 150, chk: 'output', fault: 'output', seed: 3, days: 30, hint: 'The QA results of 30 mornings on a machine whose output creeps up by about a tenth of a percent a day, on top of its day to day wobble. Fit a line to the output against the day, and predict the day it will cross the 3 % tolerance. A trend found early is fixed on a planned day, not on the morning the QA fails.' },
     drMyst: { view: 'drift', e: 150, chk: 'output', fault: 'mystery', seed: 11, days: 0, hint: 'Something may be happening to this machine, or nothing at all. Run the mornings, look at every check, and find out which quantity is changing, how fast, and when it will leave its tolerance. New mystery picks another machine; Show the answer tells you what it was.' },
@@ -632,7 +635,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.strokeStyle = 'rgba(255,255,255,0.7)'; c.lineWidth = 1; for (const [x, y] of SPOTS) { c.beginPath(); c.moveTo(X(x) - 6 * p, Y(y)); c.lineTo(X(x) + 6 * p, Y(y)); c.moveTo(X(x), Y(y) - 6 * p); c.lineTo(X(x), Y(y) + 6 * p); c.stroke(); }
     c.font = `${10 * p}px ${T.ui}`; c.fillStyle = 'rgba(220,255,230,0.85)'; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('24 × 24 cm; crosses: planned; lines: error × 5', x0 + 5 * p, y0 + 4 * p);
     if (side < R - L - 150 * p && r && !busy) { const tx = x0 + side + 12 * p; c.fillStyle = T.ink; c.font = `${10.5 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
-      [`σx ${f(r.sx, 2)} mm`, `   (base ${f(r.s0.x, 2)})`, `σy ${f(r.sy, 2)} mm`, `   (base ${f(r.s0.y, 2)})`, `worst ${f(r.err, 2)} mm`].forEach((s, i) => c.fillText(s, tx, top + 18 * p + i * 15 * p)); }
+      [`σx ${f(r.sx, 2)} mm`, `   (base ${f(r.s0.x, 2)})`, `σy ${f(r.sy, 2)} mm`, `   (base ${f(r.s0.y, 2)})`, `worst ${f(r.err, 2)} mm`, `relative ${f(r.rel, 2)} mm`].forEach((s, i) => c.fillText(s, tx, top + 18 * p + i * 15 * p)); }
     title(c, 'Spot check on the scintillating screen', L, top - 12 * p, p);
   }
   function drawTrend(c, L, R, top, bot, p) {
@@ -714,7 +717,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else {
         h += dd(`Output at 2 cm (${sig(r.E, 4)} MeV)`, `${f(r.out, 1)} % of baseline ${pf(r.pass.out)}`, true);
         h += dd(`R90 (baseline ${f(r.R90b, 2)} cm)`, `${f(r.R90, 2)} cm, ${sgn(r.dR, 2)} mm ${pf(r.pass.range)}`, true);
-        h += dd('Largest spot position error', `${f(r.err, 2)} mm ${pf(r.pass.pos)}`, true);
+        h += dd('Largest spot position error', `${f(r.err, 2)} mm, ${f(r.rel, 2)} mm relative to the central spot ${pf(r.pass.pos)}`, true);
         h += dd(`Spot size, 1σ (baseline ${f(r.s0.x, 2)} × ${f(r.s0.y, 2)} mm)`, `${f(r.sx, 2)} × ${f(r.sy, 2)} mm, ${sgn(r.ds, 1)} % ${pf(r.pass.size)}`, true);
       }
     }
@@ -773,7 +776,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   TI(0, 'oE', () => S.e, (v) => { S.e = v; if (S.view === 'drift') newDrift(); }, 70, 226.7, 0.1, 'MeV', 'QA energy');
   TI(0, 'oZm', () => S.zm, (v) => { S.zm = v; }, 2, 16, 0.1, 'cm', 'Measurement depth');
   $('tolTable').innerHTML = '<thead><tr><th>check</th><th>tolerance</th></tr></thead><tbody>'
-    + [['Output, daily', '±3 %'], ['Range (R90), daily', '±1 mm'], ['Spot position, daily', '±2 mm'], ['Spot size', '±10 %'], ['Patient QA, gamma', '≥ 95 % of points']].map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('') + '</tbody>';
+    + [['Output, daily', '±3 %'], ['Range (R90), daily', '±1 mm'], ['Spot position, daily', '±2 mm absolute, ±1 mm relative'], ['Spot size', '±10 %'], ['Patient QA, gamma', '≥ 95 % of points']].map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('') + '</tbody>';
   $('about').textContent = 'The machine is modeled on the IBA Proteus ONE at Willis-Knighton (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018): a C230 cyclotron with a degrader, 70 to 226.7 MeV, pencil beam scanning, range defined at R90, output measured at 2 cm depth, daily output and spot position within 2 % over a year. '
     + 'Depth doses come from the shared stopping power model (Bethe stopping powers with NIST PSTAR data, Bohr straggling, Bortfeld\'s nuclear losses), with no energy spread from the degrader. An energy calibration error scales the energy; an output error scales the dose per monitor unit and leaves the range alone; an energy error barely moves the output at 2 cm, which this model leaves out entirely. '
     + 'Spot sizes in air are Langner et al. 2017\'s measured values for a ProBeam, since Pidikiti gives the Proteus ONE values only in a figure; in water each spot spreads further by Fermi–Eyges multiple scattering. '
@@ -784,7 +787,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdReadingRow = () => {
     const ftx = (o) => { const a = []; if (o.fe) a.push(`energy ${sgn(o.fe, 2)} %`); if (o.fo) a.push(`output ${sgn(o.fo, 1)} %`); if (o.fx) a.push(`x ${sgn(o.fx, 1)} mm`); if (o.fy) a.push(`y ${sgn(o.fy, 1)} mm`); if (o.fg) a.push(`gain ${sgn(o.fg, 1)} %`); if (o.fs) a.push(`size ${sgn(o.fs, 0)} %`); return a.length ? a.join(', ') : 'no faults'; };
     const z = (v, d) => f(Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v, d);
-    const row = (r) => ({ E_MeV: sig(r.E, 4), output_pct: f(r.out, 2), R90_cm: f(r.R90, 3), R90_base_cm: f(r.R90b, 3), dR90_mm: z(r.dR, 2), spot_err_mm: f(r.err, 2), sigma_x_mm: f(r.sx, 2), sigma_y_mm: f(r.sy, 2), dsigma_pct: z(r.ds, 1) });
+    const row = (r) => ({ E_MeV: sig(r.E, 4), output_pct: f(r.out, 2), R90_cm: f(r.R90, 3), R90_base_cm: f(r.R90b, 3), dR90_mm: z(r.dR, 2), spot_err_mm: f(r.err, 2), spot_rel_mm: f(r.rel, 2), sigma_x_mm: f(r.sx, 2), sigma_y_mm: f(r.sy, 2), dsigma_pct: z(r.ds, 1) });
     if (S.busy > performance.now()) return 'Wait for the measurement to finish.';
     if (S.view === 'daily') { if (!S.res) return 'Press Run QA first.'; return { view: 'daily QA', faults: ftx(S.f), run: String(S.runs), ...row(S.res) }; }
     if (S.view === 'drift') { if (!S.days.length) return 'Run some mornings first (Next day).'; if (recDays > S.days.length) recDays = 0; if (recDays === S.days.length) return 'Every morning so far is recorded; run more.';

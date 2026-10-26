@@ -256,12 +256,15 @@ table.rows input:focus { border-color: var(--accent); }
   /* layers [{ m: medium, d: thickness in m }] from the transducer down (gel couples the transducer to the first layer with no echo):
      one echo from each boundary, at t = Σ 2d/c over the layers above, with amplitude r Π(1 − r²) over the boundaries crossed twice */
   /* Absorption (Medical Physics module, 2026-10-25): attenuation coefficients at 1 MHz in dB/(cm·MHz) from Culjat et al., Ultrasound
-     Med. Biol. 36, 861 (2010), Table 1 (bone: cortical). In tissue the attenuation is taken as proportional to f (real tissue goes
-     as f to a power near 1 to 1.2); in water as f². The pulse is treated as one frequency f₀, so the downshift of its center
+     Med. Biol. 36, 861 (2010), Table 1 (bone: cortical). That table gives none for air; air's 1.62 dB/cm at 1 MHz is the absorption
+     formula of ISO 9613-1 at 20 °C, 50 % humidity and 1 atm, almost all of it classical (viscosity and heat conduction) and so
+     going as f², used here far above the audio range for which the standard states its accuracy. Next to an air gap nearly all the sound is
+     reflected, so this value changes no echo the demo shows by a visible amount. In tissue the attenuation is taken as
+     proportional to f (real tissue goes as f to a power near 1 to 1.2); in water and air as f². The pulse is treated as one frequency f₀, so the downshift of its center
      frequency with depth is left out. */
-  const ATTEN = { air: 1.64, water: 0.0022, blood: 0.2, fat: 0.48, muscle: 1.09, bone: 6.9 };
+  const ATTEN = { air: 1.62, water: 0.0022, blood: 0.2, fat: 0.48, muscle: 1.09, bone: 6.9 };
   const SOFT_TISSUE_DB = 0.54;   /* the average for soft tissue in the same table; a scanner's time gain compensation is set from it */
-  const alphaDb = (m, fMHz) => ATTEN[m] * (m === 'water' ? fMHz * fMHz : fMHz);   /* dB per cm */
+  const alphaDb = (m, fMHz) => ATTEN[m] * (m === 'water' || m === 'air' ? fMHz * fMHz : fMHz);   /* dB per cm */
   /* echoes; with fMHz given, each echo also loses 2 Σ α d dB (down and back) in the layers above its boundary */
   function echoes(layers, fMHz) {
     const out = []; let t = 0, through = 1, dB = 0;

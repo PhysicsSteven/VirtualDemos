@@ -120,7 +120,7 @@
           <div><div class="slider-head"><label for="sT">Thickness t</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="60" step="0.01" value="10"></div>
           <div class="row2"><label class="lbl" for="selN">Photons</label><select id="selN" style="width:auto"><option value="2000">2 000</option><option value="5000">5 000</option><option value="10000">10 000</option><option value="20000" selected>20 000</option><option value="50000">50 000</option><option value="100000">100 000</option></select></div>
           <div class="row2"><span class="lbl">Random seed <span class="mono" id="seedOut"></span></span><button type="button" class="btn" id="newSeed">New seed</button></div>
-          <p class="note">A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air kerma.</p>
+          <p class="note">A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within 0.4 % of the air kerma).</p>
         </div>
         <div id="hardBox" hidden>
           <hr>
@@ -196,7 +196,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="formula">μ_tr/ρ = τ/ρ (1 − δ/hν) + σ_incoh/ρ ⟨T⟩/hν + κ/ρ (1 − 2mc²/hν)</p>
           <p class="formula">μ_en/ρ = μ_tr/ρ (1 − g)</p>
           <p class="formula">broad beam: K/K₀ = B e^(−μt), B ≥ 1 the buildup factor</p>
-          <p class="formula">air kerma K = Σ Φ(E) E μ_en/ρ(air, E); HVL₁ halves K, HVL₂ halves it again; h = HVL₁/HVL₂</p>
+          <p class="formula">air kerma K = Σ Φ(E) E μ_en/ρ(air, E), strictly its collision part (with μ_tr it would be larger by 1/(1 − g); g in air is under 0.1 % here); HVL₁ halves K, HVL₂ halves it again; h = HVL₁/HVL₂</p>
           <p class="hint" id="about"></p>
         </details>
         <details class="more"><summary>Where the numbers come from</summary>
@@ -339,7 +339,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      the scattered energy is the free electron's (no Doppler broadening). Photoelectric: the photon is absorbed; a K or L X-ray leaves
      with the probability P_K ω_K or (1 − P_K) P_L ω_L3, isotropically, at the line energy. Pair and triplet: absorbed; the positron
      annihilates where it was made (its range is left out), sending two 511 keV photons back to back in a random direction.
-     Charged particles are not followed: this scores kerma, not dose, and leaves out bremsstrahlung from the secondary electrons.
+     Charged particles are not followed: this scores collision kerma (μ_en), not dose, and leaves out bremsstrahlung from the secondary electrons.
      Photons below 1 keV are taken as absorbed. Scoring: a photon crossing the back face adds E μ_en/ρ(air, E)/|cos θ| to the air
      kerma per unit incident fluence behind an infinitely broad beam (|cos θ| taken as at least 0.01, a cap that leaves out
      photons crossing within 0.6° of the face); the narrow beam counts only photons that never interacted. */
@@ -432,7 +432,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tubeSpectrum(kvp) { const s = D.spec[kvp]; if (!s) return null; const f = s.split(',').map(Number); return { kvp, E: f.map((_, i) => i + 1.5), f }; }
   function filtered(sp, filters) { const f = sp.f.map((v, i) => { let a = 0; for (const fl of filters) { if (!fl.mm) continue; const m = material(fl.mat); a += m.rho * muRho(m, sp.E[i]) * fl.mm / 10; } return v * Math.exp(-a); });
     return { kvp: sp.kvp, E: sp.E, f }; }
-  /* air kerma, µGy per mAs at 1 m: Σ Φ(E) E μ_en/ρ(air, E) */
+  /* air kerma, µGy per mAs at 1 m: Σ Φ(E) E μ_en/ρ(air, E), the collision kerma; the radiative yield g of air is under 0.1 %
+     below 150 keV (this core's μ_en/μ_tr), so it equals the total air kerma to the precision shown */
   function airKerma(sp) { const air = material('air'); let k = 0; for (let i = 0; i < sp.E.length; i++) k += sp.f[i] * sp.E[i] * JKEV * muEn(air, sp.E[i]) * 1000; return k * 1e6; }
   function meanEnergy(sp) { let a = 0, b = 0; for (let i = 0; i < sp.E.length; i++) { a += sp.f[i] * sp.E[i]; b += sp.f[i]; } return a / b; }
   /* thickness (mm of mat) that brings the air kerma down to the share q of its value */
@@ -964,8 +965,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     + 'μ_tr/ρ is computed here from the parts: Klein–Nishina energy transfer weighted by the incoherent scattering function, fluorescence from the K and L shells only (all L vacancies given the L3 yield and the Lα₁ energy, the KL cascade kept, other cascades and M shells left out), and 1 − 2mc²/hν for pair and triplet production. '
     + 'So 1 − μ_en/μ_tr is the radiative yield g only where fluorescence is small: for lead below about 1 MeV part of it is fluorescence this model leaves out (3 to 4 % at 100 keV). '
     + 'The slab Monte Carlo follows photons only: coherent scattering with Hubbell\'s form factors, incoherent with Klein–Nishina and the incoherent scattering function (free electron energies, no Doppler broadening), K and L fluorescence, positrons annihilating where they are made. '
-    + 'It scores air kerma behind an infinitely broad parallel beam, so its buildup factor is for that geometry; the point isotropic buildup factors of ANSI/ANS 6.4.3 are larger. Each run is reproducible from its seed. '
-    + 'Beam hardening uses each 1 keV bin of the SpekPy spectrum at its center energy, narrow beam attenuation in the filters and the absorber, and air kerma from SRD 126 μ_en/ρ of air.';
+    + 'It scores air collision kerma (with μ_en/ρ of air; with μ_tr it would be the total kerma, larger by under 0.4 % at ⁶⁰Co energies and under 0.1 % at diagnostic ones) behind an infinitely broad parallel beam, so its buildup factor is for that geometry; the point isotropic buildup factors of ANSI/ANS 6.4.3 are larger. Each run is reproducible from its seed. '
+    + 'Beam hardening uses each 1 keV bin of the SpekPy spectrum at its center energy, narrow beam attenuation in the filters and the absorber, and air kerma from SRD 126 μ_en/ρ of air (the collision kerma, equal to the total within 0.1 % at these energies).';
 
   /* ---------- size, theme ---------- */
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }

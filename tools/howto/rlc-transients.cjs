@@ -32,7 +32,7 @@ require('./lib.cjs')({ demo: 'circuits', title: 'RLC Oscillations', query: '#tra
   r.check.paused = await p.evaluate(() => [__circ.running, __circ.run.t]);
   await r.secs(0.4);
 
-  state.caption = 'Drag the time cursor to t = 1.56 ms, where the capacitor voltage crosses zero';
+  state.caption = 'Drag the time cursor to t = 1.56 ms, just before the capacitor voltage first crosses zero';
   await p.evaluate(() => window.scrollTo(0, 400)); await r.tick(2);
   const sc = await r.box('#sCan');
   state.zoom = [sc[0], sc[1] - 70, 520, 292.5];

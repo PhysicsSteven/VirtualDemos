@@ -15,7 +15,7 @@ group('spot sizes in air: Langner et al. 2017 at 70, 160 and 245 MeV, linear bet
   assert.deepEqual(c.SIG_AIR, { E: [70, 160, 245], x: [5.75, 4.37, 3.61], y: [6.15, 4.27, 3.86] });
   c.SIG_AIR.E.forEach((E, i) => { const s = c.sigmaAir(E); within(s.x, c.SIG_AIR.x[i], 1e-12, 'x'); within(s.y, c.SIG_AIR.y[i], 1e-12, 'y'); });
   within(c.sigmaAir(115).x, (5.75 + 4.37) / 2, 1e-12, 'midpoint');
-  assert.deepEqual(c.TOL, { out: 3, range: 1, pos: 2, size: 10 });
+  assert.deepEqual(c.TOL, { out: 3, range: 1, pos: 2, rel: 1, size: 10 });
 });
 
 group('baseline: every check passes with no faults; R90 just short of the CSDA range, as it is on the distal edge', () => {
@@ -35,7 +35,8 @@ group('faults: each shows in its own checks', () => {
   const o = c.dailyQA(V, 150, { fo: 4 }, null); assert(!o.pass.out && o.pass.range && o.pass.pos && o.pass.size); within(o.out, 104, 1e-9, 'output');
   const g = c.dailyQA(V, 150, { fg: 3 }, null); within(g.err, 2.4, 1e-9, 'gain: corner spots 80 mm × 3 %'); assert(!g.pass.pos);
   const centre = g.spots.find((s) => s.xn === 0 && s.yn === 0); within(Math.hypot(centre.x, centre.y), 0, 1e-12, 'central spot in place');
-  const st = c.dailyQA(V, 150, { fx: 2.5 }, null); within(st.err, 2.5, 1e-9, 'steering'); assert(!st.pass.pos && st.pass.size);
+  const g2 = c.dailyQA(V, 150, { fg: 2 }, null); within(g2.err, 1.6, 1e-9, 'gain 2 %'); within(g2.rel, 1.6, 1e-9, 'gain 2 %, relative (TG-224 ±1 mm)'); assert(!g2.pass.pos);
+  const st = c.dailyQA(V, 150, { fx: 2.5 }, null); within(st.err, 2.5, 1e-9, 'steering'); within(st.rel, 0, 1e-9, 'steering keeps the relative places'); assert(!st.pass.pos && st.pass.size);
   const sz = c.dailyQA(V, 150, { fs: 15 }, null); within(sz.ds, 15, 1e-9, 'spot size'); assert(!sz.pass.size && sz.pass.pos);
 });
 
