@@ -41,7 +41,7 @@ COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
                                 'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages', 'intro-giant-planets'}}
 COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
-COURSE_HANDOUTS['astro-2203'] |= {'intro-exoplanets', 'intro-tides', 'intro-lagrange'}
+COURSE_HANDOUTS['astro-2203'] |= {'intro-exoplanets', 'intro-tides', 'intro-lagrange', 'intro-parallax', 'intro-atmospheres'}
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range'}
@@ -307,6 +307,8 @@ HANDOUT_TOPIC = {
     'mp-shielding-rooms': 'Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)',
     'intro-exoplanets': 'Finding Planets Around Other Stars (Astro 2203)', 'intro-tides': 'Tides: Two Bulges, the Moon and the Sun (Astro 2203)',
     'intro-lagrange': 'Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro 2203)',
+    'intro-parallax': 'Parallax: Measuring the Distance to a Star (Astro 2203)',
+    'intro-atmospheres': 'Why Small, Hot Planets Lose Their Air (Astro 2203)',
     'mp-ct-range': 'CT Numbers and Proton Range: Calibration, Stopping Power and Margins (Medical Physics)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }

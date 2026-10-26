@@ -7343,7 +7343,8 @@
       "title": "Cosmic Distance Ladder",
       "url": "demos/distance-ladder.html",
       "handouts": [
-        "hubble-law"
+        "hubble-law",
+        "intro-parallax"
       ]
     },
     {
@@ -8502,7 +8503,8 @@
       "url": "demos/ideal-gas.html",
       "handouts": [
         "ideal-gas",
-        "diffusion"
+        "diffusion",
+        "intro-atmospheres"
       ]
     },
     {

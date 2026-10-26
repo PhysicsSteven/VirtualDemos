@@ -178,7 +178,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/ideal-gas.html" target="ideal-gas-worksheet">Worksheet 1: Gas in a Box</a></li><li><a href="../curriculum/labs/students/diffusion.html" target="diffusion-worksheet">Worksheet 2: Diffusion and Graham's Law</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/ideal-gas.html" target="ideal-gas-worksheet">Worksheet 1: Gas in a Box</a></li><li><a href="../curriculum/labs/students/diffusion.html" target="diffusion-worksheet">Worksheet 2: Diffusion and Graham's Law</a></li><li><a href="../curriculum/labs/students/intro-atmospheres.html" target="intro-atmospheres-worksheet">Worksheet 3: Why Small, Hot Planets Lose Their Air (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -221,6 +221,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Box area A</dt><dd id="rA">—</dd></div>
           <div><dt>Mean speed</dt><dd id="rMean">—</dd></div>
           <div><dt>rms speed</dt><dd id="rRms">—</dd></div>
+          <div class="wide"><dt>rms speed of a real (3D) gas at this T, √(3kT/m)</dt><dd id="rRms3">—</dd></div>
         </dl>
         <details class="more"><summary>More about this</summary>
           <p class="hint" id="more1">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
@@ -237,6 +238,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section id="secGas">
         <h2>Gas</h2>
+        <div class="chips" id="gasChips" role="group" aria-label="Which gas">
+          <button type="button" data-gas="h2" aria-pressed="false">Hydrogen H₂</button>
+          <button type="button" data-gas="he" aria-pressed="false">Helium</button>
+          <button type="button" data-gas="n2" aria-pressed="false">Nitrogen N₂</button>
+          <button type="button" data-gas="ar" aria-pressed="true">Argon</button>
+          <button type="button" data-gas="co2" aria-pressed="false">Carbon dioxide CO₂</button>
+        </div>
         <div>
           <div class="slider-head"><label for="nIn">Molecules N</label><output id="nOut" class="mono" for="nIn">150</output></div>
           <input type="range" id="nIn" min="20" max="400" step="5" value="150">
@@ -323,7 +331,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch wall"></i>Piston, the movable right wall</span>
         </div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Molecules are hard disks 0.5 nm across, a bit larger than real argon (about 0.34 nm), drawn at that size or larger. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.</p>
+          <p class="hint">Molecules are hard disks 0.5 nm across, a bit larger than real argon (about 0.34 nm), drawn at that size or larger. Every gas on the Gas card is the same disk; only the mass changes. A real gas moves in three dimensions, where the average kinetic energy is (3/2)kT, so its rms speed is √(3kT/m): √(3/2) = 1.22 times the 2D gas's √(2kT/m) at the same T. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.</p>
         </details>
         </div></details>
       </section>
@@ -371,7 +379,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      different temperatures heat flows through the gas from the warm walls to the cold ones; with wallT = 0 a wall is a perfect
      mirror, as before. */
   const KB = 1.380649e-23;        /* J/K, exact (SI 2019) */
-  const M = 6.63e-26;             /* kg, argon, the Gas in a Box setups */
+  const M_AR = 6.63e-26;          /* kg, argon, the Gas in a Box setups */
+  /* the molecule's mass, chosen on the Gas card (Astro 2203's atmospheres worksheet, 2026-10-26): masses in u from the IUPAC
+     standard atomic weights (H 1.008, He 4.0026, C 12.011, N 14.007, O 15.999); argon keeps the setups' 6.63e-26 kg. Every gas is
+     the same 0.5 nm hard disk: only the mass changes */
+  const GASES = { h2: ['hydrogen', 2.016], he: ['helium', 4.0026], n2: ['nitrogen', 28.014], ar: ['argon', null], co2: ['carbon dioxide', 44.009] };
+  let gasKey = 'ar', M = M_AR;
   const U_KG = 1.66053906892e-27; /* kg, atomic mass constant (CODATA 2022) */
   const LX = 50, LY = 30;         /* nm, largest box */
   const MIN_W = 15;               /* nm */
@@ -528,6 +541,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (T >= 0.995) return T.toFixed(2) + ' K';
     return T.toPrecision(2) + ' K';
   }
+  const gasUnits = () => `${GASES[gasKey][0]}, m = ${(M / 1e-26).toFixed(gasKey === 'h2' || gasKey === 'he' ? 3 : 2)}×10⁻²⁶ kg`;
   const fmtSpeed = (v) => (v >= 99.5 ? Math.round(v) : v >= 9.95 ? v.toFixed(1) : v.toFixed(2)) + ' m/s';
   function fmtRate(ps) { return ps >= 1000 ? (ps / 1000).toPrecision(3) + ' ns' : Math.round(ps) + ' ps'; }
   const NB = 30;
@@ -1229,7 +1243,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (on) setWalls([0, 1, 2, 3], 0, 1);   /* the two gas setups keep mirror walls */
     $('clock').classList.toggle('two', on);
     $('cap3d').textContent = CAP[on ? 1 : 0];
-    $('unitsGas').textContent = on ? 'two gases, masses in u' : 'argon, m = 6.63×10⁻²⁶ kg';
+    $('unitsGas').textContent = on ? 'two gases, masses in u' : gasUnits();
     if (!on) { GS.div = 0; GS.ux = null; GS.m.fill(M); GS.r.fill(R); GS.kind.fill(0); rMin = R; }
     window.vdShowCols = on ? [['t_ps', 't (ps)'], ['A_right', 'A right'], ['B_left', 'B left'], ['msd_A_nm2', 'MSD A (nm²)']]
       : [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
@@ -1367,6 +1381,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('rTh').textContent = fmtK(tempOf(GS, N, (i) => px[i] < half)).replace(' K', '') + ' · ' + fmtK(tempOf(GS, N, (i) => px[i] >= half));
     }
     out.rRms.textContent = fmtSpeed(stats.rms);
+    $('rRms3').textContent = fmtSpeed(Math.sqrt(3 * KB * stats.T / M));
     /* in Slow motion follows T the playback rate changes with T, so the clock says so: a cold gas looks lively only because it is sped up */
     const fast = psPerS / BASE_PS;
     $('clock').textContent = 't = ' + (simT < 1000 ? Math.round(simT) + ' ps' : (simT / 1000).toFixed(2) + ' ns') +
@@ -1465,9 +1480,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setModeUI() {
     for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === mode));
   }
+  /* choosing a gas restarts it at the slider's temperature, as picking a start does; the setups are all argon */
+  function setGas(k, restart) {
+    gasKey = k; M = GASES[k][1] ? GASES[k][1] * U_KG : M_AR;
+    if (!two) GS.m.fill(M);
+    for (const b of document.querySelectorAll('#gasChips button')) b.setAttribute('aria-pressed', String(b.dataset.gas === k));
+    if (!two) $('unitsGas').textContent = gasUnits();
+    if (restart) { Tset = tFromSlider(+tIn.value); setPresetUI(null); resetGas(); }
+  }
+  for (const b of document.querySelectorAll('#gasChips button')) b.addEventListener('click', () => setGas(b.dataset.gas, true));
   function applyPreset(name) {
     if (TWO_PRESETS[name]) { applyTwo(name); return; }
     if (two) setTwo(false);
+    setGas('ar', false);
     const p = PRESETS[name];
     N = p.N; Tset = p.T; GS.wallTarget = p.W; mode = p.mode; pistonTouched = false;
     nIn.value = N; nOut.textContent = N; tIn.value = sliderFromT(Tset); syncW();
@@ -1622,9 +1647,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pm = pMeasured();
     if (!(simT > 0) || !isFinite(pm)) return 'Let the gas run for a moment so the walls have been hit and a pressure measured.';
     const g = (v, d) => +(+v).toPrecision(d);
-    return { t_ps: Math.round(simT), N, T_K: g(stats.T, 4), A_nm2: Math.round(GS.wallX * LY), width_nm: +GS.wallX.toFixed(1), P_mN_per_m: g(pm * 1e3, 4), mean_m_s: g(stats.mean, 4), rms_m_s: g(stats.rms, 4) };
+    return { t_ps: Math.round(simT), N, gas: GASES[gasKey][0], m_u: g(M / U_KG, 4), rms3_m_s: g(Math.sqrt(3 * KB * stats.T / M), 4), T_K: g(stats.T, 4), A_nm2: Math.round(GS.wallX * LY), width_nm: +GS.wallX.toFixed(1), P_mN_per_m: g(pm * 1e3, 4), mean_m_s: g(stats.mean, 4), rms_m_s: g(stats.rms, 4) };
   };
-  window.__ig = { setRunning, applyPreset, setDiv, get two() { return two; }, run, TWO, GS,
+  window.__ig = { setRunning, applyPreset, setGas, setDiv, get two() { return two; }, run, TWO, GS,
     fast: (ps) => { if (two) { runTwo(ps); computeStats(); dirty = true; } },
     seed: (n) => { let a = n >>> 0; rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }, get N() { return N; }, stats, pMeasured, pIdeal, setWall: (w) => { GS.wallTarget = clampW(w); pistonTouched = true; syncW(); dirty = true; } };
 
@@ -1638,9 +1663,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   updateReadouts();
   /* How this works: a short video of one sample reading for the worksheet the setup belongs to, Gas in a Box (150 atoms at 50 K)
      or, in the two gas setups, Diffusion and Graham's Law (Two gases mix, recorded to 400 ps); made by tools/howto/ */
-  const howVid = () => (two ? 'diffusion' : 'ideal-gas');
+  const howVid = () => (two ? 'diffusion' : VD.ws('') === 'intro-atmospheres' ? 'intro-atmospheres' : 'ideal-gas');   /* Astro 2203's atmospheres worksheet has its own */
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
-    title: () => (two ? "How this works: Diffusion and Graham's Law" : 'How this works: Gas in a Box') });
+    title: () => (two ? "How this works: Diffusion and Graham's Law" : howVid() === 'intro-atmospheres' ? 'How this works: Why Small, Hot Planets Lose Their Air' : 'How this works: Gas in a Box') });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshTokens);
   requestAnimationFrame(frame);
 })();

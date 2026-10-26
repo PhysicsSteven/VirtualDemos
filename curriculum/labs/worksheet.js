@@ -515,6 +515,11 @@
   FROM_DEMO['intro-tides'] = { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2'] };
   INTRO.push('intro-lagrange'); /* Lagrange Points demo, 2026-10-26 */
   FROM_DEMO['intro-lagrange'] = { demo: 'Lagrange Points', cols: ['row', 'system', 'mu', 'L1_a', 'L2_a', 'L2_efold_P', (r) => (r.L4 === 'stable' ? 'yes' : 'no'), 'L4_lib_P', 'L4_efold_P'] };
+  INTRO.push('intro-parallax'); INTRO_GRAPHS.push('intro-parallax'); /* Cosmic Distance Ladder, rung 1, 2026-10-26 */
+  /* Reading | Star | Instrument | d | p | 2p | ruler s | 2000/s | uncertainty | 1/d typed */
+  FROM_DEMO['intro-parallax'] = { demo: 'Cosmic Distance Ladder', cols: ['row', 'star', 'inst', 'd_pc', 'p_mas', 'shift_mas', 's_mas', 'd_ruler_pc', 'unc_pct', null] };
+  INTRO.push('intro-atmospheres'); INTRO_GRAPHS.push('intro-atmospheres'); /* Gas in a Box, 2026-10-26: Reading | Gas | m | T | 2D rms | 3D rms | 1/sqrt(m) typed; the second table typed */
+  FROM_DEMO['intro-atmospheres'] = { demo: 'Gas in a Box', cols: ['row', 'gas', 'm_u', 'T_K', 'rms_m_s', 'rms3_m_s', null] };
   FROM_DEMO['intro-exoplanets'] = { demo: 'Finding Exoplanets', cols: ['row', 'system', 'Ms_Msun', 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 'P_d', 't_h', 'drop_ppm', 'v_m_s', null] };
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */

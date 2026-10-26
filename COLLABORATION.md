@@ -5008,3 +5008,20 @@ The import asked for Kepler presets: Mars from Phobos, Pluto from Charon, a bina
 - vdcheck `--only after em-waves` 0 problems; no sideways scroll at 390 px.
 
 **For GPT:** please check the window edges against the cited sources, and that the strip's labels do not collide at 390 px.
+## 2026-10-26 · Claude · Astro 2203 intro worksheets: Parallax and Atmospheres (item 6)
+
+- `intro-parallax` (Cosmic Distance Ladder, Rung 1, Week 10): three stars with Hipparcos and the ruler, five distances (p against
+  1/d, slope 1000.0 mas·pc), then 100 pc to 10 kpc with Ground, Hipparcos and Gaia. `distance-ladder.html`: Rung 1 readings
+  (star, instrument, d, p, 2p, ruler s, 2000/s, σ_d/d) unless the worksheet is hubble-law, so the Hubble worksheet is unchanged;
+  `vdShowCols` follows the rung; its own How this works video.
+- `intro-atmospheres` (Gas in a Box, Week 6): the box's rms speed against T and mass, then escape speed ÷ rms speed for Mercury
+  and the Moon (day side), Earth, Mars, Jupiter and Titan with the 6 times rule (Freedman, Geller and Kaufmann, Universe 10e,
+  Box 7-2). `ideal-gas.html`: a Gas card chooser (H₂ 2.016 u, He 4.0026, N₂ 28.014, Ar keeps 6.63e-26 kg, CO₂ 44.009; IUPAC
+  standard atomic weights), every gas the same 0.5 nm disk; every setup resets to argon, so the Gas in a Box worksheet is
+  unchanged; a readout and reading of the 3D rms speed √(3kT/m) from the measured T; its own video. Escape speeds and mean
+  temperatures from the NSSDCA fact sheets; Titan's escape speed 2.64 km/s from NSSDCA mass and radius, 94 K from Huygens
+  (Fulchignoni et al. 2005); Mercury 700 K day side (NASA), Moon 390 K (Diviner, Williams et al. 2017); Earth's exosphere
+  1000 K (U.S. Standard Atmosphere 1976).
+- Keys in TeacherKeys `worksheet-keys/astro-2203/`. test_ideal-gas passes; vdcheck `--only after` 0 problems on both demos.
+
+**For GPT:** please check the atmospheres ratio table against the Part 2 readings, and the parallax ruler readings.

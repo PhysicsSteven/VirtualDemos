@@ -150,7 +150,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/hubble-law.html" target="hubble-law-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/hubble-law.html" target="hubble-law-worksheet">Worksheet 1: Measuring the Hubble Constant</a></li><li><a href="../curriculum/labs/students/intro-parallax.html" target="intro-parallax-worksheet">Worksheet 2: Parallax: Measuring the Distance to a Star (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2 id="rungTitle">Rung 1: parallax</h2>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -1679,9 +1679,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let parTick = 0;
   // ---------- readings (Hubble's law worksheet) ----------
   window.vdVersion = 'distance-ladder@2026-10-24';
-  window.vdShowCols = [['galaxy', 'Galaxy'], ['d_Mpc', 'd (Mpc)'], ['z_comb', 'Your z']];
+  /* Rung 1 readings for Astro 2203's parallax worksheet (?ws=intro-parallax, 2026-10-26): every reading of the Hubble worksheet stays in Rung 4 */
+  const parWs = () => VD.ws('') !== 'hubble-law';
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.tab === 'par' && parWs()
+    ? [['star', 'Star'], ['inst', 'Instrument'], ['d_pc', 'd (pc)'], ['p_mas', 'p (mas)']] : [['galaxy', 'Galaxy'], ['d_Mpc', 'd (Mpc)'], ['z_comb', 'Your z']]) });
   window.vdReadingRow = () => {
-    if (S.tab !== 'hub') return "Readings are taken in Rung 4, Hubble's law: open it, click a galaxy and match the comb to its lines.";
+    if (S.tab === 'par' && parWs()) {
+      const d = S.par.d, sp = parSig(), s = Math.abs(S.par.ruler[1] - S.par.ruler[0]), frac = sp * d;
+      return { star: S.par.star === 'custom' ? 'Any distance' : STARS[S.par.star].name, inst: INST[S.par.inst].name, d_pc: +d.toPrecision(4),
+        p_mas: +(1e3 / d).toPrecision(4), shift_mas: +(2e3 / d).toPrecision(4), s_mas: S.par.rulerSet ? +(s * 1e3).toPrecision(4) : '',
+        d_ruler_pc: S.par.rulerSet && s > 0 ? +(2 / s).toPrecision(4) : '', sig_mas: +(sp * 1e3).toPrecision(3),
+        unc_pct: frac >= 1 ? 'not measurable' : +(frac * 100).toPrecision(2) };
+    }
+    if (S.tab !== 'hub') return parWs() ? 'Readings are taken in Rung 1, parallax, and Rung 4, Hubble\'s law.' : "Readings are taken in Rung 4, Hubble's law: open it, click a galaxy and match the comb to its lines.";
     const i = S.hub.sel, p = HUB[i];
     if (!hubOn(i)) return 'Pick a galaxy that is in the fit.';
     const match = Math.abs(S.hub.zc - p.z) < 0.0006;
@@ -1689,7 +1699,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       z_comb: match ? S.hub.zc.toFixed(4) : '', z_catalog: p.z.toFixed(4), a: S.calA.toFixed(2), M_Ia: S.snM.toFixed(2), moved: S.hub.over[i] !== undefined ? 'yes' : 'no' };
   };
   /* How this works: a video of one Hubble diagram reading, a galaxy's distance and its comb redshift (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/hubble-law.mp4', poster: 'media/how-this-works/hubble-law.jpg' });
+  /* Astro 2203's parallax worksheet (?ws=intro-parallax) has its own video, of one parallax reading */
+  const howVid = () => (VD.ws('') === 'intro-parallax' ? 'intro-parallax' : 'hubble-law');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-parallax' ? 'How this works: parallax' : 'How this works') });
 
   window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
     core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, fitHubble, hubbleTimeGyr } };
