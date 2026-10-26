@@ -515,7 +515,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* ---------- Why it peaks: one proton passing electrons, in 3D (vd3kit) with a flat fallback; the physics is whyAt, kickAt and zEff in the CORE ---------- */
   const W3 = (() => {
-    const XW = 6, NPER = 6, BLO = 1e-4, BHI = 2.5, CW = 9;        /* window: ±6 nm of track, 6 dots per nm, b from 10⁻⁴ to 2.5 nm on a log scale, 9 nm/s per unit β */
+    const XW = 6, NPER = 6, BLO = 1e-4, BHI = 2.5, CW = 9, VK = 0.05;   /* VK: drawn drift of a kicked electron, in window radii per second per unit of kick */        /* window: ±6 nm of track, 6 dots per nm, b from 10⁻⁴ to 2.5 nm on a log scale, 9 nm/s per unit β */
     const C_NM = 2.99792458e17, C_CM = 2.99792458e10;
     const rm = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     const lg = (b) => Math.max(0, Math.min(1, Math.log10(b / BLO) / Math.log10(BHI / BLO)));   /* display radius, 0 at the axis to 1 at the glass */
@@ -538,8 +538,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the curve point at or just before depth z */
     const at = (z) => { const C = st.curve; let a = 0, b = C.length - 1; while (b - a > 1) { const m = (a + b) >> 1; if (C[m].z <= z) a = m; else b = m; } return z >= C[b].z ? C[b] : C[a]; };
     const ratio = () => st.b0 / Math.max(st.w.beta, 1e-6);          /* each kick against the kick at the same distance at the entrance */
-    function spawn(x) { const b = BLO * Math.pow(BHI / BLO, rnd()), ph = 2 * Math.PI * rnd(); return { x, b, ph, k: 0, f: 0.5 * (1 - x / Math.hypot(x, b)), kept: false, out: false, age: 0 }; }
-    function reset() { es = []; acc = 0; sd = 99; for (let x = -XW; x < XW; x += 1 / NPER) { const e = spawn(x + rnd() / NPER); if (e.x < 0) { e.f = 1; e.k = e.b <= st.w.bmax ? ratio() : 0; e.kept = e.k > 0; e.out = !e.kept; } es.push(e); } }
+    function spawn(x) { const b = BLO * Math.pow(BHI / BLO, rnd()), ph = 2 * Math.PI * rnd(); return { x, b, ph, k: 0, kl: 0, f: 0.5 * (1 - x / Math.hypot(x, b)), h: -b / (2 * Math.hypot(x, b)), dr: 0, dx: 0, tr: [], tt: 0, kept: false, out: false, age: 0 }; }
+    function reset() { es = []; acc = 0; sd = 99; for (let x = -XW; x < XW; x += 1 / NPER) { const e = spawn(x + rnd() / NPER); if (e.x < 0) { e.f = 1; e.h = 0; e.k = e.b <= st.w.bmax ? ratio() : 0; e.kept = e.k > 0; e.out = !e.kept; e.age = -e.x / Math.max(0.05, CW * st.w.beta); e.dr = Math.min(1.6, VK * e.k * e.age); } es.push(e); } }
     /* one step: the depth moves on while running; the window always shows the proton passing electrons at its speed */
     function step(dt) {
       if (S.run && !st.stopped) {
@@ -552,8 +552,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const vw = st.stopped ? 0 : CW * st.w.beta;
       qT -= dt; if (qT <= 0) { qT = 0.25; q = st.stopped ? 0 : (rnd() < zEff(st.w.beta) ? 1 : 0); }
       for (const e of es) {
-        e.x -= vw * dt; const f = 0.5 * (1 - e.x / Math.hypot(e.x, e.b)), df = Math.max(0, f - e.f); e.f = f;
-        if (e.b <= st.w.bmax) { e.k += df * q * ratio(); if (e.k > 0) e.kept = true; } if (!e.kept && f > 0.5) e.out = true;
+        e.x -= vw * dt; const rr = Math.hypot(e.x, e.b), f = 0.5 * (1 - e.x / rr), df = Math.max(0, f - e.f), h = -e.b / (2 * rr), dh = h - e.h; e.f = f; e.h = h;
+        /* the impulse so far, in units of the whole sideways kick at the entrance speed: sideways ½(1 − x/r), along the track −b/2r (back toward
+           the proton while it comes, forward again as it leaves: the two cancel, so the kick ends up sideways) */
+        if (e.b <= st.w.bmax) { e.k += df * q * ratio(); e.kl += dh * q * ratio(); if (e.k > 1e-6) e.kept = true; } if (!e.kept && f > 0.5) e.out = true;
+        if (e.kept && e.x <= 0) { e.dr = Math.min(1.6, e.dr + VK * e.k * dt); e.dx += VK * e.kl * dt; e.tt -= dt; if (e.tt <= 0) { e.tt = 0.08; e.tr.push([e.dx, e.dr]); if (e.tr.length > 14) e.tr.shift(); } }
         if (e.x < 0) e.age += dt;
       }
       es = es.filter((e) => e.x > -XW);
@@ -566,7 +569,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     function sci(x) { const e = Math.floor(Math.log10(x)), m = Math.round(x / Math.pow(10, e)); const sup = String(e).split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join(''); return `${m} × 10${sup}`; }
     function note() {
       return `Not to scale. The window is ${2 * XW} nm of the track, with the distance from it on a log scale (10⁻⁴ to 2.5 nm), so every ring of distance gets the same number of dots: a sample of the electrons, each drawn at rest. `
-        + `Arrows: each kick against the kick at the same distance at the entrance (length in proportion, capped at 10 times); colors: the energy the electron takes. Time is slowed about ${sci(C_CM / st.CZ)} times in the tank and ${sci(C_NM / CW)} times in the window. `
+        + `Arrows: the kick so far, drawn from the moment the proton passes: it swings round after the proton and ends up sideways, since the pulls along the track cancel; length against the whole kick at the same distance at the entrance, capped at 10 times; colors: the energy the electron takes. Kicked electrons drift many times faster than real, so their paths show. Time is slowed about ${sci(C_CM / st.CZ)} times in the tank and ${sci(C_NM / CW)} times in the window. `
         + `The track is drawn straight: no scattering, straggling or nuclear reactions. The last 1 MeV, under 0.04 mm, is paced for viewing.`;
     }
     /* ---------- 3D ---------- */
@@ -596,7 +599,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.bmin = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.44, 32, 1, true), minM); g.bmin.rotation.z = Math.PI / 2; g.bmin.position.set(...WC); g.bmin.renderOrder = 3; sc.add(g.bmin);
       g.axis = VD3K.rod([WC[0] - 0.225, WC[1], WC[2]], [WC[0] + 0.225, WC[1], WC[2]], 0.0009, new THREE.MeshBasicMaterial({ color: '#ffb066', transparent: true, opacity: 0.5 })); sc.add(g.axis);
       g.el = VD3K.particles(S3, { n: 200, r: 0.0055 }); sc.add(g.el);
-      g.arrows = VD3K.particles(S3, { n: 1400, r: 0.0028, seg: 6 }); sc.add(g.arrows);
+      g.arrows = VD3K.particles(S3, { n: 2600, r: 0.0026, seg: 6 }); sc.add(g.arrows);
       g.p = new THREE.Mesh(new THREE.SphereGeometry(0.014, 32, 16), new THREE.MeshStandardMaterial({ color: '#ff8a3d', emissive: '#c2410c', emissiveIntensity: 0.9, roughness: 0.3 })); g.p.position.set(...WC); sc.add(g.p);
       g.pe = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 16, 10), new THREE.MeshStandardMaterial({ color: '#7ea2ff', emissive: '#2b60b5', emissiveIntensity: 0.6 })); sc.add(g.pe);
       const lg2 = new THREE.BufferGeometry(); lg2.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
@@ -623,14 +626,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const grey = new THREE.Color(VD3.dark() ? '#4d5663' : '#c3cad3'), cold = new THREE.Color('#a8b4c4');
       let n = 0, na = 0;
       for (const e of es) {
-        const r = RD * lg(e.b), x = WC[0] + e.x * sxw, y = WC[1] + r * Math.cos(e.ph), zz = WC[2] + r * Math.sin(e.ph);
+        const cp = Math.cos(e.ph), sp = Math.sin(e.ph), P3 = (dx, dr) => { const rr = RD * (lg(e.b) - dr); return [WC[0] + e.x * sxw + dx * RD, WC[1] + rr * cp, WC[2] + rr * sp]; };
         let col = cold, wob = 0;
-        if (e.kept) col = VD3K.heat(eT(e.k)); else if (e.out) col = grey;
-        if (!e.kept && e.b > st.w.bmax) wob = 0.006 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3);
-        const rr = Math.max(0, r - wob);
-        g.el.put(n++, x, WC[1] + rr * Math.cos(e.ph), WC[2] + rr * Math.sin(e.ph), col);
-        if (e.kept) { const L = Math.min(0.09, 0.009 * e.k), a = Math.max(0, 1 - e.age / 2.2), cc = VD3K.heat(eT(e.k)), m = Math.max(2, Math.round(L / 0.004));
-          if (a > 0.02) for (let i = 1; i <= m && na < 1400; i++) { const t = i / m * L * Math.min(1, e.f * 1.6); g.arrows.put(na++, x, y - t * Math.cos(e.ph), zz - t * Math.sin(e.ph), cc.clone().multiplyScalar(0.35 + 0.65 * a)); } }
+        if (e.kept && e.x <= 0) col = VD3K.heat(eT(Math.hypot(e.k, e.kl))); else if (e.out) col = grey;
+        if (!e.kept && e.b > st.w.bmax) wob = 0.06 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3);
+        const at = P3(e.dx, e.dr + wob); g.el.put(n++, at[0], at[1], at[2], col);
+        if (e.kept && e.x <= 0) { const a = Math.max(0, 1 - e.age / 2.4), K = Math.hypot(e.k, e.kl), cc = VD3K.heat(eT(K));
+          if (a > 0.02) {
+            /* the kick so far: an arrow along the impulse, which swings to point at the proton as it passes and ends up sideways */
+            const L = Math.min(0.9, 0.09 * K), ux = e.kl / K, ur = e.k / K, m = Math.max(2, Math.round(L * RD / 0.004));
+            for (let i = 1; i <= m && na < 2600; i++) { const t = i / m * L, p3 = P3(e.dx + ux * t, e.dr + ur * t); g.arrows.put(na++, p3[0], p3[1], p3[2], cc.clone().multiplyScalar(0.35 + 0.65 * a)); }
+            /* and the path it has followed (drawn far faster than real) */
+            for (const [tx, tr] of e.tr) { if (na >= 2600) break; const p3 = P3(tx, tr); g.arrows.put(na++, p3[0], p3[1], p3[2], cc.clone().multiplyScalar(0.25 + 0.4 * a)); } } }
       }
       g.el.show(n); g.el.done(); g.arrows.show(na); g.arrows.done();
       const t = performance.now() / 1000; g.pe.visible = q === 0; if (q === 0) g.pe.position.set(WC[0] + 0.02 * Math.cos(t * 5), WC[1] + 0.02 * Math.sin(t * 5), WC[2] + 0.008 * Math.sin(t * 3));
@@ -668,10 +675,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.det; ctx.globalAlpha = 0.12; const rb = lg(st.w.bmax); ctx.fillRect(x0, Y(rb, 1), x1 - x0, Y(rb, -1) - Y(rb, 1)); ctx.globalAlpha = 0.18; ctx.fillStyle = '#f59e0b'; const rn = lg(st.w.bmin); ctx.fillRect(x0, Y(rn, 1), x1 - x0, Y(rn, -1) - Y(rn, 1)); ctx.globalAlpha = 1;
       ctx.strokeStyle = T.proton; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(x0, cy); ctx.lineTo(x1, cy); ctx.stroke(); ctx.globalAlpha = 1;
       for (const e of es) {
-        const s = Math.cos(e.ph) >= 0 ? 1 : -1, x = X(e.x); let r = lg(e.b);
-        if (!e.kept && e.b > st.w.bmax) r = Math.max(0, r - 0.08 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3));
-        const y = Y(r, s), col = e.kept ? heatCss(eT(e.k)) : e.out ? (d ? '#5d6775' : '#c3cad3') : '#a8b4c4';
-        if (e.kept) { const a = Math.max(0, 1 - e.age / 2.2), L = 0.9 * hh * Math.min(10, e.k) / 10 * Math.min(1, e.f * 1.6); if (a > 0.02) { ctx.globalAlpha = a; ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + s * L); ctx.stroke(); ctx.globalAlpha = 1; } }
+        const s = Math.cos(e.ph) >= 0 ? 1 : -1, ru = hh * 0.92, P2 = (dx, dr) => [X(e.x) + dx * ru, Y(lg(e.b) - dr, s)];
+        let wob = 0; if (!e.kept && e.b > st.w.bmax) wob = 0.06 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3);
+        const K = Math.hypot(e.k, e.kl), [x, y] = P2(e.dx, e.dr + wob), col = e.kept && e.x <= 0 ? heatCss(eT(K)) : e.out ? (d ? '#5d6775' : '#c3cad3') : '#a8b4c4';
+        if (e.kept && e.x <= 0) { const a = Math.max(0, 1 - e.age / 2.4);
+          if (a > 0.02) { ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.globalAlpha = 0.45 * a; ctx.beginPath(); e.tr.forEach(([tx, tr], i) => { const [px, py] = P2(tx, tr); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.lineTo(x, y); ctx.stroke();
+            const L = Math.min(0.9, 0.09 * K), [ex, ey] = P2(e.dx + e.kl / K * L, e.dr + e.k / K * L); ctx.globalAlpha = a; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke(); ctx.globalAlpha = 1; } }
         ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 3.2 * p, 0, 7); ctx.fill();
       }
       const pxc = X(0); ctx.fillStyle = T.proton; ctx.beginPath(); ctx.arc(pxc, cy, 8 * p, 0, 7); ctx.fill();
