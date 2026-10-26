@@ -151,9 +151,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="big"><dt>Wavelength λ = c/f</dt><dd id="rLam">—</dd></div>
           <div><dt>Period T = 1/f</dt><dd id="rT">—</dd></div>
           <div class="wide"><dt>Band</dt><dd id="rBand">—</dd></div>
+          <div class="wide"><dt>Reaches the ground?</dt><dd id="rGround">—</dd></div>
           <div class="wide"><dt>Check: λ × f</dt><dd id="rLf">—</dd></div>
         </dl>
         <details class="more"><summary>More about this</summary><p class="hint">The slider is logarithmic: each step of 1 is ten times the frequency. Band edges are conventional, not sharp; X-rays and gamma rays overlap and are usually named by their source. Visible colors are approximate.</p></details>
+        <label class="check"><input type="checkbox" id="cGround" checked> Show what reaches the ground</label>
+        <details class="more"><summary>About the ground strip</summary><p class="hint">The thin strip under the spectrum shows how much of each wavelength gets down through Earth's atmosphere to a telescope on a high, dry mountain: solid where the air is clear, faint where only some gets through, empty where none does. Edges: the ozone cutoff near 300 nm; the near and mid infrared windows J to Q and the 330 to 370 µm window with their transparency (IPAC Cool Cosmos, Infrared Windows); the radio window from 1 cm out to 30 m, below 10 MHz the ionosphere reflects radio waves back to space (Torge and Müller 2012), and from 1 cm down to 0.3 mm only patches between oxygen and water vapor lines at the best sites (Condon and Ransom 2016). The edges move with the weather, the site and the time of day, so they are drawn as a guide, not measurements. Telescopes for everything else fly above the air.</p></details>
       </section>
 
       <section id="secPol">
@@ -311,6 +314,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { id: 'xray', name: 'X-ray', short: 'X', lmin: 10e-12, lmax: 10e-9 },
     { id: 'gamma', name: 'Gamma ray', short: 'γ', lmin: 0, lmax: 10e-12 }
   ];
+  /* what gets down through the air to a high, dry site: [shortest λ, longest λ (m), share 0 to 1, words]. Shares are the
+     transparency classes of IPAC Cool Cosmos "Infrared Windows" (high 1, fair 0.6, low 0.35, very low 0.15), a guide, not a
+     measurement. Edges: ozone cutoff 300 nm; IR windows J to Z and 330 to 370 µm (IPAC); radio from 1 cm to 30 m, the ionosphere
+     reflecting below 10 MHz (Torge and Müller 2012, Geodesy, p. 121); 0.3 mm to 1 cm patchy at the best sites (Condon and Ransom
+     2016, Essential Radio Astronomy, ch. 1). Anything not listed is blocked. */
+  const GROUND = [
+    [300e-9, 1.1e-6, 1, 'yes: the optical window'],
+    [1.1e-6, 1.4e-6, 1, 'yes: the J window of the near infrared'], [1.5e-6, 1.8e-6, 1, 'yes: the H window of the near infrared'],
+    [2.0e-6, 2.4e-6, 1, 'yes: the K window of the near infrared'], [3.0e-6, 3.5e-6, 0.6, 'partly: the L window'], [3.5e-6, 4.0e-6, 1, 'yes: the L window'],
+    [4.6e-6, 5.0e-6, 0.35, 'partly: the M window'], [7.5e-6, 8e-6, 0.35, 'partly: the N window'], [8e-6, 9e-6, 0.6, 'partly: the N window'],
+    [9e-6, 10e-6, 0.35, 'partly: the N window (ozone absorbs near 9.6 µm)'], [10e-6, 12e-6, 0.6, 'partly: the N window'], [12e-6, 14.5e-6, 0.35, 'partly: the N window'],
+    [17e-6, 25e-6, 0.15, 'barely: the Q window, from high, dry sites'], [28e-6, 40e-6, 0.15, 'barely: the Z window, from high, dry sites'],
+    [330e-6, 370e-6, 0.15, 'barely: a submillimeter window, from high, dry sites'],
+    [0.3e-3, 0.01, 0.35, 'partly: between oxygen and water vapor lines, from high, dry sites'],
+    [0.01, 30, 1, 'yes: the radio window']
+  ];
+  function groundOf(l) {
+    for (const g of GROUND) if (l >= g[0] && l < g[1]) return { share: g[2], why: g[3] };
+    const why = l < 10e-9 ? 'no: absorbed high in the atmosphere' : l < 200e-9 ? 'no: absorbed by oxygen and nitrogen high in the atmosphere' : l < 300e-9 ? 'no: absorbed by the ozone layer'
+      : l >= 30 ? 'no: reflected back to space by the ionosphere' : 'no: absorbed by water vapor and carbon dioxide';
+    return { share: 0, why };
+  }
   function bandOf(f) { const l = C / f; for (const b of BANDS) if (l >= b.lmin && l < b.lmax) return b; return BANDS[BANDS.length - 1]; }
   function colorName(nm) {
     if (nm < 380 || nm >= 750) return '';
@@ -380,7 +405,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream };
+    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream };
     return;
   }
 
@@ -430,7 +455,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     antenna: { mode: 'antenna', f: 100e6, E0: 1, psi: 0, delta: 0,
       hint: () => 'An oscillating dipole at the center, like a short antenna driven by an AC source. Near it the field lines stay attached to the charges; farther out, closed loops of E pinch off and travel outward at c. Drag the direction on the pattern to read the intensity.' }
   };
-  const S = { preset: 'plane', mode: 'wave', logf: 10, logE: 2, psi: 0, delta: 0, pol: false, phi: 60, dir: 60, show: { e: true, b: true, s: true, sheet: true } };
+  const S = { preset: 'plane', mode: 'wave', logf: 10, logE: 2, psi: 0, delta: 0, pol: false, phi: 60, dir: 60, show: { e: true, b: true, s: true, sheet: true }, ground: true };
   let playing = !reduce, wt = 0.9;     // ωt in radians; a start phase that shows a crest near the front
   const fNow = () => Math.pow(10, S.logf), E0Now = () => Math.pow(10, S.logE);
   const ab = () => comps(S.psi * DEG);
@@ -451,7 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const LS = () => (isProj() && LY ? Math.max(1, Math.min(1.4, Math.min(LY.main.w, LY.main.h) / 330)) : 1);
   function layout(W, H) {
     const ps = isProj() ? Math.max(1, Math.min(1.4, Math.min(W, H) / 420)) : 1;
-    const sh = Math.round(66 * ps), top = H - sh;
+    const sh = Math.round((S.ground ? 84 : 66) * ps), top = H - sh;
     let main, side;
     if (W >= 640) { const mw = Math.round(W * 0.63); main = { x: 0, y: 0, w: mw, h: top }; side = { x: mw, y: 0, w: W - mw, h: top }; }
     else { const mh = Math.round(top * 0.56); main = { x: 0, y: 0, w: W, h: mh }; side = { x: 0, y: mh, w: W, h: top - mh }; }
@@ -894,7 +919,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- spectrum strip ----------
   function stripGeom() {
-    const s = LY.strip, ps = Math.min(LS(), s.h / 66), pad = 16 * ps;
+    const s = LY.strip, ps = Math.min(LS(), s.h / (S.ground ? 84 : 66)), pad = 16 * ps;
     return { s, ps, x0: s.x + pad, x1: s.x + s.w - pad, barY: s.y + 22 * ps, barH: 18 * ps };
   }
   const stripX = (g, lf) => g.x0 + (lf - LOGF_MIN) / (LOGF_MAX - LOGF_MIN) * (g.x1 - g.x0);
@@ -927,6 +952,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fr = [[6, '1 MHz'], [9, '1 GHz'], [12, '1 THz'], [15, '1 PHz'], [18, '1 EHz'], [21, '1 ZHz']];
     for (const [e, t] of fr) { const x = stripX(g, e); c.textAlign = e === 21 ? 'right' : 'center'; c.fillText(t, e === 21 ? x + 2 : x, g.barY + g.barH + 3 * ps); c.beginPath(); c.moveTo(x, g.barY + g.barH); c.lineTo(x, g.barY + g.barH + 2 * ps); c.stroke(); }
     c.textAlign = 'left'; c.fillText('λ', s.x + 3 * ps, g.barY - 13 * ps); c.fillText('f', s.x + 4 * ps, g.barY + g.barH + 3 * ps);
+    // what reaches the ground: a thin strip, solid where the air is clear
+    if (S.ground) {
+      const gy = g.barY + g.barH + 17 * ps, gh = 7 * ps;
+      c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(g.x0 + 0.5, gy + 0.5, g.x1 - g.x0 - 1, gh - 1);
+      c.fillStyle = T.accent;
+      for (const [l0, l1, sh] of GROUND) {
+        const xa = Math.max(g.x0, stripX(g, Math.log10(C / l1))), xb = Math.min(g.x1, stripX(g, Math.log10(C / l0)));
+        if (xb > xa) { c.globalAlpha = sh; c.fillRect(xa, gy, Math.max(1, xb - xa), gh); }
+      }
+      c.globalAlpha = 1; c.font = `${9.5 * ps}px ${T.mono}`; c.textBaseline = 'top'; c.fillStyle = T.muted;
+      c.textAlign = 'left'; c.fillText('reaches the ground', g.x0, gy + gh + 2 * ps);
+      c.textAlign = 'right'; c.fillText('empty: blocked by the air', g.x1, gy + gh + 2 * ps);
+    }
     // marker
     const x = stripX(g, S.logf), hot = isHot('f'), nm = lambdaOf(fNow()) * 1e9, q = wavelengthRGB(nm);
     if (hot) { c.fillStyle = T.accent; c.globalAlpha = 0.22; c.fillRect(x - 7 * ps, g.barY - 4 * ps, 14 * ps, g.barH + 8 * ps); c.globalAlpha = 1; }
@@ -963,6 +1001,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('fOut').textContent = fmtSI(f, 'Hz');
     $('rLam').textContent = fmtSI(lam, 'm'); $('rLam2').textContent = fmtSI(lam, 'm');
     $('rT').textContent = fmtSI(1 / f, 's');
+    $('rGround').textContent = groundOf(lam).why;
     $('rBand').innerHTML = bd.name + (bd.id === 'vis' ? ` (${colorName(nm)})<i class="colorchip" style="background:rgb(${q.join(',')})"></i>` : '');
     $('rLf').innerHTML = `${group((lam * f).toFixed(0))} m/s <span class="ok">= c</span>`;
     $('eOut').textContent = fmtSI(E0, 'V/m');
@@ -1025,6 +1064,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sphi').addEventListener('input', (e) => setPhi(+e.target.value));
   $('sdir').addEventListener('input', (e) => setDir(+e.target.value));
   $('cPol').addEventListener('change', (e) => { S.pol = e.target.checked; update(); });
+  $('cGround').addEventListener('change', (e) => { S.ground = e.target.checked; resize(); });
   $('pLin').addEventListener('click', () => { S.delta = 0; if (Math.abs(S.psi) === 45 && S.preset === 'circ') S.psi = 0; custom(); update(); });
   $('pRight').addEventListener('click', () => { S.psi = 45; S.delta = -90; custom(); update(); });
   $('pLeft').addEventListener('click', () => { S.psi = 45; S.delta = 90; custom(); update(); });
@@ -1175,7 +1215,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode !== 'wave') return 'Readings are of the plane wave: switch to Plane wave to record one.';
     const f = fNow(), E0 = E0Now(), I = intensity(E0);
     const pb = S.preset && document.querySelector(`#presets [data-p="${S.preset}"]`);
-    return { setup: pb ? pb.textContent : '', f_Hz: sig6(f), lambda_m: sig6(lambdaOf(f)), band: bandOf(f).name, E0_V_per_m: sig6(E0), B0_T: sig6(B0of(E0)),
+    return { setup: pb ? pb.textContent : '', f_Hz: sig6(f), lambda_m: sig6(lambdaOf(f)), band: bandOf(f).name, ground: groundOf(lambdaOf(f)).why.split(':')[0], E0_V_per_m: sig6(E0), B0_T: sig6(B0of(E0)),
       I_W_per_m2: sig6(I), u_J_per_m3: sig6(uAvg(E0)), p_abs_Pa: sig6(pAbs(I)), p_refl_Pa: sig6(pRefl(I)), psi_deg: S.psi, delta_deg: S.delta };
   };
 

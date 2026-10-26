@@ -14,6 +14,7 @@ Student worksheet · Astro 2203
 - Change the frequency by dragging the marker along the spectrum, with the frequency slider, or with the left and right arrow keys. The slider is logarithmic: each step of 1 is ten times the frequency.
 - The readouts give the frequency f, the wavelength λ, the band (radio, microwave, infrared, visible, ultraviolet, X-ray or gamma ray) and, for visible light, its color.
 - The band edges are the usual conventional ones, not sharp physical limits.
+- The thin strip under the spectrum shows what gets down through Earth's atmosphere to a telescope on a high, dry mountain: solid where the air is clear, faint where only some gets through, empty where none does. The readout "Reaches the ground?" says which, and what stops the rest.
 - Record reading stores the frequency, the wavelength, the band and the strength of the wave. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>
@@ -74,7 +75,7 @@ The demo's speed of light is computed from measured constants and agrees with th
 
 1. Hydrogen gas in space gives off radio waves with a wavelength of 21.1 cm (0.211 m). What is their frequency? Radio astronomers map our galaxy with them.
 2. A microwave oven works at 2.45 × 10⁹ Hz. What is the wavelength of its microwaves, in centimeters?
-3. Earth's atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere?
+3. Earth's atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the "Reaches the ground?" readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?
 4. Your eyes see only a tiny slice of the spectrum. From your readings, roughly how many powers of ten in frequency does the whole spectrum in the demo span, and how wide is the visible slice?
 
 ## What to hand in

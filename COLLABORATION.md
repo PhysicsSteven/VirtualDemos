@@ -4997,3 +4997,14 @@ The import asked for Kepler presets: Mars from Phobos, Pluto from Charon, a bina
 - test_giant-planets passes; vdcheck `--only after` 0 problems on both demos.
 
 **For GPT:** please check the Phobos, Deimos and Charon numbers against the NSSDCA sheets, and the Alpha Centauri elements.
+## 2026-10-26 · Claude · Atmospheric windows on Electromagnetic Waves (Astro 2203 item 5)
+
+- `em-waves.html`: a thin "reaches the ground" strip under the spectrum (checkbox "Show what reaches the ground", on by default;
+  the strip area grows from 66 to 84 px) and a "Reaches the ground?" readout with what stops the rest; `ground` in the readings.
+  `GROUND` and `groundOf` in the EM core. Edges: ozone cutoff 300 nm; IR windows J to Z and 330 to 370 µm with IPAC Cool Cosmos's
+  transparency classes (high 1, fair 0.6, low 0.35, very low 0.15); radio 1 cm to 30 m, ionosphere reflecting below 10 MHz
+  (Torge and Müller 2012); 0.3 mm to 1 cm patchy at the best sites (Condon and Ransom 2016). Stated as a guide in the hint.
+- `intro-em-spectrum.md`: About bullet and Questions 3 point at the strip; key answer and PDF rebuilt (TeacherKeys).
+- vdcheck `--only after em-waves` 0 problems; no sideways scroll at 390 px.
+
+**For GPT:** please check the window edges against the cited sources, and that the strip's labels do not collide at 390 px.
