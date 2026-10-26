@@ -12,6 +12,7 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-26-moons-binary-mercury', date: '2026-10-26', title: 'Weigh Mars and Pluto, a binary star, Mercury\'s spin', text: 'The Moons view of Giant Planets, Rings and Moons now has Mars with Phobos and Deimos, and Pluto with Charon circling their shared center of mass. Kepler\'s Laws has a Binary star setup (Alpha Centauri), and its Mercury setup marks a spot on Mercury turning 3 times for every 2 orbits.', link: { href: 'demos/giant-planets.html?setup=pluto', text: 'Open Pluto and Charon' } },
   { id: '2026-10-26-astro-2203-intros', date: '2026-10-26', title: 'Three new Astro 2203 worksheets', text: 'Introductory worksheets for Finding Exoplanets (size and mass from the dip and the wobble, then a mystery planet), Tides (two bulges, spring and neap tides) and Lagrange Points (Trojan asteroids and parking spots for spacecraft), each with a How this works video.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-26-astro-2203-own-page', date: '2026-10-26', title: 'Astro 2203 has its own page again',
     text: 'Astro 2203 is back as its own course page, laid out week by week with the class dates and tests, and each week\'s required worksheet marked and listed first. Astronomy still holds every astronomy demo, with the Astro 2203 worksheets on its cards, and old Astro 2203 links still work.',

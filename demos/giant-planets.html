@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the planets' colors, the picture, the strip and the close up */
-:root { --jup: #c99a6b; --jup2: #e8d3b4; --sat: #d9c08a; --sat2: #efe2bf; --ura: #8fd0d8; --ura2: #c4ebef; --nep: #4a74d0; --nep2: #7fa2e8; --ear: #3f78c0; --ear2: #6fae6a;
+:root { --jup: #c99a6b; --jup2: #e8d3b4; --sat: #d9c08a; --sat2: #efe2bf; --ura: #8fd0d8; --ura2: #c4ebef; --nep: #4a74d0; --nep2: #7fa2e8; --ear: #3f78c0; --ear2: #6fae6a; --mar: #b5532f; --mar2: #d98a5c; --plu: #c9a98a; --plu2: #efe0cc;
   --ring: #b8a47e; --roche: #c2410c; --rigid: #7c3aed; --moon: #5b6573; --sel: #c2410c; --debris: #b4321f; --water: #2b7bb9; --space: #0b0f16; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; } }
 :root[data-theme="dark"] { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; }
@@ -88,7 +88,7 @@
       <div class="setup-card" id="setupCard" role="group" aria-label="Choose the planet and set up the picture">
         <span class="card-title" id="cardTitle">Set up</span>
         <div class="pick" id="planetBox"><label for="selPlanet">Planet</label><select id="selPlanet">
-          <option value="jupiter">Jupiter</option><option value="saturn" selected>Saturn</option><option value="uranus">Uranus</option><option value="neptune">Neptune</option></select></div>
+          <option value="jupiter">Jupiter</option><option value="saturn" selected>Saturn</option><option value="uranus">Uranus</option><option value="neptune">Neptune</option><option value="mars">Mars</option><option value="pluto">Pluto (dwarf planet)</option></select></div>
         <div id="boxPlanets">
           <label class="check"><input type="checkbox" id="chkEarth" checked><span>Show Earth for scale</span></label>
         </div>
@@ -129,6 +129,8 @@
           <button type="button" data-p="galilean" aria-pressed="false">Io, Europa, Ganymede 1:2:4</button>
           <button type="button" data-p="saturnmoons" aria-pressed="false">Enceladus and Dione 2:1</button>
           <button type="button" data-p="triton" aria-pressed="false">Triton goes backward</button>
+          <button type="button" data-p="marsmoons" aria-pressed="false">Mars weighed by Phobos</button>
+          <button type="button" data-p="pluto" aria-pressed="false">Pluto and Charon</button>
           <button type="button" data-p="io" aria-pressed="false">Io's tides heat it</button>
           <button type="button" data-p="iocircle" aria-pressed="false">Io on a circle</button>
         </div>
@@ -197,6 +199,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     saturn: { name: 'Saturn', M: 568.32e24, GM: 37.931e6, Req: 60268, Rpol: 54364, Rm: 58232, f: 0.09796, rho: 687, rot: 10.656, tilt: 26.73, aSun: 1432.041, moi: 0.210, J2: 16298e-6, Tbb: 81.0 },
     uranus: { name: 'Uranus', M: 86.811e24, GM: 5.7940e6, Req: 25559, Rpol: 24973, Rm: 25362, f: 0.02293, rho: 1270, rot: -17.24, tilt: 97.77, aSun: 2867.043, moi: 0.225, J2: 3343.43e-6, Tbb: 58.1 },
     neptune: { name: 'Neptune', M: 102.409e24, GM: 6.8351e6, Req: 24764, Rpol: 24341, Rm: 24622, f: 0.01708, rho: 1638, rot: 16.11, tilt: 28.32, aSun: 4514.953, moi: null, J2: 3411e-6, Tbb: 46.6 },
+    /* Mars and Pluto (Astro 2203, 2026-10-26), for the Moons view only: NSSDCA Mars and Pluto fact sheets (moi and J2 not given for Pluto) */
+    mars: { name: 'Mars', M: 0.64169e24, GM: 0.042828e6, Req: 3396.2, Rpol: 3376.2, Rm: 3389.5, f: 0.00589, rho: 3934, rot: 24.6229, tilt: 25.19, aSun: 227.956, moi: 0.366, J2: 1960.45e-6, Tbb: 209.8 },
+    pluto: { name: 'Pluto', M: 0.01303e24, GM: 0.000870e6, Req: 1188, Rpol: 1188, Rm: 1188, f: 0, rho: 1854, rot: -153.2928, tilt: 119.51, aSun: 5869.656, moi: null, J2: null, Tbb: 37.5 },
     earth: { name: 'Earth', M: 5.9722e24, GM: 0.39860e6, Req: 6378.137, Rpol: 6356.752, Rm: 6371.000, f: 0.003353, rho: 5513, rot: 23.9345, tilt: 23.44, aSun: 149.598, moi: 0.3308, J2: 1082.63e-6, Tbb: 254.0 },
   };
   const GIANTS = ['jupiter', 'saturn', 'uranus', 'neptune'];
@@ -231,6 +236,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       { name: 'Proteus', a: 117.647e3, P: 1.122315, e: 0.0004, R: 210, rho: null, lam: null },
       { name: 'Triton', a: 354.76e3, P: -5.876854, e: 0.000016, R: 1353.4, rho: 2050, lam: null },
     ],
+    /* NSSDCA Mars fact sheet (satellites) and Pluto fact sheet (Charon: mean distance, mass M in kg). Phobos and Deimos: mean radius
+       (abc)^(1/3) from the three axes, 13.0 × 11.4 × 9.1 and 7.8 × 6.0 × 5.1 km. Charon's mass is 12 % of Pluto's, so the two go round
+       their center of mass (drawn so); Kepler's law with its orbit gives Pluto + Charon */
+    mars: [
+      { name: 'Phobos', a: 9378, P: 0.31891, e: 0.0151, R: 11.05, rho: 1900, lam: null },
+      { name: 'Deimos', a: 23459, P: 1.26244, e: 0.0005, R: 6.20, rho: 1750, lam: null },
+    ],
+    pluto: [
+      { name: 'Charon', a: 19596, P: 6.3872, e: 0, R: 606, rho: 1700, lam: null, M: 1.586e21 },
+    ],
   };
   /* small moons by the rings (NSSDCA): a (km), mean radius (km) = (abc)^(1/3) from the three axes, rho; role: what it does to the rings */
   const RING_MOONS = {
@@ -249,10 +264,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     uranus: [['Ring 6', 41837, 41838.5, 0.6], ['Ring 5', 42234, 42236, 0.6], ['Ring 4', 42571, 42573, 0.6], ['α ring', 44718 - 4, 44718 + 4, 0.7], ['β ring', 45661 - 4, 45661 + 4, 0.7],
       ['η ring', 47176, 47177.6, 0.5], ['γ ring', 47627 - 1, 47627 + 1, 0.6], ['δ ring', 48300 - 2.5, 48300 + 2.5, 0.7], ['λ ring', 50024, 50026, 0.4], ['ε ring', 51149 - 30, 51149 + 30, 0.9],
       ['ν ring', 67300 - 1900, 67300 + 1900, 0.05], ['μ ring', 97700 - 8500, 97700 + 8500, 0.04]],
+    mars: [], pluto: [],
     neptune: [['Galle ring', 41900 - 1000, 41900 + 1000, 0.12], ['Le Verrier ring', 53200 - 50, 53200 + 50, 0.5], ['Lassell ring', 53200, 57200, 0.08], ['Arago ring', 57200 - 50, 57200 + 50, 0.3], ['Adams ring', 62933 - 7.5, 62933 + 7.5, 0.6]],
   };
   /* gaps and edges marked by one radius (NSSDCA: features narrower than 1000 km are listed by their inner edge) */
-  const RING_MARKS = { saturn: [['Encke gap', 133410], ['Keeler gap', 136487]], jupiter: [], uranus: [], neptune: [] };
+  const RING_MARKS = { saturn: [['Encke gap', 133410], ['Keeler gap', 136487]], jupiter: [], uranus: [], neptune: [], mars: [], pluto: [] };
+  /* a moon heavy enough to move its planet (Charon): the share of the separation from the planet's center to the center of mass */
+  const baryQ = (k) => { const m = MOONS[k].find((x) => x.M); return m ? m.M / (PLANETS[k].M + m.M) : 0; };
 
   /* Roche limits. A fluid moon (no strength) in a circular orbit is torn apart where GM/d³ = 0.09009 πGρ (Chandrasekhar 1969,
      Ellipsoidal Figures of Equilibrium, ch. 8, the Roche limit), so d = (4/(3 × 0.09009))^(1/3) R (ρ_P/ρ)^(1/3) = 2.455 R (ρ_P/ρ)^(1/3);
@@ -363,8 +381,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const can = $('can'), ctx = can.getContext('2d'), card = VD.setupCard($('setupCard'));
   const MOON_KM = 250;          /* the test moon's outer radius in the pictures (its fate does not depend on its size) */
   const MOON_X = 20;            /* moons drawn this many times larger than their size in the Moons view */
-  const VIEW_RINGS = { jupiter: 3.4, saturn: 3.3, uranus: 4.0, neptune: 3.2 }, VIEW_MOONS = { jupiter: 28, saturn: 22, uranus: 24.5, neptune: 16 };
-  const CONJ = { jupiter: [[0, 1], [1, 2]], saturn: [[1, 3], [0, 2]], uranus: [], neptune: [] };
+  const moonX = () => (S.planet === 'pluto' ? 1 : MOON_X);   /* Charon is big enough to draw to scale */
+  const VIEW_RINGS = { jupiter: 3.4, saturn: 3.3, uranus: 4.0, neptune: 3.2 }, VIEW_MOONS = { jupiter: 28, saturn: 22, uranus: 24.5, neptune: 16, mars: 8.2, pluto: 16.5 };
+  const CONJ = { jupiter: [[0, 1], [1, 2]], saturn: [[1, 3], [0, 2]], uranus: [], neptune: [], mars: [], pluto: [] };
   const SPEED = { planets: 3600, rings: 3600, moons: 86400, io: 21600 };
   const PRESETS = {
     giants: { mode: 'planets', planet: 'jupiter', sel: 'jupiter', earth: true, hint: 'Jupiter, Saturn, Uranus and Neptune side by side at their true sizes, with Earth for scale, seen from a little above the plane of their orbits and each with its axis at its real tilt. The bars below compare their mean densities with water. Click a planet for its numbers.' },
@@ -378,6 +397,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     galilean: { mode: 'moons', planet: 'jupiter', moon: 0, conj: true, speed: 86400, run: true, hint: 'Jupiter\'s four big moons, starting where they were at noon on 1 January 2000. Io goes round 2.007 times for each orbit of Europa, and Europa 2.015 times for each orbit of Ganymede: a 1:2:4 rhythm, the Laplace resonance. The lines mark where Io passes Europa and where Europa passes Ganymede; each pair always lines up near the same places. The three can never line up on one side of Jupiter together: λ(Io) − 3λ(Europa) + 2λ(Ganymede) stays at 180°. Kepler\'s third law with each moon gives Jupiter\'s mass.' },
     saturnmoons: { mode: 'moons', planet: 'saturn', moon: 1, conj: true, speed: 86400, run: true, hint: 'Saturn\'s mid sized moons from noon on 1 January 2000. Enceladus goes round 1.997 times for each orbit of Dione, and Mimas 2.003 times for each orbit of Tethys. Dione\'s regular tugs keep Enceladus\'s orbit slightly out of round, and the flexing tides warm the ocean under its ice that feeds its geysers. Titan, the big one, holds most of the mass.' },
     triton: { mode: 'moons', planet: 'neptune', moon: 1, conj: false, speed: 86400, run: true, hint: 'Triton goes round Neptune backward, against Neptune\'s spin, the only large moon in the solar system that does. A moon born from the disk round its planet would go the same way as the planet spins, so Triton was most likely captured, perhaps from the Kuiper belt. Its density, 2.05 g/cm³, is close to Pluto\'s 1.85 g/cm³ (NASA). (Their starting places are spread out for clarity, not taken from a date.)' },
+    marsmoons: { mode: 'moons', planet: 'mars', moon: 0, conj: false, speed: 3600, run: true, hint: 'Mars has two small moons, Phobos and Deimos, about 22 and 12 km across (drawn 20 times larger), probably captured asteroids or pieces thrown up by a giant impact. Phobos goes round in 7 h 39 min, faster than Mars turns (24.6 h), so from Mars it rises in the west and sets in the east, twice a day; Mars\'s tides drag it slowly inward. Kepler\'s third law with Phobos\'s orbit gives Mars\'s mass, 6.43 × 10²³ kg, within 0.2 % of NASA\'s value. (Starting places spread out for clarity, not taken from a date.)' },
+    pluto: { mode: 'moons', planet: 'pluto', moon: 0, conj: false, speed: 21600, run: true, hint: 'Pluto and its largest moon Charon, both to scale. Charon has 12 % of Pluto\'s mass (NASA: 1.586 × 10²¹ kg against 1.303 × 10²² kg), so the two go round a center of mass 2126 km from Pluto\'s center, outside Pluto itself, and are often called a double dwarf planet. Each keeps the same face toward the other, turning once every 6.39 days. Kepler\'s third law with Charon\'s orbit gives the mass of Pluto and Charon together, 1.462 × 10²² kg. Pluto has four more tiny moons, left out here.' },
     io: { mode: 'io', planet: 'jupiter', e: 0.004, exag: true, speed: 21600, run: true, hint: 'Io on its slightly oval orbit (e = 0.004, drawn 60 times more oval). Its distance from Jupiter changes by ±0.4 %, so the tide that stretches it changes by ±1.2 %, and the direction of Jupiter seen from Io rocks back and forth by ±0.46°. The flexing heats Io: with Io\'s measured k₂/Q this gives about 9 × 10¹³ W, close to the more than 1.0 × 10¹⁴ W Io sends out, which keeps hundreds of volcanoes going.' },
     iocircle: { mode: 'io', planet: 'jupiter', e: 0, exag: true, speed: 21600, run: true, hint: 'If Europa and Ganymede were taken away, Io\'s orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = 0.004 pumped up.' },
   };
@@ -393,7 +414,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), surface: g('--surface'),
       ring: g('--ring'), roche: g('--roche'), rigid: g('--rigid'), moon: g('--moon'), sel: g('--sel'), debris: g('--debris'), water: g('--water'),
-      jupiter: [g('--jup'), g('--jup2')], saturn: [g('--sat'), g('--sat2')], uranus: [g('--ura'), g('--ura2')], neptune: [g('--nep'), g('--nep2')], earth: [g('--ear'), g('--ear2')],
+      jupiter: [g('--jup'), g('--jup2')], saturn: [g('--sat'), g('--sat2')], uranus: [g('--ura'), g('--ura2')], neptune: [g('--nep'), g('--nep2')], earth: [g('--ear'), g('--ear2')], mars: [g('--mar'), g('--mar2')], pluto: [g('--plu'), g('--plu2')],
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3.dark() };
   }
 
@@ -440,7 +461,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const lat of BANDS[k] || []) { ctx.beginPath(); ctx.arc(cx, cy, R * Math.cos(lat * Math.PI / 180), 0, 2 * Math.PI); ctx.stroke(); }
     ctx.restore();
   }
-  const BANDS = { jupiter: [-30, -20, -13, -7, 7, 13, 20, 30, 40], saturn: [-35, -20, -10, 10, 20, 35, 50], uranus: [-20, 20], neptune: [-25, 25], earth: [] };
+  const BANDS = { jupiter: [-30, -20, -13, -7, 7, 13, 20, 30, 40], saturn: [-35, -20, -10, 10, 20, 35, 50], uranus: [-20, 20], neptune: [-25, 25], earth: [], mars: [], pluto: [] };
   function shade(hex, k) { const n = parseInt(hex.replace('#', ''), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255, t = k < 0 ? 0 : 255, a = Math.abs(k);
     const h = (v) => Math.round(v + (t - v) * a).toString(16).padStart(2, '0'); return `#${h(r)}${h(g)}${h(b)}`; }
 
@@ -567,26 +588,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return out;
   }
   function drawMoons() {
-    const p = P(S.planet), o = moonsView(), pp = proj(), ms = MOONS[S.planet];
+    const p = P(S.planet), o = moonsView(), pp = proj(), ms = MOONS[S.planet], q = baryQ(S.planet), X = moonX();
+    /* with a heavy moon the planet circles the center of mass too: everything is drawn from that center */
+    const hv = ms.findIndex((m) => m.M), zc = hv < 0 ? null : moonAt(ms[hv], S.t, hv), pcx = o.cx - (zc ? q * zc.x * o.s : 0), pcy = o.cy + (zc ? q * zc.y * o.s : 0), mk = 1 - q;
+    if (zc) { ctx.save(); ctx.strokeStyle = K.line; ctx.lineWidth = 1.1 * pp; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(o.cx, o.cy, q * ms[hv].a * o.s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
     for (const r of RINGS[S.planet]) { if (r[3] < 0.3) continue; ctx.save(); ctx.strokeStyle = K.ring; ctx.globalAlpha = 0.7; ctx.lineWidth = Math.max(1, (r[2] - r[1]) * o.s); ctx.beginPath(); ctx.arc(o.cx, o.cy, (r[1] + r[2]) / 2 * o.s, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
-    poleDisk(S.planet, o.cx, o.cy, p.Req * o.s);
+    poleDisk(S.planet, pcx, pcy, p.Req * o.s);
+    if (zc) { ctx.save(); ctx.strokeStyle = K.sel; ctx.lineWidth = 2 * pp; const c = 6 * pp; ctx.beginPath(); ctx.moveTo(o.cx - c, o.cy); ctx.lineTo(o.cx + c, o.cy); ctx.moveTo(o.cx, o.cy - c); ctx.lineTo(o.cx, o.cy + c); ctx.stroke(); ctx.restore();
+      const L = Math.hypot(zc.x, zc.y) || 1, ux = zc.x / L, uy = -zc.y / L;   /* the words go on Charon's side, away from Pluto */
+      label('center of mass', o.cx + ux * 16 * pp, o.cy + uy * 16 * pp, { a: ux < 0 ? 'right' : 'left', col: K.sel, w: 600, size: 10 }); }
     if (S.conj && ms[0].lam != null) CONJ[S.planet].forEach(([i, j], n) => { const ls = conjunctions(i, j, S.t, 6), r = ms[j].a * o.s * 1.06;
       ls.forEach((l, q) => { const th = l * Math.PI / 180; ctx.save(); ctx.strokeStyle = n ? K.rigid : K.roche; ctx.globalAlpha = 0.85 - q * 0.12; ctx.lineWidth = 1.5 * pp; ctx.setLineDash([5, 4]);
         ctx.beginPath(); ctx.moveTo(o.cx + p.Req * o.s * Math.cos(th), o.cy - p.Req * o.s * Math.sin(th)); ctx.lineTo(o.cx + r * Math.cos(th), o.cy - r * Math.sin(th)); ctx.stroke(); ctx.restore(); });
       if (ls.length) label(`${ms[i].name} passes ${ms[j].name}`, 16 * pp, H - (40 + 16 * n) * pp, { col: n ? K.rigid : K.roche, w: 700, size: 11 }); });
     ms.forEach((m, i) => {
       ctx.save(); ctx.strokeStyle = i === S.moon ? K.sel : K.line; ctx.lineWidth = (i === S.moon ? 1.6 : 1.1) * pp; ctx.beginPath();
-      for (let q = 0; q <= 180; q++) { const z = moonAt(m, q / 180 * Math.abs(m.P) * DAY, i), x = o.cx + z.x * o.s, y = o.cy - z.y * o.s; q ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      const sk = m.M ? mk : 1, ox = m.M ? o.cx : pcx, oy = m.M ? o.cy : pcy;
+      for (let n = 0; n <= 180; n++) { const z = moonAt(m, n / 180 * Math.abs(m.P) * DAY, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s; n ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
       ctx.stroke(); ctx.restore();
-      const z = moonAt(m, S.t, i), x = o.cx + z.x * o.s, y = o.cy - z.y * o.s, r = Math.max(2.5 * pp, m.R * MOON_X * o.s);
+      const z = moonAt(m, S.t, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s, r = Math.max(2.5 * pp, m.R * X * o.s);
       ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#d6dde6'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = i === S.moon ? K.sel : shade('#5b6573', 0); ctx.lineWidth = (i === S.moon ? 2.5 : 1) * pp; ctx.stroke();
       label(m.name, x + r + 4, y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
     });
     scaleBar(o.s, 16 * pp, H - 14 * pp, 150 * pp);
-    const capL = narrow() ? [`${p.name}'s moons to scale, drawn ${MOON_X} times larger`, 'gold mostly rock, tan rock and ice, white mostly ice',
+    const big = X === 1 ? 'moons to scale too' : `moons drawn ${X} times larger`;
+    const capL = narrow() ? [`${p.name}'s orbits to scale, ${big}`, 'gold mostly rock, tan rock and ice, white mostly ice',
       ms[0].lam != null ? 'Starting places: noon, 1 January 2000' : 'Starting places spread out, not from a date'] :
-      [`${p.name} and its orbits to scale, seen from above. Moons drawn ${MOON_X} times larger.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
+      [`${p.name} and its orbits to scale, seen from above, ${big}.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
       ms[0].lam != null ? 'Starting places: noon, 1 January 2000 (JPL mean elements)' : 'Starting places spread out for clarity, not from a date'];
     capL.forEach((t, i) => label(t, 16 * pp, (18 + 15 * i) * pp, { col: K.muted, w: 400, size: 10 }));
     moonsHit = o;
@@ -707,9 +736,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       b.target = [0, 0, 0]; b.dist = VIEW_RINGS[S.planet] * 3.6;
     } else if (S.mode === 'moons') {
       const p = P(S.planet), R = p.Req; b.pl = makePlanet3(S3, S.planet, 1); grp.add(b.pl);
-      const big = RINGS[S.planet].filter((r) => r[3] > 0.3), out = Math.max(...big.map((r) => r[2])); grp.add(ringMesh(S.planet, R, out));
-      b.moons = MOONS[S.planet].map((m, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(m.R * MOON_X / R, 24, 16), new THREE.MeshStandardMaterial({ color: m.rho == null ? 0xb9c0c8 : m.rho > 2800 ? 0xd9b45a : m.rho > 1400 ? 0xb3a996 : 0xe3e9f0, roughness: 0.85 }));
-        const pts = []; for (let q = 0; q <= 180; q++) { const z = moonAt(m, q / 180 * Math.abs(m.P) * DAY, i); pts.push(new THREE.Vector3(z.x / R, z.y / R, 0)); }
+      const big = RINGS[S.planet].filter((r) => r[3] > 0.3); if (big.length) grp.add(ringMesh(S.planet, R, Math.max(...big.map((r) => r[2]))));
+      const q = baryQ(S.planet);
+      b.moons = MOONS[S.planet].map((m, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(m.R * moonX() / R, 24, 16), new THREE.MeshStandardMaterial({ color: m.rho == null ? 0xb9c0c8 : m.rho > 2800 ? 0xd9b45a : m.rho > 1400 ? 0xb3a996 : 0xe3e9f0, roughness: 0.85 }));
+        const sk = m.M ? 1 - q : 1, pts = []; for (let n = 0; n <= 180; n++) { const z = moonAt(m, n / 180 * Math.abs(m.P) * DAY, i); pts.push(new THREE.Vector3(sk * z.x / R, sk * z.y / R, 0)); }
         const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x7d8796, transparent: true, opacity: 0.7 }));
         const lab = VD3K.label(m.name, { size: VIEW_MOONS[S.planet] * 0.06, color: '#e3e8ef' }); grp.add(s, ln, lab); return { s, ln, lab }; });
       b.target = [0, 0, 0]; b.dist = VIEW_MOONS[S.planet] * 3.4;
@@ -739,7 +769,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         b.stripe.geometry.attributes.position.needsUpdate = true; }
     } else if (S.mode === 'moons') {
       const p = P(S.planet), R = p.Req; b.pl.spin(2 * Math.PI * S.t / (p.rot * HOUR));
-      MOONS[S.planet].forEach((m, i) => { const z = moonAt(m, S.t, i), q = b.moons[i]; q.s.position.set(z.x / R, z.y / R, 0); q.lab.position.set(z.x / R, z.y / R, m.R * MOON_X / R + VIEW_MOONS[S.planet] * 0.03);
+      const bq = baryQ(S.planet), ms = MOONS[S.planet], hv = ms.findIndex((m) => m.M), zc = hv < 0 ? null : moonAt(ms[hv], S.t, hv), px = zc ? -bq * zc.x / R : 0, py = zc ? -bq * zc.y / R : 0;
+      b.pl.position.set(px, py, 0);
+      ms.forEach((m, i) => { const z = moonAt(m, S.t, i), q = b.moons[i], sk = m.M ? 1 - bq : 1, ox = m.M ? 0 : px, oy = m.M ? 0 : py;
+        q.s.position.set(ox + sk * z.x / R, oy + sk * z.y / R, 0); q.ln.position.set(m.M ? 0 : px, m.M ? 0 : py, 0); q.lab.position.set(ox + sk * z.x / R, oy + sk * z.y / R, m.R * moonX() / R + VIEW_MOONS[S.planet] * 0.03);
         q.ln.material.color.set(i === S.moon ? 0xfb923c : 0x7d8796); q.lab.material.color.set(i === S.moon ? 0xfb923c : 0xffffff); });
     } else {
       const io = MOONS.jupiter[0], J = P('jupiter'), st = ioState(), ex = exagE(), aR = io.a / J.Req; b.pl.spin(2 * Math.PI * S.t / (J.rot * HOUR));
@@ -754,7 +787,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* words over the picture */
     const pp = proj();
     if (S.mode === 'rings') label(`${P(S.planet).name}'s rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
-    if (S.mode === 'moons') label(`Orbits to scale; moons drawn ${MOON_X} times larger`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+    if (S.mode === 'moons') label(moonX() === 1 ? 'Orbits and moons to scale, round the center of mass' : `Orbits to scale; moons drawn ${moonX()} times larger`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
     if (S.mode === 'planets') label('True sizes and tilts; bands and colors are a painting', 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
     if (S.mode === 'io') label(`Io drawn ${f(0.42 * P('jupiter').Req / MOONS.jupiter[0].R, 0)} times larger; ${S.exag ? 'its orbit and stretch exaggerated' : 'orbit to scale'}`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
   }
@@ -781,10 +814,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       o.push(dd('Inner edge of the bright rings', `${fmt(r0, 0)} km, period ${f(kepPeriod(p.GM, r0) / HOUR, 2)} h`, 'wide'), dd('Outer edge', `${fmt(r1, 0)} km, period ${f(kepPeriod(p.GM, r1) / HOUR, 2)} h`, 'wide'));
       if (S.planet === 'saturn' && S.res) o.push(dd('2 turns per Mimas orbit', S.blind ? hid : `${fmt(ilr21(p, MOONS.saturn[0].P), 0)} km (Kepler alone ${fmt(kepler21(MOONS.saturn[0].a), 0)} km)`, 'wide'));
     } else if (S.mode === 'moons') {
-      const p = P(S.planet), ms = MOONS[S.planet], m = ms[S.moon], GM = gmFromOrbit(m.a, Math.abs(m.P) * DAY);
+      const p = P(S.planet), ms = MOONS[S.planet], m = ms[S.moon], GM = gmFromOrbit(m.a, Math.abs(m.P) * DAY), both = m.M ? `${p.name} + ${m.name}` : 'Planet';
       o.push(dd('Moon', m.name), dd('Distance a', `${fmt(m.a, 0)} km`), dd('a in planet radii', f(m.a / p.Req, 2)), dd('Period P', `${f(Math.abs(m.P), 4)} days${m.P < 0 ? ', backward' : ''}`),
-        dd('Planet mass from this orbit', S.blind ? hid : `${sci(GM * 1e9 / G, 4)} kg`), dd('Planet mass, NASA', `${sci(p.M, 4)} kg`),
+        dd(`${both} mass from this orbit`, S.blind ? hid : `${sci(GM * 1e9 / G, 4)} kg`), dd(`${both} mass, NASA`, `${sci(p.M + (m.M || 0), 4)} kg`),
         dd('Density', m.rho == null ? '—' : `${f(m.rho / 1000, 2)} g/cm³`), dd('Made of (a rough guide)', kind(m.rho)));
+      if (m.M) o.push(dd(`${m.name}'s mass, NASA`, `${sci(m.M, 4)} kg`), dd(`Center of mass from ${p.name}'s center`, S.blind ? hid : `${fmt(baryQ(S.planet) * m.a, 0)} km = ${f(baryQ(S.planet) * m.a / p.Req, 2)} R`));
       if (S.moon > 0) o.push(dd(`Period ÷ ${ms[S.moon - 1].name}'s`, f(Math.abs(m.P / ms[S.moon - 1].P), 3)));
       if (S.planet === 'jupiter') o.push(dd('λ(Io) − 3λ(Europa) + 2λ(Ganymede)', `${f(laplaceAngle(meanLon(ms[0], S.t), meanLon(ms[1], S.t), meanLon(ms[2], S.t)), 1)}°`, 'wide'));
     } else {
@@ -813,6 +847,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('boxPlanets').hidden = S.mode !== 'planets'; $('boxRings').hidden = S.mode !== 'rings'; $('boxMoons').hidden = S.mode !== 'moons'; $('boxIo').hidden = S.mode !== 'io';
     $('planetBox').hidden = S.mode === 'io' || S.mode === 'planets'; $('moonsSec').hidden = S.mode !== 'moons';
     $('cardTitle').textContent = { planets: 'The four giants', rings: 'Rings and a test moon', moons: 'Moons', io: 'Io\'s tides' }[S.mode];
+    for (const op of $('selPlanet').options) op.hidden = op.disabled = S.mode !== 'moons' && !GIANTS.includes(op.value);
     $('selPlanet').value = S.planet; $('chkEarth').checked = S.earth;
     $('sRho').value = S.rho; $('oRho').textContent = `${f(S.rho / 1000, 2)} g/cm³`; $('sDist').value = S.dist; $('oDist').textContent = `${f(S.dist, 2)} R`;
     for (const b of document.querySelectorAll('[data-rho]')) b.setAttribute('aria-pressed', String(+b.dataset.rho === S.rho));
@@ -825,10 +860,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const MODEL = {
     planets: 'Sizes, masses, densities, spins, flattening and tilts are NASA\'s. Each planet is drawn as an oblate spheroid with its equatorial and polar radii, seen from 12° above the plane of its orbit with its axis tipped toward the right. A planet of uniform density spun as fast would flatten by 5q/4, with q = ω²a³/GM its spin compared with its gravity at the equator; the real giants flatten less because their mass is packed toward the center. Bands, colors and the turning spot are a painting.',
     rings: 'Ring radii are NASA\'s; their brightness in the picture is a drawing choice. Every ring particle and moon goes round on a circle at its Kepler speed, ω = √(GM/r³), with the planet\'s bulge left out (it changes the periods by under 1 %). The test moon is a pile of 200 equal frictionless balls that bounce off each other with some loss and pull on each other by gravity, in Hill\'s frame moving with the moon; the planet\'s tide and the turning of the frame are taken to first order in the moon\'s size, and its pieces are placed along the orbit by their distance in that frame. Whether such a moon survives depends only on its distance in units of R(ρ_planet/ρ_moon)^(1/3), not on its size. This pile holds together for at least 8 orbits at 1.80 of those units and comes apart within 3 orbits at 1.78 or closer, between a rigid moon (1.44) and a fluid one (2.455, Chandrasekhar): a pile of touching balls resists being stretched a little, so it survives somewhat inside the fluid limit. A real moon\'s strength puts its breakup somewhere in that range. The density uses the volume inside the pile\'s outer surface. The 2:1 place with Mimas solves 2Ω − κ = 2n(Mimas) with Saturn\'s J₂ included and J₄ left out.',
-    moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.1 %). Pairs line up (conjunctions) where their mean longitudes agree.',
+    moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.2 %). Charon is the exception: it has 12 % of Pluto\'s mass, so Pluto and Charon both circle their center of mass and Kepler\'s law gives their total mass. Mars and Pluto are drawn as round balls; Pluto\'s four small moons are left out. Pairs line up (conjunctions) where their mean longitudes agree.',
     io: 'Io turns once per orbit at a steady rate, but on an oval orbit it speeds up and slows down, and its distance changes. The tide that stretches it goes as 1/r³, so it swings by ±3e over each orbit, and Jupiter seen from Io rocks back and forth by ±2e radians: the bulge moves through Io\'s rock and heats it. The heating is Ė = (21/2)(k₂/Q) G M² R⁵ n e²/a⁶ (Murray and Dermott 1999, eq. 4.192), for a moon locked to its planet, with Io\'s measured k₂/Q = 0.015 ± 0.003, so the answer carries that ±20 %. The heating goes as e², so e = 0 gives none. In the picture the orbit is drawn 60 times more oval and Io\'s stretch and sway are exaggerated; the readouts are not.',
   };
-  function setMode(m) { S.mode = m; S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
+  function setMode(m) { S.mode = m; if (m !== 'moons' && !GIANTS.includes(S.planet)) S.planet = 'saturn'; S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
   const custom = () => { S.preset = 'custom'; };
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.planet = c.planet || S.planet; if (c.sel) S.sel = c.sel; if (c.earth != null) S.earth = c.earth;

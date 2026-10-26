@@ -203,6 +203,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="ceres" aria-pressed="false">Ceres</button>
           <button type="button" data-p="apophis" aria-pressed="false">Apophis</button>
           <button type="button" data-p="pluto" aria-pressed="false">Pluto</button>
+          <button type="button" data-p="alphacen" aria-pressed="false">Binary star</button>
           <button type="button" data-p="circle" aria-pressed="false">Circular orbit</button>
           <button type="button" data-p="escape" aria-pressed="false">Escape</button>
         </div>
@@ -638,7 +639,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     mars:    { a: 1.5237, e: 0.0934, at: 'peri', spd: 0.28,
                hint: 'e = 0.093 is enough to pull the foci apart. Mars moves (1 + e)/(1 − e) = 1.21 times faster at perihelion than at aphelion.' },
     mercury: { a: 0.3871, e: 0.2056, at: 'peri', spd: 0.04,
-               hint: 'The most eccentric planet. Watch the wedges: thin and long near aphelion, short and wide near perihelion, yet all equal in area.' },
+               hint: 'The most eccentric planet. Watch the wedges: thin and long near aphelion, short and wide near perihelion, yet all equal in area. The line on Mercury marks one spot on its surface: Mercury turns 3 times for every 2 orbits (58.65 days per turn, 87.97 days per orbit). The spot faces the Sun at this perihelion, faces away at the next, and faces the Sun again after two orbits, so one day from noon to noon on Mercury lasts 176 Earth days.' },
     halley:  { a: 17.8, e: 0.967, at: 'aph', spd: 9,
                hint: 'Launched at aphelion, 35 AU out, at under 1 km/s. It spends most of its 75 years far away and whips around the Sun in a few months.' },
     /* asteroids and Pluto (Astro 2203, 2026-10-25): a and e from the JPL Small Body Database, osculating elements at epoch
@@ -651,6 +652,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
                hint: 'A near Earth asteroid about 340 m across. Its orbit crosses Earth\u2019s: it comes inside 1 AU at perihelion and goes outside it at aphelion.' },
     pluto:   { a: 39.59, e: 0.2518, at: 'peri', spd: 30,
                hint: 'A dwarf planet of the Kuiper belt. Near perihelion it comes closer to the Sun than Neptune (30 AU), though the two never meet.' },
+    /* Alpha Centauri B seen from A (Astro 2203, 2026-10-26): Akeson et al. 2021, AJ 162, 14: P = 79.762 yr, a = 17.493"
+       at parallax 750.81 mas = 23.299 AU, e = 0.51947, masses 1.0788 + 0.9092 = 1.988 M☉ (so a³/P² = 1.988, as Kepler's law
+       needs). M sets the star mass; the next preset without one puts it back to 1 M☉ */
+    alphacen: { a: 23.299, e: 0.51947, at: 'peri', spd: 8, M: 1.988,
+               hint: 'Alpha Centauri, the nearest Sun like stars, 4.37 light years away. Both stars circle their center of mass; seen from A, star B traces this ellipse once every 79.76 years. For two stars the third law uses their total mass, 1.08 + 0.91 = 1.99 Suns: P² = a³/M with a = 23.30 AU (Akeson and others, 2021).' },
     circle:  { r: 1.0, f: 1, spd: 0.15,
                hint: 'Launch speed equals the circular speed, so the arrow tip sits on the gold circle and the two foci merge at the star. Try 0.9 or 1.1 times it.' },
     escape:  { r: 1.0, f: 1.2 * Math.SQRT2, spd: 0.2,
@@ -1056,6 +1062,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     };
     if (S.B) drawBody(S.B, T.pos);
     drawBody(A, T.neg);
+    spinMark(ctx, T, ps, toPx);
 
     // ruler: two picked points, the line between them and its length
     if (S.ruler.on) {
@@ -1287,7 +1294,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('spd').value = Math.log10(v);
     R.spdOut.textContent = sig(v, 2) + ' yr/s';
   }
+  // a preset with its own mass (the binary star) sets M; the next preset without one puts M back to 1
+  function setMass(Mn) {
+    S.kw /= Math.sqrt(Mn / S.M); S.M = Mn;
+    $('mass').value = Math.log10(Mn); R.massOut.textContent = Mn.toFixed(2) + ' M☉';
+  }
   function loadPreset(name) {
+    const M = PRESETS[name].M || (S.massPreset ? 1 : S.M);
+    if (M !== S.M) setMass(M);
+    S.massPreset = !!PRESETS[name].M;
     S.launch = presetState(name);
     setSpeed(PRESETS[name].spd / Math.sqrt(S.M));
     relaunch();
@@ -1315,7 +1330,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       relaunch();
       if (autoView) fitView(false, false);
     }
-    setPresetUI(null);
+    setPresetUI(null); S.massPreset = false;
     schedule();
   });
   $('keep').addEventListener('change', (e) => { S.keep = e.target.checked; });
@@ -1774,6 +1789,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
   }
 
+  /* Mercury's 3:2 spin (Mercury preset only): a fixed spot on the surface, turning at a steady rate, 3 turns per 2 orbits
+     (sidereal rotation 58.646 d, orbit 87.969 d). It faces the star at the launch perihelion. proj maps AU to the screen,
+     so the same line serves the flat and 3D views */
+  function spinMark(ctx, T, ps, proj) {
+    const A = S.A;
+    if (S.preset !== 'mercury' || A.done) return;
+    const P = Math.pow(PRESETS.mercury.a, 1.5) / Math.sqrt(S.M), phi = Math.PI + 1.5 * TAU * S.t / P;
+    const p = proj(A.x, A.y), q = proj(A.x + 1e-3 * Math.cos(phi), A.y + 1e-3 * Math.sin(phi));
+    const L = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1, ux = (q[0] - p[0]) / L, uy = (q[1] - p[1]) / L, r = 15 * ps;
+    ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, TAU); ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + ux * r, p[1] + uy * r); ctx.lineWidth = 2.4 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p[0] + ux * r, p[1] + uy * r, 3 * ps, 0, TAU); ctx.fillStyle = T.ink; ctx.fill();
+    const n = S.t / P;
+    text(ctx, T, n.toFixed(2) + ' orbits · ' + (1.5 * n).toFixed(2) + ' turns', p[0], p[1] + r + 6 * ps, 'center', 'top', T.ink, 10 * ps, 600, true);
+  }
+
   // ---------- 3D view (three.js through demos/lib/vd3kit.js) ----------
   // The same simulation seen in space: the orbit plane at a tilt with its AU grid, the predicted path, the trail, the swept wedges
   // as see through sectors, the foci and the axis, the speed circles, the launch arrow and the velocity now. Every position is the
@@ -2088,6 +2119,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         text(ctx, T, String(i + 1), q[0] + 8 * ps, q[1] - 8 * ps, 'left', 'bottom', hot ? T.accent : T.ink, fs, 700);
       });
     }
+    spinMark(ctx, T, ps, P3);
     // where a planet has left the picture
     for (const [b, col] of [[S.B, T.pos], [A, T.neg]]) {
       if (!b) continue; const p = P3(b.x, b.y);

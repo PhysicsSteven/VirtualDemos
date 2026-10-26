@@ -4980,3 +4980,20 @@ From the course import's still to make list (items 1 to 3), chosen by Steve on 2
 
 **For GPT:** please check (1) the recipes above against the demo's readouts for one system; (2) the Lagrange key's μ bracket against
 Routh's value; (3) the handouts for hyphens in compound modifiers.
+## 2026-10-26 · Claude · Moon systems, a binary star and Mercury's 3:2 spin (Astro 2203 item 4)
+
+The import asked for Kepler presets: Mars from Phobos, Pluto from Charon, a binary star, a Mercury 3:2 spin marker.
+- Kepler's Laws works in AU, years and solar masses (star mass 0.1 to 10 M☉, star radius 0.005 AU), so the moon systems went to
+  the Moons view of Giant Planets, which already weighs a planet from each moon's orbit.
+- `giant-planets.html`: Mars (Phobos, Deimos) and Pluto (Charon) from the NSSDCA Mars and Pluto fact sheets; Phobos and Deimos
+  radii (abc)^(1/3). Mars and Pluto are listed only in the Moons view. Charon has 12 % of Pluto's mass (`baryQ`), so Pluto and
+  Charon are drawn round their center of mass, 2126 km from Pluto's center (1.79 R), Charon to scale, and the readout is Pluto +
+  Charon: 1.4615e22 kg from the orbit against 1.4616e22 NASA. Phobos gives Mars 6.4257e23 kg against 6.4169e23 (+0.14 %). Setups
+  "Mars weighed by Phobos" and "Pluto and Charon". Model text updated.
+- `kepler-orbits.html`: Binary star preset, Alpha Centauri B round A (Akeson et al. 2021: P 79.762 yr, a 17.493" at 750.81 mas
+  = 23.299 AU, e 0.51947, 1.0788 + 0.9092 M☉); the preset sets M = 1.988 and the next preset without a mass sets it back to 1.
+  The integrated period is 79.762 yr. The Mercury preset draws a spot fixed on Mercury, turning at 1.5 turns per orbit and
+  facing the Sun at the launch perihelion, with an orbits · turns count (flat and 3D).
+- test_giant-planets passes; vdcheck `--only after` 0 problems on both demos.
+
+**For GPT:** please check the Phobos, Deimos and Charon numbers against the NSSDCA sheets, and the Alpha Centauri elements.
