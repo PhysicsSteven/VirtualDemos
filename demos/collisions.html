@@ -191,6 +191,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-m="table" aria-pressed="false">2D table</button>
           <button type="button" data-m="explode" aria-pressed="false">Explosion</button>
           <button type="button" data-m="cradle" aria-pressed="false">Newton's cradle</button>
+          <button type="button" data-m="sandbox" aria-pressed="false">Sandbox</button>
         </div>
         <p class="hint scene-link">Force during contact and impulse: open <a href="impulse.html">Impulse and Momentum</a>.</p>
         <div class="chips" id="presets">
@@ -199,6 +200,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="heavy" aria-pressed="false">Heavy hits light</button>
           <button type="button" data-p="explode" aria-pressed="false">Explosion</button>
           <button type="button" data-p="glance" aria-pressed="false">Glancing 2D collision: 90°</button>
+        </div>
+        <div class="chips" id="sbcRigs" role="group" aria-label="Ready made rows of carts" hidden>
+          <button type="button" data-r="three" aria-pressed="true">Three carts</button>
+          <button type="button" data-r="row" aria-pressed="false">Row of five</button>
+          <button type="button" data-r="heavy" aria-pressed="false">Heavy pins light</button>
+          <button type="button" data-r="velcro" aria-pressed="false">Velcro train</button>
+          <button type="button" data-r="bounce" aria-pressed="false">Losing bounce</button>
+          <button type="button" data-r="empty" aria-pressed="false">Empty track</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -608,11 +617,68 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     rows.forEach((r, i) => L.push([i + 1, ...CSV_COLS.map(([, k]) => csvCell(r[k]))].join(',')));
     return L.join('\n') + '\n';
   }
+  // ---------- Sandbox: any number of carts on one track between two end stops ----------
+  // A state is { carts: [{ id, m, L, x, v, velcro }], glue: [[id, id]], e, X0, X1 }: x is a cart's center, L its length, X0 and X1 the
+  // faces of the end stops. Carts glued together (velcro met another cart) move as one body. Between events every body moves at a
+  // constant velocity, so the next contact time is found exactly; then the pair (or a body and an end stop) collides in an instant:
+  // two bodies by collide1D with the track's e (e = 0 and glued when either facing end carries velcro), a body at an end stop as
+  // v′ = −e v. Carts that touch with a closing speed below SBC_EPS after a collision are given their common velocity, so a row of
+  // touching carts settles in a finite number of steps instead of an endless string of ever smaller bounces.
+  const SBC_EPS = 1e-6;
+  function sbcBodies(st) {
+    const cs = st.carts.slice().sort((a, b) => a.x - b.x), glued = new Set(st.glue.map(([a, b]) => `${Math.min(a, b)}|${Math.max(a, b)}`));
+    const out = [];
+    for (const c of cs) {
+      const last = out[out.length - 1], prev = last && last.carts[last.carts.length - 1];
+      if (prev && glued.has(`${Math.min(prev.id, c.id)}|${Math.max(prev.id, c.id)}`)) last.carts.push(c);
+      else out.push({ carts: [c] });
+    }
+    for (const b of out) { b.m = b.carts.reduce((s, c) => s + c.m, 0); b.v = b.carts.reduce((s, c) => s + c.m * c.v, 0) / b.m; b.lo = b.carts[0].x - b.carts[0].L / 2; b.hi = b.carts[b.carts.length - 1].x + b.carts[b.carts.length - 1].L / 2; }
+    return out;
+  }
+  // advance by dt; returns the new state and the collisions on the way: { t, kind: 'carts' | 'stop', ids, stick, dK }
+  function sbcAdvance(st0, dt, maxEvents) {
+    const st = { ...st0, carts: st0.carts.map((c) => ({ ...c })), glue: st0.glue.map((g) => g.slice()) }, ev = [];
+    let tNow = 0, guard = maxEvents || 20000;
+    const move = (h) => { for (const c of st.carts) c.x += c.v * h; tNow += h; };
+    while (guard-- > 0) {
+      const B = sbcBodies(st); let tb = dt - tNow, hit = null;
+      for (let i = 0; i + 1 < B.length; i++) {
+        const close = B[i].v - B[i + 1].v; if (!(close > 0)) continue;
+        const tc = Math.max(0, B[i + 1].lo - B[i].hi) / close;
+        if (tc <= tb) { tb = tc; hit = ['carts', i]; }
+      }
+      if (B.length && B[0].v < 0) { const tc = Math.max(0, B[0].lo - st.X0) / -B[0].v; if (tc <= tb) { tb = tc; hit = ['stop', 0]; } }
+      if (B.length && B[B.length - 1].v > 0) { const q = B[B.length - 1], tc = Math.max(0, st.X1 - q.hi) / q.v; if (tc <= tb) { tb = tc; hit = ['stop', B.length - 1]; } }
+      if (!hit) { move(dt - tNow); break; }
+      move(tb);
+      const setV = (b, v) => { for (const c of b.carts) c.v = v; };
+      if (hit[0] === 'carts') {
+        const a = B[hit[1]], b = B[hit[1] + 1], ca = a.carts[a.carts.length - 1], cb = b.carts[0], K0 = 0.5 * a.m * a.v * a.v + 0.5 * b.m * b.v * b.v;
+        const stick = !!(ca.velcro || cb.velcro);
+        let [va, vb] = collide1D(a.m, b.m, a.v, b.v, stick ? 0 : st.e);
+        if (stick || va - vb > -SBC_EPS) { const V = (a.m * a.v + b.m * b.v) / (a.m + b.m); va = vb = V; }
+        if (stick) st.glue.push([ca.id, cb.id]);
+        setV(a, va); setV(b, vb);
+        /* the facing ends exactly touch: no drift into each other from rounding */
+        const gap = cb.x - cb.L / 2 - (ca.x + ca.L / 2); if (gap < 0) for (const c of b.carts) c.x -= gap;
+        ev.push({ t: tNow, kind: 'carts', ids: [ca.id, cb.id], stick, dK: 0.5 * a.m * va * va + 0.5 * b.m * vb * vb - K0 });
+      } else {
+        const b = B[hit[1]], K0 = 0.5 * b.m * b.v * b.v; let v = -st.e * b.v; if (Math.abs(v) < SBC_EPS) v = 0;
+        setV(b, v);
+        ev.push({ t: tNow, kind: 'stop', ids: b.carts.map((c) => c.id), stick: false, dK: 0.5 * b.m * v * v - K0 });
+      }
+    }
+    return { st, ev };
+  }
+  const sbcMomentum = (st) => st.carts.reduce((s, c) => s + c.m * c.v, 0);
+  const sbcEnergy = (st) => st.carts.reduce((s, c) => s + 0.5 * c.m * c.v * c.v, 0);
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.COL = { G, collide1D, keLoss, trackRun, collide2D, tableRun, explode, explodeRun, eOfZeta, zetaForE, bumper, integrate, cradleInit, cradleStep, cradleResolve, cradleGap, cradleEnergy,
-      restitution, keLossFraction, cmFrame, GATE, gateIntervals, gateReading, fitLine, fitPoints, readingsCSV };
+      restitution, keLossFraction, cmFrame, GATE, gateIntervals, gateReading, fitLine, fitPoints, readingsCSV,
+      SBC_EPS, sbcBodies, sbcAdvance, sbcMomentum, sbcEnergy };
     return;
   }
 
@@ -639,26 +705,30 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ['u1', 'Speed of puck 1', 0.2, 2, 0.05, 'm/s', 2], ['b', 'Impact parameter b', 0, 20, 0.5, 'cm', 1], ['e', 'Coefficient of restitution e', 0, 1, 0.01, '', 2]],
     explode: [['m1', 'Mass m<sub>1</sub>', 0.2, 5, 0.1, 'kg', 1], ['m2', 'Mass m<sub>2</sub>', 0.2, 5, 0.1, 'kg', 1],
       ['E', 'Stored spring energy E', 0, 4, 0.05, 'J', 2], ['V', 'Starting velocity V', -1, 1, 0.05, 'm/s', 2]],
-    cradle: [['N', 'Number of balls', 2, 7, 1, '', 0], ['k', 'Balls pulled back', 1, 6, 1, '', 0], ['th', 'Pull angle', 5, 40, 1, '°', 0]]
+    cradle: [['N', 'Number of balls', 2, 7, 1, '', 0], ['k', 'Balls pulled back', 1, 6, 1, '', 0], ['th', 'Pull angle', 5, 40, 1, '°', 0]],
+    sandbox: []
   };
   const DEF = {
     track: { m1: 1, m2: 1, v1: 1, v2: 0, x1: -0.6, x2: 0.1, e: 1 },
     table: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.05], v2: [0, 0] },
     explode: { m1: 2, m2: 1, E: 1, V: 0, x0: 0 },
-    cradle: { N: 5, k: 1, th: 20 }
+    cradle: { N: 5, k: 1, th: 20 },
+    sandbox: {}
   };
-  const TITLES = { track: 'Carts', table: 'Pucks', explode: 'Pieces and spring', cradle: 'Cradle' };
+  const TITLES = { track: 'Carts', table: 'Pucks', explode: 'Pieces and spring', cradle: 'Cradle', sandbox: 'Build a row of carts' };
   const PAR_HINT = {
     track: 'Drag a cart to move its start, drag the round grip on its velocity arrow to set v, and drag the square grip on top to change its mass.',
     table: 'Drag a puck to move its start; moving puck 2 up or down sets the impact parameter b. Drag the round grips to set the velocities.',
     explode: 'Drag the pair to move it, the round grip to set the starting velocity V, the square grip on the spring to store more or less energy, and the grips on top to change the masses.',
-    cradle: 'Drag any ball but the last one to the left: it and every ball to its left are pulled back together, to the angle you drag to.'
+    cradle: 'Drag any ball but the last one to the left: it and every ball to its left are pulled back together, to the angle you drag to.',
+    sandbox: 'Drag carts from the tray onto the track and velcro onto a cart. Drag a cart to move it, the round grip on its arrow to set its velocity, the grip on its corner (up or down) to change its mass, and the e grip to change how bouncy the bumpers are. Drop a cart or its velcro on the bin to take it away. Keys: 1 to 8 pick a cart, arrows change its velocity and mass, A adds a cart, V toggles velcro, Delete removes it.'
   };
   const MODEL = {
     track: 'Model: a frictionless air track, carts treated as rigid bodies that collide in an instant. The coefficient of restitution e fixes how fast they separate: v₂′ − v₁′ = −e(v₂ − v₁). Carts that leave the track ends simply slide out of view.',
     table: 'Model: smooth hard discs on a frictionless air table. The contact impulse is along the line of centers at the moment of contact, so the velocity components along the contact tangent do not change; e acts on the components along the line of centers. No spin, no table edges.',
     explode: 'Model: an ideal massless spring, compressed by 5 cm and held by a thread, pushes the carts apart when the thread is cut. Its force is internal, so the total momentum never changes; the spring’s energy E becomes kinetic energy. The push is computed exactly (the pieces move in simple harmonic motion relative to each other until the spring reaches its natural length).',
-    cradle: 'Model: identical balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.'
+    cradle: 'Model: identical balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.',
+    sandbox: 'Model: a frictionless air track from −1.00 m to 1.00 m with an end stop at each end; carts are rigid and collide in an instant. Two carts meeting keep their total momentum and separate with v₂′ − v₁′ = −e(v₂ − v₁), e the same for every bumper; a cart with velcro sticks to the cart it meets (e = 0), and the two then move as one. At an end stop v′ = −e v. Contact times are found exactly (the carts move at constant velocity between collisions); when several carts touch at once the collisions are taken one pair at a time, and carts left closing slower than 1 µm/s are given their common velocity.'
   };
 
   // ---------- setups ----------
@@ -674,7 +744,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     glance: { mode: 'table', p: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.06], v2: [0, 0] }, rate: 1,
       hint: 'Equal masses, elastic, target at rest: the pucks always leave at 90° to each other, whatever the impact parameter. In the momentum diagram p₁′ + p₂′ = p₁, and with equal masses energy conservation says p₁′² + p₂′² = p₁², so the triangle has a right angle.' }
   };
-  const MODE_RATE = { track: 1, table: 1, explode: 0.5, cradle: 1 };
+  const MODE_RATE = { track: 1, table: 1, explode: 0.5, cradle: 1, sandbox: 1 };
 
   // ---------- state ----------
   const S = { mode: 'track', preset: 'elastic', frame: 'lab', rate: 1, sel: 0,
@@ -718,6 +788,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     } else if (S.mode === 'explode') {
       run = explodeRun({ ...p, L1: cartLen(p.m1), L2: cartLen(p.m2), comp: EXP.comp, Ls: EXP.Ls, ts: EXP.ts });
       Trun = EXP.ts + 1.8;
+    } else if (S.mode === 'sandbox') {
+      run = { tc: Infinity, bodies: [], before: [], after: [] }; Trun = Infinity;
     } else if (S.mode === 'cradle') {
       p.k = clamp(p.k, 1, p.N - 1);
       cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
@@ -1404,12 +1476,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // legend, top right, when there is room
     if (opts && opts.legend) {
       const f2 = fs * 0.9; ctx.font = `${f2}px ${T.ui}`;
-      const wb = ctx.measureText('before').width, wa = ctx.measureText('after').width, bx = 10 * ls, tot = bx + 4 * ls + wb + 12 * ls + bx + 4 * ls + wa;
+      const [w0, w1] = opts.words || ['before', 'after'], wb = ctx.measureText(w0).width, wa = ctx.measureText(w1).width, bx = 10 * ls, tot = bx + 4 * ls + wb + 12 * ls + bx + 4 * ls + wa;
       let x = W - 10 * ls - tot; const y = 10 * ls;
       if (x > titleEnd + 14 * ls) {
         ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.strokeRect(x + 0.5, y + 1, bx, bx);
-        ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('before', x + bx + 4 * ls, y);
-        x += bx + 4 * ls + wb + 12 * ls; ctx.fillRect(x, y + 1, bx, bx); ctx.fillText('after', x + bx + 4 * ls, y);
+        ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(w0, x + bx + 4 * ls, y);
+        x += bx + 4 * ls + wb + 12 * ls; ctx.fillRect(x, y + 1, bx, bx); ctx.fillText(w1, x + bx + 4 * ls, y);
       }
     }
   }
@@ -1419,7 +1491,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const C = [T.pos, T.neg, T.equi];
-    if (S.mode === 'track' || S.mode === 'explode' || S.mode === 'table') {
+    if (sbcOn()) sbcDrawE(ctx, W, H);
+    else if (S.mode === 'track' || S.mode === 'explode' || S.mode === 'table') {
       const B = pk('before'), A0 = pk('after'), pending = !held && t < run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0), BL = blind();
       // Blind: the after bars are predictions, so they go (NaN bars are not drawn)
       const A = BL ? A0.map(() => ({ p: [NaN, NaN], K: NaN })) : A0;
@@ -1603,7 +1676,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ctx = ctxs.p;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    if (S.mode === 'track' || S.mode === 'explode') drawXT(ctx, W, H);
+    if (sbcOn()) sbcDrawP(ctx, W, H);
+    else if (S.mode === 'track' || S.mode === 'explode') drawXT(ctx, W, H);
     else if (S.mode === 'table') drawMomentum(ctx, W, H);
     else drawCradleOutcomes(ctx, W, H);
   }
@@ -1615,6 +1689,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     ctlH = (document.querySelector('.stage-ctl').getBoundingClientRect().height || 30) + 10;
     if (on3()) { handles = []; render3(ctx, W, H); return; }
+    if (sbcOn()) { sbcDrawScene(ctx, W, H); return; }
     if (S.mode === 'track' || S.mode === 'explode') drawTrackScene(ctx, W, H);
     else if (S.mode === 'table') drawTableScene(ctx, W, H);
     else drawCradleScene(ctx, W, H);
@@ -1632,7 +1707,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let lastRead = '';
   function updateReadouts() {
     const p = P(); let rows = [], f = '';
-    if (S.mode === 'track') {
+    if (sbcOn()) { if (!SBC.st) return; ({ rows, f } = sbcReadouts()); }
+    else if (S.mode === 'track') {
       const [u1, u2] = [run.after[0][0], run.after[1][0]], V = vcm()[0], hit = isFinite(run.tc);
       const B = pk('before'), A = pk('after'), PB = B[0].p[0] + B[1].p[0], PA = A[0].p[0] + A[1].p[0], KB = B[0].K + B[1].K, KA = A[0].K + A[1].K;
       const off = S.frame === 'cm' ? V : 0;
@@ -1737,7 +1813,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   // ---------- scenes, presets, controls ----------
   function setMode(m, keepRate) {
-    S.mode = m;
+    const was = S.mode; S.mode = m;
+    /* the Sandbox is flat only, has its own rigs and Reset (not Replay), and no photogates or presets */
+    if (m === 'sandbox' && was !== 'sandbox') { SBC.dimWas = on3() ? '3d' : null; if (SBC.dimWas) document.querySelector('#viewSeg [data-dim=flat]').click(); }
+    $('viewSeg').hidden = m === 'sandbox'; $('presets').hidden = m === 'sandbox'; $('sbcRigs').hidden = m !== 'sandbox';
+    $('reset').textContent = m === 'sandbox' ? 'Reset' : 'Replay';
+    if (m === 'sandbox' && !SBC.st) sbcLoad('three');
+    if (m !== 'sandbox' && was === 'sandbox') { SBC.drag = null; held = false; if (SBC.dimWas) { SBC.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); } }
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
     $('parTitle').textContent = TITLES[m];
     $('parHint').textContent = PAR_HINT[m];
@@ -1749,7 +1831,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('tGhost').closest('label').hidden = m === 'cradle';
     $('tLoop').closest('label').hidden = m === 'cradle';
     const kb = $('keyBox').children;
-    const keys = m === 'cradle' ? ['Moving ball', '', '', ''] : ['Body 1', 'Body 2', 'Center of mass, or the total', 'x'];
+    const keys = m === 'cradle' ? ['Moving ball', '', '', ''] : m === 'sandbox' ? ['Cart 1', 'Cart 2', 'Center of mass, or the total', 'x'] : ['Body 1', 'Body 2', 'Center of mass, or the total', 'x'];
     kb[0].lastChild.textContent = keys[0]; kb[1].lastChild.textContent = keys[1]; kb[2].lastChild.textContent = keys[2];
     kb[0].firstChild.style.borderColor = m === 'cradle' ? 'var(--accent)' : '';
     kb[1].hidden = m === 'cradle'; kb[2].hidden = m === 'cradle'; kb[3].hidden = m === 'cradle';
@@ -1777,12 +1859,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     setHint(c.hint);
     restart();
   }
-  function restart() { t = 0; hold = 0; if (S.mode === 'cradle') buildRun(); if (!held && !reduce) setRunning(true); drawAll(); }
+  function restart() { t = 0; hold = 0; if (S.mode === 'cradle') buildRun(); if (sbcOn() && SBC.st) sbcReset(); if (!held && !reduce) setRunning(true); drawAll(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
   $('modeSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b || b.dataset.m === S.mode) return;
     const pr = Object.keys(PRESETS).find((k) => PRESETS[k].mode === b.dataset.m);
     if (pr && !S.P[b.dataset.m].__touched) applyPreset(pr);
+    else if (b.dataset.m === 'sandbox') { clearPreset(); setMode('sandbox'); setHint(SBC_RIGS[SBC.rig].hint); restart(); }
     else { clearPreset(); setMode(b.dataset.m); setHint(b.dataset.m === 'cradle' ? 'Pull back one ball and let go: one ball comes out the far side. Pull two: two come out. The chart on the right shows why no other number can, with both momentum and energy conserved.' : ''); restart(); }
   });
   $('frameSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setFrame(b.dataset.f); });
@@ -1836,12 +1919,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const p = P(); cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
   }
   cans.c.addEventListener('pointermove', (ev) => {
+    if (sbcOn() && !on3()) return;
     if (drag) { if (drag.three) drag3To(ev); else dragTo(ev); return; }
     const h = on3() ? pick3(ev) : handleAt(ev); const id = h ? h.id : null;
     if (id !== hoverId) { hoverId = id; if (!running) drawAll(); }
     cans.c.style.cursor = h ? (h.cursor || 'pointer') : on3() ? 'grab' : 'default';
   });
   cans.c.addEventListener('pointerdown', (ev) => {
+    if (sbcOn() && !on3()) return;
     cans.c.focus({ preventScroll: true });
     if (on3()) { down3(ev); return; }     /* 3D: a grip takes the pointer; anywhere else the view turns (VD3.orbit) */
     const h = handleAt(ev); if (!h) return;
@@ -1871,6 +1956,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   cans.c.addEventListener('pointercancel', endDrag);
   cans.c.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; } });
   cans.c.addEventListener('keydown', (e) => {
+    if (sbcOn()) { sbcKey(e); return; }
     const k = e.key, p = P(), sh = e.shiftKey ? 5 : 1;
     const step = (key, dir) => { const d = SLDEF(key); setParam(key, valOf(key) + dir * d[4] * sh); restart(); };
     if (k === '1' || k === '2') { S.sel = +k - 1; $('live').textContent = `Body ${k} selected.`; }
@@ -2097,6 +2183,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // the lower right graph as a table: positions against time, the momentum vectors, F against t, or the cradle outcomes
   let graphOpen = false, graphKey = '';
   function graphRows() {
+    if (sbcOn()) return sbcGraphRows();
     const BL = blind(), f3 = (v) => MIN(fx(v, 3));
     if (S.mode === 'track' || S.mode === 'explode') {
       const tEnd = BL && !runDone ? t : Trun, rows = [], dt = 0.05;
@@ -2141,9 +2228,317 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); drawFit(); }); } catch (_) {}
   new MutationObserver(() => { tokens(); drawAll(); drawFit(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // ---------- Sandbox: build a row of carts on the track by dragging parts from the tray ----------
+  const SBC_X0 = -1.0, SBC_X1 = 1.0, SBC_MAX = 8;
+  const SBC_RIGS = {
+    three: { name: 'Three carts', e: 1, carts: [[1, -0.6, 0.8], [1, 0, 0], [1, 0.4, 0]],
+      hint: 'A cart runs into two at rest. With e = 1 and equal masses each collision hands the whole velocity on, so the last cart leaves alone. Bounce off the end stops and watch the total momentum change there (the stops push) while it never changes in a collision between carts.' },
+    row: { name: 'Row of five', e: 1, row: 5, m: 0.5, carts: [[0.5, -0.7, 0.8]],
+      hint: 'Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton\'s cradle. Drop a second cart on the left to send two in.' },
+    heavy: { name: 'Heavy pins light', e: 1, carts: [[2, -0.5, 0.5], [0.25, 0.3, 0]],
+      hint: 'A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart\'s momentum, until the heavy one turns back. Count the collisions.' },
+    velcro: { name: 'Velcro train', e: 1, velcro: true, carts: [[1, -0.7, 1], [1, -0.1, 0], [1, 0.4, 0]],
+      hint: 'Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from 1 to 1/2 to 1/3 m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).' },
+    bounce: { name: 'Losing bounce', e: 0.7, carts: [[1, -0.5, 1.2]],
+      hint: 'One cart between the end stops with e = 0.7: each bounce keeps 70% of the speed and 49% of the kinetic energy. Drag the e grip to compare.' },
+    empty: { name: 'Empty track', e: 1, carts: [],
+      hint: 'Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.' }
+  };
+  const SBC = { st: null, st0: null, t: 0, hist: [], n: 0, nStick: 0, nStop: 0, nextId: 1, sel: null, drag: null, tray: null, view: null, rig: 'three', hs: [], flash: [] };
+  const sbcOn = () => S.mode === 'sandbox';
+  const SBC_COL = () => [T.pos, T.neg, T.xcol, T.vcol, T.acol, T.accent, T.equi, T.muted];
+  const sbcCart = (id) => SBC.st.carts.find((c) => c.id === id);
+  const sbcIdx = (id) => SBC.st.carts.findIndex((c) => c.id === id);
+  const sbcClone = (st) => ({ ...st, carts: st.carts.map((c) => ({ ...c })), glue: st.glue.map((g) => g.slice()) });
+  function sbcLoad(name) {
+    const R = SBC_RIGS[name]; SBC.rig = name; SBC.nextId = 1;
+    const carts = R.carts.map(([m, x, v]) => ({ id: SBC.nextId++, m, L: cartLen(m), x, v, velcro: !!R.velcro }));
+    if (R.row) { const L = cartLen(R.m); for (let k = 0; k < R.row; k++) carts.push({ id: SBC.nextId++, m: R.m, L, x: -0.1 + k * L, v: 0, velcro: false }); }
+    SBC.st = { carts, glue: [], e: R.e, X0: SBC_X0, X1: SBC_X1 };
+    SBC.sel = carts.length ? carts[0].id : null;
+    for (const b of document.querySelectorAll('#sbcRigs button')) b.setAttribute('aria-pressed', String(b.dataset.r === name));
+    setHint(R.hint);
+    sbcCommit();
+  }
+  /* any edit: the rig as it stands becomes the start (Reset comes back to it) */
+  function sbcCommit() {
+    SBC.st.carts.sort((a, b) => a.x - b.x);
+    SBC.st0 = sbcClone(SBC.st); SBC.t = 0; t = 0; SBC.hist = []; SBC.n = SBC.nStick = SBC.nStop = 0; SBC.flash = [];
+    sbcSample(); lastRead = ''; updateReadouts();
+  }
+  function sbcReset() { SBC.st = sbcClone(SBC.st0); SBC.t = 0; t = 0; SBC.hist = []; SBC.n = SBC.nStick = SBC.nStop = 0; SBC.flash = []; sbcSample(); }
+  function sbcSample() { SBC.hist.push([SBC.t, SBC.st.carts.map((c) => c.x)]); if (SBC.hist.length > 4000) SBC.hist.splice(0, SBC.hist.length - 4000); }
+  function sbcStep(dts) {
+    const k = Math.max(1, Math.ceil(dts / (1 / 120))), h = dts / k;
+    for (let i = 0; i < k; i++) {
+      const r = sbcAdvance(SBC.st, h); SBC.st = r.st;
+      for (const q of r.ev) { SBC.n++; if (q.stick) SBC.nStick++; if (q.kind === 'stop') SBC.nStop++; SBC.flash.push({ t: SBC.t + q.t, ids: q.ids, kind: q.kind }); }
+      SBC.t += h; sbcSample();
+    }
+    SBC.flash = SBC.flash.filter((f) => SBC.t - f.t < 0.15);
+    t = SBC.t;
+  }
+  // where a cart of length L can sit nearest x without overlapping another cart or an end stop (null when there is no room)
+  function sbcFit(id, x, L) {
+    const others = SBC.st.carts.filter((c) => c.id !== id).map((c) => [c.x - c.L / 2, c.x + c.L / 2]).sort((a, b) => a[0] - b[0]);
+    const gaps = []; let lo = SBC.st.X0;
+    for (const [a, b] of others) { gaps.push([lo, a]); lo = Math.max(lo, b); }
+    gaps.push([lo, SBC.st.X1]);
+    let best = null, bd = Infinity;
+    for (const [a, b] of gaps) { if (b - a < L - 1e-9) continue; const c = clamp(x, a + L / 2, b - L / 2), d = Math.abs(c - x); if (d < bd) { bd = d; best = c; } }
+    return best === null ? null : Math.round(best * 1000) / 1000;
+  }
+  const sbcUnglue = (id) => { SBC.st.glue = SBC.st.glue.filter((g) => g[0] !== id && g[1] !== id); };
+  function sbcAdd(m, x) {
+    if (SBC.st.carts.length >= SBC_MAX) { capStatus(`At most ${SBC_MAX} carts fit on the track.`); return null; }
+    const L = cartLen(m), xf = sbcFit(-1, x, L);
+    if (xf === null) { capStatus('No room for that cart there; take one away or move one.'); return null; }
+    const c = { id: SBC.nextId++, m, L, x: xf, v: 0, velcro: false }; SBC.st.carts.push(c); SBC.sel = c.id; sbcCommit();
+    $('live').textContent = `A ${fx(m, 2)} kg cart is on the track at x = ${fx(xf, 2)} m. Drag the round grip above it to give it a velocity.`;
+    return c;
+  }
+  function sbcRemove(id) { SBC.st.carts = SBC.st.carts.filter((c) => c.id !== id); sbcUnglue(id); if (SBC.sel === id) SBC.sel = SBC.st.carts.length ? SBC.st.carts[0].id : null; sbcCommit(); $('live').textContent = 'Cart taken away.'; }
+  function sbcSetMass(id, m) {
+    const c = sbcCart(id); if (!c) return;
+    m = clamp(Math.round(m * 20) / 20, 0.1, 5); if (m === c.m) return;
+    const L = cartLen(m), xf = sbcFit(id, c.x, L); if (xf === null) return;
+    c.m = m; c.L = L; c.x = xf; sbcUnglue(id); sbcCommit();
+  }
+  function sbcSetV(id, v) { const c = sbcCart(id); if (!c) return; c.v = clamp(Math.round(v * 20) / 20, -2, 2); sbcUnglue(id); sbcCommit(); }
+  function sbcSetVelcro(id, on) { const c = sbcCart(id); if (!c) return; c.velcro = on; if (!on) sbcUnglue(id); sbcCommit(); $('live').textContent = on ? `Cart ${sbcIdx(id) + 1} now has velcro on both ends: it sticks to any cart it meets.` : 'Velcro taken off.'; }
+
+  // the scene: track, end stops, carts with velocity arrows and grips, the tray along the top
+  function sbcDrawScene(ctx, W, H) {
+    const g = trackGeom(W, H), ps = g.ps, ls = lsc(W, H), fs = 11.5 * ls, cols = SBC_COL(), st = SBC.st;
+    sg = g;
+    trackBase(ctx, W, H, g, 0);
+    SBC.hs = []; handles = [];
+    // end stops: posts with rubber faces at X0 and X1
+    const stopH = 46 * ps;
+    for (const [xf, sd] of [[st.X0, -1], [st.X1, 1]]) {
+      const px = g.X(xf), x0 = sd < 0 ? px - 12 * ps : px;
+      ctx.fillStyle = T.wire; roundRect(ctx, x0, g.yT - stopH, 12 * ps, stopH + 9 * ps, 3 * ps); ctx.fill();
+      ctx.fillStyle = T.ink; ctx.globalAlpha = 0.55; ctx.fillRect(sd < 0 ? px - 3 * ps : px, g.yT - stopH * 0.7, 3 * ps, stopH * 0.5); ctx.globalAlpha = 1;
+    }
+    const maxH = Math.max(30 * ps, ...st.carts.map((c) => cartH(c.m, ps, g.s))), arrowY = g.yT - 3 * ps - maxH - 26 * ps;
+    const labels = [];
+    // carts; glued neighbors get a dark seam
+    st.carts.forEach((c, i) => {
+      const col = cols[i % cols.length], hot = SBC.sel === c.id && !SBC.drag, flash = SBC.flash.some((f) => f.ids.includes(c.id));
+      const box = drawCart(ctx, g, c.x, c.m, c.L, col, `${i + 1} · ${sig(c.m, 2)} kg`, { hot: hot || flash, short: String(i + 1) });
+      if (c.velcro) for (const sd of [-1, 1]) {   /* velcro pads on both ends */
+        const vx = sd < 0 ? box.x0 - 3 * ps : box.x0 + box.w, vy = box.y0 + box.h * 0.3;
+        ctx.fillStyle = T.ink; ctx.globalAlpha = 0.85; ctx.fillRect(vx, vy, 3 * ps, box.h * 0.5); ctx.globalAlpha = 1;
+        ctx.strokeStyle = T.equi; ctx.lineWidth = 1 * ps; ctx.strokeRect(vx, vy, 3 * ps, box.h * 0.5);
+        SBC.hs.push({ id: 'vel' + c.id + sd, cart: c.id, velcro: true, box: [vx - 4 * ps, vy - 2 * ps, 11 * ps, box.h * 0.5 + 4 * ps], cursor: 'grab' });
+      }
+      SBC.hs.push({ id: 'c' + c.id, cart: c.id, body: true, box: [box.x0, box.y0, box.w, box.h], cursor: 'grab' });
+      // mass grip on the top right corner (drag up for more mass)
+      const mg = [box.x0 + box.w - 9 * ps, box.y0 - 1 * ps];
+      grip(ctx, mg[0], mg[1], SBC.drag && SBC.drag.type === 'm' && SBC.drag.id === c.id, true);
+      SBC.hs.push({ id: 'm' + c.id, cart: c.id, grip: 'm', box: [mg[0] - 8 * ps, mg[1] - 11 * ps, 16 * ps, 22 * ps], cursor: 'ns-resize' });
+      // velocity arrow with its round grip at the tip
+      if (S.layers.arrows) {
+        const a = velArrow(ctx, g, c.x, arrowY, c.v, col, '');
+        roundGrip(ctx, a.x1, arrowY, SBC.drag && SBC.drag.type === 'v' && SBC.drag.id === c.id, col);
+        SBC.hs.push({ id: 'v' + c.id, cart: c.id, grip: 'v', box: [a.x1 - 9 * ps, arrowY - 9 * ps, 18 * ps, 18 * ps], cursor: 'ew-resize' });
+        if (!blind()) labels.push([`${fx(c.v, 2)} m/s`, g.X(c.x), arrowY - 10 * ps, 'center', col]);
+      }
+    });
+    for (const [a, b] of st.glue) { const A = sbcCart(a), B = sbcCart(b); if (!A || !B) continue; const xm = g.X((A.x + A.L / 2 + B.x - B.L / 2) / 2); ctx.strokeStyle = T.ink; ctx.lineWidth = 2.5 * ps; ctx.beginPath(); ctx.moveTo(xm, g.yT - 6 * ps); ctx.lineTo(xm, g.yT - 3 * ps - Math.min(cartH(A.m, ps, g.s), cartH(B.m, ps, g.s)) * 0.8); ctx.stroke(); }
+    // a flash where two carts (or a cart and a stop) have just met
+    for (const f of SBC.flash) {
+      const c = sbcCart(f.ids[0]); if (!c) continue; const a = 1 - (SBC.t - f.t) / 0.15;
+      const xs = f.kind === 'stop' ? (Math.abs(c.x - st.X0) < Math.abs(c.x - st.X1) ? st.X0 : st.X1) : c.x + c.L / 2, px = g.X(xs), cy = g.yT - 3 * ps - cartH(c.m, ps, g.s) / 2;
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.globalAlpha = Math.max(0, a);
+      ctx.beginPath(); for (let k = 0; k < 8; k++) { const an = k * Math.PI / 4; ctx.moveTo(px + Math.cos(an) * 6 * ps, cy + Math.sin(an) * 6 * ps); ctx.lineTo(px + Math.cos(an) * 15 * ps, cy + Math.sin(an) * 15 * ps); } ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // center of mass under the beam
+    if (S.layers.cm && st.carts.length) {
+      const M = st.carts.reduce((q, c) => q + c.m, 0), xc = st.carts.reduce((q, c) => q + c.m * c.x, 0) / M, Vc = sbcMomentum(st) / M, px = g.X(xc), y = g.yT + 33 * ps;
+      ctx.fillStyle = T.equi; ctx.beginPath(); ctx.moveTo(px, y); ctx.lineTo(px - 6 * ps, y + 11 * ps); ctx.lineTo(px + 6 * ps, y + 11 * ps); ctx.closePath(); ctx.fill();
+      if (Math.abs(Vc) * g.sv * 0.6 > 6) arrow(ctx, px + Math.sign(Vc) * 9 * ps, y + 7 * ps, px + Math.sign(Vc) * 9 * ps + Vc * g.sv * 0.6, y + 7 * ps, T.equi, 1.8 * ps, 7);
+      labels.push(['CM', px + (Vc < 0 ? 9 : -9) * ps, y + 11 * ps, Vc < 0 ? 'left' : 'right', T.equi]);
+    }
+    /* labels that would overlap one already placed go up a line */
+    const placed = [];
+    for (const [txt, x, y0, al, col] of labels) {
+      const xc = clamp(x, 40 * ls, W - 40 * ls), w = richWidth(ctx, txt, fs * 0.92, 600), a = al === 'center' ? xc - w / 2 : al === 'right' ? xc - w : xc;
+      let y = y0; while (placed.some((q) => q[2] === y && a < q[1] + 4 && a + w > q[0] - 4)) y -= fs * 1.3;
+      placed.push([a, a + w, y]); labelBox(ctx, txt, xc, y, al, col, fs * 0.92, 600);
+    }
+    // the tray along the top, the e grip and the totals under it
+    const trayB = sbcDrawTray(ctx, W, H, ps, fs);
+    { const ey = trayB + 16 * ps, ex = W - 24 * ps; grip(ctx, ex, ey, SBC.drag && SBC.drag.type === 'e', false);
+      SBC.hs.push({ id: 'e', grip: 'e', box: [ex - 11 * ps, ey - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      labelBox(ctx, blind() ? 'bumpers: e hidden' : `bumpers e = ${fx(st.e, 2)}`, ex - 16 * ps, ey + fs * 0.35, 'right', T.ink, fs * 0.9, 600);
+      if (!blind()) { const P0 = sbcMomentum(SBC.st0), Pn = sbcMomentum(st), K0 = sbcEnergy(SBC.st0), Kn = sbcEnergy(st);
+        const txt = W < 560 ? `p = ${fx(Pn, 2)} kg·m/s   K = ${fx(Kn, 3)} J` : `total p = ${fx(Pn, 2)} kg·m/s (start ${fx(P0, 2)})    K = ${fx(Kn, 3)} J (start ${fx(K0, 3)})`;
+        ctx.fillStyle = T.muted; richText(ctx, txt, 12 * ps, ey + fs * 0.35, fs * 0.88, 600, 'left', T.mono); } }
+    const hint = SBC.drag && SBC.drag.hint ? [SBC.drag.hint, T.accent] : !st.carts.length ? ['Drag a cart from the tray onto the track.', T.muted] : null;
+    if (hint) labelBox(ctx, hint[0], W / 2, arrowY - 26 * ps, 'center', hint[1], fs, 600);
+    SBC.view = { g, arrowY };
+  }
+  const SBC_PARTS = [{ kind: 'cart', m: 0.25 }, { kind: 'cart', m: 0.5 }, { kind: 'cart', m: 1 }, { kind: 'cart', m: 2 }, { kind: 'velcro' }];
+  function sbcDrawTray(ctx, W, H, ps, fs) {
+    const top = ctlH + 2 * ps, h = 40 * ps, binW = 62 * ps, x0 = 8 * ps, tw = W - 16 * ps - binW - 6 * ps, n = SBC_PARTS.length, iw = tw / n;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; roundRect(ctx, x0, top, tw, h, 8 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRect(ctx, x0, top, tw, h, 8 * ps); ctx.stroke();
+    SBC.tray = { parts: [], bin: null };
+    SBC_PARTS.forEach((pt, i) => {
+      const cx = x0 + iw * (i + 0.5), cy = top + h / 2, box = [cx - iw / 2 + 2 * ps, top + 2 * ps, iw - 4 * ps, h - 4 * ps];
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (pt.kind === 'cart') {
+        ctx.font = `600 ${9.5 * ps}px ${T.mono}`;
+        const w = Math.min(iw - 6 * ps, Math.max(ctx.measureText(`${pt.m} kg`).width + 8 * ps, (30 + 16 * Math.cbrt(pt.m)) * ps)), hh = (14 + 4 * Math.cbrt(pt.m)) * ps;
+        ctx.fillStyle = T.block; roundRect(ctx, cx - w / 2, cy - hh / 2, w, hh, 3 * ps); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, cx - w / 2, cy - hh / 2, w, hh, 3 * ps); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${pt.m} kg`, cx, cy + 0.5);
+      } else {
+        ctx.fillStyle = T.ink; ctx.globalAlpha = 0.75; ctx.fillRect(cx - 14 * ps, cy - 8 * ps, 5 * ps, 16 * ps); ctx.fillRect(cx + 9 * ps, cy - 8 * ps, 5 * ps, 16 * ps); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.ink; ctx.font = `600 ${9 * ps}px ${T.mono}`; ctx.fillText('velcro', cx, cy + 0.5);
+      }
+      SBC.tray.parts.push({ part: pt, box });
+    });
+    const bx = W - 8 * ps - binW, hot = SBC.drag && SBC.drag.overBin;
+    ctx.fillStyle = hot ? T.pos : T.canvas; ctx.globalAlpha = hot ? 0.25 : 0.9; roundRect(ctx, bx, top, binW, h, 8 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.setLineDash([4 * ps, 3 * ps]); ctx.strokeStyle = hot ? T.pos : T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, bx, top, binW, h, 8 * ps); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = hot ? T.pos : T.muted; ctx.font = `600 ${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Drop here', bx + binW / 2, top + h * 0.36); ctx.fillText('to remove', bx + binW / 2, top + h * 0.68);
+    SBC.tray.bin = [bx, top, binW, h];
+    const d = SBC.drag;
+    if (d && d.type === 'new') {
+      ctx.globalAlpha = 0.75;
+      if (d.part.kind === 'cart') { const w = cartLen(d.part.m) * SBC.view.g.s, hh = cartH(d.part.m, ps, SBC.view.g.s); ctx.fillStyle = T.block; roundRect(ctx, d.px - w / 2, d.py - hh / 2, w, hh, 4 * ps); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; roundRect(ctx, d.px - w / 2, d.py - hh / 2, w, hh, 4 * ps); ctx.stroke(); }
+      else { ctx.fillStyle = T.ink; ctx.fillRect(d.px - 3 * ps, d.py - 10 * ps, 6 * ps, 20 * ps); }
+      ctx.globalAlpha = 1;
+      if (d.target) { const b = d.target; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([5 * ps, 3 * ps]); roundRect(ctx, b[0] - 3 * ps, b[1] - 3 * ps, b[2] + 6 * ps, b[3] + 6 * ps, 5 * ps); ctx.stroke(); ctx.setLineDash([]); }
+    }
+    ctx.textBaseline = 'alphabetic';
+    return top + h;
+  }
+  // the bar charts: each cart's momentum and kinetic energy at the start (outline) and now (filled)
+  function sbcDrawE(ctx, W, H) {
+    const st = SBC.st, s0 = SBC.st0, cols = SBC_COL(), BL = blind();
+    const p0 = new Map(s0.carts.map((c) => [c.id, c])), items = (f, ttl) => [...st.carts.map((c, i) => ({ lab: `${ttl}_${i + 1}`, b: p0.has(c.id) ? f(p0.get(c.id)) : 0, a: BL ? NaN : f(c), col: cols[i % cols.length] })),
+      { lab: 'total', b: s0.carts.reduce((q, c) => q + f(c), 0), a: BL ? NaN : st.carts.reduce((q, c) => q + f(c), 0), col: T.equi, val: BL ? '' : fx(st.carts.reduce((q, c) => q + f(c), 0), ttl === 'p' ? 2 : 3) }];
+    const lost = sbcEnergy(s0) - sbcEnergy(st);
+    drawBars(ctx, W, H, [{ title: 'Momentum p (kg·m/s)', items: items((c) => c.m * c.v, 'p'), sym: true, note: BL ? '' : `${SBC.n} collision${SBC.n === 1 ? '' : 's'}, ${SBC.nStop} at the stops` },
+      { title: 'Kinetic energy K (J)', items: items((c) => 0.5 * c.m * c.v * c.v, 'K'), note: BL ? 'now: hidden (Blind)' : Math.abs(lost) < 5e-7 ? 'no kinetic energy lost' : `lost in collisions: ${fx(lost, 3)} J` }],
+      { legend: true, words: ['start', 'now'] });
+  }
+  // position of every cart against time (the last 8 s), the end stops dashed
+  function sbcDrawP(ctx, W, H) {
+    const ls = lsc(W, H), L = 44 * ls, R = W - 12 * ls, top = 40 * ls, bot = H - 34 * ls, cols = SBC_COL();
+    if (R - L < 40 || bot - top < 30) return;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Position of each cart against time', 10 * ls, 9 * ls);
+    const span = 8, t1 = Math.max(span, SBC.t), t0 = t1 - span;
+    const ax = axes(ctx, L, R, top, bot, [t0, t1], [SBC_X0, SBC_X1], 't (s)', 'x (m)', ls);
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2;
+    for (const xs of [SBC_X0, SBC_X1]) { ctx.beginPath(); ctx.moveTo(L, ax.Y(xs)); ctx.lineTo(R, ax.Y(xs)); ctx.stroke(); }
+    ctx.setLineDash([]);
+    SBC.st.carts.forEach((c, i) => {
+      ctx.strokeStyle = cols[i % cols.length]; ctx.lineWidth = 2 * projScale(); ctx.beginPath(); let on = false;
+      for (const [tt, xs] of SBC.hist) { if (tt < t0 || xs.length <= i) continue; const px = ax.X(tt), py = ax.Y(xs[i]); if (!on) { ctx.moveTo(px, py); on = true; } else ctx.lineTo(px, py); }
+      ctx.stroke();
+    });
+    ctx.restore();
+    if (!SBC.st.carts.length) { ctx.fillStyle = T.muted; ctx.font = `${11 * ls}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('No carts yet.', (L + R) / 2, (top + bot) / 2); }
+  }
+  function sbcReadouts() {
+    const st = SBC.st, s0 = SBC.st0, M = st.carts.reduce((q, c) => q + c.m, 0), c = SBC.sel !== null ? sbcCart(SBC.sel) : null;
+    let rows = [['Carts', String(st.carts.length)], ['Collisions so far', `${SBC.n} (${SBC.nStop} at the stops${SBC.nStick ? `, ${SBC.nStick} stuck` : ''})`],
+      ['Total p now', fp(sbcMomentum(st))], ['Total p at the start', fp(sbcMomentum(s0))], ['K now', fK(sbcEnergy(st))], ['K at the start', fK(sbcEnergy(s0))],
+      ['Center of mass velocity', M ? fv(sbcMomentum(st) / M) : '—', 'c-t'], ['Bumpers e', fx(st.e, 2)]];
+    if (c) { const i = sbcIdx(c.id); rows.push([`Cart ${i + 1}`, `${fx(c.m, 2)} kg at x = ${fx(c.x, 3)} m, v = ${fv(c.v)}, p = ${fp(c.m * c.v)}${c.velcro ? ', velcro' : ''}`, 'wide']); }
+    return { rows, f: 'Between carts: m₁v₁ + m₂v₂ is kept and v₂′ − v₁′ = −e(v₂ − v₁) (e = 0 and stuck with velcro). At an end stop v′ = −e v: the stop pushes, so the total momentum changes there.' };
+  }
+  function sbcGraphRows() {
+    const step = Math.max(1, Math.round(SBC.hist.length / 200)), rows = [];
+    for (let k = 0; k < SBC.hist.length; k += step) { const [tt, xs] = SBC.hist[k]; rows.push([fx(tt, 2), ...xs.map((x) => MIN(fx(x, 3)))]); }
+    return { cap: 'Position of each cart against time, about 200 rows.', head: ['t (s)', ...SBC.st.carts.map((_, i) => `x${'₁₂₃₄₅₆₇₈'[i] || i + 1} (m)`)], rows };
+  }
+  // pointer: tray parts, carts, grips and the bin
+  const sbcPt = (ev) => { const r = cans.c.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  const sbcIn = (b, x, y, pad) => b && x >= b[0] - pad && x <= b[0] + b[2] + pad && y >= b[1] - pad && y <= b[1] + b[3] + pad;
+  function sbcHit(x, y, touch) {
+    const tol = 5 * projScale() * (touch ? 2 : 1); let best = null, bd = Infinity;
+    for (const h of SBC.hs) { const [bx, by, bw, bh] = h.box, d0 = Math.hypot(Math.max(bx - x, 0, x - bx - bw), Math.max(by - y, 0, y - by - bh)); const d = d0 === 0 && (h.grip || h.velcro) ? -1 : d0; if (d <= tol && d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  /* the track region a dropped cart lands on: anywhere above the beam between the stops */
+  const sbcOnTrack = (x, y) => { const g = SBC.view.g; return y > SBC.view.arrowY - 30 * g.ps && y < g.yT + 20 * g.ps && x > g.X(SBC.st.X0) && x < g.X(SBC.st.X1); };
+  cans.c.addEventListener('pointerdown', (ev) => {
+    if (!sbcOn() || on3()) return;
+    cans.c.focus({ preventScroll: true });
+    const [x, y] = sbcPt(ev), cap = () => { try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} };
+    const part = SBC.tray && SBC.tray.parts.find((q) => sbcIn(q.box, x, y, 0));
+    if (part) { SBC.drag = { type: 'new', part: part.part, px: x, py: y, hint: part.part.kind === 'cart' ? 'Drop it on the track.' : 'Drop it on a cart: that cart then sticks to any cart it meets.' }; held = true; cap(); ev.preventDefault(); return; }
+    const h = sbcHit(x, y, ev.pointerType === 'touch'); if (!h) return;
+    if (h.cart !== undefined) SBC.sel = h.cart;
+    if (h.grip === 'e') SBC.drag = { type: 'e', x0: x, v0: SBC.st.e };
+    else if (h.grip === 'm') SBC.drag = { type: 'm', id: h.cart, y0: y, v0: sbcCart(h.cart).m };
+    else if (h.grip === 'v') SBC.drag = { type: 'v', id: h.cart };
+    else if (h.velcro) SBC.drag = { type: 'velcro', id: h.cart, px: x, py: y, hint: 'Drag it to the bin to take the velcro off.' };
+    else if (h.body) { const c = sbcCart(h.cart); SBC.drag = { type: 'cart', id: c.id, off: x - SBC.view.g.X(c.x), px: x, py: y, moved: false, x0: x }; }
+    held = true; cap(); ev.preventDefault(); lastRead = ''; updateReadouts();
+  });
+  cans.c.addEventListener('pointermove', (ev) => {
+    if (!sbcOn() || on3()) return;
+    const [x, y] = sbcPt(ev), d = SBC.drag, ps = projScale();
+    if (!d) { const part = SBC.tray && SBC.tray.parts.find((q) => sbcIn(q.box, x, y, 0)), h = part ? null : sbcHit(x, y, ev.pointerType === 'touch'); cans.c.style.cursor = part ? 'grab' : h ? h.cursor : 'default'; return; }
+    d.px = x; d.py = y; const g = SBC.view.g;
+    if (d.type === 'e') { const v = clamp(Math.round((d.v0 + (x - d.x0) / (220 * ps)) * 100) / 100, 0, 1); if (v !== SBC.st.e) { SBC.st.e = v; sbcCommit(); } return; }
+    if (d.type === 'm') { sbcSetMass(d.id, d.v0 + (d.y0 - y) * 4.9 / (220 * ps)); return; }
+    if (d.type === 'v') { sbcSetV(d.id, (x - g.X(sbcCart(d.id).x)) / g.sv); return; }
+    d.overBin = (d.type === 'cart' || d.type === 'velcro') && sbcIn(SBC.tray.bin, x, y, 6 * ps);
+    if (d.type === 'new') {
+      d.target = null;
+      if (d.part.kind === 'velcro') { const h = SBC.hs.find((q) => q.body && sbcIn(q.box, x, y, 10 * ps)); d.target = h ? h.box : null; d.hint = h ? 'Let go to put velcro on this cart.' : 'Drop it on a cart: that cart then sticks to any cart it meets.'; }
+      else d.hint = sbcOnTrack(x, y) ? 'Let go to put it on the track here.' : 'Drop it on the track.';
+      return;
+    }
+    if (d.type === 'cart') {
+      if (Math.abs(x - d.x0) > 3) d.moved = true;
+      d.hint = d.overBin ? 'Let go to take the cart away.' : null;
+      if (!d.overBin && d.moved) { const c = sbcCart(d.id), xf = sbcFit(d.id, g.invX(x - d.off), c.L); if (xf !== null && xf !== c.x) { c.x = xf; sbcUnglue(d.id); sbcCommit(); } }
+      return;
+    }
+    if (d.type === 'velcro') d.hint = d.overBin ? 'Let go to take the velcro off.' : 'Drag it to the bin to take the velcro off.';
+  });
+  const sbcEnd = () => {
+    if (!sbcOn()) return;
+    const d = SBC.drag; SBC.drag = null; held = false; if (!d) return;
+    if (d.type === 'new') {
+      if (d.part.kind === 'cart' && sbcOnTrack(d.px, d.py)) sbcAdd(d.part.m, SBC.view.g.invX(d.px));
+      else if (d.part.kind === 'velcro') { const h = SBC.hs.find((q) => q.body && sbcIn(q.box, d.px, d.py, 10 * projScale())); if (h) sbcSetVelcro(h.cart, true); }
+    } else if (d.type === 'cart' && d.overBin) sbcRemove(d.id);
+    else if (d.type === 'velcro' && d.overBin) sbcSetVelcro(d.id, false);
+    if (!reduce) setRunning(true);
+    lastRead = ''; updateReadouts();
+  };
+  cans.c.addEventListener('pointerup', sbcEnd); cans.c.addEventListener('pointercancel', sbcEnd);
+  function sbcKey(e) {
+    const k = e.key, c = SBC.sel !== null ? sbcCart(SBC.sel) : null, sh = e.shiftKey ? 5 : 1;
+    if (/^[1-8]$/.test(k)) { const q = SBC.st.carts[+k - 1]; if (q) { SBC.sel = q.id; $('live').textContent = `Cart ${k} selected: ${fx(q.m, 2)} kg, ${fv(q.v)}.`; } }
+    else if ((k === 'ArrowLeft' || k === 'ArrowRight') && c) sbcSetV(c.id, c.v + (k === 'ArrowRight' ? 0.05 : -0.05) * sh);
+    else if ((k === 'ArrowUp' || k === 'ArrowDown') && c) sbcSetMass(c.id, c.m + (k === 'ArrowUp' ? 0.05 : -0.05) * sh);
+    else if ((k === 'Delete' || k === 'Backspace') && c) sbcRemove(c.id);
+    else if (k === 'a' || k === 'A') sbcAdd(1, 0);
+    else if ((k === 'v' || k === 'V') && c) sbcSetVelcro(c.id, !c.velcro);
+    else if (k === 'e' || k === 'E') { SBC.st.e = clamp(+(SBC.st.e + (e.shiftKey ? 0.05 : -0.05)).toFixed(2), 0, 1); sbcCommit(); }
+    else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') { sbcReset(); setRunning(true); }
+    else return;
+    e.preventDefault(); lastRead = ''; updateReadouts();
+  }
+  for (const b of document.querySelectorAll('#sbcRigs button')) b.addEventListener('click', () => { sbcLoad(b.dataset.r); if (!reduce) setRunning(true); drawAll(); });
+
   // ---------- loop ----------
   function advance(dts) {
     if (!(dts > 0)) return;
+    if (sbcOn()) { sbcStep(dts); return; }
     if (S.mode === 'cradle') {
       const before = cr.hits, om0 = cr.om.slice();
       cr = cradleStep(cr, dts, CR.L, CR.R);
@@ -2174,7 +2569,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   window.__col = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get run() { return run; }, get handles() { return handles; },
     get cr() { return cr; }, get crLog() { return crLog; }, get Trun() { return Trun; }, get running() { return running; },
-    applyPreset, setMode, setParam, setFrame, setRunning, pk, get gd() { return gd; }, get runDone() { return runDone; }, get rows() { return S.rows; },
+    applyPreset, setMode, setParam, setFrame, setRunning, pk, get sbc() { return SBC; }, sbcLoad, sbcAdd, sbcSetV, sbcSetMass, sbcSetVelcro, sbcRemove, get gd() { return gd; }, get runDone() { return runDone; }, get rows() { return S.rows; },
     csvText, captureReading, gateValue, placeGates,
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); },
     seek(tt) { t = tt; drawAll(); },
@@ -2190,7 +2585,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.2, ph: 1.2, zoom: 1 }, env: null, mode: '', room: null, bench: null };
   const HOME3 = { track: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, explode: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, table: { th: -Math.PI / 2 + 0.14, ph: 0.9 }, cradle: { th: -Math.PI / 2 + 0.42, ph: 1.24 } };
   let handles3 = [], OV = null;
-  const on3 = () => G3.on && !!G3.S;
+  const on3 = () => G3.on && !!G3.S && S.mode !== 'sandbox';
   const ZB = 0.14, KV = 0.2, TRK = 1.4, FLOOR = -0.86, FLAGZ = 0.04;   /* track top above the bench; arrow scale, m per m/s; track half length; floor; flag middle above the track top */
   const OV0 = () => (G3.S ? G3.S.w / Math.max(1, G3.S.h) : 2);    /* the 3D picture's aspect ratio (wide on a desktop, near 1 on a phone) */
   const pt3 = (h) => (h.plane != null ? h.pt : h.at(h.v));

@@ -5333,3 +5333,19 @@ Steve: placing a part on top of an existing one (a wire, say) put it in parallel
 `demos/circuits.html` now removes anything lying along the new part's stretch (`overlaps`): a wire there is cut so the part sits
 in series in its place; a part there is replaced (a longer one leaves a wire for the rest of its length). New wires and the
 junction transistor place as before. The live message names what was replaced. Circuits tests pass; vdcheck after 0 problems.
+
+## 2026-10-28 · Claude · Collisions Sandbox
+
+Steve: sandboxes in more demos where they make sense (shortlist in the thread: Collisions, Static Equilibrium, Kepler, Magnetic
+Fields of Currents, Two Speaker, Optics Bench). First: a Sandbox scene in `demos/collisions.html`.
+- Up to 8 carts on the track between end stops at ±1.00 m, built by dragging from a tray (0.25, 0.5, 1, 2 kg carts and velcro);
+  grips for each cart's velocity (arrow tip) and mass (corner), one e for every bumper; bin removes carts or velcro. Rigs: Three
+  carts (opens moving), Row of five, Heavy pins light, Velcro train, Losing bounce, Empty track. Flat only; no photogates.
+- CORE `sbcAdvance`: exact event driven motion (constant velocities between contacts, next contact time solved exactly), pair
+  collisions by `collide1D` with e (velcro: e = 0 and glued into one body), stops v′ = −e v; touching carts closing slower than
+  1 µm/s get their common velocity (stated in the model text; stops endless bounces in a squeezed row).
+- Tests `test_collisions_sandbox.cjs` (7): contact time, collide1D match and ½μ(1 − e²)v² loss, velcro, five in a row one out,
+  stops and energy kept with e = 1 over many bounces (no overlaps), momentum over a chain, low e settles.
+- Bars: momentum and K per cart, start (outline) vs now; graph: x of every cart against time. Handout About bullet added.
+- Checks: vdcheck after 0 problems, clip 0 cut off; Playwright build by dragging at 1368 and 400 px, no page errors.
+  GPT: please verify the event rules and the model text.
