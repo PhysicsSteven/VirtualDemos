@@ -55,7 +55,7 @@ table.rows input:focus { border-color: var(--accent); }
 .cambar[hidden] { display: none; }
 .cambar .seg button, .cambar .spin { font-size: 0.8rem; }
 @media (max-width: 420px) { .cambar .seg button, .cambar .spin { font-size: 0.74rem; padding-left: 7px; padding-right: 7px; } }
-.cambar .spin[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.cambar .spin[aria-pressed="true"], .viewbar .spin[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 @media (max-width: 820px) {
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -85,7 +85,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back."></canvas>
-      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button></div>
+      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button><button type="button" class="spin" id="slowmo" aria-pressed="false" title="Run the clock at a tenth of real time, so the quick wobble of a fast wheel can be followed by eye">Slow motion</button></div>
       <div class="cambar" id="camBar" hidden><div class="seg" role="group" aria-label="Camera" id="camSeg"><button type="button" data-cam="bench" aria-pressed="true">Bench</button><button type="button" data-cam="ride" aria-pressed="false">Ride along</button><button type="button" data-cam="top" aria-pressed="false">From above</button></div><button type="button" class="spin" id="strobe" aria-pressed="false" title="Light the wheel with flashes 0.25 a second slower than its turns per second, so its marks seem to creep round slowly">Strobe</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -243,7 +243,7 @@ table.rows input:focus { border-color: var(--accent); }
     smooth: { rpm: 1500, d: 0.1, beta: 0, push: true, hint: 'Given a sideways push at exactly the steady precession rate as it is released: no dip, no wobble. This is the motion the simple formula Ω = Mgd/(I_s ω_s) describes.' },
     tilt: { rpm: 3000, d: 0.1, beta: 20, push: false, hint: 'The axle starts 20° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within 1% of Mgd/(I_s ω_s). Released from rest it wobbles between 20° and 9°.' }
   };
-  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], tip: [], gates: [], gate: null, lastP: null, rows: [] };
+  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, slow: false, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], tip: [], gates: [], gate: null, lastP: null, rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -664,6 +664,7 @@ table.rows input:focus { border-color: var(--accent); }
   function setRun(on) { S.run = on; $('sB').disabled = on; $('push').disabled = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { if (S.fell) reset(); setRun(!S.run); });
   $('back').addEventListener('click', reset);
+  $('slowmo').addEventListener('click', () => { S.slow = !S.slow; $('slowmo').setAttribute('aria-pressed', String(S.slow)); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
   const H = 2e-4;
   function advance(dt) {
@@ -684,7 +685,7 @@ table.rows input:focus { border-color: var(--accent); }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.run) { advance(dt); draw(); readouts(); }
+    if (S.run) { advance(S.slow ? dt / 10 : dt); draw(); readouts(); }   /* Slow motion: the simulated clock runs at a tenth of real time */
     else if (G3.on && CAM.from) draw();   /* a change of camera eases in even while the gyroscope is held */
     requestAnimationFrame(frame);
   }

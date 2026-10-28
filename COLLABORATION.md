@@ -5096,3 +5096,20 @@ Steve: the Race view's 3D camera was hard to aim; it should change pitch only, n
   drag and two finger twist, pinch and sideways moves all leave th at the camera's heading; tilt, pan and zoom still change;
   no page errors. vdcheck `--only clip` 0 cut off; test_sound_waves passes. The How this works video never shows the Race, so
   it is unchanged. Handout does not mention turning. What's new entry added.
+
+## 2026-10-28 · Claude · Gyroscope: slow motion
+
+Steve thought a plain release had no gravity torque (no wobble until the spin went to 0 rpm and back). Not a bug: checked in
+the flat and 3D views and in Node with the CORE, a release from rest (solid disk, d = 0.10 m, level) gives
+| spin | dip | wobble | mean precession |
+| 6000 rpm | 0.96° | 16.5 Hz | 0.867 rad/s |
+| 3000 rpm | 3.82° | 8.3 Hz | 1.734 rad/s |
+| 1500 rpm | 14.5° | 4.3 Hz | 3.35 rad/s |
+| 1200 rpm | 21.3° | 3.7 Hz | 4.05 rad/s |
+matching wobble rate I_s ω_s/I_1, dip about 2MgdI_1/(I_s ω_s)² and Ω = Mgd/(I_s ω_s) = 1.735 rad/s at 3000 rpm. At 3000 rpm
+the axle tip moves about 6 mm eight times a second, so it looks still. Through 0 rpm the axle falls freely and picks up
+transverse angular momentum, hence the large wobble after spinning back up (also correct).
+- Steve chose a Slow motion button: `demos/gyroscope.html` viewbar button `#slowmo` (aria-pressed) runs the simulated clock
+  at a tenth of real time (`advance(dt / 10)`). Physics, gate timings (simulated clock), strip, strobe, keys and video unchanged.
+- test_gyroscope passes; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; checked in Playwright with WebGL at
+  desktop and 390 px. What's new entry added.
