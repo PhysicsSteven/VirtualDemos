@@ -5407,3 +5407,14 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
   Amperian loop, compass grid), so no separate Sandbox: it gets the in picture tray instead. Top left of the picture: a wire out,
   a wire in (5 A), and a bin; drop a dragged wire on the tray to remove it. Physics untouched. Handout About line in
   straight-wire-fields.md. vdcheck after 0 problems; Playwright drops and removals at 1280 and 400 px, no page errors.
+
+## 2026-10-28 · Claude · Two Speaker Sandbox
+- Fifth on Steve's sandbox list. New "Sandbox" setup in `demos/two-speaker.html`: up to eight speakers anywhere on the floor from a
+  tray (a column right of the floor when the Set up card floats right, else a strip under the floor), each in phase or wired
+  backwards (red rim), drag back to the tray to remove; ready made: three in a row, facing each other (5 m either side of the
+  microphone), empty room. Walk, waves and loudness map all work; quiet lines and Record are off in the Sandbox.
+- CORE `pressureN(x, y, f, tC, spk)`: the same point source sum as `pressure()`, any number of sources; test
+  `test_two_speaker_sandbox.cjs` (4): equals `pressure()` for two at (0, ±d/2), three in a row add 20 log10 3 far ahead, facing
+  pair gives quiet spots λ/2 apart, no speakers no sound.
+- The meter now says "silent" where the pressures cancel exactly (the level is −∞ dB there; it used to print −221.6 dB from the
+  floor inside level()). Records are unchanged. vdcheck after 0 problems, clip 0 cut off; Playwright drags at 1280 and 400 px.

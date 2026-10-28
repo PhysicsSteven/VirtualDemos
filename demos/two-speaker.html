@@ -150,9 +150,14 @@ table.rows input:focus { border-color: var(--accent); }
       </div>
       <div class="card" id="card" role="group" aria-labelledby="cardTitle">
         <span class="card-title" id="cardTitle">Set up (fades while the microphone walks)</span>
-        <div><div class="slider-head"><label for="sD">Speaker separation d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.2" max="3" step="0.01"></div>
-        <div class="seg" role="group" aria-label="How speaker 2 is wired" id="phaseSeg"><button type="button" data-ph="0" aria-pressed="true">In phase</button><button type="button" data-ph="1" aria-pressed="false">Speaker 2 wired backwards</button></div>
-        <label class="check"><input type="checkbox" id="spk2" checked><span>Speaker 2 on</span></label>
+        <div data-two><div class="slider-head"><label for="sD">Speaker separation d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.2" max="3" step="0.01"></div>
+        <div class="seg" role="group" aria-label="How speaker 2 is wired" id="phaseSeg" data-two><button type="button" data-ph="0" aria-pressed="true">In phase</button><button type="button" data-ph="1" aria-pressed="false">Speaker 2 wired backwards</button></div>
+        <label class="check" data-two><input type="checkbox" id="spk2" checked><span>Speaker 2 on</span></label>
+        <div id="sbsBox" hidden>
+          <div class="chips" id="sbsRigs" role="group" aria-label="Ready made speaker layouts"><button type="button" data-r="row" aria-pressed="true">Three in a row</button><button type="button" data-r="facing" aria-pressed="false">Facing each other</button><button type="button" data-r="empty" aria-pressed="false">Empty room</button></div>
+          <div class="seg" role="group" aria-label="How the selected speaker is wired" id="sbsPh"><button type="button" data-ph="0" aria-pressed="true">Selected: in phase</button><button type="button" data-ph="1" aria-pressed="false">Wired backwards</button></div>
+          <p class="hint" id="sbsMsg" aria-live="polite">Drag speakers from the tray onto the floor, anywhere; drag one back to the tray to remove it. Tap a speaker to pick it.</p>
+        </div>
         <div><div class="slider-head"><label for="sX">Walk line, distance from the speakers</label><output id="oX" for="sX"></output></div><input type="range" id="sX" min="1" max="9" step="0.1"></div>
         <div><div class="slider-head"><label for="sT">Air temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="40" step="1"></div>
       </div>
@@ -184,6 +189,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="reverse" aria-pressed="false">Speaker 2 wired backwards</button>
           <button type="button" data-p="speed" aria-pressed="false">Measure the speed of sound</button>
           <button type="button" data-p="mystery" aria-pressed="false">Mystery frequency</button>
+          <button type="button" data-p="sandbox" aria-pressed="false">Sandbox</button>
         </div>
         <button type="button" class="btn" id="newMystery" hidden>New mystery frequency</button>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -258,6 +264,13 @@ table.rows input:focus { border-color: var(--accent); }
     let lo = -1e4, hi = 1e4; for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (dist(x, m, -d / 2) - dist(x, m, d / 2) < D) lo = m; else hi = m; }
     return (lo + hi) / 2;
   }
+  /* the Sandbox: any number of point sources spk = [{x, y, ph}] anywhere on the floor (ph in radians: 0 in phase, π wired backwards),
+     each a e^{−i(kr + ph)}/r as above; with speakers at (0, ±d/2) it gives the same pressure as pressure() */
+  function pressureN(x, y, f, tC, spk) {
+    const k = TAU * f / soundSpeed(tC), r = []; let re = 0, im = 0;
+    for (const q of spk) { const ri = Math.hypot(x - q.x, y - q.y); r.push(ri); re += AMP * Math.cos(k * ri + q.ph) / ri; im -= AMP * Math.sin(k * ri + q.ph) / ri; }
+    return { re, im, r, r1: r[0], r2: r[1] };
+  }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Two speaker interference virtual apparatus: recorded readings (simulated data)', `# demo version,${meta.version}`,
@@ -274,19 +287,20 @@ table.rows input:focus { border-color: var(--accent); }
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newMystery = () => 300 + Math.floor(Math.random() * 901);   /* Hz, 300 to 1200 */
-  const S = { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 4, mx: 4, my: 0, mystery: 0, view: 'waves', lines: false, blind: false, walking: false, phase: 0, preset: 'basic', rows: [], series: 0, trace: [], traceKey: '' };
+  const S = { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 4, mx: 4, my: 0, mystery: 0, view: 'waves', lines: false, blind: false, walking: false, phase: 0, preset: 'basic', rows: [], series: 0, trace: [], traceKey: '', sand: false, spk: [], ssel: null, sdrag: null, snid: 1, srig: 'row' };
   const PRESETS = {
     basic: { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 4, hint: '686 Hz at 20 °C: λ = 0.500 m. The speakers are 1.00 m apart. Walk along the line 4 m out and find the quiet spots; at each, r₂ − r₁ should be an odd number of half wavelengths. Then turn speaker 2 off: the dips disappear.' },
     close: { f: 686, d: 0.4, ph: 0, on2: true, tC: 20, X: 4, hint: 'Speakers 0.40 m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/2. Move the speakers apart and count the lines appear.' },
     reverse: { f: 686, d: 1.0, ph: 1, on2: true, tC: 20, X: 4, hint: 'Speaker 2 is wired backwards, so it pushes when speaker 1 pulls. Straight ahead, where r₁ = r₂, is now quiet: loud and quiet lines have swapped. This is why the two wires of a speaker must not be swapped.' },
     speed: { f: 500, d: 1.5, ph: 0, on2: true, tC: 20, X: 3, hint: 'Find the quiet spots along the walk line at several frequencies. At each frequency the path difference r₂ − r₁ = (m + ½)λ grows by one wavelength from one quiet spot to the next, so the slope of r₂ − r₁ against m is λ, and fλ is the speed of sound. Try another air temperature.' },
+    sandbox: { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 6, hint: 'Build your own: put up to eight speakers anywhere on the floor, each in phase or wired backwards, all fed by the one generator. Three in a row aim a loud beam straight ahead; two facing each other make a standing wave between them, with quiet spots half a wavelength apart.' },
     mystery: { f: 686, d: 1.2, ph: 0, on2: true, tC: 20, X: 4, mystery: true, hint: 'The generator display is covered. Find the quiet spots, work out the wavelength, and with the speed of sound at 20 °C find the frequency. New mystery frequency picks another.' }
   };
   $('modelHint').textContent = 'Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as 1/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives 80 dB at 1 m (chosen). The speed of sound is 331.3 m/s √(1 + t/273.15 °C), 343.2 m/s at 20 °C (OpenStax University Physics Vol 1, §17.2), with t in °C. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker 1 is at y = +d/2. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.';
   const fNow = () => (S.mystery ? S.mystery : S.f);
-  const P = (x, y) => pressure(x, y, fNow(), S.d, S.tC, S.ph * PI, S.on2);
+  const P = (x, y) => (S.sand ? pressureN(x, y, fNow(), S.tC, S.spk.map((q) => ({ x: q.x, y: q.y, ph: q.ph * PI }))) : pressure(x, y, fNow(), S.d, S.tC, S.ph * PI, S.on2));
 
-  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.f = c.f; S.d = c.d; S.ph = c.ph; S.on2 = c.on2; S.tC = c.tC; S.X = c.X; S.mystery = c.mystery ? newMystery() : 0; S.mx = c.X; S.my = 0; upd(); }
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.f = c.f; S.d = c.d; S.ph = c.ph; S.on2 = c.on2; S.tC = c.tC; S.X = c.X; S.mystery = c.mystery ? newMystery() : 0; S.mx = c.X; S.my = 0; S.sand = name === 'sandbox'; if (S.sand) sbsLoad(S.srig, true); upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), mic = $('mic'), GEO = {};
   /* the measuring tools: a ruler on the floor of the room, drawn to scale (path differences from each speaker to the microphone) */
   VD.tools({ el: can, scale: () => (GEO.ppm ? { m: 1 / GEO.ppm, area: GEO.area } : null) });
@@ -308,9 +322,13 @@ table.rows input:focus { border-color: var(--accent); }
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const k of KNOBS) { const el = $(k.id); el.setAttribute('aria-valuenow', String(S.f)); el.setAttribute('aria-valuetext', S.mystery ? 'covered' : `${S.f} Hz`); el.firstChild.style.transform = `rotate(${(S.f / k.per * KNOB_DEG) % 360}deg)`; }
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    for (const el of document.querySelectorAll('[data-two]')) el.hidden = S.sand; $('sbsBox').hidden = !S.sand;
+    $('genTitle').textContent = S.sand ? 'Function generator, to every speaker' : 'Function generator, to both speakers';
+    for (const b of document.querySelectorAll('#sbsRigs button')) b.setAttribute('aria-pressed', String(b.dataset.r === S.srig));
+    { const q = S.spk.find((o) => o.id === S.ssel); for (const b of document.querySelectorAll('#sbsPh button')) { b.setAttribute('aria-pressed', String(!!q && +b.dataset.ph === q.ph)); b.disabled = !q; } }
     meter();
   }
-  const changed = () => { S.preset = S.preset === 'mystery' && S.mystery ? 'mystery' : ''; upd(); };
+  const changed = () => { S.preset = S.preset === 'mystery' && S.mystery ? 'mystery' : S.sand ? 'sandbox' : ''; upd(); };
   function upd() { sync(); GEO.field = null; draw(); drawWalk(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   $('newMystery').addEventListener('click', () => { const was = S.mystery; S.mystery = newMystery(); capStatus(`The last mystery frequency was ${was} Hz. A new one is playing.`); upd(); });
@@ -339,7 +357,7 @@ table.rows input:focus { border-color: var(--accent); }
   can.addEventListener('click', (e) => { if (!GEO.ppm) return; const r = can.getBoundingClientRect(), x = (e.clientX - r.left - GEO.x0) / GEO.ppm, y = (GEO.yc - (e.clientY - r.top)) / GEO.ppm; if (x > 0.1 && x < ROOM_X && Math.abs(y) < ROOM_Y / 2) { if (S.walking) setWalk(false); moveMic(x, y); } });
 
   /* the walk: the microphone moves along the walk line from one side to the other at 0.5 m/s; the card fades meanwhile */
-  const traceKey = () => [fNow(), S.d, S.ph, S.on2, S.tC, S.X].join('|');
+  const traceKey = () => [fNow(), S.d, S.ph, S.on2, S.tC, S.X, S.sand ? JSON.stringify(S.spk.map((q) => [q.x, q.y, q.ph])) : ''].join('|');
   function setWalk(on) { S.walking = on; const over = getComputedStyle(card).position === 'absolute'; card.classList.toggle('away', on && over); card.inert = on && over;
     if (on) { const k = traceKey(); if (k !== S.traceKey) { S.trace = []; S.traceKey = k; } /* a walk starts at the far side, or carries on if the microphone was stopped part way along the walk line */ if (Math.abs(S.mx - S.X) > 1e-6 || S.my > ROOM_Y / 2 - 0.2 || !S.trace.length) S.my = -ROOM_Y / 2 + 0.05; S.mx = S.X; }
     $('walk').textContent = on ? 'Stop the walk' : 'Walk the microphone'; $('walk').classList.toggle('attn', !on); meter(); draw(); }
@@ -352,19 +370,22 @@ table.rows input:focus { border-color: var(--accent); }
   }
   $('clearWalk').addEventListener('click', () => { S.trace = []; drawWalk(); });
 
+  /* the level as shown; where the pressures cancel exactly (no speaker, or equal distances with one wired backwards) the level is −∞ dB */
+  const dbText = (L) => (L < -100 ? 'silent' : `${L.toFixed(1)} dB`);
   function meter() {
     const p = P(S.mx, S.my), L = level(p), dd = (a, v) => `<dt>${a}</dt><dd>${v}</dd>`;
-    $('oLevel').textContent = `${L.toFixed(1)} dB`;
-    let h = dd('x, from the wall', `${S.mx.toFixed(3)} m`) + dd('y, sideways', `${S.my.toFixed(3)} m`) + dd('r₁, to speaker 1', `${p.r1.toFixed(3)} m`) + dd('r₂, to speaker 2', `${p.r2.toFixed(3)} m`);
+    $('oLevel').textContent = dbText(L);
+    let h = dd('x, from the wall', `${S.mx.toFixed(3)} m`) + dd('y, sideways', `${S.my.toFixed(3)} m`) + (S.sand ? p.r.map((r, i) => dd(`r${'₁₂₃₄₅₆₇₈'[i]}, to speaker ${i + 1}`, `${r.toFixed(3)} m`)).join('') : dd('r₁, to speaker 1', `${p.r1.toFixed(3)} m`) + dd('r₂, to speaker 2', `${p.r2.toFixed(3)} m`));
     h += dd('wavelength λ', S.blind || S.mystery ? 'hidden' : `${wavelength(fNow(), S.tC).toFixed(3)} m`);
     $('tape').innerHTML = h;
-    mic.setAttribute('aria-label', `Microphone at x ${S.mx.toFixed(2)} m, y ${S.my.toFixed(2)} m, ${L.toFixed(1)} dB: drag it, or use the arrow keys to move it 5 cm (Shift, 50 cm)`); /* a button cannot carry aria-valuetext */
+    mic.setAttribute('aria-label', `Microphone at x ${S.mx.toFixed(2)} m, y ${S.my.toFixed(2)} m, ${dbText(L)}: drag it, or use the arrow keys to move it 5 cm (Shift, 50 cm)`); /* a button cannot carry aria-valuetext */
     if (GEO.ppm) { mic.style.left = `${GEO.x0 + S.mx * GEO.ppm}px`; mic.style.top = `${GEO.yc - S.my * GEO.ppm}px`; }
   }
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
   $('record').addEventListener('click', () => {
+    if (S.sand) { capStatus('The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.'); return; }
     const p = P(S.mx, S.my);
     S.rows.push({ f: S.mystery ? 'mystery' : String(S.f), d: S.d.toFixed(2), s2: !S.on2 ? 'off' : S.ph ? 'wired backwards' : 'in phase', t: String(S.tC), x: S.mx.toFixed(3), y: S.my.toFixed(3), r1: p.r1.toFixed(3), r2: p.r2.toFixed(3), L: level(p).toFixed(1) });
     renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
@@ -418,6 +439,12 @@ table.rows input:focus { border-color: var(--accent); }
   function fieldGrid(gw, gh) {
     if (GEO.field && GEO.field.gw === gw && GEO.field.gh === gh) return GEO.field;
     const n = gw * gh, a1 = new Float32Array(n), a2 = new Float32Array(n), k1 = new Float32Array(n), k2 = new Float32Array(n), lv = new Float32Array(n), k = TAU * fNow() / soundSpeed(S.tC);
+    if (S.sand) {   /* every speaker: C = Σ a cos(kr + φ) and Sn = Σ a sin(kr + φ), so the wave is C cos(phase) + Sn sin(phase) */
+      const C = new Float32Array(n), Sn = new Float32Array(n);
+      for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const x = (i + 0.5) / gw * ROOM_X, y = ROOM_Y / 2 - (j + 0.5) / gh * ROOM_Y, m = j * gw + i;
+        for (const q of S.spk) { const r = Math.max(0.05, Math.hypot(x - q.x, y - q.y)), th = k * r + q.ph * PI; C[m] += Math.cos(th) / r; Sn[m] += Math.sin(th) / r; } lv[m] = S.spk.length ? level(P(x, y)) : 0; }
+      off.width = gw; off.height = gh; return (GEO.field = { gw, gh, C, Sn, lv, img: octx.createImageData(gw, gh) });
+    }
     for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const x = (i + 0.5) / gw * ROOM_X, y = ROOM_Y / 2 - (j + 0.5) / gh * ROOM_Y, r1 = dist(x, y, S.d / 2), r2 = dist(x, y, -S.d / 2), m = j * gw + i;
       a1[m] = 1 / r1; a2[m] = S.on2 ? 1 / r2 : 0; k1[m] = k * r1; k2[m] = k * r2 + S.ph * PI; lv[m] = level(P(x, y)); }
     off.width = gw; off.height = gh;
@@ -429,12 +456,15 @@ table.rows input:focus { border-color: var(--accent); }
     const Gr = window.VDGear; Gr.backdrop(ctx, W, Hh);
     const overlay = getComputedStyle(shelf).position === 'absolute', shelfTop = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top : Hh;
     /* the floor fills the picture above the shelf, keeping the room's shape; the speakers' wall on the left */
-    const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH = Math.max(120, shelfTop - padT - 24 * p), ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
+    const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH0 = Math.max(120, shelfTop - padT - 24 * p), ppm0 = Math.min(availW / ROOM_X, availH0 / ROOM_Y);
+    /* the Sandbox tray: a column right of the floor when the card floats to the right with room to spare, otherwise a strip under the floor */
+    GEO.trayCol = S.sand && getComputedStyle(card).position === 'absolute' && W - (padL + ROOM_X * ppm0) - 24 * p >= 300 + 84 * p;
+    const availH = S.sand && !GEO.trayCol ? Math.max(120, availH0 - 58 * p) : availH0, ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
     const x0 = padL, yc = padT + ROOM_Y / 2 * ppm; Object.assign(GEO, { ppm, x0, yc });
     const fw = ROOM_X * ppm, fh = ROOM_Y * ppm, fy = yc - fh / 2;
     GEO.area = [x0, fy, fw, fh];
     /* the Set up card sits in the room left over to the right of the floor when there is room for it, otherwise over the floor's top left */
-    if (getComputedStyle(card).position === 'absolute') { const spare = W - (x0 + fw) - 24 * p; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
+    if (getComputedStyle(card).position === 'absolute') { const tc = GEO.trayCol ? 84 * p : 0, spare = W - (x0 + fw) - 24 * p - tc; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p + tc}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
     /* the floor, lifted off the page by a soft shadow */
     ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.55)' : 'rgba(20,30,45,0.18)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
     ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh); ctx.restore();
@@ -443,7 +473,7 @@ table.rows input:focus { border-color: var(--accent); }
       const cP = rgb(T.pos), cN = rgb(T.accent), cB = rgb(T.surface), ph = reduce ? 0 : S.phase, ref = 1 / 3;   /* color saturates at the pressure one speaker gives 3 m away */
       for (let m = 0; m < gw * gh; m++) {
         let t, c;
-        if (S.view === 'waves') { const v = (F.a1[m] * Math.cos(ph - F.k1[m]) + F.a2[m] * Math.cos(ph - F.k2[m])) / ref; t = Math.min(1, Math.abs(v)) * 0.6; c = v > 0 ? cP : cN; }
+        if (S.view === 'waves') { const v = (F.C ? F.C[m] * Math.cos(ph) + F.Sn[m] * Math.sin(ph) : F.a1[m] * Math.cos(ph - F.k1[m]) + F.a2[m] * Math.cos(ph - F.k2[m])) / ref; t = Math.min(1, Math.abs(v)) * 0.6; c = v > 0 ? cP : cN; }
         else { t = Math.min(1, Math.max(0, (F.lv[m] - 50) / 35)) * 0.8; c = cN; }
         d[4 * m] = cB[0] + (c[0] - cB[0]) * t; d[4 * m + 1] = cB[1] + (c[1] - cB[1]) * t; d[4 * m + 2] = cB[2] + (c[2] - cB[2]) * t; d[4 * m + 3] = 255;
       }
@@ -458,7 +488,7 @@ table.rows input:focus { border-color: var(--accent); }
     for (const y of [-4, -2, 0, 2, 4]) Gr.label(ctx, String(y), x0 - 16 * p, yc - y * ppm, { a: 'right', s: 9 * p, m: 1 });
     Gr.label(ctx, 'y (m)', x0 - 16 * p, fy - 9 * p, { a: 'right', s: 9 * p });
     /* quiet lines: hyperbolas r₂ − r₁ = (m + ½)λ (in phase) or mλ (wired backwards) */
-    if (S.lines && !S.blind && !S.mystery && S.on2) {
+    if (S.lines && !S.blind && !S.mystery && S.on2 && !S.sand) {
       const lam = wavelength(fNow(), S.tC); ctx.strokeStyle = T.ink; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2;
       for (let m = -40; m <= 40; m++) { const D = (S.ph ? m : m + 0.5) * lam; if (Math.abs(D) >= S.d) continue;
         ctx.beginPath(); for (let x = 0.05; x <= ROOM_X; x += 0.05) { const y = yForPathDiff(x, S.d, D); if (Math.abs(y) > ROOM_Y / 2) break; ctx.lineTo(x0 + x * ppm, yc - y * ppm); } ctx.stroke(); }
@@ -472,17 +502,17 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = gw2; ctx.fillRect(x0 - 12 * p, fy - 4 * p, 12 * p, fh + 8 * p);
     /* tapes from each speaker to the microphone: a yellow measuring tape pulled straight */
     const mx = x0 + S.mx * ppm, my = yc - S.my * ppm;
-    for (const s of [1, -1]) { if (s < 0 && !S.on2) continue; const ax = x0 + 18 * p, ay = yc - s * S.d / 2 * ppm;
+    if (S.sand) sbsDraw(Gr, p, x0, yc, ppm, fy, fh, mx, my); else for (const s of [1, -1]) { if (s < 0 && !S.on2) continue; const ax = x0 + 18 * p, ay = yc - s * S.d / 2 * ppm;
       ctx.save(); ctx.lineCap = 'butt'; ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 4.2 * p; ctx.beginPath(); ctx.moveTo(ax, ay + 1.2 * p); ctx.lineTo(mx, my + 1.2 * p); ctx.stroke();
       ctx.strokeStyle = Gr.dark() ? '#b89a3c' : '#f0cc4a'; ctx.lineWidth = 3.4 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(mx, my); ctx.stroke(); ctx.restore(); }
-    for (const [s, on, name] of [[1, true, '1'], [-1, S.on2, '2']]) { const sy = yc - s * S.d / 2 * ppm, bw = 20 * p, bh = 28 * p;
+    if (!S.sand) for (const [s, on, name] of [[1, true, '1'], [-1, S.on2, '2']]) { const sy = yc - s * S.d / 2 * ppm, bw = 20 * p, bh = 28 * p;
       ctx.save(); if (!on) ctx.globalAlpha = 0.45;
       Gr.box(ctx, x0 - 3 * p, sy - bh / 2, bw, bh, { r: 3 * p, color: '#2e353f' });
       /* the cone seen edge on from above: a curved lip at the front of the cabinet */
       ctx.fillStyle = '#14181d'; ctx.beginPath(); ctx.ellipse(x0 + bw - 3 * p, sy, 3 * p, bh * 0.38, 0, -PI / 2, PI / 2); ctx.fill();
       ctx.restore();
       Gr.label(ctx, name, x0 + bw + 6 * p, sy - s * 15 * p, { s: 10 * p, w: 700, c: T.ink, alpha: 0.85 }); }
-    Gr.label(ctx, `d = ${S.d.toFixed(2)} m`, x0 + 24 * p, yc, { s: 10 * p });
+    if (!S.sand) Gr.label(ctx, `d = ${S.d.toFixed(2)} m`, x0 + 24 * p, yc, { s: 10 * p });
     /* the microphone on its stand, from above: three legs, the boom and the capsule */
     Gr.shadow(ctx, mx + 3 * p, my + 4 * p, 18 * p, 14 * p, 0.8);
     ctx.strokeStyle = Gr.dark() ? '#9aa4b0' : '#3a434f'; ctx.lineWidth = 2 * p; ctx.lineCap = 'round';
@@ -490,13 +520,99 @@ table.rows input:focus { border-color: var(--accent); }
     let gm = ctx.createRadialGradient(mx - 2.5 * p, my - 2.5 * p, 0.5 * p, mx, my, 8 * p); gm.addColorStop(0, '#f2f4f7'); gm.addColorStop(0.5, '#a7b0bb'); gm.addColorStop(1, '#4a5360');
     ctx.fillStyle = gm; ctx.beginPath(); ctx.arc(mx, my, 7.5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(mx - 5 * p, my + i * 2.6 * p); ctx.lineTo(mx + 5 * p, my + i * 2.6 * p); ctx.stroke(); }
-    const lbl = `${level(P(S.mx, S.my)).toFixed(1)} dB`; ctx.font = `600 ${11 * p}px ${T.mono}`; const lw = ctx.measureText(lbl).width + 10 * p;
+    const lbl = dbText(level(P(S.mx, S.my))); ctx.font = `600 ${11 * p}px ${T.mono}`; const lw = ctx.measureText(lbl).width + 10 * p;
     ctx.fillStyle = Gr.dark() ? 'rgba(13,18,24,0.82)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(mx + 12 * p, my - 22 * p, lw, 18 * p, 4 * p); ctx.fill();
     txt(lbl, mx + 17 * p, my - 13 * p, { s: 11, b: 1, m: 1 });
     if (S.view === 'waves' && !reduce) Gr.label(ctx, 'waves slowed about 1000 times', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     if (S.view === 'loud') Gr.label(ctx, 'loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     mic.style.left = `${mx}px`; mic.style.top = `${my}px`;
   }
+
+  // ---------- Sandbox: speakers anywhere on the floor, from a tray under it ----------
+  window.__ts = { S, GEO };   /* for the tests */
+  const SBS_MAX = 8;
+  const SBS_RIGS = {
+    row: [[0, 0.5, 0], [0, 0, 0], [0, -0.5, 0]],
+    facing: [[0, 0, 0], [ROOM_X, 0, 0]],
+    empty: []
+  };
+  const sbsSay = (m) => { $('sbsMsg').textContent = m; };
+  function sbsLoad(name, quiet) { S.srig = name; S.spk = SBS_RIGS[name].map(([x, y, ph]) => ({ id: S.snid++, x, y, ph })); S.ssel = null; S.mx = name === 'facing' ? ROOM_X / 2 : 6; S.my = 0; S.X = S.mx; if (!quiet) { S.preset = 'sandbox'; upd(); } }
+  function sbsEdited() { S.srig = ''; GEO.field = null; S.preset = 'sandbox'; upd(); }
+  /* a speaker seen from above, centered on its point source, cone toward +x; wired backwards ones have a red rim */
+  function sbsCab(Gr, cx, cy, p, ph, sel, alpha) {
+    const bw = 20 * p, bh = 26 * p; ctx.save(); ctx.globalAlpha = alpha || 1;
+    Gr.box(ctx, cx - bw / 2, cy - bh / 2, bw, bh, { r: 3 * p, color: '#2e353f' });
+    ctx.fillStyle = '#14181d'; ctx.beginPath(); ctx.ellipse(cx + bw / 2 - 2 * p, cy, 3 * p, bh * 0.38, 0, -PI / 2, PI / 2); ctx.fill();
+    if (ph) { ctx.strokeStyle = T.pos; ctx.lineWidth = 2.2 * p; ctx.strokeRect(cx - bw / 2 - 1 * p, cy - bh / 2 - 1 * p, bw + 2 * p, bh + 2 * p); }
+    ctx.fillStyle = '#f2f4f7'; ctx.beginPath(); ctx.arc(cx, cy, 1.8 * p, 0, 7); ctx.fill();
+    if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.roundRect(cx - bw / 2 - 5 * p, cy - bh / 2 - 5 * p, bw + 10 * p, bh + 10 * p, 5 * p); ctx.stroke(); }
+    ctx.restore();
+  }
+  function sbsDraw(Gr, p, x0, yc, ppm, fy, fh, mx, my) {
+    const at = (q) => [x0 + q.x * ppm, yc - q.y * ppm];
+    for (const q of S.spk) { const [ax, ay] = at(q); ctx.save(); ctx.strokeStyle = Gr.dark() ? 'rgba(184,154,60,0.75)' : 'rgba(240,204,74,0.85)'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(mx, my); ctx.stroke(); ctx.restore(); }
+    S.spk.forEach((q, i) => { const [ax, ay] = at(q); if (S.sdrag && S.sdrag.item === q && !S.sdrag.on) return; sbsCab(Gr, ax, ay, p, q.ph, q.id === S.ssel); Gr.label(ctx, String(i + 1), ax - 14 * p, ay - 16 * p, { s: 10 * p, w: 700, c: T.ink, alpha: 0.85 }); });
+    /* the tray under the floor: a speaker in phase, one wired backwards, and the bin */
+    const full = S.spk.length >= SBS_MAX, rr = (x, y, w, h) => { ctx.beginPath(); ctx.roundRect(x, y, w, h, 7 * p); };
+    let boxes, items, bin;
+    if (GEO.trayCol) { const tx = x0 + ROOM_X * ppm + 12 * p, w = 72 * p, ih = 56 * p; items = [0, 1].map((i) => [tx, fy + i * ih, w, ih]); boxes = [tx, fy, w, 2 * ih]; bin = [tx, fy + 2 * ih + 6 * p, w, 44 * p]; }
+    else { const ty = fy + fh + 24 * p, th = 46 * p, tw = Math.min(300 * p, ROOM_X * ppm), binW = 74 * p, iw = (tw - binW - 6 * p) / 2; items = [0, 1].map((i) => [x0 + iw * i, ty, iw, th]); boxes = [x0, ty, iw * 2, th]; bin = [x0 + iw * 2 + 6 * p, ty, binW, th]; }
+    ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; rr(...boxes); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; rr(...boxes); ctx.stroke();
+    S.tray = { items: [], box: boxes, bin };
+    [[0, 'speaker'], [1, GEO.trayCol ? 'backwards' : 'wired backwards']].forEach(([ph, lab], i) => { const b = items[i], cx = b[0] + b[2] / 2; sbsCab(Gr, cx, b[1] + 18 * p, p * 0.8, ph, false, full ? 0.35 : 1);
+      Gr.label(ctx, lab, cx, b[1] + b[3] - 9 * p, { a: 'center', s: 9 * p, c: T.ink, alpha: full ? 0.35 : 0.9 }); S.tray.items.push({ ph, box: b }); });
+    const [bx, by, bw, bh] = S.tray.bin, hot = S.sdrag && S.sdrag.moved && S.sdrag.overTray;
+    ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = hot ? T.pos : T.muted; ctx.lineWidth = 1.2 * p; rr(bx, by, bw, bh); ctx.stroke(); ctx.setLineDash([]);
+    if (hot) { ctx.globalAlpha = 0.18; ctx.fillStyle = T.pos; rr(bx, by, bw, bh); ctx.fill(); ctx.globalAlpha = 1; }
+    Gr.label(ctx, 'Drop here', bx + bw / 2, by + bh * 0.36, { a: 'center', s: 9 * p, c: hot ? T.pos : T.muted, alpha: 1 }); Gr.label(ctx, 'to remove', bx + bw / 2, by + bh * 0.68, { a: 'center', s: 9 * p, c: hot ? T.pos : T.muted, alpha: 1 });
+    const d = S.sdrag; if (d && d.moved && !d.on) sbsCab(Gr, d.px, d.py, p, d.item.ph, true, 0.7);
+  }
+  const inB = (b, x, y) => !!b && x >= b[0] && x <= b[0] + b[2] && y >= b[1] && y <= b[1] + b[3];
+  const sbsXY = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  function sbsHit(x, y) {
+    if (!S.tray) return null; const p = ps();
+    for (const it of S.tray.items) if (inB(it.box, x, y)) return { type: 'tray', ph: it.ph };
+    for (let i = S.spk.length - 1; i >= 0; i--) { const q = S.spk[i], ax = GEO.x0 + q.x * GEO.ppm, ay = GEO.yc - q.y * GEO.ppm; if (Math.abs(x - ax) < 14 * p && Math.abs(y - ay) < 17 * p) return { type: 'spk', q }; }
+    return null;
+  }
+  let sbsClickBlock = false;
+  can.addEventListener('pointerdown', (e) => {
+    if (!S.sand) return; const [x, y] = sbsXY(e), h = sbsHit(x, y); if (!h) return;
+    e.stopImmediatePropagation(); can.focus({ preventScroll: true }); sbsClickBlock = true;
+    if (h.type === 'tray') { if (S.spk.length >= SBS_MAX) { sbsSay(`${SBS_MAX} speakers at most: drag one back to the tray first.`); return; } S.sdrag = { item: { id: S.snid++, x: 0, y: 0, ph: h.ph }, fresh: true, on: false, moved: true, px: x, py: y, x0: x, y0: y }; }
+    else { S.ssel = h.q.id; S.sdrag = { item: h.q, on: true, moved: false, px: x, py: y, x0: x, y0: y }; sync(); }
+    if (S.walking) setWalk(false); can.setPointerCapture(e.pointerId); draw();
+  }, true);
+  can.addEventListener('pointermove', (e) => {
+    if (!S.sand || !S.sdrag) return; e.stopImmediatePropagation(); const d = S.sdrag, [x, y] = sbsXY(e), p = ps(); d.px = x; d.py = y;
+    if (!d.moved && Math.hypot(x - d.x0, y - d.y0) < 4 * p) return; d.moved = true;
+    const wx = (x - GEO.x0) / GEO.ppm, wy = (GEO.yc - y) / GEO.ppm, onFloor = wx >= -0.15 && wx <= ROOM_X + 0.15 && Math.abs(wy) <= ROOM_Y / 2 + 0.15;
+    d.overTray = inB(S.tray.box, x, y) || inB(S.tray.bin, x, y);
+    if (onFloor && !d.overTray) { d.item.x = Math.min(ROOM_X, Math.max(0, Math.round(wx * 100) / 100)); d.item.y = Math.min(ROOM_Y / 2, Math.max(-ROOM_Y / 2, Math.round(wy * 100) / 100)); if (!d.on) { S.spk.push(d.item); d.on = true; } }
+    else if (d.on) { S.spk = S.spk.filter((q) => q !== d.item); d.on = false; }
+    GEO.field = null; meter(); draw();
+  }, true);
+  const sbsUp = (e) => {
+    if (!S.sand || !S.sdrag) return; e.stopImmediatePropagation(); const d = S.sdrag; S.sdrag = null;
+    if (d.moved) { if (d.on) { S.ssel = d.item.id; sbsSay(`Speaker ${S.spk.indexOf(d.item) + 1} at x = ${d.item.x.toFixed(2)} m, y = ${d.item.y.toFixed(2)} m.`); } else if (!d.fresh) { if (S.ssel === d.item.id) S.ssel = null; sbsSay('Removed a speaker.'); } sbsEdited(); }
+    else draw();
+    setTimeout(() => { sbsClickBlock = false; }, 0);
+  };
+  can.addEventListener('pointerup', sbsUp, true); can.addEventListener('pointercancel', sbsUp, true);
+  can.addEventListener('click', (e) => { if (S.sand && sbsClickBlock) { e.stopImmediatePropagation(); sbsClickBlock = false; } }, true);
+  $('sbsRigs').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { sbsLoad(b.dataset.r); sbsSay('Walk the microphone, or drag it, to hear the pattern.'); } });
+  $('sbsPh').addEventListener('click', (e) => { const b = e.target.closest('[data-ph]'), q = S.spk.find((o) => o.id === S.ssel); if (b && q) { q.ph = +b.dataset.ph; sbsEdited(); } });
+  /* keys: [ and ] pick a speaker; with one picked, the arrow keys move it (Shift, 50 cm) and Delete removes it; otherwise they move the microphone */
+  can.addEventListener('keydown', (e) => {
+    if (!S.sand) return; const k = e.key;
+    if (k === '[' || k === ']') { if (!S.spk.length) return; e.preventDefault(); e.stopImmediatePropagation(); const i = S.spk.findIndex((q) => q.id === S.ssel), n = S.spk.length; S.ssel = S.spk[((i < 0 ? (k === ']' ? -1 : 0) : i) + (k === ']' ? 1 : -1) + n) % n].id; sync(); draw(); return; }
+    if (k === 'Escape') { S.ssel = null; sync(); draw(); return; }
+    const q = S.spk.find((o) => o.id === S.ssel); if (!q) return;
+    const st = e.shiftKey ? 0.5 : 0.05, dv = { ArrowRight: [st, 0], ArrowLeft: [-st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[k];
+    if (dv) { e.preventDefault(); e.stopImmediatePropagation(); q.x = Math.min(ROOM_X, Math.max(0, +(q.x + dv[0]).toFixed(2))); q.y = Math.min(ROOM_Y / 2, Math.max(-ROOM_Y / 2, +(q.y + dv[1]).toFixed(2))); sbsEdited(); return; }
+    if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); e.stopImmediatePropagation(); S.spk = S.spk.filter((o) => o !== q); S.ssel = null; sbsSay('Removed a speaker.'); sbsEdited(); }
+  }, true);
 
   function tick(dt) { if (S.walking) stepWalk(dt); if (!reduce && S.view === 'waves') S.phase = (S.phase + dt * TAU * 0.6) % TAU; if (S.walking || (!reduce && S.view === 'waves')) draw(); }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; GEO.field = null; setWalk(S.walking); drawWalk(); }
