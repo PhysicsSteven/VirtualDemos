@@ -5292,3 +5292,9 @@ Steve: the Sandbox felt clunky going back and forth to the side panel; wanted dr
   bullet updated to describe dragging.
 - Checks: Playwright drags through tray, join, grips and bin; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; 1368,
   400 and 360 px, light, dark, Projector, no page errors. Node suites pass (test_browser needs Firefox). What's new entry added.
+
+## 2026-10-28 · Claude · Home page: Courses first, OpenStax volume tiles
+
+Steve: courses to the top, and OpenStax with thumbnails like the courses. Order is now search, Courses, OpenStax by section, All
+demos by topic. Each volume is a course style tile (`tile(..., href=)`) with four demo thumbnails spread through that volume in
+section order; the old `.vol` card styles are gone.

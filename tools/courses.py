@@ -843,26 +843,19 @@ TILE_CSS = '''
 .fam .mosaic .thumb img { height: 72px; }
 .fam .fbody { padding: 12px 16px 16px; }
 .fam h3 { margin: 0; font-size: 1.25rem; }
-.fam .sub, .vol .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.fam .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
 .tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
   background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
 .tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
 .tlinks a:hover { border-color: var(--accent); color: var(--accent); }
-.tlinks a:focus-visible, .vol:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.vols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
-.vol { display: block; height: 100%; padding: 14px 18px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; color: inherit; text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
-.vol h3 { margin: 0; font-size: 1.25rem; }
-.vol p { margin: 0; color: var(--muted); font-size: 0.93rem; }
-.vol:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
-.vol:hover h3 { color: var(--accent); }
-@media (prefers-reduced-motion: reduce) { .ctile, .vol { transition: none; } .ctile:hover, .vol:hover { translate: none; } }
+.tlinks a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
 '''
 
 
 def tiles(m, cards, t):
-    """The home page below the hero (Steve, 2026-10-28): search, OpenStax University Physics by section, Courses (LISTED) and
+    """The home page below the hero (Steve, 2026-10-28): search, Courses (LISTED), OpenStax University Physics by section and
     All demos by topic (topics.json families)."""
     out, m_demos = {}, {d['demo']: d for d in m['demos']}
     for c in m['courses']:
@@ -894,23 +887,27 @@ def tiles(m, cards, t):
     for v in (1, 2, 3):
         ss = [s for s in m['sections'] if s['vol'] == v]
         chs = sorted({s['chapter'] for s in ss})
-        vols.append(f'''      <li><a class="vol" href="openstax.html#vol-{v}"><h3>Volume {v}</h3><p class="sub">{len(chs)} chapters · {len(ss)} sections</p><p>{VOL_ABOUT[v]}</p></a></li>''')
+        # four pictures spread through the volume: its demos in section order, each first met in this volume, evenly sampled
+        seen = list(dict.fromkeys(d for s in sorted(ss, key=sec_key) for d in s['demos'] if d in cards))
+        pick = [seen[round(i * (len(seen) - 1) / 3)] for i in range(4)] if len(seen) >= 4 else seen
+        vols.append(tile(f'vol-{v}', f'Volume {v}', VOL_ABOUT[v], f'{len(chs)} chapters · {len(ss)} sections',
+                         f'{BOOK[v]}, chapter by chapter, with the demos for each section.', pick, href=f'openstax.html#vol-{v}'))
     return f'''{TILE_START}
 <section class="wrap find" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
 </section>
-<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
-  <h2 id="openstax-h">OpenStax University Physics by section</h2>
-  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
-  <ul class="vols">
-{chr(10).join(vols)}
-  </ul>
-</section>
 <section class="wrap courses" id="courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
   <ul class="ctiles">
 {chr(10).join(listed)}
+  </ul>
+</section>
+<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
+  <h2 id="openstax-h">OpenStax University Physics by section</h2>
+  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
+  <ul class="ctiles">
+{chr(10).join(vols)}
   </ul>
 </section>
 <section class="wrap courses" id="topics" aria-labelledby="topics-h">
@@ -924,9 +921,9 @@ def tiles(m, cards, t):
 {TILE_END}'''
 
 
-def tile(cid, title, sub, count, lede, names):
+def tile(cid, title, sub, count, lede, names, href=None):
     pics = ''.join(thumb(n, '') for n in names[:4])
-    return (f'''      <li><a class="ctile" href="{cid}.html">
+    return (f'''      <li><a class="ctile" href="{href or cid + '.html'}">
         <div class="mosaic" aria-hidden="true">{pics}</div>
         <div class="cbody"><h3>{esc(title)}</h3><p class="sub">{esc(sub)} · {count}</p><p>{esc(lede)}</p></div>
       </a></li>''')

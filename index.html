@@ -224,21 +224,14 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .fam .mosaic .thumb img { height: 72px; }
 .fam .fbody { padding: 12px 16px 16px; }
 .fam h3 { margin: 0; font-size: 1.25rem; }
-.fam .sub, .vol .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.fam .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
 .tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
   background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
 .tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
 .tlinks a:hover { border-color: var(--accent); color: var(--accent); }
-.tlinks a:focus-visible, .vol:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.vols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
-.vol { display: block; height: 100%; padding: 14px 18px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; color: inherit; text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
-.vol h3 { margin: 0; font-size: 1.25rem; }
-.vol p { margin: 0; color: var(--muted); font-size: 0.93rem; }
-.vol:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
-.vol:hover h3 { color: var(--accent); }
-@media (prefers-reduced-motion: reduce) { .ctile, .vol { transition: none; } .ctile:hover, .vol:hover { translate: none; } }
+.tlinks a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
 /* site search (tools/courses.py) */
 .find { padding-top: 30px; }
 .find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
@@ -302,21 +295,30 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <h2 id="find-h">Find a demo</h2>
   <div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
 </section>
-<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
-  <h2 id="openstax-h">OpenStax University Physics by section</h2>
-  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
-  <ul class="vols">
-      <li><a class="vol" href="openstax.html#vol-1"><h3>Volume 1</h3><p class="sub">17 chapters · 99 sections</p><p>Mechanics, waves and sound</p></a></li>
-      <li><a class="vol" href="openstax.html#vol-2"><h3>Volume 2</h3><p class="sub">16 chapters · 95 sections</p><p>Thermodynamics, electricity and magnetism</p></a></li>
-      <li><a class="vol" href="openstax.html#vol-3"><h3>Volume 3</h3><p class="sub">11 chapters · 76 sections</p><p>Optics and modern physics</p></a></li>
-  </ul>
-</section>
 <section class="wrap courses" id="courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
   <ul class="ctiles">
       <li><a class="ctile" href="astro-2203.html">
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Astro 2203</h3><p class="sub">Solar system astronomy · 10 weeks · 3 tests · 28 demos</p><p>From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.</p></div>
+      </a></li>
+  </ul>
+</section>
+<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
+  <h2 id="openstax-h">OpenStax University Physics by section</h2>
+  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
+  <ul class="ctiles">
+      <li><a class="ctile" href="openstax.html#vol-1">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/center-of-mass-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/center-of-mass-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/fluids-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/fluids-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/doppler-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/doppler-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Volume 1</h3><p class="sub">Mechanics, waves and sound · 17 chapters · 99 sections</p><p>University Physics Volume 1, chapter by chapter, with the demos for each section.</p></div>
+      </a></li>
+      <li><a class="ctile" href="openstax.html#vol-2">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/temperature-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/temperature-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/gauss-law-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gauss-law-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/e-over-m-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/e-over-m-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/em-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/em-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Volume 2</h3><p class="sub">Thermodynamics, electricity and magnetism · 16 chapters · 95 sections</p><p>University Physics Volume 2, chapter by chapter, with the demos for each section.</p></div>
+      </a></li>
+      <li><a class="ctile" href="openstax.html#vol-3">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/huygens-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/huygens-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/gps-clocks-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gps-clocks-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/shells-and-x-rays-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/shells-and-x-rays-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/early-universe-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/early-universe-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Volume 3</h3><p class="sub">Optics and modern physics · 11 chapters · 76 sections</p><p>University Physics Volume 3, chapter by chapter, with the demos for each section.</p></div>
       </a></li>
   </ul>
 </section>
