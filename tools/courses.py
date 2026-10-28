@@ -538,7 +538,9 @@ def schedule_section(sched, demos, cards, first_unit):
 # demos/<name>.html; courses, topics and the textbook only point at it. Opened from a topic page, a demo steps through that topic
 # (nav.js) and keeps every worksheet; course pages, ?course= links and Canvas are unchanged.
 TOPICS = ROOT / 'curriculum' / 'topics.json'
-TAUGHT = ['physics-1', 'physics-2', 'astro-2203']   # Courses: the classes on a schedule; the other course pages are the chapter modules
+# The courses listed on the home page (Steve, 2026-10-28: "in courses we only have Astro 2203 right now", the rest is covered by the
+# topics; new courses get added here as he adds them). The other course pages stay online, unlisted, for Canvas and old links.
+LISTED = ['astro-2203']
 VOL_ABOUT = {1: 'Mechanics, waves and sound', 2: 'Thermodynamics, electricity and magnetism', 3: 'Optics and modern physics'}
 
 
@@ -695,7 +697,7 @@ TOPIC_CSS = '''
 '''
 
 
-def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to all courses')):
+def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to the home page')):
     """base: the page sits one folder down (topics/<id>.html), so a <base> makes every link resolve from the site root; such a
     page has no #anchor links of its own, since they would resolve against the root too."""
     return f'''<!doctype html>
@@ -834,7 +836,6 @@ TILE_CSS = '''
 .ctile:hover h3 { color: var(--accent); }
 .ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
-.courses .subh { margin: 22px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
 .fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
 .fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
 .fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
@@ -861,8 +862,8 @@ TILE_CSS = '''
 
 
 def tiles(m, cards, t):
-    """The home page below the hero (Steve, 2026-10-28): search, Courses (the classes on a schedule, then the chapter modules),
-    All demos by topic (topics.json families) and OpenStax University Physics by section."""
+    """The home page below the hero (Steve, 2026-10-28): search, OpenStax University Physics by section, Courses (LISTED) and
+    All demos by topic (topics.json families)."""
     out, m_demos = {}, {d['demo']: d for d in m['demos']}
     for c in m['courses']:
         names = []
@@ -877,8 +878,7 @@ def tiles(m, cards, t):
         count = (f"{len(weeks)} weeks · {sum(1 for u in c['units'] if u.get('review'))} tests" if weeks
                  else f"{sum(1 for u in c['units'] if not u.get('schedule'))} units")
         out[c['id']] = tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names)
-    taught = [out[c] for c in TAUGHT if c in out]
-    modules = [v for c, v in out.items() if c not in TAUGHT]
+    listed = [out[c] for c in LISTED if c in out]
     fams = []
     for f in t['families']:
         n = len({d for x in f['topics'] for d in x['demos']})
@@ -900,14 +900,17 @@ def tiles(m, cards, t):
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
 </section>
+<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
+  <h2 id="openstax-h">OpenStax University Physics by section</h2>
+  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
+  <ul class="vols">
+{chr(10).join(vols)}
+  </ul>
+</section>
 <section class="wrap courses" id="courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
   <ul class="ctiles">
-{chr(10).join(taught)}
-  </ul>
-  <h3 class="subh">Modules that follow the textbook chapters</h3>
-  <ul class="ctiles">
-{chr(10).join(modules)}
+{chr(10).join(listed)}
   </ul>
 </section>
 <section class="wrap courses" id="topics" aria-labelledby="topics-h">
@@ -915,13 +918,6 @@ def tiles(m, cards, t):
   <p class="allnote">Every demo on the site, sorted by subject. A demo can be under more than one topic.</p>
   <ul class="fams">
 {chr(10).join(fams)}
-  </ul>
-</section>
-<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
-  <h2 id="openstax-h">OpenStax University Physics by section</h2>
-  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
-  <ul class="vols">
-{chr(10).join(vols)}
   </ul>
 </section>
 <script src="search.js" defer></script>
@@ -1252,7 +1248,7 @@ NOTFOUND_CSS = '''
 
 
 def notfound_page(m):
-    links = ''.join(f'<li><a href="{c["id"]}.html">{esc(c["title"])}</a></li>' for c in m['courses'])
+    links = ''.join(f'<li><a href="{c["id"]}.html">{esc(c["title"])}</a></li>' for c in m['courses'] if c['id'] in LISTED)
     links += '<li><a href="index.html#topics">All demos by topic</a></li><li><a href="openstax.html">OpenStax by section</a></li>'
     return f'''<!doctype html>
 <html lang="en">
@@ -1395,8 +1391,8 @@ def build():
     idx = re.sub(r'\n<script>.*?</script>', '', idx, count=1, flags=re.S)
     n_all = sum(len(sub['demos']) for sub in CATALOG_DATA()['subjects'])
     n_topics = sum(len(f['topics']) for f in t['families'])
-    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses)</span></li>(\s*<li><span><strong>\d+</strong> topics</span></li>)?',
-                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(m["courses"])}</strong> courses</span></li>'
+    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses?)</span></li>(\s*<li><span><strong>\d+</strong> topics</span></li>)?',
+                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(LISTED)}</strong> course{"s" if len(LISTED) != 1 else ""}</span></li>'
                  f'\n      <li><span><strong>{n_topics}</strong> topics</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
     idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n</style>', 1)

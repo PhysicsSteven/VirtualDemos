@@ -26,9 +26,10 @@ the two assistants share context. Log what you change there when you finish.
   its own course page with only its subset, in schedule order (`INCLUDED` in `tools/courses.py`; a new Astro 2203 only demo needs a
   `MERGE_PLACE` entry). Wave optics (Vol 3 ch 3–4) is a Physics II unit like any other (nothing is optional, Steve 2026-10-24). A demo may sit in
   several courses or modules (list each in its `course`); `later` marks a demo in no course (BZ and DNA). Moving a demo is a map change only.
-- Home page (Steve, 2026-10-28): Courses (Physics I, Physics II, Astro 2203, then the five modules), All demos by topic
-  (`curriculum/topics.json` → `topics/<id>.html`; every catalog demo must be in at least one topic, so a new demo needs a topic too)
-  and OpenStax by section (`openstax.html`). `misc.html` redirects to the Chemistry and biology topic.
+- Home page (Steve, 2026-10-28): OpenStax by section (`openstax.html`), Courses (only the courses in `LISTED` in `tools/courses.py`,
+  for now Astro 2203; the other course pages stay online, unlisted, for Canvas and old links), All demos by topic
+  (`curriculum/topics.json` → `topics/<id>.html`; every catalog demo must be in at least one topic, so a new demo needs a topic too).
+  `misc.html` redirects to the Chemistry and biology topic. New courses Steve adds go in `LISTED` and draw on the same demos.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 
 ## What's new

@@ -5268,3 +5268,13 @@ Rest of the rollout (Physics I and II entry above).
   the single canvas Acoustics demos).
 - Checks as before: each divider dragged at 1368x912 and 400x860, canvases checked to follow their panes after a drag, Node
   tests, vdcheck `--only after` and `--only clip`, and a stale vd.js run.
+
+## 2026-10-28 · Claude · Home page: OpenStax first, Courses lists only Astro 2203
+
+Steve: "move the openstax to the top; in courses we only have Astro 2203 right now, everything else is covered by Demos by
+Topic; as I add courses we can make more modules that pull from the general library."
+- Home page order: search, OpenStax by section, Courses, All demos by topic. Courses shows only `LISTED` in `tools/courses.py`
+  (`['astro-2203']`); a new course goes there. Hero count reads 1 course.
+- Physics I, Physics II, Acoustics, Thermodynamics, Modern Physics, Astronomy and Medical Physics pages are still built and
+  online, unlisted: Canvas cartridges, `?course=` links, breadcrumbs and search hits still point at them. 404 links only listed
+  courses. Course pages' bottom link now says "Back to the home page".
