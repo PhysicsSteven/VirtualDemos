@@ -5278,3 +5278,17 @@ Topic; as I add courses we can make more modules that pull from the general libr
 - Physics I, Physics II, Acoustics, Thermodynamics, Modern Physics, Astronomy and Medical Physics pages are still built and
   online, unlisted: Canvas cartridges, `?course=` links, breadcrumbs and search hits still point at them. 404 links only listed
   courses. Course pages' bottom link now says "Back to the home page".
+## 2026-10-28 · Claude · Springs Sandbox: build by dragging in the picture
+
+Steve: the Sandbox felt clunky going back and forth to the side panel; wanted drag and drop in the scene.
+- `demos/springs.html`: a parts tray drawn in the picture (a column on the right; a strip along the bottom below 600 px wide):
+  a spring and blocks of 50, 100, 200 and 500 g. Drag a spring onto the ceiling (it hangs where it is dropped), a hook (below
+  it) or a block (from its bottom face); drag a block onto a hook or bar. Drag a hook onto another hook or block beside it to
+  join them (side by side); drop a spring or hook on the bin to remove it with what hangs only from it; drag a block to the bin
+  to take it off its hook. Grips on each spring (k, drag sideways) and beside each block (mass). The rig holds still while a
+  part is being placed. Settle moved to the row under the picture. The side panel keeps the rigs, damping and label toggles;
+  the old buttons and sliders stay in a "Build with buttons instead" fold for keyboard use.
+- Physics and the Springs combined key unchanged (capture rerun: identical data; key PDF text unchanged). Handout About
+  bullet updated to describe dragging.
+- Checks: Playwright drags through tray, join, grips and bin; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; 1368,
+  400 and 360 px, light, dark, Projector, no page errors. Node suites pass (test_browser needs Firefox). What's new entry added.

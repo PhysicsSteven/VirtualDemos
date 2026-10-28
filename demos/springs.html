@@ -167,6 +167,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
+          <button type="button" class="btn" id="sbSettle" hidden title="Put every block at rest where it hangs">Settle</button>
           <button type="button" class="btn swb" id="swBtn" aria-pressed="false" aria-label="Stopwatch: press to start or stop">Stopwatch <span class="mono" id="swRead">0.00 s</span></button>
           <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
@@ -211,7 +212,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
       <section id="sbSec" hidden>
         <h2>Sandbox</h2>
-        <p class="hint">Hang springs, hooks and blocks any way you like. Tap something on the drawing to select it; drag a block to pull it and let go.</p>
+        <p class="hint">Drag springs and blocks from the parts tray onto the ceiling, a hook or a block. Drag one hook onto another to put springs side by side, drag the grips to change k or a block's mass, drag a block to pull it and let go, and drop anything on the bin to take it away.</p>
         <div class="chips" id="sbBuilds" role="group" aria-label="Ready made rigs">
           <button type="button" data-b="series" aria-pressed="true">Two in series</button>
           <button type="button" data-b="parallel" aria-pressed="false">Two in parallel</button>
@@ -221,12 +222,20 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-b="empty" aria-pressed="false">Start empty</button>
         </div>
         <details class="more"><summary>About this rig</summary><p class="hint" id="sbHint"></p></details>
+        <div class="ctl">
+          <div class="slider-head"><label for="sbB">Oil damping b on each block</label><output id="oSbB" class="mono" for="sbB"></output></div>
+          <input type="range" id="sbB" min="0" max="3" step="0.05" value="0">
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="sbLabK" checked>Spring constants</label>
+          <label><input type="checkbox" id="sbLabT" checked>Tension in each spring</label>
+        </div>
+        <details class="more"><summary>Build with buttons instead</summary>
         <p class="status" id="sbSel" aria-live="polite"></p>
         <div class="btnrow">
           <button type="button" class="btn" id="sbAdd">Hang a spring below</button>
           <button type="button" class="btn" id="sbJoin" aria-pressed="false">Join to…</button>
           <button type="button" class="btn" id="sbDel">Remove</button>
-          <button type="button" class="btn" id="sbSettle">Let it settle</button>
         </div>
         <div class="ctl" id="sbMctl" hidden>
           <div class="slider-head"><label for="sbM">Block on it</label><output id="oSbM" class="mono" for="sbM"></output></div>
@@ -236,15 +245,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div class="slider-head"><label for="sbK" id="lSbK">Spring constant k</label><output id="oSbK" class="mono" for="sbK"></output></div>
           <input type="range" id="sbK" min="5" max="100" step="1">
         </div>
-        <div class="ctl">
-          <div class="slider-head"><label for="sbB">Oil damping b on each block</label><output id="oSbB" class="mono" for="sbB"></output></div>
-          <input type="range" id="sbB" min="0" max="3" step="0.05" value="0">
-        </div>
-        <div class="toggles">
-          <label><input type="checkbox" id="sbLabK" checked>Spring constants</label>
-          <label><input type="checkbox" id="sbLabT" checked>Tension in each spring</label>
-        </div>
-        <details class="more"><summary>More about this</summary><p class="hint">Join to… makes two hooks (or a hook and a block) into one bar, so the springs on them stretch together: that is how springs go side by side. Hang a spring below a hook to put springs one after another. Remove takes away the selected spring, hook or block and anything that hung only from it. Let it settle puts every block at rest where it hangs. Every spring is 10.0 cm long when unstretched.</p></details>
+        <p class="hint">Tap a part on the drawing to select it, then use these. Join to… makes two hooks (or a hook and a block) into one bar, so the springs on them stretch together: that is how springs go side by side. Hang a spring below a hook to put springs one after another. Remove takes away the selected spring, hook or block and anything that hung only from it. Let it settle puts every block at rest where it hangs. Every spring is 10.0 cm long when unstretched.</p>
+        </details>
       </section>
 
       <section class="nosb">
@@ -2889,7 +2891,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       hint: 'Only the ceiling. Hang a spring from it, hang a block on the hook, and build from there.' }
   };
   const SB = { rig: null, md: null, z: [], t: 0, E0: 0, hist: [], held: null, sel: ['n', 0], join: null, nextId: 1, build: 'series',
-    labels: { k: true, T: true }, b: 0, scale: null, pend: null, ic: null, y0: 0, x: [0, 0] };
+    labels: { k: true, T: true }, b: 0, scale: null, ic: null, drag: null, tray: null };
   const sbOn = () => S.sys === 'sandbox';
   const sbNode = (id) => SB.rig.nodes.find((nd) => nd.id === id);
   const sbSpring = (id) => SB.rig.springs.find((s) => s.id === id);
@@ -3040,17 +3042,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const sw2 = SB.held ? 0.05 : sbSwing(), ys = [...y.values()], yr = SB.md.allY(SB.md.yEq);
     let yMax = Math.max(0.12, ...ys.map((v) => v + SB_H), ...[...yr.values()].map((v) => v + SB_H + Math.min(sw2, 0.4)));
     const xs = SB.rig.springs.map((s) => s.x), xLo = Math.min(-0.08, ...xs) - 0.05, xHi = Math.max(0.08, ...xs) + 0.05;
-    const top = ctlH + 18 * ps, padL = 64 * ps, padR = 132 * ps, bot = 14 * ps;
+    /* the parts tray: a column on the right, or a strip along the bottom on a narrow screen */
+    const horiz = W < 600, trayW = horiz ? 0 : 78 * ps, stripH = horiz ? 52 * ps : 0, top = ctlH + 18 * ps, padL = 64 * ps, padR = horiz ? 96 * ps : trayW + 124 * ps, bot = 14 * ps + stripH;
     const target = Math.min((H - top - bot) / (yMax + 0.02), 1600);
     if (!SB.scale || (!SB.held && (SB.scale > target || target > SB.scale * 1.6))) SB.scale = target;   /* held: the scale stays put under the pointer */
     /* across the page nothing is to scale (the springs only move up and down), so the rig spreads to use the width */
     const s = SB.scale, sx = Math.min((W - padL - padR) / (xHi - xLo), 1500 * ps), cx = padL + (W - padL - padR) / 2 - (xLo + xHi) / 2 * sx, X = (x) => cx + x * sx, Y = (v) => top + v * s;
-    SB.view = { X, Y, s, top };
+    SB.view = { X, Y, s, sx, top, W, H, trayW, horiz, stripH };
     // ceiling and ruler (cm below the ceiling)
     wallV(ctx, top, X(xLo), X(xHi));
     if (!window.VDGear) { ctx.fillStyle = T.wire; ctx.fillRect(X(xLo), top - 8 * ps, X(xHi) - X(xLo), 8 * ps); }
     cHandles.push({ id: 'n0', sel: ['n', 0], box: [X(xLo), top - 14 * ps, X(xHi) - X(xLo), 16 * ps], cursor: 'pointer' });
-    if (SB.sel[0] === 'n' && SB.sel[1] === 0) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.strokeRect(X(xLo) - 2, top - 14 * ps, X(xHi) - X(xLo) + 4, 16 * ps); }
+    if (SB.sel[0] === 'n' && SB.sel[1] === 0 && !SB.drag && $('sbSel').offsetParent) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.strokeRect(X(xLo) - 2, top - 14 * ps, X(xHi) - X(xLo) + 4, 16 * ps); }
     const rx = padL - 14 * ps, step = nice(40 * ps / s * 100) / 100;
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(rx, Y(0)); ctx.lineTo(rx, Y(yMax)); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
@@ -3061,12 +3064,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     SB.rig.springs.forEach((sp, i) => {
       const na = sbNode(sp.a), ya = Y(y.get(sp.a) + (na.m > 0 ? SB_H : 0)), yb = Y(y.get(sp.b)), x = X(sp.x), hot = SB.sel[0] === 's' && SB.sel[1] === sp.id;
       drawSpring(ctx, x, ya, x, yb, { r: 7 * ps, n: 10, lw: springLW(sp.k), hot });
-      cHandles.push({ id: 's' + sp.id, sel: ['s', sp.id], box: [x - 10 * ps, Math.min(ya, yb), 20 * ps, Math.abs(yb - ya)], cursor: 'pointer' });
+      cHandles.push({ id: 's' + sp.id, sel: ['s', sp.id], box: [x - 10 * ps, Math.min(ya, yb), 20 * ps, Math.abs(yb - ya)], cursor: 'grab' });
+      if (Math.abs(yb - ya) > 34 * ps) {   /* drag sideways for a stiffer or softer spring */
+        const gy = (ya + yb) / 2; grip(ctx, x, gy, SB.drag && SB.drag.type === 'k' && SB.drag.id === sp.id, false);
+        cHandles.push({ id: 'k' + sp.id, sel: ['s', sp.id], grip: 'k', box: [x - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      }
       const parts = []; if (SB.labels.k) parts.push(`k${i + 1} = ${sig(sp.k, 3)} N/m`); if (SB.labels.T) parts.push(`T = ${fx(tens[i].T, 2)} N`);
       /* the label goes left when another spring stands close on the right at the same height */
       const yIn = (q) => { const qa = Y(y.get(q.a)), qb = Y(y.get(q.b)); return qa < Math.max(ya, yb) && qb > Math.min(ya, yb); };
       const left = SB.rig.springs.some((q) => q !== sp && q.x > sp.x && X(q.x) - x < 130 * ps && yIn(q));
-      parts.forEach((p, j) => labelBox(ctx, p, x + (left ? -12 : 12) * ps, (ya + yb) / 2 + (j - (parts.length - 1) / 2) * fs * 1.25 + fs * 0.35, left ? 'right' : 'left', j === 0 && SB.labels.k ? T.ink : T.equi, fs * 0.88, 600));
+      parts.forEach((p, j) => labelBox(ctx, p, x + (left ? -18 : 18) * ps, (ya + yb) / 2 + (j - (parts.length - 1) / 2) * fs * 1.25 + fs * 0.35, left ? 'right' : 'left', j === 0 && SB.labels.k ? T.ink : T.equi, fs * 0.88, 600));
     });
     // nodes: hooks, bars and blocks
     for (const nd of SB.rig.nodes) {
@@ -3082,7 +3089,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps; roundRect(ctx, x0, yy, w, hgt, 3 * ps); ctx.stroke();
         const lab = `${i + 1} · ${fx(nd.m * 1000, 0)} g`;
         if (hgt >= 13 * ps) { ctx.fillStyle = T.ink; ctx.font = `600 ${Math.min(11 * ps, hgt * 0.62)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, x0 + w / 2, yy + hgt / 2); }
-        else { labelBox(ctx, lab, x0 + w + 8 * ps, yy + hgt / 2 + fs * 0.35, 'left', cols[i % 6], fs * 0.88, 700); ctx.textBaseline = 'alphabetic'; }   /* too thin to write on: beside it */
+        else { labelBox(ctx, lab, x0 + w + 28 * ps, yy + hgt / 2 + fs * 0.35, 'left', cols[i % 6], fs * 0.88, 700); ctx.textBaseline = 'alphabetic'; }   /* too thin to write on: beside it */
+        { const gx = x0 + w + 13 * ps, gy = yy + hgt / 2; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'm' && SB.drag.id === nd.id, false);   /* drag sideways for more or less mass */
+          cHandles.push({ id: 'm' + nd.id, sel: ['n', nd.id], grip: 'm', box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' }); }
         cHandles.push({ id: 'n' + nd.id, sel: ['n', nd.id], box: [x0, yy, w, Math.max(hgt, 14 * ps)], cursor: SB.held ? 'grabbing' : 'grab', mass: true });
       } else {
         const x0 = X(lo) - 6 * ps, x1 = X(hi) + 6 * ps;
@@ -3092,14 +3101,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         if (!SB.rig.springs.some((sp) => sp.a === nd.id)) {   /* an open hook below: something can hang here */
           const xc = X((lo + hi) / 2); ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(xc, yy); ctx.lineTo(xc, yy + 6 * ps); ctx.arc(xc + 3.5 * ps, yy + 6 * ps, 3.5 * ps, Math.PI, 0, true); ctx.stroke();
         }
-        cHandles.push({ id: 'n' + nd.id, sel: ['n', nd.id], box: [x0 - 4 * ps, yy - 9 * ps, x1 - x0 + 8 * ps, 22 * ps], cursor: 'pointer' });
+        cHandles.push({ id: 'n' + nd.id, sel: ['n', nd.id], box: [x0 - 4 * ps, yy - 9 * ps, x1 - x0 + 8 * ps, 22 * ps], cursor: 'grab', hook: true });
       }
     }
     // the rest position of each block, as a short gold tick on the ruler side
     SB.md.ids.forEach((id, i) => { const p = Y(SB.md.yEq[i]); ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(rx, p); ctx.lineTo(rx + 8 * ps, p); ctx.stroke(); });
     ctx.textBaseline = 'alphabetic';
-    if (!SB.md.n) labelBox(ctx, SB.rig.springs.length ? 'Put a block on a hook to see it move.' : 'Select the ceiling and hang a spring from it.', W / 2, H - 16 * ps, 'center', T.muted, fs, 400);
-    else if (SB.join !== null) labelBox(ctx, 'Tap a hook, bar or block to join to.', W / 2, H - 16 * ps, 'center', T.accent, fs, 600);
+    const mid = padL + (W - padL - padR) / 2;
+    const hy = H - 16 * ps - stripH, hx = horiz ? W / 2 : mid;
+    if (SB.drag && SB.drag.hint) labelBox(ctx, SB.drag.hint, hx, hy, 'center', T.accent, fs, 600);
+    else if (!SB.md.n) labelBox(ctx, SB.rig.springs.length ? 'Drag a block from the tray onto a hook.' : 'Drag a spring from the tray to the ceiling.', hx, hy, 'center', T.muted, fs, 400);
+    else if (SB.join !== null) labelBox(ctx, 'Tap a hook, bar or block to join to.', hx, hy, 'center', T.accent, fs, 600);
+    sbDrawTray(ctx, W, H, ps, fs);
   }
   function sbDrawBars() {
     const [W, H] = dims.e; if (!W || !H) return;
@@ -3174,27 +3187,140 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     let best = null, bd = Infinity;
     for (const hd of cHandles) {
       const [bx, by, bw, bh] = hd.box, dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh);
-      let d = Math.hypot(dx, dy); if (d === 0 && hd.sel[0] === 's') d = 0.5;
+      let d = Math.hypot(dx, dy); if (d === 0 && hd.grip) d = -1; else if (d === 0 && hd.sel[0] === 's') d = 0.5;
       if (d <= tol && d < bd) { bd = d; best = hd; }
     }
     return best;
   }
+
+  // ---------- Sandbox parts tray: drag a part out onto the rig, or a piece of the rig onto the bin ----------
+  const SB_PARTS = [{ kind: 'spring' }, { kind: 'block', m: 0.05 }, { kind: 'block', m: 0.1 }, { kind: 'block', m: 0.2 }, { kind: 'block', m: 0.5 }];
+  function sbDrawTray(ctx, W, H, ps, fs) {
+    const V = SB.view, VG = window.VDGear, n = SB_PARTS.length;
+    /* column: the parts in a box on the right, the bin at the bottom; strip: the parts in a row along the bottom, the bin at its end */
+    const binW = V.horiz ? 64 * ps : V.trayW, binH = V.horiz ? V.stripH - 8 * ps : 46 * ps;
+    const tw = V.horiz ? W - 16 * ps - binW - 6 * ps : V.trayW, x0 = 8 * ps + (V.horiz ? 0 : W - 16 * ps - tw), top = V.horiz ? H - V.stripH - 4 * ps : ctlH + 12 * ps;
+    const itemH = V.horiz ? V.stripH - 8 * ps : Math.max(36 * ps, Math.min(64 * ps, (H - top - 30 * ps - binH - 10 * ps) / n)), itemW = V.horiz ? tw / n : tw;
+    const boxH = V.horiz ? V.stripH : itemH * n + 24 * ps;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; roundRect(ctx, x0, top, tw, boxH, 8 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRect(ctx, x0, top, tw, boxH, 8 * ps); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `600 ${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (!V.horiz) ctx.fillText('PARTS', x0 + tw / 2, top + 12 * ps);
+    SB.tray = { parts: [], bin: null };
+    SB_PARTS.forEach((pt, i) => {
+      const cy = V.horiz ? top + V.stripH / 2 : top + 24 * ps + itemH * (i + 0.5), cx = V.horiz ? x0 + itemW * (i + 0.5) : x0 + tw / 2;
+      const box = [cx - itemW / 2 + 2 * ps, cy - itemH / 2 + 2 * ps, itemW - 4 * ps, itemH - 4 * ps];
+      if (pt.kind === 'spring') {
+        if (V.horiz) { drawSpring(ctx, cx - itemW * 0.36, cy, cx + itemW * 0.36, cy, { r: 5 * ps, n: 5, lw: springLW(20) }); }
+        else { drawSpring(ctx, cx, cy - itemH * 0.36, cx, cy + itemH * 0.18, { r: 6 * ps, n: 6, lw: springLW(20) }); ctx.fillStyle = T.ink; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.fillText('spring', cx, cy + itemH * 0.36); }
+      } else {
+        const w = Math.min(itemW - 10 * ps, (34 + 30 * Math.cbrt(pt.m)) * ps), h = 16 * ps, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1';
+        ctx.fillStyle = VG ? VG.mix(bc, '#ffffff', 0.15) : bc; roundRect(ctx, cx - w / 2, cy - h / 2, w, h, 3 * ps); ctx.fill();
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, cx - w / 2, cy - h / 2, w, h, 3 * ps); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${Math.round(pt.m * 1000)} g`, cx, cy + 0.5);
+      }
+      SB.tray.parts.push({ part: pt, box });
+    });
+    /* the bin: drop a spring, hook or block here to take it away */
+    const bx = V.horiz ? W - 8 * ps - binW : x0, by = V.horiz ? top + 4 * ps : H - binH - 14 * ps, hot = SB.drag && SB.drag.overBin;
+    ctx.fillStyle = hot ? T.pos : T.canvas; ctx.globalAlpha = hot ? 0.25 : 0.9; roundRect(ctx, bx, by, binW, binH, 8 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.setLineDash([4 * ps, 3 * ps]); ctx.strokeStyle = hot ? T.pos : T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, bx, by, binW, binH, 8 * ps); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = hot ? T.pos : T.muted; ctx.font = `600 ${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Drop here', bx + binW / 2, by + binH * 0.36); ctx.fillText('to remove', bx + binW / 2, by + binH * 0.66);
+    SB.tray.bin = [bx, by, binW, binH];
+    // a part on its way from the tray, and what it would attach to
+    const d = SB.drag;
+    if (d && d.type === 'new') {
+      if (d.target) { const hd = d.target; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([5 * ps, 3 * ps]); roundRect(ctx, hd.box[0] - 3 * ps, hd.box[1] - 3 * ps, hd.box[2] + 6 * ps, hd.box[3] + 6 * ps, 5 * ps); ctx.stroke(); ctx.setLineDash([]); }
+      ctx.globalAlpha = 0.75;
+      if (d.part.kind === 'spring') drawSpring(ctx, d.px, d.py, d.px, d.py + 60 * ps, { r: 7 * ps, n: 8, lw: springLW(20) });
+      else { const w = 60 * ps, h = 18 * ps; ctx.fillStyle = T.block; roundRect(ctx, d.px - w / 2, d.py - h / 2, w, h, 3 * ps); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; roundRect(ctx, d.px - w / 2, d.py - h / 2, w, h, 3 * ps); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.font = `600 ${10 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${Math.round(d.part.m * 1000)} g`, d.px, d.py); }
+      ctx.globalAlpha = 1;
+    }
+    if (d && d.type === 'hook' && d.moved) {
+      if (d.target) { const hd = d.target; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([5 * ps, 3 * ps]); roundRect(ctx, hd.box[0] - 3 * ps, hd.box[1] - 3 * ps, hd.box[2] + 6 * ps, hd.box[3] + 6 * ps, 5 * ps); ctx.stroke(); ctx.setLineDash([]); }
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(d.px - 12 * ps, d.py); ctx.lineTo(d.px + 12 * ps, d.py); ctx.stroke();
+    }
+    ctx.textBaseline = 'alphabetic';
+  }
+  const inBox = (b, x, y, pad) => b && x >= b[0] - pad && x <= b[0] + b[2] + pad && y >= b[1] - pad && y <= b[1] + b[3] + pad;
+  const sbPt = (ev) => { const r = cans.c.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  // what a dragged part would attach to at (x, y): a spring hangs from the ceiling, a hook, a bar or a block; a block goes on a hook or bar
+  function sbTargetAt(kind, x, y, skip) {
+    const ps = projScale(); let best = null, bd = Infinity;
+    for (const hd of cHandles) {
+      if (hd.grip || hd.sel[0] !== 'n' || hd.sel[1] === skip) continue;
+      const nd = hd.sel[1] === 0 ? null : sbNode(hd.sel[1]);
+      if (kind === 'block' && (!nd || nd.m > 0)) continue;
+      if (kind === 'hook' && (!nd || skip === undefined || sbAbove(SB.rig, skip, nd.id) || sbAbove(SB.rig, nd.id, skip))) continue;
+      const [bx, by, bw, bh] = hd.box, dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh), dd2 = Math.hypot(dx, dy);
+      const tol = (hd.sel[1] === 0 ? 30 : 22) * ps;
+      if (dd2 <= tol && dd2 < bd) { bd = dd2; best = hd; }
+    }
+    return best;
+  }
+  // hang a new spring from node top at drawing position px (the ceiling and blocks take it where it is dropped; a hook takes it below itself)
+  function sbHangAt(top, px) {
+    if (SB.rig.springs.length >= sbMaxSprings) { capStatus(`At most ${sbMaxSprings} springs fit on the drawing.`); return; }
+    const V = SB.view, nd = top === 0 ? null : sbNode(top), [lo, hi] = top === 0 ? [-Infinity, Infinity] : sbNodeSpan(top);
+    let x = (px - V.X(0)) / V.sx;
+    if (nd && nd.m > 0) { const half = Math.max((hi - lo) / 2 + 13 * projScale() / V.sx, 42 * projScale() / V.sx) - 6 * projScale() / V.sx; x = clamp(x, (lo + hi) / 2 - half, (lo + hi) / 2 + half); }
+    else if (nd) x = hi - lo > 0.005 ? clamp(x, lo, hi) : (lo + hi) / 2;
+    x = Math.round(x * 200) / 200;
+    const nid = SB.nextId++, sid = SB.nextId++;
+    SB.rig.nodes.push({ id: nid, m: 0 }); SB.rig.springs.push({ id: sid, a: top, b: nid, k: 20, x });
+    SB.sel = ['n', nid]; sbRebuild(false); sbUi();
+    $('live').textContent = 'A spring now hangs there with a hook at its end.';
+  }
+  function sbPutBlock(id, m) { const nd = sbNode(id); if (!nd || nd.m > 0) return; nd.m = m; SB.sel = ['n', id]; sbRebuild(false); sbUi(); $('live').textContent = `A ${Math.round(m * 1000)} g block hangs on the hook.`; }
   cans.c.addEventListener('pointerdown', (ev) => {
     if (!sbOn() || use3()) return;
     cans.c.focus({ preventScroll: true });
+    const [x, y] = sbPt(ev), cap = () => { try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} };
+    const part = SB.tray && SB.tray.parts.find((q) => inBox(q.box, x, y, 0));
+    if (part && !SB.held) { SB.drag = { type: 'new', part: part.part, px: x, py: y, hint: part.part.kind === 'spring' ? 'Drop it on the ceiling, a hook or a block.' : 'Drop it on a hook or a bar.' }; cap(); ev.preventDefault(); return; }
     const hd = sbHit(ev); if (!hd) return;
     if (SB.join !== null && hd.sel[0] === 'n') { sbJoin(hd.sel[1]); ev.preventDefault(); return; }
-    if (hd.mass) { sbBeginHold(hd.sel[1], ev); try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} cans.c.style.cursor = 'grabbing'; }
-    else sbSelect(hd.sel);
-    ev.preventDefault();
+    if (hd.grip === 'k') { const sp = sbSpring(hd.sel[1]); SB.drag = { type: 'k', id: sp.id, x0: x, v0: sp.k }; SB.sel = hd.sel; sbUi(); }
+    else if (hd.grip === 'm') { const nd = sbNode(hd.sel[1]); SB.drag = { type: 'm', id: nd.id, x0: x, v0: nd.m }; SB.sel = hd.sel; sbUi(); }
+    else if (hd.mass) { sbBeginHold(hd.sel[1], ev); cans.c.style.cursor = 'grabbing'; }
+    else if (hd.hook) { SB.drag = { type: 'hook', id: hd.sel[1], px: x, py: y, x0: x, y0: y, moved: false }; sbSelect(hd.sel); }
+    else if (hd.sel[0] === 's') { SB.drag = { type: 'spring', id: hd.sel[1], px: x, py: y, x0: x, y0: y, moved: false }; sbSelect(hd.sel); }
+    else { sbSelect(hd.sel); return; }
+    cap(); ev.preventDefault();
   });
   cans.c.addEventListener('pointermove', (ev) => {
     if (!sbOn()) return;
-    if (SB.held) { if (SB.held.moved || Math.abs(ev.clientY - SB.held.y0) > 3) sbHoldTo(ev.clientY); return; }
-    const hd = sbHit(ev); cans.c.style.cursor = hd ? hd.cursor : 'default';
+    const [x, y] = sbPt(ev), d = SB.drag, ps = projScale();
+    if (SB.held) { SB.held.overBin = inBox(SB.tray && SB.tray.bin, x, y, 6 * ps); SB.drag = SB.held.overBin ? { overBin: true, hint: 'Let go to take the block off its hook.' } : null;
+      if (SB.held.moved || Math.abs(ev.clientY - SB.held.y0) > 3) sbHoldTo(ev.clientY); return; }
+    if (d) {
+      d.px = x; d.py = y;
+      if (d.type === 'k' || d.type === 'm') {
+        const v = d.type === 'k' ? clamp(Math.round(d.v0 + (x - d.x0) * 95 / (220 * ps)), 5, 100) : clamp(Math.round((d.v0 + (x - d.x0) / (220 * ps)) * 100) / 100, 0.01, 1);
+        if (d.type === 'k') { if (sbSpring(d.id).k !== v) sbSetK(v); } else if (sbNode(d.id).m !== v) { SB.sel = ['n', d.id]; sbSetMass(Math.round(v * 1000)); }
+        return;
+      }
+      if (Math.hypot(x - (d.x0 === undefined ? x : d.x0), y - (d.y0 === undefined ? y : d.y0)) > 4) d.moved = true;
+      d.overBin = d.type !== 'new' && inBox(SB.tray && SB.tray.bin, x, y, 6 * ps);
+      d.target = d.overBin ? null : d.type === 'new' ? sbTargetAt(d.part.kind, x, y) : d.type === 'hook' ? sbTargetAt('hook', x, y, d.id) : null;
+      if (d.type !== 'new') d.hint = d.overBin ? 'Let go to take it away, with anything that hangs only from it.' : d.type === 'hook' && d.moved ? 'Drop it on a hook or block beside it to join them into one bar.' : d.type === 'spring' && d.moved ? 'Drag it to the bin to take it away.' : null;
+      return;
+    }
+    const part = SB.tray && SB.tray.parts.find((q) => inBox(q.box, x, y, 0));
+    const hd = part ? null : sbHit(ev); cans.c.style.cursor = part ? 'grab' : hd ? hd.cursor : 'default';
   });
-  const sbEnd = () => { if (sbOn() && SB.held) sbRelease(); };
-  cans.c.addEventListener('pointerup', sbEnd); cans.c.addEventListener('pointercancel', sbEnd);
+  const sbEnd = () => {
+    if (!sbOn()) return;
+    if (SB.held) { const bin = SB.held.overBin, id = SB.held.id; if (bin) { SB.held = null; SB.drag = null; SB.sel = ['n', id]; sbNode(id).m = 0; sbRebuild(false); sbUi(); $('live').textContent = 'Block taken off; its hook stays.'; } else { SB.drag = null; sbRelease(); } return; }
+    const d = SB.drag; SB.drag = null; if (!d) return;
+    if (d.type === 'new' && d.target) { if (d.part.kind === 'spring') sbHangAt(d.target.sel[1], d.px); else sbPutBlock(d.target.sel[1], d.part.m); }
+    else if ((d.type === 'hook' || d.type === 'spring') && d.overBin) { SB.sel = [d.type === 'hook' ? 'n' : 's', d.id]; sbRemove(); }
+    else if (d.type === 'hook' && d.target) { SB.join = d.id; sbJoin(d.target.sel[1]); }
+    else sbUi();
+  };
+  cans.c.addEventListener('pointerup', sbEnd); cans.c.addEventListener('pointercancel', () => { SB.drag = null; if (SB.held) sbRelease(); });
   function sbKey(e) {
     const k = e.key, [kind, id] = SB.sel;
     if ((k === 'ArrowUp' || k === 'ArrowDown') && kind === 'n' && sbMassIdx(id) >= 0 && !SB.held) {
@@ -3210,7 +3336,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     SB.dimWas = view3 && view3.is3d() ? '3d' : null;
     if (SB.dimWas) view3.set('flat');
     for (const bt of $('sysSeg').querySelectorAll('button')) bt.setAttribute('aria-pressed', String(bt.dataset.s === 'sandbox'));
-    document.querySelector('.rail').dataset.sb = 'on'; $('dimSeg').hidden = true; $('sbSec').hidden = false;
+    document.querySelector('.rail').dataset.sb = 'on'; $('dimSeg').hidden = true; $('sbSettle').hidden = false; $('sbSec').hidden = false;
     if (!SB.rig) sbLoad('series'); else sbUi();
     $('presetHint').textContent = SB_BUILDS[SB.build].hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
@@ -3219,7 +3345,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     SB.scale = null; ranges = {};
   }
   function sbExit() {
-    delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSec').hidden = true; SB.held = null; SB.join = null;
+    delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSettle').hidden = true; SB.drag = null; $('sbSec').hidden = true; SB.held = null; SB.join = null;
     if ($('modelHint').dataset.was) $('modelHint').innerHTML = $('modelHint').dataset.was;
     if (SB.dimWas) { view3.set('3d'); SB.dimWas = null; }
   }
@@ -3241,7 +3367,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function loop(now) {
     const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    if (sbOn()) { if (running && !SB.held && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }
+    if (sbOn()) { if (running && !SB.held && !(SB.drag && SB.drag.type && SB.drag.type !== 'k' && SB.drag.type !== 'm') && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }   /* the rig holds still while a part is placed */
     else if (running && !held && dtr > 0) {
       advance(dtr * SPEEDS[S.speedIdx]);
       view.tL = Math.max(view.tL, t - 0.85 * view.L);
