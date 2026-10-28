@@ -5244,3 +5244,27 @@ Steve: PhET parity as capability, not one worksheet per feature; try a Sandbox i
   answers added; key rebuilt (9 to 13 pages). One spring k_eff = (19.996 ± 0.006) N/m, series 10.00, parallel (39.98 ± 0.02).
 - Checks: vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright at 1368, 1024, 400 px, light, dark and
   Projector, no page errors. What's new entry added. The How this works video does not show the Sandbox (not retaken).
+
+## 2026-10-28 · Claude · Dividers: the other modules
+
+Rest of the rollout (Physics I and II entry above).
+- Double Slit (Physics II, missed in the first batch): one canvas, apparatus against screen and histogram.
+- Acoustics and Thermo: acoustic-levitation, blackbody, entropy, gas-heat-capacity, ideal-gas, ising, states-of-matter,
+  temperature (panes); timbre (bench in 3D, waveform band in flat), heat-engines (PV against TS) on the canvas.
+- Modern: early-universe, hydrogen-orbitals, magnetic-moments, molecules, nuclear-reactions, photoelectric, quantum-waves,
+  relativistic-motion, shells-and-x-rays, solids, speed-of-light (2), superconductors, e-over-m (panes); compton,
+  franck-hertz (the third column keeps its share of the rest), lasers (laser view), rutherford on the canvas. Radioactive
+  Decay already fits its tray column to the stage height; that fit is now the divider's default (`VD.split` on the stage)
+  and its two graphs share a pane divider.
+- Astronomy: celestial-sphere, craters, hr-diagram, inside-a-planet, moon-phases (2), planet-temperatures (2), resonances,
+  retrograde-motion (2), seasons (3) (panes); rotation-curves and white-dwarf-cooling on the canvas.
+- Medical and Misc: bragg-peak, charged-particles, ct-range, proton-qa, shielding-rooms, bz-reaction (2).
+- Fixes found on the way: 8 demos redrew only when the stage changed size (kepler-orbits, rotation, tides, photoelectric,
+  blackbody, hr-diagram, moon-phases, seasons), so a divider left their canvases at the old size; their ResizeObserver now
+  watches the panes too. Where a row divider meets a column divider the column's grip is on top (vd.css z-index).
+- Left alone: single pictures with no second piece, or pieces of fixed size or several rows (resonators, dosimetry,
+  distance-ladder, giant-planets, black-holes, lagrange-points, solar-system-formation, optics-bench, gamma-spectroscopy,
+  binding-energy, spacetime, spectra, star-slice, relativity-em, particles, circuits, resistivity, energy-sources, dna, and
+  the single canvas Acoustics demos).
+- Checks as before: each divider dragged at 1368x912 and 400x860, canvases checked to follow their panes after a drag, Node
+  tests, vdcheck `--only after` and `--only clip`, and a stale vd.js run.

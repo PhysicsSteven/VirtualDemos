@@ -1485,7 +1485,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(requestDraw).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
 
   // ---------- boot ----------
-  new ResizeObserver(resize).observe($('stage'));
+  { const ro = new ResizeObserver(resize), st = $('stage'); ro.observe(st); st.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   setView(S.view);
   $('view3Seg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView3(b.dataset.view); });
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();

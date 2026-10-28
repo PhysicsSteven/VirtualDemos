@@ -2200,7 +2200,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   $('tReduce').checked = reduce;
   setPlaying(!reduce);
   viewLabel(); renderRows(); syncTimer(); syncLab();
-  new ResizeObserver(resize).observe($('stage'));
+  { const ro = new ResizeObserver(resize); ro.observe($('stage')); $('stage').querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   fitView(true, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);

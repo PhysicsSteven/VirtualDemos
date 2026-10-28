@@ -520,6 +520,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'tube', axis: () => (W >= 760 ? 'x' : null), def: () => (W / Hh > 1.9 ? 0.43 : 0.53), min: 0.3, max: 0.7, label: 'Divider between the tube and the graphs', onChange: () => resize() });
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
@@ -533,11 +535,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout(W, H) {
     const P = (x, y, w, h) => { const o = { x, y, w, h }; o.ps = scaleFor(o); return o; };
     if (W >= 760 && W / H > 1.9) {
-      const a = Math.round(W * 0.43), b = Math.round(W * 0.37), th = Math.round(H * 0.52);
+      const a = Math.round(W * SPL.f()), b = Math.round((W - a) * 0.37 / 0.57), th = Math.round(H * 0.52);
       return { cols: 3, tube: P(0, 0, a, th), en: P(0, th, a, H - th), plot: P(a, 0, b, H), lev: P(a + b, 0, W - a - b, H) };
     }
     if (W >= 760) {
-      const a = Math.round(W * 0.53), th = Math.round(H * 0.5), ph = Math.round(H * 0.6);
+      const a = Math.round(W * SPL.f()), th = Math.round(H * 0.5), ph = Math.round(H * 0.6);
       return { cols: 2, tube: P(0, 0, a, th), en: P(0, th, a, H - th), plot: P(a, 0, W - a, ph), lev: P(a, ph, W - a, H - ph) };
     }
     const f = [0.25, 0.22, 0.31], y1 = Math.round(H * f[0]), y2 = y1 + Math.round(H * f[1]), y3 = y2 + Math.round(H * f[2]);

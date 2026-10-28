@@ -1241,7 +1241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- boot ----------
   applyPreset('sun');
-  new ResizeObserver(resize).observe(stage);
+  { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
@@ -1268,5 +1268,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__hr = { msL, msR, tMS, teff, radiusOf, ifmr, wdRadius, mestelL, buildTrack, stateAtAge, stateAtS, S, CL };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".pane:has(#hr)"), q(".pane:has(#scale)"), { key: 'scale', label: 'Divider between the HR diagram and the scale' }); })();</script>
 </body>
 </html>

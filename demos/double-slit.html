@@ -763,6 +763,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'app', axis: () => (W >= 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.4 : 0.36), min: 0.25, max: 0.6, label: 'Divider between the apparatus and the screen', onChange: () => resize() });
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
@@ -778,12 +780,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout(W, H) {
     const ps = projScale(), top = 34 * ps, bot = H - 40 * ps;
     if (W >= 640) {
-      const appW = Math.round(W * 0.4), tick = 50 * ps, histW = Math.round(W * 0.25);
+      const appW = Math.round(W * SPL.f()), tick = 50 * ps, histW = Math.round(W * 0.25);
       const scrX = appW + tick, scrW = W - scrX - histW - 16 - 14 * ps;
       const app = { x: 0, w: appW, cy: (top + bot) / 2, half: (bot - top) / 2, top: 0, bot: H, labelY: 12 * ps };
       return { wide: true, app, scr: { x: scrX, y: top, w: scrW, h: bot - top }, hist: { x: scrX + scrW + 14 * ps, y: top, w: histW, h: bot - top } };
     }
-    const appH = Math.round(H * 0.36), top2 = appH + 30 * ps, bot2 = H - 40 * ps;
+    const appH = Math.round(H * SPL.f()), top2 = appH + 30 * ps, bot2 = H - 40 * ps;
     const tick = 44 * ps, scrW = Math.round((W - tick - 12 - 10 * ps) * 0.5);
     const app = { x: 0, w: W, cy: appH / 2 + 4 * ps, half: appH / 2 - 32 * ps, top: 0, bot: appH, labelY: 10 * ps };
     return { wide: false, app, scr: { x: tick, y: top2, w: scrW, h: bot2 - top2 }, hist: { x: tick + scrW + 10 * ps, y: top2, w: W - tick - scrW - 10 * ps - 12, h: bot2 - top2 } };

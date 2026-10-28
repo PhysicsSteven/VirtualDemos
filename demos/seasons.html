@@ -1305,7 +1305,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   });
 
   // ---------- boot ----------
-  new ResizeObserver(resize).observe(stage);
+  { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
@@ -1328,5 +1328,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__seasons = { orbitAt, declination, sunDay, insolation, noonAlt, SEASONS, S };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".pane:has(#orbit)"), q(".pane:has(#earth)"), { key: 'views', label: 'Divider between the orbit and the two views' }); VD.splitPanes(q(".pane:has(#earth)"), q(".pane:has(#sky)"), { key: 'sky', label: 'Divider between the Earth view and the sky' }); VD.splitPanes(q(".pane:has(#orbit)"), q(".pane:has(#chart)"), { key: 'chart', label: 'Divider between the pictures and the chart' }); })();</script>
 </body>
 </html>

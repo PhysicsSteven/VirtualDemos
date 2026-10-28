@@ -1392,5 +1392,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#p3d"), q("#pEye"), { key: 'bench', label: 'Divider between the bench and the two views' }); VD.splitPanes(q("#pEye"), q("#pTop"), { key: 'views', label: 'Divider between the eyepiece and the top view' }); })();</script>
 </body>
 </html>

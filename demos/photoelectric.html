@@ -1418,7 +1418,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   tokens();
-  new ResizeObserver(resize).observe(document.querySelector('.stage'));
+  { const ro = new ResizeObserver(resize), st = document.querySelector('.stage'); ro.observe(st); st.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   applyPreset('blue');
   setRunning(running);
   if (!running) { for (let i = 0; i < 90; i++) step(1 / 60); }
@@ -1430,5 +1430,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#appPane"), q("#chartPane"), { key: 'charts', label: 'Divider between the apparatus and the graphs' }); })();</script>
 </body>
 </html>

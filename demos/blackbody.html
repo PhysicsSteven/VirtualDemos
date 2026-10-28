@@ -1178,7 +1178,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   applyPreset('sun');
   renderPins();
-  new ResizeObserver(resize).observe(stage);
+  { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
@@ -1203,5 +1203,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__blackbody = { planck, logPlanck, rayleighJeans, wien, visibleFraction, bbColor, classOf, S };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".pane:has(#chart)"), q(".pane:has(#strip)"), { key: 'strip', label: 'Divider between the spectrum and the color strip' }); })();</script>
 </body>
 </html>

@@ -209,7 +209,7 @@
 @media print { .vd-size { display: none; } }
 /* Divider between two pieces of a picture (vd.js VD.split): drag it, it snaps to the marks that show while dragging */
 .vd-split { position: absolute; z-index: 3; width: 16px; margin-left: -8px; cursor: col-resize; touch-action: none; user-select: none; -webkit-user-select: none; outline: none; display: flex; align-items: center; justify-content: center; }
-.vd-split.vd-split-y { width: auto; height: 16px; margin-left: 0; margin-top: -8px; cursor: row-resize; }
+.vd-split.vd-split-y { z-index: 2; width: auto; height: 16px; margin-left: 0; margin-top: -8px; cursor: row-resize; }   /* under a crossing column divider, whose grip sits at the crossing (Moon Phases, Seasons) */
 .vd-split[hidden], .vd-split-marks[hidden] { display: none; }
 .stage [data-vd-free="y"][data-vd-free] { min-height: 0; }   /* VD.splitPanes: panes it sizes along y or x */
 .stage [data-vd-free="x"][data-vd-free] { min-width: 0; }

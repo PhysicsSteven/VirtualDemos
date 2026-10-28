@@ -624,12 +624,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const dims = { g: [0, 0], n: [0, 0], a: [0, 0] };
   // Side by side layout: give the grid pane about as much width as it has height, so the square grid fills it.
   const stageEl = document.getElementById('stage');
+  function autoFrac() {
+    const sr = stageEl.getBoundingClientRect(), ps = projScale();
+    if (!sr.width || !sr.height) return 0.5;
+    const want = sr.height - ctlH - 14 * ps - 40 * ps - 10 * ps + 28;
+    return Math.max(0.4, Math.min(0.55, want / sr.width));
+  }
+  /* the divider between the tray and the graphs (VD.split, demos/lib/vd.js): its default is the fit above; a browser with an older cached vd.js keeps that */
+  const SPLC = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(stageEl, { key: 'tray', host: stageEl,
+    box: () => { const g = panes.g.getBoundingClientRect(), n = panes.n.getBoundingClientRect(); return { left: g.left, top: g.top, right: n.right, bottom: g.bottom, width: n.right - g.left, height: g.height }; },
+    axis: () => (matchMedia('(min-width: 1061px)').matches ? 'x' : null), def: autoFrac, min: 0.3, max: 0.7, label: 'Divider between the tray and the graphs', onChange: () => resize() });
   function fitColumns() {
     if (!matchMedia('(min-width: 1061px)').matches) { stageEl.style.gridTemplateColumns = ''; return; }
     const sr = stageEl.getBoundingClientRect(), ps = projScale();
     if (!sr.width || !sr.height) return;
-    const want = sr.height - ctlH - 14 * ps - 40 * ps - 10 * ps + 28;
-    const frac = Math.max(0.4, Math.min(0.55, want / sr.width));
+    const frac = SPLC.f();
     const cols = `minmax(0, ${(frac * 100).toFixed(1)}fr) minmax(0, ${((1 - frac) * 100).toFixed(1)}fr)`;
     if (stageEl.style.gridTemplateColumns !== cols) stageEl.style.gridTemplateColumns = cols;
   }
@@ -1796,5 +1805,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#nPane"), q("#aPane"), { key: 'plots', label: 'Divider between the two graphs' }); })();</script>
 </body>
 </html>

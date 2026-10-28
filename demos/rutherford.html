@@ -700,6 +700,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   const trails = document.createElement('canvas'), tctx = trails.getContext('2d');
   let W = 0, Hh = 0, LY = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'scene', axis: () => (W >= 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.58 : 0.56), min: 0.35, max: 0.75, label: 'Divider between the foil and the graph', onChange: () => resize() });
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
@@ -714,8 +716,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function layout(W, H) {
     const ps = projScale();
-    if (W >= 640) { const sw = Math.round(W * 0.58); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
-    const sh = Math.round(H * 0.56);
+    if (W >= 640) { const sw = Math.round(W * SPL.f()); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
+    const sh = Math.round(H * SPL.f());
     return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: H - sh } };
   }
   // scene: nucleus position, px per fm, ring radius, far distance (fm → px)

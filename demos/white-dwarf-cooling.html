@@ -704,6 +704,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null, PS = 1;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'hr', axis: () => (W >= 760 ? 'x' : null), def: () => 0.56, min: 0.35, max: 0.75, label: 'Divider between the cooling star and the HR diagram', onChange: () => resize() });
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect(); W = r.width; Hh = r.height;
@@ -715,7 +717,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function layout(W, H) {
     if (W >= 760) {
-      const lw = Math.round(W * 0.56), ch = Math.round(H * 0.6);
+      const lw = Math.round(W * SPL.f()), ch = Math.round(H * 0.6);
       return { wide: true, cool: { x: 0, y: 0, w: lw, h: ch }, slice: { x: 0, y: ch, w: lw, h: H - ch }, hr: { x: lw, y: 0, w: W - lw, h: H } };
     }
     const a = Math.round(H * 0.33), b = Math.round(H * 0.32);

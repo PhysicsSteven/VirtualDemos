@@ -585,6 +585,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let T = null, dpr = 1, W = 0, H = 0, ls = 1, G = null;
   const can = $('can'), pane = $('pane');
   let ctx = can.getContext('2d');   /* swapped for a moment while the 3D instrument screens are drawn */
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL3 = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'bench', axis: () => (on3d() ? 'y' : null), def: () => (W >= 680 ? 0.66 : 0.58), min: 0.4, max: 0.8, label: 'Divider between the bench and the harmonic bars', onChange: () => { dirty = true; draw(); } });
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'top', axis: () => (!on3d() && W >= 680 ? 'y' : null), def: () => 0.44, min: 0.3, max: 0.7, label: 'Divider between the waveform and the harmonic ladder', onChange: () => { dirty = true; draw(); } });
   const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
@@ -630,10 +633,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let wave, spec, lad, eq, pic = null;
     if (on3d()) {
       /* 3D: the bench picture on top (instrument, oscilloscope, spectrum analyzer), the harmonic bars under it */
-      const hp = Math.round(H * (wide ? 0.66 : 0.58)), z = { x: 0, y: 0, w: W, h: 0 };
+      const hp = Math.round(H * SPL3.f()), z = { x: 0, y: 0, w: W, h: 0 };
       pic = { x: 0, y: 0, w: W, h: hp }; wave = z; spec = z; lad = z; eq = { x: 0, y: hp, w: W, h: H - hp };
     } else if (wide) {
-      const hTop = Math.round(H * 0.44), wW = Math.round(W * 0.58);
+      const hTop = Math.round(H * SPL.f()), wW = Math.round(W * 0.58);
       wave = { x: 0, y: 0, w: wW, h: hTop }; spec = { x: wW, y: 0, w: W - wW, h: hTop };
       const hl = Math.round((H - hTop) * 0.4);
       lad = { x: 0, y: hTop, w: W, h: hl }; eq = { x: 0, y: hTop + hl, w: W, h: H - hTop - hl };

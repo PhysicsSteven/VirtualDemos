@@ -360,6 +360,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null, PS = 1, LBOX = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'scene', axis: () => (W >= 900 ? 'x' : W >= 560 ? 'y' : null), def: (a) => (a === 'x' ? 0.55 : 0.56), min: 0.35, max: 0.75, label: 'Divider between the scattering picture and the graphs', onChange: () => resize() });
   const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
   function resize() {
     dpr = window.devicePixelRatio || 1;
@@ -374,10 +376,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // label scale: larger in projector mode, but capped by the size of the smallest pane
     let L;
     if (W >= 900) {
-      const sw = Math.round(W * 0.55), th = Math.round(H * 0.4);
+      const sw = Math.round(W * SPL.f()), th = Math.round(H * 0.4);
       L = { kind: 'wide', scene: { x: 0, y: 0, w: sw, h: H }, tri: { x: sw, y: 0, w: W - sw, h: th }, plot: { x: sw, y: th, w: W - sw, h: H - th } };
     } else if (W >= 560) {
-      const sh = Math.round(H * 0.56), hw = Math.round(W * 0.45);
+      const sh = Math.round(H * SPL.f()), hw = Math.round(W * 0.45);
       L = { kind: 'mid', scene: { x: 0, y: 0, w: W, h: sh }, tri: { x: 0, y: sh, w: hw, h: H - sh }, plot: { x: hw, y: sh, w: W - hw, h: H - sh } };
     } else {
       const sh = Math.round(H * 0.41), th = Math.round(H * 0.23);

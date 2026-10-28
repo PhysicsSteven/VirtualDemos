@@ -543,6 +543,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, Hh = 0, LY = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'galaxy', axis: () => (W >= 700 ? 'x' : 'y'), def: () => 0.47, min: 0.3, max: 0.7, label: 'Divider between the galaxy and the graph', onChange: () => resize() });
   const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
   // label scale: larger in projector mode, but capped by the size of the panes so labels do not pile up
   let PS = 1;
@@ -561,8 +563,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout(W, H) {
     const wide = W >= 700;
     let gal, plot;
-    if (wide) { const gw = Math.round(W * 0.47); gal = { x: 0, y: 0, w: gw, h: H }; plot = { x: gw, y: 0, w: W - gw, h: H }; }
-    else { const gh = Math.round(H * 0.47); gal = { x: 0, y: 0, w: W, h: gh }; plot = { x: 0, y: gh, w: W, h: H - gh }; }
+    if (wide) { const gw = Math.round(W * SPL.f()); gal = { x: 0, y: 0, w: gw, h: H }; plot = { x: gw, y: 0, w: W - gw, h: H }; }
+    else { const gh = Math.round(H * SPL.f()); gal = { x: 0, y: 0, w: W, h: gh }; plot = { x: 0, y: gh, w: W, h: H - gh }; }
     // inset strip under the main plot
     const ih = plot.h > 360 ? Math.round(Math.min(170, Math.max(112, plot.h * 0.27))) : 0;
     const main = { x: plot.x, y: plot.y, w: plot.w, h: plot.h - ih }, inset = ih ? { x: plot.x, y: plot.y + plot.h - ih, w: plot.w, h: ih } : null;

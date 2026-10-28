@@ -1695,5 +1695,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   VD.howTo({ src: 'media/how-this-works/acoustic-levitation.mp4', poster: 'media/how-this-works/acoustic-levitation.jpg' });
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#viewBox"), q("#sideBox"), { key: 'side', label: 'Divider between the levitator and the graph' }); })();</script>
 </body>
 </html>

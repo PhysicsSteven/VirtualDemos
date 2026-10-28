@@ -1333,7 +1333,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   V.main.el.addEventListener('dblclick', () => { M3.o.th = -Math.PI / 2; M3.o.ph = M3.home || 0.98; requestDraw(); });
 
   // ---------- boot ----------
-  new ResizeObserver(resize).observe($('stage'));
+  { const ro = new ResizeObserver(resize); ro.observe($('stage')); $('stage').querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestDraw);
 
@@ -1359,5 +1359,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__moon = { S, E, phiN, litFrac, beta, riseH, transitH, setH, eclipseState, applyPreset, P_SYN, P_SID, YEAR, EC_YEAR, P_NODE };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".pane:has(#main)"), q(".pane:has(#moonview)"), { key: 'views', label: 'Divider between the orbit and the two views' }); VD.splitPanes(q(".pane:has(#moonview)"), q(".pane:has(#sky)"), { key: 'sky', label: 'Divider between the Moon view and the sky' }); })();</script>
 </body>
 </html>

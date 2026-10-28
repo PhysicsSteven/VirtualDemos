@@ -779,6 +779,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- canvas ----------
   let T = null, dpr = 1, W = 0, Hh = 0, LY = null, PS = 1;
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'pv', axis: () => (W >= 680 ? 'x' : null), def: () => 0.6, min: 0.4, max: 0.75, label: 'Divider between the PV diagram and the TS diagram', onChange: () => { LY = layout(W, Hh); drawAll(); } });
   const isProj = () => document.documentElement.getAttribute('data-projector') === 'on';
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -799,7 +801,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout(W, H) {
     const ps = PS, cylH = Math.round((on3d ? (W >= 680 ? 176 : 150) : 104) * ps);
     if (W >= 680) {
-      const lw = Math.round(W * 0.6), tsH = Math.round(H * 0.55);
+      const lw = Math.round(W * SPL.f()), tsH = Math.round(H * 0.55);
       return { wide: true, pv: { x: 0, y: 0, w: lw, h: H - cylH }, cyl: { x: 0, y: H - cylH, w: lw, h: cylH },
         ts: { x: lw, y: 0, w: W - lw, h: tsH }, flow: { x: lw, y: tsH, w: W - lw, h: H - tsH } };
     }

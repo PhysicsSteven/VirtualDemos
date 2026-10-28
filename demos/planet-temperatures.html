@@ -683,5 +683,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#sysPane"), q("#budPane"), { key: 'budget', label: 'Divider between the system and the energy budget' }); VD.splitPanes(q("#sysPane"), q("#chartPane"), { key: 'chart', label: 'Divider between the pictures and the chart' }); })();</script>
 </body>
 </html>

@@ -2403,7 +2403,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const id of ['race', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
   setTs(1);
   setScene('torque');
-  new ResizeObserver(resize).observe(stage);
+  { const ro = new ResizeObserver(resize), st = stage; ro.observe(st); st.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   /* the race opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
