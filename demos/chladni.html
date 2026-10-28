@@ -1208,7 +1208,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (a === 'x') return (pad + Math.min(H - 2 * pad, W * 0.56) + 9 * ps) / W;
     const ph = clamp(H * 0.34, 150 * ps, 260 * ps); return (pad + Math.min(W - 2 * pad, H - ph - 3 * pad) + pad / 2) / H;
   }
-  const SPL = VD.split(can, { key: 'plot', axis: () => (W && H ? (wideP() ? 'x' : 'y') : null), def: (a) => (W && H ? plateFit(a) : 0.5), min: 0.25, max: 0.75,
+  /* a browser that still has the previous demos/lib/vd.js cached has no VD.split: then the pieces keep their default */
+  const SPL = !VD.split ? { f: () => plateFit(wideP() ? 'x' : 'y'), place() {}, set() {} } : VD.split(can, { key: 'plot', axis: () => (W && H ? (wideP() ? 'x' : 'y') : null), def: (a) => (W && H ? plateFit(a) : 0.5), min: 0.25, max: 0.75,
     label: 'Divider between the plate and the response plot', onChange: () => { layout(); glResize(); dirty = true; } });
   function layout() {
     const ps = projScale(), pad = 14 * ps, f = SPL.f();

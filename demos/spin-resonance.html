@@ -1533,9 +1533,11 @@ table.rows td.b { font-size: 0.76rem; }
   { const panes = document.querySelector('.panes'), wideP = () => window.innerWidth > 820;
     const rowBox = () => { const a = $('pScope').getBoundingClientRect(), b = $('pChart').getBoundingClientRect(); return { left: a.left, top: a.top, width: b.right - a.left, height: a.height, right: b.right, bottom: a.bottom }; };
     let sx = null;
-    const sy = VD.split(panes, { key: 'bench', host: panes, axis: () => (wideP() ? 'y' : null), def: 0.8 / 1.8, min: 0.3, max: 0.7,
+    /* a browser that still has the previous demos/lib/vd.js cached has no VD.split: then the pieces keep their default */
+    const vdSplit = VD.split || ((el, o) => ({ f: () => o.def, place() {}, set() {} }));
+    const sy = vdSplit(panes, { key: 'bench', host: panes, axis: () => (wideP() ? 'y' : null), def: 0.8 / 1.8, min: 0.3, max: 0.7,
       label: 'Divider between the bench and the screens', onChange: () => { grid(); if (sx) sx.place(); } });
-    sx = VD.split($('pScope'), { key: 'screens', host: panes, box: rowBox, axis: () => (wideP() ? 'x' : null), def: 0.6, min: 0.35, max: 0.75,
+    sx = vdSplit($('pScope'), { key: 'screens', host: panes, box: rowBox, axis: () => (wideP() ? 'x' : null), def: 0.6, min: 0.35, max: 0.75,
       label: 'Divider between the oscilloscope and the chart recorder', onChange: () => grid() });
     function grid() { const y = sy.f(), x = sx ? sx.f() : 0.6, w = wideP();
       panes.style.gridTemplateRows = w ? `minmax(0, ${y}fr) minmax(0, ${1 - y}fr)` : ''; panes.style.gridTemplateColumns = w ? `minmax(0, ${x}fr) minmax(0, ${1 - x}fr)` : ''; }

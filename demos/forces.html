@@ -285,7 +285,8 @@ table.rows input:focus { border-color: var(--accent); }
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
-  const SPL = VD.split(can, { key: 'fbd', axis: () => W > 760 ? 'x' : 'y', def: (a) => a === 'x' ? 2 / 3 : 0.56, min: 0.5, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
+  /* a browser that still has the previous demos/lib/vd.js cached has no VD.split: then the pieces keep their default */
+  const SPL = !VD.split ? { f: () => (W > 760 ? 2 / 3 : 0.56), place() {}, set() {} } : VD.split(can, { key: 'fbd', axis: () => W > 760 ? 'x' : 'y', def: (a) => a === 'x' ? 2 / 3 : 0.56, min: 0.5, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
     label: 'Divider between the ramp and the free body diagram', onChange: () => { stage.style.setProperty('--vd-share', SPL.f() * 100 + '%'); draw(); } });
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();

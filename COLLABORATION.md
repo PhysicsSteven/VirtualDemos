@@ -5159,3 +5159,9 @@ Steve: give the wheel a mark so it reads as spinning.
 - Physics, gate times, keys unchanged. The How this works video still matches (it predates the note; nothing in it is wrong).
 - test_gyroscope passes; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright with WebGL at desktop and 390 px,
   flat and 3D, no page errors. What's new entry added.
+## 2026-10-28 · Claude · Dividers: survive a stale cached vd.js
+
+Steve saw Forces, Chladni and Pendulum blank right after 87137bb: his browser had the old `demos/lib/vd.js` cached with the new
+pages, so `VD.split` was missing and the script stopped (reproduced by serving bc8449a's vd.js; Ctrl+Shift+R fixed it for him).
+The five pilot demos now fall back to their default split when `VD.split` is missing. Rule for any new library helper: a
+demo calling it must work when the cached vd.js predates it.
