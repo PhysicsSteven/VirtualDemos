@@ -8,12 +8,13 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§12.1 and 12.2. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Seesaw; Plank on two supports; Sign on a strut and cable; Ladder against a wall.
+**Setups in the demo:** Seesaw; Plank on two supports; Sign on a strut and cable; Ladder against a wall; Sandbox.
 
 **Using the demo.**
 
 - Every force on the structure is drawn as an arrow to scale, with its size in newtons. Drag a load along the beam (or a person up the ladder), or set exact values on the sliders. Choosing a setup puts all of its values back to that setup's starting values.
 - Record reading stores the setup's settings and the forces as the readouts show them, to 0.1 N and 0.1°. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- The Sandbox is for exploring on your own: drag up to two supports and masses of 5, 10, 20 and 50 kg from the tray onto a beam, set the beam's length and mass, and let go to see whether it balances. A marker shows the center of mass with a line straight down from it. The Sandbox records no readings.
 - Blind hides the forces, the torques and the verdict (balanced, tips, slips) and draws every arrow the same length, so you can make your own predictions. It also stops Record reading, since the forces are what you record.
 
 **What the demo models.**

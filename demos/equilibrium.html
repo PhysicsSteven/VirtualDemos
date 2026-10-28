@@ -62,6 +62,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .viewbar .seg { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .viewnote { margin: 0; max-width: 260px; font-size: 0.78rem; color: var(--muted); background: var(--panel); border-radius: 6px; padding: 4px 8px; }
 @media (max-width: 820px) { .viewbar .seg button { min-height: 36px; } }
+.sbe-go { font: inherit; font-weight: 700; color: var(--canvas); background: var(--ink); border: 1px solid var(--ink); border-radius: 6px; padding: 7px 16px; margin-bottom: 8px; cursor: pointer; }
+#sbeBox .chips { margin-top: 8px; }
+@media (max-width: 820px) { .sbe-go { min-height: 40px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -97,8 +100,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="plank" aria-pressed="false">Plank on two supports</button>
           <button type="button" data-p="sign" aria-pressed="false">Sign on a strut and cable</button>
           <button type="button" data-p="ladder" aria-pressed="false">Ladder against a wall</button>
+          <button type="button" data-p="sandbox" aria-pressed="false">Sandbox</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="sbeBox" hidden>
+        <h2>Sandbox</h2>
+        <button type="button" class="sbe-go" id="sbeGo">Let go</button>
+        <p class="hint" id="sbeMsg" aria-live="polite">Drag supports and masses from the tray onto the beam, and back to the tray to remove them. Drag the beam's right end to change its length. Then let go.</p>
+        <div class="chips" id="sbeRigs" role="group" aria-label="Ready made beams">
+          <button type="button" data-r="seesaw" aria-pressed="true">Seesaw, unbalanced</button>
+          <button type="button" data-r="balanced" aria-pressed="false">Balanced seesaw</button>
+          <button type="button" data-r="heavy" aria-pressed="false">Heavy beam off center</button>
+          <button type="button" data-r="two" aria-pressed="false">Two supports</button>
+          <button type="button" data-r="empty" aria-pressed="false">Empty beam</button>
+        </div>
+        <details class="more"><summary>Build with buttons instead</summary>
+          <div class="chips" id="sbeAdd">
+            <button type="button" data-add="sup">Add a support</button>
+            <button type="button" data-add="5">Add 5 kg</button>
+            <button type="button" data-add="10">Add 10 kg</button>
+            <button type="button" data-add="20">Add 20 kg</button>
+            <button type="button" data-add="50">Add 50 kg</button>
+            <button type="button" data-add="del">Remove the selected part</button>
+          </div>
+          <p class="hint">On the picture: [ and ] pick a part, the arrow keys move it (Shift for bigger steps), Delete removes it, and Space lets go or holds the beam.</p>
+        </details>
       </section>
 
       <section>
@@ -171,6 +199,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const thMin = Math.atan((ml / 2 + mp * f) / (mu * (ml + mp))) * 180 / Math.PI;
     return { N, Nw, fs: Nw, fmax: mu * N, slips: Nw > mu * N + 1e-9, thMin };
   }
+  // Sandbox beam of length L and uniform mass mb resting on 0, 1 or 2 supports at sup (meters from the left end; a support can only push up),
+  // with loads (m, x). xc is the center of mass. One support: it balances only when xc is right over it, and tau is the net torque about it
+  // (counterclockwise +, so tau > 0 tips the left side down). Two supports a < b: F1 and F2 from ΣF = 0 and Στ about a = 0, as in plank();
+  // if either would be negative the beam tips about the other support. No support: it falls.
+  function beamSandbox(L, mb, sup, loads) {
+    const all = [{ m: mb, x: L / 2 }, ...loads], M = all.reduce((s, l) => s + l.m, 0), W = M * G, xc = M > 0 ? all.reduce((s, l) => s + l.m * l.x, 0) / M : L / 2;
+    const s = sup.slice().sort((p, q) => p - q), tol = 1e-9 * Math.max(1, W) * Math.max(1, L);
+    if (!s.length) return { W, xc, falls: W > 0, tips: null, F: [], about: null, tau: 0 };
+    if (s.length === 1 || s[s.length - 1] - s[0] < 1e-9) { const a = s[0], tau = -W * (xc - a), ok = Math.abs(tau) <= tol;
+      return { W, xc, falls: false, tips: ok ? null : tau > 0 ? 'left' : 'right', F: ok ? [W] : [], about: a, tau: ok ? 0 : tau }; }
+    const a = s[0], b = s[s.length - 1], F2 = W * (xc - a) / (b - a), F1 = W - F2, tips = F1 < -tol ? 'right' : F2 < -tol ? 'left' : null, q = tips === 'right' ? b : a;
+    return { W, xc, falls: false, tips, F: [F1, F2], about: tips ? q : null, tau: tips ? -W * (xc - q) : 0 };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -179,6 +220,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     seesaw: { hint: 'A 40 kg child at 1.5 m and a 30 kg child: where must the lighter one sit? Torques balance when m₁x₁ = m₂x₂, so 2.0 m. The pivot pushes up with the whole weight.', s: { mb: 20, m1: 40, x1: -1.5, m2: 30, x2: 1.6 } },
     plank: { hint: 'A 4 m, 20 kg plank on supports at 0.5 m and 2.5 m, with a 60 kg painter. Walk the painter out past the right support: the left support\'s push drops, and when it would have to pull down, the plank tips.', s: { L: 4, mb: 20, a: 0.5, b: 2.5, m1: 60, x1: 1.5 } },
     sign: { hint: 'A sign hangs from a 2 m strut hinged to the wall, held up by a cable. A shallow cable (small h) needs a huge tension, because only its vertical part T sin θ holds the strut up. The hinge pushes on the strut too.', s: { L: 2, ms: 5, m1: 25, x1: 1.8, h: 1 } },
+    sandbox: { hint: 'Build your own: a beam of any length and mass, up to two supports that can only push up, and as many masses as you like. Two posts hold it level while you build; let go to see whether it balances. A beam on one support balances only when its center of mass is right over the support; on two supports it stays when the center of mass lies between them.', s: { L: 4, mb: 10 } },
     ladder: { hint: 'A 5 m ladder on a floor with friction, against a smooth wall. As the person climbs, the wall pushes harder and the floor friction must match it. Below the angle shown in the readouts, it slips before they reach the top.', s: { L: 5, mb: 15, m1: 70, f: 0.5, th: 60, mu: 0.4 } }
   };
   const S = { preset: 'seesaw', v: { ...PRESETS.seesaw.s }, blind: false, sel: 1 };
@@ -196,6 +238,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     seesaw: [['mb', 'Beam mass', 0, 50, 1, 'kg'], ['m1', 'Left child m₁', 10, 80, 1, 'kg'], ['x1', 'Left child position x₁', -2.5, 0, 0.05, 'm'], ['m2', 'Right child m₂', 10, 80, 1, 'kg'], ['x2', 'Right child position x₂', 0, 2.5, 0.05, 'm']],
     plank: [['L', 'Plank length', 2, 6, 0.1, 'm'], ['mb', 'Plank mass', 0, 60, 1, 'kg'], ['a', 'Left support at', 0, 3, 0.05, 'm'], ['b', 'Right support at', 1, 6, 0.05, 'm'], ['m1', 'Painter mass', 0, 120, 1, 'kg'], ['x1', 'Painter position', 0, 6, 0.05, 'm']],
     sign: [['L', 'Strut length', 1, 3, 0.1, 'm'], ['ms', 'Strut mass', 0, 20, 0.5, 'kg'], ['m1', 'Sign mass', 1, 60, 1, 'kg'], ['x1', 'Sign position from the wall', 0.1, 3, 0.05, 'm'], ['h', 'Cable anchor height above the strut', 0.2, 3, 0.05, 'm']],
+    sandbox: [['L', 'Beam length', 2, 6, 0.1, 'm'], ['mb', 'Beam mass', 0, 40, 1, 'kg']],
     ladder: [['L', 'Ladder length', 2, 8, 0.1, 'm'], ['mb', 'Ladder mass', 5, 40, 1, 'kg'], ['m1', 'Person mass', 0, 120, 1, 'kg'], ['f', 'How far up (fraction)', 0, 1, 0.01, ''], ['th', 'Angle to the floor', 30, 85, 0.5, '°'], ['mu', 'Floor friction μs', 0, 1, 0.01, '']]
   };
   function buildCtl() {
@@ -206,9 +249,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const v = S.v;
     if (S.preset === 'plank') { v.b = Math.min(v.b, v.L); v.a = Math.min(v.a, v.b - 0.2); v.x1 = Math.min(v.x1, v.L); }
     if (S.preset === 'sign') v.x1 = Math.min(v.x1, v.L);
+    if (S.preset === 'sandbox') for (const q of [...SBE.sup, ...SBE.loads]) q.x = Math.min(q.x, v.L);
   }
   function sync() { for (const [k, , , , st, u] of CTL[S.preset]) { $('c_' + k).value = S.v[k]; $('o_' + k).textContent = `${f(S.v[k], st < 0.1 ? 2 : st < 1 ? 1 : 0)}${u ? ' ' + u : ''}`; } }
-  function applyPreset(k) { S.preset = k; S.v = { ...PRESETS[k].s }; S.sel = 1; $('presetHint').textContent = PRESETS[k].hint; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); buildCtl(); sync(); draw(); readouts(); }
+  function applyPreset(k) { const was = S.preset; S.preset = k; S.v = { ...PRESETS[k].s }; S.sel = 1; sbeMode(k === 'sandbox', was); $('presetHint').textContent = PRESETS[k].hint; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); buildCtl(); sync(); draw(); readouts(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
 
   // ---------- drawing ----------
@@ -270,6 +314,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W) return;
+    if (S.preset === 'sandbox') { sbeDraw(); return; }
     if (G3.on && g3) { draw3(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), v = S.v, bl = S.blind;
@@ -629,6 +674,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const v = S.v, bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, N = (x) => `${f(x, 1)} N`, Nm = (x) => `${f(x, 1)} N·m`;
     let h = '';
     if (bl) h = '<div class="wide"><dt>Forces, torques and the verdict</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
+    else if (S.preset === 'sandbox') h = sbeReadouts(dd, N, Nm);
     else if (S.preset === 'seesaw') { const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]);
       h = dd('Torque of m₁ about the pivot', Nm(-v.m1 * G * v.x1)) + dd('Torque of m₂', Nm(-v.m2 * G * v.x2)) + dd('Net torque (counterclockwise +)', Nm(r.tau)) + dd('Pivot force', N(r.P)) + dd('Balance point for m₂', `${f(v.m1 * -v.x1 / v.m2, 2)} m`, true); }
     else if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
@@ -647,6 +693,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'equilibrium@2026-10-24';
   window.vdReadingRow = () => {
     if (S.blind) return 'Blind hides the forces. Turn Blind off to record a reading.';
+    if (S.preset === 'sandbox') return 'The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.';
     const v = S.v;
     if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
       return { setup: 'plank', L_m: r2(v.L), plank_kg: v.mb, a_m: r2(v.a), b_m: r2(v.b), m_kg: v.m1, x_m: r2(v.x1), F1_N: r1(r.F1), F2_N: r1(r.F2), W_N: r1(r.W), tips: r.tips ? `tips about the ${r.tips} support` : '' }; }
@@ -658,8 +705,259 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { setup: 'ladder', L_m: r2(v.L), ladder_kg: v.mb, m_kg: v.m1, f_up: r2(v.f), theta_deg: v.th, mu_s: r2(v.mu), N_N: r1(r.N), Nwall_N: r1(r.Nw), friction_needed_N: r1(r.fs), friction_max_N: r1(r.fmax), slips: r.slips ? 'slips' : 'holds' };
   };
   const SHOW = { plank: [['x_m', 'x (m)'], ['F1_N', 'F₁ (N)'], ['F2_N', 'F₂ (N)']], sign: [['h_m', 'h (m)'], ['theta_deg', 'θ (°)'], ['T_N', 'T (N)']],
-    seesaw: [['x2_m', 'x₂ (m)'], ['net_torque_N_m', 'Στ (N·m)'], ['P_N', 'P (N)']], ladder: [['f_up', 'f'], ['theta_deg', 'θ (°)'], ['Nwall_N', 'N_wall (N)']] };
+    seesaw: [['x2_m', 'x₂ (m)'], ['net_torque_N_m', 'Στ (N·m)'], ['P_N', 'P (N)']], sandbox: [], ladder: [['f_up', 'f'], ['theta_deg', 'θ (°)'], ['Nwall_N', 'N_wall (N)']] };
   Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => [['setup', 'Setup']].concat(SHOW[S.preset]) });
+
+  // ---------- Sandbox: build a beam from a tray of parts (flat picture only). The physics is beamSandbox() in CORE; the picture tips the
+  // beam about the support it would turn on until its low end meets the floor, or drops it to the floor, only to show which way it goes
+  // (how fast it turns is not modeled). The support height and the crate sizes are drawing choices, not physics. ----------
+  const SBE_H = 0.6;   /* the supports' height in meters (picture only) */
+  const SBE_PARTS = [{ kind: 'sup' }, { kind: 'load', m: 5 }, { kind: 'load', m: 10 }, { kind: 'load', m: 20 }, { kind: 'load', m: 50 }];
+  const SBE_RIGS = {
+    seesaw: { L: 4, mb: 10, sup: [2], loads: [[20, 1], [10, 3.5]] },
+    balanced: { L: 4, mb: 10, sup: [2], loads: [[20, 1], [10, 4]] },
+    heavy: { L: 4, mb: 20, sup: [1.5], loads: [[10, 0.5]] },
+    two: { L: 4, mb: 10, sup: [1, 3], loads: [[20, 1.5], [50, 3.5]] },
+    empty: { L: 4, mb: 10, sup: [], loads: [] }
+  };
+  const SBE_MAXLOADS = 16;
+  const SBE = { rig: 'seesaw', sup: [], loads: [], held: true, sel: null, drag: null, nid: 1, ang: 0, dy: 0, piv: null, tgt: null, raf: 0, g: null, tray: null, hits: [], dimWas: null, aria: '' };
+  const sbeSnap = (x) => Math.max(0, Math.min(S.v.L, Math.round(x * 20) / 20));
+  const sbeSize = (m) => (20 + 3 * Math.sqrt(m)) * ps();
+  const sbeModel = () => beamSandbox(S.v.L, S.v.mb, SBE.sup.map((q) => q.x), SBE.loads);
+  const sbeReduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
+  const sbeSay = (m) => { $('sbeMsg').textContent = m; };
+  function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+  function sbeMode(on, was) {
+    $('sbeBox').hidden = !on; $('viewSeg').closest('.viewbar').style.display = on ? 'none' : '';
+    if (on && was !== 'sandbox') {
+      SBE.dimWas = G3.on ? '3d' : null; if (SBE.dimWas) document.querySelector('#viewSeg [data-dim="flat"]').click();
+      SBE.aria = can.getAttribute('aria-label'); can.setAttribute('aria-label', 'A beam on supports, built from the tray of parts beside it, with every force drawn as an arrow to scale. Drag parts onto the beam and back to the tray. [ and ] pick a part, the arrow keys move it, Delete removes it, and Space lets go or holds the beam.');
+      sbeLoad(SBE.rig, true);
+    }
+    if (!on && was === 'sandbox') {
+      SBE.drag = null; if (SBE.raf) cancelAnimationFrame(SBE.raf); SBE.raf = 0; if (SBE.aria) can.setAttribute('aria-label', SBE.aria);
+      if (SBE.dimWas) { SBE.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
+    }
+  }
+  function sbeLoad(k, quiet) {
+    const r = SBE_RIGS[k]; SBE.rig = k; S.v = { L: r.L, mb: r.mb };
+    SBE.sup = r.sup.map((x) => ({ id: SBE.nid++, x })); SBE.loads = r.loads.map(([m, x]) => ({ id: SBE.nid++, m, x }));
+    Object.assign(SBE, { held: true, sel: null, drag: null, ang: 0, dy: 0, piv: null });
+    for (const b of document.querySelectorAll('#sbeRigs button')) b.setAttribute('aria-pressed', String(b.dataset.r === k));
+    sbeGoLabel(); if (!quiet) { sync(); draw(); readouts(); }
+  }
+  function sbeGoLabel() { $('sbeGo').textContent = SBE.held ? 'Let go' : 'Hold it level again'; }
+  function sbeGo() { SBE.held = !SBE.held; sbeGoLabel(); sbeSay(SBE.held ? 'Two posts hold the beam level.' : 'Let go.'); draw(); readouts(); }
+  function sbeEdited() { for (const b of document.querySelectorAll('#sbeRigs button')) b.setAttribute('aria-pressed', 'false'); }
+  function sbeAddPart(part, x) {
+    if (part.kind === 'sup') { if (SBE.sup.length >= 2) { sbeSay('Two supports at most: drag one back to the tray first.'); return null; } const q = { id: SBE.nid++, x }; SBE.sup.push(q); return q; }
+    if (SBE.loads.length >= SBE_MAXLOADS) { sbeSay(`${SBE_MAXLOADS} masses at most: drag one back to the tray first.`); return null; }
+    const q = { id: SBE.nid++, m: part.m, x }; SBE.loads.push(q); return q;
+  }
+  function sbeRemove(id) { SBE.sup = SBE.sup.filter((q) => q.id !== id); SBE.loads = SBE.loads.filter((q) => q.id !== id); if (SBE.sel === id) SBE.sel = null; }
+  const sbeFind = (id) => SBE.sup.find((q) => q.id === id) || SBE.loads.find((q) => q.id === id) || null;
+
+  /* where the picture should come to rest: level while held or while a part is being moved; tipped about the support it turns on until
+     its low end meets the floor (or its high end nears the top of the picture); on the floor if nothing holds it up */
+  function sbeTarget(r, g) {
+    const v = S.v, d = SBE.drag; if (SBE.held || (d && d.moved)) return { ang: 0, dy: 0, piv: SBE.piv };
+    if (r.falls) return { ang: 0, dy: SBE_H, piv: SBE.piv };
+    if (!r.tips) return { ang: 0, dy: 0, piv: SBE.piv };
+    const a = r.about, low = r.tips === 'left' ? a : v.L - a, high = r.tips === 'left' ? v.L - a : a, up = Math.max(0.1, (g.beamY - g.bt - 40 * ps()) / g.sc);
+    const phi = Math.min(0.9, Math.asin(Math.min(1, SBE_H / Math.max(low, 1e-6))), Math.asin(Math.min(1, up / Math.max(high, 1e-6))));
+    return { ang: r.tips === 'left' ? phi : -phi, dy: 0, piv: a };
+  }
+  function sbeTick() {
+    SBE.raf = 0; const t = SBE.tgt; if (!t) return;
+    let ta = t.ang, td = t.dy;
+    if (t.piv !== SBE.piv) { if (Math.abs(SBE.ang) > 1e-3) ta = 0; else SBE.piv = t.piv; }   /* swing back level before turning about another support */
+    if (SBE.dy > 1e-3 && td === 0) ta = 0;   /* lift off the floor before tipping */
+    SBE.ang += (ta - SBE.ang) * 0.16; SBE.dy += (td - SBE.dy) * 0.2;
+    if (Math.abs(ta - SBE.ang) < 1e-3) SBE.ang = ta; if (Math.abs(td - SBE.dy) < 1e-3) SBE.dy = td;
+    draw();
+  }
+  function sbeCrate(cx, yb, m, sel, alpha) {
+    const p = ps(), s = sbeSize(m), VG = window.VDGear, mix = (a, b, t) => (VG ? VG.mix(a, b, t) : a);
+    ctx.globalAlpha = alpha || 1;
+    const gr = ctx.createLinearGradient(cx - s / 2, yb - s, cx + s / 2, yb); gr.addColorStop(0, mix(T.load, '#ffffff', 0.2)); gr.addColorStop(1, mix(T.load, '#000000', 0.25));
+    ctx.fillStyle = gr; rr(cx - s / 2, yb - s, s, s, 3 * p); ctx.fill(); ctx.strokeStyle = mix(T.load, '#000000', 0.45); ctx.lineWidth = 1.2 * p; ctx.stroke();
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${m} kg`, cx, yb - s / 2 + 0.5);
+    if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * p; rr(cx - s / 2 - 3 * p, yb - s - 3 * p, s + 6 * p, s + 6 * p, 5 * p); ctx.stroke(); }
+    ctx.globalAlpha = 1; return s;
+  }
+  function sbeWedge(x, yTop, yBot, sel, alpha) {
+    const p = ps(), hw = Math.min(16 * p, (yBot - yTop) * 0.55); ctx.globalAlpha = alpha || 1;
+    const gr = ctx.createLinearGradient(x - hw, 0, x + hw, 0); gr.addColorStop(0, T.metal); gr.addColorStop(1, T.metalDark);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(x, yTop); ctx.lineTo(x + hw, yBot); ctx.lineTo(x - hw, yBot); ctx.closePath(); ctx.fill();
+    if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * p; ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  function sbeDraw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), v = S.v, bl = S.blind, r = sbeModel(), d = SBE.drag;
+    const side = W >= 600, trayW = side ? 96 * p : 0, trayH = side ? 0 : 60 * p, Ws = W - trayW, Hs = H - trayH;
+    const sc = Math.min((Ws - 60 * p) / 6, (Hs - 170 * p) / 2), x0 = (Ws - 6 * sc) / 2, gy = Hs - Math.max(30 * p, Hs * 0.12), bt = 10 * p, beamY = gy - SBE_H * sc, X = (x) => x0 + x * sc;
+    const g = SBE.g = { X, sc, x0, gy, beamY, bt, Ws, Hs, side };
+    /* settle toward where the beam comes to rest */
+    const tg = SBE.tgt = sbeTarget(r, g);
+    if (sbeReduced()) { SBE.ang = tg.ang; SBE.dy = tg.dy; SBE.piv = tg.piv; }
+    else if ((Math.abs(SBE.ang - tg.ang) > 1e-3 || Math.abs(SBE.dy - tg.dy) > 1e-3 || (tg.piv !== SBE.piv && Math.abs(SBE.ang) > 1e-3) || tg.piv !== SBE.piv) && !SBE.raf) SBE.raf = requestAnimationFrame(sbeTick);
+    const rest = Math.abs(SBE.ang - tg.ang) < 1e-3 && Math.abs(SBE.dy - tg.dy) < 1e-3;
+    const pv = [X(SBE.piv == null ? v.L / 2 : SBE.piv), beamY], th = -SBE.ang, dyp = SBE.dy * sc, cs = Math.cos(th), sn = Math.sin(th);
+    const toScr = (x, y) => [pv[0] + (x - pv[0]) * cs - (y - pv[1]) * sn, pv[1] + (x - pv[0]) * sn + (y - pv[1]) * cs + dyp];
+    g.toBeam = (x, y) => { const ux = x - pv[0], uy = y - dyp - pv[1]; return [pv[0] + ux * cs + uy * sn, pv[1] - ux * sn + uy * cs]; };
+    /* a workshop: siding behind, a concrete floor */
+    ctx.fillStyle = T.siding; ctx.fillRect(0, 0, Ws, gy);
+    ctx.strokeStyle = T.sidingLine; ctx.lineWidth = 1; ctx.beginPath(); for (let yy = gy - 16 * p; yy > 0; yy -= 16 * p) { ctx.moveTo(0, Math.round(yy) + 0.5); ctx.lineTo(Ws, Math.round(yy) + 0.5); } ctx.stroke();
+    ctx.fillStyle = T.floor; ctx.fillRect(0, gy, Ws, Hs - gy); ctx.strokeStyle = T.floorLine; ctx.beginPath(); ctx.moveTo(0, gy + 0.5); ctx.lineTo(Ws, gy + 0.5); for (let xx = 30 * p; xx < Ws; xx += 90 * p) { ctx.moveTo(xx, gy); ctx.lineTo(xx - 20 * p, Hs); } ctx.stroke();
+    /* the two posts that hold it level while you build */
+    if (SBE.held) for (const x of [0.06, v.L - 0.06]) { ctx.fillStyle = T.metalDark; ctx.fillRect(X(x) - 3 * p, beamY, 6 * p, gy - beamY); ctx.fillRect(X(x) - 10 * p, gy - 3 * p, 20 * p, 3 * p); ctx.fillStyle = T.metal; ctx.fillRect(X(x) - 7 * p, beamY, 14 * p, 3 * p); }
+    for (const q of SBE.sup) sbeWedge(X(q.x), beamY, gy, SBE.sel === q.id);
+    /* the beam and what sits on it, turned about the pivot */
+    ctx.save(); ctx.translate(0, dyp); ctx.translate(pv[0], pv[1]); ctx.rotate(th); ctx.translate(-pv[0], -pv[1]);
+    woodPlank(X(0), beamY - bt, v.L * sc, bt);
+    ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = 0; x <= v.L + 1e-9; x += 0.5) { ctx.fillRect(X(x) - 0.5, beamY - bt, 1, 4 * p); if (Math.abs(x - Math.round(x)) < 1e-9) ctx.fillText(`${f(x, 0)}`, X(x) + (x === 0 ? 4 * p : 0), beamY + 3 * p); }
+    const stacks = new Map(); for (const q of SBE.loads) { const k = q.x.toFixed(2); if (!stacks.has(k)) stacks.set(k, { x: q.x, items: [] }); stacks.get(k).items.push(q); }
+    SBE.hits = [];
+    for (const st of stacks.values()) { let yb = beamY - bt; st.top = yb; for (const q of st.items) { const s = sbeCrate(X(st.x), yb, q.m, SBE.sel === q.id); SBE.hits.push({ id: q.id, box: [X(st.x) - s / 2, yb - s, s, s] }); yb -= s; } st.mid = (beamY - bt + yb) / 2; }
+    const gx = X(v.L) + 22 * p, gyy = beamY - bt / 2; g.grip = [gx, gyy];
+    ctx.fillStyle = T.woodDark; ctx.fillRect(X(v.L), gyy - 1.5 * p, 13 * p, 3 * p); ctx.fillStyle = T.panel; ctx.beginPath(); ctx.arc(gx, gyy, 9 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx - 5 * p, gyy); ctx.lineTo(gx + 5 * p, gyy); ctx.moveTo(gx - 2 * p, gyy - 3 * p); ctx.lineTo(gx - 5 * p, gyy); ctx.lineTo(gx - 2 * p, gyy + 3 * p); ctx.moveTo(gx + 2 * p, gyy - 3 * p); ctx.lineTo(gx + 5 * p, gyy); ctx.lineTo(gx + 2 * p, gyy + 3 * p); ctx.lineWidth = 1.5 * p; ctx.stroke();
+    ctx.restore();
+    /* the center of mass, with a plumb line to the floor: over the support (or between the two) means it stays */
+    let cmBox = null;
+    if (!bl && r.W > 0) { const [cx, cy] = toScr(X(r.xc), beamY - bt / 2), fl = gy;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, fl); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx, cy, 6 * p, 0, 7); ctx.fill(); ctx.lineWidth = 2 * p; ctx.stroke(); ctx.beginPath(); ctx.moveTo(cx - 6 * p, cy); ctx.lineTo(cx + 6 * p, cy); ctx.moveTo(cx, cy - 6 * p); ctx.lineTo(cx, cy + 6 * p); ctx.stroke();
+      ctx.font = `600 ${10 * p}px ${T.ui}`; const lw = ctx.measureText('center of mass').width + 6 * p, lx = cx + 4 * p + lw < Ws - 4 * p ? cx + 4 * p : cx - 4 * p - lw;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lx, fl - 17 * p, lw, 15 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.accent; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('center of mass', lx + 3 * p, fl - 9.5 * p);
+      cmBox = [lx, fl - 17 * p, lw, 15 * p]; }
+    /* forces, each straight up or down, to one scale */
+    const still = !SBE.held && !(d && d.moved) && !r.tips && !r.falls && rest;
+    const big = [...[...stacks.values()].map((st) => st.items.reduce((s0, q) => s0 + q.m, 0) * G), v.mb * G, ...(still ? r.F.map(Math.abs) : [])];
+    const k = Math.min(Ws, Hs) * 0.2 / Math.max(...big, 1e-9), Lf = (F) => (bl ? 44 * p : F * k), boxes = SBE.hits.map((h) => h.box.slice());
+    if (cmBox) boxes.push(cmBox);
+    /* a label past the arrow's tip, stepped further along the arrow until it clears the crates and the other labels, and kept in the picture */
+    const lab = (x, y, name, F, col, up) => { const t = lbl(name, F), dir = up ? -1 : 1; ctx.font = `700 ${11.5 * p}px ${T.ui}`; const w = ctx.measureText(t).width + 6 * p, hh = 16 * p;
+      let ty = y + dir * (Lf(F) + 13 * p); const xb = Math.max(2 * p, Math.min(Ws - w - 2 * p, x - w / 2)), hit = () => boxes.some((b) => xb < b[0] + b[2] && xb + w > b[0] && ty - hh / 2 < b[1] + b[3] && ty + hh / 2 > b[1]);
+      for (let n = 0; n < 10 && hit(); n++) ty += dir * 17 * p;
+      ty = Math.max(hh / 2 + 40 * p, Math.min(Hs - hh / 2 - 2 * p, ty)); boxes.push([xb, ty - hh / 2, w, hh]);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(xb, ty - hh / 2, w, hh); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, xb + 3 * p, ty); };
+    const arr = (x, y, F, col, lw, up) => { const L = Lf(F); arrow(x, y, 0, up ? -L : L, col, lw); };
+    for (const st of stacks.values()) { const M = st.items.reduce((s0, q) => s0 + q.m, 0), [ax, ay] = toScr(X(st.x), st.mid); arr(ax, ay, M * G, T.w, 3 * p); lab(ax, ay, 'w', M * G, T.w); }
+    if (v.mb > 0) { const [ax, ay] = toScr(X(v.L / 2), beamY - bt / 2); arr(ax, ay, v.mb * G, T.w, 2 * p); lab(ax, ay, 'beam', v.mb * G, T.w); }
+    if (still) { const xs = SBE.sup.map((q) => q.x).sort((a, b) => a - b), names = r.F.length === 1 ? ['F'] : ['F₁', 'F₂'];
+      r.F.forEach((F, i) => { const x = X(i === 0 ? xs[0] : xs[xs.length - 1]); arr(x, beamY, Math.max(0, F), T.sup, 3.5 * p, true); lab(x, beamY, names[i], Math.max(0, F), T.sup, true); }); }
+    /* what happens, in words */
+    sbeVerdict(d && d.moved ? 'Placing a part: the beam waits level.' : SBE.held ? (SBE.sup.length ? 'Held level by two posts. Let go to see if it balances.' : 'Held level by two posts. Add supports, then let go.')
+      : r.falls ? 'Nothing holds it up: it falls.' : r.W === 0 ? 'A massless, empty beam: nothing to balance.'
+      : r.tips ? (r.F.length === 2 ? `It tips about the ${r.tips} support: the other one would have to pull down.` : `It tips ${r.tips} side down: the center of mass is not over the support.`)
+      : r.F.length === 2 ? 'In equilibrium: both supports push up.' : 'Balanced: the center of mass is right over the support.');
+    sbeDrawTray(g, side, Ws, Hs);
+  }
+  /* the verdict box, wrapped onto more lines when the picture is narrow */
+  function sbeVerdict(msg) {
+    const p = ps(), max = (SBE.g ? SBE.g.Ws : W) - 28 * p, lines = []; ctx.font = `600 ${13 * p}px ${T.ui}`;
+    for (const w of msg.split(' ')) { const t = lines.length ? lines[lines.length - 1] + ' ' + w : w; if (lines.length && ctx.measureText(t).width <= max) lines[lines.length - 1] = t; else lines.push(w); }
+    const bw = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 12 * p;
+    ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, bw, (8 + 17 * lines.length) * p); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lines.forEach((l, i) => ctx.fillText(l, 14 * p, (13 + 17 * i) * p));
+  }
+  function sbeDrawTray(g, side, Ws, Hs) {
+    const p = ps(), d = SBE.drag, n = SBE_PARTS.length;
+    let box, items, bin;
+    if (side) { const x = Ws + 4 * p, w = W - Ws - 10 * p, top = 8 * p, binH = 54 * p, ih = Math.min(74 * p, (H - 16 * p - binH - 8 * p) / n);
+      box = [x, top, w, ih * n]; items = SBE_PARTS.map((_, i) => [x, top + i * ih, w, ih]); bin = [x, top + ih * n + 8 * p, w, binH]; }
+    else { const top = Hs + 4 * p, h = H - Hs - 10 * p, binW = 66 * p, tw = W - 16 * p - binW - 6 * p, iw = tw / n;
+      box = [8 * p, top, tw, h]; items = SBE_PARTS.map((_, i) => [8 * p + i * iw, top, iw, h]); bin = [W - 8 * p - binW, top, binW, h]; }
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; rr(...box, 8 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; rr(...box, 8 * p); ctx.stroke();
+    SBE.tray = { parts: [], bin, box };
+    SBE_PARTS.forEach((pt, i) => { const [bx, by, bw, bh] = items[i], cx = bx + bw / 2, full = pt.kind === 'sup' ? SBE.sup.length >= 2 : SBE.loads.length >= SBE_MAXLOADS, a = full ? 0.35 : 1;
+      if (pt.kind === 'sup') { const hgt = Math.min(24 * p, bh * 0.42), yb = by + bh / 2 + hgt * 0.45; sbeWedge(cx, yb - hgt, yb, false, a); ctx.globalAlpha = a; ctx.fillStyle = T.ink; ctx.font = `600 ${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('support', cx, yb + 2 * p); ctx.globalAlpha = 1; }
+      else { const s = sbeSize(pt.m); sbeCrate(cx, by + bh / 2 + s / 2, pt.m, false, a); }
+      SBE.tray.parts.push({ part: pt, box: items[i], full }); });
+    const hot = d && d.moved && d.item && d.overTray;
+    ctx.fillStyle = hot ? T.fr : T.canvas; ctx.globalAlpha = hot ? 0.2 : 0.92; rr(...bin, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = hot ? T.fr : T.muted; ctx.lineWidth = 1.2 * p; rr(...bin, 8 * p); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = hot ? T.fr : T.muted; ctx.font = `600 ${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Drop here', bin[0] + bin[2] / 2, bin[1] + bin[3] * 0.36); ctx.fillText('to remove', bin[0] + bin[2] / 2, bin[1] + bin[3] * 0.68);
+    /* a part being carried, off the beam: drawn at the pointer */
+    if (d && d.moved && d.item && !d.placed) {
+      if (d.part.kind === 'sup') sbeWedge(d.px, d.py - 20 * p, d.py + 14 * p, true, 0.75); else sbeCrate(d.px, d.py + sbeSize(d.part.m) / 2, d.part.m, true, 0.75);
+    }
+    ctx.textBaseline = 'alphabetic';
+  }
+  const inBox = (b, x, y) => b && x >= b[0] && x <= b[0] + b[2] && y >= b[1] && y <= b[1] + b[3];
+  function sbeHit(x, y) {
+    const g = SBE.g, p = ps(); if (!g || !SBE.tray) return null;
+    for (const t of SBE.tray.parts) if (inBox(t.box, x, y)) return { type: 'tray', part: t.part, full: t.full };
+    const [bx, by] = g.toBeam(x, y);
+    if (Math.hypot(bx - g.grip[0], by - g.grip[1]) < 16 * p) return { type: 'end' };
+    for (let i = SBE.hits.length - 1; i >= 0; i--) if (inBox(SBE.hits[i].box, bx, by)) return { type: 'load', id: SBE.hits[i].id };
+    for (const q of SBE.sup) if (Math.abs(x - g.X(q.x)) < 18 * p && y > g.beamY - 2 * p && y < g.gy + 6 * p) return { type: 'sup', id: q.id };
+    return null;
+  }
+  function sbeDown(e) {
+    const [x, y] = local(e), h = sbeHit(x, y); can.focus({ preventScroll: true });
+    if (!h) { if (SBE.sel != null) { SBE.sel = null; draw(); } return; }
+    if (h.type === 'tray') {
+      if (h.full) { sbeSay(h.part.kind === 'sup' ? 'Two supports at most: drag one back to the tray first.' : `${SBE_MAXLOADS} masses at most: drag one back to the tray first.`); return; }
+      SBE.drag = { type: 'new', part: h.part, item: { id: SBE.nid++, x: 0, m: h.part.m }, placed: false, moved: true, px: x, py: y, x0: x, y0: y };
+    } else if (h.type === 'end') SBE.drag = { type: 'end', moved: false, px: x, py: y, x0: x, y0: y };
+    else { const it = sbeFind(h.id); SBE.sel = h.id; SBE.drag = { type: h.type, part: h.type === 'sup' ? { kind: 'sup' } : { kind: 'load', m: it.m }, item: it, placed: true, moved: false, px: x, py: y, x0: x, y0: y }; }
+    can.setPointerCapture(e.pointerId); draw();
+  }
+  function sbeMove(e) {
+    const [x, y] = local(e), d = SBE.drag, p = ps(), g = SBE.g;
+    if (!d) { if (e.pointerType === 'mouse') can.style.cursor = sbeHit(x, y) ? 'grab' : ''; return; }
+    d.px = x; d.py = y;
+    if (!d.moved && Math.hypot(x - d.x0, y - d.y0) > 4 * p) { d.moved = true; SBE.ang = 0; SBE.dy = 0; }
+    if (!d.moved) return;
+    if (d.type === 'end') { S.v.L = Math.max(2, Math.min(6, Math.round((x - g.x0) / g.sc * 10) / 10)); clampV(); sync(); sbeEdited(); draw(); readouts(); return; }
+    d.overTray = inBox(SBE.tray.box, x, y) || inBox(SBE.tray.bin, x, y);
+    const on = !d.overTray && x > g.X(0) - 14 * p && x < g.X(S.v.L) + 14 * p && y > g.beamY - 190 * p && y < g.gy + 16 * p && x < g.Ws;
+    const list = d.part.kind === 'sup' ? SBE.sup : SBE.loads;
+    if (on) { d.item.x = sbeSnap((x - g.x0) / g.sc); if (!d.placed) { if (d.type === 'new' && (d.part.kind === 'sup' ? SBE.sup.length >= 2 : SBE.loads.length >= SBE_MAXLOADS)) return; list.push(d.item); d.placed = true; } }
+    else if (d.placed) { const i = list.indexOf(d.item); if (i >= 0) list.splice(i, 1); d.placed = false; }
+    sbeEdited(); draw(); readouts();
+  }
+  function sbeUp() {
+    const d = SBE.drag; if (!d) return; SBE.drag = null;
+    if (d.type === 'new' && d.placed) { SBE.sel = d.item.id; sbeSay(`Placed ${d.part.kind === 'sup' ? 'a support' : `a ${d.part.m} kg mass`} at ${f(d.item.x, 2)} m.`); }
+    else if (d.type !== 'new' && d.type !== 'end' && d.moved && !d.placed) { if (SBE.sel === d.item.id) SBE.sel = null; sbeSay(`Removed ${d.part.kind === 'sup' ? 'a support' : `a ${d.part.m} kg mass`}.`); }
+    draw(); readouts();
+  }
+  function sbeKey(e) {
+    const k = e.key, all = [...SBE.sup, ...SBE.loads];
+    if (k === ' ') { e.preventDefault(); sbeGo(); return; }
+    if (k === '[' || k === ']') { if (!all.length) return; e.preventDefault(); const i = all.findIndex((q) => q.id === SBE.sel); SBE.sel = all[((i < 0 ? (k === ']' ? -1 : 0) : i) + (k === ']' ? 1 : -1) + all.length) % all.length].id; draw(); return; }
+    const it = sbeFind(SBE.sel); if (!it) return;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') { e.preventDefault(); it.x = sbeSnap(it.x + (k === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.25 : 0.05)); sbeEdited(); draw(); readouts(); return; }
+    if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); sbeRemove(it.id); sbeEdited(); sbeSay('Removed the selected part.'); draw(); readouts(); }
+  }
+  function sbeReadouts(dd, N, Nm) {
+    const r = sbeModel(), pre = SBE.held ? 'if let go: ' : '';
+    let h = dd('Total weight, beam and masses', N(r.W)) + dd('Center of mass, from the left end', `${f(r.xc, 2)} m`);
+    if (!SBE.sup.length) return h + dd('Supports', `none: ${SBE.held ? 'if let go, it falls' : 'it falls'}`, true);
+    const xs = SBE.sup.map((q) => q.x).sort((a, b) => a - b);
+    if (r.F.length < 2 && r.about != null) { const tau = -r.W * (r.xc - r.about);
+      h += dd(`Net torque about the support at ${f(r.about, 2)} m (counterclockwise +)`, Nm(Math.abs(tau) < 1e-9 * Math.max(1, r.W) ? 0 : tau), true);
+      h += dd('Support force', r.tips ? `${pre}none steady: it tips ${r.tips} side down` : `${pre}${N(r.F[0])}`, true); }
+    else { h += dd(`Left support F₁ (at ${f(xs[0], 2)} m)`, N(r.F[0])) + dd(`Right support F₂ (at ${f(xs[1], 2)} m)`, N(r.F[1]));
+      if (r.tips) h += dd('Note', `${r.tips === 'right' ? 'F₁' : 'F₂'} would be negative: a support can only push, so ${SBE.held ? 'if let go ' : ''}the beam tips about the ${r.tips} support.`, true); }
+    return h;
+  }
+  $('sbeGo').addEventListener('click', sbeGo);
+  for (const b of document.querySelectorAll('#sbeRigs button')) b.addEventListener('click', () => { sbeLoad(b.dataset.r); sbeSay('Two posts hold the beam level. Let go to see if it balances.'); });
+  for (const b of document.querySelectorAll('#sbeAdd button')) b.addEventListener('click', () => {
+    const a = b.dataset.add, L = S.v.L;
+    if (a === 'del') { const it = sbeFind(SBE.sel); if (!it) { sbeSay('Pick a part first: tap it, or press [ or ] on the picture.'); return; } sbeRemove(it.id); sbeSay('Removed the selected part.'); }
+    else { const part = a === 'sup' ? { kind: 'sup' } : { kind: 'load', m: +a }, x = a === 'sup' ? (SBE.sup.length ? sbeSnap(SBE.sup[0].x + (SBE.sup[0].x < L / 2 ? L / 2 : -L / 2)) : sbeSnap(L / 2)) : sbeSnap(L / 2), q = sbeAddPart(part, x);
+      if (!q) return; SBE.sel = q.id; sbeSay(`Added ${a === 'sup' ? 'a support' : `a ${a} kg mass`} at ${f(x, 2)} m: the arrow keys on the picture move it.`); }
+    sbeEdited(); draw(); readouts();
+  });
 
   // ---------- drag and keys ----------
   let drag = null, off3 = 0;
@@ -678,6 +976,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setVal(which, g.kind === 'seesaw' ? (px - g.cx) / g.sc : g.kind === 'plank' || g.kind === 'sign' ? (px - g.X(0)) / g.sc : (px - g.footX) / (g.wallX - g.footX));
   }
   can.addEventListener('pointerdown', (e) => {
+    if (S.preset === 'sandbox') { sbeDown(e); return; }
     if (G3.on && g3) {   /* 3D: a press on a load or along the beam drags; anywhere else turns the view (VD3.orbit) */
       drag = null; const h = pick3(e); if (!h) { if (e.pointerType !== 'touch') can.focus({ preventScroll: true }); return; }
       can.focus({ preventScroll: true }); drag = h.which; off3 = h.off; if (S.preset === 'seesaw') S.sel = drag; can.setPointerCapture(e.pointerId); const r = ray3(e); if (r != null) setVal(drag, r + off3); return;
@@ -687,11 +986,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.setPointerCapture(e.pointerId); setPos(drag, x);
   });
   can.addEventListener('pointermove', (e) => {
+    if (S.preset === 'sandbox') { sbeMove(e); return; }
     if (G3.on && g3) { if (drag) { const r = ray3(e); if (r != null) setVal(drag, r + off3); } else if (e.pointerType === 'mouse' && !e.buttons) can.style.cursor = pick3(e) ? 'pointer' : 'grab'; return; }
     if (drag) setPos(drag, local(e)[0]);
   });
-  const end = () => { drag = null; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+  const end = (e) => { drag = null; if (S.preset === 'sandbox') sbeUp(e); }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
   can.addEventListener('keydown', (e) => {
+    if (S.preset === 'sandbox') { sbeKey(e); return; }
     const v = S.v, k = e.key;
     if (k === '1' || k === '2') { S.sel = +k; draw(); return; }
     if (k !== 'ArrowLeft' && k !== 'ArrowRight') return;

@@ -5370,3 +5370,18 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
   What's new entry added.
 
 **For GPT:** please check the friction model (torque about the vertical τ_f sin θ toward the tip's rolling rate) and the rise rate.
+## 2026-10-28 · Claude · Static Equilibrium Sandbox
+- Steve asked for sandboxes in more demos (shortlist order: Collisions done, this is second). New setup chip "Sandbox" in
+  `demos/equilibrium.html`, flat picture only (3D switch hidden there, restored on leaving).
+- CORE `beamSandbox(L, mb, sup, loads)`: beam on 0, 1 or 2 supports that only push up. One support: balanced only when the center
+  of mass is over it, net torque τ = −W(x_cm − a); two supports a < b: F1, F2 as in `plank()`, tips about the other support when one
+  would be negative; no support: falls. Two supports at the same spot act as one.
+- Scene: tray (support, 5, 10, 20, 50 kg; drop back on the tray to remove), right end grip and sliders for length (2 to 6 m) and beam
+  mass (0 to 40 kg), positions snap to 0.05 m, two posts hold the beam level until "Let go". The tipped picture turns about the
+  pivot until the low end meets the floor, only to show the direction (rate not modeled; stated in the code comment). Center of
+  mass marker with a plumb line. Ready made beams: unbalanced seesaw (opening state, tips on Let go), balanced seesaw, heavy beam
+  off center (beam weight balances 10 kg), two supports, empty. Keys: [ ] pick, arrows move, Delete, Space. No readings.
+- Tests `test_equilibrium_sandbox.cjs` (5 groups): one support balance and torque, agreement with `seesaw()` and `plank()`, torques
+  vanish about any point, x_cm between supports criterion, edge case F1 = 0, no support. Handout About bullet added.
+- Checks: vdcheck after 0 problems, clip 0 cut off; Playwright build by dragging at 1280 and 400 px, no page errors.
+  GPT: please verify the model and the readouts.
