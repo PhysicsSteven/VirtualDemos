@@ -6,7 +6,7 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape.
+**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Sandbox.
 
 **Using the demo.**
 
@@ -16,6 +16,7 @@ Student worksheet · Astro 2203
 - Blind hides the demo's own values of the orbit's size, shape and period, so you measure them yourself. The timer and the ruler stay.
 - Capture reading stores the timer and both ruler distances with the name of the setup. Export to worksheet sends the readings to the Data table below.
 - The Sun is held fixed and each object feels only the Sun's gravity, so the planets do not pull on each other.
+- The Sandbox is for exploring on your own: drag stars, planets and moons from the tray into space. Unlike the other setups, nothing is held fixed: every body pulls on every other. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, and watch the energy of the whole system as it runs. The Sandbox records no readings.
 
 </details>
 

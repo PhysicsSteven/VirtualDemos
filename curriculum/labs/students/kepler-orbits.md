@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Acces
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape.
+**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Sandbox.
 
 **Using the demo.**
 
@@ -18,6 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Acces
 - Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is a least squares line $$T^2 = \text{slope}\times a^3 + \text{intercept}$$, using the rows with the present star mass; the intercept should come out near zero.
 - Each wedge is swept in the same time $$\Delta t$$. Areas (AU²) are summed from the integrated path, not from a formula; compare them with $$\tfrac{1}{2}h\,\Delta t$$, where $$h = \lvert\mathbf{r}\times\mathbf{v}\rvert$$.
 - The star is held fixed and the planet's mass is neglected, so $$P^2 = a^3/M$$ exactly ($$a$$ in AU, $$P$$ in years, $$M$$ in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.
+- The Sandbox is for exploring on your own: drag stars, planets and moons from the tray into space. Unlike the other setups, nothing is held fixed: every body pulls on every other. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, and watch the energy of the whole system as it runs. The Sandbox records no readings.
 
 </details>
 

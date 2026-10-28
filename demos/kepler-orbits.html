@@ -206,8 +206,45 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="alphacen" aria-pressed="false">Binary star</button>
           <button type="button" data-p="circle" aria-pressed="false">Circular orbit</button>
           <button type="button" data-p="escape" aria-pressed="false">Escape</button>
+          <button type="button" data-p="sandbox" aria-pressed="false">Sandbox</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="sbkBox" hidden>
+        <h2>Sandbox</h2>
+        <p class="hint" id="sbkMsg" aria-live="polite">Drag stars, planets and moons from the tray into space. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, then press Play.</p>
+        <div class="chips" id="sbkRigs" role="group" aria-label="Ready made systems">
+          <button type="button" data-r="sunEarth" aria-pressed="true">Sun and Earth</button>
+          <button type="button" data-r="sunJupiterEarth" aria-pressed="false">Sun, Jupiter and Earth</button>
+          <button type="button" data-r="moon" aria-pressed="false">A planet with a moon</button>
+          <button type="button" data-r="binary" aria-pressed="false">Binary star</button>
+          <button type="button" data-r="circumbinary" aria-pressed="false">Planet around a binary</button>
+          <button type="button" data-r="eight" aria-pressed="false">Figure eight</button>
+          <button type="button" data-r="empty" aria-pressed="false">Empty space</button>
+        </div>
+        <div class="slider-head"><span class="hint" id="sbkFollowLab">The view follows</span></div>
+        <div class="seg wrap" role="group" aria-labelledby="sbkFollowLab" id="sbkFollow">
+          <button type="button" data-f="cm" aria-pressed="true">Center of mass</button>
+          <button type="button" data-f="sel" aria-pressed="false">Selected body</button>
+          <button type="button" data-f="none" aria-pressed="false">Nothing</button>
+        </div>
+        <label class="check"><input type="checkbox" id="sbkTrails" checked>Trails</label>
+        <dl class="readout" id="sbkOut"></dl>
+        <details class="more"><summary>Build with buttons instead</summary>
+          <div class="chips" id="sbkAdd">
+            <button type="button" data-add="star">Add a star</button>
+            <button type="button" data-add="dwarf">Add a red dwarf</button>
+            <button type="button" data-add="jupiter">Add a Jupiter</button>
+            <button type="button" data-add="earth">Add an Earth</button>
+            <button type="button" data-add="moon">Add a moon</button>
+            <button type="button" data-add="del">Remove the selected body</button>
+          </div>
+          <p class="hint">On the picture: [ and ] pick a body; the up and down arrows make it faster or slower and the left and right arrows turn its velocity (Shift for small steps); C puts it on a circular orbit; Delete removes it; Space plays or pauses; F fits the view; + and − zoom.</p>
+        </details>
+        <details class="more"><summary>The model</summary>
+          <p class="hint">Every body pulls on every other by Newton's law of gravity, F = G m₁m₂/r², in AU, years and solar masses (G = 4π² AU³/M☉·yr²). The motion is stepped with velocity Verlet, in smaller steps during close passes; the change in total energy shows the numerical error. Bodies are drawn bigger than life; their real radii decide when two touch, and then they merge, keeping their total mass and momentum. The orbit shown for the selected body treats it and its host as if they were alone, so P² = a³/(M + m).</p>
+        </details>
       </section>
 
       <section>
@@ -595,6 +632,74 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const r of rows) L.push(r.map(csvCell).join(','));
     return L.join('\n') + '\n';
   }
+  // ---- Sandbox: bodies that all pull on one another by Newton's law of gravity, F = G mᵢ mⱼ / r² with G = 4π² AU³/(M☉·yr²). Each is a
+  // point mass with a radius R used only for contact. Velocity Verlet with one shared step dt = SBK_ETA·min over pairs √(r³/G(mᵢ + mⱼ)),
+  // so a close pass takes small steps. Two bodies closer than the sum of their radii merge into one, keeping their total mass and
+  // momentum (a perfectly inelastic collision), with the volume of both (R³ adds).
+  const SBK_ETA = 0.002;
+  function nbAccel(bs) {
+    for (const b of bs) { b.ax = 0; b.ay = 0; }
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) {
+      const a = bs[i], b = bs[j], dx = b.x - a.x, dy = b.y - a.y, r2 = dx * dx + dy * dy, f = TAU * TAU / (r2 * Math.sqrt(r2));
+      a.ax += f * b.m * dx; a.ay += f * b.m * dy; b.ax -= f * a.m * dx; b.ay -= f * a.m * dy;
+    }
+  }
+  function nbDt(bs) {
+    let t = Infinity;
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) {
+      const r = Math.hypot(bs[j].x - bs[i].x, bs[j].y - bs[i].y); t = Math.min(t, Math.sqrt(r * r * r / (TAU * TAU * (bs[i].m + bs[j].m))));
+    }
+    return SBK_ETA * t;
+  }
+  // advance the system {t, bs} to time T (or until the step budget runs out); returns the steps used and any merges, each with its time
+  function nbAdvance(st, T, budget) {
+    let n = 0; const ev = [];
+    const drift = (dt) => { for (const b of st.bs) { b.x += b.vx * dt; b.y += b.vy * dt; } };
+    if (st.bs.length < 2) { drift(T - st.t); st.t = T; return { n, ev }; }
+    nbAccel(st.bs);
+    while (st.t < T - 1e-12 && n < budget) {
+      const dt = Math.min(nbDt(st.bs), T - st.t);
+      for (const b of st.bs) { b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay; b.x += dt * b.vx; b.y += dt * b.vy; }
+      nbAccel(st.bs);
+      for (const b of st.bs) { b.vx += 0.5 * dt * b.ax; b.vy += 0.5 * dt * b.ay; }
+      st.t += dt; n++;
+      for (let k = 0; k < 8; k++) { const m = nbMergeOnce(st.bs); if (!m) break; st.bs = m.bs; ev.push(Object.assign(m.ev, { t: st.t })); }
+      if (ev.length && st.bs.length < 2) { drift(T - st.t); st.t = T; break; }
+      if (ev.length) nbAccel(st.bs);
+    }
+    return { n, ev };
+  }
+  // one merge at most: the first pair found touching; returns { bs, ev } or null
+  function nbMergeOnce(bs) {
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) {
+      const a = bs[i], b = bs[j];
+      if (Math.hypot(b.x - a.x, b.y - a.y) >= a.R + b.R) continue;
+      const M = a.m + b.m, big = a.m >= b.m ? a : b, small = big === a ? b : a;
+      const c = Object.assign({}, big, { m: M, x: (a.m * a.x + b.m * b.x) / M, y: (a.m * a.y + b.m * b.y) / M, vx: (a.m * a.vx + b.m * b.vx) / M, vy: (a.m * a.vy + b.m * b.vy) / M, R: Math.cbrt(a.R ** 3 + b.R ** 3) });
+      return { bs: bs.map((q) => (q === big ? c : q)).filter((q) => q !== small), ev: { kind: 'merge', into: big.id, gone: small.id, names: [big.name, small.name] } };
+    }
+    return null;
+  }
+  // totals: kinetic and potential energy (AU²·M☉/yr²), momentum (M☉·AU/yr), angular momentum about the origin, center of mass
+  function nbTotals(bs) {
+    let K = 0, U = 0, px = 0, py = 0, Lz = 0, M = 0, X = 0, Y = 0;
+    for (const b of bs) { K += 0.5 * b.m * (b.vx * b.vx + b.vy * b.vy); px += b.m * b.vx; py += b.m * b.vy; Lz += b.m * (b.x * b.vy - b.y * b.vx); M += b.m; X += b.m * b.x; Y += b.m * b.y; }
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) U -= TAU * TAU * bs[i].m * bs[j].m / Math.hypot(bs[j].x - bs[i].x, bs[j].y - bs[i].y);
+    return { K, U, E: K + U, px, py, Lz, M, X: M ? X / M : 0, Y: M ? Y / M : 0, VX: M ? px / M : 0, VY: M ? py / M : 0 };
+  }
+  // the body that pulls hardest on b among the heavier ones (largest m/r²), or null
+  function nbHost(bs, b) {
+    let best = null, g = 0;
+    for (const q of bs) { if (q === b || q.m <= b.m) continue; const r2 = (q.x - b.x) ** 2 + (q.y - b.y) ** 2, gi = q.m / r2; if (gi > g) { g = gi; best = q; } }
+    return best;
+  }
+  // b's orbit around its host as a two body problem: the CORE orbit elements of the relative motion with GM = G(M_host + m)
+  const nbElements = (b, h) => orbitElements({ x: b.x - h.x, y: b.y - h.y, vx: b.vx - h.vx, vy: b.vy - h.vy }, TAU * TAU * (h.m + b.m));
+  // the velocity for a circular orbit around h at (x, y), counterclockwise, added to h's own velocity
+  function nbCircular(h, m, x, y) {
+    const dx = x - h.x, dy = y - h.y, r = Math.hypot(dx, dy), v = Math.sqrt(TAU * TAU * (h.m + m) / r);
+    return { vx: h.vx - v * dy / r, vy: h.vy + v * dx / r };
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -740,6 +845,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   function fitView(instant, resetArrow) {
     if (!W || !H) return;
+    if (S.sand) { sbkFit(instant); return; }
     const T = tokens(), ps = T.ps;
     const box = orbitBox(S.launch);
     if (S.Blaunch) { const b2 = orbitBox(S.Blaunch); box.x0 = Math.min(box.x0, b2.x0); box.x1 = Math.max(box.x1, b2.x1); box.y0 = Math.min(box.y0, b2.y0); box.y1 = Math.max(box.y1, b2.y1); }
@@ -1255,10 +1361,274 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
   }
 
+  // ---------- Sandbox: stars, planets and moons that all pull on one another (the CORE n body functions). Flat view only. The
+  // bodies are drawn bigger than life; their real radii (below) only decide when two touch and merge. ----------
+  /* masses: IAU 2015 nominal values and the JPL planetary constants (M☉/M_J = 1047.35, M☉/M⊕ = 332946.05, M⊕/M☾ = 81.30);
+     radii: IAU 2015 nominal R☉ = 695 700 km, R_J = 71 492 km, R⊕ = 6378 km, R☾ = 1737 km; the red dwarf, 0.3 M☉ and about 0.3 R☉ (Mann et al. 2015, ApJ 804, 64) */
+  const AU_KM = 1.495978707e8;
+  const SBK_KIND = {
+    star:    { name: 'Star', m: 1, R: 695700 / AU_KM, px: 9, col: '' },
+    dwarf:   { name: 'Red dwarf', m: 0.3, R: 0.3 * 695700 / AU_KM, px: 7, col: '#e2643b' },
+    jupiter: { name: 'Jupiter', m: 1 / 1047.35, R: 71492 / AU_KM, px: 6, col: '#c99a6b' },
+    earth:   { name: 'Earth', m: 1 / 332946.05, R: 6378 / AU_KM, px: 4.5, col: '#4a8fe0' },
+    moon:    { name: 'Moon', m: 1 / 332946.05 / 81.30, R: 1737 / AU_KM, px: 3, col: '#9aa3ad' }
+  };
+  const SBK_TRAY = ['star', 'dwarf', 'jupiter', 'earth', 'moon'];
+  const SBK_MAX = 12;
+  const SBK = { on: false, st: null, start: null, playing: false, sel: null, follow: 'cm', drag: null, nid: 1, kv: 30, tray: null, last: 0, chart: [], msg: '', rig: 'sunEarth', wasDim: null, hidden: [] };
+  const sbkCol = (b, T) => SBK_KIND[b.kind].col || T.sun;
+  function sbkMake(kind, x, y, vx, vy) { const k = SBK_KIND[kind]; return { id: SBK.nid++, kind, name: k.name, m: k.m, R: k.R, x, y, vx, vy, trail: [] }; }
+  /* a pair (m1 at the left, m2 at the right) circling their center of mass at (cx, cy) a distance d apart, the center moving at (vx, vy) */
+  function sbkPair(k1, k2, d, cx, cy, vx, vy) {
+    const m1 = SBK_KIND[k1].m, m2 = SBK_KIND[k2].m, M = m1 + m2, v = Math.sqrt(TAU * TAU * M / d);
+    return [sbkMake(k1, cx - d * m2 / M, cy, vx, vy - v * m2 / M), sbkMake(k2, cx + d * m1 / M, cy, vx, vy + v * m1 / M)];
+  }
+  const SBK_RIGS = {
+    sunEarth: { span: 2.8, spd: 0.25, build: () => sbkPair('star', 'earth', 1, 0, 0, 0, 0) },
+    sunJupiterEarth: { span: 12, spd: 1.5, build: () => { const [s, j] = sbkPair('star', 'jupiter', 5.2, 0, 0, 0, 0), e = sbkMake('earth', -1, 0, 0, 0); Object.assign(e, nbCircular(s, e.m, -1, 0)); return [s, j, e]; } },
+    moon: { span: 0.09, spd: 0.04, follow: 'sel', sel: 1, build: () => { const [s, j] = sbkPair('star', 'jupiter', 1, 0, 0, 0, 0), m = sbkMake('moon', j.x + 0.02, 0, 0, 0); Object.assign(m, nbCircular(j, m.m, m.x, 0)); return [s, j, m]; } },
+    binary: { span: 3.2, spd: 0.3, build: () => sbkPair('star', 'star', 2, 0, 0, 0, 0) },
+    circumbinary: { span: 6.4, spd: 0.6, build: () => { const p = sbkPair('star', 'dwarf', 0.4, 0, 0, 0, 0), M = 1.3 + SBK_KIND.earth.m, e = sbkMake('earth', 2.5, 0, 0, Math.sqrt(TAU * TAU * M / 2.5)); return [...p, e]; } },
+    /* the figure eight of Chenciner and Montgomery (2000, Annals of Mathematics 152, 881), given for G = m = 1: here m = 1 M☉ and the
+       length unit 1 AU, so velocities scale by √(G M☉/AU) = 2π AU/yr and the period 6.3259 by 1/(2π), to 1.0068 yr */
+    eight: { span: 2.6, spd: 0.15, build: () => { const x1 = 0.97000436, y1 = -0.24308753, wx = -0.93240737 * TAU, wy = -0.86473146 * TAU;
+      return [sbkMake('star', x1, y1, -wx / 2, -wy / 2), sbkMake('star', -x1, -y1, -wx / 2, -wy / 2), sbkMake('star', 0, 0, wx, wy)]; } },
+    empty: { span: 4, spd: 0.25, build: () => [] }
+  };
+  const sbkClone = (bs) => bs.map((b) => Object.assign({}, b, { trail: [] }));
+  const sbkTot = () => nbTotals(SBK.st.bs);
+  /* the frame the picture is drawn in: centered on the center of mass, on the selected body, or fixed */
+  function sbkFrame0() {
+    if (SBK.drag && SBK.drag.f0) return SBK.drag.f0;   /* held still while a body or an arrow is dragged */
+    const bs = SBK.st.bs, s = bs.find((q) => q.id === SBK.sel);
+    if (SBK.follow === 'sel' && s) return { x: s.x, y: s.y, vx: s.vx, vy: s.vy };
+    if (SBK.follow === 'cm' && bs.length) { const t = sbkTot(); return { x: t.X, y: t.Y, vx: t.VX, vy: t.VY }; }
+    return { x: 0, y: 0, vx: 0, vy: 0 };
+  }
+  function sbkSay(m) { $('sbkMsg').textContent = m; }
+  function sbkEnter() {
+    if (SBK.on) return; SBK.on = S.sand = true; setPlaying(false);
+    if (T3.on) { SBK.wasDim = '3d'; document.querySelector('#viewSeg [data-dim="flat"]').click(); } else SBK.wasDim = null;
+    $('viewSeg').style.display = 'none'; $('v3note').hidden = true;
+    SBK.hidden = [...document.querySelectorAll('aside.rail > section')].filter((sec) => !sec.contains($('presets')) && sec.id !== 'sbkBox' && !sec.contains($('spd')) && !sec.hidden);
+    for (const sec of SBK.hidden) sec.hidden = true;
+    for (const id of ['mass', 'keep']) $(id).closest('div, label').hidden = true; $('keepHint').hidden = true;
+    $('sbkBox').hidden = false;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === 'sandbox'));
+    chart.setAttribute('aria-label', 'Energy of the whole system against time: kinetic, potential and total.');
+    sbkLoad(SBK.rig);
+  }
+  function sbkLeave() {
+    if (!SBK.on) return; SBK.on = S.sand = false; SBK.playing = false; SBK.drag = null;
+    $('viewSeg').style.display = ''; for (const sec of SBK.hidden) sec.hidden = false; SBK.hidden = [];
+    for (const id of ['mass', 'keep']) $(id).closest('div, label').hidden = false; $('keepHint').hidden = false;
+    $('sbkBox').hidden = true; playBtn.textContent = S.playing ? 'Pause' : 'Play';
+    chart.setAttribute('aria-label', "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.");
+    if (SBK.wasDim) { SBK.wasDim = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
+  }
+  function sbkLoad(name) {
+    const r = SBK_RIGS[name]; SBK.rig = name; SBK.st = null;
+    SBK.st = { t: 0, bs: r.build() }; SBK.sel = r.sel != null && SBK.st.bs[r.sel] ? SBK.st.bs[r.sel].id : null; SBK.follow = r.follow || 'cm';
+    for (const b of document.querySelectorAll('#sbkFollow button')) b.setAttribute('aria-pressed', String(b.dataset.f === SBK.follow));
+    for (const b of document.querySelectorAll('#sbkRigs button')) b.setAttribute('aria-pressed', String(b.dataset.r === name));
+    setSpeed(r.spd); sbkCommit(); sbkFit(true, r.span); sbkPlay(false);
+  }
+  /* the system as it is now becomes the start that Reset goes back to */
+  function sbkCommit() { SBK.st.t = 0; for (const b of SBK.st.bs) b.trail = []; SBK.start = sbkClone(SBK.st.bs); sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; }
+  function sbkChart0() { SBK.chart = []; if (SBK.st.bs.length > 1) { const t = sbkTot(); SBK.chart.push([SBK.st.t, t.K, t.U]); } }
+  function sbkReset() { SBK.st = { t: 0, bs: sbkClone(SBK.start) }; sbkChart0(); sbkPlay(false); sbkSay('Back to the start.'); }
+  function sbkPlay(on) { SBK.playing = on == null ? !SBK.playing : on; playBtn.textContent = SBK.playing ? 'Pause' : 'Play'; SBK.last = 0; schedule(); }
+  function sbkEdited() { for (const b of document.querySelectorAll('#sbkRigs button')) b.setAttribute('aria-pressed', 'false'); sbkCommit(); sbkArrowScale(); }
+  /* keep the velocity arrows readable: rescale only when the longest is far too long or too short */
+  function sbkArrowScale() { const f = sbkFrame0(), D = Math.min(W, H); let vmax = 0; for (const b of SBK.st.bs) vmax = Math.max(vmax, Math.hypot(b.vx - f.vx, b.vy - f.vy));
+    if (vmax > 0 && (vmax * SBK.kv > 0.45 * D || vmax * SBK.kv < 0.06 * D)) SBK.kv = 0.22 * D / vmax; }
+  /* fit the view: the given span (AU) or every body, around the frame's center; the velocity arrows get a scale to match */
+  function sbkFit(instant, span) {
+    if (!W || !H) return; const ps = tokens().ps, f = sbkFrame0(), bs = SBK.st.bs;
+    let R = span || 0; if (!span) for (const b of bs) R = Math.max(R, 1.15 * Math.hypot(b.x - f.x, b.y - f.y)); if (!(R > 0)) R = 2; if (!span) R *= 2;
+    const s = Math.min(W - 40 * ps, H - 120 * ps) / R; VT.s = s; VT.cx = W / 2; VT.cy = (H - 60 * ps) / 2 + 20 * ps; if (instant) Object.assign(V, VT);
+    let vmax = 0; for (const b of bs) vmax = Math.max(vmax, Math.hypot(b.vx - f.vx, b.vy - f.vy));
+    SBK.kv = vmax > 0 ? 0.22 * Math.min(W, H) / vmax : 30; autoView = false; schedule();
+  }
+  /* screen position of a world point, drawn relative to the frame */
+  const sbkPx = (x, y, f) => toPx(x - f.x, y - f.y);
+  const sbkTip = (b, f) => { const [px, py] = sbkPx(b.x, b.y, f); return [px + (b.vx - f.vx) * SBK.kv, py - (b.vy - f.vy) * SBK.kv]; };
+  const sbkRad = (b, ps) => Math.max(SBK_KIND[b.kind].px * ps, b.R * V.s);
+  function sbkStep(dtr) {
+    const st = SBK.st, T = st.t + dtr * S.speed, out = nbAdvance(st, T, 40000);
+    for (const e of out.ev) { const m = `${e.names[1]} hit ${e.names[0]} at t = ${fmtT(e.t)}: they merged into one body, keeping their total mass and momentum.`; sbkSay(m); live(m); if (SBK.sel === e.gone) SBK.sel = e.into; }
+    const t = st.bs.length ? sbkTot() : null;
+    const fr = sbkFrame0();
+    for (const b of st.bs) { const L = b.trail[b.trail.length - 1]; if (!L || Math.hypot(b.x - fr.x - L[0], b.y - fr.y - L[1]) * V.s > 1.5) { b.trail.push([b.x - fr.x, b.y - fr.y]); if (b.trail.length > 4000) b.trail.splice(0, 1000); } }
+    if (st.bs.length > 1) { SBK.chart.push([st.t, t.K, t.U]); if (SBK.chart.length > 3000) SBK.chart = SBK.chart.filter((_, i) => i % 2 === 0); }
+  }
+  function sbkFrameLoop(ts) {
+    const dtr = SBK.last ? Math.min(0.05, (ts - SBK.last) / 1000) : 0; SBK.last = ts;
+    if (SBK.playing && !SBK.drag && dtr > 0) sbkStep(dtr);
+    animateView(); if (W && H) sbkDraw(); if (CW && CH) sbkChart(); sbkReadouts();
+    if ((SBK.playing && !SBK.drag) || viewMoving()) raf = requestAnimationFrame(frame); else SBK.last = 0;
+  }
+  function sbkDraw() {
+    const T = tokens(), ps = T.ps, ctx = vctx, f = sbkFrame0(), bs = SBK.st.bs, d = SBK.drag;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* a scale bar: the largest 1, 2 or 5 × 10ⁿ AU that fits in 120 px */
+    { let u = Math.pow(10, Math.floor(Math.log10(120 * ps / V.s))); for (const k of [5, 2]) if (k * u * V.s <= 120 * ps) { u *= k; break; }
+      const x0 = 14 * ps, y0 = H - 74 * ps, L = u * V.s; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(x0, y0 - 4 * ps); ctx.lineTo(x0, y0); ctx.lineTo(x0 + L, y0); ctx.lineTo(x0 + L, y0 - 4 * ps); ctx.stroke();
+      text(ctx, T, `${+u.toPrecision(1)} AU`, x0 + L / 2, y0 - 6 * ps, 'center', 'bottom', T.muted, 10 * ps, 600); }
+    /* trails, each point drawn where it was in the frame the view followed at that moment */
+    if ($('sbkTrails').checked) for (const b of bs) { if (b.trail.length < 2) continue; ctx.strokeStyle = alpha(sbkCol(b, T), 0.55); ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+      b.trail.forEach((q, i) => { const [px, py] = toPx(q[0], q[1]); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); }); const [px, py] = sbkPx(b.x, b.y, f); ctx.lineTo(px, py); ctx.stroke(); }
+    /* the center of mass */
+    if (bs.length > 1 && !S.blind) { const t = sbkTot(), [cx, cy] = sbkPx(t.X, t.Y, f); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(cx - 5 * ps, cy - 5 * ps); ctx.lineTo(cx + 5 * ps, cy + 5 * ps); ctx.moveTo(cx - 5 * ps, cy + 5 * ps); ctx.lineTo(cx + 5 * ps, cy - 5 * ps); ctx.stroke(); }
+    /* the selected body: a gold dot where its arrow tip gives a circular orbit around its host */
+    const sb = bs.find((q) => q.id === SBK.sel), host = sb && nbHost(bs, sb);
+    if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); text(ctx, T, 'circular', tx + 8 * ps, ty, 'left', 'middle', T.sun, 9.5 * ps, 600); }
+    const labs = [];
+    for (const b of bs) {
+      const [px, py] = sbkPx(b.x, b.y, f), col = sbkCol(b, T), r = sbkRad(b, ps), [tx, ty] = sbkTip(b, f);
+      arrow(ctx, px, py, tx, ty, col, (SBK.playing ? 1.4 : 2) * ps, 8 * ps, T.canvas);
+      if (!SBK.playing) { ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 4.5 * ps, 0, TAU); ctx.fill(); ctx.stroke(); }
+      ctx.beginPath(); ctx.arc(px, py, r, 0, TAU); ctx.fillStyle = col; ctx.fill(); if (VG && r < 60 * ps) litBall(ctx, px, py, r * 0.85, col, -(b.x - f.x), b.y - f.y);
+      if (b.id === SBK.sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(px, py, r + 4 * ps, 0, TAU); ctx.stroke(); }
+      labs.push([b.name, px + r + 5 * ps, py + r + 2 * ps]);
+      /* a marker at the edge for a body out of the picture */
+      if (px < 0 || px > W || py < 0 || py > H - 60 * ps) { const cx = W / 2, cy = (H - 60 * ps) / 2, dx = px - cx, dy = py - cy, k = Math.min((W / 2 - 24 * ps) / Math.abs(dx || 1e-9), ((H - 60 * ps) / 2 - 26 * ps) / Math.abs(dy || 1e-9));
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx + dx * k, cy + dy * k, 4 * ps, 0, TAU); ctx.fill(); text(ctx, T, b.name, cx + dx * k, cy + dy * k + 6 * ps, 'center', 'top', T.muted, 9.5 * ps, 600); }
+    }
+    /* names, each moved down past a name already written there */
+    { const done = []; ctx.font = `600 ${10 * ps}px ${T.mono}`; for (const [nm, x, y0] of labs) { const w = ctx.measureText(nm).width; let y = y0; for (let k = 0; k < 6 && done.some((q) => x < q[0] + q[2] && x + w > q[0] && Math.abs(y - q[1]) < 12 * ps); k++) y += 12 * ps; done.push([x, y, w]); text(ctx, T, nm, x, y, 'left', 'top', T.ink, 10 * ps, 600); } }
+    text(ctx, T, `t = ${fmtT(SBK.st.t)}`, 12 * ps, 12 * ps, 'left', 'top', T.ink, 12 * ps, 600, true);
+    if (!bs.length) text(ctx, T, 'Drag a star from the tray below', W / 2, (H - 60 * ps) / 2, 'center', 'middle', T.muted, 12 * ps, 600);
+    sbkDrawTray(ctx, T, ps);
+  }
+  function sbkDrawTray(ctx, T, ps) {
+    const h = 48 * ps, top = H - h - 8 * ps, binW = 62 * ps, x0 = 8 * ps, tw = W - 16 * ps - binW - 6 * ps, n = SBK_TRAY.length, iw = tw / n, d = SBK.drag;
+    const rr = (x, y, w, hh) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, hh, 8 * ps); else ctx.rect(x, y, w, hh); };
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; rr(x0, top, tw, h); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; rr(x0, top, tw, h); ctx.stroke();
+    SBK.tray = { parts: [], box: [x0, top, tw, h], bin: [W - 8 * ps - binW, top, binW, h] };
+    const full = SBK.st.bs.length >= SBK_MAX;
+    SBK_TRAY.forEach((k, i) => { const K = SBK_KIND[k], cx = x0 + iw * (i + 0.5), cy = top + h * 0.38, col = K.col || T.sun; ctx.globalAlpha = full ? 0.35 : 1;
+      ctx.beginPath(); ctx.arc(cx, cy, K.px * ps, 0, TAU); ctx.fillStyle = col; ctx.fill(); if (VG) litBall(ctx, cx, cy, K.px * ps * 0.85, col, -1, 1);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; let lab = K.name; while (ctx.measureText(lab).width > iw - 4 * ps && lab.length > 3) lab = lab.slice(0, -2) + '…'; ctx.fillText(lab, cx, top + h * 0.66); ctx.globalAlpha = 1;
+      SBK.tray.parts.push({ kind: k, box: [x0 + iw * i, top, iw, h] }); });
+    const [bx, by, bw, bh] = SBK.tray.bin, hot = d && d.overTray;
+    ctx.fillStyle = hot ? T.pos : T.canvas; ctx.globalAlpha = hot ? 0.22 : 0.92; rr(bx, by, bw, bh); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.setLineDash([4 * ps, 3 * ps]); ctx.strokeStyle = hot ? T.pos : T.muted; ctx.lineWidth = 1.2 * ps; rr(bx, by, bw, bh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = hot ? T.pos : T.muted; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Drop here', bx + bw / 2, by + bh * 0.36); ctx.fillText('to remove', bx + bw / 2, by + bh * 0.68);
+    if (d && d.type === 'new') { const K = SBK_KIND[d.kind]; ctx.globalAlpha = 0.75; ctx.beginPath(); ctx.arc(d.px, d.py, K.px * ps, 0, TAU); ctx.fillStyle = K.col || T.sun; ctx.fill(); ctx.globalAlpha = 1; }
+  }
+  /* the energy chart: kinetic, potential and total energy of the whole system against time, in joules */
+  const EJ = 1.98841e30 * 1.495978707e11 ** 2 / 3.15576e7 ** 2;   /* one M☉·AU²/yr² in joules (IAU nominal M☉, the au, the Julian year) */
+  function sbkChart() {
+    const T = tokens(), ps = T.ps, ctx = cctx, data = SBK.chart; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, CW, CH);
+    const mL = 62 * ps, mR = 14 * ps, mT = 26 * ps, mB = 28 * ps, pw = CW - mL - mR, ph = CH - mT - mB; if (pw < 40 || ph < 30) return;
+    text(ctx, T, 'Energy of the whole system', mL, 6 * ps, 'left', 'top', T.ink, 11 * ps, 700);
+    if (S.blind) { text(ctx, T, 'Hidden in Blind', mL + pw / 2, mT + ph / 2, 'center', 'middle', T.muted, 11 * ps, 600); return; }
+    if (data.length < 2) { text(ctx, T, SBK.st.bs.length > 1 ? 'Press Play: the energies are drawn as they go' : 'Two or more bodies needed', mL + pw / 2, mT + ph / 2, 'center', 'middle', T.muted, 11 * ps, 600); return; }
+    const t0 = data[0][0], t1 = Math.max(data[data.length - 1][0], t0 + 1e-9); let big = 0; for (const [, Kq, Uq] of data) big = Math.max(big, Math.abs(Kq), Math.abs(Uq));
+    const ex = Math.floor(Math.log10(big * EJ)), unit = Math.pow(10, ex) / EJ, top = Math.ceil(big / unit * 1.05);
+    const X = (t) => mL + (t - t0) / (t1 - t0) * pw, Y = (E) => mT + ph / 2 - E / (top * unit) * ph / 2;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mL, Y(0) + 0.5); ctx.lineTo(mL + pw, Y(0) + 0.5); ctx.stroke(); ctx.strokeStyle = T.muted; ctx.strokeRect(mL + 0.5, mT + 0.5, pw, ph);
+    for (const v of [-top, 0, top]) text(ctx, T, minus(String(v)), mL - 5 * ps, Y(v * unit), 'right', 'middle', T.muted, 10 * ps, 400);
+    text(ctx, T, `×10${String(ex).split('').map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c] || (c === '-' ? '⁻' : c)).join('')} J`, mL - 5 * ps, mT - 4 * ps, 'right', 'bottom', T.muted, 9.5 * ps, 400);
+    text(ctx, T, `${fmtT(t0)}`, mL, mT + ph + 4 * ps, 'left', 'top', T.muted, 10 * ps, 400); text(ctx, T, `t = ${fmtT(t1)}`, mL + pw, mT + ph + 4 * ps, 'right', 'top', T.muted, 10 * ps, 400);
+    const line = (fn, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w * ps; ctx.beginPath(); data.forEach((q, i) => { const x = X(q[0]), y = Y(fn(q)); if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke(); };
+    line((q) => q[1], T.pos, 1.6); line((q) => q[2], T.neg, 1.6); line((q) => q[1] + q[2], T.ink, 2.2);
+    let lx = mL + 8 * ps; for (const [lab, col] of [['kinetic K', T.pos], ['potential U', T.neg], ['total E = K + U', T.ink]]) { ctx.fillStyle = col; ctx.fillRect(lx, mT + 8 * ps, 14 * ps, 3 * ps); text(ctx, T, lab, lx + 18 * ps, mT + 10 * ps, 'left', 'middle', col, 10 * ps, 600); ctx.font = `600 ${10 * ps}px ${T.mono}`; lx += ctx.measureText(lab).width + 26 * ps; }
+  }
+  function sbkReadouts() {
+    const bs = SBK.st.bs, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, kg = 1.98841e30, PKG = kg * 4740.470;
+    let h = dd('Time', fmtT(SBK.st.t)) + dd('Bodies', String(bs.length));
+    if (bs.length > 1) { const t = sbkTot();
+      h += dd('Total energy E', S.blind ? 'hidden in Blind' : `${minus(sci(t.E * EJ))} J`) + dd('Total momentum', `${minus(sci(Math.hypot(t.px, t.py) * PKG))} kg·m/s`);
+      if (isFinite(SBK.E0) && SBK.st.t > 0) h += dd('Change in E since the start (numerical error)', `${minus(sci((t.E - SBK.E0) / Math.abs(SBK.E0)))} of |E|`, true); }
+    const b = bs.find((q) => q.id === SBK.sel);
+    if (b) { const host = nbHost(bs, b); h += dd('Selected', `${b.name}, ${minus(sci(b.m))} M☉`, true);
+      if (host) { const el = nbElements(b, host); h += dd(`Distance to ${host.name}`, `${sig(el.r, 4)} AU`) + dd(`Speed around ${host.name}`, `${sig(el.v * KMS, 4)} km/s`);
+        h += S.blind ? dd('Orbit', 'hidden in Blind', true) : el.bound ? dd(`Orbit around ${host.name}, as if the two were alone`, `a = ${sig(el.a, 4)} AU, e = ${el.e.toFixed(3)}, P = ${fmtT(el.P)}`, true) : dd(`Orbit around ${host.name}`, 'not bound: it escapes', true); }
+      else h += dd('Host', 'none: nothing heavier pulls on it', true); }
+    const out = $('sbkOut'); if (out.innerHTML !== h) out.innerHTML = h;
+  }
+  // ---- pointer and keys (capture listeners, so the orbit view's own handlers sit out while the Sandbox is on) ----
+  function sbkHit(px, py) {
+    const ps = tokens().ps, f = sbkFrame0(), bs = SBK.st.bs, inB = (b) => b && px >= b[0] && px <= b[0] + b[2] && py >= b[1] && py <= b[1] + b[3];
+    if (SBK.tray) { for (const t of SBK.tray.parts) if (inB(t.box)) return { type: 'tray', kind: t.kind }; if (inB(SBK.tray.box) || inB(SBK.tray.bin)) return { type: 'none' }; }
+    if (!SBK.playing) for (const b of [...bs].reverse()) { const [tx, ty] = sbkTip(b, f); if (Math.hypot(px - tx, py - ty) < 12 * ps) return { type: 'tip', id: b.id }; }
+    for (const b of [...bs].reverse()) { const [bx, by] = sbkPx(b.x, b.y, f); if (Math.hypot(px - bx, py - by) < Math.max(12 * ps, sbkRad(b, ps) + 4 * ps)) return { type: 'body', id: b.id }; }
+    return null;
+  }
+  function sbkDown(e) {
+    const [px, py] = evPx(e), h = sbkHit(px, py); view.focus({ preventScroll: true });
+    if (h && h.type === 'none') return;
+    if (h && h.type === 'tray' && SBK.st.bs.length >= SBK_MAX) { sbkSay(`${SBK_MAX} bodies at most: drag one to the bin first.`); return; }
+    SBK.drag = h ? Object.assign({ px, py, x0: px, y0: py, moved: false, f0: sbkFrame0() }, h) : { type: 'pan', px, py, x0: px, y0: py, cx: VT.cx, cy: VT.cy };
+    if (h && h.type !== 'tray') SBK.sel = h.id;
+    view.setPointerCapture(e.pointerId); schedule();
+  }
+  function sbkMove(e) {
+    const [px, py] = evPx(e), d = SBK.drag;
+    if (!d) { if (e.pointerType === 'mouse') view.style.cursor = sbkHit(px, py) ? 'grab' : 'move'; return; }
+    d.px = px; d.py = py; const ps = tokens().ps;
+    if (d.type === 'pan') { VT.cx = d.cx + px - d.x0; VT.cy = d.cy + py - d.y0; Object.assign(V, VT); schedule(); return; }
+    if (!d.moved && Math.hypot(px - d.x0, py - d.y0) < 3 * ps) return;
+    if (!d.moved) { d.moved = true; if (SBK.playing) sbkPlay(false); }
+    const f = sbkFrame0(), w = toW(px, py), b = SBK.st.bs.find((q) => q.id === d.id);
+    d.overTray = !!SBK.tray && (py >= SBK.tray.box[1]);
+    if (d.type === 'body' && b) { b.x = w.x + f.x; b.y = w.y + f.y; }
+    if (d.type === 'tip' && b) { const [bx, by] = sbkPx(b.x, b.y, f); let vx = f.vx + (px - bx) / SBK.kv, vy = f.vy - (py - by) / SBK.kv;
+      const host = nbHost(SBK.st.bs, b); if (host && !e.shiftKey) { const c = nbCircular(host, b.m, b.x, b.y), [cx, cy] = sbkTip(Object.assign({}, b, c), f); if (Math.hypot(px - cx, py - cy) < 8 * ps) { vx = c.vx; vy = c.vy; } }
+      b.vx = vx; b.vy = vy; }
+    schedule();
+  }
+  function sbkUp() {
+    const d = SBK.drag; if (!d) return; SBK.drag = null;
+    if (d.type === 'pan') { if (Math.hypot(d.px - d.x0, d.py - d.y0) < 3) SBK.sel = null; schedule(); return; }
+    if (!d.moved) { schedule(); return; }
+    const bs = SBK.st.bs, f = sbkFrame0();
+    if (d.type === 'tray') {
+      if (!d.overTray) { const w = toW(d.px, d.py), x = w.x + f.x, y = w.y + f.y, nb = sbkMake(d.kind, x, y, f.vx, f.vy), host = nbHost(bs, nb);
+        if (host) Object.assign(nb, nbCircular(host, nb.m, x, y)); bs.push(nb); SBK.sel = nb.id;
+        sbkSay(host ? `${nb.name} placed on a circular orbit around ${host.name}. Drag the tip of its arrow to change its velocity.` : `${nb.name} placed at rest${SBK.follow === 'cm' ? ' relative to the center of mass' : ''}.`); }
+    } else if (d.overTray) { const b = bs.find((q) => q.id === d.id); SBK.st.bs = bs.filter((q) => q.id !== d.id); if (SBK.sel === d.id) SBK.sel = null; sbkSay(`Removed ${b ? b.name : 'the body'}.`); }
+    sbkEdited(); schedule();
+  }
+  function sbkKey(e) {
+    const k = e.key, bs = SBK.st.bs, b = bs.find((q) => q.id === SBK.sel);
+    if (k === ' ') { e.preventDefault(); sbkPlay(); return; }
+    if (k === 'f' || k === 'F') { sbkFit(false); return; }
+    if (k === '[' || k === ']') { if (!bs.length) return; e.preventDefault(); const i = bs.findIndex((q) => q.id === SBK.sel); SBK.sel = bs[((i < 0 ? (k === ']' ? -1 : 0) : i) + (k === ']' ? 1 : -1) + bs.length) % bs.length].id; schedule(); return; }
+    if (!b) return;
+    const host = nbHost(bs, b), hv = host ? [host.vx, host.vy] : [0, 0];
+    if (k.startsWith('Arrow')) { e.preventDefault(); if (SBK.playing) sbkPlay(false); let ux = b.vx - hv[0], uy = b.vy - hv[1]; const sp = e.shiftKey ? 0.005 : 0.02, an = (e.shiftKey ? 0.5 : 2) * Math.PI / 180;
+      if (k === 'ArrowUp' || k === 'ArrowDown') { const g = k === 'ArrowUp' ? 1 + sp : 1 - sp; ux *= g; uy *= g; } else { const a = k === 'ArrowLeft' ? an : -an, c = Math.cos(a), s = Math.sin(a); [ux, uy] = [ux * c - uy * s, ux * s + uy * c]; }
+      b.vx = hv[0] + ux; b.vy = hv[1] + uy; sbkEdited(); schedule(); return; }
+    if (k === 'c' || k === 'C') { if (host) { Object.assign(b, nbCircular(host, b.m, b.x, b.y)); sbkEdited(); sbkSay(`${b.name} set on a circular orbit around ${host.name}.`); schedule(); } return; }
+    if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); SBK.st.bs = bs.filter((q) => q !== b); SBK.sel = null; sbkEdited(); sbkSay(`Removed ${b.name}.`); schedule(); }
+  }
+  view.addEventListener('pointerdown', (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkDown(e); }, true);
+  view.addEventListener('pointermove', (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkMove(e); }, true);
+  for (const ev of ['pointerup', 'pointercancel']) view.addEventListener(ev, (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkUp(e); }, true);
+  view.addEventListener('dblclick', (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkFit(false); }, true);
+  view.addEventListener('keydown', (e) => { if (!S.sand) return; if (['+', '=', '-', '_'].includes(e.key)) return; e.stopImmediatePropagation(); sbkKey(e); }, true);
+  for (const b of document.querySelectorAll('#sbkRigs button')) b.addEventListener('click', () => { sbkLoad(b.dataset.r); sbkSay('Press Play to set it going.'); });
+  for (const b of document.querySelectorAll('#sbkFollow button')) b.addEventListener('click', () => { SBK.follow = b.dataset.f; for (const q of document.querySelectorAll('#sbkFollow button')) q.setAttribute('aria-pressed', String(q === b)); if (SBK.follow === 'sel' && !SBK.sel && SBK.st.bs.length) SBK.sel = SBK.st.bs[0].id; for (const q of SBK.st.bs) q.trail = []; sbkFit(false); });
+  $('sbkTrails').addEventListener('change', schedule);
+  for (const b of document.querySelectorAll('#sbkAdd button')) b.addEventListener('click', () => {
+    const k = b.dataset.add, bs = SBK.st.bs;
+    if (k === 'del') { const s = bs.find((q) => q.id === SBK.sel); if (!s) { sbkSay('Pick a body first: tap it, or press [ or ] on the picture.'); return; } SBK.st.bs = bs.filter((q) => q !== s); SBK.sel = null; sbkSay(`Removed ${s.name}.`); sbkEdited(); schedule(); return; }
+    if (bs.length >= SBK_MAX) { sbkSay(`${SBK_MAX} bodies at most.`); return; }
+    /* a new body goes on the +x side of the selected body (or the heaviest), at a distance that keeps it apart, on a circular orbit */
+    const f = sbkFrame0(), heavy = [...bs].sort((p, q) => q.m - p.m)[0], ref = bs.find((q) => q.id === SBK.sel) || heavy, nb = sbkMake(k, 0, 0, f.vx, f.vy);
+    if (ref) { const r = ref.m > nb.m ? 0.25 * Math.max(0.05, 0.6 * (Math.min(W, H) / V.s)) : 0.5 * (Math.min(W, H) / V.s); nb.x = ref.x + r; nb.y = ref.y; } else { nb.x = f.x; nb.y = f.y; }
+    const host = nbHost(bs, nb); if (host) Object.assign(nb, nbCircular(host, nb.m, nb.x, nb.y));
+    bs.push(nb); SBK.sel = nb.id; sbkEdited(); sbkSay(`${nb.name} added${host ? ` on a circular orbit around ${host.name}` : ''}. On the picture, the arrow keys turn and stretch its velocity.`); schedule();
+  });
+
   // ---------- loop ----------
   let raf = 0, last = 0;
   function frame(ts) {
     raf = 0;
+    if (S.sand) { sbkFrameLoop(ts); return; }
     const dtr = last ? Math.min(0.05, (ts - last) / 1000) : 0;
     last = ts;
     if (S.playing && !drag && dtr > 0) stepSim(dtr * S.speed);
@@ -1277,11 +1647,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     last = 0; schedule();
   }
   playBtn.addEventListener('click', () => {
+    if (S.sand) { sbkPlay(); return; }
     if (!S.playing && S.A.done) relaunch();
     setPlaying(!S.playing);
   });
-  $('reset').addEventListener('click', () => { relaunch(); schedule(); });
-  $('fit').addEventListener('click', () => fitView(false, true));
+  $('reset').addEventListener('click', () => { if (S.sand) { sbkReset(); return; } relaunch(); schedule(); });
+  $('fit').addEventListener('click', () => { if (S.sand) sbkFit(false); else fitView(false, true); });
 
   // ---------- presets ----------
   function setPresetUI(name) {
@@ -1300,6 +1671,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('mass').value = Math.log10(Mn); R.massOut.textContent = Mn.toFixed(2) + ' M☉';
   }
   function loadPreset(name) {
+    if (name === 'sandbox') { sbkEnter(); return; }
+    if (S.sand) sbkLeave();
     const M = PRESETS[name].M || (S.massPreset ? 1 : S.M);
     if (M !== S.M) setMass(M);
     S.massPreset = !!PRESETS[name].M;
@@ -2215,7 +2588,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   });
 
   // exposed for testing
-  window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
+  window.__kepler = { SBK, sbkLoad, S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */

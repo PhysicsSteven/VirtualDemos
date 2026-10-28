@@ -5385,3 +5385,19 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
   vanish about any point, x_cm between supports criterion, edge case F1 = 0, no support. Handout About bullet added.
 - Checks: vdcheck after 0 problems, clip 0 cut off; Playwright build by dragging at 1280 and 400 px, no page errors.
   GPT: please verify the model and the readouts.
+
+## 2026-10-28 · Claude · Kepler's Laws Sandbox
+- Third on Steve's sandbox list. New "Sandbox" chip in the Orbits setups of `demos/kepler-orbits.html`; flat view only (3D switch
+  hidden, restored on leaving); the Launch, Measure, Readings and other rail sections hide while it is on, and the Time speed slider stays.
+- CORE n body functions: `nbAccel`, `nbDt`, `nbAdvance` (velocity Verlet, shared step SBK_ETA·min √(r³/G(mᵢ + mⱼ))), `nbMergeOnce`
+  (bodies closer than the sum of their real radii merge, mass and momentum kept, volumes add), `nbTotals`, `nbHost` (heavier body
+  with the largest m/r²), `nbElements` (two body elements with G(M + m)), `nbCircular`.
+- Parts: star 1 M☉, red dwarf 0.3 M☉ (about 0.3 R☉, Mann et al. 2015), Jupiter, Earth, Moon (IAU 2015 nominal values, JPL mass ratios).
+  A dropped body starts on a circular orbit around its host; arrow tips set velocities (snap to the circular tip, Shift to place freely).
+  Ready made: Sun and Earth, Sun Jupiter Earth, a planet with a moon (view follows Jupiter), binary, planet around a binary (launched
+  as if the pair were one star, said in the hint), figure eight (Chenciner and Montgomery 2000, scaled: period 1.0068 yr), empty.
+- Chart pane: K, U and E of the whole system against time, in joules (1 M☉·AU²/yr² = 4.47×10³⁷ J with the Julian year).
+  Readouts: E, total momentum, numerical change in E, and the selected body's distance, speed and a, e, P around its host.
+- Tests `test_kepler_sandbox.cjs` (7): Sun and Earth closes after the pair's period, eccentric orbit keeps P² = a³/(M + m), equal
+  binary, figure eight closes after one period, momentum and L kept in a five body tangle, merging, host and circular launch.
+- Checks: vdcheck after and clip, Playwright at 1280 and 400 px, no page errors. GPT: please verify the constants and the model text.
