@@ -25,7 +25,10 @@ the two assistants share context. Log what you change there when you finish.
   and Vol 3 §§10.6, 11.6, 11.7 where they apply), including every Astro 2203 demo and worksheet; Astro 2203 (`astro-2203.html`) is
   its own course page with only its subset, in schedule order (`INCLUDED` in `tools/courses.py`; a new Astro 2203 only demo needs a
   `MERGE_PLACE` entry). Wave optics (Vol 3 ch 3–4) is a Physics II unit like any other (nothing is optional, Steve 2026-10-24). A demo may sit in
-  several courses or modules (list each in its `course`); Misc is what is left (`later`: BZ and DNA, one heading). Moving a demo is a map change only.
+  several courses or modules (list each in its `course`); `later` marks a demo in no course (BZ and DNA). Moving a demo is a map change only.
+- Home page (Steve, 2026-10-28): Courses (Physics I, Physics II, Astro 2203, then the five modules), All demos by topic
+  (`curriculum/topics.json` → `topics/<id>.html`; every catalog demo must be in at least one topic, so a new demo needs a topic too)
+  and OpenStax by section (`openstax.html`). `misc.html` redirects to the Chemistry and biology topic.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 
 ## What's new
@@ -79,13 +82,13 @@ the two assistants share context. Log what you change there when you finish.
 
 ## Tools
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
-- `python3 tools/courses.py` (course pages and index from the map and catalog; `--check` to verify). It also writes `search.js`, `404.html`
+- `python3 tools/courses.py` (course pages, topic pages, openstax.html and index from the map, catalog and topics; `--check` to verify). It also writes `search.js`, `404.html`
   and `demos/lib/nav.js` (the breadcrumb and previous and next demo links on every demo, in course page order), so rerun it after any map or catalog change.
 - `python3 tools/canvas.py` (Canvas course import files, IMS Common Cartridge 1.3, one per course, in `_build/canvas/`, from the map and
   catalog like the course pages; rerun after a map, catalog or handout change; `tools/canvas_check.rb` runs Canvas's own import code on one).
 - `python3 tools/theme.py` (links the theme switch on any page that lacks it; `--check`).
 - `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
 - New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`
-  (demo entry and the sections' demo lists), QR, Reset all, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.
+  (demo entry and the sections' demo lists), `curriculum/topics.json`, QR, Reset all, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.
 - Handout math: `$$...$$` only (kramdown + MathJax); check with `node curriculum/validation/check_math.cjs` after
   `npm install --no-save mathjax-full@3.2.2`. Don't run scripted notation rewrites over keys or guides.

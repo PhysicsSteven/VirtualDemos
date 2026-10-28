@@ -1,0 +1,394 @@
+{
+ "about": "Topics (Steve, 2026-10-28): every demo on the site sorted by subject, for anyone browsing outside a course. tools/courses.py builds topics/<id>.html from this list and the home page's All demos by topic area. Every demo in curriculum/catalog.json must be in at least one topic; a demo may be in several. Courses, the textbook map and demo addresses do not depend on this file.",
+ "families": [
+  {
+   "id": "mechanics",
+   "title": "Mechanics",
+   "topics": [
+    {
+     "id": "kinematics",
+     "title": "Kinematics",
+     "blurb": "Position, velocity and acceleration, projectiles and circular motion.",
+     "demos": [
+      "units",
+      "vectors",
+      "motion-graphs",
+      "projectile-drag",
+      "cart-launch",
+      "circular-motion"
+     ]
+    },
+    {
+     "id": "forces",
+     "title": "Forces and Newton's laws",
+     "blurb": "Free body diagrams, friction, apparent weight and drag.",
+     "demos": [
+      "forces",
+      "elevator",
+      "circular-motion",
+      "terminal-velocity"
+     ]
+    },
+    {
+     "id": "energy-momentum",
+     "title": "Energy and momentum",
+     "blurb": "Work, potential energy, collisions and rockets.",
+     "demos": [
+      "potential-curves",
+      "energy-sources",
+      "impulse",
+      "collisions",
+      "center-of-mass",
+      "rocket"
+     ]
+    },
+    {
+     "id": "rotation",
+     "title": "Rotation",
+     "blurb": "Torque, moment of inertia, rolling and precession.",
+     "demos": [
+      "rotation",
+      "rotational-dynamics",
+      "gyroscope"
+     ]
+    },
+    {
+     "id": "equilibrium",
+     "title": "Equilibrium and materials",
+     "blurb": "Static equilibrium, stress and strain, hanging chains.",
+     "demos": [
+      "equilibrium",
+      "stress-strain",
+      "catenary"
+     ]
+    },
+    {
+     "id": "gravitation",
+     "title": "Gravitation and orbits",
+     "blurb": "Newton's gravity, Kepler's laws, tides and orbital resonance.",
+     "demos": [
+      "gravity-near-earth",
+      "cavendish",
+      "kepler-orbits",
+      "tides",
+      "lagrange-points",
+      "resonances",
+      "gps-clocks"
+     ]
+    },
+    {
+     "id": "fluids",
+     "title": "Fluids",
+     "blurb": "Pressure, buoyancy, flow and viscosity.",
+     "demos": [
+      "fluids",
+      "viscometer",
+      "terminal-velocity"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "waves-heat",
+   "title": "Waves and heat",
+   "topics": [
+    {
+     "id": "oscillations-waves",
+     "title": "Oscillations and waves",
+     "blurb": "Springs and pendulums, waves on strings, interference in a ripple tank.",
+     "demos": [
+      "springs",
+      "pendulum",
+      "standing-waves",
+      "string-density",
+      "wave-power",
+      "ripple-tank",
+      "huygens"
+     ]
+    },
+    {
+     "id": "sound",
+     "title": "Sound and acoustics",
+     "blurb": "Speed of sound, loudness, resonance, timbre, Doppler and ultrasound.",
+     "demos": [
+      "sound-waves",
+      "kundts-tube",
+      "sound-intensity",
+      "doppler",
+      "two-speaker",
+      "timbre",
+      "resonators",
+      "standing-waves",
+      "room-acoustics",
+      "chladni",
+      "acoustic-levitation",
+      "ultrasound"
+     ]
+    },
+    {
+     "id": "heat",
+     "title": "Heat and thermodynamics",
+     "blurb": "Temperature, gases, heat engines, entropy and radiation.",
+     "demos": [
+      "states-of-matter",
+      "temperature",
+      "ideal-gas",
+      "gas-heat-capacity",
+      "heat-engines",
+      "entropy",
+      "blackbody",
+      "ising"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "em",
+   "title": "Electricity and magnetism",
+   "topics": [
+    {
+     "id": "charges-fields",
+     "title": "Charges and fields",
+     "blurb": "Coulomb's law, field lines, Gauss's law, capacitors.",
+     "demos": [
+      "induction",
+      "coulomb-sandbox",
+      "gauss-law",
+      "electrostatics-at-work",
+      "capacitors"
+     ]
+    },
+    {
+     "id": "circuits",
+     "title": "Circuits",
+     "blurb": "Resistance, DC and RC circuits, household wiring, transformers.",
+     "demos": [
+      "circuits",
+      "resistivity",
+      "capacitors",
+      "household-wiring",
+      "transformers"
+     ]
+    },
+    {
+     "id": "magnetism",
+     "title": "Magnetism",
+     "blurb": "Forces on charges and currents, fields of currents, magnetic materials.",
+     "demos": [
+      "magnetic-force",
+      "wire-force",
+      "currents-fields",
+      "magnetism-in-matter",
+      "e-over-m",
+      "relativity-em"
+     ]
+    },
+    {
+     "id": "induction-em-waves",
+     "title": "Induction and EM waves",
+     "blurb": "Faraday's law, eddy currents, displacement current and light as a wave.",
+     "demos": [
+      "faraday",
+      "induced-electric-field",
+      "induction-at-work",
+      "eddy-currents",
+      "transformers",
+      "displacement-current",
+      "em-waves"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "light",
+   "title": "Light",
+   "topics": [
+    {
+     "id": "optics",
+     "title": "Optics",
+     "blurb": "Mirrors and lenses, the eye, microscopes and telescopes, polarization.",
+     "demos": [
+      "optics-bench",
+      "the-eye",
+      "instrument-builder",
+      "polarization",
+      "speed-of-light"
+     ]
+    },
+    {
+     "id": "wave-optics",
+     "title": "Interference and diffraction",
+     "blurb": "Slits, gratings, thin films, interferometers, resolution and holograms.",
+     "demos": [
+      "huygens",
+      "double-slit",
+      "thin-films",
+      "michelson",
+      "diffraction-grating",
+      "resolution",
+      "holography",
+      "ripple-tank"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "modern-physics",
+   "title": "Modern physics",
+   "topics": [
+    {
+     "id": "relativity",
+     "title": "Relativity",
+     "blurb": "Spacetime diagrams, time dilation, relativistic momentum and energy.",
+     "demos": [
+      "spacetime",
+      "relativistic-motion",
+      "relativity-em",
+      "gps-clocks",
+      "speed-of-light"
+     ]
+    },
+    {
+     "id": "quantum",
+     "title": "Photons and quanta",
+     "blurb": "Photoelectric effect, Compton scattering, matter waves and wave packets.",
+     "demos": [
+      "photoelectric",
+      "compton",
+      "double-slit",
+      "electron-diffraction",
+      "quantum-waves",
+      "franck-hertz",
+      "blackbody"
+     ]
+    },
+    {
+     "id": "atoms-solids",
+     "title": "Atoms, molecules and solids",
+     "blurb": "Orbitals, spectra, spin, X-rays, lasers, bands and superconductors.",
+     "demos": [
+      "hydrogen-orbitals",
+      "spectra",
+      "magnetic-moments",
+      "shells-and-x-rays",
+      "spin-resonance",
+      "lasers",
+      "molecules",
+      "solids",
+      "superconductors"
+     ]
+    },
+    {
+     "id": "nuclear-particles",
+     "title": "Nuclear and particle physics",
+     "blurb": "Decay, binding energy, fission and fusion, gamma spectra, quarks.",
+     "demos": [
+      "rutherford",
+      "binding-energy",
+      "radioactive-decay",
+      "nuclear-reactions",
+      "gamma-spectroscopy",
+      "particles"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "astronomy",
+   "title": "Astronomy",
+   "topics": [
+    {
+     "id": "sky",
+     "title": "The sky",
+     "blurb": "Seasons, the celestial sphere, Moon phases and retrograde motion.",
+     "demos": [
+      "seasons",
+      "celestial-sphere",
+      "moon-phases",
+      "retrograde-motion"
+     ]
+    },
+    {
+     "id": "telescopes-light",
+     "title": "Telescopes and light",
+     "blurb": "Collecting and resolving light, the spectrum and what it tells us.",
+     "demos": [
+      "instrument-builder",
+      "optics-bench",
+      "resolution",
+      "em-waves",
+      "spectra",
+      "blackbody"
+     ]
+    },
+    {
+     "id": "planets",
+     "title": "Planets and the solar system",
+     "blurb": "Formation, temperatures, interiors, craters, giant planets and exoplanets.",
+     "demos": [
+      "solar-system-formation",
+      "planet-temperatures",
+      "inside-a-planet",
+      "craters",
+      "giant-planets",
+      "resonances",
+      "exoplanets"
+     ]
+    },
+    {
+     "id": "stars",
+     "title": "Stars",
+     "blurb": "The HR diagram, inside a star, white dwarfs and black holes.",
+     "demos": [
+      "hr-diagram",
+      "star-slice",
+      "white-dwarf-cooling",
+      "black-holes"
+     ]
+    },
+    {
+     "id": "galaxies-cosmology",
+     "title": "Galaxies and cosmology",
+     "blurb": "Rotation curves, the distance ladder and the early universe.",
+     "demos": [
+      "rotation-curves",
+      "distance-ladder",
+      "early-universe",
+      "black-holes"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "medical-beyond",
+   "title": "Medical physics and beyond",
+   "topics": [
+    {
+     "id": "medical",
+     "title": "Radiation in medicine",
+     "blurb": "Photon and proton interactions, dose, radiobiology, shielding, therapy QA and CT.",
+     "demos": [
+      "photon-interactions",
+      "charged-particles",
+      "dosimetry",
+      "radiobiology",
+      "bragg-peak",
+      "proton-qa",
+      "ct-range",
+      "shielding-rooms",
+      "ultrasound"
+     ]
+    },
+    {
+     "id": "chemistry-biology",
+     "title": "Chemistry and biology",
+     "blurb": "An oscillating chemical reaction and the structure of DNA.",
+     "demos": [
+      "bz-reaction",
+      "dna"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -5198,3 +5198,26 @@ Steve liked the pilot ("this'll be good for them all"), so the dividers go to ev
   page errors on any of the 38). Physics and keys untouched: drawing shares only.
 - Checks: each divider dragged in Playwright at 1368x912 and 400x860; Node tests pass; vdcheck `--only after` 0 problems and
   `--only clip` 0 cut off on all 38 plus the 5 pilot demos. What's new entry added.
+
+## 2026-10-28 · Claude · Home page: Courses, All demos by topic, OpenStax by section
+
+Steve asked to reorganize before more parity work ("an area that has Courses and then another that has everything"), approved
+the mockup (https://claude.ai/artifact/UQrnhLmwpGXyNg4e6H2g5q) and chose to keep the five chapter modules as courses. He may
+change his mind, so the topics live in their own file and nothing else depends on them.
+- `curriculum/topics.json`: 27 topics in 7 families, every one of the 137 catalog demos in at least one (158 listings).
+  `tools/courses.py` builds `topics/<id>.html` (one card per demo with every worksheet, the courses that use it, the other
+  topics it is in and its OpenStax sections; links carry `?topic=<id>`) and `openstax.html` (Volumes 1 to 3, chapters that open
+  to every section with its demos; `#v1-ch3` and `#s1-3-2` open the chapter). Topic pages sit one folder down and set
+  `<base href="../">`, so they use no `#` links of their own.
+- Home page below the hero: search, Courses (Physics I, Physics II, Astro 2203, then the modules Acoustics, Thermodynamics,
+  Modern Physics, Astronomy, Medical Physics, unchanged), All demos by topic, OpenStax by section. The Misc tile is gone;
+  `misc.html` redirects to the Chemistry and biology topic (BZ, DNA keep `later` in the map). Course pages gained one line
+  pointing to the topics.
+- `demos/lib/nav.js`: opened from a topic page (referrer under `topics/`, or `?topic=`), a demo shows Home › topic › demo and
+  steps through the topic; the Handout and worksheet menu keeps every worksheet. Course behavior is unchanged. search.js lists a
+  demo's topics; 404 links the topics and the OpenStax page.
+- Unchanged: every demo and course page address, `?course=` links, Canvas cartridges (rebuilt, identical), handouts and keys.
+- New test `curriculum/validation/test_topics.cjs`. `tools/theme.py` covers `topics/` and skips redirect pages.
+- Checks: `courses.py --check`, `theme.py --check`, Node map and topic tests pass; home, a topic page and openstax.html looked at
+  in Playwright at 1280 and 390 px with no sideways scroll or page errors; breadcrumbs checked from a topic page, a course
+  link and DNA (no course). DNA's own console error (applySpin) is there before this change too.

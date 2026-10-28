@@ -23,6 +23,8 @@ def targets():
         yield p, '../demos/'
     for p in sorted(ROOT.glob('*.html')):
         yield p, 'demos/'
+    for p in sorted((ROOT / 'topics').glob('*.html')):   # topic pages set <base href="../">, so they link from the site root
+        yield p, 'demos/'
     yield ROOT / 'demos/lib/template.html', '../'
     yield ROOT / 'tools/star-slice/star-slice.template.html', ''
 
@@ -32,7 +34,7 @@ def main():
     missing = []
     for p, pre in targets():
         s = p.read_text(encoding='utf-8')
-        if 'lib/theme.js"' in s:
+        if 'lib/theme.js"' in s or 'http-equiv="refresh"' in s:   # a redirect page shows nothing to theme
             continue
         m = re.search(r'<meta name="viewport"[^>]*>\n', s) or re.search(r'<meta charset="utf-8">\n', s)
         if not m:

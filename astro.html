@@ -263,6 +263,29 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 }
 
 
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
 /* site search (tools/courses.py) */
 .find { padding-top: 30px; }
 .find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
@@ -283,6 +306,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
 .hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
 .hit .hm .sec { margin: 0; }
 @media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
 @media (max-width: 700px) {
@@ -307,7 +331,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="#sky">The sky from Earth</a></li><li><a href="#gravitation">Gravitation and orbits</a></li><li><a href="#telescopes-light">Telescopes and light</a></li><li><a href="#stars">Stars</a></li><li><a href="#galaxies-cosmology">Galaxies and cosmology</a></li><li><a href="#planets">Planets and their surfaces</a></li></ul></div>
 </nav>
 <main class="wrap">
-  <p class="how">Units follow the topics, and a demo from another course or module is listed where it fits. Each card lists this module’s worksheets, then the introductory <a href="astro-2203.html">Astro 2203</a> worksheets. Section numbers are volume:section in OpenStax University Physics.</p>
+  <p class="how">Units follow the topics, and a demo from another course or module is listed where it fits. Each card lists this module’s worksheets, then the introductory <a href="astro-2203.html">Astro 2203</a> worksheets. Section numbers are volume:section in OpenStax University Physics. Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.</p>
   <section class="unit" id="sky" aria-labelledby="sky-h">
     
     <h2 id="sky-h">The sky from Earth</h2>

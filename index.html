@@ -216,8 +216,30 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .ctile:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
 .ctile:hover h3 { color: var(--accent); }
 .ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.allnote { margin: 14px 0 0; color: var(--muted); font-size: 0.92rem; }
-@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
+.allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.courses .subh { margin: 22px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
+.fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+.fam .mosaic .thumb { border-bottom: 0; height: 72px; aspect-ratio: auto; }
+.fam .mosaic .thumb img { height: 72px; }
+.fam .fbody { padding: 12px 16px 16px; }
+.fam h3 { margin: 0; font-size: 1.25rem; }
+.fam .sub, .vol .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+.tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.tlinks a:hover { border-color: var(--accent); color: var(--accent); }
+.tlinks a:focus-visible, .vol:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.vols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.vol { display: block; height: 100%; padding: 14px 18px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; color: inherit; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
+.vol h3 { margin: 0; font-size: 1.25rem; }
+.vol p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.vol:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.vol:hover h3 { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .ctile, .vol { transition: none; } .ctile:hover, .vol:hover { translate: none; } }
 /* site search (tools/courses.py) */
 .find { padding-top: 30px; }
 .find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
@@ -238,6 +260,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
 .hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
 .hit .hm .sec { margin: 0; }
 @media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
 @media (max-width: 700px) {
@@ -267,7 +290,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="lede">Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.</p>
     <ul class="facts">
       <li><span><strong>137</strong> demos</span></li>
-      <li><span><strong>9</strong> courses</span></li>
+      <li><span><strong>8</strong> courses</span></li>
+      <li><span><strong>27</strong> topics</span></li>
       <li><span>Phone, laptop or projector</span></li>
       <li><a href="notes/index.html"><span>Teaching notes</span></a></li>
     </ul>
@@ -279,7 +303,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <h2 id="find-h">Find a demo</h2>
   <div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
 </section>
-<section class="wrap courses" aria-labelledby="courses-h">
+<section class="wrap courses" id="courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
   <ul class="ctiles">
       <li><a class="ctile" href="physics-1.html">
@@ -290,6 +314,13 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/standing-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/standing-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/string-density-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/string-density-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/coulomb-sandbox-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Physics II</h3><p class="sub">Electricity and magnetism · 14 units · 34 demos</p><p>Charges and fields through Maxwell’s equations and electromagnetic waves, then AC circuits, light and geometric optics, and wave optics. OpenStax University Physics Volume 2, and Volume 3 for optics.</p></div>
       </a></li>
+      <li><a class="ctile" href="astro-2203.html">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Astro 2203</h3><p class="sub">Solar system astronomy · 10 weeks · 3 tests · 28 demos</p><p>From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.</p></div>
+      </a></li>
+  </ul>
+  <h3 class="subh">Modules that follow the textbook chapters</h3>
+  <ul class="ctiles">
       <li><a class="ctile" href="acoustics.html">
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/standing-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/standing-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/ripple-tank-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ripple-tank-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/wave-power-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/wave-power-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/two-speaker-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/two-speaker-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Acoustics</h3><p class="sub">Waves and sound · 3 units · 14 demos</p><p>Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume 1, chapters 16 and 17.</p></div>
@@ -306,18 +337,60 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/retrograde-motion-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/retrograde-motion-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Astronomy</h3><p class="sub">Sky, planets, stars and galaxies · 6 units · 35 demos</p><p>Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro 2203 introductory worksheets too. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.</p></div>
       </a></li>
-      <li><a class="ctile" href="astro-2203.html">
-        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
-        <div class="cbody"><h3>Astro 2203</h3><p class="sub">Solar system astronomy · 10 weeks · 3 tests · 28 demos</p><p>From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.</p></div>
-      </a></li>
       <li><a class="ctile" href="medical-physics.html">
         <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/radioactive-decay-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/radioactive-decay-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/binding-energy-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/binding-energy-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/nuclear-reactions-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/nuclear-reactions-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/shells-and-x-rays-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/shells-and-x-rays-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
         <div class="cbody"><h3>Medical Physics</h3><p class="sub">Radiation physics and proton therapy · 9 units · 18 demos</p><p>For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors’ lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.</p></div>
       </a></li>
-      <li><a class="ctile" href="misc.html">
-        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/bz-reaction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bz-reaction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/dna-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/dna-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
-        <div class="cbody"><h3>Misc.</h3><p class="sub">Everything else · 2 demos</p><p>Demos that are not part of a course or module: for now a chemical reaction that makes patterns and a molecule in 3D.</p></div>
-      </a></li>
+  </ul>
+</section>
+<section class="wrap courses" id="topics" aria-labelledby="topics-h">
+  <h2 id="topics-h">All demos by topic</h2>
+  <p class="allnote">Every demo on the site, sorted by subject. A demo can be under more than one topic.</p>
+  <ul class="fams">
+      <li class="fam" id="mechanics">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/forces-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/forces-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/potential-curves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/potential-curves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/rotation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Mechanics</h3><p class="sub">7 topics · 30 demos</p>
+        <ul class="tlinks"><li><a href="topics/kinematics.html">Kinematics <span class="n">6</span></a></li><li><a href="topics/forces.html">Forces and Newton&#x27;s laws <span class="n">4</span></a></li><li><a href="topics/energy-momentum.html">Energy and momentum <span class="n">6</span></a></li><li><a href="topics/rotation.html">Rotation <span class="n">3</span></a></li><li><a href="topics/equilibrium.html">Equilibrium and materials <span class="n">3</span></a></li><li><a href="topics/gravitation.html">Gravitation and orbits <span class="n">7</span></a></li><li><a href="topics/fluids.html">Fluids <span class="n">3</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="waves-heat">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/springs-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/springs-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/sound-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/sound-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/states-of-matter-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/states-of-matter-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/pendulum-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/pendulum-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Waves and heat</h3><p class="sub">3 topics · 26 demos</p>
+        <ul class="tlinks"><li><a href="topics/oscillations-waves.html">Oscillations and waves <span class="n">7</span></a></li><li><a href="topics/sound.html">Sound and acoustics <span class="n">12</span></a></li><li><a href="topics/heat.html">Heat and thermodynamics <span class="n">8</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="em">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/circuits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circuits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/magnetic-force-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/magnetic-force-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/faraday-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/faraday-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Electricity and magnetism</h3><p class="sub">4 topics · 21 demos</p>
+        <ul class="tlinks"><li><a href="topics/charges-fields.html">Charges and fields <span class="n">5</span></a></li><li><a href="topics/circuits.html">Circuits <span class="n">5</span></a></li><li><a href="topics/magnetism.html">Magnetism <span class="n">6</span></a></li><li><a href="topics/induction-em-waves.html">Induction and EM waves <span class="n">7</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="light">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/optics-bench-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/optics-bench-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/huygens-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/huygens-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/the-eye-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/the-eye-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/instrument-builder-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/instrument-builder-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Light</h3><p class="sub">2 topics · 13 demos</p>
+        <ul class="tlinks"><li><a href="topics/optics.html">Optics <span class="n">5</span></a></li><li><a href="topics/wave-optics.html">Interference and diffraction <span class="n">8</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="modern-physics">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/spacetime-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/spacetime-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/photoelectric-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/photoelectric-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/hydrogen-orbitals-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hydrogen-orbitals-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/rutherford-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rutherford-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Modern physics</h3><p class="sub">4 topics · 27 demos</p>
+        <ul class="tlinks"><li><a href="topics/relativity.html">Relativity <span class="n">5</span></a></li><li><a href="topics/quantum.html">Photons and quanta <span class="n">7</span></a></li><li><a href="topics/atoms-solids.html">Atoms, molecules and solids <span class="n">9</span></a></li><li><a href="topics/nuclear-particles.html">Nuclear and particle physics <span class="n">6</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="astronomy">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/instrument-builder-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/instrument-builder-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/solar-system-formation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/solar-system-formation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/hr-diagram-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hr-diagram-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Astronomy</h3><p class="sub">5 topics · 24 demos</p>
+        <ul class="tlinks"><li><a href="topics/sky.html">The sky <span class="n">4</span></a></li><li><a href="topics/telescopes-light.html">Telescopes and light <span class="n">6</span></a></li><li><a href="topics/planets.html">Planets and the solar system <span class="n">7</span></a></li><li><a href="topics/stars.html">Stars <span class="n">4</span></a></li><li><a href="topics/galaxies-cosmology.html">Galaxies and cosmology <span class="n">4</span></a></li></ul></div>
+      </li>
+      <li class="fam" id="medical-beyond">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/photon-interactions-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/photon-interactions-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/bz-reaction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bz-reaction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/charged-particles-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/charged-particles-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/dosimetry-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/dosimetry-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="fbody"><h3>Medical physics and beyond</h3><p class="sub">2 topics · 11 demos</p>
+        <ul class="tlinks"><li><a href="topics/medical.html">Radiation in medicine <span class="n">9</span></a></li><li><a href="topics/chemistry-biology.html">Chemistry and biology <span class="n">2</span></a></li></ul></div>
+      </li>
+  </ul>
+</section>
+<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
+  <h2 id="openstax-h">OpenStax University Physics by section</h2>
+  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
+  <ul class="vols">
+      <li><a class="vol" href="openstax.html#vol-1"><h3>Volume 1</h3><p class="sub">17 chapters · 99 sections</p><p>Mechanics, waves and sound</p></a></li>
+      <li><a class="vol" href="openstax.html#vol-2"><h3>Volume 2</h3><p class="sub">16 chapters · 95 sections</p><p>Thermodynamics, electricity and magnetism</p></a></li>
+      <li><a class="vol" href="openstax.html#vol-3"><h3>Volume 3</h3><p class="sub">11 chapters · 76 sections</p><p>Optics and modern physics</p></a></li>
   </ul>
 </section>
 <script src="search.js" defer></script>

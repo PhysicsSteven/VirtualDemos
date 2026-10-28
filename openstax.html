@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
+<title>OpenStax University Physics · Virtual Physics Demos</title>
+<meta name="description" content="OpenStax University Physics: The free OpenStax textbook, section by section, with the demos for each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+/* hero tools, top left above the eyebrow: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
+.hero-tools { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -28px 0 22px; }
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
+/* site search (tools/courses.py) */
+.find { padding-top: 30px; }
+.find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.find .filter { max-width: 620px; }
+.find .filter input { padding-top: 11px; padding-bottom: 11px; font-size: 1rem; }
+.hits { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(620px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 6px 6px; }
+.find .hits { width: 100%; }
+.hits .hn { margin: 4px 8px 2px; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.hits ul { margin: 0; padding: 0; list-style: none; }
+.hit { padding: 8px 8px 9px; border-radius: 7px; }
+.hit + .hit { border-top: 1px solid var(--line); }
+.hit:hover, .hit.on { background: var(--canvas); }
+.hit .ht { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hit .ht:hover, .hit.on .ht { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.hit .hk { margin-left: 6px; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+.hit p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+.hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
+.hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
+.hit .hm .sec { margin: 0; }
+@media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
+@media (max-width: 700px) {
+  .tools .wrap { flex-wrap: wrap; }
+  .tools .filter { flex: 1 1 100%; }
+  html:has(.tools .filter) { scroll-padding-top: 108px; }
+}
+
+</style>
+</head>
+<body>
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>By textbook section</b></p>
+    <h1>OpenStax University Physics</h1>
+    <p class="lede">The free OpenStax textbook, section by section, with the demos for each.</p>
+    <ul class="facts"><li><span><strong>3</strong> volumes</span></li><li><span><strong>270</strong> sections</span></li><li><span><strong>270</strong> with an activity</span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="#vol-1">Volume 1</a></li><li><a href="#vol-2">Volume 2</a></li><li><a href="#vol-3">Volume 3</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; search for a section number such as 3.2 to jump straight to its demos. Section numbers match the book.</p>
+  <section class="unit" id="vol-1" aria-labelledby="vol-1-h">
+    <h2 id="vol-1-h">Volume 1: Mechanics, waves and sound</h2>
+    <p class="meta"><span>Ch. 1–17</span><span>99 sections</span><span>99 with an activity</span><span><a href="https://openstax.org/details/books/university-physics-volume-1">Free textbook: University Physics Volume 1</a></span></p>
+    <details class="ch" id="v1-ch1">
+      <summary><span class="chn">Chapter 1</span> Units and Measurement <span class="n">7 sections · 1 demo</span></summary>
+      <ol class="srows"><li id="s1-1-1"><span class="sec">1:1.1</span><span class="stitle">The Scope and Scale of Physics</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-2"><span class="sec">1:1.2</span><span class="stitle">Units and Standards</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-3"><span class="sec">1:1.3</span><span class="stitle">Unit Conversion</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-4"><span class="sec">1:1.4</span><span class="stitle">Dimensional Analysis</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-5"><span class="sec">1:1.5</span><span class="stitle">Estimates and Fermi Calculations</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-6"><span class="sec">1:1.6</span><span class="stitle">Significant Figures</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li><li id="s1-1-7"><span class="sec">1:1.7</span><span class="stitle">Solving Problems in Physics</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch2">
+      <summary><span class="chn">Chapter 2</span> Vectors <span class="n">4 sections · 1 demo</span></summary>
+      <ol class="srows"><li id="s1-2-1"><span class="sec">1:2.1</span><span class="stitle">Scalars and Vectors</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a></span></li><li id="s1-2-2"><span class="sec">1:2.2</span><span class="stitle">Coordinate Systems and Components of a Vector</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a></span></li><li id="s1-2-3"><span class="sec">1:2.3</span><span class="stitle">Algebra of Vectors</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a></span></li><li id="s1-2-4"><span class="sec">1:2.4</span><span class="stitle">Products of Vectors</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch3">
+      <summary><span class="chn">Chapter 3</span> Motion Along a Straight Line <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s1-3-1"><span class="sec">1:3.1</span><span class="stitle">Position, Displacement, and Average Velocity</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a></span></li><li id="s1-3-2"><span class="sec">1:3.2</span><span class="stitle">Instantaneous Velocity and Speed</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a></span></li><li id="s1-3-3"><span class="sec">1:3.3</span><span class="stitle">Average and Instantaneous Acceleration</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a></span></li><li id="s1-3-4"><span class="sec">1:3.4</span><span class="stitle">Motion with Constant Acceleration</span><span class="sdemos"><a href="demos/projectile-drag.html">Projectile Range</a> · <a href="demos/motion-graphs.html">Motion Graphs</a></span></li><li id="s1-3-5"><span class="sec">1:3.5</span><span class="stitle">Free Fall</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a></span></li><li id="s1-3-6"><span class="sec">1:3.6</span><span class="stitle">Finding Velocity and Displacement from Acceleration</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch4">
+      <summary><span class="chn">Chapter 4</span> Motion in Two and Three Dimensions <span class="n">5 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="s1-4-1"><span class="sec">1:4.1</span><span class="stitle">Displacement and Velocity Vectors</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a> · <a href="demos/projectile-drag.html">Projectile Range</a></span></li><li id="s1-4-2"><span class="sec">1:4.2</span><span class="stitle">Acceleration Vector</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a> · <a href="demos/projectile-drag.html">Projectile Range</a></span></li><li id="s1-4-3"><span class="sec">1:4.3</span><span class="stitle">Projectile Motion</span><span class="sdemos"><a href="demos/projectile-drag.html">Projectile Range</a> · <a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a></span></li><li id="s1-4-4"><span class="sec">1:4.4</span><span class="stitle">Uniform and Nonuniform Circular Motion</span><span class="sdemos"><a href="demos/circular-motion.html">Circular Motion</a></span></li><li id="s1-4-5"><span class="sec">1:4.5</span><span class="stitle">Relative Motion in One and Two Dimensions</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a> · <a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch5">
+      <summary><span class="chn">Chapter 5</span> Newton&#x27;s Laws of Motion <span class="n">7 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s1-5-1"><span class="sec">1:5.1</span><span class="stitle">Forces</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/vectors.html">Vectors and Relative Motion</a></span></li><li id="s1-5-2"><span class="sec">1:5.2</span><span class="stitle">Newton&#x27;s First Law</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/elevator.html">Elevator: Apparent Weight</a></span></li><li id="s1-5-3"><span class="sec">1:5.3</span><span class="stitle">Newton&#x27;s Second Law</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-5-4"><span class="sec">1:5.4</span><span class="stitle">Mass and Weight</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/elevator.html">Elevator: Apparent Weight</a></span></li><li id="s1-5-5"><span class="sec">1:5.5</span><span class="stitle">Newton’s Third Law</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-5-6"><span class="sec">1:5.6</span><span class="stitle">Common Forces</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-5-7"><span class="sec">1:5.7</span><span class="stitle">Drawing Free-Body Diagrams</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch6">
+      <summary><span class="chn">Chapter 6</span> Applications of Newton&#x27;s Laws <span class="n">4 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s1-6-1"><span class="sec">1:6.1</span><span class="stitle">Solving Problems with Newton’s Laws</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-6-2"><span class="sec">1:6.2</span><span class="stitle">Friction</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-6-3"><span class="sec">1:6.3</span><span class="stitle">Centripetal Force</span><span class="sdemos"><a href="demos/circular-motion.html">Circular Motion</a></span></li><li id="s1-6-4"><span class="sec">1:6.4</span><span class="stitle">Drag Force and Terminal Speed</span><span class="sdemos"><a href="demos/terminal-velocity.html">Terminal Velocity</a> · <a href="demos/projectile-drag.html">Projectile Range</a> · <a href="demos/viscometer.html">Falling Ball Viscometer</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch7">
+      <summary><span class="chn">Chapter 7</span> Work and Kinetic Energy <span class="n">4 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s1-7-1"><span class="sec">1:7.1</span><span class="stitle">Work</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a> · <a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-7-2"><span class="sec">1:7.2</span><span class="stitle">Kinetic Energy</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-7-3"><span class="sec">1:7.3</span><span class="stitle">Work-Energy Theorem</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a> · <a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-7-4"><span class="sec">1:7.4</span><span class="stitle">Power</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch8">
+      <summary><span class="chn">Chapter 8</span> Potential Energy and Conservation of Energy <span class="n">5 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s1-8-1"><span class="sec">1:8.1</span><span class="stitle">Potential Energy of a System</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a></span></li><li id="s1-8-2"><span class="sec">1:8.2</span><span class="stitle">Conservative and Non-Conservative Forces</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a> · <a href="demos/forces.html">Forces and Friction</a></span></li><li id="s1-8-3"><span class="sec">1:8.3</span><span class="stitle">Conservation of Energy</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a></span></li><li id="s1-8-4"><span class="sec">1:8.4</span><span class="stitle">Potential Energy Diagrams and Stability</span><span class="sdemos"><a href="demos/potential-curves.html">Potential Energy Curves</a></span></li><li id="s1-8-5"><span class="sec">1:8.5</span><span class="stitle">Sources of Energy</span><span class="sdemos"><a href="demos/energy-sources.html">Sources of Energy</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch9">
+      <summary><span class="chn">Chapter 9</span> Linear Momentum and Collisions <span class="n">7 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="s1-9-1"><span class="sec">1:9.1</span><span class="stitle">Linear Momentum</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a> · <a href="demos/impulse.html">Impulse and Momentum</a></span></li><li id="s1-9-2"><span class="sec">1:9.2</span><span class="stitle">Impulse and Collisions</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a> · <a href="demos/impulse.html">Impulse and Momentum</a></span></li><li id="s1-9-3"><span class="sec">1:9.3</span><span class="stitle">Conservation of Linear Momentum</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a></span></li><li id="s1-9-4"><span class="sec">1:9.4</span><span class="stitle">Types of Collisions</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a></span></li><li id="s1-9-5"><span class="sec">1:9.5</span><span class="stitle">Collisions in Multiple Dimensions</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a></span></li><li id="s1-9-6"><span class="sec">1:9.6</span><span class="stitle">Center of Mass</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a> · <a href="demos/center-of-mass.html">Center of Mass</a></span></li><li id="s1-9-7"><span class="sec">1:9.7</span><span class="stitle">Rocket Propulsion</span><span class="sdemos"><a href="demos/rocket.html">Rocket Propulsion</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch10">
+      <summary><span class="chn">Chapter 10</span> Fixed-Axis Rotation <span class="n">8 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s1-10-1"><span class="sec">1:10.1</span><span class="stitle">Rotational Variables</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a></span></li><li id="s1-10-2"><span class="sec">1:10.2</span><span class="stitle">Rotation with Constant Angular Acceleration</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/rotational-dynamics.html">Rotational Dynamics</a></span></li><li id="s1-10-3"><span class="sec">1:10.3</span><span class="stitle">Relating Angular and Translational Quantities</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a></span></li><li id="s1-10-4"><span class="sec">1:10.4</span><span class="stitle">Moment of Inertia and Rotational Kinetic Energy</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a></span></li><li id="s1-10-5"><span class="sec">1:10.5</span><span class="stitle">Calculating Moments of Inertia</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/rotational-dynamics.html">Rotational Dynamics</a></span></li><li id="s1-10-6"><span class="sec">1:10.6</span><span class="stitle">Torque</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/rotational-dynamics.html">Rotational Dynamics</a> · <a href="demos/pendulum.html">Pendulums</a></span></li><li id="s1-10-7"><span class="sec">1:10.7</span><span class="stitle">Newton’s Second Law for Rotation</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/rotational-dynamics.html">Rotational Dynamics</a> · <a href="demos/pendulum.html">Pendulums</a></span></li><li id="s1-10-8"><span class="sec">1:10.8</span><span class="stitle">Work and Power for Rotational Motion</span><span class="sdemos"><a href="demos/rotational-dynamics.html">Rotational Dynamics</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch11">
+      <summary><span class="chn">Chapter 11</span> Angular Momentum <span class="n">4 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s1-11-1"><span class="sec">1:11.1</span><span class="stitle">Rolling Motion</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a></span></li><li id="s1-11-2"><span class="sec">1:11.2</span><span class="stitle">Angular Momentum</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/gyroscope.html">Gyroscope Precession</a></span></li><li id="s1-11-3"><span class="sec">1:11.3</span><span class="stitle">Conservation of Angular Momentum</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a></span></li><li id="s1-11-4"><span class="sec">1:11.4</span><span class="stitle">Precession of a Gyroscope</span><span class="sdemos"><a href="demos/gyroscope.html">Gyroscope Precession</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch12">
+      <summary><span class="chn">Chapter 12</span> Static Equilibrium and Elasticity <span class="n">4 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s1-12-1"><span class="sec">1:12.1</span><span class="stitle">Conditions for Static Equilibrium</span><span class="sdemos"><a href="demos/catenary.html">Hanging Chains and Arches</a> · <a href="demos/equilibrium.html">Static Equilibrium</a></span></li><li id="s1-12-2"><span class="sec">1:12.2</span><span class="stitle">Examples of Static Equilibrium</span><span class="sdemos"><a href="demos/catenary.html">Hanging Chains and Arches</a> · <a href="demos/equilibrium.html">Static Equilibrium</a></span></li><li id="s1-12-3"><span class="sec">1:12.3</span><span class="stitle">Stress, Strain, and Elastic Modulus</span><span class="sdemos"><a href="demos/stress-strain.html">Stress and Strain</a></span></li><li id="s1-12-4"><span class="sec">1:12.4</span><span class="stitle">Elasticity and Plasticity</span><span class="sdemos"><a href="demos/stress-strain.html">Stress and Strain</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch13">
+      <summary><span class="chn">Chapter 13</span> Gravitation <span class="n">7 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="s1-13-1"><span class="sec">1:13.1</span><span class="stitle">Newton&#x27;s Law of Universal Gravitation</span><span class="sdemos"><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a> · <a href="demos/cavendish.html">The Cavendish Experiment</a></span></li><li id="s1-13-2"><span class="sec">1:13.2</span><span class="stitle">Gravitation Near Earth&#x27;s Surface</span><span class="sdemos"><a href="demos/gravity-near-earth.html">Gravity Near Earth</a> · <a href="demos/cavendish.html">The Cavendish Experiment</a></span></li><li id="s1-13-3"><span class="sec">1:13.3</span><span class="stitle">Gravitational Potential Energy and Total Energy</span><span class="sdemos"><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a></span></li><li id="s1-13-4"><span class="sec">1:13.4</span><span class="stitle">Satellite Orbits and Energy</span><span class="sdemos"><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a></span></li><li id="s1-13-5"><span class="sec">1:13.5</span><span class="stitle">Kepler&#x27;s Laws of Planetary Motion</span><span class="sdemos"><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a></span></li><li id="s1-13-6"><span class="sec">1:13.6</span><span class="stitle">Tidal Forces</span><span class="sdemos"><a href="demos/tides.html">Tides</a></span></li><li id="s1-13-7"><span class="sec">1:13.7</span><span class="stitle">Einstein&#x27;s Theory of Gravity</span><span class="sdemos"><a href="demos/gps-clocks.html">GPS Clocks and Relativity</a> · <a href="demos/black-holes.html">Black Holes and Lensing</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch14">
+      <summary><span class="chn">Chapter 14</span> Fluid Mechanics <span class="n">7 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s1-14-1"><span class="sec">1:14.1</span><span class="stitle">Fluids, Density, and Pressure</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-2"><span class="sec">1:14.2</span><span class="stitle">Measuring Pressure</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-3"><span class="sec">1:14.3</span><span class="stitle">Pascal&#x27;s Principle and Hydraulics</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-4"><span class="sec">1:14.4</span><span class="stitle">Archimedes’ Principle and Buoyancy</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-5"><span class="sec">1:14.5</span><span class="stitle">Fluid Dynamics</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-6"><span class="sec">1:14.6</span><span class="stitle">Bernoulli’s Equation</span><span class="sdemos"><a href="demos/fluids.html">Fluids: Pressure, Buoyancy and Flow</a></span></li><li id="s1-14-7"><span class="sec">1:14.7</span><span class="stitle">Viscosity and Turbulence</span><span class="sdemos"><a href="demos/viscometer.html">Falling Ball Viscometer</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch15">
+      <summary><span class="chn">Chapter 15</span> Oscillations <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s1-15-1"><span class="sec">1:15.1</span><span class="stitle">Simple Harmonic Motion</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a></span></li><li id="s1-15-2"><span class="sec">1:15.2</span><span class="stitle">Energy in Simple Harmonic Motion</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a></span></li><li id="s1-15-3"><span class="sec">1:15.3</span><span class="stitle">Comparing Simple Harmonic Motion and Circular Motion</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a></span></li><li id="s1-15-4"><span class="sec">1:15.4</span><span class="stitle">Pendulums</span><span class="sdemos"><a href="demos/pendulum.html">Pendulums</a></span></li><li id="s1-15-5"><span class="sec">1:15.5</span><span class="stitle">Damped Oscillations</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a></span></li><li id="s1-15-6"><span class="sec">1:15.6</span><span class="stitle">Forced Oscillations</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch16">
+      <summary><span class="chn">Chapter 16</span> Waves <span class="n">6 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s1-16-1"><span class="sec">1:16.1</span><span class="stitle">Traveling Waves</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s1-16-2"><span class="sec">1:16.2</span><span class="stitle">Mathematics of Waves</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a></span></li><li id="s1-16-3"><span class="sec">1:16.3</span><span class="stitle">Wave Speed on a Stretched String</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/string-density.html">Linear Density of a String</a></span></li><li id="s1-16-4"><span class="sec">1:16.4</span><span class="stitle">Energy and Power of a Wave</span><span class="sdemos"><a href="demos/wave-power.html">Energy and Power of a Wave</a></span></li><li id="s1-16-5"><span class="sec">1:16.5</span><span class="stitle">Interference of Waves</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/two-speaker.html">Two Speaker Interference</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s1-16-6"><span class="sec">1:16.6</span><span class="stitle">Standing Waves and Resonance</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/string-density.html">Linear Density of a String</a></span></li></ol>
+    </details>
+    <details class="ch" id="v1-ch17">
+      <summary><span class="chn">Chapter 17</span> Sound <span class="n">8 sections · 10 demos</span></summary>
+      <ol class="srows"><li id="s1-17-1"><span class="sec">1:17.1</span><span class="stitle">Sound Waves</span><span class="sdemos"><a href="demos/sound-waves.html">Sound Waves and the Speed of Sound</a></span></li><li id="s1-17-2"><span class="sec">1:17.2</span><span class="stitle">Speed of Sound</span><span class="sdemos"><a href="demos/resonators.html">Resonators</a> · <a href="demos/sound-waves.html">Sound Waves and the Speed of Sound</a> · <a href="demos/kundts-tube.html">Kundt&#x27;s Tube</a> · <a href="demos/ultrasound.html">Ultrasound: Echoes and Blood Flow</a></span></li><li id="s1-17-3"><span class="sec">1:17.3</span><span class="stitle">Sound Intensity</span><span class="sdemos"><a href="demos/sound-intensity.html">Sound Intensity and Decibels</a> · <a href="demos/two-speaker.html">Two Speaker Interference</a> · <a href="demos/room-acoustics.html">Room Acoustics and the Anechoic Chamber</a></span></li><li id="s1-17-4"><span class="sec">1:17.4</span><span class="stitle">Normal Modes of a Standing Sound Wave</span><span class="sdemos"><a href="demos/timbre.html">Timbre and Harmonics</a> · <a href="demos/resonators.html">Resonators</a> · <a href="demos/kundts-tube.html">Kundt&#x27;s Tube</a></span></li><li id="s1-17-5"><span class="sec">1:17.5</span><span class="stitle">Sources of Musical Sound</span><span class="sdemos"><a href="demos/timbre.html">Timbre and Harmonics</a></span></li><li id="s1-17-6"><span class="sec">1:17.6</span><span class="stitle">Beats</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a></span></li><li id="s1-17-7"><span class="sec">1:17.7</span><span class="stitle">The Doppler Effect</span><span class="sdemos"><a href="demos/doppler.html">Doppler Effect and Shock Waves</a> · <a href="demos/ultrasound.html">Ultrasound: Echoes and Blood Flow</a></span></li><li id="s1-17-8"><span class="sec">1:17.8</span><span class="stitle">Shock Waves</span><span class="sdemos"><a href="demos/doppler.html">Doppler Effect and Shock Waves</a></span></li></ol>
+    </details>
+  </section>
+  <section class="unit" id="vol-2" aria-labelledby="vol-2-h">
+    <h2 id="vol-2-h">Volume 2: Thermodynamics, electricity and magnetism</h2>
+    <p class="meta"><span>Ch. 1–16</span><span>95 sections</span><span>95 with an activity</span><span><a href="https://openstax.org/details/books/university-physics-volume-2">Free textbook: University Physics Volume 2</a></span></p>
+    <details class="ch" id="v2-ch1">
+      <summary><span class="chn">Chapter 1</span> Temperature and Heat <span class="n">6 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s2-1-1"><span class="sec">2:1.1</span><span class="stitle">Temperature and Thermal Equilibrium</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a></span></li><li id="s2-1-2"><span class="sec">2:1.2</span><span class="stitle">Thermometers and Temperature Scales</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a></span></li><li id="s2-1-3"><span class="sec">2:1.3</span><span class="stitle">Thermal Expansion</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a></span></li><li id="s2-1-4"><span class="sec">2:1.4</span><span class="stitle">Heat Transfer, Specific Heat, and Calorimetry</span><span class="sdemos"><a href="demos/states-of-matter.html">States of Matter</a> · <a href="demos/temperature.html">Temperature and Heat</a></span></li><li id="s2-1-5"><span class="sec">2:1.5</span><span class="stitle">Phase Changes</span><span class="sdemos"><a href="demos/states-of-matter.html">States of Matter</a></span></li><li id="s2-1-6"><span class="sec">2:1.6</span><span class="stitle">Mechanisms of Heat Transfer</span><span class="sdemos"><a href="demos/blackbody.html">Blackbody Radiation</a> · <a href="demos/temperature.html">Temperature and Heat</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch2">
+      <summary><span class="chn">Chapter 2</span> The Kinetic Theory of Gases <span class="n">4 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-2-1"><span class="sec">2:2.1</span><span class="stitle">Molecular Model of an Ideal Gas</span><span class="sdemos"><a href="demos/ideal-gas.html">Gas in a Box</a></span></li><li id="s2-2-2"><span class="sec">2:2.2</span><span class="stitle">Pressure, Temperature, and RMS Speed</span><span class="sdemos"><a href="demos/ideal-gas.html">Gas in a Box</a></span></li><li id="s2-2-3"><span class="sec">2:2.3</span><span class="stitle">Heat Capacity and Equipartition of Energy</span><span class="sdemos"><a href="demos/ideal-gas.html">Gas in a Box</a> · <a href="demos/gas-heat-capacity.html">Heat Capacities of Gases</a></span></li><li id="s2-2-4"><span class="sec">2:2.4</span><span class="stitle">Distribution of Molecular Speeds</span><span class="sdemos"><a href="demos/ideal-gas.html">Gas in a Box</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch3">
+      <summary><span class="chn">Chapter 3</span> The First Law of Thermodynamics <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-3-1"><span class="sec">2:3.1</span><span class="stitle">Thermodynamic Systems</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a></span></li><li id="s2-3-2"><span class="sec">2:3.2</span><span class="stitle">Work, Heat, and Internal Energy</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a></span></li><li id="s2-3-3"><span class="sec">2:3.3</span><span class="stitle">First Law of Thermodynamics</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a></span></li><li id="s2-3-4"><span class="sec">2:3.4</span><span class="stitle">Thermodynamic Processes</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a></span></li><li id="s2-3-5"><span class="sec">2:3.5</span><span class="stitle">Heat Capacities of an Ideal Gas</span><span class="sdemos"><a href="demos/gas-heat-capacity.html">Heat Capacities of Gases</a></span></li><li id="s2-3-6"><span class="sec">2:3.6</span><span class="stitle">Adiabatic Processes for an Ideal Gas</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/gas-heat-capacity.html">Heat Capacities of Gases</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch4">
+      <summary><span class="chn">Chapter 4</span> The Second Law of Thermodynamics <span class="n">7 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-4-1"><span class="sec">2:4.1</span><span class="stitle">Reversible and Irreversible Processes</span><span class="sdemos"><a href="demos/entropy.html">Entropy and the Second Law</a></span></li><li id="s2-4-2"><span class="sec">2:4.2</span><span class="stitle">Heat Engines</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/entropy.html">Entropy and the Second Law</a></span></li><li id="s2-4-3"><span class="sec">2:4.3</span><span class="stitle">Refrigerators and Heat Pumps</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/entropy.html">Entropy and the Second Law</a></span></li><li id="s2-4-4"><span class="sec">2:4.4</span><span class="stitle">Statements of the Second Law of Thermodynamics</span><span class="sdemos"><a href="demos/entropy.html">Entropy and the Second Law</a> · <a href="demos/heat-engines.html">Heat Engine Cycles</a></span></li><li id="s2-4-5"><span class="sec">2:4.5</span><span class="stitle">The Carnot Cycle</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/entropy.html">Entropy and the Second Law</a></span></li><li id="s2-4-6"><span class="sec">2:4.6</span><span class="stitle">Entropy</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/entropy.html">Entropy and the Second Law</a></span></li><li id="s2-4-7"><span class="sec">2:4.7</span><span class="stitle">Entropy on a Microscopic Scale</span><span class="sdemos"><a href="demos/entropy.html">Entropy and the Second Law</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch5">
+      <summary><span class="chn">Chapter 5</span> Electric Charges and Fields <span class="n">7 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-5-1"><span class="sec">2:5.1</span><span class="stitle">Electric Charge</span><span class="sdemos"><a href="demos/induction.html">Charging by Induction</a></span></li><li id="s2-5-2"><span class="sec">2:5.2</span><span class="stitle">Conductors, Insulators, and Charging by Induction</span><span class="sdemos"><a href="demos/induction.html">Charging by Induction</a></span></li><li id="s2-5-3"><span class="sec">2:5.3</span><span class="stitle">Coulomb&#x27;s Law</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-5-4"><span class="sec">2:5.4</span><span class="stitle">Electric Field</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-5-5"><span class="sec">2:5.5</span><span class="stitle">Calculating Electric Fields of Charge Distributions</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-5-6"><span class="sec">2:5.6</span><span class="stitle">Electric Field Lines</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-5-7"><span class="sec">2:5.7</span><span class="stitle">Electric Dipoles</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch6">
+      <summary><span class="chn">Chapter 6</span> Gauss&#x27;s Law <span class="n">4 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-6-1"><span class="sec">2:6.1</span><span class="stitle">Electric Flux</span><span class="sdemos"><a href="demos/gauss-law.html">Gauss&#x27;s Law</a></span></li><li id="s2-6-2"><span class="sec">2:6.2</span><span class="stitle">Explaining Gauss’s Law</span><span class="sdemos"><a href="demos/gauss-law.html">Gauss&#x27;s Law</a></span></li><li id="s2-6-3"><span class="sec">2:6.3</span><span class="stitle">Applying Gauss’s Law</span><span class="sdemos"><a href="demos/gauss-law.html">Gauss&#x27;s Law</a></span></li><li id="s2-6-4"><span class="sec">2:6.4</span><span class="stitle">Conductors in Electrostatic Equilibrium</span><span class="sdemos"><a href="demos/gauss-law.html">Gauss&#x27;s Law</a> · <a href="demos/induction.html">Charging by Induction</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch7">
+      <summary><span class="chn">Chapter 7</span> Electric Potential <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-7-1"><span class="sec">2:7.1</span><span class="stitle">Electric Potential Energy</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-7-2"><span class="sec">2:7.2</span><span class="stitle">Electric Potential and Potential Difference</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-7-3"><span class="sec">2:7.3</span><span class="stitle">Calculations of Electric Potential</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-7-4"><span class="sec">2:7.4</span><span class="stitle">Determining Field from Potential</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-7-5"><span class="sec">2:7.5</span><span class="stitle">Equipotential Surfaces and Conductors</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></span></li><li id="s2-7-6"><span class="sec">2:7.6</span><span class="stitle">Applications of Electrostatics</span><span class="sdemos"><a href="demos/electrostatics-at-work.html">Electrostatics at Work</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch8">
+      <summary><span class="chn">Chapter 8</span> Capacitance <span class="n">5 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-8-1"><span class="sec">2:8.1</span><span class="stitle">Capacitors and Capacitance</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a></span></li><li id="s2-8-2"><span class="sec">2:8.2</span><span class="stitle">Capacitors in Series and in Parallel</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a></span></li><li id="s2-8-3"><span class="sec">2:8.3</span><span class="stitle">Energy Stored in a Capacitor</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a></span></li><li id="s2-8-4"><span class="sec">2:8.4</span><span class="stitle">Capacitor with a Dielectric</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a></span></li><li id="s2-8-5"><span class="sec">2:8.5</span><span class="stitle">Molecular Model of a Dielectric</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a> · <a href="demos/induction.html">Charging by Induction</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch9">
+      <summary><span class="chn">Chapter 9</span> Current and Resistance <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-9-1"><span class="sec">2:9.1</span><span class="stitle">Electrical Current</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/resistivity.html">Resistivity of a Wire</a></span></li><li id="s2-9-2"><span class="sec">2:9.2</span><span class="stitle">Model of Conduction in Metals</span><span class="sdemos"><a href="demos/resistivity.html">Resistivity of a Wire</a></span></li><li id="s2-9-3"><span class="sec">2:9.3</span><span class="stitle">Resistivity and Resistance</span><span class="sdemos"><a href="demos/resistivity.html">Resistivity of a Wire</a></span></li><li id="s2-9-4"><span class="sec">2:9.4</span><span class="stitle">Ohm&#x27;s Law</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/resistivity.html">Resistivity of a Wire</a></span></li><li id="s2-9-5"><span class="sec">2:9.5</span><span class="stitle">Electrical Energy and Power</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-9-6"><span class="sec">2:9.6</span><span class="stitle">Superconductors</span><span class="sdemos"><a href="demos/resistivity.html">Resistivity of a Wire</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch10">
+      <summary><span class="chn">Chapter 10</span> Direct-Current Circuits <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-10-1"><span class="sec">2:10.1</span><span class="stitle">Electromotive Force</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-10-2"><span class="sec">2:10.2</span><span class="stitle">Resistors in Series and Parallel</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-10-3"><span class="sec">2:10.3</span><span class="stitle">Kirchhoff&#x27;s Rules</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-10-4"><span class="sec">2:10.4</span><span class="stitle">Electrical Measuring Instruments</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-10-5"><span class="sec">2:10.5</span><span class="stitle">RC Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-10-6"><span class="sec">2:10.6</span><span class="stitle">Household Wiring and Electrical Safety</span><span class="sdemos"><a href="demos/household-wiring.html">Household Wiring and Electrical Safety</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch11">
+      <summary><span class="chn">Chapter 11</span> Magnetic Forces and Fields <span class="n">7 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="s2-11-1"><span class="sec">2:11.1</span><span class="stitle">Magnetism and Its Historical Discoveries</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-11-2"><span class="sec">2:11.2</span><span class="stitle">Magnetic Fields and Lines</span><span class="sdemos"><a href="demos/magnetic-force.html">Charges in Magnetic Fields</a> · <a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-11-3"><span class="sec">2:11.3</span><span class="stitle">Motion of a Charged Particle in a Magnetic Field</span><span class="sdemos"><a href="demos/magnetic-force.html">Charges in Magnetic Fields</a> · <a href="demos/e-over-m.html">e/m of the Electron</a></span></li><li id="s2-11-4"><span class="sec">2:11.4</span><span class="stitle">Magnetic Force on a Current-Carrying Conductor</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a> · <a href="demos/wire-force.html">Force on a Current</a></span></li><li id="s2-11-5"><span class="sec">2:11.5</span><span class="stitle">Force and Torque on a Current Loop</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a> · <a href="demos/wire-force.html">Force on a Current</a></span></li><li id="s2-11-6"><span class="sec">2:11.6</span><span class="stitle">The Hall Effect</span><span class="sdemos"><a href="demos/magnetic-force.html">Charges in Magnetic Fields</a></span></li><li id="s2-11-7"><span class="sec">2:11.7</span><span class="stitle">Applications of Magnetic Forces and Fields</span><span class="sdemos"><a href="demos/magnetic-force.html">Charges in Magnetic Fields</a> · <a href="demos/wire-force.html">Force on a Current</a> · <a href="demos/e-over-m.html">e/m of the Electron</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch12">
+      <summary><span class="chn">Chapter 12</span> Sources of Magnetic Fields <span class="n">7 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s2-12-1"><span class="sec">2:12.1</span><span class="stitle">The Biot-Savart Law</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-12-2"><span class="sec">2:12.2</span><span class="stitle">Magnetic Field Due to a Thin Straight Wire</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-12-3"><span class="sec">2:12.3</span><span class="stitle">Magnetic Force between Two Parallel Currents</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-12-4"><span class="sec">2:12.4</span><span class="stitle">Magnetic Field of a Current Loop</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-12-5"><span class="sec">2:12.5</span><span class="stitle">Ampère’s Law</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a> · <a href="demos/displacement-current.html">Displacement Current</a></span></li><li id="s2-12-6"><span class="sec">2:12.6</span><span class="stitle">Solenoids and Toroids</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></span></li><li id="s2-12-7"><span class="sec">2:12.7</span><span class="stitle">Magnetism in Matter</span><span class="sdemos"><a href="demos/magnetism-in-matter.html">Magnetism in Matter</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch13">
+      <summary><span class="chn">Chapter 13</span> Electromagnetic Induction <span class="n">7 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="s2-13-1"><span class="sec">2:13.1</span><span class="stitle">Faraday’s Law</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a> · <a href="demos/induction-at-work.html">Induction at Work</a></span></li><li id="s2-13-2"><span class="sec">2:13.2</span><span class="stitle">Lenz&#x27;s Law</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a> · <a href="demos/induction-at-work.html">Induction at Work</a></span></li><li id="s2-13-3"><span class="sec">2:13.3</span><span class="stitle">Motional Emf</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a></span></li><li id="s2-13-4"><span class="sec">2:13.4</span><span class="stitle">Induced Electric Fields</span><span class="sdemos"><a href="demos/induced-electric-field.html">Induced Electric Fields</a></span></li><li id="s2-13-5"><span class="sec">2:13.5</span><span class="stitle">Eddy Currents</span><span class="sdemos"><a href="demos/eddy-currents.html">Eddy Currents: Magnet in a Pipe</a></span></li><li id="s2-13-6"><span class="sec">2:13.6</span><span class="stitle">Electric Generators and Back Emf</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a></span></li><li id="s2-13-7"><span class="sec">2:13.7</span><span class="stitle">Applications of Electromagnetic Induction</span><span class="sdemos"><a href="demos/induction-at-work.html">Induction at Work</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch14">
+      <summary><span class="chn">Chapter 14</span> Inductance <span class="n">6 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s2-14-1"><span class="sec">2:14.1</span><span class="stitle">Mutual Inductance</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a> · <a href="demos/transformers.html">Transformers</a></span></li><li id="s2-14-2"><span class="sec">2:14.2</span><span class="stitle">Self-Inductance and Inductors</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a></span></li><li id="s2-14-3"><span class="sec">2:14.3</span><span class="stitle">Energy in a Magnetic Field</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a></span></li><li id="s2-14-4"><span class="sec">2:14.4</span><span class="stitle">RL Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-14-5"><span class="sec">2:14.5</span><span class="stitle">Oscillations in an LC Circuit</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-14-6"><span class="sec">2:14.6</span><span class="stitle">RLC Series Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch15">
+      <summary><span class="chn">Chapter 15</span> Alternating-Current Circuits <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-15-1"><span class="sec">2:15.1</span><span class="stitle">AC Sources</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-15-2"><span class="sec">2:15.2</span><span class="stitle">Simple AC Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-15-3"><span class="sec">2:15.3</span><span class="stitle">RLC Series Circuits with AC</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-15-4"><span class="sec">2:15.4</span><span class="stitle">Power in an AC Circuit</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-15-5"><span class="sec">2:15.5</span><span class="stitle">Resonance in an AC Circuit</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a></span></li><li id="s2-15-6"><span class="sec">2:15.6</span><span class="stitle">Transformers</span><span class="sdemos"><a href="demos/transformers.html">Transformers</a></span></li></ol>
+    </details>
+    <details class="ch" id="v2-ch16">
+      <summary><span class="chn">Chapter 16</span> Electromagnetic Waves <span class="n">5 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s2-16-1"><span class="sec">2:16.1</span><span class="stitle">Maxwell’s Equations and Electromagnetic Waves</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a> · <a href="demos/displacement-current.html">Displacement Current</a></span></li><li id="s2-16-2"><span class="sec">2:16.2</span><span class="stitle">Plane Electromagnetic Waves</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a></span></li><li id="s2-16-3"><span class="sec">2:16.3</span><span class="stitle">Energy Carried by Electromagnetic Waves</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a></span></li><li id="s2-16-4"><span class="sec">2:16.4</span><span class="stitle">Momentum and Radiation Pressure</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a></span></li><li id="s2-16-5"><span class="sec">2:16.5</span><span class="stitle">The Electromagnetic Spectrum</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a></span></li></ol>
+    </details>
+  </section>
+  <section class="unit" id="vol-3" aria-labelledby="vol-3-h">
+    <h2 id="vol-3-h">Volume 3: Optics and modern physics</h2>
+    <p class="meta"><span>Ch. 1–11</span><span>76 sections</span><span>76 with an activity</span><span><a href="https://openstax.org/details/books/university-physics-volume-3">Free textbook: University Physics Volume 3</a></span></p>
+    <details class="ch" id="v3-ch1">
+      <summary><span class="chn">Chapter 1</span> The Nature of Light <span class="n">7 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s3-1-1"><span class="sec">3:1.1</span><span class="stitle">The Propagation of Light</span><span class="sdemos"><a href="demos/huygens.html">Huygens&#x27;s Principle</a> · <a href="demos/speed-of-light.html">Speed of Light</a></span></li><li id="s3-1-2"><span class="sec">3:1.2</span><span class="stitle">The Law of Reflection</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/huygens.html">Huygens&#x27;s Principle</a></span></li><li id="s3-1-3"><span class="sec">3:1.3</span><span class="stitle">Refraction</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/huygens.html">Huygens&#x27;s Principle</a></span></li><li id="s3-1-4"><span class="sec">3:1.4</span><span class="stitle">Total Internal Reflection</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/huygens.html">Huygens&#x27;s Principle</a></span></li><li id="s3-1-5"><span class="sec">3:1.5</span><span class="stitle">Dispersion</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a></span></li><li id="s3-1-6"><span class="sec">3:1.6</span><span class="stitle">Huygens’s Principle</span><span class="sdemos"><a href="demos/huygens.html">Huygens&#x27;s Principle</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s3-1-7"><span class="sec">3:1.7</span><span class="stitle">Polarization</span><span class="sdemos"><a href="demos/polarization.html">Polarization</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch2">
+      <summary><span class="chn">Chapter 2</span> Geometric Optics and Image Formation <span class="n">8 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="s3-2-1"><span class="sec">3:2.1</span><span class="stitle">Images Formed by Plane Mirrors</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a></span></li><li id="s3-2-2"><span class="sec">3:2.2</span><span class="stitle">Spherical Mirrors</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a></span></li><li id="s3-2-3"><span class="sec">3:2.3</span><span class="stitle">Images Formed by Refraction</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a></span></li><li id="s3-2-4"><span class="sec">3:2.4</span><span class="stitle">Thin Lenses</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/the-eye.html">The Eye</a> · <a href="demos/instrument-builder.html">Build a Microscope or Telescope</a></span></li><li id="s3-2-5"><span class="sec">3:2.5</span><span class="stitle">The Eye</span><span class="sdemos"><a href="demos/the-eye.html">The Eye</a></span></li><li id="s3-2-6"><span class="sec">3:2.6</span><span class="stitle">The Camera</span><span class="sdemos"><a href="demos/the-eye.html">The Eye</a> · <a href="demos/optics-bench.html">Optics Bench</a></span></li><li id="s3-2-7"><span class="sec">3:2.7</span><span class="stitle">The Simple Magnifier</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/instrument-builder.html">Build a Microscope or Telescope</a></span></li><li id="s3-2-8"><span class="sec">3:2.8</span><span class="stitle">Microscopes and Telescopes</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/instrument-builder.html">Build a Microscope or Telescope</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch3">
+      <summary><span class="chn">Chapter 3</span> Interference <span class="n">5 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s3-3-1"><span class="sec">3:3.1</span><span class="stitle">Young&#x27;s Double-Slit Interference</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s3-3-2"><span class="sec">3:3.2</span><span class="stitle">Mathematics of Interference</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/diffraction-grating.html">Diffraction Grating</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s3-3-3"><span class="sec">3:3.3</span><span class="stitle">Multiple-Slit Interference</span><span class="sdemos"><a href="demos/diffraction-grating.html">Diffraction Grating</a></span></li><li id="s3-3-4"><span class="sec">3:3.4</span><span class="stitle">Interference in Thin Films</span><span class="sdemos"><a href="demos/thin-films.html">Thin Film Interference</a></span></li><li id="s3-3-5"><span class="sec">3:3.5</span><span class="stitle">The Michelson Interferometer</span><span class="sdemos"><a href="demos/michelson.html">Michelson Interferometer</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch4">
+      <summary><span class="chn">Chapter 4</span> Diffraction <span class="n">7 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="s3-4-1"><span class="sec">3:4.1</span><span class="stitle">Single-Slit Diffraction</span><span class="sdemos"><a href="demos/diffraction-grating.html">Diffraction Grating</a> · <a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="s3-4-2"><span class="sec">3:4.2</span><span class="stitle">Intensity in Single-Slit Diffraction</span><span class="sdemos"><a href="demos/diffraction-grating.html">Diffraction Grating</a></span></li><li id="s3-4-3"><span class="sec">3:4.3</span><span class="stitle">Double-Slit Diffraction</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/diffraction-grating.html">Diffraction Grating</a></span></li><li id="s3-4-4"><span class="sec">3:4.4</span><span class="stitle">Diffraction Gratings</span><span class="sdemos"><a href="demos/diffraction-grating.html">Diffraction Grating</a></span></li><li id="s3-4-5"><span class="sec">3:4.5</span><span class="stitle">Circular Apertures and Resolution</span><span class="sdemos"><a href="demos/resolution.html">Circular Apertures and Resolution</a> · <a href="demos/diffraction-grating.html">Diffraction Grating</a></span></li><li id="s3-4-6"><span class="sec">3:4.6</span><span class="stitle">X-Ray Diffraction</span><span class="sdemos"><a href="demos/electron-diffraction.html">Electron Diffraction</a></span></li><li id="s3-4-7"><span class="sec">3:4.7</span><span class="stitle">Holography</span><span class="sdemos"><a href="demos/holography.html">Holography</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch5">
+      <summary><span class="chn">Chapter 5</span> Relativity <span class="n">9 sections · 8 demos</span></summary>
+      <ol class="srows"><li id="s3-5-1"><span class="sec">3:5.1</span><span class="stitle">Invariance of Physical Laws</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/speed-of-light.html">Speed of Light</a></span></li><li id="s3-5-2"><span class="sec">3:5.2</span><span class="stitle">Relativity of Simultaneity</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a></span></li><li id="s3-5-3"><span class="sec">3:5.3</span><span class="stitle">Time Dilation</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/gps-clocks.html">GPS Clocks and Relativity</a></span></li><li id="s3-5-4"><span class="sec">3:5.4</span><span class="stitle">Length Contraction</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/relativity-em.html">Magnetism from Relativity</a></span></li><li id="s3-5-5"><span class="sec">3:5.5</span><span class="stitle">The Lorentz Transformation</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/relativity-em.html">Magnetism from Relativity</a></span></li><li id="s3-5-6"><span class="sec">3:5.6</span><span class="stitle">Relativistic Velocity Transformation</span><span class="sdemos"><a href="demos/relativistic-motion.html">Velocity, Momentum and Energy Near c</a></span></li><li id="s3-5-7"><span class="sec">3:5.7</span><span class="stitle">Doppler Effect for Light</span><span class="sdemos"><a href="demos/doppler.html">Doppler Effect and Shock Waves</a></span></li><li id="s3-5-8"><span class="sec">3:5.8</span><span class="stitle">Relativistic Momentum</span><span class="sdemos"><a href="demos/relativistic-motion.html">Velocity, Momentum and Energy Near c</a> · <a href="demos/compton.html">Compton Scattering</a></span></li><li id="s3-5-9"><span class="sec">3:5.9</span><span class="stitle">Relativistic Energy</span><span class="sdemos"><a href="demos/relativistic-motion.html">Velocity, Momentum and Energy Near c</a> · <a href="demos/compton.html">Compton Scattering</a> · <a href="demos/binding-energy.html">Nuclear Binding Energy</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch6">
+      <summary><span class="chn">Chapter 6</span> Photons and Matter Waves <span class="n">6 sections · 8 demos</span></summary>
+      <ol class="srows"><li id="s3-6-1"><span class="sec">3:6.1</span><span class="stitle">Blackbody Radiation</span><span class="sdemos"><a href="demos/blackbody.html">Blackbody Radiation</a></span></li><li id="s3-6-2"><span class="sec">3:6.2</span><span class="stitle">Photoelectric Effect</span><span class="sdemos"><a href="demos/photoelectric.html">Photoelectric Effect</a></span></li><li id="s3-6-3"><span class="sec">3:6.3</span><span class="stitle">The Compton Effect</span><span class="sdemos"><a href="demos/compton.html">Compton Scattering</a></span></li><li id="s3-6-4"><span class="sec">3:6.4</span><span class="stitle">Bohr’s Model of the Hydrogen Atom</span><span class="sdemos"><a href="demos/spectra.html">Spectra Explorer</a> · <a href="demos/franck-hertz.html">Franck–Hertz Experiment</a> · <a href="demos/rutherford.html">Rutherford Scattering</a></span></li><li id="s3-6-5"><span class="sec">3:6.5</span><span class="stitle">De Broglie’s Matter Waves</span><span class="sdemos"><a href="demos/electron-diffraction.html">Electron Diffraction</a> · <a href="demos/double-slit.html">Double Slit, One Particle at a Time</a></span></li><li id="s3-6-6"><span class="sec">3:6.6</span><span class="stitle">Wave-Particle Duality</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch7">
+      <summary><span class="chn">Chapter 7</span> Quantum Mechanics <span class="n">6 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="s3-7-1"><span class="sec">3:7.1</span><span class="stitle">Wave Functions</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a> · <a href="demos/hydrogen-orbitals.html">Hydrogen Orbitals</a></span></li><li id="s3-7-2"><span class="sec">3:7.2</span><span class="stitle">The Heisenberg Uncertainty Principle</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a></span></li><li id="s3-7-3"><span class="sec">3:7.3</span><span class="stitle">The Schrӧdinger Equation</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a></span></li><li id="s3-7-4"><span class="sec">3:7.4</span><span class="stitle">The Quantum Particle in a Box</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a></span></li><li id="s3-7-5"><span class="sec">3:7.5</span><span class="stitle">The Quantum Harmonic Oscillator</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a></span></li><li id="s3-7-6"><span class="sec">3:7.6</span><span class="stitle">The Quantum Tunneling of Particles through Potential Barriers</span><span class="sdemos"><a href="demos/quantum-waves.html">Quantum Wave Packets</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch8">
+      <summary><span class="chn">Chapter 8</span> Atomic Structure <span class="n">6 sections · 7 demos</span></summary>
+      <ol class="srows"><li id="s3-8-1"><span class="sec">3:8.1</span><span class="stitle">The Hydrogen Atom</span><span class="sdemos"><a href="demos/hydrogen-orbitals.html">Hydrogen Orbitals</a> · <a href="demos/spectra.html">Spectra Explorer</a></span></li><li id="s3-8-2"><span class="sec">3:8.2</span><span class="stitle">Orbital Magnetic Dipole Moment of the Electron</span><span class="sdemos"><a href="demos/magnetic-moments.html">Atoms in a Magnetic Field</a></span></li><li id="s3-8-3"><span class="sec">3:8.3</span><span class="stitle">Electron Spin</span><span class="sdemos"><a href="demos/magnetic-moments.html">Atoms in a Magnetic Field</a> · <a href="demos/spin-resonance.html">Spin Resonance</a></span></li><li id="s3-8-4"><span class="sec">3:8.4</span><span class="stitle">The Exclusion Principle and the Periodic Table</span><span class="sdemos"><a href="demos/shells-and-x-rays.html">Shells, the Periodic Table and X-Rays</a></span></li><li id="s3-8-5"><span class="sec">3:8.5</span><span class="stitle">Atomic Spectra and X-rays</span><span class="sdemos"><a href="demos/shells-and-x-rays.html">Shells, the Periodic Table and X-Rays</a> · <a href="demos/spectra.html">Spectra Explorer</a> · <a href="demos/electron-diffraction.html">Electron Diffraction</a></span></li><li id="s3-8-6"><span class="sec">3:8.6</span><span class="stitle">Lasers</span><span class="sdemos"><a href="demos/lasers.html">Lasers and Stimulated Emission</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch9">
+      <summary><span class="chn">Chapter 9</span> Condensed Matter Physics <span class="n">8 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s3-9-1"><span class="sec">3:9.1</span><span class="stitle">Types of Molecular Bonds</span><span class="sdemos"><a href="demos/molecules.html">Molecules: Bonds and Spectra</a></span></li><li id="s3-9-2"><span class="sec">3:9.2</span><span class="stitle">Molecular Spectra</span><span class="sdemos"><a href="demos/molecules.html">Molecules: Bonds and Spectra</a></span></li><li id="s3-9-3"><span class="sec">3:9.3</span><span class="stitle">Bonding in Crystalline Solids</span><span class="sdemos"><a href="demos/solids.html">Crystals, Bands and Semiconductors</a></span></li><li id="s3-9-4"><span class="sec">3:9.4</span><span class="stitle">Free Electron Model of Metals</span><span class="sdemos"><a href="demos/resistivity.html">Resistivity of a Wire</a></span></li><li id="s3-9-5"><span class="sec">3:9.5</span><span class="stitle">Band Theory of Solids</span><span class="sdemos"><a href="demos/solids.html">Crystals, Bands and Semiconductors</a></span></li><li id="s3-9-6"><span class="sec">3:9.6</span><span class="stitle">Semiconductors and Doping</span><span class="sdemos"><a href="demos/solids.html">Crystals, Bands and Semiconductors</a></span></li><li id="s3-9-7"><span class="sec">3:9.7</span><span class="stitle">Semiconductor Devices</span><span class="sdemos"><a href="demos/solids.html">Crystals, Bands and Semiconductors</a> · <a href="demos/circuits.html">Circuits</a></span></li><li id="s3-9-8"><span class="sec">3:9.8</span><span class="stitle">Superconductivity</span><span class="sdemos"><a href="demos/resistivity.html">Resistivity of a Wire</a> · <a href="demos/superconductors.html">Superconductors and the Meissner Effect</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch10">
+      <summary><span class="chn">Chapter 10</span> Nuclear Physics <span class="n">7 sections · 7 demos</span></summary>
+      <ol class="srows"><li id="s3-10-1"><span class="sec">3:10.1</span><span class="stitle">Properties of Nuclei</span><span class="sdemos"><a href="demos/binding-energy.html">Nuclear Binding Energy</a> · <a href="demos/rutherford.html">Rutherford Scattering</a></span></li><li id="s3-10-2"><span class="sec">3:10.2</span><span class="stitle">Nuclear Binding Energy</span><span class="sdemos"><a href="demos/binding-energy.html">Nuclear Binding Energy</a></span></li><li id="s3-10-3"><span class="sec">3:10.3</span><span class="stitle">Radioactive Decay</span><span class="sdemos"><a href="demos/radioactive-decay.html">Radioactive Decay</a> · <a href="demos/gamma-spectroscopy.html">Gamma Spectroscopy</a></span></li><li id="s3-10-4"><span class="sec">3:10.4</span><span class="stitle">Nuclear Reactions</span><span class="sdemos"><a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a></span></li><li id="s3-10-5"><span class="sec">3:10.5</span><span class="stitle">Fission</span><span class="sdemos"><a href="demos/binding-energy.html">Nuclear Binding Energy</a> · <a href="demos/energy-sources.html">Sources of Energy</a> · <a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a></span></li><li id="s3-10-6"><span class="sec">3:10.6</span><span class="stitle">Nuclear Fusion</span><span class="sdemos"><a href="demos/binding-energy.html">Nuclear Binding Energy</a> · <a href="demos/star-slice.html">Star Slice</a> · <a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a></span></li><li id="s3-10-7"><span class="sec">3:10.7</span><span class="stitle">Medical Applications and Biological Effects of Nuclear Radiation</span><span class="sdemos"><a href="demos/gamma-spectroscopy.html">Gamma Spectroscopy</a> · <a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a></span></li></ol>
+    </details>
+    <details class="ch" id="v3-ch11">
+      <summary><span class="chn">Chapter 11</span> Particle Physics and Cosmology <span class="n">7 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="s3-11-1"><span class="sec">3:11.1</span><span class="stitle">Introduction to Particle Physics</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="s3-11-2"><span class="sec">3:11.2</span><span class="stitle">Particle Conservation Laws</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="s3-11-3"><span class="sec">3:11.3</span><span class="stitle">Quarks</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="s3-11-4"><span class="sec">3:11.4</span><span class="stitle">Particle Accelerators and Detectors</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a> · <a href="demos/magnetic-force.html">Charges in Magnetic Fields</a> · <a href="demos/gamma-spectroscopy.html">Gamma Spectroscopy</a></span></li><li id="s3-11-5"><span class="sec">3:11.5</span><span class="stitle">The Standard Model</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="s3-11-6"><span class="sec">3:11.6</span><span class="stitle">The Big Bang</span><span class="sdemos"><a href="demos/distance-ladder.html">Cosmic Distance Ladder</a> · <a href="demos/early-universe.html">The Big Bang and the Early Universe</a></span></li><li id="s3-11-7"><span class="sec">3:11.7</span><span class="stitle">Evolution of the Early Universe</span><span class="sdemos"><a href="demos/early-universe.html">The Big Bang and the Early Universe</a></span></li></ol>
+    </details>
+  </section>
+  <p class="more"><a href="index.html">Back to all courses</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+<script src="search.js" defer></script>
+<script>/* open the chapter a link points into (#v1-ch3, #s1-3-2) */ (function () { function go() { var e = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details'); if (d) { d.open = true; e.scrollIntoView(); } } addEventListener('hashchange', go); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go(); })();</script>
+</body>
+</html>

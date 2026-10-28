@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="../">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
+<title>Fluids · Virtual Physics Demos</title>
+<meta name="description" content="Fluids: Pressure, buoyancy, flow and viscosity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+/* hero tools, top left above the eyebrow: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
+.hero-tools { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -28px 0 22px; }
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
+/* site search (tools/courses.py) */
+.find { padding-top: 30px; }
+.find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.find .filter { max-width: 620px; }
+.find .filter input { padding-top: 11px; padding-bottom: 11px; font-size: 1rem; }
+.hits { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(620px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 6px 6px; }
+.find .hits { width: 100%; }
+.hits .hn { margin: 4px 8px 2px; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.hits ul { margin: 0; padding: 0; list-style: none; }
+.hit { padding: 8px 8px 9px; border-radius: 7px; }
+.hit + .hit { border-top: 1px solid var(--line); }
+.hit:hover, .hit.on { background: var(--canvas); }
+.hit .ht { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hit .ht:hover, .hit.on .ht { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.hit .hk { margin-left: 6px; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+.hit p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+.hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
+.hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
+.hit .hm .sec { margin: 0; }
+@media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
+@media (max-width: 700px) {
+  .tools .wrap { flex-wrap: wrap; }
+  .tools .filter { flex: 1 1 100%; }
+  html:has(.tools .filter) { scroll-padding-top: 108px; }
+}
+
+</style>
+</head>
+<body>
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Mechanics</b></p>
+    <h1>Fluids</h1>
+    <p class="lede">Pressure, buoyancy, flow and viscosity.</p>
+    <ul class="facts"><li><span><strong>3</strong> demos</span></li><li><span><strong>4</strong> worksheets</span></li><li><span>OpenStax Vol 1 · Ch. 6, 14</span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="topics/kinematics.html">Kinematics</a></li><li><a href="topics/forces.html">Forces and Newton&#x27;s laws</a></li><li><a href="topics/energy-momentum.html">Energy and momentum</a></li><li><a href="topics/rotation.html">Rotation</a></li><li><a href="topics/equilibrium.html">Equilibrium and materials</a></li><li><a href="topics/gravitation.html">Gravitation and orbits</a></li><li><a href="topics/fluids.html" aria-current="page">Fluids</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mechanics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
+  <section class="unit" aria-label="Fluids demos">
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/fluids.html?topic=fluids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/fluids-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/fluids-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/fluids.html?topic=fluids">Fluids: Pressure, Buoyancy and Flow</a></h3>
+          <p>Drag a pressure probe down a tank, drop blocks that float or sink, weigh one in an overflow can like Archimedes, see an iceberg float 89% under, watch a Venturi tube trade pressure for speed, and aim Torricelli's jet.</p>
+          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:14.1</span> <span class="sec">1:14.2</span> <span class="sec">1:14.3</span> <span class="sec">1:14.4</span> <span class="sec">1:14.5</span> <span class="sec">1:14.6</span></p>
+          <p class="links"><a class="go" href="demos/fluids.html?topic=fluids">Open demo</a> <a href="curriculum/labs/students/fluids.html">Worksheet: Pressure, Buoyancy and Flow</a> <a href="notes/fluids.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/viscometer.html?topic=fluids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/viscometer-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/viscometer-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/viscometer.html?topic=fluids">Falling Ball Viscometer</a></h3>
+          <p>Time balls falling through glycerol, oil or water and measure viscosity with Stokes' law. Then find where it fails: tube walls and fast, high Reynolds number flow.</p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:6.4</span> <span class="sec">1:14.7</span></p>
+          <p class="links"><a class="go" href="demos/viscometer.html?topic=fluids">Open demo</a> <a href="curriculum/labs/students/viscometer.html">Worksheet 1: Viscosity</a> <a href="curriculum/labs/students/pipe-flow.html">Worksheet 2: Pipe Flow and Turbulence</a> <a href="notes/viscometer.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/terminal-velocity.html?topic=fluids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/terminal-velocity-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/terminal-velocity-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/terminal-velocity.html?topic=fluids">Terminal Velocity</a></h3>
+          <p>Jump with the textbook's skydiver and watch the drag grow until it matches the weight. Switch between spread eagle and head first, open the parachute, jump from 10 km where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.</p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">Also under <a href="topics/forces.html">Forces and Newton&#x27;s laws</a></p><p class="used">OpenStax <span class="sec">1:6.4</span></p>
+          <p class="links"><a class="go" href="demos/terminal-velocity.html?topic=fluids">Open demo</a> <a href="curriculum/labs/students/terminal-velocity.html">Worksheet: Terminal Velocity</a> <a href="notes/terminal-velocity.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <p class="more"><a href="index.html#topics">Back to all topics</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+<script src="search.js" defer></script>
+</body>
+</html>

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Build the course pages (physics-1.html, physics-2.html, and the acoustics.html, thermo.html, modern.html and astro.html modules), misc.html and the course tiles on index.html
-from curriculum/textbook-map.json.
+"""Build the site's index pages from curriculum/textbook-map.json, curriculum/catalog.json and curriculum/topics.json:
+the course pages (physics-1.html, physics-2.html, astro-2203.html and the acoustics, thermo, modern, astro and medical-physics
+modules), one page per topic (topics/<id>.html), openstax.html (every textbook section with its demos), the home page below
+its hero (Courses, All demos by topic, OpenStax by section), search.js, 404.html, misc.html (a redirect) and demos/lib/nav.js.
 
     python3 tools/courses.py          # write the pages and update index.html
     python3 tools/courses.py --check  # exit 1 if any output is out of date
 
 Titles and descriptions come from curriculum/catalog.json, the list of every demo on the
-site; thumbnails are thumbs/<demo>-light.webp and -dark.webp. Demo URLs are unchanged: course pages only link to demos/<name>.html.
+site; thumbnails are thumbs/<demo>-light.webp and -dark.webp. Demo URLs are unchanged: every page only links to demos/<name>.html.
 """
 import html
 import json
@@ -122,45 +124,6 @@ def index_subjects():
 
 def CATALOG_DATA():
     return json.loads(CATALOG.read_text())
-
-
-MISC = {'id': 'misc', 'title': 'Misc.', 'sub': 'Everything else',
-        'lede': 'Demos that are not part of a course or module: for now a chemical reaction that makes patterns and a molecule in 3D.'}
-
-
-def misc_names(m):
-    return [d['demo'] for d in m['demos'] if 'later' in d['course']]
-
-
-def misc_page(m, cards, notes):
-    keep = set(misc_names(m))
-    groups = [('Misc', [n for _, names in index_subjects() for n in names if n in keep])]   # one heading (Steve, 2026-10-24)
-    jump, secs = [], []
-    for t, ns in groups:
-        sid = re.sub(r'[^a-z]+', '-', t.lower()).strip('-')
-        jump.append(f'<li><a href="#{sid}">{esc(t)} <span class="n">{len(ns)}</span></a></li>')
-        items = []
-        for n in ns:
-            c = cards[n]
-            links = [f'<a class="go" href="demos/{n}.html">Open demo</a>'] + ([f'<a href="notes/{n}.html">Notes</a>'] if n in notes else [])
-            items.append(f'''      <li class="item">
-        <a class="pic" href="demos/{n}.html" tabindex="-1" aria-hidden="true">{thumb(n, '')}</a>
-        <div class="body">
-          <h3><a href="demos/{n}.html">{esc(c['title'])}</a></h3>
-          <p>{c['desc']}</p>
-          <p class="links">{' '.join(links)}</p>
-        </div>
-      </li>''')
-        secs.append(f'''  <section class="unit" id="{sid}" aria-labelledby="{sid}-h">
-    <h2 id="{sid}-h">{esc(t)}</h2>
-    <p class="meta"><span>{len(ns)} demo{'s' if len(ns) != 1 else ''}</span></p>
-    <ul class="list">
-{chr(10).join(items)}
-    </ul>
-  </section>''')
-    return page_shell(MISC['title'], MISC['sub'], MISC['lede'],
-                      f'<li><span><strong>{len(keep)}</strong> demos</span></li>',
-                      ''.join(jump), '\n'.join(secs), 'Astronomy, e/m and the Ising model moved into the Astronomy, Modern Physics and Thermodynamics modules.')
 
 
 def sec_key(s):
@@ -529,9 +492,10 @@ def course_page(course, m, cards, notes):
         how = (f'Units follow the topics, and a demo from another course or module is listed where it fits. At the bottom, the '
                f'{TITLE[sched[0]["schedule"]]} schedule lists the same demos topic by topic with that course\u2019s introductory worksheets. '
                'Section numbers are volume:section in OpenStax University Physics.')
-    return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), how or
+    return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), (how or
                       ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
+                      + ' Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.')
 
 
 TITLE = {'astro-2203': 'Astro 2203'}   # a folded course's name on the page it was folded into
@@ -569,11 +533,175 @@ def schedule_section(sched, demos, cards, first_unit):
             f'    <ol class="topics">\n' + '\n'.join(rows) + '\n    </ol>\n  </section>')
 
 
-def page_shell(title, sub, lede, facts, jump, body, how):
+# Topics and the textbook (Steve, 2026-10-28): besides the courses, the home page lists every demo by subject (curriculum/topics.json,
+# one page per topic in topics/) and every OpenStax section with the demos that serve it (openstax.html). A demo lives once, at
+# demos/<name>.html; courses, topics and the textbook only point at it. Opened from a topic page, a demo steps through that topic
+# (nav.js) and keeps every worksheet; course pages, ?course= links and Canvas are unchanged.
+TOPICS = ROOT / 'curriculum' / 'topics.json'
+TAUGHT = ['physics-1', 'physics-2', 'astro-2203']   # Courses: the classes on a schedule; the other course pages are the chapter modules
+VOL_ABOUT = {1: 'Mechanics, waves and sound', 2: 'Thermodynamics, electricity and magnetism', 3: 'Optics and modern physics'}
+
+
+def load_topics(cards):
+    """curriculum/topics.json, checked: every catalog demo in at least one topic, every topic demo in the catalog, ids unique."""
+    t = json.loads(TOPICS.read_text())
+    ids = [x['id'] for f in t['families'] for x in f['topics']]
+    placed = {d for f in t['families'] for x in f['topics'] for d in x['demos']}
+    missing, unknown = [n for n in cards if n not in placed], sorted(placed - set(cards))
+    if missing or unknown or len(ids) != len(set(ids)):
+        raise SystemExit(f'curriculum/topics.json: in no topic {missing}; not in the catalog {unknown}; repeated ids {sorted({i for i in ids if ids.count(i) > 1})}')
+    return t
+
+
+def topics_of(t):
+    """{demo: [(family, topic)]} in topics.json order."""
+    out = {}
+    for f in t['families']:
+        for x in f['topics']:
+            for d in x['demos']:
+                out.setdefault(d, []).append((f, x))
+    return out
+
+
+def all_handouts(demo):
+    return [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+
+
+def topic_card(name, demo, topic, where, cards, notes, ctitle):
+    """A demo card on a topic page: every worksheet (as the demo's own Handout and worksheet menu has them), the courses and
+    modules that use it, and the other topics it is in. Its links open the demo with ?topic= so it steps through this topic."""
+    c, q = cards[name], f'?topic={topic["id"]}'
+    hs = all_handouts(demo)
+    links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
+    links += [f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>' for i, h in enumerate(hs, 1)]
+    if name in notes:
+        links.append(f'<a href="notes/{name}.html">Notes</a>')
+    used = [x for x in demo['course'] if x in ctitle]
+    rows = []
+    if used:
+        rows.append('In ' + ' · '.join(f'<a href="{x}.html">{esc(ctitle[x])}</a>' for x in used))
+    others = [x for _, x in where if x['id'] != topic['id']]
+    if others:
+        rows.append('Also under ' + ' · '.join(f'<a href="topics/{x["id"]}.html">{esc(x["title"])}</a>' for x in others))
+    secs = sorted(demo['sections'], key=sec_key)
+    if secs:
+        rows.append('OpenStax ' + ' '.join(f'<span class="sec">{s["vol"]}:{s["sec"]}</span>' for s in secs[:6]) + (' …' if len(secs) > 6 else ''))
+    role = 'Lab' if demo['role'] == 'lab' else 'Demo'
+    flag = DEMO_NOTE.get(demo['status'])
+    return f'''      <li class="item">
+        <a class="pic" href="demos/{name}.html{q}" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
+        <div class="body">
+          <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
+          <h3><a href="demos/{name}.html{q}">{esc(c['title'])}</a></h3>
+          <p>{c['desc']}</p>
+          {''.join(f'<p class="used">{r}</p>' for r in rows)}
+          <p class="links">{' '.join(links)}</p>
+        </div>
+      </li>'''
+
+
+def topic_page(fam, topic, t, m, cards, notes):
+    demos = {d['demo']: d for d in m['demos']}
+    where = topics_of(t)
+    ctitle = {c['id']: c['title'] for c in m['courses']}
+    names = topic['demos']
+    n_ws = len({h for n in names for h in all_handouts(demos[n])})
+    secs = [s for n in names for s in demos[n]['sections']]
+    facts = (f'<li><span><strong>{len(names)}</strong> demos</span></li><li><span><strong>{n_ws}</strong> worksheet{"s" if n_ws != 1 else ""}</span></li>'
+             + (f'<li><span>OpenStax {chapters_of(secs)}</span></li>' if secs else ''))
+    jump = ''.join(f'<li><a href="topics/{x["id"]}.html"{" aria-current=\"page\"" if x is topic else ""}>{esc(x["title"])}</a></li>' for x in fam['topics'])
+    items = '\n'.join(topic_card(n, demos[n], topic, where[n], cards, notes, ctitle) for n in names)
+    body = f'''  <section class="unit" aria-label="{esc(topic['title'])} demos">
+    <ul class="list">
+{items}
+    </ul>
+  </section>'''
+    how = ('Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through '
+           'this topic with its previous and next links. The other topics in ' + esc(fam['title']) + ' are in the bar above; the '
+           '<a href="index.html#topics">home page</a> lists them all.')
+    return page_shell(topic['title'], fam['title'], topic['blurb'], facts, jump, body, how, base=True, back=('index.html#topics', 'Back to all topics'))
+
+
+def openstax_page(m, cards, notes):
+    demos = {d['demo']: d for d in m['demos']}
+    activities = {a['id']: a for a in m.get('activities', [])}
+    vols, jump = [], []
+    for v in (1, 2, 3):
+        ss = sorted((s for s in m['sections'] if s['vol'] == v), key=sec_key)
+        chs = list(dict.fromkeys(s['chapter'] for s in ss))
+        rows = []
+        for ch in chs:
+            cs = [s for s in ss if s['chapter'] == ch]
+            lines, n_d = [], set()
+            for s in cs:
+                ds = [d for d in s['demos'] if d in cards and d in demos]
+                n_d.update(ds)
+                links = [f'<a href="demos/{d}.html">{esc(html.unescape(re.sub(r"<[^>]+>", "", cards[d]["title"])))}</a>' for d in ds]
+                for a in s.get('activities', []):
+                    if a in activities and activities[a].get('kind') and not set(activities[a].get('handouts', [])) & {h for d in ds for h in demos[d].get('handouts') or []}:
+                        href = activities[a]['url'].removesuffix('.md') + '.html'
+                        links.append(f'<a class="ws" href="{esc(href)}">{"Worksheet" if activities[a]["kind"] == "worksheet" else "Reading"}: {esc(activities[a]["title"])}</a>')
+                st = '' if s['status'] == 'usable' else f'<span class="st st-{s["status"]}">{"partly covered" if s["status"] == "needs-feature" else "no activity yet"}</span>'
+                sid = f's{v}-{s["sec"].replace(".", "-")}'
+                lines.append(f'<li id="{sid}"><span class="sec">{v}:{s["sec"]}</span><span class="stitle">{esc(s["title"])}{st}</span>'
+                             f'<span class="sdemos">{" · ".join(links)}</span></li>')
+            rows.append(f'''    <details class="ch" id="v{v}-ch{ch}">
+      <summary><span class="chn">Chapter {ch}</span> {esc(cs[0]['chapter_title'])} <span class="n">{len(cs)} sections · {len(n_d)} demo{"s" if len(n_d) != 1 else ""}</span></summary>
+      <ol class="srows">{''.join(lines)}</ol>
+    </details>''')
+        jump.append(f'<li><a href="#vol-{v}">Volume {v}</a></li>')
+        vols.append(f'''  <section class="unit" id="vol-{v}" aria-labelledby="vol-{v}-h">
+    <h2 id="vol-{v}-h">Volume {v}: {VOL_ABOUT[v]}</h2>
+    <p class="meta"><span>Ch. {chs[0]}–{chs[-1]}</span><span>{len(ss)} sections</span><span>{sum(1 for s in ss if s['status'] == 'usable')} with an activity</span><span><a href="{BOOK_URL[v]}">Free textbook: {BOOK[v]}</a></span></p>
+{chr(10).join(rows)}
+  </section>''')
+    n = len(m['sections'])
+    facts = (f'<li><span><strong>3</strong> volumes</span></li><li><span><strong>{n}</strong> sections</span></li>'
+             f'<li><span><strong>{sum(1 for s in m["sections"] if s["status"] == "usable")}</strong> with an activity</span></li>')
+    how = ('Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; '
+           'search for a section number such as 3.2 to jump straight to its demos. Section numbers match the book.')
+    page = page_shell('OpenStax University Physics', 'By textbook section', 'The free OpenStax textbook, section by section, with the demos for each.',
+                      facts, ''.join(jump), '\n'.join(vols), how)
+    # a link to a chapter or section (#v1-ch3, #s1-3-2) opens its chapter
+    return page.replace('<script src="search.js" defer></script>', '<script src="search.js" defer></script>\n' + OPEN_HASH, 1)
+
+
+OPEN_HASH = ("<script>/* open the chapter a link points into (#v1-ch3, #s1-3-2) */ (function () { function go() { var e = location.hash.length > 1 && "
+             "document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details'); if (d) { d.open = true; e.scrollIntoView(); } } "
+             "addEventListener('hashchange', go); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go(); })();</script>")
+
+TOPIC_CSS = '''
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+'''
+
+
+def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to all courses')):
+    """base: the page sits one folder down (topics/<id>.html), so a <base> makes every link resolve from the site root; such a
+    page has no #anchor links of its own, since they would resolve against the root too."""
     return f'''<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8">{chr(10) + '<base href="../">' if base else ''}
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="demos/lib/theme.js"></script>
 <title>{esc(title)} · Virtual Physics Demos</title>
@@ -584,6 +712,7 @@ def page_shell(title, sub, lede, facts, jump, body, how):
 <style>
 {shared_css()}
 {COURSE_CSS}
+{TOPIC_CSS}
 {SEARCH_CSS}
 </style>
 </head>
@@ -603,7 +732,7 @@ def page_shell(title, sub, lede, facts, jump, body, how):
 <main class="wrap">
   <p class="how">{how}</p>
 {body}
-  <p class="more"><a href="index.html">Back to all courses</a></p>
+  <p class="more"><a href="{back[0]}">{esc(back[1])}</a></p>
 </main>
 <footer>
   <div class="wrap">
@@ -704,13 +833,37 @@ TILE_CSS = '''
 .ctile:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
 .ctile:hover h3 { color: var(--accent); }
 .ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-.allnote { margin: 14px 0 0; color: var(--muted); font-size: 0.92rem; }
-@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
+.allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.courses .subh { margin: 22px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
+.fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+.fam .mosaic .thumb { border-bottom: 0; height: 72px; aspect-ratio: auto; }
+.fam .mosaic .thumb img { height: 72px; }
+.fam .fbody { padding: 12px 16px 16px; }
+.fam h3 { margin: 0; font-size: 1.25rem; }
+.fam .sub, .vol .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+.tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.tlinks a:hover { border-color: var(--accent); color: var(--accent); }
+.tlinks a:focus-visible, .vol:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.vols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.vol { display: block; height: 100%; padding: 14px 18px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; color: inherit; text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
+.vol h3 { margin: 0; font-size: 1.25rem; }
+.vol p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.vol:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.vol:hover h3 { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .ctile, .vol { transition: none; } .ctile:hover, .vol:hover { translate: none; } }
 '''
 
 
-def tiles(m, cards):
-    out, m_demos = [], {d['demo']: d for d in m['demos']}
+def tiles(m, cards, t):
+    """The home page below the hero (Steve, 2026-10-28): search, Courses (the classes on a schedule, then the chapter modules),
+    All demos by topic (topics.json families) and OpenStax University Physics by section."""
+    out, m_demos = {}, {d['demo']: d for d in m['demos']}
     for c in m['courses']:
         names = []
         for u in c['units']:
@@ -723,18 +876,52 @@ def tiles(m, cards):
         weeks = [u for u in c['units'] if u.get('dates') and not u.get('review')]   # a course laid out by weeks
         count = (f"{len(weeks)} weeks · {sum(1 for u in c['units'] if u.get('review'))} tests" if weeks
                  else f"{sum(1 for u in c['units'] if not u.get('schedule'))} units")
-        out.append(tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names))
-    mn = misc_names(m)
-    out.append(tile('misc', MISC['title'], MISC['sub'], f'{len(mn)} demos', MISC['lede'], [n for n in ['star-slice', 'hydrogen-orbitals', 'ising', 'black-holes'] if n in mn] or mn))
+        out[c['id']] = tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names)
+    taught = [out[c] for c in TAUGHT if c in out]
+    modules = [v for c, v in out.items() if c not in TAUGHT]
+    fams = []
+    for f in t['families']:
+        n = len({d for x in f['topics'] for d in x['demos']})
+        firsts = [x['demos'][0] for x in f['topics']] + [d for x in f['topics'] for d in x['demos']]   # each topic's first demo, then the rest
+        pics = ''.join(thumb(d, '') for d in list(dict.fromkeys(firsts))[:4])
+        links = ''.join(f'<li><a href="topics/{x["id"]}.html">{esc(x["title"])} <span class="n">{len(x["demos"])}</span></a></li>' for x in f['topics'])
+        fams.append(f'''      <li class="fam" id="{f['id']}">
+        <div class="mosaic" aria-hidden="true">{pics}</div>
+        <div class="fbody"><h3>{esc(f['title'])}</h3><p class="sub">{len(f['topics'])} topic{"s" if len(f['topics']) != 1 else ""} · {n} demos</p>
+        <ul class="tlinks">{links}</ul></div>
+      </li>''')
+    vols = []
+    for v in (1, 2, 3):
+        ss = [s for s in m['sections'] if s['vol'] == v]
+        chs = sorted({s['chapter'] for s in ss})
+        vols.append(f'''      <li><a class="vol" href="openstax.html#vol-{v}"><h3>Volume {v}</h3><p class="sub">{len(chs)} chapters · {len(ss)} sections</p><p>{VOL_ABOUT[v]}</p></a></li>''')
     return f'''{TILE_START}
 <section class="wrap find" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
 </section>
-<section class="wrap courses" aria-labelledby="courses-h">
+<section class="wrap courses" id="courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
   <ul class="ctiles">
-{chr(10).join(out)}
+{chr(10).join(taught)}
+  </ul>
+  <h3 class="subh">Modules that follow the textbook chapters</h3>
+  <ul class="ctiles">
+{chr(10).join(modules)}
+  </ul>
+</section>
+<section class="wrap courses" id="topics" aria-labelledby="topics-h">
+  <h2 id="topics-h">All demos by topic</h2>
+  <p class="allnote">Every demo on the site, sorted by subject. A demo can be under more than one topic.</p>
+  <ul class="fams">
+{chr(10).join(fams)}
+  </ul>
+</section>
+<section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
+  <h2 id="openstax-h">OpenStax University Physics by section</h2>
+  <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
+  <ul class="vols">
+{chr(10).join(vols)}
   </ul>
 </section>
 <script src="search.js" defer></script>
@@ -781,6 +968,7 @@ SEARCH_CSS = '''
 .hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
 .hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
 .hit .hm .sec { margin: 0; }
 @media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
 @media (max-width: 700px) {
@@ -794,6 +982,7 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
 (() => {
   const ITEMS = __ITEMS__;
   const COURSE = __COURSES__;
+  const TOPIC = __TOPICS__;
   const box = document.querySelector('.filter[role=search]');
   if (!box) return;
   const q = box.querySelector('input'), panel = box.querySelector('.hits'), list = panel.querySelector('ul'), count = panel.querySelector('.hn'), clear = box.querySelector('.clear');
@@ -801,7 +990,7 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
     .replace(/[^a-z0-9.:]+/g, ' ').split(' ').map((w) => w.replace(/^[.:]+|[.:]+$/g, '')).filter(Boolean).join(' ') + ' ';
   for (const it of ITEMS) {
     it.T = norm(it.t);
-    it.O = norm([it.n.replace(/-/g, ' '), it.g.join(' '), it.d, it.c.map((c) => COURSE[c]).join(' '), it.s.map((x) => x[1]).join(' '), it.w.map((x) => x[1]).join(' ')].join(' '));
+    it.O = norm([it.n.replace(/-/g, ' '), it.g.join(' '), it.d, it.c.map((c) => COURSE[c]).join(' '), it.p.map((p) => TOPIC[p]).join(' '), it.s.map((x) => x[1]).join(' '), it.w.map((x) => x[1]).join(' ')].join(' '));
   }
   /* a number is a textbook section ("3.2", "1:3.2") or a whole chapter ("13", "3:6"); a word scores most in the title, most of all at a word start */
   const score = (it, w) => {
@@ -823,6 +1012,7 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
     count.textContent = hits.length ? `${hits.length} match${hits.length === 1 ? '' : 'es'}` : 'Nothing matches. Try a topic, a word from the title or a section number such as 3.2.';
     list.innerHTML = hits.slice(0, 60).map((it) => `<li class="hit"><a class="ht" href="${it.h}">${esc(it.t)}</a><span class="hk">${it.k}</span>`
       + `<p class="hd">${esc(it.d)}</p><p class="hm">${it.c.map((c) => `<a href="${c}.html">${esc(COURSE[c])}</a>`).join('')}`
+      + it.p.map((p) => `<a class="tp" href="topics/${p}.html">${esc(TOPIC[p])}</a>`).join('')
       + it.w.map(([h, l]) => `<a href="${h}">${esc(l)}</a>`).join('')
       + (it.s.length ? `<span>${it.s.slice(0, 4).map(([id]) => `<span class="sec">${id}</span>`).join(' ')}${it.s.length > 4 ? ' …' : ''}</span>` : '') + '</p></li>').join('');
     show(true);
@@ -849,20 +1039,21 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
 '''
 
 
-def search_js(m, cards):
+def search_js(m, cards, t):
     """Every catalog demo (with its sections, courses and worksheets from the map) and every standalone activity whose handout no demo carries."""
     plain = lambda s: html.unescape(re.sub(r'<[^>]+>', '', s))
     demos = {d['demo']: d for d in m['demos']}
     secs = {(s['vol'], s['sec']): s['title'] for s in m['sections']}
     exists = lambda h: (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()
     on_demos, items = set(), []
+    where = topics_of(t)
     for _, names in index_subjects():
         for n in names:
             d, c = demos.get(n, {}), cards[n]
             hs = [h for h in d.get('handouts') or [] if exists(h)]
             on_demos.update(hs)
             items.append({'n': n, 't': plain(c['title']), 'd': plain(c['desc']), 'g': c.get('tags', []), 'k': 'Lab' if d.get('role') == 'lab' else 'Demo',
-                          'h': f'demos/{n}.html', 'c': [('misc' if x == 'later' else x) for x in d.get('course', [])],
+                          'h': f'demos/{n}.html', 'c': [x for x in d.get('course', []) if x != 'later'], 'p': [x['id'] for _, x in where.get(n, [])],
                           's': [[f'{s["vol"]}:{s["sec"]}', secs.get((s['vol'], s['sec']), s.get('title', ''))] for s in sorted(d.get('sections', []), key=sec_key)],
                           'w': [[f'curriculum/labs/students/{h}.html', handout_label(h, i if len(hs) > 1 else None)] for i, h in enumerate(hs, 1)]})
     for a in m.get('activities', []):
@@ -870,12 +1061,13 @@ def search_js(m, cards):
             continue
         reading = a['kind'] != 'worksheet'
         items.append({'n': a['id'], 't': a['title'], 'd': a['description'], 'g': [], 'k': 'Reading' if reading else 'Worksheet',
-                      'h': a['url'].removesuffix('.md') + '.html', 'c': a['course'],
+                      'h': a['url'].removesuffix('.md') + '.html', 'c': [x for x in a['course'] if x != 'later'], 'p': [],
                       's': [[f'{s["vol"]}:{s["sec"]}', secs.get((s['vol'], s['sec']), s.get('title', ''))] for s in sorted(a['sections'], key=sec_key)],
                       'w': [] if reading else [[a['url'].removesuffix('.md') + '.html', handout_label(a['id'])]]})
-    courses = {c['id']: c['title'] for c in m['courses']} | {'misc': MISC['title'].rstrip('.')}
+    courses = {c['id']: c['title'] for c in m['courses']}
+    topics = {x['id']: x['title'] for f in t['families'] for x in f['topics']}
     dump = lambda x: json.dumps(x, ensure_ascii=False, separators=(',', ':'))
-    return SEARCH_JS.replace('__ITEMS__', dump(items)).replace('__COURSES__', dump(courses))
+    return SEARCH_JS.replace('__ITEMS__', dump(items)).replace('__COURSES__', dump(courses)).replace('__TOPICS__', dump(topics))
 
 
 # Course navigation (Steve, 2026-10-25): every demo gets a breadcrumb (Home, course, unit, demo) and previous and next links
@@ -913,7 +1105,7 @@ def course_order(course, m, cards):
     return out
 
 
-def nav_js(m, cards):
+def nav_js(m, cards, t):
     plain = lambda s: html.unescape(re.sub(r'<[^>]+>', '', s))
     courses = {}
     for c in m['courses']:
@@ -924,7 +1116,7 @@ def nav_js(m, cards):
         p, order = MERGED[c['id']], course_order(c, m, cards)
         courses[c['id']] = {'t': TITLE[c['id']], 'p': p, 'u': {SCHEDULE_PREFIX + u['id']: u['title'] for _, u in order},
                             'o': [[d, SCHEDULE_PREFIX + u['id']] for d, u in order]}
-    courses['misc'] = {'t': MISC['title'].rstrip('.'), 'u': {}, 'o': [[n, None] for _, names in index_subjects() for n in names if n in set(misc_names(m))]}
+    topics = {x['id']: {'t': x['title'], 'o': [d for d in x['demos'] if d in cards]} for f in t['families'] for x in f['topics']}
     titles = {n: plain(c['title']) for n, c in cards.items()}
     # each course's own worksheets on a demo whose Handout and worksheet menu (tools/handout_button.py, every handout) lists more
     sheets = {}
@@ -936,7 +1128,8 @@ def nav_js(m, cards):
             if c in courses and d['demo'] in titles and mine != [[h, handout_label(h, i if len(every) > 1 else None)] for i, h in enumerate(every, 1)]:
                 sheets.setdefault(c, {})[d['demo']] = mine
     dump = lambda x: json.dumps(x, ensure_ascii=False, separators=(',', ':'))
-    return NAV_JS.replace('__COURSES__', dump(courses)).replace('__TITLES__', dump(titles)).replace('__SHEETS__', dump(sheets))
+    return (NAV_JS.replace('__COURSES__', dump(courses)).replace('__TOPICS__', dump(topics)).replace('__TITLES__', dump(titles))
+            .replace('__SHEETS__', dump(sheets)))
 
 
 def course_ws_js(m, cards):
@@ -962,6 +1155,9 @@ NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py f
    A demo in several courses follows the course the student came from (the course page, or the course of the demo they stepped
    from, kept for the tab in sessionStorage vd-course); opened any other way it uses the first course in its list.
    ?course=<id> in the address (course page and Canvas links, previous and next) names the course outright.
+   Topics (Steve, 2026-10-28): opened from a topic page (topics/<id>.html, or ?topic=<id>), the breadcrumb is Home › topic › demo
+   and previous and next step through that topic; the Handout and worksheet menu keeps every worksheet. sessionStorage keeps
+   a topic as t:<id>. A demo in no course (BZ, DNA) follows its first topic.
    A course folded into another (tools/courses.py MERGED; none since 2026-10-26) keeps its schedule order here, with p the
    page it now lives on. 
    Worksheets (Steve, 2026-10-25): opened from a course, the Handout and worksheet menu lists only that course's worksheets
@@ -969,22 +1165,41 @@ NAV_JS = r'''/* Course navigation for the demos. Generated by tools/courses.py f
    opened directly, it keeps every worksheet. The demo is the same. */
 (() => {
   const COURSES = __COURSES__;
+  const TOPICS = __TOPICS__;
   const TITLES = __TITLES__;
   const SHEETS = __SHEETS__;
   const run = () => {
   const bar = document.querySelector('header.bar > div:first-child'), h1 = bar && bar.querySelector('h1');
   const here = location.pathname.split('/').pop().replace(/\.html$/, '');
   if (!h1 || !TITLES[here] || bar.querySelector('.vd-crumbs')) return;
-  const mine = Object.keys(COURSES).filter((c) => COURSES[c].o.some((x) => x[0] === here));
+  /* where the student came from, as c:<course> or t:<topic>, first match wins */
+  const mine = Object.keys(COURSES).filter((c) => COURSES[c].o.some((x) => x[0] === here)).map((c) => 'c:' + c)
+    .concat(Object.keys(TOPICS).filter((t) => TOPICS[t].o.includes(here)).map((t) => 't:' + t));
   let from = null, kept = null;
-  const asked = new URLSearchParams(location.search).get('course');
-  try { const r = new URL(document.referrer); if (r.origin === location.origin) from = r.pathname.split('/').pop().replace(/\.html$/, ''); } catch (_) {}
-  try { kept = sessionStorage.getItem('vd-course'); } catch (_) {}
-  const chosen = [asked, from, kept].find((c) => mine.includes(c)), cid = chosen || mine[0];
-  if (cid) try { sessionStorage.setItem('vd-course', cid); } catch (_) {}
+  const P = new URLSearchParams(location.search), asked = P.get('course') && 'c:' + P.get('course'), askedT = P.get('topic') && 't:' + P.get('topic');
+  try {
+    const r = new URL(document.referrer), f = r.pathname.split('/').pop().replace(/\.html$/, '');
+    if (r.origin === location.origin && f) from = (/\/topics\/[^/]*$/.test(r.pathname) ? 't:' : 'c:') + f;
+  } catch (_) {}
+  try { kept = sessionStorage.getItem('vd-course'); if (kept && !/^t:/.test(kept)) kept = 'c:' + kept; } catch (_) {}
+  const pick = [asked, askedT, from, kept].find((c) => c && mine.includes(c)) || mine[0] || null;
+  const chosen = pick && pick[0] === 'c' && [asked, from, kept].includes(pick) ? pick.slice(2) : null;
+  const cid = pick && pick[0] === 'c' ? pick.slice(2) : null, tid = pick && pick[0] === 't' ? pick.slice(2) : null;
+  if (pick) try { sessionStorage.setItem('vd-course', cid || pick); } catch (_) {}
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const crumbs = ['<li><a href="../index.html">Home</a></li>'];
   let step = '';
+  if (tid) {
+    const t = TOPICS[tid], i = t.o.indexOf(here);
+    crumbs.push(`<li><a href="../topics/${tid}.html">${esc(t.t)}</a></li>`);
+    const link = (j, rel, arrow) => {
+      const d = t.o[j]; if (!d) return '';
+      const n = esc(TITLES[d]), say = rel === 'prev' ? 'Previous' : 'Next';
+      return `<a class="vd-${rel}" rel="${rel}" href="${d}.html?topic=${tid}" title="${say} in ${esc(t.t)}: ${n}" aria-label="${say} in ${esc(t.t)}: ${n}">`
+        + (rel === 'prev' ? `<span aria-hidden="true">${arrow}</span> <span class="vd-t">${n}</span>` : `<span class="vd-t">${n}</span> <span aria-hidden="true">${arrow}</span>`) + '</a>';
+    };
+    step = link(i - 1, 'prev', '←') + link(i + 1, 'next', '→');
+  }
   if (cid) {
     const c = COURSES[cid], i = c.o.findIndex((x) => x[0] === here), unit = c.o[i][1];
     crumbs.push(`<li><a href="../${c.p || cid}.html${c.p ? '#' + cid : ''}">${esc(c.t)}</a></li>`);
@@ -1038,7 +1253,7 @@ NOTFOUND_CSS = '''
 
 def notfound_page(m):
     links = ''.join(f'<li><a href="{c["id"]}.html">{esc(c["title"])}</a></li>' for c in m['courses'])
-    links += f'<li><a href="misc.html">{esc(MISC["title"].rstrip("."))}</a></li>'
+    links += '<li><a href="index.html#topics">All demos by topic</a></li><li><a href="openstax.html">OpenStax by section</a></li>'
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -1064,7 +1279,7 @@ def notfound_page(m):
   <div class="wrap">
     <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Page not found</b></p>
     <h1>That page isn’t here</h1>
-    <p class="lede">The link may be old, or a demo may have a new name. Search for it below, or start from a course.</p>
+    <p class="lede">The link may be old, or a demo may have a new name. Search for it below, or start from a course or topic.</p>
     <p class="where" id="where"></p>
   </div>
 </header>
@@ -1120,6 +1335,24 @@ REDIRECT = '''<!doctype html>
 '''
 
 
+MISC_REDIRECT = '''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Generated by tools/courses.py: Misc became the Chemistry and biology topic (2026-10-28). -->
+<title>Misc · Virtual Physics Demos</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="topics/chemistry-biology.html">
+<script>location.replace('topics/chemistry-biology.html');</script>
+<meta http-equiv="refresh" content="0; url=topics/chemistry-biology.html">
+</head>
+<body>
+<p>These demos are now under <a href="topics/chemistry-biology.html">Chemistry and biology</a>, with every other demo in <a href="index.html#topics">All demos by topic</a>.</p>
+</body>
+</html>
+'''
+
+
 ALIASES = ("<script>/* old unit addresses (tools/courses.py, unit aliases) */ (function () { var a = __MAP__, h = location.hash.slice(1); "
            "if (a[h]) document.addEventListener('DOMContentLoaded', function () { location.replace('#' + a[h]); }); })();</script>")
 OLD_ANCHORS = ("<script>/* __SRC__ was folded into this page 2026-10-25: its old schedule links (#__SRC__, #__PREFIX__<topic>) open "
@@ -1148,20 +1381,28 @@ def build():
         dst = MERGED[c['id']]
         out[ROOT / f'{c["id"]}.html'] = (REDIRECT.replace('__SRC__', c['id']).replace('__DST__', dst).replace('__PREFIX__', SCHEDULE_PREFIX)
                                           .replace('__TITLE__', esc(c['title'])).replace('__DTITLE__', esc(next(x['title'] for x in m['courses'] if x['id'] == dst))))
-    out[ROOT / 'misc.html'] = misc_page(m, cards, notes)
+    t = load_topics(cards)
+    for f in t['families']:
+        for x in f['topics']:
+            out[ROOT / 'topics' / f'{x["id"]}.html'] = topic_page(f, x, t, m, cards, notes)
+    out[ROOT / 'openstax.html'] = openstax_page(m, cards, notes)
+    # Misc became the Chemistry and biology topic (2026-10-28); old links land there
+    out[ROOT / 'misc.html'] = MISC_REDIRECT
     idx = INDEX.read_text()
-    block = tiles(m, cards)
+    block = tiles(m, cards, t)
     # the homepage is the hero, the course tiles and the footer
     idx = re.sub(re.escape(TILE_START) + '.*?<footer>', lambda _: block + '\n\n<footer>', idx, count=1, flags=re.S)
     idx = re.sub(r'\n<script>.*?</script>', '', idx, count=1, flags=re.S)
     n_all = sum(len(sub['demos']) for sub in CATALOG_DATA()['subjects'])
-    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses)</span></li>',
-                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(m["courses"]) + 1}</strong> courses</span></li>', idx, count=1)
+    n_topics = sum(len(f['topics']) for f in t['families'])
+    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses)</span></li>(\s*<li><span><strong>\d+</strong> topics</span></li>)?',
+                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(m["courses"])}</strong> courses</span></li>'
+                 f'\n      <li><span><strong>{n_topics}</strong> topics</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
     idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n</style>', 1)
     out[INDEX] = idx
-    out[ROOT / 'search.js'] = search_js(m, cards)
-    out[ROOT / 'demos' / 'lib' / 'nav.js'] = nav_js(m, cards)
+    out[ROOT / 'search.js'] = search_js(m, cards, t)
+    out[ROOT / 'demos' / 'lib' / 'nav.js'] = nav_js(m, cards, t)
     out[ROOT / 'demos' / 'lib' / 'vd.js'] = course_ws_js(m, cards)
     out[ROOT / '404.html'] = notfound_page(m)
     return out
@@ -1174,7 +1415,7 @@ def main():
         for p in stale: print('out of date:', p.relative_to(ROOT))
         sys.exit(1 if stale else 0)
     for p in stale:
-        p.write_text(out[p]); print('wrote', p.relative_to(ROOT))
+        p.parent.mkdir(parents=True, exist_ok=True); p.write_text(out[p]); print('wrote', p.relative_to(ROOT))
 
 
 if __name__ == '__main__':
