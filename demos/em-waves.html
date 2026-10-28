@@ -472,13 +472,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function rgb(hex) { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
   let W = 0, H = 0, LY = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'side', axis: () => (W >= 640 ? 'x' : null), def: () => 0.63, min: 0.4, max: 0.8, label: 'Divider between the wave and the side panel', onChange: () => resize() });
   // label scale: larger in projector mode, capped by the pane so labels do not pile up
   const LS = () => (isProj() && LY ? Math.max(1, Math.min(1.4, Math.min(LY.main.w, LY.main.h) / 330)) : 1);
   function layout(W, H) {
     const ps = isProj() ? Math.max(1, Math.min(1.4, Math.min(W, H) / 420)) : 1;
     const sh = Math.round((S.ground ? 84 : 66) * ps), top = H - sh;
     let main, side;
-    if (W >= 640) { const mw = Math.round(W * 0.63); main = { x: 0, y: 0, w: mw, h: top }; side = { x: mw, y: 0, w: W - mw, h: top }; }
+    if (W >= 640) { const mw = Math.round(W * SPL.f()); main = { x: 0, y: 0, w: mw, h: top }; side = { x: mw, y: 0, w: W - mw, h: top }; }
     else { const mh = Math.round(top * 0.56); main = { x: 0, y: 0, w: W, h: mh }; side = { x: 0, y: mh, w: W, h: top - mh }; }
     return { wide: W >= 640, main, side, strip: { x: 0, y: top, w: W, h: sh } };
   }

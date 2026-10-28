@@ -210,6 +210,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       car: g('--car'), person: g('--person'), N: g('--N'), Wc: g('--W'), cable: g('--cable'), building: g('--building'), slab: g('--slab'), shaft: g('--shaft'), rail: g('--rail'), window: g('--window'), windowOff: g('--window-off'), door: g('--door'), lamp: g('--lamp'), cw: g('--cw'), carWall: g('--car-wall'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plots', axis: () => (W > 620 ? 'x' : null), def: () => (32 * ps() + (use3() ? Math.min(W * 0.42, 360 * ps()) : Math.min(W * 0.36, 260 * ps()))) / W, min: 0.2, max: 0.7, label: 'Divider between the elevator and the graphs', onChange: () => draw() });
   // scenery: which windows are lit on each floor, chosen once from a seeded generator
   function seeded(q) { return () => { q |= 0; q = (q + 0x6D2B79F5) | 0; let t = Math.imul(q ^ (q >>> 15), 1 | q); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   const rnd = seeded(31337), LIT = Array.from({ length: 11 }, () => [rnd() < 0.6, rnd() < 0.5]);
@@ -405,7 +407,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const VG = window.VDGear;
     const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
-    const shaftW = wide ? (use3() ? Math.min(W * 0.42, 360 * p) : Math.min(W * 0.36, 260 * p)) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
+    const shaftW = wide ? W * SPL.f() - 32 * p : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
     const yS = (y) => top + shaftH - (y + 0.5) * sc;
     rulerAt = use3() ? null : { m: 1 / sc, area: [sx, top, shaftW, shaftH] };
     const cw = shaftW * 0.6, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;

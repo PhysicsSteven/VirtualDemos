@@ -2218,5 +2218,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#mainPane"), q("#chartPane"), { key: 'chart', label: 'Divider between the orbit and the third law chart' }); })();</script>
 </body>
 </html>

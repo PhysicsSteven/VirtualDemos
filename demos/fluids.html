@@ -2915,5 +2915,7 @@ table.rows button:hover { color: var(--pos); }
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#sPane"), q("#gPane"), { key: 'graphs', label: 'Divider between the tank and the graphs' }); })();</script>
 </body>
 </html>

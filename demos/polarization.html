@@ -455,6 +455,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  let BH0 = 0.47; const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'refl', axis: () => (S.view === 'refl' ? (W >= 640 ? 'x' : 'y') : null), def: () => 0.56, min: 0.3, max: 0.8, label: 'Divider between the picture and the graph', onChange: () => drawAll() }); const SPLB = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'bench', axis: () => (S.view === 'bench' ? 'y' : null), def: () => BH0, min: 0.3, max: 0.75, label: 'Divider between the bench and the graphs', onChange: () => drawAll() });
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
@@ -492,8 +494,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout() {
     const ps = pscale();
     if (S.view === 'refl') {
-      if (W >= 640) { const sw = Math.round(W * 0.56); return { wide: true, scene: { x: 0, y: 0, w: sw, h: Hh }, plot: { x: sw, y: 0, w: W - sw, h: Hh } }; }
-      const sh = Math.round(Hh * 0.56); return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: Hh - sh } };
+      if (W >= 640) { const sw = Math.round(W * SPL.f()); return { wide: true, scene: { x: 0, y: 0, w: sw, h: Hh }, plot: { x: sw, y: 0, w: W - sw, h: Hh } }; }
+      const sh = Math.round(Hh * SPL.f()); return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: Hh - sh } };
     }
     const wide = W >= 640;
     const nEl = S.els.length, slots = [{ kind: 'state', i: 0 }];
@@ -503,7 +505,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rows = [slots.slice(0, perRow)];
     for (let i = perRow; i < slots.length; i += perRow - 1) rows.push(slots.slice(i, i + perRow - 1));
     // the bench takes the top part; the two plots share the rest
-    const bh = Math.round(Hh * (wide ? (G3.on ? 0.55 : 0.47) : (rows.length > 1 ? 0.56 : 0.42)));
+    BH0 = wide ? (G3.on ? 0.55 : 0.47) : (rows.length > 1 ? 0.56 : 0.42); const bh = Math.round(Hh * SPLB.f());
     const bench = { x: 0, y: 0, w: W, h: bh };
     let malus, nplot;
     if (wide) { const mw = Math.round(W * 0.58); malus = { x: 0, y: bh, w: mw, h: Hh - bh }; nplot = { x: mw, y: bh, w: W - mw, h: Hh - bh }; }
@@ -1068,11 +1070,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.view = p.view;
     if (p.view === 'bench') { S.input = { ...p.input }; S.els = p.els.map(([type, ang]) => ({ type, ang })); S.sel = p.sel; }
     else { S.n1 = p.n1; S.n2 = p.n2; S.thi = p.thi === 'B' ? +(brewster(p.n1, p.n2) / D2R).toFixed(1) : p.thi; S.rpol = p.rpol; S.glasses = p.glasses; }
-    markPreset(name); update(true);
+    markPreset(name); update(true); SPL.place(); SPLB.place();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('reset').addEventListener('click', () => applyPreset(S.preset || (S.view === 'refl' ? 'brewster' : 'malus')));
-  function setView(v) { if (S.view === v) return; S.view = v; update(false); }
+  function setView(v) { if (S.view === v) return; S.view = v; update(false); SPL.place(); SPLB.place(); }
   $('vBench').addEventListener('click', () => setView('bench'));
   $('vRefl').addEventListener('click', () => setView('refl'));
   const setInput = (k) => { S.input.kind = k; if (k !== 'lin' && S.sel < 0) S.sel = S.els.length ? 0 : -1; custom(); update(false); };

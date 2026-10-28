@@ -2427,5 +2427,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#dPane"), q("#ePane"), { key: 'plots', label: 'Divider between the capacitor and the graphs' }); VD.splitPanes(q("#ePane"), q("#gPane"), { key: 'two', label: 'Divider between the two graphs' }); })();</script>
 </body>
 </html>

@@ -165,6 +165,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const RMAX = 5e7, toS = (r) => Math.round(1000 * Math.sqrt((r - RE) / (RMAX - RE))), fromS = (v) => RE + (RMAX - RE) * (v / 1000) ** 2;
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plot', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.5 : 0.55), min: 0.3, max: 0.75, label: 'Divider between the orbit and the graph', onChange: () => draw() });
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), star: g('--star'), land: g('--land'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), panel: g('--panel'), panelLine: g('--panel-line'), dial: g('--dial'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
@@ -360,7 +362,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), wide = W > 640, K = clocks(S.r, S.mode, S.spin);
-    const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + (wide ? 20 : 40) * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
+    const pw = wide ? W * SPL.f() : W, ph = wide ? Hh : Hh * SPL.f(), cx = pw / 2, cy = ph / 2 + (wide ? 20 : 40) * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
     const gth = (S.spin ? WE : 0) * S.t, gx = cx + RE * sc * Math.cos(gth), gy = cy - RE * sc * Math.sin(gth);
     const th = S.mode === 'orbit' ? K.v2 / S.r * S.t : gth, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
     if (g3 && !use3()) g3.el.hidden = true;

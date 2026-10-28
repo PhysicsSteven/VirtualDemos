@@ -2523,5 +2523,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     shots: () => shots, state: () => ({ P: Object.assign({}, P), sel, anim: !!anim, scrubT, layers: Object.assign({}, layers), panels: panels.map((p) => ({ id: p.id, x: p.x, y: p.y, w: p.w, h: p.h, x0: p.x0, x1: p.x1, y0: p.y0, y1: p.y1 })), L: Object.assign({}, L), handles: viewHandles.map((h) => ({ id: h.id, pt: h.pt.slice() })) }) };
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".stage > .pane"), q(".stage > .pane + .pane"), { key: 'chart', label: 'Divider between the flight and the graph' }); })();</script>
 </body>
 </html>

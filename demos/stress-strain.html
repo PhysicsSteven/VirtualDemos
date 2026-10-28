@@ -293,6 +293,9 @@ table.rows input:focus { border-color: var(--accent); }
       wire: g('--wire'), s: g('--scol'), pl: g('--plast'), mass: g('--mass'), surface: g('--surface'),
       wall: g('--wall'), wallLine: g('--wall-line'), floor: g('--floor'), beam: g('--beam'), beamDark: g('--beam-dark'), metal: g('--metal'), metalDark: g('--metal-dark'), metalHi: g('--metal-hi'), gaugeFace: g('--gauge-face'), gaugeTick: g('--gauge-tick'), needle: g('--needle'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'tension', axis: () => (W > 640 && S.test === 'tension' ? 'x' : null), def: () => Math.min(260 * ps(), W * 0.34) / W, min: 0.2, max: 0.7, label: 'Divider between the wire and the graph', onChange: () => draw() });
+  const SPL2 = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'press', axis: () => (W > 640 && S.test !== 'tension' ? 'x' : null), def: () => Math.min(W * 0.52, 520 * ps()) / W, min: 0.3, max: 0.75, label: 'Divider between the press and the graph', onChange: () => draw() });
   const f = (v, d = 1) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
   const M = () => MATS[S.mat];
   const hidden = () => S.blind || S.mat === 'mystery';
@@ -325,7 +328,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (g3 && !use3()) g3.el.hidden = true;
     if (S.test !== 'tension') { drawSB(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), q = now(), wide = W > 640, colW = wide ? Math.min(260 * p, W * 0.34) : W, colH = wide ? H : H * 0.55;
+    const p = ps(), q = now(), wide = W > 640, colW = wide ? W * SPL.f() : W, colH = wide ? H : H * 0.55;
     // beam, wire, load, gauge
     $('tray').style.width = wide ? `${colW - 20}px` : '';
     const trayH = getComputedStyle($('tray')).position === 'absolute' ? $('tray').offsetHeight + 16 : 0, bx = colW / 2, top = 112 * p, L0 = colH - top - Math.max(120 * p, trayH + 70 * p), stretch = Math.min(1.6, 1 + q.e * 4);   // the drawing exaggerates the stretch
@@ -742,7 +745,7 @@ table.rows input:focus { border-color: var(--accent); }
   /* drawing: the press and the sample on a bench on the left (or top), stress against strain on the right (or below) */
   function drawSB() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), wide = W > 640, colW = wide ? Math.min(W * 0.52, 520 * p) : W, colH = wide ? H : H * 0.6, q = sbNow(), mode = q.mode, m = sbM();
+    const p = ps(), wide = W > 640, colW = wide ? W * SPL2.f() : W, colH = wide ? H : H * 0.6, q = sbNow(), mode = q.mode, m = sbM();
     $('press').style.width = wide ? `${colW - 20}px` : '';
     const trayH = getComputedStyle($('press')).position === 'absolute' ? $('press').offsetHeight + 16 : 0;
     // wall and floor as in the tension test, then a bench

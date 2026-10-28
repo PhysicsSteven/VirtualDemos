@@ -211,6 +211,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'surface', 'relief', 'bfield', 'sol', 'path', 'efield', 'cur', 'neg']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
     T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+/* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plots', axis: () => (W >= 700 ? 'x' : null), def: () => Math.min(W * 0.56, Hh) / W, min: 0.3, max: 0.75, label: 'Divider between the field and the graphs', onChange: () => draw() });
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   function si(x, unit, d = 3) { const a = Math.abs(x); if (a === 0) return `0 ${unit}`; const pre = [[1e3, 'k'], [1, ''], [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p']]; for (const [f, p] of pre) if (a >= f * 0.9995) return `${+(x / f).toPrecision(d)} ${p}${unit}`; return `${x.toExponential(d - 1)} ${unit}`; }
   const pathD = () => Math.hypot(S.cx, S.cy);
@@ -470,7 +472,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const slow = 6 / window_(S.w);
     if (narrow) { const vh = Math.min(W, Hh * 0.5); drawView(0, 0, W, vh, f); const ph = (Hh - vh - 16 * p) / 2; drawIt(8 * p, vh + 4 * p, W - 8 * p, vh + ph, f); drawEr(8 * p, vh + ph + 10 * p, W - 8 * p, Hh - 8 * p, f); }
-    else { const vw = Math.min(W * 0.56, Hh); drawView(0, 0, vw, Hh, f); const ph = (Hh - 30 * p) / 2; drawIt(vw + 6 * p, 10 * p, W - 10 * p, 10 * p + ph, f); drawEr(vw + 6 * p, 20 * p + ph, W - 10 * p, Hh - 10 * p, f); }
+    else { const vw = W * SPL.f(); drawView(0, 0, vw, Hh, f); const ph = (Hh - 30 * p) / 2; drawIt(vw + 6 * p, 10 * p, W - 10 * p, 10 * p + ph, f); drawEr(vw + 6 * p, 20 * p + ph, W - 10 * p, Hh - 10 * p, f); }
     txt(S.w.kind === 'steady' ? 'steady current' : `time slowed down ${Math.round(slow).toLocaleString('en-US')} times`, 10 * p, 14 * p, { s: 10, c: T.muted });
   }
 

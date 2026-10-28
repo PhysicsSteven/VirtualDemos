@@ -1961,5 +1961,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   VD.howTo({ src: 'media/how-this-works/potential-curves.mp4', poster: 'media/how-this-works/potential-curves.jpg' });
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#sPane"), q("#mPane"), { key: 'curve', label: 'Divider between the air track and the energy curve' }); })();</script>
 </body>
 </html>

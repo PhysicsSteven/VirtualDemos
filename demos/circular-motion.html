@@ -204,6 +204,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, angVel: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'fbd', axis: () => (W > 760 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.62 : 0.58), min: 0.4, max: 0.8, snaps: [0.5, 2 / 3, 0.75], label: 'Divider between the motion and the free body diagram', onChange: () => draw() });
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       w: g('--w'), n: g('--n'), fr: g('--fr'), tn: g('--tn'), net: g('--net'), vel: g('--vel'), road: g('--road'), 
@@ -240,7 +242,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), wide = W > 760, sw = wide ? W * 0.62 : W, sh = wide ? H : H * 0.58, q = situation(), bl = S.blind;
+    const p = ps(), wide = W > 760, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f(), q = situation(), bl = S.blind;
     const cx = sw / 2, cy = (wide ? H : sh) / 2 + 16 * p, R = Math.min(sw, sh) * 0.33;
     // the setting behind the motion: tabletop, road or coaster track (decoration only)
     if (G3.want && !G3.ok && !G3.tried && S.preset === 'bank') setView('3d');   // three.js loads the first time the banked curve shows
@@ -534,7 +536,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b, at: c.at != null ? c.at : S.at }); S.ang = 0; $('presetHint').textContent = c.hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  function geom() { const wide = W > 760, sw = wide ? W * 0.62 : W, sh = wide ? H : H * 0.58, p = ps(); return { cx: sw / 2, cy: (wide ? H : sh) / 2 + 16 * p, R: Math.min(sw, sh) * 0.33, sw, sh }; }
+  function geom() { const wide = W > 760, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f(), p = ps(); return { cx: sw / 2, cy: (wide ? H : sh) / 2 + 16 * p, R: Math.min(sw, sh) * 0.33, sw, sh }; }
   function release(kind) {   // leave the circle along the present velocity (and fall, for the loop)
     const g = geom(), loopView = S.preset === 'loop', th = S.ang, x = g.cx + g.R * (loopView ? Math.sin(th) : Math.cos(th)), y = g.cy + g.R * (loopView ? Math.cos(th) : -Math.sin(th));
     const pxPerM = g.R / S.r, vNow = loopView || S.preset === 'speed' ? situation().v : S.v, vx = (loopView ? Math.cos(th) : -Math.sin(th)) * vNow * pxPerM, vy = (loopView ? -Math.sin(th) : -Math.cos(th)) * vNow * pxPerM;

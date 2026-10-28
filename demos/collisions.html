@@ -2763,5 +2763,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#cPane"), q("#ePane"), { key: 'track', label: 'Divider between the air track and the graphs' }); VD.splitPanes(q("#ePane"), q("#pPane"), { key: 'graphs', label: 'Divider between the bar charts and the position graph' }); })();</script>
 </body>
 </html>

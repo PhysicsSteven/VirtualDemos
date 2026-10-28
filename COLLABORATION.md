@@ -5176,3 +5176,25 @@ Steve: the dashed "drive post" curve on the response graph isn't needed.
   curve and its label in the plot; not retaken, left for Steve to decide.
 - test_chladni passes (17); vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright 1280x800, no page errors.
   What's new entry added.
+
+## 2026-10-28 · Claude · Dividers: Physics I and Physics II
+
+Steve liked the pilot ("this'll be good for them all"), so the dividers go to every demo, course by course.
+- Library: `VD.splitPanes(a, b, o)` in `demos/lib/vd.js` (README row) for demos whose pieces are separate panes in one grid or
+  flex box. Its default is the panes' share as the CSS lays them out, so nothing moves until someone drags. Stacked flex panes
+  get a px basis (a stage whose height follows its content kept the old total otherwise) and a `data-vd-free` mark that lets
+  vd.css lift a CSS `min-height` floor on the pane (Holography, Resolution, Transformers had 400 to 440 px floors that stopped
+  the divider). The picture size grip's own floor still wins. Off at 820 px and narrower.
+- Physics I, panes: catenary, collisions, fluids, kepler-orbits, potential-curves, projectile-drag, rotation, springs, tides,
+  cavendish, terminal-velocity. One canvas (the fixed share became `SPL.f()`): circular-motion, gps-clocks,
+  gravity-near-earth, elevator, stress-strain (one per test), cart-launch, impulse, gyroscope, rocket.
+- Physics II, panes: capacitors, electron-diffraction, faraday, holography, ripple-tank, michelson, resolution, transformers,
+  thin-films. One canvas: displacement-current, induced-electric-field, em-waves, polarization (one for the reflection view,
+  one for the bench).
+- Left alone (no second piece to share with, or the pieces are fixed size): center-of-mass, energy-sources, equilibrium, units,
+  vectors, viscometer, motion-graphs, rotational-dynamics, instrument-builder, induction-at-work, magnetism-in-matter,
+  electrostatics-at-work, gauss-law.
+- Every new call has a fallback, so a stale cached vd.js keeps the default split (checked by serving the pre-pilot vd.js: no
+  page errors on any of the 38). Physics and keys untouched: drawing shares only.
+- Checks: each divider dragged in Playwright at 1368x912 and 400x860; Node tests pass; vdcheck `--only after` 0 problems and
+  `--only clip` 0 cut off on all 38 plus the 5 pilot demos. What's new entry added.

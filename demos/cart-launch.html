@@ -256,6 +256,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       cart: g('--cart'), cartTop: g('--cartTop'), ball: g('--ball'), track: g('--track'), trackHi: g('--trackHi'), bench: g('--bench'), benchDark: g('--benchDark'), board: g('--board'), boardFrame: g('--boardFrame'), wall: g('--wall'), floor: g('--floor'), vx: g('--vx'), vy: g('--vy'), v: g('--v'), g: g('--g'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+/* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plot', axis: () => 'y', def: () => 1 - Math.max(120 * ps(), Hh * 0.24) / Hh, min: 0.4, max: 0.85, snaps: [0.5, 2 / 3, 0.75], label: 'Divider between the track and the graph', onChange: () => draw() });
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   const tPre = () => { const p = P(); return p.phi > 0 ? Math.min(0.5, p.v / (G * Math.sin(p.phi))) : 0.5; };
   const tEnd = () => landing(P()).t + 0.4;
@@ -569,7 +571,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const p = ps(), pp = P(), L = landing(pp), wide = W > 620, plotH = Math.max(120 * p, Hh * 0.24), sceneTop = (wide ? 48 : 84) * p, sceneBot = Hh - plotH - 26 * p;
+    const p = ps(), pp = P(), L = landing(pp), wide = W > 620, plotH = Hh * (1 - SPL.f()), sceneTop = (wide ? 48 : 84) * p, sceneBot = Hh - plotH - 26 * p;
     const ph = pp.phi, cs = Math.cos(ph), sn = Math.sin(ph), cam = S.frame === 'cart';
     const t = S.t, cNow = cartAt(pp, t), bNow = ballAt(pp, Math.max(t, 0)), bPos = t <= 0 ? { s: cNow.s, n: 0 } : bNow;
     // fit the run (ground view) or a window around the cart (cart view)
