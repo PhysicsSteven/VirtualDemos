@@ -44,7 +44,15 @@
    VD3K.star(S, { r, color, glow })             an emissive sphere with a soft glow sprite (the Sun, a star); .tint(color)
    VD3K.planet(S, { r, color, tex, night, tilt, seg })   a lit sphere; tex is an image URL or data URL; z is its spin axis tilted by tilt (rad)
    VD3K.earth(S, { r, tilt }, cb)               loads lib/earth.js once (NASA Blue Marble) and calls cb(planet)
-   VD3K.ring(r, { color, dashed, opacity, seg })     a circle in the xy plane (an orbit) */
+   VD3K.ring(r, { color, dashed, opacity, seg })     a circle in the xy plane (an orbit)
+
+   Room reflections (Blender pilot, 2026-10-28)
+   VD3K.room(S, { hemi, strength })             a lab room rendered in Blender (tools/blender/lab_room.py, 360 degree panoramas
+                       lib/env/lab-light.jpg and lab-dark.jpg, about 20 kB each) set as scene.environment, so metal and glass
+                       reflect a real room. Follows the theme. Call it after the demo's own onTheme that sets the lights: it then
+                       scales hemi.intensity by hemi (default 0.85). When a map arrives, every standard material in the scene gets
+                       envMapIntensity metal (default 1) when its metalness is 0.2 or more, else matte (default 0.15), so wood and walls
+                       keep their color. Skipped on a low power device. S.onRoom(), when set, runs after a map arrives. Pictures only. */
 (function () {
   'use strict';
   var K = window.VD3K = window.VD3K || {};
@@ -285,5 +293,23 @@
     var g = new THREE.BufferGeometry().setFromPoints(pts), m = o.dashed ? new THREE.LineDashedMaterial({ color: o.color || '#8090a0', dashSize: r * 0.04, gapSize: r * 0.03, transparent: true, opacity: o.opacity || 0.7 })
       : new THREE.LineBasicMaterial({ color: o.color || '#8090a0', transparent: true, opacity: o.opacity || 0.7 });
     var l = new THREE.Line(g, m); if (o.dashed) l.computeLineDistances(); return l;
+  };
+
+  /* ---------- room reflections from a Blender render ---------- */
+  K.room = function (S, o) {
+    o = o || {}; if (VD3.lowPower()) return null;
+    var base = SRC.replace(/[^\/]*$/, '') + 'env/lab-', maps = {}, want = null, pm = new THREE.PMREMGenerator(S.r), hemi = o.hemi == null ? 0.85 : o.hemi;
+    var metal = o.metal == null ? 1 : o.metal, matte = o.matte == null ? 0.15 : o.matte;
+    var use = function (dk) {
+      var k = dk ? 'dark' : 'light'; want = k;
+      if (maps[k]) { S.scene.environment = maps[k]; return; }
+      if (maps[k] === null) return; maps[k] = null;
+      new THREE.TextureLoader().load(base + k + '.jpg', function (t) {
+        maps[k] = pm.fromEquirectangular(t).texture; t.dispose();
+        if (want === k) { S.scene.environment = maps[k]; S.scene.traverse(function (x) { [].concat(x.material || []).forEach(function (m) { if (m.isMeshStandardMaterial) m.envMapIntensity = m.metalness >= 0.2 ? metal : matte; }); }); S.key = ''; if (S.onRoom) S.onRoom(); }
+      }, undefined, function () { maps[k] = undefined; });
+    };
+    S.onTheme(function (dk) { S.hemi.intensity *= hemi; use(dk); });
+    return { use: use };
   };
 })();

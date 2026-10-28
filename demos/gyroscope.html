@@ -479,6 +479,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const { r, el, scene, cam, hemi, sun } = S3, M = (o) => new THREE.MeshStandardMaterial(o);
     sun.position.set(-0.7, -1.0, 2.2); hemi.position.set(0, 0, 1);   /* z is up here */ sun.shadow.radius = 4; sun.shadow.bias = -0.0004; sun.shadow.mapSize.set(1024, 1024);
     S3.onTheme((dk) => { hemi.intensity = dk ? 0.85 : 0.5; sun.intensity = dk ? 0.9 : 0.68; });   // dark tokens are deep colors, so the room is lit a little more
+    VD3K.room(S3); S3.onRoom = () => draw();   // reflections of a lab room rendered in Blender (pictures only), after the lights are set
     const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // a cylinder along z
     const unitZ = (r0, n) => { const g = cyl(r0, r0, 1, n || 16); g.translate(0, 0, 0.5); return g; };   // from z = 0 to z = 1, scaled to length
     const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; return x; };

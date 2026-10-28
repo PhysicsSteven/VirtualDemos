@@ -5418,3 +5418,11 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
   pair gives quiet spots λ/2 apart, no speakers no sound.
 - The meter now says "silent" where the pressures cancel exactly (the level is −∞ dB there; it used to print −221.6 dB from the
   floor inside level()). Records are unchanged. vdcheck after 0 problems, clip 0 cut off; Playwright drags at 1280 and 400 px.
+
+## 2026-10-28 · Claude · Blender pilot (branch blender-pilot, not on main yet)
+- Steve asked about using Blender for a more polished look. Pilot on one demo, waiting on Steve before any rollout.
+- `tools/blender/lab_room.py` builds a lab room in Blender 5.2 (pip package bpy, headless, Cycles) and renders a 360 degree
+  panorama from the bench, light and dark; `tools/blender/remap_equirect.py` turns it to three.js r128's layout for our z up
+  scenes. Results `demos/lib/env/lab-light.jpg` and `lab-dark.jpg` (about 20 kB each).
+- New helper `VD3K.room(S)` in vd3kit.js sets the room as scene.environment (metal reflects it fully, matte surfaces 0.15), skipped
+  on low power devices. Used only in the Gyroscope 3D view so far. Pictures only: no physics, readouts or controls changed.
