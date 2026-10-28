@@ -5221,3 +5221,26 @@ change his mind, so the topics live in their own file and nothing else depends o
 - Checks: `courses.py --check`, `theme.py --check`, Node map and topic tests pass; home, a topic page and openstax.html looked at
   in Playwright at 1280 and 390 px with no sideways scroll or page errors; breadcrumbs checked from a topic page, a course
   link and DNA (no course). DNA's own console error (applySpin) is there before this change too.
+## 2026-10-28 · Claude · Springs: Sandbox (pilot), springs in series and parallel
+
+Steve: PhET parity as capability, not one worksheet per feature; try a Sandbox inside a demo, Springs first. This closes the
+"Hooke's Law: springs in series and parallel" gap from the parity plan (#4).
+- `demos/springs.html`: a fourth System button, Sandbox. Hang springs (all 10.0 cm unstretched, k 5 to 100 N/m), hooks, bars and
+  blocks (0 to 1000 g, 4.0 cm tall) from a ceiling in any arrangement: Hang a spring below, Join to… (two hooks become one bar, so
+  springs go side by side), Remove (with anything that hung only from it), Let it settle, oil damping b on each block. Drag a block
+  to pull it; the rest of the rig finds its balance while it is held. Labels give each spring's k and tension; the energy bars and
+  a graph of every block against time sit in the other two panes. Ready made rigs: Two in series (opens pulled 5 cm, so Play
+  moves it), Two in parallel, Series and parallel, One spring, Two blocks, Start empty.
+- Physics (CORE, Node): the free nodes obey M y'' + b y' + K y = f with K = Σ k d dᵀ; massless hooks and bars are solved out
+  exactly (Schur complement), and the motion is e^(At) by scaling and squaring (exact to rounding, not a step by step integration).
+  Bars stay level on a guide (stated in the model line). Flat only: 3D is set to Flat while in the Sandbox and comes back after.
+- Tests: `curriculum/validation/test_springs_sandbox.cjs` (series 1/k = 1/k₁ + 1/k₂ with equal tensions, parallel k₁ + k₂ with
+  tensions in ratio, one spring ω = √(k/m), two block normal mode against (k/m)(3 − √5)/2, energy conserved and only falling with
+  damping, holding, loops refused). All Node suites pass (test_browser needs Firefox, as before).
+- Handout `springs.md`: Background paragraph on springs combined, Before the lab 5, a Springs in series and parallel procedure, a
+  new typed table "Springs combined" (one copy per arrangement), Analysis 7 (fit y = y₀ + s m, k_eff = g/s), Questions 7 and 8.
+  The earlier tables and numbers are unchanged. For GPT to verify.
+- Key (TeacherKeys): `tools/capture/springs-sandbox.cjs` reads the Sandbox readouts, merged as tables[2] of springs-data.json;
+  answers added; key rebuilt (9 to 13 pages). One spring k_eff = (19.996 ± 0.006) N/m, series 10.00, parallel (39.98 ± 0.02).
+- Checks: vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright at 1368, 1024, 400 px, light, dark and
+  Projector, no page errors. What's new entry added. The How this works video does not show the Sandbox (not retaken).
