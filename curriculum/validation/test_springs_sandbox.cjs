@@ -81,4 +81,35 @@ test('matrix exponential of a rotation', () => {
   const E = c.sbExpm([[0, 1], [-1, 0]], 13.7);
   close(E[0][0], Math.cos(13.7), 1e-12, 1e-14); close(E[0][1], Math.sin(13.7), 1e-12, 1e-14);
 });
+test('oil on one block only: per block b; a lone block decays as the damped oscillator', () => {
+  const m = 0.25, k = 16, b = 0.8, w0 = Math.sqrt(k / m), be = b / (2 * m), wd = Math.sqrt(w0 * w0 - be * be);
+  const rig = { nodes: [ceil, { id: 1, m, b }], springs: [{ id: 1, a: 0, b: 1, k }] };
+  const md = c.sbModel(rig, g, 0);
+  for (const t of [0.2, 1.3, 4.4]) close(c.sbStep(md, [0.03, 0], t)[0], 0.03 * Math.exp(-be * t) * (Math.cos(wd * t) + be / wd * Math.sin(wd * t)), 1e-10, 1e-14);
+  const r2 = { nodes: [ceil, { id: 1, m: 0.3, b: 0.5 }, { id: 2, m: 0.3 }], springs: [{ id: 1, a: 0, b: 1, k: 20 }, { id: 2, a: 1, b: 2, k: 20 }] };
+  const m2 = c.sbModel(r2, g, 0); assert.equal(JSON.stringify(m2.bs), '[0.5,0]');
+});
+
+test('shaken ceiling: steady amplitude kA/√((k − mω²)² + (bω)²), phase from rest; massless hooks follow', () => {
+  const m = 0.2, k = 20, b = 0.4, A = 0.01, w = 7;
+  const rig = { nodes: [ceil, { id: 1, m, b }], springs: [{ id: 1, a: 0, b: 1, k }] };
+  const md = c.sbModel(rig, g, 0, { A, w });
+  close(md.Fe[0], k, 1e-14);
+  // from the steady state itself: u = Re(U e^{iωt}), U = kA/(k − mω² + ibω)
+  const re = k - m * w * w, im = b * w, D = re * re + im * im, Ur = k * A * re / D, Ui = -k * A * im / D;
+  const z0 = [Ur, -w * Ui, 1, 0];
+  for (const t of [0.15, 2.7, 9.9]) close(c.sbStep(md, z0, t)[0], Ur * Math.cos(w * t) - Ui * Math.sin(w * t), 1e-9, 1e-13);
+  close(Math.hypot(Ur, Ui), k * A / Math.sqrt(D), 1e-14);
+  // series through a hook: the same block sees k_eff, and the hook sits between ceiling and block
+  const rs = { nodes: [ceil, { id: 1, m: 0 }, { id: 2, m, b }], springs: [{ id: 1, a: 0, b: 1, k: 40 }, { id: 2, a: 1, b: 2, k: 40 }] };
+  const ms = c.sbModel(rs, g, 0, { A, w }); close(ms.Fe[0], 20, 1e-12); close(ms.Ke[0][0], 20, 1e-12);
+  const y = ms.allY([ms.yEq[0] + 0.02], A); close(y.get(1), (A + ms.yEq[0] + 0.02) / 2, 1e-12, 1e-15, 'equal springs: the hook halfway');
+  close(y.get(0), A, 0);
+});
+
+test('undamped drive exactly at resonance grows as (kA/2mω) t sin ωt', () => {
+  const m = 0.5, k = 18, w = Math.sqrt(k / m), A = 0.004;
+  const md = c.sbModel({ nodes: [ceil, { id: 1, m }], springs: [{ id: 1, a: 0, b: 1, k }] }, g, 0, { A, w });
+  for (const t of [1, 5.5, 12]) close(c.sbStep(md, [0, 0, 1, 0], t)[0], k * A / (2 * m * w) * t * Math.sin(w * t), 1e-9, 1e-13);
+});
 console.log(`${n} tests passed`);

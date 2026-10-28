@@ -5298,3 +5298,17 @@ Steve: the Sandbox felt clunky going back and forth to the side panel; wanted dr
 Steve: courses to the top, and OpenStax with thumbnails like the courses. Order is now search, Courses, OpenStax by section, All
 demos by topic. Each volume is a course style tile (`tile(..., href=)`) with four demo thumbnails spread through that volume in
 section order; the old `.vol` card styles are gone.
+
+## 2026-10-28 · Claude · Springs Sandbox: damping and driving
+
+Steve: "add dampening and driving to the sandbox". Two new parts in the tray of `demos/springs.html`:
+- Oil cup: drop it on a block to damp that block alone (force −b v on it, b set with a grip, in kg/s). Each block has its own b.
+- Shaker: drop it on the ceiling; the ceiling moves as Y = A cos ωt (grips for A and ω). Readouts give ω, f, the period and
+  each block's swing over the last drive period; the graph shows the ceiling as a dashed line. Bin removes either part.
+- Physics stays exact: the drive is carried as cos ωt and sin ωt in the state, so the system is still linear and autonomous
+  and the matrix exponential gives the motion exactly, resonance included. Springs to the ceiling feel k(Y − y); massless
+  hooks and bars are condensed with the drive included. No energy bar for oil losses while driven (energy is not conserved).
+- New tests in `test_springs_sandbox.cjs`: per block oil decay, steady amplitude kA/√((k − mω²)² + (bω)²) with a hook halfway,
+  undamped resonance growth (kA/2mω) t sin ωt. Handout About bullet updated; key capture rerun identical.
+- Checks: Playwright drops and grips at 1368 and 400 px; vdcheck after and clip 0; 1368, 400, 360 px; light and dark.
+  GPT: please verify the steady amplitude and resonance formulas against the demo.
