@@ -5146,3 +5146,16 @@ Release, Start or the like visibly does something. This is now a site standard (
   start it, but Pause and Resume do nothing visible until a ride is chosen. Making it open mid ride would move the first
   "at rest" row of the apparent weight key, so that is left for Steve to decide.
 - What's new entry added.
+
+## 2026-10-28 · Claude · Gyroscope: the wheel's turning shows
+
+Steve: give the wheel a mark so it reads as spinning.
+- `demos/gyroscope.html`: a red mark near the rim in the flat view (disk and rim wheel; it had none) and a bigger, white edged
+  red mark on the 3D disk face. The marks turn at the true angle ω_s t whenever the eye can follow them: at most 40° per frame at
+  the measured frame rate (`followable`; the three bars repeat every 120°, so faster would alias, the wagon wheel effect). Slow
+  motion divides the shown rate by 10, so at 3000 rpm and 60 frames/s the wheel is seen turning 5 times a second. Faster, it is
+  drawn blurred (a faint red ring), as the eye sees a real wheel, with a note: "wheel 50.0 turns/s: a blur to the eye (Slow
+  motion or Strobe shows it turn)"; two lines on a phone. Before, the blur threshold was a fixed 15 rad/s.
+- Physics, gate times, keys unchanged. The How this works video still matches (it predates the note; nothing in it is wrong).
+- test_gyroscope passes; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright with WebGL at desktop and 390 px,
+  flat and 3D, no page errors. What's new entry added.
