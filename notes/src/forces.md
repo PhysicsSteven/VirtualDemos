@@ -17,7 +17,7 @@ Students should know Newton's second law and the idea of components. The free bo
 
 ## Running it in class
 
-1. **Push on a level floor.** F = 40 N on 10 kg with μs = 0.5: static friction is exactly 40 N, less than μsN = 49.1 N, so nothing moves. Raise F past 49 N; once sliding, friction drops to μkN = 29.4 N. At 60 N, a = 3.06 m/s².
+1. **Push on a level floor.** F = 60 N on 10 kg with μs = 0.5: more than μsN = 49.1 N, so the block slides; friction is then μkN = 29.4 N and a = 3.06 m/s². Lower F to 40 N and static friction is exactly 40 N, less than μsN, so nothing moves.
 2. **Ramp: when does it slip?** With μs = 0.5 the block holds at 20°. Tilt with ↑ ↓: it slips at 26.6° (tan θ = μs), for any mass.
 3. **Pull at an angle.** 50 N at 30° above the floor lifts 25 N of the weight off: N = 73.1 N, a = 2.14 m/s². Ask Q2.
 4. **Hanging mass on a table.** a = 1.96 m/s² and T = 15.7 N, less than m₂g = 19.6 N.

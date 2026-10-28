@@ -5129,3 +5129,20 @@ scene). Pilot first, then course by course if he likes it.
 - `spin-resonance.html`: two dividers from 821 px wide (bench / screens, oscilloscope | chart recorder), same defaults.
 - Physics untouched; test_forces, test_chladni, test_pendulum, test_main_lab_controls pass; vdcheck `--only after` and
   `--only clip` 0 problems on all five.
+## 2026-10-28 · Claude · Every demo's first press does something
+
+Steve: a demo need not play when it opens, but its opening state must not sit at equilibrium, so the first press of Play,
+Release, Start or the like visibly does something. This is now a site standard (memory: opening-state-standard).
+- `demos/forces.html`: Push on a level floor (the opening setup) was F = 40 N against μs N = 49.1 N, so Release did nothing.
+  It is now F = 60 N: kinetic friction μk N = 29.4 N, a = (60 − 29.4)/10 = 3.06 m/s². Hint and `notes/src/forces.md` say so
+  (40 N still shows static friction holding). Physics untouched; test_forces passes. The Forces worksheet key starts from the
+  Ramp: when does it slip? setup, so no key value moves; Steve said the How this works videos stay as they are.
+- Sweep of all 138 demos (Playwright at 1280x800, three.js served locally): screenshot the page as it opens, again 1.5 s later,
+  then press the first Play/Release/Start/Launch/Fire style button and compare frames after. 67 demos already move as they
+  open; 30 move after the press; 33 have no play control (knob explorers, step buttons, rides and presets) and were checked by
+  their own action button where they have one (Beam on, Scan, Charge, Stroke the rod, Clap, Jump, Fly in, Fire, Run QA).
+  Forces was the only demo whose opening press did nothing.
+- Borderline, not changed: Elevator opens with its clock running and the car at rest on the ground floor; the ride buttons
+  start it, but Pause and Resume do nothing visible until a ride is chosen. Making it open mid ride would move the first
+  "at rest" row of the apparent weight key, so that is left for Steve to decide.
+- What's new entry added.
