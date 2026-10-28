@@ -2,7 +2,7 @@
 // Gyroscope: the exact heavy symmetric top against conservation laws, steady precession and the fast top formula.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('gyroscope', 'G,MW,RW,KS,GY_VERSION,tops,phidot,deriv,rk4,energy,steadyRate,fastTop,start,fitLine,readingsCSV,deriv,retune,ueff,steadyTilt');
+const c = core('gyroscope', 'G,MW,RW,KS,GY_VERSION,tops,phidot,deriv,rk4,energy,steadyRate,fastTop,start,fitLine,readingsCSV,deriv,retune,ueff,steadyTilt,pivotTorque,TIP_ROLL');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -55,5 +55,18 @@ group('steady tilt: level for the steady start, and the axle wobbles about the n
   let s = b.s, lo = 9, hi = -9; for (let i = 0; i < 20000; i++) { s = c.rk4(b.c, s, 2e-4); lo = Math.min(lo, s.th); hi = Math.max(hi, s.th); }
   assert(lo < eq && eq < hi, 'wobbles about it'); near(lo, eq - (Math.PI / 2 - eq), 0.05, 'nearly symmetric about it');
   console.log('   1500 → 3000 rpm: steady tilt', ((Math.PI / 2 - eq) * 180 / Math.PI).toFixed(2), '° above level; wobble', ((Math.PI / 2 - hi) * 180 / Math.PI).toFixed(2), 'to', ((Math.PI / 2 - lo) * 180 / Math.PI).toFixed(2), '°');
+});
+group('pivot friction: none changes nothing; a turning tip hurries the precession and the axle rises at about τ_f/(I_s ω_s), a still tip makes it sink', () => {
+  const a = c.start(0.5, 0.1, 3000, 0, false), b = c.start(0.5, 0.1, 3000, 0, false, 0, true); let sa = a.s, sb = b.s;
+  for (let i = 0; i < 5000; i++) { sa = c.rk4(a.c, sa, 2e-4); sb = c.rk4(b.c, sb, 2e-4); }
+  assert(sa.th === sb.th && sa.ph === sb.ph && sb.pp === a.c.pphi, 'zero friction: identical, p_φ unchanged');
+  const tilt = (rpm, roll, T) => { const m = c.start(0.5, 0.1, rpm, 0, false, 0.02, roll); let s = m.s, acc = 0, n = 0; for (let t = 0; t < T; t += 2e-4) { s = c.rk4(m.c, s, 2e-4); if (t > T - 1) { acc += Math.PI / 2 - s.th; n++; } } return { mean: acc / n, s, m }; };
+  const up = tilt(3000, true, 5), dn = tilt(3000, false, 5), pred = 0.02 / (c.tops(0.5, 0.1).Is * 100 * Math.PI);
+  const rateUp = up.mean / 4.5, rateDn = -dn.mean / 4.5;   /* mean tilt over the last second, about 4.5 s in */
+  assert(rateUp > 0.9 * pred && rateUp < 1.3 * pred, `rises near τ_f/(I_s ω_s): ${rateUp} vs ${pred}`);
+  assert(rateDn > 0.8 * pred && rateDn < 1.3 * pred, `sinks near τ_f/(I_s ω_s): ${rateDn} vs ${pred}`);
+  near(c.pivotTorque({ tf: 0.02, roll: true, w3: 300 }, 0, 1), 0, 1e-15, 'no torque when upright');
+  assert(c.pivotTorque({ tf: 0.02, roll: true, w3: 300 }, 1, 2) > 0 && c.pivotTorque({ tf: 0.02, roll: false, w3: 300 }, 1, 2) < 0, 'signs');
+  console.log('   20 mN·m at 3000 rpm: rises', (rateUp * 180 / Math.PI).toFixed(2), '°/s, sinks', (rateDn * 180 / Math.PI).toFixed(2), '°/s; τ_f/(I_s ω_s) =', (pred * 180 / Math.PI).toFixed(2), '°/s');
 });
 console.log(`${n} gyroscope test groups passed`);

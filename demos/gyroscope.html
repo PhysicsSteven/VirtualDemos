@@ -92,10 +92,11 @@ table.rows input:focus { border-color: var(--accent); }
 
     <div class="setup-card" id="setupCard" role="group" aria-labelledby="setupTitle">
       <span class="setup-title" id="setupTitle">Set up the gyroscope</span>
-      <span class="setup-note">Spin and d also change it while it runs.</span>
+      <span class="setup-note">Spin, d and friction also change it while it runs.</span>
       <div><div class="slider-head"><label for="sW">Spin rate</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="0" max="6000" step="100"></div>
       <div><div class="slider-head"><label for="sD">Pivot to wheel center d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.05" max="0.2" step="0.01"></div>
       <div><div class="slider-head"><label for="sB">Axle tilt above horizontal at release</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="-30" max="30" step="5"></div>
+      <div><div class="slider-head"><label for="sF">Friction at the pivot</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="0" max="40" step="1"></div>
     </div>
 
     <aside class="rail">
@@ -108,6 +109,8 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="none" aria-pressed="false">No spin: it falls</button>
           <button type="button" data-p="smooth" aria-pressed="false">Smooth start</button>
           <button type="button" data-p="tilt" aria-pressed="false">Axle tilted up</button>
+          <button type="button" data-p="rise" aria-pressed="false">Friction: it rises</button>
+          <button type="button" data-p="sink" aria-pressed="false">Friction: it sinks</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -115,6 +118,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Gyroscope</h2>
         <div class="seg" role="group" aria-label="Wheel" id="wheelSeg"><button type="button" data-w="disk" aria-pressed="true">Solid disk</button><button type="button" data-w="rim" aria-pressed="false">Rim heavy wheel</button></div>
+        <div class="seg" role="group" aria-label="Axle tip in the pivot cup" id="tipSeg"><button type="button" data-tip="roll" aria-pressed="true" title="The axle turns with the wheel, so its tip rubs round the pivot cup: friction hurries the precession">Turning tip</button><button type="button" data-tip="still" aria-pressed="false" title="The wheel turns on bearings and the axle does not spin: friction holds the precession back">Still tip</button></div>
         <label class="check"><input type="checkbox" id="mystery"><span>Mystery wheel: hide its moment of inertia</span></label>
         <label class="check"><input type="checkbox" id="push"><span>Start it precessing at the steady rate (no wobble)</span></label>
         <label class="check"><input type="checkbox" id="vecs" checked><span>Show L, the torque and the change in L</span></label>
@@ -153,7 +157,7 @@ table.rows input:focus { border-color: var(--accent); }
           <p class="hint">In 3D, Bench looks across the bench, Ride along turns the camera round the post with the axle so the wobble stands out, and From above looks down on the precession. The gold line traces the end of the axle over the last 4 s and the red one the tip of the L arrow, so the wobble (nutation) shows as loops or cusps along the circle; the strip marks each pass of the gate with a small triangle, and the gate's lamp lights as the axle passes. Strobe shows the wheel lit by a flashing lamp whose rate is 0.25 flashes a second below the wheel's turns per second, so its marks seem to creep round once every 4 s instead of blurring (the rates are shown beside it).</p>
           <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
         </details>
-        <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p><p class="hint">Changing the spin or d while it runs: the change acts along the axle (a motor in the hub, or sliding the wheel along the axle), so it exerts no torque across the axle. The axle's direction and its angular momentum across the axle carry over (so with a new d its turning rates scale by I_1 old/I_1 new) and the spin takes the new value at once. The axle then wobbles about a new steady tilt: the dashed gold line on the strip, where the effective potential for the tilt is least. The gate starts timing afresh after each change. Tilt at release and the steady start apply at release only.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p><p class="hint">Changing the spin or d while it runs: the change acts along the axle (a motor in the hub, or sliding the wheel along the axle), so it exerts no torque across the axle. The axle's direction and its angular momentum across the axle carry over (so with a new d its turning rates scale by I_1 old/I_1 new) and the spin takes the new value at once. The axle then wobbles about a new steady tilt: the dashed gold line on the strip, where the effective potential for the tilt is least. The gate starts timing afresh after each change. Tilt at release and the steady start apply at release only.</p><p class="hint">Friction at the pivot: the axle's tip sits in a cup on the post and rubs on its side. The friction is dry (a fixed size, the slider), and its torque about the post is taken as τ_f sin θ, since the tip presses on the cup's side as far from the post's axis as the axle leans (θ from the upward vertical); its torque across the axle is left out. It pushes the axle round toward the rate at which the tip would roll round the cup without slipping: half the spin rate for a tip that turns with the wheel (a 2 mm tip in a 4 mm cup), far faster than the precession, so it hurries the precession and the axle rises; zero for a still tip (the wheel on bearings), so it holds the precession back and the axle sinks. Gravity's torque is horizontal and cannot change the vertical part of L; the friction's torque about the post can, at the rate dL_z/dt = τ_f sin θ, and since L_z ≈ I_s ω_s cos θ the axle rises or sinks at about τ_f/(I_s ω_s). The spin is held constant (a motor in the hub). For scale, a friction coefficient of 0.3 on a 2 mm tip under the wheel's 4.9 N weight gives about 3 mN·m. At low spin the hurried axle can be driven into a fast whirl round the post, the other steady precession, where the tip rolls without slipping.</p></details>
         </div></details>
       </section>
     </aside>
@@ -169,12 +173,21 @@ table.rows input:focus { border-color: var(--accent); }
   function tops(k, d) { const Is = k * MW * RW * RW; return { Is, I1: Is / 2 + MW * d * d, Mgd: MW * G * d }; }
   // Heavy symmetric top. θ is the axle's angle from the upward vertical, φ its azimuth about the post. w3 = spin about the axle (conserved),
   // pphi = I1 sin²θ φ' + Is w3 cosθ (conserved). θ'' = sinθ (I1 φ'² cosθ − Is w3 φ' + Mgd)/I1.
-  const phidot = (c, th) => (c.pphi - c.Is * c.w3 * Math.cos(th)) / (c.I1 * Math.sin(th) ** 2);
-  function deriv(c, s) { const pd = phidot(c, s.th), sn = Math.sin(s.th); return { th: s.thd, thd: sn * (c.I1 * pd * pd * Math.cos(s.th) - c.Is * c.w3 * pd + c.Mgd) / c.I1, ph: pd }; }
+  const phidot = (c, th, pp = c.pphi) => (pp - c.Is * c.w3 * Math.cos(th)) / (c.I1 * Math.sin(th) ** 2);
+  /* Friction at the pivot (c.tf, N·m, 0 = frictionless): the axle's tip sits in a cup on the post. Its torque about the post's vertical
+     axis changes p_φ, the only part of the angular momentum it can change here (its torque across the axle is left out). Dry (Coulomb)
+     friction of fixed size, smoothed over 0.02 rad/s, pushing the axle round toward the rate at which its tip would roll round the cup
+     without slipping. The tip leans against the cup's side in the direction the axle leans, so the lever arm about the post, and the
+     torque, go as sin θ: none when the axle is upright. A tip that turns with the wheel (c.roll) rolls at ω_s × TIP_ROLL, far faster than the precession, so the
+     friction hurries the precession and the axle rises; a still tip (the wheel on bearings) rolls at 0, so the friction holds the
+     precession back and the axle sinks. The spin is held constant (a motor in the hub). */
+  const TIP_ROLL = 0.5;   // tip radius / cup radius: a 2 mm tip on a 4 mm cup
+  const pivotTorque = (c, th, pd) => (c.tf ? c.tf * Math.sin(th) * Math.tanh(((c.roll ? c.w3 * TIP_ROLL : 0) - pd) / 0.02) : 0);
+  function deriv(c, s) { const pp = s.pp ?? c.pphi, pd = phidot(c, s.th, pp), sn = Math.sin(s.th); return { th: s.thd, thd: sn * (c.I1 * pd * pd * Math.cos(s.th) - c.Is * c.w3 * pd + c.Mgd) / c.I1, ph: pd, pp: pivotTorque(c, s.th, pd) }; }
   function rk4(c, s, h) {
-    const add = (a, k, f) => ({ th: a.th + f * k.th, thd: a.thd + f * k.thd, ph: a.ph + f * k.ph });
-    const k1 = deriv(c, s), k2 = deriv(c, add(s, k1, h / 2)), k3 = deriv(c, add(s, k2, h / 2)), k4 = deriv(c, add(s, k3, h));
-    return { th: s.th + h / 6 * (k1.th + 2 * k2.th + 2 * k3.th + k4.th), thd: s.thd + h / 6 * (k1.thd + 2 * k2.thd + 2 * k3.thd + k4.thd), ph: s.ph + h / 6 * (k1.ph + 2 * k2.ph + 2 * k3.ph + k4.ph) };
+    const p0 = { ...s, pp: s.pp ?? c.pphi }, add = (a, k, f) => ({ th: a.th + f * k.th, thd: a.thd + f * k.thd, ph: a.ph + f * k.ph, pp: a.pp + f * k.pp });
+    const k1 = deriv(c, p0), k2 = deriv(c, add(p0, k1, h / 2)), k3 = deriv(c, add(p0, k2, h / 2)), k4 = deriv(c, add(p0, k3, h));
+    return { th: s.th + h / 6 * (k1.th + 2 * k2.th + 2 * k3.th + k4.th), thd: s.thd + h / 6 * (k1.thd + 2 * k2.thd + 2 * k3.thd + k4.thd), ph: s.ph + h / 6 * (k1.ph + 2 * k2.ph + 2 * k3.ph + k4.ph), pp: p0.pp + h / 6 * (k1.pp + 2 * k2.pp + 2 * k3.pp + k4.pp) };
   }
   const energy = (c, s) => 0.5 * c.I1 * (s.thd ** 2 + phidot(c, s.th) ** 2 * Math.sin(s.th) ** 2) + c.Mgd * Math.cos(s.th);
   // steady precession at fixed θ: I1 cosθ φ'² − Is w3 φ' + Mgd = 0, the slow root (exactly Mgd/(Is w3) when the axle is horizontal)
@@ -185,19 +198,19 @@ table.rows input:focus { border-color: var(--accent); }
     return 2 * c.Mgd / (B + Math.sqrt(disc));   // = (B − √disc)/(2A), written without cancellation
   }
   const fastTop = (c) => c.Mgd / (c.Is * c.w3);
-  function start(k, d, rpm, beta, steady) {   // beta: tilt above horizontal at release
-    const t = tops(k, d), w3 = rpm * 2 * Math.PI / 60, th = Math.PI / 2 - beta, c = { ...t, w3 };
+  function start(k, d, rpm, beta, steady, tf = 0, roll = true) {   // beta: tilt above horizontal at release; tf, roll: pivot friction
+    const t = tops(k, d), w3 = rpm * 2 * Math.PI / 60, th = Math.PI / 2 - beta, c = { ...t, w3, tf, roll };
     const pd = steady && w3 > 0 ? steadyRate(c, th) : 0;
     c.pphi = c.I1 * Math.sin(th) ** 2 * (isFinite(pd) ? pd : 0) + c.Is * w3 * Math.cos(th);
-    return { c, s: { th, thd: 0, ph: 0 } };
+    return { c, s: { th, thd: 0, ph: 0, pp: c.pphi } };
   }
   // A change made while it runs (spin by a motor in the hub, d by sliding the wheel along the axle) acts along the axle, so it exerts
   // no torque across it: the axle's direction and its transverse angular momentum I1(θ', φ' sinθ) carry over, the spin takes the
   // new value. So θ' and φ' scale by I1_old/I1_new (1 when only the spin changes) and p_φ is recomputed.
-  function retune(sim, k, d, rpm) {
-    const { c, s } = sim, n = { ...tops(k, d), w3: rpm * 2 * Math.PI / 60 }, r = c.I1 / n.I1, pd = phidot(c, s.th) * r;
+  function retune(sim, k, d, rpm, tf = sim.c.tf, roll = sim.c.roll) {
+    const { c, s } = sim, n = { ...tops(k, d), w3: rpm * 2 * Math.PI / 60, tf, roll }, r = c.I1 / n.I1, pd = phidot(c, s.th, s.pp ?? c.pphi) * r;
     n.pphi = n.I1 * Math.sin(s.th) ** 2 * pd + n.Is * n.w3 * Math.cos(s.th);
-    return { c: n, s: { th: s.th, thd: s.thd * r, ph: s.ph } };
+    return { c: n, s: { th: s.th, thd: s.thd * r, ph: s.ph, pp: n.pphi } };
   }
   // effective potential for θ with p_φ and the spin fixed; its minimum is the tilt at which the axle would precess steadily (θ'' = 0)
   // with its present angular momentum, the level the wobble rocks about
@@ -224,7 +237,7 @@ table.rows input:focus { border-color: var(--accent); }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Gyroscope Precession virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# wheel_mass_kg,${MW}`, `# wheel_radius_m,${RW}`, `# g_m_per_s2,${G}`,
-      '# model,"exact heavy symmetric top; constant spin about the axle; frictionless pivot; massless axle"',
+      '# model,"exact heavy symmetric top; constant spin about the axle; frictionless pivot except rows with start = friction; massless axle"',
       '# rounding,"P to 0.01 s from the gate (one full turn of the axle round the post); Omega and 1/omega_s computed from the row"', '# noise,none',
       'row,wheel,start,tilt_deg,spin_rpm,d_m,P_s,Omega_rad_per_s,inv_spin_s'];
     rows.forEach((r, i) => { const rpm = cellNum(r.rpm), P = cellNum(r.P);
@@ -241,9 +254,11 @@ table.rows input:focus { border-color: var(--accent); }
     slow: { rpm: 1200, d: 0.1, beta: 0, push: false, hint: 'Less spin, less angular momentum: the same torque turns it faster, and the dip (down to 21° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now 7% below Mgd/(I_s ω_s): the simple formula needs fast spin.' },
     none: { rpm: 0, d: 0.1, beta: 0, push: false, hint: 'No spin, no angular momentum along the axle: the torque simply tips it over, like any unsupported rod.' },
     smooth: { rpm: 1500, d: 0.1, beta: 0, push: true, hint: 'Given a sideways push at exactly the steady precession rate as it is released: no dip, no wobble. This is the motion the simple formula Ω = Mgd/(I_s ω_s) describes.' },
-    tilt: { rpm: 3000, d: 0.1, beta: 20, push: false, hint: 'The axle starts 20° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within 1% of Mgd/(I_s ω_s). Released from rest it wobbles between 20° and 9°.' }
+    tilt: { rpm: 3000, d: 0.1, beta: 20, push: false, hint: 'The axle starts 20° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within 1% of Mgd/(I_s ω_s). Released from rest it wobbles between 20° and 9°.' },
+    rise: { rpm: 3000, d: 0.1, beta: 0, push: false, tf: 20, roll: true, hint: 'Friction at the pivot, 20 mN·m, from an axle tip that turns with the wheel: the tip rubs round its cup much faster than the axle precesses, so the friction pushes the precession along. Hurried precession lifts the axle, at first about τ_f/(I_s ω_s) = 4° a second, and it stands up in about 20 s.' },
+    sink: { rpm: 3000, d: 0.1, beta: 0, push: false, tf: 20, roll: false, hint: 'The same friction from a still tip (the wheel on bearings): now it drags against the precession, holding it back, and the axle sinks at about 4° a second until it falls, after about 15 s.' }
   };
-  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, slow: false, fdt: 1 / 60, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], tip: [], gates: [], gate: null, lastP: null, rows: [] };
+  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, slow: false, tf: 0, roll: true, fdt: 1 / 60, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], tip: [], gates: [], gate: null, lastP: null, rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -259,7 +274,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
     return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
 
-  function reset() { S.sim = start(kNow(), S.d, S.rpm, S.beta * Math.PI / 180, S.push); S.t = 0; S.fell = false; S.live = false; S.marks = []; S.trace = []; S.trail = []; S.tip = []; S.gates = []; S.gate = null; S.lastP = null; setRun(false); draw(); readouts(); }
+  function reset() { S.sim = start(kNow(), S.d, S.rpm, S.beta * Math.PI / 180, S.push, S.tf / 1000, S.roll); S.t = 0; S.fell = false; S.live = false; S.marks = []; S.trace = []; S.trail = []; S.tip = []; S.gates = []; S.gate = null; S.lastP = null; setRun(false); draw(); readouts(); }
   // ---------- drawing: oblique view ----------
   const AZ = -0.55, EL = 0.32;
   function proj(x, y, z, cx, cy, sc) { const xr = x * Math.cos(AZ) - y * Math.sin(AZ), yr = x * Math.sin(AZ) + y * Math.cos(AZ);
@@ -382,7 +397,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * p; ctx.beginPath(); let first = true; for (const [t, v] of S.trace) { if (S.t - t > span) continue; const x = X(t), y = Y(v); first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; } ctx.stroke();
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(S.fell ? 'It fell.' : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
+    ctx.fillText(S.fell ? (S.fell === 'up' ? 'It stood up.' : 'It fell.') : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
   }
   /* the 3D view's strip: the same trace, steady tilt line and change marks as the flat one, on a panel with a scale in degrees, the
      level line, a small triangle at each pass of the gate and the tilt now; the gate timer sits on a chip over the scene */
@@ -423,7 +438,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const yN = Math.max(sy0 + 6 * p, Math.min(sy1 - 6 * p, Y(now))); ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(sx1, Y(now), 3.5 * p, 0, 7); ctx.fill();
     ctx.font = `600 ${10.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink; ctx.fillText(nowTxt, sx1 + 7 * p, yN);
     // the gate timer chip, as in the flat view, over the scene
-    const gt = S.fell ? 'It fell.' : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`;
+    const gt = S.fell ? (S.fell === 'up' ? 'It stood up.' : 'It fell.') : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`;
     ctx.font = `700 ${14 * p}px ${T.mono}`; const gw = ctx.measureText(gt).width, vb = stage.querySelector('.viewbar'), vr = vb.offsetLeft + vb.offsetWidth + 8, row = vr + gw + 40 < W - 10;   /* beside the buttons where it fits, else under them */
     const gx = row ? vr : 10, gy = row ? vb.offsetTop + (vb.offsetHeight - 22 * p) / 2 : vb.offsetTop + vb.offsetHeight + 6;
     ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; ctx.beginPath(); ctx.roundRect(gx, gy, gw + 30, 22 * p, 6); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
@@ -436,6 +451,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const { c, s } = S.sim, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, tilt = (Math.PI / 2 - s.th) * 180 / Math.PI;
     let h = dd('Spin ω_s', `${f(c.w3, 1)} rad/s`) + dd('Axle tilt now', `${f(tilt, 2)}°`);
     h += dd('Gate: last full turn', S.lastP ? `${S.lastP.toFixed(2)} s` : '—') + dd('Torque Mgd sin θ', `${f(c.Mgd * Math.sin(s.th) * 1000, 1)} mN·m`);
+    if (c.tf) { const tq = pivotTorque(c, s.th, phidot(c, s.th)) * 1000; h += dd('Friction torque about the post', `${f(tq, 1)} mN·m (${tq > 0 ? 'hurries' : 'holds back'} the precession)`, true); }
     if (hiddenI()) h += `<div class="wide"><dt>I, L and the predicted rate</dt><dd class="ok">${S.mystK != null && !S.blind ? 'Mystery wheel: hidden. Find I_s from your timings.' : 'hidden in Blind'}</dd></div>`;
     else {
       const ft = c.w3 > 0 ? fastTop(c) : NaN, sr = c.w3 > 0 ? steadyRate(c, s.th) : NaN;
@@ -661,21 +677,24 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#wheelSeg button')) b.setAttribute('aria-pressed', String(S.mystK == null && b.dataset.w === S.wheel));
-    $('sW').value = S.rpm; $('oW').textContent = `${S.rpm} rpm`; $('sD').value = S.d; $('oD').textContent = `${f(S.d * 100, 0)} cm`; $('sB').value = S.beta; $('oB').textContent = `${S.beta}°`;
+    $('sW').value = S.rpm; $('oW').textContent = `${S.rpm} rpm`; $('sD').value = S.d; $('oD').textContent = `${f(S.d * 100, 0)} cm`; $('sB').value = S.beta; $('oB').textContent = `${S.beta}°`; $('sF').value = S.tf; $('oF').textContent = S.tf ? `${S.tf} mN·m` : 'none';
+    for (const b of document.querySelectorAll('#tipSeg button')) b.setAttribute('aria-pressed', String((b.dataset.tip === 'roll') === S.roll));
     $('push').checked = S.push; $('mystery').checked = S.mystK != null; $('presetHint').textContent = PRESETS[S.preset] ? PRESETS[S.preset].hint : '';
   }
-  function applyPreset(k) { const q = PRESETS[k]; S.preset = k; S.rpm = q.rpm; S.d = q.d; S.beta = q.beta; S.push = q.push; sync(); reset(); }
+  function applyPreset(k) { const q = PRESETS[k]; S.preset = k; S.rpm = q.rpm; S.d = q.d; S.beta = q.beta; S.push = q.push; S.tf = q.tf || 0; S.roll = q.roll ?? true; sync(); reset(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   const edit = () => { S.preset = 'custom'; sync(); reset(); fit(); };
   /* spin and d while it runs: the change is applied to the moving gyroscope (retune), the gate starts timing afresh and the strip
      marks the moment; while it is held, as before, a change puts it back at the release position */
   function live() {
-    S.preset = 'custom'; sync(); S.sim = retune(S.sim, kNow(), S.d, S.rpm); S.live = true; S.gate = null; S.lastP = null;
+    S.preset = 'custom'; sync(); S.sim = retune(S.sim, kNow(), S.d, S.rpm, S.tf / 1000, S.roll); S.live = true; S.gate = null; S.lastP = null;
     S.marks.push(S.t); while (S.marks.length && S.t - S.marks[0] > 4.2) S.marks.shift(); fit(); draw(); readouts();
   }
   $('sW').addEventListener('input', (e) => { S.rpm = +e.target.value; S.run ? live() : edit(); });
   $('sD').addEventListener('input', (e) => { S.d = +e.target.value; S.run ? live() : edit(); });
   $('sB').addEventListener('input', (e) => { S.beta = +e.target.value; edit(); });
+  $('sF').addEventListener('input', (e) => { S.tf = +e.target.value; S.run ? live() : edit(); });
+  $('tipSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-tip]'); if (b) { S.roll = b.dataset.tip === 'roll'; S.run ? live() : edit(); } });
   $('push').addEventListener('change', (e) => { S.push = e.target.checked; edit(); });
   $('vecs').addEventListener('change', (e) => { S.vecs = e.target.checked; draw(); });
   $('wheelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) { S.wheel = b.dataset.w; if (S.mystK != null) capStatus(`Mystery wheel off: it was I_s = ${S.mystK.toFixed(3)} MR² = ${sci(S.mystK * MW * RW * RW)} kg·m².`); S.mystK = null; edit(); } });
@@ -694,13 +713,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function advance(dt) {
     const sim = S.sim, n = Math.max(1, Math.round(dt / H));
     for (let i = 0; i < n; i++) {
-      const ph0 = sim.s.ph; sim.s = rk4(sim.c, sim.s, dt / n); S.t += dt / n;
+      const ph0 = sim.s.ph; sim.s = rk4(sim.c, sim.s, dt / n); sim.c.pphi = sim.s.pp; S.t += dt / n;
       // gate at φ = 0 (mod 2π): time between successive forward crossings
       const k0 = Math.floor(ph0 / (2 * Math.PI)), k1 = Math.floor(sim.s.ph / (2 * Math.PI));
       if (k1 > k0) { const tc = S.t - (dt / n) * (sim.s.ph - 2 * Math.PI * k1) / (sim.s.ph - ph0); if (S.gate != null) S.lastP = Math.round((tc - S.gate) * 100) / 100; S.gate = tc; S.gates.push(tc); }
       /* the 3D traces: the axle's direction every 4 ms of simulated time, finer than a frame so the wobble's cusps stay sharp */
       if (!S.tip.length || S.t - S.tip[S.tip.length - 1][0] >= 0.004) { const sn = Math.sin(sim.s.th); S.tip.push([S.t, sn * Math.cos(sim.s.ph), sn * Math.sin(sim.s.ph), Math.cos(sim.s.th), S.d]); }
-      if (sim.s.th > 2.6 || sim.s.th < 0.05) { S.fell = true; setRun(false); break; }
+      if (sim.s.th > 2.6 || sim.s.th < 0.05) { S.fell = sim.s.th < 0.05 ? 'up' : true; setRun(false); break; }
     }
     S.trace.push([S.t, (Math.PI / 2 - sim.s.th) * 180 / Math.PI]); while (S.trace.length && S.t - S.trace[0][0] > 4.2) S.trace.shift();
     while (S.tip.length && S.t - S.tip[0][0] > 4) S.tip.shift(); while (S.gates.length && S.t - S.gates[0] > 4.2) S.gates.shift();
@@ -718,7 +737,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const wheelKey = () => (S.mystK != null ? 'mystery' : S.wheel);
   $('capture').addEventListener('click', () => {
     if (!S.lastP) { capStatus('Release it and let the gate time at least one full turn round the post.'); return; }
-    S.rows.push({ wheel: wheelKey(), start: S.live ? 'changed' : S.push ? 'steady' : 'rest', tilt: String(S.beta), rpm: String(S.rpm), d: S.d.toFixed(2), P: S.lastP.toFixed(2) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
+    S.rows.push({ wheel: wheelKey(), start: S.tf ? 'friction' : S.live ? 'changed' : S.push ? 'steady' : 'rest', tilt: String(S.beta), rpm: String(S.rpm), d: S.d.toFixed(2), P: S.lastP.toFixed(2) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
   $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put

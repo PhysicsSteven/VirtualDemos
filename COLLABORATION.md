@@ -5349,3 +5349,24 @@ Fields of Currents, Two Speaker, Optics Bench). First: a Sandbox scene in `demos
 - Bars: momentum and K per cart, start (outline) vs now; graph: x of every cart against time. Handout About bullet added.
 - Checks: vdcheck after 0 problems, clip 0 cut off; Playwright build by dragging at 1368 and 400 px, no page errors.
   GPT: please verify the event rules and the model text.
+
+## 2026-10-28 · Claude · Gyroscope: friction at the pivot
+
+Steve: add friction so the demo shows a gyroscope rising when its precession is hurried (and sinking when held back).
+- Model (CORE, stated in the More about this fold): the axle's tip sits in a cup on the post. Dry friction of fixed size τ_f
+  (slider "Friction at the pivot", 0 to 40 mN·m, default 0) gives a torque about the post's vertical axis τ_f sin θ (the tip
+  presses on the cup's side as far from the axis as the axle leans; none upright), smoothed by tanh over 0.02 rad/s, toward the
+  rate at which the tip would roll round the cup without slipping: ω_s/2 for a tip that turns with the wheel (2 mm tip, 4 mm cup;
+  `TIP_ROLL`), 0 for a still tip (wheel on bearings). p_φ is now integrated (dp_φ/dt = that torque, `pivotTorque`); the friction's
+  torque across the axle is left out; spin held constant. With L_z ≈ I_s ω_s cos θ the axle rises or sinks at about τ_f/(I_s ω_s).
+- Seg "Turning tip | Still tip"; presets "Friction: it rises" (3000 rpm, 20 mN·m, turning: about 4°/s, stands up after 20.0 s,
+  "It stood up.") and "Friction: it sinks" (still tip: falls after 14.7 s). Readout "Friction torque about the post". Friction
+  and tip change live while running (retune). Rows captured with friction have start = friction; the CSV model line says so.
+- At low spin (1200 rpm, 20 mN·m, turning tip) the hurried axle settles into the fast precession, a whirl at 62.8 rad/s = the
+  rolling rate, at 17.9° up: the equations' other steady root; stated in the fold.
+- Zero friction is bit identical to before (new test group), so keys and video are unchanged. test_gyroscope 9 groups pass
+  (20 mN·m at 3000 rpm: rises 3.66°/s, sinks 4.38°/s over the first 4.5 s, against τ_f/(I_s ω_s) = 4.05°/s). vdcheck `--only
+  after` 0 problems, `--only clip` 0 cut off; Playwright with WebGL, desktop and 390 px, flat and 3D, no page errors.
+  What's new entry added.
+
+**For GPT:** please check the friction model (torque about the vertical τ_f sin θ toward the tip's rolling rate) and the rise rate.
