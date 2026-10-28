@@ -2,7 +2,7 @@
 // Vectors and Relative Motion: vector algebra identities and the river crossing.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos,G_FT,ftForces,ftHolds,forceTable,ftHeld,FT_GEOM,ftPlay,ftRest');
+const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos,G_FT,ftForces,ftHolds,forceTable,ftHeld,ftHeldG,FT_GEOM,ftPlay,ftRest');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -105,5 +105,32 @@ group('force table ring: the pin\'s play; pin out, the ring rests at the weighte
   // with friction the ring stops at a place the friction can hold, before (or at) the ideal rest point
   const st = [{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.29, deg: 253 }], rf = c.ftRest(st, 0.002 * g), r0 = c.ftRest(st, 0);
   assert(rf.held && c.ftHeld(rf.S, rf.F.map((F) => c.scale(1 / c.mag(F), F)), 0.002 * g)); assert(c.mag(rf.x) <= c.mag(r0.x) + 1e-9 && c.mag(rf.x) > 0.5 * c.mag(r0.x));
+});
+group('force table ring with the pin in: clear of the pin when the rest point is within the play, against it otherwise', () => {
+  const g = c.G_FT, play = c.ftPlay(), f = 0.001 * g;
+  // ftHeldG with equal half lengths is ftHeld
+  for (let k = 0; k < 300; k++) { const dirs = [0, 1, 2].map(() => c.fromPolar(1, Math.random() * 360)), S = [Math.random() * 0.06 - 0.03, Math.random() * 0.06 - 0.03];
+    assert.equal(c.ftHeldG(S, dirs.map((u) => [u, f])), c.ftHeld(S, dirs, f)); }
+  // centered within friction: the ring stays at the center with the pin in, as with it out
+  const bal = [{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.25, deg: 253 }];
+  assert(c.ftHolds(bal, f)); assert.equal(c.mag(c.ftRest(bal, f, g, null, true).x), 0);
+  // nearly balanced (the setup Steve saw stuck to the pin on 2026-10-28): the rest point is well inside the play, so the ring
+  // rests there clear of the pin, at the same place as with the pin out
+  for (const st of [[{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.25, deg: 250 }], [{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.245, deg: 253 }], [{ m: 0.15, deg: 317 }, { m: 0.2, deg: 108 }, { m: 0.1, deg: 238 }]]) {
+    for (const fN of [0, f]) {
+      const rin = c.ftRest(st, fN, g, null, true), rout = c.ftRest(st, fN, g, null, false), d = c.mag(rout.x);
+      if (d < play) { assert(rin.held && !rin.onPin, 'clear of the pin'); near(c.mag(c.sub(rin.x, rout.x)), 0, 1e-12, 'same rest point'); assert(d > 0); }
+      else { assert(rin.onPin); near(c.mag(rin.x), play, 1e-12); }
+    }
+  }
+  const near1 = c.ftRest([{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.25, deg: 250 }], f, g, null, true);
+  assert(!near1.onPin && c.mag(near1.x) > 1e-4 && c.mag(near1.x) < 0.5 * play, `rests ${c.mag(near1.x) * 1000} mm out`);
+  // far from balance (the default 0.100 kg at 230°): against the pin, at the play, where the pull along the pin's edge is zero
+  // (ideal pulleys) and the pull points outward, so the pin pushes back
+  for (const st of [[{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.1, deg: 230 }], [{ m: 0.4, deg: 0 }, { m: 0.1, deg: 120 }, { m: 0.1, deg: 240 }]]) {
+    const r = c.ftRest(st, 0, g, null, true), u = c.scale(1 / c.mag(r.x), r.x);
+    assert(r.held && r.onPin && !r.rim); near(c.mag(r.x), play, 1e-12);
+    assert(c.dot(r.S, u) > 0, 'pin pushes back'); near(c.crossZ(u, r.S) / c.mag(r.S), 0, 1e-5, 'no pull along the pin');
+  }
 });
 console.log(`${n} vectors test groups passed`);

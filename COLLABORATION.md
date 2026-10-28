@@ -5418,3 +5418,21 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
   pair gives quiet spots λ/2 apart, no speakers no sound.
 - The meter now says "silent" where the pressures cancel exactly (the level is −∞ dB there; it used to print −221.6 dB from the
   floor inside level()). Records are unchanged. vdcheck after 0 problems, clip 0 cut off; Playwright drags at 1280 and 400 px.
+
+## 2026-10-28 · Claude · Force table: the ring no longer sticks to the pin (Steve)
+
+Steve: with the pin in, a nearly balanced ring sat "stuck" against the pin. Not a regression (`demos/vectors.html` last changed
+2026-10-25; today's dividers, opening state sweep and trays never touched it): since 2026-10-23 any setup that was not centered
+within friction was drawn against the pin, 14.5 mm toward the net pull, however small the imbalance. That was wrong physics.
+- CORE: `ftRest(strings, fN, g, geo, pin)` with `pin` true keeps the ring's center within the play (14.5 mm). It slides from the
+  center along the net pull as with the pin out; if the rest point is inside the play it stops there, clear of the pin; otherwise
+  it meets the pin and slides around it until the pull along the pin's edge is held (the pin's push, any N ≥ 0 along −x̂, joins
+  the friction test). New `ftHeldG` (the zonotope test with a half length per generator). Returns `onPin`.
+- Status reads "Ring off center, clear of the pin" or "... against the pin"; a "Pin in" readout gives where it rests (side only
+  in Blind). "Centered" is unchanged (ftHolds at the center), so Record, the CSV, the handout and the key stand; the forces are
+  still computed with every string pointing at the pin. More about this text updated. Example: 0.150 kg at 20°, 0.200 kg at
+  110°, 0.250 kg at 252° rests 1.6 mm off center (was 14.5 mm, against the pin); the opening 0.100 kg at 230° still rests on the pin.
+- Test: test_vectors.cjs new group (9 groups): ftHeldG = ftHeld for equal caps, centered stays at 0, near balance rests clear of
+  the pin at the pin out rest point (to 1e-12 m), far from balance on the pin at the play with no pull along its edge.
+- Checked top view and 3D at 1280 and 390 px (Playwright): 252° shows the ring 1.6 mm out, clear of the pin; 253° centers.
+  `vdcheck --only after vectors` 0 problems. Keys unchanged; no handout change.

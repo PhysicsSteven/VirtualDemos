@@ -227,7 +227,7 @@
         </div>
         <p class="capstatus" id="capStatus" role="status"></p>
         <div class="scroll"><table class="fttbl" id="rowsTbl"><thead><tr><th>#</th><th>Strings, mass and angle</th><th>Ring</th><th></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = 9.81 m/s². Angles are counterclockwise from the 0° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimeters of play. The model table's sizes are chosen: strings leave the table 20 cm from the center, the ring is 4 cm across (to the middle of its 3 mm wire) and the pin is 8 mm across, so an unbalanced ring rests against the pin with its center 14.5 mm toward the net pull. With the pin pulled, the ring is pulled toward the pulleys with the hanging weights and can rest only where those pulls add to zero, the weighted geometric median of the pulleys (the point that minimizes the sum of each weight times its distance, which is where the hangers hang lowest). It is shown sliding slowly along the net pull and stopping at the first place the pulley friction can hold it; when one string outweighs the rest the ring runs toward the rim and is stopped there, as a real ring would be when a hanger reaches the floor. The 3D view is drawn to the same scale on a table 36 cm across; each hanger drops by as much as the ring moves toward its pulley. A hanger is drawn as 50 g with brass slotted masses (thickness from their mass and the density of brass, 8500 kg/m³) making up the rest; the split is a picture, only the total matters. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = 9.81 m/s². Angles are counterclockwise from the 0° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimeters of play. The model table's sizes are chosen: strings leave the table 20 cm from the center, the ring is 4 cm across (to the middle of its 3 mm wire) and the pin is 8 mm across, so the ring's center can move 14.5 mm before its wire touches the pin. An unbalanced ring slides along the net pull the way it does with the pin out (below); it comes to rest clear of the pin when that place is within 14.5 mm of the center, and otherwise against the pin, where it settles at the point on the pin that the pulls hold. With the pin pulled, the ring is pulled toward the pulleys with the hanging weights and can rest only where those pulls add to zero, the weighted geometric median of the pulleys (the point that minimizes the sum of each weight times its distance, which is where the hangers hang lowest). It is shown sliding slowly along the net pull and stopping at the first place the pulley friction can hold it; when one string outweighs the rest the ring runs toward the rim and is stopped there, as a real ring would be when a hanger reaches the floor. The 3D view is drawn to the same scale on a table 36 cm across; each hanger drops by as much as the ring moves toward its pulley. A hanger is drawn as 50 g with brass slotted masses (thickness from their mass and the density of brass, 8500 kg/m³) making up the rest; the split is a picture, only the total matters. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.</p></details>
       </section>
 
       <section>
@@ -290,29 +290,53 @@
     }
     return true;
   }
+  // the same test with a half length for each generator: gens [[û, c], ...], −S in {Σ δ_i û_i, |δ_i| ≤ c_i}
+  function ftHeldG(S, gens) {
+    const gs = gens.filter((q) => q[1] > 0);
+    if (!gs.length) return mag(S) <= 1e-9;
+    for (const [u] of gs) for (const n of [[-u[1], u[0]], u]) {
+      const cap = gs.reduce((t, [v, c]) => t + c * Math.abs(dot(v, n)), 0);
+      if (Math.abs(dot(S, n)) > cap + 1e-12 * (1 + cap)) return false;
+    }
+    return true;
+  }
   // The model table (chosen sizes, in m): strings leave the table at radius R, where they meet the tops of the pulleys; a ring of
-  // radius ring (to the middle of its wire, wire thick) sits around a pin of radius pin. With the pin in, an unbalanced ring rests
-  // against the pin, its center moved by the play, ring − wire/2 − pin, toward the net pull.
+  // radius ring (to the middle of its wire, wire thick) sits around a pin of radius pin. The ring's center can move up to the play,
+  // ring − wire/2 − pin, before its wire touches the pin.
   const FT_GEOM = { R: 0.20, ring: 0.020, wire: 0.003, pin: 0.004 };
   const ftPlay = (geo) => { const q = geo || FT_GEOM; return q.ring - q.wire / 2 - q.pin; };
-  // Pin out: the light ring is pulled by tensions W_i = m_i g toward the pulley points p_i, so it can rest only where
+  // The light ring is pulled by tensions W_i = m_i g toward the pulley points p_i, so free of the pin it can rest only where
   // Σ W_i (p_i − x)/|p_i − x| = 0, the minimum of U(x) = Σ W_i |x − p_i| (the hangers' potential energy, up to a constant: each
   // hanger drops by as much as the ring moves toward its pulley). That is the weighted geometric median of the pulleys (Varignon's
-  // frame). The ring is taken to slide slowly down U along the net pull, with no overshoot, and to stop at the first place where
-  // tensions within W_i ± fN can hold it. If one string outweighs the rest it is pulled toward that pulley; the slide is stopped at
-  // 0.8 R and reported as reaching the rim.
-  function ftRest(strings, fN, g, geo) {
-    const gg = g || G_FT, R = (geo || FT_GEOM).R, W = strings.map((q) => q.m * gg), P = strings.map((q) => fromPolar(R, q.deg)), lim = 0.8 * R;
+  // frame). The ring is taken to slide slowly down U from the center, with no overshoot, and to stop at the first place where
+  // tensions within W_i ± fN can hold it.
+  // Pin out: if one string outweighs the rest it is pulled toward that pulley; the slide is stopped at 0.8 R and reported as
+  // reaching the rim. Pin in (pin true): the ring's center stays within the play of the center. A rest point inside the play is
+  // reached without touching the pin; otherwise the ring meets the pin and slides around it, the pin pushing it back along −x̂
+  // with any force N ≥ 0, until the pull along the pin's edge is held (onPin).
+  function ftRest(strings, fN, g, geo, pin) {
+    const gg = g || G_FT, R = (geo || FT_GEOM).R, W = strings.map((q) => q.m * gg), P = strings.map((q) => fromPolar(R, q.deg));
+    const lim = pin ? ftPlay(geo) : 0.8 * R, BIG = 1e3 * (W.reduce((a, b) => a + b, 0) + 1);
     const pull = (x) => { const dirs = P.map((p) => { const d = sub(p, x), L = mag(d); return L > 1e-12 ? scale(1 / L, d) : [0, 0]; }); return { dirs, F: dirs.map((u, i) => scale(W[i], u)) }; };
-    let x = [0, 0], ds = R * 2e-4, prev = null;
+    /* on the pin: S − N x̂ with N in [0, 2 BIG] is S − BIG x̂ plus a generator x̂ of half length BIG */
+    const held = (S, dirs, x, touch) => { if (!touch) return ftHeld(S, dirs, fN); const u = scale(1 / mag(x), x); return ftHeldG(sub(S, scale(BIG, u)), dirs.map((d) => [d, fN]).concat([[u, BIG]])); };
+    const out = (x, F, S, h, touch, k) => ({ x, F, S, held: h, rim: !pin && !h, onPin: !!pin && touch, steps: k });
+    let x = [0, 0], ds = R * 2e-4, prev = null, touch = false;
     for (let k = 0; k < 40000; k++) {
-      const { dirs, F } = pull(x), S = F.reduce(add, [0, 0]), n = mag(S);
-      if (ftHeld(S, dirs, fN) || ds < R * 1e-10 || n < 1e-12) return { x, F, S, held: true, rim: false, steps: k };
-      if (prev && dot(prev, S) < 0) ds /= 2;   // stepped past the minimum along the path: halve the step
-      prev = S; x = add(x, scale(ds / n, S));
-      if (mag(x) >= lim) { x = scale(lim / mag(x), x); const q = pull(x); return { x, F: q.F, S: q.F.reduce(add, [0, 0]), held: false, rim: true, steps: k }; }
+      const { dirs, F } = pull(x), S = F.reduce(add, [0, 0]);
+      if (held(S, dirs, x, touch) || ds < R * 1e-10) return out(x, F, S, true, touch, k);
+      let D = S;
+      if (touch) { const u = scale(1 / mag(x), x), sr = dot(S, u); if (sr > 0) D = sub(S, scale(sr, u)); }   /* the pin takes the outward part */
+      const n = mag(D); if (n < 1e-12) return out(x, F, S, true, touch, k);
+      if (prev && dot(prev, D) < 0) ds /= 2;   // stepped past the minimum along the path: halve the step
+      prev = D; x = add(x, scale(ds / n, D)); touch = false;
+      if (mag(x) >= lim) {
+        x = scale(lim / mag(x), x);
+        if (!pin) { const q = pull(x); return out(x, q.F, q.F.reduce(add, [0, 0]), false, false, k); }
+        touch = true;
+      }
     }
-    const q = pull(x); return { x, F: q.F, S: q.F.reduce(add, [0, 0]), held: false, rim: false, steps: -1 };
+    const q = pull(x); return { x, F: q.F, S: q.F.reduce(add, [0, 0]), held: false, rim: false, onPin: touch, steps: -1 };
   }
   function forceTable(strings, fN, g) {
     const gg = g || G_FT, F = ftForces(strings, gg), S = F.reduce(add, [0, 0]);
@@ -637,7 +661,7 @@
     ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted; if (FT.arrows || !bl) ctx.fillText(`Arrows: the table's radius is ${ARROW_N} N`, 10 * p, ty + 18 * p);
   }
   function ftStatus(res) {
-    if (!FT.pinOut) return res.centered ? 'Ring centered' : 'Ring off center, against the pin';
+    if (!FT.pinOut) return res.centered ? 'Ring centered' : FT.rest && !FT.rest.onPin ? 'Ring off center, clear of the pin' : 'Ring off center, against the pin';
     if (res.centered) return 'Pin out: the ring stays centered';
     return FT.rest && FT.rest.rim ? 'Pin out: the ring runs toward the rim' : 'Pin out: the ring slides off center';
   }
@@ -694,6 +718,10 @@
       const where = res.centered ? 'It stays at the center.' : FT.rest.rim ? `It runs toward the rim${bl ? '' : `, toward the ${f(angleDeg(x), 0)}° mark`}, until a hanger reaches the floor.` : bl ? 'It comes to rest off center.' : `It comes to rest ${f(d, 1)} cm from the center, toward the ${f(angleDeg(x), 0)}° mark.`;
       h += `<div class="wide"><dt>Pin out</dt><dd class="ok">${where}</dd></div>`;
     }
+    else if (FT.rest && !res.centered) {
+      const d = mag(FT.rest.x) * 1000, side = FT.rest.onPin ? 'against the pin' : 'clear of the pin';
+      h += `<div class="wide"><dt>Pin in</dt><dd class="ok">${bl ? `It comes to rest off center, ${side}.` : `It comes to rest ${f(d, 1)} mm from the center, toward the ${f(angleDeg(FT.rest.x), 0)}° mark, ${side}.`}</dd></div>`;
+    }
     h += '</dl>';
     if (bl) { $('ftOut').innerHTML = h + '<dl class="readout"><div class="wide"><dt>Forces, components, net force, equilibrant</dt><dd class="ok">hidden in Blind</dd></div></dl>'; return; }
     h += '<div class="scroll"><table class="fttbl"><thead><tr><th></th><th>F = mg (N)</th><th>F_x (N)</th><th>F_y (N)</th></tr></thead><tbody>';
@@ -704,12 +732,10 @@
     h += `<div class="wide"><dt>Equilibrant of ${who}: −(the sum of their forces)</dt><dd>${f(res.Emag, 3)} N at ${f(res.Edeg, 1)}°, the weight of ${f(res.Em, 3)} kg</dd></div></dl>`;
     $('ftOut').innerHTML = h;
   }
-  // where the ring goes: centered, against the pin toward the net pull, or (pin out) where it comes to rest
+  // where the ring comes to rest: with the pin in, within the pin's play (clear of the pin or against it); with the pin out, anywhere
   function ftTarget() {
-    const res = ftRes();
-    FT.rest = FT.pinOut ? ftRest(ftStrings(), ftFricN()) : null;
-    if (FT.pinOut) return FT.rest.x;
-    return res.centered || !(res.net > 0) ? [0, 0] : scale(ftPlay() / res.net, res.S);
+    FT.rest = ftRest(ftStrings(), ftFricN(), G_FT, FT_GEOM, !FT.pinOut);
+    return ftRes().centered ? [0, 0] : FT.rest.x;
   }
   function ftSet(jump) { FT.ringTo = ftTarget(); if (jump || reduce) FT.ringNow = FT.ringTo.slice(); draw(); readouts(); ftMassBar(); glDirty = true; }
   function ftMassBar() {
