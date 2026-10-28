@@ -5326,3 +5326,10 @@ side, Empty track) lay the rig on a level, frictionless track between two walls,
   modes ω² = k/m and 3k/m, shaken left wall steady amplitude k1 A/√((k1 + k2 − mω²)² + (bω)²). Handout setups line and About
   bullet updated; key capture rerun identical.
   GPT: please check the wall formulas against the demo.
+
+## 2026-10-28 · Claude · Circuits: a new part placed on another replaces it
+
+Steve: placing a part on top of an existing one (a wire, say) put it in parallel; he wants it to overwrite. `placeParts` in
+`demos/circuits.html` now removes anything lying along the new part's stretch (`overlaps`): a wire there is cut so the part sits
+in series in its place; a part there is replaced (a longer one leaves a wire for the rest of its length). New wires and the
+junction transistor place as before. The live message names what was replaced. Circuits tests pass; vdcheck after 0 problems.

@@ -4681,6 +4681,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     if (!samePt(p1, t)) out.push({ type: 'wire', a: p1, b: t });
     return out;
   }
+  // true when part e runs along the stretch from p to q (same line, overlapping by more than a point); a two way switch counts by its first contact
+  function overlaps(e, p, q) {
+    const a = e.a, b = e.b, cr = (u, v, w) => (v[0] - u[0]) * (w[1] - u[1]) - (v[1] - u[1]) * (w[0] - u[0]);
+    if (e.type === 'bjt' || samePt(a, b) || cr(p, q, a) || cr(p, q, b)) return false;
+    const d = [q[0] - p[0], q[1] - p[1]], t = (r) => (r[0] - p[0]) * d[0] + (r[1] - p[1]) * d[1], L = d[0] * d[0] + d[1] * d[1];
+    return Math.min(Math.max(t(a), t(b)), L) - Math.max(Math.min(t(a), t(b)), 0) > 0;
+  }
   function placeParts(type, from, to) {
     const plan = planParts(type, from, to); if (!plan.length) return null;
     pushUndo(null); structural();
@@ -4693,10 +4700,19 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (q.main || (type === 'wire' && !main)) main = e;
     }
     els = normalize(els, newId);
+    /* a part placed on top of others takes their place: anything lying along the same stretch is removed (a wire there is
+       cut, so the new part goes in series in its place, not in parallel with it) */
+    let gone = [];
+    if (main && main.type !== 'wire' && main.type !== 'bjt') {
+      const on = (e) => e.id !== main.id && overlaps(e, main.a, main.b);
+      gone = els.filter(on); els = els.filter((e) => !on(e));
+      if (gone.length) { channels = channels.filter((c) => elById(c.id)); els = normalize(els, newId); }
+    }
     sel = main && elById(main.id) ? { kind: 'el', id: main.id } : null; kPick = null;
     if (main && main.type === 'probe') addChannel(main.id, 'V');
     changed('edit');
-    live(`${TYPE[type]}${main && main.name ? ' ' + main.name : ''} placed.`);
+    const was = gone.filter((e) => e.type !== 'wire');
+    live(`${TYPE[type]}${main && main.name ? ' ' + main.name : ''} placed${was.length ? `, in place of ${was.map(label).join(' and ')}` : gone.length ? ' in the wire' : ''}.`);
     return main;
   }
   function toggleSwitch(e) {
