@@ -5401,3 +5401,9 @@ Steve: add friction so the demo shows a gyroscope rising when its precession is 
 - Tests `test_kepler_sandbox.cjs` (7): Sun and Earth closes after the pair's period, eccentric orbit keeps P² = a³/(M + m), equal
   binary, figure eight closes after one period, momentum and L kept in a five body tangle, merging, host and circular launch.
 - Checks: vdcheck after and clip, Playwright at 1280 and 400 px, no page errors. GPT: please verify the constants and the model text.
+
+## 2026-10-28 · Claude · Magnetic Fields of Currents: parts tray
+- Fourth on Steve's sandbox list. The Straight wires view already was a free build (up to six wires anywhere, any current, probe,
+  Amperian loop, compass grid), so no separate Sandbox: it gets the in picture tray instead. Top left of the picture: a wire out,
+  a wire in (5 A), and a bin; drop a dragged wire on the tray to remove it. Physics untouched. Handout About line in
+  straight-wire-fields.md. vdcheck after 0 problems; Playwright drops and removals at 1280 and 400 px, no page errors.

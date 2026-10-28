@@ -1110,6 +1110,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- drawing ----------
   let hoverId = null, drag = null;
+  const TRAY = { box: null, items: [], drag: null, last: null, over: false };   /* the parts tray in the straight wires picture */
   const isHot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
   function drawAll() {
     if (!T || !W || !H) return;
@@ -1118,7 +1119,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(layer, 0, 0);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (S.scene === 'wires') drawWiresScene(); else drawSideScene();
+    if (S.scene === 'wires') { drawWiresScene(); drawTray(ctx); } else drawSideScene();
   }
   function drawLegend(c, x, y) {
     if (!S.show.shade || !shadeInfo) return;
@@ -1594,6 +1595,48 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   can.addEventListener('pointerup', endDrag);
   can.addEventListener('pointercancel', endDrag);
+
+  // ---------- parts tray in the straight wires picture: drag a wire, current out or in, onto the page; drop a wire back on the tray to remove it ----------
+  const inBox = (b, x, y) => !!b && x >= b[0] && x <= b[0] + b[2] && y >= b[1] && y <= b[1] + b[3];
+  function drawTray(c) {
+    const ks = kS(), rw = rwire(), w = 62 * ks, ih = 50 * ks, x0 = 8 * ks, y0 = 8 * ks, binH = 34 * ks, h = ih * 2 + binH + 8 * ks, full = S.wires.length >= 6;
+    TRAY.box = [x0, y0, w, h]; TRAY.items = [];
+    c.save(); c.globalAlpha = 0.9; c.fillStyle = T.surface; c.beginPath(); if (c.roundRect) c.roundRect(x0, y0, w, h, 8 * ks); else c.rect(x0, y0, w, h); c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = T.line; c.lineWidth = 1; c.stroke();
+    [[1, 'out'], [-1, 'in']].forEach(([sg, lab], i) => { const cx = x0 + w / 2, cy = y0 + ih * i + ih * 0.42; c.globalAlpha = full ? 0.35 : 1; wireGlyph(c, cx, cy, rw, sg * 5, false, false);
+      c.fillStyle = T.ink; c.font = `600 ${fsz(10)}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(lab, cx, cy + rw + 3 * ks); c.globalAlpha = 1;
+      TRAY.items.push({ sign: sg, box: [x0, y0 + ih * i, w, ih] }); });
+    const by = y0 + ih * 2 + 2 * ks, hot = TRAY.over;
+    c.setLineDash([4 * ks, 3 * ks]); c.strokeStyle = hot ? T.pos : T.muted; c.lineWidth = 1.2 * ks; c.strokeRect(x0 + 5 * ks, by, w - 10 * ks, binH); c.setLineDash([]);
+    if (hot) { c.globalAlpha = 0.2; c.fillStyle = T.pos; c.fillRect(x0 + 5 * ks, by, w - 10 * ks, binH); c.globalAlpha = 1; }
+    c.fillStyle = hot ? T.pos : T.muted; c.font = `600 ${fsz(9)}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Drop here', x0 + w / 2, by + binH * 0.33); c.fillText('to remove', x0 + w / 2, by + binH * 0.7);
+    if (TRAY.drag) { c.globalAlpha = 0.75; wireGlyph(c, TRAY.drag.px, TRAY.drag.py, rw, TRAY.drag.sign * 5, true, false); c.globalAlpha = 1; }
+    c.restore();
+  }
+  const trayOn = () => S.scene === 'wires' && !G3.on;
+  const evXY = (ev) => { const r = can.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; };
+  can.addEventListener('pointerdown', (ev) => {
+    if (!trayOn()) return; const [x, y] = evXY(ev); TRAY.last = [x, y]; if (!inBox(TRAY.box, x, y)) return;
+    ev.stopImmediatePropagation(); ev.preventDefault(); can.focus({ preventScroll: true });
+    const it = TRAY.items.find((q) => inBox(q.box, x, y)); if (!it) return;
+    if (S.wires.length >= 6) { say('Six wires at most: drop one on the tray to remove it first.'); return; }
+    TRAY.drag = { sign: it.sign, px: x, py: y }; try { can.setPointerCapture(ev.pointerId); } catch (_) {} dirty = true;
+  }, true);
+  can.addEventListener('pointermove', (ev) => {
+    if (!trayOn()) return; const [x, y] = evXY(ev); TRAY.last = [x, y];
+    if (TRAY.drag) { ev.stopImmediatePropagation(); TRAY.drag.px = x; TRAY.drag.py = y; dirty = true; return; }
+    const o = !!drag && drag.kind === 'w' && inBox(TRAY.box, x, y); if (o !== TRAY.over) { TRAY.over = o; dirty = true; }
+  }, true);
+  const trayUp = (ev) => {
+    if (!trayOn()) return; const [x, y] = evXY(ev);
+    if (TRAY.drag) { ev.stopImmediatePropagation(); const d = TRAY.drag; TRAY.drag = null; dirty = true;
+      if (inBox(TRAY.box, x, y) || ev.type === 'pointercancel') return;
+      const [px, py] = inView(snap(wx(x), 0.1), snap(wy(y), 0.1), 0.4), w = mkW(px, py, 5 * d.sign); S.wires.push(w); S.wsel = w.id; S.sel = { kind: 'w', id: w.id };
+      custom(); changed(); say(`Added wire ${S.wires.length}, ${fmtI(w.I)}`); return; }
+    if (drag && drag.kind === 'w' && inBox(TRAY.box, x, y)) { ev.stopImmediatePropagation(); const id = drag.ref; drag = null; dq = null; hoverId = null; TRAY.over = false; removeWire(id); }
+    TRAY.over = false;
+  };
+  can.addEventListener('pointerup', trayUp, true); can.addEventListener('pointercancel', trayUp, true);
   can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
   can.addEventListener('dblclick', (ev) => {
     if (G3.on || S.scene !== 'wires') return;
