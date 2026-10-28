@@ -2394,7 +2394,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.fillStyle = T.block; roundRect(ctx, cx - w / 2, cy - hh / 2, w, hh, 3 * ps); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, cx - w / 2, cy - hh / 2, w, hh, 3 * ps); ctx.stroke();
         ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${pt.m} kg`, cx, cy + 0.5);
       } else {
-        ctx.fillStyle = T.ink; ctx.globalAlpha = 0.75; ctx.fillRect(cx - 14 * ps, cy - 8 * ps, 5 * ps, 16 * ps); ctx.fillRect(cx + 9 * ps, cy - 8 * ps, 5 * ps, 16 * ps); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.ink; ctx.globalAlpha = 0.75; ctx.fillRect(cx - 27 * ps, cy - 8 * ps, 4 * ps, 16 * ps); ctx.fillRect(cx + 23 * ps, cy - 8 * ps, 4 * ps, 16 * ps); ctx.globalAlpha = 1;
         ctx.fillStyle = T.ink; ctx.font = `600 ${9 * ps}px ${T.mono}`; ctx.fillText('velcro', cx, cy + 0.5);
       }
       SBC.tray.parts.push({ part: pt, box });
