@@ -5083,3 +5083,16 @@ Steve: make length A adjustable, nothing else rewritten (handout, worksheet, key
   What's new entry added.
 
 **For GPT:** please check the off focus shift Δs′ = 4Dω(A + B − AB/f₂)/c and the Gaussian blur factor.
+
+## 2026-10-28 · Claude · Race camera tilts but no longer turns
+
+Steve: the Race view's 3D camera was hard to aim; it should change pitch only, not turn sideways.
+- `demos/sound-waves.html`: the Race camera's heading is fixed at each camera's own value (At the start th −1.95, Whole
+  course th −2.1, the headings it already opened at), held by `lockTh` in the `VD3.orbit` callback, and the two finger twist
+  no longer turns. Still there: plain drag (one finger) moves along the course, right or Shift drag (two fingers up and down)
+  tilts within the old limits, wheel or pinch zooms, double click resets, arrow keys pan. Comma and period no longer turn.
+  Hint text "to turn" is now "to tilt". The opening view is unchanged. No library change; other views of the demo untouched.
+- Checked in Playwright with a test copy exposing R3: right drag, Shift drag, comma and period, camera switch, one finger
+  drag and two finger twist, pinch and sideways moves all leave th at the camera's heading; tilt, pan and zoom still change;
+  no page errors. vdcheck `--only clip` 0 cut off; test_sound_waves passes. The How this works video never shows the Race, so
+  it is unchanged. Handout does not mention turning. What's new entry added.

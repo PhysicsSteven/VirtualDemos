@@ -818,9 +818,12 @@ details.more[open] summary { margin-bottom: 6px; }
   }
 
   // ---------- the race in 3D (three.js through demos/lib/vd3.js) ----------
-  // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
+  // Drag to move, right or Shift drag to tilt, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
+  // The heading is fixed (Steve, 2026-10-28): each camera keeps its own th, so the view tilts up and down but never turns sideways.
   const R3 = { on: false, ok: false, tried: false, loading: false, key: '', sig: '', w: 0, h: 0, o: { th: -1.95, ph: 1.34, zoom: 1 } };
   R3.home = { th: -1.95, ph: 1.34, zoom: 1 }; R3.pan = { x: 0, y: 0 }; R3.homeC = { th: -2.1, ph: 0.98, zoom: 1 };
+  /* the view never turns sideways: th stays at the heading of the camera chosen (At the start or Whole course) */
+  const lockTh = () => { R3.o.th = (S.cam === 'near' ? R3.home : R3.homeC).th; };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
   const PERSON_H = 1.75;   /* m, the height of the people drawn for scale (chosen) */
   const LANE_GAP = 5;      /* m between the centers of neighboring lanes (chosen) */
@@ -878,21 +881,21 @@ details.more[open] summary { margin-bottom: 6px; }
     const dyn = new THREE.Group(); sc.add(dyn);
     g3 = { r, el, sc, cam, hemi, sun, grassCv, grassTex, groundM, ground, sky, skyG, stars, glowTex, pmrem, envRT: null, striker, listener, hammer, steelM, dyn, M, lanes: [], tex: {} };
     can.addEventListener('wheel', (e) => { if (!(S.view === 'race' && R3.on)) e.stopImmediatePropagation(); }, { passive: true });
-    /* a plain drag (one finger on a touch screen) moves along the course; a right drag or Shift drag turns the view (VD3.orbit);
-       two fingers pinch to zoom and twist to turn */
+    /* a plain drag (one finger on a touch screen) moves along the course; a right drag or Shift drag tilts the view (VD3.orbit,
+       with th held at the camera's heading by lockTh); two fingers pinch to zoom and move up and down to tilt */
     const on3 = () => S.view === 'race' && R3.on, pts = new Map(); let pinch = null;
-    const two = () => { const [a, b] = [...pts.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, ang: Math.atan2(b.y - a.y, b.x - a.x) }; };
+    const two = () => { const [a, b] = [...pts.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1 }; };
     const panGrab = (e) => {
       if (!on3()) return true;
       if (e.pointerType === 'mouse' && (e.button === 2 || e.shiftKey)) return false;
       can.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); can.style.cursor = 'grabbing';
-      if (pts.size === 2) { const q = two(); pinch = { d0: q.d, a0: q.ang, z0: R3.o.zoom, th0: R3.o.th }; }
+      if (pts.size === 2) { const q = two(); pinch = { d0: q.d, z0: R3.o.zoom }; }
       return true;
     };
     can.addEventListener('pointermove', (e) => {
       const q0 = pts.get(e.pointerId); if (!q0 || !on3()) return;
       const dx = e.clientX - q0.x, dy = e.clientY - q0.y; pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (pts.size >= 2 && pinch) { const q = two(); R3.o.zoom = Math.max(0.25, Math.min(4, pinch.z0 * q.d / pinch.d0)); R3.o.th = pinch.th0 - (q.ang - pinch.a0); }
+      if (pts.size >= 2 && pinch) { const q = two(); R3.o.zoom = Math.max(0.25, Math.min(4, pinch.z0 * q.d / pinch.d0)); }
       else panBy(dx, dy);
       if (!S.race.run) draw();
     });
@@ -904,7 +907,7 @@ details.more[open] summary { margin-bottom: 6px; }
       if (!on3()) return; const k = { ArrowLeft: [-40, 0], ArrowRight: [40, 0], ArrowUp: [0, -40], ArrowDown: [0, 40] }[e.key]; if (!k) return;
       panBy(-k[0], -k[1]); e.preventDefault(); if (!S.race.run) draw();
     });
-    VD3.orbit(can, R3.o, () => { if (!S.race.run) draw(); }, { grab: panGrab, phMin: 0.35, phMax: 1.5, zMin: 0.25, zMax: 4 });
+    VD3.orbit(can, R3.o, () => { lockTh(); if (!S.race.run) draw(); }, { grab: panGrab, phMin: 0.35, phMax: 1.5, zMin: 0.25, zMax: 4 });
     can.addEventListener('pointerup', () => { if (!(S.view === 'race' && R3.on)) can.style.cursor = ''; });
     return true;
   }
@@ -1107,7 +1110,7 @@ details.more[open] summary { margin-bottom: 6px; }
     const [sx, sy, sok] = P(-1.2, 0, PERSON_H + 0.35); if (sok && sx > 0 && sx < W) tag(`${PERSON_H} m tall`, sx, sy - 6 * p, { s: 9 });
     const [lx, ly, lok] = P(L + 2, -LANE_W / 2 - 3.5, PERSON_H + 0.35); if (lok && lx > 0 && lx < W && S.cam === 'course') tag('listener', lx, ly - 26 * p, { s: 9 });
     raceClock(p); raceBoard(ls, p);
-    if (W >= 620) Gr.label(ctx, 'drag to move · right drag or Shift drag to turn · scroll to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    if (W >= 620) Gr.label(ctx, 'drag to move · right drag or Shift drag to tilt · scroll to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
   }
   // ---------- the sound wave and time of flight views in 3D (demos/lib/vd3kit.js on vd3.js) ----------
   /* Pictures only, drawn from the same state as the flat views. Meters, z up: the bench top is z = 0, the camera looks from −y.
