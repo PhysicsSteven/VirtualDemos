@@ -5312,3 +5312,17 @@ Steve: "add dampening and driving to the sandbox". Two new parts in the tray of 
   undamped resonance growth (kA/2mω) t sin ωt. Handout About bullet updated; key capture rerun identical.
 - Checks: Playwright drops and grips at 1368 and 400 px; vdcheck after and clip 0; 1368, 400, 360 px; light and dark.
   GPT: please verify the steady amplitude and resonance formulas against the demo.
+
+## 2026-10-28 · Claude · Springs Sandbox: between two walls
+
+Steve: "a horizontal variation with a wall on each end". New Sandbox rigs in `demos/springs.html` (One block, Two blocks, Side by
+side, Empty track) lay the rig on a level, frictionless track between two walls, drawn to scale across the page.
+- Physics: the same exact model with g = 0. A fixed node now has a rest position y0 and can be still: the right wall is a still
+  fixed node at y0 = the gap, the left wall is node 0 and is the one the shaker moves (X = A cos ωt). Blocks are 4.0 cm long.
+- Building: drop springs on the left wall, a hook or a block (they run to the right); drag a hook onto the right wall to tie it
+  there; drag the right wall or its grip to change the gap (refused if any spring would rest shorter than 2 cm). Oil, shaker,
+  bin, grips and holding work as when hanging; the arrow keys move a selected block left and right.
+- Tests (`test_springs_sandbox.cjs`, 14): rest position and ω² = (k1 + k2)/m between walls, holding with a still wall, two block
+  modes ω² = k/m and 3k/m, shaken left wall steady amplitude k1 A/√((k1 + k2 − mω²)² + (bω)²). Handout setups line and About
+  bullet updated; key capture rerun identical.
+  GPT: please check the wall formulas against the demo.

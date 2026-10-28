@@ -1,5 +1,6 @@
 'use strict';
-// Springs and Oscillations, Sandbox: hanging arrangements against hand results (series, parallel, two blocks, energy, holding).
+// Springs and Oscillations, Sandbox: hanging arrangements against hand results (series, parallel, two blocks, energy, holding),
+// and blocks on a level track between two walls.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
 const c = core('springs', 'G,SB_L0,SB_H,sbSolveLin,sbExpm,sbModel,sbStep,sbTensions,sbEnergy,sbHeld,sbAttached,sbAbove');
@@ -111,5 +112,40 @@ test('undamped drive exactly at resonance grows as (kA/2mω) t sin ωt', () => {
   const m = 0.5, k = 18, w = Math.sqrt(k / m), A = 0.004;
   const md = c.sbModel({ nodes: [ceil, { id: 1, m }], springs: [{ id: 1, a: 0, b: 1, k }] }, g, 0, { A, w });
   for (const t of [1, 5.5, 12]) close(c.sbStep(md, [0, 0, 1, 0], t)[0], k * A / (2 * m * w) * t * Math.sin(w * t), 1e-9, 1e-13);
+});
+// between two walls (g = 0): the left wall is node 0 (driven), the right wall a still fixed node at the gap D
+const wallsAt = (D) => [ceil, { id: 1, m: 0, fixed: true, still: true, y0: D }];
+test('between two walls: rest where the two springs balance, ω² = (k1 + k2)/m, no gravity', () => {
+  const D = 0.34, k1 = 20, k2 = 30, m = 0.2;
+  const rig = { hz: true, nodes: [...wallsAt(D), { id: 2, m }], springs: [{ id: 3, a: 0, b: 2, k: k1 }, { id: 4, a: 2, b: 1, k: k2 }] };
+  const md = c.sbModel(rig, 0, 0);
+  // k1 (x − L0) = k2 (D − x − H − L0)
+  const x = (k1 * L0 + k2 * (D - H - L0)) / (k1 + k2);
+  close(md.yEq[0], x, 1e-13); close(md.Ke[0][0], k1 + k2, 1e-13);
+  const T = c.sbTensions(rig, md, md.yEq); close(T[0].T, T[1].T, 1e-12, 1e-14, 'equal tension in both');
+  close(T[0].T, k1 * (x - L0), 1e-12);
+  const y = md.allY(md.yEq); close(y.get(1), D, 0); close(y.get(0), 0, 0);
+  const E = c.sbEnergy(rig, md, [0.02, 0]); close(E.Ug, 0, 0);
+  // held: a still wall stays put; the other block follows
+  const r2 = { hz: true, nodes: [...wallsAt(0.44), { id: 2, m: 0.2 }, { id: 3, m: 0.2 }], springs: [{ id: 4, a: 0, b: 2, k: 20 }, { id: 5, a: 2, b: 3, k: 20 }, { id: 6, a: 3, b: 1, k: 20 }] };
+  const h = c.sbHeld(r2, 2, 0.12, 0); close(h.get(1), 0.44, 0);
+  close(h.get(3), (0.12 + H + L0 + 0.44 - H - L0) / 2, 1e-12, 1e-15, 'free block midway between the held one and the wall');
+});
+test('two blocks between walls: normal modes ω² = k/m and 3k/m', () => {
+  const k = 20, m = 0.2, rig = { hz: true, nodes: [...wallsAt(0.44), { id: 2, m }, { id: 3, m }], springs: [{ id: 4, a: 0, b: 2, k }, { id: 5, a: 2, b: 3, k }, { id: 6, a: 3, b: 1, k }] };
+  const md = c.sbModel(rig, 0, 0), w1 = Math.sqrt(k / m), w2 = Math.sqrt(3 * k / m);
+  for (const t of [0.3, 2.2]) {
+    close(c.sbStep(md, [0.02, 0.02, 0, 0], t)[0], 0.02 * Math.cos(w1 * t), 1e-10, 1e-14);
+    close(c.sbStep(md, [0.02, -0.02, 0, 0], t)[1], -0.02 * Math.cos(w2 * t), 1e-10, 1e-14);
+  }
+});
+test('shaken left wall, still right wall: steady amplitude k1 A/√((k1 + k2 − mω²)² + (bω)²)', () => {
+  const k1 = 20, k2 = 30, m = 0.2, b = 0.3, A = 0.005, w = 9;
+  const rig = { hz: true, nodes: [...wallsAt(0.34), { id: 2, m, b }], springs: [{ id: 3, a: 0, b: 2, k: k1 }, { id: 4, a: 2, b: 1, k: k2 }] };
+  const md = c.sbModel(rig, 0, 0, { A, w });
+  close(md.Fe[0], k1, 1e-14);
+  const re = k1 + k2 - m * w * w, im = b * w, D = re * re + im * im, Ur = k1 * A * re / D, Ui = -k1 * A * im / D;
+  for (const t of [0.4, 3.1]) close(c.sbStep(md, [Ur, -w * Ui, 1, 0], t)[0], Ur * Math.cos(w * t) - Ui * Math.sin(w * t), 1e-9, 1e-13);
+  const y = md.allY(md.yEq, A); close(y.get(0), A, 0); close(y.get(1), 0.34, 0);
 });
 console.log(`${n} tests passed`);

@@ -212,7 +212,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
       <section id="sbSec" hidden>
         <h2>Sandbox</h2>
-        <p class="hint">Drag springs and blocks from the parts tray onto the ceiling, a hook or a block. Drag one hook onto another to put springs side by side, drag the grips to change k or a block's mass, drag a block to pull it and let go, and drop anything on the bin to take it away. Drop oil on a block to damp it, or the shaker on the ceiling to drive the rig.</p>
+        <p class="hint">Drag springs and blocks from the parts tray onto the ceiling, a hook or a block. Drag one hook onto another to put springs side by side, drag the grips to change k or a block's mass, drag a block to pull it and let go, and drop anything on the bin to take it away. Drop oil on a block to damp it, or the shaker on the ceiling to drive the rig. Between two walls, tie a hook to the right wall by dragging it there, and drag the right wall to change the gap.</p>
+        <p class="hint">Hanging from the ceiling:</p>
         <div class="chips" id="sbBuilds" role="group" aria-label="Ready made rigs">
           <button type="button" data-b="series" aria-pressed="true">Two in series</button>
           <button type="button" data-b="parallel" aria-pressed="false">Two in parallel</button>
@@ -220,6 +221,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-b="one" aria-pressed="false">One spring</button>
           <button type="button" data-b="chain" aria-pressed="false">Two blocks</button>
           <button type="button" data-b="empty" aria-pressed="false">Start empty</button>
+        </div>
+        <p class="hint">Between two walls, on a level track:</p>
+        <div class="chips" id="sbBuildsH" role="group" aria-label="Ready made rigs between two walls">
+          <button type="button" data-b="hzOne" aria-pressed="false">One block</button>
+          <button type="button" data-b="hzTwo" aria-pressed="false">Two blocks</button>
+          <button type="button" data-b="hzPar" aria-pressed="false">Side by side</button>
+          <button type="button" data-b="hzEmpty" aria-pressed="false">Empty track</button>
         </div>
         <details class="more"><summary>About this rig</summary><p class="hint" id="sbHint"></p></details>
         <div class="toggles">
@@ -245,7 +253,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div class="slider-head"><label for="sbB">Oil on this block, b</label><output id="oSbB" class="mono" for="sbB"></output></div>
           <input type="range" id="sbB" min="0" max="5" step="0.05" value="0">
         </div>
-        <label class="check"><input type="checkbox" id="sbDrive">Shake the ceiling</label>
+        <label class="check"><input type="checkbox" id="sbDrive"><span id="sbDriveLab">Shake the ceiling</span></label>
         <div id="sbDctl" hidden>
           <div class="ctl">
             <div class="slider-head"><label for="sbDA">Shaker amplitude A</label><output id="oSbDA" class="mono" for="sbDA"></output></div>
@@ -666,6 +674,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // equations gain a force F_d Y(t); adding c = cos(ωt + φ) and s = sin(ωt + φ) to the state (c' = −ω s, s' = ω c) keeps the whole
   // system linear and autonomous, so e^(At) is exact for the drive too, even at resonance with no damping.
   // Oil: block i feels −b_i v (its own b, from nd.b; bDamp for blocks without one).
+  // A fixed node sits at y0 (0 when not given) and moves with the drive unless it is still: between two walls (rig.hz, g = 0) the
+  // left wall is node 0 at y0 = 0, driven, and the right wall a still fixed node at y0 = the gap; y is then measured from the left wall.
+  const sbPos0 = (nd) => (nd && nd.y0) || 0, sbDriven = (nd) => !!nd && !nd.still;
   function sbModel(rig, g, bDamp, drive) {
     g = g === undefined ? G : g;
     const idx = new Map(), free = rig.nodes.filter((nd) => !nd.fixed);
@@ -673,10 +684,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const byId = new Map(rig.nodes.map((nd) => [nd.id, nd])), n = free.length;
     const K = free.map(() => new Array(n).fill(0)), f = free.map((nd) => nd.m * g), Fd = new Array(n).fill(0);
     for (const s of rig.springs) {
-      const ia = idx.get(s.a), ib = idx.get(s.b), c = ((byId.get(s.a) || {}).m > 0 ? SB_H : 0) + SB_L0;
+      const ia = idx.get(s.a), ib = idx.get(s.b), na = byId.get(s.a), nb = byId.get(s.b), c = (na.m > 0 ? SB_H : 0) + SB_L0;
       const d = []; if (ib !== undefined) d.push([ib, 1]); if (ia !== undefined) d.push([ia, -1]);
-      const dFix = ia === undefined ? -1 : ib === undefined ? 1 : 0;      /* the end on the (moving) ceiling */
-      for (const [i, di] of d) { f[i] += s.k * di * c; Fd[i] -= s.k * di * dFix; for (const [j, dj] of d) K[i][j] += s.k * di * dj; }
+      const fix0 = (ib === undefined ? sbPos0(nb) : 0) - (ia === undefined ? sbPos0(na) : 0);      /* where its fixed end rests */
+      const dFix = (ib === undefined && sbDriven(nb) ? 1 : 0) - (ia === undefined && sbDriven(na) ? 1 : 0);      /* the end on the (moving) ceiling */
+      for (const [i, di] of d) { f[i] += s.k * di * (c - fix0); Fd[i] -= s.k * di * dFix; for (const [j, dj] of d) K[i][j] += s.k * di * dj; }
     }
     const P = [], Q = [];
     free.forEach((nd, i) => (nd.m > 0 ? P : Q).push(i));
@@ -691,7 +703,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const mass = P.map((i) => free[i].m);
     // the massless nodes from the blocks' positions and the ceiling's: y_q = K_qq⁻¹ (f_q + F_q Y) − (K_qq⁻¹ K_qp) y_p
     const yq = (ypNow, Yc) => KqqInv_fq.map((v, k) => v + KqqInv_Fq[k] * (Yc || 0) - P.reduce((s, _, a) => s + KqqInv_Kqp[k][a] * ypNow[a], 0));
-    const allY = (ypNow, Yc) => { const y = new Map(rig.nodes.filter((nd) => nd.fixed).map((nd) => [nd.id, Yc || 0])), q = yq(ypNow, Yc);
+    const allY = (ypNow, Yc) => { const y = new Map(rig.nodes.filter((nd) => nd.fixed).map((nd) => [nd.id, sbPos0(nd) + (sbDriven(nd) ? Yc || 0 : 0)])), q = yq(ypNow, Yc);
       P.forEach((i, a) => y.set(free[i].id, ypNow[a])); Q.forEach((i, k) => y.set(free[i].id, q[k])); return y; };
     const np = P.length, bs = P.map((i) => (free[i].b !== undefined ? free[i].b : bDamp || 0)), dr = drive && drive.A !== undefined ? drive : null;
     const A = [], extra = dr ? 2 : 0, zeros = (k) => new Array(k).fill(0);
@@ -720,14 +732,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     /* a fixed node at y_h: shift through its springs, by adding k y_h terms to the free nodes' forces */
     const idx = new Map(), free = r2.nodes.filter((nd) => !nd.fixed); free.forEach((nd, i) => idx.set(nd.id, i));
     const n = free.length, K = free.map(() => new Array(n).fill(0)), f = free.map((nd) => rig.nodes.find((o) => o.id === nd.id).m * (g === undefined ? G : g));
-    const yFix = (id) => (id === holdId ? yh : Yc || 0), mOf = new Map(rig.nodes.map((nd) => [nd.id, nd.m]));
+    const yFix = (id) => { if (id === holdId) return yh; const nd = rig.nodes.find((o) => o.id === id); return sbPos0(nd) + (sbDriven(nd) ? Yc || 0 : 0); }, mOf = new Map(rig.nodes.map((nd) => [nd.id, nd.m]));
     for (const s of rig.springs) {
       const c = (mOf.get(s.a) > 0 ? SB_H : 0) + SB_L0, ia = idx.get(s.a), ib = idx.get(s.b);
       const d = []; if (ib !== undefined) d.push([ib, 1]); if (ia !== undefined) d.push([ia, -1]);
       const fixedPart = (ib === undefined ? yFix(s.b) : 0) - (ia === undefined ? yFix(s.a) : 0);
       for (const [i, di] of d) { f[i] += s.k * di * (c - fixedPart); for (const [j, dj] of d) K[i][j] += s.k * di * dj; }
     }
-    const y = n ? sbSolveLin(K, f) : [], out = new Map(rig.nodes.filter((nd) => nd.fixed).map((nd) => [nd.id, Yc || 0]));
+    const y = n ? sbSolveLin(K, f) : [], out = new Map(rig.nodes.filter((nd) => nd.fixed).map((nd) => [nd.id, sbPos0(nd) + (sbDriven(nd) ? Yc || 0 : 0)]));
     out.set(holdId, yh); free.forEach((nd, i) => out.set(nd.id, y[i]));
     return out;
   }
@@ -2908,7 +2920,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     chain: { name: 'Two blocks', nodes: [[1, 0.3], [2, 0.3]], springs: [[1, 0, 1, 25, 0], [2, 1, 2, 25, 0]], pull: 0.04, sel: ['n', 2],
       hint: 'Two blocks, one below the other. Pulling the lower one starts a mix of two normal modes, so the motion does not repeat simply. Hold the blocks and let go in other ways to find each mode.' },
     empty: { name: 'Start empty', nodes: [], springs: [], pull: 0, sel: ['n', 0],
-      hint: 'Only the ceiling. Hang a spring from it, hang a block on the hook, and build from there.' }
+      hint: 'Only the ceiling. Hang a spring from it, hang a block on the hook, and build from there.' },
+    /* between two walls on a level track: node 1 is the right wall, `wall` the gap between the walls (m) */
+    hzOne: { hz: true, wall: 0.34, name: 'One block', nodes: [[2, 0.2]], springs: [[3, 0, 2, 20, 0], [4, 2, 1, 20, 0]], pull: 0.04, sel: ['n', 2],
+      hint: 'A block on a level track with a spring to each wall. Both springs start stretched, and when the block moves one pulls harder while the other pulls less, so the two act together: ω² = (k1 + k2)/m. Gravity plays no part.' },
+    hzTwo: { hz: true, wall: 0.44, name: 'Two blocks', nodes: [[2, 0.2], [3, 0.2]], springs: [[4, 0, 2, 20, 0], [5, 2, 3, 20, 0], [6, 3, 1, 20, 0]], pull: 0.04, sel: ['n', 3],
+      hint: 'Two blocks and three springs between the walls. Pulling one block starts a mix of two normal modes: both blocks moving together, and the two moving against each other. Hold the blocks and let go in other ways to find each mode.' },
+    hzPar: { hz: true, wall: 0.34, name: 'Side by side', nodes: [[2, 0.2]], springs: [[3, 0, 2, 20, -0.035], [4, 0, 2, 20, 0.035], [5, 2, 1, 20, 0]], pull: 0.04, sel: ['n', 2],
+      hint: 'Two springs side by side from the left wall and one to the right wall. The pair stretch the same and act as one spring of k1 + k2.' },
+    hzEmpty: { hz: true, wall: 0.44, name: 'Empty track', nodes: [], springs: [], pull: 0, sel: ['n', 0],
+      hint: 'Only the two walls. Drag a spring onto the left wall, a block onto its hook, and a hook onto the right wall to tie it there. Drag the right wall to change the gap.' }
   };
   const SB = { rig: null, md: null, z: [], t: 0, E0: 0, hist: [], held: null, sel: ['n', 0], join: null, nextId: 1, build: 'series',
     labels: { k: true, T: true }, drive: null, scale: null, ic: null, drag: null, tray: null };
@@ -2918,12 +2939,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const SB_COLS = () => [T.pos, T.neg, T.xcol, T.vcol, T.acol, T.equi];
   const sbMassIdx = (id) => SB.md.ids.indexOf(id);
   const sbMaxSprings = 12;
+  /* between two walls: no gravity along the track; y is measured from the left wall instead of down from the ceiling */
+  const sbHz = () => !!(SB.rig && SB.rig.hz), sbG = () => (sbHz() ? 0 : G);
+  const sbFixed = (id) => { const nd = sbNode(id); return !!(nd && nd.fixed); };
+  const sbBase = () => (sbHz() ? 'the left wall' : 'the ceiling'), sbFrom = () => (sbHz() ? 'from the left wall' : 'below the ceiling');
+  const SB_CHIPS = '#sbBuilds button, #sbBuildsH button';
   function sbLoad(name) {
     const B = SB_BUILDS[name]; SB.build = name;
-    SB.rig = { nodes: [{ id: 0, m: 0, fixed: true }, ...B.nodes.map(([id, m]) => ({ id, m }))], springs: B.springs.map(([id, a, b, k, x]) => ({ id, a, b, k, x })) };
+    SB.rig = { nodes: [{ id: 0, m: 0, fixed: true }, ...(B.hz ? [{ id: 1, m: 0, fixed: true, still: true, y0: B.wall }] : []), ...B.nodes.map(([id, m]) => ({ id, m }))], springs: B.springs.map(([id, a, b, k, x]) => ({ id, a, b, k, x })) };
+    if (B.hz) SB.rig.hz = true;
     SB.nextId = 1 + Math.max(0, ...SB.rig.nodes.map((n) => n.id), ...SB.rig.springs.map((s) => s.id));
     SB.sel = B.sel.slice(); SB.join = null; SB.scale = null; SB.drive = null;
-    for (const b of document.querySelectorAll('#sbBuilds button')) b.setAttribute('aria-pressed', String(b.dataset.b === name));
+    for (const b of document.querySelectorAll(SB_CHIPS)) b.setAttribute('aria-pressed', String(b.dataset.b === name));
     $('sbHint').textContent = B.hint;
     sbRebuild(true);
     // opens off balance: the last block pulled down, so Play moves it
@@ -2938,7 +2965,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function sbRebuild(atRest) {
     const prevY = SB.md ? SB.md.allY(SB.md.yEq.map((v, i) => v + SB.z[i]), sbYc()) : null;
     SB.phase = sbPhase();
-    SB.md = sbModel(SB.rig, G, 0, SB.drive);
+    SB.md = sbModel(SB.rig, sbG(), 0, SB.drive);
     const z = sbZero();
     if (!atRest && prevY) SB.md.ids.forEach((id, i) => { if (prevY.has(id) && sbNode(id).m > 0) z[i] = clamp(prevY.get(id) - SB.md.yEq[i], -0.3, 0.3); });
     sbStart(z);
@@ -2950,7 +2977,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* new oil or drive settings: the blocks carry on from where they are, at the speeds they have */
   function sbRemodel() {
     SB.phase = sbPhase(); const n = SB.md.n, keep = SB.z.slice(0, 2 * n);
-    SB.md = sbModel(SB.rig, G, 0, SB.drive); SB.z = [...keep, ...(SB.md.drive ? SB.phase : [])]; SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbUi();
+    SB.md = sbModel(SB.rig, sbG(), 0, SB.drive); SB.z = [...keep, ...(SB.md.drive ? SB.phase : [])]; SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbUi();
   }
   function sbSample() { SB.hist.push([SB.t, SB.z.slice(0, SB.md.n), sbYc()]); if (SB.hist.length > 3000) SB.hist.splice(0, SB.hist.length - 3000); }
   function sbAdvance(dts) {
@@ -2990,7 +3017,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function sbRemove() {
     if (SB.held) return;
     const [kind, id] = SB.sel;
-    if (kind === 'n' && id === 0) return;
+    if (kind === 'n' && sbFixed(id)) return;
     if (kind === 's') SB.rig.springs = SB.rig.springs.filter((s) => s.id !== id);
     else SB.rig.springs = SB.rig.springs.filter((s) => s.a !== id && s.b !== id);
     const keep = sbAttached(SB.rig);
@@ -3002,8 +3029,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   function sbJoin(other) {
     const a = SB.join; SB.join = null;
-    if (a === other || other === 0 || a === 0) { sbUi(); return; }
-    if (sbAbove(SB.rig, a, other) || sbAbove(SB.rig, other, a)) { capStatus('Those two are joined through springs already, one above the other; pick a hook beside it.'); sbUi(); return; }
+    const toWall = sbHz() && other === 1;      /* between walls a hook can be tied to the right wall */
+    if (a === other || sbFixed(a) || (sbFixed(other) && !toWall)) { sbUi(); return; }
+    if (sbAbove(SB.rig, a, other) || sbAbove(SB.rig, other, a)) { capStatus(sbHz() ? 'Those two are joined through springs already, one beside the other along the track; pick another hook.' : 'Those two are joined through springs already, one above the other; pick a hook beside it.'); sbUi(); return; }
+    if (toWall) {
+      if (sbNode(a).m > 0) { capStatus('A block cannot be fixed to the wall; tie a spring\'s hook to it instead.'); sbUi(); return; }
+      if (!sbTry(() => { for (const s of SB.rig.springs) { if (s.a === a) s.a = 1; if (s.b === a) s.b = 1; } SB.rig.nodes = SB.rig.nodes.filter((nd) => nd.id !== a); })) { capStatus('That would squeeze a spring too short; drag the right wall farther out first.'); sbUi(); return; }
+      SB.sel = ['n', 1]; sbRebuild(false); sbUi(); $('live').textContent = 'Tied to the right wall.'; return;
+    }
     const A = sbNode(a), B = sbNode(other);
     A.m = +(A.m + B.m).toFixed(3);
     for (const s of SB.rig.springs) { if (s.a === other) s.a = a; if (s.b === other) s.b = a; }
@@ -3012,8 +3045,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbRebuild(false); sbUi();
     $('live').textContent = 'Joined into one bar: the springs on it now stretch together.';
   }
+  /* change the rig only if every spring still has room at rest (longer than a fifth of its unstretched length) */
+  function sbTry(fn) {
+    const keep = JSON.stringify(SB.rig); fn();
+    let ok = true; try { const md = sbModel(SB.rig, sbG(), 0, null); ok = sbTensions(SB.rig, md, md.yEq, 0).every((q) => q.L > 0.2 * SB_L0); } catch (_) { ok = false; }
+    if (!ok) SB.rig = JSON.parse(keep);
+    return ok;
+  }
   function sbSetMass(g) {
-    const id = SB.sel[1]; if (SB.sel[0] !== 'n' || id === 0) return;
+    const id = SB.sel[1]; if (SB.sel[0] !== 'n' || sbFixed(id)) return;
     sbNode(id).m = g / 1000; sbRebuild(false); sbUi();
   }
   function sbSetK(k) { const s = SB.sel[0] === 's' ? sbSpring(SB.sel[1]) : null; if (!s) return; s.k = k; sbRebuild(false); sbUi(); }
@@ -3022,7 +3062,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function sbName(sel) {
     if (!sel) return '';
     if (sel[0] === 's') return `spring ${sbSpringNo(sel[1])}`;
-    if (sel[1] === 0) return 'the ceiling';
+    if (sel[1] === 0) return sbBase();
+    if (sbHz() && sel[1] === 1) return 'the right wall';
     const nd = sbNode(sel[1]); if (!nd) return '';
     return nd.m > 0 ? `block ${sbMassIdx(nd.id) + 1}` : (sbNodeSpan(nd.id)[1] - sbNodeSpan(nd.id)[0] > 0.01 ? 'a bar' : 'a hook');
   }
@@ -3033,11 +3074,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const [kind, id] = SB.sel, nd = kind === 'n' ? sbNode(id) : null, sp = kind === 's' ? sbSpring(id) : null;
     if ((kind === 'n' && !nd) || (kind === 's' && !sp)) { SB.sel = ['n', 0]; return sbUi(); }
     $('sbSel').textContent = SB.join !== null ? `Joining ${sbName(['n', SB.join])}: tap another hook, bar or block beside it on the drawing.` : `Selected: ${sbName(SB.sel)}. Tap the drawing to pick something else.`;
-    $('sbAdd').disabled = kind !== 'n' || !!SB.held || SB.rig.springs.length >= sbMaxSprings;
-    $('sbJoin').disabled = kind !== 'n' || id === 0; $('sbJoin').setAttribute('aria-pressed', String(SB.join !== null));
-    $('sbDel').disabled = kind === 'n' && id === 0;
-    $('sbMctl').hidden = !(kind === 'n' && id !== 0); $('sbKctl').hidden = kind !== 's';
-    if (nd && id !== 0) { const g = Math.round(nd.m * 1000); if (document.activeElement !== $('sbM')) $('sbM').value = g; $('oSbM').textContent = g ? `${g} g` : 'none (a massless hook)'; }
+    $('sbAdd').disabled = kind !== 'n' || !!SB.held || SB.rig.springs.length >= sbMaxSprings || (sbHz() && id === 1);
+    $('sbAdd').textContent = sbHz() ? 'Add a spring to the right' : 'Hang a spring below';
+    $('sbJoin').disabled = kind !== 'n' || sbFixed(id); $('sbJoin').setAttribute('aria-pressed', String(SB.join !== null));
+    $('sbDel').disabled = kind === 'n' && sbFixed(id);
+    $('sbMctl').hidden = !(kind === 'n' && !sbFixed(id)); $('sbKctl').hidden = kind !== 's';
+    $('sbDriveLab').textContent = sbHz() ? 'Shake the left wall' : 'Shake the ceiling';
+    if (nd && !sbFixed(id)) { const g = Math.round(nd.m * 1000); if (document.activeElement !== $('sbM')) $('sbM').value = g; $('oSbM').textContent = g ? `${g} g` : 'none (a massless hook)'; }
     if (sp) { if (document.activeElement !== $('sbK')) $('sbK').value = sp.k; $('oSbK').textContent = `${fx(sp.k, 1)} N/m`; $('lSbK').textContent = `Spring ${sbSpringNo(sp.id)} constant k`; }
     $('sbBctl').hidden = !(nd && nd.m > 0);
     if (nd && nd.m > 0) { const b = nd.b || 0; if (document.activeElement !== $('sbB')) $('sbB').value = b; $('oSbB').textContent = b === 0 ? '0 (no oil)' : `${fx(b, 2)} kg/s`; }
@@ -3050,10 +3093,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const y = sbYNow(), tens = sbTensions(SB.rig, SB.md, SB.held ? SB.md.ids.map((i) => y.get(i)) : sbYp(), sbYc());
     $('tclock').firstChild.nodeValue = SB.held ? 't = 0, holding' : `t = ${SB.t.toFixed(2)} s`;
     let h = dd('Time t', `${SB.t.toFixed(3)} s`);
-    const [kind, id] = SB.sel;
-    if (kind === 'n' && id !== 0 && y.has(id)) {
+    const [kind, id] = SB.sel, nd0 = kind === 'n' ? sbNode(id) : null;
+    if (kind === 'n' && id !== 0 && y.has(id) && !(nd0 && nd0.fixed && !sbHz())) {
       const nd = sbNode(id);
-      h += dd(nd.m > 0 ? `Block ${sbMassIdx(id) + 1}: its top face below the ceiling` : `${sbName(SB.sel)[0].toUpperCase() + sbName(SB.sel).slice(1)} below the ceiling`, `${fx(y.get(id) * 100, 2)} cm`, 'wide');
+      if (nd.fixed) h += dd('Gap between the walls', `${fx(y.get(id) * 100, 2)} cm`);
+      else h += dd(nd.m > 0 ? (sbHz() ? `Block ${sbMassIdx(id) + 1}: its left face from the left wall` : `Block ${sbMassIdx(id) + 1}: its top face below the ceiling`) : `${sbName(SB.sel)[0].toUpperCase() + sbName(SB.sel).slice(1)} ${sbFrom()}`, `${fx(y.get(id) * 100, 2)} cm`, 'wide');
       if (nd.m > 0) h += dd('Its mass', `${fx(nd.m * 1000, 0)} g`);
     }
     if (kind === 's') {
@@ -3062,17 +3106,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     if (SB.drive) {
       const D = SB.drive, Tp = 2 * Math.PI / D.w;
-      h += dd('Ceiling Y = A cos ωt', `${fx(sbYc() * 100, 2)} cm`) + dd('Drive ω', `${fx(D.w, 2)} rad/s`) + dd('Drive f = ω/2π', `${sig(D.w / (2 * Math.PI), 3)} Hz`) + dd('Drive period 2π/ω', `${sig(Tp, 4)} s`);
+      h += dd(sbHz() ? 'Left wall X = A cos ωt' : 'Ceiling Y = A cos ωt', `${fx(sbYc() * 100, 2)} cm`) + dd('Drive ω', `${fx(D.w, 2)} rad/s`) + dd('Drive f = ω/2π', `${sig(D.w / (2 * Math.PI), 3)} Hz`) + dd('Drive period 2π/ω', `${sig(Tp, 4)} s`);
       /* each block's swing over the last whole drive period, half its peak to peak, from the samples */
       SB.md.ids.forEach((bid, i) => { const S2 = SB.hist.filter((q) => q[0] >= SB.t - Tp && q[1].length > i); if (S2.length > 4 && SB.t >= Tp) { const v = S2.map((q) => q[1][i]);
         h += dd(`<span style="color:${SB_COLS()[i % 6]}">Block ${i + 1}</span> swing over the last drive period`, `±${fx((Math.max(...v) - Math.min(...v)) / 2 * 100, 2)} cm`, 'wide'); } });
     }
-    SB.md.ids.forEach((bid, i) => { if (kind === 'n' && bid === id) return; h += dd(`<span style="color:${SB_COLS()[i % 6]}">Block ${i + 1}</span> below the ceiling`, `${fx(y.get(bid) * 100, 2)} cm`); });
+    SB.md.ids.forEach((bid, i) => { if (kind === 'n' && bid === id) return; h += dd(`<span style="color:${SB_COLS()[i % 6]}">Block ${i + 1}</span> ${sbFrom()}`, `${fx(y.get(bid) * 100, 2)} cm`); });
     $('measBox').innerHTML = h;
     $('mFormula').innerHTML = 'Springs in one line carry the same tension and their stretches add; springs side by side on one bar stretch the same and share the load.';
     swText();
   }
   function sbDrawScene() {
+    if (sbHz()) { sbDrawSceneH(); return; }
     const [W, H] = dims.c; if (!W || !H) return;
     const ctx = ctxs.c, ps = projScale(), fs = fsOf(W);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -3089,7 +3134,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (!SB.scale || (!SB.held && (SB.scale > target || target > SB.scale * 1.6))) SB.scale = target;   /* held: the scale stays put under the pointer */
     /* across the page nothing is to scale (the springs only move up and down), so the rig spreads to use the width */
     const s = SB.scale, sx = Math.min((W - padL - padR) / (xHi - xLo), 1500 * ps), cx = padL + (W - padL - padR) / 2 - (xLo + xHi) / 2 * sx, X = (x) => cx + x * sx, Y = (v) => top + v * s;
-    SB.view = { X, Y, s, sx, top, W, H, trayW, horiz, stripH };
+    SB.view = { X, Y, s, sx, top, W, H, trayW, horiz, stripH, lat: (px) => (px - X(0)) / sx };
     // ceiling and ruler (cm below the ceiling)
     const yC = Y(y.get(0));          /* the ceiling's face: moves when the shaker drives it */
     wallV(ctx, yC, X(xLo), X(xHi));
@@ -3173,6 +3218,132 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (SB.join !== null) labelBox(ctx, 'Tap a hook, bar or block to join to.', hx, hy, 'center', T.accent, fs, 600);
     sbDrawTray(ctx, W, H, ps, fs);
   }
+  // between two walls: the track runs across the page, to scale; y (from the left wall) goes to the right and a spring's
+  // own x (where it sits across the track, not to scale) goes up the page. SB.view keeps the vertical drawing's names:
+  // Y maps y to the page and X maps a spring's x, so holding and hanging a spring work the same way.
+  function sbDrawSceneH() {
+    const [W, H] = dims.c; if (!W || !H) return;
+    const ctx = ctxs.c, ps = projScale(), fs = fsOf(W);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
+    cHandles = [];
+    const y = sbYNow(), cols = SB_COLS(), D = sbNode(1).y0, sw2 = SB.held ? 0.05 : sbSwing();
+    const xs = SB.rig.springs.map((q) => q.x), bLo = Math.min(-0.02, ...xs) - 0.03, bHi = Math.max(0.02, ...xs) + 0.03;
+    const horiz = W < 600, trayW = horiz ? 0 : 78 * ps, stripH = horiz ? 52 * ps : 0;
+    const padL = (SB.drive ? 96 : 34) * ps, padR = horiz ? 34 * ps : trayW + 44 * ps;
+    const target = Math.min((W - padL - padR) / (D + 0.012), 2400 * ps);
+    const frozen = SB.held || (SB.drag && SB.drag.type === 'wall');
+    if (!SB.scale || (!frozen && (SB.scale > target * 1.0001 || target > SB.scale * 1.3))) SB.scale = target;
+    const s = SB.scale, x0w = padL + 12 * ps, Y = (v) => x0w + v * s;
+    /* up the page: the rig between the controls and the ruler */
+    const top = ctlH + (SB.drive ? 56 : 30) * ps, bottom = H - stripH - (horiz ? 66 : 74) * ps;
+    const sx = Math.max(200 * ps, Math.min(700 * ps, (bottom - top - 40 * ps) / (bHi - bLo)));
+    /* room under the lowest spring for its labels when another spring runs above it */
+    const under = SB.rig.springs.some((q) => SB.rig.springs.some((o) => o !== q && o.x < q.x)) ? 2 * fs * 1.25 + 10 * ps : 0;
+    const floorY = Math.min(bottom, (top + bottom) / 2 + ((bHi - bLo) * sx + under) / 2), X = (x) => floorY - under - (bHi - x) * sx;
+    SB.view = { X, Y, s, sx, top: x0w, W, H, trayW, horiz, stripH, hz: true, lat: (px, py) => Math.max(bLo, Math.min(bHi, (py - floorY) / sx + bHi)), bLo, bHi };
+    const wallTop = X(bLo) - 22 * ps, xL = Y(y.get(0)), xR = Y(D);
+    // the track and the two walls
+    rail(ctx, xL - 4 * ps, xR + 4 * ps, floorY);
+    const wall = (xf, side) => { if (window.VDGear) wallH(ctx, xf, wallTop, floorY + 7 * ps, side); else { ctx.fillStyle = T.wire; ctx.fillRect(side < 0 ? xf - 12 * ps : xf, wallTop, 12 * ps, floorY + 7 * ps - wallTop); } };
+    wall(xL, -1); wall(xR, 1);
+    cHandles.push({ id: 'n0', sel: ['n', 0], box: [xL - 14 * ps, wallTop, 16 * ps, floorY - wallTop], cursor: 'pointer' });
+    cHandles.push({ id: 'n1', sel: ['n', 1], wall: true, box: [xR - 2 * ps, wallTop, 16 * ps, floorY - wallTop], cursor: 'ew-resize' });
+    /* drag the right wall (or its grip) to change the gap */
+    { const gx = xR + 6 * ps, gy = wallTop - 12 * ps; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'wall', false);
+      cHandles.push({ id: 'gw', sel: ['n', 1], wall: true, grip: 'wall', box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      labelBox(ctx, `gap ${fx(D * 100, 1)} cm`, gx - 15 * ps, gy + fs * 0.35, 'right', T.muted, fs * 0.85, 600); }
+    for (const [id, xf, sd] of [[0, xL, -1], [1, xR, 1]]) if (SB.sel[0] === 'n' && SB.sel[1] === id && !SB.drag && $('sbSel').offsetParent) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.strokeRect(sd < 0 ? xf - 14 * ps : xf - 2 * ps, wallTop - 2, 16 * ps, floorY - wallTop + 4); }
+    if (SB.drive) sbDrawShakerH(ctx, xL - 12 * ps, (X(bLo) + floorY) / 2, ps, fs);
+    // the ruler along the track (cm from the left wall)
+    const ry = floorY + (SB.rig.nodes.some((nd) => nd.b > 0) ? 34 : 16) * ps, step = nice(48 * ps / s * 100) / 100;
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Y(0), ry); ctx.lineTo(Y(D), ry); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let k = 0; k * step <= D + 1e-9; k++) { const p = Y(k * step), big = k % 2 === 0; ctx.beginPath(); ctx.moveTo(p, ry); ctx.lineTo(p, ry + (big ? 6 : 3) * ps); ctx.stroke(); if (big) ctx.fillText(String(+(k * step * 100).toFixed(1)), p, ry + 8 * ps); }
+    ctx.fillText('cm from the left wall', (Y(0) + Y(D)) / 2, ry + 22 * ps);
+    SB.md.ids.forEach((id, i) => { const p = Y(SB.md.yEq[i]); ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(p, ry); ctx.lineTo(p, ry - 8 * ps); ctx.stroke(); });
+    // oil: a trough under each block that has some, as long as its swing, drawn first so the block sits in it
+    for (const nd of SB.rig.nodes) {
+      if (!(nd.m > 0 && nd.b > 0)) continue;
+      const i = sbMassIdx(nd.id), ye = SB.md.yEq[i], reach = Math.min(0.02 + sw2, 0.3), xa = Math.max(xL + 2 * ps, Y(ye - reach)), xb = Math.min(xR - 2 * ps, Y(ye + SB_H + reach));
+      tank(ctx, xa, xb, X(bLo) - 10 * ps, floorY + 8 * ps, X(bLo) - 4 * ps, clamp(0.12 + 0.14 * (Math.log10(nd.b) + 2), 0.12, 0.7));
+      const lab = `oil ${fx(nd.b, 2)} kg/s`; ctx.font = `600 ${fs * 0.82}px ${T.mono}`; const lw = ctx.measureText(lab).width + 12 * ps;
+      const tx = clamp((xa + xb) / 2 - (lw + 28 * ps) / 2, 4 * ps, W - padR - lw - 28 * ps), ty = floorY + 11 * ps;
+      ctx.fillStyle = T.canvas; roundRect(ctx, tx, ty, lw, 16 * ps, 4 * ps); ctx.fill(); ctx.strokeStyle = T.oil; ctx.lineWidth = 1.2 * ps; roundRect(ctx, tx, ty, lw, 16 * ps, 4 * ps); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(lab, tx + 6 * ps, ty + 8.5 * ps);
+      cHandles.push({ id: 'o' + nd.id, sel: ['n', nd.id], oil: nd.id, box: [tx, ty, lw, 16 * ps], cursor: 'grab' });
+      const gx = tx + lw + 14 * ps, gy = ty + 8 * ps; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'b' && SB.drag.id === nd.id, false);
+      cHandles.push({ id: 'b' + nd.id, sel: ['n', nd.id], grip: 'b', box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      ctx.textBaseline = 'alphabetic';
+    }
+    // springs: from the right face of a block (or a hook, or the left wall) to the next node along the track
+    const tens = sbTensions(SB.rig, SB.md, SB.md.ids.map((i) => y.get(i)), sbYc());
+    SB.rig.springs.forEach((sp, i) => {
+      const na = sbNode(sp.a), xa = Y(y.get(sp.a) + (na.m > 0 ? SB_H : 0)), xb = Y(y.get(sp.b)), yy = X(sp.x), hot = SB.sel[0] === 's' && SB.sel[1] === sp.id;
+      drawSpring(ctx, xa, yy, xb, yy, { r: 7 * ps, n: 10, lw: springLW(sp.k), hot });
+      cHandles.push({ id: 's' + sp.id, sel: ['s', sp.id], box: [Math.min(xa, xb), yy - 10 * ps, Math.abs(xb - xa), 20 * ps], cursor: 'grab' });
+      if (Math.abs(xb - xa) > 34 * ps) {
+        const gx = (xa + xb) / 2; grip(ctx, gx, yy, SB.drag && SB.drag.type === 'k' && SB.drag.id === sp.id, false);
+        cHandles.push({ id: 'k' + sp.id, sel: ['s', sp.id], grip: 'k', box: [gx - 11 * ps, yy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      }
+      const parts = []; if (SB.labels.k) parts.push(`k${i + 1} = ${sig(sp.k, 3)} N/m`); if (SB.labels.T) parts.push(`T = ${fx(tens[i].T, 2)} N`);
+      /* labels above the spring, or below it when another spring runs just above at the same place along the track */
+      const along = (q) => { const qa = Y(y.get(q.a)), qb = Y(y.get(q.b)); return qa < Math.max(xa, xb) && qb > Math.min(xa, xb); };
+      const below = SB.rig.springs.some((q) => q !== sp && q.x < sp.x && (sp.x - q.x) * sx < 70 * ps && along(q));
+      parts.forEach((p, j) => labelBox(ctx, p, (xa + xb) / 2, below ? yy + 14 * ps + j * fs * 1.25 + fs * 0.6 : yy - 14 * ps - (parts.length - 1 - j) * fs * 1.25, 'center', j === 0 && SB.labels.k ? T.ink : T.equi, fs * 0.88, 600));
+    });
+    // hooks and blocks; every block spans the whole width of the rig across the track and rides on it
+    for (const nd of SB.rig.nodes) {
+      if (nd.fixed) continue;
+      const xx = Y(y.get(nd.id)), hot = SB.sel[0] === 'n' && SB.sel[1] === nd.id, joinHot = SB.join === nd.id;
+      if (nd.m > 0) {
+        const i = sbMassIdx(nd.id), w = Math.max(SB_H * s, 4), yT = X(bLo), hgt = floorY - yT;
+        if (hot || joinHot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, xx - 5 * ps, yT - 5 * ps, w + 10 * ps, hgt + 10 * ps, 6 * ps); ctx.fill(); ctx.globalAlpha = 1; }
+        const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1';
+        ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps;
+        const gr = ctx.createLinearGradient(xx, yT, xx + w, floorY); gr.addColorStop(0, VG ? VG.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(1, VG ? VG.mix(bc, '#000000', 0.2) : bc);
+        ctx.fillStyle = gr; roundRect(ctx, xx, yT, w, hgt, 3 * ps); ctx.fill(); ctx.restore();
+        ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps; roundRect(ctx, xx, yT, w, hgt, 3 * ps); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        if (w >= 34 * ps) { ctx.font = `700 ${11 * ps}px ${T.mono}`; ctx.fillText(String(i + 1), xx + w / 2, yT + hgt / 2 - 7 * ps); ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${fx(nd.m * 1000, 0)} g`, xx + w / 2, yT + hgt / 2 + 7 * ps); }
+        else labelBox(ctx, `${i + 1} · ${fx(nd.m * 1000, 0)} g`, xx + w / 2, yT - 26 * ps, 'center', cols[i % 6], fs * 0.88, 700);
+        ctx.textBaseline = 'alphabetic';
+        { const gx = xx + w / 2, gy = yT - 12 * ps; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'm' && SB.drag.id === nd.id, false);
+          cHandles.push({ id: 'm' + nd.id, sel: ['n', nd.id], grip: 'm', box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' }); }
+        cHandles.push({ id: 'n' + nd.id, sel: ['n', nd.id], box: [xx, yT, Math.max(w, 14 * ps), hgt], cursor: SB.held ? 'grabbing' : 'grab', mass: true });
+      } else {
+        const [lo, hi] = sbNodeSpan(nd.id), y0 = X(hi) - 6 * ps, y1 = X(lo) + 6 * ps;
+        if (hot || joinHot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; roundRect(ctx, xx - 7 * ps, y0 - 6 * ps, 16 * ps, y1 - y0 + 12 * ps, 5 * ps); ctx.fill(); ctx.globalAlpha = 1; }
+        ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(xx, y0 + 3 * ps); ctx.lineTo(xx, y1 - 3 * ps); ctx.stroke();
+        if (!SB.rig.springs.some((sp) => sp.a === nd.id)) {   /* an open hook: something can go on it */
+          const yc = X((lo + hi) / 2); ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(xx, yc); ctx.lineTo(xx + 6 * ps, yc); ctx.arc(xx + 6 * ps, yc - 3.5 * ps, 3.5 * ps, Math.PI / 2, -Math.PI / 2, true); ctx.stroke();
+        }
+        cHandles.push({ id: 'n' + nd.id, sel: ['n', nd.id], box: [xx - 9 * ps, y0 - 4 * ps, 22 * ps, y1 - y0 + 8 * ps], cursor: 'grab', hook: true });
+      }
+    }
+    const mid = padL + (W - padL - padR) / 2, hy = H - 12 * ps - stripH, hx = horiz ? W / 2 : mid;
+    if (SB.drag && SB.drag.hint) labelBox(ctx, SB.drag.hint, hx, hy, 'center', T.accent, fs, 600);
+    else if (!SB.md.n) labelBox(ctx, SB.rig.springs.length ? 'Drag a block from the tray onto a hook.' : 'Drag a spring from the tray to the left wall.', hx, hy, 'center', T.muted, fs, 400);
+    else if (SB.join !== null) labelBox(ctx, 'Tap a hook, a block or the right wall to join to.', hx, hy, 'center', T.accent, fs, 600);
+    sbDrawTray(ctx, W, H, ps, fs);
+  }
+  // the shaker for the left wall: a motor beside it that moves it as X = A cos ωt; grips for A and ω above the track
+  function sbDrawShakerH(ctx, xr, yc, ps, fs) {
+    const D = SB.drive, bw = 64 * ps, bh = 22 * ps, bx = Math.max(4 * ps, xr - 18 * ps - bw), by = yc - bh / 2, VG = window.VDGear;
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(bx + bw, yc); ctx.lineTo(xr, yc); ctx.stroke();
+    if (VG) VG.box(ctx, bx, by, bw, bh, { color: T.equi, r: 4 * ps, shadow: false }); else { ctx.fillStyle = T.equi; roundRect(ctx, bx, by, bw, bh, 4 * ps); ctx.fill(); }
+    ctx.fillStyle = '#ffffff'; ctx.font = `700 ${10 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('shaker', bx + bw / 2, yc + 0.5);
+    cHandles.push({ id: 'drv', sel: ['n', 0], motor: true, box: [bx, by, bw, bh], cursor: 'grab' });
+    const items = [['A', `A = ${fx(D.A * 100, 2)} cm`], ['w', `ω = ${fx(D.w, 2)} rad/s`]], gx = 18 * ps;
+    items.forEach(([key, lab], j) => {
+      const gy = ctlH + (j ? 30 : 11) * ps;
+      grip(ctx, gx, gy, SB.drag && SB.drag.type === key, false);
+      cHandles.push({ id: 'g' + key, sel: ['n', 0], grip: key, box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
+      labelBox(ctx, lab, gx + 14 * ps, gy + fs * 0.35, 'left', T.equi, fs * 0.88, 600);
+    });
+    ctx.textBaseline = 'alphabetic';
+  }
   // the shaker: a motor above the ceiling that moves it as Y = A cos ωt; grips for A and ω, its body drags to the bin
   function sbDrawShaker(ctx, xc, yRod, top, ps, fs) {
     const D = SB.drive, bw = 64 * ps, bh = 22 * ps, bx = xc - bw / 2, by = top - 54 * ps, VG = window.VDGear;
@@ -3196,7 +3367,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ctx = ctxs.e, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const E = sbEnergy(SB.rig, SB.md, SB.z), E0r = sbEnergy(SB.rig, SB.md, SB.z.map(() => 0));
-    const rows = [{ lab: 'Kinetic, Σ½mv²', v: E.K, col: T.pos }, { lab: 'Springs, Σ½ke² above rest', v: E.Us - E0r.Us, col: T.neg }, { lab: 'Gravity, −Σmgu', v: E.Ug, col: T.equi },
+    const rows = [{ lab: 'Kinetic, Σ½mv²', v: E.K, col: T.pos }, { lab: 'Springs, Σ½ke² above rest', v: E.Us - E0r.Us, col: T.neg }, ...(sbHz() ? [] : [{ lab: 'Gravity, −Σmgu', v: E.Ug, col: T.equi }]),
       { lab: 'Total above rest', v: E.total - E0r.total, col: T.ink }];
     if (!SB.drive && SB.rig.nodes.some((nd) => nd.b > 0)) rows.push({ lab: 'Lost to the oil, E₀ − E', v: SB.E0 - E.total, col: T.muted });
     const big = Math.max(...rows.map((r) => Math.abs(r.v)), SB.E0 - E0r.total, 1e-12);
@@ -3228,7 +3399,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (const v of [-A, -A / 2, 0, A / 2, A]) { ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(R, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(MIN(String(+(v * 100).toFixed(2))), L - 6 * ps, Y(v)); }
     for (let k = Math.ceil(t0); k <= t1; k++) { ctx.beginPath(); ctx.moveTo(X(k), Tp); ctx.lineTo(X(k), B); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(k), X(k), B + 5 * ps); }
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText('Each block below its rest position (cm) against time (s)', L, 16 * ps);
+    ctx.fillText(sbHz() ? 'Each block right of its rest position (cm) against time (s)' : 'Each block below its rest position (cm) against time (s)', L, 16 * ps);
     for (let i = 0; i < SB.md.n; i++) {
       ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = 2 * ps; ctx.beginPath(); let on = false;
       for (const [tt, u] of SB.hist) { if (tt < t0 || u.length <= i) continue; const px = X(tt), py = Y(u[i]); if (!on) { ctx.moveTo(px, py); on = true; } else ctx.lineTo(px, py); }
@@ -3238,21 +3409,24 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ctx.strokeStyle = T.equi; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath(); let on = false;
       for (const [tt, , yc] of SB.hist) { if (tt < t0) continue; const px = X(tt), py = Y(yc || 0); if (!on) { ctx.moveTo(px, py); on = true; } else ctx.lineTo(px, py); }
       ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.equi; ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic'; ctx.fillText('dashed: the ceiling', R - 4 * ps, B - 6 * ps);
+      ctx.fillStyle = T.equi; ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic'; ctx.fillText(`dashed: ${sbBase()}`, R - 4 * ps, B - 6 * ps);
     }
     if (!SB.md.n) { ctx.fillStyle = T.muted; ctx.font = `${11 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('No blocks yet.', (L + R) / 2, (Tp + B) / 2); }
   }
   // holding a block: drag it up or down; the rest of the rig finds its balance; let go and it starts from rest there
+  /* the pointer along the direction the blocks move: down the page when hanging, across it between walls */
+  const sbAlong = (ev) => { const r = cans.c.getBoundingClientRect(); return sbHz() ? ev.clientX - r.left : ev.clientY - r.top; };
   function sbBeginHold(id, ev) {
-    const y = sbYNow(); SB.held = { id, off: (ev.clientY - cans.c.getBoundingClientRect().top - SB.view.Y(y.get(id))), y: new Map(y), moved: false, y0: ev.clientY };
+    const y = sbYNow(); SB.held = { id, off: sbAlong(ev) - SB.view.Y(y.get(id)), y: new Map(y), moved: false, y0: sbAlong(ev) };
     SB.sel = ['n', id];
   }
-  function sbHoldTo(cy) {
-    const h = SB.held, i = sbMassIdx(h.id), r = cans.c.getBoundingClientRect();
-    let yh = (cy - r.top - h.off - SB.view.top) / SB.view.s;
+  function sbHoldTo(p) {
+    const h = SB.held, i = sbMassIdx(h.id);
+    let yh = (p - h.off - SB.view.top) / SB.view.s;
     yh = clamp(yh, SB.md.yEq[i] - 0.3, SB.md.yEq[i] + 0.3);
+    if (sbHz()) yh = clamp(yh, 0.005, sbNode(1).y0 - SB_H - 0.005);      /* between the walls */
     yh = Math.round(yh * 1000) / 1000;
-    const y = sbHeld(SB.rig, h.id, yh, G, sbYc());
+    const y = sbHeld(SB.rig, h.id, yh, sbG(), sbYc());
     /* no spring may be squeezed shorter than a fifth of its length */
     const tn = sbTensions(SB.rig, SB.md, SB.md.ids.map((q) => y.get(q)), sbYc());
     if (tn.every((q) => q.L > 0.2 * SB_L0)) h.y = y;
@@ -3326,7 +3500,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (d && d.type === 'new') {
       if (d.target) { const hd = d.target; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([5 * ps, 3 * ps]); roundRect(ctx, hd.box[0] - 3 * ps, hd.box[1] - 3 * ps, hd.box[2] + 6 * ps, hd.box[3] + 6 * ps, 5 * ps); ctx.stroke(); ctx.setLineDash([]); }
       ctx.globalAlpha = 0.75;
-      if (d.part.kind === 'spring') drawSpring(ctx, d.px, d.py, d.px, d.py + 60 * ps, { r: 7 * ps, n: 8, lw: springLW(20) });
+      if (d.part.kind === 'spring') drawSpring(ctx, d.px, d.py, d.px + (V.hz ? 60 * ps : 0), d.py + (V.hz ? 0 : 60 * ps), { r: 7 * ps, n: 8, lw: springLW(20) });
       else if (d.part.kind === 'oil') tank(ctx, d.px - 22 * ps, d.px + 22 * ps, d.py - 16 * ps, d.py + 16 * ps, d.py - 10 * ps, 0.5);
       else if (d.part.kind === 'motor') { ctx.fillStyle = T.equi; roundRect(ctx, d.px - 30 * ps, d.py - 10 * ps, 60 * ps, 20 * ps, 4 * ps); ctx.fill(); }
       else { const w = 60 * ps, h = 18 * ps; ctx.fillStyle = T.block; roundRect(ctx, d.px - w / 2, d.py - h / 2, w, h, 3 * ps); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; roundRect(ctx, d.px - w / 2, d.py - h / 2, w, h, 3 * ps); ctx.stroke();
@@ -3335,7 +3509,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     if (d && d.type === 'hook' && d.moved) {
       if (d.target) { const hd = d.target; ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.setLineDash([5 * ps, 3 * ps]); roundRect(ctx, hd.box[0] - 3 * ps, hd.box[1] - 3 * ps, hd.box[2] + 6 * ps, hd.box[3] + 6 * ps, 5 * ps); ctx.stroke(); ctx.setLineDash([]); }
-      ctx.strokeStyle = T.accent; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(d.px - 12 * ps, d.py); ctx.lineTo(d.px + 12 * ps, d.py); ctx.stroke();
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 3 * ps; ctx.beginPath(); if (V.hz) { ctx.moveTo(d.px, d.py - 12 * ps); ctx.lineTo(d.px, d.py + 12 * ps); } else { ctx.moveTo(d.px - 12 * ps, d.py); ctx.lineTo(d.px + 12 * ps, d.py); } ctx.stroke();
     }
     ctx.textBaseline = 'alphabetic';
   }
@@ -3346,41 +3520,46 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ps = projScale(); let best = null, bd = Infinity;
     for (const hd of cHandles) {
       if (hd.grip || hd.sel[0] !== 'n' || hd.sel[1] === skip) continue;
-      const nd = hd.sel[1] === 0 ? null : sbNode(hd.sel[1]);
+      const id = hd.sel[1], fx0 = sbFixed(id), nd = fx0 ? null : sbNode(id), rightWall = sbHz() && id === 1;
+      if (hd.motor || (hd.oil && kind !== 'oil')) continue;
+      if (kind === 'spring' && rightWall) continue;
       if (kind === 'block' && (!nd || nd.m > 0)) continue;
       if (kind === 'oil' && (!nd || !(nd.m > 0) || nd.b > 0)) continue;
-      if (kind === 'motor' && (nd || SB.drive)) continue;
-      if (kind === 'hook' && (!nd || skip === undefined || sbAbove(SB.rig, skip, nd.id) || sbAbove(SB.rig, nd.id, skip))) continue;
+      if (kind === 'motor' && (id !== 0 || SB.drive)) continue;
+      if (kind === 'hook' && ((!nd && !rightWall) || skip === undefined || sbAbove(SB.rig, skip, id) || sbAbove(SB.rig, id, skip))) continue;
       const [bx, by, bw, bh] = hd.box, dx = Math.max(bx - x, 0, x - bx - bw), dy = Math.max(by - y, 0, y - by - bh), dd2 = Math.hypot(dx, dy);
-      const tol = (hd.sel[1] === 0 ? 30 : 22) * ps;
+      const tol = (fx0 ? 30 : 22) * ps;
       if (dd2 <= tol && dd2 < bd) { bd = dd2; best = hd; }
     }
     return best;
   }
   // hang a new spring from node top at drawing position px (the ceiling and blocks take it where it is dropped; a hook takes it below itself)
-  function sbHangAt(top, px) {
+  function sbHangAt(top, px, py) {
     if (SB.rig.springs.length >= sbMaxSprings) { capStatus(`At most ${sbMaxSprings} springs fit on the drawing.`); return; }
     const V = SB.view, nd = top === 0 ? null : sbNode(top), [lo, hi] = top === 0 ? [-Infinity, Infinity] : sbNodeSpan(top);
-    let x = (px - V.X(0)) / V.sx;
-    if (nd && nd.m > 0) { const half = Math.max((hi - lo) / 2 + 13 * projScale() / V.sx, 42 * projScale() / V.sx) - 6 * projScale() / V.sx; x = clamp(x, (lo + hi) / 2 - half, (lo + hi) / 2 + half); }
+    let x = V.lat(px, py);
+    if (V.hz && (!nd || nd.m > 0)) x = clamp(x, V.bLo + 0.01, V.bHi - 0.01);      /* a block spans the rig across the track */
+    else if (nd && nd.m > 0) { const half = Math.max((hi - lo) / 2 + 13 * projScale() / V.sx, 42 * projScale() / V.sx) - 6 * projScale() / V.sx; x = clamp(x, (lo + hi) / 2 - half, (lo + hi) / 2 + half); }
     else if (nd) x = hi - lo > 0.005 ? clamp(x, lo, hi) : (lo + hi) / 2;
     x = Math.round(x * 200) / 200;
     const nid = SB.nextId++, sid = SB.nextId++;
     SB.rig.nodes.push({ id: nid, m: 0 }); SB.rig.springs.push({ id: sid, a: top, b: nid, k: 20, x });
     SB.sel = ['n', nid]; sbRebuild(false); sbUi();
-    $('live').textContent = 'A spring now hangs there with a hook at its end.';
+    $('live').textContent = sbHz() ? 'A spring now runs to the right from there, with a hook at its end.' : 'A spring now hangs there with a hook at its end.';
   }
-  function sbPutBlock(id, m) { const nd = sbNode(id); if (!nd || nd.m > 0) return; nd.m = m; SB.sel = ['n', id]; sbRebuild(false); sbUi(); $('live').textContent = `A ${Math.round(m * 1000)} g block hangs on the hook.`; }
+  function sbPutBlock(id, m) { const nd = sbNode(id); if (!nd || nd.m > 0 || nd.fixed) return; nd.m = m; SB.sel = ['n', id]; sbRebuild(false); sbUi(); $('live').textContent = `A ${Math.round(m * 1000)} g block hangs on the hook.`; }
   cans.c.addEventListener('pointerdown', (ev) => {
     if (!sbOn() || use3()) return;
     cans.c.focus({ preventScroll: true });
     const [x, y] = sbPt(ev), cap = () => { try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} };
     const part = SB.tray && SB.tray.parts.find((q) => inBox(q.box, x, y, 0));
-    if (part && !SB.held) { SB.drag = { type: 'new', part: part.part, px: x, py: y, hint: { spring: 'Drop it on the ceiling, a hook or a block.', block: 'Drop it on a hook or a bar.', oil: 'Drop it on a block to damp that block.', motor: 'Drop it on the ceiling to shake it up and down.' }[part.part.kind] }; cap(); ev.preventDefault(); return; }
+    if (part && !SB.held) { SB.drag = { type: 'new', part: part.part, px: x, py: y, hint: (sbHz() ? { spring: 'Drop it on the left wall, a hook or a block.', block: 'Drop it on a hook.', oil: 'Drop it on a block to damp that block.', motor: 'Drop it on the left wall to shake it back and forth.' }
+      : { spring: 'Drop it on the ceiling, a hook or a block.', block: 'Drop it on a hook or a bar.', oil: 'Drop it on a block to damp that block.', motor: 'Drop it on the ceiling to shake it up and down.' })[part.part.kind] }; cap(); ev.preventDefault(); return; }
     const hd = sbHit(ev); if (!hd) return;
     if (SB.join !== null && hd.sel[0] === 'n') { sbJoin(hd.sel[1]); ev.preventDefault(); return; }
     if (hd.grip === 'b') { const nd = sbNode(hd.sel[1]); SB.drag = { type: 'b', id: nd.id, x0: x, v0: nd.b }; SB.sel = hd.sel; sbUi(); }
     else if (hd.grip === 'A' || hd.grip === 'w') SB.drag = { type: hd.grip, x0: x, v0: SB.drive[hd.grip] };
+    else if (hd.wall) { SB.drag = { type: 'wall', x0: x, v0: sbNode(1).y0 }; SB.sel = ['n', 1]; sbUi(); }
     else if (hd.oil) SB.drag = { type: 'oil', id: hd.oil, px: x, py: y, x0: x, y0: y, moved: false };
     else if (hd.motor) SB.drag = { type: 'motor', px: x, py: y, x0: x, y0: y, moved: false };
     else if (hd.grip === 'k') { const sp = sbSpring(hd.sel[1]); SB.drag = { type: 'k', id: sp.id, x0: x, v0: sp.k }; SB.sel = hd.sel; sbUi(); }
@@ -3395,7 +3574,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (!sbOn()) return;
     const [x, y] = sbPt(ev), d = SB.drag, ps = projScale();
     if (SB.held) { SB.held.overBin = inBox(SB.tray && SB.tray.bin, x, y, 6 * ps); SB.drag = SB.held.overBin ? { overBin: true, hint: 'Let go to take the block off its hook.' } : null;
-      if (SB.held.moved || Math.abs(ev.clientY - SB.held.y0) > 3) sbHoldTo(ev.clientY); return; }
+      if (SB.held.moved || Math.abs(sbAlong(ev) - SB.held.y0) > 3) sbHoldTo(sbAlong(ev)); return; }
     if (d) {
       d.px = x; d.py = y;
       if (d.type === 'b' || d.type === 'A' || d.type === 'w') {
@@ -3403,6 +3582,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         if (d.type === 'b') { const v = clamp(Math.round((d.v0 + dx * 3) * 20) / 20, 0.05, 5); if (sbNode(d.id).b !== v) { sbNode(d.id).b = v; sbRemodel(); } }
         else if (d.type === 'A') { const v = clamp(Math.round((d.v0 + dx * 0.02) * 2000) / 2000, 0.0005, 0.03); if (SB.drive.A !== v) { SB.drive.A = v; sbRemodel(); } }
         else { const v = clamp(Math.round((d.v0 + dx * 20) * 20) / 20, 0.5, 40); if (SB.drive.w !== v) { SB.drive.w = v; sbRemodel(); } }
+        return;
+      }
+      if (d.type === 'wall') {
+        const v = clamp(Math.round((d.v0 + (x - d.x0) / SB.view.s) * 200) / 200, 0.1, 1);
+        if (sbNode(1).y0 !== v && sbTry(() => { sbNode(1).y0 = v; })) sbRemodel();
         return;
       }
       if (d.type === 'k' || d.type === 'm') {
@@ -3414,7 +3598,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       d.overBin = d.type !== 'new' && inBox(SB.tray && SB.tray.bin, x, y, 6 * ps);
       d.target = d.overBin ? null : d.type === 'new' ? sbTargetAt(d.part.kind, x, y) : d.type === 'hook' ? sbTargetAt('hook', x, y, d.id) : null;
       if (d.type === 'oil' || d.type === 'motor') { d.hint = d.overBin ? 'Let go to take it away.' : 'Drag it to the bin to take it away.'; return; }
-      if (d.type !== 'new') d.hint = d.overBin ? 'Let go to take it away, with anything that hangs only from it.' : d.type === 'hook' && d.moved ? 'Drop it on a hook or block beside it to join them into one bar.' : d.type === 'spring' && d.moved ? 'Drag it to the bin to take it away.' : null;
+      if (d.type !== 'new') d.hint = d.overBin ? 'Let go to take it away, with anything that hangs only from it.' : d.type === 'hook' && d.moved ? (sbHz() ? 'Drop it on a hook or block, or on the right wall, to join them.' : 'Drop it on a hook or block beside it to join them into one bar.') : d.type === 'spring' && d.moved ? 'Drag it to the bin to take it away.' : null;
       return;
     }
     const part = SB.tray && SB.tray.parts.find((q) => inBox(q.box, x, y, 0));
@@ -3426,12 +3610,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const d = SB.drag; SB.drag = null; if (!d) return;
     if (d.type === 'new' && d.target) {
       const k = d.part.kind, id = d.target.sel[1];
-      if (k === 'spring') sbHangAt(id, d.px); else if (k === 'block') sbPutBlock(id, d.part.m);
+      if (k === 'spring') sbHangAt(id, d.px, d.py); else if (k === 'block') sbPutBlock(id, d.part.m);
       else if (k === 'oil') { sbNode(id).b = 0.5; SB.sel = ['n', id]; sbRemodel(); $('live').textContent = `Block ${sbMassIdx(id) + 1} now sits in oil, b = 0.50 kg/s.`; }
-      else { SB.drive = { A: 0.005, w: 6 }; SB.scale = null; sbRemodel(); $('live').textContent = 'The shaker moves the ceiling 0.50 cm up and down at 6.00 rad/s.'; }
+      else { SB.drive = { A: 0.005, w: 6 }; SB.scale = null; sbRemodel(); $('live').textContent = sbHz() ? 'The shaker moves the left wall 0.50 cm back and forth at 6.00 rad/s.' : 'The shaker moves the ceiling 0.50 cm up and down at 6.00 rad/s.'; }
     }
     else if (d.type === 'oil' && d.overBin) { delete sbNode(d.id).b; sbRemodel(); $('live').textContent = 'Oil taken away.'; }
-    else if (d.type === 'motor' && d.overBin) { SB.drive = null; SB.scale = null; sbRemodel(); $('live').textContent = 'Shaker taken away; the ceiling is still.'; }
+    else if (d.type === 'motor' && d.overBin) { SB.drive = null; SB.scale = null; sbRemodel(); $('live').textContent = `Shaker taken away; ${sbBase()} is still.`; }
     else if ((d.type === 'hook' || d.type === 'spring') && d.overBin) { SB.sel = [d.type === 'hook' ? 'n' : 's', d.id]; sbRemove(); }
     else if (d.type === 'hook' && d.target) { SB.join = d.id; sbJoin(d.target.sel[1]); }
     else sbUi();
@@ -3439,8 +3623,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   cans.c.addEventListener('pointerup', sbEnd); cans.c.addEventListener('pointercancel', () => { SB.drag = null; if (SB.held) sbRelease(); });
   function sbKey(e) {
     const k = e.key, [kind, id] = SB.sel;
-    if ((k === 'ArrowUp' || k === 'ArrowDown') && kind === 'n' && sbMassIdx(id) >= 0 && !SB.held) {
-      SB.phase = sbPhase(); const i = sbMassIdx(id), y = sbHeld(SB.rig, id, sbYp()[i] + (k === 'ArrowDown' ? 0.01 : -0.01), G, sbYc()), z = sbZero();
+    if ((sbHz() ? k === 'ArrowLeft' || k === 'ArrowRight' : k === 'ArrowUp' || k === 'ArrowDown') && kind === 'n' && sbMassIdx(id) >= 0 && !SB.held) {
+      SB.phase = sbPhase(); const i = sbMassIdx(id), y = sbHeld(SB.rig, id, sbYp()[i] + (k === 'ArrowDown' || k === 'ArrowRight' ? 0.01 : -0.01), sbG(), sbYc()), z = sbZero();
       SB.md.ids.forEach((q, j) => { z[j] = y.get(q) - SB.md.yEq[j]; }); sbStart(z); setRunning(true);
     } else if (k === ' ') setRunning(!running);
     else if (k === 'r' || k === 'R') doReset();
@@ -3465,8 +3649,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if ($('modelHint').dataset.was) $('modelHint').innerHTML = $('modelHint').dataset.was;
     if (SB.dimWas) { view3.set('3d'); SB.dimWas = null; }
   }
-  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration.';
-  for (const b of document.querySelectorAll('#sbBuilds button')) b.addEventListener('click', () => { sbLoad(b.dataset.b); setRunning(!reduce || running); });
+  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². Between two walls the blocks slide on a level track without friction, so gravity plays no part, each block is 4.0 cm long, the right wall stays put (drag it to set the gap) and the shaker moves the left wall as X = A cos ωt. The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration.';
+  for (const b of document.querySelectorAll(SB_CHIPS)) b.addEventListener('click', () => { sbLoad(b.dataset.b); setRunning(!reduce || running); });
   $('sbAdd').addEventListener('click', sbAddSpring);
   $('sbJoin').addEventListener('click', () => { if (SB.sel[0] !== 'n' || SB.sel[1] === 0) return; SB.join = SB.join === null ? SB.sel[1] : null; sbUi(); });
   $('sbDel').addEventListener('click', sbRemove);
@@ -3486,7 +3670,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function loop(now) {
     const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    if (sbOn()) { if (running && !SB.held && !(SB.drag && SB.drag.type && !['k', 'm', 'b', 'A', 'w'].includes(SB.drag.type)) && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }   /* the rig holds still while a part is placed */
+    if (sbOn()) { if (running && !SB.held && !(SB.drag && SB.drag.type && !['k', 'm', 'b', 'A', 'w', 'wall'].includes(SB.drag.type)) && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }   /* the rig holds still while a part is placed */
     else if (running && !held && dtr > 0) {
       advance(dtr * SPEEDS[S.speedIdx]);
       view.tL = Math.max(view.tL, t - 0.85 * view.L);
