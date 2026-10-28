@@ -5165,3 +5165,14 @@ Steve saw Forces, Chladni and Pendulum blank right after 87137bb: his browser ha
 pages, so `VD.split` was missing and the script stopped (reproduced by serving bc8449a's vd.js; Ctrl+Shift+R fixed it for him).
 The five pilot demos now fall back to their default split when `VD.split` is missing. Rule for any new library helper: a
 demo calling it must work when the cached vd.js predates it.
+
+## 2026-10-28 · Claude · Chladni: drive post curve removed
+
+Steve: the dashed "drive post" curve on the response graph isn't needed.
+- `demos/chladni.html`: the wave driver's dashed curve (acceleration of the post, ω²|x|) and its "dashed: the drive post" label
+  are gone from the response plot, with its Key swatch, the plot hint sentence and the unused `post` array in `updateCurve`.
+  The plot's y range never depended on it. The Post motion readout stays. Physics untouched.
+- No mention in the handout, notes, answer key or worksheet keys. The How this works video (`chladni.mp4`) still shows the dashed
+  curve and its label in the plot; not retaken, left for Steve to decide.
+- test_chladni passes (17); vdcheck `--only after` 0 problems, `--only clip` 0 cut off; Playwright 1280x800, no page errors.
+  What's new entry added.
