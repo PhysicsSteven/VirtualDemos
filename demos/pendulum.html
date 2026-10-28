@@ -656,6 +656,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const S = { preset: 'simple', rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, gKey: '9.81', mystery: null, damp: false, st: { th: 8 * Math.PI / 180, w: 0 }, run: false, t: 0, trace: [], passes: [], lastT: null, blind: false, rows: [], plot: 'TL' };
     const can = $('can'), ctx = can.getContext('2d'), stage = $('stage'), VG = window.VDGear;
     let W = 0, H = 0, dpr = 1, T = null, geo = null;
+    /* the divider between the pendulum and its angle trace (VD.split): side by side when wide, the trace below on a phone */
+    const SPL = VD.split(can, { key: 'trace', axis: () => W > 640 ? 'x' : 'y', def: (a) => a === 'x' ? 0.55 : 0.62, min: 0.35, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
+      label: 'Divider between the pendulum and its angle trace', onChange: () => draw() });
     function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
       T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
         bob: g('--bob'), rod: g('--rod'), gate: g('--gate'), beam: g('--beam'),
@@ -668,13 +671,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     function release() { S.st = { th: S.A * Math.PI / 180, w: 0 }; S.t = 0; S.trace = []; S.passes = []; S.lastT = null; }
     /* pixels per meter: a 2 m pendulum and its swing fit the pendulum's half of the picture */
-    function scaleFor(A) { const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62, Lmax = 2;
+    function scaleFor(A) { const p = ps(), wide = W > 640, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f(), Lmax = 2;
       return Math.min((sh - 96 * p - 60 * p) / Lmax, (sw - 40 * p) / (2 * Lmax * Math.max(0.3, Math.sin(Math.min(A, 90) * Math.PI / 180)))); }
     function draw() {
       if (!T || !W) return;
       if (use3()) { draw3(); return; }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-      const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
+      const p = ps(), wide = W > 640, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f();
       const px = sw / 2, py = 96 * p, sc = scaleFor(S.A), Lpx = S.L * sc;
       geo = { px, py, sc };
       const traceTop = placeRack(p, wide, sw, sh, px);
@@ -868,7 +871,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return S3.project;
     }
     function draw3() {
-      const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
+      const p = ps(), wide = W > 640, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       const traceTop = placeRack(p, wide, sw, sh, sw / 2), Q = render3(p, wide, sw, sh);
       /* words on the picture: the gate and its beam */
@@ -1020,7 +1023,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
     $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) setRun(false); });
-    function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+    function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; SPL.place(); draw(); fit(); }
     const retheme = () => { tokens(); draw(); fit(); };
     try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
     new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -1035,7 +1038,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
     /* the measuring tools: a stopwatch on the simulated clock, and a ruler on the flat picture's pendulum half, which is drawn to scale */
     VD.tools({ el: can, strip: '#dimbar', stage: '#scene', time: () => (can.getClientRects().length ? S.t : null),
-      scale: () => { if (use3() || !geo) return null; const wide = W > 640; return { m: 1 / geo.sc, area: [0, 0, wide ? W * 0.55 : W, wide ? H : H * 0.62] }; } });
+      scale: () => { if (use3() || !geo) return null; const wide = W > 640; return { m: 1 / geo.sc, area: [0, 0, wide ? W * SPL.f() : W, wide ? H : H * SPL.f()] }; } });
     return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, rows: () => S.rows.length, init3D, dim3, status: capStatus };
   })();
 

@@ -1200,16 +1200,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (document.documentElement.getAttribute('data-projector') !== 'on') return 1;
     return clamp(Math.min(W, H) / 430, 1, 1.35);
   }
-  function layout() {
+  /* the divider between the plate and the plot (VD.split): side by side on a wide picture, the plot below on a narrow one.
+     Its default is where the plate fits the picture's height (side by side) or width (stacked), as before. */
+  const wideP = () => W / H > 1.22;
+  function plateFit(a) {
     const ps = projScale(), pad = 14 * ps;
-    if (W / H > 1.22) {   // side by side: plate on the left, plot on the right
-      const s = Math.min(H - 2 * pad, W * 0.56);
-      G.plate = { x: pad, y: (H - s) / 2, s };
-      G.plot = { x: pad + s + 18 * ps, y: pad, w: W - (pad + s + 18 * ps) - pad, h: H - 2 * pad };
-    } else {              // stacked: plate on top, plot below
-      const ph = clamp(H * 0.34, 150 * ps, 260 * ps), s = Math.min(W - 2 * pad, H - ph - 3 * pad);
-      G.plate = { x: (W - s) / 2, y: pad, s };
-      G.plot = { x: pad, y: pad + s + pad, w: W - 2 * pad, h: H - s - 3 * pad };
+    if (a === 'x') return (pad + Math.min(H - 2 * pad, W * 0.56) + 9 * ps) / W;
+    const ph = clamp(H * 0.34, 150 * ps, 260 * ps); return (pad + Math.min(W - 2 * pad, H - ph - 3 * pad) + pad / 2) / H;
+  }
+  const SPL = VD.split(can, { key: 'plot', axis: () => (W && H ? (wideP() ? 'x' : 'y') : null), def: (a) => (W && H ? plateFit(a) : 0.5), min: 0.25, max: 0.75,
+    label: 'Divider between the plate and the response plot', onChange: () => { layout(); glResize(); dirty = true; } });
+  function layout() {
+    const ps = projScale(), pad = 14 * ps, f = SPL.f();
+    if (wideP()) {   // side by side: plate on the left, plot on the right of the divider
+      const xd = W * f, s = Math.max(40, Math.min(H - 2 * pad, xd - pad - 9 * ps));
+      G.plate = { x: pad + (xd - 9 * ps - pad - s) / 2, y: (H - s) / 2, s };
+      G.plot = { x: xd + 9 * ps, y: pad, w: W - xd - 9 * ps - pad, h: H - 2 * pad };
+    } else {         // stacked: plate on top, plot below the divider
+      const yd = H * f, s = Math.max(40, Math.min(W - 2 * pad, yd - pad - pad / 2));
+      G.plate = { x: (W - s) / 2, y: pad + (yd - pad / 2 - pad - s) / 2, s };
+      G.plot = { x: pad, y: yd + pad / 2, w: W - 2 * pad, h: H - yd - pad / 2 - pad };
     }
     const p = G.plate; p.cx = p.x + p.s / 2; p.cy = p.y + p.s / 2; p.R = Math.max(p.s / 2 * 0.8, p.s / 2 - 24 * ps);
   }
@@ -1217,7 +1227,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const r = pane.getBoundingClientRect();
     W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height)); dpr = window.devicePixelRatio || 1;
     can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px';
-    layout(); glResize(); dirty = true;
+    SPL.place(); layout(); glResize(); dirty = true;
   }
   const U2X = (u) => G.plate.cx + u * G.plate.R, V2Y = (v) => G.plate.cy - v * G.plate.R;
   function platePath(c, grow = 0) {

@@ -207,3 +207,18 @@
 .vd-size:hover::before, .vd-size.on::before { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--surface), inset 0 0 0 4px var(--accent); }
 .vd-size:focus-visible::before { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media print { .vd-size { display: none; } }
+/* Divider between two pieces of a picture (vd.js VD.split): drag it, it snaps to the marks that show while dragging */
+.vd-split { position: absolute; z-index: 3; width: 16px; margin-left: -8px; cursor: col-resize; touch-action: none; user-select: none; -webkit-user-select: none; outline: none; display: flex; align-items: center; justify-content: center; }
+.vd-split.vd-split-y { width: auto; height: 16px; margin-left: 0; margin-top: -8px; cursor: row-resize; }
+.vd-split[hidden], .vd-split-marks[hidden] { display: none; }
+.vd-split::before { content: ""; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: 0; transition: opacity 0.15s; }
+.vd-split.vd-split-y::before { left: 0; right: 0; top: 7px; bottom: auto; width: auto; height: 2px; }
+.vd-split::after { content: ""; position: relative; width: 8px; height: 44px; border-radius: 4px; background: var(--surface); border: 1px solid var(--line); box-shadow: inset 0 0 0 2px var(--surface), inset 0 0 0 3px color-mix(in srgb, var(--muted) 55%, transparent); }
+.vd-split.vd-split-y::after { width: 44px; height: 8px; }
+.vd-split:hover::before, .vd-split.on::before, .vd-split:focus-visible::before { opacity: 0.6; }
+.vd-split:hover::after, .vd-split.on::after { border-color: var(--accent); }
+.vd-split:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 2px; }
+.vd-split-marks { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.vd-split-marks i { position: absolute; width: 0; border-left: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent); }
+.vd-split-marks i.y { height: 0; border-left: 0; border-top: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent); }
+@media print { .vd-split, .vd-split-marks { display: none; } }

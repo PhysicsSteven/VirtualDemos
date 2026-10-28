@@ -1257,6 +1257,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('presetHint').textContent = HINTS.hotj;
   syncSliders();
   derive(); tau = 0.03 * D.Per; dirty = false;
+  /* dividers (VD.split): between the orbit and the telescope's view, and between those views and the two curves below.
+     From 821 px wide only; a phone keeps its stacked panes. */
+  const views = document.querySelector('.views'), wideStage = () => window.innerWidth > 820;
+  const splitV = VD.split(views, { key: 'views', host: stage, axis: () => (wideStage() ? 'x' : null), def: 0.5, min: 0.3, max: 0.7,
+    label: 'Divider between the orbit and what the telescope sees', onChange: (f) => { views.style.gridTemplateColumns = `minmax(0, ${f}fr) minmax(0, ${1 - f}fr)`; resize(); } });
+  const below = () => { const a = views.getBoundingClientRect(), b = stage.getBoundingClientRect(); return { left: a.left, top: a.top, width: a.width, height: b.bottom - a.top, right: a.right, bottom: b.bottom }; };
+  const splitH = VD.split(stage, { key: 'curves', host: stage, box: below, axis: () => (wideStage() ? 'y' : null), def: 0.5, min: 0.3, max: 0.7,
+    label: 'Divider between the views and the curves', onChange: (f) => { rowsFor(f); resize(); splitV.place(); } });
+  function rowsFor(f) { stage.style.gridTemplateRows = wideStage() ? `auto minmax(0, ${f}fr) minmax(0, ${(1 - f) / 2}fr) minmax(0, ${(1 - f) / 2}fr)` : ''; views.style.gridTemplateColumns = wideStage() ? `minmax(0, ${splitV.f()}fr) minmax(0, ${1 - splitV.f()}fr)` : ''; }
+  window.addEventListener('resize', () => rowsFor(splitH.f()));
+  rowsFor(splitH.f());
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);

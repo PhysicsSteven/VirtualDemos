@@ -70,7 +70,7 @@ table.rows input:focus { border-color: var(--accent); }
 #viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 #viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .scene { position: absolute; inset: 0; }
-.instr { left: 12px; top: 58px; max-width: calc(60% - 24px); }
+.instr { left: 12px; top: 58px; max-width: calc(var(--vd-share, 66%) - 24px); }   /* stays on the ramp's side of the divider (VD.split) */
 @media (max-width: 820px) {
   main.bench .stage { height: auto; max-height: none; }
   .scene { position: relative; inset: auto; height: 520px; max-height: 85vh; }
@@ -284,6 +284,9 @@ table.rows input:focus { border-color: var(--accent); }
   const S = { preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
+  /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
+  const SPL = VD.split(can, { key: 'fbd', axis: () => W > 760 ? 'x' : 'y', def: (a) => a === 'x' ? 2 / 3 : 0.56, min: 0.5, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
+    label: 'Divider between the ramp and the free body diagram', onChange: () => { stage.style.setProperty('--vd-share', SPL.f() * 100 + '%'); draw(); } });
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
@@ -522,7 +525,7 @@ table.rows input:focus { border-color: var(--accent); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), wide = W > 760, sw = wide ? W * 0.6 : W, sh = wide ? H : H * 0.56;
+    const p = ps(), wide = W > 760, sw = wide ? W * SPL.f() : W, sh = wide ? H : H * SPL.f();
     /* the knob panel sits over the top of the scene: the apparatus is drawn below it */
     const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : Math.max(46 * p, (() => { const vb = document.querySelector('#scene .viewbar'); return vb.offsetTop + vb.offsetHeight + 6; })());
     drawScene(0, top, sw, sh - top);
@@ -790,7 +793,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmToggle').checked = reduce;
   $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-ff-motion', reduce ? 'reduce' : 'full'); } catch (_) {} });
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; SPL.place(); stage.style.setProperty('--vd-share', SPL.f() * 100 + '%'); draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

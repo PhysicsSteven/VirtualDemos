@@ -5113,3 +5113,19 @@ transverse angular momentum, hence the large wobble after spinning back up (also
   at a tenth of real time (`advance(dt / 10)`). Physics, gate timings (simulated clock), strip, strobe, keys and video unchanged.
 - test_gyroscope passes; vdcheck `--only after` 0 problems, `--only clip` 0 cut off; checked in Playwright with WebGL at
   desktop and 390 px. What's new entry added.
+## 2026-10-28 · Claude · Dividers between the pieces of a picture (pilot, 5 demos)
+
+Steve, 2026-10-28: each piece should be resizable with snap positions (Forces' free body diagram took more room than the
+scene). Pilot first, then course by course if he likes it.
+- `demos/lib/vd.js` `VD.split(el, o)` (README row) and `.vd-split` in vd.css: a divider on the line between two pieces;
+  drag, snaps at 1/3, 1/2, 2/3 and the default (marks show while dragging), arrow keys snap to snap, Home or double click
+  for the default; kept per demo in localStorage `vd-split:<demo>:<key>:<x|y>`; Reset all clears them.
+- `forces.html`: `sw = W * 0.6` became `W * SPL.f()`, default 2/3 (the ramp gets more room), limits 0.5 to 0.8; the knob
+  panel's max width follows the divider (`--vd-share`). Phone: the divider runs across, between scene and diagram.
+- `chladni.html`: plate and plot either side of the divider; the default is where the plate fits the height, as before.
+- `pendulum.html`: `W * 0.55` / `H * 0.62` became `SPL.f()` (defaults unchanged).
+- `exoplanets.html`: two dividers from 821 px wide (orbit | telescope, views / curves); views and curves now start half
+  and half (the curves were two fixed 160 px rows).
+- `spin-resonance.html`: two dividers from 821 px wide (bench / screens, oscilloscope | chart recorder), same defaults.
+- Physics untouched; test_forces, test_chladni, test_pendulum, test_main_lab_controls pass; vdcheck `--only after` and
+  `--only clip` 0 problems on all five.
