@@ -5482,3 +5482,17 @@ track (normal force, leaving the track, landings) is a different model from Pote
   catalog after Potential Energy Curves; thumbnails (OVERRIDES: the loop); What's new entry.
 - Checked: Playwright at 1368, 1024 and 390 px, light and dark, no page errors, no sideways scroll; dragging a point in from the
   tray, a grip onto the bin and the skater into the air; `vdcheck --only after` 0 problems, `--only clip` 0 cut off.
+
+## 2026-10-30 · Claude · New demo: Inverse Square Force Lab (PhET parity, Steve)
+
+Second parity gap: PhET Gravity Force Lab, Gravity Force Lab: Basics and Coulomb's Law (all partly covered on 28 Oct, plan #11).
+One new demo rather than modes in Cavendish and Coulomb Sandbox, since all three are the same apparatus.
+- `demos/force-lab.html`: two bodies on a ruler, dragged along it (0.1 of a ruler unit; arrow keys move the right one), with the
+  equal and opposite forces drawn as arrows (length grows with log F, stated as not to scale) and labelled. Modes: Gravity (lead
+  spheres 1 to 1000 kg, 11 340 kg/m³, radius to scale, Same size check; 10 m ruler), Coulomb (±10 μC, 10 cm ruler), Coulomb,
+  atomic scale (±10 e, 1000 pm ruler). Bodies never overlap. Record this distance builds a table per mode and a plot of |F|
+  against r or 1/r² (no fit drawn, as the graphs rule says). Blind hides the force. Five setups. Static: no Play.
+- CORE (`fl*`): G 6.674 30e-11 and k 8.987 551 786 2e9 (CODATA 2022), e exact. Tests `test_force_lab.cjs` (6 groups).
+- No worksheet by decision; notes `notes/src/force-lab.md` (6 questions), key in TeacherKeys `demo-keys/answers/force-lab.md`.
+  Map: Physics I (Vol 1 §5.5, 13.1) and Physics II (Vol 2 §5.3); topics Gravitation and Charges and fields; thumbnails; What's new.
+- Checked: Playwright at 1368 and 390 px, light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.

@@ -43,6 +43,7 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   keep_controls  True to leave buttons inside the stage visible
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
+    "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},
     "energy-track": {"wait": 1200, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__et.applyPreset('loop'); for (let i = 0; i < 160; i++) window.__et.step(0.016); window.__et.drawAll();"},
     "resonances": {"crop": ".scene", "wait": 2000, "js": "document.getElementById('setupCard').style.display = 'none'; window.__res.applyPreset('r31'); window.__res.run(3000);"},
     "planet-temperatures": {"crop": "#sysPane", "wait": 1500},

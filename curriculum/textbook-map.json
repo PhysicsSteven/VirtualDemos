@@ -2456,7 +2456,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "force-lab"
       ],
       "unit": "forces",
       "note": "Forces and Friction, Show third law partners: the block pushes the ramp, pulls the string and pulls the Earth, equal and opposite to the forces on it."
@@ -3061,7 +3062,8 @@
       "status": "usable",
       "demos": [
         "kepler-orbits",
-        "cavendish"
+        "cavendish",
+        "force-lab"
       ],
       "unit": "gravitation",
       "note": "The Cavendish Experiment (2026-10-24, Claude): a torsion balance to scale, exact torque from all four sphere pairs, damped swing; G from the turning points and the period, with the far sphere correction."
@@ -3500,7 +3502,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "coulomb-sandbox"
+        "coulomb-sandbox",
+        "force-lab"
       ],
       "unit": "charge-fields"
     },
@@ -10745,6 +10748,37 @@
       ],
       "title": "Force on a Current",
       "url": "demos/wire-force.html"
+    },
+    {
+      "demo": "force-lab",
+      "course": [
+        "physics-1",
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.1",
+          "title": "Newton's Law of Universal Gravitation"
+        },
+        {
+          "vol": 2,
+          "sec": "5.3",
+          "title": "Coulomb's Law"
+        },
+        {
+          "vol": 1,
+          "sec": "5.5",
+          "title": "Newton's Third Law"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Inverse square force lab (PhET Gravity Force Lab and Coulomb's Law counterpart, 2026-10-30): two bodies on a ruler, equal and opposite forces, F against r and 1/r². No worksheet by decision (capability parity, Steve 2026-10-28).",
+      "title": "Inverse Square Force Lab",
+      "url": "demos/force-lab.html",
+      "handouts": []
     },
     {
       "demo": "cavendish",

@@ -69,6 +69,7 @@
      "blurb": "Newton's gravity, Kepler's laws, tides and orbital resonance.",
      "demos": [
       "gravity-near-earth",
+      "force-lab",
       "cavendish",
       "kepler-orbits",
       "tides",
@@ -154,6 +155,7 @@
      "demos": [
       "induction",
       "coulomb-sandbox",
+      "force-lab",
       "gauss-law",
       "electrostatics-at-work",
       "capacitors"

@@ -1,0 +1,322 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Inverse Square Force Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the bodies' colours, the bench, the Set up card, the record plot */
+:root { --mass: #6b7787; --pos: #c23f2c; --neg: #2b60b5; --arrow: #a7740b; --bench: #dfe5ec; --wood: #b88a52; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mass: #9aa6b6; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --bench: #1c2530; --wood: #8a6a40; } }
+:root[data-theme="dark"] { --mass: #9aa6b6; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --bench: #1c2530; --wood: #8a6a40; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(380px, 1fr); min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.plotbox { position: relative; height: 200px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+table.rec { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; }
+table.rec th, table.rec td { text-align: right; padding: 3px 6px; border-bottom: 1px solid var(--line); }
+table.rec th { color: var(--muted); font-weight: 600; }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 360px; } .setup-card { position: static; width: auto; margin: 8px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Inverse Square Force Lab</h1>
+      <p>Two masses or two charges on a ruler. Slide them apart, change their size, and read the force on each: always equal and opposite, and four times smaller each time you double the distance.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/force-lab.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/force-lab.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h6v1h-6zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM16 4h2v1h-2zM19 4h7v1h-7zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM14 10h3v1h-3zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h3v1h-3zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h7v1h-7zM11 12h1v1h-1zM13 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h5v1h-5zM8 14h3v1h-3zM14 14h4v1h-4zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM13 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h6v1h-6zM29 16h1v1h-1zM33 16h5v1h-5zM4 17h1v1h-1zM9 17h3v1h-3zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h2v1h-2zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM6 19h2v1h-2zM10 19h4v1h-4zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h2v1h-2zM11 20h2v1h-2zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h1v1h-1zM5 21h3v1h-3zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h3v1h-3zM6 22h4v1h-4zM12 22h1v1h-1zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h2v1h-2zM11 24h1v1h-1zM14 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM32 24h5v1h-5zM6 25h1v1h-1zM11 25h1v1h-1zM13 25h2v1h-2zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM14 26h3v1h-3zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM10 27h1v1h-1zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h4v1h-4zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM6 29h2v1h-2zM10 29h1v1h-1zM19 29h2v1h-2zM23 29h4v1h-4zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h6v1h-6zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM17 37h10v1h-10zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Which force" id="modeSeg">
+          <button type="button" data-m="grav" aria-pressed="true">Gravity</button>
+          <button type="button" data-m="coul" aria-pressed="false">Coulomb</button>
+          <button type="button" data-m="atom" aria-pressed="false">Coulomb, atomic scale</button>
+        </div>
+        <button type="button" class="btn" id="record">Record this distance</button>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="application" aria-label="Two bodies on a ruler with the force on each drawn as an arrow. Drag either body along the ruler. Left and right arrow keys move the right body, with Shift for bigger steps."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set the two bodies">
+        <span class="card-title">The two bodies</span>
+        <div><div class="slider-head"><label for="sA" id="lA">Mass m₁</label><output id="oA" for="sA"></output></div><input type="range" id="sA"></div>
+        <div><div class="slider-head"><label for="sB" id="lB">Mass m₂</label><output id="oB" for="sB"></output></div><input type="range" id="sB"></div>
+        <label class="check" id="sizeRow"><input type="checkbox" id="cSize"><span>Same size for every mass</span></label>
+        <label class="check"><input type="checkbox" id="cSci"><span>Force in scientific notation</span></label>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="g1" aria-pressed="true">Two lead balls</button>
+          <button type="button" data-p="g2" aria-pressed="false">Double one mass</button>
+          <button type="button" data-p="c1" aria-pressed="false">Unlike charges</button>
+          <button type="button" data-p="c2" aria-pressed="false">Like charges</button>
+          <button type="button" data-p="a1" aria-pressed="false">Proton and electron</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Recorded</h2>
+        <div class="seg" role="group" aria-label="Plot against" id="axSeg">
+          <button type="button" data-a="r" aria-pressed="true">F against r</button>
+          <button type="button" data-a="inv" aria-pressed="false">F against 1/r²</button>
+        </div>
+        <div class="plotbox"><canvas id="pCan" role="img" aria-label="The recorded forces plotted against the distance or against one over the distance squared."></canvas></div>
+        <table class="rec" id="rec"><thead><tr><th id="thR">r</th><th id="thF">F</th></tr></thead><tbody></tbody></table>
+        <div class="btnrow"><button type="button" class="btn" id="clear">Clear</button></div>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the force (predict it first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">F = G m₁m₂ / r²   F = k q₁q₂ / r²</p>
+        <p class="hint">Model: two uniform spheres, or two point charges, at rest; r is the distance between their centers (a uniform sphere pulls as if its mass were at its center). The force on each is the same size and opposite in direction (Newton's third law). Gravity: G = 6.674 30 × 10⁻¹¹ N·m²/kg² (CODATA 2022); the spheres are lead, 11 340 kg/m³, so a sphere's radius is (3m/4πρ)^(1/3) unless Same size is on. Coulomb: k = 1/(4πε₀) = 8.987 551 786 2 × 10⁹ N·m²/C² (CODATA 2022), e = 1.602 176 634 × 10⁻¹⁹ C (exact); the charges are points drawn as balls, and two balls may not overlap. Nothing else acts: no Earth, no air, no other charges. Positions are read on the ruler to 0.1 of its unit.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Inverse square forces between two bodies on a line. Runs in Node: curriculum/validation/test_force_lab.cjs */
+  var FL_G = 6.67430e-11, FL_K = 8.9875517862e9, FL_E = 1.602176634e-19, FL_RHO = 11340;
+  /* each mode: the unit of position (m per unit), the unit of the bodies' size (SI per unit), the ruler's length */
+  var FL_MODES = {
+    grav: { len: 10, x: 1, xu: 'm', q: 1, qu: 'kg', min: 1, max: 1000, step: 1 },
+    coul: { len: 10, x: 0.01, xu: 'cm', q: 1e-6, qu: 'μC', min: -10, max: 10, step: 0.1 },
+    atom: { len: 1000, x: 1e-12, xu: 'pm', q: FL_E, qu: 'e', min: -10, max: 10, step: 1 }
+  };
+  /* the force on body 2 along +x (body 2 to the right of body 1), in N: positive pushes it away, negative pulls it in */
+  function flForce(mode, a, b, rUnits) {
+    var M = FL_MODES[mode], r = rUnits * M.x;
+    if (mode === 'grav') return -FL_G * a * b / (r * r);
+    return FL_K * a * M.q * b * M.q / (r * r);
+  }
+  /* radius of a lead sphere of mass m, in m */
+  function flRadius(m) { return Math.cbrt(3 * m / (4 * Math.PI * FL_RHO)); }
+  /* the radius drawn, in ruler units: lead spheres to scale in Gravity (or all as 1000 kg with Same size), charges a fixed size */
+  function flDrawR(mode, q, same) {
+    if (mode === 'grav') return flRadius(same ? 1000 : q) / FL_MODES.grav.x;
+    return mode === 'coul' ? 0.35 : 35;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    g1: { mode: 'grav', a: 500, b: 500, x1: 3, x2: 6, hint: 'Two 500 kg lead balls (radius 0.22 m) with centers 3.0 m apart: F = Gm₁m₂/r² = 1.85 × 10⁻⁶ N on each, the weight of a 0.19 mg speck of dust. Slide one to 6 m apart and the force falls to a quarter.' },
+    g2: { mode: 'grav', a: 1000, b: 500, x1: 3, x2: 6, hint: 'Double m₁ to 1000 kg. The force on both balls doubles, and it is still the same on the small ball as on the big one: each pulls the other equally hard.' },
+    c1: { mode: 'coul', a: 2, b: -2, x1: 3, x2: 7, hint: '+2 μC and −2 μC with centers 4.0 cm apart: F = k|q₁q₂|/r² = 22.5 N of attraction. Swap a sign and they repel with the same force.' },
+    c2: { mode: 'coul', a: 4, b: 1, x1: 3, x2: 7, hint: '+4 μC and +1 μC push each other apart with equal forces (22.5 N at 4.0 cm), although one charge is four times the other.' },
+    a1: { mode: 'atom', a: 1, b: -1, x1: 400, x2: 452.9, hint: 'A proton and an electron 52.9 pm apart, the Bohr radius: F = ke²/a₀² = 8.24 × 10⁻⁸ N. Tiny, but on an electron (9.11 × 10⁻³¹ kg) it gives an acceleration near 10²³ m/s².' },
+  };
+  const S = { preset: 'g1', mode: 'grav', a: 500, b: 500, x1: 3, x2: 6, same: false, sci: true, blind: false, ax: 'r', rec: { grav: [], coul: [], atom: [] }, msg: '' };
+  const can = $('can'), ctx = can.getContext('2d'), pcan = $('pCan'), pctx = pcan.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null, geo = null, drag = null;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const M = () => FL_MODES[S.mode];
+  const SUP = '⁻⁰¹²³⁴⁵⁶⁷⁸⁹';
+  function sci(v, d = 3) {
+    if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    let mm = m.toFixed(d - 1), ee = e; if (Math.abs(+mm) >= 10) { mm = (m / 10).toFixed(d - 1); ee++; }
+    if (ee === 0) return mm.replace('-', '−');
+    return `${mm.replace('-', '−')} × 10${String(ee).split('').map((c) => SUP['-0123456789'.indexOf(c)]).join('')}`;
+  }
+  function fN(v) { const a = Math.abs(v); if (S.sci || a < 1e-3 || a >= 1e5) return `${sci(a)} N`; return `${+a.toPrecision(3)} N`; }
+  const fx = (v) => `${(+v).toFixed(1)} ${M().xu}`;
+  const fq = (v) => S.mode === 'grav' ? `${Math.round(v)} kg` : `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(S.mode === 'coul' ? 1 : 0)} ${M().qu}`;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), mass: g('--mass'), pos: g('--pos'), neg: g('--neg'), arrow: g('--arrow'), bench: g('--bench'), wood: g('--wood'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const r = () => S.x2 - S.x1, F = () => flForce(S.mode, S.a, S.b, r());
+  const R1 = () => flDrawR(S.mode, S.a, S.same), R2 = () => flDrawR(S.mode, S.b, S.same);
+  const minGap = () => R1() + R2() + M().len * 0.005;
+
+  // ---------- layout and drawing ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const padL = 30 * p, padR = cardOn ? card.offsetWidth + 30 : 30 * p;
+    const ppu = (W - padL - padR) / M().len, yb = Math.min(H * 0.62, cardOn ? Math.max(H * 0.5, card.offsetTop + card.offsetHeight + 120 * p) : H * 0.62);
+    geo = { p, ppu, x0: padL, yb: Math.min(yb, H - 70 * p) };
+  }
+  const X = (u) => geo.x0 + u * geo.ppu;
+  function arrow(x0, y, x1, col, w) { const p = geo.p, d = Math.sign(x1 - x0), L = Math.abs(x1 - x0); if (L < 1) return; const h = Math.min(12 * p, L * 0.6);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1 - d * h, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x1 - d * h, y - h * 0.55); ctx.lineTo(x1 - d * h, y + h * 0.55); ctx.closePath(); ctx.fill(); }
+  function draw() {
+    if (!T || !W) return; layout(); const p = geo.p, m = M(), yb = geo.yb;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* the ruler */
+    const ry = yb + 24 * p, rh = 30 * p;
+    ctx.fillStyle = T.wood; ctx.fillRect(X(0) - 8 * p, ry, m.len * geo.ppu + 16 * p, rh);
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const major = m.len / 10, minor = major / 10;
+    for (let i = 0; i <= 100; i++) { const u = i * minor, x = X(u) + 0.5, big = i % 10 === 0, mid = i % 5 === 0; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 14 : mid ? 10 : 6) * p); ctx.stroke(); if (big) ctx.fillText(String(Math.round(u)), x, ry + 15 * p); }
+    ctx.textAlign = 'right'; ctx.fillText(m.xu, X(m.len) + 6 * p, ry + rh + 4 * p);
+    /* the two bodies */
+    const body = (u, q, R, lab) => { const x = X(u), rad = Math.max(10 * p, R * geo.ppu), y = yb - rad;
+      if (S.mode === 'grav') { const g = ctx.createRadialGradient(x - rad * 0.35, y - rad * 0.35, rad * 0.1, x, y, rad); g.addColorStop(0, T.surface); g.addColorStop(1, T.mass); ctx.fillStyle = g; }
+      else ctx.fillStyle = q > 0 ? T.pos : q < 0 ? T.neg : T.mass;
+      ctx.beginPath(); ctx.arc(x, y, rad, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = S.mode === 'grav' ? T.ink : T.canvas; ctx.font = `600 ${Math.max(10, Math.min(16, rad * 0.55)) * p / p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (S.mode !== 'grav') ctx.fillText(q > 0 ? '+' : q < 0 ? '−' : '0', x, y + 1);
+      ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom'; ctx.fillText(`${lab} ${fq(q)}`, x, y - rad - 6 * p);
+      /* center mark down to the ruler */
+      ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, yb); ctx.lineTo(x, ry); ctx.stroke(); ctx.setLineDash([]);
+      return { x, y, rad }; };
+    const n = S.mode === 'grav' ? ['m₁', 'm₂'] : ['q₁', 'q₂'];
+    const b1 = body(S.x1, S.a, R1(), n[0]), b2 = body(S.x2, S.b, R2(), n[1]);
+    /* the distance between centers */
+    const dy = ry + rh + 22 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(b1.x, dy); ctx.lineTo(b2.x, dy); ctx.moveTo(b1.x, dy - 5 * p); ctx.lineTo(b1.x, dy + 5 * p); ctx.moveTo(b2.x, dy - 5 * p); ctx.lineTo(b2.x, dy + 5 * p); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`r = ${fx(r())}`, (b1.x + b2.x) / 2, dy + 6 * p);
+    /* the forces: equal and opposite arrows; the length grows with log F so a million to one still shows (stated) */
+    const f = F(), mag = Math.abs(f);
+    if (mag > 0) {
+      const ref = { grav: 1e-9, coul: 1e-2, atom: 1e-12 }[S.mode];
+      let L = Math.max(14 * p, Math.min(150 * p, 20 * p * Math.log10(mag / ref + 1) + 14 * p));
+      if (f < 0) L = Math.min(L, Math.max(14 * p, 0.45 * (b2.x - b1.x)));   /* pulling arrows point at each other: keep them from crossing */
+      const ay = Math.min(b1.y - b1.rad, b2.y - b2.rad) - 34 * p, s = f > 0 ? 1 : -1;   /* s = +1: body 2 pushed to the right */
+      arrow(b2.x, ay, b2.x + s * L, T.arrow, 4 * p); arrow(b1.x, ay, b1.x - s * L, T.arrow, 4 * p);
+      ctx.fillStyle = T.arrow; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
+      const txt = S.blind ? 'F = ?' : `F = ${fN(f)}`;
+      ctx.textAlign = 'right'; ctx.fillText(txt, b1.x + 8 * p, ay - 8 * p); ctx.textAlign = 'left'; ctx.fillText(txt, b2.x - 8 * p, ay - 8 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(W < 640 ? 'Arrow lengths grow with log F (not to scale).' : 'Arrow lengths grow with log F (not to scale), so very small and very large forces both show.', 12 * p, 10 * p);
+    }
+  }
+  function drawPlot() {
+    if (!T || !PW) return; const c = pctx, p = ps(), w = PW, h = PH, l = 62 * p, rr = 10 * p, tp = 10 * p, b = 30 * p, data = S.rec[S.mode];
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
+    c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textBaseline = 'middle';
+    if (!data.length) { c.textAlign = 'center'; c.fillText('Record a few distances to plot them.', w / 2, h / 2); return; }
+    if (S.blind) { c.textAlign = 'center'; c.fillText('Forces hidden in Blind', w / 2, h / 2); return; }
+    const xs = data.map((q) => (S.ax === 'r' ? q[0] : 1 / (q[0] * q[0]))), ys = data.map((q) => Math.abs(q[1]));
+    const xmax = Math.max(...xs) * 1.1, ymax = Math.max(...ys) * 1.1;
+    const gx = (v) => l + v / xmax * (w - l - rr), gy = (v) => tp + (1 - v / ymax) * (h - tp - b);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(l, tp); c.lineTo(l, h - b); c.lineTo(w - rr, h - b); c.stroke();
+    c.textAlign = 'right'; c.fillText(sci(ymax, 2), l - 4 * p, tp + 4 * p); c.fillText('0', l - 4 * p, h - b);
+    c.textAlign = 'center'; const xl = S.ax === 'r' ? `r (${M().xu})` : `1/r² (1/${M().xu}²)`;
+    c.fillText(xl, (l + w) / 2, h - b / 2 + 4 * p); c.textAlign = 'right'; c.fillText(S.ax === 'r' ? (+xmax.toPrecision(2)).toString() : sci(xmax, 2), w - rr, h - b / 2 + 4 * p);
+    c.save(); c.translate(12 * p, (tp + h - b) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('|F| (N)', 0, 0); c.restore();
+    c.fillStyle = T.arrow; for (let i = 0; i < xs.length; i++) { c.beginPath(); c.arc(gx(xs[i]), gy(ys[i]), 4 * p, 0, 2 * Math.PI); c.fill(); }
+  }
+  function table() {
+    const data = S.rec[S.mode]; $('thR').textContent = `r (${M().xu})`; $('thF').textContent = '|F| (N)';
+    $('rec').tBodies[0].innerHTML = data.map((q) => `<tr><td>${q[0].toFixed(1)}</td><td>${S.blind ? '?' : sci(Math.abs(q[1]), 3)}</td></tr>`).join('');
+  }
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, f = F();
+    const kind = f < 0 ? 'attract' : f > 0 ? 'repel' : 'no force';
+    let h = dd('Distance r', fx(r())) + dd('Each body', kind);
+    h += S.blind ? '<div class="wide"><dt>Force on each</dt><dd class="ok">hidden: predict it</dd></div>' : dd('Force on each |F|', fN(f), 'wide');
+    if (S.mode === 'grav') h += dd('Radii', `${(flRadius(S.same ? 1000 : S.a) * 100).toFixed(1)} cm, ${(flRadius(S.same ? 1000 : S.b) * 100).toFixed(1)} cm`, 'wide');
+    $('out').innerHTML = h;
+  }
+  function drawAll() { draw(); drawPlot(); table(); readouts(); }
+
+  // ---------- controls ----------
+  function sync() {
+    const m = M(), nm = S.mode === 'grav' ? ['Mass m₁', 'Mass m₂'] : ['Charge q₁', 'Charge q₂'];
+    $('lA').textContent = nm[0]; $('lB').textContent = nm[1];
+    for (const [id, v] of [['sA', S.a], ['sB', S.b]]) { const e = $(id); e.min = m.min; e.max = m.max; e.step = m.step; e.value = v; }
+    $('oA').textContent = fq(S.a); $('oB').textContent = fq(S.b); $('sizeRow').hidden = S.mode !== 'grav'; $('cSize').checked = S.same; $('cSci').checked = S.sci;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#axSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === S.ax));
+  }
+  function fit() {   /* keep both bodies on the ruler and their centers at least minGap apart, on the 0.1 unit grid */
+    const m = M(), g = Math.ceil(minGap() * 10) / 10, q = (v) => Math.round(v * 10) / 10;
+    S.x1 = q(Math.max(Math.ceil(R1() * 10) / 10, Math.min(m.len - g, S.x1)));
+    S.x2 = q(Math.min(m.len, Math.max(S.x1 + g, S.x2)));
+    if (S.x2 - S.x1 < g - 1e-9) S.x1 = q(S.x2 - g);
+  }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, mode: c.mode, a: c.a, b: c.b, x1: c.x1, x2: c.x2 }); $('presetHint').textContent = c.hint; S.msg = ''; status(); sync(); drawAll(); }
+  const DEF = { grav: 'g1', coul: 'c1', atom: 'a1' };
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => applyPreset(DEF[b.dataset.m]));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); };
+  $('sA').addEventListener('input', (e) => { S.a = +e.target.value; custom(); fit(); sync(); drawAll(); });
+  $('sB').addEventListener('input', (e) => { S.b = +e.target.value; custom(); fit(); sync(); drawAll(); });
+  $('cSize').addEventListener('change', (e) => { S.same = e.target.checked; fit(); drawAll(); });
+  $('cSci').addEventListener('change', (e) => { S.sci = e.target.checked; drawAll(); });
+  for (const b of document.querySelectorAll('#axSeg button')) b.addEventListener('click', () => { S.ax = b.dataset.a; sync(); drawPlot(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  function status() { $('status').textContent = S.msg; }
+  $('record').addEventListener('click', () => {
+    const d = S.rec[S.mode], rr = +r().toFixed(1);
+    if (d.length && (d[0][2] !== S.a || d[0][3] !== S.b)) { S.msg = 'The bodies changed since the first reading: clear the table to start a new set.'; status(); return; }
+    if (d.some((q) => q[0] === rr)) { S.msg = `Already recorded at r = ${fx(rr)}.`; status(); return; }
+    d.push([rr, F(), S.a, S.b]); d.sort((x, y) => x[0] - y[0]); S.msg = `Recorded r = ${fx(rr)}.`; status(); drawPlot(); table();
+  });
+  $('clear').addEventListener('click', () => { S.rec[S.mode] = []; S.msg = ''; status(); drawPlot(); table(); });
+  window.vdReadings = () => S.rec.grav.length + S.rec.coul.length + S.rec.atom.length;
+
+  // ---------- dragging the bodies along the ruler ----------
+  function hit(x, y) {
+    const p = geo.p; for (const [k, u, R] of [['x1', S.x1, R1()], ['x2', S.x2, R2()]]) { const rad = Math.max(10 * p, R * geo.ppu); if (Math.hypot(x - X(u), y - (geo.yb - rad)) < rad + 10 * p) return k; } return null; }
+  const pt = (e) => { const b = can.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = pt(e), k = hit(x, y); if (!k) return; e.preventDefault(); can.setPointerCapture(e.pointerId); drag = { k, dx: x - X(S[k]) }; });
+  can.addEventListener('pointermove', (e) => {
+    if (!geo) return; const [x, y] = pt(e);
+    if (!drag) { can.style.cursor = hit(x, y) ? 'grab' : 'default'; return; }
+    const u = Math.round((x - drag.dx - geo.x0) / geo.ppu * 10) / 10, m = M(), g = Math.ceil(minGap() * 10) / 10;
+    if (drag.k === 'x1') S.x1 = Math.max(Math.ceil(R1() * 10) / 10, Math.min(S.x2 - g, u)); else S.x2 = Math.min(m.len, Math.max(S.x1 + g, u));
+    custom(); drawAll();
+  });
+  const up = () => { drag = null; }; can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault();
+    const d = (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1) * M().len / 10, g = Math.ceil(minGap() * 10) / 10;
+    S.x2 = Math.round(Math.min(M().len, Math.max(S.x1 + g, S.x2 + d)) * 10) / 10; custom(); drawAll();
+  });
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const b = $('scene').getBoundingClientRect(); W = b.width; H = b.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = pcan.getBoundingClientRect(); PW = q.width; PH = q.height; pcan.width = Math.round(PW * dpr); pcan.height = Math.round(PH * dpr); drawAll();
+  }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); const ro = new ResizeObserver(resize); ro.observe($('scene')); ro.observe($('pCan'));
+  applyPreset('g1'); resize();
+  window.__fl = { S, applyPreset, drawAll, F };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>

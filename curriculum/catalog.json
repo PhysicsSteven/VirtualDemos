@@ -956,6 +956,17 @@
      ]
     },
     {
+     "demo": "force-lab",
+     "title": "Inverse Square Force Lab",
+     "desc": "Two masses or two charges on a ruler: slide them apart, change their size, and read the equal and opposite forces. Record F at several distances and plot it against 1/r². Gravity, Coulomb, and Coulomb at the atomic scale.",
+     "tags": [
+      "Newton's law of gravitation",
+      "Coulomb's law",
+      "inverse square law",
+      "Newton's third law"
+     ]
+    },
+    {
      "demo": "cavendish",
      "title": "The Cavendish Experiment",
      "desc": "Swing two large lead spheres beside a torsion balance and watch a laser spot 5 m away creep a few centimeters as gravity twists the fiber; time the swing, find G, and weigh the Earth.",
