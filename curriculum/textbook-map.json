@@ -2541,7 +2541,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circular-motion"
+        "circular-motion",
+        "energy-track"
       ],
       "unit": "forces",
       "note": "Circular Motion: ball on a string, flat and banked curves with friction, vertical loop; free body diagrams to scale."
@@ -2613,7 +2614,8 @@
       "status": "usable",
       "demos": [
         "potential-curves",
-        "forces"
+        "forces",
+        "energy-track"
       ],
       "unit": "energy",
       "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
@@ -2647,7 +2649,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "energy-track"
       ],
       "unit": "energy"
     },
@@ -2664,7 +2667,8 @@
       "status": "usable",
       "demos": [
         "potential-curves",
-        "forces"
+        "forces",
+        "energy-track"
       ],
       "unit": "energy",
       "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
@@ -2681,7 +2685,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "energy-track"
       ],
       "unit": "energy"
     },
@@ -9261,6 +9266,46 @@
       "handouts": [
         "potential-curves"
       ]
+    },
+    {
+      "demo": "energy-track",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "7.3",
+          "title": "Work-Energy Theorem"
+        },
+        {
+          "vol": 1,
+          "sec": "8.1",
+          "title": "Potential Energy of a System"
+        },
+        {
+          "vol": 1,
+          "sec": "8.2",
+          "title": "Conservative and Non-Conservative Forces"
+        },
+        {
+          "vol": 1,
+          "sec": "8.3",
+          "title": "Conservation of Energy"
+        },
+        {
+          "vol": 1,
+          "sec": "6.3",
+          "title": "Centripetal Force"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Energy on a track (PhET Energy Skate Park counterpart, 2026-10-30): K, U and thermal energy, friction, moving the zero of U, the normal force on curves, leaving the track. No worksheet by decision (capability parity, Steve 2026-10-28).",
+      "title": "Energy on a Track",
+      "url": "demos/energy-track.html",
+      "handouts": []
     },
     {
       "demo": "projectile-drag",

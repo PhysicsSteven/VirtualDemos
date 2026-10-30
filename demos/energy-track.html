@@ -1,0 +1,668 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Energy on a Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the energy colours, the park and the graph under it, the Set up card */
+:root { --ek: #2b60b5; --eu: #2f8f5b; --eth: #c4552d; --etot: #17202b; --track: #6b4f2a; --rail: #8d97a6; --sky: #eef4fb; --skater: #7a3fb0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #e3e8ef; --track: #c99c5e; --rail: #7d8898; --sky: #121b26; --skater: #c08cf0; } }
+:root[data-theme="dark"] { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #e3e8ef; --track: #c99c5e; --rail: #7d8898; --sky: #121b26; --skater: #c08cf0; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(360px, 1fr) 170px; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .tclock { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.scene { position: relative; min-height: 0; }
+.scene canvas, .graph canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+.graph { position: relative; border-top: 1px solid var(--line); min-height: 0; }
+.graph canvas { touch-action: auto; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .seg button { padding: 4px 8px; font-size: 0.8rem; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.ebox { position: relative; height: 190px; }
+.ebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+:root[data-projector="on"] .ebox { height: 230px; }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto 150px; min-height: 0; } .scene { height: 400px; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 420px) { .scene { height: 340px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Energy on a Track</h1>
+      <p>Shape a track, let a skater go, and watch kinetic, potential and thermal energy trade places while the total stays fixed. Add friction, loops and jumps; see where the skater leaves the track.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/energy-track.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/energy-track.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h2v1h-2zM21 2h2v1h-2zM25 2h1v1h-1zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h3v1h-3zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM17 4h1v1h-1zM19 4h2v1h-2zM23 4h4v1h-4zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM17 6h3v1h-3zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM14 7h4v1h-4zM19 7h1v1h-1zM21 7h2v1h-2zM24 7h1v1h-1zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h5v1h-5zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h5v1h-5zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM21 10h2v1h-2zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h5v1h-5zM10 11h2v1h-2zM14 11h1v1h-1zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h1v1h-1zM34 11h4v1h-4zM5 12h1v1h-1zM7 12h3v1h-3zM11 12h1v1h-1zM14 12h2v1h-2zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h3v1h-3zM7 13h1v1h-1zM9 13h2v1h-2zM14 13h1v1h-1zM17 13h3v1h-3zM21 13h6v1h-6zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM7 14h2v1h-2zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h4v1h-4zM7 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM5 16h1v1h-1zM7 16h4v1h-4zM12 16h1v1h-1zM14 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h3v1h-3zM29 16h1v1h-1zM33 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM6 18h3v1h-3zM11 18h1v1h-1zM13 18h2v1h-2zM20 18h1v1h-1zM24 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h4v1h-4zM9 19h2v1h-2zM14 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h2v1h-2zM8 20h2v1h-2zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h1v1h-1zM4 21h1v1h-1zM9 21h2v1h-2zM13 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h1v1h-1zM12 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM9 23h1v1h-1zM12 23h3v1h-3zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h9v1h-9zM20 24h1v1h-1zM22 24h4v1h-4zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h3v1h-3zM14 25h1v1h-1zM16 25h2v1h-2zM21 25h3v1h-3zM26 25h1v1h-1zM28 25h7v1h-7zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h2v1h-2zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h2v1h-2zM15 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM12 27h5v1h-5zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h1v1h-1zM8 28h7v1h-7zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM11 29h1v1h-1zM13 29h2v1h-2zM17 29h8v1h-8zM26 29h1v1h-1zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h2v1h-2zM2 30h2v1h-2zM5 30h6v1h-6zM13 30h2v1h-2zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h6v1h-6zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM15 32h1v1h-1zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h1v1h-1zM16 33h2v1h-2zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h3v1h-3zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h9v1h-9zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h2v1h-2zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM16 37h1v1h-1zM19 37h2v1h-2zM23 37h2v1h-2zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h3v1h-3zM14 38h4v1h-4zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="restart" data-vd-key="reset">Return skater</button>
+        <div class="seg" role="group" aria-label="Speed" id="speedSeg">
+          <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+          <button type="button" data-s="0.5" aria-pressed="false">½×</button>
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+        </div>
+        <span class="tclock mono" id="tclock">t = 0.00 s</span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="application" aria-label="The skate park: a track with round grips at its points, the skater, the ground and two walls 12 m apart. Drag the skater anywhere and let go; drag a grip to reshape the track; drag a new point from the tray onto the track, or a grip onto the bin to remove it; drag the U = 0 tab on the left to move the zero of potential energy. Space plays or pauses."></canvas>
+      </div>
+      <div class="graph" id="graphBox">
+        <canvas id="gCan" role="img" aria-label="Energy against time for the last 20 s: kinetic, potential, thermal and total."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the skater, the track and gravity">
+        <span class="card-title">Set up, then press Play</span>
+        <div><div class="slider-head"><label for="sM">Skater mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="20" max="120" step="1" value="60"></div>
+        <div><div class="slider-head"><label for="sMu">Friction μ</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="0.5" step="0.01" value="0"></div>
+        <div><div class="slider-head"><span id="gLab">Gravity g</span><output id="oG"></output></div>
+          <div class="seg" role="group" aria-labelledby="gLab" id="gSeg">
+            <button type="button" data-g="earth" aria-pressed="true">Earth</button>
+            <button type="button" data-g="moon" aria-pressed="false">Moon</button>
+            <button type="button" data-g="mars" aria-pressed="false">Mars</button>
+            <button type="button" data-g="jupiter" aria-pressed="false">Jupiter</button>
+          </div></div>
+        <label class="check"><input type="checkbox" id="cStick"><span>Stick to the track (roller coaster rails)</span></label>
+        <label class="check"><input type="checkbox" id="cPie" checked><span>Energy pie over the skater</span></label>
+        <label class="check"><input type="checkbox" id="cGrid" checked><span>Grid, 1 m squares</span></label>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="valley" aria-pressed="true">Valley</button>
+          <button type="button" data-p="friction" aria-pressed="false">Valley with friction</button>
+          <button type="button" data-p="double" aria-pressed="false">Double well</button>
+          <button type="button" data-p="loop" aria-pressed="false">Loop</button>
+          <button type="button" data-p="lowloop" aria-pressed="false">Loop, started too low</button>
+          <button type="button" data-p="jump" aria-pressed="false">Jump</button>
+          <button type="button" data-p="hump" aria-pressed="false">Hump</button>
+          <button type="button" data-p="rails" aria-pressed="false">Hump on rails</button>
+          <button type="button" data-p="moon" aria-pressed="false">Valley on the Moon</button>
+          <button type="button" data-p="flat" aria-pressed="false">Build your own</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Energy bars</h2>
+        <div class="ebox"><canvas id="eBars" aria-label="Energy bars"></canvas></div>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the energies (predict them first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">K = ½mv², U = mg(y − y₀), E = K + U + E<sub>th</sub> stays the same</p>
+        <p class="formula">on the track: m dv/dt = −mg sinθ ∓ μN, N = m(v²κ + g cosθ)</p>
+        <p class="formula">E<sub>th</sub> grows by μN Δs while sliding</p>
+        <p class="hint">Model: the skater is a point mass that slides (no rolling, no air drag). The track is a smooth curve through its points (a natural cubic spline). On the track the motion is found in steps of 0.5 ms (fourth order Runge–Kutta) and the speed is then set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic friction is μN against the motion; at rest the same μ holds the skater on a slope where tanθ ≤ μ. The track pushes but cannot pull: where it would have to pull (N &lt; 0) the skater leaves it, unless Stick to the track is on. In the air the path is the exact parabola. Landing on the track keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); landing on the ground does the same with the downward speed, and the walls stop the skater. g: Earth 9.81 m/s², and the Moon 1.62, Mars 3.71 and Jupiter 24.79 m/s² from the NASA Planetary Fact Sheet.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Energy on a track: a skater (a point mass that slides, no rolling) on a track you shape, under gravity g, with kinetic
+     friction μ (the same μ holds the skater at rest), leaving the track where the track would have to pull, flying as a
+     projectile and landing again. Everything is per unit mass (J/kg); the page multiplies by m. Runs in Node:
+     curriculum/validation/test_energy_track.cjs. */
+  var ET_H = 5e-4;                /* the time step on the track, s (RK4); in the air the motion is the exact parabola */
+  var ET_X0 = 0, ET_X1 = 12;      /* the walls at each side of the park, m; the ground is y = 0 */
+
+  /* the track: a natural cubic spline x(u), y(u) through the points, u the chord length (so it can loop back on itself) */
+  function etNatural(u, v) {
+    var n = u.length, a = [], b = [], c = [], d = [], m = new Array(n).fill(0);
+    if (n < 3) return m;
+    for (var i = 1; i < n - 1; i++) {
+      var h0 = u[i] - u[i - 1], h1 = u[i + 1] - u[i];
+      a.push(h0); b.push(2 * (h0 + h1)); c.push(h1); d.push(6 * ((v[i + 1] - v[i]) / h1 - (v[i] - v[i - 1]) / h0));
+    }
+    var k = b.length;
+    for (var j = 1; j < k; j++) { var w = a[j] / b[j - 1]; b[j] -= w * c[j - 1]; d[j] -= w * d[j - 1]; }
+    var s = new Array(k); s[k - 1] = d[k - 1] / b[k - 1];
+    for (var j2 = k - 2; j2 >= 0; j2--) s[j2] = (d[j2] - c[j2] * s[j2 + 1]) / b[j2];
+    for (var i2 = 0; i2 < k; i2++) m[i2 + 1] = s[i2];
+    return m;                     /* second derivatives at the points; zero at the two ends */
+  }
+  function etTrack(pts) {
+    var u = [0];
+    for (var i = 1; i < pts.length; i++) u.push(u[i - 1] + Math.max(1e-6, Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])));
+    var xs = pts.map(function (p) { return p[0]; }), ys = pts.map(function (p) { return p[1]; });
+    var tr = { pts: pts.map(function (p) { return [p[0], p[1]]; }), u: u, xs: xs, ys: ys, mx: etNatural(u, xs), my: etNatural(u, ys), U: u[u.length - 1] };
+    tr.tab = etTable(tr, Math.max(400, Math.ceil(tr.U / 0.01)));
+    return tr;
+  }
+  /* position and its first two derivatives at u (0 ≤ u ≤ U) */
+  function etEval(tr, uu) {
+    var u = tr.u, n = u.length, i = 0, lo = 0, hi = n - 2;
+    uu = Math.max(0, Math.min(tr.U, uu));
+    while (lo <= hi) { var mid = (lo + hi) >> 1; if (u[mid] <= uu) { i = mid; lo = mid + 1; } else hi = mid - 1; }
+    if (i > n - 2) i = n - 2;
+    var h = u[i + 1] - u[i], A = (u[i + 1] - uu) / h, B = (uu - u[i]) / h;
+    function one(v, m) {
+      return [A * v[i] + B * v[i + 1] + ((A * A * A - A) * m[i] + (B * B * B - B) * m[i + 1]) * h * h / 6,
+        (v[i + 1] - v[i]) / h + ((1 - 3 * A * A) * m[i] + (3 * B * B - 1) * m[i + 1]) * h / 6,
+        A * m[i] + B * m[i + 1]];
+    }
+    var X = one(tr.xs, tr.mx), Y = one(tr.ys, tr.my);
+    return { x: X[0], y: Y[0], dx: X[1], dy: Y[1], ddx: X[2], ddy: Y[2] };
+  }
+  /* unit tangent T (along increasing u), speed factor |r′| and the signed curvature k (positive turning left) */
+  function etGeom(tr, uu) {
+    var e = etEval(tr, uu), sp = Math.hypot(e.dx, e.dy);
+    return { x: e.x, y: e.y, tx: e.dx / sp, ty: e.dy / sp, sp: sp, k: (e.dx * e.ddy - e.dy * e.ddx) / (sp * sp * sp) };
+  }
+  function etTable(tr, n) {
+    var t = { u: [], x: [], y: [] };
+    for (var i = 0; i <= n; i++) { var uu = tr.U * i / n, e = etEval(tr, uu); t.u.push(uu); t.x.push(e.x); t.y.push(e.y); }
+    return t;
+  }
+  /* the nearest point of the track to (x, y): its u, distance, and which side (σ = +1 on the left of the direction of u) */
+  function etNearest(tr, x, y) {
+    var t = tr.tab, best = 1e9, bi = 0, bf = 0;
+    for (var i = 0; i < t.u.length - 1; i++) {
+      var ax = t.x[i], ay = t.y[i], bx = t.x[i + 1] - ax, by = t.y[i + 1] - ay, L2 = bx * bx + by * by;
+      var f = L2 > 0 ? Math.max(0, Math.min(1, ((x - ax) * bx + (y - ay) * by) / L2)) : 0;
+      var d = Math.hypot(x - ax - f * bx, y - ay - f * by);
+      if (d < best) { best = d; bi = i; bf = f; }
+    }
+    var uu = t.u[bi] + bf * (t.u[bi + 1] - t.u[bi]), g = etGeom(tr, uu);
+    var side = (x - g.x) * -g.ty + (y - g.y) * g.tx;
+    return { u: uu, d: best, s: side >= 0 ? 1 : -1 };
+  }
+  /* the normal force per unit mass the track gives (N/m, along the skater's side); negative means the track would have to pull */
+  function etNormal(g, v, s, gr) { return s * (g.k * v * v + gr * g.tx); }
+
+  /* energies per unit mass: kinetic, potential (zero at yRef), thermal */
+  function etEnergy(st, P) {
+    var y = st.mode === 'track' ? etGeom(P.tr, st.u).y : st.y;
+    var v2 = st.mode === 'track' || st.mode === 'ground' ? st.v * st.v : st.vx * st.vx + st.vy * st.vy;
+    return { K: 0.5 * v2, U: P.g * (y - P.yRef), Th: st.th };
+  }
+  function etPos(st, P) {
+    if (st.mode !== 'track') return { x: st.x, y: st.y };
+    var g = etGeom(P.tr, st.u); return { x: g.x, y: g.y };
+  }
+  /* put the skater on the track at u, at rest, on side s (or in the air at (x, y) at rest) */
+  function etAt(P, u, s) { var st = { mode: 'track', u: u, v: 0, s: s, th: 0, t: 0, x: 0, y: 0, vx: 0, vy: 0, stuck: false, fresh: 0 }; return etSeal(st, P); }
+  function etAir(P, x, y, vx, vy) { var st = { mode: 'air', u: 0, v: 0, s: 1, th: 0, t: 0, x: x, y: y, vx: vx || 0, vy: vy || 0, stuck: false, fresh: 0 }; return etSeal(st, P); }
+  /* e0: the total per unit mass, which every step keeps */
+  function etSeal(st, P) { var E = etEnergy(st, P); st.e0 = E.K + P.g * (etPos(st, P).y) + E.Th; return st; }
+
+  function etDeriv(P, u, v, s) {
+    var g = etGeom(P.tr, u), N = etNormal(g, v, s, P.g), fr = P.mu * Math.abs(N);
+    return [v / g.sp, -P.g * g.ty - (v > 0 ? fr : v < 0 ? -fr : 0), fr * Math.abs(v)];
+  }
+  /* held at rest by friction where it stands? (on the track, v = 0) */
+  function etHeld(P, u, s) { var g = etGeom(P.tr, u), N = s * P.g * g.tx; return N >= 0 && Math.abs(P.g * g.ty) <= P.mu * N + 1e-12; }
+
+  /* one step of dt seconds (dt ≤ ET_H on the track); returns events: 'leave', 'land', 'end', 'ground', 'wall', 'stop' */
+  function etStep(st, P, dt) {
+    var ev = [];
+    st.t += dt;
+    if (st.mode === 'track') {
+      if (st.stuck || (st.v === 0 && P.mu > 0)) { if (etHeld(P, st.u, st.s)) { if (!st.stuck) ev.push('stop'); st.stuck = true; return ev; } st.stuck = false; }
+      var u = st.u, v = st.v, s = st.s;
+      if (v === 0) { var g0 = etGeom(P.tr, u); if (etNormal(g0, 0, s, P.g) < 0 && !P.stick) return etLeave(st, P, g0, ev); }
+      var k1 = etDeriv(P, u, v, s), k2 = etDeriv(P, u + dt / 2 * k1[0], v + dt / 2 * k1[1], s), k3 = etDeriv(P, u + dt / 2 * k2[0], v + dt / 2 * k2[1], s), k4 = etDeriv(P, u + dt * k3[0], v + dt * k3[1], s);
+      var u1 = u + dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), v1 = v + dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]), th1 = st.th + dt / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
+      if (u1 < 0 || u1 > P.tr.U) {   /* off the end of the track: fly from the end with the speed it had there */
+        var ue = u1 < 0 ? 0 : P.tr.U, ge = etGeom(P.tr, ue);
+        st.u = ue; st.th += (th1 - st.th) * (ue - u) / (u1 - u); var ke = st.e0 - P.g * ge.y - st.th; st.v = (v1 >= 0 ? 1 : -1) * Math.sqrt(Math.max(0, 2 * ke));
+        ev.push('end'); return etLeave(st, P, ge, ev);
+      }
+      var g1 = etGeom(P.tr, u1);
+      if (P.mu > 0 && v !== 0 && (v1 === 0 || (v1 > 0) !== (v > 0))) {   /* friction brought it to rest within the step */
+        st.u = u1; st.v = 0; st.th = st.e0 - P.g * g1.y;
+        if (etHeld(P, u1, s)) { st.stuck = true; ev.push('stop'); }
+        return ev;
+      }
+      /* the speed from the energy balance, so K + U + thermal stays exactly the total; the sign from the step */
+      var K = st.e0 - P.g * g1.y - th1;
+      st.u = u1; st.th = th1; st.v = (v1 > 0 ? 1 : v1 < 0 ? -1 : (g1.ty < 0 ? 1 : -1)) * Math.sqrt(Math.max(0, 2 * K));
+      if (K < 0) st.th = st.e0 - P.g * g1.y;
+      if (!P.stick && etNormal(g1, st.v, s, P.g) < 0) return etLeave(st, P, g1, ev);
+      return ev;
+    }
+    if (st.mode === 'ground') {
+      var a = P.mu * P.g, v0 = st.v;
+      if (v0 === 0) return ev;
+      var tStop = a > 0 ? Math.abs(v0) / a : Infinity, tt = Math.min(dt, tStop), sg = v0 > 0 ? 1 : -1;
+      var x1 = st.x + v0 * tt - sg * 0.5 * a * tt * tt, vv = v0 - sg * a * tt;
+      if (tt === tStop) vv = 0;
+      if (x1 <= ET_X0 || x1 >= ET_X1) { x1 = x1 <= ET_X0 ? ET_X0 : ET_X1; vv = 0; ev.push('wall'); }
+      st.x = x1; st.v = vv; st.th = st.e0 - P.g * st.y - 0.5 * vv * vv;
+      if (vv === 0 && ev.indexOf('wall') < 0) ev.push('stop');
+      return ev;
+    }
+    /* in the air: the exact parabola, checked against the track and the ground */
+    var xa = st.x, ya = st.y, vxa = st.vx, vya = st.vy;
+    var xb = xa + vxa * dt, yb = ya + vya * dt - 0.5 * P.g * dt * dt, vyb = vya - P.g * dt;
+    if (st.fresh > 0) st.fresh--;
+    else if (P.tr) {
+      var hit = etCross(P.tr, xa, ya, xb, yb);
+      /* the table is chords of the curve, so a skater that has just left can meet the chord next to where it left: not a landing */
+      if (hit && st.lt !== undefined && st.t - st.lt < 0.25 && Math.abs(hit.u - st.lu) < 0.5) hit = null;
+      if (hit) {
+        var tf = hit.f * dt, xh = xa + vxa * tf, yh = ya + vya * tf - 0.5 * P.g * tf * tf, vyh = vya - P.g * tf, gh = etGeom(P.tr, hit.u);
+        var vt = vxa * gh.tx + vyh * gh.ty, vn = -vxa * gh.ty + vyh * gh.tx;
+        var side = (xa - gh.x) * -gh.ty + (ya - gh.y) * gh.tx;
+        st.mode = 'track'; st.u = hit.u; st.s = side >= 0 ? 1 : -1; st.v = vt;
+        st.th = st.e0 - P.g * gh.y - 0.5 * vt * vt;   /* the bump: the speed across the track goes into thermal energy */
+        ev.push('land'); return ev;
+      }
+    }
+    if (yb <= 0) {   /* lands on the ground: the downward speed goes into thermal energy */
+      var tg = (vya + Math.sqrt(vya * vya + 2 * P.g * ya)) / P.g;
+      st.x = xa + vxa * tg; st.y = 0; st.mode = 'ground'; st.v = vxa; st.t += tg - dt;
+      st.x = Math.max(ET_X0, Math.min(ET_X1, st.x));
+      st.th = st.e0 - 0.5 * vxa * vxa; ev.push('ground'); return ev;
+    }
+    if ((xb <= ET_X0 && vxa < 0) || (xb >= ET_X1 && vxa > 0)) {   /* a wall stops the sideways motion */
+      xb = xb <= ET_X0 ? ET_X0 : ET_X1; st.vx = 0; ev.push('wall');
+    }
+    st.x = xb; st.y = yb; st.vy = vyb;
+    st.th = st.e0 - P.g * yb - 0.5 * (st.vx * st.vx + vyb * vyb);
+    return ev;
+  }
+  function etLeave(st, P, g, ev) {
+    st.mode = 'air'; st.x = g.x; st.y = g.y; st.vx = st.v * g.tx; st.vy = st.v * g.ty; st.fresh = 3; st.stuck = false; st.lu = st.u; st.lt = st.t;
+    ev.push('leave'); return ev;
+  }
+  /* the first crossing of the segment a→b with the track: the fraction f along a→b and the track's u there */
+  function etCross(tr, ax, ay, bx, by) {
+    var t = tr.tab, best = null, dx = bx - ax, dy = by - ay;
+    var minx = Math.min(ax, bx), maxx = Math.max(ax, bx), miny = Math.min(ay, by), maxy = Math.max(ay, by);
+    for (var i = 0; i < t.u.length - 1; i++) {
+      var cx = t.x[i], cy = t.y[i], ex = t.x[i + 1] - cx, ey = t.y[i + 1] - cy;
+      if (Math.max(cx, cx + ex) < minx || Math.min(cx, cx + ex) > maxx || Math.max(cy, cy + ey) < miny || Math.min(cy, cy + ey) > maxy) continue;
+      var den = dx * ey - dy * ex; if (den === 0) continue;
+      var f = ((cx - ax) * ey - (cy - ay) * ex) / den, q = ((cx - ax) * dy - (cy - ay) * dx) / den;
+      if (f >= 0 && f <= 1 && q >= 0 && q <= 1 && (!best || f < best.f)) best = { f: f, u: t.u[i] + q * (t.u[i + 1] - t.u[i]) };
+    }
+    return best;
+  }
+  /* run for T seconds in steps of ET_H; returns the events with their times */
+  function etRun(st, P, T) {
+    var out = [], n = Math.round(T / ET_H);
+    for (var i = 0; i < n; i++) { var ev = etStep(st, P, ET_H); for (var j = 0; j < ev.length; j++) out.push({ e: ev[j], t: st.t }); }
+    return out;
+  }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const G = { earth: 9.81, moon: 1.62, mars: 3.71, jupiter: 24.79 };
+  const GNAME = { earth: 'Earth', moon: 'the Moon', mars: 'Mars', jupiter: 'Jupiter' };
+  const VALLEY = [[0.5, 6.5], [2.5, 2.6], [6, 0.8], [9.5, 2.6], [11.5, 6.5]];
+  const HUMP = [[0.5, 7.4], [2.4, 3.0], [4.4, 3.2], [5.6, 4.3], [6.8, 3.2], [8.8, 1.0], [11.5, 7.6]];
+  const LOOP = [[0.4, 7.2], [2.2, 3.2], [4.6, 0.9], [7.2, 1.0], [8.6, 2.6], [7.4, 4.1], [6.0, 2.8], [6.9, 1.1], [9.4, 0.9], [10.8, 3.0], [11.5, 6.6]];
+  const PRESETS = {
+    valley: { pts: VALLEY, f: 0.05, mu: 0, g: 'earth', stick: false,
+      hint: 'A smooth valley with no friction. The skater swings from side to side and turns around at the height it started from every time: K + U stays the total, so the bars trade kinetic for potential energy and back.' },
+    friction: { pts: VALLEY, f: 0.05, mu: 0.08, g: 'earth', stick: false,
+      hint: 'The same valley with μ = 0.08. Each swing turns some energy into thermal energy (μN on every metre slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.' },
+    double: { pts: [[0.5, 6.5], [2.4, 1.3], [4.4, 3.3], [6.6, 3.3], [8.8, 1.0], [11.5, 6.0]], f: 0.08, mu: 0, g: 'earth', stick: false,
+      hint: 'Two wells with a hill between, its top 3.60 m up. Started at 4.15 m the skater crosses the hill and back; drag it lower than the hilltop and it stays in one well. The hill only lets through a skater whose total energy is above U at the top.' },
+    loop: { pts: LOOP, f: 0.03, mu: 0, g: 'earth', stick: false,
+      hint: 'A loop the loop. At the top of the loop the track can only push down, so the skater needs v² ≥ gR there (R the radius of the track at the top). Started from this height it makes it round, back up the far ramp, and through the loop again backwards.' },
+    lowloop: { pts: LOOP, f: 0.14, mu: 0, g: 'earth', stick: false,
+      hint: 'The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.' },
+    jump: { pts: [[0.5, 6.5], [3, 2], [6, 0.8], [8, 1.4], [9.2, 2.6]], f: 0.05, mu: 0, g: 'earth', stick: false,
+      hint: 'A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. On landing, the downward speed goes into thermal energy, so the bars show the bump.' },
+    hump: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: false,
+      hint: 'A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.' },
+    rails: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: true,
+      hint: 'The same hump with the skater on rails, like a roller coaster car. The rails can pull as well as push, so the skater stays on: N goes negative (the readout shows it) over the top, and the skater climbs the far ramp to its starting height.' },
+    moon: { pts: VALLEY, f: 0.05, mu: 0, g: 'moon', stick: false,
+      hint: 'The valley on the Moon, g = 1.62 m/s². The skater turns around at the same heights as on Earth (the heights depend only on energy per unit weight), but everything happens √(9.81/1.62) = 2.46 times slower.' },
+    flat: { pts: [[1, 5], [4, 1.5], [8, 1.5], [11, 5]], f: 0.03, mu: 0, g: 'earth', stick: false,
+      hint: 'A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends (12 points at most), and drag a grip onto the bin to take it away.' },
+  };
+  const MAXPTS = 12, MINPTS = 2, WX = 12, WY = 8.2, GW = 20;
+  const S = { preset: 'valley', pts: [], tr: null, m: 60, mu: 0, g: 'earth', stick: false, yRef: 0, st: null, start: null, run: false, speed: 1,
+    pie: true, grid: true, blind: false, hist: [], histT: 0, msg: '', runKey: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), gcan = $('gCan'), gctx = gcan.getContext('2d');
+  let W = 0, H = 0, GWd = 0, GH = 0, dpr = 1, T = null, geo = null, drag = null, hover = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−'));
+  const fJ = (v) => { const a = Math.abs(v); return a >= 1e4 ? `${f(v / 1000, 1)} kJ` : a >= 100 ? `${f(v, 0)} J` : `${f(v, 1)} J`; };
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), grid2: g('--grid-strong'), accent: g('--accent'), surface: g('--surface'),
+      k: g('--ek'), u: g('--eu'), th: g('--eth'), tot: g('--etot'), track: g('--track'), rail: g('--rail'), sky: g('--sky'), skater: g('--skater'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const P = () => ({ tr: S.tr, g: G[S.g], mu: S.mu, stick: S.stick, yRef: S.yRef });
+
+  // ---------- the track and the skater ----------
+  function rebuild() { S.tr = etTrack(S.pts); }
+  function placeStart() {
+    const p = P(), s0 = S.start;
+    if (s0.type === 'track') { const u = Math.max(0, Math.min(S.tr.U, s0.f * S.tr.U)); S.st = etAt(p, u, s0.s); }
+    else S.st = etAir(p, s0.x, s0.y);
+    S.hist = []; S.histT = 0; S.runKey++; S.msg = '';
+  }
+  function trackSide(u) { const g = etGeom(S.tr, u); return g.tx >= 0 ? 1 : -1; }   /* the side whose normal points up */
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.pts = c.pts.map((p) => p.slice()); S.mu = c.mu; S.g = c.g; S.stick = c.stick; S.yRef = 0;
+    rebuild(); S.start = { type: 'track', f: c.f, s: trackSide(c.f * S.tr.U) };
+    placeStart(); $('presetHint').textContent = c.hint; setRun(false); sync(); drawAll();
+  }
+  function edited() { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); }
+
+  // ---------- running ----------
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : S.st && S.st.t > 0 ? 'Resume' : 'Play'; $('play').classList.toggle('attn', !on); status(); }
+  function step(dt) {
+    const p = P(); let left = dt * S.speed;
+    while (left > 1e-12) { const h = Math.min(ET_H, left); const ev = etStep(S.st, p, h); left -= h; for (const e of ev) note(e); }
+    S.histT += dt * S.speed;
+    if (S.histT >= 1 / 30) { S.histT = 0; const E = energies(); S.hist.push([S.st.t, E.K, E.U, E.Th]); while (S.hist.length && S.hist[0][0] < S.st.t - GW) S.hist.shift(); }
+  }
+  const SAY = { leave: 'Left the track: the track would have had to pull (N < 0).', end: 'Off the end of the track.', land: 'Landed on the track: the speed across it went into thermal energy.',
+    ground: 'Landed on the ground: the downward speed went into thermal energy.', wall: 'Stopped by the wall.', stop: 'At rest: friction holds the skater here.' };
+  function note(e) { if (e === 'end') return; S.msg = SAY[e] || ''; status(); }
+  function status() { $('status').textContent = S.msg || (S.run ? '' : 'Press Play to let the skater go.'); }
+  function energies() { const e = etEnergy(S.st, P()), m = S.m; return { K: e.K * m, U: e.U * m, Th: e.Th * m }; }
+  function normalNow() {
+    const st = S.st; if (st.mode === 'air') return 0; if (st.mode === 'ground') return 1;
+    const g = etGeom(S.tr, st.u); return etNormal(g, st.v, st.s, G[S.g]) / G[S.g];
+  }
+
+  // ---------- geometry of the picture ----------
+  function layout() {
+    const p = ps(), cardEl = $('setupCard'), cardOn = getComputedStyle(cardEl).position === 'absolute';
+    const padL = 44 * p, padT = 14 * p, padB = 30 * p;
+    /* where the Set up card floats (wide screens) the park leaves it a column on the right, with the tray under the card;
+       otherwise the tray is a column right of the park, or a strip under it on a phone */
+    const mode = cardOn ? 'card' : W >= 560 ? 'col' : 'strip', trayW = 76 * p;
+    const right = mode === 'card' ? cardEl.offsetWidth + 24 : mode === 'col' ? trayW + 24 * p : 14 * p;
+    const availW = W - padL - right, availH = H - padT - padB - (mode === 'strip' ? 58 * p : 0);
+    const ppm = Math.max(10, Math.min(availW / WX, availH / WY));
+    const x0 = padL, y0 = padT + WY * ppm;
+    geo = { p, ppm, x0, y0, cardOn };
+    if (mode === 'card') { const tx = W - cardEl.offsetWidth - 12, ty = Math.min(H - 64 * p, cardEl.offsetTop + cardEl.offsetHeight + 12); geo.trayPt = [tx, ty, 110 * p, 52 * p]; geo.trayBin = [tx + 120 * p, ty, 90 * p, 52 * p]; }
+    else if (mode === 'col') { const tx = x0 + WX * ppm + 14 * p; geo.trayPt = [tx, padT, trayW, 64 * p]; geo.trayBin = [tx, padT + 72 * p, trayW, 52 * p]; }
+    else { const ty = y0 + padB - 4 * p; geo.trayPt = [x0, ty, 100 * p, 50 * p]; geo.trayBin = [x0 + 110 * p, ty, 80 * p, 50 * p]; }
+  }
+  const X = (x) => geo.x0 + x * geo.ppm, Y = (y) => geo.y0 - y * geo.ppm;
+  const WXp = (px) => (px - geo.x0) / geo.ppm, WYp = (py) => (geo.y0 - py) / geo.ppm;
+  const inB = (b, x, y) => x >= b[0] && x <= b[0] + b[2] && y >= b[1] && y <= b[1] + b[3];
+
+  // ---------- drawing ----------
+  function drawAll() { draw(); drawGraph(); readouts(); }
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function draw() {
+    if (!T || !W || !S.tr) return;
+    layout(); const p = geo.p, ppm = geo.ppm;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* sky, grid, ground, walls */
+    ctx.fillStyle = T.sky; ctx.fillRect(X(0), Y(WY), WX * ppm, WY * ppm);
+    if (S.grid) {
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= WX; i++) { ctx.strokeStyle = i % 2 ? T.grid : T.grid2; ctx.beginPath(); ctx.moveTo(X(i) + 0.5, Y(0)); ctx.lineTo(X(i) + 0.5, Y(WY)); ctx.stroke(); }
+      for (let j = 0; j <= Math.floor(WY); j++) { ctx.strokeStyle = j % 2 ? T.grid : T.grid2; ctx.beginPath(); ctx.moveTo(X(0), Y(j) + 0.5); ctx.lineTo(X(WX), Y(j) + 0.5); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let j = 0; j <= Math.floor(WY); j += 2) ctx.fillText(`${j} m`, X(0) - 6 * p, Y(j));
+    }
+    ctx.fillStyle = T.relief || T.line; ctx.fillStyle = T.line; ctx.fillRect(X(0) - 4 * p, Y(0), WX * ppm + 8 * p, 8 * p);
+    ctx.fillRect(X(0) - 4 * p, Y(WY), 4 * p, WY * ppm); ctx.fillRect(X(WX), Y(WY), 4 * p, WY * ppm);
+    /* U = 0 line and its tab */
+    const yr = Y(S.yRef); ctx.strokeStyle = T.u; ctx.setLineDash([6 * p, 5 * p]); ctx.lineWidth = 1.5 * p;
+    ctx.beginPath(); ctx.moveTo(X(0), yr); ctx.lineTo(X(WX), yr); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.u; rr(X(0) - 40 * p, yr - 10 * p, 36 * p, 20 * p, 4 * p); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.fillText('U=0', X(0) - 22 * p, yr + 0.5);
+    /* the track: a board with a rail on top, drawn from the spline */
+    const t = S.tr.tab;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.strokeStyle = T.track; ctx.lineWidth = Math.max(5, 0.12 * ppm);
+    ctx.beginPath(); for (let i = 0; i < t.u.length; i++) { const px = X(t.x[i]), py = Y(t.y[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke();
+    ctx.strokeStyle = T.rail; ctx.lineWidth = Math.max(1.5, 0.03 * ppm); ctx.stroke();
+    /* posts down to the ground under the track, every metre of track */
+    ctx.strokeStyle = T.rail; ctx.lineWidth = 1.5 * p; ctx.globalAlpha = 0.6;
+    for (let u = 0.5; u < S.tr.U; u += 1.2) { const g = etGeom(S.tr, u); if (g.y > 0.25) { ctx.beginPath(); ctx.moveTo(X(g.x), Y(g.y) + 3 * p); ctx.lineTo(X(g.x), Y(0)); ctx.stroke(); } }
+    ctx.globalAlpha = 1;
+    /* grips at the points */
+    S.pts.forEach((q, i) => { const hot = (drag && drag.type === 'pt' && drag.i === i) || (hover && hover.type === 'pt' && hover.i === i);
+      ctx.beginPath(); ctx.arc(X(q[0]), Y(q[1]), (hot ? 9 : 7) * p, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * p; ctx.strokeStyle = hot ? T.accent : T.track; ctx.stroke(); });
+    /* the skater */
+    drawSkater();
+    /* the tray: a new point, and the bin */
+    drawTray();
+    /* the speed arrow is left off on purpose: the readout gives v */
+  }
+  function drawSkater() {
+    const p = geo.p, st = S.st, pos = etPos(st, P()); let nx = 0, ny = 1;
+    if (st.mode === 'track') { const g = etGeom(S.tr, st.u); nx = -g.ty * st.s; ny = g.tx * st.s; }
+    const bx = X(pos.x), by = Y(pos.y), hgt = Math.max(26 * p, 1.1 * geo.ppm), ux = nx, uy = -ny;   /* screen up along the normal */
+    const tx = -uy, ty = ux;   /* along the board */
+    ctx.save(); ctx.lineCap = 'round';
+    /* board and wheels */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(bx - tx * 0.32 * hgt + ux * 4 * p, by - ty * 0.32 * hgt + uy * 4 * p); ctx.lineTo(bx + tx * 0.32 * hgt + ux * 4 * p, by + ty * 0.32 * hgt + uy * 4 * p); ctx.stroke();
+    /* body */
+    const hip = [bx + ux * 0.5 * hgt, by + uy * 0.5 * hgt], sh = [bx + ux * 0.8 * hgt, by + uy * 0.8 * hgt], hd = [bx + ux * 0.95 * hgt, by + uy * 0.95 * hgt];
+    ctx.strokeStyle = T.skater; ctx.lineWidth = 3.5 * p;
+    ctx.beginPath(); ctx.moveTo(bx - tx * 0.18 * hgt + ux * 6 * p, by - ty * 0.18 * hgt + uy * 6 * p); ctx.lineTo(hip[0], hip[1]); ctx.lineTo(bx + tx * 0.18 * hgt + ux * 6 * p, by + ty * 0.18 * hgt + uy * 6 * p);
+    ctx.moveTo(hip[0], hip[1]); ctx.lineTo(sh[0], sh[1]); ctx.moveTo(sh[0] - tx * 0.3 * hgt, sh[1] - ty * 0.3 * hgt); ctx.lineTo(sh[0] + tx * 0.3 * hgt, sh[1] + ty * 0.3 * hgt); ctx.stroke();
+    ctx.fillStyle = T.skater; ctx.beginPath(); ctx.arc(hd[0], hd[1], 0.11 * hgt, 0, 2 * Math.PI); ctx.fill();
+    /* the point mass where the board meets the track */
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(bx, by, 3 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    if (S.pie && !S.blind) drawPie(bx + ux * 1.35 * hgt, by + uy * 1.35 * hgt);
+  }
+  function drawPie(cx, cy) {
+    const p = geo.p, E = energies(), tot = E.K + E.U + E.Th, r = 20 * p;
+    if (E.U < 0) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('U < 0: no pie', cx, cy); return; }
+    if (!(tot > 0)) return;
+    let a = -Math.PI / 2;
+    for (const [v, c] of [[E.K, T.k], [E.U, T.u], [E.Th, T.th]]) { if (v <= 0) continue; const b = a + 2 * Math.PI * v / tot;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, a, b); ctx.closePath(); ctx.fillStyle = c; ctx.fill(); a = b; }
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * p; ctx.stroke();
+  }
+  function drawTray() {
+    const p = geo.p, [px, py, pw, ph] = geo.trayPt, [bx, by, bw, bh] = geo.trayBin, full = S.pts.length >= MAXPTS;
+    ctx.save();
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    rr(px, py, pw, ph, 8 * p); ctx.fill(); ctx.stroke();
+    ctx.globalAlpha = full ? 0.35 : 1;
+    ctx.beginPath(); ctx.arc(px + pw / 2, py + 22 * p, 7 * p, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * p; ctx.strokeStyle = T.track; ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('new point', px + pw / 2, py + ph - 14 * p);
+    ctx.globalAlpha = 1;
+    const hot = drag && drag.type === 'pt' && drag.overBin;
+    ctx.fillStyle = hot ? T.th : T.surface; ctx.strokeStyle = hot ? T.th : T.line; rr(bx, by, bw, bh, 8 * p); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = hot ? T.canvas : T.muted; ctx.fillText('bin', bx + bw / 2, by + bh / 2);
+    ctx.restore();
+    if (drag && drag.type === 'new') { ctx.beginPath(); ctx.arc(drag.px, drag.py, 8 * p, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.lineWidth = 2 * p; ctx.strokeStyle = T.accent; ctx.stroke(); }
+  }
+  function drawGraph() {
+    if (!T || !GWd) return;
+    const c = gctx, p = ps(), w = GWd, h = GH, l = 54 * p, r = 10 * p, tp = 18 * p, b = 22 * p;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
+    c.font = `${10 * p}px ${T.mono}`; c.textBaseline = 'middle';
+    if (S.blind) { c.fillStyle = T.muted; c.textAlign = 'center'; c.fillText('Energies hidden in Blind', w / 2, h / 2); return; }
+    const t1 = Math.max(GW, S.st.t), t0 = t1 - GW, tot = S.st.e0 * S.m - G[S.g] * S.yRef * S.m;
+    let lo = Math.min(0, tot), hi = Math.max(tot, 1);
+    for (const q of S.hist) { lo = Math.min(lo, q[2]); hi = Math.max(hi, q[1], q[2], q[3]); }
+    const pad = (hi - lo) * 0.08; lo -= lo < 0 ? pad : 0; hi += pad;
+    const gx = (t) => l + (t - t0) / GW * (w - l - r), gy = (v) => tp + (hi - v) / (hi - lo) * (h - tp - b);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(l, tp); c.lineTo(l, h - b); c.lineTo(w - r, h - b); c.stroke();
+    if (lo < 0) { c.setLineDash([3, 3]); c.beginPath(); c.moveTo(l, gy(0)); c.lineTo(w - r, gy(0)); c.stroke(); c.setLineDash([]); }
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText(fJ(hi), l - 6 * p, tp + 2 * p); c.fillText(fJ(lo), l - 6 * p, h - b - 2 * p);
+    c.textAlign = 'center'; c.fillText(`t (s), last ${GW} s`, (l + w) / 2, h - b / 2 + 2 * p);
+    c.textAlign = 'left'; c.fillText(`${f(t0, 0)}`, l, h - b / 2 + 2 * p); c.textAlign = 'right'; c.fillText(`${f(t1, 0)}`, w - r, h - b / 2 + 2 * p);
+    const line = (k, col, wd) => { if (S.hist.length < 2) return; c.strokeStyle = col; c.lineWidth = wd * p; c.beginPath(); S.hist.forEach((q, i) => { const v = k === 4 ? q[1] + q[2] + q[3] : q[k]; i ? c.lineTo(gx(q[0]), gy(v)) : c.moveTo(gx(q[0]), gy(v)); }); c.stroke(); };
+    line(4, T.tot, 2.5); line(1, T.k, 2); line(2, T.u, 2); line(3, T.th, 2);
+    const keys = w < 480 ? [['K', T.k], ['U', T.u], ['Thermal', T.th], ['Total', T.tot]] : [['Kinetic K', T.k], ['Potential U', T.u], ['Thermal', T.th], ['Total', T.tot]]; let x = l + 8 * p; c.textAlign = 'left';
+    for (const [lab, col] of keys) { c.fillStyle = col; c.fillRect(x, 5 * p, 12 * p, 3 * p); c.fillStyle = T.ink; c.fillText(lab, x + 16 * p, 7 * p); x += c.measureText(lab).width + 32 * p; }
+  }
+  function readouts() {
+    if (!S.st) return;
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, st = S.st, pos = etPos(st, P()), E = energies();
+    const v = st.mode === 'air' ? Math.hypot(st.vx, st.vy) : Math.abs(st.v), N = normalNow();
+    const where = st.mode === 'track' ? (st.stuck ? 'on the track, at rest' : 'on the track') : st.mode === 'air' ? 'in the air' : 'on the ground';
+    let h = dd('Where', where, 'wide') + dd('Speed v', `${f(v, 2)} m/s`) + dd('Height y', `${f(pos.y, 2)} m`);
+    if (S.blind) h += '<div class="wide"><dt>Energies</dt><dd class="ok">hidden: predict them</dd></div>';
+    else h += dd('Kinetic K', fJ(E.K)) + dd('Potential U', fJ(E.U)) + dd('Thermal E<sub>th</sub>', fJ(E.Th)) + dd('Total', fJ(E.K + E.U + E.Th));
+    h += dd('Normal force N', st.mode === 'air' ? '0 (in the air)' : `${f(N, 2)} mg = ${f(N * S.m * G[S.g], 0)} N`, 'wide');
+    $('out').innerHTML = h;
+    $('tclock').textContent = `t = ${f(st.t, 2)} s`;
+  }
+  function sync() {
+    $('sM').value = S.m; $('oM').textContent = `${S.m} kg`; $('sMu').value = S.mu; $('oMu').textContent = f(S.mu, 2);
+    $('oG').textContent = `${G[S.g]} m/s²`; $('cStick').checked = S.stick; $('cPie').checked = S.pie; $('cGrid').checked = S.grid;
+    for (const b of document.querySelectorAll('#gSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.g));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+  }
+
+  // ---------- pointer: the skater, the grips, the tray, the U = 0 tab ----------
+  function pick(x, y) {
+    const p = geo.p, pos = etPos(S.st, P());
+    for (let i = 0; i < S.pts.length; i++) if (Math.hypot(x - X(S.pts[i][0]), y - Y(S.pts[i][1])) < 12 * p) return { type: 'pt', i };   /* a grip first: the skater often stands on one */
+    if (Math.hypot(x - X(pos.x), y - (Y(pos.y) - 0.5 * Math.max(26 * p, 1.1 * geo.ppm))) < Math.max(22 * p, 0.6 * geo.ppm)) return { type: 'skater' };
+    if (inB(geo.trayPt, x, y) && S.pts.length < MAXPTS) return { type: 'new' };
+    if (x < X(0) && Math.abs(y - Y(S.yRef)) < 14 * p) return { type: 'ref' };
+    return null;
+  }
+  const clampX = (x) => Math.max(0.1, Math.min(WX - 0.1, x)), clampY = (y) => Math.max(0, Math.min(WY - 0.2, y));
+  const rnd = (v) => Math.round(v * 20) / 20;
+  function ptr(e) { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  can.addEventListener('pointerdown', (e) => {
+    if (!geo) return; const [x, y] = ptr(e), h = pick(x, y); if (!h) return;
+    e.preventDefault(); can.setPointerCapture(e.pointerId); drag = Object.assign({ px: x, py: y, was: S.run }, h);
+    if (h.type !== 'ref') setRun(false);
+    card.ghost(true); draw();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!geo) return; const [x, y] = ptr(e);
+    if (!drag) { const h = pick(x, y); hover = h; can.style.cursor = h ? 'grab' : 'default'; return; }
+    drag.px = x; drag.py = y; const wx = clampX(WXp(x)), wy = clampY(WYp(y));
+    if (drag.type === 'pt') {
+      drag.overBin = inB(geo.trayBin, x, y);
+      if (!drag.overBin) { S.pts[drag.i] = [rnd(wx), rnd(wy)]; rebuild(); edited(); placeStart(); }
+    } else if (drag.type === 'skater') {
+      S.st = etAir(P(), wx, wy); S.hist = []; S.runKey++;
+    } else if (drag.type === 'ref') { S.yRef = Math.max(0, Math.min(WY - 0.2, Math.round(WYp(y) * 10) / 10)); S.runKey++; S.hist = []; }
+    drawAll();
+  });
+  function endDrag(e) {
+    if (!drag) return; const d = drag; drag = null; card.ghost(false);
+    if (d.type === 'pt' && d.overBin) {
+      if (S.pts.length > MINPTS) { S.pts.splice(d.i, 1); rebuild(); edited(); placeStart(); say('Point removed.'); } else say(`A track needs ${MINPTS} points at least.`);
+    } else if (d.type === 'new') {
+      const wx = WXp(d.px), wy = WYp(d.py);
+      if (wx > 0 && wx < WX && wy >= 0 && wy < WY && !inB(geo.trayPt, d.px, d.py)) addPoint(clampX(wx), clampY(wy));
+    } else if (d.type === 'skater') {
+      const wx = clampX(WXp(d.px)), wy = clampY(WYp(d.py)), n = etNearest(S.tr, wx, wy);
+      S.start = n.d < 0.45 ? { type: 'track', f: n.u / S.tr.U, s: n.s } : { type: 'air', x: wx, y: wy };
+      placeStart(); setRun(true);
+    }
+    draw(); readouts(); drawGraph();
+  }
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  function addPoint(x, y) {
+    const pt = [rnd(x), rnd(y)], n = etNearest(S.tr, x, y);
+    let at;
+    if (n.d < 1.0) { at = 1; while (at < S.tr.u.length && S.tr.u[at] < n.u) at++; }
+    else at = Math.hypot(x - S.pts[0][0], y - S.pts[0][1]) < Math.hypot(x - S.pts[S.pts.length - 1][0], y - S.pts[S.pts.length - 1][1]) ? 0 : S.pts.length;
+    S.pts.splice(at, 0, pt); rebuild(); edited(); placeStart(); say('Point added.');
+  }
+  function say(t) { S.msg = t; status(); }
+
+  // ---------- keyboard on the picture: arrows move the skater's starting point along the track ----------
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); return; }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault(); const d = (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 0.05 : 0.01);
+      const fr = S.start.type === 'track' ? S.start.f : etNearest(S.tr, S.start.x, S.start.y).u / S.tr.U;
+      const nf = Math.max(0, Math.min(1, fr + d)); S.start = { type: 'track', f: nf, s: trackSide(nf * S.tr.U) }; setRun(false); placeStart(); drawAll();
+    }
+  });
+
+  // ---------- controls ----------
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; S.runKey++; S.hist = []; sync(); drawAll(); });
+  $('sMu').addEventListener('input', (e) => { S.mu = +e.target.value; sync(); drawAll(); });
+  for (const b of document.querySelectorAll('#gSeg button')) b.addEventListener('click', () => { S.g = b.dataset.g; placeStart(); setRun(false); sync(); drawAll(); });
+  $('cStick').addEventListener('change', (e) => { S.stick = e.target.checked; drawAll(); });
+  $('cPie').addEventListener('change', (e) => { S.pie = e.target.checked; draw(); });
+  $('cGrid').addEventListener('change', (e) => { S.grid = e.target.checked; draw(); });
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; sync(); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { placeStart(); setRun(false); drawAll(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  window.vdReadings = () => 0;
+
+  // Reduce motion: open paused (the demo always opens paused); Play still runs it
+  let last = performance.now(), lastRead = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && !drag) { step(dt); draw(); drawGraph(); if (now - lastRead > 100) { readouts(); lastRead = now; } }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const g = $('graphBox').getBoundingClientRect(); GWd = g.width; GH = g.height; gcan.width = Math.round(GWd * dpr); gcan.height = Math.round(GH * dpr);
+    drawAll();
+  }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const ro = new ResizeObserver(resize); ro.observe($('scene')); ro.observe($('graphBox'));
+  applyPreset('valley'); resize();
+  /* energy bars (demos/lib/vdenergy.js): K, U and thermal with their total */
+  VD.energy({ el: $('eBars'), unit: 'J', hidden: () => S.blind, run: () => S.runKey + ',' + S.preset,
+    terms: () => { if (!S.st) return null; const E = energies(); return [{ label: 'Kinetic', v: E.K, c: '--ek' }, { label: 'Potential', v: E.U, c: '--eu' }, { label: 'Thermal', v: E.Th, c: '--eth' }]; } });
+  /* the measuring tools: a stopwatch on the skater's clock and a ruler on the park, drawn to scale */
+  VD.tools({ el: can, strip: '.stage-ctl', time: () => S.st.t, scale: () => (geo ? { el: can, m: 1 / geo.ppm, area: [geo.x0, geo.y0 - WY * geo.ppm, WX * geo.ppm, WY * geo.ppm] } : null) });
+  /* Copy link carries the track, the skater's starting point and the U = 0 line (VD.share.picture in demos/lib/vd.js) */
+  if (VD.share && VD.share.picture) VD.share.picture('t', {
+    get: () => { if (S.preset !== 'custom' && S.yRef === 0 && S.start.type === 'track' && S.start.f === PRESETS[S.preset].f) return ''; const r = (v) => +(+v).toFixed(3);
+      return VD.share.pack({ p: S.pts.map((q) => [r(q[0]), r(q[1])]), s: S.start.type === 'track' ? [r(S.start.f), S.start.s] : [r(S.start.x), r(S.start.y), 0], z: r(S.yRef) }); },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.p) || o.p.length < MINPTS || o.p.length > MAXPTS || !o.p.every((q) => Array.isArray(q) && ok(q[0]) && ok(q[1]))) return;
+      S.pts = o.p.map((q) => [clampX(q[0]), clampY(q[1])]); rebuild(); edited();
+      if (Array.isArray(o.s) && o.s.length === 2 && ok(o.s[0])) S.start = { type: 'track', f: Math.max(0, Math.min(1, o.s[0])), s: o.s[1] === -1 ? -1 : 1 };
+      else if (Array.isArray(o.s) && ok(o.s[0]) && ok(o.s[1])) S.start = { type: 'air', x: clampX(o.s[0]), y: clampY(o.s[1]) };
+      if (ok(o.z)) S.yRef = Math.max(0, Math.min(WY - 0.2, o.z));
+      placeStart(); setRun(false); drawAll();
+    } });
+  /* the script API for tests and key captures */
+  window.__et = { S, P, step, applyPreset, energies, drawAll, etTrack, etGeom };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

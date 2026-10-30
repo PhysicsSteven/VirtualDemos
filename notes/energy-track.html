@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Energy on a Track: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Energy on a Track</h1><ul class="meta"><li><a href="../demos/energy-track.html">Open the demo</a></li><li>Intro mechanics (algebra or calculus based)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>With no friction, K + U is the same at every point of the track: the skater turns around at its starting height every time, however the track is shaped between.</li>
+<li>Friction turns mechanical energy into thermal energy, μN for every metre slid. The total K + U + E<sub>th</sub> still never changes; only the mechanical part shrinks.</li>
+<li>The zero of potential energy is a choice. Moving the U = 0 line changes U and the total by the same amount and changes nothing about the motion.</li>
+<li>A track can push but not pull. The normal force N = m(v²/R + g cosθ) on the inside of a curve, m(g cosθ − v²/R) over a crest; where it would go below zero the skater leaves the track. Rails (Stick to the track) can pull, and then N goes negative.</li>
+<li>The heights the skater reaches depend only on energy per unit weight, so they are the same on the Moon or Jupiter and for any mass; how fast it gets there scales as 1/√g.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know K = ½mv², U = mgh and the idea of a normal force. Drag the skater anywhere and let go: near the track it lands on it, elsewhere it falls. Drag the round grips to reshape the track, drag a new point from the tray onto the track to add a bend, and drag a grip onto the bin to remove it. The dashed U = 0 line has a tab on the left edge to drag. The pie over the skater, the energy bars in the rail and the graph under the park all show K, U and thermal energy; <strong>Blind</strong> in <strong>Lab</strong> hides them for predictions.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Valley.</strong> Before pressing <strong>Play</strong>, ask Q1. The skater starts 5.71 m up and the bottom is 0.80 m up; at the bottom the readout gives 9.82 m/s. Let it swing: it turns at 5.71 m on both sides, every time.</li>
+<li><strong>Valley with friction.</strong> Ask what the total bar will do. The turning points fall (3.90, 2.72, 1.95, 1.43 m ...) and the skater comes to rest near the bottom; the total bar does not move (Q2).</li>
+<li>Drag the <strong>U = 0</strong> line up to the bottom of the valley and back. The motion and K do not change; U and the total shift together (Q3).</li>
+<li><strong>Loop</strong> and <strong>Loop, started too low.</strong> Ask Q4 first. In the low start the skater leaves the track near the top and falls across the loop. Turn on <strong>Stick to the track</strong> and run it again; watch N go negative.</li>
+<li><strong>Hump</strong> and <strong>Hump on rails.</strong> Ask where the skater will leave (Q5).</li>
+<li><strong>Valley on the Moon.</strong> The same turning heights, but the first swing to the far side takes 6.57 s instead of 2.67 s (Q6).</li>
+<li><strong>Jump.</strong> The landing on the ground puts a step into the thermal energy (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> On the Valley, the skater starts at rest 5.71 m up and the bottom of the track is 0.80 m up. With no friction, how fast is it going at the bottom? Does the answer depend on the skater's mass or on the shape of the track? Check with the readout and by changing m.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With μ = 0.08 the skater turns around lower each time but the total energy bar never changes. Where does the energy go? Without friction, the skater's turning height never changes; with it, why does it end up near the bottom rather than exactly at it?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Move the U = 0 line from the ground to the bottom of the valley. Which readouts change, by how much, and which stay the same? Why can the zero of potential energy be put anywhere?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A skater on a circular loop of radius R, with no friction, starts from rest at height h above the bottom of the loop. Show that it stays on the track all the way round only if h ≥ 5R/2. In Loop, started too low, explain from N why the skater leaves the track before reaching the top.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Over a crest of radius R, at a point where the track makes angle θ with the horizontal, show that the normal force is N = m(g cosθ − v²/R). Where on the Hump is the skater most likely to leave the track, and why does it stay on in Hump on rails even though N &lt; 0?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> On the Moon (g = 1.62 m/s²) the skater on the Valley turns around at exactly the heights it did on Earth, but the first swing to the far side takes 6.57 s instead of 2.67 s. Explain both facts, and check the ratio of the times.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Off the end of the Jump the skater flies and lands on the ground. Which part of its kinetic energy turns into thermal energy at the landing, and which part does it keep? Use the readouts to check your answer.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A heavier skater goes faster down the hill."</strong> Every energy is proportional to m, so the speed at each height is the same for any mass. The mass changes the joules, not the motion.</li>
+<li><strong>"Friction destroys energy."</strong> It moves energy from mechanical to thermal; the total bar never changes.</li>
+<li><strong>"Potential energy has a definite value."</strong> Only differences in U matter. Moving the zero shifts U and the total together.</li>
+<li><strong>"The normal force always equals mg cosθ."</strong> On a curved track it also supplies, or takes away, the centripetal force mv²/R. It can be several times mg at the bottom of a loop and zero at the moment the skater leaves a crest.</li>
+<li><strong>"In a loop the skater falls off because gravity wins at the top."</strong> It leaves when gravity alone would curve its path more tightly than the track: the track would have to pull it outward, and it cannot.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The skater is a point mass sliding without rolling or air drag. The track is a natural cubic spline through its points, parameterized by chord length so it can loop. On the track the speed obeys m dv/dt = −mg sinθ ∓ μN with N = m(σκv² + g cosθ) (σ the side the skater rides on, κ the curvature), stepped by fourth order Runge–Kutta every 0.5 ms; after each step the speed is set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic and static friction share one μ.</li>
+<li>Where N would go below zero (rails off) the skater leaves the track; in the air the path is the exact parabola. Landing keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); the ground does the same with the downward speed, and the side walls stop the skater.</li>
+<li>Tests (curriculum/validation/test_energy_track.cjs): time down an incline with and without friction, the friction heat μmg cosθ L, leaving a round hill at 2R/3 above its center, the total kept on a valley and a loop, the projectile range and fall off a ledge, the stopping distance on the ground.</li>
+<li>g for the Moon, Mars and Jupiter is from the NASA Planetary Fact Sheet (1.62, 3.71 and 24.79 m/s²).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Build a track whose bottom is part of a circle of known radius and compare N at the bottom with m(g + v²/R).</li>
+<li>Use friction and the thermal readout to find μ from the distance slid on a straight ramp, then compare with the stopping distance on the ground.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -35,6 +35,7 @@
      "blurb": "Work, potential energy, collisions and rockets.",
      "demos": [
       "potential-curves",
+      "energy-track",
       "energy-sources",
       "impulse",
       "collisions",

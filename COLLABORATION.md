@@ -5455,3 +5455,30 @@ draw calls per second and heap allocation on opening and after pressing Run, plu
   390 px phone at DPR 3 with no page errors and canvases at 2×; Star Slice switches runs from a file and from a server.
 - Left as is: per demo redraw caching (binding energy redraws its whole chart for the marching arrows) is small gains for real
   risk; vd3kit shadows (one demo uses them). Profiler kept at /mnt/project-files/tablet-perf/prof.cjs.
+
+## 2026-10-30 · Claude · New demo: Energy on a Track (PhET parity, Steve)
+
+Steve reopened the PhET parity work ("get to work on some of that"). First gap closed: PhET Energy Skate Park (both versions),
+which the 28 Oct recount had as partly covered by Potential Energy Curves. Built as its own demo, since a skater on a real 2D
+track (normal force, leaving the track, landings) is a different model from Potential Curves' particle in U(x).
+- `demos/energy-track.html` on the shared library. CORE (`et*`): the track is a natural cubic spline x(u), y(u) through its points
+  with u the chord length (so it can loop); on the track RK4 in (u, v, E_th) every 0.5 ms with N = m(σκv² + g T_x), friction μ|N|,
+  and the speed then set from K + U + E_th = the starting total; the same μ holds the skater at rest where tanθ ≤ μ. N < 0 leaves
+  the track (unless Stick to the track); the air is the exact parabola; a landing keeps the speed along the track and the speed
+  across it goes into E_th; the ground does the same with v_y, the walls at x = 0 and 12 m stop the skater. Point mass, no rolling,
+  no drag (stated on the page). g Moon 1.62, Mars 3.71, Jupiter 24.79 m/s² (NASA Planetary Fact Sheet).
+- In scene building (Steve's preference): drag grips to reshape, drag a new point from the tray onto the track (12 at most),
+  drag a grip onto the bin, drag the skater anywhere (within 0.45 m of the track it lands on it), drag the U = 0 tab. Energy pie
+  over the skater, VD.energy bars, an energy against time graph, readouts with N in mg and newtons, Blind. Ten setups (valley,
+  friction, double well, loop, loop started too low, jump, hump, hump on rails, Moon, build your own); opens paused, first Play
+  releases the skater from 5.71 m. VD.tools stopwatch and ruler, Copy link carries the track and start (VD.share.picture),
+  `window.__et` script API.
+- Tests: `curriculum/validation/test_energy_track.cjs` (9 groups): incline time with and without friction and μ mg cosθ L of heat,
+  held at rest only where tanθ ≤ μ, leaving a round hill 2R/3 above its center, total kept to 1e-9 on a valley and a loop and the
+  turning height, the low loop leaves and lands (rails keep it on), projectile range and v_y²/2 of heat off a ledge, stopping
+  distance on the ground, nearest point and side.
+- No worksheet by decision (capability parity, Steve 2026-10-28). Notes `notes/src/energy-track.md` with 7 questions, key in
+  TeacherKeys `demo-keys/answers/energy-track.md`. Map: Physics I, Vol 1 §6.3, 7.3, 8.1, 8.2, 8.3; topic Energy and momentum;
+  catalog after Potential Energy Curves; thumbnails (OVERRIDES: the loop); What's new entry.
+- Checked: Playwright at 1368, 1024 and 390 px, light and dark, no page errors, no sideways scroll; dragging a point in from the
+  tray, a grip onto the bin and the skater into the air; `vdcheck --only after` 0 problems, `--only clip` 0 cut off.
