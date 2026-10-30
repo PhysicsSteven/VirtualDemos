@@ -5441,7 +5441,7 @@ within friction was drawn against the pin, 14.5 mm toward the net pull, however 
 
 Steve asked how efficient the code is. Measured every demo (138 pages) in Chromium at 1368×912: script time, frames, canvas
 draw calls per second and heap allocation on opening and after pressing Run, plus download sizes.
-- Where it stands: the median demo uses 1.5 % of one desktop core when open; 61 of 138 draw nothing while open and nothing moves, and the rest are animating by design. The
+- Where it stands: the median demo uses 1.5 % of one desktop core when open; 61 of 138 draw nothing while open and nothing moves; the 19 busiest were all checked and are animating by design. The
   busiest (ripple tank 45 %, capacitors 33 %, electron diffraction, double slit, BZ, Gauss's law 20 to 25 %) are running
   simulations that are meant to animate, and the heavy ones already cap their steps per frame. No page errors, no runaway memory
   (allocation under 5 MB/s everywhere). The home page lazy loads its WebP thumbnails; videos load only when opened.
