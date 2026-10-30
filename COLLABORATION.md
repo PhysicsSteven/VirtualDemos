@@ -5496,3 +5496,30 @@ One new demo rather than modes in Cavendish and Coulomb Sandbox, since all three
 - No worksheet by decision; notes `notes/src/force-lab.md` (6 questions), key in TeacherKeys `demo-keys/answers/force-lab.md`.
   Map: Physics I (Vol 1 §5.5, 13.1) and Physics II (Vol 2 §5.3); topics Gravitation and Charges and fields; thumbnails; What's new.
 - Checked: Playwright at 1368 and 390 px, light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.
+
+## 2026-10-30 · Claude · Worksheets: spreadsheet formulas, own columns, more fits (Steve)
+
+Steve asked for Excel style formulas in the worksheet cells, columns of the student's own to hold them, and more graph fits
+(sine, exponential, rising exponential, then "add them": power law, damped sine, resonance, Gaussian, single slit, logarithm).
+All in `curriculum/labs/worksheet.js`, so every interactive worksheet has it; no handout edited.
+- Formulas: a cell starting with = is worked out by a small parser of its own (no eval), in the block between
+  `==FORMULAS START==` and `==FORMULAS END==` (`WSF`). Cell names as in a spreadsheet (B2, $B$2), with a small column letter
+  above each heading and the row number at the left (screen only; row 1 is the first row of data). + − * / ^, parentheses,
+  ranges inside functions, SUM AVERAGE COUNT MIN MAX MEDIAN STDEV(.S/.P) VAR SUMSQ SQRT ABS SIGN POWER EXP LN LOG LOG10 ROUND
+  SIN COS TAN ASIN ACOS ATAN ATAN2(x, y) PI RADIANS DEGREES. Departures from a spreadsheet, stated in the help on the page:
+  −2^2 = −4 (algebra), a formula that uses an empty cell is empty (so a formula filled down past the data plots nothing).
+  Errors #DIV/0! #NUM! #VALUE! #REF! #NAME? #ERROR! #CIRC! with the reason in the line under the table. Fill down button and
+  Ctrl+D. A cell shows its result (10 significant figures) and the formula while edited; PDF, CSV and graphs use results,
+  the save file keeps formulas (`rows` hold the raw text, as before).
+- Own columns: Add a column / Remove the last added column on each copy of a table, with a typed heading; saved as
+  `runs[].added` (names), offered on the graph axes, in the CSV. Only the last can be removed, so letters never shift under a formula.
+- Fits: the Fit menu adds power law y = A·xⁿ (no offset, x > 0), exponential y = C + A·e^(−x/τ), rising exponential
+  y = C + A·(1 − e^(−x/τ)), logarithm y = a + b·ln x, sine y = C + A·sin(2πf·x + φ), damped sine, driven oscillator resonance
+  A/√((1 − (x/x₀)²)² + (x/(Q·x₀))²) (no offset), Gaussian, single slit C + A·(sin u/u)² with u = π(x − x₀)/w. All parameters
+  free, equal weights; starting values from a search with the linear parameters solved exactly, then Levenberg–Marquardt;
+  standard errors from s²(JᵀJ)⁻¹ with n − k degrees of freedom; residuals plotted as before. Line and quadratic unchanged.
+- Tests: `curriculum/validation/test_worksheet_formulas.cjs` (22: formulas against hand values, errors, no eval, fill down,
+  each fit recovering known parameters, an exact capacitor charging curve, a 60 Hz AC sine).
+- Checked: local Jekyll build, Playwright at 1200 and 390 px light and dark (no page errors, no sideways scroll); key PDFs
+  for pendulum, motion graphs and springs rebuilt with fill_key print the same text and pages as committed (column letters,
+  row numbers and the formula line are screen only). For GPT: check the fit formulas, units and the stated departures.

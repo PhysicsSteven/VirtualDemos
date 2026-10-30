@@ -724,6 +724,12 @@
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
   GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range');
+  /* the kinds of fit a graph offers: [value saved in axes.fit, menu text]. '' and 'quad' are worked out below; the rest by WSF.fit */
+  const FIT_KINDS = [['', 'straight line'], ['quad', 'quadratic, y = a + bx + cx²'], ['power', 'power law, y = A·xⁿ'],
+    ['exp', 'exponential, y = C + A·e^(−x/τ)'], ['rise', 'rising exponential, y = C + A·(1 − e^(−x/τ))'], ['log', 'logarithm, y = a + b·ln x'],
+    ['sine', 'sine, y = C + A·sin(2πf·x + φ)'], ['damped', 'damped sine, y = C + A·e^(−x/τ)·sin(2πf·x + φ)'],
+    ['resonance', 'resonance curve, y = A/√((1 − (x/x₀)²)² + (x/(Q·x₀))²)'], ['gauss', 'Gaussian, y = C + A·e^(−(x − μ)²/(2σ²))'],
+    ['slit', 'single slit, y = C + A·(sin u/u)², u = π(x − x₀)/w']];
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
@@ -731,6 +737,345 @@
   CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-radiobiology'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
+  /* ==FORMULAS START== */
+  /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
+     curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
+     numbers, cell names (B2, $B$2), ranges inside functions (B1:B6), + − * / ^ and parentheses, and the functions in FN.
+     A cell is named by its column letter and its row number in the same table, row 1 being the first row of data. A formula that
+     uses an empty cell is empty itself, so a formula filled down past the last reading leaves those rows blank; −2^2 is −4, as in
+     algebra (a spreadsheet gives 4). */
+  const WSF = (() => {
+    const colName = (c) => { let s = ''; for (c += 1; c > 0; c = Math.floor((c - 1) / 26)) s = String.fromCharCode(65 + (c - 1) % 26) + s; return s; };
+    const colIndex = (s) => { let c = 0; for (const ch of s.toUpperCase()) c = c * 26 + ch.charCodeAt(0) - 64; return c - 1; };
+    const num = (t) => { t = String(t == null ? '' : t).trim().replace(/[−–]/g, '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
+    const isFormula = (t) => /^\s*=/.test(String(t == null ? '' : t));
+    class Err { constructor(code, msg) { this.code = code; this.msg = msg; } }
+    const BLANK = { blank: true };
+    function tokens(src) {
+      const out = [];
+      for (let i = 0; i < src.length;) {
+        const ch = src[i], rest = src.slice(i);
+        let m;
+        if (/\s/.test(ch)) { i++; continue; }
+        if ((m = rest.match(/^(\d+\.?\d*|\.\d+)(e[-+]?\d+)?/i))) out.push({ t: 'num', v: +m[0], s: m[0], at: i });
+        else if ((m = rest.match(/^(\$?)([A-Za-z]{1,2})(\$?)(\d+)(?![A-Za-z0-9_.(])/))) out.push({ t: 'ref', c: colIndex(m[2]), r: +m[4] - 1, ac: !!m[1], ar: !!m[3], s: m[0], at: i });
+        else if ((m = rest.match(/^[A-Za-z][A-Za-z0-9.]*/))) out.push({ t: 'name', v: m[0].toUpperCase(), s: m[0], at: i });
+        else {
+          const op = { '×': '*', '·': '*', '÷': '/', '−': '-', '–': '-', ';': ',' }[ch] || ch;
+          if ('+-*/^(),:'.indexOf(op) < 0) throw new Err('#ERROR!', `“${ch}” cannot be used in a formula.`);
+          m = [ch]; out.push({ t: op, s: ch, at: i });
+        }
+        i += m[0].length;
+      }
+      return out;
+    }
+    function parse(src) {
+      const tk = tokens(src);
+      let p = 0;
+      const eat = (t) => (tk[p] && tk[p].t === t ? tk[p++] : null), fail = (why) => { throw new Err('#ERROR!', why); };
+      const expr = () => { let a = term(); for (let o; (o = eat('+') || eat('-'));) a = { op: o.t, a, b: term() }; return a; };
+      const term = () => { let a = unary(); for (let o; (o = eat('*') || eat('/'));) a = { op: o.t, a, b: unary() }; return a; };
+      const unary = () => (eat('-') ? { op: 'neg', a: unary() } : eat('+') ? unary() : power());
+      const power = () => { const a = primary(); return eat('^') ? { op: '^', a, b: unary() } : a; };
+      function primary() {
+        const t = tk[p++];
+        if (!t) fail('The formula ends too soon.');
+        if (t.t === 'num') return { op: 'num', v: t.v };
+        if (t.t === 'ref') {
+          if (!eat(':')) return { op: 'ref', a: t };
+          const u = eat('ref'); if (!u) fail('A range needs a cell after the colon, as in B1:B5.');
+          return { op: 'range', a: t, b: u };
+        }
+        if (t.t === 'name') {
+          if (!eat('(')) fail(`“${t.s}” is not a cell or a function. A function needs parentheses, as in PI() or SQRT(A1).`);
+          const args = [];
+          if (!eat(')')) { do args.push(expr()); while (eat(',')); if (!eat(')')) fail(`A closing parenthesis is missing after the inputs of ${t.v}.`); }
+          return { op: 'fn', name: t.v, args };
+        }
+        if (t.t === '(') { const e = expr(); if (!eat(')')) fail('A closing parenthesis is missing.'); return e; }
+        fail(`“${t.s}” is out of place.`);
+      }
+      if (!tk.length) fail('Nothing comes after the = sign.');
+      const e = expr();
+      if (p < tk.length) fail(`“${tk[p].s}” is out of place.`);
+      return e;
+    }
+    const mean = (v) => v.reduce((a, b) => a + b, 0) / v.length;
+    const vari = (v, d) => { if (v.length <= d) throw new Err('#DIV/0!', `This needs at least ${d + 1} numbers.`); const m = mean(v); return v.reduce((q, x) => q + (x - m) * (x - m), 0) / (v.length - d); };
+    const need = (ok, msg) => { if (!ok) throw new Err('#NUM!', msg); };
+    /* ROUND as a spreadsheet does it: halves away from zero, on the decimal digits as written (1.005 → 1.01) */
+    const round = (x, n) => { n = Math.trunc(n); const s = (v, k) => { const [m, e] = String(v).split('e'); return +(m + 'e' + ((+e || 0) + k)); }; return Math.sign(x) * s(Math.round(s(Math.abs(x), n)), -n); };
+    /* list: takes any number of inputs, ranges included, and uses only the cells that hold numbers; with none at all it is empty */
+    const FN = {
+      SUM: { list: true, f: (v) => v.reduce((a, b) => a + b, 0) },
+      SUMSQ: { list: true, f: (v) => v.reduce((a, b) => a + b * b, 0) },
+      AVERAGE: { list: true, f: mean },
+      COUNT: { list: true, f: (v) => v.length, zero: true },
+      MIN: { list: true, f: (v) => Math.min(...v) },
+      MAX: { list: true, f: (v) => Math.max(...v) },
+      MEDIAN: { list: true, f: (v) => { const s = v.slice().sort((a, b) => a - b), k = s.length >> 1; return s.length % 2 ? s[k] : (s[k - 1] + s[k]) / 2; } },
+      STDEV: { list: true, f: (v) => Math.sqrt(vari(v, 1)) },
+      'STDEV.S': { list: true, f: (v) => Math.sqrt(vari(v, 1)) },
+      'STDEV.P': { list: true, f: (v) => Math.sqrt(vari(v, 0)) },
+      VAR: { list: true, f: (v) => vari(v, 1) },
+      'VAR.S': { list: true, f: (v) => vari(v, 1) },
+      'VAR.P': { list: true, f: (v) => vari(v, 0) },
+      SQRT: { n: [1, 1], f: (x) => { need(x >= 0, 'SQRT of a negative number.'); return Math.sqrt(x); } },
+      ABS: { n: [1, 1], f: Math.abs },
+      SIGN: { n: [1, 1], f: Math.sign },
+      EXP: { n: [1, 1], f: Math.exp },
+      LN: { n: [1, 1], f: (x) => { need(x > 0, 'LN needs a positive number.'); return Math.log(x); } },
+      LOG10: { n: [1, 1], f: (x) => { need(x > 0, 'LOG10 needs a positive number.'); return Math.log10(x); } },
+      LOG: { n: [1, 2], f: (x, b) => { need(x > 0, 'LOG needs a positive number.'); if (b === undefined) return Math.log10(x); need(b > 0 && b !== 1, 'The base of LOG must be positive and not 1.'); return Math.log(x) / Math.log(b); } },
+      SIN: { n: [1, 1], f: Math.sin }, COS: { n: [1, 1], f: Math.cos }, TAN: { n: [1, 1], f: Math.tan },
+      ASIN: { n: [1, 1], f: (x) => { need(Math.abs(x) <= 1, 'ASIN needs a number from −1 to 1.'); return Math.asin(x); } },
+      ACOS: { n: [1, 1], f: (x) => { need(Math.abs(x) <= 1, 'ACOS needs a number from −1 to 1.'); return Math.acos(x); } },
+      ATAN: { n: [1, 1], f: Math.atan },
+      /* the spreadsheet order: ATAN2(x, y) is the angle of the point (x, y) */
+      ATAN2: { n: [2, 2], f: (x, y) => { if (x === 0 && y === 0) throw new Err('#DIV/0!', 'ATAN2(0, 0) has no angle.'); return Math.atan2(y, x); } },
+      RADIANS: { n: [1, 1], f: (d) => d * Math.PI / 180 },
+      DEGREES: { n: [1, 1], f: (r) => r * 180 / Math.PI },
+      PI: { n: [0, 0], f: () => Math.PI },
+      POWER: { n: [2, 2], f: (a, b) => a ** b },
+      ROUND: { n: [1, 2], f: (x, k) => round(x, k || 0) },
+    };
+    const refName = (a) => colName(a.c) + (a.r + 1);
+    /* get(r, c): the raw text of a cell of this table (row and column from 0), or undefined outside it. Returns calc(r, c) →
+       { v: a number or BLANK } or { err: Err } for the cell at (r, c), each cell worked out once */
+    function sheet(get) {
+      const memo = new Map(), busy = new Set();
+      function look(r, c) {
+        const raw = get(r, c);
+        if (raw === undefined) throw new Err('#REF!', `${colName(c)}${r + 1} is outside this table.`);
+        const s = String(raw == null ? '' : raw).trim();
+        if (isFormula(s)) { const x = calc(r, c); if (x.err) throw x.err; return x.v; }
+        if (!s) return BLANK;
+        const n = num(s);
+        return isFinite(n) ? n : { text: s };
+      }
+      const cellsOf = (n) => {
+        const a = n.op === 'range' ? n.a : n.a, b = n.op === 'range' ? n.b : n.a, out = [];
+        for (let r = Math.min(a.r, b.r); r <= Math.max(a.r, b.r); r++) for (let c = Math.min(a.c, b.c); c <= Math.max(a.c, b.c); c++) out.push(look(r, c));
+        return out;
+      };
+      const ok = (v) => { if (typeof v !== 'number' || isNaN(v)) throw new Err('#NUM!', 'The result is not a number.'); if (!isFinite(v)) throw new Err('#NUM!', 'The result is too large.'); return v; };
+      function val(n) {
+        switch (n.op) {
+          case 'num': return n.v;
+          case 'ref': { const v = look(n.a.r, n.a.c); if (typeof v === 'object' && v !== BLANK) throw new Err('#VALUE!', `${refName(n.a)} holds text (“${v.text}”), not a number.`); return v; }
+          case 'range': throw new Err('#VALUE!', 'A range such as B1:B5 goes inside a function, as in AVERAGE(B1:B5).');
+          case 'neg': { const a = val(n.a); return a === BLANK ? BLANK : -a; }
+          case 'fn': {
+            const F = FN[n.name];
+            if (!F) throw new Err('#NAME?', `There is no function called ${n.name}.`);
+            if (F.list) {
+              const v = [];
+              n.args.forEach((a) => { if (a.op === 'range' || a.op === 'ref') cellsOf(a).forEach((x) => { if (typeof x === 'number') v.push(x); }); else { const x = val(a); if (x !== BLANK) v.push(x); } });
+              return v.length || F.zero ? ok(F.f(v)) : BLANK;
+            }
+            if (n.args.length < F.n[0] || n.args.length > F.n[1]) throw new Err('#VALUE!', `${n.name} takes ${F.n[0] === F.n[1] ? F.n[0] : F.n[0] + ' or ' + F.n[1]} input${F.n[1] === 1 ? '' : 's'}.`);
+            const xs = n.args.map(val);
+            return xs.indexOf(BLANK) >= 0 ? BLANK : ok(F.f(...xs));
+          }
+          default: {
+            const a = val(n.a), b = val(n.b);
+            if (a === BLANK || b === BLANK) return BLANK;
+            if (n.op === '/' && b === 0) throw new Err('#DIV/0!', 'This divides by zero.');
+            if (n.op === '^' && a < 0 && !Number.isInteger(b)) throw new Err('#NUM!', 'A negative number to a power that is not a whole number.');
+            return ok(n.op === '+' ? a + b : n.op === '-' ? a - b : n.op === '*' ? a * b : n.op === '/' ? a / b : a ** b);
+          }
+        }
+      }
+      function calc(r, c) {
+        const k = r + ',' + c;
+        if (memo.has(k)) return memo.get(k);
+        if (busy.has(k)) throw new Err('#CIRC!', `${colName(c)}${r + 1} uses its own value, through a loop of formulas.`);
+        busy.add(k);
+        let x;
+        try { x = { v: val(parse(String(get(r, c)).trim().slice(1))) }; } catch (e) { if (!(e instanceof Err)) throw e; x = { err: e }; }
+        busy.delete(k); memo.set(k, x);
+        return x;
+      }
+      return calc;
+    }
+    /* a formula copied dr rows down and dc columns across: names without $ move with it, as in a spreadsheet */
+    function shift(src, dr, dc) {
+      const m = String(src).match(/^(\s*=)([\s\S]*)$/); if (!m) return src;
+      let tk; try { tk = tokens(m[2]); } catch (_) { return src; }
+      let out = m[2];
+      tk.filter((t) => t.t === 'ref').reverse().forEach((t) => {
+        const c = t.ac ? t.c : t.c + dc, r = t.ar ? t.r : t.r + dr;
+        const s = c < 0 || r < 0 ? '#REF!' : (t.ac ? '$' : '') + colName(c) + (t.ar ? '$' : '') + (r + 1);
+        out = out.slice(0, t.at) + s + out.slice(t.at + t.s.length);
+      });
+      return m[1] + out;
+    }
+    /* what a computed cell shows: 10 significant figures, which hides rounding error (0.1 + 0.2 shows 0.3) */
+    const show = (v) => (v === BLANK ? '' : String(+v.toPrecision(10)));
+
+    /* ---------- curve fits (least squares, equal weights, every parameter free) ---------- */
+    function solve(M, v) {   /* Gaussian elimination with partial pivoting; null when singular */
+      const k = v.length, A = M.map((r, i) => r.concat([v[i]]));
+      const scale = Math.max(...M.map((r, i) => Math.abs(r[i]))) || 1;
+      for (let i = 0; i < k; i++) {
+        let p = i; for (let j = i + 1; j < k; j++) if (Math.abs(A[j][i]) > Math.abs(A[p][i])) p = j;
+        if (!(Math.abs(A[p][i]) > 1e-14 * scale)) return null;
+        [A[i], A[p]] = [A[p], A[i]];
+        for (let j = i + 1; j < k; j++) { const f = A[j][i] / A[i][i]; for (let q = i; q <= k; q++) A[j][q] -= f * A[i][q]; }
+      }
+      const x = new Array(k);
+      for (let i = k - 1; i >= 0; i--) { let s = A[i][k]; for (let j = i + 1; j < k; j++) s -= A[i][j] * x[j]; x[i] = s / A[i][i]; }
+      return x.every(isFinite) ? x : null;
+    }
+    const inverse = (M) => { const k = M.length, cols = []; for (let j = 0; j < k; j++) { const e = M.map((_, i) => (i === j ? 1 : 0)), c = solve(M, e); if (!c) return null; cols.push(c); } return M.map((_, i) => cols.map((c) => c[i])); };
+    /* the best amplitudes for fixed basis curves (each an array over the points), and the sum of squared residuals */
+    function linear(B, ys) {
+      const M = B.map((a) => B.map((b) => a.reduce((q, x, i) => q + x * b[i], 0))), v = B.map((a) => a.reduce((q, x, i) => q + x * ys[i], 0));
+      const c = solve(M, v); if (!c) return null;
+      let ss = 0; ys.forEach((y, i) => { let f = 0; B.forEach((b, j) => { f += c[j] * b[i]; }); ss += (y - f) * (y - f); });
+      return { c, ss };
+    }
+    const logGrid = (lo, hi, n) => Array.from({ length: n }, (_, i) => lo * Math.pow(hi / lo, i / (n - 1)));
+    /* golden section search for the minimum of g between a and b */
+    function golden(g, a, b, it) {
+      const r = (Math.sqrt(5) - 1) / 2;
+      let c = b - r * (b - a), d = a + r * (b - a), gc = g(c), gd = g(d);
+      for (let i = 0; i < (it || 80); i++) { if (gc < gd) { b = d; d = c; gd = gc; c = b - r * (b - a); gc = g(c); } else { a = c; c = d; gc = gd; d = a + r * (b - a); gd = g(d); } }
+      return (a + b) / 2;
+    }
+    /* Levenberg–Marquardt from p0. model(x, p) → [y, [∂y/∂p...]]. Returns the parameters and the sum of squared residuals */
+    function lm(model, p0, xs, ys) {
+      const k = p0.length;
+      const sse = (p) => { let s = 0; for (let i = 0; i < xs.length; i++) { const r = ys[i] - model(xs[i], p)[0]; s += r * r; } return isFinite(s) ? s : Infinity; };
+      let p = p0.slice(), ss = sse(p), lam = 1e-3;
+      if (!isFinite(ss)) return null;
+      for (let it = 0; it < 300 && ss > 0; it++) {
+        const JJ = Array.from({ length: k }, () => new Array(k).fill(0)), Jr = new Array(k).fill(0);
+        xs.forEach((x, i) => { const [f, g] = model(x, p), r = ys[i] - f; for (let a = 0; a < k; a++) { Jr[a] += g[a] * r; for (let b = 0; b < k; b++) JJ[a][b] += g[a] * g[b]; } });
+        let better = false;
+        while (lam < 1e15) {
+          const A = JJ.map((row, a) => row.map((v, b) => (a === b ? v * (1 + lam) + 1e-300 : v))), dp = solve(A, Jr);
+          if (dp) { const q = p.map((v, a) => v + dp[a]), s = sse(q); if (s < ss) { better = ss - s > 1e-13 * ss; p = q; ss = s; lam = Math.max(lam / 3, 1e-12); break; } }
+          lam *= 4;
+        }
+        if (!better) break;
+      }
+      return { p, ss };
+    }
+    /* the fitted curve with standard errors from s²(JᵀJ)⁻¹, s² = SSE/(n − k) */
+    function finish(M, p, xs, ys) {
+      const k = p.length, n = xs.length;
+      const res = xs.map((x, i) => ys[i] - M.f(x, p)[0]), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > k ? ss / (n - k) : NaN;
+      const ymax = Math.max(...ys.map(Math.abs)), exact = n > k && ss <= 1e-24 * n * ymax * ymax;
+      const JJ = Array.from({ length: k }, () => new Array(k).fill(0));
+      xs.forEach((x) => { const g = M.f(x, p)[1]; for (let a = 0; a < k; a++) for (let b = 0; b < k; b++) JJ[a][b] += g[a] * g[b]; });
+      const C = inverse(JJ);
+      const se = p.map((_, a) => (C && C[a][a] >= 0 ? Math.sqrt(s2 * C[a][a]) : NaN));
+      if (!C && n > k && !exact) return null;   /* the parameters are not pinned down by these points */
+      if (exact) M.names.forEach((nm, a) => { if ((nm === 'C' || nm === 'a') && Math.abs(p[a]) < 1e-9 * ymax) p[a] = 0; });
+      return { kind: M.id, p, se, res, n, exact, npar: k, at: (x) => M.f(x, p)[0] };
+    }
+    const TAU = 2 * Math.PI, wrapPi = (a) => { a = a % TAU; return a > Math.PI ? a - TAU : a <= -Math.PI ? a + TAU : a; };
+    const spanOf = (xs) => Math.max(...xs) - Math.min(...xs);
+    const minGap = (xs) => { const u = [...new Set(xs)].sort((a, b) => a - b), d = u.slice(1).map((x, i) => x - u[i]).sort((a, b) => a - b); return d.length ? d[d.length >> 1] : 1; };
+    const few = (xs, k) => Array.from({ length: Math.min(xs.length, k) }, (_, i) => xs[Math.round(i * (xs.length - 1) / Math.max(1, Math.min(xs.length, k) - 1))]);
+    /* the decay rates and angular frequencies tried as starting points */
+    const rates = (xs) => { const s = spanOf(xs), g = logGrid(0.02 / s, 50 / s, 50); return g.concat(g.map((r) => -r)); };
+    const omegas = (xs) => { const s = spanOf(xs), lo = Math.PI / (2 * s), hi = Math.PI / minGap(xs), st = Math.PI / (8 * s), out = []; for (let w = lo; w <= hi * 1.0001 && out.length < 3000; w += st) out.push(w); return out.length ? out : [lo]; };
+    /* 1D search over one nonlinear parameter q, with the linear amplitudes solved at each q; returns the best q */
+    function search1(qs, basis, ys) {
+      let best = -1, bs = Infinity; const sse = (q) => { const L = linear(basis(q), ys); return L ? L.ss : Infinity; };
+      const v = qs.map(sse); v.forEach((s, i) => { if (s < bs) { bs = s; best = i; } });
+      if (best < 0) return null;
+      const a = qs[Math.max(0, best - 1)], b = qs[Math.min(qs.length - 1, best + 1)];
+      return a === b ? qs[best] : golden(sse, a, b);
+    }
+    const MODELS = {
+      exp: { id: 'exp', k: 3, names: ['A', 'τ', 'C'], form: 'y = C + A·e^(−x/τ)',
+        f: (x, [A, t, C]) => { const e = Math.exp(-x / t); return [C + A * e, [e, A * e * x / (t * t), 1]]; },
+        start: (xs, ys) => { const x0 = Math.min(...xs), B = (s) => [xs.map((x) => Math.exp(-s * (x - x0))), xs.map(() => 1)], s = search1(rates(xs), B, ys); const L = s && linear(B(s), ys); return L ? [[L.c[0] * Math.exp(s * x0), 1 / s, L.c[1]]] : []; } },
+      rise: { id: 'rise', k: 3, names: ['A', 'τ', 'C'], form: 'y = C + A·(1 − e^(−x/τ))',
+        f: (x, [A, t, C]) => { const e = Math.exp(-x / t); return [C + A * (1 - e), [1 - e, -A * e * x / (t * t), 1]]; },
+        start: (xs, ys) => MODELS.exp.start(xs, ys).map(([A, t, C]) => [-A, t, C + A]) },
+      log: { id: 'log', k: 2, names: ['a', 'b'], form: 'y = a + b·ln x', positive: true,
+        f: (x, [a, b]) => [a + b * Math.log(x), [1, Math.log(x)]],
+        start: (xs, ys) => { const L = linear([xs.map(() => 1), xs.map(Math.log)], ys); return L ? [L.c] : []; } },
+      power: { id: 'power', k: 2, names: ['A', 'n'], form: 'y = A·xⁿ', positive: true,
+        f: (x, [A, n]) => { const xn = Math.pow(x, n); return [A * xn, [xn, A * xn * Math.log(x)]]; },
+        start: (xs, ys) => { const B = (n) => [xs.map((x) => Math.pow(x, n))], ns = Array.from({ length: 241 }, (_, i) => -6 + i * 0.05), n = search1(ns, B, ys), L = n != null && linear(B(n), ys); return L ? [[L.c[0], n]] : []; } },
+      sine: { id: 'sine', k: 4, names: ['A', 'f', 'φ', 'C'], form: 'y = C + A·sin(2πf·x + φ)',
+        f: (x, [A, f, ph, C]) => { const t = TAU * f * x + ph, s = Math.sin(t), c = Math.cos(t); return [C + A * s, [s, A * c * TAU * x, A * c, 1]]; },
+        start: (xs, ys) => {
+          const x0 = Math.min(...xs), B = (w) => [xs.map((x) => Math.sin(w * (x - x0))), xs.map((x) => Math.cos(w * (x - x0))), xs.map(() => 1)];
+          const w = search1(omegas(xs), B, ys), L = w && linear(B(w), ys); if (!L) return [];
+          const [a, b, C] = L.c; return [[Math.hypot(a, b), w / TAU, Math.atan2(b, a) - w * x0, C]];
+        } },
+      damped: { id: 'damped', k: 5, names: ['A', 'τ', 'f', 'φ', 'C'], form: 'y = C + A·e^(−x/τ)·sin(2πf·x + φ)',
+        f: (x, [A, t, f, ph, C]) => { const e = Math.exp(-x / t), th = TAU * f * x + ph, s = Math.sin(th), c = Math.cos(th); return [C + A * e * s, [e * s, A * e * s * x / (t * t), A * e * c * TAU * x, A * e * c, 1]]; },
+        start: (xs, ys) => {
+          const x0 = Math.min(...xs), S = spanOf(xs), B = (w, r) => { const e = xs.map((x) => Math.exp(-r * (x - x0))); return [xs.map((x, i) => e[i] * Math.sin(w * (x - x0))), xs.map((x, i) => e[i] * Math.cos(w * (x - x0))), xs.map(() => 1)]; };
+          const rs = [0].concat(logGrid(0.05 / S, 20 / S, 18)), ws = omegas(xs).filter((_, i, a) => a.length < 400 || i % Math.ceil(a.length / 400) === 0);
+          let best = null;
+          ws.forEach((w) => rs.forEach((r) => { const L = linear(B(w, r), ys); if (L && (!best || L.ss < best.ss)) best = { w, r, ss: L.ss }; }));
+          if (!best) return [];
+          const r = best.r || 1e-3 / S, L = linear(B(best.w, r), ys); if (!L) return [];
+          const [a, b, C] = L.c;
+          return [[Math.hypot(a, b) * Math.exp(r * x0), 1 / r, best.w / TAU, Math.atan2(b, a) - best.w * x0, C]];
+        } },
+      resonance: { id: 'resonance', k: 3, names: ['A', 'x₀', 'Q'], form: 'y = A / √((1 − (x/x₀)²)² + (x/(Q·x₀))²)',
+        f: (x, [A, x0, Q]) => { const u = x / x0, D = (1 - u * u) ** 2 + (u / Q) ** 2, g = 1 / Math.sqrt(D), dD = -0.5 * A * g / D, dDu = -4 * u * (1 - u * u) + 2 * u / (Q * Q);
+          return [A * g, [g, dD * dDu * (-u / x0), dD * (-2 * u * u / (Q * Q * Q))]]; },
+        start: (xs, ys) => {
+          let best = null;
+          const qs = logGrid(0.3, 3000, 45), cand = [...new Set(xs)].filter((x) => x > 0);
+          few(cand.sort((a, b) => a - b), 150).forEach((x0) => qs.forEach((Q) => { const g = xs.map((x) => 1 / Math.sqrt((1 - (x / x0) ** 2) ** 2 + (x / (Q * x0)) ** 2)), L = linear([g], ys); if (L && (!best || L.ss < best.ss)) best = { p: [L.c[0], x0, Q], ss: L.ss }; }));
+          return best ? [best.p] : [];
+        } },
+      gauss: { id: 'gauss', k: 4, names: ['A', 'μ', 'σ', 'C'], form: 'y = C + A·e^(−(x − μ)²/(2σ²))',
+        f: (x, [A, m, s, C]) => { const z = (x - m) / s, g = Math.exp(-z * z / 2); return [C + A * g, [g, A * g * z / s, A * g * z * z / s, 1]]; },
+        start: (xs, ys) => {
+          let best = null;
+          const S = spanOf(xs), ss = logGrid(minGap(xs) / 2, S, 30), ms = few([...new Set(xs)].sort((a, b) => a - b), 150);
+          ms.forEach((m) => ss.forEach((s) => { const L = linear([xs.map((x) => Math.exp(-(((x - m) / s) ** 2) / 2)), xs.map(() => 1)], ys); if (L && (!best || L.ss < best.ss)) best = { p: [L.c[0], m, s, L.c[1]], ss: L.ss }; }));
+          return best ? [best.p] : [];
+        } },
+      slit: { id: 'slit', k: 4, names: ['A', 'x₀', 'w', 'C'], form: 'y = C + A·(sin u / u)², u = π(x − x₀)/w',
+        f: (x, [A, x0, w, C]) => {
+          const u = Math.PI * (x - x0) / w, s = Math.abs(u) < 1e-4 ? 1 - u * u / 6 : Math.sin(u) / u, ds = Math.abs(u) < 1e-4 ? -u / 3 : (u * Math.cos(u) - Math.sin(u)) / (u * u);
+          return [C + A * s * s, [s * s, 2 * A * s * ds * (-Math.PI / w), 2 * A * s * ds * (-u / w), 1]];
+        },
+        start: (xs, ys) => {
+          let best = null;
+          const S = spanOf(xs), ws = logGrid(minGap(xs), S, 30), ms = few([...new Set(xs)].sort((a, b) => a - b), 150);
+          const sc = (u) => (Math.abs(u) < 1e-9 ? 1 : Math.sin(u) / u);
+          ms.forEach((m) => ws.forEach((w) => { const L = linear([xs.map((x) => sc(Math.PI * (x - m) / w) ** 2), xs.map(() => 1)], ys); if (L && (!best || L.ss < best.ss)) best = { p: [L.c[0], m, w, L.c[1]], ss: L.ss }; }));
+          return best ? [best.p] : [];
+        } },
+    };
+    /* fit(kind, xs, ys): null when these points cannot settle it; { bad } when the x values do not suit the curve */
+    function fit(kind, xs, ys) {
+      const M = MODELS[kind];
+      if (!M) return null;
+      if (M.positive && xs.some((x) => !(x > 0))) return { bad: 'positive' };
+      if (new Set(xs).size < M.k) return { bad: 'few', need: M.k };
+      let best = null;
+      M.start(xs, ys).forEach((p0) => { if (!p0.every(isFinite)) return; const r = lm(M.f, p0, xs, ys); if (r && (!best || r.ss < best.ss)) best = r; });
+      if (!best || !best.p.every(isFinite)) return null;
+      const p = best.p.slice();
+      /* one way to write each answer: A > 0 and −π < φ ≤ π for the sines, σ and w and Q positive */
+      if (kind === 'sine' || kind === 'damped') { const ia = 0, iph = kind === 'sine' ? 2 : 3, ifr = iph - 1;
+        if (p[ifr] < 0) { p[ifr] = -p[ifr]; p[iph] = Math.PI - p[iph]; }
+        if (p[ia] < 0) { p[ia] = -p[ia]; p[iph] += Math.PI; } p[iph] = wrapPi(p[iph]); }
+      if (kind === 'gauss') p[2] = Math.abs(p[2]);
+      if (kind === 'slit') p[2] = Math.abs(p[2]);
+      if (kind === 'resonance') { p[1] = Math.abs(p[1]); p[2] = Math.abs(p[2]); }
+      const out = finish(M, p, xs, ys);
+      if (out) { out.form = M.form; out.names = M.names; }
+      return out;
+    }
+    return { colName, colIndex, num, isFormula, sheet, shift, show, BLANK, Err, parse, fit, MODELS, FN };
+  })();
+  /* ==FORMULAS END== */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
@@ -811,7 +1156,7 @@ tbody.ws-pad { display: none; }
 .ws-print { display: none; }
 .ws-plot { margin: 10px 0 4px; } .ws-plot h3 { font-size: 1em; margin: 0 0 4px; } .ws-plot svg { width: 100%; height: auto; display: block; max-width: 640px; }
 .ws-axes { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; } .ws-axes label { font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.ws select.ws-sel { width: auto; max-width: 15em; padding: 4px 6px; font-weight: 400; }
+.ws select.ws-sel { width: auto; max-width: 15em; padding: 4px 6px; font-weight: 400; } .ws-axes label { max-width: 100%; } .ws select.ws-sel.ws-fitsel { max-width: 100%; min-width: 0; flex: 0 1 auto; }
 @media print { .ws-axes { display: none; } }
 .ws-plot .ws-res { font-size: 0.95em; margin: 6px 0 2px; } .ws-plot .ws-res b { font-weight: 600; }
 .ws-plot .ws-warn2 { color: var(--hd-warn, #9a6700); font-weight: 600; font-size: 0.9em; margin: 4px 0; } .ws-plot .ws-pnote { font-size: 0.85em; color: var(--hd-muted, #57606a); margin: 2px 0; }
@@ -819,6 +1164,19 @@ tbody.ws-pad { display: none; }
 .ws-left { border: 1px solid var(--hd-left-line, #d4a72c); background: var(--hd-left, #fff8c5); border-radius: 8px; padding: 10px 14px; margin: 18px 0; }
 .ws-left h2 { margin-top: 0; border: 0; font-size: 1.05em; } .ws-left p { margin: 4px 0; white-space: pre-wrap; }
 @media (max-width: 480px) { .ws-btn { font-size: 13px; padding: 5px 9px; } }
+.ws-colname { display: block; font-size: 10px; font-weight: 400; line-height: 1.2; color: var(--hd-muted, #57606a); letter-spacing: 0.04em; }
+@media screen { .markdown-body table.ws-table td.ws-rn { position: relative; padding-left: 1.7em; }
+  .markdown-body table.ws-table td.ws-rn::before { content: attr(data-r); position: absolute; left: 4px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--hd-muted, #57606a); font-variant-numeric: tabular-nums; } }
+.ws input.ws-f.ws-calc { background: color-mix(in srgb, var(--hd-accent, #0969da) 10%, var(--hd-field, #fff)); }
+.ws input.ws-f.ws-calc.ws-bad { color: var(--hd-warn, #9a6700); font-weight: 600; }
+.markdown-body table.ws-table th.ws-xcol { padding: 3px 4px; } .markdown-body table.ws-table th.ws-xcol input.ws-f { min-width: 7.5em; font-weight: 600; }
+.ws-bar { font-size: 0.85em; color: var(--hd-muted, #57606a); margin: 6px 0 2px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 2em; }
+.ws-bar b { color: var(--hd-ink, #1f2328); } .ws-bar code { font-size: 1em; padding: 1px 5px; }
+.ws-bar .ws-warn { color: var(--hd-warn, #9a6700); font-weight: 600; }
+.ws-bar .ws-btn { font-size: 13px; padding: 2px 9px; }
+details.ws-help { margin: 10px 0 2px; font-size: 0.9em; } details.ws-help > summary { cursor: pointer; font-weight: 600; }
+details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { font-size: 0.95em; }
+@media print { .ws-colname, .ws-bar, details.ws-help { display: none !important; } }
 @media print {
   .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint { display: none !important; }
   .ws-panel { border: 0; background: none; padding: 0; margin: 8px 0 14px; }
@@ -850,7 +1208,7 @@ tbody.ws-pad { display: none; }
     const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
       : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
     const p = el('span', { class: 'ws-print tex2jax_ignore', 'aria-hidden': 'true' });
-    f.addEventListener('input', () => { p.textContent = f.value; if (kind === 'area') grow(f); changed(); });
+    f.addEventListener('input', () => { if (f.raw != null) f.raw = f.value; p.textContent = f.value; if (kind === 'area') grow(f); changed(); });
     f.wsSet = (v) => { f.value = v == null ? '' : String(v); p.textContent = f.value; if (kind === 'area') requestAnimationFrame(() => grow(f)); };
     f.wsPrint = p;
     return f;
@@ -880,6 +1238,16 @@ tbody.ws-pad { display: none; }
   panel.appendChild(whoBox);
   buttons('top').forEach((x) => panel.appendChild(x));
   panel.appendChild(el('p', { class: 'ws-note', text: 'Type your data into the tables and your answers under each question. Everything is saved in this browser on this computer as you type. Before you move to another computer, use Save to a file, then Open a saved file there. Hand in the PDF and the CSV.' }));
+  panel.appendChild(el('details', { class: 'ws-help' }, [el('summary', { text: 'Calculating in the tables, like a spreadsheet' }),
+    el('p', { text: 'Start a cell with = to have it calculated. Cells are named as in a spreadsheet, by the small column letter above each heading and the row number at the left of each row: B2 is column B, row 2, of the same table. Row 1 is the first row of data; the headings have no number.' }),
+    el('p', {}, ['Examples: ', el('code', { text: '=B2^2' }), ', ', el('code', { text: '=2*A3/C3' }), ', ', el('code', { text: '=AVERAGE(B1:B6)' }), ', ', el('code', { text: '=SQRT(D2)' }), ', ', el('code', { text: '=SIN(RADIANS(A2))' }), '.']),
+    el('ul', {}, [
+      el('li', { text: 'Operators + − * / ^ and parentheses. −2^2 is −4, as in algebra (a spreadsheet gives 4).' }),
+      el('li', { text: 'Functions: SUM, AVERAGE, COUNT, MIN, MAX, MEDIAN, STDEV (also STDEV.S, STDEV.P, VAR), SUMSQ; SQRT, ABS, SIGN, POWER, EXP, LN, LOG (base 10, or LOG(x, base)), LOG10, ROUND(x, places); SIN, COS, TAN, ASIN, ACOS, ATAN, ATAN2(x, y), PI(), RADIANS, DEGREES. Angles are in radians, as in a spreadsheet.' }),
+      el('li', { text: 'A range such as B1:B6 goes inside a function, which uses only the cells in it that hold numbers. A formula that uses an empty cell stays empty.' }),
+      el('li', { text: 'Fill down (under the table, or Ctrl+D in the cell below) copies a formula down its column and moves its row numbers along. Put $ before a row number, as in B$1 or $B$1, to keep it fixed.' }),
+      el('li', { text: 'Add a column gives a table a column of your own for a calculation; type its heading, with the unit in parentheses, as in v² (m²/s²). Your columns can go on the graph too.' }),
+      el('li', { text: 'A cell shows its result; click it to see or change the formula. The PDF, the CSV and the graph use the results; Save to a file keeps the formulas.' })])]));
 
   /* ---------- sections: walk the h2 headings ---------- */
   const sections = [];
@@ -916,7 +1284,7 @@ tbody.ws-pad { display: none; }
   /* A run is one copy of a table: the original on the page, or a copy added below it. */
   function addRun(T, existing) {
     const n = T.runs.length + 1;
-    const R = { rows: [], extra: 0 };
+    const R = { rows: [], extra: 0, xcols: [] };
     let t = existing;
     if (!t) {
       t = el('table');
@@ -934,6 +1302,8 @@ tbody.ws-pad { display: none; }
     }
     t.classList.add('ws', 'ws-table');
     R.table = t;
+    if (!t.tHead) t.insertBefore(el('thead', {}, [el('tr')]), t.tBodies[0]);
+    [...t.tHead.rows[0].cells].forEach((th, c) => th.insertBefore(el('span', { class: 'ws-colname tex2jax_ignore', 'aria-hidden': 'true', text: WSF.colName(c) }), th.firstChild));
     [...t.tBodies[0].rows].forEach((tr, i) => R.rows.push(wireRow(T, R, tr, T.tpl[i] || [])));
     /* printed with nothing typed, a table with no set rows gets rows to write in by hand, up to PRINT_ROWS (print only) */
     if (!T.tpl.some((r) => r.some(Boolean)) && R.rows.length < PRINT_ROWS) {
@@ -944,7 +1314,10 @@ tbody.ws-pad { display: none; }
     R.notes = field('area', `Settings and notes for ${R.label ? 'copy ' + n + ' of ' : ''}the ${T.heading} table`);
     const addRow = el('button', { type: 'button', class: 'ws-btn', text: 'Add a row', on: { click: () => { const row = newRow(T, R); row.cells[0] && row.cells[0].focus(); changed(); } } });
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
-    const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
+    const addCol0 = el('button', { type: 'button', class: 'ws-btn', text: 'Add a column', on: { click: () => { const col = addCol(T, R); col.name.focus(); changed(); } } });
+    R.removeCol = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added column', hidden: true, on: { click: () => { dropCol(T, R); changed(); } } });
+    R.bar = el('div', { class: 'ws-bar' });
+    const after = el('div', { class: 'ws tex2jax_ignore' }, [R.bar, el('div', { class: 'ws-btns' }, [addRow, R.removeRow, addCol0, R.removeCol]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
     if (GRAPHS.indexOf(SLUG) >= 0 && (T.index === 0 || GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0)) graphBox(T, R, after);
     if (existing) {
@@ -962,15 +1335,98 @@ tbody.ws-pad { display: none; }
   function wireRow(T, R, tr, tplRow) {
     const row = { tr, cells: [], added: false };
     for (let c = tr.cells.length; c < T.ncol; c++) tr.appendChild(el('td'));
-    [...tr.cells].forEach((td, c) => {
+    [...tr.cells].slice(0, T.ncol).forEach((td, c) => {
       if (tplRow[c]) { td.classList.add('ws-fixed'); row.cells.push(null); return; }
       td.textContent = '';
-      const f = field('input', `${T.cols[c] || 'Column ' + (c + 1)}, row ${R.rows.length + 1}`);
-      f.size = 6; /* a small intrinsic width, so the columns share the page instead of each taking 20 characters */
-      f.addEventListener('keydown', (e) => moveKey(e, R, row, c));
-      td.appendChild(withPrint(f)); row.cells.push(f);
+      row.cells.push(cell(T, R, row, td, c));
     });
+    if (tr.cells[0]) { tr.cells[0].classList.add('ws-rn'); tr.cells[0].dataset.r = R.rows.length + 1; }
+    R.xcols.forEach((_, k) => { const td = el('td'); tr.appendChild(td); row.cells.push(cell(T, R, row, td, T.ncol + k)); });
     return row;
+  }
+  /* a data cell: what the student typed is kept in f.raw; a formula (=...) shows its result except while the cell is being edited */
+  function colTitle(T, R, c) { return c < T.ncol ? T.cols[c] || 'Column ' + (c + 1) : (R.xcols[c - T.ncol] && R.xcols[c - T.ncol].name.value.trim()) || 'Column ' + WSF.colName(c); }
+  function cell(T, R, row, td, c) {
+    const f = field('input', `${colTitle(T, R, c)}, row ${R.rows.length + 1}`);
+    f.size = 6; /* a small intrinsic width, so the columns share the page instead of each taking 20 characters */
+    f.raw = ''; f.calc = null;
+    f.wsShow = () => { const shown = f.calc ? f.calc.text : f.raw; if (document.activeElement !== f) f.value = shown; f.wsPrint.textContent = shown;
+      f.classList.toggle('ws-calc', !!f.calc); f.classList.toggle('ws-bad', !!(f.calc && f.calc.err)); f.title = f.calc ? f.raw.trim() : ''; };
+    f.wsSet = (v) => { f.raw = v == null ? '' : String(v); if (!WSF.isFormula(f.raw)) f.calc = null; f.value = f.raw; f.wsShow(); };
+    f.addEventListener('focus', () => { if (f.calc) f.value = f.raw; R.focus = { row, c, f }; bar(T, R); });
+    f.addEventListener('blur', () => { f.wsShow(); setTimeout(() => { if (R.focus && R.focus.f === f && document.activeElement !== f) { R.focus = null; bar(T, R); } }, 150); });
+    f.addEventListener('keydown', (e) => moveKey(e, R, row, c));
+    td.appendChild(withPrint(f));
+    return f;
+  }
+  function rawOf(f) { return f ? (f.raw != null ? f.raw : f.value) : null; }
+  function shownOf(f) { return f ? (f.calc ? f.calc.text : f.value) : ''; }
+  /* work out every formula of every table (each run is its own sheet: names refer to cells of the same copy of the table) */
+  function recalc() {
+    tables.forEach((T) => T.runs.forEach((R) => {
+      const fs = [];
+      R.rows.forEach((row, i) => row.cells.forEach((f, c) => { if (f && WSF.isFormula(f.raw)) fs.push([i, c, f]); else if (f && f.calc) { f.calc = null; f.wsShow(); } }));
+      if (fs.length) {
+        const nc = T.ncol + R.xcols.length;
+        const calc = WSF.sheet((r, c) => { const row = R.rows[r]; if (!row || c < 0 || c >= nc) return undefined; const f = row.cells[c]; return f ? f.raw : (T.tpl[r] && T.tpl[r][c] ? T.tpl[r][c].text : ''); });
+        fs.forEach(([i, c, f]) => { const x = calc(i, c); f.calc = x.err ? { err: x.err, text: x.err.code, num: NaN } : { text: WSF.show(x.v), num: x.v === WSF.BLANK ? NaN : x.v }; f.wsShow(); });
+      }
+      if (R.focus) bar(T, R);
+    }));
+  }
+  /* the line under a table: the name, formula and result of the cell being edited, and Fill down */
+  function bar(T, R) {
+    const b = R.bar; if (!b) return;
+    b.innerHTML = '';
+    const F = R.focus;
+    if (!F) { b.appendChild(document.createTextNode('Start a cell with = to calculate, as in =B1^2 or =AVERAGE(C1:C5). Columns are named by the letters above the headings, rows by the numbers at the left.')); return; }
+    const i = R.rows.indexOf(F.row), name = WSF.colName(F.c) + (i + 1), f = F.f;
+    b.appendChild(el('b', { text: name }));
+    if (!WSF.isFormula(f.value)) { b.appendChild(document.createTextNode(f.value.trim() ? '' : 'Type a value, or = to start a formula.')); return; }
+    b.appendChild(el('code', { text: f.value.trim() }));
+    if (f.calc && f.calc.err) b.appendChild(el('span', { class: 'ws-warn', text: `${f.calc.err.code} ${f.calc.err.msg}` }));
+    else if (f.calc && f.raw === f.value) b.appendChild(document.createTextNode(f.calc.text === '' ? '= (empty: it uses an empty cell)' : '= ' + f.calc.text));
+    const below = R.rows.slice(i + 1).filter((r) => r.cells[F.c]);
+    if (below.length) b.appendChild(el('button', { type: 'button', class: 'ws-btn', text: `Fill down to row ${R.rows.length}`, on: { mousedown: (e) => e.preventDefault(), click: () => fillDown(T, R, F) } }));
+  }
+  function fillDown(T, R, F) {
+    const i = R.rows.indexOf(F.row), src = F.f.value, rows = R.rows.slice(i + 1);
+    const over = rows.filter((r) => r.cells[F.c] && r.cells[F.c].raw.trim() && r.cells[F.c].raw !== WSF.shift(src, R.rows.indexOf(r) - i, 0)).length;
+    if (over && !confirm(`Fill down replaces what is in ${over} cell${over === 1 ? '' : 's'} below. Go ahead?`)) return;
+    F.f.raw = src;
+    rows.forEach((r) => { const g = r.cells[F.c]; if (g) g.wsSet(WSF.shift(src, R.rows.indexOf(r) - i, 0)); });
+    changed();
+  }
+  /* a column of the student's own, at the right of one copy of a table (only the last one added can be removed, so the letters
+     of the others never change under a formula) */
+  function addCol(T, R, name) {
+    const c = T.ncol + R.xcols.length, head = R.table.tHead.rows[0];
+    const nf = field('input', `Heading of column ${WSF.colName(c)}`);
+    nf.placeholder = 'Heading (unit)'; nf.size = 8;
+    nf.addEventListener('input', () => axesOptions(T, R));
+    const th = el('th', { class: 'ws-xcol' }, [el('span', { class: 'ws-colname tex2jax_ignore', 'aria-hidden': 'true', text: WSF.colName(c) }), withPrint(nf)]);
+    for (let k = head.cells.length; k < c; k++) head.appendChild(el('th'));
+    head.appendChild(th);
+    const col = { name: nf, th };
+    R.xcols.push(col);
+    R.rows.forEach((row, i) => { const td = el('td'); for (let k = row.tr.cells.length; k < c; k++) row.tr.appendChild(el('td')); row.tr.appendChild(td); const f = cell(T, R, row, td, c); f.setAttribute('aria-label', `Column ${WSF.colName(c)}, row ${i + 1}`); row.cells[c] = f; });
+    R.table.querySelectorAll('tbody.ws-pad tr').forEach((tr) => tr.appendChild(el('td')));
+    if (name != null) nf.wsSet(name);
+    R.removeCol.hidden = false;
+    axesOptions(T, R);
+    return col;
+  }
+  function dropCol(T, R, quiet) {
+    const col = R.xcols[R.xcols.length - 1]; if (!col) return;
+    const c = T.ncol + R.xcols.length - 1;
+    if (!quiet && (col.name.value || R.rows.some((r) => r.cells[c] && r.cells[c].raw)) && !confirm('That column has entries. Remove it anyway?')) return;
+    col.th.remove();
+    R.rows.forEach((r) => { const f = r.cells[c]; if (f) f.closest('td').remove(); r.cells.length = c; });
+    R.table.querySelectorAll('tbody.ws-pad tr').forEach((tr) => tr.lastChild && tr.lastChild.remove());
+    R.xcols.pop(); R.removeCol.hidden = !R.xcols.length;
+    if (R.focus && R.focus.c === c) R.focus = null;
+    if (R.axes) ['x', 'y'].forEach((k) => { if (R.axes[k] === String(c)) R.axes[k] = ''; });
+    axesOptions(T, R);
   }
   function newRow(T, R) {
     const tr = el('tr'); for (let c = 0; c < T.ncol; c++) tr.appendChild(el('td'));
@@ -1011,6 +1467,13 @@ tbody.ws-pad { display: none; }
   /* Enter moves down a row; arrow keys move between cells when the caret is at the edge of the text. */
   function moveKey(e, R, row, c) {
     const i = R.rows.indexOf(row), f = e.target;
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {   /* fill down from the cell above, as in a spreadsheet */
+      e.preventDefault();
+      const up = R.rows[i - 1] && R.rows[i - 1].cells[c]; if (!up) return;
+      f.wsSet(WSF.isFormula(up.raw) ? WSF.shift(up.raw, 1, 0) : up.raw); changed();
+      if (WSF.isFormula(f.raw)) f.value = f.raw;
+      return;
+    }
     let to = null;
     if (e.key === 'Enter' || (e.key === 'ArrowDown' && !e.shiftKey)) to = R.rows[i + 1] && R.rows[i + 1].cells[c];
     else if (e.key === 'ArrowUp') to = R.rows[i - 1] && R.rows[i - 1].cells[c];
@@ -1055,7 +1518,7 @@ tbody.ws-pad { display: none; }
     const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers, received };
     WHO.forEach(([k]) => { S.student[k] = who[k].value; });
     tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value, source: R.source || null,
-      removed: R.removed || undefined, axes: R.axes, rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
+      removed: R.removed || undefined, axes: R.axes, added: R.xcols.length ? R.xcols.map((x) => x.name.value) : undefined, rows: R.rows.map((r) => r.cells.map((f) => (f ? rawOf(f) : null))) })) }));
     answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
     return S;
   }
@@ -1083,6 +1546,10 @@ tbody.ws-pad { display: none; }
         if (R.label) R.label.wsSet(sr.label || '');
         R.source = sr.source || null;
         if (ri === 0 && R.dropSelf) showOriginal(T, !sr.removed);
+        const added = Array.isArray(sr.added) ? sr.added : [];
+        while (R.xcols.length > added.length) dropCol(T, R, true);
+        added.forEach((nm, k) => { if (R.xcols[k]) R.xcols[k].name.wsSet(nm || ''); else addCol(T, R, nm || ''); });
+        axesOptions(T, R);
         setAxes(R, sr.axes);
         R.notes.wsSet(sr.notes || '');
         (sr.rows || []).forEach((cells, i) => {
@@ -1127,7 +1594,7 @@ tbody.ws-pad { display: none; }
   const stamp = () => { const d = new Date(), p = (x) => String(x).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; };
   const fileBase = () => { const n = (who.name.value || '').trim().replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, ''); return SLUG + (n ? '-' + n : ''); };
   function exportCSV() {
-    save();
+    recalc(); save();
     const L = [`# ${TITLE}: worksheet data tables`];
     WHO.forEach(([k, label]) => L.push(['# ' + label, who[k].value].map(csvCell).join(',')));
     L.push(`# exported,${new Date().toISOString()}`);
@@ -1137,10 +1604,10 @@ tbody.ws-pad { display: none; }
       const name = `${T.heading}${tables.length > 1 ? ' table ' + (ti + 1) : ''}, copy ${ri + 1}${R.label && R.label.value ? ': ' + R.label.value : ''}`;
       L.push('# ' + name.replace(/[\r\n]+/g, ' '));
       if (R.notes.value) L.push(['# notes', R.notes.value].map(csvCell).join(','));
-      L.push(Array.from({ length: T.ncol }, (_, c) => csvCell(T.cols[c] || 'Column ' + (c + 1))).join(','));
+      L.push(Array.from({ length: T.ncol + R.xcols.length }, (_, c) => csvCell(colTitle(T, R, c))).join(','));
       R.rows.forEach((r, i) => {
-        const vals = r.cells.map((f, c) => (f ? f.value : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '')));
-        if (r.cells.some((f) => f && f.value)) L.push(vals.map(csvCell).join(','));
+        const vals = r.cells.map((f, c) => (f ? shownOf(f) : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '')));
+        if (r.cells.some((f) => f && shownOf(f))) L.push(vals.map(csvCell).join(','));
       });
     }));
     download(fileBase() + '-data.csv', L.join('\r\n') + '\r\n', 'text/csv');
@@ -1158,7 +1625,7 @@ tbody.ws-pad { display: none; }
     }, () => alert('The file could not be read.'));
   }
   function reset() {
-    tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; showOriginal(T, true); });
+    tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; while (R.xcols.length) dropCol(T, R, true); showOriginal(T, true); });
     leftovers = [];
   }
   function clearAll() {
@@ -1173,25 +1640,37 @@ tbody.ws-pad { display: none; }
   /* ---------- graphs ---------- */
   addEventListener('resize', () => replot());
   let clipN = 0;
-  function replot() { if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); }); }
+  function replot() { recalc(); if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); }); }
   function graphBox(T, R, after) {
     R.axes = { x: '', y: '' };
     const pick = (k, label) => {
-      const s = el('select', { class: 'ws-f ws-sel', 'aria-label': label, on: { change: () => { R.axes[k] = s.value; changed(); } } },
-        [el('option', { value: '', text: 'choose a column' })].concat(T.cols.map((c, i) => el('option', { value: String(i), text: pretty(c) || 'Column ' + (i + 1) }))));
+      const s = el('select', { class: 'ws-f ws-sel', 'aria-label': label, on: { change: () => { R.axes[k] = s.value; changed(); } } });
       R.axesSel = R.axesSel || {}; R.axesSel[k] = s; return s;
     };
-    const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0, fit = el('select', { class: 'ws-f ws-sel', 'aria-label': 'Kind of fit', on: { change: () => { R.axes.fit = fit.value; changed(); } } },
-      [el('option', { value: '', text: 'straight line' }), el('option', { value: 'quad', text: 'quadratic, y = a + bx + cx²' })]);
+    const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0, fit = el('select', { class: 'ws-f ws-sel ws-fitsel', 'aria-label': 'Kind of fit', on: { change: () => { R.axes.fit = fit.value; changed(); } } },
+      FIT_KINDS.map(([v, text]) => el('option', { value: v, text })));
     R.axesSel = R.axesSel || {}; R.axesSel.fit = fit;
     R.graph = el('div');
     const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
       el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit])])),
       R.graph]);
     after.appendChild(box);
+    axesOptions(T, R);
   }
-  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit === 'quad') R.axes.fit = 'quad'; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; };
-  const numOf = (f) => { if (!f) return NaN; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
+  /* the columns offered for each axis: the table's own and the student's added ones (kept chosen when still there) */
+  function axesOptions(T, R) {
+    if (!R.axesSel || !R.axesSel.x) return;
+    ['x', 'y'].forEach((k) => {
+      const s = R.axesSel[k], keep = R.axes[k];
+      s.innerHTML = '';
+      s.appendChild(el('option', { value: '', text: 'choose a column' }));
+      for (let c = 0; c < T.ncol + R.xcols.length; c++) s.appendChild(el('option', { value: String(c), text: c < T.ncol ? pretty(T.cols[c]) || 'Column ' + (c + 1) : pretty(colTitle(T, R, c)) }));
+      s.value = keep != null && +keep < T.ncol + R.xcols.length ? keep : '';
+      R.axes[k] = s.value;
+    });
+  }
+  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit && FIT_KINDS.some((k) => k[0] === a.fit)) R.axes.fit = a.fit; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; };
+  const numOf = (f) => { if (!f) return NaN; if (f.calc) return f.calc.num; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
     const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
@@ -1226,12 +1705,12 @@ tbody.ws-pad { display: none; }
      0.001 and from 100000 up. exact: the points lie on the line to rounding error, so the standard error is zero */
   const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹';
   const sup = (k) => (k < 0 ? '⁻' : '') + String(Math.abs(k)).split('').map((c) => SUPD[+c]).join('');
-  function pm(v, e, unit, n, exact, k3) {   /* k3: a quadratic, so three coefficients come from the points, not two */
-    const u = unit ? ' ' + unit : '', need = k3 ? 4 : 3, ok = n >= need && !exact && e > 0 && isFinite(e);
+  function pm(v, e, unit, n, exact, k3) {   /* k3: true for a quadratic (three coefficients come from the points, not two), or the number of parameters */
+    const np = k3 === true ? 3 : k3 || 2, u = unit ? ' ' + unit : '', need = np + 1, ok = n >= need && !exact && e > 0 && isFinite(e);
     const p = ok ? Math.floor(Math.log10(e)) - 1 : 0, vr = ok ? Math.round(v / Math.pow(10, p)) * Math.pow(10, p) : +v.toPrecision(exact ? 6 : 4);
     const big = Math.max(Math.abs(vr), ok ? e : 0);
     const k = big > 0 && (big < 1e-3 || big >= 1e5) ? +big.toExponential(3).split('e')[1] : 0, sc = Math.pow(10, k), tail = k ? ` × 10${sup(k)}` : '';
-    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? `± 0 (the points lie exactly on the ${k3 ? 'curve' : 'line'})` : `(uncertainty needs at least ${need} points)`}`;
+    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? `± 0 (the points lie exactly on the ${np > 2 ? 'curve' : 'line'})` : `(uncertainty needs at least ${need} points)`}`;
     const d = Math.max(0, k - p), r = (x) => (x / sc).toFixed(d);
     return `(${r(vr)} ± ${r(Math.round(e / Math.pow(10, p)) * Math.pow(10, p))})${tail}${u}`;
   }
@@ -1259,7 +1738,7 @@ tbody.ws-pad { display: none; }
     const box = R.graph; box.innerHTML = '';
     if (box.parentNode) box.parentNode.classList.toggle('ws-noprint', R.axes.x === '' || R.axes.y === '');   /* no axes chosen: nothing to print */
     if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
-    const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(T.cols[cx]), [yName, yUnit] = nameUnit(T.cols[cy]);
+    const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colTitle(T, R, cx)), [yName, yUnit] = nameUnit(colTitle(T, R, cy));
     const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
     const pts = [];
     R.rows.forEach((r, i) => {
@@ -1271,16 +1750,22 @@ tbody.ws-pad { display: none; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const sameX = xs.every((x) => x === xs[0]);
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0;
-    const quad = !curve && R.axes.fit === 'quad', few = quad && !sameX && new Set(xs).size < 3;
-    const f = sameX || curve ? null : quad ? fitQuad(xs, ys) : fitLine(xs, ys);
+    const kind = curve ? '' : R.axes.fit || '', quad = kind === 'quad', few = quad && !sameX && new Set(xs).size < 3;
+    /* the other curves: worked out again only when the points or the kind change */
+    let g = null;
+    if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(','); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys); } g = R.fitOut; }
+    const f = sameX || curve ? null : quad ? fitQuad(xs, ys) : kind ? (g && !g.bad ? g : null) : fitLine(xs, ys);
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
     const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
     const lab = (n, u) => (u ? `${n} (${u})` : n);
     const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
-    if (f && !f.quad) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
-    if (f && f.quad) {   /* the curve, clipped to the plot box */
+    if (f && !f.quad && !f.kind) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
+    if (f && (f.quad || f.kind)) {   /* the curve, clipped to the plot box */
       const id = 'wsclip' + (++clipN), cp = sv('clipPath', { id }); cp.appendChild(sv('rect', { x: 62, y: 10, width: W - 80, height: 210 })); svg.appendChild(cp);
-      svg.appendChild(sv('polyline', { points: Array.from({ length: 121 }, (_, i) => { const x = xr[0] + (xr[1] - xr[0]) * i / 120; return `${A.X(x)},${A.Y(f.at(x))}`; }).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 2, 'clip-path': `url(#${id})` }));
+      /* drawn in pieces where the curve exists (xⁿ and ln x stop at x = 0), its height held to a few plot heights */
+      const N = f.kind ? 400 : 120, segs = [[]];
+      for (let i = 0; i <= N; i++) { const x = xr[0] + (xr[1] - xr[0]) * i / N, y = f.at(x); if (isFinite(y)) segs[segs.length - 1].push(`${A.X(x)},${Math.max(-2000, Math.min(2000, A.Y(y)))}`); else if (segs[segs.length - 1].length) segs.push([]); }
+      segs.filter((g) => g.length > 1).forEach((g) => svg.appendChild(sv('polyline', { points: g.join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 2, 'clip-path': `url(#${id})` })));
     }
     if (curve) svg.appendChild(sv('polyline', { points: pts.slice().sort((p, q) => p[0] - q[0]).map(([x, y]) => `${A.X(x)},${A.Y(y)}`).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.5 }));
     const dot = curve && pts.length > 40 ? 2.5 : 4.5;
@@ -1294,7 +1779,15 @@ tbody.ws-pad { display: none; }
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: `${pts.length} points, joined in order of ${P.xName}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.` })); return; }
     if (few) { box.appendChild(el('p', { class: 'ws-warn2', text: `A quadratic needs points at three or more different values of ${P.xName}.` })); return; }
+    if (kind && !quad && !f) {
+      const label = FIT_KINDS.find((k) => k[0] === kind)[1].split(',')[0];
+      box.appendChild(el('p', { class: 'ws-warn2', text: g && g.bad === 'positive' ? `A ${label} fit needs every ${P.xName} to be greater than zero.`
+        : g && g.bad === 'few' ? `A ${label} fit needs points at ${g.need} or more different values of ${P.xName}.`
+        : `The ${label} fit could not settle on these points. Check the columns, or try another kind of fit.` }));
+      return;
+    }
     if (!f) return;
+    if (f.kind) { fitText(box, f, P); return; }
     const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
     const su = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
     const sq = (u) => (/[\/\s²³]/.test(u) ? `(${u})²` : u + '²'); /* (m/s)², not m/s² */
@@ -1307,6 +1800,29 @@ tbody.ws-pad { display: none; }
     box.appendChild(el('p', { class: 'ws-pnote', text: f.quad
       ? `${f.n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − 3 degrees of freedom). What the coefficients tell you is for you to work out.`
       : `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
+  }
+
+  /* the parameters of a WSF.fit curve, each with its unit, and how the fit was made */
+  const FIT_UNITS = { exp: 'yxy', rise: 'yxy', log: 'yy', power: 'p-', sine: 'yiry', damped: 'yxiry', resonance: 'yx-', gauss: 'yxxy', slit: 'yxxy' };
+  const FIT_NOTES = {
+    exp: 'A negative τ means the curve grows instead of decaying.',
+    rise: 'C is the value at x = 0 and C + A the value it levels off at; a negative τ means it runs away instead.',
+    log: 'Every x must be greater than zero.',
+    power: 'There is no offset: the curve goes through the origin when n > 0. Every x must be greater than zero.',
+    sine: 'f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians.',
+    damped: 'f is searched up to one cycle for every two point spacings; φ is in radians; a negative τ means the swing grows.',
+    resonance: 'The amplitude of a driven oscillator against driving frequency (x): A is the response far below x₀, Q the quality factor. There is no offset.',
+    gauss: '',
+    slit: 'w is the distance from the center of the central peak to its first zero.' };
+  function fitText(box, f, P) {
+    const none = P.yUnit === null || P.xUnit === null, wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u);
+    const U = { y: none ? '' : P.yUnit, x: none ? '' : P.xUnit, i: none || !P.xUnit ? '' : `1/${wrap(P.xUnit)}`, r: 'rad', '-': '',
+      p: none ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}ⁿ` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}ⁿ` : '') };
+    const res = el('p', { class: 'ws-res' });
+    res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${f.form}, with y = ${P.yName} and x = ${P.xName}`));
+    f.names.forEach((nm, i) => { res.appendChild(el('br')); res.appendChild(el('b', { text: nm + ': ' })); res.appendChild(document.createTextNode(pm(f.p[i], f.se[i], U[FIT_UNITS[f.kind][i]], f.n, f.exact, f.npar))); });
+    box.appendChild(res);
+    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares fit with all ${f.npar} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − ${f.npar} degrees of freedom) and the curvature of the fit at its best values. ${FIT_NOTES[f.kind]} What the parameters tell you is for you to work out.`.replace(/  +/g, ' ') }));
   }
 
   /* ---------- readings from the demo ---------- */
