@@ -20,6 +20,8 @@
 
 ## What `vd.js` does
 
+As soon as it loads (2026-10-30): `window.devicePixelRatio` reads at most `VD.DPR_CAP` (2), so a canvas sized by it never fills more than 2 × 2 drawing pixels per CSS pixel (a phone at 3 drew 2.25 times as many for no visible gain). The real value is `VD.realDpr()`. Layout and every number shown are unchanged.
+
 Runs by itself once the page has loaded:
 
 | Markup | Behaviour |

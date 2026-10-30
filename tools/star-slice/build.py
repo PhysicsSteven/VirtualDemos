@@ -1,7 +1,9 @@
 """Build demos/star-slice.html: embed every tools/star-slice/data/*.json.gz into the template.
 
-Each dataset is embedded as base64 of its gzipped bytes; the page unpacks it with DecompressionStream.
-Next to it go a few small fields the page needs before unpacking: the initial mass (for the mass
+Each dataset goes in its own script, demos/star-slice-data/<file>.js, as base64 of its gzipped bytes; the page
+loads only the run it shows (efficiency pass 2026-10-30: the page was 6 MB to download with every run inside) and
+unpacks it with DecompressionStream. A script, not a fetch, so the page still works opened from a file.
+Embedded in the page go a few small fields the page needs before unpacking: the initial mass (for the mass
 slider), the HR track (log Teff, log L per moment, for the faint tracks of the other masses) and the
 index of the first main sequence moment (where the track is labeled).
 
@@ -54,6 +56,10 @@ def track(d):
 
 
 datasets = []
+data_dir = os.path.join(os.path.dirname(a.out) or '.', 'star-slice-data')
+os.makedirs(data_dir, exist_ok=True)
+for old in glob.glob(os.path.join(data_dir, '*.js')):
+    os.remove(old)
 for path in sorted(glob.glob(os.path.join(a.data, '*.json.gz'))):
     raw = open(path, 'rb').read()
     d = json.loads(gzip.decompress(raw))
@@ -64,10 +70,14 @@ for path in sorted(glob.glob(os.path.join(a.data, '*.json.gz'))):
     label = d.get('label') or os.path.basename(path)
     pts, zams = track(d)
     datasets.append({'file': os.path.basename(path), 'label': label, 'mass': initial_mass(d, label),
-                     'source': d.get('source') or [], 'track': pts, 'zams': zams,
-                     'b64': base64.b64encode(raw).decode('ascii')})
+                     'source': d.get('source') or [], 'track': pts, 'zams': zams})
+    b64 = base64.b64encode(raw).decode('ascii')
+    with open(os.path.join(data_dir, os.path.basename(path) + '.js'), 'w', encoding='ascii') as f:
+        f.write('/* Star Slice data, made by tools/star-slice/build.py: base64 of %s */\n'
+                '(window.STAR_SLICE_DATA = window.STAR_SLICE_DATA || {})[%s] = "%s";\n'
+                % (os.path.basename(path), json.dumps(os.path.basename(path)), b64))
     print(f'{os.path.basename(path)}: "{label}", {datasets[-1]["mass"]} Msun, {n} moments, '
-          f'{len(raw) / 1024:.0f} KB gz, {len(datasets[-1]["b64"]) / 1024:.0f} KB base64')
+          f'{len(raw) / 1024:.0f} KB gz, {len(b64) / 1024:.0f} KB base64')
 
 blob = json.dumps(datasets, separators=(',', ':'), ensure_ascii=False).replace('</', '<\\/')
 tpl = open(os.path.join(HERE, 'star-slice.template.html'), encoding='utf-8').read()

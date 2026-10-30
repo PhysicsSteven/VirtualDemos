@@ -56,7 +56,7 @@ python3 build.py                                                    # data/ -> d
 python3 build.py --data /tmp/test --out /tmp/test/star-slice.html   # a test build from another folder
 ```
 
-The build embeds each dataset with its initial mass and HR track, so the slider and the faint tracks work before a dataset is unpacked; each dataset is unpacked the first time it is shown.
+The build embeds each dataset's initial mass and HR track in the page, so the slider and the faint tracks work before a dataset is unpacked, and writes the data itself to `demos/star-slice-data/<file>.js`; the page loads and unpacks a dataset the first time it is shown (so the first visit downloads about 0.7 MB instead of 6 MB).
 
 ## Columns
 

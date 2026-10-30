@@ -14,6 +14,21 @@
   'use strict';
   var VD = window.VD = window.VD || {};
 
+  /* Canvas pixels (efficiency pass 2026-10-30): demos size their canvases by window.devicePixelRatio, and a phone at 3
+     filled 2.25 times the pixels of 2 with no visible gain. Read through here it is at most 2, like VD3.renderer; the real
+     value stays in VD.realDpr(). Only the drawing buffer changes: CSS sizes, layout and every number shown are untouched. */
+  VD.DPR_CAP = 2;
+  try {
+    var dprGet = (Object.getOwnPropertyDescriptor(window, 'devicePixelRatio') || {}).get ||
+      (Object.getOwnPropertyDescriptor(Window.prototype, 'devicePixelRatio') || {}).get;
+    if (dprGet) {
+      VD.realDpr = function () { return dprGet.call(window) || 1; };
+      Object.defineProperty(window, 'devicePixelRatio', { configurable: true, enumerable: true,
+        get: function () { return Math.min(VD.realDpr(), VD.DPR_CAP); }, set: function () {} });
+    }
+  } catch (_) {}
+  if (!VD.realDpr) VD.realDpr = function () { return window.devicePixelRatio || 1; };
+
   /* Course worksheets (Astro 2203's intro worksheets, 2026-10-25): a worksheet written for one course opens its demo with
      ?ws=<its slug>, and Export to worksheet then sends the readings there instead of to the demo's own worksheet.
      VD.ws(own) gives the slug to send to; the Readings panel asks window.vdWorksheet(), so while ?ws= is in the address that

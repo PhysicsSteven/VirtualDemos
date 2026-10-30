@@ -5436,3 +5436,22 @@ within friction was drawn against the pin, 14.5 mm toward the net pull, however 
   the pin at the pin out rest point (to 1e-12 m), far from balance on the pin at the play with no pull along its edge.
 - Checked top view and 3D at 1280 and 390 px (Playwright): 252° shows the ring 1.6 mm out, clear of the pin; 253° centers.
   `vdcheck --only after vectors` 0 problems. Keys unchanged; no handout change.
+
+## 2026-10-30 · Claude · Efficiency pass (Steve)
+
+Steve asked how efficient the code is. Measured every demo (138 pages) in Chromium at 1368×912: script time, frames, canvas
+draw calls per second and heap allocation on opening and after pressing Run, plus download sizes.
+- Where it stands: the median demo uses 1.5 % of one desktop core when open; 77 of 138 draw nothing while nothing moves. The
+  busiest (ripple tank 45 %, capacitors 33 %, electron diffraction, double slit, BZ, Gauss's law 20 to 25 %) are running
+  simulations that are meant to animate, and the heavy ones already cap their steps per frame. No page errors, no runaway memory
+  (allocation under 5 MB/s everywhere). The home page lazy loads its WebP thumbnails; videos load only when opened.
+- Fixed: Star Slice was a 7.9 MB page (6.0 MB compressed) because all seven MESA runs were inside it. `tools/star-slice/build.py`
+  now writes each run to `demos/star-slice-data/<file>.js` and the page loads a run the first time it is shown (a script, so it
+  still works opened from a file). First visit 84 kB plus the 1 M☉ run (620 kB). Same data, same unpacking, same pictures.
+- Fixed: `demos/lib/vd.js` caps `window.devicePixelRatio` at 2 for every demo (real value `VD.realDpr()`), as VD3.renderer already
+  did. 137 demos sized their canvases by the raw value, so a phone at 3 filled 2.25 times the pixels for no visible gain. No change
+  on a Surface or laptop (DPR 2 or less). Layout, CORE, exports and keys untouched.
+- Checks: vdcheck after 0 problems on star-slice, pendulum, capacitors, ripple-tank, celestial-sphere; all 138 demos open on a
+  390 px phone at DPR 3 with no page errors and canvases at 2×; Star Slice switches runs from a file and from a server.
+- Left as is: per demo redraw caching (binding energy redraws its whole chart for the marching arrows) is small gains for real
+  risk; vd3kit shadows (one demo uses them). Profiler kept at /mnt/project-files/tablet-perf/prof.cjs.

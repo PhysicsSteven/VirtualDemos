@@ -3426,13 +3426,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     box.hidden = !box.children.length;
   }
   let selSeq = 0;
+  // each run's data is its own script (star-slice-data/<file>.js, from build.py), loaded the first time the run is picked
+  function runData(file) {
+    const got = () => (window.STAR_SLICE_DATA || {})[file];
+    if (got()) return Promise.resolve(got());
+    return new Promise((ok, fail) => {
+      const sc = document.createElement('script');
+      sc.src = 'star-slice-data/' + file + '.js';
+      sc.onload = () => (got() ? ok(got()) : fail(new Error('The data for ' + file + ' did not load.')));
+      sc.onerror = () => fail(new Error('Could not load the data for ' + file + '. Check the connection and pick the run again.'));
+      document.head.appendChild(sc);
+    });
+  }
   async function selectDataset(k, match) {
     const d = S.datasets[k], msg = $('msg'), seq = ++selSeq;
     try {
       if (!d.D) {
         if (!S.D) { msg.hidden = false; msg.textContent = 'Unpacking the MESA profiles…'; } else syncMassSlider(true);
         d.pending = d.pending || (async () => {
-          const bytes = Uint8Array.from(atob(d.b64), (ch) => ch.charCodeAt(0));
+          const bytes = Uint8Array.from(atob(await runData(d.file)), (ch) => ch.charCodeAt(0));
           const D = prepare(JSON.parse(await bytesToText(bytes)), d.label);
           D.fileName = d.file; d.D = D;
         })();
@@ -3744,7 +3756,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- boot ----------
   const massFromLabel = (s) => { const m = /(\d+(?:\.\d+)?)/.exec(s || ''); return m ? +m[1] : null; };
-  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, b64: d.b64, mass: isNum(d.mass) ? d.mass : d.mass === null ? null : massFromLabel(d.label),   // null: a white dwarf only run (build.py), kept off the slider
+  S.datasets = EMBED.map((d) => ({ label: d.label, file: d.file, mass: isNum(d.mass) ? d.mass : d.mass === null ? null : massFromLabel(d.label),   // null: a white dwarf only run (build.py), kept off the slider
     track: d.track, zams: d.zams, source: d.source }));
   renderDatasetChips(); renderMassSlider();
   new ResizeObserver(() => renderMassSlider()).observe($('massBox'));
