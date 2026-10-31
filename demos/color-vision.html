@@ -23,6 +23,10 @@
 .setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
 .setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.filt-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 8px; padding-top: 6px; border-top: 1px solid var(--line); font-size: 0.8rem; }
+select.pick { font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 4px; min-width: 0; }
+select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (pointer: coarse) { select.pick { min-height: 36px; } }
 .status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
 @media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 520px; } .setup-card { position: static; width: auto; margin: 8px; } }
 </style>
@@ -32,7 +36,7 @@
   <header class="bar">
     <div>
       <h1>Color Vision</h1>
-      <p>Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, or put a filter in front of a white bulb.</p>
+      <p>Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, put a filter in front of a white bulb, or stack colored filters in any of the beams.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">nm</div>
@@ -79,6 +83,10 @@
           <div><div class="slider-head"><label for="sC">Filter center</label><output id="oC" for="sC"></output></div><input type="range" id="sC" min="400" max="700" step="1"></div>
           <div><div class="slider-head"><label for="sW">Filter width</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="10" max="300" step="5"></div>
         </div>
+        <div class="filt-row" id="filtBox">
+          <label for="fA">Colored filter</label><select class="pick" id="fA"><option value="none">None</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option></select>
+          <label for="fB">Second colored filter</label><select class="pick" id="fB"><option value="none">None</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option></select>
+        </div>
       </div>
     </div>
 
@@ -96,6 +104,11 @@
           <button type="button" data-p="redf" aria-pressed="false">Red filter on a bulb</button>
           <button type="button" data-p="greenf" aria-pressed="false">Green filter, photons</button>
           <button type="button" data-p="sodium" aria-pressed="false">Narrow filter at 589 nm</button>
+          <button type="button" data-p="redGreenF" aria-pressed="false">Red lamp, green filter</button>
+          <button type="button" data-p="whiteMag" aria-pressed="false">Three lamps, magenta filter</button>
+          <button type="button" data-p="yelCyan" aria-pressed="false">Yellow and cyan filters stacked</button>
+          <button type="button" data-p="redGreenStack" aria-pressed="false">Red and green filters stacked</button>
+          <button type="button" data-p="twoYellows" aria-pressed="false">Two yellows, red filter</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
         <p class="status" id="status" aria-live="polite"></p>
@@ -130,7 +143,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the color seen (predict it first)</span></label>
         <details class="more"><summary>The model and its formulas</summary>
         <p class="formula">L = ∫ S(λ) l̄(λ) dλ   M = ∫ S(λ) m̄(λ) dλ   S = ∫ S(λ) s̄(λ) dλ</p>
-        <p class="hint">Model: each cone signal is the light's spectrum S(λ) weighted by that cone's sensitivity and added up over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (analytic fit of Wyman, Sloan and Shirley 2013) turned into cone responses with the Hunt–Pointer–Estevez matrix normalized to daylight (Fairchild, Color Appearance Models), so daylight white at the brightness of the three full lamps gives L = M = S = 1. Two lights with the same three signals look the same, whatever their spectra (metamers). The lamps are modeled as Gaussian spectra 20 nm wide (full width at half maximum) at 630, 532 and 465 nm, and their powers are set so all three at 100% give exactly that white. One wavelength at 100% power has the brightness of that white at 555 nm, where the eye is most sensitive; the same power at another wavelength looks dimmer. Incandescent is a blackbody at 2856 K (CIE illuminant A, Planck's law); Daylight is CIE illuminant D65 (CIE 15:2004 table, every 10 nm, interpolated). The filter passes everything between its edges and nothing outside (an ideal band pass). The color in the bubble is the light's color in sRGB at its brightness; colors outside the screen's range are shown desaturated, so the purest spectral colors look paler than in life. Photons: each dot is one photon, its wavelength drawn at random from the spectrum in proportion to the number of photons (power times λ); the rate is slowed enormously to be seen. The eye adapts to the room in life; here nothing adapts.</p></details>
+        <p class="hint">Model: each cone signal is the light's spectrum S(λ) weighted by that cone's sensitivity and added up over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (analytic fit of Wyman, Sloan and Shirley 2013) turned into cone responses with the Hunt–Pointer–Estevez matrix normalized to daylight (Fairchild, Color Appearance Models), so daylight white at the brightness of the three full lamps gives L = M = S = 1. Two lights with the same three signals look the same, whatever their spectra (metamers). The lamps are modeled as Gaussian spectra 20 nm wide (full width at half maximum) at 630, 532 and 465 nm, and their powers are set so all three at 100% give exactly that white. One wavelength at 100% power has the brightness of that white at 555 nm, where the eye is most sensitive; the same power at another wavelength looks dimmer. Incandescent is a blackbody at 2856 K (CIE illuminant A, Planck's law); Daylight is CIE illuminant D65 (CIE 15:2004 table, every 10 nm, interpolated). The filter passes everything between its edges and nothing outside (an ideal band pass). The colored filters are ideal too: blue passes below 500 nm, green 500 to 600 nm, red above 600 nm; yellow, cyan and magenta each absorb one of those thirds (blue, red, green) and pass the other two. Real dyes have gradual edges and pass less than all of their band. Filters in a row multiply their transmissions, so the light after two filters is what both pass. The color in the bubble is the light's color in sRGB at its brightness; colors outside the screen's range are shown desaturated, so the purest spectral colors look paler than in life. Photons: each dot is one photon, its wavelength drawn at random from the spectrum in proportion to the number of photons (power times λ); the rate is slowed enormously to be seen. The eye adapts to the room in life; here nothing adapts.</p></details>
         </div></details>
       </section>
     </aside>
@@ -180,15 +193,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function cvPlanck(l, T) { var x = l * 1e-9, c2 = 1.438776877e-2; return 1 / (Math.pow(x, 5) * (Math.exp(c2 / (x * T)) - 1)); }
   /* a bulb's spectrum scaled so the bare bulb has Y = 1 */
   function cvBulb(kind) { var S = cvGrid(kind === 'day' ? cvD65 : function (l) { return cvPlanck(l, 2856); }), Y = cvXYZ(S)[1]; for (var i = 0; i < CV_N; i++) S[i] /= Y; return S; }
-  /* the spectrum reaching the eye for a setup: {mode, r, g, b (0..1), lam, pow (0..1), bulb, filt, c, w} */
-  function cvSpectrum(o) {
-    var S, i;
+  /* colored filters, ideal: each passes whole thirds of the spectrum, blue below 500 nm, green 500 to 600 nm, red above 600 nm,
+     with transmission 1 inside and 0 outside. Red, green and blue pass one third (additive primaries); yellow, cyan and magenta
+     pass two thirds and absorb one (yellow absorbs blue, cyan absorbs red, magenta absorbs green: the subtractive primaries). */
+  var CV_FEDGE = [500, 600];
+  var CV_FILTERS = { none: [1, 1, 1], red: [0, 0, 1], green: [0, 1, 0], blue: [1, 0, 0], yellow: [0, 1, 1], cyan: [1, 1, 0], magenta: [1, 0, 1] };
+  function cvFilterT(name, l) { var t = CV_FILTERS[name] || CV_FILTERS.none; return l < CV_FEDGE[0] ? t[0] : l < CV_FEDGE[1] ? t[1] : t[2]; }
+  /* the light before any filter: the lamps, the wavelength or the bulb */
+  function cvSource(o) {
     if (o.mode === 'rgb') { var lv = [o.r, o.g, o.b]; return cvGrid(function (l) { var s = 0; for (var k = 0; k < 3; k++) s += lv[k] * CV_LW[k] * cvGauss(l, CV_LAMPS[k]); return s; }); }
-    if (o.mode === 'mono') { S = new Float64Array(CV_N); var j = Math.round(o.lam - CV_L0); if (j >= 0 && j < CV_N) S[j] = o.pow / CV_YMAX; return S; }
-    S = cvBulb(o.bulb);
-    if (o.filt) for (i = 0; i < CV_N; i++) { var l = CV_L0 + i; if (l < o.c - o.w / 2 || l > o.c + o.w / 2) S[i] = 0; }
-    return S;
+    if (o.mode === 'mono') { var S = new Float64Array(CV_N), j = Math.round(o.lam - CV_L0); if (j >= 0 && j < CV_N) S[j] = o.pow / CV_YMAX; return S; }
+    return cvBulb(o.bulb);
   }
+  /* the filters in the beam, in order from the source: the band pass (bulb only), then the two colored filters */
+  function cvFilters(o) { var F = []; if (o.mode === 'bulb' && o.filt) F.push({ band: [o.c - o.w / 2, o.c + o.w / 2] }); [o.fa, o.fb].forEach(function (n) { if (n && n !== 'none') F.push({ color: n }); }); return F; }
+  function cvPass(F, l) { return F.band ? (l < F.band[0] || l > F.band[1] ? 0 : 1) : cvFilterT(F.color, l); }
+  /* the spectrum after the first n filters (all of them when n is left out): stacked filters multiply their transmissions */
+  function cvThrough(S0, F, n) { var S = Float64Array.from(S0), m = n == null ? F.length : n; for (var k = 0; k < m; k++) for (var i = 0; i < CV_N; i++) S[i] *= cvPass(F[k], CV_L0 + i); return S; }
+  /* the spectrum reaching the eye for a setup: {mode, r, g, b (0..1), lam, pow (0..1), bulb, filt, c, w, fa, fb} */
+  function cvSpectrum(o) { return cvThrough(cvSource(o), cvFilters(o)); }
   /* XYZ to linear sRGB (IEC 61966-2-1) */
   function cvLin(x) { return [3.2404542 * x[0] - 1.5371385 * x[1] - 0.4985314 * x[2], -0.9692660 * x[0] + 1.8760108 * x[1] + 0.0415560 * x[2], 0.0556434 * x[0] - 0.2040259 * x[1] + 1.0572252 * x[2]]; }
   function cvGam(v) { return v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; }
@@ -215,8 +238,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     redf: { mode: 'bulb', bulb: 'inc', filt: true, c: 650, w: 100, view: 'beam', hint: 'A red filter in front of a white bulb passes 600 to 700 nm and absorbs the rest. A filter takes light away; it never adds the red.' },
     greenf: { mode: 'bulb', bulb: 'day', filt: true, c: 530, w: 60, view: 'photon', hint: 'Photons from daylight through a green filter: every photon outside 500 to 560 nm is absorbed at the filter, and only green ones reach the eye.' },
     sodium: { mode: 'bulb', bulb: 'inc', filt: true, c: 589, w: 10, view: 'beam', hint: 'A 10 nm wide filter at 589 nm, the sodium yellow. About a tenth of the light gets through (Y = 0.095), and its color is nearly that of the single 589 nm wavelength.' },
+    redGreenF: { mode: 'rgb', r: 1, g: 0, b: 0, fa: 'green', view: 'photon', hint: 'Red light on a green filter: the filter passes only 500 to 600 nm, and the red lamp has no light there, so nothing gets through and the eye sees black. A filter cannot turn red light green; it can only take light away.' },
+    whiteMag: { mode: 'rgb', r: 1, g: 1, b: 1, fa: 'magenta', view: 'beam', hint: 'White from the three lamps through a magenta filter: magenta absorbs green and passes red and blue, so the red and blue beams go on and the green beam stops at the filter. What is left looks magenta.' },
+    yelCyan: { mode: 'bulb', bulb: 'day', filt: false, fa: 'yellow', fb: 'cyan', view: 'beam', hint: 'Daylight through yellow, then cyan. Yellow absorbs the blue, cyan absorbs the red, and only the green passes both: the transmissions multiply. This is subtractive mixing, how inks and paints combine.' },
+    redGreenStack: { mode: 'bulb', bulb: 'inc', filt: false, fa: 'red', fb: 'green', view: 'photon', hint: 'A red filter, then a green one. The red filter passes only above 600 nm and the green only 500 to 600 nm; no wavelength passes both, so no photon reaches the eye.' },
+    twoYellows: { mode: 'mono', lam: 580, pow: 0.6, fa: 'red', view: 'beam', hint: 'Pure 580 nm light through a red filter (it passes only above 600 nm): nothing gets through. Now choose Red + green and put the same red filter in: the red lamp passes. The two yellows look the same to the eye, but a filter tells them apart, because it acts on the spectrum, not on the cone signals.' },
   };
-  const S = { preset: 'white', mode: 'rgb', r: 1, g: 1, b: 1, lam: 580, pow: 0.6, bulb: 'inc', filt: true, c: 650, w: 100, view: 'beam', blind: false, msg: '', photons: [] };
+  const S = { preset: 'white', mode: 'rgb', r: 1, g: 1, b: 1, lam: 580, pow: 0.6, bulb: 'inc', filt: true, c: 650, w: 100, fa: 'none', fb: 'none', view: 'beam', blind: false, msg: '', photons: [] };
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, geo = null, cache = null, cdf = null, spawn = 0;
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
@@ -249,6 +277,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     geo.src = [geo.x0 + geo.rw * 0.10, geo.y0 + geo.rh * 0.62];
   }
   const lampPos = (k) => [geo.src[0], geo.y0 + geo.rh * (0.24 + 0.28 * k)];
+  /* where each filter stands in the beam: the band pass at 40% of the room, the colored filters at 49% and 57% */
+  function filterPlanes() { const F = cvFilters(S); let n = 0; return F.map((F1, i) => ({ F: F1, i, x: geo.x0 + geo.rw * (F1.band ? 0.40 : [0.49, 0.57][n++]) })); }
   function head() {
     const [ex, ey] = geo.eye, p = geo.p, R = geo.R, cx = ex + R * 0.78, cy = ey - R * 0.15;
     ctx.fillStyle = '#3a4250'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
@@ -267,12 +297,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [ex, ey] = geo.eye;
     const beam = (x, y, col, a, w0) => { if (a <= 0.003) return; const g = ctx.createLinearGradient(x, y, ex, ey); g.addColorStop(0, css(col, Math.min(1, a))); g.addColorStop(1, css(col, Math.min(1, a) * 0.85));
       ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x, y - w0); ctx.lineTo(ex - 4 * p, ey - 3 * p); ctx.lineTo(ex - 4 * p, ey + 3 * p); ctx.lineTo(x, y + w0); ctx.closePath(); ctx.fill(); };
+    /* part of a beam, between xa and xb, of the beam that runs from (x, y), half width w0, to the eye */
+    const segBeam = (x, y, w0, xa, xb, col, a) => { if (a <= 0.003 || xb <= xa) return; const xe = ex - 4 * p, u = (X) => (X - x) / (xe - x);
+      const top = (X) => y - w0 + (ey - 3 * p - y + w0) * u(X), bot = (X) => y + w0 + (ey + 3 * p - y - w0) * u(X);
+      ctx.fillStyle = css(col, Math.min(1, a)); ctx.beginPath(); ctx.moveTo(xa, top(xa)); ctx.lineTo(xb, top(xb)); ctx.lineTo(xb, bot(xb)); ctx.lineTo(xa, bot(xa)); ctx.closePath(); ctx.fill(); };
+    /* a beam broken at each filter: frac(j) is the share of its light left after the first j filters */
+    const planes = filterPlanes(), cuts = (x0) => [x0, ...planes.map((q) => q.x), ex - 4 * p];
+    const stepped = (x, y, w0, col, a, frac) => { const c = cuts(x); for (let j = 0; j < c.length - 1; j++) segBeam(x, y, w0, c[j], c[j + 1], col, a * frac(j)); };
     ctx.globalCompositeOperation = 'lighter';
     const lampCol = CV_LAMPS.map((_, k) => cvRGB(CV_LXYZ[k].map((v) => v * 2.5)));
-    if (S.mode === 'rgb' && S.view === 'beam') { [S.r, S.g, S.b].forEach((lv, k) => { const [x, y] = lampPos(k); beam(x + 20 * p, y, lampCol[k], lv * 0.75, 14 * p); }); }
-    if (S.mode === 'mono' && S.view === 'beam') beam(geo.src[0] + 22 * p, geo.src[1], specRGB(S.lam), Math.min(1, cache.xyz[1] * 1.2 + 0.15 * (S.pow > 0)), 14 * p);
+    const colored = planes.some((q) => q.F.color);
+    if (S.mode === 'rgb' && S.view === 'beam') { [S.r, S.g, S.b].forEach((lv, k) => { const [x, y] = lampPos(k);
+      if (!colored) beam(x + 20 * p, y, lampCol[k], lv * 0.75, 14 * p);
+      else { const one = cvSource({ mode: 'rgb', r: k === 0 ? 1 : 0, g: k === 1 ? 1 : 0, b: k === 2 ? 1 : 0 }), y0 = cvXYZ(one)[1], F = planes.map((q) => q.F);
+        const fr = [1]; for (let j = 1; j <= F.length; j++) fr.push(y0 > 0 ? cvXYZ(cvThrough(one, F, j))[1] / y0 : 0);
+        stepped(x + 20 * p, y, 14 * p, lampCol[k], lv * 0.75, (j) => fr[j]); } }); }
+    if (S.mode === 'mono' && S.view === 'beam') { const a0 = Math.min(1, cvXYZ(cvSource(S))[1] * 1.2 + 0.15 * (S.pow > 0));
+      if (!colored) beam(geo.src[0] + 22 * p, geo.src[1], specRGB(S.lam), a0, 14 * p);
+      else stepped(geo.src[0] + 22 * p, geo.src[1], 14 * p, specRGB(S.lam), a0, (j) => planes.slice(0, j).every((q) => cvPass(q.F, S.lam) > 0) ? 1 : 0); }
     const fx = geo.x0 + geo.rw * 0.40;
-    if (S.mode === 'bulb' && S.view === 'beam') {
+    if (S.mode === 'bulb' && S.view === 'beam' && colored) {
+      const [bx, by] = geo.src, src = cvBulb(S.bulb), F = planes.map((q) => q.F), c = cuts(bx + 18 * p);
+      for (let j = 0; j < c.length - 1; j++) { const xyz = cvXYZ(cvThrough(src, F, j)), Y = xyz[1];
+        if (j === 0) segBeam(bx + 18 * p, by, 16 * p, c[0], c[1], cvRGB(xyz.map((v) => v * 0.9)), 0.55);
+        else if (Y > 1e-4) segBeam(bx + 18 * p, by, 16 * p, c[j], c[j + 1], cvRGB(xyz), Math.min(1, 0.25 + Y * 2)); }
+    } else if (S.mode === 'bulb' && S.view === 'beam') {
       const wcol = cvRGB(cvXYZ(cvBulb(S.bulb)).map((v) => v * 0.9)), [bx, by] = geo.src;
       if (S.filt) { const t = (ex - fx) / (ex - bx); ctx.fillStyle = css(wcol, 0.55); ctx.beginPath(); ctx.moveTo(bx + 18 * p, by - 16 * p); ctx.lineTo(fx, by - 16 * p + (16 * p - 3 * p) * (fx - bx) / (ex - bx)); ctx.lineTo(fx, by + 16 * p - (13 * p) * (fx - bx) / (ex - bx)); ctx.lineTo(bx + 18 * p, by + 16 * p); ctx.fill();
         beam(fx, by, cache.rgb, Math.min(1, 0.25 + cache.xyz[1] * 2), 16 * p * (1 - (fx - bx) / (ex - bx)) + 3 * p * t * 0); }
@@ -291,6 +340,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(S.bulb === 'day' ? 'D65' : '2856 K', x, y + 31 * p);
       if (S.filt) { const fc = filterRGB(); ctx.fillStyle = css(fc, 0.85); ctx.fillRect(fx - 5 * p, y - 34 * p, 10 * p, 68 * p); ctx.strokeStyle = T.rMuted; ctx.lineWidth = 1; ctx.strokeRect(fx - 5 * p, y - 34 * p, 10 * p, 68 * p);
         ctx.fillStyle = T.rMuted; ctx.fillText(`${Math.round(S.c - S.w / 2)}–${Math.round(S.c + S.w / 2)} nm`, fx, y + 38 * p); } }
+    /* the colored filters: tinted panels across the beam */
+    for (const q of planes) { if (!q.F.color) continue; const hh = S.mode === 'rgb' ? geo.rh * 0.26 : 34 * p, fc = cvRGB(cvXYZ(cvThrough(cvBulb('day'), [q.F])).map((v) => v * 1.6));
+      ctx.fillStyle = css(fc, 0.85); ctx.fillRect(q.x - 5 * p, ey - hh, 10 * p, 2 * hh); ctx.strokeStyle = T.rMuted; ctx.lineWidth = 1; ctx.strokeRect(q.x - 5 * p, ey - hh, 10 * p, 2 * hh);
+      ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(q.F.color, q.x, ey + hh + 4 * p + (q.i % 2) * 12 * p); }
     /* photons */
     for (const ph of S.photons) { ctx.fillStyle = css(ph.col, ph.dead ? Math.max(0, 1 - ph.dead * 3) : 1); ctx.beginPath(); ctx.arc(ph.x, ph.y, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); }
     const hd = head();
@@ -347,7 +400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- photons ----------
   function samplePhoton(c) { const u = Math.random() * c[CV_N - 1]; let lo = 0, hi = CV_N - 1; while (lo < hi) { const mid = (lo + hi) >> 1; if (c[mid] < u) lo = mid + 1; else hi = mid; } return CV_L0 + lo + Math.random() - 0.5; }
   function stepPhotons(dt) {
-    const p = geo.p, [ex, ey] = geo.eye, speed = 240 * p, fx = geo.x0 + geo.rw * 0.40;
+    const p = geo.p, [ex, ey] = geo.eye, speed = 240 * p, planes = filterPlanes();
     /* emission: about 60 a second at full brightness (rescaled enormously from the true rate) */
     let rate = 0, src = [];
     if (S.mode === 'rgb') { [S.r, S.g, S.b].forEach((lv, k) => { const r = 25 * lv; rate += r; src.push([r, k]); }); }
@@ -356,7 +409,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     while (spawn >= 1 && S.photons.length < 600) {
       spawn -= 1; let x, y, lam;
       if (S.mode === 'rgb') { let u = Math.random() * rate, k = 0; for (const [r, kk] of src) { if (u < r) { k = kk; break; } u -= r; } [x, y] = lampPos(k); x += 20 * p; lam = CV_LAMPS[k] + (Math.random() + Math.random() + Math.random() - 1.5) * CV_FWHM / 1.4; }
-      else { [x, y] = geo.src; x += 20 * p; lam = S.mode === 'mono' ? S.lam : samplePhoton(S.filt ? cache.pre : cdf); }
+      else { [x, y] = geo.src; x += 20 * p; lam = S.mode === 'mono' ? S.lam : samplePhoton(cvFilters(S).length ? cache.pre : cdf); }
       const tx = ex, ty = ey + (Math.random() - 0.5) * 6 * p, d = Math.hypot(tx - x, ty - y), j = (Math.random() - 0.5) * 18 * p;
       S.photons.push({ x, y: y + j, vx: (tx - x) / d * speed, vy: (ty - y - j) / d * speed, lam, col: specRGB(Math.max(380, Math.min(700, lam))), dead: 0 });
     }
@@ -364,7 +417,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const ph of S.photons) {
       if (ph.dead) { ph.dead += dt; continue; }
       const ox = ph.x; ph.x += ph.vx * dt; ph.y += ph.vy * dt;
-      if (S.mode === 'bulb' && S.filt && ox < fx && ph.x >= fx && (ph.lam < S.c - S.w / 2 || ph.lam > S.c + S.w / 2)) { ph.x = fx - 5 * p; ph.dead = 0.001; }
+      for (const q of planes) if (ox < q.x - 5 * p && ph.x >= q.x - 5 * p && !(cvPass(q.F, ph.lam) > 0)) { ph.x = q.x - 5 * p; ph.dead = 0.001; break; }
     }
     S.photons = S.photons.filter((ph) => (ph.dead ? ph.dead < 0.35 : ph.x < ex - 3 * p));
   }
@@ -382,6 +435,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     $('sR').value = Math.round(S.r * 100); $('oR').textContent = `${Math.round(S.r * 100)}%`; $('sG').value = Math.round(S.g * 100); $('oG').textContent = `${Math.round(S.g * 100)}%`; $('sB').value = Math.round(S.b * 100); $('oB').textContent = `${Math.round(S.b * 100)}%`;
     $('sL').value = S.lam; $('oL').textContent = `${S.lam} nm`; $('sI').value = Math.round(S.pow * 100); $('oI').textContent = `${Math.round(S.pow * 100)}%`;
+    $('fA').value = S.fa; $('fB').value = S.fb;
     $('cFilt').checked = S.filt; $('sC').value = S.c; $('oC').textContent = `${S.c} nm`; $('sW').value = S.w; $('oW').textContent = `${S.w} nm`; $('sC').disabled = $('sW').disabled = !S.filt;
     $('rgbBox').hidden = S.mode !== 'rgb'; $('monoBox').hidden = S.mode !== 'mono'; $('bulbBox').hidden = S.mode !== 'bulb'; $('match').hidden = S.mode !== 'mono';
     $('cardTitle').textContent = { rgb: 'The lamps', mono: 'One wavelength', bulb: 'The bulb and the filter' }[S.mode];
@@ -391,7 +445,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
   function status() { $('status').textContent = S.msg; }
-  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, msg: '', photons: [] }, c); delete S.hint; $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, msg: '', photons: [], fa: 'none', fb: 'none' }, c); delete S.hint; $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const DEF = { rgb: 'white', mono: 'y580', bulb: 'redf' };
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { const v = S.view; applyPreset(DEF[b.dataset.m]); S.view = v; sync(); });
@@ -401,6 +455,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const slide = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); custom(); sync(); drawAll(); });
   slide('sR', (v) => { S.r = v / 100; }); slide('sG', (v) => { S.g = v / 100; }); slide('sB', (v) => { S.b = v / 100; });
   slide('sL', (v) => { S.lam = v; }); slide('sI', (v) => { S.pow = v / 100; }); slide('sC', (v) => { S.c = v; }); slide('sW', (v) => { S.w = v; });
+  for (const id of ['fA', 'fB']) $(id).addEventListener('change', (e) => { S[id === 'fA' ? 'fa' : 'fb'] = e.target.value; custom(); S.photons = []; sync(); drawAll(); });
   $('cFilt').addEventListener('change', (e) => { S.filt = e.target.checked; custom(); sync(); drawAll(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
   /* the match: lamp levels with the same three cone signals as this wavelength, dimmed together if a lamp would pass 100% */
@@ -420,8 +475,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const light = S.mode === 'rgb' ? `red ${Math.round(S.r * 100)}%, green ${Math.round(S.g * 100)}%, blue ${Math.round(S.b * 100)}%`
       : S.mode === 'mono' ? `${S.lam} nm at ${Math.round(S.pow * 100)}% power`
       : `${S.bulb === 'day' ? 'daylight' : 'incandescent'} bulb, ` + (S.filt ? `filter ${Math.round(S.c - S.w / 2)} to ${Math.round(S.c + S.w / 2)} nm` : 'no filter');
+    const cf = [S.fa, S.fb].filter((n) => n !== 'none'), light2 = light + (cf.length ? `, ${cf.join(' then ')} filter${cf.length > 1 ? 's' : ''}` : '');
     const lam = S.mode === 'mono' ? S.lam : S.mode === 'bulb' && S.filt ? S.c : '', [L, M, Sc] = cache.lms;
-    return { light, lambda_nm: lam, L: L.toFixed(3), M: M.toFixed(3), S: Sc.toFixed(3), Y: cache.xyz[1].toFixed(3) };
+    return { light: light2, lambda_nm: lam, L: L.toFixed(3), M: M.toFixed(3), S: Sc.toFixed(3), Y: cache.xyz[1].toFixed(3) };
   };
   window.vdShowCols = [['light', 'light'], ['L', 'L'], ['M', 'M'], ['S', 'S'], ['Y', 'Y']];
   window.vdVersion = 'color-vision@2026-10-31';

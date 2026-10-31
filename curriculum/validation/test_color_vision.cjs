@@ -2,7 +2,7 @@
 // Color Vision: cone signals from the CIE 1931 functions and the HPE matrix, the lamp calibration, metamers and the filter.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const C = core('color-vision', 'CV_L0,CV_N,CV_HPE,CV_WHITE,CV_LAMPS,CV_LW,CV_LXYZ,CV_YMAX,cvCmf,cvLms,cvXYZ,cvGrid,cvSpectrum,cvBulb,cvPlanck,cvD65,cvRGB,cvLin,cvMatch,cvSolve');
+const C = core('color-vision', 'CV_L0,CV_N,CV_HPE,CV_WHITE,CV_LAMPS,CV_LW,CV_LXYZ,CV_YMAX,cvCmf,cvLms,cvXYZ,cvGrid,cvSpectrum,cvBulb,cvPlanck,cvD65,cvRGB,cvLin,cvMatch,cvSolve,cvFilterT,cvFilters,cvThrough,cvSource');
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
 const near = (a, b, tol, msg) => assert(Math.abs(a - b) <= tol, `${msg || ''} expected ${b}, got ${a}`);
@@ -49,5 +49,24 @@ test('filters only take light away: band pass 600 to 700 nm leaves exactly the b
   for (let i = 0; i < C.CV_N; i++) { const l = C.CV_L0 + i; near(f[i], l >= 600 && l <= 700 ? bare[i] : 0, 0); }
   const nar = C.cvLms(C.cvXYZ(C.cvSpectrum({ mode: 'bulb', bulb: 'inc', filt: true, c: 589, w: 10 }))), mono = C.cvLms(C.cvCmf(589));
   near(nar[0] / nar[1], mono[0] / mono[1], 0.02); near(nar[2] / nar[0], mono[2] / mono[0], 0.002);
+});
+test('colored filters: red light on a green filter and red then green stacked pass nothing; yellow then cyan pass only the green third', () => {
+  near(C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 0, b: 0, fa: 'green' }))[1], 0, 2e-3);
+  const rg = C.cvSpectrum({ mode: 'bulb', bulb: 'inc', filt: false, fa: 'red', fb: 'green' }); assert(rg.every((v) => v === 0));
+  const yc = C.cvSpectrum({ mode: 'bulb', bulb: 'day', filt: false, fa: 'yellow', fb: 'cyan' }), g = C.cvSpectrum({ mode: 'bulb', bulb: 'day', filt: false, fa: 'green' });
+  for (let i = 0; i < C.CV_N; i++) assert.equal(yc[i], g[i]);
+  for (const [a, b, c] of [['yellow', 'magenta', 'red'], ['cyan', 'magenta', 'blue']]) {
+    const s1 = C.cvSpectrum({ mode: 'bulb', bulb: 'day', fa: a, fb: b }), s2 = C.cvSpectrum({ mode: 'bulb', bulb: 'day', fa: c }); for (let i = 0; i < C.CV_N; i++) assert.equal(s1[i], s2[i], `${a} + ${b}`);
+  }
+  for (const l of [400, 499, 500, 599, 600, 700]) { const k = l < 500 ? 0 : l < 600 ? 1 : 2; for (const [n1, n2] of [['yellow', 'blue'], ['cyan', 'red'], ['magenta', 'green']]) assert.equal(C.cvFilterT(n1, l), C.cvFilterT(n2, l) ? 0 : 1, `${n1} at ${l}`); }
+  const order1 = C.cvSpectrum({ mode: 'bulb', bulb: 'inc', fa: 'yellow', fb: 'magenta' }), order2 = C.cvSpectrum({ mode: 'bulb', bulb: 'inc', fa: 'magenta', fb: 'yellow' });
+  for (let i = 0; i < C.CV_N; i++) assert.equal(order1[i], order2[i], 'order does not matter');
+});
+test('white lamps through magenta keep the red and blue lamps (to within 0.2%) and lose the green; 580 nm is stopped by red, the red + green yellow is not', () => {
+  const m = C.cvLms(C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 1, b: 1, fa: 'magenta' }))), rb = lmsOf({ mode: 'rgb', r: 1, g: 0, b: 1 });
+  for (let k = 0; k < 3; k++) near(m[k], rb[k], 2e-3 * Math.max(...rb));
+  assert.equal(C.cvXYZ(C.cvSpectrum({ mode: 'mono', lam: 580, pow: 1, fa: 'red' }))[1], 0);
+  const ry = C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 1, b: 0, fa: 'red' }))[1], r = C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 0, b: 0 }))[1]; near(ry, r, 2e-3 * r);
+  assert.equal(C.cvFilters({ mode: 'bulb', filt: true, c: 650, w: 100, fa: 'none', fb: 'red' }).length, 2);
 });
 console.log(`${n} tests passed`);
