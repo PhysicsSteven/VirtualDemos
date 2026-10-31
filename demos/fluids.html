@@ -41,6 +41,7 @@
   --liq-water: #3f8fd8;
   --liq-sea: #23879a;
   --liq-oil: #cf9a1e;
+  --liq-myst: #8a56c2;
   --liq-hg: #8e98a4;
   --cork: #c9a77a;
   --wood: #b07a43;
@@ -56,7 +57,7 @@
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-    --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-hg: #b8c0ca;
+    --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #b8c0ca;
     --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
     color-scheme: dark;
   }
@@ -65,7 +66,7 @@
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-  --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-hg: #b8c0ca;
+  --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #b8c0ca;
   --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
   color-scheme: dark;
 }
@@ -208,6 +209,15 @@ table.rows button:hover { color: var(--pos); }
         <div class="seg full wrap" role="group" aria-label="Instrument" id="baroSeg">
           <button type="button" data-b="baro" aria-pressed="true">Barometer</button>
           <button type="button" data-b="mano" aria-pressed="false">Manometer</button>
+          <button type="button" data-b="two" aria-pressed="false">Two liquids</button>
+        </div>
+        <div id="pourBox" hidden>
+          <div class="seg full wrap" role="group" aria-label="Liquid poured into the left arm" id="pourSeg">
+            <button type="button" data-q="oil" aria-pressed="true">Pour oil</button>
+            <button type="button" data-q="water" aria-pressed="false">Pour water</button>
+            <button type="button" data-q="myst" aria-pressed="false">Mystery oil</button>
+          </div>
+          <button type="button" class="btn" id="newMyst" hidden>New mystery oil</button>
         </div>
         <div class="seg full wrap" role="group" aria-label="Block material" id="matSeg">
           <button type="button" data-m="cork" aria-pressed="false">Cork</button>
@@ -451,10 +461,18 @@ table.rows button:hover { color: var(--pos); }
     for (const r of rows) L.push(r.map(csvCell).join(','));
     return L.join('\n') + '\n';
   }
+  // Two liquids that do not mix in an open U tube of even width: a column hP of a lighter liquid (density rhoP) poured on one side.
+  // At the level of the interface the pressures in the two arms are equal: rhoP g hP = rhoB g hB, so the denser liquid stands
+  // hB = hP rhoP/rhoB above the interface on the other side. Its volume is unchanged, so the interface drops d = hB/2 below the
+  // level it had alone and the open surface rises d. Heights are from that rest level.
+  function twoLiquids(rhoB, rhoP, hP) {
+    const hB = hP * rhoP / rhoB, d = hB / 2;
+    return { hB, d, zI: -d, zB: d, zP: -d + hP, gap: hP - hB, rhoFromHeights: (h1, h2) => rhoB * h2 / h1 };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.FL = { G, PATM, LIQ, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
+    globalThis.FL = { G, PATM, LIQ, twoLiquids, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
     return;
   }
 
@@ -481,7 +499,7 @@ table.rows button:hover { color: var(--pos); }
   const SLD = {
     press: [['D', 'Liquid depth', 0.5, 10, 0.1, 'm', 1], ['pd', 'Probe depth', 0, 10, 0.01, 'm', 2]],
     pascal: [['hp', 'Fill height (all vessels)', 0.05, 0.48, 0.01, 'm', 2]],
-    baro: [['Pa', 'Air pressure P<sub>atm</sub>', 85, 106, 0.1, 'kPa', 1], ['Pg', 'Gas gauge pressure', -10, 20, 0.1, 'kPa', 1]],
+    baro: [['Pa', 'Air pressure P<sub>atm</sub>', 85, 106, 0.1, 'kPa', 1], ['Pg', 'Gas gauge pressure', -10, 20, 0.1, 'kPa', 1], ['Ho', 'Poured column h<sub>1</sub>', 2, 30, 0.5, 'cm', 1]],
     buoy: [['rho', 'Block density ρ<sub>obj</sub>', 100, 12000, 10, 'kg/m³', 0], ['L', 'Block edge (a cube)', 4, 20, 1, 'cm', 0],
       ['h0', 'Water depth without the block', 0.15, 0.45, 0.01, 'm', 2], ['zeta', 'Damping ratio ζ', 0.02, 1, 0.01, '', 2]],
     venturi: [['D1', 'Pipe diameter D<sub>1</sub>', 3, 10, 0.1, 'cm', 1], ['D2', 'Throat diameter D<sub>2</sub>', 1, 10, 0.1, 'cm', 1],
@@ -491,7 +509,7 @@ table.rows button:hover { color: var(--pos); }
   const DEF = {
     press: { D: 2, pd: 1.2, px: 0.62 },
     pascal: { hp: 0.32 },
-    baro: { Pa: 101.3, Pg: 6 },
+    baro: { Pa: 101.3, Pg: 6, Ho: 20 },
     buoy: { rho: 500, L: 10, h0: 0.3, zeta: 0.12, mat: 'wood', scale: false, over: false, xb: 0, z0: 0.48, zh: 0.6 },
     venturi: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 },
     torr: { H: 1, hh: 0.3 }
@@ -500,7 +518,7 @@ table.rows button:hover { color: var(--pos); }
   const PAR_HINT = {
     press: 'Drag the probe anywhere in the liquid, or drag the grip on the surface to change the depth. Moving the probe sideways changes nothing: only depth matters.',
     pascal: 'Drag the grip on the dashed line to fill all four vessels to the same height. Each vessel has the same base, 8 cm across.',
-    baro: 'Drag the top of the liquid column (barometer) or the open arm’s level (manometer). The column height is the pressure difference divided by ρg.',
+    baro: 'Drag the top of the liquid column (barometer) or the open arm’s level (manometer). The column height is the pressure difference divided by ρg. With two liquids, drag the top of the poured column, or pour more with the slider, and measure both heights from the interface.',
     buoy: 'Drag the block anywhere and let go; drag the square grip on its corner to resize it. With the spring scale on, drag the scale up and down to lower the block into the liquid.',
     venturi: 'Drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for D₁, the round grip on the arrow for the inlet speed, and the first standpipe’s level for the inlet pressure.',
     torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.'
@@ -508,7 +526,7 @@ table.rows button:hover { color: var(--pos); }
   const MODEL = {
     press: 'Model: a liquid at rest with constant density (incompressible), g = 9.81 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
     pascal: 'Model: liquid at rest, open to the air. Each vessel is round with a base 8 cm across (area 50.3 cm²); the narrowing vessel ends 2.4 cm across, the flared one 34 cm. Gauge pressures are shown.',
-    baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width.',
+    baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width. Two liquids: they do not mix, the tube has the same width all the way round, and the poured liquid stays in the left arm; at the interface’s level the pressure is the same in both arms, so ρ₁h₁ = ρ₂h₂. Surface tension and the curved meniscus are left out.',
     buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
     venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
     torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
@@ -539,7 +557,7 @@ table.rows button:hover { color: var(--pos); }
   };
 
   // ---------- state ----------
-  const S = { scene: 'buoy', preset: 'float', liq: 'water', gmode: 'abs', baro: 'baro', rate: 1, sel: 0, blind: false, gview: 'model',
+  const S = { pour: 'oil', myst: null, scene: 'buoy', preset: 'float', liq: 'water', gmode: 'abs', baro: 'baro', rate: 1, sel: 0, blind: false, gview: 'model',
     P: JSON.parse(JSON.stringify(DEF)), layers: { forces: true, ghost: true, cmp: true } };
   let running = !reduce, held = false, t = 0;
   let bs = null;          // buoyancy state {zb, v, Vw, caught, t}
@@ -549,6 +567,12 @@ table.rows button:hover { color: var(--pos); }
   let spillT = 0;         // time since the last spill, for drawing the overflow stream
   const P = () => S.P[S.scene];
   const rhoF = () => LIQ[S.liq].rho;
+  /* Two liquids: the liquid poured into the left arm; a mystery oil gets a density from 650 to 950 kg/m³ in steps of 5 */
+  const pourRho = () => (S.pour === 'myst' ? S.myst : LIQ[S.pour].rho);
+  const pourName = () => (S.pour === 'myst' ? 'Mystery oil' : LIQ[S.pour].name);
+  const pourCol = () => T.liq[S.pour === 'myst' ? 'myst' : S.pour];
+  const two = () => twoLiquids(rhoF(), pourRho(), S.P.baro.Ho / 100);
+  function newMyst() { S.myst = 650 + 5 * Math.floor(Math.random() * 61); }
 
   // ---------- formatting ----------
   const MIN = (s) => s.replace(/-/g, '−');
@@ -651,7 +675,7 @@ table.rows button:hover { color: var(--pos); }
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), acol: g('--acol'),
       wire: g('--wire'), block: g('--block'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace',
-      liq: { water: g('--liq-water'), sea: g('--liq-sea'), oil: g('--liq-oil'), hg: g('--liq-hg') }, la: +g('--liq-alpha') || 0.3,
+      liq: { water: g('--liq-water'), sea: g('--liq-sea'), oil: g('--liq-oil'), hg: g('--liq-hg'), myst: g('--liq-myst') }, la: +g('--liq-alpha') || 0.3,
       mat: { cork: g('--cork'), wood: g('--wood'), ice: g('--ice'), metal: g('--metal'), lead: g('--lead') } };
   }
   const cans = { s: $('sCan'), g: $('gCan') };
@@ -949,7 +973,51 @@ table.rows button:hover { color: var(--pos); }
   }
 
   // ---------- scene: barometer and manometer ----------
+  function drawTwo(ctx, W, H) {
+    // an open U tube, heights to scale on the rule (in cm); the widths are not
+    const ps = projScale(), ls = lsc(W, H), q = S.P.baro, tw = two(), hP = q.Ho / 100, rP = pourRho();
+    const top = 40 * ls, bot = H - 26 * ls, tubeW = clamp(W * 0.035, 16, 30) * ps;
+    const zTopArm = 0.36, zBot = -0.3, sy = (bot - top) / (zTopArm - zBot + 0.04);   /* as in 3D: the denser liquid alone stands 30 cm above the bottom of the bend */
+    const cx = W * 0.47, sep = clamp(W * 0.14, 80, 170) * ls, xL = cx - sep / 2, xR = cx + sep / 2;
+    const Y = (z) => bot - (z - zBot + 0.02) * sy, yU = Y(zBot), yTop = Y(zTopArm);
+    const yI = Y(tw.zI), yB = Y(tw.zB), yP = Y(tw.zP);
+    // the denser liquid: from the interface down the left arm, round the bend and up to its surface on the right
+    fillLiquid(ctx, () => {
+      ctx.beginPath(); ctx.moveTo(xL - tubeW / 2, yI); ctx.lineTo(xL - tubeW / 2, yU); ctx.lineTo(xR + tubeW / 2, yU);
+      ctx.lineTo(xR + tubeW / 2, yB); ctx.lineTo(xR - tubeW / 2, yB); ctx.lineTo(xR - tubeW / 2, yU - tubeW); ctx.lineTo(xL + tubeW / 2, yU - tubeW); ctx.lineTo(xL + tubeW / 2, yI); ctx.closePath();
+    });
+    // the poured liquid on top of it in the left arm
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xL - tubeW / 2, yP, tubeW, yI - yP); }, pourCol());
+    surfaceLine(ctx, xL - tubeW / 2, xL + tubeW / 2, yP, 2 * ps); surfaceLine(ctx, xR - tubeW / 2, xR + tubeW / 2, yB, 2 * ps);
+    ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(xL - tubeW / 2, yI); ctx.lineTo(xL + tubeW / 2, yI); ctx.stroke(); ctx.globalAlpha = 1;
+    // glass: both arms open at the top
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(xL - tubeW / 2, yTop); ctx.lineTo(xL - tubeW / 2, yU); ctx.lineTo(xR + tubeW / 2, yU); ctx.lineTo(xR + tubeW / 2, yTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xL + tubeW / 2, yTop); ctx.lineTo(xL + tubeW / 2, yU - tubeW); ctx.lineTo(xR - tubeW / 2, yU - tubeW); ctx.lineTo(xR - tubeW / 2, yTop); ctx.stroke();
+    // the interface's level, carried across: the pressure is the same at this height in both arms
+    ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps;
+    ctx.beginPath(); ctx.moveTo(xL - 40 * ls, yI); ctx.lineTo(xR + tubeW / 2 + 30 * ls, yI); ctx.stroke(); ctx.setLineDash([]);
+    // h₁ on the left, h₂ on the right, both from the interface's level
+    const ml = xL - tubeW / 2 - 18 * ls, mr = xR + tubeW / 2 + 18 * ls;
+    if (yI - yP > 8) { arrow(ctx, ml, (yI + yP) / 2, ml, yP, T.ink, 1.3 * ps, 6); arrow(ctx, ml, (yI + yP) / 2, ml, yI, T.ink, 1.3 * ps, 6); }
+    if (yI - yB > 8) { arrow(ctx, mr, (yI + yB) / 2, mr, yB, T.ink, 1.3 * ps, 6); arrow(ctx, mr, (yI + yB) / 2, mr, yI, T.ink, 1.3 * ps, 6); }
+    labelBox(ctx, `h₁ = ${fx(hP * 100, 1)} cm`, ml - 6 * ls, (yI + yP) / 2 + 4 * ls, 'right', T.ink, 13 * ls, 700);
+    labelBox(ctx, `h₂ = ${fx(tw.hB * 100, 1)} cm`, mr + 6 * ls, (yI + yB) / 2 + 4 * ls, 'left', T.ink, 13 * ls, 700);
+    labelBox(ctx, pourName().toLowerCase(), ml - 6 * ls, (yI + yP) / 2 + 22 * ls, 'right', T.muted, 11 * ls);
+    labelBox(ctx, LIQ[S.liq].name.toLowerCase(), cx, yU - tubeW - 8 * ls, 'center', T.muted, 11 * ls);
+    labelBox(ctx, 'same pressure at this level', xL - tubeW / 2 - 6 * ls, yI + 16 * ls, 'right', T.muted, 10.5 * ls);
+    labelBox(ctx, 'open to the air', cx, yTop - 8 * ls, 'center', T.muted, 11 * ls);
+    // a rule in cm beside the right arm, zero at the bottom of the bend
+    const rx = W - 40 * ls; ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.beginPath(); ctx.moveTo(rx, yU); ctx.lineTo(rx, yTop); ctx.stroke();
+    for (let c = 0; c <= (zTopArm - zBot) * 100 + 1e-9; c += 1) { const yy = Y(zBot + c / 100), big = c % 10 === 0, mid = c % 5 === 0; ctx.beginPath(); ctx.moveTo(rx, yy); ctx.lineTo(rx + (big ? 9 : mid ? 6 : 3) * ls, yy); ctx.stroke(); if (big) ctx.fillText(fx(c, 0), rx + 12 * ls, yy); }
+    ctx.textBaseline = 'bottom'; ctx.fillText('cm', rx, yTop - 6 * ls);
+    // drag the top of the poured column: its height above the rest level is hP (1 − ρ₁/(2ρ₂))
+    grip(ctx, xL, yP, isHot('pour'), true);
+    handles.push({ id: 'pour', cursor: 'ns-resize', pt: [xL, yP], set: (x, y) => setParam('Ho', 100 * ((bot - y) / sy + zBot - 0.02) / (1 - rP / (2 * rhoF()))) });
+  }
   function drawBaro(ctx, W, H) {
+    if (S.baro === 'two') { drawTwo(ctx, W, H); return; }
     const ps = projScale(), ls = lsc(W, H), q = S.P.baro, rho = rhoF();
     const top = 40 * ls, bot = H - 26 * ls;
     const tubeW = clamp(W * 0.035, 16, 30) * ps;
@@ -1393,6 +1461,9 @@ table.rows button:hover { color: var(--pos); }
       const items = [];
       d.forEach((e) => { items.push([e.v.name, e.Wl, T.pos]); items.push(['F', e.F, T.neg]); });
       bars(ctx, L, R, Math.max(top + 8 * ls, tb + 26 * ls), bot, items, ls, 'N', 2);
+    } else if (S.scene === 'baro' && S.baro === 'two') {
+      const tw = two(), tb = gTitle(ctx, 'Heights above the interface (cm): ρ₁h₁ = ρ₂h₂, so the lighter liquid stands taller', 12 * ls, 10 * ls, ls);
+      bars(ctx, L, R, Math.max(top + 8 * ls, tb + 26 * ls), bot, [[`h₁, ${pourName().toLowerCase()}`, S.P.baro.Ho, pourCol()], [`h₂, ${LIQ[S.liq].name.toLowerCase()}`, tw.hB * 100, T.liq[S.liq]]], ls, 'cm', 1);
     } else if (S.scene === 'baro') {
       const dP = S.baro === 'baro' ? S.P.baro.Pa * 1000 : Math.abs(S.P.baro.Pg * 1000);
       const tb = gTitle(ctx, `Height of a column that balances ${fx(dP / 1000, 1)} kPa, h = ΔP/(ρg), for each liquid (m)`, 12 * ls, 10 * ls, ls);
@@ -1565,7 +1636,12 @@ table.rows button:hover { color: var(--pos); }
       f = `F = ρgh·A = ${fx(Pg, 0)} Pa × ${fx(Math.PI * 0.04 * 0.04 * 1e4, 1)} cm². The flared walls hold up the extra liquid; the narrowing walls push down on it.`;
     } else if (S.scene === 'baro') {
       const q = S.P.baro;
-      if (S.baro === 'baro') {
+      if (S.baro === 'two') {
+        const tw = two(), hid = S.pour === 'myst';
+        rows = [['Poured into the left arm', pourName()], ['h₁, poured liquid above the interface', `${fx(q.Ho, 1)} cm`, 'c-p'], [`h₂, ${LIQ[S.liq].name.toLowerCase()} above the interface`, `${fx(tw.hB * 100, 2)} cm`, 'c-p'],
+          ['Difference h₁ − h₂', `${fx(tw.gap * 100, 2)} cm`, '', false, true], [`Density of the ${hid ? 'mystery oil' : pourName().toLowerCase()}, ρ₂h₂/h₁`, hid ? 'measure it: hidden for the mystery oil' : `${fx(pourRho(), 0)} kg/m³`, '', true, true]];
+        f = 'At the interface’s level: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, so ρ₁ = ρ₂h₂/h₁';
+      } else if (S.baro === 'baro') {
         const h = columnHeight(q.Pa * 1000, rho);
         rows = [['Air pressure', `${fx(q.Pa, 1)} kPa`], ['Column height', h < 2 ? `${fx(h * 1000, 1)} mm` : `${fx(h, 2)} m`, 'c-p'], ['In mmHg', `${fx(q.Pa * 1000 / 133.322387, 1)} mmHg`], ['In atmospheres', `${fx(q.Pa * 1000 / PATM, 4)} atm`]];
         f = `h = P_atm/(ρg) = ${fx(q.Pa * 1000, 0)}/(${fx(rho, 0)}·${fx(G, 3)}) m`;
@@ -1636,7 +1712,7 @@ table.rows button:hover { color: var(--pos); }
       if (d[0] !== skip) el.inp.value = v;
       el.out.textContent = `${fx(v, d[6])}${d[5] ? ' ' + d[5] : ''}`;
     }
-    if (S.scene === 'baro') { slEls['baro.Pa'].w.hidden = S.baro !== 'baro'; slEls['baro.Pg'].w.hidden = S.baro !== 'mano'; }
+    if (S.scene === 'baro') { slEls['baro.Pa'].w.hidden = S.baro !== 'baro'; slEls['baro.Pg'].w.hidden = S.baro !== 'mano'; slEls['baro.Ho'].w.hidden = S.baro !== 'two'; }
     if (S.scene === 'buoy') { slEls['buoy.h0'].w.hidden = S.P.buoy.over; slEls['buoy.zeta'].w.hidden = S.P.buoy.scale; }
   }
   function syncMat() { for (const b of document.querySelectorAll('#matSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.P.buoy.mat)); }
@@ -1678,6 +1754,19 @@ table.rows button:hover { color: var(--pos); }
     $('liqNote').textContent = LIQ[S.liq].note;
     for (const b of document.querySelectorAll('#pModeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gmode));
     for (const b of document.querySelectorAll('#baroSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.baro));
+    syncPour();
+  }
+  /* Two liquids needs a denser liquid that the poured one does not mix with: water or mercury at the bottom; water poured only onto mercury */
+  function syncPour() {
+    const on = S.scene === 'baro' && S.baro === 'two';
+    $('pourBox').hidden = !on;
+    for (const b of document.querySelectorAll('#liqSeg button')) b.disabled = on && (b.dataset.l === 'oil' || b.dataset.l === 'sea');
+    if (!on) return;
+    if (S.liq === 'oil' || S.liq === 'sea') { S.liq = 'water'; for (const b of document.querySelectorAll('#liqSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.liq)); $('liqNote').textContent = LIQ[S.liq].note; }
+    if (S.pour === 'water' && S.liq === 'water') S.pour = 'oil';
+    if (S.pour === 'myst' && !S.myst) newMyst();
+    for (const b of document.querySelectorAll('#pourSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.q === S.pour)); if (b.dataset.q === 'water') b.disabled = S.liq === 'water'; }
+    $('newMyst').hidden = S.pour !== 'myst';
   }
   function setRate(r) {
     S.rate = r;
@@ -1705,7 +1794,7 @@ table.rows button:hover { color: var(--pos); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
   const SCENE_HINT = {
     pascal: 'Pascal’s paradox: the four vessels hold very different amounts of liquid, yet the pressure and the force on each base are the same. Pressure depends only on depth, not on the shape or the amount of liquid above.',
-    baro: 'Torricelli’s barometer: the air pushing on the dish holds up a column of liquid with a vacuum above it. For mercury the column is 760 mm at sea level; water would need a tube over 10 m tall. Switch to the manometer to measure a gas pressure.'
+    baro: 'Torricelli’s barometer: the air pushing on the dish holds up a column of liquid with a vacuum above it. For mercury the column is 760 mm at sea level; water would need a tube over 10 m tall. Switch to the manometer to measure a gas pressure, or to Two liquids to find a liquid’s density from two heights.'
   };
   $('sceneSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b || b.dataset.s === S.scene) return;
@@ -1724,7 +1813,9 @@ table.rows button:hover { color: var(--pos); }
     updateReadouts(); drawAll();
   });
   $('pModeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.gmode = b.dataset.g; syncLiq(); updateReadouts(); drawAll(); } });
-  $('baroSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.baro = b.dataset.b; syncLiq(); syncSliders(); updateReadouts(); drawAll(); } });
+  $('baroSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { if (b.dataset.b === 'two' && S.baro !== 'two' && S.liq === 'hg') S.liq = 'water'; S.baro = b.dataset.b; syncLiq(); syncSliders(); updateReadouts(); drawAll(); } });
+  $('pourSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.pour = b.dataset.q; clearPreset(); syncPour(); updateReadouts(); drawAll(); });
+  $('newMyst').addEventListener('click', () => { newMyst(); updateReadouts(); drawAll(); });
   $('matSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     const q = S.P.buoy; q.mat = b.dataset.m; q.rho = MATS[q.mat][1]; q.__touched = true; syncMat(); clearPreset();
@@ -1838,7 +1929,7 @@ table.rows button:hover { color: var(--pos); }
       dir = k === 'ArrowUp' ? 1 : -1;
       if (sc === 'press') step('pd', -dir, 5);
       else if (sc === 'pascal') step('hp', dir);
-      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : 'Pg', dir);
+      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : S.baro === 'two' ? 'Ho' : 'Pg', dir);
       else if (sc === 'buoy') {
         if (p.scale) { p.zh = clamp(+(p.zh + dir * 0.005 * sh).toFixed(4), zhMin(p), zhMax()); const h = hangState(bp(), zTautOf(p), bs.Vw); bs.zb = h.zb; spill(bp()); clearPreset(); }
         else step('L', dir);
@@ -1850,7 +1941,7 @@ table.rows button:hover { color: var(--pos); }
       else if (sc === 'buoy') step('rho', dir, 5);
       else if (sc === 'venturi') step('D2', dir);
       else if (sc === 'torr') step('H', dir);
-      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : 'Pg', dir);
+      else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : S.baro === 'two' ? 'Ho' : 'Pg', dir);
       else step('hp', dir);
     } else if (k === ' ') { setRunning(!running); }
     else if (k === 'r' || k === 'R') { restart(); }
@@ -2104,6 +2195,10 @@ table.rows button:hover { color: var(--pos); }
         rows: [0, 0.2, 0.4, 0.6, 0.8, 1].map((k) => [fx(k * q.D, 2), fx((off + rho * G * k * q.D) / 1000, 2)]) };
     }
     if (S.scene === 'pascal') return { cap: 'Liquid in each vessel and force on its base', head: ['vessel', 'volume (L)', 'weight W (N)', 'force on base (N)'], rows: pascalData().map((e) => [e.v.name, fx(e.V * 1000, 2), sig(e.Wl, 3), sig(e.F, 3)]) };
+    if (S.scene === 'baro' && S.baro === 'two') {
+      const tw = two();
+      return { cap: `Heights above the interface, ${pourName().toLowerCase()} on ${LIQ[S.liq].name.toLowerCase()}`, head: ['liquid', 'height (cm)'], rows: [[pourName(), fx(S.P.baro.Ho, 1)], [LIQ[S.liq].name, sig(tw.hB * 100, 4)]] };
+    }
     if (S.scene === 'baro') {
       const dP = S.baro === 'baro' ? S.P.baro.Pa * 1000 : Math.abs(S.P.baro.Pg * 1000);
       return { cap: `Height of a column that balances ${fx(dP / 1000, 1)} kPa`, head: ['liquid', 'h (m)'], rows: Object.keys(LIQ).map((k) => [LIQ[k].name, sig(columnHeight(dP, LIQ[k].rho), 4)]) };
@@ -2656,7 +2751,7 @@ table.rows button:hover { color: var(--pos); }
 
   // Barometer and manometer: heights to scale on the rule, widths not to scale
   B3.baro = (() => {
-    let g, gb, gm, dish, dishLiq, tubeLiq, rule, ruleKey = '', air = [], uL, uR, uB, bulbGas, rest, built = false;
+    let g, gb, gm, dish, dishLiq, tubeLiq, rule, ruleKey = '', air = [], uL, uR, uB, bulbGas, rest, uP, uPm, rule2, built = false;
     const HB = 1.0;
     function build() {
       const V = G3.S; g = new THREE.Group(); V.scene.add(g);
@@ -2683,7 +2778,11 @@ table.rows button:hover { color: var(--pos); }
       const neck = VDK.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[-sep / 2 - 0.16, 0, top - 0.06], [-sep / 2 - 0.03, 0, top - 0.06], [-sep / 2, 0, top - 0.03], [-sep / 2, 0, top]].map((a) => new THREE.Vector3(...a))), 30, R, 16, false), glass); neck.renderOrder = 3; gm.add(neck);
       gm.add(VD3K.box(0.62, 0.05, 0.02, VDK.mat({ roughness: 0.7 }, ['#c9a46a', '#6b5434']), -0.12, 0.04, 0));
       rest = VDK.dashed(); gm.add(rest);
-      gm.sep = sep; gm.zb0 = zb0; gm.top = top;
+      gm.sep = sep; gm.zb0 = zb0; gm.top = top; gm.bulbParts = [bulb, bulbGas, neck];
+      /* Two liquids: the poured column in the left arm, in its own color, and a cm rule behind the right arm (heights to scale) */
+      uPm = VDK.std({ transparent: true, opacity: 0.5, roughness: 0.1, metalness: 0.05, depthWrite: false, side: THREE.DoubleSide });
+      uP = VDK.mesh(new THREE.CylinderGeometry(R - 0.003, R - 0.003, 1, 24).rotateX(Math.PI / 2).translate(0, 0, 0.5), uPm); uP.renderOrder = 1; uP.position.set(-sep / 2, 0, zb0); gm.add(uP);
+      rule2 = VDK.vrule({ len: 0.7, to: 70, unit: 'cm', w: 0.04, wood: true }); rule2.position.set(sep / 2 + 0.05, 0.03, zb0); gm.add(rule2);
       built = true;
     }
     function upd() {
@@ -2699,6 +2798,18 @@ table.rows button:hover { color: var(--pos); }
         handles3.push({ id: 'col', v: q.Pa, lo: SLDEF('Pa')[2], hi: SLDEF('Pa')[3], at: (v) => [0, -0.025, zs + columnHeight(v * 1000, rho) * k], set: (v) => setParam('Pa', v) });
         g.info = { k, zs, hcol, unitMM, Lt };
         return { t: [-0.02, 0, 0.55], d: 2.5 };
+      }
+      const isT = S.baro === 'two';
+      for (const m of gm.bulbParts) m.visible = !isT; uP.visible = isT; rule2.visible = isT;
+      if (isT) {   /* heights to scale in meters: the denser liquid alone would stand 30 cm above the bottom of the bend */
+        const tw = two(), zRest = gm.zb0 + 0.3, zI = zRest + tw.zI, zB = zRest + tw.zB, zP = zRest + tw.zP;
+        uL.scale.z = Math.max(1e-4, zI - gm.zb0); uR.scale.z = Math.max(1e-4, zB - gm.zb0);
+        uP.position.z = zI; uP.scale.z = Math.max(1e-4, zP - zI); uPm.color.set(pourCol()); uPm.opacity = VD3.dark() ? 0.55 : 0.5;
+        rest.pts([[-gm.sep / 2 - 0.08, -0.02, zI], [gm.sep / 2 + 0.08, -0.02, zI]]); rest.material.color.set(T.muted);
+        const f1 = 1 - pourRho() / (2 * rho);
+        handles3.push({ id: 'pour', v: q.Ho, lo: SLDEF('Ho')[2], hi: SLDEF('Ho')[3], at: (v) => [-gm.sep / 2, -0.02, zRest + v / 100 * f1], set: (v) => setParam('Ho', v) });
+        g.info = { two: true, zI, zB, zP, tw };
+        return { t: [0, 0, 0.4], d: 1.9 };
       }
       const dP = q.Pg * 1000, dh = columnHeight(dP, rho), dhMax = columnHeight(20000, rho), armL = dhMax * 1.25, k = 0.9 / armL, zRest = gm.zb0 + 0.45;
       const zl = zRest - dh / 2 * k, zr = zRest + dh / 2 * k;
@@ -2718,6 +2829,16 @@ table.rows button:hover { color: var(--pos); }
         tag(`air pushes with P_{atm} = ${fx(q.Pa, 1)} kPa`, [0.17, -0.06, I.zs + 0.1], 'left', T.neg, 11.5, 400, null, 6, 0);
         grips3();
         note3(`Heights are to scale on the rule; the tube and dish widths are not. ${NOTE}`);
+      } else if (I.two) {
+        const sx = gm.sep / 2, ml = -sx - 0.06, mr = sx + 0.12;
+        dim3([ml, -0.02, I.zI], [ml, -0.02, I.zP], T.ink); dim3([mr, -0.02, I.zI], [mr, -0.02, I.zB], T.ink);
+        tag(`h₁ = ${fx(q.Ho, 1)} cm`, [ml, -0.02, (I.zI + I.zP) / 2], 'right', T.ink, 13, 700, null, -8, 4);
+        tag(pourName().toLowerCase(), [ml, -0.02, (I.zI + I.zP) / 2], 'right', T.muted, 11, 400, null, -8, 20);
+        tag(`h₂ = ${fx(I.tw.hB * 100, 1)} cm`, [mr, -0.02, (I.zI + I.zB) / 2], 'left', T.ink, 13, 700, null, 8, 4);
+        tag('same pressure at this level', [sx + 0.1, -0.02, I.zI], 'left', T.muted, 10.5, 400, null, 4, 16);
+        tag('open to the air', [0, 0, gm.top], 'center', T.muted, 11, 400, null, 0, -10);
+        grips3();
+        note3(`Heights are to scale on the rule; the tube widths are not. ${NOTE}`);
       } else {
         const sx = gm.sep / 2, mx = sx + 0.08;
         if (Math.abs(I.zr - I.zl) > 0.01) dim3([mx, -0.02, I.zl], [mx, -0.02, I.zr], T.ink);

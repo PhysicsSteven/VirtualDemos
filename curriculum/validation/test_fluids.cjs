@@ -5,7 +5,7 @@
 // and the helpers behind Capture, the fit and the CSV.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const F = core('fluids', 'G,PATM,PVAP,LIQ,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV');
+const F = core('fluids', 'G,PATM,PVAP,LIQ,twoLiquids,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV');
 let n = 0;
 const close = (a, b, rel = 1e-12, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -194,6 +194,16 @@ test('CSV helpers: exact unit shifts of typed digits, quoting', () => {
   assert.equal(F.num('−1.5'), -1.5); assert.ok(Number.isNaN(F.num('')));
   const csv = F.buildCSV(['Title (simulated data)', ['demo version', 'fluids@x']], ['a_m', 'note'], [[1, 'x, "y"'], [2, '']]);
   assert.equal(csv, '# Title (simulated data)\n# demo version,fluids@x\na_m,note\n1,"x, ""y"""\n2,\n');
+});
+
+test('two liquids in a U tube: equal pressure at the interface level, volume of the denser liquid kept', () => {
+  for (const [rB, rP, h] of [[1000, 920, 0.2], [1000, 700, 0.3], [13595.1, 1000, 0.25], [13595.1, 920, 0.02]]) {
+    const t = F.twoLiquids(rB, rP, h);
+    close(F.PATM + rP * F.G * (t.zP - t.zI), F.PATM + rB * F.G * (t.zB - t.zI), 0, 1e-9, 'pressures at the interface level');
+    close(t.zB + t.zI, 0, 0, 1e-15, 'one side rises as much as the other falls');
+    close(t.zP - t.zI, h, 0, 1e-15); close(t.rhoFromHeights(h, t.hB), rP, 0, 1e-9, 'density back from the two heights');
+    assert(t.gap > 0, 'the lighter liquid stands taller');
+  }
 });
 
 console.log(`${n} fluids test groups passed`);

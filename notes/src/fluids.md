@@ -51,7 +51,7 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 ## Physics behind the demo
 
 - Hydrostatics: constant density (incompressible), g = 9.81 m/s², standard air pressure P₀ = 101.325 kPa on the surface. The depth scale is to size; the tank width is schematic.
-- Shapes: round open vessels with an 8 cm base (50.3 cm²); the narrowing one ends 2.4 cm across, the flared one 34 cm; every slice of the slanted tube is the same circle. Barometer: vacuum above the column, h = P/(ρg).
+- Shapes: round open vessels with an 8 cm base (50.3 cm²); the narrowing one ends 2.4 cm across, the flared one 34 cm; every slice of the slanted tube is the same circle. Barometer: vacuum above the column, h = P/(ρg). Two liquids: they do not mix, the U tube has one width all the way round (so the denser liquid's surface rises as much as the interface falls), and the meniscus and surface tension are left out.
 - Buoyancy: a cube in a tank of floor area 0.15 m², so the level rises by V_sub/A. Vertical motion only, with linear drag on the wet block (damping ratio ζ) and no added mass, so real blocks bob a little more slowly. The scale is read with the block hanging still.
 - Venturi: ideal flow (incompressible, inviscid, steady), uniform speed across each section, horizontal pipe; each standpipe shows the gauge pressure at the axis. A real pipe also loses pressure to friction.
 - Torricelli: a small hole with rounded edges in a wide tank kept full by a supply, so v = √(2gh) and the jet does not contract. The jet falls H − h, giving R = 2√(h(H − h)). Air drag is neglected.
@@ -59,4 +59,5 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 ## Going further
 
 - The **Barometer** scene: at 101.3 kPa a mercury column stands 760 mm (759.7 mm with g = 9.81 m/s²; the 760 mm of the mmHg definition uses standard gravity, 9.80665 m/s²) and a water column 10.33 m, which is why Torricelli used mercury.
+- **Two liquids** (Barometer scene, Instrument): oil poured into one arm of a U tube of water. At the level of the interface the pressure is the same in both arms, so ρ₁h₁ = ρ₂h₂: 20.0 cm of oil (920 kg/m³) balances 18.4 cm of water. Then try the **Mystery oil** and have students find its density from the two heights on the rule.
 - Homework: a floating block bobs with k = ρ_f g A_block (ignoring the level change). Show that a 10 cm pine cube in water bobs with a period of about 0.45 s, and compare with the demo.
