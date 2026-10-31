@@ -21,6 +21,7 @@ The tank is 450 mm by 300 mm of water, 10 mm deep unless changed, with beaches a
 3. **Two dippers**, then **Double slit.** Ask Q3. Show the Amplitude, then tick Draw the predicted lines: the dark lines sit on them far from the sources and curve away close in.
 4. **Single slit.** Ask Q4. Narrow the slit from 60 mm to 10 mm: the waves past it spread more and more until they look like a dipper's.
 5. **Focusing mirror** and **Focusing lens.** Ask Q5.
+6. **Under a wave: deep water**, then **Under a wave: shallow water.** The Side view cuts through the tank under the bar's waves: each dot is a bit of water. Ask Q6. In deep water each bit goes round a circle that shrinks fast with depth; in shallow water the circles flatten into ellipses that reach the floor, where the water only slides. The wave travels on; the water stays where it was.
 
 ## Questions
 
@@ -34,6 +35,8 @@ The tank is 450 mm by 300 mm of water, 10 mm deep unless changed, with beaches a
 
 **Q5.** A plate that makes the water shallow, shaped like a convex lens, focuses plane waves. Why does it converge them, when it makes the waves slower in the middle, as glass does to light?
 
+**Q6.** In **Under a wave: deep water** (16 Hz on water 12 mm deep) the waves are 14.55 mm long. Each bit of water at the surface goes round a circle of radius 0.50 mm. How far down is the circle a tenth of that size? Then in **Under a wave: shallow water** (6 Hz, 3 mm deep, λ = 30.88 mm), what shape is a surface particle's path, and how does a particle on the floor move?
+
 ## Common misconceptions
 
 - **"Shallower water changes the frequency."** The frequency is fixed by the wave maker: every crest that arrives makes a crest that leaves.
@@ -46,6 +49,7 @@ The tank is 450 mm by 300 mm of water, 10 mm deep unless changed, with beaches a
 - Leapfrog in time and the isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency: the wavelengths match the relation to better than 0.05 % in every direction (curriculum/validation/test_ripple-tank.cjs).
 - β is the viscous damping 2νk² (Lamb §348), plus the beaches, a ramp of damping 50 mm wide that reflects less than 3 % of the amplitude. Walls reflect everything (∂h/∂n = 0). The bar adds to the water each step instead of holding it, set from the grid's own dispersion so its plane waves are 0.50 mm in amplitude, so waves reflected back to it pass under it into the beach; a bar that held the water would mirror them and the tank between bar and barrier would ring, bending the waves that reach a slit. Friction with the floor in very shallow water, the meniscus and nonlinear waves are left out.
 - One speed in each place is exact for one frequency, with two approximations that follow: the waves carry energy at the phase speed, not the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 at 6 Hz to 1.5 at 8 Hz over 1.5 mm of water); and at a change of depth the wavelengths and directions are exact but the share reflected and the change of height are the model's.
+- **Side view** (Lamb, Hydrodynamics, §228): under a plane wave η = A cos(kx − ωt) a bit of water a depth s down goes round an ellipse with half width a = A cosh k(d − s)/sinh kd and half height b = A sinh k(d − s)/sinh kd, so b/a = tanh k(d − s): circles of radius A e^(−ks) in deep water, flat ellipses of nearly equal width at every depth in shallow water. Linear theory, as for the tank; the slow drift forward of a real wave (Stokes drift, second order in kA, up to about 0.9 mm per period here) is left out of the picture and given as a readout, and so is the thin layer at the floor (0.13 to 0.23 mm) where viscosity stops the sliding.
 
 ## Going further
 

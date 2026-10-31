@@ -175,6 +175,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="mirrorwhite" aria-pressed="false">Mirror in white light</button>
           <button type="button" data-p="shapelens" aria-pressed="false">A shape, point by point</button>
           <button type="button" data-p="shapemag" aria-pressed="false">A shape in a magnifier</button>
+          <button type="button" data-p="fermat" aria-pressed="false">Fermat: the quickest path</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p></details>
       </section>
@@ -223,6 +224,19 @@ var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['ro
 try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
 say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
 window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section id="fermSec" hidden>
+        <h2>The quickest path</h2>
+        <div class="sel">
+          <div class="chips" role="group" aria-label="The light goes" id="fmPath"><button type="button" data-fm="refr" aria-pressed="true">Into a new material</button><button type="button" data-fm="refl" aria-pressed="false">Off a mirror</button></div>
+          <div><div class="slider-head"><span>Above the line</span></div><div class="chips" role="group" aria-label="Material above the line" id="fmN1"></div></div>
+          <div id="fmN2Box"><div class="slider-head"><span>Below the line</span></div><div class="chips" role="group" aria-label="Material below the line" id="fmN2"></div></div>
+          <div><div class="slider-head"><label for="fmX">Where the path meets the line, x</label><output id="fmXo" class="mono" for="fmX"></output></div><input type="range" id="fmX" min="-18" max="18" step="0.1"></div>
+          <div class="toggles"><label><input type="checkbox" id="fmOthers" checked>Other paths, faint</label><label><input type="checkbox" id="fmBest">Show the quickest path</label></div>
+        </div>
+        <dl class="readout" id="fmDl"></dl>
+        <details class="more"><summary>More about this</summary><p class="hint">Light could go from A to B by any path: straight to a point P on the line, then straight on to B. Each path takes t = (n<sub>1</sub>|AP| + n<sub>2</sub>|PB|)/c, since light goes at c/n in a material. Fermat's principle: the path light really takes is the one that takes the least time. Moving P a little changes t by (n<sub>1</sub> sin θ<sub>1</sub> − n<sub>2</sub> sin θ<sub>2</sub>)Δx/c, so at the quickest path n<sub>1</sub> sin θ<sub>1</sub> = n<sub>2</sub> sin θ<sub>2</sub>: Snell's law. Off a mirror the same reasoning gives equal angles. Indices at 589 nm from the same formulas as the glass on the bench; air is taken as n = 1 (it is 1.0003). c = 29.979 cm/ns.</p></details>
+      </section>
+
       <section id="imgSec">
         <h2>Image</h2>
         <dl class="readout" id="imgDl">
@@ -404,6 +418,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function minDeviation(n, A) { const s = n * Math.sin(A / 2); return Math.abs(s) > 1 ? NaN : 2 * Math.asin(s) - A; }
   /* a thin glass lens of fixed shape: 1/f = (n − 1)(1/R₁ − 1/R₂), so a lens of focal length fRef at index nRef has f = fRef (nRef − 1)/(n − 1) at index n */
   function glassLensF(fRef, nRef, n) { return fRef * (nRef - 1) / (n - 1); }
+  /* Fermat's principle of least time (Feynman Lectures on Physics Vol I, ch. 26): light from A to B takes the path that takes the
+     least time. The boundary is the line y = 0: A is above it in medium n1; B is below it in medium n2 (refraction) or above it again,
+     with a flat mirror along y = 0 (reflection). A path that crosses the boundary at x takes
+        t(x) = (n1 |AP| + n2 |PB|)/c   (n2 → n1 for reflection),   P = (x, 0), lengths in cm, t in ns (c = 29.9792458 cm/ns, exact).
+     dt/dx = (n1 sin θ1 − n2 sin θ2)/c with θ1, θ2 from the normal, so t is least where n1 sin θ1 = n2 sin θ2: Snell's law (and
+     θ1 = θ2 for the mirror). t(x) is convex (its second derivative is (n1 Ay²/|AP|³ + n2 By²/|PB|³)/c > 0), so there is one
+     least time path and bisection on dt/dx finds it. */
+  const C_CM_NS = 29.9792458;
+  function fermatTime(A, B, x, n1, n2, refl) { const nB = refl ? n1 : n2; return (n1 * Math.hypot(x - A[0], A[1]) + nB * Math.hypot(B[0] - x, B[1])) / C_CM_NS; }
+  /* dt/dx in ns per cm: (n1 sin θ1 − n2 sin θ2)/c with signed sines (positive in the direction from A to B along x) */
+  function fermatSlope(A, B, x, n1, n2, refl) { const nB = refl ? n1 : n2, a = Math.hypot(x - A[0], A[1]), b = Math.hypot(B[0] - x, B[1]);
+    return ((a ? n1 * (x - A[0]) / a : 0) - (b ? nB * (B[0] - x) / b : 0)) / C_CM_NS; }
+  /* the crossing point of the least time path: for the mirror, where the line from A to the image of B (B mirrored in y = 0) meets it */
+  function fermatBest(A, B, n1, n2, refl) {
+    if (refl) { const h = Math.abs(A[1]) + Math.abs(B[1]); return h ? A[0] + (B[0] - A[0]) * Math.abs(A[1]) / h : (A[0] + B[0]) / 2; }
+    let lo = Math.min(A[0], B[0]), hi = Math.max(A[0], B[0]); if (hi - lo < 1e-12) return lo;
+    for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; if (fermatSlope(A, B, m, n1, n2, refl) > 0) hi = m; else lo = m; }
+    return (lo + hi) / 2;
+  }
+  /* the angles at P from the normal (degrees, both positive) */
+  function fermatAngles(A, B, x) { return [deg0(Math.atan2(Math.abs(x - A[0]), Math.abs(A[1]))), deg0(Math.atan2(Math.abs(B[0] - x), Math.abs(B[1])))]; }
+  function deg0(r) { return r * 180 / Math.PI; }
   // ==CORE END==
 
   const MAX_ITEMS = 8, MAX_BOUNCES = 30, EPS = 1e-6;
@@ -461,6 +497,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     depth:      () => [mk('object', -12, 0, { h: 2, rays: 9, spread: 14, rot: -4 }), mk('surf', 0, 0, { shape: 'flat', R: 10, n1: 1.33, n2: 1.0, ap: 12 })],
     shapelens:  () => [mk('shape', -17, 0, { form: 'house', h: 3, probe: 3, spread: 8 }), mk('lens', 0, 0, { f: 8, ap: 12 })],
     shapemag:   () => [mk('shape', -5, 0, { form: 'F', h: 2, probe: 2, spread: 10 }), mk('lens', 0, 0, { f: 10, ap: 12 })],
+    fermat:     () => [],
     tir:        () => {
       const b = mk('beam', 0, 0, { w: 0.6, rays: 3, rot: 30, pivot: { x: 2, y: 0, dist: 15 } });
       placeOnPivot(b);
@@ -471,7 +508,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const FRAMES = {
     converging: [1, 0, 54, 22], camera: [-12, 0, 52, 14], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
     telescope: [-4, 0, 44, 18], shapelens: [-1, 1, 44, 16], shapemag: [-6, 2, 34, 16], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
-    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-5, 0, 42, 16], mirrorwhite: [-4, 0, 44, 16]
+    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-5, 0, 42, 16], mirrorwhite: [-4, 0, 44, 16],
+    fermat: [0, 0, 38, 25]
   };
   let frame = FRAMES.converging;
   function placeOnPivot(it) {
@@ -968,7 +1006,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const F3 = 60;
   const LAB_SPECTRUM = ['#9b6bff', '#4f86ff', '#22c8dc', '#4bd463', '#ffd23a', '#ff8a3a', '#ff4a4a'];
   const GLASS = (a) => `rgba(160, 210, 255, ${a})`;
-  const SCENES = { prism: 'table', tir: 'table', surface: 'table', depth: 'table' };     // ray table (seen from above) for these, optical bench for the rest
+  const SCENES = { prism: 'table', tir: 'table', surface: 'table', depth: 'table', fermat: 'table' };     // ray table (seen from above) for these, optical bench for the rest
   let scene = 'bench', railY = -8;
   const rrect = (x, y, w, h, r) => (ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h));
   function hexA(hex, a) {
@@ -1728,6 +1766,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.clearRect(0, 0, W, H);
     drawBackdrop(T);
     if (layers.grid) drawGrid(T);
+    if (fermat) { frameData = solve(); drawFermat(T, ps); return; }
     drawSpill(T);
     // optical axis
     ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.55; ctx.lineWidth = ps; ctx.setLineDash([10 * ps, 6 * ps]);
@@ -1808,6 +1847,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const fmtCm = (v) => !isFinite(v) ? '∞' : minus((v > 0 ? '+' : '') + v.toFixed(1) + ' cm');
   const fmtM = (v) => !isFinite(v) ? '∞' : minus((v > 0 ? '+' : '') + v.toFixed(2) + '×');
   function updateReadouts() {
+    for (const id of ['imgSec', 'refSec', 'surfSec', 'instSec', 'shapeSec']) $(id).style.display = fermat ? 'none' : '';
+    $('fermSec').hidden = !fermat; if (fermat) { fermatReadouts(); return; }
     const im = frameData ? frameData.image : { why: 'none' };
     const ok = !!im.E;
     $('imgDl').hidden = $('imgHint').hidden = !ok;
@@ -2111,6 +2152,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lenswhite: 'White light through a flint glass lens, f = 20.00 cm at 589 nm. The glass bends violet more than red, so violet (400 nm) focuses 1.23 cm nearer the lens than red (700 nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.',
     shapelens: 'A house 3 cm tall and 2.4 cm deep lying on the bench, 15.8 to 18.2 cm from an 8 cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.',
     shapemag: 'A letter F 2 cm tall, 4.3 to 5.5 cm from a 10 cm lens, inside F: a magnifier. The virtual image is upright and 2.2 times as tall, but 3.9 times as deep (m₁m₂), so it looks stretched along the axis.',
+    fermat: 'Light from the lamp A reaches B. Of all the paths it could take, straight to a point P on the line and straight on to B, it takes the quickest. Drag P (or use the slider) and watch the time: it is least where n₁ sin θ₁ = n₂ sin θ₂, which is Snell\'s law. A lifeguard who runs faster than she swims picks the same kind of path to a swimmer.',
     mirrorwhite: 'White light on a concave mirror, R = 40 cm, f = 20 cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.'
   };
 
@@ -2439,6 +2481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const d = items.length ? Math.min(...items.map((c) => Math.hypot(c.x - x, c.y - y))) : 99;
       if (d > bestD) { bestD = d; best = { x, y }; }
     }
+    if (fermat) { fermat = null; setScene(null); }
     const it = mk(kind, Math.round(best.x), kind === 'screen' ? 0 : Math.round(best.y));
     items.push(it); sel = it; setPreset(null); schedule();
   }
@@ -2446,7 +2489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('del').addEventListener('click', removeSel);
 
   for (const b of document.querySelectorAll('#presets button')) {
-    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; setPreset(b.dataset.p); setScene(b.dataset.p); frame = FRAMES[b.dataset.p] || frame; resize(); });
+    b.addEventListener('click', () => { items = PRESETS[b.dataset.p](); sel = null; fermat = b.dataset.p === 'fermat' ? fermatStart() : null; setPreset(b.dataset.p); setScene(b.dataset.p); frame = FRAMES[b.dataset.p] || frame; resize(); });
   }
   const bindToggle = (id, key) => $(id).addEventListener('change', (e) => { layers[key] = e.target.checked; schedule(); });
   bindToggle('tPrincipal', 'principal'); bindToggle('tImage', 'image'); bindToggle('tFaint', 'faint'); bindToggle('tGrid', 'grid');
@@ -2532,6 +2575,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   window.vdReadingRow = () => {
     let ws, r;
+    if (fermat) return 'The quickest path has no worksheet table yet: the readouts and the graph give the times.';
     if (VD.ws('') === 'intro-mirrors') { window.vdShowCols = [['element', 'Element'], ['lam_nm', 'λ (nm)'], ['f_cm', 'f (cm)']]; return focusRows(); }
     if (frameData && frameData.shape && (!sel || sel.kind === 'shape' || !items.some((i) => i.kind === 'object' || i.kind === 'beam'))) {
       const x = shapeRow(); if (typeof x === 'string') return x; ws = x.ws; r = x.row;
@@ -2556,6 +2600,99 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => (VD.ws('') === 'intro-mirrors' ? 'intro-mirrors' : items.some(isGlass) ? 'dispersion' : items.some((it) => it.kind === 'mirror' || it.kind === 'surf') ? 'mirrors-refraction' : 'lenses-instruments');
   const HOW_TITLE = { dispersion: 'Dispersion', 'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Lenses and Optical Instruments', 'intro-mirrors': 'Lenses and Mirrors in White Light' };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`, title: () => `How this works: ${HOW_TITLE[howVid()]}` });
+
+  // ---------- Fermat: the quickest path (a scene of its own, drawn instead of the items) ----------
+  /* the boundary is the line y = 0 of the bench (cm). A lamp at A above it, B below it (into a new material) or above it (off a mirror
+     along the line), and P = (x, 0) where the trial path meets the line. Indices at 589.3 nm from the same Sellmeier formulas as the
+     glass; air is taken as 1. */
+  const FM_MEDIA = [['air', 'Air'], ['water', 'Water'], ['bk7', 'Crown glass'], ['f2', 'Flint glass'], ['diamond', 'Diamond']];
+  const fmN = (k) => (k === 'air' ? 1 : sellmeier(GLASSES[k], 589.3));
+  let fermat = null;
+  function fermatStart() { return { refl: false, m1: 'air', m2: 'water', A: [-10, 8], B: [8, -8], x: 4, others: true, best: false, drag: null }; }
+  function fmGeom() { const f = fermat, n1 = fmN(f.m1), n2 = f.refl ? n1 : fmN(f.m2), B = f.refl ? [f.B[0], Math.abs(f.B[1])] : [f.B[0], -Math.abs(f.B[1])];
+    const xb = fermatBest(f.A, B, n1, n2, f.refl); return { n1, n2, A: f.A, B, xb, t: fermatTime(f.A, B, f.x, n1, n2, f.refl), tb: fermatTime(f.A, B, xb, n1, n2, f.refl), ang: fermatAngles(f.A, B, f.x), angB: fermatAngles(f.A, B, xb) }; }
+  function drawFermat(T, ps) {
+    const f = fermat, G = fmGeom(), b = bounds(), [lx0, ly] = toPx(b.x0, 0), [lx1] = toPx(b.x1, 0);
+    /* the two materials: tinted by how far n is above 1; a mirror is a silvered strip under the line */
+    const tint = (n) => GLASS(Math.min(0.45, (n - 1) * 0.6));
+    ctx.fillStyle = tint(G.n1); ctx.fillRect(0, 0, W, ly);
+    if (f.refl) { const g = ctx.createLinearGradient(0, ly, 0, ly + 14 * ps); g.addColorStop(0, '#e6edf3'); g.addColorStop(1, '#7c8894'); ctx.fillStyle = g; ctx.fillRect(0, ly, W, 14 * ps); }
+    else { ctx.fillStyle = tint(G.n2); ctx.fillRect(0, ly, W, H - ly); }
+    ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(lx0, ly); ctx.lineTo(lx1, ly); ctx.stroke(); ctx.globalAlpha = 1;
+    const name = (k) => FM_MEDIA.find((m) => m[0] === k)[1];
+    tag(`${name(f.m1)}, n₁ = ${G.n1.toFixed(3)}`, toPx(b.x1, 0)[0] - 8 * ps, ly - 14 * ps, T.muted, T, { align: 'right' });
+    tag(f.refl ? 'mirror' : `${name(f.m2)}, n₂ = ${G.n2.toFixed(3)}`, toPx(b.x1, 0)[0] - 8 * ps, ly + (f.refl ? 26 : 16) * ps, T.muted, T, { align: 'right' });
+    const P = (q) => toPx(q[0], q[1]), A = P(G.A), B = P(G.B), path = (x, col, w, a, dash) => { const q = P([x, 0]); ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = a; ctx.lineWidth = w; ctx.setLineDash(dash || []);
+      ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(q[0], q[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); ctx.restore(); };
+    /* other paths, faint, every 2 cm along the line */
+    if (f.others) for (let x = Math.ceil(b.x0 / 2) * 2; x <= b.x1; x += 2) path(x, T.muted, 1 * ps, 0.28);
+    if (f.best) path(G.xb, T.p1, 2.4 * ps, 0.95, [8 * ps, 5 * ps]);
+    /* the trial path, its normal at P and its angles */
+    const Pp = P([f.x, 0]);
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([4 * ps, 4 * ps]); ctx.lineWidth = ps; ctx.beginPath(); ctx.moveTo(Pp[0], Pp[1] - 70 * ps); ctx.lineTo(Pp[0], Pp[1] + (f.refl ? 0 : 70 * ps)); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.shadowColor = T.ray; ctx.shadowBlur = 8 * ps; path(f.x, T.ray, 2.6 * ps, 1); ctx.restore();
+    const arc = (to, up, lab) => { const a0 = up ? -Math.PI / 2 : Math.PI / 2, a1 = Math.atan2(to[1] - Pp[1], to[0] - Pp[0]), r = 30 * ps;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(Pp[0], Pp[1], r, Math.min(a0, a1), Math.max(a0, a1)); ctx.stroke();
+      const am = (a0 + a1) / 2, c = Math.cos(am); tag(lab, Pp[0] + c * (r + 6 * ps), Pp[1] + Math.sin(am) * (r + 10 * ps), T.accent, T, { size: 10, align: c < -0.05 ? 'right' : c > 0.05 ? 'left' : 'center' }); };
+    arc(A, true, `θ₁ ${G.ang[0].toFixed(1)}°`); if (f.refl) arc(B, true, `θ₂ ${G.ang[1].toFixed(1)}°`); else arc(B, false, `θ₂ ${G.ang[1].toFixed(1)}°`);
+    /* A (the lamp), B, P */
+    const knob = (q, txt, col) => { ctx.fillStyle = col; ctx.strokeStyle = T.halo; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(q[0], q[1], 8 * ps, 0, 7); ctx.fill(); ctx.stroke(); tag(txt, q[0], q[1] - 20 * ps, col, T); };
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(A[0], A[1], 0, A[0], A[1], 40 * ps); gl.addColorStop(0, hexA(T.ray, 0.45)); gl.addColorStop(1, hexA(T.ray, 0)); ctx.fillStyle = gl; ctx.fillRect(A[0] - 40 * ps, A[1] - 40 * ps, 80 * ps, 80 * ps); ctx.restore();
+    knob(A, 'A', T.ray); knob(B, 'B', T.pos); knob(Pp, 'P', T.accent);
+    tag(`this path: t = ${G.t.toFixed(4)} ns`, 12 * ps, 16 * ps, T.ray, T, { size: 12, align: 'left' });
+    if (f.best) tag(`quickest path (dashed): t = ${G.tb.toFixed(4)} ns`, 12 * ps, 40 * ps, T.p1, T, { size: 12, align: 'left' });
+    /* the inset graph: t against x along the whole line in view, the trial point and (when shown) the least */
+    const gw = Math.min(300 * ps, W * 0.44), gh = Math.min(140 * ps, H * 0.3), gx = 12 * ps, gy = H - gh - 12 * ps, xs = [], ts = [];
+    for (let i = 0; i <= 160; i++) { const x = b.x0 + (b.x1 - b.x0) * i / 160; xs.push(x); ts.push(fermatTime(G.A, G.B, x, G.n1, G.n2, f.refl)); }
+    const t0 = Math.min(...ts, G.tb), t1 = Math.max(...ts), Xg = (x) => gx + 40 * ps + (x - b.x0) / (b.x1 - b.x0) * (gw - 50 * ps), Yg = (t) => gy + 18 * ps + (1 - (t - t0) / (t1 - t0 || 1)) * (gh - 40 * ps);
+    ctx.fillStyle = T.halo; ctx.globalAlpha = 0.92; ctx.beginPath(); rrect(gx, gy, gw, gh, 6 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.font = `${10 * ps}px ` + monoFont(); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('time t (ns) against where P is, x (cm)', gx + 8 * ps, gy + 4 * ps);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(t1.toFixed(3), gx + 38 * ps, Yg(t1)); ctx.fillText(t0.toFixed(3), gx + 38 * ps, Yg(t0));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (const x of [Math.ceil(b.x0 / 10) * 10, 0, Math.floor(b.x1 / 10) * 10]) ctx.fillText(minus(String(x)), Xg(x), gy + gh - 18 * ps);
+    ctx.strokeStyle = T.ray; ctx.lineWidth = 2 * ps; ctx.beginPath(); xs.forEach((x, i) => (i ? ctx.lineTo(Xg(x), Yg(ts[i])) : ctx.moveTo(Xg(x), Yg(ts[i])))); ctx.stroke();
+    if (f.best) { ctx.fillStyle = T.p1; ctx.beginPath(); ctx.arc(Xg(G.xb), Yg(G.tb), 4 * ps, 0, 7); ctx.fill(); }
+    if (f.x >= b.x0 && f.x <= b.x1) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(Xg(f.x), Yg(G.t), 5 * ps, 0, 7); ctx.fill(); }
+  }
+  function fermatReadouts() {
+    const f = fermat, G = fmGeom(), dd = (a, v, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${v}</dd></div>`, sn = (d) => Math.sin(rad(d));
+    const sA = G.n1 * sn(G.ang[0]), sB = G.n2 * sn(G.ang[1]);
+    $('fmDl').innerHTML = dd('Time on this path t', `${G.t.toFixed(4)} ns`, 'big') + dd('Path lengths |AP|, |PB|', minus(`${Math.hypot(f.x - G.A[0], G.A[1]).toFixed(2)}, ${Math.hypot(G.B[0] - f.x, G.B[1]).toFixed(2)} cm`))
+      + dd('Angles from the normal θ₁, θ₂', `${G.ang[0].toFixed(2)}°, ${G.ang[1].toFixed(2)}°`)
+      + (f.refl ? '' : dd('n₁ sin θ₁, n₂ sin θ₂', `${sA.toFixed(4)}, ${sB.toFixed(4)}`))
+      + dd('Slower than the quickest path by', f.best ? `${((G.t - G.tb) * 1000).toFixed(2)} ps` : 'show the quickest path')
+      + dd('Quickest path meets the line at', f.best ? minus(`x = ${G.xb.toFixed(2)} cm, t = ${G.tb.toFixed(4)} ns`) : '—', 'wide')
+      + dd('Straight line from A to B', f.refl ? 'no: it does not touch the mirror' : `${fermatTime(G.A, G.B, G.A[0] + (G.B[0] - G.A[0]) * G.A[1] / (G.A[1] - G.B[1]), G.n1, G.n2, false).toFixed(4)} ns`, 'wide');
+    $('fmXo').textContent = minus(`${f.x.toFixed(1)} cm`); if (document.activeElement !== $('fmX')) $('fmX').value = f.x;
+    $('fmN2Box').hidden = f.refl;
+    for (const bt of document.querySelectorAll('#fmPath button')) bt.setAttribute('aria-pressed', String((bt.dataset.fm === 'refl') === f.refl));
+    for (const [id, key] of [['fmN1', 'm1'], ['fmN2', 'm2']]) for (const bt of $(id).children) bt.setAttribute('aria-pressed', String(bt.dataset.m === f[key]));
+    $('fmOthers').checked = f.others; $('fmBest').checked = f.best;
+  }
+  for (const [id, key] of [['fmN1', 'm1'], ['fmN2', 'm2']]) for (const [k, label] of FM_MEDIA) {
+    const bt = document.createElement('button'); bt.type = 'button'; bt.dataset.m = k; bt.textContent = label; bt.setAttribute('aria-pressed', 'false');
+    bt.addEventListener('click', () => { if (fermat) { fermat[key] = k; schedule(); } }); $(id).appendChild(bt); }
+  $('fmPath').addEventListener('click', (e) => { const bt = e.target.closest('[data-fm]'); if (bt && fermat) { fermat.refl = bt.dataset.fm === 'refl'; schedule(); } });
+  $('fmX').addEventListener('input', (e) => { if (fermat) { fermat.x = +e.target.value; schedule(); } });
+  $('fmOthers').addEventListener('change', (e) => { if (fermat) { fermat.others = e.target.checked; schedule(); } });
+  $('fmBest').addEventListener('change', (e) => { if (fermat) { fermat.best = e.target.checked; schedule(); } });
+  /* drag A, B and P on the picture (these run before the bench's own handlers and stop them while the scene is open) */
+  const fmPick = (e) => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, G = fmGeom(), tol = (e.pointerType === 'touch' ? 24 : 14) * projScale();
+    for (const [k, q] of [['P', [fermat.x, 0]], ['A', G.A], ['B', G.B]]) { const [x, y] = toPx(q[0], q[1]); if (Math.hypot(x - px, y - py) < tol) return k; } return null; };
+  cv.addEventListener('pointerdown', (e) => { if (!fermat) return; e.stopImmediatePropagation(); cv.focus({ preventScroll: true }); const k = fmPick(e); if (!k) return;
+    fermat.drag = k; cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; e.preventDefault(); }, true);
+  cv.addEventListener('pointermove', (e) => { if (!fermat) return; e.stopImmediatePropagation(); const p = eventW(e), b = bounds(), cl = (v, a, z) => Math.max(a, Math.min(z, v));
+    if (!fermat.drag) { if (e.pointerType === 'mouse') cv.style.cursor = fmPick(e) ? 'grab' : 'default'; return; }
+    const x = +cl(p.x, b.x0 + 0.5, b.x1 - 0.5).toFixed(1);
+    if (fermat.drag === 'P') fermat.x = cl(x, -18, 18);
+    else if (fermat.drag === 'A') fermat.A = [x, +cl(p.y, 0.5, b.y1 - 0.5).toFixed(1)];
+    else fermat.B = [x, +(fermat.refl ? cl(p.y, 0.5, b.y1 - 0.5) : cl(p.y, b.y0 + 0.5, -0.5)).toFixed(1)];
+    schedule(); }, true);
+  const fmEnd = (e) => { if (!fermat) return; e.stopImmediatePropagation(); fermat.drag = null; cv.style.cursor = 'default'; };
+  cv.addEventListener('pointerup', fmEnd, true); cv.addEventListener('pointercancel', fmEnd, true);
+  /* arrow keys move P along the line (Shift: 0.1 cm) */
+  cv.addEventListener('keydown', (e) => { if (!fermat) return; const st = e.shiftKey ? 0.1 : 0.5, d = { ArrowLeft: -st, ArrowRight: st }[e.key]; if (d == null) return;
+    e.stopImmediatePropagation(); e.preventDefault(); fermat.x = Math.max(-18, Math.min(18, +(fermat.x + d).toFixed(1))); schedule(); }, true);
+  window.__ob.fermat = () => fermat && Object.assign({}, fermat, fmGeom());
 
   // ---------- boot ----------
   items = PRESETS.converging();

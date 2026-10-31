@@ -239,6 +239,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
             <button type="button" data-s="square" aria-pressed="true">Square</button>
             <button type="button" data-s="circle" aria-pressed="false">Circle</button>
+            <button type="button" data-s="bar" aria-pressed="false" title="A bar 24 cm long and 3 cm wide, free at both ends">Bar</button>
           </div>
         </div>
         <div id="drumGrp" hidden>
@@ -301,6 +302,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="high" aria-pressed="false">High mode</button>
           <button type="button" data-p="drum" aria-pressed="false">Drumhead: rings</button>
           <button type="button" data-p="drumOff" aria-pressed="false">Drumhead overtones</button>
+          <button type="button" data-p="bar" aria-pressed="false">Bar: bending overtones</button>
+          <button type="button" data-p="barMid" aria-pressed="false">Bar on the driver</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -415,14 +418,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     aluminum: { name: 'Aluminum', E: 69e9, rho: 2700, nu: 0.33 }
   };
   const SQ_P = 30;                                      // Legendre degree in x and in y for the square plate (Ritz)
-  const LAM2_MAX = { square: 2200, circle: 1300 };      // modes kept: λ² below this (λ² = ω ℓ² √(ρh/D), ℓ = side or radius)
+  const LAM2_MAX = { square: 2200, circle: 1300, bar: 4300 };   // modes kept: λ² below this (λ² = ω ℓ² √(ρh/D), ℓ = side or radius; for the bar λ² = (βL)²)
+  const BAR = { b: 0.03 };                              // the bar: as long as the square's side, 3 cm wide
   function flexRigidity(E, h, nu) { return E * h * h * h / (12 * (1 - nu * nu)); }
   // f = λ² × fScale, with ℓ the side (square) or the radius (circle)
   function fScale(shape, mat, h) {
+    if (shape === 'bar') return h * Math.sqrt(mat.E / (12 * mat.rho)) / (2 * Math.PI * PLATE.L * PLATE.L);   /* √(EI/ρA) with I = bh³/12, A = bh */
     const l = shape === 'square' ? PLATE.L : PLATE.a;
     return Math.sqrt(flexRigidity(mat.E, h, mat.nu) / (mat.rho * h)) / (2 * Math.PI * l * l);
   }
-  function plateArea(shape) { return shape === 'square' ? PLATE.L * PLATE.L : Math.PI * PLATE.a * PLATE.a; }
+  function plateArea(shape) { return shape === 'square' ? PLATE.L * PLATE.L : shape === 'bar' ? PLATE.L * BAR.b : Math.PI * PLATE.a * PLATE.a; }
   function plateMass(shape, mat, h) { return mat.rho * h * plateArea(shape); }
   // bending wavenumber k = (ω² ρh / D)^(1/4); thin plate theory needs k h ≪ 1
   function bendK(f, mat, h) { const w = 2 * Math.PI * f; return Math.pow(w * w * mat.rho * h / flexRigidity(mat.E, h, mat.nu), 0.25); }
@@ -696,6 +701,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return s;
   }
 
+  // ---- bar (2026-10-31): a free bar, length L = 24 cm, width 3 cm, bending in its thickness h (Euler–Bernoulli beam) ----
+  // EI ∂⁴w/∂x⁴ + ρA ∂²w/∂t² = 0 with free ends (w″ = w‴ = 0 at both). Modes, x from 0 to L:
+  //   φ = cosh βx + cos βx − σ(sinh βx + sin βx),  σ = (cosh βL − cos βL)/(sinh βL − sin βL),  cos βL cosh βL = 1,
+  //   f = (βL)² √(EI/ρA)/(2πL²), EI/ρA = E h²/12ρ.  βL = 4.7300, 7.8532, 10.9956, 14.1372, …, so f₂/f₁ = 2.756, f₃/f₁ = 5.404,
+  //   f₄/f₁ = 8.933 (Fletcher and Rossing, The Physics of Musical Instruments, 2nd ed., ch. 2). Mode n has n + 1 nodes.
+  // Plus the two rigid motions of a free bar, up and down and rocking (λ² = 0). Left out: shear and rotary inertia (Timoshenko),
+  // a few percent once a bending wavelength is under about ten thicknesses; twisting modes and bending across the width; the
+  // plate stiffening E/(1 − ν²) of a strip much wider than a bending wavelength. Stored like the plates: λ² = (βL)², f = λ² fs,
+  // φ̂ normalized to a mean square of 1 along the bar, as a function of u = 2x/L − 1.
+  function barRoots(lam2Max) {
+    const out = []; let n = 1;
+    for (;;) {
+      let x = (n + 0.5) * Math.PI;
+      for (let i = 0; i < 60; i++) { const ch = Math.cosh(x), F = Math.cos(x) - 1 / ch, dF = -Math.sin(x) + Math.sinh(x) / (ch * ch), dx = F / dF; x -= dx; if (Math.abs(dx) < 1e-15 * x) break; }
+      if (x * x >= lam2Max) break; out.push(x); n++;
+    }
+    return out;
+  }
+  /* the unnormalized shape at u for βL = B, written so nothing overflows: cosh y − σ sinh y = ((1 − σ)e^y + (1 + σ)e^−y)/2 */
+  function barShape(B, u) {
+    const y = B * (u + 1) / 2, eB = Math.exp(-B), den = (1 - eB * eB) / 2 - Math.sin(B) * eB;   /* (sinh B − sin B) e^−B */
+    const oneMs = (Math.cos(B) - Math.sin(B) - eB) / den;                                          /* (1 − σ) e^B */
+    const sig = 1 - oneMs * eB, onePs = 2 - oneMs * eB;
+    return Math.cos(y) - sig * Math.sin(y) + (oneMs * Math.exp(y - B) + onePs * Math.exp(-y)) / 2;
+  }
+  function barModes(lam2Max) {
+    const gq = gaussLegendre(160), modes = [{ lam2: 0, rigid: true, B: 0, N: 1, kind: 'up' }, { lam2: 0, rigid: true, B: 0, N: Math.sqrt(3), kind: 'rock' }];
+    for (const B of barRoots(lam2Max)) {
+      let ms = 0; for (let q = 0; q < gq.x.length; q++) ms += gq.w[q] * barShape(B, gq.x[q]) ** 2;
+      modes.push({ lam2: B * B, rigid: false, B, N: 1 / Math.sqrt(ms / 2) });
+    }
+    return modes;
+  }
+  function barPhi(md, u) { return md.rigid ? (md.kind === 'up' ? 1 : md.N * u) : md.N * barShape(md.B, u); }
+
   // ---- driven response: modal superposition with the same modal Q for every flexural mode ----
   // q_k = (F/M) φ̂_k(p) / (ω_k² − ω² + i ω ω_k / Q), w(x) = Σ q_k φ̂_k(x); rigid modes (ω_k = 0) give −(F/M) φ̂(p)/ω²
   function modalAmps(lam2, phiP, f, fs, Q, F, M) {
@@ -880,8 +920,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const DRIVEN = 0.15;                                    // |φ̂(p)| below this: the drive point sits on or near a nodal line
   const DRIVES = {
     square: { center: [0, 0], off: [0.42, 0.22], edge: [1, 0.36] },
-    circle: { center: [0, 0], off: [0.5, 0], edge: [1, 0] }
+    circle: { center: [0, 0], off: [0.5, 0], edge: [1, 0] },
+    bar: { center: [0, 0], off: [0.45, 0], edge: [1, 0] }
   };
+  const BW = BAR.b / PLATE.L;                            // the bar's half width in half lengths
 
   // ---------- state ----------
   /* a drumhead: Mylar film clamped in a hoop, driven by a pad 2 cm across or by a loudspeaker under it (uniform pressure) */
@@ -905,6 +947,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const sx = []; for (let a = 0; a < GN; a++) sx.push(gridU(a));
       for (const md of ms.modes) { const g = new Float32Array(GN * GN), A = sx.map((u) => Math.sin(md.m * Math.PI * (u + 1) / 2)), B = sx.map((v) => 2 * Math.sin(md.n * Math.PI * (v + 1) / 2));
         for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) g[b * GN + a] = A[a] * B[b]; md.grid = g; }
+    } else if (S.shape === 'bar') {
+      /* φ̂ depends on u alone: the same row across the bar */
+      ms.modes = barModes(LAM2_MAX.bar);
+      for (const md of ms.modes) { const row = new Float32Array(GN); for (let a = 0; a < GN; a++) row[a] = barPhi(md, gridU(a));
+        const g = new Float32Array(GN * GN); for (let b = 0; b < GN; b++) g.set(row, b * GN); md.grid = g; }
     } else if (S.shape === 'square') {
       ms.modes = squareModes(nu, SQ_P, LAM2_MAX.square);
       // φ̂ on the grid, separable: φ̂(u_a, v_b) = Σ_i p_i(u_a) Σ_j c_ij p_j(v_b)
@@ -963,7 +1010,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- derived quantities ----------
   const D = { ms: null, phiP: null, fs: 1, M: 1, fmax: 1000, Wre: new Float32Array(GN * GN), Wim: new Float32Array(GN * GN),
     gam: new Float32Array(GN * GN), gmax: 0, Wmax: 0, arms: 0, curve: null, curveMax: 0, near: null, fit: null };
-  function inside(u, v) { return S.shape === 'square' ? Math.abs(u) <= 1 && Math.abs(v) <= 1 : u * u + v * v <= 1; }
+  function inside(u, v) { return S.shape === 'square' ? Math.abs(u) <= 1 && Math.abs(v) <= 1 : S.shape === 'bar' ? Math.abs(u) <= 1 && Math.abs(v) <= BW : u * u + v * v <= 1; }
   function recomputeStatic() {
     const mat = MATERIALS[S.mat];
     D.ms = modeSet();
@@ -981,9 +1028,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     D.fmax = Math.min(F_CAP, 0.98 * LAM2_MAX[S.shape] * D.fs);
     D.lowest = D.ms.modes.find((m) => !m.rigid);
     if (D.ms.shape === 'square') D.phiP = Float64Array.from(D.ms.modes, (md) => squarePhi(md, S.du, S.dv));
+    else if (D.ms.shape === 'bar') D.phiP = Float64Array.from(D.ms.modes, (md) => barPhi(md, S.du));
     else { const r = Math.min(1, Math.hypot(S.du, S.dv)); D.phiP = Float64Array.from(D.ms.modes, (md) => md.N * circleRadial(md, r)); }
     D.thetaP = Math.hypot(S.du, S.dv) > 1e-9 ? Math.atan2(S.dv, S.du) : 0;
-    D.Lc = LAM2_MAX[S.shape]; D.wA = S.shape === 'square' ? 1 / (4 * Math.PI) : 0.25;
+    /* the bar keeps every mode up to 8 kHz and more, so it needs no tail for the modes above (Lc = 0) */
+    D.Lc = S.shape === 'bar' ? 0 : LAM2_MAX[S.shape]; D.wA = S.shape === 'square' ? 1 / (4 * Math.PI) : 0.25;
     D.res = resonances();
     D.fit = D.ms.shape === 'circle' ? chladniFit(D.ms.modes.filter((m) => !m.rigid && m.lam2 * D.fs <= D.fmax).map((m) => ({ n: m.n, m: m.m, f: m.lam2 * D.fs }))) : null;
     updateCurve();
@@ -1033,7 +1082,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Wre = D.Wre, Wim = D.Wim; Wre.fill(0); Wim.fill(0);
     let qmax = 0; for (let k = 0; k < n; k++) qmax = Math.max(qmax, Math.hypot(q.re[k], q.im[k]));
     const thr = 1e-6 * qmax;
-    if (ms.shape === 'square') {
+    if (ms.shape === 'square' || ms.shape === 'bar') {
       for (let k = 0; k < n; k++) {
         const qr = q.re[k], qi = q.im[k]; if (Math.hypot(qr, qi) <= thr) continue;
         const g = ms.modes[k].grid;
@@ -1093,7 +1142,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       do { u = 2 * rng() - 1; v = 2 * rng() - 1; } while (!inside(u, v));
       sand.x[i] = u; sand.y[i] = v; sand.alive[i] = 1;
     }
-    sand.count = NSAND; dirty = true; glSandDirty = true;
+    /* the bar is an eighth of the square's area: a quarter of the grains is plenty */
+    if (S.shape === 'bar') for (let i = Math.round(NSAND / 4); i < NSAND; i++) sand.alive[i] = 0;
+    sand.count = S.shape === 'bar' ? Math.round(NSAND / 4) : NSAND; dirty = true; glSandDirty = true;
   }
   function sandTick() {
     sand.count -= sandStep(sand.x, sand.y, sand.alive, gammaAt, inside, rng, hop, DRIFT, REL0); ticks++;
@@ -1131,6 +1182,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('driveSeg').querySelector('[data-d="speaker"]').hidden = !drum(); $('tens').value = S.T;
     $('setupTitle').textContent = drum() ? 'Set up the drumhead and drive' : 'Set up the plate and driver';
     for (const b of $('shapeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
+    $('shapeSeg').querySelector('[data-s="bar"]').hidden = drum();
     for (const b of $('matSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
     for (const b of $('driveSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.drive));
     for (const b of $('driverSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dr === S.driver));
@@ -1162,7 +1214,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Metal plate or Drumhead (2026-10-31): the same shapes, sand and response; a drumhead is clamped at its rim */
   function setKind(k) {
     if (k === S.kind) return;
-    S.kind = k; S.F = k === 'drum' ? 0.05 : 1;
+    S.kind = k; S.F = k === 'drum' ? 0.05 : 1; if (k === 'drum' && S.shape === 'bar') S.shape = 'square';
     if (k === 'drum') { S.drive = 'speaker'; S.driver = 'force'; if (S.plot === 'law') S.plot = 'resp'; }
     else { if (S.drive === 'speaker') S.drive = 'center'; S.driver = S.drive === 'edge' ? 'force' : 'wave'; }
     const d = drivesOf()[S.drive]; S.du = d[0]; S.dv = d[1];
@@ -1211,6 +1263,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'A Mylar drumhead 24 cm across, clamped in its hoop at 1000 N/m, with a loudspeaker under it pushing on the whole head at once. Only modes without nodal diameters, (0, m), move on average, so only they answer, and the sand gathers on rings. The rim itself is a node. The frequencies go as the zeros of the Bessel function J₀: 2.405, 5.520, 8.654, …, not as 1, 2, 3.' },
     drumOff: { kind: 'drum', shape: 'circle', mat: 'steel', h: 1e-3, T: 1000, drive: 'off', Q: 100, driver: 'force', F: 0.01, pick: { nm: [1, 1] },
       hint: 'The same drumhead, now pushed by a small pad halfway out. Modes with nodal diameters answer too. Step through them with Next resonance and read f/f₁ for each: 1.593, 2.136, 2.295, 2.653, … An ideal membrane is not harmonic, which is why most drums give no clear pitch. (A timpani gets close to harmonic ratios for its (1, m) modes because the air in its kettle and around the head loads the membrane; that air is left out here.)' },
+    bar: { shape: 'bar', mat: 'steel', h: 1e-3, drive: 'edge', Q: 100, driver: 'force', F: 0.05, pick: { driven: 1 },
+      hint: 'A steel bar 24 cm long, 3 cm wide and 1 mm thick, free at both ends, tapped at one end with a point force. Its lowest bending mode has two nodes, 22.4% of the length in from each end: that is where a xylophone bar rests on its cords. Step up with Next resonance: the overtones sit at 2.756, 5.404 and 8.933 times the lowest, not at 2, 3, 4, which is why a bar sounds like a bell and not like a string.' },
+    barMid: { shape: 'bar', mat: 'steel', h: 1e-3, drive: 'center', Q: 100, driver: 'wave', x0: 0.3e-3, pick: { driven: 1 },
+      hint: 'The same bar bolted to the wave driver at its middle, like a Chladni plate. Only modes that are symmetric about the middle move there, so the antisymmetric ones (f/f₁ = 2.756, 8.933, …) stay silent: Next resonance skips them. The driver\'s 50 g moving mass rides on the post and the bar weighs only 57 g, so each resonance sits well below the free bar\'s (the third mode: 384 Hz on the driver, 487 Hz free). Tapping the end (the other bar setup) shows the free bar.' },
     high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, driver: 'force', F: 0.3, pick: { nm: [4, 2] },
       hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 200 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
   };
@@ -1272,15 +1328,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k], fk = r.f, df = S.f - fk, bw = fk / S.Q;
       let s = drum() ? `${md.label} at ${fmtF(fk)}, f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)} (${S.shape === 'circle' ? `j = ${md.lam2.toFixed(3)}, a zero of J${'₀₁₂₃₄₅₆₇₈₉'[md.n] || md.n}` : `√(m² + n²) = ${md.lam2.toFixed(3)}`}). `
-        : S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free plate mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
+        : S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free ${S.shape === 'bar' ? 'bar' : 'plate'} mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
         : `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
       s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`;
       if (drum() && D.ms.shape === 'square') s += ` ${md.m - 1} nodal line${md.m === 2 ? '' : 's'} one way and ${md.n - 1} the other, besides the hoop.${md.m !== md.n ? ` (${md.n}, ${md.m}) has the same frequency.` : ''}`;
       else if (drum()) s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'} and ${md.m - 1} nodal circle${md.m === 2 ? '' : 's'} besides the hoop.`;
       else if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
+      else if (D.ms.shape === 'bar') s += ` ${md.idx + 1} nodes along the bar; f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)}, βL = ${md.B.toFixed(4)}; ${md.idx % 2 ? 'symmetric' : 'antisymmetric'} about the middle.`;
       else s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`;
       $('rMode').textContent = s;
     }
+    if (S.shape === 'bar' && !drum()) { const k1 = D.lowest; $('plateHint').textContent = `A bar 24 cm long, 3 cm wide and ${(S.h * 1000).toFixed(2)} mm thick, free at both ends, bending as an Euler–Bernoulli beam. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³. f = (βL)² (h/L²) √(E/12ρ)/2π, so every frequency scales as h; the lowest is ${fmtF(modeF(k1))}. Its overtones are not harmonics: f₂/f₁ = 2.756, f₃/f₁ = 5.404, f₄/f₁ = 8.933. Left out: shear and rotary inertia (a few percent once a bending wavelength is under ten thicknesses), twisting modes and bending across the width.`; return; }
     const name = S.shape === 'square' ? 'square, 24 cm on a side' : 'circle, 24 cm across';
     if (drum()) { $('plateHint').textContent = `A drumhead, ${name}: Mylar film ${(MYLAR.h * 1000).toFixed(2)} mm thick (chosen, a common head thickness; polyester film density ${MYLAR.rho} kg/m³), so σ = ${(SIGMA * 1000).toFixed(1)} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: ${S.shape === 'circle' ? 'the zeros j of the Bessel functions, 2.405, 3.832, 5.136, 5.520, …' : '√(m² + n²): √2, √5, √8, √10, …'}`; return; }
     $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
@@ -1348,7 +1406,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function platePath(c, grow = 0) {
     const p = G.plate, R = p.R + grow;
     c.beginPath();
-    if (S.shape === 'square') c.rect(p.cx - R, p.cy - R, 2 * R, 2 * R); else c.arc(p.cx, p.cy, R, 0, TAU);
+    if (S.shape === 'square') c.rect(p.cx - R, p.cy - R, 2 * R, 2 * R); else if (S.shape === 'bar') c.rect(p.cx - R, p.cy - p.R * BW - grow, 2 * R, 2 * (p.R * BW + grow)); else c.arc(p.cx, p.cy, R, 0, TAU);
   }
   function halo(c, txt, x, y, align, color, ps) {
     c.textAlign = align; const w = c.measureText(txt).width, h = 15 * ps;
@@ -1459,8 +1517,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.font = `${12 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
     const mat = MATERIALS[S.mat];
     let l1 = drum() ? `${S.shape === 'square' ? 'Square drumhead, 24 cm' : 'Drumhead, 24 cm across'} · Mylar · T = ${S.T.toFixed(0)} N/m · clamped rim${S.drive === 'speaker' ? ' · loudspeaker under it' : ''}`
-      : `${S.shape === 'square' ? 'Square, 24 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free edges`;
-    if (c.measureText(l1).width > p.s - 8) l1 = drum() ? `Drumhead · T = ${S.T.toFixed(0)} N/m` : `${S.shape === 'square' ? 'Square' : 'Circle'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm`;   /* a small plate: the short label */
+      : `${S.shape === 'square' ? 'Square, 24 cm' : S.shape === 'bar' ? 'Bar, 24 × 3 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free ${S.shape === 'bar' ? 'ends' : 'edges'}`;
+    if (c.measureText(l1).width > p.s - 8) l1 = drum() ? `Drumhead · T = ${S.T.toFixed(0)} N/m` : `${S.shape === 'square' ? 'Square' : S.shape === 'bar' ? 'Bar' : 'Circle'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm`;   /* a small plate: the short label */
     halo(c, l1, p.x + 4, p.y + 14 * ps, 'left', T.muted, ps);
     if (D.near != null) {
       const r = D.res[D.nearRes], off = r ? Math.abs(S.f - r.f) / (r.f / S.Q) : Infinity;
@@ -1639,7 +1697,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (drag.id === 'drive') {
       let u = (x - G.plate.cx) / G.plate.R, v = (G.plate.cy - y) / G.plate.R;
       const um = drum() ? 0.9 : 1;   /* a drumhead's pad stays inside the hoop */
-      if (S.shape === 'square') { u = clamp(u, -um, um); v = clamp(v, -um, um); } else { const r = Math.hypot(u, v); if (r > um) { u *= um / r; v *= um / r; } }
+      if (S.shape === 'square') { u = clamp(u, -um, um); v = clamp(v, -um, um); } else if (S.shape === 'bar') { u = clamp(u, -1, 1); v = 0; } else { const r = Math.hypot(u, v); if (r > um) { u *= um / r; v *= um / r; } }
       if (Math.hypot(u, v) < 0.04) { u = 0; v = 0; }
       S.du = Math.round(u * 200) / 200; S.dv = Math.round(v * 200) / 200;
       S.drive = S.du === 0 && S.dv === 0 ? 'center' : 'custom';
@@ -1768,7 +1826,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function glBuild() {
     if (!G3.ok) return;
     const pos = [], idx = [];
-    if (S.shape === 'square') {
+    if (S.shape === 'bar') {
+      const NV = 6; for (let b = 0; b <= NV; b++) for (let a = 0; a < GN; a++) pos.push(gridU(a), -BW + 2 * BW * b / NV, 0);
+      for (let b = 0; b < NV; b++) for (let a = 0; a < GN - 1; a++) { const k = b * GN + a; idx.push(k, k + 1, k + GN + 1, k, k + GN + 1, k + GN); }
+    } else if (S.shape === 'square') {
       for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) pos.push(gridU(a), gridU(b), 0);
       for (let b = 0; b < GN - 1; b++) for (let a = 0; a < GN - 1; a++) { const k = b * GN + a; idx.push(k, k + 1, k + GN + 1, k, k + GN + 1, k + GN); }
     } else {
@@ -2005,7 +2066,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let mode = '';
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k];
-      if (Math.abs(S.f - r.f) <= r.f / S.Q) mode = drum() ? `${md.label}, f/f1 = ${(md.lam2 / D.lowest.lam2).toFixed(3)}` : D.ms.shape === 'square' ? `${md.label}, ${symText(md)}` : `${md.label}: ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}`;
+      if (Math.abs(S.f - r.f) <= r.f / S.Q) mode = drum() ? `${md.label}, f/f1 = ${(md.lam2 / D.lowest.lam2).toFixed(3)}` : D.ms.shape === 'square' ? `${md.label}, ${symText(md)}` : D.ms.shape === 'bar' ? `${md.label}: ${md.idx + 1} nodes, f/f1 = ${(md.lam2 / D.lowest.lam2).toFixed(3)}` : `${md.label}: ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}`;
     }
     if (drum()) return { shape: S.shape, material: 'Mylar drumhead', h_mm: +(MYLAR.h * 1000).toFixed(2), T_N_per_m: S.T, drive: S.drive, driver: S.drive === 'speaker' ? 'loudspeaker' : 'pad',
       Q: Math.round(S.Q), f_Hz: +S.f.toFixed(S.f < 100 ? 3 : 2), mode, peak_g: +D.gmax.toFixed(2) };

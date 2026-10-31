@@ -24,6 +24,7 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 5. **Sweep and listen.** Ask Q4 first. Turn on sound. At 60 Hz the whole plate rides with the driver and all the sand jumps; the tone swells at each peak and the sand snaps into a pattern, then breaks up again between peaks. Stop near a peak and use **Fine tune** and **Modal Q (damping)** to show the width f/Q.
 6. **Square: classic star** (if time allows). Try **Where |a| > g** and **3D** (bending exaggerated and slowed). Change **Metal** and **Thickness h** for Q3.
 7. **Drumhead: rings** and **Drumhead overtones.** Switch to a drumhead: the circular modes sit at Bessel zeros, so f/f₁ = 1, 1.593, 2.136, 2.295, … and the (0, 3) mode at 3.598 f₁ is no harmonic. That is why a drum has no clear pitch. Raise the tension and every mode rises as √T.
+8. **Bar: bending overtones**, then **Bar on the driver.** A steel bar 24 × 3 cm, 1 mm thick, free at both ends and tapped at one end. Ask Q8. The lowest mode is at 90.1 Hz with two nodes 5.4 cm in from the ends; **Next resonance** gives 248.3, 486.8 and 804.7 Hz, 2.756, 5.404 and 8.933 times the lowest. On the driver at its middle only the symmetric modes answer.
 
 ## Questions
 
@@ -41,6 +42,8 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 
 **Q7.** The maker of a common square teaching plate lists its "best frequencies" starting near 345 Hz, and they do not match the demo's resonances. Give two physical reasons why a real plate on a real driver differs from this model, and one thing you could measure to tell which matters most.
 
+**Q8.** In **Bar: bending overtones** the lowest mode of the free bar is at 90.1 Hz. If the bar were like a string, where would the next two resonances be? Find them with **Next resonance** and compare. Where do the sand lines of the lowest mode sit, and why does a xylophone bar rest on cords at those points? Predict what switching to aluminum does to the lowest frequency.
+
 ## Common misconceptions
 
 - **"The sand collects where the plate vibrates most."** It is thrown away from there. Only very fine powder, like lycopodium, collects at the antinodes, carried by air currents over the plate (Faraday, 1831); the demo does not model air.
@@ -52,3 +55,4 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 - Thin plate (Kirchhoff–Love) theory, D∇⁴w = −ρh ∂²w/∂t², D = Eh³/(12(1 − ν²)), all edges free. Modes: f = λ²/(2πℓ²) √(D/ρh) (ℓ the side or radius); circle exact (Bessel J_n, I_n), square by Rayleigh–Ritz, converged to one part in a million.
 - **Wave driver**: a voice coil bolted at the post pushing its own 50 g moving mass and the plate, x = F_c/(1/G − m ω²), with G the plate's point receptance at the post; stroke limit 3.5 mm, full drive 17 N (estimates from PASCO's stated millimeter amplitudes at 50 Hz). **Point force**: an ideal force on a free plate. Every mode has the same Q.
 - Sand: where |a| > g a grain is launched at v = (g/ω)√(Γ² − 1), flies 2v/g and hops randomly with a drift toward smaller |a|; where |a| < g it stays put. Plates are 24 cm across, about 1 mm thick; steel E = 200 GPa, ρ = 7850 kg/m³, ν = 0.30.
+- **Bar** (Fletcher and Rossing, The Physics of Musical Instruments, ch. 2): an Euler–Bernoulli beam free at both ends. Modes cosh βx + cos βx − σ(sinh βx + sin βx) with cos βL cosh βL = 1, f = (βL)² (h/L²)√(E/12ρ)/2π: βL = 4.7300, 7.8532, 10.9956, 14.1372, so f₂/f₁ = 2.756, f₃/f₁ = 5.404. The same modal sum, sand and drive as the plates. Left out: shear and rotary inertia, twisting, bending across the width.

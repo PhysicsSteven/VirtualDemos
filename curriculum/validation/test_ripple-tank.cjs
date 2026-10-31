@@ -2,7 +2,7 @@
 // Ripple Tank: the water's dispersion relation, the grid's corrected wavelengths, stability, beaches, walls, double slit and Snell's law.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ripple-tank', 'PH,DX,NX,NY,BEACH,AMP,CFL,kOf,lambdaOf,speedOf,shallowSpeed,lapSym,coefFor,schemeK,makeTank,prepare,step,clearWater,sampleAt,ampAt,paint,segTest,slitTest,fringeAngles,slitMinima');
+const c = core('ripple-tank', 'PH,DX,NX,NY,BEACH,AMP,CFL,kOf,lambdaOf,speedOf,shallowSpeed,lapSym,coefFor,schemeK,makeTank,prepare,step,clearWater,sampleAt,ampAt,paint,segTest,slitTest,fringeAngles,slitMinima,orbitAt,particleAt,driftPer,floorLayer');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -136,6 +136,34 @@ group('single slit in the demo\'s own tank: the first quiet lines 150 mm from th
     const want = firstMin(kirch), got = firstMin(sm);
     assert(Math.abs(got - want) < 0.6, `a = ${a * 1000} mm: ${got}° against the Kirchhoff ${want}°`);
   }
+});
+
+group('side view: the water under a plane wave. Surface particles ride the surface, floor particles only slide, b/a = tanh k(d − s), circles A e^(−ks) in deep water, flat equal ellipses in shallow, no squeezing of the water', () => {
+  const A = c.AMP;
+  for (const [f, d] of [[6, 3e-3], [6, 12e-3], [10, 6e-3], [16, 12e-3], [20, 3e-3]]) {
+    const k = c.kOf(f, d), w = 2 * Math.PI * f;
+    /* the surface particle's height is the surface's height η = A cos(kx − ωt) */
+    for (const [x, t] of [[0.003, 0.01], [0.017, 0.123]]) near(c.particleAt(f, d, x, 0, t, A).z, A * Math.cos(k * x - w * t), 1e-12, 'surface');
+    const o0 = c.orbitAt(f, d, 0, A), oF = c.orbitAt(f, d, d, A);
+    near(o0.b, A, 1e-12, 'b at the surface'); assert(Math.abs(oF.b) < 1e-15, 'b at the floor'); near(oF.a, A / Math.sinh(k * d), 1e-12, 'a at the floor');
+    for (const s of [0, d / 3, d / 2, d]) { const o = c.orbitAt(f, d, s, A); if (s < d) near(o.b / o.a, Math.tanh(k * (d - s)), 1e-12, 'b/a');
+      /* the path is that ellipse: ((x − x₀)/a)² + ((z + s)/b)² = 1 at any time */
+      if (s < d) for (const t of [0, 0.011, 0.07]) { const q = c.particleAt(f, d, 0.01, s, t, A); near(((q.x - 0.01) / o.a) ** 2 + ((q.z + s) / o.b) ** 2, 1, 1e-9, 'ellipse'); } }
+    /* no squeezing: ∂ξ/∂x + ∂ζ/∂z = 0 (the water is incompressible), by central differences */
+    const h = 1e-6, x = 0.008, s = d / 2, t = 0.02, xi = (x, s) => c.particleAt(f, d, x, s, t, A).x - x, ze = (x, s) => c.particleAt(f, d, x, s, t, A).z + s;
+    const div = (xi(x + h, s) - xi(x - h, s)) / (2 * h) - (ze(x, s + h) - ze(x, s - h)) / (2 * h);
+    assert(Math.abs(div) < 1e-7 * k * A + 1e-12, `divergence ${div}`);
+    /* under a crest the water moves forward (the way the wave goes) */
+    const t0 = 0, xc = 0, dt = 1e-5; assert(c.particleAt(f, d, xc, 0, t0 + dt, A).x > c.particleAt(f, d, xc, 0, t0 - dt, A).x, 'forward under a crest');
+  }
+  /* deep water: circles of radius A e^(−ks), to within the floor's share, about 2e^(−2k(d − s)) (16 Hz, 12 mm: kd above 4) */
+  { const f = 16, d = 12e-3, k = c.kOf(f, d); assert(k * d > 4);
+    for (const s of [0, 2e-3, 5e-3]) { const o = c.orbitAt(f, d, s, A); const tol = 2.05 * Math.exp(-2 * k * (d - s)); /* the floor's share, about 2e^(−2k(d − s)) */ near(o.a, A * Math.exp(-k * s), tol, 'deep a'); near(o.b, A * Math.exp(-k * s), tol, 'deep b'); } }
+  /* shallow water: a ≈ A/(kd) at every depth, to within (kd)²/2; b falls in a straight line */
+  { const f = 6, d = 1e-3, k = c.kOf(f, d), kd = k * d; assert(kd < 0.4, `kd ${kd}`);
+    for (const s of [0, d / 2, d]) { const o = c.orbitAt(f, d, s, A); near(o.a, A / kd, kd * kd / 2 + 1e-3, 'shallow a'); near(o.b, A * (1 - s / d), kd * kd / 2 + 1e-3, 'shallow b'); } }
+  /* Stokes drift: deep water limit 2πkA² per period at the surface; the floor layer √(2ν/ω) */
+  { const f = 20, d = 12e-3, k = c.kOf(f, d); near(c.driftPer(f, d, 0, A), 2 * Math.PI * k * A * A, 2e-3, 'deep Stokes drift'); near(c.floorLayer(f), Math.sqrt(2 * 1.0016e-3 / 998.2 / (40 * Math.PI)), 1e-12, 'floor layer'); }
 });
 
 console.log(`${n} groups passed`);

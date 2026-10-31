@@ -70,7 +70,7 @@
         <button type="button" class="btn" id="restart" title="Still water: start the waves again from the beginning">Still the water</button>
         <label class="lbl" for="selSpeed" style="font-size:0.8rem;color:var(--muted)">Time</label>
         <select id="selSpeed"><option value="0.125">slow motion 1/8</option><option value="0.25" selected>slow motion 1/4</option><option value="0.5">slow motion 1/2</option><option value="1">real time</option></select>
-        <div class="seg" role="group" aria-label="What the picture shows" id="lookSeg"><button type="button" data-look="surface" aria-pressed="true">Surface</button><button type="button" data-look="amp" aria-pressed="false" title="The amplitude of the waves at each place, averaged over the last two periods: quiet (nodal) lines show dark">Amplitude</button></div>
+        <div class="seg" role="group" aria-label="What the picture shows" id="lookSeg"><button type="button" data-look="surface" aria-pressed="true">Surface</button><button type="button" data-look="amp" aria-pressed="false" title="The amplitude of the waves at each place, averaged over the last two periods: quiet (nodal) lines show dark">Amplitude</button><button type="button" data-look="side" aria-pressed="false" title="A slice through the water from the side under a plane wave: how the water itself moves, from the surface down to the floor">Side view</button></div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="clock mono" id="clock" aria-live="off"></span>
       </div>
@@ -91,11 +91,11 @@
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="The wave maker, the water and the shapes in the tank">
         <span class="card-title">Wave maker and water</span>
-        <div class="pick"><label for="selSrc">Wave maker</label><select id="selSrc">
+        <div class="pick" id="srcPick"><label for="selSrc">Wave maker</label><select id="selSrc">
           <option value="bar">Straight bar (plane waves)</option><option value="one">One dipper (circular waves)</option><option value="two">Two dippers</option></select></div>
         <div><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="6" max="20" step="0.5"></div>
         <div><div class="slider-head"><label for="sDeep">Water depth</label><output id="oDeep" class="mono" for="sDeep"></output></div><input type="range" id="sDeep" min="3" max="12" step="0.5"></div>
-        <div><div class="slider-head"><label for="sPlate">Depth over a shallow plate</label><output id="oPlate" class="mono" for="sPlate"></output></div><input type="range" id="sPlate" min="1" max="6" step="0.5"></div>
+        <div id="plateBox"><div class="slider-head"><label for="sPlate">Depth over a shallow plate</label><output id="oPlate" class="mono" for="sPlate"></output></div><input type="range" id="sPlate" min="1" max="6" step="0.5"></div>
         <div id="twoBox" hidden>
           <div><div class="slider-head"><label for="sSep">Dipper spacing d</label><output id="oSep" class="mono" for="sSep"></output></div><input type="range" id="sSep" min="10" max="100" step="1"></div>
           <div><div class="slider-head"><label for="sPh">Dipper 2 ahead by</label><output id="oPh" class="mono" for="sPh"></output></div><input type="range" id="sPh" min="0" max="360" step="15"></div>
@@ -105,7 +105,11 @@
           <div id="dBox"><div class="slider-head"><label for="sD">Slit spacing d</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="20" max="90" step="1"></div>
         </div>
         <div id="edgeBox" hidden><div class="slider-head"><label for="sEdge">Plate edge turned by</label><output id="oEdge" class="mono" for="sEdge"></output></div><input type="range" id="sEdge" min="0" max="60" step="5"></div>
-        <div class="pick"><label for="selEdges">Sides of the tank</label><select id="selEdges"><option value="beach">Beaches (absorb the waves)</option><option value="wall">Walls (reflect the waves)</option></select></div>
+        <div class="pick" id="edgesPick"><label for="selEdges">Sides of the tank</label><select id="selEdges"><option value="beach">Beaches (absorb the waves)</option><option value="wall">Walls (reflect the waves)</option></select></div>
+        <div id="sideBox" hidden>
+          <div><div class="slider-head"><label for="sTrack">Followed particle: depth below the surface</label><output id="oTrack" class="mono" for="sTrack"></output></div><input type="range" id="sTrack" min="0" max="10" step="0.25"></div>
+          <div class="pick"><label for="selMag">Motion of the water drawn</label><select id="selMag"><option value="1">true size</option><option value="2">2 times larger</option><option value="4">4 times larger</option></select></div>
+        </div>
         <label class="check" id="predBox"><input type="checkbox" id="chkPred"><span>Draw the predicted lines</span></label>
       </div>
       <div class="plotbox">
@@ -130,6 +134,8 @@
           <button type="button" data-p="mirror" aria-pressed="false">Focusing mirror</button>
           <button type="button" data-p="lens" aria-pressed="false">Focusing lens</button>
           <button type="button" data-p="draw" aria-pressed="false">Draw your own</button>
+          <button type="button" data-p="sideDeep" aria-pressed="false">Under a wave: deep water</button>
+          <button type="button" data-p="sideShallow" aria-pressed="false">Under a wave: shallow water</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -165,6 +171,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="formula">ω² = (g k + σk³/ρ) tanh(k d), λ = 2π/k, c = f λ</p>
           <p class="formula">two sources d apart: bright lines at d sin θ = m λ, quiet (nodal) lines at d sin θ = (m + ½) λ</p>
           <p class="formula">one slit of width a: quiet lines at a sin θ = m λ (m = 1, 2, …)</p>
+          <p class="formula">side view, a depth s down: half width a = A cosh k(d − s)/sinh kd, half height b = A sinh k(d − s)/sinh kd, b/a = tanh k(d − s)</p>
           <p class="hint" id="about"></p></details>
         </div></details>
       </section>
@@ -345,6 +352,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* single slit of width a: minima at a sin θ = mλ */
   function slitMinima(lam, a) { const r = []; for (let m = 1; m * lam < a; m++) r.push(Math.asin(m * lam / a) * 180 / Math.PI); return r; }
+  /* Side view: the water under a plane wave whose surface is η = A cos(kx − ωt), on water of depth d. Linear theory, from the same
+     velocity potential φ ∝ cosh k(z + d) sin(kx − ωt) that gives the dispersion relation (Lamb §228); surface tension enters only through
+     ω(k), not through the shape of the motion below. A particle whose rest place is x, a depth s below the surface, moves by
+        ξ = −A cosh k(d − s)/sinh kd · sin(kx − ωt),   ζ = A sinh k(d − s)/sinh kd · cos(kx − ωt),
+     an ellipse with horizontal half width a = A cosh k(d − s)/sinh kd and vertical half height b = A sinh k(d − s)/sinh kd, so
+     b/a = tanh k(d − s): 1 for a circle, 0 at the floor, where the water only slides back and forth. Deep water (kd ≫ 1): circles of
+     radius A e^(−ks). Shallow water (kd ≪ 1): flat ellipses, a ≈ A/(kd) the same at every depth, b falling in a straight line to 0.
+     Left out of the picture: the slow drift forward that comes with a wave of finite height (Stokes drift, second order in kA),
+        ū(s) = ω k A² cosh 2k(d − s)/(2 sinh² kd),   driftPer: ū times one period;
+     and the thin layer at the floor, about √(2ν/ω) thick (0.13 to 0.23 mm here), where viscosity brings the sliding to rest. */
+  function orbitAt(f, d, s, A) { const k = kOf(f, d), sh = Math.sinh(k * d); return { k, a: A * Math.cosh(k * (d - s)) / sh, b: A * Math.sinh(k * (d - s)) / sh }; }
+  /* where the particle with rest place (x, −s) is at time t: { x, z } with z up from the still surface */
+  function particleAt(f, d, x, s, t, A) { const o = orbitAt(f, d, s, A), th = o.k * x - 2 * Math.PI * f * t; return { x: x - o.a * Math.sin(th), z: -s + o.b * Math.cos(th) }; }
+  function driftPer(f, d, s, A) { const k = kOf(f, d), w = 2 * Math.PI * f; return w * k * A * A * Math.cosh(2 * k * (d - s)) / (2 * Math.sinh(k * d) ** 2) / f; }
+  const floorLayer = (f) => Math.sqrt(2 * PH.nu / (2 * Math.PI * f));
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -376,9 +398,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'A plate shaped like a convex lens (two arcs of radius 150 mm, 40 mm thick in the middle) under the water. The waves go slower over it, most where it is widest, so the wavefronts are held back in the middle and curve inward: they converge, as light does through a glass lens.' },
     draw: { src: 'bar', f: 12, deep: 10, plate: 1.5, geo: null, A: [120, 150], B: [220, 150], tool: 'wall',
       hint: 'An empty tank with the bar. Draw walls and shallow plates with the tools at the bottom of the picture; Erase removes them. Try a slit of your own, a corner reflector, a prism of shallow water, or a harbor wall.' },
+    sideDeep: { src: 'bar', f: 16, deep: 12, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150], look: 'side', track: 0, speed: 0.125,
+      hint: 'A slice through the tank from the side, under the bar\'s plane waves: each dot is a bit of water. 16 Hz waves on water 12 mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface\'s): half a wavelength down the water is almost still. The wave moves on; the water does not.' },
+    sideShallow: { src: 'bar', f: 6, deep: 3, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150], look: 'side', track: 0, speed: 0.25,
+      hint: '6 Hz waves on water only 3 mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.' },
   };
   const S = { preset: 'plane', src: 'bar', f: 10, deep: 10, plate: 1.5, sep: 40, ph: 0, a: 8, d: 45, edge: 30, edges: 'beach', geo: null, strokes: [], tool: 'move', brush: 5,
-    look: 'surface', speed: 0.25, run: false, blind: false, pred: false, mid: { x: 200, y: 150 }, A: { x: 120, y: 150 }, B: { x: 214.4, y: 150 }, sel: 'B', since: 0, hasPlate: false, rate: 1 };
+    look: 'surface', speed: 0.25, run: false, blind: false, pred: false, mid: { x: 200, y: 150 }, A: { x: 120, y: 150 }, B: { x: 214.4, y: 150 }, sel: 'B', since: 0, hasPlate: false, rate: 1, track: 0, mag: 2, tS: 0 };
   const T = makeTank();
   const can = $('can'), ctx = can.getContext('2d'), pl = $('plot'), pctx = pl.getContext('2d');
   const oc = document.createElement('canvas'); oc.width = NX; oc.height = NY; const octx = oc.getContext('2d'), img = octx.createImageData(NX, NY), px32 = new Uint32Array(img.data.buffer);
@@ -649,6 +675,85 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillText(`water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = ${f1(ln.L)} mm`, Lm, 12 * p);
   }
 
+  /* ---------- the side view: a slice of the tank under the bar's plane waves, drawn to scale (the motion of the water MAG times larger) ---------- */
+  const SIDE_ROWS = 5;
+  function sideGeom() {
+    const p = proj(), wide = getComputedStyle($('setupCard')).position === 'absolute', card = wide ? $('setupCard').offsetWidth + 30 : 0;
+    const lw = lam(S.deep), d = S.deep, o0 = orbitAt(S.f, d * MM, 0, AMP), up = (o0.b / MM) * S.mag + 2.5;
+    const aw = Math.max(120, W - card - 32), ah = Math.max(80, H - 70 * p), s = Math.min(aw / lw, ah / (d + up + 1.5));
+    return { s, x0: 16, y0: 22 * p + (ah - (d + up) * s) / 2 + up * s, span: aw / s, lw, d, aw };
+  }
+  function drawSide() {
+    const p = proj(), c = ctx, G = sideGeom(), s = G.s, mag = S.mag, d = G.d, A = AMP / MM, k = 2 * Math.PI / G.lw, t = S.tS, w = 2 * Math.PI * S.f;
+    const Xs = (x) => G.x0 + x * s, Ys = (z) => G.y0 - z * s;   /* x along the tank (mm), z up from the still surface (mm) */
+    c.fillStyle = K.canvas; c.fillRect(0, 0, W, H);
+    const bw = G.span, eta = (x) => A * mag * Math.cos(k * x - w * t);
+    /* the floor, the water under the surface, then the surface line */
+    c.fillStyle = `rgb(${K.plate.join(',')})`; c.globalAlpha = 0.55; c.fillRect(Xs(0), Ys(-d), bw * s, 7 * p); c.globalAlpha = 1;
+    c.beginPath(); c.moveTo(Xs(0), Ys(-d)); for (let i = 0; i <= 240; i++) { const x = bw * i / 240; c.lineTo(Xs(x), Ys(eta(x))); } c.lineTo(Xs(bw), Ys(-d)); c.closePath();
+    const gr = c.createLinearGradient(0, Ys(0), 0, Ys(-d)); gr.addColorStop(0, `rgb(${K.base.join(',')})`); gr.addColorStop(1, `rgb(${K.trough.join(',')})`); c.fillStyle = gr; c.globalAlpha = 0.55; c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); for (let i = 0; i <= 240; i++) { const x = bw * i / 240, y = Ys(eta(x)); i ? c.lineTo(Xs(x), y) : c.moveTo(Xs(x), y); } c.stroke();
+    c.strokeStyle = K.muted; c.setLineDash([3, 5]); c.lineWidth = 1; c.beginPath(); c.moveTo(Xs(0), Ys(0)); c.lineTo(Xs(bw), Ys(0)); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = K.ink; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(Xs(0), Ys(-d)); c.lineTo(Xs(bw), Ys(-d)); c.stroke();
+    /* the bits of water: columns λ/8 apart, SIDE_ROWS depths from the surface to the floor, each with its orbit; the middle column dyed */
+    const nc = Math.floor(bw / (G.lw / 8)), mid = Math.round(nc / 2), depths = []; for (let r = 0; r < SIDE_ROWS; r++) depths.push(d * r / (SIDE_ROWS - 1));
+    const dot = Math.max(2, 2.6 * p), dye = [];
+    for (const sd of depths) {
+      const o = orbitAt(S.f, d * MM, sd * MM, AMP), ra = o.a / MM * mag * s, rb = o.b / MM * mag * s;
+      for (let i = 0; i <= nc; i++) { const x = (i + 0.5) * G.lw / 8; if (x > bw) break;
+        c.strokeStyle = K.muted; c.globalAlpha = 0.45; c.lineWidth = 1; c.beginPath(); c.ellipse(Xs(x), Ys(-sd), Math.max(0.5, ra), Math.max(0.5, rb), 0, 0, 7); c.stroke(); c.globalAlpha = 1;
+        const q = particleAt(S.f, d * MM, x * MM, sd * MM, t, AMP), px = Xs(x + (q.x / MM - x) * mag), py = Ys(-sd + (q.z / MM + sd) * mag);
+        if (i === mid) dye.push([px, py]);
+        c.fillStyle = i === mid ? K.src : K.ink; c.beginPath(); c.arc(px, py, dot, 0, 7); c.fill(); }
+    }
+    c.strokeStyle = K.src; c.lineWidth = 1.5 * p; c.beginPath(); dye.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.stroke();
+    /* the followed particle, in the dyed column at depth S.track: its orbit drawn bold */
+    { const x = (mid + 0.5) * G.lw / 8, o = orbitAt(S.f, d * MM, S.track * MM, AMP), q = particleAt(S.f, d * MM, x * MM, S.track * MM, t, AMP);
+      c.strokeStyle = K.meas; c.lineWidth = 2 * p; c.beginPath(); c.ellipse(Xs(x), Ys(-S.track), Math.max(0.5, o.a / MM * mag * s), Math.max(0.5, o.b / MM * mag * s), 0, 0, 7); c.stroke();
+      c.fillStyle = K.meas; c.strokeStyle = K.surface; c.lineWidth = 1.5; c.beginPath(); c.arc(Xs(x + (q.x / MM - x) * mag), Ys(-S.track + (q.z / MM + S.track) * mag), dot * 1.6, 0, 7); c.fill(); c.stroke(); }
+    /* labels and a scale bar */
+    label(c, 'wave travels →', Xs(0) + 4, Math.max(12 * p, Ys(A * mag) - 16 * p), { col: K.muted, w: 400 });
+    label(c, `floor, ${f1(d)} mm down`, Xs(0) + 4, Ys(-d) + 16 * p, { col: K.muted, w: 400 });
+    const sbv = [1, 2, 5, 10, 20].find((v) => v * s >= 50) || 20, sx = Xs(0), sy = Math.min(H - 12 * p, Ys(-d) + 34 * p);
+    c.strokeStyle = K.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(sx, sy); c.lineTo(sx + sbv * s, sy); c.moveTo(sx, sy - 4); c.lineTo(sx, sy + 4); c.moveTo(sx + sbv * s, sy - 4); c.lineTo(sx + sbv * s, sy + 4); c.stroke();
+    c.fillStyle = K.muted; c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    const cap = [`${sbv} mm · to scale`, mag > 1 ? `the motion of the water drawn ${mag} times larger` : '', `wave height 2A = ${f1(2 * A)} mm`].filter(Boolean);
+    if (c.measureText(cap.join(' · ')).width + sbv * s + 30 < W) c.fillText(cap.join(' · '), sx + sbv * s + 8, sy);
+    else cap.forEach((txt, i) => c.fillText(txt, i ? sx : sx + sbv * s + 8, sy + i * 14 * p));
+  }
+  /* the graph in the side view: the orbit's half width a and half height b against depth, with the deep water circle A e^(−ks) */
+  function drawSidePlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH2);
+    const d = S.deep, A = AMP / MM, o0 = orbitAt(S.f, d * MM, 0, AMP), k = o0.k * MM, top = Math.max(A, o0.a / MM) * 1.08;
+    const Lm = 52 * p, Rm = 14 * p, Tm = 26 * p, Bm = 32 * p, pw = PW - Lm - Rm, ph = PH2 - Tm - Bm, Xp = (v) => Lm + v / top * pw, Yp = (sd) => Tm + sd / d * ph;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
+    const sx = nice(top / 5), sy = nice(d / 3);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = 0; v <= top + 1e-9; v += sx) { c.beginPath(); c.moveTo(Xp(v), Tm); c.lineTo(Xp(v), Tm + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)), Xp(v), Tm + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = 0; v <= d + 1e-9; v += sy) { c.beginPath(); c.moveTo(Lm, Yp(v)); c.lineTo(Lm + pw, Yp(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)), Lm - 5, Yp(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('half width or half height of the path (mm)', Lm + pw / 2, PH2 - 1);
+    c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('depth s (mm)', 0, 0); c.restore();
+    const curve = (fn, col, dash, lw) => { c.strokeStyle = col; c.setLineDash(dash); c.lineWidth = lw * p; c.beginPath(); for (let i = 0; i <= 120; i++) { const sd = d * i / 120, x = Xp(fn(sd)), y = Yp(sd); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); c.setLineDash([]); };
+    curve((sd) => A * Math.exp(-k * sd), K.muted, [2, 4], 1.4);
+    curve((sd) => orbitAt(S.f, d * MM, sd * MM, AMP).a / MM, K.accent, [], 2);
+    curve((sd) => orbitAt(S.f, d * MM, sd * MM, AMP).b / MM, K.accent, [6, 4], 2);
+    const o = orbitAt(S.f, d * MM, S.track * MM, AMP); c.fillStyle = K.meas; for (const v of [o.a, o.b]) { c.beginPath(); c.arc(Xp(v / MM), Yp(S.track), 4 * p, 0, 7); c.fill(); }
+    c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = K.muted;
+    c.fillText('half width a (solid), half height b (dashed), deep water circle A e^(−ks) (dotted) · dots: the followed particle', Lm, 12 * p);
+  }
+  function sideReadouts() {
+    const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind;
+    const d = S.deep, lw = lam(d), o0 = orbitAt(S.f, d * MM, 0, AMP), kd = o0.k * d * MM, oF = orbitAt(S.f, d * MM, d * MM, AMP), o = orbitAt(S.f, d * MM, S.track * MM, AMP);
+    const kind = d > lw / 2 ? 'deep water (d > λ/2)' : d < lw / 20 ? 'shallow water (d < λ/20)' : 'in between (λ/20 < d < λ/2)';
+    const mm = (v) => `${(v / MM).toFixed(3)} mm`;
+    $('out').innerHTML = dd('Frequency f', `${f1(S.f)} Hz`) + dd('Water depth d', `${f1(d)} mm`) + dd('Wavelength λ', B ? hide : `${f1(lw, 2)} mm`) + dd('kd = 2πd/λ', B ? hide : kd.toFixed(3))
+      + dd('This water is', B ? hide : kind, 'wide') + dd('Wave height A at the surface', mm(AMP))
+      + dd('At the surface: half width a, half height b', `${mm(o0.a)}, ${mm(o0.b)}`, 'wide') + dd('At the floor: half width a (b = 0)', mm(oF.a), 'wide')
+      + dd(`Followed particle, ${f1(S.track, 2)} mm down: a, b`, `${(o.a / MM).toFixed(4)} mm, ${(o.b / MM).toFixed(4)} mm`, 'wide') + dd('its b/a = tanh k(d − s)', (o.b / o.a).toFixed(4))
+      + dd('Fastest speed of that particle, ωa', `${(2 * Math.PI * S.f * o.a * 1000).toFixed(1)} mm/s`) + dd('Wave speed c = fλ', B ? hide : `${(S.f * lw).toFixed(0)} mm/s`)
+      + dd('Left out: drift forward per period at the surface (Stokes)', `${(driftPer(S.f, d * MM, 0, AMP) / MM).toFixed(3)} mm`, 'wide') + dd('Time t', `${S.tS.toFixed(3)} s`);
+  }
+
   /* ---------- readouts ---------- */
   function readouts() {
     const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind;
@@ -669,6 +774,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
   }
   function clock() { const want = S.speed, sl = want === 1 ? 'real time' : `slow motion 1/${Math.round(1 / want)}`;
+    if (S.look === 'side') { $('clock').textContent = `t = ${S.tS.toFixed(3)} s · ${sl}`; return; }
     $('clock').textContent = `t = ${T.t.toFixed(3)} s` + (S.run && S.rate < want * 0.85 ? ` · this device keeps up at ${S.rate >= 0.999 ? 'real time' : '1/' + (1 / S.rate).toFixed(1)}` : ` · ${sl}`); }
 
   /* ---------- controls ---------- */
@@ -680,6 +786,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('twoBox').hidden = S.src !== 'two'; const sl = S.geo && S.geo.kind === 'slits'; $('slitBox').hidden = !sl; $('dBox').hidden = !(sl && S.geo.n === 2);
     $('edgeBox').hidden = !(S.geo && S.geo.kind === 'edge'); $('chkPred').checked = S.pred;
     $('predBox').hidden = !((S.src === 'two' && !S.geo) || sl || (S.geo && S.geo.kind === 'mirror'));
+    /* the side view needs only the frequency and the depth: the rest of the card is about the tank seen from above */
+    const side = S.look === 'side'; S.track = Math.min(S.track, S.deep); $('sTrack').max = String(S.deep); set('Track', S.track, `${f1(S.track, 2)} mm`); $('selMag').value = String(S.mag);
+    $('sideBox').hidden = !side; $('drawbar').hidden = side;
+    if (side) for (const id of ['srcPick', 'plateBox', 'twoBox', 'slitBox', 'edgeBox', 'edgesPick', 'predBox']) $(id).hidden = true; else { $('srcPick').hidden = false; $('plateBox').hidden = false; $('edgesPick').hidden = false; }
+    can.setAttribute('aria-label', side ? 'A slice through the tank from the side under plane waves: the surface, the floor, and dots for bits of water, each going round its own path; one column of dots is dyed and one particle is followed.' : CAN_LABEL);
+    window.vdShowCols = side ? [['f_Hz', 'f (Hz)'], ['depth_mm', 'd (mm)'], ['s_mm', 's (mm)'], ['a_mm', 'a (mm)'], ['b_mm', 'b (mm)']] : SHOW_TANK;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#lookSeg button')) b.setAttribute('aria-pressed', String(b.dataset.look === S.look));
     for (const b of document.querySelectorAll('#toolSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tool === S.tool));
@@ -693,6 +805,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (c.a != null) S.a = c.a; if (c.d != null) S.d = c.d; if (c.sep != null) S.sep = c.sep; if (c.ph != null) S.ph = c.ph; if (c.edge != null) S.edge = c.edge;
     if (c.mid) S.mid = { x: c.mid[0], y: c.mid[1] };
     S.A = { x: c.A[0], y: c.A[1] }; S.B = { x: c.B[0], y: c.B[1] }; S.sel = 'B';
+    if (c.look) { S.look = c.look; S.track = c.track || 0; S.tS = 0; if (c.speed) S.speed = c.speed; if (view3 && view3.is3d()) view3.set('flat'); }
+    else if (S.look === 'side') S.look = 'surface';
     $('presetHint').textContent = c.hint; rebuild(true); sync(); setRun(true); redraw();
   }
   const custom = () => { if (S.preset !== 'draw') S.preset = 'custom'; };
@@ -709,10 +823,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('clearDraw').addEventListener('click', () => { S.strokes = []; S.geo = null; custom(); rebuild(true); sync(); redraw(); });
   /* R stills the water; in Draw your own it clears the tank too (Steve, 2026-10-25), so R starts the drawing over */
   if (window.VD && VD.keyTarget) { const kt = VD.keyTarget; VD.keyTarget = (k) => (k === 'r' && S.preset === 'draw' ? $('clearDraw') : kt(k)); }
-  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-look]'); if (b) { S.look = b.dataset.look; sync(); redraw(); } });
+  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-look]'); if (!b) return; S.look = b.dataset.look;
+    if (S.look === 'side' && view3 && view3.is3d()) view3.set('flat'); sync(); redraw(); });
+  /* the 3D tank is a view from above: asking for it leaves the side view */
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b && b.dataset.dim === '3d' && S.look === 'side') { S.look = 'surface'; sync(); redraw(); } }, true);
+  num('sTrack', (v) => { S.track = v; }, false);
+  $('selMag').addEventListener('change', (e) => { S.mag = +e.target.value; redraw(); });
   $('toolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-tool]'); if (b) { S.tool = b.dataset.tool; sync(); } });
   $('play').addEventListener('click', () => setRun(!S.run));
-  $('restart').addEventListener('click', () => { clearWater(T); S.since = 0; setRun(S.run); redraw(); });
+  $('restart').addEventListener('click', () => { clearWater(T); S.since = 0; S.tS = 0; setRun(S.run); redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
 
   /* ---------- pointer: drag the line's ends and the dippers, or draw ---------- */
@@ -732,6 +851,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let drag = null;
   const clampT = (p) => ({ x: Math.max(0, Math.min(TW, p.x)), y: Math.max(0, Math.min(TH, p.y)) });
   can.addEventListener('pointerdown', (e) => {
+    if (S.look === 'side') return;
     if (use3() && !wantGrab(e)) return;
     if (!use3() && e.pointerType === 'touch' && S.tool === 'move' && !pick(e)) return;
     const pt = where(e); if (!pt) return;
@@ -740,7 +860,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation();
   });
   can.addEventListener('pointermove', (e) => {
-    if (!drag) { if (S.tool === 'move' && !use3() && e.pointerType !== 'touch') can.style.cursor = pick(e) ? 'grab' : 'default'; return; }
+    if (!drag) { if (S.tool === 'move' && !use3() && e.pointerType !== 'touch') can.style.cursor = S.look !== 'side' && pick(e) ? 'grab' : 'default'; return; }
     const pt = where(e); if (!pt) return; const c = clampT(pt);
     if (drag.k === 'A' || drag.k === 'B') { S[drag.k] = { x: Math.round(c.x * 10) / 10, y: Math.round(c.y * 10) / 10 }; redraw(); }
     else if (drag.k === 'dip') { S.mid = clampT({ x: pt.x + drag.off.x, y: pt.y + drag.off.y }); S.mid.y = Math.max(S.sep / 2 + 4, Math.min(TH - S.sep / 2 - 4, S.mid.y)); custom(); setSources(); sources(T); redraw(); }
@@ -761,8 +881,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SETUP_NAME = { plane: 'Plane waves', dipper: 'One dipper', two: 'Two dippers', single: 'Single slit', double: 'Double slit', reflect: 'Reflection from a wall', image: 'Dipper beside a wall',
     slow: 'Shallow water slows waves', refract: 'Refraction', mirror: 'Focusing mirror', lens: 'Focusing lens', draw: 'Draw your own', custom: 'Changed by hand' };
   window.vdVersion = 'ripple-tank@2026-10-25';
-  window.vdShowCols = [['f_Hz', 'f (Hz)'], ['L_mm', 'L (mm)'], ['angle_deg', 'θ (°)'], ['amp_mm', 'amp. B (mm)']];
-  window.vdReadingRow = () => { const ln = lineInfo(), g = S.geo, dep = ln.dA === ln.dB ? f1(ln.dA) : `${ln.dA == null ? 'wall' : f1(ln.dA)} to ${ln.dB == null ? 'wall' : f1(ln.dB)}`;
+  const CAN_LABEL = can.getAttribute('aria-label');
+  const SHOW_TANK = [['f_Hz', 'f (Hz)'], ['L_mm', 'L (mm)'], ['angle_deg', 'θ (°)'], ['amp_mm', 'amp. B (mm)']];
+  window.vdShowCols = SHOW_TANK;
+  window.vdReadingRow = () => { if (S.look === 'side') { const o = orbitAt(S.f, S.deep * MM, S.track * MM, AMP), lw = lam(S.deep);
+      return { setup: 'Side view', f_Hz: f1(S.f), depth_mm: f1(S.deep), lambda_mm: S.blind ? '' : f1(lw, 2), kd: S.blind ? '' : (o.k * S.deep * MM).toFixed(3), s_mm: f1(S.track, 2),
+        a_mm: (o.a / MM).toFixed(4), b_mm: (o.b / MM).toFixed(4), b_over_a: (o.b / o.a).toFixed(4), t_s: S.tS.toFixed(3) }; } const ln = lineInfo(), g = S.geo, dep = ln.dA === ln.dB ? f1(ln.dA) : `${ln.dA == null ? 'wall' : f1(ln.dA)} to ${ln.dB == null ? 'wall' : f1(ln.dB)}`;
     let setup = SETUP_NAME[S.preset] || S.preset;
     if (g && g.kind === 'slits') setup += g.n === 2 ? `, d = ${S.d} mm, a = ${S.a} mm` : `, a = ${S.a} mm`;
     else if (S.src === 'two') setup += `, d = ${S.sep} mm${S.ph ? `, dipper 2 ahead ${S.ph}°` : ''}`;
@@ -771,15 +895,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('about').textContent = `Model: the small wave equation for the water's surface on a grid of ${DX / MM} mm squares (${NX} × ${NY}), stepped with leapfrog in time and an isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency so the wavelengths are exact to better than 0.1 %. The speed in each place is the phase speed of ripples at that frequency and depth, from ω² = (gk + σk³/ρ) tanh(kd) with g = 9.81 m/s² and water at 20 °C (σ = 72.74 mN/m, ρ = 998.2 kg/m³). Viscous damping 2νk² (ν = 1.003 mm²/s) is included; friction with the tank's floor in very shallow water is left out. Walls reflect the whole wave; the beaches are a ramp of damping that reflects about 1 to 3 % of the amplitude. The bar adds to the water rather than holding it, set so its plane waves are 0.50 mm in amplitude, and waves coming back pass under it into the beach behind it; a dipper holds the water it touches at 0.50 mm. Each place has one speed, which is exact for one frequency, so the demo makes only steady waves, never a pulse. Two things follow from that and are only approximate: the waves carry their energy at the phase speed instead of the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 to 1.5 over the demo's range), and where the depth changes, how much of a wave is reflected and how its height changes are the model's, while the wavelengths and directions are exact. The amplitude view and readouts average over the last two periods, so they settle a few periods after the waves arrive. If this device cannot keep up with the chosen speed, time runs slower, as the clock says.`;
 
   /* ---------- run, size, theme ---------- */
-  const redraw = () => { draw(); drawPlot(); readouts(); clock(); };
-  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); }
+  const redraw = () => { draw(); if (S.look === 'side') { drawSidePlot(); sideReadouts(); } else { drawPlot(); readouts(); } clock(); };
+  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (S.look === 'side') { if (g3) g3.S3.el.hidden = true; drawSide(); return; } if (g3) g3.S3.el.hidden = !use3(); layout(); if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); }
   /* deterministic stepping for tests and key capture: advance sim time by sec */
   function run(sec) { const t1 = T.t + sec; while (T.t < t1 - 1e-12) step(T, 2 / S.f); redraw(); }
   let last = performance.now(), acc = 0, perStep = 0.5, lastOut = 0, rr = { sim: 0, real: 0 };
   function frame(now) {
     const dtr = Math.min(0.1, (now - last) / 1000); last = now;
     if (dirtyShapes) { dirtyShapes = false; rebuild(false); }
-    if (S.run) {
+    if (S.run && S.look === 'side') { S.tS += dtr * S.speed; draw(); if (now - lastOut > 250) { lastOut = now; sideReadouts(); clock(); } }
+    else if (S.run) {
       acc += dtr * S.speed; let n = Math.floor(acc / T.dt); const cap = Math.max(1, Math.floor(14 / perStep));
       if (n > cap) { n = cap; acc = 0; } else acc -= n * T.dt;
       const t0 = performance.now(); for (let i = 0; i < n; i++) step(T, 2 / S.f); if (n) perStep = 0.85 * perStep + 0.15 * (performance.now() - t0) / n;
@@ -816,8 +941,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       rebuild(true); sync(); redraw();
     } });
   VD.howTo({ src: 'media/how-this-works/ripple-tank.mp4', poster: 'media/how-this-works/ripple-tank.jpg' });
-  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => T.t, scale: () => (use3() ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
-  window.__rt = { S, T, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); },
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.look === 'side' ? S.tS : T.t), scale: () => (use3() || S.look === 'side' ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
+  window.__rt = { S, T, orbitAt, particleAt, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); },
     px: (x, y) => { const b = can.getBoundingClientRect(); return [b.left + X(x), b.top + Y(y)]; } };
   requestAnimationFrame(frame);
 })();

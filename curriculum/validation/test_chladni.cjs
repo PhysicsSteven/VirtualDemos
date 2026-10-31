@@ -4,7 +4,7 @@
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
 let count = 0; const test = (name, fn) => { fn(); count++; console.log('PASS', name); };
 function close(a, b, rel = 1e-10, abs = 0) { assert(Number.isFinite(a) && Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`); }
-const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit,symEig,circleRoots,receptanceTail,pointReceptance,voiceCoilDrive,driveResonances,hopLength,MYLAR,DRUM_LMAX,PAD_R,drumScale,besselZeros,drumSquareModes,drumCircleModes,drumSquarePhi,drumCirclePhi,drumMean,drumPadMean');
+const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit,symEig,circleRoots,receptanceTail,pointReceptance,voiceCoilDrive,driveResonances,hopLength,MYLAR,DRUM_LMAX,PAD_R,drumScale,besselZeros,drumSquareModes,drumCircleModes,drumSquarePhi,drumCirclePhi,drumMean,drumPadMean,BAR,barRoots,barShape,barModes,barPhi,plateArea');
 
 test('chladni: Bessel J_n and I_n against reference values', () => {
   // J0(1), J1(1), J0(10), I0(1), I1(1), I0(10) as tabulated in Abramowitz & Stegun (Tables 9.1, 9.8); the rest from SciPy 1.x
@@ -296,5 +296,27 @@ test('chladni drumhead: Bessel zeros, the membrane frequency ratios, normalizati
   /* a small pad reads φ̂ at its center; a pad on a nodal diameter does not drive the mode */
   close(C.drumPadMean('circle', circ[0], 0, 0, 1e-4), circ[0].N, 1e-6);
   assert(Math.abs(C.drumPadMean('square', sq[1].m === 2 ? sq[1] : sq[2], 0, 0.3, 0.08)) < 1e-12, 'pad on the center line of a (2,1) mode');
+});
+test('bar: free ends, cos βL cosh βL = 1 (βL = 4.7300408, 7.8532046, 10.9956078, 14.1371655), overtones 2.756, 5.404, 8.933, orthonormal modes, w″ = w‴ = 0 at the ends', () => {
+  const r = C.barRoots(C.LAM2_MAX.bar);
+  [4.730040745, 7.853204624, 10.995607838, 14.137165491].forEach((v, i) => close(r[i], v, 1e-9));
+  for (const x of r) assert(Math.abs(Math.cos(x) - 1 / Math.cosh(x)) < 1e-14, `root ${x}`);   /* cos βL = 1/cosh βL */
+  [[1, 2.7565], [2, 5.4039], [3, 8.9330]].forEach(([i, q]) => close((r[i] / r[0]) ** 2, q, 2e-5));
+  /* every root above the first few: βL → (n + ½)π */
+  close(r[r.length - 1], (r.length + 0.5) * Math.PI, 1e-12);
+  const ms = C.barModes(C.LAM2_MAX.bar), gq = C.gaussLegendre(200), ip = (a, b) => { let s = 0; for (let q = 0; q < gq.x.length; q++) s += gq.w[q] * C.barPhi(a, gq.x[q]) * C.barPhi(b, gq.x[q]); return s / 2; };
+  assert.equal(ms.filter((m) => m.rigid).length, 2);
+  for (let i = 0; i < ms.length; i += 3) for (let j = i; j < Math.min(ms.length, i + 4); j++) close(ip(ms[i], ms[j]), i === j ? 1 : 0, 0, 1e-7);
+  /* free ends: second and third derivatives vanish (finite differences, relative to the largest second derivative inside) */
+  for (const md of ms.slice(2, 8)) { const h = 1e-3, f = (u) => C.barPhi(md, u), d2 = (u) => (f(u + h) - 2 * f(u) + f(u - h)) / (h * h);
+    let big = 0; for (let u = -0.9; u <= 0.9; u += 0.01) big = Math.max(big, Math.abs(d2(u)));
+    for (const e of [-1, 1]) { const u = e * (1 - 2 * h); assert(Math.abs(d2(u)) < 0.02 * big, `w'' at the end, mode B = ${md.B}`); } }
+  /* the lowest mode's nodes 0.2242 L in from each end (the xylophone's cord points), mode n has n + 1 nodes */
+  const m1 = ms[2]; let lo = -1, hi = 0; for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (C.barPhi(m1, m) * C.barPhi(m1, lo) > 0) lo = m; else hi = m; }
+  close((lo + 1) / 2, 0.22416, 1e-4);
+  ms.slice(2, 9).forEach((md, i) => { let n = 0, prev = C.barPhi(md, -1); for (let k = 1; k <= 4000; k++) { const v = C.barPhi(md, -1 + 2 * k / 4000); if (v * prev < 0) n++; prev = v; } assert.equal(n, i + 2); });
+  /* 1 mm steel, 24 cm: f₁ = 4.73² (h/L²) √(E/12ρ)/2π = 90.08 Hz; the bar weighs 56.5 g */
+  close(r[0] ** 2 * C.fScale('bar', C.MATERIALS.steel, 1e-3), 4.730040745 ** 2 * 1e-3 / 0.0576 * Math.sqrt(200e9 / (12 * 7850)) / (2 * Math.PI), 1e-9);
+  close(C.plateArea('bar') * 7850 * 1e-3, 0.05652, 1e-12);
 });
 console.log(`${count} chladni tests passed`);

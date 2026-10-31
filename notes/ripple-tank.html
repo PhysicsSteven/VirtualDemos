@@ -80,6 +80,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Two dippers</strong>, then <strong>Double slit.</strong> Ask Q3. Show the Amplitude, then tick Draw the predicted lines: the dark lines sit on them far from the sources and curve away close in.</li>
 <li><strong>Single slit.</strong> Ask Q4. Narrow the slit from 60 mm to 10 mm: the waves past it spread more and more until they look like a dipper's.</li>
 <li><strong>Focusing mirror</strong> and <strong>Focusing lens.</strong> Ask Q5.</li>
+<li><strong>Under a wave: deep water</strong>, then <strong>Under a wave: shallow water.</strong> The Side view cuts through the tank under the bar's waves: each dot is a bit of water. Ask Q6. In deep water each bit goes round a circle that shrinks fast with depth; in shallow water the circles flatten into ellipses that reach the floor, where the water only slides. The wave travels on; the water stays where it was.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> The bar makes waves 23.6 mm long at 10 Hz. What is their speed? What would √(gd) give for water 10 mm deep, and why is it different?</p></div>
@@ -91,6 +92,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q4.</strong> Plane waves 15.45 mm long pass a slit 30 mm wide. Where is the first quiet line? What happens when the slit is narrower than the wavelength?</p></div>
 
 <div class="q"><p><strong>Q5.</strong> A plate that makes the water shallow, shaped like a convex lens, focuses plane waves. Why does it converge them, when it makes the waves slower in the middle, as glass does to light?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In <strong>Under a wave: deep water</strong> (16 Hz on water 12 mm deep) the waves are 14.55 mm long. Each bit of water at the surface goes round a circle of radius 0.50 mm. How far down is the circle a tenth of that size? Then in <strong>Under a wave: shallow water</strong> (6 Hz, 3 mm deep, λ = 30.88 mm), what shape is a surface particle's path, and how does a particle on the floor move?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Shallower water changes the frequency."</strong> The frequency is fixed by the wave maker: every crest that arrives makes a crest that leaves.</li>
@@ -103,6 +106,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Leapfrog in time and the isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency: the wavelengths match the relation to better than 0.05 % in every direction (curriculum/validation/test_ripple-tank.cjs).</li>
 <li>β is the viscous damping 2νk² (Lamb §348), plus the beaches, a ramp of damping 50 mm wide that reflects less than 3 % of the amplitude. Walls reflect everything (∂h/∂n = 0). The bar adds to the water each step instead of holding it, set from the grid's own dispersion so its plane waves are 0.50 mm in amplitude, so waves reflected back to it pass under it into the beach; a bar that held the water would mirror them and the tank between bar and barrier would ring, bending the waves that reach a slit. Friction with the floor in very shallow water, the meniscus and nonlinear waves are left out.</li>
 <li>One speed in each place is exact for one frequency, with two approximations that follow: the waves carry energy at the phase speed, not the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 at 6 Hz to 1.5 at 8 Hz over 1.5 mm of water); and at a change of depth the wavelengths and directions are exact but the share reflected and the change of height are the model's.</li>
+<li><strong>Side view</strong> (Lamb, Hydrodynamics, §228): under a plane wave η = A cos(kx − ωt) a bit of water a depth s down goes round an ellipse with half width a = A cosh k(d − s)/sinh kd and half height b = A sinh k(d − s)/sinh kd, so b/a = tanh k(d − s): circles of radius A e^(−ks) in deep water, flat ellipses of nearly equal width at every depth in shallow water. Linear theory, as for the tank; the slow drift forward of a real wave (Stokes drift, second order in kA, up to about 0.9 mm per period here) is left out of the picture and given as a readout, and so is the thin layer at the floor (0.13 to 0.23 mm) where viscosity stops the sliding.</li>
 </ul>
 <h2>Going further</h2>
 <ul>

@@ -26,6 +26,7 @@ Students should know the law of reflection and Snell's law. The sign conventions
 7. **Microscope.** A 2 cm objective, a 5 cm eyepiece and a 0.5 cm object 2.25 cm from the objective. The red arrow between the lenses is the objective's real, inverted image, 18.0 cm behind it (m_obj = −8.00×); it sits at the eyepiece's focal point, so the rays leave parallel and the eye is relaxed. The **Microscope** readouts give M_eye = 25 cm/f_eye = +5.00× and M_net = m_obj × M_eye = −40.00×, and the angular magnification measured from the traced rays agrees. Select the eyepiece and move it: the final image leaves infinity and the measured M disappears until it is back (Q7).
 8. **Refracting surface**, then **Apparent depth.** One curved glass surface (n₁ = 1.00, n₂ = 1.50, R = +4 cm) forms an image by itself: n₁/d_o + n₂/d_i = (n₂ − n₁)/R gives +24.0 cm, but the traced rays cross at +21.4 cm. Select the surface and shrink **Aperture height**: the traced image walks out to the paraxial one. **Apparent depth** puts a fish 12 cm deep in water behind a flat surface (drawn upright, the eye on the right): it appears 9.0 cm deep, at −(n₂/n₁)d_o. Narrow the fish's fan to see why viewing at an angle makes it look shallower still (Q8).
 9. **A shape, point by point.** A flat house shape 17 cm in front of an f = 8 cm lens. Every corner is traced like a single point source; the image is drawn from the traced corners. Its depth along the axis is squeezed differently from its height: the traced depth ratio matches m₁m₂ = 0.804 from the lens equation. Then **A shape in a magnifier**: the image is 2.2 times taller but 3.9 times deeper, so a magnified object looks stretched along the axis.
+10. **Fermat: the quickest path.** A lamp A in air, a point B under water, and a trial path through P on the surface. Ask Q10, then drag P: the time is least at x = 1.69 cm, where n₁ sin θ₁ = n₂ sin θ₂ (0.8254 both). Tick **Show the quickest path** to check. Switch to **Off a mirror**: the quickest path makes equal angles.
 
 ## Questions
 
@@ -47,6 +48,8 @@ Students should know the law of reflection and Snell's law. The sign conventions
 
 **Q9.** In **Prism**, click the prism and choose **Crown**, then **Flint**, then **Diamond**. For each, note n at 400 nm and 700 nm from the editor. Which material spreads the colors most, and why does a larger change of n with wavelength mean a wider spectrum? For crown glass the editor gives a spread of 1.57° at minimum deviation; check it from n sin(A/2) = sin((A + δ)/2) with A = 60°. Why does a diamond sparkle with color more than glass does?
 
+**Q10.** In **Fermat: the quickest path**, light goes from A = (−10, 8) cm in air to B = (8, −8) cm in water (n = 1.333). Predict: is the straight line from A to B the quickest path? Find the time on the path through P = (4, 0), then find where P must be for the least time and show that Snell's law holds there.
+
 ## Common misconceptions
 
 - **"Covering half a lens cuts off half the image."** Every part of the lens sends rays from every object point to the image. Shrink a lens's aperture: the image stays whole and only fewer rays form it.
@@ -63,6 +66,7 @@ Students should know the law of reflection and Snell's law. The sign conventions
 - **Microscope** and **Telescope** readouts appear with exactly two converging lenses on one axis and an object arrow (microscope) or a parallel beam (telescope). The microscope's m_obj is measured from the objective's image traced with the objective alone; M_eye = 25 cm/f_eye assumes a relaxed eye (final image at infinity). The measured angular magnifications use tan θ: θ_object = h/(25 cm) for the object at the near point, θ_image from the rays leaving the eyepiece. For thin lenses m_obj = −(d_i − f_obj)/f_obj exactly, so −(16 cm)(25 cm)/(f_obj f_eye) is exact whenever L = 16 cm and the final image is at infinity.
 - Glass faces follow Snell's law; the faint reflection at each face has a fixed brightness (no Fresnel coefficients).
 - n is quoted at 550 nm and follows a Cauchy form; n = 1.50 gives 1.529 at 400 nm and 1.487 at 700 nm, more dispersion than crown glass so the spectrum is easy to see. White light is seven wavelengths from 400 to 700 nm.
+- **Fermat: the quickest path** (Feynman Lectures Vol I, ch. 26) is a scene of its own. A trial path A → P → B takes t = (n₁|AP| + n₂|PB|)/c; moving P by Δx changes t by (n₁ sin θ₁ − n₂ sin θ₂)Δx/c, so the least time is where Snell's law holds, and t(x) has a single minimum. Off a mirror the same gives equal angles. Indices at 589.3 nm from the bench's Sellmeier formulas; air is taken as 1.
 
 ## Going further
 

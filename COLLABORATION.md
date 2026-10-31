@@ -6401,3 +6401,47 @@ GPT, please verify the physics and numbers below (all from the demo's core and `
   `--only clip` 0 cut off; looked at 1280 light and dark, projector, and 400 px.
 - Worksheet part candidates (not built): Color Vision worksheet, paint part (Y of a cyan + yellow mix against the share of white,
   compared with K/S averaging); shadow part (shadow height against d from the backdrop, fit 1/m against d: slope −1/D, intercept 1).
+
+## 2026-10-31 · Claude · Rounds 2 and 3, Group D: Fermat's least time, water under a wave, bar waves
+
+Steve (17:54): "Let's run round 2 and 3". Group D of `round2-3/groups-2026-10-31.md` in the project files (plan #15, #17, #18), all
+folded into existing demos, no new worksheet. GPT, please verify the physics and numbers below.
+- **Optics Bench, Fermat: the quickest path** (new setup; a scene of its own drawn instead of the bench items, rail section The
+  quickest path). A lamp A above the line y = 0, B below it (Into a new material) or above it again with a flat mirror on the line
+  (Off a mirror); drag A, B and the crossing point P (slider and arrow keys too). t = (n₁|AP| + n₂|PB|)/c, c = 29.9792458 cm/ns;
+  dt/dx = (n₁ sin θ₁ − n₂ sin θ₂)/c, so the least time obeys Snell (equal angles off the mirror). Faint other paths every 2 cm,
+  Show the quickest path (dashed), an inset graph of t against x. Materials Air (taken as n = 1, stated), Water, Crown, Flint,
+  Diamond at 589.3 nm from the bench's Sellmeier formulas. Opening: A (−10, 8), B (8, −8) cm, air to water (1.3335), P at x = 4:
+  0.9357 ns; quickest x = 1.69 cm, 0.9257 ns, θ₁ 55.6°, θ₂ 38.2°, n sin θ = 0.8254 both sides; straight line 0.9372 ns. Feynman
+  Lectures Vol I ch. 26. Record says the quickest path has no worksheet table yet (so its rows never land in the Mirrors table).
+  New test file test_optics_bench_fermat.cjs (5 groups: times, Snell at the least and every other point slower, the bench's own
+  snell() ray from A through the least point lands on B, mirror through the image of B, indices).
+- **Ripple Tank, Side view** (third button beside Surface and Amplitude; setups Under a wave: deep water, 16 Hz on 12 mm, and
+  Under a wave: shallow water, 6 Hz on 3 mm). A slice under the bar's plane wave, drawn to scale with the motion of the water
+  1, 2 or 4 times larger (stated on the picture): dots in columns λ/8 apart at five depths with their orbits, the middle column
+  dyed, one followed particle (depth slider). a = A cosh k(d − s)/sinh kd, b = A sinh k(d − s)/sinh kd, b/a = tanh k(d − s), from
+  the same potential as the tank's dispersion relation (Lamb §228); k from the tank's own kOf (gravity and capillarity). Graph
+  below: a and b against depth with the deep water circle A e^(−ks). Readouts: λ, kd, deep (d > λ/2), shallow (d < λ/20) or in
+  between, a and b at the surface, the floor and the followed particle, ωa. Left out and stated: Stokes drift (readout per
+  period at the surface, 0.23 to 0.92 mm over the slider range: second order in kA, which is 0.07 to 0.27 here) and the floor's
+  viscous layer √(2ν/ω), 0.13 to 0.23 mm. Numbers: deep, λ 14.55 mm, kd 5.18, circles a tenth as big 5.34 mm down; shallow,
+  λ 30.88 mm, kd 0.610 (d = λ/10, so "in between" by the λ/20 rule, said in the hint), surface 0.918 × 0.500 mm, floor slides
+  0.770 mm. The tank does not step while the side view shows; 3D switches the side view off. New test group (11 pass).
+- **Chladni Plates, Bar** (third shape, plates only; setups Bar: bending overtones, a point force at the end, and Bar on the
+  driver). 24 × 3 cm, h from the thickness slider, free ends, Euler–Bernoulli: cos βL cosh βL = 1, βL 4.7300, 7.8532, 10.9956,
+  14.1372; f = (βL)² (h/L²)√(E/12ρ)/2π (no 1 − ν², a narrow bar); mode shapes in an overflow safe form, normalized to a mean
+  square of 1, plus the two rigid motions; same modal sum, drive, sand (a quarter of the grains) and response plot as the plates;
+  no receptance tail (Lc = 0, every mode to λ² 4300 kept). 1 mm steel: 90.08, 248.3, 486.8, 804.7 Hz (2.756, 5.404, 8.933), first
+  mode's nodes 0.2242 L from the ends, aluminum 90.22 Hz; bar 56.5 g. On the driver at the middle only symmetric modes answer and
+  the 50 g moving mass pulls them down a lot (mode 3: 384.5 Hz against 486.8 free; the hint says so). Left out and stated: shear
+  and rotary inertia, twisting and bending across the width. Fletcher and Rossing ch. 2. New test (19 chladni tests pass): roots,
+  ratios, orthonormality to 1e−7, free end w″ = 0, node position, node count, f₁ by hand.
+- Notes: one Running it in class item, one question and one physics bullet each; keys Q6 (ripple tank), Q10 (optics bench), Q8
+  (chladni) in TeacherKeys demo-keys, keys rebuilt. What's new: one entry. Checks: test_ripple-tank 11, test_optics_bench 8,
+  test_optics_bench_fermat 5, test_optics_bench_dispersion 4, test_chladni 19, test_acoustic_labs pass; vdcheck `--only after`
+  0 problems and `--only clip` 0 cut off on the three demos; my own shots of the new views at 1280, 400 and 360 px, light and dark,
+  no page errors, no sideways scroll. 3D could not load here (CDN blocked), so the Chladni bar in 3D is unchecked by eye.
+- Worksheet part candidates (not built): Optics Bench mirrors-refraction worksheet, least time part (t against x_P for one
+  geometry, find the least, check n₁ sin θ₁ = n₂ sin θ₂; needs a Fermat table and an alt map); Ripple Tank, side view part (b/a at
+  the surface against kd over the depth and frequency sliders, fit to tanh kd); Chladni worksheet, bar part (f against mode
+  number, f/f₁ against ((2n + 1)/3)², the large n limit of (βL)² ratios).
