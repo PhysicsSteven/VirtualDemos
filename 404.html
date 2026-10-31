@@ -80,6 +80,11 @@ h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter
 .facts li:nth-child(3) { --dot: var(--equi); }
 .facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .facts strong { color: var(--ink); font-weight: 600; }
+.hero:has(.art) .facts { max-width: calc(100% - min(34%, 380px) - 40px); }   /* the facts wrap before they reach the picture */
+.art-thumb { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); text-decoration: none; box-shadow: 0 10px 30px rgb(0 0 0 / 0.25); }
+.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.art-thumb span { display: block; padding: 7px 12px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.art-thumb:hover span, .art-thumb:focus-visible span { color: var(--accent); }
 
 /* Toolbar: filter and subject links, stays on screen while scrolling */
 .tools {
@@ -184,6 +189,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html { scroll-padding-top: 116px; }
   .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
   .art { display: none; }
+  .hero:has(.art) .facts { max-width: none; }
   .lede { font-size: 1.05rem; }
   .tools .wrap { flex-wrap: wrap; }
   .filter { flex: 1 1 100%; }

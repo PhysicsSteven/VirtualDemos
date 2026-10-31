@@ -6816,3 +6816,13 @@ hero facts row, computed on every run so they stay current: setups = the distinc
 `demos/*.html` (1058 tonight, in 131 demos; 15 demos build their setup lists in code and are not counted, so the row rounds down to
 the 50 below and shows "1,050+"), and worksheets = the handouts in `curriculum/labs/students/` (225: 224 on demos plus the Stellarium
 star chart activity). Checked at 1280 and 400 px, no sideways scroll; `courses.py --check` clean.
+
+## 2026-10-31 · Claude · Home hero: random demo picture, facts row clear of it (Steve)
+
+- The hero picture is now a random demo's thumbnail on each visit (theme matched, follows the theme switch), linking to the demo
+  with its title under it. The list (`HERO_DEMOS` in the `hero-pick` script after `whats-new.js`; every catalog demo with both
+  thumbnails, 146 now) is written by `tools/courses.py`; the Kepler drawing stays as the picture when scripts are off. The script sits
+  after the footer because courses.py rewrites everything from the course tiles to `<footer>`.
+- The facts row stops short of the picture (`.hero:has(.art) .facts` max width), so Teaching notes wraps underneath instead of
+  running into it. The new CSS is copied to the course and topic pages by courses.py but only applies where a hero picture exists.
+- Checked at 1700, 1100 and 400 px, light and dark: no overlap, no sideways scroll, no page errors.

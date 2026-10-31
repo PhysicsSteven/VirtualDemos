@@ -1407,6 +1407,11 @@ def build():
                  f'\n      <li><span><strong>{n_topics}</strong> topics</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
     idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n</style>', 1)
+    # the hero picture's list: every catalog demo with both thumbnails (the script picks one at random)
+    hero = [[d['demo'], d['title']] for sub in CATALOG_DATA()['subjects'] for d in sub['demos']
+            if (ROOT / 'thumbs' / f"{d['demo']}-dark.webp").exists() and (ROOT / 'thumbs' / f"{d['demo']}-light.webp").exists()]
+    hero = list({x[0]: x for x in hero}.values())
+    idx = re.sub(r'const HERO_DEMOS = \[.*?\];', lambda _: 'const HERO_DEMOS = ' + json.dumps(hero, ensure_ascii=False, separators=(',', ':')) + ';', idx, count=1, flags=re.S)
     out[INDEX] = idx
     out[ROOT / 'search.js'] = search_js(m, cards, t)
     out[ROOT / 'demos' / 'lib' / 'nav.js'] = nav_js(m, cards, t)
