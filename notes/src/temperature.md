@@ -22,6 +22,8 @@ Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has f
 3. **Gas thermometer.** Ask Q3. Put the bulb in **Ice water**, **Boiling water**, **Dry ice** and **Liquid nitrogen** in turn; each reading takes about a minute to settle (the bulb follows the bath with a 12 s time constant). Change **Gas in the bulb** and repeat: a different slope, the same zero.
 4. **Rod in a water bath**, then **Water near 4 °C.** Ask Q4 first. The rod's gauge moves 0.025 mm per degree; the water's level falls as it cools, turns near 4.5 °C and rises again.
 5. **House wall in winter.** Ask Q5. 13 mm plasterboard, 90 mm glass wool and 100 mm brick between 20 °C still air and −5 °C wind: 10.0 W through each square meter, and 21.5 °C of the 25 °C drop is across the glass wool. Drag **Probe position** through the wall. Then switch to **Window** (Q6) and **Rods in series**.
+6. **Energy chunks.** Load **Energy chunks**: the same hot aluminum and cool water with each body's thermal energy drawn as dots of one size (counted from 0 °C). Start it: dots leave A, pass through the bar and pile up in B, and the total never changes. At equilibrium the water holds more dots per kilogram than the aluminum, so thermal energy is not temperature.
+7. **Energy chain.** Load **Energy chain: bike to light**. The cyclist does 100 W of work at the pedals from 500 W of food energy (20%), the generator passes on 98 W of electricity, the bulb makes 19.6 W of light: 3.9% of the food energy, the rest wasted as heat at each station. Swap the bulb for the **Water heater** (98 W warms 1.00 kg of water 1.40 °C a minute) or the cyclist for the Sun on a solar cell. Ask why sunlight cannot turn the generator directly.
 
 ## Questions
 

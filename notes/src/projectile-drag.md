@@ -25,6 +25,7 @@ For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 
 4. **Ping pong ball and Cannonball.** Same question for each: how big is drag here? Compare v₀/v_t (2.34 and 0.41) with how far the solid path falls short of the dashed one (Q4).
 5. **Shot put.** Drag hardly matters (v₀/v_t = 0.09), yet the best angle is 42.4° in vacuum, because the ball leaves the hand 2 m up (Q5).
 6. **Denver** (if time allows). Switch the air from **Sea level** to **Denver** with the baseball and predict the change before launching (Q6).
+7. **Many launches.** Open **Many launches** with the baseball at 40 m/s and 45°, an angle spread of 1° and a speed spread of 1%, and fire 1000. With air resistance Off the histogram centers on 163 m with a spread of about 3.2 m, as the first order estimate 2σ_v R = 3.26 m predicts (the angle spread barely matters at 45°, only pulling the mean down slightly). With air On the mean is 94.8 m and the spread about 1.2 m. Ask why the angle spread matters so much more at 30°.
 
 ## Questions
 

@@ -2,7 +2,7 @@
 // Temperature and Heat: equilibrium of two bodies joined by a bar, the gas thermometer, expansion, conduction through layers.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('temperature', 'C0,cToF,fToC,cToK,kToC,SPECIFIC,CONDUCT,BAR_A,eqState,BATHS,gasP,gasT,follow,EXPAND,LIQUIDS,waterRho,rodDL,liquidVol,capH,CAP_A,FILMS,wallState,SIGMA,AIR,film,coolRates,coolMass,coolAt,coolTrack,SPHERES,SURFACES');
+const c = core('temperature', 'C0,cToF,fToC,cToK,kToC,SPECIFIC,CONDUCT,BAR_A,eqState,BATHS,gasP,gasT,follow,EXPAND,LIQUIDS,waterRho,rodDL,liquidVol,capH,CAP_A,FILMS,wallState,SIGMA,AIR,film,coolRates,coolMass,coolAt,coolTrack,SPHERES,SURFACES,CH_SRC,CH_CONV,CH_USE,SUN_I,chain,heaterRise,liftHeight');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)) || Math.abs(a - b) <= 1e-9, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -75,5 +75,21 @@ group('cooling: energy balance, mc(T0 − T) equals the heat lost (integrated); 
     near(C * (p.T0 - tr[3000]), Q, 2e-4, 'energy'); assert(tr[3000] > p.Ta, 'above room');
     near(c.coolAt(p, 1234.5, tr.slice()), c.coolAt(p, 1234.5), 1e-12, 'same answer however the track was built');
   }
+});
+group('energy chain: efficiencies from OpenStax Table 7.2; each station conserves energy (in = out + wasted)', () => {
+  near(c.CH_SRC.bike.eta, 0.20, 0); near(c.CH_CONV.gen.eta, 0.98, 0); near(c.CH_CONV.pv.eta, 0.10, 0); near(c.CH_USE.cfl.eta, 0.20, 0); near(c.CH_USE.motor.eta, 0.98, 0);
+  const r = c.chain('bike', 'gen', 'cfl', 100);
+  near(r.Pin, 500, 1e-12, 'food power'); near(r.P1, 100, 1e-12, 'pedal work'); near(r.P2, 98, 1e-12, 'electrical'); near(r.useful, 19.6, 1e-12, 'light');
+  near(r.Pin, r.useful + r.waste0 + r.waste1 + r.waste2, 1e-12, 'conservation'); near(r.eff, 0.2 * 0.98 * 0.2, 1e-12, 'overall = product');
+  const s = c.chain('sun', 'pv', 'motor', 2); near(s.Pin, 2 * c.SUN_I, 1e-12, 'sunlight on 2 m²'); near(s.useful, 2000 * 0.10 * 0.98, 1e-12, 'lifting power');
+  near(s.Pin, s.useful + s.waste0 + s.waste1 + s.waste2, 1e-12, 'conservation');
+  const h = c.chain('bike', 'gen', 'heater', 100); near(h.useful, 98, 1e-12, 'all into the water'); near(h.waste2, 0, 0, 'heater wastes none');
+});
+group('energy chain: a mismatch stops the chain (sunlight cannot turn a generator; the cyclist cannot light a solar cell)', () => {
+  const a = c.chain('sun', 'gen', 'cfl', 1); assert(!a.ok1, 'sun to generator'); near(a.useful, 0, 0); near(a.eff, 0, 0);
+  const b = c.chain('bike', 'pv', 'cfl', 100); assert(!b.ok1, 'bike to panel');
+});
+group('energy chain: 4186 J warms 1.00 kg of water 1 °C; 98.1 J lifts 10 kg 1 m', () => {
+  near(c.heaterRise(4186), 4186 / c.SPECIFIC.water.c, 1e-12); near(c.liftHeight(98.1), 1, 1e-12);
 });
 console.log(`${n} groups passed`);

@@ -5,7 +5,7 @@
 // and the helpers behind Capture, the fit and the CSV.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const F = core('fluids', 'G,PATM,PVAP,LIQ,twoLiquids,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV');
+const F = core('fluids', 'G,PATM,PVAP,LIQ,DENS,MYSTERY,mysterySet,densityFrom,nearestMaterial,twoLiquids,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV');
 let n = 0;
 const close = (a, b, rel = 1e-12, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -204,6 +204,41 @@ test('two liquids in a U tube: equal pressure at the interface level, volume of 
     close(t.zP - t.zI, h, 0, 1e-15); close(t.rhoFromHeights(h, t.hB), rP, 0, 1e-9, 'density back from the two heights');
     assert(t.gap > 0, 'the lighter liquid stands taller');
   }
+});
+
+test('mystery blocks: weigh in air, displace water, name the metal', () => {
+  // the opening set: every block sinks in water, so on the scale it goes all the way under and the beaker catches L³
+  for (const o of F.MYSTERY) {
+    const rho = F.DENS[o.m][1], L = o.L / 100, V = L ** 3, Vw = 0.15 * 0.42;
+    const p = { L, rhoO: rho, rhoF: 1000, A: 0.15, zeta: 0.12, spout: 0.42 };
+    const h = F.hangState(p, -0.01, Vw);                // hook low enough that the block rests on the floor, all under
+    close(h.s, L, 0, 1e-15, `block ${o.id} fully under`);
+    const W = rho * L ** 3 * g, sb = F.submerged(p, 0, Vw);
+    close(sb.spill, V, 1e-12, 1e-15, `block ${o.id} pushes its own volume over the spout`);
+    close(F.densityFrom(W, sb.spill), rho, 1e-12, 0, 'density back from W and the beaker');
+    assert.equal(F.nearestMaterial(F.densityFrom(W, sb.spill)), o.m);
+    // the readings as displayed (scale 0.01 N, beaker 1 cm³) still name the right metal
+    const Wr = +W.toFixed(2), Vr = Math.round(V * 1e6) / 1e6;
+    assert.equal(F.nearestMaterial(F.densityFrom(Wr, Vr)), o.m, `block ${o.id} from rounded readings`);
+  }
+  // sizes in the opening set differ, so neither mass nor size alone gives the answer
+  assert.equal(new Set(F.MYSTERY.map((o) => o.L)).size, 5);
+  assert.equal(new Set(F.MYSTERY.map((o) => o.m)).size, 5);
+  // the worst case for naming from rounded readings in any new set: the smallest block of each metal
+  for (const k of Object.keys(F.DENS)) {
+    const rho = F.DENS[k][1], V = 0.04 ** 3, W = +(rho * V * g).toFixed(2);
+    for (const dV of [-0.5e-6, 0.5e-6]) assert.equal(F.nearestMaterial(F.densityFrom(W, Math.round(V * 1e6) / 1e6 + dV)), k, `${k} with a half cm³ misread`);
+  }
+  // new sets: five different metals, edges 4 to 9 cm
+  let seed = 7; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < 200; i++) {
+    const set = F.mysterySet(rand);
+    assert.equal(set.map((o) => o.id).join(''), 'ABCDE');
+    assert.equal(new Set(set.map((o) => o.m)).size, 5);
+    for (const o of set) assert(Number.isInteger(o.L) && o.L >= 4 && o.L <= 9 && F.DENS[o.m]);
+  }
+  // table values (CRC Handbook, near 20 °C)
+  assert.equal(Object.values(F.DENS).map((d) => d[1]).join(' '), '1738 2700 4506 7140 7874 8960 10490 11340 19300');
 });
 
 console.log(`${n} fluids test groups passed`);

@@ -24,6 +24,7 @@ For a lab, the **Readings** section has **Capture reading**, **Export to workshe
 4. **Weighing in water (Archimedes).** Drag the spring scale down to lower the aluminum cube into the full overflow can. The scale falls from 26.49 N to 16.68 N as 1000 cm³ of water, weighing 9.81 N, runs into the beaker (Q4). Ask Q5 while it is submerged.
 5. **Venturi tube.** Halving the diameter makes the throat flow 4 times faster, 3.20 m/s, and the throat standpipe stands 48.9 cm lower than the inlet one (Q6). Drag the throat grip to widen it back.
 6. **Torricelli's tank.** The hole 0.30 m below the surface sends water out at 2.43 m/s, landing 0.917 m from the wall. With **Compare holes** on, ask the class to predict which hole throws farthest, then drag the hole (Q7).
+7. **Mystery blocks: name the metal.** Five metal cubes, A to E, look alike. Weigh one in air on the spring scale, lower it into the full overflow can and read the water in the beaker: block A weighs 13.56 N and pushes out 512 cm³, so ρ = W/(gV) = 2700 kg/m³, aluminum. Students pick the metal from the list and press **Check**; **New mystery set** deals five fresh blocks. This is Archimedes' test of the crown.
 
 ## Questions
 

@@ -24,6 +24,7 @@ Students should know Newton's second law and the idea of components. The free bo
 5. **Ramp and hanging mass.** At rest, static friction (4.9 N) points up the ramp. Raise m₂ to 4 kg: it slides up, friction now points down the ramp.
 6. **Atwood's machine.** 2.0 kg and 2.5 kg over one pulley: a = (m₂ − m)g/(m + m₂) = 1.09 m/s² and T = 2mm₂g/(m + m₂) = 21.8 N, between the two weights. Release at the top mark: 1.355 s for 1.000 m. Ask the class to get g back from the time and the two masses.
 7. Turn on **Show third law partners** in any setup and **Work and energy since release** during a slide.
+8. **Friction up close.** Switch the picture to **Surfaces up close**: the two surfaces magnified to the size of atoms (a schematic). Only the tips of the bumps touch. At 45 N, under the 49 N limit, nothing slides and nothing warms. Raise the push to 60 N: the block slides, the bumps catch and tear past each other, and the contact atoms jiggle harder as friction turns work into thermal energy at μk N v. Ask why rubbing your hands warms them, and why the block itself warms by only millikelvins (the warming bound assumes all the heat stays in the block).
 
 ## Questions
 

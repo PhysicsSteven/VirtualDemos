@@ -6019,3 +6019,44 @@ Steve: "Let's get to work getting these partials done" (14:16); fold into the na
   energy against Q/3, the missing energy) could be a part of the Radioactive Decay worksheet; **Build a nucleus** (find
   the drip lines for one element with S_n) a part of the Binding Energy worksheet; **Build an atom** is chemistry level
   and fits a prelab question, no worksheet.
+
+
+## 2026-10-31 · Claude · Last partials, Group 1 (Physics I benches and energy)
+
+Steve: "Let's get to work getting these partials done" (scope in `/mnt/project-files/partials-final/groups-2026-10-31.md`).
+All five folded into existing demos; no new demos, no new worksheets.
+
+- Fluids (#9, PhET Density): **Mystery blocks: name the metal** preset and a Mystery material button. Five lettered
+  cubes (A Al 8 cm, B Cu 5, C Ti 6, D Zn 7, E Pb 4; New mystery set deals five distinct metals, 4 to 9 cm); densities
+  from the CRC Handbook (Mg 1738, Al 2700, Ti 4506, Zn 7140, Fe 7874, Cu 8960, Ag 10490, Pb 11340, Au 19300). Weigh on the
+  spring scale, read the overflow beaker (now labeled in cm³), pick a metal and Check (nearest by log ratio). Density and
+  size sliders, grips and fraction readouts hidden for a mystery block; graph forced to readings. Block A: 13.56 N,
+  512 cm³, 2700 kg/m³.
+- Forces and Friction (#10): **Second pane shows: Free body diagram | Surfaces up close** and a Friction up close preset
+  (45 N under the 49 N limit, so the first change of push does something). Schematic atom lattices with seeded bumps,
+  block resting on its highest contacts; jiggle and glow follow a heat level that relaxes with τ = 1.5 s; text gives
+  the heating μk N v, the thermal energy and the warming bound E/(m c) with c = 1700 J/(kg·K) for wood (OpenStax Vol 2
+  Table 1.3; stated as a bound because heat goes into both surfaces).
+- Motion Graphs (#28, PhET Calculus Grapher): **Draw a graph** preset. Draw v or a on the tinted pane (pen with linear
+  fill), shapes Sine, Steps, Triangle, Clear, Smooth (1 2 1), x₀ and v₀ sliders; the other graphs come from the same
+  buildRun as the stage presets (slope and running area). Blind does not apply here.
+- Projectile Range (#29, PhET Projectile Data Lab): **Many launches** fold. Angle spread σθ 0 to 5°, speed spread 0 to
+  5%, normal (Box–Muller, seeded mulberry32 in tests), Fire 1, 10, 100, 1000, histogram, n, mean, sd (n − 1), sem,
+  min, max, median, landing ticks on the ground, CSV. First order prediction σ_R from central difference slopes
+  (hidden in Blind); its curvature limit stated (near the best angle the angle spread pulls the mean down,
+  R0(1 − 2σθ²) in vacuum at 45°). Baseball 40 m/s 45°, 1°, 1%: vacuum 163.2 m ± 3.2 m (prediction 3.26), drag 94.8 m ± 1.2 m.
+- Temperature and Heat (#32, PhET Energy Forms and Changes): **Energy chunks** checkbox and preset in Equilibrium (each
+  body's thermal energy as dots of one size counted from 0 °C) and an **Energy chain** view (button "Chain"): Cyclist or
+  Sun → Generator or Solar cell → Compact fluorescent light, Water heater (1.00 kg) or Motor lifting 10 kg. Efficiencies
+  from OpenStax College Physics 2e §7.6 Table 7.2 (representative values): body 20%, generator and motor 98%, solar
+  cell 10%, CFL 20%; heater 100% into the water (pot losses left out, stated). Sunlight 1000 W/m² (IEC 60904-3 STC).
+  A mismatch (Sun into a generator) stops the chain and says why. Default 100 W at the pedals: 500 W food, 98 W
+  electrical, 19.6 W light, 3.9% overall.
+- Tests: fluids 15 groups, forces 10, motion-graphs 10, projectile-drag 13, temperature 16 (new groups in each).
+  vdcheck `--only after` 0 problems and `--only clip` 0 cut off on all five (the Temperature view button was shortened
+  to "Chain" to fit at 1024 px Projector). New views looked at in screenshots at desktop and 390 px.
+- Notes: one class step each; demo keys rebuilt in TeacherKeys (no new questions). One What's new entry.
+- Worksheet candidates for the sweep: **Mystery blocks** (density by displacement) as a part of the Fluids worksheet,
+  the strongest; **Many launches** (mean, sd, sem against n; σ against the prediction) a part of the projectile
+  worksheet; **Draw a graph** a short part of Motion Graphs (sketch x from a drawn v); **Energy chain** a prelab level
+  part (efficiency products); **Friction up close** is qualitative, no worksheet.

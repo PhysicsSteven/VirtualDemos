@@ -66,6 +66,9 @@ table.rows input:focus { border-color: var(--accent); }
 :root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
+#paneSeg { display: flex; margin-bottom: 10px; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+#paneSeg button { flex: 1; font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+#paneSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 #viewSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 #viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 #viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
@@ -133,6 +136,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="table" aria-pressed="false">Hanging mass on a table</button>
           <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
           <button type="button" data-p="atwood" aria-pressed="false">Atwood's machine</button>
+          <button type="button" data-p="close" aria-pressed="false">Friction up close</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -155,6 +159,7 @@ table.rows input:focus { border-color: var(--accent); }
 
       <section>
         <h2>Forces now</h2>
+        <div class="seg full" role="group" aria-label="Second pane shows" id="paneSeg"><button type="button" data-pane="fbd" aria-pressed="true">Free body diagram</button><button type="button" data-pane="close" aria-pressed="false">Surfaces up close</button></div>
         <dl class="readout" id="forceOut"></dl>
         <label class="check"><input type="checkbox" id="tComp" checked><span>Show the weight's components along and across the ramp</span></label>
         <label class="check"><input type="checkbox" id="tNet" checked><span>Show the net force</span></label>
@@ -269,6 +274,17 @@ table.rows input:focus { border-color: var(--accent); }
     rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.th, r.m, r.m2, r.F, r.phi, r.t, isFinite(t) && t > 0 ? +(2 * GATE_D / (t * t)).toPrecision(6) : ''].map(csvCell).join(',')); });
     return L.join('\n') + '\n';
   }
+  // Friction up close. Kinetic friction turns work into thermal energy at the rate μk N |v| (the friction force times the sliding
+  // speed); static friction does no work, since the surfaces do not slide. Where that energy goes is shared between the block and
+  // the ramp, so the block's warming is at most E_th/(m c), with c = 1700 J/(kg K) for wood (OpenStax University Physics Vol 2,
+  // Table 1.3; woods range widely). In fact the heat is made in a thin layer at the contact, which gets much warmer for a moment
+  // and then spreads into both pieces.
+  const C_WOOD = 1700;
+  const frictionPower = (p, v) => { const F = forces(p, v); return F.kind === 'kinetic' && v !== 0 ? Math.abs(F.f * v) : 0; };
+  const warmBound = (Eth, m) => Eth / (m * C_WOOD);
+  // The close up's picture of how hot the contact layer looks: H gains the friction power and drains with time constant tau,
+  // dH/dt = P − H/tau, stepped exactly for constant P over dt. A picture only (tau is chosen, not measured).
+  const heatPic = (H, P, dt, tau) => { const e = Math.exp(-dt / tau); return H * e + P * tau * (1 - e); };
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -281,9 +297,10 @@ table.rows input:focus { border-color: var(--accent); }
     angle: { p: { th: 0, m: 10, F: 50, phi: 30, m2: 0, ms: 0.4, mk: 0.3 }, s: 0.4, hint: 'Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.' },
     table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
     atwood: { p: { th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, s: 1.0, atwood: true, hint: 'Two masses hang over one pulley: m on the left, m₂ on the right. With a light string and a frictionless pulley, a = (m₂ − m) g/(m + m₂) = 0.5 × 9.81/4.5 = 1.09 m/s² here, much less than g, which is why Atwood used it to measure g. The tension, 2 m m₂ g/(m + m₂) = 21.8 N, lies between the two weights. Time a 1.000 m run and work out g.' },
+    close: { p: { th: 0, m: 10, F: 45, phi: 0, m2: 0, ms: 0.5, mk: 0.3 }, s: 0.4, close: true, hint: 'The second pane shows the two surfaces magnified to the size of atoms (a schematic). Even polished surfaces are bumpy at this scale, and only the tips of the bumps touch. With a 45 N push, under the 49 N that static friction can give, the bumps stay locked and nothing slides: no work, no heat. Turn the push past 49 N: the block slides, the bumps catch and tear past each other, and the atoms at the contact jiggle harder: friction turns work into thermal energy at the rate μk N v.' },
     rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
   };
-  const S = { atwood: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
+  const S = { close: false, heat: 0, atwood: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
@@ -324,7 +341,7 @@ table.rows input:focus { border-color: var(--accent); }
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
     S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
-    S.atwood = !!c.atwood; atwoodControls(); if (S.atwood && G3.on) setView('flat'); sync(); draw(); readouts();
+    S.atwood = !!c.atwood; setPane(c.close ? 'close' : S.close && !S.atwood ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if (S.atwood && G3.on) setView('flat'); sync(); draw(); readouts();
   }
   /* Atwood's machine: the ramp turned upright (θ = 90°), so the forces are the same code: N = 0, no friction, the string straight up.
      The ramp, friction and push knobs have no part in it and are hidden, and it is drawn flat (two masses over a pulley). */
@@ -332,6 +349,12 @@ table.rows input:focus { border-color: var(--accent); }
     for (const id of ['sTh', 'sF', 'sPhi']) $(id).closest('.kctl').hidden = S.atwood;
     $('muRows').hidden = S.atwood || !!S.mystery; $('mystery').closest('label').hidden = S.atwood; $('viewSeg').hidden = S.atwood;
     $('tComp').closest('label').hidden = S.atwood;
+    $('paneSeg').hidden = S.atwood;
+  }
+  /* the second pane: the free body diagram, or the two surfaces magnified (no friction in Atwood's machine, so no close up there) */
+  function setPane(v) {
+    S.close = v === 'close' && !S.atwood;
+    for (const b of document.querySelectorAll('#paneSeg button')) b.setAttribute('aria-pressed', String((b.dataset.pane === 'close') === S.close));
   }
   function setMystery(on) {
     if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
@@ -372,6 +395,8 @@ table.rows input:focus { border-color: var(--accent); }
       }
       S.s = s; S.v = v; draw(); readouts();
     }
+    S.heat = heatPic(S.heat, S.run ? frictionPower(S.p, S.v) : 0, dt, 1.5);
+    if (S.close && !S.run && !reduce) draw();       /* the atoms keep jiggling while the block is still */
     requestAnimationFrame(frame);
   }
 
@@ -540,7 +565,61 @@ table.rows input:focus { border-color: var(--accent); }
     /* the knob panel sits over the top of the scene: the apparatus is drawn below it */
     const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : Math.max(46 * p, (() => { const vb = document.querySelector('#scene .viewbar'); return vb.offsetTop + vb.offsetHeight + 6; })());
     drawScene(0, top, sw, sh - top);
-    drawFBD(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
+    (S.close ? drawClose : drawFBD)(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
+  }
+  // ---------- friction up close: a schematic of the contact, atoms as balls (not to scale) ----------
+  const CL = { n: 15, rows: 4 };
+  const crnd = seeded(31102026), BUMP_LO = Array.from({ length: 64 }, () => crnd()), BUMP_HI = Array.from({ length: 64 }, () => crnd()), PH = Array.from({ length: 4096 }, () => [crnd() * 6.283, crnd() * 6.283, 0.8 + crnd() * 0.5]);
+  function drawClose(x0, y0, w, h) {
+    const p = ps(), P = S.p, fz = forces(P, S.v), bl = S.blind, kin = fz.kind === 'kinetic' && S.v !== 0;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('THE SURFACES UP CLOSE (A SCHEMATIC)', x0 + 14 * p, y0 + 12 * p);
+    const pw = S.v !== 0 ? frictionPower(P, S.v) : 0, Eth = -S.work.f;
+    // the picture: jiggle grows with H (the contact layer's look), 0 at room temperature, near 1 when very hot
+    const hot = 1 - Math.exp(-S.heat / 80), tnow = performance.now() / 1000;
+    const held = fz.kind === 'kinetic' && S.v === 0 && S.s > 0.26 && S.s < LEN - 0.26, stuck = fz.kind === 'static' && Math.abs(fz.f) > 1e-9;
+    const lines = bl ? [kin ? 'Sliding: the bumps catch and tear past each other.' : fz.kind === 'kinetic' && S.v === 0 && !held ? 'Stopped at the end of the ramp.' : held ? 'Held still: press Release.' : stuck ? 'Not sliding: the bumps are locked.' : 'No sideways push: no friction.']
+      : [kin ? `Sliding: kinetic friction ${f(Math.abs(fz.f), 1)} N` : fz.kind === 'kinetic' && S.v === 0 && !held ? 'Stopped at the end of the ramp' : held ? `Held still: the pushes beat the ${f(P.ms * fz.N, 1)} N static friction can give` : stuck ? `Stuck: static friction ${f(Math.abs(fz.f), 1)} N of at most ${f(P.ms * fz.N, 1)} N` : 'No sideways push: no friction',
+        `Heating at the contact μk N v = ${f(pw, 1)} W`, `Thermal energy since release ${f(Eth, 2)} J`, `Block warms by at most ${(warmBound(Eth, P.m) * 1000).toFixed(2)} mK (all of it in the block)`];
+    ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.ink;
+    lines.forEach((l, i) => { ctx.fillStyle = i === 0 ? (kin ? T.fr : T.ink) : T.muted; ctx.fillText(l, x0 + 14 * p, y0 + 32 * p + i * 16 * p); });
+    const top = y0 + 32 * p + lines.length * 16 * p + 10 * p, bot = y0 + h - 30 * p, bw = w - 28 * p, bx = x0 + 14 * p;
+    if (bot - top < 60 * p) return;
+    const r = Math.max(4 * p, Math.min(bw / (CL.n * 2.1), (bot - top) / 18)), d = 2 * r * 1.05, mid = (top + bot) / 2;
+    const off = ((S.s * 120 * p) % d + d) % d, shift = Math.floor(S.s * 120 * p / d);    /* the block's atoms move with it, slowed to be followed */
+    const amp = reduce ? 0 : r * (0.04 + 0.16 * hot);
+    const jig = (k, i) => { const q = PH[(k * 61 + i) & 4095]; return [amp * Math.sin(tnow * 9 * q[2] + q[0]), amp * Math.sin(tnow * 11 * q[2] + q[1])]; };
+    const warm = (base, depth) => { const VG = window.VDGear, a = hot * Math.max(0, 1 - depth / 3); return VG && /^#[0-9a-f]{6}$/i.test(base) ? VG.mix(base, '#ff6a2a', 0.75 * a) : base; };
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, top, bw, bot - top); ctx.clip();
+    const cols = Math.ceil(bw / d) + 3;
+    // the ramp's atoms: rows downward from the bumpy top; each column's top is 0, 1 or 2 atoms high
+    const lo = (i) => (BUMP_LO[((i % 64) + 64) % 64] < 0.35 ? 1 : 0) + (BUMP_LO[((i * 7 % 64) + 64) % 64] > 0.85 ? 1 : 0);
+    const hi = (i) => (BUMP_HI[((i % 64) + 64) % 64] < 0.4 ? 1 : 0);
+    const yLo = mid + r * 1.2;
+    for (let i = -1; i < cols; i++) {
+      const x = bx + i * d, hcol = lo(i);
+      for (let k = -hcol; k < CL.rows + 4; k++) {
+        const y = yLo + k * d; if (y - r > bot) break;
+        const [jx, jy] = jig(k + 10, i + 500); ctx.fillStyle = warm(T.board || T.ramp, k + hcol);
+        ctx.beginPath(); ctx.arc(x + jx, y + jy, r * 0.92, 0, 7); ctx.fill(); ctx.strokeStyle = T.grain; ctx.lineWidth = 0.8 * p; ctx.stroke();
+      }
+    }
+    // the block's atoms: rows upward from its bumpy bottom, carried along by the slide; a bump that meets a ramp bump rides up on it
+    /* the block rests on its highest contacts: only a few bump tips touch, the rest of the two surfaces stand apart */
+    let Y0 = Infinity;
+    for (let j = -2; j < cols; j++) { const i = j - shift, x = bx + j * d - d + off, under = Math.round((x - bx) / d); Y0 = Math.min(Y0, yLo - (lo(under) + hi(i) + 1) * d); }
+    for (let j = -2; j < cols; j++) {
+      const i = j - shift, x = bx + j * d - d + off, hcol = hi(i);
+      for (let k = -hcol; k < CL.rows + 4; k++) {
+        const y = Y0 - k * d; if (y + r < top) break;
+        const [jx, jy] = jig(k, i); ctx.fillStyle = warm(T.wood, k + hcol);
+        ctx.beginPath(); ctx.arc(x + jx, y + jy, r * 0.92, 0, 7); ctx.fill(); ctx.strokeStyle = T.grain; ctx.lineWidth = 0.8 * p; ctx.stroke();
+      }
+    }
+    ctx.restore();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Block above, ramp below. Slowed; glow and jiggle are a picture.', bx, y0 + h - 10 * p);
+    if (S.v !== 0) { const dir = Math.sign(S.v); arrow(bx + bw / 2 - dir * 30 * p, top + 12 * p, dir * 60 * p, 0, T.ink, 2 * p, ''); }
   }
   let rulerAt = null;   /* the flat scene's scale, for the ruler */
   function drawAtwood(x0, y0, w, h) {
@@ -838,6 +917,7 @@ table.rows input:focus { border-color: var(--accent); }
   });
   $('tComp').addEventListener('change', (e) => { S.comp = e.target.checked; draw(); });
   $('tNet').addEventListener('change', (e) => { S.net = e.target.checked; draw(); });
+  $('paneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-pane]'); if (!b) return; setPane(b.dataset.pane); draw(); });
   $('tPairs').addEventListener('change', (e) => { S.pairs = e.target.checked; draw(); readouts(); });
   function setBlind(on) { S.blind = on; $('labBlind').checked = on; $('blindTag').hidden = !on; draw(); readouts(); fit(); }
   $('labBlind').addEventListener('change', (e) => { if (!e.target.checked && S.mystery) setMystery(false); setBlind(e.target.checked); });

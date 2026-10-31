@@ -2,7 +2,7 @@
 // Forces and Friction: Newton's second law on a ramp with Coulomb friction, a hanging mass, the timer and the μk fit.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV');
+const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV,C_WOOD,frictionPower,warmBound,heatPic');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -70,6 +70,23 @@ group("Atwood's machine: the ramp upright gives a = (m2 − m) g/(m + m2), T = 2
   }
   near(c.gateTime(c.forces({ th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, 0).a, c.GATE_D), Math.sqrt(2 * 4.5 / (0.5 * c.G)), 1e-12, 'time for 1 m');
   near(c.forces({ th: 90, m: 2, F: 0, phi: 0, m2: 0, ms: 0, mk: 0 }, 0).a, -c.G, 1e-12, 'nothing on the other side: free fall');
+});
+
+group('friction up close: heating rate μk N v, its integral is the thermal energy, the warming bound, the picture filter', () => {
+  const p = P({ F: 60 });
+  assert.equal(c.frictionPower(P({ F: 40 }), 0), 0, 'static friction does no work');
+  near(c.frictionPower(p, 2), 0.3 * 98.1 * 2, 1e-12, 'μk N v');
+  near(c.frictionPower(p, -2), 0.3 * 98.1 * 2, 1e-12, 'either direction');
+  // sum of μk N v dt over a run from rest equals −W_f from workStep
+  let s = 0.4, v = 0, Q = 0; const Wk = { g: 0, F: 0, f: 0, T: 0 }, dt = 1e-4;
+  for (let i = 0; i < 8000; i++) { const v0 = v, r = c.workStep(p, s, v, dt, Wk); Q += c.frictionPower(p, (v0 + r.v) / 2) * dt; s = r.s; v = r.v; }
+  near(Q, -Wk.f, 1e-9 * Math.abs(Wk.f) + 1e-9, 'heat made = −W_f');
+  near(-Wk.f, 0.3 * 98.1 * (s - 0.4), 1e-9, 'μk N times the distance slid');
+  assert.equal(c.C_WOOD, 1700);
+  near(c.warmBound(1700, 10), 0.1, 1e-15, 'ΔT = E/(m c)');
+  // exact for constant P: from 0, H → P τ; halving per τ ln 2 when P = 0
+  near(c.heatPic(0, 50, 1e6, 1.5), 75, 1e-9); near(c.heatPic(80, 0, 1.5 * Math.log(2), 1.5), 40, 1e-12);
+  let H = 0; for (let i = 0; i < 300; i++) H = c.heatPic(H, 50, 0.01, 1.5); near(H, c.heatPic(0, 50, 3, 1.5), 1e-9, 'steps compose');
 });
 
 console.log(`${n} forces test groups passed`);

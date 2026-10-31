@@ -95,6 +95,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="two" aria-pressed="false">Two cars</button>
           <button type="button" data-p="ramps" aria-pressed="false">Ball on ramps</button>
           <button type="button" data-p="walk" aria-pressed="false">Walk the graph</button>
+          <button type="button" data-p="draw" aria-pressed="false">Draw a graph</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -106,6 +107,21 @@ table.rows input:focus { border-color: var(--accent); }
         <div id="segs"></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.</p>
+        </details>
+      </section>
+
+      <section id="secDraw" hidden>
+        <h2>Draw a graph</h2>
+        <div class="chips" role="group" aria-label="Draw on" id="drawSeg"><button type="button" data-k="v" aria-pressed="true">Draw v against t</button><button type="button" data-k="a" aria-pressed="false">Draw a against t</button></div>
+        <p class="hint" id="drawHint"></p>
+        <div class="chips" id="drawShapes" role="group" aria-label="Start from a shape">
+          <button type="button" data-s="sine">Sine</button><button type="button" data-s="step">Steps</button><button type="button" data-s="tri">Triangle</button><button type="button" data-s="zero">Clear</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="drawSmooth">Smooth</button></div>
+        <div><div class="slider-head"><label for="sdx0">Start position x₀</label><output id="odx0" for="sdx0"></output></div><input type="range" id="sdx0" min="-8" max="8" step="0.5"></div>
+        <div id="dv0Row"><div class="slider-head"><label for="sdv0">Start velocity v₀</label><output id="odv0" for="sdv0"></output></div><input type="range" id="sdv0" min="-4" max="4" step="0.5"></div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Your line is kept as values 0.1 s apart. Drawing v: v between them is a straight piece, so a on each piece is its slope Δv/0.1 s (the derivative), and x is the area under v added to x₀ (the integral). Drawing a: each 0.1 s piece has your a; v is v₀ plus the area under a, and x is x₀ plus the area under v. Smooth averages each value with its neighbors (1, 2, 1), which tames the jitter of a hand drawn line; the slope of a jittery line jumps about. Turn on the tangent and the area to see the slope and the area at the time marker.</p>
         </details>
       </section>
 
@@ -310,6 +326,29 @@ table.rows input:focus { border-color: var(--accent); }
     rows.forEach((r, i) => L.push([i + 1, csvCell(r.t), csvCell(r.x)].join(',')));
     return L.join('\n') + '\n';
   }
+  // Draw a graph (the calculus grapher): the student draws v(t) as values at t = 0, h, 2h, ... joined by straight pieces, or a(t)
+  // as one value for each piece. Each straight piece of v has the constant slope a = Δv/h, and a constant a gives v and x exactly,
+  // so the derivative and the integrals come out of buildRun with no further approximation than the drawing itself.
+  function drawnRun(kind, vals, h, x0, v0) {
+    const segs = [];
+    if (kind === 'v') { for (let i = 0; i + 1 < vals.length; i++) segs.push({ a: (vals[i + 1] - vals[i]) / h, T: h }); return buildRun(x0, vals[0], segs); }
+    for (const a of vals) segs.push({ a, T: h });
+    return buildRun(x0, v0, segs);
+  }
+  // one pass of a 1, 2, 1 running average, ends kept: takes the hand's jitter out of a drawn line (its slope gets much smoother)
+  const smoothVals = (vals) => vals.map((v, i) => (i === 0 || i === vals.length - 1 ? v : (vals[i - 1] + 2 * v + vals[i + 1]) / 4));
+  // ready made curves to draw from: n values (v: at the n piece ends, n = pieces + 1; a: one per piece, at its middle) over pieces of length h
+  function shapeVals(name, kind, n, h) {
+    const tAt = (i) => (kind === 'v' ? i * h : (i + 0.5) * h), Tt = (kind === 'v' ? n - 1 : n) * h, out = [];
+    for (let i = 0; i < n; i++) {
+      const t = tAt(i), u = t / Tt;
+      out.push(name === 'sine' ? (kind === 'v' ? 2 * Math.sin(2 * Math.PI * u) : 1.5 * Math.sin(2 * Math.PI * u * 2))
+        : name === 'step' ? (u < 0.3 ? 0 : u < 0.7 ? 2 : -1)
+        : name === 'tri' ? (kind === 'v' ? 3 * (1 - Math.abs(2 * u - 1)) : (u < 0.5 ? 1 : -1))
+        : 0);
+    }
+    return out;
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -328,12 +367,16 @@ table.rows input:focus { border-color: var(--accent); }
     toss: { x0: 0, v0: 12, segs: [[-9.81, 2 * 12 / 9.81], [0, 0], [0, 0]], vert: true, hint: 'Free fall: thrown up at 12 m/s, the ball has a = −9.81 m/s² the whole time, on the way up, at the top and on the way down. At the top v = 0 but a is not. It lands after 2v₀/g = 2.45 s, back at the height it started. Air resistance is ignored.' },
     two: { x0: -8, v0: 0, segs: [[1, 8], [0, 0], [0, 0]], B: { x0: -6, v0: 2, a: 0 }, hint: 'Car A (blue) starts from rest at x = −8 m and speeds up at 1 m/s²; car B (orange) passes x = −6 m at a steady 2 m/s. Where the two x–t lines cross, the cars are side by side: here at t = 2 + √8 = 4.83 s, x = 3.66 m. Where the v–t lines cross (t = 2 s), the cars have the same velocity and the gap between them is at its largest.' },
     ramps: { ang: [-20, 0, 30], v0: 0, hint: 'The ball rolls down piece 1, coasts along the flat, and climbs the steep piece 3 until it stops and comes back. Each piece gives a straight v–t line: its slope is the acceleration along that piece, steeper for a steeper ramp, zero on the flat. With no friction losses the ball comes back to its start height with no speed left and goes again.' },
+    draw: { hint: 'Draw any velocity graph with the mouse or a finger on the v–t pane, and see its derivative (the a–t graph, the slope of v) and its integral (the x–t graph, x₀ plus the area under v). The cart drives your motion when you press Play. Switch to drawing a, and both v and x come from areas.' },
     walk: { hint: 'Move the cart so that its position graph follows the dashed target. Flat parts mean stand still; steeper parts mean move faster.' }
   };
-  const S = { ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
+  const D_N = 100, D_H = 0.1;      /* Draw a graph: 100 pieces of 0.1 s, a 10 s run */
+  const S = { drawOn: false, dr: { kind: 'v', v: shapeVals('tri', 'v', D_N + 1, D_H), a: shapeVals('sine', 'a', D_N, D_H), x0: -6, v0: 0 }, ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
     walk: { pts: null, vel: false, run: false, t: 0, xs: [], x: 0, key: 0, score: null } };
   const WALK_T = 10, WALK_DT = 0.02, X_LIM = 10, RAMP_L = 3, RAMP_T = 12, G = 9.81;
   const rampBuild = () => rampRun(S.rp.ang, RAMP_L, S.rp.v0, RAMP_T, G);
+  const drawBuild = () => drawnRun(S.dr.kind, S.dr[S.dr.kind], D_H, S.dr.x0, S.dr.v0);
+  const buildAny = () => (S.drawOn ? drawBuild() : S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs));
   let run = buildRun(S.x0, S.v0, S.segs), runB = null, playing = false;
   /* car B: one constant acceleration for as long as car A's run lasts */
   const buildB = () => { runB = S.two ? buildRun(S.B.x0, S.B.v0, [{ a: S.B.a, T: Math.max(run.T, 0.5) }]) : null; };
@@ -375,7 +418,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function changed(custom) {
     if (custom) { S.preset = 'custom'; markPreset(); }
-    run = S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs); buildB();
+    run = buildAny(); buildB();
     if (S.t > tMax()) S.t = tMax();
     if (S.ramps) rampMatch();
     syncControls(); draw(); readouts();
@@ -389,15 +432,27 @@ table.rows input:focus { border-color: var(--accent); }
     $('secMotion').hidden = walk; $('secWalk').hidden = !walk;
     S.two = p === 'two'; $('secCarB').hidden = !S.two; if (S.two) S.B = { ...c.B };
     S.ramps = p === 'ramps'; $('secRamps').hidden = !S.ramps; if (S.ramps) { $('secMotion').hidden = true; S.rp = { ang: c.ang.slice(), v0: c.v0, target: null }; $('rampTargetOff').hidden = true; $('rampMatch').textContent = ''; }
+    S.drawOn = p === 'draw'; $('secDraw').hidden = !S.drawOn; if (S.drawOn) { $('secMotion').hidden = true; syncDraw(); }
     if (walk) { newTarget(); S.vert = false; }
     else {
-      if (!S.ramps) { S.x0 = c.x0; S.v0 = c.v0; c.segs.forEach(([a, T], k) => { S.segs[k] = { a, T }; }); }
+      if (!S.ramps && !S.drawOn) { S.x0 = c.x0; S.v0 = c.v0; c.segs.forEach(([a, T], k) => { S.segs[k] = { a, T }; }); }
       S.vert = !!c.vert;
-      run = S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs); buildB(); S.t = 0; syncControls();
+      run = buildAny(); buildB(); S.t = 0; syncControls();
     }
     setPlaying(false); draw(); readouts();
   }
   $('sx0').addEventListener('input', (e) => { S.x0 = +e.target.value; changed(true); });
+  function syncDraw() {
+    for (const b of document.querySelectorAll('#drawSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.dr.kind));
+    $('dv0Row').hidden = S.dr.kind === 'v';
+    $('sdx0').value = S.dr.x0; $('odx0').textContent = `${fx(S.dr.x0, 1)} m`; $('sdv0').value = S.dr.v0; $('odv0').textContent = `${fx(S.dr.v0, 1)} m/s`;
+    $('drawHint').textContent = S.dr.kind === 'v' ? 'Draw on the v–t graph. a–t shows its slope, x–t its area added to x₀.' : 'Draw on the a–t graph. v–t shows v₀ plus the area under a; x–t, x₀ plus the area under v.';
+  }
+  $('drawSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.dr.kind = b.dataset.k; S.t = 0; syncDraw(); changed(false); });
+  $('drawShapes').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const k = S.dr.kind; S.dr[k] = shapeVals(b.dataset.s, k, k === 'v' ? D_N + 1 : D_N, D_H); S.t = 0; changed(false); });
+  $('drawSmooth').addEventListener('click', () => { const k = S.dr.kind; S.dr[k] = smoothVals(S.dr[k]).map((v) => Math.round(v * 1000) / 1000); changed(false); });
+  $('sdx0').addEventListener('input', (e) => { S.dr.x0 = +e.target.value; syncDraw(); changed(false); });
+  $('sdv0').addEventListener('input', (e) => { S.dr.v0 = +e.target.value; syncDraw(); changed(false); });
   $('sv0').addEventListener('input', (e) => { S.v0 = +e.target.value; changed(true); });
   for (let k = 0; k < 3; k++) $('sr' + k).addEventListener('input', (e) => { S.rp.ang[k] = +e.target.value; changed(false); });
   $('srv').addEventListener('input', (e) => { S.rp.v0 = +e.target.value; changed(false); });
@@ -460,7 +515,7 @@ table.rows input:focus { border-color: var(--accent); }
   function layout() {
     const p = ps(), pad = 12 * p, trackH0 = S.vert ? 44 * p : Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, trackH = trackH0 + (S.two && !S.vert ? 54 * p : 0) + (S.ramps ? Math.min(110, H * 0.12) * p : 0), left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
     const top = trackH + 6 * p, gap = 8 * p, gh = (H - top - 30 * p - 2 * gap) / 3;
-    const blind = S.blind && S.preset !== 'walk';
+    const blind = S.blind && S.preset !== 'walk' && !S.drawOn;
     const panes = blind ? [{ k: 'x', y0: top, h: H - top - 30 * p }] : ['x', 'v', 'a'].map((k, i) => ({ k, y0: top + i * (gh + gap), h: gh }));
     return { p, pad, trackH, trackH0, left, right, panes, axisY: H - 22 * p };
   }
@@ -471,12 +526,15 @@ table.rows input:focus { border-color: var(--accent); }
     const span = hi - lo, step = niceStep(span / 4);
     return { lo: Math.floor(lo / step - 0.15) * step, hi: Math.ceil(hi / step + 0.15) * step, step };
   }
+  const DRAW_R = { v: { lo: -4, hi: 4, step: 2 }, a: { lo: -4, hi: 4, step: 2 } };
   function niceStep(r) { const e = Math.pow(10, Math.floor(Math.log10(r))), f = r / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
   function ranges() {
     const tm = tMax(), N = 200; let xl = Infinity, xh = -Infinity, vl = Infinity, vh = -Infinity, al = Infinity, ah = -Infinity;
     if (S.preset === 'walk') return { x: { lo: -X_LIM, hi: X_LIM, step: 5 }, v: { lo: -3, hi: 3, step: 1 }, a: { lo: -4, hi: 4, step: 2 } };
     for (let i = 0; i <= N; i++) for (const rr of runB ? [run, runB] : S.ramps && S.rp.target ? [run, S.rp.target.run] : [run]) { const s = stateAt(rr, tm * i / N); xl = Math.min(xl, s.x); xh = Math.max(xh, s.x); vl = Math.min(vl, s.v); vh = Math.max(vh, s.v); al = Math.min(al, s.a); ah = Math.max(ah, s.a); }
-    return { x: niceRange(Math.min(xl, 0), Math.max(xh, 0), 4), v: niceRange(Math.min(vl, 0), Math.max(vh, 0), 2), a: niceRange(Math.min(al, 0), Math.max(ah, 0), 2) };
+    const out = { x: niceRange(Math.min(xl, 0), Math.max(xh, 0), 4), v: niceRange(Math.min(vl, 0), Math.max(vh, 0), 2), a: niceRange(Math.min(al, 0), Math.max(ah, 0), 2) };
+    if (S.drawOn) out[S.dr.kind] = DRAW_R[S.dr.kind];     /* the pane being drawn on keeps its scale under the pen */
+    return out;
   }
 
   // ---------- drawing ----------
@@ -544,7 +602,7 @@ table.rows input:focus { border-color: var(--accent); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    LY = layout(); const L = LY, p = L.p, R = ranges(), tm = tMax(), walk = S.preset === 'walk', blind = S.blind && !walk;
+    LY = layout(); const L = LY, p = L.p, R = ranges(), tm = tMax(), walk = S.preset === 'walk', blind = S.blind && !walk && !S.drawOn;
     const tX = (t) => L.left + (L.right - L.left) * t / tm;
     // track (vertical for a ball thrown up: the height axis runs alongside the graphs)
     if (S.vert) drawShaft(L, R.x, blind);
@@ -602,6 +660,8 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.save(); ctx.translate(L.left - 44 * p, y0 + h / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`;
       ctx.fillText({ x: S.vert ? 'y (m)' : 'x (m)', v: 'v (m/s)', a: 'a (m/s²)' }[pane.k], 0, 0); ctx.restore();
       ctx.save(); ctx.beginPath(); ctx.rect(L.left, y0, L.right - L.left, h); ctx.clip();
+      if (S.drawOn && pane.k === S.dr.kind) { ctx.fillStyle = col; ctx.globalAlpha = 0.06; ctx.fillRect(L.left, y0, L.right - L.left, h); ctx.globalAlpha = 1;
+        ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = col; ctx.fillText('✎ draw on this graph', L.left + 6 * p, y0 + 4 * p); }
       // target (walk)
       if (walk && S.walk.pts && ((pane.k === 'x' && !S.walk.vel) || (pane.k === 'v' && S.walk.vel))) {
         ctx.setLineDash([7 * p, 5 * p]); ctx.strokeStyle = T.equi; ctx.lineWidth = 3 * p; ctx.beginPath();
@@ -712,7 +772,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readouts ----------
   function readouts() {
-    const walk = S.preset === 'walk', blind = S.blind && !walk, q = st(S.t), dd = (a, b, c) => `<div${c ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    const walk = S.preset === 'walk', blind = S.blind && !walk && !S.drawOn, q = st(S.t), dd = (a, b, c) => `<div${c ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Time t', `${S.t.toFixed(2)} s`) + dd(S.vert ? 'Height y' : 'Position x', `${fx(q.x, 2)} m`);
     if (blind) { if (runB) { const b = stateAt(runB, S.t); h += dd('Car B position x', `${fx(b.x, 2)} m`); } h += '<div class="wide"><dt>v, a, slopes, areas' + (runB ? ' and where the cars meet' : '') + '</dt><dd class="ok">hidden in Blind</dd></div>'; }
     else {
@@ -778,10 +838,21 @@ table.rows input:focus { border-color: var(--accent); }
     const [x, y] = local(e); if (!LY) return; can.focus();
     if (S.preset === 'walk' && y < LY.trackH) { drag = 'cart'; can.setPointerCapture(e.pointerId); moveCart(x); return; }
     if (S.preset === 'walk' && S.walk.run) return;
+    if (S.drawOn) { const pn = LY.panes.find((q) => q.k === S.dr.kind); if (pn && y >= pn.y0 && y <= pn.y0 + pn.h && x >= LY.left - 10) { drag = 'pen'; penLast = null; can.setPointerCapture(e.pointerId); setPlaying(false); pen(x, y); return; } }
     if (y > LY.trackH && x >= LY.left - 10) { drag = 'time'; can.setPointerCapture(e.pointerId); setPlaying(false); scrub(x); }
   });
-  can.addEventListener('pointermove', (e) => { if (!drag) return; const [x] = local(e); if (drag === 'cart') moveCart(x); else scrub(x); });
-  const endDrag = () => { drag = null; };
+  can.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = local(e); if (drag === 'pen') pen(x, y); else if (drag === 'cart') moveCart(x); else scrub(x); });
+  /* the pen: sets the drawn values under the pointer, filling in straight between this point and the last so a fast stroke leaves no gaps */
+  let penLast = null;
+  function pen(px, py) {
+    const L = LY, pn = L.panes.find((q) => q.k === S.dr.kind), r = DRAW_R[S.dr.kind], vals = S.dr[S.dr.kind], n = vals.length;
+    const u = Math.max(0, Math.min(1, (px - L.left) / (L.right - L.left))), i = S.dr.kind === 'v' ? Math.round(u * D_N) : Math.min(D_N - 1, Math.floor(u * D_N));
+    const val = Math.max(r.lo, Math.min(r.hi, r.lo + (r.hi - r.lo) * (pn.y0 + pn.h - py) / pn.h)), v = Math.round(val * 100) / 100;
+    if (penLast && penLast[0] !== i) { const [j, w] = penLast, st2 = i > j ? 1 : -1; for (let k = j + st2; k !== i; k += st2) vals[k] = Math.round((w + (v - w) * (k - j) / (i - j)) * 100) / 100; }
+    if (i >= 0 && i < n) vals[i] = v;
+    penLast = [i, v]; S.t = Math.min(S.t, D_N * D_H); changed(false);
+  }
+  const endDrag = () => { if (drag === 'pen') $('live') && ($('live').textContent = 'Graph drawn.'); drag = null; };
   can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
   function scrub(px) { const L = LY, t = Math.round((px - L.left) / (L.right - L.left) * tMax() * 100) / 100; /* to 0.01 s, as shown and captured */ S.t = Math.max(0, Math.min(S.preset === 'walk' ? Math.max(0, (S.walk.xs.length - 1) * WALK_DT) : tMax(), t)); draw(); readouts(); }
   function moveCart(px) { const L = LY, R = ranges().x; S.walk.x = Math.max(-X_LIM, Math.min(X_LIM, R.lo + (R.hi - R.lo) * (px - L.left) / (L.right - L.left))); if (!S.walk.run) S.walk.xs = []; draw(); }

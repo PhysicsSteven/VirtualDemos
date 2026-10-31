@@ -2,7 +2,7 @@
 // Motion Graphs: exact piecewise constant acceleration kinematics, the motion detector estimates, the parabola fit and the CSV.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,meetTimes,rampRun,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV');
+const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,meetTimes,rampRun,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV,drawnRun,smoothVals,shapeVals');
 let n = 0;
 const near = (a, b, tol, what) => assert(Math.abs(a - b) <= tol, `${what || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -101,6 +101,31 @@ group('ball on ramps: a = −(5/7) g sin θ per piece, energy conserved through 
   assert.equal(c.rampRun([10, 0, -10], L, 0, 12, g).why, 'rest');
   const r3 = c.rampRun([20, 20, 20], L, 2, 12, g); assert.equal(r3.why, 'left'); near(c.stateAt(r3, r3.T).v, -2, 1e-9);
   near(r3.T, 2 * 2 / ((5 / 7) * g * Math.sin(20 * Math.PI / 180)), 1e-9, 'up and back down the first piece');
+});
+
+group('draw a graph: the derivative and integrals of a drawn v or a are exact for the drawn line', () => {
+  const h = 0.1, N = 100;
+  // v drawn as samples of v = 3 − 0.6 t (a straight line): a = −0.6 everywhere, x = x0 + 3t − 0.3t²
+  const vs = Array.from({ length: N + 1 }, (_, i) => 3 - 0.6 * i * h), r = c.drawnRun('v', vs, h, -2, 99);
+  for (const t of [0, 0.05, 1.234, 5, 9.99, 10]) { const q = c.stateAt(r, t); near(q.x, -2 + 3 * t - 0.3 * t * t, 1e-12, `x(${t})`); near(q.v, 3 - 0.6 * t, 1e-12); near(q.a, -0.6, 1e-12); }
+  near(r.T, 10, 1e-12, 'a 10 s run');
+  // any drawn v: x at each sample time is the trapezoid sum (the exact area under the straight pieces); a is each piece's slope
+  let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const w = Array.from({ length: N + 1 }, () => Math.round((rnd() * 8 - 4) * 100) / 100), rw = c.drawnRun('v', w, h, 1, 0);
+  let X = 1;
+  for (let i = 1; i <= N; i++) { X += h * (w[i - 1] + w[i]) / 2; near(c.stateAt(rw, i * h).x, X, 1e-9, `x at sample ${i}`); near(c.stateAt(rw, (i - 0.5) * h).a, (w[i] - w[i - 1]) / h, 1e-9); near(c.stateAt(rw, i * h).v, w[i], 1e-9); }
+  // a drawn as steps: v = v0 + sum of a h, x the exact double integral
+  const as = Array.from({ length: N }, (_, i) => (i < 30 ? 0 : i < 70 ? 2 : -1)), ra = c.drawnRun('a', as, h, -6, 1);
+  near(c.stateAt(ra, 3).v, 1, 1e-12); near(c.stateAt(ra, 7).v, 1 + 2 * 4, 1e-9); near(c.stateAt(ra, 10).v, 9 - 3, 1e-9);
+  near(c.stateAt(ra, 7).x, -6 + 1 * 7 + 0.5 * 2 * 16, 1e-9, 'x after the second step');
+  // shapes: lengths and the steps shape
+  assert.equal(c.shapeVals('sine', 'v', N + 1, h).length, N + 1); assert.equal(c.shapeVals('sine', 'a', N, h).length, N);
+  near(c.shapeVals('tri', 'v', N + 1, h)[50], 3, 1e-12, 'triangle peak at the middle');
+  near(c.shapeVals('sine', 'v', N + 1, h)[100], 0, 1e-12); assert.equal(c.shapeVals('zero', 'a', N, h).every((v) => v === 0), true);
+  // smoothing keeps the ends and a straight line, and shrinks a zigzag
+  const sm = c.smoothVals(vs); for (let i = 0; i <= N; i++) near(sm[i], vs[i], 1e-12, 'a straight line is unchanged');
+  const zz = Array.from({ length: 11 }, (_, i) => (i % 2 ? 1 : -1)), z2 = c.smoothVals(zz);
+  assert.equal(z2[0], -1); assert.equal(z2[10], -1); for (let i = 1; i < 10; i++) near(z2[i], 0, 1e-12, 'zigzag averaged away');
 });
 
 console.log(`${n} motion-graphs test groups passed`);

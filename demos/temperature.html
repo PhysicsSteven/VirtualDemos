@@ -68,6 +68,7 @@
           <button type="button" data-v="ex" aria-pressed="false">Expansion</button>
           <button type="button" data-v="co" aria-pressed="false">Conduction</button>
           <button type="button" data-v="cv" aria-pressed="false">Cooling</button>
+          <button type="button" data-v="ch" aria-pressed="false" title="Energy chain">Chain</button>
         </div>
         <button type="button" class="spin attn" id="go">Start</button>
         <button type="button" class="btn" id="restart">Start over</button>
@@ -101,6 +102,7 @@
             <div><div class="slider-head"><label for="sL">Length</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0.05" max="0.40" step="0.01"></div>
             <div class="wide"><button type="button" class="btn" id="newMystery">New mystery block</button></div>
           </fieldset>
+          <label class="check wide"><input type="checkbox" id="tChunks"><span>Energy chunks: show each block's thermal energy as dots</span></label>
         </div>
         <div class="shelf-card" id="cardTh" role="group" aria-label="The gas thermometer and the bath" hidden>
           <span class="card-title">Constant volume gas thermometer: a 1.000 L bulb joined to a pressure gauge</span>
@@ -161,6 +163,13 @@
           </fieldset>
           <div><div class="slider-head"><label for="sX">Probe position</label><output id="oX" class="mono" for="sX"></output></div><input type="range" id="sX" min="0" max="1000" step="1"></div>
         </div>
+        <div class="shelf-card" id="cardCh" role="group" aria-label="The energy chain" hidden>
+          <span class="card-title">An energy chain: a source, a converter and a user</span>
+          <fieldset><legend>Source</legend><div class="seg" role="group" aria-label="Source" id="chSrc"><button type="button" data-k="bike" aria-pressed="true">Cyclist</button><button type="button" data-k="sun" aria-pressed="false">Sun</button></div>
+            <div><div class="slider-head"><label for="sChL" id="chLlab">Work at the pedals</label><output id="oChL" class="mono" for="sChL"></output></div><input type="range" id="sChL" min="25" max="300" step="5"></div></fieldset>
+          <fieldset><legend>Converter</legend><div class="seg" role="group" aria-label="Converter" id="chConv"><button type="button" data-k="gen" aria-pressed="true">Generator</button><button type="button" data-k="pv" aria-pressed="false">Solar cell</button></div></fieldset>
+          <fieldset><legend>User</legend><div class="seg" role="group" aria-label="User" id="chUse"><button type="button" data-k="cfl" aria-pressed="true">Light bulb</button><button type="button" data-k="heater" aria-pressed="false">Water heater</button><button type="button" data-k="motor" aria-pressed="false">Motor</button></div></fieldset>
+        </div>
         <div class="shelf-card" id="cardCv" role="group" aria-label="The hot sphere and the air around it" hidden>
           <span class="card-title">A hot metal sphere hanging in room air, cooling by convection and radiation</span>
           <fieldset><legend>Sphere</legend>
@@ -188,6 +197,8 @@
           <button type="button" data-p="rod" aria-pressed="false">Rod in a water bath</button>
           <button type="button" data-p="water4" aria-pressed="false">Water near 4 °C</button>
           <button type="button" data-p="wall" aria-pressed="false">House wall in winter</button>
+          <button type="button" data-p="chunks" aria-pressed="false">Energy chunks</button>
+          <button type="button" data-p="chain" aria-pressed="false">Energy chain: bike to light</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -226,6 +237,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="aboutEx"></p>
           <p class="hint" id="aboutCo"></p>
           <p class="hint" id="aboutCv"></p>
+          <p class="hint" id="aboutCh"></p>
         </details>
         </div></details>
       </section>
@@ -375,6 +387,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return tr;
   }
   function coolAt(p, t, track) { const tr = coolTrack(p, t, track), i = Math.floor(t / COOL_H), r = t - i * COOL_H; return r > 1e-12 ? coolStep(p, tr[i], r) : tr[i]; }
+
+  /* ---- Energy chain: a source, a converter and a user, each passing on part of the energy it gets in a new form ----
+     Efficiencies are the representative values of OpenStax College Physics 2e, section 7.6, Table 7.2: cycling 20% (of the food
+     energy the body uses, the rest warms the rider), solar cell 10%, compact fluorescent light 20% (of the electrical energy, as
+     light), electric motor 98%. The generator is an electric motor run the other way and is given the motor's 98% (an assumption).
+     The heater turns all its electrical energy into thermal energy of 1.00 kg of water (energy conservation; heat lost from the
+     pot is left out). Sunlight: 1000 W/m², the irradiance of the standard test conditions for solar panels (IEC 60904-3). */
+  const CH_SRC = { bike: { name: 'Cyclist', inForm: 'chemical', out: 'mechanical', eta: 0.20 }, sun: { name: 'Sun', inForm: 'light', out: 'light', eta: 1 } };
+  const CH_CONV = { gen: { name: 'Generator', inForm: 'mechanical', out: 'electrical', eta: 0.98 }, pv: { name: 'Solar cell', inForm: 'light', out: 'electrical', eta: 0.10 } };
+  const CH_USE = { cfl: { name: 'Compact fluorescent light', inForm: 'electrical', out: 'light', eta: 0.20 }, heater: { name: 'Water heater', inForm: 'electrical', out: 'thermal', eta: 1 },
+    motor: { name: 'Motor lifting a load', inForm: 'electrical', out: 'mechanical', eta: 0.98 } };
+  const SUN_I = 1000, CH_WATER = 1.00, CH_LOAD = 10;
+  /* level: the cyclist's work at the pedals (W), or the panel's area in the sun (m²). Powers in W; a mismatch stops the chain there. */
+  function chain(src, conv, use, level) {
+    const S0 = CH_SRC[src], C = CH_CONV[conv], U = CH_USE[use];
+    const Pin = src === 'bike' ? level / S0.eta : SUN_I * level, P1 = Pin * S0.eta;
+    const out = { Pin, inForm: S0.inForm, P1, form1: S0.out, waste0: Pin - P1, ok1: C.inForm === S0.out, ok2: true, P2: 0, waste1: 0, P3: 0, waste2: 0, useful: 0, eff: 0 };
+    if (!out.ok1) return out;
+    out.P2 = P1 * C.eta; out.waste1 = P1 - out.P2; out.ok2 = U.inForm === C.out;
+    if (!out.ok2) return out;
+    out.useful = out.P2 * U.eta; out.form3 = U.out; out.waste2 = U.out === 'thermal' ? 0 : out.P2 - out.useful;
+    out.eff = out.useful / Pin;
+    return out;
+  }
+  const heaterRise = (E) => E / (CH_WATER * SPECIFIC.water.c);          /* °C, water warmed by E joules */
+  const liftHeight = (E) => E / (CH_LOAD * 9.81);                         /* m, the load raised by E joules */
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -388,7 +426,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     th: { bath: 'ice', n: 20, Tg: 20, t: 0, mysT: 61.3, mysN: 0, hist: [] },
     ex: { kind: 'rod', rod: 'aluminum', liq: 'water', T: 20, mys: 'brass', mysN: 0 },
     co: { build: 'house', layers: [{ mat: 'plaster', d: 13 }, { mat: 'glasswool', d: 90 }, { mat: 'brick', d: 100 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1, x: 0.5 },
-    cv: { metal: 'aluminum', surf: 'polished', D: 5, T0: 80, U: 0, Ta: 20, t: 0 } };
+    cv: { metal: 'aluminum', surf: 'polished', D: 5, T0: 80, U: 0, Ta: 20, t: 0 },
+    ch: { src: 'bike', conv: 'gen', use: 'cfl', bike: 100, sun: 1, t: 0 }, chunks: false };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -476,6 +515,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     if (VG && Math.abs(st.P) > 1e-6) VG.label(ctx, `each dot carries ${fmtJ(eqFlow.Ep)} · ${eqFlow.sent} have left ${dir > 0 ? 'A' : 'B'}`, (xa + xb) / 2, y - br - 44 * p, { a: 'center', s: 10 * p, c: T.hot });
   }
+  /* Energy chunks: each block's thermal energy, counted from 0 °C (a choice: only changes matter), drawn as dots of one size. The two
+     counts are rounded from C_A T_A and C_B T_B; their sum stays the same (to the rounding) because the box lets no heat in or out. */
+  function eqChunks(st, cA, cB, sA, sB, floor, p) {
+    const EA = st.CA * st.TA, EB = st.CB * st.TB, tot = EA + EB, base = eqFlow.Ep || step125(tot / 200), k = Math.max(1, step125(tot / base / 260)), Ec = base * k;
+    const nA = Math.max(0, Math.round(EA / Ec)), nB = Math.max(0, Math.round(EB / Ec));
+    const dots = (cx, s, n) => {
+      const cols = Math.max(1, Math.ceil(Math.sqrt(n))), gap = (s - 10) / cols, r = Math.max(1.4, Math.min(4 * p, gap * 0.32)), x0 = cx - s / 2 + 5, y1 = floor - 5;
+      for (let i = 0; i < n; i++) { const c = i % cols, rr = Math.floor(i / cols); ctx.beginPath(); ctx.arc(x0 + gap * (c + 0.5), y1 - gap * (rr + 0.5), r, 0, 7); ctx.fill(); }
+    };
+    ctx.save(); ctx.fillStyle = T.hot; ctx.globalAlpha = 0.9; dots(cA, sA, nA); dots(cB, sB, nB); ctx.restore();
+    if (VG) VG.label(ctx, `energy chunks: each dot in a block ${fmtJ(Ec)} (from 0 °C) · A ${nA} + B ${nB} = ${nA + nB}`, W / 2, floor + 26 * p, { a: 'center', s: 10.5 * p, c: T.hot });
+  }
   function drawEq() {
     const p = proj(), by = scene(0.78), e = S.eq, st = eqNow(), keyA = e.a === 'mystery' ? e.mys : e.a;
     const bx0 = W * 0.08, bx1 = W * 0.92, top = H * 0.2;
@@ -499,6 +550,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.label(ctx, `${CONDUCT[e.bar].name.split(' (')[0].toLowerCase()} bar, ${f(e.L * 100, 0)} cm`, (xa + xb) / 2, barY + br + 12 * p, { a: 'center', s: 10.5 * p });
     block(cA, floor, sA, keyA, st.TA, e.a === 'mystery' ? 'A: mystery' : `A: ${SPECIFIC[keyA].name.toLowerCase()}`);
     block(cB, floor, sB, e.b, st.TB, `B: ${SPECIFIC[e.b].name.toLowerCase()}`);
+    if (S.chunks) eqChunks(st, cA, cB, sA, sB, floor, p);
     /* heat flow arrow, width by the power */
     const P = st.P, mx = (xa + xb) / 2, len = Math.min(70 * p, (xb - xa) * 0.35);
     eqDots(st, xa, xb, barY, br, p);
@@ -711,6 +763,56 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     thermoLCD(lx, ly, lw, lh, `${f(Tn, 2)} °C`, 'thermocouple');
     if (VG) VG.label(ctx, `${SPHERES[c.metal].name.split(',')[0].toLowerCase()} sphere, ${f(c.D, 1)} cm across, ${c.surf === 'black' ? 'painted flat black' : 'polished'}; room air at ${f(c.Ta, 0)} °C`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
   }
+  /* Energy chain: three stations left to right; dots stream along each link, one dot per fixed amount of energy, so their spacing
+     shows the power; dots that peel off upward are the thermal energy each station wastes. A picture of the numbers in chain(). */
+  const FORM_COL = { chemical: '#7a9e3a', mechanical: '#3d7fd8', electrical: '#e0a21a', light: '#f2d43a', thermal: '#e2553a' };
+  function chNow() { const c = S.ch; return chain(c.src, c.conv, c.use, c[c.src]); }
+  function drawCh() {
+    const p = proj(), c = S.ch, r = chNow(), by = scene(0.82), cy = H * 0.45, bw = Math.min(W * 0.24, 170 * p), bh = Math.min(H * 0.34, 120 * p), small = W < 600;
+    const xs = [W * 0.17, W * 0.5, W * 0.83], now = reduce ? 0 : performance.now() / 1000, Ec = step125(r.Pin / 10);
+    const stream = (x0, y0, x1, y1, P, col) => {      /* dots along a straight link: rate P/Ec per second, moving at 60 px/s */
+      if (!(P > 0)) return; const len = Math.hypot(x1 - x0, y1 - y0), v = 60 * p, sp = v * Ec / P;
+      ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 5 * p;
+      if (sp > 2) for (let d = (now * v) % sp; d < len; d += sp) { const u = d / len; ctx.beginPath(); ctx.arc(x0 + (x1 - x0) * u, y0 + (y1 - y0) * u, 4.2 * p, 0, 7); ctx.fill(); }
+      ctx.restore();
+    };
+    const box = (x, title, sub, ok) => {
+      ctx.save(); ctx.fillStyle = dark() ? '#1d2530' : '#f4f6f9'; ctx.strokeStyle = ok ? T.line : T.hot; ctx.lineWidth = (ok ? 1.5 : 2.5) * p;
+      ctx.beginPath(); ctx.roundRect(x - bw / 2, cy - bh / 2, bw, bh, 10 * p); ctx.fill(); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = T.ink; ctx.font = `700 ${(small ? 10.5 : 12.5) * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(title, x, cy + bh / 2 + 8 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${(small ? 9.5 : 10.5) * p}px ${T.ui}`; ctx.fillText(sub, x, cy + bh / 2 + 25 * p);
+    };
+    const icon = (x, kind) => {
+      const s = Math.min(bw, bh) * 0.32; ctx.save(); ctx.translate(x, cy); ctx.lineWidth = 2.5 * p; ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink;
+      if (kind === 'bike') { for (const dx of [-s * 0.8, s * 0.8]) { ctx.beginPath(); ctx.arc(dx, s * 0.5, s * 0.55, 0, 7); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(-s * 0.8, s * 0.5); ctx.lineTo(-s * 0.1, -s * 0.2); ctx.lineTo(s * 0.8, s * 0.5); ctx.moveTo(-s * 0.1, -s * 0.2); ctx.lineTo(s * 0.1, -s * 0.9); ctx.stroke();
+        ctx.beginPath(); ctx.arc(s * 0.25, -s * 1.15, s * 0.22, 0, 7); ctx.fill(); }
+      else if (kind === 'sun') { ctx.fillStyle = FORM_COL.light; ctx.beginPath(); ctx.arc(0, 0, s * 0.6, 0, 7); ctx.fill(); ctx.strokeStyle = FORM_COL.light;
+        for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; ctx.beginPath(); ctx.moveTo(Math.cos(a) * s * 0.8, Math.sin(a) * s * 0.8); ctx.lineTo(Math.cos(a) * s * 1.1, Math.sin(a) * s * 1.1); ctx.stroke(); } }
+      else if (kind === 'gen') { ctx.beginPath(); ctx.roundRect(-s, -s * 0.6, s * 2, s * 1.2, 6 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-s * 1.3, 0); ctx.lineTo(-s, 0); ctx.stroke(); ctx.font = `700 ${s * 0.8}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('G', 0, 0); }
+      else if (kind === 'pv') { ctx.fillStyle = '#2a4c8a'; ctx.beginPath(); ctx.moveTo(-s * 1.1, s * 0.5); ctx.lineTo(s * 0.7, s * 0.5); ctx.lineTo(s * 1.1, -s * 0.5); ctx.lineTo(-s * 0.7, -s * 0.5); ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#9fb6dc'; ctx.lineWidth = 1; for (let i = 1; i < 4; i++) { const u = i / 4; ctx.beginPath(); ctx.moveTo(-s * 1.1 + u * s * 1.8, s * 0.5); ctx.lineTo(-s * 0.7 + u * s * 1.8, -s * 0.5); ctx.stroke(); } }
+      else if (kind === 'cfl') { const lit = r.useful > 0; ctx.strokeStyle = lit ? FORM_COL.light : T.muted; ctx.lineWidth = 4 * p; ctx.beginPath(); for (let i = 0; i < 3; i++) { ctx.moveTo(-s * 0.4, -s * 0.9 + i * s * 0.45); ctx.bezierCurveTo(s * 0.6, -s * 0.9 + i * s * 0.45, s * 0.6, -s * 0.65 + i * s * 0.45, -s * 0.4, -s * 0.65 + i * s * 0.45); } ctx.stroke(); ctx.fillStyle = T.muted; ctx.fillRect(-s * 0.5, s * 0.5, s, s * 0.45); }
+      else if (kind === 'heater') { const rise = heaterRise(r.useful * c.t); ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(-s, -s * 0.6); ctx.lineTo(-s, s); ctx.lineTo(s, s); ctx.lineTo(s, -s * 0.6); ctx.stroke(); ctx.fillStyle = tcol(20 + rise, 0.9); ctx.fillRect(-s + 2, -s * 0.2, 2 * s - 4, s * 1.2 - 2); ctx.strokeStyle = FORM_COL.thermal; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = -2; i <= 2; i++) { ctx.moveTo(i * s * 0.3, s * 0.85); ctx.lineTo(i * s * 0.3 + s * 0.12, s * 0.65); } ctx.stroke(); }
+      else { const hgt = Math.min(1, liftHeight(r.useful * c.t) / 20); ctx.beginPath(); ctx.arc(0, s * 0.6, s * 0.4, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(s * 0.4, s * 0.6); ctx.lineTo(s * 0.4, -s * 1.1 + hgt * 0); ctx.stroke(); ctx.fillRect(s * 0.15, s * 0.3 - hgt * s * 1.2 - s * 0.3, s * 0.5, s * 0.35); }
+      ctx.restore();
+    };
+    const fmtW = (v) => `${v >= 100 ? f(v, 0) : v >= 10 ? f(v, 1) : f(v, 2)} W`;
+    /* what comes in */
+    stream(8 * p, cy, xs[0] - bw / 2, cy, r.Pin, FORM_COL[r.inForm]);
+    const S0 = CH_SRC[c.src], C = CH_CONV[c.conv], U = CH_USE[c.use];
+    box(xs[0], S0.name, c.src === 'bike' ? `${fmtW(r.Pin)} of food energy` : `${fmtW(r.Pin)} of sunlight`, true); icon(xs[0], c.src);
+    box(xs[1], C.name, r.ok1 ? `efficiency ${f(C.eta * 100, 0)}%` : `cannot use ${r.form1}`, r.ok1); icon(xs[1], c.conv);
+    box(xs[2], W < 600 && c.use === 'cfl' ? 'Light bulb (CFL)' : W < 600 && c.use === 'motor' ? 'Motor' : U.name, !r.ok1 ? 'gets nothing' : !r.ok2 ? `cannot use ${C.out}` : `${U.out === 'thermal' ? 'all into the water' : `efficiency ${f(U.eta * 100, 0)}%`}`, r.ok1 && r.ok2); icon(xs[2], c.use);
+    stream(xs[0] + bw / 2, cy, xs[1] - bw / 2, cy, r.P1, FORM_COL[r.form1]);
+    if (r.waste0 > 0) stream(xs[0], cy - bh / 2, xs[0], 40 * p, r.waste0, FORM_COL.thermal);
+    if (r.ok1) { stream(xs[1] + bw / 2, cy, xs[2] - bw / 2, cy, r.P2, FORM_COL[C.out]); if (r.waste1 > 0) stream(xs[1], cy - bh / 2, xs[1], 40 * p, r.waste1, FORM_COL.thermal); }
+    if (r.ok1 && r.ok2) { if (U.out !== 'thermal') stream(xs[2] + bw / 2, cy, W - 8 * p, cy, r.useful, FORM_COL[U.out]); if (r.waste2 > 0) stream(xs[2], cy - bh / 2, xs[2], 40 * p, r.waste2, FORM_COL.thermal); }
+    /* the key to the forms */
+    ctx.font = `${(small ? 9.5 : 10.5) * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let kx = 12 * p; const ky = Math.max(by - 10 * p, cy + bh / 2 + 46 * p);
+    for (const [k, col] of Object.entries(FORM_COL)) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(kx + 5 * p, ky, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; ctx.fillText(k, kx + 13 * p, ky); kx += ctx.measureText(k).width + (small ? 18 : 30) * p; }
+    if (VG) VG.label(ctx, `each dot ${fmtJ(Ec)} · dots rising off a station are thermal energy it wastes`, W / 2, 22 * p, { a: 'center', s: 10.5 * p });
+  }
   function drawCurve() {
     const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
     if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
@@ -733,6 +835,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else { const k = S.ex.liq; xs = [0, 40]; const pts = []; for (let t = 0; t <= 40; t += 0.5) pts.push([t, capH(k, t)]); ys = [Math.min(...pts.map((q) => q[1])) - 2, Math.max(...pts.map((q) => q[1])) + 2];
         series = [{ pts: [[S.ex.T, capH(k, S.ex.T)]], col: T.hot, dots: true, ring: true }, { pts: (window.vdRows ? window.vdRows() : []).filter((r) => r.setup === 'flask' && r.material === LIQUIDS[k].name).map((r) => [+r.T_C, +r.reading_mm]), col: T.accent, dots: true }];
         xl = 'bath temperature (°C)'; yl = 'level h (mm)'; }
+    } else if (S.view === 'ch') {
+      const r = chNow(), t = S.ch.t, tmax = Math.max(60, Math.ceil(t * 1.2 / 60) * 60);
+      xs = [0, tmax]; ys = [0, Math.max(10, r.Pin * tmax) / 1000];
+      series = [{ pts: [[0, 0], [t, r.Pin * t / 1000]], col: FORM_COL[r.inForm], w: 2.2 }, { pts: [[0, 0], [t, r.useful * t / 1000]], col: T.accent, w: 2.6 },
+        { pts: [[0, 0], [t, (r.waste0 + r.waste1 + r.waste2) * t / 1000]], col: FORM_COL.thermal, w: 2.2, dash: true }];
+      xl = 'time t (s)'; yl = 'energy (kJ)';
     } else if (S.view === 'cv') {
       const c = S.cv, tmax = Math.max(600, Math.ceil(c.t * 1.25 / 600) * 600), pts = [], n = 240;
       for (let i = 0; i <= n; i++) { const t = c.t * i / n; pts.push([t, cvTemp(t)]); }
@@ -761,14 +869,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.strokeStyle = s.col; c.lineWidth = (s.w || 2) * p; c.setLineDash(s.dash ? [5, 4] : []); c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); c.setLineDash([]);
     }
     c.restore();
+    if (S.view === 'ch') { const r = chNow(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top';
+      [['energy in', FORM_COL[r.inForm]], ['delivered', T.accent], ['wasted as heat (dashed)', FORM_COL.thermal]].forEach(([t, col], i) => { c.fillStyle = col; c.fillText(t, L + 8 * p, Tp + 4 * p + i * 14 * p); }); }
   }
   function redraw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    ({ eq: drawEq, th: drawTh, ex: drawEx, co: drawCo, cv: drawCv })[S.view]();
+    ({ eq: drawEq, th: drawTh, ex: drawEx, co: drawCo, cv: drawCv, ch: drawCh })[S.view]();
     drawCurve(); readouts(); clock();
   }
-  function clock() { $('clock').textContent = S.view === 'eq' ? `t = ${f(S.eq.t, 0)} s` : S.view === 'th' ? `t = ${f(S.th.t, 0)} s in this bath` : S.view === 'cv' ? `t = ${f(S.cv.t, 0)} s` : ''; }
+  function clock() { $('clock').textContent = S.view === 'eq' ? `t = ${f(S.eq.t, 0)} s` : S.view === 'th' ? `t = ${f(S.th.t, 0)} s in this bath` : S.view === 'cv' ? `t = ${f(S.cv.t, 0)} s` : S.view === 'ch' ? `t = ${f(S.ch.t, 0)} s` : ''; }
 
   // ---------- readouts ----------
   function readouts() {
@@ -792,6 +902,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Length now', `${f(ROD_L0 * 1000 + dl, 3)} mm`) + dd('α from the table', S.blind || ex.rod === 'mystery' ? hide : `${f(EXPAND[k].a * 1e6, 1)} × 10⁻⁶ /°C`); }
       else { const k = ex.liq, hh = capH(k, ex.T); h = dd('Level above the 20 °C mark', `${f(hh, 1)} mm`) + dd('Bath temperature', `${f(ex.T, 1)} °C`) + dd('Liquid', LIQUIDS[k].name)
         + dd('Liquid volume now', S.blind ? hide : `${f(FLASK_V0 * liquidVol(k, ex.T) / 1000, 5)} mL`) + (k === 'water' ? dd('Density of water', S.blind ? hide : `${f(waterRho(ex.T), 3)} kg/m³`) : dd('β from the table', S.blind ? hide : `${f(LIQUIDS[k].b * 1e6, 0)} × 10⁻⁶ /°C`)); }
+    } else if (S.view === 'ch') {
+      const c = S.ch, r = chNow(), U = CH_USE[c.use], W_ = (v) => `${f(v, v < 10 ? 2 : 1)} W`, E = r.useful * c.t;
+      h = dd(c.src === 'bike' ? 'Food energy the rider uses' : 'Sunlight on the panel', W_(r.Pin)) + dd(c.src === 'bike' ? 'Work at the pedals' : 'Light reaching the converter', W_(r.P1))
+        + dd('Electrical power out of the converter', r.ok1 ? W_(r.P2) : 'none: wrong kind of energy') + dd(`Useful ${r.form3 || 'output'} from the user`, r.ok1 && r.ok2 ? W_(r.useful) : 'none')
+        + dd('Wasted as thermal energy', W_(r.waste0 + r.waste1 + r.waste2)) + dd('Whole chain efficiency', r.ok1 && r.ok2 ? `${f(r.eff * 100, 2)}%` : '—')
+        + dd('Time', `${f(c.t, 0)} s`) + (c.use === 'heater' && r.ok1 && r.ok2 ? dd('1.00 kg of water warmed by', `${f(heaterRise(E), 3)} °C`) : c.use === 'motor' && r.ok1 && r.ok2 ? dd('10 kg load lifted', `${f(liftHeight(E), 2)} m`) : dd('Useful energy so far', fmtJ(E)));
     } else if (S.view === 'cv') {
       const c = S.cv, par = cvPar(), Tn = cvTemp(c.t), r = coolRates(par, Tn), m = coolMass(par);
       h = dd('Thermocouple', `${f(Tn, 2)} °C`) + dd('Time', `${f(c.t, 0)} s`) + dd('Room air', `${f(c.Ta, 0)} °C`)
@@ -833,6 +949,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sX').value = Math.round(c.x * 1000); const w = wallState(coWall()); $('oX').textContent = `${f(c.x * w.thick * 1000, 1)} mm in`;
     const v = S.cv; $('selCvM').value = v.metal; $('selCvS').value = v.surf; $('sCvD').value = v.D; $('oCvD').textContent = `${f(v.D, 1)} cm`;
     $('sCvT0').value = v.T0; $('oCvT0').textContent = `${v.T0} °C`; $('sCvU').value = v.U; $('oCvU').textContent = v.U ? `${f(v.U, 1)} m/s` : 'off (still air)'; $('sCvTa').value = v.Ta; $('oCvTa').textContent = `${v.Ta} °C`;
+    const ch = S.ch; for (const [id, k] of [['chSrc', ch.src], ['chConv', ch.conv], ['chUse', ch.use]]) for (const b of document.querySelectorAll(`#${id} button`)) b.setAttribute('aria-pressed', String(b.dataset.k === k));
+    const sl = $('sChL'); if (ch.src === 'bike') { sl.min = 25; sl.max = 300; sl.step = 5; sl.value = ch.bike; $('chLlab').textContent = 'Work at the pedals'; $('oChL').textContent = `${ch.bike} W`; }
+    else { sl.min = 0.25; sl.max = 2; sl.step = 0.25; sl.value = ch.sun; $('chLlab').textContent = 'Panel area in full sun'; $('oChL').textContent = `${f(ch.sun, 2)} m²`; }
+    $('tChunks').checked = S.chunks;
     for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
@@ -854,12 +974,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     water4: { view: 'ex', hint: 'Water fills a Pyrex flask to the zero mark of a thin tube at 20 °C. Cool it toward 0 °C: the level falls, then a little above 4 °C it turns and rises again. Water is densest at 3.98 °C; the level turns a little higher, at about 4.5 °C, because the flask shrinks as it cools too.',
       set: () => Object.assign(S.ex, { kind: 'flask', liq: 'water', T: 20 }) },
     wall: { view: 'co', hint: 'A house wall: 13 mm of plasterboard, 90 mm of glass wool and 100 mm of brick, with still air at 20 °C inside and a 24 km/h wind at −5 °C outside. Drag the probe through the wall: the temperature drops most across the insulation.',
-      set: () => setBuild('house') } };
-  const card = { eq: 'cardEq', th: 'cardTh', ex: 'cardEx', co: 'cardCo', cv: 'cardCv' };
-  const UNITS = { eq: 'T in °C · mass in kg · time in s', th: 'P in kPa · T in °C · gas in mmol', ex: 'T in °C · lengths in mm', co: 'T in °C · P in W · thickness in mm', cv: 'T in °C · time in s · diameter in cm' };
+      set: () => setBuild('house') },
+    chunks: { view: 'eq', hint: 'The same hot aluminum and cool water, with each block\'s thermal energy drawn as dots of one size (counted from 0 °C). Start it and watch dots leave A, travel through the bar and pile up in B: the total stays the same, because the box lets no energy in or out. Thermal energy is not temperature: when they agree in temperature, the water holds more dots per kilogram than the aluminum.',
+      set: () => { Object.assign(S.eq, { a: 'aluminum', b: 'water', mA: 0.5, mB: 0.25, TA0: 90, TB0: 20, bar: 'copper', L: 0.10, t: 0 }); S.chunks = true; } },
+    chain: { view: 'ch', hint: 'A cyclist turns a generator that lights a compact fluorescent bulb. Each station passes on only part of what it gets: the body turns about 20% of its food energy into work, the generator 98% of the work into electricity, the bulb 20% of that into light. Only 3.9% of the food energy ends up as light; the rest warms the rider, the generator and the bulb. Try the Sun on a solar cell, or a heater instead of the bulb.',
+      set: () => Object.assign(S.ch, { src: 'bike', conv: 'gen', use: 'cfl', bike: 100, t: 0 }) } };
+  const card = { eq: 'cardEq', th: 'cardTh', ex: 'cardEx', co: 'cardCo', cv: 'cardCv', ch: 'cardCh' };
+  const UNITS = { eq: 'T in °C · mass in kg · time in s', th: 'P in kPa · T in °C · gas in mmol', ex: 'T in °C · lengths in mm', co: 'T in °C · P in W · thickness in mm', cv: 'T in °C · time in s · diameter in cm', ch: 'P in W · energy in kJ · time in s' };
   const LABEL = { eq: 'Two blocks in an insulated box joined by a metal bar, each with a thermometer. Space starts or pauses.', th: 'A glass bulb of gas held in a bath on a stand, joined by a tube to a pressure gauge.',
     ex: 'A rod in a water jacket against a dial gauge, or a flask of liquid with a thin tube and a ruler, in a water bath.', co: 'A wall seen edge on, with the temperature profile drawn across it and a probe inside it.',
-    cv: 'A hot metal sphere hanging from a stand in room air, with a thermocouple, warm air rising from it and a fan that can blow across it. Space starts or pauses.' };
+    cv: 'A hot metal sphere hanging from a stand in room air, with a thermocouple, warm air rising from it and a fan that can blow across it. Space starts or pauses.',
+    ch: 'An energy chain: a source, a converter and a user in a row, with dots of energy streaming between them and thermal energy rising off each. Space starts or pauses.' };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     for (const k in card) $(card[k]).hidden = k !== v;
@@ -867,10 +992,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('units').textContent = UNITS[v]; can.setAttribute('aria-label', LABEL[v]);
     const st = isStatic(); $('go').hidden = st; $('restart').hidden = st; $('speedSeg').hidden = st;
     $('s300').hidden = v !== 'cv'; if (v !== 'cv' && S.speed === 300) S.speed = 60;
+    if ($('vdHowTo')) $('vdHowTo').hidden = v === 'ch';     /* no worksheet, so no video, for the energy chain */
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
-  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); if (k === 'mystery') newMystery(true); setView(c.view); }
+  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.view === 'ch' ? S.ch.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; if (c.view === 'eq') S.chunks = false; $('presetHint').textContent = c.hint; c.set(); if (k === 'mystery') newMystery(true); setView(c.view); }
   function newMystery(quiet) { const e = S.eq; let k; do { k = MYSTERY_POOL[Math.floor(rnd() * MYSTERY_POOL.length)]; } while (k === e.mys && MYSTERY_POOL.length > 1); if (!quiet && e.mysN) $('presetHint').textContent = `The last mystery block was ${SPECIFIC[e.mys].name.toLowerCase()}.`; e.mys = k; e.mysN++; e.t = 0; e.hist = []; }
   function newBath() { const th = S.th; if (th.mysN) th.lastMys = th.mysT; th.mysT = Math.round((25 + rnd() * 70) * 10) / 10; th.mysN++; th.t = 0; }
   function newRod() { const ex = S.ex; let k; do { k = ROD_POOL[Math.floor(rnd() * ROD_POOL.length)]; } while (k === ex.mys); if (ex.mysN) $('presetHint').textContent = `The last mystery rod was ${EXPAND[ex.mys].name.toLowerCase()}.`; ex.mys = k; ex.mysN++; }
@@ -880,7 +1006,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
   $('go').addEventListener('click', () => setRun(!S.run));
-  $('restart').addEventListener('click', () => { if (S.view === 'eq') S.eq.t = 0; else if (S.view === 'cv') S.cv.t = 0; else { S.th.t = 0; S.th.Tg = 20; } setRun(false); redraw(); });
+  $('restart').addEventListener('click', () => { if (S.view === 'eq') S.eq.t = 0; else if (S.view === 'cv') S.cv.t = 0; else if (S.view === 'ch') S.ch.t = 0; else { S.th.t = 0; S.th.Tg = 20; } setRun(false); redraw(); });
   const cvChanged = () => { custom(); S.cv.t = 0; cvReset(); setRun(false); sync(); redraw(); };
   $('selCvM').addEventListener('change', (e) => { S.cv.metal = e.target.value; cvChanged(); });
   $('selCvS').addEventListener('change', (e) => { S.cv.surf = e.target.value; cvChanged(); });
@@ -925,6 +1051,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (e.key === ' ') { if (!isStatic()) $('go').click(); e.preventDefault(); }
     else if (S.view === 'co' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { S.co.x = Math.max(0, Math.min(1, S.co.x + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.1 : 0.01))); sync(); redraw(); e.preventDefault(); }
   });
+  const chChanged = () => { custom(); S.ch.t = 0; sync(); redraw(); };
+  for (const [id, key] of [['chSrc', 'src'], ['chConv', 'conv'], ['chUse', 'use']]) $(id).addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.ch[key] = b.dataset.k; chChanged(); } });
+  $('sChL').addEventListener('input', (e) => { S.ch[S.ch.src] = +e.target.value; chChanged(); });
+  $('tChunks').addEventListener('change', (e) => { S.chunks = e.target.checked; redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
 
@@ -935,9 +1065,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.run) {
       if (S.view === 'eq') S.eq.t += dt * S.speed;
       else if (S.view === 'cv') S.cv.t += dt * S.speed;
+      else if (S.view === 'ch') S.ch.t += dt * S.speed;
       else if (S.view === 'th') { const sd = dt * S.speed; S.th.Tg = follow(S.th.Tg, bathT(), sd); S.th.t += sd; }
       redraw();
-    } else if ((S.view === 'th' || S.view === 'cv' || S.view === 'co') && !reduce && now - lastDraw > (S.view === 'co' ? 33 : 50)) { lastDraw = now; redraw(); }
+    } else if ((S.view === 'th' || S.view === 'cv' || S.view === 'co' || S.view === 'ch') && !reduce && now - lastDraw > (S.view === 'co' ? 33 : 50)) { lastDraw = now; redraw(); }
     requestAnimationFrame(frame);
   }
 
@@ -945,11 +1076,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'temperature@2026-10-24';
   const SHEETS = { eq: 'thermal-equilibrium', th: 'gas-thermometer', ex: 'thermal-expansion', co: 'heat-conduction', cv: 'convection' };
   window.vdWorksheet = () => SHEETS[S.view];
-  const SHOW = { eq: [['t_s', 't (s)'], ['T_A_C', 'T_A (°C)'], ['T_B_C', 'T_B (°C)']], th: [['bath', 'bath'], ['n_mmol', 'n (mmol)'], ['P_kPa', 'P (kPa)']],
+  const SHOW = { ch: [['t_s', 't (s)']], eq: [['t_s', 't (s)'], ['T_A_C', 'T_A (°C)'], ['T_B_C', 'T_B (°C)']], th: [['bath', 'bath'], ['n_mmol', 'n (mmol)'], ['P_kPa', 'P (kPa)']],
     ex: [['material', 'sample'], ['T_C', 'T (°C)'], ['reading_mm', 'reading (mm)']], co: [['x_mm', 'probe (mm)'], ['T_probe_C', 'T (°C)'], ['P_W', 'P (W)']], cv: [['t_s', 't (s)'], ['T_C', 'T (°C)'], ['U_m_s', 'fan (m/s)']] };
   const VIEWNAME = { eq: 'equilibrium', th: 'thermometer', ex: 'expansion', co: 'conduction', cv: 'cooling' }, VIEWLABEL = { equilibrium: 'Equilibrium', thermometer: 'Thermometer', expansion: 'Expansion', conduction: 'Conduction', cooling: 'Cooling' };
   window.vdShowCols = SHOW.eq;
   window.vdReadingRow = () => {
+    if (S.view === 'ch') return 'The energy chain has no worksheet readings: read the numbers from the Readouts.';
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== VIEWNAME[S.view]);
     if (other) return `These readings are from the ${VIEWLABEL[other.view]} view: export them to its worksheet or clear them first.`;
     window.vdShowCols = SHOW[S.view];
@@ -973,6 +1105,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutCo').textContent = 'Conduction view: steady heat flow (the temperatures have been held long enough for nothing to change with time). Each layer of thickness d passes P = kAΔT/d with k from the textbook\'s Table 1.5, so it has a resistance d/k per unit area (the R factor) and the layers\' resistances add. Air moving on each side carries heat to and from the surface by convection; its film resistance per unit area is the standard ASHRAE value: still indoor air on a wall 0.12 m²·°C/W, outdoor air in a 12 km/h wind 0.044, in a 24 km/h wind 0.030. "None" holds the surface at that side\'s temperature, like a stirred bath. P = AΔT/ΣR, and the temperature falls across each layer and film in proportion to its share of ΣR, in a straight line inside each layer. "Air (still, conduction only)" is air that cannot move; a real air gap also passes heat by convection and radiation, so it insulates less. Radiation through the wall is not modeled (the Blackbody demo covers radiation). The probe reads to 0.01 °C.';
 
   $('aboutCv').textContent = 'Cooling view: a solid metal sphere hanging in a large room loses heat by convection to the air and by radiation to the walls, which are at the air\'s temperature. The sphere is small enough and conducts well enough to have one temperature throughout, so mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴), with A = πD² and m = ρπD³/6 (densities from Volume 1 Table 14.1, c from Table 1.3). The convection coefficient h is not a constant: in still air it comes from Churchill\'s correlation for natural convection from a sphere (it grows as (T − T_air)^1/4 for big spheres), and with the fan from Whitaker\'s correlation for flow across a sphere, the two combined as (h_N⁴ + h_F⁴)^1/4 (both from Incropera et al., Fundamentals of Heat and Mass Transfer). Air properties at 1 atm are from the Lemmon and Jacobsen correlations. The emissivities are chosen values typical of a polished metal (0.05) and of flat black paint (0.95). The fan\'s air is taken as smooth and steady; a real fan\'s stream is turbulent, which raises h a little. The thermocouple reads to 0.01 °C with no lag.';
+  $('aboutCh').textContent = 'Energy chain view: a source, a converter and a user, each passing on part of the energy it gets in a new form; the rest becomes thermal energy. Efficiencies are the representative values of OpenStax College Physics 2e, Table 7.2 (section 7.6): cycling 20% of the food energy the body uses, solar cell 10%, compact fluorescent light 20% (as light), electric motor 98%. The generator is a motor run the other way and is given the same 98% (an assumption). The heater puts all its electrical energy into 1.00 kg of water (c = 4186 J/(kg·°C), Volume 2 Table 1.3), with no heat lost from the pot; the motor lifts a 10 kg load. Sunlight is 1000 W/m², the standard test condition for solar panels (IEC 60904-3). The streaming dots are a picture of the powers: each dot is a fixed amount of energy and they move at one speed, so closer dots mean more power.';
 
   // ---------- size, theme, start ----------
   function resize() {
@@ -993,7 +1126,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (q.get('view') === 'cv') setView('cv');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__tp = { S, cvTemp, cvReset, coolRates, cvPar, setView, applyPreset, setRun, redraw, eqNow, wallState, coWall, setBuild, sync, gasP, newMystery, newBath, newRod };
+  window.__tp = { chain, chNow, S, cvTemp, cvReset, coolRates, cvPar, setView, applyPreset, setRun, redraw, eqNow, wallState, coWall, setBuild, sync, gasP, newMystery, newBath, newRod };
   requestAnimationFrame(frame);
 })();
 </script>

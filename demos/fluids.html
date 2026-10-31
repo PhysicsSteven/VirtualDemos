@@ -187,6 +187,7 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-p="float" aria-pressed="true">Floating and sinking</button>
           <button type="button" data-p="iceberg" aria-pressed="false">Iceberg</button>
           <button type="button" data-p="weigh" aria-pressed="false">Weighing in water (Archimedes)</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery blocks: name the metal</button>
           <button type="button" data-p="venturi" aria-pressed="false">Venturi tube</button>
           <button type="button" data-p="torr" aria-pressed="false">Torricelli's tank</button>
         </div>
@@ -226,6 +227,20 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-m="al" aria-pressed="false">Aluminum</button>
           <button type="button" data-m="steel" aria-pressed="false">Steel</button>
           <button type="button" data-m="lead" aria-pressed="false">Lead</button>
+          <button type="button" data-m="myst" aria-pressed="false">Mystery</button>
+        </div>
+        <div id="mystBox" hidden>
+          <div class="seg full" role="group" aria-label="Mystery block" id="mystSeg">
+            <button type="button" data-k="A" aria-pressed="true">A</button><button type="button" data-k="B" aria-pressed="false">B</button><button type="button" data-k="C" aria-pressed="false">C</button><button type="button" data-k="D" aria-pressed="false">D</button><button type="button" data-k="E" aria-pressed="false">E</button>
+          </div>
+          <div class="inline"><label for="mystGuess">Block <span id="mystLet">A</span> is</label>
+            <select id="mystGuess"></select>
+            <button type="button" class="btn" id="mystCheck">Check</button>
+          </div>
+          <p class="hint" id="mystStat" role="status" aria-live="polite"></p>
+          <button type="button" class="btn" id="mystNew">New mystery set</button>
+          <details class="more"><summary>Density table</summary><div class="twrap"><table class="rows" id="densTab"><caption class="sr">Densities of the metals the blocks are made of</caption><thead><tr><th>Metal</th><th>ρ kg/m³</th></tr></thead><tbody></tbody></table></div>
+            <p class="hint">Near 20 °C, from the CRC Handbook of Chemistry and Physics.</p></details>
         </div>
         <div id="sliders"></div>
         <div class="toggles" id="buoyToggles">
@@ -469,10 +484,33 @@ table.rows button:hover { color: var(--pos); }
     const hB = hP * rhoP / rhoB, d = hB / 2;
     return { hB, d, zI: -d, zB: d, zP: -d + hP, gap: hP - hB, rhoFromHeights: (h1, h2) => rhoB * h2 / h1 };
   }
+  // Mystery blocks (density by displacement): solid cubes of a pure metal. Densities near 20 °C, kg/m³, from the CRC Handbook of
+  // Chemistry and Physics (physical constants of the elements); a real sample can differ by a few tenths of a percent.
+  const DENS = { mg: ['Magnesium', 1738], al: ['Aluminum', 2700], ti: ['Titanium', 4506], zn: ['Zinc', 7140], fe: ['Iron', 7874],
+    cu: ['Copper', 8960], ag: ['Silver', 10490], pb: ['Lead', 11340], au: ['Gold', 19300] };
+  // the set the page opens with (edges in cm): sizes differ, so neither the mass nor the size alone names the material
+  const MYSTERY = [{ id: 'A', m: 'al', L: 8 }, { id: 'B', m: 'cu', L: 5 }, { id: 'C', m: 'ti', L: 6 }, { id: 'D', m: 'zn', L: 7 }, { id: 'E', m: 'pb', L: 4 }];
+  // a new set: five different materials and whole centimeter edges from 4 to 9 cm; rand() returns a number in [0, 1)
+  function mysterySet(rand) {
+    const keys = Object.keys(DENS), out = [];
+    for (const id of ['A', 'B', 'C', 'D', 'E']) {
+      const left = keys.filter((k) => !out.some((o) => o.m === k));
+      out.push({ id, m: left[Math.floor(rand() * left.length)], L: 4 + Math.floor(rand() * 6) });
+    }
+    return out;
+  }
+  // density from a weighing in air (scale reading W in N, so m = W/g) and the volume of water displaced (V in m³)
+  const densityFrom = (W, V) => (V > 0 ? W / G / V : NaN);
+  // the table entry nearest a measured density (by ratio, so a 3% miss counts the same for magnesium and gold)
+  function nearestMaterial(rho) {
+    let best = null, bd = Infinity;
+    for (const k of Object.keys(DENS)) { const d = Math.abs(Math.log(rho / DENS[k][1])); if (d < bd) { bd = d; best = k; } }
+    return best;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.FL = { G, PATM, LIQ, twoLiquids, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
+    globalThis.FL = { G, PATM, LIQ, DENS, MYSTERY, mysterySet, densityFrom, nearestMaterial, twoLiquids, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
     return;
   }
 
@@ -510,7 +548,7 @@ table.rows button:hover { color: var(--pos); }
     press: { D: 2, pd: 1.2, px: 0.62 },
     pascal: { hp: 0.32 },
     baro: { Pa: 101.3, Pg: 6, Ho: 20 },
-    buoy: { rho: 500, L: 10, h0: 0.3, zeta: 0.12, mat: 'wood', scale: false, over: false, xb: 0, z0: 0.48, zh: 0.6 },
+    buoy: { rho: 500, L: 10, h0: 0.3, zeta: 0.12, mat: 'wood', scale: false, over: false, xb: 0, z0: 0.48, zh: 0.6, myst: 'A' },
     venturi: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 },
     torr: { H: 1, hh: 0.3 }
   };
@@ -527,7 +565,7 @@ table.rows button:hover { color: var(--pos); }
     press: 'Model: a liquid at rest with constant density (incompressible), g = 9.81 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
     pascal: 'Model: liquid at rest, open to the air. Each vessel is round with a base 8 cm across (area 50.3 cm²); the narrowing vessel ends 2.4 cm across, the flared one 34 cm. Gauge pressures are shown.',
     baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width. Two liquids: they do not mix, the tube has the same width all the way round, and the poured liquid stays in the left arm; at the interface’s level the pressure is the same in both arms, so ρ₁h₁ = ρ₂h₂. Surface tension and the curved meniscus are left out.',
-    buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still.',
+    buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still. Mystery blocks are solid cubes of pure metals, painted so their color gives nothing away, with densities near 20 °C from the CRC Handbook.',
     venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
     torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
   };
@@ -540,6 +578,8 @@ table.rows button:hover { color: var(--pos); }
       hint: 'Ice in seawater floats with 917/1025 = 89.5% of its volume under the surface: only about a tenth of an iceberg shows. The same holds for any shape, not only a cube.' },
     weigh: { scene: 'buoy', liq: 'water', p: { rho: 2700, L: 10, mat: 'al', zeta: 0.12, scale: true, over: true, xb: 0 },
       hint: 'Lower the aluminum block into the full overflow can. The scale reading drops by exactly the weight of the water that runs into the beaker: the buoyant force equals the weight of the liquid displaced.' },
+    mystery: { scene: 'buoy', liq: 'water', p: { mat: 'myst', myst: 'A', rho: 2700, L: 8, zeta: 0.12, scale: true, over: true, xb: 0 },
+      hint: 'Five metal blocks, A to E, each a different size. Read the spring scale with the block in air: that is its weight W, so its mass is W/g. Then lower it all the way into the full overflow can: the water that runs into the beaker has the block’s own volume. Density is mass over volume; find the nearest metal in the density table and check your answer.' },
     venturi: { scene: 'venturi', liq: 'water', p: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 }, gmode: 'gauge',
       hint: 'Halving the diameter quarters the area, so the water moves 4 times faster in the throat, and the throat standpipe stands lower. Fast flow, low pressure: the pressure drop pays for the extra kinetic energy.' },
     torr: { scene: 'torr', liq: 'water', p: { H: 1, hh: 0.3 },
@@ -551,6 +591,7 @@ table.rows button:hover { color: var(--pos); }
     depth: 'Move the probe down in steps. At each depth capture the pressure gauge and the depth ruler, then plot P against depth and find the slope.',
     float: 'Let the block settle, then compare how far its bottom sits below the surface with its height. Try other materials and liquids.',
     iceberg: 'Ice in seawater: once the block is still, how much of it is under the surface? Turn on the spring scale to measure forces.',
+    mystery: 'Weigh each mystery block in air, then lower it all the way into the full overflow can and read the water in the beaker. Work out the density and name the metal.',
     weigh: 'Lower the aluminum block into the full overflow can in steps. At each step capture the spring scale and the depth ruler, then plot the buoyant force (scale reading in air minus scale reading) against the submerged volume.',
     venturi: 'Change the inlet speed v₁ and capture the flow meter and both standpipes each time, keeping the pipe and the throat fixed. Plot the drop h₁ − h₂ against v₁².',
     torr: 'Move the hole and watch where the jet lands. Which hole depth throws the water farthest?'
@@ -573,6 +614,13 @@ table.rows button:hover { color: var(--pos); }
   const pourCol = () => T.liq[S.pour === 'myst' ? 'myst' : S.pour];
   const two = () => twoLiquids(rhoF(), pourRho(), S.P.baro.Ho / 100);
   function newMyst() { S.myst = 650 + 5 * Math.floor(Math.random() * 61); }
+  /* mystery blocks: the set in play; a mystery block takes its density and edge from the set, and both stay hidden */
+  let mset = MYSTERY.map((o) => ({ ...o }));
+  const isMyst = () => S.P.buoy.mat === 'myst';
+  /* the model graph would give a mystery block's size away (the scale curve flattens at d = L), so it shows the readings, as in Blind */
+  const fitOnly = () => S.blind || (S.scene === 'buoy' && isMyst());
+  const mystNow = () => mset.find((o) => o.id === S.P.buoy.myst) || mset[0];
+  function mystApply(q) { const o = mset.find((k) => k.id === q.myst) || mset[0]; q.myst = o.id; q.rho = DENS[o.m][1]; q.L = o.L; }
 
   // ---------- formatting ----------
   const MIN = (s) => s.replace(/-/g, '−');
@@ -836,6 +884,7 @@ table.rows button:hover { color: var(--pos); }
   // a change of parameter: keep dependent values in range, sync the rail
   function setParam(key, v, opts) {
     const p = P();
+    if (S.scene === 'buoy' && isMyst() && (key === 'rho' || key === 'L')) return;     /* a mystery block's size and density are fixed */
     p[key] = snap(key, v);
     if (S.scene === 'press') p.pd = Math.min(p.pd, p.D);
     if (S.scene === 'venturi') p.D2 = Math.min(p.D2, p.D1);
@@ -1100,6 +1149,7 @@ table.rows button:hover { color: var(--pos); }
   let bGeom = null;
   function blockColor(rho) {
     const m = S.P.buoy.mat;
+    if (m === 'myst') return T.block;
     if (m === 'cork') return T.mat.cork; if (m === 'wood') return T.mat.wood; if (m === 'ice') return T.mat.ice;
     if (m === 'al' || m === 'steel') return T.mat.metal; if (m === 'lead') return T.mat.lead;
     return rho < 350 ? T.mat.cork : rho < 880 ? T.mat.wood : rho < 2000 ? T.block : rho < 9000 ? T.mat.metal : T.mat.lead;
@@ -1165,8 +1215,7 @@ table.rows button:hover { color: var(--pos); }
       const w = bGeom; q.xb = (x - w.cxT) / w.sc; q.z0 = (w.bot - y) / w.sc - L / 2; clampBlock(q); bs.zb = q.z0; bs.v = 0; spill(p); trace = [[0, submerged(p, bs.zb, bs.Vw).s]];
     } });
     // size grip on the top right corner
-    handles.push({ id: 'size', cursor: 'ew-resize', pt: [bx1, by0], param: 'L', grip: 'h' });
-    grip(ctx, bx1, by0, isHot('size'), false);
+    if (!isMyst()) { handles.push({ id: 'size', cursor: 'ew-resize', pt: [bx1, by0], param: 'L', grip: 'h' }); grip(ctx, bx1, by0, isHot('size'), false); }
     // the spring scale
     let scaleInfo = null;
     if (q.scale) {
@@ -1218,7 +1267,8 @@ table.rows button:hover { color: var(--pos); }
     }
     // labels last
     for (const [txt, x, y, al, col] of labels) labelBox(ctx, txt, x, y, al, col, 12 * ls, 700);
-    if (bx1 - bx0 > 64 * ls && (!S.layers.forces || S.blind)) { ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${fx(q.rho, 0)} kg/m³`, cxB, (by0 + by1) / 2); }
+    if (isMyst()) { ctx.fillStyle = T.ink; ctx.font = `700 ${clamp((by1 - by0) * 0.45, 11 * ls, 26 * ls)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(q.myst, cxB + (S.layers.forces && !S.blind ? 0 : 0), (by0 + by1) / 2); }
+    else if (bx1 - bx0 > 64 * ls && (!S.layers.forces || S.blind)) { ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${fx(q.rho, 0)} kg/m³`, cxB, (by0 + by1) / 2); }
     labelBox(ctx, `${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, x0 + 6 * ls, Y(0) - 8 * ls, 'left', T.muted, 11 * ls);
     if (S.layers.ghost && Math.abs(b.hs - b.hs0) * sc > 1.5) {
       const dh = b.hs - b.hs0;
@@ -1235,7 +1285,7 @@ table.rows button:hover { color: var(--pos); }
     }
     if (beakerInfo) {
       labelBox(ctx, 'displaced water', beakerInfo.x, beakerInfo.top - 22 * ls, 'center', T.muted, 11 * ls);
-      labelBox(ctx, `${fx(bs.caught * 1000, 2)} L, ${fN(beakerInfo.Wc)}`, beakerInfo.x, beakerInfo.top - 7 * ls, 'center', T.neg, 11.5 * ls, 700, T.mono);
+      labelBox(ctx, `${fx(bs.caught * 1e6, 0)} cm³, ${fN(beakerInfo.Wc)}`, beakerInfo.x, beakerInfo.top - 7 * ls, 'center', T.neg, 11.5 * ls, 700, T.mono);
     }
   }
 
@@ -1434,7 +1484,7 @@ table.rows button:hover { color: var(--pos); }
     const L = 58 * ls, R = W - 20 * ls, top = 40 * ls, bot = H - 36 * ls;
     if (bot - top < 30) return;
     const rho = rhoF();
-    if (S.blind || S.gview === 'fit') { drawFitGraph(ctx, W, H, ls, ps); return; }
+    if (fitOnly() || S.gview === 'fit') { drawFitGraph(ctx, W, H, ls, ps); return; }
     if (S.scene === 'press') {
       const q = S.P.press, abs = S.gmode === 'abs', off = abs ? PATM : 0;
       const Pb = (hydro(rho, q.D) - PATM + off) / 1000;
@@ -1610,7 +1660,7 @@ table.rows button:hover { color: var(--pos); }
     }
     if (S.scene === 'buoy') {
       const b = buoyNow(), d = b.hs - bs.zb;
-      return { d: fx(d * 100, 1), T: fx(b.T, 2), W: fx(b.W, 2), L: fx(b.p.L * 100, 0), Vb: fx(bs.caught * 1e6, 0), scale: b.q.scale, over: b.q.over };
+      return { d: fx(d * 100, 1), T: fx(b.T, 2), W: fx(b.W, 2), L: isMyst() ? '' : fx(b.p.L * 100, 0), Vb: fx(bs.caught * 1e6, 0), scale: b.q.scale, over: b.q.over };
     }
     if (S.scene === 'venturi') {
       const q = S.P.venturi, r = venturi(vp());
@@ -1661,6 +1711,11 @@ table.rows button:hover { color: var(--pos); }
         ['Submerged volume', `${fx(Vs * 1e6, 0)} cm³`, '', false, true],
         b.q.over ? ['Water in beaker', `${I.Vb} cm³, ${fN(rhoF() * G * bs.caught)}`, 'c-p', true] : ['Level rise V_sub/A', `${fx(Vs / p.A * 1000, 2)} mm`, '', false, true]];
       f = b.q.scale ? 'Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.' : 'Floating: ρ_f V_sub g = ρ_obj V g, so V_sub/V = ρ_obj/ρ_fluid.';
+      if (isMyst()) {      /* a mystery block: keep the instruments, hide whatever gives its volume or density away */
+        rows = rows.filter((r) => !/^(Fraction under|ρ_obj|Submerged volume|Level rise)/.test(r[0]));
+        rows.unshift(['Mystery block', `${b.q.myst}, mass and volume unknown`, '', true]);
+        f = 'ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.';
+      }
     } else if (S.scene === 'venturi') {
       const v = vp(), r = venturi(v), abs = S.gmode === 'abs', off = abs ? PATM : 0;
       rows = [['v₁ (inlet)', `${I.v1} m/s`, 'c-d'], ['Flow meter Q', `${I.Q} L/s`],
@@ -1713,9 +1768,26 @@ table.rows button:hover { color: var(--pos); }
       el.out.textContent = `${fx(v, d[6])}${d[5] ? ' ' + d[5] : ''}`;
     }
     if (S.scene === 'baro') { slEls['baro.Pa'].w.hidden = S.baro !== 'baro'; slEls['baro.Pg'].w.hidden = S.baro !== 'mano'; slEls['baro.Ho'].w.hidden = S.baro !== 'two'; }
-    if (S.scene === 'buoy') { slEls['buoy.h0'].w.hidden = S.P.buoy.over; slEls['buoy.zeta'].w.hidden = S.P.buoy.scale; }
+    if (S.scene === 'buoy') { slEls['buoy.h0'].w.hidden = S.P.buoy.over; slEls['buoy.zeta'].w.hidden = S.P.buoy.scale; slEls['buoy.rho'].w.hidden = slEls['buoy.L'].w.hidden = isMyst(); }
   }
-  function syncMat() { for (const b of document.querySelectorAll('#matSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.P.buoy.mat)); }
+  function syncMat() {
+    for (const b of document.querySelectorAll('#matSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.P.buoy.mat));
+    $('mystBox').hidden = S.scene !== 'buoy' || !isMyst();
+    for (const b of document.querySelectorAll('#mystSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.P.buoy.myst));
+    $('mystLet').textContent = S.P.buoy.myst;
+    if (S.scene === 'buoy') $('parHint').textContent = isMyst() ? 'Pick a block, A to E. Drag the spring scale up and down to lower the block; in the full overflow can, the water it pushes out runs into the beaker. Each block’s size and metal stay hidden.' : PAR_HINT.buoy;
+    syncLab();
+  }
+  /* the guess list and the density table, from DENS */
+  $('mystGuess').innerHTML = '<option value="">choose a metal</option>' + Object.keys(DENS).map((k) => `<option value="${k}">${DENS[k][0]}</option>`).join('');
+  $('densTab').tBodies[0].innerHTML = Object.keys(DENS).map((k) => `<tr><td>${DENS[k][0]}</td><td>${fx(DENS[k][1], 0)}</td></tr>`).join('');
+  function mystPick(id) {
+    const q = S.P.buoy; q.myst = id; mystApply(q); q.__touched = true;
+    if (q.scale) q.zh = (q.over ? TANK.spout : q.h0) + 0.06 + STR + q.L / 100;
+    $('mystGuess').value = ''; $('mystStat').textContent = '';
+    bs = null; buoyReset(false); if (!q.scale && reduce) settleBuoy(); else if (!q.scale) setRunning(true);
+    syncMat(); syncSliders(); updateReadouts(); drawAll();
+  }
 
   // ---------- scenes, presets, controls ----------
   const KEYS = {
@@ -1780,6 +1852,7 @@ table.rows button:hover { color: var(--pos); }
     S.liq = c.liq; if (c.gmode) S.gmode = c.gmode;
     if (c.scene === 'buoy') {
       const q = S.P.buoy;
+      if (q.mat === 'myst') { mystApply(q); $('mystGuess').value = ''; $('mystStat').textContent = ''; }
       if (q.scale) q.zh = TANK.spout + 0.06 + STR + q.L / 100;
       setRate(1); bs = null; buoyReset(false);
       if (reduce) settleBuoy();
@@ -1818,8 +1891,20 @@ table.rows button:hover { color: var(--pos); }
   $('newMyst').addEventListener('click', () => { newMyst(); updateReadouts(); drawAll(); });
   $('matSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
-    const q = S.P.buoy; q.mat = b.dataset.m; q.rho = MATS[q.mat][1]; q.__touched = true; syncMat(); clearPreset();
+    const q = S.P.buoy; q.mat = b.dataset.m; q.__touched = true; clearPreset();
+    if (q.mat === 'myst') { mystPick(q.myst || 'A'); return; }
+    q.rho = MATS[q.mat][1]; syncMat();
     buoyAfterChange(); syncSliders(); updateReadouts(); drawAll();
+  });
+  $('mystSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { clearPreset(); mystPick(b.dataset.k); } });
+  $('mystNew').addEventListener('click', () => {
+    mset = mysterySet(Math.random); clearPreset(); mystPick('A');
+    $('mystStat').textContent = 'A new set of five blocks: new metals and new sizes.';
+  });
+  $('mystCheck').addEventListener('click', () => {
+    const k = $('mystGuess').value, o = mystNow();
+    const msg = !k ? 'Choose a metal first.' : k === o.m ? `Yes: block ${o.id} is ${DENS[o.m][0].toLowerCase()}, ${fx(DENS[o.m][1], 0)} kg/m³.` : `No, block ${o.id} is not ${DENS[k][0].toLowerCase()}. Check the mass and the volume again.`;
+    $('mystStat').textContent = msg; $('live').textContent = msg;
   });
   $('tScale').addEventListener('change', (e) => {
     const q = S.P.buoy; q.scale = e.target.checked; q.__touched = true; clearPreset();
@@ -1968,6 +2053,7 @@ table.rows button:hover { color: var(--pos); }
     if (r.kind === 'buoy') {
       const L = num(c.L), d = num(c.d), W = num(c.W), T = num(c.T);
       o.Vs = L * L * clamp(d, 0, L); o.FB = W - T;
+      if (c.L === '' && r.over) o.Vs = num(c.Vb);     /* a mystery block: its edge is unknown, so the volume is the water it pushed into the beaker */
     } else if (r.kind === 'venturi') { o.dh = num(c.h1) - num(c.h2); o.v1sq = num(c.v1) ** 2; }
     return o;
   }
@@ -1979,7 +2065,8 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'press') row = { kind: 'depth', ...base, mode: I.mode, cells: { h: I.h, P: I.P } };
     else if (S.scene === 'buoy') {
       if (!I.scale) { capStat('Turn on Spring scale first: the scale and the depth ruler are read with the block hanging still.'); return; }
-      row = { kind: 'buoy', ...base, rhoO: S.P.buoy.rho, over: I.over, cells: { d: I.d, T: I.T, W: I.W, L: I.L, Vb: I.over ? I.Vb : '' } };
+      if (isMyst()) base.preset = `Mystery block ${S.P.buoy.myst}`;
+      row = { kind: 'buoy', ...base, rhoO: isMyst() ? '' : S.P.buoy.rho, over: I.over, cells: { d: I.d, T: I.T, W: I.W, L: I.L, Vb: I.over ? I.Vb : '' } };
     } else if (S.scene === 'venturi') {
       if (I.cav) { capStat('No reading: the throat would cavitate, so the ideal model is invalid there. Lower v₁ or widen the throat.'); return; }
       if (I.empty) { capStat('No reading: the throat standpipe is empty because the pressure there is below air pressure. Lower v₁ or raise h₁.'); return; }
@@ -2042,7 +2129,7 @@ table.rows button:hover { color: var(--pos); }
       'venturi apparatus,horizontal round pipe; standpipes at the inlet and at the throat read the gauge pressure at the axis as a column height',
       'model,incompressible liquid; at rest P = P0 + rho g h; buoyant force F_B = rho_f V_sub g; ideal steady flow with continuity A1 v1 = A2 v2 and Bernoulli P + rho v^2/2 = constant along the axis',
       'rounding,as displayed: depth h 0.01 m; pressure gauge 0.01 kPa; spring scale 0.01 N; depth ruler d 0.1 cm; beaker 1 cm^3; v1 0.01 m/s; flow meter 0.001 L/s; standpipes 0.1 cm. Edited cells are exported as typed (units converted to SI by moving the decimal point)',
-      'derived columns,V_sub_m3 = L^2 min(max(d 0) L); F_B_N = W_air - T; dh_m = h1 - h2',
+      'derived columns,V_sub_m3 = L^2 min(max(d 0) L) (a mystery block: the beaker volume); F_B_N = W_air - T; dh_m = h1 - h2',
       'seed,none (the model is deterministic)'];
     const cols = ['row', 'scene', 'preset', 'liquid', 'rho_fluid_kg_m3', 'pressure_mode', 'depth_h_m', 'P_Pa',
       'block_edge_L_m', 'block_density_kg_m3', 'scale_in_air_W_N', 'scale_T_N', 'depth_d_m', 'V_sub_m3', 'F_B_N', 'beaker_V_m3',
@@ -2054,7 +2141,7 @@ table.rows button:hover { color: var(--pos); }
       else if (r.kind === 'buoy') {
         const L = num(c.L) / 100, d = num(c.d) / 100;
         Object.assign(o, { block_edge_L_m: shiftDec(c.L, -2), block_density_kg_m3: r.rhoO, scale_in_air_W_N: c.W, scale_T_N: c.T, depth_d_m: shiftDec(c.d, -2),
-          V_sub_m3: clean(L * L * clamp(d, 0, L)), F_B_N: clean(num(c.W) - num(c.T)), beaker_V_m3: r.over ? shiftDec(c.Vb, -6) : '' });
+          V_sub_m3: clean(c.L === '' && r.over ? num(c.Vb) * 1e-6 : L * L * clamp(d, 0, L)), F_B_N: clean(num(c.W) - num(c.T)), beaker_V_m3: r.over ? shiftDec(c.Vb, -6) : '' });
       } else {
         Object.assign(o, { D1_m: shiftDec(c.D1, -2), D2_m: shiftDec(c.D2, -2), v1_m_s: c.v1, Q_m3_s: shiftDec(c.Q, -3), h1_m: shiftDec(c.h1, -2), h2_m: shiftDec(c.h2, -2),
           dh_m: clean((num(c.h1) - num(c.h2)) / 100) });
@@ -2182,7 +2269,7 @@ table.rows button:hover { color: var(--pos); }
   let lastData = '';
   function graphData() {
     const rho = rhoF();
-    if (S.blind || S.gview === 'fit') {
+    if (fitOnly() || S.gview === 'fit') {
       const F = fitSpec();
       if (!F) return { cap: 'No readings fit for this scene.', head: [], rows: [] };
       const f = F.fit;
@@ -2234,15 +2321,15 @@ table.rows button:hover { color: var(--pos); }
 
   // ---------- lab mode: Blind, graph choice, reduce motion ----------
   function graphLabel() {
-    const fit = S.blind || S.gview === 'fit';
+    const fit = fitOnly() || S.gview === 'fit';
     $('gCan').setAttribute('aria-label', (fit ? 'Plot of your captured readings for this scene with a least squares line and a residual strip below it.'
       : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth.') + ' Show data table in the Lab section lists the plotted values.');
   }
   function syncLab() {
     $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
-    const gv = S.blind ? 'fit' : S.gview;
+    const gv = fitOnly() ? 'fit' : S.gview;
     $('stage').classList.toggle('fitv', gv === 'fit');
-    for (const b of document.querySelectorAll('#graphSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === gv)); b.disabled = S.blind && b.dataset.v === 'model'; }
+    for (const b of document.querySelectorAll('#graphSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === gv)); b.disabled = fitOnly() && b.dataset.v === 'model'; }
     // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
     if (S.hintFrom) $('presetHint').textContent = S.blind ? BLIND_HINT[S.hintFrom] : PRESETS[S.hintFrom].hint;
     graphLabel();
@@ -2309,7 +2396,7 @@ table.rows button:hover { color: var(--pos); }
   window.__fl = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
     get running() { return running; }, get trace() { return trace; },
-    applyPreset, setScene, setParam, setRunning, buoyNow, bp, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; }, get g3() { return G3; }, h3pt(id) { const h = handles3.find((k) => k.id === id), r = cans.s.getBoundingClientRect(); if (!h) return null; const p = G3.S.project(h.at(h.v)); return [r.left + p[0], r.top + p[1]]; },
+    applyPreset, setScene, setParam, setRunning, buoyNow, bp, mystPick, get mset() { return mset; }, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; }, get g3() { return G3; }, h3pt(id) { const h = handles3.find((k) => k.id === id), r = cans.s.getBoundingClientRect(); if (!h) return null; const p = G3.S.project(h.at(h.v)); return [r.left + p[0], r.top + p[1]]; },
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); }
   };
 
@@ -2505,6 +2592,7 @@ table.rows button:hover { color: var(--pos); }
       else if (key === 'al') m = VDK.std({ color: '#cfd4da', metalness: 0.72, roughness: 0.3, envMap: G3.env });
       else if (key === 'steel') m = VDK.std({ color: '#9ca3ab', metalness: 0.8, roughness: 0.36, envMap: G3.env });
       else if (key === 'lead') m = VDK.std({ color: '#70757e', metalness: 0.42, roughness: 0.58, envMap: G3.env });
+      else if (key === 'myst') m = VDK.std({ color: '#7f8fa3', roughness: 0.55, metalness: 0.1 });     /* painted, so the color gives nothing away */
       else m = VDK.std({ color: '#888', roughness: 0.6, metalness: 0.1 });
       void V; return (mats[key] = m);
     }
@@ -2585,7 +2673,7 @@ table.rows button:hover { color: var(--pos); }
           set: (v) => { q.z0 = v; clampBlock(q); bs.zb = q.z0; bs.v = 0; spill(p); trace = [[0, submerged(p, bs.zb, bs.Vw).s]]; } });
       }
       const Ld = SLDEF('L');
-      handles3.push({ id: 'size', param: 'L', v: q.L, lo: Ld[2], hi: Ld[3], at: (v) => [q.xb + v / 200 + g.position.x, -v / 200, bs.zb + v / 100 + TB], set: (v) => setParam('L', v) });
+      if (q.mat !== 'myst') handles3.push({ id: 'size', param: 'L', v: q.L, lo: Ld[2], hi: Ld[3], at: (v) => [q.xb + v / 200 + g.position.x, -v / 200, bs.zb + v / 100 + TB], set: (v) => setParam('L', v) });
       // overflow can
       spout.visible = scaleBase.visible = over;
       const hc = bs.caught / (BEAKER.W * BEAKER.D); bliq.set(BEAKER.W, BEAKER.D, hc);
@@ -2609,7 +2697,9 @@ table.rows button:hover { color: var(--pos); }
         if (b.FB > 1e-6) tag(`F_B = ${fN(b.FB)}`, P3(q.xb + off, yf, bs.zb + b.s / 2 + b.FB * k), 'left', T.vcol, 12, 700, null, 6, 4);
         if (b.T > 1e-6) tag(`T = ${fN(b.T)}`, P3(q.xb + off * 2.2, yf, bs.zb + L + b.T * k * 0.6), 'left', T.xcol, 12, 700, null, 8, 4);
         if (b.N > 1e-6) tag(`N = ${fN(b.N)}`, P3(q.xb + off * 2.2, yf, bs.zb + b.N * k * 0.5), 'left', T.xcol, 12, 700, null, 8, 4);
-      } else if (L > 0.07) tag(`${fx(q.rho, 0)} kg/m³`, P3(q.xb, -L / 2, bs.zb + L / 2), 'center', T.ink, 10.5, 600, T.mono);
+      }
+      if (q.mat === 'myst') tag(q.myst, P3(q.xb, -L / 2, bs.zb + L / 2), 'center', T.ink, 16, 700, T.mono);
+      else if (!show && L > 0.07) tag(`${fx(q.rho, 0)} kg/m³`, P3(q.xb, -L / 2, bs.zb + L / 2), 'center', T.ink, 10.5, 600, T.mono);
       tag(`${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, 0.02), 'left', T.muted, 11, 400);
       if (S.layers.ghost && Math.abs(b.hs - b.hs0) > 0.0004) {
         const dh = b.hs - b.hs0; tag(`level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, Math.min(b.hs, b.hs0)), 'left', T.muted, 11, 400, null, 0, 16);
@@ -2623,7 +2713,7 @@ table.rows button:hover { color: var(--pos); }
       if (q.over) {
         const bx = TANK.W / 2 + 0.14 + BEAKER.W / 2;
         if (OV.W > 520) tag('displaced water', P3(bx, 0, 0.06 + BEAKER.H), 'center', T.muted, 11, 400, null, 0, -24);
-        tag(`${fx(bs.caught * 1000, 2)} L, ${fN(rhoF() * G * bs.caught)}`, P3(bx, 0, 0.06 + BEAKER.H), 'center', T.neg, 11.5, 700, T.mono, 0, -8);
+        tag(`${fx(bs.caught * 1e6, 0)} cm³, ${fN(rhoF() * G * bs.caught)}`, P3(bx, 0, 0.06 + BEAKER.H), 'center', T.neg, 11.5, 700, T.mono, 0, -8);
       }
       grips3();
       note3(`The tank, block and beaker are to scale. ${NOTE}`);

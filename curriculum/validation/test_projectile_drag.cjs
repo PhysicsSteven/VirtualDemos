@@ -2,7 +2,7 @@
 // Projectile Range: the CORE physics and measurement helpers of demos/projectile-drag.html.
 const assert = require('node:assert/strict');
 const M = require('./demo_source.cjs').core('projectile-drag',
-  'G,DEG,airDensity,isaPressure,kDrag,vTerm,simulate,vacuumShot,vacRange,vacOpt,sweep,sampleAt,roundTo,snapT,readAt,fitOrigin,fitQuad,csvText,PRESETS');
+  'G,DEG,airDensity,isaPressure,kDrag,vTerm,simulate,vacuumShot,vacRange,vacOpt,sweep,sampleAt,roundTo,snapT,readAt,fitOrigin,fitQuad,csvText,PRESETS,mulberry32,gaussPair,rangeOf,manyShots,stats,histogram,spreadPredict');
 let count = 0;
 function test(name, f) { f(); count++; console.log('PASS', name); }
 const near = (a, b, rel, msg) => assert(Math.abs(a - b) <= rel * Math.max(Math.abs(b), 1e-300), `${msg || ''} expected ${b}, got ${a} (relative ${Math.abs(a - b) / Math.abs(b)})`);
@@ -156,6 +156,33 @@ test('CSV text: comment lines, header, quoting', () => {
   const L = t.trim().split('\n');
   assert.equal(L[0], '# Projectile Range (simulated data)'); assert.equal(L[1], '# demo version,projectile-drag@x');
   assert.equal(L[2], 'row,preset,range_m'); assert.equal(L[3], '1,Baseball,94.74'); assert.equal(L[4], '2,"Custom, light",');
+});
+
+test('many launches: the random numbers, the statistics, and the spread against error propagation', () => {
+  // the 1500 step ranges used for many launches agree with the shot settings to 1e-7
+  for (const p of [ball({}), ball({ th: 30, v: 25 }), ball({ m: 0.0027, d: 0.04, cd: 0.5 })]) near(M.rangeOf(p, p.th), shot(p).range, 1e-7, 'range at N = 1500');
+  near(M.rangeOf(ball({ drag: false }), 45), 40 * 40 / G, 1e-12, 'no drag: v²/g at 45°');
+  // Box–Muller normals: mean 0, variance 1, and about 68.3% within one σ, for 200 000 values
+  const r = M.mulberry32(12345); let s1 = 0, s2 = 0, in1 = 0; const N = 100000;
+  for (let i = 0; i < N; i++) for (const z of M.gaussPair(r)) { s1 += z; s2 += z * z; if (Math.abs(z) < 1) in1++; }
+  assert(Math.abs(s1 / (2 * N)) < 0.01); assert(Math.abs(s2 / (2 * N) - 1) < 0.01); assert(Math.abs(in1 / (2 * N) - 0.6827) < 0.005);
+  // the same seed gives the same launches
+  const a = M.manyShots(ball({}), 5, 1, 0.01, M.mulberry32(7)), b = M.manyShots(ball({}), 5, 1, 0.01, M.mulberry32(7));
+  assert.equal(JSON.stringify(a), JSON.stringify(b));
+  // statistics on known numbers
+  const st = M.stats([2, 4, 4, 4, 5, 5, 7, 9]);
+  near(st.mean, 5, 1e-15); near(st.sd, Math.sqrt(32 / 7), 1e-15); near(st.sem, Math.sqrt(32 / 7) / Math.sqrt(8), 1e-15); assert.equal(st.median, 4.5); assert.equal(st.min, 2); assert.equal(st.max, 9);
+  assert.equal(M.histogram([0, 0.5, 0.99, 1, 2.5, 3], 0, 1, 3).join(), '3,1,2', 'bins [0,1) [1,2) [2,3], the top edge in the last');
+  // no drag, speed spread only: R = v² sin 2θ/g, so σ_R/R = 2 σ_v/v to first order; the simulated σ agrees within sampling error
+  const p = ball({ drag: false, th: 30 }), pr = M.spreadPredict(p, 0, 0.01);
+  near(pr.sd, 2 * 0.01 * pr.R0, 1e-6, 'first order speed spread'); near(pr.dRdV, 2 * pr.R0 / 40, 1e-6);
+  const sim = M.stats(M.manyShots(p, 4000, 0, 0.01, M.mulberry32(99)).map((q) => q.R));
+  assert(Math.abs(sim.sd / pr.sd - 1) < 0.05, `σ simulated ${sim.sd} against ${pr.sd}`);
+  // at 45° with no drag, ∂R/∂θ = 0: the first order angle spread vanishes, and the mean falls below R0 (second order: −2 R0 σθ²)
+  const q45 = ball({ drag: false }), p45 = M.spreadPredict(q45, 2, 0);
+  assert(p45.sd < 1e-6 * p45.R0, 'no first order angle spread at the best angle');
+  const s45 = M.stats(M.manyShots(q45, 20000, 2, 0, M.mulberry32(5)).map((q) => q.R));
+  near(s45.mean, p45.R0 * (1 - 2 * (2 * DEG) ** 2), 2e-4, 'mean pulled down by the curvature');
 });
 
 console.log(`${count} projectile-drag test groups passed`);

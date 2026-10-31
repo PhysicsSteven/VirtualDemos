@@ -24,6 +24,7 @@ Students should know the definitions of average and instantaneous velocity and a
 6. **Walk the graph.** A volunteer drives the cart (drag it, or hold ← → with Shift for faster) to follow a dashed target, as with a real motion detector. Then switch to Match a velocity graph instead.
 7. **Two cars.** Car A starts from rest at −8 m with a = 1 m/s²; car B passes −6 m at a steady 2 m/s. The x–t lines cross at t = 2 + √8 = 4.83 s, x = 3.66 m, where A overtakes B. Where the v–t lines cross (t = 2 s) the cars have equal velocity and the gap is largest, 4 m: not where they meet.
 8. **Ball on ramps.** A ball rolls down a 20° piece (a = 2.40 m/s²), coasts along the flat at 3.79 m/s, and climbs a 30° piece (a = −3.50 m/s²) until it turns back at 3.46 s; with no losses it returns to its start with no speed and repeats every 6.91 s. Each piece is a straight piece of v–t. Then press Match a graph and have the class build the hidden track from the target's v–t slopes.
+9. **Draw a graph.** Draw any velocity graph with the mouse or a finger on the tinted v–t pane. The a–t graph shows its slope and the x–t graph x₀ plus the area under it; press Play and the cart drives the motion. Try the **Sine**, **Steps** and **Triangle** shapes, then switch to drawing a, where both v and x come from areas. Ask the class to sketch x before you draw v.
 
 ## Questions
 

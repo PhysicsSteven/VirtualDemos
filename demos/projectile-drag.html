@@ -151,6 +151,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 table.rows .empty td { color: var(--muted); font-style: italic; }
 .plotbox { position: relative; height: 230px; }
 .plotbox.ebox { height: 190px; }
+.plotbox.hbox { height: 180px; margin-top: 8px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 :root[data-projector="on"] .plotbox { height: 270px; }
 .blindtag { align-self: center; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
@@ -276,6 +277,32 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.</p>
         </details>
+      </section>
+
+      <section id="secMany">
+        <details class="fold" id="manyFold"><summary>Many launches</summary><div class="foldbody">
+        <div>
+          <div class="slider-head"><label for="sdTh">Angle spread σ<sub>θ</sub></label><output id="sdThOut" class="mono" for="sdTh"></output></div>
+          <input type="range" id="sdTh" min="0" max="5" step="0.1" value="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="sdV">Speed spread σ<sub>v</sub>/v₀</label><output id="sdVOut" class="mono" for="sdV"></output></div>
+          <input type="range" id="sdV" min="0" max="5" step="0.1" value="1">
+        </div>
+        <div class="btnrow">
+          <button type="button" class="btn primary" data-n="1" id="many1">Launch 1</button>
+          <button type="button" class="btn" data-n="10" id="many10">10</button>
+          <button type="button" class="btn" data-n="100" id="many100">100</button>
+          <button type="button" class="btn" data-n="1000" id="many1000">1000</button>
+          <button type="button" class="btn" id="manyClear">Clear landings</button>
+        </div>
+        <div class="plotbox hbox"><canvas id="histo" role="img" aria-label="Histogram of the ranges of the launches so far, with the mean and one standard deviation either side marked."></canvas></div>
+        <dl class="readout" id="manyOut"></dl>
+        <button type="button" class="btn" id="manyCsv">Download ranges (CSV)</button>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A real launcher never fires two shots exactly alike. Each launch here gets its own angle and speed, drawn at random from normal distributions centered on the Launch settings with the spreads above; the ball, the height and the air stay the same. The landings pile up as marks on the ground and as a histogram. The mean of many ranges settles down as you add shots (its standard error is σ/√n); the spread itself does not shrink. Change a setting and the next launch starts a new set. Simulated data: random numbers from a seeded generator.</p>
+        </details>
+        </div></details>
       </section>
 
       <section id="secMeasure">
@@ -628,6 +655,40 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   };
   const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const csvText = (meta, header, rows) => [...meta.map((l) => '# ' + l), header.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
+  // Many launches (projectile statistics): a real launcher never fires two shots exactly alike. Each shot here gets an angle and a
+  // speed drawn from normal distributions around the settings (standard deviations sdTh in degrees and sdV as a fraction of v0);
+  // everything else stays fixed. Random numbers: mulberry32 from a seed, normal values by the Box–Muller transform.
+  function mulberry32(a) { return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gaussPair(rand) { let u = 0; while (u === 0) u = rand(); const v = rand(), r = Math.sqrt(-2 * Math.log(u)); return [r * Math.cos(2 * Math.PI * v), r * Math.sin(2 * Math.PI * v)]; }
+  // one range for given settings: exact for no drag, RK4 (N = 1500) with drag
+  const rangeOf = (p, th) => (kDrag(p) === 0 ? vacRange(p, th) : simulate(p, th, 1500, false).range);
+  function manyShots(p, n, sdTh, sdV, rand) {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const [z1, z2] = gaussPair(rand), th = Math.max(0, Math.min(90, p.th + sdTh * z1)), v = Math.max(0.01, p.v * (1 + sdV * z2));
+      out.push({ th, v, R: rangeOf({ ...p, v }, th) });
+    }
+    return out;
+  }
+  // mean, sample standard deviation (n − 1), standard error of the mean, extremes and median
+  function stats(xs) {
+    const n = xs.length; if (!n) return null;
+    let m = 0; for (const x of xs) m += x; m /= n;
+    let ss = 0; for (const x of xs) ss += (x - m) * (x - m);
+    const sd = n > 1 ? Math.sqrt(ss / (n - 1)) : NaN, sorted = xs.slice().sort((a, b) => a - b);
+    const med = n % 2 ? sorted[(n - 1) / 2] : (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+    return { n, mean: m, sd, sem: sd / Math.sqrt(n), min: sorted[0], max: sorted[n - 1], median: med };
+  }
+  // counts in bins of width w starting at lo: bin k holds lo + k w ≤ x < lo + (k + 1) w
+  function histogram(xs, lo, w, nb) { const c = new Array(nb).fill(0); for (const x of xs) { const k = Math.floor((x - lo) / w); if (k >= 0 && k < nb) c[k]++; else if (k === nb && x === lo + nb * w) c[nb - 1]++; } return c; }
+  // the first order estimate of the spread: σ_R² ≈ (∂R/∂θ σθ)² + (∂R/∂v σv)², slopes by central differences. It ignores the curvature
+  // of R, so near the best angle, where ∂R/∂θ = 0, the angle spread shows up only at second order (and pulls the mean range down).
+  function spreadPredict(p, sdTh, sdV) {
+    const hT = 0.05, hV = p.v * 1e-3, R0 = rangeOf(p, p.th);
+    const dRdTh = (rangeOf(p, Math.min(90, p.th + hT)) - rangeOf(p, Math.max(0, p.th - hT))) / ((Math.min(90, p.th + hT) - Math.max(0, p.th - hT)) * DEG);
+    const dRdV = (rangeOf({ ...p, v: p.v + hV }, p.th) - rangeOf({ ...p, v: p.v - hV }, p.th)) / (2 * hV);
+    return { R0, dRdTh, dRdV, sd: Math.hypot(dRdTh * sdTh * DEG, dRdV * sdV * p.v) };
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -674,6 +735,8 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   let reduce = prefersReduce;
   try { const v = sessionStorage.getItem('vd-projectile-reduce'); if (v === '1') reduce = true; else if (v === '0') reduce = false; } catch (_) {}
   let sweepDirty = true, curDirty = true, raf = 0;
+  /* many launches: the current set of random launches (see the Many launches section) */
+  const MANY = { key: null, seed: 20261031, rand: null, shots: [], last: [] };
 
   // ---------- shots ----------
   const FIELDS = ['v', 'th', 'h', 'm', 'd', 'cd', 'rho', 'drag'];
@@ -887,6 +950,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const ext = (r, y) => { xm = Math.max(xm, r); ym = Math.max(ym, y); };
     for (const s of shots) ext(s.range, s.ymax);
     if (prev || !shots.length) ext(cur.range, cur.ymax);
+    if (MANY.shots.length) for (const q of MANY.shots) ext(q.R, 0);
     if (vacOn()) ext(vac.range, vac.ymax);
     const padL = 48 * ps, padR = 30 * ps, padT = (W < 560 ? 60 : 50) * ps, padB = 30 * ps;
     const xs = Math.max(xm * 1.04, 1), ys = Math.max(ym * 1.06, 1);
@@ -949,6 +1013,11 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let gy = step; L.oy - gy * s > padT * 0.6; gy += step) ctx.fillText(fmtTick(gy, step), L.ox - 8 * ps, L.oy - gy * s);
 
+    if (MANY.shots.length) {    /* many launches: a tick where each one landed, the latest a little darker */
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; const a = Math.max(0.08, Math.min(0.6, 6 / Math.sqrt(MANY.shots.length)));
+      ctx.globalAlpha = a; ctx.beginPath(); for (const q of MANY.shots) { const px = L.ox + q.R * L.s; ctx.moveTo(px, L.oy - 6 * ps); ctx.lineTo(px, L.oy + 6 * ps); } ctx.stroke();
+      ctx.globalAlpha = 0.9; ctx.strokeStyle = T.accent; ctx.beginPath(); for (const q of MANY.last.slice(-3)) { const px = L.ox + q.R * L.s; ctx.moveTo(px, L.oy - 9 * ps); ctx.lineTo(px, L.oy + 9 * ps); } ctx.stroke(); ctx.globalAlpha = 1;
+    }
     const vacT = anim ? Math.min(anim.t, vac.T) : scrubT != null ? Math.min(scrubT, vac.T) : vac.T;
     const dStep = stepNow();
 
@@ -2025,6 +2094,66 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     renderList(); fitAndPlot(); resize();
   }
   $('labBlind').addEventListener('change', (e) => setBlind(e.target.checked));
+
+  // ---------- many launches: random spread in angle and speed, landings, histogram and statistics ----------
+  const manyKey = () => [keyOf(P), $('sdTh').value, $('sdV').value].join('|');
+  function manySync() { $('sdThOut').textContent = `${(+$('sdTh').value).toFixed(1)}°`; $('sdVOut').textContent = `${(+$('sdV').value).toFixed(1)}%`; }
+  function manyFire(n) {
+    const k = manyKey();
+    if (MANY.key !== k) { MANY.key = k; MANY.shots = []; MANY.seed = (MANY.seed * 48271) % 2147483647; MANY.rand = mulberry32(MANY.seed); }
+    const add = manyShots({ ...P }, n, +$('sdTh').value, +$('sdV').value / 100, MANY.rand);
+    MANY.shots.push(...add); MANY.last = add.slice(-12);
+    if (n === 1) { const q = add[0]; MANY.one = q; }
+    manyShow(); schedule();
+    status(`${n} launch${n === 1 ? '' : 'es'} added: ${MANY.shots.length} in this set.`);
+  }
+  function manyShow() {
+    const xs = MANY.shots.map((q) => q.R), st = stats(xs), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, m2 = (v) => `${(+v).toFixed(2)} m`;
+    let h = '';
+    if (!st) h = '<div class="wide"><dt>Launches</dt><dd>none yet</dd></div>';
+    else {
+      h = dd('Launches n', String(st.n)) + dd('Mean range', m2(st.mean)) + dd('Standard deviation σ', st.n > 1 ? m2(st.sd) : '—') + dd('Standard error σ/√n', st.n > 1 ? m2(st.sem) : '—')
+        + dd('Shortest, longest', `${m2(st.min)}, ${m2(st.max)}`, true) + dd('Median', m2(st.median));
+      if (!LAB.blind) { const pr = spreadPredict({ ...P }, +$('sdTh').value, +$('sdV').value / 100); h += dd('Range with no spread', m2(pr.R0)) + dd('Spread expected to first order', m2(pr.sd), true); }
+    }
+    $('manyOut').innerHTML = h; drawHisto(st);
+  }
+  function drawHisto(st) {
+    const cv = $('histo'), box = cv.parentElement.getBoundingClientRect(), Wd = box.width, Hd = box.height;
+    if (!Wd || !Hd || !T) return;
+    const dp = window.devicePixelRatio || 1; if (cv.width !== Math.round(Wd * dp) || cv.height !== Math.round(Hd * dp)) { cv.width = Math.round(Wd * dp); cv.height = Math.round(Hd * dp); }
+    const c = cv.getContext('2d'), mono = monoFont(), ui = uiFont(); c.setTransform(dp, 0, 0, dp, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, Wd, Hd);
+    const L0 = 34, R0 = Wd - 10, top = 12, bot = Hd - 28;
+    c.font = `10px ${mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    if (!st) { c.textAlign = 'center'; c.font = `12px ${ui}`; c.fillText('Launch a few to start the histogram', Wd / 2, Hd / 2 - 8); return; }
+    const xs = MANY.shots.map((q) => q.R), span = Math.max(st.max - st.min, 0.02 * Math.max(st.mean, 1)), w = niceStep(span / Math.min(24, Math.max(6, Math.round(Math.sqrt(st.n) * 1.5))));
+    const lo = Math.floor(st.min / w) * w, nb = Math.max(1, Math.ceil((st.max - lo) / w + 1e-9)), cnt = histogram(xs, lo, w, nb), cmax = Math.max(...cnt);
+    const X = (v) => L0 + (v - lo) / (nb * w) * (R0 - L0), Y = (k) => bot - k / cmax * (bot - top);
+    c.fillStyle = T.c[0] || T.accent; c.globalAlpha = 0.75;
+    cnt.forEach((k, i) => { if (k) c.fillRect(X(lo + i * w) + 0.5, Y(k), Math.max(1, X(lo + (i + 1) * w) - X(lo + i * w) - 1), bot - Y(k)); });
+    c.globalAlpha = 1; c.strokeStyle = T.line; c.beginPath(); c.moveTo(L0, bot + 0.5); c.lineTo(R0, bot + 0.5); c.moveTo(L0 + 0.5, top); c.lineTo(L0 + 0.5, bot); c.stroke();
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(String(cmax), L0 - 4, Y(cmax)); c.fillText('0', L0 - 4, bot);
+    c.textAlign = 'center'; c.textBaseline = 'top'; const ts = niceStep(nb * w / 4);
+    for (let v = Math.ceil(lo / ts) * ts; v <= lo + nb * w + 1e-9; v += ts) c.fillText(fmtTick(v, ts), X(v), bot + 4);
+    c.textAlign = 'right'; c.fillText('range R (m)', R0, bot + 15);
+    c.save(); c.translate(10, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('count', 0, 0); c.restore();
+    c.strokeStyle = T.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(X(st.mean), top); c.lineTo(X(st.mean), bot); c.stroke();
+    if (st.n > 1) { c.setLineDash([4, 3]); c.lineWidth = 1.2; c.beginPath(); for (const v of [st.mean - st.sd, st.mean + st.sd]) { c.moveTo(X(v), top + 8); c.lineTo(X(v), bot); } c.stroke(); c.setLineDash([]); }
+    c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'top'; c.font = `10px ${ui}`; c.fillText(`bins ${fmtTick(w, w)} m · mean, and ±σ dashed`, L0 + 4, 0);
+  }
+  for (const n of [1, 10, 100, 1000]) $('many' + n).addEventListener('click', () => manyFire(n));
+  $('manyClear').addEventListener('click', () => { MANY.shots = []; MANY.last = []; MANY.key = null; manyShow(); schedule(); status('Landings cleared.'); });
+  for (const id of ['sdTh', 'sdV']) $(id).addEventListener('input', () => { manySync(); manyShow(); });
+  $('manyCsv').addEventListener('click', () => {
+    if (!MANY.shots.length) { status('No launches to save yet.'); return; }
+    const L = ['# Projectile Range, many launches (simulated data)', `# demo version,${DEMO_VERSION}`, `# seed,${MANY.seed}`,
+      `# settings,v0 ${P.v} m/s; angle ${P.th} deg; height ${P.h} m; mass ${P.m} kg; diameter ${P.d} m; Cd ${P.cd}; air density ${P.rho} kg/m^3; drag ${P.drag ? 'on' : 'off'}`,
+      `# spread,angle sd ${$('sdTh').value} deg; speed sd ${$('sdV').value} % of v0 (normal distributions)`, 'shot,angle_deg,v0_m_per_s,range_m'];
+    MANY.shots.forEach((q, i) => L.push([i + 1, q.th.toFixed(3), q.v.toFixed(3), q.R.toFixed(3)].join(',')));
+    download('projectile-many-launches.csv', L.join('\n') + '\n');
+  });
+  $('manyFold').addEventListener('toggle', () => manyShow());
+  manySync(); manyShow();
   function setReduce(on) {
     reduce = on; $('rmToggle').checked = on;
     try { sessionStorage.setItem('vd-projectile-reduce', on ? '1' : '0'); } catch (_) {}
@@ -2519,7 +2648,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
 
   // exposed for testing
   window.__projectile = { simulate, vacuumShot, sweep, vTerm, kDrag, PRESETS, makeShot, compareSet, compare, launch, loadShot,
-    LAB, capture, csvNow, fitData, readAt, snapT, stepCursor, cursorTo, setBlind, pinT: () => pinT, stepNow, G,
+    MANY, manyFire, LAB, capture, csvNow, fitData, readAt, snapT, stepCursor, cursorTo, setBlind, pinT: () => pinT, stepNow, G,
     shots: () => shots, state: () => ({ P: Object.assign({}, P), sel, anim: !!anim, scrubT, layers: Object.assign({}, layers), panels: panels.map((p) => ({ id: p.id, x: p.x, y: p.y, w: p.w, h: p.h, x0: p.x0, x1: p.x1, y0: p.y0, y1: p.y1 })), L: Object.assign({}, L), handles: viewHandles.map((h) => ({ id: h.id, pt: h.pt.slice() })) }) };
 })();
 </script>
