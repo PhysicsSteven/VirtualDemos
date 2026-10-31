@@ -2,7 +2,7 @@
 // Electrostatics at Work: Van de Graaff dome, ink jet deflection, precipitator drift and Deutsch efficiency.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('electrostatics-at-work', 'EPS0,KC,G,E_BREAK,sphereC,sphereV,sphereField,vMax,qMax,timeToSpark,WAND_A,vdgWand,lineField,normalField,INK,dropMass,inkjet,chargeFor,rayleighLimit,AIR,cunningham,chargeFactor,satCharge,driftSpeed,deutsch');
+const c = core('electrostatics-at-work', 'EPS0,KC,G,E_BREAK,sphereC,sphereV,sphereField,vMax,qMax,timeToSpark,WAND_A,vdgWand,lineField,normalField,INK,dropMass,inkjet,chargeFor,rayleighLimit,AIR,cunningham,chargeFactor,satCharge,driftSpeed,deutsch,TRIBO,BODY_C,SOLE_A,shuffleLimit,shuffleSep,shuffleStep,bodyV,P_AIR,GAP_MIN,breakdownV,sparkGap,sparkEnergy');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -89,5 +89,22 @@ group('wand: closer means an earlier spark, and the default reach (R = 15 cm, ba
   let prev = Infinity; for (const gap of [0.6, 0.35, 0.2, 0.1, 0.05, 0.02, 0.01, 0.002]) { const w = c.vdgWand(0.15, 0.18 + gap); assert(w.qSpark < prev, `Q_spark falls as the gap closes (${gap})`); prev = w.qSpark; }
   const w = c.vdgWand(0.15, 0.15 + 0.35); assert.strictEqual(w.sparkOn, 'ball'); near(w.qSpark / c.qMax(0.15), 0.5545, 1e-3, 'about 55% of Q_max');
   near(w.qSpark * w.V1, 245.0e3, 1e-3, 'breakdown starts at about 245 kV');
+});
+group('shuffle: the soles\' limit ε₀E_bA, the body at 100 pF, the rubbing model and its signs', () => {
+  near(c.shuffleLimit(), 8.8541878188e-12 * 3e6 * 0.05, 1e-12); near(c.bodyV(c.shuffleLimit()), 13281.28, 1e-5, '13.3 kV at the limit');
+  near(c.shuffleSep('rubber', 'wool'), -0.4, 1e-12, 'rubber on wool: body negative'); near(c.shuffleSep('rubber', 'fur'), -0.8, 1e-12); assert.strictEqual(c.shuffleSep('wool', 'wool'), 0);
+  assert.strictEqual(c.shuffleStep(1e-7, 'wool', 'wool'), 1e-7, 'wool on wool moves nothing');
+  let Q = 0; for (let i = 0; i < 10; i++) Q = c.shuffleStep(Q, 'rubber', 'wool');
+  near(Q, -c.shuffleLimit() * (1 - Math.pow(1 - 0.12 * 0.4, 10)), 1e-12, 'ten steps close 1 − 0.952¹⁰ of the way'); near(c.bodyV(Q), -5160.3, 1e-4, '−5.16 kV after ten steps');
+  for (let i = 0; i < 2000; i++) Q = c.shuffleStep(Q, 'rubber', 'fur'); assert(Q < 0 && Math.abs(Q) <= c.shuffleLimit() * (1 + 1e-12), 'never past the limit');
+});
+group('spark: uniform field breakdown in air (Schumann fit), its inverse, and ½CV²', () => {
+  near(c.breakdownV(0.01), 31447.1, 1e-5, 'about 31 kV across 1 cm (31 kV/cm, the intrinsic strength)');
+  near(c.breakdownV(1e-4) / 1e-4, 9.233e6, 1e-3, 'about 92 kV/cm across 0.1 mm');
+  for (const d of [1e-4, 5e-4, 0.001, 0.003, 0.0037, 0.01]) near(c.sparkGap(c.breakdownV(d)), d, 1e-10, `inverse at ${d} m`);
+  near(c.sparkGap(-8000), c.sparkGap(8000), 1e-15, 'the sign of V does not matter');
+  assert.strictEqual(c.sparkGap(500), 0, 'under 0.1 mm: no visible spark'); assert(c.sparkGap(c.bodyV(c.shuffleLimit())) < 0.004, 'at the limit the spark jumps under 4 mm');
+  let prev = 0; for (const V of [1000, 2000, 5000, 10000, 13000]) { const d = c.sparkGap(V); assert(d > prev, 'a bigger voltage sparks from farther'); prev = d; }
+  near(c.sparkEnergy(1e4), 5e-3, 1e-12, '5 mJ at 10 kV and 100 pF');
 });
 console.log(`${n} electrostatics at work test groups passed`);
