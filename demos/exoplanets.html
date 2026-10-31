@@ -36,6 +36,8 @@
   --on-charge: #ffffff;
   --star: #e79a2c;
   --planet: #26303c;
+  --s1: #2a7d6b;
+  --s2: #b5532a;
   --canvas-scale: 1;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -45,14 +47,14 @@
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-    --star: #f4b450; --planet: #05080c;
+    --star: #f4b450; --planet: #05080c; --s1: #4fc4a8; --s2: #ff9b6a;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-  --star: #f4b450; --planet: #05080c;
+  --star: #f4b450; --planet: #05080c; --s1: #4fc4a8; --s2: #ff9b6a;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.45; }
 html, body { height: 100%; }
@@ -100,6 +102,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .hint.warn { color: var(--pos); }
 .mys .mysHide { display: none; }
+/* Two stars (eclipsing binaries, 2026-10-31): the planet's controls and readouts give way to the two stars' */
+body:not(.bin) .binOnly, body.bin .planetOnly { display: none !important; }
+.swatch.s1 { border-color: var(--s1); border-top-width: 2.5px; }
+.swatch.s2 { border-color: var(--s2); border-top-width: 2.5px; }
 /* the Readings section: this demo keeps the shared table and button rules off, so the panel brings its own */
 .vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 .vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
@@ -182,6 +188,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-dim="3d" aria-pressed="false">3D</button>
           <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
+        <div class="seg" role="group" aria-label="What orbits the star" id="kindSeg">
+          <button type="button" data-k="planet" aria-pressed="true">Star and planet</button>
+          <button type="button" data-k="bin" aria-pressed="false">Two stars</button>
+        </div>
       </div>
       <div class="views">
         <div class="pane topv">
@@ -198,7 +208,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div class="viewbar">
           <div class="seg" role="group" aria-label="Light curve time span" id="lcSeg">
             <button type="button" data-lc="orbit" aria-pressed="true">Full orbit</button>
-            <button type="button" data-lc="zoom" aria-pressed="false">Zoom on transit</button>
+            <button type="button" data-lc="zoom" aria-pressed="false" id="lcZoom">Zoom on transit</button>
+            <button type="button" data-lc="zoom2" aria-pressed="false" class="binOnly">Zoom on secondary</button>
           </div>
         </div>
       </div>
@@ -211,13 +222,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet">Worksheet 1: Finding Exoplanets</a></li><li><a href="../curriculum/labs/students/intro-exoplanets.html" target="intro-exoplanets-worksheet">Worksheet 2: Finding Planets Around Other Stars (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Systems</h2>
-        <div class="chips" id="presets">
+        <div class="chips planetOnly" id="presets">
           <button type="button" data-p="hotj" aria-pressed="true">Hot Jupiter</button>
           <button type="button" data-p="earth" aria-pressed="false">Earth and Sun</button>
           <button type="button" data-p="jupiter" aria-pressed="false">Jupiter and Sun</button>
           <button type="button" data-p="ecc" aria-pressed="false">Eccentric planet</button>
           <button type="button" data-p="tilt" aria-pressed="false">Not edge on</button>
           <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 like</button>
+        </div>
+        <div class="chips binOnly" id="binPresets">
+          <button type="button" data-b="redd" aria-pressed="true">Sun and red dwarf</button>
+          <button type="button" data-b="twins" aria-pressed="false">Twin stars</button>
+          <button type="button" data-b="hotcool" aria-pressed="false">Hot star, cool giant</button>
+          <button type="button" data-b="graze" aria-pressed="false">Partial eclipses</button>
+          <button type="button" data-b="eccb" aria-pressed="false">Eccentric pair</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -242,7 +260,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </details>
       </section>
 
-      <section>
+      <section class="planetOnly">
         <h2>Star</h2>
         <div>
           <div class="slider-head"><label for="ms">Mass M<sub>s</sub></label><output id="msOut" class="mono" for="ms"></output></div>
@@ -254,7 +272,42 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
       </section>
 
-      <section class="mysHide">
+      <section class="mysHide binOnly">
+        <h2>Two stars</h2>
+        <div>
+          <div class="slider-head"><label for="m1">Star 1 mass M<sub>1</sub></label><output id="m1Out" class="mono" for="m1"></output></div>
+          <input type="range" id="m1" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="r1">Star 1 radius R<sub>1</sub></label><output id="r1Out" class="mono" for="r1"></output></div>
+          <input type="range" id="r1" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="t1">Star 1 temperature T<sub>1</sub></label><output id="t1Out" class="mono" for="t1"></output></div>
+          <input type="range" id="t1" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="m2">Star 2 mass M<sub>2</sub></label><output id="m2Out" class="mono" for="m2"></output></div>
+          <input type="range" id="m2" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="r2">Star 2 radius R<sub>2</sub></label><output id="r2Out" class="mono" for="r2"></output></div>
+          <input type="range" id="r2" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="t2">Star 2 temperature T<sub>2</sub></label><output id="t2Out" class="mono" for="t2"></output></div>
+          <input type="range" id="t2" min="0" max="1000" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="gam">Systemic velocity γ</label><output id="gamOut" class="mono" for="gam"></output></div>
+          <input type="range" id="gam" min="-100" max="100" step="1">
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Masses, radii and temperatures are logarithmic sliders. γ is the whole pair's velocity along our line of sight; both stars' velocities swing around it.</p>
+        </details>
+      </section>
+
+      <section class="mysHide planetOnly">
         <h2>Planet</h2>
         <div>
           <div class="slider-head"><label for="mp">Mass M<sub>p</sub></label><output id="mpOut" class="mono" for="mp"></output></div>
@@ -291,6 +344,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <p class="hint">i = 90° is edge on. ω is measured for the star's orbit, as radial velocity catalogs quote it; it only matters when e &gt; 0.</p>
         </details>
         <p class="hint warn" id="insideWarn" hidden>The planet's closest approach is inside the star. Move it out or shrink the star.</p>
+        <p class="hint warn binOnly" id="touchWarn" hidden>At closest approach the two stars touch or overlap. Move them apart or shrink them.</p>
       </section>
 
       <section>
@@ -304,7 +358,30 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </details>
       </section>
 
-      <section>
+      <section class="binOnly">
+        <h2>What we would measure</h2>
+        <dl class="readout">
+          <div class="big"><dt>Eclipse of star 1: depth</dt><dd id="bD1">—</dd></div>
+          <div class="big"><dt>Eclipse of star 2: depth</dt><dd id="bD2">—</dd></div>
+          <div><dt>K<sub>1</sub>, star 1</dt><dd id="bK1">—</dd></div>
+          <div><dt>K<sub>2</sub>, star 2</dt><dd id="bK2">—</dd></div>
+          <div><dt>Period</dt><dd id="bP">—</dd></div>
+          <div><dt>Eclipses?</dt><dd id="bTr">—</dd></div>
+          <div><dt>Eclipse, first to last contact</dt><dd id="bDur">—</dd></div>
+          <div><dt>Flat part, second to third contact</dt><dd id="bFlat">—</dd></div>
+          <div><dt>Mass ratio M<sub>2</sub>/M<sub>1</sub> = K<sub>1</sub>/K<sub>2</sub></dt><dd id="bQ">—</dd></div>
+          <div><dt>Light ratio L<sub>2</sub>/L<sub>1</sub></dt><dd id="bL">—</dd></div>
+          <div><dt>Cursor: time from the eclipse of star 1</dt><dd id="bTnow">—</dd></div>
+          <div><dt>Brightness now</dt><dd id="bFnow">—</dd></div>
+          <div><dt>Star 1 velocity now</dt><dd id="bV1">—</dd></div>
+          <div><dt>Star 2 velocity now</dt><dd id="bV2">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint"><b>The eclipses give the sizes and the temperatures; the two velocity curves give the masses.</b> The deeper eclipse hides the star with the brighter surface. The times of the four contacts, with the stars' speed, give both radii, and the flat bottom of a total eclipse is the light of the star left in view.</p>
+        </details>
+      </section>
+
+      <section class="planetOnly">
         <h2>What we would measure</h2>
         <dl class="readout">
           <div class="big"><dt>Transit depth (R<sub>p</sub>/R<sub>s</sub>)²</dt><dd id="rDepth">—</dd></div>
@@ -334,7 +411,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch dots"></i>Noisy measurements</span>
           <span><i class="swatch equi"></i>Path of the star (wobble exaggerated)</span>
           <span><i class="swatch cur"></i>Now</span>
+          <span class="binOnly"><i class="swatch s1"></i>Star 1's velocity (two stars)</span>
+          <span class="binOnly"><i class="swatch s2"></i>Star 2's velocity (two stars)</span>
         </div>
+        <details class="more binOnly"><summary>The two star model</summary>
+          <p class="hint">Two stars in a two body Kepler orbit, each a sphere of uniform temperature. The light is bolometric (every wavelength counted), so a star's surface brightness goes as T⁴ (Stefan Boltzmann) and its luminosity as R²T⁴. Both stars have the same quadratic limb darkening as the planet systems (u₁ = 0.40, u₂ = 0.26), so in a total eclipse the light left is exactly the uneclipsed star's. Ignored: tidal stretching, reflection of one star's light off the other, gravity darkening, light travel time across the orbit and mass transfer, all of which matter in real close binaries. The velocities are the stars' true line of sight velocities plus γ. Noise is white and Gaussian, up to 1% in brightness and 10 km/s in velocity. Star colors are approximate blackbody colors. A mystery binary draws a star 1 of 1.0 to 2.4 M☉ and a lighter star 2 (0.35 to 0.8 times as heavy), each on a simple main sequence (R ∝ M^0.8, L ∝ M⁴, so T = 5772 K × M^0.6), a circular orbit with a period of 1.5 to 5 days, an inclination at which both eclipses are total or annular, and γ between −40 and +40 km/s; only T₁ is given, as a spectrum would give it.</p>
+        </details>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Model: one planet and its star in a two body orbit. The planet's own light is ignored, so there is no secondary eclipse. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = 0.40, u₂ = 0.26): the middle of the star is brighter than its average, so at the middle of a central transit the dip is 1/(1 − u₁/3 − u₂/6) = 1.215 times (R<sub>p</sub>/R<sub>s</sub>)² for a small planet (1.210 times when R<sub>p</sub>/R<sub>s</sub> = 0.2). The duration readout uses the standard approximation for eccentric orbits. Noise is white and Gaussian. With noise, the readouts and Record reading give the measurement nearest the cursor (brightness from the closely spaced set inside the transit window, else from the whole orbit set) and the time of that measurement; without noise they give the true curves at the cursor. A mystery system draws a star of 0.70 to 1.30 M☉ (radius M^0.8) and a rocky planet, a mini Neptune or a giant, with a density in that kind's range, a circular orbit 0.03 to 0.10 AU out, and an impact parameter below 0.5. In the top view the star and planet are drawn larger than scale.</p>
         </details>
@@ -430,6 +512,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in hours */
   VD.tools({ el: document.querySelector('canvas'), time: () => simClock / 3600, timeUnit: 'h' });
+  /* the physics that runs in Node (curriculum/validation/test_exoplanets.cjs): constants, Kepler's equation, limb darkening and the
+     two star light curve and velocities */
+  // ==CORE START==
   const DEG = Math.PI / 180, TAU = 2 * Math.PI;
   // constants (SI)
   const GM_SUN = 1.32712440018e20, GM_EARTH = 3.986004418e14, GM_JUP = 1.26686534e17, G = 6.6743e-11;
@@ -439,6 +524,71 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const RJ = R_JUP / R_EARTH;            // Earth radii per Jupiter radius, 11.2
   const U1 = 0.40, U2 = 0.26;            // quadratic limb darkening
   const ORBIT_SECONDS = 12;              // real seconds per orbit at 1x
+
+  // ---------- orbit and limb darkening ----------
+  function solveE(M, e) {
+    M = ((M % TAU) + TAU) % TAU;
+    let E = e < 0.8 ? M : Math.PI;
+    for (let i = 0; i < 50; i++) {
+      const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      E -= d;
+      if (Math.abs(d) < 1e-13) break;
+    }
+    return E;
+  }
+  // fraction of the star's light hidden by a planet disk of radius p at distance d (both in stellar radii)
+  const I = (r) => { const mu = Math.sqrt(Math.max(0, 1 - r * r)); return 1 - U1 * (1 - mu) - U2 * (1 - mu) * (1 - mu); };
+  const F0 = Math.PI * (1 - U1 / 3 - U2 / 6);
+  function blocked(d, p) {
+    if (d >= 1 + p) return 0;
+    const lo = Math.max(0, d - p), hi = Math.min(1, d + p), N = 90, dr = (hi - lo) / N;
+    let sum = 0;
+    for (let k = 0; k < N; k++) {
+      const r = lo + (k + 0.5) * dr;
+      let ang;
+      if (r + d <= p) ang = TAU;
+      else if (r <= d - p || r >= d + p) ang = 0;
+      else ang = 2 * Math.acos(Math.max(-1, Math.min(1, (r * r + d * d - p * p) / (2 * r * d))));
+      sum += I(r) * r * ang * dr;
+    }
+    return sum / F0;
+  }
+
+  // ---------- two stars (eclipsing binaries, 2026-10-31) ----------
+  /* Masses in M☉, radii in R☉, temperatures in K, lengths in m, times in s. Bolometric light, so a star's surface brightness is
+     ∝ T⁴ and its whole light ∝ R²T⁴; both stars carry the same limb darkening, so blocked() gives the share of either star hidden. */
+  const T_SUN = 5772;                    /* IAU 2015 nominal solar effective temperature */
+  const ebLight = (R, T) => R * R * Math.pow(T / T_SUN, 4);           /* L/L☉ */
+  /* blocked() for a star hidden completely: 1 up to its numerical integration (2 × 10⁻⁴), so a total eclipse leaves exactly the other star */
+  const EB_FULL = blocked(0, 2);
+  /* brightness relative to both stars in full view; X, Y = star 2's place on the sky relative to star 1 (m); front2 = star 2 nearer us */
+  function ebFlux(X, Y, front2, R1, R2, T1, T2) {
+    const r1 = R1 * R_SUN, r2 = R2 * R_SUN, d = Math.hypot(X, Y), L1 = ebLight(R1, T1), L2 = ebLight(R2, T2);
+    const lost = (front2 ? L1 * blocked(d / r1, r2 / r1) : L2 * blocked(d / r2, r1 / r2)) / EB_FULL;
+    return 1 - lost / (L1 + L2);
+  }
+  /* velocity semi amplitudes (m/s) of each star: K = (2πG/P)^⅓ M_other sin i / (M1 + M2)^⅔ / √(1 − e²) */
+  function ebK(Per, M1, M2, inc, e) {
+    const c = Math.cbrt(TAU / Per) * Math.sin(inc) / Math.pow(GM_SUN * (M1 + M2), 2 / 3) / Math.sqrt(1 - e * e);
+    return { K1: c * GM_SUN * M2, K2: c * GM_SUN * M1 };
+  }
+  /* separation (m) for a period (s) and total mass (M☉), Kepler's third law */
+  const ebA = (Per, M) => Math.cbrt(GM_SUN * M * Per * Per / (TAU * TAU));
+  /* what a student finds from the measurements, as the worksheet does it:
+     masses: M sin³i = P (1 − e²)^{3/2} (K1 + K2)² K_other / (2πG), in M☉ */
+  function ebMasses(Per, K1, K2, e) {
+    const f = Per * Math.pow(1 - e * e, 1.5) * (K1 + K2) * (K1 + K2) / (TAU * GM_SUN);
+    return { M1: f * K2, M2: f * K1 };
+  }
+  /* radii from the contact times of a central eclipse on a circular orbit, the stars crossing in a straight line at their relative
+     speed v = K1 + K2 (edge on): the larger radius plus the smaller is v·t14/2, their difference v·t23/2. In R☉. */
+  function ebRadii(K1, K2, t14, t23) {
+    const v = K1 + K2;
+    return { big: v * (t14 + t23) / 4 / R_SUN, small: v * (t14 - t23) / 4 / R_SUN };
+  }
+  /* star 2's temperature from the brightness f in a total eclipse of star 2 (only star 1 in view): f = L1/(L1 + L2) */
+  const ebT2 = (T1, R1, R2, f) => T1 * Math.pow((1 / f - 1) * (R1 * R1) / (R2 * R2), 0.25);
+  // ==CORE END==
 
   // ---------- state ----------
   // ms, rs in solar units; mp, rp in Earth units; a in AU; inc, w in degrees
@@ -467,18 +617,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let MYS = null;               /* the mystery system: { n, revealed } while it is on */
   let sysName = 'hotj';
   const hidden = () => MYS && !MYS.revealed;
+  /* Two stars (eclipsing binaries, 2026-10-31): the second body is a star with its own radius and temperature. The orbit sliders and
+     the orbit code are shared: star 2 rides the planet's orbit (P.mp, P.rp hold its mass and radius in Earth units). */
+  let BIN = false, PP = null, binName = 'redd';
+  const B = {};                 /* m1, m2 in M☉; r1, r2 in R☉; t1, t2 in K; gam in km/s */
+  const BPRESETS = {
+    redd:    { m1: 1, r1: 1, t1: 5772, m2: 0.3, r2: 0.3, t2: 3300, gam: 12, a: 0.03, e: 0, inc: 90, w: 90 },
+    twins:   { m1: 1, r1: 1, t1: 5772, m2: 1, r2: 1, t2: 5772, gam: -8, a: 0.05, e: 0, inc: 90, w: 90 },
+    hotcool: { m1: 3.2, r1: 2.7, t1: 12500, m2: 0.7, r2: 3.5, t2: 4900, gam: 4, a: 0.062, e: 0, inc: 81.4, w: 90 },
+    graze:   { m1: 1.2, r1: 1.15, t1: 6200, m2: 0.9, r2: 0.85, t2: 5300, gam: 25, a: 0.04, e: 0, inc: 83.5, w: 90 },
+    eccb:    { m1: 1.5, r1: 1.5, t1: 7000, m2: 1.2, r2: 1.2, t2: 6300, gam: -20, a: 0.08, e: 0.3, inc: 89.5, w: 30 }
+  };
+  const BHINTS = {
+    redd: 'A star like the Sun with a red dwarf in a 1.7 day orbit, seen edge on. The red dwarf crosses the Sun (a shallow eclipse rounded by limb darkening), then hides completely behind it: in that total eclipse only the Sun\'s light is left, a flat bottom.',
+    twins: 'Two stars like the Sun, edge on. The two eclipses are equally deep, because the two surfaces are equally bright, and the two velocity curves are mirror images with the same K.',
+    hotcool: 'A small hot star and a larger, cooler, lighter companion, roughly like Algol. Hiding the hot star gives a deep eclipse; hiding the cool one half an orbit later, a shallow one. Not quite edge on, so both eclipses are partial.',
+    graze: 'Two stars a little heavier and a little lighter than the Sun, tilted 6.5° from edge on: each eclipse is partial, V shaped with no flat part, so the contact times alone do not give both radii.',
+    eccb: 'An eccentric orbit (e = 0.3): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.'
+  };
+  const BNAME = { redd: 'Sun and red dwarf', twins: 'Twin stars', hotcool: 'Hot star, cool giant', graze: 'Partial eclipses', eccb: 'Eccentric pair', custom: 'Own pair' };
+  /* approximate blackbody colors (after Charity's blackbody color table), only for the pictures */
+  const TCOL = [[2500, [255, 159, 70]], [3000, [255, 180, 107]], [4000, [255, 209, 163]], [5000, [255, 228, 206]], [6000, [255, 243, 239]], [7000, [245, 243, 255]],
+    [8000, [227, 232, 255]], [10000, [204, 219, 255]], [15000, [181, 205, 255]], [30000, [159, 191, 255]], [40000, [155, 188, 255]]];
+  function tcolRGB(T) {
+    let j = 0; while (j < TCOL.length - 2 && T > TCOL[j + 1][0]) j++;
+    const [x0, c0] = TCOL[j], [x1, c1] = TCOL[j + 1], f = Math.max(0, Math.min(1, Math.log(T / x0) / Math.log(x1 / x0)));
+    return c0.map((v, k) => Math.round(v + (c1[k] - v) * f));
+  }
+  const tcol = (T) => `rgb(${tcolRGB(T).join(',')})`;
 
   // ---------- orbit ----------
-  function solveE(M, e) {
-    M = ((M % TAU) + TAU) % TAU;
-    let E = e < 0.8 ? M : Math.PI;
-    for (let i = 0; i < 50; i++) {
-      const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
-      E -= d;
-      if (Math.abs(d) < 1e-13) break;
-    }
-    return E;
-  }
   // time is measured from mid transit (conjunction, planet nearest us): t = 0 there
   function state(t) {
     const e = P.e, E = solveE(D.n * (t - D.tp), e);
@@ -488,29 +656,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const vr = (s) => D.K * (Math.cos(s.th) + P.e * Math.cos(D.w));   // + means star moving away
 
-  // fraction of the star's light hidden by a planet disk of radius p at distance d (both in stellar radii)
-  const I = (r) => { const mu = Math.sqrt(Math.max(0, 1 - r * r)); return 1 - U1 * (1 - mu) - U2 * (1 - mu) * (1 - mu); };
-  const F0 = Math.PI * (1 - U1 / 3 - U2 / 6);
-  function blocked(d, p) {
-    if (d >= 1 + p) return 0;
-    const lo = Math.max(0, d - p), hi = Math.min(1, d + p), N = 90, dr = (hi - lo) / N;
-    let sum = 0;
-    for (let k = 0; k < N; k++) {
-      const r = lo + (k + 0.5) * dr;
-      let ang;
-      if (r + d <= p) ang = TAU;
-      else if (r <= d - p || r >= d + p) ang = 0;
-      else ang = 2 * Math.acos(Math.max(-1, Math.min(1, (r * r + d * d - p * p) / (2 * r * d))));
-      sum += I(r) * r * ang * dr;
-    }
-    return sum / F0;
-  }
   function flux(t) {
     const s = state(t);
+    if (BIN) return ebFlux(s.r * Math.cos(s.th), s.r * Math.sin(s.th) * Math.cos(D.i), Math.sin(s.th) > 0, B.r1, B.r2, B.t1, B.t2);
     if (Math.sin(s.th) <= 0) return 1;             // planet behind the star
     const X = s.r * Math.cos(s.th), Y = s.r * Math.sin(s.th) * Math.cos(D.i);
     return 1 - blocked(Math.hypot(X, Y) / D.Rs, D.k);
   }
+  /* two stars: line of sight velocities including γ (m/s); star 2 moves opposite star 1, M1/M2 times as fast */
+  const v1 = (s) => B.gam * 1000 + vr(s), v2 = (s) => B.gam * 1000 - vr(s) * B.m1 / B.m2;
+  /* P, mp, rp from the two stars' sliders */
+  function bToP() { P.ms = B.m1; P.rs = B.r1; P.mp = B.m2 * GM_SUN / GM_EARTH; P.rp = B.r2 * R_SUN / R_EARTH; }
 
   function derive() {
     const e = P.e, i = P.inc * DEG, w = P.w * DEG;
@@ -535,6 +691,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const zh = Math.min(0.24 * Per, transits ? Math.max(T14, 1e-6 * Per) : Math.max(Tcen, 1e-4 * Per));
     D = { a, Per, n, Rs, Rp, k, q, K, b, inside, transits, full, T14, tp, zh, i, w, mu,
           mpKg: GM_EARTH * P.mp / G, depth: k * k, prob: Rs / a };
+    if (BIN) {
+      /* the second conjunction (star 2 behind star 1), its separation and impact parameter, and the contact times of both eclipses
+         from the same standard approximation as the transit duration */
+      const nus = 1.5 * Math.PI - w, Es = 2 * Math.atan2(Math.sqrt(1 - e) * Math.sin(nus / 2), Math.sqrt(1 + e) * Math.cos(nus / 2));
+      let ts = tp + (Es - e * Math.sin(Es)) / n; ts = (((ts + Per / 4) % Per) + Per) % Per - Per / 4;
+      const esw2 = 1 - e * Math.sin(w), rc2 = a * (1 - e * e) / esw2, b2 = rc2 * Math.cos(i) / Rs;
+      const dd = (c, bb, es) => (c * c > bb * bb ? Per / Math.PI * Math.asin(Math.min(1, (Rs / a) * Math.sqrt(c * c - bb * bb) / Math.max(Math.sin(i), 1e-9))) * Math.sqrt(1 - e * e) / es : 0);
+      Object.assign(D, { tsec: ts, b2, ecl2: b2 < 1 + k && Math.sin(i) > 0, K2: K * B.m1 / B.m2,
+        T14a: dd(1 + k, b, esw), T23a: dd(1 - k, b, esw), T14b: dd(1 + k, b2, esw2), T23b: dd(1 - k, b2, esw2) });
+      D.zh2 = Math.min(0.24 * Per, D.ecl2 ? Math.max(D.T14b, 1e-6 * Per) : Math.max(Tcen * esw / esw2, 1e-4 * Per));
+    }
 
     // sampled curves; t runs from -Per/4 to 3Per/4
     const t0 = -Per / 4;
@@ -543,10 +710,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     D.rvS = rvS;
     let vmax = 0; for (const p of rvS) vmax = Math.max(vmax, Math.abs(p[1]));
     D.vmax = vmax;
+    if (BIN) {   /* both stars, in km/s, with γ */
+      D.rv1 = rvS.map(([t, v]) => [t, B.gam + v / 1000]); D.rv2 = rvS.map(([t, v]) => [t, B.gam - v / 1000 * B.m1 / B.m2]);
+      D.vlo = Math.min(...D.rv1.map((p) => p[1]), ...D.rv2.map((p) => p[1])); D.vhi = Math.max(...D.rv1.map((p) => p[1]), ...D.rv2.map((p) => p[1]));
+    }
 
     const ts = [];
     for (let j = 0; j <= 1000; j++) ts.push(t0 + Per * j / 1000);
     if (transits) for (let j = 0; j <= 500; j++) ts.push(-0.65 * T14 + 1.3 * T14 * j / 500);
+    if (BIN && D.ecl2) for (let j = 0; j <= 500; j++) { let t = D.tsec - 0.65 * D.T14b + 1.3 * D.T14b * j / 500; if (t > 0.75 * Per) t -= Per; if (t >= t0) ts.push(t); }
     ts.sort((x, y) => x - y);
     D.lcOrbit = ts.map((t) => [t, flux(t)]);
     const zs = [];
@@ -555,10 +727,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let fmin = 1; for (const p of zs) fmin = Math.min(fmin, p[1]);
     for (const p of D.lcOrbit) fmin = Math.min(fmin, p[1]);
     D.fmin = fmin;
+    if (BIN) {
+      const z2 = []; for (let j = 0; j <= 700; j++) { const t = D.tsec - D.zh2 + 2 * D.zh2 * j / 700; z2.push([t, flux(t)]); }
+      D.lcZoom2 = z2;
+      D.depth1 = 1 - Math.min(...zs.map((p) => p[1])); D.depth2 = 1 - Math.min(...z2.map((p) => p[1]));
+      D.fmin = Math.min(fmin, 1 - D.depth2);
+    }
 
     // simulated observations, uniform in time; noise deviates are fixed so the scatter changes smoothly
-    D.obsOrbit = OBS_T.orbit.map((u, j) => { const t = t0 + Per * u; return [t, flux(t), vr(state(t)), Z1[j], Z2[j]]; });
+    D.obsOrbit = OBS_T.orbit.map((u, j) => { const t = t0 + Per * u, st = state(t); return BIN ? [t, flux(t), v1(st), Z1[j], Z2[j], v2(st), Z3[j]] : [t, flux(t), vr(st), Z1[j], Z2[j]]; });
     D.obsZoom = OBS_T.zoom.map((u, j) => { const t = -zh + 2 * zh * u; return [t, flux(t), 0, Z1[j + 300], 0]; });
+    if (BIN) D.obsZoom2 = OBS_T.zoom.map((u, j) => { const t = D.tsec - D.zh2 + 2 * D.zh2 * u; return [t, flux(t), 0, Z3[j + 300], 0]; });
 
     // top view path of the planet relative to the star, by eccentric anomaly
     const path = [];
@@ -575,18 +754,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   const R = rng(20261016);
   const gauss = () => { let u = 0; while (!u) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(TAU * R()); };
-  const Z1 = Array.from({ length: 500 }, gauss), Z2 = Array.from({ length: 500 }, gauss);
+  const Z1 = Array.from({ length: 500 }, gauss), Z2 = Array.from({ length: 500 }, gauss), Z3 = Array.from({ length: 500 }, gauss);
   const OBS_T = { orbit: Array.from({ length: 260 }, (_, j) => (j + 0.5) / 260), zoom: Array.from({ length: 160 }, (_, j) => (j + 0.5) / 160) };
-  const sigF = () => 1e-3 * P.noise * P.noise;    // relative flux, up to 1000 ppm
-  const sigV = () => 10 * P.noise * P.noise;      // m/s, up to 10 m/s
+  const sigF = () => (BIN ? 1e-2 : 1e-3) * P.noise * P.noise;    /* relative flux, up to 1000 ppm (two stars: 1%) */
+  const sigV = () => (BIN ? 1e4 : 10) * P.noise * P.noise;       /* m/s, up to 10 m/s (two stars: 10 km/s) */
   /* what the instruments read near time t: with no noise, the true curves at t; with noise, the photometric measurement nearest t
      (from the closely spaced set inside the transit window, else the whole orbit set) and the nearest radial velocity measurement */
   function meas(t) {
     const sf = sigF(), sv = sigV();
-    if (sf === 0 && sv === 0) return { t, f: flux(t), v: vr(state(t)), tv: t };
+    if (sf === 0 && sv === 0) { const st = state(t); return BIN ? { t, f: flux(t), v: v1(st), v2: v2(st), tv: t } : { t, f: flux(t), v: vr(st), tv: t }; }
     const near = (set) => { let b = set[0]; for (const o of set) if (Math.abs(o[0] - t) < Math.abs(b[0] - t)) b = o; return b; };
-    const ph = near(D.transits && Math.abs(t) <= D.zh ? D.obsZoom : D.obsOrbit), rv = near(D.obsOrbit);
-    return { t: ph[0], f: ph[1] + sf * ph[3], v: rv[2] + sv * rv[4], tv: rv[0] };
+    const ph = near(D.transits && Math.abs(t) <= D.zh ? D.obsZoom : BIN && D.ecl2 && Math.abs(t - D.tsec) <= D.zh2 ? D.obsZoom2 : D.obsOrbit), rv = near(D.obsOrbit);
+    return { t: ph[0], f: ph[1] + sf * ph[3], v: rv[2] + sv * rv[4], tv: rv[0], v2: BIN ? rv[5] + sv * rv[6] : 0 };
   }
 
   // ---------- formatting ----------
@@ -622,7 +801,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'), field: g('--field'),
              canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
-             star: g('--star'), planet: g('--planet'), S: parseFloat(g('--canvas-scale')) || 1 };
+             star: g('--star'), planet: g('--planet'), s1: g('--s1'), s2: g('--s2'), S: parseFloat(g('--canvas-scale')) || 1 };
   }
   function rgb(hex) {
     hex = hex.replace('#', '');
@@ -682,6 +861,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pts = D.path.map(([r, th]) => [-Ms * r * Math.cos(th), -Ms * r * Math.sin(th)]);
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
     for (const [x, y] of pts) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    if (BIN) { const R = Math.max(D.Rs, D.Rp); x0 -= R; x1 += R; y0 -= R; y1 += R; }   /* two stars: room for the stars themselves */
     const padT = 34 * S, padB = 58 * S, padX = 18 * S;
     const s = Math.min((W - 2 * padX) / (x1 - x0), (H - padT - padB) / (y1 - y0));
     const cx = W / 2 - s * (x0 + x1) / 2, cy = padT + (H - padT - padB) / 2 + s * (y0 + y1) / 2;
@@ -709,7 +889,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * S;
     ctx.beginPath(); ctx.moveTo(qx - 6 * S, qy); ctx.lineTo(qx + 6 * S, qy); ctx.stroke(); ctx.restore();
     const f11 = `600 ${11 * S}px ${mono}`;
-    label(ctx, T, D.transits ? 'transit here' : 'nearest our line of sight', qx + 9 * S, qy + 9 * S, 'left', T.muted, f11);
+    label(ctx, T, BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight', qx + 9 * S, qy + 9 * S, 'left', T.muted, f11);
+    if (BIN) {   /* the other conjunction, star 2 behind star 1 */
+      const rc2 = D.a * (1 - P.e * P.e) / (1 - P.e * Math.sin(D.w)), [ux2, uy2] = P2(0, Ms * rc2);
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.moveTo(ux2 - 6 * S, uy2); ctx.lineTo(ux2 + 6 * S, uy2); ctx.stroke(); ctx.restore();
+      label(ctx, T, 'star 2 behind here', ux2 + Math.max(9 * S, D.Rp * s + 8 * S), uy2 + 11 * S, 'left', T.muted, f11);
+    }
     if (P.e > 0.04) {
       const rper = D.a * (1 - P.e);
       const [px, py] = P2(-Ms * rper * Math.cos(D.w), -Ms * rper * Math.sin(D.w));
@@ -728,8 +913,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rsPx = Math.max(D.Rs * s, 7 * S), rpPx = Math.max(D.Rp * s, 3.5 * S);
     // star glow and disk
     ctx.save();
-    ctx.fillStyle = T.star; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(sx, sy, rsPx + 4 * S, 0, TAU); ctx.fill();
+    ctx.fillStyle = BIN ? tcol(B.t1) : T.star; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(sx, sy, rsPx + 4 * S, 0, TAU); ctx.fill();
     ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(sx, sy, rsPx, 0, TAU); ctx.fill();
+    if (BIN) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.stroke(); }
     ctx.restore();
     // star velocity arrow, colored by line of sight motion
     const v = vr(st), vs = D.vmax > 0 ? Math.min(1, Math.hypot(-uy - P.e * Math.sin(D.w), ux + P.e * Math.cos(D.w)) / (1 + P.e)) : 0;
@@ -739,8 +925,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       arrow(ctx, sx + vx / m * (rsPx + 3 * S), sy - vy / m * (rsPx + 3 * S), sx + vx / m * (rsPx + 3 * S + L), sy - vy / m * (rsPx + 3 * S + L),
             v >= 0 ? T.pos : T.neg, 2 * S);
     }
-    ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * S; ctx.stroke();
+    if (BIN) {   /* star 2: its own glow, color and velocity arrow, opposite star 1's */
+      const c2 = tcol(B.t2), w2 = v2(st) - B.gam * 1000;
+      ctx.save(); ctx.fillStyle = c2; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(px, py, rpPx + 4 * S, 0, TAU); ctx.fill(); ctx.restore();
+      ctx.fillStyle = c2; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.stroke();
+      const vx = uy + P.e * Math.sin(D.w), vy = -ux - P.e * Math.cos(D.w), m = Math.hypot(vx, vy) || 1, L = (16 + 22 * vs) * S;
+      arrow(ctx, px + vx / m * (rpPx + 3 * S), py - vy / m * (rpPx + 3 * S), px + vx / m * (rpPx + 3 * S + L), py - vy / m * (rpPx + 3 * S + L), w2 >= 0 ? T.pos : T.neg, 2 * S);
+      const f10 = `700 ${11 * S}px ${mono}`;
+      label(ctx, T, '1', sx + rsPx + 6 * S, sy + rsPx + 4 * S, 'left', T.ink, f10); label(ctx, T, '2', px - rpPx - 6 * S, py - rpPx - 4 * S, 'right', T.ink, f10);
+    } else {
+      ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * S; ctx.stroke();
+    }
 
     // observer
     const ay0 = H - padB + 14 * S, ay1 = H - 26 * S;
@@ -750,14 +946,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const obsTxt = hidden() ? 'To Earth' : P.inc <= 0.05 ? 'Earth is straight above the page' : elev < 0.05 ? 'To Earth, in this plane' : `To Earth, ${elev.toFixed(1)}° above this plane`;
     label(ctx, T, obsTxt, cx, H - 14 * S, 'center', T.ink, f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    if (!hidden()) ctx.fillText('star wobble ×' + comma(F), 8 * S, H - padB + 4 * S);
-    ctx.fillText('sizes not to scale', 8 * S, H - padB + 18 * S);
+    if (!hidden() && !(BIN && F === 1)) ctx.fillText('star wobble ×' + comma(F), 8 * S, H - padB + 4 * S);
+    ctx.fillText(BIN && D.Rs * s >= 7 * S && D.Rp * s >= 3.5 * S ? 'sizes to scale' : 'sizes not to scale', 8 * S, H - padB + 18 * S);
     ctx.restore();
   }
 
   // ---------- telescope view ----------
   function drawSide(T) {
     const [ctx, W, H] = begin('side', T), S = T.S, mono = monoFont();
+    if (BIN) { ctx.fillStyle = '#05080f'; ctx.fillRect(0, 0, W, H); T = Object.assign({}, T, { canvas: '#05080f', muted: '#aeb9c8', ink: '#e8eef6' }); }   /* two stars: a night sky, so pale stars show in either theme */
     const padT = 30 * S, padB = 26 * S;
     const R0 = Math.max(10, Math.min(W * 0.28, (H - padT - padB) * 0.36));
     const cx = W / 2, cy = padT + (H - padT - padB) / 2;
@@ -781,19 +978,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     const st = state(nowT());
     const [px, py] = sky(st), rpPx = Math.max(D.Rp * sc, 1.5 * S), behind = Math.sin(st.th) <= 0;
+    /* a limb darkened disk in the color c (rgb triple), as seen through the telescope */
+    const ldDisk = (x, y, R, C) => {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, R);
+      for (let j = 0; j <= 10; j++) { const r = Math.min(j / 10, 0.999), f = I(r); g.addColorStop(r, `rgb(${Math.round(C[0] * f)},${Math.round(C[1] * f)},${Math.round(C[2] * f)})`); }
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, R, 0, TAU); ctx.fill();
+    };
     const drawPlanet = () => {
+      if (BIN) { ldDisk(px, py, rpPx, tcolRGB(B.t2)); return; }
       ctx.fillStyle = T.planet; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.stroke();
     };
     if (behind && !hidden()) drawPlanet();
 
     // limb darkened star
-    const C = rgb(T.star), g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R0);
-    for (let j = 0; j <= 10; j++) {
-      const r = Math.min(j / 10, 0.999), f = I(r);
-      g.addColorStop(r, `rgb(${Math.round(C[0] * f)},${Math.round(C[1] * f)},${Math.round(C[2] * f)})`);
-    }
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R0, 0, TAU); ctx.fill();
+    ldDisk(cx, cy, R0, BIN ? tcolRGB(B.t1) : rgb(T.star));
 
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.9; ctx.setLineDash([4 * S, 4 * S]);
     if (!hidden()) halfPath(true); ctx.restore();
@@ -803,11 +1002,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.font = f11; ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
     if (!hidden()) ctx.fillText(minus(`b = ${D.b < 100 ? D.b.toFixed(2) : sig(D.b, 3)}`), 8 * S, H - 8 * S);
     ctx.textAlign = 'right';
-    ctx.fillText(hidden() ? 'mystery: the planet is too small to see' : 'planet to scale with star', W - 8 * S, H - 8 * S);
+    ctx.fillText(BIN ? (hidden() ? 'mystery: the pair is too close to see apart' : 'stars to scale') : hidden() ? 'mystery: the planet is too small to see' : 'planet to scale with star', W - 8 * S, H - 8 * S);
     ctx.restore();
     if (slowNow) label(ctx, T, 'slow motion', W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
-    if (!D.transits && P.inc > 0) {
-      label(ctx, T, 'no transit from here', cx, cy + R0 + 12 * S > H - padB ? padT : cy + R0 + 12 * S, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
+    if (!D.transits && !(BIN && D.ecl2) && P.inc > 0) {
+      label(ctx, T, BIN ? 'no eclipses from here' : 'no transit from here', cx, cy + R0 + 12 * S > H - padB ? padT : cy + R0 + 12 * S, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
     }
   }
 
@@ -818,7 +1017,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (span < 3 * YEAR) return { f: DAY, name: 'd' };
     return { f: YEAR, name: 'yr' };
   }
-  function axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, title, xname) {
+  function axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, title, xname, ydiv = 3) {
     const S = T.S, mono = monoFont();
     const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
     const X = (t) => pad.l + (t - t0) / (t1 - t0) * pw, Y = (y) => pad.t + (yHi - y) / (yHi - yLo) * ph;
@@ -826,7 +1025,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
     const xticks = [];
     for (let v = Math.ceil(t0 / u.f / xs) * xs; v * u.f <= t1 + 1e-9; v += xs) { xticks.push(v); const px = Math.round(X(v * u.f)) + 0.5; ctx.moveTo(px, pad.t); ctx.lineTo(px, pad.t + ph); }
-    const ys = niceStep((yHi - yLo) / 3);
+    const ys = niceStep((yHi - yLo) / ydiv);
     const yticks = [];
     for (let v = Math.ceil(yLo / ys) * ys; v <= yHi + 1e-12; v += ys) { yticks.push(v); const py = Math.round(Y(v)) + 0.5; ctx.moveTo(pad.l, py); ctx.lineTo(pad.l + pw, py); }
     ctx.stroke();
@@ -865,20 +1064,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawLC(T) {
     const [ctx, W, H] = begin('lc', T), S = T.S;
     const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 70 : 34) * S, b: 22 * S };   // narrow: title goes under the span buttons
-    const zoom = lcMode === 'zoom';
-    const t0 = zoom ? -D.zh : -D.Per / 4, t1 = zoom ? D.zh : 0.75 * D.Per;
+    const z2 = BIN && lcMode === 'zoom2', zoom = lcMode === 'zoom' || z2, mid = z2 ? D.tsec : 0, hz = z2 ? D.zh2 : D.zh;
+    const t0 = zoom ? mid - hz : -D.Per / 4, t1 = zoom ? mid + hz : 0.75 * D.Per;
     CH.lc = { x0: pad.l, x1: W - pad.r, t0, t1 };
-    const sf = sigF(), dip = Math.max(1 - D.fmin, D.depth, 1e-6);
+    const sf = sigF(), dip = BIN ? Math.max(1 - Math.min(...(z2 ? D.lcZoom2 : zoom ? D.lcZoom : D.lcOrbit).map((p) => p[1])), 1e-4) : Math.max(1 - D.fmin, D.depth, 1e-6);
     const span = Math.max(dip * 1.25, 4 * sf);
     const yLo = 1 - span, yHi = 1 + Math.max(0.25 * dip, 3 * sf);
     const ppm = span < 0.02;
     const ytick = (v, st) => ppm ? minus(comma((v - 1) * 1e6)) : fmtTick(v, st);
-    const { X, Y, ph } = axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, ppm ? 'Brightness change (ppm)' : 'Relative brightness', zoom ? 'time from mid transit' : 'time from conjunction');
-    const pts = zoom ? D.lcZoom : D.lcOrbit, now = nowT();
+    const { X, Y, ph } = axes(ctx, T, W, H, pad, t0, t1, yLo, yHi, ytick, ppm ? 'Brightness change (ppm)' : 'Relative brightness', BIN ? 'time from the eclipse of star 1' : zoom ? 'time from mid transit' : 'time from conjunction');
+    const pts = z2 ? D.lcZoom2 : zoom ? D.lcZoom : D.lcOrbit, now = nowT();
 
     ctx.save();
     ctx.beginPath(); ctx.rect(pad.l, pad.t - 2, W - pad.l - pad.r, ph + 4); ctx.clip();
-    if (!D.transits) {   // what an edge on transit would show
+    if (!D.transits && !BIN) {   // what an edge on transit would show
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 4 * S]);
       ctx.beginPath(); ctx.moveTo(pad.l, Y(1 - D.depth)); ctx.lineTo(W - pad.r, Y(1 - D.depth)); ctx.stroke(); ctx.setLineDash([]);
     }
@@ -887,7 +1086,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       polyline(ctx, pts, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
     if (sf > 0) {
-      const obs = zoom ? D.obsZoom : D.obsOrbit;
+      const obs = z2 ? D.obsZoom2 : zoom ? D.obsZoom : D.obsOrbit;
       ctx.fillStyle = T.muted;
       for (const o of obs) { if (o[0] > now) break; ctx.beginPath(); ctx.arc(X(o[0]), Y(o[1] + sf * o[3]), 1.9 * S, 0, TAU); ctx.fill(); }
     }
@@ -896,11 +1095,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       polyline(ctx, pts, X, Y, now);
     }
     ctx.restore();
-    if (!D.transits) label(ctx, T, 'depth if it transited', W - pad.r - 4 * S, Y(1 - D.depth) - 9 * S, 'right', T.muted, `${10.5 * S}px ${monoFont()}`);
+    if (!D.transits && !BIN) label(ctx, T, 'depth if it transited', W - pad.r - 4 * S, Y(1 - D.depth) - 9 * S, 'right', T.muted, `${10.5 * S}px ${monoFont()}`);
+    cursor(ctx, T, X, pad, ph, now, t0, t1);
+  }
+
+  /* two stars: both velocity curves in km/s around γ */
+  function drawRV2(T) {
+    const [ctx, W, H] = begin('rv', T), S = T.S, mono = monoFont();
+    const pad = { l: 66 * S, r: 12 * S, t: 34 * S, b: 22 * S };
+    const t0 = -D.Per / 4, t1 = 0.75 * D.Per;
+    CH.rv = { x0: pad.l, x1: W - pad.r, t0, t1 };
+    const sv = sigV() / 1000, m = Math.max(D.vhi - D.vlo, 1) * 0.12 + 3 * sv;
+    const { X, Y, ph } = axes(ctx, T, W, H, pad, t0, t1, D.vlo - m, D.vhi + m, (v, st) => fmtTick(v, st), 'Radial velocities (km/s), + away', 'time from the eclipse of star 1', 5);
+    const now = nowT();
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t - 2, W - pad.l - pad.r, ph + 4); ctx.clip();
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 3 * S]); ctx.beginPath(); ctx.moveTo(pad.l, Y(B.gam)); ctx.lineTo(W - pad.r, Y(B.gam)); ctx.stroke(); ctx.setLineDash([]);
+    if (showModel) {
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * S; ctx.setLineDash([5 * S, 4 * S]);
+      polyline(ctx, D.rv1, X, Y); polyline(ctx, D.rv2, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    if (sv > 0) for (const o of D.obsOrbit) {
+      if (o[0] > now) break;
+      ctx.fillStyle = T.s1; ctx.beginPath(); ctx.arc(X(o[0]), Y(o[2] / 1000 + sv * o[4]), 1.9 * S, 0, TAU); ctx.fill();
+      ctx.fillStyle = T.s2; ctx.beginPath(); ctx.arc(X(o[0]), Y(o[5] / 1000 + sv * o[6]), 1.9 * S, 0, TAU); ctx.fill();
+    }
+    if (showModel || sv === 0) {
+      ctx.lineWidth = 2.4 * S; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.strokeStyle = T.s1; polyline(ctx, D.rv1, X, Y, now); ctx.strokeStyle = T.s2; polyline(ctx, D.rv2, X, Y, now);
+    }
+    ctx.restore();
+    const f = `600 ${10.5 * S}px ${mono}`;
+    if (!hidden()) label(ctx, T, `γ = ${minus(String(B.gam))} km/s`, W - pad.r - 4 * S, Y(B.gam) - 9 * S, 'right', T.equi, f);
+    if (showModel || sv === 0) {
+      const st = state(now), xa = Math.min(X(now) + 8 * S, W - pad.r - 50 * S);
+      if (now >= t0 && now <= t1) { label(ctx, T, 'star 1', xa, Y(v1(st) / 1000), 'left', T.s1, f); label(ctx, T, 'star 2', xa, Y(v2(st) / 1000), 'left', T.s2, f); }
+    }
     cursor(ctx, T, X, pad, ph, now, t0, t1);
   }
 
   function drawRV(T) {
+    if (BIN) { drawRV2(T); return; }
     const [ctx, W, H] = begin('rv', T), S = T.S;
     const pad = { l: 66 * S, r: 12 * S, t: 34 * S, b: 22 * S };
     const t0 = -D.Per / 4, t1 = 0.75 * D.Per;
@@ -946,11 +1180,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rsOut').textContent = sig(P.rs) + ' R☉';
     $('mpOut').innerHTML = fmtMp(P.mp);
     $('rpOut').innerHTML = fmtRp(P.rp);
-    $('aOut').textContent = sig(P.a) + ' AU';
+    $('aOut').textContent = sig(P.a) + ' AU' + (BIN ? ` = ${sig(P.a * AU / R_SUN)} R☉` : '');
     $('eOut').textContent = P.e.toFixed(2);
     $('incOut').textContent = P.inc.toFixed(1) + '°';
     $('wOut').textContent = P.w.toFixed(0) + '°';
-    $('noiseOut').textContent = P.noise === 0 ? 'none' : `${sig(sigF() * 1e6, 2)} ppm, ${sig(sigV(), 2)} m/s`;
+    $('noiseOut').textContent = P.noise === 0 ? 'none' : BIN ? `${sig(sigF() * 100, 2)}%, ${sig(sigV() / 1000, 2)} km/s` : `${sig(sigF() * 1e6, 2)} ppm, ${sig(sigV(), 2)} m/s`;
     $('rP').textContent = fmtPeriod(D.Per);
     $('rK').textContent = fmtV(D.K);
     $('rDepth').textContent = fmtPpm(D.depth * 1e6);
@@ -967,7 +1201,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rVnow').className = v > 1e-9 ? 'pos' : v < -1e-9 ? 'neg' : '';
     const f = flux(nowT());
     $('rFnow').textContent = f === 1 ? '1' : minus('−' + fmtPpm((1 - f) * 1e6));
-    $('insideWarn').hidden = !D.inside;
+    $('insideWarn').hidden = BIN || !D.inside; $('touchWarn').hidden = !BIN || !D.inside;
     const now = nowT(), m = meas(now), hrs = (x) => minus(sig(Math.abs(x) < 1e-6 ? 0 : x / 3600, 4)) + ' h';   /* rounding noise at mid transit (1e−11 s) would show as 4e−15 h */
     $('rTnow').textContent = hrs(now);
     if (P.noise > 0) {   /* with noise the readouts give the measurements nearest the cursor, as Record reading stores them */
@@ -975,6 +1209,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('rVnow').textContent = (m.v > 0 ? '+' : '') + fmtV(m.v);
     }
     if (hidden()) for (const id of ['rDepth', 'rK', 'rDur', 'rProb', 'rMsini', 'rRho']) { $(id).innerHTML = '<span class="ok">hidden</span>'; $(id).className = ''; }
+    if (BIN) binReadouts(now, m, hrs);
+  }
+  const fmtKm = (v) => minus((v > 0.0005 ? '+' : '') + (v / 1000).toFixed(Math.abs(v) < 1e4 ? 2 : 1)) + ' km/s';
+  const pct = (x) => (x < 1e-6 ? '0' : sig(x * 100, 3)) + '%';
+  function binReadouts(now, m, hrs) {
+    $('m1Out').textContent = sig(B.m1) + ' M☉'; $('m2Out').textContent = sig(B.m2) + ' M☉';
+    $('r1Out').textContent = sig(B.r1) + ' R☉'; $('r2Out').textContent = sig(B.r2) + ' R☉';
+    $('t1Out').textContent = comma(B.t1) + ' K'; $('t2Out').textContent = comma(B.t2) + ' K';
+    $('gamOut').textContent = minus((B.gam > 0 ? '+' : '') + B.gam) + ' km/s';
+    $('bD1').textContent = D.transits ? pct(D.depth1) : 'no eclipse';
+    $('bD2').textContent = D.ecl2 ? pct(D.depth2) : 'no eclipse';
+    $('bK1').textContent = minus((D.K / 1000).toFixed(2)) + ' km/s'; $('bK2').textContent = minus((D.K2 / 1000).toFixed(2)) + ' km/s';
+    $('bP').textContent = fmtPeriod(D.Per);
+    const flat = D.T23a > 0 && D.T23b > 0, both = D.transits && D.ecl2;
+    $('bTr').textContent = both ? (flat ? 'both, with flat bottoms' : 'both, partial') : D.transits || D.ecl2 ? 'only one' : 'no';
+    $('bTr').className = D.transits || D.ecl2 ? 'pos' : '';
+    const h = (x) => sig(x / 3600, 4) + ' h';
+    const two = (a, b, ok1, ok2) => (!ok1 && !ok2 ? '—' : !ok2 ? h(a) : !ok1 ? h(b) : Math.abs(a - b) <= 0.005 * a ? h(a) : `${h(a)} and ${h(b)}`);
+    $('bDur').textContent = two(D.T14a, D.T14b, D.transits, D.ecl2);
+    $('bFlat').textContent = two(D.T23a, D.T23b, D.T23a > 0, D.T23b > 0);
+    $('bQ').textContent = (D.K / D.K2).toFixed(3);
+    $('bL').textContent = sig(ebLight(B.r2, B.t2) / ebLight(B.r1, B.t1), 3);
+    $('bTnow').textContent = hrs(now);
+    $('bFnow').textContent = m.f.toFixed(4);
+    $('bV1').textContent = fmtKm(m.v); $('bV2').textContent = fmtKm(m.v2);
+    $('bV1').className = m.v > B.gam * 1000 ? 'pos' : 'neg'; $('bV2').className = m.v2 > B.gam * 1000 ? 'pos' : 'neg';
+    if (hidden()) for (const id of ['bD1', 'bD2', 'bK1', 'bK2', 'bDur', 'bFlat', 'bQ', 'bL', 'bTr']) { $(id).innerHTML = '<span class="ok">hidden</span>'; $(id).className = ''; }
   }
 
   // ---------- scheduling ----------
@@ -982,7 +1243,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function rate() {
     const base = D.Per / ORBIT_SECONDS * speed;
     slowNow = false;
-    if (slowmo && D.transits && Math.abs(nowT()) < D.zh) {
+    if (slowmo && ((D.transits && Math.abs(nowT()) < D.zh) || (BIN && D.ecl2 && Math.abs(nowT() - D.tsec) < D.zh2))) {
       const slow = 2 * D.zh / 4 * speed;   // about 4 s across the zoom window at 1x
       if (slow < base) { slowNow = true; return slow; }
     }
@@ -1020,10 +1281,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!MYS) return; MYS = null; document.body.classList.remove('mys');
     for (const k of ['ms', 'rs', 'noise']) $(k).disabled = false;
     $('tModel').disabled = false; showModel = $('tModel').checked; $('mysReveal').disabled = true;
-    $('mysNote').textContent = 'A real survey star with a planet you have to find: its size, mass and orbit are hidden, the measurements are noisy, and only the star\'s mass and radius are given.';
+    $('mysNote').textContent = BIN ? BIN_NOTE : PLAN_NOTE;
+  }
+  const PLAN_NOTE = 'A real survey star with a planet you have to find: its size, mass and orbit are hidden, the measurements are noisy, and only the star\'s mass and radius are given.';
+  const BIN_NOTE = 'Two stars you have to weigh and measure: their masses, sizes, orbit and the second star\'s temperature are hidden, the measurements are noisy, and only star 1\'s temperature is given, as its spectrum would give it.';
+  /* a mystery binary: star 1 of 1.0 to 2.4 M☉, star 2 0.35 to 0.8 times as heavy, each on a simple main sequence (R ∝ M^0.8, L ∝ M⁴,
+     so T = 5772 K × M^0.6), a circular orbit of 1.5 to 5 days, and an impact parameter that makes both eclipses total or annular */
+  function newMysteryBin() {
+    const r = Math.random, m1 = +(1 + 1.4 * r()).toFixed(2), m2 = +(m1 * (0.35 + 0.45 * r())).toFixed(2);
+    const rad = (m) => +Math.pow(m, 0.8).toFixed(3), tem = (m) => Math.round(T_SUN * Math.pow(m, 0.6) / 10) * 10;
+    const r1 = rad(m1), r2 = rad(m2), Per = (1.5 + 3.5 * r()) * DAY, a = ebA(Per, m1 + m2), bphys = 0.6 * r() * (r1 - r2) * R_SUN;
+    Object.assign(B, { m1, r1, t1: tem(m1), m2, r2, t2: tem(m2), gam: Math.round(80 * r() - 40) });
+    Object.assign(P, { a: +(a / AU).toPrecision(4), e: 0, inc: Math.round(Math.acos(bphys / a) / DEG * 100) / 100, w: 90, noise: 0.25 });
+    bToP();
+    MYS = { n: (MYS ? MYS.n : 0) + 1, revealed: false }; binName = 'mystery';
+    document.body.classList.add('mys'); $('noise').disabled = true;
+    showModel = false; $('tModel').disabled = true; $('mysReveal').disabled = false;
+    setPressed('#binPresets', 'b', null); $('presetHint').textContent = 'A mystery binary: see the Mystery system section.';
+    $('mysNote').textContent = `Mystery binary: star 1's spectrum gives T₁ = ${comma(B.t1)} K. Everything else is hidden, and every measurement has noise (${sig(sigF() * 100, 2)}% in brightness, ${sig(sigV() / 1000, 2)} km/s in velocity).`;
+    syncSliders(); syncB(); D = null; tau = 0; changed();
   }
   /* a star like the Sun with one transiting planet: rocky, a mini Neptune or a giant, its density in that kind's range; edge on enough to transit (b below 0.5) */
   function newMystery() {
+    if (BIN) { newMysteryBin(); return; }
     const r = Math.random, ms = +(0.7 + 0.6 * r()).toFixed(2), rs = +Math.pow(ms, 0.8).toFixed(2);
     const kinds = [{ rp: [1.3, 1.9], rho: [4, 7] }, { rp: [2.5, 4.5], rho: [1, 2.5] }, { rp: [8, 14], rho: [0.3, 1.5] }], k = kinds[Math.floor(r() * 3)];
     const rp = +(k.rp[0] + (k.rp[1] - k.rp[0]) * r()).toPrecision(3), rho = k.rho[0] + (k.rho[1] - k.rho[0]) * r();
@@ -1039,6 +1319,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function revealMystery() {
     if (!MYS) return; MYS.revealed = true; $('mysReveal').disabled = true; $('tModel').disabled = false; showModel = $('tModel').checked;
+    if (BIN) {
+      $('mysNote').textContent = `Revealed: M₁ = ${sig(B.m1)} M☉, R₁ = ${sig(B.r1)} R☉, T₁ = ${comma(B.t1)} K; M₂ = ${sig(B.m2)} M☉, R₂ = ${sig(B.r2)} R☉, T₂ = ${comma(B.t2)} K; a = ${sig(P.a)} AU, i = ${P.inc.toFixed(2)}°, γ = ${minus(String(B.gam))} km/s.`;
+      changed(); return;
+    }
     const rho = GM_EARTH * P.mp / G / (4 / 3 * Math.PI * (P.rp * R_EARTH) ** 3) / 1000;
     $('mysNote').textContent = `Revealed: R_p = ${sig(P.rp)} R⊕, M_p = ${sig(P.mp)} M⊕, a = ${sig(P.a)} AU, i = ${P.inc.toFixed(2)}°, density ${sig(rho)} g/cm³. Star: M = ${P.ms.toFixed(2)} M☉, R = ${P.rs.toFixed(2)} R☉.`;
     changed();
@@ -1055,11 +1339,53 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const k of IDS) {
     $(k).addEventListener('input', (e) => {
       P[k] = LOG[k] ? +sig(fromU(k, +e.target.value), 3) : +e.target.value;
-      if (k !== 'noise') { if (MYS) endMystery(); sysName = 'custom'; setPressed('#presets', 'p', null); $('presetHint').textContent = 'Your own system. Pick a preset to start from a known one.'; }
+      if (k !== 'noise') { if (MYS) endMystery(); markCustom(); }
       changed();
     });
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function markCustom() {
+    if (BIN) { binName = 'custom'; setPressed('#binPresets', 'b', null); $('presetHint').textContent = 'Your own pair of stars. Pick a setup to start from a known one.'; }
+    else { sysName = 'custom'; setPressed('#presets', 'p', null); $('presetHint').textContent = 'Your own system. Pick a preset to start from a known one.'; }
+  }
+  /* the two stars' sliders: masses, radii and temperatures logarithmic, γ linear */
+  const BLOG = { m1: [0.08, 20], m2: [0.08, 20], r1: [0.08, 20], r2: [0.08, 20], t1: [2500, 40000], t2: [2500, 40000] };
+  const bToU = (k, v) => 1000 * Math.log(v / BLOG[k][0]) / Math.log(BLOG[k][1] / BLOG[k][0]);
+  const bFromU = (k, u) => BLOG[k][0] * Math.pow(BLOG[k][1] / BLOG[k][0], u / 1000);
+  function syncB() { for (const k in BLOG) $(k).value = bToU(k, B[k]); $('gam').value = B.gam; }
+  for (const k of [...Object.keys(BLOG), 'gam']) {
+    $(k).addEventListener('input', (e) => {
+      B[k] = k === 'gam' ? +e.target.value : k[0] === 't' ? Math.round(bFromU(k, +e.target.value) / 10) * 10 : +sig(bFromU(k, +e.target.value), 3);
+      if (MYS) endMystery(); markCustom(); bToP(); changed();
+    });
+  }
+  function applyBin(name) {
+    endMystery(); binName = name;
+    const c = BPRESETS[name];
+    for (const k of ['m1', 'r1', 't1', 'm2', 'r2', 't2', 'gam']) B[k] = c[k];
+    Object.assign(P, { a: c.a, e: c.e, inc: c.inc, w: c.w });
+    bToP(); setPressed('#binPresets', 'b', name); $('presetHint').textContent = BHINTS[name];
+    syncSliders(); syncB(); D = null; tau = 0; changed();
+  }
+  for (const b of document.querySelectorAll('#binPresets button')) b.addEventListener('click', () => applyBin(b.dataset.b));
+  /* Star and planet | Two stars: each keeps its own system while the other is shown */
+  function setKind(on) {
+    if (on === BIN) return;
+    endMystery();
+    if (on) { PP = Object.assign({}, P, { sys: sysName }); BIN = true; P.noise = 0; }
+    else { BIN = false; if (PP) { const sys = PP.sys; delete PP.sys; Object.assign(P, PP); sysName = sys; } }
+    document.body.classList.toggle('bin', BIN);
+    setPressed('#kindSeg', 'k', BIN ? 'bin' : 'planet');
+    $('lcZoom').textContent = BIN ? 'Eclipse of star 1' : 'Zoom on transit';
+    document.querySelector('#lcSeg [data-lc="zoom2"]').textContent = 'Eclipse of star 2';
+    if (!BIN && lcMode === 'zoom2') { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
+    $('mysReveal').textContent = BIN ? 'Reveal the stars' : 'Reveal the planet';
+    $('mysNote').textContent = BIN ? BIN_NOTE : PLAN_NOTE;
+    window.vdShowCols = BIN ? [['t_h', 't (h)'], ['brightness', 'brightness'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']] : PLANET_COLS;
+    if (BIN) applyBin(BPRESETS[binName] ? binName : 'redd');
+    else { setPressed('#presets', 'p', sysName); $('presetHint').textContent = HINTS[sysName] || 'Your own system. Pick a preset to start from a known one.'; syncSliders(); D = null; changed(); }
+  }
+  for (const b of document.querySelectorAll('#kindSeg button')) b.addEventListener('click', () => setKind(b.dataset.k === 'bin'));
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { speed = +b.dataset.s; setPressed('#speedSeg', 's', b.dataset.s); });
   for (const b of document.querySelectorAll('#lcSeg button')) b.addEventListener('click', () => { lcMode = b.dataset.lc; setPressed('#lcSeg', 'lc', lcMode); schedule(); });
   $('tSlow').addEventListener('change', (e) => { slowmo = e.target.checked; schedule(); });
@@ -1097,14 +1423,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function onKey(e) {
     const big = e.shiftKey;
-    const stepT = (lcMode === 'zoom' && e.currentTarget === cv.lc ? 2 * D.zh : D.Per) / (big ? 20 : 200);
+    const stepT = (lcMode !== 'orbit' && e.currentTarget === cv.lc ? 2 * (lcMode === 'zoom2' ? D.zh2 : D.zh) : D.Per) / (big ? 20 : 200);
     if (e.key === 'ArrowRight') setT(nowT() + stepT);
     else if (e.key === 'ArrowLeft') setT(nowT() - stepT);
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       const d = (big ? 1 : 0.1) * (e.key === 'ArrowUp' ? 1 : -1);
       if (hidden()) return;
-      P.inc = Math.round(Math.min(90, Math.max(0, P.inc + d)) * 10) / 10; $('inc').value = P.inc; sysName = 'custom';
-      setPressed('#presets', 'p', null); changed();
+      P.inc = Math.round(Math.min(90, Math.max(0, P.inc + d)) * 10) / 10; $('inc').value = P.inc; markCustom(); changed();
     } else if (e.key === ' ') setPlaying(!playing);
     else return;
     e.preventDefault();
@@ -1178,8 +1503,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sPos = w3(sq * st.r * ux, sq * st.r * uy), pPos = w3(-Ms * st.r * ux, -Ms * st.r * uy);
     const rs3 = hid ? 0.07 : Math.max(D.Rs * X3.u, 0.045), rp3 = hid ? 0.035 : Math.max(D.Rp * X3.u, 0.032);
     X3.star.position.copy(sPos); X3.star.scale.setScalar(rs3); X3.light.position.copy(sPos);
-    if (X3.star.tint) X3.star.tint(T.star);
+    if (X3.star.tint) X3.star.tint(BIN ? tcol(B.t1) : T.star);
     X3.planet.position.copy(pPos); X3.planet.scale.setScalar(rp3);
+    X3.planet.material.color.set(BIN ? tcol(B.t2) : '#9cc0f0'); X3.planet.material.emissive.set(BIN ? tcol(B.t2) : '#2c4266');
     // toward Earth: −y in the plane (the bottom of the top view), raised by 90° − i
     const el = (90 - P.inc) * DEG, e3 = new THREE.Vector3(0, -Math.cos(el), Math.sin(el)), L = 1.35;
     X3.e3 = e3;
@@ -1222,7 +1548,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // conjunction mark and periastron, as in the top view
     const rc = D.a * (1 - P.e * P.e) / (1 + P.e * Math.sin(D.w)), [qx, qy] = S3.project(w3(0, -Ms3() * rc));
     const qr = qx > W * 0.5;
-    label(ctx, DK, D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qy + 12 * S, qr ? 'right' : 'left', '#aeb9c8', f11);
+    label(ctx, DK, BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qy + 12 * S, qr ? 'right' : 'left', '#aeb9c8', f11);
     if (P.e > 0.04) {
       const rper = D.a * (1 - P.e), [ex, ey] = S3.project(w3(-Ms3() * rper * Math.cos(D.w), -Ms3() * rper * Math.sin(D.w)));
       ctx.fillStyle = '#aeb9c8'; ctx.beginPath(); ctx.arc(ex, ey, 3 * S, 0, TAU); ctx.fill();
@@ -1234,7 +1560,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(ctx, DK, P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`, tx, ty, tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center', '#e8eef6', f12);
     } else label(ctx, DK, 'To Earth: hidden in a mystery', W / 2, H - 14 * S, 'center', '#e8eef6', f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = '#aeb9c8'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    if (!hidden()) ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S);
+    if (!hidden() && !(BIN && D.F === 1)) ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S);
     ctx.fillText('sizes not to scale · drag to turn', 8 * S, H - 8 * S);
     ctx.restore();
   }
@@ -1276,11 +1602,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // readings for the worksheet: the cursor's time and what the instruments read there
   const SYSNAME = { hotj: 'Hot Jupiter', earth: 'Earth and Sun', jupiter: 'Jupiter and Sun', ecc: 'Eccentric planet', tilt: 'Not edge on', trappist: 'TRAPPIST-1 like', custom: 'Own system' };
-  window.vdVersion = 'exoplanets@2026-10-24';
-  window.vdShowCols = [['t_h', 't (h)'], ['drop_ppm', 'drop (ppm)'], ['v_m_s', 'v (m/s)']];
+  window.vdVersion = 'exoplanets@2026-10-31';
+  const PLANET_COLS = [['t_h', 't (h)'], ['drop_ppm', 'drop (ppm)'], ['v_m_s', 'v (m/s)']];
+  window.vdShowCols = PLANET_COLS;
+  /* Two stars send to their own worksheet (Eclipsing Binary Stars); a ?ws= in the address still wins (VD.ws) */
+  window.vdWorksheet = () => (BIN ? 'eclipsing-binary' : VD.ws('exoplanets'));
   window.vdReadingRow = () => {
     ensure();
     const m = meas(nowT()), hid = hidden(), g = (x) => String(+(+x).toPrecision(4));
+    if (BIN) {
+      const ph = (((m.t / D.Per) % 1) + 1) % 1;
+      return { system: binName === 'mystery' ? `Mystery binary ${MYS.n}` : BNAME[binName], t_h: (m.t / 3600).toFixed(4), phase: ph.toFixed(4), brightness: m.f.toFixed(5),
+        v1_km_s: (m.v / 1000).toFixed(3), v2_km_s: (m.v2 / 1000).toFixed(3), t_v_h: (m.tv / 3600).toFixed(4), P_d: +(D.Per / DAY).toPrecision(6), T1_K: B.t1,
+        M1_Msun: hid ? 'hidden' : B.m1, R1_Rsun: hid ? 'hidden' : B.r1, M2_Msun: hid ? 'hidden' : B.m2, R2_Rsun: hid ? 'hidden' : B.r2, T2_K: hid ? 'hidden' : B.t2,
+        a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, gamma_km_s: hid ? 'hidden' : B.gam,
+        noise_pct: +(sigF() * 100).toPrecision(3), noise_km_s: +(sigV() / 1000).toPrecision(3) };
+    }
     return { system: sysName === 'mystery' ? `Mystery ${MYS.n}` : SYSNAME[sysName], Ms_Msun: P.ms, Rs_Rsun: P.rs, Rp_RE: hid ? 'hidden' : g(P.rp), Mp_ME: hid ? 'hidden' : g(P.mp),
       a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, noise_ppm: +(sigF() * 1e6).toPrecision(3), noise_m_s: +sigV().toPrecision(3),
       P_d: +(D.Per / DAY).toPrecision(6), t_h: (m.t / 3600).toFixed(4), drop_ppm: ((1 - m.f) * 1e6).toFixed(1), v_m_s: m.v.toFixed(3), t_v_h: (m.tv / 3600).toFixed(4) };
@@ -1288,12 +1625,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* How this works: one video per worksheet (made by tools/howto/): the Hot Jupiter transit depth, or for the Astro 2203 worksheet
      (intro-exoplanets, opened from it with ?ws= or from the Astro 2203 course page with ?course=, which VD.ws reads too) Earth's transit */
-  const howVid = () => (VD.ws('exoplanets') === 'intro-exoplanets' ? 'intro-exoplanets' : 'exoplanets');
+  const howVid = () => (BIN || VD.ws('') === 'eclipsing-binary' ? 'eclipsing-binary' : VD.ws('exoplanets') === 'intro-exoplanets' ? 'intro-exoplanets' : 'exoplanets');
+  const HOW_TITLE = { 'intro-exoplanets': 'Finding Planets Around Other Stars', exoplanets: 'Finding Exoplanets', 'eclipsing-binary': 'Eclipsing Binary Stars' };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
-    title: () => (howVid() === 'intro-exoplanets' ? 'How this works: Finding Planets Around Other Stars' : 'How this works: Finding Exoplanets') });
+    title: () => 'How this works: ' + HOW_TITLE[howVid()] });
+  /* Two stars from the address: its worksheet (?ws=eclipsing-binary) or ?kind=bin */
+  if (VD.ws('') === 'eclipsing-binary' || /[?&]kind=bin\b/.test(location.search)) setKind(true);
 
   // exposed for testing
-  window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying };
+  window.__exo = { P, B, get D() { return D; }, derive, flux, blocked, PRESETS, BPRESETS, applyPreset, applyBin, setKind, get BIN() { return BIN; }, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying, setLc: (k) => document.querySelector(`#lcSeg [data-lc="${k}"]`).click() };
 })();
 </script>
 </body>
