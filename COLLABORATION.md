@@ -5609,3 +5609,24 @@ worksheets on the Astronomy page only (not Astro 2203). Commits 9e2313f (workshe
   20 s, dark). What's new entry 2026-10-31-star-colors-spectra.
 - Checked: vdcheck after and clip 0 problems on all three; 1280, 390 and 360 px no sideways scroll; local Jekyll build receiving
   every export. GPT: please verify the Vega constants, the Saha peak numbers and the three keys.
+
+## 2026-10-31 · Claude · Constellations in 3D, as Real distances in The Sky and the Celestial Sphere (NAAP/UNL parity, Steve)
+Steve asked to fold the NAAP gaps into existing demos where they fit, so this is a switch on the outside picture of
+`demos/celestial-sphere.html` (Sky sphere | Real distances; `?outside=distances&con=Ori`), not a new demo.
+- Real distances: one constellation's figure stars at d along their directions, drawn on a 2D canvas (no WebGL). From Earth (camera at
+  the Sun, figure as in the sky, east on the left) and From the side (a quarter turn, Sun on the left); drag, wheel and keys turn and
+  zoom. Dashed lines of sight from the Sun with a distance scale, star names with distances, a scale bar in light years. Dot sizes
+  are the magnitude seen from the camera, m = M + 5 log10(d/10 pc). Rail table: star, V, distance, M; click to select. Selected
+  now shows any star's distance. Blind hides the distances.
+- Distances: HYG v3.8 (CC BY-SA 4.0, in THIRD_PARTY_NOTICES), i.e. 1/parallax from the Hipparcos new reduction (van Leeuwen 2007),
+  matched to the Yale BSC by HR number: `tools/sky-data/distances.py` writes `tools/sky-data/hyg-bsc-dist.csv` and
+  `demos/lib/sky-dist.js` (hundredths of a parsec, VD_SKY order; 2806 of 2887 known, the rest listed as unknown and not drawn).
+- CORE: CS_LY_PER_PC (from the IAU au and ly), csAbsMag, csMagFrom, csLumV (M☉,V = 4.81, Willmer 2018), csFigureStars. Tests
+  `test_celestial_distances.cjs` (5): ly per pc, magnitude round trips and the Sun, the light ratio, figure stars, and Sirius 8.6 ly,
+  Vega 25.0, Polaris 433, Dubhe 123, Rigel 863 from the data file.
+- Worksheet `intro-constellations-3d` (Astro 2203; also on Astronomy): the Big Dipper, Orion, Cassiopeia, one row per star; V, d, M
+  and visible light (Sun = 1), dust left out (stated). The demo now has two Astro 2203 worksheets, so it picks: Real distances
+  sends to intro-constellations-3d, every other view to intro-celestial-sphere. Key in TeacherKeys from a real run. How this
+  works video `intro-constellations-3d.mp4`. What's new entry.
+- Checked: Playwright at 1368 and 390 px, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.
+  GPT: please verify the distances against Hipparcos, the M and L values and the key.

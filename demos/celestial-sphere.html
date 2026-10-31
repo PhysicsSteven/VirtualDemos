@@ -70,19 +70,28 @@
   .setup select, .rail select { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+/* the Real distances view */
+.pane.out.depth #outFlat, .pane.out.depth #outLbl, .pane.out.depth canvas.vd3d { display: none !important; }
+.pane.out.depth #dimSeg { display: none; }
+#outDepth { touch-action: pan-y; }
+.pbar select { font: inherit; font-size: 0.82rem; color: #e3e8ef; background: rgba(21, 28, 37, 0.85); border: 1px solid #2c3747; border-radius: 6px; padding: 3px 4px; max-width: 11rem; }
+#depthTab tbody tr { cursor: pointer; }
+#depthTab tbody tr[aria-selected="true"] td { color: var(--accent); font-weight: 700; }
+#depthTab td:nth-child(n+2), #depthTab th:nth-child(n+2) { text-align: right; font-family: var(--font-mono); }
 /* the Readings section */
 .vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 </style>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <script src="lib/sky-bsc.js"></script>
+<script src="lib/sky-dist.js"></script>
 </head>
 <body>
 <div class="app">
   <header class="bar">
     <div>
       <h1>The Sky and the Celestial Sphere</h1>
-      <p>The stars as a sphere seen from outside, with your horizon cutting it, beside the sky you see from the ground. Turn the Earth through a night, a month, a year or thousands of years and see why the sky moves the way it does.</p>
+      <p>The stars as a sphere seen from outside, with your horizon cutting it, beside the sky you see from the ground. Turn the Earth through a night, a month, a year or thousands of years and see why the sky moves the way it does, or place a constellation's stars at their real distances.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">RA in hours · angles in degrees · standard time, no daylight saving</div>
@@ -112,9 +121,13 @@
         <div class="pane out" id="paneOut">
           <canvas id="outFlat" tabindex="0" role="img" aria-label="The celestial sphere seen from outside: the stars on a sphere around the observer, the horizon plane cutting it, the celestial poles and equator, the ecliptic with the Sun, and the Moon. Drag to turn the view, wheel to zoom."></canvas>
           <canvas id="outLbl" aria-hidden="true"></canvas>
+          <canvas id="outDepth" tabindex="0" hidden role="img" aria-label="The stars of one constellation placed at their real distances from the Sun, in light years. Drag to turn the view, wheel to zoom; comma and period turn and minus and equals zoom when the picture has the focus. Click a star to select it."></canvas>
           <div class="pbar">
-            <span class="pt">From outside</span>
+            <span class="pt" id="outTitle">From outside</span>
             <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+            <div class="seg" role="group" aria-label="Star distances" id="depthSeg"><button type="button" data-depth="sphere" aria-pressed="true" title="Every star on one sphere, as the sky looks">Sky sphere</button><button type="button" data-depth="dist" aria-pressed="false" title="One constellation's stars at their real distances">Real distances</button></div>
+            <label class="sr" for="depthCon">Constellation</label><select id="depthCon" hidden></select>
+            <div class="seg" role="group" aria-label="Look from" id="depthLook" hidden><button type="button" data-look="earth" aria-pressed="true">From Earth</button><button type="button" data-look="side" aria-pressed="false">From the side</button></div>
           </div>
           <p class="pnote" id="outNote"></p>
         </div>
@@ -168,7 +181,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-celestial-sphere.html" target="intro-celestial-sphere-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/intro-celestial-sphere.html" target="intro-celestial-sphere-worksheet">Worksheet 1: The Sky and the Celestial Sphere (Astro 2203)</a></li><li><a href="../curriculum/labs/students/intro-constellations-3d.html" target="intro-constellations-3d-worksheet">Worksheet 2: Constellations in 3D (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -193,6 +206,15 @@
         <h2>Selected</h2>
         <div class="find"><label for="find">Find an object (or click one in the sky)</label><select id="find"></select></div>
         <dl class="readout" id="selOut"></dl>
+      </section>
+      <section id="depthSec" hidden>
+        <h2>Real distances</h2>
+        <p class="hint" id="depthNote"></p>
+        <div class="toggles">
+          <label><input type="checkbox" id="tSight" checked>Lines of sight from the Sun, with a distance scale</label>
+          <label><input type="checkbox" id="tDepthNames" checked>Star names and distances</label>
+        </div>
+        <div class="twrap"><table class="rows" id="depthTab"><caption class="sr">The stars of the figure and their distances</caption><thead><tr><th>Star</th><th>V</th><th>Distance (ly)</th><th>M</th></tr></thead><tbody></tbody></table></div>
       </section>
       <section>
         <h2>The sky now</h2>
@@ -237,7 +259,7 @@ say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');
 window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
-        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the highest and lowest altitudes, rising and setting, and the pole's altitude</span></label>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the highest and lowest altitudes, rising and setting, the pole's altitude, and the star distances</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">altitude h: sin h = sin φ sin δ + cos φ cos δ cos H, H = LST − α</p>
           <p class="formula">highest altitude 90° − |φ − δ|, lowest |φ + δ| − 90°; never sets when δ &gt; 90° − φ (north)</p>
@@ -464,6 +486,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < R.length; i += 4) if (p.dec >= R[i + 2] / 1e4 && p.ra >= R[i] / 1e4 && p.ra < R[i + 1] / 1e4) return sky.abbr[R[i + 3]];
     return null;
   }
+  /* Real distances. A star's absolute magnitude, the magnitude it would have from 10 pc, M = V − 5 log10(d / 10 pc) (dust left
+     out), and back, the magnitude it shows from a distance d; its visible light output against the Sun's, from the Sun's absolute
+     V magnitude 4.81 (Willmer 2018, ApJS 236, 47). 1 pc = 648000/π AU and 1 ly = 9 460 730 472 580 800 m (IAU). */
+  const CS_LY_PER_PC = 3.2615637771674333, CS_MV_SUN = 4.81;
+  const csAbsMag = (V, dpc) => V - 5 * Math.log10(dpc / 10);
+  const csMagFrom = (M, dpc) => M + 5 * Math.log10(dpc / 10);
+  const csLumV = (M) => Math.pow(10, 0.4 * (CS_MV_SUN - M));
+  /* the stars of a constellation's figure, each once, in the order the figure lines first reach them */
+  function csFigureStars(figures, con) {
+    const out = [];
+    for (const fg of figures) if (fg[0] === con) for (const i of fg.slice(1)) if (out.indexOf(i) < 0) out.push(i);
+    return out;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -612,7 +647,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     dpr = window.devicePixelRatio || 1;
     const ro = $('paneOut').getBoundingClientRect(), rs = $('paneSky').getBoundingClientRect();
     OW = ro.width; OH = ro.height; SW = rs.width; SH = rs.height;
-    for (const c of [outFlat, outLbl]) { c.width = Math.round(OW * dpr); c.height = Math.round(OH * dpr); }
+    for (const c of [outFlat, outLbl, outDepth]) { c.width = Math.round(OW * dpr); c.height = Math.round(OH * dpr); }
     skyCan.width = Math.round(SW * dpr); skyCan.height = Math.round(SH * dpr);
     if (G3 && G3.S) G3.S.size(OW, OH);
     dirty = true;
@@ -1007,6 +1042,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += B ? dd('Highest and lowest altitude', 'hidden: measure them', 'wide') : dd('Highest altitude', `${sgn(D.cu.hi, 2)}°`) + dd('Lowest altitude', `${sgn(D.cu.lo, 2)}°`);
       if (!B) h += dd('Through a day', D.status, 'wide');
     }
+    if (si.kind === 'star' && distPc(si.i)) h += B ? dd('Distance', 'hidden', 'wide') : dd('Distance', `${lyText(distPc(si.i) * CS_LY_PER_PC)} light years <small>Hipparcos</small>`, 'wide');
     if (si.kind === 'moon') h += dd('Phase', `${phaseName(K.phase)}, ${f(K.phase.lit * 100, 1)}% lit`, 'wide') + dd('Ecliptic latitude β', `${sgn(K.moon.lat, 2)}°`) + dd('Distance', `${Math.round(K.moonT.km).toLocaleString('en-US')} km`);
     if (si.kind === 'sun') h += dd('Ecliptic longitude λ', `${f(K.sun.lon, 2)}°`) + dd('Distance', `${f(K.sun.R, 4)} AU`);
     $('selOut').innerHTML = h;
@@ -1131,17 +1167,181 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     NAMED.slice().sort((a, b) => SKY.names[a].localeCompare(SKY.names[b])).forEach((i) => add('star:' + i, `${SKY.names[i]} (${SKY.bayer[i]})`, g2));
   })();
   function notes() {
-    $('outNote').textContent = 'Seen from outside the sphere, so the constellations look mirror reversed. Drag to turn.';
+    $('outNote').textContent = DP.on ? (DP.look === 'earth' ? 'From the Sun: the figure looks as it does in the sky. Turn the view to see how far away each star is.'
+      : DP.look === 'side' ? 'From the side: the Sun on the left, the stars at their distances. Dot sizes show how bright each star would look from here.'
+        : 'Dot sizes show how bright each star would look from where the view is. Drag to turn, wheel to zoom.')
+      : 'Seen from outside the sphere, so the constellations look mirror reversed. Drag to turn.';
     $('skyNote').textContent = S.view === 'horizon' ? `Facing ${compass(S.face)}, centered ${Math.round(S.tilt)}° up, ${Math.round(S.fov)}° across. Drag to look around.`
       : S.view === 'dome' ? 'The whole sky: zenith in the middle, horizon at the edge, north at the top and east on the left, as you see it lying on your back with your head to the north.'
         : `Right ascension and declination of date; the dashed line is your meridian. Shaded: below your horizon now.${SW / SH >= 1.5 ? '' : ' Drag sideways to slide the chart.'}`;
   }
 
+  /* ---------- Real distances: one constellation's stars placed at their distances from the Sun ---------- */
+  const DIST = window.VD_SKYDIST ? window.VD_SKYDIST.pc100 : null;
+  const distPc = (i) => (DIST && DIST[i] ? DIST[i] / 100 : 0);
+  const outDepth = $('outDepth'), cDep = outDepth.getContext('2d');
+  const DEPTH_FIRST = ['UMa', 'Ori', 'Cas', 'Cru', 'Leo', 'Sco', 'Lyr', 'Cyg', 'Tau', 'CMa', 'Gem', 'Sgr', 'Peg', 'And', 'Boo', 'Aql'];
+  const DP = { on: false, con: 'UMa', look: 'earth', anim: null };
+  const DO = { th: 0, ph: Math.PI / 2, zoom: 1 };
+  let DG = null;
+  const lyText = (ly) => (ly >= 100 ? Math.round(ly).toLocaleString('en-US') : ly.toFixed(1));
+  const niceStep = (x) => { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; };
+  /* the figure's stars at d (light years) along their directions, the middle T of those with a distance, and a frame: f toward T,
+     r to the right as seen from the Sun (west on the sky) and u toward the celestial north */
+  function depthGeom() {
+    if (DG && DG.con === DP.con && DG.ep === svEp) return DG;
+    const stars = csFigureStars(SKY.figures, DP.con).map((i) => { const d = distPc(i), ly = d * CS_LY_PER_PC, u = sv(i); return { i, d, ly, u, p: d ? u.map((x) => x * ly) : null, V: VM[i], M: d ? csAbsMag(VM[i], d) : NaN }; });
+    const known = stars.filter((st) => st.p), T = [0, 0, 0];
+    known.forEach((st) => { for (let k = 0; k < 3; k++) T[k] += st.p[k] / known.length; });
+    const Tn = Math.hypot(T[0], T[1], T[2]) || 1, f = T.map((x) => x / Tn);
+    let r = cross(f, [0, 0, 1]); r = Math.hypot(r[0], r[1], r[2]) < 1e-6 ? [0, -1, 0] : norm(r);
+    const u = cross(r, f);
+    let ang = 0, R = Tn;
+    known.forEach((st) => { ang = Math.max(ang, angle(st.u, f)); R = Math.max(R, Math.hypot(st.p[0] - T[0], st.p[1] - T[1], st.p[2] - T[2])); });
+    DG = { con: DP.con, ep: svEp, stars, known, T, Tn, f, r, u, half: Math.min(70 * D2R, Math.max(4 * D2R, ang * 1.1)), R, near: known.length ? Math.min(...known.map((st) => st.ly)) : 0, far: known.length ? Math.max(...known.map((st) => st.ly)) : 0 };
+    return DG;
+  }
+  /* the camera turns about T at distance |T| / zoom: th = 0 and ph = 90° put it at the Sun looking at T, so the figure looks as
+     it does in the sky (east on the left); th = 90° looks from the side, with the Sun on the left */
+  function depthCam(G) {
+    const yaw = DO.th, pitch = Math.PI / 2 - DO.ph, dist = G.Tn / DO.zoom, cp = Math.cos(pitch), sp = Math.sin(pitch), cy = Math.cos(yaw), sy = Math.sin(yaw);
+    const back = [0, 1, 2].map((k) => cp * (sy * G.r[k] - cy * G.f[k]) + sp * G.u[k]);
+    const C = [0, 1, 2].map((k) => G.T[k] + dist * back[k]), fw = back.map((x) => -x), rt = norm(cross(fw, G.u)), up = cross(rt, fw);
+    const F = Math.min(OW, OH) * 0.38 / Math.tan(G.half), cx = OW / 2, cy0 = OH / 2 + 12 * proj();
+    const zOf = (q) => (q[0] - C[0]) * fw[0] + (q[1] - C[1]) * fw[1] + (q[2] - C[2]) * fw[2];
+    const P = (q) => { const d = [q[0] - C[0], q[1] - C[1], q[2] - C[2]], z = dot(d, fw); return z <= dist * 1e-4 ? null : [cx + dot(d, rt) / z * F, cy0 - dot(d, up) / z * F, z]; };
+    const seg = (a, b) => {
+      const za = zOf(a), zb = zOf(b), zn = dist * 1e-3; if (za < zn && zb < zn) return null;
+      if (za < zn) { const t = (zn - za) / (zb - za); a = a.map((x, k) => x + t * (b[k] - x)); } else if (zb < zn) { const t = (zn - zb) / (za - zb); b = b.map((x, k) => x + t * (a[k] - x)); }
+      const pa = P(a), pb = P(b); return pa && pb ? [pa, pb] : null;
+    };
+    return { C, fw, rt, up, F, dist, P, seg, zOf };
+  }
+  /* the views a button picks: from the Sun, or from the side far enough back that the Sun and every star fit */
+  function lookTarget(k) {
+    const G = depthGeom(), F = Math.min(OW, OH) * 0.38 / Math.tan(G.half);
+    return k === 'side' ? { th: Math.PI / 2, ph: Math.PI / 2, zoom: Math.max(0.02, Math.min(1, G.Tn / (G.R * F / (Math.min(OW, OH) * 0.42)))) } : { th: 0, ph: Math.PI / 2, zoom: 1 };
+  }
+  function setLook(k, now) {
+    DP.look = k; for (const b of document.querySelectorAll('#depthLook button')) b.setAttribute('aria-pressed', String(b.dataset.look === k));
+    const to = lookTarget(k), still = now || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (still) { Object.assign(DO, to); DP.anim = null; } else DP.anim = { from: { th: DO.th, ph: DO.ph, zoom: DO.zoom }, to, t0: performance.now(), dur: 1400 };
+    dirty = true; notes();
+  }
+  function stepAnim(now) {
+    const A = DP.anim; if (!A) return;
+    const x = Math.min(1, (now - A.t0) / A.dur), e = x * x * (3 - 2 * x);
+    DO.th = A.from.th + (A.to.th - A.from.th) * e; DO.ph = A.from.ph + (A.to.ph - A.from.ph) * e;
+    DO.zoom = Math.exp(Math.log(A.from.zoom) + (Math.log(A.to.zoom) - Math.log(A.from.zoom)) * e);
+    if (x >= 1) DP.anim = null; dirty = true;
+  }
+  function drawDepth() {
+    const ctx = cDep, s = proj(), G = depthGeom(), Cm = depthCam(G), blind = S.blind;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = '#05070d'; ctx.fillRect(0, 0, OW, OH); LB = [];
+    const byI = {}; G.stars.forEach((st) => { byI[st.i] = st; });
+    const ticks = [];   /* the scale's labels, drawn last so they give way to the stars and their names */
+    if ($('tSight').checked && G.known.length) {
+      ctx.save(); ctx.setLineDash([4 * s, 5 * s]); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(242,193,78,0.42)';
+      for (const st of G.known) { const sg = Cm.seg([0, 0, 0], st.p); if (sg) { ctx.beginPath(); ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); ctx.stroke(); } }
+      ctx.restore();
+      /* a distance scale along the line of sight to the figure's middle, when it shows as more than a point */
+      const top = G.far * 1.12, sg = Cm.seg([0, 0, 0], G.f.map((x) => x * top));
+      if (sg && Math.hypot(sg[1][0] - sg[0][0], sg[1][1] - sg[0][1]) > 60 * s) {
+        ctx.strokeStyle = 'rgba(242,193,78,0.75)'; ctx.lineWidth = 1.4 * s; ctx.beginPath(); ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); ctx.stroke();
+        const step = niceStep(top / 5);
+        for (let L = step; L <= top; L += step) {
+          const a = Cm.P(G.f.map((x) => x * L)), b = Cm.P(G.f.map((x) => x * (L + step * 0.01))); if (!a || !b) continue;
+          const dx = b[0] - a[0], dy = b[1] - a[1], n = Math.hypot(dx, dy) || 1, nx = -dy / n * 5 * s, ny = dx / n * 5 * s;
+          ctx.beginPath(); ctx.moveTo(a[0] - nx, a[1] - ny); ctx.lineTo(a[0] + nx, a[1] + ny); ctx.stroke();
+          if (!blind) ticks.push([`${lyText(L)} ly`, a[0] + nx * 2.2, a[1] + ny * 2.2 + 8 * s]);
+        }
+      }
+    }
+    ctx.lineWidth = 1.3 * s; ctx.strokeStyle = 'rgba(170,190,215,0.62)';
+    for (const fg of SKY.figures) if (fg[0] === DP.con) {
+      ctx.beginPath(); let on = false;
+      for (const i of fg.slice(1)) { const st = byI[i], q = st && st.p ? Cm.P(st.p) : null; if (q) { if (on) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); on = true; } else on = false; }
+      ctx.stroke();
+    }
+    const sun = Cm.P([0, 0, 0]);
+    if (sun) { ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.arc(sun[0], sun[1], 4.5 * s, 0, TAU); ctx.fill(); label(ctx, 'Sun', sun[0], sun[1] + 13 * s, { size: 11, align: 'center', bold: true, color: '#ffd27a' }); }
+    /* each dot as bright as the star would look from the camera: m = M + 5 log10(d / 10 pc) */
+    const vis = G.known.map((st) => { const q = Cm.P(st.p); if (!q) return null; const dc = Math.hypot(st.p[0] - Cm.C[0], st.p[1] - Cm.C[1], st.p[2] - Cm.C[2]) / CS_LY_PER_PC; return { st, q, m: csMagFrom(st.M, Math.max(dc, 1e-3)) }; }).filter(Boolean);
+    vis.sort((a, b) => b.q[2] - a.q[2]);
+    const selI = S.sel.startsWith('star:') ? +S.sel.slice(5) : -1;
+    for (const v of vis) {
+      const r = Math.max(1.6, Math.min(10, 3.7 - 0.55 * v.m)) * s; v.r = r;
+      ctx.fillStyle = SCOL[v.st.i]; ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(v.q[0], v.q[1], r * 2.2, 0, TAU); ctx.fill();
+      ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(v.q[0], v.q[1], r, 0, TAU); ctx.fill();
+      if (v.st.i === selI) { ctx.strokeStyle = 'rgba(255,138,80,0.95)'; ctx.lineWidth = 1.6 * s; ctx.beginPath(); ctx.arc(v.q[0], v.q[1], r + 5 * s, 0, TAU); ctx.stroke(); }
+    }
+    if ($('tDepthNames').checked) {
+      const order = vis.slice().sort((a, b) => (b.st.i === selI) - (a.st.i === selI) || a.st.V - b.st.V);
+      for (const v of order) label(ctx, blind ? starName(v.st.i) : `${starName(v.st.i)} · ${lyText(v.st.ly)} ly`, v.q[0] + v.r + 5 * s, v.q[1], { size: 11, color: v.st.i === selI ? '#ffb48a' : '#dfe6ef', avoid: true });
+    }
+    for (const v of vis) LB.push([v.q[0] - v.r - 2, v.q[1] - v.r - 2, v.q[0] + v.r + 2, v.q[1] + v.r + 2]);
+    for (const t of ticks) label(ctx, t[0], t[1], t[2], { size: 10, align: 'center', color: '#f2c14e', avoid: true });
+    /* a scale bar: light years across, at the distance of the figure's middle from the camera */
+    const zT = Cm.zOf(G.T);
+    if (zT > 0) {
+      const ppl = Cm.F / zT, L = niceStep(110 * s / ppl), w = L * ppl, x1 = OW - 14 * s, x0 = x1 - w, y = OH - (OW < 520 ? 70 : 52) * s;
+      ctx.strokeStyle = '#c9d3e0'; ctx.lineWidth = 1.5 * s; ctx.beginPath(); ctx.moveTo(x0, y - 4 * s); ctx.lineTo(x0, y); ctx.lineTo(x1, y); ctx.lineTo(x1, y - 4 * s); ctx.stroke();
+      label(ctx, `${lyText(L)} light years`, (x0 + x1) / 2, y - 11 * s, { size: 10, align: 'center', color: '#c9d3e0' });
+    }
+    DP.vis = vis;
+  }
+  function depthTable() {
+    const G = depthGeom(), selI = S.sel.startsWith('star:') ? +S.sel.slice(5) : -1, blind = S.blind;
+    $('depthTab').tBodies[0].innerHTML = G.stars.map((st) => `<tr data-i="${st.i}" tabindex="0" aria-selected="${st.i === selI}"><td>${starName(st.i)}</td><td>${f(st.V, 2)}</td><td>${blind ? '?' : st.p ? lyText(st.ly) : 'unknown'}</td><td>${blind || !st.p ? '' : f(st.M, 2)}</td></tr>`).join('');
+    const unk = G.stars.length - G.known.length;
+    $('depthNote').textContent = (blind ? `${CON[DP.con]}: ${G.known.length} stars of the figure placed at their distances (hidden in Blind).`
+      : `${CON[DP.con]}: the ${G.known.length} stars of the figure lie from ${lyText(G.near)} to ${lyText(G.far)} light years away. They only look like a group because they are in nearly the same direction from us.`) +
+      (unk ? ` ${unk === 1 ? 'One star has' : unk + ' stars have'} no measured distance and ${unk === 1 ? 'is' : 'are'} left out of the picture.` : '') +
+      ' Distances are from parallaxes measured by the Hipparcos satellite; the farther a star, the smaller its parallax, so the farthest distances here are the least certain. M is the absolute magnitude, how bright the star would look from 10 parsecs (32.6 light years), with dust left out.';
+  }
+  function setDepth(on) {
+    DP.on = on; $('paneOut').classList.toggle('depth', on); outDepth.hidden = !on; $('depthCon').hidden = !on; $('depthLook').hidden = !on; $('depthSec').hidden = !on;
+    $('outTitle').textContent = on ? 'Real distances' : 'From outside';
+    for (const b of document.querySelectorAll('#depthSeg button')) b.setAttribute('aria-pressed', String((b.dataset.depth === 'dist') === on));
+    if (on) { DG = null; setLook(DP.look, true); depthTable(); }
+    dirty = true; notes();
+  }
+  function setCon(c) { DP.con = c; $('depthCon').value = c; DG = null; setLook('earth', true); const G = depthGeom(), b = G.known.slice().sort((x, y) => x.V - y.V)[0]; if (b) select('star:' + b.i); depthTable(); dirty = true; }
+  (function fillCon() {
+    const have = [...new Set(SKY.figures.map((fg) => fg[0]))], sel = $('depthCon'), add = (a, g) => { const o = document.createElement('option'); o.value = a; o.textContent = CON[a]; g.appendChild(o); };
+    const g1 = document.createElement('optgroup'); g1.label = 'Start with these'; sel.appendChild(g1); DEPTH_FIRST.filter((a) => have.includes(a)).forEach((a) => add(a, g1));
+    const g2 = document.createElement('optgroup'); g2.label = 'All the others'; sel.appendChild(g2); have.filter((a) => !DEPTH_FIRST.includes(a)).sort((a, b) => CON[a].localeCompare(CON[b])).forEach((a) => add(a, g2));
+    sel.value = DP.con;
+  })();
+  for (const b of document.querySelectorAll('#depthSeg button')) b.addEventListener('click', () => setDepth(b.dataset.depth === 'dist'));
+  for (const b of document.querySelectorAll('#depthLook button')) b.addEventListener('click', () => setLook(b.dataset.look));
+  $('depthCon').addEventListener('change', (e) => setCon(e.target.value));
+  for (const id of ['tSight', 'tDepthNames']) $(id).addEventListener('change', () => { dirty = true; });
+  $('labBlind').addEventListener('change', () => { if (DP.on) depthTable(); dirty = true; });
+  $('depthTab').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-i]'); if (tr) { select('star:' + tr.dataset.i); depthTable(); } });
+  $('depthTab').addEventListener('keydown', (e) => { const tr = e.target.closest('tr[data-i]'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select('star:' + tr.dataset.i); depthTable(); } });
+  VD3.orbit(outDepth, DO, () => { DP.anim = null; if (DP.look) { DP.look = ''; for (const b of document.querySelectorAll('#depthLook button')) b.setAttribute('aria-pressed', 'false'); } dirty = true; }, { phMin: 0.15, phMax: Math.PI - 0.15, zMin: 0.02, zMax: 6 });
+  let downD = null;
+  outDepth.addEventListener('pointerdown', (e) => { downD = { x: e.clientX, y: e.clientY }; });
+  outDepth.addEventListener('pointerup', (e) => {
+    if (!downD || Math.hypot(e.clientX - downD.x, e.clientY - downD.y) >= 5) { downD = null; return; } downD = null;
+    const rc = outDepth.getBoundingClientRect(), x = e.clientX - rc.left, y = e.clientY - rc.top; let best = null, bd = 16 * proj();
+    for (const v of DP.vis || []) { const d = Math.hypot(v.q[0] - x, v.q[1] - y); if (d < bd) { bd = d; best = v.st.i; } }
+    if (best != null) { select('star:' + best); depthTable(); }
+  });
+
   /* ---------- readings for the worksheet ---------- */
-  window.vdVersion = 'celestial-sphere@2026-10-25';
-  VD.howTo({ src: 'media/how-this-works/celestial-sphere.mp4', poster: 'media/how-this-works/celestial-sphere.jpg' });
-  window.vdShowCols = [['obj', 'Object'], ['lat_deg', 'φ (°)'], ['alt_deg', 'Alt (°)'], ['dec_deg', 'δ (°)']];
-  window.vdReadingRow = () => {
+  window.vdVersion = 'celestial-sphere@2026-10-31';
+  /* two worksheets: the Real distances view sends to Constellations in 3D, every other view to the celestial sphere one */
+  const wsLock = /[?&]ws=/.test(location.search) ? VD.ws('intro-celestial-sphere') : null;
+  window.__csWs = () => (DP.on ? 'intro-constellations-3d' : wsLock && wsLock !== 'intro-constellations-3d' ? wsLock : 'intro-celestial-sphere');
+  if (!wsLock) window.vdWorksheet = window.__csWs;
+  const howVid = () => (DP.on || wsLock === 'intro-constellations-3d' ? 'intro-constellations-3d' : 'celestial-sphere');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-constellations-3d' ? 'How this works: Constellations in 3D' : 'How this works') });
+  const SHOW_SKY = [['obj', 'Object'], ['lat_deg', 'φ (°)'], ['alt_deg', 'Alt (°)'], ['dec_deg', 'δ (°)']], SHOW_DEPTH = [['star', 'Star'], ['V', 'V'], ['dist_ly', 'Distance (ly)'], ['M', 'M']];
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (DP.on ? SHOW_DEPTH : SHOW_SKY), set: () => {} });
+  const skyRow = () => {
     compute(); const D = selData(), c = local(S.jd), ps = poleStar(), si = D.si;
     const r = { obj: si.name.replace(/^The /, ''), place: S.place === 'custom' ? `${latText(S.lat)}, ${lonText(S.lon)}` : PLACES[S.place].name.replace(/^the /, ''), lat_deg: f(S.lat, 2), lon_deg: f(S.lon, 2),
       date: `${c.y}-${pad(c.m)}-${pad(c.d)}`, time: hm(c.h), year: c.y > 0 ? String(c.y) : `${1 - c.y} BC`, ra_h: f(D.rd.ra, 3), ra_hms: hms(D.rd.ra), dec_deg: f(D.rd.dec, 2), alt_deg: f(D.aa.alt, 2), az_deg: f(D.aa.az, 1),
@@ -1150,13 +1350,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (si.kind === 'moon') { r.lit_pct = f(K.phase.lit * 100, 1); r.ecl_lat_deg = f(K.moon.lat, 2); }
     return r;
   };
+  /* in the Real distances view, one row for each star of the figure that has a distance */
+  window.vdReadingRow = () => {
+    if (!DP.on) return skyRow();
+    if (S.blind) return 'Turn off Blind in the Lab section to record the distances.';
+    const G = depthGeom(); if (!G.known.length) return 'No star of this figure has a measured distance.';
+    return G.known.map((st) => ({ con: CON[DP.con], star: starName(st.i), V: f(st.V, 2), dist_ly: st.ly >= 100 ? String(Math.round(st.ly)) : st.ly.toFixed(1), dist_pc: st.d.toFixed(2), M: f(st.M, 2), L_sun: String(Number(csLumV(st.M).toPrecision(3))) }));
+  };
 
   /* ---------- loop ---------- */
   last = performance.now();
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
-    advance(dt);
-    if (dirty) { compute(); if (S.run) syncSliders(); drawSky(); drawOutFlat(); if (G3on) draw3d(); readouts(!S.run); dirty = false; }
+    advance(dt); stepAnim(now);
+    if (dirty) { compute(); if (S.run) syncSliders(); drawSky(); if (DP.on) drawDepth(); else { drawOutFlat(); if (G3on) draw3d(); } readouts(!S.run); dirty = false; }
     requestAnimationFrame(frame);
   }
   const retheme = () => { tokens(); dirty = true; };
@@ -1164,12 +1371,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('paneOut')); new ResizeObserver(resize).observe($('paneSky'));
   notes(); applyPreset('tonight'); resize();
+  { const qs = new URLSearchParams(location.search), con = qs.get('con');
+    if (con && SKY.figures.some((fg) => fg[0] === con)) DP.con = con;
+    if (qs.get('outside') === 'distances' || wsLock === 'intro-constellations-3d') { setDepth(true); setCon(DP.con); } }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* the camera and the way the ground view looks, which no control holds, ride in Copy link too */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('view', {
     get: () => [S.face, S.tilt, S.fov, O.th, O.ph, O.zoom, S.chartOff].map((x) => +x.toFixed(3)).join('_'),
     set: (s) => { const a = String(s).split('_').map(Number); if (a.length !== 7 || a.some((x) => !isFinite(x))) return; [S.face, S.tilt, S.fov, O.th, O.ph, O.zoom, S.chartOff] = a; markFace(); dirty = true; } });
-  window.__cs = { S, K: () => K, select, applyPreset, setRun, compute, selData, PRESETS, PLACES, O, poleStar, skyProj, skyPt: (v) => skyPt(skyProj(), v), sv, BYNAME };
+  window.__cs = { S, K: () => K, select, applyPreset, setRun, compute, selData, PRESETS, PLACES, O, poleStar, skyProj, skyPt: (v) => skyPt(skyProj(), v), sv, BYNAME, DP, DO, setDepth, setCon, setLook, depthGeom };
   requestAnimationFrame(frame);
 
 })();

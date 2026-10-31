@@ -557,6 +557,9 @@
   INTRO.push('intro-sidereal-day');
   FROM_DEMO['intro-sidereal-day'] = { demo: 'Reasons for Seasons', cols: ['row', 'planet', 'time (h)', 'turns against the star', 'noons', 'sidereal day (h)', 'year (days)', null],
     alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.date != null && r.date !== ''), cols: ['row', 'date', 'equation of time (min)', 'solar day − 24 h (s)', 'declination (°)'] }] };
+  /* The Sky and the Celestial Sphere, Real distances (2026-10-31): Reading | Constellation | Star | V | Distance (ly) | M | Visible light (Sun = 1) */
+  INTRO.push('intro-constellations-3d');
+  FROM_DEMO['intro-constellations-3d'] = { demo: 'The Sky and the Celestial Sphere', cols: ['row', 'con', 'star', 'V', 'dist_ly', 'M', 'L_sun'] };
   INTRO.push('intro-lagrange'); /* Lagrange Points demo, 2026-10-26 */
   FROM_DEMO['intro-lagrange'] = { demo: 'Lagrange Points', cols: ['row', 'system', 'mu', 'L1_a', 'L2_a', 'L2_efold_P', (r) => (r.L4 === 'stable' ? 'yes' : 'no'), 'L4_lib_P', 'L4_efold_P'] };
   INTRO.push('intro-parallax'); INTRO_GRAPHS.push('intro-parallax'); /* Cosmic Distance Ladder, rung 1, 2026-10-26 */
