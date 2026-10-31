@@ -1151,6 +1151,38 @@
   };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
+  /* How this works (Steve, 2026-10-31): every worksheet shows the short video of one sample reading that its demo's How this works
+     button plays for it, folded under the link to the demo; it loads only when opened, and is left out of printouts. The video is
+     demos/media/how-this-works/<slug>.mp4, made by tools/howto/, except where HOWTO_VIDEO names another. The demo keeps its button. */
+  const HOWTO_VIDEO = { 'apparent-weight': 'elevator', 'intro-celestial-sphere': 'celestial-sphere', 'intro-craters': 'craters',
+    'intro-giant-planets': 'giant-planets', 'intro-inside-a-planet': 'inside-a-planet', 'intro-mars-ages': 'craters-mars',
+    'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion',
+    'intro-solar-system-formation': 'solar-system-formation', 'measurement-and-units': 'units', 'mp-bragg-peak': 'bragg-peak',
+    'mp-charged-particles': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-proton-calibration': 'proton-calibration',
+    'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',
+    'mp-technetium-generator': 'technetium-generator', 'mp-ultrasound-attenuation': 'ultrasound-attenuation',
+    'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium' };
+  if (m) (function howTo(slug) {
+    const root = location.pathname.slice(0, location.pathname.indexOf('/curriculum/labs/students/'));
+    const v = root + '/demos/media/how-this-works/' + (HOWTO_VIDEO[slug] || slug), md = document.querySelector('.markdown-body') || document.body;
+    const link = [...md.querySelectorAll('a[href*="/demos/"]')].find((a) => /virtual apparatus|open the demo/i.test(a.textContent));
+    const after = link ? link.closest('p') || link : md.querySelector('h1');
+    if (!after) return;
+    const d = document.createElement('details'); d.className = 'ws-howto'; d.id = 'wsHowTo';
+    d.innerHTML = '<summary>How this works: a short video of one sample reading in the demo</summary>' +
+      '<video controls playsinline muted preload="none"></video><p>One sample reading. The procedure below has the full steps.</p>';
+    const vid = d.querySelector('video'); vid.poster = v + '.jpg';
+    d.addEventListener('toggle', () => { if (d.open) { if (!vid.getAttribute('src')) vid.src = v + '.mp4'; } else vid.pause(); });
+    /* only where the video is there (a worksheet without a demo, such as the Stellarium one, has none) */
+    fetch(v + '.jpg', { method: 'HEAD' }).then((r) => { if (r.ok && !document.getElementById('wsHowTo')) after.insertAdjacentElement('afterend', d); }).catch(() => {});
+    const st = document.createElement('style');
+    st.textContent = 'details.ws-howto { margin: 12px 0; padding: 8px 12px; border: 1px solid var(--hd-line, #d0d7de); border-radius: 8px; }' +
+      ' details.ws-howto > summary { cursor: pointer; font-weight: 700; } details.ws-howto[open] > summary { margin-bottom: 8px; }' +
+      ' details.ws-howto video { display: block; width: 100%; max-width: 960px; aspect-ratio: 16 / 9; height: auto; border-radius: 6px; background: #000; }' +
+      ' details.ws-howto p { margin: 6px 0 0; font-size: 0.9em; color: var(--hd-muted, #57606a); }' +
+      ' @media print { details.ws-howto { display: none !important; } }';
+    document.head.appendChild(st);
+  })(m[1]);
   if (!m || ENABLED.indexOf(m[1]) < 0) return;
   const SLUG = m[1], KEY = 'vd-worksheet:' + SLUG, VERSION = 1;
   const body = document.querySelector('.markdown-body') || document.body;

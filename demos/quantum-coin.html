@@ -466,6 +466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/quantum-coin.mp4', poster: 'media/how-this-works/quantum-coin.jpg' });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('fair'); resize();
   window.__qc = { S, applyPreset, drawAll, measure };

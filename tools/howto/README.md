@@ -39,3 +39,7 @@ Everything comes from a script, so when a demo changes, rerun both steps:
    A demo with several worksheets can pass functions instead, read each time the popup opens, as Room Acoustics does:
    `` VD.howTo({ src: () => `media/how-this-works/${S.mode === 'decay' ? 'room-acoustics' : 'anechoic-chamber'}.mp4`, ... }) ``.
    Its scripts set `demo:` to the page they record (`anechoic-chamber.cjs` records `room-acoustics`).
+
+Every worksheet also shows its video (Steve, 2026-10-31): `curriculum/labs/worksheet.js` folds it under the link to the demo,
+from `demos/media/how-this-works/<worksheet slug>.mp4`, or the name in its `HOWTO_VIDEO` map when the video is named after the
+demo instead. So a new worksheet needs a video under its own name (or a map entry); the box only appears when the poster exists.

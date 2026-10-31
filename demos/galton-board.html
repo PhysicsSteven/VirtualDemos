@@ -323,6 +323,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/galton-board.mp4', poster: 'media/how-this-works/galton-board.jpg' });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('fair'); resize();
   window.__gb = { S, applyPreset, drawAll, drop, step, launch };

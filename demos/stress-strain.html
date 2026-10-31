@@ -916,7 +916,8 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   /* How this works: a short video of one sample reading (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/stress-strain.mp4', poster: 'media/how-this-works/stress-strain.jpg' });
+  const howVid = () => (S.test === 'tension' ? 'stress-strain' : 'shear-bulk');   /* the Shear and Bulk tests have their own worksheet */
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); readouts(); renderRows(); resize();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();

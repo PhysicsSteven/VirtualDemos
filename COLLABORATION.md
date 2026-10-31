@@ -5708,3 +5708,23 @@ after it.
   drags and the canvases follow their panes.
 - Checks: dragged at 1368x912 and 400x860; Node tests; vdcheck `--only after` 0 problems and `--only clip` 0 cut off; no page
   errors with the pre-divider vd.js cached. What's new entry added.
+
+## 2026-10-31 · Claude · How this works: the last five videos, and a video in every worksheet
+
+Steve asked how many videos one per worksheet would need: of 220 worksheets, 213 already had their own video (demos with several
+worksheets already switch the video with the setup), 2 had a video of another setup and 3 had none. Steve: "We should do those
+then", and wants the videos in the worksheets too, with the demo button kept.
+- New videos (tools/howto/<name>.cjs, recipe unchanged): shear-bulk (Shear test, Blind, aluminum, 10 kN: Δx 8.0 µm, matching
+  F L/(A S) = 1.0e4 × 0.05/(25e-4 × 25e9) m), pipe-flow (water 20 °C, 10 mm pipe, valve 2%: Q 2.00 mL/s, 56 mL in 28.16 s,
+  ΔP 4.1 Pa against Poiseuille's 4.08 Pa, shown ×10 and said so), color-vision (red lamp alone: L 0.435, M 0.161, S 0.000,
+  Y 0.260), galton-board (12 fair rows, 100 balls: mean 6.16, s 1.74 against 6.00 and 1.73), quantum-coin (θ 0°: 1000 of 1000
+  heads, ordinary coin 530). All from the first reading of each worksheet's first table, 19.6 to 23.2 s.
+- Hooked up: Stress and Strain plays shear-bulk in the Shear and Bulk tests, Viscometer plays pipe-flow in Flow in a pipe;
+  the three new demos got VD.howTo (recorded after adding it, so the rail is the live one).
+- Worksheets: worksheet.js adds a folded How this works box under the link to the demo on every student worksheet (not only
+  the interactive ones), video loaded only when opened, hidden in print. Video by slug, or HOWTO_VIDEO for the 22 worksheets
+  whose video is named after the demo; checked that all 220 resolve to a file. It appears only when the poster exists (HEAD
+  request), so intro-stellarium-sky (no demo) gets none. README updated. What's new entry added.
+- Checks: vdcheck --only after on the five demos, 0 problems; worksheet box checked at 1280 and 400 px (no sideways scroll),
+  absent on the Stellarium worksheet; each video looked at frame by frame.
+
