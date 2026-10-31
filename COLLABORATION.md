@@ -5668,8 +5668,8 @@ as a mode of Finding Exoplanets by his choice), with worksheets on the Astronomy
 Steve asked for a second, independent pass over everything from the last two days (worksheet formulas and fits, Energy on a Track,
 Inverse Square Force Lab, Color Vision, Galton Board, Quantum Coin Toss and their worksheets, the nine NAAP astro pieces, the astro
 polish pass, the efficiency pass). Numbers were recomputed from the data files and by hand rather than taken from the entries above.
-- Verified: every node suite passes and the Pages build and physics regression are green; `courses.py --check` clean; no `{%` or `{{`
-  in any changed file; no hyphenated compound modifiers in the new demos, handouts or notes; no keys in the public repo. Formula
+- Verified: every node suite passes and the Pages build and physics regression are green; `courses.py --check` clean; no Liquid tag or output
+  braces in any changed file; no hyphenated compound modifiers in the new demos, handouts or notes; no keys in the public repo. Formula
   engine: no eval, function names cannot reach object prototype members, circular references and out of table ranges caught; all
   nine fit models' derivatives, sign and phase normalizations, standard errors and parameter units checked. Energy on a Track:
   the normal force s(κv² + g T_x), the rest condition tan θ ≤ μ and the key's numbers (9.82 m/s, √(9.81/1.62) = 2.461). Force lab:
