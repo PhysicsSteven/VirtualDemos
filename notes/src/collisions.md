@@ -26,6 +26,7 @@ For a measurement lab, the 1D track and the Explosion have two photogates (**Gat
 5. **Glancing 2D collision: 90°.** Puck 1 leaves at 0.50 m/s at −60°, puck 2 at 0.87 m/s at 30°. Change **Impact parameter b**: the angle stays 90° (Q5). Show the momentum triangle.
 6. **Impulse.** Back in **Explosion**, each piece gets 1.15 N·s, equal and opposite, over the 45.3 ms push (Q6). For the force against time during a collision, and soft against stiff bumpers, open the Impulse and Momentum demo.
 7. **Newton's cradle** (scene button). Pull back one ball, then two. The lower pane asks what would happen if n balls came out and shows that only n = k keeps the energy (Q7).
+8. **Ballistic pendulum: rifle bullet** (scene button **Ballistic pendulum**). A 10 g bullet at 300 m/s stops in a 2.0 kg block hung on 1.0 m parallel rods. Ask how high it swings before pressing **Play** (Q8). The block leaves at 1.49 m/s, rises 11.4 cm (the marker on the scale stays at the top) and swings out 27.6°; 447.8 J of the 450 J is gone in the catch. **Ball into a catcher** is the lab version (25 g at 5 m/s, 250 g catcher, 1.05 cm rise); **Over the top** shows why a ballistic pendulum is made heavy. **New mystery bullet** fires an unknown speed with Blind on: students read h and find u = ((m + M)/m)√(2gh).
 
 ## Questions
 
@@ -43,6 +44,8 @@ For a measurement lab, the 1D track and the Explosion have two photogates (**Gat
 
 **Q7.** In **Newton's cradle**, one ball comes in at speed v. Why can't two balls go out at v/2 each? Check both momentum and kinetic energy. Use the chart in the lower pane, then test with **Balls pulled back** set to 2.
 
+**Q8.** In **Ballistic pendulum: rifle bullet**, a 10 g bullet at 300 m/s stops inside a 2.0 kg block hung on 1.0 m rods. Find the block's speed just after the catch, how high it rises, the largest angle of the rods and the share of the bullet's kinetic energy left. Why can't you set ½mu² equal to (m + M)gh? Then press **New mystery bullet**, read the rise and find the bullet's speed.
+
 ## Common misconceptions
 
 - **"Momentum is conserved only in elastic collisions."** Momentum is conserved in every collision, because the forces are internal and equal and opposite. It is kinetic energy that may or may not be conserved.
@@ -54,6 +57,7 @@ For a measurement lab, the 1D track and the Explosion have two photogates (**Gat
 - 1D track: frictionless air track, rigid carts, instant collisions. Momentum is conserved and v₂′ − v₁′ = −e(v₂ − v₁), giving v₁′ = ((m₁ − e m₂)v₁ + (1 + e)m₂v₂)/(m₁ + m₂), and similarly for v₂′. Energy lost: ½μ(1 − e²)v_rel².
 - 2D table: smooth hard discs with no spin and no table edges. The impulse J = (1 + e)μ(v₁ − v₂)·n acts along the line of centers n at contact; the velocity components along the contact tangent do not change.
 - Explosion: an ideal massless spring, compressed 5 cm and held by a thread, is released. Its force is internal, so momentum stays MV, and E = ½μv_rel². The pieces move in simple harmonic motion relative to each other for a quarter period.
+- Ballistic pendulum: the block hangs from two light rigid rods of length L that stay parallel, so it swings without turning and its center moves on a circle of radius L, a simple pendulum swung by RK4 (no friction or drag). The bullet stops in the block before the block has moved, so momentum is kept through the catch, V = mu/(m + M), and only m/(m + M) of the kinetic energy is left; then h = V²/2g, or over the top when V² ≥ 4gL. The bullet arrives within 10 ms of leaving the muzzle (at most 50 cm away), so it drops less than 0.5 mm. Block drawn as 600 kg/m³ wood; bullet drawn larger.
 - Newton's cradle: 0.25 kg balls on 30 cm strings, each a full pendulum; a collision is an instant elastic exchange of velocity between touching neighbors, one pair at a time. A real cradle slowly fades and mixes.
 
 ## Going further

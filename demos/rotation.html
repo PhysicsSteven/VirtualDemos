@@ -200,6 +200,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-s="yoyo" aria-pressed="false">Yo-yo</button>
           <button type="button" data-s="spin" aria-pressed="false">Spin</button>
           <button type="button" data-s="seesaw" aria-pressed="false">Seesaw</button>
+          <button type="button" data-s="hit" aria-pressed="false">Collide</button>
         </div>
         <div class="chips" id="presets">
           <button type="button" data-p="wrench" aria-pressed="false">Wrench</button>
@@ -214,6 +215,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="cyl" aria-pressed="false">Unwinding cylinder: ⅔g</button>
           <button type="button" data-p="skater" aria-pressed="false">Skater</button>
           <button type="button" data-p="seesaw" aria-pressed="false">Seesaw</button>
+          <button type="button" data-p="hitClay" aria-pressed="false">Clay hits a pinned rod</button>
+          <button type="button" data-p="sweet" aria-pressed="false">Sweet spot: no push from the pin</button>
+          <button type="button" data-p="freeRod" aria-pressed="false">Free rod: it spins and drifts</button>
+          <button type="button" data-p="bounce" aria-pressed="false">Bouncy ball off a rod</button>
+          <button type="button" data-p="disks" aria-pressed="false">Disk dropped on a spinning disk</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -431,6 +437,91 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>More about this</summary>
           <p class="hint">Both start from rest at the same height. The dropped one has only its weight on it and falls at g. The unwinding one also has the string pulling up: that slows its fall, and the string's torque Tr about the center spins it up. With a = αr (the string does not slip), mg − T = ma and Tr = Iα give a = g/(1 + I/mr²), whatever the mass. A thin axle makes I/mr² large, so a yo-yo falls slowly and spins fast.</p>
           <p class="hint">Energy: the height lost, mgh, is shared between moving down, ½mv², and spinning, ½Iω²; the share in spinning is k/(1 + k) with k = I/mr². The string does no net work, since its end at the spool is at rest. Massless string, no air drag; the spools are drawn larger than the height scale.</p>
+        </details>
+      </section>
+
+      <!-- ===== collide: a ball hits a rod that can turn, or a disk lands on a spinning disk ===== -->
+      <section data-scene="hit" hidden>
+        <h2>Target</h2>
+        <div class="chips" id="hTarget" role="group" aria-label="What is hit">
+          <button type="button" data-ht="end" aria-pressed="true">Rod, pin at its end</button>
+          <button type="button" data-ht="center" aria-pressed="false">Rod, pin at its center</button>
+          <button type="button" data-ht="free" aria-pressed="false">Free rod</button>
+          <button type="button" data-ht="disk" aria-pressed="false">Disk on a spinning disk</button>
+        </div>
+        <div id="hRodBox">
+          <div class="inline"><span class="lab">Ball</span>
+            <div class="seg" role="group" aria-label="Ball" id="hBall">
+              <button type="button" data-hb="clay" aria-pressed="true">Clay, sticks</button>
+              <button type="button" data-hb="ball" aria-pressed="false">Bouncy ball</button>
+            </div>
+          </div>
+          <div id="hEWrap">
+            <div class="slider-head"><label for="hE">Coefficient of restitution e</label><output id="hEOut" class="mono" for="hE"></output></div>
+            <input type="range" id="hE" min="0.05" max="1" step="0.05" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hm">Ball mass m</label><output id="hmOut" class="mono" for="hm"></output></div>
+            <input type="range" id="hm" min="0.02" max="1" step="0.01" value="0.2">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hu">Ball speed u</label><output id="huOut" class="mono" for="hu"></output></div>
+            <input type="range" id="hu" min="0.5" max="5" step="0.05" value="3">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hd" id="hdLab">Hit point d, from the pin</label><output id="hdOut" class="mono" for="hd"></output></div>
+            <input type="range" id="hd" min="0" max="1" step="0.01" value="0.8">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hM">Rod mass M</label><output id="hMOut" class="mono" for="hM"></output></div>
+            <input type="range" id="hM" min="0.1" max="5" step="0.1" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="hL">Rod length L</label><output id="hLOut" class="mono" for="hL"></output></div>
+            <input type="range" id="hL" min="0.4" max="1.2" step="0.05" value="1">
+          </div>
+          <button type="button" class="btn" id="hSweet">Hit at the sweet spot, 2L/3</button>
+        </div>
+        <div id="hDiskBox" hidden>
+          <div>
+            <div class="slider-head"><label for="kW1">Bottom disk spin ω₁</label><output id="kW1Out" class="mono" for="kW1"></output></div>
+            <input type="range" id="kW1" min="-3" max="3" step="0.05" value="2">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kM1">Bottom disk mass M₁</label><output id="kM1Out" class="mono" for="kM1"></output></div>
+            <input type="range" id="kM1" min="0.2" max="5" step="0.1" value="2">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kR1">Bottom disk radius R₁</label><output id="kR1Out" class="mono" for="kR1"></output></div>
+            <input type="range" id="kR1" min="5" max="25" step="0.5" value="15">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kW2">Top disk spin ω₂, as it lands</label><output id="kW2Out" class="mono" for="kW2"></output></div>
+            <input type="range" id="kW2" min="-3" max="3" step="0.05" value="0">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kM2">Top disk mass M₂</label><output id="kM2Out" class="mono" for="kM2"></output></div>
+            <input type="range" id="kM2" min="0.2" max="5" step="0.1" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kR2">Top disk radius R₂</label><output id="kR2Out" class="mono" for="kR2"></output></div>
+            <input type="range" id="kR2" min="3" max="25" step="0.5" value="10">
+          </div>
+          <div>
+            <div class="slider-head"><label for="kMu">Friction between them μk</label><output id="kMuOut" class="mono" for="kMu"></output></div>
+            <input type="range" id="kMu" min="0.05" max="1" step="0.01" value="0.3">
+          </div>
+        </div>
+        <p class="hint" id="hModel"></p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the ball sideways to choose where it hits and drag the tip of its arrow to set its speed. Keys: <kbd>←</kbd> <kbd>→</kbd> move the hit point (on the disks, change the bottom disk's spin), <kbd>↑</kbd> <kbd>↓</kbd> change the ball's speed (on the disks, the friction), <kbd>Enter</kbd> goes.</p>
+        </details>
+      </section>
+      <section data-scene="hit" hidden>
+        <h2 id="hOutTitle">Through the hit</h2>
+        <dl class="readout" id="hOut"></dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint" id="hMore"></p>
         </details>
       </section>
 
@@ -732,13 +823,86 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return { k, I, rs, a, T, tension: o.m * (G - a), y, v, w, th: y / rs, KEt: 0.5 * o.m * v * v, KEr: 0.5 * I * w * w, drop: o.m * G * y,
       done: t >= T, Td, yd: 0.5 * G * td * td, vd: G * td };
   }
+  /* Angular momentum in collisions, on a frictionless table seen from above (x to the right, y up the page, counterclockwise positive).
+     A small ball (mass m, speed u, moving in +y) hits a thin uniform rod (mass M, length L) lying along x, at x = d. The rod turns on a pin
+     at its end or its center (the pin at the origin), or is free (its center at the origin). The contact impulse J is along y, and the
+     contact separates with (rod point speed after) − (ball speed after) = e u: e = 1 elastic, e = 0 clay, which then stays stuck as a point
+     mass on the rod's line. The pin's impulse has no torque about the pin, so L about the pin is kept; a free rod keeps p and L about any
+     fixed point (here its starting center). */
+  function rodHit(o) {
+    const Ic = o.M * o.L * o.L / 12, free = o.pivot === 'free', xc = o.pivot === 'end' ? o.L / 2 : 0, Ip = Ic + o.M * xc * xc;
+    const J = (1 + o.e) * o.u / (1 / o.m + (free ? 1 / o.M + o.d * o.d / Ic : o.d * o.d / Ip));
+    const v = o.u - J / o.m, w = free ? J * o.d / Ic : J * o.d / Ip, V = free ? J / o.M : w * xc;   /* V: speed of the rod's center (along y) */
+    const K0 = 0.5 * o.m * o.u * o.u, K1 = 0.5 * o.m * v * v + 0.5 * o.M * V * V + 0.5 * Ic * w * w;
+    const p0 = o.m * o.u, p1 = o.m * v + o.M * V;
+    return { Ic, Ip: free ? Ic : Ip, xc, J, v, w, V, K0, K1, lost: K0 - K1, p0, p1, P: p1 - p0, L0: o.m * o.u * o.d, L1: o.m * v * o.d + Ic * w + o.M * xc * V };
+  }
+  // where everything is at time t; the ball starts s0 below its contact point, its center rb + hw below the rod's line (rod half width hw)
+  function rodHitAt(o, t) {
+    const h = rodHit(o), yc = -(o.rb + o.hw), tc = o.s0 / o.u, stick = o.e === 0, free = o.pivot === 'free';
+    const rot = (x, y, a) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
+    let ball, vb, rc, vr, phi, w;
+    if (t <= tc) { ball = [o.d, yc - o.s0 + o.u * t]; vb = [0, o.u]; rc = [free ? 0 : h.xc, 0]; vr = [0, 0]; phi = 0; w = 0; }
+    else {
+      const s = t - tc; w = h.w; phi = w * s;
+      if (free && stick) {
+        const cx = o.m * o.d / (o.m + o.M), Vc = o.m * o.u / (o.m + o.M), c = [cx, Vc * s];
+        const rb = rot(o.d - cx, 0, phi), rr = rot(-cx, 0, phi);
+        ball = [c[0] + rb[0], c[1] + rb[1]]; rc = [c[0] + rr[0], c[1] + rr[1]];
+        vb = [-w * rb[1], Vc + w * rb[0]]; vr = [-w * rr[1], Vc + w * rr[0]];
+      } else if (free) {
+        rc = [0, h.V * s]; vr = [0, h.V]; ball = [o.d, yc + h.v * s]; vb = [0, h.v];
+      } else {
+        const r0 = rot(h.xc, 0, phi); rc = r0; vr = [-w * r0[1], w * r0[0]];
+        if (stick) { const q = rot(o.d, 0, phi); ball = q; vb = [-w * q[1], w * q[0]]; }
+        else { ball = [o.d, yc + h.v * s]; vb = [0, h.v]; }
+      }
+    }
+    const cross = (r, v) => r[0] * v[1] - r[1] * v[0];
+    const Lball = o.m * cross(ball, vb), Lrod = h.Ic * w + o.M * cross(rc, vr);
+    const Kball = 0.5 * o.m * (vb[0] * vb[0] + vb[1] * vb[1]), Krod = 0.5 * o.M * (vr[0] * vr[0] + vr[1] * vr[1]) + 0.5 * h.Ic * w * w;
+    return { h, tc, stick, ball, vb, rc, vr, phi, w, Lball, Lrod, Kball, Krod, hit: t > tc,
+      /* a clay ball rides on the rod's line once stuck; before the hit and when it bounces, its center is off the line by rb + hw */
+      onRod: t > tc && stick };
+  }
+  // the first time after the hit when the rod comes round and meets the bouncing ball again (Infinity if not before tMax)
+  function rodHitAgain(o, tMax) {
+    if (o.e === 0) return Infinity;
+    const tc = o.s0 / o.u, x0 = o.pivot === 'end' ? 0 : -o.L / 2, x1 = x0 + o.L;
+    let away = false;
+    for (let s = 0.002; s <= tMax; s += 0.002) {
+      const q = rodHitAt(o, tc + s), dx = q.ball[0] - (o.pivot === 'free' ? q.rc[0] : 0), dy = q.ball[1] - (o.pivot === 'free' ? q.rc[1] : 0);
+      const ca = Math.cos(q.phi), sa = Math.sin(q.phi), lx = dx * ca + dy * sa, ly = -dx * sa + dy * ca;
+      const gap = Math.abs(ly) - (o.rb + o.hw), inside = lx >= x0 - o.rb && lx <= x1 + o.rb;
+      if (!inside || gap > 1e-3) away = true;
+      if (away && inside && gap < 0) return tc + s;
+    }
+    return Infinity;
+  }
+  /* A disk (I₂ = ½M₂R₂², spin ω₂) set down on a coaxial spinning disk (I₁ = ½M₁R₁², ω₁, R₂ ≤ R₁) on a frictionless bearing. Kinetic
+     friction acts over the top disk's face, pressing with its weight spread evenly, so its torque is τ = ⅔μM₂gR₂, slowing the faster disk
+     and speeding the slower one until they turn together at ω = (I₁ω₁ + I₂ω₂)/(I₁ + I₂). The friction is internal: L is kept, K is not. */
+  function diskDrop(o) {
+    const I1 = 0.5 * o.M1 * o.R1 * o.R1, I2 = 0.5 * o.M2 * o.R2 * o.R2, tau = 2 / 3 * o.mu * o.M2 * G * o.R2;
+    const wf = (I1 * o.w1 + I2 * o.w2) / (I1 + I2), sg = Math.sign(o.w1 - o.w2);
+    const tLock = tau > 0 ? Math.abs(o.w1 - o.w2) * I1 * I2 / ((I1 + I2) * tau) : Infinity;
+    const K0 = 0.5 * I1 * o.w1 * o.w1 + 0.5 * I2 * o.w2 * o.w2, Kf = 0.5 * (I1 + I2) * wf * wf;
+    function at(t) {
+      const ts = Math.min(Math.max(t, 0), tLock), tl = Math.max(0, t - tLock);
+      const w1 = o.w1 - sg * tau * ts / I1, w2 = o.w2 + sg * tau * ts / I2;
+      const th1 = o.w1 * ts - 0.5 * sg * tau * ts * ts / I1 + wf * tl, th2 = o.w2 * ts + 0.5 * sg * tau * ts * ts / I2 + wf * tl;
+      const K = 0.5 * I1 * w1 * w1 + 0.5 * I2 * w2 * w2;
+      return { w1, w2, th1, th2, K1: 0.5 * I1 * w1 * w1, K2: 0.5 * I2 * w2 * w2, heat: K0 - K, L: I1 * w1 + I2 * w2, slipping: t < tLock };
+    }
+    return { I1, I2, tau, wf, tLock, K0, Kf, heat: K0 - Kf, L: I1 * o.w1 + I2 * o.w2, at };
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock of the torque, spin and rolling scenes */
   /* How this works: a 19 s video of one door push, 20 N at 0.80 m (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/rotation.mp4', poster: 'media/how-this-works/rotation.jpg' });
-  VD.tools({ el: $('view'), time: () => (S.scene === 'torque' ? TQ.t : S.scene === 'roll' ? RO.t : S.scene === 'floor' ? FL.t : S.scene === 'yoyo' ? YO.t : S.scene === 'spin' ? SP.t : null) });
+  VD.tools({ el: $('view'), time: () => (S.scene === 'torque' ? TQ.t : S.scene === 'roll' ? RO.t : S.scene === 'floor' ? FL.t : S.scene === 'yoyo' ? YO.t : S.scene === 'hit' ? HT.t : S.scene === 'spin' ? SP.t : null) });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const v = sessionStorage.getItem('rotation-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
@@ -754,7 +918,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const fmtTick = (v, step) => { const dp = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)); return fx(v, dp); };
 
   // ---------- state ----------
-  const S = { scene: 'torque', ts: 1, preset: { torque: 'hinge', roll: 'race', floor: 'skid', yoyo: 'yoyo', spin: 'skater', seesaw: 'seesaw' } };
+  const S = { scene: 'torque', ts: 1, preset: { torque: 'hinge', roll: 'race', floor: 'skid', yoyo: 'yoyo', spin: 'skater', seesaw: 'seesaw', hit: 'hitClay' } };
   const TQ = { obj: 'door', L: 0.9, m: 15, F: 20, r: 0.15, th: 90, mode: 'follow', sw: null, t: 0, run: false, ghost: null };
   const RO = { beta: 10, D: 2, lanes: [], sel: 0, t: 0, run: false };
   const SP = { look: 'skater', I0: 0.8, m: 3, r: 0.8, L: 0, phi: 0, t: 0, run: !reduce, pull: null, hist: [], ref: null, trail: [] };
@@ -764,6 +928,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const FL = { shape: 'sphere', m: 7, R: 0.11, v0: 4, rim0: 0, mu: 0.2, x0: 0.5, Lf: 8, t: 0, run: false, trace: true, arrows: true, rn: null, sig: '', tEnd: 0, path: null };
   /* yo-yo: R and r in meters, the drop height H */
   const YO = { shape: 'yoyo', m: 0.06, R: 0.028, r: 0.004, H: 1, t: 0, run: false };
+  /* collide: target end | center | free | disk; ball clay | ball; d in meters along the rod (from the pin, or from the center of a free rod); disk spins in rev/s */
+  const HT = { target: 'end', ball: 'clay', e: 1, m: 0.2, u: 3, d: 0.8, M: 1, L: 1, M1: 2, R1: 0.15, w1: 2, M2: 1, R2: 0.1, w2: 0, mu: 0.3, t: 0, run: false };
 
   const lane = (shape, m, R) => ({ shape, m, R });
   const PRESETS = {
@@ -794,7 +960,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     skater: { scene: 'spin', ts: 0.25, hint: 'Arms out, spinning slowly. Press Pull in: I drops by about 4.5 times, so ω rises by the same factor while L stays fixed. Shown at ¼ speed.',
       apply() { Object.assign(SP, { look: 'skater', I0: 0.8, m: 3, r: 0.8 }); setSpinRate(1); } },
     seesaw: { scene: 'seesaw', ts: 1, hint: 'The supports hold the beam level. The net torque is not zero, so press Release and the left end goes down. Then find where B must sit to balance A.',
-      apply() { SE.ms[0].m = 4; SE.ms[0].x = -1; SE.ms[1].m = 2; SE.ms[1].x = 1.5; SE.ms[2].m = 0; SE.ms[2].x = 0.5; SE.sel = 1; holdSeesaw(); } }
+      apply() { SE.ms[0].m = 4; SE.ms[0].x = -1; SE.ms[1].m = 2; SE.ms[1].x = 1.5; SE.ms[2].m = 0; SE.ms[2].x = 0.5; SE.sel = 1; holdSeesaw(); } },
+    hitClay: { scene: 'hit', ts: 1, hint: 'A 200 g lump of clay at 3 m/s sticks to a 1 kg, 1 m rod pinned at one end, 80 cm from the pin. Angular momentum about the pin, mud = 0.48 kg·m²/s, is the same after the hit, so ω = mud/(ML²/3 + md²) = 1.04 rad/s. Only 28% of the kinetic energy is left, and the pin gives the rod a push of 0.087 N·s: momentum is not kept.',
+      apply() { Object.assign(HT, { target: 'end', ball: 'clay', m: 0.2, u: 3, d: 0.8, M: 1, L: 1, t: 0, run: false }); } },
+    sweet: { scene: 'hit', ts: 1, hint: 'The same clay hits a 90 cm rod 60 cm from the pin, at 2L/3: the center of percussion. Now the rod turns about the pin all by itself and the pin does not push at all, so even momentum is kept (0.600 kg·m/s before and after). Batters feel this as the sweet spot of a bat: no sting in the hands.',
+      apply() { Object.assign(HT, { target: 'end', ball: 'clay', m: 0.2, u: 3, d: 0.6, M: 1, L: 0.9, t: 0, run: false }); } },
+    freeRod: { scene: 'hit', ts: 1, hint: 'No pin: the clay sticks 40 cm from the center of a free rod. Rod and clay keep the momentum, so their center of mass (the violet dot) goes straight on at mu/(m + M) = 0.50 m/s, and the angular momentum, so they spin about it at 1.82 rad/s.',
+      apply() { Object.assign(HT, { target: 'free', ball: 'clay', m: 0.2, u: 3, d: 0.4, M: 1, L: 1, t: 0, run: false }); } },
+    bounce: { scene: 'hit', ts: 1, hint: 'A hard ball bounces elastically (e = 1) off a rod pinned at its center. Kinetic energy is kept, and so is the angular momentum about the pin: the ball comes back at 1.34 m/s and the rod spins at 4.16 rad/s. The pin takes all of the ball\u2019s change in momentum, since the rod\u2019s center cannot move.',
+      apply() { Object.assign(HT, { target: 'center', ball: 'ball', e: 1, m: 0.2, u: 3, d: 0.4, M: 1, L: 1, t: 0, run: false }); } },
+    disks: { scene: 'hit', ts: 0.25, hint: 'A 1 kg disk is dropped onto a 2 kg disk spinning at 2 rev/s. Friction between them slows the bottom one and spins up the top one until, after 0.26 s, they turn together at 1.64 rev/s (10.3 rad/s): I₁ω₁ = (I₁ + I₂)ω. 18% of the kinetic energy, the share I₂/(I₁ + I₂), went to heat. Shown at ¼ speed.',
+      apply() { Object.assign(HT, { target: 'disk', M1: 2, R1: 0.15, w1: 2, M2: 1, R2: 0.1, w2: 0, mu: 0.3, t: 0, run: false }); } }
   };
   const SCENE_HINT = {
     torque: 'Push a door or a wrench. The torque about the pivot is τ = rF sin θ = r⊥F, and it sets the angular acceleration α = τ/I.',
@@ -802,7 +978,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     floor: 'Launch a ball, cylinder or hoop along a level floor with any spin. Friction at the contact point acts until v = ωR; then it rolls, with its contact point at rest.',
     yoyo: 'A spool unwinding from a string held at the top falls beside one that is dropped: a = g/(1 + I/mr²).',
     spin: 'No outside torque, so L = Iω stays the same while the masses move.',
-    seesaw: 'Each block adds a torque −m g x about the pivot. The beam stays level only when they cancel.'
+    seesaw: 'Each block adds a torque −m g x about the pivot. The beam stays level only when they cancel.',
+    hit: 'A ball hits a rod that can turn, or a disk lands on a spinning one. Angular momentum about the pin (or the axis) is the same after the hit; kinetic energy is not, unless the hit is elastic.'
   };
 
   // ---------- torque scene ----------
@@ -938,6 +1115,258 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     YO[key] = v;
     if (YO.r > YO.R - 0.002) YO.r = Math.max(0.002, YO.R - 0.002);
     YO.t = 0; YO.run = false; custom(); syncSliders(); dirty = true;
+  }
+
+
+  // ---------- collide scene: a ball hits a rod that can turn, or a disk lands on a spinning disk ----------
+  /* rb, hw: the ball's radius and the rod's half width (m); s0: how far the ball travels before the hit; after: how long the run goes on */
+  const HTK = { rb: 0.025, hw: 0.012, s0: 0.6, after: 3, clay: '#c2603e', bouncy: '#2f7de1' };
+  const htDiskOn = () => HT.target === 'disk';
+  const htO = () => ({ pivot: HT.target, M: HT.M, L: HT.L, m: HT.m, u: HT.u, d: HT.d, e: HT.ball === 'clay' ? 0 : HT.e, rb: HTK.rb, hw: HTK.hw, s0: HTK.s0 });
+  const htD = () => diskDrop({ M1: HT.M1, R1: HT.R1, w1: HT.w1 * 2 * Math.PI, M2: HT.M2, R2: HT.R2, w2: HT.w2 * 2 * Math.PI, mu: HT.mu });
+  let htMemo = { sig: '', tEnd: 1, again: Infinity };
+  function htEnd() {
+    const sig = JSON.stringify([HT.target, HT.ball, HT.e, HT.m, HT.u, HT.d, HT.M, HT.L, HT.M1, HT.R1, HT.w1, HT.M2, HT.R2, HT.w2, HT.mu]);
+    if (sig !== htMemo.sig) {
+      if (htDiskOn()) { const d = htD(); htMemo = { sig, tEnd: Math.min(isFinite(d.tLock) ? d.tLock : 20, 20) + 2, again: Infinity }; }
+      else { const o = htO(), tc = o.s0 / o.u, again = rodHitAgain(o, HTK.after); htMemo = { sig, tEnd: Math.min(tc + HTK.after, again), again }; }
+    }
+    return htMemo;
+  }
+  function htAct() {
+    const e = htEnd().tEnd;
+    if (HT.run) { HT.run = false; return; }
+    if (HT.t > 0 && HT.t < e) { HT.run = true; return; }
+    HT.t = 0;
+    if (reduce) { HT.t = e; sayHit(); } else HT.run = true;
+  }
+  function sayHit() {
+    if (htDiskOn()) { const d = htD(); say(isFinite(d.tLock) ? `The disks turn together after ${fx(d.tLock, 2)} s, at ${s3(d.wf)} rad/s; ${f3(d.heat)} J went to heat.` : 'No friction: the disks never turn together.'); return; }
+    const h = rodHit(htO()), m = htEnd();
+    say(`After the hit the rod turns at ${s3(h.w)} rad/s; ${fx(100 * h.K1 / h.K0, 1)}% of the kinetic energy is left.${isFinite(m.again) ? ' The rod comes round and meets the ball again, so the run stops there.' : ''}`);
+  }
+  function setHt(key, v) {
+    HT[key] = v;
+    if (key === 'R1' && HT.R2 > HT.R1) HT.R2 = HT.R1;
+    if (key === 'R2' && HT.R2 > HT.R1) HT.R2 = HT.R1;
+    htClampD();
+    HT.t = 0; HT.run = false; custom(); syncSliders(); dirty = true;
+  }
+  function htClampD() {
+    const lo = HT.target === 'end' ? 0 : -HT.L / 2, hi = HT.target === 'end' ? HT.L : HT.L / 2;
+    HT.d = +Math.min(hi, Math.max(lo, HT.d)).toFixed(4);
+  }
+  function setHtTarget(tg) {
+    if (HT.target === tg) return;
+    const was = HT.target; HT.target = tg;
+    if (tg !== 'disk' && was !== 'disk') HT.d = tg === 'end' ? (was === 'end' ? HT.d : +(HT.d + HT.L / 2).toFixed(2)) : (was === 'end' ? +(HT.d - HT.L / 2).toFixed(2) : HT.d);
+    htClampD(); HT.t = 0; HT.run = false; custom(); syncSliders(); dirty = true;
+  }
+  const rodEnds = (o) => (o.pivot === 'end' ? [0, o.L] : [-o.L / 2, o.L / 2]);
+
+  function drawHit() { if (htDiskOn()) drawHitDisk(); else drawHitRod(); }
+  function drawHitRod() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale(), o = htO(), q = rodHitAt(o, HT.t), h = q.h, L = o.L, m = htEnd();
+    handlesNow = [];
+    const yb = -(HTK.s0 + HTK.rb + HTK.hw) - 0.08;
+    let x0, x1, y0, y1;
+    if (o.pivot === 'end') { x0 = -L - 0.06; x1 = L + 0.06; y0 = Math.min(yb, -L - 0.06); y1 = L + 0.06; }
+    else { const r = Math.max(L / 2 + 0.08, 0.45); x0 = -r; x1 = r; y0 = Math.min(yb, -L / 2 - 0.06); y1 = o.pivot === 'free' ? L / 2 + 0.5 : L / 2 + 0.06; }
+    const top = ctlH + 36 * ps, bot = H - 10 * ps, sc = Math.min((W - 24 * ps) / (x1 - x0), (bot - top) / (y1 - y0));
+    const ox = (W - (x1 - x0) * sc) / 2 - x0 * sc, oy = top + y1 * sc;
+    const X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
+    // the table, a 10 cm grid on it
+    ctx.save(); ctx.fillStyle = T.relief; roundRectV(ctx, X(x0), Y(y1), (x1 - x0) * sc, (y1 - y0) * sc, 8 * ps); ctx.fill(); ctx.clip();
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = Math.ceil(x0 * 10) / 10; x <= x1; x += 0.1) { const px = Math.round(X(x)) + 0.5; ctx.moveTo(px, Y(y1)); ctx.lineTo(px, Y(y0)); }
+    for (let y = Math.ceil(y0 * 10) / 10; y <= y1; y += 0.1) { const py = Math.round(Y(y)) + 0.5; ctx.moveTo(X(x0), py); ctx.lineTo(X(x1), py); }
+    ctx.stroke(); ctx.restore();
+    // where the ball started, and its path so far
+    const br = Math.max(5 * ps, HTK.rb * sc), col = HT.ball === 'clay' ? HTK.clay : HTK.bouncy, yc = -(HTK.rb + HTK.hw);
+    ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([2 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.arc(X(o.d), Y(yc - o.s0), br, 0, 2 * Math.PI); ctx.stroke();
+    ctx.beginPath(); for (let k = 0; k <= 80; k++) { const tt = HT.t * k / 80, p = rodHitAt(o, tt).ball; k ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])); } ctx.stroke();
+    ctx.restore();
+    // the center of mass of rod and clay, for a free rod: it moves in a straight line
+    if (o.pivot === 'free' && q.hit) {
+      const Mt = o.m + o.M, c0 = [o.m * o.d / Mt, o.m * (q.stick ? 0 : yc) / Mt], cNow = [(o.m * q.ball[0] + o.M * q.rc[0]) / Mt, (o.m * q.ball[1] + o.M * q.rc[1]) / Mt];
+      ctx.save(); ctx.strokeStyle = T.violet; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(X(c0[0]), Y(c0[1])); ctx.lineTo(X(cNow[0]), Y(cNow[1])); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = T.violet; ctx.beginPath(); ctx.arc(X(cNow[0]), Y(cNow[1]), 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    // the rod, and the pin
+    const [ra, rbx] = rodEnds(o), ca = Math.cos(q.phi), sa = Math.sin(q.phi);
+    const e1 = o.pivot === 'free' ? [q.rc[0] - ca * L / 2, q.rc[1] - sa * L / 2] : [ca * ra, sa * ra];
+    const e2 = o.pivot === 'free' ? [q.rc[0] + ca * L / 2, q.rc[1] + sa * L / 2] : [ca * rbx, sa * rbx];
+    const rw = Math.max(3 * ps, HTK.hw * sc);
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps;
+    if (window.VDGear) window.VDGear.rod(ctx, X(e1[0]), Y(e1[1]), X(e2[0]), Y(e2[1]), rw, { color: '#9aa4b0' });
+    else { ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * rw; ctx.beginPath(); ctx.moveTo(X(e1[0]), Y(e1[1])); ctx.lineTo(X(e2[0]), Y(e2[1])); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle = '#7d8794'; for (const e of [e1, e2]) { ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), rw, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(q.rc[0]), Y(q.rc[1]), 2.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    if (o.pivot !== 'free') {
+      ctx.fillStyle = T.line; ctx.beginPath(); ctx.arc(X(0), Y(0), 9 * ps, 0, 2 * Math.PI); ctx.fill();
+      if (window.VDGear) window.VDGear.screw(ctx, X(0), Y(0), 5.5 * ps); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(0), Y(0), 5 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    // the ball: a round ball in flight or bouncing away, clay squashed flat once it sticks
+    if (q.onRod) {
+      ctx.save(); ctx.translate(X(q.ball[0]), Y(q.ball[1])); ctx.rotate(-q.phi);
+      ctx.fillStyle = HTK.clay; ctx.beginPath(); ctx.ellipse(0, 0, br * 1.3, Math.max(rw * 1.2, br * 0.62), 0, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+    } else if (window.VDGear) window.VDGear.ball(ctx, X(q.ball[0]), Y(q.ball[1]), br, col, { matte: HT.ball === 'clay' });
+    else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(q.ball[0]), Y(q.ball[1]), br, 0, 2 * Math.PI); ctx.fill(); }
+    // arrows: the ball's velocity (one scale for the run), the spin, and the pin's kick
+    const kv = 56 * ps / Math.max(o.u, 1e-9), bx = X(q.ball[0]), by = Y(q.ball[1]);
+    const vb = q.vb, sp = Math.hypot(vb[0], vb[1]);
+    if (sp * kv > 4 * ps) arrow(ctx, bx, by, bx + vb[0] * kv, by - vb[1] * kv, col, 2.4 * ps);
+    if (!q.hit && HT.t === 0) {
+      handlesNow.push({ id: 'hu', pt: [bx, by - o.u * kv], cursor: 'ns-resize', col: T.accent, set: (px, py) => setHt('u', snap('hu', (by - py) / kv)) });
+      handlesNow.push({ id: 'hd', pt: [bx, by], rad: br, noGrip: true, cursor: 'ew-resize', set: (px) => setHt('d', snap('hd', (px - ox) / sc)) });
+      label(ctx, `u = ${fx(o.u, 2)} m/s`, bx + 10 * ps, by - o.u * kv * 0.5, T.ink, 'left', 'middle', 11);
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([3 * ps, 3 * ps]); ctx.lineWidth = 1;
+      const xp = 0;
+      ctx.beginPath(); ctx.moveTo(X(xp), Y(0) + 14 * ps); ctx.lineTo(X(xp), Y(0) + 24 * ps); ctx.moveTo(X(o.d), Y(0) + 14 * ps); ctx.lineTo(X(o.d), Y(0) + 24 * ps); ctx.stroke(); ctx.restore();
+      if (Math.abs(X(o.d) - X(xp)) > 30 * ps) { arrow(ctx, X(xp), Y(0) + 19 * ps, X(o.d), Y(0) + 19 * ps, T.muted, 1.2 * ps); label(ctx, `d = ${fx(o.d, 2)} m`, (X(xp) + X(o.d)) / 2, Y(0) + 31 * ps, T.muted, 'center', 'middle', 10.5, 400); }
+    }
+    if (q.hit && Math.abs(q.w) > 1e-6) {
+      const c = o.pivot === 'free' ? [X((o.m * q.ball[0] + o.M * q.rc[0]) / (o.m + o.M)), Y((o.m * q.ball[1] + o.M * q.rc[1]) / (o.m + o.M))] : [X(0), Y(0)];
+      const rr = 22 * ps, a0 = -q.phi - (q.w > 0 ? 0.3 : -0.3), a1 = a0 - (q.w > 0 ? 1.8 : -1.8);
+      arcArrow(ctx, c[0], c[1], rr, a0, a1, q.w > 0, T.ink, 2 * ps);
+      label(ctx, `ω = ${s3(q.w)} rad/s`, c[0] + rr + 6 * ps, c[1] - rr, T.ink, 'left', 'middle', 11);
+    }
+    if (q.hit && o.pivot !== 'free' && Math.abs(h.P) > 1e-6) {
+      const len = Math.min(40 * ps, Math.max(12 * ps, Math.abs(h.P) / h.p0 * 60 * ps)) * Math.sign(h.P);
+      arrow(ctx, X(0) - 16 * ps, Y(0), X(0) - 16 * ps, Y(0) - len, T.equi, 2.4 * ps);
+      label(ctx, `pin's push ${s3(h.P)} N·s`, X(0) - 22 * ps, Y(0) - len / 2, T.equi, 'right', 'middle', 10.5);
+    } else if (q.hit && o.pivot !== 'free') label(ctx, 'no push from the pin', X(0) - 14 * ps, Y(0) + 16 * ps, T.equi, 'right', 'middle', 10.5);
+    const yInfo = ctlH + 12 * ps;
+    const where = o.pivot === 'free' ? 'about the rod’s starting center' : 'about the pin';
+    label(ctx, W > 560 * ps ? `L ${where} = ${s3(q.Lball + q.Lrod)} kg·m²/s, ${q.hit ? 'the same as before the hit' : 'all in the ball, mud'}` : `L = ${s3(q.Lball + q.Lrod)} kg·m²/s${q.hit ? ', as before' : ' = mud'}`, 12 * ps, yInfo, T.ink, 'left', 'middle', 11);
+    if (isFinite(m.again) && HT.t >= m.tEnd - 1e-9) label(ctx, 'The rod comes round and meets the ball again: the run stops here.', 12 * ps, yInfo + 17 * ps, T.neg, 'left', 'middle', 10.5);
+    else if (W > 560 * ps) label(ctx, 'top view, to scale, frictionless table', 12 * ps, yInfo + 17 * ps, T.muted, 'left', 'middle', 10.5, 400);
+    drawGrips(ctx);
+  }
+  // round rectangle path (the torque scene draws none of its own)
+  function roundRectV(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function drawHitDisk() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale(), d = htD(), q = d.at(HT.t), dropped = HT.t > 0 || HT.run;
+    handlesNow = [];
+    const top = ctlH + 40 * ps, bot = H - 14 * ps, insetW = W > 560 * ps ? 150 * ps : 0;
+    const sc = Math.min((W - insetW - 30 * ps) / (2 * HT.R1 * 1.35), (bot - top) / (2 * HT.R1 * 1.25));
+    const cx = (W - insetW) / 2, cy = (top + bot) / 2, r1 = HT.R1 * sc, r2 = HT.R2 * sc;
+    // bottom disk: a dark turntable with spokes and a marker, turned by θ₁ (counterclockwise positive, so screen angle −θ)
+    if (window.VDGear) window.VDGear.shadow(ctx, cx, cy + r1 * 0.9, r1 * 0.95, r1 * 0.12, 0.6);
+    const g1 = ctx.createRadialGradient(cx - r1 * 0.3, cy - r1 * 0.35, r1 * 0.1, cx, cy, r1); g1.addColorStop(0, '#6c7784'); g1.addColorStop(1, '#3a434e');
+    ctx.fillStyle = g1; ctx.beginPath(); ctx.arc(cx, cy, r1, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r1 * 0.97, 0, 2 * Math.PI); ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-q.th1);
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+    for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.moveTo(Math.cos(a) * r1 * 0.55, Math.sin(a) * r1 * 0.55); ctx.lineTo(Math.cos(a) * r1 * 0.93, Math.sin(a) * r1 * 0.93); }
+    ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.fillRect(r1 * 0.6, -3 * ps, r1 * 0.36, 6 * ps);
+    ctx.restore();
+    // top disk: wood, with its own marker, turned by θ₂; held above (faint) until it is dropped
+    ctx.save(); ctx.globalAlpha = dropped ? 1 : 0.45;
+    if (dropped && window.VDGear) window.VDGear.shadow(ctx, cx, cy + r2 * 0.15, r2 * 1.02, r2 * 1.02, 0.5);
+    const wd = ['#d4a56c', '#a8784a'], g2 = ctx.createRadialGradient(cx - r2 * 0.3, cy - r2 * 0.35, r2 * 0.1, cx, cy, r2); g2.addColorStop(0, wd[0]); g2.addColorStop(1, wd[1]);
+    ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(cx, cy, r2, 0, 2 * Math.PI); ctx.fill();
+    ctx.translate(cx, cy); ctx.rotate(-(dropped ? q.th2 : 0));
+    ctx.strokeStyle = 'rgba(90,60,30,0.35)'; ctx.lineWidth = 1; for (let k = 1; k < 5; k++) { ctx.beginPath(); ctx.arc(0, 0, r2 * k / 5, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.fillStyle = T.pos; ctx.fillRect(r2 * 0.25, -3 * ps, r2 * 0.68, 6 * ps);
+    ctx.restore();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    // spin arrows and labels outside each rim
+    const spin = (w, rad, col, txt, ang) => {
+      if (Math.abs(w) > 1e-6) arcArrow(ctx, cx, cy, rad, ang, ang - (w > 0 ? 1 : -1) * 0.9, w > 0, col, 2.4 * ps);
+      label(ctx, txt, cx + Math.cos(ang - 0.45 * Math.sign(w || 1)) * (rad + 14 * ps), cy + Math.sin(ang - 0.45 * Math.sign(w || 1)) * (rad + 14 * ps), col, 'center', 'middle', 11);
+    };
+    spin(q.w1, r1 + 9 * ps, T.accent, `ω₁ = ${s3(q.w1)} rad/s`, -2.2);
+    spin(dropped ? q.w2 : d.at(0).w2, Math.max(r2 + 9 * ps, r2 * 1.08), T.pos, `ω₂ = ${s3(dropped ? q.w2 : d.at(0).w2)} rad/s`, 0.75);
+    // the side view: post, bottom disk, and the top disk above it until dropped
+    if (insetW) {
+      const ix = W - insetW - 6 * ps, iy = top + 6 * ps, iw = insetW - 6 * ps, ih = 96 * ps, k = (iw - 20 * ps) / (2 * HT.R1), mx = ix + iw / 2;
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRectV(ctx, ix, iy, iw, ih, 6 * ps); ctx.fill(); ctx.stroke();
+      label(ctx, 'side view', ix + 8 * ps, iy + 12 * ps, T.muted, 'left', 'middle', 10, 400);
+      const by = iy + ih - 18 * ps;
+      ctx.fillStyle = '#7d8794'; ctx.fillRect(mx - 3 * ps, by + 6 * ps, 6 * ps, 12 * ps);
+      ctx.fillStyle = '#4b5561'; ctx.fillRect(mx - HT.R1 * k, by, 2 * HT.R1 * k, 6 * ps);
+      const ty = dropped ? by - 6 * ps : by - 30 * ps;
+      ctx.fillStyle = '#c0915a'; ctx.fillRect(mx - HT.R2 * k, ty, 2 * HT.R2 * k, 6 * ps);
+      if (!dropped) { ctx.strokeStyle = T.muted; ctx.setLineDash([2 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(mx, ty + 8 * ps); ctx.lineTo(mx, by - 2 * ps); ctx.stroke(); ctx.setLineDash([]); }
+    }
+    const yInfo = ctlH + 12 * ps;
+    const txt = !dropped ? `Held above. Drop: friction ⅔μM₂gR₂ = ${f3(d.tau)} N·m will act until they turn together.`
+      : q.slipping ? `Slipping: friction torque ${f3(d.tau)} N·m, +${f3(d.tau)} on the slower disk, −${f3(d.tau)} on the faster` : `Turning together at ω = ${s3(d.wf)} rad/s since t = ${fx(d.tLock, 2)} s`;
+    label(ctx, txt, 12 * ps, yInfo, q.slipping && dropped ? T.equi : T.ink, 'left', 'middle', 11);
+    label(ctx, `L = I₁ω₁ + I₂ω₂ = ${s3(q.L)} kg·m²/s`, 12 * ps, yInfo + 17 * ps, T.muted, 'left', 'middle', 10.5, 400);
+  }
+  function drawHitCharts() {
+    if (htDiskOn()) {
+      const d = htD(), m = htEnd(), tEnd = m.tEnd;
+      {
+        const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale(), w1 = HT.w1 * 2 * Math.PI, w2 = HT.w2 * 2 * Math.PI;
+        const lo = Math.min(0, w1, w2), hi = Math.max(0, w1, w2), pad = 0.1 * Math.max(hi - lo, 0.5);
+        const { X, Y } = chartFrame(ctx, W, H, [0, tEnd], [lo - (lo < 0 ? pad : 0), hi + pad], 'Spin ω (rad/s) vs time, bottom disk ω₁ and top disk ω₂', 't (s)');
+        const line = (f, col, t1, alpha, lw) => { ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = lw; ctx.beginPath(); for (let k = 0; k <= 80; k++) { const tt = t1 * k / 80; k ? ctx.lineTo(X(tt), Y(f(d.at(tt)))) : ctx.moveTo(X(tt), Y(f(d.at(tt)))); } ctx.stroke(); ctx.restore(); };
+        ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([4 * ps, 4 * ps]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(d.wf)); ctx.lineTo(X(tEnd), Y(d.wf)); ctx.stroke(); ctx.restore();
+        label(ctx, `together: ${s3(d.wf)} rad/s`, X(tEnd) - 4 * ps, Y(d.wf) - 10 * ps, T.muted, 'right', 'middle', 10.5, 400);
+        line((s) => s.w1, T.accent, tEnd, 0.3, 1.4 * ps); line((s) => s.w2, T.pos, tEnd, 0.3, 1.4 * ps);
+        if (HT.t > 0) { line((s) => s.w1, T.accent, HT.t, 1, 2.4 * ps); line((s) => s.w2, T.pos, HT.t, 1, 2.4 * ps); }
+        label(ctx, 'ω₁', X(0) + 8 * ps, Y(w1), T.accent, 'left', 'middle', 11); label(ctx, 'ω₂', X(0) + 8 * ps, Y(w2) + (Math.abs(Y(w2) - Y(w1)) < 14 * ps ? 14 * ps : 0), T.pos, 'left', 'middle', 11);
+      }
+      {
+        const ctx = ctxB, [W, H] = begin(ctxB, 'b'), q = d.at(HT.t);
+        bars(ctx, W, H, 'Energy: ' + f3(d.K0) + ' J of spin to start', [
+          { lab: 'Bottom disk, ½I₁ω₁²', v: q.K1, col: T.accent }, { lab: 'Top disk, ½I₂ω₂²', v: q.K2, col: T.pos }, { lab: 'Heat from slipping', v: Math.max(0, q.heat), col: T.equi }
+        ], 'J', { max: d.K0, foot: [`heat at the end ${f3(d.heat)} J = I₁I₂(ω₁ − ω₂)²/2(I₁ + I₂)`] });
+      }
+      return;
+    }
+    const o = htO(), q = rodHitAt(o, HT.t), h = q.h;
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a');
+      bars(ctx, W, H, 'Angular momentum ' + (o.pivot === 'free' ? 'about the starting center' : 'about the pin') + ', kg·m²/s', [
+        { lab: HT.ball === 'clay' ? 'Clay, m(r × v)' : 'Ball, m(r × v)', v: q.Lball, col: HT.ball === 'clay' ? HTK.clay : HTK.bouncy },
+        { lab: 'Rod', v: q.Lrod, col: T.muted }, { lab: 'Total', v: q.Lball + q.Lrod, col: T.ink }
+      ], 'kg·m²/s', { max: Math.max(Math.abs(h.L0), Math.abs(q.Lball), Math.abs(q.Lrod)), foot: [
+        `p before ${s3(h.p0)}, after ${s3(h.p1)} kg·m/s`, o.pivot === 'free' ? 'no pin: momentum kept too' : `the pin's push changes it by ${s3(h.P)} N·s`] });
+    }
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b'), lost = q.hit ? Math.max(0, h.K0 - q.Kball - q.Krod) : 0;
+      bars(ctx, W, H, 'Kinetic energy, ' + f3(h.K0) + ' J before the hit', [
+        { lab: HT.ball === 'clay' ? 'Clay' : 'Ball', v: q.Kball, col: HT.ball === 'clay' ? HTK.clay : HTK.bouncy }, { lab: 'Rod, ½MV² + ½I_cω²', v: q.Krod, col: T.muted },
+        { lab: 'Lost in the hit (heat, sound)', v: lost, col: T.equi }
+      ], 'J', { max: h.K0, foot: [`kept ${fx(100 * h.K1 / h.K0, 1)}% with e = ${fx(o.e, 2)}`] });
+    }
+  }
+  function hitReadouts() {
+    let rows, more, model, title;
+    if (htDiskOn()) {
+      const d = htD();
+      title = 'Through the slipping';
+      rows = [['I₁ = ½M₁R₁², bottom', f3(d.I1) + ' kg·m²'], ['I₂ = ½M₂R₂², top', f3(d.I2) + ' kg·m²'], ['Friction torque ⅔μM₂gR₂', f3(d.tau) + ' N·m'],
+        ['Time to turn together', isFinite(d.tLock) ? fx(d.tLock, 3) + ' s' : 'never'], ['Together at ω = (I₁ω₁ + I₂ω₂)/(I₁ + I₂)', s3(d.wf) + ' rad/s', 'big'],
+        ['L before and after', s3(d.L) + ' kg·m²/s'], ['K before', f3(d.K0) + ' J'], ['K after', f3(d.Kf) + ' J'], ['Heat from slipping', f3(d.heat) + ' J']];
+      more = 'Friction between the faces pushes the two disks with equal and opposite torques, so whatever angular momentum one loses the other gains: L = I₁ω₁ + I₂ω₂ stays the same. Kinetic energy does not: the faces rub while they slip, and the heat is I₁I₂(ω₁ − ω₂)²/2(I₁ + I₂), however large or small the friction. Friction only sets how long it takes: Δt = I₁I₂|ω₁ − ω₂|/((I₁ + I₂)τ).';
+      model = 'Model: uniform disks on one axis, the bottom one on a frictionless bearing. The top disk is set down without a bounce and presses with its weight spread evenly over its face (R₂ ≤ R₁), so kinetic friction gives τ = ⅔μkM₂gR₂ while they slip. Air drag neglected.';
+    } else {
+      const o = htO(), h = rodHit(o), free = o.pivot === 'free';
+      title = 'Through the hit';
+      rows = [[free ? 'I of the rod about its center, ML²/12' : o.pivot === 'end' ? 'I of the rod about the pin, ML²/3' : 'I of the rod about the pin, ML²/12', f3(h.Ip) + ' kg·m²'],
+        ['ω after the hit', s3(h.w) + ' rad/s', 'big'], [HT.ball === 'clay' ? 'Clay speed after (with the rod)' : 'Ball velocity after', s3(h.v) + ' m/s'],
+        ['L before, mud', s3(h.L0) + ' kg·m²/s'], ['L after', s3(h.L1) + ' kg·m²/s'],
+        ['p before', s3(h.p0) + ' kg·m/s'], ['p after', s3(h.p1) + ' kg·m/s'], [free ? 'Rod center speed after' : 'Push from the pin', free ? s3(h.V) + ' m/s' : s3(h.P) + ' N·s'],
+        ['K before', f3(h.K0) + ' J'], ['K after', f3(h.K1) + ' J']];
+      more = free
+        ? 'Nothing outside pushes a free rod, so the hit keeps both the momentum and the angular momentum (about any fixed point). The rod and ball share the momentum mu, and the center of mass of rod and ball goes on in a straight line at mu/(m + M), while the rod spins about it.'
+        : 'The pin holds the rod in place, so during the hit it pushes: momentum is not kept. Its push acts at the pin, though, so it has no torque about the pin, and the angular momentum about the pin is kept: mud = (what the ball keeps) + I_pin ω. Hit a rod pinned at its end 2L/3 from the pin (the center of percussion, or sweet spot) and the pin does not need to push at all.';
+      model = HT.ball === 'clay'
+        ? 'Model: a thin uniform rod on a frictionless table, a small clay ball that stops dead against the rod and stays stuck to it as a point mass on the rod’s line (a perfectly inelastic hit, e = 0). The hit takes no time.'
+        : 'Model: a thin uniform rod on a frictionless table, a small hard ball, and an instant hit along the ball’s path with coefficient of restitution e at the contact point. The run stops if the rod comes round to meet the ball again.';
+    }
+    const html = rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+    if ($('hOut').innerHTML !== html) $('hOut').innerHTML = html;
+    setText('hMore', more); setText('hModel', model); setText('hOutTitle', title);
   }
 
   // ---------- canvas ----------
@@ -2006,6 +2435,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       setText('yW', f3(q.w) + ' rad/s');
       for (const btn of document.querySelectorAll('#yShape button')) btn.setAttribute('aria-pressed', String(btn.dataset.ys === YO.shape));
       t = YO.t;
+    } else if (sc === 'hit') {
+      hitReadouts(); t = HT.t;
     } else if (sc === 'spin') {
       const I = spinNowI(), w = SP.L / I, ref = SP.ref;
       setText('sIr', f3(I) + ' kg·m²');
@@ -2062,6 +2493,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (S.scene === 'roll') { const e = rollEnd(); txt = RO.run ? 'Pause' : RO.t > 0 && RO.t < e ? 'Resume' : RO.t >= e ? 'Race again' : 'Race'; }
     else if (S.scene === 'floor') { flRun(); txt = FL.run ? 'Pause' : FL.t > 0 && FL.t < FL.tEnd ? 'Resume' : FL.t >= FL.tEnd ? 'Launch again' : 'Launch'; }
     else if (S.scene === 'yoyo') { const e = yoNow().T; txt = YO.run ? 'Pause' : YO.t > 0 && YO.t < e ? 'Resume' : YO.t >= e ? 'Drop again' : 'Drop'; }
+    else if (S.scene === 'hit') { const e = htEnd().tEnd, go = htDiskOn() ? 'Drop' : 'Go'; txt = HT.run ? 'Pause' : HT.t > 0 && HT.t < e ? 'Resume' : HT.t >= e ? go + ' again' : go; }
     else if (S.scene === 'spin') txt = SP.run ? 'Pause' : 'Play';
     else txt = SE.held ? 'Release' : 'Hold level';
     setText('act', txt);
@@ -2073,6 +2505,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     roll: () => `Ramp with ${RO.lanes.length} lanes, one object in each, at the top. Pointer: click an object to select its lane, drag the round grip at the top of the lowest board to tilt the ramp. Keys: 1 to ${RO.lanes.length} select a lane, up and down arrows tilt the ramp, Enter or space races.`,
     floor: () => `Side view of a ${SHAPES[FL.shape].name.toLowerCase()} on a level floor, drawn to scale, the camera following it, with the velocity of its center and of eight points on its rim, the contact point and, while it slides, the friction there. A marked point on the rim leaves its path behind. Keys: up and down arrows change the launch speed, left and right arrows the launch spin, Enter or space launches.`,
     yoyo: () => `Side view of two ${SPOOLS[YO.shape].name.toLowerCase()}s let go from the same height: on the left one unwinds from a string tied to the beam above, on the right one is simply dropped. Arrows show the weight mg and the string tension T. Keys: up and down arrows change the drop height, left and right arrows the string radius, Enter or space lets both go.`,
+    hit: () => htDiskOn() ? `Two disks seen from above on one axis: the bottom one spinning at ${s3(HT.w1 * 2 * Math.PI)} rad/s, the top one held above it until it is dropped, with a side view on the right. Keys: left and right arrows change the bottom disk's spin, up and down arrows the friction, Enter or space drops it.`
+      : `Table seen from above: a ${HT.ball === 'clay' ? 'clay ball' : 'bouncy ball'} moving up the page toward a rod ${HT.target === 'free' ? 'lying free' : HT.target === 'end' ? 'pinned at its left end' : 'pinned at its center'}, to hit it ${fx(HT.d, 2)} m ${HT.target === 'free' ? 'from its center' : 'from the pin'}. Pointer: drag the ball sideways to move the hit point, drag the grip at its arrow tip to set its speed. Keys: left and right arrows move the hit point, up and down arrows change the speed, Enter or space goes.`,
     spin: () => `${SP.look === 'skater' ? 'Skater' : 'Platform'} seen from above, spinning with two masses at radius ${fx(SP.r, 2)} m. Pointer: drag a mass in or out. Keys: up and down arrows move the masses out and in, Enter or space plays or pauses. Pull in and Push out in the rail move them smoothly.`,
     seesaw: () => `Beam on a center pivot with blocks on it, held level by supports until released. Pointer: drag a block along the beam. Keys: 1, 2 and 3 pick a block, left and right arrows move it, Enter or space releases or holds the beam.`
   };
@@ -2118,6 +2552,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const q = yoNow();
       out.push({ cap: `Energy of the unwinding spool at t = ${fx(YO.t, 2)} s: height lost mgh = ${s3(q.drop)} J, moving down ½mv² = ${s3(q.KEt)} J, spinning ½Iω² = ${s3(q.KEr)} J.`,
         head: ['Energy', 'J'], rows: [['Height lost, mgh', s3(q.drop)], ['Moving down, ½mv²', s3(q.KEt)], ['Spinning, ½Iω²', s3(q.KEr)]] });
+    } else if (sc === 'hit') {
+      if (htDiskOn()) {
+        const d = htD(), tEnd = htEnd().tEnd, rows = [];
+        for (let i = 0; i <= 20; i++) { const tt = tEnd * i / 20, q = d.at(tt); rows.push([fx(tt, 3), s3(q.w1), s3(q.w2)]); }
+        out.push({ cap: `Spin against time after the top disk lands: the bottom disk from ${s3(HT.w1 * 2 * Math.PI)} rad/s and the top one from ${s3(HT.w2 * 2 * Math.PI)} rad/s turn together at ${s3(d.wf)} rad/s after ${fx(d.tLock, 3)} s. Now t = ${fx(HT.t, 2)} s.`, head: ['t (s)', 'ω₁ (rad/s)', 'ω₂ (rad/s)'], rows });
+        const q = d.at(HT.t);
+        out.push({ cap: `Energy at t = ${fx(HT.t, 2)} s out of ${f3(d.K0)} J: bottom disk ${s3(q.K1)} J, top disk ${s3(q.K2)} J, heat ${s3(Math.max(0, q.heat))} J.`, head: ['Energy', 'J'], rows: [['Bottom disk, ½I₁ω₁²', s3(q.K1)], ['Top disk, ½I₂ω₂²', s3(q.K2)], ['Heat from slipping', s3(Math.max(0, q.heat))]] });
+      } else {
+        const q = rodHitAt(htO(), HT.t), h = q.h, wh = HT.target === 'free' ? 'about the rod\u2019s starting center' : 'about the pin';
+        out.push({ cap: `Angular momentum ${wh} at t = ${fx(HT.t, 2)} s: ball ${s3(q.Lball)}, rod ${s3(q.Lrod)}, total ${s3(q.Lball + q.Lrod)} kg·m²/s (mud = ${s3(h.L0)} before the hit). Momentum along the ball's path ${s3(h.p0)} before, ${s3(h.p1)} kg·m/s after.`, head: ['Part', 'L (kg·m²/s)'], rows: [['Ball', s3(q.Lball)], ['Rod', s3(q.Lrod)], ['Total', s3(q.Lball + q.Lrod)]] });
+        out.push({ cap: `Kinetic energy at t = ${fx(HT.t, 2)} s out of ${f3(h.K0)} J: ball ${s3(q.Kball)} J, rod ${s3(q.Krod)} J.`, head: ['Energy', 'J'], rows: [['Ball', s3(q.Kball)], ['Rod', s3(q.Krod)], ['Lost in the hit', s3(q.hit ? Math.max(0, h.K0 - q.Kball - q.Krod) : 0)]] });
+      }
     } else if (sc === 'spin') {
       const ref = SP.ref, w0 = ref.L / ref.I, KE0 = ref.L * w0 / 2, h = SP.hist, rows = [];
       const every = Math.max(1, Math.ceil(h.length / 40));
@@ -2141,7 +2587,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const cellRow = (r) => '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>';
   function setAttr(el, k, v) { if (el.getAttribute(k) !== v) el.setAttribute(k, v); }
   function chartsA11y(force) {
-    const tabs = chartTables(), anim = TQ.run || RO.run || FL.run || YO.run || SP.run || SE.run;
+    const tabs = chartTables(), anim = TQ.run || RO.run || FL.run || YO.run || HT.run || SP.run || SE.run;
     setAttr(view, 'aria-label', VIEW_LABEL[S.scene]());
     setAttr(cA, 'aria-label', tabs[0].cap + ' Show data table in the rail lists the values.');
     if (tabs[1]) setAttr(cB, 'aria-label', tabs[1].cap + ' Show data table in the rail lists the values.');
@@ -2170,6 +2616,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (RO.run) { RO.t = rollEnd(); RO.run = false; }
       if (FL.run) { FL.t = FL.tEnd; FL.run = false; }
       if (YO.run) { YO.t = yoNow().T; YO.run = false; }
+      if (HT.run) { HT.t = htEnd().tEnd; HT.run = false; }
       if (SE.run && SE.tip) { SE.t = SE.tip.tEnd; SE.run = false; }
       if (SP.pull) { SP.r = SP.pull.r2; SP.pull = null; recordSpin(); }
       SP.run = false;
@@ -2184,6 +2631,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     roll: '<span><i class="dot" style="background:var(--violet)"></i>Block, slides with no friction</span><span><i class="dot" style="background:var(--pos)"></i>Solid sphere, I = ⅖mR²</span><span><i class="dot" style="background:var(--equi)"></i>Cylinder, I = ½mR²</span><span><i class="dot" style="background:var(--teal)"></i>Hollow sphere, I = ⅔mR²</span><span><i class="dot" style="background:var(--neg)"></i>Hoop, I = mR²</span>',
     floor: '<span><i class="swatch" style="border-color:var(--ink)"></i>v, velocity of the center</span><span><i class="swatch" style="border-color:var(--accent)"></i>Velocity of points on the rim</span><span><i class="swatch" style="border-color:var(--violet)"></i>Path of the marked rim point</span><span><i class="swatch" style="border-color:var(--equi)"></i>Kinetic friction at the contact point</span>',
     yoyo: '<span><i class="swatch" style="border-color:var(--pos)"></i>Weight mg</span><span><i class="swatch" style="border-color:var(--accent)"></i>String tension T</span><span><i class="swatch" style="border-color:var(--muted)"></i>Dropped spool, distance fallen</span>',
+    hit: '<span><i class="dot" style="background:#c2603e"></i>Clay ball, squashed flat once it sticks</span><span><i class="dot" style="background:#2f7de1"></i>Bouncy ball</span><span><i class="swatch" style="border-color:var(--equi)"></i>Push from the pin during the hit</span><span><i class="swatch" style="border-color:var(--violet);border-top-style:dashed"></i>Path of the center of mass of a free rod and the clay</span><span><i class="dot" style="background:var(--accent)"></i>Bottom disk\u2019s marker</span><span><i class="dot" style="background:var(--pos)"></i>Top disk\u2019s marker</span>',
     spin: '<span><i class="swatch" style="border-color:var(--ink)"></i>L, angular momentum</span><span><i class="swatch" style="border-color:var(--accent)"></i>ω, spin rate</span><span><i class="swatch" style="border-color:var(--equi)"></i>I, moment of inertia</span><span><i class="swatch" style="border-color:var(--pos);border-top-style:dashed"></i>Rotational kinetic energy</span>',
     seesaw: '<span><i class="swatch" style="border-color:var(--pos)"></i>Block A, its weight and torque</span><span><i class="swatch" style="border-color:var(--neg)"></i>Block B, dashed outline where it balances</span><span><i class="swatch" style="border-color:var(--equi)"></i>Block C</span><span><i class="swatch tq"></i>Net torque about the pivot</span>'
   };
@@ -2197,7 +2645,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.22, ph: 1.08, zoom: 1 },
     ot: { th: -Math.PI / 2 + 0.5, ph: 0.72, zoom: 1 }, os: { th: -Math.PI / 2 + 0.3, ph: 0.85, zoom: 1 }, oe: { th: -Math.PI / 2 + 0.18, ph: 1.25, zoom: 1 } };
   let g3 = null;
-  const FLAT_ONLY = { floor: 1, yoyo: 1 };   /* the level floor and the yo-yo are side views, flat only */
+  const FLAT_ONLY = { floor: 1, yoyo: 1, hit: 1 };   /* the level floor and the yo-yo are side views, the collide scene a top view: flat only */
   const use3 = () => !!(G3.on && g3) && !FLAT_ONLY[S.scene];
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function init3D() {
@@ -2650,6 +3098,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (sc === 'roll') { if (use3()) drawRoll3D(); else drawRoll(); drawRollCharts(); }
     else if (sc === 'floor') { drawFloor(); drawFloorCharts(); }
     else if (sc === 'yoyo') { drawYoyo(); drawYoyoCharts(); }
+    else if (sc === 'hit') { drawHit(); drawHitCharts(); }
     else if (sc === 'spin') { if (use3()) drawSpin3D(); else drawSpin(); drawSpinCharts(); }
     else { if (use3()) drawSeesaw3D(); else drawSeesaw(); drawSeesawCharts(); }
   }
@@ -2704,6 +3153,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     yr: [() => YO.r * 100, (v) => setYo('r', v / 100), (v) => fx(v, 1) + ' cm'],
     yM: [() => YO.m, (v) => setYo('m', v), (v) => fx(v, 2) + ' kg'],
     yH: [() => YO.H, (v) => setYo('H', v), (v) => fx(v, 2) + ' m'],
+    hE: [() => HT.e, (v) => setHt('e', v), (v) => fx(v, 2)],
+    hm: [() => HT.m, (v) => setHt('m', v), (v) => fx(v, 2) + ' kg'],
+    hu: [() => HT.u, (v) => setHt('u', v), (v) => fx(v, 2) + ' m/s'],
+    hd: [() => HT.d, (v) => setHt('d', v), (v) => fsg(v, 2) + ' m'],
+    hM: [() => HT.M, (v) => setHt('M', v), (v) => fx(v, 1) + ' kg'],
+    hL: [() => HT.L, (v) => setHt('L', v), (v) => fx(v, 2) + ' m'],
+    kW1: [() => HT.w1, (v) => setHt('w1', v), (v) => fsg(v, 2) + ' rev/s, ' + fsg(v * 2 * Math.PI, 1) + ' rad/s'],
+    kM1: [() => HT.M1, (v) => setHt('M1', v), (v) => fx(v, 1) + ' kg'],
+    kR1: [() => HT.R1 * 100, (v) => setHt('R1', v / 100), (v) => fx(v, 1) + ' cm'],
+    kW2: [() => HT.w2, (v) => setHt('w2', v), (v) => fsg(v, 2) + ' rev/s, ' + fsg(v * 2 * Math.PI, 1) + ' rad/s'],
+    kM2: [() => HT.M2, (v) => setHt('M2', v), (v) => fx(v, 1) + ' kg'],
+    kR2: [() => HT.R2 * 100, (v) => setHt('R2', v / 100), (v) => fx(v, 1) + ' cm'],
+    kMu: [() => HT.mu, (v) => setHt('mu', v), (v) => fx(v, 2)],
     sR: [() => SP.r, (v) => setSpin('r', v), (v) => fx(v, 2) + ' m'],
     sF: [() => spinW() / (2 * Math.PI), (v) => setSpin('f', v), (v) => fx(v, 2) + ' rev/s'],
     sM: [() => SP.m, (v) => setSpin('m', v), (v) => fx(v, 1) + ' kg'],
@@ -2726,6 +3188,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       hoop: 'Thin ring, I = mR², with the string wound on its rim, so it leaves at R.'
     }[YO.shape]);
     $('fTrace').checked = FL.trace; $('fArrows').checked = FL.arrows;
+    { const end = HT.target === 'end'; $('hd').min = end ? 0 : (-HT.L / 2).toFixed(3); $('hd').max = (end ? HT.L : HT.L / 2).toFixed(3); }
+    setText('hdLab', HT.target === 'free' ? 'Hit point d, from the rod\u2019s center' : HT.target === 'center' ? 'Hit point d, from the pin (+ right)' : 'Hit point d, from the pin');
+    $('kR2').max = (HT.R1 * 100).toFixed(1);
+    $('hEWrap').hidden = HT.ball === 'clay'; $('hRodBox').hidden = htDiskOn(); $('hDiskBox').hidden = !htDiskOn(); $('hSweet').hidden = HT.target !== 'end';
+    setPressed('#hTarget', 'ht', HT.target); setPressed('#hBall', 'hb', HT.ball);
     $('sI0').max = SP.look === 'skater' ? 3 : 12;
     for (const id in SL) {
       const el = $(id), v = SL[id][0]();
@@ -2754,7 +3221,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     setPressed('#sceneSeg', 's', sc);
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== sc;
     $('charts').classList.toggle('one', sc === 'seesaw');
-    $('stage').dataset.layout = sc === 'torque' || sc === 'spin' || sc === 'yoyo' ? 'side' : 'below';
+    $('stage').dataset.layout = sc === 'torque' || sc === 'spin' || sc === 'yoyo' || sc === 'hit' ? 'side' : 'below';
     $('keyBox').innerHTML = KEYS[sc];
     $('speedSeg').hidden = sc === 'seesaw';
     syncPresetChips(); syncSliders();
@@ -2792,6 +3259,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   });
   for (const b of document.querySelectorAll('#flShape button')) b.addEventListener('click', () => setFl('shape', b.dataset.fs));
   for (const b of document.querySelectorAll('#yShape button')) b.addEventListener('click', () => setYo('shape', b.dataset.ys));
+  for (const b of document.querySelectorAll('#hTarget button')) b.addEventListener('click', () => setHtTarget(b.dataset.ht));
+  for (const b of document.querySelectorAll('#hBall button')) b.addEventListener('click', () => setHt('ball', b.dataset.hb));
+  $('hSweet').addEventListener('click', () => setHt('d', +(2 * HT.L / 3).toFixed(2)));
   $('fMatch').addEventListener('click', () => setFl('rim0', snap('fS', FL.v0)));
   $('fTrace').addEventListener('change', (e) => { FL.trace = e.target.checked; dirty = true; });
   $('fArrows').addEventListener('change', (e) => { FL.arrows = e.target.checked; dirty = true; });
@@ -2808,6 +3278,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (S.scene === 'roll') roAct();
     else if (S.scene === 'floor') flAct();
     else if (S.scene === 'yoyo') yoAct();
+    else if (S.scene === 'hit') htAct();
     else if (S.scene === 'spin') { SP.run = !SP.run; }
     else seAct();
     dirty = true;
@@ -2817,6 +3288,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (S.scene === 'roll') { RO.t = 0; RO.run = false; }
     else if (S.scene === 'floor') { FL.t = 0; FL.run = false; }
     else if (S.scene === 'yoyo') { YO.t = 0; YO.run = false; }
+    else if (S.scene === 'hit') { HT.t = 0; HT.run = false; }
     else if (S.scene === 'spin') { SP.r = SP.ref.r; SP.L = SP.ref.L; SP.phi = 0; setRef(); }
     else holdSeesaw();
     syncSliders(); dirty = true;
@@ -2894,6 +3366,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (k === 'ArrowUp') nudge('yH', 1); else if (k === 'ArrowDown') nudge('yH', -1);
       else if (k === 'ArrowRight') nudge('yr', 1); else if (k === 'ArrowLeft') nudge('yr', -1);
       else if (k === ' ') act(); else return;
+    } else if (sc === 'hit') {
+      if (htDiskOn()) { if (k === 'ArrowUp') nudge('kMu', 1); else if (k === 'ArrowDown') nudge('kMu', -1); else if (k === 'ArrowRight') nudge('kW1', 1); else if (k === 'ArrowLeft') nudge('kW1', -1); else if (k === ' ') act(); else return; }
+      else if (k === 'ArrowUp') nudge('hu', 1); else if (k === 'ArrowDown') nudge('hu', -1);
+      else if (k === 'ArrowRight') nudge('hd', 1); else if (k === 'ArrowLeft') nudge('hd', -1);
+      else if (k === ' ') act(); else return;
     } else if (sc === 'spin') {
       if (k === 'ArrowUp') nudge('sR', 2); else if (k === 'ArrowDown') nudge('sR', -2);
       else if (k === ' ') act(); else return;
@@ -2928,6 +3405,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (S.scene === 'roll' && RO.run) { const e = rollEnd(); RO.t += dt; if (RO.t >= e) { RO.t = e; RO.run = false; dirty = true; sayRace(); } anim = true; }
     else if (S.scene === 'floor' && FL.run) { flRun(); FL.t += dt; if (FL.t >= FL.tEnd) { FL.t = FL.tEnd; FL.run = false; dirty = true; sayFloor(); } anim = true; }
     else if (S.scene === 'yoyo' && YO.run) { const e = yoNow().T; YO.t += dt; if (YO.t >= e) { YO.t = e; YO.run = false; dirty = true; sayYoyo(); } anim = true; }
+    else if (S.scene === 'hit' && HT.run) { const e = htEnd().tEnd; HT.t += dt; if (HT.t >= e) { HT.t = e; HT.run = false; dirty = true; sayHit(); } anim = true; }
     else if (S.scene === 'spin' && SP.run) { advanceSpin(dt); anim = true; }
     else if (S.scene === 'seesaw' && SE.run && SE.tip) { SE.t += dt / S.ts; if (SE.t >= SE.tip.tEnd) { SE.t = SE.tip.tEnd; SE.run = false; dirty = true; saySeesaw(); } anim = true; }
     if (anim || dirty) {
@@ -2942,13 +3420,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
 
   window.__rot = {
-    core: { G, SHAPES, rodI, torqueOf, leverArm, doorTorque, swingRK4, makeSwing, rollAcc, rollTime, rollAt, muMin, spinI, spinWork, pullProfile, seesawTorque, seesawI, balanceX, seesawTip, floorRun, floorExit, floorEnergy, SPOOLS, spoolFall },
-    S, TQ, RO, FL, YO, SP, SE, applyPreset, setScene, act, reset, advanceSpin, get frameMs() { return frameMs; }, get handles() { return handlesNow; }
+    core: { G, SHAPES, rodI, torqueOf, leverArm, doorTorque, swingRK4, makeSwing, rollAcc, rollTime, rollAt, muMin, spinI, spinWork, pullProfile, seesawTorque, seesawI, balanceX, seesawTip, floorRun, floorExit, floorEnergy, SPOOLS, spoolFall, rodHit, rodHitAt, rodHitAgain, diskDrop },
+    S, TQ, RO, FL, YO, HT, SP, SE, htEnd, applyPreset, setScene, act, reset, advanceSpin, get frameMs() { return frameMs; }, get handles() { return handlesNow; }
   };
 
   // ---------- boot ----------
   tokens();
-  for (const id of ['race', 'skid', 'yoyo', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
+  for (const id of ['race', 'skid', 'yoyo', 'hitClay', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
   setTs(1);
   setScene('torque');
   { const sc = new URLSearchParams(location.search).get('scene'); if (sc && SCENE_HINT[sc]) setScene(sc); }   /* ?scene=floor opens a scene */

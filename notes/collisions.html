@@ -84,6 +84,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Glancing 2D collision: 90°.</strong> Puck 1 leaves at 0.50 m/s at −60°, puck 2 at 0.87 m/s at 30°. Change <strong>Impact parameter b</strong>: the angle stays 90° (Q5). Show the momentum triangle.</li>
 <li><strong>Impulse.</strong> Back in <strong>Explosion</strong>, each piece gets 1.15 N·s, equal and opposite, over the 45.3 ms push (Q6). For the force against time during a collision, and soft against stiff bumpers, open the Impulse and Momentum demo.</li>
 <li><strong>Newton's cradle</strong> (scene button). Pull back one ball, then two. The lower pane asks what would happen if n balls came out and shows that only n = k keeps the energy (Q7).</li>
+<li><strong>Ballistic pendulum: rifle bullet</strong> (scene button <strong>Ballistic pendulum</strong>). A 10 g bullet at 300 m/s stops in a 2.0 kg block hung on 1.0 m parallel rods. Ask how high it swings before pressing <strong>Play</strong> (Q8). The block leaves at 1.49 m/s, rises 11.4 cm (the marker on the scale stays at the top) and swings out 27.6°; 447.8 J of the 450 J is gone in the catch. <strong>Ball into a catcher</strong> is the lab version (25 g at 5 m/s, 250 g catcher, 1.05 cm rise); <strong>Over the top</strong> shows why a ballistic pendulum is made heavy. <strong>New mystery bullet</strong> fires an unknown speed with Blind on: students read h and find u = ((m + M)/m)√(2gh).</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: a cart moving at 1 m/s hits an identical cart at rest, and the collision is perfectly elastic. What does each cart do afterward? Then predict what would change if the collision were perfectly inelastic. Check with the first two presets.</p></div>
@@ -99,6 +100,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q6.</strong> In <strong>Explosion</strong>, the spring (compressed 5.0 cm, storing 1.00 J) pushes the 2.0 kg and 1.0 kg pieces apart for 45.3 ms. Find the impulse on each piece from its velocity, and the average force on each. Find the spring's force at the start, kx, from E = ½kx². Why is the average force smaller?</p></div>
 
 <div class="q"><p><strong>Q7.</strong> In <strong>Newton's cradle</strong>, one ball comes in at speed v. Why can't two balls go out at v/2 each? Check both momentum and kinetic energy. Use the chart in the lower pane, then test with <strong>Balls pulled back</strong> set to 2.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> In <strong>Ballistic pendulum: rifle bullet</strong>, a 10 g bullet at 300 m/s stops inside a 2.0 kg block hung on 1.0 m rods. Find the block's speed just after the catch, how high it rises, the largest angle of the rods and the share of the bullet's kinetic energy left. Why can't you set ½mu² equal to (m + M)gh? Then press <strong>New mystery bullet</strong>, read the rise and find the bullet's speed.</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Momentum is conserved only in elastic collisions."</strong> Momentum is conserved in every collision, because the forces are internal and equal and opposite. It is kinetic energy that may or may not be conserved.</li>
@@ -110,6 +113,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>1D track: frictionless air track, rigid carts, instant collisions. Momentum is conserved and v₂′ − v₁′ = −e(v₂ − v₁), giving v₁′ = ((m₁ − e m₂)v₁ + (1 + e)m₂v₂)/(m₁ + m₂), and similarly for v₂′. Energy lost: ½μ(1 − e²)v_rel².</li>
 <li>2D table: smooth hard discs with no spin and no table edges. The impulse J = (1 + e)μ(v₁ − v₂)·n acts along the line of centers n at contact; the velocity components along the contact tangent do not change.</li>
 <li>Explosion: an ideal massless spring, compressed 5 cm and held by a thread, is released. Its force is internal, so momentum stays MV, and E = ½μv_rel². The pieces move in simple harmonic motion relative to each other for a quarter period.</li>
+<li>Ballistic pendulum: the block hangs from two light rigid rods of length L that stay parallel, so it swings without turning and its center moves on a circle of radius L, a simple pendulum swung by RK4 (no friction or drag). The bullet stops in the block before the block has moved, so momentum is kept through the catch, V = mu/(m + M), and only m/(m + M) of the kinetic energy is left; then h = V²/2g, or over the top when V² ≥ 4gL. The bullet arrives within 10 ms of leaving the muzzle (at most 50 cm away), so it drops less than 0.5 mm. Block drawn as 600 kg/m³ wood; bullet drawn larger.</li>
 <li>Newton's cradle: 0.25 kg balls on 30 cm strings, each a full pendulum; a collision is an instant elastic exchange of velocity between touching neighbors, one pair at a time. A real cradle slowly fades and mixes.</li>
 </ul>
 <h2>Going further</h2>

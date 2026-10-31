@@ -165,7 +165,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="cPane">
-        <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position."></canvas>
+        <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position. In the Ballistic pendulum scene: a side view of a gun firing a bullet into a wood block hung on two parallel rods, with a protractor and a height scale whose markers stay at the highest point; left and right arrows change the bullet speed, up and down arrows the block mass."></canvas>
         <div class="stage-ctl">
           <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <button type="button" class="btn" id="play">Pause</button>
@@ -192,6 +192,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-m="explode" aria-pressed="false">Explosion</button>
           <button type="button" data-m="cradle" aria-pressed="false">Newton's cradle</button>
           <button type="button" data-m="sandbox" aria-pressed="false">Sandbox</button>
+          <button type="button" data-m="ballistic" aria-pressed="false">Ballistic pendulum</button>
         </div>
         <p class="hint scene-link">Force during contact and impulse: open <a href="impulse.html">Impulse and Momentum</a>.</p>
         <div class="chips" id="presets">
@@ -200,6 +201,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="heavy" aria-pressed="false">Heavy hits light</button>
           <button type="button" data-p="explode" aria-pressed="false">Explosion</button>
           <button type="button" data-p="glance" aria-pressed="false">Glancing 2D collision: 90°</button>
+          <button type="button" data-p="ballistic" aria-pressed="false">Ballistic pendulum: rifle bullet</button>
+          <button type="button" data-p="catcher" aria-pressed="false">Ball into a catcher</button>
+          <button type="button" data-p="overtop" aria-pressed="false">Over the top</button>
         </div>
         <div class="chips" id="sbcRigs" role="group" aria-label="Ready made rows of carts" hidden>
           <button type="button" data-r="three" aria-pressed="true">Three carts</button>
@@ -220,6 +224,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
             <button type="button" data-f="lab" aria-pressed="true">Lab</button>
             <button type="button" data-f="cm" aria-pressed="false">Center of mass</button>
           </div>
+        </div>
+        <div class="row2" id="bpBtns" hidden>
+          <button type="button" class="btn" id="bpMystery">New mystery bullet</button>
         </div>
         <div class="row2" id="explodeBtns" hidden>
           <button type="button" class="btn" id="gunBtn">Gun and bullet</button>
@@ -673,12 +680,57 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   const sbcMomentum = (st) => st.carts.reduce((s, c) => s + c.m * c.v, 0);
   const sbcEnergy = (st) => st.carts.reduce((s, c) => s + 0.5 * c.m * c.v * c.v, 0);
+  /* Ballistic pendulum. A bullet (mass m, speed u) stops inside a block (mass M) hung from two light rigid rods of length L that stay
+     parallel, so the block swings without turning and every point of it moves on a circle of radius L: exactly a simple pendulum.
+     The bullet stops in well under a millisecond, before the block has moved, so the rods (vertical then) push on nothing sideways and
+     horizontal momentum is kept through the catch: V = mu/(m + M). After the catch only gravity does work, so the block rises
+     h = V²/2g, or goes over the top when V² ≥ 4gL (rigid rods). */
+  function ballisticCatch(m, M, u) {
+    const V = m * u / (m + M), K0 = 0.5 * m * u * u, K1 = 0.5 * (m + M) * V * V;
+    return { V, K0, K1, heat: K0 - K1, kept: m / (m + M), p0: m * u, p1: (m + M) * V };
+  }
+  function ballisticRise(V, L) {
+    const h = V * V / (2 * G), over = h >= 2 * L;
+    return { h: over ? 2 * L : h, over, th: over ? Math.PI : Math.acos(1 - h / L), x: over ? 0 : Math.sqrt(Math.max(0, h * (2 * L - h))) };
+  }
+  // the bullet speed a measured rise h implies: u = ((m + M)/m)√(2gh)
+  const ballisticSpeed = (m, M, h) => (m + M) / m * Math.sqrt(2 * G * h);
+  // a simple pendulum started at the bottom with angular speed w0 > 0: θ'' = −(g/L) sin θ by RK4 at step dt, sampled every dt, for one
+  // full swing (back at the bottom moving the same way) or one turn over the top, at most tMax. T: that time, found by interpolation.
+  function pendulumSwing(L, w0, dt, tMax) {
+    const f = (q) => -G / L * Math.sin(q);
+    const ths = [0], ws = [w0];
+    let th = 0, w = w0, t = 0, T = NaN, neg = false;
+    while (t < tMax - 1e-12) {
+      const a1 = w, b1 = f(th), a2 = w + 0.5 * dt * b1, b2 = f(th + 0.5 * dt * a1), a3 = w + 0.5 * dt * b2, b3 = f(th + 0.5 * dt * a2), a4 = w + dt * b3, b4 = f(th + dt * a3);
+      const th1 = th + dt / 6 * (a1 + 2 * a2 + 2 * a3 + a4), w1 = w + dt / 6 * (b1 + 2 * b2 + 2 * b3 + b4);
+      if (th1 < 0) neg = true;
+      const full = (neg && th < 0 && th1 >= 0) || th1 >= 2 * Math.PI;
+      if (full) {
+        const target = th1 >= 2 * Math.PI ? 2 * Math.PI : 0, fr = (target - th) / (th1 - th);
+        T = t + fr * dt; ths.push(target); ws.push(w0); break;
+      }
+      th = th1; w = w1; t += dt; ths.push(th); ws.push(w);
+    }
+    return { dt, ths, ws, T, n: ths.length };
+  }
+  // θ and ω at time t into the swing, cubic Hermite between samples (the last interval may be short: it ends at T)
+  function swingAt(sw, t) {
+    if (!(t > 0)) return [0, sw.ws[0]];
+    const last = sw.n - 1, tEnd = isFinite(sw.T) ? sw.T : last * sw.dt;
+    if (t >= tEnd) return [sw.ths[last], sw.ws[last]];
+    const i = Math.min(last - 1, Math.floor(t / sw.dt)), t0 = i * sw.dt, h = (i + 1 === last && isFinite(sw.T) ? sw.T : (i + 1) * sw.dt) - t0, u = (t - t0) / h;
+    const p0 = sw.ths[i], p1 = sw.ths[i + 1], m0 = sw.ws[i] * h, m1 = sw.ws[i + 1] * h, u2 = u * u, u3 = u2 * u;
+    const th = (2 * u3 - 3 * u2 + 1) * p0 + (u3 - 2 * u2 + u) * m0 + (-2 * u3 + 3 * u2) * p1 + (u3 - u2) * m1;
+    const w = ((6 * u2 - 6 * u) * p0 + (3 * u2 - 4 * u + 1) * m0 + (-6 * u2 + 6 * u) * p1 + (3 * u2 - 2 * u) * m1) / h;
+    return [th, w];
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.COL = { G, collide1D, keLoss, trackRun, collide2D, tableRun, explode, explodeRun, eOfZeta, zetaForE, bumper, integrate, cradleInit, cradleStep, cradleResolve, cradleGap, cradleEnergy,
       restitution, keLossFraction, cmFrame, GATE, gateIntervals, gateReading, fitLine, fitPoints, readingsCSV,
-      SBC_EPS, sbcBodies, sbcAdvance, sbcMomentum, sbcEnergy };
+      SBC_EPS, sbcBodies, sbcAdvance, sbcMomentum, sbcEnergy, ballisticCatch, ballisticRise, ballisticSpeed, pendulumSwing, swingAt };
     return;
   }
 
@@ -706,21 +758,25 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     explode: [['m1', 'Mass m<sub>1</sub>', 0.2, 5, 0.1, 'kg', 1], ['m2', 'Mass m<sub>2</sub>', 0.2, 5, 0.1, 'kg', 1],
       ['E', 'Stored spring energy E', 0, 4, 0.05, 'J', 2], ['V', 'Starting velocity V', -1, 1, 0.05, 'm/s', 2]],
     cradle: [['N', 'Number of balls', 2, 7, 1, '', 0], ['k', 'Balls pulled back', 1, 6, 1, '', 0], ['th', 'Pull angle', 5, 40, 1, '°', 0]],
-    sandbox: []
+    sandbox: [],
+    ballistic: [['mb', 'Bullet mass m', 1, 100, 0.5, 'g', 1], ['ub', 'Bullet speed u', 1, 800, 1, 'm/s', 0],
+      ['M', 'Block mass M', 0.1, 10, 0.05, 'kg', 2], ['Lp', 'Rod length L', 0.2, 2, 0.05, 'm', 2]]
   };
   const DEF = {
     track: { m1: 1, m2: 1, v1: 1, v2: 0, x1: -0.6, x2: 0.1, e: 1 },
     table: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.05], v2: [0, 0] },
     explode: { m1: 2, m2: 1, E: 1, V: 0, x0: 0 },
     cradle: { N: 5, k: 1, th: 20 },
-    sandbox: {}
+    sandbox: {},
+    ballistic: { mb: 10, ub: 300, M: 2, Lp: 1 }
   };
-  const TITLES = { track: 'Carts', table: 'Pucks', explode: 'Pieces and spring', cradle: 'Cradle', sandbox: 'Build a row of carts' };
+  const TITLES = { track: 'Carts', table: 'Pucks', explode: 'Pieces and spring', cradle: 'Cradle', sandbox: 'Build a row of carts', ballistic: 'Bullet and block' };
   const PAR_HINT = {
     track: 'Drag a cart to move its start, drag the round grip on its velocity arrow to set v, and drag the square grip on top to change its mass.',
     table: 'Drag a puck to move its start; moving puck 2 up or down sets the impact parameter b. Drag the round grips to set the velocities.',
     explode: 'Drag the pair to move it, the round grip to set the starting velocity V, the square grip on the spring to store more or less energy, and the grips on top to change the masses.',
     cradle: 'Drag any ball but the last one to the left: it and every ball to its left are pulled back together, to the angle you drag to.',
+    ballistic: 'Drag the grip on the gun to change the bullet speed and the grip under the block to change its mass. New mystery bullet fires one at a speed you do not see (Blind turns on): find it from how high the block swings.',
     sandbox: 'Drag carts from the tray onto the track and velcro onto a cart. Drag a cart to move it, the round grip on its arrow to set its velocity, the grip on its corner (up or down) to change its mass, and the e grip to change how bouncy the bumpers are. Drop a cart or its velcro on the bin to take it away. Keys: 1 to 8 pick a cart, arrows change its velocity and mass, A adds a cart, V toggles velcro, Delete removes it.'
   };
   const MODEL = {
@@ -728,6 +784,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     table: 'Model: smooth hard discs on a frictionless air table. The contact impulse is along the line of centers at the moment of contact, so the velocity components along the contact tangent do not change; e acts on the components along the line of centers. No spin, no table edges.',
     explode: 'Model: an ideal massless spring, compressed by 5 cm and held by a thread, pushes the carts apart when the thread is cut. Its force is internal, so the total momentum never changes; the spring’s energy E becomes kinetic energy. The push is computed exactly (the pieces move in simple harmonic motion relative to each other until the spring reaches its natural length).',
     cradle: 'Model: identical balls (0.25 kg, 2.5 cm radius) on 30 cm strings, just touching at rest. Each ball swings as a full pendulum, g = 9.81 m/s². A collision is an instant, perfectly elastic exchange of velocity between two touching neighbors, taken one pair at a time. Real balls are slightly squashy and lose a little energy, so a real cradle slowly fades and mixes.',
+    ballistic: 'Model: the block hangs from two light rigid rods of length L that stay parallel, so it swings without turning and each point of it moves on a circle of radius L (a simple pendulum, swung exactly by RK4, g = 9.81 m/s², no friction or air drag). The bullet flies level at constant speed from the muzzle, 50 cm from the block or closer, so that it arrives within 10 ms and drops less than 0.5 mm on the way (neglected), and stops inside the block in far less time than the swing takes, so the block has not moved yet: momentum is kept through the catch, energy is not. The block is drawn as wood (600 kg/m³) and the bullet larger than its true size.',
     sandbox: 'Model: a frictionless air track from −1.00 m to 1.00 m with an end stop at each end; carts are rigid and collide in an instant. Two carts meeting keep their total momentum and separate with v₂′ − v₁′ = −e(v₂ − v₁), e the same for every bumper; a cart with velcro sticks to the cart it meets (e = 0), and the two then move as one. At an end stop v′ = −e v. Contact times are found exactly (the carts move at constant velocity between collisions); when several carts touch at once the collisions are taken one pair at a time, and carts left closing slower than 1 µm/s are given their common velocity.'
   };
 
@@ -742,9 +799,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     explode: { mode: 'explode', p: { m1: 2, m2: 1, E: 1, V: 0, x0: 0 }, rate: 0.5,
       hint: 'The spring pushes both pieces with the same force for the same time, so they get equal and opposite momenta: m₁v₁ = −m₂v₂. The lighter piece moves faster and carries more of the energy, K₁/K₂ = m₂/m₁. Press Gun and bullet for the extreme case.' },
     glance: { mode: 'table', p: { m1: 1, m2: 1, e: 1, r1: [-0.7, 0], v1: [1, 0], r2: [0, 0.06], v2: [0, 0] }, rate: 1,
-      hint: 'Equal masses, elastic, target at rest: the pucks always leave at 90° to each other, whatever the impact parameter. In the momentum diagram p₁′ + p₂′ = p₁, and with equal masses energy conservation says p₁′² + p₂′² = p₁², so the triangle has a right angle.' }
+      hint: 'Equal masses, elastic, target at rest: the pucks always leave at 90° to each other, whatever the impact parameter. In the momentum diagram p₁′ + p₂′ = p₁, and with equal masses energy conservation says p₁′² + p₂′² = p₁², so the triangle has a right angle.' },
+    ballistic: { mode: 'ballistic', p: { mb: 10, ub: 300, M: 2, Lp: 1 }, rate: 1,
+      hint: 'A 10 g bullet at 300 m/s into a 2 kg block. Momentum through the catch gives V = mu/(m + M) = 1.49 m/s; then the block rises h = V²/2g = 11.4 cm. Only m/(m + M) = 0.50% of the bullet’s 450 J is left as motion: the rest heats and tears the wood. From the rise alone, u = ((m + M)/m)√(2gh).' },
+    catcher: { mode: 'ballistic', p: { mb: 25, ub: 5, M: 0.25, Lp: 0.3 }, rate: 0.25,
+      hint: 'A school lab version: a 25 g ball fired at 5 m/s into a 250 g catcher on 30 cm rods. The catch keeps m/(m + M) = 1/11 = 9.1% of the kinetic energy, V = 0.455 m/s and the catcher rises 1.05 cm, swinging out 15.2°. Shown at ¼ speed.' },
+    overtop: { mode: 'ballistic', p: { mb: 50, ub: 400, M: 1, Lp: 0.5 }, rate: 0.25,
+      hint: 'Too fast for the pendulum: V = 19.0 m/s, and V² is more than 4gL, so the block goes over the top and keeps turning. With strings instead of rods it would go slack partway up unless V² ≥ 5gL. A real ballistic pendulum is made heavy enough to swing well below 90°. Shown at ¼ speed.' }
   };
-  const MODE_RATE = { track: 1, table: 1, explode: 0.5, cradle: 1, sandbox: 1 };
+  const MODE_RATE = { track: 1, table: 1, explode: 0.5, cradle: 1, sandbox: 1, ballistic: 1 };
 
   // ---------- state ----------
   const S = { mode: 'track', preset: 'elastic', frame: 'lab', rate: 1, sel: 0,
@@ -758,6 +821,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   S.gates = JSON.parse(JSON.stringify(GATE_DEF)); S.rows = []; S.fitKind = 'p'; S.blind = false;
   let gd = null, runDone = false;
   const hasGates = () => S.mode === 'track' || S.mode === 'explode';
+  const FLATM = { sandbox: 1, ballistic: 1 };     /* scenes with no 3D view */
   const blind = () => S.blind;
   const bumperOf = (e) => Object.keys(BUMPERS).find((k) => Math.abs(BUMPERS[k] - e) < 1e-9) || '';
 
@@ -790,6 +854,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       Trun = EXP.ts + 1.8;
     } else if (S.mode === 'sandbox') {
       run = { tc: Infinity, bodies: [], before: [], after: [] }; Trun = Infinity;
+    } else if (S.mode === 'ballistic') {
+      run = ballisticRun(p);
+      Trun = run.tc + (run.r.over ? Math.min(2 * run.sw.T, 12) : run.sw.T) + 0.4;
     } else if (S.mode === 'cradle') {
       p.k = clamp(p.k, 1, p.N - 1);
       cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
@@ -1492,6 +1559,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const C = [T.pos, T.neg, T.equi];
     if (sbcOn()) sbcDrawE(ctx, W, H);
+    else if (S.mode === 'ballistic') bpDrawE(ctx, W, H);
     else if (S.mode === 'track' || S.mode === 'explode' || S.mode === 'table') {
       const B = pk('before'), A0 = pk('after'), pending = !held && t < run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0), BL = blind();
       // Blind: the after bars are predictions, so they go (NaN bars are not drawn)
@@ -1677,6 +1745,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     if (sbcOn()) sbcDrawP(ctx, W, H);
+    else if (S.mode === 'ballistic') bpDrawP(ctx, W, H);
     else if (S.mode === 'track' || S.mode === 'explode') drawXT(ctx, W, H);
     else if (S.mode === 'table') drawMomentum(ctx, W, H);
     else drawCradleOutcomes(ctx, W, H);
@@ -1690,11 +1759,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctlH = (document.querySelector('.stage-ctl').getBoundingClientRect().height || 30) + 10;
     if (on3()) { handles = []; render3(ctx, W, H); return; }
     if (sbcOn()) { sbcDrawScene(ctx, W, H); return; }
+    if (S.mode === 'ballistic') { bpDrawScene(ctx, W, H); return; }
     if (S.mode === 'track' || S.mode === 'explode') drawTrackScene(ctx, W, H);
     else if (S.mode === 'table') drawTableScene(ctx, W, H);
     else drawCradleScene(ctx, W, H);
   }
-  function drawAll() { if (!T || !run) return; drawScene(); drawE(); drawP(); clock(); }
+  function drawAll() { if (!T || !run || !!run.ballistic !== (S.mode === 'ballistic')) return; drawScene(); drawE(); drawP(); clock(); }   /* not while a scene switch is half done */
   function clock() {
     $('tclock').firstChild.textContent = `t = ${fx(t, 2)} s`;
     $('rateTag').textContent = fmtRate(S.rate);
@@ -1706,8 +1776,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   let lastRead = '';
   function updateReadouts() {
+    if (run && !!run.ballistic !== (S.mode === 'ballistic')) return;
     const p = P(); let rows = [], f = '';
     if (sbcOn()) { if (!SBC.st) return; ({ rows, f } = sbcReadouts()); }
+    else if (S.mode === 'ballistic') ({ rows, f } = bpReadouts());
     else if (S.mode === 'track') {
       const [u1, u2] = [run.after[0][0], run.after[1][0]], V = vcm()[0], hit = isFinite(run.tc);
       const B = pk('before'), A = pk('after'), PB = B[0].p[0] + B[1].p[0], PA = A[0].p[0] + A[1].p[0], KB = B[0].K + B[1].K, KA = A[0].K + A[1].K;
@@ -1747,7 +1819,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       f = `With n balls out at kv/n: p = k m v always, K = (k/n)·½ k m v². Both hold only for n = k.`;
     }
     if (blind()) {
-      rows = [['Results', `Hidden while Blind is on. ${hasGates() ? 'Read the velocities from the photogates and the graph.' : 'Measure from the graphs and the motion.'}`, 'wide ok']];
+      rows = [['Results', `Hidden while Blind is on. ${hasGates() ? 'Read the velocities from the photogates and the graph.' : S.mode === 'ballistic' ? 'Read the rise h from the scale beside the block (its marker stays at the highest point).' : 'Measure from the graphs and the motion.'}`, 'wide ok']];
       f = '';
     }
     const html = dl(rows);
@@ -1815,11 +1887,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function setMode(m, keepRate) {
     const was = S.mode; S.mode = m;
     /* the Sandbox is flat only, has its own rigs and Reset (not Replay), and no photogates or presets */
-    if (m === 'sandbox' && was !== 'sandbox') { SBC.dimWas = on3() ? '3d' : null; if (SBC.dimWas) document.querySelector('#viewSeg [data-dim=flat]').click(); }
-    $('viewSeg').hidden = m === 'sandbox'; $('presets').hidden = m === 'sandbox'; $('sbcRigs').hidden = m !== 'sandbox';
+    if (FLATM[m] && !FLATM[was]) { SBC.dimWas = G3.on && !!G3.S ? '3d' : null; if (SBC.dimWas) document.querySelector('#viewSeg [data-dim=flat]').click(); }
+    $('viewSeg').hidden = !!FLATM[m]; $('presets').hidden = m === 'sandbox'; $('sbcRigs').hidden = m !== 'sandbox';
+    $('bpBtns').hidden = m !== 'ballistic';
     $('reset').textContent = m === 'sandbox' ? 'Reset' : 'Replay';
     if (m === 'sandbox' && !SBC.st) sbcLoad('three');
-    if (m !== 'sandbox' && was === 'sandbox') { SBC.drag = null; held = false; if (SBC.dimWas) { SBC.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); } }
+    if (m !== 'sandbox' && was === 'sandbox') { SBC.drag = null; held = false; }
+    if (!FLATM[m] && FLATM[was] && SBC.dimWas) { SBC.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
     $('parTitle').textContent = TITLES[m];
     $('parHint').textContent = PAR_HINT[m];
@@ -1827,11 +1901,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('frameWrap').hidden = !(m === 'track' || m === 'table');
     if (!(m === 'track' || m === 'table')) setFrame('lab', true);
     $('explodeBtns').hidden = m !== 'explode';
-    $('tCM').closest('label').hidden = m === 'cradle';
-    $('tGhost').closest('label').hidden = m === 'cradle';
+    $('tCM').closest('label').hidden = m === 'cradle' || m === 'ballistic';
+    $('tGhost').closest('label').hidden = m === 'cradle' || m === 'ballistic';
     $('tLoop').closest('label').hidden = m === 'cradle';
     const kb = $('keyBox').children;
-    const keys = m === 'cradle' ? ['Moving ball', '', '', ''] : m === 'sandbox' ? ['Cart 1', 'Cart 2', 'Center of mass, or the total', 'x'] : ['Body 1', 'Body 2', 'Center of mass, or the total', 'x'];
+    const keys = m === 'cradle' ? ['Moving ball', '', '', ''] : m === 'sandbox' ? ['Cart 1', 'Cart 2', 'Center of mass, or the total', 'x'] : m === 'ballistic' ? ['Bullet', 'Block (with the bullet in it after the catch)', 'Total', 'x'] : ['Body 1', 'Body 2', 'Center of mass, or the total', 'x'];
     kb[0].lastChild.textContent = keys[0]; kb[1].lastChild.textContent = keys[1]; kb[2].lastChild.textContent = keys[2];
     kb[0].firstChild.style.borderColor = m === 'cradle' ? 'var(--accent)' : '';
     kb[1].hidden = m === 'cradle'; kb[2].hidden = m === 'cradle'; kb[3].hidden = m === 'cradle';
@@ -1966,10 +2040,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       else if (S.mode === 'table') { if (S.sel) { p.v2 = [clamp(+(p.v2[0] + 0.05 * dir * sh).toFixed(2), -2, 2), p.v2[1]]; setParam('e', p.e); restart(); } else step('u1', dir); }
       else if (S.mode === 'explode') step('V', dir);
       else if (S.mode === 'cradle') step('k', dir);
+      else if (S.mode === 'ballistic') { if (!blind()) step('ub', dir); }
       else step('v0', dir);
     } else if (k === 'ArrowUp' || k === 'ArrowDown') {
       const dir = k === 'ArrowUp' ? 1 : -1;
-      if (S.mode === 'cradle') step('th', dir); else if (S.mode === 'explode') step('E', dir); else if (S.mode === 'table' && e.shiftKey) step('b', dir);
+      if (S.mode === 'cradle') step('th', dir); else if (S.mode === 'explode') step('E', dir); else if (S.mode === 'ballistic') step('M', dir); else if (S.mode === 'table' && e.shiftKey) step('b', dir);
       else if (blind() && (S.mode === 'track' || S.mode === 'table')) {     // Blind: step through the bumpers instead of e
         const ks = Object.keys(BUMPERS), cur = ks.indexOf(bumperOf(p.e)); setBumper(ks[clamp(cur < 0 ? (dir > 0 ? 0 : ks.length - 1) : cur - dir, 0, ks.length - 1)]);
       } else step('e', dir);
@@ -1994,7 +2069,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const presetName = (p) => { const b = document.querySelector(`#presets [data-p="${p}"]`); return b ? b.textContent.trim() : 'custom'; };
   const capStatus = (msg) => { $('capStatus').textContent = msg; };
   function captureReading() {
-    if (!hasGates()) { capStatus('Capture reads the photogates, on the 1D track and in the Explosion scene.'); return; }
+    if (!hasGates()) { capStatus(S.mode === 'ballistic' ? 'Capture reads the photogates, on the 1D track and in the Explosion scene. Here, read the rise h from the scale beside the block.' : 'Capture reads the photogates, on the 1D track and in the Explosion scene.'); return; }
     if (held) return;
     if (S.mode === 'track' && !isFinite(run.tc)) { capStatus('Not captured: the carts never collide in this setup.'); return; }
     if (S.mode === 'explode' && !(P().E > 0)) { capStatus('Not captured: with no stored energy the pieces never separate.'); return; }
@@ -2156,6 +2231,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('labBlind').checked = on;
     const bm = on && (S.mode === 'track' || S.mode === 'table');
     for (const m of ['track', 'table']) { const el = slEls[`${m}.e`]; if (el) el.inp.closest('.ctl').hidden = on; }
+    { const el = slEls['ballistic.ub']; if (el) el.inp.closest('.ctl').hidden = on; }
     $('bumperWrap').hidden = !bm;
     const cur = bm ? bumperOf(P().e) : '';
     for (const b of document.querySelectorAll('#bumperSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === cur));
@@ -2184,6 +2260,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let graphOpen = false, graphKey = '';
   function graphRows() {
     if (sbcOn()) return sbcGraphRows();
+    if (S.mode === 'ballistic') return bpGraphRows();
     const BL = blind(), f3 = (v) => MIN(fx(v, 3));
     if (S.mode === 'track' || S.mode === 'explode') {
       const tEnd = BL && !runDone ? t : Trun, rows = [], dt = 0.05;
@@ -2227,6 +2304,185 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawAll(); drawFit(); }); } catch (_) {}
   new MutationObserver(() => { tokens(); drawAll(); drawFit(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- Ballistic pendulum: a bullet into a block hung on parallel rods (side view, flat only) ----------
+  /* The bullet leaves the muzzle at t = 0.25 s, 0.50 m from the block's face (closer for a slow one: it arrives within 10 ms); the block is drawn as wood, 600 kg/m³. Pictures aside, every
+     number comes from ballisticCatch, ballisticRise and the RK4 swing in the CORE. */
+  const BPK = { fire: 0.25, gap: 0.5, tf: 0.01, rho: 600, gun: 0.34, blen: 0.03 };
+  function ballisticRun(p) {
+    const m = p.mb / 1000, c = ballisticCatch(m, p.M, p.ub), r = ballisticRise(c.V, p.Lp);
+    const sw = pendulumSwing(p.Lp, c.V / p.Lp, 0.001, 30), T = isFinite(sw.T) ? sw.T : 30;
+    const gap = Math.min(BPK.gap, BPK.tf * p.ub), tc = BPK.fire + gap / p.ub, b = Math.cbrt(p.M / BPK.rho), tTop = r.over ? T / 2 : T / 4;
+    const phi = (tt) => {
+      if (!(tt > tc)) return 0;
+      const s = tt - tc;
+      if (r.over && isFinite(sw.T)) { const k = Math.floor(s / T); return swingAt(sw, s - k * T)[0] + 2 * Math.PI * k; }
+      return swingAt(sw, s)[0];
+    };
+    const phiMax = (tt) => (!(tt > tc) ? 0 : tt - tc >= tTop ? r.th : Math.min(Math.PI, phi(tt)));
+    return { ballistic: true, tc, gap, c, r, sw, T, m, b, tTop, phi, phiMax, bodies: [], before: [], after: [] };
+  }
+  // world: meters, x to the right, y up, the rods' pivots on y = 0; the block's top center hangs at (0, −L) at rest
+  function bpGeom(W, H) {
+    const p = P(), ps = projScale(), L = p.Lp, b = run.b, muzzle = -b / 2 - run.gap;
+    const floor = -L - b - 0.05, x0 = muzzle - BPK.gun - 0.06, x1 = L + b / 2 + 0.12;
+    const y1 = run.r.over ? L + b + 0.06 : 0.14, y0 = floor - 0.03;
+    const top = ctlH + 6 * ps, bot = H - 8 * ps, padX = 12 * ps;
+    const s = Math.min((W - 2 * padX) / (x1 - x0), (bot - top) / (y1 - y0));
+    const ox = (W - (x1 - x0) * s) / 2 - x0 * s, oy = top + y1 * s;
+    return { ps, L, b, s, muzzle, floor, X: (x) => ox + x * s, Y: (y) => oy - y * s, ox, oy, W, H, top, bot };
+  }
+  const bpWood = () => (document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) ? ['#8a6440', '#6b4c30', '#4f3823'] : ['#d4a56c', '#b8864f', '#8f6438'];
+  function bpDrawScene(ctx, W, H) {
+    const g = bpGeom(W, H), { ps, L, b, s, X, Y } = g, p = P(), ls = lsc(W, H), fs = 11 * ls, BL = blind();
+    const ph = run.phi(t), pm = run.phiMax(t), a = 0.32 * b;
+    const cx = L * Math.sin(ph), cyTop = -L * Math.cos(ph), cy = cyTop - b / 2;      /* block center */
+    handles = [];
+    // the bench under the gun, the floor line under the block
+    const benchY = Y(g.floor);
+    if (window.VDGear) window.VDGear.bench(ctx, 0, benchY, W, 10 * ps, 12 * ps); else { ctx.fillStyle = T.block; ctx.fillRect(0, benchY, W, 12 * ps); }
+    // the frame: a beam with the two pivots, hung from the ceiling
+    const beamY = Y(0) - 4 * ps, bx0 = X(-a - 0.1), bx1 = X(a + 0.1);
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(bx0 - 6 * ps, Y(0.14) - 2 * ps, bx1 - bx0 + 12 * ps, 4 * ps);
+    if (window.VDGear) { window.VDGear.rod(ctx, (bx0 + bx1) / 2 - 18 * ps, Y(0.14), (bx0 + bx1) / 2 - 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, (bx0 + bx1) / 2 + 18 * ps, Y(0.14), (bx0 + bx1) / 2 + 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, bx0, beamY, bx1, beamY, 5 * ps, { color: '#8e98a5' }); }
+    else { ctx.fillStyle = T.wire; ctx.fillRect(bx0, beamY - 5 * ps, bx1 - bx0, 10 * ps); }
+    // protractor at the pivots with the friction pointer the block pushes round: it stays at the largest angle
+    const rp = Math.min(0.3 * L, 0.24) * s, pcx = X(0), pcy = Y(0), span = run.r.th > Math.PI / 2 + 1e-9 ? Math.PI : Math.PI / 2;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.arc(pcx, pcy, rp, Math.PI / 2 - span, Math.PI / 2, false); ctx.stroke();
+    ctx.font = `${9.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let d = 0; d <= span * 180 / Math.PI + 1e-9; d += 5) {
+      const an = Math.PI / 2 - d * Math.PI / 180, big = d % 30 === 0, l = (big ? 8 : d % 10 === 0 ? 5 : 3) * ps;
+      ctx.beginPath(); ctx.moveTo(pcx + Math.cos(an) * rp, pcy + Math.sin(an) * rp); ctx.lineTo(pcx + Math.cos(an) * (rp - l), pcy + Math.sin(an) * (rp - l)); ctx.stroke();
+      if (big && rp > 40 * ps) ctx.fillText(String(d), pcx + Math.cos(an) * (rp - 16 * ps), pcy + Math.sin(an) * (rp - 16 * ps));
+    }
+    ctx.restore();
+    const pan = Math.PI / 2 - pm;
+    ctx.strokeStyle = T.acol; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(pcx, pcy); ctx.lineTo(pcx + Math.cos(pan) * (rp + 6 * ps), pcy + Math.sin(pan) * (rp + 6 * ps)); ctx.stroke();
+    // the path of the block's center: so far, and (unless Blind) the whole swing, dashed
+    const cR = L * s, ccx = X(0), ccy = Y(-b / 2);
+    if (!BL) { ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.arc(ccx, ccy, cR, Math.PI / 2 - run.r.th, Math.PI / 2 + run.r.th); ctx.stroke(); ctx.restore(); }
+    // the gun, on a stand on the bench, its muzzle 50 cm from the block
+    const gy = Y(-L - b / 2), mx = X(g.muzzle), gl = BPK.gun * s, gh = Math.max(14 * ps, 0.07 * s);
+    ctx.fillStyle = T.wire; ctx.fillRect(mx - gl * 0.7 - 3 * ps, gy + gh / 2, 6 * ps, benchY - gy - gh / 2);
+    if (window.VDGear) { window.VDGear.box(ctx, mx - gl, gy - gh / 2, gl * 0.62, gh, { r: 3 * ps }); window.VDGear.rod(ctx, mx - gl * 0.4, gy, mx, gy, Math.max(3 * ps, gh * 0.22), { color: '#6f7a87' }); }
+    else { ctx.fillStyle = T.wire; ctx.fillRect(mx - gl, gy - gh / 2, gl * 0.62, gh); ctx.fillRect(mx - gl * 0.4, gy - 3 * ps, gl * 0.4, 6 * ps); }
+    if (!BL) handles.push({ id: 'gun', grip: 'h', param: 'ub', dirX: 1, pt: [mx - gl * 0.69, gy], cursor: 'ew-resize' });
+    // the bullet in flight, with a streak behind it (it crosses the gap in a few milliseconds), and the muzzle flash
+    const blen = Math.max(10 * ps, BPK.blen * s), bh = Math.max(4 * ps, blen * 0.34);
+    if (t >= BPK.fire && t < run.tc) {
+      const xf = X(g.muzzle + p.ub * (t - BPK.fire)), tail = Math.max(mx, xf - p.ub * 0.02 * s);
+      const gr = ctx.createLinearGradient(tail, 0, xf - blen, 0); gr.addColorStop(0, 'rgba(200,160,80,0)'); gr.addColorStop(1, 'rgba(200,160,80,0.55)');
+      ctx.fillStyle = gr; ctx.fillRect(tail, gy - bh * 0.35, Math.max(0, xf - blen - tail), bh * 0.7);
+      ctx.fillStyle = '#c8a050'; roundRect(ctx, xf - blen, gy - bh / 2, blen, bh, bh / 2); ctx.fill();
+      ctx.strokeStyle = '#7a5a20'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    if (t >= BPK.fire && t < BPK.fire + 0.04) {
+      const fr = ctx.createRadialGradient(mx, gy, 0, mx, gy, 16 * ps); fr.addColorStop(0, 'rgba(255,230,140,0.95)'); fr.addColorStop(1, 'rgba(255,140,40,0)');
+      ctx.fillStyle = fr; ctx.beginPath(); ctx.arc(mx + 6 * ps, gy, 16 * ps, 0, 7); ctx.fill();
+    }
+    if (t < run.tc && S.layers.arrows) {
+      arrow(ctx, mx + 8 * ps, gy - gh * 0.9 - 6 * ps, mx + 58 * ps, gy - gh * 0.9 - 6 * ps, T.pos, 2.2 * ps, 8);
+      labelBox(ctx, BL ? 'u = ?' : `u = ${fx(p.ub, 0)} m/s`, mx + 8 * ps, gy - gh * 0.9 - 13 * ps, 'left', T.pos, fs, 700);
+    }
+    // the rods, kept parallel, and the block
+    const tl = [cx - a, cyTop], tr = [cx + a, cyTop];
+    for (const [px, q] of [[-a, tl], [a, tr]]) {
+      if (window.VDGear) window.VDGear.rod(ctx, X(px), Y(0), X(q[0]), Y(q[1]), 2 * ps, { color: '#b4bcc6' }); else { ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(px), Y(0)); ctx.lineTo(X(q[0]), Y(q[1])); ctx.stroke(); }
+    }
+    for (const px of [-a, a]) { if (window.VDGear) window.VDGear.screw(ctx, X(px), Y(0), 3.5 * ps); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(px), Y(0), 3 * ps, 0, 7); ctx.fill(); } }
+    const bw = b * s, bxL = X(cx - b / 2), byT = Y(cyTop), wood = bpWood();
+    if (window.VDGear && ph < 0.05) window.VDGear.shadow(ctx, X(cx), benchY, bw * 0.55, 3 * ps, 0.35);
+    const wg = ctx.createLinearGradient(bxL, byT, bxL + bw, byT + bw); wg.addColorStop(0, wood[0]); wg.addColorStop(1, wood[1]);
+    ctx.fillStyle = wg; roundRect(ctx, bxL, byT, bw, bw, 2 * ps); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.rect(bxL, byT, bw, bw); ctx.clip(); ctx.strokeStyle = wood[2]; ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
+    for (let k = 1; k < 6; k++) { const yy = byT + bw * k / 6; ctx.beginPath(); ctx.moveTo(bxL, yy); for (let xx = 0; xx <= bw; xx += 6) ctx.lineTo(bxL + xx, yy + Math.sin(xx * 0.09 + k * 1.3) * 1.5); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = wood[2]; ctx.lineWidth = 1.2 * ps; roundRect(ctx, bxL, byT, bw, bw, 2 * ps); ctx.stroke();
+    for (const q of [tl, tr]) { ctx.fillStyle = '#5b6573'; ctx.beginPath(); ctx.arc(X(q[0]), Y(q[1]), 2.5 * ps, 0, 7); ctx.fill(); }
+    if (t >= run.tc) {     /* the bullet's hole in the face it entered */
+      ctx.fillStyle = '#2a1c10'; ctx.beginPath(); ctx.ellipse(bxL + 1.5 * ps, Y(cy), 1.6 * ps, Math.max(2 * ps, bh * 0.45), 0, 0, 7); ctx.fill();
+    }
+    handles.push({ id: 'mass', grip: 'v', param: 'M', dirY: -1, pt: [X(cx), byT + bw + 13 * ps], cursor: 'ns-resize' });
+    if (t >= run.tc && S.layers.arrows && !BL) {
+      const s1 = t - run.tc, w = swingAt(run.sw, run.r.over && isFinite(run.sw.T) ? s1 % run.T : Math.min(s1, run.T - 1e-9))[1], v = w * L, k = 50 * ps / Math.max(run.c.V, 1e-9);
+      const ux = Math.cos(ph), uy = Math.sin(ph);
+      if (Math.abs(v * k) > 4 * ps) arrow(ctx, X(cx), Y(cy), X(cx) + ux * v * k, Y(cy) - uy * v * k, T.neg, 2.4 * ps, 8);
+      if (t - run.tc < 0.25) labelBox(ctx, `V = ${sig(run.c.V, 3)} m/s`, X(cx) + 10 * ps, Y(cy) - bw / 2 - 8 * ps, 'left', T.neg, fs, 700);
+    }
+    // the height scale on the right, zeroed at the bottom of the block at rest, with a rider pushed up to the highest point
+    const zx = Math.min(W - 26 * ps, X(L + b / 2 + 0.06)), y0 = Y(-L - b), hTop = Math.min(2 * L, (y0 - (ctlH + 20 * ps)) / s);
+    const rs = nice(46 * ps / s), hu = L * (1 - Math.cos(ph)), hr = run.r.over && pm >= Math.PI - 1e-9 ? 2 * L : L * (1 - Math.cos(Math.min(pm, Math.PI)));
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(zx + 0.5, y0); ctx.lineTo(zx + 0.5, Y(-L - b + hTop)); ctx.stroke();
+    ctx.font = `${9.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= hTop + 1e-9; v += rs / 5) {
+      const yy = Math.round(Y(-L - b + v)) + 0.5, major = Math.abs(v / rs - Math.round(v / rs)) < 1e-6;
+      ctx.beginPath(); ctx.moveTo(zx, yy); ctx.lineTo(zx - (major ? 7 : 3) * ps, yy); ctx.stroke();
+      if (major) ctx.fillText(fx(v * 100, rs < 0.01 ? 1 : 0), zx + 3 * ps, yy);
+    }
+    ctx.textBaseline = 'bottom'; ctx.fillText('cm', zx + 3 * ps, Y(-L - b + hTop) - 4 * ps);
+    if (hu > 1e-6) { ctx.save(); ctx.strokeStyle = T.neg; ctx.globalAlpha = 0.5; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(cx + b / 2), Y(cyTop - b)); ctx.lineTo(zx, Y(cyTop - b)); ctx.stroke(); ctx.restore(); }
+    const ry = Y(-L - b + Math.min(hr, hTop));
+    ctx.fillStyle = T.acol; ctx.beginPath(); ctx.moveTo(zx - 1 * ps, ry); ctx.lineTo(zx - 9 * ps, ry - 5 * ps); ctx.lineTo(zx - 9 * ps, ry + 5 * ps); ctx.closePath(); ctx.fill();
+    if (pm > 0) labelBox(ctx, `${fx(Math.round(hr * 1000) / 10, 1)} cm`, zx - 11 * ps, ry + 4 * ls, 'right', T.acol, fs, 700);
+    if (W > 520 * ps) labelBox(ctx, 'side view, to scale (bullet drawn larger)', 10 * ps, ctlH + 14 * ls, 'left', T.muted, 10 * ls, 400);
+    drawGrips(ctx);
+  }
+  function bpDrawE(ctx, W, H) {
+    const p = P(), c = run.c, m = run.m, V = c.V, BL = blind(), A = (v) => (BL ? NaN : v);
+    const hTop = run.r.h, Utop = (m + p.M) * G * hTop, Ktop = Math.max(0, c.K1 - Utop);
+    const groups = [
+      { title: 'Momentum p (kg·m/s)', items: [{ lab: 'bullet', b: c.p0, a: A(m * V), col: T.pos }, { lab: 'block', b: 0, a: A(p.M * V), col: T.neg },
+        { lab: 'total', b: c.p0, a: A(c.p1), col: T.equi, val: BL ? '' : sig(c.p1, 3) }] },
+      { title: 'Kinetic energy K (J)', items: [{ lab: 'bullet', b: c.K0, a: A(0.5 * m * V * V), col: T.pos }, { lab: 'block', b: 0, a: A(0.5 * p.M * V * V), col: T.neg },
+        { lab: 'total', b: c.K0, a: A(c.K1), col: T.equi, val: BL ? '' : sig(c.K1, 3) }], note: BL ? 'after: hidden (Blind)' : `kept ${sig(100 * c.kept, 3)}% = m/(m + M)` }
+    ];
+    if (W > 380 * projScale()) groups.push({ title: 'After the catch (J)', items: [{ lab: 'K_{catch}', a: A(c.K1), col: T.neg }, { lab: 'mgh_{top}', a: A(Utop), col: T.acol }, { lab: 'K_{top}', a: A(Ktop), col: T.muted }],
+      scale: c.K1 * 1.12 || 1, note: BL ? '' : run.r.over ? 'over the top' : 'K turns into height' });
+    drawBars(ctx, W, H, groups, { pending: t < run.tc, legend: true, words: ['before', 'after the catch'] });
+  }
+  function bpDrawP(ctx, W, H) {
+    const ls = lsc(W, H), ps = projScale(), L0 = 46 * ls, R = W - 12 * ls, top = 40 * ls, bot = H - 34 * ls, p = P(), BL = blind();
+    if (R - L0 < 40 || bot - top < 30) return;
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Height of the block above rest against time', 10 * ls, 9 * ls);
+    const hy = (tt) => 100 * p.Lp * (1 - Math.cos(run.phi(tt)));
+    const shown = BL ? 100 * p.Lp * (1 - Math.cos(Math.min(Math.PI, run.phiMax(t)))) : 100 * run.r.h;
+    const { X, Y } = axes(ctx, L0, R, top, bot, [0, Trun], [0, Math.max(shown * 1.18, 0.5)], 't (s)', 'h (cm)', ls);
+    ctx.save(); ctx.beginPath(); ctx.rect(L0, top, R - L0, bot - top); ctx.clip();
+    const n = Math.max(80, Math.round((R - L0) / 2));
+    const line = (t1, col, lw, alpha) => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.globalAlpha = alpha; ctx.beginPath(); for (let k = 0; k <= n; k++) { const tt = Math.min(t1, Trun * k / n); k ? ctx.lineTo(X(tt), Y(hy(tt))) : ctx.moveTo(X(tt), Y(hy(tt))); if (tt >= t1) break; } ctx.stroke(); ctx.globalAlpha = 1; };
+    if (!BL) line(Trun, T.neg, 1.4 * ps, 0.3);
+    line(t, T.neg, 2.4 * ps, 1);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(run.tc), top); ctx.lineTo(X(run.tc), bot); ctx.stroke();
+    if (!BL && !run.r.over) { ctx.beginPath(); ctx.moveTo(L0, Y(100 * run.r.h)); ctx.lineTo(R, Y(100 * run.r.h)); ctx.stroke(); }
+    ctx.setLineDash([]);
+    ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(X(t), top); ctx.lineTo(X(t), bot); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.restore();
+    labelBox(ctx, 'catch', X(run.tc) + 4 * ls, top + 14 * ls, 'left', T.muted, 10.5 * ls, 400);
+    if (!BL && !run.r.over) labelBox(ctx, `h = V²/2g = ${sig(100 * run.r.h, 3)} cm`, R - 4 * ls, Y(100 * run.r.h) - 4 * ls, 'right', T.ink, 10.5 * ls, 600);
+  }
+  function bpReadouts() {
+    const p = P(), c = run.c, r = run.r, m = run.m;
+    const rows = [['Block speed after the catch V', fv(c.V), 'c-2'],
+      ['Rise h = V²/2g', r.over ? 'over the top' : `${sig(r.h * 100, 3)} cm`], ['Largest angle θ', r.over ? 'goes round' : deg(r.th)],
+      ['p before, the bullet', `${sig(c.p0, 3)} kg·m/s`, 'c-1'], ['p just after', `${sig(c.p1, 3)} kg·m/s`],
+      ['K before', `${sig(c.K0, 4)} J`], ['K just after', `${sig(c.K1, 4)} J`],
+      ['Kinetic energy lost in the catch', `${sig(c.heat, 4)} J, ${sig(100 * (1 - c.kept), 4)}% <span class="ok">the share M/(m + M)</span>`, 'wide']];
+    const f = r.over ? `V = mu/(m + M) = ${sig(c.V, 4)} m/s, V² = ${sig(c.V * c.V, 4)} m²/s² ≥ 4gL = ${sig(4 * G * p.Lp, 4)} m²/s², so it goes over the top.`
+      : `Back from the rise: u = ((m + M)/m)√(2gh) = ${sig(ballisticSpeed(m, p.M, r.h), 4)} m/s. Sideways swing L sin θ = ${sig(r.x * 100, 3)} cm.`;
+    return { rows, f };
+  }
+  function bpGraphRows() {
+    const BL = blind(), tEnd = BL && !runDone ? t : Trun, rows = [], p = P();
+    for (let k = 0; k * 0.05 <= tEnd + 1e-9; k++) { const tt = k * 0.05, ph = run.phi(tt); rows.push([fx(tt, 2), fx(ph * 180 / Math.PI, 1), fx(100 * p.Lp * (1 - Math.cos(ph)), 2)]); }
+    return { cap: `Swing angle and height of the block above rest, every 0.05 s${BL && !runDone ? ' up to now' : ''}; the bullet arrives at t = ${fx(run.tc, 4)} s.`, head: ['t (s)', 'angle (°)', 'height (cm)'], rows };
+  }
+  $('bpMystery').addEventListener('click', () => {
+    const q = S.P.ballistic; q.ub = 100 + 5 * Math.floor(Math.random() * 121); q.__touched = true;
+    clearPreset(); S.blind = true; buildRun(); syncSliders(); applyBlind(); setHint(''); restart();
+    $('live').textContent = 'A mystery bullet is loaded and Blind is on: find its speed from how high the block rises.';
+  });
 
   // ---------- Sandbox: build a row of carts on the track by dragging parts from the tray ----------
   const SBC_X0 = -1.0, SBC_X1 = 1.0, SBC_MAX = 8;
@@ -2585,7 +2841,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.2, ph: 1.2, zoom: 1 }, env: null, mode: '', room: null, bench: null };
   const HOME3 = { track: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, explode: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, table: { th: -Math.PI / 2 + 0.14, ph: 0.9 }, cradle: { th: -Math.PI / 2 + 0.42, ph: 1.24 } };
   let handles3 = [], OV = null;
-  const on3 = () => G3.on && !!G3.S && S.mode !== 'sandbox';
+  const on3 = () => G3.on && !!G3.S && !FLATM[S.mode];
   const ZB = 0.14, KV = 0.2, TRK = 1.4, FLOOR = -0.86, FLAGZ = 0.04;   /* track top above the bench; arrow scale, m per m/s; track half length; floor; flag middle above the track top */
   const OV0 = () => (G3.S ? G3.S.w / Math.max(1, G3.S.h) : 2);    /* the 3D picture's aspect ratio (wide on a desktop, near 1 on a phone) */
   const pt3 = (h) => (h.plane != null ? h.pt : h.at(h.v));
@@ -3134,6 +3390,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     cam.ovl();
   }
   function view3(on) {
+    if (on && FLATM[S.mode]) { SBC.dimWas = '3d'; document.querySelector('#viewSeg [data-dim=flat]').click(); return; }   /* a 3D view that comes up in a flat only scene waits for the next scene */
     G3.on = on && !!G3.S;
     if (G3.S) G3.S.el.hidden = !G3.on;
     cans.c.style.touchAction = G3.on ? 'pan-y' : 'none';
@@ -3152,6 +3409,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStatus(m); } });
   /* How this works: a 20 s video of one elastic run timed by the photogates (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/collisions.mp4', poster: 'media/how-this-works/collisions.jpg' });
+  if (new URLSearchParams(location.search).get('scene') === 'ballistic') applyPreset('ballistic');   /* ?scene=ballistic opens the Ballistic pendulum */
   renderRows();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());

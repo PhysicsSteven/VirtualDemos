@@ -6301,3 +6301,38 @@ project files (plan #5, #6, #8), all folded into existing demos, no new workshee
 - Worksheet part candidates (not built): Springs Worksheet 1, drop a block at equilibrium and at a turning point, measure T and A
   before and after; Motion Graphs, stopping distance against v at fixed t_r and b, fit d/v against v (intercept t_r, slope 1/2b);
   Forces, least pull that lifts a load against 1/n.
+## 2026-10-31 · Claude · Round 1, Group B: Ballistic pendulum (Collisions) and Collide (Rotation)
+
+Steve (17:07): "let's do a quick recount to be sure and maybe get started on that". Round 1 #2 and #4 of the PhET Parity Plan
+(`round1/groups-2026-10-31.md` in the project files), folded into existing demos; no new worksheet. GPT, please verify the
+numbers below (all from the demos' own readouts and the new tests).
+- **Collisions and Momentum, Ballistic pendulum scene** (`?scene=ballistic`, flat only). A bullet stops in a block hung on two
+  parallel rigid rods of length L (so the block swings without turning: a simple pendulum, swung by RK4). Momentum through the
+  catch, V = mu/(m + M); then h = V²/2g, or over the top when V² ≥ 4gL. Protractor with a friction pointer and a height scale whose
+  rider stays at the top; momentum and energy bars before and after the catch; height against time. Sliders: bullet mass 1 to
+  100 g, speed 1 to 800 m/s, block 0.1 to 10 kg, L 0.2 to 2 m. The muzzle is 50 cm away or closer, so the bullet arrives within
+  10 ms and drops under 0.5 mm. Setups: rifle (10 g, 300 m/s, 2 kg, 1 m: V 1.49 m/s, h 11.4 cm, 27.6°, 0.498% of 450 J kept),
+  catcher (25 g, 5 m/s, 250 g, 0.30 m: 1.05 cm, 15.2°, 1/11 kept), over the top (50 g, 400 m/s, 1 kg, 0.5 m: V 19.0 m/s). New
+  mystery bullet: random 100 to 700 m/s with Blind on (speed slider hidden); students read h and use u = ((m + M)/m)√(2gh).
+  Tests `test_collisions_ballistic.cjs` (6): presets by hand, swing top against acos(1 − h/L) to 1e-5 rad, energy drift under
+  1e-9, period against the exact elliptic period 4√(L/g)K(sin θ₀/2) to 2e-6, one turn over the top against ∮dθ/ω.
+- **Rotation and Torque, Collide scene** (`?scene=hit`, flat top view). A ball (clay, which sticks as a point mass on the rod's
+  line, or a bouncy ball with e) hits a thin rod pinned at its end or center, or free; or a disk is set down on a spinning disk.
+  J = (1 + e)u/(1/m + d²/I_pin), or (1 + e)u/(1/m + 1/M + d²/I_c) for a free rod. Bars of L (ball, rod, total) and K (ball, rod,
+  lost) through the run; the pin's push drawn and read out; a bouncing ball's run stops if the rod comes round to meet it again.
+  Disks: τ = ⅔μkM₂gR₂ (weight spread evenly over the top disk, R₂ ≤ R₁), lock time I₁I₂|ω₁ − ω₂|/((I₁ + I₂)τ), heat
+  I₁I₂(ω₁ − ω₂)²/2(I₁ + I₂). Setups: Clay hits a pinned rod (0.2 kg at 3 m/s, 0.8 m out on a 1 kg, 1 m rod: ω 1.04 rad/s, 27.7%
+  of K kept, pin push 0.087 N·s), Sweet spot (L 0.9 m, d 0.6 m = 2L/3: push 0, p 0.600 before and after), Free rod (d 0.4 m:
+  ω 1.82 rad/s, center of mass 0.50 m/s), Bouncy ball off a rod pinned at its center (e = 1: ball back at 1.34 m/s, ω 4.16 rad/s),
+  Disk dropped on a spinning disk (2 kg 15 cm at 2 rev/s, 1 kg 10 cm dropped, μ 0.3: 0.262 s, 1.64 rev/s, 0.323 J heat = 18%).
+  Tests `test_rotation_collide.cjs` (9): presets, sweet spot for any e and masses, L kept for every pin and e at every time,
+  free rod momentum and straight center of mass path, restitution law, second hit, and the disks against a ring by ring torque sum
+  and a step by step integration.
+- Fix along the way (Collisions): a 3D view that comes up while a flat only scene is open now waits for the next scene, and the page
+  draws nothing while a scene switch is half done.
+- Notes: collisions and rotation (new Running it in class items, Q8 each, physics bullets); keys Q8 in TeacherKeys demo-keys.
+  whats-new entry. Checks: both test files pass, test_collisions (14), test_collisions_sandbox (7), test_rotation (8) pass;
+  vdcheck `--only after` 0 problems and `--only clip` 0 cut off on both demos; looked at desktop light and dark and 400 px.
+- Worksheet part candidates (not built): Collisions worksheet, mystery bullet part (measure h for three mystery bullets, find u,
+  and the share of K kept); Rotation worksheet, sweet spot part (pin push against d, find the zero at 2L/3) and disk on a disk
+  part (heat against I₂/(I₁ + I₂), independent of μ).
