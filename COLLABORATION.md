@@ -6365,3 +6365,39 @@ both folded into Timbre and Harmonics; no new worksheet. GPT, please verify the 
 - Worksheet part candidates (not built): Timbre worksheet, a dispersion part (time the v_p and v_g marks over one λ₁ for each medium,
   plot v_g/v_p against p) and a vowel part (record harmonics 1 to 6 for ah at two pitches and show the strong ones sit at the same
   frequencies, not the same harmonic numbers).
+## 2026-10-31 · Claude · Rounds 2 and 3, Group A: Paints and Stage lights in Color Vision (#13)
+
+Steve (17:54): "Let's run round 2 and 3". Group A of `round2-3/groups-2026-10-31.md` in the project files: pigment mixing, colored
+shadows and stage lighting (oPhysics Pigment Mixing; Physics Classroom Painting with CMY, Shadows, Stage Lighting), folded into
+`demos/color-vision.html` as two new views beside Three lamps, One wavelength and Bulb and filter. No new worksheet.
+GPT, please verify the physics and numbers below (all from the demo's core and `test_color_vision.cjs`).
+- **Model pigments** (stated as models, not measured): each absorbs whole thirds of the spectrum, the same thirds as the colored
+  filters (500 and 600 nm), with logistic edges (6 nm scale, 26 nm from 10% to 90%) whose absorption reaches 15 nm past each edge
+  (real paint absorptions overlap; with no overlap, cyan + magenta + yellow left bright notches at 500 and 600 nm). Reflectance
+  0.04 + 0.84 × Π(1 − absorption). White 0.88 flat, black 0.04 (up to 0.045 where two edges meet).
+- **Paints** (`?mode=paint`): parts of cyan, magenta, yellow and white (0 to 10 each), on a board lit by D65 or the 2856 K bulb
+  (each scaled to Y = 1). Thick coat, single constant Kubelka–Munk (Kubelka and Munk 1931; Duncan 1940 for mixtures): K/S = (1 − R)²/2R,
+  K/S of the mix = Σ cᵢ (K/S)ᵢ, R = 1 + K/S − √((K/S)² + 2K/S); no Saunderson gloss term. Light to the eye = bulb × R. Picture: four
+  pots, the board under the bulb, the eye and bubble; the spectrum panel adds the reflectance as a dotted line (0 to 1).
+  Numbers: cyan + yellow R 0.074 / 0.878 / 0.074 at 450 / 550 / 650 nm, L M S 0.538 0.606 0.094, Y 0.581; magenta + yellow Y 0.160,
+  L largest; cyan + magenta S 0.797; all three R ≈ 0.104 everywhere, Y 0.112 (dark gray: each absorber is a third of the mix,
+  K/S 11.5 → 3.85); yellow + 3 white R(450) 0.04 → 0.131, S 0.056 → 0.153; blue paint under 2856 K S 0.797 → 0.244.
+- **Stage lights** (`?mode=stage`): red, green, blue point footlights on the floor 4 m from the backdrop at x = (k − 1) × spacing,
+  lighting it evenly (no fall off; all three full on a perfect reflector = the D65 white). A 1.69 m performer of circles and
+  capsules stands d from the backdrop; a point (x, z) shadows to X = xₖ + (x − xₖ)m, Z = zm, m = D/(D − d) (similar triangles,
+  lamps at floor height so the scaling is about the lamp's foot). Front view to scale, no perspective; floor takes no shadows;
+  sharp shadows (point lamps, penumbra stated). Pixels drawn from the exact blocked set per pixel (nine colors from cvStageSpec).
+  Costume (lit by every lamp) and backdrop pick from the same pigments. A ring (tap, click, mouse drag, arrow keys) sets where
+  the eye looks; readout says what it is on and which lamps light it. Shadows on white: red's cyan (0.497, 0.738, 0.880), green's
+  magenta (0.402, 0.207, 0.852), blue's yellow (0.860, 0.815, 0.028); two overlapping = the third lamp × 0.88; three = black.
+  m = 1.60 at 1.5 m, 1.08 at 0.3 m, 4.00 at 3 m. Red costume under green alone Y 0.028; yellow costume under red + blue L M S
+  0.384 0.145 0.039; blue backdrop in the blue lamp's shadow Y 0.039.
+- 13 new presets (6 paint, 7 stage), Readings rows for both views (light column describes the paint or the spot), the Model text,
+  notes (two What students come away with lines, Running it in class 8 and 9, Q7, Q8, two misconceptions, physics bullets; key
+  Q7 and Q8 in TeacherKeys demo-keys), one whats-new entry. The Set up card now grows the stage when it is taller than the picture
+  (Stage lights, Projector), and the mode buttons wrap at 360 px.
+- Checks: test_color_vision 17 pass (7 new: pigments, Kubelka–Munk round trip and averaging, paint mixes, bulb × R, shadow
+  geometry and collinearity, shadows equal the other lamps, costumes); vdcheck `--only after` 0 problems (116 screenshots) and
+  `--only clip` 0 cut off; looked at 1280 light and dark, projector, and 400 px.
+- Worksheet part candidates (not built): Color Vision worksheet, paint part (Y of a cyan + yellow mix against the share of white,
+  compared with K/S averaging); shadow part (shadow height against d from the backdrop, fit 1/m against d: slope −1/D, intercept 1).

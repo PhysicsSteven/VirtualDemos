@@ -11,10 +11,12 @@ time: 15 to 25 minutes
 - No mix of three real lamps reaches the purest spectral colors: some would need a negative amount of one lamp.
 - A filter only removes light. A red filter on a white bulb passes the red part and absorbs the rest; it never turns other light into red.
 - The eye is far more sensitive near 555 nm than at the ends of the spectrum.
+- Paints subtract: each pigment absorbs part of the spectrum, so cyan and yellow paint leave only green. A surface's color is the light falling on it times its reflectance, so the same costume looks different under different lamps.
+- Each lamp throws its own shadow. In the shadow of one colored lamp the others still arrive, so shadows of red, green and blue lamps are cyan, magenta and yellow.
 
 ## Before class
 
-Students should know that white light contains all visible wavelengths. Choose **Three lamps**, **One wavelength** or **Bulb and filter** at the top of the picture, and **Beams** or **Photons**. The card sets the lamp powers, the wavelength and its power, or the bulb and the filter. Under the room are the spectrum reaching the eye with the three cone sensitivities, and the three cone signals (white = 1). In One wavelength, **Mix it from the three lamps** finds the lamp powers that give the same cone signals. **Blind** in **Lab** hides the color seen.
+Students should know that white light contains all visible wavelengths. Choose **Three lamps**, **One wavelength**, **Bulb and filter**, **Paints** or **Stage lights** at the top of the picture, and **Beams** or **Photons**. The card sets the lamp powers, the wavelength and its power, or the bulb and the filter. Under the room are the spectrum reaching the eye with the three cone sensitivities, and the three cone signals (white = 1). In One wavelength, **Mix it from the three lamps** finds the lamp powers that give the same cone signals. In Paints the card sets the parts of cyan, magenta, yellow and white paint and the light on the board; in Stage lights it sets the three footlights, the costume, the backdrop and where the performer stands, and a tap on the stage moves the ring the eye looks at. **Blind** in **Lab** hides the color seen.
 
 ## Running it in class
 
@@ -25,6 +27,8 @@ Students should know that white light contains all visible wavelengths. Choose *
 5. One wavelength at 100% power: move it from 450 to 555 to 650 nm (Q4).
 6. **Red filter on a bulb** and **Green filter, photons** (Q5, Q6).
 7. **Colored filters on any light.** Put a yellow filter and a cyan filter on a white bulb, one after the other: each passes its own band and only green gets through both. Then **Red and green filters stacked**: no wavelength passes both, so the screen goes dark. Filters subtract; lamps add (ideal filters with edges at 500 and 600 nm, stated in the Model).
+8. **Cyan + yellow paint**, then **All three paints** (Q7). Compare with **Green + blue**: lamps add, paints subtract.
+9. **Colored shadows.** Ask for the color of each shadow before tapping on it (Q8), then **Performer near the lamps** and **Red costume, green light**.
 
 ## Questions
 
@@ -40,12 +44,18 @@ Students should know that white light contains all visible wavelengths. Choose *
 
 **Q6.** With the green filter (500 to 560 nm) on daylight, watch the photons. About what fraction of the photons from the bulb pass the filter? What happens to the others?
 
+**Q7.** Mix one part cyan paint with one part yellow. Read the reflectance at 450, 550 and 650 nm and the cone signals: what color is the mix, and why? Now add one part magenta. Why is the result a dark gray rather than black?
+
+**Q8.** In Colored shadows, predict the color of each lamp's shadow on the white backdrop, then tap on them to check. What do you see where two shadows overlap, and where all three do? Move the performer to 3 m from the backdrop: how large are the shadows now, and why?
+
 ## Common misconceptions
 
 - **"Red and green paint make brown, so red and green light must too."** Lights add; paints and filters subtract.
 - **"Yellow light must contain yellow wavelengths."** Red plus green light looks just as yellow.
 - **"A red filter colors the light red."** It removes everything but the red.
 - **"Each cone sees one color."** Each cone type responds to a broad band; the cones overlap heavily, which is why L and M respond together to most light.
+- **"A shadow is always black."** Only the light of the blocked lamp is missing; the other lamps still light the spot.
+- **"A red shirt is red in any light."** It reflects red light; in green light there is no red to reflect, and it looks nearly black.
 - **"A screen can show every color."** No three primaries cover the spectral colors.
 
 ## Physics behind the demo
@@ -54,7 +64,9 @@ Students should know that white light contains all visible wavelengths. Choose *
 - The lamps are Gaussian spectra 20 nm wide at 630, 532 and 465 nm, with powers set so all three at full give D65 white exactly. One wavelength at 100% has the brightness of that white at 555 nm.
 - Incandescent is a blackbody at 2856 K (CIE illuminant A); Daylight is CIE D65. The filter is an ideal band pass.
 - The color shown is the light's sRGB color at its brightness; colors outside the screen's range are desaturated. Photons are drawn at random in proportion to their number (power times λ), at a rate slowed enormously.
-- Tests (curriculum/validation/test_color_vision.cjs): the white calibration, additivity, the brightness of single wavelengths, metamer matches and the negative red at 490 nm, the bulbs, and the filter.
+- Paints are model pigments (not measured ones) that absorb whole thirds of the spectrum with smooth edges; a coat of mixed paint follows single constant Kubelka–Munk theory: K/S = (1 − R)²/2R for each paint, the mix has the K/S of the paints averaged by their parts. Gloss is left out.
+- Stage lights: point lamps on the floor 4 m from the backdrop light it evenly; a performer d from the backdrop casts a shadow m = D/(D − d) times life size about each lamp (similar triangles). Costumes and backdrops use the same pigments; each spot's light is lamp × reflectance.
+- Tests (curriculum/validation/test_color_vision.cjs): the white calibration, additivity, the brightness of single wavelengths, metamer matches and the negative red at 490 nm, the bulbs, the filters, the pigments and Kubelka–Munk mixing, the shadow geometry, and colored shadows and costumes.
 
 ## Going further
 

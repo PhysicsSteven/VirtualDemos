@@ -27,6 +27,7 @@
 select.pick { font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 4px; min-width: 0; }
 select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (pointer: coarse) { select.pick { min-height: 36px; } }
+#modeSeg { flex-wrap: wrap; max-width: 100%; }
 .status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
 @media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 520px; } .setup-card { position: static; width: auto; margin: 8px; } }
 </style>
@@ -36,7 +37,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   <header class="bar">
     <div>
       <h1>Color Vision</h1>
-      <p>Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, put a filter in front of a white bulb, or stack colored filters in any of the beams.</p>
+      <p>Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, put a filter in front of a white bulb, stack colored filters in any of the beams, mix paints, or light a stage with colored lamps.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">nm</div>
@@ -53,6 +54,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" data-m="rgb" aria-pressed="true">Three lamps</button>
           <button type="button" data-m="mono" aria-pressed="false">One wavelength</button>
           <button type="button" data-m="bulb" aria-pressed="false">Bulb and filter</button>
+          <button type="button" data-m="paint" aria-pressed="false">Paints</button>
+          <button type="button" data-m="stage" aria-pressed="false">Stage lights</button>
         </div>
         <div class="seg" role="group" aria-label="Show the light as" id="viewSeg">
           <button type="button" data-v="beam" aria-pressed="true">Beams</button>
@@ -83,6 +86,26 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <div><div class="slider-head"><label for="sC">Filter center</label><output id="oC" for="sC"></output></div><input type="range" id="sC" min="400" max="700" step="1"></div>
           <div><div class="slider-head"><label for="sW">Filter width</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="10" max="300" step="5"></div>
         </div>
+        <div id="paintBox" hidden>
+          <div class="seg" role="group" aria-label="Paint lit by" id="litSeg">
+            <button type="button" data-l="day" aria-pressed="true">Daylight</button>
+            <button type="button" data-l="inc" aria-pressed="false">Incandescent</button>
+          </div>
+          <div><div class="slider-head"><label for="sPc">Cyan paint</label><output id="oPc" for="sPc"></output></div><input type="range" id="sPc" min="0" max="10" step="1"></div>
+          <div><div class="slider-head"><label for="sPm">Magenta paint</label><output id="oPm" for="sPm"></output></div><input type="range" id="sPm" min="0" max="10" step="1"></div>
+          <div><div class="slider-head"><label for="sPy">Yellow paint</label><output id="oPy" for="sPy"></output></div><input type="range" id="sPy" min="0" max="10" step="1"></div>
+          <div><div class="slider-head"><label for="sPw">White paint</label><output id="oPw" for="sPw"></output></div><input type="range" id="sPw" min="0" max="10" step="1"></div>
+        </div>
+        <div id="stageBox" hidden>
+          <div class="filt-row">
+            <label for="pCos">Costume</label><select class="pick" id="pCos"><option value="white">White</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option><option value="black">Black</option></select>
+            <label for="pBack">Backdrop</label><select class="pick" id="pBack"><option value="white">White</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option><option value="black">Black</option></select>
+          </div>
+          <div><div class="slider-head"><label for="sDist">Performer to backdrop</label><output id="oDist" for="sDist"></output></div><input type="range" id="sDist" min="0.2" max="3" step="0.1"></div>
+          <div><div class="slider-head"><label for="sPx">Performer across the stage</label><output id="oPx" for="sPx"></output></div><input type="range" id="sPx" min="-2" max="2" step="0.1"></div>
+          <div><div class="slider-head"><label for="sSp">Lamp spacing</label><output id="oSp" for="sSp"></output></div><input type="range" id="sSp" min="0.2" max="2" step="0.1"></div>
+          <p class="hint">Tap or click the stage to look at a spot; arrow keys move the ring.</p>
+        </div>
         <div class="filt-row" id="filtBox">
           <label for="fA">Colored filter</label><select class="pick" id="fA"><option value="none">None</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option></select>
           <label for="fB">Second colored filter</label><select class="pick" id="fB"><option value="none">None</option><option value="red">Red</option><option value="green">Green</option><option value="blue">Blue</option><option value="yellow">Yellow</option><option value="cyan">Cyan</option><option value="magenta">Magenta</option></select>
@@ -109,6 +132,19 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" data-p="yelCyan" aria-pressed="false">Yellow and cyan filters stacked</button>
           <button type="button" data-p="redGreenStack" aria-pressed="false">Red and green filters stacked</button>
           <button type="button" data-p="twoYellows" aria-pressed="false">Two yellows, red filter</button>
+          <button type="button" data-p="paintCY" aria-pressed="false">Cyan + yellow paint</button>
+          <button type="button" data-p="paintMY" aria-pressed="false">Magenta + yellow paint</button>
+          <button type="button" data-p="paintCM" aria-pressed="false">Cyan + magenta paint</button>
+          <button type="button" data-p="paintCMY" aria-pressed="false">All three paints</button>
+          <button type="button" data-p="paintTint" aria-pressed="false">Yellow paint with white</button>
+          <button type="button" data-p="paintInc" aria-pressed="false">Blue paint under a bulb</button>
+          <button type="button" data-p="stageShadows" aria-pressed="false">Colored shadows</button>
+          <button type="button" data-p="stageTwo" aria-pressed="false">Shadows in red and green light</button>
+          <button type="button" data-p="stageNear" aria-pressed="false">Performer near the backdrop</button>
+          <button type="button" data-p="stageFar" aria-pressed="false">Performer near the lamps</button>
+          <button type="button" data-p="stageRedGreen" aria-pressed="false">Red costume, green light</button>
+          <button type="button" data-p="stageYellow" aria-pressed="false">Yellow costume, magenta light</button>
+          <button type="button" data-p="stageBlue" aria-pressed="false">Blue backdrop</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
         <p class="status" id="status" aria-live="polite"></p>
@@ -143,7 +179,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the color seen (predict it first)</span></label>
         <details class="more"><summary>The model and its formulas</summary>
         <p class="formula">L = ∫ S(λ) l̄(λ) dλ   M = ∫ S(λ) m̄(λ) dλ   S = ∫ S(λ) s̄(λ) dλ</p>
-        <p class="hint">Model: each cone signal is the light's spectrum S(λ) weighted by that cone's sensitivity and added up over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (analytic fit of Wyman, Sloan and Shirley 2013) turned into cone responses with the Hunt–Pointer–Estevez matrix normalized to daylight (Fairchild, Color Appearance Models), so daylight white at the brightness of the three full lamps gives L = M = S = 1. Two lights with the same three signals look the same, whatever their spectra (metamers). The lamps are modeled as Gaussian spectra 20 nm wide (full width at half maximum) at 630, 532 and 465 nm, and their powers are set so all three at 100% give exactly that white. One wavelength at 100% power has the brightness of that white at 555 nm, where the eye is most sensitive; the same power at another wavelength looks dimmer. Incandescent is a blackbody at 2856 K (CIE illuminant A, Planck's law); Daylight is CIE illuminant D65 (CIE 15:2004 table, every 10 nm, interpolated). The filter passes everything between its edges and nothing outside (an ideal band pass). The colored filters are ideal too: blue passes below 500 nm, green 500 to 600 nm, red above 600 nm; yellow, cyan and magenta each absorb one of those thirds (blue, red, green) and pass the other two. Real dyes have gradual edges and pass less than all of their band. Filters in a row multiply their transmissions, so the light after two filters is what both pass. The color in the bubble is the light's color in sRGB at its brightness; colors outside the screen's range are shown desaturated, so the purest spectral colors look paler than in life. Photons: each dot is one photon, its wavelength drawn at random from the spectrum in proportion to the number of photons (power times λ); the rate is slowed enormously to be seen. The eye adapts to the room in life; here nothing adapts.</p></details>
+        <p class="hint">Model: each cone signal is the light's spectrum S(λ) weighted by that cone's sensitivity and added up over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (analytic fit of Wyman, Sloan and Shirley 2013) turned into cone responses with the Hunt–Pointer–Estevez matrix normalized to daylight (Fairchild, Color Appearance Models), so daylight white at the brightness of the three full lamps gives L = M = S = 1. Two lights with the same three signals look the same, whatever their spectra (metamers). The lamps are modeled as Gaussian spectra 20 nm wide (full width at half maximum) at 630, 532 and 465 nm, and their powers are set so all three at 100% give exactly that white. One wavelength at 100% power has the brightness of that white at 555 nm, where the eye is most sensitive; the same power at another wavelength looks dimmer. Incandescent is a blackbody at 2856 K (CIE illuminant A, Planck's law); Daylight is CIE illuminant D65 (CIE 15:2004 table, every 10 nm, interpolated). The filter passes everything between its edges and nothing outside (an ideal band pass). The colored filters are ideal too: blue passes below 500 nm, green 500 to 600 nm, red above 600 nm; yellow, cyan and magenta each absorb one of those thirds (blue, red, green) and pass the other two. Real dyes have gradual edges and pass less than all of their band. Filters in a row multiply their transmissions, so the light after two filters is what both pass. The color in the bubble is the light's color in sRGB at its brightness; colors outside the screen's range are shown desaturated, so the purest spectral colors look paler than in life. Photons: each dot is one photon, its wavelength drawn at random from the spectrum in proportion to the number of photons (power times λ); the rate is slowed enormously to be seen. The eye adapts to the room in life; here nothing adapts.</p>
+        <p class="hint">Paints: model pigments, not measured ones. Each absorbs whole thirds of the spectrum (the same thirds as the filters), with smooth edges 26 nm wide (10% to 90%) whose absorption reaches 15 nm past 500 and 600 nm, as real paint absorptions overlap; a pigment reflects 88% where it does not absorb and 4% where it does. White reflects 88% everywhere, black 4% (up to 4.5% where two absorption edges meet). A thick coat of mixed paint follows Kubelka–Munk theory (Kubelka and Munk 1931; mixtures, Duncan 1940) in its single constant form, which takes every pigment to scatter alike: K/S = (1 − R)²/2R for each paint, the mix has K/S = Σ cᵢ (K/S)ᵢ by the parts cᵢ, and R = 1 + K/S − √((K/S)² + 2 K/S). Gloss at the surface is left out. The board is lit by daylight (D65) or the 2856 K bulb at the brightness of a white of Y = 1.</p>
+        <p class="hint">Stage lights: the three lamps are points on the floor at the front of the stage, 4 m from the backdrop, and they light the backdrop evenly (no fall off with distance or angle; all three at full give white of Y = 1 on a surface that reflects everything). The performer, 1.69 m tall, made of circles and rounded bars, stands d from the backdrop. By similar triangles a point at height z throws its shadow at height z m, m = D/(D − d), scaled about the lamp across the stage too. Point lamps give sharp shadows; a real lamp of some size gives a soft edge (penumbra). The front of the performer is lit by every lamp. The view is from the front, to scale, without perspective; the floor takes no shadows. Costumes and backdrops use the same model pigments as the paints, and each spot's light is lamp × reflectance.</p></details>
         </div></details>
       </section>
     </aside>
@@ -199,14 +237,76 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   var CV_FEDGE = [500, 600];
   var CV_FILTERS = { none: [1, 1, 1], red: [0, 0, 1], green: [0, 1, 0], blue: [1, 0, 0], yellow: [0, 1, 1], cyan: [1, 1, 0], magenta: [1, 0, 1] };
   function cvFilterT(name, l) { var t = CV_FILTERS[name] || CV_FILTERS.none; return l < CV_FEDGE[0] ? t[0] : l < CV_FEDGE[1] ? t[1] : t[2]; }
-  /* the light before any filter: the lamps, the wavelength or the bulb */
+  /* pigments (model pigments, not measured ones): each absorbs whole thirds of the spectrum, the same thirds as the colored filters
+     (blue below 500 nm, green 500 to 600 nm, red above 600 nm), with smooth (logistic) edges, and each absorption band reaches
+     CV_PIG_OVER past its edges, as real paint absorptions overlap. Reflectance CV_PIG_LO + (CV_PIG_HI − CV_PIG_LO) w, where w is the
+     product of (1 − absorption) over the thirds the pigment absorbs. White absorbs none, black all three. Thirds: [blue, green, red]. */
+  var CV_PIG_HI = 0.88, CV_PIG_LO = 0.04, CV_PIG_EDGE = 6, CV_PIG_OVER = 15;   /* nm: an edge goes from 10% to 90% across 26 nm */
+  var CV_PIGMENTS = { white: [0, 0, 0], black: [1, 1, 1], red: [1, 1, 0], green: [1, 0, 1], blue: [0, 1, 1], yellow: [1, 0, 0], cyan: [0, 0, 1], magenta: [0, 1, 0] };
+  function cvSig(x) { return 1 / (1 + Math.exp(-x)); }
+  function cvAbs(j, l) {
+    var e0 = CV_FEDGE[0], e1 = CV_FEDGE[1], o = CV_PIG_OVER, s = CV_PIG_EDGE;
+    return j === 0 ? 1 - cvSig((l - e0 - o) / s) : j === 1 ? cvSig((l - e0 + o) / s) * (1 - cvSig((l - e1 - o) / s)) : cvSig((l - e1 + o) / s);
+  }
+  function cvPigR(name, l) {
+    var t = CV_PIGMENTS[name] || CV_PIGMENTS.white, w = 1; for (var j = 0; j < 3; j++) if (t[j]) w *= 1 - cvAbs(j, l);
+    return CV_PIG_LO + (CV_PIG_HI - CV_PIG_LO) * w;
+  }
+  /* Kubelka–Munk for a thick (opaque) paint layer: K/S = (1 − R)²/2R and back R = 1 + K/S − √((K/S)² + 2 K/S) (Kubelka and Munk 1931).
+     Mixed paints, single constant form (Duncan 1940): every pigment scatters alike, so the mix has K/S = Σ cᵢ (K/S)ᵢ by fraction cᵢ.
+     Surface gloss (the Saunderson correction) is left out. */
+  function cvKS(R) { return (1 - R) * (1 - R) / (2 * R); }
+  function cvKSinv(q) { return 1 + q - Math.sqrt(q * q + 2 * q); }
+  var CV_PAINTS = ['cyan', 'magenta', 'yellow', 'white'];
+  /* reflectance of the paint mixed from parts {cyan, magenta, yellow, white}; no paint at all is the white of the board */
+  function cvMixR(parts) {
+    var tot = 0; CV_PAINTS.forEach(function (n) { tot += parts[n] || 0; });
+    return cvGrid(function (l) { if (!tot) return cvPigR('white', l); var q = 0; CV_PAINTS.forEach(function (n) { if (parts[n]) q += parts[n] / tot * cvKS(cvPigR(n, l)); }); return cvKSinv(q); });
+  }
+  /* the stage: three point lamps on the floor at the front (footlights), CV_STAGE_D from the backdrop, at x = (k − 1) × spacing
+     (red, green, blue from left to right as the audience sees them). A performer stands d from the backdrop, D − d from the lamps.
+     By similar triangles the shadow of a point (x, z) of the performer lands on the backdrop at X = xₖ + (x − xₖ) m, Z = z m, with
+     m = D/(D − d). The light on the backdrop is taken as even (no fall off with distance or angle). */
+  var CV_STAGE_D = 4;
+  function cvShadowScale(d) { return CV_STAGE_D / (CV_STAGE_D - d); }
+  function cvLampX(k, sp) { return (k - 1) * sp; }
+  /* the performer, in meters from the point between the feet, z up: a head, a body, two legs and two arms (one raised), as
+     circles and capsules (every point within r of a segment) */
+  var CV_PERSON = [[0, 1.58, 0, 1.58, 0.11], [0, 0.97, 0, 1.36, 0.17], [-0.09, 0.9, -0.14, 0.05, 0.07], [0.09, 0.9, 0.15, 0.05, 0.07],
+    [0.17, 1.36, 0.33, 0.92, 0.05], [-0.17, 1.36, -0.5, 1.8, 0.05]];
+  function cvInPerson(u, z) {
+    for (var i = 0; i < CV_PERSON.length; i++) { var c = CV_PERSON[i], dx = c[2] - c[0], dz = c[3] - c[1], L2 = dx * dx + dz * dz;
+      var t = L2 ? Math.max(0, Math.min(1, ((u - c[0]) * dx + (z - c[1]) * dz) / L2)) : 0, ex = u - c[0] - t * dx, ez = z - c[1] - t * dz;
+      if (ex * ex + ez * ez <= c[4] * c[4]) return true; }
+    return false;
+  }
+  /* which lamps the performer blocks at the backdrop point (X, Z): bit k set when lamp k is in shadow there */
+  function cvBlocked(o, X, Z) {
+    var m = cvShadowScale(o.dist), b = 0;
+    for (var k = 0; k < 3; k++) { var xk = cvLampX(k, o.spacing); if (cvInPerson(xk + (X - xk) / m - o.px, Z / m)) b |= 1 << k; }
+    return b;
+  }
+  /* what the eye sees at the point (X, Z) of the front view: the performer (lit by every lamp) or the backdrop with its shadows */
+  function cvStageLook(o) {
+    var X = o.probe[0], Z = o.probe[1];
+    if (cvInPerson(X - o.px, Z)) return { on: 'performer', pig: o.costume, blocked: 0 };
+    return { on: 'backdrop', pig: o.backdrop, blocked: cvBlocked(o, X, Z) };
+  }
+  /* light leaving a surface of pigment pig lit by the lamps not blocked */
+  function cvStageSpec(o, blocked, pig) {
+    var lv = [o.r, o.g, o.b];
+    return cvGrid(function (l) { var s = 0; for (var k = 0; k < 3; k++) if (!((blocked >> k) & 1)) s += lv[k] * CV_LW[k] * cvGauss(l, CV_LAMPS[k]); return s * cvPigR(pig, l); });
+  }
+  /* the light before any filter: the lamps, the wavelength or the bulb; paint lit by a bulb; a point of the stage */
   function cvSource(o) {
+    if (o.mode === 'paint') { var Rm = cvMixR(o.parts), Bm = cvBulb(o.lit); for (var q = 0; q < CV_N; q++) Rm[q] *= Bm[q]; return Rm; }
+    if (o.mode === 'stage') { var lk = cvStageLook(o); return cvStageSpec(o, lk.blocked, lk.pig); }
     if (o.mode === 'rgb') { var lv = [o.r, o.g, o.b]; return cvGrid(function (l) { var s = 0; for (var k = 0; k < 3; k++) s += lv[k] * CV_LW[k] * cvGauss(l, CV_LAMPS[k]); return s; }); }
     if (o.mode === 'mono') { var S = new Float64Array(CV_N), j = Math.round(o.lam - CV_L0); if (j >= 0 && j < CV_N) S[j] = o.pow / CV_YMAX; return S; }
     return cvBulb(o.bulb);
   }
   /* the filters in the beam, in order from the source: the band pass (bulb only), then the two colored filters */
-  function cvFilters(o) { var F = []; if (o.mode === 'bulb' && o.filt) F.push({ band: [o.c - o.w / 2, o.c + o.w / 2] }); [o.fa, o.fb].forEach(function (n) { if (n && n !== 'none') F.push({ color: n }); }); return F; }
+  function cvFilters(o) { var F = []; if (o.mode === 'paint' || o.mode === 'stage') return F; if (o.mode === 'bulb' && o.filt) F.push({ band: [o.c - o.w / 2, o.c + o.w / 2] }); [o.fa, o.fb].forEach(function (n) { if (n && n !== 'none') F.push({ color: n }); }); return F; }
   function cvPass(F, l) { return F.band ? (l < F.band[0] || l > F.band[1] ? 0 : 1) : cvFilterT(F.color, l); }
   /* the spectrum after the first n filters (all of them when n is left out): stacked filters multiply their transmissions */
   function cvThrough(S0, F, n) { var S = Float64Array.from(S0), m = n == null ? F.length : n; for (var k = 0; k < m; k++) for (var i = 0; i < CV_N; i++) S[i] *= cvPass(F[k], CV_L0 + i); return S; }
@@ -242,9 +342,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     whiteMag: { mode: 'rgb', r: 1, g: 1, b: 1, fa: 'magenta', view: 'beam', hint: 'White from the three lamps through a magenta filter: magenta absorbs green and passes red and blue, so the red and blue beams go on and the green beam stops at the filter. What is left looks magenta.' },
     yelCyan: { mode: 'bulb', bulb: 'day', filt: false, fa: 'yellow', fb: 'cyan', view: 'beam', hint: 'Daylight through yellow, then cyan. Yellow absorbs the blue, cyan absorbs the red, and only the green passes both: the transmissions multiply. This is subtractive mixing, how inks and paints combine.' },
     redGreenStack: { mode: 'bulb', bulb: 'inc', filt: false, fa: 'red', fb: 'green', view: 'photon', hint: 'A red filter, then a green one. The red filter passes only above 600 nm and the green only 500 to 600 nm; no wavelength passes both, so no photon reaches the eye.' },
+    paintCY: { mode: 'paint', parts: { cyan: 1, yellow: 1 }, hint: 'One part cyan paint and one part yellow, in daylight. Cyan absorbs the red third of the spectrum, yellow the blue third; only the green third is reflected by both, so the mix looks green (reflectance 0.88 at 550 nm, 0.07 at 450 and 650 nm). Paints subtract, like filters in a row. Compare with Green + blue lamps: there the lights add.' },
+    paintMY: { mode: 'paint', parts: { magenta: 1, yellow: 1 }, hint: 'Magenta absorbs the green third and yellow the blue third, so only red is left: Y = 0.16 and L is the largest cone signal. Magenta and yellow are how a printer makes red.' },
+    paintCM: { mode: 'paint', parts: { cyan: 1, magenta: 1 }, hint: 'Cyan absorbs red and magenta absorbs green, so only blue is reflected: S = 0.80 while L and M are only 0.10 and 0.13.' },
+    paintCMY: { mode: 'paint', parts: { cyan: 1, magenta: 1, yellow: 1 }, hint: 'All three paints, one part each: every third of the spectrum is absorbed by one of them, and the mix reflects about 10% everywhere (Y = 0.11), a dark muddy gray, not black. Each pigment is only a third of the mix, so each absorbs less than it does alone; real printers add black ink for this reason.' },
+    paintTint: { mode: 'paint', parts: { yellow: 1, white: 3 }, hint: 'One part yellow to three parts white: the white scatters the light back before the yellow can absorb all of the blue, so the reflectance at 450 nm rises from 0.04 to 0.13 and the color is a paler yellow (S from 0.06 to 0.15). Mixed paints follow Kubelka–Munk: the absorption over scattering, K/S, of the mix is the average of the paints\' K/S by their share.' },
+    paintInc: { mode: 'paint', parts: { cyan: 1, magenta: 1 }, lit: 'inc', hint: 'Blue paint (cyan + magenta) under an incandescent bulb. The bulb has little blue light, so the paint sends back far less blue: S falls from 0.80 in daylight to 0.24, and the blue looks dull violet. Switch to Daylight to compare. The eye in life adapts to the bulb; here nothing adapts.' },
+    stageShadows: { mode: 'stage', r: 1, g: 1, b: 1, probe: [0.6, 1.7], hint: 'Red, green and blue footlights on a white backdrop. Each lamp throws its own shadow of the performer; the ring sits in the red lamp\'s shadow, where only green and blue arrive, so it looks cyan (L 0.50, M 0.74, S 0.88). The green lamp\'s shadow is magenta and the blue lamp\'s yellow; where two shadows overlap only one lamp lights the backdrop. The red lamp is on the left, so its shadow falls to the right. Tap anywhere to look there.' },
+    stageTwo: { mode: 'stage', r: 1, g: 1, b: 0, probe: [0.3, 2.2], hint: 'Only the red and green lamps: the backdrop is yellow, the red lamp\'s shadow is green, the green lamp\'s shadow is red, and where both shadows overlap (the ring) no light arrives, so it is black. Turn the blue lamp on and the overlap turns blue.' },
+    stageNear: { mode: 'stage', r: 1, g: 1, b: 1, dist: 0.3, probe: [-0.25, 1.15], hint: 'The performer stands 0.3 m from the backdrop: the shadows are only 1.08 times life size and lie almost on top of each other, with thin colored fringes. The ring is on a fringe in the blue lamp\'s shadow, lit by red and green: yellow. Move the performer forward to pull the shadows apart.' },
+    stageFar: { mode: 'stage', r: 1, g: 1, b: 1, dist: 3, probe: [0.15, 2.9], hint: 'The performer stands 3 m from the backdrop, 1 m from the lamps: each shadow is 4 times life size (m = D/(D − d) = 4/1), and the three spread far apart. The ring is in the green lamp\'s shadow, lit by red and blue: magenta.' },
+    stageRedGreen: { mode: 'stage', r: 0, g: 1, b: 0, costume: 'red', probe: [0, 1.15], hint: 'A red costume under the green lamp alone. Red pigment reflects only the red third, and the green lamp has almost no light there, so the costume sends back 3% of the light (Y = 0.03) and looks nearly black against the green backdrop. Turn the red lamp up to see the red.' },
+    stageYellow: { mode: 'stage', r: 1, g: 0, b: 1, costume: 'yellow', probe: [0, 1.15], hint: 'A yellow costume under red and blue light (magenta). Yellow pigment absorbs the blue and reflects the red, so the costume looks red (L 0.38, M 0.15, S 0.04). In white light it is yellow; on stage a costume\'s color depends on the light as much as on the cloth.' },
+    stageBlue: { mode: 'stage', r: 1, g: 1, b: 1, backdrop: 'blue', probe: [-0.7, 2.1], hint: 'A blue backdrop under all three lamps. Blue paint reflects only the blue light, so the backdrop\'s shadows of the red and green lamps still look blue, but the blue lamp\'s shadow (the ring) gets only red and green light, which the blue paint absorbs: it is nearly black (Y = 0.04, the paint\'s 4% reflectance outside its band).' },
     twoYellows: { mode: 'mono', lam: 580, pow: 0.6, fa: 'red', view: 'beam', hint: 'Pure 580 nm light through a red filter (it passes only above 600 nm): nothing gets through. Now choose Red + green and put the same red filter in: the red lamp passes. The two yellows look the same to the eye, but a filter tells them apart, because it acts on the spectrum, not on the cone signals.' },
   };
-  const S = { preset: 'white', mode: 'rgb', r: 1, g: 1, b: 1, lam: 580, pow: 0.6, bulb: 'inc', filt: true, c: 650, w: 100, fa: 'none', fb: 'none', view: 'beam', blind: false, msg: '', photons: [] };
+  /* the paint and stage settings every preset starts from (copied fresh each time) */
+  const BASE = () => ({ fa: 'none', fb: 'none', parts: { cyan: 0, magenta: 0, yellow: 0, white: 0 }, lit: 'day', dist: 1.5, spacing: 1, px: 0, costume: 'white', backdrop: 'white', probe: [0.6, 1.7] });
+  const S = Object.assign({ preset: 'white', mode: 'rgb', r: 1, g: 1, b: 1, lam: 580, pow: 0.6, bulb: 'inc', filt: true, c: 650, w: 100, view: 'beam', blind: false, msg: '', photons: [] }, BASE());
+  const NEW_MODE = () => S.mode === 'paint' || S.mode === 'stage';
+  const LAMP_NAMES = ['red', 'green', 'blue'];
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, geo = null, cache = null, cdf = null, spawn = 0;
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
@@ -263,6 +380,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let pre = null;
     if (S.mode === 'bulb') { const b = cvBulb(S.bulb); let t2 = 0; pre = new Float64Array(CV_N); for (let i = 0; i < CV_N; i++) { t2 += b[i] * (CV_L0 + i); pre[i] = t2; } }
     cache = { sp, xyz, lms, rgb: cvRGB(xyz), tot, pre };
+    if (S.mode === 'paint') { const bulb = cvBulb(S.lit); cache.refl = cvMixR(S.parts);
+      cache.pots = Object.fromEntries(CV_PAINTS.map((n) => [n, cvRGB(cvXYZ(cvGrid((l) => cvPigR(n, l) * bulb[Math.round(l - CV_L0)])))])); }
+    if (S.mode === 'stage') { cache.look = cvStageLook(S); cache.refl = cvGrid((l) => cvPigR(cache.look.pig, l)); }
+  }
+  /* the stage drawn pixel by pixel (CSS pixels): the performer in front (lit by every lamp) and the backdrop with its shadows,
+     each pixel's color one of nine looked up from cvStageSpec; kept until a setting changes */
+  let stagePic = null;
+  function stageImage(w, h, k, cx, floorY, oy) {
+    const key = [w, h, k, cx, floorY, oy, S.r, S.g, S.b, S.dist, S.spacing, S.px, S.costume, S.backdrop].join();
+    if (stagePic && stagePic.key === key) return stagePic.c;
+    const col = (b, pig) => cvRGB(cvXYZ(cvStageSpec(S, b, pig))), back = [0, 1, 2, 3, 4, 5, 6, 7].map((b) => col(b, S.backdrop)), cos = col(0, S.costume);
+    const edge = cos.map((v) => Math.round(v * 0.55)), c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h));
+    const g = c.getContext('2d'), im = g.createImageData(c.width, c.height), d = im.data, inP = new Uint8Array(c.width * c.height);
+    for (let j = 0; j < c.height; j++) { const Z = (floorY - (oy + j + 0.5)) / k;
+      for (let i = 0; i < c.width; i++) { const X = (i + 0.5 - cx) / k, n = j * c.width + i, me = cvInPerson(X - S.px, Z); inP[n] = me ? 1 : 0;
+        const q = me ? ((i && !inP[n - 1]) || (j && !inP[n - c.width]) ? edge : cos) : (i && inP[n - 1]) || (j && inP[n - c.width]) ? edge : back[cvBlocked(S, X, Z)];
+        d[4 * n] = q[0]; d[4 * n + 1] = q[1]; d[4 * n + 2] = q[2]; d[4 * n + 3] = 255; } }
+    g.putImageData(im, 0, 0); stagePic = { key, c }; return c;
   }
   function filterRGB() { const s = cvSpectrum({ mode: 'bulb', bulb: 'day', filt: true, c: S.c, w: S.w }); return cvRGB(cvXYZ(s).map((v) => v * 1.6)); }
 
@@ -294,6 +429,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the dark room */
     ctx.fillStyle = T.room; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(geo.x0, geo.y0, geo.rw, geo.rh, 8 * p) : ctx.rect(geo.x0, geo.y0, geo.rw, geo.rh); ctx.fill();
     ctx.save(); ctx.beginPath(); ctx.rect(geo.x0, geo.y0, geo.rw, geo.rh); ctx.clip();
+    if (NEW_MODE()) { if (S.mode === 'paint') drawPaint(); else drawStage(); ctx.restore(); drawSpectrum(); return; }
     const [ex, ey] = geo.eye;
     const beam = (x, y, col, a, w0) => { if (a <= 0.003) return; const g = ctx.createLinearGradient(x, y, ex, ey); g.addColorStop(0, css(col, Math.min(1, a))); g.addColorStop(1, css(col, Math.min(1, a) * 0.85));
       ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x, y - w0); ctx.lineTo(ex - 4 * p, ey - 3 * p); ctx.lineTo(ex - 4 * p, ey + 3 * p); ctx.lineTo(x, y + w0); ctx.closePath(); ctx.fill(); };
@@ -346,16 +482,67 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(q.F.color, q.x, ey + hh + 4 * p + (q.i % 2) * 12 * p); }
     /* photons */
     for (const ph of S.photons) { ctx.fillStyle = css(ph.col, ph.dead ? Math.max(0, 1 - ph.dead * 3) : 1); ctx.beginPath(); ctx.arc(ph.x, ph.y, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); }
-    const hd = head();
-    /* the thought bubble: the color seen */
-    const bR = Math.min(geo.rh * 0.2, 46 * p), bx = Math.min(hd.cx + hd.R * 0.2, geo.x0 + geo.rw - bR - 8 * p), by = Math.max(geo.y0 + bR + 10 * p, hd.cy - hd.R - bR - 18 * p);
-    ctx.fillStyle = '#e8ecf2'; for (const [dx, dy, r] of [[-0.2, 0.62, 4], [-0.32, 0.4, 7]]) { ctx.beginPath(); ctx.arc(hd.cx + dx * hd.R * 2, hd.cy - hd.R * 1.05 + dy * 0 - r * p * 1.5 * (r === 7 ? 2 : 0.5), r * p, 0, 2 * Math.PI); ctx.fill(); }
-    ctx.beginPath(); ctx.arc(bx, by, bR + 4 * p, 0, 2 * Math.PI); ctx.fill();
-    if (S.blind) { ctx.fillStyle = '#1b2230'; ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#e8ecf2'; ctx.font = `700 ${22 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', bx, by); }
-    else { ctx.fillStyle = css(cache.rgb); ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); }
+    thought(head());
     ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('A dark room', geo.x0 + 10 * p, geo.y0 + 8 * p);
     ctx.restore();
     drawSpectrum();
+  }
+  /* the color seen, in a bubble at (bx, by) */
+  function seenDisk(bx, by, bR) { const p = geo.p; ctx.fillStyle = '#e8ecf2'; ctx.beginPath(); ctx.arc(bx, by, bR + 4 * p, 0, 2 * Math.PI); ctx.fill();
+    if (S.blind) { ctx.fillStyle = '#1b2230'; ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#e8ecf2'; ctx.font = `700 ${22 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', bx, by); }
+    else { ctx.fillStyle = css(cache.rgb); ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); } }
+  /* the thought bubble over the head: the color seen */
+  function thought(hd) { const p = geo.p, bR = Math.min(geo.rh * 0.2, 46 * p), bx = Math.min(hd.cx + hd.R * 0.2, geo.x0 + geo.rw - bR - 8 * p), by = Math.max(geo.y0 + bR + 10 * p, hd.cy - hd.R - bR - 18 * p);
+    ctx.fillStyle = '#e8ecf2'; for (const [dx, dy, r] of [[-0.2, 0.62, 4], [-0.32, 0.4, 7]]) { ctx.beginPath(); ctx.arc(hd.cx + dx * hd.R * 2, hd.cy - hd.R * 1.05 + dy * 0 - r * p * 1.5 * (r === 7 ? 2 : 0.5), r * p, 0, 2 * Math.PI); ctx.fill(); }
+    seenDisk(bx, by, bR); }
+  /* Paints: four pots, the mixed paint on a board under the bulb, and the eye looking at it */
+  function drawPaint() {
+    const p = geo.p, { x0, y0, rw, rh } = geo, [ex, ey] = geo.eye, bulbCol = cvRGB(cvXYZ(cvBulb(S.lit)).map((v) => v * 0.9));
+    const bx0 = x0 + rw * 0.27, bw = Math.max(60 * p, Math.min(rw * 0.26, ex - geo.R * 1.4 - bx0 - 14 * p)), by0 = y0 + rh * 0.34, bh = rh * 0.52, lx = bx0 + bw / 2, ly = y0 + 22 * p;
+    /* the bulb and its light falling on the board */
+    const cone = ctx.createLinearGradient(0, ly, 0, by0); cone.addColorStop(0, css(bulbCol, 0.16)); cone.addColorStop(1, css(bulbCol, 0.03));
+    ctx.fillStyle = cone; ctx.beginPath(); ctx.moveTo(lx - 8 * p, ly); ctx.lineTo(bx0 - 6 * p, by0); ctx.lineTo(bx0 + bw + 6 * p, by0); ctx.lineTo(lx + 8 * p, ly); ctx.fill();
+    const gl = ctx.createRadialGradient(lx, ly, 2, lx, ly, 16 * p); gl.addColorStop(0, css(bulbCol, 1)); gl.addColorStop(1, css(bulbCol, 0.1)); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(lx, ly, 14 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(S.lit === 'day' ? 'daylight, D65' : 'bulb, 2856 K', lx + 20 * p, ly);
+    /* the pots */
+    const tot = CV_PAINTS.reduce((a, n) => a + (S.parts[n] || 0), 0), potR = Math.min(17 * p, rh * 0.07), px = x0 + Math.max(potR + 10 * p, rw * 0.11);
+    CV_PAINTS.forEach((n, i) => { const py = y0 + rh * (0.2 + 0.2 * i), v = S.parts[n] || 0;
+      if (v) { ctx.strokeStyle = css(cache.pots[n], 0.5); ctx.lineWidth = Math.max(1, v / tot * 6 * p); ctx.beginPath(); ctx.moveTo(px + potR, py); ctx.lineTo(bx0, by0 + bh * (0.2 + 0.2 * i)); ctx.stroke(); }
+      ctx.fillStyle = '#4a5262'; ctx.beginPath(); ctx.ellipse(px, py + potR * 0.3, potR * 1.1, potR * 0.75, 0, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = css(cache.pots[n]); ctx.beginPath(); ctx.ellipse(px, py, potR, potR * 0.45, 0, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = T.rInk; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${n} ${v}`, px, py + potR * 1.15); });
+    /* the board with the mixed paint */
+    ctx.fillStyle = '#2a2f3a'; ctx.fillRect(bx0 - 4 * p, by0 - 4 * p, bw + 8 * p, bh + 8 * p);
+    ctx.fillStyle = css(cvRGB(cvXYZ(cache.sp))); ctx.fillRect(bx0, by0, bw, bh);
+    ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(tot ? 'the mixed paint' : 'bare white board', bx0 + bw / 2, by0 + bh + 8 * p);
+    /* the light from the board to the eye */
+    ctx.strokeStyle = css(cache.rgb, 0.45); ctx.lineWidth = 3 * p; ctx.setLineDash([6 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(bx0 + bw + 4 * p, by0 + bh * 0.5); ctx.lineTo(ex - 6 * p, ey); ctx.stroke(); ctx.setLineDash([]);
+    thought(head());
+    ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Paints, mixed in the pot', x0 + 10 * p, y0 + 8 * p);
+  }
+  /* Stage lights: front view, to scale and without perspective: the backdrop, the performer and the footlights */
+  function stageGeo() { const p = geo.p, floorY = geo.y0 + geo.rh * 0.84, k = Math.min(geo.rw / 6.2, (floorY - geo.y0 - 8 * p) / 3.1); return { floorY, k, cx: geo.x0 + geo.rw / 2 }; }
+  function drawStage() {
+    const p = geo.p, { x0, y0, rw, rh } = geo, sg = stageGeo(), { floorY, k, cx } = sg;
+    ctx.drawImage(stageImage(rw, floorY - y0, k, cx - x0, floorY, y0), x0, y0, rw, floorY - y0);
+    ctx.fillStyle = '#2b2622'; ctx.fillRect(x0, floorY, rw, y0 + rh - floorY);
+    ctx.strokeStyle = '#4a4038'; ctx.lineWidth = 1; for (let i = 1; i < 4; i++) { const yy = floorY + (y0 + rh - floorY) * i / 4; ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x0 + rw, yy); ctx.stroke(); }
+    const lampCol = CV_LAMPS.map((_, i) => cvRGB(CV_LXYZ[i].map((v) => v * 2.5))), ly = floorY + Math.min(16 * p, (y0 + rh - floorY) * 0.45);
+    [S.r, S.g, S.b].forEach((lv, i) => { const x = cx + cvLampX(i, S.spacing) * k;
+      ctx.fillStyle = '#4a5262'; ctx.fillRect(x - 11 * p, ly - 5 * p, 22 * p, 12 * p);
+      ctx.fillStyle = css(lampCol[i], 0.25 + 0.75 * lv); ctx.beginPath(); ctx.arc(x, ly - 5 * p, 8 * p, Math.PI, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = T.rMuted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; if (ly + 9 * p < y0 + rh - 9 * p) ctx.fillText(`${Math.round(lv * 100)}%`, x, ly + 9 * p); });
+    /* the ring: where the eye looks */
+    const rx = cx + S.probe[0] * k, ry = floorY - S.probe[1] * k;
+    ctx.lineWidth = 3 * p; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.beginPath(); ctx.arc(rx, ry, 9 * p, 0, 2 * Math.PI); ctx.stroke();
+    ctx.lineWidth = 1.5 * p; ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.arc(rx, ry, 9 * p, 0, 2 * Math.PI); ctx.stroke();
+    const bR = Math.min(rh * 0.14, 30 * p), bx = x0 + rw - bR - 12 * p, by = y0 + bR + 12 * p; seenDisk(bx, by, bR);
+    ctx.fillStyle = T.rInk; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(11,14,20,0.7)'; const lab = 'seen at the ring', tw = ctx.measureText(lab).width; ctx.fillRect(bx - tw / 2 - 4 * p, by + bR + 6 * p, tw + 8 * p, 14 * p);
+    ctx.fillStyle = T.rInk; ctx.textAlign = 'center'; ctx.fillText(lab, bx, by + bR + 8 * p);
+    const t1 = rw < 520 * p ? `Performer ${S.dist.toFixed(1)} m from the backdrop; shadows ${cvShadowScale(S.dist).toFixed(2)} × life size` : `Footlights ${CV_STAGE_D} m from the backdrop; performer ${S.dist.toFixed(1)} m from it; shadows ${cvShadowScale(S.dist).toFixed(2)} × life size`;
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; const tw1 = Math.min(ctx.measureText(t1).width, rw - 2 * bR - 40 * p);
+    ctx.fillStyle = 'rgba(11,14,20,0.7)'; ctx.fillRect(x0 + 6 * p, y0 + 4 * p, tw1 + 8 * p, 16 * p); ctx.fillStyle = T.rInk; ctx.fillText(t1, x0 + 10 * p, y0 + 7 * p, tw1);
   }
   /* the spectrum reaching the eye, the three cone sensitivities, and the cone signal bars */
   function drawSpectrum() {
@@ -383,8 +570,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let i = 0; i <= 320; i++) ctx.lineTo(X(380 + i), y1 - sp[i] / m * (y1 - y0) * 0.9);
       ctx.lineTo(X(700), y1); ctx.closePath(); ctx.fill(); ctx.stroke();
     }
+    /* reflectance of the paint or the surface looked at, on its own scale: 0 at the axis, 1 at 90% of the height */
+    if (NEW_MODE() && cache.refl) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([1.5 * p, 3 * p]); ctx.beginPath();
+      for (let i = 0; i <= 320; i += 2) { const y = y1 - cache.refl[i] * (y1 - y0) * 0.9; i ? ctx.lineTo(X(380 + i), y) : ctx.moveTo(X(380), y); } ctx.stroke(); ctx.setLineDash([]); }
     ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * p}px ${T.ui}`;
-    ctx.fillText(x1 - x0 < 420 * p ? 'Light (solid), cones (dashed)' : 'Light reaching the eye (solid) and the cone sensitivities (dashed)', x0, y0 - 6 * p);
+    ctx.fillText(NEW_MODE() ? (x1 - x0 < 300 * p ? 'Light, cones (dashed), R (dots)' : x1 - x0 < 480 * p ? 'Light (solid), cones (dashed), reflectance (dots)' : 'Light reaching the eye (solid), cone sensitivities (dashed), reflectance from 0 to 1 (dots)')
+      : x1 - x0 < 420 * p ? 'Light (solid), cones (dashed)' : 'Light reaching the eye (solid) and the cone sensitivities (dashed)', x0, y0 - 6 * p);
     /* cone signal bars, white = 1 */
     const bx0 = side ? W - geo.right + 12 + (geo.right - 24 - barW) / 2 + 10 * p : x1 + 14 * p, bw = (barW - 10 * p) / 3, top = Math.max(1.2, ...cache.lms.map((v) => v * 1.05));
     if (side) { y0 = Math.max(card.offsetTop + card.offsetHeight + 40 * p, y0); }
@@ -426,10 +617,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, [L, M, Sc] = cache.lms;
     let h = dd('L cone signal', f(L)) + dd('M cone signal', f(M)) + dd('S cone signal', f(Sc)) + dd('Brightness Y', f(cache.xyz[1]));
     const sum = L + M + Sc; if (sum > 1e-6) h += dd('Share L : M : S', `${Math.round(100 * L / sum)} : ${Math.round(100 * M / sum)} : ${Math.round(100 * Sc / sum)}`, 'wide');
+    if (S.mode === 'paint') { const tot = CV_PAINTS.reduce((a, n) => a + (S.parts[n] || 0), 0), at = (l) => f(cache.refl[l - CV_L0]);
+      h += dd('Paint mix (parts)', tot ? CV_PAINTS.filter((n) => S.parts[n]).map((n) => `${n} ${S.parts[n]}`).join(' : ') : 'none, bare board', 'wide');
+      h += dd('Reflectance at 450, 550, 650 nm', `${at(450)}, ${at(550)}, ${at(650)}`, 'wide'); }
+    if (S.mode === 'stage') { const lk = cache.look; h += dd('Looking at', lookText(lk), 'wide'); h += dd('Shadow size', `${f(cvShadowScale(S.dist))} × life size`); }
     h += S.blind ? '<div class="wide"><dt>Color seen</dt><dd class="ok">hidden: predict it</dd></div>' : dd('Color shown (sRGB)', '#' + cache.rgb.map((v) => v.toString(16).padStart(2, '0')).join(''), 'wide');
     $('out').innerHTML = h;
   }
   function drawAll() { compute(); draw(); readouts(); }
+  /* in words: what the ring is on and which lamps light it */
+  function lookText(lk) {
+    if (lk.on === 'performer') return `the performer's ${lk.pig} costume, lit by every lamp`;
+    const lit = [0, 1, 2].filter((i) => !((lk.blocked >> i) & 1) && [S.r, S.g, S.b][i] > 0).map((i) => LAMP_NAMES[i]), sh = [0, 1, 2].filter((i) => (lk.blocked >> i) & 1).map((i) => LAMP_NAMES[i]);
+    const list = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
+    return `the ${lk.pig} backdrop, ` + (lit.length ? `lit by ${list(lit)}` : 'lit by no lamp') + (sh.length ? ` (in the shadow of ${list(sh)})` : '');
+  }
 
   // ---------- controls ----------
   function sync() {
@@ -437,17 +639,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sL').value = S.lam; $('oL').textContent = `${S.lam} nm`; $('sI').value = Math.round(S.pow * 100); $('oI').textContent = `${Math.round(S.pow * 100)}%`;
     $('fA').value = S.fa; $('fB').value = S.fb;
     $('cFilt').checked = S.filt; $('sC').value = S.c; $('oC').textContent = `${S.c} nm`; $('sW').value = S.w; $('oW').textContent = `${S.w} nm`; $('sC').disabled = $('sW').disabled = !S.filt;
-    $('rgbBox').hidden = S.mode !== 'rgb'; $('monoBox').hidden = S.mode !== 'mono'; $('bulbBox').hidden = S.mode !== 'bulb'; $('match').hidden = S.mode !== 'mono';
-    $('cardTitle').textContent = { rgb: 'The lamps', mono: 'One wavelength', bulb: 'The bulb and the filter' }[S.mode];
+    $('rgbBox').hidden = S.mode !== 'rgb' && S.mode !== 'stage'; $('monoBox').hidden = S.mode !== 'mono'; $('bulbBox').hidden = S.mode !== 'bulb'; $('match').hidden = S.mode !== 'mono';
+    $('paintBox').hidden = S.mode !== 'paint'; $('stageBox').hidden = S.mode !== 'stage'; $('filtBox').hidden = NEW_MODE(); $('viewSeg').hidden = NEW_MODE();
+    for (const [id, n] of [['Pc', 'cyan'], ['Pm', 'magenta'], ['Py', 'yellow'], ['Pw', 'white']]) { $('s' + id).value = S.parts[n] || 0; $('o' + id).textContent = `${S.parts[n] || 0} part${S.parts[n] === 1 ? '' : 's'}`; }
+    $('pCos').value = S.costume; $('pBack').value = S.backdrop;
+    $('sDist').value = S.dist; $('oDist').textContent = `${S.dist.toFixed(1)} m`; $('sPx').value = S.px; $('oPx').textContent = `${f(S.px, 1)} m`; $('sSp').value = S.spacing; $('oSp').textContent = `${S.spacing.toFixed(1)} m`;
+    for (const b of document.querySelectorAll('#litSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.lit));
+    requestAnimationFrame(fitCard);
+    $('cardTitle').textContent = { rgb: 'The lamps', mono: 'One wavelength', bulb: 'The bulb and the filter', paint: 'The paints', stage: 'The stage' }[S.mode];
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of document.querySelectorAll('#bulbSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.bulb));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
   function status() { $('status').textContent = S.msg; }
-  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, msg: '', photons: [], fa: 'none', fb: 'none' }, c); delete S.hint; $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
+  /* the Set up card floats over the picture on wide screens: grow the stage so a tall card (Stage lights, Projector) never hangs below it */
+  function fitCard() { const st = $('stage'), card = $('setupCard'); if (getComputedStyle(card).position !== 'absolute') { st.style.minHeight = ''; return; }
+    st.style.minHeight = ''; const need = card.offsetTop + card.offsetHeight + 12; if (need > st.offsetHeight) st.style.minHeight = need + 'px'; }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, msg: '', photons: [] }, BASE(), c); delete S.hint;
+    if (c.parts) S.parts = Object.assign(BASE().parts, c.parts); if (c.probe) S.probe = c.probe.slice(); $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  const DEF = { rgb: 'white', mono: 'y580', bulb: 'redf' };
+  const DEF = { rgb: 'white', mono: 'y580', bulb: 'redf', paint: 'paintCY', stage: 'stageShadows' };
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { const v = S.view; applyPreset(DEF[b.dataset.m]); S.view = v; sync(); });
   for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.v; S.photons = []; sync(); draw(); });
   for (const b of document.querySelectorAll('#bulbSeg button')) b.addEventListener('click', () => { S.bulb = b.dataset.b; custom(); S.photons = []; sync(); drawAll(); });
@@ -456,6 +668,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   slide('sR', (v) => { S.r = v / 100; }); slide('sG', (v) => { S.g = v / 100; }); slide('sB', (v) => { S.b = v / 100; });
   slide('sL', (v) => { S.lam = v; }); slide('sI', (v) => { S.pow = v / 100; }); slide('sC', (v) => { S.c = v; }); slide('sW', (v) => { S.w = v; });
   for (const id of ['fA', 'fB']) $(id).addEventListener('change', (e) => { S[id === 'fA' ? 'fa' : 'fb'] = e.target.value; custom(); S.photons = []; sync(); drawAll(); });
+  for (const [id, n] of [['sPc', 'cyan'], ['sPm', 'magenta'], ['sPy', 'yellow'], ['sPw', 'white']]) slide(id, (v) => { S.parts = Object.assign({}, S.parts, { [n]: v }); });
+  slide('sDist', (v) => { S.dist = v; }); slide('sPx', (v) => { S.px = v; }); slide('sSp', (v) => { S.spacing = v; });
+  for (const id of ['pCos', 'pBack']) $(id).addEventListener('change', (e) => { S[id === 'pCos' ? 'costume' : 'backdrop'] = e.target.value; custom(); sync(); drawAll(); });
+  for (const b of document.querySelectorAll('#litSeg button')) b.addEventListener('click', () => { S.lit = b.dataset.l; custom(); sync(); drawAll(); });
+  /* Stage lights: tap or click to put the ring there (a mouse or pen can drag it); arrow keys move it 5 cm */
+  function ringTo(e) { if (S.mode !== 'stage' || !geo) return; const r = can.getBoundingClientRect(), sg = stageGeo(), x = e.clientX - r.left, y = Math.min(e.clientY - r.top, sg.floorY);
+    if (x < geo.x0 || x > geo.x0 + geo.rw || y < geo.y0) return; S.probe = [(x - sg.cx) / sg.k, (sg.floorY - y) / sg.k]; drawAll(); }
+  can.addEventListener('pointerdown', ringTo);
+  can.addEventListener('pointermove', (e) => { if (e.buttons && e.pointerType !== 'touch') ringTo(e); });
+  can.addEventListener('keydown', (e) => { if (S.mode !== 'stage') return; const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!d) return; e.preventDefault();
+    const sg = stageGeo(), top = (sg.floorY - geo.y0) / sg.k, half = geo.rw / 2 / sg.k; S.probe = [Math.max(-half, Math.min(half, S.probe[0] + 0.05 * d[0])), Math.max(0, Math.min(top, S.probe[1] + 0.05 * d[1]))]; drawAll(); });
   $('cFilt').addEventListener('change', (e) => { S.filt = e.target.checked; custom(); sync(); drawAll(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
   /* the match: lamp levels with the same three cone signals as this wavelength, dimmed together if a lamp would pass 100% */
@@ -472,6 +695,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   });
   /* Readings: the light and its three cone signals, for the worksheet (Readings section, tools/readings_panel.py) */
   window.vdReadingRow = () => {
+    const parts = CV_PAINTS.filter((n) => S.parts[n]).map((n) => `${n} ${S.parts[n]}`).join(', ');
+    if (S.mode === 'paint') return { light: `paint, ${parts || 'none'}${parts ? ' parts' : ''}, ${S.lit === 'day' ? 'daylight' : 'incandescent bulb'}`, lambda_nm: '', L: cache.lms[0].toFixed(3), M: cache.lms[1].toFixed(3), S: cache.lms[2].toFixed(3), Y: cache.xyz[1].toFixed(3) };
+    if (S.mode === 'stage') return { light: `stage lamps red ${Math.round(S.r * 100)}%, green ${Math.round(S.g * 100)}%, blue ${Math.round(S.b * 100)}%: ${lookText(cache.look)}`, lambda_nm: '', L: cache.lms[0].toFixed(3), M: cache.lms[1].toFixed(3), S: cache.lms[2].toFixed(3), Y: cache.xyz[1].toFixed(3) };
     const light = S.mode === 'rgb' ? `red ${Math.round(S.r * 100)}%, green ${Math.round(S.g * 100)}%, blue ${Math.round(S.b * 100)}%`
       : S.mode === 'mono' ? `${S.lam} nm at ${Math.round(S.pow * 100)}% power`
       : `${S.bulb === 'day' ? 'daylight' : 'incandescent'} bulb, ` + (S.filt ? `filter ${Math.round(S.c - S.w / 2)} to ${Math.round(S.c + S.w / 2)} nm` : 'no filter');
@@ -485,17 +711,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.view === 'photon' && geo)   /* photons move only when chosen, so Reduce motion opens still */ { stepPhotons(dt); draw(); }
+    if (S.view === 'photon' && geo && !NEW_MODE())   /* photons move only when chosen, so Reduce motion opens still */ { stepPhotons(dt); draw(); }
     requestAnimationFrame(frame);
   }
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); S.photons = []; drawAll(); }
   const retheme = () => { tokens(); drawAll(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  VD.projector({ onChange: resize });
+  VD.projector({ onChange: () => { fitCard(); resize(); } });
+  window.addEventListener('resize', () => requestAnimationFrame(fitCard));
   VD.howTo({ src: 'media/how-this-works/color-vision.mp4', poster: 'media/how-this-works/color-vision.jpg' });
   tokens(); new ResizeObserver(resize).observe($('scene'));
-  applyPreset('white'); resize();
+  applyPreset('white');
+  { const qm = new URLSearchParams(location.search).get('mode'); if (qm && DEF[qm] && qm !== 'rgb') applyPreset(DEF[qm]); }   /* ?mode=paint or ?mode=stage opens that view */
+  resize();
   window.__cv = { S, applyPreset, drawAll, sync, cache: () => cache };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

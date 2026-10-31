@@ -2,7 +2,7 @@
 // Color Vision: cone signals from the CIE 1931 functions and the HPE matrix, the lamp calibration, metamers and the filter.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const C = core('color-vision', 'CV_L0,CV_N,CV_HPE,CV_WHITE,CV_LAMPS,CV_LW,CV_LXYZ,CV_YMAX,cvCmf,cvLms,cvXYZ,cvGrid,cvSpectrum,cvBulb,cvPlanck,cvD65,cvRGB,cvLin,cvMatch,cvSolve,cvFilterT,cvFilters,cvThrough,cvSource');
+const C = core('color-vision', 'CV_L0,CV_N,CV_HPE,CV_WHITE,CV_LAMPS,CV_LW,CV_LXYZ,CV_YMAX,cvCmf,cvLms,cvXYZ,cvGrid,cvSpectrum,cvBulb,cvPlanck,cvD65,cvRGB,cvLin,cvMatch,cvSolve,cvFilterT,cvFilters,cvThrough,cvSource,cvPigR,cvKS,cvKSinv,cvMixR,cvShadowScale,cvLampX,cvInPerson,cvBlocked,cvStageLook,cvStageSpec,CV_PIG_HI,CV_PIG_LO,CV_STAGE_D,CV_LAMPS');
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
 const near = (a, b, tol, msg) => assert(Math.abs(a - b) <= tol, `${msg || ''} expected ${b}, got ${a}`);
@@ -68,5 +68,57 @@ test('white lamps through magenta keep the red and blue lamps (to within 0.2%) a
   assert.equal(C.cvXYZ(C.cvSpectrum({ mode: 'mono', lam: 580, pow: 1, fa: 'red' }))[1], 0);
   const ry = C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 1, b: 0, fa: 'red' }))[1], r = C.cvXYZ(C.cvSpectrum({ mode: 'rgb', r: 1, g: 0, b: 0 }))[1]; near(ry, r, 2e-3 * r);
   assert.equal(C.cvFilters({ mode: 'bulb', filt: true, c: 650, w: 100, fa: 'none', fb: 'red' }).length, 2);
+});
+// ---- Paints and Stage lights ----
+const paint = (parts, lit = 'day') => ({ mode: 'paint', parts, lit });
+const stage = (o) => Object.assign({ mode: 'stage', r: 1, g: 1, b: 1, dist: 1.5, spacing: 1, px: 0, costume: 'white', backdrop: 'white', probe: [0.6, 1.7] }, o);
+test('model pigments: white flat at 0.88, black 0.04 to within 0.005 (the band edges overlap); each colored pigment reflects 0.88 in the middle of its own thirds and 0.04 in the middle of the others (to 0.006)', () => {
+  for (let l = 380; l <= 780; l += 10) { near(C.cvPigR('white', l), C.CV_PIG_HI, 1e-15); near(C.cvPigR('black', l), C.CV_PIG_LO, 0.005); }
+  const mid = [450, 550, 650], refl = { red: [0, 0, 1], green: [0, 1, 0], blue: [1, 0, 0], yellow: [0, 1, 1], cyan: [1, 1, 0], magenta: [1, 0, 1] };
+  for (const [n, t] of Object.entries(refl)) mid.forEach((l, j) => near(C.cvPigR(n, l), t[j] ? C.CV_PIG_HI : C.CV_PIG_LO, 6e-3, `${n} at ${l}`));
+});
+test('Kubelka–Munk: R ↔ K/S round trip; one paint alone, or two parts of one, gives its own reflectance; the mix lies between and K/S is the average', () => {
+  for (const R of [0.01, 0.04, 0.3, 0.5, 0.88, 0.99]) near(C.cvKSinv(C.cvKS(R)), R, 1e-12);
+  const c = C.cvMixR({ cyan: 2 }); for (let i = 0; i < C.CV_N; i += 7) near(c[i], C.cvPigR('cyan', C.CV_L0 + i), 1e-12);
+  const m = C.cvMixR({ cyan: 1, yellow: 3 });
+  for (let i = 0; i < C.CV_N; i += 5) { const l = C.CV_L0 + i, a = C.cvPigR('cyan', l), b = C.cvPigR('yellow', l);
+    near(C.cvKS(m[i]), 0.25 * C.cvKS(a) + 0.75 * C.cvKS(b), 1e-9); assert(m[i] >= Math.min(a, b) - 1e-12 && m[i] <= Math.max(a, b) + 1e-12); }
+  const none = C.cvMixR({}); near(none[100], C.CV_PIG_HI, 1e-15);
+});
+test('paints subtract: cyan + yellow look green (M largest, S small), magenta + yellow red, cyan + magenta blue; all three a dark gray near 0.1', () => {
+  const cy = lmsOf(paint({ cyan: 1, yellow: 1 })), my = lmsOf(paint({ magenta: 1, yellow: 1 })), cm = lmsOf(paint({ cyan: 1, magenta: 1 }));
+  assert(cy[1] > cy[0] && cy[2] < 0.2 * cy[1]); assert(my[0] > my[1] && my[0] > my[2]); assert(cm[2] > 5 * cm[1] && cm[2] > 5 * cm[0]);
+  const all = lmsOf(paint({ cyan: 1, magenta: 1, yellow: 1 })); all.forEach((v) => assert(v > 0.08 && v < 0.14, `CMY ${v}`));
+  near(C.cvXYZ(C.cvSpectrum(paint({ cyan: 1, magenta: 1, yellow: 1 })))[1], 0.112, 0.001);
+  const bare = C.cvXYZ(C.cvSpectrum(paint({}))); near(bare[1], C.CV_PIG_HI, 1e-9);   /* the bare board is the white pigment: Y = 0.88 */
+});
+test('paint under a bulb: the light reaching the eye is bulb × reflectance; blue paint loses most of its S signal under 2856 K', () => {
+  const R = C.cvMixR({ cyan: 1, magenta: 1 }), B = C.cvBulb('inc'), sp = C.cvSpectrum(paint({ cyan: 1, magenta: 1 }, 'inc'));
+  for (let i = 0; i < C.CV_N; i += 3) near(sp[i], R[i] * B[i], 1e-15);
+  const d = lmsOf(paint({ cyan: 1, magenta: 1 })), inc = lmsOf(paint({ cyan: 1, magenta: 1 }, 'inc')); assert(inc[2] < 0.35 * d[2]);
+});
+test('shadow geometry: m = D/(D − d); a shadow point maps back through the performer to the lamp along one straight line', () => {
+  near(C.cvShadowScale(1.5), 1.6, 1e-15); near(C.cvShadowScale(3), 4, 1e-15); near(C.cvShadowScale(0), 1, 1e-15);
+  const o = stage({ dist: 1.2, spacing: 0.8, px: 0.3 });
+  for (const [u, z] of [[0, 1.58], [0, 1.1], [-0.4, 1.7], [0.25, 1.0]]) { assert(C.cvInPerson(u, z), `${u}, ${z} in the performer`);
+    for (let k = 0; k < 3; k++) { const xk = C.cvLampX(k, o.spacing), m = C.cvShadowScale(o.dist), X = xk + (o.px + u - xk) * m, Z = z * m;
+      assert((C.cvBlocked(o, X, Z) >> k) & 1, `lamp ${k} shadow of ${u}, ${z}`);
+      /* collinear: lamp (xk, 0, depth 0), performer point (depth D − d), shadow (depth D) */
+      near((o.px + u - xk) / (C.CV_STAGE_D - o.dist), (X - xk) / C.CV_STAGE_D, 1e-12); near(z / (C.CV_STAGE_D - o.dist), Z / C.CV_STAGE_D, 1e-12); } }
+  assert.equal(C.cvBlocked(o, 2.9, 0.2), 0, 'far from every shadow');
+});
+test('colored shadows on white: light in a shadow is exactly the other lamps; three full lamps on a perfect reflector give white; overlaps of all three are black', () => {
+  const o = stage({}); for (let b = 0; b < 8; b++) { const sp = C.cvStageSpec(o, b, 'white'), rgb = C.cvSource({ mode: 'rgb', r: b & 1 ? 0 : 1, g: b & 2 ? 0 : 1, b: b & 4 ? 0 : 1 });
+    for (let i = 0; i < C.CV_N; i += 4) near(sp[i], C.CV_PIG_HI * rgb[i], 1e-15); }
+  assert.equal(JSON.stringify(C.cvStageLook(o)), JSON.stringify({ on: 'backdrop', pig: 'white', blocked: 1 }));
+  const cyan = lmsOf(o); assert(cyan[1] > cyan[0] && cyan[2] > cyan[0], 'the red lamp shadow looks cyan');
+  assert(C.cvStageSpec(o, 7, 'white').every((v) => v === 0));
+  assert.equal(C.cvStageLook(stage({ r: 1, g: 1, b: 0, probe: [0.3, 2.2] })).blocked, 3);
+});
+test('colored objects in colored light: red costume in green light nearly black (Y < 0.04); yellow costume in magenta light reads red; the ring on the performer sees every lamp', () => {
+  const rg = stage({ r: 0, g: 1, b: 0, costume: 'red', probe: [0, 1.15] }); assert.equal(C.cvStageLook(rg).on, 'performer');
+  assert(C.cvXYZ(C.cvSpectrum(rg))[1] < 0.04);
+  const ym = lmsOf(stage({ r: 1, g: 0, b: 1, costume: 'yellow', probe: [0, 1.15] })); assert(ym[0] > 2 * ym[1] && ym[2] < 0.1);
+  const blue = stage({ backdrop: 'blue', probe: [-0.7, 2.1] }); assert.equal(C.cvStageLook(blue).blocked, 4); near(C.cvXYZ(C.cvSpectrum(blue))[1], 0.039, 0.001);
 });
 console.log(`${n} tests passed`);

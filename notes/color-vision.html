@@ -72,9 +72,11 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>No mix of three real lamps reaches the purest spectral colors: some would need a negative amount of one lamp.</li>
 <li>A filter only removes light. A red filter on a white bulb passes the red part and absorbs the rest; it never turns other light into red.</li>
 <li>The eye is far more sensitive near 555 nm than at the ends of the spectrum.</li>
+<li>Paints subtract: each pigment absorbs part of the spectrum, so cyan and yellow paint leave only green. A surface's color is the light falling on it times its reflectance, so the same costume looks different under different lamps.</li>
+<li>Each lamp throws its own shadow. In the shadow of one colored lamp the others still arrive, so shadows of red, green and blue lamps are cyan, magenta and yellow.</li>
 </ul>
 <h2>Before class</h2>
-<p>Students should know that white light contains all visible wavelengths. Choose <strong>Three lamps</strong>, <strong>One wavelength</strong> or <strong>Bulb and filter</strong> at the top of the picture, and <strong>Beams</strong> or <strong>Photons</strong>. The card sets the lamp powers, the wavelength and its power, or the bulb and the filter. Under the room are the spectrum reaching the eye with the three cone sensitivities, and the three cone signals (white = 1). In One wavelength, <strong>Mix it from the three lamps</strong> finds the lamp powers that give the same cone signals. <strong>Blind</strong> in <strong>Lab</strong> hides the color seen.</p>
+<p>Students should know that white light contains all visible wavelengths. Choose <strong>Three lamps</strong>, <strong>One wavelength</strong>, <strong>Bulb and filter</strong>, <strong>Paints</strong> or <strong>Stage lights</strong> at the top of the picture, and <strong>Beams</strong> or <strong>Photons</strong>. The card sets the lamp powers, the wavelength and its power, or the bulb and the filter. Under the room are the spectrum reaching the eye with the three cone sensitivities, and the three cone signals (white = 1). In One wavelength, <strong>Mix it from the three lamps</strong> finds the lamp powers that give the same cone signals. In Paints the card sets the parts of cyan, magenta, yellow and white paint and the light on the board; in Stage lights it sets the three footlights, the costume, the backdrop and where the performer stands, and a tap on the stage moves the ring the eye looks at. <strong>Blind</strong> in <strong>Lab</strong> hides the color seen.</p>
 <h2>Running it in class</h2>
 <ol>
 <li><strong>Red + green + blue.</strong> Ask what the person sees (Q1), then turn the blue lamp off.</li>
@@ -84,6 +86,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>One wavelength at 100% power: move it from 450 to 555 to 650 nm (Q4).</li>
 <li><strong>Red filter on a bulb</strong> and <strong>Green filter, photons</strong> (Q5, Q6).</li>
 <li><strong>Colored filters on any light.</strong> Put a yellow filter and a cyan filter on a white bulb, one after the other: each passes its own band and only green gets through both. Then <strong>Red and green filters stacked</strong>: no wavelength passes both, so the screen goes dark. Filters subtract; lamps add (ideal filters with edges at 500 and 600 nm, stated in the Model).</li>
+<li><strong>Cyan + yellow paint</strong>, then <strong>All three paints</strong> (Q7). Compare with <strong>Green + blue</strong>: lamps add, paints subtract.</li>
+<li><strong>Colored shadows.</strong> Ask for the color of each shadow before tapping on it (Q8), then <strong>Performer near the lamps</strong> and <strong>Red costume, green light</strong>.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> All three lamps at 100% look white. Predict what the person sees with only red and green, and read the three cone signals. Why does the result look yellow when the lamps give out no light near 580 nm?</p></div>
@@ -97,12 +101,18 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> Put the red filter (600 to 700 nm) in front of the incandescent bulb. What fraction of the bulb's brightness gets through? Switch to Daylight: why does less of the brightness get through?</p></div>
 
 <div class="q"><p><strong>Q6.</strong> With the green filter (500 to 560 nm) on daylight, watch the photons. About what fraction of the photons from the bulb pass the filter? What happens to the others?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Mix one part cyan paint with one part yellow. Read the reflectance at 450, 550 and 650 nm and the cone signals: what color is the mix, and why? Now add one part magenta. Why is the result a dark gray rather than black?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> In Colored shadows, predict the color of each lamp's shadow on the white backdrop, then tap on them to check. What do you see where two shadows overlap, and where all three do? Move the performer to 3 m from the backdrop: how large are the shadows now, and why?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Red and green paint make brown, so red and green light must too."</strong> Lights add; paints and filters subtract.</li>
 <li><strong>"Yellow light must contain yellow wavelengths."</strong> Red plus green light looks just as yellow.</li>
 <li><strong>"A red filter colors the light red."</strong> It removes everything but the red.</li>
 <li><strong>"Each cone sees one color."</strong> Each cone type responds to a broad band; the cones overlap heavily, which is why L and M respond together to most light.</li>
+<li><strong>"A shadow is always black."</strong> Only the light of the blocked lamp is missing; the other lamps still light the spot.</li>
+<li><strong>"A red shirt is red in any light."</strong> It reflects red light; in green light there is no red to reflect, and it looks nearly black.</li>
 <li><strong>"A screen can show every color."</strong> No three primaries cover the spectral colors.</li>
 </ul>
 <h2>Physics behind the demo</h2>
@@ -111,7 +121,9 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>The lamps are Gaussian spectra 20 nm wide at 630, 532 and 465 nm, with powers set so all three at full give D65 white exactly. One wavelength at 100% has the brightness of that white at 555 nm.</li>
 <li>Incandescent is a blackbody at 2856 K (CIE illuminant A); Daylight is CIE D65. The filter is an ideal band pass.</li>
 <li>The color shown is the light's sRGB color at its brightness; colors outside the screen's range are desaturated. Photons are drawn at random in proportion to their number (power times λ), at a rate slowed enormously.</li>
-<li>Tests (curriculum/validation/test_color_vision.cjs): the white calibration, additivity, the brightness of single wavelengths, metamer matches and the negative red at 490 nm, the bulbs, and the filter.</li>
+<li>Paints are model pigments (not measured ones) that absorb whole thirds of the spectrum with smooth edges; a coat of mixed paint follows single constant Kubelka–Munk theory: K/S = (1 − R)²/2R for each paint, the mix has the K/S of the paints averaged by their parts. Gloss is left out.</li>
+<li>Stage lights: point lamps on the floor 4 m from the backdrop light it evenly; a performer d from the backdrop casts a shadow m = D/(D − d) times life size about each lamp (similar triangles). Costumes and backdrops use the same pigments; each spot's light is lamp × reflectance.</li>
+<li>Tests (curriculum/validation/test_color_vision.cjs): the white calibration, additivity, the brightness of single wavelengths, metamer matches and the negative red at 490 nm, the bulbs, the filters, the pigments and Kubelka–Munk mixing, the shadow geometry, and colored shadows and costumes.</li>
 </ul>
 <h2>Going further</h2>
 <ul>
