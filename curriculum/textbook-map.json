@@ -2525,7 +2525,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "granular-flow"
       ],
       "unit": "forces",
       "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
@@ -2562,7 +2563,8 @@
       "demos": [
         "terminal-velocity",
         "projectile-drag",
-        "viscometer"
+        "viscometer",
+        "granular-flow"
       ],
       "unit": "forces",
       "note": "Terminal Velocity (2026-10-24, Claude): the textbook's skydivers (Example 6.17 and the head first diver), body position changes, a round canopy, thin air (standard atmosphere) and stacked coffee filters; worksheet terminal-velocity. Falling Ball Viscometer: Stokes drag and terminal speed measured (worksheet viscometer). (OpenStax recheck 2026-10-24, Claude)"
@@ -2787,7 +2789,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "granular-flow"
       ],
       "unit": "momentum"
     },
@@ -7357,8 +7360,10 @@
       "url": "demos/distance-ladder.html",
       "handouts": [
         "hubble-law",
-        "intro-parallax"
-      , "main-sequence-fitting", "cepheid-photometry"]
+        "intro-parallax",
+        "main-sequence-fitting",
+        "cepheid-photometry"
+      ]
     },
     {
       "demo": "dna",
@@ -7825,8 +7830,9 @@
       "url": "demos/exoplanets.html",
       "handouts": [
         "exoplanets",
-        "intro-exoplanets"
-      , "eclipsing-binary"]
+        "intro-exoplanets",
+        "eclipsing-binary"
+      ]
     },
     {
       "demo": "planet-temperatures",
@@ -7840,8 +7846,9 @@
       "status": "usable",
       "note": "New 2026-10-25 (Claude), gap demo 4 of the Astro 2203 plan. A planet's energy balance with starlight S = L/(4πd²), Bond albedo and heat shared over the whole planet, the day side or the subsolar point; a greenhouse factor e (the share of the ground's heat radiation that escapes) matched to Venus, Earth and Mars and read as the one layer or N layer model; habitable zone edges from Kopparapu et al. 2014; which gases a world keeps (6 v_rms against escape speed). NASA fact sheet values; presets Mercury, Venus, Earth, Moon, Mars, Earth under the young Sun, Proxima Centauri b and TRAPPIST-1 e. Intro worksheet intro-planet-temperatures with a key from a real run in TeacherKeys.",
       "handouts": [
-        "intro-planet-temperatures"
-      , "galactic-habitable-zone"],
+        "intro-planet-temperatures",
+        "galactic-habitable-zone"
+      ],
       "title": "Planet Temperatures and Habitable Zones",
       "url": "demos/planet-temperatures.html"
     },
@@ -10758,6 +10765,35 @@
       ],
       "title": "Falling Ball Viscometer",
       "url": "demos/viscometer.html"
+    },
+    {
+      "demo": "granular-flow",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "6.2",
+          "title": "Friction"
+        },
+        {
+          "vol": 1,
+          "sec": "6.4",
+          "title": "Drag Force and Terminal Speed"
+        },
+        {
+          "vol": 1,
+          "sec": "9.4",
+          "title": "Types of Collisions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-31 (Claude, Steve asked after a video of beads sorting in a rotating drum and a sand picture): a soft contact model of grains with Coulomb friction, rolling resistance and liquid drag in five apparatus (rotating drum, shaken box, shear box, landslide, sand picture in glycerol). Sand kinds set by the student: number, diameter, size spread, color, friction, shape, material. No worksheet (Steve: just a demo). Tests in test_granular_flow.cjs.",
+      "title": "Granular Flow: Sorting and Landslides",
+      "url": "demos/granular-flow.html"
     },
     {
       "demo": "wave-power",

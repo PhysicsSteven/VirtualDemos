@@ -949,6 +949,19 @@
      ]
     },
     {
+     "demo": "granular-flow",
+     "title": "Granular Flow: Sorting and Landslides",
+     "desc": "Sand of several kinds you choose (number, size, color, roughness, shape, material) in a rotating drum, a shaken box, a shear box, a landslide and a moving sand picture in liquid. Watch the sizes sort: small grains in the core of the drum, the Brazil nut rising, big stones on top of a slide.",
+     "tags": [
+      "granular",
+      "friction",
+      "segregation",
+      "Brazil nut",
+      "landslide",
+      "Stokes drag"
+     ]
+    },
+    {
      "demo": "equilibrium",
      "title": "Static Equilibrium",
      "desc": "Balance a seesaw, walk a painter off the end of a plank until it tips, hang a sign from a strut and cable, and climb a ladder until it slips, with every force drawn to scale.",

@@ -26,7 +26,8 @@
       "forces",
       "elevator",
       "circular-motion",
-      "terminal-velocity"
+      "terminal-velocity",
+      "granular-flow"
      ]
     },
     {
@@ -85,7 +86,8 @@
      "demos": [
       "fluids",
       "viscometer",
-      "terminal-velocity"
+      "terminal-velocity",
+      "granular-flow"
      ]
     }
    ]

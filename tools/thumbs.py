@@ -44,6 +44,7 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
     "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},
+    "granular-flow": {"wait": 600, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gf.applyPreset('drum3'); window.__gf.runTo(16);"},
     "galton-board": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gb.S.fast = true; window.__gb.drop(400); window.__gb.S.fast = false; window.__gb.drawAll();"},
     "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
     "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},

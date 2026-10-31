@@ -1,0 +1,770 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Granular Flow: Sorting and Landslides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the apparatus colours, the Set up card, the sand kinds */
+:root { --wallc: #7a8594; --glass: rgba(120, 170, 220, 0.10); --liquid: rgba(214, 170, 60, 0.16); --hill: #d9ccb4; --drum: #e8eef5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #8d99a8; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #1c232c; } }
+:root[data-theme="dark"] { --wallc: #8d99a8; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #1c232c; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(440px, 1fr); min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.stage-ctl .sp { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { display: block; width: 100%; height: 100%; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.setup-card [hidden] { display: none; }
+select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; max-width: 100%; }
+.field { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.88rem; }
+.field select { flex: 0 1 auto; min-width: 0; }
+.kinds { display: flex; flex-direction: column; gap: 8px; }
+.kind { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px 8px; display: flex; flex-direction: column; gap: 6px; background: var(--canvas); }
+.kind .khead { display: flex; align-items: center; gap: 8px; }
+.kind .dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+.kind .khead b { font-size: 0.88rem; }
+.kind .khead .x { margin-left: auto; font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 0 4px; }
+.kind .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.kind .two label { display: flex; flex-direction: column; gap: 2px; font-size: 0.78rem; color: var(--muted); }
+.plotwrap { position: relative; height: 170px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); }
+.plotwrap canvas { display: block; width: 100%; height: 100%; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; background: var(--c); vertical-align: -1px; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 440px; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 420px) { .scene { height: 380px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Granular Flow: Sorting and Landslides</h1>
+      <p>Mix sand of different sizes, then turn it, shake it, shear it or let it slide. The grains sort themselves: the small ones fall through the gaps between the big ones, and the big ones ride to the top and to the front.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/granular-flow.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/granular-flow.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM15 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h5v1h-5zM9 11h5v1h-5zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM6 12h1v1h-1zM8 12h1v1h-1zM15 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h2v1h-2zM12 14h1v1h-1zM14 14h3v1h-3zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM4 15h4v1h-4zM12 15h2v1h-2zM15 15h1v1h-1zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h1v1h-1zM13 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM28 16h8v1h-8zM38 16h1v1h-1zM2 17h4v1h-4zM7 17h1v1h-1zM14 17h1v1h-1zM16 17h8v1h-8zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM5 18h1v1h-1zM7 18h4v1h-4zM14 18h1v1h-1zM16 18h3v1h-3zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h3v1h-3zM6 19h1v1h-1zM9 19h1v1h-1zM14 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h4v1h-4zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h6v1h-6zM9 21h2v1h-2zM13 21h1v1h-1zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM7 22h2v1h-2zM14 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM7 23h1v1h-1zM10 23h2v1h-2zM15 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM3 24h3v1h-3zM7 24h2v1h-2zM10 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM32 24h4v1h-4zM37 24h2v1h-2zM6 25h2v1h-2zM11 25h1v1h-1zM13 25h3v1h-3zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h3v1h-3zM8 26h2v1h-2zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h9v1h-9zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM6 28h3v1h-3zM12 28h3v1h-3zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM6 29h2v1h-2zM10 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM30 29h5v1h-5zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h3v1h-3zM12 30h3v1h-3zM16 30h1v1h-1zM19 30h1v1h-1zM26 30h3v1h-3zM30 30h9v1h-9zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM17 31h7v1h-7zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM14 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h3v1h-3zM17 33h4v1h-4zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM14 34h3v1h-3zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM15 35h3v1h-3zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h4v1h-4zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h2v1h-2zM17 37h1v1h-1zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="btn attn" id="go">Start</button>
+        <button type="button" class="btn" id="flip" hidden>Flip the frame</button>
+        <button type="button" class="btn" id="reset">Refill</button>
+        <label class="sp" for="speed">Speed <select id="speed"><option value="1">Real time</option><option value="0.5">½ slow motion</option><option value="0.25">¼ slow motion</option><option value="0.1">1/10 slow motion</option></select></label>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Beads of sand in the apparatus, coloured by kind. Space starts or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the apparatus">
+        <span class="card-title">The apparatus</span>
+        <div class="field"><label for="mode">Apparatus</label><select id="mode">
+          <option value="drum">Rotating drum</option><option value="shaker">Shaken box</option><option value="shear">Shear box</option><option value="slide">Landslide</option><option value="frame">Sand picture in liquid</option></select></div>
+        <div data-m="drum"><div class="slider-head"><label for="sRpm">Turning rate</label><output id="oRpm" for="sRpm"></output></div><input type="range" id="sRpm" min="1" max="240" step="1"></div>
+        <div data-m="shaker"><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="5" max="60" step="1"></div>
+        <div data-m="shaker"><div class="slider-head"><label for="sGam">Peak acceleration Γ</label><output id="oGam" for="sGam"></output></div><input type="range" id="sGam" min="0" max="6" step="0.1"></div>
+        <div data-m="shear"><div class="slider-head"><label for="sU">Lid speed U</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="0" max="1" step="0.01"></div>
+        <div data-m="shear"><div class="slider-head"><label for="sLid">Lid mass</label><output id="oLid" for="sLid"></output></div><input type="range" id="sLid" min="0.002" max="0.05" step="0.001"></div>
+        <div data-m="slide"><div class="slider-head"><label for="sAlpha">Slope angle</label><output id="oAlpha" for="sAlpha"></output></div><input type="range" id="sAlpha" min="10" max="50" step="1"></div>
+        <div data-m="frame" class="field"><label for="liquid">Liquid</label><select id="liquid">
+          <option value="water">Water</option><option value="g50">50 % glycerol</option><option value="g75">75 % glycerol</option><option value="g90">90 % glycerol</option><option value="g100">Glycerol</option></select></div>
+        <div class="field"><label for="start">Start</label><select id="start">
+          <option value="mixed">Mixed</option><option value="layers">Layers, kind 1 lowest</option><option value="big">Largest at the bottom</option><option value="small">Smallest at the bottom</option></select></div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="drum2" aria-pressed="true">Drum: two sizes</button>
+          <button type="button" data-p="drumColor" aria-pressed="false">Drum: one size, two colors</button>
+          <button type="button" data-p="drum3" aria-pressed="false">Drum: a range of sizes</button>
+          <button type="button" data-p="drumRough" aria-pressed="false">Drum: rough and smooth</button>
+          <button type="button" data-p="drumFast" aria-pressed="false">Drum: fast enough to stick</button>
+          <button type="button" data-p="brazil" aria-pressed="false">Shaken: Brazil nut</button>
+          <button type="button" data-p="shake2" aria-pressed="false">Shaken: two sizes</button>
+          <button type="button" data-p="shear" aria-pressed="false">Shear box</button>
+          <button type="button" data-p="slide" aria-pressed="false">Landslide</button>
+          <button type="button" data-p="slideSand" aria-pressed="false">Landslide: sand on 25°</button>
+          <button type="button" data-p="slideBeads" aria-pressed="false">Landslide: glass beads on 25°</button>
+          <button type="button" data-p="frame" aria-pressed="false">Sand picture</button>
+          <button type="button" data-p="frameDense" aria-pressed="false">Sand picture: light and heavy</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Sand</h2>
+        <div class="kinds" id="kinds" data-vd-noshare></div>
+        <div class="btnrow" style="margin-top:8px"><button type="button" class="btn" id="addKind">Add a kind</button></div>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Sorting over time</h2>
+        <div class="plotwrap"><canvas id="plot" role="img" aria-label="Graph of where each kind of sand sits, against time"></canvas></div>
+        <div class="legend" id="legend"></div>
+        <p class="hint" id="plotHint"></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the predictions (critical turning rate, settling speeds)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">Fn = kn δ − γn vn   |Ft| ≤ μ Fn   Fr = ω²R/g   Γ = A(2πf)²/g   F_drag = 3πηd v (1 + 0.15 Re^0.687)</p>
+        <p class="hint">The grains move in the plane of the picture, a layer one grain thick between two glass plates; rubbing on the front and back plates is left out. In the drum, shaken box, shear box and landslide each grain is a disk (a short cylinder) 3 mm thick, so a grain's weight goes as its area, as in a truly flat layer; with spheres in one flat layer a big bead would weigh more for the room it takes than a small one, and that would sort them by weight as well as size. In the sand picture each grain is a sphere, so that it settles through the liquid as a real sand grain does. Beads overlap slightly when they press together and push apart with a spring and a damper along the line of centres (a soft sphere model, Cundall and Strack 1979). The damper gives a coefficient of restitution of about 0.5 (set for two of the smallest beads; where a collision falls between time steps moves it by a few hundredths). The springs are much softer than real glass (kn = 3000 m g/d for the smallest bead) so the computer can take longer time steps; overlaps stay below a few percent of a diameter, and the flow does not depend on the stiffness at this level. Sideways, a spring of stiffness 2/7 kn resists sliding until the force reaches μ Fn, then the beads slide (Coulomb friction); μ of a pair is the mean of the two beads' roughness. Round beads resist rolling with a torque of up to 0.02 Reff Fn, angular grains with 0.2 Reff Fn (a pair uses the mean), a common way to model the corners of real sand grains in a model with round ones. Walls are rows of beads glued to the apparatus, so they are rough and have friction 0.5. Densities: glass 2500, quartz sand 2650, steel 7850, acrylic 1190 kg/m³. Each grain's size is varied at random by at least ±3 % (the size spread sets more), so equal grains do not lock into a perfect crystal. The time step is a tenth of the duration of a collision between two of the smallest beads; the simulation runs as fast as this device allows, up to real time, and the clock shows simulated time.</p>
+        <p class="hint">Rotating drum: the drum turns at ω; above ω²R/g = 1 the beads ride round with the wall (the critical rate). Shaken box: the box moves y = A sin(2πft); beads lift off the floor once Γ = A(2πf)²/g passes 1. Shear box: the lid moves at speed U and rests on the beads with its weight (its up and down motion is lightly damped); the box repeats sideways, so beads leaving one side come back on the other. Landslide: the gate lifts at 1 m/s at the start. Sand picture: the liquid moves with the frame as a solid body; each bead feels its weight less the buoyancy and a drag from the liquid (Schiller and Naumann, valid for Re below about 800), and a turning drag πηd³ω. The flow of the liquid around and between the beads is left out. Liquid data at 20 °C, glycerol in water by mass (Glycerine Producers' Association, Physical Properties of Glycerine and its Solutions, 1963): water 998.2 kg/m³, 1.002 mPa·s; 50 % 1126 kg/m³, 6.00 mPa·s; 75 % 1196 kg/m³, 35.5 mPa·s; 90 % 1235 kg/m³, 219 mPa·s; glycerol 1261 kg/m³, 1412 mPa·s. Simulated data; every run with the same settings is the same.</p>
+        <p class="hint">Further reading: Rosato, Strandburg, Prinz and Swendsen, Phys. Rev. Lett. 58, 1038 (1987) on the Brazil nut effect; Savage and Lun, J. Fluid Mech. 189, 311 (1988) on sorting in shear flow (kinetic sieving); Ottino and Khakhar, Annu. Rev. Fluid Mech. 32, 55 (2000) on mixing and sorting in drums; Makse, Havlin, King and Stanley, Nature 386, 379 (1997) on layers in poured sand.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Grains: soft sphere discrete element model of beads in a single layer (runs in Node: curriculum/validation/test_granular_flow.cjs).
+     Units SI. Each bead is a sphere of diameter d moving in the plane of the picture (a layer one bead thick between two glass plates). */
+  var GF_G = 9.81;                 /* m/s² */
+  var GF_RHO = 2500;               /* kg/m³, soda lime glass beads */
+  var GF_K = 16;                   /* contact history slots per bead */
+  /* mulberry32: a small seeded generator, uniform on [0, 1) */
+  function gfRng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gfMass(d, rho) { return rho * Math.PI * d * d * d / 6; }
+  /* restitution of a linear spring and dashpot contact with damping ratio z, where the contact force may push but never pull
+     (it ends when the force reaches zero, a little before the beads separate): x'' = −x − 2z x' while that is negative, in units of the
+     contact frequency, stepped as gfStep steps (semi implicit Euler with step h) */
+  function gfRestitution(z, h) { h = h || 1e-4; var x = 0, v = 1, a; for (var k = 0; k < 2e6; k++) { a = -x - 2 * z * v; if (a > 0) a = 0; v += a * h; x += v * h; if (x <= 0) break; } return -v; }
+  /* the damping ratio that gives restitution e with step h, by bisection (with no pull rule and tiny steps it would be −ln e / √(π² + ln² e)) */
+  function gfZeta(e, h) { var lo = 0, hi = 1; for (var k = 0; k < 40; k++) { var m = (lo + hi) / 2; if (gfRestitution(m, h) > e) lo = m; else hi = m; } return (lo + hi) / 2; }
+  /* Schiller and Naumann drag correction for a sphere, 1 + 0.15 Re^0.687 (Re < 800): F = 3π μ d v f */
+  function gfDragF(Re) { return 1 + 0.15 * Math.pow(Re, 0.687); }
+  /* terminal settling speed of a sphere in a liquid, solved with the Schiller and Naumann drag */
+  function gfSettle(d, rhoP, rhoF, mu, g) {
+    var W = (rhoP - rhoF) * g * Math.PI * d * d * d / 6, v = W / (3 * Math.PI * mu * d), i;
+    for (i = 0; i < 200; i++) { var Re = rhoF * v * d / mu, vn = W / (3 * Math.PI * mu * d * gfDragF(Re)); v = 0.5 * (v + vn); }
+    return v;
+  }
+  /* a new empty simulation: cap beads at most, params p */
+  function gfNew(cap, p) {
+    var s = {
+      cap: cap, n: 0, t: 0, steps: 0, builds: 0, lost: 0,
+      x: new Float64Array(cap), y: new Float64Array(cap), vx: new Float64Array(cap), vy: new Float64Array(cap),
+      w: new Float64Array(cap), r: new Float64Array(cap), m: new Float64Array(cap), I: new Float64Array(cap), vol: new Float64Array(cap),
+      mu: new Float64Array(cap), mr: new Float64Array(cap),
+      fx: new Float64Array(cap), fy: new Float64Array(cap), tq: new Float64Array(cap), bx: new Float64Array(cap), by: new Float64Array(cap),
+      wall: new Uint8Array(cap), body: new Int16Array(cap), lx: new Float64Array(cap), ly: new Float64Array(cap), cls: new Uint8Array(cap),
+      hj: new Int32Array(cap * GF_K), hx: new Float64Array(cap * GF_K), hc: new Uint8Array(cap),
+      np: 0, pi: new Int32Array(cap * 8), pj: new Int32Array(cap * 8), px: new Float64Array(cap * 8),
+      bodies: [], big: [], p: {}, grid: null, rcut: 0, skin: 0
+    };
+    var d = { KN: 3000, kn: 1, disk: true, h: 0.003, e: 0.5, wallMu: 0.5, wallMr: 0.02, rho: GF_RHO, g: GF_G, fluid: null, Lx: 0, box: [0, 0, 1, 1] };
+    for (var k in d) s.p[k] = d[k];
+    for (var q in p) s.p[q] = p[q];
+    return s;
+  }
+  /* add a bead: free (with density rho, friction coefficient mu and rolling resistance mr), or glued to body b at its present place.
+     A bead is a sphere of diameter d, or with s.p.disk a disk (a short cylinder) of diameter d and thickness s.p.h */
+  function gfAdd(s, x, y, d, cls, b, rho, mu, mr) {
+    var i = s.n++, r = d / 2, v = s.p.disk ? Math.PI * d * d / 4 * s.p.h : Math.PI * d * d * d / 6, m = (rho || s.p.rho) * v;
+    s.x[i] = x; s.y[i] = y; s.r[i] = r; s.m[i] = m; s.vol[i] = v; s.I[i] = (s.p.disk ? 0.5 : 0.4) * m * r * r; s.cls[i] = cls || 0;
+    s.mu[i] = mu != null ? mu : s.p.wallMu; s.mr[i] = mr != null ? mr : s.p.wallMr;
+    if (b != null && b >= 0) { var B = s.bodies[b], c = Math.cos(-B.th), sn = Math.sin(-B.th), ux = x - B.cx - B.ox, uy = y - B.cy - B.oy;
+      s.wall[i] = 1; s.body[i] = b; s.lx[i] = c * ux - sn * uy; s.ly[i] = sn * ux + c * uy; }
+    else { s.wall[i] = 0; s.body[i] = -1; }
+    return i;
+  }
+  /* a rigid wall made of beads glued to it: centre (cx, cy), angle th, offset (ox, oy), angular velocity w, offset velocity (vx, vy) */
+  function gfBody(s, cx, cy) { s.bodies.push({ cx: cx, cy: cy, th: 0, w: 0, ox: 0, oy: 0, vx: 0, vy: 0, fx: 0, fy: 0 }); return s.bodies.length - 1; }
+  /* a row of wall beads from (x0, y0) to (x1, y1), diameter dw, spaced half a diameter, glued to body b */
+  function gfWallLine(s, b, x0, y0, x1, y1, dw) {
+    var L = Math.hypot(x1 - x0, y1 - y0), n = Math.max(1, Math.round(L / (0.5 * dw))), i;
+    for (i = 0; i <= n; i++) gfAdd(s, x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n, dw, 255, b);
+  }
+  function gfWallArc(s, b, cx, cy, R, a0, a1, dw) {
+    var n = Math.max(2, Math.round(R * Math.abs(a1 - a0) / (0.5 * dw))), i;
+    for (i = 0; i <= n; i++) { var a = a0 + (a1 - a0) * i / n; gfAdd(s, cx + R * Math.cos(a), cy + R * Math.sin(a), dw, 255, b); }
+  }
+  /* call once all beads are added: contact stiffness, time step, neighbour grid */
+  function gfReady(s) {
+    var p = s.p, i, rs = [], dmin = Infinity, mmin = Infinity;
+    for (i = 0; i < s.n; i++) if (!s.wall[i]) { rs.push(s.r[i]); if (2 * s.r[i] < dmin) dmin = 2 * s.r[i]; if (s.m[i] < mmin) mmin = s.m[i]; }
+    rs.sort(function (a, b) { return a - b; });
+    var rmed = rs.length ? rs[rs.length >> 1] : 0.002, rcut = 0, nb = 0;
+    for (i = 0; i < s.n; i++) if (!s.wall[i] && s.r[i] > 1.75 * rmed) nb++;
+    /* a few big beads (an intruder) are searched from their own side; many share a grid sized for them */
+    for (i = 0; i < s.n; i++) { var r = s.r[i]; if (nb > 12 || s.wall[i] || r <= 1.75 * rmed) { if (r > rcut) rcut = r; } }
+    s.rcut = rcut; s.big = [];
+    for (i = 0; i < s.n; i++) if (s.r[i] > rcut) s.big.push(i);
+    s.skin = 0.3 * dmin;
+    /* linear contact: kn = KN m g / d of the smallest bead, so a bead under a column of n others overlaps by about n/KN of its diameter */
+    p.kn = p.KN * mmin * p.g / dmin; p.kt = 2 / 7 * p.kn;
+    var tc = Math.PI * Math.sqrt(mmin / 2 / p.kn);
+    p.dt = tc / 10; p.tc = tc;
+    /* damping for restitution e between two of the smallest beads, at this time step (pair stiffness frequency √(kn/(m/2)) times dt) */
+    p.zeta = gfZeta(p.e, Math.sqrt(2 * p.kn / mmin) * p.dt);
+    var bx = p.box, h = 2 * rcut + s.skin, ncx = Math.max(1, Math.floor((bx[2] - bx[0]) / h)), ncy = Math.max(1, Math.floor((bx[3] - bx[1]) / h));
+    s.grid = { x0: bx[0], y0: bx[1], hx: (bx[2] - bx[0]) / ncx, hy: (bx[3] - bx[1]) / ncy, nx: ncx, ny: ncy, head: new Int32Array(ncx * ncy), next: new Int32Array(s.cap), ci: new Int32Array(s.cap) };
+    gfPlace(s); gfBuild(s);
+  }
+  /* put every wall bead where its body is */
+  function gfPlace(s) {
+    var Lx = s.p.Lx, cs = [], i;
+    for (i = 0; i < s.bodies.length; i++) cs.push(Math.cos(s.bodies[i].th), Math.sin(s.bodies[i].th));
+    for (i = 0; i < s.n; i++) if (s.wall[i] === 1) {
+      var b = s.body[i], B = s.bodies[b], c = cs[2 * b], sn = cs[2 * b + 1], ux = c * s.lx[i] - sn * s.ly[i], uy = sn * s.lx[i] + c * s.ly[i];
+      var x = B.cx + B.ox + ux; if (Lx) { x = x % Lx; if (x < 0) x += Lx; }
+      s.x[i] = x; s.y[i] = B.cy + B.oy + uy; s.vx[i] = B.vx - B.w * uy; s.vy[i] = B.vy + B.w * ux; s.w[i] = B.w;
+    }
+  }
+  /* the list of pairs closer than their radii plus the skin; tangential springs carried over from the old list */
+  function gfBuild(s) {
+    var G = s.grid, n = s.n, i, j, k, Lx = s.p.Lx, hL = Lx / 2, sk = s.skin;
+    s.hc.fill(0);
+    for (k = 0; k < s.np; k++) if (s.px[k] !== 0) { i = s.pi[k]; var c0 = s.hc[i]; if (c0 < GF_K) { s.hj[i * GF_K + c0] = s.pj[k]; s.hx[i * GF_K + c0] = s.px[k]; s.hc[i] = c0 + 1; } }
+    var np = 0, cap = s.pi.length;
+    var add = function (a, b, dx, dy) {
+      var rr = s.r[a] + s.r[b] + sk; if (dx * dx + dy * dy >= rr * rr) return;
+      if (s.wall[a] && s.wall[b]) return;
+      if (np >= cap) { cap *= 2; var A = new Int32Array(cap), B = new Int32Array(cap), X = new Float64Array(cap); A.set(s.pi); B.set(s.pj); X.set(s.px); s.pi = A; s.pj = B; s.px = X; }
+      var lo = a < b ? a : b, hi = a < b ? b : a, xi = 0, c = s.hc[lo], base = lo * GF_K;
+      for (var q = 0; q < c; q++) if (s.hj[base + q] === hi) { xi = s.hx[base + q]; break; }
+      s.pi[np] = lo; s.pj[np] = hi; s.px[np] = xi; np++;
+    };
+    G.head.fill(-1);
+    for (i = 0; i < n; i++) {
+      s.bx[i] = s.x[i]; s.by[i] = s.y[i];
+      if (s.r[i] > s.rcut || s.wall[i] === 2) { G.ci[i] = -1; continue; }
+      var cx = Math.floor((s.x[i] - G.x0) / G.hx), cy = Math.floor((s.y[i] - G.y0) / G.hy);
+      if (Lx) cx = ((cx % G.nx) + G.nx) % G.nx; else cx = cx < 0 ? 0 : cx >= G.nx ? G.nx - 1 : cx;
+      cy = cy < 0 ? 0 : cy >= G.ny ? G.ny - 1 : cy;
+      var cc = cy * G.nx + cx; G.ci[i] = cc; G.next[i] = G.head[cc]; G.head[cc] = i;
+    }
+    for (i = 0; i < n; i++) {
+      var ci = G.ci[i]; if (ci < 0) continue;
+      var icx = ci % G.nx, icy = (ci - icx) / G.nx, xi0 = s.x[i], yi0 = s.y[i];
+      for (var oy = -1; oy <= 1; oy++) {
+        var yy = icy + oy; if (yy < 0 || yy >= G.ny) continue;
+        for (var ox = -1; ox <= 1; ox++) {
+          var xx = icx + ox;
+          if (Lx) { if (G.nx < 3 && ox) continue; xx = (xx + G.nx) % G.nx; } else if (xx < 0 || xx >= G.nx) continue;
+          for (j = G.head[yy * G.nx + xx]; j >= 0; j = G.next[j]) {
+            if (j <= i) continue;
+            var dx = s.x[j] - xi0; if (Lx) { if (dx > hL) dx -= Lx; else if (dx < -hL) dx += Lx; }
+            add(i, j, dx, s.y[j] - yi0);
+          }
+        }
+      }
+    }
+    for (var q = 0; q < s.big.length; q++) {
+      i = s.big[q]; if (s.wall[i] === 2) continue; var reach = s.r[i] + s.rcut + sk, x0 = Math.floor((s.x[i] - reach - G.x0) / G.hx), x1 = Math.floor((s.x[i] + reach - G.x0) / G.hx);
+      var y0 = Math.max(0, Math.floor((s.y[i] - reach - G.y0) / G.hy)), y1 = Math.min(G.ny - 1, Math.floor((s.y[i] + reach - G.y0) / G.hy));
+      if (!Lx) { x0 = Math.max(0, x0); x1 = Math.min(G.nx - 1, x1); } else if (x1 - x0 >= G.nx) { x0 = 0; x1 = G.nx - 1; }
+      for (var cyy = y0; cyy <= y1; cyy++) for (var cxx = x0; cxx <= x1; cxx++) {
+        var cw = Lx ? ((cxx % G.nx) + G.nx) % G.nx : cxx;
+        for (j = G.head[cyy * G.nx + cw]; j >= 0; j = G.next[j]) {
+          var ddx = s.x[j] - s.x[i]; if (Lx) { if (ddx > hL) ddx -= Lx; else if (ddx < -hL) ddx += Lx; }
+          add(i, j, ddx, s.y[j] - s.y[i]);
+        }
+      }
+      for (var q2 = q + 1; q2 < s.big.length; q2++) { j = s.big[q2]; var ex = s.x[j] - s.x[i]; if (Lx) { if (ex > hL) ex -= Lx; else if (ex < -hL) ex += Lx; } add(i, j, ex, s.y[j] - s.y[i]); }
+    }
+    s.np = np; s.builds++;
+  }
+  /* one time step of length s.p.dt; drive(s) sets the bodies first */
+  function gfStep(s, drive) {
+    var p = s.p, n = s.n, i, j, k, dt = p.dt, Lx = p.Lx, hL = Lx / 2;
+    if (drive) drive(s);
+    gfPlace(s);
+    /* rebuild the pair list once any bead has moved half the skin */
+    var lim2 = 0.25 * s.skin * s.skin;
+    for (i = 0; i < n; i++) { var ddx = s.x[i] - s.bx[i], ddy = s.y[i] - s.by[i]; if (Lx) { if (ddx > hL) ddx -= Lx; else if (ddx < -hL) ddx += Lx; } if (ddx * ddx + ddy * ddy > lim2) { gfBuild(s); break; } }
+    for (var b = 0; b < s.bodies.length; b++) { s.bodies[b].fx = 0; s.bodies[b].fy = 0; }
+    /* weight less the buoyancy of the liquid */
+    var rf = p.fluid ? p.fluid.rho : 0;
+    for (i = 0; i < n; i++) { s.fx[i] = 0; s.fy[i] = s.wall[i] ? 0 : -(s.m[i] - rf * s.vol[i]) * p.g; s.tq[i] = 0; }
+    var kn = p.kn, kt = p.kt, MU = s.mu, MR = s.mr, z2 = 2 * p.zeta, X = s.x, Y = s.y, R = s.r, M = s.m, WL = s.wall, VX = s.vx, VY = s.vy, Wn = s.w;
+    var PI_ = s.pi, PJ = s.pj, PX = s.px, FX = s.fx, FY = s.fy, TQ = s.tq;
+    for (k = 0; k < s.np; k++) {
+      i = PI_[k]; j = PJ[k];
+      var dx = X[j] - X[i]; if (Lx) { if (dx > hL) dx -= Lx; else if (dx < -hL) dx += Lx; }
+      var dy = Y[j] - Y[i], rs = R[i] + R[j], d2 = dx * dx + dy * dy;
+      if (d2 >= rs * rs) { PX[k] = 0; continue; }
+      var dist = Math.sqrt(d2), nx = dx / dist, ny = dy / dist, del = rs - dist;
+      var mi = WL[i] ? 0 : M[i], mj = WL[j] ? 0 : M[j], me = mi && mj ? mi * mj / (mi + mj) : (mi || mj);
+      var rvx = VX[j] - VX[i], rvy = VY[j] - VY[i];
+      var vn = rvx * nx + rvy * ny, vt = -rvx * ny + rvy * nx - (Wn[i] * R[i] + Wn[j] * R[j]);
+      var gn = z2 * Math.sqrt(me * kn), Fn = kn * del - gn * vn;
+      if (Fn < 0) Fn = 0;
+      /* tangential spring with Coulomb's limit, the pair's friction coefficient the mean of the two beads' */
+      var xi = PX[k] + vt * dt, Ft = -kt * xi - 0.5 * gn * vt, lm = 0.5 * (MU[i] + MU[j]) * Fn;
+      if (Ft > lm || Ft < -lm) { Ft = Ft > 0 ? lm : -lm; xi = -Ft / kt; }
+      PX[k] = xi === 0 ? 1e-300 : xi;
+      var Fx = Fn * nx - Ft * ny, Fy = Fn * ny + Ft * nx;
+      FX[j] += Fx; FY[j] += Fy; FX[i] -= Fx; FY[i] -= Fy;
+      TQ[i] -= R[i] * Ft; TQ[j] -= R[j] * Ft;
+      /* rolling resistance: a torque up to mur Reff Fn against the relative rolling, viscous near zero */
+      var wrel = Wn[i] - Wn[j], Re = R[i] * R[j] / rs, Tm = 0.5 * (MR[i] + MR[j]) * Re * Fn, T = 0.5 * Re * Re * gn * wrel;
+      if (T > Tm) T = Tm; else if (T < -Tm) T = -Tm;
+      TQ[i] -= T; TQ[j] += T;
+    }
+    /* move the free beads: semi implicit Euler, liquid drag implicit (the liquid moves with body 0) */
+    var F = p.fluid, B0 = s.bodies[0], bxs = p.box;
+    for (i = 0; i < n; i++) {
+      if (WL[i]) { if (WL[i] === 1) { var Bw = s.bodies[s.body[i]]; Bw.fx += FX[i]; Bw.fy += FY[i]; } continue; }
+      var m = M[i], ax = FX[i] / m, ay = FY[i] / m, al = TQ[i] / s.I[i];
+      if (F) {
+        var ux = 0, uy = 0, Om = 0;
+        if (B0) { var rx = X[i] - B0.cx - B0.ox, ry = Y[i] - B0.cy - B0.oy; ux = B0.vx - B0.w * ry; uy = B0.vy + B0.w * rx; Om = B0.w; }
+        var d = 2 * R[i], wx = VX[i] - ux, wy = VY[i] - uy, Rey = F.rho * Math.sqrt(wx * wx + wy * wy) * d / F.mu;
+        var kd = 3 * Math.PI * F.mu * d * gfDragF(Rey) / m, kr = Math.PI * F.mu * d * d * d / s.I[i];
+        VX[i] = (VX[i] + dt * (ax + kd * ux)) / (1 + dt * kd); VY[i] = (VY[i] + dt * (ay + kd * uy)) / (1 + dt * kd);
+        Wn[i] = (Wn[i] + dt * (al + kr * Om)) / (1 + dt * kr);
+      } else { VX[i] += ax * dt; VY[i] += ay * dt; Wn[i] += al * dt; }
+      X[i] += VX[i] * dt; Y[i] += VY[i] * dt;
+      if (Lx) { if (X[i] < 0) X[i] += Lx; else if (X[i] >= Lx) X[i] -= Lx; }
+      /* a bead that leaves the apparatus is taken out of the run (counted in s.lost) */
+      if (Y[i] < bxs[1] - 0.05 || (!Lx && (X[i] < bxs[0] - 0.05 || X[i] > bxs[2] + 0.05))) { WL[i] = 2; VX[i] = VY[i] = Wn[i] = 0; X[i] = bxs[0]; Y[i] = bxs[1] - 1; s.lost++; }
+    }
+    s.t += dt; s.steps++;
+  }
+  /* ---------- the kinds of sand ---------- */
+  /* densities, kg/m³: soda lime glass, quartz sand, steel, acrylic (PMMA) */
+  var GF_MAT = { glass: 2500, sand: 2650, steel: 7850, acrylic: 1190 };
+  /* rolling resistance coefficient: round beads roll freely; angular grains resist rolling (a model of their corners) */
+  var GF_SHAPE = { round: 0.02, angular: 0.2 };
+  /* the list of beads to place, from kinds [{ n, d, spread, mu, shape, mat }]: n beads of diameter d, each varied at random
+     by up to ±spread (a fraction) and always by ±3 % so equal beads do not lock into a crystal; start orders them */
+  function gfBeads(kinds, rnd, start) {
+    var L = [], k, i;
+    for (k = 0; k < kinds.length; k++) { var K = kinds[k]; for (i = 0; i < K.n; i++) {
+      var sp = Math.max(0.03, K.spread || 0); L.push({ d: K.d * (1 + sp * (2 * rnd() - 1)), k: k }); } }
+    for (i = L.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)), t = L[i]; L[i] = L[j]; L[j] = t; }
+    if (start === 'big') L.sort(function (a, b) { return b.d - a.d; });
+    else if (start === 'small') L.sort(function (a, b) { return a.d - b.d; });
+    else if (start === 'layers') L.sort(function (a, b) { return a.k - b.k; });
+    return L;
+  }
+  /* place the beads in rows from the bottom, each row centred: span(y) gives [x0, x1] inside the region at height y, or null when full */
+  function gfFill(s, kinds, list, span, y0) {
+    var y = y0, q = 0, guard = 0, placed = kinds.map(function () { return 0; });
+    while (q < list.length) {
+      var h = list[q].d, sp = span(y + h / 2), sp2 = span(y + h); if (!sp || !sp2) break;
+      var x0 = Math.max(sp[0], sp2[0]), x1 = Math.min(sp[1], sp2[1]), row = [], w = 0, rowH = 0;
+      while (q < list.length && w + list[q].d * 1.02 <= x1 - x0) { row.push(list[q]); w += list[q].d * 1.02; if (list[q].d > rowH) rowH = list[q].d; q++; }
+      if (!row.length) { y += h * 0.25; if (++guard > 400) break; continue; }
+      var x = x0 + (x1 - x0 - w) / 2;
+      for (var i = 0; i < row.length; i++) { var b = row[i], K = kinds[b.k];
+        gfAdd(s, x + b.d * 0.51, y + b.d / 2, b.d, b.k, -1, GF_MAT[K.mat] || GF_RHO, K.mu, GF_SHAPE[K.shape] != null ? GF_SHAPE[K.shape] : GF_SHAPE.round);
+        placed[b.k]++; x += b.d * 1.02; }
+      y += rowH * 1.02;
+    }
+    s.placed = placed; s.asked = kinds.map(function (K) { return K.n; });
+    return placed;
+  }
+  /* let a new fill settle with the walls held still (step(s) moves one step), then start the clock at zero */
+  function gfSettle0(s, time, step) { var n = Math.ceil(time / s.p.dt); for (var k = 0; k < n; k++) step ? step(s) : gfStep(s, null);
+    s.t = 0; s.steps = 0; for (var i = 0; i < s.n; i++) if (!s.wall[i]) { s.vx[i] = 0; s.vy[i] = 0; s.w[i] = 0; } }
+  function gfDefaults(o, d) { var q = {}, k; for (k in d) q[k] = d[k]; for (k in o || {}) if (o[k] != null) q[k] = o[k]; return q; }
+  function gfKind(n, dmm, mu, more) { var K = { n: n, d: dmm / 1000, spread: 0, mu: mu, shape: 'round', mat: 'glass' }; for (var k in more || {}) K[k] = more[k]; return K; }
+  /* the smallest bead asked for: the wall beads take its size, so no free bead slips between them */
+  function gfDmin(kinds) { var d = Infinity; for (var k = 0; k < kinds.length; k++) if (kinds[k].n > 0) d = Math.min(d, kinds[k].d * (1 - (kinds[k].spread || 0))); return isFinite(d) ? d : 0.003; }
+
+  /* ---------- the setups: each returns { s, o, drive } ---------- */
+  /* rotating drum of radius R turning clockwise at rpm */
+  function gfDrum(o0) {
+    var o = gfDefaults(o0, { R: 0.07, rpm: 15, start: 'mixed', seed: 1, settle: 0.6, kinds: [gfKind(260, 3, 0.4), gfKind(70, 6, 0.4)] });
+    var R = o.R, dw = gfDmin(o.kinds), s = gfNew(4000, { box: [-R - 2 * dw, -R - 2 * dw, R + 2 * dw, R + 2 * dw] });
+    var b = gfBody(s, 0, 0), rnd = gfRng(o.seed);
+    gfWallArc(s, b, 0, 0, R + dw / 2, 0, 2 * Math.PI * (1 - 0.5 * dw / (2 * Math.PI * R)), dw);
+    var Rin = R - 0.02 * dw;
+    gfFill(s, o.kinds, gfBeads(o.kinds, rnd, o.start), function (y) { var h = Rin * Rin - y * y; if (h <= 0) return null; var w = Math.sqrt(h); return [-w, w]; }, -Rin + 0.001);
+    gfReady(s); gfSettle0(s, o.settle);
+    var drive = function (S) { var B = S.bodies[0], om = 2 * Math.PI * o.rpm / 60; B.w = -om; B.th += -om * S.p.dt; };
+    return { s: s, o: o, drive: drive };
+  }
+  /* box of width W shaken up and down: y = A sin(2π f t), with Γ = A(2πf)²/g the peak acceleration in g */
+  function gfShaker(o0) {
+    var o = gfDefaults(o0, { W: 0.05, Hb: 0.13, f: 20, Gamma: 2.5, start: 'big', seed: 2, settle: 0.5, kinds: [gfKind(1, 12, 0.4), gfKind(330, 3, 0.4)] });
+    var W = o.W, dw = gfDmin(o.kinds), s = gfNew(3000, { box: [-W / 2 - 2 * dw, -0.03, W / 2 + 2 * dw, o.Hb + 0.04] });
+    var b = gfBody(s, 0, 0), rnd = gfRng(o.seed);
+    gfWallLine(s, b, -W / 2 - dw / 2, -dw / 2, W / 2 + dw / 2, -dw / 2, dw);
+    gfWallLine(s, b, -W / 2 - dw / 2, 0, -W / 2 - dw / 2, o.Hb, dw);
+    gfWallLine(s, b, W / 2 + dw / 2, 0, W / 2 + dw / 2, o.Hb, dw);
+    gfFill(s, o.kinds, gfBeads(o.kinds, rnd, o.start), function (y) { return y > o.Hb - 0.005 ? null : [-W / 2, W / 2]; }, 0.0005);
+    gfReady(s); gfSettle0(s, o.settle);
+    var drive = function (S) { var B = S.bodies[0], om = 2 * Math.PI * o.f, A = o.Gamma * S.p.g / (om * om), t = S.t + S.p.dt;
+      B.oy = A * Math.sin(om * t); B.vy = A * om * Math.cos(om * t); };
+    return { s: s, o: o, drive: drive };
+  }
+  /* shear box: beads between a rough floor and a rough lid of mass lid (kg) that slides at speed U and rests on them with its weight;
+     the box repeats sideways (a bead leaving on the right comes back on the left) */
+  function gfShear(o0) {
+    var o = gfDefaults(o0, { L: 0.06, Hmax: 0.1, U: 0.2, lid: 0.01, start: 'mixed', seed: 3, settle: 0.5, kinds: [gfKind(150, 3, 0.4), gfKind(40, 6, 0.4)] });
+    var L = o.L, dw = gfDmin(o.kinds), s = gfNew(3000, { box: [0, -0.01, L, o.Hmax + 0.03], Lx: L });
+    var rnd = gfRng(o.seed), b0 = gfBody(s, 0, 0), i, n = Math.round(L / (0.5 * dw));
+    for (i = 0; i < n; i++) gfAdd(s, i * L / n, -dw / 2 + 0.25 * dw * Math.sin(i * 2.1), dw, 255, b0);
+    var dmax = 0; for (i = 0; i < o.kinds.length; i++) dmax = Math.max(dmax, o.kinds[i].d * (1 + (o.kinds[i].spread || 0)));
+    gfFill(s, o.kinds, gfBeads(o.kinds, rnd, o.start), function (y) { return y > o.Hmax - dmax ? null : [0, L - dmax * 0.6]; }, 0.0005);
+    var top = 0; for (i = 0; i < s.n; i++) if (!s.wall[i]) top = Math.max(top, s.y[i] + s.r[i]);
+    var b1 = gfBody(s, 0, top + dw / 2);
+    for (i = 0; i < n; i++) gfAdd(s, i * L / n, top + dw / 2 + 0.25 * dw * Math.sin(i * 1.7), dw, 255, b1);
+    s.bodies[1].M = o.lid;
+    /* the lid: pushed at speed U, free to rise and fall under its weight and the beads' push (lightly damped) */
+    var lidDrive = function (S, U) { var B = S.bodies[1], dt = S.p.dt;
+      B.vy += dt * (B.fy / B.M - S.p.g); B.vy *= 1 - 20 * dt; B.oy += B.vy * dt; B.vx = U; B.ox += U * dt; if (B.ox > L) B.ox -= L; };
+    gfReady(s); gfSettle0(s, o.settle, function (S) { gfStep(S, function (T) { lidDrive(T, 0); }); });
+    var drive = function (S) { lidDrive(S, o.U); };
+    return { s: s, o: o, drive: drive };
+  }
+  /* landslide: a pile held by a gate at the top of a slope at alpha degrees; the gate lifts at t = 0 */
+  function gfSlide(o0) {
+    var o = gfDefaults(o0, { alpha: 30, Wr: 0.1, Hr: 0.16, Ls: 0.24, Lr: 0.4, start: 'mixed', seed: 4, settle: 0.5, lift: 1.0, kinds: [gfKind(200, 4, 0.4, { shape: 'angular', mat: 'sand' }), gfKind(50, 8, 0.4, { shape: 'angular', mat: 'sand' })] });
+    var a = o.alpha * Math.PI / 180, ta = Math.tan(a), dw = gfDmin(o.kinds), xB = o.Ls * Math.cos(a), yB = -xB * ta, xC = xB + o.Lr, yA = o.Wr * ta;
+    var s = gfNew(3000, { box: [-o.Wr - 2 * dw, yB - 2 * dw, xC + 2 * dw, yA + o.Hr + 0.25] });
+    var rnd = gfRng(o.seed), b0 = gfBody(s, 0, 0);
+    gfWallLine(s, b0, -o.Wr - dw / 2, yA + o.Hr, -o.Wr - dw / 2, yA, dw);
+    gfWallLine(s, b0, -o.Wr - dw / 2, yA - dw / 2 / Math.cos(a), xB, yB - dw / 2 / Math.cos(a), dw);
+    gfWallLine(s, b0, xB, yB - dw / 2, xC, yB - dw / 2, dw);
+    gfWallLine(s, b0, xC + dw / 2, yB, xC + dw / 2, yB + 0.1, dw);
+    var b1 = gfBody(s, 0, 0);
+    gfWallLine(s, b1, dw / 2, 0, dw / 2, yA + o.Hr, dw);
+    gfFill(s, o.kinds, gfBeads(o.kinds, rnd, o.start), function (y) { if (y > yA + o.Hr - 0.005) return null; return [Math.max(-o.Wr, -y / ta) + 0.1 * dw, -0.1 * dw]; }, 0.0005);
+    gfReady(s); gfSettle0(s, o.settle);
+    var drive = function (S) { var B = S.bodies[1]; if (B.oy < yA + o.Hr + 0.05) { B.vy = o.lift; B.oy += o.lift * S.p.dt; } else B.vy = 0; };
+    return { s: s, o: o, drive: drive, geo: { a: a, xB: xB, yB: yB, xC: xC, yA: yA } };
+  }
+  /* liquids at 20 °C: [density kg/m³, viscosity Pa·s], glycerol in water by mass */
+  var GF_LIQ = { water: [998.2, 0.001002], g50: [1126.3, 0.00600], g75: [1195.5, 0.0355], g90: [1234.7, 0.219], g100: [1261.3, 1.412] };
+  /* moving sand picture: a sealed frame W × H full of liquid, a divider across the middle with gaps; a flip turns it half a turn in flipT */
+  function gfFrame(o0) {
+    var o = gfDefaults(o0, { W: 0.08, H: 0.12, liquid: 'g75', gaps: 3, gapW: 3.5, flipT: 1.5, start: 'mixed', seed: 5, settle: 0.8,
+      kinds: [gfKind(200, 2, 0.4, { mat: 'sand' }), gfKind(50, 4, 0.4, { mat: 'sand' })] });
+    var Lq = GF_LIQ[o.liquid] || GF_LIQ.g75, W = o.W, H = o.H, dw = gfDmin(o.kinds), R = Math.hypot(W, H) / 2 + 3 * dw;
+    var s = gfNew(4000, { box: [-R, -R, R, R], fluid: { rho: Lq[0], mu: Lq[1] }, disk: false });
+    var rnd = gfRng(o.seed), b = gfBody(s, 0, 0), x0 = -W / 2 - dw / 2, x1 = W / 2 + dw / 2, y0 = -H / 2 - dw / 2, y1 = H / 2 + dw / 2;
+    gfWallLine(s, b, x0, y0, x1, y0, dw); gfWallLine(s, b, x1, y0, x1, y1, dw); gfWallLine(s, b, x1, y1, x0, y1, dw); gfWallLine(s, b, x0, y1, x0, y0, dw);
+    /* the divider: beads across y = 0 with gaps gapW times the largest bead wide */
+    var dmax = 0, i; for (i = 0; i < o.kinds.length; i++) if (o.kinds[i].n > 0) dmax = Math.max(dmax, o.kinds[i].d * (1 + (o.kinds[i].spread || 0)));
+    var g = o.gapW * dmax, segs = o.gaps + 1, seg = (W - o.gaps * g) / segs, xs = -W / 2;
+    for (i = 0; i < segs; i++) { var xa = xs + (i ? dw / 2 : 0), xb = xs + seg - (i < segs - 1 ? dw / 2 : 0); if (xb > xa) gfWallLine(s, b, xa, 0, xb, 0, dw); xs += seg + g; }
+    s.gapW = g;
+    /* beads lighter than the liquid start on top of the lower half and float up; the rest sit on its floor */
+    gfFill(s, o.kinds, gfBeads(o.kinds, rnd, o.start), function (y) { return y > -dw ? null : [-W / 2, W / 2]; }, -H / 2 + 0.0005);
+    gfReady(s); gfSettle0(s, o.settle);
+    s.flip = null;
+    var drive = function (S) { var B = S.bodies[0], F = S.flip; if (!F) { B.w = 0; return; }
+      var u = (S.t + S.p.dt - F.t0) / o.flipT; if (u >= 1) { B.th = F.th0 + Math.PI; B.w = 0; S.flip = null; return; }
+      if (u < 0) u = 0; B.th = F.th0 + Math.PI * (1 - Math.cos(Math.PI * u)) / 2; B.w = Math.PI * Math.PI / (2 * o.flipT) * Math.sin(Math.PI * u); };
+    return { s: s, o: o, drive: drive };
+  }
+  /* start a half turn of the frame now */
+  function gfFlip(set) { var S = set.s; if (!S.flip) S.flip = { t0: S.t, th0: S.bodies[0].th }; }
+
+  /* ---------- measurements ---------- */
+  /* mean of f(i) over the free beads of colour class c (or over all when c is null) */
+  function gfMean(s, c, f) { var a = 0, n = 0; for (var i = 0; i < s.n; i++) if (!s.wall[i] && (c == null || s.cls[i] === c)) { a += f(i); n++; } return n ? a / n : NaN; }
+  /* kinetic energy of the free beads, translation and rotation, J */
+  function gfKE(s) { var E = 0; for (var i = 0; i < s.n; i++) if (!s.wall[i]) E += 0.5 * s.m[i] * (s.vx[i] * s.vx[i] + s.vy[i] * s.vy[i]) + 0.5 * s.I[i] * s.w[i] * s.w[i]; return E; }
+  /* the largest overlap between touching beads as a fraction of the smaller diameter */
+  function gfMaxOverlap(s) { var m = 0; for (var i = 0; i < s.n; i++) for (var j = i + 1; j < s.n; j++) { if (s.wall[i] && s.wall[j]) continue;
+    var dx = s.x[j] - s.x[i]; if (s.p.Lx) { if (dx > s.p.Lx / 2) dx -= s.p.Lx; else if (dx < -s.p.Lx / 2) dx += s.p.Lx; }
+    var dy = s.y[j] - s.y[i], r = s.r[i] + s.r[j], d = Math.sqrt(dx * dx + dy * dy); if (d < r) m = Math.max(m, (r - d) / (2 * Math.min(s.r[i], s.r[j]))); } return m; }
+  /* drum Froude number Fr = ω²R/g; the beads centrifuge above Fr = 1 */
+  function gfFroude(rpm, R, g) { var w = 2 * Math.PI * rpm / 60; return w * w * R / g; }
+  function gfCriticalRpm(R, g) { return 60 / (2 * Math.PI) * Math.sqrt(g / R); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  /* colours of the sand kinds: name, fill */
+  const COLORS = { blue: '#3f8ef0', orange: '#f07a3a', yellow: '#efc23a', green: '#3fb26a', purple: '#a06ad8', red: '#e04848', white: '#f2eee6', black: '#3a3d42', sand: '#d2ad74' };
+  const CNAMES = { blue: 'Blue', orange: 'Orange', yellow: 'Yellow', green: 'Green', purple: 'Purple', red: 'Red', white: 'White', black: 'Black', sand: 'Sand' };
+  const MATS = { glass: 'Glass', sand: 'Quartz sand', steel: 'Steel', acrylic: 'Acrylic' };
+  const K = (n, d, mu, color, more) => Object.assign({ n, d, spread: 0, mu, shape: 'round', mat: 'glass', color }, more || {});
+  const PRESETS = {
+    drum2: { mode: 'drum', rpm: 15, start: 'mixed', kinds: [K(260, 3, 0.4, 'blue'), K(65, 6, 0.4, 'orange')],
+      hint: 'A drum 14 cm across, a little under half full of glass beads 3 mm and 6 mm across, turning 15 times a minute. The surface tilts until the beads near it slide, so a thin layer flows down the slope while the rest turns with the drum. In that layer the small beads drop into the gaps under the big ones: within a few turns the small beads gather in a core and the big ones ride round the outside. Watch the graph: the orange line (big beads, distance from the middle of the bed) climbs above the blue within about ten seconds.' },
+    drumColor: { mode: 'drum', rpm: 15, start: 'layers', kinds: [K(160, 4, 0.4, 'blue'), K(160, 4, 0.4, 'yellow')],
+      hint: 'The control experiment: one size, two colors, starting in two layers. The flowing layer mixes them, and nothing sorts them again, because the beads differ only in color. Compare with two sizes.' },
+    drum3: { mode: 'drum', rpm: 15, start: 'mixed', kinds: [K(160, 2.5, 0.4, 'blue'), K(70, 4, 0.4, 'green'), K(30, 6.5, 0.4, 'orange')],
+      hint: 'Three sizes. The sorting goes in order of size: smallest in the middle, the middle size around it, the largest outside.' },
+    drumRough: { mode: 'drum', rpm: 15, start: 'mixed', kinds: [K(160, 4, 0.9, 'red', { shape: 'angular', mat: 'sand' }), K(160, 4, 0.1, 'white')],
+      hint: 'Same size, different roughness: rough angular grains (red, μ = 0.9) and smooth round beads (white, μ = 0.1). The smooth beads slip and roll more easily, and over several turns they drift a little toward the outside of the bed while the rough grains keep to the middle. Friction and shape sort far more weakly than size does: compare the graph with two sizes.' },
+    drumFast: { mode: 'drum', rpm: 200, start: 'mixed', kinds: [K(260, 3, 0.4, 'blue'), K(65, 6, 0.4, 'orange')],
+      hint: 'At 200 turns per minute ω²R/g = 3.1: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), 113 turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at 130 they still tumble). Lower the rate and find where they fall away.' },
+    brazil: { mode: 'shaker', f: 20, Gamma: 2.5, start: 'big', kinds: [K(1, 12, 0.4, 'orange'), K(330, 3, 0.4, 'sand', { mat: 'sand' })],
+      hint: 'The Brazil nut effect: one 12 mm bead starts at the bottom of a box of 3 mm sand, shaken up and down 20 times a second with a peak acceleration 2.5 g. Every time the box drops away, the sand loosens; small grains fall into the space under the big bead, which cannot fall back. It rises to the top though it is the heaviest bead there. Lower Γ below 1 and nothing happens: the box never drops faster than gravity.' },
+    shake2: { mode: 'shaker', f: 20, Gamma: 2.5, start: 'mixed', kinds: [K(240, 3, 0.4, 'blue'), K(30, 7, 0.4, 'orange')],
+      hint: 'Many big beads in small ones, shaken. The big ones rise and gather in a layer on top.' },
+    shear: { mode: 'shear', U: 0.5, lid: 0.01, start: 'mixed', kinds: [K(150, 3, 0.4, 'blue'), K(40, 6, 0.4, 'orange')],
+      hint: 'A layer of beads between a rough floor and a rough lid that slides along at 0.5 m/s and rests on the beads with its weight. The box repeats sideways, so it acts like an endless strip. The layers slide over each other (shear), the gaps open and close, and small beads drop down through them: the big beads end up near the lid. This is what happens at the bottom of a landslide or a debris flow.' },
+    slide: { mode: 'slide', alpha: 30, start: 'mixed', kinds: [K(320, 4, 0.5, 'sand', { shape: 'angular', mat: 'sand' }), K(50, 9, 0.5, 'black', { shape: 'angular', mat: 'sand' })],
+      hint: 'A pile of angular sand with some large stones, held by a gate at the top of a 30° slope. Start lifts the gate. The pile collapses and slides; inside the flow the small grains sink and the big ones rise to the top, where the flow is fastest, so they reach the front first and pile up at the far end. Lower the slope: below the angle of repose of the sand, part of the pile stays behind.' },
+    slideSand: { mode: 'slide', alpha: 25, start: 'mixed', kinds: [K(400, 5, 0.5, 'sand', { shape: 'angular', mat: 'sand' })],
+      hint: 'Angular sand grains 5 mm across on a 25° slope. A good part of the pile (about a quarter in this run) stops on the slope and never reaches the bottom: the grains lock together and resist rolling. Compare with glass beads on the same slope.' },
+    slideBeads: { mode: 'slide', alpha: 25, start: 'mixed', kinds: [K(400, 5, 0.1, 'white')],
+      hint: 'Smooth glass beads 5 mm across on the same 25° slope. They roll and slip, and almost all of them run out to the far end. The angle of repose of the sand is steeper than the slope; that of the beads is shallower. That is why angular rock makes steep piles and talus slopes, and why marbles never pile up at all.' },
+    frame: { mode: 'frame', liquid: 'g75', start: 'mixed', kinds: [K(200, 2, 0.4, 'blue', { mat: 'sand' }), K(50, 4, 0.4, 'orange', { mat: 'sand' })],
+      hint: 'A sealed frame of 75 % glycerol with sand in it and a divider with three gaps across the middle, like the moving sand pictures sold as desk ornaments. Start flips it: the sand pours through the gaps and settles in hills. The 4 mm grains sink about two and a half times as fast as the 2 mm ones (the readouts give both speeds), so where the two pour through a gap together the big ones reach the bottom first, and the small ones settle over them.' },
+    frameDense: { mode: 'frame', liquid: 'g75', start: 'mixed', kinds: [K(150, 3, 0.4, 'black', { mat: 'steel' }), K(150, 3, 0.4, 'white', { mat: 'glass' })],
+      hint: 'The same size, different density: steel (7850 kg/m³) and glass (2500 kg/m³) in 75 % glycerol (1196 kg/m³). The steel sinks about three times as fast (the readouts give both speeds), so it lands first and most of the glass settles on top of it. Try acrylic: at 1190 kg/m³ it is a hair lighter than this liquid and barely moves; in 90 % glycerol it floats.' },
+  };
+  const MODES = { drum: gfDrum, shaker: gfShaker, shear: gfShear, slide: gfSlide, frame: gfFrame };
+  const S = { preset: 'drum2', mode: 'drum', rpm: 15, f: 20, Gamma: 2.5, U: 0.5, lid: 0.01, alpha: 30, liquid: 'g75', start: 'mixed', kinds: [], run: false, speed: 1, blind: false,
+    set: null, hist: [], lastSample: -1, rate: 1, wallStart: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), pcan = $('plot'), pctx = pcan.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, sprites = {}, view = null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), wall: g('--wallc'), glass: g('--glass'), liquid: g('--liquid'), hill: g('--hill'), drum: g('--drum'), accent: g('--accent'), mono: g('--font-mono'), ui: g('--font-ui') };
+    sprites = {}; }
+
+  /* ---------- building a run ---------- */
+  function kindsSI() { return S.kinds.map((k) => ({ n: k.n, d: k.d / 1000, spread: k.spread / 100, mu: k.mu, shape: k.shape, mat: k.mat })); }
+  function build() {
+    const o = { kinds: kindsSI(), start: S.start };
+    if (S.mode === 'drum') o.rpm = S.rpm; if (S.mode === 'shaker') { o.f = S.f; o.Gamma = S.Gamma; }
+    if (S.mode === 'shear') { o.U = S.U; o.lid = S.lid; } if (S.mode === 'slide') o.alpha = S.alpha; if (S.mode === 'frame') o.liquid = S.liquid;
+    S.set = MODES[S.mode](o); S.hist = []; S.lastSample = -1; S.frameDone = false;
+    const s = S.set.s, miss = s.asked.map((a, i) => a - s.placed[i]), lost = miss.reduce((a, b) => a + b, 0);
+    S.msg = lost ? `Only ${s.placed.reduce((a, b) => a + b, 0)} of ${s.asked.reduce((a, b) => a + b, 0)} beads fit in the ${S.mode === 'slide' ? 'pile behind the gate' : 'container'}; use fewer or smaller beads.` : '';
+    computeView(); sample(); status();
+  }
+  /* the part of the world drawn, in metres */
+  function worldBox() {
+    const set = S.set, o = set.o, s = set.s, dw = 2 * s.r[0];
+    if (S.mode === 'drum') { const R = o.R + 3 * dw; return [-R, -R, R, R]; }
+    if (S.mode === 'shaker') return [-o.W / 2 - 0.012, -0.012, o.W / 2 + 0.012, o.Hb + 0.012];
+    if (S.mode === 'shear') return [0, -0.008, o.L, o.Hmax];
+    if (S.mode === 'slide') { const g = set.geo; return [-o.Wr - 0.012, g.yB - 0.015, g.xC + 0.012, g.yA + o.Hr + 0.012]; }
+    const R = Math.hypot(o.W, o.H) / 2 + 0.006; return [-R, -R, R, R];
+  }
+  function lidY() { const B = S.set.s.bodies[1]; return B.cy + B.oy; }
+  function computeView() {
+    if (!S.set || !W) return; const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const right = cardOn ? card.offsetWidth + 24 : 14 * p, left = 14 * p, top = 30 * p, bottom = 34 * p;
+    const [x0, y0, x1, y1] = worldBox(), sc = Math.min((W - left - right) / (x1 - x0), (H - top - bottom) / (y1 - y0));
+    view = { sc, ox: left + (W - left - right - (x1 - x0) * sc) / 2 - x0 * sc, oy: top + (H - top - bottom - (y1 - y0) * sc) / 2 + y1 * sc, box: [x0, y0, x1, y1] };
+  }
+  const X = (x) => view.ox + x * view.sc, Y = (y) => view.oy - y * view.sc;
+
+  /* ---------- where each kind sits: the sorting measure for each apparatus ---------- */
+  function measure() {
+    const s = S.set.s, n = S.kinds.length, out = [];
+    if (S.mode === 'drum') { const cx = gfMean(s, null, (i) => s.x[i]), cy = gfMean(s, null, (i) => s.y[i]);
+      for (let k = 0; k < n; k++) out.push(gfMean(s, k, (i) => Math.hypot(s.x[i] - cx, s.y[i] - cy)) * 1000); }
+    else if (S.mode === 'shaker') { const B = s.bodies[0]; for (let k = 0; k < n; k++) out.push(gfMean(s, k, (i) => s.y[i] - B.oy) * 1000); }
+    else if (S.mode === 'shear') { for (let k = 0; k < n; k++) out.push(gfMean(s, k, (i) => s.y[i]) * 1000); }
+    else if (S.mode === 'slide') { for (let k = 0; k < n; k++) out.push(gfMean(s, k, (i) => s.x[i]) * 1000); }
+    else { const B = s.bodies[0], c = Math.cos(B.th); for (let k = 0; k < n; k++) out.push(gfMean(s, k, (i) => s.y[i] + S.set.o.H / 2) * 1000 * (Math.abs(c) > 0.999 ? 1 : NaN)); }
+    return out;
+  }
+  const MEASURE = { drum: ['Mean distance from the middle of the bed', 'Small beads near the middle of the bed and large ones near its edge mean the drum has sorted them.'],
+    shaker: ['Mean height above the floor of the box', 'A kind whose line climbs is rising to the top.'],
+    shear: ['Mean height above the floor', 'Big beads rising toward the lid show sorting by shear.'],
+    slide: ['Mean distance travelled past the gate', 'The kind with the higher line has run out farther.'],
+    frame: ['Mean height above the floor of the frame', 'Read it after the sand settles: the kind lower down landed first. (No reading while the frame turns.)'] };
+  function sample() { const s = S.set.s; S.hist.push([s.t, measure()]); if (S.hist.length > 3000) S.hist.splice(0, 1000); S.lastSample = s.t; }
+
+  /* ---------- drawing ---------- */
+  function sprite(color) {
+    if (sprites[color]) return sprites[color];
+    const N = 64, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d');
+    const base = COLORS[color] || color, gr = g.createRadialGradient(N * 0.36, N * 0.32, N * 0.04, N / 2, N / 2, N / 2);
+    gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.18, base); gr.addColorStop(1, shade(base, 0.55));
+    g.fillStyle = gr; g.beginPath(); g.arc(N / 2, N / 2, N / 2 - 1, 0, 2 * Math.PI); g.fill();
+    g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 2; g.stroke();
+    return (sprites[color] = c);
+  }
+  function shade(hex, k) { const n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255; return `rgb(${Math.round(r * k)},${Math.round(g * k)},${Math.round(b * k)})`; }
+  function draw() {
+    if (!T || !W || !S.set) return; computeView();
+    const s = S.set.s, o = S.set.o, p = ps(), sc = view.sc;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* the apparatus behind the beads */
+    if (S.mode === 'drum') { const B = s.bodies[0], R = o.R + s.r[0] * 2;
+      ctx.fillStyle = T.drum; ctx.beginPath(); ctx.arc(X(0), Y(0), R * sc, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; for (let k = 0; k < 6; k++) { const a = B.th + k * Math.PI / 3; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(o.R * 0.97 * Math.cos(a)), Y(o.R * 0.97 * Math.sin(a))); ctx.stroke(); }
+      ctx.fillStyle = T.wall; ctx.beginPath(); ctx.arc(X(0), Y(0), 5 * p, 0, 2 * Math.PI); ctx.fill(); }
+    if (S.mode === 'frame') { const B = s.bodies[0]; ctx.save(); ctx.translate(X(0), Y(0)); ctx.rotate(-B.th); ctx.fillStyle = T.liquid; ctx.fillRect(-o.W / 2 * sc, -o.H / 2 * sc, o.W * sc, o.H * sc);
+      ctx.strokeStyle = T.wall; ctx.lineWidth = 6 * p; ctx.strokeRect(-o.W / 2 * sc - 3 * p, -o.H / 2 * sc - 3 * p, o.W * sc + 6 * p, o.H * sc + 6 * p); ctx.restore(); }
+    if (S.mode === 'slide') { const g = S.set.geo; ctx.fillStyle = T.hill; ctx.beginPath(); ctx.moveTo(X(-o.Wr), Y(g.yA)); ctx.lineTo(X(g.xB), Y(g.yB)); ctx.lineTo(X(g.xC), Y(g.yB));
+      ctx.lineTo(X(g.xC), Y(view.box[1])); ctx.lineTo(X(-o.Wr), Y(view.box[1])); ctx.closePath(); ctx.fill(); }
+    if (S.mode === 'shaker') { const B = s.bodies[0]; ctx.fillStyle = T.glass; ctx.fillRect(X(-o.W / 2), Y(o.Hb + B.oy), o.W * sc, o.Hb * sc);
+      ctx.fillStyle = T.wall; ctx.fillRect(X(-o.W / 2 - 0.008), Y(B.oy - s.r[0] * 2), (o.W + 0.016) * sc, 5 * p); }
+    /* wall beads */
+    ctx.fillStyle = T.wall;
+    for (let i = 0; i < s.n; i++) if (s.wall[i] === 1) { const x = s.x[i]; if (S.mode === 'slide' && s.body[i] === 1 && s.y[i] > view.box[3]) continue;
+      ctx.beginPath(); ctx.arc(X(x), Y(s.y[i]), s.r[i] * sc, 0, 2 * Math.PI); ctx.fill();
+      if (S.mode === 'shear' && x < 0.004) { ctx.beginPath(); ctx.arc(X(x + o.L), Y(s.y[i]), s.r[i] * sc, 0, 2 * Math.PI); ctx.fill(); } }
+    /* free beads, drawn as shaded spheres */
+    const sp = S.kinds.map((k) => sprite(k.color));
+    for (let i = 0; i < s.n; i++) if (!s.wall[i]) { const r = s.r[i] * sc, im = sp[s.cls[i]] || sp[0]; ctx.drawImage(im, X(s.x[i]) - r, Y(s.y[i]) - r, 2 * r, 2 * r);
+      if (S.mode === 'shear') { const L = o.L; if (s.x[i] < s.r[i]) ctx.drawImage(im, X(s.x[i] + L) - r, Y(s.y[i]) - r, 2 * r, 2 * r); else if (s.x[i] > L - s.r[i]) ctx.drawImage(im, X(s.x[i] - L) - r, Y(s.y[i]) - r, 2 * r, 2 * r); } }
+    if (S.mode === 'shear') { /* the box repeats sideways: cover the copies outside it and mark its edges */
+      ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, X(0), H); ctx.fillRect(X(o.L), 0, W - X(o.L), H);
+      ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(view.box[3])); ctx.lineTo(X(0), Y(view.box[1])); ctx.moveTo(X(o.L), Y(view.box[3])); ctx.lineTo(X(o.L), Y(view.box[1])); ctx.stroke(); ctx.setLineDash([]);
+      const yL = Y(lidY() + 0.006); ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(o.L * 0.35), yL); ctx.lineTo(X(o.L * 0.65), yL); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(X(o.L * 0.65) + 8 * p, yL); ctx.lineTo(X(o.L * 0.65), yL - 5 * p); ctx.lineTo(X(o.L * 0.65), yL + 5 * p); ctx.fill(); }
+    /* scale bar and clock */
+    const bar = sc * 0.01 > 160 * p ? 0.005 : sc * 0.01 < 30 * p ? 0.05 : 0.01;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(14 * p, H - 14 * p); ctx.lineTo(14 * p + bar * sc, H - 14 * p); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left'; ctx.fillText(`${bar * 100} cm`, 14 * p, H - 18 * p);
+    ctx.textBaseline = 'top'; ctx.fillText(`t = ${f(s.t, 2)} s`, 14 * p, 10 * p);
+    if (S.mode === 'slide' && s.t === 0) { ctx.fillText('gate', X(0) + 6 * p, Y(S.set.geo.yA + o.Hr) + 4 * p); }
+  }
+  function drawPlot() {
+    const r = pcan.getBoundingClientRect(); if (!r.width || !T) return;
+    const w = r.width, h = r.height, d = window.devicePixelRatio || 1; if (pcan.width !== Math.round(w * d)) { pcan.width = Math.round(w * d); pcan.height = Math.round(h * d); }
+    pctx.setTransform(d, 0, 0, d, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, w, h);
+    const L = 40, R = 8, Tp = 8, B = 22, hs = S.hist; let tmax = 1, lo = Infinity, hi = -Infinity;
+    for (const [t, v] of hs) { tmax = Math.max(tmax, t); for (const q of v) if (isFinite(q)) { lo = Math.min(lo, q); hi = Math.max(hi, q); } }
+    if (!isFinite(lo)) { lo = 0; hi = 1; } const pad = Math.max(1, (hi - lo) * 0.1); lo -= pad; hi += pad;
+    const xs = (t) => L + (w - L - R) * t / tmax, ys = (v) => h - B - (h - B - Tp) * (v - lo) / (hi - lo);
+    pctx.strokeStyle = T.line; pctx.lineWidth = 1; pctx.strokeRect(L, Tp, w - L - R, h - B - Tp);
+    pctx.fillStyle = T.muted; pctx.font = `10px ${T.mono}`; pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+    pctx.fillText(f(hi - pad, 0), L - 4, ys(hi - pad)); pctx.fillText(f(lo + pad, 0), L - 4, ys(lo + pad));
+    pctx.textAlign = 'center'; pctx.textBaseline = 'top'; pctx.fillText('0', L, h - B + 4); pctx.fillText(`${f(tmax, 1)} s`, w - R - 14, h - B + 4);
+    pctx.save(); pctx.translate(10, (h - B + Tp) / 2); pctx.rotate(-Math.PI / 2); pctx.textBaseline = 'middle'; pctx.fillText('mm', 0, 0); pctx.restore();
+    S.kinds.forEach((k, j) => { pctx.strokeStyle = COLORS[k.color]; pctx.lineWidth = 2; pctx.beginPath(); let pen = false;
+      for (const [t, v] of hs) { const q = v[j]; if (!isFinite(q)) { pen = false; continue; } pen ? pctx.lineTo(xs(t), ys(q)) : pctx.moveTo(xs(t), ys(q)); pen = true; } pctx.stroke(); });
+  }
+  function readouts() {
+    if (!S.set) return; const s = S.set.s, o = S.set.o, dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Time t', `${f(s.t, 2)} s`) + dd('Speed', S.run ? `${f(S.rate, 2)} × real time` : '—');
+    const nb = s.placed.reduce((a, b) => a + b, 0) - s.lost; h += dd('Beads', String(nb) + (s.lost ? ` (${s.lost} flew out)` : ''));
+    if (S.mode === 'drum') { const Fr = gfFroude(S.rpm, o.R, GF_G); h += dd('Froude number ω²R/g', f(Fr, 3)); if (!S.blind) h += dd('Critical rate √(g/R)', `${f(gfCriticalRpm(o.R, GF_G), 0)} rpm`); }
+    if (S.mode === 'shaker') { const A = S.Gamma * GF_G / Math.pow(2 * Math.PI * S.f, 2); h += dd('Amplitude A', `${f(A * 1000, 2)} mm`); }
+    if (S.mode === 'shear') { const hl = lidY() - s.r[0]; h += dd('Layer thickness h', `${f(hl * 1000, 1)} mm`) + dd('Shear rate U/h', `${f(S.U / hl, 1)} s⁻¹`); }
+    if (S.mode === 'slide') { const xs = []; for (let i = 0; i < s.n; i++) if (!s.wall[i]) xs.push(s.x[i]); xs.sort((p, q) => p - q);
+      const fx = xs.length ? xs[Math.floor(0.95 * (xs.length - 1))] : NaN; h += dd('Front of the slide (all but the farthest 5 % of grains)', `${f(fx * 100, 1)} cm past the gate`, 'wide'); }
+    if (S.mode === 'frame') { const Lq = GF_LIQ[S.liquid]; h += dd('Liquid', `${f(Lq[0], 0)} kg/m³, ${f(Lq[1] * 1000, Lq[1] < 0.01 ? 2 : 1)} mPa·s`, 'wide');
+      if (!S.blind) S.kinds.forEach((k) => { const rp = GF_MAT[k.mat], v = rp > Lq[0] ? gfSettle(k.d / 1000, rp, Lq[0], Lq[1], GF_G) : -gfSettle(k.d / 1000, Lq[0] + (Lq[0] - rp), Lq[0], Lq[1], GF_G);
+        h += dd(`Settling speed, ${CNAMES[k.color].toLowerCase()} ${f(k.d, 1)} mm ${MATS[k.mat].toLowerCase()}`, rp > Lq[0] ? `${f(v * 1000, 1)} mm/s` : `rises at ${f(-v * 1000, 1)} mm/s (lighter than the liquid)`, 'wide'); }); }
+    const m = measure(); h += `<div class="wide"><dt>${MEASURE[S.mode][0]}</dt><dd>${S.kinds.map((k, j) => `<span style="color:${COLORS[k.color]}">●</span> ${f(m[j], 1)} mm`).join('  ')}</dd></div>`;
+    $('out').innerHTML = h;
+  }
+  function legend() { $('legend').innerHTML = S.kinds.map((k) => `<span style="--c:${COLORS[k.color]}">${CNAMES[k.color]} ${f(k.d, 1)} mm</span>`).join(''); $('plotHint').textContent = `${MEASURE[S.mode][0]}, mm, against time. ${MEASURE[S.mode][1]}`; }
+
+  /* ---------- the sand kinds panel ---------- */
+  const opt = (obj, v) => Object.keys(obj).map((k) => `<option value="${k}"${k === v ? ' selected' : ''}>${obj[k]}</option>`).join('');
+  function kindsUI() {
+    $('kinds').innerHTML = S.kinds.map((k, j) => `<div class="kind" data-k="${j}">
+      <div class="khead"><span class="dot" style="background:${COLORS[k.color]}"></span><b>Kind ${j + 1}</b>
+        <select data-f="color" aria-label="Color of kind ${j + 1}">${opt(CNAMES, k.color)}</select>
+        ${S.kinds.length > 1 ? `<button type="button" class="x" data-del="${j}" aria-label="Remove kind ${j + 1}" title="Remove this kind">×</button>` : ''}</div>
+      <div><div class="slider-head"><label for="k${j}n">Number</label><output for="k${j}n">${k.n}</output></div><input type="range" id="k${j}n" data-f="n" min="0" max="500" step="1" value="${k.n}"></div>
+      <div><div class="slider-head"><label for="k${j}d">Diameter</label><output for="k${j}d">${f(k.d, 1)} mm</output></div><input type="range" id="k${j}d" data-f="d" min="1" max="15" step="0.5" value="${k.d}"></div>
+      <div><div class="slider-head"><label for="k${j}s">Size spread</label><output for="k${j}s">± ${k.spread} %</output></div><input type="range" id="k${j}s" data-f="spread" min="0" max="50" step="5" value="${k.spread}"></div>
+      <div><div class="slider-head"><label for="k${j}m">Roughness (friction μ)</label><output for="k${j}m">${f(k.mu, 2)}</output></div><input type="range" id="k${j}m" data-f="mu" min="0" max="1" step="0.05" value="${k.mu}"></div>
+      <div class="two"><label>Shape<select data-f="shape">${opt({ round: 'Round beads', angular: 'Angular grains' }, k.shape)}</select></label>
+        <label>Material<select data-f="mat">${opt(MATS, k.mat)}</select></label></div></div>`).join('');
+    $('addKind').disabled = S.kinds.length >= 5; legend();
+  }
+  let rebuildT = 0;
+  function soon() { clearTimeout(rebuildT); rebuildT = setTimeout(() => { setRun(false); build(); drawAll(); }, 250); }
+  $('kinds').addEventListener('input', (e) => {
+    const el = e.target, row = el.closest('[data-k]'); if (!row || !el.dataset.f) return; const k = S.kinds[+row.dataset.k], fld = el.dataset.f;
+    k[fld] = el.type === 'range' ? +el.value : el.value; S.preset = 'custom'; syncChips();
+    if (el.type === 'range') { const out = row.querySelector(`output[for="${el.id}"]`); out.textContent = fld === 'd' ? `${f(k.d, 1)} mm` : fld === 'spread' ? `± ${k.spread} %` : fld === 'mu' ? f(k.mu, 2) : String(k.n); }
+    if (fld === 'color') { row.querySelector('.dot').style.background = COLORS[k.color]; legend(); draw(); drawPlot(); readouts(); return; }
+    S.msg = 'Changing the sand refills the apparatus.'; status(); soon();
+  });
+  $('kinds').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (!b) return; S.kinds.splice(+b.dataset.del, 1); S.preset = 'custom'; syncChips(); kindsUI(); soon(); });
+  $('addKind').addEventListener('click', () => { if (S.kinds.length >= 5) return; const used = S.kinds.map((k) => k.color), c = Object.keys(COLORS).find((x) => !used.includes(x)) || 'blue';
+    S.kinds.push(K(50, 5, 0.4, c)); S.preset = 'custom'; syncChips(); kindsUI(); soon(); });
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  function showMode() { for (const el of document.querySelectorAll('[data-m]')) el.hidden = el.dataset.m !== S.mode; $('flip').hidden = S.mode !== 'frame'; }
+  function sync() {
+    $('mode').value = S.mode; $('start').value = S.start; $('liquid').value = S.liquid; $('speed').value = String(S.speed);
+    $('sRpm').value = S.rpm; $('oRpm').textContent = `${S.rpm} rpm`; $('sF').value = S.f; $('oF').textContent = `${S.f} Hz`; $('sGam').value = S.Gamma; $('oGam').textContent = `${f(S.Gamma, 1)} g`;
+    $('sU').value = S.U; $('oU').textContent = `${f(S.U, 2)} m/s`; $('sLid').value = S.lid; $('oLid').textContent = `${f(S.lid * 1000, 0)} g`; $('sAlpha').value = S.alpha; $('oAlpha').textContent = `${S.alpha}°`;
+    showMode(); syncChips();
+  }
+  function syncChips() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function setRun(on) { S.run = on; card.away(on); S.rate = 1; S.wallStart = performance.now(); S.simStart = S.set ? S.set.s.t : 0;
+    const s = S.set && S.set.s; $('go').textContent = on ? 'Pause' : s && s.t > 0 ? 'Resume' : S.mode === 'slide' ? 'Open the gate' : S.mode === 'frame' ? 'Flip and run' : 'Start';
+    $('go').classList.toggle('attn', !on); }
+  function applyPreset(key) { const c = PRESETS[key];
+    Object.assign(S, { preset: key, mode: c.mode, start: c.start, kinds: c.kinds.map((k) => Object.assign({}, k)) });
+    for (const q of ['rpm', 'f', 'Gamma', 'U', 'lid', 'alpha', 'liquid']) if (c[q] != null) S[q] = c[q];
+    $('presetHint').textContent = c.hint; sync(); kindsUI(); build(); setRun(false); drawAll(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const live = (k, v) => { S[k] = v; S.preset = 'custom'; if (S.set) { S.set.o[k] = v; if (k === 'lid') S.set.s.bodies[1].M = v; } sync(); readouts(); };
+  $('sRpm').addEventListener('input', (e) => live('rpm', +e.target.value));
+  $('sF').addEventListener('input', (e) => live('f', +e.target.value));
+  $('sGam').addEventListener('input', (e) => live('Gamma', +e.target.value));
+  $('sU').addEventListener('input', (e) => live('U', +e.target.value));
+  $('sLid').addEventListener('input', (e) => live('lid', +e.target.value));
+  $('sAlpha').addEventListener('input', (e) => { S.alpha = +e.target.value; S.preset = 'custom'; sync(); soon(); });
+  $('liquid').addEventListener('change', (e) => { S.liquid = e.target.value; S.preset = 'custom'; const L = GF_LIQ[S.liquid]; if (S.set) S.set.s.p.fluid = { rho: L[0], mu: L[1] }; sync(); readouts(); });
+  $('start').addEventListener('change', (e) => { S.start = e.target.value; S.preset = 'custom'; syncChips(); soon(); });
+  $('mode').addEventListener('change', (e) => { const first = { drum: 'drum2', shaker: 'brazil', shear: 'shear', slide: 'slide', frame: 'frame' }[e.target.value]; applyPreset(first); });
+  $('speed').addEventListener('change', (e) => { S.speed = +e.target.value; setRun(S.run); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); });
+  $('go').addEventListener('click', () => { if (!S.run && S.mode === 'frame' && S.set.s.t === 0) gfFlip(S.set); setRun(!S.run); });
+  $('flip').addEventListener('click', () => { gfFlip(S.set); if (!S.run) setRun(true); });
+  $('reset').addEventListener('click', () => { setRun(false); build(); drawAll(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  function status() { $('status').textContent = S.msg || ''; }
+  function drawAll() { draw(); readouts(); drawPlot(); legend(); }
+
+  /* Copy link carries the sand kinds (VD.share.picture in demos/lib/vd.js) */
+  if (VD.share && VD.share.picture) VD.share.picture('sand', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ m: S.mode, s: S.start, k: S.kinds }) : ''),
+    set: (str) => { const q = VD.share.unpack(str); if (!q || !q.k) return; S.mode = q.m || S.mode; S.start = q.s || S.start; S.kinds = q.k.slice(0, 5); S.preset = 'custom'; sync(); kindsUI(); build(); setRun(false); drawAll(); } });
+
+  /* ---------- the clock: as many steps as fit in about 12 ms of each frame, up to real time ---------- */
+  let last = performance.now(), lastRead = 0;
+  function frame(now) {
+    const wall = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && S.set) {
+      const s = S.set.s, goal = s.t + wall * S.speed, t0 = performance.now(), t1 = s.t;
+      while (s.t < goal && performance.now() - t0 < 12) for (let k = 0; k < 20 && s.t < goal; k++) gfStep(s, S.set.drive);
+      S.rate = 0.9 * S.rate + 0.1 * (wall > 0 ? (s.t - t1) / wall : 1);
+      if (s.t - S.lastSample >= 0.05) sample();
+      draw();
+      if (now - lastRead > 250) { readouts(); drawPlot(); lastRead = now; }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.tools({ el: can, strip: '#strip', time: () => (S.set ? S.set.s.t : null), scale: () => (view ? 1 / view.sc : null) });
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('drum2'); resize();
+  window.__gf = { S, applyPreset, build, drawAll, setRun, runTo: (T) => { const s = S.set.s; while (s.t < T) { gfStep(s, S.set.drive); if (s.t - S.lastSample >= 0.05) sample(); } drawAll(); } };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

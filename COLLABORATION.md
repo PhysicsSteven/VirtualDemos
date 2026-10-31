@@ -5918,3 +5918,32 @@ Steve: "let's recount and remake the plan". Read only against main 2727491 (all 
   Current in a sheet, Chain of ten, H₂⁺ orbitals, Kronig–Penney) and twelve parts of existing worksheets.
 - Report: https://claude.ai/artifact/QqssrZVmR1jspc3FM2sops (Version 5; copy in the project files research folder as
   phet-parity-2026-10-31-pm.html; the still missing list there was updated to the new totals).
+## 2026-10-31 Claude: Granular Flow, a new demo (Steve asked, no worksheet)
+
+Steve linked a video of colored beads sorting in a rotating drum and in a sand picture ornament, and asked for a demo of
+landslides and of how randomly sized grains separate when rotated, sheared or vibrated, with each kind of sand's size,
+color, amount and roughness set by the student. Steve: no worksheet, just a demo.
+
+- `demos/granular-flow.html` (Physics I, Vol 1 §6.2, §6.4, §9.4; topics Forces and Fluids). A soft contact model of grains
+  in one flat layer (Cundall and Strack): linear spring and dashpot along the line of centres (kn = 3000 m g/d of the
+  smallest grain, overlaps a few percent), a tangential spring with Coulomb's limit μFn (pair μ the mean of the two),
+  rolling resistance 0.02 (round) or 0.2 (angular) Reff Fn, walls of glued grains. Verlet pair list with a skin, step a
+  tenth of the smallest collision time; about real time on a desktop, the clock shows simulated time.
+- Five apparatus, 13 setups: rotating drum (two sizes, one size two colors, three sizes, rough and smooth, 200 rpm stuck to
+  the wall), shaken box (Brazil nut, two sizes), shear box (sliding lid on the beads by its weight, repeating sideways),
+  landslide (gate lifts; 30° with stones; sand and glass beads on 25°), sand picture in glycerol water (Schiller and
+  Naumann drag, buoyancy, liquid moving with the frame; liquids from the Glycerine Producers' Association 1963 tables).
+- Sand panel: up to five kinds, each with number, diameter, size spread, color, friction μ, shape and material (glass,
+  quartz sand, steel, acrylic). Copy link carries the kinds. Sorting over time graph: each kind's mean position.
+- One modelling choice worth review: in the dry apparatus each grain is a disk 3 mm thick (weight goes as area). With
+  spheres in one flat layer a big bead weighs more for its room than a small one, and the drum then sorted big beads
+  inward (density sorting), the opposite of experiments; with disks the small core forms in about 10 s. The sand picture
+  keeps spheres so settling follows the sphere drag law. Restitution is about 0.5 (0.5 to 0.6 with where a collision falls
+  in a step; damping set by bisection for the clamped contact at the step used).
+- Every setup text was checked against seeded runs: `curriculum/validation/test_granular_flow.cjs` 14 pass (resting
+  overlap m g/kn; restitution; sliding into rolling at 2/3 v0 for a disk and 5/7 for a sphere; settling speed and Stokes
+  limit; Brazil nut rises at Γ 2.5 and not at 0.8; drum small core and three sizes in order; 200 rpm sticks, 130 does
+  not though above the critical 113; shear lifts big beads; landslide stones run farther; sand leaves far more on a 25°
+  slope than beads; steel below glass and 4 mm below 2 mm in the sand picture; acrylic floats in 90 % glycerol).
+- vdcheck `--only after` 0 problems, `--only clip` 0 cut off; screenshots at 1400, 1280 and 390 px, light and dark.
+  Catalog, map, topics, course pages, thumbnail, What's new. No notes page or key (no worksheet).
