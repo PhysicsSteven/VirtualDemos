@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Granular Flow: Sorting and Landslides: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Granular Flow: Sorting and Landslides</h1><ul class="meta"><li><a href="../demos/granular-flow.html">Open the demo</a></li><li>Physics I (friction, drag, collisions), or any class as a demonstration</li><li>10 to 20 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Sand, beads and gravel flow like a liquid when they are stirred, but rest like a solid when they are not; friction between grains decides the steepest slope a pile can hold (the angle of repose).</li>
+<li>Mixed sizes sort themselves whenever grains move past each other: small grains drop through the gaps that open under big ones, and cannot be pushed back up, so the big ones end up on top or outside.</li>
+<li>Sorting by size needs no difference in weight: a single big bead rises in a shaken box although it is the heaviest bead there.</li>
+<li>In a liquid, grains settle at a terminal speed set by their weight less the buoyancy against the drag; bigger and denser grains land first.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know what friction, a terminal speed and a coefficient of restitution are. <strong>Start</strong> runs the chosen setup (in the landslide it lifts the gate, in the sand picture it flips the frame); <strong>Refill</strong> puts the sand back. The card sets the apparatus and its drive (turning rate, shaking, lid speed, slope angle, liquid) and how the sand starts. The <strong>Sand</strong> panel sets up to five kinds of grain: number, diameter, size spread, color, roughness (friction μ), shape and material; changing the sand refills the apparatus. The graph tracks where each kind sits. <strong>Blind</strong> in <strong>Lab</strong> hides the predicted critical rate and settling speeds.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Drum: one size, two colors.</strong> Run it first: the colors mix and stay mixed (Q1).</li>
+<li><strong>Drum: two sizes.</strong> Ask for a prediction, then run for about three turns and watch the graph (Q2).</li>
+<li><strong>Shaken: Brazil nut.</strong> Run it at Γ = 2.5, then at Γ below 1 (Q3).</li>
+<li><strong>Landslide.</strong> Open the gate; look at where the big stones end up. Then compare sand and glass beads on 25° (Q4).</li>
+<li><strong>Sand picture.</strong> Flip it and read the settling speeds (Q5, Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the drum with one size and two colors, the colors mix and never separate again. In the drum with two sizes, the sizes separate. What is different about the two mixtures?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict where the small beads will end up in the turning drum: near the wall, near the surface, or in the middle of the bed. Run it and explain what you see in terms of the thin layer that flows down the surface.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The 12 mm bead in the shaken box is heavier than any grain of sand around it, yet it rises. Why does it rise, and why does nothing happen when Γ = A(2πf)²/g is below 1?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> On a 25° slope, about a quarter of a pile of angular sand stays on the slope, but almost all of a pile of glass beads runs off. What does this tell you about the angles of repose of the two? Why do angular rocks make steeper piles than round pebbles?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the sand picture with 75 % glycerol, the readouts give the settling speeds of the 2 mm and 4 mm grains. Is the ratio the 4 of Stokes's law (speed ∝ d²)? Use the Reynolds number to explain why not.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Turn the drum to 200 rpm. Use ω²R/g to explain why the beads ride round with the wall. Why do they still tumble at 130 rpm, although that is above the critical rate √(g/R)?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Heavy things sink."</strong> In a shaken box the heaviest bead rises; size and the gaps between grains matter more than weight.</li>
+<li><strong>"Shaking or stirring always mixes."</strong> It mixes grains that differ only in color; grains that differ in size or roughness sort.</li>
+<li><strong>"Sand is either a solid or a liquid."</strong> It is both: it holds a slope up to its angle of repose and flows beyond it.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>A soft contact model (Cundall and Strack 1979): grains overlap slightly and push apart with a spring and a damper (coefficient of restitution about 0.5); sideways a spring resists sliding up to Coulomb's limit μFn; a rolling resistance torque models the corners of angular grains. The springs are far softer than glass so the time step can be longer; overlaps stay at a few percent of a diameter.</li>
+<li>In the drum, shaken box, shear box and landslide each grain is a disk 3 mm thick, so its weight goes as its area, as in a truly flat layer. In the sand picture each grain is a sphere settling with the Schiller and Naumann drag 3πηdv(1 + 0.15 Re^0.687) less buoyancy; the liquid moves with the frame as a solid body and its flow between the grains is left out.</li>
+<li>Tests (curriculum/validation/test_granular_flow.cjs): resting overlap mg/kn, restitution, a disk and a sphere sliding into rolling at 2/3 and 5/7 of their speed, settling speeds and Stokes's law, and seeded runs of every setup against what its text says.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Falling Ball Viscometer measures the Stokes drag of a single sphere, the law behind the sand picture.</li>
+<li>Forces and Friction shows static and kinetic friction on a single block; here thousands of contacts share it.</li>
+<li>Rosato et al., Phys. Rev. Lett. 58, 1038 (1987); Ottino and Khakhar, Annu. Rev. Fluid Mech. 32, 55 (2000).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

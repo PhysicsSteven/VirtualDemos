@@ -5946,7 +5946,8 @@ color, amount and roughness set by the student. Steve: no worksheet, just a demo
   not though above the critical 113; shear lifts big beads; landslide stones run farther; sand leaves far more on a 25°
   slope than beads; steel below glass and 4 mm below 2 mm in the sand picture; acrylic floats in 90 % glycerol).
 - vdcheck `--only after` 0 problems, `--only clip` 0 cut off; screenshots at 1400, 1280 and 390 px, light and dark.
-  Catalog, map, topics, course pages, thumbnail, What's new. No notes page or key (no worksheet).
+  Catalog, map, topics, course pages, thumbnail, What's new. Teaching notes notes/src/granular-flow.md (the Physics I
+  package test needs them; added in a follow up commit after the regression run caught it); six questions, no key yet.
 
 ## 2026-10-31 · Claude · Last partly covered sims, Group 4 (atoms and light, fits)
 
