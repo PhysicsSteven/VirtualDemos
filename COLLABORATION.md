@@ -5903,3 +5903,18 @@ rebuilt in TeacherKeys, no new questions) and What's new (one entry). Opening st
   of a loaded string) is the strongest; **drumhead** ratios could be a part of the Chladni worksheet; the **free and fixed
   end pulse** fits the wave power worksheet as a short qualitative part; **two pulses** and **wave packets** (Δx against
   1/Δk) are short additions to the Standing Waves and Timbre worksheets.
+
+## 2026-10-31 · Claude · Parity recount after the partial gaps, and the remade plan (Steve)
+
+Steve: "let's recount and remake the plan". Read only against main 2727491 (all five partial gap groups in); no demos changed.
+- PhET: 55 covered, 15 partly, 0 missing of 70 (morning 53, 17, 0). Fourier: Making Waves (Timbre in space and packets) and
+  Balloons and Static Electricity (Charging by rubbing) moved to covered. Normal Modes (no 2D grid), John Travoltage (no
+  doorknob spark) and Models of the Hydrogen Atom (no models side by side) stay partly.
+- Six collections: 297 covered, 1 partly, 46 missing of 344 (morning 273, 25, 46). The one partly left is Falstad's 2D
+  electrodynamics TE: In a plane runs TM only. The missing list is unchanged (code searched for each missing sim's idea).
+- Plan, all fold ins: Round 1 Physics I benches (10 builds, 5.5 sessions), Round 2 Physics II (5, 3), Round 3 waves and
+  acoustics (5, 3), Round 4 modern and astro (7, 5.5), Round 5 parity to the letter (12, about 8, recommended skip).
+  Millikan flagged as maybe its own worksheet. Worksheet sweep candidates sorted: five new worksheets (Atwood's machine,
+  Current in a sheet, Chain of ten, H₂⁺ orbitals, Kronig–Penney) and twelve parts of existing worksheets.
+- Report: https://claude.ai/artifact/QqssrZVmR1jspc3FM2sops (Version 5; copy in the project files research folder as
+  phet-parity-2026-10-31-pm.html; the still missing list there was updated to the new totals).
