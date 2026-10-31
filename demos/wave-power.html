@@ -136,12 +136,12 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses. Left and right arrows change the driver frequency by 0.1 Hz (with Shift, 1 Hz); up and down change the amplitude by 0.05 mm; space starts or stops the vibrator."></canvas>
-        <div class="viewbar"><button type="button" class="spin attn" id="play">Start the vibrator</button></div>
+        <div class="viewbar"><button type="button" class="spin attn" id="play">Start the vibrator</button><button type="button" class="spin" id="pulse">Send one pulse</button></div>
         <span class="droptag" id="dropTag" hidden>Drop on the hanger</span>
         <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
       <div class="card" id="card" role="group" aria-labelledby="cardTitle">
-        <span class="card-title" id="cardTitle">Set up (fades while the vibrator runs)</span>
+        <span class="card-title" id="cardTitle">Set up (fades while the vibrator or a pulse runs)</span>
         <div class="chips" id="strings" role="group" aria-label="String">
           <button type="button" data-s="A" aria-pressed="false">String A</button>
           <button type="button" data-s="B" aria-pressed="true">String B</button>
@@ -153,6 +153,8 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-a="matched" aria-pressed="true">Matched</button>
           <button type="button" data-a="soft" aria-pressed="false">Too soft</button>
           <button type="button" data-a="stiff" aria-pressed="false">Too stiff</button>
+          <button type="button" data-a="free" aria-pressed="false">Free end</button>
+          <button type="button" data-a="fixed" aria-pressed="false">Fixed end</button>
         </div>
         <div><div class="slider-head"><label for="sL">Length L, vibrator to absorber</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.5" max="2" step="0.01"></div>
         <div class="btnrow"><button type="button" class="btn" id="Lm">L −1 cm</button><button type="button" class="btn" id="Lp">L +1 cm</button><button type="button" class="btn" id="newUnknown">New unknown string</button></div>
@@ -202,6 +204,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="tension" aria-pressed="false">Power against tension</button>
           <button type="button" data-p="mismatch" aria-pressed="false">Mismatched absorber</button>
           <button type="button" data-p="unknown" aria-pressed="false">Unknown string</button>
+          <button type="button" data-p="pulse" aria-pressed="false">One pulse: free and fixed ends</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -254,7 +257,9 @@ table.rows input:focus { border-color: var(--accent); }
   const STRINGS = { A: { name: 'String A', mu: 0.40e-3 }, B: { name: 'String B', mu: 1.20e-3 }, C: { name: 'String C', mu: 3.60e-3 } };   /* kg/m, chosen (as in Linear Density of a String) */
   const UNKNOWN_MIN = 0.50e-3, UNKNOWN_MAX = 3.00e-3;   /* kg/m, range of the unknown string, in 0.01 g/m steps */
   /* the absorber is a dashpot on the string's end, b in N·s/m, given as a multiple of the string's impedance Z = √(Tμ) */
-  const ABSORBERS = { matched: { name: 'matched (b = Z)', rel: 1 }, soft: { name: 'too soft (b = Z/3)', rel: 1 / 3 }, stiff: { name: 'too stiff (b = 3Z)', rel: 3 } };
+  const ABSORBERS = { matched: { name: 'matched (b = Z)', rel: 1 }, soft: { name: 'too soft (b = Z/3)', rel: 1 / 3 }, stiff: { name: 'too stiff (b = 3Z)', rel: 3 },
+    /* 2026-10-31, for one pulse only: no dashpot at all (a massless ring on a frictionless rod, b = 0) and the string clamped (b → ∞) */
+    free: { name: 'free end (b = 0)', rel: 0, pulseOnly: true }, fixed: { name: 'fixed end (clamped)', rel: Infinity, pulseOnly: true } };
 
   const tension = (mKg) => mKg * G_LAB;
   const waveSpeed = (T, mu) => Math.sqrt(T / mu);
@@ -264,7 +269,42 @@ table.rows input:focus { border-color: var(--accent); }
   /* average energy per meter of that wave, half kinetic and half potential: ½ μ A² ω² (so P = (E/L) v) */
   const energyPerMetre = (f, A, mu) => 0.5 * mu * A * A * (TAU * f) ** 2;
   /* amplitude reflection at a dashpot end: r = (Z − b)/(Z + b) */
-  const reflection = (bRel) => (1 - bRel) / (1 + bRel);
+  const reflection = (bRel) => (bRel === Infinity ? -1 : (1 - bRel) / (1 + bRel));
+
+  /* One pulse (2026-10-31). The blade rises and comes back once, y(0, t) = g(t) = ½A(1 − cos 2πft) for 0 ≤ t ≤ 1/f, and is then held
+     still, so the vibrator end is a fixed end (r₀ = −1). The far end sends back r of whatever reaches it; for a dashpot r = (Z − b)/(Z + b)
+     is the same at every frequency, so the pulse comes back with its shape, scaled by r: upright from a free end (r = +1), inverted from
+     a fixed end (r = −1). The exact solution is the sum of images: after n round trips the outgoing pulse carries (r r₀)ⁿ = (−r)ⁿ,
+     y = Σ (−r)ⁿ [ g(t − 2nL/v − x/v) + r g(t − 2nL/v − (2L − x)/v) ]. */
+  const pulseG = (t, f, A) => (t > 0 && t < 1 / f ? 0.5 * A * (1 - Math.cos(TAU * f * t)) : 0);
+  const pulseGd = (t, f, A) => (t > 0 && t < 1 / f ? 0.5 * A * TAU * f * Math.sin(TAU * f * t) : 0);
+  /* displacement y, velocity y_t and slope y_x at x and time t after the blade starts */
+  function pulseAt(x, t, f, A, L, v, r) {
+    let y = 0, yt = 0, yx = 0;
+    for (let n = 0; ; n++) {
+      const c = n ? (-r) ** n : 1, s = t - 2 * n * L / v;
+      if (s - x / v <= 0 || Math.abs(c) < 1e-12) break;
+      const a = s - x / v, b = s - (2 * L - x) / v, ga = pulseGd(a, f, A), gb = pulseGd(b, f, A);
+      y += c * (pulseG(a, f, A) + r * pulseG(b, f, A)); yt += c * (ga + r * gb); yx += c * (-ga + r * gb) / v;
+    }
+    return { y, yt, yx };
+  }
+  /* energy the pulse carries, Z ∫ g′² dt = ½ π² Z A² f (half kinetic, half potential, as for any wave moving one way) */
+  const pulseEnergy = (f, A, T, mu) => 0.5 * PI * PI * impedance(T, mu) * A * A * f;
+  /* the share of a pulse's energy that has passed a point a time s after its front: u − sin(4πu)/(4π), u = fs */
+  const pulsePassed = (s, f) => { const u = Math.min(1, Math.max(0, s * f)); return u - Math.sin(4 * PI * u) / (4 * PI); };
+  /* energy the far end has taken by time t: each arrival n (amplitude (−r)ⁿ) gives up 1 − r² of its energy there */
+  function pulseTaken(t, f, A, L, T, mu, r) {
+    const v = waveSpeed(T, mu), E = pulseEnergy(f, A, T, mu); let sum = 0;
+    for (let n = 0; ; n++) { const s = t - (2 * n + 1) * L / v, c2 = r * r === 1 ? 1 : (r * r) ** n; if (s <= 0 || c2 < 1e-24) break; sum += c2 * pulsePassed(s, f); }
+    return E * (1 - r * r) * sum;
+  }
+  /* power into the far end at time t: b y_t(L)² = Z (1 − r²) (Σ (−r)ⁿ g′)², finite for the clamp too */
+  function pulsePowerIn(t, f, A, L, T, mu, r) {
+    const v = waveSpeed(T, mu); let s = 0;
+    for (let n = 0; ; n++) { const a = t - (2 * n + 1) * L / v, c = n ? (-r) ** n : 1; if (a <= 0 || Math.abs(c) < 1e-12) break; s += c * pulseGd(a, f, A); }
+    return impedance(T, mu) * (1 - r * r) * s * s;
+  }
 
   /* complex numbers as [re, im] */
   const cmul = (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]];
@@ -310,15 +350,16 @@ table.rows input:focus { border-color: var(--accent); }
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newUnknownMu = () => (Math.round((UNKNOWN_MIN + Math.random() * (UNKNOWN_MAX - UNKNOWN_MIN)) * 1e5) / 1e5);
-  const S = { str: 'B', unknownMu: newUnknownMu(), abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [100, 50], blind: false, running: false, phase: 0, preset: 'amp', plot: 'A', rows: [], series: 0, energy: true };
+  const S = { str: 'B', unknownMu: newUnknownMu(), abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [100, 50], blind: false, running: false, pulseT: null, phase: 0, preset: 'amp', plot: 'A', rows: [], series: 0, energy: true };
   const PRESETS = {
     amp: { str: 'B', abs: 'matched', L: 1.2, f: 20, A: 0.5, masses: [100, 50], plot: 'A', hint: 'String B with 200 g hanging (the 50 g hanger plus 150 g), at 20 Hz. With the vibrator running, record the power at six or more amplitudes from 0.5 to 5 mm, keeping f and the mass fixed. Doubling A should multiply P by four.' },
     freq: { str: 'B', abs: 'matched', L: 1.2, f: 10, A: 1.0, masses: [100, 50], plot: 'f', hint: 'The same string and mass at A = 1.00 mm. Record the power at six or more frequencies from 10 to 60 Hz, keeping A fixed. Each frequency also changes the wavelength: count the waves on the string.' },
     tension: { str: 'B', abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [], plot: 'T', hint: 'Only the 50 g hanger hangs. At 20 Hz and 1.00 mm, add masses and record the power at each load. More tension makes a faster wave: P = ½ μ A² ω² v grows as √T.' },
     mismatch: { str: 'B', abs: 'soft', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'f', hint: 'The absorber is too soft, so part of each wave comes back and a standing wave forms on top of the traveling one. Change L or f and watch the meter swing up and down, then switch back to Matched: the power no longer depends on L. A matched end is what makes the string act as if it were endless.' },
-    unknown: { str: 'U', abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'A2', hint: 'An unknown string with 200 g hanging: μ is hidden. Measure P against A² at one frequency; the slope is ½ μ ω² v = ½ ω² √(Tμ), which gives μ. New unknown string picks another.' }
+    unknown: { str: 'U', abs: 'matched', L: 1.2, f: 20, A: 1.0, masses: [100, 50], plot: 'A2', hint: 'An unknown string with 200 g hanging: μ is hidden. Measure P against A² at one frequency; the slope is ½ μ ω² v = ½ ω² √(Tμ), which gives μ. New unknown string picks another.' },
+    pulse: { str: 'B', abs: 'fixed', L: 1.6, f: 100, A: 3.0, masses: [100, 50], plot: 'A', hint: 'The blade rises and comes back once, sending a single upward pulse 0.40 m long (v/f) down the string. Send one pulse with the end clamped (Fixed end): it comes back upside down. Then choose Free end (a ring that slides on a smooth rod): it comes back upright. Too soft and Too stiff send back half as tall a pulse, upright and upside down; Matched sends back nothing. The held blade is a fixed end too, so the pulse flips each time it gets back to the vibrator.' }
   };
-  $('modelHint').textContent = 'Model: the string obeys the linear wave equation with no losses along it, so the power is the same at every point. The vibrator moves its end up and down as A cos 2πft. The far end is tied to a dashpot (the absorber) that pushes back with a force b times its velocity; the string’s impedance is Z = √(Tμ), and with b = Z (Matched) no wave comes back, as on an endless string. Too soft is b = Z/3 and too stiff b = 3Z; both send back half the amplitude (a quarter of the power) of each wave that reaches the end. The power meter reads the time average power the absorber takes, exactly. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. The linear wave equation needs small slopes; the readout warns when the largest slope kA passes 0.2. Strings A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Shown is the steady state: the time the waves take to build up is skipped. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise.';
+  $('modelHint').textContent = 'Model: the string obeys the linear wave equation with no losses along it, so the power is the same at every point. The vibrator moves its end up and down as A cos 2πft. The far end is tied to a dashpot (the absorber) that pushes back with a force b times its velocity; the string’s impedance is Z = √(Tμ), and with b = Z (Matched) no wave comes back, as on an endless string. Too soft is b = Z/3 and too stiff b = 3Z; both send back half the amplitude (a quarter of the power) of each wave that reaches the end. The power meter reads the time average power the absorber takes, exactly. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. The linear wave equation needs small slopes; the readout warns when the largest slope kA passes 0.2. Strings A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Shown is the steady state: the time the waves take to build up is skipped. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Send one pulse: the blade rises and comes back once, y = ½A(1 − cos 2πft) for one period 1/f, and is then held still, so it is a fixed end. Each end sends back r = (Z − b)/(Z + b) of the pulse with the same shape (a dashpot takes the same share at every frequency): +1 for a free end (b = 0, a massless ring on a frictionless rod) and −1 for a fixed end (clamped). The motion is the exact sum of the pulse and its reflections, slowed down so that one trip along the string takes 2.5 s. Free and fixed ends are for one pulse only: with nothing to take the energy out, a steady wave would grow without limit at a resonance. Simulated data, no noise.';
   const muNow = () => (S.str === 'U' ? S.unknownMu : STRINGS[S.str].mu);
   const massG = () => HANGER_G + S.masses.reduce((a, b) => a + b, 0);
   const Tnow = () => tension(massG() / 1000);
@@ -328,7 +369,7 @@ table.rows input:focus { border-color: var(--accent); }
   const meterW = () => (S.running ? absorberPower(Fnow(), S.L) : 0);
   const fmtP = (w) => (w * 1000).toPrecision(4);
 
-  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.str === 'U' && S.str !== 'U') S.unknownMu = newUnknownMu(); S.str = c.str; S.abs = c.abs; S.L = c.L; S.f = c.f; S.A = c.A; S.masses = c.masses.slice(); S.plot = c.plot; upd(); }
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.str === 'U' && S.str !== 'U') S.unknownMu = newUnknownMu(); S.str = c.str; S.abs = c.abs; S.L = c.L; S.f = c.f; S.A = c.A; S.masses = c.masses.slice(); S.plot = c.plot; stopPulse(); upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), GEO = {};
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -354,13 +395,15 @@ table.rows input:focus { border-color: var(--accent); }
     $('massList').textContent = `hanger ${HANGER_G} g` + S.masses.map((g) => ` + ${g} g`).join('') + ` = ${massG()} g`;
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
   }
-  const changed = () => { S.preset = ''; upd(); };
+  const changed = () => { S.preset = ''; stopPulse(); upd(); };
   function upd() { sync(); readouts(); draw(); drawPlot(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   $('strings').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (!b) return; const was = S.str; S.str = b.dataset.s;
     if (was === 'U' && S.str !== 'U') capStatus(`The unknown string had μ = ${(S.unknownMu * 1000).toFixed(2)} g/m.`);
     changed(); });
-  $('absorber').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b) { S.abs = b.dataset.a; changed(); } });
+  $('absorber').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (!b) return; S.abs = b.dataset.a;
+    if (ABSORBERS[S.abs].pulseOnly && S.running) { setRun(false); capStatus(PULSE_ONLY); } changed(); });
+  const PULSE_ONLY = 'With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.';
   $('newUnknown').addEventListener('click', () => { S.unknownMu = newUnknownMu(); S.str = 'U'; capStatus('A new unknown string is on the apparatus.'); changed(); });
   const setL = (v) => { const L = Math.min(2, Math.max(0.5, Math.round(v * 100) / 100)); if (L !== S.L) { S.L = L; changed(); } };
   $('sL').addEventListener('input', (e) => setL(+e.target.value));
@@ -397,9 +440,15 @@ table.rows input:focus { border-color: var(--accent); }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
   $('showEnergy').addEventListener('change', (e) => { S.energy = e.target.checked; draw(); });
   /* the Set up card fades away while the vibrator runs (only where it sits over the picture) */
-  function setRun(on, keepCard) { S.running = on; if (keepCard !== undefined) S.keepCard = keepCard; const over = getComputedStyle(card).position === 'absolute', hide = on && over && !S.keepCard; card.classList.toggle('away', hide); card.inert = hide;
+  function setRun(on, keepCard) { S.running = on; if (keepCard !== undefined) S.keepCard = keepCard; const over = getComputedStyle(card).position === 'absolute', hide = (on || S.pulseT != null) && over && !S.keepCard; card.classList.toggle('away', hide); card.inert = hide;
     $('play').textContent = on ? 'Stop the vibrator' : 'Start the vibrator'; $('play').classList.toggle('attn', !on); readouts(); draw(); }
-  $('play').addEventListener('click', () => setRun(!S.running, false));
+  $('play').addEventListener('click', () => { if (!S.running && ABSORBERS[S.abs].pulseOnly) { capStatus(PULSE_ONLY); return; } stopPulse(); setRun(!S.running, false); });
+  /* one pulse: the sim clock runs slowed so that a crossing takes PULSE_CROSS seconds; it stops itself once what is left is under 1% */
+  const PULSE_CROSS = 2.5;
+  function stopPulse() { if (S.pulseT == null) return; S.pulseT = null; $('pulse').textContent = 'Send one pulse'; setRun(S.running); }
+  $('pulse').addEventListener('click', () => {
+    if (S.pulseT != null) { stopPulse(); readouts(); draw(); return; }
+    S.pulseT = 0; $('pulse').textContent = 'Stop the pulse'; setRun(false, false); });
   can.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setF(S.f + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1));
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setA(S.A + (e.key === 'ArrowUp' ? 0.05 : -0.05));
@@ -420,6 +469,12 @@ table.rows input:focus { border-color: var(--accent); }
     h += dd('Predicted P = ½ μ A² ω² v', S.blind || hideMu() ? HID : `${fmtP(travelingPower(S.f, S.A / 1000, Tn, mu))} mW`, true);
     h += dd('Average energy per meter ½ μ A² ω²', S.blind || hideMu() ? HID : `${(energyPerMetre(S.f, S.A / 1000, mu) * 1000).toPrecision(4)} mJ/m`, true);
     h += dd('Part of each wave sent back by the absorber', S.abs === 'matched' ? 'none' : `amplitude ${Math.abs(F.r).toFixed(2)}, power ${(F.r * F.r).toFixed(2)}`, true);
+    if (S.pulseT != null || ABSORBERS[S.abs].pulseOnly || S.preset === 'pulse') {
+      const r = F.r, Ep = pulseEnergy(S.f, S.A / 1000, Tn, mu);
+      h += dd('One pulse at the far end, r = (Z − b)/(Z + b)', r === 0 ? 'r = 0: nothing comes back' : `r = ${r > 0 ? '+' : '−'}${Math.abs(r).toFixed(2)}: comes back ${r > 0 ? 'upright' : 'upside down'}${Math.abs(r) < 1 ? `, ${Math.abs(r).toFixed(2)} as tall` : ''}`, true);
+      h += dd('Pulse length v/f', hideMu() ? HID : `${(v / S.f).toFixed(3)} m`) + dd('Energy in the pulse ½π²ZA²f', S.blind || hideMu() ? HID : `${(Ep * 1e6).toPrecision(3)} µJ`);
+      if (S.pulseT != null) h += dd('Energy the far end has taken', S.blind || hideMu() ? HID : `${(pulseTaken(S.pulseT, S.f, S.A / 1000, S.L, Tn, mu, r) * 1e6).toPrecision(3)} µJ`, true);
+    }
     h += dd('Largest slope of the string, kA', kA > 0.2 ? `${kA.toFixed(3)}: too steep for the linear model, lower A or f` : kA.toFixed(3), true, kA > 0.2 ? 'warn' : '');
     $('out').innerHTML = h;
   }
@@ -511,23 +566,28 @@ table.rows input:focus { border-color: var(--accent); }
     Gr.plate(ctx, 'wave driver', vx, tableY - bh + 12 * q, { s: 6.5 * q });
     Gr.screw(ctx, vx - bw / 2 + 6 * q, tableY - 7 * q, 2 * q); Gr.screw(ctx, vx + bw / 2 - 6 * q, tableY - 7 * q, 2 * q);
     /* string: the steady state seen through a slow strobe, and the blur band a real eye sees */
-    const mu = muNow(), Tn = Tnow(), F = Fnow(), on = S.running;
+    const mu = muNow(), Tn = Tnow(), F = Fnow(), on = S.running, pul = S.pulseT != null, vNow = waveSpeed(Tn, mu);
+    /* one pulse: [y, y_t, y_x] at each point, exact (sum of images) */
+    const PA = (x) => { const o = pulseAt(x, S.pulseT, S.f, S.A / 1000, S.L, vNow, F.r); return [o.y, o.yt, o.yx]; };
     const N = Math.max(160, Math.round(S.L * ppm / 2)), clip = Math.max(20 * p, Math.min(sy - top - 96 * p, tableY - 30 * q - sy)), yScale = clip * 0.9 / 0.005;   /* 5 mm, the largest A, fills 90% of the room */
-    const ys = []; for (let i = 0; i <= N; i++) ys.push(on ? Yat(F, S.L * i / N) : [0, 0]);
+    const ys = []; for (let i = 0; i <= N; i++) ys.push(on ? Yat(F, S.L * i / N) : pul ? PA(S.L * i / N) : [0, 0]);
     const sx = (i) => vx + S.L * ppm * i / N, cl = (d) => Math.max(-clip, Math.min(clip, d));
-    ctx.fillStyle = T.env; ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); for (let i = N; i >= 0; i--) ctx.lineTo(sx(i), sy + cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); ctx.closePath(); ctx.fill();
-    const c = Math.cos(S.phase), s = Math.sin(S.phase), yAt = (i) => (reduce ? 0 : ys[i][0] * c - ys[i][1] * s);
+    if (!pul) { ctx.fillStyle = T.env; ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); for (let i = N; i >= 0; i--) ctx.lineTo(sx(i), sy + cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); ctx.closePath(); ctx.fill(); }
+    const c = Math.cos(S.phase), s = Math.sin(S.phase), yAt = (i) => (pul ? ys[i][0] : reduce ? 0 : ys[i][0] * c - ys[i][1] * s);
+    /* energy per meter, ½μy_t² + ½Ty_x², of the steady wave or of the pulse */
+    const eAt = (i) => (pul ? 0.5 * mu * ys[i][1] * ys[i][1] + 0.5 * Tn * ys[i][2] * ys[i][2] : energyAt(F, S.L * i / N, reduce ? 0 : S.phase, mu));
+    const ePk = mu * (PI * S.f * S.A / 1000) ** 2;   /* a lone pulse's largest energy per meter, μ (πfA)² */
     /* where the energy is: a glow along the string, brighter where the energy per meter (½μy_t² + ½Ty_x²) is larger. In a matched
        string the bright patches ride along with the crests into the absorber; with a mismatched end part of it stands still */
-    if (on) {
-      const eg = []; let egMax = 0; for (let i = 0; i <= N; i++) { const e = energyAt(F, S.L * i / N, reduce ? 0 : S.phase, mu); eg.push(e); egMax = Math.max(egMax, e); }
+    if (on || pul) {
+      const eg = []; let egMax = pul ? ePk : 0; for (let i = 0; i <= N; i++) { const e = eAt(i); eg.push(e); egMax = Math.max(egMax, e); }
       ctx.save(); ctx.lineCap = 'round'; ctx.lineWidth = 9 * Math.sqrt(p * q); ctx.shadowColor = T.glow; ctx.shadowBlur = 8 * q;
       for (let i = 0; i < N; i += 2) { const a = egMax > 0 ? (eg[i] + eg[Math.min(N, i + 2)]) / 2 / egMax : 0; if (a < 0.04) continue;
         ctx.globalAlpha = 0.7 * a; ctx.strokeStyle = T.glow; ctx.beginPath(); ctx.moveTo(sx(i), sy - cl(yAt(i) * yScale)); ctx.lineTo(sx(Math.min(N, i + 2)), sy - cl(yAt(Math.min(N, i + 2)) * yScale)); ctx.stroke(); }
       ctx.restore();
       /* the net flow, the same power the meter on the absorber reads */
       const fy = Math.min(tableY - 30 * q, sy + clip + 16 * p), fx0 = vx + 40 * q, fx1 = ax - 26 * q;
-      if (fx1 - fx0 > 120 * p) {
+      if (on && fx1 - fx0 > 120 * p) {
         ctx.save(); ctx.strokeStyle = T.glow; ctx.fillStyle = T.glow; ctx.globalAlpha = 0.85; ctx.lineWidth = 2.4 * p;
         ctx.beginPath(); ctx.moveTo(fx0, fy); ctx.lineTo(fx1 - 8 * p, fy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(fx1, fy); ctx.lineTo(fx1 - 11 * p, fy - 6 * p); ctx.lineTo(fx1 - 11 * p, fy + 6 * p); ctx.closePath(); ctx.fill(); ctx.restore();
@@ -538,21 +598,33 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.6)' : 'rgba(60,30,10,0.25)'; ctx.shadowBlur = 3 * q; ctx.shadowOffsetY = 2 * q;
     ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(yAt(i) * yScale)); ctx.stroke(); ctx.restore();
     /* blade of the vibrator, with the string's clip on its tip */
-    const by = sy - cl(on && !reduce ? S.A / 1000 * c * yScale : 0); Gr.rod(ctx, vx, by, vx, tableY - bh + 1, 3.2 * q, { color: '#b9c1cb' });
+    const by = sy - cl(pul ? pulseG(S.pulseT, S.f, S.A / 1000) * yScale : on && !reduce ? S.A / 1000 * c * yScale : 0); Gr.rod(ctx, vx, by, vx, tableY - bh + 1, 3.2 * q, { color: '#b9c1cb' });
     ctx.fillStyle = '#d2a64a'; ctx.beginPath(); ctx.roundRect(vx - 5 * q, by - 4 * q, 10 * q, 7 * q, 2 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
     /* the absorber: a dashpot under the string's end, its piston rod tied to the string; then the string runs on to the pulley */
     const yEnd = sy - cl(yAt(N) * yScale), dw = 30 * q, dBot = tableY, dTop = Math.max(sy + 22 * q, dBot - 70 * q);
-    const pistonY = Math.min(dBot - 8 * q, dTop + 10 * q + (yEnd - sy) * 0.3);
-    Gr.rod(ctx, ax, yEnd, ax, pistonY, 2 * q, { color: '#c3cad3' });
-    /* the cylinder: clear plastic over the oil, so the piston shows */
-    Gr.shadow(ctx, ax, dBot, dw * 0.8, 4 * q);
-    gr = ctx.createLinearGradient(ax - dw / 2, 0, ax + dw / 2, 0); gr.addColorStop(0, 'rgba(120,140,160,0.55)'); gr.addColorStop(0.3, 'rgba(235,242,250,0.55)'); gr.addColorStop(1, 'rgba(90,105,125,0.6)');
-    ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.fill();
-    ctx.fillStyle = 'rgba(200,150,40,0.35)'; ctx.fillRect(ax - dw / 2 + 2 * q, dTop + (dBot - dTop) * 0.35, dw - 4 * q, (dBot - dTop) * 0.65 - 6 * q);
-    Gr.slotted(ctx, ax, pistonY, dw - 6 * q, 4 * q);
-    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.stroke();
-    Gr.box(ctx, ax - dw / 2 - 3 * q, dTop - 4 * q, dw + 6 * q, 6 * q, { r: 2 * q, shadow: false }); Gr.box(ctx, ax - dw / 2 - 4 * q, dBot - 6 * q, dw + 8 * q, 6 * q, { r: 2 * q, shadow: false });
-    Gr.label(ctx, 'absorber', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+    if (S.abs === 'free') {
+      /* a light ring on a smooth vertical rod: it slides freely, so the end has no sideways force on it */
+      const rt = sy - clip - 12 * q; Gr.shadow(ctx, ax, dBot, 10 * q, 3 * q); Gr.rod(ctx, ax, rt, ax, dBot, 2.6 * q, { color: '#c3cad3' });
+      ctx.strokeStyle = '#d2a64a'; ctx.lineWidth = 2.6 * q; ctx.beginPath(); ctx.ellipse(ax, yEnd, 6 * q, 3 * q, 0, 0, TAU); ctx.stroke();
+      Gr.label(ctx, 'free end', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+    } else if (S.abs === 'fixed') {
+      /* the string clamped to a post: that point cannot move */
+      Gr.shadow(ctx, ax, dBot, 12 * q, 3 * q); Gr.rod(ctx, ax, sy + 6 * q, ax, dBot, 4 * q);
+      Gr.box(ctx, ax - 9 * q, sy - 7 * q, 18 * q, 14 * q, { r: 2 * q }); Gr.screw(ctx, ax, sy, 2.4 * q);
+      Gr.label(ctx, 'fixed end', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+    } else {
+      const pistonY = Math.min(dBot - 8 * q, dTop + 10 * q + (yEnd - sy) * 0.3);
+      Gr.rod(ctx, ax, yEnd, ax, pistonY, 2 * q, { color: '#c3cad3' });
+      /* the cylinder: clear plastic over the oil, so the piston shows */
+      Gr.shadow(ctx, ax, dBot, dw * 0.8, 4 * q);
+      gr = ctx.createLinearGradient(ax - dw / 2, 0, ax + dw / 2, 0); gr.addColorStop(0, 'rgba(120,140,160,0.55)'); gr.addColorStop(0.3, 'rgba(235,242,250,0.55)'); gr.addColorStop(1, 'rgba(90,105,125,0.6)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.fill();
+      ctx.fillStyle = 'rgba(200,150,40,0.35)'; ctx.fillRect(ax - dw / 2 + 2 * q, dTop + (dBot - dTop) * 0.35, dw - 4 * q, (dBot - dTop) * 0.65 - 6 * q);
+      Gr.slotted(ctx, ax, pistonY, dw - 6 * q, 4 * q);
+      ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.stroke();
+      Gr.box(ctx, ax - dw / 2 - 3 * q, dTop - 4 * q, dw + 6 * q, 6 * q, { r: 2 * q, shadow: false }); Gr.box(ctx, ax - dw / 2 - 4 * q, dBot - 6 * q, dw + 8 * q, 6 * q, { r: 2 * q, shadow: false });
+      Gr.label(ctx, 'absorber', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+    }
     ctx.strokeStyle = T.string; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, yEnd); ctx.lineTo(px, sy); ctx.stroke();
     const hx = px + pr, hy0 = sy + pr, hang = overlay ? Math.max(hy0 + 70 * q, tableY + 40 * q) : Math.max(hy0 + 70 * p, tableY + 30 * p);
     Gr.pulley(ctx, px, sy + pr, pr, { angle: on && !reduce ? S.phase * 0.02 : 0 });
@@ -562,7 +634,7 @@ table.rows input:focus { border-color: var(--accent); }
     Gr.cable(ctx, ax + 18 * q, my + mh, ax + dw / 2, dTop + 14 * q, 26 * p, { w: 2.4 * p, dx1: 12 * q, dx2: 12 * q });
     Gr.box(ctx, mx, my, mw, mh, { r: 7 * p });
     Gr.plate(ctx, 'power meter', mx + mw / 2, my + 9 * p, { s: 7 * p });
-    Gr.lcd(ctx, mx + 7 * p, my + 17 * p, mw - 14 * p, 20 * p, on ? `${fmtP(meterW())} mW` : '0 mW');
+    Gr.lcd(ctx, mx + 7 * p, my + 17 * p, mw - 14 * p, 20 * p, on ? `${fmtP(meterW())} mW` : pul ? `${fmtP(pulsePowerIn(S.pulseT, S.f, S.A / 1000, S.L, Tn, mu, F.r))} mW` : '0 mW');
     /* hanger and slotted masses */
     const stackTop = hang; let y = hang; Gr.rod(ctx, hx, y, hx, y + 10 * q, 1.2 * p); y += 10 * q;
     const stack = [...S.masses].reverse(), mwid = (narrow ? 30 : 40) * q, maxH = Hh - y - 40 * p, raw = stack.map((g) => 2.5 + 3 * Math.log10(g)), sum = raw.reduce((a, b) => a + b, 0) * q + 6 * q, shrink = sum > maxH ? maxH / sum : 1;
@@ -574,21 +646,36 @@ table.rows input:focus { border-color: var(--accent); }
     const ly = Math.min(Hh - 24 * p, y + 16 * p);
     txt(`${massG()} g`, hx, ly, { a: 'right', s: 11, b: 1, m: 1 });
     /* energy per meter along the string, drawn in a lane at the top of the picture (seen once the card has faded) */
-    if (S.energy && on) {
+    if (S.energy && (on || pul)) {
       const laneT = top + 4 * p, laneB = laneT + 40 * p, mean = energyPerMetre(S.f, S.A / 1000, mu), es = [];
       if (laneT > 8 * p) {
-        let emax = 0; for (let i = 0; i <= N; i++) { const e = energyAt(F, S.L * i / N, reduce ? 0 : S.phase, mu); es.push(e); emax = Math.max(emax, e); }
-        const sc = (laneB - laneT) / Math.max(emax, 2 * mean, 1e-12);
-        ctx.fillStyle = T.env; ctx.beginPath(); ctx.moveTo(sx(0), laneB); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), laneB - es[i] * sc); ctx.lineTo(sx(N), laneB); ctx.closePath(); ctx.fill();
+        let emax = 0; for (let i = 0; i <= N; i++) { const e = eAt(i); es.push(e); emax = Math.max(emax, e); }
+        /* a pulse keeps one scale (twice a lone pulse's peak), so the lane does not jump while it moves; overlaps are cut at the top */
+        const sc = (laneB - laneT) / (pul ? 2 * ePk : Math.max(emax, 2 * mean, 1e-12));
+        ctx.fillStyle = T.env; ctx.beginPath(); ctx.moveTo(sx(0), laneB); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), laneB - Math.min(laneB - laneT, es[i] * sc)); ctx.lineTo(sx(N), laneB); ctx.closePath(); ctx.fill();
         ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx(0), laneB + 0.5); ctx.lineTo(sx(N), laneB + 0.5); ctx.stroke();
-        if (S.abs === 'matched') { ctx.strokeStyle = T.equi; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(sx(0), laneB - mean * sc); ctx.lineTo(sx(N), laneB - mean * sc); ctx.stroke(); ctx.setLineDash([]); }
-        txt(S.abs === 'matched' ? 'energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per meter, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
+        if (on && S.abs === 'matched') { ctx.strokeStyle = T.equi; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(sx(0), laneB - mean * sc); ctx.lineTo(sx(N), laneB - mean * sc); ctx.stroke(); ctx.setLineDash([]); }
+        txt(on && S.abs === 'matched' ? 'energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per meter, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
       }
     }
-    Gr.label(ctx, `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    Gr.label(ctx, pul ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(PULSE_CROSS * vNow / S.L)}` : `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
   }
 
-  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.5) % TAU; draw(); } }
+  let roT = 0;
+  function tick(dt) {
+    if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.5) % TAU; draw(); }
+    if (S.pulseT != null) {
+      const v = waveSpeed(Tnow(), muNow()), r = reflection(ABSORBERS[S.abs].rel), rt = 2 * S.L / v;
+      S.pulseT += dt * (S.L / v) / PULSE_CROSS;
+      /* with |r| = 1 nothing is lost and the motion repeats every round trip (r = −1) or two (r = +1): fold the clock back */
+      const P = r === 1 ? 2 * rt : rt;
+      if (Math.abs(r) === 1 && S.pulseT > 1 / S.f + P) S.pulseT -= P;
+      /* what is left after n trips to the far end is |r|ⁿ of the pulse: stop once it is under 1% and has come home */
+      if (Math.abs(r) < 1) { const n = Math.floor((S.pulseT - 1 / S.f) / rt); if (n >= 1 && (r === 0 || Math.abs(r) ** n < 0.01) && S.pulseT > 1 / S.f + n * rt + S.L / v) { stopPulse(); capStatus(r === 0 ? 'The absorber took the whole pulse: nothing came back.' : 'Less than 1% of the pulse is left: send another.'); } }
+      roT += dt; if (roT > 0.2) { roT = 0; readouts(); }
+      draw();
+    }
+  }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; setRun(S.running); drawPlot(); }
   const retheme = () => { tokens(); draw(); drawPlot(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

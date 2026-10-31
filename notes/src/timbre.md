@@ -25,6 +25,7 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 6. **Randomize phases** on the **Sawtooth wave**, several times, with sound on. The waveform and **Peak / RMS** change; the spectrum, the RMS and the sound barely do (Q5). Try again at f₁ = 55 Hz (drag the slider to A1).
 7. **Inharmonic partials**. Set **by Δf** to 1.5 Hz on harmonic 3: the trace drifts and the tone throbs (Q6). Press **Back to exact harmonics**, then raise **Stiffness B** to about 0.01 for a clangy tone like a bell.
 8. Finish on the piano: play C3 and read harmonic 3 and 5 in the table against the G4 and E5 keys (Q7).
+9. **Wave packet.** The waveform is plotted against position: a sound wave carries it at 343.2 m/s, so T₁ becomes λ₁ = v/f₁. Widen the **Packet spread σ** and the packet narrows: Δx · Δk stays near 1/2.
 
 ## Questions
 

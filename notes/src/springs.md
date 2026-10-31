@@ -26,6 +26,7 @@ For the lab, students time N oscillations with **Stopwatch** on the stage (press
 5. **Damping on the resonance.** Still driven, use the **ζ = 0.2** button or the damping slider and ask Q6 before the curve redraws.
 6. **Lab: k from T² against m.** In Simple harmonic motion, turn on Blind, time 10 oscillations at four or five masses and capture each. The fitted slope is 4π²/k; the intercept should be zero within the scatter because these springs have no mass (Q8).
 7. **Normal modes, then Beats.** Show mode 1, press **Mode 2**, then switch to **Beats** with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).
+8. **Chain of ten** (Sandbox, Normal modes pane). Click mode 1 and then mode 10: every block moves at one frequency. Pull one block and let go and the pane shows the motion shared among all ten modes. The frequencies crowd together near the top, fₙ = (1/π)√(k/m) sin(nπ/22), instead of rising as n f₁.
 
 ## Questions
 

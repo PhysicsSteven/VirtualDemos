@@ -184,6 +184,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="shelf" id="shelf">
         <div class="shelf-card" id="cardWaves" role="group" aria-label="The two waves">
           <span class="card-title">The two waves</span>
+          <div class="seg wide" role="group" aria-label="Endless sine waves or single pulses" id="wShape"><button type="button" data-shape="sines" aria-pressed="true">Sine waves</button><button type="button" data-shape="pulses" aria-pressed="false">Single pulses</button></div>
           <div>
             <div class="slider-head"><label for="wA1">Amplitude A₁ (moving right)</label><output id="wA1Out" class="mono" for="wA1"></output></div>
             <input type="range" id="wA1" min="0" max="2" step="0.05" value="1">
@@ -203,6 +204,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="toggles wide">
             <label><input type="checkbox" id="wEnv" checked>Envelope</label>
             <label><input type="checkbox" id="wMarks" checked>Nodes N, antinodes A</label>
+            <label hidden><input type="checkbox" id="wFlip">Pulse 2 upside down</label>
           </div>
         </div>
         <div class="shelf-card" id="cardString" role="group" aria-label="The string" hidden>
@@ -279,6 +281,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="standing" aria-pressed="true">Two waves make a standing wave</button>
+          <button type="button" data-p="pulses" aria-pressed="false">Two pulses pass through each other</button>
           <button type="button" data-p="harmonics" aria-pressed="false">Harmonics of a string</button>
           <button type="button" data-p="resonance" aria-pressed="false">Find the resonances</button>
           <button type="button" data-p="pluck" aria-pressed="false">Pluck at the middle</button>
@@ -291,7 +294,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- two traveling waves -->
       <section id="secWaves">
         <h2>Two traveling waves</h2>
-        <dl class="readout">
+        <dl class="readout" id="rwPulseBox" hidden>
+          <div class="wide"><dt>Pulse widths w₁, w₂ = v/2f</dt><dd id="rwPw">—</dd></div>
+          <div class="wide"><dt>The peaks pass each other at</dt><dd id="rwPmeet">—</dd></div>
+          <div class="wide"><dt>Sum where the peaks coincide</dt><dd id="rwPsum">—</dd></div>
+        </dl>
+        <dl class="readout" id="rwSineBox">
           <div><dt>Wavelength λ₁</dt><dd id="rwL1">—</dd></div>
           <div><dt>Wavelength λ₂</dt><dd id="rwL2">—</dd></div>
           <div><dt>Node spacing</dt><dd id="rwNode">—</dd></div>
@@ -506,6 +514,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const S = PI * (f1 + f2) / v * x + PI * (f2 - f1) * t, s = Math.sin(S), c = Math.cos(S);
     return Math.sqrt((A1 + A2) * (A1 + A2) * s * s + (A1 - A2) * (A1 - A2) * c * c);
   }
+  // Two single pulses (2026-10-31). Each is one hump of its wave, half a wavelength wide (w = v/2f): y = A sin(πu/w) for 0 < u < w,
+  // u measured back from the pulse's front. Pulse 1 leaves x = xL moving right, pulse 2 leaves x = xR moving left (s₂ = −1 turns it
+  // upside down). On an ideal string the displacements add where the pulses overlap, and each comes out the other side unchanged.
+  const pulseHump = (u, A, w) => (u > 0 && u < w ? A * Math.sin(PI * u / w) : 0);
+  function twoPulses(x, t, A1, A2, f1, f2, v, xL, xR, s2) {
+    return [pulseHump(v * t - (x - xL), A1, v / (2 * f1)), s2 * pulseHump(v * t - (xR - x), A2, v / (2 * f2))];
+  }
+  // time for both pulses to cross from one end to the other and leave
+  const pulsePass = (f1, f2, v, xL, xR) => (xR - xL + v / (2 * Math.min(f1, f2))) / v;
   const beatEnvelope = (t, A1, A2, f1, f2) => Math.sqrt(Math.max(0, A1 * A1 + A2 * A2 + 2 * A1 * A2 * Math.cos(TAU * (f2 - f1) * t)));
 
   // ---------- acoustic levitation ----------
@@ -553,7 +570,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') {
     globalThis.SWV = { PI, TAU, WAVE_V, DRIVE_F0, DRIVE_XD, DRIVE_M, PLUCK_N, waveSpeed, stringFreq, soundSpeed, pipeLeff, pipeFreq,
       sineSeries, cosineSeries, pluckCoeffs, triangle, modalEnergy, fieldEnergy, makeDriven, steadyG, setOmega, drivenQ, retarget,
-      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope,
+      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope, pulseHump, twoPulses, pulsePass,
       G_N, airDensity, airViscosity, gorkovCoeffs, levP2, levV2, gorkovU, levU, levFmax, levForce, beadWeight, levNodes, trapOffset,
       trapStiffness, levPmin, cavityGain, beadDrag, stepBead };
     return;
@@ -567,7 +584,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- state ----------
   const S = {
     view: 'waves', speed: 1,
-    w: { A1: 1, A2: 1, f1: 1, f2: 1, env: true, marks: true },
+    w: { A1: 1, A2: 1, f1: 1, f2: 1, env: true, marks: true, shape: 'sines', flip: false },
     s: { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 1, d: 0.5, h: 6, f: 60, Q: 30 },
     b: { f1: 440, df: 3, a2: 1, myst: null }   /* myst: the hidden f₂ (Hz) of a mystery tone, or null */
   };
@@ -575,8 +592,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let pluckB = null, pluckDrag = false, D = null, curve = null, curveMax = 1, holdSpan = null;
 
   const PRESETS = {
-    standing: { view: 'waves', set: () => Object.assign(S.w, { A1: 1, A2: 1, f1: 1, f2: 1 }),
+    standing: { view: 'waves', set: () => Object.assign(S.w, { A1: 1, A2: 1, f1: 1, f2: 1, shape: 'sines' }),
       hint: 'Two equal waves moving in opposite directions add up to a standing wave: the nodes never move and sit half a wavelength apart. Drag one wave\'s amplitude grip down and the nodes no longer reach zero, because part of the wave now travels.' },
+    pulses: { view: 'waves', set: () => Object.assign(S.w, { A1: 1.5, A2: 1, f1: 1, f2: 1, shape: 'pulses', flip: false }),
+      hint: 'Each driver sends a single pulse, one hump of its wave (1 m wide here), and the two meet in the middle. Where they overlap the rope is at the sum of the two: 2.50 cm when the peaks coincide. Then each pulse goes on as if the other had never been there. Turn pulse 2 upside down and the overlap gives 1.5 − 1 = 0.50 cm; with equal amplitudes the rope is flat for an instant, yet still moving, so its energy is all kinetic then.' },
     harmonics: { view: 'string', set: () => Object.assign(S.s, { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 3 }),
       hint: 'A guitar\'s low E string, 0.648 m long at about 70 N, sounds E2 at 82.4 Hz. Harmonic n fits n half wavelengths between the fixed ends, so fₙ = n v/2L = n f₁. Pick other harmonics, or drag the bridge to shorten the string, as a fret does.' },
     resonance: { view: 'string', set: () => Object.assign(S.s, { L: 0.648, T: 70, mu: 6.14, mode: 'drive', f: 60, Q: 30 }),
@@ -589,7 +608,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let presetId = 'standing';
 
   const MODEL = {
-    waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale. The 3D view shows the same waves on a rope: the rope is the sum, the red and blue ghosts are the two waves alone, and up and down displacement is drawn 10 times larger than true scale while lengths along the rope are to scale. Each driver moves its end of the rope just as the two waves move the rope there, so it sends its own wave in and takes the other one away with no reflection.',
+    waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale. The 3D view shows the same waves on a rope: the rope is the sum, the red and blue ghosts are the two waves alone, and up and down displacement is drawn 10 times larger than true scale while lengths along the rope are to scale. Each driver moves its end of the rope just as the two waves move the rope there, so it sends its own wave in and takes the other one away with no reflection. Single pulses: each driver sends one hump of its wave, y = A sin(πu/w) over a width w = v/2f, from the rope’s ends at x = −0.75 m and 6.75 m; the rope is again the exact sum y₁ + y₂ (superposition on an ideal linear string), and each pulse leaves through the other driver. The pair is sent again 0.6 s after both have left.',
     string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated. The 3D view shows the same motion on a sonometer, sideways in the plane of the box top and magnified by the factor printed under it; lengths along the string are to scale, and the hanging mass is m = T/g with g = 9.81 m/s². The string is drawn three times thicker than a 1.2 mm guitar string.',
     beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
   };
@@ -760,8 +779,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- view: two traveling waves ----------
+  /* Pulses: one hump of each wave, sent in from the two ends of the long rope (the 3D drivers at WXA and WXB), again and again */
+  const PULSE_GAP = 0.6;   /* s of still string between passes */
+  const pulseOn = () => S.w.shape === 'pulses';
+  function pulseFns() {
+    const w = S.w, v = WAVE_V, per = pulsePass(w.f1, w.f2, v, WXA, WXB) + PULSE_GAP, tp = t % per, s2 = w.flip ? -1 : 1;
+    const f = (x) => twoPulses(x, tp, w.A1, w.A2, w.f1, w.f2, v, WXA, WXB, s2);
+    return { tp, y1: (x) => f(x)[0], y2: (x) => f(x)[1] };
+  }
   function drawWaves() {
-    const w = S.w, v = WAVE_V, xa = 0, xb = 6;
+    const w = S.w, v = WAVE_V, xa = 0, xb = 6, pz = pulseOn(), PF = pz ? pulseFns() : null;
     /* in 3D the rope takes the top of the pane and the three plots sit under it as the analysis panel */
     let y00 = 0;
     if (onW3()) {
@@ -776,7 +803,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (x) => L + (x - xa) / (xb - xa) * (R - L), invX = (px) => xa + (px - L) / (R - L) * (xb - xa);
     const scales = [2.4, 2.4, 4.4];
     const Ys = strips.map(([a, b], i) => (val) => (a + b) / 2 - val / scales[i] * (b - a) / 2);
-    const titles = [
+    const titles = pz ? [
+      [pick([`Pulse 1, moving right →   one hump of wave 1, w₁ = v/2f₁ = ${(v / (2 * w.f1)).toFixed(2)} m`, 'Pulse 1, moving right →'], R - L), T.pos],
+      [pick([`Pulse 2, moving left ←   one hump of wave 2, w₂ = v/2f₂ = ${(v / (2 * w.f2)).toFixed(2)} m${w.flip ? ', upside down' : ''}`, 'Pulse 2, moving left ←'], R - L), T.neg],
+      [`Sum y₁ + y₂`, T.ink]] : [
       [pick([`Wave 1, moving right →   y₁ = A₁ sin(k₁x − ω₁t)`, 'Wave 1, moving right →'], R - L), T.pos],
       [pick([`Wave 2, moving left ←   y₂ = A₂ sin(k₂x + ω₂t)`, 'Wave 2, moving left ←'], R - L), T.neg],
       [`Sum y₁ + y₂`, T.ink]];
@@ -792,16 +822,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     // curves
-    const y1 = (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t);
-    const y2 = (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
+    const y1 = pz ? PF.y1 : (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t);
+    const y2 = pz ? PF.y2 : (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
     ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
     // amplitude guides
     hline(L, R, Ys[0](w.A1), T.pos, [3 * ls, 4 * ls], 1); hline(L, R, Ys[0](-w.A1), T.pos, [3 * ls, 4 * ls], 1);
     hline(L, R, Ys[1](w.A2), T.neg, [3 * ls, 4 * ls], 1); hline(L, R, Ys[1](-w.A2), T.neg, [3 * ls, 4 * ls], 1);
-    plot(L, R, (px) => Ys[0](y1(invX(px))), T.pos, 2.4 * ls);
-    plot(L, R, (px) => Ys[1](y2(invX(px))), T.neg, 2.4 * ls);
+    plot(L, R, (px) => Ys[0](y1(invX(px))), T.pos, 2.4 * ls, null, pz ? 1 : undefined);
+    plot(L, R, (px) => Ys[1](y2(invX(px))), T.neg, 2.4 * ls, null, pz ? 1 : undefined);
     const Y3 = Ys[2];
-    if (w.env) {
+    if (pz) {   /* guides at A₁ + A₂ and A₁ − A₂, the tallest and the smallest the overlap can give for equal widths */
+      const s2 = w.flip ? -1 : 1, hi = w.A1 + s2 * w.A2;
+      hline(L, R, Y3(hi), T.muted, [3 * ls, 4 * ls], 1);
+      if (Math.abs(hi) > 0.02 && X(xb) - X(xa) > 200 * ls) tag(`A₁ ${w.flip ? '−' : '+'} A₂ = ${hi.toFixed(2)} cm`, R - 4 * ls, Y3(hi) - 3 * ls, T.muted, 'right', 'bottom', false, 10);
+    }
+    if (w.env && !pz) {
       const env = (px) => waveEnvelope(invX(px), t, w.A1, w.A2, w.f1, w.f2, v);
       ctx.fillStyle = T.accent; ctx.globalAlpha = 0.08; ctx.beginPath();
       for (let px = L; px <= R; px += 2) ctx.lineTo(px, Y3(env(px)));
@@ -816,7 +851,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     // nodes and antinodes: sin Σ = 0 at nodes, cos Σ = 0 at antinodes, with Σ = k̄x + (ω₂ − ω₁)t/2
     const marks = [];
-    if (w.marks && w.A1 + w.A2 > 0) {
+    if (!pz && w.marks && w.A1 + w.A2 > 0) {
       const kb = PI * (w.f1 + w.f2) / v, ph = PI * (w.f2 - w.f1) * t, half = PI / kb;   // node spacing λ̄/2
       const kmin = Math.ceil((kb * xa + ph) / PI - 0.5 - 1e-9), kmax = Math.floor((kb * xb + ph) / PI);
       if ((X(half) - X(0)) > 16 * ls) {
@@ -844,7 +879,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     {
       ctx.font = font(11.5, true); const tw = ctx.measureText(titles[2][0]).width, room = R - L - tw - 18 * ls;
       const swrShort = w.A1 === w.A2 ? swr : `SWR ${((w.A1 + w.A2) / Math.abs(w.A1 - w.A2)).toFixed(2)}`;
-      const note = w.f1 !== w.f2 ? pick(['f₁ ≠ f₂: the nodes drift', 'nodes drift'], room, 10.5, false) : swr ? pick([swr, swrShort], room, 10.5, false) : '';
+      const note = pz ? pick(['each pulse comes out of the overlap unchanged', 'out unchanged'], room, 10.5, false) : w.f1 !== w.f2 ? pick(['f₁ ≠ f₂: the nodes drift', 'nodes drift'], room, 10.5, false) : swr ? pick([swr, swrShort], room, 10.5, false) : '';
       if (note) tag(note, L + tw + 18 * ls, a3 - 5 * ls, T.muted, 'left', 'bottom', false, 10.5);
     }
     ctx.fillStyle = T.muted; ctx.font = font(10); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
@@ -977,28 +1012,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* a wide picture faces the rope; a narrow one (a phone) looks along it from the left, so the rope fills more of it */
     const dist = narrow ? 7.9 / Math.min(1.5, Math.max(0.75, asp)) : Math.max(4.15 / (tn * asp), 1.25 / tn) * 1.02;
     St.place(narrow ? { th: W3.o.th - 0.5, ph: W3.o.ph - 0.06, zoom: W3.o.zoom } : W3.o, narrow ? [3.2, 0, 0.75] : [3, 0, 0.8], dist);
-    const y1 = (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t), y2 = (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
+    const pz = pulseOn(), PF = pz ? pulseFns() : null;
+    const y1 = pz ? PF.y1 : (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t), y2 = pz ? PF.y2 : (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
     const k = WK / 100, n = WN, xs = new Float32Array(n + 1), z0 = new Float32Array(n + 1), z1 = new Float32Array(n + 1), z2 = new Float32Array(n + 1);
     const bp = g.bg.attributes.position.array, ep = g.edges.map((l) => l.geometry.attributes.position.array);
     for (let i = 0; i <= n; i++) {
-      const x = WXA + (WXB - WXA) * i / n, a = y1(x), b = y2(x), e = k * waveEnvelope(x, t, w.A1, w.A2, w.f1, w.f2, v);
+      const x = WXA + (WXB - WXA) * i / n, a = y1(x), b = y2(x), e = pz ? 0 : k * waveEnvelope(x, t, w.A1, w.A2, w.f1, w.f2, v);
       xs[i] = x; z1[i] = WZ0 + k * a; z2[i] = WZ0 + k * b; z0[i] = WZ0 + k * (a + b);
       bp.set([x, 0.03, WZ0 - e, x, 0.03, WZ0 + e], i * 6); ep[0].set([x, 0.03, WZ0 + e], i * 3); ep[1].set([x, 0.03, WZ0 - e], i * 3);
     }
     tubeSet(g.rope, xs, z0, 0, WROPE); tubeSet(g.g1, xs, z1, 0.004, 0.011); tubeSet(g.g2, xs, z2, 0.008, 0.011);
     g.rope.geometry.computeBoundingSphere();
-    g.band.visible = g.edges[0].visible = g.edges[1].visible = w.env; g.bg.attributes.position.needsUpdate = true;
+    g.band.visible = g.edges[0].visible = g.edges[1].visible = w.env && !pz; g.bg.attributes.position.needsUpdate = true;
     for (const l of g.edges) { l.geometry.attributes.position.needsUpdate = true; l.computeLineDistances(); }
     // the drivers follow the rope's ends; their screens show the frequency of the wave each one sends
     g.drivers.forEach((d, i) => {
       const ze = WZ0 + k * (y1(d.x) + y2(d.x)), top = 0.44 + 0.24;
       cyl(d.shaft, v3(d.x, 0, top), v3(d.x, 0, ze - 0.03)); d.clamp.position.set(d.x, 0, ze);
-      d.o.sub = i ? `sends wave 2 ←  A₂ = ${w.A2.toFixed(2)} cm` : `sends wave 1 →  A₁ = ${w.A1.toFixed(2)} cm`;
+      d.o.sub = pz ? (i ? `sends pulse 2 ←  A₂ = ${w.A2.toFixed(2)} cm` : `sends pulse 1 →  A₁ = ${w.A1.toFixed(2)} cm`) : i ? `sends wave 2 ←  A₂ = ${w.A2.toFixed(2)} cm` : `sends wave 1 →  A₁ = ${w.A1.toFixed(2)} cm`;
       d.met.set((i ? w.f2 : w.f1).toFixed(2) + ' Hz', d.o.sub);
     });
     // nodes (sin Σ = 0) and antinodes (cos Σ = 0) between 0 and 6 m, as in the plots
     const marks = [];
-    if (w.marks && w.A1 + w.A2 > 0) {
+    if (!pz && w.marks && w.A1 + w.A2 > 0) {
       const kb = PI * (w.f1 + w.f2) / v, ph = PI * (w.f2 - w.f1) * t;
       for (let m = Math.ceil(ph / PI - 0.5 - 1e-9); m <= Math.floor((kb * 6 + ph) / PI); m++) {
         const xn = (m * PI - ph) / kb, xa = ((m + 0.5) * PI - ph) / kb;
@@ -1023,9 +1059,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (marks.length && mstep * v / (w.f1 + w.f2) > 24 * ls) for (const [kind, xm] of marks) { const q = P(xm, WTAPE + 0.06, 0.075); tag(kind, q[0], q[1] - 2 * ls, kind === 'N' ? T.equi : T.muted, 'center', 'bottom', kind === 'N', 9); }
     g.drivers.forEach((d, i) => { const q = P(d.x, -0.1, 0.03); tag(`driver ${i + 1}`, Math.max(34 * ls, Math.min(R.w - 34 * ls, q[0])), q[1] + 4 * ls, i ? T.neg : T.pos, 'center', 'top', true, 10); });
     const a1 = P(0.35, 0, WZ0 + 0.3), a2 = P(5.65, 0, WZ0 + 0.3); a1[0] = Math.max(8 * ls, a1[0]); a2[0] = Math.min(R.w - 8 * ls, a2[0]);
-    tag(pick(['wave 1, moving right →', 'wave 1 →'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a1[0], a1[1], T.pos, 'left', 'bottom', true, 11);
-    tag(pick(['← wave 2, moving left', '← wave 2'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a2[0], a2[1], T.neg, 'right', 'bottom', true, 11);
-    tag(pick(['A long rope: the rope is the sum y₁ + y₂, the red and blue ghosts are the two waves alone', 'The rope is the sum y₁ + y₂; ghosts: the two waves', 'Rope = y₁ + y₂'], R.w - 24 * ls, 11.5, true), 12 * ls, R.y + 10 * ls, T.ink, 'left', 'top', true, 11.5);
+    tag(pick(pz ? ['pulse 1, moving right →', 'pulse 1 →'] : ['wave 1, moving right →', 'wave 1 →'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a1[0], a1[1], T.pos, 'left', 'bottom', true, 11);
+    tag(pick(pz ? ['← pulse 2, moving left', '← pulse 2'] : ['← wave 2, moving left', '← wave 2'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a2[0], a2[1], T.neg, 'right', 'bottom', true, 11);
+    tag(pick(pz ? ['A long rope: each driver sends one pulse; the rope is the sum y₁ + y₂, the ghosts are the pulses alone', 'The rope is the sum y₁ + y₂; ghosts: the two pulses', 'Rope = y₁ + y₂'] : ['A long rope: the rope is the sum y₁ + y₂, the red and blue ghosts are the two waves alone', 'The rope is the sum y₁ + y₂; ghosts: the two waves', 'Rope = y₁ + y₂'], R.w - 24 * ls, 11.5, true), 12 * ls, R.y + 10 * ls, T.ink, 'left', 'top', true, 11.5);
     const note = `displacement drawn ${WK}× larger than true scale · lengths along the rope to scale · drag to turn`;
     tag(pick([note, `displacement ×${WK}, not to scale · lengths to scale · drag to turn`, `displacement ×${WK}, not to scale · drag to turn`, `displacement ×${WK}, not to scale`], R.w - 24 * ls, 10, false), R.w - 12 * ls, R.y + 32 * ls, T.muted, 'right', 'top', false, 10);
     ctx.restore();
@@ -1643,6 +1679,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sHarm').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setStrN(+b.dataset.n); });
   $('wEnv').addEventListener('change', () => { S.w.env = $('wEnv').checked; if (!running) drawAll(); });
   $('wMarks').addEventListener('change', () => { S.w.marks = $('wMarks').checked; if (!running) drawAll(); });
+  /* Sine waves or Single pulses (2026-10-31): the same amplitudes and frequencies; a pulse is one hump of its wave */
+  function syncShape() {
+    const pz = pulseOn();
+    for (const b of $('wShape').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.shape === S.w.shape));
+    $('wEnv').closest('label').hidden = pz; $('wMarks').closest('label').hidden = pz; $('wFlip').closest('label').hidden = !pz; $('wFlip').checked = S.w.flip;
+    $('rwPulseBox').hidden = !pz; $('rwSineBox').hidden = pz;
+  }
+  $('wShape').addEventListener('click', (e) => { const b = e.target.closest('[data-shape]'); if (!b) return; S.w.shape = b.dataset.shape; markPreset(null); syncShape(); buildKey(); updateReadouts(); t = 0; if (!running) drawAll(); });
+  $('wFlip').addEventListener('change', () => { S.w.flip = $('wFlip').checked; markPreset(null); updateReadouts(); t = 0; if (!running) drawAll(); });
 
   function buildTables() {
     const s = S.s, rows = ['<tr><th>n</th><th>fₙ (Hz)</th><th>λₙ = 2L/n (m)</th></tr>'];
@@ -1661,6 +1706,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rwNode').textContent = (v / (w.f1 + w.f2)).toFixed(2) + ' m';
     const drift = -v * (w.f2 - w.f1) / (w.f1 + w.f2);
     $('rwDrift').textContent = Math.abs(drift) < 1e-9 ? '0 (fixed)' : `${Math.abs(drift).toFixed(3)} m/s ${drift > 0 ? '→' : '←'}`;
+    {
+      const w1 = v / (2 * w.f1), w2 = v / (2 * w.f2), s2 = w.flip ? -1 : 1, tm = (WXB - WXA + (w1 + w2) / 2) / (2 * v);
+      $('rwPw').textContent = `${w1.toFixed(2)} and ${w2.toFixed(2)} m`;
+      $('rwPmeet').textContent = `x = ${((WXA + WXB) / 2 + (w2 - w1) / 4).toFixed(2)} m, ${tm.toFixed(2)} s after they are sent`;
+      $('rwPsum').textContent = `A₁ ${s2 > 0 ? '+' : '−'} A₂ = ${(w.A1 + s2 * w.A2).toFixed(2)} cm`;
+    }
     const dA = Math.abs(w.A1 - w.A2);
     $('rwSWR').textContent = w.A1 + w.A2 === 0 ? '—' : dA < 1e-9 ? '∞' : ((w.A1 + w.A2) / dA).toFixed(2);
     $('rwParts').textContent = `${(2 * Math.min(w.A1, w.A2)).toFixed(2)} / ${dA.toFixed(2)} cm`;
@@ -1688,7 +1739,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function buildKey() {
     const k = $('key'), v = S.view, rows = [];
-    if (v === 'waves') rows.push(['pos', 'Wave 1, moving right'], ['neg', 'Wave 2, moving left'], ['ink', 'Their sum'], ['env', 'Envelope: the largest |y| at each x']);
+    if (v === 'waves' && pulseOn()) rows.push(['pos', 'Pulse 1, moving right'], ['neg', 'Pulse 2, moving left'], ['ink', 'Their sum']);
+    else if (v === 'waves') rows.push(['pos', 'Wave 1, moving right'], ['neg', 'Wave 2, moving left'], ['ink', 'Their sum'], ['env', 'Envelope: the largest |y| at each x']);
     else if (v === 'string') {
       rows.push(['ink', 'String'], ['env', S.s.mode === 'drive' ? 'Steady state envelope' : S.s.mode === 'pluck' ? 'Shape at release' : 'Envelope of the harmonic']);
       if (S.s.mode === 'drive') rows.push(['acc', 'Resonance curve'], ['gold', 'Harmonics fₙ = n v/2L'], ['pos', 'Drive frequency and the driver']);
@@ -1715,7 +1767,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('bMyst').addEventListener('change', (e) => setMyst(e.target.checked));
   function applyPreset(id) {
     const P = PRESETS[id]; P.set();
-    markPreset(id);
+    markPreset(id); syncShape();
     stringChanged(); syncSliders();
     buildHarmChips();
     setStrMode(S.s.mode);

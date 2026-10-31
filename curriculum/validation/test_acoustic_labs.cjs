@@ -17,6 +17,19 @@ test('timbre: missing fundamental, harmonic gcd, detuning and stiffness invarian
  for(const B of [0,.005,.01,.02]){close(t.partialFreq(1,220,B,3,0),220);for(const j of [3,5])close(t.partialFreq(j,220,B,0,0),j*220*Math.sqrt((1+B*j*j)/(1+B)));}
  close(t.toDb(1/3),20*Math.log10(1/3));assert.equal(t.modeShape('closed',2,.5),null);
 });
+const tp=core('timbre','V_SOUND,packetSeries,packetWidths,seriesAt');
+test('timbre: wave packet crests line up, widths match the Gaussian, and the truncated product stays above 1/2',()=>{
+ assert.equal(tp.V_SOUND,343.2);
+ const p=tp.packetSeries(8,1.5,16);
+ for(let n=1;n<=16;n++){close(p.a[n],Math.exp(-((n-8)**2)/(2*1.5**2)));close(p.a[n]*Math.sin(n*Math.PI+p.ph[n]),p.a[n],1e-12,1e-12);}
+ let best=-1,ib=0;const M=4096;for(let i=0;i<M;i++){const y=tp.seriesAt(2*Math.PI*i/M,p.a,p.ph);if(y>best){best=y;ib=i;}}
+ close(ib/M*2*Math.PI,Math.PI,0,1e-12);close(best,p.a.reduce((u,v)=>u+v,0),1e-12);
+ const k1=2*Math.PI*220/343.2,w=tp.packetWidths(p.a,p.ph,k1);
+ close(w.nBar,8,1e-6);close(w.dn,1.5/Math.SQRT2,2e-3);close(w.dth,1/(1.5*Math.SQRT2),2e-3);close(w.product,0.5,1e-3);
+ close(w.dk,w.dn*k1);close(w.dx,w.dth/k1);close(w.peak,Math.PI,0,2e-3);
+ for(const [n0,s] of [[4,3],[12,4],[8,4]])assert(tp.packetWidths(...Object.values(tp.packetSeries(n0,s,16)),1).product>0.5);
+ const one=new Array(17).fill(0);one[5]=1;const w1=tp.packetWidths(one,new Array(17).fill(0),1);close(w1.dn,0,0,1e-12);close(w1.dth,Math.PI/Math.sqrt(3),2e-3);
+});
 const r=core('resonators','soundSpeed,tubeResonances,tubeFit,spacingSpeeds,tubeResponse,tubeX,pipeFreq,pipeShape,pluckCoeffs,stringF1,neckLeff,helmholtzF,readingScatter');
 test('resonance tube: multi-frequency speed/end correction fit and skipped-order spacing',()=>{
  const c=331.3*Math.sqrt(293.15/273.15),a=.016,rows=[];close(r.soundSpeed(20),c);

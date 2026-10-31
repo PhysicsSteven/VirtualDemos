@@ -20,6 +20,7 @@ Students should know v = fλ and superposition. Three views are chosen at the to
 3. **Find the resonances.** Driven at 60 Hz the string barely moves. Drag the red marker across the curve: peaks at 82.4, 164.8, 247.2 Hz. Raise **Quality factor Q of mode 1** from 30 to 300 (Q4).
 4. **Pluck at the middle.** The table marks the even harmonics "(missing)". Drag **Pluck point d** toward the bridge and listen: the tone brightens (Q3).
 5. **Beats.** 440 and 443 Hz with sound on: the loudness swells and fades 3 times a second. Drag **Difference f₂ − f₁** toward zero and the beats slow and stop.
+6. **Two pulses pass through each other.** Watch the two humps add where they overlap (A₁ + A₂ at the moment the peaks coincide) and come out the other side unchanged. Tick **Pulse 2 upside down** and where they meet the sum drops to A₁ − A₂ (zero for equal pulses), yet both reappear.
 
 ## Questions
 

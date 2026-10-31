@@ -5864,3 +5864,42 @@ What's new (five entries). Notes: one new class step each; demo keys rebuilt in 
   geometry) and the strongest candidate; **Charging by rubbing** could be a short part of the induction worksheet; **In a
   plane** (r⟨E²⟩ against r, two slit angles at microwave scale) could be a part of the em-waves worksheet; colored filters
   fit the Color Vision worksheet as one more part; the shape's depth ratio fits an Optics Bench homework question.
+
+## 2026-10-31 · Claude · Partly covered gaps, Group C (Waves and acoustics)
+
+Steve: "Let's do the partial gaps today"; additions to existing demos only, no new worksheets (a worksheet sweep comes after).
+Group C of `partial-gaps/groups-2026-10-31.md`. One commit for the five demos, notes (one new class step each, demo keys
+rebuilt in TeacherKeys, no new questions) and What's new (one entry). Opening states unchanged.
+- Energy and Power of a Wave, **one pulse off a free end and a fixed end** (oPhysics pulse reflection): **Send one pulse**
+  next to Start; absorber chips **Free end** (b = 0, ring on a frictionless rod, r = +1) and **Fixed end** (clamped, r = −1),
+  pulse only (a steady drive with nothing taking energy out would grow without limit at resonance, said in the Model).
+  The blade moves y = ½A(1 − cos 2πft) for one period, then is held (a fixed end, r₀ = −1). Motion is the exact sum of
+  images with r = (Z − b)/(Z + b) each trip (`pulseAt`); energy ½π²ZA²f (`pulseEnergy`), energy taken by the end
+  (`pulseTaken`), power into the end (`pulsePowerIn`); preset One pulse: free and fixed ends. `test_wave_power.cjs` 9 groups
+  (new: reflection signs and scaling; boundary conditions, wave equation and energy conservation).
+- Standing Waves, **two single pulses** (oPhysics pulse interference): Sine waves | Single pulses switch, Pulse 2 upside
+  down, one hump of each wave, width v/2f (`pulseHump`, `twoPulses`, `pulsePass`); readouts for widths, where and when the
+  peaks meet, and A₁ ± A₂; preset Two pulses pass through each other. New `test_standing_waves.cjs` 2 groups.
+- Springs sandbox, **normal modes of a long chain** (Falstad coupled oscillations and loaded string, plan #16): rig Chain of
+  ten (ten 100 g blocks, eleven 20 N/m springs, 1.6 m); Energy | Normal modes pane for any sandbox rig: the generalized
+  eigenproblem K φ = ω² M φ by Jacobi on M^(−1/2) K M^(−1/2) (`sbJacobi`, `sbModes`), each mode's amplitude and share of the
+  energy now (`sbModeShares`); click a mode (or its digit) to start in it alone. Chain matches fₙ = (1/π)√(k/m) sin(nπ/22),
+  f₁ = 0.641 Hz (`chainOmega`). `test_springs_sandbox.cjs` 16 pass (chain against the formula, two hanging blocks against 2×2).
+- Chladni Plates, **drumheads** (Falstad rectangular and circular membranes, plan #17): Metal plate | Drumhead; ideal
+  membrane clamped at the rim, Mylar 0.19 mm (chosen) at 1390 kg/m³, tension 200 to 4000 N/m. Square f = (c/2L)√(m² + n²);
+  circle f = j c/(2πa) with Bessel zeros to 12 digits (A&S Table 9.5 checked). Point drive is singular on a membrane, so a
+  2 cm pad or a loudspeaker under the head (uniform pressure, the modal mean). Air loading left out, stated. Presets
+  Drumhead: rings ((0, 3) at 3.598 f₁) and Drumhead overtones. `test_chladni.cjs` 18 pass.
+- Timbre and Harmonics, **series in space and wave packets** (Falstad Fourier series, plan #15): In space section, Waveform
+  against Time | Position (Flat view; the 3D oscilloscope keeps time). Position is y(x) = s(t − x/v), v = 343.2 m/s, the time
+  trace mirrored, moving slowed like the ladder; λ₁, k₁ readouts. Packet sliders n₀ and σ, Make a wave packet, preset Wave
+  packet: aₙ = exp(−(n − n₀)²/2σ²), φₙ = π/2 − nπ so every crest lines up mid period (`packetSeries`). Δk (RMS of kₙ
+  weighted by aₙ²), Δx (RMS width of the squared envelope) and Δx·Δk from the 16 terms (`packetWidths`): 0.500 at n₀ = 8,
+  σ = 1.5, rising above 1/2 when the Gaussian is cut off at n = 1 or 16 (σ kept ≥ 1 so the packet is narrower than λ₁).
+  New group in `test_acoustic_labs.cjs`.
+- Checks: all suites pass; vdcheck `--only after` 0 problems and `--only clip` 0 cut off on all five; screenshots at 1368
+  and 400 px, light and dark. Springs: the wall's gap label moves above the block numbers on a long chain.
+- Worksheet candidates for the sweep: **Chain of ten** (measure fₙ for a few modes, compare with the formula; the dispersion
+  of a loaded string) is the strongest; **drumhead** ratios could be a part of the Chladni worksheet; the **free and fixed
+  end pulse** fits the wave power worksheet as a short qualitative part; **two pulses** and **wave packets** (Δx against
+  1/Δk) are short additions to the Standing Waves and Timbre worksheets.

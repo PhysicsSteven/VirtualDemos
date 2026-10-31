@@ -23,6 +23,7 @@ Students should know standing waves on a string, nodes and antinodes, and driven
 4. **A cross**, then **High mode**. Off center and at the rim, the modes with nodal diameters appear. Switch **Plot** to **Chladni's law** and use Q5.
 5. **Sweep and listen.** Ask Q4 first. Turn on sound. At 60 Hz the whole plate rides with the driver and all the sand jumps; the tone swells at each peak and the sand snaps into a pattern, then breaks up again between peaks. Stop near a peak and use **Fine tune** and **Modal Q (damping)** to show the width f/Q.
 6. **Square: classic star** (if time allows). Try **Where |a| > g** and **3D** (bending exaggerated and slowed). Change **Metal** and **Thickness h** for Q3.
+7. **Drumhead: rings** and **Drumhead overtones.** Switch to a drumhead: the circular modes sit at Bessel zeros, so f/f₁ = 1, 1.593, 2.136, 2.295, … and the (0, 3) mode at 3.598 f₁ is no harmonic. That is why a drum has no clear pitch. Raise the tension and every mode rises as √T.
 
 ## Questions
 

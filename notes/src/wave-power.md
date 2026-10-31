@@ -22,6 +22,7 @@ Students need the traveling wave y = A sin(kx − ωt), ω = 2πf and v = √(T/
 3. **Power against tension.** Add masses at 20 Hz and 1.00 mm: four times the load gives twice the power.
 4. **Mismatched absorber.** Too soft: change L by a few centimeters and the meter swings between about a third and three times the matched power. Switch back to Matched and L stops mattering. This is why the lab needs a matched end.
 5. **Unknown string.** Students get μ from the slope of P against A²: slope = ½ ω² √(Tμ).
+6. **One pulse: free and fixed ends.** Press **Send one pulse** with the end clamped: the pulse comes back upside down. Choose **Free end** and send another: it comes back upright. Too soft and Too stiff return half as tall a pulse, upright and upside down; Matched returns nothing. The energy readout shows how much the end took.
 
 ## Questions
 

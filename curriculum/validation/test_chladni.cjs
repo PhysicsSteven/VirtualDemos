@@ -4,7 +4,7 @@
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
 let count = 0; const test = (name, fn) => { fn(); count++; console.log('PASS', name); };
 function close(a, b, rel = 1e-10, abs = 0) { assert(Number.isFinite(a) && Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`); }
-const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit,symEig,circleRoots,receptanceTail,pointReceptance,voiceCoilDrive,driveResonances,hopLength');
+const C = core('chladni', 'G0,PLATE,MATERIALS,SQ_P,LAM2_MAX,flexRigidity,fScale,plateMass,besselJ,besselI,besselJArr,circleEdge,circleModes,circleRadial,circlePhi,gaussLegendre,legendreRow,squareModes,squarePhi,modalAmps,rmsAccel,launchSpeed,sandStep,mulberry32,chladniFit,symEig,circleRoots,receptanceTail,pointReceptance,voiceCoilDrive,driveResonances,hopLength,MYLAR,DRUM_LMAX,PAD_R,drumScale,besselZeros,drumSquareModes,drumCircleModes,drumSquarePhi,drumCirclePhi,drumMean,drumPadMean');
 
 test('chladni: Bessel J_n and I_n against reference values', () => {
   // J0(1), J1(1), J0(10), I0(1), I1(1), I0(10) as tabulated in Abramowitz & Stegun (Tables 9.1, 9.8); the rest from SciPy 1.x
@@ -266,4 +266,35 @@ test('chladni: Chladni’s law fit recovers C and p from exact power law data, a
   assert(real.p > 1.8 && real.p < 2.05);
 });
 
+test('chladni drumhead: Bessel zeros, the membrane frequency ratios, normalization and the uniform drive', () => {
+  /* zeros of J₀, J₁, J₂ (Abramowitz & Stegun Table 9.5) */
+  const z = { 0: [2.404825557695773, 5.520078110286311, 8.653727912911013], 1: [3.831705970207512, 7.015586669815619], 2: [5.135622301840683] };
+  for (const n in z) C.besselZeros(+n, z[n].length, 40).forEach((v, i) => close(v, z[n][i], 1e-11));
+  /* the ideal circular membrane's overtones, f/f₁ = j_nm / j_01, from the zeros above (A&S Table 9.5) */
+  const circ = C.drumCircleModes(C.DRUM_LMAX.circle), f1 = circ[0].lam2;
+  [[0, 1, 1], [1, 1, 1.593], [2, 1, 2.136], [0, 2, 2.295], [3, 1, 2.653], [1, 2, 2.917], [4, 1, 3.155], [2, 2, 3.500], [0, 3, 3.598]].forEach(([n, m, r], i) => {
+    assert.equal(circ[i].n, n); assert.equal(circ[i].m, m); close(circ[i].lam2 / f1, r, 0, 5e-4); });
+  /* f = (c/2πa) j: 24 cm across at 1000 N/m on 0.19 mm Mylar */
+  const sigma = C.MYLAR.rho * C.MYLAR.h, c = Math.sqrt(1000 / sigma);
+  close(C.drumScale('circle', 1000, sigma) * f1, 2.404825557695773 * c / (2 * Math.PI * 0.12), 1e-12);
+  close(C.drumScale('square', 1000, sigma) * Math.SQRT2, c / (2 * 0.24) * Math.SQRT2, 1e-12);
+  /* square: f ∝ √(m² + n²), (1,2) and (2,1) degenerate */
+  const sq = C.drumSquareModes(C.DRUM_LMAX.square);
+  close(sq[0].lam2, Math.SQRT2, 1e-15); close(sq[1].lam2, Math.sqrt(5), 1e-15); close(sq[2].lam2, Math.sqrt(5), 1e-15);
+  /* mean square 1 and the mean (what a uniform pressure drives), by midpoint sums */
+  for (const md of [circ[0], circ[1], circ[3], circ[8]]) {
+    let s2 = 0, s1 = 0, a = 0; const NR = 600, NT = 240;
+    for (let i = 0; i < NR; i++) { const r = (i + 0.5) / NR; for (let j = 0; j < NT; j++) { const p = C.drumCirclePhi(md, r, 2 * Math.PI * (j + 0.5) / NT); s2 += p * p * r; s1 += p * r; a += r; } }
+    close(s2 / a, 1, 2e-4); close(s1 / a + 1, C.drumMean('circle', md) + 1, 2e-4);
+  }
+  for (const md of [sq[0], sq[1], sq[4], { m: 3, n: 3 }]) {
+    let s2 = 0, s1 = 0; const N = 400;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const p = C.drumSquarePhi(md, -1 + 2 * (i + 0.5) / N, -1 + 2 * (j + 0.5) / N); s2 += p * p; s1 += p; }
+    close(s2 / N / N, 1, 1e-9); close(s1 / N / N + 1, C.drumMean('square', md) + 1, 1e-4);
+  }
+  close(C.drumMean('square', { m: 1, n: 1 }), 8 / Math.PI ** 2, 1e-15); close(C.drumMean('circle', circ[0]), 2 / 2.404825557695773, 1e-12);
+  /* a small pad reads φ̂ at its center; a pad on a nodal diameter does not drive the mode */
+  close(C.drumPadMean('circle', circ[0], 0, 0, 1e-4), circ[0].N, 1e-6);
+  assert(Math.abs(C.drumPadMean('square', sq[1].m === 2 ? sq[1] : sq[2], 0, 0.3, 0.08)) < 1e-12, 'pad on the center line of a (2,1) mode');
+});
 console.log(`${count} chladni tests passed`);

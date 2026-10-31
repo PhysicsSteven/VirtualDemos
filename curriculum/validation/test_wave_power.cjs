@@ -2,7 +2,7 @@
 // Energy and Power of a Wave: a driven string ending in a dashpot absorber, P = ½ μ A² ω² v when matched (OpenStax Vol 1 §16.4).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('wave-power', 'G_LAB,STRINGS,ABSORBERS,tension,waveSpeed,impedance,travelingPower,energyPerMetre,reflection,field,Yat,dYat,powerAt,absorberPower,energyAt,maxSlope,readingsCSV');
+const c = core('wave-power', 'G_LAB,STRINGS,ABSORBERS,tension,waveSpeed,impedance,travelingPower,energyPerMetre,reflection,pulseG,pulseGd,pulseAt,pulseEnergy,pulsePassed,pulseTaken,pulsePowerIn,field,Yat,dYat,powerAt,absorberPower,energyAt,maxSlope,readingsCSV');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -60,5 +60,41 @@ group('CSV: header, comment lines and squared columns', () => {
   const lines = csv.trim().split('\n'), head = lines.find((l) => l[0] !== '#');
   assert.equal(head, 'row,string,absorber,L_m,m_kg,T_N,f_Hz,A_mm,P_mW,A2_mm2,f2_Hz2');
   assert.equal(lines[lines.length - 1], '1,String B,matched,1.20,0.200,1.9600,20.0,1.50,0.8616,2.25,400');
+});
+group('one pulse: free end comes back upright, fixed end inverted, dashpot ends scaled by r', () => {
+  assert.equal(c.reflection(0), 1); assert.equal(c.reflection(Infinity), -1); assert.equal(c.reflection(c.ABSORBERS.fixed.rel), -1);
+  const f = 100, A = 3e-3, Lx = 1.6, v = c.waveSpeed(T, mu);
+  /* time when the reflected pulse's peak (launched at t = 1/(2f)) is back at the middle */
+  const t = 1 / (2 * f) + 1.5 * Lx / v;
+  for (const [rel, want] of [[0, A], [Infinity, -A], [1 / 3, 0.5 * A], [3, -0.5 * A], [1, 0]]) {
+    const r = c.reflection(rel); near(c.pulseAt(Lx / 2, t, f, A, Lx, v, r).y + 1e-30, want + 1e-30, 1e-9, `rel ${rel}`);
+  }
+  /* before the pulse reaches the end, every end gives the same string */
+  near(c.pulseAt(0.3, 0.3 / v + 1 / (2 * f), f, A, Lx, v, 1).y, A, 1e-12, 'outgoing peak');
+});
+group('one pulse: boundary conditions, the wave equation and energy conservation', () => {
+  const f = 60, A = 2e-3, Lx = 1.3, v = c.waveSpeed(T, mu), Z = c.impedance(T, mu);
+  for (const rel of [0, Infinity, 1 / 3, 3, 1]) {
+    const r = c.reflection(rel), b = rel * Z;
+    for (const t of [0.004, 0.03, 0.071, 0.13, 0.2]) {
+      near(c.pulseAt(0, t, f, A, Lx, v, r).y + 1, c.pulseG(t, f, A) + 1, 1e-12, 'blade end y(0, t) = g(t)');
+      const e = c.pulseAt(Lx, t, f, A, Lx, v, r);
+      if (rel === Infinity) assert(Math.abs(e.y) < 1e-15 && Math.abs(e.yt) < 1e-12, 'fixed end stays put');
+      else assert(Math.abs(T * e.yx + b * e.yt) < 1e-9 * T * A * f / v, `end force T y_x + b y_t = 0 at rel ${rel}`);
+      /* y_tt = v² y_xx at an inside point, by finite differences */
+      const x = 0.47, h = 2e-4, k = h / v, Y = (xx, tt) => c.pulseAt(xx, tt, f, A, Lx, v, r).y;
+      const ytt = (Y(x, t + k) - 2 * Y(x, t) + Y(x, t - k)) / k / k, yxx = (Y(x + h, t) - 2 * Y(x, t) + Y(x - h, t)) / h / h;
+      assert(Math.abs(ytt - v * v * yxx) < 2e-3 * (2 * Math.PI * f) ** 2 * A, `wave equation, rel ${rel}, t ${t}`);
+    }
+    /* energy on the string plus what the far end took equals what the blade put in, ½π²ZA²f */
+    const E = c.pulseEnergy(f, A, T, mu); near(E, Z * A * A * Math.PI ** 2 * f / 2, 1e-12);
+    for (const t of [1 / f + 0.01, 0.09, 0.17, 0.33]) {
+      let s = 0; const K = 6000; for (let i = 0; i <= K; i++) { const o = c.pulseAt(Lx * i / K, t, f, A, Lx, v, r), w = i % K ? 1 : 0.5; s += w * (0.5 * mu * o.yt * o.yt + 0.5 * T * o.yx * o.yx); }
+      near(s * Lx / K + c.pulseTaken(t, f, A, Lx, T, mu, r), E, 2e-4, `energy, rel ${rel}, t ${t}`);
+    }
+    /* the far end's power integrates to what it took */
+    let w = 0; const tt = 0.2, K = 40000; for (let i = 0; i < K; i++) w += c.pulsePowerIn((i + 0.5) * tt / K, f, A, Lx, T, mu, r) * tt / K;
+    near(w + 1e-30, c.pulseTaken(tt, f, A, Lx, T, mu, r) + 1e-30, 1e-6, `power into the end, rel ${rel}`);
+  }
 });
 console.log(`${n} groups passed`);

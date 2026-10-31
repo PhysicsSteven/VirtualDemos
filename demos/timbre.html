@@ -235,6 +235,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="clarinet" aria-pressed="false">Like a clarinet</button>
           <button type="button" data-p="flute" aria-pressed="false">Like a flute</button>
           <button type="button" data-p="missing" aria-pressed="false">Missing fundamental</button>
+          <button type="button" data-p="packet" aria-pressed="false">Wave packet</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -260,6 +261,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <table class="ftab" id="ptab"></table>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag the bars (sweep across several to paint them), or a dot in the spectrum to set a level in dB. Levels in the table are relative to the strongest partial.</p>
+        </details>
+      </section>
+
+      <section>
+        <h2>In space</h2>
+        <div class="inline">
+          <span class="lab">Waveform against</span>
+          <div class="seg" role="group" aria-label="Plot the waveform against" id="axisSeg">
+            <button type="button" data-ax="t" aria-pressed="true">Time</button>
+            <button type="button" data-ax="x" aria-pressed="false">Position</button>
+          </div>
+        </div>
+        <dl class="readout">
+          <div><dt>Wavelength λ₁ = v/f₁</dt><dd id="rLam1">—</dd></div>
+          <div><dt>Wave number k₁ = 2π/λ₁</dt><dd id="rK1">—</dd></div>
+        </dl>
+        <div>
+          <div class="slider-head"><label for="pkN0">Packet center n₀</label><output id="pkN0Out" class="mono" for="pkN0"></output></div>
+          <input type="range" id="pkN0" min="3" max="13" step="0.5" value="8">
+        </div>
+        <div>
+          <div class="slider-head"><label for="pkSig">Packet spread σ</label><output id="pkSigOut" class="mono" for="pkSig"></output></div>
+          <input type="range" id="pkSig" min="1" max="4" step="0.1" value="1.5">
+        </div>
+        <button type="button" class="btn" id="pkMake">Make a wave packet</button>
+        <dl class="readout">
+          <div><dt>Spread in k, Δk</dt><dd id="rDk">—</dd></div>
+          <div><dt>Packet width Δx</dt><dd id="rDx">—</dd></div>
+          <div><dt>Δx · Δk</dt><dd id="rDxDk">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A sound wave carries the waveform through the air at v = 343.2 m/s (air at 20 °C), so time and position trade places: x = v t, the period T₁ becomes the wavelength λ₁ = v/f₁ and each harmonic has kₙ = n k₁. Position plots a snapshot of the wave moving to the right, y(x) = s(t − x/v), so its shape is the time trace mirrored: the part that left the source first is farthest away. It moves slowed, like the ladder, so f₁ is drawn at 0.5 Hz; the oscilloscope in the 3D view always shows time.</p>
+          <p class="hint">A wave packet is a bump made of many harmonics: amplitudes aₙ = exp(−(n − n₀)²/(2σ²)), all with a crest at the same place. A wider spread of harmonics Δk gives a narrower packet Δx. Here Δk is the RMS spread of kₙ weighted by aₙ² and Δx is the RMS width of the squared envelope. For a Gaussian with nothing cut off, Δx Δk = 1/2, the smallest possible; with only harmonics 1 to 16 the product rises above 1/2 once the packet reaches past either end. The packet repeats every λ₁ because it is built from harmonics of f₁; the same rule, with momentum p = ħk, is the Heisenberg uncertainty principle.</p>
         </details>
       </section>
 
@@ -435,11 +469,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let n = 1; n <= N; n++) out[n] = (1 - p.w) * (A[n - 1] || 0) + p.w * (B[n - 1] || 0);
     return out;
   }
+  // speed of sound used to turn the waveform into a wave in space (air at 20 °C, the site's convention): λₙ = v/fₙ, kₙ = 2π/λₙ
+  const V_SOUND = 343.2;
+  // a wave packet made of harmonics: Gaussian amplitudes aₙ = exp(−(n − n₀)²/(2σ²)), and phases φₙ = π/2 − nπ (mod 2π), so that every
+  // harmonic, aₙ sin(nθ + φₙ) = aₙ cos(n(θ − π)), has a crest at θ = π: the packet peaks in the middle of each period
+  function packetSeries(n0, sig, N) {
+    const a = new Array(N + 1).fill(0), ph = new Array(N + 1).fill(0);
+    for (let n = 1; n <= N; n++) { a[n] = Math.exp(-(n - n0) * (n - n0) / (2 * sig * sig)); ph[n] = (((PI / 2 - n * PI) % TAU) + TAU) % TAU; }
+    return { a, ph };
+  }
+  // widths of a packet with spatial wave number k₁ (rad/m). Δk: RMS spread of kₙ = n k₁ weighted by aₙ² (the energy in each harmonic).
+  // Δx: RMS width of the squared envelope |Σ aₙ e^(i(nθ + φₙ))|² around its peak, over one period θ = k₁x from 0 to 2π, so x = θ/k₁.
+  // For an untruncated Gaussian, Δx Δk = 1/2, the smallest the product can be; cutting the series off at n = 1 and n = 16 raises it.
+  function packetWidths(a, ph, k1, M) {
+    const m = M || 2048; let sw = 0, sn = 0, sn2 = 0;
+    for (let n = 1; n < a.length; n++) { const w = a[n] * a[n]; sw += w; sn += w * n; sn2 += w * n * n; }
+    if (!sw) return null;
+    const nBar = sn / sw, dn = Math.sqrt(Math.max(0, sn2 / sw - nBar * nBar));
+    const E = new Float64Array(m); let iMax = 0;
+    for (let i = 0; i < m; i++) {
+      const th = i / m * TAU; let re = 0, im = 0;
+      for (let n = 1; n < a.length; n++) if (a[n]) { re += a[n] * Math.cos(n * th + ph[n]); im += a[n] * Math.sin(n * th + ph[n]); }
+      E[i] = re * re + im * im; if (E[i] > E[iMax]) iMax = i;
+    }
+    let w0 = 0, w1 = 0, w2 = 0;
+    for (let i = 0; i < m; i++) { let d = (i - iMax) / m * TAU; if (d > PI) d -= TAU; if (d <= -PI) d += TAU; w0 += E[i]; w1 += E[i] * d; w2 += E[i] * d * d; }
+    const mu = w1 / w0, dth = Math.sqrt(Math.max(0, w2 / w0 - mu * mu));
+    return { nBar, dn, dth, kBar: nBar * k1, dk: dn * k1, dx: dth / k1, peak: iMax / m * TAU, product: dn * dth };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.TIMBRE = { PI, TAU, NH, A4, etFreq, midiFreq, noteOf, partialFreq, idealSeries, idealWave, seriesAt, fourier, gcd, periodInfo,
-      rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE, INSTRUMENTS, morphPos, morphSpectrum };
+      rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE, INSTRUMENTS, morphPos, morphSpectrum, V_SOUND, packetSeries, packetWidths };
     return;
   }
 
@@ -454,7 +516,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const S = {
     semi: -12, a: new Array(NH + 1).fill(0), ph: new Array(NH + 1).fill(0),
     mute1: false, mute2: false, detN: 3, df: 0, B: 0,
-    ladder: 'string', periods: 3, showEach: false, showIdeal: true, showDials: true, sel: 1
+    ladder: 'string', periods: 3, showEach: false, showIdeal: true, showDials: true, sel: 1,
+    axis: 't', pk: { n0: 8, sig: 1.5 }
   };
   let presetId = 'saw', running = !reduce, tAnim = 0, frameMs = 0, dirty = true;
   let morph = null;   // instrument slider position (0 to 4), or null once the bars are edited by hand
@@ -470,12 +533,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       hint: 'Illustrative spectrum, not a recording: D3 with strong odd harmonics and weak even ones, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed. Switch the ladder to Closed pipe: only odd modes fit.' },
     flute: { semi: 0, set: () => setAmps(INSTRUMENTS[0].a),
       hint: 'Illustrative spectrum, not a recording: A4 with a strong fundamental and a few weak harmonics, close to a pure sine wave. A softly played flute comes near this; compare the tone with Pure tone and with the sawtooth.' },
+    packet: { semi: -12, set: () => { setPacket(); S.axis = 'x'; toFlat(); },
+      hint: 'A wave packet: harmonics of A3 with Gaussian amplitudes centered on harmonic 8, every one with a crest at the middle of each wavelength, plotted against position. Widen the spread σ and the packet gets narrower: Δx Δk stays near 1/2. Built from harmonics of f₁, the packet repeats every λ₁; you hear a buzz at 220 Hz with a bright tone near 8 f₁.' },
     missing: { semi: -12, set: () => { setAmps([0.9, 0.9, 0.8, 0.7, 0.6, 0.5, 0.42, 0.35, 0.3, 0.25]); S.mute1 = true; },
       hint: 'Harmonics 2 to 10 of A3 with nothing at 220 Hz. The waveform still repeats every 4.55 ms and you still hear A3: pitch follows the repetition period, not the energy at f₁. Small speakers that cannot play the lowest notes rely on this. Untick Remove harmonic 1 to compare, then also remove harmonic 2.' }
   };
   function clearAll() { for (let n = 0; n <= NH; n++) { S.a[n] = 0; S.ph[n] = 0; } }
   function setIdeal(kind) { const s = idealSeries(kind, NH); for (let n = 0; n <= NH; n++) { S.a[n] = s.a[n]; S.ph[n] = s.ph[n]; } }
   function setAmps(list) { clearAll(); list.forEach((v, i) => { S.a[i + 1] = v; }); }
+  function setPacket() { const p = packetSeries(S.pk.n0, S.pk.sig, NH); for (let n = 0; n <= NH; n++) { S.a[n] = p.a[n]; S.ph[n] = p.ph[n]; } }
 
   // ---------- instrument slider ----------
   const INST_HINT = {
@@ -546,7 +612,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     'Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √((1 + Bn²)/(1 + B)), scaled so partial 1 stays at f₁. Equal temperament: f = 440 Hz × 2^(k/12), k semitones from A4. ' +
     'The square, sawtooth and triangle presets are the exact Fourier series cut off at 16 harmonics, which causes the ripples near the jumps. The clarinet and flute presets are illustrative spectra chosen to show one feature, not measurements of real instruments. ' +
     'The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = (1 − w) aₙ(left) + w aₙ(right), w from 0 to 1. Real instruments change their spectrum with pitch and loudness; these do not. ' +
-    'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar.';
+    'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar. ' +
+    'Against position, the waveform is a snapshot of a sound wave moving to the right through air at v = 343.2 m/s (20 °C), y(x) = s(t − x/v), with λₙ = v/fₙ; the air is taken as lossless and without dispersion, so every harmonic travels at the same speed and the shape moves without changing. The wave packet uses Gaussian amplitudes over harmonics 1 to 16, and its widths are computed from those 16 terms, not from the Gaussian formula.';
 
   const MODEL3 = 'The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder\'s modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at 0.5 Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.';
   // ---------- derived quantities ----------
@@ -664,6 +731,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (bot - top < 30) return;
     const fs = [0]; for (let n = 1; n <= NH; n++) fs.push(fOf(n));
     const t0 = traceStart(), T1 = 1 / f1();
+    /* Position: a snapshot of the wave moving to the right, y(x) = s(τ − x/v), τ slowed like the ladder; never on the 3D oscilloscope */
+    const inX = S.axis === 'x' && T !== SCREEN_T, tau = F_VIS / f1() * tAnim;
+    const tAt = (px) => { const u = (px - L) / (R - L) * span; return inX ? tau - u : t0 + u; };
     // grid
     ctx.font = font(10.5); ctx.fillStyle = T.muted;
     const yst = nice(yMax / (bot - top < 140 ? 1 : 2));
@@ -674,14 +744,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
       ctx.fillText(fmtTick(v, yst), L - 6 * ls, py);
     }
-    const spanMs = span * 1e3, xst = nice(spanMs / ((R - L) < 360 ? 3 : 6));
+    const tk = inX ? V_SOUND : 1e3, spanU = span * tk, xst = nice(spanU / ((R - L) < 360 ? 3 : 6));
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let v = 0; v <= spanMs + 1e-9; v += xst) {
-      const px = Math.round(X(v / 1e3)) + 0.5;
+    for (let v = 0; v <= spanU + 1e-9; v += xst) {
+      const px = Math.round(X(v / tk)) + 0.5;
       ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
       ctx.fillText(fmtTick(v, xst), px, bot + 5 * ls);
     }
-    ctx.textAlign = 'right'; ctx.fillText(D.info.kind === 'drift' ? `t − ${(t0).toFixed(2)} s (ms)` : 't (ms)', R, bot + 5 * ls + 12 * ls);
+    ctx.textAlign = 'right'; ctx.fillText(inX ? 'x (m)' : D.info.kind === 'drift' ? `t − ${(t0).toFixed(2)} s (ms)` : 't (ms)', R, bot + 5 * ls + 12 * ls);
     ctx.save(); ctx.translate(r.x + 11 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('signal (bar units)', 0, 0); ctx.restore();
 
     // period markers
@@ -699,7 +769,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ls; ctx.setLineDash([5 * ls, 4 * ls]); ctx.beginPath();
       let prev = null;
       for (let px = L; px <= R + 0.5; px += 1) {
-        const t = (px - L) / (R - L) * span, v = idealWave(ideal, TAU * f1() * t), py = Y(v);
+        const t = tAt(px), v = idealWave(ideal, TAU * f1() * t), py = Y(v);
         if (prev !== null && Math.abs(py - prev) > (bot - top) * 0.3) ctx.moveTo(px, py); else if (prev === null) ctx.moveTo(px, py); else ctx.lineTo(px, py);
         prev = py;
       }
@@ -712,13 +782,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const a = D.a[n]; if (!a) continue;
         ctx.strokeStyle = hcol(n, 0.55); ctx.beginPath();
         const st = Math.max(0.5, Math.min(1.5, (R - L) / (span * fs[n] * 24)));
-        for (let px = L; px <= R + 0.01; px += st) { const t = t0 + (px - L) / (R - L) * span, py = Y(a * Math.sin(TAU * fs[n] * t + S.ph[n])); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+        for (let px = L; px <= R + 0.01; px += st) { const t = tAt(px), py = Y(a * Math.sin(TAU * fs[n] * t + S.ph[n])); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
         ctx.stroke();
       }
     }
     // the sum: what you hear
     ctx.strokeStyle = T.ink; ctx.lineWidth = 2.3 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
-    for (let px = L; px <= R + 0.01; px += 0.75) { const t = t0 + (px - L) / (R - L) * span, py = Y(sumAt(t, fs)); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+    for (let px = L; px <= R + 0.01; px += 0.75) { const t = tAt(px), py = Y(sumAt(t, fs)); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
     ctx.stroke();
     ctx.restore();
 
@@ -732,13 +802,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.beginPath(); ctx.moveTo(xb - 2 * ls, yb - 2.5 * ls); ctx.lineTo(xb - 2 * ls, yb + 2.5 * ls); ctx.moveTo(xb + 2 * ls, yb - 2.5 * ls); ctx.lineTo(xb + 2 * ls, yb + 2.5 * ls); ctx.lineWidth = 1.2 * ls; ctx.stroke();
     G.periodGrip = [xb, yb];
     let btxt;
-    if (exact) btxt = D.info.g && D.info.g > 1 ? [`repeats every T = ${fmtMs(per)} = T₁/${D.info.g}`, `T = ${fmtMs(per)} = T₁/${D.info.g}`] : [`repeats every T = ${fmtMs(per)}`, `T = ${fmtMs(per)}`];
+    const lam = (tt) => `${(V_SOUND * tt).toFixed(V_SOUND * tt < 1 ? 3 : 2)} m`;
+    if (inX) btxt = exact ? (D.info.g && D.info.g > 1 ? [`repeats every λ = ${lam(per)} = λ₁/${D.info.g}`, `λ = ${lam(per)}`] : [`repeats every λ = ${lam(per)}`, `λ = ${lam(per)}`])
+      : [`λ₁ = ${lam(T1)}, but the shape never repeats exactly`, `λ₁ = ${lam(T1)}`];
+    else if (exact) btxt = D.info.g && D.info.g > 1 ? [`repeats every T = ${fmtMs(per)} = T₁/${D.info.g}`, `T = ${fmtMs(per)} = T₁/${D.info.g}`] : [`repeats every T = ${fmtMs(per)}`, `T = ${fmtMs(per)}`];
     else if (D.info.kind === 'drift') btxt = [`T₁ = ${fmtMs(T1)}, but the shape drifts`, `T₁ = ${fmtMs(T1)}, drifting`];
     else btxt = [`T₁ = ${fmtMs(T1)}, but it never repeats exactly`, `T₁ = ${fmtMs(T1)}, no repeat`];
     const bx = xb + 10 * ls, room = R - bx;
     if (room > 60 * ls) tag(pick(btxt, room, 10.5, true), bx, yb, T.brass, 'left', 'middle', true, 10.5);
     // title
-    const title = pick([`Waveform: the sum of ${D.ns.length} harmonic${D.ns.length === 1 ? '' : 's'}`, 'Waveform'], r.w - 20 * ls, 11.5, true);
+    const title = inX ? pick([`Wave in space, moving right: the sum of ${D.ns.length} harmonic${D.ns.length === 1 ? '' : 's'}`, 'Wave in space, moving right', 'Wave in space'], r.w - 20 * ls, 11.5, true)
+      : pick([`Waveform: the sum of ${D.ns.length} harmonic${D.ns.length === 1 ? '' : 's'}`, 'Waveform'], r.w - 20 * ls, 11.5, true);
     ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
   }
@@ -1417,7 +1491,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function syncControls() {
     $('f1').value = S.semi; $('mute1').checked = S.mute1; $('mute2').checked = S.mute2;
     $('detN').value = S.detN; $('df').value = S.df; $('stB').value = S.B;
+    $('pkN0').value = S.pk.n0; $('pkSig').value = S.pk.sig;
+    for (const b of $('axisSeg').children) b.setAttribute('aria-pressed', String(b.dataset.ax === S.axis));
   }
+  /* the wave in space is drawn only in the flat view (the 3D oscilloscope shows time), so asking for it leaves the 3D view */
+  function toFlat() { const b = $('dimSeg').querySelector('[data-dim="flat"]'); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); }
+  $('axisSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.axis = b.dataset.ax; if (S.axis === 'x') toFlat(); syncControls(); dirty = true; });
+  function packetNow() {
+    clearAll(); S.mute1 = false; S.mute2 = false; S.df = 0; S.B = 0; hoverKey = null;
+    setPacket(); S.axis = 'x'; morph = null; toFlat();
+    syncControls(); markPreset('packet'); morphUI();
+    recompute(); readouts(); soundDirty = true;
+  }
+  $('pkN0').addEventListener('input', (e) => { S.pk.n0 = +e.target.value; packetNow(); });
+  $('pkSig').addEventListener('input', (e) => { S.pk.sig = +e.target.value; packetNow(); });
+  $('pkMake').addEventListener('click', packetNow);
   $('f1').addEventListener('input', (e) => setSemi(+e.target.value));
   $('morph').addEventListener('input', (e) => setMorph(+e.target.value));
   // keys: arrows step by 0.1 of the way (Shift 0.01), Page Up and Page Down jump to the next instrument
@@ -1528,6 +1616,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('stBOut').textContent = S.B.toFixed(4);
     $('rDrift').textContent = S.df ? `${(1 / Math.abs(S.df)).toFixed(2)} s` : '—';
     $('rStretch').textContent = (fOf(NH) / (NH * f) - (S.detN === NH ? S.df / (NH * f) : 0)).toFixed(3);
+    const lam1 = V_SOUND / f, k1 = TAU / lam1;
+    $('rLam1').textContent = `${lam1.toFixed(lam1 < 1 ? 3 : 2)} m`;
+    $('rK1').textContent = `${k1.toFixed(k1 < 10 ? 3 : 2)} rad/m`;
+    $('pkN0Out').textContent = `${S.pk.n0.toFixed(1)} (${fmtHz(S.pk.n0 * f)})`;
+    $('pkSigOut').textContent = `${S.pk.sig.toFixed(1)} harmonics`;
+    const pw = presetId === 'packet' ? packetWidths(D.a, S.ph, k1) : null;
+    if (pw) {
+      $('rDk').textContent = `${pw.dk.toFixed(2)} rad/m`;
+      $('rDx').textContent = pw.dx < 0.1 ? `${(pw.dx * 100).toFixed(2)} cm` : `${pw.dx.toFixed(3)} m`;
+      $('rDxDk').textContent = pw.product.toFixed(3);
+    } else for (const id of ['rDk', 'rDx', 'rDxDk']) $(id).innerHTML = '— <small>make a packet</small>';
     pianoMark(); buildTable(); soundHintText();
   }
   function buildKey() {

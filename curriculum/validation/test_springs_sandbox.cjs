@@ -3,7 +3,7 @@
 // and blocks on a level track between two walls.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const c = core('springs', 'G,SB_L0,SB_H,sbSolveLin,sbExpm,sbModel,sbStep,sbTensions,sbEnergy,sbHeld,sbAttached,sbAbove');
+const c = core('springs', 'G,SB_L0,SB_H,sbSolveLin,sbExpm,sbModel,sbStep,sbTensions,sbEnergy,sbHeld,sbAttached,sbAbove,sbJacobi,sbModes,sbModeShares,chainOmega');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -147,5 +147,32 @@ test('shaken left wall, still right wall: steady amplitude k1 A/√((k1 + k2 −
   const re = k1 + k2 - m * w * w, im = b * w, D = re * re + im * im, Ur = k1 * A * re / D, Ui = -k1 * A * im / D;
   for (const t of [0.4, 3.1]) close(c.sbStep(md, [Ur, -w * Ui, 1, 0], t)[0], Ur * Math.cos(w * t) - Ui * Math.sin(w * t), 1e-9, 1e-13);
   const y = md.allY(md.yEq, A); close(y.get(0), A, 0); close(y.get(1), 0.34, 0);
+});
+test('normal modes: a chain of ten between walls gives ωₙ = 2√(k/m) sin(nπ/22) and sine shapes', () => {
+  const N = 10, k = 20, m = 0.1, nodes = [ceil, { id: 1, m: 0, fixed: true, still: true, y0: 1.6 }], springs = [];
+  for (let j = 0; j < N; j++) nodes.push({ id: 2 + j, m });
+  for (let j = 0; j <= N; j++) springs.push({ id: 20 + j, a: j ? 1 + j : 0, b: j === N ? 1 : 2 + j, k, x: 0 });
+  const md = c.sbModel({ hz: true, nodes, springs }, 0, 0), modes = c.sbModes(md);
+  assert.equal(modes.length, N);
+  modes.forEach((mo, i) => {
+    const n1 = i + 1; close(mo.w, 2 * Math.sqrt(k / m) * Math.sin(n1 * Math.PI / 22), 1e-12); close(mo.w, c.chainOmega(n1, N, k, m), 1e-12);
+    const big = Math.max(...Array.from({ length: N }, (_, j) => Math.abs(Math.sin((j + 1) * n1 * Math.PI / (N + 1)))));
+    mo.phi.forEach((p, j) => close(Math.abs(p), Math.abs(Math.sin((j + 1) * n1 * Math.PI / (N + 1))) / big, 1e-10, 1e-12, `mode ${n1} block ${j + 1}`));
+  });
+  /* a start in one mode stays in it: the exact propagator moves every block as cos ωt */
+  const z0 = [...modes[3].phi.map((p) => 0.03 * p), ...new Array(N).fill(0)], t = 1.234, z = c.sbStep(md, z0, t);
+  z0.slice(0, N).forEach((u, j) => close(z[j], u * Math.cos(modes[3].w * t), 1e-9, 1e-13));
+  const sh = c.sbModeShares(md, modes, z);
+  sh.forEach((q, i) => (i === 3 ? close(q.amp, 0.03, 1e-9) : assert(q.amp < 1e-10)));
+  /* any start: the shares add up to the energy, ½Σmv² + ½Σk e² above rest */
+  const zr = [0.01, -0.02, 0.005, 0, 0.03, 0, -0.01, 0.02, 0, 0.004, 0.1, 0, -0.2, 0.05, 0, 0, 0.3, 0, 0, -0.1], E = c.sbEnergy({ hz: true, nodes, springs }, md, zr), E0 = c.sbEnergy({ hz: true, nodes, springs }, md, zr.map(() => 0));
+  close(c.sbModeShares(md, modes, zr).reduce((s, q) => s + q.E, 0), E.total - E0.total, 1e-10);
+});
+test('normal modes: two unequal blocks hanging, against the 2 × 2 hand result', () => {
+  const rig = { nodes: [ceil, { id: 1, m: 0.2 }, { id: 2, m: 0.1 }], springs: [{ id: 1, a: 0, b: 1, k: 30 }, { id: 2, a: 1, b: 2, k: 10 }] };
+  const md = c.sbModel(rig, g, 0), modes = c.sbModes(md);
+  /* det(K − ω²M) = 0: m₁m₂ω⁴ − (m₁k₂ + m₂(k₁ + k₂))ω² + k₁k₂ = 0 */
+  const a = 0.02, b = -(0.2 * 10 + 0.1 * 40), cc = 300, r = Math.sqrt(b * b - 4 * a * cc);
+  close(modes[0].w ** 2, (-b - r) / (2 * a), 1e-10); close(modes[1].w ** 2, (-b + r) / (2 * a), 1e-10);
 });
 console.log(`${n} tests passed`);

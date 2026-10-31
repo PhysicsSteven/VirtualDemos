@@ -176,7 +176,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Chladni Plates</h1>
-      <p>Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one.</p>
+      <p>Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one. Switch to a drumhead and hear why a drum has no clear pitch.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = 9.81 m/s²</div>
@@ -228,20 +228,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="setup-card" role="group" aria-labelledby="setupTitle">
           <span class="card-title" id="setupTitle">Set up the plate and driver</span>
         <div class="inline">
+          <span class="lab">Vibrating</span>
+          <div class="seg" role="group" aria-label="Metal plate or drumhead" id="kindSeg">
+            <button type="button" data-k="plate" aria-pressed="true">Metal plate</button>
+            <button type="button" data-k="drum" aria-pressed="false">Drumhead</button>
+          </div>
+        </div>
+        <div class="inline">
           <span class="lab">Shape</span>
           <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
             <button type="button" data-s="square" aria-pressed="true">Square</button>
             <button type="button" data-s="circle" aria-pressed="false">Circle</button>
           </div>
         </div>
-        <div class="inline">
+        <div id="drumGrp" hidden>
+          <div class="slider-head"><label for="tens">Head tension T</label><output id="tensOut" class="mono" for="tens"></output></div>
+          <input type="range" id="tens" min="200" max="4000" step="10" value="1000">
+        </div>
+        <div class="inline" id="metalRow">
           <span class="lab">Metal</span>
           <div class="seg" role="group" aria-label="Metal" id="matSeg">
             <button type="button" data-m="steel" aria-pressed="true">Steel</button>
             <button type="button" data-m="aluminum" aria-pressed="false">Aluminum</button>
           </div>
         </div>
-        <div>
+        <div id="thickRow">
           <div class="slider-head"><label for="thick">Thickness h</label><output id="thickOut" class="mono" for="thick"></output></div>
           <input type="range" id="thick" min="0.5" max="2" step="0.05" value="1">
         </div>
@@ -251,9 +262,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-d="center" aria-pressed="true">Center</button>
             <button type="button" data-d="off" aria-pressed="false">Off center</button>
             <button type="button" data-d="edge" aria-pressed="false">Edge</button>
+            <button type="button" data-d="speaker" aria-pressed="false" hidden>Loudspeaker under it</button>
           </div>
         </div>
-        <div class="inline">
+        <div class="inline" id="driverRow">
           <span class="lab">Driver</span>
           <div class="seg" role="group" aria-label="Driver" id="driverSeg">
             <button type="button" data-dr="wave" aria-pressed="true">Wave driver</button>
@@ -287,6 +299,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="sweep" aria-pressed="false">Sweep and listen</button>
           <button type="button" data-p="star" aria-pressed="false">Square: classic star</button>
           <button type="button" data-p="high" aria-pressed="false">High mode</button>
+          <button type="button" data-p="drum" aria-pressed="false">Drumhead: rings</button>
+          <button type="button" data-p="drumOff" aria-pressed="false">Drumhead overtones</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -296,8 +310,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div><dt>Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
           <div><dt>Grains on the plate</dt><dd id="rGrains">—</dd></div>
-          <div><dt>Post motion</dt><dd id="rPost">—</dd></div>
-          <div><dt>Driver force</dt><dd id="rCoil">—</dd></div>
+          <div id="rPostRow"><dt>Post motion</dt><dd id="rPost">—</dd></div>
+          <div id="rCoilRow"><dt>Driver force</dt><dd id="rCoil">—</dd></div>
           <div class="wide"><dt>Nearest resonance</dt><dd id="rMode" class="txt">—</dd></div>
         </dl>
         <p class="hint" id="driveHint"></p>
@@ -306,9 +320,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Plate</h2>
         <dl class="readout">
-          <div><dt>Plate mass M</dt><dd id="rMass">—</dd></div>
-          <div><dt>Lowest flexural mode</dt><dd id="rLow">—</dd></div>
-          <div class="wide"><dt>Bending wave at f</dt><dd id="rKh" class="txt">—</dd></div>
+          <div><dt id="rMassLab">Plate mass M</dt><dd id="rMass">—</dd></div>
+          <div><dt id="rLowLab">Lowest flexural mode</dt><dd id="rLow">—</dd></div>
+          <div class="wide"><dt id="rKhLab">Bending wave at f</dt><dd id="rKh" class="txt">—</dd></div>
         </dl>
         <p class="hint" id="plateHint"></p>
       </section>
@@ -377,6 +391,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p>Thin plate (Kirchhoff–Love) theory: D∇⁴w = −ρh ∂²w/∂t² with flexural rigidity D = Eh³/(12(1 − ν²)). Small, linear motion of a flat, uniform, isotropic plate. Good while the bending wavelength is long compared with the thickness (k h well below 1; shown under Plate).</p>
           <p>Every edge is free. Two drives: <b>Wave driver</b> (the default for the center and off center posts) is a voice coil bolted to the plate: its coil pushes with force F_c on its own moving mass m_d = 50 g (an estimate) and on the plate, so the post moves x = F_c/(1/G − m_d ω²), with G the plate's point receptance at the post (the modal sum, rigid modes included, plus the share of the modes above the computed range from the plate's average mode density). The bolt is treated as a point; the clamp's width and the driver's suspension are left out. At low frequency the whole plate rides up and down with the post, |a| ≈ F_c/(M + m_d) everywhere. The plate with the driver's mass at its center has its own resonances, between those of a free plate and those of a plate pinned at the post. <b>Point force</b> (the default at the edge, like a bow) is an ideal force F₀ cos(2πft) on a free plate.</p>
           <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
+          <p>Drumhead: an ideal membrane, σ ∂²w/∂t² = T ∇²w, clamped at its rim (w = 0), with no bending stiffness and no air: Mylar film 0.19 mm thick (chosen) at 1390 kg/m³, so σ = 0.264 kg/m², and the tension T per unit length set by the slider (chosen range 200 to 4000 N/m). Square: φ = 2 sin(mπx/L) sin(nπy/L), f = (c/2L)√(m² + n²), c = √(T/σ). Circle: φ = N J_n(j r/a) cos nθ, f = j c/(2πa), j a zero of J_n found to 12 digits. Kept: Λ below 22 (square) or 40 (circle). The drive is a pad 2 cm across (the mean of φ over it) or a loudspeaker under the head, a uniform pressure (the mean of φ over the head), with the same Q for every mode. A real drum's air (inside a kettle or shell and around the head) lowers the low modes and moves them toward harmonic ratios in a timpani; that is left out, so these are the ideal membrane's inharmonic ratios. The sand model is the same as on the plate.</p>
           <p>Damping: every flexural mode has the same Q (default 50, a model choice: a plate bolted to a driver and carrying sand is heavily damped). The response is the sum over all computed modes, between resonances too. The sand's mass does not load the plate.</p>
           <p>Drive level: PASCO publishes no force rating for its wave drivers. The SF-9324 manual gives amplitudes up to 7 mm peak to peak at low frequency, and its product page about 5 mm up to about 50 Hz; the WA-9855 takes at most 1.2 A. The demo takes full drive to be the coil force that moves the driver's 50 g alone 3.5 mm at 50 Hz, F = m_d (2π·50 Hz)² × 3.5 mm = 17 N, and never lets the post move more than 3.5 mm (the stroke limit). The <b>Driver setting x₀</b> is the amplitude the setting would give the driver alone at 50 Hz. These numbers are estimates, not measurements.</p>
           <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than 1/60 s it moves v_L × 1/60 s every 1/60 s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to 0.5 of a hop toward smaller |a|: full where |a| changes by a factor of 4 or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. The plate starts with 24,000 grains (12,000 on a phone, a tablet or a computer with 4 cores or fewer), each drawn about a pixel across: the count and the drawn size are a picture, not real sand. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
@@ -796,6 +811,55 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (tf <= tick) return eps * v * tick;
     return u < tick / tf ? eps * v * tf : 0;
   }
+
+  // ---- drumhead (2026-10-31): an ideal membrane, tension T per unit length and areal density σ, clamped at its rim ----
+  // σ ∂²w/∂t² = T ∇²w, wave speed c = √(T/σ). Rectangle (here a square of side L): φ = 2 sin(mπx/L) sin(nπy/L), f = (c/2L)√(m² + n²).
+  // Circle of radius a: φ = N J_n(j_nm r/a) cos nθ, f = j_nm c/(2πa), j_nm the m-th zero of J_n; N makes the mean square 1:
+  // N = 1/|J₁(j)| for n = 0 and √2/|J_{n+1}(j)| otherwise (∫₀¹ J_n(jr)² r dr = J_{n+1}(j)²/2 when J_n(j) = 0).
+  // As for the plate, f = Λ × fs: Λ = √(m² + n²) with fs = c/2L, or Λ = j_nm with fs = c/2πa (stored in the modes' lam2 field).
+  const MYLAR = { name: 'Mylar drumhead', rho: 1390, h: 0.19e-3 };   // kg/m³ (polyester film), m (chosen, a common head thickness)
+  const DRUM_LMAX = { square: 22, circle: 40 };                    // modes kept: Λ below this
+  const PAD_R = 0.01;                                               // m, radius of the drive pad on a drumhead
+  function drumScale(shape, T, sigma) { const c = Math.sqrt(T / sigma); return shape === 'square' ? c / (2 * PLATE.L) : c / (2 * Math.PI * PLATE.a); }
+  function besselZeros(n, count, xmax) {
+    const out = [], h = 0.05; let a = Math.max(0.5, n * 0.9), fa = besselJ(n, a);
+    for (let b = a + h; out.length < count && b <= xmax + h; b += h) {
+      const fb = besselJ(n, b);
+      if (fa * fb < 0) { let lo = a, hi = b, flo = fa; for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2, fm = besselJ(n, mid); if (flo * fm <= 0) hi = mid; else { lo = mid; flo = fm; } } out.push((lo + hi) / 2); }
+      a = b; fa = fb;
+    }
+    return out;
+  }
+  function drumSquareModes(lmax) {
+    const out = [];
+    for (let m = 1; m <= lmax; m++) for (let n = 1; n <= lmax; n++) { const L = Math.hypot(m, n); if (L < lmax) out.push({ m, n, lam2: L, drum: true }); }
+    return out.sort((p, q) => p.lam2 - q.lam2 || p.m - q.m);
+  }
+  function drumCircleModes(lmax) {
+    const out = [];
+    for (let n = 0; ; n++) {
+      const z = besselZeros(n, 200, lmax); if (!z.length) break;
+      z.forEach((j, i) => { const Jn1 = besselJ(n + 1, j); out.push({ n, m: i + 1, lam2: j, N: n === 0 ? 1 / Math.abs(Jn1) : Math.SQRT2 / Math.abs(Jn1), drum: true }); });
+    }
+    return out.sort((p, q) => p.lam2 - q.lam2);
+  }
+  // φ̂ at (u, v) in [−1, 1]² (square), or at r ≤ 1 and angle dθ from the drive (circle)
+  function drumSquarePhi(md, u, v) { return 2 * Math.sin(md.m * Math.PI * (u + 1) / 2) * Math.sin(md.n * Math.PI * (v + 1) / 2); }
+  function drumCirclePhi(md, r, dth) { return md.N * besselJ(md.n, md.lam2 * r) * Math.cos(md.n * dth); }
+  // mean of φ̂ over the whole head, what a uniform pressure drives: 8/(mnπ²) for m, n both odd (else 0); 2N J₁(j)/j for n = 0 (else 0)
+  function drumMean(shape, md) {
+    if (shape === 'square') return md.m % 2 && md.n % 2 ? 8 / (md.m * md.n * Math.PI * Math.PI) : 0;
+    return md.n === 0 ? 2 * md.N * besselJ(1, md.lam2) / md.lam2 : 0;
+  }
+  // mean of φ̂ over a round pad of radius rp (in half widths) at (u, v): 48 equal area points, 4 rings of 12
+  function drumPadMean(shape, md, u, v, rp) {
+    let s = 0;
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 12; j++) {
+      const r = rp * Math.sqrt((i + 0.5) / 4), t = 2 * Math.PI * (j + 0.5 * (i % 2)) / 12, x = u + r * Math.cos(t), y = v + r * Math.sin(t);
+      s += shape === 'square' ? drumSquarePhi(md, x, y) : drumCirclePhi(md, Math.min(1, Math.hypot(x, y)), Math.atan2(y, x));
+    }
+    return s / 48;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -820,7 +884,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   // ---------- state ----------
-  const S = { shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, driver: 'wave', x0: 2e-3, drive: 'center', du: 0, dv: 0,
+  /* a drumhead: Mylar film clamped in a hoop, driven by a pad 2 cm across or by a loudspeaker under it (uniform pressure) */
+  const DRUM_DRIVES = { square: { center: [0, 0], off: [0.42, 0.22], edge: [0.8, 0.3], speaker: [0, 0] }, circle: { center: [0, 0], off: [0.5, 0], edge: [0.8, 0], speaker: [0, 0] } };
+  const SIGMA = MYLAR.rho * MYLAR.h;   /* kg/m², areal density of the head */
+  const drum = () => S.kind === 'drum';
+  const drivesOf = () => (drum() ? DRUM_DRIVES : DRIVES)[S.shape];
+  const S = { kind: 'plate', T: 1000, shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, driver: 'wave', x0: 2e-3, drive: 'center', du: 0, dv: 0,
     view: 'sand', plot: 'resp', nodal: false, heat: false, follow: true, sweep: false, rate: 4 };
   let presetId = null, running = !reduce, frameMs = 0, dirty = true;
 
@@ -828,10 +897,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const cache = {};
   const gridU = (a) => -1 + 2 * a / (GN - 1);
   function modeSet() {
-    const nu = MATERIALS[S.mat].nu, key = S.shape + ':' + nu;
+    const nu = MATERIALS[S.mat].nu, key = drum() ? 'drum:' + S.shape : S.shape + ':' + nu;
     if (cache[key]) return cache[key];
-    const t0 = performance.now(), ms = { shape: S.shape, nu };
-    if (S.shape === 'square') {
+    const t0 = performance.now(), ms = { shape: S.shape, nu, drum: drum() };
+    if (ms.drum && S.shape === 'square') {
+      ms.modes = drumSquareModes(DRUM_LMAX.square);
+      const sx = []; for (let a = 0; a < GN; a++) sx.push(gridU(a));
+      for (const md of ms.modes) { const g = new Float32Array(GN * GN), A = sx.map((u) => Math.sin(md.m * Math.PI * (u + 1) / 2)), B = sx.map((v) => 2 * Math.sin(md.n * Math.PI * (v + 1) / 2));
+        for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) g[b * GN + a] = A[a] * B[b]; md.grid = g; }
+    } else if (S.shape === 'square') {
       ms.modes = squareModes(nu, SQ_P, LAM2_MAX.square);
       // φ̂ on the grid, separable: φ̂(u_a, v_b) = Σ_i p_i(u_a) Σ_j c_ij p_j(v_b)
       const N1 = SQ_P + 1, rows = [];
@@ -852,7 +926,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         md.grid = g;
       }
     } else {
-      ms.modes = circleModes(nu, LAM2_MAX.circle);
+      ms.modes = ms.drum ? drumCircleModes(DRUM_LMAX.circle) : circleModes(nu, LAM2_MAX.circle);
       // radial factor N·R(r) on the grid (r clamped to the rim outside the plate), interpolated from a fine table
       const NR = 1601, ri = new Float32Array(GN * GN), inside = new Uint8Array(GN * GN), th = new Float32Array(GN * GN);
       for (let b = 0; b < GN; b++) for (let a = 0; a < GN; a++) {
@@ -862,7 +936,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ms.inside = inside; ms.theta = th;
       const tab = new Float64Array(NR);
       for (const md of ms.modes) {
-        for (let i = 0; i < NR; i++) tab[i] = md.N * circleRadial(md, i / (NR - 1));
+        for (let i = 0; i < NR; i++) tab[i] = md.drum ? md.N * besselJ(md.n, md.lam2 * i / (NR - 1)) : md.N * circleRadial(md, i / (NR - 1));
         const g = new Float32Array(GN * GN);
         for (let k = 0; k < GN * GN; k++) { const x = ri[k], i = Math.min(NR - 2, Math.floor(x)), w = x - i; g[k] = tab[i] * (1 - w) + tab[i + 1] * w; }
         md.rad = g;
@@ -872,8 +946,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let k = 0;
     for (const md of ms.modes) {
       md.idx = md.rigid ? 0 : ++k;
-      md.label = ms.shape === 'circle' ? `(${md.n}, ${md.m})` : `mode ${md.idx}`;
-      md.short = ms.shape === 'circle' ? `${md.n},${md.m}` : `${md.idx}`;
+      md.label = ms.shape === 'circle' ? `(${md.n}, ${md.m})` : ms.drum ? `(${md.m}, ${md.n})` : `mode ${md.idx}`;
+      md.short = ms.shape === 'circle' ? `${md.n},${md.m}` : ms.drum ? `${md.m},${md.n}` : `${md.idx}`;
     }
     ms.lam2 = Float64Array.from(ms.modes, (md) => md.lam2);
     ms.ms = performance.now() - t0;
@@ -893,6 +967,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function recomputeStatic() {
     const mat = MATERIALS[S.mat];
     D.ms = modeSet();
+    if (drum()) {
+      /* a drumhead: f = Λ fs; the drive is a pad (the mean of φ̂ over it) or a loudspeaker (the mean over the whole head), F = p₀A */
+      D.fs = drumScale(S.shape, S.T, SIGMA); D.M = SIGMA * plateArea(S.shape);
+      D.fmax = Math.min(F_CAP, 0.98 * DRUM_LMAX[S.shape] * D.fs); D.lowest = D.ms.modes[0];
+      D.thetaP = Math.hypot(S.du, S.dv) > 1e-9 ? Math.atan2(S.dv, S.du) : 0;
+      /* the circle's fields are built with cos n(θ − θ_p), so the pad's mean is taken at angle 0 from the drive */
+      D.phiP = Float64Array.from(D.ms.modes, (md) => S.drive === 'speaker' ? drumMean(S.shape, md) : S.shape === 'square' ? drumPadMean('square', md, S.du, S.dv, PAD_R / HALF) : drumPadMean('circle', md, Math.hypot(S.du, S.dv), 0, PAD_R / HALF));
+      D.Lc = 0; D.wA = 0; D.res = resonances(); D.fit = null; updateCurve(); return;
+    }
     D.fs = fScale(S.shape, mat, S.h);
     D.M = plateMass(S.shape, mat, S.h);
     D.fmax = Math.min(F_CAP, 0.98 * LAM2_MAX[S.shape] * D.fs);
@@ -926,7 +1009,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else for (const L of driveResonances(D.ms.lam2, D.phiP, D.Lc, D.wA, D.M / MD, D.fmax / D.fs)) { const f = L * D.fs; if (f >= F_MIN) out.push({ f, k: dominant(f) }); }
     return out.sort((a, b) => a.f - b.f);
   }
-  function isDriven(k) { return Math.abs(D.phiP[k]) >= DRIVEN; }
+  /* a drumhead's drive is a mean over a pad or the whole head, so far smaller numbers still drive a mode */
+  function isDriven(k) { return Math.abs(D.phiP[k]) >= (drum() ? 0.01 : DRIVEN); }
   // response curve: RMS acceleration over the plate on a log grid, plus points around every mode so no peak is missed
   function updateCurve() {
     const ms = D.ms, lo = Math.log(F_MIN), hi = Math.log(D.fmax), pts = [];
@@ -1037,20 +1121,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- controls ----------
-  const forceOf = (p) => 0.01 * Math.pow(10, 2.5 * p / 100), posOfForce = (F) => 40 * Math.log10(F / 0.01);
+  /* a drumhead weighs about 1% of a plate, so its drive force runs ten times lower: 1 mN to 0.32 N */
+  const forceOf = (p) => (drum() ? 0.001 : 0.01) * Math.pow(10, 2.5 * p / 100), posOfForce = (F) => 40 * Math.log10(F / (drum() ? 0.001 : 0.01));
   const qOf = (p) => 10 * Math.pow(100, p / 100), posOfQ = (Q) => 50 * Math.log10(Q / 10);
   function syncControls() {
+    for (const b of $('kindSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
+    $('drumGrp').hidden = !drum(); $('metalRow').hidden = drum(); $('thickRow').hidden = drum(); $('driverRow').hidden = drum();
+    $('rPostRow').hidden = drum(); $('rCoilRow').hidden = drum();
+    $('driveSeg').querySelector('[data-d="speaker"]').hidden = !drum(); $('tens').value = S.T;
+    $('setupTitle').textContent = drum() ? 'Set up the drumhead and drive' : 'Set up the plate and driver';
     for (const b of $('shapeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
     for (const b of $('matSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
     for (const b of $('driveSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.drive));
     for (const b of $('driverSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dr === S.driver));
-    $('waveGrp').hidden = S.driver !== 'wave'; $('forceGrp').hidden = S.driver !== 'force';
+    $('waveGrp').hidden = S.driver !== 'wave' || drum(); $('forceGrp').hidden = S.driver !== 'force' && !drum();
     $('x0').value = Math.round(posOfX0(S.x0));
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of $('rateSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate));
     for (const b of $('plotSeg').querySelectorAll('button')) {
       b.setAttribute('aria-pressed', String(b.dataset.pl === S.plot));
-      if (b.dataset.pl === 'law') b.disabled = S.shape !== 'circle';
+      if (b.dataset.pl === 'law') b.disabled = S.shape !== 'circle' || drum();
     }
     $('thick').value = (S.h * 1000).toFixed(2);
     $('force').value = Math.round(posOfForce(S.F)); $('qual').value = Math.round(posOfQ(S.Q));
@@ -1059,16 +1149,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function setShape(s) {
     if (s === S.shape) return;
-    S.shape = s; if (s !== 'circle' && S.plot === 'law') S.plot = 'resp';
-    const d = DRIVES[s][S.drive] || DRIVES[s].center; S.du = d[0]; S.dv = d[1];
+    S.shape = s; if ((s !== 'circle' || drum()) && S.plot === 'law') S.plot = 'resp';
+    const d = drivesOf()[S.drive] || drivesOf().center; S.du = d[0]; S.dv = d[1];
     clearPreset(); staticDirty = true; recomputeNow(); sprinkle(); setF(S.f); syncControls(); glBuild();
   }
   function setDrive(name) {
-    S.drive = name; const d = DRIVES[S.shape][name]; S.du = d[0]; S.dv = d[1];
-    S.driver = name === 'edge' ? 'force' : 'wave';   // a bolt at the center or the off center hole; a bow (point force) at the rim
+    S.drive = name; const d = drivesOf()[name]; S.du = d[0]; S.dv = d[1];
+    S.driver = name === 'edge' || drum() ? 'force' : 'wave';   // a bolt at the center or the off center hole; a bow (point force) at the rim; a pad or a speaker on a drumhead
     staticDirty = true; dirty = true; syncControls();
   }
   $('shapeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setShape(b.dataset.s); });
+  /* Metal plate or Drumhead (2026-10-31): the same shapes, sand and response; a drumhead is clamped at its rim */
+  function setKind(k) {
+    if (k === S.kind) return;
+    S.kind = k; S.F = k === 'drum' ? 0.05 : 1;
+    if (k === 'drum') { S.drive = 'speaker'; S.driver = 'force'; if (S.plot === 'law') S.plot = 'resp'; }
+    else { if (S.drive === 'speaker') S.drive = 'center'; S.driver = S.drive === 'edge' ? 'force' : 'wave'; }
+    const d = drivesOf()[S.drive]; S.du = d[0]; S.dv = d[1];
+    clearPreset(); staticDirty = true; recomputeNow(); sprinkle(); setF(D.res.length ? D.res[0].f : S.f); syncControls(); glBuild(); plotHintText(); dirty = true;
+  }
+  $('kindSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setKind(b.dataset.k); });
+  $('tens').addEventListener('input', () => { S.T = +$('tens').value; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); });
   $('matSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.mat = b.dataset.m; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); syncControls(); });
   $('driveSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { clearPreset(); setDrive(b.dataset.d); } });
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setView(b.dataset.v); });
@@ -1106,6 +1207,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Turn on Sound. The sweep starts at 60 Hz, where the whole plate rides up and down with the driver at about 2 g at the post, more out on the plate, and all the sand jumps. It rises one semitone per second: at each peak the sand snaps into a pattern, and between peaks the old pattern breaks up again.' },
     star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 1e-3, pick: { driven: 7 },
       hint: 'A higher resonance of the center driven square: nodal lines cross on the diagonals and loop around the corners. Patterns like this fill the plates in Chladni’s 1787 book.' },
+    drum: { kind: 'drum', shape: 'circle', mat: 'steel', h: 1e-3, T: 1000, drive: 'speaker', Q: 50, driver: 'force', F: 0.05, pick: { nm: [0, 3] },
+      hint: 'A Mylar drumhead 24 cm across, clamped in its hoop at 1000 N/m, with a loudspeaker under it pushing on the whole head at once. Only modes without nodal diameters, (0, m), move on average, so only they answer, and the sand gathers on rings. The rim itself is a node. The frequencies go as the zeros of the Bessel function J₀: 2.405, 5.520, 8.654, …, not as 1, 2, 3.' },
+    drumOff: { kind: 'drum', shape: 'circle', mat: 'steel', h: 1e-3, T: 1000, drive: 'off', Q: 100, driver: 'force', F: 0.01, pick: { nm: [1, 1] },
+      hint: 'The same drumhead, now pushed by a small pad halfway out. Modes with nodal diameters answer too. Step through them with Next resonance and read f/f₁ for each: 1.593, 2.136, 2.295, 2.653, … An ideal membrane is not harmonic, which is why most drums give no clear pitch. (A timpani gets close to harmonic ratios for its (1, m) modes because the air in its kettle and around the head loads the membrane; that air is left out here.)' },
     high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, driver: 'force', F: 0.3, pick: { nm: [4, 2] },
       hint: 'Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = 200 so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.' }
   };
@@ -1117,9 +1222,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function applyPreset(id) {
     const p = PRESETS[id]; if (!p) return;
     stopSweep();
+    S.kind = p.kind || 'plate'; S.T = p.T || 1000;
     S.shape = p.shape; S.mat = p.mat; S.h = p.h; S.Q = p.Q; S.F = p.F || 1; S.drive = p.drive; S.driver = p.driver; S.x0 = p.x0 || 2e-3;
-    const d = DRIVES[S.shape][S.drive]; S.du = d[0]; S.dv = d[1];
-    if (S.shape !== 'circle' && S.plot === 'law') S.plot = 'resp';
+    const d = drivesOf()[S.drive]; S.du = d[0]; S.dv = d[1];
+    if ((S.shape !== 'circle' || drum()) && S.plot === 'law') S.plot = 'resp';
     staticDirty = true; recomputeNow();
     let f = p.f || 100;
     if (p.pick) {
@@ -1148,10 +1254,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('thickOut').textContent = `${(S.h * 1000).toFixed(2)} mm`;
     $('rPeak').innerHTML = `${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} <small>g</small>`;
     $('rGrains').textContent = sand.count.toLocaleString('en-US');
-    $('rMass').innerHTML = `${(D.M * 1000).toFixed(0)} <small>g</small>`;
+    $('rMass').innerHTML = drum() ? `${(D.M * 1000).toFixed(1)} <small>g</small>` : `${(D.M * 1000).toFixed(0)} <small>g</small>`;
     $('rLow').innerHTML = `${fmtF(modeF(D.lowest))}`;
-    const k = bendK(S.f, mat, S.h), kh = k * S.h;
-    $('rKh').innerHTML = `wavelength ${(TAU / k * 100).toFixed(1)} cm, k h = ${kh.toFixed(3)}` + (kh > 0.25 ? ' <small>(thin plate theory a few percent high here)</small>' : '');
+    $('rMassLab').textContent = drum() ? 'Head mass M = σA' : 'Plate mass M'; $('rLowLab').textContent = drum() ? 'Lowest mode f₁' : 'Lowest flexural mode';
+    $('rKhLab').textContent = drum() ? 'Wave on the head at f' : 'Bending wave at f';
+    if (drum()) { const c = Math.sqrt(S.T / SIGMA); $('rKh').innerHTML = `c = √(T/σ) = ${c.toFixed(1)} m/s, wavelength c/f = ${(c / S.f * 100).toFixed(1)} cm`; }
+    else { const k = bendK(S.f, mat, S.h), kh = k * S.h;
+      $('rKh').innerHTML = `wavelength ${(TAU / k * 100).toFixed(1)} cm, k h = ${kh.toFixed(3)}` + (kh > 0.25 ? ' <small>(thin plate theory a few percent high here)</small>' : ''); }
+    $('tensOut').textContent = `${S.T.toFixed(0)} N/m`;
     const dr = D.drv;
     if (dr) {
       const xm = Math.hypot(dr.xr, dr.xi), am = Math.pow(TAU * S.f, 2) * xm / G0;
@@ -1161,17 +1271,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('x0Out').textContent = `${(S.x0 * 1000).toFixed(2)} mm (${(MD * W50 * W50 * S.x0).toFixed(1)} N)`;
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k], fk = r.f, df = S.f - fk, bw = fk / S.Q;
-      let s = S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free plate mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
+      let s = drum() ? `${md.label} at ${fmtF(fk)}, f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)} (${S.shape === 'circle' ? `j = ${md.lam2.toFixed(3)}, a zero of J${'₀₁₂₃₄₅₆₇₈₉'[md.n] || md.n}` : `√(m² + n²) = ${md.lam2.toFixed(3)}`}). `
+        : S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free plate mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
         : `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
       s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`;
-      if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
+      if (drum() && D.ms.shape === 'square') s += ` ${md.m - 1} nodal line${md.m === 2 ? '' : 's'} one way and ${md.n - 1} the other, besides the hoop.${md.m !== md.n ? ` (${md.n}, ${md.m}) has the same frequency.` : ''}`;
+      else if (drum()) s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'} and ${md.m - 1} nodal circle${md.m === 2 ? '' : 's'} besides the hoop.`;
+      else if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
       else s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`;
       $('rMode').textContent = s;
     }
     const name = S.shape === 'square' ? 'square, 24 cm on a side' : 'circle, 24 cm across';
+    if (drum()) { $('plateHint').textContent = `A drumhead, ${name}: Mylar film ${(MYLAR.h * 1000).toFixed(2)} mm thick (chosen, a common head thickness; polyester film density ${MYLAR.rho} kg/m³), so σ = ${(SIGMA * 1000).toFixed(1)} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: ${S.shape === 'circle' ? 'the zeros j of the Bessel functions, 2.405, 3.832, 5.136, 5.520, …' : '√(m² + n²): √2, √5, √8, √10, …'}`; return; }
     $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
   }
   function driveHintText() {
+    if (drum()) { $('driveHint').textContent = S.drive === 'speaker'
+      ? `A loudspeaker under the head pushes on all of it at once with a uniform pressure p₀ (total force F₀ = p₀A). A mode answers only if the head moves on average in it: on a circle only the (0, m) modes, on a square only (odd, odd). Q = ${Math.round(S.Q)} gives each peak a width f/Q.`
+      : `A pad 2 cm across pushes on the head with F₀ cos(2πft), spread over the pad. A mode answers if the pad is not on one of its nodal lines. Q = ${Math.round(S.Q)} gives each peak a width f/Q.`; return; }
     $('driveHint').textContent = S.driver === 'wave'
       ? `The wave driver shakes the post. At low frequency the whole plate rides up and down with it, so where the plate's acceleration passes g everywhere all the sand hops, farther the lower the frequency. Near a resonance the plate bends far more than the post moves, and the sand settles on the nodal lines. The driver setting x₀ = ${(S.x0 * 1000).toFixed(2)} mm means a coil force of ${(MD * W50 * W50 * S.x0).toFixed(1)} N (see Model); Q = ${Math.round(S.Q)} gives each peak a width f/Q.`
       : `An ideal point force on a free plate. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances a free plate moves little, so the sand mostly stays put. Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
@@ -1328,17 +1445,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.restore();
     platePath(c); c.strokeStyle = T.plateEdge; c.lineWidth = 1.2 * ps; c.stroke();
-    // drive post (bolt head)
+    /* a drumhead: the hoop that clamps it */
+    if (drum()) { c.save(); platePath(c); c.strokeStyle = '#a07a3c'; c.lineWidth = Math.max(4, p.R * 0.035); c.shadowColor = 'rgba(0,0,0,0.4)'; c.shadowBlur = 4 * ps; c.stroke(); c.restore(); }
+    // drive post (bolt head), or the drumhead's pad; nothing for the loudspeaker under a drumhead
     const hot = (drag && drag.id === 'drive') || (!drag && hoverId === 'drive');
-    const dx = U2X(S.du), dy = V2Y(S.dv), rr = Math.max(5, p.R * 0.03) * (hot ? 1.25 : 1);
+    const dx = U2X(S.du), dy = V2Y(S.dv), rr = (drum() ? p.R * PAD_R / HALF : Math.max(5, p.R * 0.03)) * (hot ? 1.25 : 1);
+    if (!(drum() && S.drive === 'speaker')) {
     if (hot) { c.globalAlpha = 0.35; c.fillStyle = T.brass; c.beginPath(); c.arc(dx, dy, rr * 2, 0, TAU); c.fill(); c.globalAlpha = 1; }
     c.fillStyle = T.brass; c.strokeStyle = '#111'; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(dx, dy, rr, 0, TAU); c.fill(); c.stroke();
-    c.strokeStyle = 'rgba(0,0,0,0.55)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx - rr * 0.55, dy); c.lineTo(dx + rr * 0.55, dy); c.stroke();
+    if (!drum()) { c.strokeStyle = 'rgba(0,0,0,0.55)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(dx - rr * 0.55, dy); c.lineTo(dx + rr * 0.55, dy); c.stroke(); }
+    }
     // labels
     c.font = `${12 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
     const mat = MATERIALS[S.mat];
-    let l1 = `${S.shape === 'square' ? 'Square, 24 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free edges`;
-    if (c.measureText(l1).width > p.s - 8) l1 = `${S.shape === 'square' ? 'Square' : 'Circle'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm`;   /* a small plate: the short label */
+    let l1 = drum() ? `${S.shape === 'square' ? 'Square drumhead, 24 cm' : 'Drumhead, 24 cm across'} · Mylar · T = ${S.T.toFixed(0)} N/m · clamped rim${S.drive === 'speaker' ? ' · loudspeaker under it' : ''}`
+      : `${S.shape === 'square' ? 'Square, 24 cm' : 'Circle, 24 cm across'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm · free edges`;
+    if (c.measureText(l1).width > p.s - 8) l1 = drum() ? `Drumhead · T = ${S.T.toFixed(0)} N/m` : `${S.shape === 'square' ? 'Square' : 'Circle'} · ${mat.name.toLowerCase()} ${(S.h * 1000).toFixed(2)} mm`;   /* a small plate: the short label */
     halo(c, l1, p.x + 4, p.y + 14 * ps, 'left', T.muted, ps);
     if (D.near != null) {
       const r = D.res[D.nearRes], off = r ? Math.abs(S.f - r.f) / (r.f / S.Q) : Infinity;
@@ -1386,7 +1508,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.textAlign = 'right'; c.fillText('drive frequency f (Hz)', g.R, g.bot + 17 * ps);
     c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.font = `${11.5 * ps}px ${T.ui}`; c.fillStyle = T.muted;
-    c.fillText('RMS acceleration of the plate (g)', g.L, g.top - 9 * ps);
+    c.fillText(drum() ? 'RMS acceleration of the drumhead (g)' : 'RMS acceleration of the plate (g)', g.L, g.top - 9 * ps);
     // 1 g
     if (ymin < 0 && ymax > 0) {
       const y = Y(G0); c.strokeStyle = T.equi; c.lineWidth = 1.3 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.setLineDash([]);
@@ -1494,7 +1616,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let drag = null, hoverId = null;
   function dragHandles() {
     const out = [];
-    if (S.view === 'sand' || !G3.ok) out.push({ id: 'drive', pt: [U2X(S.du), V2Y(S.dv)], cursor: 'move' });
+    if ((S.view === 'sand' || !G3.ok) && !(drum() && S.drive === 'speaker')) out.push({ id: 'drive', pt: [U2X(S.du), V2Y(S.dv)], cursor: 'move' });
     if (S.plot === 'resp' || S.shape !== 'circle') { const g = G.resp; if (g) out.push({ id: 'f', seg: [fX(g, S.f), g.top, g.bot], cursor: 'ew-resize' }); }
     return out;
   }
@@ -1516,7 +1638,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!drag) return;
     if (drag.id === 'drive') {
       let u = (x - G.plate.cx) / G.plate.R, v = (G.plate.cy - y) / G.plate.R;
-      if (S.shape === 'square') { u = clamp(u, -1, 1); v = clamp(v, -1, 1); } else { const r = Math.hypot(u, v); if (r > 1) { u /= r; v /= r; } }
+      const um = drum() ? 0.9 : 1;   /* a drumhead's pad stays inside the hoop */
+      if (S.shape === 'square') { u = clamp(u, -um, um); v = clamp(v, -um, um); } else { const r = Math.hypot(u, v); if (r > um) { u *= um / r; v *= um / r; } }
       if (Math.hypot(u, v) < 0.04) { u = 0; v = 0; }
       S.du = Math.round(u * 200) / 200; S.dv = Math.round(v * 200) / 200;
       S.drive = S.du === 0 && S.dv === 0 ? 'center' : 'custom';
@@ -1607,7 +1730,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     housing.position.z = BENCH_Z + 0.03; scene.add(housing);
     const benchMat = new THREE.MeshStandardMaterial({ color: 0xcbb38e, roughness: 0.85, metalness: 0 });
     const benchTop = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), benchMat); benchTop.position.z = BENCH_Z; benchTop.receiveShadow = true; scene.add(benchTop);
-    Object.assign(G3, { ok: true, renderer, el, scene, cam, mesh, plateMat, sandGeo, sandMat, pts, post, housing, benchMat });
+    /* a drumhead's hoop, built in glBuild for the shape */
+    const hoopMat = new THREE.MeshStandardMaterial({ color: 0xa07a3c, metalness: 0.3, roughness: 0.5 }), hoop = new THREE.Group(); scene.add(hoop);
+    Object.assign(G3, { ok: true, renderer, el, scene, cam, mesh, plateMat, sandGeo, sandMat, pts, post, housing, benchMat, hoop, hoopMat });
     // orbit: drag to turn, wheel or pinch to zoom
     const pointers = new Map(); let mode = null;
     const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
@@ -1659,6 +1784,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); geo.setIndex(idx);
     G3.base = Float32Array.from(pos);
     G3.mesh.geometry.dispose(); G3.mesh.geometry = geo;
+    /* the hoop and shell of a drumhead: a ring (circle) or a frame (square) with a shell down to the bench */
+    for (const ch of [...G3.hoop.children]) { G3.hoop.remove(ch); ch.geometry.dispose(); }
+    if (drum()) {
+      if (S.shape === 'circle') {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.035, 12, 96), G3.hoopMat); ring.castShadow = true; G3.hoop.add(ring);
+        const shell = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.6, 96, 1, true), G3.hoopMat); shell.rotation.x = Math.PI / 2; shell.position.z = -0.32; G3.hoop.add(shell);
+      } else for (const [x, y, w, h] of [[0, 1, 2.1, 0.07], [0, -1, 2.1, 0.07], [1, 0, 0.07, 2.1], [-1, 0, 0.07, 2.1]]) {
+        const bar = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.07), G3.hoopMat); bar.position.set(x, y, 0); bar.castShadow = true; G3.hoop.add(bar);
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.6), G3.hoopMat); wall.position.set(x, y, -0.33); G3.hoop.add(wall);
+      }
+    }
+    G3.plateMat.color = new THREE.Color(drum() ? 0x51565e : 0x3a3f47); G3.plateMat.metalness = drum() ? 0.05 : 0.45; G3.plateMat.roughness = drum() ? 0.8 : 0.55;
     glDirty = true;
   }
   function glResize() {
@@ -1692,6 +1829,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.sandGeo.attributes.position.needsUpdate = true;
     G3.post.position.set(S.du, S.dv, -POST_LEN / 2 + sc * (wAt(D.Wre, S.du, S.dv) * cph - wAt(D.Wim, S.du, S.dv) * sph));
     G3.housing.position.x = S.du; G3.housing.position.y = S.dv;
+    G3.post.visible = !(drum() && S.drive === 'speaker');
     const r = 5.9 / orbit.zoom, cam = G3.cam, tz = -0.32;
     cam.position.set(r * Math.sin(orbit.phi) * Math.cos(orbit.theta), r * Math.sin(orbit.phi) * Math.sin(orbit.theta), tz + r * Math.cos(orbit.phi));
     cam.lookAt(0, 0, tz);
@@ -1797,7 +1935,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- loop ----------
   let staticDirty = true, fieldDirty = true, last = performance.now(), lastRead = 0;
-  function recomputeNow() { recomputeStatic(); staticDirty = false; fieldDirty = true; }
+  function recomputeNow() { recomputeStatic(); staticDirty = false; fieldDirty = true; driveHintText(); }
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
@@ -1867,8 +2005,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let mode = '';
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k];
-      if (Math.abs(S.f - r.f) <= r.f / S.Q) mode = D.ms.shape === 'square' ? `${md.label}, ${symText(md)}` : `${md.label}: ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}`;
+      if (Math.abs(S.f - r.f) <= r.f / S.Q) mode = drum() ? `${md.label}, f/f1 = ${(md.lam2 / D.lowest.lam2).toFixed(3)}` : D.ms.shape === 'square' ? `${md.label}, ${symText(md)}` : `${md.label}: ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}`;
     }
+    if (drum()) return { shape: S.shape, material: 'Mylar drumhead', h_mm: +(MYLAR.h * 1000).toFixed(2), T_N_per_m: S.T, drive: S.drive, driver: S.drive === 'speaker' ? 'loudspeaker' : 'pad',
+      Q: Math.round(S.Q), f_Hz: +S.f.toFixed(S.f < 100 ? 3 : 2), mode, peak_g: +D.gmax.toFixed(2) };
     return { shape: S.shape, material: MATERIALS[S.mat].name.toLowerCase(), h_mm: +(S.h * 1000).toFixed(2), drive: S.drive, driver: S.driver === 'wave' ? 'wave driver' : 'point force',
       Q: Math.round(S.Q), f_Hz: +S.f.toFixed(S.f < 100 ? 3 : 2), mode, peak_g: +D.gmax.toFixed(2) };
   };

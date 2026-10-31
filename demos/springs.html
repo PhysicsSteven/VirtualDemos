@@ -70,6 +70,9 @@
   display: grid; grid-template-columns: minmax(0, 50fr) minmax(0, 50fr); grid-template-rows: minmax(0, 57fr) minmax(0, 43fr); }
 #pPane { grid-column: 2; grid-row: 1 / 3; border-left: 1px solid var(--line); }
 #ePane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); }
+#ePane { position: relative; }
+.panetog { position: absolute; top: 6px; right: 8px; z-index: 2; }
+.panetog button { font-size: 0.78rem; padding: 2px 8px; }
 #cCan, #eCan { touch-action: none; outline: none; }
 #cCan:focus-visible, #eCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
@@ -175,6 +178,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </div>
       <div class="pane" id="ePane">
         <canvas id="eCan" tabindex="0" aria-label="Energy bars"></canvas>
+        <div class="seg panetog" role="group" aria-label="What the lower pane shows" id="sbPaneSeg" hidden><button type="button" data-pane="energy" aria-pressed="true">Energy</button><button type="button" data-pane="modes" aria-pressed="false">Normal modes</button></div>
       </div>
       <div class="pane" id="pPane">
         <canvas id="pCan" role="img" aria-label="Displacement, velocity, acceleration and energy against time, scrolling as the run goes on. The values at this moment are listed under Measurements."></canvas>
@@ -227,6 +231,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-b="hzOne" aria-pressed="false">One block</button>
           <button type="button" data-b="hzTwo" aria-pressed="false">Two blocks</button>
           <button type="button" data-b="hzPar" aria-pressed="false">Side by side</button>
+          <button type="button" data-b="hzChain" aria-pressed="false">Chain of ten</button>
           <button type="button" data-b="hzEmpty" aria-pressed="false">Empty track</button>
         </div>
         <details class="more"><summary>About this rig</summary><p class="hint" id="sbHint"></p></details>
@@ -755,6 +760,44 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     while (st.length) { const v = st.pop(); if (v === p) return true; if (seen.has(v)) continue; seen.add(v); for (const s of rig.springs) if (s.b === v) st.push(s.a); }
     return false;
   }
+  // Normal modes of a rig (2026-10-31): the blocks' undamped motion M ü = −K u, K the stiffness with the massless nodes condensed out
+  // (md.Ke). With S = M^(−1/2) K M^(−1/2), symmetric, the cyclic Jacobi method gives S = V diag(ω²) Vᵀ; mode n moves the blocks as
+  // φₙ = M^(−1/2) vₙ, each scaled so its largest block moves 1 (m) and its first moving block moves forward. Oil and the shaker are left out.
+  function sbJacobi(A) {
+    const n = A.length, a = A.map((r) => r.slice()), V = A.map((_, i) => A.map((__, j) => (i === j ? 1 : 0)));
+    for (let sweep = 0; sweep < 100; sweep++) {
+      let off = 0, scale = 0; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) (i === j ? (scale += a[i][i] * a[i][i]) : (off += a[i][j] * a[i][j]));
+      if (off <= 1e-30 * Math.max(scale, 1e-300)) break;
+      for (let p = 0; p < n - 1; p++) for (let q = p + 1; q < n; q++) {
+        if (Math.abs(a[p][q]) < 1e-300) continue;
+        const th = (a[q][q] - a[p][p]) / (2 * a[p][q]), t = Math.sign(th || 1) / (Math.abs(th) + Math.sqrt(th * th + 1)), c = 1 / Math.sqrt(t * t + 1), s = t * c;
+        for (let k = 0; k < n; k++) { const akp = a[k][p], akq = a[k][q]; a[k][p] = c * akp - s * akq; a[k][q] = s * akp + c * akq; }
+        for (let k = 0; k < n; k++) { const apk = a[p][k], aqk = a[q][k]; a[p][k] = c * apk - s * aqk; a[q][k] = s * apk + c * aqk; }
+        for (let k = 0; k < n; k++) { const vkp = V[k][p], vkq = V[k][q]; V[k][p] = c * vkp - s * vkq; V[k][q] = s * vkp + c * vkq; }
+      }
+    }
+    return { vals: a.map((r, i) => r[i]), V };
+  }
+  function sbModes(md) {
+    const n = md.n; if (!n) return [];
+    const r = md.mass.map((m) => 1 / Math.sqrt(m)), S = md.Ke.map((row, i) => row.map((k, j) => k * r[i] * r[j]));
+    const { vals, V } = sbJacobi(S);
+    return vals.map((w2, j) => {
+      let phi = V.map((row, i) => row[j] * r[i]); const big = Math.max(...phi.map(Math.abs)), first = phi.find((v) => Math.abs(v) > 1e-9 * big) || 1;
+      phi = phi.map((v) => v / big * Math.sign(first));
+      return { w: Math.sqrt(Math.max(0, w2)), phi, mm: phi.reduce((s, v, i) => s + md.mass[i] * v * v, 0) };
+    }).sort((a, b) => a.w - b.w);
+  }
+  // the share of mode n in a state z = [u; v]: qₙ = φₙᵀ M u / φₙᵀ M φₙ (and the same for v), amplitude √(qₙ² + (q̇ₙ/ωₙ)²) in m, energy ½ φₙᵀMφₙ (q̇ₙ² + ωₙ² qₙ²)
+  function sbModeShares(md, modes, z) {
+    return modes.map((m) => {
+      const q = m.phi.reduce((s, p, i) => s + md.mass[i] * p * z[i], 0) / m.mm, qd = m.phi.reduce((s, p, i) => s + md.mass[i] * p * z[md.n + i], 0) / m.mm;
+      return { q, qd, amp: m.w > 0 ? Math.hypot(q, qd / m.w) : Math.abs(q), E: 0.5 * m.mm * (qd * qd + m.w * m.w * q * q) };
+    });
+  }
+  // a chain of N equal blocks m and N + 1 equal springs k between fixed walls (the loaded string, longitudinal):
+  // ωₙ = 2√(k/m) sin(nπ / 2(N + 1)), block j of mode n moves as sin(jnπ/(N + 1))
+  const chainOmega = (n, N, k, m) => 2 * Math.sqrt(k / m) * Math.sin(n * Math.PI / (2 * (N + 1)));
   // ==CORE END==
 
   if (typeof document === 'undefined') {
@@ -2257,7 +2300,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawAll() {
     if (!segs.length || !T) return;
     { const c = $('cPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
-    if (sbOn()) { sbDrawScene(); sbDrawPlot(); sbDrawBars(); return; }
+    if (sbOn()) { sbDrawScene(); sbDrawPlot(); if (SB.pane === 'modes') sbDrawModes(); else sbDrawBars(); return; }
     drawScene(); drawPlots();
     if (S.sys === 'driven') drawRes(); else drawBars();
     if (fitDirty) { fitDirty = false; drawFit(); }
@@ -2928,6 +2971,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       hint: 'Two blocks and three springs between the walls. Pulling one block starts a mix of two normal modes: both blocks moving together, and the two moving against each other. Hold the blocks and let go in other ways to find each mode.' },
     hzPar: { hz: true, wall: 0.34, name: 'Side by side', nodes: [[2, 0.2]], springs: [[3, 0, 2, 20, -0.035], [4, 0, 2, 20, 0.035], [5, 2, 1, 20, 0]], pull: 0.04, sel: ['n', 2],
       hint: 'Two springs side by side from the left wall and one to the right wall. The pair stretch the same and act as one spring of k1 + k2.' },
+    hzChain: { hz: true, wall: 1.6, name: 'Chain of ten', nodes: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((id) => [id, 0.1]),
+      springs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((j) => [12 + j, j ? 1 + j : 0, j === 10 ? 1 : 2 + j, 20, 0]), pull: 0.03, sel: ['n', 11], pane: 'modes', quiet: true,
+      hint: 'Ten 100 g blocks and eleven 20 N/m springs between the walls: a long chain, the same as ten beads on a stretched string. It has ten normal modes, shown in the lower pane: each one\'s frequency, its shape, and how much of the motion is in it now. Click a mode (or press its number, 0 for mode 10, with the pane in focus) to start the chain in that mode alone: every block then moves at that one frequency. Pull one block and let go and the motion is a mix of all ten. The frequencies are fₙ = (1/π)√(k/m) sin(nπ/22): they crowd together near the top instead of rising as n f₁, as they would on a smooth string.' },
     hzEmpty: { hz: true, wall: 0.44, name: 'Empty track', nodes: [], springs: [], pull: 0, sel: ['n', 0],
       hint: 'Only the two walls. Drag a spring onto the left wall, a block onto its hook, and a hook onto the right wall to tie it there. Drag the right wall to change the gap.' }
   };
@@ -2950,6 +2996,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (B.hz) SB.rig.hz = true;
     SB.nextId = 1 + Math.max(0, ...SB.rig.nodes.map((n) => n.id), ...SB.rig.springs.map((s) => s.id));
     SB.sel = B.sel.slice(); SB.join = null; SB.scale = null; SB.drive = null;
+    if (B.pane) sbPane(B.pane);
+    if (B.quiet) { SB.labels.k = SB.labels.T = false; $('sbLabK').checked = $('sbLabT').checked = false; }
     for (const b of document.querySelectorAll(SB_CHIPS)) b.setAttribute('aria-pressed', String(b.dataset.b === name));
     $('sbHint').textContent = B.hint;
     sbRebuild(true);
@@ -2971,7 +3019,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbStart(z);
   }
   function sbStart(z) {
-    SB.z = z.slice(); SB.t = 0; SB.hist = []; SB.ic = z.slice(); SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbSample();
+    SB.modeOn = null; SB.z = z.slice(); SB.t = 0; SB.hist = []; SB.ic = z.slice(); SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbSample();
     t = 0; sw.acc = 0; swText();
   }
   /* new oil or drive settings: the blocks carry on from where they are, at the speeds they have */
@@ -3252,7 +3300,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     /* drag the right wall (or its grip) to change the gap */
     { const gx = xR + 6 * ps, gy = wallTop - 12 * ps; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'wall', false);
       cHandles.push({ id: 'gw', sel: ['n', 1], wall: true, grip: 'wall', box: [gx - 11 * ps, gy - 8 * ps, 22 * ps, 16 * ps], cursor: 'ew-resize' });
-      labelBox(ctx, `gap ${fx(D * 100, 1)} cm`, gx - 15 * ps, gy + fs * 0.35, 'right', T.muted, fs * 0.85, 600); }
+      labelBox(ctx, `gap ${fx(D * 100, 1)} cm`, gx - 15 * ps, gy + fs * (SB.md && SB.md.n > 6 ? -1.1 : 0.35), 'right', T.muted, fs * 0.85, 600); }   /* above the block numbers of a long chain */
     for (const [id, xf, sd] of [[0, xL, -1], [1, xR, 1]]) if (SB.sel[0] === 'n' && SB.sel[1] === id && !SB.drag && $('sbSel').offsetParent) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.strokeRect(sd < 0 ? xf - 14 * ps : xf - 2 * ps, wallTop - 2, 16 * ps, floorY - wallTop + 4); }
     if (SB.drive) sbDrawShakerH(ctx, xL - 12 * ps, (X(bLo) + floorY) / 2, ps, fs);
     // the ruler along the track (cm from the left wall)
@@ -3306,6 +3354,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = (hot ? 2.6 : 1.8) * ps; roundRect(ctx, xx, yT, w, hgt, 3 * ps); ctx.stroke();
         ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         if (w >= 34 * ps) { ctx.font = `700 ${11 * ps}px ${T.mono}`; ctx.fillText(String(i + 1), xx + w / 2, yT + hgt / 2 - 7 * ps); ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${fx(nd.m * 1000, 0)} g`, xx + w / 2, yT + hgt / 2 + 7 * ps); }
+        else if (SB.md.n > 6) labelBox(ctx, `${i + 1}`, xx + w / 2, yT - 26 * ps, 'center', cols[i % 6], fs * 0.88, 700);   /* a long chain: numbers only, the masses would overlap */
         else labelBox(ctx, `${i + 1} · ${fx(nd.m * 1000, 0)} g`, xx + w / 2, yT - 26 * ps, 'center', cols[i % 6], fs * 0.88, 700);
         ctx.textBaseline = 'alphabetic';
         { const gx = xx + w / 2, gy = yT - 12 * ps; grip(ctx, gx, gy, SB.drag && SB.drag.type === 'm' && SB.drag.id === nd.id, false);
@@ -3387,6 +3436,52 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       yy += rowH;
     }
   }
+  /* the lower pane in the Sandbox: Energy bars or the rig's Normal modes (2026-10-31) */
+  function sbPane(v) { SB.pane = v; for (const b of $('sbPaneSeg').children) b.setAttribute('aria-pressed', String(b.dataset.pane === v));
+    cans.e.setAttribute('aria-label', v === 'modes' ? 'Normal modes of the rig: each mode\'s frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number (0 for mode 10), to start the rig in that mode alone.' : 'Energy bars'); }
+  $('sbPaneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-pane]'); if (b) { sbPane(b.dataset.pane); if (!running) drawAll(); } });
+  function sbModesNow() { if (SB.modesFor !== SB.md) { SB.modes = sbModes(SB.md); SB.modesFor = SB.md; } return SB.modes; }
+  let sbModeRows = [];
+  function sbDrawModes() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ps = projScale(), modes = sbModesNow(), n = modes.length;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 14 * ps, R = W - 14 * ps, fs = (W < 400 ? 10 : 11) * ps;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const segW = $('sbPaneSeg').offsetWidth + 16 * ps;
+    ctx.fillText(n ? (ctx.measureText('Normal modes: f, shape, amplitude (cm), share of energy').width < R - L - segW ? 'Normal modes: f, shape, amplitude (cm), share of energy' : 'Modes: f, shape, cm, energy') : 'Normal modes', L, 20 * ps);
+    sbModeRows = [];
+    if (!n) { ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.ui}`; ctx.fillText('No blocks yet: a rig with blocks has one mode for each block.', L, 44 * ps); return; }
+    const sh = sbModeShares(SB.md, modes, SB.z), Etot = sh.reduce((a, q) => a + q.E, 0), amax = Math.max(0.005, ...sh.map((q) => q.amp));
+    const top = 30 * ps, rowH = Math.min(34 * ps, (H - top - 6 * ps) / n), wF = 92 * ps * (fs / (11 * ps)), wShape = Math.min(150 * ps, (R - L) * 0.32), x1 = L + wF, x2 = x1 + wShape + 12 * ps;
+    const sel = SB.modeOn;
+    for (let k = 0; k < n; k++) {
+      const m = modes[k], y0 = top + k * rowH, yc = y0 + rowH / 2, hh = Math.max(3 * ps, rowH * 0.36);
+      sbModeRows.push([y0, y0 + rowH]);
+      if (sel === k) { ctx.fillStyle = T.grid; ctx.fillRect(L - 6 * ps, y0, R - L + 12 * ps, rowH); }
+      ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${k + 1}`, L, yc); ctx.font = `${fs}px ${T.mono}`; ctx.fillText(`${(m.w / (2 * Math.PI)).toFixed(3)} Hz`, L + 20 * ps, yc);
+      /* the shape: one stem per block, up for forward (right, or down when hanging) */
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x1, yc + 0.5); ctx.lineTo(x1 + wShape, yc + 0.5); ctx.stroke();
+      const cols = SB_COLS();
+      m.phi.forEach((p, i) => { const x = x1 + wShape * (i + 0.5) / m.phi.length; ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, yc); ctx.lineTo(x, yc - p * hh); ctx.stroke();
+        ctx.fillStyle = cols[i % 6]; ctx.beginPath(); ctx.arc(x, yc - p * hh, 2.2 * ps, 0, 7); ctx.fill(); });
+      /* the amplitude of this mode in the motion now, and its share of the energy */
+      const q = sh[k], bw = (R - x2) * 0.62 * q.amp / amax, bh = Math.max(3 * ps, Math.min(10 * ps, rowH * 0.4));
+      ctx.fillStyle = T.grid; ctx.fillRect(x2, yc - bh / 2, (R - x2) * 0.62, bh); ctx.fillStyle = T.accent; ctx.globalAlpha = 0.85; ctx.fillRect(x2, yc - bh / 2, bw, bh); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.font = `${fs * 0.95}px ${T.mono}`; ctx.textAlign = 'right';
+      ctx.fillText(`${(q.amp * 100).toFixed(2)}${Etot > 0 ? ` · ${Math.round(100 * q.E / Etot)}%` : ''}`, R, yc);
+    }
+  }
+  function sbStartMode(k) {
+    const modes = sbModesNow(); if (!modes[k] || SB.held) return;
+    const A = 0.03, z = sbZero(); modes[k].phi.forEach((p, i) => { z[i] = A * p; });
+    sbStart(z); SB.modeOn = k; if (!running) setRunning(true); updateReadouts();
+    $('live').textContent = `Mode ${k + 1} alone, ${(modes[k].w / (2 * Math.PI)).toFixed(3)} Hz: every block moves at this one frequency.`;
+  }
+  cans.e.addEventListener('click', (ev) => { if (!sbOn() || SB.pane !== 'modes') return; const r = cans.e.getBoundingClientRect(), y = ev.clientY - r.top;
+    const k = sbModeRows.findIndex(([a, b]) => y >= a && y < b); if (k >= 0) sbStartMode(k); });
+  cans.e.addEventListener('keydown', (ev) => { if (!sbOn() || SB.pane !== 'modes' || !/^[0-9]$/.test(ev.key)) return; sbStartMode(ev.key === '0' ? 9 : +ev.key - 1); ev.preventDefault(); });
   function sbDrawPlot() {
     const [W, H] = dims.p; if (!W || !H) return;
     const ctx = ctxs.p, ps = projScale(), cols = SB_COLS();
@@ -3637,6 +3732,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (SB.dimWas) view3.set('flat');
     for (const bt of $('sysSeg').querySelectorAll('button')) bt.setAttribute('aria-pressed', String(bt.dataset.s === 'sandbox'));
     document.querySelector('.rail').dataset.sb = 'on'; $('dimSeg').hidden = true; $('sbSettle').hidden = false; $('sbSec').hidden = false;
+    $('sbPaneSeg').hidden = false;
     if (!SB.rig) sbLoad('series'); else sbUi();
     $('presetHint').textContent = SB_BUILDS[SB.build].hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false');
@@ -3645,11 +3741,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     SB.scale = null; ranges = {};
   }
   function sbExit() {
+    $('sbPaneSeg').hidden = true; if (SB.pane === 'modes') sbPane('energy');
     delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSettle').hidden = true; SB.drag = null; $('sbSec').hidden = true; SB.held = null; SB.join = null;
     if ($('modelHint').dataset.was) $('modelHint').innerHTML = $('modelHint').dataset.was;
     if (SB.dimWas) { view3.set('3d'); SB.dimWas = null; }
   }
-  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². Between two walls the blocks slide on a level track without friction, so gravity plays no part, each block is 4.0 cm long, the right wall stays put (drag it to set the gap) and the shaker moves the left wall as X = A cos ωt. The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration.';
+  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². Between two walls the blocks slide on a level track without friction, so gravity plays no part, each block is 4.0 cm long, the right wall stays put (drag it to set the gap) and the shaker moves the left wall as X = A cos ωt. The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration. Normal modes (the lower pane): the stiffness matrix of the blocks (massless hooks and bars worked out exactly) and their masses give each mode’s frequency and shape by the Jacobi method; a mode’s amplitude is the projection of the blocks’ positions and speeds on it, φᵀMu/φᵀMφ. Oil and the shaker are left out of the modes, so with either on the shares change with time.';
   for (const b of document.querySelectorAll(SB_CHIPS)) b.addEventListener('click', () => { sbLoad(b.dataset.b); setRunning(!reduce || running); });
   $('sbAdd').addEventListener('click', sbAddSpring);
   $('sbJoin').addEventListener('click', () => { if (SB.sel[0] !== 'n' || SB.sel[1] === 0) return; SB.join = SB.join === null ? SB.sel[1] : null; sbUi(); });
