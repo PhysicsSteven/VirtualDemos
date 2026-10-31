@@ -64,6 +64,7 @@
           <button type="button" data-v="mo" aria-pressed="false">H₂⁺ orbitals</button>
           <button type="button" data-v="lev" aria-pressed="false">Energy levels</button>
           <button type="button" data-v="sp" aria-pressed="false">HCl spectrum</button>
+          <button type="button" data-v="light" aria-pressed="false">Molecules and light</button>
         </div>
         <span class="count mono" id="clock"></span>
       </div>
@@ -136,6 +137,21 @@
             </div>
           </div>
         </div>
+        <div class="shelf-card" id="cardLight" role="group" aria-label="Molecules and light" hidden>
+          <span class="card-title">A lamp sends photons at one molecule. Pick the light and the molecule; watch whether it turns, shakes, glows or breaks.</span>
+          <div class="wide"><span class="lab">Light</span>
+            <div class="seg" role="group" aria-label="Light" id="mlLampSeg">
+              <button type="button" data-l="mw" aria-pressed="false">Microwave</button><button type="button" data-l="ir" aria-pressed="true">Infrared</button><button type="button" data-l="vis" aria-pressed="false">Visible</button><button type="button" data-l="uv" aria-pressed="false">Ultraviolet</button>
+            </div>
+          </div>
+          <div class="wide"><span class="lab">Molecule</span>
+            <div class="seg" role="group" aria-label="Molecule" id="mlMolSeg">
+              <button type="button" data-m="N2" aria-pressed="false">N₂</button><button type="button" data-m="O2" aria-pressed="false">O₂</button><button type="button" data-m="CO" aria-pressed="false">CO</button><button type="button" data-m="CO2" aria-pressed="true">CO₂</button><button type="button" data-m="H2O" aria-pressed="false">H₂O</button><button type="button" data-m="NO2" aria-pressed="false">NO₂</button><button type="button" data-m="O3" aria-pressed="false">O₃</button>
+            </div>
+          </div>
+          <div id="mlLamRow"><div class="slider-head"><label for="sMl">Wavelength</label><output id="oMl" class="mono" for="sMl"></output></div><input type="range" id="sMl" min="0" max="1000" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="mlRun">Pause</button><button type="button" class="btn" id="mlFresh">A fresh molecule</button></div>
+        </div>
         <div class="shelf-card" id="cardSp" role="group" aria-label="The spectrometer" hidden>
           <span class="card-title">Infrared light through a cell of HCl gas: the absorption around 3.5 μm. Drag the cursor across the band.</span>
           <div><div class="slider-head"><label for="sNu">Cursor</label><output id="oNu" class="mono" for="sNu"></output></div><input type="range" id="sNu" min="2560" max="3140" step="0.01"></div>
@@ -167,6 +183,9 @@
           <button type="button" data-p="band" aria-pressed="false">HCl band</button>
           <button type="button" data-p="isotopes" aria-pressed="false">Two isotopes</button>
           <button type="button" data-p="hot" aria-pressed="false">Hot gas</button>
+          <button type="button" data-p="greenhouse" aria-pressed="false">CO₂ and infrared</button>
+          <button type="button" data-p="ozone" aria-pressed="false">Ozone and ultraviolet</button>
+          <button type="button" data-p="brown" aria-pressed="false">NO₂ in visible light</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -205,6 +224,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="aboutMo"></p>
           <p class="hint" id="aboutLev"></p>
           <p class="hint" id="aboutSp"></p>
+          <p class="hint" id="aboutLight"></p>
           <p class="hint" id="aboutSrc"></p>
         </details>
         </div></details>
@@ -377,6 +397,44 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* how much charge piles up at the midpoint: |ψ|² there against the two atoms' clouds added without interference, (φ_A² + φ_B²)/2;
      2/(1 + S) for the bonding orbital, 0 for the antibonding one */
   function h2pMidRatio(Rnm, sign = 1) { const q = h2pPsi(0, 0, Rnm, sign); return q.psi * q.psi / ((q.phiA * q.phiA + q.phiB * q.phiB) / 2); }
+  /* Molecules and light (2026-10-31, PhET Molecules and Light): photons from four kinds of lamp meet one molecule.
+     Microwaves turn a molecule only if it has a permanent electric dipole (it needs a rotational line; CO's first is at
+     115.27 GHz). Infrared is absorbed only by a vibration that changes the dipole (IR active); the lamp counts as on a band when
+     within ±60 cm⁻¹ of its center, about the reach of the P and R branches at room temperature. Visible and ultraviolet light is
+     absorbed only inside an electronic absorption band; a photon there with more energy than the bond's dissociation energy breaks
+     the molecule, one with less excites it and it glows. Dipoles: NIST CCCBDB (experimental). Fundamentals: T. Shimanouchi, Tables
+     of Molecular Vibrational Frequencies (NSRDS-NBS 39, 1972) via the NIST WebBook; diatomics ΔG(1/2) from Huber and Herzberg; O₃
+     band centers. Absorption bands (longest absorbed wavelength, rounded) and dissociation energies D₀: H. Okabe, Photochemistry of
+     Small Molecules (1978) and the JPL evaluation (Burkholder et al., JPL Publication 19-5, 2019). The band edges are approximate:
+     real cross sections fade out gradually and some are very weak (O₂ above 200 nm, O₃'s Chappuis band). Geometry (bond lengths in
+     nm, angles): NIST CCCBDB. */
+  const ML_MOLS = {
+    N2: { name: 'N₂', dip: 0, atoms: ['N', 'N'], r: 0.1098, ang: 180, modes: [{ nu: 2330, ir: false, kind: 'stretch' }], bands: [[0, 100]], D0: 9.759, frag: [[0], [1]], fname: ['N', 'N'] },
+    O2: { name: 'O₂', dip: 0, atoms: ['O', 'O'], r: 0.1208, ang: 180, modes: [{ nu: 1556, ir: false, kind: 'stretch' }], bands: [[0, 242]], D0: 5.116, frag: [[0], [1]], fname: ['O', 'O'] },
+    CO: { name: 'CO', dip: 0.110, atoms: ['C', 'O'], r: 0.1128, ang: 180, modes: [{ nu: 2143, ir: true, kind: 'stretch' }], bands: [[0, 155]], D0: 11.108, frag: [[0], [1]], fname: ['C', 'O'] },
+    CO2: { name: 'CO₂', dip: 0, atoms: ['C', 'O', 'O'], r: 0.1160, ang: 180, modes: [{ nu: 1333, ir: false, kind: 'sym' }, { nu: 667, ir: true, kind: 'bend' }, { nu: 2349, ir: true, kind: 'asym' }], bands: [[0, 205]], D0: 5.453, frag: [[0, 1], [2]], fname: ['CO', 'O'] },
+    H2O: { name: 'H₂O', dip: 1.855, atoms: ['O', 'H', 'H'], r: 0.0958, ang: 104.5, modes: [{ nu: 3657, ir: true, kind: 'sym' }, { nu: 1595, ir: true, kind: 'bend' }, { nu: 3756, ir: true, kind: 'asym' }], bands: [[0, 190]], D0: 5.099, frag: [[0, 1], [2]], fname: ['OH', 'H'] },
+    NO2: { name: 'NO₂', dip: 0.316, atoms: ['N', 'O', 'O'], r: 0.1197, ang: 134.3, modes: [{ nu: 1318, ir: true, kind: 'sym' }, { nu: 750, ir: true, kind: 'bend' }, { nu: 1618, ir: true, kind: 'asym' }], bands: [[0, 700]], D0: 3.115, frag: [[0, 1], [2]], fname: ['NO', 'O'] },
+    O3: { name: 'O₃', dip: 0.53, atoms: ['O', 'O', 'O'], r: 0.1278, ang: 116.8, modes: [{ nu: 1103, ir: true, kind: 'sym' }, { nu: 701, ir: true, kind: 'bend' }, { nu: 1042, ir: true, kind: 'asym' }], bands: [[0, 360], [410, 750]], D0: 1.052, frag: [[0, 1], [2]], fname: ['O₂', 'O'] }
+  };
+  const ML_IR_REACH = 60;   /* cm⁻¹ */
+  /* the longest wavelength (nm) whose photon can break the bond, hc/D₀ */
+  const mlBreakNm = (m) => HC_EVNM / m.D0;
+  /* what one photon does: lamp 'mw' (microwave), 'ir' (x = wavelength in μm), 'vis' or 'uv' (x = wavelength in nm) */
+  function mlResponse(key, lamp, x) {
+    const m = ML_MOLS[key];
+    if (lamp === 'mw') return m.dip > 0 ? { what: 'turn' } : { what: 'pass', why: 'no electric dipole to push on' };
+    if (lamp === 'ir') {
+      const nu = 1e4 / x; let best = null;
+      for (const md of m.modes) { const d = Math.abs(nu - md.nu); if (md.ir && d <= ML_IR_REACH && (!best || d < best.d)) best = { d, md }; }
+      if (best) return { what: 'shake', mode: best.md };
+      const near = m.modes.find((md) => Math.abs(nu - md.nu) <= ML_IR_REACH);
+      return { what: 'pass', why: near ? `its ${near.nu} cm⁻¹ vibration does not change the dipole` : 'no vibration at this wavenumber' };
+    }
+    const inBand = m.bands.some(([a, b]) => x >= a && x <= b);
+    if (!inBand) return { what: 'pass', why: 'no electronic absorption at this wavelength' };
+    return x <= mlBreakNm(m) ? { what: 'break' } : { what: 'glow' };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -731,10 +789,173 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function redraw() {
     if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
-    ({ ion: drawIon, cov: drawCov, mo: drawMo, lev: drawLev, sp: drawSp })[S.view](); ({ ion: curveIon, cov: curveCov, mo: curveMo, lev: curveLev, sp: curveSp })[S.view](); readouts();
-    $('clock').textContent = S.view === 'ion' ? `r = ${f(S.ion.r, 3)} nm` : S.view === 'cov' ? `r = ${f(S.cov.r, 3)} nm` : S.view === 'mo' ? `R = ${f(S.mo.R, 3)} nm` : S.view === 'sp' ? `${f(S.sp.nu, 2)} cm⁻¹` : `${levMol().name}`;
+    ({ ion: drawIon, cov: drawCov, mo: drawMo, lev: drawLev, sp: drawSp, light: drawLight })[S.view](); ({ ion: curveIon, cov: curveCov, mo: curveMo, lev: curveLev, sp: curveSp, light: curveLight })[S.view](); readouts();
+    $('clock').textContent = S.view === 'ion' ? `r = ${f(S.ion.r, 3)} nm` : S.view === 'cov' ? `r = ${f(S.cov.r, 3)} nm` : S.view === 'mo' ? `R = ${f(S.mo.R, 3)} nm` : S.view === 'sp' ? `${f(S.sp.nu, 2)} cm⁻¹` : S.view === 'light' ? `${ML.sent} photons sent` : `${levMol().name}`;
   }
 
+
+  // ---------- molecules and light (mlResponse, ML_MOLS in CORE) ----------
+  const ML = { mol: 'CO2', lamp: 'ir', x: { ir: 15.0, vis: 500, uv: 254 }, run: true, t: 0, next: 0.3, ph: [], out: [], st: 'calm', timer: 0, mode: null, ang: 0, last: 0, raf: 0, why: '', sent: 0, frag: 0 };
+  const ML_RANGE = { ir: [2.5, 25, true], vis: [400, 700, false], uv: [120, 400, false] };
+  const mlToU = (lamp, v) => { const [a, b, lg] = ML_RANGE[lamp]; return Math.round(1000 * (lg ? Math.log(v / a) / Math.log(b / a) : (v - a) / (b - a))); };
+  const mlFromU = (lamp, u) => { const [a, b, lg] = ML_RANGE[lamp]; const v = lg ? a * Math.pow(b / a, u / 1000) : a + (b - a) * u / 1000; return lg ? +v.toFixed(2) : Math.round(v); };
+  const mlNm = () => (ML.lamp === 'mw' ? 1.2e7 : ML.lamp === 'ir' ? ML.x.ir * 1000 : ML.x[ML.lamp]);
+  function mlRGB(nm) {
+    if (nm < 400) return [139, 92, 246]; if (nm > 700) return nm > 1e6 ? [154, 167, 184] : [192, 57, 43];
+    let r = 0, g = 0, b = 0;
+    if (nm < 440) { r = (440 - nm) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = (510 - nm) / 20; } else if (nm < 580) { r = (nm - 510) / 70; g = 1; } else if (nm < 645) { r = 1; g = (645 - nm) / 65; } else r = 1;
+    return [r, g, b].map((v) => Math.round(255 * Math.pow(v, 0.8)));
+  }
+  const ML_EL = { H: ['#d8dde4', 0.030], C: ['#4a4f57', 0.045], N: ['#3d66c9', 0.044], O: ['#d2452b', 0.042] };
+  const mlMass = (el) => (el === 'H' ? MASS.H : MASS[el]);
+  function mlGeom(m) {   /* atom positions in nm, x right and y down, center of mass at 0 */
+    let P;
+    if (m.atoms.length === 2) P = [[-m.r / 2, 0], [m.r / 2, 0]];
+    else { const h = m.ang / 2 * Math.PI / 180; P = [[0, 0], [-m.r * Math.sin(h), m.r * Math.cos(h)], [m.r * Math.sin(h), m.r * Math.cos(h)]]; }
+    const M = m.atoms.reduce((s, e) => s + mlMass(e), 0), cx = P.reduce((s, q, i) => s + q[0] * mlMass(m.atoms[i]), 0) / M, cy = P.reduce((s, q, i) => s + q[1] * mlMass(m.atoms[i]), 0) / M;
+    return P.map(([x, y]) => [x - cx, y - cy]);
+  }
+  function mlModeVec(m, P, kind) {   /* the textbook shape of a normal mode, center of mass held still */
+    const ms = m.atoms.map(mlMass), nrm = (v) => { const L = Math.hypot(v[0], v[1]) || 1; return [v[0] / L, v[1] / L]; };
+    if (P.length === 2) { const u = nrm([P[1][0] - P[0][0], P[1][1] - P[0][1]]), M = ms[0] + ms[1]; return [[-u[0] * ms[1] / M, -u[1] * ms[1] / M], [u[0] * ms[0] / M, u[1] * ms[0] / M]]; }
+    const u1 = nrm([P[1][0] - P[0][0], P[1][1] - P[0][1]]), u2 = nrm([P[2][0] - P[0][0], P[2][1] - P[0][1]]);
+    let d1, d2;
+    if (kind === 'sym') { d1 = u1; d2 = u2; }
+    else if (kind === 'asym') { d1 = u1; d2 = [-u2[0], -u2[1]]; }
+    else {
+      const perp = (u, v) => { const k = v[0] * u[0] + v[1] * u[1], w = [v[0] - k * u[0], v[1] - k * u[1]]; return Math.hypot(w[0], w[1]) > 1e-6 ? nrm(w) : [0, 1]; };
+      d1 = perp(u1, u2); d2 = perp(u2, u1); if (m.ang === 180) { d1 = [0, 1]; d2 = [0, 1]; }
+    }
+    const dc = [-(ms[1] * d1[0] + ms[2] * d2[0]) / ms[0], -(ms[1] * d1[1] + ms[2] * d2[1]) / ms[0]];
+    return [dc, d1, d2];
+  }
+  const mlLabel = { stretch: 'stretch', sym: 'symmetric stretch', asym: 'asymmetric stretch', bend: 'bend' };
+  function mlFresh() { ML.st = 'calm'; ML.timer = 0; ML.mode = null; ML.ang = 0; ML.frag = 0; }
+  function mlStep(dt) {
+    ML.t += dt;
+    if (ML.t >= ML.next) { ML.ph.push({ x: 0, y: (Math.random() - 0.5) * 0.06, nm: mlNm(), hit: false }); ML.next = ML.t + 0.8; ML.sent++; }
+    const vx = 0.55;   /* of the pane width a second */
+    for (const q of ML.ph) {
+      q.x += vx * dt;
+      if (!q.hit && q.x >= 0.58) {
+        q.hit = true;
+        if (ML.st === 'calm') {
+          const r = mlResponse(ML.mol, ML.lamp, ML.lamp === 'mw' ? 0 : ML.x[ML.lamp]);
+          if (r.what !== 'pass') { q.gone = true; ML.st = r.what; ML.timer = r.what === 'break' ? 2.6 : 2.2; ML.mode = r.mode || null; ML.why = ''; ML.absNm = q.nm; }
+          else ML.why = r.why;
+        }
+      }
+    }
+    ML.ph = ML.ph.filter((q) => !q.gone && q.x < 1.1);
+    for (const o of ML.out) { o.x += o.vx * dt; o.y += o.vy * dt; }
+    ML.out = ML.out.filter((o) => o.x > -0.1 && o.x < 1.1 && o.y > -0.6 && o.y < 0.6);
+    if (ML.st === 'turn') ML.ang += dt * 5;
+    if (ML.st === 'break') ML.frag += dt;
+    if (ML.st !== 'calm') {
+      ML.timer -= dt;
+      if (ML.timer <= 0) {
+        if (ML.st !== 'break') { const th = Math.random() * 2 * Math.PI; ML.out.push({ x: 0.58, y: 0, vx: 0.45 * Math.cos(th), vy: 0.45 * Math.sin(th), nm: ML.absNm }); }
+        mlFresh();
+      }
+    }
+  }
+  function mlTick(ts) {
+    ML.raf = 0; if (S.view !== 'light' || document.hidden) return;
+    const dt = ML.last ? Math.min(0.05, (ts - ML.last) / 1000) : 0; ML.last = ts;
+    if (ML.run && !reduce) mlStep(dt);
+    redraw();
+    if (ML.run && !reduce) ML.raf = requestAnimationFrame(mlTick);
+  }
+  function mlStart() { if (!ML.raf && S.view === 'light') { ML.last = 0; ML.raf = requestAnimationFrame(mlTick); } }
+  function photon(c, x, y, nm, p) {
+    const lam = nm > 1e6 ? 26 : nm > 700 ? 13 : nm >= 400 ? 7 : 4.5, col = mlRGB(nm), L = 36 * p;
+    c.save(); c.strokeStyle = `rgb(${col.join(',')})`; c.lineWidth = 2 * p; c.shadowColor = `rgb(${col.join(',')})`; c.shadowBlur = 6 * p; c.beginPath();
+    for (let i = 0; i <= 40; i++) { const s = i / 40, xx = x - L + s * L, env = Math.sin(Math.PI * s), yy = y + 5 * p * env * Math.sin(2 * Math.PI * s * L / (lam * p)); i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
+    c.stroke(); c.restore();
+  }
+  function drawLight() {
+    back(ctx, W, H); const p = proj(), m = ML_MOLS[ML.mol], P0 = mlGeom(m), cx = W * 0.58, cy = H * 0.46;
+    const sc = Math.min(W * (W < 600 ? 0.24 : 0.32), H * 0.42) / 0.16;   /* px per nm */
+    /* the lamp */
+    const lx = 26 * p, col = mlRGB(mlNm());
+    if (VG) VG.box(ctx, lx - 16 * p, cy - 30 * p, 40 * p, 60 * p, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); else { ctx.fillStyle = '#34404e'; ctx.fillRect(lx - 16 * p, cy - 30 * p, 40 * p, 60 * p); }
+    const g = ctx.createRadialGradient(lx + 24 * p, cy, 2, lx + 24 * p, cy, 40 * p); g.addColorStop(0, `rgba(${col.join(',')},0.55)`); g.addColorStop(1, `rgba(${col.join(',')},0)`);
+    ctx.fillStyle = g; ctx.fillRect(lx, cy - 40 * p, 70 * p, 80 * p);
+    lab(ctx, { mw: 'microwave', ir: 'infrared', vis: 'visible', uv: 'ultraviolet' }[ML.lamp], lx + 4 * p, cy + 44 * p, { a: 'center', s: 9.5, c: T.muted });
+    /* the molecule */
+    let P = P0.map((q) => q.slice());
+    if (ML.st === 'shake' && ML.mode) { const D = mlModeVec(m, P0, ML.mode.kind), a = 0.016 * Math.sin(ML.t * 2 * Math.PI * 2.2); P = P0.map((q, i) => [q[0] + a * D[i][0], q[1] + a * D[i][1]]); }
+    if (ML.st === 'turn') { const c0 = Math.cos(ML.ang), s0 = Math.sin(ML.ang); P = P0.map(([x, y]) => [x * c0 - y * s0, x * s0 + y * c0]); }
+    if (ML.st === 'break') {
+      const grp = m.frag, ms = m.atoms.map(mlMass), com = (ix) => { const M = ix.reduce((s, i) => s + ms[i], 0); return [ix.reduce((s, i) => s + P0[i][0] * ms[i], 0) / M, ix.reduce((s, i) => s + P0[i][1] * ms[i], 0) / M, M]; };
+      const A = com(grp[0]), B = com(grp[1]); let dx = B[0] - A[0], dy = B[1] - A[1]; const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+      const d = 0.032 * ML.frag; P = P0.map(([x, y], i) => { const inB = grp[1].includes(i), M = A[2] + B[2], k = inB ? A[2] / M : -B[2] / M; return [x + dx * d * k * 2, y + dy * d * k * 2]; });
+    }
+    const X = (q) => cx + q[0] * sc, Y = (q) => cy + q[1] * sc;
+    if (ML.st === 'glow') { const pulse = 0.55 + 0.35 * Math.sin(ML.t * 9), gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 0.17 * sc); gg.addColorStop(0, `rgba(255,214,102,${0.55 * pulse})`); gg.addColorStop(1, 'rgba(255,214,102,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, 0.17 * sc, 0, 7); ctx.fill(); }
+    /* bonds, then atoms (sizes not to scale) */
+    const bonds = m.atoms.length === 2 ? [[0, 1]] : [[0, 1], [0, 2]];
+    ctx.save(); ctx.strokeStyle = dark() ? 'rgba(230,237,245,0.75)' : 'rgba(43,54,68,0.8)'; ctx.lineWidth = 5 * p; ctx.lineCap = 'round';
+    for (const [i, j] of bonds) { if (ML.st === 'break' && m.frag[0].includes(i) !== m.frag[0].includes(j)) continue; ctx.beginPath(); ctx.moveTo(X(P[i]), Y(P[i])); ctx.lineTo(X(P[j]), Y(P[j])); ctx.stroke(); }
+    ctx.restore();
+    m.atoms.forEach((el, i) => { const [c, r] = ML_EL[el], rr = r * sc; if (VG) VG.ball(ctx, X(P[i]), Y(P[i]), rr, c); else dot(ctx, X(P[i]), Y(P[i]), rr, c); lab(ctx, el, X(P[i]), Y(P[i]), { a: 'center', c: '#ffffff', w: 700, s: 11 }); });
+    if (ML.st === 'break') { const grp = m.frag; grp.forEach((ix, k) => { const xs = ix.map((i) => X(P[i])), ys = ix.map((i) => Y(P[i])); lab(ctx, m.fname[k], xs.reduce((a, b) => a + b) / xs.length, Math.max(...ys) + 0.07 * sc, { a: 'center', c: T.ink, w: 700, s: 11 }); }); }
+    /* photons */
+    for (const q of ML.ph) photon(ctx, q.x * W, cy + q.y * H, q.nm, p);
+    for (const o of ML.out) { ctx.save(); ctx.translate(o.x * W, cy + o.y * H); ctx.rotate(Math.atan2(o.vy * H, o.vx * W)); photon(ctx, 18 * p, 0, o.nm, p); ctx.restore(); }
+    /* what happened */
+    const said = { calm: ML.why ? `passes: ${ML.why}` : 'waiting for a photon', turn: 'absorbed: the molecule turns faster', shake: ML.mode ? `absorbed: the ${mlLabel[ML.mode.kind]} (${ML.mode.nu} cm⁻¹) starts` : 'absorbed', glow: 'absorbed: an electron is lifted, the molecule glows', break: `absorbed: the bond breaks, ${m.name} → ${m.fname.join(' + ')}` }[ML.st];
+    lab(ctx, `${m.name}: ${said}`, W / 2, H - 34 * p, { a: 'center', c: T.ink, w: 700, s: 11.5 });
+    lab(ctx, ML.st === 'turn' || ML.st === 'shake' || ML.st === 'glow' ? 'it gives a photon back soon, in any direction' : 'bond lengths and angles to scale; atoms and the motion not; slowed', W / 2, H - 16 * p, { a: 'center', c: T.muted, s: 9.5 });
+    MAP.pane = null;
+  }
+  function curveLight() {
+    const p = proj(), c = cctx, m = ML_MOLS[ML.mol], narrow = CW < 600, L = (narrow ? 64 : 92) * p, R = 14 * p, Tp = 22 * p, B = 30 * p, w = CW - L - R, h = CH - Tp - B;
+    const lg0 = 2, lg1 = 8, X = (nm) => L + (Math.log10(nm) - lg0) / (lg1 - lg0) * w;
+    c.font = `${10 * p}px ${T.ui}`;
+    const regs = [[100, 400, 'UV'], [400, 700, 'visible'], [700, 1e6, 'infrared'], [1e6, 1e8, 'microwave']];
+    regs.forEach(([a, b, t], i) => { c.fillStyle = i % 2 ? 'rgba(127,127,127,0.06)' : 'rgba(127,127,127,0.12)'; c.fillRect(X(a), Tp, X(b) - X(a), h); if (!(narrow && i === 1)) lab(c, narrow && i === 0 ? 'UV, vis' : t, (X(a) + X(b)) / 2, Tp - 9 * p, { a: 'center', s: 9.5, c: T.muted }); });
+    for (let nm = 400; nm < 700; nm += 5) { const col = mlRGB(nm); c.fillStyle = `rgba(${col.join(',')},0.35)`; c.fillRect(X(nm), Tp, X(nm + 5) - X(nm) + 0.5, 4 * p); }
+    const lane = (k) => Tp + h * (k + 0.5) / 3, lh = h / 3 * 0.55;
+    (narrow ? ['electron', 'shakes', 'turns'] : ['breaks or glows', 'shakes', 'turns']).forEach((t, k) => lab(c, t, L - 8 * p, lane(k), { a: 'right', s: 10, c: T.ink, w: 700 }));
+    /* electronic bands: red where a photon breaks the bond, amber where it only excites */
+    const bk = mlBreakNm(m);
+    for (const [a0, b0] of m.bands) {
+      const a = Math.max(100, a0), b = b0; if (b <= 100) continue;
+      const split = Math.min(Math.max(bk, a), b);
+      if (split > a) { c.fillStyle = 'rgba(220,60,50,0.55)'; c.fillRect(X(a), lane(0) - lh / 2, X(split) - X(a), lh); }
+      if (b > split) { c.fillStyle = 'rgba(240,170,40,0.6)'; c.fillRect(X(split), lane(0) - lh / 2, X(b) - X(split), lh); }
+    }
+    if (m.bands.every(([, b]) => b <= 100)) lab(c, `no absorption above 100 nm (starts near ${m.bands[0][1]} nm)`, X(150), lane(0), { s: 9.5, c: T.muted });
+    else lab(c, `breaks below ${f(bk, 0)} nm`, X(110), lane(0) + lh / 2 + 8 * p, { s: 9, c: T.muted });
+    /* vibrations */
+    for (const md of m.modes) {
+      const x = X(1e7 / md.nu); c.save(); c.strokeStyle = md.ir ? T.accent : T.muted; c.lineWidth = 2.5 * p; if (!md.ir) c.setLineDash([3 * p, 3 * p]);
+      c.beginPath(); c.moveTo(x, lane(1) - lh / 2); c.lineTo(x, lane(1) + lh / 2); c.stroke(); c.restore();
+      lab(c, `${md.nu}`, x, lane(1) + lh / 2 + 7 * p, { a: 'center', s: 8.5, c: md.ir ? T.accent : T.muted, m: true });
+    }
+    if (!narrow) lab(c, 'solid: absorbs infrared; dashed: no dipole change, does not absorb (cm⁻¹)', X(1.4e6), lane(1), { s: 8.5, c: T.muted });
+    /* rotation lines */
+    if (m.dip > 0) { c.fillStyle = 'rgba(60,170,110,0.5)'; c.fillRect(X(3e5), lane(2) - lh / 2, X(1e8) - X(3e5), lh); lab(c, narrow ? `${m.dip} D` : `rotational lines, dipole ${m.dip} D`, X(1.2e6), lane(2), { s: 9.5, c: T.ink }); }
+    else lab(c, narrow ? 'no dipole' : 'no electric dipole: no rotational lines', X(1.2e6), lane(2), { s: 9.5, c: T.muted });
+    /* the lamp */
+    const x = X(mlNm()); c.save(); c.strokeStyle = T.cursor; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + h); c.stroke(); c.restore();
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = T.muted; c.font = `${9.5 * p}px ${T.mono}`;
+    for (const [nm, t] of (narrow ? [[100, '100 nm'], [1e4, '10 μm'], [1e6, '1 mm'], [1e8, '10 cm']] : [[100, '100 nm'], [1000, '1 μm'], [1e4, '10 μm'], [1e5, '100 μm'], [1e6, '1 mm'], [1e7, '1 cm'], [1e8, '10 cm']])) { c.fillRect(X(nm) - 0.5, Tp + h, 1, 4 * p); c.fillText(t, Math.min(Math.max(X(nm), L + 18 * p), L + w - 18 * p), Tp + h + 6 * p); }
+    MAP.curve = null;
+  }
+  function mlSync() {
+    press('#mlLampSeg button', (b) => b.dataset.l === ML.lamp); press('#mlMolSeg button', (b) => b.dataset.m === ML.mol);
+    $('mlLamRow').hidden = ML.lamp === 'mw';
+    if (ML.lamp !== 'mw') { $('sMl').value = mlToU(ML.lamp, ML.x[ML.lamp]); const v = ML.x[ML.lamp]; $('oMl').textContent = ML.lamp === 'ir' ? `${f(v, 2)} μm = ${f(1e4 / v, 0)} cm⁻¹` : `${v} nm`; }
+    $('mlRun').textContent = ML.run ? 'Pause' : 'Play';
+  }
+  $('mlLampSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-l]'); if (b) { ML.lamp = b.dataset.l; mlFresh(); ML.why = ''; custom(); } });
+  $('mlMolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { ML.mol = b.dataset.m; mlFresh(); ML.why = ''; ML.out = []; custom(); } });
+  $('sMl').addEventListener('input', (e) => { ML.x[ML.lamp] = mlFromU(ML.lamp, +e.target.value); ML.why = ''; custom(); });
+  $('mlRun').addEventListener('click', () => { ML.run = !ML.run; mlSync(); mlStart(); });
+  $('mlFresh').addEventListener('click', () => { mlFresh(); ML.out = []; ML.why = ''; redraw(); });
+  document.addEventListener('visibilitychange', mlStart);
   // ---------- readouts ----------
   function readouts() {
     const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', bl = (v) => (S.blind ? hide : v);
@@ -758,6 +979,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Allowed?', tr.allowed ? 'yes' : `no: ${tr.why}`) + dd('Photon wavenumber', tr.allowed || isFinite(tr.nu) ? `${f(tr.nu, 3)} cm⁻¹` : '—') + dd('Photon energy', isFinite(tr.nu) ? `${f(tr.eV * 1000, 3)} meV` : '—')
         + dd('Frequency', isFinite(tr.nu) ? `${f(tr.nu * C_MS * 100 / 1e12, 3)} THz` : '—') + dd('hf (n = 0 → 1)', bl(`${f(nuVib(m), 2)} cm⁻¹, ${f(nuVib(m) * CM_EV * 1000, 1)} meV`))
         + dd('ħ²/2I = B₀', bl(`${f(B0, 4)} cm⁻¹, ${f(B0 * CM_EV * 1000, 4)} meV`)) + dd('Moment of inertia I', bl(`${(IfromB(B0) * 1e47).toFixed(4)} × 10⁻⁴⁷ kg m²`));
+    } else if (S.view === 'light') { const m = ML_MOLS[ML.mol], nm = mlNm(), r = mlResponse(ML.mol, ML.lamp, ML.lamp === 'mw' ? 0 : ML.x[ML.lamp]);
+      const what = { pass: `passes through (${r.why})`, turn: 'turns faster (rotation)', shake: r.mode ? `${mlLabel[r.mode.kind]}, ${r.mode.nu} cm⁻¹` : '', glow: 'an electron is lifted; it glows', break: `breaks: ${m.fname.join(' + ')}` }[r.what];
+      o = dd('Molecule', m.name) + dd('Light', ML.lamp === 'mw' ? 'microwave, on a rotational line' : ML.lamp === 'ir' ? `${f(ML.x.ir, 2)} μm, ${f(1e4 / ML.x.ir, 0)} cm⁻¹` : `${nm} nm`)
+        + dd('Photon energy', ML.lamp === 'mw' ? 'about 0.1 meV (at 1 cm)' : nm > 700 ? `${f(HC_EVNM / nm * 1000, 1)} meV` : `${f(HC_EVNM / nm, 2)} eV`) + dd('What one photon does', bl(what))
+        + dd('Electric dipole', bl(m.dip ? `${m.dip} D` : 'none')) + dd('Vibrations (cm⁻¹)', bl(m.modes.map((md) => `${md.nu}${md.ir ? '' : ' (no IR)'}`).join(', ')))
+        + dd('Bond energy D₀', bl(`${m.D0} eV, photons below ${f(mlBreakNm(m), 0)} nm`)) + dd('Absorbs visible or UV', bl(m.bands.map(([a, b]) => (a ? `${a} to ${b} nm` : `below ${b} nm`)).join(' and ')));
     } else { const l = nearestLine(S.sp.nu);
       o = dd('Cursor', `${f(S.sp.nu, 2)} cm⁻¹`) + dd('Wavelength', `${f(1e4 / S.sp.nu, 4)} μm`) + dd('Relative absorbance', f(spRel(S.sp.nu), 3)) + dd('Locked to a peak', S.sp.lock ? 'yes' : 'no')
         + dd('Nearest line', bl(l ? `${l.iso === 'H35Cl' ? 'H³⁵Cl' : 'H³⁷Cl'} ${lineName(l)} at ${f(l.nu, 3)} cm⁻¹` : '—')) + dd('Band center H³⁵Cl', bl(`${f(nuVib(MOLS.HCl), 3)} cm⁻¹`))
@@ -774,7 +1001,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     press('#molSeg button', (b) => b.dataset.m === S.cov.mol); press('#spinSeg button', (b) => b.dataset.s === S.cov.spin); $('spinRow').hidden = S.cov.mol !== 'H2'; $('showLev').checked = S.cov.lev;
     $('sRm').value = S.mo.R; $('oRm').textContent = `${f(S.mo.R, 3)} nm`; press('#orbSeg button', (b) => +b.dataset.o === S.mo.sign); press('#moShowSeg button', (b) => b.dataset.w === S.mo.show);
     press('#levMolSeg button', (b) => b.dataset.m === S.lev.mol); press('#modelSeg button', (b) => b.dataset.k === S.lev.model); press('#dvSeg button', (b) => +b.dataset.d === S.lev.dv); press('#dlSeg button', (b) => +b.dataset.d === S.lev.dl);
-    $('sL').value = S.lev.l; $('oL').textContent = S.lev.l;
+    $('sL').value = S.lev.l; $('oL').textContent = S.lev.l; mlSync();
     $('sNu').value = S.sp.raw; $('oNu').textContent = `${f(S.sp.nu, 2)} cm⁻¹`; $('sT').value = S.sp.T; $('oT').textContent = `${S.sp.T} K`; $('sRes').value = S.sp.res; $('oRes').textContent = `${f(S.sp.res, 2)} cm⁻¹`;
     press('#isoSeg button', (b) => b.dataset.i === S.sp.iso); $('lock').checked = S.sp.lock;
     press('#presets button', (b) => b.dataset.p === S.preset);
@@ -790,16 +1017,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     levels: { view: 'lev', hint: 'The vibration and rotation levels of HCl in the book\'s model. A photon of the infrared band raises n by one and changes l by one, up (R branch) or down (P branch). Try Δl = 0 or +2 and see why they are forbidden.', set: () => Object.assign(S.lev, { mol: 'HCl', model: 'book', dv: 1, l: 0, dl: 1 }) },
     band: { view: 'sp', hint: 'The infrared absorption band of HCl gas at room temperature, as a spectrometer with a resolution of 0.5 cm⁻¹ would record it. The lines come in two branches with a gap at the center, where the missing line would be.', set: () => { Object.assign(S.sp, { T: 300, res: 0.5, iso: 'both', lock: true }); spSet(2906.25); } },
     isotopes: { view: 'sp', hint: 'Look closely: each line is a pair. Natural chlorine is 76 % ³⁵Cl and 24 % ³⁷Cl, and the heavier isotope gives a slightly larger reduced mass, so its lines sit a little lower. The close up shows one pair.', set: () => { Object.assign(S.sp, { T: 300, res: 0.2, iso: 'both', lock: true }); spSet(2944.91); } },
+    greenhouse: { view: 'light', hint: 'Infrared at 15 μm, the 667 cm⁻¹ band where CO₂ bends, on a CO₂ molecule. Bending moves the charge off center, so the molecule takes the photon and later sends one out again in any direction: CO₂ in the air returns part of the Earth\'s infrared glow. Try N₂ and O₂, the bulk of the air: they let it pass.', set: () => { Object.assign(ML, { mol: 'CO2', lamp: 'ir' }); ML.x.ir = 15.0; mlFresh(); } },
+    ozone: { view: 'light', hint: 'Ultraviolet at 254 nm on ozone. The photon has more energy than the bond, so O₃ breaks into O₂ + O; this is how the ozone layer takes UV out of sunlight. O₂ needs photons below 242 nm to break, so at 254 nm it lets the light through.', set: () => { Object.assign(ML, { mol: 'O3', lamp: 'uv' }); ML.x.uv = 254; mlFresh(); } },
+    brown: { view: 'light', hint: 'Blue light at 450 nm on NO₂, the brown gas of smog. The photon lifts an electron but has less energy than the 3.1 eV bond, so the molecule glows instead of breaking. Below 398 nm (switch to ultraviolet) it breaks into NO + O.', set: () => { Object.assign(ML, { mol: 'NO2', lamp: 'vis' }); ML.x.vis = 450; mlFresh(); } },
     hot: { view: 'sp', hint: 'The same gas at 1000 K. More molecules sit in high rotation levels, so the strongest lines move away from the center and the band spreads out. The line positions do not move.', set: () => { Object.assign(S.sp, { T: 1000, res: 0.5, iso: 'both', lock: true }); spSet(2981); } },
   };
   function setView(v) {
     S.view = v; press('#viewSeg button', (b) => b.dataset.v === v); $('stage').className = `stage v-${v}`;
-    $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardMo').hidden = v !== 'mo'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp';
-    $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'mo' ? 'R in nm · U in eV, from H and a proton far apart' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : 'wavenumber in cm⁻¹ · simulated spectrum';
-    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometers. Drag the right hand atom, or use the arrow keys, to change the bond length.', mo: 'The H₂⁺ molecular orbital in the plane through both protons, with its profile along the axis. Drag a proton, or use the arrow keys, to change the separation.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
-    can.style.cursor = v === 'lev' ? 'default' : 'ew-resize';
+    $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardMo').hidden = v !== 'mo'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp'; $('cardLight').hidden = v !== 'light';
+    $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'mo' ? 'R in nm · U in eV, from H and a proton far apart' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : v === 'light' ? 'wavelength λ · photon energy E = hc/λ' : 'wavenumber in cm⁻¹ · simulated spectrum';
+    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometers. Drag the right hand atom, or use the arrow keys, to change the bond length.', mo: 'The H₂⁺ molecular orbital in the plane through both protons, with its profile along the axis. Drag a proton, or use the arrow keys, to change the separation.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.', light: 'A lamp sending photons at one molecule, which turns, vibrates, glows, breaks apart or lets the photon pass. The graph below shows where across the spectrum this molecule absorbs.' }[v]);
+    can.style.cursor = v === 'lev' || v === 'light' ? 'default' : 'ew-resize';
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
-    sync(); redraw();
+    sync(); redraw(); if (v === 'light') mlStart();
   }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
   const custom = () => { S.preset = 'custom'; sync(); redraw(); };
@@ -851,10 +1081,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'molecules@2026-10-31';
   const SHOW = { ion: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], cov: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], mo: [['molecule', 'molecule'], ['r_nm', 'R (nm)'], ['U_eV', 'U (eV)']], lev: [], sp: [['nu_cm', 'ν (cm⁻¹)'], ['absorbance', 'absorbance']] };
   const WS = { ion: 'molecular-bonds', cov: 'molecular-bonds', mo: 'molecular-bonds', sp: 'hcl-spectrum' };
+  SHOW.light = [];
   window.vdShowCols = SHOW.ion;
   window.vdWorksheet = () => WS[S.view] || 'molecular-bonds';
   window.vdReadingRow = () => {
     if (S.view === 'lev') return 'The Energy levels view has nothing to record: measure the lines in the HCl spectrum view.';
+    if (S.view === 'light') return 'Molecules and light has nothing to record: it shows what each kind of light does.';
     const other = (window.vdRows ? window.vdRows() : []).find((r) => WS[r.view] !== WS[S.view]);
     if (other) return `These readings are for the ${WS[other.view] === 'hcl-spectrum' ? 'HCl spectrum' : 'bonds'} worksheet: export them or clear them first.`;
     window.vdShowCols = SHOW[S.view];
@@ -870,6 +1102,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutMo').textContent = 'H₂⁺ orbitals: the hydrogen molecular ion has one electron, so its orbitals can be drawn exactly as a model gives them. The LCAO model (linear combination of atomic orbitals) builds them from the 1s orbital φ of each proton: the bonding orbital σg = (φ_A + φ_B)/√(2(1 + S)) and the antibonding orbital σu* = (φ_A − φ_B)/√(2(1 − S)), where S is the overlap of the two atomic orbitals. In σg the two waves add between the protons, so the electron spends more time there, attracted by both; in σu* they cancel on the midplane, a node. The energy from H and a proton far apart is U = (1/R − (j ± k)/(1 ± S)) E_h with R in units of a₀ (Griffiths, Introduction to Quantum Mechanics, §7.3; Atkins, Physical Chemistry, §10.3). The protons are held fixed (Born–Oppenheimer). The model is not exact: its well is 1.76 eV deep at 0.132 nm, against the measured 2.79 eV at 0.1052 nm, because the real orbital also shrinks toward the protons. The measured curve is a Morse potential through the measured r_e, ωe and D₀ (Huber and Herzberg 1979 via the NIST WebBook; D₀ = 2.65073 eV, Bishop 1974). The picture uses a compressed brightness scale so the tails show.';
   $('aboutLev').textContent = 'Energy levels (OpenStax §9.2): in the book\'s model the molecule vibrates as a harmonic oscillator, E_vib = (n + 1/2)hf, and turns as a rigid rotor, E_rot = l(l + 1)ħ²/2I with I = μr² and μ the reduced mass. Here hf is the measured spacing of n = 0 and n = 1 and ħ²/2I = B₀ (the measured rotational constant of n = 0). A photon carries one unit of angular momentum, so l must change by 1 (Δl = ±1); in the harmonic model n changes by 1 or not at all, and only molecules with an electric dipole (HCl, HF, CO, not N₂) absorb. "Measured constants" uses the full term values: anharmonic vibration G(v) = ωe(v + 1/2) − ωe xe(v + 1/2)² + ..., a rotational constant B_v that falls as v rises, and centrifugal stretching D_v [l(l + 1)]². Wavenumbers are in cm⁻¹; 1 cm⁻¹ is 0.12398 meV.';
   $('aboutSp').textContent = 'HCl spectrum: the v = 0 → 1 band of HCl gas, simulated from the measured spectroscopic constants of H³⁵Cl (NIST WebBook, Huber and Herzberg 1979, with the higher terms of Rank, Rao et al. 1965). They reproduce the measured lines to about 0.01 cm⁻¹ (R(0) 2906.25, P(1) 2865.10 cm⁻¹). H³⁷Cl constants are scaled from H³⁵Cl by the reduced mass (Born–Oppenheimer). Line strengths follow the Boltzmann population of the lower level, the Hönl–London factors and the isotope abundances (75.76 % and 24.24 %); the slight difference in strength between the R and P branches from the stretching of the dipole (Herman–Wallis effect), pressure broadening and the weak hot band are left out. Each line is drawn as a Gaussian as wide as the spectrometer\'s resolution. Absorbance is relative to the strongest peak. The lock finds the top of the displayed peak, as you would by eye.';
+  $('aboutLight').textContent = 'Molecules and light: a photon is absorbed only if the molecule has a way to take exactly its energy. Microwaves turn a molecule, and only one with a permanent electric dipole (CO, H₂O, NO₂, O₃; not N₂, O₂ or CO₂) feels the wave\'s field; a real absorber needs the photon on one of its rotational lines. Infrared sets a vibration going, and only one that changes the dipole: the bend of CO₂ at 667 cm⁻¹ (15 μm) does, its symmetric stretch does not, and N₂ and O₂ have none that do; here the lamp counts as on a band within ±60 cm⁻¹ of its center, about the reach of the rotational branches at room temperature. Visible and ultraviolet photons lift an electron, but only inside the molecule\'s absorption band; if the photon also carries more than the bond energy D₀, the molecule breaks (O₃ below 1180 nm, NO₂ below 398 nm, O₂ below 242 nm), otherwise it glows. An excited molecule here gives back a photon of the color it took, in a random direction, about two seconds later on screen (really nanoseconds to milliseconds; in a gas, collisions often take the energy as heat first, and NO₂\'s real glow is spread to longer wavelengths). Every allowed photon is taken, though real absorption strengths differ by large factors: ozone takes 254 nm light about two thousand times more readily than 600 nm. Vibration shapes are the textbook pictures, exaggerated; in a bent molecule the real symmetric stretch also bends slightly. Data: dipoles NIST CCCBDB; vibration frequencies Shimanouchi (NSRDS-NBS 39) via the NIST WebBook; absorption band edges (approximate) and D₀ from Okabe, Photochemistry of Small Molecules (1978), and the JPL evaluation 19-5 (2019); geometry NIST CCCBDB.';
   $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); ionic radii R. D. Shannon, Acta Cryst. A32, 751 (1976); H₂⁺: D. J. Griffiths, Introduction to Quantum Mechanics, 2nd ed. (2005), §7.3, and P. Atkins and J. de Paula, Physical Chemistry, 9th ed. (2010), §10.3; constants CODATA 2022.';
 
   /* recorded readings are drawn on the graphs: redraw after Record, Clear or a deleted row */

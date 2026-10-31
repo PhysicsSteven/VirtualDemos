@@ -162,6 +162,11 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 #starsBox .slider-head output { font-size: 0.85rem; color: var(--muted); }
 #starsBox input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (max-width: 820px) { #starsBox input[type="range"] { min-height: 28px; } }
+.models-cv { display: block; width: 100%; height: 520px; }
+.amkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
+.amkey span { display: inline-flex; align-items: center; }
+.amkey i { display: inline-block; width: 3px; height: 12px; margin-right: 6px; }
+@media (max-width: 820px) { #modelsBox input[type="range"] { min-height: 28px; } }
 .starkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
 .starkey span { display: inline-flex; align-items: center; }
 .starkey i { display: inline-block; width: 22px; height: 0; margin-right: 6px; }
@@ -328,6 +333,14 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <canvas id="cBalmer" class="balmer" role="img" aria-label="Balmer absorption lines of hydrogen, drawn darker when more atoms sit on level n = 2."></canvas>
       </section>
 
+      <section class="card" id="modelsCard" aria-labelledby="modelsTitle" hidden>
+        <h2 id="modelsTitle">Models of the hydrogen atom</h2>
+        <p class="hint" style="margin: 4px 0 8px;">One lamp shines the same photons up into six atoms, oldest model on the left. Under each, the light it gives off, against hydrogen's real lines.</p>
+        <canvas id="cModels" class="models-cv" role="img" aria-label="Six models of the hydrogen atom side by side under one photon beam, each with a strip of the light it gives off."></canvas>
+        <p class="hint amkey"><span><i style="background: var(--equi);"></i>hydrogen's lines (NIST, matched by the Rydberg formula)</span><span><i style="width: 14px; background: linear-gradient(90deg, #8a3cff, #2b6cff, #22c55e, #facc15, #ef4444);"></i>light this atom gave off, each bar in its own color</span><span>strip from 10 to 2000 nm, log scale; the rainbow band is visible light</span></p>
+        <p class="sr-only" id="amLive" aria-live="polite"></p>
+      </section>
+
       <section class="card" id="ptCard" aria-labelledby="ptTitle">
         <h2 id="ptTitle">Periodic table</h2>
         <p class="hint" id="ptHint" style="margin: 4px 0 10px;">Click an element to see its spectrum.</p>
@@ -345,6 +358,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
           <button type="button" data-m="compare" aria-pressed="false">Compare</button>
           <button type="button" data-m="mystery" aria-pressed="false">Mystery</button>
           <button type="button" data-m="stars" aria-pressed="false">Hydrogen in stars</button>
+          <button type="button" data-m="models" aria-pressed="false">Atom models</button>
         </div>
         <p class="hint" id="modeHint"></p>
         <div id="compareBox" hidden>
@@ -377,6 +391,39 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
           <details class="more"><summary>More about this</summary>
             <p class="hint">A Balmer line is absorbed by a hydrogen atom whose electron already sits on level n = 2. In a cool star almost every atom is on n = 1 (Boltzmann factor), and in a hot star almost every atom has lost its electron (Saha equation). Only in between are there many atoms on n = 2: the Balmer lines are strongest in A stars, near 10,000 K.</p>
             <p class="hint">Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §8.1): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × 13.598 eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup> with χ = 13.598 eV. Approximations: partition functions Z<sub>I</sub> = 2 (ground level only) and Z<sub>II</sub> = 1 (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use 20 N/m², where the peak falls near 9900 K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go: each line is drawn darker on a log scale of N₂/N<sub>total</sub>, from 10⁻⁴ of its peak (barely there) to the peak (black). Constants CODATA 2022.</p>
+          </details>
+        </div>
+        <div id="modelsBox" hidden>
+          <div class="chips" id="amChips" aria-label="Lamp color">
+            <button type="button" data-l="2,1" aria-pressed="false">Lyman α</button>
+            <button type="button" data-l="3,1" aria-pressed="false">Lyman β</button>
+            <button type="button" data-l="3,2" aria-pressed="false">Hα</button>
+            <button type="button" data-l="4,2" aria-pressed="false">Hβ</button>
+            <button type="button" data-l="4,3" aria-pressed="false">Paschen α</button>
+            <button type="button" data-l="thomson" aria-pressed="false">Thomson's line</button>
+            <button type="button" data-l="ion" aria-pressed="false">80 nm, ionizing</button>
+          </div>
+          <div style="margin-top: 8px;">
+            <div class="slider-head"><label for="amLam">Lamp wavelength λ</label><output id="amLamOut" class="mono" for="amLam"></output></div>
+            <input type="range" id="amLam" min="0" max="1000" step="1" value="500">
+          </div>
+          <label class="hint" style="display:flex;align-items:center;gap:7px;cursor:pointer;margin-top:6px"><input type="checkbox" id="amWhite" style="margin:0"> White light: every photon a random color from 40 to 2000 nm</label>
+          <div style="margin-top: 8px;">
+            <div class="slider-head"><label for="amR">Plum pudding radius R</label><output id="amROut" class="mono" for="amR"></output></div>
+            <input type="range" id="amR" min="0.02" max="0.3" step="0.001" value="0.0529">
+          </div>
+          <div class="row2" style="margin-top: 8px;">
+            <button type="button" class="btn primary" id="amRun">Pause</button>
+            <button type="button" class="btn" id="amAgain">Start the atoms again</button>
+          </div>
+          <button type="button" class="btn" id="amClear" style="margin-top: 6px; width: 100%;">Clear the spectra</button>
+          <dl class="readout" style="margin-top: 8px;">
+            <div><dt>Photon energy</dt><dd id="amE">—</dd></div>
+            <div><dt>Photons sent</dt><dd id="amSent">0</dd></div>
+          </dl>
+          <details class="more"><summary>More about this</summary>
+            <p class="hint">The same photons, at the same moments, go into all six atoms. Only the quantum atoms (Bohr, de Broglie, Schrödinger) give hydrogen's real lines, and they absorb a photon only when its energy matches a jump between two levels, E = −13.6 eV/n² (levels up to n = 6 here). Thomson's electron has one natural frequency, so it answers one color, set by the size of the pudding. The classical planetary atom radiates as its electron circles, spirals in and collapses in 16 ps, giving a smear of every color rather than lines. Bohr's and de Broglie's atoms share the same levels: Bohr postulated them, de Broglie explained them as standing electron waves. Bohr's model says nothing about which way down an electron goes, so here each lower level is equally likely. Schrödinger's atom adds the angular momentum l, the rule that a photon changes l by one, and the rate of each jump, so its lines come out with their real relative strengths, and an electron that lands in 2s is stuck (it lives 0.12 s, against 1.6 ns for 2p).</p>
+            <p class="hint">Model: energies from R<sub>H</sub> = R<sub>∞</sub>/(1 + m<sub>e</sub>/m<sub>p</sub>) (CODATA 2022), vacuum wavelengths, fine structure left out. Thomson λ = (2πa₀/α)(R/a₀)<sup>3/2</sup>. Classical collapse time r₀³/(4r<sub>e</sub>²c) from r₀ = a₀, by Larmor's formula. Schrödinger rates A = (4/3)αω³/c² · l<sub>max</sub>/(2l + 1) · |∫R<sub>nl</sub>R<sub>n′l′</sub>r³dr|² (Bethe and Salpeter §59, §63), within 0.05 % of NIST's. The lamp's photons spread ±0.6 % in energy, so a lamp set within 0.6 % of a line excites it; real atoms answer a far narrower band. Times are slowed: every excited state is held about one second on screen (its real lifetime is shown), 2s eight seconds, and the classical collapse takes five seconds. A photon on a line is absorbed every time and an ionizing photon one time in ten, so you can watch both; really a photon on a line is thousands of times likelier to be taken than one above the ionization energy. The photon from capturing an electron after ionization belongs to a continuum and is not drawn. Orbits are drawn with radius in proportion to n (really n²), and each Schrödinger cloud (m = 0, a slice through the nucleus) at its own scale.</p>
           </details>
         </div>
         <div id="mysteryBox" hidden>
@@ -480,6 +527,84 @@ const BOHR_ALPHA = 7.2973525643e-3, BOHR_C = 299792458, BOHR_HBAR = HS_H / (2 * 
 function bohrOrbit(nu) {
   const r = nu * nu * BOHR_A0, v = BOHR_ALPHA * BOHR_C / nu, lam = HS_H / (HS_ME * v) * 1e9, circ = 2 * Math.PI * r;
   return { r, v, lam, circ, waves: circ / lam, L: HS_ME * v * r * 1e-9 / BOHR_HBAR };
+}
+/* Models of the hydrogen atom side by side (2026-10-31, PhET Models of the Hydrogen Atom): the same photons go into six
+   historical atoms. Energies of the quantum models E_n = −hcR_H/n², R_H = R∞/(1 + m_e/m_p) (CODATA 2022; the moving proton
+   included). Thomson's plum pudding: an electron inside a uniform sphere of positive charge, radius R, feels F = −(ke²/R³)x and
+   oscillates at one frequency, ω = √(ke²/(m_e R³)), so it can absorb and give back only λ = 2πc/ω = (2πa₀/α)(R/a₀)^(3/2)
+   (45.56 nm when R = a₀). The classical planetary atom (Rutherford's nucleus with a circling electron) radiates by Larmor's
+   formula P = (2/3)ke²a²/c³; with E = −ke²/2r this gives r³ = r₀³ − 4r_e²ct, a collapse time r₀³/(4r_e²c) (16 ps from r₀ = a₀),
+   radiating at its orbital frequency, the same ω(r) as Thomson's, so the light sweeps continuously to shorter wavelengths
+   (nonrelativistic, so the last instants are only indicative). Schrödinger's atom: the radiative rate of each allowed jump
+   n l → n′ l′ (l′ = l ± 1) is A = (4/3)αω³/c² · l_max/(2l + 1) · |∫R_nl R_n′l′ r³ dr|², radial functions in units of the reduced
+   Bohr radius a_μ = a₀(1 + m_e/m_p), integrated numerically (Bethe and Salpeter, Quantum Mechanics of One and Two Electron Atoms,
+   §59 and §63; checked against NIST ASD rates in the tests). 2s has no one photon jump (l would have to change by one to 1s);
+   it leaves by two photons, rate 8.23 s⁻¹, lifetime about 0.12 s (Bethe and Salpeter §67). */
+const AM_RINF = 10973731.568157, AM_MEMP = 5.446170214889e-4, AM_RE = 2.8179403205e-15;   /* m⁻¹, m_e/m_p, classical electron radius m; CODATA 2022 */
+const AM_RH = AM_RINF / (1 + AM_MEMP);
+const AM_HC = HS_H * BOHR_C / HS_EV * 1e9;   /* eV nm */
+const AM_NMAX = 6;
+function amLevel(n) { return -AM_HC * AM_RH * 1e-9 / (n * n); }   /* eV */
+function amLine(nu, nl) { const eV = amLevel(nu) - amLevel(nl); return { eV, nm: AM_HC / eV }; }
+function amThomsonNm(Rnm) { return 2 * Math.PI * BOHR_A0 / BOHR_ALPHA * Math.pow(Rnm / BOHR_A0, 1.5); }
+function amCollapseTime(r0m) { return r0m * r0m * r0m / (4 * AM_RE * AM_RE * BOHR_C); }   /* s */
+function amClassical(t, r0m) {   /* radius (m) and the wavelength it radiates (nm) a time t (s) after it starts at r₀ */
+  const c3 = r0m * r0m * r0m - 4 * AM_RE * AM_RE * BOHR_C * t;
+  if (c3 <= 0) return { r: 0, nm: 0, done: true };
+  const r = Math.cbrt(c3); return { r, nm: amThomsonNm(r * 1e9), done: false };
+}
+function amFact(k) { let f = 1; for (let i = 2; i <= k; i++) f *= i; return f; }
+/* hydrogen radial function R_nl(r), r in units of a_μ, normalized so ∫R²r²dr = 1 */
+function amRadial(n, l, r) {
+  const rho = 2 * r / n, a = 2 * l + 1, k = n - l - 1;
+  let L0 = 1, L1 = 1 + a - rho;
+  let L = k === 0 ? L0 : L1;
+  for (let j = 1; j < k; j++) { const L2 = ((2 * j + 1 + a - rho) * L1 - (j + a) * L0) / (j + 1); L0 = L1; L1 = L2; L = L2; }
+  const N = Math.sqrt(Math.pow(2 / n, 3) * amFact(k) / (2 * n * amFact(n + l)));
+  return N * Math.exp(-rho / 2) * Math.pow(rho, l) * L;
+}
+/* ∫R_nl R_n′l′ r³ dr in units of a_μ, Simpson's rule on 0 to 4·n²max + 40 */
+function amRadInt(n, l, n2, l2) {
+  const rmax = 4 * Math.max(n, n2) ** 2 + 40, N = 2 * Math.ceil(rmax / 0.01 / 2), h = rmax / N;
+  let s = 0;
+  for (let i = 0; i <= N; i++) { const r = i * h, w = i === 0 || i === N ? 1 : i % 2 ? 4 : 2; s += w * amRadial(n, l, r) * amRadial(n2, l2, r) * r * r * r; }
+  return s * h / 3;
+}
+/* spontaneous rate (s⁻¹) from n l down to n2 l2 */
+function amRate(n, l, n2, l2) {
+  if (n2 >= n || Math.abs(l - l2) !== 1 || l2 >= n2 || l2 < 0) return 0;
+  const w = amLine(n, n2).eV * HS_EV / BOHR_HBAR, aMu = BOHR_A0 * 1e-9 * (1 + AM_MEMP), I = amRadInt(n, l, n2, l2) * aMu;
+  return 4 / 3 * BOHR_ALPHA * w * w * w / (BOHR_C * BOHR_C) * Math.max(l, l2) / (2 * l + 1) * I * I;
+}
+const AM_RATES = {};   /* "n,l" → [{ n, l, A }], every one photon way down */
+for (let n = 2; n <= AM_NMAX; n++) for (let l = 0; l < n; l++) {
+  const out = [];
+  for (let n2 = 1; n2 < n; n2++) for (const l2 of [l - 1, l + 1]) { const A = amRate(n, l, n2, l2); if (A > 0) out.push({ n: n2, l: l2, A }); }
+  AM_RATES[n + ',' + l] = out;
+}
+const AM_2S_TWO_PHOTON = 8.23;   /* s⁻¹ */
+function amLifetime(n, l) { if (n === 1) return Infinity; if (n === 2 && l === 0) return 1 / AM_2S_TWO_PHOTON; return 1 / AM_RATES[n + ',' + l].reduce((s, d) => s + d.A, 0); }
+/* which level a photon of energy E (eV) can lift an electron to from n: the nearest line within a fractional spread tol, or none;
+   E above the binding energy ionizes */
+function amAbsorbN(n, E, tol) {
+  if (E >= -amLevel(n)) return 'ion';
+  let best = 0, bd = Infinity;
+  for (let n2 = n + 1; n2 <= AM_NMAX; n2++) { const dE = amLevel(n2) - amLevel(n), d = Math.abs(E - dE) / dE; if (d <= tol && d < bd) { bd = d; best = n2; } }
+  return best;
+}
+/* Schrödinger: the l′ = l ± 1 reached by absorbing on n → n2, weighted by the absorption strength g′A (same λ for both) */
+function amAbsorbL(n, l, n2, u) {
+  const opts = [l - 1, l + 1].filter((l2) => l2 >= 0 && l2 < n2).map((l2) => ({ l: l2, w: (2 * l2 + 1) * amRate(n2, l2, n, l) })).filter((o) => o.w > 0);
+  const tot = opts.reduce((s, o) => s + o.w, 0); let acc = 0;
+  for (const o of opts) { acc += o.w / tot; if (u < acc) return o.l; }
+  return opts.length ? opts[opts.length - 1].l : -1;
+}
+/* Schrödinger: where an electron on n l drops to, chosen with the branching ratios A/ΣA */
+function amDecay(n, l, u) {
+  const ds = AM_RATES[n + ',' + l]; if (!ds || !ds.length) return null;
+  const tot = ds.reduce((s, d) => s + d.A, 0); let acc = 0;
+  for (const d of ds) { acc += d.A / tot; if (u < acc) return d; }
+  return ds[ds.length - 1];
 }
 // ==CORE END==
 </script>
@@ -1461,8 +1586,283 @@ function bohrOrbit(nu) {
   $('starT').value = uFromT(ST.T); $('starPe').value = uFromPe(ST.Pe);
   window.__stars = { ST, setStarT, update: updateStars, uFromPe };   /* for the key scripts and tests */
 
+  // ---------- Atom models: six models of hydrogen under one beam (amLevel, amRate, amDecay ... in CORE) ----------
+  const AM_PION = 0.1, AM_TOL = 0.006, AM_L0 = 40, AM_L1 = 2000, AX0 = 10, AX1 = 2000, AM_BINS = 150;
+  const AM_MODELS = [
+    { key: 'ball', name: 'Billiard ball', who: 'Dalton, 1803', verdict: 'No lines: light only bounces off.' },
+    { key: 'pud', name: 'Plum pudding', who: 'Thomson, 1904', verdict: 'One line, not a series.' },
+    { key: 'plan', name: 'Classical orbit', who: 'Rutherford, 1911', verdict: 'Collapses in 16 ps, a smear of colors.' },
+    { key: 'bohr', name: 'Bohr', who: '1913', verdict: 'Right lines; no rule for which jump.' },
+    { key: 'deb', name: 'de Broglie', who: '1924', verdict: 'Right lines; waves explain the orbits.' },
+    { key: 'sch', name: 'Schrödinger', who: '1926', verdict: 'Right lines and strengths; 2s stuck.' }
+  ];
+  const AM = { lam: 0, white: false, R: BOHR_A0, run: !reduceMotion, sent: 0, t: 0, nextShot: 0, photons: [], atoms: [], last: 0, raf: 0, chip: '2,1' };
+  const amU = (lam) => Math.round(1000 * Math.log(lam / AM_L0) / Math.log(AM_L1 / AM_L0));
+  const amLamU = (u) => AM_L0 * Math.pow(AM_L1 / AM_L0, u / 1000);
+  function amFresh(m) {
+    return { m, n: 1, l: 0, wait: 0, ion: false, exc: false, ph: Math.random() * 6.283, tc: 0, done: false, bins: new Float64Array(AM_BINS), out: [], trail: [], note: '' };
+  }
+  function amRestart() { AM.atoms = AM_MODELS.map((m) => amFresh(m.key)); AM.photons = []; }
+  amRestart();
+  const amBin = (nm) => Math.floor(Math.log(nm / AX0) / Math.log(AX1 / AX0) * AM_BINS);
+  function amGive(a, nm) {   /* the atom sends a photon out: drawn flying away and counted in its strip */
+    const b = amBin(nm); if (b >= 0 && b < AM_BINS) a.bins[b] += 1;
+    const th = Math.random() * 6.283; a.out.push({ nm, x: 0, y: 0, vx: Math.cos(th), vy: Math.sin(th) });
+  }
+  const amDwell = (a) => (a.m === 'sch' && a.n === 2 && a.l === 0 ? 8 : 1);
+  function amHit(a, ph) {   /* a photon reaches the middle of this atom: true if it is absorbed */
+    const E = AM_HC / ph.nm;
+    if (a.m === 'ball') { if (Math.abs(ph.x) < 0.3) { ph.vx = ph.x >= 0 ? 0.9 : -0.9; ph.vy = 0.45; ph.bounced = true; } return false; }
+    if (a.m === 'pud') { if (a.exc) return false; const E0 = AM_HC / amThomsonNm(AM.R); if (Math.abs(E - E0) / E0 <= AM_TOL) { a.exc = true; a.wait = 1; return true; } return false; }
+    if (a.m === 'plan') return false;
+    if (a.ion) return false;
+    const to = amAbsorbN(a.n, E, AM_TOL);
+    if (to === 'ion') { if (Math.random() >= AM_PION) return false; a.ion = true; a.wait = 2; return true; }
+    if (!to) return false;
+    if (a.m === 'sch') { const l2 = amAbsorbL(a.n, a.l, to, Math.random()); if (l2 < 0) return false; a.l = l2; }
+    a.n = to; a.wait = amDwell(a); return true;
+  }
+  function amStep(dt) {
+    AM.t += dt;
+    /* the lamp: 4 photons a second, 10 in white light; each photon goes to every atom at the same place and time */
+    const rate = AM.white ? 10 : 4;
+    while (AM.nextShot <= AM.t) {
+      const nm = AM.white ? AM_HC / (AM_HC / AM_L1 * Math.pow(AM_L1 / AM_L0, Math.random())) : AM.lam;
+      AM.photons.push({ nm, x: (Math.random() * 2 - 1) * 0.42, y: 1.15, vx: 0, vy: -1, born: AM.nextShot, hit: new Array(6).fill(false), gone: new Array(6).fill(false), bvx: [], bvy: [] });
+      AM.sent++; AM.nextShot += 1 / rate;
+    }
+    const speed = 0.9;   /* box half widths per second */
+    for (const ph of AM.photons) {
+      ph.y -= speed * dt;
+      for (let i = 0; i < 6; i++) {
+        if (ph.gone[i]) continue;
+        if (!ph.hit[i] && ph.y <= 0) {
+          ph.hit[i] = true;
+          const q = { x: ph.x, vx: 0, vy: -1, nm: ph.nm };
+          if (amHit(AM.atoms[i], q)) ph.gone[i] = true;
+          else if (q.bounced) { ph.bvx[i] = q.vx; ph.bvy[i] = q.vy; }
+        }
+      }
+    }
+    AM.photons = AM.photons.filter((ph) => ph.y > -1.3);
+    for (const a of AM.atoms) {
+      a.ph += dt;
+      for (const o of a.out) { o.x += o.vx * speed * 1.3 * dt; o.y += o.vy * speed * 1.3 * dt; }
+      a.out = a.out.filter((o) => Math.abs(o.x) < 1.2 && Math.abs(o.y) < 1.2);
+      if (a.m === 'plan') {
+        if (a.done) { a.wait -= dt; if (a.wait <= 0) { a.done = false; a.tc = 0; a.trail = []; } continue; }
+        const r0 = BOHR_A0 * 1e-9, T = amCollapseTime(r0), p0 = amClassical(a.tc / 5 * T, r0);
+        a.tc = Math.min(5, a.tc + dt);
+        const p1 = amClassical(a.tc / 5 * T, r0), r1 = p1.done ? 0 : p1.r;
+        /* energy given off between the two radii, ke²/2 (1/r₁ − 1/r₀), spread over the wavelengths swept, in units of ke²/(2a₀) */
+        const lo = p1.done ? AX0 : Math.max(AX0, p1.nm), hi = p0.nm;
+        if (hi > lo) {
+          const e = (r1 > 0 ? r0 / r1 : r0 / (amClassical(T * 0.999999, r0).r)) - r0 / p0.r;
+          const b0 = Math.max(0, amBin(lo)), b1 = Math.min(AM_BINS - 1, amBin(hi)), nb = b1 - b0 + 1;
+          for (let b = b0; b <= b1; b++) a.bins[b] += 0.02 * e / nb;
+        }
+        for (let k = 1; k <= 4; k++) a.trail.push((a.trail.length ? a.trail[a.trail.length - 1] : 1) + (r1 / r0 - (a.trail.length ? a.trail[a.trail.length - 1] : 1)) * k / 4); if (a.trail.length > 2400) a.trail.splice(0, a.trail.length - 2400);
+        if (p1.done || a.tc >= 5) { a.done = true; a.wait = 2.5; }
+        continue;
+      }
+      if (a.m === 'pud') { if (a.exc) { a.wait -= dt; if (a.wait <= 0) { a.exc = false; amGive(a, amThomsonNm(AM.R)); } } continue; }
+      if (a.m === 'ball') continue;
+      if (a.ion) { a.wait -= dt; if (a.wait <= 0) { a.ion = false; a.n = AM_NMAX; a.l = a.m === 'sch' ? amAbsorbLFree() : 0; a.wait = amDwell(a); } continue; }
+      if (a.n === 1) continue;
+      a.wait -= dt; if (a.wait > 0) continue;
+      if (a.m === 'sch') {
+        if (a.n === 2 && a.l === 0) { a.n = 1; a.l = 0; a.note = 'left 2s by two photons'; continue; }
+        const d = amDecay(a.n, a.l, Math.random()); amGive(a, amLine(a.n, d.n).nm); a.n = d.n; a.l = d.l;
+      } else {
+        const n2 = 1 + Math.floor(Math.random() * (a.n - 1)); amGive(a, amLine(a.n, n2).nm); a.n = n2;
+      }
+      a.note = ''; a.wait = amDwell(a);
+    }
+  }
+  function amAbsorbLFree() {   /* the l an electron is captured into on n = 6, in proportion to the 2l + 1 states */
+    let u = Math.random() * 36, l = 0; while (l < 5 && u >= 2 * l + 1) { u -= 2 * l + 1; l++; } return l;
+  }
+  /* Schrödinger clouds: |R_nl|² |Y_l0|² in a slice through the nucleus, each at its own scale, cached */
+  const amClouds = {};
+  function amCloud(n, l, rgb) {
+    const key = n + ',' + l + ',' + rgb.join(','); if (amClouds[key]) return amClouds[key];
+    const N = 96, c = document.createElement('canvas'); c.width = c.height = N;
+    const g = c.getContext('2d'), img = g.createImageData(N, N), rv = 2.2 * n * n + 4, vals = new Float32Array(N * N);
+    const P = (x) => [1, x, (3 * x * x - 1) / 2, (5 * x * x * x - 3 * x) / 2, (35 * x ** 4 - 30 * x * x + 3) / 8, (63 * x ** 5 - 70 * x ** 3 + 15 * x) / 8][l];
+    let mx = 0;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const x = ((i + 0.5) / N * 2 - 1) * rv, z = ((j + 0.5) / N * 2 - 1) * rv, r = Math.hypot(x, z);
+      const v = amRadial(n, l, r) ** 2 * P(r > 0 ? z / r : 1) ** 2; vals[j * N + i] = v; if (v > mx) mx = v;
+    }
+    for (let k = 0; k < N * N; k++) { const a = Math.pow(vals[k] / mx, 0.5); img.data[4 * k] = rgb[0]; img.data[4 * k + 1] = rgb[1]; img.data[4 * k + 2] = rgb[2]; img.data[4 * k + 3] = Math.round(255 * a); }
+    g.putImageData(img, 0, 0); return (amClouds[key] = c);
+  }
+  const SUB = 'spdfgh';
+  const fmtT = (s) => (s === Infinity ? 'stable' : s >= 1e-3 ? `${(s).toFixed(2)} s` : s >= 1e-6 ? `${(s * 1e6).toPrecision(3)} μs` : `${(s * 1e9).toPrecision(3)} ns`);
+  function amStatus(a) {
+    if (a.m === 'ball') return 'a hard, solid sphere';
+    if (a.m === 'pud') return a.exc ? 'electron ringing' : `rings at ${amThomsonNm(AM.R).toFixed(1)} nm`;
+    if (a.m === 'plan') return a.done ? 'collapsed; a fresh atom next' : `t = ${(a.tc / 5 * amCollapseTime(BOHR_A0 * 1e-9) * 1e12).toFixed(1)} ps of 15.6`;
+    if (a.ion) return 'ionized, electron gone';
+    if (a.m === 'sch') return `${a.n}${SUB[a.l]}, lives ${fmtT(amLifetime(a.n, a.l))}` + (a.note ? `, ${a.note}` : '');
+    return `n = ${a.n}, E = ${amLevel(a.n).toFixed(2)} eV`;
+  }
+  let amGeo = null;
+  function drawModels() {
+    const cv = $('cModels'), ps = projScale(), Wc = cv.getBoundingClientRect().width || 600;
+    const cols = Wc >= 860 ? 6 : Wc >= 520 ? 3 : 2, rows = Math.ceil(6 / cols), pw = Wc / cols;
+    const box = Math.min(pw - 14, 210 * ps), headH = 34 * ps, stripH = 24 * ps, panelH = headH + box + 16 * ps + stripH + 14 * ps + 30 * ps;
+    const Hc = Math.round(rows * panelH + 4);
+    if (Math.abs(parseFloat(cv.style.height || 0) - Hc) > 0.5) cv.style.height = Hc + 'px';
+    const [ctx, W] = fit(cv);
+    ctx.clearRect(0, 0, W, Hc);
+    const ink = tok('--ink'), muted = tok('--muted'), line = tok('--line'), accent = tok('--accent'), gold = tok('--equi'), scope = tok('--scope') || '#05070a';
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+    const fs = 11 * ps, mf = mono();
+    amGeo = { cols };
+    AM_MODELS.forEach((M, i) => {
+      const a = AM.atoms[i], cx0 = (i % cols) * pw, cy0 = Math.floor(i / cols) * panelH, bx = cx0 + (pw - box) / 2, by = cy0 + headH;
+      const cx = bx + box / 2, cy = by + box / 2, R = box / 2;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = ink; ctx.font = `700 ${12.5 * ps}px system-ui, sans-serif`; ctx.fillText(M.name, cx, cy0 + 15 * ps);
+      ctx.fillStyle = muted; ctx.font = `${fs}px system-ui, sans-serif`; ctx.fillText(M.who, cx, cy0 + 28 * ps);
+      /* the box, dark like the inside of an instrument */
+      ctx.fillStyle = scope; rrect(ctx, bx, by, box, box, 8 * ps); ctx.fill();
+      ctx.save(); rrect(ctx, bx, by, box, box, 8 * ps); ctx.clip();
+      /* lamp glow along the bottom edge */
+      const lc = AM.white ? [235, 235, 235] : lamRGB(AM.lam);
+      const gg = ctx.createLinearGradient(0, by + box, 0, by + box - 26 * ps); gg.addColorStop(0, rgba(lc, 0.55)); gg.addColorStop(1, rgba(lc, 0));
+      ctx.fillStyle = gg; ctx.fillRect(bx, by + box - 26 * ps, box, 26 * ps);
+      const P = (x, y) => [cx + x * R, cy + y * R];
+      /* the atom */
+      if (a.m === 'ball') {
+        const g = ctx.createRadialGradient(cx - 0.1 * R, cy - 0.1 * R, 0.03 * R, cx, cy, 0.3 * R); g.addColorStop(0, '#d9dde3'); g.addColorStop(1, '#5d6673');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 0.3 * R, 0, 6.283); ctx.fill();
+      } else if (a.m === 'pud') {
+        const rr = Math.min(0.92, 0.25 + 0.67 * (AM.R - 0.02) / 0.28) * R;
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, 'rgba(240,120,150,0.55)'); g.addColorStop(1, 'rgba(240,120,150,0.25)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.65)'; ctx.font = `700 ${9 * ps}px system-ui`; ctx.textBaseline = 'middle';
+        for (const [u, v] of [[-0.45, -0.3], [0.4, -0.42], [0.1, 0.5], [-0.35, 0.35], [0.5, 0.15]]) ctx.fillText('+', cx + u * rr, cy + v * rr);
+        const amp = a.exc ? 0.22 * rr * Math.max(0, a.wait) : 0, x = cx + amp * Math.sin(a.ph * 18);
+        ctx.fillStyle = '#7fb2ff'; ctx.beginPath(); ctx.arc(x, cy, 4 * ps, 0, 6.283); ctx.fill();
+      } else if (a.m === 'plan') {
+        ctx.strokeStyle = 'rgba(127,178,255,0.35)'; ctx.lineWidth = 1; ctx.beginPath();
+        const om = (rho) => 1 / Math.pow(Math.max(rho, 0.05), 1.5);
+        let th = 0; const k0 = Math.max(0, a.trail.length - 160);
+        a.trail.forEach((rho, k) => { th += 0.12 * om(rho); if (k < k0) return; const [x, y] = P(0.85 * rho * Math.cos(th), 0.85 * rho * Math.sin(th)); k > k0 ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+        ctx.stroke();
+        const rho = a.done ? 0 : a.trail.length ? a.trail[a.trail.length - 1] : 1;
+        a.th = th;
+        ctx.fillStyle = '#ff8a5c'; ctx.beginPath(); ctx.arc(cx, cy, 4 * ps, 0, 6.283); ctx.fill();
+        if (!a.done) { const [x, y] = P(0.85 * rho * Math.cos(a.th), 0.85 * rho * Math.sin(a.th)); ctx.fillStyle = '#7fb2ff'; ctx.beginPath(); ctx.arc(x, y, 3.5 * ps, 0, 6.283); ctx.fill(); }
+      } else {
+        const rn = (n) => 0.14 * R * n;
+        if (a.m !== 'sch') {
+          ctx.strokeStyle = 'rgba(170,181,195,0.28)'; ctx.lineWidth = 1;
+          for (let n = 1; n <= AM_NMAX; n++) { ctx.beginPath(); ctx.arc(cx, cy, rn(n), 0, 6.283); ctx.stroke(); }
+        }
+        if (a.m === 'sch' && !a.ion) {
+          const c = amCloud(a.n, a.l, [127, 178, 255]); ctx.globalAlpha = 0.95; ctx.drawImage(c, cx - 0.86 * R, cy - 0.86 * R, 1.72 * R, 1.72 * R); ctx.globalAlpha = 1;
+        }
+        ctx.fillStyle = '#ff8a5c'; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * ps, 0, 6.283); ctx.fill();
+        if (!a.ion && a.m === 'bohr') {
+          const th = a.ph * 4 / (a.n * a.n * a.n) * 3; ctx.fillStyle = '#7fb2ff'; ctx.beginPath(); ctx.arc(cx + rn(a.n) * Math.cos(th), cy - rn(a.n) * Math.sin(th), 3.5 * ps, 0, 6.283); ctx.fill();
+        }
+        if (!a.ion && a.m === 'deb') {
+          const A = Math.min(6 * ps, 0.3 * rn(a.n)), cw = Math.cos(a.ph * 5); ctx.strokeStyle = '#7fb2ff'; ctx.lineWidth = 1.8 * ps; ctx.beginPath();
+          for (let k = 0; k <= 360; k++) { const th = k / 360 * 6.283, rr = rn(a.n) + A * cw * Math.sin(a.n * th); const x = cx + rr * Math.cos(th), y = cy - rr * Math.sin(th); k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+          ctx.stroke();
+        }
+        if (a.ion) { ctx.fillStyle = muted; ctx.font = `${fs}px system-ui`; ctx.textBaseline = 'middle'; ctx.fillText('bare proton', cx, cy + 16 * ps); }
+      }
+      /* the beam's photons, the same ones in every box */
+      for (const ph of AM.photons) {
+        if (ph.gone[i]) continue;
+        let x = ph.x, y = ph.y;
+        if (ph.bvx[i] != null && ph.y < 0) { const s = -ph.y; x = ph.x + ph.bvx[i] * s; y = ph.bvy[i] * s; }
+        const c = lamRGB(ph.nm), [px, py] = P(x, y);
+        ctx.fillStyle = rgba(c, 1); ctx.beginPath(); ctx.arc(px, py, 2.6 * ps, 0, 6.283); ctx.fill();
+        ctx.fillStyle = rgba(c, 0.25); ctx.beginPath(); ctx.arc(px, py, 5.5 * ps, 0, 6.283); ctx.fill();
+      }
+      for (const o of a.out) {
+        const c = lamRGB(o.nm), [px, py] = P(o.x, o.y);
+        ctx.fillStyle = rgba(c, 1); ctx.beginPath(); ctx.arc(px, py, 3 * ps, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = rgba(c, 0.6); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 6.5 * ps, 0, 6.283); ctx.stroke();
+      }
+      ctx.restore();
+      /* status line */
+      ctx.fillStyle = ink; ctx.font = `${10.5 * ps}px ${mf}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      let st = amStatus(a); while (ctx.measureText(st).width > pw - 6 && st.length > 8) st = st.slice(0, -2);
+      ctx.fillText(st, cx, by + box + 9 * ps);
+      /* its spectrum strip, log scale 10 to 2000 nm */
+      const sx = cx0 + 6, sw = pw - 12, sy = by + box + 18 * ps, X = (nm) => sx + Math.log(nm / AX0) / Math.log(AX1 / AX0) * sw;
+      ctx.fillStyle = scope; ctx.fillRect(sx, sy, sw, stripH);
+      ctx.globalAlpha = 0.22; for (let nm = 380; nm < 750; nm += 6) { ctx.fillStyle = rgba(lamRGB(nm), 1); ctx.fillRect(X(nm), sy, X(nm + 6) - X(nm) + 0.5, stripH); } ctx.globalAlpha = 1;
+      ctx.fillStyle = gold;
+      for (let nl = 1; nl <= 3; nl++) for (let nu = nl + 1; nu <= AM_NMAX; nu++) { const x = X(amLine(nu, nl).nm); ctx.fillRect(x - 0.5, sy, 1, 5 * ps); ctx.fillRect(x - 0.5, sy + stripH - 5 * ps, 1, 5 * ps); }
+      let mx = 0; for (const v of a.bins) mx = Math.max(mx, v);
+      if (mx > 0) {
+        for (let b = 0; b < AM_BINS; b++) {
+          if (!a.bins[b]) continue;
+          const nm0 = AX0 * Math.pow(AX1 / AX0, b / AM_BINS), nm1 = AX0 * Math.pow(AX1 / AX0, (b + 1) / AM_BINS), h = (stripH - 10 * ps) * Math.pow(a.bins[b] / mx, 0.6);
+          ctx.fillStyle = rgba(lamRGB(Math.sqrt(nm0 * nm1)), 1); ctx.fillRect(X(nm0), sy + stripH - 5 * ps - h, Math.max(1.5, X(nm1) - X(nm0)), h);
+        }
+      }
+      ctx.fillStyle = muted; ctx.font = `${9 * ps}px ${mf}`; ctx.textBaseline = 'top';
+      for (const [nm, t] of [[10, '10'], [100, '100'], [1000, '1000 nm']]) { const x = X(nm); ctx.fillRect(x - 0.5, sy + stripH, 1, 3); ctx.textAlign = nm === 10 ? 'left' : 'center'; ctx.fillText(t, Math.min(x, sx + sw - ctx.measureText(t).width / 2), sy + stripH + 3); }
+      /* verdict */
+      ctx.fillStyle = muted; ctx.font = `italic ${10.5 * ps}px system-ui, sans-serif`; ctx.textAlign = 'center';
+      const words = M.verdict.split(' '); let ln = '', yy = sy + stripH + 16 * ps;
+      for (const w of words) { const t = ln ? ln + ' ' + w : w; if (ctx.measureText(t).width > pw - 10 && ln) { ctx.fillText(ln, cx, yy); ln = w; yy += 12.5 * ps; } else ln = t; }
+      if (ln) ctx.fillText(ln, cx, yy);
+    });
+  }
+  function amReadout() {
+    const nm = AM.lam;
+    $('amLamOut').textContent = AM.white ? 'white light' : `${nm < 100 ? nm.toFixed(1) : nm.toFixed(1)} nm`;
+    $('amE').textContent = AM.white ? '0.62 to 31 eV' : `${(AM_HC / nm).toFixed(3)} eV`;
+    $('amROut').textContent = `${AM.R.toFixed(3)} nm → λ ${amThomsonNm(AM.R).toFixed(1)} nm`;
+    $('amSent').textContent = String(AM.sent);
+    $('amRun').textContent = AM.run ? 'Pause' : 'Play';
+    for (const b of document.querySelectorAll('#amChips button')) b.setAttribute('aria-pressed', String(!AM.white && b.dataset.l === AM.chip));
+    $('amLam').disabled = AM.white;
+  }
+  function amTick(ts) {
+    AM.raf = 0;
+    if (S.mode !== 'models' || document.hidden) return;
+    const dt = AM.last ? Math.min(0.05, (ts - AM.last) / 1000) : 0; AM.last = ts;
+    if (AM.run) amStep(dt);
+    drawModels();
+    if (Math.floor(AM.t * 2) !== Math.floor((AM.t - dt) * 2)) amReadout();
+    if (AM.run) AM.raf = requestAnimationFrame(amTick);
+  }
+  function amStart() { if (!AM.raf) { AM.last = 0; AM.raf = requestAnimationFrame(amTick); } }
+  function amSetLam(nm, chip) { AM.lam = nm; AM.chip = chip || ''; $('amLam').value = amU(nm); amReadout(); drawModels(); }
+  function amChipLam(k) {
+    if (k === 'thomson') return amThomsonNm(AM.R);
+    if (k === 'ion') return 80;
+    const [u, l] = k.split(',').map(Number); return amLine(u, l).nm;
+  }
+  for (const b of document.querySelectorAll('#amChips button')) b.addEventListener('click', () => { AM.white = false; $('amWhite').checked = false; amSetLam(Math.max(AM_L0, amChipLam(b.dataset.l)), b.dataset.l); });
+  $('amLam').addEventListener('input', (e) => amSetLam(amLamU(+e.target.value), ''));
+  $('amWhite').addEventListener('change', (e) => { AM.white = e.target.checked; AM.nextShot = AM.t; amReadout(); });
+  $('amR').addEventListener('input', (e) => { AM.R = +e.target.value; if (AM.chip === 'thomson') AM.lam = Math.max(AM_L0, amThomsonNm(AM.R)), $('amLam').value = amU(AM.lam); amReadout(); drawModels(); });
+  $('amRun').addEventListener('click', () => { AM.run = !AM.run; amReadout(); if (AM.run) amStart(); });
+  $('amAgain').addEventListener('click', () => { const keep = AM.atoms.map((a) => a.bins); amRestart(); AM.atoms.forEach((a, i) => { a.bins = keep[i]; }); drawModels(); amStart(); });
+  $('amClear').addEventListener('click', () => { for (const a of AM.atoms) a.bins.fill(0); drawModels(); });
+  setInterval(() => {
+    if (S.mode !== 'models') return;
+    const sum = AM.atoms.map((a, i) => `${AM_MODELS[i].name}: ${amStatus(a)}`).join('; ');
+    $('cModels').setAttribute('aria-label', `Six models of the hydrogen atom under one photon beam at ${AM.white ? 'white light' : AM.lam.toFixed(1) + ' nm'}. ${sum}.`);
+  }, 2000);
+  document.addEventListener('visibilitychange', () => { if (S.mode === 'models' && AM.run) amStart(); });
+  window.__models = { AM, step: amStep, setLam: amSetLam, restart: amRestart, draw: drawModels };   /* for the key scripts and tests */
+  amSetLam(amLine(2, 1).nm, '2,1');
+
   // ---------- render ----------
   const MODE_HINTS = {
+    models: 'Six historical models of hydrogen under the same lamp. Pick a color and see which atoms answer, and with what light.',
     stars: 'Change the star\'s surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines.',
     explore: 'Click any element in the table. Hover over a line for its wavelength.',
     compare: 'The top strip keeps your element; click the table to set the bottom one. "Pick top" lets the next click change the top strip instead.',
@@ -1482,6 +1882,14 @@ function bohrOrbit(nu) {
     for (const b of document.querySelectorAll('#mysteryKind button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
     $('modeHint').textContent = MODE_HINTS[mode];
     /* Hydrogen in stars: its own chart and controls; the spectroscope, the level diagram and the table step aside */
+    const models = mode === 'models';
+    $('modelsBox').hidden = !models; $('modelsCard').hidden = !models;
+    if (models) {
+      window.vdShowCols = [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
+      $('starsBox').hidden = $('starCard').hidden = true; $('ptCard').hidden = true; document.querySelector('.card.spec').hidden = true;
+      $('compareBox').hidden = $('mysteryBox').hidden = true; $('factsCard').hidden = $('listCard').hidden = $('bohrCard').hidden = true;
+      amReadout(); drawModels(); amStart(); return;
+    }
     const stars = mode === 'stars';
     window.vdShowCols = stars ? [['T_K', 'T (K)'], ['Pe_N_m2', 'Pe (N/m²)'], ['n2_share', 'N₂/N_total']] : [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
     $('starsBox').hidden = !stars; $('starCard').hidden = !stars;
@@ -1580,6 +1988,7 @@ function bohrOrbit(nu) {
       const sh = hsShares(ST.T, ST.Pe), g = (v) => +v.toPrecision(4);
       return { source: 'Hydrogen in stars', T_K: ST.T, Pe_N_m2: ST.Pe, spectral_class: classOfT(ST.T), n2_n1: g(sh.r12), nII_nI: g(sh.rion), neutral_share: g(1 / (1 + sh.rion)), n2_share: g(sh.f2), peak_T_K: Math.round(hsPeak(ST.Pe)) };
     }
+    if (S.mode === 'models') return 'The atom models have no readings: read hydrogen\'s lines in Explore.';
     if (S.display === 'continuous' && S.mode !== 'mystery') return 'A continuous spectrum has no lines to read: choose Emission or Absorption.';
     if (!picked) return 'Click or tap a line in the top spectrum first, so its readout shows.';
     const myst = S.mode === 'mystery' && !S.revealed;
@@ -1615,6 +2024,7 @@ function bohrOrbit(nu) {
 
   buildTable();
   if (VD.ws('') === 'hydrogen-in-stars' || new URLSearchParams(location.search).get('mode') === 'stars') S.mode = 'stars';
+  if (new URLSearchParams(location.search).get('mode') === 'models') S.mode = 'models';
   render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
 })();

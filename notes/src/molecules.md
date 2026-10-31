@@ -20,6 +20,7 @@ Students should know the Coulomb energy, the exclusion principle, the quantized 
 3. **H₂ bond** and **H₂ spins parallel.** Compare the two curves; turn on the vibration levels and read the zero point energy (Q3).
 4. **HCl levels.** Step l from 0 to 7 with Δl = +1 and −1; try Δl = 0 and +2 (Q4). Switch to N₂ (Q5). Switch to Measured constants and watch the R lines crowd together.
 5. **HCl band.** Find the gap and read the spacing near it (Q6). **Two isotopes**: the pairs (Q7). **Hot gas**: the strongest lines move out.
+6. **Molecules and light.** **CO₂ and infrared**: the bend at 15 μm takes the photon and sends one back in any direction; switch to N₂ and O₂, which let it pass (the greenhouse idea). **Ozone and ultraviolet**: O₃ breaks at 254 nm while O₂ passes. **NO₂ in visible light** glows, and breaks below 398 nm. With **Microwave** only the molecules with a dipole turn.
 
 ## Questions
 

@@ -23,6 +23,7 @@ Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm
 4. **Neon: All, Neutral, Ionized.** Click Ne. Under **All** there are blue Ne II lines; **Neutral** shows only the red and orange lines a neon sign gives off. Ask Q4.
 5. **Compare.** Put hydrogen on top and helium or mercury on the bottom. No two elements share a pattern.
 6. **Mystery.** Start with **Gas mixture**. Students click elements to build a guess, then **Check**. Finish with **A star**, an absorption spectrum built from five elements, and ask Q5 and Q6.
+7. **Atom models.** Choose **Atom models**: the same lamp shines on six historical atoms side by side. With **Lyman α** only Bohr, de Broglie and Schrödinger answer, and they give Lyman α back; the classical orbit collapses in 16 ps whatever the lamp does, and Thomson's pudding answers only **Thomson's line**. Try **White light** and let the strips fill: only the quantum atoms land on the gold marks. In Schrödinger's atom an electron that lands in 2s stays (0.12 s against 1.6 ns for 2p).
 
 ## Questions
 

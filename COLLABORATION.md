@@ -5947,3 +5947,38 @@ color, amount and roughness set by the student. Steve: no worksheet, just a demo
   slope than beads; steel below glass and 4 mm below 2 mm in the sand picture; acrylic floats in 90 % glycerol).
 - vdcheck `--only after` 0 problems, `--only clip` 0 cut off; screenshots at 1400, 1280 and 390 px, light and dark.
   Catalog, map, topics, course pages, thumbnail, What's new. No notes page or key (no worksheet).
+
+## 2026-10-31 · Claude · Last partly covered sims, Group 4 (atoms and light, fits)
+
+Steve: "Let's get to work getting these partials done". The 16 sims still partly covered (15 PhET, Falstad TE) were split by
+demo into four groups (`partials-final/groups-2026-10-31.md` in the project files), run as parallel threads. This entry is Group 4:
+plan #23, #24 and #30. Notes got one class step each (demo keys rebuilt in TeacherKeys, no new questions), one What's new entry.
+- Spectra Explorer, **Atom models** mode (PhET Models of the Hydrogen Atom): one lamp, the same photons at the same moments,
+  into six atoms side by side: billiard ball, Thomson's plum pudding, the classical orbit, Bohr, de Broglie, Schrödinger. Each has
+  a strip of the light it gave off (log 10 to 2000 nm) against hydrogen's lines. Energies from R_H = R∞/(1 + m_e/m_p) (CODATA
+  2022), vacuum wavelengths (Lyman α 121.568, Hα 656.470 nm, within 0.02 nm of NIST). Thomson λ = (2πa₀/α)(R/a₀)^(3/2), 45.56 nm at
+  R = a₀, with a radius slider. Classical collapse r³ = r₀³ − 4r_e²ct by Larmor, 15.6 ps from a₀, radiating at ω(r), a smear.
+  Schrödinger: rates A(nl → n′l′) from numerically integrated radial functions (Bethe and Salpeter §59, §63), within 0.05 % of
+  NIST ASD (2p→1s 6.2649e8, 3p→1s 1.6725e8, 3d→2p 6.4651e7, 3p→2s 2.2448e7 s⁻¹); lifetimes 2p 1.596 ns, 3s 158 ns, 3d 15.5 ns;
+  branching by A; Δl = ±1; 2s stuck (two photons, 0.12 s). Bohr and de Broglie drop to any lower level with equal chance (stated:
+  Bohr's model has no rule). Stated approximations: lamp spread ±0.6 % in energy; a line photon always absorbed, an ionizing one
+  one time in ten; every excited state held about 1 s on screen (2s 8 s), real lifetime shown; capture photon not drawn; orbits
+  drawn ∝ n. Opens on Lyman α, running (classical atom collapses at once). `?mode=models`. New `test_atom_models.cjs` 10 groups.
+- Molecules, **Molecules and light** view (PhET Molecules and Light): Microwave | Infrared | Visible | Ultraviolet lamp, wavelength
+  slider per kind (IR 2.5 to 25 μm, visible 400 to 700 nm, UV 120 to 400 nm), seven molecules (N₂, O₂, CO, CO₂, H₂O, NO₂, O₃).
+  Microwave turns a molecule only with a dipole (CCCBDB); infrared starts an IR active vibration within ±60 cm⁻¹ of its band
+  center (Shimanouchi NSRDS-NBS 39); visible and UV are absorbed only inside an electronic band (Okabe 1978, JPL 19-5, edges
+  approximate) and break the molecule below hc/D₀ (NO₂ 398, O₂ 242, O₃ 1179 nm), else it glows. Excited molecules give a photon
+  back in a random direction after 2 s on screen. The graph shows where across 100 nm to 10 cm the molecule breaks, glows, shakes
+  or turns, with the lamp as a cursor. Setups CO₂ and infrared (opens on the 667 cm⁻¹ bend), Ozone and ultraviolet, NO₂ in
+  visible light. Readings: none (a message says so). New `test_molecules_light.cjs` 4 groups.
+- Worksheet graphs, **error bars and χ²** (PhET Curve Fitting): an Error bars on y menu under every fitted graph takes σ from any
+  column (the student's own columns too); ±σ bars on the points and residuals; every fit becomes weighted (1/σ²): closed form
+  line (Bevington §6.4), quadratic, and the nine curve kinds through weighted Levenberg–Marquardt; uncertainties from (JᵀWJ)⁻¹
+  alone; χ², ν = n − k, χ²/ν and P(χ² or more) = Q(ν/2, χ²/2). A missing or zero σ on a plotted row falls back to unweighted with a
+  warning. Saved with the axes. Help list has one new line. `test_worksheet_formulas.cjs` 26 pass (four new).
+- Checks: all suites above pass; vdcheck `--only after` 0 problems and `--only clip` 0 cut off on spectra and molecules;
+  screenshots at 1368 and 400 px, light and dark; worksheet graph checked on a locally rendered pendulum worksheet.
+- Worksheet candidates for the sweep: **Atom models** as a part of the hydrogen worksheet (which models land on the lines; Thomson
+  radius for Hα); **Molecules and light** as a short part of the HCl or bonds worksheet (which molecules absorb 15 μm and why);
+  error bars need no worksheet, but keys that report uncertainty columns could now ask for χ².

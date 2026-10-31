@@ -774,7 +774,9 @@
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
-     such as position against time at constant acceleration. Anything computed from the fit (g, k, ...) is left to the student. */
+     such as position against time at constant acceleration. Anything computed from the fit (g, k, ...) is left to the student.
+     A column chosen under Error bars on y (2026-10-31, PhET Curve Fitting) draws ±σ bars and makes every fit weighted (1/σ²),
+     with χ², ν and P(χ² or more) shown, and the uncertainties from the error bars alone. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
@@ -1007,14 +1009,14 @@
       return (a + b) / 2;
     }
     /* Levenberg–Marquardt from p0. model(x, p) → [y, [∂y/∂p...]]. Returns the parameters and the sum of squared residuals */
-    function lm(model, p0, xs, ys) {
-      const k = p0.length;
-      const sse = (p) => { let s = 0; for (let i = 0; i < xs.length; i++) { const r = ys[i] - model(xs[i], p)[0]; s += r * r; } return isFinite(s) ? s : Infinity; };
+    function lm(model, p0, xs, ys, ws) {
+      const k = p0.length, wt = ws || xs.map(() => 1);
+      const sse = (p) => { let s = 0; for (let i = 0; i < xs.length; i++) { const r = ys[i] - model(xs[i], p)[0]; s += wt[i] * r * r; } return isFinite(s) ? s : Infinity; };
       let p = p0.slice(), ss = sse(p), lam = 1e-3;
       if (!isFinite(ss)) return null;
       for (let it = 0; it < 300 && ss > 0; it++) {
         const JJ = Array.from({ length: k }, () => new Array(k).fill(0)), Jr = new Array(k).fill(0);
-        xs.forEach((x, i) => { const [f, g] = model(x, p), r = ys[i] - f; for (let a = 0; a < k; a++) { Jr[a] += g[a] * r; for (let b = 0; b < k; b++) JJ[a][b] += g[a] * g[b]; } });
+        xs.forEach((x, i) => { const [f, g] = model(x, p), r = ys[i] - f, w = wt[i]; for (let a = 0; a < k; a++) { Jr[a] += w * g[a] * r; for (let b = 0; b < k; b++) JJ[a][b] += w * g[a] * g[b]; } });
         let better = false;
         while (lam < 1e15) {
           const A = JJ.map((row, a) => row.map((v, b) => (a === b ? v * (1 + lam) + 1e-300 : v))), dp = solve(A, Jr);
@@ -1025,18 +1027,61 @@
       }
       return { p, ss };
     }
-    /* the fitted curve with standard errors from s²(JᵀJ)⁻¹, s² = SSE/(n − k) */
-    function finish(M, p, xs, ys) {
-      const k = p.length, n = xs.length;
-      const res = xs.map((x, i) => ys[i] - M.f(x, p)[0]), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > k ? ss / (n - k) : NaN;
-      const ymax = Math.max(...ys.map(Math.abs)), exact = n > k && ss <= 1e-24 * n * ymax * ymax;
+    /* the fitted curve with standard errors from s²(JᵀJ)⁻¹, s² = SSE/(n − k); with error bars (weights w = 1/σ²) from (JᵀWJ)⁻¹
+       alone, not scaled by the scatter, and χ² = Σ w r² (P. R. Bevington and D. K. Robinson, Data Reduction and Error Analysis,
+       3rd ed., §8.2 and §11.5) */
+    function finish(M, p, xs, ys, ws) {
+      const k = p.length, n = xs.length, wt = ws || xs.map(() => 1);
+      const res = xs.map((x, i) => ys[i] - M.f(x, p)[0]), ss = res.reduce((q, r) => q + r * r, 0), s2 = ws ? 1 : n > k ? ss / (n - k) : NaN;
+      const ymax = Math.max(...ys.map(Math.abs)), exact = !ws && n > k && ss <= 1e-24 * n * ymax * ymax;
       const JJ = Array.from({ length: k }, () => new Array(k).fill(0));
-      xs.forEach((x) => { const g = M.f(x, p)[1]; for (let a = 0; a < k; a++) for (let b = 0; b < k; b++) JJ[a][b] += g[a] * g[b]; });
+      xs.forEach((x, i) => { const g = M.f(x, p)[1]; for (let a = 0; a < k; a++) for (let b = 0; b < k; b++) JJ[a][b] += wt[i] * g[a] * g[b]; });
       const C = inverse(JJ);
       const se = p.map((_, a) => (C && C[a][a] >= 0 ? Math.sqrt(s2 * C[a][a]) : NaN));
       if (!C && n > k && !exact) return null;   /* the parameters are not pinned down by these points */
       if (exact) M.names.forEach((nm, a) => { if ((nm === 'C' || nm === 'a') && Math.abs(p[a]) < 1e-9 * ymax) p[a] = 0; });
-      return { kind: M.id, p, se, res, n, exact, npar: k, at: (x) => M.f(x, p)[0] };
+      const out = { kind: M.id, p, se, res, n, exact, npar: k, at: (x) => M.f(x, p)[0] };
+      if (ws) Object.assign(out, chiOf(res, ws, k));
+      return out;
+    }
+    /* χ² = Σ (r/σ)², ν = n − k degrees of freedom, and P, the chance of a χ² at least this large if the model is right and the
+       error bars are true: the upper regularized gamma function Q(ν/2, χ²/2) */
+    function chiOf(res, ws, k) { const chi2 = res.reduce((q, r, i) => q + ws[i] * r * r, 0), nu = res.length - k; return { weighted: true, chi2, nu, P: nu > 0 ? chiP(chi2, nu) : NaN }; }
+    function lnGamma(z) {   /* Lanczos, g = 7, nine terms */
+      const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+      if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lnGamma(1 - z);
+      z -= 1; let x = c[0]; for (let i = 1; i < 9; i++) x += c[i] / (z + i); const t = z + 7.5;
+      return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+    }
+    function chiP(chi2, nu) {   /* Q(a, x) by its series below a + 1 and its continued fraction above (Numerical Recipes §6.2) */
+      const a = nu / 2, x = chi2 / 2;
+      if (!(x > 0)) return 1;
+      const lead = -x + a * Math.log(x) - lnGamma(a);
+      if (x < a + 1) { let ap = a, sum = 1 / a, del = sum; for (let i = 0; i < 1000; i++) { ap += 1; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; } return Math.max(0, 1 - sum * Math.exp(lead)); }
+      let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+      for (let i = 1; i < 1000; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300; c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+      return Math.min(1, Math.exp(lead) * h);
+    }
+    /* weighted straight line y = a + bx, weights 1/σ², solved about the weighted mean of x (Bevington §6.4) */
+    function wline(xs, ys, sig) {
+      const n = xs.length, ws = sig.map((s) => 1 / (s * s)); if (new Set(xs).size < 2) return null;
+      const S = ws.reduce((q, w) => q + w, 0), xm = xs.reduce((q, x, i) => q + ws[i] * x, 0) / S;
+      let Suu = 0, Suy = 0, Sy = 0; xs.forEach((x, i) => { const u = x - xm; Suu += ws[i] * u * u; Suy += ws[i] * u * ys[i]; Sy += ws[i] * ys[i]; });
+      const b = Suy / Suu, a = Sy / S - b * xm, res = xs.map((x, i) => ys[i] - a - b * x);
+      return Object.assign({ a, b, res, n, exact: false, seB: Math.sqrt(1 / Suu), seA: Math.sqrt(1 / S + xm * xm / Suu) }, chiOf(res, ws, 2));
+    }
+    /* weighted quadratic y = a + bx + cx², solved in u = (x − mean)/spread and carried back with its covariance */
+    function wquad(xs, ys, sig) {
+      const n = xs.length, ws = sig.map((s) => 1 / (s * s)); if (new Set(xs).size < 3) return null;
+      const mx = xs.reduce((q, x) => q + x, 0) / n, sx = Math.sqrt(xs.reduce((q, x) => q + (x - mx) * (x - mx), 0) / n) || 1, us = xs.map((x) => (x - mx) / sx);
+      const M = [0, 1, 2].map((i) => [0, 1, 2].map((j) => us.reduce((q, u, k) => q + ws[k] * Math.pow(u, i + j), 0))), v = [0, 1, 2].map((i) => us.reduce((q, u, k) => q + ws[k] * ys[k] * Math.pow(u, i), 0));
+      const C = inverse(M); if (!C) return null;
+      const p = C.map((row) => row[0] * v[0] + row[1] * v[1] + row[2] * v[2]);
+      const J = [[1, -mx / sx, mx * mx / (sx * sx)], [0, 1 / sx, -2 * mx / (sx * sx)], [0, 0, 1 / (sx * sx)]];
+      const [a, b, c] = J.map((row) => row[0] * p[0] + row[1] * p[1] + row[2] * p[2]);
+      const se = J.map((row) => Math.sqrt([0, 1, 2].reduce((q, i) => q + [0, 1, 2].reduce((r, j) => r + row[i] * C[i][j] * row[j], 0), 0)));
+      const res = xs.map((x, i) => ys[i] - (a + b * x + c * x * x));
+      return Object.assign({ quad: true, a, b, c, res, n, exact: false, seA: se[0], seB: se[1], seC: se[2], at: (x) => a + b * x + c * x * x }, chiOf(res, ws, 3));
     }
     const TAU = 2 * Math.PI, wrapPi = (a) => { a = a % TAU; return a > Math.PI ? a - TAU : a <= -Math.PI ? a + TAU : a; };
     const spanOf = (xs) => Math.max(...xs) - Math.min(...xs);
@@ -1116,13 +1161,13 @@
         } },
     };
     /* fit(kind, xs, ys): null when these points cannot settle it; { bad } when the x values do not suit the curve */
-    function fit(kind, xs, ys) {
-      const M = MODELS[kind];
+    function fit(kind, xs, ys, sig) {
+      const M = MODELS[kind], ws = sig ? sig.map((s) => 1 / (s * s)) : null;
       if (!M) return null;
       if (M.positive && xs.some((x) => !(x > 0))) return { bad: 'positive' };
       if (new Set(xs).size < M.k) return { bad: 'few', need: M.k };
       let best = null;
-      M.start(xs, ys).forEach((p0) => { if (!p0.every(isFinite)) return; const r = lm(M.f, p0, xs, ys); if (r && (!best || r.ss < best.ss)) best = r; });
+      M.start(xs, ys).forEach((p0) => { if (!p0.every(isFinite)) return; let r = lm(M.f, p0, xs, ys); if (r && ws) r = lm(M.f, r.p, xs, ys, ws); if (r && (!best || r.ss < best.ss)) best = r; });
       if (!best || !best.p.every(isFinite)) return null;
       const p = best.p.slice();
       /* one way to write each answer: A > 0 and −π < φ ≤ π for the sines, σ and w and Q positive */
@@ -1132,11 +1177,11 @@
       if (kind === 'gauss') p[2] = Math.abs(p[2]);
       if (kind === 'slit') p[2] = Math.abs(p[2]);
       if (kind === 'resonance') { p[1] = Math.abs(p[1]); p[2] = Math.abs(p[2]); }
-      const out = finish(M, p, xs, ys);
+      const out = finish(M, p, xs, ys, ws);
       if (out) { out.form = M.form; out.names = M.names; }
       return out;
     }
-    return { colName, colIndex, num, isFormula, sheet, shift, show, BLANK, Err, parse, fit, MODELS, FN };
+    return { colName, colIndex, num, isFormula, sheet, shift, show, BLANK, Err, parse, fit, MODELS, FN, wline, wquad, chiP };
   })();
   /* ==FORMULAS END== */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
@@ -1342,6 +1387,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       el('li', { text: 'A range such as B1:B6 goes inside a function, which uses only the cells in it that hold numbers. A formula that uses an empty cell stays empty.' }),
       el('li', { text: 'Fill down (under the table, or Ctrl+D in the cell below) copies a formula down its column and moves its row numbers along. Put $ before a row number, as in B$1 or $B$1, to keep it fixed.' }),
       el('li', { text: 'Add a column gives a table a column of your own for a calculation; type its heading, with the unit in parentheses, as in v² (m²/s²). Your columns can go on the graph too.' }),
+      el('li', { text: 'Error bars on y, under a graph, takes each point\'s uncertainty from a column you choose (add a column for it if the table has none). The fit then weights each point by 1/σ² and reports χ², its degrees of freedom and the chance P of a χ² that large.' }),
       el('li', { text: 'A cell shows its result; click it to see or change the formula. The PDF, the CSV and the graph use the results; Save to a file keeps the formulas.' })])]));
 
   /* ---------- sections: walk the h2 headings ---------- */
@@ -1520,7 +1566,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     R.table.querySelectorAll('tbody.ws-pad tr').forEach((tr) => tr.lastChild && tr.lastChild.remove());
     R.xcols.pop(); R.removeCol.hidden = !R.xcols.length;
     if (R.focus && R.focus.c === c) R.focus = null;
-    if (R.axes) ['x', 'y'].forEach((k) => { if (R.axes[k] === String(c)) R.axes[k] = ''; });
+    if (R.axes) ['x', 'y', 'err'].forEach((k) => { if (R.axes[k] === String(c)) R.axes[k] = ''; });
     axesOptions(T, R);
   }
   function newRow(T, R) {
@@ -1747,7 +1793,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     R.axesSel = R.axesSel || {}; R.axesSel.fit = fit;
     R.graph = el('div');
     const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
-      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit])])),
+      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit]), el('label', {}, ['Error bars on y ', pick('err', 'Column holding the uncertainty of each y value, for error bars and a weighted fit')])])),
       R.graph]);
     after.appendChild(box);
     axesOptions(T, R);
@@ -1755,16 +1801,18 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   /* the columns offered for each axis: the table's own and the student's added ones (kept chosen when still there) */
   function axesOptions(T, R) {
     if (!R.axesSel || !R.axesSel.x) return;
-    ['x', 'y'].forEach((k) => {
+    ['x', 'y', 'err'].forEach((k) => {
       const s = R.axesSel[k], keep = R.axes[k];
+      if (!s) return;
       s.innerHTML = '';
-      s.appendChild(el('option', { value: '', text: 'choose a column' }));
+      s.appendChild(el('option', { value: '', text: k === 'err' ? 'none' : 'choose a column' }));
       for (let c = 0; c < T.ncol + R.xcols.length; c++) s.appendChild(el('option', { value: String(c), text: c < T.ncol ? pretty(T.cols[c]) || 'Column ' + (c + 1) : pretty(colTitle(T, R, c)) }));
       s.value = keep != null && +keep < T.ncol + R.xcols.length ? keep : '';
       R.axes[k] = s.value;
     });
   }
-  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit && FIT_KINDS.some((k) => k[0] === a.fit)) R.axes.fit = a.fit; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; };
+  const errOf = (R) => (R.axes && R.axes.err != null ? R.axes.err : '');
+  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit && FIT_KINDS.some((k) => k[0] === a.fit)) R.axes.fit = a.fit; if (a && a.err) R.axes.err = a.err; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; if (R.axesSel.err) R.axesSel.err.value = R.axes.err || ''; };
   const numOf = (f) => { if (!f) return NaN; if (f.calc) return f.calc.num; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
@@ -1835,23 +1883,26 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
     const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colTitle(T, R, cx)), [yName, yUnit] = nameUnit(colTitle(T, R, cy));
     const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
-    const pts = [];
+    const pts = [], ce = errOf(R) === '' ? -1 : +errOf(R);
     R.rows.forEach((r, i) => {
       const val = (c) => (r.cells[c] ? numOf(r.cells[c]) : numOf({ value: T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '' }));
       const x = val(cx), y = val(cy);
-      if (isFinite(x) && isFinite(y)) pts.push([x, y]);
+      if (isFinite(x) && isFinite(y)) pts.push([x, y, ce >= 0 ? Math.abs(val(ce)) : NaN]);
     });
     if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `No row has a number in both columns yet. Each row with a number for ${xName} and for ${yName} is a point.` })); return; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const errName = ce >= 0 ? nameUnit(colTitle(T, R, ce))[0] : '', sigOK = ce >= 0 && pts.every((p) => p[2] > 0 && isFinite(p[2])), sig = sigOK ? pts.map((p) => p[2]) : null;
     const sameX = xs.every((x) => x === xs[0]);
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0;
     const kind = curve ? '' : R.axes.fit || '', quad = kind === 'quad', few = quad && !sameX && new Set(xs).size < 3;
     /* the other curves: worked out again only when the points or the kind change */
     let g = null;
-    if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(','); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys); } g = R.fitOut; }
-    const f = sameX || curve ? null : quad ? fitQuad(xs, ys) : kind ? (g && !g.bad ? g : null) : fitLine(xs, ys);
+    if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(',') + '|' + (sig ? sig.join(',') : ''); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys, sig); } g = R.fitOut; }
+    const f = sameX || curve ? null : quad ? (sig ? WSF.wquad(xs, ys, sig) : fitQuad(xs, ys)) : kind ? (g && !g.bad ? g : null) : sig ? WSF.wline(xs, ys, sig) : fitLine(xs, ys);
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
-    const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
+    const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = sig ? pad(Math.min(...ys.map((y, i) => y - sig[i])), Math.max(...ys.map((y, i) => y + sig[i])), true) : pad(Math.min(...ys), Math.max(...ys), true);
+    /* an error bar: a line from y − σ to y + σ with short caps */
+    const bar = (Ax, x, y, s) => { const x0 = Ax.X(x), y0 = Ax.Y(y - s), y1 = Ax.Y(y + s); svg.appendChild(sv('path', { d: `M${x0},${y0}V${y1}M${x0 - 3},${y0}h6M${x0 - 3},${y1}h6`, stroke: '#cf222e', 'stroke-width': 1.2, fill: 'none' })); };
     const lab = (n, u) => (u ? `${n} (${u})` : n);
     const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
     if (f && !f.quad && !f.kind) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
@@ -1864,13 +1915,16 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     }
     if (curve) svg.appendChild(sv('polyline', { points: pts.slice().sort((p, q) => p[0] - q[0]).map(([x, y]) => `${A.X(x)},${A.Y(y)}`).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.5 }));
     const dot = curve && pts.length > 40 ? 2.5 : 4.5;
+    if (sig) pts.forEach(([x, y], i) => bar(A, x, y, sig[i]));
     pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: dot, fill: '#cf222e', stroke: '#fff', 'stroke-width': dot > 3 ? 1 : 0.5 })));
     if (f) {
-      const m = Math.max(...f.res.map(Math.abs)) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab('residual', P.yUnit), 4);
+      const m = Math.max(...f.res.map((r, i) => Math.abs(r) + (sig ? sig[i] : 0))) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab('residual', P.yUnit), 4);
       svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
+      if (sig) xs.forEach((x, i) => bar(B, x, f.res[i], sig[i]));
       xs.forEach((x, i) => svg.appendChild(sv('circle', { cx: B.X(x), cy: B.Y(f.res[i]), r: 3.5, fill: '#cf222e' })));
     }
     box.appendChild(svg);
+    if (ce >= 0 && !sigOK) box.appendChild(el('p', { class: 'ws-warn2', text: `Error bars need a positive number in ${errName} on every plotted row; until then the points are drawn and fitted without them.` }));
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: `${pts.length} points, joined in order of ${P.xName}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.` })); return; }
     if (few) { box.appendChild(el('p', { class: 'ws-warn2', text: `A quadratic needs points at three or more different values of ${P.xName}.` })); return; }
@@ -1882,7 +1936,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       return;
     }
     if (!f) return;
-    if (f.kind) { fitText(box, f, P); return; }
+    if (f.kind) { P.errName = errName; fitText(box, f, P); return; }
     const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
     const su = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
     const sq = (u) => (/[\/\s²³]/.test(u) ? `(${u})²` : u + '²'); /* (m/s)², not m/s² */
@@ -1892,11 +1946,22 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     if (f.quad) { res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${P.yName} = a + b·${P.xName} + c·${P.xName}²`)); }
     lines.forEach(([name, v, e, u], i) => { if (i || f.quad) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact, f.quad))); });
     box.appendChild(res);
+    if (f.weighted) { chiText(box, f, errName); return; }
     box.appendChild(el('p', { class: 'ws-pnote', text: f.quad
       ? `${f.n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − 3 degrees of freedom). What the coefficients tell you is for you to work out.`
       : `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
   }
 
+  /* χ² of a fit weighted by the error bars, and how the fit was made */
+  function chiText(box, f, errName, extra) {
+    const k = f.n - f.nu, g = (v) => (v >= 1e4 || (v > 0 && v < 1e-3) ? v.toExponential(2) : +v.toPrecision(3));
+    const res = el('p', { class: 'ws-res' });
+    res.appendChild(el('b', { text: 'χ²: ' })); res.appendChild(document.createTextNode(`${g(f.chi2)} for ν = ${f.nu} degree${f.nu === 1 ? "" : "s"} of freedom`));
+    if (f.nu > 0) { res.appendChild(el('br')); res.appendChild(el('b', { text: 'χ²/ν: ' })); res.appendChild(document.createTextNode(String(g(f.chi2 / f.nu))));
+      res.appendChild(el('br')); res.appendChild(el('b', { text: 'P(χ² this large or larger): ' })); res.appendChild(document.createTextNode(String(g(f.P)))); }
+    box.appendChild(res);
+    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points with error bars from ${errName}. Weighted least squares: each point counts with weight 1/σ², all ${k} parameters free${f.kind ? ', found by a search over starting values and then iteration (Levenberg–Marquardt)' : ''}. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − ${k}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. ${extra || ''} What the numbers tell you is for you to work out.`.replace(/  +/g, ' ') }));
+  }
   /* the parameters of a WSF.fit curve, each with its unit, and how the fit was made */
   const FIT_UNITS = { exp: 'yxy', rise: 'yxy', log: 'yy', power: 'p-', sine: 'yiry', damped: 'yxiry', resonance: 'yx-', gauss: 'yxxy', slit: 'yxxy' };
   const FIT_NOTES = {
@@ -1917,6 +1982,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${f.form}, with y = ${P.yName} and x = ${P.xName}`));
     f.names.forEach((nm, i) => { res.appendChild(el('br')); res.appendChild(el('b', { text: nm + ': ' })); res.appendChild(document.createTextNode(pm(f.p[i], f.se[i], U[FIT_UNITS[f.kind][i]], f.n, f.exact, f.npar))); });
     box.appendChild(res);
+    if (f.weighted) { chiText(box, f, P.errName, FIT_NOTES[f.kind]); return; }
     box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares fit with all ${f.npar} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − ${f.npar} degrees of freedom) and the curvature of the fit at its best values. ${FIT_NOTES[f.kind]} What the parameters tell you is for you to work out.`.replace(/  +/g, ' ') }));
   }
 

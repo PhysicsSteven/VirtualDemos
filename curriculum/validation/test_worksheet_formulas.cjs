@@ -94,4 +94,30 @@ test('fit: refuses x ≤ 0 for a power law or a logarithm, and too few distinct 
   assert.equal(WSF.fit('power', [0, 1, 2], [0, 1, 4]).bad, 'positive'); assert.equal(WSF.fit('log', [-1, 1, 2], [0, 1, 2]).bad, 'positive');
   assert.equal(WSF.fit('sine', [0, 1, 2, 2], [0, 1, 0, 0]).bad, 'few');
 });
+test('χ² probabilities: Q(ν/2, χ²/2) at the textbook 5 % points (3.841 for ν = 1, 18.307 for ν = 10) and e⁻¹ for χ² = 2, ν = 2', () => {
+  rel(WSF.chiP(3.841459, 1), 0.05, 1e-5); rel(WSF.chiP(18.307038, 10), 0.05, 1e-5); rel(WSF.chiP(2, 2), Math.exp(-1), 1e-12);
+  rel(WSF.chiP(100, 100), 0.481192, 1e-4); assert.equal(WSF.chiP(0, 3), 1);
+});
+test('weighted line: equal error bars give the unweighted slope and intercept, uncertainties σ/√Sxx, and χ² = SSE/σ²', () => {
+  const xs = [1, 2, 3, 4, 5], ys = [2.1, 3.9, 6.2, 7.8, 10.1], s = 0.2, f = WSF.wline(xs, ys, xs.map(() => s));
+  const mx = 3, sxx = 10, b = xs.reduce((q, x, i) => q + (x - mx) * ys[i], 0) / sxx, a = ys.reduce((q, y) => q + y, 0) / 5 - b * mx;
+  rel(f.b, b, 1e-12); rel(f.a, a, 1e-12); rel(f.seB, s / Math.sqrt(sxx), 1e-12); rel(f.seA, s * Math.sqrt(1 / 5 + mx * mx / sxx), 1e-12);
+  rel(f.chi2, f.res.reduce((q, r) => q + r * r, 0) / (s * s), 1e-12); assert.equal(f.nu, 3);
+});
+test('weighted line: a point with a huge error bar barely counts; Bevington closed form a = (ΣwΣwxy …)/Δ', () => {
+  const xs = [0, 1, 2, 3], ys = [1, 3, 5, 20], sig = [0.1, 0.1, 0.1, 1e4], f = WSF.wline(xs, ys, sig);
+  rel(f.b, 2, 1e-6); rel(f.a, 1, 1e-6);
+  const w = sig.map((s) => 1 / (s * s)), S = w.reduce((q, v) => q + v, 0), Sx = xs.reduce((q, x, i) => q + w[i] * x, 0), Sy = ys.reduce((q, y, i) => q + w[i] * y, 0);
+  const Sxx = xs.reduce((q, x, i) => q + w[i] * x * x, 0), Sxy = xs.reduce((q, x, i) => q + w[i] * x * ys[i], 0), D = S * Sxx - Sx * Sx;
+  rel(f.a, (Sxx * Sy - Sx * Sxy) / D, 1e-10); rel(f.b, (S * Sxy - Sx * Sy) / D, 1e-10); rel(f.seA, Math.sqrt(Sxx / D), 1e-10); rel(f.seB, Math.sqrt(S / D), 1e-10);
+});
+test('weighted quadratic recovers exact coefficients with χ² = 0; weighted exponential fit gives χ² from the error bars', () => {
+  const xs = [0, 1, 2, 3, 4], q = WSF.wquad(xs, xs.map((x) => 1 + 2 * x - 0.5 * x * x), xs.map(() => 0.1));
+  rel(q.a, 1, 1e-9); rel(q.b, 2, 1e-9); rel(q.c, -0.5, 1e-9); assert(q.chi2 < 1e-15 && q.nu === 2);
+  const tx = [0, 1, 2, 3, 4, 5, 6, 7], noise = [0.03, -0.02, 0.01, -0.04, 0.02, 0.01, -0.01, 0.02], ty = tx.map((x, i) => 0.5 + 4 * Math.exp(-x / 2.5) + noise[i]);
+  const e = WSF.fit('exp', tx, ty, tx.map(() => 0.03));
+  assert(Math.abs(e.p[1] - 2.5) < 3 * e.se[1], 'τ within three standard errors'); assert(e.weighted && e.nu === 5);
+  rel(e.chi2, e.res.reduce((s, r) => s + r * r, 0) / 0.0009, 1e-9);
+  const u = WSF.fit('exp', tx, ty); rel(e.p[0], u.p[0], 1e-6, 'equal error bars give the unweighted fit');
+});
 console.log(`${n} tests passed`);
