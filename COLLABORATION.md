@@ -6445,3 +6445,38 @@ folded into existing demos, no new worksheet. GPT, please verify the physics and
   geometry, find the least, check n₁ sin θ₁ = n₂ sin θ₂; needs a Fermat table and an alt map); Ripple Tank, side view part (b/a at
   the surface against kd over the depth and frequency sliders, fit to tanh kd); Chladni worksheet, bar part (f against mode
   number, f/f₁ against ((2n + 1)/3)², the large n limit of (βL)² ratios).
+
+## 2026-10-31 · Claude · Rounds 2 and 3, Group B: Rainbows (new demo)
+
+Steve (17:54): "Let's run round 2 and 3". Plan #14 of the PhET Parity Plan (`round2-3/groups-2026-10-31.md` in the project files), its own
+demo by Steve's call (14:11). No worksheet. GPT, please verify the physics and numbers below (all from the core and its tests).
+- **demos/rainbows.html**, two views. **One drop**: a ray at impact parameter b through a sphere of water (Daimon and Masumura 2007 at
+  20 °C, the Optics Bench's formula: n = 1.3334 at 589 nm, 1.3436 at 400 nm, 1.3305 at 700 nm) with 1 to 4 reflections inside, one
+  wavelength, white light (seven colors) or twenty parallel rays, the light that leaves at each surface (Fresnel, (1 − R)² Rᵏ for s
+  and p), an observer's eye on the outgoing ray with θ from the antisolar point; below it D against i with the least deviation
+  marked. Sweep the ray moves b from 0 to 1 (the opening state at b = 0.5 is not at the end, so the first press moves it).
+  **The sky**: the rain's brightness against θ by ray tracing (12 000 rays per wavelength evenly over the drop's cross section,
+  400 to 700 nm every 5 nm, outside reflection plus k = 1 and 2, per unit solid angle, averaged over the Sun's 0.53° disk; sunlight a
+  5772 K blackbody; CIE 1931 (Wyman fit) to sRGB, desaturated out of gamut) painted on an azimuth and elevation map with the Sun's
+  height 0 to 60°; marks at 42° and 51° and the antisolar point; a brightness graph with the color strip. **3D** (vd3kit): you, the
+  Sun, a curtain of rain 30 to 33 m away (12 000 drops drawn far larger than life, falling at 4 m/s, colored by the light each sends
+  to the eye), the 42° and 51° cones drawn to the curtain, Walk sideways. Lower the sun animates the height.
+- Numbers: least deviation 137.97° at i = 59.39° (b = 0.861), bow 42.03°; secondary D 230.98°, 50.98°; third order 138.39° from the
+  antisolar point (41.6° from the Sun). Primary 40.57° (400 nm) to 42.44° (700 nm), secondary 50.24° (red) to 53.62° (violet), dark
+  band 7.80° red to red. Bow ray carries 4.56% of the light (s 8.78%, p 0.34%; over 90% polarized), secondary 1.94%. Sky profile
+  (primary peak = 1): 0.06 near the antisolar point, 0.16 at 30°, peak at 41.6°, 0.013 from 43° to 50°, secondary peak 0.14 at
+  51.5°. Top of the bow = θ − h.
+- Tests `test_rainbows.cjs` (9): water's index (and within 4e-4 of the handbook 1.33299), the path (points on the drop, angle r at both
+  ends of each chord), the leaving direction against an independent vector trace, least deviation against a brute force search for
+  k = 1 to 4, the bow angles and color order, no k = 1 light beyond the bow or k = 2 inside the secondary, Fresnel at normal incidence
+  and Brewster, all orders summing to 1, energy in the sky profile, the peak and the dark band, sky geometry.
+- Registered: catalog (Optics, after Color Vision), textbook map (demo entry, Vol 3 §1.5; courses Physics II and Astronomy, Astronomy
+  unit "The sky from Earth"), topics Optics and The sky, QR, Reset all, thumbnails (OVERRIDES entry), courses.py rerun, notes
+  (notes/src/rainbows.md, Q1 to Q8) and the key in TeacherKeys demo-keys. One line links from Optics Bench and Color Vision (their Lab
+  folds). What's new entry. No How this works video (no worksheet).
+- Checks: all Node suites pass; vdcheck `--only after` 0 problems on rainbows, optics-bench and color-vision; `--only clip` 0 cut off;
+  looked at 1280 and 390 px, dark and light, every setup, 3D with three.js served locally.
+- Noticed, not touched: `python3 tools/notes.py` (all) rewrites notes/ideal-gas.html without its Cold walls class step, so
+  notes/src/ideal-gas.md is behind the built page on main. Left the built page as it was.
+- Worksheet part ideas (not built): a short Rainbows worksheet or a part in an optics worksheet: measure θ against b and find the least
+  deviation at three wavelengths, test cos² i = (n² − 1)/3, and the top of the bow against the Sun's height (slope −1, intercept 42°).

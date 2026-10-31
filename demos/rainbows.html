@@ -1,0 +1,707 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Rainbows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the outdoor panels (dark in both themes, so spectral colors show), the Set up card's place */
+:root { --room: #0b0e14; --roomInk: #d8dee8; --roomMuted: #8b95a5; --roomLine: #2a3240; --drop: #7fb2e6; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(480px, 1fr); min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 540px; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 420px) { .scene { height: 480px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rainbows</h1>
+      <p>Follow one ray of sunlight into a raindrop, around the back and out again, and see why the light leaving the drop piles up near 42° from the point straight opposite the Sun. Then step outside: the primary bow, the fainter secondary bow with its colors reversed, the dark band between them, and the cone of drops that makes your own rainbow.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">degrees, nm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rainbows.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rainbows.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM14 2h1v1h-1zM18 2h2v1h-2zM23 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h2v1h-2zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h5v1h-5zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h9v1h-9zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h2v1h-2zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h3v1h-3zM13 11h5v1h-5zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM5 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM14 13h2v1h-2zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM4 14h1v1h-1zM7 14h4v1h-4zM12 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h1v1h-1zM14 15h3v1h-3zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM7 16h2v1h-2zM14 16h2v1h-2zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h2v1h-2zM7 17h1v1h-1zM9 17h4v1h-4zM14 17h1v1h-1zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h1v1h-1zM7 18h3v1h-3zM15 18h3v1h-3zM20 18h5v1h-5zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h3v1h-3zM6 20h4v1h-4zM11 20h1v1h-1zM15 20h2v1h-2zM22 20h5v1h-5zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h1v1h-1zM9 21h2v1h-2zM12 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM8 22h1v1h-1zM13 22h2v1h-2zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM6 23h2v1h-2zM10 23h1v1h-1zM12 23h1v1h-1zM14 23h3v1h-3zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h4v1h-4zM7 24h3v1h-3zM11 24h1v1h-1zM13 24h3v1h-3zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h2v1h-2zM9 25h2v1h-2zM14 25h2v1h-2zM17 25h9v1h-9zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h1v1h-1zM4 26h5v1h-5zM12 26h3v1h-3zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h2v1h-2zM9 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h3v1h-3zM8 28h1v1h-1zM12 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM13 29h2v1h-2zM17 29h1v1h-1zM21 29h3v1h-3zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h4v1h-4zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h1v1h-1zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h2v1h-2zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM16 34h1v1h-1zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h4v1h-4zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h6v1h-6zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h3v1h-3zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="drop" aria-pressed="true">One drop</button>
+          <button type="button" data-v="sky" aria-pressed="false">The sky</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden>
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+        </div>
+        <button type="button" class="spin attn" id="play">Sweep the ray</button>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A raindrop with a ray of sunlight entering, reflecting inside and leaving toward an observer, and a graph of how much the ray is turned against where it enters. In the sky view, a rain shower with the primary and secondary rainbows around the point opposite the Sun. Arrow keys move the ray or the Sun; Space plays."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">The ray</span>
+        <div id="dropBox">
+          <div class="seg" role="group" aria-label="Reflections inside the drop" id="kSeg">
+            <button type="button" data-k="1" aria-pressed="true">1 reflection</button>
+            <button type="button" data-k="2" aria-pressed="false">2</button>
+            <button type="button" data-k="3" aria-pressed="false">3</button>
+            <button type="button" data-k="4" aria-pressed="false">4</button>
+          </div>
+          <div><div class="slider-head"><label for="sB">Where it enters, b</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="0.999" step="0.001"></div>
+          <div><div class="slider-head"><label for="sL">Wavelength λ</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="400" max="700" step="1"></div>
+          <label class="check"><input type="checkbox" id="cWhite"><span>White light (seven colors)</span></label>
+          <label class="check"><input type="checkbox" id="cMany"><span>Many parallel rays</span></label>
+          <label class="check"><input type="checkbox" id="cLost"><span>Light leaving at each surface</span></label>
+        </div>
+        <div id="skyBox" hidden>
+          <div><div class="slider-head"><label for="sH">Sun above the horizon</label><output id="oH" for="sH"></output></div><input type="range" id="sH" min="0" max="60" step="0.5"></div>
+          <div id="walkRow" hidden><div class="slider-head"><label for="sW">Walk sideways</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="-12" max="12" step="0.5"></div>
+          <label class="check"><input type="checkbox" id="cMarks"><span>Mark 42° and 51° and the antisolar point</span></label>
+          <label class="check" id="graphRow"><input type="checkbox" id="cGraph"><span>Brightness across the sky</span></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="one" aria-pressed="true">One ray, one reflection</button>
+          <button type="button" data-p="bowray" aria-pressed="false">The rainbow ray</button>
+          <button type="button" data-p="many" aria-pressed="false">Many rays: where they pile up</button>
+          <button type="button" data-p="white" aria-pressed="false">White light splits</button>
+          <button type="button" data-p="second" aria-pressed="false">Two reflections: secondary bow</button>
+          <button type="button" data-p="third" aria-pressed="false">Three reflections: toward the Sun</button>
+          <button type="button" data-p="evening" aria-pressed="false">Evening shower, Sun at 10°</button>
+          <button type="button" data-p="sunset" aria-pressed="false">Sun on the horizon</button>
+          <button type="button" data-p="high" aria-pressed="false">Sun higher than 42°</button>
+          <button type="button" data-p="band" aria-pressed="false">Alexander's dark band</button>
+          <button type="button" data-p="cone" aria-pressed="false">Your own cone of drops (3D)</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the bow angles (predict them first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">sin i = n sin r   D = 2(i − r) + k(180° − 2r)   least D where cos² i = (n² − 1)/(k² + 2k)</p>
+        <p class="hint">Model: a raindrop is a sphere of pure water at 20 °C, its index n(λ) from the Sellmeier formula of Daimon and Masumura (2007), as in the Optics Bench (n = 1.3334 at 589 nm, 1.3436 at 400 nm, 1.3305 at 700 nm). Sunlight arrives as parallel rays (geometric optics). A ray at impact parameter b (its distance from the drop's center line, as a fraction of the radius) meets the surface at i with sin i = b, refracts by Snell's law, reflects k times inside and leaves; it has turned through D = 2(i − r) + k(180° − 2r) and leaves at θ from the antisolar point, the point in the sky straight opposite the Sun (θ = 180° − D for one reflection, D − 180° for two). The ray of least deviation (Descartes 1637) satisfies cos² i = (n² − 1)/(k² + 2k): near it many rays leave at almost the same angle, and that pile up is the bow. The share of light on each ray is from the Fresnel equations for light polarized across (s) and along (p) the plane of the ray, (1 − R)² Rᵏ, with R the same at every surface of the ray (Stokes relations); sunlight is unpolarized, an even mix. The sky picture adds, at each angle from the antisolar point, the light of every ray from an evenly lit drop (12 000 rays per wavelength, 400 to 700 nm every 5 nm; light reflected off the outside, one reflection and two reflections inside), divided by the solid angle it spreads into, and averages it over the Sun's disk, 0.53° across. Sunlight is a blackbody at 5772 K (the Sun's effective temperature). Colors use the CIE 1931 color matching functions (fit of Wyman, Sloan and Shirley 2013) and sRGB; colors outside the screen's range are desaturated, so the bow looks paler than in life. Left out: diffraction (Airy theory), which makes the real bow slightly wider and adds the faint supernumerary bows inside the primary; drops flattened by the air (large drops); light scattered twice; the sky's own light. The cloud behind and the hills are drawn, not computed. The sky picture is a map of azimuth across and elevation up, like a panorama photograph, so circles look slightly wider near the top. In 3D the shower is a curtain of rain 30 to 33 m in front of you, its drops drawn far larger than life (and larger still where they send you more light), falling at 4 m/s, about the terminal speed of a 1 mm drop (Gunn and Kinzer 1949); each drop's color is the light it sends to the observer's eye.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Rainbows: light through a spherical raindrop and the bows it makes in the sky. Runs in Node: curriculum/validation/test_rainbows.cjs.
+     Angles in radians unless a name ends in Deg; b is the impact parameter as a fraction of the drop radius; k counts the reflections
+     inside the drop (k = 0 passes straight through, 1 is the primary bow, 2 the secondary). */
+  var RB_PI = Math.PI, RB_DEG = Math.PI / 180;
+  /* water at 20 °C: Sellmeier formula of Daimon and Masumura (2007), Applied Optics 46, 3811, λ in µm (as optics-bench.html) */
+  var RB_B = [5.684027565e-1, 1.726177391e-1, 2.086189578e-2, 1.130748688e-1], RB_C = [5.101829712e-3, 1.821153936e-2, 2.620722293e-2, 1.069792721e1];
+  function rbN(lamNm) { var L = (lamNm / 1000) * (lamNm / 1000), s = 1; for (var j = 0; j < 4; j++) s += RB_B[j] * L / (L - RB_C[j]); return Math.sqrt(s); }
+  /* angle of incidence i and of refraction r (Snell: sin i = n sin r) for a ray at impact parameter b */
+  function rbAngles(b, n) { var i = Math.asin(Math.min(1, Math.abs(b))); return { i: i, r: Math.asin(Math.sin(i) / n) }; }
+  /* total turning of the ray, clockwise when the light comes in above the center: D = 2(i − r) + k(π − 2r) */
+  function rbDev(b, n, k) { var a = rbAngles(b, n); return 2 * (a.i - a.r) + k * (RB_PI - 2 * a.r); }
+  /* angle between the ray leaving the drop and the antisolar direction (straight away from the Sun), 0 to π */
+  function rbSky(b, n, k) { var D = rbDev(b, n, k); return RB_PI - Math.acos(Math.cos(D)); }
+  /* light reflected off the outside of the drop: it turns by π − 2i, so it leaves 2i from the antisolar direction */
+  function rbSkyRefl(b) { return 2 * Math.asin(Math.min(1, Math.abs(b))); }
+  /* the stationary ray (minimum deviation, Descartes 1637): cos² i = (n² − 1)/(k² + 2k); its angle from the antisolar point is the bow */
+  function rbBow(n, k) {
+    var i = Math.acos(Math.sqrt((n * n - 1) / (k * k + 2 * k))), b = Math.sin(i), D = rbDev(b, n, k);
+    return { i: i, b: b, r: Math.asin(b / n), D: D, theta: rbSky(b, n, k) };
+  }
+  /* Fresnel reflectance for light polarized perpendicular (s) and parallel (p) to the plane of incidence, air to water at i.
+     The reflectance inside at r is the same (Stokes relations), so one pair serves every surface the ray meets. */
+  function rbFresnel(i, n) {
+    var r = Math.asin(Math.sin(i) / n), ci = Math.cos(i), cr = Math.cos(r);
+    var rs = (ci - n * cr) / (ci + n * cr), rp = (n * ci - cr) / (n * ci + cr);
+    return { s: rs * rs, p: rp * rp };
+  }
+  /* share of the light arriving on a ray that leaves after k reflections inside: (1 − R)² R^k, for each polarization.
+     k = −1 means the light reflected off the outside (share R). Returns { s, p, avg } (avg for unpolarized sunlight). */
+  function rbShare(b, n, k) {
+    var R = rbFresnel(rbAngles(b, n).i, n), f = function (x) { return k < 0 ? x : (1 - x) * (1 - x) * Math.pow(x, k); };
+    var s = f(R.s), p = f(R.p); return { s: s, p: p, avg: (s + p) / 2 };
+  }
+  /* the path through the drop of unit radius centered at the origin, light moving in +x: points where the ray meets the surface
+     (entry, each reflection, exit) and the direction it leaves in. Successive points step round by −(π − 2r). */
+  function rbPath(b, n, k) {
+    var a = rbAngles(b, n), sg = b < 0 ? -1 : 1, al = sg * (RB_PI - a.i), pts = [];
+    for (var j = 0; j <= k + 1; j++) { pts.push([Math.cos(al), Math.sin(al)]); al -= sg * (RB_PI - 2 * a.r); }
+    var D = rbDev(b, n, k); return { pts: pts, out: [Math.cos(-sg * D), Math.sin(-sg * D)], D: D };
+  }
+  /* CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan and Shirley 2013), as color-vision.html */
+  function rbGl(x, mu, s1, s2) { var t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); }
+  function rbCmf(l) {
+    return [1.056 * rbGl(l, 599.8, 37.9, 31.0) + 0.362 * rbGl(l, 442.0, 16.0, 26.7) - 0.065 * rbGl(l, 501.1, 20.4, 26.2),
+      0.821 * rbGl(l, 568.8, 46.9, 40.5) + 0.286 * rbGl(l, 530.9, 16.3, 31.1),
+      1.217 * rbGl(l, 437.0, 11.8, 36.0) + 0.681 * rbGl(l, 459.0, 26.0, 13.8)];
+  }
+  /* XYZ to linear sRGB (IEC 61966-2-1) */
+  function rbLin(xyz) {
+    return [3.2406 * xyz[0] - 1.5372 * xyz[1] - 0.4986 * xyz[2], -0.9689 * xyz[0] + 1.8758 * xyz[1] + 0.0415 * xyz[2], 0.0557 * xyz[0] - 0.2040 * xyz[1] + 1.0570 * xyz[2]];
+  }
+  /* sunlight: a blackbody at the Sun's effective temperature 5772 K (IAU 2015 nominal), power per unit wavelength, peak scaled to 1 */
+  function rbSun(lamNm) { var x = lamNm * 1e-9, c2 = 1.438776877e-2, T = 5772, xp = 2.897771955e-3 / T; return Math.pow(xp / x, 5) * (Math.exp(c2 / (xp * T)) - 1) / (Math.exp(c2 / (x * T)) - 1); }
+  /* Brightness of a sunlit rain shower against the angle θ from the antisolar point, by ray tracing: sunlight falls evenly over
+     each drop's cross section, so the impact parameter is sampled evenly in b²; each ray adds its share to the θ bin it lands in
+     (outside reflection, k = 1 and k = 2), divided by the bin's solid angle 2π sin θ dθ. Then smoothed over the Sun's disk
+     (0.53° across). Returns per bin the XYZ of the light (relative units) and the spectral radiance at a few wavelengths.
+     opt: { dDeg (bin width), maxDeg, N (rays per wavelength), lam0, lam1, dLam, sunDeg, orders } */
+  function rbProfile(opt) {
+    opt = opt || {}; var dD = opt.dDeg || 0.05, nb = Math.round((opt.maxDeg || 90) / dD), N = opt.N || 12000;
+    var l0 = opt.lam0 || 380, l1 = opt.lam1 || 700, dl = opt.dLam || 5, orders = opt.orders || [-1, 1, 2], sunR = (opt.sunDeg == null ? 0.53 : opt.sunDeg) / 2;
+    var X = new Float64Array(nb), Y = new Float64Array(nb), Z = new Float64Array(nb), P = new Float64Array(nb), lams = [];
+    var sa = new Float64Array(nb); for (var j = 0; j < nb; j++) sa[j] = 2 * RB_PI * (Math.cos(j * dD * RB_DEG) - Math.cos((j + 1) * dD * RB_DEG));
+    for (var l = l0; l <= l1 + 1e-9; l += dl) {
+      var n = rbN(l), c = rbCmf(l), w = rbSun(l) * dl / N; lams.push(l);
+      for (var q = 0; q < N; q++) {
+        var b = Math.sqrt((q + 0.5) / N), a = rbAngles(b, n), R = rbFresnel(a.i, n);
+        for (var o = 0; o < orders.length; o++) {
+          var k = orders[o], th = k < 0 ? 2 * a.i : RB_PI - Math.acos(Math.cos(2 * (a.i - a.r) + k * (RB_PI - 2 * a.r)));
+          var sh = k < 0 ? (R.s + R.p) / 2 : ((1 - R.s) * (1 - R.s) * Math.pow(R.s, k) + (1 - R.p) * (1 - R.p) * Math.pow(R.p, k)) / 2;
+          var bin = Math.floor(th / RB_DEG / dD); if (bin < 0 || bin >= nb) continue;
+          var e = sh * w; X[bin] += e * c[0]; Y[bin] += e * c[1]; Z[bin] += e * c[2]; P[bin] += sh / N;
+        }
+      }
+    }
+    for (j = 0; j < nb; j++) { X[j] /= sa[j]; Y[j] /= sa[j]; Z[j] /= sa[j]; }
+    /* the Sun's disk: each direction sees the profile averaged over a disk of radius sunR; across θ that is a weight ∝ √(1 − (x/sunR)²) */
+    var sm = function (A) {
+      if (sunR <= 0) return A; var m = Math.ceil(sunR / dD), wt = [], ws = 0, out = new Float64Array(A.length);
+      for (var u = -m; u <= m; u++) { var x = u * dD / sunR, v = Math.abs(x) < 1 ? Math.sqrt(1 - x * x) : 0; wt.push(v); ws += v; }
+      for (var i2 = 0; i2 < A.length; i2++) { var s = 0, sw = 0; for (u = -m; u <= m; u++) { var jj = i2 + u; if (jj < 0 || jj >= A.length) continue; s += A[jj] * wt[u + m]; sw += wt[u + m]; } out[i2] = s / sw; }
+      return out;
+    };
+    return { dDeg: dD, n: nb, X: sm(X), Y: sm(Y), Z: sm(Z), power: P, lams: lams };
+  }
+  /* the antisolar direction for the Sun at elevation h behind an observer facing +y (x right, z up), and the angle of any
+     direction (az from straight ahead, el above the horizon) from it: cos θ = cos el cos az cos h − sin el sin h */
+  function rbAnti(h) { return [0, Math.cos(h), -Math.sin(h)]; }
+  function rbThetaAt(az, el, h) { var c = Math.cos(el) * Math.cos(az) * Math.cos(h) - Math.sin(el) * Math.sin(h); return Math.acos(Math.max(-1, Math.min(1, c))); }
+  function rbThetaVec(d, h) { var L = Math.hypot(d[0], d[1], d[2]) || 1, A = rbAnti(h); return Math.acos(Math.max(-1, Math.min(1, (d[0] * A[0] + d[1] * A[1] + d[2] * A[2]) / L))); }
+  /* the highest point of a bow of angular radius θ: θ − h above the horizon (below it when the Sun is higher than θ) */
+  function rbTop(theta, h) { return theta - h; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const DEG = Math.PI / 180, d = (x) => x / DEG;
+  const WHITE7 = [700, 620, 585, 545, 500, 465, 420];
+  const PRESETS = {
+    one: { view: 'drop', k: 1, b: 0.5, lam: 589, white: false, many: false, lost: false,
+      hint: 'A ray of yellow light (589 nm) enters the drop halfway between its center line and its edge (b = 0.5). It bends toward the normal, reflects once off the back and leaves heading back toward the Sun\'s side, turned by about 152°: 28° away from the antisolar point. Press Sweep the ray and watch the graph: the turning angle D falls to a least value and rises again.' },
+    bowray: { view: 'drop', k: 1, b: 'bow', lam: 589, white: false, many: false, lost: true,
+      hint: 'The rainbow ray: at b = 0.861 (i = 59.4°) the deviation is least, 137.97°, so this ray leaves 42.03° from the antisolar point. Rays a little above or below it leave at almost the same angle. Only about 4.5% of the light on this ray reaches the observer: most passes out through the back (the faint rays), and what is left is strongly polarized, since the reflection inside is close to Brewster\'s angle.' },
+    many: { view: 'drop', k: 1, b: 'bow', lam: 650, white: false, many: true, lost: false,
+      hint: 'Twenty rays of red light (650 nm), evenly spaced across the top half of the drop. Count where they leave: the five rays from b = 0.74 to 0.93 all come out between 39.4° and 42.3°, while the other fifteen spread from 3° to 37°. That pile up near the least deviation is the bow, and nothing at all leaves beyond it.' },
+    white: { view: 'drop', k: 1, b: 'bow', lam: 589, white: true, many: false, lost: false,
+      hint: 'White sunlight on the rainbow ray. Water bends violet a little more than red (n = 1.3436 at 400 nm, 1.3305 at 700 nm), so each color has its own least deviation: red leaves at 42.4°, violet at 40.6°. Red light reaches the eye from drops higher in the sky, so the primary bow is red on the outside.' },
+    second: { view: 'drop', k: 2, b: 'bow', lam: 589, white: true, many: false, lost: false,
+      hint: 'Two reflections inside. The ray enters near the bottom of the drop, goes round twice and leaves turned by about 231°, which puts it 51° from the antisolar point. Now violet is turned more and leaves farther out (53.6°), red nearer (50.2°): the secondary bow has its colors reversed. Each reflection keeps only a few percent of the light, so it is fainter.' },
+    third: { view: 'drop', k: 3, b: 'bow', lam: 589, white: true, many: false, lost: false,
+      hint: 'Three reflections turn the ray by about 318°: it leaves 138.4° from the antisolar point, which is 41.6° from the Sun itself. A third order bow circles the Sun, lost in its glare and far fainter (each reflection inside keeps only a few percent of the light); it was first photographed only in 2011.' },
+    evening: { view: 'sky', dim: 'flat', h: 10, marks: true, graph: false,
+      hint: 'An evening shower in the east with the Sun 10° up behind you in the west. The antisolar point (where the shadow of your head points) is 10° below the horizon, and the primary bow is a circle of 42° round it, so its top stands 32° up. Outside it, at 51°, is the fainter secondary with red on the inside. The sky inside the primary is brighter than outside it. Press Lower the sun.' },
+    sunset: { view: 'sky', dim: 'flat', h: 0, marks: false, graph: false,
+      hint: 'With the Sun on the horizon the antisolar point is on the horizon too, so both bows are full half circles: the primary stands 42° high and the secondary 51°. This is the tallest rainbow anyone on the ground can see.' },
+    high: { view: 'sky', dim: 'flat', h: 45, marks: true, graph: false,
+      hint: 'The Sun 45° up: the antisolar point is 45° below the horizon, deeper than the bow\'s 42° radius, so the primary bow is below the ground and cannot be seen; only the top of the secondary peeks over the horizon. This is why rainbows are seen in the morning and late afternoon, not near noon in summer. (From an airplane or a hose in the garden, with drops below you, the bow still appears.)' },
+    band: { view: 'sky', dim: 'flat', h: 8, marks: true, graph: true,
+      hint: 'Alexander\'s dark band (Alexander of Aphrodisias, about 200 AD). Light with one reflection leaves only inside 42°, light with two reflections only outside 51°, so between them the rain sends back nothing but the little light reflected off the drops\' outsides. The graph under the sky shows the brightness against the angle from the antisolar point: bright inside the primary, the sharp primary edge, the dark band, the secondary.' },
+    cone: { view: 'sky', dim: '3d', h: 15, walk: 0, marks: true, graph: false,
+      hint: 'In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of 42° around the line from the Sun through your eye send you the primary colors, and on a cone of 51° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops.' },
+  };
+  const S = { preset: 'one', view: 'drop', k: 1, b: 0.5, lam: 589, white: false, many: false, lost: false, h: 10, walk: 0, marks: true, graph: false, blind: false,
+    play: false, dim: 'flat' };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null, prof = null, skyImg = null, skyKey = '', v3 = null, G3 = null;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const splitOr = VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} }));
+  /* dividers (VD.split, demos/lib/vd.js): the drop above its graph; the sky above its brightness graph */
+  const SPL = splitOr(can, { key: 'drop', axis: () => (S.view === 'drop' ? 'y' : null), def: () => 0.62, min: 0.4, max: 0.8, label: 'Divider between the drop and its graph', onChange: () => drawAll() });
+  const SPL2 = splitOr(can, { key: 'sky', axis: () => (S.view === 'sky' && S.graph && !(v3 && v3.is3d()) ? 'y' : null), def: () => 0.74, min: 0.5, max: 0.85, label: 'Divider between the sky and the brightness graph', onChange: () => { skyKey = ''; drawAll(); } });
+  const f = (v, n = 2) => (!isFinite(v) ? '—' : v.toFixed(n).replace('-', '−'));
+  const mono = () => `${T.mono}, monospace`;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), room: g('--room'), rInk: g('--roomInk'), rMuted: g('--roomMuted'), rLine: g('--roomLine'), drop: g('--drop'), mono: g('--font-mono') || 'JetBrains Mono' }; }
+  const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+  /* the color of one wavelength at full saturation the screen can show */
+  function specRGB(l) { let [r, g, b] = rbLin(rbCmf(l)); const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; } const mx = Math.max(r, g, b) || 1; return [r, g, b].map((v) => Math.round(255 * gam(Math.max(0, v / mx)))); }
+  const rgbs = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const bowB = (lam, k) => rbBow(rbN(lam), k).b;
+
+  // ---------- the sky's brightness against the angle from the antisolar point (computed once) ----------
+  const CLOUD = [0.030, 0.034, 0.042];   /* the dark cloud behind the rain, linear sRGB; drawn, not computed */
+  function profile() {
+    if (prof) return prof;
+    const P = rbProfile({ N: 12000, dLam: 5, maxDeg: 180, dDeg: 0.05 }), n = P.n, R = new Float32Array(n), G = new Float32Array(n), B = new Float32Array(n);
+    let peak = 0; for (let j = Math.round(38 / P.dDeg); j < Math.round(44 / P.dDeg); j++) peak = Math.max(peak, P.Y[j]);
+    const ex = 0.75 / peak;   /* exposure: the brightest point of the primary bow at 75% of the screen's white */
+    for (let j = 0; j < n; j++) { const c = rbLin([P.X[j], P.Y[j], P.Z[j]]); R[j] = c[0] * ex; G[j] = c[1] * ex; B[j] = c[2] * ex; }
+    const Yn = new Float32Array(n); for (let j = 0; j < n; j++) Yn[j] = P.Y[j] / peak;
+    prof = { P, R, G, B, Yn, dD: P.dDeg, n };
+    return prof;
+  }
+  /* screen color (0 to 1, sRGB) of rain seen θ from the antisolar point, over the cloud; amt scales the rain's light */
+  function rainColor(thDeg, amt, out) {
+    const p = profile(), j = Math.min(p.n - 1, Math.max(0, Math.floor(thDeg / p.dD)));
+    let r = CLOUD[0] + amt * p.R[j], g = CLOUD[1] + amt * p.G[j], b = CLOUD[2] + amt * p.B[j];
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    out[0] = gam(Math.min(1, r)); out[1] = gam(Math.min(1, g)); out[2] = gam(Math.min(1, b)); return out;
+  }
+  /* bow edges for the readouts: least deviation angles at 400 and 700 nm */
+  const BOWS = (() => { const o = {}; for (const k of [1, 2, 3]) o[k] = { v: d(rbBow(rbN(400), k).theta), y: d(rbBow(rbN(589), k).theta), r: d(rbBow(rbN(700), k).theta) }; return o; })();
+
+  // ---------- layout ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const right = cardOn ? card.offsetWidth + 24 : 0;
+    geo = { p, cardOn, right, pad: 10 * p };
+    if (S.view === 'drop') {
+      const top = H * SPL.f();
+      geo.pic = { x: geo.pad, y: geo.pad, w: W - 2 * geo.pad, h: top - 1.5 * geo.pad };
+      geo.gr = { x: geo.pad, y: top + 0.5 * geo.pad, w: W - 2 * geo.pad, h: H - top - 1.5 * geo.pad };
+      const aw = geo.pic.w - right;   /* the part of the picture not under the card */
+      geo.R = Math.max(30, Math.min(geo.pic.h * 0.27, aw * 0.24));
+      geo.c = [geo.pic.x + Math.max(aw * 0.62, geo.R * 2.6), geo.pic.y + geo.pic.h * 0.37];
+    } else {
+      const g = S.graph && !(v3 && v3.is3d());
+      const top = g ? H * SPL2.f() : H;
+      geo.sky = { x: 0, y: 0, w: W, h: top };
+      geo.gr = g ? { x: geo.pad, y: top + 0.5 * geo.pad, w: W - 2 * geo.pad, h: H - top - 1.5 * geo.pad } : null;
+      const elTop = 60, elBot = Math.max(-62, Math.min(-6, -S.h - 6)), s = Math.min(top / (elTop - elBot), W / 100);
+      const m = (top - (elTop - elBot) * s) / 2;
+      geo.s = s; geo.yh = m + elTop * s; geo.cx = geo.cardOn ? (W - right) / 2 : W / 2; geo.elBot = elBot;
+    }
+  }
+
+  // ---------- one drop ----------
+  /* the ray's sign: it enters above the center line (b > 0) or below, whichever sends the light leaving the drop downward,
+     toward an observer below the drop (the picture is a side view with the Sun far to the left) */
+  const sideOf = (k, lam, b) => (Math.sin(rbDev(b, rbN(lam), k)) >= 0 ? 1 : -1);
+  function toPx(q) { return [geo.c[0] + q[0] * geo.R, geo.c[1] - q[1] * geo.R]; }
+  /* the distance along (x, y) from point q (px) to the edge of the picture */
+  function toEdge(q, dir) {
+    const P = geo.pic; let t = 1e9;
+    if (dir[0] > 1e-9) t = Math.min(t, (P.x + P.w - q[0]) / dir[0]); if (dir[0] < -1e-9) t = Math.min(t, (P.x - q[0]) / dir[0]);
+    if (dir[1] > 1e-9) t = Math.min(t, (P.y + P.h - q[1]) / dir[1]); if (dir[1] < -1e-9) t = Math.min(t, (P.y - q[1]) / dir[1]);
+    return Math.max(0, t);
+  }
+  function rayPath(b, lam, k, col, w, alpha, lost) {
+    const n = rbN(lam), sg = sideOf(k, lam, b), path = rbPath(sg * b, n, k), p = geo.p, P = path.pts.map(toPx);
+    ctx.strokeStyle = rgbs(col, alpha); ctx.lineWidth = w; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(geo.pic.x, P[0][1]); P.forEach((q) => ctx.lineTo(q[0], q[1]));
+    const out = [path.out[0], -path.out[1]], E = P[P.length - 1], L = toEdge(E, out);
+    ctx.lineTo(E[0] + out[0] * L, E[1] + out[1] * L); ctx.stroke();
+    if (lost) {   /* light that leaves at each surface instead: off the outside at entry, and out through each reflection point */
+      const a = rbAngles(b, n), R = rbFresnel(a.i, n), Rav = (R.s + R.p) / 2;
+      const seg = (q, ang, share) => { const dir = [Math.cos(ang), -Math.sin(ang)], Ld = Math.min(toEdge(q, dir), geo.R * 1.6);
+        ctx.strokeStyle = rgbs(col, alpha * Math.max(0.18, Math.min(0.6, share * 1.2))); ctx.lineWidth = 1.2 * p; ctx.setLineDash([4 * p, 3 * p]);
+        ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[0] + dir[0] * Ld, q[1] + dir[1] * Ld); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = T.rMuted; ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(`${f(share * 100, 1)}%`, q[0] + dir[0] * Math.min(Ld, geo.R * 0.75) + 2 * p, q[1] + dir[1] * Math.min(Ld, geo.R * 0.75) - 8 * p); };
+      seg(P[0], sg * (Math.PI - 2 * a.i), Rav);   /* reflected off the outside: turned by 180° − 2i the other way */
+      for (let j = 0; j < k; j++) { const D = 2 * (a.i - a.r) + j * (Math.PI - 2 * a.r), sh = rbShare(b, n, j).avg; seg(P[j + 1], -sg * D, sh); }
+    }
+    return { P, out, E, sg, D: path.D };
+  }
+  function drawEye(x, y, dir) {
+    const p = geo.p; ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(dir[1], dir[0]));
+    ctx.fillStyle = '#e8ecf2'; ctx.beginPath(); ctx.ellipse(0, 0, 9 * p, 5.5 * p, 0, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#1b2230'; ctx.beginPath(); ctx.arc(3 * p, 0, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
+  }
+  function drawDrop() {
+    const p = geo.p, P0 = geo.pic, R = geo.R, [cx, cy] = geo.c;
+    ctx.fillStyle = T.room; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(P0.x, P0.y, P0.w, P0.h, 8 * p) : ctx.rect(P0.x, P0.y, P0.w, P0.h); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.rect(P0.x, P0.y, P0.w, P0.h); ctx.clip();
+    /* the drop */
+    const gd = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+    gd.addColorStop(0, 'rgba(160,200,240,0.30)'); gd.addColorStop(1, 'rgba(90,140,200,0.16)');
+    ctx.fillStyle = gd; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(150,190,235,0.75)'; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    ctx.strokeStyle = T.rLine; ctx.setLineDash([3 * p, 4 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(P0.x, cy); ctx.lineTo(P0.x + P0.w, cy); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.rMuted; ctx.font = `${11 * p}px ${mono()}`; ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+    ctx.fillText('sunlight →', P0.x + 8 * p, P0.y + 8 * p);
+    let main = null;
+    if (S.many) {
+      const col = specRGB(S.lam);
+      for (let j = 1; j <= 20; j++) rayPath(j * 0.049, S.lam, S.k, col, 1.1 * p, 0.55, false);
+      main = rayPath(S.b, S.lam, S.k, col, 2.4 * p, 1, S.lost);
+    } else if (S.white) {
+      const sun = [255, 250, 235];
+      WHITE7.forEach((l) => rayPath(S.b, l, S.k, specRGB(l), 1.7 * p, 0.95, false));
+      /* the incoming white ray drawn over the seven, up to the drop */
+      const sg = sideOf(S.k, 589, S.b), y = cy - sg * S.b * R, x = cx - Math.sqrt(Math.max(0, 1 - S.b * S.b)) * R;
+      ctx.strokeStyle = rgbs(sun, 1); ctx.lineWidth = 2.4 * p; ctx.beginPath(); ctx.moveTo(P0.x, y); ctx.lineTo(x, y); ctx.stroke();
+      main = rayPath(S.b, 589, S.k, sun, 0, 0, S.lost);
+    } else main = rayPath(S.b, S.lam, S.k, specRGB(S.lam), 2.4 * p, 1, S.lost);
+    /* the normal and the angles i and r at the entry point */
+    const n = rbN(S.white ? 589 : S.lam), a = rbAngles(S.b, n), E0 = main.P[0], nx = (E0[0] - cx) / R, ny = (E0[1] - cy) / R;
+    ctx.strokeStyle = T.rMuted; ctx.lineWidth = 1 * p; ctx.setLineDash([2 * p, 3 * p]);
+    ctx.beginPath(); ctx.moveTo(E0[0] + nx * R * 0.45, E0[1] + ny * R * 0.45); ctx.lineTo(E0[0] - nx * R * 0.45, E0[1] - ny * R * 0.45); ctx.stroke(); ctx.setLineDash([]);
+    if (S.b > 0.06) {   /* i between the outward normal and the incoming ray (reversed); r between the inward normal and the ray inside */
+      const an = Math.atan2(ny, nx), E1 = main.P[1], ar = Math.atan2(E1[1] - E0[1], E1[0] - E0[0]), rr = R * 0.24;
+      const arcLab = (a0, a1, t) => { let da = a1 - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+        ctx.strokeStyle = T.rInk; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(E0[0], E0[1], rr, a0, a0 + da, da < 0); ctx.stroke();
+        const am = a0 + da / 2; ctx.fillStyle = T.rInk; ctx.fillText(t, E0[0] + Math.cos(am) * (rr + 9 * p), E0[1] + Math.sin(am) * (rr + 9 * p)); };
+      ctx.font = `${11 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      arcLab(an, Math.PI, 'i'); arcLab(an + Math.PI, ar, 'r');
+    }
+    /* the observer's eye on the outgoing ray, with the angle θ between the line of sight and the antisolar direction */
+    const E = main.E, dir = main.out, Lmax = toEdge(E, dir), Le = Math.min(Lmax - 30 * p, Math.max(R * 1.3, Math.min(R * 2.3, Lmax * 0.75)));
+    if (Le > 20 * p) {
+      const ex = E[0] + dir[0] * Le, ey = E[1] + dir[1] * Le, look = [-dir[0], -dir[1]], th = Math.atan2(-look[1], look[0]);
+      drawEye(ex, ey, look);
+      const back = Math.cos(th) < 0;   /* the observer faces the Sun (three or more reflections) */
+      ctx.strokeStyle = T.rMuted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1 * p;
+      const ref = back ? -1 : 1, Lr = Math.min(R * 1.2, toEdge([ex, ey], [ref, 0]));
+      ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex + ref * Lr, ey); ctx.stroke(); ctx.setLineDash([]);
+      const rr = Math.min(R * 0.7, Lr * 0.8), a0 = back ? Math.PI : 0; let da = -th - a0; while (da > Math.PI) da -= 2 * Math.PI; while (da <= -Math.PI) da += 2 * Math.PI;
+      ctx.strokeStyle = T.rInk; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(ex, ey, rr, a0, a0 + da, da < 0); ctx.stroke();
+      if (!S.blind) {
+        const mid = a0 + da / 2, sky = d(rbSky(main.sg * S.b, n, S.k));
+        ctx.fillStyle = T.rInk; ctx.font = `${12 * p}px ${mono()}`; ctx.textAlign = 'center';
+        ctx.fillText(back ? `${f(180 - sky, 1)}° from the Sun` : `θ = ${f(sky, 1)}°`, ex + Math.cos(mid) * (rr + 30 * p), ey + Math.sin(mid) * (rr + 12 * p));
+      }
+      ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      const ot = back ? 'observer facing the Sun' : 'observer, back to the Sun', ow = ctx.measureText(ot).width, ox = Math.max(P0.x + ow / 2 + 4 * p, Math.min(P0.x + P0.w - ow / 2 - 4 * p, ex));
+      ctx.fillStyle = T.room; ctx.fillRect(ox - ow / 2 - 3 * p, ey + 9 * p, ow + 6 * p, 15 * p);
+      ctx.fillStyle = T.rMuted; ctx.fillText(ot, ox, ey + 11 * p);
+    }
+    ctx.restore();
+  }
+  /* the deviation curve D(i) for this number of reflections, with its least value marked */
+  function drawGraph() {
+    const p = geo.p, G0 = geo.gr; if (G0.h < 60 * p) return;
+    ctx.fillStyle = T.room; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(G0.x, G0.y, G0.w, G0.h, 8 * p) : ctx.rect(G0.x, G0.y, G0.w, G0.h); ctx.fill();
+    const L = G0.x + 58 * p, Rr = G0.x + G0.w - 16 * p, Tp = G0.y + 22 * p, Bt = G0.y + G0.h - 30 * p, k = S.k;
+    const lams = S.white ? WHITE7 : [S.lam], all = [400, 700, ...lams];
+    let lo = 1e9, hi = -1e9;
+    for (const l of all) { const n = rbN(l); for (let x = 0; x <= 90; x += 1) { const D = d(rbDev(Math.sin(x * DEG), n, k)); lo = Math.min(lo, D); hi = Math.max(hi, D); } }
+    lo = Math.floor((lo - 4) / 10) * 10; hi = Math.ceil((hi + 2) / 10) * 10;
+    const X = (i) => L + (Rr - L) * i / 90, Y = (D) => Bt - (Bt - Tp) * (D - lo) / (hi - lo);
+    ctx.strokeStyle = T.rLine; ctx.lineWidth = 1; ctx.fillStyle = T.rMuted; ctx.font = `${10.5 * p}px ${mono()}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let i = 0; i <= 90; i += 15) { ctx.beginPath(); ctx.moveTo(X(i), Tp); ctx.lineTo(X(i), Bt); ctx.stroke(); ctx.fillText(`${i}°`, X(i), Bt + 4 * p); }
+    const step = (hi - lo) > 120 ? 30 : (hi - lo) > 50 ? 20 : 10;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let D = Math.ceil(lo / step) * step; D <= hi; D += step) { ctx.beginPath(); ctx.moveTo(L, Y(D)); ctx.lineTo(Rr, Y(D)); ctx.stroke(); ctx.fillText(`${D}°`, L - 5 * p, Y(D)); }
+    ctx.fillStyle = T.rInk; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${11 * p}px ${mono()}`;
+    const ttl = `Deviation D against the angle of incidence i (${k} reflection${k > 1 ? 's' : ''} inside)`;
+    ctx.fillText(ctx.measureText(ttl).width < Rr - L ? ttl : `Deviation D against i (${k} inside)`, L, G0.y + 5 * p);
+    for (const l of lams) {
+      const n = rbN(l), c = specRGB(l); ctx.strokeStyle = rgbs(c, 0.95); ctx.lineWidth = 1.8 * p; ctx.beginPath();
+      for (let x = 0; x <= 90; x += 0.5) { const D = d(rbDev(Math.sin(x * DEG), n, k)); x ? ctx.lineTo(X(x), Y(D)) : ctx.moveTo(X(x), Y(D)); } ctx.stroke();
+      const bw = rbBow(n, k); ctx.fillStyle = rgbs(c, 1); ctx.beginPath(); ctx.arc(X(d(bw.i)), Y(d(bw.D)), 3.2 * p, 0, 2 * Math.PI); ctx.fill();
+    }
+    /* the least deviation of the main color, and where the present ray is */
+    const nl = rbN(S.white ? 589 : S.lam), bw = rbBow(nl, k), Di = d(bw.D), ii = d(bw.i);
+    ctx.strokeStyle = T.rMuted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(L, Y(Di)); ctx.lineTo(Rr, Y(Di)); ctx.stroke(); ctx.setLineDash([]);
+    if (!S.blind) {
+      const sky = d(bw.theta), txt = k >= 3 ? `least D = ${f(Di, 2)}°: ${f(180 - sky, 2)}° from the Sun` : `least D = ${f(Di, 2)}°: bow at ${f(sky, 2)}° from the antisolar point`;
+      ctx.font = `${11 * p}px ${mono()}`; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.rInk; ctx.textAlign = 'left';
+      const short = k >= 3 ? `least D ${f(Di, 2)}°` : `least D ${f(Di, 2)}°, bow ${f(sky, 2)}°`, t2 = ctx.measureText(txt).width < (Rr - L) * 0.9 ? txt : short, tw = ctx.measureText(t2).width;
+      const tx = Math.max(L + 4 * p, Math.min(Rr - tw - 4 * p, ii > 45 ? X(ii) - 10 * p - tw : X(ii) + 10 * p));
+      ctx.fillText(t2, tx, Y(Di) + 18 * p > Bt ? Y(Di) - 4 * p : Y(Di) + 16 * p);
+    }
+    const ic = d(rbAngles(S.b, nl).i), Dc = d(rbDev(S.b, nl, k));
+    ctx.fillStyle = T.rInk; ctx.strokeStyle = T.room; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(ic), Y(Dc), 5 * p, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+  }
+
+  // ---------- the sky ----------
+  const hill = (az) => 1.1 + 0.7 * Math.sin(az * 0.083 + 0.6) + 0.45 * Math.sin(az * 0.21 + 2.1) + 0.25 * Math.sin(az * 0.47);
+  function skyImage() {
+    const p = geo.p, sw = Math.max(1, Math.round(W / 2)), sh = Math.max(1, Math.round(geo.sky.h / 2)), key = `${sw}x${sh}|${S.h}|${geo.s}|${geo.cx}|${geo.yh}`;
+    if (skyKey === key && skyImg) return skyImg;
+    if (!skyImg) skyImg = document.createElement('canvas');
+    skyImg.width = sw; skyImg.height = sh; const c2 = skyImg.getContext('2d'), im = c2.createImageData(sw, sh), D = im.data, hR = S.h * DEG, col = [0, 0, 0];
+    for (let y = 0; y < sh; y++) {
+      const el = (geo.yh - (y + 0.5) * 2) / geo.s;
+      for (let x = 0; x < sw; x++) {
+        const az = ((x + 0.5) * 2 - geo.cx) / geo.s, o = 4 * (y * sw + x);
+        if (el < hill(az)) {   /* the land: drawn, darker toward the viewer */
+          const t = Math.min(1, Math.max(0, -el / 40)), g = el < 0 ? 1 : 0.8;
+          D[o] = (34 - 18 * t) * g; D[o + 1] = (58 - 30 * t) * g; D[o + 2] = (36 - 20 * t) * g; D[o + 3] = 255; continue;
+        }
+        const th = d(rbThetaAt(az * DEG, el * DEG, hR));
+        rainColor(th, 1, col);
+        D[o] = 255 * col[0]; D[o + 1] = 255 * col[1]; D[o + 2] = 255 * col[2]; D[o + 3] = 255;
+      }
+    }
+    c2.putImageData(im, 0, 0); skyKey = key; return skyImg;
+  }
+  /* a point on the cone of angular radius θ round the antisolar point, at angle φ round it, as [az, el] in degrees */
+  function conePt(thDeg, phi) {
+    const h = S.h * DEG, A = [0, Math.cos(h), -Math.sin(h)], U = [1, 0, 0], V = [0, Math.sin(h), Math.cos(h)], t = thDeg * DEG;
+    const v = [0, 1, 2].map((i) => Math.cos(t) * A[i] + Math.sin(t) * (Math.cos(phi) * U[i] + Math.sin(phi) * V[i]));
+    return [d(Math.atan2(v[0], v[1])), d(Math.asin(Math.max(-1, Math.min(1, v[2]))))];
+  }
+  const skyPx = (az, el) => [geo.cx + az * geo.s, geo.yh - el * geo.s];
+  function drawSky() {
+    const p = geo.p, img = skyImage();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(img, 0, 0, W, geo.sky.h);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, geo.sky.h); ctx.clip();
+    /* elevation scale and the horizon */
+    ctx.strokeStyle = 'rgba(220,228,240,0.35)'; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(0, geo.yh); ctx.lineTo(W, geo.yh); ctx.stroke();
+    ctx.fillStyle = 'rgba(220,228,240,0.75)'; ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let e = -60; e <= 60; e += 10) { const y = geo.yh - e * geo.s; if (y < 8 * p || y > geo.sky.h - 8 * p) continue; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(8 * p, y); ctx.stroke(); ctx.fillText(`${e}°`, 11 * p, y); }
+    ctx.fillText('horizon', 48 * p, geo.yh - 9 * p);
+    if (S.marks) {
+      for (const [th, lab] of [[BOWS[1].y, 'primary'], [BOWS[2].y, 'secondary']]) {
+        ctx.strokeStyle = 'rgba(235,240,250,0.55)'; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); let on = false;
+        for (let j = 0; j <= 360; j++) { const [az, el] = conePt(th, j * DEG), [x, y] = skyPx(az, el); if (el < 0 || Math.abs(az) > 170) { on = false; continue; } on ? ctx.lineTo(x, y) : ctx.moveTo(x, y); on = true; }
+        ctx.stroke(); ctx.setLineDash([]);
+        const [az, el] = conePt(th, Math.PI / 2);
+        if (el > 1.5) { const [x, y] = skyPx(az, el); ctx.fillStyle = 'rgba(235,240,250,0.9)'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(S.blind ? lab : `${lab}, ${f(th, 1)}°`, x, y - 4 * p); }
+      }
+      const [az2, el2] = conePt((BOWS[1].r + BOWS[2].r) / 2, Math.PI / 2);
+      if (el2 > 3 && (BOWS[2].r - BOWS[1].r) * geo.s > 44 * p) { const [x, y] = skyPx(az2, el2); ctx.fillStyle = 'rgba(235,240,250,0.8)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('dark band', x, y); }
+      /* the antisolar point, where the shadow of your head points */
+      const ya = geo.yh + S.h * geo.s;
+      ctx.strokeStyle = 'rgba(255,220,120,0.9)'; ctx.lineWidth = 1.5 * p;
+      if (ya < geo.sky.h - 4 * p) {
+        ctx.beginPath(); ctx.moveTo(geo.cx - 7 * p, ya); ctx.lineTo(geo.cx + 7 * p, ya); ctx.moveTo(geo.cx, ya - 7 * p); ctx.lineTo(geo.cx, ya + 7 * p); ctx.stroke();
+        ctx.fillStyle = 'rgba(255,220,120,0.95)'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const at = 'antisolar point (shadow of your head)'; ctx.fillText(geo.cx + 14 * p + ctx.measureText(at).width < W ? at : 'antisolar point', geo.cx + 10 * p, ya + (S.h < 3 ? 12 * p : 0));
+        ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(geo.cx, ya); ctx.lineTo(geo.cx, geo.yh); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+    ctx.fillStyle = 'rgba(220,228,240,0.75)'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`Sun ${f(S.h, 1)}° up, behind you`, 11 * p, geo.sky.h - 8 * p);
+    ctx.restore();
+  }
+  /* brightness of the rain against the angle from the antisolar point, with the colors under it */
+  function drawSkyGraph() {
+    const p = geo.p, G0 = geo.gr; if (!G0 || G0.h < 50 * p) return; const P = profile();
+    ctx.fillStyle = T.room; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(G0.x, G0.y, G0.w, G0.h, 8 * p) : ctx.rect(G0.x, G0.y, G0.w, G0.h); ctx.fill();
+    const L = G0.x + 46 * p, Rr = G0.x + G0.w - 14 * p, Tp = G0.y + 20 * p, strip = 12 * p, Bt = G0.y + G0.h - 22 * p - strip, maxT = 70;
+    const X = (t) => L + (Rr - L) * t / maxT, Ymax = 1.15, Y = (v) => Bt - (Bt - Tp) * Math.min(Ymax, v) / Ymax;
+    ctx.strokeStyle = T.rLine; ctx.lineWidth = 1; ctx.fillStyle = T.rMuted; ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let t = 0; t <= maxT; t += 10) { ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), Bt); ctx.stroke(); ctx.fillText(`${t}°`, X(t), Bt + strip + 5 * p); }
+    const col = [0, 0, 0];
+    for (let x = Math.floor(L); x < Rr; x++) { const t = (x - L) / (Rr - L) * maxT; rainColor(t, 1, col); ctx.fillStyle = `rgb(${255 * col[0] | 0},${255 * col[1] | 0},${255 * col[2] | 0})`; ctx.fillRect(x, Bt + 2 * p, 1.5, strip); }
+    ctx.strokeStyle = T.rInk; ctx.lineWidth = 1.5 * p; ctx.beginPath();
+    for (let x = Math.floor(L); x < Rr; x++) { const t = (x - L) / (Rr - L) * maxT, j = Math.floor(t / P.dD); x > L ? ctx.lineTo(x, Y(P.Yn[j])) : ctx.moveTo(x, Y(P.Yn[j])); } ctx.stroke();
+    ctx.fillStyle = T.rInk; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${11 * p}px ${mono()}`;
+    const ttl = 'Brightness of the rain against the angle from the antisolar point (primary peak = 1)';
+    ctx.fillText(ctx.measureText(ttl).width < Rr - L ? ttl : 'Brightness against θ (primary peak = 1)', L, G0.y + 4 * p);
+    if (!S.blind) {
+      ctx.fillStyle = T.rMuted; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${10.5 * p}px ${mono()}`;
+      const a = (BOWS[1].r + BOWS[2].r) / 2; if (X(BOWS[2].r) - X(BOWS[1].r) > 60 * p) ctx.fillText('dark band', X(a), Bt - 4 * p);
+    }
+  }
+
+  // ---------- 3D: you, the Sun and a rain shower ----------
+  const NDROP = 12000, RAIN = { x: 60, y0: 30, y1: 33, z: 42 };   /* a curtain of rain 30 to 33 m in front of you */
+  const reduce = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
+  function init3d() {
+    const S3 = VD3K.stage($('scene'), { fov: 42, near: 0.1, far: 5000, sky: '#262b33' }); if (!S3) return false;
+    S3.el.style.position = 'absolute'; S3.el.style.inset = '0';
+    const sc = S3.scene, g = new THREE.Group(); sc.add(g);
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), new THREE.MeshStandardMaterial({ color: '#2f4a2c', roughness: 1 })); g.add(ground);
+    const person = new THREE.Group(), cloth = new THREE.MeshStandardMaterial({ color: '#46566e', roughness: 0.8 }), skin = new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.7 });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 1.45, 16), cloth); body.rotation.x = Math.PI / 2; body.position.z = 0.73;
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 14), skin); head.position.z = 1.6; person.add(body, head); g.add(person);
+    const sun = VD3K.star(S3, { r: 5, glow: 7, color: '#fff2c8' }); g.add(sun);
+    const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(0.1, 6, 4), new THREE.MeshBasicMaterial({ color: 0xffffff }), NDROP);
+    const M = new THREE.Matrix4(), C = new THREE.Color(), pos = new Float32Array(NDROP * 3);
+    let seed = 12345; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < NDROP; i++) { pos[3 * i] = (rnd() * 2 - 1) * RAIN.x; pos[3 * i + 1] = RAIN.y0 + rnd() * (RAIN.y1 - RAIN.y0); pos[3 * i + 2] = rnd() * RAIN.z; drops.setColorAt(i, C.setRGB(0.2, 0.2, 0.2)); }
+    drops.frustumCulled = false; g.add(drops);
+    /* the cones of 42° and 51° round the line from the Sun through your eye, drawn out to 70 m, and that line itself */
+    const mk = (color, op) => new THREE.LineBasicMaterial({ color, transparent: true, opacity: op });
+    const cone = (th, color) => { const grp = new THREE.Group(), n = 96, ring = [], rays = [];
+      for (let j = 0; j <= n; j++) ring.push(new THREE.Vector3()); const rl = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ring), mk(color, 0.55)); grp.add(rl);
+      for (let j = 0; j < 16; j++) { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), mk(color, 0.22)); rays.push(l); grp.add(l); }
+      grp.th = th; grp.rl = rl; grp.rays = rays; return grp; };
+    const c1 = cone(BOWS[1].y, '#ffd38a'), c2 = cone(BOWS[2].y, '#a9c8ff'); g.add(c1, c2);
+    const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: '#ffdc78', dashSize: 1.2, gapSize: 0.8 })); g.add(axis);
+    const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 24), new THREE.MeshBasicMaterial({ color: '#ffdc78' })); shadow.position.z = 0.02; g.add(shadow);
+    const lab = (t) => VD3K.label(t, { size: 1.6, color: '#e6ebf2', bg: 'rgba(20,24,30,0.6)' });
+    const l1 = lab('42°'), l2 = lab('51°'), ls = lab('antisolar point'), lu = lab('you'); g.add(l1, l2, ls, lu); lu.scale.multiplyScalar(0.6);
+    const o = { th: -Math.PI / 2 - 0.5, ph: 1.3, zoom: 1 };
+    S3.orbit(S3.el, o, () => {}, { zMin: 0.35, zMax: 2.2, phMin: 0.3, phMax: 1.5 }); S3.el.tabIndex = 0;
+    G3 = { S3, person, sun, drops, pos, M, C, c1, c2, axis, shadow, l1, l2, ls, lu, o, last: performance.now(), col: [0, 0, 0] };
+    return true;
+  }
+  function place3d() {
+    const g = G3, h = S.h * DEG, eye = new THREE.Vector3(S.walk, 0, 1.6), A = new THREE.Vector3(0, Math.cos(h), -Math.sin(h));
+    g.person.position.x = S.walk; g.sun.position.set(S.walk, -320 * Math.cos(h), 1.6 + 320 * Math.sin(h));
+    g.S3.sun.position.set(S.walk, -50 * Math.cos(h), 50 * Math.sin(h) + 1.6); g.S3.sun.target.position.set(S.walk, 0, 0);
+    const U = new THREE.Vector3(1, 0, 0), V = new THREE.Vector3(0, Math.sin(h), Math.cos(h)), Ld = 120, Yc = (RAIN.y0 + RAIN.y1) / 2;
+    for (const c of [g.c1, g.c2]) {
+      const t = c.th * DEG, pts = c.rl.geometry.attributes.position, n = pts.count - 1, p = new THREE.Vector3();
+      for (let j = 0; j <= n; j++) { const ph = j / n * 2 * Math.PI; p.copy(A).multiplyScalar(Math.cos(t)).addScaledVector(U, Math.sin(t) * Math.cos(ph)).addScaledVector(V, Math.sin(t) * Math.sin(ph));
+        p.multiplyScalar(p.y > 0.05 ? Math.min(Ld, Yc / p.y) : Ld).add(eye); pts.setXYZ(j, p.x, p.y, p.z); }   /* drawn out to the middle of the rain curtain */
+      pts.needsUpdate = true;
+      c.rays.forEach((l, j) => { const q = l.geometry.attributes.position, k = Math.round(j * n / c.rays.length); q.setXYZ(0, eye.x, eye.y, eye.z); q.setXYZ(1, pts.getX(k), pts.getY(k), pts.getZ(k)); q.needsUpdate = true; });
+      const top = new THREE.Vector3().copy(A).multiplyScalar(Math.cos(t)).addScaledVector(V, Math.sin(t)); top.multiplyScalar(Math.min(Ld, Yc / top.y)).add(eye);
+      (c === g.c1 ? g.l1 : g.l2).position.copy(top).add(new THREE.Vector3(0, 0, 2.2));
+    }
+    const far = h > 0.004 ? Math.min(160, 1.6 / Math.tan(h) / Math.cos(0)) : 160, aEnd = new THREE.Vector3().copy(A).multiplyScalar(h > 0.004 ? Math.min(160 / Math.cos(h), 1.6 / Math.sin(h)) : 160).add(eye);
+    const q = g.axis.geometry.attributes.position; q.setXYZ(0, S.walk, -40 * Math.cos(h), 1.6 + 40 * Math.sin(h)); q.setXYZ(1, aEnd.x, aEnd.y, aEnd.z); q.needsUpdate = true; g.axis.computeLineDistances();
+    g.shadow.visible = h > 0.004 && 1.6 / Math.tan(h) < 160; g.shadow.position.set(S.walk, Math.min(far, 1.6 / Math.tan(Math.max(h, 1e-3))), 0.02);
+    g.ls.position.set(g.shadow.position.x, g.shadow.position.y, 1.4); g.ls.visible = S.marks && g.shadow.visible;
+    g.lu.position.set(S.walk, 0, 2.3);
+    [g.c1, g.c2, g.l1, g.l2, g.axis].forEach((x) => { x.visible = S.marks; });
+  }
+  function frame3d(now) {
+    const g = G3, dt = Math.min(0.05, (now - g.last) / 1000); g.last = now;
+    const sc = $('scene'); g.S3.size(sc.clientWidth, sc.clientHeight); place3d();
+    const fall = reduce() ? 0 : 4 * dt, hR = S.h * DEG, col = g.col, dv = [0, 0, 0];
+    for (let i = 0; i < NDROP; i++) {
+      let z = g.pos[3 * i + 2] - fall; if (z < 0) z += RAIN.z; g.pos[3 * i + 2] = z;
+      const x = g.pos[3 * i], y = g.pos[3 * i + 1]; dv[0] = x - S.walk; dv[1] = y; dv[2] = z - 1.6;
+      const th = d(rbThetaVec(dv, hR)), P = profile(), yn = P.Yn[Math.min(P.n - 1, Math.floor(th / P.dD))];
+      rainColor(th, 1.6, col);   /* a single drop drawn brighter than the rain's even glow, so its color shows, and bigger where it sends more light */
+      const sz = 0.45 + 1.8 * Math.min(1, yn); g.M.makeScale(sz, sz, sz).setPosition(x, y, z); g.drops.setMatrixAt(i, g.M); g.drops.setColorAt(i, g.C.setRGB(col[0], col[1], col[2]));
+    }
+    g.drops.instanceMatrix.needsUpdate = true; if (g.drops.instanceColor) g.drops.instanceColor.needsUpdate = true;
+    g.S3.place(g.o, [S.walk, 20, 12], g.S3.fit(75)); g.S3.render();
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden: predict it</span>';
+    let h = '';
+    if (S.view === 'drop') {
+      const lam = S.white ? 589 : S.lam, n = rbN(lam), a = rbAngles(S.b, n), sg = sideOf(S.k, lam, S.b), D = d(rbDev(S.b, n, S.k)), th = d(rbSky(sg * S.b, n, S.k)), bw = rbBow(n, S.k), sh = rbShare(S.b, n, S.k);
+      const far = S.k >= 3;
+      h += dd(S.white ? 'Numbers for' : 'Wavelength λ', `${lam} nm, n = ${f(n, 4)}`);
+      h += dd('Where it enters, b', f(S.b, 3)) + dd('Incidence i, refraction r', `${f(d(a.i), 2)}°, ${f(d(a.r), 2)}°`);
+      h += dd('Deviation D', `${f(D, 2)}°`) + dd(far ? 'Leaves at, from the Sun' : 'Leaves at θ from the antisolar point', `${f(far ? 180 - th : th, 2)}°`);
+      h += dd('Light on this ray (s, p)', `${f(sh.avg * 100, 2)}% (${f(sh.s * 100, 2)}%, ${f(sh.p * 100, 3)}%)`);
+      if (S.blind) h += dd('Least deviation', hid, 'wide');
+      else {
+        h += dd('Least deviation at', `i = ${f(d(bw.i), 2)}°, b = ${f(bw.b, 3)}`) + dd('Least deviation D', `${f(d(bw.D), 2)}°`);
+        h += dd(far ? 'Bow, from the Sun' : 'Bow at θ', `${f(far ? 180 - d(bw.theta) : d(bw.theta), 2)}°`);
+        if (S.white) { const B = BOWS[Math.min(3, S.k)] || null, bv = d(rbBow(rbN(400), S.k).theta), br = d(rbBow(rbN(700), S.k).theta);
+          h += dd('Bow: 400 nm, 700 nm', `${f(far ? 180 - bv : bv, 2)}°, ${f(far ? 180 - br : br, 2)}°`) + dd('Width of the colors', `${f(Math.abs(br - bv), 2)}°`); }
+        const shb = rbShare(bw.b, n, S.k); h += dd('Polarization of the bow ray', `${f((shb.s - shb.p) / (shb.s + shb.p) * 100, 1)}% across the plane`);
+      }
+    } else {
+      const p1 = BOWS[1], p2 = BOWS[2];
+      h += dd('Sun above the horizon', `${f(S.h, 1)}°`) + dd('Antisolar point', S.h > 0 ? `${f(S.h, 1)}° below the horizon` : 'on the horizon');
+      if (S.blind) h += dd('Bow radii', hid, 'wide');
+      else {
+        h += dd('Primary bow radius', `${f(p1.v, 2)}° (violet) to ${f(p1.r, 2)}° (red)`) + dd('Secondary bow radius', `${f(p2.r, 2)}° (red) to ${f(p2.v, 2)}° (violet)`);
+        h += dd('Dark band, red to red', `${f(p1.r, 2)}° to ${f(p2.r, 2)}°, ${f(p2.r - p1.r, 2)}° wide`);
+        const t1 = rbTop(p1.y, S.h), t2 = rbTop(p2.y, S.h);
+        h += dd('Top of the primary', t1 > 0 ? `${f(t1, 2)}° above the horizon` : 'below the horizon: no primary bow') + dd('Top of the secondary', t2 > 0 ? `${f(t2, 2)}° above the horizon` : 'below the horizon');
+      }
+      if (v3 && v3.is3d()) h += dd('You walked', `${f(S.walk, 1)} m sideways`);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#kSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.k));
+    $('dropBox').hidden = S.view !== 'drop'; $('skyBox').hidden = S.view !== 'sky'; $('dimSeg').hidden = S.view !== 'sky';
+    const on3 = !!(v3 && v3.is3d()) && S.view === 'sky';
+    $('walkRow').hidden = !on3; $('graphRow').hidden = on3;
+    $('cardTitle').textContent = S.view === 'drop' ? 'The ray' : on3 ? 'The Sun and you' : 'The Sun';
+    $('sB').value = S.b; $('oB').textContent = f(S.b, 3); $('sL').value = S.lam; $('oL').textContent = `${S.lam} nm`; $('sL').disabled = S.white;
+    $('cWhite').checked = S.white; $('cMany').checked = S.many; $('cLost').checked = S.lost;
+    $('sH').value = S.h; $('oH').textContent = `${f(S.h, 1)}°`; $('sW').value = S.walk; $('oW').textContent = `${f(S.walk, 1)} m`;
+    $('cMarks').checked = S.marks; $('cGraph').checked = S.graph;
+    $('play').textContent = S.play ? 'Pause' : S.view === 'drop' ? 'Sweep the ray' : 'Lower the sun';
+    $('play').classList.toggle('attn', !S.play);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  function showCanvas() { const on3 = !!(v3 && v3.is3d()) && S.view === 'sky'; can.hidden = on3; if (G3) G3.S3.el.hidden = !on3; }
+  function drawAll() {
+    if (!T || !W) return; SPL.place(); SPL2.place(); layout(); showCanvas();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'drop') { drawDrop(); drawGraph(); } else if (!(v3 && v3.is3d())) { drawSky(); drawSkyGraph(); }
+    readouts();
+  }
+  const changed = () => { S.preset = 'custom'; sync(); drawAll(); };
+  function setPlay(on) { S.play = on; if (on && S.view === 'drop' && S.b >= 0.995) S.b = 0; if (on && S.view === 'sky' && S.h <= 0) S.h = 50; sync(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.play = false;
+    if (c.view === 'drop') Object.assign(S, { view: 'drop', k: c.k, lam: c.lam, white: c.white, many: c.many, lost: c.lost });
+    else Object.assign(S, { view: 'sky', h: c.h, marks: c.marks, graph: c.graph, walk: c.walk || 0 });
+    if (c.view === 'drop') S.b = c.b === 'bow' ? +bowB(c.white ? 589 : c.lam, c.k).toFixed(3) : c.b;
+    $('presetHint').textContent = c.hint;
+    if (c.view === 'sky' && v3) v3.set(c.dim);
+    sync(); drawAll(); S.preset = k; sync();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; S.view = b.dataset.v; S.play = false; changed(); });
+  $('kSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.k = +b.dataset.k; changed(); });
+  $('sB').addEventListener('input', (e) => { S.b = +e.target.value; changed(); });
+  $('sL').addEventListener('input', (e) => { S.lam = +e.target.value; changed(); });
+  $('cWhite').addEventListener('change', (e) => { S.white = e.target.checked; if (S.white) S.many = false; changed(); });
+  $('cMany').addEventListener('change', (e) => { S.many = e.target.checked; if (S.many) S.white = false; changed(); });
+  $('cLost').addEventListener('change', (e) => { S.lost = e.target.checked; changed(); });
+  $('sH').addEventListener('input', (e) => { S.h = +e.target.value; changed(); });
+  $('sW').addEventListener('input', (e) => { S.walk = +e.target.value; changed(); });
+  $('cMarks').addEventListener('change', (e) => { S.marks = e.target.checked; changed(); });
+  $('cGraph').addEventListener('change', (e) => { S.graph = e.target.checked; skyKey = ''; changed(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  $('play').addEventListener('click', () => setPlay(!S.play));
+  can.addEventListener('keydown', (e) => {
+    const s = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { if (S.view === 'drop') S.b = Math.min(0.999, +(S.b + 0.005 * s).toFixed(3)); else S.h = Math.min(60, S.h + 0.5 * s); changed(); e.preventDefault(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { if (S.view === 'drop') S.b = Math.max(0, +(S.b - 0.005 * s).toFixed(3)); else S.h = Math.max(0, S.h - 0.5 * s); changed(); e.preventDefault(); }
+  });
+  v3 = VD3K.view({ seg: '#dimSeg', init: init3d, start: 'flat', status: (m) => { $('status').textContent = m; }, change: () => { S.dim = v3 && v3.is3d() ? '3d' : 'flat'; skyKey = ''; sync(); drawAll(); } });
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.play) {
+      if (S.view === 'drop') { S.b = Math.min(0.999, S.b + dt / 8); if (S.b >= 0.999) S.play = false; }
+      else { S.h = Math.max(0, S.h - 3 * dt); if (S.h <= 0) S.play = false; }
+      S.b = +S.b.toFixed(3); sync(); drawAll();
+    }
+    if (G3 && v3.is3d() && S.view === 'sky') frame3d(now);
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); skyKey = ''; drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('one'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+  window.__rb = { S, applyPreset, drawAll, sync, profile, view: () => v3 };
+})();
+</script>
+</body>
+</html>

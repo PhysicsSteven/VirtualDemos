@@ -46,6 +46,7 @@ OVERRIDES = {
     "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},
     "granular-flow": {"wait": 600, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gf.applyPreset('drum3'); window.__gf.runTo(16);"},
     "galton-board": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gb.S.fast = true; window.__gb.drop(400); window.__gb.S.fast = false; window.__gb.drawAll();"},
+    "rainbows": {"wait": 1500, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rb.applyPreset('evening'); window.__rb.S.marks = false; window.__rb.drawAll();"},
     "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
     "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},
     "energy-track": {"wait": 1200, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__et.applyPreset('loop'); for (let i = 0; i < 160; i++) window.__et.step(0.016); window.__et.drawAll();"},

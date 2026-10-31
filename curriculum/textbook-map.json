@@ -1463,7 +1463,8 @@
             "celestial-sphere",
             "seasons",
             "moon-phases",
-            "retrograde-motion"
+            "retrograde-motion",
+            "rainbows"
           ]
         },
         {
@@ -4645,7 +4646,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "optics-bench"
+        "optics-bench",
+        "rainbows"
       ],
       "unit": "optics",
       "note": "Optics Bench (2026-10-23, Claude): a glass element can be crown, flint, fused silica, water or diamond with Sellmeier dispersion; the editor gives n from 400 to 700 nm and the prism's spread of colors at minimum deviation (white light on the Prism setup)."
@@ -10450,6 +10452,26 @@
       "handouts": [
         "color-vision"
       ]
+    },
+    {
+      "demo": "rainbows",
+      "course": [
+        "physics-2",
+        "astro"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "1.5",
+          "title": "Dispersion"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Rainbows (oPhysics rainbow sims counterpart, plan #14, 2026-10-31, own demo by Steve's call): a ray through a spherical drop with Daimon and Masumura water, the deviation curve and Descartes' least deviation, Fresnel shares and polarization; the sky's brightness by ray tracing (primary, secondary, Alexander's dark band) against the Sun's height, flat and in 3D with the cone of drops. No worksheet.",
+      "title": "Rainbows",
+      "url": "demos/rainbows.html"
     },
     {
       "demo": "instrument-builder",

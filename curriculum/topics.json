@@ -219,7 +219,8 @@
       "instrument-builder",
       "polarization",
       "speed-of-light",
-      "color-vision"
+      "color-vision",
+      "rainbows"
      ]
     },
     {
@@ -313,7 +314,8 @@
       "seasons",
       "celestial-sphere",
       "moon-phases",
-      "retrograde-motion"
+      "retrograde-motion",
+      "rainbows"
      ]
     },
     {

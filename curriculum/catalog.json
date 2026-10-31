@@ -1571,6 +1571,19 @@
      ]
     },
     {
+     "demo": "rainbows",
+     "title": "Rainbows",
+     "desc": "Follow sunlight through a raindrop and find the ray of least deviation that makes the bow at 42°, then see the sky: the primary and the reversed secondary bow, Alexander's dark band, the Sun's height, and in 3D the cone of drops that makes your own rainbow.",
+     "tags": [
+      "dispersion",
+      "refraction",
+      "least deviation",
+      "secondary rainbow",
+      "Alexander's dark band",
+      "polarization"
+     ]
+    },
+    {
      "demo": "instrument-builder",
      "title": "Build a Microscope or Telescope",
      "desc": "Put lenses and stops on a rail and look through them with an eye or a camera: find each image, the magnification, the exit pupil, the field of view and how bright the view is, for a magnifier, a microscope or a telescope of your own design.",
