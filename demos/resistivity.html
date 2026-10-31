@@ -115,7 +115,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/resistivity.html" target="resistivity-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/resistivity.html" target="resistivity-worksheet">Worksheet 1: Resistivity</a></li><li><a href="../curriculum/labs/students/current-sheet.html" target="current-sheet-worksheet">Worksheet 2: Current in a Sheet</a></li></ul></details><!-- /vd-handout -->
       <section id="wireSec">
         <h2>Wire</h2>
         <div class="chips" id="mats">
@@ -180,8 +180,13 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-sl="slot" aria-pressed="false">Slot between dots</button>
           <button type="button" data-sl="ring" aria-pressed="false">Silver ring</button>
           <button type="button" data-sl="neck" aria-pressed="false">Narrow neck</button>
+          <button type="button" data-sl="strip" aria-pressed="false">Strip L by W</button>
         </div>
         <p class="hint" id="shHint"></p>
+        <div id="shStrip" hidden>
+          <div><div class="slider-head"><label for="shL">Length between the electrodes L</label><output id="oShL" for="shL"></output></div><input type="range" id="shL" min="2" max="22" step="1"></div>
+          <div><div class="slider-head"><label for="shW">Strip width W</label><output id="oShW" for="shW"></output></div><input type="range" id="shW" min="2" max="16" step="1"></div>
+        </div>
         <div class="seg" role="group" aria-label="What a press on the sheet does" id="shTools">
           <button type="button" data-st="probe" aria-pressed="true">Probe</button>
           <button type="button" data-st="cut" aria-pressed="false">Cut</button>
@@ -228,7 +233,8 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
-        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>L (m)</th><th>V (V)</th><th>I (A)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" id="shRowsWrap" hidden><table class="rows" id="shRowsTbl"><caption class="sr">Captured readings in the sheet</caption><thead><tr><th>#</th><th>Layout</th><th>Probe x, y (cm)</th><th>V (V)</th><th>I (A)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" id="rowsWrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>L (m)</th><th>V (V)</th><th>I (A)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="inline"><span class="lab">Plot</span>
           <div class="seg" role="group" aria-label="What to plot">
@@ -391,6 +397,23 @@ table.rows input:focus { border-color: var(--accent); }
     for (let k = 0; k < q2.length && !joined; k++) for (const j of nb(q2[k])) { if (reach[j] || !(c[j] > 0) || !(c[q2[k]] > 0)) continue; if (fix[j] === 2) { joined = true; break; } if (fix[j] === 1) continue; reach[j] = 1; q2.push(j); }
     if (!joined) { Iout = 0; Iin = 0; }
     return { V, G: V0 ? Iout / V0 : 0, Gin: V0 ? Iin / V0 : 0, iters: it };
+  }
+  /* A strip of sheet L cm long and W cm wide (whole cm) between two electrodes as wide as the strip, centered on the nx × ny grid of
+     0.25 cm cells; everything else is cut away. The current runs straight down the strip, so R = R_s L/W exactly (4L cells in
+     series in each of 4W rows; an electrode's face counts from its edge). Returns c, fix and the cells the electrodes cover. */
+  function sheetStrip(nx, ny, Lcm, Wcm) {
+    const c = new Float64Array(nx * ny), fix = new Int8Array(nx * ny), y0 = ny / 2 - 2 * Wcm, y1 = ny / 2 + 2 * Wcm - 1, xa = nx / 2 - 2 * Lcm, xb = nx / 2 + 2 * Lcm;
+    for (let y = y0; y <= y1; y++) for (let x = xa - 2; x <= xb + 1; x++) { const i = y * nx + x; c[i] = 1; if (x < xa) fix[i] = 1; else if (x >= xb) fix[i] = 2; }
+    return { c, fix, bars: [{ x0: xa - 2, x1: xa - 1, y0, y1, v: 1 }, { x0: xb, x1: xb + 1, y0, y1, v: 2 }] };
+  }
+  /* the sheet readings as CSV for the Current in a sheet worksheet */
+  function sheetCSV(rows, version) {
+    const L = ['# Resistivity of a Wire virtual apparatus, Current in a sheet: recorded readings (simulated data)', `# demo version,${version}`,
+      '# model,"steady current in a thin sheet, Kirchhoff rule on 0.25 cm squares, conjugate gradients to 1e-10 of V"',
+      '# coordinates,"x from the left edge, y from the bottom edge of the 24 cm by 16 cm sheet"', '# noise,none',
+      'row,layout,V_battery_V,Rs_ohm_per_sq,L_cm,W_cm,x_cm,y_cm,V_probe_V,E_V_per_m,I_A'];
+    rows.forEach((r, i) => L.push([i + 1, r.layout, r.V0, r.Rs, r.L, r.W, r.x, r.y, r.Vp, r.E, r.I].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
   }
   // ==CORE END==
   if (typeof document === 'undefined') return;
@@ -913,7 +936,7 @@ table.rows input:focus { border-color: var(--accent); }
   const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), sheet: 'A resistive sheet with two electrodes, tinted by potential, with equipotential lines and arrows along the current. A probe reads the potential where it is placed; the arrow keys move it.', inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
     S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; $('sheetSec').hidden = v !== 'sheet'; $('wireSec').hidden = $('metersSec').hidden = v === 'sheet';
-    if (v === 'sheet') { shSync(); shReadouts(); } for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    if (v === 'sheet') { shSync(); shReadouts(); } $('shRowsWrap').hidden = v !== 'sheet'; $('rowsWrap').hidden = v === 'sheet'; document.querySelector('.plotfold').hidden = v === 'sheet'; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
     if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
     can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop(); if (v === 'bench') benchLoop();
   }
@@ -942,13 +965,14 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- current in a sheet: field mapping on a resistive sheet ----------
   const SH_NX = 96, SH_NY = 64, SH_H = 0.0025, SH_PAINT = 1e4;   /* 24 cm × 16 cm in 0.25 cm cells; silver paint 10⁴ times the sheet's conductance (a model) */
-  const SH = { layout: 'bars', tool: 'probe', V0: 10, Rs: 1000, c: null, fix: null, sol: null, probe: [12, 8], busy: 0, last: 0, geo: null, paint: false };
+  const SH = { layout: 'bars', tool: 'probe', V0: 10, Rs: 1000, L: 12, W: 8, rows: [], series: Date.now(), c: null, fix: null, sol: null, probe: [12, 8], busy: 0, last: 0, geo: null, paint: false };
   const shI = (x, y) => y * SH_NX + x;
   function shLayout(name) {
     const c = new Float64Array(SH_NX * SH_NY).fill(1), fix = new Int8Array(SH_NX * SH_NY);
     const shapes = [];
     const disk = (cx, cy, r, v) => { shapes.push({ k: 'disk', cx, cy, r, v }); for (let y = 0; y < SH_NY; y++) for (let x = 0; x < SH_NX; x++) if ((x + 0.5 - cx) ** 2 + (y + 0.5 - cy) ** 2 <= r * r) fix[shI(x, y)] = v; };
-    const bar = (x0, x1, v) => { shapes.push({ k: 'bar', x0, x1, v }); for (let y = 0; y < SH_NY; y++) for (let x = x0; x <= x1; x++) fix[shI(x, y)] = v; };
+    const bar = (x0, x1, v) => { shapes.push({ k: 'bar', x0, x1, v, y0: 0, y1: SH_NY - 1 }); for (let y = 0; y < SH_NY; y++) for (let x = x0; x <= x1; x++) fix[shI(x, y)] = v; };
+    if (name === 'strip') { const st = sheetStrip(SH_NX, SH_NY, SH.L, SH.W); SH.c = st.c; SH.fix = st.fix; SH.sol = null; SH.layout = name; SH.shapes = st.bars.map((b) => Object.assign({ k: 'bar' }, b)); return; }
     const cut = (x0, x1, y0, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) c[shI(x, y)] = 0; };
     if (name === 'bars' || name === 'neck') { bar(3, 4, 1); bar(91, 92, 2); }
     if (name === 'dots' || name === 'slot' || name === 'ring') { disk(24, 32, 4, 1); disk(72, 32, 4, 2); }
@@ -1032,12 +1056,12 @@ table.rows input:focus { border-color: var(--accent); }
     /* the electrodes, drawn smooth over their cells (the solver uses the cells), and their labels */
     for (const e of SH.shapes) {
       const g = ctx.createLinearGradient(0, Y(0), 0, Y(16)); g.addColorStop(0, '#d7dce2'); g.addColorStop(1, '#8e98a4'); ctx.fillStyle = g; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1;
-      ctx.beginPath(); if (e.k === 'disk') ctx.arc(X(e.cx * 0.25), Y(e.cy * 0.25), (e.r + 0.5) * 0.25 * sc, 0, 2 * Math.PI); else ctx.rect(X(e.x0 * 0.25), Y(0), (e.x1 - e.x0 + 1) * 0.25 * sc, 16 * sc); ctx.fill(); ctx.stroke();
-      const bx = X((e.x0 + e.x1 + 1) * 0.125), lx = e.k === 'disk' ? X(e.cx * 0.25) : bx + (bx < X(12) ? 34 : -34) * p, ly = e.k === 'disk' ? Y((e.cy - e.r) * 0.25) - 6 * p : Y(0) + 24 * p, t = e.v === 1 ? `+${SH.V0} V` : '0 V';
+      ctx.beginPath(); if (e.k === 'disk') ctx.arc(X(e.cx * 0.25), Y(e.cy * 0.25), (e.r + 0.5) * 0.25 * sc, 0, 2 * Math.PI); else ctx.rect(X(e.x0 * 0.25), Y(e.y0 * 0.25), (e.x1 - e.x0 + 1) * 0.25 * sc, (e.y1 - e.y0 + 1) * 0.25 * sc); ctx.fill(); ctx.stroke();
+      const bx = X((e.x0 + e.x1 + 1) * 0.125), lx = e.k === 'disk' ? X(e.cx * 0.25) : bx + (bx < X(12) ? 34 : -34) * p, ly = e.k === 'disk' ? Y((e.cy - e.r) * 0.25) - 6 * p : e.y0 > 0 ? Y(e.y0 * 0.25) - 4 * p : Y(0) + 24 * p, t = e.v === 1 ? `+${SH.V0} V` : '0 V';
       ctx.save(); ctx.font = `700 ${11 * p}px ${T.mono}`; const tw = ctx.measureText(t).width + 10 * p; ctx.fillStyle = e.v === 1 ? '#b8322a' : '#2f5fb8'; ctx.fillRect(lx - tw / 2, ly - 16 * p, tw, 16 * p);
       ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, lx, ly - 8 * p); ctx.restore();
     }
-    txt('24 cm × 16 cm sheet · lines every ' + sig(SH.V0 / 10, 3) + ' V · arrows: current', x0, y0 + 16 * sc + 6 * p, { s: 10, c: T.muted, bl: 'top' });
+    txt((SH.layout === 'strip' ? `strip ${SH.L} cm × ${SH.W} cm` : '24 cm × 16 cm sheet') + ' · lines every ' + sig(SH.V0 / 10, 3) + ' V · arrows: current', x0, y0 + 16 * sc + 6 * p, { s: 10, c: T.muted, bl: 'top' });
     /* the probe */
     const [px, py] = SH.probe, vp = shV(px, py), qx = X(px), qy = Y(py);
     ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(qx, qy, 6 * p, 0, 2 * Math.PI); ctx.moveTo(qx - 10 * p, qy); ctx.lineTo(qx + 10 * p, qy); ctx.moveTo(qx, qy - 10 * p); ctx.lineTo(qx, qy + 10 * p); ctx.stroke(); ctx.restore();
@@ -1062,6 +1086,7 @@ table.rows input:focus { border-color: var(--accent); }
   function shSync() {
     for (const b of document.querySelectorAll('#shLayouts button')) b.setAttribute('aria-pressed', String(b.dataset.sl === SH.layout));
     for (const b of document.querySelectorAll('#shTools button')) b.setAttribute('aria-pressed', String(b.dataset.st === SH.tool));
+    $('shStrip').hidden = SH.layout !== 'strip'; $('shL').value = SH.L; $('oShL').textContent = `${SH.L} cm`; $('shW').value = SH.W; $('oShW').textContent = `${SH.W} cm`;
     $('shV').value = SH.V0; $('oShV').textContent = `${SH.V0} V`; $('shRs').value = SH.Rs; $('oShRs').textContent = `${sig(SH.Rs, 4)} Ω/□`;
     can.style.cursor = S.view === 'sheet' ? (SH.tool === 'probe' ? 'crosshair' : 'cell') : can.style.cursor;
   }
@@ -1071,10 +1096,12 @@ table.rows input:focus { border-color: var(--accent); }
     bardot: 'A straight electrode and a round one: the lines leave the bar evenly and gather onto the dot.',
     slot: 'A slot cut between the electrodes: no current crosses it, so the current lines bend round its ends and the equipotentials meet its edges at right angles.',
     ring: 'A ring painted with silver: it conducts so much better than the sheet that it is nearly one potential, and the sheet inside it barely carries any current.',
-    neck: 'Two cuts leave a 4 cm neck: the current crowds through it, the field there is strongest, and R rises above the 1.344 squares of the uncut sheet.' };
+    neck: 'Two cuts leave a 4 cm neck: the current crowds through it, the field there is strongest, and R rises above the 1.344 squares of the uncut sheet.',
+    strip: 'A strip of the sheet L long and W wide between two electrodes as wide as the strip; the rest is cut away. The current runs straight down the strip, so R = R_s L/W: L/W squares in series.' };
   for (const b of document.querySelectorAll('#shLayouts button')) b.addEventListener('click', () => { shLayout(b.dataset.sl); $('shHint').textContent = SH_HINT[b.dataset.sl]; shSolve(); shUpd(); });
   for (const b of document.querySelectorAll('#shTools button')) b.addEventListener('click', () => { SH.tool = b.dataset.st; shSync(); });
   $('shV').addEventListener('input', (e) => { SH.V0 = +e.target.value; shSolve(); shUpd(); });
+  for (const k of ['L', 'W']) $('sh' + k).addEventListener('input', (e) => { SH[k] = +e.target.value; shLayout('strip'); $('shHint').textContent = SH_HINT.strip; shSolve(); shUpd(); });
   $('shRs').addEventListener('input', (e) => { SH.Rs = +e.target.value; shUpd(); });
   const shAt = (e) => { const r = can.getBoundingClientRect(), g = SH.geo; return [((e.clientX - r.left) - g.x0) / g.sc, ((e.clientY - r.top) - g.y0) / g.sc]; };
   function shBrush(xc, yc) {
@@ -1102,6 +1129,8 @@ table.rows input:focus { border-color: var(--accent); }
     e.preventDefault(); e.stopImmediatePropagation(); const st = e.shiftKey ? 1 : 0.25; SH.probe = [Math.max(0, Math.min(24, SH.probe[0] + k[0] * st)), Math.max(0, Math.min(16, SH.probe[1] + k[1] * st))]; shUpd();
   }, true);
   shLayout('bars'); $('shHint').textContent = SH_HINT.bars;
+  /* for the worksheet key scripts: put the probe at (x, y) cm, y from the bottom edge, as a press there would */
+  window.__sheet = { probe: (x, y) => { SH.probe = [x, 16 - y]; shUpd(); return shV(x, 16 - y); }, get SH() { return SH; } };
 
   // ---------- cold stage ----------
   const CS = { key: 'lead', lgR: 2, Tk: T_ROOM, dir: 0, pts: [], raf: 0, last: 0, acc: 0 };
@@ -1186,9 +1215,23 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readings and fits ----------
   function capStatus(m) { $('capStatus').textContent = m; }
-  $('capture').addEventListener('click', (e) => { if (S.view === 'sheet') { e.stopImmediatePropagation(); capStatus('Readings here are for the wire. In the sheet, read the probe and the meters in the Current in a sheet section.'); } }, true);
+  /* In the sheet the readings are the probe and the meters, kept apart from the wire's rows and sent to the Current in a sheet worksheet */
+  const SH_NAME = { bars: 'two bars', dots: 'two dots', bardot: 'bar and dot', slot: 'slot between dots', ring: 'silver ring', neck: 'narrow neck', strip: 'strip', own: 'own sheet' };
+  function shRow() {
+    if (!SH.sol) shSolve();
+    const [px, py] = SH.probe, vp = shV(px, py), e = shE(px, py), G = SH.sol.G, geo = SH.layout === 'strip' ? [SH.L, SH.W] : SH.layout === 'bars' ? [21.5, 16] : ['', ''];
+    return { layout: SH_NAME[SH.layout] || SH.layout, V0: SH.V0, Rs: SH.Rs, L: geo[0], W: geo[1], x: px.toFixed(2), y: (16 - py).toFixed(2), Vp: isFinite(vp) ? vp.toFixed(3) : 'no contact',
+      E: !S.blind && isFinite(vp) ? sig(Math.hypot(e[0], e[1]), 4) : '', I: S.blind ? '' : G > 0 ? sig(G * SH.V0 / SH.Rs, 4) : '0' };
+  }
+  function renderShRows() {
+    $('shRowsTbl').querySelector('tbody').innerHTML = SH.rows.length ? SH.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.layout}</td><td>${r.x}, ${r.y}</td><td>${r.Vp}</td><td>${r.I}</td><td><button type="button" data-shdel="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="6">No readings yet. Place the probe, then capture.</td></tr>';
+  }
+  $('shRowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-shdel]'); if (b) { SH.rows.splice(+b.dataset.shdel, 1); renderShRows(); } });
+  $('capture').addEventListener('click', (e) => { if (S.view !== 'sheet') return; e.stopImmediatePropagation(); SH.rows.push(shRow()); renderShRows(); capStatus(`Row ${SH.rows.length} captured.`); }, true);
+  $('capture').addEventListener('click', (e) => { if (S.view !== 'bench' && S.view !== 'sheet') { e.stopImmediatePropagation(); capStatus('Readings are captured in the Wire view and in Current in a sheet.'); } }, true);
   $('capture').addEventListener('click', () => { S.rows.push({ mat: M().name, key: S.mat, d: d().toFixed(3), T: String(S.T), L: S.L.toFixed(3), I: sig(S.I, 3), V: vShown() }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
-  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { if (S.view === 'sheet') { SH.series = Date.now(); SH.rows = []; renderShRows(); capStatus('Readings cleared.'); return; } wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
@@ -1210,6 +1253,13 @@ table.rows input:focus { border-color: var(--accent); }
     a.style.color = 'var(--accent)'; st.appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {
+    if (S.view === 'sheet') {
+      if (!SH.rows.length) { capStatus('No readings to export.'); return; }
+      const txt = sheetCSV(SH.rows, RS_VERSION);
+      toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'current-sheet-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} },
+        { ws: 'current-sheet', wsName: 'Current in a Sheet', csvName: 'current-sheet-readings.csv', series: SH.series });
+      return;
+    }
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const txt = readingsCSV(S.rows, { version: RS_VERSION, material: [...new Set(S.rows.map((r) => r.mat))].join('; ') });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'resistivity-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
@@ -1266,8 +1316,11 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmotion').checked = reducePref(); EL.playing = !$('rmotion').checked; setPlaying(EL.playing);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { runLoop(); benchLoop(); } });
   resetElectrons();
-  tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); resize();
-  VD.howTo({ src: 'media/how-this-works/resistivity.mp4', poster: 'media/how-this-works/resistivity.jpg' });
+  tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); renderShRows(); resize();
+  /* How this works: the Current in a Sheet worksheet's video in that view, the wire's in the others */
+  const howVid = () => (S.view === 'sheet' ? 'current-sheet' : 'resistivity');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.view === 'sheet' ? 'How this works: Mapping the Field in a Current Carrying Sheet' : 'How this works: Measuring a Wire\'s Resistivity') });
   { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside' || v0 === 'sheet') setView(v0); else benchLoop();
     G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

@@ -9571,9 +9571,10 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a meter rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "note": "New 2026-10-22 (Claude). Four-wire measurement on a wire along a meter rule: nichrome, constantan, copper, mystery wire; four AWG gauges; length, current, temperature; Capture, CSV, R against L (ρ) and R against T (α) fits; Blind. Handbook ρ at 20 °C, linear in T. Student/private instructor package written and source/numerically checked 2026-10-22. Mystery fit discloses calculated answers unless Blind is explicitly on; strict regression reproduces this. See EM_BENCH_LABS_2026-10-22.md. Browser/classroom acceptance pending. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind. 2026-10-31: worksheet current-sheet (Current in a sheet view: field mapping, R = R_s L/W on the new Strip L by W layout).",
       "handouts": [
-        "resistivity"
+        "resistivity",
+        "current-sheet"
       ],
       "title": "Resistivity of a Wire",
       "url": "demos/resistivity.html"

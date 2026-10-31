@@ -135,4 +135,16 @@ group('current in a sheet: Kirchhoff on a grid of squares, R = R_s L/W for bars,
   /* 19 squares of 1, then 19 of 3 per row: half cells at the bars and the series face 2·1·3/4 = 1.5 between them */
   const Rrow = 0.5 + 18 + 1 / 1.5 + 18 / 3 + 0.5 / 3; near(r.G, ny / Rrow, 1e-9, 'two sheets in series');
 });
+group('Current in a sheet, Strip L by W: R = R_s L/W exactly, V falls evenly along the strip, the CSV', () => {
+  const S = core('resistivity', 'sheetSolve,sheetStrip,sheetCSV,RS_VERSION');
+  for (const [L, W] of [[12, 8], [22, 16], [4, 2], [6, 12], [20, 3]]) {
+    const st = S.sheetStrip(96, 64, L, W), r = S.sheetSolve(96, 64, st.c, st.fix, 10);
+    near(1 / r.G, L / W, 1e-8, `strip ${L} by ${W}`); near(r.Gin, r.G, 1e-8, 'current conserved');
+    /* the cell 1 cm past the + electrode's edge (center 1.125 cm in) on the middle row */
+    const xa = 48 - 2 * L, V = r.V[32 * 96 + xa + 4]; near(V, 10 * (1 - 1.125 / L), 1e-8, 'linear potential');
+    assert.equal(st.bars[0].y1 - st.bars[0].y0 + 1, 4 * W); assert.equal(st.bars[1].x0 - st.bars[0].x1 - 1, 4 * L);
+  }
+  const csv = S.sheetCSV([{ layout: 'strip', V0: 10, Rs: 1000, L: 12, W: 8, x: '12.00', y: '8.00', Vp: '5.000', E: '83.33', I: '0.006667' }], S.RS_VERSION).trim().split('\n');
+  const h = csv.indexOf('row,layout,V_battery_V,Rs_ohm_per_sq,L_cm,W_cm,x_cm,y_cm,V_probe_V,E_V_per_m,I_A'); assert(h > 0); assert.equal(csv[h + 1], '1,strip,10,1000,12,8,12.00,8.00,5.000,83.33,0.006667');
+});
 console.log(`${n} resistivity test groups passed`);

@@ -131,7 +131,8 @@
     'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */,
     'straight-wire-fields', 'loops-solenoids' /* Magnetic Fields of Currents, 2026-10-24 */,
     'mirrors-refraction', 'lenses-instruments' /* Optics Bench, 2026-10-24 */,
-    'ripple-tank' /* Ripple Tank, 2026-10-25 */];
+    'ripple-tank' /* Ripple Tank, 2026-10-25 */,
+    'current-sheet' /* Current in a sheet view of Resistivity of a Wire, 2026-10-31 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -173,6 +174,10 @@
     'magnetic-force': { demo: 'Charges in Magnetic Fields', cols: [both('row', 'particle'), 'v_perp_m_per_s', (r) => (r.B_tesla !== '' && r.B_tesla != null ? `${r.B_tesla} T${r.B_direction ? ', ' + r.B_direction : ''}` : ''),
       'r_measured_m', 'turns_timed', 'timer_s', 'T_measured_s'] },
     resistivity: { demo: 'Resistivity of a Wire', cols: ['row', 'material', 'd_mm', 'T_C', 'L_m', 'I_A', 'V_V', 'R_ohm'] },
+    /* Reading | Layout | x (cm) | y (cm) | Potential V (V) | Field E (V/m) | Current I (A); a series of Strip L by W readings goes to the
+       Resistance table: Reading | L (cm) | W (cm) | Battery V (V) | Current I (A) | R = V/I | L/W (the last two typed) */
+    'current-sheet': { demo: 'Resistivity of a Wire (Current in a sheet)', cols: ['row', 'layout', 'x_cm', 'y_cm', 'V_probe_V', 'E_V_per_m', 'I_A'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.layout === 'strip'), cols: ['row', 'L_cm', 'W_cm', 'V_battery_V', 'I_A', null, null] }] },
     'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null] },
     'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
     /* Trial | Setup | Rod charge (nC) | d (cm) | Radius of B (cm) | Gap (cm) | Connections | Q_A (nC) | Q_B (nC) | R/(R + d) */
@@ -802,6 +807,7 @@
   GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
   GRAPH_EVERY_TABLE.push('chladni', 'timbre');   /* the Drumhead table graphs f against √T, the Wave packets table Δx against 1/Δk (2026-10-31) */
+  GRAPH_EVERY_TABLE.push('current-sheet');   /* V against x in the probe tables; R against L/W in the Resistance table */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');

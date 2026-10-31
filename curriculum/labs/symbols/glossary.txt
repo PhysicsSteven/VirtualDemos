@@ -2179,6 +2179,22 @@ E' | Electric field in the test charge's frame | V/m
 F' | Electric force in the test charge's frame | N
 beta | Speed as a fraction of c
 
+== current-sheet ==
+V | Potential (Battery V: the voltage across the electrodes) | V
+L | Length between the electrodes | cm
+W | Width of the strip | cm
+x | Distance from the sheet's left edge | cm
+y | Distance from the sheet's bottom edge | cm
+I | Current from the battery | A
+R | Resistance between the electrodes | Ω
+E | Electric field in the sheet | V/m
+R_s | Sheet resistance | Ω per square
+J | Current per unit width of the sheet | A/m
+t | Thickness of the sheet | m
+rho | Resistivity of the sheet's material | Ω·m
+a | Radius of a round electrode | cm
+d | Distance between the centers of the two round electrodes | cm
+
 == resistivity ==
 I | Current | A
 e | @
