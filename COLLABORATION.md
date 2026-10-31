@@ -6772,6 +6772,10 @@ hardly showed; the sky was one flat dark gray in both themes and the camera open
   not computed), ground #587a46 in the light theme (unchanged dark), camera opens nearer eye level so the bow stands against the
   cloud. CORE unchanged; `test_rainbows.cjs` passes; `vdcheck --only after` and `--only clip` on rainbows: 0 problems, 0 cut off.
   Screenshots light and dark, desktop and 400 px in /mnt/project-files/review-2026-10-31/rainbows-v2/.
+- Steve (22:20): the drops were too large to show the gradient. Now 36 000 drops (was 12 000) at a third the size, and the curtain
+  is 1 m thick (30 to 31 m) instead of 3 m, so the drops on each cone sit in a thin ring and the color order reads as a band from
+  any camera angle. Page text updated (thin curtain 30 to 31 m).
+
 ## 2026-10-31 · Claude · Star Slice: Play no longer sits still on open (Steve)
 
 Steve asked for the Star Slice visual pass tonight. Checked against the visual bar at 1280 and 400 px, light and dark, 3D and Flat:
