@@ -268,6 +268,7 @@ HANDOUT_TOPIC = {
     'mp-bragg-peak': 'The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)',
     'mp-proton-qa': 'Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)',
     'mp-shielding-rooms': 'Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)',
+    'color-vision': 'Cones, Mixing and Filters', 'galton-board': 'Chance, the Binomial and the Bell Curve', 'quantum-coin': 'Superposition and Measurement',
     'intro-exoplanets': 'Finding Planets Around Other Stars (Astro 2203)', 'intro-tides': 'Tides: Two Bulges, the Moon and the Sun (Astro 2203)',
     'intro-lagrange': 'Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro 2203)',
     'intro-parallax': 'Parallax: Measuring the Distance to a Star (Astro 2203)',

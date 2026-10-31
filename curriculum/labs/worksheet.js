@@ -712,6 +712,18 @@
         cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] }] },
   });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
+  /* ==PARITY DEMOS (2026-10-31)== Color Vision (Physics II), Galton Board (Thermodynamics), Quantum Coin Toss (Modern Physics). */
+  PHYSICS_II.push('color-vision'); THERMO.push('galton-board'); MODERN.push('quantum-coin'); ENABLED.push('color-vision', 'galton-board', 'quantum-coin');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Light | Wavelength or filter center (nm) | L | M | S | Brightness Y */
+    'color-vision': { demo: 'Color Vision', cols: ['row', 'light', 'lambda_nm', 'L', 'M', 'S', 'Y'] },
+    /* Reading | Rows n | Chance p | Balls N | Sample mean of k | Sample standard deviation s | s² (typed) | np(1 − p) (typed) */
+    'galton-board': { demo: 'Galton Board', cols: ['row', 'n', 'p', 'N', 'mean', 'sd', null, null] },
+    /* Table 1: Reading | Setup | Angle (°) | Measured N | Heads or up | Fraction up (typed) | cos²(angle/2) (typed);
+       Table 2, magnets in a row: Reading | Magnets | Atoms N | Up at the end | Down at the end | Blocked | Predicted fractions (typed) */
+    'quantum-coin': { demo: 'Quantum Coin Toss', cols: ['row', 'setup', 'angle_deg', 'N', 'up', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'sg'), cols: ['row', 'setup', 'N', 'up', 'down', 'blocked', null] }] },
+  });
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -735,6 +747,7 @@
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
   CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
+  CURVE_TABLES['color-vision'] = [0];   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-radiobiology'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
   /* ==FORMULAS START== */

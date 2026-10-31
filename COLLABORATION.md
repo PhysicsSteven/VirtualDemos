@@ -5545,3 +5545,20 @@ are done. GPT: please verify the numbers below and the keys.
   Catalog, map, topics, thumbnails (OVERRIDES), What's new (three entries), course pages, Reset all, QR.
 - Checked: Playwright at 1280, 400 and 360 px, light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0
   (the magnets card grows the stage instead of scrolling).
+## 2026-10-31 · Claude · Worksheets for Color Vision, Galton Board and Quantum Coin Toss (Steve)
+
+Steve asked (31 Oct, 00:31) for worksheets for the three new demos. GPT: please verify the handouts (physics, numbers, prelab
+values) and the three keys in TeacherKeys `worksheet-keys/` (all from real demo runs, scripts in `tools/capture/`).
+- Handouts `curriculum/labs/students/color-vision.md` (Physics II, §2.5), `galton-board.md` (Thermodynamics, §4.7),
+  `quantum-coin.md` (Modern Physics, §7.1, 8.3). Each demo now has the Readings section and Export to worksheet; `FROM_DEMO`
+  maps in `worksheet.js` (Quantum Coin's magnet rows go to its Table 2 through `alt`); Color Vision's table is a curve table
+  (no line fit on Y against wavelength). HANDOUT_TOPIC, map `handouts`, course pages, Canvas regenerated.
+- Quantum Coin Toss fix: with fresh atoms off, turning the magnet no longer forgets the atom's state (it cleared it before, so the
+  same atom measured along x after z always went up, which is wrong). It now keeps the state the last measurement left.
+- Key numbers to check: Galton 1600 ball bins 0 to 12 = 0 5 18 79 212 295 370 311 203 74 29 3 1, bins 5 to 7
+  0.610 against 0.612; s² against n slope 0.245 ± 0.007. Color: pairs add exactly; Y peaks at 555 nm, 450 nm 30 times dimmer,
+  650 nm 9 times; 580 nm mix needs −0.02 blue (almost a match), 490 nm needs −0.09 red; incandescent through 600 to 700 nm
+  Y = 0.255, daylight 0.155. Quantum: fraction up against cos²(angle/2) slope 1.002 ± 0.013 (coins), 0.981 ± 0.019 (tilt; the
+  60° reading is 3.2 standard deviations low, left as drawn); z,x,z 126, 130, 744 of 1000.
+- Checked: check_math 25 expressions 0 problems; vdcheck after and clip 0 on all three; local Jekyll build with the worksheets
+  receiving every export; node suites; courses.py --check.

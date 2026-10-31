@@ -7758,10 +7758,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Galton board (PhET Plinko Probability counterpart, 2026-10-30, Steve asked): binomial against the normal curve, random walk labels, microstate counts. No worksheet yet.",
+      "note": "Galton board (PhET Plinko Probability counterpart, 2026-10-30, Steve asked): binomial against the normal curve, random walk labels, microstate counts. Worksheet added 2026-10-31 (Steve).",
       "title": "Galton Board",
       "url": "demos/galton-board.html",
-      "handouts": []
+      "handouts": [
+        "galton-board"
+      ]
     },
     {
       "demo": "equilibrium",
@@ -10120,10 +10122,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Quantum coin toss and measurement (PhET Quantum Coin Toss and Quantum Measurement counterpart, 2026-10-30, Steve asked): coins, spin on a Bloch sphere, Stern–Gerlach magnets in a row. No worksheet yet.",
+      "note": "Quantum coin toss and measurement (PhET Quantum Coin Toss and Quantum Measurement counterpart, 2026-10-30, Steve asked): coins, spin on a Bloch sphere, Stern–Gerlach magnets in a row. Worksheet added 2026-10-31 (Steve).",
       "title": "Quantum Coin Toss",
       "url": "demos/quantum-coin.html",
-      "handouts": []
+      "handouts": [
+        "quantum-coin"
+      ]
     },
     {
       "demo": "springs",
@@ -10412,10 +10416,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Color vision (PhET Color Vision counterpart, 2026-10-30, Steve asked): three lamps, one wavelength with a lamp match (metamers), bulb and filter, beams or photons. Cone signals from CIE 1931 and the HPE matrix. No worksheet yet.",
+      "note": "Color vision (PhET Color Vision counterpart, 2026-10-30, Steve asked): three lamps, one wavelength with a lamp match (metamers), bulb and filter, beams or photons. Cone signals from CIE 1931 and the HPE matrix. Worksheet added 2026-10-31 (Steve).",
       "title": "Color Vision",
       "url": "demos/color-vision.html",
-      "handouts": []
+      "handouts": [
+        "color-vision"
+      ]
     },
     {
       "demo": "instrument-builder",

@@ -97,6 +97,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/quantum-coin.html" target="quantum-coin-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -117,6 +118,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="quantum-coin" data-title="Quantum Coin Toss" data-demo="quantum-coin">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the expected values (predict them first)</span></label>
@@ -398,7 +420,9 @@
   const DEF = { coin: 'fair', spin: 'sx', sg: 'zxz' };
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => applyPreset(DEF[b.dataset.m]));
   const changed = () => { S.preset = 'custom'; clear(); S.msg = 'Changing the setup clears the counts.'; status(); sync(); drawAll(); };
-  for (const [id, key] of [['sPc', 'pc'], ['sTq', 'tq'], ['sFq', 'fq'], ['sTs', 'ts'], ['sFs', 'fs'], ['sTa', 'ta'], ['sFa', 'fa']]) $(id).addEventListener('input', (e) => { S[key] = +e.target.value; changed(); });
+  for (const [id, key] of [['sPc', 'pc'], ['sTq', 'tq'], ['sFq', 'fq'], ['sTs', 'ts'], ['sFs', 'fs']]) $(id).addEventListener('input', (e) => { S[key] = +e.target.value; changed(); });
+  /* turning the magnet keeps the same atom when fresh atoms are off: it stays in the state its last measurement left */
+  for (const [id, key] of [['sTa', 'ta'], ['sFa', 'fa']]) $(id).addEventListener('input', (e) => { S[key] = +e.target.value; const cur = S.cur; changed(); if (!S.fresh && cur) { S.cur = cur; S.msg = 'Changing the setup clears the counts. The same atom keeps the state its last measurement left.'; status(); drawAll(); } });
   for (let i = 0; i < 3; i++) $(`sA${i}`).addEventListener('input', (e) => { S.mags[i].a = +e.target.value; changed(); });
   for (let i = 0; i < 2; i++) for (const b of document.querySelectorAll(`#k${i} button`)) b.addEventListener('click', () => { S.mags[i].keep = b.dataset.k; changed(); });
   for (const b of document.querySelectorAll('#nSeg button')) b.addEventListener('click', () => { S.n = +b.dataset.n; changed(); });
@@ -407,7 +431,25 @@
   $('go').addEventListener('click', () => measure(1)); $('go10').addEventListener('click', () => measure(10)); $('go100').addEventListener('click', () => measure(100)); $('go1000').addEventListener('click', () => measure(1000));
   $('reset').addEventListener('click', () => { clear(); S.msg = ''; status(); drawAll(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { measure(1); e.preventDefault(); } });
-  window.vdReadings = () => 0;
+  /* Readings for the worksheet (Readings section, tools/readings_panel.py): coins give two rows (ordinary, quantum), spin one row,
+     magnets one row that the worksheet sends to its second table */
+  window.vdReadingRow = () => {
+    if (S.mode === 'coin') {
+      const Nc = S.cc[0] + S.cc[1]; if (!Nc) return 'Toss and measure some coins first.';
+      return [{ setup: `ordinary coin, chance of heads ${S.pc.toFixed(2)}`, angle_deg: '', N: Nc, up: S.cc[0] },
+        { setup: `quantum coin, θ = ${S.tq}°, φ = ${S.fq}°`, angle_deg: S.tq, N: S.qc[0] + S.qc[1], up: S.qc[0] }];
+    }
+    if (S.mode === 'spin') {
+      const N = S.sp[0] + S.sp[1]; if (!N) return 'Measure some atoms first.';
+      const s = qcVec(S.ts, S.fs), n = axis(), g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D;
+      return { setup: `spin θ = ${S.ts}°, φ = ${S.fs}°; magnet tilt ${S.ta}°, turn ${S.fa}°` + (S.fresh ? '' : '; the same atom each time'), angle_deg: g.toFixed(1), N, up: S.sp[0] };
+    }
+    if (!S.sgc.N) return 'Send some atoms through first.';
+    const m = mags(), kp = { up: 'up beam', down: 'down beam', both: 'both beams' };
+    return { view: 'sg', setup: m.map((q, i) => `${q.a}°` + (i < m.length - 1 ? ` (${kp[q.keep]})` : '')).join(', then '), N: S.sgc.N, up: S.sgc.up, down: S.sgc.down, blocked: S.sgc.blocked };
+  };
+  window.vdShowCols = [['setup', 'setup'], ['N', 'N'], ['up', 'up']];
+  window.vdVersion = 'quantum-coin@2026-10-31';
 
   let last = performance.now();
   function frame(now) {
