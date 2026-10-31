@@ -151,12 +151,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="viewbar">
-        <div class="seg" role="group" aria-label="Wavelength axis">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-view="spec" aria-pressed="true">Spectrum</button>
+          <button type="button" data-view="ubv" aria-pressed="false">U B V filters</button>
+        </div>
+        <div class="seg" role="group" aria-label="Wavelength axis" id="xSeg">
           <span class="seglabel">λ</span>
           <button type="button" data-x="lin" aria-pressed="true">Linear</button>
           <button type="button" data-x="log" aria-pressed="false">Log</button>
         </div>
-        <div class="seg" role="group" aria-label="Radiance axis">
+        <div class="seg" role="group" aria-label="Radiance axis" id="ySeg">
           <span class="seglabel">B</span>
           <button type="button" data-y="lin" aria-pressed="true">Linear</button>
           <button type="button" data-y="log" aria-pressed="false">Log</button>
@@ -214,6 +218,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </dl>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Doubling T multiplies the flux by 16 and halves the peak wavelength.</p>
+        </details>
+      </section>
+
+      <section id="ubvBox" hidden>
+        <h2>Through the filters</h2>
+        <dl class="readout">
+          <div class="big"><dt>Color index B − V</dt><dd id="rBV">—</dd></div>
+          <div class="big"><dt>Color index U − B</dt><dd id="rUB">—</dd></div>
+          <div class="wide"><dt>Light through B ÷ light through V</dt><dd id="rBoV">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Astronomers measure a star's brightness through standard color filters: U (ultraviolet), B (blue) and V (visual, yellow green). The color index B − V is the B magnitude minus the V magnitude, B − V = −2.5 log₁₀(light through B ÷ light through V) + a constant. Hot stars are brighter in B, so their B − V is small or negative; cool stars are brighter in V, so it is large. The constant is fixed so that Vega has B − V = 0 and U − B = 0.</p>
+          <p class="hint">Filters: the standard U, B and V passbands of Bessell (1990, PASP 102, 1181), as tabulated in the speclite package, used as energy response curves (Bessell and Murphy 2012, PASP 124, 140). Zero point: the HST STIS spectrum of Vega (CALSPEC alpha_lyr_stis_011, Bohlin). The light through each filter is ∫B<sub>λ</sub>S(λ)dλ from 290 to 1000 nm. The star is an ideal blackbody: real stars have absorption lines and the Balmer jump, so their colors differ, most in U − B and for A stars, whose strong hydrogen lines sit in the B band.</p>
         </details>
       </section>
 
@@ -351,6 +368,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 })();
 </script>
 <script>
+/* U, B and V view (2026-10-31): star colors through the Bessell (1990) passbands, Vega based. Data and the Vega constants from
+   tools/star-colors/build.py, which checks this integral against its own. */
+// ==CORE START==
+  const UBV_BANDS = {"U":[[300.0,0.0],[305.0,0.016],[310.0,0.068],[315.0,0.167],[320.0,0.287],[325.0,0.423],[330.0,0.56],[335.0,0.673],[340.0,0.772],[345.0,0.841],[350.0,0.905],[355.0,0.943],[360.0,0.981],[365.0,0.993],[370.0,1.0],[375.0,0.989],[380.0,0.916],[385.0,0.804],[390.0,0.625],[395.0,0.423],[400.0,0.238],[405.0,0.114],[410.0,0.051],[415.0,0.019],[420.0,0.0]],"B":[[360.0,0.0],[370.0,0.03],[380.0,0.134],[390.0,0.567],[400.0,0.92],[410.0,0.978],[420.0,1.0],[430.0,0.978],[440.0,0.935],[450.0,0.853],[460.0,0.74],[470.0,0.64],[480.0,0.536],[490.0,0.424],[500.0,0.325],[510.0,0.235],[520.0,0.15],[530.0,0.095],[540.0,0.043],[550.0,0.009],[560.0,0.0]],"V":[[470.0,0.0],[480.0,0.03],[490.0,0.163],[500.0,0.458],[510.0,0.78],[520.0,0.967],[530.0,1.0],[540.0,0.973],[550.0,0.898],[560.0,0.792],[570.0,0.684],[580.0,0.574],[590.0,0.461],[600.0,0.359],[610.0,0.27],[620.0,0.197],[630.0,0.135],[640.0,0.081],[650.0,0.045],[660.0,0.025],[670.0,0.017],[680.0,0.013],[690.0,0.009],[700.0,0.0]]};
+  const VEGA_UB = 0.91804, VEGA_BV = -0.68788;   /* Vega instrumental colors, from tools/star-colors/build.py */
+  const UBV_C2 = 1.438776877e-2;   /* hc/k, m·K */
+  /* ln of the Planck radiance per unit wavelength, up to a constant (only ratios are used) */
+  function ubvLnB(lamNm, T) { const l = lamNm * 1e-9, x = UBV_C2 / (l * T); return -5 * Math.log(l) - (x > 40 ? x : Math.log(Math.expm1(x))); }
+  function ubvResponse(band, lamNm) {   /* linear between the tabulated points, zero outside */
+    const t = UBV_BANDS[band]; if (lamNm <= t[0][0] || lamNm >= t[t.length - 1][0]) return 0;
+    let i = 1; while (t[i][0] < lamNm) i++;
+    const [a, ra] = t[i - 1], [b, rb] = t[i]; return ra + (rb - ra) * (lamNm - a) / (b - a);
+  }
+  /* energy through each band, I = ∫ B_λ S(λ) dλ, trapezoids every 0.5 nm from 290 to 1000 nm, as fractions of the largest */
+  function ubvFluxes(T) {
+    const lam = [], ln = []; let mx = -Infinity;
+    for (let l = 290; l <= 1000.0001; l += 0.5) { const v = ubvLnB(l, T); lam.push(l); ln.push(v); if (v > mx) mx = v; }
+    const out = {};
+    for (const b of ['U', 'B', 'V']) {
+      let s = 0;
+      for (let i = 0; i < lam.length; i++) { const w = i === 0 || i === lam.length - 1 ? 0.5 : 1; s += w * Math.exp(ln[i] - mx) * ubvResponse(b, lam[i]); }
+      out[b] = s * 0.5;
+    }
+    return out;
+  }
+  /* colors on the Vega system: Vega's U − B and B − V are zero by definition */
+  function ubvColors(T) {
+    const f = ubvFluxes(T);
+    return { UB: -2.5 * Math.log10(f.U / f.B) - VEGA_UB, BV: -2.5 * Math.log10(f.B / f.V) - VEGA_BV, BoverV: f.B / f.V, f };
+  }
+  /* the temperature of the blackbody with a given B − V (bisection on ln T between 1000 K and 1e6 K; B − V falls as T rises) */
+  function ubvTempFromBV(bv) {
+    let a = Math.log(1000), b = Math.log(1e6);
+    if (bv >= ubvColors(1000).BV || bv <= ubvColors(1e6).BV) return NaN;
+    for (let i = 0; i < 60; i++) { const m = (a + b) / 2; if (ubvColors(Math.exp(m)).BV > bv) a = m; else b = m; }
+    return Math.exp((a + b) / 2);
+  }
+// ==CORE END==
+</script>
+<script>
 (() => {
   const $ = (id) => document.getElementById(id);
 
@@ -444,8 +501,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue. Slide T down to about 9940 K for Sirius A: its peak is still in the ultraviolet, near 290 nm, but the visible part is nearly flat, so it looks white.' },
     cmb:    { T: 2.725, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.725 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
   };
-  const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false };
+  const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false, view: 'spec' };
   let pins = [];
+  const SPEC_SHOW = [['T_K', 'T (K)'], ['peak_nm', 'peak (nm)'], ['flux_W_m2', 'flux (W/m²)']], UBV_SHOW = [['T_K', 'T (K)'], ['B_V', 'B − V'], ['U_B', 'U − B']];   /* Readings table columns per view */
   let locked = null, frozen = null;
   let probe = null, drag = null, hoverPeak = false;
   let raf = 0;
@@ -560,7 +618,67 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- chart ----------
+  /* U B V view: the Planck curve over 290 to 760 nm, scaled to 1 at its highest there, the three passbands (each 1 at its peak)
+     and the light each one lets through, B_λ × S(λ), shaded: the shaded areas are what the color index compares */
+  const UBV_COL = { U: '#8b5cf6', B: '#3b82f6', V: '#16a34a' };
+  function drawUBV() {
+    const ctx = cctx, T = tokens(), W = CW, H = CH, ps = T.ps, mono = monoFont(), ui = uiFont();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const narrow = W < 560, x0 = 290, x1 = 760;
+    const padL = 46 * ps, padR = 18 * ps, padT = (narrow && matchMedia("(min-width: 821px)").matches ? 84 : 58) * ps, padB = 46 * ps;
+    const pw = Math.max(10, W - padL - padR), ph = Math.max(10, H - padT - padB);
+    const X = (l) => padL + (l - x0) / (x1 - x0) * pw, Y = (v) => padT + ph - v / 1.12 * ph;
+    M = { padL, padT, pw, ph, X, Xinv: (px) => (x0 + (px - padL) / pw * (x1 - x0)) * 1e-9, peak: null };
+    if (S.band) for (let px = Math.floor(X(380)); px < X(750); px++) {
+      const k = Math.round(x0 + (px + 0.5 - padL) / pw * (x1 - x0)) - 380; if (k < 0 || k >= BAND.length) continue;
+      const c = BAND[k]; ctx.fillStyle = css(c.rgb, T.bandA * c.a); ctx.fillRect(px, padT, 1, ph); ctx.fillStyle = css(c.rgb, c.a); ctx.fillRect(px, padT + ph - 7 * ps, 1, 7 * ps);
+    }
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (let l = 300; l <= x1; l += 50) { const x = Math.round(X(l)) + 0.5; ctx.moveTo(x, padT); ctx.lineTo(x, padT + ph); }
+    for (let v = 0; v <= 1.0001; v += 0.25) { const y = Math.round(Y(v)) + 0.5; ctx.moveTo(padL, y); ctx.lineTo(padL + pw, y); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(padL + 0.5, padT); ctx.lineTo(padL + 0.5, padT + ph + 0.5); ctx.lineTo(padL + pw, padT + ph + 0.5); ctx.stroke();
+    ctx.font = `${11 * ps}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let l = 300; l <= x1; l += narrow ? 100 : 50) ctx.fillText(String(l), X(l), padT + ph + 7 * ps);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= 1.0001; v += 0.5) ctx.fillText(String(v), padL - 7 * ps, Y(v));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.font = `700 ${11.5 * ps}px ${ui}`;
+    ctx.fillText('Wavelength λ (nm)', padL + pw, H - 4 * ps);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.font = `700 ${12.5 * ps}px ${ui}`;
+    const ty = narrow ? padT - 30 * ps : 22 * ps;
+    ctx.fillText(narrow ? 'Bλ and the U, B, V filters' : 'Bλ and the U, B, V filters, each scaled to 1 at its highest', padL - 34 * ps, ty);
+    // the curve, scaled to its largest value on the window
+    let mx = -Infinity; for (let l = x0; l <= x1; l += 1) mx = Math.max(mx, ubvLnB(l, S.T));
+    const bn = (l) => Math.exp(ubvLnB(l, S.T) - mx);
+    ctx.save(); ctx.beginPath(); ctx.rect(padL, padT - 2, pw, ph + 4); ctx.clip();
+    for (const b of ['U', 'B', 'V']) {
+      const t = UBV_BANDS[b], la = t[0][0], lb = t[t.length - 1][0];
+      ctx.beginPath(); ctx.moveTo(X(la), Y(0));
+      for (let l = la; l <= Math.min(lb, x1); l += 1) ctx.lineTo(X(l), Y(bn(l) * ubvResponse(b, l)));
+      ctx.lineTo(X(Math.min(lb, x1)), Y(0)); ctx.closePath();
+      ctx.fillStyle = UBV_COL[b]; ctx.globalAlpha = 0.32; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = UBV_COL[b]; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.beginPath();
+      for (let l = la; l <= Math.min(lb, x1); l += 1) { const y = Y(ubvResponse(b, l)); l === la ? ctx.moveTo(X(l), y) : ctx.lineTo(X(l), y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = T.pos; ctx.lineWidth = 2.8 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let l = x0; l <= x1; l += 1) { const y = Y(bn(l)); l === x0 ? ctx.moveTo(X(l), y) : ctx.lineTo(X(l), y); }
+    ctx.stroke(); ctx.restore();
+    // band names over each filter's peak
+    ctx.font = `800 ${14 * ps}px ${ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (const [b, l] of [['U', 360], ['B', 425], ['V', 535]]) { ctx.fillStyle = UBV_COL[b]; ctx.fillText(b, X(l), Y(1) - 4 * ps); }
+    // the color index, top right
+    const c = ubvColors(S.T), f2 = (v) => (v < 0 ? '−' : '+') + Math.abs(v).toFixed(2);
+    const lines = [`B − V = ${f2(c.BV)}`, `U − B = ${f2(c.UB)}`];
+    ctx.font = `700 ${13 * ps}px ${mono}`; const bw = Math.max(...lines.map((q) => ctx.measureText(q).width)) + 16 * ps, bh = 44 * ps;
+    const bx = padL + pw - bw - 6 * ps, by = padT + 6 * ps;
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1; rr(ctx, bx, by, bw, bh, 6 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lines.forEach((q, i) => ctx.fillText(q, bx + 8 * ps, by + 6 * ps + i * 17 * ps));
+  }
   function drawChart() {
+    if (S.view === 'ubv') return drawUBV();
     const ctx = cctx, T = tokens(), W = CW, H = CH, ps = T.ps;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
@@ -1035,6 +1153,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const vf = visibleFraction(S.T);
     $('rVis').textContent = vf > 0 ? (vf >= 1e-3 ? (vf * 100).toFixed(vf > 0.1 ? 1 : 2) + '%' : sci(vf * 100, 2) + '%') : '≈ 0';
     $('rB').textContent = sci(planck(wien(S.T), S.T) * 1e-9, 3);
+    if (S.view === 'ubv') {
+      const c = ubvColors(S.T), f2 = (v) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(3);
+      $('rBV').textContent = f2(c.BV); $('rUB').textContent = f2(c.UB); $('rBoV').textContent = c.BoverV.toPrecision(4);
+    }
     $('pin').disabled = pins.length >= 3 || pins.some((p) => p.T === S.T);
     $('unpin').disabled = !pins.length;
   }
@@ -1091,8 +1213,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('presetHint').textContent = 'Slide T and watch the peak shift as 1/T while the height of the curve climbs much faster.';
   });
   $('rad').addEventListener('input', (e) => { S.R = uToR(+e.target.value); S.star = true; schedule(); });
-  for (const b of document.querySelectorAll('[data-x]')) b.addEventListener('click', () => { S.xMode = b.dataset.x; setPressed('.seg:nth-child(1)', 'x', S.xMode); schedule(); });
-  for (const b of document.querySelectorAll('[data-y]')) b.addEventListener('click', () => { S.yMode = b.dataset.y; setPressed('.seg:nth-child(2)', 'y', S.yMode); schedule(); });
+  for (const b of document.querySelectorAll('[data-x]')) b.addEventListener('click', () => { S.xMode = b.dataset.x; setPressed('#xSeg', 'x', S.xMode); schedule(); });
+  for (const b of document.querySelectorAll('[data-y]')) b.addEventListener('click', () => { S.yMode = b.dataset.y; setPressed('#ySeg', 'y', S.yMode); schedule(); });
+  function setView(v) {
+    S.view = v === 'ubv' ? 'ubv' : 'spec'; setPressed('#viewSeg', 'view', S.view);
+    $('xSeg').hidden = $('ySeg').hidden = S.view === 'ubv'; $('ubvBox').hidden = S.view !== 'ubv';
+    window.vdShowCols = S.view === 'ubv' ? UBV_SHOW : SPEC_SHOW;
+    probe = null; schedule();
+  }
+  for (const b of document.querySelectorAll('[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
   $('tRJ').addEventListener('change', (e) => { S.rj = e.target.checked; schedule(); });
   $('tBand').addEventListener('change', (e) => { S.band = e.target.checked; schedule(); });
   $('tEye').addEventListener('change', (e) => { S.eye = e.target.checked; schedule(); });
@@ -1174,9 +1303,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- boot ----------
   /* How this works: a short video of one sample reading; made by tools/howto/ */
   /* How this works: the Astro 2203 worksheet opens the demo with ?ws=intro-blackbody */
-  const howVid = () => (VD.ws('blackbody') === 'intro-blackbody' ? 'intro-blackbody' : 'blackbody');
+  /* the U, B, V view sends its readings to its own worksheet, ubv-colors, which opens the demo with ?ws=ubv-colors (or use ?view=ubv) */
+  window.vdWorksheet = () => VD.ws(S.view === 'ubv' ? 'ubv-colors' : 'blackbody');
+  const howVid = () => { const w = window.vdWorksheet(); return w === 'intro-blackbody' || w === 'ubv-colors' ? w : 'blackbody'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   applyPreset('sun');
+  if (VD.ws('') === 'ubv-colors' || new URLSearchParams(location.search).get('view') === 'ubv') setView('ubv');
   renderPins();
   { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
@@ -1189,18 +1321,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 80; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (logPlanck(Math.exp(c), T) > logPlanck(Math.exp(d), T)) b = d; else a = c; } return Math.exp((a + b) / 2); }
   function curveFlux(T) { const lp = Math.log(BW / T), a = lp + Math.log(0.01), b = lp + Math.log(1000), n = 4000, h = (b - a) / n, g = (u) => { const l = Math.exp(u); return planck(l, T) * l; };
     let sum = g(a) + g(b); for (let i = 1; i < n; i++) sum += (i % 2 ? 4 : 2) * g(a + i * h); return Math.PI * sum * h / 3; }
-  window.vdVersion = 'blackbody@2026-10-24';
-  window.vdShowCols = [['T_K', 'T (K)'], ['peak_nm', 'peak (nm)'], ['flux_W_m2', 'flux (W/m²)']];
+  window.vdVersion = 'blackbody@2026-10-31';
+  window.vdShowCols = S.view === 'ubv' ? UBV_SHOW : SPEC_SHOW;
   window.vdReadingRow = () => {
     const g = (v, d) => +(+v).toPrecision(d), pk = curvePeak(S.T);
     return { T_K: g(S.T, 5), peak_nm: g(pk * 1e9, 5), B_peak_W_m2_sr_nm: g(planck(pk, S.T) * 1e-9, 4), flux_W_m2: g(curveFlux(S.T), 5), visible_percent: g(visibleFraction(S.T) * 100, 4), R_sun: S.star ? g(S.R, 4) : '',
       /* added for Astro 2203's intro worksheet: the star's spectral class and color name as the readouts give them, and its luminosity */
       spectral_class: classOf(S.T) ? classOf(S.T).c : (S.T < 2400 ? 'cooler than M' : ''), color: $('rCol').textContent,
-      L_sun: S.star ? g(4 * Math.PI * Math.pow(S.R * RSUN, 2) * SIG * Math.pow(S.T, 4) / LSUN, 4) : '' };
+      L_sun: S.star ? g(4 * Math.PI * Math.pow(S.R * RSUN, 2) * SIG * Math.pow(S.T, 4) / LSUN, 4) : '',
+      /* the U, B, V view (2026-10-31): 10⁴/T for the graph, the light through B over the light through V, and the two color indexes */
+      ...(S.view === 'ubv' ? (() => { const c = ubvColors(S.T); return { view: 'U B V filters', invT_1e4: g(1e4 / S.T, 4), B_over_V: g(c.BoverV, 4), B_V: +c.BV.toFixed(3), U_B: +c.UB.toFixed(3) }; })() : {}) };
   };
 
   // exposed for testing
-  window.__blackbody = { planck, logPlanck, rayleighJeans, wien, visibleFraction, bbColor, classOf, S };
+  window.__blackbody = { planck, logPlanck, rayleighJeans, wien, visibleFraction, bbColor, classOf, S, setView };
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */

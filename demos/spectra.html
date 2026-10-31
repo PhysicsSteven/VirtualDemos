@@ -150,6 +150,17 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 
 .bohr { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 14px; align-items: start; }
 .bohr canvas { display: block; width: 100%; height: 270px; cursor: pointer; touch-action: none; }
+.starchart { display: block; width: 100%; height: 340px; cursor: ew-resize; touch-action: pan-y; }
+#starsBox .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.9rem; }
+#starsBox .slider-head output { font-size: 0.85rem; color: var(--muted); }
+#starsBox input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+@media (max-width: 820px) { #starsBox input[type="range"] { min-height: 28px; } }
+.starkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
+.starkey span { display: inline-flex; align-items: center; }
+.starkey i { display: inline-block; width: 22px; height: 0; margin-right: 6px; }
+.balmer { display: block; width: 100%; height: 64px; margin-top: 8px; }
+:root[data-projector="on"] .starchart { height: 420px; }
+.starchart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 :root[data-projector="on"] .bohr canvas { height: 330px; }
 
 .rail { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
@@ -286,7 +297,15 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         </div>
       </section>
 
-      <section class="card" aria-labelledby="ptTitle">
+      <section class="card" id="starCard" aria-labelledby="starTitle" hidden>
+        <h2 id="starTitle">Hydrogen in a star's atmosphere</h2>
+        <p class="hint" style="margin: 4px 0 8px;">Where the hydrogen atoms are, against the star's surface temperature. Balmer lines need atoms on level n = 2.</p>
+        <canvas id="cStars" class="starchart" tabindex="0" role="application" aria-label="Chart of hydrogen level populations against temperature, log scales. Drag sideways or use the left and right arrow keys to change the temperature."></canvas>
+        <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span></p>
+        <canvas id="cBalmer" class="balmer" role="img" aria-label="Balmer absorption lines of hydrogen, drawn darker when more atoms sit on level n = 2."></canvas>
+      </section>
+
+      <section class="card" id="ptCard" aria-labelledby="ptTitle">
         <h2 id="ptTitle">Periodic table</h2>
         <p class="hint" id="ptHint" style="margin: 4px 0 10px;">Click an element to see its spectrum.</p>
         <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
@@ -298,10 +317,11 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/spectra.html" target="spectra-worksheet">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant</a></li><li><a href="../curriculum/labs/students/intro-spectra.html" target="intro-spectra-worksheet">Worksheet 2: Fingerprints of the Elements (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section class="card">
         <h2>Mode</h2>
-        <div class="seg" role="group" aria-label="Mode" id="modeSeg" style="align-self: flex-start;">
+        <div class="seg" role="group" aria-label="Mode" id="modeSeg" style="align-self: flex-start; flex-wrap: wrap;">
           <button type="button" data-m="explore" aria-pressed="true">Explore</button>
           <button type="button" data-m="compare" aria-pressed="false">Compare</button>
           <button type="button" data-m="mystery" aria-pressed="false">Mystery</button>
+          <button type="button" data-m="stars" aria-pressed="false">Hydrogen in stars</button>
         </div>
         <p class="hint" id="modeHint"></p>
         <div id="compareBox" hidden>
@@ -309,6 +329,32 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
             <button type="button" class="btn" id="swap">Swap</button>
             <button type="button" class="btn" id="pickA">Pick top</button>
           </div>
+        </div>
+        <div id="starsBox" hidden>
+          <div class="chips" id="starPresets">
+            <button type="button" data-t="3500" aria-pressed="false">M star, 3500 K</button>
+            <button type="button" data-t="5772" aria-pressed="false">The Sun, 5772 K</button>
+            <button type="button" data-t="9500" aria-pressed="false">A star, 9500 K</button>
+            <button type="button" data-t="20000" aria-pressed="false">B star, 20,000 K</button>
+          </div>
+          <div style="margin-top: 8px;">
+            <div class="slider-head"><label for="starT">Surface temperature T</label><output id="starTOut" class="mono" for="starT"></output></div>
+            <input type="range" id="starT" min="0" max="1000" step="1" value="500">
+          </div>
+          <div style="margin-top: 6px;">
+            <div class="slider-head"><label for="starPe">Electron pressure P<sub>e</sub></label><output id="starPeOut" class="mono" for="starPe"></output></div>
+            <input type="range" id="starPe" min="0" max="1000" step="1" value="500">
+          </div>
+          <dl class="readout" style="margin-top: 8px;">
+            <div><dt>Excited to n = 2, N₂/N₁</dt><dd id="sR12">—</dd></div>
+            <div><dt>Ionized, N<sub>II</sub>/N<sub>I</sub></dt><dd id="sRion">—</dd></div>
+            <div class="wide"><dt>Share of all hydrogen in n = 2, N₂/N<sub>total</sub></dt><dd id="sF2">—</dd></div>
+            <div class="wide"><dt>Balmer lines strongest at, this P<sub>e</sub></dt><dd id="sPeak">—</dd></div>
+          </dl>
+          <details class="more"><summary>More about this</summary>
+            <p class="hint">A Balmer line is absorbed by a hydrogen atom whose electron already sits on level n = 2. In a cool star almost every atom is on n = 1 (Boltzmann factor), and in a hot star almost every atom has lost its electron (Saha equation). Only in between are there many atoms on n = 2: the Balmer lines are strongest in A stars, near 10,000 K.</p>
+            <p class="hint">Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §8.1): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × 13.598 eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup> with χ = 13.598 eV. Approximations: partition functions Z<sub>I</sub> = 2 (ground level only) and Z<sub>II</sub> = 1 (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use 20 N/m², where the peak falls near 9900 K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go: each line is drawn darker on a log scale of N₂/N<sub>total</sub>, from 10⁻⁴ of its peak (barely there) to the peak (black). Constants CODATA 2022.</p>
+          </details>
         </div>
         <div id="mysteryBox" hidden>
           <div class="chips" id="mysteryKind">
@@ -376,6 +422,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   </main>
 </div>
 
+<script>
+/* Hydrogen in stars mode (2026-10-31): Boltzmann and Saha populations of hydrogen, as in Carroll and Ostlie §8.1. */
+// ==CORE START==
+  const HS_K = 1.380649e-23, HS_H = 6.62607015e-34, HS_ME = 9.1093837139e-31, HS_EV = 1.602176634e-19;   /* CODATA 2022 */
+  const HS_CHI = 13.598434;   /* ionization energy of hydrogen, eV (NIST) */
+  const HS_E21 = 0.75 * HS_CHI;   /* E₂ − E₁ in the Bohr model, eV */
+  const HS_ZI = 2, HS_ZII = 1;   /* partition functions: neutral atom, ground level only (g₁ = 2); ion, a bare proton */
+  /* N₂/N₁, Boltzmann, g₂/g₁ = 8/2 */
+  function hsBoltz(T) { return 4 * Math.exp(-HS_E21 * HS_EV / (HS_K * T)); }
+  /* N_II/N_I, Saha, at electron pressure Pe (N/m²) */
+  function hsSaha(T, Pe) {
+    const kT = HS_K * T;
+    return 2 * kT * HS_ZII / (Pe * HS_ZI) * Math.pow(2 * Math.PI * HS_ME * kT / (HS_H * HS_H), 1.5) * Math.exp(-HS_CHI * HS_EV / kT);
+  }
+  /* shares of all hydrogen: on n = 1, on n = 2 (neutral atoms counted as N₁ + N₂) and ionized */
+  function hsShares(T, Pe) {
+    const b = hsBoltz(T), s = hsSaha(T, Pe), neutral = 1 / (1 + s);
+    return { r12: b, rion: s, f1: neutral / (1 + b), f2: neutral * b / (1 + b), fion: s / (1 + s) };
+  }
+  /* the temperature where N₂/N_total is largest, golden section search on ln T between 3000 and 40,000 K */
+  function hsPeak(Pe) {
+    let a = Math.log(3000), b = Math.log(40000); const r = (Math.sqrt(5) - 1) / 2;
+    for (let i = 0; i < 90; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (hsShares(Math.exp(c), Pe).f2 > hsShares(Math.exp(d), Pe).f2) b = d; else a = c; }
+    return Math.exp((a + b) / 2);
+  }
+// ==CORE END==
+</script>
 <script>
 (() => {
   // ---------- data ----------
@@ -1213,8 +1286,111 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { new IntersectionObserver((es) => { rigSeen = es[0].isIntersecting; startRig(); }).observe(rigCv); } catch (_) {}
   document.addEventListener('visibilitychange', startRig);
 
+  // ---------- hydrogen in stars ----------
+  /* T from 3000 to 30,000 K and Pe from 1 to 1000 N/m², both on log sliders; the chart and the Balmer strip */
+  const ST = { T: 5772, Pe: 20 };
+  const HS_T0 = 3000, HS_T1 = 30000, HS_Y0 = -10;
+  const tFromU = (u) => { const t = HS_T0 * Math.pow(HS_T1 / HS_T0, u / 1000); return t < 10000 ? Math.round(t / 10) * 10 : Math.round(t / 100) * 100; };
+  const uFromT = (t) => Math.round(1000 * Math.log(t / HS_T0) / Math.log(HS_T1 / HS_T0));
+  const peFromU = (u) => +Math.pow(10, 3 * u / 1000).toPrecision(2);
+  const uFromPe = (p) => Math.round(1000 * Math.log10(p) / 3);
+  const BALMER = [['Hα', 656.279], ['Hβ', 486.135], ['Hγ', 434.047], ['Hδ', 410.174], ['Hε', 397.007]];   /* NIST air wavelengths, nm */
+  const sci2 = (v) => { if (!(v > 0)) return '0'; const e = Math.floor(Math.log10(v)); if (e >= -2 && e <= 3) return String(+v.toPrecision(3)); const m = v / Math.pow(10, e); return `${m.toFixed(2)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; };
+  const fmtK = (t) => `${Math.round(t).toLocaleString('en-US')} K`;
+  const STAR_CLASSES = [['M', 2400, 3700], ['K', 3700, 5200], ['G', 5200, 6000], ['F', 6000, 7500], ['A', 7500, 10000], ['B', 10000, 30000], ['O', 30000, 1e9]];
+  const classOfT = (t) => (STAR_CLASSES.find((c) => t >= c[1] && t < c[2]) || ['—'])[0];
+  let starGeo = null;
+  function drawStars() {
+    const cv = $('cStars'), [ctx, W, H] = fit(cv), ps = projScale(), m = mono();
+    ctx.clearRect(0, 0, W, H);
+    const muted = tok('--muted'), ink = tok('--ink'), grid = tok('--grid'), gridS = tok('--grid-strong'), pos = tok('--pos'), neg = tok('--neg'), equi = tok('--equi'), acc = tok('--accent');
+    const L = 54 * ps, R = W - 12 * ps, T0 = 26 * ps, B = H - 34 * ps;
+    const X = (t) => L + Math.log(t / HS_T0) / Math.log(HS_T1 / HS_T0) * (R - L), Y = (v) => T0 + (0 - Math.log10(Math.max(v, 1e-300))) / -HS_Y0 * (B - T0);
+    starGeo = { L, R, X, tAt: (x) => HS_T0 * Math.pow(HS_T1 / HS_T0, Math.min(1, Math.max(0, (x - L) / (R - L)))) };
+    // spectral classes along the top
+    ctx.font = `700 ${10.5 * ps}px ${m}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    STAR_CLASSES.forEach(([c, lo, hi], i) => {
+      const xa = X(Math.max(lo, HS_T0)), xb = X(Math.min(hi, HS_T1)); if (xb <= xa) return;
+      ctx.fillStyle = i % 2 ? grid : gridS; ctx.globalAlpha = 0.8; ctx.fillRect(xa, T0 - 20 * ps, xb - xa, 15 * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = muted; ctx.fillText(c, (xa + xb) / 2, T0 - 12.5 * ps);
+    });
+    // grid
+    ctx.strokeStyle = grid; ctx.lineWidth = 1; ctx.beginPath();
+    const ticks = W < 480 ? [3000, 5000, 10000, 20000, 30000] : [3000, 4000, 5000, 6000, 8000, 10000, 15000, 20000, 30000];
+    for (const t of ticks) { const x = Math.round(X(t)) + 0.5; ctx.moveTo(x, T0); ctx.lineTo(x, B); }
+    for (let e = 0; e >= HS_Y0; e -= 2) { const y = Math.round(Y(Math.pow(10, e))) + 0.5; ctx.moveTo(L, y); ctx.lineTo(R, y); }
+    ctx.stroke();
+    ctx.strokeStyle = gridS; ctx.strokeRect(L + 0.5, T0 + 0.5, R - L - 1, B - T0 - 1);
+    ctx.fillStyle = muted; ctx.font = `${10.5 * ps}px ${m}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const t of ticks) ctx.fillText(t >= 10000 ? `${t / 1000}k` : t.toLocaleString('en-US'), X(t), B + 5 * ps);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let e = 0; e >= HS_Y0; e -= 2) ctx.fillText(e === 0 ? '1' : '10' + String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]), L - 5 * ps, Y(Math.pow(10, e)));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('surface temperature T (K), log scale', R, H - 1 * ps);
+    // curves
+    ctx.save(); ctx.beginPath(); ctx.rect(L, T0, R - L, B - T0); ctx.clip();
+    const curve = (fn, col, lw, dash) => {
+      ctx.strokeStyle = col; ctx.lineWidth = lw * ps; ctx.setLineDash(dash.map((d) => d * ps)); ctx.beginPath();
+      for (let i = 0; i <= 300; i++) { const t = HS_T0 * Math.pow(HS_T1 / HS_T0, i / 300), y = Y(fn(t)); i ? ctx.lineTo(X(t), y) : ctx.moveTo(X(t), y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    };
+    curve((t) => hsShares(t, ST.Pe).r12, equi, 1.8, [6, 4]);
+    curve((t) => 1 / (1 + hsSaha(t, ST.Pe)), neg, 1.8, [2, 3]);
+    curve((t) => hsShares(t, ST.Pe).f2, pos, 3, []);
+    ctx.restore();
+    // labels on the curves
+    ctx.font = `700 ${11 * ps}px ${m}`; ctx.textBaseline = 'bottom';
+    const lab = (txt, col, t, v, al) => { ctx.fillStyle = col; ctx.textAlign = al; ctx.fillText(txt, X(t), Y(v) - 4 * ps); };
+    const pk = hsPeak(ST.Pe), fpk = hsShares(pk, ST.Pe).f2;
+    lab('share in n = 2', pos, pk, fpk * 2.2, 'center');
+    // the peak, and the current temperature
+    ctx.strokeStyle = pos; ctx.globalAlpha = 0.5; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(pk), Y(fpk)); ctx.lineTo(X(pk), B); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.fillStyle = pos; ctx.font = `${10.5 * ps}px ${m}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`peak ${fmtK(pk)}`, X(pk) + 4 * ps, B - 3 * ps);
+    const x = X(ST.T);
+    ctx.strokeStyle = acc; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, T0); ctx.lineTo(x, B); ctx.stroke();
+    const sh = hsShares(ST.T, ST.Pe);
+    for (const [v, col] of [[sh.r12, equi], [1 / (1 + sh.rion), neg], [sh.f2, pos]]) {
+      const y = Y(v); if (y < T0 || y > B) continue;
+      ctx.beginPath(); ctx.arc(x, y, 4.5 * ps, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1.5 * ps; ctx.strokeStyle = tok('--canvas'); ctx.stroke();
+    }
+    ctx.fillStyle = acc; ctx.font = `700 ${11 * ps}px ${m}`; ctx.textBaseline = 'top';
+    const tl = fmtK(ST.T), tw = ctx.measureText(tl).width; ctx.textAlign = x + tw + 8 * ps > R ? 'right' : 'left'; ctx.fillText(tl, x + (ctx.textAlign === 'right' ? -5 : 5) * ps, T0 + 4 * ps);
+    /* the Balmer strip, drawn, not computed line by line: darkness on a log scale of N₂/N_total, from 10⁻⁴ of its peak for this
+       Pe (barely there) to the peak (black) */
+    const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 700, BX = (l) => (l - l0) / (l1 - l0) * BW, top = 4 * ps, bot = BH - 18 * ps;
+    bx.clearRect(0, 0, BW, BH);
+    for (let px = 0; px < BW; px++) { const c = lamRGB(l0 + (px + 0.5) / BW * (l1 - l0)); bx.fillStyle = `rgb(${c.join(',')})`; bx.fillRect(px, top, 1, bot - top); }
+    const depth = Math.max(0, Math.min(1, 1 + Math.log10(sh.f2 / fpk) / 4));
+    bx.font = `${10 * ps}px ${m}`; bx.textAlign = 'center'; bx.textBaseline = 'top';
+    for (const [nm, l] of BALMER) {
+      bx.fillStyle = `rgba(0,0,0,${(0.97 * depth).toFixed(3)})`; bx.fillRect(BX(l) - 2.5 * ps, top, 5 * ps, bot - top);
+      bx.fillStyle = muted; bx.fillText(nm, BX(l), bot + 3 * ps);
+    }
+  }
+  function updateStars() {
+    const sh = hsShares(ST.T, ST.Pe);
+    $('starTOut').textContent = `${fmtK(ST.T)} (${classOfT(ST.T)})`;
+    $('starPeOut').textContent = `${ST.Pe} N/m²`;
+    $('sR12').textContent = sci2(sh.r12); $('sRion').textContent = sci2(sh.rion); $('sF2').textContent = sci2(sh.f2);
+    $('sPeak').textContent = fmtK(Math.round(hsPeak(ST.Pe) / 10) * 10);
+    for (const b of document.querySelectorAll('#starPresets button')) b.setAttribute('aria-pressed', String(+b.dataset.t === ST.T));
+    drawStars();
+  }
+  function setStarT(t) { ST.T = Math.min(HS_T1, Math.max(HS_T0, t)); $('starT').value = uFromT(ST.T); updateStars(); }
+  $('starT').addEventListener('input', (e) => { ST.T = tFromU(+e.target.value); updateStars(); });
+  $('starPe').addEventListener('input', (e) => { ST.Pe = peFromU(+e.target.value); updateStars(); });
+  for (const b of document.querySelectorAll('#starPresets button')) b.addEventListener('click', () => setStarT(+b.dataset.t));
+  { const cv = $('cStars'); let dragging = false;
+    const at = (e) => { const r = cv.getBoundingClientRect(); return starGeo ? tFromU(uFromT(starGeo.tAt(e.clientX - r.left))) : ST.T; };
+    cv.addEventListener('pointerdown', (e) => { dragging = true; cv.setPointerCapture(e.pointerId); setStarT(at(e)); });
+    cv.addEventListener('pointermove', (e) => { if (dragging) setStarT(at(e)); });
+    cv.addEventListener('pointerup', () => { dragging = false; }); cv.addEventListener('pointercancel', () => { dragging = false; });
+    cv.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); setStarT(tFromU(+$('starT').value + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 50 : 5))); });
+  }
+  $('starT').value = uFromT(ST.T); $('starPe').value = uFromPe(ST.Pe);
+
   // ---------- render ----------
   const MODE_HINTS = {
+    stars: 'Change the star\'s surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines.',
     explore: 'Click any element in the table. Hover over a line for its wavelength.',
     compare: 'The top strip keeps your element; click the table to set the bottom one. "Pick top" lets the next click change the top strip instead.',
     mystery: 'The top strip is an unknown spectrum. Click elements in the table to build your guess in the bottom strip, then check it.'
@@ -1232,6 +1408,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#series button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.series));
     for (const b of document.querySelectorAll('#mysteryKind button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
     $('modeHint').textContent = MODE_HINTS[mode];
+    /* Hydrogen in stars: its own chart and controls; the spectroscope, the level diagram and the table step aside */
+    const stars = mode === 'stars';
+    window.vdShowCols = stars ? [['T_K', 'T (K)'], ['Pe_N_m2', 'Pe (N/m²)'], ['n2_share', 'N₂/N_total']] : [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
+    $('starsBox').hidden = !stars; $('starCard').hidden = !stars;
+    for (const id of ['ptCard']) $(id).hidden = stars;
+    document.querySelector('.card.spec').hidden = stars;
+    if (stars) { $('compareBox').hidden = $('mysteryBox').hidden = true; $('factsCard').hidden = $('listCard').hidden = $('bohrCard').hidden = true; updateStars(); return; }
     $('compareBox').hidden = mode !== 'compare';
     $('mysteryBox').hidden = mode !== 'mystery';
     $('pickA').setAttribute('aria-pressed', String(S.pickTop));
@@ -1312,12 +1495,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('check').addEventListener('click', () => check(false));
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; render(); });
   // Readings: the line last read from the top strip, as NIST lists it (air wavelength)
-  window.vdVersion = 'spectra@2026-10-24';
+  window.vdVersion = 'spectra@2026-10-31';
   window.vdShowCols = [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
   /* How this works: the intro worksheet opens the demo with ?ws=intro-spectra */
-  const howVid = () => (VD.ws('spectra') === 'intro-spectra' ? 'intro-spectra' : 'spectra');
+  /* Hydrogen in stars sends its readings to its own worksheet, hydrogen-in-stars (opened with ?ws=hydrogen-in-stars, or ?mode=stars) */
+  window.vdWorksheet = () => VD.ws(S.mode === 'stars' ? 'hydrogen-in-stars' : 'spectra');
+  const howVid = () => { const w = window.vdWorksheet(); return w === 'intro-spectra' || w === 'hydrogen-in-stars' ? w : 'spectra'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   window.vdReadingRow = () => {
+    if (S.mode === 'stars') {
+      const sh = hsShares(ST.T, ST.Pe), g = (v) => +v.toPrecision(4);
+      return { source: 'Hydrogen in stars', T_K: ST.T, Pe_N_m2: ST.Pe, spectral_class: classOfT(ST.T), n2_n1: g(sh.r12), nII_nI: g(sh.rion), neutral_share: g(1 / (1 + sh.rion)), n2_share: g(sh.f2), peak_T_K: Math.round(hsPeak(ST.Pe)) };
+    }
     if (S.display === 'continuous' && S.mode !== 'mystery') return 'A continuous spectrum has no lines to read: choose Emission or Absorption.';
     if (!picked) return 'Click or tap a line in the top spectrum first, so its readout shows.';
     const myst = S.mode === 'mystery' && !S.revealed;
@@ -1352,6 +1541,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(() => { cancelAnimationFrame(rz); rz = requestAnimationFrame(render); }).observe(document.querySelector('.main'));
 
   buildTable();
+  if (VD.ws('') === 'hydrogen-in-stars' || new URLSearchParams(location.search).get('mode') === 'stars') S.mode = 'stars';
   render();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
 })();
