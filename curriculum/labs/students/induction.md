@@ -105,4 +105,4 @@ The demo's charges come from the exact image solution, and each reading is recor
 
 ## What to hand in
 
-Prelab answers, the data tables, the fits for Parts 1 and 2 with their residuals compared with $$-q$$ and $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables, the fits for Parts 1 and 2 with their residuals compared with $$-q$$ and $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, the Rubbing table with the Part 6 charge against strokes, and answers to the questions. Identify simulated data.

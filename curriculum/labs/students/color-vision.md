@@ -89,4 +89,4 @@ The demo's numbers come from tabulated color matching functions and a model of t
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions. Identify simulated data.

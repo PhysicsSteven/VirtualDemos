@@ -119,4 +119,4 @@ The model has no noise, and its lenses are ideal thin lenses, so the traced imag
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, the camera screen distances, the magnification comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, the camera screen distances, the magnification comparisons, the Depth table with its graph, and answers to the questions. Identify simulated data.

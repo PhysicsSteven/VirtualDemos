@@ -103,4 +103,4 @@ The demo's values are exact for its model, so the scatter about your lines comes
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs and fits, your values of $$c$$, $$\varepsilon_0$$ and $$\mu_0$$ with uncertainties and comparisons, the solar sail result, the antenna readings, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs and fits, your values of $$c$$, $$\varepsilon_0$$ and $$\mu_0$$ with uncertainties and comparisons, the solar sail result, the antenna readings, the In a plane table with its graph, and answers to the questions. Identify simulated data.

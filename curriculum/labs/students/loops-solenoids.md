@@ -108,4 +108,4 @@ The model has no noise: fields are the exact sum over the turns, given to five s
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, the comparisons of Analysis items 2 and 4, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, the comparisons of Analysis items 2 and 4, the Electromagnet table with its gain graph, and answers to the questions. Identify simulated data.

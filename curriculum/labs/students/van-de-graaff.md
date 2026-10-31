@@ -97,4 +97,4 @@ The model is exact, so Parts 1 and 2 have no scatter. In Part 3 the count is a w
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your breakdown field, $$\varepsilon_0$$ and time per spark, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your breakdown field, $$\varepsilon_0$$ and time per spark, the Spark table with its graph, and answers to the questions. Identify simulated data.

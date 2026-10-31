@@ -6162,3 +6162,43 @@ in the project files: one new worksheet and four new parts. GPT, please verify t
   standing-waves-pulses, timbre-packets.
 - How this works: `demos/media/how-this-works/normal-modes.mp4` (20 s, dark): mode 3 of the chain, block 9 timed for 10
   oscillations, 5.32 s (5.35 s expected; one 1/30 s frame), captured and sent.
+
+## 2026-10-31 · Claude · Worksheet sweep, Group 2 (Physics II): Current in a sheet worksheet and six new parts (Steve)
+
+For GPT to verify. Keys are in TeacherKeys `worksheet-keys/physics-2/`, every number from a real run of the demo.
+
+- **New worksheet `current-sheet`** (Mapping the Field in a Current Carrying Sheet, Physics II, §§7.5, 9.3), on the Current in a
+  sheet view of `demos/resistivity.html`. The demo gained a Strip L by W layout (L 2 to 22 cm, W 2 to 16 cm, whole cm, rest of the
+  sheet cut away) and sheet readings: Capture, Clear and Export follow the view, Export goes to `vd-handoff:current-sheet`, and a
+  series of Strip readings lands in the Resistance table (`alt`). Parts: Two bars along y = 8 cm, Two dots with the 7 V and 3 V
+  equipotentials, R/R_s for six layouts at the probe (9.00, 8.00) cm, and R against L/W. Key: bars E 46.51 V/m against V/L =
+  46.51, I 7.442 mA; R/R_s neck 2.091, slot 1.387, bars 1.344, bar and dot 1.188, dots 1.028, ring 0.808; strips slope
+  999.82 ± 0.04 Ω against R_s = 1000, intercept 0.28 ± 0.09 Ω. Endless sheet check (arccosh, a = 1.1 cm) 0.758 below 1.028.
+  test_resistivity has a new group (R = R_s L/W exactly, linear V, CSV): 14 groups pass. How this works video
+  `demos/media/how-this-works/current-sheet.mp4` (dark, 18 s). Map handouts, HANDOUT_TOPIC, glossary section, What's new.
+- **Induction, Part 6 charging by rubbing**: Rubbing table; glass/silk at 1 to 40 strokes follows Q_max(1 − 0.952ⁿ) to
+  Q_max = ε₀E_b(2πrL) = 41.7 nC (35.89 nC and 2.581 MV/m at 40); other pairs at 40 strokes. Silk with silk was dropped
+  (there is no silk rod).
+- **EM waves, Part 5 in a plane**: One wire ⟨E²⟩ ∝ r^(−0.983 ± 0.005), r⟨E²⟩ 0.511 ± 0.006 (3% drift is the grid and the
+  absorbing border); two wires in phase 4.1 times one wire; opposite phase 8 × 10⁻⁵; wire grid passes E in the page (0.362
+  against 0.0117). Fix: the Readings panel was hidden in the In a plane view (`syncUI`), so nothing could be recorded there.
+  Table headers are plain ⟨E²⟩ and r⟨E²⟩ (λ); worksheet.js plainTeX also maps langle, rangle, lvert, rvert now (no existing
+  header used them).
+- **Color vision, colored filters**: same Data table, new series. Y through R, G, B sums to 0.999; yellow = R + G, yellow then
+  cyan = green exactly; red then green and the red lamp through green give 0. Demo label fix: "daylight bulb, red filter"
+  instead of "daylight bulb, no filter, red filter" (only rows with a colored filter change).
+- **Lenses and instruments, Part 7 depth of an image**: Depth table; traced depth ratio equals m₁m₂ in every row (0.251 to
+  8.466 for the house, 3.899 for the F in the magnifier with height ratio 2.222).
+- **Loops and solenoids, Part 6 electromagnet**: gain = 1 + χL/√(L² + 4R²), χ = (μr − 1)/(1 + (μr − 1)N_d); gains 3.115 to
+  128.3 against 1/N_d 3 to 148.2. At 40 cm the turns are 1 cm apart, so the coil alone gives 247.9 μT against the continuous
+  251.0.
+- **Van de Graaff, Part 4 shuffle and spark**: Spark table; one step (0.64 kV) touches without a spark, so the handout now asks
+  for a note at 1 step and readings from 2 steps. |V|/d falls from 78.3 to 35.9 kV/cm (Schumann); 13.05 kV and 8.511 mJ at most.
+- Each part: a new last table (`alt` in FROM_DEMO; GRAPH_EVERY_TABLE), Analysis item, glossary lines and What to hand in line;
+  first tables unchanged and their key data identical to the old runs. Checks: check_math 424 expressions 0 problems;
+  symbols.py `--check`; courses.py and `--check`; canvas.py; node suites (color vision 10, currents fields magnets 6,
+  electrostatics at work 14, em waves 10, induction 20, optics bench 8, resistivity 14) pass; vdcheck `--only after` and
+  `--only clip` 0 problems on the seven demos; exports landed in the local Jekyll build during the key captures.
+- Keys (TeacherKeys): new `physics-2/current-sheet`; induction, em-waves, color-vision, lenses-instruments, loops-solenoids and
+  van-de-graaff gained the new tables and answers, PDFs rebuilt. Capture scripts: current-sheet.cjs, em-waves-plane.cjs, and
+  additions to induction, color-vision, lenses-instruments, loops-solenoids and electrostatics-at-work.
