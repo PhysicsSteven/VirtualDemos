@@ -3289,3 +3289,82 @@ N | Protons delivered in a week |
 lambda | Attenuation length of the neutrons in concrete | cm | 52 cm
 r | Distance from the patient to the point beyond the wall | m
 Z | Atomic number |
+
+== main-sequence-fitting ==
+d | Distance | pc
+m | Apparent magnitude | mag
+M | Absolute magnitude: the magnitude seen from 10 pc | mag
+mu | Shift of the cluster, its trial distance modulus m − M | mag
+i | Number of a star in the cluster
+o_i | Offset of star i from the ridge line at the shift μ | mag
+V_i | Apparent V magnitude of star i | mag
+M_ridge | Absolute magnitude of the calibrated ridge line at that color | mag
+B | Magnitude through the B (blue) filter, in the color index B − V | mag
+V | Apparent magnitude through the V (visual) filter | mag
+sigma_M | Spread (standard deviation) of M among nearby stars of one spectral type | mag
+b | Linear coefficient of the quadratic fit of mean square offset against shift
+c | Quadratic coefficient of the quadratic fit of mean square offset against shift
+
+== cepheid-photometry ==
+N_V | Net counts of the Cepheid, sky taken away
+N_C | Net counts of the comparison star, sky taken away
+V_C | Known V magnitude of the comparison star | mag
+V | Apparent V magnitude of the Cepheid | mag
+m | Apparent magnitude | mag
+N | Number of photons counted
+sigma | Uncertainty (standard deviation) of a net count
+n_pix | Number of pixels in the aperture
+M_V | Absolute V magnitude: the V magnitude seen from 10 pc | mag
+P | Period of the Cepheid's pulsation | days
+M | Absolute magnitude | mag
+d | Distance | pc
+t | Time of the night's image | days
+sigma_V | Uncertainty of the Cepheid's V from the photon counts | mag
+f | Frequency of the fitted sine, 1/P | 1/day
+
+== galactic-habitable-zone ==
+P_metals | Chance of enough heavy elements to build Earths
+P_safe | Chance that no giant planet wrecks the inner planets
+P_SN | Chance that nearby supernovae never sterilized the planet
+p_E | Chance that Earth's own supernova dose would have sterilized it
+N | Supernova dose over the planet's first 4 billion years, in units of Earth's
+P_time | Chance that complex life has had time to arise
+Phi | Cumulative normal distribution
+t_life | Time complex life needs | Gyr
+R | Distance from the Galaxy's center | kpc
+P | Product of the four chances: complex life today, in this model
+g | Metallicity gradient across the disk | dex/kpc
+
+== eclipsing-binary ==
+M_1 | Mass of star 1 | M☉
+v_1 | Line of sight velocity of star 1 | km/s
+M_2 | Mass of star 2 | M☉
+v_2 | Line of sight velocity of star 2 | km/s
+K_1 | Velocity semi amplitude of star 1 | km/s
+K_2 | Velocity semi amplitude of star 2 | km/s
+i | Inclination of the orbit (90° is edge on) | °
+v | Relative speed of the two stars | km/s
+a | Separation of the stars (semi major axis of the relative orbit) | m
+P | Orbital period | days
+G | @G
+M | Mass of a star | M☉
+R_large | Radius of the larger star | R☉
+R_small | Radius of the smaller star | R☉
+t_1 | Time of first contact | h
+t_2 | Time of second contact | h
+t_3 | Time of third contact | h
+t_4 | Time of fourth contact | h
+L | Luminosity of a star | W
+R | Radius of a star | m
+sigma | @sigma
+T | Surface temperature of a star | K
+f | Brightness left in a total eclipse, as a share of the full brightness
+L_1 | Luminosity of star 1 | W
+L_2 | Luminosity of star 2 | W
+M_odot | Mass of the Sun | kg
+R_odot | Radius of the Sun | m
+T_1 | Surface temperature of star 1 | K
+R_1 | Radius of star 1 | R☉
+R_2 | Radius of star 2 | R☉
+T_2 | Surface temperature of star 2 | K
+t | Time from the middle of the eclipse of star 1 | h
