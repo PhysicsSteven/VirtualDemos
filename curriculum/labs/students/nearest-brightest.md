@@ -30,7 +30,7 @@ Compare the stars closest to the Sun with the stars that look brightest in our s
 
 $$V - M_V = 5\log_{10}\frac{d}{10\ \text{pc}}.$$
 
-$$V - M_V$$ is called the distance modulus. The Sun has $$M_V = 4.83$$.
+$$V - M_V$$ is called the distance modulus. The Sun has $$M_V = 4.81$$.
 
 **The observer's HR diagram.** Plotting $$M_V$$ against B − V is the Hertzsprung Russell diagram in the quantities a telescope measures. B − V stands in for surface temperature (hot stars have small B − V) and $$M_V$$ for luminosity.
 

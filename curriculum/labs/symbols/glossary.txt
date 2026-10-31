@@ -2605,6 +2605,12 @@ phi | Phase constant | rad
 a | Intercept of the fit of T² against m | s²
 s | Slope of the fit of T² against m | s²/kg
 ddot x | Acceleration, d²x/dt² | m/s²
+Y | Position of the shaken ceiling, A cos ωt | m
+k_eff | Effective spring constant of the combination of springs | N/m
+g | Acceleration due to gravity | m/s² | 9.81 m/s²
+y | Position of the top of the block below the ceiling | cm
+y_0 | Position of the top of the block with the springs unstretched: the intercept of y against m | cm
+F | Load held by the two springs | N
 
 == standing-waves ==
 v | Wave speed on the string | m/s
@@ -3368,3 +3374,93 @@ R_1 | Radius of star 1 | R☉
 R_2 | Radius of star 2 | R☉
 T_2 | Surface temperature of star 2 | K
 t | Time from the middle of the eclipse of star 1 | h
+
+== color-vision ==
+L | L cone signal: the light weighted by the long wavelength cones' sensitivity and added over all wavelengths
+M | M cone signal: the light weighted by the middle wavelength cones' sensitivity and added over all wavelengths
+S | S cone signal: the light weighted by the short wavelength cones' sensitivity and added over all wavelengths; S(λ) is the spectrum, the power per unit wavelength reaching the eye
+lambda | Wavelength | nm
+bar l | Sensitivity of the L cones at wavelength λ
+bar m | Sensitivity of the M cones at wavelength λ
+bar s | Sensitivity of the S cones at wavelength λ
+
+== galton-board ==
+P | Probability that a ball lands in bin k
+k | Bin number: how many of its bounces went right
+n | Number of rows of pegs
+p | Chance of bouncing right at each peg
+mu | Mean of the bin number, np
+sigma | Standard deviation of the bin number, √(np(1 − p))
+N | Number of balls dropped
+s | Sample standard deviation of the bin numbers of the balls dropped
+S | Entropy | J/K
+Omega | Number of microstates of a macrostate: here the number of paths that end in a bin
+
+== hydrogen-in-stars ==
+E_n | Energy of level n | eV
+n | Level number (the principal quantum number)
+E_2 | Energy of level n = 2 | eV
+E_1 | Energy of level n = 1, the ground level | eV
+T | Temperature of the star's atmosphere | K
+N_2 | Number of hydrogen atoms on level n = 2
+N_1 | Number of hydrogen atoms on level n = 1
+g_2 | Number of states on level n = 2, 8
+g_1 | Number of states on level n = 1, 2
+g_n | Number of states on level n, 2n²
+e | @euler
+k | Boltzmann constant | eV/K | 8.617 × 10⁻⁵ eV/K
+N_II | Number of ionized hydrogen atoms (bare protons)
+N_I | Number of neutral hydrogen atoms
+Z_II | Partition function of ionized hydrogen, 1
+Z_I | Partition function of neutral hydrogen, about 2 (the ground level only)
+P_e | Electron pressure | N/m²
+h | @h
+chi | Ionization energy of hydrogen | eV | 13.6 eV
+N_total | Number of hydrogen atoms, neutral and ionized together
+
+== intro-constellations-3d ==
+M | Absolute magnitude: the magnitude the star would have from 10 pc (32.6 ly) | mag
+V | Apparent magnitude: how bright the star looks from Earth | mag
+d | Distance of the star from the Sun | ly
+L | Visible light output of the star
+L_odot | Visible light output of the Sun
+
+== nearest-brightest ==
+M_V | Absolute V magnitude: the magnitude the star would have from 10 pc | mag
+V | Apparent V magnitude: how bright the star looks from Earth | mag
+d | Distance of the star | pc
+
+== quantum-coin ==
+a | Amplitude of heads, cos(θ/2)
+H | Heads: the state |H⟩
+b | Amplitude of tails, e^(iφ) sin(θ/2)
+T | Tails: the state |T⟩
+theta | Angle of the state from the up (heads) pole of the Bloch sphere | °
+e | @euler
+i | Imaginary unit, √(−1)
+phi | Phase of the tails amplitude: the angle of the state around the Bloch sphere's axis | °
+psi | The spin state
+P_up | Probability that a measurement gives up
+gamma | Angle between the spin's direction and the measurement axis | °
+N | Number of measurements
+P | Probability of up (or heads), cos²(angle/2)
+
+== ubv-colors ==
+F_1 | Brightness of the first star
+F_2 | Brightness of the second star
+m_1 | Magnitude of the first star | mag
+m_2 | Magnitude of the second star | mag
+B | Magnitude through the B (blue) filter, in the color index B − V | mag
+V | Magnitude through the V (visual, yellow green) filter | mag
+F_B | Light through the B filter
+F_V | Light through the V filter
+C | Constant of the color index, fixed so that Vega has B − V = 0 | mag
+h | @h
+c | @c
+lambda | Wavelength | m
+k | @k_B
+T | Temperature of the blackbody (the star's surface) | K
+B_lambda | Blackbody spectrum per unit wavelength (Planck's law)
+e | @euler
+lambda_B | One wavelength standing for the whole B filter, about 440 nm | nm
+lambda_V | One wavelength standing for the whole V filter, about 550 nm | nm

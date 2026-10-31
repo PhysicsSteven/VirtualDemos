@@ -5662,3 +5662,36 @@ as a mode of Finding Exoplanets by his choice), with worksheets on the Astronomy
   min-height: max(600px, 100%) }`, Projector `max(440px, 100%)`), and Inside a Planet keeps its picture tall enough for the whole
   floating card (`fitCard`). Both now 0 cut off, 0 problems. Desktop screenshots of all 35 looked over; nothing else to fix.
 - The astro items the six collections count marked partly covered were exactly the nine NAAP gaps, now all done.
+
+## 2026-10-31 · Claude · Independent review of the 30 and 31 Oct work (Steve)
+
+Steve asked for a second, independent pass over everything from the last two days (worksheet formulas and fits, Energy on a Track,
+Inverse Square Force Lab, Color Vision, Galton Board, Quantum Coin Toss and their worksheets, the nine NAAP astro pieces, the astro
+polish pass, the efficiency pass). Numbers were recomputed from the data files and by hand rather than taken from the entries above.
+- Verified: every node suite passes and the Pages build and physics regression are green; `courses.py --check` clean; no `{%` or `{{`
+  in any changed file; no hyphenated compound modifiers in the new demos, handouts or notes; no keys in the public repo. Formula
+  engine: no eval, function names cannot reach object prototype members, circular references and out of table ranges caught; all
+  nine fit models' derivatives, sign and phase normalizations, standard errors and parameter units checked. Energy on a Track:
+  the normal force s(κv² + g T_x), the rest condition tan θ ≤ μ and the key's numbers (9.82 m/s, √(9.81/1.62) = 2.461). Force lab:
+  CODATA 2022 constants and the key's six answers. Color Vision: HPE matrix maps D65 to L = M = S = 1, D65 table and Wyman fit
+  coefficients as published, handout prelab values and the 30 and 9 times ratios reproduced. Galton: P(k) sums, 0.612 for bins 5 to
+  7. Quantum coin: z, x, z chain 1/8, 1/8, 3/4. U B V: Vega instrumental colors (U − B 0.91804, B − V −0.68788) and the blackbody
+  colors recomputed from the Bessell and CALSPEC files in `tools/star-colors/` with an independent integration. Saha peaks 8506,
+  9872 and 12 391 K recomputed. Seasons: every rotation and orbit period against the NASA fact sheets, the Almanac day number
+  (9496.5 for 2026) and the sign of the equation of time. Eclipsing binary: the K, M sin³ i, contact time and T₂ formulas and
+  the five prelab answers. Main sequence fitting, Cepheid photometry (Benedict 2007, LMC modulus 18.48) and the GHZ model (zone
+  5.0 to 12.6 kpc, born 3.4 to 10.1 Gyr ago, 82.5% older than the Sun) reproduced from CORE. Every prelab answer of the twelve new
+  keys recomputed. Browser: `vdcheck --only after` and `--only clip` on the 16 changed demos (the five new ones, seasons,
+  celestial-sphere, blackbody, spectra, hr-diagram, exoplanets, distance-ladder, planet-temperatures, inside-a-planet, craters,
+  star-slice): no page errors, no sideways scroll, 0 controls cut off.
+- Fixed: the Sun's absolute V magnitude was 4.83 in Stellar Evolution's Nearest and brightest view, its handout and its key, with
+  a comment citing IAU 2015 B3 (B3 defines M_bol = 4.74, not M_V), while The Sky and the Celestial Sphere and its worksheet use 4.81
+  (Willmer 2018, ApJS 236, 47). Now 4.81 everywhere (no star in the sample lies between the two values, so the set counts are
+  unchanged); key rebuilt (TeacherKeys 24d5ef2). Cepheid photometry key: 10^4.698 pc is 49.9 kpc, not 49.8 (same commit).
+  Symbol glossaries: `symbols.py --check` was failing on the eight new handouts (color-vision, galton-board, hydrogen-in-stars,
+  intro-constellations-3d, intro-sidereal-day, nearest-brightest, quantum-coin, ubv-colors); their sections are written in
+  `glossary.txt` and the JSON files built, plus the six Springs sandbox symbols (Y, k_eff, g, y, y₀, F) that had no meaning since
+  28 Oct; `--check` and `--meanings` clean.
+- Left for Steve: the Color Vision, Galton Board and Quantum Coin Toss worksheets have no How this works video yet (one per
+  worksheet is the rule); the site's three cone and lamp model is stated on the page but Steve may want the handout to say that
+  the 20 nm lamps are a model, not real LEDs. Nothing else found.
