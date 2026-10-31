@@ -173,6 +173,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="depth" aria-pressed="false">Apparent depth</button>
           <button type="button" data-p="lenswhite" aria-pressed="false">Lens in white light</button>
           <button type="button" data-p="mirrorwhite" aria-pressed="false">Mirror in white light</button>
+          <button type="button" data-p="shapelens" aria-pressed="false">A shape, point by point</button>
+          <button type="button" data-p="shapemag" aria-pressed="false">A shape in a magnifier</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p></details>
       </section>
@@ -186,6 +188,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" data-add="prism"><span class="dot glass"></span>Prism</button>
           <button type="button" class="btn" data-add="semi"><span class="dot glass"></span>Semicircle</button>
           <button type="button" class="btn" data-add="object"><span class="dot"></span>Object arrow</button>
+          <button type="button" class="btn" data-add="shape"><span class="dot"></span>Shape</button>
           <button type="button" class="btn" data-add="beam"><span class="dot"></span>Parallel beam</button>
           <button type="button" class="btn" data-add="point"><span class="dot"></span>Point source</button>
           <button type="button" class="btn" data-add="screen"><span class="dot card"></span>Screen</button>
@@ -233,6 +236,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         </dl>
         <p class="hint" id="imgHint">Signs: d<sub>o</sub> &gt; 0 for a real object. d<sub>i</sub> &gt; 0 for a real image (far side of a lens, in front of a mirror) and d<sub>i</sub> &lt; 0 for a virtual one. f &gt; 0 for a converging lens or concave mirror. m &lt; 0 means inverted.</p>
         <p class="hint" id="imgNone" hidden></p>
+      </section>
+
+      <section id="shapeSec" hidden>
+        <h2>Shape and its image</h2>
+        <dl class="readout" id="shapeDl">
+          <div><dt>Object depth along the axis</dt><dd id="shDo">—</dd></div>
+          <div><dt>Image depth (traced)</dt><dd id="shDi">—</dd></div>
+          <div class="big"><dt>Depth ratio (traced)</dt><dd id="shR">—</dd></div>
+          <div class="big"><dt id="shREqL">m<sub>1</sub>m<sub>2</sub> from the ends' d<sub>o</sub></dt><dd id="shREq">—</dd></div>
+          <div><dt>Height ratio, tallest corner (traced)</dt><dd id="shH">—</dd></div>
+          <div><dt>m = −d<sub>i</sub>/d<sub>o</sub> at that corner</dt><dd id="shHEq">—</dd></div>
+          <div class="wide"><dt>Image</dt><dd id="shKind">—</dd></div>
+        </dl>
+        <p class="hint" id="shapeNone" hidden></p>
+        <details class="more"><summary>More about this</summary><p class="hint">The shape lies flat in the plane of the drawing, so it has depth along the axis as well as height. Every point of its outline is imaged on its own: five rays from the point are traced through the optics and the image point is where they meet. A point nearer the lens has its image farther away, so the image depth is not the object depth times m. For one lens or mirror the image depth over the object depth is m<sub>1</sub>m<sub>2</sub>, the transverse magnifications at the near and far ends (from x<sub>o</sub>x<sub>i</sub> = f², Newton's form of the lens equation; (n<sub>2</sub>/n<sub>1</sub>)m<sub>1</sub>m<sub>2</sub> for a refracting surface). For a thin slice it is m²: depth is magnified as the square of the height, so a magnified image looks stretched along the axis. A lens keeps the order front to back; a mirror reverses it. The rays from one corner, chosen in the editor, are drawn.</p></details>
       </section>
 
       <section id="surfSec" hidden>
@@ -334,6 +352,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dI = Math.abs(inv) < 1e-12 ? Infinity : 1 / inv;
     return { dI, m: isFinite(dI) ? -(n1 * dI) / (n2 * dO) : Infinity };
   }
+  /* depth of the image of an object that has depth along the axis, from its near end (dO1) to its far end (dO2): every point
+     obeys the thin lens or mirror equation, so the image depth over the object depth is m1 m2, the product of the transverse
+     magnifications at the two ends (Newton's form xo xi = f^2). For one refracting surface it is (n2/n1) m1 m2. As the two ends
+     come together this is m^2 (n2/n1 for a surface): depth is magnified as the square of the height. */
+  function depthRatio(m1, m2, n1, n2) { return (n1 && n2 ? n2 / n1 : 1) * m1 * m2; }
   /* flat surface: di = -(n2/n1) do (virtual image, on the object's side) */
   function apparentDepth(n1, n2, dO) { return -(n2 / n1) * dO; }
   /* Snell's law n1 sin(theta1) = n2 sin(theta2) in vector form. d: unit direction of travel; N: unit normal pointing back
@@ -404,12 +427,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     beam:   () => ({ w: 4, rays: 7, white: false }),
     point:  () => ({ rays: 24, spread: 360, white: false }),
     screen: () => ({ h: 10 }),
+    shape:  () => ({ form: 'house', h: 3, rays: 7, spread: 8, probe: 3, white: false }),
     surf:   () => ({ shape: 'pos', R: 4, n1: 1.0, n2: 1.5, ap: 3 })
   };
   const NAMES = { lens: 'Lens', mirror: 'Mirror', block: 'Glass block', prism: 'Prism', semi: 'Semicircle',
-                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source', screen: 'Screen', surf: 'Refracting surface' };
+                  object: 'Object arrow', shape: 'Shape', beam: 'Parallel beam', point: 'Point source', screen: 'Screen', surf: 'Refracting surface' };
   const mk = (kind, x, y, props) => Object.assign({ id: nextId++, kind, x, y, rot: 0 }, DEFAULTS[kind](), props || {});
-  const isSource = (it) => it.kind === 'object' || it.kind === 'beam' || it.kind === 'point';
+  const isSource = (it) => it.kind === 'object' || it.kind === 'beam' || it.kind === 'point' || it.kind === 'shape';
+  /* a flat shape lying in the drawing plane, so it has depth along the axis as well as height: strokes in units of its height,
+     x along the bench (its base centered on the item's x), y up from the axis. Every point of it is imaged by tracing rays. */
+  const FORMS = {
+    house: { name: 'House', strokes: [[[-0.4, 0], [0.4, 0], [0.4, 0.6], [0, 1], [-0.4, 0.6], [-0.4, 0]]] },
+    F: { name: 'Letter F', strokes: [[[-0.25, 0], [-0.25, 1], [0.35, 1]], [[-0.25, 0.55], [0.2, 0.55]]] },
+    square: { name: 'Square', strokes: [[[-0.5, 0], [0.5, 0], [0.5, 1], [-0.5, 1], [-0.5, 0]]] }
+  };
+  /* the shape's corners, each once, in order: the points labeled A, B, C ... */
+  function formCorners(form) { const out = []; for (const st of FORMS[form].strokes) for (const q of st) if (!out.some((o) => o[0] === q[0] && o[1] === q[1])) out.push(q); return out; }
+  const shapeAt = (it, q) => [it.x + q[0] * it.h, it.y + q[1] * it.h];
+  const shapeProbe = (it) => shapeAt(it, formCorners(it.form)[Math.min(it.probe, formCorners(it.form).length - 1)]);
   const isGlass = (it) => it.kind === 'block' || it.kind === 'prism' || it.kind === 'semi';
 
   const PRESETS = {
@@ -424,6 +459,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     microscope: () => [mk('object', -16.25, 0, { h: 0.5, rays: 9, spread: 30, rot: -9 }), mk('lens', -14, 0, { f: 2, ap: 3 }), mk('lens', 9, 0, { f: 5, ap: 12 })],
     surface:    () => [mk('object', -16, 0, { h: 1, rays: 11, spread: 5, rot: -3.6 }), mk('surf', 0, 0, { shape: 'pos', R: 4, n1: 1.0, n2: 1.5, ap: 3 })],
     depth:      () => [mk('object', -12, 0, { h: 2, rays: 9, spread: 14, rot: -4 }), mk('surf', 0, 0, { shape: 'flat', R: 10, n1: 1.33, n2: 1.0, ap: 12 })],
+    shapelens:  () => [mk('shape', -17, 0, { form: 'house', h: 3, probe: 3, spread: 8 }), mk('lens', 0, 0, { f: 8, ap: 12 })],
+    shapemag:   () => [mk('shape', -5, 0, { form: 'F', h: 2, probe: 2, spread: 10 }), mk('lens', 0, 0, { f: 10, ap: 12 })],
     tir:        () => {
       const b = mk('beam', 0, 0, { w: 0.6, rays: 3, rot: 30, pivot: { x: 2, y: 0, dist: 15 } });
       placeOnPivot(b);
@@ -433,7 +470,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // what each preset should show: [center x, center y, width, height] in cm
   const FRAMES = {
     converging: [1, 0, 54, 22], camera: [-12, 0, 52, 14], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
-    telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
+    telescope: [-4, 0, 44, 18], shapelens: [-1, 1, 44, 16], shapemag: [-6, 2, 34, 16], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
     microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-5, 0, 42, 16], mirrorwhite: [-4, 0, 44, 16]
   };
   let frame = FRAMES.converging;
@@ -679,6 +716,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const o = n === 1 ? 0 : -src.w / 2 + src.w * i / (n - 1);
         out.push({ p: [src.x + w[0] * o, src.y + w[1] * o], d: u, lam: null, white, central: i === mid, src, tag });
       }
+    } else if (src.kind === 'shape') {
+      const p = from || shapeProbe(src), angs = fanAngles(src.rays, src.rot, src.spread), mid = (angs.length - 1) >> 1;
+      angs.forEach((a, i) => out.push({ p, d: [Math.cos(rad(a)), Math.sin(rad(a))], lam: null, white, central: i === mid, src, tag }));
     } else if (src.kind === 'point') {
       let angs;
       if (src.spread >= 360) { angs = []; for (let k = 0; k < src.rays; k++) angs.push(src.rot + 360 * k / src.rays); }
@@ -783,6 +823,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return dirs.map((d, i) => d && { p: tip, d, lam: null, white: false, central: false, src: im.obj, tag: 'pr' + i }).filter(Boolean);
   }
 
+  /* ---------- a flat shape imaged point by point ----------
+     Each point of the outline sends five rays within 1.5° of the shape's aim through everything on the bench; where they meet
+     (least squares, as for the arrow) is that point's image, real when the rays meet ahead and virtual when only their backward
+     extensions meet. The points are joined in order, so the image is drawn exactly where the traced rays put it. */
+  function shapeImagePoint(P, it, prims) {
+    const starts = [-1.5, -0.75, 0, 0.75, 1.5].map((a) => ({ p: P, d: [Math.cos(rad(it.rot + a)), Math.sin(rad(it.rot + a))], lam: null, white: false, central: false, src: it, tag: 'shape' }));
+    const ps = traceAll(starts, prims, { faint: false });
+    if (ps.length !== 5 || ps.some((q) => q.wall || q.end === 'absorbed' || q.end === 'max' || q.end === 'split' || !q.hits.length)) return null;
+    const key = ps[0].hits.map((h) => h.id).join();
+    if (ps.some((q) => q.hits.map((h) => h.id).join() !== key)) return null;
+    const lines = ps.map((q) => q.last), Q = lsq(lines);
+    if (!Q || Math.hypot(Q[0] - P[0], Q[1] - P[1]) > 2000) return { inf: true, hits: ps[0].hits };
+    const tMean = lines.reduce((acc, l) => acc + dot([Q[0] - l.p[0], Q[1] - l.p[1]], l.d), 0) / lines.length;
+    return { q: Q, real: tMean > 0, hits: ps[0].hits, lines };
+  }
+  function shapeImage(it, prims) {
+    const strokes = [], step = it.h * 0.04;
+    for (const st of FORMS[it.form].strokes) {
+      const pts = [];
+      for (let k = 1; k < st.length; k++) {
+        const a = shapeAt(it, st[k - 1]), b = shapeAt(it, st[k]), n = Math.max(2, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+        for (let j = k === 1 ? 0 : 1; j <= n; j++) { const t = j / n, P = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; pts.push({ P, im: shapeImagePoint(P, it, prims) }); }
+      }
+      strokes.push(pts);
+    }
+    const corners = formCorners(it.form).map((q) => { const P = shapeAt(it, q); return { P, im: shapeImagePoint(P, it, prims) }; });
+    const out = { it, strokes, corners };
+    /* one lens, mirror or refracting surface for every corner: compare the traced depth with the lens or mirror equation */
+    const ok = corners.every((c) => c.im && !c.im.inf && c.im.hits.length === 1 && c.im.hits[0] === corners[0].im.hits[0]);
+    if (ok) {
+      const E = corners[0].im.hits[0], u = frameOf(E).u, C = [E.x, E.y];
+      if (E.kind === 'lens' || E.kind === 'mirror' || E.kind === 'surf') {
+        const toward = E.kind === 'mirror' ? [-u[0], -u[1]] : E.kind === 'surf' ? u : (dot([C[0] - it.x, C[1] - it.y], u) >= 0 ? u : [-u[0], -u[1]]);
+        const dOs = corners.map((c) => dot([C[0] - c.P[0], C[1] - c.P[1]], toward)), along = corners.map((c) => dot([c.im.q[0] - C[0], c.im.q[1] - C[1]], u));
+        const i1 = dOs.indexOf(Math.min(...dOs)), i2 = dOs.indexOf(Math.max(...dOs)), objDepth = dOs[i2] - dOs[i1];
+        if (dOs[i1] > 0.05 && objDepth > 1e-6) {
+          const eq = (dO) => E.kind === 'surf' ? surfaceImage(E.n1, E.n2, surfR(E), dO) : thinLens(focal(E), dO);
+          const e1 = eq(dOs[i1]), e2 = eq(dOs[i2]);
+          Object.assign(out, { E, dO1: dOs[i1], dO2: dOs[i2], objDepth, imgDepth: Math.abs(along[i2] - along[i1]),
+            m1: e1.m, m2: e2.m, ratioEq: depthRatio(e1.m, e2.m, E.kind === 'surf' ? E.n1 : 0, E.kind === 'surf' ? E.n2 : 0),
+            real: corners.every((c) => c.im.real), virt: corners.every((c) => !c.im.real) });
+          /* height ratio: the tallest corner's image height over its height, both from the axis */
+          const w = frameOf(E).w, hs = corners.map((c) => dot([c.P[0] - C[0], c.P[1] - C[1]], w)), ah = hs.map(Math.abs), j = ah.indexOf(Math.max(...ah));
+          out.hRatio = dot([corners[j].im.q[0] - C[0], corners[j].im.q[1] - C[1]], w) / hs[j];
+          out.mEqTop = eq(dOs[j]).m;
+        }
+      }
+    }
+    return out;
+  }
+
   // ---------- full scene trace ----------
   let frameData = null;
   function solve() {
@@ -799,6 +890,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       fr.principal = traceAll(principalStarts(fr.image), primsOf(fr.image.E, true), { faint: false });
     }
     fr.inst = instrument(fr);
+    const shp = (sel && sel.kind === 'shape') ? sel : items.find((i) => i.kind === 'shape');
+    fr.shape = shp && layers.image ? shapeImage(shp, prims) : null;
     return fr;
   }
 
@@ -1022,6 +1115,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (it.kind === 'surf') return null;            /* a medium, not a part on a post */
     if (it.kind === 'object') return [it.x - 1.35, it.y - 0.9];
     if (it.kind === 'point') return [it.x, it.y - 0.9];
+    if (it.kind === 'shape') return [it.x, it.y - 0.3];
     if (it.kind === 'beam') { const hp = housingPts(it); return [(hp[0][0] + hp[2][0]) / 2, Math.min(...hp.map((p) => p[1]))]; }
     if (it.kind === 'screen') return [it.x, it.y - it.h / 2];
     if (it.kind === 'lens') { const a = local(it, 0, -it.ap / 2 - 0.45), b = local(it, 0, it.ap / 2 + 0.45); return a[1] < b[1] ? a : b; }
@@ -1263,6 +1357,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (it.kind === 'lens' || it.kind === 'mirror') return [local(it, 0, -it.ap / 2), local(it, 0, it.ap / 2)];
     if (it.kind === 'screen') return [[it.x, it.y - it.h / 2], [it.x, it.y + it.h / 2]];
     if (it.kind === 'object') return [[it.x, it.y], [it.x, it.y + it.h]];
+    if (it.kind === 'shape') return [].concat(...FORMS[it.form].strokes.map((st) => st.map((q) => shapeAt(it, q))));
     if (it.kind === 'beam') return [local(it, 0, -Math.max(it.w, 0.6) / 2), local(it, 0, Math.max(it.w, 0.6) / 2)];
     return [[it.x - 0.3, it.y - 0.3], [it.x + 0.3, it.y + 0.3]];
   }
@@ -1346,6 +1441,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       glowDot(tx, ty, 14 * ps, c, 0.5);
       ctx.restore();
       drawObjectArrow(base, tip, it.white ? '#ffffff' : '#fff1cf', false, 1);
+      return;
+    }
+    if (it.kind === 'shape') {
+      const strokes = FORMS[it.form].strokes.map((st) => st.map((q) => shapeAt(it, q))), pr = shapeProbe(it);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for (const [wd, a] of [[14, 0.07], [7, 0.16]]) { ctx.strokeStyle = hexA(c, a); ctx.lineWidth = wd * ps; for (const st of strokes) polyline(st); }
+      ctx.restore();
+      ctx.save(); ctx.strokeStyle = it.white ? '#ffffff' : '#fff1cf'; ctx.lineWidth = 3 * ps; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for (const st of strokes) polyline(st);
+      ctx.restore();
+      const [qx, qy] = toPx(...pr); ctx.save(); ctx.globalCompositeOperation = 'lighter'; glowDot(qx, qy, 14 * ps, c, 0.5); ctx.restore();
       return;
     }
     if (it.kind === 'point') {
@@ -1565,6 +1671,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.restore();
   }
+  /* the shape's image, joined point to point where neighbouring image points are both real or both virtual and not torn apart
+     by the focal plane; corners A, B, C ... on the shape and A′, B′, C′ ... on the image */
+  function drawShapeImage(sh, T) {
+    const ps = projScale(), b = bounds(), tear = Math.max(b.x1 - b.x0, b.y1 - b.y0) * 0.6;
+    ctx.save(); ctx.lineWidth = 2.6 * ps; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.85;
+    for (const st of sh.strokes) {
+      for (let k = 1; k < st.length; k++) {
+        const a = st[k - 1].im, c = st[k].im;
+        if (!a || !c || a.inf || c.inf || a.real !== c.real || Math.hypot(a.q[0] - c.q[0], a.q[1] - c.q[1]) > tear) continue;
+        ctx.setLineDash(a.real ? [] : [6 * ps, 4 * ps]);
+        const [x1, y1] = toPx(...a.q), [x2, y2] = toPx(...c.q); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      }
+    }
+    ctx.restore();
+    const pr = sh.corners[Math.min(sh.it.probe, sh.corners.length - 1)];
+    if (pr && pr.im && !pr.im.inf && !pr.im.real) drawExtensions(pr.im.lines.slice(0, 1).concat(pr.im.lines.slice(-1)), pr.im.q, T.virt, 0.8, 1.1);
+    ctx.font = `600 ${10 * ps}px ` + monoFont();
+    const iq = sh.corners.filter((c) => c.im && !c.im.inf).map((c) => toPx(...c.im.q)), roomy = iq.length && Math.max(Math.max(...iq.map((q) => q[0])) - Math.min(...iq.map((q) => q[0])), Math.max(...iq.map((q) => q[1])) - Math.min(...iq.map((q) => q[1]))) > 60 * ps;
+    sh.corners.forEach((c, i) => {
+      const L = String.fromCharCode(65 + i), [x, y] = toPx(...c.P), cxW = sh.it.x, up = c.P[1] >= sh.it.y + sh.it.h * 0.5;
+      tag(L, x + (c.P[0] < cxW ? -9 : c.P[0] > cxW ? 9 : 0) * ps, y + (up ? -9 : 9) * ps, i === sh.it.probe ? T.ink : T.muted, T, { base: up ? 'bottom' : 'top', size: 10 });
+      if (!c.im || c.im.inf) return;
+      const [ix, iy] = toPx(...c.im.q);
+      if (ix < -20 || ix > W + 20 || iy < -20 || iy > H + 20) return;
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(ix, iy, (i === sh.it.probe ? 4 : 2.6) * ps, 0, 2 * Math.PI); ctx.fill();
+      if (roomy || i === sh.it.probe) tag(L + '′', ix, iy - 8 * ps, T.pos, T, { base: 'bottom', size: 10 });
+    });
+  }
   function drawExtensions(lines, P, color, alpha, width) {
     const ps = projScale();
     ctx.save(); ctx.strokeStyle = color; ctx.globalAlpha = alpha; ctx.lineWidth = width * ps; ctx.setLineDash([5 * ps, 5 * ps]);
@@ -1651,6 +1785,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const [x, y] = toPx(ins.imgTip[0], ins.imgTip[1]), up = ins.imgTip[1] >= ins.imgBase[1];
       tag("objective's image", x, y + (up ? -10 : 10) * ps, T.muted, T, { base: up ? 'bottom' : 'top' });
     }
+    if (fr.shape) drawShapeImage(fr.shape, T);
     if (ins && ins.O) {
       for (const [L, name] of [[ins.O, 'objective'], [ins.E, 'eyepiece']]) {
         const p = toPx(...local(L, 0, L.ap / 2 + 0.6));
@@ -1721,6 +1856,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('sAppRow').hidden = isFinite(Rs);
       if (!isFinite(Rs)) $('sApp').textContent = fmtCm(apparentDepth(E.n1, E.n2, im.dO));
     }
+    updateShape(frameData ? frameData.shape : null);
     updateInstrument(frameData ? frameData.inst : null);
     const glass = (sel && isGlass(sel)) ? sel : items.find(isGlass);
     $('refSec').hidden = !glass;
@@ -1733,6 +1869,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
 
+  function updateShape(sh) {
+    $('shapeSec').hidden = !sh;
+    if (!sh) return;
+    const ok = sh.E != null;
+    $('shapeDl').hidden = !ok; $('shapeNone').hidden = ok;
+    if (!ok) { $('shapeNone').textContent = 'The depth readouts need the rays from every corner to pass through one lens, mirror or refracting surface, with the shape in front of it. The traced image is still drawn.'; return; }
+    setLabel('shREqL', sh.E.kind === 'surf' ? '(n<sub>2</sub>/n<sub>1</sub>)m<sub>1</sub>m<sub>2</sub> from the ends\' d<sub>o</sub>' : null);
+    $('shDo').textContent = minus(sh.objDepth.toFixed(2) + ' cm (dₒ ' + sh.dO1.toFixed(2) + ' to ' + sh.dO2.toFixed(2) + ' cm)');
+    $('shDi').textContent = sh.imgDepth.toFixed(2) + ' cm';
+    $('shR').textContent = (sh.imgDepth / sh.objDepth).toFixed(3) + '×';
+    $('shREq').textContent = minus(Math.abs(sh.ratioEq).toFixed(3) + '× (m₁ = ' + sh.m1.toFixed(3) + ', m₂ = ' + sh.m2.toFixed(3) + ')');
+    $('shH').textContent = fmtM(sh.hRatio); $('shHEq').textContent = fmtM(sh.mEqTop);
+    $('shKind').textContent = sh.real ? 'Real, ' + (sh.hRatio > 0 ? 'upright' : 'inverted') : sh.virt ? 'Virtual, ' + (sh.hRatio > 0 ? 'upright' : 'inverted') : 'Partly real, partly virtual: it straddles the focal point';
+  }
   const LABEL0 = {};
   function setLabel(id, html) {             /* html = null restores the original label */
     const el = $(id);
@@ -1829,6 +1979,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       { label: 'Fan half angle', min: 2, max: 60, step: 1, key: 'spread', unit: '°' },
       { label: 'Aim', min: -60, max: 60, step: 0.5, key: 'rot', unit: '°' },
       { toggle: 'White light', key: 'white' }
+    ],
+    shape: [
+      { chips: Object.keys(FORMS).map((k) => [k, FORMS[k].name]), get: (it) => it.form, set: (it, v) => { it.form = v; it.probe = Math.min(it.probe, formCorners(v).length - 1); } },
+      { label: 'Height', min: 0.5, max: 8, step: 0.5, key: 'h', unit: ' cm' },
+      { label: 'Rays from corner', min: 0, max: 4, step: 1, key: 'probe', get: (it) => it.probe, set: (it, v) => { it.probe = Math.min(v, formCorners(it.form).length - 1); }, fmt: (it) => String.fromCharCode(65 + it.probe) },
+      { label: 'Ray count', min: 3, max: 21, step: 1, key: 'rays', digits: 0 },
+      { label: 'Fan half angle', min: 2, max: 60, step: 1, key: 'spread', unit: '°' },
+      { label: 'Aim', min: -60, max: 60, step: 0.5, key: 'rot', unit: '°' }
     ],
     beam: [
       { label: 'Width', min: 0, max: 12, step: 0.2, key: 'w', unit: ' cm' },
@@ -1951,6 +2109,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     surface: 'The curved end of a glass rod (n = 1.50, R = +4 cm) with a 3 cm aperture. Shrink the aperture to bring the traced image to the paraxial one.',
     depth: 'A fish in water (n = 1.33) seen through a flat surface, here standing upright: the eye is on the right, in air.',
     lenswhite: 'White light through a flint glass lens, f = 20.00 cm at 589 nm. The glass bends violet more than red, so violet (400 nm) focuses 1.23 cm nearer the lens than red (700 nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.',
+    shapelens: 'A house 3 cm tall and 2.4 cm deep lying on the bench, 15.8 to 18.2 cm from an 8 cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.',
+    shapemag: 'A letter F 2 cm tall, 4.3 to 5.5 cm from a 10 cm lens, inside F: a magnifier. The virtual image is upright and 2.2 times as tall, but 3.9 times as deep (m₁m₂), so it looks stretched along the axis.',
     mirrorwhite: 'White light on a concave mirror, R = 40 cm, f = 20 cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.'
   };
 
@@ -2033,6 +2193,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const tip = [it.x, it.y + it.h];
       grip('h', [tip[0], tip[1] + go], [0, 1], (p) => setKey(it, 'h', p.y - it.y - go));
       knob(tip, 0, 44 * ps / s, tip);
+    } else if (it.kind === 'shape') {
+      const top = [it.x, it.y + it.h], pr = shapeProbe(it);
+      grip('h', [top[0], top[1] + go], [0, 1], (p) => setKey(it, 'h', p.y - it.y - go));
+      knob(pr, 0, 44 * ps / s, pr);
     } else if (it.kind === 'beam') {
       const half = Math.max(it.w / 2, 18 * ps / s);   // keep the grips apart on a narrow beam so its middle can still be grabbed
       grip('w2', local(it, 0, half), w, (p) => setKey(it, 'w', 2 * Math.abs(dot(rel(p), w))));
@@ -2131,6 +2295,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     prism: 'Drag the corner grip to change the side length.',
     semi: 'Drag the grip on the flat face to change the radius.',
     object: 'Drag the tip of the arrow to change its height. The knob aims the rays.',
+    shape: 'A flat shape lying in the bench plane. Drag the grip at the top to change its size; the knob aims the rays from the chosen corner.',
     beam: 'Drag either end of the beam to change its width.',
     point: 'The knob aims the rays.',
     surf: 'Drag C along the axis to change R; pull it through the surface to change the sign. The grip sets the aperture, an opaque stop on the face.',
@@ -2172,6 +2337,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function hitItem(it, p) {
     const tol = 11 * projScale() / s, pts = outline(it);
     if (it.kind === 'point') return Math.hypot(p[0] - it.x, p[1] - it.y) <= tol;
+    if (it.kind === 'shape') {
+      const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
+      return p[0] >= Math.min(...xs) - tol && p[0] <= Math.max(...xs) + tol && p[1] >= Math.min(...ys) - tol && p[1] <= Math.max(...ys) + tol;
+    }
     if (it.kind === 'screen') return Math.abs(p[0] - it.x) <= Math.max(tol, 0.5) && Math.abs(p[1] - it.y) <= it.h / 2 + tol;
     if (isGlass(it)) {
       if (inPoly(p, pts)) return true;
@@ -2231,7 +2400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cv.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; schedule(); } });
 
   // what + and − change: the focal length or main size of each kind
-  const SIZE_KEYS = { surf: ['R'], lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'], screen: ['h'] };
+  const SIZE_KEYS = { surf: ['R'], lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], shape: ['h'], beam: ['w'], point: ['spread'], screen: ['h'] };
   function removeSel() { items = items.filter((i) => i !== sel); sel = null; setPreset(null); schedule(); }
   cv.addEventListener('keydown', (e) => {
     if (!sel) return;
@@ -2246,7 +2415,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sel = null;
     } else if (e.key === '[' || e.key === ']') {
       if (sel.kind === 'screen') return;           // the screen stays square to the bench
-      const lim = sel.kind === 'lens' ? 90 : sel.kind === 'object' ? 60 : 180;
+      const lim = sel.kind === 'lens' ? 90 : sel.kind === 'object' || sel.kind === 'shape' ? 60 : 180;
       let r = sel.rot + (e.key === ']' ? 1 : -1) * (e.shiftKey ? 1 : 5);
       if (lim === 180) { if (r > 180) r -= 360; if (r < -180) r += 360; } else r = Math.max(-lim, Math.min(lim, r));
       sel.rot = r; placeOnPivot(sel); setPreset(null);

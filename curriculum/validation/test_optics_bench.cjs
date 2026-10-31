@@ -2,7 +2,7 @@
 // Optics Bench: single refracting surface (OpenStax Vol 3, 2.3), apparent depth, microscope and telescope (2.8).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('optics-bench', 'NEAR_POINT,thinLens,surfaceImage,apparentDepth,snell,sagAt,surfaceAxisCrossing,microscope,telescopeM');
+const c = core('optics-bench', 'NEAR_POINT,thinLens,surfaceImage,apparentDepth,snell,sagAt,surfaceAxisCrossing,microscope,telescopeM,depthRatio');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -103,6 +103,20 @@ group('thin lens and limits used by the readouts', () => {
   const r = c.thinLens(10, 30); near(r.dI, 15, 1e-12); near(r.m, -0.5, 1e-12);
   assert(!isFinite(c.thinLens(10, 10).dI));
   near(c.sagAt(5, 3), 1, 1e-12); near(c.sagAt(-5, 3), -1, 1e-12); near(c.sagAt(Infinity, 3), 0, 0);
+});
+
+group('depth of an image: the image depth over the object depth is m1 m2 for a lens or mirror, (n2/n1) m1 m2 for a surface, m^2 in the limit', () => {
+  for (const [f, d1, d2] of [[8, 15.8, 18.2], [10, 4.3, 5.5], [-6, 5, 9], [12, 30, 31]]) {
+    const a = c.thinLens(f, d1), b = c.thinLens(f, d2);
+    near(Math.abs(b.dI - a.dI) / (d2 - d1), c.depthRatio(a.m, b.m), 1e-12, `lens f ${f}`);
+  }
+  near(c.depthRatio(c.thinLens(8, 15.8).m, c.thinLens(8, 18.2).m), 0.804, 5e-4, 'Shape preset');
+  near(c.depthRatio(c.thinLens(10, 4.3).m, c.thinLens(10, 5.5).m), 3.898, 5e-4, 'magnifier preset');
+  const m = c.thinLens(8, 20).m, e = 1e-5; near(c.depthRatio(c.thinLens(8, 20).m, c.thinLens(8, 20 + e).m), m * m, 1e-5, 'thin slice: m^2');
+  for (const [n1, n2, R, d1, d2] of [[1, 1.5, 4, 16, 18], [1.33, 1, Infinity, 3, 5]]) {
+    const a = c.surfaceImage(n1, n2, R, d1), b = c.surfaceImage(n1, n2, R, d2);
+    near(Math.abs(b.dI - a.dI) / (d2 - d1), c.depthRatio(a.m, b.m, n1, n2), 1e-12, 'surface');
+  }
 });
 
 console.log(`${n} groups passed`);
