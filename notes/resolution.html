@@ -70,9 +70,11 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Two point sources make two overlapping Airy patterns. By Rayleigh's criterion they are just resolved when the center of one falls on the first dark ring of the other: θ_min = 1.22 λ/D. The intensity midway between them then dips to about 73.5% of the peaks.</li>
 <li>Every optical instrument has this limit: the pupil of the eye, a telescope's mirror, a camera lens. Bigger apertures resolve finer detail.</li>
 <li>The 1.22 is not a fudge factor: it is the first zero of the Bessel function J₁, 3.8317, divided by π.</li>
+<li>Close to the hole the far field pattern has not formed yet. Seen from a point on the screen, the hole holds N_F = D²/4λL Fresnel zones; neighboring zones nearly cancel, so the center of the pattern is bright for an odd number of zones and dark for an even number. Far away (N_F ≪ 1) the Airy pattern returns.</li>
+<li>The shadow of a small round disk has a bright spot at its center, as bright as the beam itself: the Poisson (or Arago) spot, the observation that settled the wave theory of light in 1818.</li>
 </ul>
 <h2>Before class</h2>
-<p>Students should know single slit diffraction (sin θ = mλ/a for the dark fringes). The demo has six setups: <strong>Laser through a pinhole</strong> (a screen at distance L, positions in mm), <strong>Two point sources</strong> (an iris in front of a lens, angles in µrad), <strong>Headlights and the eye</strong>, <strong>Hubble and two stars</strong>, <strong>Camera lens</strong> (positions on the sensor in µm) and <strong>Mystery pinhole</strong>. The graph under the picture is the intensity along the line through the sources; the orange cursor reads position and intensity anywhere on it.</p>
+<p>Students should know single slit diffraction (sin θ = mλ/a for the dark fringes). The demo has six setups: <strong>Laser through a pinhole</strong> (a screen at distance L, positions in mm), <strong>Two point sources</strong> (an iris in front of a lens, angles in µrad), <strong>Headlights and the eye</strong>, <strong>Hubble and two stars</strong>, <strong>Camera lens</strong> (positions on the sensor in µm), <strong>Mystery pinhole</strong>, and two near field setups, <strong>Near the hole: Fresnel zones</strong> and <strong>A disk: the Poisson spot</strong>. The graph under the picture is the intensity along the line through the sources; the orange cursor reads position and intensity anywhere on it.</p>
 <h2>Running it in class</h2>
 <ol>
 <li><strong>Laser through a pinhole.</strong> Ask Q1. 632.8 nm, 200 µm, 2.00 m: the first dark ring is 7.72 mm from the center. Tick <strong>Bring out the faint rings</strong> to see the rings, which are only 1.75% as bright as the center. Change D and λ.</li>
@@ -80,6 +82,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Headlights and the eye.</strong> Ask Q3. Move the car away: with a 3.00 mm pupil the headlights merge at 5.81 km. Open the pupil to 8 mm (night) and they stay separate to 15.5 km.</li>
 <li><strong>Hubble and two stars.</strong> Ask Q4. 2.40 m mirror, 550 nm: 2.80 × 10⁻⁷ rad, so stars at 2.0 million ly must be 0.56 ly apart.</li>
 <li><strong>Camera lens.</strong> Ask Q5. Step from f/4 to f/22 and watch the two points blur together as the Airy disk grows (2.44 λN: 5.4 µm at f/4, 29.5 µm at f/22).</li>
+<li><strong>Near the hole: Fresnel zones.</strong> Ask Q6. A 2.00 mm hole with the screen 0.50 m away holds 3.16 zones and the center is 3.75 times as bright as the beam. Press <strong>Move the screen</strong>: the center goes dark at 0.790 m (two zones) and reaches 4.00 times the beam at 1.580 m (one zone), while the inset shows the zones in the hole.</li>
+<li><strong>A disk: the Poisson spot.</strong> Ask Q7 before showing it. The center of the shadow is as bright as the open beam; zoom to 4× to see the spot and its first dark ring.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> A 632.8 nm laser lights a pinhole 200 µm across. How far from the center of a screen 2.00 m away is the first dark ring? What happens to it if the pinhole is made smaller?</p></div>
@@ -91,12 +95,18 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q4.</strong> The Hubble Space Telescope's mirror is 2.40 m across. What angle can it resolve at 550 nm, and how far apart must two stars 2.0 million light years away be for Hubble to see them as two?</p></div>
 
 <div class="q"><p><strong>Q5.</strong> A 50 mm lens is stopped down from f/4 to f/22. What happens to the size of the Airy disk on the sensor?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A round hole 2.00 mm across is lit by a 632.8 nm beam and the screen starts 0.50 m behind it. As the screen moves away, where does the center of the pattern first go dark, and where is it brightest? How bright is that, compared with the beam with no hole?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Predict: an opaque disk 2.00 mm across sits in the same beam, the screen 1.00 m behind it. What is at the center of its shadow?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"A perfect lens focuses a point to a point."</strong> Diffraction at the edge of the aperture always spreads the image into an Airy disk; a perfect lens is only diffraction limited.</li>
 <li><strong>"Magnifying the image more will separate the two stars."</strong> Magnification enlarges both Airy disks along with their separation; it cannot split two patterns that already overlap.</li>
 <li><strong>"Smaller apertures always give sharper pictures."</strong> A smaller aperture reduces aberrations and increases depth of field, but the Airy disk grows as 1/D.</li>
 <li><strong>"The 1.22 comes from rounding."</strong> It is 3.8317/π, from the first zero of J₁; the textbook rounds it to two decimals.</li>
+<li><strong>"A shadow's middle is the darkest place."</strong> Behind a round disk every point on the axis sees the same ring of uncovered zones around the edge, so the center of the shadow is as bright as the beam.</li>
+<li><strong>"Light through a hole can never be brighter than the beam."</strong> Near the hole the center can reach four times the beam's intensity (one zone exactly fills the hole); the light is taken from elsewhere on the screen, so energy is conserved.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
@@ -104,6 +114,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Two sources.</strong> Equal and incoherent, so intensities add; each pattern depends on the angle from its own center (small angles). The lens or mirror is perfect: no aberrations, no turbulence, no central obstruction (a real Hubble has one, which changes the ring brightness a little).</li>
 <li><strong>Screen.</strong> A plane wave lights the pinhole and the screen is in the far field (D²/λL ≤ 0.22 here). A point x from the center is at θ = arctan(x/L). The camera uses D = f/N with the marked f-numbers.</li>
 <li><strong>Numbers.</strong> Hubble from the textbook's Example 4.6 in §4.5 (2.40 m, 550 nm, 2.0 million ly); the eye from its Chapter 4 Problem 59 (3.00 mm pupil, headlights 1.30 m apart). Real eyes reach about one minute of arc (291 µrad, 20/20 vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.</li>
+<li><strong>Near field (Fresnel).</strong> Near the hole and A disk use the Fresnel form of the Kirchhoff integral for a plane wave of unit intensity, U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F, by Simpson's rule (J₀ from Abramowitz and Stegun 9.4.1 and 9.4.3, good to 5 × 10⁻⁸); the disk is the open beam minus the hole (Babinet). On the axis this gives 4 sin²(πN_F/2) for the hole and exactly 1 for the disk; the readouts compare it with the exact Rayleigh–Sommerfeld value, 1 + L²/R² − 2(L/R) cos k(R − L) and L²/R² with R = √(L² + a²), within 0.003 over the slider ranges. The tests check the far field limit (πN_F)²[2J₁(v)/v]², the power through the hole, Babinet's sum, and the Poisson spot's J₀² shape when many zones are covered. The edge is perfectly sharp and the beam perfectly even, both stated.</li>
 </ul>
 <h2>Going further</h2>
 <ul>

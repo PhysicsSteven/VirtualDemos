@@ -6627,3 +6627,43 @@ existing demos, no new worksheet. GPT, please verify the physics and numbers bel
 - Worksheet part ideas (not built): Springs, falling slinky: time when the bottom starts to move for ten and for the Two blocks chain
   and compare with √(M/3K); Pendulums, pendulum wave: from the readout table, check Tₙ = Γ/(N₀ + n), predict the times of two and
   three rows, and measure the drift with small swing lengths against θ₀ (it grows as θ₀²/16).
+
+## 2026-10-31 · Claude · Rounds 4 and 5, Group E: Fresnel diffraction, guides and cavities
+
+Steve (19:05): "Yeah let's finish up". Plan #37 and #39 of the PhET Parity Plan (`round4/groups-2026-10-31.md` in the project files),
+folded into three existing demos. No new worksheets. GPT, please verify the physics and numbers below (all from the cores and tests).
+- **Circular Apertures and Resolution, two near field setups** (`?setup=near`, `?setup=disk`). A plane wave on a round hole of
+  diameter D, screen at distance z, paraxial Fresnel–Kirchhoff: U = −2iφ e^(ikr²/2z) ∫₀¹ J₀(vu) e^(iφu²) u du with φ = πN_F,
+  N_F = a²/λz, v = kar/z (Born and Wolf §8.8; Hecht §10.3). The disk by Babinet: U_disk = 1 − U_hole. J₀ from Abramowitz and
+  Stegun 9.4.1 and 9.4.3, Simpson's rule (error about 3e−6). On the axis the hole gives 4 sin²(πN_F/2) and the disk 1 (the Poisson
+  spot); the readout also shows the exact Rayleigh–Sommerfeld axis values, hole 1 + z²/R² − 2(z/R) cos k(R − z), disk z²/R²
+  (R = √(z² + a²)). Zone radii √(nλz + (nλ/2)²); zones in the hole (√(z² + a²) − z)/(λ/2). Poisson spot's first dark ring
+  2.405 zλ/(πD). Stated on the page: paraxial (the neglected phase on the axis is under 0.002 rad over the slider ranges), scalar
+  light, a perfectly black edge. Numbers, 632.8 nm: near (D 2.00 mm, z 0.50 m) N_F 3.161, center 3.7509 I₀ (4 sin² 3.7509, exact
+  3.7509), 3.16 zones; disk (D 2.00 mm, z 1.00 m) N_F 1.580, center 1.0000 (exact 0.999999), first dark ring 0.242 mm. Inset of
+  the zones to scale; "Move the screen" sweeps z from 0.2 to 4 m on a log scale. Tests: 7 new groups in test_resolution.cjs (15 pass):
+  J₀ against Bessel's integral, N_F and zone radii, the axis formula, exact on axis against a direct Rayleigh–Sommerfeld integral
+  over the hole, far field limit against Airy, Babinet and energy, the Poisson spot against J₀²(kar/z).
+- **Ripple Tank, A channel** (`?setup=channel`). One dipper near the closed end of a straight channel of width w (20 to 80 mm),
+  run in the live tank simulation. Modes cos(nπy/w) across, k_x = √(k² − (nπ/w)²); a mode's cutoff is the frequency whose
+  wavenumber is nπ/w in the tank's own dispersion relation ω² = (gk + σk³/ρ) tanh kd (gravity and capillarity, as the tank).
+  Below cutoff the mode dies away with κ = √((nπ/w)² − k²). Numbers (9 Hz, depth 10 mm, w 20 mm): cutoffs n = 1 6.51 Hz,
+  n = 2 11.61 Hz, n = 3 17.61 Hz; n = 0 travels with λ 26.71 mm, n = 1 with 35.88 mm (at 41.9° to the walls); n = 2 dies away by e
+  in 4.80 mm; the n = 0 and 1 beat length 2π/(k₀ − k₁) = 104.5 mm. Tests: 2 new groups (13 pass), one runs the simulation and fits κ
+  between x = 90 and 120 mm within 5 %, and checks the odd mode under 5 % of the even 128 mm from the dipper on symmetric rows.
+- **Electromagnetic Waves, Guides and cavities** (new mode, 3D with a flat top view fallback). Rectangular guide a × b, perfectly
+  conducting walls, vacuum: TE (m or n ≥ 1) and TM (m and n ≥ 1) fields from Griffiths §9.5 and Pozar §3.3; f_c = (c/2)√((m/a)² +
+  (n/b)²), λ_g = λ/√(1 − (f_c/f)²), v_p v_g = c², below cutoff κ = (2π/c)√(f_c² − f²). Cavity a × b × d: f = (c/2)√((m/a)² + (n/b)²
+  + (p/d)²), TE needs p ≥ 1, TM m and n ≥ 1 and p ≥ 0; E and B a quarter period apart (Pozar §6.3). Numbers, WR-90 (22.86 × 10.16 mm):
+  TE10 6.557 GHz, TE20 13.11, TE01 14.75, TE11 and TM11 16.15 GHz; TE10 at 10 GHz λ_g 39.71 mm, v_p 1.3245c, v_g 0.7550c; at 5 GHz
+  dies away by e in 11.25 mm. Cavity TE101 (25 mm long) 8.885 GHz; 30 mm square box TM110 7.066 GHz; 30 mm cube TE101, TE011,
+  TM110 degenerate at 7.066 GHz. A strip below shows every cutoff or resonance from 0 to 40 GHz with a frequency handle. Stated:
+  perfect walls (no Q), empty guide. New test test_em_waves_guides.cjs (7 pass): WR-90 cutoffs, v_p v_g = c², Maxwell's
+  equations by finite differences for guide and cavity fields (curl and divergence), tangential E and normal B zero on every wall,
+  cavity energy constant over a period, ⟨S_z⟩/⟨u⟩ = v_g.
+- Notes: Running it in class items, physics bullets and questions (resolution Q6 and Q7, ripple tank Q7, EM waves Q7 and Q8),
+  answers in TeacherKeys demo-keys, keys rebuilt. What's new: one entry. Interpretation: the Falstad box modes (3D waves) are the EM
+  cavity in 3D; the ripple tank gets the water channel analog of a waveguide.
+- Worksheet part ideas (not built): Circular Apertures, center intensity against N_F as the screen moves (peaks at odd N_F, zero at
+  even, fit 4 sin²(πN_F/2)); Ripple Tank, the first mode's cutoff against channel width (fit to the dispersion relation); EM Waves,
+  λ_g against f for TE10, fit 1/λ_g² = (f/c)² − (1/2a)² for a.

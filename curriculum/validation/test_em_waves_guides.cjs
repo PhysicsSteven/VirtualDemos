@@ -9,9 +9,9 @@ const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1e-300, 
 const close = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a} (tolerance ${tol})`);
 const a = 22.86e-3, b = 10.16e-3;   /* WR-90 (X band) inside dimensions, EIA standard */
 
-test('WR-90 cutoffs: TE10 6.557 GHz, TE20 13.11, TE01 14.75, TE11 and TM11 16.14 GHz; λ_g at 10 GHz 39.7 mm', () => {
+test('WR-90 cutoffs: TE10 6.557 GHz, TE20 13.11, TE01 14.75, TE11 and TM11 16.15 GHz; λ_g at 10 GHz 39.7 mm', () => {
   near(R.guideCutoff(1, 0, a, b) / 1e9, 6.5571, 1e-4, 'TE10'); near(R.guideCutoff(2, 0, a, b) / 1e9, 13.1142, 1e-4, 'TE20');
-  near(R.guideCutoff(0, 1, a, b) / 1e9, 14.7533, 1e-4, 'TE01'); near(R.guideCutoff(1, 1, a, b) / 1e9, 16.1449, 1e-4, 'TE11');
+  near(R.guideCutoff(0, 1, a, b) / 1e9, 14.7533, 1e-4, 'TE01'); near(R.guideCutoff(1, 1, a, b) / 1e9, 16.1451, 1e-4, 'TE11');
   const L = R.guideList(a, b, 17e9); assert.equal(L.map((u) => u.type + u.m + u.n).join(' '), 'TE10 TE20 TE01 TE11 TM11');
   const g = R.guideWave(10e9, R.guideCutoff(1, 0, a, b)); near(g.lamg * 1e3, 39.71, 1e-3, 'λ_g'); assert(g.travels);
   assert(!R.guideModeOK('TE', 0, 0) && !R.guideModeOK('TM', 1, 0) && R.guideModeOK('TM', 1, 1) && R.guideModeOK('TE', 0, 1));
