@@ -3,7 +3,7 @@
 // and blocks on a level track between two walls.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const c = core('springs', 'G,SB_L0,SB_H,sbSolveLin,sbExpm,sbModel,sbStep,sbTensions,sbEnergy,sbHeld,sbAttached,sbAbove,sbJacobi,sbModes,sbModeShares,chainOmega');
+const c = core('springs', 'G,SB_L0,SB_H,sbSolveLin,sbExpm,sbModel,sbStep,sbTensions,sbEnergy,sbHeld,sbAttached,sbAbove,sbJacobi,sbModes,sbModeShares,chainOmega,gridOmega,gridShape,gridProject,gridCompose,gridAccel,gridAt,gridEnergy,gridModeE');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -174,5 +174,33 @@ test('normal modes: two unequal blocks hanging, against the 2 × 2 hand result',
   /* det(K − ω²M) = 0: m₁m₂ω⁴ − (m₁k₂ + m₂(k₁ + k₂))ω² + k₁k₂ = 0 */
   const a = 0.02, b = -(0.2 * 10 + 0.1 * 40), cc = 300, r = Math.sqrt(b * b - 4 * a * cc);
   close(modes[0].w ** 2, (-b - r) / (2 * a), 1e-10); close(modes[1].w ** 2, (-b + r) / (2 * a), 1e-10);
+});
+test('grid of pucks: each mode shape is an exact eigenvector, ü = −ω²u, for N = 2 to 6', () => {
+  const k = 20, m = 0.1;
+  for (let N = 2; N <= 6; N++) for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) {
+    const phi = []; for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) phi.push(c.gridShape(p, q, i, j, N));
+    const a = c.gridAccel(phi, N, k, m), w2 = c.gridOmega(p, q, N, k, m) ** 2;
+    phi.forEach((v, i) => close(a[i], -w2 * v, 1e-12, 1e-12, `N ${N} mode ${p},${q}`));
+  }
+  close(c.gridOmega(1, 1, 3, 20, 0.1) / (2 * Math.PI), 2.436238396, 1e-9, 0, 'f11 of the 3 by 3 grid');
+});
+test('grid of pucks: the modes agree with the Jacobi eigenvalues of the stiffness matrix built puck by puck', () => {
+  const N = 4, k = 20, m = 0.1, n2 = N * N, K = [];
+  for (let a = 0; a < n2; a++) { const e = new Array(n2).fill(0); e[a] = 1; K.push(c.gridAccel(e, N, k, m).map((v) => -v)); }   /* K/m, symmetric */
+  const { vals } = c.sbJacobi(K), mine = []; for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) mine.push(c.gridOmega(p, q, N, k, m) ** 2);
+  vals.slice().sort((x, y) => x - y).forEach((v, i) => close(v, mine.sort((x, y) => x - y)[i], 1e-9, 1e-9));
+});
+test('grid of pucks: projecting and composing give back any start; gridAt obeys the equations of motion and keeps the energy', () => {
+  const N = 5, k = 20, m = 0.1, n2 = N * N; let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647 - 0.5) * 0.04;
+  const u0 = Array.from({ length: n2 }, rnd), v0 = Array.from({ length: n2 }, rnd);
+  c.gridCompose(c.gridProject(u0, N), N).forEach((v, i) => close(v, u0[i], 1e-10, 1e-14));
+  const c0 = c.gridProject(u0, N), cv0 = c.gridProject(v0, N), at = (tt) => c.gridAt(c0, cv0, N, k, m, tt);
+  at(0).u.forEach((v, i) => close(v, u0[i], 1e-10, 1e-14)); at(0).v.forEach((v, i) => close(v, v0[i], 1e-10, 1e-14));
+  const t1 = 1.37, h = 1e-4, a = c.gridAccel(at(t1).u, N, k, m), fd = at(t1 + h).u.map((v, i) => (v - 2 * at(t1).u[i] + at(t1 - h).u[i]) / (h * h));
+  fd.forEach((v, i) => close(v, a[i], 1e-4, 1e-6, 'second derivative'));
+  at(t1).v.forEach((v, i) => close(v, (at(t1 + h).u[i] - at(t1 - h).u[i]) / (2 * h), 1e-4, 1e-7, 'velocity'));
+  const E0 = c.gridEnergy(u0, v0, N, k, m).total;
+  for (const tt of [0.5, 3, 17.2]) { const s = at(tt); close(c.gridEnergy(s.u, s.v, N, k, m).total, E0, 1e-10, 0, `energy at ${tt} s`);
+    close(c.gridModeE(s.c, s.cv, N, k, m).reduce((x, y) => x + y, 0), E0, 1e-10, 0, 'the mode energies add up to the total'); }
 });
 console.log(`${n} tests passed`);

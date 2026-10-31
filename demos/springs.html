@@ -234,12 +234,21 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-b="hzChain" aria-pressed="false">Chain of ten</button>
           <button type="button" data-b="hzEmpty" aria-pressed="false">Empty track</button>
         </div>
+        <p class="hint">On an air table, in a plane:</p>
+        <div class="chips" id="sbBuildsG" role="group" aria-label="Ready made grids of pucks">
+          <button type="button" data-b="grid3" aria-pressed="false">3 by 3 grid</button>
+          <button type="button" data-b="grid5" aria-pressed="false">5 by 5 grid</button>
+        </div>
+        <div class="ctl" id="gdCtl" hidden>
+          <div class="slider-head"><label for="gdN">Pucks along each side N</label><output id="oGdN" class="mono" for="gdN"></output></div>
+          <input type="range" id="gdN" min="2" max="6" step="1" value="3">
+        </div>
         <details class="more"><summary>About this rig</summary><p class="hint" id="sbHint"></p></details>
-        <div class="toggles">
+        <div class="toggles" id="sbTog">
           <label><input type="checkbox" id="sbLabK" checked>Spring constants</label>
           <label><input type="checkbox" id="sbLabT" checked>Tension in each spring</label>
         </div>
-        <details class="more"><summary>Build with buttons instead</summary>
+        <details class="more" id="sbBtns"><summary>Build with buttons instead</summary>
         <p class="status" id="sbSel" aria-live="polite"></p>
         <div class="btnrow">
           <button type="button" class="btn" id="sbAdd">Hang a spring below</button>
@@ -798,6 +807,42 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // a chain of N equal blocks m and N + 1 equal springs k between fixed walls (the loaded string, longitudinal):
   // ωₙ = 2√(k/m) sin(nπ / 2(N + 1)), block j of mode n moves as sin(jnπ/(N + 1))
   const chainOmega = (n, N, k, m) => 2 * Math.sqrt(k / m) * Math.sin(n * Math.PI / (2 * (N + 1)));
+  /* A grid of N × N pucks on an air table (2026-10-31, PhET Normal Modes 2D): each puck is tied to its four neighbors, and the pucks at
+     the edge to a square frame, by springs of constant k stretched far past their natural length, as if that length were zero. Then the
+     pull of a spring is exactly k times the vector from one end to the other, so the motion is exactly linear for any swing (no small
+     angle approximation) and the x and y motions do not mix: each is the same N × N problem, m ü_ij = k(u_i+1,j + u_i−1,j + u_i,j+1 +
+     u_i,j−1 − 4u_ij), with u = 0 at the frame. Its normal modes are exact: shape sin((i+1)pπ/(N+1)) sin((j+1)qπ/(N+1)) and
+     ω_pq = 2√(k/m) √(sin²(pπ/2(N+1)) + sin²(qπ/2(N+1))), p, q = 1 … N, for the x motion and again for the y motion. The motion is the sum
+     of the modes, each a cosine and a sine at its own ω, so it is exact at every moment, not stepped. */
+  const gridOmega = (p, q, N, k, m) => 2 * Math.sqrt(k / m) * Math.hypot(Math.sin(p * Math.PI / (2 * (N + 1))), Math.sin(q * Math.PI / (2 * (N + 1))));
+  const gridShape = (p, q, i, j, N) => Math.sin((i + 1) * p * Math.PI / (N + 1)) * Math.sin((j + 1) * q * Math.PI / (N + 1));
+  /* u: N·N displacements, index i + N j. Returns the mode amplitudes c[(p−1) + N(q−1)], u = Σ c φ_pq (Σ φ² = ((N+1)/2)²) */
+  function gridProject(u, N) {
+    const c = new Array(N * N).fill(0), w = (2 / (N + 1)) ** 2;
+    for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) { let sum = 0; for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) sum += u[i + N * j] * gridShape(p, q, i, j, N); c[p - 1 + N * (q - 1)] = sum * w; }
+    return c;
+  }
+  function gridCompose(c, N) { const u = new Array(N * N).fill(0); for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) { const a = c[p - 1 + N * (q - 1)]; if (a) for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) u[i + N * j] += a * gridShape(p, q, i, j, N); } return u; }
+  /* the force per mass on each puck along one axis: k/m (sum of the neighbors − 4u), the frame at 0 */
+  function gridAccel(u, N, k, m) { const a = new Array(N * N), at = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : u[i + N * j]);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) a[i + N * j] = k / m * (at(i + 1, j) + at(i - 1, j) + at(i, j + 1) + at(i, j - 1) - 4 * at(i, j)); return a; }
+  /* displacements and velocities at time t from the mode amplitudes c0 and their rates v0 at t = 0 */
+  function gridAt(c0, v0, N, k, m, t) {
+    const c = new Array(N * N), cv = new Array(N * N);
+    for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) { const n = p - 1 + N * (q - 1), w = gridOmega(p, q, N, k, m), co = Math.cos(w * t), si = Math.sin(w * t);
+      c[n] = c0[n] * co + v0[n] / w * si; cv[n] = -c0[n] * w * si + v0[n] * co; }
+    return { u: gridCompose(c, N), v: gridCompose(cv, N), c, cv };
+  }
+  /* energy above rest along one axis: ½mΣv² + ½kΣ(stretch change)² over every spring, the frame springs included (the spring energy
+     at rest, ½k a² each, is the same in any motion: its cross terms add up to zero along each row) */
+  function gridEnergy(u, v, N, k, m) { let K = 0, U = 0; const at = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : u[i + N * j]);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) K += 0.5 * m * v[i + N * j] ** 2;
+    for (let j = 0; j < N; j++) for (let i = -1; i < N; i++) U += 0.5 * k * (at(i + 1, j) - at(i, j)) ** 2;
+    for (let i = 0; i < N; i++) for (let j = -1; j < N; j++) U += 0.5 * k * (at(i, j + 1) - at(i, j)) ** 2;
+    return { K, U, total: K + U }; }
+  /* each mode's share of the energy now: ½M_eff(ċ² + ω²c²) with M_eff = m((N+1)/2)² for every mode */
+  function gridModeE(c, cv, N, k, m) { const Me = m * ((N + 1) / 2) ** 2, out = new Array(N * N);
+    for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) { const n = p - 1 + N * (q - 1), w = gridOmega(p, q, N, k, m); out[n] = 0.5 * Me * (cv[n] ** 2 + w * w * c[n] ** 2); } return out; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
@@ -809,7 +854,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock (no ruler: the stretch is drawn shortened) */
-  VD.tools({ el: $('cCan'), time: () => (S.sys === 'sandbox' ? (SB.held ? null : SB.t) : held ? null : t) });
+  VD.tools({ el: $('cCan'), time: () => (S.sys === 'sandbox' ? (SB.held || (SB.grid && SB.grid.held) ? null : SB.t) : held ? null : t) });
   /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/springs.mp4', poster: 'media/how-this-works/springs.jpg' });
   /* Phase plot of the block (block 1 when coupled): v against x at the time shown (demos/lib/vdenergy.js) */
@@ -2300,6 +2345,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawAll() {
     if (!segs.length || !T) return;
     { const c = $('cPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
+    if (sbOn() && SB.grid) { gdDrawScene(); gdDrawPlot(); if (SB.pane === 'modes') gdDrawModes(); else gdDrawBars(); return; }
     if (sbOn()) { sbDrawScene(); sbDrawPlot(); if (SB.pane === 'modes') sbDrawModes(); else sbDrawBars(); return; }
     drawScene(); drawPlots();
     if (S.sys === 'driven') drawRes(); else drawBars();
@@ -2367,7 +2413,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ghostKey();
   }
   function updateReadouts() {
-    if (sbOn()) { if (SB.md) sbReadouts(); return; }
+    if (sbOn()) { if (SB.grid) gdReadouts(); else if (SB.md) sbReadouts(); return; }
     if (!segs.length) return;
     const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), cp = g.sys === 'coupled';
     $('tclock').firstChild.nodeValue = held ? 't = 0, holding' : `t = ${t.toFixed(2)} s`;
@@ -2502,7 +2548,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));
-  function doReset() { if (sbOn()) { if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; newRun(lastIC); if (!running) setRunning(true); }
+  function doReset() { if (sbOn() && SB.grid) { if (!SB.grid.held) { gdStart(SB.grid.ic.slice()); if (!running) setRunning(true); } return; } if (sbOn()) { if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; newRun(lastIC); if (!running) setRunning(true); }
   $('reset').addEventListener('click', doReset);
 
   // ---------- stopwatch, ruler peak, readings, fit, Blind (lab kit) ----------
@@ -2974,6 +3020,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     hzChain: { hz: true, wall: 1.6, name: 'Chain of ten', nodes: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((id) => [id, 0.1]),
       springs: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((j) => [12 + j, j ? 1 + j : 0, j === 10 ? 1 : 2 + j, 20, 0]), pull: 0.03, sel: ['n', 11], pane: 'modes', quiet: true,
       hint: 'Ten 100 g blocks and eleven 20 N/m springs between the walls: a long chain, the same as ten beads on a stretched string. It has ten normal modes, shown in the lower pane: each one\'s frequency, its shape, and how much of the motion is in it now. Click a mode (or press its number, 0 for mode 10, with the pane in focus) to start the chain in that mode alone: every block then moves at that one frequency. Pull one block and let go and the motion is a mix of all ten. The frequencies are fₙ = (1/π)√(k/m) sin(nπ/22): they crowd together near the top instead of rising as n f₁, as they would on a smooth string.' },
+    grid3: { grid: 3, name: '3 by 3 grid', hint: 'Nine 100 g pucks on an air table, each tied to its neighbors and the frame by 20 N/m springs stretched to 10 cm. Each puck moves in the plane, and the motion along x and the motion along y go on separately: each has nine normal modes, shown in the lower pane with their shapes and how much of the motion is in each now. Drag a puck and let go, or click a mode to start it alone.' },
+    grid5: { grid: 5, name: '5 by 5 grid', hint: 'Twenty five pucks: 25 modes along x and 25 along y. Modes with the same p and q swapped have the same frequency, and so do some others, so a mix of them can make a pattern turn or march across the grid. Drag a puck and let go, or click a mode to start it alone.' },
     hzEmpty: { hz: true, wall: 0.44, name: 'Empty track', nodes: [], springs: [], pull: 0, sel: ['n', 0],
       hint: 'Only the two walls. Drag a spring onto the left wall, a block onto its hook, and a hook onto the right wall to tie it there. Drag the right wall to change the gap.' }
   };
@@ -2989,9 +3037,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const sbHz = () => !!(SB.rig && SB.rig.hz), sbG = () => (sbHz() ? 0 : G);
   const sbFixed = (id) => { const nd = sbNode(id); return !!(nd && nd.fixed); };
   const sbBase = () => (sbHz() ? 'the left wall' : 'the ceiling'), sbFrom = () => (sbHz() ? 'from the left wall' : 'below the ceiling');
-  const SB_CHIPS = '#sbBuilds button, #sbBuildsH button';
+  const SB_CHIPS = '#sbBuilds button, #sbBuildsH button, #sbBuildsG button';
   function sbLoad(name) {
     const B = SB_BUILDS[name]; SB.build = name;
+    if (B.grid) { gdLoad(B.grid); for (const b of document.querySelectorAll(SB_CHIPS)) b.setAttribute('aria-pressed', String(b.dataset.b === name)); $('sbHint').textContent = B.hint; return; }
+    if (SB.grid) gdLeave();
     SB.rig = { nodes: [{ id: 0, m: 0, fixed: true }, ...(B.hz ? [{ id: 1, m: 0, fixed: true, still: true, y0: B.wall }] : []), ...B.nodes.map(([id, m]) => ({ id, m }))], springs: B.springs.map(([id, a, b, k, x]) => ({ id, a, b, k, x })) };
     if (B.hz) SB.rig.hz = true;
     SB.nextId = 1 + Math.max(0, ...SB.rig.nodes.map((n) => n.id), ...SB.rig.springs.map((s) => s.id));
@@ -3105,7 +3155,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbNode(id).m = g / 1000; sbRebuild(false); sbUi();
   }
   function sbSetK(k) { const s = SB.sel[0] === 's' ? sbSpring(SB.sel[1]) : null; if (!s) return; s.k = k; sbRebuild(false); sbUi(); }
-  function sbSettle() { if (SB.held) return; SB.phase = sbPhase(); sbStart(sbZero()); updateReadouts(); }
+  function sbSettle() { if (SB.grid) { if (!SB.grid.held) { gdStart(new Array(4 * SB.grid.N * SB.grid.N).fill(0)); updateReadouts(); } return; } if (SB.held) return; SB.phase = sbPhase(); sbStart(sbZero()); updateReadouts(); }
   function sbSelect(sel) { SB.sel = sel; sbUi(); }
   function sbName(sel) {
     if (!sel) return '';
@@ -3118,6 +3168,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const sbSpringNo = (id) => SB.rig.springs.findIndex((s) => s.id === id) + 1;
   // the rail: what is selected and what can be done to it
   function sbUi() {
+    if (SB.grid) { gdUi(); return; }
     if (!SB.rig) return;
     const [kind, id] = SB.sel, nd = kind === 'n' ? sbNode(id) : null, sp = kind === 's' ? sbSpring(id) : null;
     if ((kind === 'n' && !nd) || (kind === 's' && !sp)) { SB.sel = ['n', 0]; return sbUi(); }
@@ -3479,9 +3530,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbStart(z); SB.modeOn = k; if (!running) setRunning(true); updateReadouts();
     $('live').textContent = `Mode ${k + 1} alone, ${(modes[k].w / (2 * Math.PI)).toFixed(3)} Hz: every block moves at this one frequency.`;
   }
-  cans.e.addEventListener('click', (ev) => { if (!sbOn() || SB.pane !== 'modes') return; const r = cans.e.getBoundingClientRect(), y = ev.clientY - r.top;
+  cans.e.addEventListener('click', (ev) => { if (!sbOn() || SB.pane !== 'modes') return; if (SB.grid) { gdModeClick(ev); return; } const r = cans.e.getBoundingClientRect(), y = ev.clientY - r.top;
     const k = sbModeRows.findIndex(([a, b]) => y >= a && y < b); if (k >= 0) sbStartMode(k); });
-  cans.e.addEventListener('keydown', (ev) => { if (!sbOn() || SB.pane !== 'modes' || !/^[0-9]$/.test(ev.key)) return; sbStartMode(ev.key === '0' ? 9 : +ev.key - 1); ev.preventDefault(); });
+  cans.e.addEventListener('keydown', (ev) => { if (!sbOn() || SB.pane !== 'modes' || !/^[0-9]$/.test(ev.key) || SB.grid) return; sbStartMode(ev.key === '0' ? 9 : +ev.key - 1); ev.preventDefault(); });
   function sbDrawPlot() {
     const [W, H] = dims.p; if (!W || !H) return;
     const ctx = ctxs.p, ps = projScale(), cols = SB_COLS();
@@ -3645,6 +3696,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function sbPutBlock(id, m) { const nd = sbNode(id); if (!nd || nd.m > 0 || nd.fixed) return; nd.m = m; SB.sel = ['n', id]; sbRebuild(false); sbUi(); $('live').textContent = `A ${Math.round(m * 1000)} g block hangs on the hook.`; }
   cans.c.addEventListener('pointerdown', (ev) => {
     if (!sbOn() || use3()) return;
+    if (SB.grid) { gdDown(ev); return; }
     cans.c.focus({ preventScroll: true });
     const [x, y] = sbPt(ev), cap = () => { try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} };
     const part = SB.tray && SB.tray.parts.find((q) => inBox(q.box, x, y, 0));
@@ -3667,6 +3719,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   });
   cans.c.addEventListener('pointermove', (ev) => {
     if (!sbOn()) return;
+    if (SB.grid) { gdMove(ev); return; }
     const [x, y] = sbPt(ev), d = SB.drag, ps = projScale();
     if (SB.held) { SB.held.overBin = inBox(SB.tray && SB.tray.bin, x, y, 6 * ps); SB.drag = SB.held.overBin ? { overBin: true, hint: 'Let go to take the block off its hook.' } : null;
       if (SB.held.moved || Math.abs(sbAlong(ev) - SB.held.y0) > 3) sbHoldTo(sbAlong(ev)); return; }
@@ -3701,6 +3754,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   });
   const sbEnd = () => {
     if (!sbOn()) return;
+    if (SB.grid) { gdUp(); return; }
     if (SB.held) { const bin = SB.held.overBin, id = SB.held.id; if (bin) { SB.held = null; SB.drag = null; SB.sel = ['n', id]; sbNode(id).m = 0; sbRebuild(false); sbUi(); $('live').textContent = 'Block taken off; its hook stays.'; } else { SB.drag = null; sbRelease(); } return; }
     const d = SB.drag; SB.drag = null; if (!d) return;
     if (d.type === 'new' && d.target) {
@@ -3715,8 +3769,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (d.type === 'hook' && d.target) { SB.join = d.id; sbJoin(d.target.sel[1]); }
     else sbUi();
   };
-  cans.c.addEventListener('pointerup', sbEnd); cans.c.addEventListener('pointercancel', () => { SB.drag = null; if (SB.held) sbRelease(); });
+  cans.c.addEventListener('pointerup', sbEnd); cans.c.addEventListener('pointercancel', () => { if (SB.grid) { gdUp(); return; } SB.drag = null; if (SB.held) sbRelease(); });
   function sbKey(e) {
+    if (SB.grid) { gdKey(e); return; }
     const k = e.key, [kind, id] = SB.sel;
     if ((sbHz() ? k === 'ArrowLeft' || k === 'ArrowRight' : k === 'ArrowUp' || k === 'ArrowDown') && kind === 'n' && sbMassIdx(id) >= 0 && !SB.held) {
       SB.phase = sbPhase(); const i = sbMassIdx(id), y = sbHeld(SB.rig, id, sbYp()[i] + (k === 'ArrowDown' || k === 'ArrowRight' ? 0.01 : -0.01), sbG(), sbYc()), z = sbZero();
@@ -3726,6 +3781,187 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (k === 'w' || k === 'W') setSw(!sw.on);
     else return;
     e.preventDefault();
+  }
+  /* ---------- the Sandbox's grid of pucks on an air table (gridOmega … gridModeE in the core) ---------- */
+  const GD_K = 20, GD_M = 0.1, GD_A = 0.1, GD_R = 0.018, GD_MAX = 0.04;   /* N/m, kg, spacing (m), puck radius (m), the farthest a puck can be pulled (m) */
+  let gdRects = [], gdCache = null;
+  function gdLoad(N) {
+    const fresh = !SB.grid; SB.grid = { N, held: null, sel: 0, hist: [], modeOn: null, ic: null, view: null };
+    $('gdCtl').hidden = false; $('sbTog').hidden = true; $('sbBtns').hidden = true; SB.held = null; SB.drag = null; SB.join = null;
+    if (fresh || SB.pane !== 'modes') sbPane('modes');
+    const z = new Array(4 * N * N).fill(0); z[0] = 0.02; z[N * N] = 0.012;   /* opens off balance: the corner puck pulled out, so Play moves it */
+    gdStart(z); gdUi();
+  }
+  function gdLeave() { SB.grid = null; $('gdCtl').hidden = true; $('sbTog').hidden = false; $('sbBtns').hidden = false; $('modelHint').textContent = SB_MODEL; }
+  function gdStart(z) {
+    const G2 = SB.grid, n2 = G2.N * G2.N;
+    G2.ic = z.slice(); G2.cx = gridProject(z.slice(0, n2), G2.N); G2.cy = gridProject(z.slice(n2, 2 * n2), G2.N);
+    G2.vx = gridProject(z.slice(2 * n2, 3 * n2), G2.N); G2.vy = gridProject(z.slice(3 * n2), G2.N);
+    G2.modeOn = null; G2.hist = []; SB.t = 0; t = 0; sw.acc = 0; swText(); gdCache = null;
+    const s = gdNow(); G2.E0 = gridEnergy(s.x.u, s.x.v, G2.N, GD_K, GD_M).total + gridEnergy(s.y.u, s.y.v, G2.N, GD_K, GD_M).total; gdSample();
+  }
+  function gdNow() {
+    const G2 = SB.grid, N = G2.N;
+    if (G2.held) { const zero = new Array(N * N).fill(0); return { x: { u: G2.held.ux, v: zero, c: gridProject(G2.held.ux, N), cv: zero }, y: { u: G2.held.uy, v: zero, c: gridProject(G2.held.uy, N), cv: zero } }; }
+    if (gdCache && gdCache.t === SB.t && gdCache.g === G2) return gdCache.s;
+    const s = { x: gridAt(G2.cx, G2.vx, N, GD_K, GD_M, SB.t), y: gridAt(G2.cy, G2.vy, N, GD_K, GD_M, SB.t) };
+    gdCache = { t: SB.t, g: G2, s }; return s;
+  }
+  function gdSample() { const G2 = SB.grid, s = gdNow(); G2.hist.push([SB.t, s.x.u[G2.sel], s.y.u[G2.sel]]); if (G2.hist.length > 3000) G2.hist.splice(0, G2.hist.length - 3000); }
+  function gdAdvance(dts) { if (!(dts > 0)) return; SB.t += dts; t = SB.t; if (sw.on) sw.acc += dts; gdSample(); }
+  function gdUi() {
+    const N = SB.grid.N; if (document.activeElement !== $('gdN')) $('gdN').value = N; $('oGdN').textContent = `${N} (${N * N} pucks)`;
+    for (const b of document.querySelectorAll(SB_CHIPS)) b.setAttribute('aria-pressed', String(b.dataset.b === `grid${N}`));
+    $('sbHint').textContent = (SB_BUILDS[`grid${N}`] || SB_BUILDS.grid3).hint.replace(/^Nine|^Twenty five/, N === 3 ? 'Nine' : N === 5 ? 'Twenty five' : `${N * N}`).replace(/nine normal modes/, `${N * N} normal modes`);
+    $('modelHint').textContent = GD_MODEL;
+    updateReadouts();
+  }
+  const GD_MODEL = 'Grid model: pucks of 100 g on an air table, with no friction, each tied to its four neighbors (and the pucks at the edge to the frame) by springs of 20 N/m stretched to 10.0 cm. The springs are taken as stretched so far past their natural length that it counts as zero: then each pulls with exactly k times the vector from one end to the other, so the motion is exactly linear however far a puck swings, and the x and y motions go on separately. The motion is the sum of the normal modes, each a cosine and a sine at its own frequency, worked out exactly at every moment, not step by step. A real spring with a natural length pulls less across than along, so its across motion is slower; that is left out. While you hold a puck the others wait where they are, and all start from rest when you let go.';
+  $('gdN').addEventListener('input', (e) => { if (!SB.grid) return; const N = +e.target.value; gdLoad(N); SB.build = SB_BUILDS[`grid${N}`] ? `grid${N}` : SB.build; setRunning(!reduce || running); });
+  const gdIJ = (k) => [k % SB.grid.N, Math.floor(k / SB.grid.N)];
+  function gdDrawScene() {
+    const [W, H] = dims.c; if (!W || !H) return;
+    const ctx = ctxs.c, ps = projScale(), fs = fsOf(W), G2 = SB.grid, N = G2.N, L = (N + 1) * GD_A, s = gdNow();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
+    cHandles = [];
+    const top = ctlH + 26 * ps, bot = H - 30 * ps, side = Math.max(60, Math.min(W - 40 * ps, bot - top)), sc = side / (L + 0.04), x0 = (W - side) / 2 + 0.02 * sc, y0 = top + 0.02 * sc;
+    const X = (xm) => x0 + xm * sc, Y = (ym) => y0 + (L - ym) * sc;
+    G2.view = { X, Y, sc, x0, y0 };
+    /* the air table and the frame */
+    ctx.fillStyle = T.surface; ctx.globalAlpha = 0.85; ctx.fillRect(X(0), Y(L), L * sc, L * sc); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 4 * ps; ctx.strokeRect(X(0), Y(L), L * sc, L * sc);
+    ctx.fillStyle = T.grid; for (let j = 1; j <= N * 3 + 2; j++) for (let i = 1; i <= N * 3 + 2; i++) { ctx.fillRect(X(i * L / (N * 3 + 3)) - 0.8, Y(j * L / (N * 3 + 3)) - 0.8, 1.6, 1.6); }   /* the table's air holes */
+    const pos = (i, j) => (i < 0 || i >= N || j < 0 || j >= N ? [X((i + 1) * GD_A), Y((j + 1) * GD_A)] : [X((i + 1) * GD_A + s.x.u[i + N * j]), Y((j + 1) * GD_A + s.y.u[i + N * j])]);
+    const anchor = (i, j) => [X(Math.max(0, Math.min(L, (i + 1) * GD_A))), Y(Math.max(0, Math.min(L, (j + 1) * GD_A)))];
+    const P = (i, j) => (i < 0 || i >= N || j < 0 || j >= N ? anchor(i, j) : pos(i, j));
+    const zig = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1, ux = dx / len, uy = dy / len, amp = Math.min(0.012 * sc, 6 * ps), n = 10, lead = Math.min(len * 0.12, 0.02 * sc);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(a[0] + ux * lead, a[1] + uy * lead);
+      for (let q = 1; q < 2 * n; q++) { const f = lead + (len - 2 * lead) * q / (2 * n), o = (q % 2 ? 1 : -1) * amp; ctx.lineTo(a[0] + ux * f - uy * o, a[1] + uy * f + ux * o); }
+      ctx.lineTo(b[0] - ux * lead, b[1] - uy * lead); ctx.lineTo(b[0], b[1]); ctx.stroke(); };
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.lineJoin = 'round';
+    for (let j = 0; j < N; j++) for (let i = -1; i < N; i++) zig(P(i, j), P(i + 1, j));
+    for (let i = 0; i < N; i++) for (let j = -1; j < N; j++) zig(P(i, j), P(i, j + 1));
+    /* rest positions, faint, then the pucks */
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const [px, py] = anchor(i, j); ctx.beginPath(); ctx.moveTo(px - 4 * ps, py); ctx.lineTo(px + 4 * ps, py); ctx.moveTo(px, py - 4 * ps); ctx.lineTo(px, py + 4 * ps); ctx.stroke(); }
+    const r = Math.max(5 * ps, GD_R * sc);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const k = i + N * j, [px, py] = pos(i, j), sel = k === G2.sel;
+      const gr = ctx.createRadialGradient(px - r * 0.35, py - r * 0.35, r * 0.1, px, py, r); gr.addColorStop(0, T.canvas); gr.addColorStop(1, sel ? T.accent : T.xcol);
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(px, py, r, 0, 7); ctx.fill(); ctx.strokeStyle = sel ? T.ink : T.line; ctx.lineWidth = (sel ? 2 : 1) * ps; ctx.stroke();
+      cHandles.push({ id: `g${k}`, k, box: [px - r - 6 * ps, py - r - 6 * ps, 2 * r + 12 * ps, 2 * r + 12 * ps], cursor: 'grab' });
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.9}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(W < 520 ? 'Top view, to scale; drag a puck' : 'Top view, to scale: 10 cm between pucks. Drag a puck and let go.', X(0), Y(L) - 8 * ps);
+    if (G2.held) { ctx.fillStyle = T.ink; ctx.textAlign = 'right'; ctx.fillText('the others wait while you hold one', X(L), H - 10 * ps); }
+  }
+  function gdHit(ev) { const [x, y] = sbPt(ev); let best = null, bd = Infinity; for (const h of cHandles) { if (!h.box || h.k === undefined) continue; const cx = h.box[0] + h.box[2] / 2, cy = h.box[1] + h.box[3] / 2, d = Math.hypot(x - cx, y - cy); if (d < h.box[2] / 2 && d < bd) { bd = d; best = h; } } return best; }
+  function gdDown(ev) {
+    cans.c.focus({ preventScroll: true });
+    const h = gdHit(ev); if (!h) return;
+    const G2 = SB.grid, s = gdNow(); G2.sel = h.k; G2.held = { k: h.k, ux: s.x.u.slice(), uy: s.y.u.slice() };
+    try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {} cans.c.style.cursor = 'grabbing'; ev.preventDefault(); updateReadouts();
+  }
+  function gdMove(ev) {
+    const G2 = SB.grid, V2 = G2.view; if (!V2) return;
+    if (!G2.held) { cans.c.style.cursor = gdHit(ev) ? 'grab' : 'default'; return; }
+    const [x, y] = sbPt(ev), [i, j] = gdIJ(G2.held.k);
+    G2.held.ux[G2.held.k] = clamp(Math.round(((x - V2.x0) / V2.sc - (i + 1) * GD_A) * 1000) / 1000, -GD_MAX, GD_MAX);
+    G2.held.uy[G2.held.k] = clamp(Math.round(((V2.y0 - y) / V2.sc + (G2.N + 1) * GD_A - (j + 1) * GD_A) * 1000) / 1000, -GD_MAX, GD_MAX);
+  }
+  function gdUp() { const G2 = SB.grid; if (!G2 || !G2.held) return; const h = G2.held, n2 = G2.N * G2.N; G2.held = null; cans.c.style.cursor = 'default';
+    gdStart([...h.ux, ...h.uy, ...new Array(2 * n2).fill(0)]); setRunning(true); $('live').textContent = 'Let go: every puck now moves as a mix of the grid\'s normal modes.'; }
+  function gdKey(e) {
+    const G2 = SB.grid, N = G2.N, k = e.key, mv = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[k];
+    if (mv && !G2.held) { const s = gdNow(), ux = s.x.u.slice(), uy = s.y.u.slice(), n2 = N * N; ux[G2.sel] = clamp(ux[G2.sel] + 0.01 * mv[0], -GD_MAX, GD_MAX); uy[G2.sel] = clamp(uy[G2.sel] + 0.01 * mv[1], -GD_MAX, GD_MAX);
+      gdStart([...ux, ...uy, ...new Array(2 * n2).fill(0)]); setRunning(true); }
+    else if (k === 'n' || k === 'N') { G2.sel = (G2.sel + 1) % (N * N); G2.hist = []; gdSample(); updateReadouts(); }
+    else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') doReset();
+    else if (k === 'w' || k === 'W') setSw(!sw.on);
+    else return;
+    e.preventDefault();
+  }
+  function gdDrawPlot() {
+    const [W, H] = dims.p; if (!W || !H) return;
+    const ctx = ctxs.p, ps = projScale(), G2 = SB.grid;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 54 * ps, R = W - 14 * ps, Tp = 26 * ps, B = H - 30 * ps, span = 8, t1 = Math.max(span, SB.t), t0 = t1 - span;
+    let A = 0.005; for (const [, a, b] of G2.hist) A = Math.max(A, Math.abs(a), Math.abs(b)); A = nice(A * 1.15 * 100) / 100;
+    const X = (tt) => L + (tt - t0) / span * (R - L), Y = (v) => (Tp + B) / 2 - v / A * (B - Tp) / 2;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
+    for (const v of [-A, -A / 2, 0, A / 2, A]) { ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(R, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(MIN(String(+(v * 100).toFixed(2))), L - 6 * ps, Y(v)); }
+    for (let k = Math.ceil(t0); k <= t1; k++) { ctx.beginPath(); ctx.moveTo(X(k), Tp); ctx.lineTo(X(k), B); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(k), X(k), B + 5 * ps); }
+    const [i, j] = gdIJ(G2.sel);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(W < 520 ? `Puck (${i + 1}, ${j + 1}): x and y (cm), t (s)` : `Puck (${i + 1}, ${j + 1}) from its rest position: x and y (cm) against time (s)`, L, 16 * ps);
+    for (const [ix, col] of [[1, T.xcol], [2, T.vcol]]) { ctx.strokeStyle = col; ctx.lineWidth = 2 * ps; ctx.beginPath(); let on = false;
+      for (const q of G2.hist) { if (q[0] < t0) continue; const px = X(q[0]), py = Y(q[ix]); if (!on) { ctx.moveTo(px, py); on = true; } else ctx.lineTo(px, py); } ctx.stroke(); }
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillStyle = T.xcol; ctx.fillText('x', R - 22 * ps, 16 * ps); ctx.fillStyle = T.vcol; ctx.fillText('y', R, 16 * ps);
+  }
+  function gdDrawModes() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ps = projScale(), G2 = SB.grid, N = G2.N, s = gdNow();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const Ex = gridModeE(s.x.c, s.x.cv, N, GD_K, GD_M), Ey = gridModeE(s.y.c, s.y.cv, N, GD_K, GD_M), Etot = [...Ex, ...Ey].reduce((a, b) => a + b, 0);
+    const segW = $('sbPaneSeg').offsetWidth + 16 * ps, L = 14 * ps, R = W - 14 * ps;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(ctx.measureText('Normal modes (p, q): shape, f, share of energy').width < R - L - segW ? 'Normal modes (p, q): shape, f, share of energy' : 'Modes (p, q)', L, 20 * ps);
+    gdRects = [];
+    const top = 34 * ps, gap = 14 * ps, cellOf = (w2) => (w2 ? Math.min((R - L - gap) / 2 / N, (H - top - 22 * ps) / N) : Math.min((R - L) / N, (H - top - 2 * 22 * ps - gap) / 2 / N));
+    const wide = cellOf(true) >= cellOf(false), availW = wide ? (R - L - gap) / 2 : R - L, availH = wide ? H - top - 22 * ps : (H - top - 2 * 22 * ps - gap) / 2;
+    const cell = Math.max(10, Math.min(availW / N, availH / N)), fsz = Math.max(8, Math.min(10.5 * ps, cell * 0.2));
+    for (const [ax, E, lab] of [[0, Ex, 'Moving along x'], [1, Ey, 'Moving along y']]) {
+      const ox = wide ? L + ax * (availW + gap) : L, oy = wide ? top + 14 * ps : top + 14 * ps + ax * (availH + 22 * ps + gap);
+      ctx.fillStyle = ax ? T.vcol : T.xcol; ctx.font = `600 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(lab, ox, oy - 4 * ps);
+      for (let q = 1; q <= N; q++) for (let p = 1; p <= N; p++) {
+        const n = p - 1 + N * (q - 1), x = ox + (p - 1) * cell, y = oy + (N - q) * cell, sh = Etot > 0 ? E[n] / Etot : 0, on = G2.modeOn && G2.modeOn.ax === ax && G2.modeOn.n === n;
+        ctx.fillStyle = T.grid; ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+        if (sh > 0.0005) { ctx.fillStyle = T.accent; ctx.globalAlpha = Math.min(0.85, 0.15 + 0.7 * Math.sqrt(sh)); ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2); ctx.globalAlpha = 1; }
+        if (on) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.strokeRect(x + 2, y + 2, cell - 4, cell - 4); }
+        /* the mode's shape: each puck nudged along x or y by its share of the mode */
+        const pad = cell * 0.16, st = (cell - 2 * pad) / (N + 1), d = st * 0.42, rr = Math.max(1.2, Math.min(3 * ps, st * 0.18));
+        ctx.fillStyle = T.ink; for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const f = gridShape(p, q, i, j, N), px = x + pad + (i + 1) * st + (ax ? 0 : f * d), py = y + cell - pad - (j + 1) * st - (ax ? f * d : 0); ctx.beginPath(); ctx.arc(px, py, rr, 0, 7); ctx.fill(); }
+        if (cell >= 40 * ps) { ctx.fillStyle = T.ink; ctx.font = `${fsz}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${p},${q}`, x + 3, y + 2);
+          ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(cell >= 64 * ps ? 3 : 2)}${cell >= 64 * ps ? ' Hz' : ''}`, x + cell - 3, y + cell - 2); }
+        gdRects.push([x, y, cell, cell, ax, n]);
+      }
+    }
+    ctx.textBaseline = 'alphabetic';
+  }
+  function gdModeClick(ev) {
+    const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, hit = gdRects.find((q) => x >= q[0] && x < q[0] + q[2] && y >= q[1] && y < q[1] + q[3]);
+    if (!hit || SB.grid.held) return;
+    const G2 = SB.grid, N = G2.N, n2 = N * N, c = new Array(n2).fill(0); c[hit[5]] = 0.02;
+    const u = gridCompose(c, N), z = new Array(4 * n2).fill(0); for (let k = 0; k < n2; k++) z[k + hit[4] * n2] = u[k];
+    gdStart(z); G2.modeOn = { ax: hit[4], n: hit[5] }; if (!running) setRunning(true); updateReadouts();
+    const p = hit[5] % N + 1, q = Math.floor(hit[5] / N) + 1;
+    $('live').textContent = `Mode (${p}, ${q}) along ${hit[4] ? 'y' : 'x'} alone, ${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(3)} Hz: every puck moves at this one frequency.`;
+  }
+  function gdDrawBars() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ps = projScale(), G2 = SB.grid, s = gdNow(), ex = gridEnergy(s.x.u, s.x.v, G2.N, GD_K, GD_M), ey = gridEnergy(s.y.u, s.y.v, G2.N, GD_K, GD_M);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const rows = [{ lab: 'Kinetic, Σ½mv²', v: ex.K + ey.K, col: T.pos }, { lab: 'Springs, above rest', v: ex.U + ey.U, col: T.neg }, { lab: 'Total above rest', v: ex.total + ey.total, col: T.ink }, { lab: 'At the start', v: G2.E0, col: T.muted }];
+    const big = Math.max(...rows.map((q) => Math.abs(q.v)), 1e-12); if (big > eMax || big < eMax * 0.25) eMax = big * 1.05;
+    const L = 14 * ps, R = W - 14 * ps, fs = (W < 400 ? 10.5 : 11.5) * ps;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText('Energy now, from the grid at rest', L, 20 * ps);
+    const rowH = Math.min(46 * ps, (H - 40 * ps) / rows.length), bh = Math.max(5 * ps, Math.min(14 * ps, rowH - fs - 9 * ps)), sc = (R - L) / eMax; let yy = 28 * ps;
+    for (const q of rows) { ctx.fillStyle = T.muted; richText(ctx, q.lab, L, yy + fs, fs, 400, 'left'); ctx.fillStyle = T.ink; ctx.font = `600 ${fs * 0.95}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(fmtE(q.v), R, yy + fs);
+      const by = yy + fs + 4 * ps; ctx.fillStyle = T.grid; ctx.fillRect(L, by, R - L, bh); ctx.fillStyle = q.col; ctx.globalAlpha = 0.85; ctx.fillRect(L, by, Math.max(0, q.v * sc), bh); ctx.globalAlpha = 1; yy += rowH; }
+  }
+  function gdReadouts() {
+    const G2 = SB.grid, N = G2.N, s = gdNow(), [i, j] = gdIJ(G2.sel), f = (p, q) => gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI);
+    $('tclock').firstChild.nodeValue = G2.held ? 't = 0, holding' : `t = ${SB.t.toFixed(2)} s`;
+    const E = gridEnergy(s.x.u, s.x.v, N, GD_K, GD_M).total + gridEnergy(s.y.u, s.y.v, N, GD_K, GD_M).total;
+    let h = dd('Time t', `${SB.t.toFixed(3)} s`) + dd('Pucks', `${N} × ${N}, ${fx(GD_M * 1000, 0)} g each`);
+    h += dd('Springs', `k = ${GD_K} N/m, ${fx(GD_A * 100, 1)} cm long`) + dd('Tension in each, k × 10 cm', `${fx(GD_K * GD_A, 2)} N`);
+    h += dd(`Puck (${i + 1}, ${j + 1}) x, y from rest`, `${fx(s.x.u[G2.sel] * 100, 2)}, ${fx(s.y.u[G2.sel] * 100, 2)} cm`, 'wide');
+    h += dd('Lowest mode f₁₁', `${f(1, 1).toFixed(4)} Hz`) + dd(`Highest f<sub>${N}${N}</sub>`, `${f(N, N).toFixed(4)} Hz`);
+    h += dd('Energy now', fmtE(E)) + dd('At the start', fmtE(G2.E0));
+    $('measBox').innerHTML = h;
+    $('mFormula').innerHTML = 'ω<sub>pq</sub> = 2√(k/m) √(sin²(pπ/2(N+1)) + sin²(qπ/2(N+1))), the same for x and y. Press N with the picture in focus to pick the next puck.';
+    swText();
   }
   function sbEnter() {
     SB.dimWas = view3 && view3.is3d() ? '3d' : null;
@@ -3767,7 +4003,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function loop(now) {
     const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    if (sbOn()) { if (running && !SB.held && !(SB.drag && SB.drag.type && !['k', 'm', 'b', 'A', 'w', 'wall'].includes(SB.drag.type)) && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }   /* the rig holds still while a part is placed */
+    if (sbOn() && SB.grid) { if (running && !SB.grid.held && dtr > 0) gdAdvance(dtr * SPEEDS[S.speedIdx]); }
+    else if (sbOn()) { if (running && !SB.held && !(SB.drag && SB.drag.type && !['k', 'm', 'b', 'A', 'w', 'wall'].includes(SB.drag.type)) && dtr > 0) sbAdvance(dtr * SPEEDS[S.speedIdx]); }   /* the rig holds still while a part is placed */
     else if (running && !held && dtr > 0) {
       advance(dtr * SPEEDS[S.speedIdx]);
       view.tL = Math.max(view.tL, t - 0.85 * view.L);
