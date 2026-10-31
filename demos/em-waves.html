@@ -78,6 +78,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.pol { border-color: var(--accent); border-top-style: dashed; border-top-width: 2px; }
 .swatch.bin { height: 10px; border: 0; background: color-mix(in srgb, var(--bf) 45%, transparent); }
 .swatch.bout { height: 10px; border: 0; background: color-mix(in srgb, var(--bo) 45%, transparent); }
+.swatch.ezp, .swatch.ezn, .swatch.metal, .swatch.int { height: 10px; border: 0; }
+.swatch.ezp { background: var(--pos); } .swatch.ezn { background: var(--neg); } .swatch.metal { background: var(--muted); } .swatch.int { background: var(--equi); }
 
 /* projector on a short screen: a smaller lede and a lower stage floor keep the stage above the fold */
 @media (min-width: 821px) and (max-height: 820px) {
@@ -89,6 +91,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { height: 86vh; min-height: 660px; }
+  /* In a plane on a narrow screen: the picture is 5 by 3, so the stage hugs it instead of leaving empty space */
+  .stage.pl { height: auto; min-height: 0; }
+  .stage.pl .pane { aspect-ratio: 5 / 3; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
@@ -100,7 +105,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Electromagnetic Waves</h1>
-      <p>Electric and magnetic fields that keep each other going and travel at c. E and B stay at right angles to each other and to the direction of travel, and peak together. Change the polarization, read off the energy a wave carries, and watch a dipole antenna launch one.</p>
+      <p>Electric and magnetic fields that keep each other going and travel at c. E and B stay at right angles to each other and to the direction of travel, and peak together. Change the polarization, read off the energy a wave carries, and watch a dipole antenna launch one. In a plane, place wires and metal and watch the waves reflect, interfere and spread.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">SI · c = 1/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²</div>
@@ -116,6 +121,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="seg" role="group" aria-label="What to show">
           <button type="button" id="mWave" aria-pressed="true">Plane wave</button>
           <button type="button" id="mAnt" aria-pressed="false">Antenna</button>
+          <button type="button" id="mPlane" aria-pressed="false">In a plane</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="resetView">Reset view</button>
@@ -128,7 +134,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     <aside class="rail">
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/em-waves.html" target="em-waves-worksheet">Worksheet 1: Electromagnetic Waves: Fields, Intensity and Pressure</a></li><li><a href="../curriculum/labs/students/intro-em-spectrum.html" target="intro-em-spectrum-worksheet">Worksheet 2: The Electromagnetic Spectrum (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
-      <section>
+      <section id="secSetups">
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="plane" aria-pressed="true">Plane wave</button>
@@ -141,7 +147,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
-      <section>
+      <section id="secFreq">
         <h2>Frequency and wavelength</h2>
         <div>
           <div class="slider-head"><label for="sf">Frequency f</label><output id="fOut" class="mono" for="sf"></output></div>
@@ -252,6 +258,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>More about this</summary><p class="hint">Close in (r ≪ λ/2π) the field is nearly the dipole's own field, falling as 1/r³. Beyond about a wavelength the 1/r terms win: loops of E break off and move outward at c, with E, B and the direction of travel at right angles, a wave like the one on the Plane wave view.</p></details>
       </section>
 
+      <section id="secPlane" hidden>
+        <h2>In a plane</h2>
+        <div class="chips" id="plPresets">
+          <button type="button" data-q="one" aria-pressed="true">One wire</button>
+          <button type="button" data-q="two" aria-pressed="false">Two wires in phase</button>
+          <button type="button" data-q="anti" aria-pressed="false">Two wires, opposite phase</button>
+          <button type="button" data-q="reflector" aria-pressed="false">Wire in front of a metal sheet</button>
+          <button type="button" data-q="dish" aria-pressed="false">Wire at the focus of a dish</button>
+          <button type="button" data-q="slit" aria-pressed="false">A wide beam through a slit</button>
+          <button type="button" data-q="twoslit" aria-pressed="false">A wide beam through two slits</button>
+          <button type="button" data-q="box" aria-pressed="false">A closed metal box</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="plHint"></p></details>
+        <div class="seg" role="group" aria-label="What a tap or drag on the picture does" id="plTools">
+          <button type="button" data-t="wire" aria-pressed="true">Wire</button>
+          <button type="button" data-t="metal" aria-pressed="false">Metal</button>
+          <button type="button" data-t="erase" aria-pressed="false">Erase</button>
+          <button type="button" data-t="probe" aria-pressed="false">Probe</button>
+        </div>
+        <p class="hint" id="plTip"></p>
+        <div class="seg" role="group" aria-label="What the shading shows" id="plShow">
+          <button type="button" data-s="now" aria-pressed="true">Field now</button>
+          <button type="button" data-s="avg" aria-pressed="false">Average intensity</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="plRestart">Start again</button><button type="button" class="btn" id="plClear">Clear all</button></div>
+        <dl class="readout">
+          <div><dt>Time since the start</dt><dd id="rPlT">—</dd></div>
+          <div><dt>Wires</dt><dd id="rPlN">—</dd></div>
+          <div class="wide"><dt>Probe: distance r to the nearest wire</dt><dd id="rPlR">—</dd></div>
+          <div><dt>Probe: ⟨E²⟩</dt><dd id="rPlE">—</dd></div>
+          <div><dt>Probe: r⟨E²⟩</dt><dd id="rPlRE">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary><p class="hint">Each wire runs straight through the page and carries an alternating current, so the picture is the same in every plane you could slice. E points along the wire, into or out of the page; B circles around in the page. Energy spreads over circles instead of spheres, so ⟨E²⟩ falls as 1/r instead of 1/r², and r⟨E²⟩ stays the same at every distance from one wire. Every length is in wavelengths: the picture is the same for radio waves meters long and microwaves centimeters long, as long as the metal conducts well.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Metal makes E along its surface zero, so a wave that hits it reflects, flipped over. A sheet λ/4 behind a wire sends its reflection back in step with the wave going forward: a reflector, as in a TV antenna. A parabola reflects waves from its focus into a parallel beam. Inside a closed metal box the field stays exactly zero (a Faraday cage); erase a gap in a wall and watch it leak in.</p></details>
+      </section>
+
       <section id="secShow">
         <details class="fold"><summary>Show</summary><div class="foldbody">
         <div class="toggles">
@@ -273,6 +315,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelWave">A plane wave in vacuum, exact: E as in the formula above and B = ẑ × E/c, so B is always at right angles to E, in phase with it, and |B| = |E|/c. In SI units B in tesla is about 3 × 10⁸ times smaller than E in V/m, so it is drawn as cB. The drawing is scaled so E₀ fills it and always shows 2.5 wavelengths; time is slowed so one period takes 2.5 s. S = E × B/μ₀ = |E|²/(μ₀c) along ẑ; its time average is I.</p>
         <p class="hint" id="modelAnt" hidden>Exact fields of an oscillating point dipole (length much less than λ), including the near field terms, in a plane through its axis. Lines are electric field lines, drawn as contours of the stream function sin²θ [sin(kr − ωt) + cos(kr − ωt)/kr]. Shading shows B, which points into or out of the page, multiplied by r so the far field shows evenly. A real half wave antenna has a slightly narrower pattern than sin²θ.</p>
+        <p class="hint" id="modelPlane" hidden></p>
+        <div class="key" id="planeKey" hidden>
+          <span><i class="swatch ezp"></i>E out of the page</span>
+          <span><i class="swatch ezn"></i>E into the page</span>
+          <span><i class="swatch int"></i>Average intensity ⟨E²⟩</span>
+          <span><i class="swatch metal"></i>Metal (a perfect conductor)</span>
+        </div>
         <div class="key" id="antKey" hidden>
           <span><i class="swatch e"></i>Electric field line</span>
           <span><i class="swatch bin"></i>B into the page</span>
@@ -402,10 +451,48 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Electric field lines in a plane through the axis are contours of this function (r sinθ times the
   // vector potential of E, whose curl gives E): ψ = sin²θ [sin(u − ωt) + cos(u − ωt)/u]
   const stream = (u, s2, wt) => s2 * (Math.sin(u - wt) + Math.cos(u - wt) / u);
+  /* ---- In a plane: the 2D field of currents along z (TMz), Yee's finite difference time domain scheme ----
+     Ez sits on cell centers, Hx and Hy half a cell away; H is stored as η₀H, so all three carry the units of E.
+     FD_S = c Δt/Δx, the Courant number (stable below 1/√2). FD_NL cells per wavelength, so one period is FD_NL/FD_S steps. */
+  const FD_S = 0.5, FD_NL = 20, FD_NT = 40, FD_PAD = 30;
+  /* the grid's own speed error: along grid lines a wave of FD_NL cells per wavelength travels this fraction slower than c
+     (from the scheme's dispersion relation sin(ωΔt/2) = S sin(kΔx/2)); along diagonals less */
+  const FD_SLOW = 1 - (2 * Math.PI / FD_NL) / (2 * Math.asin(Math.sin(Math.PI / FD_NT) / FD_S));
+  function fdLoss(d, pad) { return d <= 0 ? 0 : 0.05 * Math.pow(Math.min(1, d / pad), 2); }   /* graded sponge FD_PAD cells deep, σΔt/2ε₀ rising as depth squared */
+  function fdtdMake(nx, ny, pad) {
+    const n = nx * ny, F = { nx, ny, pad, n: 0, Ez: new Float64Array(n), Hx: new Float64Array(n), Hy: new Float64Array(n),
+      metal: new Uint8Array(n), ce: new Float64Array(n), de: new Float64Array(n), chx: new Float64Array(n), dhx: new Float64Array(n), chy: new Float64Array(n), dhy: new Float64Array(n) };
+    const dist = (x, y) => Math.max(pad - x, x - (nx - 1 - pad), pad - y, y - (ny - 1 - pad), 0);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const k = j * nx + i, a = fdLoss(dist(i, j), pad), ax = fdLoss(dist(i, j + 0.5), pad), ay = fdLoss(dist(i + 0.5, j), pad);
+      /* the same loss for E and H keeps the sponge's impedance that of free space, so a wave enters it with little reflection */
+      F.ce[k] = (1 - a) / (1 + a); F.de[k] = FD_S / (1 + a);
+      F.chx[k] = (1 - ax) / (1 + ax); F.dhx[k] = FD_S / (1 + ax);
+      F.chy[k] = (1 - ay) / (1 + ay); F.dhy[k] = FD_S / (1 + ay);
+    }
+    return F;
+  }
+  /* a source switches on smoothly over two periods, so it does not ring the grid */
+  const fdRamp = (m) => (m <= 0 ? 0 : m >= 2 * FD_NT ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * m / (2 * FD_NT)));
+  /* one time step. srcs: { k: cell index, a: amplitude, ph: phase (rad), n0: step it was switched on } added to Ez (a soft source) */
+  function fdtdStep(F, srcs) {
+    const { nx, ny, Ez, Hx, Hy, metal } = F;
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx; i++) { const k = j * nx + i; Hx[k] = F.chx[k] * Hx[k] - F.dhx[k] * (Ez[k + nx] - Ez[k]); }
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx - 1; i++) { const k = j * nx + i; Hy[k] = F.chy[k] * Hy[k] + F.dhy[k] * (Ez[k + 1] - Ez[k]); }
+    for (let j = 1; j < ny; j++) for (let i = 1; i < nx; i++) {
+      const k = j * nx + i;
+      Ez[k] = metal[k] ? 0 : F.ce[k] * Ez[k] + F.de[k] * ((Hy[k] - Hy[k - 1]) - (Hx[k] - Hx[k - nx]));
+    }
+    F.n++;
+    const w = 2 * Math.PI / FD_NT;
+    if (srcs) for (const s of srcs) if (!metal[s.k]) Ez[s.k] += s.a * fdRamp(F.n - (s.n0 || 0)) * Math.sin(w * (F.n - (s.n0 || 0)) + (s.ph || 0));
+  }
+  /* the field energy per unit length along z, in units where ε₀ = 1: ½ Σ (Ez² + (η₀Hx)² + (η₀Hy)²) Δx² with Δx = 1 */
+  function fdtdEnergy(F) { let u = 0; for (let k = 0; k < F.Ez.length; k++) u += F.Ez[k] * F.Ez[k] + F.Hx[k] * F.Hx[k] + F.Hy[k] * F.Hy[k]; return 0.5 * u; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream };
+    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream, FD_S, FD_NL, FD_NT, FD_PAD, FD_SLOW, fdLoss, fdtdMake, fdRamp, fdtdStep, fdtdEnergy };
     return;
   }
 
@@ -471,9 +558,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function rgb(hex) { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const CAN_LABEL = can.getAttribute('aria-label'), PL_LABEL = 'The electric field of long straight wires through the page, in a plane, with metal you place. Tap to use the chosen tool: add or remove a wire, paint metal, erase, or place the probe. Keys: arrows move a cursor, Enter uses the tool there, 1 to 4 choose the tool, I switches between the field now and the average intensity, R starts again, space plays or pauses, A switches to the plane wave.';
   let W = 0, H = 0, LY = null;
   /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
-  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'side', axis: () => (W >= 640 ? 'x' : null), def: () => 0.63, min: 0.4, max: 0.8, label: 'Divider between the wave and the side panel', onChange: () => resize() });
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'side', axis: () => (W >= 640 && S.mode !== 'plane' ? 'x' : null), def: () => 0.63, min: 0.4, max: 0.8, label: 'Divider between the wave and the side panel', onChange: () => resize() });
   // label scale: larger in projector mode, capped by the pane so labels do not pile up
   const LS = () => (isProj() && LY ? Math.max(1, Math.min(1.4, Math.min(LY.main.w, LY.main.h) / 330)) : 1);
   function layout(W, H) {
@@ -982,6 +1070,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!T || !LY) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.mode === 'plane') { if (G.ok) G.el.hidden = true; drawPlane(); return; }
     if (S.mode === 'wave') {
       if (use3D()) { G.el.hidden = false; render3D(); ctx.clearRect(LY.main.x, LY.main.y, LY.main.w, LY.main.h); }
       else drawWave2D();
@@ -1031,10 +1120,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function syncUI() {
     $('sf').value = S.logf; $('sE').value = S.logE; $('spsi').value = S.psi; $('sdel').value = S.delta; $('sphi').value = S.phi; $('sdir').value = S.dir;
-    const wave = S.mode === 'wave';
-    $('mWave').setAttribute('aria-pressed', String(wave)); $('mAnt').setAttribute('aria-pressed', String(!wave));
-    $('secPol').hidden = !wave; $('secEnergy').hidden = !wave; $('secShow').hidden = !wave; $('secAnt').hidden = wave;
-    $('modelWave').hidden = !wave; $('modelAnt').hidden = wave; $('antKey').hidden = wave;
+    const wave = S.mode === 'wave', ant = S.mode === 'antenna', pl = S.mode === 'plane';
+    $('mWave').setAttribute('aria-pressed', String(wave)); $('mAnt').setAttribute('aria-pressed', String(ant)); $('mPlane').setAttribute('aria-pressed', String(pl));
+    $('secPol').hidden = !wave; $('secEnergy').hidden = !wave; $('secShow').hidden = !wave; $('secAnt').hidden = !ant; $('secPlane').hidden = !pl;
+    $('secSetups').hidden = pl; $('secFreq').hidden = pl; document.querySelector('.vd-readings').hidden = pl;
+    $('modelWave').hidden = !wave; $('modelAnt').hidden = !ant; $('antKey').hidden = !ant; $('modelPlane').hidden = !pl; $('planeKey').hidden = !pl;
+    can.setAttribute('aria-label', pl ? PL_LABEL : CAN_LABEL); $('stage').classList.toggle('pl', pl);
     $('resetView').hidden = !(wave && G.ok);
     for (const [id, k] of [['tE', 'e'], ['tB', 'b'], ['tS', 's'], ['tSheet', 'sheet']]) $(id).checked = S.show[k];
   }
@@ -1044,7 +1135,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint() : 'Your own setup. Pick a preset to return to a known one.';
   }
   function custom() { if (S.preset) markPreset(null); }
-  function update() { syncUI(); readouts(); draw(); }
+  function update() { syncUI(); readouts(); if (S.mode === 'plane') plReadouts(); draw(); }
   function applyPreset(name) {
     const p = PRESETS[name];
     S.mode = p.mode; S.logf = Math.log10(p.f); S.logE = Math.log10(p.E0); S.psi = p.psi; S.delta = p.delta;
@@ -1058,7 +1149,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setDelta(v) { S.delta = clampStep($('sdel'), v); custom(); update(); }
   function setPhi(v) { S.phi = clampStep($('sphi'), v); update(); }
   function setDir(v) { S.dir = clampStep($('sdir'), v); update(); }
-  function setMode(m) { if (S.mode === m) return; S.mode = m; if (m === 'wave') init3D(); custom(); update(); }
+  function setMode(m) {
+    if (S.mode === m) return; S.mode = m; if (m === 'wave') init3D();
+    if (m === 'plane' && !PL.F) plPreset('one');
+    if (m !== 'plane') custom();
+    update(); requestAnimationFrame(() => SPL.place());
+  }
   $('sf').addEventListener('input', (e) => setLogf(+e.target.value));
   $('sE').addEventListener('input', (e) => setLogE(+e.target.value));
   $('spsi').addEventListener('input', (e) => setPsi(+e.target.value));
@@ -1074,6 +1170,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('mWave').addEventListener('click', () => setMode('wave'));
   $('mAnt').addEventListener('click', () => setMode('antenna'));
+  $('mPlane').addEventListener('click', () => setMode('plane'));
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
   playBtn.addEventListener('click', () => setPlaying(!playing));
@@ -1176,7 +1273,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (e.key === ',' || e.key === '.') setPsi(S.psi + (e.key === '.' ? 1 : -1) * 5 * big);
     else if (e.key === '[' || e.key === ']') setDelta(S.delta + (e.key === ']' ? 1 : -1) * 5 * big);
     else if (e.key === 'p' || e.key === 'P') { S.pol = !S.pol; update(); }
-    else if (e.key === 'a' || e.key === 'A') setMode(S.mode === 'wave' ? 'antenna' : 'wave');
+    else if (e.key === 'a' || e.key === 'A') setMode(S.mode === 'wave' ? 'antenna' : 'plane');
     else if (e.key === 'v' || e.key === 'V') resetView();
     else if (e.key === ' ') setPlaying(!playing);
     else return;
@@ -1198,12 +1295,200 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // ---------- In a plane: the 2D field of wires and metal you place (fdtdStep in the core) ----------
+  const PLV = { nx: 200, ny: 120 }, PW = PLV.nx + 2 * FD_PAD, PH = PLV.ny + 2 * FD_PAD;
+  const A_WIRE = 20, BEAM_W = 3 * FD_NL;   /* a wire's soft source strength (E amplitude 1 at about 1 λ); the beam's Gaussian half width, 3 λ */
+  const PL = { F: null, wires: [], beam: null, srcs: [], tool: 'wire', show: 'now', acc: null, avg: null, accN: 0, avgN: 0, probe: null, preset: 'one', cur: { i: 100, j: 60 }, kbd: false, down: false, last: null, fr: 0 };
+  const plK = (i, j) => (j + FD_PAD) * PW + (i + FD_PAD);
+  function plFresh() { PL.F = fdtdMake(PW, PH, FD_PAD); PL.acc = new Float64Array(PW * PH); PL.avg = new Float64Array(PW * PH); PL.accN = 0; PL.avgN = 0; }
+  function plCompile() {
+    const out = [];
+    for (const w of PL.wires) out.push({ k: plK(w.i, w.j), a: A_WIRE, ph: w.ph || 0, n0: w.n0 || 0 });
+    if (PL.beam) for (let j = -FD_PAD; j < PLV.ny + FD_PAD; j++) out.push({ k: plK(PL.beam.i, j), a: Math.exp(-(((j - PLV.ny / 2) / BEAM_W) ** 2)), ph: 0, n0: PL.beam.n0 || 0 });
+    PL.srcs = out;
+  }
+  function plRestart() {
+    const m = PL.F ? PL.F.metal.slice() : null; plFresh(); if (m) PL.F.metal.set(m);
+    for (const w of PL.wires) w.n0 = 0; if (PL.beam) PL.beam.n0 = 0; plCompile();
+  }
+  function plMetal(i, j, on) {
+    if (i < -FD_PAD || j < -FD_PAD || i >= PLV.nx + FD_PAD || j >= PLV.ny + FD_PAD) return;
+    const k = plK(i, j); PL.F.metal[k] = on ? 1 : 0; if (on) PL.F.Ez[k] = 0;
+  }
+  function plRect(i0, j0, i1, j1) { for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) plMetal(i, j, true); }
+  /* a wall across the whole height (into the absorbing border), two cells thick, with openings [from, to] in cells */
+  function plWall(i, gaps) { for (let j = -FD_PAD; j < PLV.ny + FD_PAD; j++) if (!gaps.some((g) => j >= g[0] && j <= g[1])) { plMetal(i, j, true); plMetal(i + 1, j, true); } }
+  const PLP = {
+    one: { hint: 'One wire through the page, its current going up and down at frequency f. Rings of E spread out at c, one wavelength apart; they fade as 1/√r because the energy spreads over ever larger circles. The probe sits 3 λ away: move it and r⟨E²⟩ stays the same, once the waves have filled the picture.',
+      build() { PL.wires = [{ i: 100, j: 60 }]; PL.probe = { i: 160, j: 60 }; } },
+    two: { hint: 'Two wires 1.5 λ apart, in step. Straight out to the sides the waves arrive together and add; along the line through both wires they arrive half a wavelength apart and cancel. Switch to Average intensity to see the beams: bright where sin θ = mλ/d, measured from the sideways direction.',
+      build() { PL.wires = [{ i: 100, j: 45 }, { i: 100, j: 75 }]; PL.probe = { i: 170, j: 60 }; } },
+    anti: { hint: 'The same two wires, but one current is half a period behind the other. Now the waves cancel straight out to the sides and add along the line through the wires: changing only the phase steers the beams, the idea behind phased array radar and 5G antennas.',
+      build() { PL.wires = [{ i: 100, j: 45 }, { i: 100, j: 75, ph: Math.PI }]; PL.probe = { i: 170, j: 60 }; } },
+    reflector: { hint: 'A wire a quarter wavelength in front of a metal sheet. The sheet reflects the wave flipped over; the extra half wavelength of path puts the reflection back in step, so almost everything goes one way. Move the wire to λ/2 from the sheet and the forward wave nearly cancels.',
+      build() { PL.wires = [{ i: 85, j: 60 }]; plRect(79, 20, 80, 100); PL.probe = { i: 160, j: 60 }; } },
+    dish: { hint: 'A wire at the focus of a parabolic metal dish, focal length 2 λ. Every path from the focus to the dish and on to a flat front is the same length, so the reflections leave as a straight beam, like a satellite dish run backward. The width of the dish, 5 λ, sets how fast the beam spreads. Part of the wire’s wave goes straight forward without touching the dish and interferes with the beam close in.',
+      build() { PL.wires = [{ i: 80, j: 60 }]; plDish(40, 60, 40, 50); PL.probe = { i: 170, j: 60 }; } },
+    slit: { hint: 'A wide beam (a Gaussian 6 λ across, close to a plane wave near its middle) on a metal wall with a slit 2 λ wide. Past the slit the wave spreads; in Average intensity the first dark directions are where sin θ = λ/a = 0.5, at 30°.',
+      build() { PL.beam = { i: 4 }; plWall(60, [[40, 79]]); PL.probe = { i: 150, j: 60 }; } },
+    twoslit: { hint: 'The same beam on two slits each λ/2 wide with centers 3 λ apart. The two spreading waves overlap and interfere: in Average intensity the bright directions are where sin θ = mλ/d, at 0, 19.5° and 41.8°, the same rule as for light in Young’s experiment.',
+      build() { PL.beam = { i: 4 }; plWall(60, [[25, 34], [85, 94]]); PL.probe = { i: 150, j: 60 }; } },
+    box: { hint: 'A wire outside a closed metal box. The wave reflects from the box and goes around it, but inside E stays exactly zero: a Faraday cage. Erase a gap in the near wall and watch the wave leak in; a gap much narrower than λ lets little through.',
+      build() { PL.wires = [{ i: 45, j: 60 }]; plRect(110, 25, 170, 26); plRect(110, 94, 170, 95); plRect(110, 25, 111, 95); plRect(169, 25, 170, 95); PL.probe = { i: 140, j: 60 }; } }
+  };
+  /* a parabola x = x0 + (y − y0)²/(4f), opening toward +x, two cells thick, joined so no wave slips between cells */
+  function plDish(x0, y0, f, half) {
+    let px = null;
+    for (let y = -half; y <= half; y++) {
+      const x = Math.round(x0 + y * y / (4 * f)), a = px == null ? x : Math.min(x, px), b = px == null ? x : Math.max(x, px);
+      for (let i = a; i <= b; i++) { plMetal(i, y0 + y, true); plMetal(i - 1, y0 + y, true); }
+      px = x;
+    }
+  }
+  function plPreset(name) {
+    PL.wires = []; PL.beam = null; PL.probe = null; plFresh();
+    PLP[name].build(); plCompile(); plMark(name);
+  }
+  function plMark(name) {
+    PL.preset = name;
+    for (const b of document.querySelectorAll('#plPresets button')) b.setAttribute('aria-pressed', String(b.dataset.q === name));
+    $('plHint').textContent = name ? PLP[name].hint : 'Your own arrangement. Pick a setup to return to a known one.';
+  }
+  const PL_TIPS = { wire: 'Tap empty space to add a wire; tap a wire to take it away. A new wire starts in step with the others.', metal: 'Drag to paint metal.',
+    erase: 'Drag to erase metal and wires.', probe: 'Tap to put the probe there and read ⟨E²⟩, the field squared averaged over one period.' };
+  function plSetTool(t) { PL.tool = t; for (const b of document.querySelectorAll('#plTools button')) b.setAttribute('aria-pressed', String(b.dataset.t === t)); $('plTip').textContent = PL_TIPS[t]; }
+  function plSetShow(v) { PL.show = v; for (const b of document.querySelectorAll('#plShow button')) b.setAttribute('aria-pressed', String(b.dataset.s === v)); if (!playing) draw(); }
+  function plStep(m) {
+    const F = PL.F;
+    for (let s = 0; s < m; s++) {
+      fdtdStep(F, PL.srcs);
+      const E = F.Ez, A = PL.acc; for (let k = 0; k < E.length; k++) A[k] += E[k] * E[k];
+      /* the average over exactly one period, so a steady wave gives its true time average */
+      if (++PL.accN === FD_NT) { const t = PL.avg; PL.avg = A; PL.acc = t; for (let k = 0; k < A.length; k++) PL.avg[k] /= FD_NT; t.fill(0); PL.accN = 0; PL.avgN++; }
+    }
+  }
+  // drawing
+  let plOC = null;
+  function plGeom() { const sc = Math.min(W / PLV.nx, H / PLV.ny), w = PLV.nx * sc, h = PLV.ny * sc; return { sc, ox: (W - w) / 2, oy: (H - h) / 2, w, h }; }
+  function drawPlane() {
+    const g = plGeom(), c = ctx, F = PL.F;
+    c.fillStyle = T.surface; c.fillRect(0, 0, W, H);
+    if (!plOC) { plOC = document.createElement('canvas'); plOC.width = PLV.nx; plOC.height = PLV.ny; }
+    const oc = plOC.getContext('2d'), img = oc.createImageData(PLV.nx, PLV.ny), d = img.data;
+    const bg = rgb(T.canvas), cp = rgb(T.pos), cn = rgb(T.neg), ci = rgb(T.equi), avg = PL.show === 'avg';
+    for (let j = 0; j < PLV.ny; j++) for (let i = 0; i < PLV.nx; i++) {
+      const k = plK(i, j), o = 4 * (j * PLV.nx + i);
+      let v, col;
+      if (avg) { v = Math.tanh((PL.avgN ? PL.avg[k] : 0) / 0.6); col = ci; }
+      else { const e = F.Ez[k]; v = Math.tanh(Math.abs(e) / 1.1); col = e >= 0 ? cp : cn; }
+      d[o] = bg[0] + (col[0] - bg[0]) * v; d[o + 1] = bg[1] + (col[1] - bg[1]) * v; d[o + 2] = bg[2] + (col[2] - bg[2]) * v; d[o + 3] = 255;
+    }
+    oc.putImageData(img, 0, 0);
+    c.save(); c.imageSmoothingEnabled = true; c.drawImage(plOC, g.ox, g.oy, g.w, g.h); c.restore();
+    // metal, as runs of cells in each row
+    c.fillStyle = T.muted;
+    for (let j = 0; j < PLV.ny; j++) { let i0 = -1; for (let i = 0; i <= PLV.nx; i++) { const m = i < PLV.nx && F.metal[plK(i, j)]; if (m && i0 < 0) i0 = i; if (!m && i0 >= 0) { c.fillRect(g.ox + i0 * g.sc, g.oy + j * g.sc, (i - i0) * g.sc + 0.5, g.sc + 0.5); i0 = -1; } } }
+    c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(g.ox + 0.5, g.oy + 0.5, g.w - 1, g.h - 1);
+    const X = (i) => g.ox + (i + 0.5) * g.sc, Y = (j) => g.oy + (j + 0.5) * g.sc, ls = LS();
+    // the beam's source line
+    if (PL.beam) { c.save(); c.strokeStyle = T.ink; c.setLineDash([4, 4]); c.lineWidth = 1.5; c.beginPath(); c.moveTo(X(PL.beam.i), g.oy + 2); c.lineTo(X(PL.beam.i), g.oy + g.h - 2); c.stroke(); c.restore();
+      label(c, g.w < 560 ? 'beam' : 'beam starts here', X(PL.beam.i) + 6, g.oy + 8, T.ink, 'left', 'top', true, 11); }
+    // wires: current along z, through the page
+    for (const w of PL.wires) {
+      const x = X(w.i), y = Y(w.j), r = Math.max(4, 0.22 * FD_NL * g.sc / 4) * ls;
+      c.fillStyle = T.canvas; c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill(); c.stroke();
+      c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, r * 0.35, 0, 2 * Math.PI); c.fill();
+      if (w.ph) label(c, 'opposite phase', x, y + r + 3, T.ink, 'center', 'top', true, 10);
+    }
+    // probe
+    if (PL.probe) { const x = X(PL.probe.i), y = Y(PL.probe.j), r = 7 * ls; c.strokeStyle = T.accent; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.moveTo(x - r - 4, y); c.lineTo(x - r + 3, y); c.moveTo(x + r - 3, y); c.lineTo(x + r + 4, y); c.moveTo(x, y - r - 4); c.lineTo(x, y - r + 3); c.moveTo(x, y + r - 3); c.lineTo(x, y + r + 4); c.stroke();
+      label(c, 'probe', x + r + 5, y - r, T.accent, 'left', 'bottom', true, 11); }
+    // keyboard cursor
+    if (PL.kbd && document.activeElement === can) { c.strokeStyle = T.accent; c.lineWidth = 2; c.setLineDash([3, 3]); c.strokeRect(X(PL.cur.i) - 1.5 * g.sc, Y(PL.cur.j) - 1.5 * g.sc, 3 * g.sc, 3 * g.sc); c.setLineDash([]); }
+    // scale: one wavelength
+    const bx = g.ox + 12, by = g.oy + g.h - 14, bl = FD_NL * g.sc;
+    c.strokeStyle = T.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(bx, by - 4); c.lineTo(bx, by + 4); c.moveTo(bx, by); c.lineTo(bx + bl, by); c.moveTo(bx + bl, by - 4); c.lineTo(bx + bl, by + 4); c.stroke();
+    label(c, '1 λ', bx + bl / 2, by - 5, T.ink, 'center', 'bottom', true, 11);
+    if (g.w >= 560) label(c, avg ? 'Average intensity ⟨E²⟩ over the last period' : 'E along the wires, out of or into the page', g.ox + g.w - 10, g.oy + 8, T.ink, 'right', 'top', true, 11);
+  }
+  function plReadouts() {
+    const F = PL.F, per = F.n / FD_NT;
+    $('rPlT').textContent = `${per.toFixed(1)} periods`;
+    $('rPlN').textContent = String(PL.wires.length) + (PL.beam ? ' and a beam' : '');
+    if (!PL.probe) { $('rPlR').textContent = 'no probe: pick Probe and tap the picture'; $('rPlE').textContent = '—'; $('rPlRE').textContent = '—'; }
+    else {
+      let r = Infinity; for (const w of PL.wires) r = Math.min(r, Math.hypot(w.i - PL.probe.i, w.j - PL.probe.j) / FD_NL);
+      const e2 = PL.avg[plK(PL.probe.i, PL.probe.j)];
+      $('rPlR').textContent = Number.isFinite(r) ? `${r.toFixed(2)} λ` : 'no wire';
+      $('rPlE').textContent = PL.avgN ? e2.toPrecision(3) : 'after one period';
+      $('rPlRE').textContent = PL.avgN && Number.isFinite(r) ? (r * e2).toPrecision(3) : '—';
+    }
+    $('status').textContent = `t = ${per.toFixed(1)} T`;
+  }
+  // tapping and dragging on the picture
+  function plCell(ev) { const [x, y] = local(ev), g = plGeom(), i = Math.floor((x - g.ox) / g.sc), j = Math.floor((y - g.oy) / g.sc); return i >= 0 && j >= 0 && i < PLV.nx && j < PLV.ny ? { i, j } : null; }
+  function plBrush(c, r, on) {
+    for (let dj = -r; dj <= r; dj++) for (let di = -r; di <= r; di++) { const i = c.i + di, j = c.j + dj; if (i >= 0 && j >= 0 && i < PLV.nx && j < PLV.ny) plMetal(i, j, on); }
+    const n = PL.wires.length; PL.wires = PL.wires.filter((w) => Math.max(Math.abs(w.i - c.i), Math.abs(w.j - c.j)) > r); if (PL.wires.length !== n) plCompile();
+  }
+  function plApply(c, first) {
+    if (PL.tool === 'wire') {
+      if (!first) return;
+      const near = PL.wires.findIndex((w) => Math.hypot(w.i - c.i, w.j - c.j) < 0.3 * FD_NL);
+      if (near >= 0) PL.wires.splice(near, 1);
+      else { PL.F.metal[plK(c.i, c.j)] = 0; PL.wires.push({ i: c.i, j: c.j, n0: PL.F.n }); }
+      plCompile();
+    } else if (PL.tool === 'metal') plBrush(c, 1, true);
+    else if (PL.tool === 'erase') { plBrush(c, 2, false); if (PL.probe && Math.max(Math.abs(PL.probe.i - c.i), Math.abs(PL.probe.j - c.j)) <= 2 && first) PL.probe = null; }
+    else if (PL.tool === 'probe') PL.probe = { i: c.i, j: c.j };
+    plMark(null); plReadouts(); if (!playing) draw();
+  }
+  function plStroke(a, b) { const n = Math.max(Math.abs(b.i - a.i), Math.abs(b.j - a.j)); for (let s = 1; s <= n; s++) plApply({ i: Math.round(a.i + (b.i - a.i) * s / n), j: Math.round(a.j + (b.j - a.j) * s / n) }, false); }
+  can.addEventListener('pointerdown', (ev) => {
+    if (S.mode !== 'plane') return;
+    ev.stopImmediatePropagation(); ev.preventDefault(); can.focus({ preventScroll: true }); PL.kbd = false;
+    const c = plCell(ev); if (!c) return;
+    PL.down = true; PL.last = c; try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    plApply(c, true);
+  }, true);
+  can.addEventListener('pointermove', (ev) => {
+    if (S.mode !== 'plane') return;
+    ev.stopImmediatePropagation(); can.style.cursor = 'crosshair';
+    if (!PL.down || PL.tool === 'wire') return;
+    const c = plCell(ev); if (!c || !PL.last) return;
+    if (PL.tool === 'probe') plApply(c, false); else plStroke(PL.last, c);
+    PL.last = c;
+  }, true);
+  const plUp = (ev) => { if (S.mode !== 'plane') return; ev.stopImmediatePropagation(); PL.down = false; PL.last = null; };
+  can.addEventListener('pointerup', plUp, true); can.addEventListener('pointercancel', plUp, true);
+  can.addEventListener('keydown', (e) => {
+    if (S.mode !== 'plane') return;
+    const big = e.shiftKey ? 5 : 1, cu = PL.cur, mv = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (mv) { cu.i = Math.max(0, Math.min(PLV.nx - 1, cu.i + mv[0] * 2 * big)); cu.j = Math.max(0, Math.min(PLV.ny - 1, cu.j + mv[1] * 2 * big)); PL.kbd = true; if (!playing) draw(); }
+    else if (e.key === 'Enter') { PL.kbd = true; plApply({ i: cu.i, j: cu.j }, true); }
+    else if ('1234'.includes(e.key) && e.key.length === 1) plSetTool(['wire', 'metal', 'erase', 'probe'][+e.key - 1]);
+    else if (e.key === 'i' || e.key === 'I') plSetShow(PL.show === 'now' ? 'avg' : 'now');
+    else if (e.key === 'r' || e.key === 'R') { plRestart(); plReadouts(); if (!playing) draw(); }
+    else if (e.key === ' ') setPlaying(!playing);
+    else if (e.key === 'a' || e.key === 'A') setMode('wave');
+    else return;
+    e.preventDefault(); e.stopImmediatePropagation();
+  }, true);
+  for (const b of document.querySelectorAll('#plPresets button')) b.addEventListener('click', () => { plPreset(b.dataset.q); plReadouts(); if (!playing) draw(); });
+  for (const b of document.querySelectorAll('#plTools button')) b.addEventListener('click', () => plSetTool(b.dataset.t));
+  for (const b of document.querySelectorAll('#plShow button')) b.addEventListener('click', () => plSetShow(b.dataset.s));
+  $('plRestart').addEventListener('click', () => { plRestart(); plReadouts(); if (!playing) draw(); });
+  $('plClear').addEventListener('click', () => { PL.wires = []; PL.beam = null; PL.probe = null; plFresh(); plCompile(); plMark(null); plReadouts(); if (!playing) draw(); });
+  $('modelPlane').textContent = `Maxwell's equations solved step by step on a grid (Yee's finite difference time domain method) for currents along z, so E points along z and B lies in the page. The grid has ${FD_NL} cells per wavelength and a time step of half a cell's crossing time; waves on it travel ${(100 * FD_SLOW).toFixed(1)} % slower than c along the grid lines and less along diagonals. Metal is a perfect conductor (E = 0 in it). The wires are long straight currents through the page, so fields fall as 1/√r, not 1/r as for a short antenna. Past the edge of the picture an absorbing border ${FD_PAD / FD_NL} λ deep takes up outgoing waves, sending back about 1 % of their amplitude. The beam is a Gaussian 6 λ across, not an endless plane wave. Brightness grows with the field but levels off (tanh), so strong fields near a wire do not wash out the rest.`;
+  plSetTool('wire');
+
   // ---------- loop ----------
   let last = performance.now(), frameMs = 0;
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    if (playing) { wt = (wt + 2 * Math.PI * dt / TV) % (2 * Math.PI * 1000); draw(); }
+    if (playing && S.mode === 'plane') { plStep(2); draw(); if (++PL.fr % 6 === 0) plReadouts(); }
+    else if (playing) { wt = (wt + 2 * Math.PI * dt / TV) % (2 * Math.PI * 1000); draw(); }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
@@ -1214,7 +1499,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'em-waves@2026-10-24';
   window.vdShowCols = [['f_Hz', 'f (Hz)'], ['E0_V_per_m', 'E₀ (V/m)'], ['B0_T', 'B₀ (T)'], ['I_W_per_m2', 'I (W/m²)']];
   window.vdReadingRow = () => {
-    if (S.mode !== 'wave') return 'Readings are of the plane wave: switch to Plane wave to record one.';
+    if (S.mode !== 'wave') return 'Readings are of the plane wave: switch to Plane wave to record one.';   /* In a plane and Antenna have no readings */
     const f = fNow(), E0 = E0Now(), I = intensity(E0);
     const pb = S.preset && document.querySelector(`#presets [data-p="${S.preset}"]`);
     return { setup: pb ? pb.textContent : '', f_Hz: sig6(f), lambda_m: sig6(lambdaOf(f)), band: bandOf(f).name, ground: groundOf(lambdaOf(f)).why.split(':')[0], E0_V_per_m: sig6(E0), B0_T: sig6(B0of(E0)),
