@@ -6667,3 +6667,37 @@ folded into three existing demos. No new worksheets. GPT, please verify the phys
 - Worksheet part ideas (not built): Circular Apertures, center intensity against N_F as the screen moves (peaks at odd N_F, zero at
   even, fit 4 sin²(πN_F/2)); Ripple Tank, the first mode's cutoff against channel width (fit to the dispersion relation); EM Waves,
   λ_g against f for TE10, fit 1/λ_g² = (f/c)² − (1/2a)² for a.
+## 2026-10-31 · Claude · Rounds 4 and 5, Group B: Rotating Frames (new demo)
+
+Steve (19:05): "Yeah let's finish up". Plan #26 of the PhET Parity Plan (`round4/groups-2026-10-31.md` in the project files), its own demo
+by Steve's call (14:11); Falstad Coriolis and Foucault Pendulum counterparts. No worksheet. GPT, please verify the physics and numbers
+below (all from the core and its tests).
+- **demos/rotating-frames.html**, two views. **Turntable**: a table of radius 2 m turning at −30 to 30 turns/min (positive
+  counterclockwise), a ball from the center, halfway out or the edge (1.76 m), thrown by someone in the room or by a rider (whose
+  velocity Ω × r is added), sliding without friction (a straight line in the room) or rolling without slipping (a uniform solid
+  ball: dv/dt = (2/7)Ω ẑ × v, a circle at 2Ω/7 in the room; Weltner 1979, Romer 1981). Seen from the room, from the table, or both side
+  by side: r′ = R(−Ωt) r, v′ = R(−Ωt)(v − Ω × r); force arrows per kg: Coriolis −2Ω × v′, centrifugal Ω²r′, friction for the rolling
+  ball. **Foucault pendulum**: small swings, ω₀ = √(g/L), horizontal Coriolis term 2Ω sin λ (v_north, −v_east), solved exactly
+  (z = e^(−iΩz t)(P e^(iωt) + Q e^(−iωt))); Ω = 2π × 1.00273781191135448 / 86 400 s = 7.2921151e−5 rad/s (rate of the Earth Rotation
+  Angle, IERS 2010), sidereal day 86 164.099 s. Let go at the side (star) or pushed from the middle (rosette); time ×1 to ×1000; Earth's
+  spin ×1000 as a labelled option; the plane's turn is read from the bob at each farthest out point (graph and readout), pegs fall as
+  it passes, a globe inset shows Ω sin λ. **3D** (vd3kit) for both: the turntable room (Turntable under Seen from makes the camera
+  ride; the table's trail is painted on the table) and a pendulum hall with a rail and 48 pegs.
+- Numbers: across (10 rpm, 2 m/s from the edge) crosses in 1.88 s, table turns 112.8°; rider at 1.76 m moves 1.84 m/s, ball leaves
+  42.7° off the aim at 2.72 m/s and passes 1.19 m from the center; let go at 1 m, 15 rpm: 1.571 m/s on the tangent, off in 1.10 s;
+  rolling at 20 rpm, 0.5 m/s: circle at 0.598 rad/s (10.5 s), radius 0.836 m. Foucault: Paris 48.846° N 11.32°/h, 31.79 h; pole
+  23.93 h; Sydney 33.87° S 42.95 h; equator never; Panthéon 67 m period 16.42 s, 5 m 4.49 s.
+- Left out and stated: air drag, rolling resistance, the vertical Coriolis term, centrifugal (in g), Airy's precession of an elliptical
+  swing, damping.
+- Tests `test_rotating-frames.cjs` (9): Ω and the sidereal day; the table frame path against RK4 of a′ = −2Ω × v′ + Ω²r′ (sliding, both
+  throwers, both senses); Coriolis direction; the rolling ball's spin integrated from the torque stays on the no slip condition, its
+  path integrates its velocity and closes after 7π/Ω; a ball at rest in the room stays put; edge times; the Foucault solution against
+  RK4 (five cases); the plane's azimuth at every farthest out point equals −Ω sin λ t; the turn times.
+- Registered: catalog (Mechanics, after Circular Motion), textbook map (demo entry, Vol 1 §6.3; Physics I and Astronomy, unit
+  "The sky from Earth"), topics Forces and The sky, QR, Reset all, thumbnails (OVERRIDES entry), courses.py rerun, notes
+  (notes/src/rotating-frames.md, Q1 to Q8) and the key in TeacherKeys demo-keys. One line link from Circular Motion's Lab fold. What's
+  new entry. No How this works video (no worksheet).
+- Checks: all Node suites pass; vdcheck `--only after` 0 problems on rotating-frames and circular-motion, `--only clip` 0 cut off (VD.fitStage grows the stage for the tall Foucault card in Projector); my own
+  shots at 1280, 390 and 360 px, dark and light, every view, 3D with three.js r128 served locally; no page errors, no sideways scroll.
+- Worksheet part ideas (not built): a Rotating Frames part in a circular motion worksheet: Coriolis acceleration against v′ at a few
+  Ω (slope 2Ω), and the Foucault turn time against latitude (fit 1/T against sin λ, slope 1/T⋆).

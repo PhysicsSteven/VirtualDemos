@@ -1465,7 +1465,8 @@
             "seasons",
             "moon-phases",
             "retrograde-motion",
-            "rainbows"
+            "rainbows",
+            "rotating-frames"
           ]
         },
         {
@@ -2546,7 +2547,8 @@
       "status": "usable",
       "demos": [
         "circular-motion",
-        "energy-track"
+        "energy-track",
+        "rotating-frames"
       ],
       "unit": "forces",
       "note": "Circular Motion: ball on a string, flat and banked curves with friction, vertical loop; free body diagrams to scale."
@@ -7047,6 +7049,26 @@
       ],
       "title": "Circular Motion",
       "url": "demos/circular-motion.html"
+    },
+    {
+      "demo": "rotating-frames",
+      "course": [
+        "physics-1",
+        "astro"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "6.3",
+          "title": "Centripetal Force"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Rotating Frames (Falstad Coriolis and Foucault Pendulum counterparts, plan #26, 2026-10-31, own demo by Steve's call): a ball sliding or rolling (2Ω/7 circles) on a turntable seen from the room and from the table with Coriolis and centrifugal forces; a Foucault pendulum solved exactly with the horizontal Coriolis term, turning once in a sidereal day over sin λ, flat and in 3D. No worksheet.",
+      "title": "Rotating Frames",
+      "url": "demos/rotating-frames.html"
     },
     {
       "demo": "collisions",

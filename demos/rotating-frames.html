@@ -1,0 +1,697 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Rotating Frames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the picture and the Set up card's place */
+:root { --table: #d9cdb6; --tableLine: #a8977a; --ball: #c0392b; --cor: #1f6fd1; --cen: #2e8b57; --fric: #9a5bd0; --room: #6b7787; --trail: #d9822b; --floor: #e8e2d6; --brass: #b08a3e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #9aa6b6; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; } }
+:root[data-theme="dark"] { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #9aa6b6; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(480px, 1fr); min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 256px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .sub { font-size: 0.72rem; color: var(--muted); margin: 2px 0 -4px; }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 560px; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 420px) { .scene { height: 520px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Rotating Frames</h1>
+      <p>Roll a ball across a turning merry go round and watch it twice: from the room it goes straight, from the turntable it curves away, pushed by the Coriolis and centrifugal forces that only a rider feels. Then go to the Earth, which is a turntable too: a Foucault pendulum's swing turns once in a sidereal day divided by the sine of the latitude.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units, degrees</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rotating-frames.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rotating-frames.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h3v1h-3zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h3v1h-3zM18 4h1v1h-1zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h4v1h-4zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h4v1h-4zM29 10h1v1h-1zM32 10h5v1h-5zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h2v1h-2zM12 11h1v1h-1zM17 11h2v1h-2zM24 11h3v1h-3zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM5 12h2v1h-2zM8 12h7v1h-7zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h5v1h-5zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h2v1h-2zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h4v1h-4zM12 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM4 15h4v1h-4zM9 15h3v1h-3zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h5v1h-5zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h2v1h-2zM9 17h1v1h-1zM11 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h1v1h-1zM8 18h5v1h-5zM14 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h2v1h-2zM9 19h2v1h-2zM12 19h2v1h-2zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h3v1h-3zM8 20h1v1h-1zM11 20h4v1h-4zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h3v1h-3zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h2v1h-2zM6 22h4v1h-4zM11 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM9 23h5v1h-5zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM15 24h3v1h-3zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h6v1h-6zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h2v1h-2zM6 25h1v1h-1zM10 25h1v1h-1zM14 25h1v1h-1zM16 25h3v1h-3zM21 25h5v1h-5zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h1v1h-1zM7 26h2v1h-2zM10 26h2v1h-2zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h3v1h-3zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM9 27h5v1h-5zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h2v1h-2zM11 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM10 29h3v1h-3zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM4 30h5v1h-5zM12 30h2v1h-2zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h14v1h-14zM10 31h2v1h-2zM14 31h2v1h-2zM17 31h6v1h-6zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h5v1h-5zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM15 37h3v1h-3zM21 37h3v1h-3zM26 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="table" aria-pressed="true">Turntable</button>
+          <button type="button" data-v="foucault" aria-pressed="false">Foucault pendulum</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+        </div>
+        <button type="button" class="spin attn" id="play">Roll the ball</button>
+        <button type="button" class="proj" id="again">Start again</button>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A turntable seen from above, once from the room and once riding it, with a ball rolled across it and the path it traces in each. In the Foucault view, the floor under a long pendulum seen from above, with the swing and how far its plane has turned. Arrow keys change the turntable's speed or the latitude; Space plays."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">The turntable and the ball</span>
+        <div id="tableBox">
+          <div class="seg" role="group" aria-label="Seen from" id="seenSeg">
+            <button type="button" data-s="both" aria-pressed="true">Both</button>
+            <button type="button" data-s="room" aria-pressed="false">Room</button>
+            <button type="button" data-s="table" aria-pressed="false">Turntable</button>
+          </div>
+          <div><div class="slider-head"><label for="sOm">Turntable speed</label><output id="oOm" for="sOm"></output></div><input type="range" id="sOm" min="-30" max="30" step="0.5"></div>
+          <div><div class="slider-head"><label for="sV">Ball speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0" max="5" step="0.1"></div>
+          <div><div class="slider-head"><label for="sAim">Aim, from straight up the picture</label><output id="oAim" for="sAim"></output></div><input type="range" id="sAim" min="-90" max="90" step="1"></div>
+          <p class="sub">Start from</p>
+          <div class="seg" role="group" aria-label="Start from" id="fromSeg">
+            <button type="button" data-f="center" aria-pressed="false">Center</button>
+            <button type="button" data-f="half" aria-pressed="false">Halfway out</button>
+            <button type="button" data-f="edge" aria-pressed="true">Edge</button>
+          </div>
+          <p class="sub">Thrown by</p>
+          <div class="seg" role="group" aria-label="Thrown by" id="bySeg">
+            <button type="button" data-b="room" aria-pressed="true">Someone in the room</button>
+            <button type="button" data-b="rider" aria-pressed="false">A rider</button>
+          </div>
+          <div class="seg" role="group" aria-label="How the ball moves" id="modeSeg">
+            <button type="button" data-m="slide" aria-pressed="true">Slides, no friction</button>
+            <button type="button" data-m="roll" aria-pressed="false">Rolls</button>
+          </div>
+          <label class="check"><input type="checkbox" id="cForce"><span>Force arrows</span></label>
+          <label class="check"><input type="checkbox" id="cSlow"><span>Slow motion (a quarter speed)</span></label>
+        </div>
+        <div id="fouBox" hidden>
+          <div><div class="slider-head"><label for="sLat">Latitude</label><output id="oLat" for="sLat"></output></div><input type="range" id="sLat" min="-90" max="90" step="0.1"></div>
+          <div><div class="slider-head"><label for="sLen">Length of the wire</label><output id="oLen" for="sLen"></output></div><input type="range" id="sLen" min="2" max="100" step="1"></div>
+          <div><div class="slider-head"><label for="sAmp">Swing, out from the middle</label><output id="oAmp" for="sAmp"></output></div><input type="range" id="sAmp" min="0.5" max="4" step="0.1"></div>
+          <p class="sub">Start the swing</p>
+          <div class="seg" role="group" aria-label="Start the swing" id="startSeg">
+            <button type="button" data-st="edge" aria-pressed="true">Let go at the side</button>
+            <button type="button" data-st="push" aria-pressed="false">Push from the middle</button>
+          </div>
+          <p class="sub">Time runs</p>
+          <div class="seg" role="group" aria-label="Time runs" id="speedSeg">
+            <button type="button" data-x="1" aria-pressed="false">×1</button>
+            <button type="button" data-x="10" aria-pressed="false">×10</button>
+            <button type="button" data-x="100" aria-pressed="false">×100</button>
+            <button type="button" data-x="1000" aria-pressed="true">×1000</button>
+          </div>
+          <label class="check"><input type="checkbox" id="cSpin"><span>Spin the Earth 1000 times faster</span></label>
+          <label class="check"><input type="checkbox" id="cGlobe"><span>Show where on the Earth</span></label>
+          <label class="check" id="graphRow"><input type="checkbox" id="cGraph"><span>Graph of the turn</span></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="across" aria-pressed="true">Rolled across from the edge</button>
+          <button type="button" data-p="rider" aria-pressed="false">A rider aims at the center</button>
+          <button type="button" data-p="out" aria-pressed="false">From the center outward</button>
+          <button type="button" data-p="letgo" aria-pressed="false">Let go of a ball resting on the table</button>
+          <button type="button" data-p="fast" aria-pressed="false">Fast turntable, slow ball: a spiral</button>
+          <button type="button" data-p="reverse" aria-pressed="false">Turning the other way</button>
+          <button type="button" data-p="roll" aria-pressed="false">A rolling ball goes in circles</button>
+          <button type="button" data-p="paris" aria-pressed="false">Foucault, Paris 1851</button>
+          <button type="button" data-p="pole" aria-pressed="false">At the North Pole</button>
+          <button type="button" data-p="equator" aria-pressed="false">At the equator</button>
+          <button type="button" data-p="south" aria-pressed="false">Southern hemisphere</button>
+          <button type="button" data-p="star" aria-pressed="false">Spin sped up: each swing curves</button>
+          <button type="button" data-p="rosette" aria-pressed="false">Pushed from the middle: a rosette</button>
+          <button type="button" data-p="short" aria-pressed="false">A short pendulum turns as fast</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide how fast the pendulum's plane turns (predict it first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">a′ = a − 2Ω × v′ − Ω × (Ω × r′)   rolling ball: dv/dt = (2/7) Ω ẑ × v   Foucault: Ω sin λ, one turn in T⋆ / sin λ</p>
+        <p class="hint">Turntable: a flat table of radius 2 m turning at a steady rate Ω about its center, counterclockwise seen from above when the speed is positive. The ball is a point on the table top; air drag is left out. <strong>Slides, no friction</strong>: no horizontal force acts, so in the room the ball moves in a straight line at a steady speed (an air hockey puck comes close). <strong>Rolls</strong>: a uniform solid ball (I = 2mR²/5) rolling without slipping from the start, with no rolling resistance. Friction from the table is then the only horizontal force; the no slip condition and the torque it makes give dv/dt = (2/7) Ω ẑ × v, so in the room the ball goes round a circle at 2Ω/7, turning the same way as the table (Weltner 1979, Am. J. Phys. 47, 984; Romer 1981, Am. J. Phys. 49, 985). Seen riding the turntable, positions and velocities are turned back by the angle the table has turned, r′ = R(−Ωt) r and v′ = R(−Ωt)(v − Ω × r); in that frame Newton's second law needs two more terms, the Coriolis acceleration −2Ω × v′ and the centrifugal acceleration Ω²r′ outward. Thrown by a rider, the ball's speed and aim are measured on the table, so the room sees the rider's own motion Ω × r added. The force arrows are forces per kilogram (accelerations), all to one scale. Foucault pendulum: a bob on a long wire, small swings (the wire stays within a few degrees of vertical), so the pendulum is a two dimensional harmonic oscillator, ω₀ = √(g/L), g = 9.81 m/s², with the horizontal part of the Coriolis acceleration, 2Ω sin λ (v<sub>north</sub>, −v<sub>east</sub>), Ω = 7.2921151 × 10⁻⁵ rad/s (the rate of the Earth Rotation Angle, IERS Conventions 2010). The equations are solved exactly: x + iy = e<sup>−iΩ sin λ t</sup>(P e<sup>iωt</sup> + Q e<sup>−iωt</sup>), ω = √(ω₀² + Ω² sin² λ). The swing's plane turns clockwise in the north (counterclockwise in the south) at Ω sin λ, once in T⋆/|sin λ|, where T⋆ = 2π/Ω = 86 164.099 s = 23 h 56 min 4.099 s is the Earth's turn relative to the stars (the sidereal day). Left out and stated: the vertical part of the Coriolis force (it changes the bob's weight by a few parts in 10⁶), the centrifugal force (it is folded into the measured g and the local vertical), air drag (a real pendulum must be given small pushes to keep swinging), and the slow turning of a swing that is slightly elliptical (Airy's precession, about 3ab/(8L²) ω₀ for semi axes a and b; real Foucault pendulums damp out ellipticity with a Charron ring). Spin the Earth 1000 times faster multiplies Ω by 1000 so each swing visibly curves; the readouts say so. The Paris setup uses Foucault's Panthéon pendulum of 1851: 67 m wire, latitude 48.846° N.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Rotating Frames: a ball on a turntable seen from the room and from the turning table, and a Foucault pendulum.
+     Runs in Node: curriculum/validation/test_rotating-frames.cjs. 2D vectors are [x, y]; the turntable turns at Om (rad/s),
+     counterclockwise seen from above when positive; z is up. */
+  var RF_OMEGA_E = 2 * Math.PI * 1.00273781191135448 / 86400;   /* the Earth's turn relative to the stars, 7.2921151 × 10⁻⁵ rad/s: the rate of the Earth Rotation Angle (IAU 2000, IERS Conventions 2010) */
+  var RF_G = 9.81;                 /* site convention, m/s² */
+  var RF_STELLAR = 2 * Math.PI / RF_OMEGA_E;   /* 86 164.099 s: the sidereal (stellar) day */
+  function rfRot(v, a) { var c = Math.cos(a), s = Math.sin(a); return [c * v[0] - s * v[1], s * v[0] + c * v[1]]; }
+  function rfZx(v) { return [-v[1], v[0]]; }   /* ẑ × v */
+  /* the ball in the room (inertial frame). mode 'slide': no horizontal force, a straight line. mode 'roll': a uniform solid ball
+     rolling without slipping on the turning table; friction gives dv/dt = (2/7) Om ẑ × v (derived in the page's model text),
+     so v turns at w = 2 Om / 7 and r = r0 − (ẑ × (v − v0)) / w. */
+  function rfRoom(p0, v0, Om, mode, t) {
+    if (mode !== 'roll' || Math.abs(Om) < 1e-12) return { r: [p0[0] + v0[0] * t, p0[1] + v0[1] * t], v: [v0[0], v0[1]], a: [0, 0] };
+    var w = 2 * Om / 7, v = rfRot(v0, w * t), dz = rfZx([v[0] - v0[0], v[1] - v0[1]]), zv = rfZx(v);
+    return { r: [p0[0] - dz[0] / w, p0[1] - dz[1] / w], v: v, a: [w * zv[0], w * zv[1]] };
+  }
+  /* the velocity in the room of a ball launched at p0 with velocity u measured on the table (by a rider): u + Om ẑ × p0 */
+  function rfLaunchRoom(p0, u, Om) { var z = rfZx(p0); return [u[0] + Om * z[0], u[1] + Om * z[1]]; }
+  /* room position and velocity seen from the table, which has turned by Om t: r′ = R(−Om t) r, v′ = R(−Om t)(v − Om ẑ × r) */
+  function rfToTable(r, v, Om, t) { var z = rfZx(r); return { r: rfRot(r, -Om * t), v: rfRot([v[0] - Om * z[0], v[1] - Om * z[1]], -Om * t) }; }
+  /* the two extra accelerations in the turning frame: Coriolis −2 Om ẑ × v′ and centrifugal Om² r′ */
+  function rfCoriolis(vp, Om) { var z = rfZx(vp); return [-2 * Om * z[0], -2 * Om * z[1]]; }
+  function rfCentrifugal(rp, Om) { return [Om * Om * rp[0], Om * Om * rp[1]]; }
+  /* first time the ball reaches the table's edge (radius R), or Infinity if it never does */
+  function rfEdgeTime(p0, v0, Om, mode, R) {
+    var r0 = Math.hypot(p0[0], p0[1]); if (r0 >= R) return 0;
+    if (mode !== 'roll' || Math.abs(Om) < 1e-12) {
+      var vv = v0[0] * v0[0] + v0[1] * v0[1]; if (vv < 1e-18) return Infinity;
+      var pv = p0[0] * v0[0] + p0[1] * v0[1]; return (-pv + Math.sqrt(pv * pv - vv * (r0 * r0 - R * R))) / vv;
+    }
+    var w = Math.abs(2 * Om / 7), Tw = 2 * Math.PI / w, n = 1440, prev = 0, f = function (t) { var q = rfRoom(p0, v0, Om, mode, t).r; return Math.hypot(q[0], q[1]) - R; };
+    for (var j = 1; j <= n; j++) {
+      var t = j * Tw / n; if (f(t) >= 0) { var a = prev, b = t; for (var k = 0; k < 60; k++) { var m = (a + b) / 2; if (f(m) >= 0) b = m; else a = m; } return b; }
+      prev = t;
+    }
+    return Infinity;
+  }
+  /* Foucault pendulum, small swings: x east, y north (m). x'' = 2Ωz y' − ω0² x, y'' = −2Ωz x' − ω0² y with Ωz = spin Ω sin λ.
+     Exact solution z = x + iy = e^(−iΩz t) (P e^(iωt) + Q e^(−iωt)), ω = √(ω0² + Ωz²). start 'edge': let go from rest at
+     distance A along azimuth az (radians, counterclockwise from east); 'push': from the middle with speed A ω0 along az. */
+  function rfFoucault(o) {
+    var w0 = Math.sqrt((o.g || RF_G) / o.L), Oz = (o.spin || 1) * RF_OMEGA_E * Math.sin(o.lat), w = Math.sqrt(w0 * w0 + Oz * Oz);
+    var ca = Math.cos(o.az), sa = Math.sin(o.az), z0 = [0, 0], v0 = [0, 0];
+    if (o.start === 'push') v0 = [o.A * w0 * ca, o.A * w0 * sa]; else z0 = [o.A * ca, o.A * sa];
+    /* P + Q = z0, P − Q = (v0 + iΩz z0)/(iω) */
+    var nr = v0[0] - Oz * z0[1], ni = v0[1] + Oz * z0[0], dr = ni / w, di = -nr / w;
+    var P = [(z0[0] + dr) / 2, (z0[1] + di) / 2], Q = [(z0[0] - dr) / 2, (z0[1] - di) / 2];
+    var at = function (t) {
+      var c1 = Math.cos(w * t), s1 = Math.sin(w * t), ar = P[0] * c1 - P[1] * s1 + Q[0] * c1 + Q[1] * s1, ai = P[0] * s1 + P[1] * c1 - Q[0] * s1 + Q[1] * c1;
+      var br = -w * (P[0] * s1 + P[1] * c1) - w * (Q[0] * s1 - Q[1] * c1), bi = w * (P[0] * c1 - P[1] * s1) - w * (Q[0] * c1 + Q[1] * s1);
+      var c = Math.cos(-Oz * t), s = Math.sin(-Oz * t), x = c * ar - s * ai, y = s * ar + c * ai;
+      return { x: x, y: y, vx: c * br - s * bi + Oz * y, vy: s * br + c * bi - Oz * x };
+    };
+    /* the times the bob is farthest out: ωt = nπ when let go at the side, (n + ½)π when pushed from the middle */
+    var apex = function (n) { return (o.start === 'push' ? n + 0.5 : n) * Math.PI / w; };
+    return { at: at, w0: w0, w: w, Oz: Oz, apex: apex, period: 2 * Math.PI / w0 };
+  }
+  /* how long the plane of swing takes to turn once: T⋆ / |sin λ| (Infinity on the equator) */
+  function rfTurnTime(lat, spin) { var s = Math.abs(Math.sin(lat)) * (spin || 1); return s < 1e-12 ? Infinity : RF_STELLAR / s; }
+  /* degrees per hour the plane turns: 360°/T⋆ × sin λ, 15.04° sin λ per hour */
+  function rfDegPerHour(lat, spin) { return 360 / (RF_STELLAR / 3600) * Math.sin(lat) * (spin || 1); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const DEG = Math.PI / 180, TR = 2;   /* the turntable's radius, m */
+  const RPM = 2 * Math.PI / 60;
+  const PRESETS = {
+    across: { view: 'table', om: 10, v: 2, aim: 0, from: 'edge', by: 'room', mode: 'slide', seen: 'both', force: false,
+      hint: 'A merry go round 4 m across turns at 10 turns a minute. Someone standing in the room rolls a ball (sliding, without friction) from the near edge straight across, at 2 m/s. Predict the path before you press Roll the ball: from the room, and as a rider sees it.' },
+    rider: { view: 'table', om: 10, v: 2, aim: 0, from: 'edge', by: 'rider', mode: 'slide', seen: 'both', force: true,
+      hint: 'Now a rider at the edge aims straight at the center and throws at 2 m/s. The rider is moving sideways at Ωr = 1.84 m/s when the ball leaves the hand, so in the room the ball goes off 42.7° to the side of the aim, at 2.72 m/s, and passes 1.19 m from the center. The rider sees it curve to the right of where it was aimed: the Coriolis force, at right angles to the ball\'s motion on the table.' },
+    out: { view: 'table', om: 10, v: 1.5, aim: 0, from: 'center', by: 'room', mode: 'slide', seen: 'both', force: true,
+      hint: 'A ball sent out from the middle at 1.5 m/s. It starts with no sideways motion, so in the room it goes straight out along a radius. On the table it curves back against the turning, to the right: the table runs ahead underneath it. Turn on the force arrows: the Coriolis arrow is always at right angles to the motion seen on the table.' },
+    letgo: { view: 'table', om: 15, v: 0, aim: 0, from: 'half', by: 'rider', mode: 'slide', seen: 'both', force: true,
+      hint: 'A ball resting on the table halfway out is let go (no friction to hold it). In the room it simply carries on in a straight line at the speed the table gave it, Ωr = 1.57 m/s. The rider sees it start straight outward, pulled by the centrifugal force, then bend back as the Coriolis force grows with its speed.' },
+    fast: { view: 'table', om: 30, v: 0.6, aim: 0, from: 'center', by: 'rider', mode: 'slide', seen: 'both', force: false,
+      hint: 'A fast turntable (30 turns a minute) and a slow ball, 0.6 m/s, thrown by a rider at the middle. In the room it is still a straight line out from the middle; seen from the table it winds out in a spiral, 1.67 turns before it reaches the edge, because the table turns under it while it moves out.' },
+    reverse: { view: 'table', om: -10, v: 2, aim: 0, from: 'edge', by: 'room', mode: 'slide', seen: 'both', force: true,
+      hint: 'The same throw with the turntable turning clockwise. The path seen on the table now curves to the left. On the Earth, seen from above the North Pole the ground turns counterclockwise and moving things are turned to the right; seen from above the South Pole it turns clockwise, and they are turned to the left.' },
+    roll: { view: 'table', om: 20, v: 0.5, aim: 0, from: 'center', by: 'room', mode: 'roll', seen: 'both', force: true,
+      hint: 'A real ball that rolls without slipping is pushed sideways by friction from the table, and it does not fly off: in the room it goes round a circle at 2/7 of the table\'s rate, here once every 10.5 s, while the table turns once every 3 s. The purple arrow is the friction force, a real force that both frames agree on.' },
+    paris: { view: 'foucault', lat: 48.846, L: 67, A: 3, start: 'edge', x: 1000, spin: false, globe: true, graph: true,
+      hint: 'Léon Foucault\'s pendulum in the Panthéon, Paris, 1851: a 67 m wire and a 28 kg bob, at latitude 48.846° N. It swings once every 16.4 s and its plane turns clockwise, 11.3° an hour, once in 31.8 h. Time runs 1000 times fast here, so the swing is a blur and you watch the plane turn. Before pressing Release, predict which way.' },
+    pole: { view: 'foucault', lat: 90, L: 67, A: 3, start: 'edge', x: 1000, spin: false, globe: true, graph: true,
+      hint: 'At the North Pole the floor is a turntable turning once a sidereal day (23 h 56 min) under a swing that keeps its plane fixed against the stars. Seen on the floor, the plane turns clockwise once in 23 h 56 min.' },
+    equator: { view: 'foucault', lat: 0, L: 67, A: 3, start: 'edge', x: 1000, spin: false, globe: true, graph: true,
+      hint: 'On the equator the floor is carried round the Earth\'s axis but does not turn about the local vertical, so the swing\'s plane does not turn at all. The Earth turns just as fast here; what counts is the part of its spin about the vertical, Ω sin λ.' },
+    south: { view: 'foucault', lat: -33.87, L: 67, A: 3, start: 'edge', x: 1000, spin: false, globe: true, graph: true,
+      hint: 'In Sydney, 33.87° S, the plane turns counterclockwise, once in 42.9 h. Seen from above, the ground of the southern hemisphere turns clockwise about the vertical.' },
+    star: { view: 'foucault', lat: 48.846, L: 67, A: 3, start: 'edge', x: 1, spin: true, globe: false, graph: false,
+      hint: 'The Earth spun 1000 times faster than it really does, and time at its real rate, so each swing curves visibly. Let go from rest at the side, the bob traces a star: it comes back to rest at a point on each swing, and between those it curves to the right (northern hemisphere), never quite through the middle.' },
+    rosette: { view: 'foucault', lat: 48.846, L: 67, A: 3, start: 'push', x: 1, spin: true, globe: false, graph: false,
+      hint: 'The same sped up Earth, but the bob is pushed from the middle instead. Now each swing passes right through the middle and curves to the right at the ends: a rosette of loops, turning the same way as the star.' },
+    short: { view: 'foucault', lat: 48.846, L: 5, A: 0.5, start: 'edge', x: 1000, spin: false, globe: false, graph: true,
+      hint: 'A 5 m pendulum in the same place swings every 4.5 s instead of 16.4 s, yet its plane turns just as fast, once in 31.8 h: the turning comes from the Earth under it, not from the pendulum. Long, heavy pendulums are used because they keep swinging for hours and are less upset by drafts and a slightly uneven start.' },
+  };
+  const S = { preset: 'across', view: 'table', om: 10, v: 2, aim: 0, from: 'edge', by: 'room', mode: 'slide', seen: 'both', force: false, slow: false,
+    lat: 48.846, L: 67, A: 3, start: 'edge', x: 1000, spin: false, globe: true, graph: true, blind: false, play: false, t: 0, done: false };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null, v3 = null, G3 = null, B = null, F = null;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const splitOr = VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} }));
+  /* dividers (VD.split, demos/lib/vd.js): room and table side by side; the Foucault floor above its graph */
+  const SPL = splitOr(can, { key: 'frames', axis: () => (S.view === 'table' && S.seen === 'both' && !is3() ? (W > 640 ? 'x' : 'y') : null), def: () => 0.5, min: 0.3, max: 0.7, label: 'Divider between the room view and the turntable view', onChange: () => drawAll(),
+    box: () => { const r = can.getBoundingClientRect(), c = $('setupCard'), on = getComputedStyle(c).position === 'absolute' && W > 640; return { left: r.left, top: r.top, width: r.width - (on ? c.offsetWidth + 24 : 0), height: r.height }; } });
+  const SPL2 = splitOr(can, { key: 'turn', axis: () => (S.view === 'foucault' && S.graph && !is3() ? 'y' : null), def: () => 0.7, min: 0.45, max: 0.85, label: 'Divider between the floor and the graph', onChange: () => drawAll() });
+  const f = (v, n = 2) => (!isFinite(v) ? '—' : v.toFixed(n).replace('-', '−'));
+  const mono = () => `${T.mono}, monospace`;
+  function is3() { return !!(v3 && v3.is3d()); }
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), table: g('--table'), tline: g('--tableLine'), ball: g('--ball'),
+      cor: g('--cor'), cen: g('--cen'), fric: g('--fric'), room: g('--room'), trail: g('--trail'), floor: g('--floor'), brass: g('--brass'), mono: g('--font-mono') || 'JetBrains Mono' }; }
+  const fmtT = (s) => { if (!isFinite(s)) return 'never'; const a = Math.abs(s); if (a < 120) return `${f(s, 1)} s`; if (a < 7200) return `${f(s / 60, 1)} min`; if (a < 86400 * 3) return `${f(s / 3600, 2)} h`; return `${f(s / 86400, 2)} days`; };
+
+  // ---------- the ball: launch and where it is ----------
+  function ball() {
+    if (B) return B;
+    const r0 = S.from === 'center' ? 0 : S.from === 'half' ? TR / 2 : 0.88 * TR, p0 = [0, -r0];
+    const a = S.aim * DEG, u = [-Math.sin(a) * S.v, Math.cos(a) * S.v], Om = S.om * RPM;
+    const v0 = S.by === 'rider' ? rfLaunchRoom(p0, u, Om) : u;
+    B = { p0, v0, Om, tEnd: rfEdgeTime(p0, v0, Om, S.mode, TR) };
+    return B;
+  }
+  function ballAt(t) {
+    const b = ball(), tt = Math.min(t, b.tEnd), R = rfRoom(b.p0, b.v0, b.Om, S.mode, tt), Tb = rfToTable(R.r, R.v, b.Om, tt);
+    return { t: tt, r: R.r, v: R.v, a: R.a, rp: Tb.r, vp: Tb.v, ap: rfRot(R.a, -b.Om * tt), cor: rfCoriolis(Tb.v, b.Om), cen: rfCentrifugal(Tb.r, b.Om), phi: b.Om * tt };
+  }
+  function fou() {
+    if (F) return F;
+    F = rfFoucault({ L: S.L, lat: S.lat * DEG, A: S.A, start: S.start, az: Math.PI / 2, spin: S.spin ? 1000 : 1 });
+    return F;
+  }
+
+  // ---------- layout ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const right = cardOn ? card.offsetWidth + 24 : 0, pad = 10 * p;
+    geo = { p, cardOn, right, pad };
+    if (S.view === 'table') {
+      const aw = W - right, panels = [];
+      if (S.seen === 'both') {
+        if (W > 640) { const x1 = aw * SPL.f(); panels.push({ x: 0, y: 0, w: x1, h: H, k: 'room' }, { x: x1, y: 0, w: aw - x1, h: H, k: 'table' }); }
+        else { const y1 = H * SPL.f(); panels.push({ x: 0, y: 0, w: W, h: y1, k: 'room' }, { x: 0, y: y1, w: W, h: H - y1, k: 'table' }); }
+      } else panels.push({ x: 0, y: 0, w: aw, h: H, k: S.seen });
+      for (const q of panels) { q.R = Math.max(30, (Math.min(q.w, q.h - 44 * p) / 2 - 8 * p) / 1.28); q.c = [q.x + q.w / 2, q.y + 34 * p + (q.h - 34 * p) / 2]; }
+      geo.panels = panels; geo.mpp = TR / panels[0].R;
+    } else {
+      const top = S.graph ? H * SPL2.f() : H;
+      geo.floor = { x: 0, y: 0, w: W - right, h: top };
+      geo.gr = S.graph ? { x: pad, y: top + 0.5 * pad, w: W - 2 * pad, h: H - top - 1.5 * pad } : null;
+      const rr = Math.max(40, Math.min(geo.floor.w, geo.floor.h) / 2 - 26 * p);
+      geo.fc = [geo.floor.w / 2, geo.floor.h / 2]; geo.fR = rr; geo.fs = rr / (1.2 * S.A);   /* px per m: the swing fills most of the floor */
+    }
+  }
+
+  /* where the person throwing stands, just behind the start: a rider on the table (inside the rim), a thrower in the room
+     (outside the rim when the ball starts at the edge, else on the table's center line behind the start) */
+  function throwerAt() {
+    const b = ball(), y = b.p0[1];
+    if (S.by === 'rider') return [0, y - 0.22];
+    return [0, S.from === 'edge' ? -TR - 0.35 : y - 0.3];
+  }
+  /* a peg at azimuth a is knocked over once the swing's plane has turned past it (turned clockwise positive, radians) */
+  function pegHit(a, turned) {
+    if (Math.abs(turned) < 1e-6) return false; if (Math.abs(turned) >= Math.PI) return true;
+    const a0 = Math.PI / 2, rel = turned > 0 ? a0 - a : a - a0, m = ((rel % Math.PI) + Math.PI) % Math.PI;
+    return m > 1e-6 && m <= Math.abs(turned) + 0.02;
+  }
+  // ---------- drawing helpers ----------
+  function arrow(x, y, dx, dy, col, w, lab) {
+    const p = geo.p, L = Math.hypot(dx, dy); if (L < 3 * p) return;
+    const ux = dx / L, uy = dy / L, hd = Math.min(9 * p, L * 0.5);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx - ux * hd * 0.8, y + dy - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + dx, y + dy); ctx.lineTo(x + dx - ux * hd - uy * hd * 0.5, y + dy - uy * hd + ux * hd * 0.5); ctx.lineTo(x + dx - ux * hd + uy * hd * 0.5, y + dy - uy * hd - ux * hd * 0.5); ctx.closePath(); ctx.fill();
+    if (lab) { ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = ux >= 0 ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.fillText(lab, x + dx + ux * 5 * p + (ux >= 0 ? 2 : -2) * p, y + dy + uy * 6 * p); }
+  }
+  function person(x, y, ang, col) {   /* a person seen from above: shoulders and a head, facing ang (screen radians) */
+    const p = geo.p; ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(0, 0, 5 * p, 11 * p, 0, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(1 * p, 0, 4.5 * p, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.restore();
+  }
+
+  // ---------- turntable, flat ----------
+  function drawPanel(q, st) {
+    const p = geo.p, R = q.R, [cx, cy] = q.c, k = R / TR, b = ball(), onTable = q.k === 'table';
+    const X = (v) => [cx + v[0] * k, cy - v[1] * k];
+    const phi = st.phi, tabA = onTable ? 0 : phi, roomA = onTable ? -phi : 0;   /* how far the table and the room are turned in this picture */
+    ctx.save(); ctx.beginPath(); ctx.rect(q.x, q.y, q.w, q.h); ctx.clip();
+    ctx.fillStyle = T.ink; ctx.font = `700 ${12.5 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(onTable ? 'Seen riding the turntable' : 'Seen from the room', q.x + q.w / 2, q.y + 10 * p);
+    /* the room: a wall mark (a door) outside the rim, fixed in the room */
+    const door = rfRot([0, TR * 1.12], roomA), D = X(door), dn = rfRot([1, 0], roomA);
+    ctx.strokeStyle = T.room; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(D[0] - dn[0] * 18 * p, D[1] + dn[1] * 18 * p); ctx.lineTo(D[0] + dn[0] * 18 * p, D[1] - dn[1] * 18 * p); ctx.stroke();
+    ctx.fillStyle = T.room; ctx.font = `${10 * p}px ${mono()}`; ctx.textBaseline = 'middle';
+    const DL = X(rfRot([0, TR * 1.2], roomA)); ctx.fillText('door', DL[0], DL[1]);
+    /* the table */
+    ctx.fillStyle = T.table; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = T.tline; ctx.lineWidth = 1 * p;
+    for (let j = 0; j < 8; j++) { const e = X(rfRot([TR, 0], tabA + j * Math.PI / 4)); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(e[0], e[1]); ctx.stroke(); }
+    for (const rr of [0.5, 1, 1.5]) { ctx.beginPath(); ctx.arc(cx, cy, rr * k, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
+    /* a painted stripe, so the turning shows */
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 5 * p; ctx.beginPath(); const s0 = -tabA - Math.PI / 2 - 0.12; ctx.arc(cx, cy, R - 4 * p, s0, s0 + 0.24); ctx.stroke();
+    /* turning arrow */
+    if (Math.abs(b.Om) > 1e-9 && !onTable) { const sg = b.Om > 0 ? -1 : 1; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, R + 10 * p, -0.9, -0.9 + sg * 0.7, sg < 0); ctx.stroke();
+      const e = -0.9 + sg * 0.7, ex = cx + Math.cos(e) * (R + 10 * p), ey = cy + Math.sin(e) * (R + 10 * p), tx = -Math.sin(e) * sg, ty = Math.cos(e) * sg;
+      ctx.fillStyle = T.muted; ctx.beginPath(); ctx.moveTo(ex + tx * 7 * p, ey + ty * 7 * p); ctx.lineTo(ex - ty * 4 * p, ey + tx * 4 * p); ctx.lineTo(ex + ty * 4 * p, ey - tx * 4 * p); ctx.fill(); }
+    if (onTable && Math.abs(b.Om) > 1e-9) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.fillText(`the room turns ${b.Om > 0 ? 'clockwise' : 'counterclockwise'} past you`, cx, q.y + q.h - 10 * p); }
+    /* the thrower: in the room, just outside the rim; a rider, on the table at the start */
+    if (S.from !== 'center' || S.by === 'rider') {
+      /* both face up the picture at the start (the direction of an aim of 0): a rider turns with the table, a thrower in the room with the room */
+      const at = S.by === 'rider' ? tabA : roomA, pos = rfRot(throwerAt(), at), up = rfRot([0, 1], at), P = X(pos);
+      person(P[0], P[1], Math.atan2(-up[1], up[0]), S.by === 'rider' ? T.cen : T.room);
+    }
+    /* the path so far, in this picture's frame */
+    const t1 = st.t, n = Math.max(2, Math.min(1500, Math.ceil(t1 * 120)));
+    ctx.strokeStyle = onTable ? T.trail : T.ink; ctx.lineWidth = 2 * p; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let j = 0; j <= n; j++) { const s = ballAt(t1 * j / n), P = X(onTable ? s.rp : s.r); j ? ctx.lineTo(P[0], P[1]) : ctx.moveTo(P[0], P[1]); }
+    ctx.stroke();
+    /* where it was aimed, before it moved */
+    if (st.t < 1e-9 && S.v > 0) { const P0 = X(onTable ? b.p0 : b.p0), a = S.aim * DEG, u = [-Math.sin(a), Math.cos(a)];
+      ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(P0[0], P0[1]); ctx.lineTo(P0[0] + u[0] * 60 * p, P0[1] - u[1] * 60 * p); ctx.stroke(); ctx.setLineDash([]); }
+    /* the ball */
+    const P = X(onTable ? st.rp : st.r);
+    ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(P[0], P[1], Math.max(5 * p, 0.07 * k), 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2 * p; ctx.stroke();
+    /* force arrows (per kilogram): one scale, 10 N per kg is half the radius */
+    if (S.force) {
+      const sc = 0.5 * R / 10, cl = (v) => { const L = Math.hypot(v[0], v[1]) * sc, m = 0.9 * R; return L > m ? [v[0] * m / L, v[1] * m / L] : v; };
+      const A = (v, col, lab) => { const c = cl(v); arrow(P[0], P[1], c[0] * sc, -c[1] * sc, col, 2.2 * p, lab); };
+      if (onTable) { A(st.cor, T.cor, 'Coriolis'); A(st.cen, T.cen, 'centrifugal'); if (S.mode === 'roll') A(st.ap, T.fric, 'friction'); }
+      else if (S.mode === 'roll') A(st.a, T.fric, 'friction');
+      else if (!onTable) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.fillText('no horizontal force', P[0], P[1] - 14 * p); }
+      if (q === geo.panels[geo.panels.length - 1]) { const x0 = q.x + 12 * p, y0 = q.y + 50 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 10 * sc, y0); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('10 N per kg', x0, y0 - 4 * p); }
+    }
+    if (st.t >= b.tEnd - 1e-9 && isFinite(b.tEnd)) { ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('off the edge', P[0], P[1] - 10 * p); }
+    ctx.restore();
+  }
+  function drawTable() { const st = ballAt(S.t); for (const q of geo.panels) drawPanel(q, st); if (geo.panels.length === 2) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; const q = geo.panels[1]; ctx.beginPath(); if (q.x > 0) { ctx.moveTo(q.x, 0); ctx.lineTo(q.x, H); } else { ctx.moveTo(0, q.y); ctx.lineTo(W, q.y); } ctx.stroke(); } }
+
+  // ---------- Foucault, flat ----------
+  const fastSwing = () => S.x / fou().period > 1.5;   /* more than a swing and a half each second: draw the swing as a band */
+  function drawFloor() {
+    const p = geo.p, Fo = fou(), [cx, cy] = geo.fc, R = geo.fR, k = geo.fs, X = (x, y) => [cx + x * k, cy - y * k];
+    ctx.save(); ctx.beginPath(); ctx.rect(geo.floor.x, geo.floor.y, geo.floor.w, geo.floor.h); ctx.clip();
+    ctx.fillStyle = T.floor; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = T.tline; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    /* compass and degree marks */
+    ctx.fillStyle = T.muted; ctx.font = `700 ${12 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    [['N', 0, 1], ['E', 1, 0], ['S', 0, -1], ['W', -1, 0]].forEach(([l, x, y]) => ctx.fillText(l, cx + x * (R + 13 * p), cy - y * (R + 13 * p)));
+    ctx.strokeStyle = T.tline; ctx.lineWidth = 1 * p;
+    for (let d = 0; d < 360; d += 10) { const a = d * DEG, r1 = R - (d % 30 ? 5 : 10) * p; ctx.beginPath(); ctx.moveTo(cx + Math.sin(a) * r1, cy - Math.cos(a) * r1); ctx.lineTo(cx + Math.sin(a) * R, cy - Math.cos(a) * R); ctx.stroke(); }
+    /* the plane it started in, and how far it has turned: measured from the last farthest out point of the swing */
+    const turned = turnedNow(), a0 = Math.PI / 2, a1 = a0 - turned, rr = S.A * k * 1.04;
+    if (Math.abs(turned) > 1e-4) {
+      ctx.fillStyle = 'rgba(217,130,43,0.18)';
+      for (const sh of [0, Math.PI]) { ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, rr, -(a0 + sh), -(a1 + sh), turned < 0); ctx.closePath(); ctx.fill(); }
+    }
+    ctx.strokeStyle = T.muted; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1.2 * p;
+    ctx.beginPath(); ctx.moveTo(cx - Math.cos(a0) * rr, cy + Math.sin(a0) * rr); ctx.lineTo(cx + Math.cos(a0) * rr, cy - Math.sin(a0) * rr); ctx.stroke(); ctx.setLineDash([]);
+    /* pegs round the edge of the swing, knocked over as the plane reaches them */
+    const NP = 48, pr = S.A * k * 1.0;
+    for (let j = 0; j < NP; j++) {
+      const a = j * 2 * Math.PI / NP, hit = pegHit(a, turned);
+      const x = cx + Math.cos(a) * (pr + 7 * p), y = cy - Math.sin(a) * (pr + 7 * p);
+      if (hit) { ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * 7 * p, y - Math.sin(a) * 7 * p); ctx.stroke(); }
+      else { ctx.fillStyle = T.brass; ctx.beginPath(); ctx.arc(x, y, 3 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    /* the bob's path: all of it while it is short, else the last two swings */
+    const t1 = S.t, Tw = Fo.period, t0 = t1 < 30 * Tw && !fastSwing() ? 0 : Math.max(0, t1 - 2 * Tw), n = Math.max(2, Math.min(4000, Math.ceil((t1 - t0) / Tw * 120)));
+    ctx.strokeStyle = T.trail; ctx.lineWidth = (fastSwing() ? 2.5 : 1.6) * p; ctx.lineJoin = 'round'; ctx.globalAlpha = fastSwing() ? 0.75 : 1; ctx.beginPath();
+    for (let j = 0; j <= n; j++) { const s = Fo.at(t0 + (t1 - t0) * j / n), P = X(s.x, s.y); j ? ctx.lineTo(P[0], P[1]) : ctx.moveTo(P[0], P[1]); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    /* the plane now */
+    if (S.t > 0) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx - Math.cos(a1) * rr, cy + Math.sin(a1) * rr); ctx.lineTo(cx + Math.cos(a1) * rr, cy - Math.sin(a1) * rr); ctx.stroke(); }
+    if (!fastSwing() || !S.play) { const s = Fo.at(t1), P = X(s.x, s.y); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(P[0], P[1]); ctx.stroke();
+      const g = ctx.createRadialGradient(P[0] - 3 * p, P[1] - 3 * p, 1, P[0], P[1], 10 * p); g.addColorStop(0, '#f3dc9a'); g.addColorStop(1, T.brass);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(P[0], P[1], 9 * p, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(cx, cy, 2.5 * p, 0, 2 * Math.PI); ctx.fill();
+    /* captions */
+    ctx.fillStyle = T.ink; ctx.font = `${11.5 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const lines = [`${S.spin ? 'Earth spun 1000× faster' : 'Earth\'s real spin'}, time ×${S.x}`, `elapsed ${fmtT(S.t)}`];
+    if (!S.blind) lines.push(`plane turned ${f(Math.abs(turned) / DEG, 1)}°${Math.abs(turned) > 1e-4 ? (turned > 0 ? ' clockwise' : ' counterclockwise') : ''}`);
+    lines.forEach((l, j) => ctx.fillText(l, 10 * p, geo.floor.h - 10 * p - (lines.length - 1 - j) * 16 * p));
+    if (S.globe) drawGlobe();
+    ctx.restore();
+  }
+  /* how far the plane has turned (radians, clockwise positive), measured from where the bob was at its last farthest out point */
+  function turnedNow() {
+    const Fo = fou(); if (S.t <= 0) return 0;
+    const n = Math.floor(S.t * Fo.w / Math.PI - (S.start === 'push' ? 0.5 : 0)); if (n < 0) return 0;
+    const s = Fo.at(Fo.apex(n)); let a = Math.PI / 2 - Math.atan2(s.y, s.x);
+    const guess = Fo.Oz * Fo.apex(n);   /* unwrap to the branch nearest the steady turn, ±π for the far end of the swing */
+    a = a - Math.PI * Math.round((a - guess) / Math.PI); return a;
+  }
+  function drawGlobe() {
+    const p = geo.p, r = 42 * p, cx = 14 * p + r, cy = 18 * p + r, lat = S.lat * DEG;
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(4 * p, 4 * p, 2 * r + 20 * p, 2 * r + 40 * p, 8 * p) : ctx.rect(4 * p, 4 * p, 2 * r + 20 * p, 2 * r + 40 * p); ctx.fill(); ctx.stroke();
+    const g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r); g.addColorStop(0, '#6fa8dc'); g.addColorStop(1, '#2c5a8a');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy); ctx.stroke();
+    arrow(cx, cy - r, 0, -14 * p, T.ink, 1.8 * p, '');
+    ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Ω', cx + 4 * p, cy - r - 10 * p);
+    const sx = cx + Math.cos(lat) * r, sy = cy - Math.sin(lat) * r; ctx.fillStyle = T.trail; ctx.beginPath(); ctx.arc(sx, sy, 3.5 * p, 0, 2 * Math.PI); ctx.fill();
+    const ul = 16 * p * Math.sin(lat);   /* the part of the spin about the local vertical, Ω sin λ */
+    if (Math.abs(ul) > 1) arrow(sx, sy, Math.cos(lat) * ul, -Math.sin(lat) * ul, T.trail, 1.8 * p, '');
+    ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${f(Math.abs(S.lat), 1)}° ${S.lat >= 0 ? 'N' : 'S'}`, cx, cy + r + 6 * p);
+    ctx.fillStyle = T.trail; ctx.fillText('Ω sin λ', cx, cy + r + 19 * p);
+  }
+  function drawTurnGraph() {
+    const p = geo.p, G0 = geo.gr; if (!G0 || G0.h < 60 * p) return; const Fo = fou();
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(G0.x, G0.y, G0.w, G0.h, 8 * p) : ctx.rect(G0.x, G0.y, G0.w, G0.h); ctx.fill(); ctx.stroke();
+    const tTurn = rfTurnTime(S.lat * DEG, S.spin ? 1000 : 1), tMax = Math.max(isFinite(tTurn) ? tTurn : (S.spin ? 86.2 : 86164), S.t);
+    const u = tMax > 7200 ? [3600, 'h'] : tMax > 120 ? [60, 'min'] : [1, 's'];
+    const L = G0.x + 44 * p, Rr = G0.x + G0.w - 12 * p, Tp = G0.y + 22 * p, Bt = G0.y + G0.h - 22 * p, X = (t) => L + (Rr - L) * t / tMax, Y = (a) => Bt - (Bt - Tp) * a / 360;
+    ctx.strokeStyle = T.line; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let a = 0; a <= 360; a += 90) { ctx.beginPath(); ctx.moveTo(L, Y(a)); ctx.lineTo(Rr, Y(a)); ctx.stroke(); ctx.fillText(`${a}°`, L - 4 * p, Y(a)); }
+    const step = niceStep(tMax / u[0] / 6); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let t = 0; t <= tMax / u[0] + 1e-9; t += step) ctx.fillText(`${+t.toFixed(3)} ${u[1]}`, X(t * u[0]), Bt + 4 * p);
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.font = `${11 * p}px ${mono()}`;
+    ctx.fillText('Angle the plane has turned, read at the end of each swing, against time', L, G0.y + 5 * p);
+    if (!S.blind && isFinite(tTurn)) { ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(Math.min(tMax, tTurn)), Y(360 * Math.min(tMax, tTurn) / tTurn)); ctx.stroke(); ctx.setLineDash([]); }
+    /* points: the swing's own turn at its farthest out points, at most 160 of them */
+    const nMax = Math.floor(S.t * Fo.w / Math.PI - (S.start === 'push' ? 0.5 : 0)); if (nMax < 0) return;
+    const stride = Math.max(1, Math.ceil(nMax / 160)); ctx.fillStyle = T.trail;
+    for (let n = 0; n <= nMax; n += stride) { const t = Fo.apex(n), s = Fo.at(t); let a = Math.PI / 2 - Math.atan2(s.y, s.x); const gs = Fo.Oz * t; a -= Math.PI * Math.round((a - gs) / Math.PI);
+      const deg = Math.abs(a) / DEG; ctx.beginPath(); ctx.arc(X(t), Y(Math.min(360, deg)), 2.6 * p, 0, 2 * Math.PI); ctx.fill(); }
+  }
+  function niceStep(x) { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; }
+
+  // ---------- 3D ----------
+  function init3d() {
+    const S3 = VD3K.stage($('scene'), { fov: 40, near: 0.05, far: 600, shadow: 6 }); if (!S3) return false;
+    S3.el.style.position = 'absolute'; S3.el.style.inset = '0';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+    /* --- the turntable room --- */
+    const tg = new THREE.Group(); sc.add(tg);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.95 }, ['#cfd3d8', '#22272e'])); floor.receiveShadow = true; tg.add(floor);
+    const disc = new THREE.Group(); tg.add(disc);
+    const top = new THREE.Mesh(new THREE.CylinderGeometry(TR, TR, 0.12, 96), M({ roughness: 0.7 }, ['#d9cdb6', '#5a4e3c'])); top.rotation.x = Math.PI / 2; top.position.z = 0.06; top.receiveShadow = true; top.castShadow = true; disc.add(top);
+    const lm = new THREE.LineBasicMaterial({ color: '#8a7a5e' });
+    for (let j = 0; j < 8; j++) { const a = j * Math.PI / 4; disc.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0.122), new THREE.Vector3(TR * Math.cos(a), TR * Math.sin(a), 0.122)]), lm)); }
+    for (const rr of [0.5, 1, 1.5, TR]) { const pts = []; for (let j = 0; j <= 96; j++) pts.push(new THREE.Vector3(rr * Math.cos(j * Math.PI / 48), rr * Math.sin(j * Math.PI / 48), 0.122)); disc.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm)); }
+    const stripe = new THREE.Mesh(new THREE.RingGeometry(TR - 0.16, TR - 0.02, 16, 1, -Math.PI / 2 - 0.12, 0.24), new THREE.MeshBasicMaterial({ color: '#d9822b' })); stripe.position.z = 0.123; disc.add(stripe);
+    const fig = (col) => { const g = new THREE.Group(), m = new THREE.MeshStandardMaterial({ color: col, roughness: 0.8 }), sk = new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.7 });
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 1.2, 14), m); b.rotation.x = Math.PI / 2; b.position.z = 0.6; b.castShadow = true;
+      const h = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), sk); h.position.z = 1.34; h.castShadow = true; g.add(b, h); return g; };
+    const rider = fig('#2e8b57'), thrower = fig('#56657a'); disc.add(rider); tg.add(thrower);
+    const door = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.08, 2.1), M({ roughness: 0.8 }, ['#8a6a4a', '#5c4632'])); door.position.set(0, TR * 1.9, 1.05); tg.add(door);
+    const ballM = new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 16), new THREE.MeshStandardMaterial({ color: '#c0392b', roughness: 0.4 })); ballM.castShadow = true; tg.add(ballM);
+    const NT = 1501, trailRoom = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#7d8898' })), trailTab = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#d9822b' }));
+    trailRoom.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NT * 3), 3)); trailTab.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NT * 3), 3));
+    tg.add(trailRoom); disc.add(trailTab); trailRoom.frustumCulled = trailTab.frustumCulled = false;
+    const arC = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x1f6fd1, 0.12, 0.08), arF = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x2e8b57, 0.12, 0.08), arR = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x9a5bd0, 0.12, 0.08);
+    tg.add(arC, arF, arR);
+    /* --- the Foucault hall --- */
+    const fg = new THREE.Group(); sc.add(fg);
+    const ffl = new THREE.Mesh(new THREE.CircleGeometry(9, 96), M({ roughness: 0.9 }, ['#ddd5c4', '#2b2823'])); ffl.receiveShadow = true; fg.add(ffl);
+    const rail = new THREE.Mesh(new THREE.TorusGeometry(4.6, 0.05, 8, 96), M({ metalness: 0.6, roughness: 0.35 }, ['#9b8350', '#b8995a'])); rail.position.z = 0.9; fg.add(rail);
+    for (let j = 0; j < 16; j++) { const a = j * Math.PI / 8, post = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9, 8), rail.material); post.rotation.x = Math.PI / 2; post.position.set(4.6 * Math.cos(a), 4.6 * Math.sin(a), 0.45); fg.add(post); }
+    const sector = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ color: '#d9822b', transparent: true, opacity: 0.25, side: THREE.DoubleSide })); sector.position.z = 0.01; fg.add(sector);
+    const plane0 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: '#8a8f99', dashSize: 0.2, gapSize: 0.15 })); plane0.position.z = 0.015; fg.add(plane0);
+    const planeN = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#e8e2d6' })); planeN.position.z = 0.016; fg.add(planeN);
+    const NPEG = 48, pegs = []; for (let j = 0; j < NPEG; j++) { const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.16, 8), M({ metalness: 0.5, roughness: 0.4 }, ['#b08a3e', '#d8b45a'])); pg.castShadow = true; fg.add(pg); pegs.push(pg); }
+    const bob = new THREE.Mesh(new THREE.SphereGeometry(0.17, 32, 20), new THREE.MeshStandardMaterial({ color: '#c9a656', metalness: 0.75, roughness: 0.3 })); bob.castShadow = true; fg.add(bob);
+    const wire = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#9aa3ad' })); fg.add(wire);
+    const NF = 1201, ftrail = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#d9822b' })); ftrail.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NF * 3), 3)); ftrail.frustumCulled = false; ftrail.position.z = 0.02; fg.add(ftrail);
+    const lab = (t) => VD3K.label(t, { size: 0.45, color: '#e6ebf2', bg: 'rgba(20,24,30,0.6)' });
+    const cps = [['N', 0, 1], ['E', 1, 0], ['S', 0, -1], ['W', -1, 0]].map(([t, x, y]) => { const l = lab(t); l.position.set(x * 5.3, y * 5.3, 0.4); fg.add(l); return l; });
+    const o = { th: -Math.PI / 2 - 0.55, ph: 0.85, zoom: 1 };
+    S3.orbit(S3.el, o, () => {}, { zMin: 0.4, zMax: 2.5, phMin: 0.05, phMax: 1.45 }); S3.el.tabIndex = 0;
+    G3 = { S3, tg, disc, rider, thrower, ballM, trailRoom, trailTab, NT, arC, arF, arR, fg, sector, plane0, planeN, pegs, bob, wire, ftrail, NF, o, cps, door };
+    return true;
+  }
+  function frame3d() {
+    const g = G3, sc = $('scene'); g.S3.size(sc.clientWidth, sc.clientHeight);
+    g.tg.visible = S.view === 'table'; g.fg.visible = S.view === 'foucault';
+    if (S.view === 'table') {
+      const b = ball(), st = ballAt(S.t), z = 0.12 + 0.09, ride = S.seen === 'table';
+      g.disc.rotation.z = st.phi;
+      const wp = throwerAt(); g.rider.visible = S.by === 'rider'; g.thrower.visible = S.by === 'room';
+      g.rider.position.set(wp[0], wp[1], 0.12); g.thrower.position.set(wp[0], wp[1], 0);
+      g.ballM.position.set(st.r[0], st.r[1], z);
+      const n = Math.max(2, Math.min(g.NT - 1, Math.ceil(S.t * 120))), A = g.trailRoom.geometry.attributes.position, Bt = g.trailTab.geometry.attributes.position;
+      for (let j = 0; j <= n; j++) { const s = ballAt(S.t * j / n); A.setXYZ(j, s.r[0], s.r[1], 0.126); Bt.setXYZ(j, s.rp[0], s.rp[1], 0.128); }
+      A.needsUpdate = true; Bt.needsUpdate = true; g.trailRoom.geometry.setDrawRange(0, n + 1); g.trailTab.geometry.setDrawRange(0, n + 1);
+      const sca = 0.07, setA = (ar, v, on) => { const L = Math.hypot(v[0], v[1]); ar.visible = on && L > 1e-6; if (!ar.visible) return; ar.position.set(st.r[0], st.r[1], z + 0.02); ar.setDirection(new THREE.Vector3(v[0] / L, v[1] / L, 0)); ar.setLength(Math.min(1.8, L * sca), 0.12, 0.08); };
+      const cr = rfRot(st.cor, st.phi), ce = rfRot(st.cen, st.phi);   /* the rider's fictitious forces, drawn in the room's axes */
+      setA(g.arC, cr, S.force && ride); setA(g.arF, ce, S.force && ride); setA(g.arR, st.a, S.force && S.mode === 'roll');
+      const oo = { th: g.o.th + (ride ? st.phi : 0), ph: g.o.ph, zoom: g.o.zoom };
+      g.S3.place(oo, [0, 0, 0.3], g.S3.fit(8.5));
+    } else {
+      const Fo = fou(), sm = 4.2 / (1.25 * S.A) * 1;   /* the floor is drawn so the swing fills it: meters on the floor per meter of swing */
+      const turned = turnedNow(), a0 = Math.PI / 2, a1 = a0 - turned, rr = S.A * sm * 1.04;
+      if (Math.abs(turned) > 1e-4) {
+        const pos = [], seg = Math.max(2, Math.ceil(Math.abs(turned) / 0.05));
+        for (const sh of [0, Math.PI]) for (let j = 0; j < seg; j++) { const u = a0 + sh - turned * j / seg, v = a0 + sh - turned * (j + 1) / seg; pos.push(0, 0, 0, rr * Math.cos(u), rr * Math.sin(u), 0, rr * Math.cos(v), rr * Math.sin(v), 0); }
+        g.sector.geometry.dispose(); g.sector.geometry = new THREE.BufferGeometry(); g.sector.geometry.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.sector.visible = true;
+      } else g.sector.visible = false;
+      const pl = (ln, a) => { const q = ln.geometry.attributes.position; q.setXYZ(0, -rr * Math.cos(a), -rr * Math.sin(a), 0); q.setXYZ(1, rr * Math.cos(a), rr * Math.sin(a), 0); q.needsUpdate = true; };
+      pl(g.plane0, a0); g.plane0.computeLineDistances(); pl(g.planeN, a1); g.planeN.visible = S.t > 0;
+      const pr = S.A * sm + 0.12;
+      g.pegs.forEach((pg, j) => { const a = j * 2 * Math.PI / g.pegs.length, hit = pegHit(a, turned);
+        pg.position.set((pr + (hit ? 0.08 : 0)) * Math.cos(a), (pr + (hit ? 0.08 : 0)) * Math.sin(a), hit ? 0.03 : 0.08); pg.rotation.set(hit ? 0 : Math.PI / 2, hit ? Math.PI / 2 : 0, hit ? a : 0); });
+      const s = Fo.at(S.t), bx = s.x * sm, by = s.y * sm, hL = 9, pivot = new THREE.Vector3(0, 0, hL + 0.3);
+      g.bob.position.set(bx, by, 0.3 + (hL - Math.sqrt(Math.max(0, hL * hL - bx * bx - by * by))) * 0.25); g.bob.visible = !(fastSwing() && S.play);
+      const wq = g.wire.geometry.attributes.position; wq.setXYZ(0, pivot.x, pivot.y, pivot.z); wq.setXYZ(1, g.bob.position.x, g.bob.position.y, g.bob.position.z); wq.needsUpdate = true; g.wire.visible = g.bob.visible;
+      const Tw = Fo.period, t0 = S.t < 30 * Tw && !fastSwing() ? 0 : Math.max(0, S.t - 2 * Tw), n = Math.max(2, Math.min(g.NF - 1, Math.ceil((S.t - t0) / Tw * 120))), q = g.ftrail.geometry.attributes.position;
+      for (let j = 0; j <= n; j++) { const u = Fo.at(t0 + (S.t - t0) * j / n); q.setXYZ(j, u.x * sm, u.y * sm, 0); } q.needsUpdate = true; g.ftrail.geometry.setDrawRange(0, n + 1);
+      g.S3.place(g.o, [0, -0.6, 0.6], g.S3.fit(14));
+    }
+    g.S3.render();
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden: predict it</span>';
+    let h = '';
+    if (S.view === 'table') {
+      const b = ball(), st = ballAt(S.t), Om = b.Om, mg = (v) => Math.hypot(v[0], v[1]);
+      h += dd('Turntable', Math.abs(Om) > 1e-9 ? `${f(Math.abs(S.om), 1)} turns/min, Ω = ${f(Om, 3)} rad/s, once in ${f(2 * Math.PI / Math.abs(Om), 2)} s` : 'not turning');
+      h += dd('Time', `${f(st.t, 2)} s`) + dd('The table has turned', `${f(Math.abs(st.phi) / DEG, 1)}°`);
+      h += dd('From the room: speed, distance out', `${f(mg(st.v), 2)} m/s, ${f(mg(st.r), 2)} m`);
+      h += dd('On the table: speed, distance out', `${f(mg(st.vp), 2)} m/s, ${f(mg(st.rp), 2)} m`);
+      h += dd('Coriolis, 2Ωv′ (per kg)', `${f(mg(st.cor), 2)} N`) + dd('Centrifugal, Ω²r′ (per kg)', `${f(mg(st.cen), 2)} N`);
+      h += dd('Real horizontal force (per kg)', S.mode === 'roll' ? `${f(mg(st.a), 3)} N, friction (2/7)Ωv` : 'none');
+      if (S.mode === 'roll' && Math.abs(Om) > 1e-9) h += dd('In the room it circles', `at 2Ω/7 = ${f(2 * Math.abs(Om) / 7, 3)} rad/s, radius ${f(mg(b.v0) / (2 * Math.abs(Om) / 7), 2)} m`);
+      h += dd('Reaches the edge', isFinite(b.tEnd) ? `at ${f(b.tEnd, 2)} s` : 'never: it stays on the table');
+    } else {
+      const Fo = fou(), lat = S.lat * DEG, sp = S.spin ? 1000 : 1, tt = rfTurnTime(lat, sp), turned = turnedNow();
+      h += dd('Latitude λ', `${f(Math.abs(S.lat), 2)}° ${S.lat >= 0 ? 'N' : 'S'}, sin λ = ${f(Math.sin(lat), 4)}`);
+      h += dd('Swing period 2π√(L/g)', `${f(Fo.period, 2)} s`);
+      h += dd('Earth\'s spin Ω', S.spin ? `${f(RF_OMEGA_E * 1000, 5)} rad/s (1000 × real)` : `${(RF_OMEGA_E * 1e5).toFixed(5)} × 10⁻⁵ rad/s`);
+      if (S.blind) h += dd('How fast the plane turns', hid, 'wide');
+      else {
+        h += dd('Spin about the vertical, Ω sin λ', S.spin ? `${f(Fo.Oz, 5)} rad/s` : `${(Fo.Oz * 1e5).toFixed(5).replace('-', '−')} × 10⁻⁵ rad/s`);
+        h += dd('The plane turns', Math.abs(Math.sin(lat)) < 1e-9 ? 'not at all' : `${f(Math.abs(rfDegPerHour(lat, sp)), 2)}° per hour, ${S.lat > 0 ? 'clockwise' : 'counterclockwise'}`);
+        h += dd('Once round in', isFinite(tt) ? `${fmtT(tt)} (${f(tt / 3600, 2)} h)` : 'never');
+      }
+      h += dd('Time elapsed', fmtT(S.t)) + dd('Swings so far', f(S.t / Fo.period, 0));
+      if (!S.blind) h += dd('Plane turned, measured', `${f(Math.abs(turned) / DEG, 2)}°`);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    const T3 = S.view === 'table';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#seenSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.s === S.seen)); if (b.dataset.s === 'both') b.hidden = is3(); }
+    for (const b of document.querySelectorAll('#fromSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.from));
+    for (const b of document.querySelectorAll('#bySeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.by));
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === S.start));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.x === S.x));
+    $('tableBox').hidden = !T3; $('fouBox').hidden = T3; $('graphRow').hidden = is3();
+    $('cardTitle').textContent = T3 ? 'The turntable and the ball' : 'The pendulum and where it is';
+    $('sOm').value = S.om; $('oOm').textContent = `${f(S.om, 1)} turns/min${S.om > 0 ? ', counterclockwise' : S.om < 0 ? ', clockwise' : ''}`;
+    $('sV').value = S.v; $('oV').textContent = `${f(S.v, 1)} m/s`; $('sAim').value = S.aim; $('oAim').textContent = `${S.aim > 0 ? S.aim + '° left' : S.aim < 0 ? -S.aim + '° right' : 'straight'}`;
+    $('cForce').checked = S.force; $('cSlow').checked = S.slow;
+    $('sLat').value = S.lat; $('oLat').textContent = `${f(Math.abs(S.lat), 1)}° ${S.lat >= 0 ? 'N' : 'S'}`; $('sLen').value = S.L; $('oLen').textContent = `${S.L} m`; $('sAmp').value = S.A; $('oAmp').textContent = `${f(S.A, 1)} m`;
+    $('cSpin').checked = S.spin; $('cGlobe').checked = S.globe; $('cGraph').checked = S.graph;
+    $('play').textContent = S.play ? 'Pause' : T3 ? (S.t > 0 && !S.done ? 'Go on' : 'Roll the ball') : (S.t > 0 ? 'Go on' : 'Release');
+    $('play').classList.toggle('attn', !S.play);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  function showCanvas() { const on3 = is3(); can.hidden = on3; if (G3) G3.S3.el.hidden = !on3; }
+  function drawAll() {
+    if (!T || !W) return; SPL.place(); SPL2.place(); layout(); showCanvas();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (!is3()) { if (S.view === 'table') drawTable(); else { drawFloor(); drawTurnGraph(); } }
+    readouts();
+  }
+  const restart = () => { S.t = 0; S.done = false; S.play = false; B = null; F = null; };
+  const changed = (keep) => { S.preset = 'custom'; if (!keep) restart(); sync(); drawAll(); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; restart(); S.preset = k;
+    if (c.view === 'table') Object.assign(S, { view: 'table', om: c.om, v: c.v, aim: c.aim, from: c.from, by: c.by, mode: c.mode, seen: is3() && c.seen === 'both' ? 'room' : c.seen, force: c.force });
+    else Object.assign(S, { view: 'foucault', lat: c.lat, L: c.L, A: c.A, start: c.start, x: c.x, spin: c.spin, globe: c.globe, graph: c.graph });
+    $('presetHint').textContent = c.hint;
+    sync(); drawAll();
+  }
+  function setPlay(on) { if (on && S.view === 'table' && S.done) restart(); S.play = on; sync(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const segOn = (id, key, attr, num) => $(id).addEventListener('click', (e) => { const b = e.target.closest(`[data-${attr}]`); if (!b) return; S[key] = num ? +b.dataset[attr] : b.dataset[attr]; changed(key === 'seen' || key === 'x'); });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b || b.dataset.v === S.view) return; applyPreset(b.dataset.v === 'table' ? 'across' : 'paris'); });
+  segOn('seenSeg', 'seen', 's'); segOn('fromSeg', 'from', 'f'); segOn('bySeg', 'by', 'b'); segOn('modeSeg', 'mode', 'm'); segOn('startSeg', 'start', 'st'); segOn('speedSeg', 'x', 'x', true);
+  $('sOm').addEventListener('input', (e) => { S.om = +e.target.value; changed(); });
+  $('sV').addEventListener('input', (e) => { S.v = +e.target.value; changed(); });
+  $('sAim').addEventListener('input', (e) => { S.aim = +e.target.value; changed(); });
+  $('cForce').addEventListener('change', (e) => { S.force = e.target.checked; changed(true); });
+  $('cSlow').addEventListener('change', (e) => { S.slow = e.target.checked; sync(); });
+  $('sLat').addEventListener('input', (e) => { S.lat = +e.target.value; changed(); });
+  $('sLen').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
+  $('sAmp').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
+  $('cSpin').addEventListener('change', (e) => { S.spin = e.target.checked; changed(); });
+  $('cGlobe').addEventListener('change', (e) => { S.globe = e.target.checked; changed(true); });
+  $('cGraph').addEventListener('change', (e) => { S.graph = e.target.checked; changed(true); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  $('play').addEventListener('click', () => setPlay(!S.play));
+  $('again').addEventListener('click', () => { restart(); sync(); drawAll(); });
+  can.addEventListener('keydown', (e) => {
+    const s = e.shiftKey ? 10 : 1, up = e.key === 'ArrowUp' || e.key === 'ArrowRight', dn = e.key === 'ArrowDown' || e.key === 'ArrowLeft';
+    if (e.key === ' ') { setPlay(!S.play); e.preventDefault(); return; }
+    if (!up && !dn) return; const d = up ? 1 : -1;
+    if (S.view === 'table') S.om = Math.max(-30, Math.min(30, S.om + d * 0.5 * s)); else S.lat = Math.max(-90, Math.min(90, +(S.lat + d * 0.5 * s).toFixed(1)));
+    changed(); e.preventDefault();
+  });
+  v3 = VD3K.view({ seg: '#dimSeg', init: init3d, start: 'flat', status: (m) => { $('status').textContent = m; }, change: () => { if (is3() && S.seen === 'both') S.seen = 'room'; sync(); drawAll(); } });
+  VD.tools({ el: can, time: () => S.t, scale: () => (is3() ? null : S.view === 'table' ? geo && geo.mpp : geo && 1 / geo.fs) });
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.play) {
+      if (S.view === 'table') { const b = ball(); S.t += dt * (S.slow ? 0.25 : 1); if (S.t >= b.tEnd) { S.t = b.tEnd; S.play = false; S.done = true; } if (S.t > 120) { S.play = false; S.done = true; } sync(); }
+      else S.t += dt * S.x;
+      drawAll();
+    }
+    if (G3 && is3()) frame3d();
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  if (VD.fitStage) VD.fitStage($('stage'));   /* the stage grows to fit the Set up card on a short window or in Projector */
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('across'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+  window.__rf = { S, applyPreset, drawAll, sync, ballAt, fou, turnedNow, setPlay, run: (t) => { S.t = t; sync(); drawAll(); }, view: () => v3 };
+})();
+</script>
+</body>
+</html>

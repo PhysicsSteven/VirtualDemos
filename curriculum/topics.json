@@ -27,7 +27,8 @@
       "elevator",
       "circular-motion",
       "terminal-velocity",
-      "granular-flow"
+      "granular-flow",
+      "rotating-frames"
      ]
     },
     {
@@ -317,7 +318,8 @@
       "celestial-sphere",
       "moon-phases",
       "retrograde-motion",
-      "rainbows"
+      "rainbows",
+      "rotating-frames"
      ]
     },
     {
