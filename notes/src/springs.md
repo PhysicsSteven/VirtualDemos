@@ -27,6 +27,7 @@ For the lab, students time N oscillations with **Stopwatch** on the stage (press
 6. **Lab: k from T² against m.** In Simple harmonic motion, turn on Blind, time 10 oscillations at four or five masses and capture each. The fitted slope is 4π²/k; the intercept should be zero within the scatter because these springs have no mass (Q8).
 7. **Normal modes, then Beats.** Show mode 1, press **Mode 2**, then switch to **Beats** with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).
 8. **Chain of ten** (Sandbox, Normal modes pane). Click mode 1 and then mode 10: every block moves at one frequency. Pull one block and let go and the pane shows the motion shared among all ten modes. The frequencies crowd together near the top, fₙ = (1/π)√(k/m) sin(nπ/22), instead of rising as n f₁.
+9. **Grid of pucks** (Sandbox, Normal modes pane). A 3 × 3 grid of pucks joined by springs, seen from above. Pull one puck and let go: its x and y motion is a jumble. Click a mode square and every puck moves together at one frequency, from 2.436 Hz for mode (1, 1) to 5.882 Hz for (3, 3). Modes (1, 3), (2, 2) and (3, 1) all have 4.502 Hz: different shapes at one frequency (degenerate modes), as on a square drumhead.
 
 ## Questions
 

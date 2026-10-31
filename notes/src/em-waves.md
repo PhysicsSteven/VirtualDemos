@@ -24,6 +24,7 @@ Students should know the cross product right hand rule and v = λf. Drag the 3D 
 5. **Circular polarization.** At one place E keeps its length and turns. Check **Polarizer in the end on view** and turn the **Transmission axis φ**: the transmitted fraction stays at 0.500. Go back to **Linear** and turn it again (Q5).
 6. **Antenna.** Loops of E pinch off near the dipole and move outward. Drag the **Direction θ from the dipole axis** slider: the intensity is sin²θ, zero along the axis, half at 45°.
 7. **In a plane.** Long wires through the page carry alternating currents; metal you paint reflects. One wire: rings spread out and the probe's r⟨E²⟩ stays the same at every distance (energy spreads over circles, a 2D solution). Then **Two wires in phase** and **opposite phase** (beams steer with phase), **Wire in front of a metal sheet** (a λ/4 reflector), **A wide beam through two slits** (bright directions at sin θ = mλ/d: 0, 19.5°, 41.8°), and **A closed metal box** (E inside stays zero).
+8. **Polarization in a plane.** Load **A wire grid polarizer** with E along the wires: almost nothing gets through (about 3% of the power in our runs). Switch to E in the page and about 80% passes. **A slit λ/4 wide** surprises students: with E along the slit next to nothing gets through, because the gap is narrower than λ/2, while E across the gap squeezes through and spreads out beyond it.
 
 ## Questions
 

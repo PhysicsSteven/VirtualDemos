@@ -21,6 +21,7 @@ Students need V = kQ/R and E = kQ/r² for a sphere (OpenStax Vol 2 §7.3, §6.3)
 3. **Ink jet.** Fire one drop with the defaults: it lands 0.99 mm up. Double q: twice as high. Double v: a quarter as high. Set q = 0 and the drop goes into the gutter.
 4. **Print PHYS.** The controller gives each dot its own charge. Change the plate voltage and print again: the letters keep their shape because the charges are recalculated.
 5. **Precipitator.** At 1 µm the efficiency is 87%. Slide the diameter: 10 µm particles are caught to better than 99.99%, while 0.1 µm particles are mostly lost in this model. Double the plate length: the escaping fraction is squared.
+6. **Shuffle and spark.** Ten shuffles in rubber soles on a wool rug leave the body at −5.16 kV (100 pF), so the spark jumps 1.16 mm to the doorknob and carries ½CV² = 1.33 mJ. Ask what a fur rug does before trying it: −8.44 kV and a 2.15 mm spark. Wool socks on a wool rug move no charge at all, and no amount of shuffling goes past 13.3 kV, where the air at the soles breaks down.
 
 ## Questions
 

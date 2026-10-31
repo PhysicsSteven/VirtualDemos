@@ -6060,3 +6060,34 @@ All five folded into existing demos; no new demos, no new worksheets.
   the strongest; **Many launches** (mean, sd, sem against n; σ against the prediction) a part of the projectile
   worksheet; **Draw a graph** a short part of Motion Graphs (sketch x from a drawn v); **Energy chain** a prelab level
   part (efficiency products); **Friction up close** is qualitative, no worksheet.
+
+## 2026-10-31 Claude: Group 2 partials (Physics II and waves), folded into four demos
+
+Steve 14:16 "Let's get to work getting these partials done" (plan /mnt/project-files/partials-final/groups-2026-10-31.md,
+Group 2). All four fit existing demos; none became its own demo. GPT, please verify the numbers below.
+- **Electrostatics at Work, Shuffle and spark** (fourth machine, `?setup=shuffle`). Rubbing model shared with Charging by
+  Induction (triboelectric order fur, glass, wool, silk, rubber, teflon; each step closes 12% × separation of the gap to
+  the limit). Limit ε₀E_bA with soles 2 × 250 cm²: 1.33 µC, 13.3 kV on a 100 pF body (human body model, JEDEC JS-001).
+  Spark length from the Schumann fit for uniform field breakdown in air, V_b = 6.72√(pd) + 24.36pd kV (p in bar, d in
+  cm, p = 1.01325 bar): 31.4 kV across 1 cm, 92 kV/cm across 0.1 mm; no spark below 0.1 mm (stated). Ten shuffles,
+  rubber on wool: −5.16 kV, 1.16 mm spark, ½CV² = 1.33 mJ. Fur rug: −8.44 kV, 2.15 mm. Wool socks on wool: nothing.
+- **Magnetic Fields of Currents, Electromagnet on a supply** (preset, DC or slow AC, iron core switch). Core as a spheroid
+  with Osborn's demagnetizing factor, M = (μr − 1)H₀/(1 + (μr − 1)N_d), μr = 1000, saturation M_s = 1.71 × 10⁶ A/m
+  (Kittel); drawn as an extra current ML/N in each turn, so the whole field scales by one gain (stated: uniform
+  magnetization, linear below saturation). Preset 40 turns, 10 cm, R 1 cm, 2 A: N_d 0.0558, gain 18.26, 0.99 → 18.0 mT;
+  40 cm long: gain 128. AC is I₀ sin 2πft, slow enough that inductance does not matter (stated).
+- **Electromagnetic Waves, In a plane: E in the page (TE)**. Same Yee grid by duality (the Ez array holds η₀Hz, the H
+  arrays −Ex, −Ey); metal zeroes every tangential E edge it touches. With no metal TE and TM give the same numbers
+  (tested). New presets: wire grid polarizer (2 × 2 cell rods every 5 cells, λ/10 thick, λ/4 apart): TM 2.6%, TE 82%
+  through; λ/4 slit in a wall 0.3 λ thick: TM 0.03%, TE 4.3% of the beam.
+- **Springs Sandbox, Grid of pucks** (3 × 3 and 5 × 5, size 2 to 6). Zero length springs on an air table, so x and y
+  separate and are exactly linear (stated). Modes sin((i+1)pπ/(N+1)) sin((j+1)qπ/(N+1)),
+  ω_pq = 2√(k/m)√(sin²(pπ/2(N+1)) + sin²(qπ/2(N+1))); evolution is exact by modes. k 20 N/m, m 100 g: N = 3 gives
+  2.436 Hz for (1, 1) to 5.882 Hz for (3, 3); (1, 3), (2, 2), (3, 1) all 4.502 Hz. Tests check each shape against a
+  stiffness matrix built puck by puck (Jacobi eigenvalues).
+- Tests: electrostatics-at-work 14 groups, currents-fields-magnets 6, em-waves 10, springs-sandbox 19, springs 10.
+  vdcheck `--only after` 0 problems and `--only clip` 0 cut off on all four; looked at desktop, 400 px, 360 px, light and dark.
+- Notes: one class step each; demo keys rebuilt in TeacherKeys (no new questions). One What's new entry.
+- Worksheet candidates for the sweep: **Grid of pucks** (f_pq against the formula, degeneracy), the strongest;
+  **Electromagnet** (core gain against L/2R, compare N_d); **Shuffle and spark** (spark gap against voltage, Paschen
+  region); **TE and TM polarizers** is qualitative, a short part of the EM waves worksheet at most.

@@ -24,6 +24,7 @@ A **3D** button (next to Flat) shows the same field map as a sheet in space. Wit
 4. **Ampère's law.** The loop encloses 5 A out and 2 A in: ∮B·dl = μ₀(3 A) = 3.77 µT·m, computed by integrating B along the loop. Drag wire 3 around outside the loop: the colors along the loop change, the integral does not. Drag the loop over wire 3 and the integral jumps. Switch to **Rectangle** and **Clockwise**.
 5. **Current loop.** B at the center is 78.5 µT. Drag the probe along the axis and compare with μ₀IR²/(2(R² + z²)^(3/2)).
 6. **Solenoid.** N = 30 over 24 cm: 762 µT at the center against the ideal μ₀nI = 785 µT, and 0.511 of the center value at an end. Shorten L with the grip or slider until it turns back into a loop.
+7. **Electromagnet on a supply.** 40 turns over 10 cm at 2 A: put the iron core in and the center field rises 18.3 times, from 0.99 mT to 18.0 mT. Ask why the gain is not μr = 1000: the iron's own poles push back (the demagnetizing factor is 0.056 for this shape). Stretch the coil to 40 cm and the gain climbs to 128. Switch the supply to AC and watch the compasses swing as the field reverses.
 
 ## Questions
 
