@@ -640,7 +640,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   })();
 
   // ---------- state ----------
-  const S = { realSet: 'near', realSel: 'Proxima Centauri', mode: 'single', M: 1, track: null, s: 0, cAge: 6e8, playing: false, speed: 1, sel: -1, selAuto: true, preset: 'sun' };
+  const S = { realSet: 'near', realSel: null, mode: 'single', M: 1, track: null, s: 0, cAge: 6e8, playing: false, speed: 1, sel: -1, selAuto: true, preset: 'sun' };
   const layers = { bg: true, rad: true, ms: true, lab: true };
   const PHASE_HINT = {
     ms: 'Hydrogen fuses to helium in the core. As helium builds up the core contracts and heats, so the star slowly brightens.',
@@ -799,7 +799,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the star list: nearest first for the nearest stars and for both, brightest first for the brightest */
   function fillPick() {
     const list = REAL.slice().sort((a, b) => (S.realSet === 'bright' ? a.V - b.V : a.d - b.d)), sel = $('realPick');
-    sel.textContent = '';
+    sel.textContent = ''; { const o = document.createElement('option'); o.value = ''; o.textContent = 'Choose a star'; o.disabled = true; sel.appendChild(o); }
     for (const q of list) { const o = document.createElement('option'); o.value = q.name; o.textContent = `${q.name} · ${S.realSet === 'bright' ? 'V ' + q.V.toFixed(2) : q.d.toFixed(2) + ' pc'}${q.BV == null ? ' · no B − V' : ''}`; sel.appendChild(o); }
     sel.value = S.realSel || '';
   }
@@ -1015,7 +1015,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, SW, SH);
     const mono = monoFont(), ui = uiFont();
     if (S.mode === 'real') {   /* the selected star's card */
-      const q = realSelected(); if (!q) return;
+      const q = realSelected();
+      if (!q) { ctx.fillStyle = T.muted; ctx.font = `${13 * ps}px ${ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Tap a star on the diagram, or pick one from the list', SW / 2, SH / 2); return; }
       const big = Math.min(SH * 0.32, 46 * ps), cx = 20 * ps + big, cy = SH / 2;
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, big * 1.5), c = q.BV != null ? bvRGB(q.BV) : [200, 200, 200];
       g.addColorStop(0, css(c)); g.addColorStop(0.6, css(c, 0.9)); g.addColorStop(1, css(c, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, big * 1.5, 0, 2 * Math.PI); ctx.fill();
@@ -1443,7 +1444,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   // exposed for testing
-  window.__hr = { msL, msR, tMS, teff, radiusOf, ifmr, wdRadius, mestelL, buildTrack, stateAtAge, stateAtS, S, CL };
+  window.__hr = { realXY: (n) => { const q = REAL.find((x) => x.name === n); const c = hr.getBoundingClientRect(); return q && q.BV != null ? [c.left + RX(q.BV), c.top + RY(q.MV)] : null; }, msL, msR, tMS, teff, radiusOf, ifmr, wdRadius, mestelL, buildTrack, stateAtAge, stateAtS, S, CL };
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
