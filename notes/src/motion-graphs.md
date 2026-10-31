@@ -22,6 +22,8 @@ Students should know the definitions of average and instantaneous velocity and a
 4. **Stop and go.** Three stages; v is a trapezoid whose area, 20 m, is the trip from −8 m to 12 m.
 5. **Ball thrown up.** 12 m/s upward with a = −9.81 m/s² throughout: top at 1.22 s, 7.34 m high, back down at 2.45 s.
 6. **Walk the graph.** A volunteer drives the cart (drag it, or hold ← → with Shift for faster) to follow a dashed target, as with a real motion detector. Then switch to Match a velocity graph instead.
+7. **Two cars.** Car A starts from rest at −8 m with a = 1 m/s²; car B passes −6 m at a steady 2 m/s. The x–t lines cross at t = 2 + √8 = 4.83 s, x = 3.66 m, where A overtakes B. Where the v–t lines cross (t = 2 s) the cars have equal velocity and the gap is largest, 4 m: not where they meet.
+8. **Ball on ramps.** A ball rolls down a 20° piece (a = 2.40 m/s²), coasts along the flat at 3.79 m/s, and climbs a 30° piece (a = −3.50 m/s²) until it turns back at 3.46 s; with no losses it returns to its start with no speed and repeats every 6.91 s. Each piece is a straight piece of v–t. Then press Match a graph and have the class build the hidden track from the target's v–t slopes.
 
 ## Questions
 
@@ -48,3 +50,5 @@ Students should know the definitions of average and instantaneous velocity and a
 - Walk the graph records the cart's position every 0.02 s. Velocity is a centered difference over ±0.2 s and acceleration a second difference over ±0.3 s, like the smoothing in a motion detector, so quick jerks appear as spikes.
 - The parabola fit is least squares on the captured (t, x) rows with standard errors from the residuals. Rows are rounded as displayed: t to 0.01 s, x to 0.01 m.
 - Ball thrown up ignores air resistance (compare Projectile Range for drag).
+- Two cars: car B keeps one constant acceleration. The meeting times solve x_A(t) = x_B(t) exactly, a quadratic within each stretch where both accelerations are constant.
+- Ball on ramps: a solid ball rolling without slipping (I = 2mr²/5), so along a piece of slope θ, a = −(5/7) g sin θ, with g = 9.81 m/s². No rolling resistance, and the ball keeps its speed through each bend (a real ball loses a little there). x is the distance along the track; each piece is 3.0 m long, and a stop at each end ends the run.

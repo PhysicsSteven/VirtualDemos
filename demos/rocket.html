@@ -92,6 +92,10 @@
       <div><div class="slider-head"><label for="sMf">Fuel mass</label><output id="oMf" for="sMf"></output></div><input type="range" id="sMf" min="0" max="20000" step="250"></div>
       <div><div class="slider-head"><label for="sU">Exhaust speed u (relative to the rocket)</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="500" max="4500" step="100"></div>
       <div><div class="slider-head"><label for="sB">Burn rate</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="10" max="500" step="10"></div>
+      <div id="stage1Box" hidden>
+        <div><div class="slider-head"><label for="sMc">First stage empty casing</label><output id="oMc" for="sMc"></output></div><input type="range" id="sMc" min="200" max="5000" step="100"></div>
+        <div><div class="slider-head"><label for="sMf1">First stage fuel</label><output id="oMf1" for="sMf1"></output></div><input type="range" id="sMf1" min="0" max="20000" step="250"></div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -103,6 +107,7 @@
           <button type="button" data-p="earth" aria-pressed="false">Launch from the ground</button>
           <button type="button" data-p="heavy" aria-pressed="false">Too heavy at first</button>
           <button type="button" data-p="slow" aria-pressed="false">Same fuel, burned slowly</button>
+          <button type="button" data-p="two" aria-pressed="false">Two stage rocket</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -110,8 +115,10 @@
       <section>
         <h2>Rocket</h2>
         <label class="check"><input type="checkbox" id="grav"><span>Gravity (launch from the ground)</span></label>
+        <label class="check"><input type="checkbox" id="two"><span>Two stages: drop the empty first stage</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">thrust = u × (burn rate) · m dv/dt = thrust − mg</p>
+          <p class="hint">With two stages, the dry mass and fuel mass set the upper stage; the first stage (its empty casing and its fuel) sits under it, with the same engine (same u and burn rate). When the first stage's fuel is gone its casing is let go and the upper stage fires at once. With no gravity each stage adds u ln(mass before its burn / mass after), so dropping the casing beats carrying it to the end.</p>
         </details>
       </section>
 
@@ -179,6 +186,50 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const tTop = g > 0 && lifts ? tb + Math.max(0, burn.v) / g : Infinity;
     return { m0, thrust, tb, t0, lifts, at, dvIdeal, vBurnout: burn.v, yBurnout: burn.y, tTop, yTop: g > 0 && lifts ? burn.y + Math.max(0, burn.v) ** 2 / (2 * g) : Infinity };
   }
+  // Two stages: a first stage (empty casing mc, fuel mf1) under the rocket above (dry md, fuel mf), one engine size for both (same
+  // u and burn rate b). The first stage burns its fuel, its empty casing is let go at once, and the upper stage fires straight away.
+  // Each burn is exact, as above, from the speed and height it starts with; while thrust is less than the weight it waits on the pad.
+  // The dropped casing coasts from where it was let go (no air), so in deep space it keeps its speed and the rocket pulls away.
+  function stagedFlight(p) {
+    const g = p.g, thrust = p.u * p.b, m0 = p.md + p.mf + p.mc + p.mf1, M2 = p.md + p.mf, t1 = p.mf1 / p.b, tb = t1 + p.mf / p.b;
+    // one burn from mass M lasting dur, starting at rest on the pad or flying with speed v and height y
+    function burnFrom(M, dur, st) {
+      const wait = st.onPad ? (g > 0 ? Math.min(dur, Math.max(0, (M - thrust / g) / p.b)) : 0) : 0;
+      const flies = !st.onPad || wait < dur, Mf = M - p.b * wait, k = p.b / Mf;
+      const f = (tau) => {
+        if (!flies || (st.onPad && tau <= wait)) return { v: st.onPad ? 0 : st.v, y: st.onPad ? 0 : st.y, a: 0, onPad: st.onPad };
+        const tt = tau - wait, mm = Mf - p.b * tt, sv = st.onPad ? 0 : st.v, sy = st.onPad ? 0 : st.y;
+        return { v: sv + p.u * Math.log(Mf / mm) - g * tt, y: sy + sv * tt + p.u * ((1 - k * tt) * Math.log(1 - k * tt) / k + tt) - 0.5 * g * tt * tt, a: thrust / mm - g, onPad: false };
+      };
+      return { f, wait, flies };
+    }
+    const B1 = burnFrom(m0, t1, { onPad: g > 0, v: 0, y: 0 });
+    const e1 = t1 > 0 ? B1.f(t1) : { v: 0, y: 0, onPad: g > 0 };
+    const B2 = burnFrom(M2, tb - t1, e1);
+    const e2 = tb > t1 ? B2.f(tb - t1) : e1;
+    const t0 = !e1.onPad || B1.flies && t1 > 0 ? B1.wait : t1 + B2.wait, lifts = !e2.onPad;
+    function at(t) {
+      const m = t < t1 ? m0 - p.b * t : Math.max(p.md, M2 - p.b * Math.min(t - t1, tb - t1)), m2 = t < t1 ? M2 : m;
+      const stage = t < t1 ? 1 : 2, burning = t < tb;
+      if (t < t1) return { t, m, m2, stage, burning, ...B1.f(t) };
+      if (t <= tb) { const q = B2.f(t - t1); return { t, m, m2, stage, burning, ...q, a: t < tb ? q.a : (q.onPad ? 0 : -g) }; }
+      if (e2.onPad) return { t, m, m2, stage, v: 0, y: 0, a: 0, burning: false, onPad: true };
+      const dt = t - tb, y = e2.y + e2.v * dt - 0.5 * g * dt * dt, v = e2.v - g * dt;
+      if (y < 0) return { t, m, m2, stage, v: 0, y: 0, a: 0, burning: false, onPad: true, landed: true };
+      return { t, m, m2, stage, v, y, a: -g, burning: false, onPad: false };
+    }
+    // the empty first stage after it is let go at t1
+    function casing(t) {
+      if (t < t1) return null;
+      if (e1.onPad) return { y: 0, v: 0 };
+      const dt = t - t1, y = e1.y + e1.v * dt - 0.5 * g * dt * dt;
+      return y < 0 ? { y: 0, v: 0, landed: true } : { y, v: e1.v - g * dt };
+    }
+    const dv1 = p.u * Math.log(m0 / (m0 - p.mf1)), dv2 = p.u * Math.log(M2 / p.md);
+    const tTop = g > 0 && lifts ? tb + Math.max(0, e2.v) / g : Infinity;
+    return { m0, thrust, tb, t1, t0, lifts, at, casing, dv1, dv2, dvIdeal: dv1 + dv2, dvSingle: p.u * Math.log(m0 / (p.md + p.mc)),
+      vSep: e1.v, ySep: e1.y, vBurnout: e2.v, yBurnout: e2.y, tTop, yTop: g > 0 && lifts ? e2.y + Math.max(0, e2.v) ** 2 / (2 * g) : Infinity };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -193,6 +244,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     space: { md: 1000, mf: 9000, u: 2500, b: 200, g: 0, hint: 'No gravity and no air. Burning 9000 kg of fuel from a 10 000 kg rocket gives Δv = u ln(10) = 2.30u, faster than the exhaust itself. Burn rate does not matter here, only how much fuel and how fast it leaves.' },
     earth: { md: 1000, mf: 9000, u: 2500, b: 200, g: 1, hint: 'The same rocket from the ground. Thrust 500 kN against a 98 kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).' },
     heavy: { md: 1000, mf: 18000, u: 2500, b: 70, g: 1, hint: 'Twice the fuel but a slow burn: thrust 175 kN is less than the 186 kN launch weight. The engine fires but the rocket sits on the pad, burning fuel until it is light enough to rise. That fuel is wasted: it never helped the rocket move.' },
+    two: { md: 1000, mf: 2000, mc: 1000, mf1: 7000, two: true, u: 2500, b: 200, g: 1, hint: 'The same 11 000 kg at launch and the same 9000 kg of fuel as one stage would carry, split in two. The first stage burns 7000 kg, its 1000 kg casing falls away, and the 3000 kg upper stage burns the last 2000 kg. With no gravity that gives u ln(11/4) + u ln(3) = 5276 m/s; one stage carrying the empty casing to the end gets only u ln(11/2) = 4262 m/s. Watch the mass graph drop at separation.' },
     slow: { md: 1000, mf: 9000, u: 2500, b: 60, g: 1, hint: 'Same fuel and exhaust speed as Launch from the ground, burned over 150 s instead of 45 s. The rocket equation gives the same Δv, but gravity pulls for longer, so it ends up slower and lower. Rockets burn fast for this reason.' }
   };
   const S = { preset: 'space', p: { ...PRESETS.space }, t: 0, run: false, blind: false, ghost: null };
@@ -207,7 +259,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
 const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'graphs', axis: () => 'x', def: () => (W > 640 ? (use3() ? Math.min(360 * ps(), W * 0.4) : Math.min(240 * ps(), W * 0.32)) : W * 0.5) / W, min: 0.2, max: 0.7, label: 'Divider between the rocket and the graphs', onChange: () => draw() });
   const n0 = (v, d = 0) => (!isFinite(v) ? '∞' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d })).replace('-', '−');
-  const P = () => ({ md: S.p.md, mf: S.p.mf, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
+  const P = () => ({ md: S.p.md, mf: S.p.mf, mc: S.p.mc ?? 1000, mf1: S.p.mf1 ?? 7000, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
+  const fly = (o) => (S.p.two ? stagedFlight({ ...P(), ...o }) : flight({ ...P(), ...o }));
   function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), f = r / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
 
   // ---------- 3D view of the flight (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
@@ -216,7 +269,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
      and the orange window shows the fuel left, as in the flat view. Clouds sit at 2 km; the sky darkens with the same 15 km scale height.
      Drag to turn the view, wheel or pinch to zoom, double click to reset. */
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.5, ph: 1.32, zoom: 1 } };
-  const RH = 14, RR = 0.8;   /* drawn height and radius of the rocket body (m) */
+  const RH = 14, RR = 0.8, BH = 9;   /* drawn height and radius of the rocket body, and height of the first stage (m) */
   let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
@@ -258,6 +311,11 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const winBack = mesh(new THREE.BoxGeometry(0.5, 0.2, 1), M({ roughness: 0.6, color: 0x1d252f })), fuelM = M({ roughness: 0.5, emissive: 0x552200 }), fuel = mesh(new THREE.BoxGeometry(0.42, 0.24, 1), fuelM, false);
     const winH = RH - 6.2; winBack.scale.z = winH; winBack.position.set(0, -RR + 0.05, 1.9 + winH / 2);
     rocket.add(bell, body, nose, winBack, fuel);
+    /* the first stage for Two stages: a plain cylinder BH tall with fins and a bell, drawn under the rocket, then let go */
+    const booster = new THREE.Group(), bBell = mesh(upZ(new THREE.CylinderGeometry(0.35, 0.6, 1.4, 24, 1, true)), bellM), bBody = mesh(upZ(new THREE.CylinderGeometry(RR, RR, BH - 1.4, 32)), bodyM);
+    bBell.position.z = 0.7; bBody.position.z = 1.4 + (BH - 1.4) / 2; booster.add(bBell, bBody);
+    for (let k = 0; k < 4; k++) { const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(1.5, -0.4); sh.lineTo(1.5, 0.8); sh.lineTo(0, 3.2); sh.closePath();
+      const fg = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: false }); fg.rotateX(Math.PI / 2); fg.translate(RR - 0.05, 0.06, 1.4); const fin = mesh(fg, finM); fin.rotation.z = k * Math.PI / 2 + Math.PI / 4; booster.add(fin); }
     /* plume: two nested cones, additive, scaled by the thrust; a glow sprite at the nozzle */
     const plumeM = new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }), coreM = new THREE.MeshBasicMaterial({ color: 0xfff1c0, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
     const cone = (r) => new THREE.ConeGeometry(r, 1, 24, 1, true).rotateX(-Math.PI / 2).translate(0, 0, -0.5);   /* wide end at the nozzle, tip 1 m below */
@@ -266,8 +324,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     /* smoke over the pad while the engine fires near the ground */
     const smokeM = M({ roughness: 1, transparent: true, opacity: 0.8, depthWrite: false }), smoke = new THREE.Group(), rp = rng(7);
     for (let i = 0; i < 26; i++) { const b = mesh(new THREE.IcosahedronGeometry(1, 3), smokeM, false); const a = rp() * 6.283, d = 6 + rp() * 14; b.position.set(Math.cos(a) * d, Math.sin(a) * d, 1.4 + rp() * 1.2); b.userData = { s: 1 + rp() * 1.6, ph: rp() * 6.28 }; smoke.add(b); }
-    scene.add(ground, pad, tower, clouds, stars, rocket, smoke);
-    g3 = { rd, el, scene, cam, hemi, sun, groundM, ground, padM, pad, steelM, tower, cloudM, clouds, starM, stars, rocket, bodyM, noseM, finM, fuel, fuelM, winH, plumeG, plume, core, smokeM, smoke };
+    scene.add(ground, pad, tower, clouds, stars, rocket, smoke, booster);
+    g3 = { rd, el, scene, cam, hemi, sun, groundM, ground, padM, pad, steelM, tower, cloudM, clouds, starM, stars, rocket, bodyM, noseM, finM, fuel, fuelM, winH, plumeG, plume, core, smokeM, smoke, booster };
     can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
     VD3.orbit(can, G3.o, () => { if (use3() && !S.run) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.25, phMax: 2.4, zMin: 0.35, zMax: 3, keys: false });
     can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
@@ -294,9 +352,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     g.scene.fog = onEarth ? new THREE.Fog(skyCol, 2000 + q.y * 2, 40000 + q.y * 6) : null;
     g.ground.visible = g.pad.visible = g.tower.visible = g.clouds.visible = g.smoke.visible = onEarth;
     g.starM.opacity = Math.max(0, Math.min(1, (sk - 0.3) / 0.5)); g.stars.visible = g.starM.opacity > 0;
-    g.rocket.position.set(0, 0, z); g.stars.position.set(0, 0, z);
+    const stack = S.p.two && q.stage === 1, cas = S.p.two && !stack ? F.casing(S.t) : null;
+    g.rocket.position.set(0, 0, z + (stack ? BH : 0)); g.stars.position.set(0, 0, z);
+    g.plumeG.position.z = stack ? -BH : 0; g.booster.visible = stack || !!cas; g.booster.rotation.set(0, 0, 0);
+    if (stack) g.booster.position.set(0, 0, z);
+    else if (cas) { const dt = S.t - F.t1; g.booster.position.set(Math.min(6, dt * 0.6), 0, cas.y + 1.2 + (cas.landed ? RR : 0)); g.booster.rotation.y = cas.landed ? Math.PI / 2 : Math.min(0.9, dt * 0.08); }
     /* fuel window: the orange fill's height is the fraction of fuel left */
-    const ff = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf)); g.fuel.visible = ff > 0.002; g.fuel.scale.z = Math.max(0.001, g.winH * ff); g.fuel.position.set(0, -RR + 0.02, 1.9 + g.winH * ff / 2);
+    const ff = Math.min(1, Math.max(0, ((S.p.two ? q.m2 : q.m) - S.p.md) / Math.max(1, S.p.mf))); g.fuel.visible = ff > 0.002; g.fuel.scale.z = Math.max(0.001, g.winH * ff); g.fuel.position.set(0, -RR + 0.02, 1.9 + g.winH * ff / 2);
     /* plume: length grows with the square root of the thrust (2.25 MN is the largest the sliders allow), flickering while it runs */
     const burn = q.burning && !(q.onPad && S.t === 0 && !S.run); g.plumeG.visible = burn;
     if (burn) { const k = Math.sqrt(F.thrust / 2.25e6), fk = !reduce && S.run ? 1 + 0.07 * Math.sin(amb * 41) + 0.05 * Math.sin(amb * 67 + 1) : 1, L = (4 + 26 * k) * fk, r = 0.7 + 0.8 * k;
@@ -326,11 +388,12 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), F = flight(P()), q = F.at(S.t), bl = S.blind, wide = W > 640;
+    const p = ps(), F = fly(), q = F.at(S.t), bl = S.blind, wide = W > 640;
     const colW = W * SPL.f(), top = 96 * p, bot = H - 30 * p;
     // altitude column: scale to the highest point reached (or the burnout height in space)
     const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
-    const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf));
+    const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, ((S.p.two ? q.m2 : q.m) - S.p.md) / Math.max(1, S.p.mf));
+    const stack = S.p.two && q.stage === 1, bh = 34 * p, ru = stack ? ry - bh : ry;   /* with the first stage on, the upper stage sits on top of it */
     const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
     let r3 = null;
     if (u3) { ctx.clearRect(80 * p, top - 18 * p, colW - 84 * p, H - top + 12 * p); r3 = draw3(80 * p, top - 18 * p, colW - 84 * p, H - top + 12 * p, q, F); } else scene(p, colW, top, bot, rx, ry, rw, rh, q, F);
@@ -351,20 +414,34 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       ctx.fillStyle = T.flame; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(rx - fw, ry); ctx.quadraticCurveTo(rx - fw * 1.1, ry + fl * 0.45, rx, ry + fl); ctx.quadraticCurveTo(rx + fw * 1.1, ry + fl * 0.45, rx + fw, ry); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
       ctx.fillStyle = T.flameCore; ctx.beginPath(); ctx.moveTo(rx - fw * 0.5, ry); ctx.quadraticCurveTo(rx - fw * 0.5, ry + fl * 0.3, rx, ry + fl * 0.55); ctx.quadraticCurveTo(rx + fw * 0.5, ry + fl * 0.3, rx + fw * 0.5, ry); ctx.closePath(); ctx.fill(); ctx.restore();
     }
+    // two stages: the first stage under the rocket while it burns, and its empty casing falling away after separation
+    if (S.p.two) {
+      const booster = (cx, by0, frac, tilt) => {   /* a plain cylinder with fins; by0 is its bottom */
+        ctx.save(); ctx.translate(cx, by0); ctx.rotate(tilt);
+        ctx.fillStyle = T.fin; for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(sg * rw / 2, -14 * p); ctx.lineTo(sg * rw * 0.95, 0); ctx.lineTo(sg * rw / 2, 0); ctx.closePath(); ctx.fill(); }
+        ctx.fillStyle = T.body; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.rect(-rw / 2, -bh, rw, bh - 2 * p); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(-rw * 0.22, -2 * p); ctx.lineTo(-rw * 0.32, 2 * p); ctx.lineTo(rw * 0.32, 2 * p); ctx.lineTo(rw * 0.22, -2 * p); ctx.closePath(); ctx.fill();
+        if (frac > 0) { ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(-rw / 2 + 3 * p, -4 * p - (bh - 8 * p) * frac, rw - 6 * p, (bh - 8 * p) * frac); ctx.globalAlpha = 1; }
+        const cg = ctx.createLinearGradient(-rw / 2, 0, rw / 2, 0); cg.addColorStop(0, 'rgba(0,0,0,0.12)'); cg.addColorStop(0.28, 'rgba(255,255,255,0.4)'); cg.addColorStop(0.5, 'rgba(255,255,255,0)'); cg.addColorStop(1, 'rgba(0,0,0,0.3)');
+        ctx.fillStyle = cg; ctx.fillRect(-rw / 2, -bh, rw, bh - 2 * p); ctx.restore();
+      };
+      if (stack) booster(rx, ry, Math.max(0, (q.m - q.m2 - S.p.mc) / Math.max(1, S.p.mf1)), 0);
+      else { const c = F.casing(S.t); if (c) { const dt = S.t - F.t1, off = Math.min(46 * p, dt * 4 * p); booster(rx - off, Yp(c.y), 0, c.landed ? 1.35 : -Math.min(0.9, dt * 0.08)); } }
+    }
     // body with fins, engine bell and nose cone; the orange fill shows the fuel left
-    const by = ry - 4 * p, bodyTop = ry - rh + 14 * p;
+    const by = ru - 4 * p, bodyTop = ru - rh + 14 * p;
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5;
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(rx - rw * 0.22, by); ctx.lineTo(rx - rw * 0.32, ry); ctx.lineTo(rx + rw * 0.32, ry); ctx.lineTo(rx + rw * 0.22, by); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = T.fin; for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(rx + sg * rw / 2, by - 16 * p); ctx.lineTo(rx + sg * rw * 0.95, ry); ctx.lineTo(rx + sg * rw / 2, by); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(rx - rw * 0.22, by); ctx.lineTo(rx - rw * 0.32, ru); ctx.lineTo(rx + rw * 0.32, ru); ctx.lineTo(rx + rw * 0.22, by); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.fin; for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(rx + sg * rw / 2, by - 16 * p); ctx.lineTo(rx + sg * rw * 0.95, ru); ctx.lineTo(rx + sg * rw / 2, by); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     ctx.fillStyle = T.body; ctx.beginPath(); ctx.rect(rx - rw / 2, bodyTop, rw, by - bodyTop); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = T.nose; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ry - rh + 4 * p, rx, ry - rh); ctx.quadraticCurveTo(rx + rw / 2, ry - rh + 4 * p, rx + rw / 2, bodyTop); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(rx - rw / 2 + 3 * p, ry - 3 * p - (rh - 20 * p) * fuelFrac, rw - 6 * p, (rh - 20 * p) * fuelFrac); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.nose; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ru - rh + 4 * p, rx, ru - rh); ctx.quadraticCurveTo(rx + rw / 2, ru - rh + 4 * p, rx + rw / 2, bodyTop); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(rx - rw / 2 + 3 * p, ru - 3 * p - (rh - 20 * p) * fuelFrac, rw - 6 * p, (rh - 20 * p) * fuelFrac); ctx.globalAlpha = 1;
     {   // round the body and nose: light from the left, shade on the right (a picture only)
       const cg = ctx.createLinearGradient(rx - rw / 2, 0, rx + rw / 2, 0); cg.addColorStop(0, 'rgba(0,0,0,0.12)'); cg.addColorStop(0.28, 'rgba(255,255,255,0.4)'); cg.addColorStop(0.5, 'rgba(255,255,255,0)'); cg.addColorStop(1, 'rgba(0,0,0,0.3)');
-      ctx.fillStyle = cg; ctx.beginPath(); ctx.moveTo(rx - rw / 2, by); ctx.lineTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ry - rh + 4 * p, rx, ry - rh); ctx.quadraticCurveTo(rx + rw / 2, ry - rh + 4 * p, rx + rw / 2, bodyTop); ctx.lineTo(rx + rw / 2, by); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = cg; ctx.beginPath(); ctx.moveTo(rx - rw / 2, by); ctx.lineTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ru - rh + 4 * p, rx, ru - rh); ctx.quadraticCurveTo(rx + rw / 2, ru - rh + 4 * p, rx + rw / 2, bodyTop); ctx.lineTo(rx + rw / 2, by); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop + 0.5); ctx.lineTo(rx + rw / 2, bodyTop + 0.5); ctx.stroke(); ctx.globalAlpha = 1;
     }
-    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const fx = rx + rw + 3 * p, fy = ry - rh * 0.45, fw2 = ctx.measureText('fuel').width;
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const fx = rx + rw + 3 * p, fy = ru - rh * 0.45, fw2 = ctx.measureText('fuel').width;
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(fx - 2 * p, fy - 7 * p, fw2 + 4 * p, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.fillText('fuel', fx, fy);
     }
     // status
@@ -378,7 +455,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     if (!wide) return;   // phones: rocket and readouts only
     const X = (t) => gx0 + (gx1 - gx0) * t / tEnd;
     const vMax = Math.max(bl ? 1 : F.dvIdeal, F.vBurnout, 1) * 1.08, vMin = Math.min(0, F.at(tEnd).v) * 1.08;
-    const panes = [['v', 'speed v (m/s)', gy0, vMin, vMax], ['m', 'mass m (kg)', gy0 + pane + 30 * p, 0, (S.p.md + S.p.mf) * 1.08]];
+    const panes = [['v', 'speed v (m/s)', gy0, vMin, vMax], ['m', 'mass m (kg)', gy0 + pane + 30 * p, 0, F.m0 * 1.08]];
     for (const [k, lab, y0, lo, hi] of panes) {
       const Y = (v) => y0 + pane - pane * (v - lo) / (hi - lo);
       ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0 + 0.5, y0 + 0.5, gx1 - gx0, pane);
@@ -386,10 +463,11 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
       const sv = niceStep((hi - lo) / 4); for (let v = Math.ceil(lo / sv) * sv; v <= hi; v += sv) { ctx.fillText(n0(v), gx0 - 4 * p, Y(v)); ctx.strokeStyle = Math.abs(v) < 1e-9 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(gx0, Y(v)); ctx.lineTo(gx1, Y(v)); ctx.stroke(); }
       // burnout line
-      ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(F.tb), y0); ctx.lineTo(X(F.tb), y0 + pane); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(F.tb), y0); ctx.lineTo(X(F.tb), y0 + pane); if (S.p.two && F.t1 > 0) { ctx.moveTo(X(F.t1), y0); ctx.lineTo(X(F.t1), y0 + pane); } ctx.stroke(); ctx.setLineDash([]);
       if (k === 'v' && !bl) {   // the rocket equation with no gravity, for comparison
         ctx.strokeStyle = T.v; ctx.globalAlpha = 0.35; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 2 * p; ctx.beginPath();
-        for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, m = Math.max(S.p.md, S.p.md + S.p.mf - S.p.b * t), v = S.p.u * Math.log((S.p.md + S.p.mf) / m); i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)); }
+        const F0 = S.p.two ? fly({ g: 0 }) : null;   /* two stages: each stage's rocket equation in turn, no gravity */
+        for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, m = Math.max(S.p.md, S.p.md + S.p.mf - S.p.b * t), v = F0 ? F0.at(t).v : S.p.u * Math.log((S.p.md + S.p.mf) / m); i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)); }
         ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
         ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('dashed: u ln(m₀/m), no gravity', gx1 - 4 * p, y0 + 4 * p);
       }
@@ -398,7 +476,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `${10 * p}px ${T.mono}`;
     const ts = niceStep(tEnd / 6); for (let t = 0; t <= tEnd; t += ts) ctx.fillText(n0(t), X(t), bot - 26 * p + 6 * p);
-    ctx.textAlign = 'right'; ctx.fillText('t (s) · dashed vertical line: burnout', gx1, bot - 4 * p);
+    ctx.textAlign = 'right'; ctx.fillText(S.p.two ? 't (s) · dashed vertical lines: separation, burnout' : 't (s) · dashed vertical line: burnout', gx1, bot - 4 * p);
   }
 
   // ---------- scenery (decoration only; random layout precomputed once from a seeded generator) ----------
@@ -439,36 +517,38 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   }
 
   function readouts() {
-    const F = flight(P()), q = F.at(S.t), bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    const F = fly(), q = F.at(S.t), bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Thrust u × burn rate', `${n0(F.thrust / 1000, 0)} kN`) + dd('Weight at launch m₀g', S.p.g ? `${n0(F.m0 * G / 1000, 0)} kN` : '0 (no gravity)') + dd('Burn time', `${n0(F.tb, 1)} s`) + dd('Mass now', `${n0(q.m)} kg`);
     h += dd('Speed now', `${n0(q.v, 0)} m/s`) + dd('Height now', `${q.y >= 1000 ? n0(q.y / 1000, 2) + ' km' : n0(q.y) + ' m'}`) + dd('Acceleration now', `${n0(q.a, 1)} m/s²`);
     if (bl) h += '<div class="wide"><dt>Rocket equation, burnout speed and height</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
-      h += dd('Rocket equation u ln(m₀/m_dry)', `${n0(F.dvIdeal)} m/s`, true) + dd('Speed at burnout', `${n0(F.vBurnout)} m/s`) + dd('Lost to gravity', S.p.g ? `${n0(F.dvIdeal - F.vBurnout)} m/s` : '0');
+      if (S.p.two) h += dd('First stage u ln(m₀/m₁)', `${n0(F.dv1)} m/s`) + dd('Upper stage u ln(m₂/m_dry)', `${n0(F.dv2)} m/s`) + dd('One stage carrying the empty casing: u ln(m₀/(m_dry + casing))', `${n0(F.dvSingle)} m/s`, true) + dd('Separation', `at ${n0(F.t1, 1)} s, ${n0(F.vSep)} m/s`, true);
+      h += dd(S.p.two ? 'Rocket equation, both stages' : 'Rocket equation u ln(m₀/m_dry)', `${n0(F.dvIdeal)} m/s`, true) + dd('Speed at burnout', `${n0(F.vBurnout)} m/s`) + dd('Lost to gravity', S.p.g ? `${n0(F.dvIdeal - F.vBurnout)} m/s` : '0');
       if (S.p.g && F.t0 > 0) h += dd('Time waiting on the pad', F.lifts ? `${n0(F.t0, 1)} s` : 'the whole burn', true);
       if (S.p.g && F.lifts) h += dd('Highest point (constant g, no air)', `${n0(F.yTop / 1000, 1)} km at ${n0(F.tTop, 0)} s`, true) + (F.yTop > 1e5 ? '<div class="wide"><dt>Note</dt><dd class="ok">At hundreds of kilometers gravity is noticeably weaker than 9.81 m/s², so this height is only a rough figure.</dd></div>' : '');
     }
     $('out').innerHTML = h;
   }
 
-  const SL = [['sM0', 'md', (v) => `${n0(v)} kg`], ['sMf', 'mf', (v) => `${n0(v)} kg`], ['sU', 'u', (v) => `${n0(v)} m/s`], ['sB', 'b', (v) => `${n0(v)} kg/s`]];
-  function sync() { for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); } $('grav').checked = !!S.p.g; }
+  const SL = [['sM0', 'md', (v) => `${n0(v)} kg`], ['sMf', 'mf', (v) => `${n0(v)} kg`], ['sU', 'u', (v) => `${n0(v)} m/s`], ['sB', 'b', (v) => `${n0(v)} kg/s`], ['sMc', 'mc', (v) => `${n0(v)} kg`], ['sMf1', 'mf1', (v) => `${n0(v)} kg`]];
+  function sync() { if (S.p.mc == null) S.p.mc = 1000; if (S.p.mf1 == null) S.p.mf1 = 7000; for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); } $('grav').checked = !!S.p.g; $('two').checked = !!S.p.two; $('stage1Box').hidden = !S.p.two; }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S.p[k] = +e.target.value; S.preset = 'custom'; mark(); restart(); });
   $('grav').addEventListener('change', (e) => { S.p.g = e.target.checked ? 1 : 0; S.preset = 'custom'; mark(); restart(); });
+  $('two').addEventListener('change', (e) => { S.p.two = e.target.checked; S.preset = 'custom'; mark(); restart(); });
   function mark() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   function restart() { S.t = 0; setRun(false); sync(); draw(); readouts(); }
   function applyPreset(k) { S.preset = k; S.p = { ...PRESETS[k] }; $('presetHint').textContent = PRESETS[k].hint; mark(); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const card = VD.setupCard($('setupCard'), { within: '#stage' });
   function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Launch'; $('go').classList.toggle('attn', !on); }
-  $('go').addEventListener('click', () => { const F = flight(P()); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
+  $('go').addEventListener('click', () => { const F = fly(); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
   $('again').addEventListener('click', restart);
   const endTime = (F) => Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run && !reduce) amb += dt;
-    if (S.run) { const F = flight(P()), speed = Math.max(1, endTime(F) / 25); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
+    if (S.run) { const F = fly(), speed = Math.max(1, endTime(F) / 25); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });
@@ -479,7 +559,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   window.vdVersion = 'rocket@2026-10-24';
   window.vdShowCols = [['m_fuel_kg', 'fuel (kg)'], ['b_kg_s', 'burn (kg/s)'], ['v_cutoff_m_s', 'v cutoff (m/s)']];
   window.vdReadingRow = () => {
-    const F = flight(P());
+    if (S.p.two) return 'Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.';
+    const F = fly();
     if (S.t < F.tb) return 'Record after the engine stops: the reading is the flight log at engine cutoff.';
     const c = F.at(F.tb);
     return { gravity: S.p.g ? 'yes' : 'no', m_dry_kg: S.p.md, m_fuel_kg: S.p.mf, u_m_s: S.p.u, b_kg_s: S.p.b, t_burn_s: r6(F.tb), ln_m0_over_mdry: r6(Math.log(F.m0 / S.p.md)),

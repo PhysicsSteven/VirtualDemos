@@ -16,6 +16,7 @@ time: 15 to 25 minutes
 2. **Launch from the ground.** Thrust 500 kN against a 98 kN weight. Burnout speed 5315 m/s: 441 m/s lost to gravity in the 45 s burn.
 3. **Too heavy at first.** Thrust 175 kN is less than the 186 kN launch weight: it burns fuel on the pad for 16.6 s before lifting off.
 4. **Same fuel, burned slowly.** 150 s instead of 45 s: burnout at 4285 m/s, 1472 m/s lost to gravity.
+5. **Two stage rocket.** 11 000 kg at launch: a first stage of 7000 kg fuel in a 1000 kg casing, under an upper stage of 2000 kg fuel and 1000 kg dry. The casing drops at 35 s (2186 m/s, 30.9 km) and the upper stage burns out at 45 s at 4834 m/s. The same masses in one stage, carrying the empty casing to the end, reach only 3820 m/s. Without gravity: u ln(11/4) + u ln 3 = 5276 m/s against u ln(5.5) = 4262 m/s.
 
 ## Questions
 
@@ -36,5 +37,6 @@ time: 15 to 25 minutes
 ## Physics behind the demo
 
 - Variable mass: m dv/dt = u b − mg (b = burn rate), exact solution v = u ln(m₁/m) − g(t − t₀) after lift off at t₀, height from its integral, coasting after burnout.
+- Two stages: both stages have the same engine (u and burn rate). Each burn is solved exactly from the speed and height it starts with; the casing is let go the moment the first stage's fuel runs out and the upper stage fires at once. The casing then coasts with no air.
 - Constant g = 9.81 m/s² and no air drag. At hundreds of kilometers gravity is noticeably weaker, so the highest point shown is a rough figure (the readout says so).
 - The animation is sped up so a flight takes about 25 s; the clock shows real time.

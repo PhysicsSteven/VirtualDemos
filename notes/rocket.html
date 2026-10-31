@@ -77,6 +77,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Launch from the ground.</strong> Thrust 500 kN against a 98 kN weight. Burnout speed 5315 m/s: 441 m/s lost to gravity in the 45 s burn.</li>
 <li><strong>Too heavy at first.</strong> Thrust 175 kN is less than the 186 kN launch weight: it burns fuel on the pad for 16.6 s before lifting off.</li>
 <li><strong>Same fuel, burned slowly.</strong> 150 s instead of 45 s: burnout at 4285 m/s, 1472 m/s lost to gravity.</li>
+<li><strong>Two stage rocket.</strong> 11 000 kg at launch: a first stage of 7000 kg fuel in a 1000 kg casing, under an upper stage of 2000 kg fuel and 1000 kg dry. The casing drops at 35 s (2186 m/s, 30.9 km) and the upper stage burns out at 45 s at 4834 m/s. The same masses in one stage, carrying the empty casing to the end, reach only 3820 m/s. Without gravity: u ln(11/4) + u ln 3 = 5276 m/s against u ln(5.5) = 4262 m/s.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Why can a rocket accelerate in empty space, where there is nothing to push against?</p></div>
@@ -95,6 +96,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li>Variable mass: m dv/dt = u b − mg (b = burn rate), exact solution v = u ln(m₁/m) − g(t − t₀) after lift off at t₀, height from its integral, coasting after burnout.</li>
+<li>Two stages: both stages have the same engine (u and burn rate). Each burn is solved exactly from the speed and height it starts with; the casing is let go the moment the first stage's fuel runs out and the upper stage fires at once. The casing then coasts with no air.</li>
 <li>Constant g = 9.81 m/s² and no air drag. At hundreds of kilometers gravity is noticeably weaker, so the highest point shown is a rough figure (the readout says so).</li>
 <li>The animation is sped up so a flight takes about 25 s; the clock shows real time.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>

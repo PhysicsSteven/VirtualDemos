@@ -2,7 +2,7 @@
 // Motion Graphs: exact piecewise constant acceleration kinematics, the motion detector estimates, the parabola fit and the CSV.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV');
+const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,meetTimes,rampRun,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV');
 let n = 0;
 const near = (a, b, tol, what) => assert(Math.abs(a - b) <= tol, `${what || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -65,6 +65,42 @@ group('CSV: comment lines, version, SI snake case header, rows as typed', () => 
   const L = c.readingsCSV([{ t: '1.00', x: '-2.50' }, { t: '2.00', x: 'about 1' }], { version: c.MG_VERSION, setup: 'Speeding up', settings: 'x0 -8 m, a 1 m/s2' }).trim().split('\n');
   assert.match(L[0], /\(simulated data\)$/); assert.equal(L[1], `# demo version,${c.MG_VERSION}`); assert.match(c.MG_VERSION, /^motion-graphs@\d{4}-\d{2}-\d{2}/);
   const h = L.indexOf('row,t_s,x_m'); assert(h > 0); assert.equal(L[h + 1], '1,1.00,-2.50'); assert.equal(L[h + 2], '2,2.00,about 1');
+});
+
+group('two cars: meeting times solve x_A = x_B exactly, across stage changes', () => {
+  const A = c.buildRun(-8, 0, [{ a: 1, T: 8 }]), B = c.buildRun(-6, 2, [{ a: 0, T: 8 }]);
+  const M = c.meetTimes(A, B, 8); assert.equal(M.same, false); assert.equal(M.t.length, 1);
+  near(M.t[0], 2 + Math.sqrt(8), 1e-12, 'the opening Two cars setup'); near(c.stateAt(A, M.t[0]).x, c.stateAt(B, M.t[0]).x, 1e-12);
+  near(c.stateAt(A, M.t[0]).x, 3.6568542494923806, 1e-12);
+  // two crossings: B ahead and slowing, A behind and steady
+  const A2 = c.buildRun(0, 3, [{ a: 0, T: 10 }]), B2 = c.buildRun(2, 6, [{ a: -2, T: 10 }]);
+  const M2 = c.meetTimes(A2, B2, 10); assert.equal(M2.t.length, 1, 'B starts ahead, so only one crossing after t = 0');
+  near(M2.t[0], (3 + Math.sqrt(9 + 8)) / 2, 1e-12);
+  // A in three stages against a steady B: brute force sign changes match
+  const A3 = c.buildRun(-8, 0, [{ a: 2, T: 2 }, { a: 0, T: 3 }, { a: -3, T: 3 }]), B3 = c.buildRun(-2, 1.5, [{ a: 0, T: 8 }]);
+  const M3 = c.meetTimes(A3, B3, 8), N = 79999;   /* odd grid, so no sample lands on the crossing at t = 4 */ let flips = 0;
+  for (let i = 0; i < N; i++) { const d0 = c.stateAt(A3, i * 8 / N).x - c.stateAt(B3, i * 8 / N).x, d1 = c.stateAt(A3, (i + 1) * 8 / N).x - c.stateAt(B3, (i + 1) * 8 / N).x; if (d0 * d1 < 0) flips++; }
+  assert.equal(M3.t.length, flips, 'one root per crossing'); for (const t of M3.t) near(c.stateAt(A3, t).x, c.stateAt(B3, t).x, 1e-9);
+  assert.equal(c.meetTimes(A, c.buildRun(-8, 0, [{ a: 1, T: 8 }]), 8).same, true);
+  assert.deepEqual(c.meetTimes(A, c.buildRun(20, 5, [{ a: 0, T: 8 }]), 8).t, []);
+});
+
+group('ball on ramps: a = −(5/7) g sin θ per piece, energy conserved through the bends, stops at the ends', () => {
+  const g = 9.81, L = 3, ang = [-20, 0, 30], r = c.rampRun(ang, L, 0, 12, g);
+  near(r.stages[0].a, (5 / 7) * g * Math.sin(20 * Math.PI / 180), 1e-12, 'down piece 1');
+  near(r.stages[1].a, 0, 1e-12, 'flat'); near(r.stages[2].a, -(5 / 7) * g * Math.sin(30 * Math.PI / 180), 1e-12, 'up piece 3');
+  // height along the track and rolling energy: (7/10) v² + g h is constant
+  const h = (x) => { let y = 0, s = x; for (const d of ang) { const u = Math.min(Math.max(s, 0), L); y += u * Math.sin(d * Math.PI / 180); s -= L; } return y; };
+  for (let t = 0; t <= 12; t += 0.37) { const q = c.stateAt(r, t); near(0.7 * q.v * q.v + g * h(q.x), 0, 1e-9, `energy at t = ${t}`); assert(q.x >= -1e-9 && q.x <= 3 * L + 1e-9); }
+  near(r.stages[1].v0, Math.sqrt(2 * (5 / 7) * g * L * Math.sin(20 * Math.PI / 180)), 1e-12, 'speed at the first bend');
+  assert.equal(r.why, 'time'); near(r.T, 12, 1e-12);
+  // runs off the right end: caught there with the speed energy gives
+  const r2 = c.rampRun([-20, 0, 15], L, 0, 12, g), e = c.stateAt(r2, r2.T);
+  assert.equal(r2.why, 'right'); near(e.x, 9, 1e-12); near(0.7 * e.v * e.v, -g * (L * Math.sin(-20 * Math.PI / 180) + L * Math.sin(15 * Math.PI / 180)), 1e-9);
+  // a valley from rest: nothing happens; a ball started up a hill comes back and is caught at the left end
+  assert.equal(c.rampRun([10, 0, -10], L, 0, 12, g).why, 'rest');
+  const r3 = c.rampRun([20, 20, 20], L, 2, 12, g); assert.equal(r3.why, 'left'); near(c.stateAt(r3, r3.T).v, -2, 1e-9);
+  near(r3.T, 2 * 2 / ((5 / 7) * g * Math.sin(20 * Math.PI / 180)), 1e-9, 'up and back down the first piece');
 });
 
 console.log(`${n} motion-graphs test groups passed`);
