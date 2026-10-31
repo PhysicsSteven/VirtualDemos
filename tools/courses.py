@@ -44,6 +44,7 @@ COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation
                                 'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages', 'intro-giant-planets'}}
 COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
 COURSE_HANDOUTS['astro-2203'] |= {'intro-exoplanets', 'intro-tides', 'intro-lagrange', 'intro-parallax', 'intro-atmospheres'}
+COURSE_HANDOUTS['astro-2203'].add('intro-sidereal-day')   # Reasons for Seasons, Sidereal and solar days and Sundial and clock, 2026-10-31
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range'}
@@ -242,6 +243,7 @@ HANDOUT_TOPIC = {
     'ising': 'The Ising Phase Transition',
     # Astro 2203 intro worksheets (COURSE_HANDOUTS), 2026-10-25
     'intro-seasons': 'Why We Have Seasons (Astro 2203)',
+    'intro-sidereal-day': 'Sidereal Days, Solar Days and Sundials (Astro 2203)',
     'intro-solar-system-formation': 'Building a Solar System (Astro 2203)',
     'intro-craters': 'Craters and the Ages of the Moon\'s Surface (Astro 2203)',
     'intro-mars-ages': 'Dating the Surface of Mars (Astro 2203)',

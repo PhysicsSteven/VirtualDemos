@@ -163,6 +163,35 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 .vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
 .vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
 .vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Sidereal and solar days, Sundial and clock (2026-10-31): one scene in place of the four seasons panes */
+:root { --sd-sun: #f2a516; --sd-star: #2b60b5; --sd-sunline: #c27a00; --sd-planet: #2f7fd0; --sd-eot: #2b60b5; --sd-ell: #b2441f; --sd-tilt: #2e8a57; --sd-chart: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #10151d; } }
+:root[data-theme="dark"] { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #10151d; }
+.pane.sdpane { grid-area: sd; display: none; }
+.stage canvas#sdCan { touch-action: pan-y; width: 100%; height: 100%; }
+.stage.sdmode { grid-template-areas: "ctl ctl" "sd sd" "sd sd" "sd sd"; }
+.stage.sdmode .pane:not(.sdpane), .stage.sdmode .stage-ctl > :not(.sd-keep), .stage.sdmode .vd-split { display: none !important; }
+.stage.sdmode .pane.sdpane { display: block; }
+.sd-card { position: absolute; z-index: 3; right: 12px; top: 12px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.sd-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.sd-card.away { opacity: 0; visibility: hidden; }
+.sd-card.ghost { opacity: 0.25; pointer-events: none; }
+.sd-card .row2 { display: flex; flex-wrap: wrap; gap: 6px; }
+.sd-card input[type=range] { width: 100%; }
+.sd-card .check, .sd-only .check { display: flex; gap: 8px; align-items: flex-start; font-size: 0.85rem; cursor: pointer; }
+.sd-only .status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+.sd-only .formula { font-family: var(--font-mono); font-size: 0.8rem; margin: 6px 0; overflow-wrap: anywhere; }
+.chips button[hidden] { display: none; }
+#sdOrbitCtl .btn:disabled { opacity: 0.45; cursor: default; }
+@media (prefers-reduced-motion: reduce) { .sd-card { transition: none; } }
+@media (max-width: 820px) {
+  .stage.sdmode, :root[data-projector="on"] .stage.sdmode { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; grid-template-areas: "ctl" "sd"; }
+  .stage canvas#sdCan { position: relative; height: 440px; width: 100%; }
+  .sd-card { position: static; width: auto; margin: 8px; }
+}
+@media (max-width: 420px) { .stage canvas#sdCan { height: 400px; } }
 </style>
 </head>
 <body>
@@ -170,7 +199,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <header class="bar">
     <div>
       <h1>Reasons for Seasons</h1>
-      <p>Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January.</p>
+      <p>Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">AU · W/m² · S₀ = 1361 W/m² · e = 0.0167 · ε = 23.44°</div>
@@ -183,6 +212,23 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl">
+        <div class="seg sd-keep" role="group" aria-label="What to show" id="modeSeg">
+          <button type="button" data-m="seasons" aria-pressed="true">Seasons</button>
+          <button type="button" data-m="sidereal" aria-pressed="false">Sidereal and solar days</button>
+          <button type="button" data-m="sundial" aria-pressed="false">Sundial and clock</button>
+        </div>
+        <span class="sd-keep" id="sdOrbitCtl" style="display:none">
+          <button type="button" class="btn attn" id="sdPlay" data-vd-key="play">Play</button>
+          <button type="button" class="btn" id="sdStepSid">Next sidereal day</button>
+          <button type="button" class="btn" id="sdStepSol">Next solar day</button>
+          <button type="button" class="btn" id="sdReset" data-vd-key="reset">Restart</button>
+          <div class="seg" role="group" aria-label="Spin speed" id="sdSpeedSeg">
+            <button type="button" data-s="0.25" aria-pressed="false">Slow</button>
+            <button type="button" data-s="1" aria-pressed="true">1 turn/s</button>
+            <button type="button" data-s="6" aria-pressed="false">Fast</button>
+            <button type="button" data-s="40" aria-pressed="false">Very fast</button>
+          </div>
+        </span>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
         <div class="seg" role="group" aria-label="Speed" id="speedSeg">
@@ -217,10 +263,66 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           </div>
         </div>
       </div>
+      <div class="pane sdpane" id="sdScene">
+        <canvas id="sdCan" tabindex="0" role="img" aria-label="Top view of a planet spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet; or, for Sundial and clock, charts of the equation of time and the length of the solar day through the year. Space plays or pauses."></canvas>
+      <div class="sd-card" id="sdCard" role="group" aria-label="Set up the planet">
+        <span class="card-title" id="sdCardTitle">The planet</span>
+        <div id="sdOrbitCard" style="display:contents">
+          <div><div class="slider-head"><label for="sdN">Sidereal days in a year</label><output id="sdNOut" for="sdN"></output></div><input type="range" id="sdN" min="1" max="30" step="1"></div>
+          <label class="check"><input type="checkbox" id="sdRetro"><span>Spin backward (retrograde, like Venus)</span></label>
+          <label class="check"><input type="checkbox" id="sdZoom"><span>Close up of the marked spot</span></label>
+          <label class="check"><input type="checkbox" id="sdTrail"><span>Show the extra turn as an arc</span></label>
+        </div>
+        <div id="sdYearCard" style="display:none">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div><div class="slider-head"><label for="sdDate">Date</label><output id="sdDateOut" for="sdDate"></output></div><input type="range" id="sdDate" min="0" max="364" step="1"></div>
+            <div><div class="slider-head"><label for="sdE">Orbit eccentricity e</label><output id="sdEOut" for="sdE"></output></div><input type="range" id="sdE" min="0" max="0.1" step="0.0001"></div>
+            <div><div class="slider-head"><label for="sdTilt">Axial tilt</label><output id="sdTiltOut" for="sdTilt"></output></div><input type="range" id="sdTilt" min="0" max="40" step="0.01"></div>
+            <label class="check"><input type="checkbox" id="sdParts"><span>Show the two causes separately</span></label>
+            <div class="row2"><button type="button" class="btn" id="sdEarthNow">Earth's values</button></div>
+          </div>
+        </div>
+      </div>
+      </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/seasons.html" target="seasons-worksheet">Worksheet 1: Sunlight Through the Year</a></li><li><a href="../curriculum/labs/students/intro-seasons.html" target="intro-seasons-worksheet">Worksheet 2: Why We Have Seasons (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/seasons.html" target="seasons-worksheet">Worksheet 1: Sunlight Through the Year</a></li><li><a href="../curriculum/labs/students/intro-seasons.html" target="intro-seasons-worksheet">Worksheet 2: Why We Have Seasons (Astro 2203)</a></li><li><a href="../curriculum/labs/students/intro-sidereal-day.html" target="intro-sidereal-day-worksheet">Worksheet 3: Sidereal Days, Solar Days and Sundials (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
+      <section class="sd-only" hidden>
+        <h2>Setups</h2>
+        <div class="chips" id="sdPresets">
+          <button type="button" data-p="toy4" aria-pressed="true">Toy planet, 4 days a year</button>
+          <button type="button" data-p="toy10" aria-pressed="false">Toy planet, 10 days a year</button>
+          <button type="button" data-p="locked" aria-pressed="false">Always faces the Sun</button>
+          <button type="button" data-p="earth" aria-pressed="false">Earth</button>
+          <button type="button" data-p="mars" aria-pressed="false">Mars</button>
+          <button type="button" data-p="mercury" aria-pressed="false">Mercury</button>
+          <button type="button" data-p="venus" aria-pressed="false">Venus</button>
+          <button type="button" data-p="jupiter" aria-pressed="false">Jupiter</button>
+          <button type="button" data-p="moon" aria-pressed="false">The Moon</button>
+          <button type="button" data-p="clock" aria-pressed="false">Earth: sundial and clock</button>
+          <button type="button" data-p="notilt" aria-pressed="false">The ellipse alone (no tilt)</button>
+          <button type="button" data-p="circle" aria-pressed="false">The tilt alone (circular orbit)</button>
+          <button type="button" data-p="stretched" aria-pressed="false">A much more stretched orbit</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="sdPresetHint"></p></details>
+        <p class="status" id="sdStatus" aria-live="polite"></p>
+      </section>
+      <section class="sd-only" hidden>
+        <h2>Readouts</h2>
+        <dl class="readout" id="sdOut"></dl>
+      </section>
+      <section class="sd-only" hidden>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="sdBlind"><span>Blind: hide the solar day and the predictions (measure them)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">1/P_solar = |1/P_sidereal − 1/P_orbit|   (spin backward: P_sidereal &lt; 0)   solar days in a year = sidereal days − 1</p>
+        <p class="hint">Spin and orbit: the planet spins at a steady rate and moves at a steady rate on a circular orbit, both counterclockwise seen from above the north pole (backward spin turns clockwise). The marked spot is on the equator; it faces the distant star once every sidereal day and the Sun once every solar day. The star is so far away that the line to it keeps the same direction all year. Sizes and distances in the picture are not to scale. Earth: the stellar day, one turn against the stars, is 86 164.0989 s (IERS); one turn against the March equinox, the sidereal day of star charts, is 8.4 ms shorter because the equinox slowly moves (precession), too small to show here. The year is the sidereal year, 365.256 36 days. The mean solar day is 86 400 s; today's Earth day is about 1 ms longer from tidal slowing, left out. Other planets: sidereal rotation periods, orbital periods and lengths of day from the NASA Planetary Fact Sheets (D. R. Williams, NSSDCA): Mercury 58.6462 d, Venus 243.025 d backward, Mars 24.6229 h, Jupiter 9.9250 h (System III); the Moon's turn is its sidereal month, 27.321 661 d, and its year is Earth's.</p>
+        <p class="formula">EoT = L − α   α = atan2(cos ε sin λ, cos λ)   M − e sin E... solved exactly   solar day = 86 400 s − ΔEoT per day</p>
+        <p class="hint">Through the year: the true Sun against a mean Sun that moves along the equator at a steady rate. L is the mean longitude (280.460° + 0.985 647 4° a day from J2000), M the mean anomaly (357.528° + 0.985 600 3° a day), from the low precision solar coordinates of the Astronomical Almanac, accurate to about 0.01° from 1950 to 2050. The true longitude λ comes from Kepler's equation solved exactly for the eccentricity set, the right ascension α from the tilt ε. Dates are 2026 at noon UT; nutation is left out (a few seconds at most). The equation of time is how far the sundial (apparent solar time) is ahead of the clock (mean solar time); the length of the solar day is the time from one noon on a sundial to the next, which is 86 400 s minus the change in the equation of time over that day. Eccentricity alone uses ε = 0; tilt alone uses e = 0.</p>
+        </details>
+        </div></details>
+      </section>
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -469,7 +571,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'),
              canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
-             sun: g('--sun'), day: g('--day'), night: g('--night'), ps: parseFloat(g('--canvas-scale')) || 1,
+             sun: g('--sd-sun'), day: g('--day'), night: g('--night'), ps: parseFloat(g('--canvas-scale')) || 1,
              mono: monoFont(), ui: uiFont() };
   }
   function resize() {
@@ -1310,7 +1412,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
   // readings for the worksheet: the observer's date, place and tilt and the readouts there
-  window.vdVersion = 'seasons@2026-10-24';
+  window.vdVersion = 'seasons@2026-10-31';
   window.vdShowCols = [['date', 'date'], ['lat_deg', 'φ (°)'], ['alt_deg', 'noon (°)'], ['Q_W_m2', 'Q (W/m²)']];
   window.vdReadingRow = () => {
     const o = orbitAt(S.T), dec = declination(o.lam, S.tilt), phi = S.lat * DEG, sd = sunDay(phi, dec);
@@ -1320,12 +1422,423 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* How this works: one video per worksheet; the Astro 2203 one (intro-seasons) when the demo was opened from that worksheet (?ws=) or from
      the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
-  const howVid = () => (VD.ws('seasons') === 'intro-seasons' ? 'intro-seasons' : 'seasons');
+  const howVid = () => { const w = window.__seasonsWs ? window.__seasonsWs() : VD.ws('seasons'); return window.__sdMode && window.__sdMode() !== 'seasons' ? 'intro-sidereal-day' : w === 'intro-seasons' ? 'intro-seasons' : 'seasons'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
-    title: () => (howVid() === 'intro-seasons' ? 'How this works: Why We Have Seasons' : 'How this works: Sunlight Through the Year') });
+    title: () => (howVid() === 'intro-sidereal-day' ? 'How this works: Sidereal and Solar Days' : howVid() === 'intro-seasons' ? 'How this works: Why We Have Seasons' : 'How this works: Sunlight Through the Year') });
 
   // exposed for testing
   window.__seasons = { orbitAt, declination, sunDay, insolation, noonAlt, SEASONS, S };
+})();
+</script>
+<script>
+/* Sidereal and solar days, and Sundial and clock: the planet scene and the year charts */
+(() => {
+  // ==CORE START==
+  /* Sidereal and solar days. Runs in Node: curriculum/validation/test_sidereal_day.cjs */
+  var SD_H = 3600, SD_D = 86400;
+  /* NASA Planetary Fact Sheets (Williams, NSSDCA) and IERS for Earth. rot: sidereal rotation period in s (negative spins backward);
+     orb: orbital period in s; lod: the fact sheet's length of day (solar day) in s, for comparison */
+  var SD_PLANETS = {
+    earth: { name: 'Earth', rot: 86164.0989, orb: 365.25636 * SD_D, lod: 86400 },
+    mars: { name: 'Mars', rot: 24.6229 * SD_H, orb: 686.980 * SD_D, lod: 24.6597 * SD_H },
+    mercury: { name: 'Mercury', rot: 58.6462 * SD_D, orb: 87.969 * SD_D, lod: 4222.6 * SD_H },
+    venus: { name: 'Venus', rot: -243.025 * SD_D, orb: 224.701 * SD_D, lod: 2802.0 * SD_H },
+    jupiter: { name: 'Jupiter', rot: 9.9250 * SD_H, orb: 4332.59 * SD_D, lod: 9.9259 * SD_H },
+    moon: { name: 'The Moon', rot: 27.321661 * SD_D, orb: 365.25636 * SD_D, lod: 29.530589 * SD_D }
+  };
+  /* the solar day from the sidereal rotation period (signed) and the orbital period; Infinity when the planet keeps one face to the Sun */
+  function sdSolar(rot, orb) { var w = 1 / rot - 1 / orb; return Math.abs(w) < 1e-15 ? Infinity : 1 / Math.abs(w); }
+  /* how many of each day fit in one orbit */
+  function sdPerYear(rot, orb) { var s = sdSolar(rot, orb); return { sid: orb / Math.abs(rot), sol: isFinite(s) ? orb / s : 0 }; }
+  /* angles at time t (s from the start): the orbit angle of the planet about the Sun, measured counterclockwise from straight
+     below the Sun, and the direction the marked spot faces, both in radians. At t = 0 the spot faces the Sun and the star together. */
+  function sdAngles(t, rot, orb) { return { orbit: -Math.PI / 2 + 2 * Math.PI * t / orb, spot: Math.PI / 2 + 2 * Math.PI * t / rot }; }
+  /* the next time after t at which the spot faces the star (kind 'sid') or the Sun (kind 'sol') */
+  function sdNext(t, rot, orb, kind) {
+    var P = kind === 'sid' ? Math.abs(rot) : sdSolar(rot, orb);
+    if (!isFinite(P)) return Infinity;
+    return (Math.floor(t / P + 1e-9) + 1) * P;
+  }
+  /* how many of each day have passed by time t */
+  function sdCount(t, rot, orb) { var s = sdSolar(rot, orb); return { sid: Math.floor(t / Math.abs(rot) + 1e-9), sol: isFinite(s) ? Math.floor(t / s + 1e-9) : 0 }; }
+  function sdKepler(M, e) { var E = e < 0.8 ? M : Math.PI, i; for (i = 0; i < 50; i++) { var dE = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= dE; if (Math.abs(dE) < 1e-15) break; } return E; }
+  function sdWrap(a) { a = (a + 180) % 360; if (a < 0) a += 360; return a - 180; }
+  /* the Sun on day n of 2026 (n = 0 is 1 January, 0 h UT; fractions allowed), for eccentricity e and tilt eps (degrees):
+     mean longitude L, true longitude lam, right ascension ra, declination dec (degrees) and the equation of time in minutes */
+  function sdSun(n, e, eps) {
+    var d = n + 9496.5, rad = Math.PI / 180;
+    var L = 280.460 + 0.9856474 * d, g = 357.528 + 0.9856003 * d, perigee = L - g;
+    var M = ((g % 360) + 360) % 360 * rad, E = sdKepler(M, e);
+    var nu = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+    var lam = nu / rad + perigee, ra = Math.atan2(Math.cos(eps * rad) * Math.sin(lam * rad), Math.cos(lam * rad)) / rad;
+    var dec = Math.asin(Math.sin(eps * rad) * Math.sin(lam * rad)) / rad;
+    return { L: L, lam: lam, ra: ra, dec: dec, eot: 4 * sdWrap(L - ra) };
+  }
+  /* the length of the solar day starting at noon UT on day n (sundial noon to sundial noon), in seconds */
+  function sdDayLength(n, e, eps) { return SD_D - 60 * (sdSun(n + 1.5, e, eps).eot - sdSun(n + 0.5, e, eps).eot); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const TOY_DAY = 24 * SD_H;
+  const toy = (n, retro) => ({ name: 'Toy planet', rot: (retro ? -1 : 1) * TOY_DAY, orb: n * TOY_DAY, lod: null });
+  const PRESETS = {
+    toy4: { view: 'orbit', n: 4, hint: 'A made up planet that spins once every 24 hours against the stars and goes round its Sun in just 4 of those turns. Count the turns: in one year it faces the star 4 times but the Sun only 3 times, so its solar day is 4/3 × 24 = 32 hours.' },
+    toy10: { view: 'orbit', n: 10, hint: 'The same 24 hour spin with a year of 10 turns: 9 solar days in a year, each 24 × 10/9 = 26.7 hours. The longer the year compared with the spin, the closer the two days get.' },
+    locked: { view: 'orbit', n: 1, hint: 'One turn in one orbit: the marked spot always faces the Sun, so the solar day never ends. The Moon does this to Earth, which is why we always see the same side of it.' },
+    earth: { view: 'orbit', planet: 'earth', hint: 'Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit, so it must turn about 1° more, which takes about 4 minutes, to bring the Sun back to the meridian: 24 h. 366.26 sidereal days fit in a year but only 365.26 solar days. Turn on the close up to see the 1°.' },
+    mars: { view: 'orbit', planet: 'mars', hint: 'Mars turns in 24.6229 h and takes 687 Earth days to orbit, so its solar day, the sol, is only 2.2 minutes longer: 24.6597 h.' },
+    mercury: { view: 'orbit', planet: 'mercury', hint: 'Mercury turns three times in two of its years (58.6 days a turn, 88 days a year). Its solar day is two of its years long, 176 Earth days: Mercury goes round the Sun twice between one noon and the next.' },
+    venus: { view: 'orbit', planet: 'venus', hint: 'Venus spins backward, once every 243 days, slower than it orbits (225 days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: 117 Earth days.' },
+    jupiter: { view: 'orbit', planet: 'jupiter', hint: 'Jupiter spins in under 10 hours and takes almost 12 years to orbit, so its two days differ by only 3.3 seconds.' },
+    moon: { view: 'orbit', planet: 'moon', hint: 'The Moon turns once against the stars in 27.3 days, its sidereal month. It goes round the Sun with Earth, once a year, so a day on the Moon (sunrise to sunrise) is 29.5 days: the month of phases.' },
+    notilt: { view: 'year', e: 0.0167086, tilt: 0, parts: false, hint: "Earth's ellipse with no tilt: the sundial falls behind in winter, when Earth is near the Sun and moving fastest, and gains in summer. The swing is about ±7.7 minutes, once a year." },
+    circle: { view: 'year', e: 0, tilt: 23.4393, parts: false, hint: "Earth's tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate, but its eastward step along the equator is biggest at the solstices and smallest at the equinoxes. The sundial swings by about ±10 minutes, twice a year." },
+    stretched: { view: 'year', e: 0.1, tilt: 23.4393, parts: true, hint: "A made up orbit six times as stretched as Earth's, with Earth's tilt: the ellipse now wins, and the two causes are drawn separately. Mars has e = 0.093 (NASA fact sheet), so its sundials swing far more than Earth's." },
+    clock: { view: 'year', hint: "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about 16 minutes, and solar days in December are about 30 seconds longer than in September." },
+  };
+  const S = { mode: 'seasons', started: false, preset: 'toy4', view: 'orbit', n: 4, retro: false, planet: null, P: toy(4, false), t: 0, run: false, speed: 1, target: null, zoom: false, trail: true,
+    blind: false, date: 41, e: 0.0167086, tilt: 23.4393, parts: false, flashSid: 0, flashSol: 0, msg: '' };
+  const can = $('sdCan'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), accent: g('--accent'), sun: g('--sd-sun'), star: g('--sd-star'),
+      sunline: g('--sd-sunline'), planet: g('--sd-planet'), eot: g('--sd-eot'), ell: g('--sd-ell'), tilt: g('--sd-tilt'), chart: g('--sd-chart'), mono: g('--font-mono'), ui: g('--font-ui'),
+      dark: document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) }; }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* ---------- times written out ---------- */
+  function hms(s) {
+    if (!isFinite(s)) return 'never';
+    if (s >= 10 * SD_D) return `${f(s / SD_D, 2)} days`;
+    if (s >= 2 * SD_D) return `${f(s / SD_H, 1)} h (${f(s / SD_D, 3)} days)`;
+    const t = Math.round(s * 10), h = Math.floor(t / 36000), m = Math.floor((t - h * 36000) / 600), x = (t - h * 36000 - m * 600) / 10;
+    return `${h} h ${m} min ${x.toFixed(1)} s`;
+  }
+  const hours = (s) => (!isFinite(s) ? '—' : Math.abs(s) >= 100 * SD_H ? f(s / SD_H, 1) : Math.abs(s) >= 20 * SD_H && Math.abs(s) <= 30 * SD_H ? f(s / SD_H, 5) : f(s / SD_H, 4));
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], ML = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  function dateName(n) { let m = 0; n = Math.floor(n); while (m < 11 && n >= ML[m]) { n -= ML[m]; m++; } return `${n + 1} ${MONTHS[m]}`; }
+  function minSec(m) { const s = Math.round(Math.abs(m) * 60), mm = Math.floor(s / 60), ss = s % 60; return `${m < 0 ? '−' : ''}${mm} min ${String(ss).padStart(2, '0')} s`; }
+  const aheadBehind = (m) => Math.round(Math.abs(m) * 60) === 0 ? 'together' : `${minSec(Math.abs(m))} ${m > 0 ? 'ahead' : 'behind'}`;
+
+  /* ---------- the space scene (Spin and orbit) ---------- */
+  let starsBg = null;
+  function makeStars() { let a = 7; const r = () => { a = (a * 16807) % 2147483647; return a / 2147483647; }; starsBg = []; for (let i = 0; i < 260; i++) starsBg.push([r(), r(), r()]); }
+  function geo() {
+    const p = proj(), top = 26 * p, leg = W < 600 ? 62 * p : 0, R = Math.max(60, Math.min((W - 40 * p) / 2 - 40 * p, (H - top - 30 * p - leg) / 2 - 40 * p));
+    const cx = W < 821 || W < 560 ? W / 2 : Math.min(W / 2, W - 290 * p - R), cy = top + 40 * p + R;
+    return { p, R, cx, cy, pr: Math.max(16, Math.min(34 * p, R * 0.17)) };
+  }
+  function drawSpace() {
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#05070d'); g.addColorStop(1, '#0b1020'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (const [x, y, b] of starsBg) { ctx.globalAlpha = 0.25 + 0.55 * b; ctx.fillStyle = '#dfe8ff'; ctx.fillRect(x * W, y * H, b > 0.85 ? 2 : 1, b > 0.85 ? 2 : 1); }
+    ctx.globalAlpha = 1;
+  }
+  function arrowHead(x, y, ang, s) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - s * Math.cos(ang - 0.4), y - s * Math.sin(ang - 0.4)); ctx.lineTo(x - s * Math.cos(ang + 0.4), y - s * Math.sin(ang + 0.4)); ctx.closePath(); ctx.fill(); }
+  /* screen angle: physics angles are counterclockwise from +x; the screen y axis points down */
+  const sx = (a) => Math.cos(a), sy = (a) => -Math.sin(a);
+  function drawPlanet(x, y, r, A, p, big) {
+    const toSun = A.orbit + Math.PI;   /* direction from the planet to the Sun */
+    /* night side, then the lit half facing the Sun */
+    ctx.fillStyle = '#121a2a'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    const lg = ctx.createLinearGradient(x + sx(toSun) * r, y + sy(toSun) * r, x - sx(toSun) * r, y - sy(toSun) * r);
+    lg.addColorStop(0, T.planet); lg.addColorStop(0.5, T.planet); lg.addColorStop(0.5, '#152238'); lg.addColorStop(1, '#152238');
+    ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    /* longitude lines that turn with the planet, so the spin shows */
+    ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.clip(); ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+    for (let k = 0; k < 6; k++) { const a = A.spot + k * Math.PI / 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sx(a) * r, y + sy(a) * r); ctx.stroke(); }
+    ctx.restore();
+    /* the marked spot: a person standing on the equator, head pointing straight up (the zenith) */
+    const a = A.spot, bx = x + sx(a) * r, by = y + sy(a) * r, hl = Math.max(8, r * (big ? 0.42 : 0.55));
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = Math.max(2, 2.4 * p * (big ? 1.3 : 1)); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + sx(a) * hl, by + sy(a) * hl); ctx.stroke();
+    ctx.fillStyle = '#ff5a4f'; ctx.beginPath(); ctx.arc(bx + sx(a) * (hl + 3 * p), by + sy(a) * (hl + 3 * p), Math.max(3.5, 4 * p * (big ? 1.3 : 1)), 0, 2 * Math.PI); ctx.fill();
+    return { bx, by, hl };
+  }
+  function drawOrbitView() {
+    const G = geo(), p = G.p, P = S.P, A = sdAngles(S.t, P.rot, P.orb), c = sdCount(S.t, P.rot, P.orb), sol = sdSolar(P.rot, P.orb);
+    drawSpace();
+    /* orbit and the Sun */
+    ctx.strokeStyle = 'rgba(200,215,255,0.28)'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.arc(G.cx, G.cy, G.R, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    const sr = Math.max(14, G.R * 0.13), glow = ctx.createRadialGradient(G.cx, G.cy, sr * 0.2, G.cx, G.cy, sr * 3.2);
+    glow.addColorStop(0, 'rgba(255,214,120,0.95)'); glow.addColorStop(0.3, 'rgba(255,170,40,0.45)'); glow.addColorStop(1, 'rgba(255,150,30,0)');
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(G.cx, G.cy, sr * 3.2, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#ffe3a0'; ctx.beginPath(); ctx.arc(G.cx, G.cy, sr, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = 'rgba(255,240,210,0.85)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Sun', G.cx, G.cy + sr + 4 * p);
+    /* the distant star, straight up the screen, far beyond the edge */
+    const stx = Math.max(250 * p, G.cx - G.R * 0.55), sty = 18 * p;
+    ctx.fillStyle = '#cfe0ff'; ctx.beginPath();
+    for (let k = 0; k < 8; k++) { const rr = k % 2 ? 2.2 * p : 8 * p, aa = k * Math.PI / 4; k ? ctx.lineTo(stx + rr * Math.cos(aa), sty + rr * Math.sin(aa)) : ctx.moveTo(stx + rr, sty); }
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(207,224,255,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('distant star', stx + 12 * p, sty);
+    ctx.fillStyle = 'rgba(207,224,255,0.6)'; ctx.fillText(W < 600 ? '(very far away)' : '(far off the top: the same direction all year)', stx + 12 * p, sty + 15 * p);
+    /* past track along the orbit */
+    if (S.trail && S.t > 0) { const a0 = -Math.PI / 2, a1 = A.orbit, turns = Math.min(1, (a1 - a0) / (2 * Math.PI));
+      ctx.strokeStyle = 'rgba(120,170,255,0.55)'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.R, -a0, -(a0 + turns * 2 * Math.PI), true); ctx.stroke(); }
+    /* the planet */
+    const px = G.cx + G.R * sx(A.orbit), py = G.cy + G.R * sy(A.orbit), toSun = A.orbit + Math.PI;
+    /* line to the Sun and line toward the star from the planet's centre */
+    const fs = Math.max(0, S.flashSol), fd = Math.max(0, S.flashSid);
+    ctx.lineWidth = 2 * p + 3 * p * fs; ctx.strokeStyle = T.sunline; ctx.globalAlpha = 0.7 + 0.3 * fs; ctx.setLineDash([6 * p, 5 * p]);
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(G.cx + sx(toSun) * -sr, G.cy + sy(toSun) * -sr); ctx.stroke();
+    ctx.lineWidth = 2 * p + 3 * p * fd; ctx.strokeStyle = '#9cc0ff'; ctx.globalAlpha = 0.7 + 0.3 * fd;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, Math.max(4, py - Math.min(G.R * 1.15, py - 6))); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#9cc0ff'; arrowHead(px, Math.max(4, py - Math.min(G.R * 1.15, py - 6)), -Math.PI / 2, 9 * p); ctx.globalAlpha = 1;
+    const spot = drawPlanet(px, py, G.pr, A, p, false);
+    /* the extra turn still owed: the arc from the star direction to the Sun direction, after the last sidereal day */
+    if (S.trail && isFinite(sol)) {
+      const rr = G.pr + spot.hl + 14 * p; let a0 = Math.PI / 2, a1 = toSun, d = sdWrap((a1 - a0) * 180 / Math.PI) * Math.PI / 180;
+      if (Math.abs(d) > 0.004) { ctx.strokeStyle = '#ff5a4f'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(px, py, rr, -a0, -(a0 + d), d > 0); ctx.stroke(); }
+    }
+    /* the planet's name and where it is */
+    ctx.fillStyle = 'rgba(230,238,255,0.92)'; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(P.name, px, py + G.pr + 6 * p);
+    /* counters, top left */
+    const L = 14 * p; let y = 14 * p; ctx.textAlign = 'left'; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
+    const line = (txt, col) => { ctx.fillStyle = col; ctx.fillText(txt, L, y); y += 17 * p; };
+    line(`time  ${hms(S.t)}`, '#e6eeff');
+    line(`turns against the star  ${c.sid}`, '#9cc0ff');
+    line(`noons (faces the Sun)   ${isFinite(sol) ? c.sol : 0}`, T.sunline);
+    line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(230,238,255,0.7)');
+    if (S.msg) { ctx.fillStyle = '#ffdca3'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(S.msg, L, y + 2 * p); }
+    /* legend, bottom left */
+    ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; let yb = H - 10 * p;
+    const key = (col, txt, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash ? [6 * p, 5 * p] : []); ctx.beginPath(); ctx.moveTo(L, yb - 6 * p); ctx.lineTo(L + 22 * p, yb - 6 * p); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = 'rgba(230,238,255,0.8)'; ctx.fillText(txt, L + 28 * p, yb); yb -= 16 * p; };
+    if (S.trail && isFinite(sol)) key('#ff5a4f', 'the extra turn: from the star direction to the Sun');
+    key(T.sunline, 'toward the Sun', true); key('#9cc0ff', 'toward the distant star', true);
+    ctx.fillStyle = 'rgba(230,238,255,0.55)'; ctx.fillText('top view from above the north pole · not to scale', L, yb);
+    if (S.zoom) drawZoom(G, A, spot);
+  }
+  /* the close up: the marked spot with the star and Sun directions and the angle between them */
+  function drawZoom(G, A, spot) {
+    const p = G.p, w = Math.min(230 * p, W * 0.42), h = w * 0.82, x0 = W - w - 12 * p, y0 = H - h - 12 * p;
+    ctx.fillStyle = 'rgba(8,12,22,0.92)'; ctx.strokeStyle = 'rgba(160,190,255,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, w, h, 8) : ctx.rect(x0, y0, w, h); ctx.fill(); ctx.stroke();
+    const cx = x0 + w / 2, cy = y0 + h * 0.62, r = h * 0.3;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    drawPlanet(cx, cy, r, A, p, true);
+    const toSun = A.orbit + Math.PI, Lr = h * 0.5;
+    ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.6 * p;
+    ctx.strokeStyle = '#9cc0ff'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - Lr); ctx.stroke();
+    ctx.strokeStyle = T.sunline; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + sx(toSun) * Lr, cy + sy(toSun) * Lr); ctx.stroke(); ctx.setLineDash([]);
+    const d = sdWrap((toSun - Math.PI / 2) * 180 / Math.PI);
+    ctx.fillStyle = 'rgba(230,238,255,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('close up (not to scale)', x0 + 8 * p, y0 + 6 * p);
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`Sun is ${f(Math.abs(d), 3)}° ${d >= 0 ? 'left' : 'right'} of the star`, x0 + 8 * p, y0 + 22 * p);
+    ctx.restore();
+  }
+
+  /* ---------- Through the year ---------- */
+  function chartBox(x, y, w, h, title, yLab, ymin, ymax, ticks) {
+    const p = proj();
+    ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillRect(x, y, w, h); ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    const X = (n) => x + 44 * p + (w - 54 * p) * n / 365, Y = (v) => y + 22 * p + (h - 44 * p) * (ymax - v) / (ymax - ymin);
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.strokeStyle = T.line;
+    for (const v of ticks) { ctx.globalAlpha = v === 0 ? 1 : 0.5; ctx.beginPath(); ctx.moveTo(X(0), Y(v)); ctx.lineTo(X(365), Y(v)); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(String(v).replace('-', '−'), X(0) - 5 * p, Y(v)); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; let n0 = 0;
+    for (let m = 0; m < 12; m++) { ctx.fillText(MONTHS[m][0], X(n0 + ML[m] / 2), y + h - 18 * p); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(n0), y + 22 * p); ctx.lineTo(X(n0), y + h - 22 * p); ctx.stroke(); ctx.globalAlpha = 1; n0 += ML[m]; }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(title, x + 8 * p, y + 5 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(yLab, x + w - 8 * p, y + 6 * p);
+    return { X, Y };
+  }
+  function curve(F, X, Y, col, w, dash) { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.beginPath(); for (let n = 0; n <= 365; n += 1) { const v = F(n); n ? ctx.lineTo(X(n), Y(v)) : ctx.moveTo(X(n), Y(v)); } ctx.stroke(); ctx.setLineDash([]); }
+  function drawYearView() {
+    const p = proj(); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const narrow = W < 821, pad = 12 * p, cardW = narrow ? 0 : 270 * p, aw = narrow ? 0 : Math.min(200 * p, (W - cardW - 3 * pad) * 0.32);
+    const cw = W - cardW - aw - pad * (narrow ? 2 : 3), h1 = (H - 3 * pad) / 2, x = pad;
+    const eot = (n) => sdSun(n + 0.5, S.e, S.tilt).eot, len = (n) => sdDayLength(n, S.e, S.tilt) - SD_D;
+    let emax = 2; for (let n = 0; n < 365; n++) emax = Math.max(emax, Math.abs(eot(n)), S.parts ? Math.abs(sdSun(n + 0.5, S.e, 0).eot) : 0, S.parts ? Math.abs(sdSun(n + 0.5, 0, S.tilt).eot) : 0);
+    const er = Math.ceil(emax / 5) * 5, et = []; for (let v = -er; v <= er; v += er > 20 ? 10 : 5) et.push(v);
+    const A = chartBox(x, pad, cw, h1, 'Sundial ahead of the clock (equation of time)', 'minutes', -er, er, et);
+    if (S.parts && !S.blind) { curve((n) => sdSun(n + 0.5, S.e, 0).eot, A.X, A.Y, T.ell, 1.6 * p, [5, 4]); curve((n) => sdSun(n + 0.5, 0, S.tilt).eot, A.X, A.Y, T.tilt, 1.6 * p, [2, 3]); }
+    if (!S.blind) curve(eot, A.X, A.Y, T.eot, 2.6 * p);
+    let lmax = 5; for (let n = 0; n < 365; n++) lmax = Math.max(lmax, Math.abs(len(n)), S.parts ? Math.abs(sdDayLength(n, S.e, 0) - SD_D) : 0, S.parts ? Math.abs(sdDayLength(n, 0, S.tilt) - SD_D) : 0);
+    const lr = Math.ceil(lmax / 10) * 10, lt = []; for (let v = -lr; v <= lr; v += lr > 40 ? 20 : 10) lt.push(v);
+    const B = chartBox(x, pad * 2 + h1, cw, h1, 'Length of the solar day minus 24 hours', 'seconds', -lr, lr, lt);
+    if (S.parts && !S.blind) { curve((n) => sdDayLength(n, S.e, 0) - SD_D, B.X, B.Y, T.ell, 1.6 * p, [5, 4]); curve((n) => sdDayLength(n, 0, S.tilt) - SD_D, B.X, B.Y, T.tilt, 1.6 * p, [2, 3]); }
+    if (!S.blind) curve(len, B.X, B.Y, T.eot, 2.6 * p);
+    /* today's marker */
+    const n = S.date; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p;
+    for (const [C, v, top] of [[A, eot(n), pad], [B, len(n), pad * 2 + h1]]) {
+      ctx.beginPath(); ctx.moveTo(C.X(n), top + 20 * p); ctx.lineTo(C.X(n), top + h1 - 22 * p); ctx.stroke();
+      if (!S.blind) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(C.X(n), C.Y(v), 4.5 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    if (S.parts && !S.blind) { ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; const ly = pad + h1 - 22 * p;
+      ctx.fillStyle = T.ell; ctx.fillText('— — from the ellipse alone', x + 50 * p, ly); ctx.fillStyle = T.tilt; ctx.fillText('· · · from the tilt alone', x + 50 * p + 150 * p, ly); }
+    /* the analemma: where the Sun stands at clock noon through the year */
+    if (aw > 90) {
+      const ax = x + cw + pad, ah = H - 2 * pad; ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.fillRect(ax, pad, aw, ah); ctx.strokeRect(ax + 0.5, pad + 0.5, aw - 1, ah - 1);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Sun at clock noon', ax + 8 * p, pad + 5 * p);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('(the analemma)', ax + 8 * p, pad + 20 * p);
+      const dm = Math.max(5, S.tilt), em = Math.max(er, 5), sc = Math.min((aw - 30 * p) / (2 * em * 0.25), (ah - 70 * p) / (2 * dm));
+      const ox = ax + aw / 2, oy = pad + 40 * p + (ah - 70 * p) / 2;
+      ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(ax + 8 * p, oy); ctx.lineTo(ax + aw - 8 * p, oy); ctx.moveTo(ox, pad + 36 * p); ctx.lineTo(ox, pad + ah - 26 * p); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('east ← · → west', ox, pad + ah - 20 * p);
+      ctx.textAlign = 'left'; ctx.fillText('equator', ax + 8 * p, oy + 3 * p);
+      if (!S.blind) {
+        ctx.strokeStyle = T.eot; ctx.lineWidth = 2 * p; ctx.beginPath();
+        for (let k = 0; k <= 365; k++) { const s = sdSun(k + 0.5, S.e, S.tilt), X = ox + s.eot * 0.25 * sc, Y = oy - s.dec * sc; k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke();
+      }
+      const s = sdSun(n + 0.5, S.e, S.tilt); ctx.fillStyle = '#f2a516'; ctx.beginPath(); ctx.arc(ox + (S.blind ? 0 : s.eot * 0.25 * sc), oy - s.dec * sc, 6 * p, 0, 2 * Math.PI); ctx.fill();
+    }
+    /* the date */
+    ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(dateName(n) + ' 2026', x + cw - 10 * p, pad + 22 * p);
+  }
+
+  function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (S.view === 'orbit') drawOrbitView(); else drawYearView(); }
+
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`; let h = '';
+    if (S.view === 'orbit') {
+      const P = S.P, sol = sdSolar(P.rot, P.orb), py = sdPerYear(P.rot, P.orb);
+      h += dd('Sidereal day (one turn against the stars)', hms(Math.abs(P.rot)) + (P.rot < 0 ? ', backward' : ''), 'wide') + dd('Year (one orbit)', P.orb >= 2 * SD_D ? `${f(P.orb / SD_D, 3)} days` : hms(P.orb), 'wide');
+      if (S.blind) h += '<div class="wide"><dt>Solar day</dt><dd class="ok">hidden: measure it</dd></div>';
+      else {
+        h += dd('Solar day (noon to noon)', hms(sol), 'wide');
+        if (isFinite(sol)) h += dd('Solar day minus sidereal day', hms(sol - Math.abs(P.rot)).replace(/^0 h 0 min /, '').replace(/^0 h /, ''), 'wide');
+        h += dd('Sidereal days in a year', f(py.sid, py.sid > 100 ? 2 : 3)) + dd('Solar days in a year', f(py.sol, py.sol > 100 ? 2 : 3));
+        if (P.lod) h += dd('NASA fact sheet length of day', hms(P.lod), 'wide');
+      }
+    } else {
+      const s = sdSun(S.date + 0.5, S.e, S.tilt), L = sdDayLength(S.date, S.e, S.tilt);
+      h += dd('Date (noon UT)', dateName(S.date) + ' 2026');
+      if (S.blind) h += '<div class="wide"><dt>Equation of time and day length</dt><dd class="ok">hidden: predict them</dd></div>';
+      else {
+        h += dd('Sundial against the clock', aheadBehind(s.eot), 'wide') + dd('Solar day', `24 h ${L - SD_D >= 0 ? '+' : '−'} ${f(Math.abs(L - SD_D), 1)} s`, 'wide');
+        if (S.parts) h += dd('From the ellipse alone', aheadBehind(sdSun(S.date + 0.5, S.e, 0).eot)) + dd('From the tilt alone', aheadBehind(sdSun(S.date + 0.5, 0, S.tilt).eot));
+      }
+      h += dd("Sun's declination", `${f(s.dec, 2)}°`) + dd('Eccentricity, tilt', `${f(S.e, 4)}, ${f(S.tilt, 2)}°`);
+    }
+    $('sdOut').innerHTML = h;
+  }
+  function drawAll() { draw(); readouts(); }
+
+  /* ---------- controls ---------- */
+  function sync() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#sdPresets button')) b.hidden = PRESETS[b.dataset.p].view !== S.view;
+    for (const b of document.querySelectorAll('#sdPresets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#sdSpeedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    $('sdOrbitCtl').style.display = S.mode === 'sidereal' ? 'contents' : 'none';
+    $('sdOrbitCard').style.display = S.view === 'orbit' ? 'contents' : 'none'; $('sdYearCard').style.display = S.view === 'year' ? '' : 'none';
+    $('sdCardTitle').textContent = S.view === 'orbit' ? 'The planet' : "Earth's orbit and tilt";
+    const nShow = S.planet ? sdPerYear(S.P.rot, S.P.orb).sid : S.n; $('sdN').value = Math.min(30, Math.max(1, Math.round(nShow)));
+    $('sdNOut').textContent = S.planet ? f(nShow, nShow > 100 ? 2 : 3) : String(S.n); $('sdRetro').checked = S.P.rot < 0; $('sdZoom').checked = S.zoom; $('sdTrail').checked = S.trail;
+    $('sdDate').value = S.date; $('sdDateOut').textContent = dateName(S.date); $('sdE').value = S.e; $('sdEOut').textContent = f(S.e, 4); $('sdTilt').value = S.tilt; $('sdTiltOut').textContent = `${f(S.tilt, 2)}°`; $('sdParts').checked = S.parts;
+    $('sdPlay').textContent = S.run ? 'Pause' : S.t > 0 ? 'Resume' : 'Play'; $('sdPlay').classList.toggle('attn', !S.run && S.t === 0);
+    const locked = !isFinite(sdSolar(S.P.rot, S.P.orb)); $('sdStepSol').disabled = locked;
+  }
+  const card = VD.setupCard($('sdCard'));
+  function setRun(on) { S.run = on; S.target = null; card.away(on && S.view === 'orbit'); sync(); }
+  function restart() { S.t = 0; S.target = null; S.msg = ''; S.flashSid = S.flashSol = 0; setRun(false); drawAll(); }
+  function setPlanet(key) { S.planet = key; S.P = key ? SD_PLANETS[key] : toy(S.n, S.retro); S.preset = key || S.preset; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; $('sdPresetHint').textContent = c.hint;
+    if (c.view === 'orbit') { if (c.planet) setPlanet(c.planet); else { S.n = c.n; S.retro = false; setPlanet(null); } S.zoom = c.planet === 'earth' || c.planet === 'jupiter'; }
+    else { S.e = c.e != null ? c.e : 0.0167086; S.tilt = c.tilt != null ? c.tilt : 23.4393; S.parts = !!c.parts; S.date = 41; }
+    S.preset = k; restart(); sync(); resize();
+  }
+  for (const b of document.querySelectorAll('#sdPresets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  /* the three modes of the page: the seasons panes, or this scene in one of its two views */
+  const MODE_VIEW = { sidereal: 'orbit', sundial: 'year' }, stage = document.getElementById('stage');
+  function setMode(m) {
+    if (!(m in MODE_VIEW)) m = 'seasons';
+    S.mode = m; const sdOn = m !== 'seasons';
+    stage.classList.toggle('sdmode', sdOn);
+    for (const sec of document.querySelectorAll('aside.rail > section')) if (!sec.classList.contains('vd-readings')) sec.hidden = sec.classList.contains('sd-only') ? !sdOn : sdOn;
+    if (sdOn) {
+      if (window.__seasons && window.__seasons.S.running) document.getElementById('play').click();
+      S.run = false; card.away(false);
+      if (S.view !== MODE_VIEW[m] || !S.started) { S.view = MODE_VIEW[m]; S.started = true; applyPreset(m === 'sundial' ? 'clock' : 'toy4'); }
+    }
+    sync(); if (sdOn) resize(); else { S.run = false; window.dispatchEvent(new Event('resize')); }
+  }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (S.mode !== b.dataset.m) setMode(b.dataset.m); });
+  window.__sdMode = () => S.mode;
+  for (const b of document.querySelectorAll('#sdSpeedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; sync(); });
+  $('sdN').addEventListener('input', (e) => { S.n = +e.target.value; S.preset = 'custom'; setPlanet(null); S.preset = 'custom'; restart(); });
+  $('sdRetro').addEventListener('change', (e) => { S.retro = e.target.checked; if (S.planet) { S.n = Math.max(1, Math.min(30, Math.round(sdPerYear(S.P.rot, S.P.orb).sid))); } S.preset = 'custom'; setPlanet(null); S.preset = 'custom'; restart(); });
+  $('sdZoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
+  $('sdTrail').addEventListener('change', (e) => { S.trail = e.target.checked; draw(); });
+  $('sdDate').addEventListener('input', (e) => { S.date = +e.target.value; sync(); drawAll(); });
+  $('sdE').addEventListener('input', (e) => { S.e = +e.target.value; S.preset = 'custom'; sync(); drawAll(); });
+  $('sdTilt').addEventListener('input', (e) => { S.tilt = +e.target.value; S.preset = 'custom'; sync(); drawAll(); });
+  $('sdParts').addEventListener('change', (e) => { S.parts = e.target.checked; drawAll(); });
+  $('sdEarthNow').addEventListener('click', () => { S.e = 0.0167086; S.tilt = 23.4393; sync(); drawAll(); });
+  $('sdPlay').addEventListener('click', () => setRun(!S.run));
+  $('sdReset').addEventListener('click', restart);
+  function stepTo(kind) {
+    const t1 = sdNext(S.t, S.P.rot, S.P.orb, kind); if (!isFinite(t1)) return;
+    S.msg = '';
+    if (reduce) { S.t = t1; S.run = false; if (kind === 'sid') S.flashSid = 1; else S.flashSol = 1; sync(); drawAll(); return; }
+    S.run = true; S.target = { t: t1, kind }; card.away(true); sync();
+  }
+  $('sdStepSid').addEventListener('click', () => stepTo('sid'));
+  $('sdStepSol').addEventListener('click', () => stepTo('sol'));
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view === 'orbit') { $('sdPlay').click(); e.preventDefault(); } });
+  $('sdBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  /* the date can be dragged along either chart */
+  let dragging = false;
+  function dateAt(e) { const r = can.getBoundingClientRect(), p = proj(), narrow = W < 821, pad = 12 * p, cardW = narrow ? 0 : 270 * p, aw = narrow ? 0 : Math.min(200 * p, (W - cardW - 3 * pad) * 0.32), cw = W - cardW - aw - pad * (narrow ? 2 : 3);
+    const x = e.clientX - r.left; if (x < pad + 44 * p - 10 || x > pad + cw) return null; return Math.max(0, Math.min(364, Math.round(365 * (x - pad - 44 * p) / (cw - 54 * p)))); }
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'year') return; const n = dateAt(e); if (n == null) return; dragging = true; S.date = n; sync(); drawAll(); try { can.setPointerCapture(e.pointerId); } catch (_) {} });
+  can.addEventListener('pointermove', (e) => { if (!dragging) return; const n = dateAt(e); if (n != null && n !== S.date) { S.date = n; sync(); drawAll(); } });
+  addEventListener('pointerup', () => { dragging = false; });
+
+  /* Readings: one row per reading, for the worksheet (Readings section, tools/readings_panel.py) */
+  const seasonsRow = window.vdReadingRow, seasonsCols = window.vdShowCols;
+  window.vdReadingRow = () => {
+    if (S.mode === 'seasons') return seasonsRow();
+    if (S.view === 'orbit') {
+      if (S.run) return 'Pause first, then record.';
+      const P = S.P, c = sdCount(S.t, P.rot, P.orb);
+      if (!(S.t > 0)) return 'Run the planet for a while first: step to a noon, or play and pause.';
+      return { planet: P.name + (P === SD_PLANETS[S.planet] ? '' : ` (${S.n} sidereal days a year${P.rot < 0 ? ', backward' : ''})`), 'time (h)': (S.t / SD_H).toPrecision(8).replace(/\.?0+$/, ''),
+        'turns against the star': c.sid, 'noons': c.sol, 'sidereal day (h)': hours(Math.abs(P.rot)), 'year (days)': (P.orb / SD_D).toPrecision(8).replace(/\.?0+$/, '') };
+    }
+    const s = sdSun(S.date + 0.5, S.e, S.tilt), L = sdDayLength(S.date, S.e, S.tilt);
+    const fx = (v, d) => (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d);
+    return { date: dateName(S.date), 'equation of time (min)': fx(s.eot, 2), 'solar day − 24 h (s)': fx(L - SD_D, 1), 'declination (°)': fx(s.dec, 2), e: S.e.toFixed(4), 'tilt (°)': S.tilt.toFixed(2) };
+  };
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, set() {}, get: () => (S.mode === 'seasons' ? seasonsCols : S.view === 'orbit' ? [['planet', 'planet'], ['time (h)', 't (h)'], ['turns against the star', 'turns'], ['noons', 'noons']] : [['date', 'date'], ['equation of time (min)', 'EoT'], ['solar day − 24 h (s)', 'day − 24 h']]) });
+  /* the worksheet for the two day modes (VD.ws still answers the ?ws= worksheet when the page was opened from one) */
+  /* Reasons for Seasons has two Astro 2203 worksheets, so vd.js's COURSE_WS cannot pick one: from the Astro 2203 page (?course=astro-2203)
+     the seasons panes send to intro-seasons and the day modes to intro-sidereal-day */
+  const course = (/[?&]course=([a-z0-9-]+)/.exec(location.search) || [])[1];
+  window.__seasonsWs = () => (/[?&]ws=/.test(location.search) ? VD.ws('seasons') : S.mode !== 'seasons' ? 'intro-sidereal-day' : course === 'astro-2203' ? 'intro-seasons' : 'seasons');
+  if (!/[?&]ws=/.test(location.search)) window.vdWorksheet = window.__seasonsWs;
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    let redraw = false;
+    if (S.run && S.view === 'orbit') {
+      const P = S.P, before = sdCount(S.t, P.rot, P.orb); let t = S.t + dt * S.speed * Math.abs(P.rot);
+      if (S.target && t >= S.target.t) { t = S.target.t; S.run = false; S.target = null; card.away(false); }
+      S.t = t; const after = sdCount(S.t, P.rot, P.orb);
+      if (after.sid > before.sid) S.flashSid = 1; if (after.sol > before.sol) S.flashSol = 1;
+      if (!S.run) sync();
+      redraw = true;
+    }
+    if (S.flashSid > 0 || S.flashSol > 0) { S.flashSid = Math.max(0, S.flashSid - dt * 1.6); S.flashSol = Math.max(0, S.flashSol - dt * 1.6); redraw = true; }
+    if (redraw) { draw(); if (now - (frame.r || 0) > 120) { readouts(); frame.r = now; } }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = can.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  window.addEventListener('vd-projector', resize);
+  new MutationObserver(() => resize()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-projector'] });
+  makeStars(); tokens(); new ResizeObserver(resize).observe(can);
+  /* ?mode=sidereal or ?mode=sundial opens a day mode; so does the day worksheet (?ws=intro-sidereal-day) */
+  const q = new URLSearchParams(location.search);
+  setMode(q.get('mode') || (VD.ws('seasons') === 'intro-sidereal-day' ? 'sidereal' : 'seasons'));
+  if (S.mode !== 'seasons' && PRESETS[q.get('setup')] && PRESETS[q.get('setup')].view === S.view) applyPreset(q.get('setup'));
+  window.__sd = { S, applyPreset, drawAll, stepTo, restart, setRun, setMode };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */

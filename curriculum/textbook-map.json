@@ -9827,12 +9827,13 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Astronomy module, sky unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet seasons (noon altitude against declination, insolation against 1/r² with no tilt, the yearly swing from tilt against distance, the June solstice by latitude) with a key from real runs in TeacherKeys.",
+      "note": "Astronomy module, sky unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet seasons (noon altitude against declination, insolation against 1/r² with no tilt, the yearly swing from tilt against distance, the June solstice by latitude) with a key from real runs in TeacherKeys. 2026-10-31 (Claude): two more switches, Sidereal and solar days (a planet's spin against the stars and the Sun, real planets from the NASA fact sheets) and Sundial and clock (equation of time, length of the solar day, analemma), with the Astro 2203 worksheet intro-sidereal-day (NAAP/UNL parity).",
       "title": "Reasons for Seasons",
       "url": "demos/seasons.html",
       "handouts": [
         "seasons",
-        "intro-seasons"
+        "intro-seasons",
+        "intro-sidereal-day"
       ]
     },
     {

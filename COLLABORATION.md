@@ -5562,3 +5562,28 @@ values) and the three keys in TeacherKeys `worksheet-keys/` (all from real demo 
   60° reading is 3.2 standard deviations low, left as drawn); z,x,z 126, 130, 744 of 1000.
 - Checked: check_math 25 expressions 0 problems; vdcheck after and clip 0 on all three; local Jekyll build with the worksheets
   receiving every export; node suites; courses.py --check.
+
+## 2026-10-31 · Claude · Reasons for Seasons: Sidereal and solar days, Sundial and clock (NAAP/UNL parity, Steve)
+
+From the six collections count (UNL Sidereal and Solar Time Simulator, partly covered). Steve asked to fold new pieces into existing
+demos where they fit, so this is two new switches in `demos/seasons.html` (Seasons | Sidereal and solar days | Sundial and clock;
+`?mode=sidereal` or `?mode=sundial`), not a new demo. The seasons panes are unchanged; the new modes show one canvas in their place.
+- Sidereal and solar days: top view, a person on the equator, a line to a distant star (fixed direction) and one to the Sun, the
+  extra turn drawn as an arc, counters of turns and noons, Next sidereal day / Next solar day / Play, a close up of the angle.
+  Setups: toy planets (4 and 10 turns a year, one turn a year, spin backward), Earth, Mars, Mercury, Venus, Jupiter, the Moon.
+  1/P_sol = |1/P_sid − 1/P_orb| with signed spin. Earth: stellar day 86 164.0989 s (IERS), sidereal year 365.256 36 d; others from
+  the NASA fact sheets (Mercury 58.6462 d / 87.969 d, Venus −243.025 d / 224.701 d, Mars 24.6229 h / 686.980 d, Jupiter 9.9250 h /
+  4332.59 d, Moon 27.321 661 d with Earth's year); each solar day matches the fact sheet length of day to its last digit.
+- Sundial and clock: equation of time (L − α) and the length of the solar day (86 400 s − ΔEoT) through 2026, the analemma at clock
+  noon, sliders for e and tilt, the two causes drawn separately. L and M from the Astronomical Almanac low precision formulas,
+  Kepler's equation solved exactly, nutation left out (stated). 2026: −14.20 min on 11 Feb, +16.45 min on 3 Nov, longest day
+  +29.9 s on 22 Dec.
+- CORE (sd*) in the new script; seasons had no CORE block before. Tests `test_seasons_days.cjs` (8): fact sheet lengths of day,
+  N − 1 and N + 1 noons, the spot faces star and Sun on schedule, Kepler, EoT extremes, day length extremes and mean, declination.
+- Worksheet `intro-sidereal-day` (Astro 2203, Week 1 sky topic; also listed on Astronomy): toy planets, real planets, Earth's sundial on
+  eight dates, the two causes. FROM_DEMO with an alt table for the sundial rows. Seasons now has two Astro 2203 worksheets, so
+  COURSE_WS no longer picks one; the demo itself sends ?course=astro-2203 readings to intro-seasons (seasons panes) or
+  intro-sidereal-day (day modes). Key in TeacherKeys `worksheet-keys/astro-2203/` from a real run (capture script there).
+  How this works video `intro-sidereal-day.mp4` (toy planet, 4 turns, 3 noons, 96 h). What's new entry.
+- Checked: Playwright at 1368 and 390 px light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.
+  GPT: please verify the planet periods, the EoT numbers and the key.
