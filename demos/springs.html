@@ -171,6 +171,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <button type="button" class="btn" id="sbSettle" hidden title="Put every block at rest where it hangs">Settle</button>
+          <button type="button" class="btn" id="sbLetGo" hidden title="Let go of the spring that holds the chain to the ceiling">Let go of the top</button>
           <button type="button" class="btn swb" id="swBtn" aria-pressed="false" aria-label="Stopwatch: press to start or stop">Stopwatch <span class="mono" id="swRead">0.00 s</span></button>
           <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
@@ -225,6 +226,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-b="mix" aria-pressed="false">Series and parallel</button>
           <button type="button" data-b="one" aria-pressed="false">One spring</button>
           <button type="button" data-b="chain" aria-pressed="false">Two blocks</button>
+          <button type="button" data-b="slinky" aria-pressed="false">Falling slinky</button>
           <button type="button" data-b="empty" aria-pressed="false">Start empty</button>
         </div>
         <p class="hint">Between two walls, on a level track:</p>
@@ -843,6 +845,94 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // a chain of N equal blocks m and N + 1 equal springs k between fixed walls (the loaded string, longitudinal):
   // ωₙ = 2√(k/m) sin(nπ / 2(N + 1)), block j of mode n moves as sin(jnπ/(N + 1))
   const chainOmega = (n, N, k, m) => 2 * Math.sqrt(k / m) * Math.sin(n * Math.PI / (2 * (N + 1)));
+  // ---------- Falling slinky (2026-10-31, oPhysics falling slinky): a hanging chain of blocks let go at the top ----------
+  // Blocks 0 … N−1 from the top (masses m_i, top faces y_i measured down); spring i joins block i to block i + 1 with constant k_i.
+  // Each spring stands for a slinky's coils: it pulls with k (L − L0) when stretched, and at L = L0 its coils touch, so it never gets
+  // shorter. Coils that meet do not bounce: two blocks that close to L0 collide perfectly inelastically (Cross and Wheatland 2012, after
+  // Calkin 1993). Then the pair's speeds are equal and every spring pulls them apart again (their relative acceleration T_above/m_upper +
+  // T_below/m_lower is never negative), so no pair ever stays stuck and the motion between collisions is linear with constant gravity:
+  // z' = A z, z = [y; v; 1]. Over a step with ‖Aτ‖∞ ≤ 1/4 the Taylor series of e^(Aτ) z to 20 terms is exact to rounding.
+  // A collision is where a gap's series crosses L0 (sampled 16 times a step, then bisected to 1e−15 s).
+  // At a collision every run of blocks joined by touching coils is sorted out together: neighbors that would close on each other share
+  // their momentum (pool adjacent violators), the least change that leaves no touching pair closing, as a perfectly inelastic contact does.
+  // The top block's own spring, let go of, is slack and massless: it pulls on nothing.
+  const SLK_TERMS = 20;
+  function slkA(m, k) {
+    const N = m.length, n = 2 * N + 1, c = SB_H + SB_L0, A = Array.from({ length: n }, () => new Array(n).fill(0));
+    for (let i = 0; i < N; i++) {
+      A[i][N + i] = 1;
+      const r = A[N + i]; r[n - 1] = G;
+      if (i < N - 1) { r[i + 1] += k[i] / m[i]; r[i] -= k[i] / m[i]; r[n - 1] -= k[i] * c / m[i]; }
+      if (i > 0) { r[i] -= k[i - 1] / m[i]; r[i - 1] += k[i - 1] / m[i]; r[n - 1] += k[i - 1] * c / m[i]; }
+    }
+    return A;
+  }
+  const slkGap = (y, i) => y[i + 1] - y[i] - SB_H - SB_L0;
+  const slkCM = (st) => st.m.reduce((s, mi, i) => s + mi * st.y[i], 0) / st.m.reduce((s, mi) => s + mi, 0);
+  /* energies, gravity measured from where the blocks were let go */
+  function slkEnergy(st) {
+    const K = st.m.reduce((s, mi, i) => s + 0.5 * mi * st.v[i] * st.v[i], 0);
+    const Us = st.k.reduce((s, ki, i) => { const e = Math.max(0, slkGap(st.y, i)); return s + 0.5 * ki * e * e; }, 0);
+    const Ug = -st.m.reduce((s, mi, i) => s + mi * G * (st.y[i] - st.y0[i]), 0);
+    return { K, Us, Ug, total: K + Us + Ug };
+  }
+  function slkStart(m, k, y, v) {
+    const A = slkA(m, k), nr = Math.max(...A.map((r) => r.reduce((s, x) => s + Math.abs(x), 0)));
+    const st = { m: m.slice(), k: k.slice(), N: m.length, y: y.slice(), y0: y.slice(), v: (v || m.map(() => 0)).slice(), t: 0, lost: 0, hits: 0, A, hmax: 0.25 / nr, first: k.map(() => null) };
+    st.cm0 = slkCM(st); st.E0 = slkEnergy(st).total;
+    return st;
+  }
+  /* the Taylor coefficients Aⁿz/n! of the motion from the state now, and their sum at τ */
+  function slkSeries(st) {
+    const z = [...st.y, ...st.v, 1], D = [z];
+    for (let n = 1; n <= SLK_TERMS; n++) { const p = D[n - 1]; D.push(st.A.map((r) => { let s = 0; for (let j = 0; j < r.length; j++) if (r[j]) s += r[j] * p[j]; return s / n; })); }
+    return D;
+  }
+  function slkAt(D, tau, len) { const out = new Array(len).fill(0); for (let n = SLK_TERMS; n >= 0; n--) for (let j = 0; j < len; j++) out[j] = out[j] * tau + D[n][j]; return out; }
+  function slkCollide(st) {
+    const N = st.N, touch = (i) => slkGap(st.y, i) < 1e-9, K0 = slkEnergy(st).K;
+    let a = 0;
+    while (a < N) {
+      let b = a; while (b < N - 1 && touch(b)) b++;
+      if (b > a) {
+        const grp = [];
+        for (let i = a; i <= b; i++) {
+          grp.push({ m: st.m[i], p: st.m[i] * st.v[i], n: 1 });
+          while (grp.length > 1 && grp[grp.length - 2].p / grp[grp.length - 2].m > grp[grp.length - 1].p / grp[grp.length - 1].m) { const q = grp.pop(), r = grp[grp.length - 1]; r.m += q.m; r.p += q.p; r.n += q.n; }
+        }
+        let i = a; for (const q of grp) for (let j = 0; j < q.n; j++) st.v[i++] = q.p / q.m;
+      }
+      a = b + 1;
+    }
+    st.lost += K0 - slkEnergy(st).K; st.hits++;
+  }
+  function slkAdvance(st, dt) {
+    let left = dt, guard = 0;
+    const N = st.N;
+    while (left > 1e-15 && guard++ < 200000) {
+      const h = Math.min(left, st.hmax), D = slkSeries(st);
+      let tHit = Infinity;
+      for (let i = 0; i < N - 1; i++) {
+        const g = D.map((d) => d[i + 1] - d[i]); g[0] -= SB_H + SB_L0;
+        const Gt = (tau) => { let s = 0; for (let n = SLK_TERMS; n >= 0; n--) s = s * tau + g[n]; return s; };
+        let prev = 0;
+        for (let j = 1; j <= 16; j++) {
+          const tau = h * j / 16;
+          if (Gt(tau) < -1e-12) { let lo = prev, hi = tau; for (let it = 0; it < 60 && hi - lo > 1e-15; it++) { const mid = (lo + hi) / 2; if (Gt(mid) < 0) hi = mid; else lo = mid; } tHit = Math.min(tHit, hi); break; }
+          prev = tau;
+        }
+      }
+      const tau = Math.min(h, tHit), z = slkAt(D, tau, 2 * N);
+      st.y = z.slice(0, N); st.v = z.slice(N); st.t += tau; left -= tau;
+      if (tHit <= h) slkCollide(st);
+      for (let i = 0; i < N - 1; i++) if (st.first[i] === null && slkGap(st.y, i) < 1e-9) st.first[i] = st.t;
+    }
+    return st;
+  }
+  /* an ideal slinky (smooth, coils touching at zero tension) of mass M and spring constant K, hung fully stretched, collapses to the
+     bottom in √(M/3K) (Cross and Wheatland 2012, eq. 18 with no collapsed part at the bottom): the collapsed top carries all the
+     momentum, M ξ v = M g t, while the part below has not moved */
+  const slkSmooth = (M, K) => Math.sqrt(M / (3 * K));
   /* A grid of N × N pucks on an air table (2026-10-31, PhET Normal Modes 2D): each puck is tied to its four neighbors, and the pucks at
      the edge to a square frame, by springs of constant k stretched far past their natural length, as if that length were zero. Then the
      pull of a spring is exactly k times the vector from one end to the other, so the motion is exactly linear for any swing (no small
@@ -2601,8 +2691,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const playBtn = $('play');
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
-  playBtn.addEventListener('click', () => setRunning(!running));
-  function doReset() { if (sbOn() && SB.grid) { if (!SB.grid.held) { gdStart(SB.grid.ic.slice()); if (!running) setRunning(true); } return; } if (sbOn()) { if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; liftRider(); syncSliders(); staticText(); newRun(lastIC); if (!running) setRunning(true); }
+  /* Play on a hung slinky lets go of the top; Play after it has fallen hangs it up and lets go again */
+  function togglePlay() {
+    if (!running && sbOn() && !SB.grid) { if (SB.fall && SB.fall.done) { sbStart(SB.fall.z0); slkLetGo(); } else if (SB.armed) slkLetGo(); }
+    setRunning(!running);
+  }
+  playBtn.addEventListener('click', togglePlay);
+  function doReset() { if (sbOn() && SB.grid) { if (!SB.grid.held) { gdStart(SB.grid.ic.slice()); if (!running) setRunning(true); } return; } if (sbOn()) { if (SB.fall) { slkHangUp(); return; } if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; liftRider(); syncSliders(); staticText(); newRun(lastIC); if (!running) setRunning(true); }
   $('reset').addEventListener('click', doReset);
 
   // ---------- stopwatch, ruler peak, readings, fit, Blind (lab kit) ----------
@@ -3105,6 +3200,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       hint: 'A parallel pair on top, then two springs in series below it. Compare the tensions in the labels: every spring in one line carries the same force; springs side by side share it.' },
     chain: { name: 'Two blocks', nodes: [[1, 0.3], [2, 0.3]], springs: [[1, 0, 1, 25, 0], [2, 1, 2, 25, 0]], pull: 0.04, sel: ['n', 2],
       hint: 'Two blocks, one below the other. Pulling the lower one starts a mix of two normal modes, so the motion does not repeat simply. Hold the blocks and let go in other ways to find each mode.' },
+    /* the Chain of ten hung up (2026-10-31, oPhysics falling slinky): Let go of the top drops it */
+    slinky: { name: 'Falling slinky', slinky: true, nodes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) => [id, 0.1]),
+      springs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((j) => [10 + j, j - 1, j, 50, 0]), pull: 0, sel: ['n', 10], quiet: true,
+      hint: 'Ten 100 g blocks hung one below another on 50 N/m springs: a slinky in pieces. Each spring stands for a slinky\'s coils, which touch at 10.0 cm and close no further. Press Let go of the top (or Play) and the spring that holds the chain to the ceiling lets go. The top rushes down, the coils close up one after another, and the bottom block stays where it is until the collapse reaches it, although gravity pulls on it the whole time: until then the spring above it pulls up just as hard. The center of mass falls as ½gt² from the moment you let go. Any chain hung by one spring, one block under another, can be let go the same way.' },
     empty: { name: 'Start empty', nodes: [], springs: [], pull: 0, sel: ['n', 0],
       hint: 'Only the ceiling. Hang a spring from it, hang a block on the hook, and build from there.' },
     /* between two walls on a level track: node 1 is the right wall, `wall` the gap between the walls (m) */
@@ -3150,6 +3249,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbRebuild(true);
     // opens off balance: the last block pulled down, so Play moves it
     if (SB.md.n && B.pull) { const z = SB.z.slice(); z[SB.md.n - 1] = B.pull; sbStart(z); }
+    /* the falling slinky opens hanging at rest, paused, with the top about to be let go: Play lets go */
+    if (B.slinky) { SB.armed = true; setRunning(false); }
     sbUi();
   }
   // a change to the rig: rebuild the model; the blocks keep their places (or start at rest where they hang)
@@ -3166,7 +3267,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sbStart(z);
   }
   function sbStart(z) {
-    SB.modeOn = null; SB.z = z.slice(); SB.t = 0; SB.hist = []; SB.ic = z.slice(); SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbSample();
+    SB.fall = null; SB.armed = false; SB.modeOn = null; SB.z = z.slice(); SB.t = 0; SB.hist = []; SB.ic = z.slice(); SB.E0 = sbEnergy(SB.rig, SB.md, SB.z).total; sbSample();
     t = 0; sw.acc = 0; swText();
   }
   /* new oil or drive settings: the blocks carry on from where they are, at the speeds they have */
@@ -3176,6 +3277,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   function sbSample() { SB.hist.push([SB.t, SB.z.slice(0, SB.md.n), sbYc()]); if (SB.hist.length > 3000) SB.hist.splice(0, SB.hist.length - 3000); }
   function sbAdvance(dts) {
+    if (SB.fall) { slkStep(dts); return; }
     if (!(dts > 0) || !SB.md.A.length) { if (dts > 0) { SB.t += dts; t = SB.t; if (sw.on) sw.acc += dts; } return; }
     const n = Math.max(1, Math.ceil(dts / (1 / 120))), h = dts / n, Phi = sbExpm(SB.md.A, h);
     for (let i = 0; i < n; i++) { SB.z = sbMulV(Phi, SB.z); SB.t += h; sbSample(); }
@@ -3183,6 +3285,60 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   const sbYp = () => SB.md.yEq.map((v, i) => v + SB.z[i]);
   function sbYNow() { return SB.held ? SB.held.y : SB.md.allY(sbYp(), sbYc()); }
+  // ---------- Falling slinky: let go of the top of a hanging chain (the motion is slkAdvance in the core) ----------
+  /* a chain hung from the ceiling by one spring, one block under another, each on one spring, no oil and no shaker:
+     its blocks and springs from the top, or null */
+  function sbChainOrder(rig) {
+    if (!rig || rig.hz || SB.drive || SB.grid) return null;
+    const blocks = rig.nodes.filter((nd) => !nd.fixed);
+    if (!blocks.length || blocks.some((nd) => !(nd.m > 0) || nd.b > 0) || rig.springs.length !== blocks.length) return null;
+    const ids = [], springs = []; let at = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      const s = rig.springs.filter((q) => q.a === at); if (s.length !== 1) return null;
+      ids.push(s[0].b); springs.push(s[0]); at = s[0].b;
+    }
+    return new Set(ids).size === blocks.length ? { ids, springs } : null;
+  }
+  function slkLetGo() {
+    const ch = sbChainOrder(SB.rig); if (!ch || SB.held || SB.fall) return false;
+    const y = sbYNow(), idx = ch.ids.map((id) => sbMassIdx(id)), ys = ch.ids.map((id) => y.get(id)), vs = idx.map((i) => SB.z[SB.md.n + i]);
+    for (let i = 0; i < ys.length - 1; i++) if (slkGap(ys, i) < 0) { capStatus('A spring is squeezed shorter than its coils allow: press Settle first.'); return false; }
+    const z0 = SB.z.slice();
+    SB.fall = { st: slkStart(ch.ids.map((id) => sbNode(id).m), ch.springs.slice(1).map((q) => q.k), ys, vs), idx, top: ch.springs[0].id, done: false, z0 };
+    SB.armed = false; SB.modeOn = null; SB.hist = []; SB.t = 0; t = 0; sw.acc = 0; swText(); sbSample();
+    if (SB.pane === 'modes') sbPane('energy');
+    sbUi();
+    $('live').textContent = 'Let go of the top.';
+    return true;
+  }
+  /* back where it hung when let go, paused, ready to let go again */
+  function slkHangUp() { const z0 = SB.fall ? SB.fall.z0 : sbZero(); sbStart(z0); SB.armed = true; setRunning(false); sbUi(); }
+  function slkSync() { const F = SB.fall; F.idx.forEach((i, j) => { SB.z[i] = F.st.y[j] - SB.md.yEq[i]; SB.z[SB.md.n + i] = F.st.v[j]; }); }
+  function slkStep(dts) {
+    const F = SB.fall; if (!(dts > 0) || F.done) return;
+    const n = Math.max(1, Math.ceil(dts / (1 / 240))), h = dts / n, N = F.st.N;
+    for (let j = 0; j < n && !F.done; j++) {
+      slkAdvance(F.st, h); slkSync(); SB.t = F.st.t; sbSample();
+      /* once every coil has closed, let the chain fall 15 cm past where its bottom hung, then stop */
+      if (F.st.first.every((q) => q !== null) && F.st.y[N - 1] - F.st.y0[N - 1] > 0.15) F.done = true;
+    }
+    t = SB.t; if (sw.on) sw.acc += dts;
+    if (F.done) { setRunning(false); $('live').textContent = `Stopped ${fx(15, 0)} cm below where the bottom block hung. Play or Reset hangs it up again.`; }
+  }
+  function slkReadouts() {
+    const st = SB.fall.st, N = st.N, M = st.m.reduce((a, b) => a + b, 0), fr = N > 1 ? st.first[N - 2] : null;
+    $('tclock').firstChild.nodeValue = `t = ${st.t.toFixed(2)} s`;
+    let h = dd('Time since letting go', `${st.t.toFixed(3)} s`);
+    if (N > 1) h += dd('Springs with their coils touching', `${st.k.filter((_, i) => slkGap(st.y, i) < 1e-6).length} of ${N - 1}`);
+    h += dd('Top block has fallen', `${fx((st.y[0] - st.y0[0]) * 100, 2)} cm`) + dd('Bottom block has fallen', `${fx((st.y[N - 1] - st.y0[N - 1]) * 1000, 3)} mm`);
+    if (N > 1) h += dd('Collapse reached the bottom block at', fr === null ? 'not yet' : `${fr.toFixed(4)} s`, 'wide');
+    h += dd('Center of mass has fallen', `${fx((slkCM(st) - st.cm0) * 100, 3)} cm`) + dd('½gt²', `${fx(0.5 * G * st.t * st.t * 100, 3)} cm`);
+    if (N > 1) { const K = 1 / st.k.reduce((a, k) => a + 1 / k, 0); h += dd(`Smooth slinky with M = ${fx(M * 1000, 0)} g and K = ${sig(K, 4)} N/m: √(M/3K)`, `${slkSmooth(M, K).toFixed(4)} s`, 'wide'); }
+    h += dd('Coil collisions so far', `${st.hits}`) + dd('Energy lost in them', fmtE(st.lost));
+    $('measBox').innerHTML = h;
+    $('mFormula').innerHTML = 'Once the top is let go only gravity pulls on the chain from outside, so its center of mass falls as ½gt². The bottom block still stays put until the collapse reaches it: until then the spring above it pulls up as hard as gravity pulls down. K is the springs below the top block taken in series.';
+    swText();
+  }
   // an exact bound on each block's swing from energy: u_i² ≤ 2E (K_e⁻¹)_ii, for the scale of the drawing
   function sbSwing() {
     if (!SB.md.n) return 0;
@@ -3265,6 +3421,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const sbSpringNo = (id) => SB.rig.springs.findIndex((s) => s.id === id) + 1;
   // the rail: what is selected and what can be done to it
   function sbUi() {
+    { const lg = $('sbLetGo'), ok = !SB.grid && !!sbChainOrder(SB.rig); lg.hidden = !ok && !SB.fall; lg.textContent = SB.fall ? 'Hang it up again' : 'Let go of the top'; }
     if (SB.grid) { gdUi(); return; }
     if (!SB.rig) return;
     const [kind, id] = SB.sel, nd = kind === 'n' ? sbNode(id) : null, sp = kind === 's' ? sbSpring(id) : null;
@@ -3286,9 +3443,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     updateReadouts();
   }
   function sbReadouts() {
+    if (SB.fall) { slkReadouts(); return; }
     const y = sbYNow(), tens = sbTensions(SB.rig, SB.md, SB.held ? SB.md.ids.map((i) => y.get(i)) : sbYp(), sbYc());
     $('tclock').firstChild.nodeValue = SB.held ? 't = 0, holding' : `t = ${SB.t.toFixed(2)} s`;
     let h = dd('Time t', `${SB.t.toFixed(3)} s`);
+    if (SB.armed) h += dd('The top', 'held: Play or Let go of the top drops the chain', 'wide');
     const [kind, id] = SB.sel, nd0 = kind === 'n' ? sbNode(id) : null;
     if (kind === 'n' && id !== 0 && y.has(id) && !(nd0 && nd0.fixed && !sbHz())) {
       const nd = sbNode(id);
@@ -3321,13 +3480,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     cHandles = [];
     const y = sbYNow(), cols = SB_COLS();
     // the view: every node at rest plus the largest swing the energy allows, all to one scale
-    const sw2 = SB.held ? 0.05 : sbSwing(), ys = [...y.values()], yr = SB.md.allY(SB.md.yEq);
+    const sw2 = SB.held ? 0.05 : SB.fall ? 0 : sbSwing(), ys = [...y.values()], yr = SB.md.allY(SB.md.yEq);
     let yMax = Math.max(0.12, ...ys.map((v) => v + SB_H), ...[...yr.values()].map((v) => v + SB_H + Math.min(sw2, 0.4)));
     const xs = SB.rig.springs.map((s) => s.x), xLo = Math.min(-0.08, ...xs) - 0.05, xHi = Math.max(0.08, ...xs) + 0.05;
     /* the parts tray: a column on the right, or a strip along the bottom on a narrow screen */
-    const horiz = W < 600, trayW = horiz ? 0 : 78 * ps, stripH = horiz ? 52 * ps : 0, top = ctlH + (SB.drive ? 60 : 18) * ps, padL = 64 * ps, padR = horiz ? 96 * ps : trayW + 124 * ps, bot = 14 * ps + stripH;
+    const horiz = W < 600, trayW = horiz ? 0 : 78 * ps, stripH = horiz ? 52 * ps : 0, top = ctlH + (SB.drive ? 60 : 18) * ps, padL = 64 * ps, padR = horiz ? 96 * ps : trayW + 124 * ps, bot = 14 * ps + stripH + (horiz ? 12 * ps : 0);
     const target = Math.min((H - top - bot) / (yMax + 0.02), 1600);
-    if (!SB.scale || (!SB.held && (SB.scale > target || target > SB.scale * 1.6))) SB.scale = target;   /* held: the scale stays put under the pointer */
+    if (!SB.scale || (!SB.held && !SB.fall && (SB.scale > target || target > SB.scale * 1.6))) SB.scale = target;   /* falling: the scale stays as it hung */   /* held: the scale stays put under the pointer */
     /* across the page nothing is to scale (the springs only move up and down), so the rig spreads to use the width */
     const s = SB.scale, sx = Math.min((W - padL - padR) / (xHi - xLo), 1500 * ps), cx = padL + (W - padL - padR) / 2 - (xLo + xHi) / 2 * sx, X = (x) => cx + x * sx, Y = (v) => top + v * s;
     SB.view = { X, Y, s, sx, top, W, H, trayW, horiz, stripH, lat: (px) => (px - X(0)) / sx };
@@ -3362,7 +3521,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // springs
     const tens = sbTensions(SB.rig, SB.md, SB.md.ids.map((i) => y.get(i)), y.get(0));
     SB.rig.springs.forEach((sp, i) => {
-      const na = sbNode(sp.a), ya = Y(y.get(sp.a) + (na.m > 0 ? SB_H : 0)), yb = Y(y.get(sp.b)), x = X(sp.x), hot = SB.sel[0] === 's' && SB.sel[1] === sp.id;
+      const loose = SB.fall && sp.id === SB.fall.top;      /* let go of: slack, riding on the top block */
+      if (loose) tens[i] = { ...tens[i], T: 0 };
+      const na = sbNode(sp.a), ya = loose ? Y(y.get(sp.b) - SB_L0) : Y(y.get(sp.a) + (na.m > 0 ? SB_H : 0)), yb = Y(y.get(sp.b)), x = X(sp.x), hot = SB.sel[0] === 's' && SB.sel[1] === sp.id;
       drawSpring(ctx, x, ya, x, yb, { r: 7 * ps, n: 10, lw: springLW(sp.k), hot });
       cHandles.push({ id: 's' + sp.id, sel: ['s', sp.id], box: [x - 10 * ps, Math.min(ya, yb), 20 * ps, Math.abs(yb - ya)], cursor: 'grab' });
       if (Math.abs(yb - ya) > 34 * ps) {   /* drag sideways for a stiffer or softer spring */
@@ -3563,15 +3724,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const [W, H] = dims.e; if (!W || !H) return;
     const ctx = ctxs.e, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const E = sbEnergy(SB.rig, SB.md, SB.z), E0r = sbEnergy(SB.rig, SB.md, SB.z.map(() => 0));
-    const rows = [{ lab: 'Kinetic, Σ½mv²', v: E.K, col: T.pos }, { lab: 'Springs, Σ½ke² above rest', v: E.Us - E0r.Us, col: T.neg }, ...(sbHz() ? [] : [{ lab: 'Gravity, −Σmgu', v: E.Ug, col: T.equi }]),
+    const E = sbEnergy(SB.rig, SB.md, SB.z), E0r = sbEnergy(SB.rig, SB.md, SB.z.map(() => 0)), F = SB.fall, Ef = F ? slkEnergy(F.st) : null, Ef0 = F ? { Us: F.st.k.reduce((s, k, i) => s + 0.5 * k * Math.max(0, slkGap(F.st.y0, i)) ** 2, 0) } : null;
+    const rows = F ? [{ lab: 'Kinetic, Σ½mv²', v: Ef.K, col: T.pos }, { lab: 'Springs, change since letting go', v: Ef.Us - Ef0.Us, col: T.neg }, { lab: 'Gravity, −Σmg Δy', v: Ef.Ug, col: T.equi },
+      { lab: 'Lost in coil collisions', v: F.st.lost, col: T.muted }, { lab: 'Total, with what was lost', v: Math.abs(Ef.total - F.st.E0 + F.st.lost) < 1e-9 ? 0 : Ef.total - F.st.E0 + F.st.lost, col: T.ink }] : [{ lab: 'Kinetic, Σ½mv²', v: E.K, col: T.pos }, { lab: 'Springs, Σ½ke² above rest', v: E.Us - E0r.Us, col: T.neg }, ...(sbHz() ? [] : [{ lab: 'Gravity, −Σmgu', v: E.Ug, col: T.equi }]),
       { lab: 'Total above rest', v: E.total - E0r.total, col: T.ink }];
-    if (!SB.drive && SB.rig.nodes.some((nd) => nd.b > 0)) rows.push({ lab: 'Lost to the oil, E₀ − E', v: SB.E0 - E.total, col: T.muted });
-    const big = Math.max(...rows.map((r) => Math.abs(r.v)), SB.E0 - E0r.total, 1e-12);
+    if (!F && !SB.drive && SB.rig.nodes.some((nd) => nd.b > 0)) rows.push({ lab: 'Lost to the oil, E₀ − E', v: SB.E0 - E.total, col: T.muted });
+    const big = Math.max(...rows.map((r) => Math.abs(r.v)), F ? 0 : SB.E0 - E0r.total, 1e-12);
     if (big > eMax || big < eMax * 0.25) eMax = big * 1.05;
     const L = 14 * ps, R = W - 14 * ps, fs = (W < 400 ? 10.5 : 11.5) * ps;
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(SB.drive ? 'Energy now (the shaker puts energy in and takes it out)' : 'Energy now, from the rig at rest', L, 20 * ps);
+    ctx.fillText(F ? (W < 480 ? 'Since letting go' : 'Energy since letting go of the top') : SB.drive ? 'Energy now (the shaker puts energy in and takes it out)' : 'Energy now, from the rig at rest', L, 20 * ps);
     const avail = H - 40 * ps, rowH = Math.min(46 * ps, avail / rows.length), bh = Math.max(5 * ps, Math.min(14 * ps, rowH - fs - 9 * ps));
     const z = L + (R - L) * 0.28, sc = (R - z) / eMax;
     let yy = 28 * ps;
@@ -3599,6 +3761,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const segW = $('sbPaneSeg').offsetWidth + 16 * ps;
     ctx.fillText(n ? (ctx.measureText('Normal modes: f, shape, amplitude (cm), share of energy').width < R - L - segW ? 'Normal modes: f, shape, amplitude (cm), share of energy' : 'Modes: f, shape, cm, energy') : 'Normal modes', L, 20 * ps);
     sbModeRows = [];
+    if (SB.fall) { ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.ui}`; ctx.fillText('Falling: nothing holds the chain up, so it has no normal modes. Reset hangs it up again.', L, 44 * ps); return; }
     if (!n) { ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.ui}`; ctx.fillText('No blocks yet: a rig with blocks has one mode for each block.', L, 44 * ps); return; }
     const sh = sbModeShares(SB.md, modes, SB.z), Etot = sh.reduce((a, q) => a + q.E, 0), amax = Math.max(0.005, ...sh.map((q) => q.amp));
     const top = 30 * ps, rowH = Math.min(34 * ps, (H - top - 6 * ps) / n), wF = 92 * ps * (fs / (11 * ps)), wShape = Math.min(150 * ps, (R - L) * 0.32), x1 = L + wF, x2 = x1 + wShape + 12 * ps;
@@ -3634,13 +3797,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const [W, H] = dims.p; if (!W || !H) return;
     const ctx = ctxs.p, ps = projScale(), cols = SB_COLS();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const L = 54 * ps, R = W - 14 * ps, Tp = 26 * ps, B = H - 30 * ps, span = 8, t1 = Math.max(span, SB.t), t0 = t1 - span;
+    const L = 54 * ps, R = W - 14 * ps, Tp = 26 * ps, B = H - 30 * ps, span = SB.fall ? 0.5 : 8, t1 = Math.max(span, SB.t), t0 = t1 - span, tk = SB.fall ? 0.1 : 1;   /* a fall lasts a fraction of a second */
     let A = 0.01; for (const [, u, yc] of SB.hist) { for (const v of u) A = Math.max(A, Math.abs(v)); A = Math.max(A, Math.abs(yc || 0)); }
     A = nice(A * 1.15 * 100) / 100;
     const X = (tt) => L + (tt - t0) / span * (R - L), Y = (v) => (Tp + B) / 2 + v / A * (B - Tp) / 2;
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
     for (const v of [-A, -A / 2, 0, A / 2, A]) { ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(R, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(MIN(String(+(v * 100).toFixed(2))), L - 6 * ps, Y(v)); }
-    for (let k = Math.ceil(t0); k <= t1; k++) { ctx.beginPath(); ctx.moveTo(X(k), Tp); ctx.lineTo(X(k), B); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(k), X(k), B + 5 * ps); }
+    for (let j = Math.ceil(t0 / tk - 1e-9); j * tk <= t1 + 1e-9; j++) { const k = j * tk; ctx.beginPath(); ctx.moveTo(X(k), Tp); ctx.lineTo(X(k), B); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(+k.toFixed(1)), X(k), B + 5 * ps); }
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(sbHz() ? 'Each block right of its rest position (cm) against time (s)' : 'Each block below its rest position (cm) against time (s)', L, 16 * ps);
     for (let i = 0; i < SB.md.n; i++) {
@@ -3660,6 +3823,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* the pointer along the direction the blocks move: down the page when hanging, across it between walls */
   const sbAlong = (ev) => { const r = cans.c.getBoundingClientRect(); return sbHz() ? ev.clientX - r.left : ev.clientY - r.top; };
   function sbBeginHold(id, ev) {
+    if (SB.fall) { sbStart(SB.fall.z0); sbUi(); }      /* grabbing a falling block hangs the chain back up first */
     const y = sbYNow(); SB.held = { id, off: sbAlong(ev) - SB.view.Y(y.get(id)), y: new Map(y), moved: false, y0: sbAlong(ev) };
     SB.sel = ['n', id];
   }
@@ -3873,9 +4037,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if ((sbHz() ? k === 'ArrowLeft' || k === 'ArrowRight' : k === 'ArrowUp' || k === 'ArrowDown') && kind === 'n' && sbMassIdx(id) >= 0 && !SB.held) {
       SB.phase = sbPhase(); const i = sbMassIdx(id), y = sbHeld(SB.rig, id, sbYp()[i] + (k === 'ArrowDown' || k === 'ArrowRight' ? 0.01 : -0.01), sbG(), sbYc()), z = sbZero();
       SB.md.ids.forEach((q, j) => { z[j] = y.get(q) - SB.md.yEq[j]; }); sbStart(z); setRunning(true);
-    } else if (k === ' ') setRunning(!running);
+    } else if (k === ' ') togglePlay();
     else if (k === 'r' || k === 'R') doReset();
     else if (k === 'w' || k === 'W') setSw(!sw.on);
+    else if ((k === 'l' || k === 'L') && !SB.fall && sbChainOrder(SB.rig)) { if (slkLetGo()) setRunning(true); }
     else return;
     e.preventDefault();
   }
@@ -4080,12 +4245,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   function sbExit() {
     $('sbPaneSeg').hidden = true; $('sbReadSec').hidden = true; if (SB.pane === 'modes') sbPane('energy');
-    delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSettle').hidden = true; SB.drag = null; $('sbSec').hidden = true; SB.held = null; SB.join = null;
+    delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSettle').hidden = true; $('sbLetGo').hidden = true; SB.drag = null; $('sbSec').hidden = true; SB.held = null; SB.join = null;
     if ($('modelHint').dataset.was) $('modelHint').innerHTML = $('modelHint').dataset.was;
     if (SB.dimWas) { view3.set('3d'); SB.dimWas = null; }
   }
-  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². Between two walls the blocks slide on a level track without friction, so gravity plays no part, each block is 4.0 cm long, the right wall stays put (drag it to set the gap) and the shaker moves the left wall as X = A cos ωt. The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration. Normal modes (the lower pane): the stiffness matrix of the blocks (massless hooks and bars worked out exactly) and their masses give each mode’s frequency and shape by the Jacobi method; a mode’s amplitude is the projection of the blocks’ positions and speeds on it, φᵀMu/φᵀMφ. Oil and the shaker are left out of the modes, so with either on the shares change with time.';
-  for (const b of document.querySelectorAll(SB_CHIPS)) b.addEventListener('click', () => { sbLoad(b.dataset.b); setRunning(!reduce || running); });
+  const SB_MODEL = 'Sandbox model: ideal massless springs that obey Hooke\'s law, each 10.0 cm long unstretched; blocks are rigid and 4.0 cm tall, and every block, bar and hook moves straight up and down on a guide, so a bar never tilts (in a real rig it tilts unless the load hangs where the spring forces balance). Hooks and bars carry no mass, so they always sit where the spring forces on them balance. Oil dropped on a block pushes on that block alone with −bv, wherever the block is (the beaker is drawn around its swing). The shaker moves the whole ceiling as Y = A cos ωt, whatever the springs pull on it. g = 9.81 m/s². Between two walls the blocks slide on a level track without friction, so gravity plays no part, each block is 4.0 cm long, the right wall stays put (drag it to set the gap) and the shaker moves the left wall as X = A cos ωt. The motion is the exact solution of the linear equations of motion (a matrix exponential over each frame, with cos ωt and sin ωt of the drive carried in the state), not a step by step integration. Normal modes (the lower pane): the stiffness matrix of the blocks (massless hooks and bars worked out exactly) and their masses give each mode’s frequency and shape by the Jacobi method; a mode’s amplitude is the projection of the blocks’ positions and speeds on it, φᵀMu/φᵀMφ. Oil and the shaker are left out of the modes, so with either on the shares change with time. Falling slinky (Let go of the top, on any chain hung by one spring with one block under another): the spring that held the top is let go of, so it is slack and pulls on nothing; every other spring then stands for a slinky\'s coils, which touch at 10.0 cm, so it never gets shorter, and coils that meet collide without bouncing (perfectly inelastic, as in R. C. Cross and M. S. Wheatland, Am. J. Phys. 80, 1051 (2012), after M. G. Calkin, Am. J. Phys. 61, 261 (1993)). Between collisions the motion is again the exact solution of the linear equations (a Taylor series of the matrix exponential, to rounding), and each collision is found to 1e−15 s. The smooth slinky time √(M/3K) is their eq. 18 for a slinky hung with no coils closed.';
+  for (const b of document.querySelectorAll(SB_CHIPS)) b.addEventListener('click', () => { sbLoad(b.dataset.b); setRunning(SB.armed ? false : !reduce || running); });
+  $('sbLetGo').addEventListener('click', () => { if (SB.fall) slkHangUp(); else if (slkLetGo()) setRunning(true); });
   $('sbAdd').addEventListener('click', sbAddSpring);
   $('sbJoin').addEventListener('click', () => { if (SB.sel[0] !== 'n' || SB.sel[1] === 0) return; SB.join = SB.join === null ? SB.sel[1] : null; sbUi(); });
   $('sbDel').addEventListener('click', sbRemove);
@@ -4186,7 +4352,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     get handles() { return cHandles; }, get rGeom() { return rGeom; }, get book() { return book; }, get amp() { return amp; }, get sweepPts() { return sweepPts; },
     get sweep() { return sweep; }, get crossings() { return crossings; }, get held() { return held; }, get view() { return view; },
     applyPreset, setRunning, setParam, setSys, setVert, startSweep, stopSweep,
-    sb: { get SB() { return SB; }, load: sbLoad, add: sbAddSpring, remove: sbRemove, join(a, b) { SB.join = a; sbJoin(b); }, select: sbSelect, setMass: sbSetMass, setK: sbSetK, settle: sbSettle,
+    sb: { get SB() { return SB; }, load: sbLoad, add: sbAddSpring, remove: sbRemove, join(a, b) { SB.join = a; sbJoin(b); }, select: sbSelect, setMass: sbSetMass, setK: sbSetK, settle: sbSettle, letGo() { return slkLetGo(); }, hangUp: slkHangUp, get fall() { return SB.fall; },
       go(dts) { if (SB.grid) gdAdvance(dts); else sbAdvance(dts); updateReadouts(); }, gridNow() { return SB.grid ? gdNow() : null; }, startMode: sbStartMode, gridMode(ax, p, q) { gdStartMode(ax, p - 1 + SB.grid.N * (q - 1)); }, sw(on) { setSw(on); }, get swAcc() { return sw.acc; }, get rows() { return nmRows; }, y() { return Object.fromEntries(sbYNow()); }, tensions() { return sbTensions(SB.rig, SB.md, sbYp()); } },
     go(dts, step) { step = step || 0.05; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); },
     state() { const g = lastSeg(), st = segState(g, t); return { t, st, en: energy(g, st, S.vert), book: { ...book } }; }
@@ -4202,7 +4368,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* ?rig=hzChain, grid3, … opens the Sandbox on that ready made rig (the Normal modes worksheet links here) */
   const rigQ = (() => { try { return new URLSearchParams(location.search).get('rig'); } catch (_) { return null; } })();
   if (rigQ && SB_BUILDS[rigQ]) { setSys('sandbox'); sbLoad(rigQ); }
-  setRunning(!reduce);
+  setRunning(!reduce && !(sbOn() && SB.armed));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => {
     if (g3) g3.S3.el.style.display = on ? '' : 'none';

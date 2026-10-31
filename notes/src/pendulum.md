@@ -37,6 +37,9 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 4. **Double pendulum chaos.** Both rods start at 130°, with E = 48.3 J against 58.9 J needed to stand both rods straight up. The lower bob flips over the top at irregular times. Point to the **λ estimate** in **Copies and separation**; after half a minute it settles near 1.5 s⁻¹.
 5. **Butterfly effect: 100 copies.** Ask the class how long 100 pendulums started 10⁻⁶ rad apart will stay together. They move as one for several seconds, then fan out. On the log plot the separation rises along a straight line and levels off near d ≈ 1 to 5. Do Q10.
 6. **Poincaré section** (upper level). At E = 15 J each dot marks the lower rod passing straight down moving right. Click inside the curve to start orbits, then raise **Section energy E**: the islands shrink (Q12).
+**Pendulum wave scene**
+
+1. **Fifteen pendulums, 60 s** (the Scene switch: Pendulum wave). Fifteen pendulums, the longest making 51 swings in 60 s and each shorter one one more. Press **Play** at 3×: the row drifts out of step into traveling waves, splits into two rows at 30 s (Q13), three at 20 s and 40 s, and is back in one line at 60 s. Then pick **Small swing lengths**: the lengths come from 2π√(L/g) but the bobs start at 20°, and at 60 s the line has not come back (the longest makes 50.61 swings).
 
 ## Questions
 
@@ -64,6 +67,8 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 
 **Q12.** In a Poincaré section, what does a set of dots lying on a closed curve tell you about that orbit, and what does a scattered cloud of dots tell you? Predict what the section looks like at very low energy, where the small angle equations apply.
 
+**Q13.** In **Fifteen pendulums, 60 s**, pendulum n (n = 0 to 14) makes 51 + n full swings in 60 s. Find the lengths of the longest and the shortest from T = 2π√(L/g). Explain why at t = 30 s the bobs stand in two rows. The demo makes the longest 34.31 cm instead: why a little shorter, when the bobs are let go from 8°?
+
 ## Common misconceptions
 
 - **"A heavier bob swings faster."** Mass cancels.
@@ -83,6 +88,7 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 - Exact period scene: θ″ = −(g/L) sin θ (point bob on a rigid massless rod, so it can go over the top), exact period T = 4√(L/g) K(sin(θ₀/2)), with K from the arithmetic–geometric mean.
 - Normal modes come from the linearized equations, det(K − ω²M) = 0, drawn as gold reference lines. The **Mode amplitude, larger angle** slider sets the larger starting angle, the lower rod's for equal masses and lengths.
 - Separation: d² = Δθ₁² + Δθ₂² + (Δω₁² + Δω₂²)L₁/g; copy k starts with the upper rod turned k·δ more than copy 0. The λ estimate follows a nearby orbit pulled back to 10⁻⁸ every 0.1 s; it is a finite time estimate. The Poincaré section records θ₁ and ω₁ each time θ₂ crosses zero moving right.
+- Pendulum wave: N independent pendulums, pendulum n with period Tₙ = Γ/(N₀ + n), so all are back in step at Γ (Harvard Natural Sciences Lecture Demonstrations: 15 pendulums, 51 to 65 swings in 60 s; J. A. Flaten and K. A. Parendo, Am. J. Phys. 69, 778 (2001)). Each length comes from the exact period, L = g(T/4K(sin(θ₀/2)))², and each bob moves exactly, sin(θ/2) = sin(θ₀/2) cd(ω₀t) with Jacobi's elliptic function; the box Lengths from T = 2π√(L/g) uses the small swing formula instead and shows the pattern drift. At t = (p/q)Γ the phases of neighbors differ by p/q of a turn, so the bobs fall into q rows.
 
 ## Going further
 

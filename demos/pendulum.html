@@ -149,6 +149,16 @@ table.rows input:focus { border-color: var(--accent); }
   #dpStage { grid-template-rows: 380px 250px 330px; }
 }
 
+/* Pendulum wave (2026-10-31): the row of pendulums in an oblique view above, the row seen from above below */
+#pwStage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 64fr) minmax(0, 36fr); }
+#pwTopPane { border-top: 1px solid var(--line); }
+#sceneSeg { flex-wrap: wrap; } #sceneSeg button { flex: 1 1 40%; }   /* four scenes: two rows in a narrow rail */
+#pwCan, #pwTopCan { touch-action: pan-y; outline: none; }
+#pwCan:focus-visible, #pwTopCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+@media (max-width: 1060px) { #pwStage { grid-template-rows: 440px 250px; min-height: 0; } }
+@media (max-width: 820px) { #pwStage { grid-template-rows: 380px 230px; } }
+@media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] #pwStage { min-height: 440px !important; } }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] #dpStage { min-height: 440px !important; } }
 /* Readings section (tools/readings_panel.py): the double pendulum scenes turned some of the shared button, status and table rules off, so the section brings its own */
@@ -239,6 +249,21 @@ table.rows input:focus { border-color: var(--accent); }
       </div>
     </div>
 
+    <div class="stage dp" id="pwStage" data-scene="wave" hidden>
+      <div class="pane" id="pwPane">
+        <canvas id="pwCan" tabindex="0" aria-label="A row of pendulums of slowly changing length hung from one bar, drawn at an angle. All are let go together from the same angle; space plays or pauses, R starts again, left and right arrows step the time by one second."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn primary" id="pwPlay">Play</button>
+          <button type="button" class="btn" id="pwReset">Reset</button>
+          <div class="seg dimseg" role="group" aria-label="Playback speed" id="pwSpeed"><button type="button" data-r="1" aria-pressed="true">1×</button><button type="button" data-r="3" aria-pressed="false">3×</button><button type="button" data-r="10" aria-pressed="false">10×</button></div>
+          <span class="tclock mono" id="pwClock">t = 0.00 s<small id="pwPhase">t/Γ = 0.000</small></span>
+        </div>
+      </div>
+      <div class="pane" id="pwTopPane">
+        <canvas id="pwTopCan" tabindex="0" role="img" aria-label="The row seen from above: each bob's sideways position against its place in the row."></canvas>
+      </div>
+    </div>
+
     <aside class="rail">
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/pendulum.html" target="pendulum-worksheet">Worksheet 1: Measuring g</a></li><li><a href="../curriculum/labs/students/double-pendulum.html" target="double-pendulum-worksheet">Worksheet 2: Normal Modes and Chaos</a></li></ul></details><!-- /vd-handout -->
       <section>
@@ -247,6 +272,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-s="lab" aria-pressed="true">Photogate lab</button>
           <button type="button" data-s="phase" aria-pressed="false">Exact period</button>
           <button type="button" data-s="double" aria-pressed="false">Double pendulum</button>
+          <button type="button" data-s="wave" aria-pressed="false">Pendulum wave</button>
         </div>
         <h2>Setups</h2>
         <div class="setgroup" data-scene="lab">
@@ -271,6 +297,15 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="poinc" data-for="double" aria-pressed="false">Poincaré section</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="dpPresetHint"></p></details>
+        </div>
+        <div class="setgroup" data-scene="wave" hidden>
+        <div class="chips" id="pwPresets">
+          <button type="button" data-p="harvard" aria-pressed="true">Fifteen pendulums, 60 s</button>
+          <button type="button" data-p="quick" aria-pressed="false">A quicker pattern</button>
+          <button type="button" data-p="many" aria-pressed="false">Twenty four pendulums</button>
+          <button type="button" data-p="smallLen" aria-pressed="false">Small swing lengths</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="pwPresetHint"></p></details>
         </div>
       </section>
 
@@ -446,6 +481,49 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         </div>
         <div class="key" id="keyBox"></div>
         <p class="hint" id="modelHint">Model: point masses on rigid massless rods, frictionless pivots, no air drag, uniform g. The motion comes from the exact nonlinear equations of motion (from the Lagrangian), integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; the energy drift readout shows how well the integration keeps energy fixed. The small angle period 2π√(L/g) and the normal mode frequencies are the linearized limits, drawn as references.</p>
+        </div></details>
+      </section>
+      </div>
+
+      <div class="sc dp" data-scene="wave" hidden>
+      <section>
+        <h2>Pendulum wave</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="pwN">Pendulums N</label><output id="pwoN" class="mono" for="pwN"></output></div>
+          <input type="range" id="pwN" min="5" max="24" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="pwG">Pattern time Γ</label><output id="pwoG" class="mono" for="pwG"></output></div>
+          <input type="range" id="pwG" min="10" max="120" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="pwN0">Swings of the longest in Γ, N₀</label><output id="pwoN0" class="mono" for="pwN0"></output></div>
+          <input type="range" id="pwN0" min="5" max="80" step="1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="pwA">Release angle θ₀</label><output id="pwoA" class="mono" for="pwA"></output></div>
+          <input type="range" id="pwA" min="1" max="30" step="1">
+        </div>
+        <label class="check"><input type="checkbox" id="pwSmall"><span>Lengths from T = 2π√(L/g), the small swing formula</span></label>
+        <div class="ctl">
+          <div class="slider-head"><label for="pwT">Jump to time t</label><output id="pwoT" class="mono" for="pwT"></output></div>
+          <input type="range" id="pwT" min="0" max="1" step="0.0025" value="0">
+        </div>
+        <p class="hint">Pendulum n makes N₀ + n full swings in Γ, so every bob is back where it started at t = Γ. In between the row makes waves, then two rows at Γ/2, three at Γ/3 and so on.</p>
+      </section>
+      <section>
+        <h2>Measurements</h2>
+        <dl class="readout" id="pwOut"></dl>
+        <p class="formula mono">Tₙ = Γ/(N₀ + n) · L = g (T/4K(sin(θ₀/2)))² · small swings: L = g (T/2π)²</p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lengths and periods</summary><div class="foldbody">
+        <div class="twrap"><table class="dtab"><caption>Each pendulum, longest first</caption><thead><tr><th>n</th><th>L (cm)</th><th>T (s)</th><th>Swings in Γ</th></tr></thead><tbody id="pwTab"></tbody></table></div>
+        </div></details>
+      </section>
+      <section>
+        <details class="fold"><summary>The model</summary><div class="foldbody">
+        <p class="hint">Model: point bobs on massless strings that do not stretch, frictionless pivots, no air drag, g = 9.81 m/s², every pendulum let go from rest at θ₀ at t = 0, all swinging in parallel planes and not touching. Each one moves exactly as a pendulum at any angle: sin(θ/2) = sin(θ₀/2) cd(ω₀t), with Jacobi's elliptic function and ω₀ = √(g/L), so its period is 4√(L/g) K(sin(θ₀/2)), a little longer than 2π√(L/g). The lengths are chosen from that exact period, so the pattern comes back exactly at Γ; tick the small swing formula and the lengths come from 2π√(L/g) instead, every swing is a little slow, and the pattern drifts. The classic demonstration (Harvard Natural Sciences Lecture Demonstrations) has 15 pendulums, the longest making 51 swings in 60 s; see also J. A. Flaten and K. A. Parendo, Am. J. Phys. 69, 778 (2001). The bobs are drawn in an oblique view: the row runs across, the swing comes toward you; lengths and swings are to scale.</p>
         </div></details>
       </section>
       </div>
@@ -638,6 +716,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 4; i++) { const di = i < 2 ? wrapPi(sh.y[i] - ref[i]) : sh.y[i] - ref[i]; y[i] = ref[i] + di * r; }
     integReset(sh, t, y);
   }
+  // ---------- Pendulum wave (2026-10-31, oPhysics pendulum wave) ----------
+  // N independent pendulums. Pendulum n (n = 0 … N−1, longest first) makes N₀ + n full swings in the pattern time Γ, so its period is
+  // Tₙ = Γ/(N₀ + n) and after Γ every one is back where it started (Harvard Natural Sciences Lecture Demonstrations: 15 pendulums,
+  // the longest 51 swings in 60 s; J. A. Flaten and K. A. Parendo, Am. J. Phys. 69, 778 (2001)). The length that gives Tₙ at the
+  // release angle θ₀ comes from the exact period T = 4√(L/g) K(sin(θ₀/2)); small swing lengths use T = 2π√(L/g) instead.
+  const pwPeriod = (n, Gam, N0) => Gam / (N0 + n);
+  function pwLength(T, g, th0, small) { const q = small ? T / (2 * Math.PI) : T / (4 * ellipK(Math.sin(Math.abs(th0) / 2))); return g * q * q; }
+  // Jacobi sn, cn, dn of u with parameter m = k² by the arithmetic geometric mean (Abramowitz and Stegun 16.4.3)
+  function jacobi(u, m) {
+    if (m < 1e-300) return { sn: Math.sin(u), cn: Math.cos(u), dn: 1 };
+    const a = [1], c = [Math.sqrt(m)]; let b = Math.sqrt(1 - m);
+    for (let i = 0; i < 40 && Math.abs(c[c.length - 1]) > 1e-17; i++) { const an = (a[i] + b) / 2, cn = (a[i] - b) / 2; b = Math.sqrt(a[i] * b); a.push(an); c.push(cn); }
+    const N = a.length - 1; let phi = Math.pow(2, N) * a[N] * u, phiPrev = phi;
+    for (let i = N; i >= 1; i--) { phiPrev = phi; phi = (phi + Math.asin(c[i] / a[i] * Math.sin(phi))) / 2; }
+    return { sn: Math.sin(phi), cn: Math.cos(phi), dn: Math.cos(phi) / Math.cos(phiPrev - phi) };
+  }
+  // a pendulum let go from rest at θ₀: sin(θ/2) = k cd(ω₀t, k), k = sin(θ₀/2), ω₀ = √(g/L) (exact; the time is first brought into one period 4K)
+  function pwAngle(t, L, g, th0) {
+    const k = Math.sin(Math.abs(th0) / 2), K = ellipK(k), w0 = Math.sqrt(g / L);
+    let u = (w0 * t) % (4 * K); if (u < 0) u += 4 * K;
+    const J = jacobi(u, k * k), s = Math.max(-1, Math.min(1, k * J.cn / J.dn));
+    return Math.sign(th0) * 2 * Math.asin(s);
+  }
+  // full swings pendulum n makes in the pattern time with these lengths, and where the bobs stand at t (sideways, L sin θ)
+  function pwSwings(L, g, th0, Gam) { return Gam / periodExact(L, g, th0); }
+  function pwPattern(Ls, g, th0, t) { return Ls.map((L) => { const th = pwAngle(t, L, g, th0); return { th, x: L * Math.sin(th), y: L * Math.cos(th) }; }); }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -2435,39 +2539,162 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { resize, pause: () => setRunning(false), setMode, applyPreset, presets: PRESETS, mode: () => S.mode, init3D, dim3 };
   })();
 
+  /* ========== Pendulum wave (2026-10-31): a row of pendulums whose lengths make them line up again after Γ ========== */
+  const pw = (() => {
+    const $ = (id) => document.getElementById(id), G = 9.81, D = Math.PI / 180;
+    const stage = $('pwStage'), can = $('pwCan'), top = $('pwTopCan'), ctx = can.getContext('2d'), tctx = top.getContext('2d');
+    const PRESETS = {
+      harvard: { N: 15, Gam: 60, N0: 51, A: 8, small: false, hint: 'The classic demonstration: fifteen pendulums, the longest making 51 full swings in 60 s and each shorter one one more, up to 65. Let them all go together: they drift out of step into traveling waves, split into two rows at 30 s, three at 20 s and 40 s, and at 60 s are all back in one line.' },
+      quick: { N: 15, Gam: 20, N0: 15, A: 10, small: false, hint: 'The same idea in 20 s: the longest makes 15 swings and the shortest 29. Fewer swings in Γ means longer pendulums and faster waves along the row.' },
+      many: { N: 24, Gam: 60, N0: 40, A: 8, small: false, hint: 'Twenty four pendulums, 40 to 63 swings in 60 s. More pendulums make the waves smoother; between the simple fractions of Γ the row shows waves of many lengths at once.' },
+      smallLen: { N: 15, Gam: 60, N0: 51, A: 20, small: true, hint: 'The lengths here come from T = 2π√(L/g), the small swing formula, but the bobs are let go from 20°, where every swing takes about 0.8% longer. By 60 s the longest has made only 50.6 swings instead of 51, so the line does not quite come back. Untick the small swing formula and the lengths are set from the exact period, and the line returns at Γ.' }
+    };
+    const S = { N: 15, Gam: 60, N0: 51, A: 8, small: false, t: 0, run: false, rate: 1, Ls: [], preset: 'harvard' };
+    let W = 0, H = 0, TW = 0, TH = 0, dpr = 1, last = 0, lastText = 0;
+    const tok = () => { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim(); return { ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), canvas: g('--canvas'), accent: g('--accent'), wire: g('--wire'), metal: g('--metal'), metalDark: g('--metal-dark'), wood: g('--wood'), woodDark: g('--wood-dark'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; };
+    const hue = (n) => 250 - 250 * n / Math.max(1, S.N - 1);
+    const fx = (v, d) => (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−');
+    function lengths() { S.Ls = []; for (let n = 0; n < S.N; n++) S.Ls.push(pwLength(pwPeriod(n, S.Gam, S.N0), G, S.A * D, S.small)); }
+    function sync() {
+      $('pwN').value = S.N; $('pwG').value = S.Gam; $('pwN0').value = S.N0; $('pwA').value = S.A; $('pwSmall').checked = S.small;
+      $('pwoN').textContent = String(S.N); $('pwoG').textContent = `${S.Gam} s`; $('pwoN0').textContent = String(S.N0); $('pwoA').textContent = `${S.A}°`;
+      $('pwTab').innerHTML = S.Ls.map((L, n) => `<tr><td>${n + 1}</td><td>${(L * 100).toFixed(2)}</td><td>${periodExact(L, G, S.A * D).toFixed(4)}</td><td>${pwSwings(L, G, S.A * D, S.Gam).toFixed(3)}</td></tr>`).join('');
+    }
+    function setRun(on) { S.run = on; $('pwPlay').textContent = on ? 'Pause' : 'Play'; $('pwPlay').classList.toggle('primary', !on); last = performance.now(); }
+    function setT(t) { S.t = Math.max(0, t); draw(); text(); }
+    function change() { lengths(); S.t = 0; setRun(false); sync(); draw(); text(); for (const b of $('pwPresets').children) b.setAttribute('aria-pressed', 'false'); }
+    function applyPreset(k) { const c = PRESETS[k]; if (!c) return; Object.assign(S, { N: c.N, Gam: c.Gam, N0: c.N0, A: c.A, small: c.small, preset: k }); lengths(); S.t = 0; setRun(false); sync();
+      for (const b of $('pwPresets').children) b.setAttribute('aria-pressed', String(b.dataset.p === k)); $('pwPresetHint').textContent = c.hint; draw(); text(); }
+    /* how many rows the bobs stand in now, seen from above: their sideways positions sorted, split where two neighbors are more than a
+       tenth of the full swing apart; more than 8 groups, or a group spread wider than that, counts as waves */
+    function rows(P) {
+      const xm = 2 * Math.max(...S.Ls) * Math.sin(S.A * D), tol = 0.1 * xm, xs = P.map((p) => p.x).sort((a, b) => a - b);
+      let k = 1, start = xs[0];
+      for (let i = 1; i < xs.length; i++) if (xs[i] - xs[i - 1] > tol) { k++; start = xs[i]; } else if (xs[i] - start > tol) return null;
+      return k <= 8 ? k : null;
+    }
+    function text() {
+      const th0 = S.A * D, L0 = S.Ls[0], L1 = S.Ls[S.N - 1], r = rows(pwPattern(S.Ls, G, th0, S.t)), miss = Math.max(...pwPattern(S.Ls, G, th0, S.Gam).map((p) => Math.abs(p.th - th0))) / D;
+      $('pwClock').firstChild.nodeValue = `t = ${S.t.toFixed(2)} s`; $('pwPhase').textContent = `t/Γ = ${(S.t / S.Gam).toFixed(3)}`;
+      if (document.activeElement !== $('pwT')) $('pwT').value = Math.min(1, S.t / S.Gam); $('pwoT').textContent = `${S.t.toFixed(2)} s`;
+      const dd = (k, v) => `<div><dt>${k}</dt><dd class="mono">${v}</dd></div>`;
+      let h = dd('Time t', `${S.t.toFixed(2)} s`) + dd('t/Γ', (S.t / S.Gam).toFixed(4));
+      h += dd('Seen from above, the bobs stand in', r ? (r === 1 ? 'one line' : `${r} rows`) : 'waves');
+      h += dd('Longest: L, T', `${(L0 * 100).toFixed(2)} cm, ${periodExact(L0, G, th0).toFixed(4)} s`) + dd('Shortest: L, T', `${(L1 * 100).toFixed(2)} cm, ${periodExact(L1, G, th0).toFixed(4)} s`);
+      h += dd('Swings of the longest so far', (S.t / periodExact(L0, G, th0)).toFixed(3)) + dd('Swings of the longest in Γ', pwSwings(L0, G, th0, S.Gam).toFixed(4));
+      h += dd('Largest miss from θ₀ at t = Γ', `${fx(miss, 3)}°`);
+      $('pwOut').innerHTML = h;
+    }
+    function resize() {
+      if (stage.hidden) return;
+      dpr = window.devicePixelRatio || 1;
+      const a = $('pwPane').getBoundingClientRect(), b = $('pwTopPane').getBoundingClientRect();
+      W = a.width; H = a.height; TW = b.width; TH = b.height;
+      for (const [c, w, h] of [[can, W, H], [top, TW, TH]]) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); c.style.width = w + 'px'; c.style.height = h + 'px'; }
+      draw();
+    }
+    function draw() {
+      if (stage.hidden || !W || !H) return;
+      const T = tok(), P = pwPattern(S.Ls, G, S.A * D, S.t), N = S.N, d = 0.035, zs = P.map((_, n) => (n - (N - 1) / 2) * d), Lmax = Math.max(...S.Ls);
+      const ox = -0.5 * Math.cos(35 * D), oy = 0.5 * Math.sin(35 * D), xm = Lmax * Math.sin(S.A * D) * 1.05, br = 0.011;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+      const padT = 64, padB = 24, floor = Lmax + 0.07, spanX = (zs[N - 1] - zs[0]) + 0.12 + 2 * Math.abs(ox) * xm, spanY = floor + 2 * oy * xm + 0.02;
+      const s = Math.min((W - 40) / spanX, (H - padT - padB) / spanY), cx = W / 2, cy = padT + (H - padT - padB - spanY * s) / 2 + oy * xm * s;
+      const P2 = (z, y, x) => [cx + s * (z + ox * x), cy + s * (y + oy * x)];
+      /* the frame: a base, two posts and the bar the strings hang from */
+      const z0 = zs[0] - 0.05, z1 = zs[N - 1] + 0.05;
+      ctx.lineCap = 'round';
+      { const a = P2(z0, floor, xm), b = P2(z1, floor, xm), c = P2(z1, floor, -xm), e = P2(z0, floor, -xm); ctx.fillStyle = T.wood; ctx.globalAlpha = 0.55; ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.lineTo(...c); ctx.lineTo(...e); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.woodDark; ctx.lineWidth = 1; ctx.stroke(); }
+      ctx.strokeStyle = T.metalDark; ctx.lineWidth = 5; for (const z of [z0, z1]) { ctx.beginPath(); ctx.moveTo(...P2(z, floor, 0)); ctx.lineTo(...P2(z, -0.01, 0)); ctx.stroke(); }
+      ctx.strokeStyle = T.metal; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(...P2(z0, -0.01, 0)); ctx.lineTo(...P2(z1, -0.01, 0)); ctx.stroke();
+      /* shadows on the base, then strings and bobs from the back (away from you) to the front */
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'; P.forEach((p, n) => { const [u, v] = P2(zs[n], floor, p.x); ctx.beginPath(); ctx.ellipse(u, v, br * s * 1.1, br * s * 0.45, 0, 0, 7); ctx.fill(); });
+      const order = P.map((p, n) => n).sort((a, b) => P[a].x - P[b].x);
+      for (const n of order) {
+        const p = P[n], [u0, v0] = P2(zs[n], 0, 0), [u, v] = P2(zs[n], p.y, p.x), r = Math.max(3, br * s);
+        ctx.strokeStyle = T.wire; ctx.lineWidth = 1; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(u0, v0); ctx.lineTo(u, v); ctx.stroke(); ctx.globalAlpha = 1;
+        const gr = ctx.createRadialGradient(u - r * 0.35, v - r * 0.35, r * 0.15, u, v, r); gr.addColorStop(0, `hsl(${hue(n)} 85% 78%)`); gr.addColorStop(1, `hsl(${hue(n)} 70% 42%)`);
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(u, v, r, 0, 7); ctx.fill();
+      }
+      ctx.fillStyle = T.muted; ctx.font = `11px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(`${N} pendulums, ${S.N0} to ${S.N0 + N - 1} swings in Γ = ${S.Gam} s; θ₀ = ${S.A}°${S.small ? ', small swing lengths' : ''}`, 12, H - 8);
+      drawTop(T, P, zs);
+    }
+    function drawTop(T, P, zs) {
+      if (!TW || !TH) return;
+      const c = tctx, N = S.N; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, TW, TH);
+      const L = 52, R = TW - 16, Tp = 30, B = TH - 28, xm = Math.max(...S.Ls) * Math.sin(S.A * D), A = Math.max(0.5, Math.ceil(xm * 100 * 1.1));
+      const X = (n) => L + (R - L) * (N === 1 ? 0.5 : n / (N - 1)), Y = (cm) => (Tp + B) / 2 - cm / A * (B - Tp) / 2;
+      c.fillStyle = T.ink; c.font = `600 11px ${T.mono}`; c.textAlign = 'left'; c.fillText(TW < 520 ? 'From above: sideways position (cm)' : 'From above: each bob’s sideways position (cm) against its place in the row', L, 16);
+      c.strokeStyle = T.grid; c.lineWidth = 1; c.fillStyle = T.muted; c.font = `10px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (const v of [-A, -A / 2, 0, A / 2, A]) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(R, Y(v)); c.stroke(); c.fillText(fx(v, A < 4 ? 1 : 0), L - 6, Y(v)); }
+      c.textAlign = 'center'; c.textBaseline = 'top'; for (let n = 0; n < N; n += N > 16 ? 2 : 1) c.fillText(String(n + 1), X(n), B + 6);
+      c.strokeStyle = T.line; c.lineWidth = 1.2; c.beginPath(); P.forEach((p, n) => (n ? c.lineTo(X(n), Y(p.x * 100)) : c.moveTo(X(n), Y(p.x * 100)))); c.stroke();
+      P.forEach((p, n) => { c.fillStyle = `hsl(${hue(n)} 70% 50%)`; c.beginPath(); c.arc(X(n), Y(p.x * 100), 4.5, 0, 7); c.fill(); });
+      c.textBaseline = 'alphabetic';
+    }
+    function frame(now) {
+      const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+      if (S.run && !stage.hidden) { S.t += dt * S.rate; draw(); if (now - lastText > 150) { text(); lastText = now; } }
+      requestAnimationFrame(frame);
+    }
+    $('pwPlay').addEventListener('click', () => setRun(!S.run));
+    $('pwReset').addEventListener('click', () => { setRun(false); setT(0); });
+    for (const b of $('pwSpeed').children) b.addEventListener('click', () => { S.rate = +b.dataset.r; for (const q of $('pwSpeed').children) q.setAttribute('aria-pressed', String(q === b)); });
+    for (const b of $('pwPresets').children) b.addEventListener('click', () => applyPreset(b.dataset.p));
+    $('pwN').addEventListener('input', (e) => { S.N = +e.target.value; change(); });
+    $('pwG').addEventListener('input', (e) => { S.Gam = +e.target.value; change(); });
+    $('pwN0').addEventListener('input', (e) => { S.N0 = +e.target.value; change(); });
+    $('pwA').addEventListener('input', (e) => { S.A = +e.target.value; change(); });
+    $('pwSmall').addEventListener('change', (e) => { S.small = e.target.checked; change(); });
+    $('pwT').addEventListener('input', (e) => { setRun(false); setT(+e.target.value * S.Gam); });
+    can.addEventListener('keydown', (e) => {
+      if (e.key === ' ') setRun(!S.run); else if (e.key === 'r' || e.key === 'R') { setRun(false); setT(0); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { setRun(false); setT(S.t + (e.key === 'ArrowRight' ? 1 : -1)); } else return;
+      e.preventDefault();
+    });
+    const ro = new ResizeObserver(resize); ro.observe($('pwPane')); ro.observe($('pwTopPane'));
+    for (const q of ['(prefers-color-scheme: dark)']) try { matchMedia(q).addEventListener('change', draw); } catch (_) {}
+    new MutationObserver(() => draw()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+    applyPreset('harvard');
+    requestAnimationFrame(frame);
+    return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, get S() { return S; }, setT, play: () => setRun(true) };
+  })();
+
   /* ========== scenes ========== */
   const $ = (id) => document.getElementById(id);
   /* Photogate lab (lab), Exact period (phase: the simple pendulum at any amplitude, the phase portrait) and Double pendulum (double).
      A link can open a scene or a setup: ?scene=lab|phase|double, ?setup=<setup> (or ?p=, or #<setup>); old double-pendulum.html
-     links come here through that page. Leaving a scene pauses it. */
-  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.81 m/s²', double: 'SI units · angles from straight down · g = 9.81 m/s²' };
+     links come here through that page. Pendulum wave (wave, 2026-10-31) has setups harvard, quick, many, smallLen. Leaving a scene pauses it. */
+  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.81 m/s²', double: 'SI units · angles from straight down · g = 9.81 m/s²', wave: 'SI units · lengths to the bob center · g = 9.81 m/s²' };
   let scene = 'lab';
   function setScene(sc) {
     if (!UNITS[sc]) return;
-    if (sc !== scene) { if (scene === 'lab') lab.pause(); else if (sc === 'lab') dbl.pause(); }
+    if (sc !== scene) { if (scene === 'lab') lab.pause(); else if (scene === 'wave') pw.pause(); else if (sc === 'lab' || sc === 'wave') dbl.pause(); }
     scene = sc;
     for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === sc));
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = !el.dataset.scene.split(' ').includes(sc);
     $('unitsLine').textContent = UNITS[sc];
-    if (sc !== 'lab') dbl.setMode(sc === 'phase' ? 'simple' : 'double');
-    requestAnimationFrame(() => { lab.resize(); dbl.resize(); });
+    if (sc === 'phase' || sc === 'double') dbl.setMode(sc === 'phase' ? 'simple' : 'double');
+    requestAnimationFrame(() => { lab.resize(); dbl.resize(); pw.resize(); });
   }
   for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.s));
   /* Projector resizes both scenes; Reset all counts the readings of both */
-  VD.projector({ onChange: () => { lab.resize(); dbl.resize(); } });
+  VD.projector({ onChange: () => { lab.resize(); dbl.resize(); pw.resize(); } });
   VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   const dpCount = window.vdReadings;
   window.vdReadings = () => lab.rows() + (typeof dpCount === 'function' ? dpCount() : 0);
   /* 3D | Flat: one choice for the scenes; 3D opens first (unless ?view=flat, a low power device, or no WebGL) */
   view3 = VD3K.view({ seg: document.querySelector('main.bench'), init: () => { const ok = lab.init3D(); if (ok) dbl.init3D(); return ok; },
     change: (on) => { lab.dim3(on); dbl.dim3(on); }, status: (m) => lab.status(m) });
-  window.__pend = { setScene, get scene() { return scene; }, get view3() { return view3; } };
+  window.__pend = { setScene, get scene() { return scene; }, get view3() { return view3; }, pw };
   (() => {
     let q = null; try { q = new URLSearchParams(location.search); } catch (_) { return; }
     const ALIAS = { 'double-pendulum': 'double', chaos: 'double', simple: 'phase', exact: 'phase', photogate: 'lab' };
     let sc = q.get('scene') || q.get('mode'); sc = ALIAS[sc] || sc;
     const p = q.get('setup') || q.get('p') || (location.hash || '').slice(1);
     if (p && lab.presets[p] && (!sc || sc === 'lab')) { setScene('lab'); lab.applyPreset(p); return; }
+    if (p && pw.presets[p]) { setScene('wave'); pw.applyPreset(p); return; }
     if (p && dbl.presets[p]) { const m = dbl.presets[p].mode; setScene(m === 'simple' ? 'phase' : 'double'); dbl.applyPreset(p); return; }
     if (UNITS[sc]) setScene(sc);
   })();

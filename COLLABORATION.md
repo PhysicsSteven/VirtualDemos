@@ -6588,3 +6588,42 @@ worksheets this round). GPT, please verify the physics and numbers below (all fr
 - Worksheet ideas (not built): a Millikan worksheet of its own if Steve wants one later (each student times five drops twice each
   way, the class pools |q| in a histogram, finds e from the spacings and from q/n with n chosen by rounding); or a part in the e/m
   worksheet (m_e = e/(e/m) with e from three drops).
+## 2026-10-31 · Claude · Rounds 4 and 5, Group D: falling slinky (Springs) and pendulum wave (Pendulums)
+
+Steve (19:05): "Yeah let's finish up". Group D of `round4/groups-2026-10-31.md` in the project files (plan #33, #34), both folded into
+existing demos, no new worksheet. GPT, please verify the physics and numbers below.
+- **Springs and Oscillations, Falling slinky** (Sandbox rig beside Two blocks; `?rig=slinky`): the Chain of ten hung up, ten 100 g blocks
+  on ten 50 N/m springs from the ceiling. It opens hanging at rest and paused; Play or **Let go of the top** (stage row, also L) lets go
+  of the ceiling spring, which is then slack; **Hang it up again**, Reset and Play after the fall put it back. Any chain hung by one
+  spring with one block under another (no hooks, oil or shaker) can be let go, e.g. Two blocks. Model: each other spring stands for a
+  slinky's coils, pulling k(L − L₀) and touching at L₀ = 10.0 cm; coils that meet collide perfectly inelastically (R. C. Cross and
+  M. S. Wheatland, Am. J. Phys. 80, 1051 (2012), after Calkin, Am. J. Phys. 61, 261 (1993)). After a collision the pair's relative
+  acceleration T_above/m + T_below/m is never negative, so no pair stays stuck and between collisions the motion is linear: z' = Az,
+  advanced by the Taylor series of e^(Aτ) to 20 terms with ‖Aτ‖∞ ≤ 1/4 (rounding level); a collision is where a gap's series crosses
+  L₀, sampled 16 times a step and bisected to 1e−15 s; runs of touching blocks are resolved by pool adjacent violators. Core `slkA`,
+  `slkStart`, `slkAdvance`, `slkCollide`, `slkEnergy`, `slkCM`, `slkSmooth`. Numbers: the top block starts at 10g; the bottom block has
+  moved 0.38 µm at 0.2 s and 0.25 mm when the collapse reaches it at 0.2569 s; center of mass ½gt² to 1e−13; energy plus what the 38
+  collisions took (2.59 J by then) kept to 1e−13. Smooth slinky √(M/3K) (Cross and Wheatland eq. 18, K = 50/9 N/m): 0.2449 s; twenty
+  blocks of the same M and K give 0.2510 s, and 2t₂₀ − t₁₀ = 0.2451 s. Readouts during the fall, Energy bars since letting go (with
+  what the collisions took), the graph on a 0.5 s window; the Normal modes pane says a falling chain has none. New
+  `test_springs_slinky.cjs` (5): free fall, two blocks against e₀ cos ωt with the collision at π/2ω and ½ke₀² lost, initial
+  accelerations, conservation and order of collapse on the ten, convergence to √(M/3K). Small fix on the way: the Sandbox picture
+  leaves 12 px more above the parts strip on narrow panes (the lowest block's label hid behind it).
+- **Pendulums, Pendulum wave** (fourth scene; `?scene=wave`, setups `harvard`, `quick`, `many`, `smallLen`): N pendulums, pendulum n
+  makes N₀ + n swings in Γ (Harvard Natural Sciences Lecture Demonstrations, 15 pendulums, 51 to 65 swings in 60 s; Flaten and Parendo,
+  Am. J. Phys. 69, 778 (2001)). Lengths from the exact period, L = g(T/4K(sin(θ₀/2)))², and exact motion sin(θ/2) = k cd(ω₀t, k) with
+  Jacobi functions by the AGM (A&S 16.4.3), time reduced into one period. A box takes the lengths from 2π√(L/g) instead. Sliders N, Γ,
+  N₀, θ₀, Jump to time; speeds 1×, 3×, 10×. Picture: an oblique view of the frame and row (to scale), and below it the row from above
+  (sideways position against place in the row). Readouts include how many rows the bobs stand in (counted from their positions), the
+  swings of the longest in Γ and the largest miss from θ₀ at t = Γ; a table of every L, T and swings. Numbers: at 8° the longest is
+  34.31 cm (34.39 cm by 2π√(L/g)), the shortest 21.12 cm; Small swing lengths at 20°: the longest makes 50.61 swings in 60 s, largest
+  miss 40.0°. New `test_pendulum_wave.cjs` (4): Jacobi identities and a numerical inversion, θ″ = −(g/L) sin θ and the period, against
+  the photogate lab's RK4 over 60 s (1e−8 rad), every bob back at θ₀ at Γ and alternating at Γ/2. The Scene switch wraps to two rows.
+- Notes: a Running it in class item, a question and a physics bullet each (springs Q9, pendulum Q13); keys in TeacherKeys demo-keys,
+  rebuilt. What's new: one entry. Checks: test_springs (11), test_springs_sandbox (19), test_springs_slinky (5), test_pendulum (4),
+  test_double_pendulum (6), test_pendulum_wave (4) pass; vdcheck `--only after` 0 problems and `--only clip` 0 cut off on both; my own
+  shots at 1368, 1280 and 390 px, light and dark, no page errors, no sideways scroll. No 3D for either (the sandbox is Flat only; the
+  pendulum wave is an oblique flat drawing).
+- Worksheet part ideas (not built): Springs, falling slinky: time when the bottom starts to move for ten and for the Two blocks chain
+  and compare with √(M/3K); Pendulums, pendulum wave: from the readout table, check Tₙ = Γ/(N₀ + n), predict the times of two and
+  three rows, and measure the drift with small swing lengths against θ₀ (it grows as θ₀²/16).
