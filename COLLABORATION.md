@@ -5630,3 +5630,27 @@ Steve asked to fold the NAAP gaps into existing demos where they fit, so this is
   works video `intro-constellations-3d.mp4`. What's new entry.
 - Checked: Playwright at 1368 and 390 px, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.
   GPT: please verify the distances against Hipparcos, the M and L values and the key.
+
+## 2026-10-31 · Claude · Eclipsing binaries, main sequence fitting, Cepheid photometry, galactic habitable zone (NAAP parity, Steve)
+
+Group C of the Astro push. All four are new views or modes of existing demos (Steve: fold into existing demos; eclipsing binaries
+as a mode of Finding Exoplanets by his choice), with worksheets on the Astronomy page only. Commits 23c431d, 05d5b70, a077c75
+(demos), 181262a (worksheets), d116c71 (shared files), 413cef1 (videos); keys TeacherKeys 4c1fe17.
+- Finding Exoplanets, Two stars mode (`?kind=bin`, `?ws=eclipsing-binary`): two luminous limb darkened stars in a Kepler orbit,
+  bolometric light, flux normalized so a total eclipse leaves exactly the other star; both velocity curves with γ; setups Sun and
+  red dwarf, Twin stars, Hot star and cool giant, Partial eclipses, Eccentric pair; mystery binary with noise. Planet mode readings
+  unchanged. Tests `test_exoplanets.cjs` (4).
+- Distance Ladder, Spectroscopic parallax and Main sequence fitting: ridge line a quadratic fit to the HYG v3.8 main sequence within
+  25 pc (3σ clipped); clusters simulated (0.08 mag in V, 0.02 in B − V, 30% unresolved pairs); ten real target stars 40 to 100 pc
+  with Hipparcos distances. Cepheid photometry: simulated CCD frames (Gaussian seeing, transparency, photon and read noise), sky
+  from a 3 to 8 px annulus median, Benedict et al. (2007) Leavitt law, LMC 49.6 kpc (Pietrzyński et al. 2019). Tests in
+  `test_distance_ladder.cjs`.
+- Planet Temperatures, Galaxy view: simplified Lineweaver, Fenner and Gibson (2004) model, four factors and their product, 68% and
+  95% regions; ingredients stated in the demo. Test group in `test_planet-temperatures.cjs` (Sun P = 0.97 × 0.5 × Φ(0.57)).
+- Key numbers from real runs: Sun and red dwarf M 1.000/0.300, R 1.005/0.304 (curved path, stated), T2 3290 K; clusters fit short
+  (A 111 pc vs 118) because of unresolved pairs, as the handout asks students to explain; spectroscopic parallax median ratio 0.68;
+  Cepheid C3 P 11.38 ± 0.09 d, d 51.0 kpc; GHZ zone 5.0 to 12.6 kpc, born 3.4 to 10.1 Gyr ago, 82.5% older than the Sun.
+- How this works videos eclipsing-binary, galactic-habitable-zone, main-sequence-fitting, cepheid-photometry (18 to 21 s, dark).
+  What's new entries. Math check 0 problems. `symbols.py --check` still fails on other threads' handouts (color-vision,
+  galton-board, hydrogen-in-stars, intro-sidereal-day, nearest-brightest, quantum-coin, ubv-colors); I left those to their threads.
+- GPT: please verify the eclipsing binary masses and radii, the Leavitt law and LMC distance, the GHZ factors, and the four keys.
