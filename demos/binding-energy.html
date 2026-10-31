@@ -9,6 +9,7 @@
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
+<script src="lib/nubase.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -32,6 +33,7 @@
   --equi: #a7740b;
   --accent: #2b60b5;
   --alpha: #17855f;
+  --emit: #7b52b8;
   --seq0: #dfe8f5;
   --seq1: #12356b;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -41,13 +43,13 @@
   :root:not([data-theme="light"]) {
     --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
     --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
+    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
+  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -85,6 +87,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.band { height: 10px; border: 0; border-radius: 2px; }
 .swatch.dot { width: 9px; height: 9px; border: 0; border-radius: 50%; margin: 0 6.5px; background: var(--neg); }
 .swatch.dot.faint { background: var(--muted); opacity: 0.5; }
+.swatch.sq { width: 11px; height: 11px; border: 0; border-radius: 2px; margin: 0 5.5px; }
+.buildctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.buildctl .bgrp { display: inline-flex; align-items: center; gap: 3px; border: 1px solid var(--line); border-radius: 8px; padding: 2px 3px 2px 8px; background: var(--canvas); }
+.buildctl .blab { font-size: 0.82rem; font-weight: 700; margin-right: 3px; }
+.buildctl .bgrp .btn { min-width: 34px; padding: 2px 8px; font-size: 1rem; }
+#bTbl td:last-child { white-space: normal; text-align: right; font-family: var(--font-ui); }
 .b-surf { background: color-mix(in srgb, var(--neg) 40%, transparent); }
 .b-coul { background: color-mix(in srgb, var(--pos) 40%, transparent); }
 .b-asym { background: color-mix(in srgb, var(--alpha) 40%, transparent); }
@@ -101,6 +109,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { height: 86vh; min-height: 640px; }
+  .stage.build { height: auto; min-height: 960px; }
 }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -129,6 +138,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="ldm" aria-pressed="false">Liquid drop</button>
           <button type="button" data-v="shell" aria-pressed="false">Shell effects</button>
           <button type="button" data-v="chart" aria-pressed="false">Chart</button>
+          <button type="button" data-v="build" aria-pressed="false">Build</button>
         </div>
         <div class="seg" role="group" aria-label="Range of A" id="zoomSeg">
           <button type="button" data-z="full" aria-pressed="true">All A</button>
@@ -145,6 +155,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <label class="check" id="allRow"><input type="checkbox" id="showAll" checked> Unstable too</label>
+        <div class="buildctl" id="buildCtl" hidden>
+          <span class="bgrp"><span class="blab">Protons</span><button type="button" class="btn" id="bPm" aria-label="Remove a proton">−</button><button type="button" class="btn" id="bPp" aria-label="Add a proton">+</button></span>
+          <span class="bgrp"><span class="blab">Neutrons</span><button type="button" class="btn" id="bNm" aria-label="Remove a neutron">−</button><button type="button" class="btn" id="bNp" aria-label="Add a neutron">+</button></span>
+          <button type="button" class="btn primary" id="bDecay">Let it decay</button>
+          <button type="button" class="btn" id="bClear">Empty</button>
+        </div>
         <button type="button" class="btn" id="play">Pause</button>
       </div>
       <div class="pane" id="pane">
@@ -167,7 +183,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
-      <section>
+      <section id="buildSec" hidden>
+        <h2>Build a nucleus</h2>
+        <p class="hint">Add protons and neutrons one at a time with the buttons on the picture, the arrow keys on it (up and down for protons, left and right for neutrons), or a click on a square of the chart. Let it decay follows the main decay mode.</p>
+        <table class="terms" id="bTbl" aria-label="The nucleus you built"></table>
+        <details class="more"><summary>Where this comes from</summary>
+          <p class="hint">Every ground state in NUBASE2020 (F. G. Kondev et al., Chinese Physics C 45, 030001 (2021)): half lives, decay modes and their shares, natural abundances, and the AME2020 mass excesses, including the ones AME2020 estimates from systematics (marked estimated). A nucleus not in the table has never been made, or falls apart too fast to be seen; NUBASE lists some as particle unstable, bound neither for its last proton nor its last neutron. B = Z Δ(¹H) + N Δ(n) − Δ, so it counts the electrons with the protons, as in the other views. S<sub>n</sub> and S<sub>p</sub>, the energies to pull off the last neutron or proton, come from the same masses; a negative one means that nucleon is not bound. A mode NUBASE marks as not yet seen is left out, and Let it decay takes the largest share, so a chain with a branch follows only its main line.</p>
+        </details>
+        <p class="sr" aria-live="polite" id="bLive"></p>
+      </section>
+
+      <section class="nobuild">
         <h2>Selected nuclide</h2>
         <div>
           <div class="slider-head"><label for="aSl">Mass number A</label><output id="aOut" class="mono" for="aSl"></output></div>
@@ -189,7 +215,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
-      <section>
+      <section class="nobuild">
         <h2>Energy from the curve</h2>
         <div class="chips" id="rxs" role="group" aria-label="Reaction">
           <button type="button" data-r="dt" aria-pressed="false">D + T</button>
@@ -212,7 +238,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
       </section>
 
-      <section>
+      <section class="nobuild">
         <h2>Liquid drop model</h2>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">B = a<sub>V</sub>A − a<sub>S</sub>A<sup>2/3</sup> − a<sub>C</sub>Z(Z−1)/A<sup>1/3</sup> − a<sub>A</sub>(N−Z)²/A ± a<sub>P</sub>/A<sup>1/2</sup></p>
@@ -236,7 +262,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="ldmHint">Textbook values a<sub>V</sub> = 15.75, a<sub>S</sub> = 17.8, a<sub>C</sub> = 0.711, a<sub>A</sub> = 23.7, a<sub>P</sub> = 11.18 MeV, from Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, 1994). Pairing is + for even Z and even N, − for odd Z and odd N, 0 for odd A. Fit to AME2020 finds the least squares coefficients for every measured nucleus with A ≥ 16.</p>
       </section>
 
-      <!-- vd-readings --><section class="vd-readings" data-ws="binding-energy" data-title="Nuclear Binding Energy" data-demo="binding-energy">
+      <!-- vd-readings --><section class="vd-readings nobuild" data-ws="binding-energy" data-title="Nuclear Binding Energy" data-demo="binding-energy">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
@@ -355,12 +381,56 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function minMassPerNucleon() { let b = null; for (const n of NUC) if (n.A > 1 && (!b || n.dm / n.A < b.dm / b.A)) b = n; return b; }
   // M/A in MeV/c² for the neutral atom
   const massPerNucleon = (n) => U_MEV + n.dm / 1000 / n.A;
+  /* ---- Build a nucleus (2026-10-31, PhET Build a Nucleus): every ground state in NUBASE2020 (F. G. Kondev et al., Chinese Physics C 45,
+     030001 (2021); demos/lib/nubase.js), including the masses AME2020 estimates from systematics and the nuclides known only to be
+     particle unstable. The browser calls useNubase(window.VDNUBASE); the tests pass the same object. */
+  let NBD = null; const NBM = new Map();
+  function useNubase(d) { NBD = d; NBM.clear(); for (const r of d.gs) NBM.set(r[0] * 1000 + r[1], r); }
+  const nbRow = (Z, A) => NBM.get(Z * 1000 + A) || null;
+  /* how each decay mode changes Z and N, and its name. B+ in NUBASE is β⁺ and electron capture together; e+ is β⁺ alone. */
+  const MODES = {
+    'B-': [1, -1, 'β⁻ decay'], 'B+': [-1, 1, 'β⁺ decay or electron capture'], 'EC': [-1, 1, 'electron capture'], 'e+': [-1, 1, 'β⁺ decay'],
+    'A': [-2, -2, 'α decay'], 'p': [-1, 0, 'proton emission'], '2p': [-2, 0, 'two proton emission'], 'n': [0, -1, 'neutron emission'],
+    '2n': [0, -2, 'two neutron emission'], 'B-n': [1, -2, 'β⁻ decay, then a neutron'], 'B+p': [-2, 1, 'β⁺ decay, then a proton'],
+    'B-2n': [1, -3, 'β⁻ decay, then two neutrons'], 'B+A': [-3, -1, 'β⁺ decay, then an alpha'], 'B-A': [-1, -3, 'β⁻ decay, then an alpha'],
+    '2B-': [2, -2, 'double β⁻ decay'], '2B+': [-2, 2, 'double β⁺ decay'], 'IT': [0, 0, 'gamma decay'], 'SF': [null, null, 'spontaneous fission']
+  };
+  /* the decay modes of a nucleus with Z protons and N neutrons, largest first; modes NUBASE marks "?" (not seen) are left out */
+  function decayModes(Z, N) {
+    const r = nbRow(Z, Z + N); if (!r) return [];
+    return r[5].filter((m) => m[2] !== '?' && MODES[m[0]]).map((m) => ({ code: m[0], pct: m[1], q: m[2], dZ: MODES[m[0]][0], dN: MODES[m[0]][1], name: MODES[m[0]][2] }))
+      .sort((a, b) => (b.pct == null ? -1 : b.pct) - (a.pct == null ? -1 : a.pct));
+  }
+  /* what is known about Z protons and N neutrons: 'none' (nothing there), 'unknown' (not in NUBASE2020: never made, or beyond the
+     drip line), 'unbound' (particle unstable, falls apart at once), 'stable', or 'decays'; with B and B/A from the mass excess when
+     NUBASE lists one (est: estimated from systematics), the half life (log10 s), the modes and the next nucleus down the main mode */
+  function buildInfo(Z, N) {
+    const A = Z + N; if (A <= 0 || Z < 0 || N < 0) return { kind: 'none', Z, N, A };
+    const r = nbRow(Z, A); if (!r) return { kind: 'unknown', Z, N, A };
+    const B = (Z * DH + N * DN - r[2]) / 1000, modes = decayModes(Z, N), main = modes[0] || null;
+    const kind = r[4] === 's' ? 'stable' : r[4] === 'u' ? 'unbound' : 'decays';
+    const lg = typeof r[4] === 'number' ? r[4] : typeof r[4] === 'string' && /^[<>]/.test(r[4]) ? +r[4].slice(1) : null;
+    const lim = typeof r[4] === 'string' && /^[<>]/.test(r[4]) ? r[4][0] : '';
+    const next = main && main.dZ != null ? { Z: Z + main.dZ, N: N + main.dN } : null;
+    return { kind, Z, N, A, B, ba: A > 1 ? B / A : 0, est: !!r[3], lg, lim, modes, main, next, abund: r[6] };
+  }
+  /* separation energies from the mass excesses, MeV: S_n = Δ(Z, A − 1) + Δ(n) − Δ(Z, A), S_p = Δ(Z − 1, A − 1) + Δ(¹H) − Δ(Z, A);
+     null when a neighbour is not listed. Positive: that nucleon is bound. */
+  function sepN(Z, N) { const a = nbRow(Z, Z + N), b = nbRow(Z, Z + N - 1); return a && b && N > 0 ? (b[2] + DN - a[2]) / 1000 : null; }
+  function sepP(Z, N) { const a = nbRow(Z, Z + N), b = nbRow(Z - 1, Z + N - 1); return a && b && Z > 0 ? (b[2] + DH - a[2]) / 1000 : null; }
+  /* follow the main decay mode until a stable nucleus (or fission, or a gap in the table), at most 40 steps */
+  function decayChain(Z, N) {
+    const out = [{ Z, N }]; let cur = buildInfo(Z, N);
+    for (let k = 0; k < 40 && cur.next && cur.kind !== 'stable'; k++) { out.push(cur.next); cur = buildInfo(cur.next.Z, cur.next.N); }
+    return out;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.BE = { NUC, SYM, get, BOOK, basis, terms, semfB, z0, valleyBA, fit, stats, reaction, REACTIONS, maxBA, minMassPerNucleon, massPerNucleon, DH, DN, DNP, U_MEV, TNT };
     return;
   }
+  if (window.VDNUBASE) useNubase(window.VDNUBASE);
 
   const $ = (id) => document.getElementById(id);
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -411,7 +481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), alpha: g('--alpha'), seq0: g('--seq0'), seq1: g('--seq1'),
-      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', emit: g('--emit') };
     T.s0 = hexRgb(T.seq0); T.s1 = hexRgb(T.seq1);
   }
   function hexRgb(h) { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map((x) => x + x).join(''); const v = parseInt(h, 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; }
@@ -492,6 +562,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view === 'curve') drawCurve();
     else if (S.view === 'ldm') drawLdm();
     else if (S.view === 'shell') drawShell();
+    else if (S.view === 'build') drawBuild();
     else if (use3()) drawChart3();
     else drawChart();
     flushLabels();
@@ -918,6 +989,129 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return best;
   }
 
+
+  // ---------- Build a nucleus (2026-10-31): protons and neutrons one at a time, what NUBASE2020 knows about the result ----------
+  const BLD = { Z: 6, N: 5, anim: null, trail: [] };     /* opens on ¹¹C, which decays, so Let it decay does something at once */
+  const MODE_COL = (m, kind) => (kind === 'stable' ? T.ink : kind === 'unbound' ? T.emit : !m ? T.gridStrong
+    : m.code === 'B-' || m.code === 'B-n' || m.code === 'B-2n' || m.code === '2B-' || m.code === 'B-A' ? T.neg
+    : m.code === 'A' ? T.equi : m.code === 'SF' ? T.alpha : m.code === 'p' || m.code === '2p' || m.code === 'n' || m.code === '2n' ? T.emit : T.pos);
+  const PART = { 'B-': 'e⁻ + ν̄', 'B+': 'e⁺ + ν (or an electron captured)', 'EC': 'ν (an electron captured)', 'e+': 'e⁺ + ν', 'A': 'α', 'p': 'p', '2p': '2p', 'n': 'n', '2n': '2n',
+    'B-n': 'e⁻ + ν̄, then n', 'B+p': 'e⁺ + ν, then p', 'B-2n': 'e⁻ + ν̄, then 2n', 'B+A': 'e⁺ + ν, then α', 'B-A': 'e⁻ + ν̄, then α', '2B-': '2e⁻ + 2ν̄', '2B+': '2e⁺ + 2ν', 'SF': 'two fragments and neutrons' };
+  const bName = (Z, A) => (A === 1 && Z === 0 ? 'n' : A === 1 && Z === 1 ? 'p' : `${sup(A)}${SYM[Z] || '?'}`);
+  function bPack(Z, A) {
+    const pts = [], ga = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < A; i++) { const r = Math.sqrt((i + 0.5) / A), th = i * ga; pts.push([r * Math.cos(th), r * Math.sin(th), 0]); }
+    let s = 11 + Z * 131 + A * 7; const rnd = () => ((s = (s * 1103515245 + 12345) % 2147483648) / 2147483648);
+    const idx = pts.map((_, i) => i); for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+    for (let k = 0; k < Z; k++) pts[idx[k]][2] = 1;
+    return pts;
+  }
+  function bBall(x, y, r, col) {
+    const c = ctx, g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,0.85)'); g.addColorStop(0.35, col); g.addColorStop(1, col);
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.strokeStyle = 'rgba(0,0,0,0.25)'; c.lineWidth = 0.6; c.stroke();
+  }
+  function bHL(info) {
+    if (info.kind === 'stable') return 'stable';
+    if (info.lg == null) return 'half life not measured';
+    return `half life ${info.lim === '<' ? 'under ' : info.lim === '>' ? 'over ' : ''}${fmtHL(info.lg)}`;
+  }
+  function bStatus(info) {
+    if (info.kind === 'none') return ['Add a proton or a neutron', T.muted];
+    if (info.kind === 'unknown') return ['Not in NUBASE2020: never made, or it falls apart at once', T.muted];
+    if (info.kind === 'unbound') return ['Not bound: it falls apart at once', T.pos];
+    if (info.kind === 'stable') return [info.abund != null ? `Stable · ${info.abund}% of natural ${SYM[info.Z]}` : 'Stable', T.ink];
+    const m = info.main; return [`${m ? m.name : 'decay mode not known'} · ${bHL(info)}`, MODE_COL(m, info.kind)];
+  }
+  function drawBuild() {
+    const c = ctx, ps = PS, wide = W >= 640, top = 10 * ps;
+    const sc = wide ? [0, top, W * 0.46, Hh - top] : [0, top, W, (Hh - top) * 0.46];
+    const ch = wide ? [W * 0.46, top, W * 0.54, Hh - top] : [0, top + (Hh - top) * 0.46, W, (Hh - top) * 0.54];
+    const info = buildInfo(BLD.Z, BLD.N), A = BLD.Z + BLD.N;
+    /* the nucleus */
+    const tb = 112 * ps, Rmax = Math.max(20, Math.min(sc[2] * 0.32, (sc[3] - tb) * 0.42)), cx = sc[0] + sc[2] / 2, cy = sc[1] + (sc[3] - tb) / 2, Rpx = A ? Math.max(10 * ps, Rmax * Math.cbrt(Math.min(1, A / 240))) : 0;
+    const an = BLD.anim, u = an ? Math.min(1, an.t) : 0;
+    if (A) {
+      const pts = bPack(BLD.Z, A), rn = Math.max(3, Math.min(18 * ps, Rpx / Math.sqrt(A) * 1.05)), Re = Math.max(0, Rpx - rn);
+      for (const p of pts) bBall(cx + p[0] * Re, cy + p[1] * Re, rn, p[2] ? T.pos : T.neg);
+      if (an) {   /* what leaves: drawn flying out */
+        const d = Rpx + u * Math.min(sc[2], sc[3]) * 0.42, x = cx + Math.cos(an.dir) * d, y = cy + Math.sin(an.dir) * d;
+        c.globalAlpha = 1 - 0.6 * u; c.fillStyle = MODE_COL(an.mode, 'decays'); c.font = `700 ${14 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+        if (an.mode.code === 'A') { const r = rn * 0.9; bBall(x - r * 0.7, y - r * 0.7, r, T.pos); bBall(x + r * 0.7, y + r * 0.7, r, T.pos); bBall(x + r * 0.7, y - r * 0.7, r, T.neg); bBall(x - r * 0.7, y + r * 0.7, r, T.neg); }
+        else if (an.mode.code === 'p' || an.mode.code === 'n') bBall(x, y, rn, an.mode.code === 'p' ? T.pos : T.neg);
+        else c.fillText(PART[an.mode.code] || '', x, y);
+        c.globalAlpha = 1;
+      }
+    }
+    c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    c.fillStyle = T.ink; c.font = `700 ${22 * ps}px ${T.ui}`; c.fillText(A ? bName(BLD.Z, A) : '—', cx, cy + Rmax + 40 * ps);
+    c.font = `${12 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.fillText(`${BLD.Z} proton${BLD.Z === 1 ? '' : 's'}, ${BLD.N} neutron${BLD.N === 1 ? '' : 's'}, A = ${A}`, cx, cy + Rmax + 60 * ps);
+    /* a line of text that shrinks to fit the width of the picture */
+    const fitText = (t, y, px, w, face, colr) => { c.font = `${w} ${px}px ${face}`; const m = c.measureText(t).width, lim = sc[2] - 16; if (m > lim) c.font = `${w} ${px * lim / m}px ${face}`; c.fillStyle = colr; c.fillText(t, cx, y); };
+    const [st, col] = bStatus(info);
+    fitText(st, cy + Rmax + 82 * ps, 13 * ps, 600, T.ui, col);
+    if (info.B != null && A > 1) fitText(`B = ${info.B.toFixed(3)} MeV · B/A = ${info.ba.toFixed(3)} MeV${info.est ? ' (estimated)' : ''}`, cy + Rmax + 102 * ps, 12 * ps, 400, T.mono, T.muted);
+    /* the neighbourhood on the chart of nuclides */
+    const span = wide ? 6 : 5, nx = 2 * span + 1, cw = Math.min((ch[2] - 70 * ps) / nx, (ch[3] - 64 * ps) / nx), L = ch[0] + (ch[2] - cw * nx) / 2 + 12 * ps, Tt = ch[1] + 30 * ps;
+    const N0 = Math.max(0, BLD.N - span), Z0 = Math.max(0, BLD.Z - span), X = (N) => L + (N - N0) * cw, Y = (Z) => Tt + (Z0 + nx - 1 - Z) * cw;
+    c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.fillText('Chart of nuclides around it', ch[0] + 14 * ps, ch[1] + 16 * ps);
+    BLD.cells = { X, Y, cw, N0, Z0, nx };
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let Z = Z0; Z < Z0 + nx; Z++) for (let N = N0; N < N0 + nx; N++) {
+      const k = buildInfo(Z, N); if (k.kind === 'none') continue;
+      const x = X(N), y = Y(Z);
+      if (k.kind === 'unknown') { c.strokeStyle = T.grid; c.lineWidth = 1; c.strokeRect(x + 1.5, y + 1.5, cw - 3, cw - 3); continue; }
+      c.fillStyle = MODE_COL(k.main, k.kind); c.globalAlpha = k.kind === 'unbound' ? 0.35 : 0.85; c.fillRect(x + 1, y + 1, cw - 2, cw - 2); c.globalAlpha = 1;
+      if (cw > 26 * ps) { c.fillStyle = k.kind === 'stable' || !k.main ? T.canvas : '#fff'; c.font = `600 ${Math.min(11, cw / 3.6) * ps}px ${T.ui}`; c.fillText(bName(Z, Z + N), x + cw / 2, y + cw / 2); }
+    }
+    /* the main decay path from here */
+    const chain = decayChain(BLD.Z, BLD.N);
+    c.strokeStyle = T.accent; c.lineWidth = 2 * ps;
+    for (let i = 1; i < chain.length; i++) { const a = chain[i - 1], b = chain[i]; if (b.N < N0 || b.N >= N0 + nx || b.Z < Z0 || b.Z >= Z0 + nx) break;
+      const x1 = X(a.N) + cw / 2, y1 = Y(a.Z) + cw / 2, x2 = X(b.N) + cw / 2, y2 = Y(b.Z) + cw / 2, ang = Math.atan2(y2 - y1, x2 - x1);
+      c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - Math.cos(ang) * cw * 0.3, y2 - Math.sin(ang) * cw * 0.3); c.stroke(); arrowHead(x2 - Math.cos(ang) * cw * 0.22, y2 - Math.sin(ang) * cw * 0.22, ang, 8 * ps, T.accent); }
+    if (BLD.N >= N0 && BLD.Z >= Z0) { c.strokeStyle = T.accent; c.lineWidth = 3 * ps; c.strokeRect(X(BLD.N) - 1, Y(BLD.Z) - 1, cw + 2, cw + 2); }
+    /* axes */
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`;
+    for (let N = N0; N < N0 + nx; N++) if (cw > 18 * ps || N % 2 === 0) c.fillText(String(N), X(N) + cw / 2, Y(Z0) + cw + 10 * ps);
+    c.textAlign = 'right'; for (let Z = Z0; Z < Z0 + nx; Z++) if (cw > 18 * ps || Z % 2 === 0) c.fillText(String(Z), L - 5 * ps, Y(Z) + cw / 2);
+    c.textAlign = 'center'; c.fillText('neutrons N', L + cw * nx / 2, Y(Z0) + cw + 24 * ps);
+    c.save(); c.translate(L - 26 * ps, Tt + cw * nx / 2); c.rotate(-Math.PI / 2); c.fillText('protons Z', 0, 0); c.restore();
+    c.textBaseline = 'alphabetic';
+  }
+  function bKey() {
+    return '<span><i class="swatch sq" style="background:var(--ink)"></i>Stable</span><span><i class="swatch sq" style="background:var(--neg)"></i>β⁻ decay</span><span><i class="swatch sq" style="background:var(--pos)"></i>β⁺ decay or electron capture</span>'
+      + '<span><i class="swatch sq" style="background:var(--equi)"></i>α decay</span><span><i class="swatch sq" style="background:var(--alpha)"></i>Spontaneous fission</span><span><i class="swatch sq" style="background:var(--emit)"></i>Gives off a proton or neutron; faint: not bound at all</span><span><i class="swatch sq" style="background:var(--grid-strong)"></i>Decay mode not known</span><span>Outlined: not in NUBASE2020. Arrows: the main decay path.</span>';
+  }
+  function bReadouts() {
+    const info = buildInfo(BLD.Z, BLD.N), A = BLD.Z + BLD.N, sn = sepN(BLD.Z, BLD.N), sp = sepP(BLD.Z, BLD.N);
+    const rows = [['Nucleus', A ? bName(BLD.Z, A) : '—'], ['Z, N, A', `${BLD.Z}, ${BLD.N}, ${A}`], ['Status', bStatus(info)[0]]];
+    if (info.kind === 'decays' || info.kind === 'stable') rows.push(['Half life', bHL(info)]);
+    if (info.modes && info.modes.length) rows.push(['Decay modes', info.modes.slice(0, 4).map((m) => `${m.name}${m.pct != null ? ` ${m.q === '~' ? '≈' : m.q === '<' ? '<' : m.q === '>' ? '>' : ''}${+m.pct.toPrecision(4)}%` : ''}`).join('; ')]);
+    if (info.next) rows.push(['Becomes', bName(info.next.Z, info.next.Z + info.next.N) + ' + ' + (PART[info.main.code] || '')]);
+    if (info.B != null && A > 1) { rows.push(['Binding energy B', `${info.B.toFixed(3)} MeV${info.est ? ' (estimated)' : ''}`], ['B/A', `${info.ba.toFixed(4)} MeV`]); }
+    if (sn != null) rows.push(['Last neutron bound by S_n', `${sn.toFixed(3)} MeV`]);
+    if (sp != null) rows.push(['Last proton bound by S_p', `${sp.toFixed(3)} MeV`]);
+    $('bTbl').innerHTML = '<tbody>' + rows.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('') + '</tbody>';
+    $('bDecay').disabled = !info.next || !!BLD.anim;
+    $('bPm').disabled = BLD.Z <= 0; $('bNm').disabled = BLD.N <= 0; $('bPp').disabled = BLD.Z >= 118; $('bNp').disabled = BLD.N >= 177;
+    $('bLive').textContent = `${A ? bName(BLD.Z, A) : 'Nothing'}: ${bStatus(info)[0]}.`;
+    const meas = get(BLD.Z, A); if (meas && A > 1) S.sel = meas;
+  }
+  function bSet(Z, N) { BLD.Z = Math.max(0, Math.min(118, Z)); BLD.N = Math.max(0, Math.min(177, N)); BLD.anim = null; bReadouts(); drawAll(); }
+  function bDecay() {
+    const info = buildInfo(BLD.Z, BLD.N); if (!info.next || BLD.anim) return;
+    if (reduce) { bSet(info.next.Z, info.next.N); return; }
+    BLD.anim = { mode: info.main, to: info.next, t: 0, dir: -Math.PI / 4 + (Math.random() - 0.5) };
+    bReadouts();
+  }
+  function bTick(dt) {
+    const a = BLD.anim; if (!a) return; a.t += dt * 1.3;
+    if (a.t >= 0.35 && !a.done) { a.done = true; BLD.Z = a.to.Z; BLD.N = a.to.N; bReadouts(); }
+    if (a.t >= 1) { BLD.anim = null; bReadouts(); }
+    drawAll();
+  }
+
   // ---------- readouts ----------
   const fmtE = (v) => { const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e); return `${m.toFixed(2)} × 10${sup(e).replace('-', '⁻')}`; };
   function readouts() {
@@ -964,7 +1158,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       shell: '<span><i class="swatch dot"></i>Stable or found in nature</span><span><i class="swatch dot faint"></i>Radioactive, measured mass</span><span>Faint lines join isotopes (against N) or isotones (against Z). A ≥ 16 only.</span>',
       chart: '<span><i class="swatch curve"></i>Liquid drop valley of stability</span><span>Shaded rows and columns: magic Z and N. Gray cells: half life not listed.</span>'
     };
-    $('viewKey').innerHTML = k[S.view];
+    $('viewKey').innerHTML = S.view === 'build' ? bKey() : k[S.view];
   }
 
   // ---------- controls ----------
@@ -984,6 +1178,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('allRow').hidden = !(S.view === 'curve' || S.view === 'shell'); $('showAll').checked = S.all;
     $('arrows').checked = S.arrows;
     $('play').hidden = S.view !== 'curve' || !(S.rx || S.arrows);
+    const bv = S.view === 'build'; $('stage').classList.toggle('build', bv); $('buildCtl').hidden = !bv; $('buildSec').hidden = !bv; $('allRow').hidden = $('allRow').hidden || bv;
+    for (const el of document.querySelectorAll('.rail .nobuild')) el.hidden = bv;
+    if (bv) bReadouts();
   }
   function update() { syncUI(); readouts(); drawAll(); }
   function markPreset(name) {
@@ -1077,6 +1274,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hoverQ = [px, py, ev.pointerType === 'touch'];
     if (!hoverFrame) { hoverFrame = true; requestAnimationFrame(() => {
       hoverFrame = false; if (!hoverQ) return; const [x, y, t] = hoverQ; hoverQ = null;
+      if (S.view === 'build') { can.style.cursor = 'pointer'; return; }
       const h = handleAt(x, y, t), n = h ? null : nearest(x, y, 9 * PS * (t ? 2 : 1));
       hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : n ? 'pointer' : 'default';
       tip = n ? { n, x, y } : null; drawAll();
@@ -1085,6 +1283,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerdown', (ev) => {
     const [px, py] = pos(ev), touch = ev.pointerType === 'touch', h = handleAt(px, py, touch);
     can.focus({ preventScroll: true });
+    if (S.view === 'build') { const b = BLD.cells; if (b) { const N = b.N0 + Math.floor((px - b.X(b.N0)) / b.cw), Z = b.Z0 + b.nx - 1 - Math.floor((py - b.Y(b.Z0 + b.nx - 1)) / b.cw);
+      if (N >= b.N0 && N < b.N0 + b.nx && Z >= b.Z0 && Z < b.Z0 + b.nx && Z + N > 0) bSet(Z, N); } return; }
     if (h) { drag = { id: h.id }; hoverId = h.id; tip = null; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); drawAll(); return; }
     const n = nearest(px, py, 9 * PS * (touch ? 2 : 1));
     if (n) { S.sel = n; custom(); tip = { n, x: px, y: py }; readouts(); drawAll(); }
@@ -1095,11 +1295,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; tip = null; drawAll(); } });
   can.addEventListener('keydown', (e) => {
     const big = e.shiftKey ? 10 : 1;
+    if (S.view === 'build') {
+      const k = { ArrowUp: [1, 0], ArrowDown: [-1, 0], ArrowRight: [0, 1], ArrowLeft: [0, -1] }[e.key];
+      if (k) bSet(BLD.Z + k[0], BLD.N + k[1]); else if (e.key === 'd' || e.key === 'D' || e.key === ' ') bDecay(); else if (e.key === 'v' || e.key === 'V') setView('curve'); else return;
+      e.preventDefault(); return;
+    }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       const d = e.key === 'ArrowRight' ? 1 : -1;
       if (S.view === 'chart') stepN(d * big); else { custom(); setA(S.sel.A + d * big); }
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') stepZ(e.key === 'ArrowUp' ? 1 : -1);
-    else if (e.key === 'v' || e.key === 'V') { const vs = ['curve', 'ldm', 'shell', 'chart']; setView(vs[(vs.indexOf(S.view) + 1) % 4]); }
+    else if (e.key === 'v' || e.key === 'V') { const vs = ['curve', 'ldm', 'shell', 'chart', 'build']; setView(vs[(vs.indexOf(S.view) + 1) % 5]); }
     else if (e.key === ' ') setPlaying(!playing);
     else return;
     tip = null; e.preventDefault();
@@ -1124,6 +1329,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now(), frameMs = 0;
   function loop(now) {
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (S.view === 'build') bTick(dt);
     if (playing && (S.arrows || S.rx) && S.view === 'curve') {
       phase = (phase + dt * 1.2) % 1000;
       const t0 = performance.now(); drawAll(); frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
@@ -1147,6 +1353,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__be.applyPreset = applyPreset; window.__be.setRx = setRx;
   VD.howTo({ src: 'media/how-this-works/binding-energy.mp4', poster: 'media/how-this-works/binding-energy.jpg' });
 
+  $('bPp').addEventListener('click', () => bSet(BLD.Z + 1, BLD.N)); $('bPm').addEventListener('click', () => bSet(BLD.Z - 1, BLD.N));
+  $('bNp').addEventListener('click', () => bSet(BLD.Z, BLD.N + 1)); $('bNm').addEventListener('click', () => bSet(BLD.Z, BLD.N - 1));
+  $('bDecay').addEventListener('click', bDecay); $('bClear').addEventListener('click', () => bSet(0, 0));
+  window.__be.build = BLD; window.__be.bSet = bSet; window.__be.bDecay = bDecay;
+  { const q = new URLSearchParams(location.search).get('view'); if (q === 'build') queueMicrotask(() => setView('build')); }
   buildCoefs();
   tokens();
   const ro = new ResizeObserver(() => resize());

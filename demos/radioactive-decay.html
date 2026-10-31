@@ -9,6 +9,7 @@
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
+<script src="lib/nubase.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -123,6 +124,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
   :root[data-projector="on"] .stage { min-height: 440px; }
 }
+#onePane { grid-column: 1 / -1; grid-row: 1 / -1; }
+#oneCan { touch-action: manipulation; outline: none; }
+#oneCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage.one > .pane:not(#onePane) { display: none; }
+.stage.one + .vd-split, .stage.one .vd-split { display: none; }
+.rail.one > section:not(#oneSec) { display: none; }
+.slab { display: flex; justify-content: space-between; gap: 8px; font-size: 0.88rem; margin: 6px 0 2px; }
+#oneTbl { margin-top: 8px; }
+#oneTbl td:first-child { white-space: normal; }
+#oneTbl td + td { white-space: nowrap; }
 @media (max-width: 1060px) {
   .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 46fr) minmax(0, 30fr) minmax(0, 24fr); min-height: 820px; }
   #gPane { grid-row: auto; border-right: 0; }
@@ -134,6 +145,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   html, body { height: auto; }
   .stage { min-height: 0; grid-template-rows: 440px 300px 240px; }
   .stage.g3on { grid-template-rows: 560px 300px 240px; }
+  .stage.one { grid-template-rows: 900px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -159,7 +171,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="stage" id="stage">
       <div class="pane" id="gPane">
         <canvas id="gCan" tabindex="0" aria-label="Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
-        <div class="stage-ctl">
+        <div class="stage-ctl" id="manyCtl">
+          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="many" aria-pressed="true">Many nuclei</button><button type="button" data-v="alpha" aria-pressed="false">Alpha decay</button><button type="button" data-v="beta" aria-pressed="false">Beta decay</button></div>
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="stepBtn">Step</button>
           <button type="button" class="btn" id="reset">Reset</button>
@@ -186,6 +199,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="aPane">
         <canvas id="aCan" aria-label="Activity: number of decays in each time bin as a histogram, with the expected number dashed."></canvas>
       </div>
+      <div class="pane" id="onePane" hidden>
+        <canvas id="oneCan" tabindex="0" aria-label="One nucleus up close. Alpha decay: the nucleus with its alpha particle bouncing inside, the potential energy against distance with the Coulomb barrier the alpha tunnels through, and a Geiger–Nuttall plot of half life against Z over the square root of Q for twenty alpha emitters, measured and from the model. Beta decay: the nucleus sending out an electron and an antineutrino, the share of the energy each takes, and a histogram of the electron energies building up against the allowed spectrum. Keys: left and right pick the previous or next nucleus, space starts the clock or sends one decay."></canvas>
+        <div class="stage-ctl" id="oneCtl">
+          <button type="button" class="btn primary" id="oneGo" data-vd-key="play">Watch it decay</button>
+          <button type="button" class="btn" id="oneRun" hidden aria-pressed="false">Run</button>
+          <button type="button" class="btn" id="oneReset" data-vd-key="reset">Start again</button>
+          <div class="seg" role="group" aria-label="Decays a second" id="oneRate" hidden><button type="button" data-r="2" aria-pressed="true">2/s</button><button type="button" data-r="20" aria-pressed="false">20/s</button><button type="button" data-r="200" aria-pressed="false">200/s</button></div>
+          <span class="tclock mono" id="oneClock"></span>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -205,6 +228,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="mo99" aria-pressed="false">⁹⁹Mo generator</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="oneSec" hidden>
+        <h2>Nucleus</h2>
+        <div class="chips" id="oneNuc"></div>
+        <div id="alphaCtl">
+          <label class="slab" for="oneR0">Nuclear radius constant r₀ <output id="oneR0Out" for="oneR0" class="mono">1.20 fm</output></label>
+          <input type="range" id="oneR0" min="1" max="1.6" step="0.01" value="1.2">
+        </div>
+        <div id="betaCtl" class="toggles" hidden>
+          <label><input type="checkbox" id="oneNoNu"> No neutrino, as expected before 1930</label>
+        </div>
+        <table class="tbl" id="oneTbl"><tbody></tbody></table>
+        <details class="more"><summary>About this nucleus</summary><p class="hint" id="oneHint"></p></details>
+        <details class="more"><summary>Model</summary><p class="hint" id="oneModel"></p></details>
+        <p class="sr" aria-live="polite" id="oneLive"></p>
       </section>
 
       <section>
@@ -446,12 +485,88 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cumD += br * Pe * g[2];
     return [P, D, (1 - br) * (1 - P) + cumD, out, 1 - P, cumD];
   }
+  /* ---- single nuclei (2026-10-31, PhET Alpha Decay and Beta Decay): masses, half lives and branchings from NUBASE2020
+     (F. G. Kondev et al., Chinese Physics C 45, 030001 (2021), demos/lib/nubase.js). The browser calls useNubase(window.VDNUBASE);
+     the tests pass the same object. Constants CODATA 2022. */
+  let NB = null; const NBI = new Map();
+  function useNubase(d) { NB = d; NBI.clear(); for (const r of d.gs) NBI.set(r[0] * 1000 + r[1], r); }
+  const nb = (Z, A) => NBI.get(Z * 1000 + A) || null;
+  const U_KEV = 931494.10372, ME_MEV = 0.51099895069, HBARC = 197.3269804, ALPHA_FS = 7.2973525643e-3, C_FM = 2.99792458e23;
+  const E2 = ALPHA_FS * HBARC;                    /* e²/4πε₀ in MeV fm, 1.43996 */
+  /* nuclear rest energy in MeV from the atomic mass excess, A u + Δ − Z mₑc², with the electrons' binding left out. Only the
+     reduced mass uses it; every Q comes from the atomic masses, as the mass evaluation defines it. */
+  const nucMass = (Z, A) => (A * U_KEV + nb(Z, A)[2]) / 1000 - Z * ME_MEV;
+  /* Q of alpha decay from atomic mass excesses, MeV: Δ(Z, A) − Δ(Z − 2, A − 4) − Δ(⁴He) */
+  const alphaQ = (Z, A) => (nb(Z, A)[2] - nb(Z - 2, A - 4)[2] - nb(2, 4)[2]) / 1000;
+  /* Gamow's model (Griffiths, Introduction to Quantum Mechanics, 2nd ed., §8.2; Krane, Introductory Nuclear Physics, §8.4):
+     the alpha and the daughter touch at R = r₀(A_d^(1/3) + 4^(1/3)); outside, the Coulomb barrier V = 2 Z_d e²/(4πε₀ r);
+     the WKB exponent across it from R to the turning point b = 2 Z_d e²/(4πε₀ Q) is exact for a pure Coulomb barrier:
+     G = (√(2μQ)/ħ) b [arccos √(R/b) − √((R/b)(1 − R/b))], escape chance per hit P = e^(−2G).
+     The alpha hits the wall f = v/2R times a second with v = √(2Q/μ) (its speed inside taken as its speed outside, as Griffiths does),
+     so λ = f P and T½ = ln 2 / λ. μ is the reduced mass of the alpha and the daughter nucleus. */
+  function gamow(Z, A, r0) {
+    const Q = alphaQ(Z, A), Zd = Z - 2, md = nucMass(Zd, A - 4), ma = nucMass(2, 4), mu = md * ma / (md + ma);
+    const R = r0 * (Math.cbrt(A - 4) + Math.cbrt(4)), VR = 2 * Zd * E2 / R, b = 2 * Zd * E2 / Q, x = R / b;
+    const G = Math.sqrt(2 * mu * Q) / HBARC * b * (Math.acos(Math.sqrt(x)) - Math.sqrt(x * (1 - x)));
+    const v = Math.sqrt(2 * Q / mu) * C_FM, f = v / (2 * R), lgP = -2 * G / Math.LN10;
+    const lgT = Math.log10(Math.LN2) - Math.log10(f) - lgP;
+    return { Q, Ta: Q * md / (md + ma), Zd, R, VR, b, G, lgP, f, v, lgT, mu };
+  }
+  /* measured: total half life (s), alpha branch (fraction) and the partial alpha half life T½/BR */
+  function alphaMeasured(Z, A) {
+    const r = nb(Z, A), m = r[5].find((q) => q[0] === 'A'), br = m && m[1] != null ? m[1] / 100 : 0;
+    return { lgT: r[4], br, lgTa: br > 0 ? r[4] - Math.log10(br) : null };
+  }
+  /* Geiger–Nuttall abscissa Z_d/√Q in MeV^(−1/2): log T½ is nearly a straight line in it */
+  const gnX = (Z, A) => (Z - 2) / Math.sqrt(alphaQ(Z, A));
+  /* even–even alpha emitters, ground state to ground state dominant, Sm to Cf */
+  const ALPHA_SET = [[62, 146], [64, 148], [78, 190], [84, 210], [84, 212], [84, 214], [84, 216], [84, 218], [86, 220], [86, 222], [88, 224], [88, 226],
+    [90, 228], [90, 230], [90, 232], [92, 234], [92, 238], [94, 238], [96, 244], [98, 252]];
+  /* beta decay: Q from atomic mass excesses. β⁻: Δ(Z, A) − Δ(Z + 1, A). β⁺: Δ(Z, A) − Δ(Z − 1, A) − 2mₑc². MeV. The kinetic energy
+     shared by the electron (or positron) and the antineutrino (or neutrino) is Q less the recoil of the daughter, at most
+     Q²/2Mc² ≈ 0.4 keV for the neutron and under 0.1 keV for the others, which is left out. */
+  const betaQ = (Z, A, plus) => (plus ? (nb(Z, A)[2] - nb(Z - 1, A)[2]) / 1000 - 2 * ME_MEV : (nb(Z, A)[2] - nb(Z + 1, A)[2]) / 1000);
+  /* the allowed spectrum (Krane §9.2): N(T) ∝ F(Z_d, T) p E (Q − T)², p and E the electron's momentum and total energy;
+     F the nonrelativistic Fermi function 2πη/(1 − e^(−2πη)), η = ±Z_d α E/(pc) (+ for β⁻, − for β⁺). Finite nuclear size,
+     screening and the relativistic Fermi function are left out, and every decay is taken as allowed. */
+  function fermiNR(Zd, T, plus) {
+    const E = T + ME_MEV, p = Math.sqrt(T * (T + 2 * ME_MEV)); if (!(p > 0)) return plus ? 0 : 1;
+    const y = 2 * Math.PI * (plus ? -1 : 1) * Zd * ALPHA_FS * E / p;
+    return Math.abs(y) < 1e-9 ? 1 : y / -Math.expm1(-y);
+  }
+  function betaShape(Zd, Q, T, plus) {
+    if (!(T > 0 && T < Q)) return 0;
+    const E = T + ME_MEV, p = Math.sqrt(T * (T + 2 * ME_MEV));
+    return fermiNR(Zd, T, plus) * p * E * (Q - T) * (Q - T);
+  }
+  /* a table of the normalized spectrum on n bins: density (per MeV), cumulative, mean and peak T */
+  function betaTable(Zd, Q, plus, n = 400) {
+    const h = Q / n, d = new Float64Array(n), cum = new Float64Array(n + 1); let s = 0, s1 = 0;
+    for (let i = 0; i < n; i++) {
+      /* Simpson on each bin, so the steep start of a β⁻ shape on a heavy daughter is integrated well */
+      const a = i * h, m = a + h / 2, b = a + h, w = h / 6 * (betaShape(Zd, Q, a, plus) + 4 * betaShape(Zd, Q, m, plus) + betaShape(Zd, Q, b, plus));
+      d[i] = w; s += w; s1 += w * m; cum[i + 1] = s;
+    }
+    let pk = 0; for (let i = 0; i < n; i++) { d[i] /= s * h; cum[i + 1] /= s; if (d[i] > d[pk]) pk = i; }
+    return { Q, n, h, d, cum, mean: s1 / s, peak: (pk + 0.5) * h };
+  }
+  /* inverse of the cumulative: electron kinetic energy for a uniform random u in [0, 1) */
+  function sampleBeta(tab, u) {
+    let lo = 0, hi = tab.n; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (tab.cum[m] <= u) lo = m; else hi = m; }
+    const c0 = tab.cum[lo], c1 = tab.cum[lo + 1]; return (lo + (c1 > c0 ? (u - c0) / (c1 - c0) : 0.5)) * tab.h;
+  }
+  /* electron momentum (MeV/c) for kinetic energy T, and the neutrino's for the rest of Q (massless) */
+  const pElectron = (T) => Math.sqrt(T * (T + 2 * ME_MEV));
+  const BETA_SET = [{ Z: 0, A: 1, plus: false }, { Z: 1, A: 3, plus: false }, { Z: 6, A: 14, plus: false }, { Z: 15, A: 32, plus: false }, { Z: 9, A: 18, plus: true }];
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim, elute, expected };
     return;
   }
+  /* the single nucleus views (script below) use the same core */
+  if (window.VDNUBASE) useNubase(window.VDNUBASE);
+  window.RD1 = { nb, alphaQ, gamow, alphaMeasured, gnX, ALPHA_SET, betaQ, betaTable, sampleBeta, pElectron, BETA_SET, ME_MEV };
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in the setup's unit (steps, years, days or hours) */
@@ -1802,6 +1917,375 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'coin'); }
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+/* Alpha decay and Beta decay up close (2026-10-31, PhET Alpha Decay and Beta Decay): one nucleus at a time. Physics in the CORE
+   above (window.RD1); this draws it and runs the clock. */
+(() => {
+  const C = window.RD1; if (!C || !window.VDNUBASE) return;
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage'), rail = document.querySelector('.rail'), pane = $('onePane'), can = $('oneCan'), seg = $('viewSeg');
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const SYM = 'n H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf'.split(' ');
+  const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹', sup = (k) => String(k).replace(/\d/g, (d) => SUPD[d]);
+  const nuc = (Z, A) => (Z === 0 ? 'n' : Z === 1 && A === 1 ? 'p' : sup(A) + SYM[Z]);
+  const O = { view: 'many', a: 4, b: 2, r0: 1.2, noNu: false, rate: 2 };   /* a: index in ALPHA_SET (²¹²Po), b: index in BETA_SET (¹⁴C) */
+  /* alpha clock: the nucleus waits a random time drawn from the measured half life; the screen shows a mean life in 3 s */
+  const AL = { run: false, done: false, t: 0, tDecay: 0, waits: [], fly: 0, dir: 0, ph: 0 };
+  const BE = { hist: new Float64Array(40), n: 0, sumT: 0, last: null, fly: 0, acc: 0, run: false, tab: null };
+  const SCREEN_TAU = 3;
+  let T = null, W = 0, H = 0, dpr = 1, L = null;
+
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gs: g('--grid-strong'), accent: g('--accent'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), sp1: g('--sp1'), sp2: g('--sp2'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const font = (px, w) => `${w || 400} ${px * ps()}px ${T.ui}`;
+
+  /* ---------- formatting ---------- */
+  const YR = 365.2422 * 86400;
+  function fmtDur(s) {
+    if (!(s > 0)) return '0 s';
+    const u = [[1e-9, 'ns', 1e-9], [1e-6, 'μs', 1e-6], [1e-3, 'ms', 1e-3], [1, 's', 1], [60, 'min', 60], [3600, 'h', 3600], [86400, 'd', 86400], [YR, 'yr', YR], [1e3 * YR, 'kyr', 1e3 * YR], [1e6 * YR, 'Myr', 1e6 * YR], [1e9 * YR, 'Gyr', 1e9 * YR]];
+    let k = 0; for (let i = 0; i < u.length; i++) if (s >= u[i][0] * 0.9999) k = i;
+    if (s >= 1e12 * YR) return sci(s / YR, 3) + ' yr';
+    const v = s / u[k][2]; return (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + ' ' + u[k][1];
+  }
+  function pow10(x, d) { const t = Math.abs(x).toFixed(d || 0); return '10' + (x < 0 && +t !== 0 ? '⁻' : '') + t.replace(/\d/g, (ch) => SUPD[ch]).replace('.', '·'); }
+  function sci(v, sig) { if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 4) return String(+v.toPrecision(sig));
+    return `${(v / Math.pow(10, e)).toFixed(sig - 1)} × ${pow10(e)}`; }
+  const keV = (MeV) => (MeV < 1 ? `${(MeV * 1000).toFixed(MeV < 0.1 ? 2 : 1)} keV` : `${MeV.toFixed(3)} MeV`);
+
+  /* ---------- the nucleus picture: A nucleons packed on a Fermat spiral, protons and neutrons spread evenly ---------- */
+  function packing(Z, A) {
+    const pts = [], ga = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < A; i++) { const r = Math.sqrt((i + 0.5) / A), th = i * ga; pts.push([r * Math.cos(th), r * Math.sin(th), 0]); }
+    /* protons at evenly spaced places in a shuffled order (fixed seed, so a nucleus always looks the same) */
+    let s = 7 + Z * 131 + A; const rnd = () => ((s = (s * 1103515245 + 12345) % 2147483648) / 2147483648);
+    const idx = pts.map((_, i) => i); for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+    for (let k = 0; k < Z; k++) pts[idx[k]][2] = 1;
+    return pts;
+  }
+  function ball(x, y, r, col) {
+    const c = ctx, g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,0.85)'); g.addColorStop(0.35, col); g.addColorStop(1, col);
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,0.25)'; c.lineWidth = 0.6; c.stroke();
+  }
+  function drawNucleus(cx, cy, Rpx, Z, A, skip) {
+    const pts = packing(Z, A), rn = Math.max(1.6, Rpx / Math.sqrt(A) * 0.98);
+    for (let i = 0; i < pts.length; i++) { if (skip && skip(i)) continue; const p = pts[i]; ball(cx + p[0] * (Rpx - rn), cy + p[1] * (Rpx - rn), rn, p[2] ? T.pos : T.neg); }
+    return rn;
+  }
+  function alphaCluster(x, y, rn) { const d = rn * 0.75; ball(x - d, y - d, rn, T.pos); ball(x + d, y + d, rn, T.pos); ball(x + d, y - d, rn, T.neg); ball(x - d, y + d, rn, T.neg); }
+
+  const ctx = can.getContext('2d');
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = pane.getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr)); can.style.width = W + 'px'; can.style.height = H + 'px';
+    const top = ($('oneCtl').offsetHeight || 40) + 18;
+    if (W >= 760) { const lw = Math.round(W * 0.42); L = { scene: [0, top, lw, H - top], p1: [lw, top, W - lw, (H - top) * 0.5], p2: [lw, top + (H - top) * 0.5, W - lw, (H - top) * 0.5] }; }
+    else { const h1 = Math.round((H - top) * 0.36), h2 = Math.round((H - top - h1) / 2); L = { scene: [0, top, W, h1], p1: [0, top + h1, W, h2], p2: [0, top + h1 + h2, W, H - top - h1 - h2] }; }
+    draw();
+  }
+
+  /* ---------- alpha ---------- */
+  const aZA = () => C.ALPHA_SET[O.a];
+  const aG = () => { const [Z, A] = aZA(); return C.gamow(Z, A, O.r0); };
+  const aM = () => { const [Z, A] = aZA(); return C.alphaMeasured(Z, A); };
+  /* the clock runs on the measured partial alpha half life */
+  const aTau = () => Math.pow(10, aM().lgTa) / Math.LN2;
+  function alphaNew() { AL.run = false; AL.done = false; AL.t = 0; AL.fly = 0; AL.tDecay = -aTau() * Math.log(1 - Math.random()); goLabel(); }
+  function alphaGo() {
+    if (AL.done) alphaNew();
+    AL.run = !AL.run; goLabel();
+  }
+  function alphaTick(dt) {
+    AL.ph += dt * (reduce ? 0 : 1);
+    if (AL.run && !AL.done) {
+      AL.t += dt * aTau() / SCREEN_TAU;
+      if (AL.t >= AL.tDecay) { AL.t = AL.tDecay; AL.done = true; AL.run = false; AL.fly = 0; AL.dir = Math.random() * 2 * Math.PI; AL.waits.push(AL.tDecay); if (AL.waits.length > 12) AL.waits.shift();
+        const [Z, A] = aZA(); live(`${nuc(Z, A)} decayed after ${fmtDur(AL.tDecay)}: ${nuc(Z - 2, A - 4)} and an alpha particle.`); goLabel(); readouts(); }
+    }
+    if (AL.done && AL.fly < 1) AL.fly = Math.min(1, AL.fly + dt * (reduce ? 10 : 0.9));
+  }
+  function drawAlphaScene(x0, y0, w, h) {
+    const c = ctx, [Z, A] = aZA(), cx = x0 + w / 2, cy = y0 + h * 0.46, Rpx = Math.min(w, h) * 0.27;
+    c.fillStyle = T.muted; c.font = font(12); c.textAlign = 'center';
+    if (!AL.done) {
+      const amp = (Rpx * 0.55), xo = Math.sin(AL.ph * 7) * amp;    /* the alpha rattling inside, slowed down beyond measure */
+      const rn = drawNucleus(cx, cy, Rpx, Z, A);
+      alphaCluster(cx + xo, cy, rn); c.strokeStyle = T.equi; c.lineWidth = 1.5; c.beginPath(); c.arc(cx + xo, cy, rn * 2.2, 0, 7); c.stroke();
+      c.fillStyle = T.ink; c.font = font(16, 700); c.fillText(nuc(Z, A), cx, cy + Rpx + 26 * ps());
+      c.fillStyle = T.muted; c.font = font(12);
+      c.fillText(`The alpha hits the wall ${sci(aG().f, 2)} times a second`, cx, cy + Rpx + 46 * ps());
+      c.fillText(`and gets out on a hit with chance about ${pow10(aG().lgP, 0)}`, cx, cy + Rpx + 62 * ps());
+    } else {
+      const d = AL.fly * Math.min(w, h) * 0.45 + Rpx * 0.9, ax = cx + Math.cos(AL.dir) * d, ay = cy + Math.sin(AL.dir) * d;
+      const rn = drawNucleus(cx - Math.cos(AL.dir) * AL.fly * 6, cy - Math.sin(AL.dir) * AL.fly * 6, Rpx * Math.cbrt((A - 4) / A), Z - 2, A - 4);
+      c.strokeStyle = T.equi; c.setLineDash([3, 4]); c.lineWidth = 1.2; c.beginPath(); c.moveTo(cx + Math.cos(AL.dir) * Rpx, cy + Math.sin(AL.dir) * Rpx); c.lineTo(ax, ay); c.stroke(); c.setLineDash([]);
+      alphaCluster(ax, ay, rn);
+      c.fillStyle = T.ink; c.font = font(16, 700); c.fillText(`${nuc(Z - 2, A - 4)} + α`, cx, cy + Rpx + 26 * ps());
+      c.fillStyle = T.muted; c.font = font(12); c.fillText(`The alpha leaves with ${C.gamow(Z, A, O.r0).Ta.toFixed(3)} MeV`, cx, cy + Rpx + 46 * ps());
+    }
+    /* the last waits */
+    if (AL.waits.length) {
+      c.textAlign = 'left'; c.fillStyle = T.muted; c.font = font(11.5);
+      c.fillText('Waits so far: ' + AL.waits.slice(-6).map(fmtDur).join(', '), x0 + 12, y0 + h - 12 * ps());
+    }
+  }
+  function axes(x0, y0, w, h, xl, xr, yb, yt, xlab, ylab, xt, yt2) {
+    const c = ctx, l = x0 + 52 * ps(), r = x0 + w - 14, t = y0 + 26 * ps(), b = y0 + h - 34 * ps();
+    const X = (v) => l + (v - xl) / (xr - xl) * (r - l), Y = (v) => b - (v - yb) / (yt - yb) * (b - t);
+    c.strokeStyle = T.gs; c.lineWidth = 1; c.fillStyle = T.muted; c.font = font(11); c.textAlign = 'center';
+    for (const v of xt) { c.beginPath(); c.moveTo(X(v), t); c.lineTo(X(v), b); c.stroke(); c.fillText(String(v), X(v), b + 14 * ps()); }
+    c.textAlign = 'right'; for (const v of yt2) { c.beginPath(); c.moveTo(l, Y(v)); c.lineTo(r, Y(v)); c.stroke(); c.fillText(String(v), l - 5, Y(v) + 4); }
+    c.strokeStyle = T.muted; c.strokeRect(l, t, r - l, b - t);
+    c.textAlign = 'center'; c.fillStyle = T.ink; c.font = font(11.5); c.fillText(xlab, (l + r) / 2, b + 29 * ps());
+    c.save(); c.translate(x0 + 14 * ps(), (t + b) / 2); c.rotate(-Math.PI / 2); c.fillText(ylab, 0, 0); c.restore();
+    return { X, Y, l, r, t, b };
+  }
+  const ticks = (a, b, n) => { const st = Math.pow(10, Math.floor(Math.log10((b - a) / n))), m = (b - a) / n / st, s = (m < 2 ? 1 : m < 5 ? 2 : 5) * st, o = []; for (let v = Math.ceil(a / s) * s; v <= b + 1e-9; v += s) o.push(+v.toFixed(6)); return o; };
+  function drawBarrier(x0, y0, w, h) {
+    const c = ctx, g = aG(), xr = Math.max(1.12 * g.b, 3 * g.R), yt = Math.ceil(g.VR / 5) * 5 + 5, yb = -15;
+    c.fillStyle = T.ink; c.font = font(12.5, 700); c.textAlign = 'left'; c.fillText(w > 520 ? 'Potential energy of the alpha against distance from the center' : 'Potential energy of the alpha', x0 + 12, y0 + 16 * ps());
+    const A = axes(x0, y0, w, h, 0, xr, yb, yt, 'r (fm)', 'energy (MeV)', ticks(0, xr, 6), ticks(yb, yt, 5));
+    /* the forbidden zone, R < r < b, where V > Q */
+    c.save(); c.globalAlpha = 0.18; c.fillStyle = T.equi; c.beginPath(); c.moveTo(A.X(g.R), A.Y(g.Q));
+    for (let i = 0; i <= 80; i++) { const r = g.R + (g.b - g.R) * i / 80; c.lineTo(A.X(r), A.Y(2 * g.Zd * 1.43996448 / r)); } c.lineTo(A.X(g.b), A.Y(g.Q)); c.closePath(); c.fill(); c.restore();
+    /* the well (its depth plays no part in the model) and the Coulomb barrier */
+    c.strokeStyle = T.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(A.X(0), A.Y(-12)); c.lineTo(A.X(g.R), A.Y(-12)); c.lineTo(A.X(g.R), A.Y(g.VR));
+    for (let i = 1; i <= 120; i++) { const r = g.R + (xr - g.R) * i / 120; c.lineTo(A.X(r), A.Y(2 * g.Zd * 1.43996448 / r)); } c.stroke();
+    /* Q */
+    c.strokeStyle = T.accent; c.lineWidth = 1.6; c.setLineDash([6, 4]); c.beginPath(); c.moveTo(A.X(0), A.Y(g.Q)); c.lineTo(A.X(xr), A.Y(g.Q)); c.stroke(); c.setLineDash([]);
+    /* the wave: oscillating inside, dying away through the barrier, a small wave outside (a sketch: outside it is really e^(−G) smaller) */
+    const amp = (A.Y(0) - A.Y(4)), kIn = 2.2, kOut = 1.1;
+    c.strokeStyle = T.sp2; c.lineWidth = 1.5; c.beginPath();
+    for (let i = 0; i <= 300; i++) { const r = xr * i / 300; let y;
+      if (r < g.R) y = amp * Math.cos(kIn * (r - g.R)); else if (r < g.b) y = amp * Math.exp(-3 * (r - g.R) / (g.b - g.R)); else y = amp * Math.exp(-3) * Math.cos(kOut * (r - g.b));
+      const py = A.Y(g.Q) - y; i ? c.lineTo(A.X(r), py) : c.moveTo(A.X(r), py); } c.stroke();
+    c.font = font(11); c.textAlign = 'left'; c.fillStyle = T.accent; c.textAlign = 'right'; c.fillText(`Q = ${g.Q.toFixed(3)} MeV`, A.r - 4, A.Y(g.Q) - 6); c.textAlign = 'left';
+    c.fillStyle = T.ink; c.fillText(`barrier top ${g.VR.toFixed(1)} MeV at R = ${g.R.toFixed(2)} fm`, A.X(g.R) + 6, A.Y(g.VR) + 4);
+    c.fillStyle = T.equi; c.textAlign = 'center'; c.fillText('tunnels through', A.X((g.R + g.b) / 2), A.Y(g.Q) + 14 * ps());
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText(`ψ is a sketch: outside it is really ${pow10(g.lgP / 2, 0)} as big`, A.r - 4, A.b - 6);
+  }
+  const GN = { x: [26, 44], y: [-8, 20] };
+  function drawGN(x0, y0, w, h) {
+    const c = ctx;
+    c.fillStyle = T.ink; c.font = font(12.5, 700); c.textAlign = 'left'; c.fillText('Geiger–Nuttall: half life against Z_d / √Q', x0 + 12, y0 + 16 * ps());
+    const A = axes(x0, y0, w, h, GN.x[0], GN.x[1], GN.y[0], GN.y[1], 'Z_d / √(Q in MeV)', 'log₁₀(T½ in s)', ticks(GN.x[0], GN.x[1], 6), ticks(GN.y[0], GN.y[1], 6));
+    GN.A = A; GN.pts = [];
+    /* lines for 1 s, 1 yr, 1 Gyr */
+    c.font = font(10.5); c.textAlign = 'left';
+    for (const [v, lab] of [[0, '1 s'], [Math.log10(YR), '1 yr'], [Math.log10(1e9 * YR), '1 Gyr']]) { c.strokeStyle = T.line; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(A.l, A.Y(v)); c.lineTo(A.r, A.Y(v)); c.stroke(); c.setLineDash([]); c.fillStyle = T.muted; c.fillText(lab, A.l + 4, A.Y(v) - 3); }
+    C.ALPHA_SET.forEach(([Z, A2], i) => {
+      const x = A.X(C.gnX(Z, A2)), m = C.alphaMeasured(Z, A2), g = C.gamow(Z, A2, O.r0), ym = A.Y(m.lgTa), yg = A.Y(g.lgT), sel = i === O.a;
+      c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(x, ym); c.lineTo(x, yg); c.stroke();
+      c.fillStyle = T.sp1; c.beginPath(); c.arc(x, ym, (sel ? 5.5 : 3.6) * ps(), 0, 7); c.fill();
+      c.strokeStyle = T.sp2; c.lineWidth = 1.6; c.beginPath(); c.arc(x, yg, (sel ? 5.5 : 3.6) * ps(), 0, 7); c.stroke();
+      if (sel) { c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.arc(x, ym, 9 * ps(), 0, 7); c.stroke(); c.fillStyle = T.ink; c.font = font(11.5, 700); c.textAlign = 'left'; c.fillText(nuc(Z, A2), x + 11 * ps(), ym + 4); }
+      GN.pts.push([x, ym, i]);
+    });
+    c.font = font(11); c.textAlign = 'right';
+    c.fillStyle = T.sp1; c.fillText('● measured (NUBASE2020)', A.r - 6, A.b - 22 * ps()); c.fillStyle = T.sp2; c.fillText(`○ Gamow model, r₀ = ${O.r0.toFixed(2)} fm`, A.r - 6, A.b - 8 * ps());
+  }
+
+  /* ---------- beta ---------- */
+  const bS = () => C.BETA_SET[O.b];
+  const bQ = () => { const s = bS(); return C.betaQ(s.Z, s.A, s.plus); };
+  const bZd = () => { const s = bS(); return s.Z + (s.plus ? -1 : 1); };
+  function betaNew() { BE.hist = new Float64Array(40); BE.n = 0; BE.sumT = 0; BE.last = null; BE.fly = 1; BE.acc = 0; BE.tab = C.betaTable(bZd(), bQ(), bS().plus); goLabel(); }
+  function betaOne(quiet) {
+    const Q = bQ(), Te = O.noNu ? Q : C.sampleBeta(BE.tab, Math.random()), Ev = Q - Te;
+    const k = Math.min(39, Math.floor(Te / Q * 40)); BE.hist[k]++; BE.n++; BE.sumT += Te;
+    /* directions: the electron and the neutrino each isotropic (their angular correlation is left out); the nucleus recoils
+       to balance both. Without a neutrino the electron and the nucleus fly apart back to back. */
+    const pe = C.pElectron(Te), th = Math.random() * 2 * Math.PI, tn = Math.random() * 2 * Math.PI;
+    const ex = pe * Math.cos(th), ey = pe * Math.sin(th), nx = Ev * Math.cos(tn), ny = Ev * Math.sin(tn);
+    BE.last = { Te, Ev, pe, pn: Ev, e: [ex, ey], v: [nx, ny], r: [-(ex + nx), -(ey + ny)] }; BE.fly = 0;
+    if (!quiet) live(`Electron ${keV(Te)}, ${O.noNu ? 'no neutrino' : 'antineutrino ' + keV(Ev)}.`);
+  }
+  function betaTick(dt) {
+    if (BE.run) { BE.acc += dt * O.rate; let k = 0; while (BE.acc >= 1 && k < 500) { BE.acc -= 1; betaOne(true); k++; } }
+    if (BE.fly < 1) BE.fly = Math.min(1, BE.fly + dt * (reduce ? 10 : BE.run && O.rate > 2 ? 4 : 1.2));
+  }
+  function arrow(x, y, dx, dy, col, dash, lab) {
+    const c = ctx, L2 = Math.hypot(dx, dy); if (L2 < 1) return; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2; c.setLineDash(dash ? [5, 4] : []);
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x + dx, y + dy); c.stroke(); c.setLineDash([]);
+    const ux = dx / L2, uy = dy / L2, a = 8 * ps(); c.beginPath(); c.moveTo(x + dx, y + dy); c.lineTo(x + dx - a * ux + a * 0.5 * uy, y + dy - a * uy - a * 0.5 * ux); c.lineTo(x + dx - a * ux - a * 0.5 * uy, y + dy - a * uy + a * 0.5 * ux); c.closePath(); c.fill();
+    if (lab) { c.font = font(12, 700); c.textAlign = 'center'; c.fillText(lab, x + dx + ux * 14 * ps(), y + dy + uy * 14 * ps() + 4); }
+  }
+  function drawBetaScene(x0, y0, w, h) {
+    const c = ctx, s = bS(), cx = x0 + w / 2, cy = y0 + h * 0.44, Rpx = s.A === 1 ? Math.min(w, h) * 0.05 : Math.min(w, h) * (0.06 + 0.012 * Math.cbrt(s.A) * 3);
+    const done = BE.last && BE.fly > 0, Zs = done ? bZd() : s.Z, ln = BE.last;
+    let rx = 0, ry = 0;
+    const span = Math.min(w, h) * 0.36, pmax = Math.max(C.pElectron(bQ()), bQ()) || 1;
+    if (ln && done) { rx = ln.r[0] / pmax * span * 0.25 * BE.fly; ry = ln.r[1] / pmax * span * 0.25 * BE.fly; }
+    drawNucleus(cx + rx, cy + ry, Rpx, Zs, s.A);
+    if (ln && done) {
+      const f = BE.fly;
+      if (O.noNu) { const n = Math.hypot(ln.e[0], ln.e[1]) || 1; arrow(cx, cy, ln.e[0] / n * span * f, ln.e[1] / n * span * f, T.sp1, false, s.plus ? 'e⁺' : 'e⁻'); }
+      else { arrow(cx, cy, ln.e[0] / pmax * span * f, ln.e[1] / pmax * span * f, T.sp1, false, s.plus ? 'e⁺' : 'e⁻');
+        arrow(cx, cy, ln.v[0] / pmax * span * f, ln.v[1] / pmax * span * f, T.sp2, true, s.plus ? 'ν' : 'ν̄'); }
+    }
+    c.fillStyle = T.ink; c.font = font(16, 700); c.textAlign = 'center';
+    const eq = `${nuc(s.Z, s.A)} → ${nuc(bZd(), s.A)} + ${s.plus ? 'e⁺' : 'e⁻'}${O.noNu ? '' : s.plus ? ' + ν' : ' + ν̄'}`;
+    c.fillText(eq, cx, y0 + h - 64 * ps());
+    c.fillStyle = T.muted; c.font = font(11.5); c.fillText('Arrow lengths are the momenta (MeV/c); the nucleus takes the recoil', cx, y0 + h - 46 * ps());
+    /* energy split of the last decay */
+    if (ln) { const bx = x0 + 24, bw = w - 48, by = y0 + h - 34 * ps(), bh = 12 * ps(), fe = ln.Te / bQ();
+      c.fillStyle = T.sp1; c.fillRect(bx, by, bw * fe, bh); c.fillStyle = T.sp2; c.fillRect(bx + bw * fe, by, bw * (1 - fe), bh); c.strokeStyle = T.muted; c.strokeRect(bx, by, bw, bh);
+      c.font = font(11); c.textAlign = 'left'; c.fillStyle = T.ink; c.fillText(`${s.plus ? 'positron' : 'electron'} ${keV(ln.Te)}`, bx, by + bh + 13 * ps());
+      c.textAlign = 'right'; c.fillText(O.noNu ? 'nothing else' : `${s.plus ? 'neutrino' : 'antineutrino'} ${keV(ln.Ev)}`, bx + bw, by + bh + 13 * ps()); }
+  }
+  function drawSpectrum(x0, y0, w, h) {
+    const c = ctx, Q = bQ(), tab = BE.tab, s = bS(), mev = Q >= 0.3, k = mev ? 1 : 1000, unit = mev ? 'MeV' : 'keV';
+    let ymax = 0; for (let i = 0; i < tab.n; i++) ymax = Math.max(ymax, tab.d[i]);
+    const nb = 40, bw = Q / nb, hmax = Math.max(...BE.hist), exp = BE.n * bw;
+    const top = Math.max(ymax * Math.max(exp, 1), hmax) * 1.12 || 1;
+    c.fillStyle = T.ink; c.font = font(12.5, 700); c.textAlign = 'left'; c.fillText(`${s.plus ? 'Positron' : 'Electron'} kinetic energies, ${BE.n} decay${BE.n === 1 ? '' : 's'}`, x0 + 12, y0 + 16 * ps());
+    const A = axes(x0, y0, w, h, 0, Q * k * 1.04, 0, top, `kinetic energy T (${unit})`, 'decays per bin', ticks(0, Q * k * 1.04, 5), ticks(0, top, 4).filter((v) => Number.isInteger(v) || top < 4));
+    c.strokeStyle = T.sp1; c.fillStyle = T.sp1; c.lineWidth = 1;
+    for (let i = 0; i < nb; i++) { if (!BE.hist[i]) continue; const xa = A.X(i * bw * k), xb = A.X((i + 1) * bw * k), y = A.Y(BE.hist[i]); c.globalAlpha = 0.3; c.fillRect(xa, y, xb - xa, A.b - y); c.globalAlpha = 1; c.strokeRect(xa, y, xb - xa, A.b - y); }
+    if (!O.noNu && BE.n > 0) { c.strokeStyle = T.ink; c.lineWidth = 1.6; c.setLineDash([6, 4]); c.beginPath();
+      for (let i = 0; i <= tab.n; i++) { const v = i === tab.n ? 0 : tab.d[i] * exp; const x = A.X((i + 0.5) * tab.h * k); i ? c.lineTo(x, A.Y(v)) : c.moveTo(x, A.Y(v)); } c.stroke(); c.setLineDash([]); }
+    c.strokeStyle = T.pos; c.lineWidth = 1.5; c.beginPath(); c.moveTo(A.X(Q * k), A.t); c.lineTo(A.X(Q * k), A.b); c.stroke();
+    c.fillStyle = T.pos; c.font = font(11); c.textAlign = 'right'; c.fillText(`Q = ${keV(Q)}`, A.X(Q * k) - 4, A.t + 14 * ps());
+    c.textAlign = 'right'; c.fillStyle = T.muted;
+    c.fillText(O.noNu ? 'Two bodies: every electron would get all of Q' : '-- allowed spectrum, scaled to the count', A.r - 6, A.t + 30 * ps());
+  }
+  function drawBetaShare(x0, y0, w, h) {
+    /* the mean energy each takes, from the decays so far and from the spectrum */
+    const c = ctx, Q = bQ(), s = bS(), meanE = BE.n ? BE.sumT / BE.n : null, mT = O.noNu ? Q : BE.tab.mean;
+    c.fillStyle = T.ink; c.font = font(12.5, 700); c.textAlign = 'left'; c.fillText('Where the energy Q goes, on average', x0 + 12, y0 + 16 * ps());
+    const bx = x0 + 24, bw = w - 48; let by = y0 + 44 * ps(); const bh = 22 * ps();
+    const row = (lab, f, note) => { c.fillStyle = T.sp1; c.fillRect(bx, by, bw * f, bh); c.fillStyle = T.sp2; c.fillRect(bx + bw * f, by, bw * (1 - f), bh); c.strokeStyle = T.muted; c.strokeRect(bx, by, bw, bh);
+      c.fillStyle = T.ink; c.font = font(11.5); c.textAlign = 'left'; c.fillText(lab, bx, by - 5); c.textAlign = 'right'; c.fillStyle = T.muted; c.fillText(note, bx + bw, by - 5); by += bh + 34 * ps(); };
+    row('These decays', meanE == null ? 0 : meanE / Q, meanE == null ? 'no decays yet' : `${s.plus ? 'positron' : 'electron'} ${(meanE / Q * 100).toFixed(1)}%, mean ${keV(meanE)}`);
+    row(O.noNu ? 'Two body decay' : 'The allowed spectrum', mT / Q, `${s.plus ? 'positron' : 'electron'} ${(mT / Q * 100).toFixed(1)}%, mean ${keV(mT)}`);
+    c.font = font(11); c.textAlign = 'left'; c.fillStyle = T.sp1; c.fillText(`■ ${s.plus ? 'positron' : 'electron'}`, bx, by); c.fillStyle = T.sp2; c.fillText(`■ ${O.noNu ? 'missing' : s.plus ? 'neutrino' : 'antineutrino'}`, bx + 110 * ps(), by);
+  }
+
+  /* ---------- drawing ---------- */
+  function frame(x, y, w, h) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + 0.5, y); ctx.lineTo(x + 0.5, y + h); ctx.moveTo(x, y + 0.5); ctx.lineTo(x + w, y + 0.5); ctx.stroke(); }
+  function draw() {
+    if (O.view === 'many' || !T || !L) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    frame(...L.p1); frame(...L.p2);
+    if (O.view === 'alpha') { drawAlphaScene(...L.scene); drawBarrier(...L.p1); drawGN(...L.p2); }
+    else { drawBetaScene(...L.scene); drawSpectrum(...L.p1); drawBetaShare(...L.p2); }
+    clock();
+  }
+  function clock() {
+    const el = $('oneClock');
+    if (O.view === 'alpha') { const sc = aTau() / SCREEN_TAU; el.textContent = `t = ${fmtDur(AL.t)} · 1 s here is ${fmtDur(sc)}`; }
+    else el.textContent = `${BE.n} decay${BE.n === 1 ? '' : 's'}`;
+  }
+  const live = (m) => { $('oneLive').textContent = m; };
+
+  /* ---------- rail ---------- */
+  function chips() {
+    const box = $('oneNuc'); box.innerHTML = '';
+    const list = O.view === 'alpha' ? C.ALPHA_SET.map(([Z, A]) => nuc(Z, A)) : C.BETA_SET.map((s) => nuc(s.Z, s.A) + (s.plus ? ' (β⁺)' : ''));
+    list.forEach((t, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.dataset.i = i; b.setAttribute('aria-pressed', String(i === (O.view === 'alpha' ? O.a : O.b)));
+      b.addEventListener('click', () => pick(i)); box.appendChild(b); });
+  }
+  function pick(i) {
+    if (O.view === 'alpha') { O.a = (i + C.ALPHA_SET.length) % C.ALPHA_SET.length; AL.waits = []; alphaNew(); }
+    else { O.b = (i + C.BETA_SET.length) % C.BETA_SET.length; BE.run = false; betaNew(); }
+    for (const b of document.querySelectorAll('#oneNuc button')) b.setAttribute('aria-pressed', String(+b.dataset.i === i));
+    readouts(); draw();
+  }
+  const HINT_A = {
+    '84,210': 'Polonium 210 sits just above the closed shell of 126 neutrons in lead 208. It lives about 40 times longer than the simple model says: the shell closure makes it harder to form an alpha at the surface, which the model leaves out.',
+    '84,212': 'Polonium 212 has the largest Q here, 8.95 MeV, and lives only 0.3 μs. It ends the thorium series, after bismuth 212.',
+    '92,238': 'Uranium 238 has Q = 4.27 MeV, only half that of polonium 212, yet its half life of 4.47 billion years is about 5 × 10²³ times as long. The barrier is wider when Q is lower, and the tunneling chance falls off exponentially with the width.',
+    '90,232': 'Thorium 232, 14 billion years, is the longest lived member of the thorium series and keeps the Earth warm with uranium 238 and potassium 40.',
+    '86,222': 'Radon 222, a gas, seeps out of the ground from the uranium series; its 3.8 day half life is long enough to reach a basement.',
+    '88,226': 'Radium 226, 1600 years, is the radium of the Curies, in the uranium 238 series.',
+    '94,238': 'Plutonium 238 powers the thermoelectric generators of deep space probes, warmed by its alphas.',
+    '98,252': 'Californium 252 also splits by itself in 3.1% of its decays, so its partial alpha half life is a little longer than its half life.'
+  };
+  function readouts() {
+    const tb = document.querySelector('#oneTbl tbody'); let rows = [];
+    if (O.view === 'alpha') {
+      const [Z, A] = aZA(), g = aG(), m = aM(), d = g.lgT - m.lgTa;
+      rows = [['Decay', `${nuc(Z, A)} → ${nuc(Z - 2, A - 4)} + α`], ['Q (masses)', `${g.Q.toFixed(4)} MeV`], ['Alpha energy', `${g.Ta.toFixed(4)} MeV`],
+        ['Radius R', `${g.R.toFixed(2)} fm`], ['Barrier top', `${g.VR.toFixed(1)} MeV`], ['Barrier ends, b', `${g.b.toFixed(1)} fm`],
+        ['Gamow factor G', g.G.toFixed(2)], ['Chance per hit', sci(Math.pow(10, g.lgP), 2)], ['Hits per second', sci(g.f, 2)],
+        ['T½, model', fmtDur(Math.pow(10, g.lgT))], ['T½, measured', fmtDur(Math.pow(10, m.lgT)) + (m.br < 1 ? ` (α ${(m.br * 100).toPrecision(4)}%)` : '')],
+        ['Model ÷ measured', `${sci(Math.pow(10, d), 2)} (${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(2)} decades)`]];
+      if (AL.waits.length) { const mean = AL.waits.reduce((a, b) => a + b, 0) / AL.waits.length; rows.push([`Mean of your ${AL.waits.length} wait${AL.waits.length === 1 ? '' : 's'}`, fmtDur(mean)], ['Mean life τ = T½/ln 2', fmtDur(aTau())]); }
+      $('oneHint').textContent = HINT_A[`${Z},${A}`] || `${nuc(Z, A)} is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.`;
+      $('oneModel').textContent = 'Gamow (1928): the alpha is formed inside and rattles back and forth, hitting the wall f = v/2R times a second, v = √(2Q/μ). The Coulomb barrier V = 2Z_d e²/4πε₀r is higher than Q out to b = 2Z_d e²/4πε₀Q, so classically it can never leave; quantum mechanically it tunnels with chance e^(−2G) per hit, where G = (√(2μQ)/ħ) b [arccos √(R/b) − √((R/b)(1 − R/b))] is the WKB exponent of a pure Coulomb barrier. Then λ = fP and T½ = ln 2/λ. R is where the alpha and daughter touch, r₀(A_d^⅓ + 4^⅓); with r₀ = 1.20 fm the twenty half lives, which span 26 decades, come out within about half a decade rms. Masses (for Q), half lives and the alpha branch: NUBASE2020. The clock waits a random time drawn from the measured half life, shown at a scale where a mean life takes 3 s. References: Griffiths, Introduction to Quantum Mechanics, 2nd ed., §8.2; Krane, Introductory Nuclear Physics, §8.4; OpenStax University Physics Vol. 3, §7.7 and §10.4.';
+    } else {
+      const s = bS(), Q = bQ(), tab = BE.tab, r = NBr(s.Z, s.A);
+      rows = [['Decay', `${nuc(s.Z, s.A)} → ${nuc(bZd(), s.A)} + ${s.plus ? 'e⁺ + ν' : 'e⁻ + ν̄'}`], ['Q (masses)', keV(Q)], ['T½, measured', fmtDur(Math.pow(10, r[4]))],
+        [`Mean ${s.plus ? 'positron' : 'electron'} energy, spectrum`, keV(tab.mean)], ['Most likely energy', keV(tab.peak)],
+        ['Mean, these decays', BE.n ? keV(BE.sumT / BE.n) : '—'], ['Decays', String(BE.n)]];
+      if (BE.last) rows.push([`Last ${s.plus ? 'positron' : 'electron'}`, keV(BE.last.Te)], [O.noNu ? 'Missing' : s.plus ? 'Last neutrino' : 'Last antineutrino', O.noNu ? 'nothing (energy conserved only if T = Q)' : keV(BE.last.Ev)]);
+      $('oneHint').textContent = ({ '0,1': 'A free neutron has a half life of 10.2 minutes (a mean life of 14.7 minutes) before it becomes a proton, an electron and an antineutrino. Q = (m_n − m_H)c² = 0.782 MeV.',
+        '1,3': 'Tritium has the smallest Q of any beta emitter, 18.59 keV. The KATRIN experiment measures the very top of its spectrum, near T = Q, to weigh the neutrino.',
+        '6,14': 'Carbon 14, the radiocarbon of dating, gives electrons of at most 156 keV.',
+        '15,32': 'Phosphorus 32 is a pure beta emitter used in labs and in medicine; its electrons reach 1.71 MeV.',
+        '9,18': 'Fluorine 18, the PET isotope: a proton becomes a neutron, a positron and a neutrino. 96.9% of decays are positrons, the rest electron capture (left out here). The Coulomb push on the positron moves its spectrum up.' })[`${s.Z},${s.A}`];
+      $('oneModel').textContent = 'If only the electron and the nucleus came out, momentum and energy would fix the electron energy at Q (less a recoil of under a keV), the same every time. The measured spectrum is continuous instead, so Pauli (1930) proposed a third, unseen particle, the neutrino, which takes the rest of Q. Here each decay draws the electron energy from the allowed spectrum N(T) ∝ F(Z_d, T) p E (Q − T)², with p and E the electron’s momentum and total energy and F the nonrelativistic Fermi function 2πη/(1 − e^(−2πη)), η = ±Z_d αE/pc (+ for e⁻, attracted back by the nucleus; − for e⁺, pushed away). Finite nuclear size, screening, the relativistic Fermi function, forbidden shape factors and the electron–neutrino angular correlation are left out; the directions are drawn at random, and the nucleus recoils to balance the momenta. Q from the NUBASE2020 masses: Q(β⁻) = Δ(Z) − Δ(Z + 1), Q(β⁺) = Δ(Z) − Δ(Z − 1) − 2mₑc². Reference: Krane, Introductory Nuclear Physics, §9.2; OpenStax University Physics Vol. 3, §10.4.';
+    }
+    tb.innerHTML = rows.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('');
+  }
+  const NBr = (Z, A) => C.nb(Z, A);
+  function goLabel() {
+    const g = $('oneGo');
+    if (O.view === 'alpha') g.textContent = AL.done ? 'Again' : AL.run ? 'Pause' : AL.t > 0 ? 'Go on' : 'Watch it decay';
+    else g.textContent = 'One decay';
+    const r = $('oneRun'); r.textContent = BE.run ? 'Stop' : 'Run'; r.setAttribute('aria-pressed', String(BE.run));
+  }
+
+  /* ---------- view switch ---------- */
+  function setView(v) {
+    O.view = v; const one = v !== 'many';
+    for (const b of seg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    stage.classList.toggle('one', one); rail.classList.toggle('one', one); pane.hidden = !one; $('oneSec').hidden = !one;
+    (one ? $('oneCtl') : $('manyCtl')).prepend(seg);
+    if (one && window.__rd) window.__rd.setRunning(false);
+    $('alphaCtl').hidden = v !== 'alpha'; $('betaCtl').hidden = v !== 'beta'; $('oneRun').hidden = v !== 'beta'; $('oneRate').hidden = v !== 'beta';
+    if (one) { if (v === 'beta' && !BE.tab) betaNew(); if (v === 'alpha' && !AL.tDecay) alphaNew(); chips(); readouts(); goLabel(); requestAnimationFrame(resize); }
+    window.dispatchEvent(new Event('resize'));
+  }
+  for (const b of seg.querySelectorAll('button')) b.addEventListener('click', () => setView(b.dataset.v));
+  $('oneGo').addEventListener('click', () => { if (O.view === 'alpha') alphaGo(); else { betaOne(); readouts(); } draw(); });
+  $('oneRun').addEventListener('click', () => { BE.run = !BE.run; goLabel(); });
+  $('oneReset').addEventListener('click', () => { if (O.view === 'alpha') { AL.waits = []; alphaNew(); } else { BE.run = false; betaNew(); } readouts(); draw(); });
+  for (const b of document.querySelectorAll('#oneRate button')) b.addEventListener('click', () => { O.rate = +b.dataset.r; for (const o of document.querySelectorAll('#oneRate button')) o.setAttribute('aria-pressed', String(o === b)); });
+  $('oneR0').addEventListener('input', (e) => { O.r0 = +e.target.value; $('oneR0Out').textContent = O.r0.toFixed(2) + ' fm'; readouts(); draw(); });
+  $('oneNoNu').addEventListener('change', (e) => { O.noNu = e.target.checked; betaNew(); readouts(); draw(); });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { pick((O.view === 'alpha' ? O.a : O.b) + (e.key === 'ArrowRight' ? 1 : -1)); e.preventDefault(); }
+    else if (e.key === ' ') { $('oneGo').click(); e.preventDefault(); }
+  });
+  can.addEventListener('pointerdown', (e) => {
+    if (O.view !== 'alpha' || !GN.pts) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    let best = -1, bd = (e.pointerType === 'touch' ? 22 : 12) * ps(); for (const [px, py, i] of GN.pts) { const d = Math.hypot(px - x, py - y); if (d < bd) { bd = d; best = i; } }
+    if (best >= 0) pick(best);
+  });
+
+  tokens();
+  new ResizeObserver(() => { if (O.view !== 'many') resize(); }).observe(pane);
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); draw(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  let last = performance.now(), lastRd = 0;
+  function loop(now) {
+    const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    if (O.view === 'alpha') { alphaTick(dt); draw(); }
+    else if (O.view === 'beta') { betaTick(dt); draw(); if (BE.run && now - lastRd > 250) { readouts(); lastRd = now; } }
+    requestAnimationFrame(loop);
+  }
+  { const v = new URLSearchParams(location.search).get('view'); if (v === 'alpha' || v === 'beta') setView(v); }
+  window.__rd1 = { O, AL, BE, setView, pick, betaOne, alphaNew };
   requestAnimationFrame(loop);
 })();
 </script>

@@ -23,6 +23,7 @@ Students should know E = mc², 1 u = 931.494 MeV/c², and Z, N and A. The demo u
 4. **The liquid drop model.** Start with only **Volume** checked, then add **Surface**, **Coulomb**, **Asymmetry** and **Pairing** one at a time, and watch the model curve take the shape of the data. Ask the prediction in Q5 before removing the Coulomb term. **Fit to AME2020** shows how good five numbers can be.
 5. **Why iron is the end of the line.** Near the peak, compare **B/A measured** and **Mass per nucleon M/A** for ⁶²Ni, ⁵⁸Fe and ⁵⁶Fe: the order is not the same (Q6).
 6. **Magic numbers.** Measured B minus the fitted drop, against N, then **Against Z**. The spikes sit at the magic numbers; ²⁰⁸Pb is doubly magic (Q7).
+7. **Build.** Start from ¹¹C and add or remove protons and neutrons one at a time: the chart around it shows which nuclei are stable (black or white), which β⁻ or β⁺ decay, which α decay, and which do not hold together at all. **Let it decay** follows the main decay mode; from ²³⁸U the arrows trace the uranium series down to ²⁰⁶Pb. Read the last neutron's separation energy S<sub>n</sub> as you add neutrons: it drops toward zero at the drip line.
 
 ## Questions
 

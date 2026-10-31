@@ -5982,3 +5982,40 @@ plan #23, #24 and #30. Notes got one class step each (demo keys rebuilt in Teach
 - Worksheet candidates for the sweep: **Atom models** as a part of the hydrogen worksheet (which models land on the lines; Thomson
   radius for Hα); **Molecules and light** as a short part of the HCl or bonds worksheet (which molecules absorb 15 μm and why);
   error bars need no worksheet, but keys that report uncertainty columns could now ask for χ².
+
+## 2026-10-31 · Claude · Last partials, Group 3 (Nuclei and atoms)
+
+Steve: "Let's get to work getting these partials done" (14:16); fold into the named demos, no new worksheets. Group 3 of
+`partials-final/groups-2026-10-31.md` (plan #21, #22, #31: PhET Alpha Decay, Beta Decay, Build a Nucleus, Build an Atom).
+- New shared data `demos/lib/nubase.js` (`window.VDNUBASE`, 213 kB): every NUBASE2020 ground state (3558), with the mass
+  excess (estimated ones flagged), half life, decay modes with their shares and natural abundance. Built by
+  `tools/nubase/build.py` from `nubase_4.mas20.txt` (the copy in the pynucastro 3.2.0 wheel; IAEA AMDC is blocked here);
+  1 y = 365.2422 d as in NUBASE. Each CORE takes it through `useNubase(d)`, as photondata does.
+- Radioactive Decay, **Alpha decay** and **Beta decay** views (View: Many nuclei | Alpha decay | Beta decay, also
+  `?view=alpha|beta`). Alpha: 20 even–even emitters ¹⁴⁶Sm to ²⁵²Cf; Q from AME2020 masses; Gamow model with the exact WKB
+  integral of a pure Coulomb barrier from R = r₀(A_d^⅓ + 4^⅓) to b, assault frequency v/2R with v = √(2Q/μ) (Griffiths
+  §8.2, Krane §8.4); r₀ slider 1.0 to 1.6 fm, default 1.20 fm gives 0.52 decades rms against NUBASE over 26 decades
+  (²¹⁰Po, at the N = 126 closure, is the outlier, 1.6 decades long). Potential energy picture (ψ a labelled sketch),
+  Geiger–Nuttall plot measured and model, one nucleus waiting a random time drawn from the measured partial alpha half
+  life (a mean life shown in 3 s). Beta: n, ³H, ¹⁴C, ³²P and ¹⁸F (β⁺); allowed shape with the nonrelativistic Fermi
+  function (stated, with what is left out); means 5.70, 49.46, 697.2, 250.5 keV against evaluated 5.68, 49.5, 695,
+  249.8; histogram builds against the curve; No neutrino switch shows the two body expectation. Opening view unchanged.
+- Nuclear Binding Energy, **Build** view: protons and neutrons ± on the picture (arrow keys too, or a click on the chart),
+  status from NUBASE (stable with abundance, decay mode and half life, particle unstable, or not in the table), B, B/A,
+  S_n, S_p, a 13 × 13 chart of nuclides around it colored by main decay mode, the main decay path drawn, and Let it decay
+  (follows the largest mode; ²³⁸U reaches ²⁰⁶Pb in 14 steps). Opens on ¹¹C (β⁺), so Let it decay does something at once.
+  New token `--emit` for nucleon emission.
+- Shells, the Periodic Table and X-Rays, **Build an atom** view: protons, neutrons, electrons ±; element card with
+  ᴬX charge, ion or neutral, isotope status and neutral atom mass (A u + Δ); shells drawn as rings; ions fill by the
+  usual rule (a cation loses highest n, then highest l, first: Fe³⁺ [Ar] 3d⁵; an anion is the next neutral atom),
+  stated in About. The periodic table picks an element's most common isotope. No readings in this view (says so).
+- Tests: `test_radioactive-decay.cjs` 10 groups (5 new: Q values, WKB against a direct integral, model against
+  NUBASE, beta Q and spectrum means, sampling); new `test_binding-energy.cjs` 5 groups; `test_shells-and-x-rays.cjs`
+  10 groups (2 new). vdcheck `--only after` 0 problems and `--only clip` 0 cut off on all three; new views looked at in
+  screenshots at 1368, 1024 and 390 px, light and dark.
+- Notes: one class step each; demo keys rebuilt in TeacherKeys (no new questions). One What's new entry.
+- Worksheet candidates for the sweep: **Geiger–Nuttall** (read Q and T½ for the twenty emitters, plot log T½ against
+  Z_d/√Q, compare with the model and fit r₀) is the strongest, a short worksheet of its own; the **beta spectrum** (mean
+  energy against Q/3, the missing energy) could be a part of the Radioactive Decay worksheet; **Build a nucleus** (find
+  the drip lines for one element with S_n) a part of the Binding Energy worksheet; **Build an atom** is chemistry level
+  and fits a prelab question, no worksheet.

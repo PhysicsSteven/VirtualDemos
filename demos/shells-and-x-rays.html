@@ -10,6 +10,7 @@
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <script src="lib/photondata.js"></script>
+<script src="lib/nubase.js"></script>
 <title>Shells, the Periodic Table and X-Rays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +30,12 @@
 #can { z-index: 1; }
 .pane canvas.xr3 { z-index: 0; right: auto; bottom: auto; }
 .curvebox { position: relative; flex: none; height: 180px; border-top: 1px solid var(--line); }
+.stage.build .curvebox, .stage.build .vd-split { display: none; }
+.bactl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.bactl .bgrp { display: inline-flex; align-items: center; gap: 3px; border: 1px solid var(--line); border-radius: 8px; padding: 2px 3px 2px 8px; background: var(--canvas); }
+.bactl .blab { font-size: 0.82rem; font-weight: 700; margin-right: 3px; }
+.bactl .bgrp .btn { min-width: 34px; padding: 2px 8px; font-size: 1rem; }
+@media (max-width: 820px) { .stage.build .pane { height: 560px; } }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); flex: 0 1 auto; min-height: 96px; overflow-y: auto; }
 .shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
@@ -75,11 +82,18 @@
       <div class="stage-ctl">
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="shells" aria-pressed="true">Shells</button>
+          <button type="button" data-v="build" aria-pressed="false">Build an atom</button>
           <button type="button" data-v="xray" aria-pressed="false">X-ray tube</button>
         </div>
         <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn" id="zDown" aria-label="One electron fewer (previous element)">− electron</button>
         <button type="button" class="btn" id="zUp" aria-label="One electron more (next element)">+ electron</button>
+        <div class="bactl" id="baCtl" hidden>
+          <span class="bgrp"><span class="blab">Protons</span><button type="button" class="btn" id="baPm" aria-label="Remove a proton">−</button><button type="button" class="btn" id="baPp" aria-label="Add a proton">+</button></span>
+          <span class="bgrp"><span class="blab">Neutrons</span><button type="button" class="btn" id="baNm" aria-label="Remove a neutron">−</button><button type="button" class="btn" id="baNp" aria-label="Add a neutron">+</button></span>
+          <span class="bgrp"><span class="blab">Electrons</span><button type="button" class="btn" id="baEm" aria-label="Remove an electron">−</button><button type="button" class="btn" id="baEp" aria-label="Add an electron">+</button></span>
+          <span class="sr" aria-live="polite" id="baLive"></span>
+        </div>
         <span class="count mono" id="clock"></span>
       </div>
       <div class="pane" id="pane">
@@ -88,8 +102,8 @@
       <div class="curvebox"><canvas id="curve" tabindex="0" role="img" aria-label="Graph of the first ionization energy against atomic number."></canvas></div>
       <div class="shelf" id="shelf">
         <div class="shelf-card" id="cardShells" role="group" aria-label="Pick an element">
-          <span class="card-title">Pick an element, or add and remove electrons one at a time</span>
-          <div class="wide">
+          <span class="card-title" id="cardTitle">Pick an element, or add and remove electrons one at a time</span>
+          <div class="wide" id="fillRow">
             <span class="lab">Fill</span>
             <div class="seg" role="group" aria-label="How the subshells are filled" id="fillSeg">
               <button type="button" data-f="real" aria-pressed="true">Measured ground state (NIST)</button>
@@ -162,6 +176,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutShells"></p>
           <p class="hint" id="aboutXray"></p>
+          <p class="hint" id="aboutBuild"></p>
           <p class="hint" id="aboutData"></p>
         </details>
         </div></details>
@@ -443,9 +458,49 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < sp.E.length; i++) { const w = sp.f[i] * filterT(sp.E[i] * 1000, alMm, cuMm); a += w * sp.E[i]; b += w; } return a / b; }
   /* minimum first HVL, 21 CFR 1020.30(m)(1) Table 1, systems made on or after June 10, 2006 (other than intraoral dental): kVp → mm Al */
   const CFR_HVL = { 30: 0.3, 40: 0.4, 50: 0.5, 51: 1.3, 60: 1.5, 70: 1.8, 71: 2.5, 80: 2.9, 90: 3.2, 100: 3.6 };
+  /* ---- Build an atom (2026-10-31, PhET Build an Atom): protons give the element, protons and neutrons the mass number,
+     protons less electrons the charge. Isotopes from NUBASE2020 (F. G. Kondev et al., Chinese Physics C 45, 030001 (2021),
+     demos/lib/nubase.js): stable or radioactive, half life, natural abundance, atomic mass from the AME2020 mass excess. The browser
+     calls useNubase(window.VDNUBASE); the tests pass the same object. */
+  let NBD = null; const NBM = new Map();
+  function useNubase(d) { NBD = d; NBM.clear(); for (const r of d.gs) NBM.set(r[0] * 1000 + r[1], r); }
+  const U_KEV = 931494.10372;   /* keV per u, CODATA 2022 as used by AME2020 */
+  function atomInfo(p, n, e) {
+    const A = p + n, o = { p, n, e, A, charge: p - e, el: p >= 1 && p <= 118 ? ELEMENTS[p - 1] : null };
+    const r = p >= 1 ? NBM.get(p * 1000 + A) : null;
+    if (!o.el) o.kind = 'none';
+    else if (!r) o.kind = 'unknown';
+    else {
+      o.kind = r[4] === 's' ? 'stable' : r[4] === 'u' ? 'unbound' : 'radioactive';
+      o.lg = typeof r[4] === 'number' ? r[4] : null; o.abund = r[6]; o.est = !!r[3];
+      o.massU = A + r[2] / U_KEV;            /* the neutral atom's mass in u */
+    }
+    return o;
+  }
+  /* the electrons of an ion, p protons and e electrons: a positive ion loses its outermost electrons first, the highest n and then the
+     highest l (so Fe³⁺ is [Ar] 3d⁵, losing both 4s electrons before a 3d one); a negative ion takes the places of the neutral atom with
+     e electrons. Measured ground states of the neutral atoms (realConfig). */
+  function ionConfig(p, e) {
+    if (e <= 0) return {};
+    if (p < 1 || e >= p) return realConfig(Math.min(118, e));
+    const o = Object.assign({}, realConfig(p));
+    for (let k = p - e; k > 0; k--) {
+      let best = null; for (const s in o) if (o[s] > 0 && (!best || +s[0] > +best[0] || (+s[0] === +best[0] && L_OF[s[1]] > L_OF[best[1]]))) best = s;
+      o[best]--; if (!o[best]) delete o[best];
+    }
+    return o;
+  }
+  /* neutrons in the most abundant natural isotope of element Z; with none in nature, the longest lived isotope */
+  function commonN(Z) {
+    let best = null, bv = -Infinity;
+    for (let A = Z; A <= 3 * Z + 20; A++) { const r = NBM.get(Z * 1000 + A); if (!r) continue;
+      const v = r[6] != null ? 1e6 + r[6] : r[4] === 's' ? 1e6 : typeof r[4] === 'number' ? r[4] : -Infinity; if (v > bv) { bv = v; best = A - Z; } }
+    return best == null ? Z : best;
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
   useData(window.VDPHOTON);
+  if (window.VDNUBASE) useNubase(window.VDNUBASE);
 
   const $ = (id) => document.getElementById(id);
   const VG = window.VDGear;
@@ -754,7 +809,66 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
   }
   (function spin() { if (use3() && !document.hidden) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawTube(); } requestAnimationFrame(spin); })();
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh); if (S.view === 'shells') { drawShells(); drawIE(); } else { drawTube(); drawXspec(); } readouts(); }
+  // ---------- Build an atom view (2026-10-31) ----------
+  const BA = { p: 6, n: 6, e: 5 };    /* opens on a carbon ion, C⁺, so the first electron added makes it neutral */
+  const ESHELL = (p, e) => (e >= 1 ? shellCounts(ionConfig(p, e)) : [0, 0, 0, 0, 0, 0, 0]);
+  function baBall(x, y, r, col) { const c = ctx, g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,0.85)'); g.addColorStop(0.35, col); g.addColorStop(1, col); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); }
+  const baName = (i) => (i.el ? i.el[2] : 'nothing');
+  const chargeTxt = (q) => (q === 0 ? '' : (Math.abs(q) === 1 ? '' : sup(Math.abs(q))) + (q > 0 ? '⁺' : '⁻'));
+  function baStatus(i) {
+    if (i.kind === 'none') return 'no protons: not an element';
+    if (i.kind === 'unknown') return 'no such isotope known';
+    if (i.kind === 'unbound') return 'not bound: falls apart at once';
+    if (i.kind === 'stable') return i.abund != null ? `stable, ${i.abund}% of natural ${i.el[1]}` : 'stable';
+    return i.lg == null ? 'radioactive' : `radioactive, half life ${fmtHLs(i.lg)}`;
+  }
+  function fmtHLs(lg) { const s = Math.pow(10, lg), Y = 365.2422 * 86400, g = (v, u) => `${v >= 100 ? Math.round(v) : +v.toPrecision(3)} ${u}`;
+    return s >= 1e9 * Y ? g(s / 1e9 / Y, 'billion years') : s >= 1e6 * Y ? g(s / 1e6 / Y, 'million years') : s >= Y ? g(s / Y, 'years') : s >= 86400 ? g(s / 86400, 'days') : s >= 3600 ? g(s / 3600, 'hours') : s >= 60 ? g(s / 60, 'minutes') : s >= 1 ? g(s, 's') : s >= 1e-3 ? g(s * 1e3, 'ms') : s >= 1e-6 ? g(s * 1e6, 'μs') : `${s.toExponential(1)} s`; }
+  function drawBuild() {
+    const p = proj(), i = atomInfo(BA.p, BA.n, BA.e), wide = W >= 620;
+    backdrop();
+    const aw = wide ? W * 0.56 : W, ah = wide ? Hh : Hh * 0.62, cx = aw / 2, cy = ah / 2 + 6 * p;
+    const sh = ESHELL(BA.p, BA.e), nSh = Math.max(1, sh.reduce((m, k, j) => (k ? j + 1 : m), 0)), Rn = Math.max(7 * p, Math.min(aw, ah) * 0.085 * Math.cbrt(Math.max(1, i.A) / 12));
+    const Rout = Math.min(aw, ah) * 0.45, step = (Rout - Rn - 10 * p) / Math.max(nSh, 2);
+    /* shells: rings; electrons spread evenly on each */
+    for (let k = 0; k < nSh; k++) { const r = Rn + 12 * p + step * (k + 0.5);
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      const m = sh[k]; for (let j = 0; j < m; j++) { const a = -Math.PI / 2 + 2 * Math.PI * j / m + k * 0.35; baBall(cx + r * Math.cos(a), cy + r * Math.sin(a), Math.max(2.5, Math.min(6 * p, step * 0.18, 2 * Math.PI * r / m * 0.32)), T.up); }
+      const la = -0.3 - 0.32 * k; if (m) lbl(`n = ${k + 1}: ${m}`, cx + r * Math.cos(la) + 6 * p, cy + r * Math.sin(la), { s: 9.5 * p, m: true, c: T.muted }); }
+    /* nucleus: protons and neutrons packed on a spiral */
+    const A = i.A, ga = Math.PI * (3 - Math.sqrt(5)), rb = A ? Math.max(1.6, Math.min(8 * p, Rn / Math.sqrt(A) * 1.05)) : 0;
+    let sd = 11 + BA.p * 131 + A * 7; const rnd = () => ((sd = (sd * 1103515245 + 12345) % 2147483648) / 2147483648);
+    const idx = Array.from({ length: A }, (_, k) => k); for (let k = A - 1; k > 0; k--) { const j = Math.floor(rnd() * (k + 1)); [idx[k], idx[j]] = [idx[j], idx[k]]; }
+    const isP = new Uint8Array(A); for (let k = 0; k < BA.p; k++) isP[idx[k]] = 1;
+    for (let k = 0; k < A; k++) { const r = Math.sqrt((k + 0.5) / A) * Math.max(0, Rn - rb), a = k * ga; baBall(cx + r * Math.cos(a), cy + r * Math.sin(a), rb, isP[k] ? T.down : T.brems); }
+    lbl('not to scale: the nucleus is tens of thousands of times smaller than the atom', 10 * p, ah - 12 * p, { s: 10 * p, c: T.muted });
+    /* the element card */
+    const bx = wide ? aw + 10 * p : 16 * p, by = wide ? 24 * p : ah + 6 * p, bw = wide ? W - aw - 26 * p : W - 32 * p, bh = Math.min(wide ? Hh * 0.5 : Hh - ah - 14 * p, 230 * p);
+    ctx.fillStyle = i.el ? CATHEX(i.el[5]) : T.grid; ctx.globalAlpha = 0.18; ctx.fillRect(bx, by, bw, bh); ctx.globalAlpha = 1; ctx.strokeStyle = i.el ? CATHEX(i.el[5]) : T.line; ctx.lineWidth = 2; ctx.strokeRect(bx + 1, by + 1, bw - 2, bh - 2);
+    const sym = i.el ? i.el[1] : '?', mx = bx + bw / 2;
+    lbl(String(BA.p), bx + 10 * p, by + 16 * p, { s: 13 * p, m: true, c: T.ink });
+    if (i.el) lbl(`A = ${A}`, bx + bw - 10 * p, by + 16 * p, { s: 13 * p, m: true, c: T.ink, a: 'right' });
+    lbl(`${sup(A)}${sym}${chargeTxt(i.charge)}`, mx, by + bh * 0.42, { s: Math.min(54 * p, bh * 0.28), w: 700, c: T.ink, a: 'center' });
+    lbl(baName(i), mx, by + bh * 0.66, { s: 15 * p, w: 700, c: T.ink, a: 'center' });
+    lbl(i.charge === 0 ? 'neutral atom' : i.charge > 0 ? `positive ion, charge +${i.charge}e` : `negative ion, charge −${-i.charge}e`, mx, by + bh * 0.79, { s: 12 * p, c: i.charge ? T.down : T.muted, a: 'center' });
+    lbl(baStatus(i), mx, by + bh * 0.9, { s: 11.5 * p, c: i.kind === 'stable' ? T.ink : i.kind === 'radioactive' ? T.diff : T.muted, a: 'center' });
+    if (wide) { const yy = by + bh + 22 * p, row = (a, b, k) => { lbl(a, bx, yy + k * 20 * p, { s: 11.5 * p, c: T.muted }); lbl(b, bx + bw, yy + k * 20 * p, { s: 11.5 * p, m: true, c: T.ink, a: 'right' }); };
+      row('protons', String(BA.p), 0); row('neutrons', String(BA.n), 1); row('electrons', String(BA.e), 2); row('charge', i.charge === 0 ? '0' : `${i.charge > 0 ? '+' : '−'}${Math.abs(i.charge)}e`, 3); row('mass number', String(A), 4);
+      if (i.massU) row('mass of the neutral atom', `${i.massU.toFixed(6)} u${i.est ? ' (est.)' : ''}`, 5); }
+  }
+  const CATHEX = (cat) => getComputedStyle(document.documentElement).getPropertyValue(`--cat-${cat}`).trim() || T.accent;
+  function baReadouts(dd) {
+    const i = atomInfo(BA.p, BA.n, BA.e), sh = ESHELL(BA.p, BA.e);
+    return dd('Element (from the protons)', i.el ? `${i.el[2]}, ${i.el[1]}` : 'none') + dd('Protons, neutrons, electrons', `${BA.p}, ${BA.n}, ${BA.e}`)
+      + dd('Charge, protons − electrons', i.charge === 0 ? '0, a neutral atom' : `${i.charge > 0 ? '+' : '−'}${Math.abs(i.charge)}e, ${i.charge > 0 ? 'a positive' : 'a negative'} ion`)
+      + dd('Mass number A = protons + neutrons', String(i.A)) + dd('Isotope', i.el ? `${sup(i.A)}${i.el[1]}, ${baStatus(i)}` : '—')
+      + dd('Mass of the neutral atom', i.massU ? `${i.massU.toFixed(6)} u${i.est ? ' (estimated)' : ''}` : '—')
+      + dd('Electrons per shell', BA.e ? sh.filter((k, j, a) => a.slice(j).some((q) => q)).join(', ') : 'none') + dd('Configuration', BA.e ? pretty(ionConfig(BA.p, BA.e)) : '—');
+  }
+  function baSet(p, n, e) { BA.p = Math.max(0, Math.min(118, p)); BA.n = Math.max(0, Math.min(180, n)); BA.e = Math.max(0, Math.min(118, e)); custom(); sync(); redraw();
+    const i = atomInfo(BA.p, BA.n, BA.e); $('baLive').textContent = `${i.el ? `${sup(i.A)}${i.el[1]}${chargeTxt(i.charge)}` : 'No element'}: ${baStatus(i)}.`; }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh); if (S.view === 'shells') { drawShells(); drawIE(); } else if (S.view === 'build') drawBuild(); else { drawTube(); drawXspec(); } readouts(); }
 
   // ---------- readouts ----------
   /* the beam quality readouts: the ion chamber, and, with filtration, the half value layers it gives (hidden in Blind mode) */
@@ -779,7 +893,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function readouts() {
     const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
     let o = '';
-    if (S.view === 'shells') {
+    if (S.view === 'build') o = baReadouts(dd);
+    else if (S.view === 'shells') {
       const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), rule = ruleConfig(Z), os = outerShell(real);
       o = dd('Element', `${e[2]}, ${e[1]}`) + dd('Atomic number Z', Z) + dd('Configuration (measured)', pretty(real) + (Z > 103 ? ' (predicted)' : '')) + dd('By the n + l rule', pretty(rule))
         + dd('Electrons per shell', shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(', ')) + dd('Outer shell', `n = ${os.n}, ${os.count} electron${os.count === 1 ? '' : 's'}`)
@@ -814,6 +929,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('tNote').textContent = S.xr.lastMys ? `The last mystery target was ${byZ(S.xr.lastMys)[2].toLowerCase()} (Z = ${S.xr.lastMys}).` : '';
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     $('zDown').hidden = $('zUp').hidden = S.view !== 'shells';
+    $('baCtl').hidden = S.view !== 'build'; $('fillRow').hidden = S.view === 'build'; $('stage').classList.toggle('build', S.view === 'build');
+    for (const b of document.querySelectorAll('#ptable button')) if (S.view === 'build') b.setAttribute('aria-pressed', String(+b.dataset.z === BA.p));
   }
   const MYSTERY_POOL = XRAY.map((r) => r[0]).filter((z) => z >= 20 && z <= 60);
   function newTarget(quiet) { const x = S.xr; let z; do { z = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (z === x.mys); if (!quiet && x.mysN) x.lastMys = x.mys; x.mys = z; x.mysN++; }
@@ -826,11 +943,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     mystery: { view: 'xray', hint: 'An unknown target at 70 kV. Measure the wavelength of its Kα₁ line and use Moseley\'s law to find its atomic number.', set: () => { Object.assign(S.xr, { target: 'mystery', kV: 70, axis: 'lam', cur: 60 }); newTarget(true); } } };
   const VIEW_LABEL = { shells: 'Orbital boxes for every subshell from 1s to 7p, filled with spin up and spin down electrons, and a bar for each shell showing how many electrons it holds out of 2n².',
     xray: 'An X-ray tube: a hot filament, electrons accelerated to a metal target, and X-rays leaving through a window; beside it, the target atom\'s K, L and M levels with the Kα and Kβ transitions.' };
+  VIEW_LABEL.build = 'An atom built from protons, neutrons and electrons: the nucleus in the middle, the electrons on rings for their shells, and a card with the element, its charge, mass number and whether that isotope is stable.';
   const CURVE_LABEL = { shells: 'Graph of the first ionization energy against atomic number, for Z = 1 to 103.', xray: 'The X-ray spectrum, intensity against wavelength or photon energy. Drag or use the arrow keys to move the cursor.' };
+  CURVE_LABEL.build = '';
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('cardShells').hidden = v !== 'shells'; $('cardXray').hidden = v !== 'xray';
-    $('units').textContent = v === 'shells' ? 'energies in eV' : 'λ in pm · E in keV · V in kV';
+    $('cardShells').hidden = v === 'xray'; $('cardXray').hidden = v !== 'xray';
+    $('cardTitle').textContent = v === 'build' ? 'Pick an element: its most common isotope, as a neutral atom' : 'Pick an element, or add and remove electrons one at a time';
+    $('units').textContent = v === 'xray' ? 'λ in pm · E in keV · V in kV' : v === 'build' ? 'masses in u (unified atomic mass units)' : 'energies in eV';
     can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]);
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     if (g3) g3.S3.el.hidden = !use3(); $('dimSeg').hidden = v !== 'xray';
@@ -841,7 +961,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const setZ = (z) => { S.sh.Z = Math.max(1, Math.min(118, z)); custom(); sync(); redraw(); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
-  $('ptable').addEventListener('click', (e) => { const b = e.target.closest('[data-z]'); if (b) setZ(+b.dataset.z); });
+  $('ptable').addEventListener('click', (e) => { const b = e.target.closest('[data-z]'); if (!b) return; if (S.view === 'build') { const z = +b.dataset.z; baSet(z, commonN(z), z); } else setZ(+b.dataset.z); });
+  for (const [id, dp, dn, de] of [['baPm', -1, 0, 0], ['baPp', 1, 0, 0], ['baNm', 0, -1, 0], ['baNp', 0, 1, 0], ['baEm', 0, 0, -1], ['baEp', 0, 0, 1]]) $(id).addEventListener('click', () => baSet(BA.p + dp, BA.n + dn, BA.e + de));
+  window.__sx = Object.assign(window.__sx || {}, { BA, baSet, setView });
   $('zDown').addEventListener('click', () => setZ(S.sh.Z - 1)); $('zUp').addEventListener('click', () => setZ(S.sh.Z + 1));
   $('fillSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.sh.fill = b.dataset.f; custom(); sync(); redraw(); } });
   $('selTarget').addEventListener('change', (e) => { S.xr.target = e.target.value; if (S.xr.target === 'mystery') newTarget(true); custom(); sync(); redraw(); });
@@ -850,6 +972,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('axisSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b && b.dataset.a !== S.xr.axis) { const x = S.xr; x.cur = x.cur > 0 ? HC_EV_PM / x.cur : x.cur; x.axis = b.dataset.a; sync(); redraw(); } });
   $('newTarget').addEventListener('click', () => { newTarget(false); custom(); sync(); redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (S.view === 'build') { const k = { ArrowUp: [1, 0, 0], ArrowDown: [-1, 0, 0], ArrowRight: [0, 1, 0], ArrowLeft: [0, -1, 0], '+': [0, 0, 1], '=': [0, 0, 1], '-': [0, 0, -1] }[e.key]; if (k) { baSet(BA.p + k[0], BA.n + k[1], BA.e + k[2]); e.preventDefault(); } return; } });
   can.addEventListener('keydown', (e) => { if (S.view !== 'shells') return; if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { setZ(S.sh.Z + 1); e.preventDefault(); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { setZ(S.sh.Z - 1); e.preventDefault(); } });
   /* the spectrum cursor: drag, click or arrow keys (Shift for bigger steps) */
   function cursorAt(ev) { if (S.view !== 'xray') return; const r = cur.getBoundingClientRect(), x = ev.clientX - r.left, x0 = +cur.dataset.x0, x1 = +cur.dataset.x1, L = +cur.dataset.L, pw = +cur.dataset.pw;
@@ -864,10 +987,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- readings (tools/readings_panel.py) ----------
   window.vdVersion = 'shells-and-x-rays@2026-10-24';
   const SHOW = { shells: [['element', 'element'], ['Z', 'Z'], ['IE_eV', 'IE (eV)']], xray: [['target', 'target'], ['V_kV', 'V (kV)'], ['cursor_pm', 'cursor (pm)']] };
+  SHOW.build = SHOW.shells;
   window.vdShowCols = SHOW.shells;
   const mpBeam = () => S.view === 'xray' && filtered();   /* readings with filtration or absorbers go to the Medical Physics worksheet */
-  window.vdWorksheet = () => (S.view === 'shells' ? 'periodic-table' : mpBeam() ? 'mp-x-ray-filtration' : 'x-ray-spectra');
+  window.vdWorksheet = () => (S.view !== 'xray' ? 'periodic-table' : mpBeam() ? 'mp-x-ray-filtration' : 'x-ray-spectra');
   window.vdReadingRow = () => {
+    if (S.view === 'build') return 'Build an atom has no readings: switch to Shells or X-ray tube to record.';
     const rows = window.vdRows ? window.vdRows() : [], other = rows.find((r) => r.view !== S.view);
     if (other) return `These readings are from the ${other.view === 'shells' ? 'Shells' : 'X-ray tube'} view: export them to its worksheet or clear them first.`;
     if (S.view === 'xray' && rows.some((r) => (r.chamber !== undefined) !== mpBeam())) return mpBeam() ? 'These readings have no filtration: export them to the X-ray spectra worksheet or clear them first.' : 'These readings have filtration: export them to their worksheet or clear them first.';
@@ -885,6 +1010,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- about ----------
   $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
   $('aboutXray').textContent = 'X-ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X-rays move slowed down for the eye, and each X-ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, gray for bremsstrahlung). Filtration and half value layer (for the Medical Physics module): with a filter or sheets in the beam of the tungsten target, from 20 to 100 kV, the graph and the chamber use a full tube model instead of Kramers\' law: the spectrum of SpekPy 2.5.4 (Poludniowski et al. 2021, Med. Phys. 48, 3630; validated against measured spectra and half value layers by Bujila, Omar and Poludniowski 2020, Phys. Med. 75, 44), a tungsten anode at 12° behind a 0.8 mm beryllium window, in 1 keV bins with its K and L lines. That spectrum includes the absorption of the X-rays in the target itself, which Kramers\' law leaves out and which removes much of the low energy end. It is the same spectrum, and the same coefficients, that Photon Interactions in Matter uses, so the two demos give the same half value layers. The filters remove photons as e^(−μx), with μ/ρ of aluminum and copper the sums of the NIST XCOM cross sections, interpolated log–log (densities 2.699 and 8.96 g/cm³). The ion chamber reads air kerma, K ∝ Σ Φ(E) T(E) E (μ_en/ρ)_air over the bins, each taken at its center energy, with μ_en/ρ for dry air from NIST Standard Reference Database 126; the reading is relative to no sheets. The half value layer is the aluminum that halves this reading, found by bisection, and the second one is the extra aluminum that halves it again; the mean photon energy is weighted by photon number. These agree with SpekPy\'s own to 0.3 %. The tube has no glass envelope or oil in the model, so with 2.5 mm Al at 80 kV it gives a first HVL of 2.74 mm Al, below the 2.9 mm Al minimum that 21 CFR 1020.30(m) sets for systems made since June 2006; a real tube\'s inherent filtration adds to it. Other targets and lower voltages draw the filtered Kramers spectrum but give no chamber reading or half value layers, since the shared SpekPy spectra are for tungsten from 20 kV only. In 3D each X-ray of the filtered tungsten beam has an energy picked from the SpekPy spectrum (red for Kα, blue for Kβ, gray for the continuum and the L lines).';
+  $('aboutBuild').textContent = 'Build an atom: the number of protons fixes the element; protons plus neutrons give the mass number A; protons less electrons give the charge in units of e (OpenStax Vol. 3 §10.1). Whether that isotope exists, is stable, its half life and natural abundance, and the mass of the neutral atom (A u plus the mass excess) come from NUBASE2020 and AME2020 (F. G. Kondev et al. and M. Wang et al., Chinese Physics C 45, 030001 and 030003 (2021)). The electrons fill the measured ground state of the neutral atom; a positive ion loses its outermost electrons first, highest n and then highest l, so Fe³⁺ is [Ar] 3d⁵, and a negative ion takes the places of the neutral atom with as many electrons. That rule fits the common ions; a few ions of the heavier transition metals differ. The rings are shells, not orbits, and the nucleus is drawn far too large. Arrow keys on the picture add and remove protons (up, down) and neutrons (right, left); + and − add and remove electrons.';
   $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X-ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2022). Element families and the table layout are those of the Spectra Explorer.';
 
   // ---------- size, theme, start ----------
@@ -898,7 +1024,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
-  window.__sx = { S, setView, applyPreset, redraw, sync, setZ, newTarget, xrayLines, lamPm, xZ };
+  window.__sx = Object.assign(window.__sx || {}, { S, setView, applyPreset, redraw, sync, setZ, newTarget, xrayLines, lamPm, xZ });
   const HOW = { 'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X-Ray Spectra and Moseley's Law", 'mp-x-ray-filtration': 'Filtration and Half Value Layers' };   /* one video per worksheet, picked as vdWorksheet picks */
   VD.howTo({ src: () => `media/how-this-works/${window.vdWorksheet()}.mp4`, poster: () => `media/how-this-works/${window.vdWorksheet()}.jpg`, title: () => `How this works: ${HOW[window.vdWorksheet()]}` });
 })();

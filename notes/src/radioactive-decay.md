@@ -24,6 +24,7 @@ Students should know exponentials and logarithms; the RC discharge in PHYS 202 i
 5. **Iodine 131.** The activity histogram falls with the same 8 day half life as N. After 10 half lives, about 80 days, 1/1024 of the activity is left (Q4).
 6. **Two step chain.** Bismuth 210 (5.0 d) feeds polonium 210 (138 d). Ask when the polonium will peak before running (Q6).
 7. **Short daughter, long parent.** Tellurium 132 (76.9 h) feeds iodine 132 (2.3 h). On the log scale the two lines become parallel; read the activity ratio (Q7).
+8. **Alpha decay and Beta decay, one nucleus up close.** Switch the view to **Alpha decay** with ²¹²Po and press **Watch it decay** a few times: the waits are all different. Then pick ²³⁸U: Q is only half as large, yet the half life is about 5 × 10²³ times longer, because the alpha must tunnel through a wider barrier. The Geiger–Nuttall plot puts twenty alpha emitters on one line, and Gamow's model lands within about half a decade of each. In **Beta decay** run ¹⁴C at 200/s and watch the electron energies spread out under Q, then tick **No neutrino**: every electron would carry all of Q. The missing energy is the antineutrino.
 
 ## Questions
 

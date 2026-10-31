@@ -65,4 +65,21 @@ group('half value layers: SpekPy 2.5.4 within 0.3 %, and the same numbers as Pho
   assert(!t.beamOK(74, 19.5) && t.beamOK(74, 20) && t.beamOK(74, 99.5) && !t.beamOK(29, 80) && !t.beamOK(74, 110), 'tungsten, 20 to 100 kV only');
   assert(t.hvl(74, 80, 2.5, 0).h2 > t.hvl(74, 80, 2.5, 0).h1, 'the beam hardens');
 });
+
+/* Build an atom (2026-10-31) */
+const b = core('shells-and-x-rays', 'useNubase,atomInfo,commonN,ionConfig,configText,realConfig');
+{ const d = {}; vm.runInNewContext(readLib('nubase.js'), d, { timeout: 5000 }); b.useNubase(d.VDNUBASE); }
+group('Build an atom: element from protons, charge p − e, A = p + n; isotopes from NUBASE2020; ¹²C weighs 12 u exactly', () => {
+  const c12 = b.atomInfo(6, 6, 6); assert.equal(c12.el[1], 'C'); assert.equal(c12.charge, 0); assert.equal(c12.A, 12); assert.equal(c12.kind, 'stable'); assert.equal(c12.massU, 12);
+  const na = b.atomInfo(11, 12, 10); assert.equal(na.charge, 1); near(na.massU, 22.98976928, 1e-9, 'Na23');
+  const cl = b.atomInfo(17, 18, 18); assert.equal(cl.charge, -1);
+  assert.equal(b.atomInfo(6, 8, 6).kind, 'radioactive'); assert.equal(b.atomInfo(0, 1, 0).kind, 'none'); assert.equal(b.atomInfo(1, 9, 1).kind, 'unknown');
+  je([1, 6, 26, 43, 82, 92].map(b.commonN), [0, 6, 30, 54, 126, 146]);
+});
+group('ions: a cation loses its highest n, then highest l, first (Fe³⁺ [Ar] 3d⁵, Cu⁺ [Ar] 3d¹⁰); an anion is the next neutral atom', () => {
+  const ar = '1s2 2s2 2p6 3s2 3p6';
+  assert.equal(b.configText(b.ionConfig(26, 23)), ar + ' 3d5'); assert.equal(b.configText(b.ionConfig(29, 28)), ar + ' 3d10');
+  assert.equal(b.configText(b.ionConfig(17, 18)), ar); assert.equal(b.configText(b.ionConfig(11, 10)), '1s2 2s2 2p6');
+  assert.equal(b.configText(b.ionConfig(26, 26)), b.configText(b.realConfig(26))); assert.equal(b.configText(b.ionConfig(5, 0)), '');
+});
 console.log(`${n} groups passed`);

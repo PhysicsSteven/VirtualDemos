@@ -21,6 +21,7 @@ Students should know the four quantum numbers of the hydrogen atom and the Bohr 
 3. **Copper tube, 30 kV.** The smooth curve starts at 41.33 pm. Change the voltage: the start moves, the lines stay (Q4, Q5).
 4. **Below the K edge.** Molybdenum at 15 kV has no K lines. Raise the voltage past 20.0 kV and they appear (Q6).
 5. **Mystery target.** Students measure Kα₁ and use Moseley's law to find Z (Q7).
+6. **Build an atom.** Add and remove protons, neutrons and electrons. Protons alone name the element; protons and neutrons give the mass number; protons less electrons give the charge. Ask what changes when a neutron is added to ¹²C (the isotope, not the element), and why Fe³⁺ has its 4s electrons gone first.
 
 ## Questions
 
