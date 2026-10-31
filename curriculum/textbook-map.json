@@ -6125,7 +6125,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "quantum-waves"
+        "quantum-waves",
+        "radioactive-decay"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunneling through a barrier, reflected and transmitted parts.",
       "unit": "quantum-mechanics"
@@ -6440,7 +6441,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "nuclear-reactions"
+        "nuclear-reactions",
+        "radioactive-decay"
       ],
       "note": "Nuclear Reactions, Fission and Fusion (2026-10-24, Claude): build a reaction, check ΣZ and ΣA, Q from AME2020 atomic masses, exothermic or endothermic, the threshold energy measured and compared with −Q(1 + m_a/m_A); Rutherford, Cockcroft–Walton, Chadwick, Example 10.7 (²³⁹Pu α decay). Worksheet nuclear-reactions.",
       "unit": "nuclear"
@@ -9450,17 +9452,28 @@
           "vol": 3,
           "sec": "10.3",
           "title": "Radioactive Decay"
+        },
+        {
+          "vol": 3,
+          "sec": "7.6",
+          "title": "The Quantum Tunneling of Particles through Potential Barriers"
+        },
+        {
+          "vol": 3,
+          "sec": "10.4",
+          "title": "Nuclear Reactions"
         }
       ],
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Random decay of every nucleus with the exact step probability; half lives from ENSDF; carbon 14 dating task; two step chains with the Bateman solution. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Measuring a Half Life and Parent and Daughter, keys from real runs in TeacherKeys.",
+      "note": "Random decay of every nucleus with the exact step probability; half lives from ENSDF; carbon 14 dating task; two step chains with the Bateman solution. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Measuring a Half Life and Parent and Daughter, keys from real runs in TeacherKeys. Alpha decay and Beta decay views record for the Alpha and Beta Decay worksheet (2026-10-31, Claude).",
       "title": "Radioactive Decay",
       "url": "demos/radioactive-decay.html",
       "handouts": [
         "radioactive-decay",
         "decay-chains",
+        "alpha-and-beta-decay",
         "mp-technetium-generator"
       ]
     },

@@ -485,6 +485,21 @@
     /* Reading | Sample | Temperature T (K) | Applied field B (mT) | Moment m (mA·m²) | Field at the equator (mT) | T² (K²) */
     'meissner-effect': { demo: 'Superconductors and the Meissner Effect', cols: ['row', (r) => `${r.sample}, ${r.model}`, 'T_K', 'B_mT', 'm_mAm2', 'B_eq_mT', null] },
   });
+  /* Worksheet sweep, Modern (2026-10-31): a new worksheet for the Alpha decay and Beta decay views of Radioactive Decay */
+  MODERN.push('alpha-and-beta-decay'); ENABLED.push('alpha-and-beta-decay');
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Emitter | Daughter Z_d | Q (MeV) | r₀ (fm) | Measured T½ (s) | Model T½ (s) | Z_d/√Q | log₁₀ T½ measured | log₁₀ T½ model
+       Table 2: Reading | Nuclide | Q (keV) | Decays N | Mean energy, your decays (keV) | Mean energy, spectrum (keV) | Q/3 (keV) | Mean ÷ Q */
+    'alpha-and-beta-decay': { demo: 'Radioactive Decay (Alpha decay and Beta decay)', cols: ['row', 'emitter', 'Zd', 'Q_MeV', 'r0_fm', 'T_meas_s', 'T_model_s', null, null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'beta'), cols: ['row', 'nuclide', 'Q_keV', 'n', 'mean_run_keV', 'mean_spec_keV', null, null] }] },
+  });
+  /* new parts of existing worksheets from the same sweep, each a table of its own after the first (FROM_DEMO fills the first in order) */
+  /* Ionic and Covalent Bonds, Table 2: Reading | Orbital | Separation R (nm) | Energy U (eV) | R/a₀ (the H₂⁺ orbitals view) */
+  FROM_DEMO['molecular-bonds'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'mo'), cols: ['row', 'molecule', 'r_nm', 'U_eV', null] }];
+  /* Energy Bands, Table 2: Reading | V₀ | b | a | Band 1 bottom | Band 1 top | Band 2 bottom | First gap | Width of band 1 | ln(width) (the periodic potential) */
+  FROM_DEMO['energy-bands'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.model === 'kp'), cols: ['row', 'V0_eV', 'b_nm', 'a_nm', 'band1_bottom_eV', 'band1_top_eV', 'band2_bottom_eV', 'gap1_eV', null, null] }];
+  /* The Curve of Binding Energy, Table 2: Reading | Nucleus | Z | N | Status | Half life | S_n | S_p (the Build view) */
+  FROM_DEMO['binding-energy'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'build'), cols: ['row', 'nucleus', 'Z', 'N', 'status', (r) => r.half_life.replace(/^half life /, ''), 'Sn_MeV', 'Sp_MeV'] }];
   /* ==MODERN END== */
   /* ==ASTRO START== Astronomy worksheets (astro.html) and their demo column maps. */
   const CURVE_TABLES_LATER = [];   /* curve tables named before CURVE_TABLES exists */

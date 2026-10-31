@@ -17,6 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§10.1, 10.2, 10.5 and 10.6. 
 - Binding energies use atomic mass excesses: $$B = Z\Delta(^1\mathrm{H}) + N\Delta(n) - \Delta(A, Z)$$, with $$\Delta(^1\mathrm{H}) = 7.289$$ MeV and $$\Delta(n) = 8.071$$ MeV. The electrons are counted with the protons; their own binding, at most 0.8 MeV for uranium, is left in B.
 - Energy from the curve shows the Q value of D + T fusion, one uranium 235 fission, the proton chain and the triple alpha process, from the masses.
 - The liquid drop model starts from the textbook coefficients (Rohlf 1994). Its terms can be turned off, changed with sliders, or fitted to AME2020.
+- The Build view makes a nucleus from protons and neutrons, one at a time. It shows whether NUBASE2020 lists it as stable, decaying (with its main decay mode and half life), not bound at all, or not listed, with its binding energy and the separation energies $$S_n$$ and $$S_p$$, the energy needed to pull off its last neutron or proton. A small chart of nuclides around it is colored by decay mode. Record reading there stores the nucleus, its status and $$S_n$$ and $$S_p$$; those readings go to Table 2.
 - Record reading stores the selected nuclide's numbers and the model's B/A. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>
@@ -47,6 +48,7 @@ The terms are the bulk binding, the missing neighbors of surface nucleons, the p
 2. Deuterium has B = 2.22 MeV and tritium 8.48 MeV. Using your helium 4 value, find the energy released in $$^2\mathrm{H} + {}^3\mathrm{H} \to {}^4\mathrm{He} + n$$.
 3. In the liquid drop formula, which term grows fastest with Z? Which term makes very light nuclei loosely bound?
 4. Predict roughly where B/A is largest, and why it falls for heavier nuclei.
+5. The separation energy of the last neutron is $$S_n = B(Z, N) - B(Z, N - 1)$$. What does a negative $$S_n$$ mean for the nucleus?
 
 ## Safety
 
@@ -60,6 +62,8 @@ No hazards in the virtual lab.
 
 **Liquid drop.** With the liquid drop model setup, record tin 120 and lead 208 with all five terms on. Export them, Clear, turn off the Coulomb term and record both again, so they go into a new copy of the table.
 
+**Part 2: the edges of the chart.** Export and clear the readings, then build oxygen nuclei (8 protons) in the Build view. Record every oxygen from 3 neutrons to 20 neutrons. Then do the same for carbon (6 protons), from 2 to 18 neutrons. Export: these readings go to Table 2.
+
 ## Data
 
 | Reading | Nuclide | Z | N | A | Mass excess Δ (MeV) | B (MeV) | B/A (MeV) | B/A liquid drop (MeV) |
@@ -67,6 +71,14 @@ No hazards in the virtual lab.
 | | | | | | | | | |
 | | | | | | | | | |
 | | | | | | | | | |
+
+Table 2. Building nuclei.
+
+| Reading | Nucleus | Z | N | Status | Half life | $$S_n$$ (MeV) | $$S_p$$ (MeV) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
 ## Analysis
 
@@ -76,6 +88,9 @@ No hazards in the virtual lab.
 4. Estimate the fission Q a second way: 236 nucleons go from about the B/A of uranium to about the B/A of the fragments. How close is this to your answer to Analysis 3?
 5. Compare the energy released per nucleon of fuel in D + T fusion and in uranium fission.
 6. Compare the liquid drop model's B/A with the measured values along the curve. Where does the model do worst? For tin 120 and lead 208, by how much does turning off the Coulomb term raise B/A, and why is the change larger for lead?
+7. From Table 2, find the heaviest bound oxygen and the heaviest bound carbon: the neutron drip line. How does $$S_n$$ change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.
+8. Find the lightest bound oxygen: the proton drip line. Which side of the stable isotopes is the chart wider, and why?
+9. How do the half lives change as you move away from the stable isotopes?
 
 ## Uncertainty
 
@@ -90,4 +105,4 @@ The AME2020 masses are known to a few keV or better for most stable nuclei, so t
 
 ## What to hand in
 
-Prelab answers, the table copies and the graph of B/A against A, your Q values with the two estimates for fission, the liquid drop comparison, and answers to the questions. Identify data taken from the demo's tables.
+Prelab answers, the table copies and the graph of B/A against A, your Q values with the two estimates for fission, the liquid drop comparison, Table 2 with the drip lines you found, and answers to the questions. Identify data taken from the demo's tables.

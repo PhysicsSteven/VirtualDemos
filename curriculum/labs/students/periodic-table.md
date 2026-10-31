@@ -19,6 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.4. Access for free at https
 - The graph shows the first ionization energy for Z = 1 to 103, from NIST, with the selected element marked.
 - The readout gives $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ (13.606 eV is the hydrogen ground state energy), which treats the outer electron as if it were in a hydrogen atom with nuclear charge $$Z_\mathrm{eff}$$. It is a rough estimate.
 - Record reading stores the element, Z, the measured and rule configurations, the electrons in each shell, the outer shell's n and its number of electrons, and the ionization energy. Export to worksheet sends the readings to the Data table below. Clear starts a new series, which goes into a new copy of the table.
+- The Build an atom view makes an atom or ion from protons, neutrons and electrons. It names the element from the number of protons and gives the charge, the mass number, whether that isotope is stable, the mass of the neutral atom, the electrons in each shell and the configuration. An ion's electrons are taken off or added by the usual rule: a positive ion loses its highest n electrons first, then its highest l. Nothing is recorded in this view.
 - Blind hides the ionization graph and the ionization energy and $$Z_\mathrm{eff}$$ readouts, and leaves the ionization energy out of the readings. Keep it off for this worksheet.
 
 </details>
@@ -43,6 +44,7 @@ The first ionization energy IE is the energy needed to remove the most loosely b
 2. Write the ground configuration of phosphorus (Z = 15) and draw its 3p boxes. How many electrons are unpaired?
 3. By the n + l rule, which fills first, 4s or 3d? 5s or 4d? 6s, 4f or 5d?
 4. Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.
+5. How many protons, neutrons and electrons are there in ³⁵Cl⁻? In ⁵⁶Fe³⁺?
 
 ## Safety
 
@@ -55,6 +57,8 @@ No hazards in the virtual lab.
 **The alkali metals and noble gases.** Clear the readings. Record a reading for lithium, sodium, potassium, rubidium, cesium and francium, then for helium, neon, argon, krypton, xenon and radon. Send this run to a new copy of the table.
 
 **Exceptions.** Pick Chromium breaks the rule and switch between the two fills. Do the same for copper (Z = 29), palladium (Z = 46) and gadolinium (Z = 64). Write down both configurations of each in the second table.
+
+**Part 2: build an atom.** In Build an atom, build each of these and write its charge, mass number and configuration in the last table: carbon 12 and carbon 14, both neutral; sodium 23 with 10 electrons; chlorine 35 with 18 electrons; iron 56 with 24 electrons and with 23 electrons.
 
 ## Data
 
@@ -73,6 +77,14 @@ Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ yourself.
 | Palladium | | | |
 | Gadolinium | | | |
 
+Building atoms and ions (Part 2).
+
+| Atom or ion | Protons | Neutrons | Electrons | Charge | Mass number A | Configuration |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
 ## Analysis
 
 1. Graph IE against Z for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.
@@ -80,6 +92,8 @@ Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ yourself.
 3. Graph IE against n for the alkali metals and for the noble gases. How do the two families compare, and what trend do you see down each column?
 4. Find $$Z_\mathrm{eff}$$ for each alkali metal. If the inner electrons screened the nucleus completely, $$Z_\mathrm{eff}$$ would be 1. Is it? Explain why it grows down the column.
 5. For the four exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
+6. From the last table, compare the configurations of the sodium and chlorine ions with those of neon and argon. Why do these two elements form these ions?
+7. Which electrons does iron lose first to become Fe²⁺ and Fe³⁺? The n + l rule filled 4s before 3d. Why are the 4s electrons the first to go?
 
 ## Uncertainty
 
@@ -94,4 +108,4 @@ The ionization energies are measured values from NIST, given to many more figure
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the table of exceptions, your $$Z_\mathrm{eff}$$ values, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs, the table of exceptions, your $$Z_\mathrm{eff}$$ values, the table of atoms and ions you built, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.

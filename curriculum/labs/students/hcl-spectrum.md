@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§9.1 and 9.2. Access for fre
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** HCl band; Two isotopes; Hot gas (these three use the HCl spectrum view, the subject of this worksheet); HCl levels (the Energy levels view); NaCl molecule; Pull the ions apart; H₂ bond; H₂ spins parallel (the bonds worksheet).
+**Setups in the demo:** HCl band; Two isotopes; Hot gas (these three use the HCl spectrum view, the subject of this worksheet); HCl levels (the Energy levels view); CO₂ and infrared, Ozone and ultraviolet, NO₂ in visible light (the Molecules and light view, Part 2 of this worksheet); NaCl molecule; Pull the ions apart; H₂ bond; H₂ spins parallel (the bonds worksheet).
 
 **Using the demo.**
 
@@ -16,6 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§9.1 and 9.2. Access for fre
 - Move the cursor by dragging on either graph, with the slider, or with the arrow keys on a graph. With the lock on, the cursor sits on the top of the nearest peak and the arrow keys step from peak to peak.
 - You can set the gas temperature, the resolution of the spectrometer (the width of each line), and whether the chlorine is natural (a mixture of ³⁵Cl and ³⁷Cl) or ³⁵Cl only.
 - The Energy levels view shows the vibration and rotation levels and the transitions between them, in the book's model or with the measured constants.
+- The Molecules and light view sends photons from a microwave, infrared, visible or ultraviolet lamp at one of seven molecules and shows what each photon does: it passes through, or it is absorbed and the molecule turns faster, shakes in one of its vibrations, glows (an electron is lifted) or breaks apart. The readouts list the molecule's electric dipole, its vibrations, its bond energy and where it absorbs. Nothing is recorded in this view.
 - Record reading stores the cursor's wavenumber, the absorbance there (relative to the strongest peak), the temperature, the resolution and the chlorine. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind (in the Lab section) hides the line names, the band center and the nearest line readout.
 
@@ -53,6 +54,7 @@ The force constant of the bond follows from the vibration: $$k = \mu\,(2\pi c\,\
 2. The bond length of HCl is about 0.127 nm. Find its moment of inertia, and the rotational constant $$B$$ in cm⁻¹ and in meV.
 3. The band center is near 2886 cm⁻¹. Find the photon energy in eV, the wavelength in μm, and the force constant $$k$$ of the bond.
 4. Why does the band have no line at its center?
+5. Find the photon energy of infrared light at 15.0 μm (in meV), of visible light at 500 nm and of ultraviolet light at 254 nm (in eV).
 
 ## Safety
 
@@ -66,6 +68,8 @@ No hazards in the virtual lab.
 
 **A hot gas.** Export, clear and set the temperature to 1000 K. Record the tallest peak above the gap and the tallest below it, then do the same at 100 K.
 
+**Part 2: molecules and light.** For each of the seven molecules in Molecules and light, find what one photon does in microwave light, in infrared light at 15.0 μm, in visible light at 500 nm and in ultraviolet light at 254 nm (the wavelengths the view opens at), and write it in Table 2: passes through, turns, shakes (which vibration), glows or breaks.
+
 ## Data
 
 | Reading | Wavenumber (cm⁻¹) | Relative absorbance | Line | m | Spacing to the next line (cm⁻¹) |
@@ -73,6 +77,14 @@ No hazards in the virtual lab.
 | | | | | | |
 | | | | | | |
 | | | | | | |
+
+Table 2. Molecules and light.
+
+| Molecule | Microwave | Infrared 15.0 μm | Visible 500 nm | Ultraviolet 254 nm |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
 
 ## Analysis
 
@@ -83,6 +95,8 @@ No hazards in the virtual lab.
 5. Estimate the band center $$\tilde\nu_0$$ from the lines either side of the gap, using your values of $$B_0$$ and $$B_1$$. Find the force constant of the bond.
 6. For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Predict the shift of the band center from the reduced masses, $$\tilde\nu_0\left(1 - \sqrt{\mu_{35}/\mu_{37} }\right)$$, and compare. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl (75.76 %) and ³⁷Cl (24.24 %).
 7. Which lines were strongest at 100 K, 300 K and 1000 K? Explain the change using the Boltzmann factor and the $$2l + 1$$ orientations of each level.
+8. From Table 2, which molecules take up microwaves, and what do they have in common? Which take up infrared at 15.0 μm, and why does CO₂ while N₂ and O₂ do not? What has this to do with the greenhouse effect?
+9. For each molecule that breaks in Table 2, compare the photon energy with its bond energy $$D_0$$. Why does NO₂ break at 254 nm but only glow at 500 nm?
 
 ## Uncertainty
 
@@ -95,7 +109,8 @@ The cursor locks to the top of each peak and reads to 0.01 cm⁻¹. Estimate the
 3. Why is the band center lower than the harmonic frequency $$\omega_e$$ = 2990.9 cm⁻¹ that the vibration would have for very small oscillations?
 4. Why does the heavier isotope give lines at lower wavenumbers, and why is the shift so small?
 5. The book's model gives equally spaced lines. Name two ways the real HCl molecule differs from that model, and the measurement in this lab that shows each one.
+6. Ozone is a small part of the air, yet it shields the ground from ultraviolet light near 254 nm, which O₂ lets through. What does Table 2 show about why?
 
 ## What to hand in
 
-Prelab answers, the table copies with your line names, $$m$$ and spacings, the two graphs, your values of $$B_0$$, $$B_1$$, the bond length, the band center and the force constant with uncertainties, the isotope comparison, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with your line names, $$m$$ and spacings, the two graphs, your values of $$B_0$$, $$B_1$$, the bond length, the band center and the force constant with uncertainties, the isotope comparison, Table 2, and answers to the questions. Identify simulated data.

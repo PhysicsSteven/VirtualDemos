@@ -221,6 +221,7 @@ HANDOUT_TOPIC = {
     'chladni': 'Chladni Plates', 'doppler': 'Doppler Effect and Shock Waves',
     # modern, Vol. 3 ch. 9 to 11
     'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
+    'alpha-and-beta-decay': 'Alpha and Beta Decay',
     'binding-energy': 'The Curve of Binding Energy',
     'gamma-spectroscopy': 'Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays',
     'hubble-law': 'Measuring the Hubble Constant',

@@ -262,7 +262,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="ldmHint">Textbook values a<sub>V</sub> = 15.75, a<sub>S</sub> = 17.8, a<sub>C</sub> = 0.711, a<sub>A</sub> = 23.7, a<sub>P</sub> = 11.18 MeV, from Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, 1994). Pairing is + for even Z and even N, − for odd Z and odd N, 0 for odd A. Fit to AME2020 finds the least squares coefficients for every measured nucleus with A ≥ 16.</p>
       </section>
 
-      <!-- vd-readings --><section class="vd-readings nobuild" data-ws="binding-energy" data-title="Nuclear Binding Energy" data-demo="binding-energy">
+      <!-- vd-readings --><section class="vd-readings" data-ws="binding-energy" data-title="Nuclear Binding Energy" data-demo="binding-energy">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
@@ -398,7 +398,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the decay modes of a nucleus with Z protons and N neutrons, largest first; modes NUBASE marks "?" (not seen) are left out */
   function decayModes(Z, N) {
     const r = nbRow(Z, Z + N); if (!r) return [];
-    return r[5].filter((m) => m[2] !== '?' && MODES[m[0]]).map((m) => ({ code: m[0], pct: m[1], q: m[2], dZ: MODES[m[0]][0], dN: MODES[m[0]][1], name: MODES[m[0]][2] }))
+    /* a mode NUBASE gives as 0% (²⁸O's β⁻) is left out, so it never counts as the main mode */
+    return r[5].filter((m) => m[2] !== '?' && m[1] !== 0 && MODES[m[0]]).map((m) => ({ code: m[0], pct: m[1], q: m[2], dZ: MODES[m[0]][0], dN: MODES[m[0]][1], name: MODES[m[0]][2] }))
       .sort((a, b) => (b.pct == null ? -1 : b.pct) - (a.pct == null ? -1 : a.pct));
   }
   /* what is known about Z protons and N neutrons: 'none' (nothing there), 'unknown' (not in NUBASE2020: never made, or beyond the
@@ -1344,6 +1345,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'binding-energy@2026-10-24';
   window.vdShowCols = [['nuclide', 'nuclide'], ['B_MeV', 'B (MeV)'], ['BA_MeV', 'B/A (MeV)']];
   window.vdReadingRow = () => {
+    /* the Build view (2026-10-31, worksheet sweep): one row per nucleus built, for Part 2 of the worksheet (its Table 2) */
+    const prev = window.vdRows ? window.vdRows() : [];
+    if (prev.some((r) => (r.view === 'build') !== (S.view === 'build'))) return `These readings are from the ${S.view === 'build' ? 'other views' : 'Build view'}: export them to the worksheet or clear them first.`;
+    if (S.view === 'build') {
+      const Z = BLD.Z, N = BLD.N, A = Z + N, info = buildInfo(Z, N), sn = sepN(Z, N), sp = sepP(Z, N);
+      if (!A) return 'Add some protons and neutrons first.';
+      window.vdShowCols = [['nucleus', 'nucleus'], ['status', 'status'], ['Sn_MeV', 'S_n (MeV)'], ['Sp_MeV', 'S_p (MeV)']];
+      return { view: 'build', nucleus: bName(Z, A), Z, N, A, status: info.kind === 'stable' ? 'stable' : info.kind === 'unbound' ? 'not bound' : info.kind === 'unknown' ? 'not in NUBASE2020' : info.main ? info.main.name : 'decay mode not known', half_life: info.kind === 'decays' || info.kind === 'stable' ? bHL(info) : '',
+        Sn_MeV: sn != null ? sn.toFixed(3) : '', Sp_MeV: sp != null ? sp.toFixed(3) : '', B_MeV: info.B != null && A > 1 ? info.B.toFixed(3) : '', mass: info.est ? 'estimated' : 'measured' };
+    }
+    window.vdShowCols = [['nuclide', 'nuclide'], ['B_MeV', 'B (MeV)'], ['BA_MeV', 'B/A (MeV)']];
     const n = S.sel; if (!n || n.A < 2) return 'Pick a nucleus with at least two nucleons.';
     const m = semfB(n.Z, n.A, S.c, S.on) / n.A;
     return { nuclide: `${n.A}${SYM[n.Z]}`, Z: n.Z, N: n.N, A: n.A, dm_MeV: (n.dm / 1000).toFixed(3), B_MeV: n.B.toFixed(3), BA_MeV: n.ba.toFixed(4), BA_ldm_MeV: m.toFixed(3),

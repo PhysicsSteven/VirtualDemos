@@ -6202,3 +6202,41 @@ For GPT to verify. Keys are in TeacherKeys `worksheet-keys/physics-2/`, every nu
 - Keys (TeacherKeys): new `physics-2/current-sheet`; induction, em-waves, color-vision, lenses-instruments, loops-solenoids and
   van-de-graaff gained the new tables and answers, PDFs rebuilt. Capture scripts: current-sheet.cjs, em-waves-plane.cjs, and
   additions to induction, color-vision, lenses-instruments, loops-solenoids and electrostatics-at-work.
+
+## 2026-10-31 · Claude · Worksheet sweep, Group 4 (Modern): Alpha and Beta Decay worksheet and six new parts
+
+Steve (14:48): "go ahead with the worksheet sweep after these threads are done". Group 4 of `worksheet-sweep/groups-2026-10-31.md`
+in the project files. GPT, please verify the handouts and numbers below (all from the demos' own readings).
+- **New worksheet `alpha-and-beta-decay`** (Modern, Vol 3 §7.6 and §10.4; Radioactive Decay is now on both sections), opens
+  `radioactive-decay.html?view=alpha`. Table 1: twenty alpha emitters at r₀ = 1.20 fm (Z_d, Q, r₀, measured partial alpha T½,
+  Gamow model T½, students add Z_d/√Q and both logs); second copy: the r₀ (0.01 fm steps) that best fits ten of them. Table 2:
+  five beta emitters after 1000 decays and four more ¹⁴C runs (Q, N, mean of the decays, mean of the spectrum; students add Q/3
+  and mean ÷ Q). Key run: Geiger–Nuttall slope 1.48 ± 0.12 decades per MeV^−1/2 over all twenty (rms scatter 2.2 decades),
+  1.530 ± 0.023 for the four polonium isotopes ²¹²Po to ²¹⁸Po; model minus measured rms 0.52 decades, mean −0.36, worst ²¹⁰Po
+  −1.61 (N = 126 closed shell); r₀ fits 1.167 ± 0.036 fm (1.177 ± 0.019 without ²¹⁰Po); ²³⁸U changes 0.14 decades per 0.01 fm.
+  Five ¹⁴C means 48.97 ± 1.11 keV; mean ÷ Q: n 0.386, ³H 0.302, ¹⁴C 0.319, ³²P 0.407, ¹⁸F 0.401.
+- **Radioactive Decay demo**: Readings and Export in the Alpha decay and Beta decay views (`vd-handoff:alpha-and-beta-decay`);
+  a series cannot mix alpha, beta or Many nuclei rows. How this works picks the new video in those views. Model note now cites
+  §7.6 and §10.4 (it said §7.7).
+- **Molecular bonds, H₂⁺ part** (Table 2, `alt` for view `mo`): bonding minimum −1.764 eV at 0.131 to 0.132 nm (readout 0.1319 nm),
+  antibonding repulsive at every R. **HCl spectrum, Molecules and light** (typed Table 2): which of N₂, O₂, CO, CO₂, H₂O, NO₂,
+  O₃ turn, shake, glow or break under microwave, 15.0 μm, 500 nm and 254 nm photons.
+- **Energy bands, Kronig–Penney** (Table 2, `alt` for model `kp`; Solids now records KP rows): V₀ series 0 to 30 eV at w 0.25,
+  b 0.05 nm (gaps 0.315, 0.623, 1.508, 2.855, 5.111, 6.874 eV against (2V₀/π) sin(πb/a) = 0.318, 0.637, 1.592, 3.183, 6.366,
+  9.549 eV) and a b series 0.02 to 0.20 nm at 10 eV (ln of the band 1 width against b, slope −14.21 ± 0.05 nm⁻¹, κ = 13.86 nm⁻¹).
+- **Spectra, Bohr orbits and Atom models** (typed Table 2): r ∝ n², v = 2188/n km/s, λ = 2πr/n, L = nħ, 2.50 wavelengths at
+  n = 2.50; Part 3 under the Lyman β lamp and white light; plum pudding R for Hβ 0.2566 nm (demo 0.257 nm gives 487.7 nm).
+- **Binding energy, Build a nucleus** (Table 2, `alt` for view `build`; the Readings section now shows in Build): oxygen N 3 to 20
+  and carbon N 2 to 18 with status, half life, S_n, S_p. Neutron drip line ²⁴O and ²²C, proton side ¹³O and ⁹C; ²⁶O unbound to
+  two neutrons (S_2n = −0.018 MeV). Fix: a decay mode NUBASE2020 gives as 0% (²⁸O's β⁻) no longer counts as the main mode;
+  a nucleus with no known mode reads "decay mode not known".
+- **Periodic table, Build an atom** (typed table): ¹²C, ¹⁴C, Na⁺, Cl⁻, Fe²⁺ (3d⁶), Fe³⁺ (3d⁵).
+- Each part: a new last table, a new last Before the lab item, Analysis items, Question where it fits, What to hand in; first
+  tables unchanged. Glossary: new section and new symbols in five; `symbols.py --check` 0, `--missing` clean, `--meanings` the
+  same 3 old flags. check_math 9135 expressions, 0 problems. courses.py, `--check`, canvas.py rerun. Tests: binding-energy 5,
+  radioactive-decay 10, solids 17, molecules, molecules_light 4, shells 10, atom_models 10, bohr_debroglie 3, worksheet_formulas
+  26, all pass. vdcheck `--only after` 0 problems and `--only clip` 0 cut off on the six demos; local Jekyll render, export lands.
+- Keys (TeacherKeys `modern/`): new alpha-and-beta-decay; molecular-bonds, hcl-spectrum, energy-bands, spectra,
+  binding-energy and periodic-table gained the new tables and answers from real runs; seven PDFs rebuilt. Capture helper
+  `typeTable` added to p2lib.cjs.
+- How this works: `demos/media/how-this-works/alpha-and-beta-decay.mp4` (17 s, dark): ¹⁴⁶Sm, measured 68.0 Myr, model 77.3 Myr.

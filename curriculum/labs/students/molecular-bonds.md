@@ -8,13 +8,14 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.1. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).
+**Setups in the demo:** NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view, Part 2 of this worksheet); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).
 
 **Using the demo.**
 
 - The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of 0.001 nm) to set the separation $$r$$ of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.
 - The model has three parts: the energy $$\Delta E$$ it costs to move the electron from sodium to chlorine, the Coulomb energy $$-ke^2/r$$ of the two ions, and a repulsion $$A/r^n$$ from the exclusion principle when the ions' electron clouds overlap. The repulsion exponent $$n$$ can be changed, and the repulsion turned off; $$A$$ is set so that the minimum stays at the measured separation.
 - The Covalent bond view shows two atoms sharing electrons. Choose the molecule; for H₂ you can also choose whether the two electrons have opposite or parallel spins. The curve is a Morse potential built from each molecule's measured bond length, vibration frequency and dissociation energy, and the lines in the well are its vibration levels.
+- The H₂⁺ orbitals view shows the one electron of the hydrogen molecular ion in the bonding or the antibonding orbital of the LCAO model, built from the 1s orbitals of the two hydrogen atoms, with its energy against the proton separation R and, dashed, a curve through the measured bond length and well depth. Energies are measured from a hydrogen atom and a proton far apart.
 - Record reading stores the molecule, the separation and the energy. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind (in the Lab section) hides the model curves and the predicted values. The energy readout stays.
 
@@ -44,6 +45,7 @@ In a covalent bond the atoms share electrons. Two electrons with opposite spins 
 2. Ignoring the exclusion principle repulsion, what would the dissociation energy of NaCl be? The measured value is 4.26 eV. How large must $$U_\mathrm{ex}$$ be at 0.236 nm?
 3. At what separation does the ion pair have the same energy as the neutral atoms (ignore the repulsion)? What does this mean for a sodium and a chlorine atom approaching each other?
 4. For large $$r$$ the repulsion is negligible. What should a graph of $$U$$ against $$1/r$$ look like there? What would its slope and intercept be?
+5. The energy of H₂⁺ in Part 2 is measured from a hydrogen atom and a proton far apart, whose energy is −13.606 eV. Its measured well depth is $$D_e = 2.793$$ eV. What is the electron's total energy at the bottom of the well?
 
 ## Safety
 
@@ -59,6 +61,8 @@ No hazards in the virtual lab.
 
 **Other molecules.** Export, clear, and for HCl, N₂ and Cl₂ find the separation with the lowest energy (to 0.001 nm) and record it, with one more reading at twice that separation.
 
+**Part 2: one electron, H₂⁺.** Export and clear the readings, and choose the H₂⁺ bonding orbital. Record the energy at separations of 0.04, 0.06, 0.08, 0.10, 0.12, 0.13, 0.14, 0.16, 0.20, 0.25, 0.30 and 0.40 nm. Find the minimum to 0.001 nm and record it. Then change to the antibonding orbital and record the energy at 0.06, 0.10, 0.14, 0.20 and 0.30 nm. Export: these readings go to Table 2.
+
 ## Data
 
 | Reading | Molecule and state | Separation r (nm) | Energy U (eV) | 1/r (1/nm) |
@@ -66,6 +70,16 @@ No hazards in the virtual lab.
 | | | | | |
 | | | | | |
 | | | | | |
+
+Table 2. H₂⁺, one electron.
+
+| Reading | Orbital | Separation R (nm) | Energy U (eV) | R/a₀ |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
+
+Fill in R/a₀, with the Bohr radius a₀ = 0.05292 nm.
 
 ## Analysis
 
@@ -76,6 +90,8 @@ No hazards in the virtual lab.
 5. Use the zero crossing you found to say at what separation it first pays for the electron to jump from sodium to chlorine, and compare it with Before the lab 3.
 6. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$ and compare them with the values in §9.1 (0.074 nm and 4.52 eV). The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
 7. Make a small table of bond length and well depth for H₂, HCl, N₂ and Cl₂ from your readings. Is a shorter bond always a stronger one?
+8. Plot U against R for both H₂⁺ orbitals (Table 2). Find the bond length and well depth the LCAO model gives, and compare them with the measured $$r_e = 0.1052$$ nm and $$D_e = 2.793$$ eV. Is the model's bond too long or too short, too weak or too strong?
+9. Compare H₂⁺ with H₂: one shared electron against two. Which bond is longer, and which is stronger? Explain.
 
 ## Uncertainty
 
@@ -88,7 +104,8 @@ Your separations are set to 0.001 nm and the energies are shown to 0.001 eV. Est
 3. Why is the NaCl minimum so much farther out than the H₂ minimum?
 4. The repulsion in the demo is a model ($$A/r^n$$). Which of your measurements depend on the model, and which would any reasonable repulsion give?
 5. Why is the energy needed to break a real bond, $$D_0$$, smaller than the depth of the well?
+6. In the antibonding orbital of H₂⁺ the electron is never found on the plane halfway between the protons. Why does that leave the protons repelling at every separation?
 
 ## What to hand in
 
-Prelab answers, the table copies with the $$1/r$$ column, the graphs, your values of $$r_0$$, $$D$$, $$r_e$$ and $$D_e$$ compared with the book, the table of molecules, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with the $$1/r$$ column, the graphs, your values of $$r_0$$, $$D$$, $$r_e$$ and $$D_e$$ compared with the book, the table of molecules, the H₂⁺ table and graph with the LCAO and measured bonds compared, and answers to the questions. Identify simulated data.

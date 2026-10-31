@@ -129,7 +129,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 #oneCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage.one > .pane:not(#onePane) { display: none; }
 .stage.one + .vd-split, .stage.one .vd-split { display: none; }
-.rail.one > section:not(#oneSec) { display: none; }
+.rail.one > section:not(#oneSec):not(.vd-readings) { display: none; }
 .slab { display: flex; justify-content: space-between; gap: 8px; font-size: 0.88rem; margin: 6px 0 2px; }
 #oneTbl { margin-top: 8px; }
 #oneTbl td:first-child { white-space: normal; }
@@ -1888,11 +1888,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'radioactive-decay@2026-10-24';
   window.vdShowCols = [['t', 't'], ['parent', 'parents'], ['daughter', 'daughters']];
   /* How this works: a two step chain shows the Parent and Daughter video, the others Measuring a Half Life */
-  const howVid = () => (S.preset === 'mo99' ? 'technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  const howVid = () => (window.__rd1 && window.__rd1.O.view !== 'many' ? 'alpha-and-beta-decay' : S.preset === 'mo99' ? 'technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
-  window.vdWorksheet = () => (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  /* the Alpha decay and Beta decay views (script below) record for the Alpha and Beta Decay worksheet */
+  const oneView = () => (window.__rd1 && window.__rd1.O.view !== 'many' ? window.__rd1 : null);
+  window.vdWorksheet = () => oneView() ? 'alpha-and-beta-decay' : (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   window.vdReadingRow = () => {
+    if (oneView()) return oneView().reading();
     if (!sim) return null;
+    if ((window.vdRows ? window.vdRows() : []).some((r) => r.view)) return 'These readings are from the Alpha decay or Beta decay view: export them to their worksheet or clear them first.';
     const chain = nSp() === 2, gen = !!(cfg().generator && !S.custom), rows = window.vdRows ? window.vdRows() : [];
     const other = rows.find((r) => (r.daughter_T_half !== '') !== chain);
     if (other) return `These readings are from a ${chain ? 'one step' : 'two step'} setup: export them to its worksheet or clear them first.`;
@@ -2221,7 +2225,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ['Model ÷ measured', `${sci(Math.pow(10, d), 2)} (${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(2)} decades)`]];
       if (AL.waits.length) { const mean = AL.waits.reduce((a, b) => a + b, 0) / AL.waits.length; rows.push([`Mean of your ${AL.waits.length} wait${AL.waits.length === 1 ? '' : 's'}`, fmtDur(mean)], ['Mean life τ = T½/ln 2', fmtDur(aTau())]); }
       $('oneHint').textContent = HINT_A[`${Z},${A}`] || `${nuc(Z, A)} is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.`;
-      $('oneModel').textContent = 'Gamow (1928): the alpha is formed inside and rattles back and forth, hitting the wall f = v/2R times a second, v = √(2Q/μ). The Coulomb barrier V = 2Z_d e²/4πε₀r is higher than Q out to b = 2Z_d e²/4πε₀Q, so classically it can never leave; quantum mechanically it tunnels with chance e^(−2G) per hit, where G = (√(2μQ)/ħ) b [arccos √(R/b) − √((R/b)(1 − R/b))] is the WKB exponent of a pure Coulomb barrier. Then λ = fP and T½ = ln 2/λ. R is where the alpha and daughter touch, r₀(A_d^⅓ + 4^⅓); with r₀ = 1.20 fm the twenty half lives, which span 26 decades, come out within about half a decade rms. Masses (for Q), half lives and the alpha branch: NUBASE2020. The clock waits a random time drawn from the measured half life, shown at a scale where a mean life takes 3 s. References: Griffiths, Introduction to Quantum Mechanics, 2nd ed., §8.2; Krane, Introductory Nuclear Physics, §8.4; OpenStax University Physics Vol. 3, §7.7 and §10.4.';
+      $('oneModel').textContent = 'Gamow (1928): the alpha is formed inside and rattles back and forth, hitting the wall f = v/2R times a second, v = √(2Q/μ). The Coulomb barrier V = 2Z_d e²/4πε₀r is higher than Q out to b = 2Z_d e²/4πε₀Q, so classically it can never leave; quantum mechanically it tunnels with chance e^(−2G) per hit, where G = (√(2μQ)/ħ) b [arccos √(R/b) − √((R/b)(1 − R/b))] is the WKB exponent of a pure Coulomb barrier. Then λ = fP and T½ = ln 2/λ. R is where the alpha and daughter touch, r₀(A_d^⅓ + 4^⅓); with r₀ = 1.20 fm the twenty half lives, which span 26 decades, come out within about half a decade rms. Masses (for Q), half lives and the alpha branch: NUBASE2020. The clock waits a random time drawn from the measured half life, shown at a scale where a mean life takes 3 s. References: Griffiths, Introduction to Quantum Mechanics, 2nd ed., §8.2; Krane, Introductory Nuclear Physics, §8.4; OpenStax University Physics Vol. 3, §7.6 and §10.4.';
     } else {
       const s = bS(), Q = bQ(), tab = BE.tab, r = NBr(s.Z, s.A);
       rows = [['Decay', `${nuc(s.Z, s.A)} → ${nuc(bZd(), s.A)} + ${s.plus ? 'e⁺ + ν' : 'e⁻ + ν̄'}`], ['Q (masses)', keV(Q)], ['T½, measured', fmtDur(Math.pow(10, r[4]))],
@@ -2285,7 +2289,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
   { const v = new URLSearchParams(location.search).get('view'); if (v === 'alpha' || v === 'beta') setView(v); }
-  window.__rd1 = { O, AL, BE, setView, pick, betaOne, alphaNew };
+  /* Record reading in these views (2026-10-31, worksheet sweep): one row per emitter for the Alpha and Beta Decay worksheet. Alpha
+     rows go to its first table, beta rows to the second; a series holds one view only. Half lives in seconds (partial alpha half
+     life T½/branch, as plotted). */
+  const sig = (v, n) => +v.toPrecision(n), secs = (v) => (v >= 1e5 || v < 1e-2 ? v.toExponential(3) : v.toPrecision(4));
+  function reading() {
+    const rows = window.vdRows ? window.vdRows() : [], other = rows.find((r) => r.view !== O.view);
+    if (other) return other.view ? `These readings are from the ${other.view === 'alpha' ? 'Alpha' : 'Beta'} decay view: export them or clear them first.` : 'These readings are from Many nuclei: export them to their worksheet or clear them first.';
+    if (O.view === 'alpha') {
+      const [Z, A] = aZA(), g = aG(), m = aM();
+      window.vdShowCols = [['emitter', 'emitter'], ['r0_fm', 'r₀ (fm)'], ['T_meas_s', 'T½ measured (s)'], ['T_model_s', 'T½ model (s)']];
+      return { view: 'alpha', emitter: nuc(Z, A), Z, A, Zd: Z - 2, Q_MeV: g.Q.toFixed(4), r0_fm: O.r0.toFixed(2), T_meas_s: secs(Math.pow(10, m.lgTa)), T_model_s: secs(Math.pow(10, g.lgT)),
+        alpha_branch: sig(m.br, 6), decades: (g.lgT - m.lgTa).toFixed(2) };
+    }
+    const s = bS(), Q = bQ();
+    if (!BE.n) return 'Let some decays happen first (One decay or Run), so there is a mean to record.';
+    window.vdShowCols = [['nuclide', 'nuclide'], ['n', 'decays'], ['mean_run_keV', 'mean, these (keV)'], ['mean_spec_keV', 'mean, spectrum (keV)']];
+    return { view: 'beta', nuclide: nuc(s.Z, s.A) + (s.plus ? ' (β⁺)' : ''), Q_keV: (Q * 1000).toFixed(2), n: BE.n, mean_run_keV: (BE.sumT / BE.n * 1000).toFixed(2),
+      mean_spec_keV: (BE.tab.mean * 1000).toFixed(2), no_neutrino: O.noNu ? 'yes' : '' };
+  }
+  window.__rd1 = { O, AL, BE, setView, pick, betaOne, alphaNew, reading };
   requestAnimationFrame(loop);
 })();
 </script>

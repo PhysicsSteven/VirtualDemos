@@ -196,6 +196,8 @@ a_S | Surface term coefficient | MeV
 a_C | Coulomb term coefficient | MeV
 a_A | Asymmetry term coefficient | MeV
 a_P | Pairing term coefficient | MeV
+S_n | Separation energy of the last neutron, the energy to pull it off | MeV
+S_p | Separation energy of the last proton, the energy to pull it off | MeV
 
 == black-holes ==
 r | Distance from the center of the hole | km
@@ -762,9 +764,17 @@ e | @euler
 d | Spacing of the atoms | nm
 lambda | How far the orbital reaches | nm
 w | Width of the band | eV
-k | @k_B
 T | Temperature | K
 E_g | Band gap | eV
+k [kT] | @k_B
+k | Wave number of the electron | nm⁻¹
+V_0 | Height of the barriers | eV
+b | Width of each barrier | nm
+a | Period of the potential, well width plus barrier width | nm
+E | Energy of the electron | eV
+m | @m_e
+kappa | How fast the wave falls off inside a barrier, √(2m(V₀ − E))/ħ | nm⁻¹
+x | Distance into the barrier | nm
 
 == energy-levels ==
 m | Electron mass | kg
@@ -1090,6 +1100,7 @@ mu_37 | Reduced mass of H³⁷Cl | u
 omega_e | Harmonic vibration wavenumber | cm⁻¹
 tilde nu | Wavenumber of a line, 1/λ | cm⁻¹
 tilde nu_0 | Wavenumber of the band center | cm⁻¹
+D_0 | Bond energy, the energy needed to break the molecule | eV
 
 == heat-capacities-of-gases ==
 R | @R
@@ -2635,6 +2646,14 @@ Z | Charge number of the nucleus
 e | @
 R | Rydberg constant | m⁻¹
 R_infty | @
+r | Radius of the orbit | nm
+v | Speed of the electron | km/s
+m_e | @
+alpha | Fine structure constant | | 1/137.036
+n [~grows as] | Orbit number
+n [~falls as] | Orbit number
+n [n\hbar] | Orbit number
+R [a_0] | Radius of the plum pudding (Thomson's sphere of positive charge) | nm
 
 == speed-of-light ==
 f_2 | Focal length of lens L2 | mm | 252 mm
@@ -3614,3 +3633,33 @@ v_n | Wave speed of mode n of the chain, (22/n) f_n | block spacings per second
 f_pq | Frequency of grid mode (p, q) | Hz
 s_p | sin(pπ/2(N + 1)) for the grid
 s_q | sin(qπ/2(N + 1)) for the grid
+
+== alpha-and-beta-decay ==
+Q | Energy released in the decay | MeV
+T_alpha | Kinetic energy of the alpha particle | MeV
+m_d | Mass of the daughter nucleus | u
+m_alpha | Mass of the alpha particle | u
+V | Potential energy of the alpha in the daughter's Coulomb field | MeV
+Z_d | Atomic number of the daughter nucleus
+e [^] | @euler
+e | @e
+epsilon_0 | @
+r | Distance of the alpha from the center of the daughter | fm
+R | Radius where the alpha and the daughter touch, r₀(A_d^⅓ + 4^⅓) | fm
+b | Turning point, where V = Q | fm
+G | Gamow factor, the tunneling exponent | | chance per hit e^(−2G)
+mu | Reduced mass of the alpha and the daughter | MeV/c²
+f | Number of times a second the alpha hits the barrier | s⁻¹
+v | Speed of the alpha inside the nucleus, √(2Q/μ) | m/s
+lambda | Decay constant | s⁻¹
+T_1/2 | Half life (for alpha decay, the partial alpha half life) | s
+r_0 | Nuclear radius constant | fm
+A_d | Mass number of the daughter nucleus
+A | Mass number
+beta | Beta decay: β⁻ gives off an electron, β⁺ a positron
+N | Number of electrons per unit energy, the shape of the spectrum
+F | Fermi function, the daughter's Coulomb pull on the electron (or push on a positron)
+T | Kinetic energy of the electron | keV
+p | Momentum of the electron | MeV/c
+E | Total energy of the electron, T + mₑc² | MeV
+c | @c

@@ -1001,7 +1001,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (other) return `These readings are from the ${name[other.view]} view: export them to its worksheet or clear them first.`;
     window.vdShowCols = SHOW[S.view];
     if (S.view === 'cr') { const s = crSalt(); return { view: 'cr', salt: s.name, structure: s.st === 'rs' ? 'NaCl' : 'CsCl', r0_nm: f(s.r0, 4), n: s.n, alpha: f(ALPHA[s.st], 4), U_table_kJ_mol: s.U, sum: crMethod() === 'cube' ? `cube m = ${S.cr.m}` : `${S.cr.K} shells`, alpha_sum: f(crAlphaNow(), 4) }; }
-    if (S.view === 'bd' && S.bd.model === 'kp') return 'The periodic potential has no worksheet table: read its bands and states from the Readouts.';
+    /* the periodic potential (2026-10-31, worksheet sweep): band edges for Part 2 of the Energy Bands worksheet, its Table 2 */
+    if (S.view === 'bd' && (window.vdRows ? window.vdRows() : []).some((r) => (r.model === 'kp') !== (S.bd.model === 'kp'))) return `These readings are from the ${S.bd.model === 'kp' ? 'chain of atoms' : 'periodic potential'}: export them to the worksheet or clear them first.`;
+    if (S.view === 'bd' && S.bd.model === 'kp') { const { k, B, a } = kpNow(), b1 = B[0], b2 = B[1];
+      window.vdShowCols = [['V0_eV', 'V₀ (eV)'], ['b_nm', 'b (nm)'], ['band1_top_eV', 'band 1 top (eV)'], ['gap1_eV', 'gap (eV)']];
+      return { view: 'bd', model: 'kp', V0_eV: f(k.V0, 1), w_nm: f(k.w, 3), b_nm: f(k.b, 3), a_nm: f(a, 3), band1_bottom_eV: b1 ? f(b1[0], 3) : '', band1_top_eV: b1 ? f(b1[1], 3) : '',
+        band2_bottom_eV: b2 ? f(b2[0], 3) : '', gap1_eV: b1 && b2 ? f(b2[0] - b1[1], 3) : '' }; }
     if (S.view === 'bd') { const b = S.bd, lv = chainLevels(b.N, b.d), sl = lv.filter((l) => l.band === 's'), pl = lv.filter((l) => l.band !== 's'), F = fillChain(b.N, b.d, b.Z);
       return { view: 'bd', N: b.N, d_nm: f(b.d, 3), Z: b.Z, s_low_eV: f(sl[0].E, 3), s_high_eV: f(sl[sl.length - 1].E, 3), p_low_eV: f(pl[0].E, 3), p_high_eV: f(pl[pl.length - 1].E, 3), highest_filled_eV: F.homo ? f(F.homo.E, 3) : '', lowest_empty_eV: F.lumo ? f(F.lumo.E, 3) : '' }; }
     if (S.view === 'dp') { const r = dpRun(), nd = dpND(), na = dpNA(); return { view: 'dp', material: S.dp.mat, donor: nd ? S.dp.don : '', ND_cm3: nd ? ex(nd, 2) : '0', acceptor: na ? S.dp.acc : '', NA_cm3: na ? ex(na, 2) : '0', T_K: S.dp.T, n_cm3: ex(r.n, 4), p_cm3: ex(r.p, 4) }; }
