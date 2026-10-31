@@ -8049,9 +8049,10 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. UI requests fixed by Claude 2026-10-22: paused readouts keep the real v (K no longer reads 0), editing a control or switching the Mystery surface clears the last timer reading, and the end stop splits the step at impact so work matches the displayed path.",
+      "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. UI requests fixed by Claude 2026-10-22: paused readouts keep the real v (K no longer reads 0), editing a control or switching the Mystery surface clears the last timer reading, and the end stop splits the step at impact so work matches the displayed path. 2026-10-31: student worksheet atwood (Atwood's machine setup: g from a against (m₂ − m)/(m + m₂), 1/a against the total mass, tension).",
       "handouts": [
-        "forces"
+        "forces",
+        "atwood"
       ],
       "title": "Forces and Friction",
       "url": "demos/forces.html"

@@ -842,6 +842,17 @@ T | Spring scale reading with the block in the liquid | N
 rho_block | Density of the block | kg/m³
 rho_liquid | Density of the liquid | kg/m³
 A | Cross section of the pipe | m²
+W | Weight of the block in air | N
+V | Volume of water caught in the beaker | m³
+rho [W/(gV)] | Density of the block, from its weight and the water it pushed out | kg/m³
+rho_w | Density of water | kg/m³
+rho_1 | Density of the poured liquid | kg/m³
+h_1 [\rho_1] | Height of the poured liquid above the interface | cm
+h_2 [\rho_1] | Height of the water above the interface | cm
+h_1 [~above the interface] | Height of the poured liquid above the interface | cm
+h_2 [~above the interface] | Height of the water above the interface | cm
+h_2 [~Plot] | Height of the water above the interface | cm
+h_1 [~against] | Height of the poured liquid above the interface | cm
 
 == force-table ==
 m_1 | Mass hanging on string 1 | kg
@@ -872,6 +883,19 @@ x | Along the 0° mark
 y | Along the 90° mark
 F | Pull of a hanging mass, mg | N
 theta | Angle, counterclockwise from the 0° mark | °
+
+== atwood ==
+a | Acceleration of the masses (m₂ falling positive) | m/s²
+d | Distance of the timed run | m
+t | Time for the run of distance d from rest | s
+g | Gravitational acceleration | m/s²
+m | Mass on the left (rises when m₂ is heavier) | kg
+m_2 | Mass on the right | kg
+T | Tension in the string | N
+x | Mass fraction (m₂ − m)/(m + m₂)
+I | Moment of inertia of the pulley | kg·m²
+r | Radius of the pulley | m
+f | Friction force at the pulley's axle, referred to the string | N
 
 == forces ==
 W | Work done by a force | J
@@ -1732,6 +1756,8 @@ v | Velocity | m/s
 x_0 | Position at t = 0 | m
 y | Height (upward positive) | m
 g | Gravitational acceleration | m/s²
+x_A | Position of car A | m
+x_B | Position of car B | m
 
 == mp-shielding-barrier ==
 e | @euler
@@ -2004,6 +2030,12 @@ A | Cross section of the ball | m²
 v | Speed of the ball | m/s
 theta | Launch angle | °
 y_0 | Launch height | m
+sigma_theta | Spread (standard deviation) of the launch angle | °
+sigma_v | Spread (standard deviation) of the launch speed | m/s
+n | Number of launches
+bar R | Mean range of the launches | m
+sigma | Standard deviation of the ranges | m
+sigma_R | Spread of the range expected to first order | m
 
 == quantum-tunneling ==
 m | Mass of the electron | kg
@@ -2285,6 +2317,9 @@ t_b | Burn time | s
 m_fuel | Fuel mass | kg
 m_1 | Mass at lift off | kg
 t_0 | Time of lift off | s
+m_sep | Mass of the rocket just before the empty first stage is dropped | kg
+m_2 | Mass of the upper stage at separation | kg
+m_casing | Mass of the first stage's empty casing | kg
 
 == room-acoustics ==
 T | Reverberation time, for the level to fall 60 dB | s
@@ -2349,6 +2384,15 @@ omega_initial | Angular velocity before | rad/s
 I_final | Moment of inertia after | kg·m²
 omega_final | Angular velocity after | rad/s
 KE | Kinetic energy (one quantity, not a product) | J
+v_0 | Launch speed along the floor | m/s
+omega_0 | Launch spin (angular velocity) | rad/s
+mu_k | Coefficient of kinetic friction with the floor
+t_s | Time when the object starts to roll | s
+v_f | Rolling speed once it rolls | m/s
+k | I/(mR²), the shape's moment of inertia factor
+r_s | Radius where the string leaves the spool | cm
+H | Height the spool falls | m
+a [2H/t^2] | Acceleration of the unwinding spool | m/s²
 
 == rotational-dynamics ==
 m | Hanging mass | kg

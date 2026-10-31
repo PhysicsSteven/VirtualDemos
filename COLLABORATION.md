@@ -6092,3 +6092,37 @@ Group 2). All four fit existing demos; none became its own demo. GPT, please ver
 - Worksheet candidates for the sweep: **Grid of pucks** (f_pq against the formula, degeneracy), the strongest;
   **Electromagnet** (core gain against L/2R, compare N_d); **Shuffle and spark** (spark gap against voltage, Paschen
   region); **TE and TM polarizers** is qualitative, a short part of the EM waves worksheet at most.
+
+## 2026-10-31 · Claude · Worksheet sweep, Group 1 (Physics I): Atwood's machine worksheet and five new parts (Steve)
+
+Steve (14:48): "go ahead with the worksheet sweep after these threads are done". Scope: a new worksheet only for a setup vastly
+different from every existing one, otherwise a new part of the demo's existing worksheet. The candidates from today's partials
+entries were sorted in `/mnt/project-files/worksheet-sweep/groups-2026-10-31.md`: four new worksheets (Atwood's machine; Current
+in a sheet; Normal modes, chain of ten and grid of pucks; Alpha and beta decay) and the rest as parts, in four groups. H₂⁺ and
+Kronig–Penney were downgraded to parts (same views and topics as Molecular Bonds and Energy Bands). This is Group 1; Groups 2 to 4
+run in sibling threads. Main was green first: every node suite passes at 929deea (the Granular Flow notes commit touched no path
+the regression workflow watches, so it was checked locally).
+- New worksheet `atwood` (Physics I, §§5.3, 5.4, 5.6, 6.1, 10.7): a against x = (m₂ − m)/(m + m₂) at totals 6.0 and 10.0 kg (slope
+  g), 1/a against m + m₂ at m₂ − m = 1.0 kg (slope 1/(Δm g), intercept I/r² over Δm g), tension against 2 m m₂ g/(m + m₂). Forces
+  and Friction now tags Atwood rows and sends them to `vd-handoff:atwood` (ramp rows still to forces; Export sends only the current
+  kind), opens in Atwood's machine from `?ws=atwood` or `?setup=atwood`, and switches its How this works video by setup. FROM_DEMO
+  with an alt for the second table, map handouts, HANDOUT_TOPIC, handout button (Worksheet 2), glossary section, What's new.
+  Video `atwood.mp4` (17.2 s: 2.5 and 3.5 kg, 1.106 s, a 1.635 m/s² = 9.81/6). Key numbers: g 9.806 ± 0.005 (Part 1), 9.813 ±
+  0.003 (Part 2), I/r² 0.004 ± 0.003 kg; tensions 21.8, 16.4, 92.9 N against 21.80, 16.35, 92.94 N.
+- New parts (each its own table at the end; first tables and FROM_DEMO columns unchanged): fluids, Density by displacement (the
+  opening mystery set, sent with Export to worksheet to Table 2 through a new alt; A 2700, B 8962, C 4507, D 7139, E 11 340 kg/m³)
+  and Two liquids (typed; key oil 835 kg/m³, slope 0.8354); rotation, Skid then roll (sphere v_f against ω₀R: k 0.4000 ± 0.0007
+  from the slope, 0.399 from the intercept; hoop k 1.00) and Unwinding against falling (yo-yo r 0.4, 0.8, 1.4 cm, cylinder, ring
+  against g/(1 + I/m r_s²)); projectile-drag, Many launches (no air, 40 m/s, 1° and 1%: σ 3.29 m at 45° against 3.26, 4.09 m at
+  30° against 4.01); motion-graphs, Two cars and Draw a graph (meet at 4.83 s, 3.66 m; largest gap 4.00 m at 2.00 s; triangle x
+  at 10 s 9.00 m); rocket, Part 5 two stages (5276 m/s deep space against 4262 one stage with the casing; 4834 from the ground,
+  g t_b = 441 m/s lost). fluids and rotation graph every table now. Setups lists in the About boxes brought up to date.
+- No part: Energy chain (efficiencies from a table, nothing to measure) and Friction up close (qualitative), Steve's earlier
+  scope for qualitative views.
+- Keys: TeacherKeys dfcdd49 (atwood new; fluids, rotation, projectile-drag, motion-graphs, rocket extended; capture scripts
+  added). Key PDFs copied to the project's keys folder; the Physics I Canvas cartridge rebuilt and copied.
+- Checks: check_math 297 expressions 0 problems on the six handouts; symbols.py --check clean, --missing none on these, --meanings
+  only the three older flags (cepheid-photometry, eclipsing-binary, orbital-magnetic-moment); courses.py --check; vdcheck
+  --only after and --only clip on forces 0; test_forces passes; local Jekyll build with every new table, the How this works box on
+  all six worksheets and no sideways scroll at 400 px.
+- GPT: please verify the Atwood handout and key, and the new parts' numbers in the five keys.

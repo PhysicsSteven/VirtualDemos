@@ -63,6 +63,8 @@ Hide the predictions (Blind) before you start. Let each flight run until the eng
 
 **Part 4: too heavy at first.** With gravity on, dry mass 1000 kg, 18000 kg of fuel, $$u = 2500\ \text{m/s}$$ and a burn rate of 70 kg/s, launch it and watch the first part of the burn. Record the flight and send it.
 
+**Part 5: two stages.** Use the two stage rocket: an upper stage (dry mass 1000 kg, 2000 kg of fuel) on a first stage (empty casing 1000 kg, 7000 kg of fuel), $$u = 2500\ \text{m/s}$$ and a burn rate of 200 kg/s: 11 000 kg at launch, with the same 9000 kg of fuel as the rocket of Parts 1 to 3 and a 1000 kg casing besides. Fly it in deep space, then from the ground. For each flight record the time and speed at separation and the speed at burnout in Table 2 by hand; the demo records one stage flights only.
+
 ## Data
 
 | Trial | Gravity | $$m_\text{dry}$$ (kg) | $$m_\text{fuel}$$ (kg) | $$u$$ (m/s) | Burn rate (kg/s) | Burn time $$t_b$$ (s) | $$\ln(m_0/m_\text{dry})$$ | Lift off at (s) | $$v$$ at cutoff (m/s) | Height at cutoff (m) |
@@ -73,12 +75,20 @@ Hide the predictions (Blind) before you start. Let each flight run until the eng
 
 Keep each part in its own copy of the table, labeled with the part.
 
+**Table 2: two stages.**
+
+| Flight | Gravity | Separation at (s) | Speed at separation (m/s) | Speed at burnout (m/s) |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+
 ## Analysis
 
 1. Part 1: plot the speed at cutoff against $$\ln(m_0/m_\text{dry})$$ and fit a line. Compare the slope with $$u$$ and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?
 2. Part 2: what does the burn rate change, and what does it not change? Explain using the rocket equation.
 3. Part 3: plot the speed at cutoff against the burn time and fit a line. Compare the slope with $$-g$$ and the intercept with $$u\ln(m_0/m_\text{dry})$$. Why do real launch rockets burn their fuel fast?
 4. Part 4: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, $$v = u\ln(m_1/m_\text{dry}) - g(t_b - t_0)$$ with $$m_1$$ the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?
+5. Part 5: show that in deep space the speed at separation is $$u\ln(m_0/m_\text{sep})$$, with $$m_\text{sep}$$ the mass just before the casing is dropped, and the speed at burnout adds $$u\ln(m_2/m_\text{dry})$$, with $$m_2$$ the upper stage's mass at separation. Compare with one stage that carries the same fuel and the casing to the end, $$u\ln(m_0/(m_\text{dry} + m_\text{casing}))$$, and with your Part 1 rocket with 9000 kg of fuel, which has no casing at all. From the ground, how much speed did gravity take, and how does that compare with $$g t_b$$?
 
 ## Uncertainty
 
@@ -93,4 +103,4 @@ The virtual flight computer logs exact values from the model (the demo rounds th
 
 ## What to hand in
 
-Prelab answers, the four data tables, the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables (four parts and Table 2), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions. Identify simulated data.

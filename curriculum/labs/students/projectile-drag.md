@@ -12,6 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§3.4, 4.3 and 6.4. Access fo
 
 **Using the demo.**
 
+- Many launches gives each shot its own angle and speed, drawn at random from normal distributions around the settings with the spreads you choose; it shows the landings, a histogram, the mean, the standard deviation (n − 1) and the standard error. The random numbers come from a seeded generator, so the data are simulated.
 - R range, H highest point, T flight time. Settings that differ between shots are in bold. Click a shot to load its settings into the controls. Up to 8 shots; the oldest drops off.
 - Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.
 - The time cursor sits on a dot of the selected shot: $$t$$ is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). $$x$$ and $$y$$ read to 1 cm from the launcher's foot; $$R$$ is where the ball lands, to 1 cm.
@@ -64,6 +65,8 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 **Using the virtual apparatus.** Start with air resistance off, set the launch speed, angle and height, and hide the predictions and answers before you launch. Show time dots at an interval you choose, and record the time and position at each dot you use. Send each scan to the worksheet before clearing, so the trajectory and the range scan each get their own copy of the Data table. Fit the trajectory in the worksheet: a quadratic for $$y$$ against $$t$$ and a straight line for $$x$$ against $$t$$. The Data table has no $$\sin 2\theta$$ column, so fit $$R$$ against $$\sin 2\theta$$ in the demo before you clear the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings.
 
+**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Repeat at 30°. Record these in Table 2 by hand.
+
 ## Data
 
 | Shot | $$v_0$$ (m/s) | $$\theta$$ (°) | $$y_0$$ (m) | Air on/off | $$t$$ (s) | $$x$$ (m) | $$y$$ (m) | $$R$$ (m) |
@@ -74,12 +77,22 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 Keep separate trajectory and range scans. Record ball mass, diameter, drag coefficient and air density above the drag table.
 
+**Table 2: many launches.** $$v_0$$ = 40 m/s, no air, $$\sigma_\theta$$ = 1.0°, $$\sigma_v/v_0$$ = 1.0%.
+
+| Angle $$\theta$$ (°) | Launches $$n$$ | Mean range $$\bar R$$ (m) | Standard deviation $$\sigma$$ (m) | Standard error $$\sigma/\sqrt n$$ (m) |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
+
 ## Analysis
 
 1. Fit $$x$$ against $$t$$ and $$y$$ against $$t$$. Infer horizontal velocity and $$g$$; compare the fitted initial vertical velocity with $$v_0 \sin\theta$$.
 2. Fit $$R$$ against $$\sin(2\theta)$$ in vacuum. Infer $$g = v_0^2/\text{slope}$$ and compare with the trajectory result.
 3. Compare complementary angle pairs and inspect residuals from the vacuum fit.
 4. Quantify the range reduction with drag. Explain why equal size does not imply equal drag acceleration for different masses.
+5. From Table 2, how do the standard deviation and the standard error change as n grows from 10 to 1000? Which one tells you how well you know the mean range, and which one how far a single shot may land from it?
+6. In vacuum $$R = v_0^2\sin 2\theta/g$$, so to first order $$\sigma_R^2 = \left(\frac{\partial R}{\partial\theta}\sigma_\theta\right)^2 + \left(\frac{\partial R}{\partial v_0}\sigma_v\right)^2$$ with $$\partial R/\partial v_0 = 2R/v_0$$ and $$\partial R/\partial\theta = 2v_0^2\cos 2\theta/g$$ (θ in radians). Work out $$\sigma_R$$ at 30° and at 45° and compare with your σ for 1000 launches. Why does the angle spread add almost nothing at 45°?
 
 ## Uncertainty
 
@@ -91,7 +104,8 @@ Use the resolution of the position and time dots and the rounding of the range. 
 2. Why does a drag free equal height range peak at 45°?
 3. Why does the vacuum fit generally fail when drag is on?
 4. Is a shorter observed range enough to prove that $$g$$ is larger?
+5. At 45° the mean range of many launches comes out slightly below the range with no spread. Why can a spread in angle only shorten the range there, never lengthen it on average?
 
 ## What to hand in
 
-Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$ with uncertainty, the drag comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$ with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.

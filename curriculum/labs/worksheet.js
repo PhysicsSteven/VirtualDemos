@@ -20,7 +20,8 @@
     'shear-bulk' /* Shear and Bulk tests of the Stress and Strain demo, 2026-10-24 */,
     'pipe-flow' /* Flow in a pipe experiment of the Falling Ball Viscometer demo, 2026-10-24 */,
     'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */,
-    'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */];
+    'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */,
+    'atwood' /* Atwood's machine setup of the Forces and Friction demo, 2026-10-31 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -36,7 +37,15 @@
     fluids: { demo: 'Fluids', cols: [(r) => [r.scene, r.liquid].concat(r.depth_d_m ? [`d = ${r.depth_d_m} m`] : []).filter(Boolean).join(', '),
       both('depth_h_m', 'D1_m', 'D2_m'), both('P_Pa', 'h1_m', 'h2_m'),
       (r) => (r.block_edge_L_m !== '' && r.block_edge_L_m != null ? sig(Math.pow(+r.block_edge_L_m, 3)) : ''), /* block volume L³ from its edge */
-      'scale_in_air_W_N', 'scale_T_N', 'Q_m3_s'] },
+      'scale_in_air_W_N', 'scale_T_N', 'Q_m3_s'],
+      /* mystery blocks (every row a mystery block) go to the second table: Block | W | T | water caught V | ρ | Material | W − T */
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => /^Mystery block/.test(r.preset || '')), cols: [(r) => r.preset.replace(/^Mystery block\s*/, ''), 'scale_in_air_W_N', 'scale_T_N', 'beaker_V_m3', null, null, null] }] },
+    /* Atwood's machine: Run | m | m₂ | t | a | x = (m₂ − m)/(m + m₂). A series with one difference m₂ − m and several totals goes to
+       the second table: Run | m | m₂ | t | a | m + m₂ | 1/a */
+    atwood: { demo: "Forces and Friction (Atwood's machine)", cols: ['row', 'm_kg', 'm2_kg', 't_gate_s', 'a_m_per_s2',
+      (r) => (+r.m_kg + +r.m2_kg > 0 ? sig((r.m2_kg - r.m_kg) / (+r.m_kg + +r.m2_kg)) : '')],
+      alt: [{ table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => (r.m2_kg - r.m_kg).toFixed(2))).size === 1 && new Set(rows.map((r) => (+r.m_kg + +r.m2_kg).toFixed(2))).size > 1,
+        cols: ['row', 'm_kg', 'm2_kg', 't_gate_s', 'a_m_per_s2', (r) => sig(+r.m_kg + +r.m2_kg), (r) => (+r.a_m_per_s2 > 0 ? sig(1 / r.a_m_per_s2) : '')] }] },
     forces: { demo: 'Forces and Friction', cols: ['row', 'm_kg', 'theta_deg', null, (r, h) => (r.t_gate_s ? h.gate_distance_m || '' : ''), 't_gate_s', 'a_m_per_s2', null] },
     'kepler-orbits': { demo: 'Kepler Orbits', cols: [both('row', 'preset'), 'M_Msun', 'ruler_d12_AU', 'a_AU', 'timer_T_yr', 'a3_AU3', 'T2_yr2'] },
     /* Reading | Planet | Height h (km) | Latitude (°) | r (Mm) | Gravity alone GM/r² (m/s²) | Effective g (m/s²) | Real Earth at sea level (m/s²) | 1/r² (1/Mm²) | cos² of latitude */
@@ -781,6 +790,9 @@
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
+  GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
+  GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
+  GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');

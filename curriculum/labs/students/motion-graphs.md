@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§3.1–3.6. Access for free 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Constant velocity; Speeding up; Slowing down and turning around; Stop and go; Ball thrown up; Walk the graph.
+**Setups in the demo:** Constant velocity; Speeding up; Slowing down and turning around; Stop and go; Ball thrown up; Two cars; Ball on ramps; Walk the graph; Draw a graph.
 
 **Using the demo.**
 
@@ -54,6 +54,10 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 **Using the virtual apparatus.** For each setup, write down its stage settings first, then hide the predictions and answers before you take data (hiding them hides the settings too). Move the time marker to each time you want and record the position there. Use the slowing down and turning around setup for constant acceleration, the stop and go setup for the stages and the ball thrown up setup for free fall; the vertical run's height goes in the CSV column `x_m`. Send each run to the worksheet before you clear the readings, or the runs mix. Show the tangent lines and the shaded area only after your predictions. For graph matching, keep the same target for the repeat, record each score with its units, and finish with a velocity target. Graph matching is an interpretation task; the parabola fit is meant for constant acceleration, not for an arbitrary walk.
 
+**Two cars.** Use the Two cars setup as it opens. From the two cars' starting positions, velocities and accelerations, predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Then step the time marker through the run to check. Record both in Table 2.
+
+**Draw a graph.** Draw a velocity graph shaped like a triangle: from rest, rising steadily to 3 m/s at 5 s and falling steadily back to rest at 10 s, starting from the start position the demo gives. Before looking at the other graphs, predict the acceleration on each half from the slope, and the position at 10 s from the area under the velocity graph. Then check both with the demo. Record them in Table 2.
+
 ## Data
 
 | Run/stage | $$t$$ (s) | $$x$$ or $$y$$ (m) | Estimated slope (m/s) | Target/score or observation |
@@ -64,6 +68,14 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 Add a copy of this table for each run (pressing **Clear** in the demo before the next run does this when you export), and note its setup and settings. For graph matching, keep the target sketch and both trial scores.
 
+**Table 2: two cars and a drawn graph.**
+
+| Quantity | Your prediction | Demo |
+|---|---|---|
+| | | |
+| | | |
+| | | |
+
 ## Analysis
 
 1. Fit the turning run to a quadratic. Find initial velocity, acceleration, turning time and turning position. Compare fit residuals with position rounding.
@@ -71,6 +83,8 @@ Add a copy of this table for each run (pressing **Clear** in the demo before the
 3. For the three stages, compare measured displacements with areas under velocity and changes in velocity with areas under acceleration.
 4. Fit free fall and report $$g$$ with units and uncertainty. Compare the acceleration on the way up and down. Explain why fitting across landing would fail.
 5. Interpret the two graph matching trials. Discuss whether the score improved and what part of the motion remained difficult. Do not compare scores from different targets or different graph types as if they measured identical tasks.
+6. For the two cars, write $$x_A(t)$$ and $$x_B(t)$$ and solve $$x_A = x_B$$. Why is the gap largest exactly when the two velocities are equal?
+7. For the drawn triangle, explain how the shape of the position graph follows from the velocity graph: where is it curving up, where curving down, and where is it steepest?
 
 ## Uncertainty
 

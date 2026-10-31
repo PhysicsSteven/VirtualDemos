@@ -126,7 +126,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/forces.html" target="forces-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/forces.html" target="forces-worksheet">Worksheet 1: Friction and Work</a></li><li><a href="../curriculum/labs/students/atwood.html" target="atwood-worksheet">Worksheet 2: Atwood's Machine</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -833,7 +833,7 @@ table.rows input:focus { border-color: var(--accent); }
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => {
     if (!S.lastGate) { capStatus('Use Release at the top mark first, and let the timer finish.'); return; }
-    S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3) });
+    S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3), atw: S.atwood });
     renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
   $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
@@ -841,23 +841,26 @@ table.rows input:focus { border-color: var(--accent); }
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
+  const wsSlug = () => (S.atwood ? 'atwood' : 'forces');
   function toWorksheet(txt, fallback) {
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
-    const hand = { v: 1, demo: 'forces', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
-      note: 'Simulated data from the Forces and Friction demo.', csv: txt, csvName: 'forces-readings.csv' };
-    try { localStorage.setItem('vd-handoff:forces', JSON.stringify(hand)); }
+    const slug = wsSlug(), hand = { v: 1, demo: 'forces', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Forces and Friction demo.', csv: txt, csvName: slug + '-readings.csv' };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
     catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/forces.html'; a.target = 'forces-worksheet'; a.textContent = 'Open the worksheet';
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${slug}.html`; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {
-    if (!S.rows.length) { capStatus('No readings to export.'); return; }
-    const txt = readingsCSV(S.rows, { version: FF_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own setup', surface: S.mystery ? 'mystery surface (coefficients hidden)' : `mu_s ${S.p.ms}, mu_k ${S.p.mk} at export` });
-    toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'forces-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
+    /* Atwood's machine readings go to the Atwood worksheet, every other setup's to the friction worksheet */
+    const rows = S.rows.filter((r) => !!r.atw === S.atwood);
+    if (!rows.length) { capStatus(S.rows.length ? (S.atwood ? 'No Atwood readings to export: the captured rows are from the ramp.' : 'No ramp readings to export: the captured rows are from Atwood\'s machine.') : 'No readings to export.'); return; }
+    const txt = readingsCSV(rows, { version: FF_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own setup', surface: S.mystery ? 'mystery surface (coefficients hidden)' : `mu_s ${S.p.ms}, mu_k ${S.p.mk} at export` });
+    toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = wsSlug() + '-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
@@ -931,11 +934,12 @@ table.rows input:focus { border-color: var(--accent); }
   VD.projector({ onChange: resize });
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat ramp, drawn to scale */
   /* How this works: a 22 s video of the slip angle and one timed slide (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/forces.mp4', poster: 'media/how-this-works/forces.jpg' });
+  VD.howTo({ src: () => `media/how-this-works/${wsSlug()}.mp4`, poster: () => `media/how-this-works/${wsSlug()}.jpg`,
+    title: () => (S.atwood ? 'How this works: Atwood\'s Machine' : 'How this works') });
   VD.tools({ el: can, strip: '.viewbar', stage: '#scene', time: () => simClock, scale: () => rulerAt });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
-  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); applyPreset('push'); renderRows(); resize();
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); applyPreset(VD.ws('forces') === 'atwood' || new URLSearchParams(location.search).get('setup') === 'atwood' ? 'atwood' : 'push'); renderRows(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
