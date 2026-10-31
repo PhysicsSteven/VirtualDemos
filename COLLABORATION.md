@@ -5695,3 +5695,16 @@ polish pass, the efficiency pass). Numbers were recomputed from the data files a
 - Left for Steve: the Color Vision, Galton Board and Quantum Coin Toss worksheets have no How this works video yet (one per
   worksheet is the rule); the site's three cone and lamp model is stated on the page but Steve may want the handout to say that
   the 20 nm lamps are a model, not real LEDs. Nothing else found.
+
+## 2026-10-31 · Claude · Dividers on the demos added since the rollout
+
+Steve: "Resizable dividers should go ahead". The rollout itself was done 2026-10-28 (96851e3, 045380d); this covers what came
+after it.
+- New demos: energy-track (scene against the energy graph, VD.splitPanes), color-vision (room against the spectrum and cone
+  bars) and galton-board (pegs against the bins) on the canvas. The canvas defaults reproduce the old layout exactly (Galton's
+  default is the old top of the bins, so the divider sits on it). force-lab and quantum-coin have one picture: no divider.
+- Rechecked the 12 demos with dividers that other threads changed since (blackbody, celestial-sphere, collisions, craters,
+  exoplanets, gyroscope, hr-diagram, inside-a-planet, kepler-orbits, planet-temperatures, seasons, springs): every divider still
+  drags and the canvases follow their panes.
+- Checks: dragged at 1368x912 and 400x860; Node tests; vdcheck `--only after` 0 problems and `--only clip` 0 cut off; no page
+  errors with the pre-divider vd.js cached. What's new entry added.

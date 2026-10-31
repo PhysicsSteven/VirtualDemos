@@ -220,6 +220,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, geo = null, cache = null, cdf = null, spawn = 0;
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'room', axis: () => 'y', def: () => (H ? Math.max(220 * ps(), H * 0.56) / H : 0.56), min: 0.35, max: 0.8, label: 'Divider between the room and the spectrum', onChange: () => drawAll() });
   const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const css = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -240,7 +242,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layout() {
     const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
     const right = cardOn ? card.offsetWidth + 24 : 12 * p, roomW = W - right - 12 * p;
-    const roomH = Math.max(220 * p, H * 0.56), specTop = roomH + 30 * p;
+    const roomH = H * SPL.f(), specTop = roomH + 30 * p;
     geo = { p, x0: 12 * p, y0: 12 * p, rw: roomW, rh: roomH - 12 * p, specTop, specH: H - specTop - 34 * p, right, cardOn };
     geo.R = Math.min(geo.rh * 0.22, 56 * p, geo.rw * 0.13);
     geo.eye = [Math.min(geo.x0 + geo.rw * 0.70, geo.x0 + geo.rw - geo.R * 2.0), geo.y0 + geo.rh * 0.62];
