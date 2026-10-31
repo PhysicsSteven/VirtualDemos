@@ -860,11 +860,14 @@
     {
      "demo": "rotation",
      "title": "Rotation and Torque",
-     "desc": "Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.",
+     "desc": "Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, throw a ball that skids until it rolls and trace the cycloid of a rolling wheel, race a yo-yo against a dropped one, spin a skater who pulls her arms in, and balance a seesaw.",
      "tags": [
       "torque",
       "moment of inertia",
       "rolling without slipping",
+      "cycloid",
+      "kinetic friction",
+      "yo-yo",
       "angular momentum"
      ]
     },

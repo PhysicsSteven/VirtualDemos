@@ -2,7 +2,7 @@
 // Rotation: moments of inertia against direct integrals, torque and angular acceleration, the rolling race,
 // angular momentum conservation for the spinner (checked against an independent Cartesian integration), and the seesaw.
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
-const m = core('rotation', 'G,DEG,SHAPES,rodI,torqueOf,leverArm,doorTorque,swingRK4,makeSwing,rollAcc,rollTime,muMin,rollAt,spinI,spinWork,pullProfile,seesawMoment,seesawTorque,seesawI,balanceX,seesawTip');
+const m = core('rotation', 'G,DEG,SHAPES,rodI,torqueOf,leverArm,doorTorque,swingRK4,makeSwing,rollAcc,rollTime,muMin,rollAt,spinI,spinWork,pullProfile,seesawMoment,seesawTorque,seesawI,balanceX,seesawTip,floorRun,floorExit,floorEnergy,SPOOLS,spoolFall');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 0) => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`);
 const test = (name, f) => { f(); n++; console.log('PASS', name); };
@@ -125,6 +125,73 @@ test('seesaw: torque −Σmgx cos φ, balance point, I with the beam, and energy
   // ½Iω² equals the drop in potential energy, U(φ) = g Σ m x sin φ
   close(0.5 * I * tip.vHit * tip.vHit, -m.G * m.seesawMoment(ms) * Math.sin(stop), 1e-8);
   assert(m.seesawTip([{ m: 4, x: -1 }, { m: 2, x: 2 }], Mb, Lb, stop).none);
+});
+
+test('level floor: friction brings a sliding ball to rolling; checked against an independent integration', () => {
+  const g = m.G;
+  // independent: step v and ω with friction −sgn(u) μ m g at the contact until u = v − ωR changes sign, then roll
+  function step(k, R, v0, w0, mu, tEnd) {
+    let v = v0, w = w0, x = 0, th = 0, t = 0, heat = 0; const h = 1e-6;
+    while (t < tEnd - 1e-12) {
+      const u = v - w * R, dt = Math.min(h, tEnd - t);
+      if (Math.abs(u) < 2 * mu * g * (1 + 1 / k) * h) { v = w = null; break; }
+      const f = -Math.sign(u) * mu * g;               // friction per unit mass
+      heat += mu * g * Math.abs(u) * dt;
+      x += v * dt + 0.5 * f * dt * dt; th += w * dt - 0.5 * f / (k * R) * dt * dt;
+      v += f * dt; w += -f / (k * R) * dt; t += dt;
+    }
+    return { v, w, x, th, t, heat };
+  }
+  for (const [shape, v0, rim0, mu] of [['sphere', 4, 0, 0.2], ['sphere', 3, -9, 0.3], ['hoop', 1, 4, 0.5], ['disk', 2, -1, 0.4], ['hsphere', 0, 3, 0.15]]) {
+    const k = m.SHAPES[shape].k, R = 0.11, w0 = rim0 / R, run = m.floorRun({ k, R, v0, w0, mu });
+    close(run.ts, k * Math.abs(v0 - rim0) / (mu * g * (1 + k)), 1e-12);
+    const q = run.at(run.ts * 0.6), ref = step(k, R, v0, w0, mu, run.ts * 0.6);
+    close(q.v, ref.v, 1e-6, 1e-9); close(q.w, ref.w, 1e-6, 1e-9); close(q.x, ref.x, 1e-6, 1e-9); close(q.th, ref.th, 1e-6, 1e-9);
+    const e = run.at(run.ts + 1e-9);
+    close(e.v - e.w * R, 0, 0, 1e-7);                                  // rolling: the contact point is at rest
+    close(run.vf, (v0 + k * rim0) / (1 + k), 1e-12);
+    // angular momentum about the floor stays the same, and the heat is μ m g times the sliding distance ½|u0| ts
+    const mass = 7, E0 = m.floorEnergy(run, mass, 0);
+    for (const t of [0.1, 0.5, 1, 2].map((f) => f * run.ts)) close(m.floorEnergy(run, mass, t).L, E0.L, 1e-12, 1e-12);
+    const Ef = m.floorEnergy(run, mass, run.ts + 3);
+    close(Ef.heat, mu * mass * g * 0.5 * Math.abs(v0 - rim0) * run.ts, 1e-9, 1e-12);
+    close(Ef.KEt + Ef.KEr + Ef.heat, E0.KE0, 1e-12);
+  }
+  // a solid ball thrown without spin rolls at 5/7 v0 after 2v0/(7μg); the backspin preset comes back at −0.429 m/s
+  const b = m.floorRun({ k: 0.4, R: 0.11, v0: 4, w0: 0, mu: 0.2 });
+  close(b.ts, 2 * 4 / (7 * 0.2 * g), 1e-12); close(b.vf, 20 / 7, 1e-12); close(b.xs, 12 * 4 * 4 / (49 * 0.2 * g), 1e-12);
+  const back = m.floorRun({ k: 0.4, R: 0.11, v0: 3, w0: -9 / 0.11, mu: 0.3 });
+  close(back.vf, -0.6 / 1.4, 1e-12);
+  // the end of the floor: the center comes within R of either end, during the skid or while rolling
+  for (const run of [b, back, m.floorRun({ k: 1, R: 0.3, v0: 0.8, w0: 0.8 / 0.3, mu: 0.3 })]) {
+    const tE = m.floorExit(run, 0.5, 8), x = 0.5 + run.at(tE).x;
+    assert(Math.abs(x - run.R) < 1e-9 || Math.abs(x - (8 - run.R)) < 1e-9, `ends at ${x}`);
+    for (let i = 1; i < 200; i++) { const xi = 0.5 + run.at(tE * i / 200).x; assert(xi > run.R && xi < 8 - run.R); }
+  }
+  // fast enough to leave the floor while still sliding
+  const fast = m.floorRun({ k: 0.4, R: 0.11, v0: 6, w0: 0, mu: 0.02 }), tf = m.floorExit(fast, 0.5, 8);
+  assert(tf < fast.ts); close(0.5 + fast.at(tf).x, 8 - 0.11, 1e-12);
+});
+
+test('yo-yo: a = g/(1 + I/mr²) from mg − T = ma and Tr = Iα, against an energy check and the textbook cases', () => {
+  const g = m.G;
+  close(m.spoolFall({ shape: 'disk', m: 0.5, R: 0.05, r: 0.02 }, 1, 0).a, 2 * g / 3, 1e-12);   // solid cylinder: 2g/3
+  close(m.spoolFall({ shape: 'hoop', m: 0.5, R: 0.05, r: 0.02 }, 1, 0).a, g / 2, 1e-12);       // thin ring: g/2
+  const yo = { shape: 'yoyo', m: 0.06, R: 0.028, r: 0.004 }, q = m.spoolFall(yo, 1, 0);
+  close(q.k, 24.5, 1e-12); close(q.a, g / 25.5, 1e-12); close(q.T, Math.sqrt(2 / (g / 25.5)), 1e-12); close(q.Td, Math.sqrt(2 / g), 1e-12);
+  const pr = m.spoolFall({ shape: 'tube', m: 0.1, R: 0.055, r: 0.02 }, 1, 0);
+  close(pr.k, 0.5 * (1 + (0.02 / 0.055) ** 2), 1e-12); close(pr.a / g, 0.6386, 1e-3);
+  for (const o of [yo, { shape: 'tube', m: 0.1, R: 0.055, r: 0.02 }, { shape: 'hoop', m: 1, R: 0.1, r: 0 }]) {
+    const s0 = m.spoolFall(o, 1.2, 0), I = s0.I, rs = s0.rs;
+    // Newton: mg − T = ma, T rs = I α, α = a/rs
+    close(o.m * g - s0.tension, o.m * s0.a, 1e-12); close(s0.tension * rs, I * s0.a / rs, 1e-12);
+    for (const t of [0.2, 0.5].map((f) => f * s0.T)) {
+      const s = m.spoolFall(o, 1.2, t);
+      close(s.KEt + s.KEr, s.drop, 1e-12);                             // the string does no net work
+      close(s.KEr / (s.KEt + s.KEr), s.k / (1 + s.k), 1e-12);
+    }
+    const end = m.spoolFall(o, 1.2, 99); close(end.y, 1.2, 1e-12); assert(end.done);
+  }
 });
 
 console.log(`${n} rotation test groups passed`);

@@ -91,6 +91,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .seg.full { display: flex; }
 .seg.full button { flex: 1; padding: 4px 4px; }
+#sceneSeg { flex-wrap: wrap; }
+#sceneSeg button { flex: 1 0 30%; }
 .inline .lab { font-size: 0.88rem; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dd.pos { color: var(--pos); }
@@ -155,7 +157,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <header class="bar">
     <div>
       <h1>Rotation and Torque</h1>
-      <p>Push a door, race rolling objects down a ramp, spin a skater, balance a seesaw. Torque makes things turn, moment of inertia resists it, and angular momentum stays the same when nothing twists from outside.</p>
+      <p>Push a door, race rolling objects down a ramp, throw a ball that skids and then rolls, drop a yo-yo beside a falling one, spin a skater, balance a seesaw. Torque makes things turn, moment of inertia resists it, and angular momentum stays the same when nothing twists from outside.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">SI units · g = 9.81 m/s² · counterclockwise positive</div>
@@ -194,6 +196,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div class="seg full" role="group" aria-label="Scene" id="sceneSeg">
           <button type="button" data-s="torque" aria-pressed="true">Torque</button>
           <button type="button" data-s="roll" aria-pressed="false">Rolling</button>
+          <button type="button" data-s="floor" aria-pressed="false">Floor</button>
+          <button type="button" data-s="yoyo" aria-pressed="false">Yo-yo</button>
           <button type="button" data-s="spin" aria-pressed="false">Spin</button>
           <button type="button" data-s="seesaw" aria-pressed="false">Seesaw</button>
         </div>
@@ -202,6 +206,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="hinge" aria-pressed="true">Door: push near the hinge</button>
           <button type="button" data-p="race" aria-pressed="false">Rolling race</button>
           <button type="button" data-p="mass" aria-pressed="false">Mass doesn't matter</button>
+          <button type="button" data-p="wheel" aria-pressed="false">Rolling wheel: cycloid</button>
+          <button type="button" data-p="skid" aria-pressed="false">Ball thrown without spin</button>
+          <button type="button" data-p="backspin" aria-pressed="false">Backspin: it comes back</button>
+          <button type="button" data-p="yoyo" aria-pressed="false">Yo-yo against a dropped one</button>
+          <button type="button" data-p="paper" aria-pressed="false">Paper roll unwinding</button>
+          <button type="button" data-p="cyl" aria-pressed="false">Unwinding cylinder: ⅔g</button>
           <button type="button" data-p="skater" aria-pressed="false">Skater</button>
           <button type="button" data-p="seesaw" aria-pressed="false">Seesaw</button>
         </div>
@@ -316,6 +326,111 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>More about this</summary>
           <p class="hint">Every object that rolls without slipping loses the same potential energy mgh, but part of it goes into spinning. The larger I/mR², the bigger that share, and the slower it goes down. The frictionless block puts it all into sliding, so it wins.</p>
           <p class="hint">Assumes enough static friction to roll without slipping, no rolling resistance and no air drag; static friction does no work on a rolling object. Objects are drawn larger than scale.</p>
+        </details>
+      </section>
+
+      <!-- ===== level floor: skid, roll, cycloid ===== -->
+      <section data-scene="floor" hidden>
+        <h2>Launch on a level floor</h2>
+        <div class="chips" id="flShape">
+          <button type="button" data-fs="sphere" aria-pressed="true">Solid sphere</button>
+          <button type="button" data-fs="disk" aria-pressed="false">Cylinder</button>
+          <button type="button" data-fs="hsphere" aria-pressed="false">Hollow sphere</button>
+          <button type="button" data-fs="hoop" aria-pressed="false">Hoop</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="fV">Launch speed v₀</label><output id="fVOut" class="mono" for="fV"></output></div>
+          <input type="range" id="fV" min="0" max="6" step="0.05" value="4">
+        </div>
+        <div>
+          <div class="slider-head"><label for="fS">Launch spin, as rim speed ω₀R</label><output id="fSOut" class="mono" for="fS"></output></div>
+          <input type="range" id="fS" min="-10" max="10" step="0.05" value="0">
+        </div>
+        <button type="button" class="btn" id="fMatch">Spin it to roll: ω₀R = v₀</button>
+        <div>
+          <div class="slider-head"><label for="fMu">Kinetic friction μk</label><output id="fMuOut" class="mono" for="fMu"></output></div>
+          <input type="range" id="fMu" min="0.02" max="1" step="0.01" value="0.2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="fR">Radius R</label><output id="fROut" class="mono" for="fR"></output></div>
+          <input type="range" id="fR" min="3" max="40" step="0.5" value="11">
+        </div>
+        <div>
+          <div class="slider-head"><label for="fM">Mass m</label><output id="fMOut" class="mono" for="fM"></output></div>
+          <input type="range" id="fM" min="0.1" max="10" step="0.1" value="7">
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="fTrace" checked>Trace a point on the rim</label>
+          <label><input type="checkbox" id="fArrows" checked>Velocity arrows on the rim</label>
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Positive spin is the way the object turns when it rolls forward; a negative spin is backspin. Keys: <kbd>↑</kbd> <kbd>↓</kbd> change the launch speed, <kbd>←</kbd> <kbd>→</kbd> the spin, <kbd>Enter</kbd> launches.</p>
+        </details>
+      </section>
+      <section data-scene="floor" hidden>
+        <h2>Skid, then roll</h2>
+        <dl class="readout">
+          <div><dt>I / mR²</dt><dd id="fK">—</dd></div>
+          <div><dt>Speed v now</dt><dd id="fNv">—</dd></div>
+          <div><dt>Rim speed ωR now</dt><dd id="fNw">—</dd></div>
+          <div class="big"><dt>Contact point v − ωR</dt><dd id="fSlip">—</dd></div>
+          <div><dt>Friction on it now</dt><dd id="fFr">—</dd></div>
+          <div><dt>Rolls from t =</dt><dd id="fTs">—</dd></div>
+          <div><dt>Distance skidding</dt><dd id="fXs">—</dd></div>
+          <div><dt>Rolling speed (v₀ + kω₀R)/(1 + k)</dt><dd id="fVf">—</dd></div>
+          <div><dt>Heat from sliding</dt><dd id="fQ">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The floor pushes back only at the contact point. While that point slides (v ≠ ωR), kinetic friction μk m g acts there against the sliding: it changes v and, through its torque μk m g R, changes ω, until v = ωR. From then on the contact point is at rest, friction is zero and the object rolls at constant speed. Each point of a rolling object moves as if it turned about the contact point, so the top moves at 2v.</p>
+          <p class="hint">Friction acts along the floor and the weight and normal force cancel, so the angular momentum about any point on the floor, mR(v + kωR) with k = I/mR², stays the same the whole time. That fixes the rolling speed. Model: constant μk while sliding, no rolling resistance, no air drag. Drawn to scale, side view; the camera follows the object.</p>
+        </details>
+      </section>
+
+      <!-- ===== yo-yo: a spool unwinding beside one dropped ===== -->
+      <section data-scene="yoyo" hidden>
+        <h2>Spool</h2>
+        <div class="chips" id="yShape">
+          <button type="button" data-ys="yoyo" aria-pressed="true">Yo-yo</button>
+          <button type="button" data-ys="tube" aria-pressed="false">Paper roll</button>
+          <button type="button" data-ys="disk" aria-pressed="false">Solid cylinder</button>
+          <button type="button" data-ys="hoop" aria-pressed="false">Thin ring</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="yR">Outer radius R</label><output id="yROut" class="mono" for="yR"></output></div>
+          <input type="range" id="yR" min="1" max="10" step="0.1" value="2.8">
+        </div>
+        <div>
+          <div class="slider-head"><label for="yr" id="yrLab">Axle radius r</label><output id="yrOut" class="mono" for="yr"></output></div>
+          <input type="range" id="yr" min="0.2" max="9.8" step="0.1" value="0.4">
+        </div>
+        <div>
+          <div class="slider-head"><label for="yM">Mass m</label><output id="yMOut" class="mono" for="yM"></output></div>
+          <input type="range" id="yM" min="0.02" max="2" step="0.01" value="0.06">
+        </div>
+        <div>
+          <div class="slider-head"><label for="yH">Drop height H</label><output id="yHOut" class="mono" for="yH"></output></div>
+          <input type="range" id="yH" min="0.2" max="2" step="0.05" value="1">
+        </div>
+        <p class="hint" id="yModel"></p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Keys: <kbd>↑</kbd> <kbd>↓</kbd> change the drop height, <kbd>←</kbd> <kbd>→</kbd> the string radius, <kbd>Enter</kbd> lets both go.</p>
+        </details>
+      </section>
+      <section data-scene="yoyo" hidden>
+        <h2>Unwinding against falling</h2>
+        <dl class="readout">
+          <div><dt>I / mr², r where it leaves</dt><dd id="yK">—</dd></div>
+          <div class="big"><dt>a = g / (1 + I/mr²)</dt><dd id="yA">—</dd></div>
+          <div><dt>String tension T = m(g − a)</dt><dd id="yT">—</dd></div>
+          <div><dt>Weight mg</dt><dd id="yW8">—</dd></div>
+          <div><dt>Time to fall H, unwinding</dt><dd id="yTu">—</dd></div>
+          <div><dt>Time to fall H, dropped</dt><dd id="yTd">—</dd></div>
+          <div><dt>Speed at the bottom</dt><dd id="yV">—</dd></div>
+          <div><dt>Spin at the bottom ω = v/r</dt><dd id="yW">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Both start from rest at the same height. The dropped one has only its weight on it and falls at g. The unwinding one also has the string pulling up: that slows its fall, and the string's torque Tr about the center spins it up. With a = αr (the string does not slip), mg − T = ma and Tr = Iα give a = g/(1 + I/mr²), whatever the mass. A thin axle makes I/mr² large, so a yo-yo falls slowly and spins fast.</p>
+          <p class="hint">Energy: the height lost, mgh, is shared between moving down, ½mv², and spinning, ½Iω²; the share in spinning is k/(1 + k) with k = I/mr². The string does no net work, since its end at the spool is at rest. Massless string, no air drag; the spools are drawn larger than the height scale.</p>
         </details>
       </section>
 
@@ -562,13 +677,68 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const R = swingRK4((phi) => seesawTorque(ms, phi) / I, phiStop, Math.min(tc / 600, 2e-3), 30);
     return { I, tEnd: R.tEnd, tHit: R.tHit, vHit: R.vHit, pts: R.pts, at: (t) => { const q = sampleAt(R.pts, t); return [q[1], q[2]]; } };
   }
+  // level floor: launched with speed v0 and spin w0 (rad/s, positive the way it turns rolling forward), k = I/mR².
+  // While the contact point slides (u = v − ωR ≠ 0) kinetic friction μk m g acts there against u:
+  // dv/dt = −sgn(u) μk g and dω/dt = sgn(u) μk g/(kR), so u falls at μk g (1 + 1/k) and reaches 0 at ts = k|u0| / (μk g (1 + k)).
+  // After that it rolls at vf = (v0 + k ω0 R)/(1 + k), fixed by the angular momentum about the floor, mR(v + kωR).
+  function floorRun(p) {
+    const k = p.k, R = p.R, v0 = p.v0, w0 = p.w0, mu = p.mu, u0 = v0 - w0 * R, sg = Math.abs(u0) < 1e-12 ? 0 : Math.sign(u0);
+    const ts = sg ? k * Math.abs(u0) / (mu * G * (1 + k)) : 0;
+    const av = -sg * mu * G, al = sg * mu * G / (k * R);
+    const vf = (v0 + k * R * w0) / (1 + k), wf = vf / R;
+    const xs = v0 * ts + 0.5 * av * ts * ts, ths = w0 * ts + 0.5 * al * ts * ts;
+    function at(t) {
+      if (t < ts) return { x: v0 * t + 0.5 * av * t * t, th: w0 * t + 0.5 * al * t * t, v: v0 + av * t, w: w0 + al * t, sliding: true };
+      const d = t - ts;
+      return { x: xs + vf * d, th: ths + wf * d, v: vf, w: wf, sliding: false };
+    }
+    return { k, R, v0, w0, mu, u0, sg, ts, av, al, vf, wf, xs, ths, at };
+  }
+  // first time the center, starting at x0 on a floor from 0 to Lf, comes within R of either end (or 1 s after it stops)
+  function floorExit(run, x0, Lf) {
+    const lo = run.R - x0, hi = Lf - run.R - x0;
+    let best = Infinity;
+    if (run.ts > 0) {
+      for (const X of [lo, hi]) {   // ½ av t² + v0 t − X = 0 during the skid
+        const a = 0.5 * run.av, b = run.v0, c = -X, disc = b * b - 4 * a * c;
+        if (disc < 0) continue;
+        for (const t of [(-b - Math.sqrt(disc)) / (2 * a), (-b + Math.sqrt(disc)) / (2 * a)]) if (t > 1e-12 && t <= run.ts && t < best) best = t;
+      }
+    }
+    if (best < Infinity) return best;
+    if (run.vf > 1e-12) return run.ts + (hi - run.xs) / run.vf;
+    if (run.vf < -1e-12) return run.ts + (lo - run.xs) / run.vf;
+    return run.ts + 1;
+  }
+  // kinetic energies and the heat made by sliding friction, per the run above, for mass m at time t
+  function floorEnergy(run, m, t) {
+    const q = run.at(t), I = run.k * m * run.R * run.R;
+    const KE0 = 0.5 * m * run.v0 * run.v0 + 0.5 * I * run.w0 * run.w0, KEt = 0.5 * m * q.v * q.v, KEr = 0.5 * I * q.w * q.w;
+    return { KE0, KEt, KEr, heat: KE0 - KEt - KEr, L: m * run.R * (q.v + run.k * run.R * q.w) };
+  }
+
+  // a spool falling as its string (or paper) unwinds, the string's top end held still; the string leaves at radius rs
+  const SPOOLS = {
+    yoyo: { name: 'Yo-yo', Iform: '½mR²', I: (m, R) => m * R * R / 2, rs: (R, r) => r },
+    tube: { name: 'Paper roll', Iform: '½m(R² + r²)', I: (m, R, r) => m * (R * R + r * r) / 2, rs: (R) => R },
+    disk: { name: 'Solid cylinder', Iform: '½mR²', I: (m, R) => m * R * R / 2, rs: (R) => R },
+    hoop: { name: 'Thin ring', Iform: 'mR²', I: (m, R) => m * R * R, rs: (R) => R }
+  };
+  function spoolFall(o, H, t) {
+    const sp = SPOOLS[o.shape], rs = sp.rs(o.R, o.r), I = sp.I(o.m, o.R, o.r), k = I / (o.m * rs * rs);
+    const a = G / (1 + k), T = Math.sqrt(2 * H / a), tt = Math.min(Math.max(t, 0), T);
+    const y = 0.5 * a * tt * tt, v = a * tt, w = v / rs;
+    const Td = Math.sqrt(2 * H / G), td = Math.min(Math.max(t, 0), Td);
+    return { k, I, rs, a, T, tension: o.m * (G - a), y, v, w, th: y / rs, KEt: 0.5 * o.m * v * v, KEr: 0.5 * I * w * w, drop: o.m * G * y,
+      done: t >= T, Td, yd: 0.5 * G * td * td, vd: G * td };
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock of the torque, spin and rolling scenes */
   /* How this works: a 19 s video of one door push, 20 N at 0.80 m (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/rotation.mp4', poster: 'media/how-this-works/rotation.jpg' });
-  VD.tools({ el: $('view'), time: () => (S.scene === 'torque' ? TQ.t : S.scene === 'roll' ? RO.t : S.scene === 'spin' ? SP.t : null) });
+  VD.tools({ el: $('view'), time: () => (S.scene === 'torque' ? TQ.t : S.scene === 'roll' ? RO.t : S.scene === 'floor' ? FL.t : S.scene === 'yoyo' ? YO.t : S.scene === 'spin' ? SP.t : null) });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const v = sessionStorage.getItem('rotation-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
@@ -584,12 +754,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const fmtTick = (v, step) => { const dp = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)); return fx(v, dp); };
 
   // ---------- state ----------
-  const S = { scene: 'torque', ts: 1, preset: { torque: 'hinge', roll: 'race', spin: 'skater', seesaw: 'seesaw' } };
+  const S = { scene: 'torque', ts: 1, preset: { torque: 'hinge', roll: 'race', floor: 'skid', yoyo: 'yoyo', spin: 'skater', seesaw: 'seesaw' } };
   const TQ = { obj: 'door', L: 0.9, m: 15, F: 20, r: 0.15, th: 90, mode: 'follow', sw: null, t: 0, run: false, ghost: null };
   const RO = { beta: 10, D: 2, lanes: [], sel: 0, t: 0, run: false };
   const SP = { look: 'skater', I0: 0.8, m: 3, r: 0.8, L: 0, phi: 0, t: 0, run: !reduce, pull: null, hist: [], ref: null, trail: [] };
   const SE = { ms: [{ id: 'A', m: 4, x: -1 }, { id: 'B', m: 2, x: 1.5 }, { id: 'C', m: 0, x: 0.5 }], held: true, tip: null, t: 0, run: false, sel: 0, Mb: 10, Lb: 4, h: 0.5 };
   const SE_STOP = Math.asin(SE.h / (SE.Lb / 2));
+  /* level floor: rim0 is the launch spin as a rim speed ω₀R (m/s); the run and the traced rim point are cached by their inputs */
+  const FL = { shape: 'sphere', m: 7, R: 0.11, v0: 4, rim0: 0, mu: 0.2, x0: 0.5, Lf: 8, t: 0, run: false, trace: true, arrows: true, rn: null, sig: '', tEnd: 0, path: null };
+  /* yo-yo: R and r in meters, the drop height H */
+  const YO = { shape: 'yoyo', m: 0.06, R: 0.028, r: 0.004, H: 1, t: 0, run: false };
 
   const lane = (shape, m, R) => ({ shape, m, R });
   const PRESETS = {
@@ -605,6 +779,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('block', 1, 0.1), lane('sphere', 1, 0.1), lane('disk', 1, 0.1), lane('hsphere', 1, 0.1), lane('hoop', 1, 0.1)]; RO.sel = 2; RO.t = 0; RO.run = false; } },
     mass: { scene: 'roll', ts: 1, hint: 'A heavy, wide cylinder against a light, narrow one, and the same for two hoops. Shape decides the race, through I/mR², and mass and radius cancel out.',
       apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('disk', 8, 0.15), lane('disk', 0.5, 0.03), lane('hoop', 8, 0.15), lane('hoop', 0.5, 0.03)]; RO.sel = 0; RO.t = 0; RO.run = false; } },
+    wheel: { scene: 'floor', ts: 1, hint: 'A hoop already rolling without slipping. The point touching the floor is at rest, the top moves at 2v, and the marked point on the rim traces a cycloid, with a sharp point (a cusp) each time it touches down.',
+      apply() { Object.assign(FL, { shape: 'hoop', m: 2, R: 0.3, v0: 0.8, rim0: 0.8, mu: 0.3, t: 0, run: false }); } },
+    skid: { scene: 'floor', ts: 0.25, hint: 'A solid ball thrown along the floor with no spin. It slides at first: friction slows it and spins it up until v = ωR, after a time 2v₀/(7μk g). From then on it rolls at 5/7 of its launch speed. Shown at ¼ speed.',
+      apply() { Object.assign(FL, { shape: 'sphere', m: 7, R: 0.11, v0: 4, rim0: 0, mu: 0.2, t: 0, run: false }); } },
+    backspin: { scene: 'floor', ts: 1, hint: 'Thrown forward with strong backspin, ω₀R = −9 m/s. Friction slows the ball and then sends it back: once v = ωR it rolls back toward you at (v₀ + ⅖ω₀R)/(1 + ⅖). The angular momentum about the floor stays the same throughout.',
+      apply() { Object.assign(FL, { shape: 'sphere', m: 7, R: 0.11, v0: 3, rim0: -9, mu: 0.3, t: 0, run: false }); } },
+    yoyo: { scene: 'yoyo', ts: 1, hint: 'Two identical yo-yos let go together from the same height: one unwinds from its string, the other just falls. The string pulls up, and its torque spins the yo-yo up, so it falls at a = g/(1 + I/mr²), here g/25.5.',
+      apply() { Object.assign(YO, { shape: 'yoyo', m: 0.06, R: 0.028, r: 0.004, H: 1, t: 0, run: false }); } },
+    paper: { scene: 'yoyo', ts: 1, hint: 'Hold the loose end of a roll of paper and let the roll go, beside a roll that is just dropped. The paper leaves from the outside of the roll, so I/mR² is only a little over ½ and it falls at about 0.64 g.',
+      apply() { Object.assign(YO, { shape: 'tube', m: 0.1, R: 0.055, r: 0.02, H: 1, t: 0, run: false }); } },
+    cyl: { scene: 'yoyo', ts: 1, hint: 'A solid cylinder with the string wound on its surface falls at exactly ⅔g, whatever its mass and radius; a thin ring falls at ½g.',
+      apply() { Object.assign(YO, { shape: 'disk', m: 0.5, R: 0.05, r: 0.02, H: 1, t: 0, run: false }); } },
     skater: { scene: 'spin', ts: 0.25, hint: 'Arms out, spinning slowly. Press Pull in: I drops by about 4.5 times, so ω rises by the same factor while L stays fixed. Shown at ¼ speed.',
       apply() { Object.assign(SP, { look: 'skater', I0: 0.8, m: 3, r: 0.8 }); setSpinRate(1); } },
     seesaw: { scene: 'seesaw', ts: 1, hint: 'The supports hold the beam level. The net torque is not zero, so press Release and the left end goes down. Then find where B must sit to balance A.',
@@ -613,6 +799,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const SCENE_HINT = {
     torque: 'Push a door or a wrench. The torque about the pivot is τ = rF sin θ = r⊥F, and it sets the angular acceleration α = τ/I.',
     roll: 'Objects roll down a ramp without slipping: a = g sin β / (1 + I/mR²).',
+    floor: 'Launch a ball, cylinder or hoop along a level floor with any spin. Friction at the contact point acts until v = ωR; then it rolls, with its contact point at rest.',
+    yoyo: 'A spool unwinding from a string held at the top falls beside one that is dropped: a = g/(1 + I/mr²).',
     spin: 'No outside torque, so L = Iω stays the same while the masses move.',
     seesaw: 'Each block adds a torque −m g x about the pivot. The beam stays level only when they cancel.'
   };
@@ -704,6 +892,53 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     say(`The ${seesawMoment(liveMasses()) < 0 ? 'left' : 'right'} end touched the ground after ${fx(tip.tHit, 2)} s.`);
   }
   const seesawPhi = () => (SE.tip && !SE.tip.none ? SE.tip.at(SE.t)[0] : 0);
+
+  // ---------- level floor scene ----------
+  /* the run for the current inputs, its end at either end of the floor, and the path of the rim point marked at the bottom at launch */
+  function flRun() {
+    const sig = [FL.shape, FL.R, FL.v0, FL.rim0, FL.mu, FL.x0, FL.Lf].join('|');
+    if (FL.sig === sig && FL.rn) return FL.rn;
+    FL.sig = sig;
+    const rn = floorRun({ k: SHAPES[FL.shape].k, R: FL.R, v0: FL.v0, w0: FL.rim0 / FL.R, mu: FL.mu });
+    FL.rn = rn; FL.tEnd = floorExit(rn, FL.x0, FL.Lf);
+    const wMax = Math.max(Math.abs(rn.w0), Math.abs(rn.wf), 1e-6);
+    let dt = Math.min(0.004, 0.04 / wMax); if (FL.tEnd / dt > 40000) dt = FL.tEnd / 40000;
+    const n = Math.ceil(FL.tEnd / dt), path = new Float64Array(2 * (n + 1));
+    for (let i = 0; i <= n; i++) { const q = rn.at(Math.min(FL.tEnd, i * dt)); path[2 * i] = FL.x0 + q.x - FL.R * Math.sin(q.th); path[2 * i + 1] = FL.R - FL.R * Math.cos(q.th); }
+    FL.path = { dt, n, xy: path };
+    return rn;
+  }
+  function flAct() {
+    flRun();
+    if (FL.run) { FL.run = false; return; }
+    if (FL.t > 0 && FL.t < FL.tEnd) { FL.run = true; return; }
+    FL.t = 0;
+    if (reduce) { FL.t = FL.tEnd; sayFloor(); } else FL.run = true;
+  }
+  function sayFloor() {
+    const rn = flRun();
+    say((rn.ts > 0 ? `Slid for ${fx(rn.ts, 2)} s and ${fx(Math.abs(rn.xs), 2)} m, then rolled` : 'Rolled from the start') + ` at ${s3(rn.vf)} m/s.`);
+  }
+  function setFl(key, v) { FL[key] = v; FL.t = 0; FL.run = false; custom(); syncSliders(); dirty = true; }
+
+  // ---------- yo-yo scene ----------
+  const yoNow = () => spoolFall(YO, YO.H, YO.t);
+  function yoAct() {
+    const T = yoNow().T;
+    if (YO.run) { YO.run = false; return; }
+    if (YO.t > 0 && YO.t < T) { YO.run = true; return; }
+    YO.t = 0;
+    if (reduce) { YO.t = T; sayYoyo(); } else YO.run = true;
+  }
+  function sayYoyo() {
+    const q = spoolFall(YO, YO.H, 0);
+    say(`The dropped ${SPOOLS[YO.shape].name.toLowerCase()} landed after ${fx(q.Td, 2)} s, the unwinding one after ${fx(q.T, 2)} s.`);
+  }
+  function setYo(key, v) {
+    YO[key] = v;
+    if (YO.r > YO.R - 0.002) YO.r = Math.max(0.002, YO.R - 0.002);
+    YO.t = 0; YO.run = false; custom(); syncSliders(); dirty = true;
+  }
 
   // ---------- canvas ----------
   const view = $('view'), cA = $('cA'), cB = $('cB'), stage = $('stage');
@@ -1259,6 +1494,230 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
   }
 
+  // ---------- level floor drawing ----------
+  function drawFloor() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale(), rn = flRun(), q = rn.at(FL.t), R = FL.R;
+    handlesNow = [];
+    const padX = 14 * ps, top = ctlH + 46 * ps, floorY = H - 52 * ps;
+    const span = Math.min(FL.Lf + 0.4, Math.max(1.5, 12 * R));
+    const pxm = Math.max(4, Math.min((W - 2 * padX) / span, (floorY - top) * 0.36 / R));
+    const vis = (W - 2 * padX) / pxm, xc = FL.x0 + q.x;
+    const camL = vis >= FL.Lf + 0.4 ? (FL.Lf - vis) / 2 : Math.max(-0.2, Math.min(FL.Lf + 0.2 - vis, xc - vis / 2));
+    const X = (x) => padX + (x - camL) * pxm, Y = (y) => floorY - y * pxm;
+    // the floor, with a scale in meters
+    const xa = Math.max(0, X(0)), xb = Math.min(W, X(FL.Lf));
+    ctx.save();
+    ctx.fillStyle = T.relief; ctx.fillRect(xa, floorY, xb - xa, 12 * ps);
+    ctx.beginPath(); ctx.rect(xa, floorY, xb - xa, 12 * ps); ctx.clip();
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = xa - 12 * ps - ((xa - X(0)) % (6 * ps)); x < xb; x += 6 * ps) { ctx.moveTo(x, floorY + 12 * ps); ctx.lineTo(x + 12 * ps, floorY); }
+    ctx.stroke(); ctx.restore();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(xa, floorY); ctx.lineTo(xb, floorY); ctx.stroke();
+    const step = nice(70 * ps / pxm);
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    for (let x = Math.max(0, Math.ceil(camL / step) * step); x <= Math.min(FL.Lf, camL + vis) + 1e-9; x += step) {
+      const px = Math.round(X(x)) + 0.5; ctx.beginPath(); ctx.moveTo(px, floorY + 12 * ps); ctx.lineTo(px, floorY + 17 * ps); ctx.stroke();
+      ctx.fillText(fmtTick(x, step) + ' m', px, floorY + 20 * ps);
+    }
+    const mark = (x, txt) => {
+      const px = X(x); if (px < -40 || px > W + 40) return;
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.moveTo(px, floorY); ctx.lineTo(px, Y(2 * R) - 26 * ps); ctx.stroke(); ctx.restore();
+      label(ctx, txt, px, Y(2 * R) - 28 * ps, T.muted, 'center', 'bottom', 10.5, 400);
+    };
+    mark(FL.x0, 'start');
+    if (rn.ts > 0 && FL.t >= rn.ts) mark(FL.x0 + rn.xs, 'rolling from here');
+    // the path of the marked rim point so far, skipping points less than a pixel apart
+    if (FL.trace && FL.path) {
+      const P = FL.path, iEnd = Math.min(P.n, Math.floor(FL.t / P.dt));
+      ctx.save(); ctx.strokeStyle = T.violet; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+      let lx = -1e9, ly = -1e9, pen = false;
+      for (let i = 0; i <= iEnd; i++) {
+        const x = P.xy[2 * i], px = X(x), py = Y(P.xy[2 * i + 1]);
+        if (px < -20 || px > W + 20) { pen = false; continue; }
+        if (!pen) { ctx.moveTo(px, py); pen = true; lx = px; ly = py; continue; }
+        if (Math.abs(px - lx) + Math.abs(py - ly) < 1 && i < iEnd) continue;
+        ctx.lineTo(px, py); lx = px; ly = py;
+      }
+      if (pen) ctx.lineTo(X(xc - R * Math.sin(q.th)), Y(R - R * Math.cos(q.th)));
+      ctx.stroke(); ctx.restore();
+    }
+    // the object, turned by θ (clockwise on screen when it rolls to the right)
+    const cx = X(xc), cy = Y(R), rpx = R * pxm, col = shapeColor(FL.shape);
+    drawObject(ctx, FL.shape, cx, cy, rpx, q.th, 0, col, false);
+    const mx = X(xc - R * Math.sin(q.th)), my = Y(R - R * Math.cos(q.th));
+    ctx.fillStyle = T.violet; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(mx, my, 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    // velocities: v of the center, and v + ω × r at eight points on the rim, on one scale for the whole run
+    const vMax = Math.max(Math.abs(rn.v0) + Math.abs(rn.w0) * R, 2 * Math.abs(rn.vf), 0.05), vs = 1.15 * rpx / vMax;
+    if (FL.arrows) {
+      for (let a = 0; a < 8; a++) {
+        const an = a * Math.PI / 4, rx = R * Math.cos(an), ry = R * Math.sin(an);
+        const vx = q.v + q.w * ry, vy = -q.w * rx, px = cx + rx * pxm, py = cy - ry * pxm;
+        arrow(ctx, px, py, px + vx * vs, py - vy * vs, T.accent, 2 * ps);
+      }
+    }
+    arrow(ctx, cx, cy, cx + q.v * vs, cy, T.ink, 2.6 * ps);
+    if (Math.abs(q.v * vs) > 14 * ps) label(ctx, 'v', cx + q.v * vs + (q.v > 0 ? 8 : -8) * ps, cy - 10 * ps, T.ink, 'center', 'middle', 11.5);
+    // the contact point, and friction on it while it slides
+    const slip = q.v - q.w * R;
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, floorY, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    if (q.sliding && Math.abs(slip) > 1e-9) {
+      const dir = -Math.sign(slip), len = 34 * ps;
+      arrow(ctx, cx, floorY + 3 * ps, cx + dir * len, floorY + 3 * ps, T.equi, 3 * ps);
+      label(ctx, 'friction', cx + dir * len, floorY + 40 * ps, T.equi, dir > 0 ? 'right' : 'left', 'middle', 10.5);
+    }
+    const yInfo = ctlH + 12 * ps;
+    label(ctx, `contact point v − ωR = ${s3(slip)} m/s, ${Math.abs(slip) < 5e-4 ? 'rolling' : 'sliding'}`, padX, yInfo, Math.abs(slip) < 5e-4 ? T.ink : T.equi, 'left', 'middle', 11);
+    label(ctx, `top of the rim v + ωR = ${s3(q.v + q.w * R)} m/s`, padX, yInfo + 17 * ps, T.muted, 'left', 'middle', 11, 400);
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    if (W > 520 * ps) ctx.fillText('side view, to scale', W - 12 * ps, yInfo);
+  }
+  function drawFloorCharts() {
+    const rn = flRun(), R = FL.R;
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale(), tEnd = FL.tEnd;
+      const vals = [rn.v0, rn.w0 * R, rn.vf, 0], lo = Math.min(...vals), hi = Math.max(...vals), pad = 0.1 * Math.max(hi - lo, 0.2);
+      const { X, Y } = chartFrame(ctx, W, H, [0, tEnd * 1.04], [lo < 0 ? lo - pad : 0, hi + pad], 'Speed v (solid) and rim speed ωR (dashed), m/s, vs time', 't (s)');
+      const series = (f, col, t1, alpha, lw, dash) => {
+        const ts = [0]; for (let i = 1; i <= 60; i++) ts.push(t1 * i / 60);
+        if (rn.ts > 0 && rn.ts < t1) ts.push(rn.ts); ts.sort((a, b) => a - b);
+        ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = lw; if (dash) ctx.setLineDash(dash);
+        ctx.beginPath(); ts.forEach((t, i) => { const y = f(rn.at(t)); i ? ctx.lineTo(X(t), Y(y)) : ctx.moveTo(X(t), Y(y)); }); ctx.stroke(); ctx.restore();
+      };
+      const fv = (q) => q.v, fw = (q) => q.w * R;
+      series(fv, T.accent, tEnd, 0.28, 1.4 * ps); series(fw, T.pos, tEnd, 0.28, 1.4 * ps, [5 * ps, 3 * ps]);
+      if (FL.t > 0) { series(fv, T.accent, Math.min(FL.t, tEnd), 1, 2.4 * ps); series(fw, T.pos, Math.min(FL.t, tEnd), 1, 2.4 * ps, [5 * ps, 3 * ps]); }
+      if (Math.abs(rn.u0) < 1e-9) label(ctx, 'v = ωR', X(0) + 6 * ps, Y(rn.v0) - 10 * ps, T.ink, 'left', 'middle', 10.5);
+      if (rn.ts > 0 && rn.ts <= tEnd) {
+        ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([3 * ps, 3 * ps]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(rn.ts) + 0.5, Y(hi + pad)); ctx.lineTo(X(rn.ts) + 0.5, Y(lo < 0 ? lo - pad : 0)); ctx.stroke(); ctx.restore();
+        label(ctx, 'rolls', X(rn.ts) + 4 * ps, Y(hi + pad) + 8 * ps, T.muted, 'left', 'middle', 10.5, 400);
+      }
+      if (FL.t > 0) { ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(FL.t) + 0.5, Y(hi + pad)); ctx.lineTo(X(FL.t) + 0.5, Y(lo < 0 ? lo - pad : 0)); ctx.stroke(); ctx.globalAlpha = 1; }
+    }
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b'), E = floorEnergy(rn, FL.m, FL.t), E0 = floorEnergy(rn, FL.m, 0);
+      bars(ctx, W, H, 'Energy: ' + SHAPES[FL.shape].name.toLowerCase() + ', launch ' + f3(E.KE0) + ' J', [
+        { lab: 'Moving along, ½mv²', v: E.KEt, col: T.accent },
+        { lab: 'Spinning, ½Iω²', v: E.KEr, col: T.pos },
+        { lab: 'Heat from sliding friction', v: Math.max(0, E.heat), col: T.equi }
+      ], 'J', { max: E.KE0, foot: [
+        `L about the floor, mR(v + kωR): ${s3(E.L)} kg·m²/s, at launch ${s3(E0.L)}`
+      ] });
+    }
+  }
+
+  // ---------- yo-yo drawing ----------
+  const spoolColor = (sh) => ({ yoyo: T.pos, tube: T.teal, disk: T.equi, hoop: T.neg })[sh];
+  /* a spool seen along its axis: outer radius Rd, the axle or core radius rd, turned by rot */
+  function drawSpool(ctx, shape, cx, cy, Rd, rd, rot, col) {
+    const ps = projScale();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+    if (shape === 'tube') {
+      ctx.fillStyle = '#f2eee5'; ctx.beginPath(); ctx.arc(0, 0, Rd, 0, 2 * Math.PI); ctx.arc(0, 0, rd, 0, 2 * Math.PI, true); ctx.fill();
+      ctx.strokeStyle = '#b9b09e'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
+      for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.arc(0, 0, rd + (Rd - rd) * i / 5, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(0, 0, Rd, 0, 2 * Math.PI); ctx.stroke();
+      ctx.strokeStyle = '#a4793f'; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.arc(0, 0, rd + 1.5 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.strokeStyle = '#6f675a'; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(rd + 3 * ps, 0); ctx.lineTo(Rd, 0); ctx.stroke();
+    } else if (shape === 'hoop') {
+      ctx.strokeStyle = col; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.arc(0, 0, Rd - 2 * ps, 0, 2 * Math.PI); ctx.stroke();
+      ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Rd - 3 * ps, 0); ctx.stroke();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(Rd - 2 * ps, 0, 3.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    } else {
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, 0, Rd, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = 0.8;
+      if (shape === 'yoyo') {
+        ctx.beginPath(); ctx.arc(0, 0, Rd * 0.72, 0, 2 * Math.PI); ctx.stroke();
+        ctx.beginPath(); for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3; ctx.moveTo(Math.cos(a) * Rd * 0.3, Math.sin(a) * Rd * 0.3); ctx.lineTo(Math.cos(a) * Rd * 0.66, Math.sin(a) * Rd * 0.66); } ctx.stroke();
+        ctx.globalAlpha = 1; ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(0, 0, Math.max(2 * ps, rd), 0, 2 * Math.PI); ctx.fill();
+      } else { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Rd * 0.9, 0); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      ctx.rotate(-rot); const lg = ctx.createRadialGradient(-Rd * 0.35, -Rd * 0.4, 0, 0, 0, Rd);   // light from the top left, fixed in the room (a picture only)
+      lg.addColorStop(0, 'rgba(255,255,255,0.25)'); lg.addColorStop(0.5, 'rgba(255,255,255,0)'); lg.addColorStop(1, 'rgba(0,0,0,0.14)');
+      ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(0, 0, Rd, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.restore();
+  }
+  function drawYoyo() {
+    const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale(), q = yoNow(), sp = SPOOLS[YO.shape], col = spoolColor(YO.shape);
+    handlesNow = [];
+    const ceilY = ctlH + 22 * ps, floorY = H - 44 * ps;
+    const Rd = Math.max(20 * ps, Math.min(44 * ps, (floorY - ceilY) * 0.085));
+    const rsd = Rd * q.rs / YO.R, rd = Rd * YO.r / YO.R;
+    const c0 = ceilY + 30 * ps + Rd, cEnd = floorY - Rd, pxm = (cEnd - c0) / YO.H;
+    const xR = 58 * ps, xU = xR + (W - xR) * 0.36, xD = xR + (W - xR) * 0.72;
+    // ceiling beam, floor, and a scale of the distance fallen
+    ctx.save(); ctx.fillStyle = T.relief; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    const bx0 = xU - Rd - 50 * ps, bx1 = xD + Rd + 40 * ps;
+    ctx.fillRect(bx0, ceilY - 10 * ps, bx1 - bx0, 10 * ps); ctx.strokeRect(bx0 + 0.5, ceilY - 10 * ps + 0.5, bx1 - bx0, 10 * ps);
+    ctx.fillRect(xR, floorY, W - xR - 10 * ps, 10 * ps);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(xR, floorY); ctx.lineTo(W - 10 * ps, floorY); ctx.stroke(); ctx.restore();
+    const step = nice(40 * ps / pxm);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xR - 6 * ps + 0.5, c0); ctx.lineTo(xR - 6 * ps + 0.5, cEnd); ctx.stroke();
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = 0; y <= YO.H + 1e-9; y += step) { const py = Math.round(c0 + y * pxm) + 0.5; ctx.beginPath(); ctx.moveTo(xR - 11 * ps, py); ctx.lineTo(xR - 6 * ps, py); ctx.stroke(); ctx.fillText(fmtTick(y, step), xR - 13 * ps, py); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('fallen (m)', 6 * ps, c0 - 10 * ps);
+    // the unwinding spool hangs from its string, which leaves it at radius rs on the left
+    const cy = c0 + q.y * pxm, sx = xU - rsd;
+    ctx.save();
+    if (YO.shape === 'tube') { ctx.strokeStyle = '#b9b09e'; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(sx + 2.5 * ps, ceilY); ctx.lineTo(sx + 2.5 * ps, cy); ctx.stroke(); ctx.strokeStyle = '#f2eee5'; ctx.lineWidth = 3.5 * ps; ctx.stroke(); }
+    else { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(sx, ceilY); ctx.lineTo(sx, cy); ctx.stroke(); }
+    ctx.restore();
+    drawSpool(ctx, YO.shape, xU, cy, Rd, rd, q.th, col);
+    // the dropped one, held by a clip until it is let go
+    const cyd = c0 + Math.min(q.yd, YO.H) * pxm;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(xD, ceilY); ctx.lineTo(xD, c0 - Rd - 4 * ps);
+    const open = YO.t > 0 ? 7 * ps : 2 * ps; ctx.moveTo(xD - open, c0 - Rd + 3 * ps); ctx.lineTo(xD, c0 - Rd - 4 * ps); ctx.lineTo(xD + open, c0 - Rd + 3 * ps); ctx.stroke();
+    drawSpool(ctx, YO.shape, xD, cyd, Rd, rd, 0, col);
+    // forces, on one scale: mg is 44 px
+    const mg = YO.m * G, fs = (Rd + 34 * ps) / mg;
+    /* drawn only while falling: on the floor the weight is balanced by the floor's push */
+    if (YO.t < q.T) {
+      arrow(ctx, xU, cy, xU, cy + mg * fs, T.pos, 2.4 * ps);
+      if (q.tension * fs > 3) arrow(ctx, sx, cy, sx, cy - q.tension * fs, T.accent, 2.4 * ps);
+      label(ctx, 'mg', xU + 6 * ps, cy + mg * fs - 6 * ps, T.pos, 'left', 'middle', 11);
+      label(ctx, 'T', sx - 6 * ps, cy - q.tension * fs * 0.6 - Rd * 0.2, T.accent, 'right', 'middle', 11);
+    }
+    if (YO.t < q.Td) {
+      arrow(ctx, xD, cyd, xD, cyd + mg * fs, T.pos, 2.4 * ps);
+      label(ctx, 'mg', xD + 6 * ps, cyd + mg * fs - 6 * ps, T.pos, 'left', 'middle', 11);
+    }
+    // names and times under the floor
+    const tag = (x, name, Tland, a) => {
+      label(ctx, name, x, floorY + 18 * ps, T.ink, 'center', 'middle', 11);
+      label(ctx, YO.t >= Tland ? 'landed at ' + fx(Tland, 2) + ' s' : 'a = ' + fx(a, 3) + ' m/s²', x, floorY + 34 * ps, YO.t >= Tland ? T.ink : T.muted, 'center', 'middle', 10.5, 400);
+    };
+    tag(xU, 'unwinding', q.T, q.a); tag(xD, 'dropped', q.Td, G);
+  }
+  function drawYoyoCharts() {
+    const q = yoNow();
+    {
+      const ctx = ctxA, [W, H] = begin(ctxA, 'a'), ps = projScale(), tEnd = q.T;
+      const { X, Y } = chartFrame(ctx, W, H, [0, tEnd * 1.04], [0, YO.H], 'Distance fallen (m) vs time', 't (s)');
+      const curve = (acc, Tl, col, t1, alpha, lw) => {
+        ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = lw; ctx.beginPath();
+        for (let i = 0; i <= 80; i++) { const t = t1 * i / 80, y = 0.5 * acc * Math.min(t, Tl) ** 2; i ? ctx.lineTo(X(t), Y(y)) : ctx.moveTo(X(t), Y(y)); }
+        ctx.stroke(); ctx.restore();
+      };
+      const col = spoolColor(YO.shape);
+      curve(G, q.Td, T.muted, tEnd, 0.3, 1.4 * ps); curve(q.a, q.T, col, tEnd, 0.3, 1.4 * ps);
+      if (YO.t > 0) { curve(G, q.Td, T.muted, YO.t, 1, 2.4 * ps); curve(q.a, q.T, col, YO.t, 1, 2.6 * ps); }
+      label(ctx, 'dropped', X(Math.min(q.Td, tEnd)) + 6 * ps, Y(YO.H) + 12 * ps, T.muted, 'left', 'middle', 10.5);
+      label(ctx, 'unwinding', X(tEnd * 0.98), Y(0.5 * q.a * (tEnd * 0.98) ** 2) + 14 * ps, col === T.muted ? T.ink : col, 'right', 'middle', 10.5);
+      if (YO.t > 0) { ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(YO.t) + 0.5, Y(0)); ctx.lineTo(X(YO.t) + 0.5, Y(YO.H)); ctx.stroke(); ctx.globalAlpha = 1; }
+    }
+    {
+      const ctx = ctxB, [W, H] = begin(ctxB, 'b');
+      bars(ctx, W, H, 'Energy: unwinding ' + SPOOLS[YO.shape].name.toLowerCase(), [
+        { lab: 'Height lost, mgh', v: q.drop, col: T.equi },
+        { lab: 'Moving down, ½mv²', v: q.KEt, col: T.accent },
+        { lab: 'Spinning, ½Iω²', v: q.KEr, col: T.pos }
+      ], 'J', { max: YO.m * G * YO.H, foot: [
+        `share spinning k/(1 + k) = ${fx(100 * q.k / (1 + q.k), 1)}%, k = I/mr² = ${f3(q.k)}`
+      ] });
+    }
+  }
+
   // ---------- spin scene drawing ----------
   function drawSpin() {
     const ctx = ctxV, [W, H] = begin(ctxV, 'v'), ps = projScale();
@@ -1522,6 +1981,31 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       for (const btn of document.querySelectorAll('#shapeChips button')) btn.setAttribute('aria-pressed', String(btn.dataset.sh === o.shape));
       raceTable();
       t = RO.t;
+    } else if (sc === 'floor') {
+      const rn = flRun(), q = rn.at(FL.t), slip = q.v - q.w * FL.R, E = floorEnergy(rn, FL.m, 1e9);
+      setText('fK', fx(rn.k, 3) + '  (I = ' + SHAPES[FL.shape].Iform + ')');
+      setText('fNv', s3(q.v) + ' m/s');
+      setText('fNw', s3(q.w * FL.R) + ' m/s');
+      setText('fSlip', s3(slip) + ' m/s'); $('fSlip').className = Math.abs(slip) < 5e-4 ? '' : 'neg';
+      setText('fFr', q.sliding ? f3(FL.mu * FL.m * G) + ' N, μk m g' : '0, rolling');
+      setText('fTs', rn.ts > 0 ? fx(rn.ts, 3) + ' s' : '0, rolls from the start');
+      setText('fXs', fx(Math.abs(rn.xs), 3) + ' m');
+      setText('fVf', s3(rn.vf) + ' m/s');
+      setText('fQ', f3(Math.max(0, E.heat)) + ' J');
+      for (const btn of document.querySelectorAll('#flShape button')) btn.setAttribute('aria-pressed', String(btn.dataset.fs === FL.shape));
+      t = FL.t;
+    } else if (sc === 'yoyo') {
+      const q = spoolFall(YO, YO.H, 1e9);
+      setText('yK', f3(q.k) + '  (I = ' + SPOOLS[YO.shape].Iform + ')');
+      setText('yA', fx(q.a, 3) + ' m/s² = ' + fx(q.a / G, 3) + ' g');
+      setText('yT', f3(q.tension) + ' N');
+      setText('yW8', f3(YO.m * G) + ' N');
+      setText('yTu', fx(q.T, 3) + ' s');
+      setText('yTd', fx(q.Td, 3) + ' s');
+      setText('yV', fx(q.v, 3) + ' m/s');
+      setText('yW', f3(q.w) + ' rad/s');
+      for (const btn of document.querySelectorAll('#yShape button')) btn.setAttribute('aria-pressed', String(btn.dataset.ys === YO.shape));
+      t = YO.t;
     } else if (sc === 'spin') {
       const I = spinNowI(), w = SP.L / I, ref = SP.ref;
       setText('sIr', f3(I) + ' kg·m²');
@@ -1576,6 +2060,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let txt = 'Push';
     if (S.scene === 'torque') txt = TQ.run ? 'Pause' : (TQ.sw && TQ.t > 0 && TQ.t < TQ.sw.tEnd) ? 'Resume' : 'Push';
     else if (S.scene === 'roll') { const e = rollEnd(); txt = RO.run ? 'Pause' : RO.t > 0 && RO.t < e ? 'Resume' : RO.t >= e ? 'Race again' : 'Race'; }
+    else if (S.scene === 'floor') { flRun(); txt = FL.run ? 'Pause' : FL.t > 0 && FL.t < FL.tEnd ? 'Resume' : FL.t >= FL.tEnd ? 'Launch again' : 'Launch'; }
+    else if (S.scene === 'yoyo') { const e = yoNow().T; txt = YO.run ? 'Pause' : YO.t > 0 && YO.t < e ? 'Resume' : YO.t >= e ? 'Drop again' : 'Drop'; }
     else if (S.scene === 'spin') txt = SP.run ? 'Pause' : 'Play';
     else txt = SE.held ? 'Release' : 'Hold level';
     setText('act', txt);
@@ -1585,6 +2071,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const VIEW_LABEL = {
     torque: () => `${TQ.obj === 'door' ? 'Door' : 'Wrench'} seen from above, turning about its ${TQ.obj === 'door' ? 'hinge' : 'bolt'}, with the force F at the push point, its line of action and the lever arm r⊥. Pointer: drag the grip on the ${TQ.obj} to move the push point and the arrow tip to aim and size the force. Keys: left and right arrows move the push point, up and down arrows turn the force, plus and minus change its size, Enter or space pushes. The sliders in the rail do the same.`,
     roll: () => `Ramp with ${RO.lanes.length} lanes, one object in each, at the top. Pointer: click an object to select its lane, drag the round grip at the top of the lowest board to tilt the ramp. Keys: 1 to ${RO.lanes.length} select a lane, up and down arrows tilt the ramp, Enter or space races.`,
+    floor: () => `Side view of a ${SHAPES[FL.shape].name.toLowerCase()} on a level floor, drawn to scale, the camera following it, with the velocity of its center and of eight points on its rim, the contact point and, while it slides, the friction there. A marked point on the rim leaves its path behind. Keys: up and down arrows change the launch speed, left and right arrows the launch spin, Enter or space launches.`,
+    yoyo: () => `Side view of two ${SPOOLS[YO.shape].name.toLowerCase()}s let go from the same height: on the left one unwinds from a string tied to the beam above, on the right one is simply dropped. Arrows show the weight mg and the string tension T. Keys: up and down arrows change the drop height, left and right arrows the string radius, Enter or space lets both go.`,
     spin: () => `${SP.look === 'skater' ? 'Skater' : 'Platform'} seen from above, spinning with two masses at radius ${fx(SP.r, 2)} m. Pointer: drag a mass in or out. Keys: up and down arrows move the masses out and in, Enter or space plays or pauses. Pull in and Push out in the rail move them smoothly.`,
     seesaw: () => `Beam on a center pivot with blocks on it, held level by supports until released. Pointer: drag a block along the beam. Keys: 1, 2 and 3 pick a block, left and right arrows move it, Enter or space releases or holds the beam.`
   };
@@ -1614,6 +2102,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const o = RO.lanes[RO.sel], st = rollAt(o, b, RO.D, RO.t);
       out.push({ cap: `Energy of lane ${RO.sel + 1}, ${SHAPES[o.shape].name.toLowerCase()}, at t = ${fx(RO.t, 2)} s: height lost mgh = ${s3(st.drop)} J, moving along ½mv² = ${s3(st.KEt)} J, spinning ½Iω² = ${s3(st.KEr)} J.`,
         head: ['Energy', 'J'], rows: [['Height lost, mgh', s3(st.drop)], ['Moving along, ½mv²', s3(st.KEt)], ['Spinning, ½Iω²', s3(st.KEr)]] });
+    } else if (sc === 'floor') {
+      const rn = flRun(), rows = [];
+      for (let i = 0; i <= 20; i++) { const t = FL.tEnd * i / 20, q = rn.at(t); rows.push([fx(t, 3), s3(q.v), s3(q.w * FL.R), s3(q.v - q.w * FL.R)]); }
+      out.push({ cap: `Speed v and rim speed ωR against time for a ${SHAPES[FL.shape].name.toLowerCase()} launched at ${s3(rn.v0)} m/s with ω₀R = ${s3(rn.w0 * FL.R)} m/s on μk = ${fx(FL.mu, 2)}. ${rn.ts > 0 ? `They meet at t = ${fx(rn.ts, 3)} s, when it starts to roll at ${s3(rn.vf)} m/s.` : 'They are equal from the start: it rolls.'} Now t = ${fx(FL.t, 2)} s.`,
+        head: ['t (s)', 'v (m/s)', 'ωR (m/s)', 'v − ωR (m/s)'], rows });
+      const E = floorEnergy(rn, FL.m, FL.t);
+      out.push({ cap: `Energy at t = ${fx(FL.t, 2)} s, out of ${f3(E.KE0)} J at launch: moving along ${s3(E.KEt)} J, spinning ${s3(E.KEr)} J, heat from sliding ${s3(Math.max(0, E.heat))} J. Angular momentum about the floor ${s3(E.L)} kg·m²/s.`,
+        head: ['Energy', 'J'], rows: [['Moving along, ½mv²', s3(E.KEt)], ['Spinning, ½Iω²', s3(E.KEr)], ['Heat from sliding friction', s3(Math.max(0, E.heat))]] });
+    } else if (sc === 'yoyo') {
+      const q0 = spoolFall(YO, YO.H, 0), rows = [];
+      for (let i = 0; i <= 20; i++) { const t = q0.T * i / 20, q = spoolFall(YO, YO.H, t); rows.push([fx(t, 3), fx(q.y, 3), fx(q.yd, 3)]); }
+      out.push({ cap: `Distance fallen against time from H = ${fx(YO.H, 2)} m: the unwinding ${SPOOLS[YO.shape].name.toLowerCase()} at a = ${fx(q0.a, 3)} m/s² lands after ${fx(q0.T, 2)} s, the dropped one at g after ${fx(q0.Td, 2)} s. Now t = ${fx(YO.t, 2)} s.`,
+        head: ['t (s)', 'unwinding (m)', 'dropped (m)'], rows });
+      const q = yoNow();
+      out.push({ cap: `Energy of the unwinding spool at t = ${fx(YO.t, 2)} s: height lost mgh = ${s3(q.drop)} J, moving down ½mv² = ${s3(q.KEt)} J, spinning ½Iω² = ${s3(q.KEr)} J.`,
+        head: ['Energy', 'J'], rows: [['Height lost, mgh', s3(q.drop)], ['Moving down, ½mv²', s3(q.KEt)], ['Spinning, ½Iω²', s3(q.KEr)]] });
     } else if (sc === 'spin') {
       const ref = SP.ref, w0 = ref.L / ref.I, KE0 = ref.L * w0 / 2, h = SP.hist, rows = [];
       const every = Math.max(1, Math.ceil(h.length / 40));
@@ -1637,7 +2141,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const cellRow = (r) => '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>';
   function setAttr(el, k, v) { if (el.getAttribute(k) !== v) el.setAttribute(k, v); }
   function chartsA11y(force) {
-    const tabs = chartTables(), anim = TQ.run || RO.run || SP.run || SE.run;
+    const tabs = chartTables(), anim = TQ.run || RO.run || FL.run || YO.run || SP.run || SE.run;
     setAttr(view, 'aria-label', VIEW_LABEL[S.scene]());
     setAttr(cA, 'aria-label', tabs[0].cap + ' Show data table in the rail lists the values.');
     if (tabs[1]) setAttr(cB, 'aria-label', tabs[1].cap + ' Show data table in the rail lists the values.');
@@ -1664,6 +2168,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (reduce) {
       if (TQ.run && TQ.sw) { TQ.t = TQ.sw.tEnd; TQ.run = false; }
       if (RO.run) { RO.t = rollEnd(); RO.run = false; }
+      if (FL.run) { FL.t = FL.tEnd; FL.run = false; }
+      if (YO.run) { YO.t = yoNow().T; YO.run = false; }
       if (SE.run && SE.tip) { SE.t = SE.tip.tEnd; SE.run = false; }
       if (SP.pull) { SP.r = SP.pull.r2; SP.pull = null; recordSpin(); }
       SP.run = false;
@@ -1676,6 +2182,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const KEYS = {
     torque: '<span><i class="swatch f"></i>Force F, tail at the push point</span><span><i class="swatch r"></i>r, from the pivot to the push point</span><span><i class="swatch la"></i>Line of action of F</span><span><i class="swatch rp"></i>Lever arm r⊥, perpendicular to the line of action</span><span><i class="swatch tq"></i>Torque, curved arrow at the pivot</span>',
     roll: '<span><i class="dot" style="background:var(--violet)"></i>Block, slides with no friction</span><span><i class="dot" style="background:var(--pos)"></i>Solid sphere, I = ⅖mR²</span><span><i class="dot" style="background:var(--equi)"></i>Cylinder, I = ½mR²</span><span><i class="dot" style="background:var(--teal)"></i>Hollow sphere, I = ⅔mR²</span><span><i class="dot" style="background:var(--neg)"></i>Hoop, I = mR²</span>',
+    floor: '<span><i class="swatch" style="border-color:var(--ink)"></i>v, velocity of the center</span><span><i class="swatch" style="border-color:var(--accent)"></i>Velocity of points on the rim</span><span><i class="swatch" style="border-color:var(--violet)"></i>Path of the marked rim point</span><span><i class="swatch" style="border-color:var(--equi)"></i>Kinetic friction at the contact point</span>',
+    yoyo: '<span><i class="swatch" style="border-color:var(--pos)"></i>Weight mg</span><span><i class="swatch" style="border-color:var(--accent)"></i>String tension T</span><span><i class="swatch" style="border-color:var(--muted)"></i>Dropped spool, distance fallen</span>',
     spin: '<span><i class="swatch" style="border-color:var(--ink)"></i>L, angular momentum</span><span><i class="swatch" style="border-color:var(--accent)"></i>ω, spin rate</span><span><i class="swatch" style="border-color:var(--equi)"></i>I, moment of inertia</span><span><i class="swatch" style="border-color:var(--pos);border-top-style:dashed"></i>Rotational kinetic energy</span>',
     seesaw: '<span><i class="swatch" style="border-color:var(--pos)"></i>Block A, its weight and torque</span><span><i class="swatch" style="border-color:var(--neg)"></i>Block B, dashed outline where it balances</span><span><i class="swatch" style="border-color:var(--equi)"></i>Block C</span><span><i class="swatch tq"></i>Net torque about the pivot</span>'
   };
@@ -1689,7 +2197,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.22, ph: 1.08, zoom: 1 },
     ot: { th: -Math.PI / 2 + 0.5, ph: 0.72, zoom: 1 }, os: { th: -Math.PI / 2 + 0.3, ph: 0.85, zoom: 1 }, oe: { th: -Math.PI / 2 + 0.18, ph: 1.25, zoom: 1 } };
   let g3 = null;
-  const use3 = () => !!(G3.on && g3);
+  const FLAT_ONLY = { floor: 1, yoyo: 1 };   /* the level floor and the yo-yo are side views, flat only */
+  const use3 = () => !!(G3.on && g3) && !FLAT_ONLY[S.scene];
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function init3D() {
     G3.tried = true;
@@ -2136,9 +2645,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (!T) tokens();
     { const c = $('ctl'); ctlH = c.offsetTop + c.offsetHeight; }
     if (!dims.v[0] || !dims.v[1]) return;
-    const sc = S.scene; if (g3 && !use3()) g3.el.hidden = true; $('viewSeg').hidden = false;
+    const sc = S.scene; if (g3 && !use3()) g3.el.hidden = true; $('viewSeg').hidden = !!FLAT_ONLY[sc];
     if (sc === 'torque') { if (use3()) drawTorque3D(); else drawTorque(); drawTorqueCharts(); }
     else if (sc === 'roll') { if (use3()) drawRoll3D(); else drawRoll(); drawRollCharts(); }
+    else if (sc === 'floor') { drawFloor(); drawFloorCharts(); }
+    else if (sc === 'yoyo') { drawYoyo(); drawYoyoCharts(); }
     else if (sc === 'spin') { if (use3()) drawSpin3D(); else drawSpin(); drawSpinCharts(); }
     else { if (use3()) drawSeesaw3D(); else drawSeesaw(); drawSeesawCharts(); }
   }
@@ -2184,6 +2695,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     rD: [() => RO.D, (v) => setRo('D', v), (v) => fx(v, 1) + ' m'],
     rM: [() => RO.lanes[RO.sel].m, (v) => { RO.lanes[RO.sel].m = v; custom(); dirty = true; syncSliders(); }, (v) => fx(v, 1) + ' kg'],
     rR: [() => RO.lanes[RO.sel].R * 100, (v) => { RO.lanes[RO.sel].R = v / 100; custom(); dirty = true; syncSliders(); }, (v) => fx(v, 1) + ' cm'],
+    fV: [() => FL.v0, (v) => setFl('v0', v), (v) => fx(v, 2) + ' m/s'],
+    fS: [() => FL.rim0, (v) => setFl('rim0', v), (v) => fsg(v, 2) + ' m/s, ω₀ ' + fsg(v / FL.R, 1) + ' rad/s'],
+    fMu: [() => FL.mu, (v) => setFl('mu', v), (v) => fx(v, 2)],
+    fR: [() => FL.R * 100, (v) => setFl('R', v / 100), (v) => fx(v, 1) + ' cm'],
+    fM: [() => FL.m, (v) => setFl('m', v), (v) => fx(v, 1) + ' kg'],
+    yR: [() => YO.R * 100, (v) => setYo('R', v / 100), (v) => fx(v, 1) + ' cm'],
+    yr: [() => YO.r * 100, (v) => setYo('r', v / 100), (v) => fx(v, 1) + ' cm'],
+    yM: [() => YO.m, (v) => setYo('m', v), (v) => fx(v, 2) + ' kg'],
+    yH: [() => YO.H, (v) => setYo('H', v), (v) => fx(v, 2) + ' m'],
     sR: [() => SP.r, (v) => setSpin('r', v), (v) => fx(v, 2) + ' m'],
     sF: [() => spinW() / (2 * Math.PI), (v) => setSpin('f', v), (v) => fx(v, 2) + ' rev/s'],
     sM: [() => SP.m, (v) => setSpin('m', v), (v) => fx(v, 1) + ' kg'],
@@ -2197,6 +2717,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   };
   function syncSliders() {
     $('tR').max = TQ.L;
+    $('yr').max = (YO.R * 100 - 0.2).toFixed(1); $('yr').disabled = YO.shape === 'disk' || YO.shape === 'hoop';
+    setText('yrLab', YO.shape === 'tube' ? 'Core radius r' : YO.shape === 'yoyo' ? 'Axle radius r' : 'Inner radius (not used)');
+    setText('yModel', {
+      yoyo: 'Yo-yo: two equal disks of radius R on an axle of radius r, with the axle\'s mass neglected, so I = ½mR². The string unwinds from the axle, at r.',
+      tube: 'Paper roll: a uniform thick tube from the core radius r out to R, I = ½m(R² + r²). The paper leaves from the outside, at R; the mass and size of the roll are taken as fixed for the drop.',
+      disk: 'Solid cylinder, I = ½mR², with the string wound on its surface, so it leaves at R.',
+      hoop: 'Thin ring, I = mR², with the string wound on its rim, so it leaves at R.'
+    }[YO.shape]);
+    $('fTrace').checked = FL.trace; $('fArrows').checked = FL.arrows;
     $('sI0').max = SP.look === 'skater' ? 3 : 12;
     for (const id in SL) {
       const el = $(id), v = SL[id][0]();
@@ -2225,7 +2754,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     setPressed('#sceneSeg', 's', sc);
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = el.dataset.scene !== sc;
     $('charts').classList.toggle('one', sc === 'seesaw');
-    $('stage').dataset.layout = sc === 'torque' || sc === 'spin' ? 'side' : 'below';
+    $('stage').dataset.layout = sc === 'torque' || sc === 'spin' || sc === 'yoyo' ? 'side' : 'below';
     $('keyBox').innerHTML = KEYS[sc];
     $('speedSeg').hidden = sc === 'seesaw';
     syncPresetChips(); syncSliders();
@@ -2261,6 +2790,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => {
     RO.lanes[RO.sel].shape = b.dataset.sh; RO.t = 0; RO.run = false; custom(); syncSliders(); dirty = true;
   });
+  for (const b of document.querySelectorAll('#flShape button')) b.addEventListener('click', () => setFl('shape', b.dataset.fs));
+  for (const b of document.querySelectorAll('#yShape button')) b.addEventListener('click', () => setYo('shape', b.dataset.ys));
+  $('fMatch').addEventListener('click', () => setFl('rim0', snap('fS', FL.v0)));
+  $('fTrace').addEventListener('change', (e) => { FL.trace = e.target.checked; dirty = true; });
+  $('fArrows').addEventListener('change', (e) => { FL.arrows = e.target.checked; dirty = true; });
   $('pullIn').addEventListener('click', () => { startPull(+$('sR').min); custom(); dirty = true; });
   $('pushOut').addEventListener('click', () => { startPull(+$('sR').max); custom(); dirty = true; });
   $('balB').addEventListener('click', () => {
@@ -2272,6 +2806,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function act() {
     if (S.scene === 'torque') tqAct();
     else if (S.scene === 'roll') roAct();
+    else if (S.scene === 'floor') flAct();
+    else if (S.scene === 'yoyo') yoAct();
     else if (S.scene === 'spin') { SP.run = !SP.run; }
     else seAct();
     dirty = true;
@@ -2279,6 +2815,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function reset() {
     if (S.scene === 'torque') { TQ.sw = null; TQ.t = 0; TQ.run = false; }
     else if (S.scene === 'roll') { RO.t = 0; RO.run = false; }
+    else if (S.scene === 'floor') { FL.t = 0; FL.run = false; }
+    else if (S.scene === 'yoyo') { YO.t = 0; YO.run = false; }
     else if (S.scene === 'spin') { SP.r = SP.ref.r; SP.L = SP.ref.L; SP.phi = 0; setRef(); }
     else holdSeesaw();
     syncSliders(); dirty = true;
@@ -2348,6 +2886,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     } else if (sc === 'roll') {
       if (k === 'ArrowUp') nudge('rB', 1); else if (k === 'ArrowDown') nudge('rB', -1);
       else if (/^[1-9]$/.test(k)) selectLane(+k - 1); else if (k === ' ') act(); else return;
+    } else if (sc === 'floor') {
+      if (k === 'ArrowUp') nudge('fV', 2); else if (k === 'ArrowDown') nudge('fV', -2);
+      else if (k === 'ArrowRight') nudge('fS', 4); else if (k === 'ArrowLeft') nudge('fS', -4);
+      else if (k === ' ') act(); else return;
+    } else if (sc === 'yoyo') {
+      if (k === 'ArrowUp') nudge('yH', 1); else if (k === 'ArrowDown') nudge('yH', -1);
+      else if (k === 'ArrowRight') nudge('yr', 1); else if (k === 'ArrowLeft') nudge('yr', -1);
+      else if (k === ' ') act(); else return;
     } else if (sc === 'spin') {
       if (k === 'ArrowUp') nudge('sR', 2); else if (k === 'ArrowDown') nudge('sR', -2);
       else if (k === ' ') act(); else return;
@@ -2380,6 +2926,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let anim = false;
     if (S.scene === 'torque' && TQ.run && TQ.sw) { TQ.t += dt; if (TQ.t >= TQ.sw.tEnd) { TQ.t = TQ.sw.tEnd; TQ.run = false; dirty = true; sayTorque(); } anim = true; }
     else if (S.scene === 'roll' && RO.run) { const e = rollEnd(); RO.t += dt; if (RO.t >= e) { RO.t = e; RO.run = false; dirty = true; sayRace(); } anim = true; }
+    else if (S.scene === 'floor' && FL.run) { flRun(); FL.t += dt; if (FL.t >= FL.tEnd) { FL.t = FL.tEnd; FL.run = false; dirty = true; sayFloor(); } anim = true; }
+    else if (S.scene === 'yoyo' && YO.run) { const e = yoNow().T; YO.t += dt; if (YO.t >= e) { YO.t = e; YO.run = false; dirty = true; sayYoyo(); } anim = true; }
     else if (S.scene === 'spin' && SP.run) { advanceSpin(dt); anim = true; }
     else if (S.scene === 'seesaw' && SE.run && SE.tip) { SE.t += dt / S.ts; if (SE.t >= SE.tip.tEnd) { SE.t = SE.tip.tEnd; SE.run = false; dirty = true; saySeesaw(); } anim = true; }
     if (anim || dirty) {
@@ -2394,15 +2942,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
 
   window.__rot = {
-    core: { G, SHAPES, rodI, torqueOf, leverArm, doorTorque, swingRK4, makeSwing, rollAcc, rollTime, rollAt, muMin, spinI, spinWork, pullProfile, seesawTorque, seesawI, balanceX, seesawTip },
-    S, TQ, RO, SP, SE, applyPreset, setScene, act, reset, advanceSpin, get frameMs() { return frameMs; }, get handles() { return handlesNow; }
+    core: { G, SHAPES, rodI, torqueOf, leverArm, doorTorque, swingRK4, makeSwing, rollAcc, rollTime, rollAt, muMin, spinI, spinWork, pullProfile, seesawTorque, seesawI, balanceX, seesawTip, floorRun, floorExit, floorEnergy, SPOOLS, spoolFall },
+    S, TQ, RO, FL, YO, SP, SE, applyPreset, setScene, act, reset, advanceSpin, get frameMs() { return frameMs; }, get handles() { return handlesNow; }
   };
 
   // ---------- boot ----------
   tokens();
-  for (const id of ['race', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
+  for (const id of ['race', 'skid', 'yoyo', 'skater', 'seesaw', 'hinge']) { const p = PRESETS[id]; p.apply(); S.preset[p.scene] = id; }
   setTs(1);
   setScene('torque');
+  { const sc = new URLSearchParams(location.search).get('scene'); if (sc && SCENE_HINT[sc]) setScene(sc); }   /* ?scene=floor opens a scene */
   { const ro = new ResizeObserver(resize), st = stage; ro.observe(st); st.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });

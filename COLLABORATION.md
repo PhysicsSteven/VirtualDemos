@@ -5764,3 +5764,33 @@ are untouched.
   measured bond), Kronig–Penney (band 1 edges and the first gap against V₀ and b, the free electron limit), Bohr and de Broglie
   (λ and wavelengths around against n; probably a short addition to an existing hydrogen worksheet rather than a new one).
   No How this works video, since no new worksheet.
+## 2026-10-31 · Claude · Rotation partial gaps (Group B): Floor and Yo-yo scenes in Rotation and Torque
+
+Steve: "Let's do the partial gaps today", additions to existing demos only, no new worksheets. Group B of
+`partial-gaps/groups-2026-10-31.md`; all three gaps went into Rotation and Torque as two new scenes (the scene switch now has
+six buttons in two rows). The yo-yo went there rather than into Rotational Dynamics: that demo is one turntable lab built
+around its readings table and worksheet columns, while Rotation and Torque already switches scenes.
+- Floor: a sphere, cylinder, hollow sphere or hoop launched on a level floor with any speed and spin (spin set as a rim
+  speed ω₀R, backspin negative), kinetic friction μk. Exact piecewise motion in CORE (`floorRun`, `floorExit`, `floorEnergy`):
+  slip u = v − ωR falls at μk g(1 + 1/k) to zero at ts = k|u₀|/(μk g(1 + k)), then it rolls at (v₀ + kω₀R)/(1 + k). Side view to
+  scale with a following camera, velocity arrows at eight rim points and the center, the contact point's v − ωR, friction while
+  it slides, and the path of a marked rim point (cycloid when rolling, loops with backspin). Charts: v and ωR against t; energy
+  bars with the heat from sliding and the angular momentum about the floor. Presets: Rolling wheel: cycloid (hoop, 0.80 m/s),
+  Ball thrown without spin (7 kg, 4.00 m/s, μk 0.20: rolls after 0.582 s and 2.00 m at 2.86 m/s, 16.0 J of 56.0 J to heat),
+  Backspin: it comes back (3.00 m/s, ω₀R −9.00 m/s, μk 0.30: rolls back at −0.429 m/s after 1.16 s).
+- Yo-yo: a spool unwinding from a string tied to a beam beside an identical one that is dropped. `SPOOLS` and `spoolFall`:
+  a = g/(1 + I/mr²), T = m(g − a). Yo-yo (two disks on a massless axle, I = ½mR², string at r), paper roll (thick tube,
+  I = ½m(R² + r²), unwinds from R, mass and size held fixed), solid cylinder (⅔g), thin ring (½g). Spools drawn larger than
+  the height scale, said in the rail. Presets: Yo-yo against a dropped one (R 2.8 cm, r 0.4 cm: g/25.5, 2.28 s against
+  0.452 s for 1 m), Paper roll unwinding (R 5.5 cm, core 2.0 cm: 0.639 g), Unwinding cylinder: ⅔g.
+- Both scenes are flat only (side views; the 3D | Flat switch hides there). `?scene=floor` or `?scene=yoyo` opens a scene.
+  Notes source updated (four new class steps, two misconceptions, the models); no new questions, so the demo key is
+  unchanged apart from a rebuild with the current key template (TeacherKeys). Catalog description, tags and what's new entry.
+- Checks: `test_rotation.cjs` 8 groups pass, two new ones (the floor run against an independent small step integration, ts,
+  vf, heat = μk m g × sliding distance, angular momentum about the floor constant, floor ends during the skid and while
+  rolling; yo-yo a against Newton's two equations, 2g/3 and g/2, energy split k/(1 + k)). vdcheck `--only after` 0 problems,
+  `--only clip` 0 cut off; screenshots of both scenes at 1368 and 360/400 px, light and dark, no sideways scroll.
+- Worksheet candidates for the sweep: the Floor scene (time to roll and rolling speed against v₀ or ω₀R; a fit of vf
+  against ω₀R gives k) is a natural new part of the rotation worksheet; the yo-yo could be one part of the Rotational
+  Dynamics worksheet (same equations, a falling spool instead of a hanging mass). Canvas cartridges not rebuilt
+  (catalog description only).
