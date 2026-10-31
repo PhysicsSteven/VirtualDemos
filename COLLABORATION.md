@@ -6336,3 +6336,32 @@ numbers below (all from the demos' own readouts and the new tests).
 - Worksheet part candidates (not built): Collisions worksheet, mystery bullet part (measure h for three mystery bullets, find u,
   and the share of K kept); Rotation worksheet, sweet spot part (pin push against d, find the zero at 2L/3) and disk on a disk
   part (heat against I₂/(I₁ + I₂), independent of μ).
+## 2026-10-31 · Claude · Rounds 2 and 3, Group C: dispersion and vowels in Timbre
+
+Steve (17:54): "Let's run round 2 and 3". Group C of `round2-3/groups-2026-10-31.md` in the project files (plan #16 and #19),
+both folded into Timbre and Harmonics; no new worksheet. GPT, please verify the physics and numbers below.
+- **Dispersion and group velocity** (In space, new Medium for the packet chips: Air, Deep water, Ripples, Bar or particle). The
+  Wave packet in a medium with ω ∝ k^p, scaled so the mean harmonic n̄ (weighted by aₙ²) keeps its air frequency: ωₙ = n̄ (n/n̄)^p ω₁,
+  so v_p = v and v_g = p v at the center (p = 1/2 deep water ω = √(gk), 3/2 capillary ripples ω = √(γk³/ρ), 2 a bending bar or a
+  free quantum particle ω ∝ k²). Picture: y(θ) = Σ aₙ sin(Ωₙ s − nθ + φₙ), the envelope ±|Σ aₙ e^(i(nθ − Ωₙ s − φₙ))| dashed, and
+  marks moving at v_p and v_g from the packet's starting center; drawn at f₁ = 0.125 Hz; Start the packet again; readouts ω(k),
+  v_g/v_p and Width now. Only with the Wave packet preset, position axis, stiffness and detune off; the sound stays the packet in
+  air. Stated on the page: pure power laws, scaled crest speed, and the picture repeats every λ₁ so a spread packet meets its
+  neighbors. Opening at A3, σ 1.5, n₀ 8: Δx 0.117 m at the start.
+- **Vowels and formants** (new Vowels preset and a Voice and vowels section: ten vowel chips, F1 and F2 sliders). Source and
+  filter model (Fant 1960): the sawtooth aₙ = 1/n (glottal −12 dB per octave plus +6 dB per octave lip radiation) through three
+  formants in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ); aₙ = |H(n f₁)|/n, φₙ = arg H(n f₁), strongest set to 1. Formants: Peterson and
+  Barney (1952), Table II, averages for women (heed 310/2790/3310 … heard 500/1640/1960 Hz); bandwidths 80, 100, 120 Hz assumed.
+  The spectrum draws the envelope (f₁/f)|H(f)| that every harmonic sits on and marks F1 to F3; changing f₁ keeps the formants and
+  re-samples them. Readouts F3 and the harmonic nearest F1 and F2 (ah at 220 Hz: n = 4 at 880 Hz, n = 6 at 1320 Hz; at 110 Hz:
+  n = 8 and n = 11). With 16 harmonics, f₁ below about 200 Hz no longer reaches F2 of ee (said in the hint).
+- Core: `packetWidths` now also returns the envelope center; new `MEDIA`, `dispOmega`, `packetAt`, `FORMANT_BW`, `VOWELS`,
+  `tractH`, `vowelSeries`. Test `test_timbre_dispersion_vowels.cjs` (10 pass): scaling at the center, air keeps width and moves at v,
+  k² energy center at exactly 2v, deep water and ripples near v/2 and 3v/2 early, spreading order, k² width against
+  Δθ² = Δθ₀² + (Ω''Δn s)², tract gain Fᵢ/Bᵢ and −90° at resonance, cascade product, filtered sawtooth sum. test_acoustic_labs passes.
+- Notes: Running it in class items 10 and 11, Q8 (deep water v_g = v_p/2, swell λ 100 m: 12.5 and 6.25 m/s) and Q9 (vowel
+  harmonics and pitch, sopranos); keys in TeacherKeys demo-keys; Physics behind the demo updated. whats-new entry. Checks: vdcheck
+  `--only after` 0 problems and `--only clip` 0 cut off; looked at 1280 px dark and 400 px light.
+- Worksheet part candidates (not built): Timbre worksheet, a dispersion part (time the v_p and v_g marks over one λ₁ for each medium,
+  plot v_g/v_p against p) and a vowel part (record harmonics 1 to 6 for ah at two pitches and show the strong ones sit at the same
+  frequencies, not the same harmonic numbers).

@@ -26,6 +26,8 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 7. **Inharmonic partials**. Set **by Δf** to 1.5 Hz on harmonic 3: the trace drifts and the tone throbs (Q6). Press **Back to exact harmonics**, then raise **Stiffness B** to about 0.01 for a clangy tone like a bell.
 8. Finish on the piano: play C3 and read harmonic 3 and 5 in the table against the G4 and E5 keys (Q7).
 9. **Wave packet.** The waveform is plotted against position: a sound wave carries it at 343.2 m/s, so T₁ becomes λ₁ = v/f₁. Widen the **Packet spread σ** and the packet narrows: Δx · Δk stays near 1/2.
+10. **Medium for the packet.** Press **Deep water**: the crests (marked v_p) run forward through the packet, appearing at its back and vanishing at its front, while the envelope (v_g) moves at half their speed and slowly spreads. Then **Bar or particle**: now the crests slip backward through the envelope. **Start the packet again** to compare from the same start (Q8).
+11. **Vowels.** Pick **ah · hod**, then **ee · heed** and **oo · who'd**, with sound on: the dashed envelope in the spectrum peaks at the formants F1, F2, F3 and the harmonics under it change, while the pitch stays A3. Then drag f₁ down an octave and back: the harmonics slide under the same envelope and the vowel stays the same (Q9).
 
 ## Questions
 
@@ -43,6 +45,10 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 
 **Q7.** In equal temperament C3 is 130.81 Hz, G4 is 392.00 Hz and E5 is 659.26 Hz. Find the frequencies of harmonics 3 and 5 of C3 and how far each lies from the equal tempered note, in hertz and in cents (1 cent = 1/100 semitone, a ratio of 2^(1/1200)). If C3 and E5 are played together on an equal tempered instrument, what beat rate do you expect between E5 and the 5th harmonic of C3? Check the harmonics in the demo with the C3 key.
 
+**Q8.** Deep water waves follow ω = √(gk). Show that their group velocity is half their phase velocity. For an ocean swell with λ = 100 m, find v_p and v_g. On **Deep water**, where do crests appear and where do they vanish as the packet moves? What changes on **Bar or particle**, where ω ∝ k²?
+
+**Q9.** With **ah · hod** at A3 (220 Hz), which harmonics lie nearest F1 = 850 Hz and F2 = 1220 Hz? Lower f₁ to A2 (110 Hz) and answer again. Why does the vowel still sound like ah? A soprano sings ee (F1 = 310 Hz) at about 1000 Hz: why is the vowel hard to recognize?
+
 ## Common misconceptions
 
 - **"The pitch you hear is the lowest frequency present."** The pitch follows the repetition period, 1/T, which can be a frequency with no energy at all (the missing fundamental).
@@ -52,4 +58,4 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 
 ## Physics behind the demo
 
-The signal is x(t) = Σ aₙ sin(2π fₙ t + φₙ), n = 1 to 16, 0 ≤ aₙ ≤ 1, fₙ = n f₁. Ideal waves use the exact series with a₁ = 1: square 1/n (odd n), sawtooth 1/n, triangle 1/n² (odd n, inverted for n = 3, 7, 11, 15). Levels are 20 log₁₀ aₙ. The waveform repeats every T = 1/(g f₁), g the greatest common divisor of the harmonic numbers present; RMS = √(Σ aₙ²/2) for any phases. Stiffness: fₙ = n f₁ √((1 + Bn²)/(1 + B)). Equal temperament: f = 440 Hz × 2^(k/12). The ladder shows ideal string and pipe modes, slowed so f₁ is drawn at 0.5 Hz. Sound: 16 sine oscillators with the drawn values, scaled to a fixed RMS with the peak 12 dB below full scale, 12 dB quieter above 8 kHz. The instrument slider mixes five illustrative spectra linearly in amplitude between neighbors, aₙ = (1 − w) aₙ(left) + w aₙ(right), at fixed f₁ and phases. No attack or decay; the instrument spectra are illustrative, not recordings.
+The signal is x(t) = Σ aₙ sin(2π fₙ t + φₙ), n = 1 to 16, 0 ≤ aₙ ≤ 1, fₙ = n f₁. Ideal waves use the exact series with a₁ = 1: square 1/n (odd n), sawtooth 1/n, triangle 1/n² (odd n, inverted for n = 3, 7, 11, 15). Levels are 20 log₁₀ aₙ. The waveform repeats every T = 1/(g f₁), g the greatest common divisor of the harmonic numbers present; RMS = √(Σ aₙ²/2) for any phases. Stiffness: fₙ = n f₁ √((1 + Bn²)/(1 + B)). Equal temperament: f = 440 Hz × 2^(k/12). The ladder shows ideal string and pipe modes, slowed so f₁ is drawn at 0.5 Hz. Sound: 16 sine oscillators with the drawn values, scaled to a fixed RMS with the peak 12 dB below full scale, 12 dB quieter above 8 kHz. The instrument slider mixes five illustrative spectra linearly in amplitude between neighbors, aₙ = (1 − w) aₙ(left) + w aₙ(right), at fixed f₁ and phases. No attack or decay; the instrument spectra are illustrative, not recordings. Packet in a medium: ωₙ = n̄ (n/n̄)^p ω₁ (n̄ the mean harmonic weighted by aₙ²), so every medium keeps the air crest speed at the center and v_g/v_p = p there: 1/2 deep water (ω = √(gk)), 3/2 capillary ripples (ω = √(γk³/ρ)), 2 a bending bar or a free quantum particle (ω ∝ k²); drawn at f₁ = 0.125 Hz; the sound stays the packet in air. Vowels: aₙ = |H(n f₁)|/n, φₙ = arg H(n f₁), H the cascade of three resonances Fᵢ²/(Fᵢ² − f² + i f Bᵢ) with Peterson and Barney (1952) formants for women and assumed bandwidths 80, 100 and 120 Hz (source and filter model, Fant 1960).
