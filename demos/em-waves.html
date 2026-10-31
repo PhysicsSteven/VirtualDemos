@@ -502,10 +502,67 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* E² at a cell center: Ez² on a TM grid; on a TE grid (Ex² + Ey²) with each component the mean of the two edges around the center */
   function fdtdE2(F, k) { if (!F.te) return F.Ez[k] * F.Ez[k]; const nx = F.nx, ex = 0.5 * (F.Hx[k] + (k >= nx ? F.Hx[k - nx] : 0)), ey = 0.5 * (F.Hy[k] + (k % nx ? F.Hy[k - 1] : 0)); return ex * ex + ey * ey; }
   function fdtdEnergy(F) { let u = 0; for (let k = 0; k < F.Ez.length; k++) u += F.Ez[k] * F.Ez[k] + F.Hx[k] * F.Hx[k] + F.Hy[k] * F.Hy[k]; return 0.5 * u; }
+  /* ---- Guides and cavities: a rectangular metal pipe (waveguide) a × b along z, and a closed metal box (cavity) a × b × d.
+     Perfect conductors, vacuum inside. Fields ∝ e^(i(βz − ωt)); Maxwell's equations with E tangent and B normal zero on the walls
+     (Jackson, Classical Electrodynamics, 3rd ed., §§8.2 to 8.4 and 8.7; Pozar, Microwave Engineering, 4th ed., §§3.3 and 6.3).
+     Transverse electric TE_mn: B_z = B₀ cos(mπx/a) cos(nπy/b), m, n = 0, 1, 2, ... not both 0; transverse magnetic TM_mn:
+     E_z = E₀ sin(mπx/a) sin(nπy/b), m, n ≥ 1. The transverse fields follow from ∇×E = −∂B/∂t and ∇×B = (1/c²)∂E/∂t:
+        TE: E_t = (iω/k_c²)(∂_y B_z, −∂_x B_z),       B_t = (iβ/k_c²) ∇_t B_z
+        TM: E_t = (iβ/k_c²) ∇_t E_z,                 B_t = (iω/c²k_c²)(−∂_y E_z, ∂_x E_z)
+     with k_c = π√((m/a)² + (n/b)²) and β² = ω²/c² − k_c². So mode mn travels only above its cutoff f_c = (c/2)√((m/a)² + (n/b)²);
+     below it β = iκ and the fields die away as e^(−κz). Guide wavelength λ_g = 2π/β = λ/√(1 − (f_c/f)²), phase speed c/√(1 − (f_c/f)²)
+     (faster than c), group speed (the energy's) c√(1 − (f_c/f)²), and v_p v_g = c².
+     The cavity is a length d of guide closed at both ends: the waves going each way add to a standing wave with β = pπ/d, so it rings
+     only at f = (c/2)√((m/a)² + (n/b)² + (p/d)²): TE_mnp (p ≥ 1, B_z ∝ sin(pπz/d)) and TM_mnp (p ≥ 0, E_z ∝ cos(pπz/d)). In the cavity
+     E and B are a quarter period apart in time, so the energy sloshes between them. Fields are returned as E (V/m, peak of order 1)
+     and cB, so both share one scale. */
+  const guideKc = (m, n, a, b) => Math.PI * Math.hypot(m / a, n / b);
+  const guideCutoff = (m, n, a, b) => C / 2 * Math.hypot(m / a, n / b);
+  const guideModeOK = (type, m, n) => (type === 'TE' ? m >= 0 && n >= 0 && m + n > 0 : m >= 1 && n >= 1);
+  const cavityModeOK = (type, m, n, p) => (type === 'TE' ? m + n > 0 && p >= 1 : m >= 1 && n >= 1 && p >= 0);
+  const cavityRes = (m, n, p, a, b, d) => C / 2 * Math.sqrt((m / a) ** 2 + (n / b) ** 2 + (p / d) ** 2);
+  /* the modes up to fmax, lowest first; TE and TM with the same m and n share a cutoff (they are degenerate) */
+  function guideList(a, b, fmax, mmax = 6) {
+    const out = []; for (const type of ['TE', 'TM']) for (let m = 0; m <= mmax; m++) for (let n = 0; n <= mmax; n++) if (guideModeOK(type, m, n)) { const fc = guideCutoff(m, n, a, b); if (fc <= fmax) out.push({ type, m, n, fc }); }
+    return out.sort((u, v) => u.fc - v.fc || (u.type < v.type ? -1 : 1));
+  }
+  function cavityList(a, b, d, fmax, mmax = 5) {
+    const out = []; for (const type of ['TE', 'TM']) for (let m = 0; m <= mmax; m++) for (let n = 0; n <= mmax; n++) for (let p = 0; p <= mmax; p++) if (cavityModeOK(type, m, n, p)) { const f = cavityRes(m, n, p, a, b, d); if (f <= fmax) out.push({ type, m, n, p, f }); }
+    return out.sort((u, v) => u.f - v.f || (u.type < v.type ? -1 : 1));
+  }
+  /* β (rad/m) when the mode travels, or κ (1/m) when it dies away, and the speeds */
+  function guideWave(f, fc) {
+    const k = 2 * Math.PI * f / C, kc = 2 * Math.PI * fc / C, q = k * k - kc * kc;
+    if (q > 0) { const r = Math.sqrt(1 - (fc / f) ** 2); return { travels: true, beta: Math.sqrt(q), lam: C / f, lamg: 2 * Math.PI / Math.sqrt(q), vp: C / r, vg: C * r }; }
+    return { travels: false, kappa: Math.sqrt(-q), lam: C / f, decay: 1 / Math.sqrt(-q) };
+  }
+  /* the real fields of a guide mode at (x, y, z) and phase ωt: { E: [Ex, Ey, Ez], cB: [...] } (B₀ = 1/c for TE, E₀ = 1 for TM) */
+  function guideField(type, m, n, a, b, f, x, y, z, wt) {
+    const kx = m * Math.PI / a, ky = n * Math.PI / b, kc2 = kx * kx + ky * ky, w = 2 * Math.PI * f, k = w / C;
+    const cx = Math.cos(kx * x), sx = Math.sin(kx * x), cy = Math.cos(ky * y), sy = Math.sin(ky * y), q = k * k - kc2;
+    /* P = e^(iβz − iωt), with β = √q or iκ */
+    const amp = q >= 0 ? 1 : Math.exp(-Math.sqrt(-q) * z), ph = (q >= 0 ? Math.sqrt(q) * z : 0) - wt, Pr = amp * Math.cos(ph), Pi = amp * Math.sin(ph);
+    const br = q >= 0 ? Math.sqrt(q) : 0, bi = q >= 0 ? 0 : Math.sqrt(-q);   /* β = br + i bi */
+    /* Re[(i s) P] = −s Pi for real s; Re[(i β s) P] with iβ = −bi + i br: Re[(−bi + i br) s P] = s(−bi Pr − br Pi) */
+    const iRe = (s) => -s * Pi, ibRe = (s) => s * (-bi * Pr - br * Pi), re = (s) => s * Pr;
+    if (type === 'TE') { const gx = -kx * sx * cy / C, gy = -ky * cx * sy / C;   /* ∇_t B_z with B₀ = 1/c */
+      return { E: [iRe(w / kc2 * gy), iRe(-w / kc2 * gx), 0], cB: [C * ibRe(gx / kc2), C * ibRe(gy / kc2), re(cx * cy)] }; }
+    const hx = kx * cx * sy, hy = ky * sx * cy;   /* ∇_t E_z with E₀ = 1 */
+    return { E: [ibRe(hx / kc2), ibRe(hy / kc2), re(sx * sy)], cB: [iRe(-w / (C * kc2) * hy), iRe(w / (C * kc2) * hx), 0] };
+  }
+  /* the real fields of cavity mode mnp at (x, y, z), ωt (ω its own resonance) */
+  function cavityField(type, m, n, p, a, b, d, x, y, z, wt) {
+    const kx = m * Math.PI / a, ky = n * Math.PI / b, kz = p * Math.PI / d, kc2 = kx * kx + ky * ky, w = 2 * Math.PI * cavityRes(m, n, p, a, b, d);
+    const cx = Math.cos(kx * x), sx = Math.sin(kx * x), cy = Math.cos(ky * y), sy = Math.sin(ky * y), cz = Math.cos(kz * z), sz = Math.sin(kz * z), ct = Math.cos(wt), st = Math.sin(wt);
+    if (type === 'TE') { const gx = -kx * sx * cy / C, gy = -ky * cx * sy / C;
+      return { E: [w / kc2 * gy * sz * st, -w / kc2 * gx * sz * st, 0], cB: [C * kz / kc2 * gx * cz * ct, C * kz / kc2 * gy * cz * ct, cx * cy * sz * ct] }; }
+    const hx = kx * cx * sy, hy = ky * sx * cy;
+    return { E: [-kz / kc2 * hx * sz * ct, -kz / kc2 * hy * sz * ct, sx * sy * cz * ct], cB: [-w / (C * kc2) * hy * cz * st, w / (C * kc2) * hx * cz * st, 0] };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream, FD_S, FD_NL, FD_NT, FD_PAD, FD_SLOW, fdLoss, fdtdMake, fdRamp, fdtdStep, fdtdE2, fdtdEnergy };
+    globalThis.EM = { guideKc, guideCutoff, guideModeOK, cavityModeOK, cavityRes, guideList, cavityList, guideWave, guideField, cavityField, MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream, FD_S, FD_NL, FD_NT, FD_PAD, FD_SLOW, fdLoss, fdtdMake, fdRamp, fdtdStep, fdtdE2, fdtdEnergy };
     return;
   }
 
