@@ -23,6 +23,7 @@ Students should know the cross product right hand rule and v = λf. Drag the 3D 
 4. **Visible light.** A 5 mW laser pointer in a 1 mm beam is about five times as intense as sunlight. Then **Radio**: 39.8 µW/m² at 10 km from a 50 kW station (Q3).
 5. **Circular polarization.** At one place E keeps its length and turns. Check **Polarizer in the end on view** and turn the **Transmission axis φ**: the transmitted fraction stays at 0.500. Go back to **Linear** and turn it again (Q5).
 6. **Antenna.** Loops of E pinch off near the dipole and move outward. Drag the **Direction θ from the dipole axis** slider: the intensity is sin²θ, zero along the axis, half at 45°.
+7. **In a plane.** Long wires through the page carry alternating currents; metal you paint reflects. One wire: rings spread out and the probe's r⟨E²⟩ stays the same at every distance (energy spreads over circles, a 2D solution). Then **Two wires in phase** and **opposite phase** (beams steer with phase), **Wire in front of a metal sheet** (a λ/4 reflector), **A wide beam through two slits** (bright directions at sin θ = mλ/d: 0, 19.5°, 41.8°), and **A closed metal box** (E inside stays zero).
 
 ## Questions
 

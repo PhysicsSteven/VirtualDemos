@@ -24,6 +24,7 @@ Students should know that white light contains all visible wavelengths. Choose *
 4. **Pure cyan, 490 nm.** Press Mix it again (Q3).
 5. One wavelength at 100% power: move it from 450 to 555 to 650 nm (Q4).
 6. **Red filter on a bulb** and **Green filter, photons** (Q5, Q6).
+7. **Colored filters on any light.** Put a yellow filter and a cyan filter on a white bulb, one after the other: each passes its own band and only green gets through both. Then **Red and green filters stacked**: no wavelength passes both, so the screen goes dark. Filters subtract; lamps add (ideal filters with edges at 500 and 600 nm, stated in the Model).
 
 ## Questions
 

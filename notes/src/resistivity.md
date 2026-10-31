@@ -23,6 +23,7 @@ Students should know R = V/I. The wire runs along a 1.000 m rule. A constant cur
 4. Heat the copper to 100 °C: about 31% more resistance. Do the same with **Constantan**: almost no change.
 5. Lab: capture R at five lengths and fit R against L for ρ; then fix L and capture at five temperatures for α.
 6. **Inside the wire** (button above the picture). Copper, 0.405 mm, 0.2 A: a 4 nm × 2 nm region with all 203 free electrons in it. The random motion is fast and the drift is invisible; untick **Show random motion** and the whole electron sea creeps left, against the current. The drift is shown 10⁶ times slower than real and the random motion 10¹⁵ times slower; say out loud that the two are not on one scale. Read v_d = 1.14 × 10⁻⁴ m/s and the transit time L/v_d = 72.8 min for 0.500 m, then ask why the lamp comes on at once. Raise I or pick a thinner gauge and watch the drift speed up; switch to nichrome and the trail of the circled electron turns from long straight flights (copper, mean free path 39 nm) into a zigzag (0.58 nm). Tick **Follow the marked electron along the wire** and the view rides with the circled electron while the ions stream past. Ask Q6.
+7. **Current in a sheet.** Field mapping on a resistive sheet, the classic lab, solved on a grid. Two full width bars: R = R_s L/W exactly (1344 Ω at R_s = 1 kΩ/□) and E = 46.5 V/m everywhere between them. Switch layouts (dots, slot, ring, neck), cut a slot or paint a silver line, and watch the equipotentials and current lines rearrange; the probe reads V at any point.
 
 ## Questions
 

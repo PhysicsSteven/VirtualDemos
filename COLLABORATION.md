@@ -5824,3 +5824,43 @@ this is Group A. Commits a3863f2, 66e37fb, 619a376.
   three.js r128. Notes updated; three What's new entries.
 - Worksheet candidates for the sweep: Atwood's machine (measure g from a and the masses, a classic lab of its own) and Two
   liquids (density from two heights, with the mystery oil). The others fit the existing worksheets' topics as extra questions.
+
+## 2026-10-31 · Claude · Partly covered gaps, Group D (Physics II)
+
+Steve: "Let's do the partial gaps today"; additions to existing demos only, no new worksheets unless a setup is vastly different
+(a worksheet sweep comes after). Group D of `partial-gaps/groups-2026-10-31.md`. Five commits, one per demo, then notes and
+What's new (five entries). Notes: one new class step each; demo keys rebuilt in TeacherKeys (no new questions).
+- Color Vision, **colored filters on any light** (PhET Color Vision filters): `CV_FILTERS` (red, green, blue, yellow, cyan,
+  magenta as ideal band filters with edges at 500 and 600 nm, stated in the Model), `cvFilterT`, `cvFilters`, `cvThrough`;
+  transmissions multiply, so stacked filters subtract. Two filter pickers work on lamps, bulb or one wavelength; filters drawn
+  in the beam, photons absorbed at each. Five presets (red light through green filter, white through magenta, yellow then cyan,
+  red then green stacked, two yellows). `test_color_vision.cjs` 10 pass.
+- Optics Bench, **Shape source** (PhET Geometric Optics extended object): a flat house, F or square; every corner traced
+  like a point source (five rays within ±1.5°, least squares meeting point) and the image drawn from the traced corners.
+  `depthRatio(m1, m2, n1, n2)`: the axial (depth) ratio is m₁m₂, (n₂/n₁)m₁m₂ for a refracting surface; for one element the
+  readouts compare traced and equation. Presets: A shape, point by point (f = 8 cm, traced 0.804 = equation 0.804), A shape in
+  a magnifier (height 2.2×, depth 3.9×). `test_optics_bench.cjs` 8 groups pass.
+- Charging by Induction, **Charging by rubbing** setup (PhET Balloons/John Travoltage, plan #7): `TRIBO` order fur, glass,
+  wool, silk, rubber, teflon (OpenStax Vol 2 §5.1 signs), `rubLimit` = ε₀E_b·2πrL with E_b = 3 MV/m (Vol 2 Table 8.1): 41.7 nC
+  on a 5 cm patch of a 0.5 cm rod; `rubStroke` moves the charge a share 0.12|sep| of the way to the limit, a stated model, not
+  measured data. Rod and cloth chips, Rub once and ten times, then Take the rod to the spheres (capped at ±20 nC, said).
+  `test_induction.cjs` 20 groups pass.
+- Resistivity, **Current in a sheet** view (field mapping lab, PhET-like 2D current flow): Kirchhoff's rule on a 96 × 64 grid
+  of square cells solved by preconditioned conjugate gradients (`sheetSolve`, `sheetFace`), exact to solver tolerance;
+  two full width bars give R = R_s L/W exactly (1344 Ω at 1 kΩ/□) and E = 46.5 V/m. Layouts bars, dots, bar and dot, slot,
+  ring, neck; tools probe, cut, paint silver (10⁴ times the sheet's conductance, stated), mend. Equipotentials by marching
+  squares, current lines seeded at equal flux. `?view=sheet`. `test_resistivity.cjs` 13 groups pass.
+- Electromagnetic Waves, **In a plane** view (the 2D radiation field, "above intro"; kept simple): Yee FDTD for currents
+  along z (Ez, Hx, Hy), 20 cells per λ, Courant 0.5 (`fdtdMake`, `fdtdStep`, `fdtdEnergy`, `FD_SLOW` = 0.31 % grid speed
+  error, stated), metal as perfect conductor, a graded matched sponge 1.5 λ deep (about 1 % amplitude back, stated), soft
+  sources ramped over two periods, average ⟨E²⟩ over exactly one period. Tools wire, metal, erase, probe (r, ⟨E²⟩, r⟨E²⟩).
+  Eight presets: one wire, two in phase, opposite phase, λ/4 reflector, dish, beam through a slit (Gaussian beam 6 λ across,
+  stated, not an endless plane wave), two slits, closed metal box. Why 2D line sources: fields fall as 1/√r, said in the Model
+  and More about this. New `test_em_waves.cjs` 7 pass (box energy, Ez = 0 in metal and inside a closed box, pulse speed c
+  within 1 %, border absorption, r⟨E²⟩ constant within 3 %, two wires 4× and opposite phase cancels broadside).
+- Checks: vdcheck `--only after` 0 problems and `--only clip` 0 cut off on all five; screenshots at 1368 and 360/390 px, light
+  and dark, no sideways scroll; In a plane on a phone shrinks the stage to the 5 by 3 picture.
+- Worksheet candidates for the sweep: **Current in a sheet** is a classic lab of its own (map equipotentials, R against
+  geometry) and the strongest candidate; **Charging by rubbing** could be a short part of the induction worksheet; **In a
+  plane** (r⟨E²⟩ against r, two slit angles at microwave scale) could be a part of the em-waves worksheet; colored filters
+  fit the Color Vision worksheet as one more part; the shape's depth ratio fits an Optics Bench homework question.
