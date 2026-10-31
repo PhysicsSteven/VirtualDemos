@@ -687,7 +687,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
     const sxs = nice(L / 8), sys = nice(top / 2);
     c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = 0; v <= L + 1e-9; v += sxs) { c.beginPath(); c.moveTo(Xp(v), Tm); c.lineTo(Xp(v), Tm + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)), Xp(v), Tm + ph + 4); }
-    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = -Math.floor(top / sys) * sys; v <= top + 1e-9; v += sys) { c.beginPath(); c.moveTo(Lm, Yp(v)); c.lineTo(Lm + pw, Yp(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), Lm - 5, Yp(v)); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = -Math.floor(top / sys) * sys; v <= top + 1e-9; v += sys) { c.beginPath(); c.moveTo(Lm, Yp(v)); c.lineTo(Lm + pw, Yp(v)); c.stroke(); c.fillText(String(+(Math.abs(v) < sys * 1e-6 ? 0 : v).toPrecision(6)).replace('-', '−'), Lm - 5, Yp(v)); }
     c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('distance along the line from A (mm)', Lm + pw / 2, PH2 - 1);
     c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('height (mm)', 0, 0); c.restore();
     c.strokeStyle = K.muted; c.setLineDash([4, 4]); c.lineWidth = 1.3 * p;

@@ -122,6 +122,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="mWave" aria-pressed="true">Plane wave</button>
           <button type="button" id="mAnt" aria-pressed="false">Antenna</button>
           <button type="button" id="mPlane" aria-pressed="false">In a plane</button>
+          <button type="button" id="mGuide" aria-pressed="false">Guides and cavities</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="resetView">Reset view</button>
@@ -145,6 +146,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="antenna" aria-pressed="false">Antenna</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="secGuide" hidden>
+        <h2>Guides and cavities</h2>
+        <div class="chips" id="gPresets">
+          <button type="button" data-g="x10" aria-pressed="true">X band guide, TE10</button>
+          <button type="button" data-g="x20" aria-pressed="false">Above the next cutoff: TE20</button>
+          <button type="button" data-g="below" aria-pressed="false">Below cutoff</button>
+          <button type="button" data-g="tm11" aria-pressed="false">TM11 in the guide</button>
+          <button type="button" data-g="c101" aria-pressed="false">Cavity: TE101</button>
+          <button type="button" data-g="c110" aria-pressed="false">Cavity: TM110</button>
+          <button type="button" data-g="cube" aria-pressed="false">A cube: three modes, one frequency</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="gHint"></p></details>
+        <div class="seg" role="group" aria-label="Waveguide or cavity" id="gKind" style="margin-top:6px"><button type="button" data-k="guide" aria-pressed="true">Waveguide</button><button type="button" data-k="cavity" aria-pressed="false">Cavity</button></div>
+        <div class="seg" role="group" aria-label="Kind of mode" id="gType" style="margin-top:6px"><button type="button" data-t="TE" aria-pressed="true">TE (E across)</button><button type="button" data-t="TM" aria-pressed="false">TM (B across)</button></div>
+        <div><div class="slider-head"><label for="gm">m: half waves across a</label><output id="gmOut" class="mono" for="gm"></output></div><input type="range" id="gm" min="0" max="4" step="1" value="1"></div>
+        <div><div class="slider-head"><label for="gn">n: half waves across b</label><output id="gnOut" class="mono" for="gn"></output></div><input type="range" id="gn" min="0" max="4" step="1" value="0"></div>
+        <div id="gpRow" hidden><div class="slider-head"><label for="gp">p: half waves along d</label><output id="gpOut" class="mono" for="gp"></output></div><input type="range" id="gp" min="0" max="4" step="1" value="1"></div>
+        <div><div class="slider-head"><label for="ga">Width a</label><output id="gaOut" class="mono" for="ga"></output></div><input type="range" id="ga" min="5" max="60" step="0.01" value="22.86"></div>
+        <div><div class="slider-head"><label for="gb">Height b</label><output id="gbOut" class="mono" for="gb"></output></div><input type="range" id="gb" min="5" max="60" step="0.01" value="10.16"></div>
+        <div id="gdRow" hidden><div class="slider-head"><label for="gd">Length d</label><output id="gdOut" class="mono" for="gd"></output></div><input type="range" id="gd" min="5" max="60" step="0.01" value="25"></div>
+        <div id="gfRow"><div class="slider-head"><label for="gf">Frequency f</label><output id="gfOut" class="mono" for="gf"></output></div><input type="range" id="gf" min="1" max="40" step="0.01" value="10"></div>
+        <dl class="readout" id="gOut"></dl>
+        <p class="hint" style="margin-top:8px">The lowest modes; tap one to show it:</p>
+        <div class="chips" id="gModes"></div>
+        <div class="toggles" style="margin-top:8px"><label><input type="checkbox" id="gShowE" checked> E field</label><label><input type="checkbox" id="gShowB" checked> B field (as cB)</label></div>
       </section>
 
       <section id="secFreq">
@@ -322,6 +350,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <p class="hint" id="modelWave">A plane wave in vacuum, exact: E as in the formula above and B = ẑ × E/c, so B is always at right angles to E, in phase with it, and |B| = |E|/c. In SI units B in tesla is about 3 × 10⁸ times smaller than E in V/m, so it is drawn as cB. The drawing is scaled so E₀ fills it and always shows 2.5 wavelengths; time is slowed so one period takes 2.5 s. S = E × B/μ₀ = |E|²/(μ₀c) along ẑ; its time average is I.</p>
         <p class="hint" id="modelAnt" hidden>Exact fields of an oscillating point dipole (length much less than λ), including the near field terms, in a plane through its axis. Lines are electric field lines, drawn as contours of the stream function sin²θ [sin(kr − ωt) + cos(kr − ωt)/kr]. Shading shows B, which points into or out of the page, multiplied by r so the far field shows evenly. A real half wave antenna has a slightly narrower pattern than sin²θ.</p>
         <p class="hint" id="modelPlane" hidden></p>
+        <p class="hint" id="modelGuide" hidden>Guides and cavities: exact modes of a rectangular metal pipe a × b (and of a closed box a × b × d) with perfectly conducting walls and vacuum inside, from Maxwell's equations with E along the walls and B into them zero (Jackson, Classical Electrodynamics, 3rd ed., sections 8.2 to 8.4 and 8.7; Pozar, Microwave Engineering, 4th ed., sections 3.3 and 6.3). TE modes have B<sub>z</sub> ∝ cos(mπx/a) cos(nπy/b), TM modes E<sub>z</sub> ∝ sin(mπx/a) sin(nπy/b); a guide mode travels only above f<sub>c</sub> = (c/2)√((m/a)² + (n/b)²), and a cavity rings only at f = (c/2)√((m/a)² + (n/b)² + (p/d)²). Real walls lose a little power (copper at 10 GHz: a WR-90 guide loses about 0.1 dB per meter; a copper cavity's Q is several thousand), which is left out. Arrows are drawn in proportion to the largest field anywhere in the guide over a period, E red and cB blue; the 3D view and the end view are to scale, the length shown is 2.5 guide wavelengths (or 4 decay lengths below cutoff). The standard X band guide is WR-90, 22.86 mm × 10.16 mm inside (EIA RS-261-B).</p>
         <div class="key" id="planeKey" hidden>
           <span><i class="swatch ezp"></i>E out of the page</span>
           <span><i class="swatch ezn"></i>E into the page</span>
@@ -628,6 +657,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function rgb(hex) { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
+  const G_LABEL = 'A rectangular metal waveguide or cavity in 3D, with arrows for the electric field E and the magnetic field (as cB) on a grid inside, an end view of the cross section, and a strip of the modes\' cutoff or resonant frequencies. Drag the 3D view to turn it; arrow keys change the frequency.';
   const CAN_LABEL = can.getAttribute('aria-label'), PL_LABEL = 'The electric field of long straight wires through the page, in a plane, with metal you place. Tap to use the chosen tool: add or remove a wire, paint metal, erase, or place the probe. Keys: arrows move a cursor, Enter uses the tool there, 1 to 4 choose the tool, I switches between the field now and the average intensity, R starts again, space plays or pauses, A switches to the plane wave.';
   let W = 0, H = 0, LY = null;
   /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
@@ -1141,6 +1171,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!T || !LY) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.mode === 'plane') { if (G.ok) G.el.hidden = true; drawPlane(); return; }
+    if (S.mode === 'guide') { drawGuide(); return; }
     if (S.mode === 'wave') {
       if (use3D()) { G.el.hidden = false; render3D(); ctx.clearRect(LY.main.x, LY.main.y, LY.main.w, LY.main.h); }
       else drawWave2D();
@@ -1155,6 +1186,225 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (LY.wide) { ctx.moveTo(LY.side.x + 0.5, 0); ctx.lineTo(LY.side.x + 0.5, LY.strip.y); } else { ctx.moveTo(0, LY.side.y + 0.5); ctx.lineTo(W, LY.side.y + 0.5); }
     ctx.stroke();
   }
+
+  // ---------- Guides and cavities (2026-10-31): a rectangular waveguide or cavity in 3D, an end view, and the modes on a strip ----------
+  const GU = { kind: 'guide', type: 'TE', m: 1, n: 0, p: 1, a: 22.86e-3, b: 10.16e-3, d: 25e-3, f: 10e9, showE: true, showB: true, preset: 'x10' };
+  const GV = { th: -Math.PI / 2 - 0.55, ph: 1.15, zoom: 1 };
+  const G_FMAX = 40e9;
+  const GPRE = {
+    x10: { kind: 'guide', type: 'TE', m: 1, n: 0, a: 22.86, b: 10.16, f: 10, hint: 'A standard X band waveguide (WR-90: 22.86 mm by 10.16 mm inside) carrying its lowest mode, TE10, at 10 GHz. E goes straight across the short side, strongest in the middle and zero at the side walls; B makes loops lying flat in the guide. The pattern moves along at more than c, but the energy goes at less than c: the group speed. Below 6.56 GHz nothing gets through.' },
+    x20: { kind: 'guide', type: 'TE', m: 2, n: 0, a: 22.86, b: 10.16, f: 14, hint: 'The same guide at 14 GHz, above the 13.11 GHz cutoff of TE20: two half waves of E across the wide side, pointing opposite ways. At this frequency TE10 travels too; a real guide is used below 13.11 GHz so only one mode can carry the signal.' },
+    below: { kind: 'guide', type: 'TE', m: 1, n: 0, a: 22.86, b: 10.16, f: 5, hint: 'TE10 at 5 GHz, below its 6.56 GHz cutoff: the wave cannot travel. The fields still swing in time, but every part swings together and the size dies away down the guide, by e every κ⁻¹. This is why a microwave oven\'s door can have holes: the holes are far too small for 2.45 GHz to get through.' },
+    tm11: { kind: 'guide', type: 'TM', m: 1, n: 1, a: 22.86, b: 10.16, f: 20, hint: 'A transverse magnetic mode, TM11, at 20 GHz: now E has a part along the guide and B lies entirely across it. Its cutoff, 16.14 GHz, is the same as TE11\'s: two different modes at the same frequency are called degenerate.' },
+    c101: { kind: 'cavity', type: 'TE', m: 1, n: 0, p: 1, a: 22.86, b: 10.16, d: 25, hint: 'A length of the same guide closed at both ends: a cavity. Waves bouncing back and forth add to a standing wave, so it rings only at certain frequencies. Its lowest, TE101, is at 8.885 GHz. E and B are a quarter period apart: when E is largest B is zero and the other way round, as in an LC circuit.' },
+    c110: { kind: 'cavity', type: 'TM', m: 1, n: 1, p: 0, a: 30, b: 30, d: 20, hint: 'A square box 30 mm by 30 mm, 20 mm deep, in its TM110 mode at 7.07 GHz: E points straight from one end face to the other, largest in the middle; B circles round it. With p = 0 nothing changes along the box\'s depth.' },
+    cube: { kind: 'cavity', type: 'TE', m: 1, n: 0, p: 1, a: 30, b: 30, d: 30, hint: 'A cube 30 mm on a side. TE101, TE011 and TM110 all ring at the same 7.07 GHz: three modes, one frequency. Step through them with m, n and p and the TE | TM switch.' },
+  };
+  const gUnit = 1e-3;
+  const gmm = (v) => `${(v / gUnit).toFixed(2)} mm`;
+  const gHz = (v) => `${(v / 1e9).toFixed(3)} GHz`;
+  const gName = (u) => `${u.type}${u.m}${u.n}${u.p != null ? u.p : ''}`, gNow = () => (GU.kind === 'guide' ? `${GU.type}${GU.m}${GU.n}` : `${GU.type}${GU.m}${GU.n}${GU.p}`);
+  const gOK = () => (GU.kind === 'guide' ? guideModeOK(GU.type, GU.m, GU.n) : cavityModeOK(GU.type, GU.m, GU.n, GU.p));
+  const gFix = () => { /* keep the mode allowed: TM needs m, n ≥ 1; TE needs m + n > 0 and p ≥ 1 in a cavity */
+    if (GU.type === 'TM') { GU.m = Math.max(1, GU.m); GU.n = Math.max(1, GU.n); } else { if (GU.m + GU.n === 0) GU.m = 1; if (GU.kind === 'cavity') GU.p = Math.max(1, GU.p); } };
+  const gFreq = () => (GU.kind === 'guide' ? GU.f : cavityRes(GU.m, GU.n, GU.p, GU.a, GU.b, GU.d));
+  const gFc = () => guideCutoff(GU.m, GU.n, GU.a, GU.b);
+  const gWave = () => guideWave(GU.f, gFc());
+  /* the length of guide drawn: 2.5 guide wavelengths, or 4 decay lengths below cutoff, at least 2a; the cavity its own d */
+  const gLen = () => { if (GU.kind === 'cavity') return GU.d; const w = gWave(); return Math.max(2 * GU.a, Math.min(12 * GU.a, w.travels ? 2.5 * w.lamg : 4 * w.decay)); };
+  const gField = (x, y, z, ph) => (GU.kind === 'guide' ? guideField(GU.type, GU.m, GU.n, GU.a, GU.b, GU.f, x, y, z, ph) : cavityField(GU.type, GU.m, GU.n, GU.p, GU.a, GU.b, GU.d, x, y, z, ph));
+  /* the largest |E| and |cB| anywhere, over a period (a coarse search; the arrows are drawn in proportion to it) */
+  let gMaxKey = '', gMax = { E: 1, B: 1 };
+  function gScale() {
+    const key = [GU.kind, GU.type, GU.m, GU.n, GU.p, GU.a, GU.b, GU.d, GU.f].join('|'); if (key === gMaxKey) return gMax;
+    let mE = 1e-30, mB = 1e-30; const L = gLen();
+    for (let t = 0; t < 8; t++) for (let i = 0; i <= 8; i++) for (let j = 0; j <= 8; j++) for (const z of GU.kind === 'guide' ? [0] : [0, 0.25, 0.5, 0.75, 1].map((u) => u * L)) {
+      const q = gField(i / 8 * GU.a, j / 8 * GU.b, z, t / 8 * Math.PI); mE = Math.max(mE, Math.hypot(...q.E)); mB = Math.max(mB, Math.hypot(...q.cB)); }
+    gMaxKey = key; gMax = { E: mE, B: mB }; return gMax;
+  }
+  /* ---- 3D: the guide's walls, and arrows of E and cB on a grid, with the shared renderer of the plane wave view ---- */
+  const GS = { ok: false };
+  function gInit3D() {
+    if (GS.ok) return true; if (!init3D()) return false;
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 500); cam.up.set(0, 0, 1);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8a8a, 0.9), sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-3, -6, 9); scene.add(hemi, sun);
+    const stem = new THREE.CylinderGeometry(0.022, 0.022, 1, 7); stem.translate(0, 0.5, 0);
+    const head = new THREE.ConeGeometry(0.06, 0.18, 12); head.translate(0, -0.09, 0);
+    const N = 1600;
+    const set = () => { const mat = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.1 }), st = new THREE.InstancedMesh(stem, mat, N), hd = new THREE.InstancedMesh(head, mat, N);
+      for (const m of [st, hd]) { m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(m); } return { st, hd, mat, n: N, hl: 0.18 }; };
+    const walls = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xb8a070, metalness: 0.6, roughness: 0.35, transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false }));
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1)), new THREE.LineBasicMaterial({ color: 0xc8a860 }));
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshStandardMaterial({ color: 0xb8a070, metalness: 0.5, roughness: 0.4, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false }));
+    const ax = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 1, 0x888888, 0.2, 0.1);
+    scene.add(walls, edges, floor, ax);
+    Object.assign(GS, { ok: true, scene, cam, hemi, sun, eA: set(), bA: set(), walls, edges, floor, ax });
+    gTheme3D(); return true;
+  }
+  function gTheme3D() {
+    if (!GS.ok) return; const dk = /^#([0-3])/i.test(T.canvas);
+    GS.eA.mat.color.set(T.pos); GS.bA.mat.color.set(T.bf); GS.hemi.intensity = dk ? 1.1 : 0.85; GS.ax.setColor(new THREE.Color(T.muted));
+  }
+  /* physics (x across a, y up b, z along) → world (X along, Y across, Z up), scaled so the longest side is SC units */
+  const gW = (x, y, z, s) => [z * s, -x * s, y * s];
+  function gGrid() {
+    const L = gLen(), longest = Math.max(GU.a, GU.b, L), cell = longest / (GU.kind === 'guide' ? 26 : 9);
+    const nx = Math.max(2, Math.min(9, Math.round(GU.a / cell))), ny = Math.max(2, Math.min(9, Math.round(GU.b / cell))), nz = Math.max(3, Math.min(30, Math.round(L / cell)));
+    return { L, nx, ny, nz, s: 6 / longest, cell: Math.min(GU.a / nx, GU.b / ny, L / nz) };
+  }
+  function gUpdate3D() {
+    const g = gGrid(), sc = gScale(), ps = LS(), s = g.s, len = 0.9 * g.cell * s;
+    let ie = 0, ib = 0;
+    for (let i = 0; i < g.nx; i++) for (let j = 0; j < g.ny; j++) for (let k = 0; k < g.nz; k++) {
+      const x = (i + 0.5) * GU.a / g.nx, y = (j + 0.5) * GU.b / g.ny, z = (k + 0.5) * g.L / g.nz, q = gField(x, y, z, wt), o = gW(x, y, z, s);
+      if (GU.showE && ie < GS.eA.n) { const v = gW(...q.E.map((u) => u / sc.E * len), 1); const w = [v[0], v[1], v[2]]; setArrow(GS.eA, ie++, [o[0] - w[0] / 2, o[1] - w[1] / 2, o[2] - w[2] / 2], w, ps * 0.8); }
+      if (GU.showB && ib < GS.bA.n) { const v = gW(...q.cB.map((u) => u / sc.B * len), 1); const w = [v[0], v[1], v[2]]; setArrow(GS.bA, ib++, [o[0] - w[0] / 2, o[1] - w[1] / 2, o[2] - w[2] / 2], w, ps * 0.8); }
+    }
+    const zero = new THREE.Matrix4().makeScale(0, 0, 0);
+    for (const [set, n] of [[GS.eA, ie], [GS.bA, ib]]) { for (let i = n; i < set.n; i++) { set.st.setMatrixAt(i, zero); set.hd.setMatrixAt(i, zero); } set.st.instanceMatrix.needsUpdate = true; set.hd.instanceMatrix.needsUpdate = true; }
+    /* the walls: a box a × b × L; a guide is open at its ends (drawn as an open pipe), a cavity closed */
+    const W = [g.L * s, GU.a * s, GU.b * s];
+    GS.walls.scale.set(...W); GS.walls.position.set(W[0] / 2, -W[1] / 2, W[2] / 2); GS.edges.scale.set(...W); GS.edges.position.copy(GS.walls.position);
+    GS.floor.scale.set(W[0], W[1], 1); GS.floor.position.set(W[0] / 2, -W[1] / 2, 0);
+    GS.ax.position.set(W[0] + 0.15, -W[1] / 2, W[2] / 2); GS.ax.setLength(Math.min(1.2, 0.25 * W[0] + 0.3), 0.18, 0.1); GS.ax.visible = GU.kind === 'guide';
+    GS.box = { x0: -0.1, x1: W[0] + (GU.kind === 'guide' ? 1.4 : 0.1), y0: -W[1] - 0.1, y1: 0.1, z0: -0.1, z1: W[2] + 0.1 };
+  }
+  function gCamera() {
+    const cam = GS.cam, B = GS.box, c0 = [(B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2, (B.z0 + B.z1) / 2], sp = Math.sin(GV.ph);
+    const dir = [sp * Math.cos(GV.th), sp * Math.sin(GV.th), Math.cos(GV.ph)], f = [-dir[0], -dir[1], -dir[2]];
+    let r = [f[1], -f[0], 0]; const rl = Math.hypot(...r) || 1; r = r.map((v) => v / rl);
+    const u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]], tV = Math.tan(cam.fov * DEG / 2), tH = tV * cam.aspect;
+    let need = 0;
+    for (const X of [B.x0, B.x1]) for (const Y of [B.y0, B.y1]) for (const Z of [B.z0, B.z1]) {
+      const p = [X - c0[0], Y - c0[1], Z - c0[2]], xc = p[0] * r[0] + p[1] * r[1] + p[2] * r[2], yc = p[0] * u[0] + p[1] * u[1] + p[2] * u[2], zc = p[0] * dir[0] + p[1] * dir[1] + p[2] * dir[2];
+      need = Math.max(need, zc + Math.abs(xc) / (tH * 0.9), zc + Math.abs(yc) / (tV * 0.85));
+    }
+    const dist = need * GV.zoom; cam.position.set(c0[0] + dist * dir[0], c0[1] + dist * dir[1], c0[2] + dist * dir[2]); cam.lookAt(...c0); cam.updateMatrixWorld();
+    cam.aspect = LY.main.w / Math.max(1, LY.main.h); cam.updateProjectionMatrix();
+  }
+  const use3DG = () => S.mode === 'guide' && GS.ok;
+  /* ---- flat: the guide seen from above (x across, z along), arrows of the field in the middle plane y = b/2 ---- */
+  function gDrawFlat() {
+    const c = ctx, m = LY.main, ps = LS(), g = gGrid(), sc = gScale(), pad = 30 * ps, L = g.L;
+    c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip(); c.fillStyle = T.canvas; c.fillRect(m.x, m.y, m.w, m.h);
+    const k = Math.min((m.w - 2 * pad) / L, (m.h - 2 * pad - 30 * ps) / GU.a), x0 = m.x + (m.w - L * k) / 2, y0 = m.y + pad + 20 * ps + (m.h - 2 * pad - 30 * ps - GU.a * k) / 2;
+    c.fillStyle = T.surface; c.fillRect(x0, y0, L * k, GU.a * k); c.strokeStyle = '#b8a070'; c.lineWidth = 3 * ps;
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0 + L * k, y0); c.moveTo(x0, y0 + GU.a * k); c.lineTo(x0 + L * k, y0 + GU.a * k);
+    if (GU.kind === 'cavity') { c.moveTo(x0, y0); c.lineTo(x0, y0 + GU.a * k); c.moveTo(x0 + L * k, y0); c.lineTo(x0 + L * k, y0 + GU.a * k); } c.stroke();
+    const yy = GU.b / 2, cl = Math.min(GU.a / g.nx, L / g.nz) * k * 0.9;
+    for (let i = 0; i < g.nx; i++) for (let kz = 0; kz < g.nz; kz++) {
+      const x = (i + 0.5) * GU.a / g.nx, z = (kz + 0.5) * L / g.nz, q = gField(x, yy, z, wt), px = x0 + z * k, py = y0 + x * k;
+      if (GU.showE) { const u = q.E[2] / sc.E * cl, v = q.E[0] / sc.E * cl; arrow2(c, px - u / 2, py - v / 2, px + u / 2, py + v / 2, T.pos, 1.6 * ps, 6 * ps); }
+      if (GU.showB) { const u = q.cB[2] / sc.B * cl, v = q.cB[0] / sc.B * cl; arrow2(c, px - u / 2, py - v / 2, px + u / 2, py + v / 2, T.bf, 1.6 * ps, 6 * ps); }
+    }
+    label(c, `From above: the middle plane, y = b/2 (${GU.kind === 'guide' ? 'z along the guide, left to right' : 'z from one end to the other'})`, m.x + 12 * ps, m.y + 14 * ps, T.ink, 'left', 'middle', true, 10.5);
+    c.restore();
+  }
+  /* ---- the end view: the cross section a × b at one z, the longitudinal field as shading, E and cB across it as arrows ---- */
+  function gDrawEnd() {
+    const c = ctx, s = LY.side, ps = LS(), sc = gScale(), z = GU.kind === 'guide' ? 0 : GU.d / (2 * Math.max(1, GU.p));
+    c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip(); c.fillStyle = T.canvas; c.fillRect(s.x, s.y, s.w, s.h);
+    label(c, GU.kind === 'guide' ? 'End view at z = 0' : `Cross section at z = ${GU.p > 1 ? `d/${2 * GU.p}` : 'd/2'}`, s.x + 12 * ps, s.y + 14 * ps, T.ink, 'left', 'middle', true);
+    const top = s.y + 34 * ps, bot = s.y + s.h - 40 * ps, k = Math.min((s.w - 40 * ps) / GU.a, (bot - top) / GU.b), w = GU.a * k, h = GU.b * k, x0 = s.x + (s.w - w) / 2, y0 = top + (bot - top - h) / 2;
+    /* shading: E_z (TM) or cB_z (TE), red one way and blue the other */
+    const N = 36, NY = Math.max(6, Math.round(N * GU.b / GU.a)), [pr, pg, pb] = rgb(T.pos), [nr, ng, nb] = rgb(T.bf);
+    for (let i = 0; i < N; i++) for (let j = 0; j < NY; j++) {
+      const q = gField((i + 0.5) * GU.a / N, (j + 0.5) * GU.b / NY, z, wt), v = GU.type === 'TE' ? q.cB[2] / sc.B : q.E[2] / sc.E;
+      const col = GU.type === 'TE' ? [nr, ng, nb] : [pr, pg, pb];
+      c.fillStyle = v >= 0 ? `rgba(${col.join(',')},${Math.min(0.55, v * 0.55)})` : `rgba(128,128,128,${Math.min(0.45, -v * 0.45)})`;
+      c.fillRect(x0 + i * w / N, y0 + h - (j + 1) * h / NY, w / N + 0.5, h / NY + 0.5);
+    }
+    c.strokeStyle = '#b8a070'; c.lineWidth = 3 * ps; c.strokeRect(x0, y0, w, h);
+    const nx = Math.max(3, Math.min(10, Math.round(w / (26 * ps)))), ny = Math.max(2, Math.min(10, Math.round(h / (26 * ps)))), cl = Math.min(w / nx, h / ny) * 0.85;
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const x = (i + 0.5) * GU.a / nx, y = (j + 0.5) * GU.b / ny, q = gField(x, y, z, wt), px = x0 + x * k, py = y0 + h - y * k;
+      if (GU.showE) { const u = q.E[0] / sc.E * cl, v = -q.E[1] / sc.E * cl; arrow2(c, px - u / 2, py - v / 2, px + u / 2, py + v / 2, T.pos, 1.8 * ps, 7 * ps); }
+      if (GU.showB) { const u = q.cB[0] / sc.B * cl, v = -q.cB[1] / sc.B * cl; arrow2(c, px - u / 2, py - v / 2, px + u / 2, py + v / 2, T.bf, 1.8 * ps, 7 * ps); }
+    }
+    label(c, `a = ${gmm(GU.a)} across, b = ${gmm(GU.b)} up`, x0 + w / 2, y0 + h + 12 * ps, T.muted, 'center', 'middle', false, 10);
+    label(c, GU.type === 'TE' ? 'shading: B along z (gray: the other way)' : 'shading: E along z (gray: the other way)', s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
+    c.restore();
+  }
+  /* ---- the strip: a frequency axis 0 to 40 GHz with the cutoffs (guide) or the resonances (cavity), and the working frequency ---- */
+  function gStripGeom() { const s = LY.strip, ps = Math.min(LS(), s.h / 66), pad = 16 * ps; return { s, ps, x0: s.x + pad, x1: s.x + s.w - pad, barY: s.y + 26 * ps, barH: 14 * ps }; }
+  const gSX = (g, f) => g.x0 + f / G_FMAX * (g.x1 - g.x0);
+  function gDrawStrip() {
+    const c = ctx, g = gStripGeom(), ps = g.ps, s = g.s;
+    c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip(); c.fillStyle = T.surface; c.fillRect(s.x, s.y, s.w, s.h);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(s.x, s.y + 0.5); c.lineTo(s.x + s.w, s.y + 0.5); c.stroke();
+    const list = GU.kind === 'guide' ? guideList(GU.a, GU.b, G_FMAX) : cavityList(GU.a, GU.b, GU.d, G_FMAX);
+    if (GU.kind === 'guide') { const fc1 = list.length ? list[0].fc : G_FMAX; c.fillStyle = T.grid; c.fillRect(g.x0, g.barY, gSX(g, fc1) - g.x0, g.barH); c.fillStyle = T.muted; c.font = `${9.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle'; if (gSX(g, fc1) - g.x0 > 90 * ps) c.fillText('nothing travels', g.x0 + 4 * ps, g.barY + g.barH / 2); }
+    c.strokeStyle = T.line; c.strokeRect(g.x0 + 0.5, g.barY + 0.5, g.x1 - g.x0 - 1, g.barH - 1);
+    const lastX = [-1e9, -1e9]; c.font = `${9 * ps}px ${T.mono}`; c.textBaseline = 'bottom'; c.textAlign = 'center';
+    for (const u of list) {
+      const f = GU.kind === 'guide' ? u.fc : u.f, x = gSX(g, f), mine = u.type === GU.type && u.m === GU.m && u.n === GU.n && (u.p == null || u.p === GU.p);
+      c.strokeStyle = mine ? T.accent : T.muted; c.lineWidth = mine ? 2 * ps : ps; c.beginPath(); c.moveTo(x, g.barY); c.lineTo(x, g.barY + g.barH); c.stroke();
+      const tw = c.measureText(gName(u)).width + 4 * ps, row = x - lastX[0] >= tw ? 0 : x - lastX[1] >= tw ? 1 : mine ? 1 : -1;
+      if (row >= 0) { c.fillStyle = mine ? T.accent : T.muted; c.fillText(gName(u), x, g.barY - 2 * ps - row * 10 * ps); lastX[row] = x; }
+    }
+    c.textBaseline = 'top'; c.fillStyle = T.muted; c.font = `${9.5 * ps}px ${T.mono}`;
+    for (let f = 0; f <= G_FMAX; f += 5e9) { const x = gSX(g, f); c.textAlign = f === 0 ? 'left' : f === G_FMAX ? 'right' : 'center'; c.fillText(`${f / 1e9}${f === G_FMAX ? ' GHz' : ''}`, x, g.barY + g.barH + 3 * ps); }
+    c.textAlign = 'left'; c.fillText(GU.kind === 'guide' ? 'cutoff frequencies' : 'resonances', s.x + 4 * ps, s.y + 3 * ps);
+    const fx = gSX(g, Math.min(G_FMAX, gFreq())), hot = isHot('gf');
+    if (hot) { c.fillStyle = T.accent; c.globalAlpha = 0.22; c.fillRect(fx - 7 * ps, g.barY - 4 * ps, 14 * ps, g.barH + 8 * ps); c.globalAlpha = 1; }
+    c.strokeStyle = T.ink; c.lineWidth = 2.4 * ps; c.beginPath(); c.moveTo(fx, g.barY - 4 * ps); c.lineTo(fx, g.barY + g.barH + 4 * ps); c.stroke();
+    label(c, `f = ${gHz(gFreq())}`, Math.max(s.x + 50 * ps, Math.min(s.x + s.w - 50 * ps, fx)), g.barY + g.barH + 16 * ps, T.ink, 'center', 'top', true, 10);
+    c.restore();
+  }
+  function drawGuide() {
+    if (use3DG()) { G.el.hidden = false; gUpdate3D(); gCamera(); G.renderer.render(GS.scene, GS.cam); ctx.clearRect(LY.main.x, LY.main.y, LY.main.w, LY.main.h);
+      const ps = LS(); label(ctx, GU.kind === 'guide' ? `${gNow()} in a waveguide${gWave().travels ? '' : ': below cutoff, dying away'}` : `${gNow()} in a cavity`, LY.main.x + 12 * ps, LY.main.y + 14 * ps, T.ink, 'left', 'middle', true, 10.5);
+      label(ctx, 'arrows: E red, cB blue · drag to turn', LY.main.x + 12 * ps, LY.main.y + 31 * ps, T.muted, 'left', 'middle', false, 10); }
+    else { if (G.ok) G.el.hidden = true; gDrawFlat(); }
+    gDrawEnd(); gDrawStrip();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (LY.wide) { ctx.moveTo(LY.side.x + 0.5, 0); ctx.lineTo(LY.side.x + 0.5, LY.strip.y); } else { ctx.moveTo(0, LY.side.y + 0.5); ctx.lineTo(W, LY.side.y + 0.5); }
+    ctx.stroke();
+  }
+  /* ---- readouts and controls ---- */
+  function gReadouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`; let h = '';
+    if (GU.kind === 'guide') {
+      const fc = gFc(), w = gWave();
+      h += dd('Mode', gNow()) + dd('Cutoff f<sub>c</sub> = (c/2)√((m/a)² + (n/b)²)', gHz(fc), 'big') + dd('Frequency f', gHz(GU.f)) + dd('Free space λ = c/f', gmm(w.lam));
+      if (w.travels) h += dd('Guide wavelength λ<sub>g</sub> = λ/√(1 − (f<sub>c</sub>/f)²)', gmm(w.lamg), 'big') + dd('Phase speed v<sub>p</sub>', `${(w.vp / C).toFixed(4)} c`) + dd('Group speed v<sub>g</sub> (the energy)', `${(w.vg / C).toFixed(4)} c`) + dd('Check: v<sub>p</sub> v<sub>g</sub>/c²', (w.vp * w.vg / C / C).toFixed(6));
+      else h += dd('Travels?', '<span class="ok">no: below cutoff</span>', 'big') + dd('Dies away by e in κ⁻¹ = 1/√(k<sub>c</sub>² − k²)', gmm(w.decay)) + dd('Over 10 mm the field falls to', (Math.exp(-0.01 / w.decay)).toPrecision(3));
+      const go = guideList(GU.a, GU.b, GU.f).map(gName); h += dd('Modes that travel at this f', go.length ? go.join(', ') : 'none', 'wide');
+    } else {
+      const f = gFreq(); h += dd('Mode', gNow()) + dd('Resonance f = (c/2)√((m/a)² + (n/b)² + (p/d)²)', gHz(f), 'big') + dd('Free space λ = c/f', gmm(C / f));
+      h += dd('Lowest resonances', cavityList(GU.a, GU.b, GU.d, G_FMAX).slice(0, 6).map((u) => `${gName(u)} ${(u.f / 1e9).toFixed(3)}`).join(', ') + ' GHz', 'wide');
+    }
+    $('gOut').innerHTML = h;
+  }
+  function gSync() {
+    const cav = GU.kind === 'cavity';
+    for (const b of document.querySelectorAll('#gKind button')) b.setAttribute('aria-pressed', String(b.dataset.k === GU.kind));
+    for (const b of document.querySelectorAll('#gType button')) b.setAttribute('aria-pressed', String(b.dataset.t === GU.type));
+    for (const b of document.querySelectorAll('#gPresets button')) b.setAttribute('aria-pressed', String(b.dataset.g === GU.preset));
+    const set = (id, v, t) => { $(id).value = v; $(id + 'Out').textContent = t; };
+    set('gm', GU.m, String(GU.m)); set('gn', GU.n, String(GU.n)); set('gp', GU.p, String(GU.p));
+    set('ga', +(GU.a / gUnit).toFixed(2), gmm(GU.a)); set('gb', +(GU.b / gUnit).toFixed(2), gmm(GU.b)); set('gd', +(GU.d / gUnit).toFixed(2), gmm(GU.d)); set('gf', +(GU.f / 1e9).toFixed(3), gHz(GU.f));
+    $('gpRow').hidden = !cav; $('gdRow').hidden = !cav; $('gfRow').hidden = cav;
+    $('gHint').textContent = GU.preset && GPRE[GU.preset] ? GPRE[GU.preset].hint : 'Your own guide or cavity. Pick a setup to return to a known one.';
+    $('gShowE').checked = GU.showE; $('gShowB').checked = GU.showB;
+    const list = cav ? cavityList(GU.a, GU.b, GU.d, G_FMAX).slice(0, 8) : guideList(GU.a, GU.b, G_FMAX).slice(0, 8);
+    $('gModes').innerHTML = list.map((u) => `<button type="button" data-mode="${gName(u)}" aria-pressed="${u.type === GU.type && u.m === GU.m && u.n === GU.n && (u.p == null || u.p === GU.p)}">${gName(u)} · ${((cav ? u.f : u.fc) / 1e9).toFixed(2)} GHz</button>`).join('');
+  }
+  function gChanged(own) { if (own !== false) GU.preset = null; gFix(); gSync(); gReadouts(); draw(); }
+  function gPreset(k) {
+    const p = GPRE[k]; Object.assign(GU, { kind: p.kind, type: p.type, m: p.m, n: p.n, p: p.p != null ? p.p : 1, a: p.a * gUnit, b: p.b * gUnit, preset: k });
+    if (p.d) GU.d = p.d * gUnit; if (p.f) GU.f = p.f * 1e9; gChanged(false);
+  }
+  function setGf(v) { GU.f = Math.max(1e9, Math.min(G_FMAX, v)); gChanged(); }
+  for (const b of document.querySelectorAll('#gPresets button')) b.addEventListener('click', () => gPreset(b.dataset.g));
+  $('gKind').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; GU.kind = b.dataset.k; if (GU.kind === 'cavity' && GU.type === 'TE') GU.p = Math.max(1, GU.p); gChanged(); });
+  $('gType').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (!b) return; GU.type = b.dataset.t; gChanged(); });
+  for (const [id, key] of [['gm', 'm'], ['gn', 'n'], ['gp', 'p']]) $(id).addEventListener('input', (e) => { GU[key] = +e.target.value; gChanged(); });
+  for (const [id, key] of [['ga', 'a'], ['gb', 'b'], ['gd', 'd']]) $(id).addEventListener('input', (e) => { GU[key] = +e.target.value * gUnit; gChanged(); });
+  $('gf').addEventListener('input', (e) => setGf(+e.target.value * 1e9));
+  $('gShowE').addEventListener('change', (e) => { GU.showE = e.target.checked; draw(); });
+  $('gShowB').addEventListener('change', (e) => { GU.showB = e.target.checked; draw(); });
+  $('gModes').addEventListener('click', (e) => { const b = e.target.closest('[data-mode]'); if (!b) return; const s = b.dataset.mode; GU.type = s.slice(0, 2); GU.m = +s[2]; GU.n = +s[3]; if (s.length > 4) GU.p = +s[4]; gChanged(); });
 
   // ---------- readouts ----------
   function readouts() {
@@ -1190,13 +1440,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function syncUI() {
     $('sf').value = S.logf; $('sE').value = S.logE; $('spsi').value = S.psi; $('sdel').value = S.delta; $('sphi').value = S.phi; $('sdir').value = S.dir;
-    const wave = S.mode === 'wave', ant = S.mode === 'antenna', pl = S.mode === 'plane';
-    $('mWave').setAttribute('aria-pressed', String(wave)); $('mAnt').setAttribute('aria-pressed', String(ant)); $('mPlane').setAttribute('aria-pressed', String(pl));
+    const wave = S.mode === 'wave', ant = S.mode === 'antenna', pl = S.mode === 'plane', gd = S.mode === 'guide';
+    $('mWave').setAttribute('aria-pressed', String(wave)); $('mAnt').setAttribute('aria-pressed', String(ant)); $('mPlane').setAttribute('aria-pressed', String(pl)); $('mGuide').setAttribute('aria-pressed', String(gd));
+    $('secGuide').hidden = !gd; $('modelGuide').hidden = !gd;
     $('secPol').hidden = !wave; $('secEnergy').hidden = !wave; $('secShow').hidden = !wave; $('secAnt').hidden = !ant; $('secPlane').hidden = !pl;
-    $('secSetups').hidden = pl; $('secFreq').hidden = pl;
+    $('secSetups').hidden = pl || gd; $('secFreq').hidden = pl || gd;
     $('modelWave').hidden = !wave; $('modelAnt').hidden = !ant; $('antKey').hidden = !ant; $('modelPlane').hidden = !pl; $('planeKey').hidden = !pl;
-    can.setAttribute('aria-label', pl ? PL_LABEL : CAN_LABEL); $('stage').classList.toggle('pl', pl);
-    $('resetView').hidden = !(wave && G.ok);
+    can.setAttribute('aria-label', pl ? PL_LABEL : gd ? G_LABEL : CAN_LABEL); $('stage').classList.toggle('pl', pl);
+    $('resetView').hidden = !((wave && G.ok) || (gd && GS.ok));
     for (const [id, k] of [['tE', 'e'], ['tB', 'b'], ['tS', 's'], ['tSheet', 'sheet']]) $(id).checked = S.show[k];
   }
   function markPreset(name) {
@@ -1205,7 +1456,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('presetHint').textContent = name && PRESETS[name] ? PRESETS[name].hint() : 'Your own setup. Pick a preset to return to a known one.';
   }
   function custom() { if (S.preset) markPreset(null); }
-  function update() { syncUI(); readouts(); if (S.mode === 'plane') plReadouts(); draw(); }
+  function update() { syncUI(); readouts(); if (S.mode === 'plane') plReadouts(); if (S.mode === 'guide') { gSync(); gReadouts(); } draw(); }
   function applyPreset(name) {
     const p = PRESETS[name];
     S.mode = p.mode; S.logf = Math.log10(p.f); S.logE = Math.log10(p.E0); S.psi = p.psi; S.delta = p.delta;
@@ -1220,7 +1471,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setPhi(v) { S.phi = clampStep($('sphi'), v); update(); }
   function setDir(v) { S.dir = clampStep($('sdir'), v); update(); }
   function setMode(m) {
-    if (S.mode === m) return; S.mode = m; if (m === 'wave') init3D();
+    if (S.mode === m) return; S.mode = m; if (m === 'wave') init3D(); if (m === 'guide') gInit3D();
     if (m === 'plane' && !PL.F) plPreset('one');
     if (m !== 'plane') custom();
     update(); requestAnimationFrame(() => SPL.place());
@@ -1241,10 +1492,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('mWave').addEventListener('click', () => setMode('wave'));
   $('mAnt').addEventListener('click', () => setMode('antenna'));
   $('mPlane').addEventListener('click', () => setMode('plane'));
+  $('mGuide').addEventListener('click', () => setMode('guide'));
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
   playBtn.addEventListener('click', () => setPlaying(!playing));
-  function resetView() { view.th = -Math.PI / 2 - 0.42; view.ph = 1.2; view.zoom = 1; draw(); }
+  function resetView() { if (S.mode === 'guide') { GV.th = -Math.PI / 2 - 0.55; GV.ph = 1.15; GV.zoom = 1; draw(); return; } view.th = -Math.PI / 2 - 0.42; view.ph = 1.2; view.zoom = 1; draw(); }
   $('resetView').addEventListener('click', resetView);
 
   // ---------- dragging on the drawing ----------
@@ -1253,6 +1505,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const wrap90 = (deg) => { while (deg > 90) deg -= 180; while (deg < -90) deg += 180; return deg; };
   function dragHandles() {
     if (!LY) return [];
+    if (S.mode === 'guide') { if (GU.kind !== 'guide') return []; const g = gStripGeom(), x = gSX(g, GU.f); return [{ id: 'gf', seg: [x, g.barY - 6 * g.ps, x, g.barY + g.barH + 6 * g.ps], cursor: 'ew-resize', set: (xx) => setGf((xx - g.x0) / (g.x1 - g.x0) * G_FMAX) }]; }
     const out = [], sg = stripGeom(), xf = stripX(sg, S.logf);
     out.push({ id: 'f', seg: [xf, sg.barY - 6 * sg.ps, xf, sg.barY + sg.barH + 6 * sg.ps], cursor: 'ew-resize', set: (x) => setLogf(stripInv(sg, x)) });
     if (S.mode === 'wave') {
@@ -1281,17 +1534,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const inStrip = (x, y) => LY && y >= LY.strip.y;
   let dragQ = null, dragFrame = false;
   function bindOrbit() { /* orbit uses the overlay canvas's pointer events below */ }
+  const orb3D = () => use3D() || use3DG(), cv = () => (S.mode === 'guide' ? GV : view);
   can.addEventListener('pointerdown', (ev) => {
     const [x, y] = local(ev);
     can.focus({ preventScroll: true });
     const h = handleAt(x, y, ev.pointerType === 'touch');
     if (h) { drag = { id: h.id }; hoverId = h.id; try { can.setPointerCapture(ev.pointerId); } catch (_) {} can.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor; ev.preventDefault(); return; }
+    if (inStrip(x, y) && S.mode === 'guide') { const g = gStripGeom(); if (GU.kind === 'guide' && y >= g.barY - 8 && y <= g.barY + g.barH + 8) { drag = { id: 'gf' }; hoverId = 'gf'; try { can.setPointerCapture(ev.pointerId); } catch (_) {} setGf((x - g.x0) / (g.x1 - g.x0) * G_FMAX); ev.preventDefault(); } return; }
     if (inStrip(x, y)) { const sg = stripGeom(); if (y >= sg.barY - 8 && y <= sg.barY + sg.barH + 8) { drag = { id: 'f' }; hoverId = 'f'; try { can.setPointerCapture(ev.pointerId); } catch (_) {} setLogf(stripInv(sg, x)); ev.preventDefault(); } return; }
-    if (use3D() && inMain(x, y)) {
+    if (orb3D() && inMain(x, y)) {
       if (ev.pointerType === 'touch') return;   /* touches on the 3D view: VD3.touch below */
       pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
       try { can.setPointerCapture(ev.pointerId); } catch (_) {}
-      if (pointers.size === 2) { const p = [...pointers.values()]; orbitDrag = { pinch: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), z0: view.zoom }; }
+      if (pointers.size === 2) { const p = [...pointers.values()]; orbitDrag = { pinch: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y), z0: cv().zoom }; }
       else orbitDrag = { lx: ev.clientX, ly: ev.clientY };
       can.style.cursor = 'grabbing'; ev.preventDefault();
     }
@@ -1305,9 +1560,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (orbitDrag && pointers.has(ev.pointerId)) {
       pointers.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
-      if (orbitDrag.pinch && pointers.size === 2) { const p = [...pointers.values()]; view.zoom = Math.max(0.45, Math.min(2.5, orbitDrag.z0 * orbitDrag.pinch / Math.max(1, Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y)))); }
+      if (orbitDrag.pinch && pointers.size === 2) { const p = [...pointers.values()]; cv().zoom = Math.max(0.45, Math.min(2.5, orbitDrag.z0 * orbitDrag.pinch / Math.max(1, Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y)))); }
       else if (!orbitDrag.pinch) {
-        view.th -= (ev.clientX - orbitDrag.lx) * 0.008; view.ph = Math.max(0.12, Math.min(Math.PI - 0.12, view.ph - (ev.clientY - orbitDrag.ly) * 0.008));
+        cv().th -= (ev.clientX - orbitDrag.lx) * 0.008; cv().ph = Math.max(0.12, Math.min(Math.PI - 0.12, cv().ph - (ev.clientY - orbitDrag.ly) * 0.008));
         orbitDrag.lx = ev.clientX; orbitDrag.ly = ev.clientY;
       }
       if (!playing) draw();
@@ -1315,7 +1570,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const h = handleAt(x, y, ev.pointerType === 'touch');
     const nh = h ? h.id : null; if (nh !== hoverId) { hoverId = nh; if (!playing) draw(); }
-    can.style.cursor = h ? h.cursor : (use3D() && inMain(x, y)) ? 'grab' : 'default';
+    can.style.cursor = h ? h.cursor : (orb3D() && inMain(x, y)) ? 'grab' : 'default';
   });
   const endPtr = (ev) => {
     pointers.delete(ev.pointerId);
@@ -1325,18 +1580,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerup', endPtr);
   can.addEventListener('pointercancel', endPtr);
   /* phones: on the 3D view one finger scrolls the page and two fingers turn and pinch; handles, the spectrum and the flat views keep the touch as before */
-  if (window.VD3) VD3.touch(can, { grab: (ev) => { const [x, y] = local(ev); return !!handleAt(x, y, true) || !(use3D() && inMain(x, y)); },
-    move: (dx, dy, k) => { if (!use3D()) return; view.th -= dx * 0.008; view.ph = Math.max(0.12, Math.min(Math.PI - 0.12, view.ph - dy * 0.008)); view.zoom = Math.max(0.45, Math.min(2.5, view.zoom / k)); if (!playing) draw(); } });
+  if (window.VD3) VD3.touch(can, { grab: (ev) => { const [x, y] = local(ev); return !!handleAt(x, y, true) || !(orb3D() && inMain(x, y)); },
+    move: (dx, dy, k) => { if (!orb3D()) return; cv().th -= dx * 0.008; cv().ph = Math.max(0.12, Math.min(Math.PI - 0.12, cv().ph - dy * 0.008)); cv().zoom = Math.max(0.45, Math.min(2.5, cv().zoom / k)); if (!playing) draw(); } });
   can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; if (!playing) draw(); } });
   can.addEventListener('wheel', (ev) => {
     const [x, y] = local(ev);
-    if (!(use3D() && inMain(x, y))) return;
+    if (!(orb3D() && inMain(x, y))) return;
     ev.preventDefault();
-    view.zoom = Math.max(0.45, Math.min(2.5, view.zoom * Math.exp(ev.deltaY * 0.0012)));
+    cv().zoom = Math.max(0.45, Math.min(2.5, cv().zoom * Math.exp(ev.deltaY * 0.0012)));
     if (!playing) draw();
   }, { passive: false });
   can.addEventListener('keydown', (e) => {
     const big = e.shiftKey ? 5 : 1;
+    if (S.mode === 'guide' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { if (GU.kind === 'guide') setGf(GU.f + (e.key === 'ArrowRight' ? 1 : -1) * 0.05e9 * big); e.preventDefault(); return; }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setLogf(S.logf + (e.key === 'ArrowRight' ? 1 : -1) * 0.05 * big);
     else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && S.mode === 'wave') setLogE(S.logE + (e.key === 'ArrowUp' ? 1 : -1) * 0.05 * big);
     else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && S.mode === 'antenna') setDir(S.dir + (e.key === 'ArrowUp' ? -1 : 1) * 2 * big);
@@ -1361,7 +1617,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
-  const retheme = () => { tokens(); theme3D(); draw(); };
+  const retheme = () => { tokens(); theme3D(); gTheme3D(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
@@ -1580,9 +1836,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- Readings (shared section): the plane wave's numbers as the readouts give them, to 6 significant figures ----------
   const sig6 = (v) => { const r = +v.toPrecision(6), a = Math.abs(r); return a && (a >= 1e6 || a < 1e-3) ? r.toExponential() : String(r); };
-  window.vdVersion = 'em-waves@2026-10-24';
+  window.vdVersion = 'em-waves@2026-10-31';
   /* the columns the Readings table shows follow the view: the plane wave's numbers, or In a plane's probe */
-  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.mode === 'plane' ? [['setup', 'setup'], ['E_dir', 'E'], ['r_lambda', 'r (λ)'], ['E2_avg', '⟨E²⟩']] : [['f_Hz', 'f (Hz)'], ['E0_V_per_m', 'E₀ (V/m)'], ['B0_T', 'B₀ (T)'], ['I_W_per_m2', 'I (W/m²)']]) });
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.mode === 'guide' ? [['setup', 'setup'], ['mode', 'mode'], ['f_GHz', 'f (GHz)'], ['fc_GHz', 'f_c (GHz)']] : S.mode === 'plane' ? [['setup', 'setup'], ['E_dir', 'E'], ['r_lambda', 'r (λ)'], ['E2_avg', '⟨E²⟩']] : [['f_Hz', 'f (Hz)'], ['E0_V_per_m', 'E₀ (V/m)'], ['B0_T', 'B₀ (T)'], ['I_W_per_m2', 'I (W/m²)']]) });
   window.vdReadingRow = () => {
     if (S.mode === 'plane') {
       /* Part 5 of the worksheet: the probe's ⟨E²⟩ over the last full period, in the grid's units (a wire's source strength fixed),
@@ -1594,7 +1850,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return { setup: 'in a plane: ' + (pb ? pb.textContent : 'own arrangement'), E_dir: PL.te ? 'in the page' : 'along the wires', periods: +(PL.F.n / FD_NT).toFixed(1),
         probe_x_lambda: +(PL.probe.i / FD_NL).toFixed(2), probe_y_lambda: +((PLV.ny - 1 - PL.probe.j) / FD_NL).toFixed(2), r_lambda: Number.isFinite(r) ? +r.toFixed(2) : '', E2_avg: +e2.toPrecision(3), rE2: Number.isFinite(r) ? +(r * e2).toPrecision(3) : '' };
     }
-    if (S.mode !== 'wave') return 'Readings are of the plane wave and of In a plane: switch to one of them to record.';   /* Antenna has no readings */
+    if (S.mode === 'guide') {
+      const pb = GU.preset && document.querySelector(`#gPresets [data-g="${GU.preset}"]`), f = gFreq();
+      if (GU.kind === 'cavity') return { setup: 'cavity: ' + (pb ? pb.textContent : 'own'), mode: gNow(), a_mm: sig6(GU.a * 1e3), b_mm: sig6(GU.b * 1e3), d_mm: sig6(GU.d * 1e3), f_GHz: sig6(f / 1e9), fc_GHz: '', lambda_mm: sig6(C / f * 1e3) };
+      const w = gWave();
+      return { setup: 'waveguide: ' + (pb ? pb.textContent : 'own'), mode: gNow(), a_mm: sig6(GU.a * 1e3), b_mm: sig6(GU.b * 1e3), f_GHz: sig6(GU.f / 1e9), fc_GHz: sig6(gFc() / 1e9), lambda_mm: sig6(w.lam * 1e3),
+        lambda_g_mm: w.travels ? sig6(w.lamg * 1e3) : '', vg_over_c: w.travels ? sig6(w.vg / C) : '', decay_mm: w.travels ? '' : sig6(w.decay * 1e3) };
+    }
+    if (S.mode !== 'wave') return 'Readings are of the plane wave, In a plane, and Guides and cavities: switch to one of them to record.';   /* Antenna has no readings */
     const f = fNow(), E0 = E0Now(), I = intensity(E0);
     const pb = S.preset && document.querySelector(`#presets [data-p="${S.preset}"]`);
     return { setup: pb ? pb.textContent : '', f_Hz: sig6(f), lambda_m: sig6(lambdaOf(f)), band: bandOf(f).name, ground: groundOf(lambdaOf(f)).why.split(':')[0], E0_V_per_m: sig6(E0), B0_T: sig6(B0of(E0)),

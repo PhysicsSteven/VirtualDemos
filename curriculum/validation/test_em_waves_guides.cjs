@@ -46,8 +46,8 @@ test('guide modes obey all four of Maxwell\'s equations (to 1e−6 of the fields
     assert(e < 1e-6, `${type}${m}${n} at ${f / 1e9} GHz: ${e}`);
   }
 });
-test('cavity modes obey Maxwell\'s equations at their resonance; TE101 of a 22.86 × 10.16 × 25.00 mm box rings at 8.886 GHz', () => {
-  const d = 25e-3; near(R.cavityRes(1, 0, 1, a, b, d) / 1e9, 8.8860, 1e-4, 'TE101');
+test('cavity modes obey Maxwell\'s equations at their resonance; TE101 of a 22.86 × 10.16 × 25.00 mm box rings at 8.885 GHz', () => {
+  const d = 25e-3; near(R.cavityRes(1, 0, 1, a, b, d) / 1e9, 8.88516, 2e-6, 'TE101');
   for (const [type, m, n, p] of [['TE', 1, 0, 1], ['TE', 1, 1, 2], ['TE', 0, 1, 1], ['TM', 1, 1, 0], ['TM', 2, 1, 1]]) {
     const pts = []; for (let i = 0; i < 6; i++) pts.push([a * rnd(), b * rnd(), d * rnd(), 6.28 * rnd()]);
     const e = maxwell((x, y, z, wt) => R.cavityField(type, m, n, p, a, b, d, x, y, z, wt), 2 * Math.PI * R.cavityRes(m, n, p, a, b, d), pts, a);
