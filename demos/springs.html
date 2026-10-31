@@ -196,6 +196,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="res" aria-pressed="false">Resonance</button>
           <button type="button" data-p="modes" aria-pressed="false">Normal modes</button>
           <button type="button" data-p="beats" aria-pressed="false">Beats</button>
+          <button type="button" data-p="drop" aria-pressed="false">Drop a block on it</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -307,6 +308,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <input type="range" id="sM" min="0.1" max="5" step="0.05">
         </div>
         <dl class="readout" id="natBox"></dl>
+      </section>
+
+      <section id="dropSec" class="nosb" hidden>
+        <h2>Drop a block on it</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sDm">Block to drop m<sub>d</sub></label><output id="oDm" class="mono" for="sDm"></output></div>
+          <input type="range" id="sDm" min="0.1" max="2" step="0.05" value="1">
+        </div>
+        <div class="btnrow"><button type="button" class="btn primary" id="dropBtn">Drop it now</button></div>
+        <p class="status" id="dropStatus" aria-live="polite"></p>
+        <dl class="readout" id="dropBox"></dl>
+        <details class="more"><summary>More about this</summary><p class="hint">The block falls straight down onto the moving block, lands and sticks (D on the drawing drops it too). While it lands, the track and gravity act up and down only, so nothing pushes the pair along the track: momentum along the track is kept, m v = (m + m<sub>d</sub>) v′, and the position x does not change. The pair then oscillates with ω′ = √(k/(m + m<sub>d</sub>)). Kinetic energy ½ m v² m<sub>d</sub>/(m + m<sub>d</sub>) is lost in the landing. Dropped as the block passes equilibrium, the amplitude shrinks by √(m/(m + m<sub>d</sub>)); dropped at a turning point, where v = 0, the amplitude stays and only the period grows. The landing is taken as instant, and the dropped block as stuck from then on. Start over lifts it off. The amplitude shown is √(x² + (v/ω₀)²), the amplitude when there is no damping.</p></details>
       </section>
 
       <section id="coupSec" hidden>
@@ -501,6 +514,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const pp = partic(g, 0);
     g.y0 = x - pp[0]; g.u0 = v - pp[1];
     return g;
+  }
+  // A block of mass md let fall straight down onto the moving block (horizontal track) lands on it and sticks. In the moment of the
+  // landing the track pushes up and gravity pulls down, both vertical, and the springs' pull is finite, so nothing outside the two
+  // blocks gives a sideways impulse: their momentum along the track is conserved, m v = (m + md) v′, and x does not change.
+  // The kinetic energy ½ m v² md/(m + md) goes into the landing (a perfectly inelastic collision). After it, ω₁ = √(k/(m + md));
+  // with no damping the amplitude is √(x² + (v/ω)²) before and after.
+  function dropOn(m, k, x, v, md) {
+    const M = m + md, v1 = m * v / M, w0 = Math.sqrt(k / m), w1 = Math.sqrt(k / M);
+    return { M, v1, w0, w1, T0: 2 * Math.PI / w0, T1: 2 * Math.PI / w1, A0: Math.hypot(x, v / w0), A1: Math.hypot(x, v1 / w1), Klost: 0.5 * m * v * v * md / M };
   }
   function partic(g, s) {
     if (g.F0 === 0) return [0, 0];
@@ -902,6 +924,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       hint: 'The moving wall drives the block. The transient dies away and the block settles at the drive frequency, with the amplitude on the resonance curve below. Drag the ω marker on the curve, or press Sweep ω to trace the whole curve.' },
     modes: { sys: 'coupled', m: 0.5, k: 20, k2: 20, kc: 10, zeta: 0, ic: { x1: 0.1, v1: 0, x2: 0.1, v2: 0 },
       hint: 'Both blocks start displaced the same way, so the middle spring never stretches: mode 1 at ω₁ = √(k/m). Press Mode 2: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m). Then make k₂ different from k₁ and press the mode buttons again: the modes become lopsided.' },
+    drop: { sys: 'free', vert: false, m: 1, k: 40, zeta: 0, ic: { x: 0.15, v: 0 }, drop: true,
+      hint: 'A 1 kg block on a 40 N/m spring. Press Play, then Drop it now (or D) as the block passes equilibrium: a 1 kg block lands on it and sticks. Momentum along the track is kept, so the pair moves on at half the speed, and the amplitude falls to 1/√2 of what it was. Start over and drop it at a turning point instead: the amplitude stays the same. Either way the period grows by √2, since T = 2π√(m/k).' },
     beats: { sys: 'coupled', m: 0.5, k: 20, k2: 20, kc: 2, zeta: 0, ic: { x1: 0.12, v1: 0, x2: 0, v2: 0 },
       hint: 'Only block 1 is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block 2 and back with period 2π/(ω₂ − ω₁).' }
   };
@@ -914,6 +938,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let peak = 0;                         // largest |x| (block 1 for two blocks) since Reset peak or the last release
   let fitDirty = true;
   let segs = [], t = 0, running = !reduce, held = null, ghosts = [], compare = [], book = null, crossings = [], lastIC = { x: 0.15, v: 0 };
+  let rider = 0, lastDrop = null;     /* mass sitting on the block (kg; S.p.m includes it), and the last landing's numbers */
   let Av = 0.25, amp = null, sweep = null, sweepPts = [], speedBeforeSweep = null;
   const view = { tL: 0, L: 5, tLshow: 0 };
   let ranges = {};
@@ -1250,6 +1275,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.fillText(label, x, y);
     cHandles.push({ id, box: [x - side / 2, y - side / 2, side, side], cursor: held ? 'grabbing' : 'grab', mass: true });
   }
+  /* the dropped block (or blocks) stuck on top: drawn in the second block color, labeled with its mass */
+  function drawRider(ctx, x, y, side, ps) {
+    const w = side * 1.15;
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 5 * ps; ctx.shadowOffsetY = 2 * ps; ctx.fillStyle = T.neg; ctx.globalAlpha = 0.9;
+    roundRect(ctx, x - w / 2, y - side / 2, w, side, 3 * ps); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.globalAlpha = 0.6; roundRect(ctx, x - w / 2, y - side / 2, w, side, 3 * ps); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${Math.min(11 * ps, side * 0.3)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(`${fx(rider, 2)} kg`, x, y);
+  }
   // a small tab on a block for changing m: drag away from the block for more mass
   function massTab(ctx, x, y, dir, vertical) {
     const ps = projScale(), hot = isHot('m');
@@ -1294,13 +1328,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
   }
   function drawHorizontal(ctx, W, H, st, g, ps) {
-    const fs = fsOf(W), pad = 12 * ps, L0 = LNAT.h, side = blockSide(S.p.m), drv = S.sys === 'driven';
-    const top = ctlH + 6, rulerH = 46 * ps, troughH = 20 * ps;
+    const fs = fsOf(W), pad = 12 * ps, L0 = LNAT.h, side = blockSide(S.p.m - rider), drv = S.sys === 'driven';
+    const top = ctlH + 6, rulerH = 46 * ps, troughH = 20 * ps, rideS = rider ? blockSide(rider) * 0.8 : 0;   /* a dropped block sits on top */
     let wallX = pad + 12 * ps + (drv ? 12 * ps : 0);
     const sW = (W - wallX - pad - side - 30 * ps) / (L0 + Av);
     // free motion keeps room above the block for the reference circle; driven motion puts the track higher instead
     const trackY = H - 8 * ps - rulerH - troughH;
-    const sH = drv ? Infinity : (trackY - side - top - 30 * ps) / (2 * Av);
+    const sH = drv ? Infinity : (trackY - side - rideS - top - 30 * ps) / (2 * Av);
     const s = Math.max(20, Math.min(sW, sH, 1400));
     // when the height limits the scale, center the wall, spring and track in the spare width
     const dx = Math.max(0, (W - pad - (wallX + (L0 + Av) * s + side + 30 * ps)) / 2);
@@ -1352,10 +1386,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       labelBox(ctx, kl, Math.max(wallB + 2 * ps + kw / 2, Math.min(mx, sx1 - kw / 2 - 6 * ps)), gy - 16 * ps, 'center', T.ink, fs, 600);
     }
     // reference circle
-    drawCircle(ctx, g, st, cx0, by - side / 2 - 12 * ps - Av * s, s, 'h', bx, by - side / 2, fs);
-    // block
-    drawBlock(ctx, bx, by, side, 'mass', `${fx(S.p.m, 2)} kg`);
-    massTab(ctx, bx, by - side / 2 - 12 * ps, -1, true);
+    drawCircle(ctx, g, st, cx0, by - side / 2 - rideS - 12 * ps - Av * s, s, 'h', bx, by - side / 2 - rideS, fs);
+    // block, and a dropped block riding on it
+    drawBlock(ctx, bx, by, side, 'mass', `${fx(S.p.m - rider, 2)} kg`);
+    if (rider) drawRider(ctx, bx, by - side / 2 - rideS / 2, rideS, ps);
+    massTab(ctx, bx, by - side / 2 - rideS - 12 * ps, -1, true);
     // displacement along the ruler, labeled under it
     { const yy = trackY + troughH + 4 * ps;
       ctx.strokeStyle = T.xcol; ctx.lineWidth = 4 * ps; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(cx0, yy); ctx.lineTo(bx, yy); ctx.stroke(); ctx.globalAlpha = 1;
@@ -1737,7 +1772,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const R3 = g3, S3 = R3.S3, cp = S.sys === 'coupled', vert = !cp && S.vert, drv = S.sys === 'driven', fs = fsOf(W), m = S.p.m, AX = R3.AX;
     S3.size(W, H); theme3();
     const L0 = LNAT[ori()], dTrue = vert ? m * G / S.p.k : 0, d = Math.min(dTrue, D3MAX), cut = dTrue > d;   /* d: the stretch as drawn */
-    const [bl, bw, bh] = vert ? (() => { const [hh, dd] = canDims(m); return [hh, dd, dd]; })() : blockDims(m);
+    const [bl, bw, bh] = vert ? (() => { const [hh, dd] = canDims(m); return [hh, dd, dd]; })() : blockDims(m - rider);
     const Rc = vert ? clamp(bw * 0.38, 0.008, 0.016) : clamp(bh * 0.42, 0.0075, 0.013), wr = (k) => clamp(0.0006 + 0.00045 * Math.log10(Math.max(k, 1)), 0.0006, Rc * 0.25);
     const rc = rulerCm(Av, cp ? 100 * (L0 + bl) / 2 - 1 : 0), half = rc.half / 100;
     const Xw = drv ? S.p.F0 / S.p.k : 0, xw = drv ? Xw * Math.cos(st.th) : 0, Lr = Math.max(0.07, Xw + 0.04), Rw = Xw + 0.014;
@@ -1770,6 +1805,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     blk.position.set(xb1, 0, 0); blk.scale.set(bl, bw, bh);
     R3.hook.visible = vert; R3.hook.position.set(xb1 - bl / 2 - 0.004, 0, 0);
     R3.spB.visible = R3.spC.visible = R3.blkB.visible = cp;
+    if (!cp && !vert && rider) { const [rl, rw, rh] = blockDims(rider); R3.blkB.visible = true; R3.blkB.position.set(xb1, 0, bh / 2 + rh / 2); R3.blkB.scale.set(rl, rw, rh); }
     let xb2 = 0;
     if (cp) {
       xb2 = xc2 + st.x2;
@@ -1956,7 +1992,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ctx.fillText(narrow ? `m = ${fx(S.p.m, 2)} kg each` : `k₁ = ${sig(S.p.k, 3)}, k₂ = ${sig(S.p.k2, 3)} N/m, m = ${fx(S.p.m, 2)} kg each`, W / 2, ctlH + 4 * ps);
       for (const [xb, col, lab, xv] of [[xb1, T.pos, 'x_1', st.x1], [xb2, T.neg, 'x_2', st.x2]]) { const q = Q([wx(xb), YR3 - 0.03, 0.004]); labelBox(ctx, `${lab} = ${cm(xv)}`, clamp(q[0], 40 * ps, W - 40 * ps), ylim(q[1] + fs * 0.9), 'center', col, fs, 700); }
     } else if (vert) { massTab(ctx, bb1[0] + bb1[2] / 2, bb1[1] + bb1[3] + 12 * ps, 1, true); labelBox(ctx, `${fx(S.p.m, 2)} kg`, bb1[0] + bb1[2] / 2 + 14 * ps, bb1[1] + bb1[3] + 16 * ps, 'left', T.ink, fs * 0.92, 600); }
-    else { massTab(ctx, bb1[0] + bb1[2] / 2, bb1[1] - 12 * ps, -1, true); const q = Lp(xb1, -bw / 2, -bh / 2 - 0.03); labelBox(ctx, `${fx(S.p.m, 2)} kg`, q[0], q[1] + fs * 0.4, 'center', T.ink, fs * 0.92, 600); }
+    else { const rt = rider ? Lp(xb1, 0, bh / 2 + blockDims(rider)[2])[1] : Infinity; massTab(ctx, bb1[0] + bb1[2] / 2, Math.min(bb1[1], rt) - 12 * ps, -1, true); const q = Lp(xb1, -bw / 2, -bh / 2 - 0.03); labelBox(ctx, rider ? `${fx(S.p.m - rider, 2)} kg + ${fx(rider, 2)} kg dropped` : `${fx(S.p.m, 2)} kg`, q[0], q[1] + fs * 0.4, 'center', T.ink, fs * 0.92, 600); }
     if (fv && !cp) { ctx.font = `700 ${10.5 * Math.min(ps, 1.25)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       for (const [L, z, col, lab] of [[fv[0], -0.25 * bh, T.pos, 'F'], [fv[1], 0.25 * bh, T.vcol, 'v']]) { if (Math.abs(L) < 0.012) continue; const q = Lp(xb1 + Math.sign(L) * (bl / 2 + Math.abs(L) + 0.008), -bw / 2 - 0.006, z); ctx.fillStyle = col; ctx.fillText(lab, q[0], q[1]); } }
     /* the rule: x along it, equilibrium */
@@ -2414,6 +2450,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       $('coupBox').innerHTML = bl ? hid('Mode frequencies, shapes and beat period') : h3;
     }
     // sections shown
+    dropUi();
     $('driveSec').hidden = S.sys !== 'driven';
     $('coupSec').hidden = !cp;
     $('cmpWrap').hidden = S.sys !== 'free' || S.blind;
@@ -2466,7 +2503,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (sbOn()) { sbExit(); for (const b of document.querySelectorAll('#sysSeg button')) b.setAttribute('aria-pressed', 'false'); }
     S.preset = name;
     const c = cfg();
-    S.sys = c.sys; S.vert = !!c.vert;
+    S.sys = c.sys; S.vert = !!c.vert; liftRider(true);
     S.p.m = c.m; S.p.k = c.k; S.p.b = c.zeta * 2 * Math.sqrt(c.k * c.m);
     if (c.F0 !== undefined) S.p.F0 = c.F0;
     if (c.w !== undefined) S.p.w = c.w;
@@ -2487,6 +2524,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (S.p[key] === v) return;
     if (key === 'k' && S.unk && !force) return;    // k is locked while the spring is unknown
     if (key !== 'w' || !sweep) stopSweep(false);
+    if (key === 'm') liftRider(true);   /* the mass setting is the whole mass now: a dropped block becomes part of it */
     S.p[key] = v;
     if (held) rebuildHeld(); else { branch(key === 'm' || key === 'k' || key === 'kc' || key === 'k2'); buildCompare(); }
     refitWindow(); syncSliders(); staticText(); updateReadouts();
@@ -2502,7 +2540,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function setSys(sys) {
     if (sys === S.sys) return;
     stopSweep(false);
-    const was = S.sys; S.sys = sys;
+    const was = S.sys; liftRider(); S.sys = sys;
     if (sys === 'sandbox') { sbEnter(); setRunning(!reduce || running); syncSliders(); $('live').textContent = 'Sandbox: build any hanging arrangement.'; return; }
     if (was === 'sandbox') { sbExit(); newRun(sys === 'coupled' ? { x1: 0.1, v1: 0, x2: 0, v2: 0 } : { x: 0.12, v: 0 }); }
     if (sys === 'coupled' && S.unk) setUnknown(false, 'Unknown spring off: it works with one block only.');
@@ -2517,7 +2555,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function setVert(v) {
     if (S.sys === 'coupled' || v === S.vert) return;
     stopSweep(false);
-    S.vert = v;
+    liftRider(); S.vert = v;
     const x0 = clamp(lastIC.x, -XMAX[ori()], XMAX[ori()]);
     newRun({ x: x0, v: 0 });
     staticText();
@@ -2564,7 +2602,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));
-  function doReset() { if (sbOn() && SB.grid) { if (!SB.grid.held) { gdStart(SB.grid.ic.slice()); if (!running) setRunning(true); } return; } if (sbOn()) { if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; newRun(lastIC); if (!running) setRunning(true); }
+  function doReset() { if (sbOn() && SB.grid) { if (!SB.grid.held) { gdStart(SB.grid.ic.slice()); if (!running) setRunning(true); } return; } if (sbOn()) { if (!SB.held) { sbStart(SB.ic); if (!running) setRunning(true); } return; } stopSweep(false); held = null; liftRider(); syncSliders(); staticText(); newRun(lastIC); if (!running) setRunning(true); }
   $('reset').addEventListener('click', doReset);
 
   // ---------- stopwatch, ruler peak, readings, fit, Blind (lab kit) ----------
@@ -2942,9 +2980,52 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (k === 'w' || k === 'W') setSw(!sw.on);
     else if (k === 'c' || k === 'C') captureReading();
     else if (k === '[' || k === ']') kick(k === ']' ? 1 : -1);
+    else if ((k === 'd' || k === 'D') && dropAllowed()) dropBlock();
     else return;
     e.preventDefault();
   });
+  // ---------- Drop a block on it: a block lands on the moving block and sticks (dropOn in the core) ----------
+  const dropAllowed = () => S.sys === 'free' && !S.vert;
+  const dropM = () => +$('sDm').value;
+  /* Start over, a new setup, the other orientation or a new mass setting takes the dropped block off (or makes it part of m) */
+  function liftRider(keepMass) {
+    if (!rider) return;
+    if (!keepMass) S.p.m = +(S.p.m - rider).toFixed(4);
+    rider = 0; lastDrop = null; dropUi();
+  }
+  function dropBlock() {
+    if (!dropAllowed()) return;
+    if (held) { $('dropStatus').textContent = 'Let go of the block first.'; return; }
+    const md = dropM();
+    if (S.p.m + md > SL.m.max + 1e-9) { $('dropStatus').textContent = `The block and what sits on it can be at most ${SL.m.max} kg: press Start over to lift the dropped blocks off.`; return; }
+    stopSweep(false);
+    const g = lastSeg(), st = segState(g, t), r = dropOn(S.p.m, S.p.k, st.x, st.v, md);
+    lastDrop = { ...r, m: S.p.m, md, x: st.x, v: st.v, t };
+    rider = +(rider + md).toFixed(4); S.p.m = +r.M.toFixed(4);
+    const ng = segFrom(t, { ...st, v: r.v1 });
+    if (t === g.t0) segs[segs.length - 1] = ng; else segs.push(ng);
+    resetBook(); buildCompare();
+    if (!running) setRunning(true);
+    refitWindow(); syncSliders(); staticText(); updateReadouts(); dropUi();
+    $('dropStatus').textContent = '';
+    $('live').textContent = S.blind ? 'A block landed and stuck.' : `A ${fx(md, 2)} kg block landed and stuck: velocity ${fx(st.v, 3)} to ${fx(r.v1, 3)} m/s.`;
+  }
+  function dropUi() {
+    $('dropSec').hidden = !dropAllowed() || sbOn();
+    $('oDm').textContent = `${fx(dropM(), 2)} kg`;
+    const L = lastDrop;
+    if (!L) { $('dropBox').innerHTML = rider ? '' : dd('Nothing dropped yet', 'Press Play, then Drop it now', 'wide'); if (!rider) $('dropStatus').textContent = ''; return; }
+    const hidv = (v) => (S.blind ? '<span class="ok">hidden in Blind</span>' : v);
+    let h = dd('Landed at', `t = ${L.t.toFixed(2)} s, x = ${cm(L.x)}`, 'wide');
+    h += dd('Mass m → m + m<sub>d</sub>', `${fx(L.m, 2)} → ${fx(L.M, 2)} kg`, 'wide');
+    h += dd('Velocity v → v′ = m v/(m + m<sub>d</sub>)', hidv(`${fx(L.v, 3)} → ${fx(L.v1, 3)} m/s`), 'wide');
+    h += dd('Period 2π√(m/k) before → after', hidv(`${sig(L.T0, 4)} → ${sig(L.T1, 4)} s`), 'wide');
+    h += dd('Amplitude √(x² + (v/ω₀)²) before → after', hidv(`${cm(L.A0, 2)} → ${cm(L.A1, 2)}`), 'wide');
+    h += dd('Kinetic energy lost in the landing', hidv(fmtE(L.Klost)), 'wide');
+    $('dropBox').innerHTML = h;
+  }
+  $('sDm').addEventListener('input', dropUi);
+  $('dropBtn').addEventListener('click', dropBlock);
   // a push from the keyboard: the block carries on from where it is with 5 cm/s more (or less) velocity
   function kick(dir) {
     if (held) return;

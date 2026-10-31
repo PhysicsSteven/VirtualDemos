@@ -2,7 +2,7 @@
 // Springs and Oscillations: the CORE block against analytic results.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const c = core('springs', 'G,homog,steady,makeSingle,singleState,coupledModes,makeCoupled,coupledState,segState,energy,powerIntegrals,upCrossings,phasor,SP_VERSION,periodOf,qualityOf,cellNum,rowPeriod,fitLine,kFromSlope,plotPoints,CSV_COLS,scaleStr,readingsCSV');
+const c = core('springs', 'dropOn,G,homog,steady,makeSingle,singleState,coupledModes,makeCoupled,coupledState,segState,energy,powerIntegrals,upCrossings,phasor,SP_VERSION,periodOf,qualityOf,cellNum,rowPeriod,fitLine,kFromSlope,plotPoints,CSV_COLS,scaleStr,readingsCSV');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -226,6 +226,28 @@ test('readings: T = t/N, plot points, CSV header, SI columns and cells exported 
   // the ideal stopwatch: the T² fit of exact periods recovers k
   const exact = [0.4, 0.8, 1.2, 1.6].map((m) => ({ m: String(m), N: '10', t: String(10 * c.periodOf(m, 25)) }));
   const Q = c.plotPoints(exact, 'T2m'), f = c.fitLine(Q.x, Q.y); close(c.kFromSlope(f.b, f.seB).k, 25, 1e-10);
+});
+
+test('a block dropped on the moving block: momentum along the track kept, new period, amplitude and energy lost', () => {
+  const m = 1, k = 40, md = 1, A = 0.15, w0 = Math.sqrt(k / m);
+  // at equilibrium, moving at its fastest: v' = v/2, amplitude falls by √(m/(m + md)) = 1/√2
+  const r = c.dropOn(m, k, 0, A * w0, md);
+  close(r.M * r.v1, m * A * w0, 1e-15); close(r.v1, A * w0 / 2, 1e-15);
+  close(r.A0, A, 1e-15); close(r.A1, A / Math.SQRT2, 1e-14);
+  close(r.T1 / r.T0, Math.SQRT2, 1e-14); close(r.T0, 2 * Math.PI * Math.sqrt(m / k), 1e-15);
+  close(r.Klost, 0.5 * m * (A * w0) ** 2 - 0.5 * r.M * r.v1 ** 2, 1e-14);
+  close(r.Klost, 0.5 * 0.5 * k * A * A, 1e-14);   /* half the energy goes, for equal masses */
+  // at a turning point: nothing moving, nothing lost, the amplitude stays
+  const q = c.dropOn(m, k, A, 0, md);
+  close(q.A1, A, 1e-15); assert.equal(q.Klost, 0); assert.equal(q.v1, 0);
+  // anywhere between: run on with the exact solution from (x, v') at m + md; its largest |x| is A1 and its period T1
+  const x = 0.09, v = -Math.sqrt(w0 * w0 * (A * A - x * x)), d = c.dropOn(m, k, x, v, 0.35);
+  const g = c.makeSingle(0, x, d.v1, 0, { m: d.M, k, b: 0 });
+  let big = 0; for (let i = 0; i <= 20000; i++) big = Math.max(big, Math.abs(c.singleState(g, d.T1 * i / 20000).x));
+  close(big, d.A1, 1e-7);
+  const z = c.upCrossings(g, 0, 4.5 * d.T1, 'x'); for (let i = 1; i < z.length; i++) close(z[i] - z[i - 1], d.T1, 1e-11);
+  // energy after the landing is the energy before less what the landing took
+  close(0.5 * d.M * d.v1 ** 2 + 0.5 * k * x * x, 0.5 * m * v * v + 0.5 * k * x * x - d.Klost, 1e-13);
 });
 
 console.log(`${n} springs test groups passed`);

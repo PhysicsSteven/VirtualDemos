@@ -22,6 +22,9 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; --bcol: #f2b544; } }
 :root[data-theme="dark"] { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; --bcol: #f2b544; }
 /* scenery: hallway wall and floor, the motion sensor, sky and building for the toss */
+:root { --road: #8d939c; --road-line: #f4f1e6; --kerb: #c9ced6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --road: #2b3038; --road-line: #c9c3ad; --kerb: #3a414c; } }
+:root[data-theme="dark"] { --road: #2b3038; --road-line: #c9c3ad; --kerb: #3a414c; }
 :root { --wall: #eef0f3; --wall-trim: #d6dbe2; --door: #e2e6ec; --floor: #f0e9de; --floor-seam: #e1d6c4; --sensor: #3d4654; --grille: #8a95a3; --ping: #8a95a3;
   --sky-top: #cfe3f5; --sky-bot: #eef5fb; --cloud: #ffffff; --grass: #d5e3c8; --building: #dde1e7; --window: #c7d6e6; --shine: rgba(255, 255, 255, 0.5); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wall: #151c25; --wall-trim: #262f3c; --door: #1b232e; --floor: #221e19; --floor-seam: #2e2821; --sensor: #a9b4c2; --grille: #4c5664; --ping: #7d8a9a;
@@ -93,6 +96,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="stopgo" aria-pressed="false">Stop and go</button>
           <button type="button" data-p="toss" aria-pressed="false">Ball thrown up</button>
           <button type="button" data-p="two" aria-pressed="false">Two cars</button>
+          <button type="button" data-p="stop" aria-pressed="false">Stopping distance</button>
           <button type="button" data-p="ramps" aria-pressed="false">Ball on ramps</button>
           <button type="button" data-p="walk" aria-pressed="false">Walk the graph</button>
           <button type="button" data-p="draw" aria-pressed="false">Draw a graph</button>
@@ -132,6 +136,19 @@ table.rows input:focus { border-color: var(--accent); }
         <div><div class="slider-head"><label for="sba">Acceleration a</label><output id="oba" for="sba"></output></div><input type="range" id="sba" min="-10" max="10" step="0.5"></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Car A is the blue cart, set with Motion above; car B (orange) keeps one constant acceleration for the whole run. They pass each other wherever their x–t lines cross. The meeting times are worked out exactly from x_A(t) = x_B(t), a quadratic in each stage. Capture records car A.</p>
+        </details>
+      </section>
+
+      <section id="secStop" hidden>
+        <h2>Stopping distance</h2>
+        <div><div class="slider-head"><label for="ssa">Car A speed</label><output id="osa" for="ssa"></output></div><input type="range" id="ssa" min="0" max="40" step="0.5"></div>
+        <div><div class="slider-head"><label for="ssb">Car B speed</label><output id="osb" for="ssb"></output></div><input type="range" id="ssb" min="0" max="40" step="0.5"></div>
+        <div><div class="slider-head"><label for="str">Reaction time</label><output id="otr" for="str"></output></div><input type="range" id="str" min="0.3" max="2.5" step="0.01"></div>
+        <div><div class="slider-head"><label for="sbr">Braking deceleration</label><output id="obr" for="sbr"></output></div><input type="range" id="sbr" min="1" max="10" step="0.1"></div>
+        <dl class="readout" id="stopOut"></dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Both drivers see a hazard at t = 0, at x = 0. For the reaction time the car keeps its speed (reaction distance v t<sub>r</sub>), then it brakes with a constant deceleration b until it stops (braking distance v²/2b, from v² = v₀² − 2b d). The stopping distance is the sum: d = v t<sub>r</sub> + v²/2b. Double the speed and the reaction distance doubles, but the braking distance goes up four times.</p>
+          <p class="hint">The setup opens with t<sub>r</sub> = 0.67 s and b = 6.5 m/s², close to the typical stopping distances in the UK Highway Code (rule 126): thinking distance 0.3 m for each mile per hour of speed (0.67 s), and braking distances from 6 m at 20 mph to 75 m at 70 mph (6.5 to 6.7 m/s²). The Highway Code says stopping distances are at least double on wet roads (rule 227) and can be ten times greater on ice (rule 230); lower b to see why. The braking is taken as constant from the moment the brakes go on, and the road as level.</p>
         </details>
       </section>
 
@@ -285,6 +302,11 @@ table.rows input:focus { border-color: var(--accent); }
     }
     return { x0: 0, v0, stages, T: t, why };
   }
+  // Stopping distance: a car at speed v; the driver sees a hazard at t = 0, keeps the speed for the reaction time tr, then brakes with
+  // a constant deceleration b to a stop. Reaction distance v tr; braking distance v²/2b (v² = v0² − 2 b d with the final v = 0).
+  function stopDist(v, tr, b) { const react = v * tr, brake = v * v / (2 * b); return { react, brake, total: react + brake, tBrake: tr, tStop: tr + v / b }; }
+  // the same car as stages of constant acceleration (coast, brake, stand still) up to tEnd, so stateAt and meetTimes read it
+  function stopRun(v, tr, b, tEnd) { const d = stopDist(v, tr, b); return buildRun(0, v, [{ a: 0, T: tr }, { a: -b, T: v / b }, { a: 0, T: Math.max(0, tEnd - d.tStop) }]); }
   // piecewise linear target x(t) through points [[t, x], ...]
   function targetAt(pts, t) {
     if (t <= pts[0][0]) return pts[0][1];
@@ -366,20 +388,23 @@ table.rows input:focus { border-color: var(--accent); }
     stopgo: { x0: -8, v0: 0, segs: [[2, 2], [0, 3], [-2, 2]], hint: 'Speed up, cruise, slow to a stop. Each stage has its own constant a. x is curved, straight, then curved again; v is a trapezoid, and the area under it is the total distance.' },
     toss: { x0: 0, v0: 12, segs: [[-9.81, 2 * 12 / 9.81], [0, 0], [0, 0]], vert: true, hint: 'Free fall: thrown up at 12 m/s, the ball has a = −9.81 m/s² the whole time, on the way up, at the top and on the way down. At the top v = 0 but a is not. It lands after 2v₀/g = 2.45 s, back at the height it started. Air resistance is ignored.' },
     two: { x0: -8, v0: 0, segs: [[1, 8], [0, 0], [0, 0]], B: { x0: -6, v0: 2, a: 0 }, hint: 'Car A (blue) starts from rest at x = −8 m and speeds up at 1 m/s²; car B (orange) passes x = −6 m at a steady 2 m/s. Where the two x–t lines cross, the cars are side by side: here at t = 2 + √8 = 4.83 s, x = 3.66 m. Where the v–t lines cross (t = 2 s), the cars have the same velocity and the gap between them is at its largest.' },
+    stop: { sd: { vA: 15, vB: 30, tr: 0.67, b: 6.5 }, hint: 'Two cars, side by side at x = 0 when their drivers see a hazard ahead: car A (blue) at 15 m/s (54 km/h), car B (orange) at twice that. Each keeps its speed for the 0.67 s reaction time, then brakes at 6.5 m/s² to a stop. Car B\'s reaction distance is twice car A\'s, but its braking distance is four times as long, since it goes as v². On the v–t graph each stopping distance is the area under that car\'s line: a rectangle for the reaction, a triangle for the braking.' },
     ramps: { ang: [-20, 0, 30], v0: 0, hint: 'The ball rolls down piece 1, coasts along the flat, and climbs the steep piece 3 until it stops and comes back. Each piece gives a straight v–t line: its slope is the acceleration along that piece, steeper for a steeper ramp, zero on the flat. With no friction losses the ball comes back to its start height with no speed left and goes again.' },
     draw: { hint: 'Draw any velocity graph with the mouse or a finger on the v–t pane, and see its derivative (the a–t graph, the slope of v) and its integral (the x–t graph, x₀ plus the area under v). The cart drives your motion when you press Play. Switch to drawing a, and both v and x come from areas.' },
     walk: { hint: 'Move the cart so that its position graph follows the dashed target. Flat parts mean stand still; steeper parts mean move faster.' }
   };
   const D_N = 100, D_H = 0.1;      /* Draw a graph: 100 pieces of 0.1 s, a 10 s run */
-  const S = { drawOn: false, dr: { kind: 'v', v: shapeVals('tri', 'v', D_N + 1, D_H), a: shapeVals('sine', 'a', D_N, D_H), x0: -6, v0: 0 }, ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
+  const S = { stop: false, sd: { vA: 15, vB: 30, tr: 0.67, b: 6.5 }, drawOn: false, dr: { kind: 'v', v: shapeVals('tri', 'v', D_N + 1, D_H), a: shapeVals('sine', 'a', D_N, D_H), x0: -6, v0: 0 }, ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
     walk: { pts: null, vel: false, run: false, t: 0, xs: [], x: 0, key: 0, score: null } };
   const WALK_T = 10, WALK_DT = 0.02, X_LIM = 10, RAMP_L = 3, RAMP_T = 12, G = 9.81;
   const rampBuild = () => rampRun(S.rp.ang, RAMP_L, S.rp.v0, RAMP_T, G);
   const drawBuild = () => drawnRun(S.dr.kind, S.dr[S.dr.kind], D_H, S.dr.x0, S.dr.v0);
-  const buildAny = () => (S.drawOn ? drawBuild() : S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs));
+  /* Stopping distance: both cars' runs last until the slower to stop has stood still for 1 s */
+  const stopEnd = () => Math.max(stopDist(S.sd.vA, S.sd.tr, S.sd.b).tStop, stopDist(S.sd.vB, S.sd.tr, S.sd.b).tStop) + 1;
+  const buildAny = () => (S.stop ? stopRun(S.sd.vA, S.sd.tr, S.sd.b, stopEnd()) : S.drawOn ? drawBuild() : S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs));
   let run = buildRun(S.x0, S.v0, S.segs), runB = null, playing = false;
   /* car B: one constant acceleration for as long as car A's run lasts */
-  const buildB = () => { runB = S.two ? buildRun(S.B.x0, S.B.v0, [{ a: S.B.a, T: Math.max(run.T, 0.5) }]) : null; };
+  const buildB = () => { runB = S.stop ? stopRun(S.sd.vB, S.sd.tr, S.sd.b, stopEnd()) : S.two ? buildRun(S.B.x0, S.B.v0, [{ a: S.B.a, T: Math.max(run.T, 0.5) }]) : null; };
   const meets = () => (runB ? meetTimes(run, runB, tMax()) : null);
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null, LY = null;
@@ -388,7 +413,7 @@ table.rows input:focus { border-color: var(--accent); }
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      accent: g('--accent'), b: g('--bcol'), x: g('--xcol'), v: g('--vcol'), a: g('--acol'), equi: g('--equi'),
+      accent: g('--accent'), b: g('--bcol'), road: g('--road'), roadLine: g('--road-line'), kerb: g('--kerb'), x: g('--xcol'), v: g('--vcol'), a: g('--acol'), equi: g('--equi'),
       wall: g('--wall'), wallTrim: g('--wall-trim'), door: g('--door'), floor: g('--floor'), floorSeam: g('--floor-seam'), sensor: g('--sensor'), grille: g('--grille'), ping: g('--ping'),
       skyTop: g('--sky-top'), skyBot: g('--sky-bot'), cloud: g('--cloud'), grass: g('--grass'), building: g('--building'), window: g('--window'), shine: g('--shine'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
@@ -413,6 +438,9 @@ table.rows input:focus { border-color: var(--accent); }
     $('ov0').textContent = S.blind ? 'hidden' : `${fx(S.v0, 1)} m/s`;
     for (let k = 0; k < 3; k++) { $('sr' + k).value = S.rp.ang[k]; $('or' + k).textContent = `${fx(S.rp.ang[k], 0)}°`; }
     $('srv').value = S.rp.v0; $('orv').textContent = `${fx(S.rp.v0, 1)} m/s`;
+    const kmh = (v) => `${fx(v, 1)} m/s (${fx(v / 0.44704, 0)} mph)`;   /* 1 mph = 0.44704 m/s exactly */
+    $('ssa').value = S.sd.vA; $('ssb').value = S.sd.vB; $('str').value = S.sd.tr; $('sbr').value = S.sd.b;
+    $('osa').textContent = kmh(S.sd.vA); $('osb').textContent = kmh(S.sd.vB); $('otr').textContent = `${fx(S.sd.tr, 2)} s`; $('obr').textContent = `${fx(S.sd.b, 1)} m/s² (${fx(S.sd.b / G, 2)} g)`;
     $('sbx0').value = S.B.x0; $('sbv0').value = S.B.v0; $('sba').value = S.B.a;
     $('obx0').textContent = `${fx(S.B.x0, 1)} m`; $('obv0').textContent = S.blind ? 'hidden' : `${fx(S.B.v0, 1)} m/s`; $('oba').textContent = S.blind ? 'hidden' : `${fx(S.B.a, 1)} m/s²`;
   }
@@ -430,12 +458,13 @@ table.rows input:focus { border-color: var(--accent); }
     $('presetHint').textContent = c.hint;
     const walk = p === 'walk';
     $('secMotion').hidden = walk; $('secWalk').hidden = !walk;
-    S.two = p === 'two'; $('secCarB').hidden = !S.two; if (S.two) S.B = { ...c.B };
+    S.two = p === 'two' || p === 'stop'; $('secCarB').hidden = p !== 'two'; if (p === 'two') S.B = { ...c.B };
+    S.stop = p === 'stop'; $('secStop').hidden = !S.stop; if (S.stop) { $('secMotion').hidden = true; S.sd = { ...c.sd }; }
     S.ramps = p === 'ramps'; $('secRamps').hidden = !S.ramps; if (S.ramps) { $('secMotion').hidden = true; S.rp = { ang: c.ang.slice(), v0: c.v0, target: null }; $('rampTargetOff').hidden = true; $('rampMatch').textContent = ''; }
     S.drawOn = p === 'draw'; $('secDraw').hidden = !S.drawOn; if (S.drawOn) { $('secMotion').hidden = true; syncDraw(); }
     if (walk) { newTarget(); S.vert = false; }
     else {
-      if (!S.ramps && !S.drawOn) { S.x0 = c.x0; S.v0 = c.v0; c.segs.forEach(([a, T], k) => { S.segs[k] = { a, T }; }); }
+      if (!S.ramps && !S.drawOn && !S.stop) { S.x0 = c.x0; S.v0 = c.v0; c.segs.forEach(([a, T], k) => { S.segs[k] = { a, T }; }); }
       S.vert = !!c.vert;
       run = buildAny(); buildB(); S.t = 0; syncControls();
     }
@@ -456,6 +485,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('sv0').addEventListener('input', (e) => { S.v0 = +e.target.value; changed(true); });
   for (let k = 0; k < 3; k++) $('sr' + k).addEventListener('input', (e) => { S.rp.ang[k] = +e.target.value; changed(false); });
   $('srv').addEventListener('input', (e) => { S.rp.v0 = +e.target.value; changed(false); });
+  for (const [id, k] of [['ssa', 'vA'], ['ssb', 'vB'], ['str', 'tr'], ['sbr', 'b']]) $(id).addEventListener('input', (e) => { S.sd[k] = +e.target.value; S.t = 0; changed(false); });
   /* Match a graph: a hidden track whose run lasts at least 4 s and does not just sit still */
   function rampTarget() {
     const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -609,7 +639,7 @@ table.rows input:focus { border-color: var(--accent); }
     else if (S.ramps) drawRamps(L, blind);
     else {
     const xr = R.x, ty = L.trackH - 0.38 * L.trackH0,   /* the rail keeps its height above the graphs; Two cars adds a lane above it */ tx0 = L.left, tx1 = L.right, X = (x) => tx0 + (tx1 - tx0) * (x - xr.lo) / (xr.hi - xr.lo);
-    hallScene(p, L.trackH, ty, tx0, tx1);
+    if (S.stop) roadScene(p, L.trackH, ty, X); else hallScene(p, L.trackH, ty, tx0, tx1);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(tx0, ty + 12 * p); ctx.lineTo(tx1, ty + 12 * p); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let x = xr.lo; x <= xr.hi + 1e-9; x += xr.step) { const px = X(x); ctx.fillRect(px - 0.5, ty + 12 * p, 1, 6 * p); ctx.fillText(fx(x, xr.step < 1 ? 1 : 0), px, ty + 20 * p); }
@@ -622,13 +652,13 @@ table.rows input:focus { border-color: var(--accent); }
     const cw = 34 * p, ch = 16 * p;
     if (runB) {   /* car B on the far lane, a little smaller, behind car A */
       const b = stateAt(runB, S.t), bx = X(Math.max(xr.lo, Math.min(xr.hi, b.x))), by = ty - 40 * p, bw = cw * 0.86, bh = ch * 0.86;
-      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(tx0, by + 9 * p); ctx.lineTo(tx1, by + 9 * p); ctx.stroke();   /* car B's own rail, behind car A's */
+      if (!S.stop) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(tx0, by + 9 * p); ctx.lineTo(tx1, by + 9 * p); ctx.stroke(); }   /* car B's own rail, behind car A's */
       ctx.fillStyle = T.b; ctx.beginPath(); ctx.roundRect(bx - bw / 2, by - bh + 4 * p, bw, bh, 4 * p); ctx.fill();
       ctx.fillStyle = T.shine; ctx.fillRect(bx - bw / 2 + 4 * p, by - bh + 6 * p, bw - 8 * p, 2.5 * p);
       ctx.fillStyle = T.ink; for (const dx of [-bw / 3, bw / 3]) { ctx.beginPath(); ctx.arc(bx + dx, by + 5 * p, 3.8 * p, 0, 7); ctx.fill(); }
       ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.canvas; ctx.fillText('B', bx, by - bh / 2 + 4 * p);
     }
-    sensorPings(p, tx0, ty, cx - cw / 2 - 3 * p);
+    if (!S.stop) sensorPings(p, tx0, ty, cx - cw / 2 - 3 * p);
     // the cart: body, a reflector card facing the sensor, wheels with hubs
     ctx.fillStyle = T.ink; ctx.fillRect(cx - cw / 2 - 3 * p, ty - ch, 2 * p, ch - 2 * p);
     if (window.VDGear) window.VDGear.shadow(ctx, cx, ty + 10 * p, cw * 0.6, 2.5 * p, 0.8);
@@ -638,7 +668,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (runB) { ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.canvas; ctx.fillText('A', cx, ty - ch / 2 + 5 * p); }
     ctx.fillStyle = T.ink; for (const dx of [-cw / 3, cw / 3]) { ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.grille; ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 1.6 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; }
     if (!blind) {
-      const vs = 14 * p, as = 14 * p;
+      const vs = (S.stop ? 4 : 14) * p, as = (S.stop ? 6 : 14) * p;   /* road speeds are large: shorter arrows */
       if (Math.abs(s.v) > 0.01) { arrow(cx, ty - ch - 6 * p, cx + s.v * vs, ty - ch - 6 * p, T.v, 2.5 * p, 8 * p); }
       if (Math.abs(s.a) > 0.01) { arrow(cx, ty - ch - 20 * p, cx + s.a * as, ty - ch - 20 * p, T.a, 2.5 * p, 8 * p); }
       ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle';
@@ -702,7 +732,7 @@ table.rows input:focus { border-color: var(--accent); }
         lineB(tm, 0.3); lineB(S.t === 0 ? tm : S.t, 1);
         ctx.fillStyle = T.b; ctx.beginPath(); ctx.arc(tX(S.t), Y(stateAt(runB, S.t)[pane.k]), 4.5 * p, 0, 7); ctx.fill();
         const M = meets();
-        if (pane.k === 'x' && !blind && M && !M.same) for (const tmt of M.t) {
+        if (pane.k === 'x' && !blind && !S.stop && M && !M.same) for (const tmt of M.t) {
           const xm = stateAt(run, tmt).x; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(tX(tmt), Y(xm), 7 * p, 0, 7); ctx.stroke();
           ctx.setLineDash([2 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(tX(tmt), Y(xm) + 7 * p); ctx.lineTo(tX(tmt), y0 + h); ctx.stroke(); ctx.setLineDash([]);
         }
@@ -751,6 +781,31 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.grille; ctx.beginPath(); ctx.ellipse(bx + bw, by + bh / 2, 3 * p, 8 * p, 0, -Math.PI / 2, Math.PI / 2); ctx.fill();
     ctx.strokeStyle = T.grille; ctx.lineWidth = 1; ctx.beginPath(); for (let i = -2; i <= 2; i++) { ctx.moveTo(bx + 4 * p, by + bh / 2 + i * 3 * p); ctx.lineTo(bx + bw - 4 * p, by + bh / 2 + i * 3 * p); } ctx.stroke();
   }
+  function roadScene(p, trackH, ty, X) {
+    // a road seen from the side of it: grass, two lanes of asphalt with a dashed line between them, the hazard line at x = 0;
+    // on each lane the stretch covered while reacting (dashed) and while braking (solid), drawn as the car covers it
+    const x0 = 4 * p, x1 = W - 4 * p, y0 = 4 * p, y1 = trackH + 2 * p, rTop = ty - 62 * p, rBot = ty + 12 * p, mid = ty - 22 * p;
+    ctx.save(); ctx.beginPath(); ctx.roundRect(x0, y0, x1 - x0, y1 - y0, 8 * p); ctx.clip();
+    const g = ctx.createLinearGradient(0, y0, 0, rTop); g.addColorStop(0, T.skyTop); g.addColorStop(1, T.skyBot); ctx.fillStyle = g; ctx.fillRect(x0, y0, x1 - x0, rTop - y0);
+    ctx.fillStyle = T.grass; ctx.fillRect(x0, rTop - 8 * p, x1 - x0, 8 * p); ctx.fillRect(x0, rBot, x1 - x0, y1 - rBot);
+    ctx.fillStyle = T.road; ctx.fillRect(x0, rTop, x1 - x0, rBot - rTop);
+    ctx.fillStyle = T.kerb; ctx.fillRect(x0, rTop, x1 - x0, 2 * p);
+    ctx.strokeStyle = T.roadLine; ctx.lineWidth = 2 * p; ctx.setLineDash([14 * p, 10 * p]); ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x1, mid); ctx.stroke(); ctx.setLineDash([]);
+    // the hazard line
+    const hx = X(0); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(hx, rTop - 4 * p); ctx.lineTo(hx, rBot); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.roadLine; ctx.font = `600 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('hazard seen', hx - 4 * p, rTop + 5 * p);
+    // reaction and braking stretches on each lane, up to where the car is now
+    const lane = (rr, d, y, col) => {
+      const x = stateAt(rr, S.t).x, a = Math.min(x, d.react);
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.85;
+      if (a > 0) { ctx.lineWidth = 2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(0), y); ctx.lineTo(X(a), y); ctx.stroke(); ctx.setLineDash([]); }
+      if (x > d.react) { ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(X(d.react), y); ctx.lineTo(X(x), y); ctx.stroke(); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(d.react), y - 7 * p); ctx.lineTo(X(d.react), y + 7 * p); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    };
+    lane(run, stopDist(S.sd.vA, S.sd.tr, S.sd.b), ty + 4 * p, T.x);
+    if (runB) lane(runB, stopDist(S.sd.vB, S.sd.tr, S.sd.b), ty - 36 * p, T.b);
+    ctx.restore();
+  }
   function sensorPings(p, tx0, ty, xTarget) {   // faint sound pulses traveling from the sensor to the cart while it runs
     if (reduce || !playing) return;
     const sx = tx0 - 6 * p + 3 * p, sy = ty + 1 * p, d = xTarget - sx; if (d < 16 * p) return;
@@ -789,11 +844,23 @@ table.rows input:focus { border-color: var(--accent); }
         if (runB) {
           const b = stateAt(runB, S.t), M = meets();
           h += dd('Car B position x', `${fx(b.x, 2)} m`) + dd('Car B velocity v', `${fx(b.v, 2)} m/s`) + dd('Gap x_B − x_A', `${fx(b.x - q.x, 2)} m`, true);
-          h += dd('Side by side', M.same ? 'the whole time: the two motions are the same' : M.t.length ? M.t.map((t) => `t = ${fx(t, 2)} s at x = ${fx(stateAt(run, t).x, 2)} m`).join('; ') : 'never in this run', true);
+          if (!S.stop) h += dd('Side by side', M.same ? 'the whole time: the two motions are the same' : M.t.length ? M.t.map((t) => `t = ${fx(t, 2)} s at x = ${fx(stateAt(run, t).x, 2)} m`).join('; ') : 'never in this run', true);
         }
       } else h += '<div class="wide"><dt>From the motion detector</dt><dd class="ok">v and a are estimated from position samples 0.02 s apart, smoothed over 0.4 s (v) and 0.6 s (a).</dd></div>';
     }
     $('readout').innerHTML = h;
+    if (S.stop) {
+      const A = stopDist(S.sd.vA, S.sd.tr, S.sd.b), B = stopDist(S.sd.vB, S.sd.tr, S.sd.b);
+      let o;
+      if (S.blind) o = '<div class="wide"><dt>Reaction, braking and stopping distances</dt><dd class="ok">hidden in Blind</dd></div>';
+      else {
+        o = '';
+        for (const [n, d] of [['A', A], ['B', B]]) o += dd(`Car ${n}: reaction v t<sub>r</sub> + braking v²/2b = stopping distance`, `${fx(d.react, 2)} m + ${fx(d.brake, 2)} m = ${fx(d.total, 2)} m`, true);
+        o += dd('Car B\'s braking distance ÷ car A\'s', S.sd.vA > 0 ? `${fx(B.brake / A.brake, 3)}, and (v<sub>B</sub>/v<sub>A</sub>)² = ${fx((S.sd.vB / S.sd.vA) ** 2, 3)}` : '— (car A is not moving)', true);
+        o += dd('Brakes on, stopped', `A: ${fx(A.tBrake, 2)} s, ${fx(A.tStop, 2)} s; B: ${fx(B.tBrake, 2)} s, ${fx(B.tStop, 2)} s`, true);
+      }
+      $('stopOut').innerHTML = o;
+    }
   }
   function distance(t) { // integral of |v| from 0 to t, exact within each stage
     let d = 0;
@@ -900,7 +967,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
-    const settings = S.preset === 'walk' ? 'your own walk' : S.ramps ? `ball on ramps, pieces ${RAMP_L} m long, slopes ${S.rp.ang.join(', ')} deg, start speed ${S.rp.v0} m/s; x along the track` : S.blind ? 'hidden (Blind)' : `x0 ${S.x0} m, v0 ${S.v0} m/s, stages ${S.segs.map((g) => `a ${g.a} m/s2 for ${g.T} s`).join('; ')}${S.two ? `; car B x0 ${S.B.x0} m, v0 ${S.B.v0} m/s, a ${S.B.a} m/s2 (rows are car A)` : ''}`;
+    const settings = S.preset === 'walk' ? 'your own walk' : S.stop ? (S.blind ? 'hidden (Blind)' : `stopping distance: car A ${S.sd.vA} m/s, car B ${S.sd.vB} m/s, reaction time ${S.sd.tr} s, braking deceleration ${S.sd.b} m/s2; hazard seen at t = 0, x = 0 (rows are car A)`) : S.ramps ? `ball on ramps, pieces ${RAMP_L} m long, slopes ${S.rp.ang.join(', ')} deg, start speed ${S.rp.v0} m/s; x along the track` : S.blind ? 'hidden (Blind)' : `x0 ${S.x0} m, v0 ${S.v0} m/s, stages ${S.segs.map((g) => `a ${g.a} m/s2 for ${g.T} s`).join('; ')}${S.two ? `; car B x0 ${S.B.x0} m, v0 ${S.B.v0} m/s, a ${S.B.a} m/s2 (rows are car A)` : ''}`;
     const txt = readingsCSV(S.rows, { version: MG_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own motion', settings });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'motion-graphs-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });

@@ -121,6 +121,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div id="muRows" class="kgroup"><div class="kctl"><label for="sMs">Static friction μs</label><input type="range" id="sMs" min="0" max="1" step="0.01"><output id="oMs" for="sMs"></output></div><div class="kctl"><label for="sMk">Kinetic friction μk</label><input type="range" id="sMk" min="0" max="1" step="0.01"><output id="oMk" for="sMk"></output></div></div>
         <div class="kctl"><label for="sF">Applied force F</label><input type="range" id="sF" min="0" max="150" step="1"><output id="oF" for="sF"></output></div>
         <div class="kctl"><label for="sPhi">Angle of F above the surface</label><input type="range" id="sPhi" min="-45" max="60" step="1"><output id="oPhi" for="sPhi"></output></div>
+        <div class="kctl" id="nRow" hidden><label for="sN">Strands n</label><input type="range" id="sN" min="1" max="6" step="1"><output id="oN" for="sN"></output></div>
         <div class="kctl"><label for="sM2">Hanging mass m₂ (0 = none)</label><input type="range" id="sM2" min="0" max="10" step="0.5" data-unit="kg"><output id="oM2" for="sM2"></output></div>
       </div>
     </div>
@@ -136,6 +137,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="table" aria-pressed="false">Hanging mass on a table</button>
           <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
           <button type="button" data-p="atwood" aria-pressed="false">Atwood's machine</button>
+          <button type="button" data-p="tackle" aria-pressed="false">Block and tackle</button>
           <button type="button" data-p="close" aria-pressed="false">Friction up close</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -252,6 +254,25 @@ table.rows input:focus { border-color: var(--accent); }
     if (stops) return workStep(p, s + ds, 0, dt - t1, W);
     return { s: s + ds, v: v + a * t1 };
   }
+  // Block and tackle: a load of mass m hangs from the lower block, the rope runs n times between the upper and lower blocks, and a
+  // hand pulls the free end with a steady force F. With a light rope and light, frictionless pulleys the tension is F all along the
+  // rope, so the n strands hold the load up with n F: the ideal mechanical advantage is n, and the pull that just holds the load is
+  // mg/n. The rope's length is fixed, so when the load rises by Δy the hand draws in n Δy of rope: the hand's work F n Δy equals
+  // mg Δy + ΔK. A load resting on the floor stays there while n F ≤ mg (the floor takes the rest).
+  function tackle(m, n, F, onFloor) {
+    const W = m * G, up = n * F, net = up - W;
+    if (onFloor && net <= 0) return { W, T: F, up, N: W - up, a: 0, aHand: 0, MA: n, Fhold: W / n };
+    return { W, T: F, up, N: 0, a: net / m, aHand: n * net / m, MA: n, Fhold: W / n };
+  }
+  // where the rope runs, for the drawing: strand 0 is the hand's, strands 1..n hold the load. Turns over the upper block join
+  // strands (0, 1), (2, 3), ...; turns under the lower block join (1, 2), (3, 4), .... The rope's far end is tied to the upper block
+  // when n is even and to the lower block when n is odd. Returns the upper and lower sheaves as pairs of strand numbers.
+  function tackleSheaves(n) {
+    const up = [], lo = [];
+    for (let j = 0; j + 1 <= n; j += 2) up.push([j, j + 1]);
+    for (let j = 1; j + 1 <= n; j += 2) lo.push([j, j + 1]);
+    return { up, lo, tied: n % 2 ? 'lower' : 'upper' };
+  }
   const gateTime = (a, d) => (a !== 0 ? Math.sqrt(2 * d / Math.abs(a)) : Infinity);
   const slipAngle = (ms) => Math.atan(ms) * 180 / Math.PI;      // free block on a ramp starts to slide when tan θ > μs
   function fitLine(xs, ys) {
@@ -297,10 +318,11 @@ table.rows input:focus { border-color: var(--accent); }
     angle: { p: { th: 0, m: 10, F: 50, phi: 30, m2: 0, ms: 0.4, mk: 0.3 }, s: 0.4, hint: 'Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.' },
     table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
     atwood: { p: { th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, s: 1.0, atwood: true, hint: 'Two masses hang over one pulley: m on the left, m₂ on the right. With a light string and a frictionless pulley, a = (m₂ − m) g/(m + m₂) = 0.5 × 9.81/4.5 = 1.09 m/s² here, much less than g, which is why Atwood used it to measure g. The tension, 2 m m₂ g/(m + m₂) = 21.8 N, lies between the two weights. Time a 1.000 m run and work out g.' },
+    tackle: { p: { th: 90, m: 12, F: 32, phi: 0, m2: 0, ms: 0, mk: 0, n: 4 }, s: 0, tackle: true, hint: 'A 12 kg load hangs from a block and tackle: the rope runs back and forth four times between the pulleys, so four strands hold the load, each pulled with the tension F. Here F = 32 N, so the strands pull up with 4 × 32 = 128 N, more than the 117.7 N weight, and the load rises at 0.86 m/s². The pull that just holds it is mg/4 = 29.4 N. The price: the hand pulls in 4 m of rope for every 1 m the load rises, so the work done is the same. Change the number of strands n and find the least pull that lifts the load.' },
     close: { p: { th: 0, m: 10, F: 45, phi: 0, m2: 0, ms: 0.5, mk: 0.3 }, s: 0.4, close: true, hint: 'The second pane shows the two surfaces magnified to the size of atoms (a schematic). Even polished surfaces are bumpy at this scale, and only the tips of the bumps touch. With a 45 N push, under the 49 N that static friction can give, the bumps stay locked and nothing slides: no work, no heat. Turn the push past 49 N: the block slides, the bumps catch and tear past each other, and the atoms at the contact jiggle harder: friction turns work into thermal energy at the rate μk N v.' },
     rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
   };
-  const S = { close: false, heat: 0, atwood: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
+  const S = { close: false, heat: 0, atwood: false, tackle: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
@@ -325,10 +347,10 @@ table.rows input:focus { border-color: var(--accent); }
   const f = (v, d = 1) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
 
   // ---------- controls ----------
-  const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')]];
+  const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')], ['sN', 'n', (v) => `${v}`]];
   function sync() {
     for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); }
-    $('muRows').hidden = !!S.mystery || S.atwood; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
+    $('muRows').hidden = !!S.mystery || S.atwood || S.tackle; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => {
     S.p[k] = +e.target.value;
@@ -340,20 +362,23 @@ table.rows input:focus { border-color: var(--accent); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
-    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
-    S.atwood = !!c.atwood; setPane(c.close ? 'close' : S.close && !S.atwood ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if (S.atwood && G3.on) setView('flat'); sync(); draw(); readouts();
+    S.p = { n: 4, ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
+    S.atwood = !!c.atwood; S.tackle = !!c.tackle; setPane(c.close ? 'close' : S.close && !S.atwood && !S.tackle ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if ((S.atwood || S.tackle) && G3.on) setView('flat'); sync(); draw(); readouts();
   }
   /* Atwood's machine: the ramp turned upright (θ = 90°), so the forces are the same code: N = 0, no friction, the string straight up.
      The ramp, friction and push knobs have no part in it and are hidden, and it is drawn flat (two masses over a pulley). */
+  /* The block and tackle uses the mass knob for the load, F for the pull on the rope and its own Strands knob; it is drawn flat too */
   function atwoodControls() {
-    for (const id of ['sTh', 'sF', 'sPhi']) $(id).closest('.kctl').hidden = S.atwood;
-    $('muRows').hidden = S.atwood || !!S.mystery; $('mystery').closest('label').hidden = S.atwood; $('viewSeg').hidden = S.atwood;
-    $('tComp').closest('label').hidden = S.atwood;
-    $('paneSeg').hidden = S.atwood;
+    const up = S.atwood || S.tackle;
+    for (const id of ['sTh', 'sPhi']) $(id).closest('.kctl').hidden = up;
+    $('sF').closest('.kctl').hidden = S.atwood; $('sM2').closest('.kctl').hidden = S.tackle; $('nRow').hidden = !S.tackle;
+    $('muRows').hidden = up || !!S.mystery; $('mystery').closest('label').hidden = up; $('viewSeg').hidden = up;
+    $('tComp').closest('label').hidden = up; $('timed').hidden = S.tackle;
+    $('paneSeg').hidden = up;
   }
   /* the second pane: the free body diagram, or the two surfaces magnified (no friction in Atwood's machine, so no close up there) */
   function setPane(v) {
-    S.close = v === 'close' && !S.atwood;
+    S.close = v === 'close' && !S.atwood && !S.tackle;
     for (const b of document.querySelectorAll('#paneSeg button')) b.setAttribute('aria-pressed', String((b.dataset.pane === 'close') === S.close));
   }
   function setMystery(on) {
@@ -370,16 +395,35 @@ table.rows input:focus { border-color: var(--accent); }
   function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; }
   $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; clearWork(); setRun(false); draw(); readouts(); });
   $('timed').addEventListener('click', () => {
+    if (S.tackle) return;
     const fz = forces(S.p, 0), top = LEN - 0.45, bottom = 0.45;
     S.v = 0; S.s = fz.D < 0 || fz.a <= 0 ? top : bottom;   // start at the end it will move away from
     S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(true); draw(); readouts();
   });
+  /* Block and tackle: S.s is the load's height above the floor. Steps of constant acceleration; the work each force does is added
+     as it moves (the hand's F n Δy, gravity's −mg Δy); landing on the floor or reaching the top takes the kinetic energy left */
+  const TK_TOP = 2.2, TK_LOAD = 0.3;   /* the highest the load rises before the lower block meets the upper one; the load's height (m) */
+  function tackleAdvance(dt) {
+    const P = S.p, nS = 20, h = dt / nS;
+    for (let i = 0; i < nS; i++) {
+      const y = S.s, v = S.v, tk = tackle(P.m, P.n, P.F, y <= 1e-12 && v <= 1e-12);
+      if (tk.a === 0 && Math.abs(v) <= 1e-12) { S.v = 0; continue; }
+      const a = tk.a; let y1 = y + v * h + 0.5 * a * h * h, v1 = v + a * h, hit = null;
+      if (y1 <= 0) { y1 = 0; hit = 'floor'; } else if (y1 >= TK_TOP) { y1 = TK_TOP; hit = 'top'; }
+      const dy = y1 - y;
+      S.work.F += P.F * P.n * dy; S.work.g -= P.m * G * dy; S.work.rope = (S.work.rope || 0) + P.n * dy; S.work.lift = (S.work.lift || 0) + dy;
+      if (hit) { S.work.stop = (S.work.stop || 0) - 0.5 * P.m * Math.max(0, v * v + 2 * a * dy); v1 = 0; }
+      S.s = y1; S.v = v1;
+      if (hit === 'top') { setRun(false); break; }
+    }
+  }
   let last = performance.now();
   let simClock = 0;   /* simulated time while the block runs, for the stopwatch */
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run) {
       simClock += dt;
+      if (S.tackle) { tackleAdvance(dt); draw(); readouts(); } else {
       const n = 10; let s = S.s, v = S.v;
       for (let i = 0; i < n; i++) {
         const lo = 0.25, hi = LEN - 0.25, W0 = { ...S.work };
@@ -394,6 +438,7 @@ table.rows input:focus { border-color: var(--accent); }
         if (hit) { S.work.stop = (S.work.stop || 0) - 0.5 * S.p.m * v * v; v = 0; setRun(false); break; }
       }
       S.s = s; S.v = v; draw(); readouts();
+      }
     }
     S.heat = heatPic(S.heat, S.run ? frictionPower(S.p, S.v) : 0, dt, 1.5);
     if (S.close && !S.run && !reduce) draw();       /* the atoms keep jiggling while the block is still */
@@ -565,7 +610,7 @@ table.rows input:focus { border-color: var(--accent); }
     /* the knob panel sits over the top of the scene: the apparatus is drawn below it */
     const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : Math.max(46 * p, (() => { const vb = document.querySelector('#scene .viewbar'); return vb.offsetTop + vb.offsetHeight + 6; })());
     drawScene(0, top, sw, sh - top);
-    (S.close ? drawClose : drawFBD)(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
+    (S.tackle ? drawTackleFBD : S.close ? drawClose : drawFBD)(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
   }
   // ---------- friction up close: a schematic of the contact, atoms as balls (not to scale) ----------
   const CL = { n: 15, rows: 4 };
@@ -661,8 +706,83 @@ table.rows input:focus { border-color: var(--accent); }
     if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
     if (S.pairs) { ctx.fillStyle = T.w; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.blind ? 'Mass m also pulls the Earth up, and pulls down on the string.' : `m also pulls the Earth up with ${f(fz.W, 1)} N, and the string down with ${f(fz.T, 1)} N.`, x0 + 14 * p, y0 + 44 * p, w - 28 * p); }
   }
+  function drawTackle(x0, y0, w, h) {
+    // a load on a block and tackle hung from a beam; heights to scale (the ruler works); the sheaves of each block are drawn side by
+    // side (in a real block they share one axle) so that every strand shows
+    const p = ps(), P = S.p, n = P.n, tk = tackle(P.m, n, P.F, S.s <= 1e-12 && S.v <= 1e-12), HU = LEN, beamH = HU + 0.22;
+    const sc = Math.min((h - 70 * p) / (beamH + 0.05), (w - 40 * p) / 1.9);
+    rulerAt = { m: 1 / sc, area: [x0, y0, w, h] };
+    const floorY = y0 + h - 20 * p, Y = (hm) => floorY - hm * sc;
+    ctx.fillStyle = T.wall; ctx.fillRect(x0, 0, w, floorY);
+    if (window.VDGear) window.VDGear.wall(ctx, x0, 0, w, floorY, { color: T.wall, tile: 0 });
+    ctx.fillStyle = T.wallLine; ctx.fillRect(x0, floorY - 6 * p, w, 6 * p);
+    ctx.fillStyle = T.floor; ctx.fillRect(x0, floorY, w, y0 + h - floorY);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, floorY); ctx.lineTo(x0 + w, floorY); ctx.stroke();
+    // geometry in meters: strand j (0 the hand's, 1..n the load's) at xs(j) from the middle, spaced one sheave across
+    const r = Math.min(0.09, 0.42 / (n + 1)), sp = 2 * r, cx = x0 + w * 0.56, XS = (j) => cx + ((j - n / 2) * sp) * sc;
+    const y = S.s, lift = S.work.lift || 0, hL = y + TK_LOAD + 0.12 + r, sh = tackleSheaves(n);
+    // beam and the upper block's hanger and plate
+    const bw = Math.max(1.0, (n + 2) * sp + 0.3) * sc; ctx.fillStyle = T.bench; ctx.fillRect(cx - bw / 2, Y(beamH) - 10 * p, bw, 10 * p); grain(cx - bw / 2, Y(beamH) - 10 * p, bw, 10 * p, 3, 0.4);
+    const plate = (xa, xb, hm) => { ctx.fillStyle = T.metal; ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xa - r * sc, Y(hm + r + 0.03), xb - xa + 2 * r * sc, (2 * r + 0.06) * sc, 4 * p); ctx.fill(); ctx.stroke(); };
+    ctx.strokeStyle = T.metalDark; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx, Y(beamH)); ctx.lineTo(cx, Y(HU + r + 0.03)); ctx.stroke();
+    plate(XS(0), XS(n), HU);
+    if (n > 1 || sh.tied === 'lower') plate(XS(1), XS(n), hL);
+    // the load strands, then the hand's strand down to the hand; the rope below the hand is coiled on the floor
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * p; ctx.beginPath();
+    for (let j = 1; j <= n; j++) { ctx.moveTo(XS(j), Y(HU)); ctx.lineTo(XS(j), Y(hL)); }
+    const hHand = 1.0; ctx.moveTo(XS(0), Y(HU)); ctx.lineTo(XS(0), Y(hHand)); ctx.stroke();
+    const rope = S.work.rope || 0, coil = Math.min(9, 1 + Math.floor(rope / 0.5));
+    ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(XS(0), Y(hHand) + 10 * p); ctx.quadraticCurveTo(XS(0) - 0.02 * sc, Y(0.3), XS(0) - 0.12 * sc, floorY - 3 * p); ctx.stroke();
+    for (let i = 0; i < coil; i++) { ctx.beginPath(); ctx.ellipse(XS(0) - 0.2 * sc, floorY - (2 + i * 1.6) * p, 0.1 * sc, 3 * p, 0, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // marks on the hand's strand every 0.25 m of rope: they run n times as fast as the load rises
+    { const top = HU, bot = hHand + 0.06, span = top - bot; ctx.fillStyle = T.ap;
+      for (let k = 0; k < Math.ceil(span / 0.25) + 1; k++) { const d = ((k * 0.25 + rope) % span + span) % span; ctx.fillRect(XS(0) - 3 * p, Y(top - d) - 1.5 * p, 6 * p, 3 * p); } }
+    // the tie at the rope's far end
+    { const yt = sh.tied === 'upper' ? Y(HU) : Y(hL); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(XS(n), yt, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); }
+    // sheaves: the one the rope reaches i turns from the tied end has a rim speed i times the load's speed, so it turns i lift / r
+    const sheave = (pair, hm, k) => { const xc = (XS(pair[0]) + XS(pair[1])) / 2, rr = r * sc, ang = (k % 2 ? 1 : -1) * (n - pair[0]) * lift / r;
+      if (window.VDGear) window.VDGear.pulley(ctx, xc, Y(hm), rr, { angle: ang }); else { ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(xc, Y(hm), rr, 0, 7); ctx.fill(); ctx.stroke(); } };
+    sh.up.forEach((q, i) => sheave(q, HU, 0)); sh.lo.forEach((q, i) => sheave(q, hL, 1));
+    // the hand, pulling down with F
+    { const hx = XS(0), hy = Y(hHand); ctx.fillStyle = T.wood; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(hx - 9 * p, hy - 4 * p, 18 * p, 14 * p, 5 * p); ctx.fill(); ctx.stroke();
+      if (P.F > 0) arrow(hx - 28 * p, hy, 0, Math.min(70 * p, 18 * p + P.F * 0.5 * p), T.ap, 3 * p, S.blind ? 'F' : `F = ${f(P.F, 0)} N`, false, 0); }
+    // the load: a crate under the lower block's hook
+    const lw = Math.min(0.8, 0.42 + 0.02 * P.m) * sc, lx = (XS(1) + XS(n)) / 2, lt = Y(y + TK_LOAD);
+    ctx.strokeStyle = T.metalDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(lx, Y(hL - r - 0.03)); ctx.lineTo(lx, lt); ctx.stroke();
+    if (window.VDGear) window.VDGear.shadow(ctx, lx, floorY, lw * 0.55, 3 * p, Math.max(0.15, 0.8 - y * 0.3));
+    ctx.fillStyle = T.wood; ctx.fillRect(lx - lw / 2, lt, lw, TK_LOAD * sc); grain(lx - lw / 2, lt, lw, TK_LOAD * sc, 4, 0.35);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.strokeRect(lx - lw / 2, lt, lw, TK_LOAD * sc);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`m = ${f(P.m, 1)} kg`, lx, lt + TK_LOAD * sc / 2);
+    // status
+    ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    let st = !S.run ? (y >= TK_TOP - 1e-9 ? 'At the top: the blocks meet. Press Put back.' : 'Held in place. Press Release.')
+      : Math.abs(S.v) > 1e-9 ? (S.v > 0 ? 'Load rising' : 'Load falling') : y <= 1e-12 ? (S.blind ? 'Resting on the floor' : 'On the floor: n F is not more than mg') : 'At rest';
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.fillText(`n = ${n} · rope pulled ${f(rope, 2)} m · load up ${f(lift, 2)} m`, x0 + 14 * p, y0 + 24 * p);
+  }
+  function drawTackleFBD(x0, y0, w, h) {
+    const p = ps(), P = S.p, tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12), bl = S.blind;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('FREE BODY DIAGRAM OF THE LOAD', x0 + 14 * p, y0 + 12 * p);
+    ctx.fillText('AND THE LOWER BLOCK', x0 + 14 * p, y0 + 26 * p);
+    const cx = x0 + w / 2, cy = y0 + h * 0.42 + 14 * p, Rm = Math.min(w, h) * 0.26, big = Math.max(tk.W, tk.up, tk.N, 1e-9), k = Rm / big;
+    const L = (F) => (bl ? Rm * 0.45 : F * k);
+    // one arrow T for each strand, side by side; the weight down; the floor's push if it carries some of the load
+    const n = P.n, gap = Math.min(16 * p, (w * 0.5) / Math.max(n, 1));
+    for (let j = 0; j < n; j++) { const xo = cx + (j - (n - 1) / 2) * gap; arrow(xo, cy - 6 * p, 0, -Math.max(L(tk.T), 0), T.tn, 2.6 * p, j === n - 1 ? (bl ? 'T each' : `T = F = ${f(tk.T, 1)} N each`) : '', false, 0); }
+    arrow(cx, cy + 6 * p, 0, L(tk.W), T.w, 3.2 * p, bl ? 'W = mg' : `W = mg = ${f(tk.W, 1)} N`);
+    if (tk.N > 1e-9) arrow(cx + (n / 2 + 1) * gap + 10 * p, cy + 6 * p + L(tk.W), 0, -L(tk.N), T.n, 3 * p, bl ? 'N' : `N = ${f(tk.N, 1)} N`, false, 1);
+    const net = tk.up + tk.N - tk.W;
+    if (S.net && !bl && Math.abs(net) > 1e-6) arrow(cx - (n / 2 + 1) * gap - 20 * p, cy, 0, -net * k, T.net, 4.5 * p, `net = ma = ${f(Math.abs(net), 1)} N`, false, -1);
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(bl ? 'Blind: arrows show directions only' : `Arrow lengths are to scale. ${n} strands pull up with n T = ${f(tk.up, 1)} N.`, x0 + 14 * p, y0 + h - 10 * p);
+  }
   function drawScene(x0, y0, w, h) {
     if (S.atwood) { if (g3) g3.el.hidden = true; drawAtwood(x0, y0, w, h); return; }
+    if (S.tackle) { if (g3) g3.el.hidden = true; drawTackle(x0, y0, w, h); return; }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v);
     const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
     const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
@@ -801,6 +921,7 @@ table.rows input:focus { border-color: var(--accent); }
   // ---------- readouts ----------
   function readouts() {
     const fz = forces(S.p, S.v), bl = S.blind, dd = (a, b, w, cls) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
+    if (S.tackle) { tackleReadouts(dd); return; }
     let h = dd('Weight mg', `${f(fz.W, 1)} N`);
     if (bl) h += '<div class="wide"><dt>N, friction, tension, acceleration</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
@@ -829,9 +950,32 @@ table.rows input:focus { border-color: var(--accent); }
     $('workOut').innerHTML = w;
   }
 
+  function tackleReadouts(dd) {
+    const P = S.p, bl = S.blind, tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12), Wk = S.work, J = (x) => `${f(x, 2)} J`;
+    let h = dd('Weight mg', `${f(tk.W, 1)} N`) + dd('Strands n', `${P.n}`) + dd('Pull on the rope F', `${f(P.F, 0)} N`);
+    if (bl) h += '<div class="wide"><dt>Tension, lift, acceleration and the pull that holds the load</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      h += dd('Tension in every strand T = F', `${f(tk.T, 1)} N`) + dd('Strands pull up, n F', `${f(tk.up, 1)} N`);
+      if (tk.N > 1e-9) h += dd('Floor pushes up, N', `${f(tk.N, 1)} N`);
+      h += dd('Pull that just holds it, mg/n', `${f(tk.Fhold, 2)} N`) + dd('Mechanical advantage, ideal', `${P.n}`);
+      h += dd('Load acceleration a (up +)', `${f(tk.a, 3)} m/s²`, true) + dd('Rope at the hand, n a', `${f(tk.aHand, 3)} m/s²`, true);
+    }
+    $('forceOut').innerHTML = h;
+    const rope = Wk.rope || 0, lift = Wk.lift || 0, K = 0.5 * P.m * S.v * S.v;
+    let w = dd('Rope pulled in', `${f(rope, 3)} m`) + dd('Load lifted', `${f(lift, 3)} m`);
+    if (bl) w += '<div class="wide"><dt>Work and kinetic energy</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      w += dd('Rope pulled ÷ load lifted', Math.abs(lift) > 1e-6 ? f(rope / lift, 3) : '—', true);
+      w += dd('By the hand, F × rope pulled', J(Wk.F)) + dd('By gravity, −mg Δy', J(Wk.g));
+      if (Wk.stop) w += dd('Taken by the floor or the top stop', J(Wk.stop));
+      w += dd('Total work on the load', J(Wk.F + Wk.g + (Wk.stop || 0))) + dd('Kinetic energy ½mv² now', J(K)) + dd('Gain in gravitational energy mg Δy', J(-Wk.g), true);
+    }
+    $('workOut').innerHTML = w;
+  }
   // ---------- readings and fit ----------
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => {
+    if (S.tackle) { capStatus('Readings and the fit are for the ramp and Atwood\'s machine. For the block and tackle, read the panel under Forces now.'); return; }
     if (!S.lastGate) { capStatus('Use Release at the top mark first, and let the timer finish.'); return; }
     S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3), atw: S.atwood });
     renderRows(); capStatus(`Row ${S.rows.length} captured.`);
@@ -913,8 +1057,8 @@ table.rows input:focus { border-color: var(--accent); }
   // ---------- keys, toggles, Blind, boot ----------
   can.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (k === ' ') $('go').click(); else if (k === 'r' || k === 'R') $('back').click(); else if (k === 't' || k === 'T') $('timed').click();
-    else if (k === 'ArrowUp' || k === 'ArrowDown') { S.p.th = Math.max(0, Math.min(60, S.p.th + (k === 'ArrowUp' ? 0.5 : -0.5))); S.preset = 'custom'; mark(); sync(); draw(); readouts(); }
+    if (k === ' ') $('go').click(); else if (k === 'r' || k === 'R') $('back').click(); else if ((k === 't' || k === 'T') && !S.tackle) $('timed').click();
+    else if ((k === 'ArrowUp' || k === 'ArrowDown') && !S.atwood && !S.tackle) { S.p.th = Math.max(0, Math.min(60, S.p.th + (k === 'ArrowUp' ? 0.5 : -0.5))); S.preset = 'custom'; mark(); sync(); draw(); readouts(); }
     else return;
     e.preventDefault();
   });
@@ -939,7 +1083,7 @@ table.rows input:focus { border-color: var(--accent); }
   VD.tools({ el: can, strip: '.viewbar', stage: '#scene', time: () => simClock, scale: () => rulerAt });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
-  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); applyPreset(VD.ws('forces') === 'atwood' || new URLSearchParams(location.search).get('setup') === 'atwood' ? 'atwood' : 'push'); renderRows(); resize();
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); { const q = new URLSearchParams(location.search).get('setup'); applyPreset(VD.ws('forces') === 'atwood' ? 'atwood' : q && PRESETS[q] ? q : 'push'); } renderRows(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

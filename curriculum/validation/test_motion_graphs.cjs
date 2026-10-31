@@ -2,7 +2,7 @@
 // Motion Graphs: exact piecewise constant acceleration kinematics, the motion detector estimates, the parabola fit and the CSV.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,meetTimes,rampRun,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV,drawnRun,smoothVals,shapeVals');
+const c = core('motion-graphs', 'MG_VERSION,buildRun,stateAt,meetTimes,rampRun,targetAt,targetSlope,sensorV,sensorA,quadFit,readingsCSV,drawnRun,smoothVals,shapeVals,stopDist,stopRun');
 let n = 0;
 const near = (a, b, tol, what) => assert(Math.abs(a - b) <= tol, `${what || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -126,6 +126,26 @@ group('draw a graph: the derivative and integrals of a drawn v or a are exact fo
   const sm = c.smoothVals(vs); for (let i = 0; i <= N; i++) near(sm[i], vs[i], 1e-12, 'a straight line is unchanged');
   const zz = Array.from({ length: 11 }, (_, i) => (i % 2 ? 1 : -1)), z2 = c.smoothVals(zz);
   assert.equal(z2[0], -1); assert.equal(z2[10], -1); for (let i = 1; i < 10; i++) near(z2[i], 0, 1e-12, 'zigzag averaged away');
+});
+
+group('stopping distance: reaction v tr plus braking v²/2b; braking goes as v²; the run stops there', () => {
+  // the UK Highway Code's typical figures: thinking 0.3 m per mph (tr = 0.3/0.44704 s), braking 6 m at 20 mph and 75 m at 70 mph
+  const tr = 0.3 / 0.44704;
+  for (const [mph, think] of [[20, 6], [30, 9], [40, 12], [50, 15], [60, 18], [70, 21]]) near(c.stopDist(mph * 0.44704, tr, 6.5).react, think, 1e-12, `thinking at ${mph} mph`);
+  near((20 * 0.44704) ** 2 / (2 * 6), 6.661, 0.001, 'b implied at 20 mph'); near((70 * 0.44704) ** 2 / (2 * 75), 6.528, 0.001, 'b implied at 70 mph');
+  const A = c.stopDist(15, 0.67, 6.5), B = c.stopDist(30, 0.67, 6.5);
+  near(A.react, 10.05, 1e-12); near(A.brake, 225 / 13, 1e-12); near(A.total, 10.05 + 225 / 13, 1e-12);
+  near(B.react / A.react, 2, 1e-12, 'reaction doubles'); near(B.brake / A.brake, 4, 1e-12, 'braking four times');
+  near(A.tStop, 0.67 + 15 / 6.5, 1e-12);
+  // the run: coasts, brakes, stands still where the formula says, and the area under v is the stopping distance
+  const r = c.stopRun(30, 0.67, 6.5, 8);
+  near(c.stateAt(r, 0.67).x, B.react, 1e-12); near(c.stateAt(r, 0.67).v, 30, 1e-12);
+  near(c.stateAt(r, B.tStop).x, B.total, 1e-9); near(c.stateAt(r, B.tStop).v, 0, 1e-9); near(c.stateAt(r, 8).x, B.total, 1e-9);
+  near(c.stateAt(r, 2).a, -6.5, 0); near(r.T, 8, 1e-12);
+  let area = 0; const N = 80000; for (let i = 0; i < N; i++) area += c.stateAt(r, (i + 0.5) * 8 / N).v * 8 / N;
+  near(area, B.total, 1e-6, 'area under v');
+  // standing still: no distance at all
+  const z = c.stopDist(0, 1, 5); assert.equal(z.total, 0); near(c.stateAt(c.stopRun(0, 1, 5, 3), 3).x, 0, 0);
 });
 
 console.log(`${n} motion-graphs test groups passed`);

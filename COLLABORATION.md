@@ -6270,3 +6270,34 @@ Steve (17:07): "let's do a quick recount to be sure and maybe get started on tha
   rebuilt in TeacherKeys. What's new entry added.
 - Worksheet part candidates for the next sweep: conical pendulum (period² against h, slope 4π²/g) in the Circular Motion
   worksheet; rotor (least speed against μs); monkey and hunter as a short Projectile part (gap with and without air).
+
+## 2026-10-31 · Claude · Round 1 Group C: drop a block on the oscillator, stopping distance, block and tackle
+
+Steve (17:07): "let's do a quick recount to be sure and maybe get started on that". Group C of `round1/groups-2026-10-31.md` in the
+project files (plan #5, #6, #8), all folded into existing demos, no new worksheets. GPT, please verify the physics and numbers below.
+- **Springs and Oscillations, Drop a block on it** (new setup and a rail section in the Free system on the horizontal track; the plan
+  said Sandbox, but the single oscillator is where the period and amplitude readouts live, so it went there). A block m_d falls
+  straight down onto the moving block and sticks: momentum along the track kept, m v = (m + m_d) v′, x unchanged, then the exact
+  solution for m + m_d carries on. Readouts: v → v′, period, amplitude √(x² + (v/ω₀)²) before and after, kinetic energy lost
+  ½ m v² m_d/(m + m_d). Opening: 1 kg on 40 N/m at 15 cm; dropping 1 kg at equilibrium gives 0.949 → 0.474 m/s, 15.00 → 10.61 cm,
+  0.9935 → 1.405 s, 0.225 J lost; at a turning point the amplitude stays. D drops on the drawing; Start over lifts it off; a mass
+  change makes it part of m. Drawn on top in 2D and in 3D (the second block's mesh). Core `dropOn`; new test group (11 pass).
+- **Motion Graphs, Stopping distance** (new setup): two cars on a road see a hazard at t = 0, coast for t_r, brake at b to a stop.
+  d = v t_r + v²/2b as three stages of constant acceleration. Opens at 15 and 30 m/s, t_r = 0.67 s, b = 6.5 m/s² (UK Highway Code
+  rule 126 typical figures: 0.3 m per mph thinking, i.e. 0.671 s; braking 6 m at 20 mph to 75 m at 70 mph, i.e. 6.66 to 6.53 m/s²;
+  rules 227 and 230 for wet and ice are quoted, not modeled). Car A 10.05 + 17.31 = 27.36 m, car B 20.10 + 69.23 = 89.33 m, braking
+  ratio 4.000. Road scene with the reaction (dashed) and braking (solid) stretches drawn as each car covers them. Core `stopDist`,
+  `stopRun`; new test group with the Highway Code thinking distances and the area under v (11 pass).
+- **Forces and Friction, Block and tackle** (new setup beside Atwood's machine): load m, pull F, new Strands n knob (1 to 6). Light
+  rope, light frictionless pulleys: T = F in every strand, lift n F, hold at mg/n, ideal mechanical advantage n, rope n Δy per Δy.
+  Opening 12 kg, n = 4, F = 32 N: a = 0.857 m/s², hold 29.43 N. Panel: rope pulled, load lifted and their ratio (4.000), the
+  hand's work F × rope = −W_g + ½mv² (131.70 = 121.13 + 10.58 J in a run). Free body diagram of the load with n tension arrows.
+  Sheaves drawn side by side (a real block has one axle); each turns at its true rim speed i v. `?setup=` now opens any setup.
+  Fix on the way: ↑ ↓ on the drawing no longer tilt the hidden ramp in Atwood's machine. Core `tackle`, `tackleSheaves`; new test
+  group (11 pass). Capture says readings are for the ramp and Atwood here.
+- Notes: a Running it in class item and a Physics behind the demo line in springs, motion-graphs and forces; rebuilt. What's new: one
+  entry. Checks: vdcheck `--only after` 0 problems and `--only clip` 0 cut off on the three demos; looked at 1280 and 400 px, light
+  and dark. 3D could not be loaded here (the CDN is blocked in this container), so the 3D rider block is unchecked by eye.
+- Worksheet part candidates (not built): Springs Worksheet 1, drop a block at equilibrium and at a turning point, measure T and A
+  before and after; Motion Graphs, stopping distance against v at fixed t_r and b, fit d/v against v (intercept t_r, slope 1/2b);
+  Forces, least pull that lifts a load against 1/n.

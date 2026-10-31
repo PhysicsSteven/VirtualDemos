@@ -28,6 +28,7 @@ For the lab, students time N oscillations with **Stopwatch** on the stage (press
 7. **Normal modes, then Beats.** Show mode 1, press **Mode 2**, then switch to **Beats** with a weak coupling spring and watch block 2 take all the motion and give it back (Q7).
 8. **Chain of ten** (Sandbox, Normal modes pane). Click mode 1 and then mode 10: every block moves at one frequency. Pull one block and let go and the pane shows the motion shared among all ten modes. The frequencies crowd together near the top, fₙ = (1/π)√(k/m) sin(nπ/22), instead of rising as n f₁.
 9. **Grid of pucks** (Sandbox, Normal modes pane). A 3 × 3 grid of pucks joined by springs, seen from above. Pull one puck and let go: its x and y motion is a jumble. Click a mode square and every puck moves together at one frequency, from 2.436 Hz for mode (1, 1) to 5.882 Hz for (3, 3). Modes (1, 3), (2, 2) and (3, 1) all have 4.502 Hz: different shapes at one frequency (degenerate modes), as on a square drumhead.
+10. **Drop a block on it.** The 1 kg block swings 15 cm on 40 N/m (period 0.9935 s, 0.450 J). Ask what a second 1 kg block, let fall onto it, will do to the amplitude and the period. Press **Drop it now** (or D) as the block passes equilibrium at 0.949 m/s: momentum along the track is kept, so the pair moves on at 0.474 m/s, the amplitude falls to 10.61 cm (15/√2) and the period grows to 1.405 s (√2 longer); 0.225 J, half the energy, goes into the landing. Press **Start over** and drop it at a turning point instead: nothing is moving, nothing is lost, and the amplitude stays 15 cm while the period still grows to 1.405 s.
 
 ## Questions
 
@@ -61,6 +62,7 @@ For the lab, students time N oscillations with **Stopwatch** on the stage (press
 - Steady state: A = (F₀/m)/√((ω₀² − ω²)² + (bω/m)²), tan δ = (bω/m)/(ω₀² − ω²), with the peak at ω_r = √(ω₀² − b²/(2m²)). The drive is a wall moving as X_w cos ωt, equivalent to a force F₀ = kX_w on the block. During a sweep, ω rises slowly; for small b the block needs a time of order 2m/b to catch up, so the swept dots fall a little below the steady curve near the peak.
 - Two equal blocks between walls (k, k_c, k) move as normal coordinates q₁ = (x₁ + x₂)/2 at ω₁ = √(k/m) and q₂ = (x₁ − x₂)/2 at ω₂ = √((k + 2k_c)/m).
 - Energy bars: hanging, ½k(x + mg/k)² plus −mgx for gravity; driven, ½mv² + ½kx², with the drive's work ∫Fv dt and the heat ∫bv² dt.
+- Drop a block on it: the dropped block falls straight down, lands and sticks at once (a perfectly inelastic collision). The track and gravity act up and down only, so momentum along the track is kept, m v = (m + m_d) v′, and x does not change; the run then carries on with the exact solution for m + m_d. The kinetic energy lost is ½ m v² m_d/(m + m_d). On the horizontal track only; Start over lifts the dropped block off.
 - Approximations: ideal massless springs that obey Hooke's law at any stretch (the drawing never shows a spring pressed solid), a frictionless track, damping exactly proportional to v, g = 9.81 m/s².
 
 ## Going further

@@ -2,7 +2,7 @@
 // Forces and Friction: Newton's second law on a ramp with Coulomb friction, a hanging mass, the timer and the μk fit.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV,C_WOOD,frictionPower,warmBound,heatPic');
+const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV,C_WOOD,frictionPower,warmBound,heatPic,tackle,tackleSheaves');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -87,6 +87,25 @@ group('friction up close: heating rate μk N v, its integral is the thermal ener
   // exact for constant P: from 0, H → P τ; halving per τ ln 2 when P = 0
   near(c.heatPic(0, 50, 1e6, 1.5), 75, 1e-9); near(c.heatPic(80, 0, 1.5 * Math.log(2), 1.5), 40, 1e-12);
   let H = 0; for (let i = 0; i < 300; i++) H = c.heatPic(H, 50, 0.01, 1.5); near(H, c.heatPic(0, 50, 3, 1.5), 1e-9, 'steps compose');
+});
+
+group('block and tackle: n strands at tension F lift n F; mg/n holds it; work in equals work out', () => {
+  // the opening setup: 12 kg on four strands, 32 N pull
+  let t = c.tackle(12, 4, 32, true);
+  near(t.W, 117.72, 1e-12); near(t.up, 128, 0); near(t.Fhold, 29.43, 1e-12); near(t.a, (128 - 117.72) / 12, 1e-12); near(t.aHand, 4 * t.a, 1e-12); assert.equal(t.MA, 4);
+  // too weak a pull: the load stays on the floor, which carries the rest
+  t = c.tackle(12, 2, 40, true); assert.equal(t.a, 0); near(t.N, 117.72 - 80, 1e-12);
+  // the same pull in mid air: the load falls
+  t = c.tackle(12, 2, 40, false); near(t.a, (80 - 117.72) / 12, 1e-12); assert.equal(t.N, 0);
+  // the least pull that lifts a load for n = 1 to 6 falls as 1/n
+  for (let n = 1; n <= 6; n++) near(c.tackle(20, n, 0, true).Fhold * n, 20 * c.G, 1e-12);
+  // work: rope in n Δy at force F, from rest; the load's kinetic energy afterwards is F n Δy − mg Δy
+  const m = 12, n = 4, F = 32, a = c.tackle(m, n, F, true).a, dy = 1.5, v2 = 2 * a * dy;
+  near(F * n * dy - m * c.G * dy, 0.5 * m * v2, 1e-12, 'work energy');
+  // rope layout: n sheaves in all, the far end on the upper block for even n, the lower for odd
+  for (let k = 1; k <= 6; k++) { const s = c.tackleSheaves(k); assert.equal(s.up.length + s.lo.length, k); assert.equal(s.tied, k % 2 ? 'lower' : 'upper'); }
+  assert.deepEqual(c.tackleSheaves(4), { up: [[0, 1], [2, 3]], lo: [[1, 2], [3, 4]], tied: 'upper' });
+  assert.deepEqual(c.tackleSheaves(1), { up: [[0, 1]], lo: [], tied: 'lower' });
 });
 
 console.log(`${n} forces test groups passed`);
