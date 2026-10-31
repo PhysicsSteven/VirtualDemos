@@ -24,6 +24,7 @@ Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm
 5. **Compare.** Put hydrogen on top and helium or mercury on the bottom. No two elements share a pattern.
 6. **Mystery.** Start with **Gas mixture**. Students click elements to build a guess, then **Check**. Finish with **A star**, an absorption spectrum built from five elements, and ask Q5 and Q6.
 7. **Atom models.** Choose **Atom models**: the same lamp shines on six historical atoms side by side. With **Lyman α** only Bohr, de Broglie and Schrödinger answer, and they give Lyman α back; the classical orbit collapses in 16 ps whatever the lamp does, and Thomson's pudding answers only **Thomson's line**. Try **White light** and let the strips fill: only the quantum atoms land on the gold marks. In Schrödinger's atom an electron that lands in 2s stays (0.12 s against 1.6 ns for 2p).
+8. **Bohr orbits and the electron wave.** Below the hydrogen level diagram the orbits are drawn to scale (r = n²a₀) with the electron's de Broglie wave around the chosen one. On n = 3 exactly three wavelengths fit (λ = 2πa₀n = 0.9975 nm, v = 729 km/s, L = 3ħ). Set the slider to 2.50: the second trip round (dashed) misses, so only whole numbers of wavelengths survive. Picking a transition puts the slider on its upper level.
 
 ## Questions
 
@@ -52,6 +53,7 @@ Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm
 - **Lines shown** counts every NIST entry: for hydrogen, Hα and Hβ are each listed as several closely spaced components, so the count is 11 although the strip shows seven distinct Balmer positions between 380 and 750 nm.
 - The hydrogen panel computes 1/λ = R_H(1/n_f² − 1/n_i²) with R_H = 1.09678 × 10⁷ m⁻¹, then converts to air wavelengths with a standard formula for the refractive index of air. Its energy levels use 13.598 eV, the value for hydrogen's own reduced mass, matching the wavelengths. Spin and fine structure are ignored there.
 - The tube and swatch color is computed from the listed lines (neutral atom lines under All) weighted by their NIST intensities with the CIE 1931 color matching functions; it is only as good as those rough relative intensities (potassium, for example, comes out greenish rather than the lilac of a flame). **Mystery**: a gas mixture is two or three elements drawn at random from 23 common ones; **A star** is always H, Na, Mg, Ca and Fe in absorption.
+- **Bohr orbits and the electron wave** (OpenStax Vol. 3 §6.4 and §6.6). The proton is held fixed (its motion would make every radius 0.05 % larger): v = √(ke²/(m_e r)), so on r = n²a₀ the speed is αc/n and λ = h/(m_e v) = 2πa₀n, exactly n wavelengths around the circumference, with m_e v r = nħ; a₀ = 0.0529177 nm (CODATA 2022). Between whole numbers the wave is drawn for two trips round as r = R + A sin(νθ); its height is not to scale.
 
 ## Going further
 

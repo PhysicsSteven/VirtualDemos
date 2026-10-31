@@ -112,7 +112,7 @@ Find the mean and the standard deviation of the five carbon 14 means. The standa
 1. Every alpha particle from one kind of nucleus has the same energy, but beta electrons have a spread of energies. Why the difference?
 2. With No neutrino on, what energy does every electron get? Why did the measured continuous spectrum force physicists either to give up energy conservation or to accept a new particle?
 3. Polonium 210 has 126 neutrons, a closed shell. Why might the simple model, which treats the alpha as already formed inside, get its half life wrong?
-4. Tritium has the smallest Q of any beta emitter, 18.59 keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino's mass?
+4. Tritium has one of the smallest Q values of any beta emitter, 18.59 keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino's mass?
 5. Radon 222 lives 3.8 d, but its parent radium 226 lives 1600 yr. Why does that make radon a hazard in basements?
 
 ## What to hand in

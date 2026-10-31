@@ -23,6 +23,7 @@ Students should have met Coulomb potential energy, the Boltzmann factor and the 
 5. **Pure silicon.** Warm it from 300 K to 600 K: n rises by about 1.4 × 10⁵ (Q6).
 6. **n type silicon.** At 300 K n ≈ 10¹⁵ cm⁻³, set by the phosphorus. Cool it to 40 K (freeze out) and heat it to 700 K (intrinsic) (Q7).
 7. **Diode.** Step the bias from −2 V to 0.6 V; the current changes from −1 pA to over 10 mA. Show the straight line of ln I against V (Q8). **LED colors**: GaP gives 549 nm, green; GaAs 867 nm, infrared (Q9).
+8. **Periodic potential.** In **Bands**, switch the Model to **Periodic potential (Kronig–Penney)**: one electron in a row of wells 0.25 nm wide between 10 eV barriers 0.05 nm thick. Band 1 runs from 1.340 to 4.250 eV and the first gap is 2.855 eV wide; step k from 0 to π/a and watch the state move along its band while E against k bends away from the free electron parabola. **Deep wells, narrow bands** (20 eV, 0.12 nm barriers) shrinks band 1 to 3.015 to 3.502 eV, toward the level of a single well; lower V₀ to 0 and the gaps close.
 
 ## Questions
 
@@ -60,6 +61,7 @@ Students should have met Coulomb potential energy, the Boltzmann factor and the 
 - **Doping.** n = N_c e^(−(E_c − E_F)/kT), p = N_v e^(−(E_F − E_v)/kT), N_c and N_v from Sze and Ng (Si 2.8 and 2.65 × 10¹⁹, Ge 1.04 × 10¹⁹ and 6.0 × 10¹⁸, GaAs 4.7 × 10¹⁷ and 7.0 × 10¹⁸ cm⁻³ at 300 K) times (T/300)^(3/2); gaps held at 1.12, 0.66, 1.42 eV. Charge neutrality with partly ionized donors (degeneracy 2) and acceptors (4), solved for E_F by bisection. Impurity levels in silicon from Sze and Ng: P 0.045, As 0.054, Sb 0.039, B 0.045, Al 0.067, Ga 0.072 eV. Boltzmann statistics throughout (doping up to 10¹⁸ cm⁻³).
 - **Junction.** Ideal diode I = I₀(e^(eV/kT) − 1) (Eq. 9.36), with I₀ = I₀(300 K) (T/300)³ e^(−E_g/k (1/T − 1/300)); no series resistance, no breakdown, no recombination current in the depletion region. Abrupt junction in the depletion approximation: V_bi = (kT/e) ln(N_A N_D/n_i²), W = √(2ε(V_bi − V)/e (1/N_A + 1/N_D)), ε = 11.9 ε₀. LED photon energy taken as E_g (Table 9.4; GaN 3.43 eV from Vurgaftman and coworkers 2001).
 - **The book's Example 9.6** gives eV/kT = ln(2.05 × 10⁷) = 16.8 for 0.12 V, which is T = 83 K; the printed answer, 73 K, divides by 19 instead of 16.8.
+- **Periodic potential (Kronig–Penney).** Square wells (V = 0, width w) and barriers (V₀, width b), period a = w + b, solved exactly by a transfer matrix in each flat piece; Bloch's theorem leaves cos ka = (M₁₁ + M₂₂)/2 = f(E), and energies with |f| > 1 are the gaps (for E < V₀, f = cos αw cosh βb + (β² − α²)/(2αβ) sin αw sinh βb; Kronig and Penney 1931, Kittel ch. 7). ħ²/2m_e = 0.0380998 eV nm² (CODATA 2022). One dimensional with square barriers: it shows how bands and gaps arise, not the bands of a particular solid.
 
 ## Going further
 

@@ -1636,7 +1636,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (bs.length > 1 && !S.blind) { const t = sbkTot(), [cx, cy] = sbkPx(t.X, t.Y, f); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(cx - 5 * ps, cy - 5 * ps); ctx.lineTo(cx + 5 * ps, cy + 5 * ps); ctx.moveTo(cx - 5 * ps, cy + 5 * ps); ctx.lineTo(cx + 5 * ps, cy - 5 * ps); ctx.stroke(); }
     /* the selected body: a gold dot where its arrow tip gives a circular orbit around its host */
     const sb = bs.find((q) => q.id === SBK.sel), host = sb && nbHost(bs, sb);
-    if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); text(ctx, T, 'circular', tx + 8 * ps, ty, 'left', 'middle', T.sun, 9.5 * ps, 600); }
+    if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); text(ctx, T, 'circular', tx - 8 * ps, ty, 'right', 'middle', T.sun, 9.5 * ps, 600); }
     /* the rendezvous forecast: the ship's path ahead (dashed) and where the ship and the target are at the closest approach (crosses) */
     const rvp = RV.pred && !S.blind ? rvPick() : null;
     if (rvp && RV.pred.hid === rvp.h.id) { const P = RV.pred, h = rvp.h, k0 = Math.max(0, Math.floor((SBK.st.t - P.t0) / P.T * (P.path.length - 1)));

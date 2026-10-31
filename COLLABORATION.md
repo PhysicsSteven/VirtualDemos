@@ -6701,3 +6701,58 @@ below (all from the core and its tests).
   shots at 1280, 390 and 360 px, dark and light, every view, 3D with three.js r128 served locally; no page errors, no sideways scroll.
 - Worksheet part ideas (not built): a Rotating Frames part in a circular motion worksheet: Coriolis acceleration against v′ at a few
   Ω (slope 2Ω), and the Foucault turn time against latitude (fit 1/T against sin λ, slope 1/T⋆).
+
+## 2026-10-31 · Claude · Independent review of the 31 Oct afternoon and evening work (Steve)
+
+Steve asked for a second independent pass over everything since the morning review: the How this works videos, the five partial gap
+groups, the last partials (Granular Flow, electromagnet, shuffle and spark, TE, atom models, nuclei and atoms, Physics I benches,
+grid of pucks), the worksheet sweep (four new worksheets, 23 new parts), and the missing build rounds 1 to 5 (Rainbows, Millikan
+Oil Drop, Rotating Frames and the 26 fold ins). Five reviewers worked in parallel, each recomputing every number from the CORE in
+Node or by hand, not from the entries above.
+- Verified: every node suite passes and the Pages build and physics regression are green at 4dfacc2; `courses.py --check`,
+  `symbols.py --check`, `theme.py --check` and `notes.py --check` clean; no Liquid tag or output braces in any changed file; no
+  hyphenated compound modifiers in the new text; no keys in the public repo; every What's new entry has a unique id and its link
+  opens the state it names; every worksheet resolves to a video. Physics recomputed and matching the pages, notes and keys: Kronig
+  and Penney band 1 1.340 to 4.250 eV, H₂⁺ LCAO minimum 0.1319 nm and 1.764 eV, Bohr orbit waves, yo-yo a = g/25.5, slip to roll
+  2v₀/(7μg), Atwood, U tube, two stage rocket Δv, rubbing limit 41.7 nC, sheet R = R_s L/W, FDTD Courant number, pulse reflection
+  signs, Bessel zeros and the (0,3) ratio 3.598; shuffle and spark (1.33 µC, 13.3 kV, Schumann 31.45 kV at 1 cm), electromagnet
+  (N_d 0.0558, gain 18.26), TE by duality, χ² and the incomplete gamma, NUBASE2020 half lives and Q values (Ra-226 4870.7 keV,
+  U-238 4269.8, C-14 156.48), Thomson and Schrödinger atom rates within 0.05 % of NIST, puck grid modes, mystery metals, energy
+  chain, drum critical rate 113 rpm and settling ratio 2.52; all four new worksheet keys (Atwood g 9.806 ± 0.005, normal modes k/m
+  200.6 ± 0.3, current sheet slope 999.82 Ω, Geiger and Nuttall r₀ 1.167 ± 0.036 fm and the ¹⁴C end point) and every new part's
+  last table; conical pendulum, rotor, monkey and hunter, drop a block, stopping distance, block and tackle, ballistic pendulum,
+  rotational collisions, dispersion, the ten Peterson and Barney formants, paints and colored shadows, Fermat, Lamb's water orbits,
+  bar modes (90.08, 248.30, 486.77, 804.66 Hz, nodes 0.2242 L), Rainbows (bow 42.03°, 40.57° to 42.44°, secondary 50.24° to
+  53.62°, band 7.80°); Millikan (Allen and Raabe slip, fall speeds 30.51 and 113.74 µm/s, C^1.5 1.604 at 45 kPa), Rotating Frames
+  (31.79 h at Paris, 42.95 h at Sydney), Hohmann to Mars (2.9447 and 2.6489 km/s, 258.86 d, lead 44.34°), antipode altitudes, 2D
+  wells (E₁₁ 0.18801 eV, Rabi 382.66 fs), slinky arrival 0.2569 s, pendulum wave lengths, Fresnel (dark at 0.790 m, Poisson spot
+  1.0000), channel cutoffs 6.51, 11.61, 17.61 Hz, WR-90 TE₁₀ 6.557 GHz and the cube 7.066 GHz. Browser: `vdcheck --only after`
+  and `--only clip` on all 70 changed demos, 0 problems, 0 controls cut off; a page error sweep of 42 demo pages (every What's new
+  link included) clean. By eye with three.js served locally: Springs 3D with the dropped block, Chladni bar 3D, Rainbows sky 3D,
+  Rotating Frames turntable and Foucault 3D, EM guide and cavity 3D, 2D well 3D, rocket booster and U tube 3D, light and dark,
+  desktop and 400 px: all render and nothing is clipped. Every new scene moves on its first press.
+- Fixed (VirtualDemos this commit, TeacherKeys next commit): the Alpha and Beta Decay handout, demo hint and key said tritium has
+  the smallest Q of any beta emitter (¹⁸⁷Re's is 2.5 keV): now "one of the smallest"; key PDF rebuilt. Projectile Range notes
+  step 8 claimed a hit at 20 m/s, where the ball lands 32.6 m out (a hit needs v > 22.1 m/s): now 30 m/s. Molecules H₂⁺ presets sat
+  at 0.106 nm while calling it the measured bond length (r_e = 0.1052 nm): now 0.105. Rainbows key Q1 r = 22.02° (readout) and Q3
+  spread 39.4° to 42.1°, 2.7°. Rotating Frames key Q2 miss distance is 1.76 sin 42.7°, not cos. Electrostatics at Work intro and
+  catalog line now count four machines. Millikan model text names the Cunningham slip correction. Kepler Sandbox: the "circular"
+  snap label now sits left of the arrow tip, so it no longer overprints the Target's name in the rendezvous setup. Induction notes
+  "a rod of 0.5 cm radius". Notes for solids, spectra and molecules (Group E) and chladni, wave power, standing waves, springs and
+  timbre (Group C) had class steps but no model statement for the new pieces: one Physics behind the demo line each. Granular Flow
+  had six notes questions and no key: key written from CORE runs (TeacherKeys demo-keys/granular-flow). Induction hint "cross
+  section".
+- Left for Steve: Rainbows 3D colors the drops by the light they send you plus the cloud light, so the bow reads yellow, green and
+  white with red outside and the blue inner rim and the secondary are faint among the dots; coloring the drops by the bow light
+  alone would show the color order (a design choice). The 3D scene's sky stays dark gray in the light theme with the Sun up. Chladni
+  bar 3D is framed for the square plate, so the bar is small (tiny at 400 px). Granular Flow's black landslide stones are dim in the
+  dark theme. Cosmetic overlaps at 400 px: slinky axis label under the Stopwatch button, 2D wells 3D | Flat switch over two x axis
+  ticks, Foucault 3D "N" tile half behind the rail. Spectra header says "air wavelengths" while Atom models uses vacuum (stated in
+  its own model line). Build an atom opens on C⁺ so the first electron added makes it neutral (deliberate; a note on the page
+  would help). Electromagnet draws the core's field as a cylinder's sheet while N_d is the spheroid's (3.7 % inside the stated
+  approximation); the energy chain generator takes the motor's 98 %; the Atwood readings table shows θ = 90.0°. circular-motion
+  once threw "arc radius −30.6" in vdcheck (a load race before the stage has a size, not reproducible). Collections: PhET and the
+  six collections rescanned, no physics sim added since the lists were made (PhET's Greenhouse Effect, Vector Addition: Equations
+  and Projectile Sampling Distributions stay excluded as before; HTML5 rewrites of Alpha Decay, Beta Decay, Fluid Pressure and Flow
+  and Quantum Wave Interference, plus Photoelectric Effect, Optics Lab, Quantum Bound States and X-ray Diffraction are in PhET's
+  pipeline, not published).

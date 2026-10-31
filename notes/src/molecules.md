@@ -21,6 +21,7 @@ Students should know the Coulomb energy, the exclusion principle, the quantized 
 4. **HCl levels.** Step l from 0 to 7 with Δl = +1 and −1; try Δl = 0 and +2 (Q4). Switch to N₂ (Q5). Switch to Measured constants and watch the R lines crowd together.
 5. **HCl band.** Find the gap and read the spacing near it (Q6). **Two isotopes**: the pairs (Q7). **Hot gas**: the strongest lines move out.
 6. **Molecules and light.** **CO₂ and infrared**: the bend at 15 μm takes the photon and sends one back in any direction; switch to N₂ and O₂, which let it pass (the greenhouse idea). **Ozone and ultraviolet**: O₃ breaks at 254 nm while O₂ passes. **NO₂ in visible light** glows, and breaks below 398 nm. With **Microwave** only the molecules with a dipole turn.
+7. **H₂⁺ orbitals.** **H₂⁺ bonding orbital** shows σg = (φ_A + φ_B)/√(2(1 + S)) at the measured R = 0.105 nm, where |ψ|² halfway between the protons is 2/(1 + S) = 1.26 times the two atoms' clouds added without interference. Drag a proton and read the energy: the LCAO curve bottoms out at 0.1319 nm and 1.764 eV, against the measured 0.1052 nm and 2.793 eV. **H₂⁺ antibonding orbital** has a node on the midplane and its energy rises at every separation.
 
 ## Questions
 
@@ -51,6 +52,7 @@ Students should know the Coulomb energy, the exclusion principle, the quantized 
 - **Covalent bond.** Morse U = D_e(1 − e^(−a(r − r_e)))² − D_e, with r_e and ωe from Huber and Herzberg and D_e = D₀ + G(0); a = 2πcωe√(μ/2D_e). The H₂ parallel spin curve is Sato's anti Morse form, a qualitative model.
 - **Levels.** Book model: hf = G(1) − G(0) and ħ²/2I = B₀. Measured: G(v) with ωe xe (and higher terms for HCl), B_v = B_e − α_e(v + 1/2) + ..., centrifugal distortion D_v (measured for HCl and H₂, Kratzer's 4B³/ω² otherwise).
 - **Spectrum.** H³⁵Cl constants from the NIST WebBook (Rank, Rao et al. 1965 higher terms); H³⁷Cl scaled by the reduced mass. They reproduce R(0) = 2906.25, P(1) = 2865.10 cm⁻¹ and the H³⁷Cl lines to 0.01 cm⁻¹. Strengths: Boltzmann population, Hönl–London factors, abundances 75.76 % and 24.24 %; no Herman–Wallis factor, hot band or pressure broadening. Gaussian lines as wide as the resolution.
+- **H₂⁺ orbitals.** LCAO from hydrogen 1s orbitals, ψ± = (φ_A ± φ_B)/√(2(1 ± S)), protons held fixed; in atomic units U± = 1/R − (j ± k)/(1 ± S) with S = (1 + R + R²/3)e^(−R), j = [1 − (1 + R)e^(−2R)]/R and k = (1 + R)e^(−R) (Griffiths, Introduction to Quantum Mechanics, §7.3; Atkins and de Paula, Physical Chemistry, §10.3). The measured curve is a Morse potential through r_e = 0.1052 nm, ωe = 2321.7, ωe xe = 66.2, ωe ye = 0.6 cm⁻¹ and D₀ = 2.65073 eV (Huber and Herzberg via the NIST WebBook; D₀ from Bishop 1974), so D_e = 2.793 eV. The picture uses a compressed brightness scale so the tails show.
 
 ## Going further
 

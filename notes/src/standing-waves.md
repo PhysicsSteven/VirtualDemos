@@ -42,6 +42,7 @@ Students should know v = fλ and superposition. Three views are chosen at the to
 - **Two waves:** y = A₁ sin(k₁x − ω₁t) + A₂ sin(k₂x + ω₂t) at 2 m/s: a standing part 2 min(A) plus a traveling part |A₁ − A₂|. Nodes are v/(f₁ + f₂) apart.
 - **String:** ideal flexible string, small amplitude, fixed ends. The pluck is 200 undamped modes, bₙ = 2hL² sin(nπd/L)/(n²π² d(L − d)). The driven string has a point force at L/20 and damping rate γ = ω₁/Q for every mode, solved exactly, transients included.
 - **Beats:** two pure tones added.
+- **Single pulses:** each pulse is one hump A sin(πu/w) of width w = v/2f, half a wavelength, sent in from its end at v and added to the other where they overlap; pulse 2 can be inverted. Both leave after (x_R − x_L + w)/v.
 
 ## Going further
 

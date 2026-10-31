@@ -2233,7 +2233,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ['Mean, these decays', BE.n ? keV(BE.sumT / BE.n) : '—'], ['Decays', String(BE.n)]];
       if (BE.last) rows.push([`Last ${s.plus ? 'positron' : 'electron'}`, keV(BE.last.Te)], [O.noNu ? 'Missing' : s.plus ? 'Last neutrino' : 'Last antineutrino', O.noNu ? 'nothing (energy conserved only if T = Q)' : keV(BE.last.Ev)]);
       $('oneHint').textContent = ({ '0,1': 'A free neutron has a half life of 10.2 minutes (a mean life of 14.7 minutes) before it becomes a proton, an electron and an antineutrino. Q = (m_n − m_H)c² = 0.782 MeV.',
-        '1,3': 'Tritium has the smallest Q of any beta emitter, 18.59 keV. The KATRIN experiment measures the very top of its spectrum, near T = Q, to weigh the neutrino.',
+        '1,3': 'Tritium has one of the smallest Q values of any beta emitter, 18.59 keV. The KATRIN experiment measures the very top of its spectrum, near T = Q, to weigh the neutrino.',
         '6,14': 'Carbon 14, the radiocarbon of dating, gives electrons of at most 156 keV.',
         '15,32': 'Phosphorus 32 is a pure beta emitter used in labs and in medicine; its electrons reach 1.71 MeV.',
         '9,18': 'Fluorine 18, the PET isotope: a proton becomes a neutron, a positron and a neutrino. 96.9% of decays are positrons, the rest electron capture (left out here). The Coulomb push on the positron moves its spectrum up.' })[`${s.Z},${s.A}`];
