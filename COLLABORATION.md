@@ -6756,3 +6756,19 @@ Node or by hand, not from the entries above.
   and Projectile Sampling Distributions stay excluded as before; HTML5 rewrites of Alpha Decay, Beta Decay, Fluid Pressure and Flow
   and Quantum Wave Interference, plus Photoelectric Effect, Optics Lab, Quantum Bound States and X-ray Diffraction are in PhET's
   pipeline, not published).
+
+## 2026-10-31 · Claude · Rainbows: 3D visual overhaul (Steve)
+
+Steve, after the review screenshots: "the rainbow could use a visual overhaul" (Chladni bar 3D stays as it is). In the 3D view the drops
+were colored by the bow light plus the cloud light behind them, so the bow read yellow and white and the blue rim and the secondary
+hardly showed; the sky was one flat dark gray in both themes and the camera opened high above, looking down at the ground.
+- Drops: `dropColor` colors each drop by the bow light alone (profile at its θ, brightness 1.4, saturation 2.4 about its luminance)
+  over a faint sky gray; a drop inside the width of either bow is tinted with the pure color of the wavelength whose rainbow angle
+  is θ (`bands()`: bisection on `rbBow` over 400 to 700 nm per 0.05°, primary weight 0.8, secondary 0.7 at 0.6 brightness), and
+  drops in the bands are drawn large. The order of colors now shows on single drops: red outside and violet inside on the primary,
+  reversed on the secondary, the inside of the primary pale. The model text and the notes say the 3D colors are strengthened and
+  the sky picture keeps the computed colors.
+- Scene: overcast sky (light #a5b2c0, dark #2a3039) and a bank of dark rain cloud behind the shower (a vertex colored plane, drawn,
+  not computed), ground #587a46 in the light theme (unchanged dark), camera opens nearer eye level so the bow stands against the
+  cloud. CORE unchanged; `test_rainbows.cjs` passes; `vdcheck --only after` and `--only clip` on rainbows: 0 problems, 0 cut off.
+  Screenshots light and dark, desktop and 400 px in /mnt/project-files/review-2026-10-31/rainbows-v2/.

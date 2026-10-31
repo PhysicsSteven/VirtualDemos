@@ -111,7 +111,7 @@
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the bow angles (predict them first)</span></label>
         <details class="more"><summary>The model and its formulas</summary>
         <p class="formula">sin i = n sin r   D = 2(i − r) + k(180° − 2r)   least D where cos² i = (n² − 1)/(k² + 2k)</p>
-        <p class="hint">Model: a raindrop is a sphere of pure water at 20 °C, its index n(λ) from the Sellmeier formula of Daimon and Masumura (2007), as in the Optics Bench (n = 1.3334 at 589 nm, 1.3436 at 400 nm, 1.3305 at 700 nm). Sunlight arrives as parallel rays (geometric optics). A ray at impact parameter b (its distance from the drop's center line, as a fraction of the radius) meets the surface at i with sin i = b, refracts by Snell's law, reflects k times inside and leaves; it has turned through D = 2(i − r) + k(180° − 2r) and leaves at θ from the antisolar point, the point in the sky straight opposite the Sun (θ = 180° − D for one reflection, D − 180° for two). The ray of least deviation (Descartes 1637) satisfies cos² i = (n² − 1)/(k² + 2k): near it many rays leave at almost the same angle, and that pile up is the bow. The share of light on each ray is from the Fresnel equations for light polarized across (s) and along (p) the plane of the ray, (1 − R)² Rᵏ, with R the same at every surface of the ray (Stokes relations); sunlight is unpolarized, an even mix. The sky picture adds, at each angle from the antisolar point, the light of every ray from an evenly lit drop (12 000 rays per wavelength, 400 to 700 nm every 5 nm; light reflected off the outside, one reflection and two reflections inside), divided by the solid angle it spreads into, and averages it over the Sun's disk, 0.53° across. Sunlight is a blackbody at 5772 K (the Sun's effective temperature). Colors use the CIE 1931 color matching functions (fit of Wyman, Sloan and Shirley 2013) and sRGB; colors outside the screen's range are desaturated, so the bow looks paler than in life. Left out: diffraction (Airy theory), which makes the real bow slightly wider and adds the faint supernumerary bows inside the primary; drops flattened by the air (large drops); light scattered twice; the sky's own light. The cloud behind and the hills are drawn, not computed. The sky picture is a map of azimuth across and elevation up, like a panorama photograph, so circles look slightly wider near the top. In 3D the shower is a curtain of rain 30 to 33 m in front of you, its drops drawn far larger than life (and larger still where they send you more light), falling at 4 m/s, about the terminal speed of a 1 mm drop (Gunn and Kinzer 1949); each drop's color is the light it sends to the observer's eye.</p></details>
+        <p class="hint">Model: a raindrop is a sphere of pure water at 20 °C, its index n(λ) from the Sellmeier formula of Daimon and Masumura (2007), as in the Optics Bench (n = 1.3334 at 589 nm, 1.3436 at 400 nm, 1.3305 at 700 nm). Sunlight arrives as parallel rays (geometric optics). A ray at impact parameter b (its distance from the drop's center line, as a fraction of the radius) meets the surface at i with sin i = b, refracts by Snell's law, reflects k times inside and leaves; it has turned through D = 2(i − r) + k(180° − 2r) and leaves at θ from the antisolar point, the point in the sky straight opposite the Sun (θ = 180° − D for one reflection, D − 180° for two). The ray of least deviation (Descartes 1637) satisfies cos² i = (n² − 1)/(k² + 2k): near it many rays leave at almost the same angle, and that pile up is the bow. The share of light on each ray is from the Fresnel equations for light polarized across (s) and along (p) the plane of the ray, (1 − R)² Rᵏ, with R the same at every surface of the ray (Stokes relations); sunlight is unpolarized, an even mix. The sky picture adds, at each angle from the antisolar point, the light of every ray from an evenly lit drop (12 000 rays per wavelength, 400 to 700 nm every 5 nm; light reflected off the outside, one reflection and two reflections inside), divided by the solid angle it spreads into, and averages it over the Sun's disk, 0.53° across. Sunlight is a blackbody at 5772 K (the Sun's effective temperature). Colors use the CIE 1931 color matching functions (fit of Wyman, Sloan and Shirley 2013) and sRGB; colors outside the screen's range are desaturated, so the bow looks paler than in life. Left out: diffraction (Airy theory), which makes the real bow slightly wider and adds the faint supernumerary bows inside the primary; drops flattened by the air (large drops); light scattered twice; the sky's own light. The cloud behind and the hills are drawn, not computed. The sky picture is a map of azimuth across and elevation up, like a panorama photograph, so circles look slightly wider near the top. In 3D the shower is a curtain of rain 30 to 33 m in front of you, its drops drawn far larger than life (and larger still where they send you more light), falling at 4 m/s, about the terminal speed of a 1 mm drop (Gunn and Kinzer 1949); each drop's color is the bow light it sends to the observer's eye, with its saturation strengthened 2.4 times, and a drop inside the width of either bow is tinted with the pure color of the wavelength whose rainbow angle it sits at, so the order of the colors shows on single drops (the sky picture keeps the computed colors). The overcast sky and the bank of cloud behind the shower are drawn, not computed.</p></details>
         </div></details>
       </section>
     </aside>
@@ -280,6 +280,35 @@
     let r = CLOUD[0] + amt * p.R[j], g = CLOUD[1] + amt * p.G[j], b = CLOUD[2] + amt * p.B[j];
     const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
     out[0] = gam(Math.min(1, r)); out[1] = gam(Math.min(1, g)); out[2] = gam(Math.min(1, b)); return out;
+  }
+  /* the color of a drop in the 3D shower: the bow light it sends you alone (no cloud behind it), its colors strengthened
+     (saturation times 2.4, brightness times 1.4) over a faint gray of sky light, so the order of the colors shows on single drops */
+  let bandLUT = null;
+  /* for each 0.05° of θ inside the primary and secondary bows, the pure color of the wavelength whose rainbow angle is θ (bisection on
+     rbBow over 400 to 700 nm), as sRGB 0 to 1, and which bow it is; null outside the two bands */
+  function bands() {
+    if (bandLUT) return bandLUT;
+    const p = profile(), L = new Array(p.n).fill(null);
+    for (const k of [1, 2]) {
+      const lo = Math.min(BOWS[k].v, BOWS[k].r), hi = Math.max(BOWS[k].v, BOWS[k].r);
+      for (let j = Math.floor(lo / p.dD); j <= Math.ceil(hi / p.dD) && j < p.n; j++) {
+        const th = (j + 0.5) * p.dD; if (th < lo || th > hi) continue;
+        let a = 400, b = 700; for (let i = 0; i < 30; i++) { const m = (a + b) / 2; if ((d(rbBow(rbN(m), k).theta) - th) * (d(rbBow(rbN(a), k).theta) - th) <= 0) b = m; else a = m; }
+        const c = specRGB((a + b) / 2); L[j] = { c: [c[0] / 255, c[1] / 255, c[2] / 255], k };
+      }
+    }
+    bandLUT = L; return L;
+  }
+  function dropColor(thDeg, out) {
+    const p = profile(), j = Math.min(p.n - 1, Math.max(0, Math.floor(thDeg / p.dD)));
+    let r = 1.4 * p.R[j], g = 1.4 * p.G[j], b = 1.4 * p.B[j];
+    const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    r = y + 2.4 * (r - y); g = y + 2.4 * (g - y); b = y + 2.4 * (b - y);
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    out[0] = gam(Math.min(1, 0.06 + r)); out[1] = gam(Math.min(1, 0.065 + g)); out[2] = gam(Math.min(1, 0.075 + b));
+    const bd = bands()[j];
+    if (bd) { const w = bd.k === 1 ? 0.8 : 0.7, B = bd.k === 1 ? 0.95 : 0.6; for (let i = 0; i < 3; i++) out[i] = (1 - w) * out[i] + w * B * bd.c[i]; }
+    return out;
   }
   /* bow edges for the readouts: least deviation angles at 400 and 700 nm */
   const BOWS = (() => { const o = {}; for (const k of [1, 2, 3]) o[k] = { v: d(rbBow(rbN(400), k).theta), y: d(rbBow(rbN(589), k).theta), r: d(rbBow(rbN(700), k).theta) }; return o; })();
@@ -526,10 +555,18 @@
   const NDROP = 12000, RAIN = { x: 60, y0: 30, y1: 33, z: 42 };   /* a curtain of rain 30 to 33 m in front of you */
   const reduce = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
   function init3d() {
-    const S3 = VD3K.stage($('scene'), { fov: 42, near: 0.1, far: 5000, sky: '#262b33' }); if (!S3) return false;
+    const S3 = VD3K.stage($('scene'), { fov: 42, near: 0.1, far: 5000 }); if (!S3) return false;
     S3.el.style.position = 'absolute'; S3.el.style.inset = '0';
     const sc = S3.scene, g = new THREE.Group(); sc.add(g);
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), new THREE.MeshStandardMaterial({ color: '#2f4a2c', roughness: 1 })); g.add(ground);
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), VD3K.material(S3, { roughness: 1 }, ['#587a46', '#2f4a2c'])); g.add(ground);
+    /* an overcast sky and a bank of dark rain cloud behind the shower (drawn, not computed): the bow is seen against the cloud, as in the sky picture */
+    const cg = new THREE.PlaneGeometry(900, 220, 1, 8); cg.rotateX(Math.PI / 2); cg.translate(0, 110, 110);
+    const cc = new Float32Array(cg.attributes.position.count * 3); cg.setAttribute('color', new THREE.BufferAttribute(cc, 3));
+    const cloud = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, fog: false })); g.add(cloud);
+    const tintCloud = (dk) => { const lo = new THREE.Color(dk ? '#13171d' : '#4b5663'), hi = new THREE.Color(dk ? '#2a3039' : '#9aa7b6'), pz = cg.attributes.position, c = new THREE.Color();
+      for (let i = 0; i < pz.count; i++) { const t = Math.min(1, Math.max(0, pz.getZ(i) / 220)); c.copy(lo).lerp(hi, Math.pow(t, 0.8)); cc[3 * i] = c.r; cc[3 * i + 1] = c.g; cc[3 * i + 2] = c.b; }
+      cg.attributes.color.needsUpdate = true; };
+    S3.onTheme((dk) => { S3.scene.background = new THREE.Color(dk ? '#2a3039' : '#a5b2c0'); S3.scene.fog = null; tintCloud(dk); });
     const person = new THREE.Group(), cloth = new THREE.MeshStandardMaterial({ color: '#46566e', roughness: 0.8 }), skin = new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.7 });
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 1.45, 16), cloth); body.rotation.x = Math.PI / 2; body.position.z = 0.73;
     const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 14), skin); head.position.z = 1.6; person.add(body, head); g.add(person);
@@ -550,7 +587,7 @@
     const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 24), new THREE.MeshBasicMaterial({ color: '#ffdc78' })); shadow.position.z = 0.02; g.add(shadow);
     const lab = (t) => VD3K.label(t, { size: 1.6, color: '#e6ebf2', bg: 'rgba(20,24,30,0.6)' });
     const l1 = lab('42°'), l2 = lab('51°'), ls = lab('antisolar point'), lu = lab('you'); g.add(l1, l2, ls, lu); lu.scale.multiplyScalar(0.6);
-    const o = { th: -Math.PI / 2 - 0.5, ph: 1.3, zoom: 1 };
+    const o = { th: -Math.PI / 2 - 0.35, ph: 1.42, zoom: 1 };
     S3.orbit(S3.el, o, () => {}, { zMin: 0.35, zMax: 2.2, phMin: 0.3, phMax: 1.5 }); S3.el.tabIndex = 0;
     G3 = { S3, person, sun, drops, pos, M, C, c1, c2, axis, shadow, l1, l2, ls, lu, o, last: performance.now(), col: [0, 0, 0] };
     return true;
@@ -584,11 +621,11 @@
       let z = g.pos[3 * i + 2] - fall; if (z < 0) z += RAIN.z; g.pos[3 * i + 2] = z;
       const x = g.pos[3 * i], y = g.pos[3 * i + 1]; dv[0] = x - S.walk; dv[1] = y; dv[2] = z - 1.6;
       const th = d(rbThetaVec(dv, hR)), P = profile(), yn = P.Yn[Math.min(P.n - 1, Math.floor(th / P.dD))];
-      rainColor(th, 1.6, col);   /* a single drop drawn brighter than the rain's even glow, so its color shows, and bigger where it sends more light */
-      const sz = 0.45 + 1.8 * Math.min(1, yn); g.M.makeScale(sz, sz, sz).setPosition(x, y, z); g.drops.setMatrixAt(i, g.M); g.drops.setColorAt(i, g.C.setRGB(col[0], col[1], col[2]));
+      dropColor(th, col);   /* the bow light alone, strengthened, and a bigger drop where it sends more light */
+      const bd = bands()[Math.min(P.n - 1, Math.floor(th / P.dD))], sz = 0.4 + 2.2 * Math.max(bd ? (bd.k === 1 ? 0.85 : 0.6) : 0, Math.pow(Math.min(1, yn), 0.7)); g.M.makeScale(sz, sz, sz).setPosition(x, y, z); g.drops.setMatrixAt(i, g.M); g.drops.setColorAt(i, g.C.setRGB(col[0], col[1], col[2]));
     }
     g.drops.instanceMatrix.needsUpdate = true; if (g.drops.instanceColor) g.drops.instanceColor.needsUpdate = true;
-    g.S3.place(g.o, [S.walk, 20, 12], g.S3.fit(75)); g.S3.render();
+    g.S3.place(g.o, [S.walk, 22, 16], g.S3.fit(70)); g.S3.render();
   }
 
   // ---------- readouts ----------
