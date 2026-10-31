@@ -5794,3 +5794,33 @@ around its readings table and worksheet columns, while Rotation and Torque alrea
   against ω₀R gives k) is a natural new part of the rotation worksheet; the yo-yo could be one part of the Rotational
   Dynamics worksheet (same equations, a falling spool instead of a hanging mass). Canvas cartridges not rebuilt
   (catalog description only).
+
+## 2026-10-31 · Claude · Partly covered gaps, Group A (Physics I motion and forces)
+
+Steve: "Let's do the partial gaps today"; no new demos, additions to existing ones, no new worksheets unless a setup is vastly
+different (a worksheet sweep comes after). The 21 gaps are split in five groups (/mnt/project-files/partial-gaps/groups-2026-10-31.md);
+this is Group A. Commits a3863f2, 66e37fb, 619a376.
+- Motion Graphs, **Two cars** setup (oPhysics two object kinematics): car B with its own x₀, v₀ and constant a on a second rail; both
+  sets of graphs; meeting times solved exactly per stretch of constant accelerations (`meetTimes`), circled on the x–t graph and
+  listed in the readouts (hidden in Blind). Opening: meet at t = 2 + √8 = 4.83 s, x = 3.66 m.
+- Motion Graphs, **Ball on ramps** setup (Physics Classroom Graph and Ramps): three 3.0 m pieces, slopes −30° to 30°, solid ball
+  rolling without slipping, a = −(5/7) g sin θ per piece, speed kept through bends, stops at both ends, run up to 12 s (`rampRun`,
+  stages in the buildRun form so graphs, tangents, areas, Capture and the fit all work). **Match a graph** draws a hidden track's
+  x–t and v–t dashed and says when the student's track is the same. x is the distance along the track (said on the page).
+- Rocket, **Two stage rocket** setup and a Two stages switch (Physics Classroom Two Stage Rocket): first stage casing and fuel
+  sliders on the Set up card; `stagedFlight` solves each burn exactly from its start, waits on the pad while thrust < weight, and
+  the dropped casing coasts. Readouts give each stage's u ln(before/after) and the one stage figure with the same masses
+  (deep space 5276 against 4262 m/s; from the ground 4834 against 3820 m/s). Flat and 3D (booster under the rocket, then falling
+  away). Record says the worksheet's readings are for one stage rockets.
+- Forces and Friction, **Atwood's machine** setup: the ramp turned upright (θ = 90°) through the same `forces` code (N = 0, no
+  friction), drawn flat as two hangers over a pulley; θ, μ, F, φ knobs, the mystery surface and 3D are hidden in this setup.
+  2.0 and 2.5 kg: a = 1.09 m/s², T = 21.8 N, 1.355 s for 1.000 m. Captured rows have θ = 90.
+- Fluids, **Two liquids** instrument in the Barometer scene (oPhysics Fluid Density U Tube): oil, water (onto mercury only) or a
+  mystery oil (650 to 950 kg/m³) poured into one arm of a water or mercury U tube; `twoLiquids` gives ρ₁h₁ = ρ₂h₂ at the
+  interface level with the denser liquid's volume kept. Flat and 3D, heights to scale on a cm rule, drag grip, graph, data
+  table; the mystery's density is hidden. Oil and seawater are disabled as the bottom liquid here.
+- Checks: Node tests added for each new CORE function (motion-graphs 9, rocket 5, forces 9, fluids 14 groups pass); vdcheck
+  `--only after` and `--only clip` 0 problems on all four demos; screenshots at 1368 and 400 px, light and dark, 3D with a local
+  three.js r128. Notes updated; three What's new entries.
+- Worksheet candidates for the sweep: Atwood's machine (measure g from a and the masses, a classic lab of its own) and Two
+  liquids (density from two heights, with the mystery oil). The others fit the existing worksheets' topics as extra questions.
