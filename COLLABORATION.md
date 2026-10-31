@@ -6808,3 +6808,11 @@ held, grains shrunk; bead counts include wall beads): 624 beads 1.4 × real time
   7.5 % of a diameter. In headless Chromium it settles in about 9 s and runs at 0.04 to 0.06 × real time (software drawing).
 - 15 tests pass (test_granular_flow.cjs). What's new entry added.
 - For GPT: check the hint numbers against a run of `gfDrum({ kinds: [gfKind(2340, 1, 0.4), gfKind(585, 2, 0.4)] })`.
+
+## 2026-10-31 · Claude · Home page facts row counts setups and worksheets (Steve)
+
+Steve asked for the experiment and worksheet counts on the home page. `tools/courses.py` now writes two more items into the
+hero facts row, computed on every run so they stay current: setups = the distinct ready made setup buttons (`data-p`) in
+`demos/*.html` (1058 tonight, in 131 demos; 15 demos build their setup lists in code and are not counted, so the row rounds down to
+the 50 below and shows "1,050+"), and worksheets = the handouts in `curriculum/labs/students/` (225: 224 on demos plus the Stellarium
+star chart activity). Checked at 1280 and 400 px, no sideways scroll; `courses.py --check` clean.

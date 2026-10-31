@@ -1396,8 +1396,14 @@ def build():
     idx = re.sub(r'\n<script>.*?</script>', '', idx, count=1, flags=re.S)
     n_all = sum(len(sub['demos']) for sub in CATALOG_DATA()['subjects'])
     n_topics = sum(len(f['topics']) for f in t['families'])
-    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>\s*<li><span><strong>\d+</strong> (subjects|courses?)</span></li>(\s*<li><span><strong>\d+</strong> topics</span></li>)?',
-                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{len(LISTED)}</strong> course{"s" if len(LISTED) != 1 else ""}</span></li>'
+    # setups: the ready made setup buttons (data-p) in the demo pages, counted down to the 50 below, since a few demos build
+    # their setup lists in code and are not counted; worksheets: every student handout (Steve 2026-10-31)
+    n_setups = sum(len(set(re.findall(r'<button[^>]*\sdata-p="([^"]+)"', f.read_text()))) for f in (ROOT / 'demos').glob('*.html'))
+    n_ws = len(list((ROOT / 'curriculum' / 'labs' / 'students').glob('*.md')))
+    idx = re.sub(r'<li><span><strong>\d+</strong> demos</span></li>(\s*<li><span><strong>[\d,+]+</strong> (setups|worksheets)</span></li>)*\s*<li><span><strong>\d+</strong> (subjects|courses?)</span></li>(\s*<li><span><strong>\d+</strong> topics</span></li>)?',
+                 f'<li><span><strong>{n_all}</strong> demos</span></li>\n      <li><span><strong>{n_setups // 50 * 50:,}+</strong> setups</span></li>'
+                 f'\n      <li><span><strong>{n_ws}</strong> worksheets</span></li>'
+                 f'\n      <li><span><strong>{len(LISTED)}</strong> course{"s" if len(LISTED) != 1 else ""}</span></li>'
                  f'\n      <li><span><strong>{n_topics}</strong> topics</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
     idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n</style>', 1)
