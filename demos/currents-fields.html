@@ -178,6 +178,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <button type="button" data-p="amp" aria-pressed="false">Ampère's law</button>
           <button type="button" data-p="loop" aria-pressed="false">Current loop</button>
           <button type="button" data-p="sol" aria-pressed="false">Solenoid</button>
+          <button type="button" data-p="emag" aria-pressed="false">Electromagnet on a supply</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -246,11 +247,21 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <input type="range" id="sR" min="0.5" max="8" step="0.1">
         </div>
         <div class="ctl">
-          <div class="slider-head"><label for="sIs">Current I</label><output id="oIs" class="mono" for="sIs"></output></div>
+          <div class="slider-head"><label for="sIs" id="lIs">Current I</label><output id="oIs" class="mono" for="sIs"></output></div>
           <input type="range" id="sIs" min="-20" max="20" step="0.5">
         </div>
+        <div class="seg full" role="group" aria-label="Supply" id="supSeg" style="margin-top:8px">
+          <button type="button" data-sup="dc" aria-pressed="true">Battery (steady)</button>
+          <button type="button" data-sup="ac" aria-pressed="false">AC supply</button>
+        </div>
+        <div class="ctl" id="fCtl" hidden>
+          <div class="slider-head"><label for="sF">AC frequency (slowed)</label><output id="oF" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0.1" max="2" step="0.1">
+        </div>
+        <label class="check"><input type="checkbox" id="coreChk"> Iron core in the coil</label>
         <dl class="readout" id="sRead"></dl>
         <p class="hint" id="sideHint"></p>
+        <details class="more"><summary>About the electromagnet</summary><p class="hint">With the iron core the coil becomes an electromagnet. The coil's field magnetizes the iron, and the iron's tiny atomic current loops line up and add their own field, the same shape as the coil's, many times stronger. How many times depends mostly on the core's shape: a long thin core works far better than a short fat one, because the poles at its ends push back on its magnetization less. On the AC supply the current, the field and every compass needle reverse each cycle. The supply is slowed to at most 2 Hz so the needles can follow; at 60 Hz a real needle cannot turn that fast and only buzzes. Model: the core is magnetized uniformly, as an ellipsoid of the same proportions would be (demagnetizing factor N<sub>d</sub>, Osborn 1945), with μ<sub>r</sub> = 1000 (chosen, soft iron) and saturation at M<sub>s</sub> = 1.71 × 10⁶ A/m (Kittel); hysteresis and the coil's inductance are left out. The iron is drawn inside the turns; its field comes from the surface current M around its side, which runs where the turns are.</p></details>
       </section>
 
       <section>
@@ -492,6 +503,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = m < 1e-3 ? Math.PI / 16 * m * m * (1 + 0.75 * m + 75 / 128 * m * m) : (2 - m) * K - 2 * E;   // series avoids cancellation
     return [c * (K + (a * a - r * r - z * z) / q * E), c * z / r * (-K + (a * a + r * r + z * z) / q * E), MU0 * sq / (4 * Math.PI) * g];
   }
+  /* The current in the winding: I, or It at this moment on an AC supply. The field is worked out from fieldI, which adds the iron
+     core's share when there is one (Ieff, set by coreState below). */
+  const coilI = (sol) => (sol.It != null ? sol.It : sol.I);
+  const fieldI = (sol) => (sol.Ieff != null ? sol.Ieff : coilI(sol));
   // a solenoid {N, L, R, I} (cm, A): N coaxial rings of radius R evenly spread over the length L, centered at z = 0.
   // Ring k sits at the middle of its share of the length, so the turn density is exactly n = N/L. One turn sits at z = 0.
   function solTurns(sol) { const out = []; for (let k = 0; k < sol.N; k++) out.push(sol.N === 1 ? 0 : -sol.L / 2 + sol.L * (k + 0.5) / sol.N); return out; }
@@ -501,24 +516,47 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const a = sol.R * CM, r = Math.abs(y) * CM;
     let bz = 0, br = 0, ps = 0;
     for (const zk of turns) { const f = ringField(a, r, (z - zk) * CM); bz += f[0]; br += f[1]; ps += f[2]; }
-    return [bz * sol.I, (y < 0 ? -br : br) * sol.I, ps * sol.I];
+    const I = fieldI(sol); return [bz * I, (y < 0 ? -br : br) * I, ps * I];
   }
   // on the axis: one ring gives μ₀IR²/(2(R² + z²)^{3/2}); summed over the turns
   function axisExact(sol, z, turns) {
     turns = turns || solTurns(sol);
     const a = sol.R * CM; let b = 0;
     for (const zk of turns) { const d = (z - zk) * CM; b += a * a / (2 * Math.pow(a * a + d * d, 1.5)); }
-    return MU0 * sol.I * b;
+    return MU0 * fieldI(sol) * b;
   }
   const loopCenter = (R, I) => MU0 * I / (2 * R * CM);                 // μ₀I/(2R)
   const turnsPerM = (sol) => sol.N / (sol.L * CM);
-  const idealSol = (sol) => MU0 * turnsPerM(sol) * sol.I;                // μ₀nI
+  const idealSol = (sol) => MU0 * turnsPerM(sol) * coilI(sol);          // μ₀nI, the coil alone
   // the winding as a continuous current sheet n I per meter from z₁ = −L/2 to z₂ = L/2, on the axis:
   // B = μ₀nI (cos θ₁ − cos θ₂)/2, θ₁ and θ₂ the angles from the +z axis to the rims of the ends at z₂ and z₁
   function sheetAxis(sol, z) {
     const a = sol.R, d2 = sol.L / 2 - z, d1 = -sol.L / 2 - z;
     return idealSol(sol) / 2 * (d2 / Math.hypot(d2, a) - d1 / Math.hypot(d1, a));
   }
+  /* ---- an electromagnet: an iron core filling the coil (OpenStax Vol. 2 §12.7; PhET Magnets and Electromagnets).
+     Model: the core is a soft iron rod of the coil's length L and radius R, magnetized uniformly along the axis by the coil's field at
+     the center, H₀ = B₀/μ₀. A uniformly magnetized body keeps a uniform M only if it is an ellipsoid, so the rod is treated as the
+     ellipsoid of the same length to diameter ratio m = L/2R, whose own field opposes the coil's by the demagnetizing factor N_d
+     (Osborn 1945): M = (μ_r − 1)H₀/(1 + (μ_r − 1)N_d), capped at iron's saturation magnetization M_s = 1.71 × 10⁶ A/m (Kittel,
+     Introduction to Solid State Physics, the table of ferromagnets: 1707 G for iron at room temperature). A uniform M is the same as a current sheet of M amperes
+     per meter around the rod's side, so the core's field is that of the coil's own turns carrying an extra M L/N each: the field shape
+     is unchanged and its size grows by 1 + M L/(N I). For a long thin core N_d is small and the gain is close to 1/N_d, almost whatever
+     μ_r is, so the shape of the iron matters more than the iron; μ_r = 1000 is chosen (soft iron). Hysteresis, a rod's weaker
+     magnetization near its ends and the coil's inductance are left out. */
+  const IRON_MU = 1000, IRON_MS = 1.71e6;
+  function demagFactor(m) {   /* along the symmetry axis of a spheroid with length/diameter m */
+    if (Math.abs(m - 1) < 1e-6) return 1 / 3;
+    if (m > 1) { const e = Math.sqrt(m * m - 1); return (m / e * Math.log(m + e) - 1) / (m * m - 1); }
+    const e = Math.sqrt(1 - m * m); return (1 - m / e * Math.acos(m)) / (1 - m * m);
+  }
+  function coreState(sol, I, mu = IRON_MU, Ms = IRON_MS) {
+    const plain = { N: sol.N, L: sol.L, R: sol.R, I }, H0 = axisExact(plain, 0) / MU0, Nd = demagFactor(sol.L / (2 * sol.R));
+    const chi = (mu - 1) / (1 + (mu - 1) * Nd), Mfree = chi * H0, M = Math.sign(Mfree) * Math.min(Math.abs(Mfree), Ms);
+    return { H0, Nd, chi, M, sat: Math.abs(Mfree) > Ms, Ieff: I + M * sol.L * CM / sol.N, gain: I ? 1 + M * sol.L * CM / (sol.N * I) : 1 + chi * axisExact({ N: sol.N, L: sol.L, R: sol.R, I: 1 }, 0) / MU0 * sol.L * CM / sol.N };
+  }
+  /* a slow AC supply: I(t) = I₀ sin 2πft (f slowed so the compasses can follow; at these rates the coil's inductance does not matter) */
+  const acCurrent = (I0, f, t) => I0 * Math.sin(2 * Math.PI * f * t);
   /* ---- magnets (OpenStax 11.1). A bar magnet is drawn as two magnetic poles (Gilbert's model): a pole of strength q gives
      B = μ₀q r̂/(4πr²) and two poles push each other with F = μ₀q₁q₂/(4πr²). Good outside thin magnets; only directions and ratios are shown. */
   function poleB(poles, x, y) { let bx = 0, by = 0; for (const [px, py, q] of poles) { const dx = x - px, dy = y - py, r2 = dx * dx + dy * dy, r3 = r2 * Math.sqrt(r2); if (r3 < 1e-12) continue; bx += q * dx / r3; by += q * dy / r3; } return [bx * MU0 / (4 * Math.PI), by * MU0 / (4 * Math.PI)]; }
@@ -532,7 +570,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   if (typeof document === 'undefined') {
     globalThis.CF = { MU0, CM, wireB, wirePsi, wireForce, pairForce, integrate, breaks, loopPieces, circulation, insideLoop, loopDist, enclosedI,
-      ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis, poleB, poleForceX, oerstedB, oerstedAngle };
+      ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis, poleB, poleForceX, oerstedB, oerstedAngle,
+      coilI, fieldI, IRON_MU, IRON_MS, demagFactor, coreState, acCurrent };
     return;
   }
 
@@ -556,13 +595,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     loop: { scene: 'side', sol: { N: 1, L: 12, R: 4, I: 5 }, sprobe: [0, 0],
       hint: 'A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).' },
     sol: { scene: 'side', sol: { N: 30, L: 24, R: 3, I: 5 }, sprobe: [0, 1.2],
-      hint: 'Many loops side by side. Inside a long solenoid the field is nearly uniform, close to μ₀nI with n = N/L, and outside it is weak. At each end it drops to about half. Shorten it to watch it turn into a loop.' }
+      hint: 'Many loops side by side. Inside a long solenoid the field is nearly uniform, close to μ₀nI with n = N/L, and outside it is weak. At each end it drops to about half. Shorten it to watch it turn into a loop.' },
+    emag: { scene: 'side', sol: { N: 40, L: 10, R: 1, I: 2, core: true }, sprobe: [8, 0], sup: 'dc',
+      hint: 'An electromagnet: 40 turns on a soft iron rod 10 cm long and 2 cm across, on a 2 A battery. The iron makes the field about 18 times what the coil gives alone, and the compasses line up with it like the field of a bar magnet. Take the core out, switch to the AC supply, or make the rod short and fat to see the gain fall.' }
   };
   const S = {
     scene: 'wires', preset: 'par', wires: [], wsel: null, sel: null, amp: false,
     loop: { kind: 'circle', x: -1.5, y: 0, r: 4, w: 9, h: 7 }, ccw: true,
     probe: { x: 0, y: 3 }, sprobe: { z: 0, y: 1.2 },
-    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null,
+    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null, sup: 'dc', acF: 0.5, acT: 0, cs: null,
     show: { lines: true, shade: true, compass: true, probe: true, force: true }
   };
   const wById = (id) => S.wires.find((w) => w.id === id);
@@ -711,7 +752,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function layerSig() {
     const base = `${S.scene}|${W}|${H}|${dpr}|${projScale()}|${themeVer}|${S.show.lines}|${S.show.shade}|${V.s.toFixed(4)}|${V.cx}|${V.cy}`;
     if (S.scene === 'wires') return base + '|' + S.wires.map((w) => `${w.x},${w.y},${w.I}`).join(';');
-    return base + `|${S.sol.N},${S.sol.L},${S.sol.R},${S.sol.I}`;
+    return base + `|${S.sol.N},${S.sol.L},${S.sol.R},${fieldI(S.sol)},${coilI(S.sol)}`;
   }
   function shadeColor(img, idx, B, lo, hi, rgb) {
     const t = B > lo ? Math.min(1, Math.log(B / lo) / Math.log(hi / lo)) : 0;
@@ -831,7 +872,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const hi = 2.5 * Math.abs(axisExact(sol, 0, turns)) || 1e-12;
         shadeImage(c, Bm, cols, rows, g, ox, oy, hi / 400, hi, Hd);
       }
-      if (S.show.lines && sol.I) {
+      if (S.show.lines && fieldI(sol)) {
         const mask = new Uint8Array((cols - 1) * (rows - 1)), rm = tr + 3.5 * kS();
         for (const zk of turns) for (const yy of [sol.R, -sol.R]) {
           const px = X(zk), py = Y(yy);
@@ -847,11 +888,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const dir = (x, y) => { const f = solField(sol, wx(x), wy(y), turns), m = Math.hypot(f[0], f[1]); return m > 0 ? [f[0] / m, -f[1] / m] : null; };
         arrows = placeArrows(lines, 240 * ks, 24 * ks, dir);
         // the axis is a field line too
-        const sg = Math.sign(sol.I), n = Math.max(2, Math.round(W / (230 * ks)));
+        const sg = Math.sign(fieldI(sol)), n = Math.max(2, Math.round(W / (230 * ks)));
         for (let q = 0; q < n; q++) axisArrows.push([(q + 0.5) * W / n, V.cy, sg, 0]);
       }
     }
-    if (S.show.lines && sol.I) {
+    if (S.show.lines && fieldI(sol)) {
       c.save(); c.beginPath(); c.rect(0, 0, W, Hd); c.clip();
       strokeLines(c);
       c.strokeStyle = T.bline; c.lineWidth = 1.25 * kS(); c.beginPath(); c.moveTo(0, V.cy); c.lineTo(W, V.cy); c.stroke();
@@ -879,7 +920,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xs = [], ys = [], ysh = [];
     for (let px = 0; px <= W; px += 2) {
       const z = wx(px), b = axisExact(sol, z, turns); xs.push(px); ys.push(b); lo = Math.min(lo, b); hi = Math.max(hi, b);
-      if (sol.N > 1) { const s = sheetAxis(sol, z); ysh.push(s); }
+      if (sol.N > 1) { const s = sheetAxis(sol, z) * (coilI(sol) ? fieldI(sol) / coilI(sol) : 1); ysh.push(s); }   /* with an iron core the sheet carries nI + M */
     }
     if (sol.N > 1) { const id = idealSol(sol); lo = Math.min(lo, id); hi = Math.max(hi, id); }
     if (hi === lo) hi = lo + 1e-9;
@@ -919,20 +960,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.xs.forEach((px, k) => { const y = g.Yb(g.ysh[k]); k ? c.lineTo(px, y) : c.moveTo(px, y); }); c.stroke(); c.setLineDash([]);
     }
     if (sol.N === 1) {   // μ₀I/(2R) at the center
-      const b = loopCenter(sol.R, sol.I), y = g.Yb(b);
+      const b = loopCenter(sol.R, coilI(sol)), y = g.Yb(b);
       c.strokeStyle = T.muted; c.lineWidth = 1.5 * ks; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(X(0) - 70 * ks, y); c.lineTo(X(0) + 70 * ks, y); c.stroke(); c.setLineDash([]);
     }
     // y tick labels on a halo
     for (let b = Math.ceil(g.lo / st) * st; b <= g.hi - st * 0.3; b += st) {
       if (Math.abs(b) < st * 1e-6 && g.lo >= 0) continue;
-      label(c, `${+(b * g.unit).toPrecision(3)}`, 6, g.Yb(b) + fs * 0.35, { size: fs, weight: 400, fam: T.mono, color: T.muted });
+      label(c, `${Math.abs(b) < st * 1e-6 ? 0 : +(b * g.unit).toPrecision(3)}`, 6, g.Yb(b) + fs * 0.35, { size: fs, weight: 400, fam: T.mono, color: T.muted });
     }
     label(c, `B_z on the axis (${g.uname})`, 8, g.top - 9 * ks, { size: fsz(12), color: T.ink });
     if (sol.N > 1) {
       const id = idealSol(sol), y = g.Yb(id);
       label(c, `μ₀nI = ${fmtB(id)}`, W - 8, y - 7 * ks, { size: fsz(11), align: 'right', fam: T.mono, color: T.muted, weight: 400 });
     } else {
-      const b = loopCenter(sol.R, sol.I);
+      const b = loopCenter(sol.R, coilI(sol));
       label(c, `μ₀I/(2R) = ${fmtB(b)}`, X(0) + 78 * ks, g.Yb(b) + fs * 1.5, { size: fsz(11), fam: T.mono, color: T.muted, weight: 400 });
     }
   }
@@ -1240,6 +1281,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawSideScene() {
     const c = ctx, ks = kS(), sol = S.sol, turns = solTurns(sol), tr = turnR(), Hd = V.Hd;
     c.save(); c.beginPath(); c.rect(0, 0, W, Hd); c.clip();
+    if (sol.core && sol.N > 1) {   /* the iron core inside the turns, see through so the field lines show */
+      const x0 = X(-sol.L / 2), x1 = X(sol.L / 2), y0 = Y(sol.R * 0.82), y1 = Y(-sol.R * 0.82);
+      c.fillStyle = T.muted; c.globalAlpha = 0.22; c.fillRect(x0, y0, x1 - x0, y1 - y0); c.globalAlpha = 0.7; c.strokeStyle = T.muted; c.lineWidth = 1.2; c.strokeRect(x0, y0, x1 - x0, y1 - y0); c.globalAlpha = 1;
+      label(c, 'iron', x1 - 4 * ks, y0 + fsz(11) + 2 * ks, { size: fsz(10.5), color: T.muted, align: 'right', weight: 400 });
+    }
     if (S.show.compass) drawNeedles(c);
     // outline of the coil and its axis label
     if (sol.N === 1) {   // the loop itself, seen nearly edge on
@@ -1252,8 +1298,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hotR = isHot('sr'), hotL = isHot('sl');
     for (const zk of turns) {
       const endHot = hotL && Math.abs(zk - turns[turns.length - 1]) < 1e-9;
-      wireGlyph(c, X(zk), Y(sol.R), tr, sol.I, hotR || endHot, false);
-      wireGlyph(c, X(zk), Y(-sol.R), tr, -sol.I, hotR || endHot, false);
+      wireGlyph(c, X(zk), Y(sol.R), tr, coilI(sol), hotR || endHot, false);
+      wireGlyph(c, X(zk), Y(-sol.R), tr, -coilI(sol), hotR || endHot, false);
     }
     const gp = sideGrips();
     grip(c, gp.R[0], gp.R[1], hotR, 'v');
@@ -1268,9 +1314,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // labels
     const fs = fsz(11.5);
     if (sol.N === 1) {
-      label(c, `I = ${fmtI(sol.I).replace('+', '')}, R = ${fmtCm(sol.R)}`, X(0) + tr + 10 * ks, Y(sol.R) + fs * 0.35, { size: fs, fam: T.mono, color: T.ink });
+      label(c, `I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}, R = ${fmtCm(sol.R)}`, X(0) + tr + 10 * ks, Y(sol.R) + fs * 0.35, { size: fs, fam: T.mono, color: T.ink });
     } else {
-      label(c, `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(sol.I).replace('+', '')}`, X(0), Y(-sol.R) + tr + 18 * ks, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
+      label(c, `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}${sol.core && W >= 520 ? ', iron core' : ''}`, X(0), Y(-sol.R) + tr + 18 * ks, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
     }
     if (pr && isFinite(pr.m)) label(c, `B = ${fmtB(pr.m)}`, pr.px + 12 * ks, pr.py + 20 * ks, { size: fsz(11.5), fam: T.mono, color: T.accent });
     if (W >= 560) label(c, 'Plane through the axis · z to the right · grid 1 cm', W - 10, Hd - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
@@ -1339,7 +1385,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let sh = '';
     if (sol.N === 1) {
       sh = `<div class="wide big"><dt>B at the center, exact</dt><dd>${fmtB(bc, 4)}</dd></div>
-        <div class="wide"><dt>μ₀I/(2R)</dt><dd>${fmtB(loopCenter(sol.R, sol.I), 4)}</dd></div>
+        <div class="wide"><dt>μ₀I/(2R)</dt><dd>${fmtB(loopCenter(sol.R, coilI(sol)), 4)}</dd></div>
         <div class="wide"><dt>On the axis at the probe's z: μ₀IR²/(2(R²+z²)<sup>3/2</sup>)</dt><dd>${fmtB(axisExact(sol, S.sprobe.z, turns), 4)} <span class="ok">z = ${fmtCm(S.sprobe.z)}</span></dd></div>`;
       $('sideHint').textContent = 'With one turn the length L does not matter. Raise N to stack more turns along the length.';
     } else {
@@ -1351,6 +1397,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <div class="wide"><dt>B at an end (z = L/2), exact</dt><dd>${fmtB(be, 4)} <span class="ok">${(be / bc).toFixed(3)} of the center</span></dd></div>`;
       $('sideHint').textContent = 'θ₁ and θ₂ are the angles from the +z axis to the rims of the two ends, seen from the point on the axis. A long solenoid has θ₁ → 0 and θ₂ → 180°, giving μ₀nI.';
     }
+    if (S.sup === 'ac') sh += `<div class="wide"><dt>AC supply: current now I₀ sin 2πft</dt><dd>${fmtI(+coilI(sol).toFixed(2)).replace('+', '')} <span class="ok">I₀ = ${fmtI(sol.I).replace('+', '')}, f = ${S.acF.toFixed(1)} Hz, t = ${S.acT.toFixed(1)} s</span></dd></div>`;
+    if (sol.core && sol.N === 1) sh += '<div class="wide"><dt>Iron core</dt><dd>needs a coil of two or more turns</dd></div>';
+    if (S.cs) { const c = S.cs;
+      sh += `<div><dt>Core length/diameter L/2R</dt><dd>${(sol.L / (2 * sol.R)).toFixed(2)}</dd></div><div><dt>Demagnetizing factor N<sub>d</sub></dt><dd>${c.Nd.toFixed(4)}</dd></div>
+        <div><dt>Coil's H at the center H₀</dt><dd>${Math.abs(c.H0) >= 1e4 ? (c.H0 / 1000).toPrecision(4) + ' kA/m' : c.H0.toPrecision(4) + ' A/m'}</dd></div><div><dt>Iron's magnetization M</dt><dd>${Math.abs(c.M) >= 1e4 ? (c.M / 1000).toPrecision(4) + ' kA/m' : c.M.toPrecision(4) + ' A/m'}</dd></div>
+        <div class="wide big"><dt>Field with the core ÷ coil alone, 1 + ML/(NI)</dt><dd>${c.gain.toFixed(2)} <span class="ok">(μ<sub>r</sub> − 1)/(1 + (μ<sub>r</sub> − 1)N<sub>d</sub> = ${c.chi.toFixed(2)}${c.sat ? '; the iron is saturated' : ''}</span></dd></div>`; }
     $('sRead').innerHTML = sh;
     // probe
     if (S.scene === 'wires') {
@@ -1370,7 +1422,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hl = $('headline');
     if (S.scene === 'side') {
       const sol = S.sol, bc = axisExact(sol, 0);
-      hl.innerHTML = sol.N === 1 ? `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀I/(2R) = ${fmtB(loopCenter(sol.R, sol.I), 4)}</small>`
+      hl.innerHTML = sol.N === 1 ? `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀I/(2R) = ${fmtB(loopCenter(sol.R, coilI(sol)), 4)}</small>`
         : `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀nI = ${fmtB(idealSol(sol), 4)}</small>`;
     } else if (S.amp) {
       const A = ampere();
@@ -1409,7 +1461,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- changes ----------
   let dirty = true, readDirty = true, lastInput = 0;
-  function changed() { dirty = true; readDirty = true; }
+  /* the current in the coil now (a slow AC supply makes it change) and the iron core's share of the field */
+  function updCur() {
+    const sol = S.sol;
+    if (S.sup === 'ac' && S.scene === 'side') sol.It = acCurrent(sol.I, S.acF, S.acT); else delete sol.It;
+    if (sol.core && sol.N > 1) { S.cs = coreState(sol, coilI(sol)); sol.Ieff = S.cs.Ieff; } else { S.cs = null; delete sol.Ieff; }
+  }
+  function changed() { updCur(); dirty = true; readDirty = true; }
   function markPreset(name) {
     S.preset = name;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
@@ -1425,7 +1483,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.probe = { x: p.probe[0], y: p.probe[1] };
       S.show.force = !p.amp;
     }
-    if (p.sol) { S.sol = { ...p.sol }; S.sprobe = { z: p.sprobe[0], y: p.sprobe[1] }; S.fit = null; S.sel = null; }
+    if (p.sol) { S.sol = { ...p.sol }; S.sprobe = { z: p.sprobe[0], y: p.sprobe[1] }; S.fit = null; S.sel = null; S.sup = p.sup || 'dc'; S.acT = 0; syncSupply(); }
     markPreset(name);
     syncScene(); setView(); if (S.scene === 'side') fitSide(); keepInView();
     needlesKey = ''; changed();
@@ -1493,6 +1551,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sIs').addEventListener('input', (e) => sideInput('I', +e.target.value));
   for (const id of ['sN', 'sL', 'sR']) $(id).addEventListener('change', () => { fitSide(); lastInput = 0; changed(); });
   $('sIs').addEventListener('change', () => { lastInput = 0; changed(); });
+  function syncSupply() {
+    for (const b of document.querySelectorAll('#supSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sup === S.sup));
+    $('fCtl').hidden = S.sup !== 'ac'; $('sF').value = S.acF; $('oF').textContent = `${S.acF.toFixed(1)} Hz`; $('coreChk').checked = !!S.sol.core;
+    $('lIs').textContent = S.sup === 'ac' ? 'Peak current I₀' : 'Current I';
+  }
+  $('supSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-sup]'); if (!b) return; S.sup = b.dataset.sup; S.acT = 0; custom(); syncSupply(); changed(); });
+  $('sF').addEventListener('input', (e) => { S.acF = +e.target.value; custom(); syncSupply(); changed(); });
+  $('coreChk').addEventListener('change', (e) => { S.sol.core = e.target.checked; custom(); changed(); });
   for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']])
     $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; changed(); });
 
@@ -1763,9 +1829,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.show.lines) for (const a of [Math.PI / 3, 2 * Math.PI / 3]) ghostLines((z, y) => [z, -y * Math.sin(a), y * Math.cos(a)]);
       const sol = S.sol, tr = Math.max(0.06, turnR() / V.s * 0.8), ringG = new THREE.TorusGeometry(sol.R, tr, 12, 48, Math.PI).rotateY(Math.PI / 2), nearG = ringG.clone().rotateX(Math.PI);   /* far and near halves of a turn; the near half is drawn faint so the field inside shows */
       for (const zk of solTurns(sol)) { const m = new THREE.Mesh(ringG, g.copperM), n = new THREE.Mesh(nearG, g.nearM); m.position.x = n.position.x = zk; n.renderOrder = 3; g.turns.add(m, n); }
+      if (sol.core && sol.N > 1) { g.ironM = g.ironM || new THREE.MeshStandardMaterial({ color: 0x8a9099, metalness: 0.55, roughness: 0.45, transparent: true, opacity: 0.6 });
+        const m = new THREE.Mesh(new THREE.CylinderGeometry(sol.R * 0.82, sol.R * 0.82, sol.L, 40).rotateZ(Math.PI / 2), g.ironM); m.renderOrder = 2; g.turns.add(m); }
       // one chevron on top of each end turn: out of the page (toward −y here) for I > 0, as in the flat view
-      if (sol.I) { const coneG = new THREE.ConeGeometry(tr * 1.8, tr * 3, 16).rotateX(Math.PI / 2);
-        for (const zk of [...new Set([solTurns(sol)[0], solTurns(sol).at(-1)])]) { const c = new THREE.Mesh(coneG, sol.I > 0 ? g.outM : g.inM); c.position.set(zk, 0, sol.R); c.rotation.x = sol.I > 0 ? Math.PI / 2 : -Math.PI / 2; g.turns.add(c); } }
+      if (coilI(sol)) { const coneG = new THREE.ConeGeometry(tr * 1.8, tr * 3, 16).rotateX(Math.PI / 2);
+        for (const zk of [...new Set([solTurns(sol)[0], solTurns(sol).at(-1)])]) { const c = new THREE.Mesh(coneG, coilI(sol) > 0 ? g.outM : g.inM); c.position.set(zk, 0, sol.R); c.rotation.x = coilI(sol) > 0 ? Math.PI / 2 : -Math.PI / 2; g.turns.add(c); } }
     }
     g.sheetM.opacity = S.scene === 'wires' ? 0.9 : 0.72; g.tex.needsUpdate = true;
   }
@@ -1789,7 +1857,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const w of S.wires) { const q = Q(w.x, w.y, hw); if (q[2] < 1) label(ctx, `I_${wIndex(w)} = ${fmtI(w.I)}`, q[0], q[1] - 8 * kS(), { size: fs, fam: T.mono, color: T.ink, align: 'center', avoid }); }
     } else {
       const sol = S.sol, q = Q(0, 0, -sol.R * 1.25);
-      label(ctx, sol.N === 1 ? `I = ${fmtI(sol.I).replace('+', '')}, R = ${fmtCm(sol.R)}` : `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(sol.I).replace('+', '')}`, q[0], q[1] + fs, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
+      label(ctx, sol.N === 1 ? `I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}, R = ${fmtCm(sol.R)}` : `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}${sol.core ? ', iron core' : ''}`, q[0], q[1] + fs, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
       plotMarker(ctx, sol, solTurns(sol));
     }
     if (W >= 560) label(ctx, S.scene === 'wires' ? 'Drag to turn the view · move things in the flat view' : 'Near half of each turn drawn faint · drag to turn the view', W - 10, h - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
@@ -1814,6 +1882,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
     if (W && H) {
+      if (S.sup === 'ac' && S.scene === 'side') { S.acT += dt; lastInput = now; changed(); }   /* the layer is rebuilt coarse while the current changes */
       if (dirty) { setupNeedles(); }
       const wasMoving = needlesMoving;
       if (S.show.compass) stepNeedles(dt);
@@ -1956,7 +2025,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sol = S.sol, turns = solTurns(sol), p = S.sprobe, f = solField(sol, p.z, p.y, turns);
     return { setup: setupName(), N: sol.N, L_cm: sol.N === 1 ? '' : sol.L, R_cm: sol.R, I_A: sol.I, z_cm: +p.z.toFixed(1), rho_cm: +Math.abs(p.y).toFixed(1),
       Bz_uT: sig(f[0] * 1e6, 5), Brho_uT: Math.abs(f[1]) < 1e-9 * Math.hypot(f[0], f[1]) ? 0 : sig((p.y < 0 ? -f[1] : f[1]) * 1e6, 4), Bc_uT: sig(axisExact(sol, 0, turns) * 1e6, 5),
-      Bend_uT: sol.N === 1 ? '' : sig(axisExact(sol, sol.L / 2, turns) * 1e6, 5) };
+      Bend_uT: sol.N === 1 ? '' : sig(axisExact(sol, sol.L / 2, turns) * 1e6, 5),
+      ...(S.cs ? { core: 'iron', gain: sig(S.cs.gain, 4) } : {}), ...(S.sup === 'ac' ? { I_now_A: +coilI(sol).toFixed(3), f_Hz: S.acF } : {}) };
   }
   window.vdReadingRow = () => {
     const ws = wsNow(), n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;
