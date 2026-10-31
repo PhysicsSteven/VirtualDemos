@@ -5587,3 +5587,25 @@ demos where they fit, so this is two new switches in `demos/seasons.html` (Seaso
   How this works video `intro-sidereal-day.mp4` (toy planet, 4 turns, 3 noons, 96 h). What's new entry.
 - Checked: Playwright at 1368 and 390 px light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0.
   GPT: please verify the planet periods, the EoT numbers and the key.
+
+## 2026-10-31 · Claude · Star colors and spectra: U B V filters, Hydrogen in stars, Nearest and brightest (NAAP parity, Steve)
+
+Group B of the Astro push. Steve asked to fold new pieces into existing demos, so all three are views of existing demos, with
+worksheets on the Astronomy page only (not Astro 2203). Commits 9e2313f (worksheets), 2287333 (shared files), 632dbf5 (videos).
+- Blackbody Radiation, U B V filters view (`?view=ubv`, `?ws=ubv-colors`): Bessell (1990) U, B, V passbands (speclite 1.0.0) used as
+  energy response, I = ∫B_λ S dλ (Bessell and Murphy 2012). Vega zero point from CALSPEC alpha_lyr_stis_011 (pyphot 2.1.1):
+  instrumental Vega U − B 0.91804, B − V −0.68788. Blackbody B − V 1.699 at 3000 K (U − B 1.036), 0.646 at 5772 K, 0 at 13 310 K,
+  −0.375 hot limit. Build script and data in `tools/star-colors/`. Vega is bluer than a blackbody at its T because the continuum
+  opacity beyond 365 nm rises with wavelength (V light escapes from cooler layers); this wins over the Balmer lines in B.
+- Spectra Explorer, Hydrogen in stars mode (`?mode=stars`, `?ws=hydrogen-in-stars`): Boltzmann plus Saha as in Carroll and Ostlie
+  §8.1, Z_I = 2, Z_II = 1, χ = 13.598434 eV, E2 − E1 = 0.75 χ, CODATA 2022, Pe fixed (stated). Peak of the n = 2 share 9870 K at
+  20 N/m² (C and O: 9900 K); 8506 K at 1 N/m², 12 391 K at 1000 N/m². Balmer strip darkness is log scaled (stated).
+- Stellar Evolution, Nearest and brightest preset (`?view=real`, `?ws=nearest-brightest`): HYG v3.8 subset (`tools/hr-stars/`,
+  CC BY-SA 4.0; Group A owns the notice): 317 stars within 10 pc (272 with B − V), 100 brightest (99), 7 in both. M_V computed from
+  V and d (HYG absmag disagrees for GJ 3192). Medians: nearest M_V 11.61, 7.5 pc; brightest M_V −1.61, 54.5 pc. Readings export
+  as catalog data, not simulated (new `window.vdDataNote`, documented in tools/readings_panel.py).
+- CORE tests `test_ubv_colors.cjs` (5), `test_hydrogen_in_stars.cjs` (4), `test_nearest_brightest.cjs` (4). Keys from real runs in
+  TeacherKeys `worksheet-keys/astro/` (57d38d5). How this works videos ubv-colors, hydrogen-in-stars, nearest-brightest (18 to
+  20 s, dark). What's new entry 2026-10-31-star-colors-spectra.
+- Checked: vdcheck after and clip 0 problems on all three; 1280, 390 and 360 px no sideways scroll; local Jekyll build receiving
+  every export. GPT: please verify the Vega constants, the Saha peak numbers and the three keys.
