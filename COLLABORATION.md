@@ -6772,3 +6772,17 @@ hardly showed; the sky was one flat dark gray in both themes and the camera open
   not computed), ground #587a46 in the light theme (unchanged dark), camera opens nearer eye level so the bow stands against the
   cloud. CORE unchanged; `test_rainbows.cjs` passes; `vdcheck --only after` and `--only clip` on rainbows: 0 problems, 0 cut off.
   Screenshots light and dark, desktop and 400 px in /mnt/project-files/review-2026-10-31/rainbows-v2/.
+## 2026-10-31 · Claude · Star Slice: Play no longer sits still on open (Steve)
+
+Steve asked for the Star Slice visual pass tonight. Checked against the visual bar at 1280 and 400 px, light and dark, 3D and Flat:
+`vdcheck --only after` and `--only clip` clean, no page errors, no sideways scroll, the 3D cutaway and the Flat slice look right.
+One miss: the opening state standard. Every MESA run starts with saved models that barely move (the 1 M☉ run holds R = 1.846 R☉
+and T_eff = 4382 K for its first 11 saved models, 1e-5 yr to 4.1 kyr), so the first Play press showed nothing for about 5 s.
+- Fixed in `tools/star-slice/star-slice.template.html` (rebuilt with `build.py`; no drift found before editing): the loader marks a
+  step from saved model i to i + 1 as quiet when R, L and T_eff change by under 0.3 %, central and surface log T by under 0.002 dex and
+  central H and He by under 0.002 (`D.quiet`); Play crosses quiet steps 10 times faster (`QUIET_RATE`). The age readout still shows
+  the true age, the display blend line says "little changes here, played 10× faster" while it happens, and a new paragraph in How
+  the picture is drawn states the rule. Quiet steps per run: 1 M☉ 12 (0 to 10 at the start), 3.7 M☉ 37 (including 79 to 107),
+  12 M☉ 7, 15 M☉ 9, 20 M☉ 6, 25 M☉ 8, white dwarf cooling 25 (all at the start). No data, readout or physics changed.
+- For GPT: check the quiet rule's thresholds against what the picture can show (the radius is drawn to scale; 0.3 % of the view
+  radius is under a pixel at 1280 px).

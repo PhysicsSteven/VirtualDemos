@@ -435,6 +435,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint">Convection is drawn as tracer streaks circling counter rotating roll cells. Their extent comes from MESA's mixing_type and their relative speed from log_conv_vel (compressed so slow and fast regions both show); the roll pattern itself is illustrative, not computed. Overshoot shows as fainter, slower streaks; semiconvection as drifting layers; thermohaline mixing as thin radial fingers.</p>
         <p class="hint" id="surfHint">In the 3D cutaway the outside is drawn from the model's T<sub>eff</sub>: its color is the blackbody color at T<sub>eff</sub> (Planck spectrum through the CIE 1931 color matching functions), with a fixed saturation boost that keeps the hue, and drawn a little dimmer below about 6000 K so cool stars read orange red and hot ones blue white. Its brightness falls toward the edge by the linear limb darkening law I(μ) = 1 − u(1 − μ) with u = 0.65 (0.55 in red and 0.8 in blue, so the edge is redder, as in real stars), where μ is the cosine of the angle between the line of sight and the surface normal. Granulation shows only when MESA has a convective envelope reaching the surface, and never on a white dwarf. The cells are illustrative and far larger than real ones: their size follows d/R = 0.012 x<sup>0.75</sup>, kept between 0.008 and 0.5 (small cells are also drawn with lower contrast), with x = (T<sub>eff</sub>/5772 K)(R/R<sub>sun</sub>)(M<sub>sun</sub>/M), which grows with the surface pressure scale height over the radius. In the cutaway the two upright cut faces show the true colors; the floor of the cut is drawn 12% darker so the cut reads in 3D. The halo around the star and the background sky are decorative.</p>
         <p class="hint" id="gasHint">True size (3D): the view radius follows the star's radius with smooth easing in log scale, so the swelling to a giant and the shrinking to a white dwarf play out on screen; zoom out past the star with the wheel, a pinch or the Zoom slider. The faint rings are the orbits of Mercury, Venus, Earth and Mars at true scale (1 AU = 215.03 R<sub>sun</sub>). Lost gas: the mass of each shell is the drop in the model's total mass between saved moments (MESA star_mass), so a run without mass loss shows none. The shells' shape (a uniform spherical outflow), their speed (an assumed 15 km/s, typical of winds from giants), their brightness, their color (teal once the star is hotter than about 25,000 K and can ionize the gas, dull orange before) and their fading beyond about 2 pc are illustrative.</p>
+        <p class="hint" id="quietHint">Play shows two saved models per second at 1×. Where the next saved model differs by less than 0.3 % in radius, luminosity and T<sub>eff</sub>, by less than 0.002 dex in central and surface temperature and by less than 0.002 in central hydrogen and helium, nothing visible changes, so Play crosses that step ten times faster; the age readout always shows the true age. This matters most at the start of each run, where MESA's first saved models barely move.</p>
         <p class="hint" id="burnHint">Glow marks zones with ε<sub>nuc</sub> above 10 erg g⁻¹ s⁻¹ and above 10⁻⁴ of the moment's peak. Channel shares use MESA's pp, cno and tri_alpha columns; any remainder is other reactions.</p>
         </details>
       </section>
@@ -613,6 +614,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     if (!moments.length) throw new Error('The moments in this file have no usable zones.');
     const D = { label: raw.label || fallbackLabel || 'MESA run', source: raw.source || [], mc, moments, N: moments.length };
+    /* quiet steps: from moment i to i + 1 the radius, luminosity and surface temperature change by under 0.3 %, the central
+       and surface temperatures by under 0.002 dex and the central H and He by under 0.002, so the picture does not change;
+       playback crosses them QUIET_RATE times faster (the age readout still shows the true age) */
+    const rel = (x, y) => (x && y != null ? Math.abs(y - x) / Math.abs(x) : 0);
+    const ends = (u, v) => (u.logT && v.logT ? Math.max(Math.abs(v.logT[0] - u.logT[0]), Math.abs(v.logT[v.n - 1] - u.logT[u.n - 1])) : 0);
+    D.quiet = moments.map((u, i) => {
+      const v = moments[i + 1]; if (!v) return false;
+      return Math.max(rel(u.R, v.R), rel(u.L, v.L), rel(u.Teff, v.Teff)) < 0.003 && ends(u, v) < 0.002 &&
+        Math.abs((v.cH ?? 0) - (u.cH ?? 0)) < 0.002 && Math.abs((v.cHe ?? 0) - (u.cHe ?? 0)) < 0.002;
+    });
     const any = (k) => moments.some((mo) => mo[k]);
     D.has = { logT: any('logT'), logRho: any('logRho'), mix: any('mix'), cv: any('cv'), eps: any('eps'), eta: any('eta'),
       chan: any('pp') || any('cno') || any('ta') || any('bc') || any('bo'), phase: any('phase'), gam: any('gam'), psep: any('psep'),
@@ -944,6 +955,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return P.slice(0, 7);
   }
 
+  const QUIET_RATE = 10;   /* playback speed up across quiet steps (D.quiet) */
   // ---------- state ----------
   const S = {
     datasets: [], D: null, idx: 0, mode: 'glow', log: false, hold: false, zoomDec: 0, viewAbs: 1,
@@ -1065,7 +1077,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // the moment the stage draws: the blend during smooth playback, otherwise the saved moment
   const disp = () => S.blendMo || cur();
-  const blendTag = (mo) => `Between saved models ${grp(S.D.moments[mo.blend.a].model ?? mo.blend.a + 1)} and ${grp(S.D.moments[mo.blend.b].model ?? mo.blend.b + 1)} (display blend)`;
+  const blendTag = (mo) => `Between saved models ${grp(S.D.moments[mo.blend.a].model ?? mo.blend.a + 1)} and ${grp(S.D.moments[mo.blend.b].model ?? mo.blend.b + 1)} (display blend)` + (S.playing && S.D.quiet && S.D.quiet[mo.blend.a] ? ' · little changes here, played ' + QUIET_RATE + '× faster' : '');
   function updateBlend() {
     let bm = null;
     if (S.playing && S.smooth && S.D && S.idx < S.D.N - 1 && S.acc > 0.008) {
@@ -1841,7 +1853,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!W || !H || !S.D) return;
     const dt = S.lastT ? Math.min(0.1, (now - S.lastT) / 1000) : 0; S.lastT = now;
     if (S.playing) {
-      S.acc += dt * 2 * S.speed;
+      S.acc += dt * 2 * S.speed * (S.D.quiet && S.D.quiet[S.idx] ? QUIET_RATE : 1);
       if (S.acc >= 1) { S.acc = 0; if (S.idx >= S.D.N - 1) setPlaying(false); else setMoment(S.idx + 1, true); }
     }
     updateBlend();
