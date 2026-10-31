@@ -203,4 +203,18 @@ group('neutral ball: bound charge sums to zero; metal σ matches the images; uni
   const Dfar = 50, E0 = di.K * q / Dfar ** 2; near(-di.diFieldIn(q, Dfar, a, 2.56, 0, 0)[0] / E0, 3 / 4.56, 1e-3);
   near(di.diBalance(84.676e-6), -8.63, 1e-9); near(di.diBalance(-1e-12), 0, 0);
 });
+group('charging by rubbing: series order, equal and opposite charges, and the air breakdown limit', () => {
+  const r = core('induction', 'EPS0,E_BREAK,TRIBO,QE,rubLimit,rubSep,rubStroke');
+  near(r.rubLimit(0.005, 0.05), 8.8541878188e-12 * 3e6 * 2 * Math.PI * 0.005 * 0.05, 1e-20); near(r.rubLimit(0.005, 0.05) * 1e9, 41.72, 0.01, '41.7 nC on the patch');
+  near(r.EPS0 * r.E_BREAK * 1e6, 26.56, 0.01, 'σ max 26.6 µC/m²');
+  assert(r.rubSep('glass', 'silk') > 0, 'glass rubbed with silk is left positive (OpenStax §5.1)');
+  assert(r.rubSep('rubber', 'fur') < 0, 'hard rubber rubbed with fur is left negative');
+  assert.equal(r.rubSep('glass', 'glass'), 0);
+  const Qm = r.rubLimit(0.005, 0.05); let Q = 0, prev = 0;
+  for (let i = 0; i < 400; i++) { const nq = r.rubStroke(Q, Qm, r.rubSep('glass', 'silk')); assert(nq > Q && nq < Qm, 'grows toward the limit, never past it'); assert(i === 0 || nq - Q <= prev + 1e-24, 'each stroke moves less'); prev = nq - Q; Q = nq; }
+  near(Q / Qm, 1, 1e-6, 'saturates at the breakdown limit');
+  let A = 0, B = 0; for (let i = 0; i < 10; i++) { A = r.rubStroke(A, Qm, r.rubSep('rubber', 'fur')); B = r.rubStroke(B, Qm, r.rubSep('glass', 'silk')); }
+  assert(A < 0 && Math.abs(A) > B, 'rubber and fur, farther apart in the series, charge faster than glass and silk');
+  near(r.rubStroke(5e-9, Qm, 0), 5e-9, 0, 'same material: no change'); assert.equal(r.QE, 1.602176634e-19);
+});
 console.log(`${n} induction test groups passed`);

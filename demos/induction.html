@@ -60,7 +60,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Charging by Induction</h1>
-      <p>Bring a charged rod near two metal spheres without touching them. Free electrons in the metal move, so the near side and the far side get opposite charges. Separate the spheres, or ground one, before taking the rod away, and the charge stays.</p>
+      <p>Bring a charged rod near two metal spheres without touching them. Free electrons in the metal move, so the near side and the far side get opposite charges. Separate the spheres, or ground one, before taking the rod away, and the charge stays. Or charge the rod first, by rubbing it with a cloth.</p>
     </div>
     <div class="bar-right">
       <div class="units mono" id="units">spheres 5 cm radius · exact image charge solution</div>
@@ -83,6 +83,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
+          <button type="button" data-p="rub" aria-pressed="false">Charging by rubbing</button>
           <button type="button" data-p="induce" aria-pressed="true">Charging two spheres by induction</button>
           <button type="button" data-p="ground" aria-pressed="false">Charging one sphere by grounding</button>
           <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
@@ -125,6 +126,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
         <canvas class="sigplot" id="sigPlot" role="img" aria-label="Graph of the surface charge density along the surface against the angle around the center"></canvas>
         <p class="hint" id="plotHint"></p>
+      </section>
+
+      <section id="rubSec" hidden>
+        <h2>Rod and cloth</h2>
+        <div class="chips" id="rubRodChips" role="group" aria-label="Rod material">
+          <button type="button" data-r="glass" aria-pressed="true">Glass rod</button>
+          <button type="button" data-r="rubber" aria-pressed="false">Hard rubber rod</button>
+          <button type="button" data-r="teflon" aria-pressed="false">Teflon rod</button>
+        </div>
+        <div class="chips" id="rubClothChips" role="group" aria-label="Cloth material">
+          <button type="button" data-c="fur" aria-pressed="false">Fur</button>
+          <button type="button" data-c="wool" aria-pressed="false">Wool</button>
+          <button type="button" data-c="silk" aria-pressed="true">Silk</button>
+        </div>
+        <p class="btnrow"><button type="button" class="spin" id="rub1">Rub once</button><button type="button" class="spin" id="rub10">Rub ten times</button><button type="button" class="spin" id="rubReset">Both neutral again</button></p>
+        <p><button type="button" class="spin" id="rubTake">Take the rod to the spheres</button></p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Changing the rod or the cloth starts again with both neutral. Take the rod to the spheres carries its charge, rounded to 1 nC and at most 20 nC either way, into Charging two spheres by induction.</p>
+        </details>
       </section>
 
       <section id="polSec" hidden>
@@ -178,6 +198,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p></details>
         <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands, and the rod's charge as a point charge at its very tip, anywhere in the plane through the spheres' centers. Solved exactly with Kelvin image charges at every position as you move things (every image lies in that plane). Touching spheres are solved 0.5 mm apart and joined, so they are one conductor (B's share of a shared charge is within 2 % of true point contact for a 1 cm sphere B, and within 0.25 % from 3 cm up); a thin wire joins them the same way, its own charge neglected. A grounded sphere is held at zero potential, the potential far away. The bench, the stands, the wand, the leads and the rest of the rod are left out of the electrostatics: only their connections count. The color on each sphere is the exact σ on the side facing you, full color at ±1 µC/m² (its strength goes as the square root of |σ|); the + and − marks show σ around the rim in the plane of the drawing, darker for more charge per area. Real charge sits as a tiny excess or shortage of electrons, and only electrons move: each moving dot stands for 0.25 nC of electrons (1.6 × 10⁹), drawn slowed down (in metal the charge settles in far less than a microsecond), and the color eases to the new σ in about half a second for the same reason. The guided steps move the rod and B at a steady hand's pace. The largest field at each surface is σ/ε₀ where |σ| is largest around the rim; where it passes air's breakdown field, about 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1), the picture marks where a spark would start but does not model the spark.</p>
+        <p class="hint" id="modelRub" hidden>Model (Charging by rubbing): rubbing moves electrons from the material nearer the positive end of the triboelectric series to the one nearer the negative end, in this order: fur, glass, wool, silk, hard rubber, Teflon (the usual textbook order; glass rubbed with silk ends up positive and hard rubber rubbed with fur negative, OpenStax Vol. 2, §5.1). Real results depend on humidity and on how clean the surfaces are, and neighbours in the list can swap. Only electrons move, so the rod and the cloth always carry equal and opposite charges. The rubbed patch is 5 cm of a rod of radius 0.5 cm. Its charge cannot grow past the point where the field just outside it, σ/ε₀, reaches air's breakdown field, 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1): then the air conducts and charge leaks away. That limit is |σ| = ε₀E = 26.6 µC/m², 41.7 nC on the patch. How much each stroke moves is a model, not a measurement: each stroke closes 12% of the gap to that limit times how far apart the two materials sit in the series, as a share of the whole list (neighbours: a fifth of that; fur and Teflon: all of it). The marks show net charge only; each material holds vastly more electrons and protons that balance.</p>
         <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's center. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
         </div></details>
@@ -251,6 +272,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // dry air at 1 atm breaks down near 3 × 10⁶ V/m (its dielectric strength, OpenStax University Physics Vol. 2, Table 8.1; approximate)
   const E_BREAK = 3e6;
+
+  // ---- Charging by rubbing (the triboelectric effect) ----
+  // Rubbing moves electrons from the material nearer the positive end of the triboelectric series to the one nearer the negative end;
+  // the two end up with equal and opposite charges (charge is conserved, only electrons move). Glass rubbed with silk is left positive
+  // and hard rubber rubbed with fur negative (OpenStax University Physics Vol. 2, §5.1). The series below is the usual textbook order;
+  // real results depend on humidity and on how clean the surfaces are, and neighbours in the list can swap.
+  const TRIBO = ['fur', 'glass', 'wool', 'silk', 'rubber', 'teflon'];
+  const QE = 1.602176634e-19;        /* elementary charge, C (exact, SI 2019) */
+  /* the most charge the rubbed patch of rod can hold: the field just outside a charged surface is σ/ε₀, and once that reaches air's
+     breakdown field the air conducts and charge leaks away, so |σ| ≤ ε₀ E_break. The patch is a cylinder of radius r and length L (m). */
+  function rubLimit(r, L) { return EPS0 * E_BREAK * 2 * Math.PI * r * L; }
+  /* how far apart the two sit in the series, −1 to 1: positive when the cloth is nearer the negative end, so the rod loses electrons */
+  function rubSep(rod, cloth) { return (TRIBO.indexOf(cloth) - TRIBO.indexOf(rod)) / (TRIBO.length - 1); }
+  /* the rod's charge after one more stroke (a model, not measured): each stroke closes the share k |sep| of the gap between the rod's
+     charge and the breakdown limit of the sign the series gives, so a pair far apart in the series charges faster. */
+  function rubStroke(Q, Qmax, sep, k = 0.12) { if (!sep) return Q; const tgt = Math.sign(sep) * Qmax; return Q + (tgt - Q) * k * Math.abs(sep); }
 
   // ---- Conductor shapes in a plane (2D cross-sections of long conductors), solved with a boundary element method ----
   // The surface is cut into straight panels, each with a uniform surface charge density σ. The unknowns are the σ of every panel and the
@@ -548,6 +585,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* Attracting a neutral insulator: ball material, rod lowered or raised, rod charge (nC), target gap and shown gap (cm), the force taken off by Tare (N) */
     pb: 'polystyrene', prod: false, pq: 20, ps: 3, pv: 25, tare: 0, myst: null, pol: null,
     /* worked by hand: A's center (m), the rod's direction from A's center, which rod, the ground wand, motion, electrons in flight, σ shading, camera */
+    rubRod: 'glass', rubCloth: 'silk', rubQ: 0, rubN: 0, rubAnim: null,
     xA: 0, ang: Math.PI, kind: 'glass', wand: { on: null, th: 0, p: null }, glide: null, dots: [], flow: { gA: 0, gB: 0, AB: 0 }, shade: { A: {}, B: {} }, cam: null, drag: null, view: null };
   const STEPS = {
     induce: [
@@ -575,6 +613,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Swap in a metal ball of the same size. Its free electrons move all the way to the surface, so it polarizes much more and the pull is nearly three times as strong.', (s) => Object.assign(s, { pb: 'metal' })],
       ['A ball of strontium titanate, an insulator with κ = 310, is pulled almost exactly as hard as the metal one.', (s) => Object.assign(s, { pb: 'srtio3' })]
     ],
+    rub: [
+      ['A glass rod and a silk cloth, both neutral: each holds exactly as many electrons as protons. Rub them together.', (s) => Object.assign(s, { rubRod: 'glass', rubCloth: 'silk', rubQ: 0, rubN: 0 })],
+      ['Ten strokes. Electrons have moved from the glass to the silk: the glass is positive, the silk negative, by exactly the same amount. No charge was made; it was only moved.', (s) => rubTimes(10)],
+      ['Forty more strokes. Each stroke moves less than the one before: as the rod charges, the field at its surface nears 3 MV/m, where the air breaks down and charge leaks away.', (s) => rubTimes(40)],
+      ['A hard rubber rod and fur, ten strokes. Fur sits at the positive end of the series, so this time the rod takes electrons and turns negative. Take the rod to the spheres to charge them by induction.', (s) => { Object.assign(s, { rubRod: 'rubber', rubCloth: 'fur', rubQ: 0, rubN: 0 }); rubTimes(10); }]
+    ],
     shapes: [
       ['A long metal cylinder, seen end on, in a uniform field E₀. Free electrons shift until E = 0 inside; the field lines bend to meet the surface at right angles, and σ = 2ε₀E₀ cos θ (the dashed curve in the graph).', (s) => Object.assign(s, { shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0] })],
       ['Stretch it into an ellipse. The induced charge crowds onto the ends, where the surface curves most sharply.', (s) => Object.assign(s, { shape: 'ellipse', probe: [0.032, 0] })],
@@ -584,7 +628,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Bring a line charge near the box. The field outside and the charge on the outer surface change a lot; the cavity stays free of field.', (s) => Object.assign(s, { lam: 2, ld: 1.5 })]
     ]
   };
-  const HINT = { polar: 'OpenStax Vol. 2 §5.2 and §8.5: a charged rod attracts a neutral insulator too, because its molecules polarize. The pull on a neutral ball is measured with an analytical balance: it reads less when the ball is pulled up.', induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross-section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
+  const HINT = { rub: 'OpenStax Vol. 2 §5.1: charging by rubbing (the triboelectric effect). Pick a rod and a cloth and rub them; the order of the materials in the triboelectric series decides which one ends up positive.', polar: 'OpenStax Vol. 2 §5.2 and §8.5: a charged rod attracts a neutral insulator too, because its molecules polarize. The pull on a neutral ball is measured with an analytical balance: it reads less when the ball is pulled up.', induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross-section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -668,6 +712,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.chk = { em, ec, sc: cSurfaceCharge(sys, sol), smax, smin, jmax };
   }
   function compute() {
+    if (S.preset === 'rub') return;
     if (S.preset === 'shapes') { computeShapes(); return; }
     if (S.preset === 'polar') { computePolar(); return; }
     computeSpheres();
@@ -948,7 +993,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* world coordinates in meters: x along the bench, y up, the spheres' centers at y = 0 and the bench top at Y_BENCH */
   const R_A = 0.05, Y_BENCH = -0.2, ROD_L = 0.34, ROD_GRIP = 0.1, ROD_R = 0.006, WAND_TIP = 0.025, WAND_L = 0.11, MIN_TIP = 0.01;
   const TOUCH = 0.05, QDOT = 0.25 * NC, SIG_FULL = 1e-6, SG = 44, B_SHOW = 25;
-  const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar';
+  const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar' && S.preset !== 'rub';
   function geomSI() {
     const A = { c: S.xA, r: R_A }, rB = S.rB * CM, B = { c: S.xA + R_A + S.gap * CM + rB, r: rB }, D = R_A + S.d * CM;
     return { A, B, x0: S.rod ? A.c + D * Math.cos(S.ang) : null, y0: S.rod ? D * Math.sin(S.ang) : 0 };
@@ -1307,7 +1352,76 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (reduceMotion) { S.rod = false; update(); return; }
     S.glide = { dTo: Math.max(S.d + 25, 45), rodOut: true, dBack: Math.min(30, Math.max(1, S.d)), flags: { wire: S.wire, gA: S.gA, gB: S.gB } }; update();
   }
+  /* ---- Charging by rubbing ---- */
+  const RUB_R = 0.005, RUB_L = 0.05, RUB_QMAX = rubLimit(RUB_R, RUB_L);
+  const RUB_NAME = { fur: 'fur', glass: 'glass', wool: 'wool', silk: 'silk', rubber: 'hard rubber', teflon: 'Teflon' };
+  function rubTimes(n) { for (let i = 0; i < n; i++) { S.rubQ = rubStroke(S.rubQ, RUB_QMAX, rubSep(S.rubRod, S.rubCloth)); S.rubN++; } }
+  /* strokes drawn one by one: the cloth slides along the rubbed end and back; the charge moves at the end of each stroke */
+  function rubGo(n) {
+    if (S.rubAnim) return;
+    if (reduceMotion) { rubTimes(n); own(); update(); return; }
+    S.rubAnim = { left: n, t: 0, dur: n > 1 ? 0.28 : 0.5, last: 0 }; own(); sync();
+    const step = (t) => {
+      const a = S.rubAnim; if (!a || S.preset !== 'rub') { S.rubAnim = null; return; }
+      const dt = a.last ? Math.min(0.05, (t - a.last) / 1000) : 0.016; a.last = t; a.t += dt / a.dur;
+      if (a.t >= 1) { rubTimes(1); a.left--; a.t = 0; readouts(); }
+      if (a.left <= 0) { S.rubAnim = null; update(); return; }
+      draw(); requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const RUB_COL = { glass: '#cfe3e6', rubber: '#2a2b2f', teflon: '#efeee8', fur: '#a98a66', wool: '#e3d9c4', silk: '#e7cfe2' };
+  function drawRub() {
+    const p = ps(), sb = document.querySelector('.stepbar'), Hu = Math.max(220, (sb ? sb.offsetTop : H) - 4 * p);
+    VG.backdrop(ctx, W, H);
+    const benchY = Hu - 12 * p; VG.bench(ctx, 0, benchY, W, 16 * p, 12 * p);
+    const x0 = W * 0.08, x1 = W * 0.84, yR = Math.max(70 * p, Hu * 0.36), rr = Math.max(9 * p, Math.min(16 * p, W * 0.02));
+    const px0 = x0 + (x1 - x0) * 0.62;            /* the rubbed patch: the last 5 of the rod's 13.5 cm shown */
+    const a = S.rubAnim, Q = S.rubQ, n = Math.round(30 * Math.min(1, Math.abs(Q) / RUB_QMAX));
+    /* the handle and the rod */
+    ctx.fillStyle = '#3b3128'; ctx.beginPath(); ctx.roundRect(x0 - 6 * p, yR - rr * 1.25, (x1 - x0) * 0.3, rr * 2.5, rr * 0.6); ctx.fill();
+    const g = ctx.createLinearGradient(0, yR - rr, 0, yR + rr), base = RUB_COL[S.rubRod];
+    g.addColorStop(0, '#ffffff'); g.addColorStop(0.25, base); g.addColorStop(1, S.rubRod === 'rubber' ? '#0d0d0f' : '#8f9aa3');
+    ctx.globalAlpha = S.rubRod === 'glass' ? 0.85 : 1; ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 + (x1 - x0) * 0.22, yR - rr, (x1 - x0) * 0.78, 2 * rr, rr); ctx.fill(); ctx.globalAlpha = 1;
+    VG.label(ctx, `${RUB_NAME[S.rubRod]} rod`, x0 + (x1 - x0) * 0.3, yR - rr - 10 * p, { s: 11 * p, c: T.muted });
+    /* the cloth: on the patch while rubbing, held below it otherwise */
+    const cw = (x1 - px0) * 0.42, ch = rr * 3.2;
+    let cx, cy;
+    if (a) { const u = 0.5 - 0.5 * Math.cos(2 * Math.PI * a.t); cx = px0 + cw / 2 + u * (x1 - px0 - cw); cy = yR; }
+    else { cx = (px0 + x1) / 2; cy = Math.min(benchY - ch, yR + rr + ch * 1.4); }
+    ctx.save(); ctx.globalAlpha = a ? 0.9 : 1; ctx.fillStyle = RUB_COL[S.rubCloth]; ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(cx - cw / 2, cy - ch / 2, cw, ch, 8 * p); ctx.fill(); ctx.stroke();
+    if (S.rubCloth === 'fur') { ctx.strokeStyle = 'rgba(70,50,30,0.5)'; ctx.beginPath(); for (let i = 0; i < 14; i++) { const xx = cx - cw / 2 + 6 * p + i * (cw - 12 * p) / 13; ctx.moveTo(xx, cy - ch / 2 + 3 * p); ctx.lineTo(xx + 3 * p, cy + ch / 2 - 3 * p); } ctx.stroke(); }
+    ctx.restore();
+    VG.label(ctx, RUB_NAME[S.rubCloth], cx, cy + ch / 2 + 12 * p, { a: 'center', s: 11 * p, c: T.muted });
+    /* net charge marks: + and − on the patch and the cloth, as many on each */
+    const mark = (x, y, sg) => { ctx.strokeStyle = sg > 0 ? T.pos : T.neg; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x - 4 * p, y); ctx.lineTo(x + 4 * p, y); if (sg > 0) { ctx.moveTo(x, y - 4 * p); ctx.lineTo(x, y + 4 * p); } ctx.stroke(); };
+    if (!S.blind) {
+      for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, xx = px0 + 6 * p + t * (x1 - px0 - 12 * p), yy = yR + (i % 2 ? 1 : -1) * (rr + 6 * p); mark(xx, yy, Math.sign(Q)); }
+      if (!a) for (let i = 0; i < n; i++) { const cols = Math.ceil(Math.sqrt(n * 3)), r0 = Math.floor(i / cols), c0 = i % cols, rows = Math.ceil(n / cols);
+        mark(cx - cw / 2 + (c0 + 0.5) * cw / cols, cy - ch / 2 + (r0 + 0.5) * ch / rows, -Math.sign(Q)); }
+    }
+    /* electrons crossing during a stroke, from the material that gives them up to the one that takes them */
+    const sep = rubSep(S.rubRod, S.rubCloth);
+    if (a && sep) { ctx.fillStyle = T.neg; for (let i = 0; i < 5; i++) { const u = (a.t * 3 + i / 5) % 1, xx = cx - cw / 2 + (i + 0.5) * cw / 5, yy = sep > 0 ? yR - rr * (1 - u) * 0.2 - u * ch * 0.45 : yR - ch * 0.45 * (1 - u); ctx.beginPath(); ctx.arc(xx, yy, 2.4 * p, 0, 2 * Math.PI); ctx.fill(); } }
+    if (a && !sep) VG.label(ctx, 'same material: nothing moves', cx, yR - ch, { a: 'center', s: 11 * p, c: T.muted });
+    /* at the breakdown limit the air glows faintly along the patch */
+    const Eb = Math.abs(Q) / (2 * Math.PI * RUB_R * RUB_L) / EPS0;
+    if (Eb > 0.97 * E_BREAK) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(150,170,255,0.18)'; ctx.beginPath(); ctx.roundRect(px0, yR - rr - 8 * p, x1 - px0, 2 * rr + 16 * p, rr); ctx.fill(); ctx.restore();
+      VG.label(ctx, 'air breaking down: charge leaks off', (px0 + x1) / 2, yR - rr - 24 * p, { a: 'center', s: 10.5 * p, c: T.ink }); }
+    VG.label(ctx, 'rubbed end (5 cm)', (px0 + x1) / 2, yR - rr - (Eb > 0.97 * E_BREAK ? 38 : 22) * p, { a: 'center', s: 10 * p, c: T.muted });
+  }
+  function readoutsRub() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, Q = S.rubQ, A = 2 * Math.PI * RUB_R * RUB_L, sig = Q / A;
+    let h = dd('Strokes', String(S.rubN)) + dd('Series order', S.rubRod === S.rubCloth ? 'same' : rubSep(S.rubRod, S.rubCloth) > 0 ? `${RUB_NAME[S.rubRod]} above ${RUB_NAME[S.rubCloth]}` : `${RUB_NAME[S.rubCloth]} above ${RUB_NAME[S.rubRod]}`);
+    if (S.blind) h += '<div class="wide"><dt>Charges</dt><dd class="ok">hidden in Blind: predict the signs</dd></div>';
+    else h += dd('Charge on the rod', `${f(Q / NC, 2)} nC`) + dd('Charge on the cloth', `${f(-Q / NC, 2)} nC`) + dd('Rod + cloth', `${f(0, 2)} nC`)
+      + dd('Electrons moved', Math.abs(Q) < QE ? '0' : (() => { const v = Math.abs(Q) / QE, e = Math.floor(Math.log10(v)); return `${(v / 10 ** e).toFixed(2)} × 10${String(e).replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c])}`; })())
+      + dd('σ on the rubbed end', `${f(sig * 1e6, 2)} µC/m²`) + dd('Field just outside, σ/ε₀', `${f(Math.abs(sig) / EPS0 / 1e6, 2)} MV/m of 3 MV/m`, true);
+    $('out').innerHTML = h;
+  }
   function draw() {
+    if (S.preset === 'rub') { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawRub(); return; }
     if (S.preset === 'polar') { if (!T || !W || !S.pol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawPolar(); return; }
     if (S.preset === 'shapes') { if (!T || !W || !S.ssol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawShapes(); return; }
     if (!T || !W || !S.sol) return;
@@ -1352,6 +1466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
   }
   function readouts() {
+    if (S.preset === 'rub') { readoutsRub(); return; }
     if (S.preset === 'shapes') { readoutsShapes(); return; }
     if (S.preset === 'polar') { readoutsPolar(); return; }
     const sol = S.sol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
@@ -1369,13 +1484,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
     $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
     $('rodCard').hidden = !sphPreset(); $('rodGlass').setAttribute('aria-pressed', String(S.rod && S.kind === 'glass')); $('rodRubber').setAttribute('aria-pressed', String(S.rod && S.kind === 'rubber')); $('rodAway').disabled = !S.rod;
-    const sh = S.preset === 'shapes', pol = S.preset === 'polar';
-    $('appSec').hidden = sh || pol; $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('modelSph').hidden = sh || pol; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol;
+    const sh = S.preset === 'shapes', pol = S.preset === 'polar', rub = S.preset === 'rub';
+    $('appSec').hidden = sh || pol || rub; $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('rubSec').hidden = !rub; $('modelSph').hidden = sh || pol || rub; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol; $('modelRub').hidden = !rub;
+    for (const b of document.querySelectorAll('#rubRodChips button')) b.setAttribute('aria-pressed', String(b.dataset.r === S.rubRod));
+    for (const b of document.querySelectorAll('#rubClothChips button')) b.setAttribute('aria-pressed', String(b.dataset.c === S.rubCloth));
+    for (const id of ['rub1', 'rub10']) $(id).disabled = !!S.rubAnim;
     for (const b of document.querySelectorAll('#ballChips button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.pb));
     $('rodP').checked = S.prod; $('sQp').value = S.pq; $('oQp').textContent = `${S.pq > 0 ? '+' : ''}${S.pq} nC`.replace('-', '−'); $('sS').value = S.ps; $('oS').textContent = `${f(S.ps, 1)} cm`; $('sS').disabled = !S.prod;
     window.vdShowCols = pol ? [['ball', 'ball'], ['q_rod_nC', 'q (nC)'], ['gap_cm', 's (cm)'], ['balance_mg', 'reading (mg)']] : [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
     $('units').textContent = pol ? 'ball 2.00 cm radius · exact multipole series' : sh ? '2D cross section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
-    can.setAttribute('aria-label', pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
+    if (rub) $('units').textContent = 'rubbed patch 5 cm of a 0.5 cm radius rod · charge limited by air breakdown';
+    can.setAttribute('aria-label', rub ? 'A rod held by its handle and a cloth. Rubbing moves electrons between them; plus and minus marks show the net charge on the rubbed end of the rod and on the cloth.' : pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
     for (const b of document.querySelectorAll('#shapeChips button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
     $('sE0').value = S.E0; $('oE0').textContent = `${S.E0} N/C`; $('sLam').value = S.lam; $('oLam').textContent = S.lam ? `${f(S.lam, 1)} nC/m` : 'off';
     $('sLd').value = S.ld; $('oLd').textContent = `${f(S.ld, 1)} cm`; $('sLd').disabled = !S.lam; $('sLc').value = S.lamC; $('oLc').textContent = `${f(S.lamC, 1)} nC/m`;
@@ -1414,6 +1533,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!e.target.checked && S.wand.on === id) { wandTo(null); S.wand.p = null; }
     update();
   });
+  for (const b of document.querySelectorAll('#rubRodChips button')) b.addEventListener('click', () => { S.rubAnim = null; Object.assign(S, { rubRod: b.dataset.r, rubQ: 0, rubN: 0 }); own(); update(); });
+  for (const b of document.querySelectorAll('#rubClothChips button')) b.addEventListener('click', () => { S.rubAnim = null; Object.assign(S, { rubCloth: b.dataset.c, rubQ: 0, rubN: 0 }); own(); update(); });
+  $('rub1').addEventListener('click', () => rubGo(1));
+  $('rub10').addEventListener('click', () => rubGo(10));
+  $('rubReset').addEventListener('click', () => { S.rubAnim = null; Object.assign(S, { rubQ: 0, rubN: 0 }); own(); update(); });
+  $('rubTake').addEventListener('click', () => {
+    const q = Math.max(-20, Math.min(20, Math.round(S.rubQ / NC))), raw = S.rubQ / NC;
+    applyPreset('induce'); S.q = q || 1; S.kind = S.q > 0 ? 'glass' : 'rubber'; S.rod = true; own(); update();
+    $('stepText').textContent = `The rubbed rod, ${f(raw, 1)} nC${Math.abs(raw) > 20.5 ? `, held here at ${S.q > 0 ? '+' : '−'}20 nC, the most this setup takes` : q ? '' : ' (almost nothing: shown as +1 nC)'}, is near sphere A. Ground a sphere or pull B away to charge them.`;
+  });
   $('rodGlass').addEventListener('click', () => pickRod('glass'));
   $('rodRubber').addEventListener('click', () => pickRod('rubber'));
   $('rodAway').addEventListener('click', putRodDown);
@@ -1423,7 +1552,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
   const SETUP = { induce: 'two spheres by induction', ground: 'one sphere by grounding', contact: 'sharing by contact' };
   window.vdReadingRow = () => {
-    if (S.preset === 'shapes') return 'Readings are recorded in the three sphere setups and with the neutral ball.';
+    if (S.preset === 'shapes' || S.preset === 'rub') return 'Readings are recorded in the three sphere setups and with the neutral ball.';
     if (S.preset === 'polar') {
       const o = S.pol; if (!o.stable) return 'Wait for the balance to settle: the rod is still moving.';
       return { setup: 'neutral ball on a balance', ball: S.pb === 'mystery' ? 'Mystery insulator' : o.m.name, q_rod_nC: S.prod ? S.pq : '', gap_cm: S.prod ? S.ps : 'rod raised', balance_mg: (o.mg === 0 ? 0 : o.mg).toFixed(2) };
