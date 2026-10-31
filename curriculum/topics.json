@@ -349,7 +349,9 @@
       "hr-diagram",
       "star-slice",
       "white-dwarf-cooling",
-      "black-holes"
+      "black-holes",
+      "exoplanets",
+      "distance-ladder"
      ]
     },
     {
@@ -360,7 +362,8 @@
       "rotation-curves",
       "distance-ladder",
       "early-universe",
-      "black-holes"
+      "black-holes",
+      "planet-temperatures"
      ]
     }
    ]

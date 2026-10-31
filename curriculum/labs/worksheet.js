@@ -512,6 +512,30 @@
     'nearest-brightest': { demo: 'Stellar Evolution', cols: ['row', 'star', 'set', 'spect', 'V', 'M_V', 'B_V', 'd_pc', null, null] },
   });
   CURVE_TABLES_LATER.push(['hydrogen-in-stars', [0]]);   /* the n = 2 share against T rises and falls: read, not fitted */
+  /* Group C astronomy labs (2026-10-31): second worksheets on Cosmic Distance Ladder (Main sequence fitting and Spectroscopic parallax;
+     Cepheid photometry), Planet Temperatures (Galaxy view) and Finding Exoplanets (Two stars); each view sends to its own worksheet,
+     or the demo opened with ?ws=<slug> does */
+  ASTRO.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone', 'eclipsing-binary');
+  ENABLED.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone', 'eclipsing-binary');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Cluster | Shift m − M | d for this shift (pc) | Stars in the fit | Mean offset | Mean square offset; star readings go to the second table:
+       Reading | Star | Type | V | B − V | Mean M | Spread of M | Nearby stars | m − M | Spectroscopic d (pc) | Uncertainty (%) | Parallax d (pc) | Ratio */
+    'main-sequence-fitting': { demo: 'Cosmic Distance Ladder', cols: ['row', 'cluster', 'shift', 'd_pc', 'n', 'mean_mag', 'ms_mag2'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.rung === 'Spectroscopic parallax'), cols: ['row', 'star', 'spect', 'V', 'B_V', 'M_cal', 'M_sd', 'n_cal', 'mu', 'd_spec_pc', 'd_unc_pct', 'd_hip_pc', 'ratio'] }] },
+    /* Reading | Night | t (d) | Comparison | V_C | N_V | N_C | Δm | V | σ_V | Raw | Seeing (px); one night at several apertures goes to the second table:
+       Reading | Radius (px) | N_V | N_C | Δm | V | σ_V */
+    'cepheid-photometry': { demo: 'Cosmic Distance Ladder', cols: ['row', 'night', 't_d', 'comp', 'V_comp', 'N_V', 'N_C', 'dm', 'V', 'sigma', 'raw', 'seeing_px'],
+      alt: [{ table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => r.night)).size === 1 && new Set(rows.map((r) => r.r_px)).size > 1, cols: ['row', 'r_px', 'N_V', 'N_C', 'dm', 'V', 'sigma'] }] },
+    /* Reading | R (kpc) | [Fe/H] | P_metals | P_safe | SN dose | P_SN | P_time | P; one distance at several birth times goes to the second table
+       (Born (Gyr ago) first), readings that change an assumption to the third */
+    'galactic-habitable-zone': { demo: 'Planet Temperatures and Habitable Zones', cols: ['row', 'R_kpc', 'FeH', 'P_metals', 'P_safe', 'SN_dose', 'P_SN', 'P_time', 'P'],
+      alt: [
+        { table: 2, when: (rows) => rows.length > 1 && ['p_Earth', 'g_dex_kpc', 't_life_Gyr'].some((k) => new Set(rows.map((r) => r[k])).size > 1), cols: ['row', 'p_Earth', 'g_dex_kpc', 't_life_Gyr', 'zone_R_kpc', 'zone_born_Gyr_ago', 'share_pct', 'older_pct'] },
+        { table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => r.R_kpc)).size === 1 && new Set(rows.map((r) => r.born_Gyr_ago)).size > 1, cols: ['row', 'born_Gyr_ago', 'FeH', 'P_metals', 'P_safe', 'SN_dose', 'P_SN', 'P_time', 'P'] }] },
+    /* Reading | t (h) | Phase | Brightness | v₁ (km/s) | v₂ (km/s) */
+    'eclipsing-binary': { demo: 'Finding Exoplanets', cols: ['row', 't_h', 'phase', 'brightness', 'v1_km_s', 'v2_km_s'] },
+  });
+  CURVE_TABLES_LATER.push(['galactic-habitable-zone', [0, 1]]);   /* P against R and against birth time rise and fall: read, not fitted */
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
@@ -751,7 +775,8 @@
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
-  GRAPH_EVERY_TABLE.push('hydrogen-in-stars');   /* its second table graphs the Balmer peak against log₁₀ Pe */
+  GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
+  GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-radiobiology');

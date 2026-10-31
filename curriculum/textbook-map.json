@@ -7358,7 +7358,7 @@
       "handouts": [
         "hubble-law",
         "intro-parallax"
-      ]
+      , "main-sequence-fitting", "cepheid-photometry"]
     },
     {
       "demo": "dna",
@@ -7826,7 +7826,7 @@
       "handouts": [
         "exoplanets",
         "intro-exoplanets"
-      ]
+      , "eclipsing-binary"]
     },
     {
       "demo": "planet-temperatures",
@@ -7841,7 +7841,7 @@
       "note": "New 2026-10-25 (Claude), gap demo 4 of the Astro 2203 plan. A planet's energy balance with starlight S = L/(4πd²), Bond albedo and heat shared over the whole planet, the day side or the subsolar point; a greenhouse factor e (the share of the ground's heat radiation that escapes) matched to Venus, Earth and Mars and read as the one layer or N layer model; habitable zone edges from Kopparapu et al. 2014; which gases a world keeps (6 v_rms against escape speed). NASA fact sheet values; presets Mercury, Venus, Earth, Moon, Mars, Earth under the young Sun, Proxima Centauri b and TRAPPIST-1 e. Intro worksheet intro-planet-temperatures with a key from a real run in TeacherKeys.",
       "handouts": [
         "intro-planet-temperatures"
-      ],
+      , "galactic-habitable-zone"],
       "title": "Planet Temperatures and Habitable Zones",
       "url": "demos/planet-temperatures.html"
     },
