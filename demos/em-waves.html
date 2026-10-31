@@ -269,6 +269,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <button type="button" data-q="slit" aria-pressed="false">A wide beam through a slit</button>
           <button type="button" data-q="twoslit" aria-pressed="false">A wide beam through two slits</button>
           <button type="button" data-q="box" aria-pressed="false">A closed metal box</button>
+          <button type="button" data-q="grid" aria-pressed="false">A wire grid polarizer</button>
+          <button type="button" data-q="narrow" aria-pressed="false">A slit λ/4 wide</button>
+        </div>
+        <div class="seg" role="group" aria-label="Polarization" id="plPol" style="margin-top:6px">
+          <button type="button" data-pol="tm" aria-pressed="true">E along the wires</button>
+          <button type="button" data-pol="te" aria-pressed="false">E in the page</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="plHint"></p></details>
         <div class="seg" role="group" aria-label="What a tap or drag on the picture does" id="plTools">
@@ -459,8 +465,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      (from the scheme's dispersion relation sin(ωΔt/2) = S sin(kΔx/2)); along diagonals less */
   const FD_SLOW = 1 - (2 * Math.PI / FD_NL) / (2 * Math.asin(Math.sin(Math.PI / FD_NT) / FD_S));
   function fdLoss(d, pad) { return d <= 0 ? 0 : 0.05 * Math.pow(Math.min(1, d / pad), 2); }   /* graded sponge FD_PAD cells deep, σΔt/2ε₀ rising as depth squared */
-  function fdtdMake(nx, ny, pad) {
-    const n = nx * ny, F = { nx, ny, pad, n: 0, Ez: new Float64Array(n), Hx: new Float64Array(n), Hy: new Float64Array(n),
+  /* TE (the other polarization, E in the page and H along z): Maxwell's equations are the same with E and H swapped (duality,
+     E → η₀H and η₀H → −E), so the same arrays and the same update serve: in a TE grid (te true) Ez holds η₀Hz, and Hx and Hy hold −Ex
+     and −Ey on the cell edges. Only metal acts differently: a perfect conductor makes the E along its surface zero, so in TE the edge
+     fields Hx (= −Ex) and Hy (= −Ey) are zero on every edge that touches a metal cell, and Hz is zero inside the metal. A source on a
+     TE grid is a magnetic line current, the field of a long thin coil through the page carrying an alternating current. */
+  function fdtdMake(nx, ny, pad, te) {
+    const n = nx * ny, F = { nx, ny, pad, n: 0, te: !!te, Ez: new Float64Array(n), Hx: new Float64Array(n), Hy: new Float64Array(n),
       metal: new Uint8Array(n), ce: new Float64Array(n), de: new Float64Array(n), chx: new Float64Array(n), dhx: new Float64Array(n), chy: new Float64Array(n), dhy: new Float64Array(n) };
     const dist = (x, y) => Math.max(pad - x, x - (nx - 1 - pad), pad - y, y - (ny - 1 - pad), 0);
     for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
@@ -476,9 +487,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const fdRamp = (m) => (m <= 0 ? 0 : m >= 2 * FD_NT ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * m / (2 * FD_NT)));
   /* one time step. srcs: { k: cell index, a: amplitude, ph: phase (rad), n0: step it was switched on } added to Ez (a soft source) */
   function fdtdStep(F, srcs) {
-    const { nx, ny, Ez, Hx, Hy, metal } = F;
-    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx; i++) { const k = j * nx + i; Hx[k] = F.chx[k] * Hx[k] - F.dhx[k] * (Ez[k + nx] - Ez[k]); }
-    for (let j = 0; j < ny; j++) for (let i = 0; i < nx - 1; i++) { const k = j * nx + i; Hy[k] = F.chy[k] * Hy[k] + F.dhy[k] * (Ez[k + 1] - Ez[k]); }
+    const { nx, ny, Ez, Hx, Hy, metal } = F, te = F.te;
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx; i++) { const k = j * nx + i; Hx[k] = te && (metal[k] || metal[k + nx]) ? 0 : F.chx[k] * Hx[k] - F.dhx[k] * (Ez[k + nx] - Ez[k]); }
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx - 1; i++) { const k = j * nx + i; Hy[k] = te && (metal[k] || metal[k + 1]) ? 0 : F.chy[k] * Hy[k] + F.dhy[k] * (Ez[k + 1] - Ez[k]); }
     for (let j = 1; j < ny; j++) for (let i = 1; i < nx; i++) {
       const k = j * nx + i;
       Ez[k] = metal[k] ? 0 : F.ce[k] * Ez[k] + F.de[k] * ((Hy[k] - Hy[k - 1]) - (Hx[k] - Hx[k - nx]));
@@ -488,11 +499,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (srcs) for (const s of srcs) if (!metal[s.k]) Ez[s.k] += s.a * fdRamp(F.n - (s.n0 || 0)) * Math.sin(w * (F.n - (s.n0 || 0)) + (s.ph || 0));
   }
   /* the field energy per unit length along z, in units where ε₀ = 1: ½ Σ (Ez² + (η₀Hx)² + (η₀Hy)²) Δx² with Δx = 1 */
+  /* E² at a cell center: Ez² on a TM grid; on a TE grid (Ex² + Ey²) with each component the mean of the two edges around the center */
+  function fdtdE2(F, k) { if (!F.te) return F.Ez[k] * F.Ez[k]; const nx = F.nx, ex = 0.5 * (F.Hx[k] + (k >= nx ? F.Hx[k - nx] : 0)), ey = 0.5 * (F.Hy[k] + (k % nx ? F.Hy[k - 1] : 0)); return ex * ex + ey * ey; }
   function fdtdEnergy(F) { let u = 0; for (let k = 0; k < F.Ez.length; k++) u += F.Ez[k] * F.Ez[k] + F.Hx[k] * F.Hx[k] + F.Hy[k] * F.Hy[k]; return 0.5 * u; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream, FD_S, FD_NL, FD_NT, FD_PAD, FD_SLOW, fdLoss, fdtdMake, fdRamp, fdtdStep, fdtdEnergy };
+    globalThis.EM = { MU0, EPS0, C, C_DEF, SOLAR, intensity, E0ofI, B0of, uAvg, pAbs, pRefl, lambdaOf, BANDS, bandOf, GROUND, groundOf, colorName, wavelengthRGB, comps, field, ellipse, polState, malus, dipoleE, dipoleH, stream, FD_S, FD_NL, FD_NT, FD_PAD, FD_SLOW, fdLoss, fdtdMake, fdRamp, fdtdStep, fdtdE2, fdtdEnergy };
     return;
   }
 
@@ -1298,9 +1311,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- In a plane: the 2D field of wires and metal you place (fdtdStep in the core) ----------
   const PLV = { nx: 200, ny: 120 }, PW = PLV.nx + 2 * FD_PAD, PH = PLV.ny + 2 * FD_PAD;
   const A_WIRE = 20, BEAM_W = 3 * FD_NL;   /* a wire's soft source strength (E amplitude 1 at about 1 λ); the beam's Gaussian half width, 3 λ */
-  const PL = { F: null, wires: [], beam: null, srcs: [], tool: 'wire', show: 'now', acc: null, avg: null, accN: 0, avgN: 0, probe: null, preset: 'one', cur: { i: 100, j: 60 }, kbd: false, down: false, last: null, fr: 0 };
+  const PL = { F: null, te: false, wires: [], beam: null, srcs: [], tool: 'wire', show: 'now', acc: null, avg: null, accN: 0, avgN: 0, probe: null, preset: 'one', cur: { i: 100, j: 60 }, kbd: false, down: false, last: null, fr: 0 };
   const plK = (i, j) => (j + FD_PAD) * PW + (i + FD_PAD);
-  function plFresh() { PL.F = fdtdMake(PW, PH, FD_PAD); PL.acc = new Float64Array(PW * PH); PL.avg = new Float64Array(PW * PH); PL.accN = 0; PL.avgN = 0; }
+  function plFresh() { PL.F = fdtdMake(PW, PH, FD_PAD, PL.te); PL.acc = new Float64Array(PW * PH); PL.avg = new Float64Array(PW * PH); PL.accN = 0; PL.avgN = 0; }
   function plCompile() {
     const out = [];
     for (const w of PL.wires) out.push({ k: plK(w.i, w.j), a: A_WIRE, ph: w.ph || 0, n0: w.n0 || 0 });
@@ -1333,6 +1346,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       build() { PL.beam = { i: 4 }; plWall(60, [[40, 79]]); PL.probe = { i: 150, j: 60 }; } },
     twoslit: { hint: 'The same beam on two slits each λ/2 wide with centers 3 λ apart. The two spreading waves overlap and interfere: in Average intensity the bright directions are where sin θ = mλ/d, at 0, 19.5° and 41.8°, the same rule as for light in Young’s experiment.',
       build() { PL.beam = { i: 4 }; plWall(60, [[25, 34], [85, 94]]); PL.probe = { i: 150, j: 60 }; } },
+    grid: { hint: 'A wide beam on a row of thin metal rods through the page, λ/10 thick and λ/4 apart: a wire grid polarizer. With E along the rods (E along the wires), the electrons in the rods are driven along them and send the wave back: only a few percent of the intensity gets through. Switch to E in the page: now E is across the rods, the electrons cannot move far, and most of the wave passes. That is why a wire grid passes the polarization at right angles to its wires.',
+      build() { PL.beam = { i: 4 }; for (let j = -FD_PAD; j < PLV.ny + FD_PAD; j += 5) plRect(60, j, 61, j + 1); PL.probe = { i: 150, j: 60 }; } },
+    narrow: { hint: 'The beam on a metal wall 0.3 λ thick with a slit only λ/4 wide. With E along the wires (along the slit\'s edges) the wave has to fit between two walls that make E zero on both sides, which needs a gap of at least λ/2: in the slit it dies away and next to nothing comes through. With E in the page (across the gap) nothing stops it, and the wave squeezes through and spreads out on the far side as from a line source. A narrow slit is a polarizer too.',
+      build() { PL.beam = { i: 4 }; plWall(60, [[58, 62]]); plWall(62, [[58, 62]]); plWall(64, [[58, 62]]); PL.probe = { i: 150, j: 60 }; } },
     box: { hint: 'A wire outside a closed metal box. The wave reflects from the box and goes around it, but inside E stays exactly zero: a Faraday cage. Erase a gap in the near wall and watch the wave leak in; a gap much narrower than λ lets little through.',
       build() { PL.wires = [{ i: 45, j: 60 }]; plRect(110, 25, 170, 26); plRect(110, 94, 170, 95); plRect(110, 25, 111, 95); plRect(169, 25, 170, 95); PL.probe = { i: 140, j: 60 }; } }
   };
@@ -1356,13 +1373,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const PL_TIPS = { wire: 'Tap empty space to add a wire; tap a wire to take it away. A new wire starts in step with the others.', metal: 'Drag to paint metal.',
     erase: 'Drag to erase metal and wires.', probe: 'Tap to put the probe there and read ⟨E²⟩, the field squared averaged over one period.' };
-  function plSetTool(t) { PL.tool = t; for (const b of document.querySelectorAll('#plTools button')) b.setAttribute('aria-pressed', String(b.dataset.t === t)); $('plTip').textContent = PL_TIPS[t]; }
+  function plSetTool(t) { PL.tool = t; for (const b of document.querySelectorAll('#plTools button')) b.setAttribute('aria-pressed', String(b.dataset.t === t)); $('plTip').textContent = PL_TIPS[t] + (PL.te && t === 'wire' ? ' With E in the page each source is a thin coil through the page, its current circling the coil, so H points along it and E circles in the page.' : ''); }
   function plSetShow(v) { PL.show = v; for (const b of document.querySelectorAll('#plShow button')) b.setAttribute('aria-pressed', String(b.dataset.s === v)); if (!playing) draw(); }
   function plStep(m) {
     const F = PL.F;
     for (let s = 0; s < m; s++) {
       fdtdStep(F, PL.srcs);
-      const E = F.Ez, A = PL.acc; for (let k = 0; k < E.length; k++) A[k] += E[k] * E[k];
+      const E = F.Ez, A = PL.acc; if (F.te) { for (let k = 0; k < E.length; k++) A[k] += fdtdE2(F, k); } else for (let k = 0; k < E.length; k++) A[k] += E[k] * E[k];
       /* the average over exactly one period, so a steady wave gives its true time average */
       if (++PL.accN === FD_NT) { const t = PL.avg; PL.avg = A; PL.acc = t; for (let k = 0; k < A.length; k++) PL.avg[k] /= FD_NT; t.fill(0); PL.accN = 0; PL.avgN++; }
     }
@@ -1397,7 +1414,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const w of PL.wires) {
       const x = X(w.i), y = Y(w.j), r = Math.max(4, 0.22 * FD_NL * g.sc / 4) * ls;
       c.fillStyle = T.canvas; c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill(); c.stroke();
-      c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, r * 0.35, 0, 2 * Math.PI); c.fill();
+      if (PL.te) { /* a coil through the page: its current circles it */ c.beginPath(); c.arc(x, y, r * 0.55, -0.3, 4.6); c.stroke(); const a = 4.6, ax = x + r * 0.55 * Math.cos(a), ay = y + r * 0.55 * Math.sin(a); c.fillStyle = T.ink; c.beginPath(); c.moveTo(ax + 3, ay + 1); c.lineTo(ax - 2, ay - 3); c.lineTo(ax - 2, ay + 4); c.fill(); }
+      else { c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, r * 0.35, 0, 2 * Math.PI); c.fill(); }
       if (w.ph) label(c, 'opposite phase', x, y + r + 3, T.ink, 'center', 'top', true, 10);
     }
     // probe
@@ -1409,7 +1427,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bx = g.ox + 12, by = g.oy + g.h - 14, bl = FD_NL * g.sc;
     c.strokeStyle = T.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(bx, by - 4); c.lineTo(bx, by + 4); c.moveTo(bx, by); c.lineTo(bx + bl, by); c.moveTo(bx + bl, by - 4); c.lineTo(bx + bl, by + 4); c.stroke();
     label(c, '1 λ', bx + bl / 2, by - 5, T.ink, 'center', 'bottom', true, 11);
-    if (g.w >= 560) label(c, avg ? 'Average intensity ⟨E²⟩ over the last period' : 'E along the wires, out of or into the page', g.ox + g.w - 10, g.oy + 8, T.ink, 'right', 'top', true, 11);
+    if (g.w >= 560) label(c, avg ? 'Average intensity ⟨E²⟩ over the last period' : PL.te ? 'η₀H along the coils, out of or into the page; E lies in the page' : 'E along the wires, out of or into the page', g.ox + g.w - 10, g.oy + 8, T.ink, 'right', 'top', true, 11);
   }
   function plReadouts() {
     const F = PL.F, per = F.n / FD_NT;
@@ -1477,9 +1495,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#plPresets button')) b.addEventListener('click', () => { plPreset(b.dataset.q); plReadouts(); if (!playing) draw(); });
   for (const b of document.querySelectorAll('#plTools button')) b.addEventListener('click', () => plSetTool(b.dataset.t));
   for (const b of document.querySelectorAll('#plShow button')) b.addEventListener('click', () => plSetShow(b.dataset.s));
+  /* the polarization: a fresh grid of the other kind, keeping the metal, the sources and the probe */
+  function plSetPol(te) {
+    PL.te = te; for (const b of document.querySelectorAll('#plPol button')) b.setAttribute('aria-pressed', String((b.dataset.pol === 'te') === te));
+    const m = PL.F ? PL.F.metal.slice() : null; plFresh(); if (m) PL.F.metal.set(m); for (const w of PL.wires) w.n0 = 0; if (PL.beam) PL.beam.n0 = 0; plCompile();
+    plSetTool(PL.tool); plModel(); plReadouts(); if (!playing) draw();
+  }
+  for (const b of document.querySelectorAll('#plPol button')) b.addEventListener('click', () => plSetPol(b.dataset.pol === 'te'));
   $('plRestart').addEventListener('click', () => { plRestart(); plReadouts(); if (!playing) draw(); });
   $('plClear').addEventListener('click', () => { PL.wires = []; PL.beam = null; PL.probe = null; plFresh(); plCompile(); plMark(null); plReadouts(); if (!playing) draw(); });
-  $('modelPlane').textContent = `Maxwell's equations solved step by step on a grid (Yee's finite difference time domain method) for currents along z, so E points along z and B lies in the page. The grid has ${FD_NL} cells per wavelength and a time step of half a cell's crossing time; waves on it travel ${(100 * FD_SLOW).toFixed(1)} % slower than c along the grid lines and less along diagonals. Metal is a perfect conductor (E = 0 in it). The wires are long straight currents through the page, so fields fall as 1/√r, not 1/r as for a short antenna. Past the edge of the picture an absorbing border ${FD_PAD / FD_NL} λ deep takes up outgoing waves, sending back about 1 % of their amplitude. The beam is a Gaussian 6 λ across, not an endless plane wave. Brightness grows with the field but levels off (tanh), so strong fields near a wire do not wash out the rest.`;
+  function plModel() { $('modelPlane').textContent = `Maxwell's equations solved step by step on a grid (Yee's finite difference time domain method) for currents along z, so E points along z and B lies in the page. The grid has ${FD_NL} cells per wavelength and a time step of half a cell's crossing time; waves on it travel ${(100 * FD_SLOW).toFixed(1)} % slower than c along the grid lines and less along diagonals. Metal is a perfect conductor (E = 0 in it). The wires are long straight currents through the page, so fields fall as 1/√r, not 1/r as for a short antenna. Past the edge of the picture an absorbing border ${FD_PAD / FD_NL} λ deep takes up outgoing waves, sending back about 1 % of their amplitude. The beam is a Gaussian 6 λ across, not an endless plane wave. Brightness grows with the field but levels off (tanh), so strong fields near a wire do not wash out the rest.` + (PL.te ? ` E in the page (TE): the same equations with E and H swapped, so the same grid serves, with H along z and E in the page. Each source is then a long thin coil through the page (a magnetic line current), and the shading in Field now shows η₀H along z. Metal makes the E along its surface zero, which now means the E in the page along every metal edge; E may still point straight into the metal. ⟨E²⟩ is (E_x² + E_y²) at the cell center, each from the two edges around it, averaged over one period.` : ''); }
+  plModel();
   plSetTool('wire');
 
   // ---------- loop ----------
