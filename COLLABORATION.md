@@ -6516,3 +6516,37 @@ into existing demos, no new worksheet. GPT, please verify the physics and number
   the target after one lap and compare with Δv from vis viva and P² = a³); Celestial Sphere worksheet, an antipode part (record a
   star's altitude and azimuth here and at the antipode for three stars and the Moon; show h' = −h, A' = 360° − A, and measure the
   Moon's parallax from the sum).
+## 2026-10-31 · Claude · Rounds 4 and 5, Group F: 2D quantum wells in Quantum Wave Packets (plan #38)
+
+Steve (19:05): "Yeah let's finish up". Plan #38 (Falstad's 2D square and circular wells, 2D and 3D oscillators, 2D quantum crystal,
+1D quantum transitions, atomic dipole transitions), folded into `demos/quantum-waves.html`. Upper level; the page still opens on the
+1D packets (Barrier), so the intro framing is unchanged. No worksheet. GPT, please verify the physics and numbers below.
+- **1D packets | 2D wells** switch above the setups. 2D setups: Square box, Rectangle, Round box, Oscillator, Circling packet,
+  Oscillator 1 : 2, Lattice of wells, Light drives a transition, Selection rule (`?setup=box`, `rect`, `circle`, `osc`, `orbit`, `liss`,
+  `lattice`, `rabi`, `rules` open them). Picture: |ψ|² as brightness, phase as color (the 1D wheel), the well drawn, ⟨x⟩, ⟨y⟩ with its
+  path; 3D | Flat shows |ψ|² as a height surface. Beside it the level diagram (degenerate states side by side, tap to add or drop a
+  state, a bar as long as |cₙ|²); below, |cₙ|² against time. Rail: Well sliders, State of the electron (table, ⟨E⟩, ΔE, ⟨x⟩, ⟨y⟩,
+  ⟨Lz⟩ in the round box, beat period, total probability), Light on the electron, Display.
+- Physics (CORE, Node): box sin·sin, E = (ħ²π²/2m)(nx²/Lx² + ny²/Ly²); round box J_m(j r/R)e^(imφ)/√2π with N = √2/(R|J_{m+1}(j)|),
+  J_m from Bessel's integral (trapezoid over a period), zeros by bisection; oscillator Hermite functions, b = √(2·KIN/ħω); lattice
+  V(x) + V(y), each a row of nw wells 1 nm wide, barriers g at V₀, hard walls outside, solved with the existing 1D `eigen` on a 0.01 nm
+  grid, states the products. Basis: the lowest 36 states, a degenerate group never cut (35 in the box and lattice). Dipole elements:
+  box −8Lmn/(π²(m² − n²)²) for m + n odd; oscillator b√(n/2), b√((n+1)/2); round box ½∫J J′ r² dr, ⟨m+1|y|m⟩ = −iI/2; lattice from
+  the grid. Without light cₙ(t) = cₙ(0)e^(−iEₙt/ħ) exactly; with light H′ = eℰx cos ωt (or y), RK4 with step ≤ min(ħ/20E_top, period/40).
+- Numbers: 2 nm square, E₁₁ 0.18801 eV, E₂₁ = E₁₂ 0.47004, beat 14.66 fs, ⟨2,1|x|1,1⟩ 0.3603 nm (16L/9π²), Rabi period at 0.03 V/nm
+  382.7 fs (the RK4 run reaches (2,1) within 2 % of 191 fs, the test bound); round box R 1.2 nm: E 0.15301 and 0.38846 eV, turn 17.57 fs, ⟨Lz⟩ 0.500 ħ;
+  oscillator 0.2 eV: b 0.6173 nm, period 20.68 fs, level n holds n + 1 states; lattice 3 × 3, g 0.5 nm, V₀ 0.8 eV: lowest band 0.3227 to
+  0.3921 eV, next level 0.7518 eV, h/width 59.6 fs. 0.03 V/nm = peak field of 1.2 × 10⁸ W/cm². Left out and stated: spontaneous emission,
+  the light's magnetic field, its variation across the well (dipole approximation); a basis edge readout warns when the top six states fill.
+- Not built: Falstad's 3D oscillator as its own picture (the 2D one covers degeneracy and orbits) and a 2D crystal with a non separable
+  potential (the lattice here is separable, stated on the page).
+- Tests: new `test_quantum_wells2d.cjs` (8 groups): Bessel values and zeros, box energies and degeneracy, orthonormality and every stored
+  x and y element against a 2D quadrature for all four wells, round box and oscillator formulas, lattice band and gap, Rabi period and
+  y light leaving (2,1) empty, the 2ħω selection rule. vdcheck `--only after` 0 problems, `--only clip` 0 cut off; my own shots of all nine
+  2D setups at 1280, 400 and 360 px, light and dark, no page errors, no sideways scroll; 3D checked with three.js r128 served locally;
+  the 1D setups unchanged after switching back and forth.
+- Notes: Running it in class item 7, Q8, a physics bullet; key Q8 in TeacherKeys demo-keys (rebuilt). What's new entry.
+- Noticed, not touched: `python3 tools/notes.py` (all) rewrites notes/ideal-gas.html (as Group B said) and would also fix notes/index.html,
+  which still lists Rainbows as "notes to come"; left both for whoever next rebuilds every note.
+- Worksheet part ideas (not built): in the Energy Levels worksheet, a 2D box part (E against nx² + ny², the degeneracies of a square,
+  splitting them by stretching the box); a Rabi part (period against 1/ℰ, slope h/(e|x_fi|)).

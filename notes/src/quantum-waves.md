@@ -22,6 +22,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 4. **Square well.** With **Walls** on **Infinite**, it starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the **n=2** level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click **n=2** again to bring the sloshing back.
 5. **Measure x.** In the well, press **Pause** and then **Measure x** twice; press **Play** and measure again. Press **Reset** to return to the prepared state, then **Measure 200 copies**, and let the histogram build up |ψ|² (Q7).
 6. **Oscillator** and **Double well**. The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.
+7. **2D wells** (upper level; switch with **1D packets | 2D wells** above the setups). **Square box** opens in (1,1) with (2,1): the lump sloshes side to side every 14.66 fs, while (1,2) sits at the same 0.4700 eV as (2,1). **Round box** mixes m = 0 and m = 1, so the lump goes round the wall every 17.57 fs and ⟨Lz⟩ reads 0.500 ħ. **Light drives a transition** shows Rabi oscillation: 0.03 V/nm along x at 0.2820 eV takes (1,1) fully to (2,1) and back in 383 fs; switch the light to **along y** and nothing happens (Q8). **Selection rule** puts the oscillator's ground state in light at 2ħω, which it cannot absorb.
 
 ## Questions
 
@@ -39,6 +40,8 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 
 **Q7.** Pause the motion, press **Measure x** on a state in the well, then press it again. Then try the same with the motion running. Compare the two results with each other, and with what **Measure 200 copies** shows. What does one measurement tell you about |ψ|², and what do 200 copies tell you?
 
+**Q8.** (Upper level.) In **Light drives a transition**, light polarized along x at 0.2820 eV moves the electron from (1,1) to (2,1) and back. Using ⟨m|x|n⟩ for a 1D box, explain why x polarized light can reach (2,1) but not (1,2), although both have the same energy, and why it can never reach (3,1). Predict the Rabi period for ℰ = 0.03 V/nm and check it with the readout.
+
 ## Common misconceptions
 
 - **"Reflection only happens when E < V₀."** Waves reflect at any sudden change in potential; at a step, E > V₀ still gives R > 0.
@@ -54,6 +57,8 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 - The launched packet is ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x), with Δx = σ and Δp = ħ/2σ at launch. **Plane wave T(E₀)** comes from transfer matrices (for the single barrier, T = [1 + V₀² sinh²(κa)/4E(V₀ − E)]⁻¹); **T averaged over packet** averages T(E) over the packet's spread of k.
 - Wells have hard walls at the edges of the grid. Their levels come from diagonalizing the same finite difference Hamiltonian, which is why the infinite well and oscillator tables agree with n²π²ħ²/2mL² and (n + ½)ħω to three or four decimals rather than exactly.
 - **Measure x** draws one position from |ψ|² and replaces ψ with a narrow packet there, with zero mean momentum, to stand in for a detector of finite resolution. **Measure 200 copies** samples 200 positions without disturbing ψ.
+
+- **2D wells** use exact states: the box's sin(nxπ…)sin(nyπ…), the round box's J_m(j r/R) e^(imφ) (Bessel zeros j found numerically to 1e−12), the oscillator's Hermite functions, and for the lattice products of the states of one row of wells (the 1D solver above on a 0.01 nm grid; V(x) + V(y) separates exactly). Without light each cₙ turns as e^(−iEₙt/ħ). With light the electron feels eℰx cos ωt, and the coefficients of the 35 or 36 lowest states are stepped by fourth order Runge–Kutta (step below ħ/20E_top), so the Rabi period comes out within a percent of the two level value h/(eℰ|⟨f|x|i⟩|). Left out and said on the page: spontaneous emission, the light's magnetic field, and its variation across the well (dipole approximation).
 
 ## Going further
 

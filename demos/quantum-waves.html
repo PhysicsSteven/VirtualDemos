@@ -121,6 +121,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .setup-card.ghost { opacity: 0.25; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 @media (max-width: 820px) { .setup-card { position: static; width: auto; margin: 8px; } }
+/* 2D wells (2026-10-31): a second set of panes over the stage, and rail sections for each dimension */
+html[data-qd="2d"] .only1d, html:not([data-qd="2d"]) .only2d { display: none !important; }
+html[data-qd="2d"] #stage > .pane, html[data-qd="2d"] #stage > .vd-split, html[data-qd="2d"] #stage > .vd-split-marks { display: none !important; }
+#q2Pane { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 0.36fr); background: var(--canvas); }
+#q2Pic, #q2LevBox, #q2PopBox { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+#q2Pic { grid-row: 1; grid-column: 1; }
+#q2LevBox { grid-row: 1; grid-column: 2; border-left: 1px solid var(--line); }
+#q2PopBox { grid-row: 2; grid-column: 1 / 3; border-top: 1px solid var(--line); }
+#q2Pane canvas { position: absolute; inset: 0; display: block; }
+#q2Pic > canvas:first-child { cursor: grab; }
+#q2Can, #q2Lev { outline: none; }
+#q2Can:focus-visible, #q2Lev:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+#q2Pic .q2dim { position: absolute; right: 10px; bottom: 8px; z-index: 2; }
+#q2FieldBody.off { opacity: 0.6; }
+#q2EdgeNote { color: var(--pos); }
+@media (max-width: 820px) {
+  html[data-qd="2d"] .stage { display: block; height: auto; min-height: 0; }
+  #q2Pane { position: static; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 250px 170px; }
+  #q2Pic { aspect-ratio: 1 / 1.12; }
+  #q2LevBox { grid-row: 2; grid-column: 1; border-left: 0; border-top: 1px solid var(--line); }
+  #q2PopBox { grid-row: 3; grid-column: 1; }
+}
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -163,9 +185,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="kPane" hidden>
         <canvas id="kCan" aria-label="Momentum space: probability density |φ(k)|² against wave number k."></canvas>
       </div>
+      <div id="q2Pane" class="only2d">
+        <div id="q2Pic">
+          <canvas id="q2Can" tabindex="0" aria-label="The electron in the plane: brightness shows the probability density |ψ|², color the phase of ψ; the outline is the well, the cross is the mean position ⟨x⟩, ⟨y⟩ with its path. Keys: space plays or pauses, 1 to 9 add or drop the lowest states."></canvas>
+          <div class="stage-ctl">
+            <button type="button" class="btn" id="play2">Pause</button>
+            <button type="button" class="btn" id="step2">Step</button>
+            <button type="button" class="btn" id="reset2">Reset</button>
+            <div class="seg" role="group" aria-label="Speed" id="speed2">
+              <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
+              <button type="button" data-s="1" aria-pressed="true">1×</button>
+              <button type="button" data-s="4" aria-pressed="false">4×</button>
+              <button type="button" data-s="16" aria-pressed="false">16×</button>
+            </div>
+            <span class="tclock mono" id="tclock2">t = 0.0 fs</span>
+          </div>
+          <div class="q2dim"><div class="seg" role="group" aria-label="Perspective of the 2D picture" id="dimSeg2"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div></div>
+        </div>
+        <div id="q2LevBox"><canvas id="q2Lev" tabindex="0" aria-label="Energy levels of the well, degenerate states side by side. Chosen states are bold, and a bar over each level is as long as its probability. Tap a level to add it to the state or drop it; keys 1 to 9 do the same for the lowest nine."></canvas></div>
+        <div id="q2PopBox"><canvas id="q2Pop" aria-label="Probability of each state against time, for the states that matter most."></canvas></div>
+      </div>
     </div>
 
-    <div class="setup-card" id="setupCard" role="group" aria-label="Set up the wave packet">
+    <div class="setup-card only1d" id="setupCard" role="group" aria-label="Set up the wave packet">
       <span class="card-title">Set up the packet, then press Launch packet</span>
       <div>
         <div class="slider-head"><label for="px0">Center x₀</label><output id="px0Out" class="mono" for="px0"></output></div>
@@ -193,7 +235,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/uncertainty-principle.html" target="uncertainty-principle-worksheet">Worksheet 1: The Uncertainty Principle</a></li><li><a href="../curriculum/labs/students/energy-levels.html" target="energy-levels-worksheet">Worksheet 2: Energy Levels in a Box and a Spring</a></li><li><a href="../curriculum/labs/students/quantum-tunneling.html" target="quantum-tunneling-worksheet">Worksheet 3: Quantum Tunneling</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
-        <div class="chips" id="presets">
+        <div class="seg" role="group" aria-label="Dimensions" id="qdSeg">
+          <button type="button" data-qd="1d" aria-pressed="true">1D packets</button>
+          <button type="button" data-qd="2d" aria-pressed="false">2D wells</button>
+        </div>
+        <div class="chips only1d" id="presets">
           <button type="button" data-p="free" aria-pressed="false">Free particle</button>
           <button type="button" data-p="step" aria-pressed="false">Step</button>
           <button type="button" data-p="barrier" aria-pressed="true">Barrier</button>
@@ -201,10 +247,103 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="ho" aria-pressed="false">Oscillator</button>
           <button type="button" data-p="dwell" aria-pressed="false">Double well</button>
         </div>
-        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <details class="more only1d"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <div class="chips only2d" id="presets2">
+          <button type="button" data-p="box" aria-pressed="false">Square box</button>
+          <button type="button" data-p="rect" aria-pressed="false">Rectangle</button>
+          <button type="button" data-p="circle" aria-pressed="false">Round box</button>
+          <button type="button" data-p="osc" aria-pressed="false">Oscillator</button>
+          <button type="button" data-p="orbit" aria-pressed="false">Circling packet</button>
+          <button type="button" data-p="liss" aria-pressed="false">Oscillator 1 : 2</button>
+          <button type="button" data-p="lattice" aria-pressed="false">Lattice of wells</button>
+          <button type="button" data-p="rabi" aria-pressed="false">Light drives a transition</button>
+          <button type="button" data-p="rules" aria-pressed="false">Selection rule</button>
+        </div>
+        <details class="more only2d"><summary>About this setup</summary><p class="hint" id="presetHint2"></p></details>
+      </section>
+      <section class="only2d">
+        <h2>Well</h2>
+        <div id="q2s1Row">
+          <div class="slider-head"><label for="q2s1" id="q2s1Lab">Width</label><output id="q2s1Out" class="mono" for="q2s1"></output></div>
+          <input type="range" id="q2s1" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div id="q2s2Row">
+          <div class="slider-head"><label for="q2s2" id="q2s2Lab">Height</label><output id="q2s2Out" class="mono" for="q2s2"></output></div>
+          <input type="range" id="q2s2" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div id="q2s3Row">
+          <div class="slider-head"><label for="q2s3" id="q2s3Lab">Wells</label><output id="q2s3Out" class="mono" for="q2s3"></output></div>
+          <input type="range" id="q2s3" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <p class="hint" id="q2PotHint"></p>
       </section>
 
-      <section id="potSec">
+      <section class="only2d">
+        <h2>State of the electron</h2>
+        <table class="lv-table" id="q2Table"></table>
+        <dl class="readout">
+          <div><dt>Energy ⟨E⟩</dt><dd id="q2E">—</dd></div>
+          <div><dt>Energy spread ΔE</dt><dd id="q2dE">—</dd></div>
+          <div><dt>Position ⟨x⟩</dt><dd id="q2X">—</dd></div>
+          <div><dt>Position ⟨y⟩</dt><dd id="q2Y">—</dd></div>
+          <div id="q2LzRow"><dt>Angular momentum ⟨Lz⟩</dt><dd id="q2Lz">—</dd></div>
+          <div><dt>Beat period h/ΔE</dt><dd id="q2Beat">—</dd></div>
+          <div><dt>Total probability</dt><dd id="q2N">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Tap levels in the diagram (or press 1 to 9 with the picture in focus) to add states or drop them; the chosen states get equal weights. One state alone is stationary: |ψ|² never changes and only the phase turns. States with different energies beat, once every h/ΔE for two. States with the same energy mix into another stationary state.</p>
+          <p class="hint">Without the field each cₙ just turns, cₙ(t) = cₙ(0) e^(−iEₙt/ħ), computed exactly. ⟨E⟩ = Σ|cₙ|²Eₙ is the energy in the well alone: with the field on, energy goes into and out of the light.</p>
+        </details>
+      </section>
+
+      <section class="only2d">
+        <h2>Light on the electron</h2>
+        <div class="toggles"><label><input type="checkbox" id="q2Field">Field on</label></div>
+        <div id="q2FieldBody">
+          <div class="inline">
+            <span class="lab" id="q2PolLab">Polarization</span>
+            <div class="seg" role="group" aria-labelledby="q2PolLab" id="q2Pol">
+              <button type="button" data-pol="x" aria-pressed="true">along x</button>
+              <button type="button" data-pol="y" aria-pressed="false">along y</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="q2hw">Photon energy ħω</label><output id="q2hwOut" class="mono" for="q2hw"></output></div>
+            <input type="range" id="q2hw" min="0.01" max="1.5" step="0.001" value="0.28">
+          </div>
+          <div>
+            <div class="slider-head"><label for="q2F">Field strength ℰ</label><output id="q2FOut" class="mono" for="q2F"></output></div>
+            <input type="range" id="q2F" min="0" max="0.1" step="0.001" value="0.03">
+          </div>
+          <div><label for="q2Tune" class="lab">Tune to a level</label> <select id="q2Tune"></select></div>
+          <dl class="readout">
+            <div class="wide"><dt>Transition</dt><dd id="q2Tr">—</dd></div>
+            <div><dt>Gap ΔE</dt><dd id="q2dEtr">—</dd></div>
+            <div><dt>Dipole |⟨f|x|i⟩|</dt><dd id="q2Mx">—</dd></div>
+            <div><dt>Detuning ħω − ΔE</dt><dd id="q2Det">—</dd></div>
+            <div><dt>Rabi period</dt><dd id="q2Rabi">—</dd></div>
+            <div class="wide"><dt>Probability in the top six states of the basis</dt><dd id="q2Edge">—</dd></div>
+          </dl>
+          <p class="hint" id="q2EdgeNote" hidden>The top of the basis is filling: from here on the picture is missing states it would need.</p>
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The light's electric field ℰ cos ωt pushes on the electron (charge −e) with energy eℰx cos ωt (or eℰy). Light only links two states when ⟨f|x|i⟩ is not zero: in the box x must change the parity of nx and leave ny alone, in the oscillator nx goes up or down by exactly 1, in the round box m changes by 1.</p>
+          <p class="hint">iħ dc/dt = (E + eℰX cos ωt) c is solved in the basis of the 36 lowest states (fewer where a group of equal energies would be cut) by fourth order Runge–Kutta, with a step under ħ/20E of the top state. The Rabi period h/(eℰ|⟨f|x|i⟩|) is the two level answer on resonance in the rotating wave approximation, close when eℰ|⟨f|x|i⟩| is far below the gap. 0.03 V/nm is 3 × 10⁷ V/m, the peak field of light at 1.2 × 10⁸ W/cm² (I = cε₀ℰ²/2).</p>
+          <p class="hint">Left out: spontaneous emission (here only the light can make the electron fall, as stimulated emission; real excited states decay on their own in nanoseconds, far longer than these femtoseconds), the light's magnetic field, and the change of the field across the well (its wavelength is hundreds of nanometers, the well a couple: the dipole approximation).</p>
+        </details>
+      </section>
+
+      <section class="only2d">
+        <details class="fold"><summary>Display</summary><div class="foldbody">
+        <div class="toggles">
+          <label><input type="checkbox" id="q2Phase" checked>Phase colors</label>
+          <label><input type="checkbox" id="q2Center" checked>Center ⟨x⟩, ⟨y⟩ and its path</label>
+        </div>
+        <p class="hint">Brightness is proportional to |ψ|², scaled to the brightest spot of the last few seconds. Color is the phase of ψ on the wheel at the top right; with Phase colors off, only |ψ|² shows. In the oscillator the dashed curve is the classical turning curve at ⟨E⟩.</p>
+        </div></details>
+      </section>
+
+      <section id="potSec" class="only1d">
         <h2>Potential</h2>
         <div class="inline" id="variantRow" hidden>
           <span class="lab" id="variantLab">Barriers</span>
@@ -225,7 +364,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="potHint"></p>
       </section>
 
-      <section id="levelSec">
+      <section id="levelSec" class="only1d">
         <h2>Energy eigenstates</h2>
         <div class="chips" id="levels"></div>
         <details class="more"><summary>More about this</summary>
@@ -237,7 +376,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
       </section>
 
-      <section>
+      <section class="only1d">
         <h2>Measurements</h2>
         <dl class="readout">
           <div><dt>Position ⟨x⟩</dt><dd id="rX">—</dd></div>
@@ -256,7 +395,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
-      <section id="scatSec">
+      <section id="scatSec" class="only1d">
         <h2>Scattering</h2>
         <dl class="readout">
           <div class="big"><dt id="rRLab">Reflected R</dt><dd id="rR">—</dd></div>
@@ -271,7 +410,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
-      <!-- vd-readings --><section class="vd-readings" data-ws="quantum-tunneling" data-title="Quantum Wave Packets" data-demo="quantum-waves">
+      <!-- vd-readings --><section class="vd-readings only1d" data-ws="quantum-tunneling" data-title="Quantum Wave Packets" data-demo="quantum-waves">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
@@ -292,7 +431,7 @@ var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['ro
 try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
 say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
 window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
-      <section>
+      <section class="only1d">
         <h2>Measure position</h2>
         <div class="row2">
           <button type="button" class="btn primary" id="measure">Measure x</button>
@@ -308,7 +447,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         </details>
       </section>
 
-      <section>
+      <section class="only1d">
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tRe">Re ψ</label>
@@ -597,12 +736,184 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return out;
   }
+
+  // ---------- 2D wells (2026-10-31) ----------
+  /* An electron in the plane, in four wells whose eigenstates are known exactly (or, for the lattice, from the 1D solver above):
+     a rectangular box with hard walls, a circular box with hard walls, an oscillator with ħωx and ħωy, and a separable lattice
+     V(x) + V(y) of square wells. ψ(x, y, t) = Σ cₙ(t) φₙ(x, y). Without the field cₙ(t) = cₙ(0) e^(−iEₙt/ħ) exactly. With the field
+     the electron feels eℰx cos ωt (or y), and iħ dc/dt = (E + eℰX cos ωt) c is integrated in the basis of the lowest states by RK4. */
+
+  // J_m(x) from Bessel's integral (1/2π)∫ cos(mτ − x sin τ) dτ over a whole period: the trapezoid rule converges exponentially.
+  function besselJ(m, x) {
+    const n = 2 * Math.ceil(Math.abs(x) + Math.abs(m)) + 48; let s = 0;
+    for (let i = 0; i < n; i++) { const tau = 2 * Math.PI * i / n; s += Math.cos(m * tau - x * Math.sin(tau)); }
+    return s / n;
+  }
+  // the first count positive zeros of J_m, by a scan and bisection
+  function besselZeros(m, count) {
+    const out = []; let a = m === 0 ? 0.5 : m * 0.9 + 0.5, fa = besselJ(m, a);
+    while (out.length < count) {
+      const b = a + 0.05, fb = besselJ(m, b);
+      if (fa === 0) { out.push(a); } else if (fa * fb < 0) {
+        let lo = a, hi = b, flo = fa;
+        for (let it = 0; it < 60; it++) { const mid = 0.5 * (lo + hi), fm = besselJ(m, mid); if (flo * fm <= 0) hi = mid; else { lo = mid; flo = fm; } }
+        out.push(0.5 * (lo + hi));
+      }
+      a = b; fa = fb;
+    }
+    return out;
+  }
+  // normalized oscillator functions φ₀ … φₙ at x (nm) for length b = √(ħ/mω) = √(2·KIN/ħω)
+  function hermiteFns(nMax, x, b) {
+    const u = x / b, out = new Float64Array(nMax + 1);
+    out[0] = Math.pow(Math.PI, -0.25) * Math.exp(-u * u / 2) / Math.sqrt(b);
+    if (nMax > 0) out[1] = Math.SQRT2 * u * out[0];
+    for (let k = 1; k < nMax; k++) out[k + 1] = Math.sqrt(2 / (k + 1)) * u * out[k] - Math.sqrt(k / (k + 1)) * out[k - 1];
+    return out;
+  }
+  const oscLen = (hw) => Math.sqrt(2 * KIN / hw);
+  // ⟨m|x|n⟩ in a box of width L centered on 0: −8Lmn/(π²(m² − n²)²) when m + n is odd, else 0 (so ⟨1|x|2⟩ = −16L/9π²)
+  function boxX(m, n, L) { if ((m + n) % 2 === 0) return 0; return -8 * L * m * n / (Math.PI * Math.PI * Math.pow(m * m - n * n, 2)); }
+  // ⟨m|x|n⟩ for the oscillator: b√(n/2) for m = n − 1, b√((n + 1)/2) for m = n + 1
+  function oscX(m, n, b) { if (m === n - 1) return b * Math.sqrt(n / 2); if (m === n + 1) return b * Math.sqrt((n + 1) / 2); return 0; }
+
+  // A 1D chain of nw square wells (width a, V = 0) between barriers (width g, height V0), hard walls outside: the lattice's factor
+  function chain1D(nw, a, g, V0, dx, Ecut, nMax) {
+    const L = nw * a + (nw + 1) * g, N = Math.round(L / dx) - 1, h = L / (N + 1), V = new Float64Array(N), x = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      x[i] = -L / 2 + (i + 1) * h; let v = 0;
+      for (let j = 0; j < 8; j++) { const u = x[i] + ((j + 0.5) / 8 - 0.5) * h + L / 2, cell = u - g, per = a + g, r = cell - Math.floor(cell / per) * per;
+        v += cell < 0 || cell > nw * per - g || r > a ? V0 : 0; }
+      V[i] = v / 8;
+    }
+    const e = eigen(V, h, Ecut, nMax);
+    return { L, N, dx: h, x, V, vals: e.vals, vecs: e.vecs };
+  }
+  function chainX(c, m, n) { let s = 0; const u = c.vecs[m], v = c.vecs[n]; for (let i = 0; i < c.N; i++) s += u[i] * c.x[i] * v[i]; return s * c.dx; }
+  function chainAt(c, j, x) { const f = (x + c.L / 2) / c.dx - 1, i = Math.floor(f), u = f - i, v = c.vecs[j];
+    const a = i >= 0 && i < c.N ? v[i] : 0, b = i + 1 >= 0 && i + 1 < c.N ? v[i + 1] : 0; return a * (1 - u) + b * u; }
+
+  /* wells2d(kind, p, M): the M lowest states, sorted by energy, each { E, label, ... }, and the dipole matrices X and Y as sparse lists
+     [m, n, re, im] of ⟨m|x|n⟩ (nm). kind 'box' { Lx, Ly }, 'circle' { R }, 'osc' { hx, hy } (ħω in eV), 'lattice' { nw, a, g, V0 }. */
+  function wells2d(kind, p, M) {
+    let st = [];
+    const X = [], Y = [];
+    if (kind === 'box') {
+      const nm = Math.ceil(Math.sqrt(M)) * 3 + 2;
+      for (let nx = 1; nx <= nm; nx++) for (let ny = 1; ny <= nm; ny++)
+        st.push({ nx, ny, E: KIN * Math.PI * Math.PI * (nx * nx / (p.Lx * p.Lx) + ny * ny / (p.Ly * p.Ly)), label: '(' + nx + ',' + ny + ')' });
+    } else if (kind === 'osc') {
+      const nm = Math.ceil(Math.sqrt(2 * M)) + 3 + Math.ceil(M * Math.max(p.hx, p.hy) / Math.min(p.hx, p.hy) / 4);
+      for (let nx = 0; nx <= nm; nx++) for (let ny = 0; ny <= nm; ny++)
+        st.push({ nx, ny, E: p.hx * (nx + 0.5) + p.hy * (ny + 0.5), label: '(' + nx + ',' + ny + ')' });
+    } else if (kind === 'circle') {
+      const mm = Math.ceil(Math.sqrt(M)) + 6, kk = Math.ceil(Math.sqrt(M)) + 2;
+      for (let m = 0; m <= mm; m++) {
+        const z = besselZeros(m, kk);
+        z.forEach((j, k) => { const E = KIN * j * j / (p.R * p.R), nrm = Math.SQRT2 / (p.R * Math.abs(besselJ(m + 1, j)));
+          st.push({ m, k: k + 1, j, E, nrm, label: '(' + m + ',' + (k + 1) + ')' });
+          if (m > 0) st.push({ m: -m, k: k + 1, j, E, nrm, label: '(−' + m + ',' + (k + 1) + ')' }); });
+      }
+    } else if (kind === 'lattice') {
+      const c = chain1D(p.nw, p.a, p.g, p.V0, 0.01, 50, M + 4);
+      p.chain = c;
+      for (let i = 0; i < c.vals.length; i++) for (let j = 0; j < c.vals.length; j++)
+        st.push({ nx: i, ny: j, E: c.vals[i] + c.vals[j], label: '(' + (i + 1) + ',' + (j + 1) + ')' });
+    }
+    st.sort((a, b) => a.E - b.E || (a.nx ?? a.m) - (b.nx ?? b.m) || (b.m || 0) - (a.m || 0));
+    // never cut a degenerate group in two: a group that does not fit whole is left out
+    if (st.length > M) { const Ec = st[M].E; st = st.slice(0, M); while (st.length > 1 && Math.abs(st[st.length - 1].E - Ec) < 1e-9 * Ec) st.pop(); }
+    const n = st.length;
+    for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) {
+      const s = st[a], t = st[b];
+      if (kind === 'box') {
+        if (s.ny === t.ny) { const v = boxX(s.nx, t.nx, p.Lx); if (v) X.push([a, b, v, 0], [b, a, v, 0]); }
+        if (s.nx === t.nx) { const v = boxX(s.ny, t.ny, p.Ly); if (v) Y.push([a, b, v, 0], [b, a, v, 0]); }
+      } else if (kind === 'osc') {
+        if (s.ny === t.ny) { const v = oscX(s.nx, t.nx, oscLen(p.hx)); if (v) X.push([a, b, v, 0], [b, a, v, 0]); }
+        if (s.nx === t.nx) { const v = oscX(s.ny, t.ny, oscLen(p.hy)); if (v) Y.push([a, b, v, 0], [b, a, v, 0]); }
+      } else if (kind === 'lattice') {
+        const c = p.chain;
+        if (s.ny === t.ny) { const v = chainX(c, s.nx, t.nx); if (Math.abs(v) > 1e-9) X.push([a, b, v, 0], [b, a, v, 0]); }
+        if (s.nx === t.nx) { const v = chainX(c, s.ny, t.ny); if (Math.abs(v) > 1e-9) Y.push([a, b, v, 0], [b, a, v, 0]); }
+      } else if (kind === 'circle' && Math.abs(s.m - t.m) === 1) {
+        // I = N N' ∫₀^R J_|m|(j r/R) J_|m'|(j' r/R) r² dr (Simpson); ⟨m ± 1|x|m⟩ = I/2, ⟨m + 1|y|m⟩ = −iI/2, ⟨m − 1|y|m⟩ = +iI/2
+        const K = 400, h = p.R / K; let I = 0;
+        for (let i = 0; i <= K; i++) { const r = i * h, w = i === 0 || i === K ? 1 : i % 2 ? 4 : 2;
+          I += w * besselJ(Math.abs(s.m), s.j * r / p.R) * besselJ(Math.abs(t.m), t.j * r / p.R) * r * r; }
+        I *= h / 3 * s.nrm * t.nrm;
+        // a = s, b = t; ⟨t|x|s⟩ = I/2 both ways; ⟨t|y|s⟩ = −iI/2 if t.m = s.m + 1, +iI/2 if t.m = s.m − 1
+        X.push([b, a, I / 2, 0], [a, b, I / 2, 0]);
+        const sg = t.m === s.m + 1 ? -1 : 1;
+        Y.push([b, a, 0, sg * I / 2], [a, b, 0, -sg * I / 2]);
+      }
+    }
+    return { kind, p, states: st, X, Y };
+  }
+
+  // φₙ(x, y) as [re, im] (the circle's states carry e^(imφ)/√2π; the others are real)
+  function phi2d(w, s, x, y) {
+    const p = w.p;
+    if (w.kind === 'box') {
+      if (Math.abs(x) >= p.Lx / 2 || Math.abs(y) >= p.Ly / 2) return [0, 0];
+      return [2 / Math.sqrt(p.Lx * p.Ly) * Math.sin(s.nx * Math.PI * (x / p.Lx + 0.5)) * Math.sin(s.ny * Math.PI * (y / p.Ly + 0.5)), 0];
+    }
+    if (w.kind === 'osc') { const fx = hermiteFns(s.nx, x, oscLen(p.hx)), fy = hermiteFns(s.ny, y, oscLen(p.hy)); return [fx[s.nx] * fy[s.ny], 0]; }
+    if (w.kind === 'lattice') return [chainAt(p.chain, s.nx, x) * chainAt(p.chain, s.ny, y), 0];
+    const r = Math.hypot(x, y); if (r >= p.R) return [0, 0];
+    const a = s.nrm * besselJ(Math.abs(s.m), s.j * r / p.R) / Math.sqrt(2 * Math.PI), th = Math.atan2(y, x);
+    return [a * Math.cos(s.m * th), a * Math.sin(s.m * th)];
+  }
+  function V2d(w, x, y) {
+    const p = w.p;
+    if (w.kind === 'box') return Math.abs(x) < p.Lx / 2 && Math.abs(y) < p.Ly / 2 ? 0 : WALL;
+    if (w.kind === 'circle') return Math.hypot(x, y) < p.R ? 0 : WALL;
+    if (w.kind === 'osc') { const bx = oscLen(p.hx), by = oscLen(p.hy); return 0.5 * p.hx * x * x / (bx * bx) + 0.5 * p.hy * y * y / (by * by); }   // ½mω²x² = ½ħω (x/b)²
+    const c = p.chain, at = (u) => { const f = (u + c.L / 2) / c.dx - 1, i = Math.round(f); return i < 0 || i >= c.N ? WALL : c.V[i]; };
+    return at(x) + at(y);
+  }
+
+  /* One RK4 step of iħ dc/dt = (diag E + F cos(ωt) X) c, with c as (cr, ci), F = eℰ in eV/nm, X a sparse list (pol 'x' or 'y').
+     Arrays k1 … k4 are scratch. */
+  function driveStep(w, cr, ci, t, dt, F, hw, pol, tmp) {
+    const n = cr.length, E = w.states.map((s) => s.E), L = pol === 'y' ? w.Y : w.X, om = hw / HBAR;
+    const deriv = (tt, ar, ai, dr, di) => {
+      const f = F * Math.cos(om * tt);
+      for (let i = 0; i < n; i++) { const e = E[i] / HBAR; dr[i] = e * ai[i]; di[i] = -e * ar[i]; }
+      if (f !== 0) for (const [m, k, xr, xi] of L) {
+        // −(i/ħ) f (xr + i xi)(ar + i ai) = (f/ħ)[(xr ai + xi ar) − i(xr ar − xi ai)]
+        const hr = f / HBAR; dr[m] += hr * (xr * ai[k] + xi * ar[k]); di[m] -= hr * (xr * ar[k] - xi * ai[k]);
+      }
+    };
+    const T = tmp || {}; for (const k of ['k1r', 'k1i', 'k2r', 'k2i', 'k3r', 'k3i', 'k4r', 'k4i', 'ar', 'ai']) if (!T[k] || T[k].length !== n) T[k] = new Float64Array(n);
+    deriv(t, cr, ci, T.k1r, T.k1i);
+    for (let i = 0; i < n; i++) { T.ar[i] = cr[i] + 0.5 * dt * T.k1r[i]; T.ai[i] = ci[i] + 0.5 * dt * T.k1i[i]; }
+    deriv(t + dt / 2, T.ar, T.ai, T.k2r, T.k2i);
+    for (let i = 0; i < n; i++) { T.ar[i] = cr[i] + 0.5 * dt * T.k2r[i]; T.ai[i] = ci[i] + 0.5 * dt * T.k2i[i]; }
+    deriv(t + dt / 2, T.ar, T.ai, T.k3r, T.k3i);
+    for (let i = 0; i < n; i++) { T.ar[i] = cr[i] + dt * T.k3r[i]; T.ai[i] = ci[i] + dt * T.k3i[i]; }
+    deriv(t + dt, T.ar, T.ai, T.k4r, T.k4i);
+    for (let i = 0; i < n; i++) { cr[i] += dt / 6 * (T.k1r[i] + 2 * T.k2r[i] + 2 * T.k3r[i] + T.k4r[i]); ci[i] += dt / 6 * (T.k1i[i] + 2 * T.k2i[i] + 2 * T.k3i[i] + T.k4i[i]); }
+    return T;
+  }
+  // ⟨x⟩ or ⟨y⟩ = c† X c
+  function dipoleMean(L, cr, ci) { let s = 0; for (const [m, k, xr, xi] of L) s += cr[m] * (xr * cr[k] - xi * ci[k]) + ci[m] * (xr * ci[k] + xi * cr[k]); return s; }
+  function matEl(L, m, k) { for (const e of L) if (e[0] === m && e[1] === k) return Math.hypot(e[2], e[3]); return 0; }
+  // a 1D factor of a separable state (box, oscillator, lattice) at x along axis 'x' or 'y'
+  function phi1d(w, axis, n, x) {
+    const p = w.p;
+    if (w.kind === 'box') { const L = axis === 'y' ? p.Ly : p.Lx; return Math.abs(x) >= L / 2 ? 0 : Math.sqrt(2 / L) * Math.sin(n * Math.PI * (x / L + 0.5)); }
+    if (w.kind === 'osc') { const b = oscLen(axis === 'y' ? p.hy : p.hx); return hermiteFns(n, x, b)[n]; }
+    return chainAt(p.chain, n, x);
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.QW = { KIN, HBAR, HPL, HBARC, WALL, makeSim, setDt, stepSim, observe, gaussian, eigen, transmission, barrierT, momentum, momentumDirect, samplePositions };
+    globalThis.QW = { KIN, HBAR, HPL, HBARC, WALL, makeSim, setDt, stepSim, observe, gaussian, eigen, transmission, barrierT, momentum, momentumDirect, samplePositions,
+      besselJ, besselZeros, hermiteFns, oscLen, boxX, oscX, chain1D, chainX, wells2d, phi2d, phi1d, V2d, driveStep, dipoleMean, matEl };
     return;
   }
+  window.QW2 = { KIN, HBAR, WALL, besselJ, besselZeros, hermiteFns, oscLen, wells2d, phi2d, phi1d, V2d, driveStep, dipoleMean, matEl };   /* for the 2D wells script below */
 
   const $ = (id) => document.getElementById(id);
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -1755,6 +2066,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- loop ----------
   let last = performance.now(), lastRead = 0, frameMs = 0;
   function loop(now) {
+    if (window.__qw2d) { last = now; requestAnimationFrame(loop); return; }   /* the 2D wells are showing: the 1D picture rests */
     const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
     if (running && dtr > 0) { advance(speedBase * S.mult * dtr); }
@@ -1818,7 +2130,514 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: init3, change: () => drawAll(), status: () => {}, start: 'flat' });
 })();
 </script>
+<script>
+/* 2D wells (2026-10-31): an electron in a rectangular box, a round box, a 2D oscillator or a lattice of square wells; stationary
+   states, superpositions, and a light field driving transitions. The physics is in the CORE above (wells2d, phi2d, driveStep). */
+(() => {
+  if (!window.QW2) return;
+  const Q = window.QW2, $ = (id) => document.getElementById(id), HBAR = Q.HBAR, HPL = 2 * Math.PI * HBAR, M = 36;
+  const root = document.documentElement;
+  const PRE = {
+    box: { kind: 'box', p: { Lx: 2, Ly: 2 }, sel: [['(1,1)', 1, 0], ['(2,1)', 1, 0]], speed: 6,
+      hint: 'A square box 2 nm on a side with hard walls. States (nx, ny) have E = (ħ²π²/2m)(nx²/Lx² + ny²/Ly²), so (1,2) and (2,1) share an energy. The two states chosen beat: the electron sloshes from side to side once every h/ΔE.' },
+    rect: { kind: 'box', p: { Lx: 2.4, Ly: 1.5 }, sel: [['(1,1)', 1, 0], ['(1,2)', 1, 0], ['(2,1)', 1, 0]], speed: 6,
+      hint: 'Make the box longer than it is wide and the pairs that matched in the square, like (1,2) and (2,1), move apart. Three states with three energies: the motion never quite repeats.' },
+    circle: { kind: 'circle', p: { R: 1.2 }, sel: [['(0,1)', 1, 0], ['(1,1)', 1, 0]], speed: 6,
+      hint: 'A round box of radius R. States (m, k) are J_m(j r/R) e^(imφ), with j the kth zero of the Bessel function J_m and E = ħ²j²/2mR². Each state carries angular momentum mħ; m and −m share an energy. Mixing m = 0 with m = 1 sends the lump around the circle.' },
+    osc: { kind: 'osc', p: { hx: 0.2, hy: 0.2 }, sel: [['(0,0)', 1, 0], ['(1,0)', 1, 0]], speed: 6,
+      hint: 'V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): with ωx = ωy the nth level holds n + 1 states. (0,0) with (1,0) swings along x at the oscillator\'s own frequency.' },
+    orbit: { kind: 'osc', p: { hx: 0.2, hy: 0.2 }, packet: { x: 0.9, y: 0, kx: 0, ky: 1.4 }, speed: 6,
+      hint: 'A Gaussian as wide as the ground state, moved off center and kicked sideways: a coherent state. In an oscillator it keeps its shape and goes round an ellipse, as a classical mass on two springs does.' },
+    liss: { kind: 'osc', p: { hx: 0.15, hy: 0.3 }, packet: { x: 0.9, y: 0.5, kx: 0, ky: 0 }, speed: 6,
+      hint: 'ωy = 2ωx. The packet traces a figure eight, the classical Lissajous curve for a 1 : 2 ratio, because each Cartesian part swings at its own frequency.' },
+    lattice: { kind: 'lattice', p: { nw: 3, a: 1, g: 0.5, V0: 0.8 }, packet: { well: true }, speed: 12,
+      hint: 'Square wells 1 nm wide in a 3 × 3 grid, with barriers 0.5 nm wide between them. Tunneling splits the lowest level of the nine wells into a band of nine levels, with a wide gap above it. An electron started in the corner well (a mix of that band only) tunnels to its neighbors and spreads across the grid.' },
+    rabi: { kind: 'box', p: { Lx: 2, Ly: 2 }, sel: [['(1,1)', 1, 0]], field: { on: true, pol: 'x', to: '(2,1)', F: 0.03 }, speed: 24,
+      hint: 'Light polarized along x at exactly the (1,1) to (2,1) energy. The electron climbs to (2,1), then the same light drives it back down (stimulated emission), over and over: Rabi oscillations, one full cycle every h/(eℰ|⟨2,1|x|1,1⟩|).' },
+    rules: { kind: 'osc', p: { hx: 0.2, hy: 0.2 }, sel: [['(0,0)', 1, 0]], field: { on: true, pol: 'x', hw: 0.4, F: 0.03 }, speed: 24,
+      hint: 'Light at 2ħω, exactly the gap to (2,0), yet nothing happens: x only links n to n ± 1, so in an oscillator light at 2ħω has no step to drive. Set ħω to 0.2 eV and the electron climbs the evenly spaced ladder instead of swinging back down.' }
+  };
+  const NAME = { box: 'Square box', rect: 'Rectangle', circle: 'Round box', osc: 'Oscillator', orbit: 'Circling packet', liss: 'Oscillator 1 : 2', lattice: 'Lattice of wells', rabi: 'Light drives a transition', rules: 'Selection rule' };
+  const Z = { preset: 'box', kind: 'box', p: {}, w: null, c0r: null, c0i: null, cr: null, ci: null, ref: 0, t: 0, running: false, mult: 1, speed: 6,
+    field: { on: false, pol: 'x', hw: 0.28, F: 0.03, to: -1 }, hist: [], trail: [], rhoMax: 0, tmp: null, phase: true, center: true, sel: [] };
+  let on2 = false, G = 112, ext = 1, basis = [], img = null, imgC = null, T = {}, dpr = 1;
+
+  // ---------- basis on the picture grid ----------
+  function extent() {
+    const p = Z.p;
+    if (Z.kind === 'box') return Math.max(p.Lx, p.Ly) / 2 * 1.08;
+    if (Z.kind === 'circle') return p.R * 1.08;
+    if (Z.kind === 'lattice') return p.chain.L / 2 * 1.03;
+    const top = Z.w.states[Math.min(Z.w.states.length - 1, 20)].E;   // classical turning point of the 21st state
+    return 1.08 * Math.max(Math.sqrt(2 * top / p.hx) * Q.oscLen(p.hx), Math.sqrt(2 * top / p.hy) * Q.oscLen(p.hy)) / Math.SQRT2;
+  }
+  function buildBasis() {
+    ext = extent(); const n = Z.w.states.length, h = 2 * ext / G, xs = []; for (let i = 0; i < G; i++) xs.push(-ext + (i + 0.5) * h);
+    basis = [];
+    if (Z.kind === 'circle') {
+      const K = 1200, R = Z.p.R;
+      for (const s of Z.w.states) {
+        const tab = new Float64Array(K + 2); for (let i = 0; i <= K + 1; i++) tab[i] = s.nrm * Q.besselJ(Math.abs(s.m), s.j * Math.min(i, K) / K) / Math.sqrt(2 * Math.PI);
+        const re = new Float32Array(G * G), im = new Float32Array(G * G);
+        for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
+          const x = xs[i], y = -xs[j], r = Math.hypot(x, y); if (r >= R) continue;
+          const f = r / R * K, k = Math.floor(f), u = f - k, a = tab[k] * (1 - u) + tab[k + 1] * u, th = Math.atan2(y, x);
+          re[j * G + i] = a * Math.cos(s.m * th); im[j * G + i] = a * Math.sin(s.m * th);
+        }
+        basis.push([re, im]);
+      }
+      return;
+    }
+    // separable wells: φ(x)φ(y) from 1D tables
+    const one = (axis, nq) => xs.map((x) => { const v = axis === 'y' ? -x : x; const ph = Q.phi1d(Z.w, axis, nq, v); return ph; });
+    const cache = {};
+    for (const s of Z.w.states) {
+      const kx = 'x' + s.nx, ky = 'y' + s.ny;
+      if (!cache[kx]) cache[kx] = one('x', s.nx); if (!cache[ky]) cache[ky] = one('y', s.ny);
+      const fx = cache[kx], fy = cache[ky], re = new Float32Array(G * G);
+      for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) re[j * G + i] = fx[i] * fy[j];
+      basis.push([re, null]);
+    }
+  }
+  const idxOf = (label) => Z.w.states.findIndex((s) => s.label === label);
+
+  // ---------- preparing a state ----------
+  function setCoeffs(list) {
+    const n = Z.w.states.length; Z.c0r = new Float64Array(n); Z.c0i = new Float64Array(n);
+    let s = 0; for (const [j, a, b] of list) if (j >= 0 && j < n) { Z.c0r[j] += a; Z.c0i[j] += b; }
+    for (let j = 0; j < n; j++) s += Z.c0r[j] ** 2 + Z.c0i[j] ** 2;
+    if (!s) { Z.c0r[0] = 1; s = 1; }
+    const f = 1 / Math.sqrt(s); for (let j = 0; j < n; j++) { Z.c0r[j] *= f; Z.c0i[j] *= f; }
+    Z.sel = []; for (let j = 0; j < n; j++) if (Z.c0r[j] ** 2 + Z.c0i[j] ** 2 > 1e-6) Z.sel.push(j);
+    restart();
+  }
+  function packetCoeffs(pk) {
+    // project a Gaussian onto the basis: cₙ = ∫ φₙ* g dA on the picture grid; for the lattice only the lowest band is kept
+    const n = Z.w.states.length, h = 2 * ext / G, list = [];
+    let x0 = pk.x, y0 = pk.y, sx, sy, kx = pk.kx || 0, ky = pk.ky || 0;
+    if (Z.kind === 'osc') { sx = Q.oscLen(Z.p.hx) / Math.SQRT2; sy = Q.oscLen(Z.p.hy) / Math.SQRT2; x0 *= Q.oscLen(Z.p.hx); y0 *= Q.oscLen(Z.p.hy); kx /= Q.oscLen(Z.p.hx); ky /= Q.oscLen(Z.p.hy); }
+    else { const c = Z.p.chain, per = Z.p.a + Z.p.g; x0 = -c.L / 2 + Z.p.g + Z.p.a / 2; y0 = -x0; sx = sy = Z.p.a / 4; void per; }
+    const band = Z.kind === 'lattice' ? Z.w.states[Z.p.nw * Z.p.nw - 1].E * (1 + 1e-9) : Infinity;
+    for (let m = 0; m < n; m++) {
+      if (Z.w.states[m].E > band) continue;
+      const [re] = basis[m]; let ar = 0, ai = 0;
+      for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
+        const x = -ext + (i + 0.5) * h, y = ext - (j + 0.5) * h, g = Math.exp(-((x - x0) ** 2) / (4 * sx * sx) - ((y - y0) ** 2) / (4 * sy * sy)), ph = kx * x + ky * y;
+        ar += re[j * G + i] * g * Math.cos(ph); ai += re[j * G + i] * g * Math.sin(ph);
+      }
+      list.push([m, ar * h * h, ai * h * h]);
+    }
+    return list;
+  }
+  function restart() {
+    const n = Z.w.states.length; Z.cr = Float64Array.from(Z.c0r); Z.ci = Float64Array.from(Z.c0i);
+    Z.t = 0; Z.ref = 0; Z.refR = Float64Array.from(Z.c0r); Z.refI = Float64Array.from(Z.c0i); Z.hist = []; Z.trail = []; Z.rhoMax = 0; Z.tmp = null; void n;
+    sample(true); syncState(); draw();
+  }
+  function build(keep) {
+    const was = keep && Z.w ? Z.sel.map((j) => [Z.w.states[j].label, Z.c0r[j], Z.c0i[j]]) : null;
+    Z.w = Q.wells2d(Z.kind, Object.assign({}, Z.p), M); Z.p = Z.w.p;
+    buildBasis(); syncTune();
+    if (was) { const l = was.map(([lab, a, b]) => [idxOf(lab), a, b]).filter((e) => e[0] >= 0); setCoeffs(l.length ? l : [[0, 1, 0]]); }
+  }
+
+  // ---------- time evolution ----------
+  function exactAt(t) {
+    const E = Z.w.states, dt = t - Z.ref;
+    for (let j = 0; j < E.length; j++) { const a = -E[j].E * dt / HBAR, c = Math.cos(a), s = Math.sin(a); Z.cr[j] = Z.refR[j] * c - Z.refI[j] * s; Z.ci[j] = Z.refR[j] * s + Z.refI[j] * c; }
+  }
+  function stepTo(t1) {
+    const f = Z.field;
+    if (!f.on || f.F === 0) { exactAt(t1); Z.t = t1; return; }
+    const Emax = Z.w.states[Z.w.states.length - 1].E, h = Math.min(0.05 * HBAR / Emax, 0.025 * HPL / Math.max(f.hw, 1e-3));
+    let steps = Math.ceil((t1 - Z.t) / h); if (steps <= 0) return; if (steps > 4000) { steps = 4000; t1 = Z.t + steps * h; }
+    const dt = (t1 - Z.t) / steps;
+    for (let k = 0; k < steps; k++) { Z.tmp = Q.driveStep(Z.w, Z.cr, Z.ci, Z.t, dt, f.F, f.hw, f.pol, Z.tmp); Z.t += dt; }
+    Z.ref = Z.t; Z.refR.set(Z.cr); Z.refI.set(Z.ci);
+  }
+  function setField(on) {
+    exactAt(Z.t); Z.ref = Z.t; Z.refR.set(Z.cr); Z.refI.set(Z.ci); Z.field.on = on; $('q2Field').checked = on; syncField();
+  }
+  function sample(force) {
+    const n = Z.w.states.length, P = new Float64Array(n); for (let j = 0; j < n; j++) P[j] = Z.cr[j] ** 2 + Z.ci[j] ** 2;
+    const last = Z.hist[Z.hist.length - 1];
+    if (force || !last || Z.t - last.t > 0.002 * histSpan()) Z.hist.push({ t: Z.t, P });
+    while (Z.hist.length > 1 && Z.t - Z.hist[1].t > histSpan()) Z.hist.shift();
+    const xm = Q.dipoleMean(Z.w.X, Z.cr, Z.ci), ym = Q.dipoleMean(Z.w.Y, Z.cr, Z.ci);
+    const lt = Z.trail[Z.trail.length - 1]; if (force || !lt || Math.hypot(lt[0] - xm, lt[1] - ym) > ext / 200) Z.trail.push([xm, ym]);
+    if (Z.trail.length > 600) Z.trail.shift();
+  }
+  function histSpan() { const f = Z.field; if (f.on && f.to >= 0) { const r = rabiT(); if (r) return Math.min(3 * r, 4000); } return Math.max(40, 8 * Z.speed); }
+
+  // ---------- drawing ----------
+  function tokens() {
+    const cs = getComputedStyle(root), g = (k) => cs.getPropertyValue(k).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), equi: g('--equi'), accent: g('--accent'), pot: g('--pot'), potEdge: g('--pot-edge'), pos: g('--pos'), mono: g('--font-mono') || 'monospace' };
+    T.dark = cs.colorScheme.includes('dark'); const c = document.createElement('canvas').getContext('2d'); c.fillStyle = T.canvas; const hx = c.fillStyle;
+    T.bg = hx.startsWith('#') ? [parseInt(hx.slice(1, 3), 16), parseInt(hx.slice(3, 5), 16), parseInt(hx.slice(5, 7), 16)] : [16, 22, 30];
+  }
+  const ps = () => (root.getAttribute('data-projector') === 'on' ? 1.45 : 1);
+  function hsl(h, s, l) { const a = s * Math.min(l, 1 - l), f = (n) => { const k = (n + h * 12) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return [255 * f(0), 255 * f(8), 255 * f(4)]; }
+  const HUE = []; function hues() { HUE.length = 0; for (let k = 0; k < 360; k++) HUE.push(hsl(k / 360, T.dark ? 0.78 : 0.82, T.dark ? 0.6 : 0.5)); }
+  let psiR = null, psiI = null;
+  function compose() {
+    const n = Z.w.states.length, GG = G * G; if (!psiR || psiR.length !== GG) { psiR = new Float32Array(GG); psiI = new Float32Array(GG); }
+    psiR.fill(0); psiI.fill(0);
+    for (let m = 0; m < n; m++) {
+      const a = Z.cr[m], b = Z.ci[m]; if (a * a + b * b < 1e-8) continue;
+      const [re, im] = basis[m];
+      if (im) for (let q = 0; q < GG; q++) { psiR[q] += a * re[q] - b * im[q]; psiI[q] += a * im[q] + b * re[q]; }
+      else for (let q = 0; q < GG; q++) { psiR[q] += a * re[q]; psiI[q] += b * re[q]; }
+    }
+    let mx = 0; for (let q = 0; q < GG; q++) { const r = psiR[q] * psiR[q] + psiI[q] * psiI[q]; if (r > mx) mx = r; }
+    Z.rhoMax = Math.max(mx, Z.rhoMax * (Z.running ? 0.995 : 1), 1e-12);
+  }
+  function paintImage() {
+    if (!imgC) { imgC = document.createElement('canvas'); }
+    if (imgC.width !== G) { imgC.width = G; imgC.height = G; img = imgC.getContext('2d').createImageData(G, G); }
+    const d = img.data, bg = T.bg, ink = T.dark ? [227, 232, 239] : [23, 32, 43];
+    for (let q = 0; q < G * G; q++) {
+      const r = psiR[q], i = psiI[q], a = Math.min(1, (r * r + i * i) / Z.rhoMax);
+      let c = ink; if (Z.phase) { let h = Math.atan2(i, r) * 180 / Math.PI; if (h < 0) h += 360; c = HUE[Math.round(h) % 360]; }
+      const k = 4 * q; d[k] = bg[0] + (c[0] - bg[0]) * a; d[k + 1] = bg[1] + (c[1] - bg[1]) * a; d[k + 2] = bg[2] + (c[2] - bg[2]) * a; d[k + 3] = 255;
+    }
+    imgC.getContext('2d').putImageData(img, 0, 0);
+  }
+  const C = {};
+  function fit(key) {
+    const el = C[key].el, r = el.parentElement.getBoundingClientRect(); dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    if (el.width !== Math.round(w * dpr) || el.height !== Math.round(h * dpr)) { el.width = Math.round(w * dpr); el.height = Math.round(h * dpr); el.style.width = w + 'px'; el.style.height = h + 'px'; }
+    C[key].W = w; C[key].H = h; const ctx = C[key].ctx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return ctx;
+  }
+  let picGeom = null;
+  function drawPic() {
+    const ctx = fit('pic'), { W, H } = C.pic, s = ps(), in3 = use3();
+    ctx.clearRect(0, 0, W, H); if (!in3) { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const top = (W < 640 ? 130 : 48) * s, bot = H - 30 * s, left = 46 * s, right = W - 14 * s, side = Math.max(40, Math.min(right - left, bot - top));
+    const x0 = left + (right - left - side) / 2, y0 = top + (bot - top - side) / 2, sc = side / (2 * ext);
+    picGeom = { x0, y0, side, sc };
+    const PX = (x) => x0 + (x + ext) * sc, PY = (y) => y0 + (ext - y) * sc;
+    if (in3) { draw3(); }
+    else {
+      paintImage(); ctx.imageSmoothingEnabled = true; ctx.drawImage(imgC, x0, y0, side, side);
+      // the well
+      ctx.strokeStyle = T.potEdge; ctx.lineWidth = 1.5 * s; ctx.setLineDash([]);
+      if (Z.kind === 'box') { ctx.strokeRect(PX(-Z.p.Lx / 2), PY(Z.p.Ly / 2), Z.p.Lx * sc, Z.p.Ly * sc); ctx.fillStyle = T.pot; ctx.globalAlpha = 0.5;
+        ctx.beginPath(); ctx.rect(x0, y0, side, side); ctx.rect(PX(Z.p.Lx / 2), PY(Z.p.Ly / 2), -Z.p.Lx * sc, Z.p.Ly * sc); ctx.fill('evenodd'); ctx.globalAlpha = 1; }
+      else if (Z.kind === 'circle') { ctx.fillStyle = T.pot; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.rect(x0, y0, side, side); ctx.arc(PX(0), PY(0), Z.p.R * sc, 0, 2 * Math.PI, true); ctx.fill(); ctx.globalAlpha = 1;
+        ctx.beginPath(); ctx.arc(PX(0), PY(0), Z.p.R * sc, 0, 2 * Math.PI); ctx.stroke(); }
+      else if (Z.kind === 'lattice') { const c = Z.p.chain, per = Z.p.a + Z.p.g; ctx.lineWidth = 1 * s;
+        for (let i = 0; i < Z.p.nw; i++) for (let j = 0; j < Z.p.nw; j++) { const xa = -c.L / 2 + Z.p.g + i * per, ya = -c.L / 2 + Z.p.g + j * per; ctx.strokeRect(PX(xa), PY(ya + Z.p.a), Z.p.a * sc, Z.p.a * sc); }
+        ctx.lineWidth = 1.5 * s; ctx.strokeRect(PX(-c.L / 2), PY(c.L / 2), c.L * sc, c.L * sc); }
+      else { // oscillator: equipotentials V = ⟨E⟩ (the classical turning curve) dashed, and 1, 2, 3 ħω lighter
+        const E = meanE(); ctx.setLineDash([5 * s, 4 * s]);
+        const ell = (e) => { const ax = Math.sqrt(2 * e / Z.p.hx) * Q.oscLen(Z.p.hx), ay = Math.sqrt(2 * e / Z.p.hy) * Q.oscLen(Z.p.hy); ctx.beginPath(); ctx.ellipse(PX(0), PY(0), ax * sc, ay * sc, 0, 0, 2 * Math.PI); ctx.stroke(); };
+        ctx.globalAlpha = 0.9; ell(E); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, side, side);
+    }
+    // center and its path
+    if (Z.center && !in3) {
+      ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.2 * s; ctx.beginPath();
+      Z.trail.forEach(([x, y], k) => (k ? ctx.lineTo(PX(x), PY(y)) : ctx.moveTo(PX(x), PY(y)))); ctx.stroke(); ctx.globalAlpha = 1;
+      const [x, y] = Z.trail[Z.trail.length - 1] || [0, 0], X = PX(x), Y = PY(y), r = 6 * s;
+      ctx.lineWidth = 2 * s; ctx.strokeStyle = T.canvas; ctx.beginPath(); ctx.moveTo(X - r, Y); ctx.lineTo(X + r, Y); ctx.moveTo(X, Y - r); ctx.lineTo(X, Y + r); ctx.stroke();
+      ctx.lineWidth = 1.2 * s; ctx.strokeStyle = T.ink; ctx.stroke();
+    }
+    // axes
+    if (!in3) {
+      ctx.fillStyle = T.muted; ctx.font = `${10.5 * s}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      const st = nice(ext / 2); for (let v = -Math.floor(ext / st) * st; v <= ext + 1e-9; v += st) { const lab = fmt(v, st); ctx.fillText(lab, PX(v), y0 + side + 4 * s); }
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let v = -Math.floor(ext / st) * st; v <= ext + 1e-9; v += st) ctx.fillText(fmt(v, st), x0 - 5 * s, PY(v));
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('x (nm)', x0 + side + 4 * s > W - 40 * s ? x0 + side - 40 * s : x0 + side + 4 * s, y0 + side + 4 * s);
+      ctx.textBaseline = 'bottom'; ctx.fillText('y (nm)', x0 - 40 * s, y0 - 4 * s);
+    }
+    // title, field arrow, wheel
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * s}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const ty = W < 640 ? 96 * s : 10 * s;
+    ctx.fillText(in3 ? (W < 560 ? '|ψ|² as height' : '|ψ|² as height, color is the phase of ψ') : (W < 560 ? 'brightness |ψ|², color phase' : 'brightness: |ψ|² · color: the phase of ψ'), 12 * s, ty);
+    if (!in3) wheel(ctx, W - 32 * s, ty + 14 * s, s);
+    if (Z.field.on) {
+      const f = Math.cos(Z.field.hw / HBAR * Z.t), L = 26 * s * f, cx = W - 32 * s, cy = ty + 52 * s;
+      ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 2 * s; ctx.beginPath();
+      if (Z.field.pol === 'x') { ctx.moveTo(cx - L, cy); ctx.lineTo(cx + L, cy); } else { ctx.moveTo(cx, cy + L); ctx.lineTo(cx, cy - L); } ctx.stroke();
+      if (Math.abs(L) > 4 * s) { const dir = Math.sign(L), hx = Z.field.pol === 'x' ? cx + L : cx, hy = Z.field.pol === 'x' ? cy : cy - L; ctx.beginPath();
+        if (Z.field.pol === 'x') { ctx.moveTo(hx, hy); ctx.lineTo(hx - dir * 6 * s, hy - 4 * s); ctx.lineTo(hx - dir * 6 * s, hy + 4 * s); } else { ctx.moveTo(hx, hy); ctx.lineTo(hx - 4 * s, hy + dir * 6 * s); ctx.lineTo(hx + 4 * s, hy + dir * 6 * s); } ctx.fill(); }
+      ctx.font = `${10 * s}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('field ℰ', cx, cy + 30 * s);
+    }
+  }
+  function wheel(ctx, cx, cy, s) {
+    const r = 11 * s;
+    for (let k = 0; k < 72; k++) { const a0 = k / 72 * 2 * Math.PI, a1 = (k + 1.15) / 72 * 2 * Math.PI, c = HUE[(k * 5) % 360]; ctx.fillStyle = `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, -a1, -a0); ctx.closePath(); ctx.fill(); }
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+  }
+  function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
+  function fmt(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return (Math.abs(v) < st / 1e6 ? 0 : v).toFixed(d).replace('-', '−'); }
+
+  // level diagram: one short line per state, degenerate states side by side; bold when in the state, a bar for its probability
+  let levHits = [];
+  function groups() {
+    const st = Z.w.states, out = [];
+    st.forEach((s, j) => { const g = out[out.length - 1]; if (g && Math.abs(g.E - s.E) < 1e-6 * Math.max(1e-3, s.E)) g.js.push(j); else out.push({ E: s.E, js: [j] }); });
+    return out;
+  }
+  function levTop() { const g = groups(), k = Math.min(g.length - 1, Z.kind === 'lattice' ? g.length - 1 : 13); let top = g[k].E;
+    for (const j of Z.sel) top = Math.max(top, Z.w.states[j].E); return top; }
+  function drawLev() {
+    const ctx = fit('lev'), { W, H } = C.lev, s = ps(); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const top = 50 * s, bot = H - 22 * s, L = 46 * s, R = W - 10 * s, Et = levTop() * 1.06, Eb = Z.kind === 'lattice' ? Z.w.states[0].E * 0.9 : 0;
+    const Y = (e) => bot - (e - Eb) / (Et - Eb) * (bot - top);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * s}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(Z.kind === 'circle' ? 'levels (m, k)' : 'levels (nx, ny)', 10 * s, 10 * s);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * s}px ${T.mono}`; ctx.fillText(W < 300 ? 'tap to pick' : 'tap a level to add or drop it', 10 * s, 24 * s);
+    // energy axis
+    const st = nice((Et - Eb) / 5); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    for (let v = Math.ceil(Eb / st) * st; v <= Et + 1e-9; v += st) { const y = Y(v); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.fillText(fmt(v, st), L - 5 * s, y); }
+    ctx.save(); ctx.translate(12 * s, (top + bot) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('E (eV)', 0, -2 * s); ctx.restore();
+    levHits = [];
+    const P = Z.cr.map((a, j) => a * a + Z.ci[j] * Z.ci[j]), gs = groups(), lab = W > 240;
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top - 8 * s, R - L, bot - top + 16 * s); ctx.clip();
+    let lastLab = Infinity;   /* a label only where it clears the one below */
+    for (const g of gs) {
+      const y = Y(g.E); if (y < top - 6 * s) continue;
+      const n = g.js.length, span = Math.min((R - L) * (lab ? 0.55 : 0.9), n * 34 * s), w = span / n, xa = L + 10 * s;
+      g.js.forEach((j, k) => {
+        const a = xa + k * w + 2 * s, b = xa + (k + 1) * w - 2 * s, on = Z.sel.includes(j);
+        ctx.strokeStyle = on ? T.equi : T.muted; ctx.lineWidth = (on ? 3 : 1.3) * s; ctx.beginPath(); ctx.moveTo(a, y); ctx.lineTo(b, y); ctx.stroke();
+        if (P[j] > 1e-4) { ctx.fillStyle = T.accent; ctx.fillRect(a, y - 6 * s, Math.max(1, (b - a) * P[j]), 3.5 * s); }   /* a bar as long as |cₙ|² */
+        levHits.push({ j, a, b, y });
+      });
+      if (lab) { ctx.fillStyle = g.js.some((j) => Z.sel.includes(j)) ? T.ink : T.muted; ctx.font = `${9.5 * s}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        const txt = g.js.length > 3 ? g.js.slice(0, 2).map((j) => Z.w.states[j].label).join(' ') + ' …' : g.js.map((j) => Z.w.states[j].label).join(' ');
+        if (y < lastLab - 10 * s) { ctx.fillText(txt, xa + span + 6 * s, y); lastLab = y; } }
+    }
+    // the photon: an arrow ħω long from the lowest picked state
+    if (Z.field.on && Z.sel.length) {
+      const e0 = Z.w.states[Z.sel[0]].E, y0 = Y(e0), y1 = Y(e0 + Z.field.hw), x = R - (lab ? 20 : 8) * s;
+      ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1 + 6 * s); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x - 4 * s, y1 + 7 * s); ctx.lineTo(x + 4 * s, y1 + 7 * s); ctx.fill();
+      ctx.font = `${9.5 * s}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('ħω', x - 6 * s, (y0 + y1) / 2);
+    }
+    ctx.restore();
+  }
+  const PAL = ['#d9622b', '#2b8fd9', '#3aa65a', '#b04fc4', '#c9a227', '#5b6cd9'], PALD = ['#ff8a57', '#69b4ff', '#6fd18b', '#d488e6', '#e8c65a', '#97a3ff'];
+  function drawPop() {
+    const ctx = fit('pop'), { W, H } = C.pop, s = ps(); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 46 * s, R = W - (W > 420 ? 96 : 12) * s, top = 24 * s, bot = H - 20 * s; if (bot - top < 20) return;
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * s}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('probability of each state |cₙ|² against time', 10 * s, 6 * s);
+    const h = Z.hist; if (!h.length) return;
+    const t1 = Math.max(Z.t, h[0].t + 1e-9), t0 = Math.max(h[0].t, t1 - histSpan()), X = (t) => L + (t - t0) / Math.max(1e-9, t1 - t0) * (R - L), Y = (p) => bot - p * (bot - top);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * s}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const p of [0, 0.5, 1]) { ctx.beginPath(); ctx.moveTo(L, Y(p)); ctx.lineTo(R, Y(p)); ctx.stroke(); ctx.fillText(String(p), L - 5 * s, Y(p)); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; const st = nice(Math.max(1e-6, t1 - t0) / 4);
+    for (let v = Math.ceil(t0 / st) * st; v <= t1 + 1e-9; v += st) if (X(v) < R - 44 * s) ctx.fillText(fmt(v, st), X(v), bot + 3 * s);   /* the last tick gives way to the axis name */
+    ctx.textAlign = 'right'; ctx.fillText('t (fs)', R, bot + 3 * s);
+    // the six states that reach the highest probability in the window
+    const n = Z.w.states.length, best = new Float64Array(n); for (const e of h) for (let j = 0; j < n; j++) if (e.P[j] > best[j]) best[j] = e.P[j];
+    const pick = [...best.keys()].filter((j) => best[j] > 0.005).sort((a, b) => best[b] - best[a]).slice(0, 6).sort((a, b) => a - b), pal = T.dark ? PALD : PAL;
+    pick.forEach((j, k) => {
+      ctx.strokeStyle = pal[k]; ctx.lineWidth = 1.8 * s; ctx.beginPath(); let first = true;
+      for (const e of h) { if (e.t < t0) continue; const x = X(e.t), y = Y(e.P[j]); if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y); }
+      ctx.stroke();
+      if (W > 420) { ctx.fillStyle = pal[k]; ctx.font = `${10 * s}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(Z.w.states[j].label, R + 8 * s, top + 4 * s + k * 13 * s); }
+    });
+  }
+  function draw() { if (!on2 || !Z.w) return; compose(); drawPic(); drawLev(); drawPop(); }
+
+  // ---------- 3D: |ψ|² as a height over the floor of the well ----------
+  const G3 = { st: null, view: null, o: { th: -1.0, ph: 0.95, zoom: 1 }, mesh: null, wall: null, key: '', n: 0 };
+  const use3 = () => !!(G3.view && G3.view.is3d() && G3.st);
+  function init3() {
+    const st = VD3K.stage($('q2Pic'), { before: $('q2Can'), fov: 30, near: 0.05, far: 400 }); if (!st) return false;
+    G3.st = st; G3.n = 0;
+    G3.mesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide })); G3.mesh.frustumCulled = false; st.scene.add(G3.mesh);
+    G3.wall = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x888888 })); st.scene.add(G3.wall);
+    st.onTheme(() => G3.wall.material.color.set(T.potEdge || '#6b7786'));
+    st.orbit(st.el, G3.o, () => draw(), { phMin: 0.15, phMax: 1.5, zMin: 0.4, zMax: 3 });
+    return true;
+  }
+  function draw3() {
+    const st = G3.st, { W, H } = C.pic, n = Math.min(G, 96), step = G / n;
+    st.size(W, H);
+    if (G3.n !== n) { G3.n = n; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * n * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * n * 3), 3));
+      const idx = []; for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) { const a = j * n + i; idx.push(a, a + 1, a + n, a + 1, a + n + 1, a + n); } g.setIndex(idx); G3.mesh.geometry.dispose(); G3.mesh.geometry = g; G3.key = ''; }
+    const pos = G3.mesh.geometry.attributes.position.array, col = G3.mesh.geometry.attributes.color.array, A = ext * 0.9, bgc = T.dark ? [44, 54, 68] : [206, 213, 222], ink = T.dark ? [227, 232, 239] : [23, 32, 43];   /* the floor a little off the page color, so it reads as a surface */
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const q = Math.min(G - 1, Math.round(j * step)) * G + Math.min(G - 1, Math.round(i * step)), r = psiR[q], m = psiI[q], a = Math.min(1, (r * r + m * m) / Z.rhoMax), k = 3 * (j * n + i);
+      pos[k] = -ext + 2 * ext * i / (n - 1); pos[k + 1] = ext - 2 * ext * j / (n - 1); pos[k + 2] = a * A;
+      let c = ink; if (Z.phase) { let h = Math.atan2(m, r) * 180 / Math.PI; if (h < 0) h += 360; c = HUE[Math.round(h) % 360]; }
+      const w = Math.sqrt(a); col[k] = (bgc[0] + (c[0] - bgc[0]) * w) / 255; col[k + 1] = (bgc[1] + (c[1] - bgc[1]) * w) / 255; col[k + 2] = (bgc[2] + (c[2] - bgc[2]) * w) / 255;
+    }
+    G3.mesh.geometry.attributes.position.needsUpdate = true; G3.mesh.geometry.attributes.color.needsUpdate = true;
+    const key = Z.kind + JSON.stringify([Z.p.Lx, Z.p.Ly, Z.p.R, Z.p.hx, Z.p.hy, Z.p.nw, Z.p.a, Z.p.g, ext]);
+    if (key !== G3.key) {
+      G3.key = key; const P = [], hz = A * 0.5, seg = (a, b, c, d) => P.push(a, b, 0, c, d, 0, a, b, hz, c, d, hz, a, b, 0, a, b, hz);
+      if (Z.kind === 'box') { const x = Z.p.Lx / 2, y = Z.p.Ly / 2; seg(-x, -y, x, -y); seg(x, -y, x, y); seg(x, y, -x, y); seg(-x, y, -x, -y); }
+      else if (Z.kind === 'circle') { const K = 64; for (let k = 0; k < K; k++) { const a = 2 * Math.PI * k / K, b = 2 * Math.PI * (k + 1) / K; seg(Z.p.R * Math.cos(a), Z.p.R * Math.sin(a), Z.p.R * Math.cos(b), Z.p.R * Math.sin(b)); } }
+      else if (Z.kind === 'lattice') { const c = Z.p.chain, per = Z.p.a + Z.p.g; for (let i = 0; i < Z.p.nw; i++) for (let j = 0; j < Z.p.nw; j++) { const xa = -c.L / 2 + Z.p.g + i * per, ya = -c.L / 2 + Z.p.g + j * per, xb = xa + Z.p.a, yb = ya + Z.p.a;
+        P.push(xa, ya, 0, xb, ya, 0, xb, ya, 0, xb, yb, 0, xb, yb, 0, xa, yb, 0, xa, yb, 0, xa, ya, 0); } }
+      else { const K = 64, e = 3 * Math.min(Z.p.hx, Z.p.hy), ax = Math.sqrt(2 * e / Z.p.hx) * Q.oscLen(Z.p.hx), ay = Math.sqrt(2 * e / Z.p.hy) * Q.oscLen(Z.p.hy);
+        for (let k = 0; k < K; k++) { const a = 2 * Math.PI * k / K, b = 2 * Math.PI * (k + 1) / K; P.push(ax * Math.cos(a), ay * Math.sin(a), 0, ax * Math.cos(b), ay * Math.sin(b), 0); } }
+      P.push(-ext, -ext, 0, ext, -ext, 0, ext, -ext, 0, ext, ext, 0, ext, ext, 0, -ext, ext, 0, -ext, ext, 0, -ext, -ext, 0);
+      G3.wall.geometry.dispose(); G3.wall.geometry = new THREE.BufferGeometry(); G3.wall.geometry.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
+    }
+    st.place(G3.o, new THREE.Vector3(0, 0, A * 0.25), ext * 5 * Math.max(1, 0.9 * H / W));
+    st.render();
+  }
+
+  // ---------- readouts ----------
+  const f4 = (v) => (Math.abs(v) < 5e-5 ? 0 : v).toFixed(4).replace('-', '−'), f3 = (v) => (Math.abs(v) < 5e-4 ? 0 : v).toFixed(3).replace('-', '−');
+  function meanE() { let e = 0; Z.w.states.forEach((s, j) => { e += (Z.cr[j] ** 2 + Z.ci[j] ** 2) * s.E; }); return e; }
+  function rabiT() { const f = Z.field; if (f.to < 0 || !Z.sel.length) return null; const x = Q.matEl(f.pol === 'y' ? Z.w.Y : Z.w.X, f.to, Z.sel[0]); return x && f.F ? HPL / (f.F * x) : null; }
+  function readouts() {
+    if (!Z.w) return;
+    const P = Z.cr.map((a, j) => a * a + Z.ci[j] * Z.ci[j]); let n = 0, e = 0, e2 = 0, lz = 0;
+    Z.w.states.forEach((s, j) => { n += P[j]; e += P[j] * s.E; e2 += P[j] * s.E * s.E; if (Z.kind === 'circle') lz += P[j] * s.m; });
+    e /= n; e2 /= n;
+    $('q2E').textContent = f4(e) + ' eV'; $('q2dE').textContent = f4(Math.sqrt(Math.max(0, e2 - e * e))) + ' eV';
+    $('q2X').textContent = f3(Q.dipoleMean(Z.w.X, Z.cr, Z.ci)) + ' nm'; $('q2Y').textContent = f3(Q.dipoleMean(Z.w.Y, Z.cr, Z.ci)) + ' nm';
+    $('q2LzRow').hidden = Z.kind !== 'circle'; $('q2Lz').textContent = f3(lz / n) + ' ħ';
+    $('q2N').textContent = n.toFixed(6); $('tclock2').textContent = 't = ' + Z.t.toFixed(1) + ' fs';
+    const Es = [...new Set(Z.sel.map((j) => +Z.w.states[j].E.toFixed(9)))];
+    $('q2Beat').textContent = !Z.field.on && Es.length === 2 ? (HPL / Math.abs(Es[1] - Es[0])).toFixed(2) + ' fs' : '—';
+    // the chosen states with their energies and probabilities now
+    const rows = [...new Set(Z.sel.concat([...P.keys()].filter((j) => P[j] > 0.01)))].sort((a, b) => a - b).slice(0, 10);
+    $('q2Table').innerHTML = '<tr><th>' + (Z.kind === 'circle' ? '(m, k)' : '(nx, ny)') + '</th><th>E (eV)</th><th>|c|²</th></tr>' +
+      rows.map((j) => `<tr><td>${Z.w.states[j].label}</td><td>${f4(Z.w.states[j].E)}</td><td>${P[j].toFixed(3)}</td></tr>`).join('');
+    // the field
+    const f = Z.field, top = Z.w.states.length, edge = P.slice(Math.max(0, top - 6)).reduce((a, b) => a + b, 0);
+    $('q2Edge').textContent = f.on ? edge.toExponential(1) : '—';
+    $('q2EdgeNote').hidden = !(f.on && edge > 0.01);
+    if (f.to >= 0 && Z.sel.length) {
+      const i = Z.sel[0], dE = Z.w.states[f.to].E - Z.w.states[i].E, x = Q.matEl(f.pol === 'y' ? Z.w.Y : Z.w.X, f.to, i);
+      $('q2Tr').textContent = Z.w.states[i].label + ' → ' + Z.w.states[f.to].label; $('q2dEtr').textContent = f4(dE) + ' eV';
+      $('q2Mx').textContent = x ? f4(x) + ' nm' : '0 (not linked)'; $('q2Det').textContent = f4(f.hw - dE) + ' eV';
+      const r = rabiT(); $('q2Rabi').textContent = r ? r.toFixed(0) + ' fs' : '—';
+    } else for (const id of ['q2Tr', 'q2dEtr', 'q2Mx', 'q2Det', 'q2Rabi']) $(id).textContent = '—';
+  }
+
+  // ---------- controls ----------
+  const SL = {
+    box: [['Lx', 'Width Lx', 1, 3, 0.01, ' nm'], ['Ly', 'Height Ly', 1, 3, 0.01, ' nm']],
+    circle: [['R', 'Radius R', 0.6, 1.8, 0.01, ' nm']],
+    osc: [['hx', 'ħωx', 0.05, 0.4, 0.005, ' eV'], ['hy', 'ħωy', 0.05, 0.4, 0.005, ' eV']],
+    lattice: [['V0', 'Barrier height V₀', 0.1, 2, 0.01, ' eV'], ['g', 'Barrier width', 0.15, 0.8, 0.01, ' nm'], ['nw', 'Wells along each side', 2, 4, 1, '']]
+  };
+  function syncSliders() {
+    const defs = SL[Z.kind];
+    ['q2s1', 'q2s2', 'q2s3'].forEach((id, k) => {
+      const d = defs[k], row = $(id + 'Row'); row.hidden = !d; if (!d) return;
+      const el = $(id); el.dataset.key = d[0]; el.min = d[2]; el.max = d[3]; el.step = d[4]; el.value = Z.p[d[0]];
+      $(id + 'Lab').textContent = d[1]; $(id + 'Out').textContent = (+Z.p[d[0]]).toFixed(d[4] >= 1 ? 0 : d[4] < 0.01 ? 3 : 2) + d[5];
+    });
+    const H = { box: 'Hard walls: V = 0 inside, ψ = 0 on the walls.', circle: 'Hard wall at r = R.', osc: 'V = ½mωx²x² + ½mωy²y². The dashed curve is where V equals ⟨E⟩, the classical turning curve.',
+      lattice: 'V = V(x) + V(y), each a row of wells 1 nm wide between barriers, with hard walls outside. Where barriers cross, V is 2V₀. Each state is a product of two states of the row, found on a 0.01 nm grid.' };
+    $('q2PotHint').textContent = H[Z.kind];
+  }
+  function syncState() { readouts(); }
+  function syncTune() {
+    const sel = $('q2Tune'), f = Z.field, L = f.pol === 'y' ? Z.w.Y : Z.w.X, i = Z.sel.length ? Z.sel[0] : 0, opts = ['<option value="-1">Pick a level to tune to</option>'];
+    Z.w.states.forEach((s, j) => { if (j === i || s.E <= Z.w.states[i].E) return; const x = Q.matEl(L, j, i); if (!x || opts.length > 14) return;
+      opts.push(`<option value="${j}">${Z.w.states[i].label} → ${s.label}: ${(s.E - Z.w.states[i].E).toFixed(4)} eV</option>`); });
+    sel.innerHTML = opts.join(''); sel.value = String(f.to >= 0 && opts.some((o) => o.includes(`value="${f.to}"`)) ? f.to : -1);
+    if (sel.value === '-1') f.to = -1;
+  }
+  function syncField() {
+    const f = Z.field; $('q2Field').checked = f.on; $('q2hw').value = f.hw; $('q2hwOut').textContent = f.hw.toFixed(3) + ' eV'; $('q2F').value = f.F; $('q2FOut').textContent = f.F.toFixed(3) + ' V/nm';
+    for (const b of document.querySelectorAll('#q2Pol button')) b.setAttribute('aria-pressed', String(b.dataset.pol === f.pol));
+    $('q2FieldBody').classList.toggle('off', !f.on);
+  }
+  function applyPreset(name) {
+    const c = PRE[name]; Z.preset = name; Z.kind = c.kind; Z.p = Object.assign({}, c.p); Z.speed = c.speed;
+    Z.field = { on: false, pol: 'x', hw: 0.28, F: 0.03, to: -1 };
+    for (const b of document.querySelectorAll('#presets2 button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    $('presetHint2').textContent = c.hint;
+    Z.w = Q.wells2d(Z.kind, Object.assign({}, Z.p), M); Z.p = Z.w.p; buildBasis();
+    if (c.packet) setCoeffs(packetCoeffs(c.packet)); else setCoeffs(c.sel.map(([l, a, b]) => [idxOf(l), a, b]));
+    if (c.field) { Object.assign(Z.field, c.field); syncTune(); if (c.field.to) { Z.field.to = idxOf(c.field.to); Z.field.hw = +(Z.w.states[Z.field.to].E - Z.w.states[Z.sel[0]].E).toFixed(6); syncTune(); } setField(true); }
+    else { syncTune(); setField(false); }
+    syncSliders(); syncField(); setRunning(true); restart();
+  }
+  function toggleState(j) {
+    const s = new Set(Z.sel); if (s.has(j)) { if (s.size > 1) s.delete(j); } else s.add(j);
+    Z.preset = 'custom'; for (const b of document.querySelectorAll('#presets2 button')) b.setAttribute('aria-pressed', 'false');
+    setCoeffs([...s].sort((a, b) => a - b).map((k) => [k, 1, 0])); syncTune();
+  }
+  const playBtn = $('play2');
+  function setRunning(r) { Z.running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
+  playBtn.addEventListener('click', () => setRunning(!Z.running));
+  $('step2').addEventListener('click', () => { setRunning(false); stepTo(Z.t + Z.speed / 10); sample(); readouts(); draw(); });
+  $('reset2').addEventListener('click', () => { const on = Z.field.on; restart(); Z.field.on = on; syncField(); });
+  for (const b of document.querySelectorAll('#speed2 button')) b.addEventListener('click', () => { Z.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speed2 button')) o.setAttribute('aria-pressed', String(o === b)); });
+  for (const b of document.querySelectorAll('#presets2 button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  ['q2s1', 'q2s2', 'q2s3'].forEach((id) => $(id).addEventListener('input', (e) => {
+    const k = e.target.dataset.key; Z.p[k] = +e.target.value; delete Z.p.chain; Z.preset = 'custom';
+    for (const b of document.querySelectorAll('#presets2 button')) b.setAttribute('aria-pressed', 'false');
+    const tl = Z.field.to >= 0 ? Z.w.states[Z.field.to].label : null; build(true); if (tl) { Z.field.to = idxOf(tl); syncTune(); }
+    syncSliders();
+  }));
+  $('q2Field').addEventListener('change', (e) => setField(e.target.checked));
+  for (const b of document.querySelectorAll('#q2Pol button')) b.addEventListener('click', () => { exactAt(Z.t); Z.ref = Z.t; Z.refR.set(Z.cr); Z.refI.set(Z.ci); Z.field.pol = b.dataset.pol; Z.field.to = -1; syncTune(); syncField(); });
+  $('q2hw').addEventListener('input', (e) => { Z.field.hw = +e.target.value; syncField(); });
+  $('q2F').addEventListener('input', (e) => { Z.field.F = +e.target.value; syncField(); });
+  $('q2Tune').addEventListener('change', (e) => {
+    const j = +e.target.value; Z.field.to = j; if (j < 0) return;
+    Z.field.hw = +(Z.w.states[j].E - Z.w.states[Z.sel[0]].E).toFixed(6); syncField();
+    if (!Z.field.on) setField(true);
+  });
+  $('q2Phase').addEventListener('change', (e) => { Z.phase = e.target.checked; });
+  $('q2Center').addEventListener('change', (e) => { Z.center = e.target.checked; });
+  // levels: click or tap; digits on the picture pick the first nine
+  const lev = $('q2Lev');
+  const levAt = (ev) => { const r = lev.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; let best = null, bd = 10 * ps();
+    for (const h of levHits) { const d = Math.abs(h.y - y); if (d < bd && x >= h.a - 4 && x <= h.b + 4) { bd = d; best = h; } } return best; };
+  lev.addEventListener('pointerdown', (ev) => { const h = levAt(ev); if (h) { toggleState(h.j); ev.preventDefault(); } });
+  lev.addEventListener('pointermove', (ev) => { lev.style.cursor = levAt(ev) ? 'pointer' : 'default'; });
+  for (const el of [$('q2Can'), lev]) el.addEventListener('keydown', (e) => {
+    if (e.key === ' ') setRunning(!Z.running); else if (/^[1-9]$/.test(e.key)) { const j = +e.key - 1; if (j < Z.w.states.length) toggleState(j); } else return;
+    e.preventDefault();
+  });
+
+  // ---------- switching between 1D and 2D ----------
+  const LEDE = { '1d': null, '2d': 'An electron in two dimensions: a box, a round box, an oscillator or a lattice of wells. Pick its stationary states, mix them and watch them beat, or shine light on it and drive it from one level to another.' };
+  const lede = document.querySelector('.bar p'), units = document.querySelector('.bar .units'); LEDE['1d'] = lede.textContent; const U1 = units.textContent;
+  function setDim(d) {
+    const two = d === '2d'; on2 = two; window.__qw2d = two; root.setAttribute('data-qd', d);
+    for (const b of document.querySelectorAll('#qdSeg button')) b.setAttribute('aria-pressed', String(b.dataset.qd === d));
+    lede.textContent = LEDE[d]; units.textContent = two ? 'x, y in nm · E in eV · t in fs · field ℰ in V/nm' : U1;
+    if (two) { if (window.__qw) window.__qw.setRunning(false); if (!Z.w) applyPreset('box'); setRunning(true); requestAnimationFrame(() => { window.dispatchEvent(new Event('resize')); resize(); }); }
+    else { setRunning(false); window.dispatchEvent(new Event('resize')); }
+  }
+  for (const b of document.querySelectorAll('#qdSeg button')) b.addEventListener('click', () => setDim(b.dataset.qd));
+  function resize() { draw(); }
+
+  C.pic = { el: $('q2Can') }; C.lev = { el: lev }; C.pop = { el: $('q2Pop') };
+  for (const k in C) C[k].ctx = C[k].el.getContext('2d');
+  const ro = new ResizeObserver(() => { if (on2) draw(); }); for (const k in C) ro.observe(C[k].el.parentElement);
+  const retheme = () => { tokens(); hues(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  tokens(); hues();
+
+  let last = performance.now(), lastRead = 0;
+  function loop(now) {
+    const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+    if (on2) {
+      if (Z.running && dtr > 0) { stepTo(Z.t + Z.speed * Z.mult * dtr); sample(); }
+      draw();
+      if (now - lastRead > 140) { readouts(); lastRead = now; }
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  if (window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg2', init: init3, change: () => draw(), status: () => {}, start: 'flat' });
+  { const q = new URLSearchParams(location.search).get('setup'); if (PRE[q]) { setDim('2d'); applyPreset(q); } }
+  window.__qw2 = { Z, applyPreset, setDim, toggleState, setField, stepTo, get basis() { return basis; }, get ext() { return ext; } };
+})();
+</script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
-(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#ePane"), q("#wPane"), { key: 'wave', label: 'Divider between the energy picture and the wave function' }); })();</script>
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#ePane"), q("#wPane"), { key: 'wave', label: 'Divider between the energy picture and the wave function' });
+  VD.splitPanes(q("#q2Pic"), q("#q2LevBox"), { key: 'wells2d', label: 'Divider between the 2D picture and the energy levels' }); })();</script>
 </body>
 </html>

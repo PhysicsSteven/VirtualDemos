@@ -81,6 +81,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Square well.</strong> With <strong>Walls</strong> on <strong>Infinite</strong>, it starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the <strong>n=2</strong> level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click <strong>n=2</strong> again to bring the sloshing back.</li>
 <li><strong>Measure x.</strong> In the well, press <strong>Pause</strong> and then <strong>Measure x</strong> twice; press <strong>Play</strong> and measure again. Press <strong>Reset</strong> to return to the prepared state, then <strong>Measure 200 copies</strong>, and let the histogram build up |ψ|² (Q7).</li>
 <li><strong>Oscillator</strong> and <strong>Double well</strong>. The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.</li>
+<li><strong>2D wells</strong> (upper level; switch with <strong>1D packets | 2D wells</strong> above the setups). <strong>Square box</strong> opens in (1,1) with (2,1): the lump sloshes side to side every 14.66 fs, while (1,2) sits at the same 0.4700 eV as (2,1). <strong>Round box</strong> mixes m = 0 and m = 1, so the lump goes round the wall every 17.57 fs and ⟨Lz⟩ reads 0.500 ħ. <strong>Light drives a transition</strong> shows Rabi oscillation: 0.03 V/nm along x at 0.2820 eV takes (1,1) fully to (2,1) and back in 383 fs; switch the light to <strong>along y</strong> and nothing happens (Q8). <strong>Selection rule</strong> puts the oscillator's ground state in light at 2ħω, which it cannot absorb.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: an electron with 0.6 eV of kinetic energy meets a step up of 0.4 eV. A classical particle would always continue, slower. Will the quantum electron always continue? What changes if its energy is below 0.4 eV?</p></div>
@@ -96,6 +97,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q6.</strong> In <strong>Free particle</strong>, Δx grows steadily while Δp does not change. Explain the spreading using the momentum components of the packet. In <strong>Barrier</strong>, after the split, the readout shows Δx·Δp near 50 ħ. Does that violate the uncertainty principle? What does it tell you about the state?</p></div>
 
 <div class="q"><p><strong>Q7.</strong> Pause the motion, press <strong>Measure x</strong> on a state in the well, then press it again. Then try the same with the motion running. Compare the two results with each other, and with what <strong>Measure 200 copies</strong> shows. What does one measurement tell you about |ψ|², and what do 200 copies tell you?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> (Upper level.) In <strong>Light drives a transition</strong>, light polarized along x at 0.2820 eV moves the electron from (1,1) to (2,1) and back. Using ⟨m|x|n⟩ for a 1D box, explain why x polarized light can reach (2,1) but not (1,2), although both have the same energy, and why it can never reach (3,1). Predict the Rabi period for ℰ = 0.03 V/nm and check it with the readout.</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Reflection only happens when E &lt; V₀."</strong> Waves reflect at any sudden change in potential; at a step, E &gt; V₀ still gives R &gt; 0.</li>
@@ -110,7 +113,12 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Scattering setups have absorbing layers just beyond the view; probability absorbed there is counted in R or T, so <strong>Total probability</strong> stays 1. All other readouts (⟨x⟩, Δx, ⟨p⟩, Δp, ⟨E⟩) use only the part still on the grid.</li>
 <li>The launched packet is ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x), with Δx = σ and Δp = ħ/2σ at launch. <strong>Plane wave T(E₀)</strong> comes from transfer matrices (for the single barrier, T = [1 + V₀² sinh²(κa)/4E(V₀ − E)]⁻¹); <strong>T averaged over packet</strong> averages T(E) over the packet's spread of k.</li>
 <li>Wells have hard walls at the edges of the grid. Their levels come from diagonalizing the same finite difference Hamiltonian, which is why the infinite well and oscillator tables agree with n²π²ħ²/2mL² and (n + ½)ħω to three or four decimals rather than exactly.</li>
-<li><strong>Measure x</strong> draws one position from |ψ|² and replaces ψ with a narrow packet there, with zero mean momentum, to stand in for a detector of finite resolution. <strong>Measure 200 copies</strong> samples 200 positions without disturbing ψ.</li>
+<li>
+<p><strong>Measure x</strong> draws one position from |ψ|² and replaces ψ with a narrow packet there, with zero mean momentum, to stand in for a detector of finite resolution. <strong>Measure 200 copies</strong> samples 200 positions without disturbing ψ.</p>
+</li>
+<li>
+<p><strong>2D wells</strong> use exact states: the box's sin(nxπ…)sin(nyπ…), the round box's J_m(j r/R) e^(imφ) (Bessel zeros j found numerically to 1e−12), the oscillator's Hermite functions, and for the lattice products of the states of one row of wells (the 1D solver above on a 0.01 nm grid; V(x) + V(y) separates exactly). Without light each cₙ turns as e^(−iEₙt/ħ). With light the electron feels eℰx cos ωt, and the coefficients of the 35 or 36 lowest states are stepped by fourth order Runge–Kutta (step below ħ/20E_top), so the Rabi period comes out within a percent of the two level value h/(eℰ|⟨f|x|i⟩|). Left out and said on the page: spontaneous emission, the light's magnetic field, and its variation across the well (dipole approximation).</p>
+</li>
 </ul>
 <h2>Going further</h2>
 <ul>
