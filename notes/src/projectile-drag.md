@@ -26,6 +26,7 @@ For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 
 5. **Shot put.** Drag hardly matters (v₀/v_t = 0.09), yet the best angle is 42.4° in vacuum, because the ball leaves the hand 2 m up (Q5).
 6. **Denver** (if time allows). Switch the air from **Sea level** to **Denver** with the baseball and predict the change before launching (Q6).
 7. **Many launches.** Open **Many launches** with the baseball at 40 m/s and 45°, an angle spread of 1° and a speed spread of 1%, and fire 1000. With air resistance Off the histogram centers on 163 m with a spread of about 3.2 m, as the first order estimate 2σ_v R = 3.26 m predicts (the angle spread barely matters at 45°, only pulling the mean down slightly). With air On the mean is 94.8 m and the spread about 1.2 m. Ask why the angle spread matters so much more at 30°.
+8. **Monkey and hunter.** Open **Monkey and hunter** (target 40 m away, 20 m up), switch Air resistance Off, press **Aim straight at the target** (26.57°) and launch at 40 m/s: the ball reaches the monkey's line at 1.118 s, both at 13.87 m, a hit. Ask what changes at 20 m/s (still a hit, lower down) and at 12 m/s (the monkey lands first). Then turn air resistance On: the ball arrives at 1.285 s and passes 0.67 m above, because drag also slows its fall.
 
 ## Questions
 
@@ -54,6 +55,7 @@ For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 
 ## Physics behind the demo
 
 - The ball feels gravity and a drag force F = ½ρC_dAv² opposite its velocity, with A = πd²/4. The equation of motion is a = −g ŷ − k|v|v with k = ρC_dA/(2m), integrated with fourth order Runge–Kutta. The landing point is found on a cubic interpolation within the last step.
+- Monkey and hunter: the target falls freely from rest at launch (no drag on it). The page finds when the selected shot reaches x = D by bisection on its recorded flight and compares the two heights; a hit is within 0.25 m. Without air both fall ½gt² below their straight lines, so the gap is zero whatever the speed.
 - The vacuum path is the exact parabola. The terminal speed is v_t = √(g/k) = √(2mg/ρC_dA).
 - Each shot uses steps of at most 1 ms (and at most 1/100 of the drag time 1/√(kg)); halving the step changes the range by less than 1 part in 10⁹. Cursor readings interpolate samples a few ms apart, far below the 1 cm display.
 - Sea level air is the standard atmosphere, 1.225 kg/m³. The Denver button uses 1.0 kg/m³: the standard pressure at 1609 m (83.4 kPa) at about 17 °C.

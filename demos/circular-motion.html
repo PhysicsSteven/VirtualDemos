@@ -65,7 +65,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Circular Motion</h1>
-      <p>Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, or the track and gravity together.</p>
+      <p>Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, a wall, or the track and gravity together.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">g = 9.81 m/s²</div>
@@ -97,18 +97,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="bank" aria-pressed="false">Banked curve</button>
           <button type="button" data-p="speed" aria-pressed="false">Speeding up or braking</button>
           <button type="button" data-p="loop" aria-pressed="false">Vertical loop</button>
+          <button type="button" data-p="cone" aria-pressed="false">Conical pendulum</button>
+          <button type="button" data-p="rotor" aria-pressed="false">Barrel ride (rotor)</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Settings</h2>
-        <div><div class="slider-head"><label for="sV" id="lV">Speed v</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="1" max="40" step="0.5"></div>
-        <div><div class="slider-head"><label for="sR">Radius r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="100" step="0.5"></div>
+        <div id="vRow"><div class="slider-head"><label for="sV" id="lV">Speed v</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="1" max="40" step="0.5"></div>
+        <div><div class="slider-head"><label for="sR" id="lR">Radius r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="100" step="0.5"></div>
         <div><div class="slider-head"><label for="sM">Mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.1" max="2000" step="0.1"></div>
-        <div id="muRow"><div class="slider-head"><label for="sMu">Static friction μs (tires on road)</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="1.2" step="0.01"></div>
+        <div id="muRow"><div class="slider-head"><label for="sMu" id="lMu">Static friction μs (tires on road)</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="1.2" step="0.01"></div>
         <div id="atRow"><div class="slider-head"><label for="sAt">Rate of change of speed a_t (negative brakes)</label><output id="oAt" for="sAt"></output></div><input type="range" id="sAt" min="-5" max="5" step="0.5"></div>
-        <div id="bankRow"><div class="slider-head"><label for="sB">Bank angle θ</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="45" step="0.5"></div>
+        <div id="bankRow"><div class="slider-head"><label for="sB" id="lB">Bank angle θ</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="45" step="0.5"></div>
       </section>
 
       <section>
@@ -188,6 +190,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (at === 0) return v0 > vs ? 0 : null;
     return v0 > vs ? 0 : null;   // braking only lowers v²/r, so it slips at once or never
   }
+  // conical pendulum: a bob on a string of length L at angle θ from the vertical goes round a horizontal circle of radius L sin θ,
+  // h = L cos θ below the pivot. Vertical: T cos θ = mg; horizontal: T sin θ = mω²L sin θ, so ω² = g/h and the period is 2π√(h/g).
+  function conical(m, L, thDeg) {
+    const th = thDeg * Math.PI / 180, h = L * Math.cos(th), r = L * Math.sin(th), w = Math.sqrt(G / h);
+    return { h, r, w, v: w * r, T: m * G / Math.cos(th), P: 2 * Math.PI / w, a: w * w * r };
+  }
+  // barrel ride (rotor): riders against the wall of a drum of radius R whose wall moves at speed v. The wall's push N = mv²/R is
+  // the whole centripetal force; static friction μs N must hold the weight mg once the floor drops, so v ≥ √(gR/μs), whatever the mass.
+  // A rider who slips slides down with a = g − μ v²/R (sliding friction taken equal to μs, the model's one coefficient).
+  function rotor(m, R, v, mu) {
+    const N = m * v * v / R, fmax = mu * N, holds = fmax >= m * G - 1e-9;
+    return { N, fmax, need: m * G, holds, a: v * v / R, vmin: mu > 0 ? Math.sqrt(G * R / mu) : Infinity, aDown: holds ? 0 : G - mu * v * v / R };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -199,9 +214,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     flat: { v: 15, r: 50, m: 1200, mu: 0.7, b: 0, hint: 'Static friction from the road is all that turns the car: it needs mv²/r and can give at most μs mg. Above √(μs g r) the car slides off along a nearly straight line. Try a wet road, μs = 0.4.' },
     bank: { v: 20, r: 50, m: 1200, mu: 0.3, b: 25, hint: 'Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.' },
     speed: { v: 0, r: 60, m: 1200, mu: 0.7, b: 0, at: 2, hint: 'Speeding up or braking on the curve: the acceleration now has a part along the road, a_t, as well as v²/r toward the center. The total is not toward the center, and the road\'s grip must supply all of it, so a car that is speeding up or braking slides off at a lower speed than one cruising. Set a_t negative to brake.' },
+    cone: { v: 0, r: 1, m: 0.5, mu: 0, b: 30, hint: 'A bob on a string swinging round in a horizontal circle, seen from the side and a little above. The string\'s pull T has an upward part that holds the weight, T cos θ = mg, and a part toward the center that turns the bob, T sin θ = mv²/r. Together they give a period 2π√(h/g) that depends only on h, the height of the pivot above the circle: a longer string at a steeper angle with the same h goes round in the same time. Cut the string and the bob flies off along its velocity as it falls.' },
+    rotor: { v: 9, r: 2.5, m: 70, mu: 0.4, b: 0, hint: 'The rotor ride: riders stand against the wall of a spinning drum, then the floor drops away. The wall pushes each rider toward the center with N = mv²/R, and friction from the wall, at most μs N, has to hold the weight mg. That needs a wall speed of at least √(gR/μs), the same for a child and an adult because the mass cancels. Drop the floor and see who stays up; slow the drum or make the wall slicker and they slide down.' },
     loop: { v: 9, r: 1.5, m: 0.5, mu: 0, b: 0, hint: 'A ball rolling without friction inside a loop (treated as sliding, so no rotational energy). It slows as it climbs. At the top gravity and the track both point to the center; below v = √(gr) there, gravity alone is too much and the ball falls away. That needs v ≥ √(5gr) at the bottom.' }
   };
-  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, angVel: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
+  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, angVel: 0, run: !reduce, cut: null, slid: null, fell: null, drop: null, blind: false };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
@@ -221,6 +238,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.preset === 'string') return { need: tension(m, v, r), a: accel(v, r), T: tension(m, v, r), ok: !S.cut };
     if (S.preset === 'flat') { const need = m * accel(v, r), fmax = mu * m * G; return { need, a: accel(v, r), fmax, vmax: flatMax(mu, r), ok: need <= fmax + 1e-9 }; }
     if (S.preset === 'bank') { const q = bank(m, v, r, b, mu); return { ...q, need: m * accel(v, r), a: accel(v, r), ok: q.holds }; }
+    if (S.preset === 'cone') { const c = conical(m, r, b); return { ...c, need: m * c.a, ok: !S.cut }; }
+    if (S.preset === 'rotor') { const c = rotor(m, r, v, mu); return { ...c, ok: c.holds }; }
     if (S.preset === 'speed') { const k = speedState(v, S.at, r, S.ts); return { ...k, need: m * k.a, fmax: mu * m * G, ok: k.a <= mu * G + 1e-9, tSlip: slipTime(v, S.at, r, mu) }; }
     const q = loop(m, v, r, S.ang * 180 / Math.PI); return { ...q, a: q.stalls ? 0 : q.v * q.v / r, vmin: loopMin(r), ok: !q.stalls && q.N >= 0 };
   }
@@ -247,6 +266,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // the setting behind the motion: tabletop, road or coaster track (decoration only)
     if (G3.want && !G3.ok && !G3.tried && S.preset === 'bank') setView('3d');   // three.js loads the first time the banked curve shows
     const u3 = use3(); $('viewSeg').hidden = S.preset !== 'bank'; if (g3) g3.el.hidden = !u3;
+    const side = S.preset === 'cone' || S.preset === 'rotor';
+    if (side) obliq(sw, wide ? H : sh, p, q);
+    else {
     if (u3) ctx.clearRect(0, 0, sw, wide ? H : sh); else scenery(cx, cy, R, sw, wide ? H : sh, p);
     // the object's place: on the circle, or flying off along a straight line after release
     let x, y, vx, vy;
@@ -278,14 +300,85 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       else if (!free && !bl) { const al = 50 * p; arrow(x, y, (cx - x) / R * al, (cy - y) / R * al, T.net, 3 * p, 'a = v²/r', 1); }
     }
+    }
     // status line
     ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const msg = S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : S.preset === 'speed' ? (W < 560 ? 'Not enough grip: it slides off.' : 'Friction cannot supply the whole acceleration: the car slides off.') : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : use3() ? 'The banked road in 3D: drag to turn the view' : 'View from above';
-    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, 44 * p, ctx.measureText(msg).width + 8 * p, 20 * p); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.ink; ctx.fillText(msg, 12 * p, 48 * p);
+    const msg = S.preset === 'cone' ? (S.cut ? (W < 560 ? 'String cut: it flies off and falls.' : 'String cut: the bob flies off along its velocity and falls.') : 'Seen from the side, a little above')
+      : S.preset === 'rotor' ? (!S.drop ? (W < 560 ? 'Cut away side view' : 'Cut away side view of the spinning drum') : bl ? 'The floor has dropped.' : q.holds ? (W < 560 ? 'Friction holds them up.' : 'Floor dropped: friction from the wall holds every rider up.') : (W < 560 ? 'Too little friction: they slide.' : 'Floor dropped: too little friction, the riders slide down.'))
+      : S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : S.preset === 'speed' ? (W < 560 ? 'Not enough grip: it slides off.' : 'Friction cannot supply the whole acceleration: the car slides off.') : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : use3() ? 'The banked road in 3D: drag to turn the view' : 'View from above';
+    /* just under the buttons, which wrap to two rows on a narrow phone */
+    const vbar = stage.querySelector('.viewbar'), my = Math.max(44 * p, vbar ? vbar.offsetTop + vbar.offsetHeight + 4 : 0);
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, my, ctx.measureText(msg).width + 8 * p, 20 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.fillText(msg, 12 * p, my + 4 * p);
     // free body diagram
     if (wide) { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(sw, 12 * p); ctx.lineTo(sw, H - 12 * p); ctx.stroke(); drawFBD(sw, 0, W - sw, H, q); }
     else { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(12 * p, sh); ctx.lineTo(W - 12 * p, sh); ctx.stroke(); drawFBD(0, sh, W, H - sh, q); }
+  }
+  // ---------- side views drawn in oblique projection: the conical pendulum and the rotor ----------
+  // x to the right, y toward the viewer (drawn squeezed to 0.3 and shifted down), z up; to scale in each picture, k pixels per meter.
+  function obliq(sw, sh0, p, q) {
+    const bl = S.blind, E = 0.3, cx = sw / 2, top = 86 * p;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, sw, sh0); ctx.clip();
+    const sky = ctx.createLinearGradient(0, 0, 0, sh0); sky.addColorStop(0, T.skyTop); sky.addColorStop(1, T.skyBot); ctx.fillStyle = sky; ctx.fillRect(0, 0, sw, sh0);
+    const ell = (P, rx, ry, a0, a1) => { ctx.beginPath(); ctx.ellipse(P[0], P[1], Math.max(0.1, rx), Math.max(0.1, ry), 0, a0 == null ? 0 : a0, a1 == null ? 7 : a1); };
+    const arr3 = (P, A, B, col, lab, side) => arrow(A[0], A[1], B[0] - A[0], B[1] - A[1], col, 3 * p, lab, side);
+    if (S.preset === 'cone') {
+      const L = S.r, th = S.b * Math.PI / 180, zf = -(L + 0.3), Rf = 1.3 * L;
+      const k = Math.min(sw * 0.44 / Rf, (sh0 - top - 30 * p) / (L + 0.3 + Rf * E + 0.15));
+      const P3 = (x, y, z) => [cx + x * k, top + 0.15 * k - z * k + y * k * E];
+      // the lab floor, a stand and its arm out to the pivot (scenery)
+      const F = P3(0, 0, zf); ctx.fillStyle = T.ground; ell(F, Rf * k, Rf * k * E); ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
+      const px = -1.2 * L, base = P3(px, 0, zf), up = P3(px, 0, 0.15), piv = P3(0, 0, 0);
+      ctx.strokeStyle = T.steel; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(base[0], base[1]); ctx.lineTo(up[0], up[1]); ctx.lineTo(piv[0], up[1]); ctx.lineTo(piv[0], piv[1]); ctx.stroke();
+      ctx.fillStyle = T.steel; ctx.fillRect(base[0] - 18 * p, base[1] - 4 * p, 36 * p, 8 * p);
+      const c = conical(S.m, L, S.b), ph = S.ang, rad = Math.max(7 * p, 0.05 * k);
+      // the axis and the bob's path
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(piv[0], piv[1]); ctx.lineTo(F[0], F[1]); ctx.stroke();
+      ell(P3(0, 0, -c.h), c.r * k, c.r * k * E); ctx.stroke(); ctx.setLineDash([]);
+      // h, the height of the pivot above the circle: geometry, so shown in Blind too
+      { const a = P3(0, 0, 0), b = P3(0, 0, -c.h), xh = a[0] - 10 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xh, a[1]); ctx.lineTo(xh, b[1]); ctx.moveTo(xh - 4 * p, a[1]); ctx.lineTo(xh + 4 * p, a[1]); ctx.moveTo(xh - 4 * p, b[1]); ctx.lineTo(xh + 4 * p, b[1]); ctx.stroke();
+        ctx.fillStyle = T.muted; ctx.font = `italic 600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('h', xh - 6 * p, (a[1] + b[1]) / 2); }
+      let X, Y, Z, vel;
+      if (S.cut) { const u = S.cut, t = u.t, zb = zf + 0.05 * L, tl = Math.sqrt(Math.max(0, 2 * (u.z - zb) / G)), tt = Math.min(t, tl); X = u.x + u.vx * tt; Y = u.y + u.vy * tt; Z = u.z - 0.5 * G * tt * tt; vel = [u.vx, u.vy, t < tl ? -G * tt : 0];
+        ctx.strokeStyle = T.fr; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); for (let i = 0; i <= 24; i++) { const s = tt * i / 24, Q = P3(u.x + u.vx * s, u.y + u.vy * s, u.z - 0.5 * G * s * s); i ? ctx.lineTo(Q[0], Q[1]) : ctx.moveTo(Q[0], Q[1]); } ctx.stroke(); ctx.setLineDash([]); }
+      else { X = c.r * Math.cos(ph); Y = c.r * Math.sin(ph); Z = -c.h; vel = [-c.v * Math.sin(ph), c.v * Math.cos(ph), 0]; }
+      const B = P3(X, Y, Z), sh = P3(X, Y, zf);
+      ctx.fillStyle = T.shadow; ell(sh, rad * 1.3, rad * 0.45); ctx.fill();
+      if (!S.cut) { ctx.strokeStyle = T.tn; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(piv[0], piv[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); }
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(piv[0], piv[1], 3.5 * p, 0, 7); ctx.fill();
+      ball(B[0], B[1], rad, 0);
+      const sp = Math.hypot(...vel); if (sp > 1e-6) { const l3 = Math.min(80 * p, 18 * p + sp * 14 * p) / k; arr3(P3, B, P3(X + vel[0] / sp * l3, Y + vel[1] / sp * l3, Z + vel[2] / sp * l3), T.vel, 'v'); }
+      if (!S.cut && !bl && c.r > 1e-6) { const l3 = 50 * p / k; arr3(P3, B, P3(X - Math.cos(ph) * l3, Y - Math.sin(ph) * l3, Z), T.net, 'a = v²/r', 1); }
+    } else {
+      const R = S.r, Hd = 3.2, pit = -1.4, drop = 1.2;
+      const k = Math.min(sw * 0.4 / R, (sh0 - top - 34 * p) / (Hd - pit + 2 * R * E));
+      const y0 = top + R * k * E + Hd * k, P3 = (x, y, z) => [cx + x * k, y0 - z * k + y * k * E];
+      const c = rotor(S.m, R, S.v, S.mu), t = S.drop ? S.drop.t : 0;
+      const zFl = S.drop ? Math.max(-drop, -0.5 * G * t * t) : 0, zR = !S.drop || c.holds ? 0 : Math.max(-drop, -0.5 * c.aDown * t * t);
+      const wall = window.VDGear ? window.VDGear.mix(T.kerb, T.canvas, 0.35) : T.kerb, wall2 = window.VDGear ? window.VDGear.mix(T.kerb2, T.canvas, 0.2) : T.kerb2;
+      // the inside of the drum, back half: panels that turn with it
+      const tp = P3(0, 0, Hd), bt = P3(0, 0, pit);
+      ctx.fillStyle = wall2; ctx.beginPath(); ctx.ellipse(tp[0], tp[1], R * k, R * k * E, 0, Math.PI, 2 * Math.PI); ctx.lineTo(cx + R * k, bt[1]); ctx.ellipse(bt[0], bt[1], R * k, R * k * E, 0, 0, Math.PI, true); ctx.closePath(); ctx.fill();
+      const n = 16; for (let i = 0; i < n; i++) { const a0 = S.ang + i * 2 * Math.PI / n, a1 = a0 + Math.PI / n; if (Math.sin(a0 + Math.PI / 2 / n) > 0) continue;
+        ctx.fillStyle = wall; ctx.beginPath(); const q0 = P3(R * Math.cos(a0), R * Math.sin(a0), Hd), q1 = P3(R * Math.cos(a1), R * Math.sin(a1), Hd), q2 = P3(R * Math.cos(a1), R * Math.sin(a1), pit), q3 = P3(R * Math.cos(a0), R * Math.sin(a0), pit);
+        ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.lineTo(q3[0], q3[1]); ctx.closePath(); ctx.fill(); }
+      ctx.fillStyle = T.shadow; ell(bt, R * k, R * k * E); ctx.fill();
+      // the floor, which drops 1.2 m when it is let go (it falls freely, then stops: scenery)
+      const fl = P3(0, 0, zFl); ctx.fillStyle = T.ground; ell(fl, R * k * 0.995, R * k * E * 0.995); ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
+      // three riders, back to front; rider 1 is the one in the free body diagram
+      const rid = [0, 1, 2].map((i) => { const a = S.ang + i * 2 * Math.PI / 3; return { i, a, y: Math.sin(a) }; }).sort((u, w) => u.y - w.y);
+      for (const r0 of rid) { const rw = R - 0.18, X = rw * Math.cos(r0.a), Y = rw * Math.sin(r0.a), feet = P3(X, Y, zR), head = P3(X, Y, zR + 1.6), bw = 0.42 * k;
+        ctx.fillStyle = r0.i === 0 ? T.n : T.muted; ctx.globalAlpha = r0.y < 0 ? 0.8 : 1; rr(feet[0] - bw / 2, head[1] + 0.12 * k, bw, feet[1] - head[1] - 0.12 * k, bw / 3); ctx.fill();
+        ctx.beginPath(); ctx.arc(head[0], head[1], 0.12 * k, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+        if (r0.i === 0) { const vv = [-Math.sin(r0.a), Math.cos(r0.a)], mid = P3(X, Y, zR + 1.0), l3 = Math.min(80 * p, 18 * p + S.v * 5 * p) / k;
+          arr3(P3, mid, P3(X + vv[0] * l3, Y + vv[1] * l3, zR + 1.0), T.vel, 'v');
+          if (!bl) { const la = 50 * p / k; arr3(P3, mid, P3(X - Math.cos(r0.a) * la, Y - Math.sin(r0.a) * la, zR + 1.0), T.net, 'a = v²/R', 1); } } }
+      // the front half of the wall, see through, and the rims
+      ctx.fillStyle = wall; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.ellipse(tp[0], tp[1], R * k, R * k * E, 0, 0, Math.PI); ctx.lineTo(cx - R * k, bt[1]); ctx.ellipse(bt[0], bt[1], R * k, R * k * E, 0, Math.PI, 0, true); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ell(tp, R * k, R * k * E); ctx.stroke(); ell(bt, R * k, R * k * E, 0, Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - R * k, tp[1]); ctx.lineTo(cx - R * k, bt[1]); ctx.moveTo(cx + R * k, tp[1]); ctx.lineTo(cx + R * k, bt[1]); ctx.stroke();
+    }
+    ctx.restore();
   }
   // ---------- 3D view of the banked curve (three.js through demos/lib/vd3.js), Banked curve setup only ----------
   // The road is a cone at the bank angle θ: its height rises by tan θ per meter outward. The car follows the same angle as the flat
@@ -476,12 +569,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.stroke(); ctx.globalAlpha = 1;
   }
   function drawFBD(x0, y0, w, h, q) {
-    const p = ps(), bl = S.blind, cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
+    const p = ps(), bl = S.blind, cx = x0 + w * (S.preset === 'cone' || S.preset === 'rotor' ? 0.62 : 0.5), cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
+    const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : S.preset === 'cone' || S.preset === 'rotor' ? 'SIDE VIEW, CENTER TO THE LEFT' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
     { const full = `FREE BODY DIAGRAM, ${view}`; if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText('FREE BODY DIAGRAM,', x0 + 14 * p, y0 + 12 * p); ctx.fillText(view, x0 + 14 * p, y0 + 26 * p); } }   /* two lines when narrow */
     let items = [];   // [label, color, fx (toward the center = −x on screen), fy (up +)]
     if (S.preset === 'string') items = S.cut ? [] : [['T', T.tn, -q.T, 0]];
+    else if (S.preset === 'cone') { const th = S.b * Math.PI / 180; items = S.cut ? [['mg', T.w, 0, -m * G]] : [['mg', T.w, 0, -m * G], ['T', T.tn, -q.T * Math.sin(th), q.T * Math.cos(th)]]; }
+    else if (S.preset === 'rotor') { const sliding = S.drop && !q.holds, fw = !S.drop ? Math.min(q.need, q.fmax) : q.holds ? q.need : q.fmax;
+      items = [['mg', T.w, 0, -m * G], ['N', T.n, -q.N, 0], [sliding ? 'f (sliding)' : 'f (static)', T.fr, 0, fw]];
+      if (!S.drop && fw < q.need - 1e-9) items.push(['floor', T.n, 0, q.need - fw]); }
     else if (S.preset === 'flat') { const fs = Math.min(q.need, q.fmax); items = [['mg', T.w, 0, -m * G], ['N', T.n, 0, m * G], [q.ok ? 'f (static)' : 'f (at its limit)', T.fr, -fs, 0]]; }
     else if (S.preset === 'bank') { const th = S.b * Math.PI / 180, fC = q.ok ? q.f : Math.sign(q.f) * S.mu * q.N; items = [['mg', T.w, 0, -m * G], ['N', T.n, -q.N * Math.sin(th), q.N * Math.cos(th)]];
       if (Math.abs(fC) > 1e-6) items.push([fC > 0 ? 'f (down the slope)' : 'f (up the slope)', T.fr, -fC * Math.cos(th), -fC * Math.sin(th)]);
@@ -490,11 +587,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (S.preset === 'speed') { if (!S.slid) { const fc = m * q.ac, ft = m * q.at, sc = q.ok ? 1 : 1; items = [['f to center', T.fr, -fc * sc, 0], [ft >= 0 ? 'f forward' : 'f backward', T.fr, 0, ft * sc]]; }
       ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Motion is up the page; mg and N cancel.', x0 + 14 * p, y0 + 42 * p); }
     else if (!q.stalls) { const ph = S.ang; items = [['mg', T.w, 0, -m * G]]; if (q.N > 0) items.push(['N', T.n, -Math.sin(ph) * q.N, Math.cos(ph) * q.N]); }
-    const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : m * accel(S.v, S.r), 1e-9), k = Rm / big;
+    const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : S.preset === 'cone' ? q.T : S.preset === 'rotor' ? 0 : m * accel(S.v, S.r), 1e-9), k = Rm / big;
     const L = (fx, fy) => (bl ? [fx / (Math.hypot(fx, fy) || 1) * Rm * 0.6, fy / (Math.hypot(fx, fy) || 1) * Rm * 0.6] : [fx * k, fy * k]);
     for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${f(Math.hypot(fx, fy), 1)} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' && lab === 'N' ? -1 : 0); }
     // net force, toward the center (loop: also a tangential part)
-    if (!bl && items.length) { const nx = items.reduce((s, i) => s + i[2], 0), ny = items.reduce((s, i) => s + i[3], 0); if (Math.hypot(nx, ny) > 1e-6) { const [dx, dy] = L(nx, ny); arrow(cx, cy + 56 * p, dx, -dy, T.net, 4.5 * p, `net = ${f(Math.hypot(nx, ny), 1)} N`, 1); } }
+    /* below the lowest arrow tip and its label, so the two never overlap; one force alone is its own net force */
+    const low = Math.max(0, ...items.map((i) => -L(i[2], i[3])[1])), netY = cy + Math.max(56 * p, low + 34 * p);
+    if (!bl && items.length && !(S.preset === 'cone' && items.length < 2)) { const nx = items.reduce((s, i) => s + i[2], 0), ny = items.reduce((s, i) => s + i[3], 0); if (Math.hypot(nx, ny) > 1e-6) { const [dx, dy] = L(nx, ny); arrow(cx, netY, dx, -dy, T.net, 4.5 * p, `net = ${f(Math.hypot(nx, ny), 1)} N`, 1); } }
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText(bl ? 'Blind: arrows show directions only' : 'Arrow lengths to scale; the net force is drawn below the dot', x0 + 14 * p, y0 + h - 10 * p);
@@ -509,6 +608,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (P === 'flat') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('a = v²/r', `${f(q.a, 2)} m/s²`) + dd('Top speed √(μs g r)', `${f(q.vmax, 1)} m/s (${f(q.vmax * 3.6, 0)} km/h)`);
     else if (P === 'bank') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Normal force N', `${f(q.N, 0)} N`) + dd('Friction needed', `${f(Math.abs(q.f), 0)} N ${q.f > 1e-6 ? 'down the slope' : q.f < -1e-6 ? 'up the slope' : ''}`) + dd('Most friction μs N', `${f(S.mu * q.N, 0)} N`)
       + dd('Ideal speed √(rg tan θ)', `${f(q.vIdeal, 1)} m/s`) + dd('Allowed speeds', `${f(q.vmin, 1)} to ${f(q.vmax, 1)} m/s`);
+    else if (P === 'cone') h = dd('Radius r = L sin θ', `${f(q.r, 3)} m`) + dd('Height h = L cos θ', `${f(q.h, 3)} m`) + dd('Speed v', `${f(q.v, 2)} m/s`) + dd('a = v²/r = g tan θ', `${f(q.a, 2)} m/s²`)
+      + dd('Tension T = mg/cos θ', `${f(q.T, 2)} N`) + dd('Period 2π√(h/g)', `${f(q.P, 3)} s`);
+    else if (P === 'rotor') h = dd('Wall push N = mv²/R', `${f(q.N, 0)} N`) + dd('Most friction μs N', `${f(q.fmax, 0)} N`) + dd('Weight mg', `${f(q.need, 0)} N`) + dd('a = v²/R', `${f(q.a, 1)} m/s² (${f(q.a / G, 2)} g)`)
+      + dd('Turns per minute', `${f(60 * S.v / (2 * Math.PI * S.r), 1)}`) + dd('Least wall speed √(gR/μs)', isFinite(q.vmin) ? `${f(q.vmin, 2)} m/s (${f(60 * q.vmin / (2 * Math.PI * S.r), 1)} per minute)` : 'none: no friction')
+      + dd('When the floor drops', q.holds ? 'riders stay up' : `riders slide down at ${f(q.aDown, 2)} m/s²`, true);
     else if (P === 'speed') h = dd('Speed now', `${f(S.slid ? S.slid.v : q.v, 2)} m/s`) + dd('Time', `${f(S.ts, 2)} s`) + dd('Along the road a_t', `${f(q.at, 2)} m/s²`) + dd('Toward the center v²/r', `${f(q.ac, 2)} m/s²`) + dd('Total |a|', `${f(q.a, 2)} m/s²`) + dd('Angle of a from the center', `${f(q.ang * 180 / Math.PI, 1)}°`)
       + dd('Friction needed m|a|', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('Predicted slip', q.tSlip == null ? 'never' : q.tSlip === 0 ? 'at once' : `at ${f(q.tSlip, 2)} s, at ${f(S.v + S.at * q.tSlip, 1)} m/s`) + dd('Cruising top speed √(μs g r)', `${f(flatMax(S.mu, S.r), 1)} m/s`);
     else h = dd('Speed here', q.stalls ? '0 m/s' : `${f(q.v, 2)} m/s`) + dd('Normal force N', q.stalls ? '—' : `${f(q.N, 2)} N`) + dd('Weight mg', `${f(S.m * G, 2)} N`) + dd('Least speed at the bottom √(5gr)', `${f(q.vmin, 2)} m/s`) + dd('At the top, needs v ≥ √(gr)', `${f(Math.sqrt(G * S.r), 2)} m/s`, true);
@@ -520,19 +624,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     const P = S.preset;
     /* the ranges first, then the values: a value set before its range changes is clamped to the old range */
-    $('sR').min = P === 'string' || P === 'loop' ? 0.5 : 1; $('sR').max = P === 'string' || P === 'loop' ? 3 : 100; $('sR').step = P === 'string' || P === 'loop' ? 0.1 : 1;
-    $('sM').max = P === 'string' || P === 'loop' ? 2 : 2000; $('sM').min = P === 'string' || P === 'loop' ? 0.1 : 500; $('sM').step = P === 'string' || P === 'loop' ? 0.1 : 50;
-    $('sV').max = P === 'string' ? 10 : P === 'loop' ? 15 : 40;
-    $('lV').textContent = P === 'loop' ? 'Speed at the bottom v₀' : P === 'speed' ? 'Starting speed v₀' : 'Speed v';
+    const small = P === 'string' || P === 'loop' || P === 'cone';
+    $('sR').min = P === 'cone' ? 0.2 : P === 'rotor' ? 1 : small ? 0.5 : 1; $('sR').max = small ? 3 : P === 'rotor' ? 5 : 100; $('sR').step = P === 'cone' ? 0.05 : small || P === 'rotor' ? 0.1 : 1;
+    $('sM').max = small ? 2 : P === 'rotor' ? 150 : 2000; $('sM').min = small ? 0.1 : P === 'rotor' ? 20 : 500; $('sM').step = small ? 0.1 : P === 'rotor' ? 1 : 50;
+    $('sB').min = P === 'cone' ? 5 : 0; $('sB').max = P === 'cone' ? 80 : 45; $('sB').step = P === 'cone' ? 1 : 0.5;
+    $('lR').textContent = P === 'cone' ? 'String length L' : P === 'rotor' ? 'Drum radius R' : 'Radius r';
+    $('lB').textContent = P === 'cone' ? 'String angle θ from the vertical' : 'Bank angle θ';
+    $('lMu').textContent = P === 'rotor' ? 'Static friction μs (back on the wall)' : 'Static friction μs (tires on road)';
+    $('vRow').hidden = P === 'cone';
+    $('sV').max = P === 'string' ? 10 : P === 'loop' ? 15 : P === 'rotor' ? 20 : 40;
+    $('lV').textContent = P === 'loop' ? 'Speed at the bottom v₀' : P === 'speed' ? 'Starting speed v₀' : P === 'rotor' ? 'Wall speed v' : 'Speed v';
     $('sV').min = P === 'speed' ? 0 : 1;
     for (const [id, k, fmt] of SL) { $(id).value = S[k]; $('o' + id.slice(1)).textContent = fmt(S[k]); }
     $('atRow').hidden = P !== 'speed';
-    $('muRow').hidden = !(P === 'flat' || P === 'bank' || P === 'speed'); $('bankRow').hidden = P !== 'bank';
-    $('cut').textContent = P === 'string' ? 'Cut the string' : P === 'loop' ? 'Launch again' : 'Steady';
-    $('cut').hidden = !(P === 'string');
+    $('muRow').hidden = !(P === 'flat' || P === 'bank' || P === 'speed' || P === 'rotor'); $('bankRow').hidden = !(P === 'bank' || P === 'cone');
+    $('cut').textContent = P === 'string' || P === 'cone' ? 'Cut the string' : P === 'rotor' ? 'Drop the floor' : P === 'loop' ? 'Launch again' : 'Steady';
+    $('cut').hidden = !(P === 'string' || P === 'cone' || P === 'rotor');
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
-  function restart() { S.cut = S.slid = S.fell = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; S.angVel = S.v / S.r; sync(); draw(); readouts(); }
+  function restart() { S.cut = S.slid = S.fell = S.drop = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; S.angVel = S.v / S.r; sync(); draw(); readouts(); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b, at: c.at != null ? c.at : S.at }); S.ang = 0; $('presetHint').textContent = c.hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -542,12 +652,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pxPerM = g.R / S.r, vNow = loopView || S.preset === 'speed' ? situation().v : S.v, vx = (loopView ? Math.cos(th) : -Math.sin(th)) * vNow * pxPerM, vy = (loopView ? -Math.sin(th) : -Math.cos(th)) * vNow * pxPerM;
     S[kind] = { x, y, vx, vy, t: 0, g: loopView ? G * pxPerM : 0, path: true, v: vNow };
   }
-  $('cut').addEventListener('click', () => { if (S.preset === 'string' && !S.cut) { release('cut'); draw(); readouts(); } });
+  $('cut').addEventListener('click', () => {
+    if (S.preset === 'string' && !S.cut) release('cut');
+    else if (S.preset === 'cone' && !S.cut) { const c = conical(S.m, S.r, S.b), ph = S.ang; S.cut = { x: c.r * Math.cos(ph), y: c.r * Math.sin(ph), z: -c.h, vx: -c.v * Math.sin(ph), vy: c.v * Math.cos(ph), t: 0 }; }
+    else if (S.preset === 'rotor' && !S.drop) S.drop = { t: 0 };
+    else return;
+    draw(); readouts(); });
   $('again').addEventListener('click', () => { S.ang = 0; restart(); });
   // a link to #speed (the old Speeding Up on a Curve page) opens this setup
   $('play').addEventListener('click', () => { S.run = !S.run; $('play').textContent = S.run ? 'Pause' : 'Play'; });
   // shown slower than real time so it stays readable: the loop at half speed, the cars at a quarter
-  const timeScale = () => (S.preset === 'string' ? 1 : S.preset === 'loop' ? 0.5 : S.preset === 'speed' ? 1 : 0.25);
+  const timeScale = () => (S.preset === 'string' || S.preset === 'cone' || S.preset === 'rotor' ? 1 : S.preset === 'loop' ? 0.5 : S.preset === 'speed' ? 1 : 0.25);
   let last = performance.now();
   let simClock = 0;   /* simulated time for the stopwatch: it runs at the preset's slow motion rate */
   function frame(now) {
@@ -561,6 +676,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const slow = timeScale();
         let w = S.v / S.r;
         if (S.preset === 'loop') { const q = situation(); w = q.stalls ? 0 : q.v / S.r; }
+        if (S.preset === 'cone') w = situation().w;
+        if (S.preset === 'rotor' && S.drop) S.drop.t += dt * slow;
         if (S.preset === 'speed') { const ts = situation().tSlip; S.ts += dt * slow; if (ts != null && S.ts >= ts) S.ts = ts; S.ang = situation().th; if (ts != null && S.ts >= ts) release('slid'); w = 0; }
         else if (S.preset === 'loop' && S.v * S.v <= 2 * G * S.r) {
           /* too slow to pass the side of the loop: it stops below that height and slides back and forth like a pendulum of length r,
@@ -583,15 +700,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Readings for the worksheet (tools/readings_panel.py): the settings and what happens with them. The outcome is the model's, the same
      thing the picture shows: the car holds the curve or slides off, the ball goes round the loop, leaves the track or slides back. */
   const r6 = (v) => +(+v).toPrecision(6);
-  window.vdVersion = 'circular-motion@2026-10-24';
+  window.vdVersion = 'circular-motion@2026-10-31';
   window.vdShowCols = [['setup', 'setup'], ['r_m', 'r (m)'], ['v_m_s', 'v (m/s)'], ['outcome', 'outcome']];
   window.vdReadingRow = () => {
     const P = S.preset, q = situation(), row = (setup, v, outcome) => ({ setup, r_m: S.r, mu_s: P === 'loop' ? '' : S.mu, bank_deg: P === 'bank' ? S.b : '',
       tan_theta: P === 'bank' ? r6(Math.tan(S.b * Math.PI / 180)) : '', m_kg: S.m, v_m_s: v, v2_m2_s2: r6(v * v), outcome });
     if (P === 'flat') return row('flat curve', S.v, q.ok ? 'holds the curve' : 'slides off');
     if (P === 'bank') return row('banked curve', S.v, !q.ok ? 'slides off' : Math.abs(q.f) < 1e-9 * S.m * G ? 'holds, no friction needed' : `holds, friction ${q.f > 0 ? 'down' : 'up'} the slope`);
+    if (P === 'cone') return { setup: 'conical pendulum', L_m: S.r, theta_deg: S.b, r_m: r6(q.r), h_m: r6(q.h), m_kg: S.m, v_m_s: r6(q.v), v2_m2_s2: r6(q.v * q.v), period_s: r6(q.P), outcome: `period ${f(q.P, 3)} s` };
+    if (P === 'rotor') return { ...row('barrel ride (rotor)', S.v, q.holds ? 'stays up when the floor drops' : 'slides down'), rpm: r6(60 * S.v / (2 * Math.PI * S.r)) };
     if (P === 'loop') { const v2 = S.v * S.v, gr = G * S.r; return row('vertical loop', S.v, v2 >= 5 * gr - 1e-9 ? 'goes round' : v2 <= 2 * gr ? 'stops and slides back' : 'leaves the track'); }
-    return 'Readings are recorded in the flat curve, banked curve and vertical loop setups.';
+    return 'Readings are recorded in the flat curve, banked curve, vertical loop, conical pendulum and barrel ride setups.';
   };
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   $('rmToggle').checked = reduce;
@@ -604,11 +723,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat picture, where the circle's radius is to scale */
   /* How this works: a short video of the speed limit on a flat curve (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/circular-motion.mp4', poster: 'media/how-this-works/circular-motion.jpg' });
-  VD.tools({ el: can, strip: '.viewbar', time: () => simClock, scale: () => { if (use3()) return null; const g = geom(); return { m: S.r / g.R, area: [0, 0, g.sw, g.sh] }; } });
+  VD.tools({ el: can, strip: '.viewbar', time: () => simClock, scale: () => { if (use3() || S.preset === 'cone' || S.preset === 'rotor') return null; const g = geom(); return { m: S.r / g.R, area: [0, 0, g.sw, g.sh] }; } });
   $('play').textContent = S.run ? 'Pause' : 'Play';
   /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
-  tokens(); new ResizeObserver(resize).observe(stage); applyPreset(location.hash === '#speed' ? 'speed' : 'string'); resize();
+  tokens(); new ResizeObserver(resize).observe(stage); { const hs = location.hash.slice(1), qs = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[qs] ? qs : PRESETS[hs] ? hs : 'string'); } resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

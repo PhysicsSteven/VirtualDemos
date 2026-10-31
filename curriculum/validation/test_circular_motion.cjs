@@ -2,7 +2,7 @@
 // Circular Motion: centripetal force supplied by a string, friction, a banked road, or the track and gravity.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('circular-motion', 'G,accel,tension,flatMax,bank,loop,loopMin,speedState,slipTime');
+const c = core('circular-motion', 'G,accel,tension,flatMax,bank,loop,loopMin,speedState,slipTime,conical,rotor');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -28,5 +28,21 @@ group('speeding up or braking: v = v0 + a_t t, a_c = v²/r, |a| = √(a_t² + a_
   const ts = c.slipTime(0, 2, 60, 0.7); near(c.speedState(0, 2, 60, ts).a, 0.7 * 9.81, 1e-9); near(ts, 9.9267, 1e-4);
   assert.equal(c.slipTime(0, 7, 60, 0.7), 0); assert.equal(c.slipTime(10, -2, 60, 0.7), null); assert.equal(c.slipTime(20.3, -2, 60, 0.7), 0);
   const b = c.speedState(20, -4, 60, 6); near(b.v, 0, 1e-12); near(b.a, 0, 1e-12); near(b.s, 50, 1e-12);
+});
+group('conical pendulum: T cos θ = mg, T sin θ = m v²/r, period 2π√(L cos θ / g)', () => {
+  const m = 0.5, L = 1, th = 30 * Math.PI / 180, q = c.conical(m, L, 30);
+  near(q.T * Math.cos(th), m * 9.81, 1e-12, 'vertical'); near(q.T * Math.sin(th), m * q.v * q.v / q.r, 1e-12, 'horizontal');
+  near(q.P, 2 * Math.PI * Math.sqrt(L * Math.cos(th) / 9.81), 1e-12); near(q.a, 9.81 * Math.tan(th), 1e-12, 'a = g tan θ');
+  near(q.P, 1.8669, 1e-4, 'L = 1 m, 30°');
+  near(c.conical(m, 2, 60).P, q.P * Math.sqrt(2 * 0.5 / Math.cos(th)), 1e-12, 'period depends on h only');
+  near(c.conical(m, 1, 60).P, c.conical(m, 0.5 / Math.cos(th), 30).P, 1e-12, 'same h, same period');
+  near(c.conical(m, 1, 1e-6).P, 2 * Math.PI * Math.sqrt(1 / 9.81), 1e-9, 'small angle: the simple pendulum period');
+});
+group('rotor: N = m v²/R, holds when μs v²/R ≥ g, least speed √(gR/μs) whatever the mass; slipping a = g − μ v²/R', () => {
+  const q = c.rotor(70, 2.5, 9, 0.4); near(q.N, 70 * 81 / 2.5, 1e-9); near(q.fmax, 0.4 * q.N, 1e-9); assert(q.holds); near(q.aDown, 0, 0);
+  near(q.vmin, Math.sqrt(9.81 * 2.5 / 0.4), 1e-12); near(q.vmin, 7.8302, 1e-4);
+  assert(c.rotor(30, 2.5, q.vmin + 1e-9, 0.4).holds && c.rotor(150, 2.5, q.vmin + 1e-9, 0.4).holds, 'mass cancels');
+  const s = c.rotor(70, 2.5, 6, 0.4); assert(!s.holds); near(s.aDown, 9.81 - 0.4 * 36 / 2.5, 1e-12);
+  assert.equal(c.rotor(70, 2.5, 9, 0).vmin, Infinity); near(c.rotor(70, 2.5, 9, 0).aDown, 9.81, 1e-12);
 });
 console.log(`${n} circular-motion test groups passed`);

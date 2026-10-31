@@ -305,6 +305,24 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         </div></details>
       </section>
 
+      <section id="secMonkey">
+        <details class="fold" id="monkeyFold"><summary>Monkey and hunter</summary><div class="foldbody">
+        <div>
+          <div class="slider-head"><label for="mkD">Target distance D</label><output id="mkDOut" class="mono" for="mkD"></output></div>
+          <input type="range" id="mkD" min="2" max="120" step="1" value="40">
+        </div>
+        <div>
+          <div class="slider-head"><label for="mkH">Target height</label><output id="mkHOut" class="mono" for="mkH"></output></div>
+          <input type="range" id="mkH" min="1" max="40" step="0.5" value="20">
+        </div>
+        <div class="btnrow"><button type="button" class="btn primary" id="mkAim">Aim straight at the target</button></div>
+        <dl class="readout" id="mkOut"></dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The classic demonstration: a toy monkey hangs from a branch, the launcher points straight at it, and the monkey lets go the instant the ball leaves. Without air both fall the same distance ½gt² below where they would have been, so the ball meets the monkey at any speed fast enough to cross the gap before the monkey lands. With air the ball reaches the monkey's line later, and drag also slows its fall, so in that time it drops less than the freely falling monkey and passes above it. The monkey is a 0.5 m target that falls without drag (stated); a hit means the ball passes within 0.25 m of its center. The readings come from the selected shot.</p>
+        </details>
+        </div></details>
+      </section>
+
       <section id="secMeasure">
         <details class="fold"><summary>Measure</summary><div class="foldbody">
         <div class="slider-head"><span>Dot interval</span></div>
@@ -596,6 +614,18 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     return a.map((v, i) => v + (b[i] - v) * u);
   }
 
+  // ---- monkey and hunter: a target at (D, H) let go from rest at the launch; where is the shot when it reaches x = D? ----
+  // The target falls freely (no drag on it, stated on the page). t* comes from bisection on the recorded flight, x(t) rising.
+  // aimAt gives the angle that points the launcher (at height h) straight at the target.
+  const aimAt = (h, D, H) => Math.atan2(H - h, D) / DEG;
+  function monkeyMeet(pts, T, D, H) {
+    const tFall = Math.sqrt(2 * H / G), end = sampleAt(pts, T);
+    if (end[1] < D) return { reaches: false, tFall };
+    let lo = 0, hi = T;
+    for (let i = 0; i < 60; i++) { const mid = 0.5 * (lo + hi); if (sampleAt(pts, mid)[1] < D) lo = mid; else hi = mid; }
+    const t = 0.5 * (lo + hi), yb = sampleAt(pts, t)[2], ym = Math.max(0, H - 0.5 * G * t * t);
+    return { reaches: true, t, yb, ym, gap: yb - ym, landed: t >= tFall, hit: t < tFall && Math.abs(yb - ym) <= 0.25, tFall };
+  }
   // ---- measurement: the strobe cursor and what the student reads ----
   const roundTo = (v, step) => +(Math.round(v / step) * step).toFixed(Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)));
   // cursor times sit on the strobe grid t = n Δt, from launch to the last dot before landing
@@ -737,6 +767,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   let sweepDirty = true, curDirty = true, raf = 0;
   /* many launches: the current set of random launches (see the Many launches section) */
   const MANY = { key: null, seed: 20261031, rand: null, shots: [], last: [] };
+  const MK = { D: 40, H: 20 };
+  const monkeyOn = () => $('monkeyFold').open;
+  const mkShot = () => shots.find((q) => q.id === sel) || null;
 
   // ---------- shots ----------
   const FIELDS = ['v', 'th', 'h', 'm', 'd', 'cd', 'rho', 'drag'];
@@ -951,6 +984,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     for (const s of shots) ext(s.range, s.ymax);
     if (prev || !shots.length) ext(cur.range, cur.ymax);
     if (MANY.shots.length) for (const q of MANY.shots) ext(q.R, 0);
+    if (monkeyOn()) ext(MK.D + 1.5, MK.H + 2.5);
     if (vacOn()) ext(vac.range, vac.ymax);
     const padL = 48 * ps, padR = 30 * ps, padT = (W < 560 ? 60 : 50) * ps, padB = 30 * ps;
     const xs = Math.max(xm * 1.04, 1), ys = Math.max(ym * 1.06, 1);
@@ -1086,6 +1120,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     ctx.restore();
     const vlen = (20 + 70 * P.v / 60) * ps, tx = lx + vlen * ca, ty = ly - vlen * sa;
     arrow(ctx, lx, ly, tx, ty, T.accent, 2.6 * ps, null, ps);
+    if (monkeyOn()) drawMonkey(ctx, ps);
     viewHandles = [
       { id: 'tip', pt: [tx, ty], cursor: 'grab' },
       { id: 'hub', pt: [lx, ly], cursor: 'ns-resize' }
@@ -1567,6 +1602,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
 
   // ---------- scheduling ----------
   function schedule() {
+    if (monkeyOn()) mkShow();   /* the meeting readout follows the selected shot and the aim */
     if (raf) return;
     raf = requestAnimationFrame(frame);
   }
@@ -1580,7 +1616,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     if (anim) {
       if (anim.last == null) anim.last = now;
       anim.t += Math.min(0.1, (now - anim.last) / 1000) * timeScale; anim.last = now;
-      if (anim.t >= anim.Tend) anim = null;
+      if (anim.t >= anim.Tend) { anim = null; if (monkeyOn()) mkShow(); }
     }
     if (VW && VH && !on3d) drawView();
     if (CW && CH) drawChart();
@@ -1660,6 +1696,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     let Tend = 0;
     for (const s of list) Tend = Math.max(Tend, s.T);
     if (vacOn() && kDrag(P) > 0) Tend = Math.max(Tend, vac ? vac.T : 0);
+    if (monkeyOn()) { Tend = Math.max(Tend, Math.sqrt(2 * MK.H / G)); const sl = list.find((q) => q.id === sel) || list[list.length - 1]; MK.flown = `${sl.id}|${MK.D}|${MK.H}`; }   /* the monkey reaches the ground too; after the flight it stays where it ended */
     anim = { t: 0, last: null, Tend, ids: new Set(list.map((s) => s.id)) };
     schedule();
   }
@@ -2153,6 +2190,46 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     download('projectile-many-launches.csv', L.join('\n') + '\n');
   });
   $('manyFold').addEventListener('toggle', () => manyShow());
+
+  // ---------- monkey and hunter: a target let go at the instant of launch (the fold open shows it) ----------
+  function mkSync() { $('mkDOut').textContent = `${MK.D.toFixed(0)} m`; $('mkHOut').textContent = `${MK.H.toFixed(1)} m`; }
+  function mkShow() {
+    const s = mkShot(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, bl = LAB.blind;
+    const aim = aimAt(P.h, MK.D, MK.H), pointed = Math.abs(P.th - aim) < 0.05;
+    let h = dd('Angle that points at it', bl ? 'hidden in Blind' : `${aim.toFixed(2)}°`) + dd('Launcher now', `${P.th.toFixed(2)}°${pointed ? ', on target' : ''}`)
+      + dd('Monkey reaches the ground at', `${Math.sqrt(2 * MK.H / G).toFixed(3)} s`, true);
+    if (!s) h += dd('Selected shot', 'none yet: launch one', true);
+    else { const q = monkeyMeet(s.pts, s.T, MK.D, MK.H);
+      if (!q.reaches) h += dd(`Shot ${s.n}`, 'lands before it reaches the monkey\'s line', true);
+      else h += dd(`Shot ${s.n} reaches x = D at`, `${q.t.toFixed(3)} s`) + dd('Ball height there', `${q.yb.toFixed(2)} m`) + dd('Monkey height then', `${q.ym.toFixed(2)} m`)
+        + dd('Ball minus monkey', Math.abs(q.gap) < 0.005 ? '0.00 m' : `${q.gap > 0 ? '+' : '−'}${Math.abs(q.gap).toFixed(2)} m`) + dd('Result', q.landed ? 'the monkey is already on the ground' : q.hit ? 'hit' : q.gap > 0 ? 'passes above' : 'passes below', true); }
+    $('mkOut').innerHTML = h;
+  }
+  /* the branch, the monkey (0.5 m across, to scale but never smaller than a few pixels), its path, and the meeting */
+  function drawMonkey(ctx, ps) {
+    const s = mkShot(), q = s ? monkeyMeet(s.pts, s.T, MK.D, MK.H) : null;
+    let tt = anim ? Math.min(anim.t, anim.Tend) : scrubT;
+    if (tt == null && s && MK.flown === `${s.id}|${MK.D}|${MK.H}`) tt = Infinity;
+    const X = L.ox + MK.D * L.s, Y = (y) => L.oy - y * L.s, r = Math.max(6 * ps, 0.25 * L.s);
+    let ym = MK.H, gone = false;
+    if (tt != null) { const t = q && q.hit ? Math.min(tt, q.t) : tt; ym = Math.max(0.25, MK.H - 0.5 * G * t * t); gone = q && q.hit && tt >= q.t; }
+    ctx.save();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(X, Y(MK.H)); ctx.lineTo(X, L.oy); ctx.stroke();
+    if (!LAB.blind) { ctx.beginPath(); ctx.moveTo(L.ox, Y(P.h)); ctx.lineTo(X, Y(MK.H)); ctx.stroke(); }   /* the line of sight */
+    ctx.setLineDash([]);
+    ctx.strokeStyle = '#7a5532'; ctx.lineWidth = 5 * ps; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(X - 6 * r, Y(MK.H) - r * 1.2); ctx.lineTo(X + 4 * r, Y(MK.H) - r * 1.6); ctx.stroke();
+    const cy = Y(ym), col = '#8a5a35', face = '#e2b98d';
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X - r * 0.95, cy - r * 0.15, r * 0.38, 0, 7); ctx.arc(X + r * 0.95, cy - r * 0.15, r * 0.38, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(X, cy, r, 0, 7); ctx.fill(); ctx.fillStyle = face; ctx.beginPath(); ctx.ellipse(X, cy + r * 0.2, r * 0.62, r * 0.5, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#2a2018'; ctx.beginPath(); ctx.arc(X - r * 0.3, cy - r * 0.15, r * 0.12, 0, 7); ctx.arc(X + r * 0.3, cy - r * 0.15, r * 0.12, 0, 7); ctx.fill();
+    if (gone) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * ps; ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; ctx.moveTo(X + Math.cos(a) * r * 1.4, cy + Math.sin(a) * r * 1.4); ctx.lineTo(X + Math.cos(a) * r * 2.2, cy + Math.sin(a) * r * 2.2); } ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `700 ${12 * ps}px ` + monoFont(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('hit', X + r * 2.5, cy); }
+    ctx.restore();
+  }
+  for (const [id, k] of [['mkD', 'D'], ['mkH', 'H']]) $(id).addEventListener('input', (e) => { MK[k] = +e.target.value; mkSync(); mkShow(); schedule(); });
+  $('mkAim').addEventListener('click', () => { P.th = aimAt(P.h, MK.D, MK.H); syncSliders(); changed(false); mkShow(); status(`Aimed at the monkey: ${P.th.toFixed(2)}°. Launch!`); });
+  $('monkeyFold').addEventListener('toggle', () => { if (monkeyOn() && on3d) { const b = document.querySelector('#dimSeg [data-dim="flat"]'); if (b) b.click(); status('The monkey is drawn in the Flat view.'); } mkShow(); resize(); });
+  mkSync(); mkShow();
   manySync(); manyShow();
   function setReduce(on) {
     reduce = on; $('rmToggle').checked = on;

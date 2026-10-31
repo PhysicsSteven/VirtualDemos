@@ -2,7 +2,7 @@
 // Projectile Range: the CORE physics and measurement helpers of demos/projectile-drag.html.
 const assert = require('node:assert/strict');
 const M = require('./demo_source.cjs').core('projectile-drag',
-  'G,DEG,airDensity,isaPressure,kDrag,vTerm,simulate,vacuumShot,vacRange,vacOpt,sweep,sampleAt,roundTo,snapT,readAt,fitOrigin,fitQuad,csvText,PRESETS,mulberry32,gaussPair,rangeOf,manyShots,stats,histogram,spreadPredict');
+  'G,DEG,airDensity,isaPressure,kDrag,vTerm,simulate,vacuumShot,vacRange,vacOpt,sweep,sampleAt,roundTo,snapT,readAt,fitOrigin,fitQuad,csvText,PRESETS,mulberry32,gaussPair,rangeOf,manyShots,stats,histogram,spreadPredict,aimAt,monkeyMeet');
 let count = 0;
 function test(name, f) { f(); count++; console.log('PASS', name); }
 const near = (a, b, rel, msg) => assert(Math.abs(a - b) <= rel * Math.max(Math.abs(b), 1e-300), `${msg || ''} expected ${b}, got ${a} (relative ${Math.abs(a - b) / Math.abs(b)})`);
@@ -185,4 +185,22 @@ test('many launches: the random numbers, the statistics, and the spread against 
   near(s45.mean, p45.R0 * (1 - 2 * (2 * DEG) ** 2), 2e-4, 'mean pulled down by the curvature');
 });
 
+test('monkey and hunter: aimed straight at it, without air the ball meets the falling target at any speed that gets there in time', () => {
+  for (const [v, h, D, H] of [[40, 0, 40, 20], [25, 1.5, 30, 12], [60, 0, 100, 35], [18, 3, 20, 8]]) {
+    const p = ball({ v, h, drag: false }); p.th = M.aimAt(h, D, H);
+    const s = shot(p), q = M.monkeyMeet(s.pts, s.T, D, H), vx = v * Math.cos(p.th * DEG);
+    assert(q.reaches); near(q.t, D / vx, 1e-6, 't* = D / (v cos θ)');
+    assert(Math.abs(q.gap) < 1e-4, `gap ${q.gap}`); assert.equal(q.hit, q.t < Math.sqrt(2 * H / G));
+  }
+  const slow = ball({ v: 12, h: 0, drag: false }); slow.th = M.aimAt(0, 40, 20); const ss = shot(slow);
+  const qs = M.monkeyMeet(ss.pts, ss.T, 40, 20); assert(!qs.reaches || qs.landed, 'too slow: lands short or meets it on the ground');
+  near(M.aimAt(0, 40, 20), Math.atan(0.5) / DEG, 1e-12);
+});
+test('monkey and hunter with air: drag also slows the ball\'s fall, so it drops less than the free falling monkey and passes above', () => {
+  const p = ball({ v: 40, h: 0 }); p.th = M.aimAt(0, 40, 20);
+  const s = shot(p), q = M.monkeyMeet(s.pts, s.T, 40, 20);
+  assert(q.reaches && q.gap > 0, `gap ${q.gap}`); near(q.gap, 0.6746, 1e-3, 'baseball, 40 m/s at a monkey 40 m away and 20 m up');
+  const vac = ball({ v: 40, h: 0, drag: false }); vac.th = p.th; const qv = M.monkeyMeet(shot(vac).pts, shot(vac).T, 40, 20);
+  assert(q.t > qv.t, 'later with drag');
+});
 console.log(`${count} projectile-drag test groups passed`);

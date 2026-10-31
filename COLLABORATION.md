@@ -6240,3 +6240,33 @@ in the project files. GPT, please verify the handouts and numbers below (all fro
   binding-energy and periodic-table gained the new tables and answers from real runs; seven PDFs rebuilt. Capture helper
   `typeTable` added to p2lib.cjs.
 - How this works: `demos/media/how-this-works/alpha-and-beta-decay.mp4` (17 s, dark): ¹⁴⁶Sm, measured 68.0 Myr, model 77.3 Myr.
+
+## 2026-10-31 · Claude · Parity recount (Version 6) and Round 1 Group A: conical pendulum, rotor, monkey and hunter
+
+Steve (17:07): "let's do a quick recount to be sure and maybe get started on that".
+- Recount against main 82c2362: PhET 70 covered, 0 partly, 0 missing (the last 15 partials built this afternoon); six
+  collections 298 / 0 / 46 (Falstad TE now covered; code searched again for every missing sim's idea, none found). Plan
+  artifact https://claude.ai/artifact/QqssrZVmR1jspc3FM2sops Version 6 (copy research/phet-parity-2026-10-31-evening.html).
+- Round 1 (#1 to #8) split by demo into groups A, B, C (`round1/groups-2026-10-31.md` in the project files). This entry is
+  Group A (#1, #3, #7); B and C run as sibling threads. All fold ins, no new worksheets. GPT, please verify the numbers.
+- **Circular Motion, Conical pendulum** (`?setup=cone`): bob on a string L at θ from the vertical, drawn from the side and a
+  little above (oblique projection, to scale). T cos θ = mg, T sin θ = mv²/r, period 2π√(h/g) with h = L cos θ. L = 1.00 m,
+  30°, 0.5 kg: r 0.500 m, h 0.866 m, v 1.68 m/s, T 5.66 N, period 1.867 s. Cut the string: projectile to the floor.
+  Readings rows: L, θ, r, h, v, v², period.
+- **Circular Motion, Barrel ride (rotor)** (`?setup=rotor`): cut away drum, three riders, Drop the floor. N = mv²/R,
+  friction up to μs N must hold mg, v_min = √(gR/μs) for any mass; a rider who slips slides at g − μ v²/R (sliding friction
+  taken equal to μs, stated). R 2.5 m, μs 0.40, 9.0 m/s, 70 kg: N 2268 N, μs N 907 N, mg 687 N, holds; v_min 7.83 m/s
+  (29.9 per minute); at 6.0 m/s they slide at 4.05 m/s². Readings rows with rpm and the outcome.
+- Circular Motion generic fixes: the free body diagram's net arrow now sits below the lowest arrow label (no overlap), and
+  the status line sits under the buttons when they wrap on a 360 px phone.
+- **Projectile Range, Monkey and hunter** fold: target distance and height, Aim straight at the target, the monkey (0.5 m,
+  free fall without drag, stated) lets go at launch; readouts of when the selected shot reaches x = D, both heights, the gap
+  and hit (within 0.25 m) / above / below / monkey already down. Vacuum: always a hit if it gets there in time (tested for
+  four cases, gap < 0.1 mm). With air it passes ABOVE: drag slows the fall too (baseball 40 m/s at D 40 m, H 20 m: +0.67 m,
+  1.285 s against 1.118 s). After a flight the monkey stays where it ended. Opening the fold switches 3D to Flat.
+- Tests: test_circular_motion 7 groups (2 new), figures 8, test_projectile_drag 15 (2 new), all pass. vdcheck `--only after`
+  0 problems and `--only clip` 0 cut off on both demos; screenshots at 1280, 400 and 360 looked at.
+- Notes: one class step each (circular-motion 6 and 7, projectile-drag 8) and model lines; demo key for circular-motion
+  rebuilt in TeacherKeys. What's new entry added.
+- Worksheet part candidates for the next sweep: conical pendulum (period² against h, slope 4π²/g) in the Circular Motion
+  worksheet; rotor (least speed against μs); monkey and hunter as a short Projectile part (gap with and without air).

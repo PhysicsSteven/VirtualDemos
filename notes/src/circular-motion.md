@@ -17,6 +17,8 @@ time: 15 to 30 minutes
 3. **Banked curve.** 25°, μs = 0.3: ideal speed 15.1 m/s (no friction needed); allowed 8.5 to 20.9 m/s. Watch friction flip from up the slope to down it. This setup opens in 3D, so students can see the road tilt and the car lean in (drag to turn the view; the **Flat** button, or `?view=flat`, gives the view from above).
 4. **Speeding up or braking.** Same road, radius 60 m, μs = 0.70, from rest at a_t = 2.0 m/s². At first the acceleration points along the road; as v²/r grows it swings toward the center (40° from the center at 12 m/s). The car slides off at 9.93 s at 19.9 m/s, below the 20.3 m/s it could hold cruising: the grip is shared between speeding up and turning. With a_t negative it brakes; a car already near the cruising limit slides at once.
 5. **Vertical loop.** r = 1.5 m: it needs 8.58 m/s at the bottom to keep contact at the top. Lower v₀ to 8 m/s and watch it leave the track.
+6. **Conical pendulum.** 0.5 kg on a 1.00 m string at 30°: r = 0.500 m, h = 0.866 m, v = 1.68 m/s, T = 5.66 N, period 1.867 s. Ask what happens to the period at 60° on a 1.73 m string (h is the same, so the period is too). Cut the string and the bob flies off along its velocity as it falls.
+7. **Barrel ride (rotor).** R = 2.5 m, μs = 0.40, wall speed 9.0 m/s (34.4 turns per minute): the wall pushes a 70 kg rider with 2268 N, friction can hold up to 907 N, the weight is 687 N, so the riders stay up when the floor drops. The least wall speed is 7.83 m/s (29.9 per minute) for any mass; at 6.0 m/s they slide down at 4.05 m/s².
 
 ## Questions
 
@@ -45,4 +47,6 @@ time: 15 to 30 minutes
 
 - Constant speed on a circle, a = v²/r; g = 9.81 m/s². Flat curve: static friction up to μs mg. Banked curve: N and static friction solved from the horizontal and vertical balances, with the friction limit μs N giving v_min and v_max.
 - Loop: frictionless sliding (no rolling energy); speed from energy conservation, N = m(v²/r + g cos φ) with φ from the bottom; the ball leaves the track where N = 0 and then moves as a projectile.
+- Conical pendulum: a point bob on a massless string, T cos θ = mg and T sin θ = mv²/r, so ω² = g/h with h = L cos θ and the period is 2π√(h/g); after a cut it moves as a projectile until it reaches the floor. Drawn in oblique projection (depth squeezed to 0.3), to scale; runs at real speed.
+- Barrel ride: riders as points on the wall, N = mv²/R toward the center, static friction up to μs N holding mg once the floor drops; a rider who slips slides with a = g − μ v²/R, sliding friction taken equal to μs. The floor falls freely 1.2 m and stops (scenery). Real speed.
 - After release the object moves in a straight line (string, car) or a parabola (loop). Cars are shown at a quarter of real speed and the loop at half; readouts are real.
