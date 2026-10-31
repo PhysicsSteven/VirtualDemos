@@ -6550,3 +6550,41 @@ Steve (19:05): "Yeah let's finish up". Plan #38 (Falstad's 2D square and circula
   which still lists Rainbows as "notes to come"; left both for whoever next rebuilds every note.
 - Worksheet part ideas (not built): in the Energy Levels worksheet, a 2D box part (E against nx² + ny², the degeneracies of a square,
   splitting them by stretching the box); a Rabi part (period against 1/ℰ, slope h/(e|x_fi|)).
+## 2026-10-31 · Claude · Rounds 4 and 5, Group A: Millikan Oil Drop (new demo, plan #25)
+
+Steve (19:05): "Yeah let's finish up". Group A of `round4/groups-2026-10-31.md` in the project files (rounds 4 and 5 split into six
+groups, A to F). Plan #25, its own demo by Steve's call (14:11); closes oPhysics Millikan. No worksheet (coordinator brief: no new
+worksheets this round). GPT, please verify the physics and numbers below (all from the core and `test_millikan.cjs`).
+- **demos/millikan.html**: the apparatus (lamp, plates 7.60 mm apart with a hole under the atomizer, telescope, supply 0 to 600 V,
+  plates off, top plate + or top plate −, ionizing source) beside the view through the telescope (3.2 mm field, lines every 0.5 mm,
+  ticks every 0.1 mm), and a dot plot of |q| below it with dashed lines at whole numbers of e. Spray drops; tap a drop or press N
+  to follow it. Timing: a stopwatch on the demo's clock, or two orange lines 0.5 to 2.0 mm apart that time the followed drop as it
+  crosses them. Record the time puts it in the drop's row (falls with the plates off, runs with the plates on; a new row when V
+  or the polarity changes or by hand after the charge changes); Record: held still at this V is the balancing method (v_E = 0).
+  The table averages the speeds and works out r (iterating with the slip correction) and q; Blind hides r, q and the e lines.
+  Lab: plain Stokes analysis (no slip), true charge of the followed drop, the plain Stokes radius column, oil density 800 to 1000.
+  Speed ×1, ×4, ×16. Seven setups. Debug handle window.__mk.
+- **Physics**: terminal velocity v = C(qE_up − m′g)/(6πηr), m′ = (4/3)πr³(ρ − ρ_air); relaxation time m C/(6πηr) < 2 × 10⁻⁵ s,
+  so no transient (test). Slip correction C = 1 + (λ/r)[1.155 + 0.471 exp(−0.596 r/λ)] (Allen and Raabe 1982, fitted to Millikan's
+  oil drop data), λ = 67.3 nm at 23 °C and 101.325 kPa, scaled ∝ (T/p)(1 + S/T)⁻¹ (Willeke 1976). η by Sutherland (1.716 × 10⁻⁵
+  Pa·s at 273.15 K, S = 110.4 K; 1.8276 × 10⁻⁵ at 23 °C), ρ_air by the ideal gas law (M = 28.9647 g/mol; 1.1919 kg/m³), g 9.81,
+  e = 1.602176634 × 10⁻¹⁹ C, k_B exact. Oil 886 kg/m³ (light mineral oil, PASCO's Millikan manual). Brownian step √(2DΔt) each
+  way, D = k_B T C/(6πηr), steps of at most 20 ms of demo time. Simulated drops (labelled on the page): r log uniform 0.35 to
+  1.0 µm, |n| from 1 up with P(n ≥ k) = 0.42^(k−1) capped at 12, three in four negative; ionizing source changes a drop by ±1 e
+  at 1/8 per second. Seeded generator (mulberry32) per setup.
+- Numbers: fall speed 30.51 µm/s at r = 0.5 µm (C = 1.156), 113.74 at 1.0 µm (C = 1.078); hold voltage for one e 215.6 V at
+  0.5 µm, 1725 V at 1 µm; at 45 kPa λ = 151.5 nm, C(0.5 µm) = 1.370, plain Stokes q too large by C^(3/2) = 1.604. Brownian
+  spread over 1 mm for r = 0.5 µm 4.2%, over 0.5 mm for 0.36 µm 9.8%.
+- Tests `test_millikan.cjs` (9): air values, slip limits, the force balance at terminal speed, the C × Stokes speed, the transient,
+  r from v_f with and without slip (r₀ = r√C), q from both speeds for 1 to 12 e of both signs at two voltages and polarities and by
+  balancing, the C^(3/2) error, Brownian σ and drift from 20 000 steps, the generator.
+- Registered: catalog (after e/m), textbook map (Vol 2 §5.1; courses Physics II and Modern Physics, Modern unit Photons and matter
+  waves beside e/m), topics Charges and fields, Quantum; QR, Reset all, thumbnails (OVERRIDES), courses.py, notes (Q1 to Q8) and
+  the key in TeacherKeys demo-keys. What's new entry. No How this works video (no worksheet).
+- Checks: all Node suites; vdcheck `--only after` 0 problems (36 screenshots) and `--only clip` 0 cut off; looked at 1280 px dark
+  and 400 px light (no sideways scroll; the readings table scrolls in its box).
+- Left out and stated on the page: evaporation, fringe fields, convection, image charges; the apparatus picture is not to scale and
+  the telescope view is upright. No 3D view (the picture is a bench schematic and a telescope view; 3D would add little here).
+- Worksheet ideas (not built): a Millikan worksheet of its own if Steve wants one later (each student times five drops twice each
+  way, the class pools |q| in a histogram, finds e from the spacings and from q/n with n chosen by rounding); or a part in the e/m
+  worksheet (m_e = e/(e/m) with e from three drops).

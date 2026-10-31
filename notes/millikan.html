@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Millikan Oil Drop: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Millikan Oil Drop</h1><ul class="meta"><li><a href="../demos/millikan.html">Open the demo</a></li><li>Intro E&amp;M and Modern Physics (algebra based)</li><li>25 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A tiny drop falling through air reaches a steady (terminal) speed almost at once, where air drag balances its weight less the buoyancy. Measuring that speed gives the drop's radius, because drag grows as r and weight as r³.</li>
+<li>With the plates on, the electric force qE joins in. Timing the same drop with the field on as well as off gives its charge without knowing its mass in advance.</li>
+<li>Every charge measured is a whole number times one smallest charge, e = 1.602 × 10⁻¹⁹ C. When a drop picks up an ion its charge jumps by exactly ±e.</li>
+<li>Real measurements scatter: Brownian motion jiggles the smallest drops and reaction time spoils hand timing. Timing each drop several times and averaging is part of the experiment.</li>
+<li>Stokes's law alone is not quite right for drops this small: the air is not a smooth fluid on the scale of the mean free path (about 67 nm), so drops slip and fall faster. The correction matters more in thin air.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the forces on a falling object with drag, E = V/d between parallel plates and F = qE (OpenStax Vol 2 §5.1, §7.5). The bar above the picture starts the run, sprays drops in, switches the plates (off, top plate + or top plate −), turns on the ionizing source and sets the speed (×1, ×4, ×16 of real time). On the left is the apparatus, on the right the view through the telescope with lines every 0.5 mm, and below it a dot plot of the charges worked out so far. Tap a drop (or press <strong>Follow next drop</strong>, or N) to follow it. The Set up card sets the plate voltage, the timing distance and the air; <strong>Time the followed drop between the two orange lines</strong> times it exactly, or students can use the stopwatch in <strong>Timing</strong>. <strong>Record the time</strong> puts the last time in the drop's row of the <strong>Readings</strong> table, which works out v_f, v_E, r and q; <strong>Record: held still at this V</strong> is the balancing method. <strong>Blind</strong> in <strong>Lab</strong> hides r, q and the lines at whole numbers of e.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Time a drop falling.</strong> Before starting, ask which drops will fall fastest (Q1). Time the followed drop two or three times with the plates off.</li>
+<li>Work out its radius by hand from the fall speed and compare with the table (Q2).</li>
+<li><strong>Make a drop rise.</strong> Ask which way each drop will go when the top plate is made + (Q3); time the followed drop rising and read its charge.</li>
+<li><strong>Hold a drop still.</strong> Turn the voltage until the drop hovers and record it (Q4).</li>
+<li><strong>Change a drop's charge.</strong> Time the drop with the plates on, wait for it to pick up an ion, start a new row and time it again (Q5).</li>
+<li><strong>Many drops: charges in steps.</strong> Pool the class's charges in the dot plot (Q6).</li>
+<li><strong>Thin air: drag slips.</strong> Compare the charges with and without the slip correction (Q7).</li>
+<li><strong>A tiny drop jiggles.</strong> Time it five times over 0.5 mm and look at the spread (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> With the plates off, two drops of the same oil fall side by side, one with twice the radius of the other. Which falls faster, and by roughly how much? Check with the readings: what fall speeds would drops of radius 0.5 µm and 1.0 µm have at 23 °C?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A drop takes 23.4 s to fall 1.00 mm with the plates off. Find its radius from Stokes's law (η = 1.828 × 10⁻⁵ Pa·s, ρ_oil − ρ_air = 885 kg/m³), then correct it for slip with C = 1 + (λ/r)(1.155 + 0.471 e^(−0.596 r/λ)), λ = 67.3 nm, and compare with the table.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The top plate is made + at 450 V with the plates 7.60 mm apart. What is E, and which way does it point? Which drops now rise, which fall faster and which fall more slowly? The followed drop rises 1.00 mm in about 8.8 s after falling it in 23.4 s: what is its charge?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Hold a drop still</strong>, find the voltage that holds the followed drop still and record it. From its fall speed find its weight less buoyancy m′g, and its charge from q = m′g d/V. Why is it hard to be sure the drop is exactly still?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A drop with one extra electron (r = 0.560 µm) rises at 12.0 µm/s with the top plate + at 400 V. It picks up an ion and now rises at 61.8 µm/s. What was its change in charge? What speed would one more electron give?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Pool the charges from several drops. Without being told e, how could you find the smallest charge from a list like 1.51, 3.20 and 4.41 × 10⁻¹⁹ C? What does the dot plot show?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Thin air: drag slips</strong> the pressure is 45 kPa. What is the mean free path now? For a drop of radius 0.5 µm, compare the slip correction at 45 kPa and at 101 kPa. If you work out q with plain Stokes drag, by what factor is it wrong?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> The tiny drop (r = 0.36 µm) takes about 30 s to fall 0.5 mm. How far does Brownian motion move it in that time (D = k_B T C / 6πηr)? What spread in the fall times does that give? Why does Millikan's method work better with larger drops, and what limits how large?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Heavier drops fall faster because gravity pulls harder."</strong> All objects fall together in a vacuum; here drag sets a terminal speed, and since weight grows as r³ and drag as r, big drops' terminal speed is larger.</li>
+<li><strong>"The drop accelerates the whole way down."</strong> It reaches its terminal speed in about 10 microseconds: every time you measure is at constant speed.</li>
+<li><strong>"A drop with charge on it always rises in the field."</strong> It rises only if qE is larger than its weight less buoyancy and points up: the sign of the charge and of the plates both matter.</li>
+<li><strong>"The charges should come out exactly 1.602, 3.204, ..."</strong> Individual timings scatter by several percent from Brownian motion and timing; the whole numbers emerge from many careful measurements.</li>
+<li><strong>"Millikan measured the mass of each drop directly."</strong> He found it from the fall speed and the density of the oil, through the drag law.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Plates 7.60 mm apart (typical teaching apparatus), uniform field E = V/d; oil density 886 kg/m³ (light mineral oil, PASCO's Millikan manual); g = 9.81 m/s².</li>
+<li>Air: viscosity from Sutherland's law (1.716 × 10⁻⁵ Pa·s at 0 °C, S = 110.4 K; 1.828 × 10⁻⁵ Pa·s at 23 °C), density from the ideal gas law (1.192 kg/m³ at 23 °C and 101.325 kPa), mean free path 67.3 nm at 23 °C and 1 atm scaled as (T/p)(1 + S/T)⁻¹.</li>
+<li>Drag 6πηrv/C with the slip correction of Allen and Raabe (1982), fitted to Millikan's own oil drop data: C = 1 + (λ/r)[1.155 + 0.471 exp(−0.596 r/λ)]; C = 1.156 at r = 0.5 µm, 1.078 at 1 µm.</li>
+<li>Each drop moves at its terminal velocity v = C(qE − m′g)/(6πηr) plus a Brownian step of standard deviation √(2DΔt) each way, D = k_B T C/(6πηr) (Einstein 1905). The drops' radii (0.35 to 1.0 µm) and charges (1 to 12 e, mostly negative) are drawn at random: simulated drops.</li>
+<li>The readings work out r from the mean fall speed by iterating r = √(9ηv_f / 2(ρ − ρ_air)gC(r)) and q = 6πηr(v_f + v_E)/(CE); held still, v_E = 0, which is q = m′gd/V.</li>
+<li>Left out (stated on the page): evaporation, the field's fringe near the hole, convection, image charges. The apparatus picture is not to scale; the telescope view is shown upright.</li>
+<li>Tests (curriculum/validation/test_millikan.cjs): the air values, the slip correction's limits, the force balance at terminal speed, the radius and charge recovered from the two speeds for every charge 1 to 12 e and both signs (and the balancing method), the C^(3/2) error without slip, and the Brownian spread against √(2DΔt).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>e/m of the Electron: with e from here and e/m from that bench, the electron's mass.</li>
+<li>Electrostatics at Work: the ink jet printer and the precipitator steer charged drops and particles in the same way, and the precipitator uses the same slip correction.</li>
+<li>Brownian motion was itself measured this way: Millikan and Fletcher used the jiggling of oil drops to find Avogadro's number.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

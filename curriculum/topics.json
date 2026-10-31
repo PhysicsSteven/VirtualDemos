@@ -161,7 +161,8 @@
       "force-lab",
       "gauss-law",
       "electrostatics-at-work",
-      "capacitors"
+      "capacitors",
+      "millikan"
      ]
     },
     {
@@ -268,7 +269,8 @@
       "quantum-waves",
       "franck-hertz",
       "blackbody",
-      "quantum-coin"
+      "quantum-coin",
+      "millikan"
      ]
     },
     {

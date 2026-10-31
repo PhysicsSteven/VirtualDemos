@@ -1273,7 +1273,8 @@
             }
           ],
           "demos": [
-            "e-over-m"
+            "e-over-m",
+            "millikan"
           ]
         },
         {
@@ -3472,7 +3473,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "induction"
+        "induction",
+        "millikan"
       ],
       "unit": "charge-fields",
       "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
@@ -7491,6 +7493,26 @@
       "handouts": [
         "e-over-m"
       ]
+    },
+    {
+      "demo": "millikan",
+      "course": [
+        "physics-2",
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "5.1",
+          "title": "Electric Charge"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Millikan Oil Drop (oPhysics Millikan counterpart, plan #25, 2026-10-31, own demo by Steve's call): parallel plates 7.60 mm apart, drops timed falling and with the plates on through a telescope reticle (stopwatch or lines), Stokes drag with the Allen and Raabe (1982) slip correction, Sutherland viscosity, Brownian motion, the balancing method, an ionizing source; r and q worked out in the readings, a dot plot of |q|. No worksheet (log the part ideas).",
+      "title": "Millikan Oil Drop",
+      "url": "demos/millikan.html"
     },
     {
       "demo": "early-universe",

@@ -551,6 +551,18 @@
      ]
     },
     {
+     "demo": "millikan",
+     "title": "Millikan Oil Drop",
+     "desc": "Spray oil drops between charged plates, time them falling and rising through the telescope, work out each drop's size and charge, and find that charge comes in whole numbers of e.",
+     "tags": [
+      "lab",
+      "elementary charge",
+      "Stokes drag",
+      "slip correction",
+      "Brownian motion"
+     ]
+    },
+    {
      "demo": "electron-diffraction",
      "title": "Electron Diffraction",
      "desc": "Fire electrons through graphite, measure the two rings on the tube's screen at several voltages, and find the lattice spacings from de Broglie's λ = h/p.",
