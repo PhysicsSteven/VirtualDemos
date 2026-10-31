@@ -64,3 +64,7 @@ wire-force | LB | label LB | a product, L times B; each letter has its own tip
 mp-ultrasound-attenuation | e | euler \alpha=20\log_{10}(e)\,a=8.686\,a | log₁₀(e) = 0.4343 converts nepers to decibels: this e is Euler's number, as the tip says
 mp-charged-particles | t | = shift + | "t_w = shift + t" in a table heading: t is the slab thickness added to the shift
 mp-bragg-peak | R_80 | in water ÷ | "R_80 in water ÷ R_80" in a table heading: the first R_80 is the one measured in water, the tip is right for both
+normal-modes | p | even | "an even p or q" says which modes, not what p is
+normal-modes | N | factor | "smaller by the factor N": N is still the number of oscillations timed
+normal-modes | t | display truncates | "the display truncates t": t is still the stopwatch time
+springs | t | Stopwatch | table heading "Stopwatch t": t is the time on the stopwatch, as the tip says

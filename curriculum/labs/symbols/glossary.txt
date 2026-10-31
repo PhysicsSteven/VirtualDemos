@@ -376,6 +376,19 @@ g | Gravitational acceleration | m/s²
 f_j | Frequency of mode j | Hz
 a [\lvert a\rvert] | Acceleration amplitude of the plate | m/s²
 ell | Side of the square plate or radius of the circular plate | m
+m | Number of nodal circles of a drumhead mode, the rim included
+T | Tension of the drumhead, per unit length | N/m
+sigma | Mass of the drumhead per unit area | kg/m²
+f_nm | Frequency of drumhead mode (n, m) | Hz
+f_01 | Frequency of the drumhead's lowest mode (0, 1) | Hz
+f_1 | Fundamental frequency of a string | Hz
+j_nm | The mth zero of the Bessel function J_n
+j_01 | First zero of J_0 | | 2.405
+j_11 | First zero of J_1 | | 3.832
+j_21 | First zero of J_2 | | 5.136
+j_02 | Second zero of J_0 | | 5.520
+j_31 | First zero of J_3 | | 6.380
+j_12 | Second zero of J_1 | | 7.016
 
 == circular-motion ==
 r | Radius of the circle | m
@@ -2673,15 +2686,23 @@ gamma | Damping rate | s⁻¹
 omega_1 | Angular frequency of the fundamental | rad/s
 Q | Quality factor
 y | Displacement (sum of the two tones) | m
-A_1 | Amplitude of the first tone
+A_1 [\cos] | Amplitude of the first tone
+A_1 | Height of pulse 1 | cm
 f_1 | Frequency of the first tone | Hz
-A_2 | Amplitude of the second tone
+A_2 [\cos] | Amplitude of the second tone
+A_2 | Height of pulse 2 | cm
 f_2 | Frequency of the second tone | Hz
 A | Amplitude of each tone
 f_beat | Beat frequency | Hz
 t_1 | Time of the first quiet moment | s
 t_N | Time of the last quiet moment | s
 N | Number of quiet moments counted
+A [\sin(\pi u/w)] | Height of the pulse | cm
+y [\sin(\pi u/w)] | Displacement of the string in the pulse | cm
+u | Distance back from the pulse's front | m
+w | Width of a pulse, v/2f | m
+w_1 | Width of pulse 1, v/2f₁ | m
+w_2 | Width of pulse 2, v/2f₂ | m
 
 == static-equilibrium ==
 mu_s | Coefficient of static friction
@@ -2899,6 +2920,16 @@ k | Number of semitones from A4
 B | Stiffness (inharmonicity) coefficient
 x_rms | rms value of the signal
 L_n | Level of harmonic n | dB
+n_0 | Harmonic at the center of the wave packet
+sigma | Spread of the wave packet, in harmonics
+k_n | Wave number of harmonic n, n k₁ | rad/m
+k_1 | Wave number of the fundamental, 2π/λ₁ | rad/m
+lambda_1 | Wavelength of the fundamental in air | m
+v | Speed of sound in air | m/s | 343.2 m/s
+Delta k | Spread of the wave numbers in the packet (RMS, weighted by aₙ²) | rad/m
+Delta x | Width of the packet (RMS width of its squared envelope) | m
+x [=x=vt] | Position along the wave | m
+k [=k=2\pif/v] | Wave number | rad/m
 
 == transformers ==
 V_P | rms primary voltage | V
@@ -3085,6 +3116,7 @@ g | Gravitational acceleration | m/s²
 omega | Angular frequency, 2πf | rad/s
 P | Average power carried | mW
 L | Length of the string | m
+r | Ratio of the returning pulse to the pulse that reached the end, (Z − b)/(Z + b)
 
 == white-dwarf-cooling ==
 k | @k_B
@@ -3508,3 +3540,32 @@ B_lambda | Blackbody spectrum per unit wavelength (Planck's law)
 e | @euler
 lambda_B | One wavelength standing for the whole B filter, about 440 nm | nm
 lambda_V | One wavelength standing for the whole V filter, about 550 nm | nm
+
+== normal-modes ==
+N | Number of blocks in the chain, or of pucks along each side of the grid
+N [~oscillations] | Number of full oscillations timed
+N [~count] | Number of full oscillations timed
+N [~time of] | Number of full oscillations timed
+N [~factor] | Number of full oscillations timed
+p | Number of half waves of the grid mode along x (across the grid), 1 to N
+q | Number of half waves of the grid mode along y (up the grid), 1 to N
+t | Time of N oscillations on the stopwatch | s
+T | Period, t/N | s
+k | Spring constant of each spring | N/m
+m | Mass of each block or puck | kg
+j | Number of the block, counted from the left wall, 1 to N
+n | Number of the chain's mode, from the lowest, 1 to N
+x_j | Displacement of block j from its rest position | m
+A | Amplitude of the mode | m
+omega_n | Angular frequency of mode n of the chain | rad/s
+omega | Angular frequency of the one block between two walls | rad/s
+f_n | Frequency of mode n of the chain, ω_n/2π | Hz
+f_1 | Frequency of the chain's lowest mode | Hz
+f_10 | Frequency of the chain's highest mode, n = 10 | Hz
+f | Frequency, 1/T | Hz
+v | Wave speed, λf | m/s
+lambda | Wavelength | m
+v_n | Wave speed of mode n of the chain, (22/n) f_n | block spacings per second
+f_pq | Frequency of grid mode (p, q) | Hz
+s_p | sin(pπ/2(N + 1)) for the grid
+s_q | sin(qπ/2(N + 1)) for the grid

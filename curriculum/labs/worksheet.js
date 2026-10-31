@@ -21,7 +21,8 @@
     'pipe-flow' /* Flow in a pipe experiment of the Falling Ball Viscometer demo, 2026-10-24 */,
     'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */,
     'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */,
-    'atwood' /* Atwood's machine setup of the Forces and Friction demo, 2026-10-31 */];
+    'atwood' /* Atwood's machine setup of the Forces and Friction demo, 2026-10-31 */,
+    'normal-modes' /* chain of ten and grid of pucks, Springs Sandbox, 2026-10-31 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -60,6 +61,10 @@
     /* driven series (every row has a drive frequency) go to the second table: Run | m | k | b | F₀ | ω | steady A | ω/ω₀ | predicted A */
     springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.omega_drive_rad_per_s !== ''), cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] }] },
+    /* Chain of ten: Reading | Rig | Mode n | N | t (s) | T (s) | f | sin(nπ/22) | predicted f. Grid series (every row a grid mode) go to the
+       second table: Reading | Grid | Mode (p, q) | Along | N | t | T | f | √(s_p² + s_q²) | predicted f */
+    'normal-modes': { demo: 'Springs and Oscillations (Sandbox)', cols: ['row', (r) => `${r.rig} (${r.k_N_per_m} N/m, ${r.m_kg} kg)`, 'mode', 'N_osc', 't_s', 'T_s', null, null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.p !== '' && r.p != null), cols: ['row', 'rig', (r) => `(${r.p}, ${r.q})`, 'axis', 'N_osc', 't_s', 'T_s', null, null, null] }] },
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
     /* Shear: Reading | Block | F (kN) | Δx (µm) | F/A | Δx/L₀. Bulk series (every row a bulk test) go to the second table:
        Reading | Sample | F (kN) | Piston Δx (mm) | Strain gauge (µε) | Δp | −ΔV/V₀ */
@@ -254,7 +259,10 @@
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
     /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */
-    chladni: { demo: 'Chladni Plates', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null] },
+    /* drumhead series (every row a Mylar drumhead) go to the second table: Reading | Drive | T (N/m) | Mode (n, m) | f | f/f01 | j ratio | √T;
+       the demo's mode text also carries f/f1, which is the student's to work out here, so only the (n, m) label is taken */
+    chladni: { demo: 'Chladni Plates', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.material === 'Mylar drumhead'), cols: ['row', 'driver', 'T_N_per_m', (r) => String(r.mode || '').replace(/, f\/f1 = .*$/, ''), 'f_Hz', null, null, null] }] },
     /* Scan | Motion | Emitted f₀ (Hz) | Speed (m/s) | Direction | Observed f (Hz) | f/f₀; Speed is the part along the line of sight */
     doppler: { demo: 'Doppler Effect', cols: ['row', (r) => (r.motion === 'both' ? `both: source ${r.vs_line_m_s} m/s, observer ${r.vo_line_m_s} m/s along the line` : r.motion),
       'f0_Hz', 'speed_m_s', 'direction', 'f_obs_Hz', 'ratio'] },
@@ -788,11 +796,12 @@
      with χ², ν and P(χ² or more) shown, and the uncertainties from the error bars alone. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
   GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
+  GRAPH_EVERY_TABLE.push('chladni', 'timbre');   /* the Drumhead table graphs f against √T, the Wave packets table Δx against 1/Δk (2026-10-31) */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');

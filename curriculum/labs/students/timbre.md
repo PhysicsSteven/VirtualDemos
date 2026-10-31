@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.4 and 17.5. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo** (the Presets chips)**:** Square wave; Sawtooth wave; Triangle wave; Like a clarinet; Like a flute; Missing fundamental. The demo opens on Sawtooth wave with f₁ = 220 Hz (A3); Square wave, Triangle wave and Missing fundamental also set 220 Hz, Like a clarinet sets D3 (146.8 Hz) and Like a flute A4 (440 Hz).
+**Setups in the demo** (the Presets chips)**:** Square wave; Sawtooth wave; Triangle wave; Like a clarinet; Like a flute; Missing fundamental; Wave packet. The demo opens on Sawtooth wave with f₁ = 220 Hz (A3); Square wave, Triangle wave and Missing fundamental also set 220 Hz, Like a clarinet sets D3 (146.8 Hz) and Like a flute A4 (440 Hz).
 
 **Using the demo.**
 
@@ -50,11 +50,18 @@ $$L_n=20\log_{10}\left(\frac{a_n}{a_{\rm ref}}\right).$$
 
 The waveform's shortest repetition period depends on all the harmonics present, not just the lowest frequency you can see in the spectrum.
 
+**Wave packets.** A sum of harmonics with amplitudes $$a_n = \exp\left(-(n - n_0)^2/2\sigma^2\right)$$, all with a crest at the same place, is a short bump, a wave packet, centered on harmonic $$n_0$$. Seen against position, harmonic $$n$$ has wave number $$k_n = n k_1$$ with $$k_1 = 2\pi/\lambda_1$$. If $$\Delta k$$ is the spread of the wave numbers in it and $$\Delta x$$ the width of the packet, both as root mean square spreads of the squared amplitudes, then for a Gaussian with nothing cut off
+
+$$\Delta x\,\Delta k = \frac12,$$
+
+the smallest the product can be for any shape. A narrow packet needs a wide spread of wave numbers.
+
 ## Before the lab
 
 1. A tone contains harmonics 2, 3, 4 and 5 of 220 Hz. Must its repetition frequency be 440 Hz because harmonic 1 is missing?
 2. What does halving an amplitude do to its level in dB?
 3. Does the rms formula depend on harmonic phase?
+4. A packet is made twice as narrow. What must happen to the spread of wave numbers in it?
 
 ## Safety
 
@@ -70,6 +77,8 @@ Use a comfortable listening level with real speakers or headphones. High volume 
 
 **Detune a partial.** Return to Sawtooth. In the Inharmonic partials section, set **Detune harmonic** to 3 and **by Δf** to +1.5 Hz, and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness $$B = 0$$, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
 
+**Wave packets.** Use the Wave packet setup, which shows the waveform against position. With the packet centered on $$n_0 = 8$$, record $$\Delta k$$ and $$\Delta x$$ for a spread $$\sigma$$ of 1.0, 1.5, 2.0, 2.5, 3.0 and 4.0 harmonics. Watch the spectrum as $$\sigma$$ grows.
+
 **Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**, which lists the six strongest harmonics. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. **Record harmonics 1 to 6** records the six harmonics of the tone on screen as six rows. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Keep $$f_1$$, $$B$$ and $$\Delta f$$ written beside each run. **Detune harmonic** and **Stiffness B** are in the folded Inharmonic partials section.
 
 ## Data
@@ -82,6 +91,17 @@ Use a comfortable listening level with real speakers or headphones. High volume 
 
 Use rows for all requested harmonics and phase comparisons. State which partial is the dB reference.
 
+**Wave packets.** Work out the last two columns yourself.
+
+| Spread $$\sigma$$ (harmonics) | Center $$n_0$$ | $$\Delta k$$ (rad/m) | $$\Delta x$$ (m) | $$\Delta x\,\Delta k$$ | $$1/\Delta k$$ (m) |
+|---|---|---|---|---|---|
+| | | | | | |
+| | | | | | |
+| | | | | | |
+| | | | | | |
+| | | | | | |
+| | | | | | |
+
 ## Analysis
 
 1. Compare amplitudes with $$1/n$$ for Sawtooth and odd only Square, and with $$1/n^2$$ for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
@@ -89,6 +109,7 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
 4. Calculate the frequency of the detuned third partial and the relative phase drift time $$1/\lvert\Delta f\rvert$$.
 5. Compare the stiffness results with
+6. Plot $$\Delta x$$ against $$1/\Delta k$$ for the wave packets, with a free intercept. Compare the slope with 1/2. At which $$\sigma$$ does $$\Delta x\,\Delta k$$ start to rise above 1/2, and why? (Look at which harmonics the packet would need.)
 
 $$f_n=nf_1\sqrt{\frac{1+Bn^2}{1+B}}.$$
 
@@ -102,7 +123,8 @@ State the resolution of the frequency and amplitude controls and how closely you
 2. Why can a tone still repeat at the original fundamental frequency after harmonic 1 is removed?
 3. Why do Square and Triangle sound different even though both have only odd harmonics?
 4. What part of a real instrument's sound is missing from a comparison of steady spectra alone?
+5. A short click of sound has a wide spread of frequencies, a long steady tone a narrow one. Explain this from $$\Delta x\,\Delta k \ge 1/2$$, using $$x = vt$$ and $$k = 2\pi f/v$$.
 
 ## What to hand in
 
-Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the detuning and stiffness comparison, and answers to the questions. State whether you listened as well as using the plots.
+Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the detuning and stiffness comparison, the Wave packets table with its graph, and answers to the questions. State whether you listened as well as using the plots.

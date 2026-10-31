@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§16.1–16.3, 16.5, 16.6 and
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Two waves make a standing wave; Harmonics of a string; Find the resonances; Pluck at the middle; Beats. The demo opens on Two waves make a standing wave. This handout uses Find the resonances (the **String** view with **Driven** chosen) and Beats (the **Beats** view).
+**Setups in the demo:** Two waves make a standing wave; Harmonics of a string; Find the resonances; Pluck at the middle; Beats; Two pulses pass through each other. The demo opens on Two waves make a standing wave. This handout uses Find the resonances (the **String** view with **Driven** chosen), Beats (the **Beats** view) and Two pulses pass through each other (the **Two traveling waves** view with **Single pulses** chosen).
 
 **Using the demo.**
 
@@ -53,12 +53,15 @@ $$f_{\rm beat} = \lvert f_1 - f_2\rvert.$$
 
 Between swells the envelope pinches to zero, a quiet moment. If quiet moments are seen at times $$t_1$$ and $$t_N$$, with $$N$$ quiet moments from the first to the last counted, there are $$N - 1$$ beat periods between them and $$f_{\rm beat} = (N - 1)/(t_N - t_1)$$. A single beat frequency does not say whether the unknown tone is above or below the known one; changing the known tone and watching whether the beats speed up or slow down settles it. This is how a piano tuner or a guitarist tunes by ear.
 
+**Superposition of pulses** (§16.5). Where two pulses on an ideal string overlap, the string's displacement is the sum of the two displacements, and each pulse comes out of the overlap with its own shape and speed, as if the other had not been there. In the demo each pulse is one hump of a sine wave, $$y = A\sin(\pi u/w)$$ for $$0 < u < w$$, of width $$w = v/2f$$, and both move at $$v = 2$$ m/s.
+
 ## Before the lab
 
 1. What happens to the fundamental frequency if the tension is multiplied by four?
 2. How many antinodes does the third harmonic have?
 3. Why is a peak in the driven response more useful than an arbitrary drive frequency for identifying a normal mode?
 4. A 440 Hz tuning fork and a guitar string sound together and give 4 beats per second. What are the two possible frequencies of the string? The string is tightened a little and the beats slow to 2 per second. Which was it?
+5. Two pulses of heights 1.50 cm and 1.00 cm, both upright, meet with their peaks at the same place. How high is the string there? And if the 1.00 cm pulse is upside down?
 
 ## Safety
 
@@ -73,6 +76,8 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 **Length check.** Keep tension and density fixed. Measure the fundamental at three lengths. Test whether $$f_1$$ is proportional to $$1/L$$.
 
 **Beats.** Use two pure tones. First check the method with tones of 440 Hz and 443 Hz: the strip then spans two beat periods, so count its quiet moments, read the times of the first and last, and find $$f_{\rm beat}$$. Then turn on the mystery tone, whose frequency $$f_2$$ is hidden; the strip now shows a fixed 4 s stretch. Change $$f_1$$ until the beats are slowest, by ear or by eye. Then choose six whole number values of $$f_1$$, three below that point and three above it, each giving between 3 and 25 quiet moments in the 4 s strip. For each, measure $$f_{\rm beat}$$ as before and record it in the Beats table. Reveal $$f_2$$ only after the analysis.
+
+**Two pulses.** Use Two pulses pass through each other: $$A_1 = 1.50$$ cm and $$A_2 = 1.00$$ cm, both 1 m wide. Predict the height of the string where the two peaks coincide, then check it in the demo. Repeat with pulse 2 upside down, then with $$A_2 = 1.50$$ cm upside down, and then with $$A_2 = 1.00$$ cm upright and pulse 2 half as wide ($$f_2 = 2$$ Hz). For each run, describe each pulse after the overlap.
 
 **Using the virtual apparatus.** Use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
 
@@ -99,6 +104,15 @@ Keep harmonic, tension and length scans separate and record how each peak was id
 | | | | | | |
 | | | | | | |
 
+**Two pulses.** Work out the widths and the predicted sum before you look.
+
+| Run | $$A_1$$ (cm) | $$A_2$$ (cm) | Pulse 2 | $$w_1$$ (m) | $$w_2$$ (m) | Predicted height where the peaks coincide (cm) | Height in the demo (cm) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
+
 ## Analysis
 
 1. Fit $$f_n$$ against $$n$$ with a free intercept. Determine wave speed and compare it with $$\sqrt{T/\mu}$$.
@@ -107,6 +121,7 @@ Keep harmonic, tension and length scans separate and record how each peak was id
 4. Describe how damping and frequency resolution affect the location and width of the measured peaks.
 5. For the 440 and 443 Hz check, compare your $$f_{\rm beat}$$ with $$\lvert f_1 - f_2\rvert$$.
 6. Plot $$f_{\rm beat}$$ against $$f_1$$ for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet, and from each row as $$f_1 \pm f_{\rm beat}$$. Then reveal $$f_2$$ and compare.
+7. For the two pulses, compare each predicted height with the demo's. In the run with equal pulses of opposite sign, the string is flat for an instant: where is the pulses' energy then?
 
 ## Uncertainty
 
@@ -119,7 +134,8 @@ Record the smallest available frequency adjustment and how sharply the peak can 
 3. What would change if one end were not effectively fixed?
 4. Why does a large driven amplitude challenge the small displacement model?
 5. Why is it hard to measure $$f_{\rm beat}$$ precisely when $$f_1$$ is very close to $$f_2$$, and also when it is far from it? Which part of the range gives the most precise $$f_2$$?
+6. Why does each pulse come out of the overlap unchanged, even when the two cancel for an instant? What property of the wave equation does this need?
 
 ## What to hand in
 
-Prelab answers, a completed data table, three labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, uncertainty discussion and answers to the questions. Label simulated measurements as simulated.
+Prelab answers, a completed data table, three labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, the Two pulses table, uncertainty discussion and answers to the questions. Label simulated measurements as simulated.

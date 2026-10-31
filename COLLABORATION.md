@@ -6126,3 +6126,39 @@ the regression workflow watches, so it was checked locally).
   --only after and --only clip on forces 0; test_forces passes; local Jekyll build with every new table, the How this works box on
   all six worksheets and no sideways scroll at 400 px.
 - GPT: please verify the Atwood handout and key, and the new parts' numbers in the five keys.
+## 2026-10-31 · Claude · Worksheet sweep, Group 3 (waves and oscillations)
+
+Steve (14:48): "go ahead with the worksheet sweep after these threads are done". Group 3 of `worksheet-sweep/groups-2026-10-31.md`
+in the project files: one new worksheet and four new parts. GPT, please verify the handouts and numbers below.
+- **New worksheet `normal-modes`** (Physics I, Vol 1 §§15.1 and 16.6), on the Springs Sandbox. Part 1, Chain of ten (20 N/m,
+  100 g): time each mode 1 to 10 started alone, f against sin(nπ/22), slope (1/π)√(k/m) = 4.502 Hz, f against n f₁ (falls 10%
+  below at n = 6), v_n = (22/n) f_n in block spacings per second (dispersion). Part 2, 3 by 3 grid: the nine modes along x and
+  (1, 2) along y, f against √(s_p² + s_q²) with s_p = sin(pπ/8), degeneracy ((1, 2) with (2, 1) by symmetry; (1, 3), (3, 1) and
+  (2, 2) at 4.502 Hz, the last one accidental, sin²(π/8) + sin²(3π/8) = 2 sin²(π/4)). Second worksheet on the Springs demo
+  (handout button now a drop-down: Worksheet 1 Spring Constant, Worksheet 2 Normal Modes).
+- **Springs demo** (`demos/springs.html`): a Readings section in the Sandbox between two walls and on the air table (N
+  counted, Capture, Export to worksheet to `vd-handoff:normal-modes`, Clear), rows carry the rig, k and m when uniform, the mode
+  started alone (n, or (p, q) and the axis, or "a mix"), N, t and T = t/N. "Blind: hide the mode frequencies" (the same
+  Blind as the Lab fold) hides each mode's f in the lower pane (chain and grid), the f₁₁ and f_NN readouts and the frequency in
+  what is read aloud. `?rig=hzChain`, `?rig=grid3` (any ready made rig) opens the Sandbox on it. How this works picks the
+  Normal Modes video between walls and on the air table. Tests unchanged and passing (springs 10, sandbox 19); vdcheck
+  `--only after` 0 problems, `--only clip` 0 cut off; new section looked at at 1280, 400 and 360 px.
+- **Chladni, Drumhead part**: Background f_nm = (j_nm/2πa)√(T/σ) with the first six Bessel zeros (Abramowitz and Stegun
+  Table 9.5); six resonances with the pad (f/f₀₁ against j_nm/j₀₁) and f₀₁ against √T for 250 to 4000 N/m with the
+  loudspeaker, σ from the slope (key: 0.26415 against 0.2641 kg/m²). Export lands drumhead readings in the new Drumhead table
+  (`alt` in FROM_DEMO; the demo's f/f1 text is cut from the mode so the ratio stays the student's). About gained the drumhead
+  controls (its pipe escaped: an unescaped `|` there made the whole About a table and moved the Export banner into it).
+- **Wave power, Part 6, one pulse**: r = (Z − b)/(Z + b) for free, too soft, matched, too stiff and fixed ends; typed table.
+- **Standing waves, Two pulses**: superposition, A₁ ± A₂ where the peaks coincide (2.50, 0.50, 0.00, 2.50 cm), flat string
+  energy question; typed table.
+- **Timbre, Wave packets**: Δx against 1/Δk for σ = 1 to 4 at n₀ = 8, slope 0.501 ± 0.001 for σ ≤ 3, product 0.556 at σ = 4
+  where the series is cut off at harmonics 1 and 16; Δt Δf ≥ 1/4π question; typed table.
+- Each part: a new last table, a new last Before the lab item, Analysis item(s), a Question and the What to hand in line; the
+  first tables are unchanged. Glossary sections and four reviewed flags; `symbols.py --check` and `--meanings` clean (3 old flags).
+  check_math 374 expressions, 0 problems. courses.py, `--check`, canvas.py rerun. What's new: one entry.
+- Keys (TeacherKeys): new `physics-1/normal-modes` from a real run (stopwatch pressed frame by frame on the stepped clock, no
+  reaction time: chain k/m = 200.6 ± 0.3 s⁻², grid 199.6 ± 1.7 s⁻²); chladni, wave-power, standing-waves and timbre keys gained
+  the new tables and answers, PDFs rebuilt. Capture scripts: normal-modes, chladni-drumhead, wave-power-pulse,
+  standing-waves-pulses, timbre-packets.
+- How this works: `demos/media/how-this-works/normal-modes.mp4` (20 s, dark): mode 3 of the chain, block 9 timed for 10
+  oscillations, 5.32 s (5.35 s expected; one 1/30 s frame), captured and sent.

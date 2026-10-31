@@ -10179,7 +10179,8 @@
       "status": "usable",
       "note": "OpenStax student handout and matching private guide aligned on 2026-10-22; current controls and numerical reference checks passed. Browser/classroom acceptance remains open.",
       "handouts": [
-        "springs"
+        "springs",
+        "normal-modes"
       ],
       "title": "Springs and Oscillations",
       "url": "demos/springs.html"

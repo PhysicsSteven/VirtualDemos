@@ -186,7 +186,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/springs.html" target="springs-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/springs.html" target="springs-worksheet">Worksheet 1: Spring Constant</a></li><li><a href="../curriculum/labs/students/normal-modes.html" target="normal-modes-worksheet">Worksheet 2: Normal Modes</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -280,6 +280,20 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <p class="hint">Tap a part on the drawing to select it, then use these. Join to… makes two hooks (or a hook and a block) into one bar, so the springs on them stretch together: that is how springs go side by side. Hang a spring below a hook to put springs one after another. Remove takes away the selected spring, hook or block and anything that hung only from it. Let it settle puts every block at rest where it hangs. Every spring is 10.0 cm long when unstretched.</p>
         </details>
+      </section>
+
+      <section id="sbReadSec" hidden>
+        <h2>Readings</h2>
+        <div class="inline"><label for="sbNosc">Oscillations counted, N</label><input type="number" class="num" id="sbNosc" min="1" max="200" step="1" value="10"></div>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="sbCapture">Capture reading</button>
+          <button type="button" class="btn" id="sbExport">Export to worksheet</button>
+          <button type="button" class="btn" id="sbClear">Clear</button>
+        </div>
+        <p class="status" id="sbCapStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="sbRowsTbl"><caption class="sr">Captured readings of the normal modes</caption><thead></thead><tbody></tbody></table></div>
+        <label class="check"><input type="checkbox" id="sbBlind">Blind: hide the mode frequencies</label>
+        <details class="more"><summary>More about this</summary><p class="hint">For the Normal modes worksheet, between two walls and on the air table. Start one mode alone by clicking it in the lower pane, press Stopwatch (or W on the drawing) as a block or puck passes a mark you choose, count N full oscillations and press it again as it passes the same mark going the same way. Capture stores the rig, the mode you started (or "a mix" after you pulled a block yourself), your N and the stopwatch time t, as displayed; T = t/N. Starting a mode sets the stopwatch back to 0.00 s. Blind hides each mode's frequency in the lower pane, in the readouts and in what is read aloud; the shapes, the shares and the stopwatch stay. Export to worksheet sends the readings to the Normal modes worksheet; Clear starts a new series, which goes to a new copy of the table there.</p></details>
       </section>
 
       <section class="nosb">
@@ -856,7 +870,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* the measuring tools: a stopwatch on the simulated clock (no ruler: the stretch is drawn shortened) */
   VD.tools({ el: $('cCan'), time: () => (S.sys === 'sandbox' ? (SB.held || (SB.grid && SB.grid.held) ? null : SB.t) : held ? null : t) });
   /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/springs.mp4', poster: 'media/how-this-works/springs.jpg' });
+  const howVid = () => (S.sys === 'sandbox' && (SB.grid || (SB.rig && SB.rig.hz)) ? 'normal-modes' : 'springs');   /* the Normal modes worksheet's video between two walls and on the air table */
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'normal-modes' ? 'How this works: Normal Modes' : 'How this works') });
   /* Phase plot of the block (block 1 when coupled): v against x at the time shown (demos/lib/vdenergy.js) */
   VD.energy({ run: () => [S.sys, S.preset, S.vert, lastIC.x, lastIC.v, held ? 'held' : ''].join(','),
     phase: { el: $('phCan'), x: 'x (m)', v: 'v (m/s)', n: 1200,
@@ -2413,7 +2429,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ghostKey();
   }
   function updateReadouts() {
-    if (sbOn()) { if (SB.grid) gdReadouts(); else if (SB.md) sbReadouts(); return; }
+    if (sbOn()) { nmShow(); if (SB.grid) gdReadouts(); else if (SB.md) sbReadouts(); return; }
     if (!segs.length) return;
     const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), cp = g.sys === 'coupled';
     $('tclock').firstChild.nodeValue = held ? 't = 0, holding' : `t = ${t.toFixed(2)} s`;
@@ -2773,7 +2789,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('fitTblBtn').setAttribute('aria-expanded', String(open)); $('fitTblBtn').textContent = open ? 'Hide data table' : 'Show data table';
   });
   function setBlind(on) {
-    S.blind = !!on; $('labBlind').checked = S.blind;
+    S.blind = !!on; $('labBlind').checked = S.blind; $('sbBlind').checked = S.blind;
     document.documentElement.setAttribute('data-blind', S.blind ? 'on' : 'off');
     buildCompare(); ranges = {};
     staticText(); updateReadouts(); updateFitOut(); drawAll();
@@ -3511,7 +3527,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       sbModeRows.push([y0, y0 + rowH]);
       if (sel === k) { ctx.fillStyle = T.grid; ctx.fillRect(L - 6 * ps, y0, R - L + 12 * ps, rowH); }
       ctx.fillStyle = T.ink; ctx.font = `600 ${fs}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText(`${k + 1}`, L, yc); ctx.font = `${fs}px ${T.mono}`; ctx.fillText(`${(m.w / (2 * Math.PI)).toFixed(3)} Hz`, L + 20 * ps, yc);
+      ctx.fillText(`${k + 1}`, L, yc); ctx.font = `${fs}px ${T.mono}`; ctx.fillText(S.blind ? 'f hidden' : `${(m.w / (2 * Math.PI)).toFixed(3)} Hz`, L + 20 * ps, yc);
       /* the shape: one stem per block, up for forward (right, or down when hanging) */
       ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x1, yc + 0.5); ctx.lineTo(x1 + wShape, yc + 0.5); ctx.stroke();
       const cols = SB_COLS();
@@ -3528,7 +3544,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const modes = sbModesNow(); if (!modes[k] || SB.held) return;
     const A = 0.03, z = sbZero(); modes[k].phi.forEach((p, i) => { z[i] = A * p; });
     sbStart(z); SB.modeOn = k; if (!running) setRunning(true); updateReadouts();
-    $('live').textContent = `Mode ${k + 1} alone, ${(modes[k].w / (2 * Math.PI)).toFixed(3)} Hz: every block moves at this one frequency.`;
+    $('live').textContent = `Mode ${k + 1} alone${S.blind ? '' : `, ${(modes[k].w / (2 * Math.PI)).toFixed(3)} Hz`}: every block moves at this one frequency.`;
   }
   cans.e.addEventListener('click', (ev) => { if (!sbOn() || SB.pane !== 'modes') return; if (SB.grid) { gdModeClick(ev); return; } const r = cans.e.getBoundingClientRect(), y = ev.clientY - r.top;
     const k = sbModeRows.findIndex(([a, b]) => y >= a && y < b); if (k >= 0) sbStartMode(k); });
@@ -3923,7 +3939,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         const pad = cell * 0.16, st = (cell - 2 * pad) / (N + 1), d = st * 0.42, rr = Math.max(1.2, Math.min(3 * ps, st * 0.18));
         ctx.fillStyle = T.ink; for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const f = gridShape(p, q, i, j, N), px = x + pad + (i + 1) * st + (ax ? 0 : f * d), py = y + cell - pad - (j + 1) * st - (ax ? f * d : 0); ctx.beginPath(); ctx.arc(px, py, rr, 0, 7); ctx.fill(); }
         if (cell >= 40 * ps) { ctx.fillStyle = T.ink; ctx.font = `${fsz}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${p},${q}`, x + 3, y + 2);
-          ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(cell >= 64 * ps ? 3 : 2)}${cell >= 64 * ps ? ' Hz' : ''}`, x + cell - 3, y + cell - 2); }
+          if (!S.blind) { ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(cell >= 64 * ps ? 3 : 2)}${cell >= 64 * ps ? ' Hz' : ''}`, x + cell - 3, y + cell - 2); } }
         gdRects.push([x, y, cell, cell, ax, n]);
       }
     }
@@ -3932,11 +3948,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function gdModeClick(ev) {
     const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, hit = gdRects.find((q) => x >= q[0] && x < q[0] + q[2] && y >= q[1] && y < q[1] + q[3]);
     if (!hit || SB.grid.held) return;
+    gdStartMode(hit[4], hit[5]);
+  }
+  /* start grid mode n (index p − 1 + N(q − 1)) alone along axis ax (0 x, 1 y) */
+  function gdStartMode(ax, n) {
+    const hit = [0, 0, 0, 0, ax, n];
     const G2 = SB.grid, N = G2.N, n2 = N * N, c = new Array(n2).fill(0); c[hit[5]] = 0.02;
     const u = gridCompose(c, N), z = new Array(4 * n2).fill(0); for (let k = 0; k < n2; k++) z[k + hit[4] * n2] = u[k];
     gdStart(z); G2.modeOn = { ax: hit[4], n: hit[5] }; if (!running) setRunning(true); updateReadouts();
     const p = hit[5] % N + 1, q = Math.floor(hit[5] / N) + 1;
-    $('live').textContent = `Mode (${p}, ${q}) along ${hit[4] ? 'y' : 'x'} alone, ${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(3)} Hz: every puck moves at this one frequency.`;
+    $('live').textContent = `Mode (${p}, ${q}) along ${hit[4] ? 'y' : 'x'} alone${S.blind ? '' : `, ${(gridOmega(p, q, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(3)} Hz`}: every puck moves at this one frequency.`;
   }
   function gdDrawBars() {
     const [W, H] = dims.e; if (!W || !H) return;
@@ -3957,7 +3978,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     let h = dd('Time t', `${SB.t.toFixed(3)} s`) + dd('Pucks', `${N} × ${N}, ${fx(GD_M * 1000, 0)} g each`);
     h += dd('Springs', `k = ${GD_K} N/m, ${fx(GD_A * 100, 1)} cm long`) + dd('Tension in each, k × 10 cm', `${fx(GD_K * GD_A, 2)} N`);
     h += dd(`Puck (${i + 1}, ${j + 1}) x, y from rest`, `${fx(s.x.u[G2.sel] * 100, 2)}, ${fx(s.y.u[G2.sel] * 100, 2)} cm`, 'wide');
-    h += dd('Lowest mode f₁₁', `${f(1, 1).toFixed(4)} Hz`) + dd(`Highest f<sub>${N}${N}</sub>`, `${f(N, N).toFixed(4)} Hz`);
+    h += S.blind ? dd('Mode frequencies', '<span class="ok">hidden in Blind</span>', 'wide') : dd('Lowest mode f₁₁', `${f(1, 1).toFixed(4)} Hz`) + dd(`Highest f<sub>${N}${N}</sub>`, `${f(N, N).toFixed(4)} Hz`);
     h += dd('Energy now', fmtE(E)) + dd('At the start', fmtE(G2.E0));
     $('measBox').innerHTML = h;
     $('mFormula').innerHTML = 'ω<sub>pq</sub> = 2√(k/m) √(sin²(pπ/2(N+1)) + sin²(qπ/2(N+1))), the same for x and y. Press N with the picture in focus to pick the next puck.';
@@ -3977,7 +3998,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     SB.scale = null; ranges = {};
   }
   function sbExit() {
-    $('sbPaneSeg').hidden = true; if (SB.pane === 'modes') sbPane('energy');
+    $('sbPaneSeg').hidden = true; $('sbReadSec').hidden = true; if (SB.pane === 'modes') sbPane('energy');
     delete document.querySelector('.rail').dataset.sb; $('dimSeg').hidden = false; $('sbSettle').hidden = true; SB.drag = null; $('sbSec').hidden = true; SB.held = null; SB.join = null;
     if ($('modelHint').dataset.was) $('modelHint').innerHTML = $('modelHint').dataset.was;
     if (SB.dimWas) { view3.set('3d'); SB.dimWas = null; }
@@ -3997,6 +4018,67 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('sbDW').addEventListener('input', (e) => { if (SB.drive) { SB.drive.w = +e.target.value; sbRemodel(); } });
   $('sbLabK').addEventListener('change', (e) => { SB.labels.k = e.target.checked; });
   $('sbLabT').addEventListener('change', (e) => { SB.labels.T = e.target.checked; });
+
+  /* ---------- Readings for the Normal modes worksheet (2026-10-31): between two walls and on the air table ---------- */
+  const NM_VERSION = 'springs-normal-modes@2026-10-31';
+  let nmRows = [], nmSeries = Date.now();
+  const nmOn = () => sbOn() && (!!SB.grid || sbHz());
+  function nmShow() { const h = !nmOn(); if ($('sbReadSec').hidden !== h) $('sbReadSec').hidden = h; }
+  function nmStatus(m) { $('sbCapStatus').textContent = m; }
+  /* the same value for every block or spring, or "mixed" */
+  const nmSame = (vals, d) => (vals.length && vals.every((v) => Math.abs(v - vals[0]) < 1e-9) ? (+vals[0]).toFixed(d) : 'mixed');
+  function nmCapture() {
+    if (SB.grid ? SB.grid.held : SB.held) { nmStatus('Let go first.'); return; }
+    if (!(sw.acc > 0)) { nmStatus('Time N oscillations with the stopwatch first.'); return; }
+    const Nc = String($('sbNosc').value).trim(), t = swShown(), Nn = cellNum(Nc), T = Nn > 0 ? +t / Nn : NaN;
+    let row;
+    if (SB.grid) {
+      const G2 = SB.grid, N = G2.N, on = G2.modeOn, p = on ? on.n % N + 1 : '', q = on ? Math.floor(on.n / N) + 1 : '';
+      row = { rig: `${N} by ${N} grid`, blocks: N * N, k_N_per_m: GD_K.toFixed(1), m_kg: GD_M.toFixed(3), mode: on ? `(${p}, ${q}) along ${on.ax ? 'y' : 'x'}` : 'a mix', n: '', p, q, axis: on ? (on.ax ? 'y' : 'x') : '' };
+    } else {
+      const md = SB.md, k = SB.modeOn, B = SB_BUILDS[SB.build];
+      row = { rig: B && B.hz ? B.name : 'own rig', blocks: md.n, k_N_per_m: nmSame(SB.rig.springs.map((sp) => sp.k), 1), m_kg: nmSame(md.mass, 3), mode: k != null ? String(k + 1) : 'a mix', n: k != null ? k + 1 : '', p: '', q: '', axis: '' };
+    }
+    Object.assign(row, { N_osc: Nc, t_s: t, T_s: isFinite(T) ? T.toPrecision(4) : '' });
+    nmRows.push(row); nmRender();
+    nmStatus(`Row ${nmRows.length} captured${sw.on ? ' (the stopwatch was still running)' : ''}.`);
+    const wrap = $('sbRowsTbl').closest('.twrap'); wrap.scrollTop = wrap.scrollHeight;
+  }
+  function nmRender() {
+    $('sbRowsTbl').querySelector('thead').innerHTML = '<tr><th scope="col">#</th><th scope="col">Mode</th><th scope="col">N</th><th scope="col">t s</th><th scope="col">T s</th><th scope="col"><span class="sr">Delete</span></th></tr>';
+    const tb = $('sbRowsTbl').querySelector('tbody');
+    if (!nmRows.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Start a mode, time N oscillations, then press Capture reading.</td></tr>'; return; }
+    tb.innerHTML = nmRows.map((r, i) => `<tr title="${r.rig}"><td class="n">${i + 1}</td><td>${r.mode}</td><td>${r.N_osc}</td><td>${r.t_s}</td><td class="b">${r.T_s || '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('');
+  }
+  $('sbRowsTbl').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-del]'); if (!b) return; const i = +b.dataset.del; nmRows.splice(i, 1); nmRender(); nmStatus(`Row ${i + 1} deleted.`); });
+  const NM_COLS = ['rig', 'blocks', 'k_N_per_m', 'm_kg', 'mode', 'n', 'p', 'q', 'axis', 'N_osc', 't_s', 'T_s'];
+  function nmCSV() {
+    const L = ['# Springs and Oscillations virtual apparatus, Sandbox: normal mode readings (simulated data)',
+      `# demo version,${csvCell(NM_VERSION)}`,
+      '# model,"ideal massless Hooke\'s law springs, no friction; between two walls the blocks slide on a level track; on the air table each spring is taken as of zero natural length, so x and y separate; the motion is the exact solution"',
+      '# mode,"the mode the student started alone by clicking it, or a mix after a block or puck was pulled by hand; n counts the chain\'s modes from the lowest; p and q number a grid mode along x and along y"',
+      '# timing,"the stopwatch runs on simulation time and is started and stopped by the student; N is the student\'s count; t truncated to 0.01 s; T = t/N"',
+      `# blind at export,${S.blind ? 'on' : 'off'}`,
+      ['row', ...NM_COLS].join(',')];
+    nmRows.forEach((r, i) => L.push([i + 1, ...NM_COLS.map((c) => csvCell(r[c]))].join(',')));
+    return L.join('\n') + '\n';
+  }
+  function nmExport() {
+    if (!nmRows.length) { nmStatus('No readings to export yet.'); return; }
+    const txt = nmCSV(), hand = { v: 1, demo: 'springs', series: nmSeries, sent: new Date().toISOString(), columns: ['row', ...NM_COLS],
+      rows: nmRows.map((r, i) => [String(i + 1), ...NM_COLS.map((c) => String(r[c] == null ? '' : r[c]))]), meta: { 'demo version': NM_VERSION },
+      note: 'Simulated data from the Springs and Oscillations Sandbox.', csv: txt, csvName: 'springs-normal-modes.csv' };
+    try { localStorage.setItem('vd-handoff:normal-modes', JSON.stringify(hand)); }
+    catch (_) { download('springs-normal-modes.csv', txt); nmStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    nmStatus(`${nmRows.length} reading${nmRows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/normal-modes.html'; a.target = 'normal-modes-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; $('sbCapStatus').appendChild(a);
+  }
+  $('sbCapture').addEventListener('click', nmCapture);
+  $('sbExport').addEventListener('click', nmExport);
+  $('sbClear').addEventListener('click', () => { nmSeries = Date.now(); nmRows = []; nmRender(); nmStatus('Readings cleared.'); });
+  $('sbBlind').addEventListener('change', (e) => setBlind(e.target.checked));
+  nmRender();
 
   // ---------- loop ----------
   let lastRead = 0, frameMs = 0;
@@ -4024,7 +4106,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     get sweep() { return sweep; }, get crossings() { return crossings; }, get held() { return held; }, get view() { return view; },
     applyPreset, setRunning, setParam, setSys, setVert, startSweep, stopSweep,
     sb: { get SB() { return SB; }, load: sbLoad, add: sbAddSpring, remove: sbRemove, join(a, b) { SB.join = a; sbJoin(b); }, select: sbSelect, setMass: sbSetMass, setK: sbSetK, settle: sbSettle,
-      go(dts) { sbAdvance(dts); updateReadouts(); }, y() { return Object.fromEntries(sbYNow()); }, tensions() { return sbTensions(SB.rig, SB.md, sbYp()); } },
+      go(dts) { if (SB.grid) gdAdvance(dts); else sbAdvance(dts); updateReadouts(); }, gridNow() { return SB.grid ? gdNow() : null; }, startMode: sbStartMode, gridMode(ax, p, q) { gdStartMode(ax, p - 1 + SB.grid.N * (q - 1)); }, sw(on) { setSw(on); }, get swAcc() { return sw.acc; }, get rows() { return nmRows; }, y() { return Object.fromEntries(sbYNow()); }, tensions() { return sbTensions(SB.rig, SB.md, sbYp()); } },
     go(dts, step) { step = step || 0.05; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); },
     state() { const g = lastSeg(), st = segState(g, t); return { t, st, en: energy(g, st, S.vert), book: { ...book } }; }
   };
@@ -4036,6 +4118,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   applyPreset('shm');
   document.documentElement.setAttribute('data-blind', 'off');
   renderRows();
+  /* ?rig=hzChain, grid3, … opens the Sandbox on that ready made rig (the Normal modes worksheet links here) */
+  const rigQ = (() => { try { return new URLSearchParams(location.search).get('rig'); } catch (_) { return null; } })();
+  if (rigQ && SB_BUILDS[rigQ]) { setSys('sandbox'); sbLoad(rigQ); }
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => {
