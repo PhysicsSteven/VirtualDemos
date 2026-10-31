@@ -3,7 +3,7 @@
 // the greenhouse factor and its layer models, the Kopparapu et al. 2014 zone edges, and the rule for keeping an atmosphere.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('planet-temperatures', 'SIGMA,LSUN,AU,KB,AMU,G,SPREAD,flux,tBare,tSurf,eFor,layers,seff,hzEdges,zoneOf,vrms,vEscape,keeps,youngSun');
+const c = core('planet-temperatures', 'SIGMA,LSUN,AU,KB,AMU,G,SPREAD,flux,tBare,tSurf,eFor,layers,seff,hzEdges,zoneOf,vrms,vEscape,keeps,youngSun,GHZ,ghzT,normCdf,snDose,feh,ghzFactors,ghzGrid');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -84,6 +84,26 @@ group('the young Sun (Gough 1981)', () => {
   near(c.youngSun(4.57), 1, 1e-12, 'today'); abs(c.youngSun(0), 0.7143, 0.0001, 'at birth'); abs(c.youngSun(0.57), 0.7407, 0.0001, '4 billion years ago');
   /* Earth then, today's albedo and greenhouse: 288 × 0.7407^¼ = 267 K */
   abs(288 * c.youngSun(0.57) ** 0.25, 267.2, 0.1, 'faint young Earth');
+});
+
+group('galactic habitable zone: the simplified Lineweaver, Fenner and Gibson 2004 model', () => {
+  const o = { g: -0.06, pE: 0.5, tLife: 4 };
+  /* Φ against tabulated values */
+  abs(c.normCdf(0), 0.5, 1e-7, 'Φ(0)'); abs(c.normCdf(1.959964), 0.975, 2e-7, 'Φ(1.96)'); abs(c.normCdf(-1), 0.1586553, 2e-7, 'Φ(−1)');
+  /* the Sun: solar metals, Earth's own supernova dose, so P = (1 − 0.03)(0.5)Φ(0.57) */
+  const s = c.ghzFactors(c.GHZ.R0, c.GHZ.tSun, o);
+  abs(s.feh, 0, 1e-12, '[Fe/H] of the Sun'); abs(s.Nrel, 1, 1e-12, 'dose at the Sun'); abs(s.pm, 1, 1e-12, 'P metals');
+  abs(s.pk, 0.97, 1e-12, 'P safe'); abs(s.ps, 0.5, 1e-12, 'P SN'); abs(s.p, 0.97 * 0.5 * c.normCdf(0.57), 1e-12, 'P of the Sun');
+  /* limits: born too recently, no complex life yet; at the floor of metals, almost no planets; a stronger gradient makes the inside richer */
+  assert(c.ghzFactors(8.2, 0.5, o).pt < 1e-3, 'too young'); abs(c.feh(30, 0.01, -0.06), -2, 1e-12, 'metal floor');
+  assert(c.feh(4, c.ghzT(), -0.08) > c.feh(4, c.ghzT(), -0.04), 'gradient'); assert(c.ghzFactors(3, 6, o).ps < c.ghzFactors(12, 6, o).ps, 'more supernovae inward');
+  /* P_SN is (1 − p_E)^N exactly */
+  const q = c.ghzFactors(5, 7, o); abs(q.ps, Math.pow(1 - o.pE, q.Nrel), 1e-12, 'P SN power law');
+  /* the grid: the 68% zone holds at least 68% of H and lies inside the 95% zone, around the Sun's radius */
+  const G = c.ghzGrid(o); let all = 0, in68 = 0; for (let k = 0; k < G.H.length; k++) { all += G.H[k]; if (G.H[k] >= G.lev[0.68]) in68 += G.H[k]; }
+  assert(in68 / all >= 0.68 && in68 / all < 0.70, `68% set holds ${in68 / all}`);
+  assert(G.z95.R[0] <= G.z68.R[0] && G.z95.R[1] >= G.z68.R[1], '68 inside 95'); assert(G.z68.R[0] < 8.2 && G.z68.R[1] > 8.2, 'Sun inside the zone');
+  assert(G.share > 0 && G.share < 0.2 && G.older > 0.5 && G.older < 1, `share ${G.share}, older ${G.older}`);
 });
 
 console.log(`${n} groups passed`);

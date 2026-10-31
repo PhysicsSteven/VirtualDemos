@@ -44,6 +44,12 @@
 .formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
 .blindtag { position: absolute; right: 10px; top: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .srcs { margin: 0; padding-left: 18px; font-size: 0.8rem; color: var(--muted); }
+/* the Galaxy view (2026-10-31): one pane in place of the system, the budget and the chart */
+.pane.gal { grid-area: 2 / 1 / 4 / 3; display: none; background: var(--canvas); }
+.stage.galmode .pane.gal { display: block; }
+.stage.galmode .pane.sys, .stage.galmode .pane.bud, .stage.galmode .pane.chart, .stage.galmode .setup-card, .stage.galmode .sysonly { display: none !important; }
+.stage.galmode .vd-split { display: none !important; }
+#gal { touch-action: none; }
 @media (min-width: 821px) { .stage { min-height: 780px; } :root[data-projector="on"] .stage { grid-template-rows: auto minmax(0, 1fr) 280px; } }
 @media (max-width: 820px) {
   html, body { height: auto; }
@@ -53,6 +59,7 @@
   .setup-card { position: static; grid-area: card; width: auto; margin: 8px; max-height: none; }
   .pane.bud { height: 330px; border-left: 0; border-top: 1px solid var(--line); }
   .pane.chart { height: 270px; }
+  .pane.gal { grid-area: auto; height: 980px; }
   .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
@@ -77,11 +84,12 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="spin" id="play" title="Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)">Pause</button>
-        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
-        <div class="seg" role="group" aria-label="Chart" id="chartSeg"><button type="button" data-c="temp" aria-pressed="true">Temperature and distance</button><button type="button" data-c="air" aria-pressed="false">Keeping an atmosphere</button></div>
-        <label class="check"><input type="checkbox" id="chkSpread"><span>Show how sunlight spreads</span></label>
-        <label class="check"><input type="checkbox" id="chkOrbits" checked><span>Inner planets' orbits</span></label>
+        <div class="seg" role="group" aria-label="Scale" id="scaleSeg"><button type="button" data-v="sys" aria-pressed="true">Star system</button><button type="button" data-v="gal" aria-pressed="false">Galaxy</button></div>
+        <button type="button" class="spin sysonly" id="play" title="Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)">Pause</button>
+        <div class="seg sysonly" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <div class="seg sysonly" role="group" aria-label="Chart" id="chartSeg"><button type="button" data-c="temp" aria-pressed="true">Temperature and distance</button><button type="button" data-c="air" aria-pressed="false">Keeping an atmosphere</button></div>
+        <label class="check sysonly"><input type="checkbox" id="chkSpread"><span>Show how sunlight spreads</span></label>
+        <label class="check sysonly"><input type="checkbox" id="chkOrbits" checked><span>Inner planets' orbits</span></label>
       </div>
       <div class="pane sys" id="sysPane">
         <canvas id="sys" tabindex="0" role="application" aria-label="The star, its habitable zone in green and the planet on its orbit, seen from above or in 3D. Drag the planet in or out to change its distance from the star; drag elsewhere in 3D to turn the view. Left and right arrow keys change the distance (Shift for bigger steps)."></canvas>
@@ -108,6 +116,9 @@
       <div class="pane bud" id="budPane">
         <canvas id="bud" role="img" aria-label="The energy budget of one square meter of the planet: sunlight in, the share reflected, the heat radiation from the ground, the share that escapes to space and the share the air sends back down, with a thermometer."></canvas>
       </div>
+      <div class="pane gal" id="galPane">
+        <canvas id="gal" tabindex="0" role="application" aria-label="The Milky Way seen face on with the Galactic habitable zone, a map of where and when stars were born colored by how many could have complex life today, and bars for the four ingredients at the chosen star. Drag the star in the galaxy or the cross on the map; arrow keys move it."></canvas>
+      </div>
       <div class="pane chart" id="chartPane">
         <canvas id="chart" role="img" aria-label="Chart: surface temperature against distance from the star, with the habitable zone, or the speeds of gas molecules against temperature compared with each world's escape speed."></canvas>
       </div>
@@ -115,7 +126,7 @@
 
     <aside class="rail">
       <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-planet-temperatures.html" target="intro-planet-temperatures-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
-      <section>
+      <section id="setupsSec">
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="mercury" aria-pressed="false">Mercury</button>
@@ -128,6 +139,24 @@
           <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 e</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section id="galSec" hidden>
+        <h2>A star in the Milky Way</h2>
+        <div class="chips" id="galPresets">
+          <button type="button" data-g="sun" aria-pressed="true">The Sun</button>
+          <button type="button" data-g="inner" aria-pressed="false">Inner disk</button>
+          <button type="button" data-g="outer" aria-pressed="false">Outer disk</button>
+          <button type="button" data-g="young" aria-pressed="false">Young star near the Sun</button>
+          <button type="button" data-g="old" aria-pressed="false">Old star near the Sun</button>
+        </div>
+        <div><div class="slider-head"><label for="gR">Distance from the center R</label><output id="oGR" for="gR"></output></div><input type="range" id="gR" min="0.5" max="20" step="0.1"></div>
+        <div><div class="slider-head"><label for="gAgo">Born how long ago</label><output id="oGAgo" for="gAgo"></output></div><input type="range" id="gAgo" min="0" max="12" step="0.05"></div>
+        <h2>The model's assumptions</h2>
+        <div><div class="slider-head"><label for="gPE" title="The chance that Earth's own history of nearby supernovae would have sterilized it">Chance Earth's supernovae sterilize</label><output id="oGPE" for="gPE"></output></div><input type="range" id="gPE" min="0" max="0.95" step="0.01"></div>
+        <div><div class="slider-head"><label for="gG">Metallicity gradient g</label><output id="oGG" for="gG"></output></div><input type="range" id="gG" min="-0.12" max="0" step="0.005"></div>
+        <div><div class="slider-head"><label for="gLife">Time complex life needs</label><output id="oGLife" for="gLife"></output></div><input type="range" id="gLife" min="1" max="7" step="0.1"></div>
+        <details class="more"><summary>About this star</summary><p class="hint" id="presetHint2"></p></details>
+        <details class="more"><summary>The model and where it comes from</summary><p class="hint" id="galAbout"></p></details>
       </section>
       <section>
         <h2>Readouts</h2>
@@ -224,6 +253,49 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function keeps(vesc, T, M) { return 6 * vrms(T, M) < vesc; }
   /* the young Sun (Gough 1981): t in billions of years since the Sun formed, t☉ = 4.57 */
   function youngSun(t) { return 1 / (1 + 0.4 * (1 - t / 4.57)); }
+  /* ---- the Galactic habitable zone (2026-10-31): a simplified model after Lineweaver, Fenner and Gibson 2004 (Science 303, 59), who
+     traced four needs for complex life through the Milky Way's history: a star, enough heavy elements to build Earths, enough time
+     for evolution, and no nearby supernova to sterilize the planet. Each ingredient here is a simple stand in, stated:
+       the disk   stars form at a rate per area ∝ e^(−R/R_d) e^(−t/τ), R_d = 2.6 kpc (thin disk scale length, Bland-Hawthorn and
+                  Gerhard 2016, ARA&A 54, 529), τ = 7 Gyr (an assumed slow decline), from t = 0, taken as 12 Gyr ago; the Sun formed
+                  4.57 Gyr ago at R☉ = 8.2 kpc (Bland-Hawthorn and Gerhard 2016; the Sun's birth radius is taken as today's)
+       metals     [Fe/H] = g (R − R☉) + log₁₀(t/t☉), floor −2: a radial gradient g (about −0.06 dex/kpc in today's thin disk) and
+                  an enrichment that grows as the log of time, set so a star born where and when the Sun was has the Sun's [Fe/H] = 0
+       Earths     P_metals = 10^[Fe/H] up to 1: the raw material for rocky planets taken in proportion to the metal content
+       giants     P_safe = 1 − 0.03 × 10^(2[Fe/H]): the share of Sun like stars with a giant planet on an orbit shorter than 4 years
+                  (Fischer and Valenti 2005, ApJ 622, 1102), each taken to wreck the system's Earths as it migrates in
+       supernovae core collapse supernovae follow star formation; a planet's dose N is the rate summed over its first 4 Gyr (or its
+                  life so far); P_SN = (1 − p_E)^(N/N_Earth), p_E being the chance that Earth's own dose would have sterilized it
+       time       P_time = Φ((age − t_life)/1 Gyr), the share of worlds on which complex life has had time to arise, with
+                  t_life = 4 Gyr and a spread of 1 Gyr as in Lineweaver et al. 2004; Φ is the normal distribution's cumulative
+     The product P is the chance that a star born at R, t has a planet with complex life today, in this model. */
+  const GHZ = { R0: 8.2, TD: 12, Rd: 2.6, tau: 7, tSun: 4.57, dose: 4 };
+  const ghzT = () => GHZ.TD - GHZ.tSun;    /* the Sun's birth, in Gyr after the disk began */
+  /* Φ from erfc, Abramowitz and Stegun 7.1.26 (error below 1.5 × 10⁻⁷) */
+  function normCdf(x) { const z = Math.abs(x) / Math.SQRT2, t = 1 / (1 + 0.3275911 * z), y = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-z * z); return x >= 0 ? 1 - y / 2 : y / 2; }
+  function sfr(R, t) { return Math.exp(-R / GHZ.Rd) * Math.exp(-t / GHZ.tau); }
+  function snDose(R, tf) { const a = tf, b = Math.min(tf + GHZ.dose, GHZ.TD); return Math.exp(-R / GHZ.Rd) * GHZ.tau * (Math.exp(-a / GHZ.tau) - Math.exp(-b / GHZ.tau)); }
+  function feh(R, tf, g) { return Math.max(-2, g * (R - GHZ.R0) + Math.log10(Math.max(tf, 1e-6) / ghzT())); }
+  /* R in kpc, ago = born how many Gyr ago; o = { g, pE, tLife } */
+  function ghzFactors(R, ago, o) {
+    const tf = GHZ.TD - ago, f = feh(R, tf, o.g), Nrel = snDose(R, tf) / snDose(GHZ.R0, ghzT());
+    const pm = Math.min(1, Math.pow(10, f)), pk = Math.max(0, 1 - 0.03 * Math.pow(10, 2 * f)), ps = Math.pow(1 - o.pE, Nrel), pt = normCdf((ago - o.tLife) / 1);
+    return { feh: f, Nrel, pm, pk, ps, pt, p: pm * pk * ps * pt };
+  }
+  /* the whole disk on a grid (R 0 to 20 kpc by 0.2, birth 0 to 12 Gyr ago by 0.1): stars born per cell ∝ sfr × R, and those that
+     could have complex life today, H = stars × P. The zone is the smallest set of cells holding 68% (or 95%) of H. */
+  function ghzGrid(o) {
+    const nR = 100, nT = 120, dR = 20 / nR, dT = GHZ.TD / nT, H = new Float64Array(nR * nT), P = new Float64Array(nR * nT);
+    let W = 0, Hs = 0, older = 0;
+    for (let j = 0; j < nT; j++) for (let i = 0; i < nR; i++) {
+      const R = (i + 0.5) * dR, ago = (j + 0.5) * dT, w = sfr(R, GHZ.TD - ago) * R, q = ghzFactors(R, ago, o);
+      P[j * nR + i] = q.p; H[j * nR + i] = w * q.p; W += w; Hs += w * q.p; if (ago > GHZ.tSun) older += w * q.p;
+    }
+    const idx = Array.from(H.keys()).sort((a, b) => H[b] - H[a]), lev = {};
+    for (const f of [0.68, 0.95]) { let s = 0, k = 0; while (k < idx.length && s < f * Hs) s += H[idx[k++]]; lev[f] = H[idx[Math.max(0, k - 1)]]; }
+    const span = (L) => { let rl = 99, rh = 0, al = 99, ah = 0; for (let k = 0; k < H.length; k++) if (H[k] >= L) { const i = k % nR, j = (k - i) / nR; rl = Math.min(rl, i * dR); rh = Math.max(rh, (i + 1) * dR); al = Math.min(al, j * dT); ah = Math.max(ah, (j + 1) * dT); } return { R: [rl, rh], ago: [al, ah] }; };
+    return { nR, nT, dR, dT, H, P, lev, z68: span(lev[0.68]), z95: span(lev[0.95]), share: Hs / W, older: older / Hs };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -634,11 +706,177 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   sysC.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1, ArrowDown: -1, ArrowUp: 1 }[e.key]; if (!k) return;
     S.d = Math.max(0.01, Math.min(50, +(Math.pow(10, lg(S.d) + k * (e.shiftKey ? 0.05 : 0.005))).toPrecision(4))); e.preventDefault(); changed(); });
 
+  /* ---------- the Galaxy view (2026-10-31): the Galactic habitable zone ---------- */
+  const GPRE = {
+    sun: { R: 8.2, ago: 4.57, hint: 'The Sun, born 4.57 billion years ago, taken at today\'s 8.2 kpc from the center.' },
+    inner: { R: 4, ago: 6, hint: 'A star born 6 billion years ago, 4 kpc from the center: plenty of metals, but many more supernovae nearby.' },
+    outer: { R: 14, ago: 6, hint: 'A star born 6 billion years ago, 14 kpc out: quiet, but short of the heavy elements that make rocky planets.' },
+    young: { R: 8.2, ago: 1, hint: 'A star born a billion years ago near the Sun: its planets have not had the time complex life took on Earth.' },
+    old: { R: 8.2, ago: 10, hint: 'A star born 10 billion years ago near the Sun, when the gas held fewer heavy elements.' },
+  };
+  const GS = { on: false, pre: 'sun', R: 8.2, ago: 4.57, pE: 0.5, g: -0.06, tLife: 4 };
+  const galC = $('gal'), gctx = galC.getContext('2d');
+  let GW = 0, GH = 0, grid = null, gridKey = '', gG = {}, gDrag = null;
+  const gOpts = () => ({ g: GS.g, pE: GS.pE, tLife: GS.tLife });
+  function ghzNow() { const k = `${GS.g}|${GS.pE}|${GS.tLife}`; if (k !== gridKey) { grid = ghzGrid(gOpts()); gridKey = k; mapImg = null; } return grid; }
+  /* the disk drawn face on: a two armed log spiral with a bar, seeded dots, for orientation only (a drawing, not a map) */
+  const DISK = (() => { let a = 12345; const r = () => { a = (a * 1103515245 + 12345) & 0x7fffffff; return a / 0x7fffffff; }; const g = () => Math.sqrt(-2 * Math.log(r() + 1e-12)) * Math.cos(2 * Math.PI * r()); const pts = [];
+    for (let i = 0; i < 4200; i++) { const R = -2.6 * Math.log(1 - 0.995 * r()), arm = i % 2, th = arm * Math.PI + Math.log(Math.max(R, 3) / 3) / Math.tan(12.5 * Math.PI / 180) + 0.22 * g(); if (R < 18) pts.push([R * Math.cos(th), R * Math.sin(th), r(), 0]); }
+    for (let i = 0; i < 1600; i++) { const R = -2.6 * Math.log(1 - 0.99 * r()), th = 2 * Math.PI * r(); if (R < 18) pts.push([R * Math.cos(th), R * Math.sin(th), r(), 1]); }
+    for (let i = 0; i < 700; i++) { const u = 4.5 * g() * 0.45, v = 1.2 * g() * 0.45, t = 0.47; pts.push([u * Math.cos(t) - v * Math.sin(t), u * Math.sin(t) + v * Math.cos(t), r(), 2]); }
+    return pts; })();
+  let mapImg = null;
+  function pColor(f) { const st = [[0, [10, 14, 22]], [0.25, [24, 70, 60]], [0.55, [40, 150, 90]], [0.8, [150, 210, 110]], [1, [240, 245, 170]]]; let i = 0; while (i < st.length - 2 && f > st[i + 1][0]) i++;
+    const [a, c0] = st[i], [b, c1] = st[i + 1], u = Math.max(0, Math.min(1, (f - a) / (b - a))); return c0.map((v, k) => Math.round(v + (c1[k] - v) * u)); }
+  function drawGal() {
+    if (!GS.on || !GW) return;
+    const c = gctx, p = proj(), z = ghzNow(), q = ghzFactors(GS.R, GS.ago, gOpts()), wide = GW >= 760;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, GW, GH);
+    const pad = 12 * p;
+    const A = wide ? [pad, pad, Math.min(GW * 0.46, GH - 2 * pad), 0] : [pad, pad, GW - 2 * pad, 0]; A[3] = A[2];
+    const M = wide ? [A[0] + A[2] + 64 * p, pad + 30 * p, GW - A[2] - 3 * pad - 64 * p, GH * 0.55 - 60 * p] : [52 * p, A[1] + A[3] + 46 * p, GW - 66 * p, 300 * p];
+    const Bt = wide ? [A[0] + A[2] + 2 * pad, GH * 0.55 + 10 * p, GW - A[2] - 4 * pad, GH * 0.45 - 20 * p] : [pad, M[1] + M[3] + 46 * p, GW - 2 * pad, GH - M[1] - M[3] - 56 * p];
+    // the disk, face on, with today's zone as rings
+    const cx = A[0] + A[2] / 2, cy = A[1] + A[3] / 2, s = A[2] / 2 / 18.5;
+    c.fillStyle = '#04060b'; c.beginPath(); c.roundRect ? c.roundRect(A[0], A[1], A[2], A[3], 8 * p) : c.rect(A[0], A[1], A[2], A[3]); c.fill();
+    c.save(); c.beginPath(); c.rect(A[0], A[1], A[2], A[3]); c.clip();
+    const gl = c.createRadialGradient(cx, cy, 0, cx, cy, 9 * s); gl.addColorStop(0, 'rgba(255,226,170,0.55)'); gl.addColorStop(0.35, 'rgba(200,190,200,0.14)'); gl.addColorStop(1, 'rgba(120,150,220,0)');
+    c.fillStyle = gl; c.fillRect(A[0], A[1], A[2], A[3]);
+    for (const d of DISK) { c.globalAlpha = 0.25 + 0.5 * d[2]; c.fillStyle = d[3] === 0 ? (d[2] > 0.85 ? '#a9c4ff' : '#dfe6ff') : d[3] === 2 ? '#ffe2b0' : '#cdbfae'; const r0 = d[3] === 0 ? 1.9 : 1.4; c.fillRect(cx + d[0] * s, cy + d[1] * s, r0, r0); }
+    c.globalAlpha = 1;
+    // P today at the cursor's birth time, as a translucent green ring
+    { const fs = []; let fm = 0; for (let R = 0.25; R < 18.5; R += 0.5) { const f = ghzFactors(R, GS.ago, gOpts()).p; fs.push([R, f]); fm = Math.max(fm, f); }
+      for (const [R, f] of fs) { if (f < 0.02 * fm) continue; c.strokeStyle = `rgba(76,208,125,${(0.32 * f / fm).toFixed(3)})`; c.lineWidth = 0.5 * s + 0.5; c.beginPath(); c.arc(cx, cy, R * s, 0, 2 * Math.PI); c.stroke(); } }
+    c.setLineDash([5 * p, 4 * p]); c.strokeStyle = '#f0f4f8'; c.lineWidth = 1.2 * p;
+    for (const R of z.z68.R) { c.beginPath(); c.arc(cx, cy, R * s, 0, 2 * Math.PI); c.stroke(); }
+    c.setLineDash([]);
+    // the Sun and the chosen star
+    const sa = -2.3, sx = cx + GHZ.R0 * s * Math.cos(sa), sy = cy + GHZ.R0 * s * Math.sin(sa);
+    c.fillStyle = '#ffd27a'; c.beginPath(); c.arc(sx, sy, 3.2 * p, 0, 2 * Math.PI); c.fill();
+    const ta = -0.9, tx = cx + GS.R * s * Math.cos(ta), ty = cy + GS.R * s * Math.sin(ta), hot = gDrag === 'disk';
+    c.strokeStyle = '#ffffff'; c.lineWidth = (hot ? 2.4 : 1.6) * p; c.beginPath(); c.arc(tx, ty, 8 * p, 0, 2 * Math.PI); c.stroke();
+    c.fillStyle = '#ffffff'; c.beginPath(); c.arc(tx, ty, 2.6 * p, 0, 2 * Math.PI); c.fill();
+    c.restore();
+    label(c, 'The Milky Way from above (a drawing)', A[0] + 10 * p, A[1] + 14 * p, { s: 11, w: 700, col: '#dfe6ef' });
+    label(c, 'Sun', sx + 7 * p, sy - 8 * p, { s: 10.5, w: 700, col: '#ffd27a' });
+    label(c, 'your star: drag it in or out', Math.min(tx + 12 * p, A[0] + A[2] - 150 * p), ty + 16 * p, { s: 10.5, w: 600, col: '#ffffff' });
+    label(c, wide ? `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68% of the stars that could have complex life)` : `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68%)`, A[0] + 10 * p, A[1] + A[3] - 14 * p, { s: 10, col: '#dfe6ef' });
+    label(c, `green: P for stars born ${fx(GS.ago, 2)} Gyr ago`, A[0] + 10 * p, A[1] + A[3] - 30 * p, { s: 10, col: '#8fe0a8' });
+    for (const R of [5, 10, 15]) label(c, `${R} kpc`, cx + R * s * 0.7071 + 3 * p, cy + R * s * 0.7071 + 2 * p, { s: 9.5, col: '#8b95a5' });
+    gG.disk = { cx, cy, s, ta, tx, ty };
+    // the map of where and when stars were born, shaded by H (stars that could have complex life today)
+    if (!mapImg) {
+      mapImg = document.createElement('canvas'); mapImg.width = z.nR; mapImg.height = z.nT;
+      const mc = mapImg.getContext('2d'), id = mc.createImageData(z.nR, z.nT); let hm = 0; for (const v of z.H) hm = Math.max(hm, v);
+      for (let j = 0; j < z.nT; j++) for (let i = 0; i < z.nR; i++) { const v = z.H[j * z.nR + i] / hm, col = pColor(Math.sqrt(v)), k = 4 * ((z.nT - 1 - j) * z.nR + i); id.data[k] = col[0]; id.data[k + 1] = col[1]; id.data[k + 2] = col[2]; id.data[k + 3] = 255; }
+      mc.putImageData(id, 0, 0);
+    }
+    const MX = (R) => M[0] + R / 20 * M[2], MY = (ago) => M[1] + (1 - ago / GHZ.TD) * M[3];
+    c.save(); c.imageSmoothingEnabled = true; c.drawImage(mapImg, M[0], M[1], M[2], M[3]); c.restore();
+    // contours as cell edges of the 68% and 95% sets
+    c.save(); c.beginPath(); c.rect(M[0], M[1], M[2], M[3]); c.clip();
+    for (const [lv, col, w] of [[z.lev[0.95], 'rgba(255,255,255,0.55)', 1], [z.lev[0.68], '#ffffff', 1.8]]) {
+      c.strokeStyle = col; c.lineWidth = w * p; c.beginPath();
+      const inS = (i, j) => i >= 0 && j >= 0 && i < z.nR && j < z.nT && z.H[j * z.nR + i] >= lv;
+      for (let j = 0; j < z.nT; j++) for (let i = 0; i < z.nR; i++) { if (!inS(i, j)) continue;
+        const x0 = MX(i * z.dR), x1 = MX((i + 1) * z.dR), y0 = MY(j * z.dT), y1 = MY((j + 1) * z.dT);
+        if (!inS(i - 1, j)) { c.moveTo(x0, y0); c.lineTo(x0, y1); } if (!inS(i + 1, j)) { c.moveTo(x1, y0); c.lineTo(x1, y1); }
+        if (!inS(i, j - 1)) { c.moveTo(x0, y0); c.lineTo(x1, y0); } if (!inS(i, j + 1)) { c.moveTo(x0, y1); c.lineTo(x1, y1); } }
+      c.stroke();
+    }
+    c.restore();
+    c.strokeStyle = K.line; c.lineWidth = 1; c.strokeRect(M[0] + 0.5, M[1] + 0.5, M[2], M[3]);
+    for (let R = 0; R <= 20; R += 4) label(c, String(R), MX(R), M[1] + M[3] + 10 * p, { a: 'center', s: 10, col: K.muted, bg: K.canvas });
+    for (let a = 0; a <= 12; a += 2) label(c, String(a), M[0] - 6 * p, MY(a), { a: 'right', s: 10, col: K.muted, bg: K.canvas });
+    label(c, 'distance from the center R (kpc)', M[0] + M[2], M[1] + M[3] + 24 * p, { a: 'right', s: 10.5, col: K.muted, bg: K.canvas });
+    label(c, 'born how long ago (Gyr)', M[0] - 40 * p, M[1] - 12 * p, { s: 10.5, col: K.muted, bg: K.canvas });
+    label(c, wide ? 'Where and when the stars that could have complex life today were born' : 'Where and when they were born', M[0] - 40 * p, M[1] - 28 * p, { s: 11, w: 700, col: K.ink, bg: K.canvas });
+    const ux = MX(GHZ.R0), uy = MY(GHZ.tSun); c.fillStyle = '#ffd27a'; c.beginPath(); c.arc(ux, uy, 4 * p, 0, 2 * Math.PI); c.fill(); label(c, 'Sun', ux + 7 * p, uy - 8 * p, { s: 10, w: 700, col: '#ffd27a' });
+    const kx = MX(GS.R), ky = MY(GS.ago), hk = gDrag === 'map'; c.strokeStyle = '#ffffff'; c.lineWidth = (hk ? 2.2 : 1.4) * p;
+    c.beginPath(); c.moveTo(kx - 10 * p, ky); c.lineTo(kx + 10 * p, ky); c.moveTo(kx, ky - 10 * p); c.lineTo(kx, ky + 10 * p); c.stroke();
+    c.beginPath(); c.arc(kx, ky, 6 * p, 0, 2 * Math.PI); c.stroke();
+    label(c, 'solid line: 68%, faint: 95%', M[0] + M[2] - 6 * p, M[1] + 12 * p, { a: 'right', s: 10, col: '#ffffff' });
+    gG.map = { M, MX, MY };
+    // the four ingredients and their product for the chosen star
+    const bars = [[wide ? 'Enough metals for Earths' : 'Enough metals', q.pm, `[Fe/H] = ${fx(q.feh, 2)}`], [wide ? 'No giant planet wrecking them' : 'No wrecking giant', q.pk, `${fx(100 * (1 - q.pk), 1)}% have one`],
+      [wide ? 'Spared by supernovae' : 'Spared by supernovae', q.ps, `dose ${sig(q.Nrel, 3)} × Earth's`], [wide ? 'Time for complex life' : 'Time for life', q.pt, `age ${fx(GS.ago, 2)} Gyr`], ['All four: P', q.p, '']];
+    label(c, `The chosen star: R = ${fx(GS.R, 1)} kpc, born ${fx(GS.ago, 2)} Gyr ago`, Bt[0], Bt[1] + 6 * p, { s: 11, w: 700, col: K.ink, bg: K.canvas });
+    const bh = Math.min(40 * p, (Bt[3] - 30 * p) / bars.length), lw = Math.min(220 * p, Bt[2] * 0.4), bw = Bt[2] - lw - 60 * p;
+    bars.forEach(([n, v, note], i) => {
+      const y = Bt[1] + 24 * p + i * bh, last = i === bars.length - 1, two = note && bh > 30 * p;
+      label(c, n, Bt[0], y + (two ? bh * 0.3 : bh * 0.45), { s: 10.5, w: last ? 700 : 600, col: K.ink, bg: K.canvas });
+      if (two) label(c, note, Bt[0], y + bh * 0.68, { s: 9.5, w: 400, col: K.muted, bg: K.canvas });
+      c.fillStyle = K.grid; c.fillRect(Bt[0] + lw, y + bh * 0.2, bw, bh * 0.5);
+      c.fillStyle = last ? K.hz : K.accent; c.fillRect(Bt[0] + lw, y + bh * 0.2, bw * Math.max(0, Math.min(1, v)), bh * 0.5);
+      label(c, fx(v, 3), Bt[0] + lw + bw + 6 * p, y + bh * 0.45, { s: 10.5, w: 700, col: K.ink, bg: K.canvas });
+    });
+  }
+  function galReadouts() {
+    const z = ghzNow(), q = ghzFactors(GS.R, GS.ago, gOpts()), dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd${cls && cls.includes('note') ? ' class="note"' : ''}>${b}</dd></div>`;
+    $('out').innerHTML = dd('P, all four together', fx(q.p, 3), 'big') + dd('Metallicity [Fe/H]', fx(q.feh, 2)) + dd('Enough metals for Earths', fx(q.pm, 3))
+      + dd('No giant planet wrecking them', fx(q.pk, 3)) + dd('Supernova dose, Earth = 1', sig(q.Nrel, 3)) + dd('Spared by supernovae', fx(q.ps, 3)) + dd('Time for complex life', fx(q.pt, 3))
+      + dd('The zone (68%)', `${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc, born ${fx(z.z68.ago[0], 1)} to ${fx(z.z68.ago[1], 1)} Gyr ago`, 'wide note')
+      + dd('Share of all stars ever born that could have complex life', `${fx(100 * z.share, 1)}%`, 'wide note')
+      + dd('Of those, older than the Sun', `${fx(100 * z.older, 0)}%`, 'wide note');
+  }
+  function galSync() {
+    $('gR').value = GS.R; $('oGR').textContent = `${fx(GS.R, 1)} kpc`; $('gAgo').value = GS.ago; $('oGAgo').textContent = `${fx(GS.ago, 2)} Gyr`;
+    $('gPE').value = GS.pE; $('oGPE').textContent = `${Math.round(GS.pE * 100)}%`; $('gG').value = GS.g; $('oGG').textContent = `${fx(GS.g, 3)} dex/kpc`;
+    $('gLife').value = GS.tLife; $('oGLife').textContent = `${fx(GS.tLife, 1)} Gyr`;
+    for (const b of document.querySelectorAll('#galPresets button')) b.setAttribute('aria-pressed', String(b.dataset.g === GS.pre));
+    for (const b of document.querySelectorAll('#scaleSeg button')) b.setAttribute('aria-pressed', String((b.dataset.v === 'gal') === GS.on));
+  }
+  const galChanged = () => { galSync(); drawGal(); galReadouts(); };
+  function galPreset(k) { const g = GPRE[k]; Object.assign(GS, { pre: k, R: g.R, ago: g.ago }); $('presetHint2').textContent = g.hint; galChanged(); }
+  function setScale(on) {
+    GS.on = on; $('stage').classList.toggle('galmode', on); $('galSec').hidden = !on; $('setupsSec').hidden = on;
+    galSync(); if (on) { galSize(); galChanged(); } else { resize(); }
+  }
+  function galSize() { const r = $('galPane').getBoundingClientRect(); GW = r.width; GH = r.height; galC.width = Math.round(GW * dpr); galC.height = Math.round(GH * dpr); }
+  $('scaleSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) setScale(b.dataset.v === 'gal'); });
+  for (const b of document.querySelectorAll('#galPresets button')) b.addEventListener('click', () => galPreset(b.dataset.g));
+  const gnum = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); galChanged(); });
+  gnum('gR', (v) => { GS.R = v; GS.pre = 'custom'; }); gnum('gAgo', (v) => { GS.ago = v; GS.pre = 'custom'; });
+  gnum('gPE', (v) => { GS.pE = v; }); gnum('gG', (v) => { GS.g = v; }); gnum('gLife', (v) => { GS.tLife = v; });
+  function galAt(e, start) {
+    const r = galC.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, d = gG.disk, m = gG.map;
+    if (start) {
+      if (d && Math.hypot(x - d.tx, y - d.ty) < 16 * proj()) gDrag = 'disk';
+      else if (m && x >= m.M[0] && x <= m.M[0] + m.M[2] && y >= m.M[1] && y <= m.M[1] + m.M[3]) gDrag = 'map';
+      else return false;
+    }
+    if (gDrag === 'disk') GS.R = Math.max(0.5, Math.min(20, Math.round(10 * ((x - d.cx) * Math.cos(d.ta) + (y - d.cy) * Math.sin(d.ta)) / d.s) / 10));
+    else if (gDrag === 'map') { GS.R = Math.max(0.5, Math.min(20, Math.round(10 * (x - m.M[0]) / m.M[2] * 20) / 10)); GS.ago = Math.max(0, Math.min(12, Math.round(20 * (1 - (y - m.M[1]) / m.M[3]) * GHZ.TD) / 20)); }
+    GS.pre = 'custom'; galChanged(); return true;
+  }
+  galC.addEventListener('pointerdown', (e) => { if (galAt(e, true)) { galC.setPointerCapture(e.pointerId); e.preventDefault(); } });
+  galC.addEventListener('pointermove', (e) => { if (gDrag) galAt(e, false); });
+  const gEnd = () => { if (gDrag) { gDrag = null; drawGal(); } }; galC.addEventListener('pointerup', gEnd); galC.addEventListener('pointercancel', gEnd);
+  galC.addEventListener('keydown', (e) => { const big = e.shiftKey ? 10 : 1, k = e.key;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') GS.R = Math.max(0.5, Math.min(20, +(GS.R + (k === 'ArrowLeft' ? -0.1 : 0.1) * big).toFixed(1)));
+    else if (k === 'ArrowUp' || k === 'ArrowDown') GS.ago = Math.max(0, Math.min(12, +(GS.ago + (k === 'ArrowUp' ? 0.05 : -0.05) * big).toFixed(2)));
+    else return; GS.pre = 'custom'; e.preventDefault(); galChanged(); });
+  new ResizeObserver(() => { if (GS.on) { galSize(); drawGal(); } }).observe($('galPane'));
+  $('galAbout').textContent = 'A simplified model after Lineweaver, Fenner and Gibson (2004, Science 303, 59), who found the zone an annulus 7 to 9 kpc from the center, widening with time, made of stars born 8 to 4 billion years ago, with 75% of its stars older than the Sun. '
+    + 'Here every ingredient is a simple stand in, so the numbers differ from theirs; the sliders show how much the zone depends on each assumption. '
+    + 'The disk: stars form at a rate per area ∝ e^(−R/2.6 kpc) e^(−t/7 Gyr) from 12 billion years ago (scale length from Bland-Hawthorn and Gerhard 2016; the decline time and the start are assumptions). The Sun formed 4.57 billion years ago at 8.2 kpc (its birth radius taken as today\'s; stars wander, which is ignored). '
+    + 'Metals: [Fe/H] = g (R − 8.2 kpc) + log₁₀(t/t☉), with t the time since the disk began, so stars born where and when the Sun was have the Sun\'s metallicity; real disks enrich unevenly and their gradients change with time. '
+    + 'Earths: chance in proportion to 10^[Fe/H], up to 1. Giant planets: 0.03 × 10^(2[Fe/H]) of Sun like stars have one on an orbit shorter than 4 years (Fischer and Valenti 2005), each taken to wreck the inner planets. '
+    + 'Supernovae: core collapse supernovae follow star formation (Type Ia ignored); the dose is the rate summed over a planet\'s first 4 billion years, and a planet escapes with chance (1 − p)^(dose/Earth\'s dose), p set by the slider. '
+    + 'Time: the share of planets old enough, a normal distribution of 4 ± 1 billion years (Lineweaver et al. 2004). The zone holds the 68% (or 95%) of stars that could have complex life today with the highest density on the map.';
+
   /* ---------- readings for the worksheet ---------- */
   const SP_NAME = { whole: 'whole planet', day: 'day side', sub: 'under the star' };
-  window.vdVersion = 'planet-temperatures@2026-10-25';
-  window.vdShowCols = [['body', 'planet'], ['d_AU', 'd (AU)'], ['S_W_m2', 'S (W/m²)'], ['T_surf_K', 'T (K)']];
-  window.vdReadingRow = () => { const st = state(), z = st.z, gs = gasesNow(st.ts);
+  window.vdVersion = 'planet-temperatures@2026-10-31';
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (GS.on ? [['R_kpc', 'R (kpc)'], ['born_Gyr_ago', 'born (Gyr ago)'], ['P', 'P']]
+    : [['body', 'planet'], ['d_AU', 'd (AU)'], ['S_W_m2', 'S (W/m²)'], ['T_surf_K', 'T (K)']]) });
+  /* the Galaxy view's readings go to its own worksheet (a ?ws= in the address still wins, vd.js) */
+  window.vdWorksheet = () => (GS.on ? 'galactic-habitable-zone' : 'intro-planet-temperatures');
+  window.vdReadingRow = () => { if (GS.on) { const z = ghzNow(), q = ghzFactors(GS.R, GS.ago, gOpts());
+      return { view: 'Galaxy', R_kpc: fx(GS.R, 1), born_Gyr_ago: fx(GS.ago, 2), FeH: fx(q.feh, 3), P_metals: fx(q.pm, 4), P_safe: fx(q.pk, 4), SN_dose: sig(q.Nrel, 4),
+        P_SN: fx(q.ps, 4), P_time: fx(q.pt, 4), P: fx(q.p, 4), p_Earth: fx(GS.pE, 2), g_dex_kpc: fx(GS.g, 3), t_life_Gyr: fx(GS.tLife, 1),
+        zone_R_kpc: `${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)}`, zone_born_Gyr_ago: `${fx(z.z68.ago[0], 1)} to ${fx(z.z68.ago[1], 1)}`, share_pct: fx(100 * z.share, 2), older_pct: fx(100 * z.older, 1) }; }
+    const st = state(), z = st.z, gs = gasesNow(st.ts);
     return { body: S.preset === 'custom' ? `${S.body}, changed` : S.body, star: S.star, L_Lsun: sig(S.L, 4), Tstar_K: String(Math.round(S.T)), d_AU: sig(S.d, 4), inv_d2: sig(1 / (S.d * S.d), 4),
       S_W_m2: sig(st.Sx, 4), S_rel: sig(st.rel, 4), albedo: fx(S.a, 3), spread: SP_NAME[S.sp], greenhouse: S.gh ? 'on' : 'off', e: S.gh ? sig(S.e, 3) : '1',
       T_bare_K: fx(st.tb, 1), T_surf_K: fx(st.ts, 1), T_meas_K: asSet() ? (S.meas.v ? String(S.meas.v) : `${S.meas.lo} to ${S.meas.hi}`) : '', warming_K: fx(st.ts - st.tb, 1),
@@ -651,7 +889,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     + 'The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.';
 
   /* ---------- run, size, theme ---------- */
-  const redraw = () => { drawSys(); drawBud(); drawChart(); readouts(); };
+  const redraw = () => { if (GS.on) { drawGal(); galReadouts(); return; } drawSys(); drawBud(); drawChart(); readouts(); };
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
@@ -678,8 +916,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); sysC.style.cursor = use3() ? 'grab' : 'default'; drawSys(); }, status: () => {} });
   VD.tools({ el: sysC, strip: '#strip', stage: '#sysPane', scale: () => { if (use3()) return null; const Lr = sysLayout(); return { el: sysC, m: AU / Lr.s, unit: 'AU' }; } });
-  VD.howTo({ src: 'media/how-this-works/planet-temperatures.mp4', poster: 'media/how-this-works/planet-temperatures.jpg' });
-  window.__pt = { S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
+  /* one video per worksheet: the planet temperature one, and the Galaxy view's for the habitable zone worksheet */
+  const howVid = () => (GS.on || VD.ws('') === 'galactic-habitable-zone' ? 'galactic-habitable-zone' : 'planet-temperatures');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'galactic-habitable-zone' ? 'How this works: the Galactic habitable zone' : 'How this works') });
+  galPreset('sun');
+  if (qs.get('view') === 'galaxy' || VD.ws('') === 'galactic-habitable-zone') setScale(true);
+  window.__pt = { GS, setScale, galPreset, ghzFactors, ghzGrid, S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
   requestAnimationFrame(frame);
 })();
 </script>
