@@ -2,9 +2,10 @@
 // Crystals, Bands and Semiconductors: Madelung constants and lattice energies, the tight binding chain, carriers in silicon, the pn junction.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('solids', 'KB,KE2,HC,KJMOL_PER_EV,SALTS,salt,erfc,madelungEwald,madelungCube,shellList,madelungShells,latticeU,pairU,r0FromDensity,BAND,hop,bandSet,chainLevels,fillChain,bandFill,GAPS,MATS,DONORS,ACCEPTORS,NcT,NvT,ni,carriers,region,diodeI,I0T,junction,LEDS,lambdaNm');
+const c = core('solids', 'KB,KE2,HC,KJMOL_PER_EV,SALTS,salt,erfc,madelungEwald,madelungCube,shellList,madelungShells,latticeU,pairU,r0FromDensity,BAND,hop,bandSet,chainLevels,fillChain,bandFill,GAPS,MATS,DONORS,ACCEPTORS,NcT,NvT,ni,carriers,region,diodeI,I0T,junction,LEDS,lambdaNm,HB2M,kpPiece,kpCell,kpF,kpBands,kpE,kpPsi,kpKext');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
+const nearAbs = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b} ± ${tol}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
 
 group('erfc matches tabulated values (Abramowitz and Stegun Table 7.1)', () => {
@@ -84,5 +85,36 @@ group('abrupt junction: V_bi = (kT/e) ln(N_A N_D / n_i²); W ∝ √(V_bi − V)
 });
 group('LEDs: λ = hc/Eg; GaP 2.26 eV → 549 nm (green), GaAs 1.43 eV → 867 nm (infrared)', () => {
   near(c.lambdaNm(c.LEDS.GaP), 548.6, 1e-3); near(c.lambdaNm(c.LEDS.GaAs), 867.0, 1e-3); near(c.lambdaNm(c.LEDS.GaN), 361.5, 1e-3); near(c.HC, 1239.84, 1e-5);
+});
+group('Kronig–Penney: f(E) equals the textbook form below V₀; det M = 1; with V₀ = 0 the bands touch and follow the free electron E = ħ²k²/2m', () => {
+  const V0 = 10, w = 0.25, b = 0.05;
+  for (const E of [0.5, 2, 4.25, 7, 9.9]) { const al = Math.sqrt(E / c.HB2M), be = Math.sqrt((V0 - E) / c.HB2M);
+    const ff = Math.cos(al * w) * Math.cosh(be * b) + (be * be - al * al) / (2 * al * be) * Math.sin(al * w) * Math.sinh(be * b);
+    nearAbs(c.kpF(E, V0, w, b), ff, 1e-9 * Math.max(1, Math.abs(ff)), `f(${E})`);
+    const M = c.kpCell(E, V0, w, b); nearAbs(M[0] * M[3] - M[1] * M[2], 1, 1e-9, 'det'); }
+  for (const E of [12, 20]) { const al = Math.sqrt(E / c.HB2M), g = Math.sqrt((E - V0) / c.HB2M);
+    nearAbs(c.kpF(E, V0, w, b), Math.cos(al * w) * Math.cos(g * b) - (al * al + g * g) / (2 * al * g) * Math.sin(al * w) * Math.sin(g * b), 1e-9, `f above V0 ${E}`); }
+  const free = c.kpBands(0, w, b, 40); for (let i = 0; i < 3; i++) { nearAbs(free[i + 1][0], free[i][1], 1e-9, 'no gaps'); nearAbs(free[i][1], c.HB2M * ((i + 1) * Math.PI / (w + b)) ** 2, 1e-6, 'edge at nπ/a'); }
+  for (const sv of [0.3, 0.8]) { nearAbs(c.kpE(free, 1, sv, 0, w, b), c.HB2M * (sv * Math.PI / (w + b)) ** 2, 1e-6, `free ${sv}`); nearAbs(c.kpE(free, 2, sv, 0, w, b), c.HB2M * c.kpKext(2, sv, w + b) ** 2, 1e-6, `free band 2 ${sv}`); }
+  const tiny = c.kpBands(0.05, w, b, 40); assert(tiny[1][0] - tiny[0][1] > 0.01 && tiny[1][0] - tiny[0][1] < 0.05, 'a small gap for a small V0');
+});
+group('Kronig–Penney: bands and gaps (V₀ = 10 eV, w = 0.25, b = 0.05 nm): band 1 1.340 to 4.250 eV, gap 2.855 eV; |f| = 1 at every edge; deep wells narrow the band toward the single well level', () => {
+  const V0 = 10, w = 0.25, b = 0.05, B = c.kpBands(V0, w, b, 40);
+  nearAbs(B[0][0], 1.3397, 1e-4); nearAbs(B[0][1], 4.2496, 1e-4); nearAbs(B[1][0] - B[0][1], 2.8548, 1e-3);
+  for (const [lo, hi] of B.slice(0, 3)) { nearAbs(Math.abs(c.kpF(lo, V0, w, b)), 1, 1e-9); nearAbs(Math.abs(c.kpF(hi, V0, w, b)), 1, 1e-9); }
+  nearAbs(c.kpE(B, 1, 0, V0, w, b), B[0][0], 1e-9); nearAbs(c.kpE(B, 1, 1, V0, w, b), B[0][1], 1e-9); nearAbs(c.kpE(B, 2, 1, V0, w, b), B[1][0], 1e-9);
+  const width = (bb) => { const q = c.kpBands(20, w, bb, 40)[0]; return q[1] - q[0]; }; assert(width(0.2) < width(0.1) && width(0.1) < width(0.05), 'thicker barriers, narrower band');
+  /* single finite well of width w and depth 20 eV, even ground state: √E tan(αw/2) = √(V0 − E) */
+  let lo = 0.01, hi = 5; const g = (E) => Math.sqrt(E) * Math.tan(Math.sqrt(E / c.HB2M) * w / 2) - Math.sqrt(20 - E); for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; if (g(m) < 0) lo = m; else hi = m; }
+  const q = c.kpBands(20, w, 0.3, 40)[0]; assert(q[0] < lo && lo < q[1] && q[1] - q[0] < 0.02, `well level ${lo} inside the narrow band ${q}`);
+});
+group('Kronig–Penney: the Bloch state obeys ψ(x + a) = e^(ika) ψ(x) and the Schrödinger equation in each piece', () => {
+  const V0 = 10, w = 0.25, b = 0.05, a = w + b, B = c.kpBands(V0, w, b, 40);
+  for (const [n, sv] of [[1, 0.3], [2, 0.7], [3, 0.5]]) { const E = c.kpE(B, n, sv, V0, w, b), ps = c.kpPsi(E, sv, V0, w, b);
+    for (const x of [0.05, 0.2, 0.27]) { const z0 = ps(x), z1 = ps(x + a), lr = Math.cos(Math.PI * sv), li = Math.sin(Math.PI * sv);
+      nearAbs(z1[0], z0[0] * lr - z0[1] * li, 1e-9, 'Bloch re'); nearAbs(z1[1], z0[0] * li + z0[1] * lr, 1e-9, 'Bloch im'); }
+    const h = 1e-4; for (const [x, V] of [[0.12, 0], [0.275, V0]]) { const d2 = (ps(x + h)[0] - 2 * ps(x)[0] + ps(x - h)[0]) / (h * h);
+      nearAbs(-c.HB2M * d2 + V * ps(x)[0], E * ps(x)[0], 1e-4 * Math.max(1, Math.abs(E * ps(x)[0])), `Schrödinger at ${x}`); } }
+  nearAbs(c.kpKext(1, 0.5, a), 0.5 * Math.PI / a, 1e-12); nearAbs(c.kpKext(2, 0.25, a), 1.75 * Math.PI / a, 1e-12);
 });
 console.log(`${n} groups passed`);

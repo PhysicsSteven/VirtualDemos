@@ -5728,3 +5728,39 @@ then", and wants the videos in the worksheets too, with the demo button kept.
 - Checks: vdcheck --only after on the five demos, 0 problems; worksheet box checked at 1280 and 400 px (no sideways scroll),
   absent on the Stellarium worksheet; each video looked at frame by frame.
 
+
+## 2026-10-31 · Claude · Modern partial gaps (Group E): H₂⁺ orbitals, Kronig–Penney bands, Bohr orbits with de Broglie waves
+
+Steve: "Let's do the partial gaps today", additions to existing demos only, no new worksheets (a worksheet sweep comes after).
+Group E of /mnt/project-files/partial-gaps/groups-2026-10-31.md. Nothing else in these demos changed; their worksheets and keys
+are untouched.
+- Molecules: new view **H₂⁺ orbitals** (setups "H₂⁺ bonding orbital", "H₂⁺ antibonding orbital"). The LCAO orbitals
+  σg and σu* = (φ_A ± φ_B)/√(2(1 ± S)) from hydrogen 1s orbitals, drawn as |ψ|² or as ψ with its sign in color in the plane
+  through both protons, with the profile along the axis against the two atoms added without interference. Energy curves
+  U± = (1/R − (j ± k)/(1 ± S)) E_h (Griffiths, Introduction to QM, 2nd ed. §7.3; Atkins and de Paula, Physical Chemistry,
+  9th ed. §10.3), against a Morse curve through the measured r_e = 0.1052 nm, ωe 2321.7, ωe xe 66.2, ωe ye 0.6 cm⁻¹ and
+  D₀ = 2.65073 eV (Huber and Herzberg via the NIST WebBook; D₀ is Bishop 1974 as the WebBook gives it), so D_e = 2.793 eV.
+  The LCAO minimum, 0.1319 nm (2.49 a₀) and 1.764 eV, is computed, not typed. Readings go to the bonds worksheet as
+  "H2+ bonding (LCAO)" rows, R and U. a₀, E_h and the proton mass CODATA 2022. The picture uses a compressed brightness scale,
+  stated in the About text.
+- Crystals, Bands and Semiconductors: the Bands view has a **Model** switch, Chain of atoms (unchanged, the default) or
+  **Periodic potential (Kronig–Penney)** (setups "Periodic potential", "Deep wells, narrow bands"). Exact transfer matrix
+  solution for square wells (V = 0, width w) and barriers (V₀, width b): bands where |cos ka| = |(M₁₁ + M₂₂)/2| ≤ 1, each
+  band's E(k), and the Bloch state (Re ψ or |ψ|²) drawn on its energy line over six periods; graphs of E against k in the
+  extended zone with the free electron parabola, and f(E) with the allowed strip. ħ²/2m_e = 0.0380998212 eV nm² (CODATA 2022);
+  Kronig and Penney 1931, Kittel ch. 7. Band edges are split where f turns at |f| = 1, so V₀ = 0 gives touching bands on the
+  free electron curve. No readings in this model (Record says so).
+- Spectra Explorer: the hydrogen card has **Bohr orbits and the electron wave** below the level diagram: orbits drawn to scale
+  (r = n²a₀), the de Broglie wave λ = h/(m_e v) = 2πa₀n wrapped around the chosen orbit, with an Orbit n slider from 1 to 6 in
+  steps of 0.05; between whole numbers the second time round is drawn dashed and does not match. Readouts: radius, speed (αc/n),
+  λ, wavelengths around, m v r in ħ. Picking a transition puts the slider on its upper level. Nucleus held fixed, said on the card.
+- Tests: test_molecules (3 new groups: Griffiths F(x) reproduced, normalization by numerical integral, node, midpoint ratio,
+  measured D_e), test_solids (3 new groups: f(E) against the textbook closed forms above and below V₀, det M = 1, free electron
+  limit, band edges at |f| = 1, single well level inside the deep well band, Bloch condition and the Schrödinger equation checked
+  by finite differences on the state), new test_bohr_debroglie (a₀ from ħ/(m_e c α), v, λ, n waves, L = nħ, force balance).
+- Checks: vdcheck `--only after` and `--only clip` on molecules, solids, spectra: 0 problems, 0 cut off; each new view looked
+  at in light and dark at 1368 and 400 px, no sideways scroll, no page errors. What's new entry added.
+- Worksheet candidates for the sweep: H₂⁺ (table of R and U for both orbitals, find the LCAO minimum and compare with the
+  measured bond), Kronig–Penney (band 1 edges and the first gap against V₀ and b, the free electron limit), Bohr and de Broglie
+  (λ and wavelengths around against n; probably a short addition to an existing hydrogen worksheet rather than a new one).
+  No How this works video, since no new worksheet.

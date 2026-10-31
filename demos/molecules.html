@@ -61,6 +61,7 @@
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="ion" aria-pressed="true">Ionic bond</button>
           <button type="button" data-v="cov" aria-pressed="false">Covalent bond</button>
+          <button type="button" data-v="mo" aria-pressed="false">H₂⁺ orbitals</button>
           <button type="button" data-v="lev" aria-pressed="false">Energy levels</button>
           <button type="button" data-v="sp" aria-pressed="false">HCl spectrum</button>
         </div>
@@ -92,6 +93,22 @@
             </div>
           </div>
           <div class="wide"><label class="check"><input type="checkbox" id="showLev"><span>Show the vibration levels in the well</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardMo" role="group" aria-label="The H₂⁺ molecular orbitals" hidden>
+          <span class="card-title">One electron shared by two protons (H₂⁺). Drag a proton to change the separation; pick the orbital the electron is in.</span>
+          <div><div class="slider-head"><label for="sRm">Separation R</label><output id="oRm" class="mono" for="sRm"></output></div><input type="range" id="sRm" min="0.020" max="0.400" step="0.001"></div>
+          <div class="wide"><span class="lab">Orbital</span>
+            <div class="seg" role="group" aria-label="Orbital" id="orbSeg">
+              <button type="button" data-o="1" aria-pressed="true">Bonding σg (φ_A + φ_B)</button>
+              <button type="button" data-o="-1" aria-pressed="false">Antibonding σu* (φ_A − φ_B)</button>
+            </div>
+          </div>
+          <div class="wide"><span class="lab">Picture</span>
+            <div class="seg" role="group" aria-label="Picture" id="moShowSeg">
+              <button type="button" data-w="dens" aria-pressed="true">Probability density |ψ|²</button>
+              <button type="button" data-w="wave" aria-pressed="false">Wave function ψ (sign in color)</button>
+            </div>
+          </div>
         </div>
         <div class="shelf-card" id="cardLev" role="group" aria-label="The energy levels" hidden>
           <span class="card-title">Vibration and rotation levels of one molecule, and a photon that moves it between two of them</span>
@@ -144,6 +161,8 @@
           <button type="button" data-p="naclApart" aria-pressed="false">Pull the ions apart</button>
           <button type="button" data-p="h2" aria-pressed="false">H₂ bond</button>
           <button type="button" data-p="h2anti" aria-pressed="false">H₂ spins parallel</button>
+          <button type="button" data-p="h2p" aria-pressed="false">H₂⁺ bonding orbital</button>
+          <button type="button" data-p="h2pAnti" aria-pressed="false">H₂⁺ antibonding orbital</button>
           <button type="button" data-p="levels" aria-pressed="false">HCl levels</button>
           <button type="button" data-p="band" aria-pressed="false">HCl band</button>
           <button type="button" data-p="isotopes" aria-pressed="false">Two isotopes</button>
@@ -183,6 +202,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutIon"></p>
           <p class="hint" id="aboutCov"></p>
+          <p class="hint" id="aboutMo"></p>
           <p class="hint" id="aboutLev"></p>
           <p class="hint" id="aboutSp"></p>
           <p class="hint" id="aboutSrc"></p>
@@ -327,6 +347,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fa = v[best - 1], f0 = v[best], fb = v[best + 1], den = fa - 2 * f0 + fb, x = xs(best - n) + (den < 0 ? 0.5 * h * (fa - fb) / den : 0);
     return { nu: x, A: absorb(L, x, fwhm) };
   }
+
+  /* H₂⁺, the simplest molecule: one electron shared by two protons held a distance R apart (Born–Oppenheimer). In the LCAO model
+     the orbitals are ψ± = (φ_A ± φ_B)/√(2(1 ± S)), where φ = e^(−r/a₀)/√(πa₀³) is the hydrogen 1s orbital centered on each proton:
+     ψ₊ (σg, bonding) adds the two, ψ₋ (σu*, antibonding) subtracts them and has a nodal plane halfway between the protons. In
+     atomic units (lengths in a₀, energies in hartree E_h) the energy measured from a hydrogen atom and a proton far apart is
+     U±(R) = 1/R − (j ± k)/(1 ± S), with the overlap S = (1 + R + R²/3)e^(−R), the Coulomb integral j = [1 − (1 + R)e^(−2R)]/R and
+     the resonance integral k = (1 + R)e^(−R). For ψ₊ this is D. J. Griffiths, Introduction to Quantum Mechanics, 2nd ed. (2005),
+     §7.3; both signs in P. Atkins and J. de Paula, Physical Chemistry, 9th ed. (2010), §10.3. It is a model: its well
+     (1.76 eV deep at 0.132 nm) is shallower and wider than the measured one. Measured ground state (K. P. Huber and G. Herzberg,
+     Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook): r_e = 0.1052 nm, ωe = 2321.7, ωe xe = 66.2, ωe ye =
+     0.6 cm⁻¹; D₀ = 2.65073 eV (Bishop 1974, the WebBook's value). Constants: CODATA 2022 (a₀, E_h, proton mass). */
+  const A0 = 0.0529177210544 /* nm */, EH = 27.211386245981 /* eV */;
+  MASS.p = 1.007276466621;
+  const H2P = { name: 'H₂⁺', m1: MASS.p, m2: MASS.p, we: 2321.7, wexe: 66.2, weye: 0.6, re: 0.1052, D0: 2.65073 };
+  const h2pS = (Rnm) => { const R = Rnm / A0; return (1 + R + R * R / 3) * Math.exp(-R); };
+  function h2pU(Rnm, sign = 1) {
+    const R = Rnm / A0, S = (1 + R + R * R / 3) * Math.exp(-R), j = (1 - (1 + R) * Math.exp(-2 * R)) / R, k = (1 + R) * Math.exp(-R);
+    return EH * (1 / R - (j + sign * k) / (1 + sign * S));
+  }
+  /* ψ at the point (x, y) in nm, protons at x = ±R/2 on the axis, in units of a₀^(−3/2); the parts φ_A and φ_B with the same factor */
+  function h2pPsi(x, y, Rnm, sign = 1) {
+    const N = 1 / Math.sqrt(2 * (1 + sign * h2pS(Rnm))), c = 1 / Math.sqrt(Math.PI);
+    const a = c * Math.exp(-Math.hypot(x + Rnm / 2, y) / A0), b = c * Math.exp(-Math.hypot(x - Rnm / 2, y) / A0);
+    return { psi: N * (a + sign * b), a: N * a, b: N * sign * b, phiA: a, phiB: b };
+  }
+  /* the LCAO bonding minimum (golden section) */
+  function h2pMin() { const r = argmin((x) => h2pU(x, 1), 0.05, 0.4); return { re: r, De: -h2pU(r, 1) }; }
+  /* how much charge piles up at the midpoint: |ψ|² there against the two atoms' clouds added without interference, (φ_A² + φ_B²)/2;
+     2/(1 + S) for the bonding orbital, 0 for the antibonding one */
+  function h2pMidRatio(Rnm, sign = 1) { const q = h2pPsi(0, 0, Rnm, sign); return q.psi * q.psi / ((q.phiA * q.phiA + q.phiB * q.phiB) / 2); }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -335,6 +385,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const S = { view: 'ion', preset: 'nacl', blind: false,
     ion: { r: 0.236, n: 19, rep: true },
     cov: { mol: 'H2', r: MOLS.H2.re, spin: 'bond', lev: true },
+    mo: { R: 0.106, sign: 1, show: 'dens' },
     lev: { mol: 'HCl', model: 'book', dv: 1, l: 0, dl: 1 },
     sp: { raw: 2906.25, nu: 2906.25, T: 300, res: 0.5, iso: 'both', lock: true } };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
@@ -487,6 +538,70 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     MAP.curve = { toVal: (x) => lo + (x - L) / w * (hi - lo), lo, hi };
   }
 
+
+  // ---------- H₂⁺ orbitals ----------
+  const MO_X = 0.26, MO_Y = 0.13, MO_LO = 0.02, MO_HI = 0.40; /* half widths of the map and the range of R, in nm */
+  const rgb = (hex) => { const h = hex.replace('#', ''), n = parseInt(h.length === 3 ? h.split('').map((ch) => ch + ch).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  let moOff = null;
+  function moGeom() {
+    const p = proj(), mR = W >= 640 ? 170 * p : 14 * p, x0 = 14 * p, x1 = W - mR, top = 30 * p, profH = Math.max(78 * p, H * 0.24), bot = H - profH - 34 * p;
+    const sc = Math.min((x1 - x0) / (2 * MO_X), (bot - top) / (2 * MO_Y));
+    return { p, sc, xc: (x0 + x1) / 2, yc: (top + bot) / 2, x0, x1, top, bot, pt: bot + 24 * p, pb: H - 24 * p };
+  }
+  function drawMo() {
+    back(ctx, W, H); const g = moGeom(), { p, sc, xc, yc } = g, R = S.mo.R, sg = S.mo.sign, wave = S.mo.show === 'wave';
+    const mw = Math.round(2 * MO_X * sc), mh = Math.round(2 * MO_Y * sc), st = 2, nx = Math.ceil(mw / st), ny = Math.ceil(mh / st);
+    if (!moOff) moOff = document.createElement('canvas'); moOff.width = nx; moOff.height = ny;
+    const oc = moOff.getContext('2d'), im = oc.createImageData(nx, ny), d = im.data, cp = rgb(T.elec), cn = rgb(T.ion), rp = Math.sqrt(Math.PI);
+    for (let j = 0; j < ny; j++) { const y = MO_Y - (j + 0.5) * st / sc;
+      for (let i = 0; i < nx; i++) { const x = -MO_X + (i + 0.5) * st / sc, v = h2pPsi(x, y, R, sg).psi, k = 4 * (j * nx + i);
+        /* shown on a compressed scale so the tails stay visible: |ψ|² as (π a₀³ |ψ|²)^0.55, ψ as (√π a₀^1.5 |ψ|)^0.7 */
+        const a = wave ? Math.pow(Math.min(1, Math.abs(v) * rp), 0.7) : Math.pow(Math.min(1, v * v * Math.PI), 0.55), c = wave && v < 0 ? cn : cp;
+        d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2]; d[k + 3] = Math.round(235 * a); } }
+    oc.putImageData(im, 0, 0);
+    ctx.save(); ctx.imageSmoothingEnabled = true; ctx.drawImage(moOff, xc - mw / 2, yc - mh / 2, nx * st, ny * st); ctx.restore();
+    ctx.save(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(xc - mw / 2, yc - mh / 2, mw, mh); ctx.restore();
+    const xA = xc - R / 2 * sc, xB = xc + R / 2 * sc;
+    if (sg < 0) { ctx.save(); ctx.setLineDash([4 * p, 4 * p]); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xc, yc - mh / 2 + 16 * p); ctx.lineTo(xc, yc + mh / 2); ctx.stroke(); ctx.restore();
+      lab(ctx, 'nodal plane: ψ = 0', xc, yc - mh / 2 + 9 * p, { a: 'center', c: T.ink, s: 9.5 }); }
+    for (const [x, n] of [[xA, 'A'], [xB, 'B']]) { ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 3 * p; dot(ctx, x, yc, 4.5 * p, '#d2452b'); ctx.restore(); lab(ctx, '+', x, yc - 0.5 * p, { a: 'center', c: '#ffffff', w: 700, s: 9 });
+      lab(ctx, `proton ${n}`, x, yc + 16 * p, { a: 'center', c: T.ink, w: 700, s: 9.5 }); }
+    const by = yc + mh / 2 - 14 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xA, by - 4 * p); ctx.lineTo(xA, by + 4 * p); ctx.moveTo(xA, by); ctx.lineTo(xB, by); ctx.moveTo(xB, by - 4 * p); ctx.lineTo(xB, by + 4 * p); ctx.stroke();
+    lab(ctx, `R = ${f(R, 3)} nm`, xc, by - 10 * p, { a: 'center', c: T.ink, m: true, s: 10 });
+    lab(ctx, wave ? `ψ in the plane through both protons: blue +, ${dark() ? 'orange' : 'red'} −` : '|ψ|² in the plane through both protons', xc - mw / 2, g.top - 12 * p, { s: 9.5 });
+    /* the profile along the axis */
+    const N = 160, xs = [], A = [], B = [], P = []; for (let i = 0; i <= N; i++) { const x = -MO_X + 2 * MO_X * i / N, q = h2pPsi(x, 0, R, sg); xs.push(x); P.push(wave ? q.psi : q.psi * q.psi); A.push(wave ? q.a : (q.phiA * q.phiA + q.phiB * q.phiB) / 2); B.push(wave ? q.b : NaN); }
+    const all = P.concat(A, B).filter(isFinite), top = Math.max(...all.map(Math.abs)) * 1.12, lo = wave ? -top : 0, pt = g.pt, pb = g.pb, X = (x) => xc + x * sc, Y = (v) => pb - (v - lo) / (top - lo) * (pb - pt);
+    ctx.save(); ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = -0.2; v <= 0.20001; v += 0.1) { ctx.beginPath(); ctx.moveTo(X(v), pt); ctx.lineTo(X(v), pb); ctx.stroke(); ctx.fillText(f(v, 1), X(v), pb + 3 * p); }
+    ctx.textAlign = 'left'; ctx.fillText('nm', X(0.2) + 12 * p, pb + 3 * p);
+    ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(X(-MO_X), Y(0)); ctx.lineTo(X(MO_X), Y(0)); ctx.stroke(); ctx.restore();
+    const line = (arr, col, wd, dash) => { ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = wd * p; if (dash) ctx.setLineDash(dash.map((q) => q * p)); ctx.beginPath(); arr.forEach((v, i) => (i ? ctx.lineTo(X(xs[i]), Y(v)) : ctx.moveTo(X(xs[i]), Y(v)))); ctx.stroke(); ctx.restore(); };
+    if (wave) { line(A, T.theory, 1.3, [4, 3]); line(B, T.theory, 1.3, [4, 3]); } else line(A, T.theory, 1.3, [4, 3]);
+    line(P, sg > 0 ? T.elec : T.ion, 2.2);
+    lab(ctx, wave ? 'ψ along the axis; dashed: the two atomic parts' : '|ψ|² along the axis; dashed: the two atoms added without interference', X(-MO_X), pt - 8 * p, { s: 9 });
+    if (W >= 640) { const mx = W - 150 * p, mw2 = 124 * p, mh2 = 28 * p; lcdBox(mx, 40 * p, mw2, mh2, `${f(R, 3)} nm`, 'separation R'); lcdBox(mx, 106 * p, mw2, mh2, `${f(h2pU(R, sg), 3)} eV`, 'energy U (LCAO)'); }
+    MAP.pane = { toVal: (x) => 2 * Math.abs(x - xc) / sc, lo: MO_LO, hi: MO_HI };
+  }
+  function curveMo() {
+    const p = proj(), c = cctx, L = 54 * p, Tp = 12 * p, B = 34 * p, w = CW - L - 14 * p, h = CH - Tp - B;
+    const A = axes(c, L, Tp, w, h, [MO_LO, MO_HI], [-3.5, 4.5], 'separation R (nm)', 'U (eV)', CH);
+    c.save(); c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(L, A.Y(0)); c.lineTo(L + w, A.Y(0)); c.stroke(); c.restore();
+    const sg = S.mo.sign;
+    if (!S.blind) {
+      plotLine(c, A, (r) => morse(H2P, r), 0.045, MO_HI, T.theory, 1.4, [5, 4]);
+      plotLine(c, A, (r) => h2pU(r, -1), MO_LO, MO_HI, T.ion, sg < 0 ? 2.4 : 1.4, sg < 0 ? null : [5, 4]);
+      plotLine(c, A, (r) => h2pU(r, 1), MO_LO, MO_HI, T.accent, sg > 0 ? 2.4 : 1.4, sg > 0 ? null : [5, 4]);
+      c.textAlign = 'right'; c.textBaseline = 'middle'; c.font = `${10 * p}px ${T.mono}`; const tx = L + w - 6 * p;
+      c.fillStyle = T.ion; c.fillText('antibonding σu* (LCAO)', tx, A.Y(1.6)); c.fillStyle = T.accent; c.fillText('bonding σg (LCAO)', tx, A.Y(-0.75));
+      c.fillStyle = T.theory; c.fillText('measured (Morse through r_e, ωe, D₀)', tx, A.Y(-2.75));
+    }
+    const tag = sg > 0 ? 'bonding' : 'antibonding';
+    for (const q of rowsOf('mo').filter((q) => q.molecule.indexOf(tag) >= 0 && (sg > 0 ? q.molecule.indexOf('anti') < 0 : true))) dot(c, A.X(+q.r_nm), A.Y(+q.U_eV), 3.2 * p, T.ink);
+    const U = h2pU(S.mo.R, sg); if (U < 4.5) dot(c, A.X(S.mo.R), A.Y(U), 6 * p, T.cursor);
+    MAP.curve = { toVal: (x) => MO_LO + (x - L) / w * (MO_HI - MO_LO), lo: MO_LO, hi: MO_HI };
+  }
+
   // ---------- energy levels ----------
   const levMol = () => MOLS[S.lev.mol];
   const levTr = () => transition(levMol(), 0, S.lev.l, S.lev.dv, S.lev.dl, S.lev.model);
@@ -616,8 +731,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function redraw() {
     if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
-    ({ ion: drawIon, cov: drawCov, lev: drawLev, sp: drawSp })[S.view](); ({ ion: curveIon, cov: curveCov, lev: curveLev, sp: curveSp })[S.view](); readouts();
-    $('clock').textContent = S.view === 'ion' ? `r = ${f(S.ion.r, 3)} nm` : S.view === 'cov' ? `r = ${f(S.cov.r, 3)} nm` : S.view === 'sp' ? `${f(S.sp.nu, 2)} cm⁻¹` : `${levMol().name}`;
+    ({ ion: drawIon, cov: drawCov, mo: drawMo, lev: drawLev, sp: drawSp })[S.view](); ({ ion: curveIon, cov: curveCov, mo: curveMo, lev: curveLev, sp: curveSp })[S.view](); readouts();
+    $('clock').textContent = S.view === 'ion' ? `r = ${f(S.ion.r, 3)} nm` : S.view === 'cov' ? `r = ${f(S.cov.r, 3)} nm` : S.view === 'mo' ? `R = ${f(S.mo.R, 3)} nm` : S.view === 'sp' ? `${f(S.sp.nu, 2)} cm⁻¹` : `${levMol().name}`;
   }
 
   // ---------- readouts ----------
@@ -634,6 +749,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Bond length r_e', bl(`${f(m.re, 4)} nm`)) + dd('Well depth D_e', bl(`${f(De(m), 3)} eV`)) + dd('Zero point energy', bl(`${f(G(m, 0) * CM_EV, 3)} eV`))
         + dd('Dissociation energy D₀', bl(`${f(m.D0, 3)} eV`)) + dd('Vibration ωe', bl(`${f(m.we, 1)} cm⁻¹`)) + dd('Force constant k', bl(`${f(kFromNu(m.we, mu(m)), 0)} N/m`))
         + dd('Reduced mass μ', `${f(mu(m), 4)} u`) + (S.cov.mol === 'H2' ? dd('OpenStax §9.1 for H₂', '0.074 nm, 4.52 eV') : '');
+    } else if (S.view === 'mo') { const R = S.mo.R, sg = S.mo.sign, mn = h2pMin();
+      o = dd('Orbital', sg > 0 ? 'bonding σg' : 'antibonding σu*') + dd('Separation R', `${f(R, 3)} nm = ${f(R / A0, 2)} a₀`) + dd('Energy U (LCAO)', `${f(h2pU(R, sg), 3)} eV`)
+        + dd('Overlap S', f(h2pS(R), 4)) + dd('|ψ|² at the midpoint ÷ atoms added', bl(f(h2pMidRatio(R, sg), 3)))
+        + dd('LCAO minimum', bl(`${f(mn.re, 4)} nm, ${f(mn.De, 3)} eV`)) + dd('Measured r_e', '0.1052 nm') + dd('Measured D_e = D₀ + G(0)', `${f(De(H2P), 3)} eV`);
     } else if (S.view === 'lev') { const m = levMol(), tr = levTr(), B0 = Bv(m, 0);
       o = dd('Molecule', m.name) + dd('Model', S.lev.model === 'book' ? 'rigid rotor and harmonic' : 'measured constants') + dd('Transition', `n 0 → ${S.lev.dv}, l ${S.lev.l} → ${S.lev.l + S.lev.dl}`)
         + dd('Allowed?', tr.allowed ? 'yes' : `no: ${tr.why}`) + dd('Photon wavenumber', tr.allowed || isFinite(tr.nu) ? `${f(tr.nu, 3)} cm⁻¹` : '—') + dd('Photon energy', isFinite(tr.nu) ? `${f(tr.eV * 1000, 3)} meV` : '—')
@@ -653,6 +772,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sRi').value = S.ion.r; $('oRi').textContent = `${f(S.ion.r, 3)} nm`; $('sN').value = S.ion.n; $('oN').textContent = f(S.ion.n, 1); $('rep').checked = S.ion.rep; $('sN').disabled = !S.ion.rep;
     const m = MOLS[S.cov.mol]; $('sRc').min = covLo(); $('sRc').max = covHi(); $('sRc').value = S.cov.r; $('oRc').textContent = `${f(S.cov.r, 3)} nm`;
     press('#molSeg button', (b) => b.dataset.m === S.cov.mol); press('#spinSeg button', (b) => b.dataset.s === S.cov.spin); $('spinRow').hidden = S.cov.mol !== 'H2'; $('showLev').checked = S.cov.lev;
+    $('sRm').value = S.mo.R; $('oRm').textContent = `${f(S.mo.R, 3)} nm`; press('#orbSeg button', (b) => +b.dataset.o === S.mo.sign); press('#moShowSeg button', (b) => b.dataset.w === S.mo.show);
     press('#levMolSeg button', (b) => b.dataset.m === S.lev.mol); press('#modelSeg button', (b) => b.dataset.k === S.lev.model); press('#dvSeg button', (b) => +b.dataset.d === S.lev.dv); press('#dlSeg button', (b) => +b.dataset.d === S.lev.dl);
     $('sL').value = S.lev.l; $('oL').textContent = S.lev.l;
     $('sNu').value = S.sp.raw; $('oNu').textContent = `${f(S.sp.nu, 2)} cm⁻¹`; $('sT').value = S.sp.T; $('oT').textContent = `${S.sp.T} K`; $('sRes').value = S.sp.res; $('oRes').textContent = `${f(S.sp.res, 2)} cm⁻¹`;
@@ -665,6 +785,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     naclApart: { view: 'ion', hint: 'The ions 1.2 nm apart. Here the ion pair has more energy than neutral atoms: the 1.52 eV it cost to move the electron is more than the Coulomb energy gives back. Bring them closer and find where the transfer starts to pay off.', set: () => Object.assign(S.ion, { r: 1.2, n: 19, rep: true }) },
     h2: { view: 'cov', hint: 'H₂ at its bond length, 0.0741 nm. Both electrons, with opposite spins, sit mostly between the protons and pull them together. Stretch the bond and read the energy; the bottom of the well is −D_e and the molecule\'s lowest level sits a zero point energy above it.', set: () => Object.assign(S.cov, { mol: 'H2', r: 0.074, spin: 'bond', lev: true }) },
     h2anti: { view: 'cov', hint: 'Two hydrogen atoms whose electrons have parallel spins. The exclusion principle keeps the electrons out of the region between the protons, the protons repel, and there is no bond at any separation.', set: () => Object.assign(S.cov, { mol: 'H2', r: 0.074, spin: 'anti', lev: false }) },
+    h2p: { view: 'mo', hint: 'H₂⁺: one electron and two protons 0.106 nm apart, the measured bond length. In the bonding orbital the two atomic waves add, so the electron is more likely to be found between the protons, where it pulls on both. Change R and watch the energy; the LCAO model is simple, so its well is shallower than the measured one.', set: () => Object.assign(S.mo, { R: 0.106, sign: 1, show: 'dens' }) },
+    h2pAnti: { view: 'mo', hint: 'The same molecule with the electron in the antibonding orbital: the atomic waves subtract, ψ changes sign halfway, and the electron is never found on the plane between the protons. Its energy falls as the protons separate, so there is no bond.', set: () => Object.assign(S.mo, { R: 0.106, sign: -1, show: 'wave' }) },
     levels: { view: 'lev', hint: 'The vibration and rotation levels of HCl in the book\'s model. A photon of the infrared band raises n by one and changes l by one, up (R branch) or down (P branch). Try Δl = 0 or +2 and see why they are forbidden.', set: () => Object.assign(S.lev, { mol: 'HCl', model: 'book', dv: 1, l: 0, dl: 1 }) },
     band: { view: 'sp', hint: 'The infrared absorption band of HCl gas at room temperature, as a spectrometer with a resolution of 0.5 cm⁻¹ would record it. The lines come in two branches with a gap at the center, where the missing line would be.', set: () => { Object.assign(S.sp, { T: 300, res: 0.5, iso: 'both', lock: true }); spSet(2906.25); } },
     isotopes: { view: 'sp', hint: 'Look closely: each line is a pair. Natural chlorine is 76 % ³⁵Cl and 24 % ³⁷Cl, and the heavier isotope gives a slightly larger reduced mass, so its lines sit a little lower. The close up shows one pair.', set: () => { Object.assign(S.sp, { T: 300, res: 0.2, iso: 'both', lock: true }); spSet(2944.91); } },
@@ -672,16 +794,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   function setView(v) {
     S.view = v; press('#viewSeg button', (b) => b.dataset.v === v); $('stage').className = `stage v-${v}`;
-    $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp';
-    $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : 'wavenumber in cm⁻¹ · simulated spectrum';
-    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometers. Drag the right hand atom, or use the arrow keys, to change the bond length.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
+    $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardMo').hidden = v !== 'mo'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp';
+    $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'mo' ? 'R in nm · U in eV, from H and a proton far apart' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : 'wavenumber in cm⁻¹ · simulated spectrum';
+    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometers. Drag the right hand atom, or use the arrow keys, to change the bond length.', mo: 'The H₂⁺ molecular orbital in the plane through both protons, with its profile along the axis. Drag a proton, or use the arrow keys, to change the separation.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
     can.style.cursor = v === 'lev' ? 'default' : 'ew-resize';
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     sync(); redraw();
   }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
   const custom = () => { S.preset = 'custom'; sync(); redraw(); };
-  const setR = (v) => { if (S.view === 'ion') S.ion.r = +Math.max(0.15, Math.min(1.4, v)).toFixed(3); else if (S.view === 'cov') S.cov.r = +Math.max(covLo(), Math.min(covHi(), v)).toFixed(3); };
+  const setR = (v) => { if (S.view === 'ion') S.ion.r = +Math.max(0.15, Math.min(1.4, v)).toFixed(3); else if (S.view === 'cov') S.cov.r = +Math.max(covLo(), Math.min(covHi(), v)).toFixed(3); else if (S.view === 'mo') S.mo.R = +Math.max(MO_LO, Math.min(MO_HI, v)).toFixed(3); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('sRi').addEventListener('input', (e) => { S.ion.r = +e.target.value; custom(); });
@@ -690,6 +812,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('molSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.cov.mol = b.dataset.m; S.cov.r = +MOLS[b.dataset.m].re.toFixed(3); if (S.cov.mol !== 'H2') S.cov.spin = 'bond'; custom(); } });
   $('sRc').addEventListener('input', (e) => { S.cov.r = +e.target.value; custom(); });
   $('spinSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.cov.spin = b.dataset.s; custom(); } });
+  $('sRm').addEventListener('input', (e) => { S.mo.R = +e.target.value; custom(); });
+  $('orbSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-o]'); if (b) { S.mo.sign = +b.dataset.o; custom(); } });
+  $('moShowSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) { S.mo.show = b.dataset.w; custom(); } });
   $('showLev').addEventListener('change', (e) => { S.cov.lev = e.target.checked; custom(); });
   $('levMolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.lev.mol = b.dataset.m; custom(); } });
   $('modelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.lev.model = b.dataset.k; custom(); } });
@@ -712,7 +837,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* arrow keys: separation in steps of 0.001 nm (Shift 0.01); cursor to the next peak when locked, else 0.05 cm⁻¹ (Shift 1); level l */
   function key(e) {
     const d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0; if (!d) return; e.preventDefault();
-    if (S.view === 'ion') setR(S.ion.r + d * (e.shiftKey ? 0.01 : 0.001)); else if (S.view === 'cov') setR(S.cov.r + d * (e.shiftKey ? 0.01 : 0.001));
+    if (S.view === 'ion') setR(S.ion.r + d * (e.shiftKey ? 0.01 : 0.001)); else if (S.view === 'cov') setR(S.cov.r + d * (e.shiftKey ? 0.01 : 0.001)); else if (S.view === 'mo') setR(S.mo.R + d * (e.shiftKey ? 0.01 : 0.001));
     else if (S.view === 'lev') S.lev.l = Math.max(0, Math.min(7, S.lev.l + d));
     else if (S.sp.lock) { const d0 = spData(), now = S.sp.nu; for (let k = 1; k < 400; k++) { const c = peakNear(d0.L, now + d * k * 0.25, S.sp.res).nu; if ((c - now) * d > 0.15) { S.sp.raw = now + d * k * 0.25; S.sp.nu = c; break; } } }
     else spSet(S.sp.raw + d * (e.shiftKey ? 1 : 0.05));
@@ -723,9 +848,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
 
   // ---------- readings ----------
-  window.vdVersion = 'molecules@2026-10-24';
-  const SHOW = { ion: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], cov: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], lev: [], sp: [['nu_cm', 'ν (cm⁻¹)'], ['absorbance', 'absorbance']] };
-  const WS = { ion: 'molecular-bonds', cov: 'molecular-bonds', sp: 'hcl-spectrum' };
+  window.vdVersion = 'molecules@2026-10-31';
+  const SHOW = { ion: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], cov: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], mo: [['molecule', 'molecule'], ['r_nm', 'R (nm)'], ['U_eV', 'U (eV)']], lev: [], sp: [['nu_cm', 'ν (cm⁻¹)'], ['absorbance', 'absorbance']] };
+  const WS = { ion: 'molecular-bonds', cov: 'molecular-bonds', mo: 'molecular-bonds', sp: 'hcl-spectrum' };
   window.vdShowCols = SHOW.ion;
   window.vdWorksheet = () => WS[S.view] || 'molecular-bonds';
   window.vdReadingRow = () => {
@@ -735,15 +860,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     window.vdShowCols = SHOW[S.view];
     if (S.view === 'ion') return { view: 'ion', molecule: S.ion.rep ? `NaCl ion pair, n = ${S.ion.n}` : 'NaCl ion pair, no repulsion', r_nm: f(S.ion.r, 3).replace('−', '-'), U_eV: f(ionU(S.ion.r, S.ion.n, S.ion.rep), 3).replace('−', '-'), n: S.ion.rep ? S.ion.n : '' };
     if (S.view === 'cov') return { view: 'cov', molecule: ASCII[S.cov.mol] + (S.cov.mol === 'H2' ? (S.cov.spin === 'anti' ? ' spins parallel' : ' spins opposite') : ''), r_nm: f(S.cov.r, 3), U_eV: f(covU(), 3).replace('−', '-'), n: '' };
+    if (S.view === 'mo') return { view: 'mo', molecule: `H2+ ${S.mo.sign > 0 ? 'bonding' : 'antibonding'} (LCAO)`, r_nm: f(S.mo.R, 3), U_eV: f(h2pU(S.mo.R, S.mo.sign), 3).replace('−', '-'), n: '' };
     return { view: 'sp', nu_cm: f(S.sp.nu, 2), absorbance: f(spRel(S.sp.nu), 3), T_K: S.sp.T, resolution_cm: f(S.sp.res, 2), chlorine: S.sp.iso === 'both' ? 'natural' : '35Cl only', locked: S.sp.lock ? 'peak' : 'cursor' };
   };
 
   // ---------- about ----------
   $('aboutIon').textContent = 'Ionic bond (OpenStax §9.1): taking the outer electron from sodium costs its ionization energy, 5.14 eV, and giving it to chlorine returns the electron affinity, 3.62 eV, so the ions Na⁺ and Cl⁻ far apart have ΔE = 1.52 eV more energy than the neutral atoms. Brought to a separation r they gain the Coulomb energy −ke²/r (point charges). When their electron clouds overlap the exclusion principle pushes them apart. The book describes this repulsion but gives no formula, so the demo uses A/rⁿ with A chosen to put the minimum at the measured separation r₀ = 0.236 nm; the exponent n sets how stiff the repulsion is and how deep the well is. With n = 19 the depth matches the measured dissociation energy, 4.26 eV. The balls are drawn in proportion to measured radii (to each other, not to the separation scale) and change size where the ions become the lower energy state. Losing its one 3s electron leaves Na⁺ with only the filled n = 2 shell, held by 11 protons, so it shrinks from about 186 pm (sodium metal) to 102 pm. The extra electron on Cl⁻ is screened from the nucleus by the other 17 and repelled by them, so the ion swells from about 99 pm (half the Cl₂ bond) to 181 pm. The ionic radii (Shannon, 1976) are measured in crystals, where they add to 283 pm, the spacing of Na⁺ and Cl⁻ in rock salt (282 pm); in a lone NaCl molecule each ion has one neighbor instead of six and the pair sits closer, 236 pm apart. Left out: the polarization of each ion by the other, and the motion of the nuclei (the zero point energy, about 0.02 eV). Energies are measured from neutral Na and Cl at rest far apart; the neutral atoms are taken not to interact.';
   $('aboutCov').textContent = 'Covalent bond (OpenStax §9.1): two atoms share a pair of electrons. The curve is a Morse potential U = D_e(1 − e^(−a(r − r_e)))² − D_e, a model with three measured inputs: the bond length r_e, the vibration wavenumber ωe (which fixes a = 2πcωe√(μ/2D_e)) and the well depth D_e = D₀ + G(0), where D₀ is the measured dissociation energy and G(0) the zero point energy of the lowest vibration level (constants from Huber and Herzberg 1979 via the NIST Chemistry WebBook). The levels drawn in the well use the measured ωe and ωe xe. The parallel spin curve for H₂ is Sato\'s anti Morse form, a model of the repulsive (antibonding) state, shown for the idea only. OpenStax quotes 0.074 nm and 4.52 eV for H₂; the spectroscopic values are r_e = 0.0741 nm and D₀ = 4.478 eV (D_e = 4.747 eV).';
+  $('aboutMo').textContent = 'H₂⁺ orbitals: the hydrogen molecular ion has one electron, so its orbitals can be drawn exactly as a model gives them. The LCAO model (linear combination of atomic orbitals) builds them from the 1s orbital φ of each proton: the bonding orbital σg = (φ_A + φ_B)/√(2(1 + S)) and the antibonding orbital σu* = (φ_A − φ_B)/√(2(1 − S)), where S is the overlap of the two atomic orbitals. In σg the two waves add between the protons, so the electron spends more time there, attracted by both; in σu* they cancel on the midplane, a node. The energy from H and a proton far apart is U = (1/R − (j ± k)/(1 ± S)) E_h with R in units of a₀ (Griffiths, Introduction to Quantum Mechanics, §7.3; Atkins, Physical Chemistry, §10.3). The protons are held fixed (Born–Oppenheimer). The model is not exact: its well is 1.76 eV deep at 0.132 nm, against the measured 2.79 eV at 0.1052 nm, because the real orbital also shrinks toward the protons. The measured curve is a Morse potential through the measured r_e, ωe and D₀ (Huber and Herzberg 1979 via the NIST WebBook; D₀ = 2.65073 eV, Bishop 1974). The picture uses a compressed brightness scale so the tails show.';
   $('aboutLev').textContent = 'Energy levels (OpenStax §9.2): in the book\'s model the molecule vibrates as a harmonic oscillator, E_vib = (n + 1/2)hf, and turns as a rigid rotor, E_rot = l(l + 1)ħ²/2I with I = μr² and μ the reduced mass. Here hf is the measured spacing of n = 0 and n = 1 and ħ²/2I = B₀ (the measured rotational constant of n = 0). A photon carries one unit of angular momentum, so l must change by 1 (Δl = ±1); in the harmonic model n changes by 1 or not at all, and only molecules with an electric dipole (HCl, HF, CO, not N₂) absorb. "Measured constants" uses the full term values: anharmonic vibration G(v) = ωe(v + 1/2) − ωe xe(v + 1/2)² + ..., a rotational constant B_v that falls as v rises, and centrifugal stretching D_v [l(l + 1)]². Wavenumbers are in cm⁻¹; 1 cm⁻¹ is 0.12398 meV.';
   $('aboutSp').textContent = 'HCl spectrum: the v = 0 → 1 band of HCl gas, simulated from the measured spectroscopic constants of H³⁵Cl (NIST WebBook, Huber and Herzberg 1979, with the higher terms of Rank, Rao et al. 1965). They reproduce the measured lines to about 0.01 cm⁻¹ (R(0) 2906.25, P(1) 2865.10 cm⁻¹). H³⁷Cl constants are scaled from H³⁵Cl by the reduced mass (Born–Oppenheimer). Line strengths follow the Boltzmann population of the lower level, the Hönl–London factors and the isotope abundances (75.76 % and 24.24 %); the slight difference in strength between the R and P branches from the stretching of the dipole (Herman–Wallis effect), pressure broadening and the weak hot band are left out. Each line is drawn as a Gaussian as wide as the spectrometer\'s resolution. Absorbance is relative to the strongest peak. The lock finds the top of the displayed peak, as you would by eye.';
-  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); ionic radii R. D. Shannon, Acta Cryst. A32, 751 (1976); constants CODATA 2022.';
+  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); ionic radii R. D. Shannon, Acta Cryst. A32, 751 (1976); H₂⁺: D. J. Griffiths, Introduction to Quantum Mechanics, 2nd ed. (2005), §7.3, and P. Atkins and J. de Paula, Physical Chemistry, 9th ed. (2010), §10.3; constants CODATA 2022.';
 
   /* recorded readings are drawn on the graphs: redraw after Record, Clear or a deleted row */
   document.querySelector('.vd-readings').addEventListener('click', () => setTimeout(redraw, 0));

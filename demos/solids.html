@@ -91,16 +91,36 @@
           <div class="wide"><span class="lab" id="crNote"></span></div>
         </div>
         <div class="shelf-card" id="cardBd" role="group" aria-label="The chain of atoms" hidden>
-          <span class="card-title">A chain of N model atoms, each with one s level and three p levels</span>
-          <div><div class="slider-head"><label for="sN">Number of atoms N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="1" max="40" step="1"></div>
-          <div><div class="slider-head"><label for="sD">Spacing between atoms d</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0.20" max="0.60" step="0.005"></div>
-          <div class="wide">
+          <span class="card-title" id="bdTitle">A chain of N model atoms, each with one s level and three p levels</span>
+          <div class="wide"><span class="lab">Model</span>
+            <div class="seg" role="group" aria-label="Model" id="bdModelSeg">
+              <button type="button" data-m="chain" aria-pressed="true">Chain of atoms</button>
+              <button type="button" data-m="kp" aria-pressed="false">Periodic potential (Kronig–Penney)</button>
+            </div>
+          </div>
+          <div class="chainRow"><div class="slider-head"><label for="sN">Number of atoms N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="1" max="40" step="1"></div>
+          <div class="chainRow"><div class="slider-head"><label for="sD">Spacing between atoms d</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0.20" max="0.60" step="0.005"></div>
+          <div class="wide chainRow">
             <span class="lab">Electrons per atom</span>
             <div class="seg" role="group" aria-label="Electrons per atom" id="zSeg">
               <button type="button" data-z="1" aria-pressed="false">1</button>
               <button type="button" data-z="2" aria-pressed="true">2</button>
               <button type="button" data-z="3" aria-pressed="false">3</button>
               <button type="button" data-z="4" aria-pressed="false">4</button>
+            </div>
+          </div>
+          <div class="kpRow" hidden><div class="slider-head"><label for="sV0">Barrier height V₀</label><output id="oV0" class="mono" for="sV0"></output></div><input type="range" id="sV0" min="0" max="30" step="0.1"></div>
+          <div class="kpRow" hidden><div class="slider-head"><label for="sKw">Well width w</label><output id="oKw" class="mono" for="sKw"></output></div><input type="range" id="sKw" min="0.10" max="0.50" step="0.005"></div>
+          <div class="kpRow" hidden><div class="slider-head"><label for="sKb">Barrier width b</label><output id="oKb" class="mono" for="sKb"></output></div><input type="range" id="sKb" min="0.01" max="0.20" step="0.005"></div>
+          <div class="kpRow" hidden><div class="slider-head"><label for="sKs">Wave number k</label><output id="oKs" class="mono" for="sKs"></output></div><input type="range" id="sKs" min="0" max="1" step="0.01"></div>
+          <div class="wide kpRow" hidden><span class="lab">Band</span>
+            <div class="seg" role="group" aria-label="Band" id="kpBandSeg">
+              <button type="button" data-n="1" aria-pressed="true">1</button><button type="button" data-n="2" aria-pressed="false">2</button><button type="button" data-n="3" aria-pressed="false">3</button><button type="button" data-n="4" aria-pressed="false">4</button>
+            </div>
+          </div>
+          <div class="wide kpRow" hidden><span class="lab">Picture</span>
+            <div class="seg" role="group" aria-label="Picture" id="kpShowSeg">
+              <button type="button" data-w="re" aria-pressed="true">Wave function (real part)</button><button type="button" data-w="dens" aria-pressed="false">Probability density |ψ|²</button>
             </div>
           </div>
         </div>
@@ -144,6 +164,8 @@
           <button type="button" data-p="crCsCl" aria-pressed="false">Cesium chloride</button>
           <button type="button" data-p="bdForm" aria-pressed="false">Levels become bands</button>
           <button type="button" data-p="bdFill" aria-pressed="false">Filling the bands</button>
+          <button type="button" data-p="bdKP" aria-pressed="false">Periodic potential</button>
+          <button type="button" data-p="bdKPdeep" aria-pressed="false">Deep wells, narrow bands</button>
           <button type="button" data-p="dpIntr" aria-pressed="false">Pure silicon</button>
           <button type="button" data-p="dpN" aria-pressed="false">n type silicon</button>
           <button type="button" data-p="dvDiode" aria-pressed="false">Diode</button>
@@ -183,6 +205,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutCr"></p>
           <p class="hint" id="aboutBd"></p>
+          <p class="hint" id="aboutKp"></p>
           <p class="hint" id="aboutDp"></p>
           <p class="hint" id="aboutDv"></p>
         </details>
@@ -354,13 +377,72 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* LED photon energy is about the band gap (§9.7 and §9.5); wavelength λ = hc/E */
   const LEDS = { GaAs: 1.43, InP: 1.35, GaP: 2.26, GaN: 3.43 };
   const lambdaNm = (E) => HC / E;
+
+  /* ---------- states in a periodic potential: the Kronig–Penney model ---------- */
+  /* An electron in a row of square wells: well width w (V = 0, where the ions are) and barrier width b (height V₀), period a = w + b.
+     In each flat piece ψ'' = −(2m/ħ²)(E − V)ψ, so a piece of length L carries (ψ, ψ') through the matrix
+     [[cos κL, sin κL/κ], [−κ sin κL, cos κL]] with κ = √(2m(E − V))/ħ when E > V, and [[cosh qL, sinh qL/q], [q sinh qL, cosh qL]] with
+     q = √(2m(V − E))/ħ when E < V. One period gives M = M_barrier M_well, with det M = 1. Bloch's theorem asks ψ(x + a) = e^(ika) ψ(x),
+     so e^(ika) is an eigenvalue of M and cos ka = (M₁₁ + M₂₂)/2 = f(E): an energy is allowed only where |f(E)| ≤ 1, which gives bands
+     separated by gaps. For E < V₀ this is f = cos αw cosh βb + (β² − α²)/(2αβ) sin αw sinh βb (R. de L. Kronig and W. G. Penney, Proc.
+     R. Soc. A 130, 499 (1931); C. Kittel, Introduction to Solid State Physics, 8th ed. (2005), ch. 7). ħ²/2m_e = 0.0380998212 eV nm²
+     (CODATA 2022). The model is exact for this potential; real crystals are three dimensional and their potential is not square. */
+  const HB2M = 0.0380998212; /* ħ²/2m_e in eV nm² */
+  function kpPiece(E, V, L) {
+    const d = E - V;
+    if (Math.abs(d) < 1e-12) return [1, L, 0, 1];
+    if (d > 0) { const k = Math.sqrt(d / HB2M), c = Math.cos(k * L), sn = Math.sin(k * L); return [c, sn / k, -k * sn, c]; }
+    const q = Math.sqrt(-d / HB2M), c = Math.cosh(q * L), sh = Math.sinh(q * L); return [c, sh / q, q * sh, c];
+  }
+  const mul = (A, B) => [A[0] * B[0] + A[1] * B[2], A[0] * B[1] + A[1] * B[3], A[2] * B[0] + A[3] * B[2], A[2] * B[1] + A[3] * B[3]];
+  const kpCell = (E, V0, w, b) => mul(kpPiece(E, V0, b), kpPiece(E, 0, w));
+  const kpF = (E, V0, w, b) => { const M = kpCell(E, V0, w, b); return (M[0] + M[3]) / 2; };
+  /* the allowed bands up to Emax: scan f(E), refine each edge where |f| crosses 1 by bisection, and split a run of allowed energies
+     where f has a turning point at |f| ≥ 1 between two samples (a gap narrower than the step, or bands that touch when V₀ = 0) */
+  function kpBands(V0, w, b, Emax = 40, n = 4000) {
+    const F = (E) => kpF(E, V0, w, b), g = (E) => Math.abs(F(E)) - 1, out = [], h = Emax / n;
+    const edge = (lo, hi) => { let glo = g(lo); for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2, gm = g(m); if ((gm > 0) === (glo > 0)) { lo = m; glo = gm; } else hi = m; } return (lo + hi) / 2; };
+    const turn = (lo, hi, sg) => { const r = (Math.sqrt(5) - 1) / 2; let c1 = hi - r * (hi - lo), d1 = lo + r * (hi - lo); for (let i = 0; i < 90; i++) { if (sg * F(c1) > sg * F(d1)) { hi = d1; d1 = c1; c1 = hi - r * (hi - lo); } else { lo = c1; c1 = d1; d1 = lo + r * (hi - lo); } } return (lo + hi) / 2; };
+    let Ep = 1e-9, fp = F(Ep), fpp = null, start = Math.abs(fp) <= 1 ? Ep : null;
+    for (let i = 1; i <= n; i++) { const E = i * h, fE = F(E), gE = Math.abs(fE) - 1;
+      if (start != null && fpp != null && (fp - fpp) * (fE - fp) < 0 && gE <= 0) { const sg = fp > fpp ? 1 : -1, x = turn(E - 2 * h, E, sg), fx = F(x);
+        if (Math.abs(fx) >= 1 - 1e-9) { const l = Math.abs(fx) > 1 ? edge(Math.max(start, E - 2 * h), x) : x, r = Math.abs(fx) > 1 ? edge(x, E) : x; out.push([start, l]); start = r; } }
+      const gp = Math.abs(fp) - 1;
+      if (gp > 0 && gE <= 0) start = edge(E - h, E);
+      else if (gp <= 0 && gE > 0) { out.push([start, edge(E - h, E)]); start = null; }
+      fpp = fp; fp = fE; }
+    if (start != null) out.push([start, Emax]);
+    return out;
+  }
+  /* the energy of band n (from 1) at k = s π/a (0 ≤ s ≤ 1): within a band f runs monotonically between +1 and −1, so solve
+     f(E) = cos(sπ) by bisection between its edges */
+  function kpE(B, nBand, s, V0, w, b) {
+    const band = B[nBand - 1]; if (!band) return NaN; const want = Math.cos(Math.PI * s); let lo = band[0], hi = band[1];
+    const up = kpF(hi, V0, w, b) > kpF(lo, V0, w, b);
+    for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if ((kpF(m, V0, w, b) < want) === up) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  /* the Bloch state at energy E with k = s π/a: ψ(x) (complex, as [re, im]) for 0 ≤ x, from the eigenvector of M with eigenvalue
+     λ = e^(isπ), carried through each piece and multiplied by λ for each whole period */
+  function kpPsi(E, s, V0, w, b) {
+    const M = kpCell(E, V0, w, b), a = w + b, lr = Math.cos(Math.PI * s), li = Math.sin(Math.PI * s);
+    /* (M − λ)v = 0: v = (M₁₂, λ − M₁₁), or (λ − M₂₂, M₂₁) when M₁₂ is tiny */
+    let v = Math.abs(M[1]) > 1e-9 * (Math.abs(M[0]) + 1) ? [[M[1], 0], [lr - M[0], li]] : [[lr - M[3], li], [M[2], 0]];
+    const nrm = Math.hypot(v[0][0], v[0][1], v[1][0], v[1][1]); v = v.map((z) => [z[0] / nrm, z[1] / nrm]);
+    const ap = (P, z) => [[P[0] * z[0][0] + P[1] * z[1][0], P[0] * z[0][1] + P[1] * z[1][1]], [P[2] * z[0][0] + P[3] * z[1][0], P[2] * z[0][1] + P[3] * z[1][1]]];
+    const atW = ap(kpPiece(E, 0, w), v);
+    return (x) => { const n = Math.floor(x / a), u = x - n * a, z = u <= w ? ap(kpPiece(E, 0, u), v) : ap(kpPiece(E, V0, u - w), atW);
+      const cr = Math.cos(n * Math.PI * s), ci = Math.sin(n * Math.PI * s); return [z[0][0] * cr - z[0][1] * ci, z[0][0] * ci + z[0][1] * cr]; };
+  }
+  /* a free electron with the same wave number in the extended zone: k = ((n − 1) + s)π/a for odd n, (n − s)π/a for even n */
+  const kpKext = (nBand, s, a) => (nBand % 2 ? (nBand - 1 + s) : (nBand - s)) * Math.PI / a;
   // ==CORE END==
   if (typeof document === 'undefined') return;
   const $ = (id) => document.getElementById(id);
   const VG = window.VDGear;
   const S = { view: 'cr', preset: 'crNaCl', blind: false, t: 0,
     cr: { salt: 'NaCl', method: 'cube', m: 2, K: 6, orb: { th: -0.62, ph: 1.12, zoom: 1 } },
-    bd: { N: 6, d: 0.30, Z: 2 },
+    bd: { N: 6, d: 0.30, Z: 2, model: 'chain', kp: { V0: 10, w: 0.25, b: 0.05, n: 1, s: 0.5, show: 're' } },
     dp: { mat: 'Si', T: 300, nd: 11, na: 11, don: 'P', acc: 'B' },
     dv: { kind: 'diode', V: 0.5, T: 300, i0: -12, ja: 16, jd: 16, led: 'GaP', Eg: 2.0 } };
   const ALPHA = { rs: madelungEwald('rs'), cs: madelungEwald('cs') };
@@ -472,6 +554,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- Bands ----------
   const BCOL = () => ({ s: T.sb, 'pσ': T.pb, 'pπ': T.pb });
   function drawBd() {
+    if (S.bd.model === 'kp') return drawKp();
     const c = ctx, p = proj(), b = S.bd, narrow = W < 560;
     if (VG) VG.backdrop(c, W, H); else { c.fillStyle = T.canvas; c.fillRect(0, 0, W, H); }
     /* the chain of atoms, drawn to scale: each atom's outer cloud (radius 0.15 nm) overlaps its neighbor's as d shrinks */
@@ -518,6 +601,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       lab(c, msg, 2 * gx + lw + 10 * p, bot - 12 * p, { c: T.ink, w: 700, s: (narrow ? 9.5 : 11) * p }); }
   }
   function curveBd() {
+    if (S.bd.model === 'kp') return curveKp();
     const c = cctx, p = proj(), b = S.bd, [P1, P2] = lay(), L = P1.x, Tp = P1.y, ph = P1.h, half = P1.w, x0 = P2.x, T2 = P2.y;
     const lv = chainLevels(b.N, b.d), bin = 0.25, nb = Math.round(16 / bin), hs = new Array(nb).fill(0), hp = new Array(nb).fill(0);
     for (const l of lv) { const i = Math.floor((l.E + 14) / bin); if (i >= 0 && i < nb) (l.band === 's' ? hs : hp)[i] += l.band === 'pπ' ? 2 : 1; }
@@ -532,6 +616,61 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.forEach(([nm, g], i) => { const y = A2.Y(i), xe = A2.X(g), txt = `${nm} ${f(g, 2)}`, inside = xe + c.measureText(txt).width + 6 > x0 + half; c.fillStyle = T.muted; c.fillRect(A2.X(0), y - 5 * p, xe - A2.X(0), 10 * p); c.fillStyle = inside ? T.canvas : T.ink; c.textAlign = inside ? 'right' : 'left'; c.fillText(txt, inside ? xe - 4 : xe + 4, y); });
     if (!S.blind) { const fb = bandFill(b.d, b.Z), y = A2.Y(G.length), g = fb.metal ? 0 : Math.min(gmax, fb.gap); c.fillStyle = T.gold; c.fillRect(A2.X(0), y - 5 * p, Math.max(2, A2.X(g) - A2.X(0)), 10 * p); c.fillStyle = T.ink; c.textAlign = 'left'; c.fillText(fb.metal ? 'model chain: no gap (metal)' : `model chain ${f(fb.gap, 2)}`, A2.X(g) + 4, y); }
     c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('kT at 300 K = 0.026 eV', x0 + half - 2, T2 + ph - 3);
+  }
+
+  // ---------- Bands: the periodic potential (Kronig–Penney) ----------
+  const kpNow = () => { const k = S.bd.kp, B = kpBands(k.V0, k.w, k.b, 80, 8000); return { k, B, a: k.w + k.b, E: kpE(B, k.n, k.s, k.V0, k.w, k.b) }; };
+  const kpTop = (K) => Math.min(80, Math.max(1.5 * K.k.V0, (K.B[1] ? K.B[1][1] : 20) * 1.12, (K.B[K.k.n - 1] ? K.B[K.k.n - 1][1] * 1.08 : 0), 6));
+  function drawKp() {
+    const c = ctx, p = proj(), K = kpNow(), { k, B, a, E } = K, narrow = W < 560, nc = narrow ? 4 : 6;
+    if (VG) VG.backdrop(c, W, H); else { c.fillStyle = T.canvas; c.fillRect(0, 0, W, H); }
+    const x0 = 52 * p, x1 = W - (narrow ? 14 : 70) * p, top = 30 * p, bot = H - 50 * p, Et = kpTop(K), sc = (x1 - x0) / (nc * a);
+    const X = (x) => x0 + x * sc, Y = (e) => bot - e / Et * (bot - top), BC = BCOL(), bcol = (i) => (i % 2 ? BC['pσ'] : BC.s);
+    panel(c, 8 * p, top - 22 * p, W - 16 * p, bot - top + 64 * p);
+    c.save(); c.font = `${9.5 * p}px ${T.mono}`; c.fillStyle = T.muted; c.strokeStyle = T.grid; c.lineWidth = 1; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const st = Et > 40 ? 10 : Et > 16 ? 5 : 2; for (let e = 0; e <= Et + 1e-9; e += st) { c.beginPath(); c.moveTo(x0, Y(e)); c.lineTo(x1, Y(e)); c.stroke(); c.fillText(String(e), x0 - 5 * p, Y(e)); }
+    c.restore(); lab(c, 'E (eV)', 14 * p, top - 10 * p, {});
+    /* allowed bands, shaded across the crystal */
+    c.save(); c.beginPath(); c.rect(x0, top, x1 - x0, bot - top); c.clip();
+    B.forEach((bd, i) => { if (bd[0] > Et) return; c.globalAlpha = i + 1 === k.n ? 0.30 : 0.16; c.fillStyle = bcol(i); c.fillRect(x0, Y(Math.min(bd[1], Et)), x1 - x0, Y(bd[0]) - Y(Math.min(bd[1], Et))); });
+    c.globalAlpha = 1;
+    /* the potential: wells (V = 0) and barriers (V₀) */
+    c.fillStyle = dark() ? 'rgba(200,210,225,0.20)' : 'rgba(60,70,90,0.18)'; for (let i = 0; i < nc; i++) c.fillRect(X(i * a + k.w), Y(k.V0), k.b * sc, Y(0) - Y(k.V0));
+    c.strokeStyle = T.ink; c.lineWidth = 1.6 * p; c.beginPath(); c.moveTo(X(0), Y(0)); for (let i = 0; i < nc; i++) { c.lineTo(X(i * a + k.w), Y(0)); c.lineTo(X(i * a + k.w), Y(k.V0)); c.lineTo(X((i + 1) * a), Y(k.V0)); c.lineTo(X((i + 1) * a), Y(0)); } c.stroke();
+    /* the chosen state on its energy line */
+    if (isFinite(E)) { const N = Math.max(200, Math.round((x1 - x0) / 1.5)), ps = kpPsi(E, k.s, k.V0, k.w, k.b), vals = [];
+      for (let i = 0; i <= N; i++) { const x = nc * a * i / N, z = ps(x); vals.push(k.show === 're' ? z[0] : z[0] * z[0] + z[1] * z[1]); }
+      const mx = Math.max(...vals.map(Math.abs)) || 1, amp = Math.min(30 * p, (bot - top) * 0.1);
+      c.strokeStyle = T.accent; c.globalAlpha = 0.6; c.lineWidth = 1; c.setLineDash([4 * p, 3 * p]); c.beginPath(); c.moveTo(x0, Y(E)); c.lineTo(x1, Y(E)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+      c.strokeStyle = T.el; c.lineWidth = 2.2 * p; c.beginPath(); vals.forEach((v, i) => { const xx = X(nc * a * i / N), yy = Y(E) - amp * v / mx; i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }); c.stroke(); }
+    c.restore();
+    /* ions at the well centers, and the labels */
+    for (let i = 0; i < nc; i++) { const xi = X(i * a + k.w / 2); if (VG) VG.ball(c, xi, bot + 14 * p, 5 * p, dark() ? '#c9d3df' : '#56616f'); lab(c, '+', xi, bot + 14 * p, { a: 'center', c: dark() ? '#1b2330' : '#ffffff', w: 700, s: 9 }); }
+    lab(c, 'ions sit in the wells', X(nc * a) , bot + 30 * p, { a: 'right', s: 9 });
+    if (!narrow) B.forEach((bd, i) => { if (bd[0] > Et) return; lab(c, `band ${i + 1}`, x1 + 6 * p, Y((bd[0] + Math.min(bd[1], Et)) / 2), { c: bcol(i), w: 700, s: 9.5 }); });
+    c.strokeStyle = T.ink; c.lineWidth = 1.1 * p; const ay = bot + 30 * p; c.beginPath(); c.moveTo(X(0), ay - 4 * p); c.lineTo(X(0), ay + 4 * p); c.moveTo(X(0), ay); c.lineTo(X(a), ay); c.moveTo(X(a), ay - 4 * p); c.lineTo(X(a), ay + 4 * p); c.stroke();
+    lab(c, `a = ${f(a, 3)} nm`, X(a) + 6 * p, ay, { c: T.ink, m: true, s: 9.5 });
+    lab(c, !isFinite(E) ? `band ${k.n} lies above ${f(Et, 0)} eV` : narrow ? `${k.show === 're' ? 'Re ψ' : '|ψ|²'}, band ${k.n}, k = ${f(k.s, 2)} π/a, E = ${f(E, 3)} eV` : `${k.show === 're' ? 'Re ψ' : '|ψ|²'} of band ${k.n} at k = ${f(k.s, 2)} π/a, drawn on its energy E = ${f(E, 3)} eV; shaded: allowed bands`, x0, top - 12 * p, { s: (narrow ? 8.5 : 9.5) * p });
+  }
+  function curveKp() {
+    const c = cctx, p = proj(), K = kpNow(), { k, B, a, E } = K, [P1, P2] = lay(), Et = kpTop(K), nb = Math.min(4, B.filter((bd) => bd[0] < Et).length) || 1, BC = BCOL(), bcol = (i) => (i % 2 ? BC['pσ'] : BC.s);
+    const A = axes(c, P1.x, P1.y, P1.w, P1.h, [0, nb], [0, Et], 'k (units of π/a), extended zone', 'E (eV)');
+    c.save(); c.beginPath(); c.rect(P1.x, P1.y, P1.w, P1.h); c.clip();
+    for (let i = 0; i < B.length; i++) if (i + 1 < B.length && B[i][1] < Et) { c.fillStyle = T.gold; c.globalAlpha = 0.14; c.fillRect(P1.x, A.Y(B[i + 1][0]), P1.w, A.Y(B[i][1]) - A.Y(B[i + 1][0])); c.globalAlpha = 1; }
+    if (!S.blind) { c.strokeStyle = T.muted; c.setLineDash([5, 4]); c.lineWidth = 1.2 * p; c.beginPath(); for (let i = 0; i <= 200; i++) { const q = nb * i / 200, e = HB2M * (q * Math.PI / a) ** 2; i ? c.lineTo(A.X(q), A.Y(e)) : c.moveTo(A.X(q), A.Y(e)); } c.stroke(); c.setLineDash([]); }
+    for (let n = 1; n <= nb; n++) { c.strokeStyle = bcol(n - 1); c.lineWidth = (n === k.n ? 2.6 : 1.8) * p; c.beginPath(); for (let i = 0; i <= 60; i++) { const s = i / 60, e = kpE(B, n, s, k.V0, k.w, k.b), q = kpKext(n, s, a) * a / Math.PI; i ? c.lineTo(A.X(q), A.Y(e)) : c.moveTo(A.X(q), A.Y(e)); } c.stroke(); }
+    c.restore();
+    if (isFinite(E) && k.n <= nb) { c.fillStyle = T.accent; c.beginPath(); c.arc(A.X(kpKext(k.n, k.s, a) * a / Math.PI), A.Y(E), 5 * p, 0, 7); c.fill(); }
+    if (!S.blind) lab(c, 'dashed: free electron ħ²k²/2m; shaded: gaps', P1.x + 6 * p, P1.y + 8 * p, { s: 9 });
+    /* f(E) = cos ka: allowed where |f| ≤ 1 */
+    const A2 = axes(c, P2.x, P2.y, P2.w, P2.h, [0, Et], [-3, 3], 'E (eV)', 'f(E) = cos ka');
+    c.save(); c.beginPath(); c.rect(P2.x, P2.y, P2.w, P2.h); c.clip(); c.fillStyle = T.gold; c.globalAlpha = 0.12; c.fillRect(P2.x, A2.Y(1), P2.w, A2.Y(-1) - A2.Y(1)); c.globalAlpha = 1;
+    c.strokeStyle = T.ink; c.lineWidth = 1.6 * p; c.beginPath(); for (let i = 0; i <= 600; i++) { const e = Et * i / 600 + 1e-6, v = Math.max(-4, Math.min(4, kpF(e, k.V0, k.w, k.b))); i ? c.lineTo(A2.X(e), A2.Y(v)) : c.moveTo(A2.X(e), A2.Y(v)); } c.stroke();
+    B.forEach((bd, i) => { if (bd[0] > Et) return; c.strokeStyle = bcol(i); c.lineWidth = 5 * p; c.globalAlpha = 0.7; c.beginPath(); c.moveTo(A2.X(bd[0]), A2.Y(-3) - 3 * p); c.lineTo(A2.X(Math.min(bd[1], Et)), A2.Y(-3) - 3 * p); c.stroke(); c.globalAlpha = 1; });
+    c.strokeStyle = T.muted; c.setLineDash([4, 3]); c.lineWidth = 1; c.beginPath(); c.moveTo(A2.X(k.V0), P2.y); c.lineTo(A2.X(k.V0), P2.y + P2.h); c.stroke(); c.setLineDash([]); c.restore();
+    lab(c, 'V₀', A2.X(k.V0) + 4 * p, A2.Y(-2.4), { s: 9 });
+    if (isFinite(E) && E < Et) { c.fillStyle = T.accent; c.beginPath(); c.arc(A2.X(E), A2.Y(kpF(E, k.V0, k.w, k.b)), 5 * p, 0, 7); c.fill(); }
+    lab(c, 'allowed where −1 ≤ f ≤ 1 (shaded); bars: the bands', P2.x + 6 * p, P2.y + 8 * p, { s: 9 });
   }
 
   // ---------- Doping ----------
@@ -722,7 +861,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ({ cr: curveCr, bd: curveBd, dp: curveDp, dv: curveDv })[S.view]();
     readouts(); clock();
   }
-  function clock() { $('clock').textContent = S.view === 'cr' ? `α = ${f(crAlphaNow(), 4)}` : S.view === 'bd' ? `${S.bd.N} atoms, d = ${f(S.bd.d, 3)} nm` : S.view === 'dp' ? `T = ${S.dp.T} K` : S.dv.kind === 'led' ? `E_g = ${f(ledEg(), 2)} eV` : `V = ${f(S.dv.V, 2)} V, T = ${S.dv.T} K`; }
+  function clock() { $('clock').textContent = S.view === 'cr' ? `α = ${f(crAlphaNow(), 4)}` : S.view === 'bd' ? (S.bd.model === 'kp' ? `a = ${f(S.bd.kp.w + S.bd.kp.b, 3)} nm, V₀ = ${f(S.bd.kp.V0, 1)} eV` : `${S.bd.N} atoms, d = ${f(S.bd.d, 3)} nm`) : S.view === 'dp' ? `T = ${S.dp.T} K` : S.dv.kind === 'led' ? `E_g = ${f(ledEg(), 2)} eV` : `V = ${f(S.dv.V, 2)} V, T = ${S.dv.T} K`; }
 
   // ---------- readouts ----------
   function readouts() {
@@ -733,6 +872,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd(crMethod() === 'cube' ? `α summed, cube m = ${S.cr.m}` : `α summed, ${S.cr.K} shells`, f(crAlphaNow(), 4)) + dd('Madelung constant α (Ewald sum)', f(a, 4))
         + dd('Lattice energy, Table 9.2', `${s.U} kJ/mol = ${f(s.U / KJMOL_PER_EV, 3)} eV per ion pair`)
         + dd('Calculated α ke²/r₀ (1 − 1/n)', S.blind ? hide : `${f(U, 3)} eV = ${f(U * KJMOL_PER_EV, 0)} kJ/mol`) + dd('Calculated against table', S.blind ? hide : `${f(100 * (U * KJMOL_PER_EV / s.U - 1), 1)} %`); }
+    else if (S.view === 'bd' && S.bd.model === 'kp') { const K = kpNow(), { k, B, a, E } = K, bd = B[k.n - 1], nx = B[k.n], kk = k.s * Math.PI / a;
+      o = dd('Period a = w + b', `${f(a, 3)} nm`) + dd('Barrier V₀, width b', `${f(k.V0, 1)} eV, ${f(k.b, 3)} nm`) + dd(`Band ${k.n}`, bd ? `${f(bd[0], 3)} to ${f(bd[1], 3)} eV` : '—')
+        + dd(`Gap above band ${k.n}`, bd && nx ? `${f(nx[0] - bd[1], 3)} eV` : '—') + dd('State energy E', isFinite(E) ? `${f(E, 3)} eV` : '—') + dd('Wave number k', `${f(k.s, 2)} π/a = ${f(kk, 3)} nm⁻¹`)
+        + dd('Free electron, same k (extended zone)', S.blind ? hide : `${f(HB2M * kpKext(k.n, k.s, a) ** 2, 3)} eV`) + dd('Bands below V₀', B.filter((x) => x[1] <= k.V0).length); }
     else if (S.view === 'bd') { const b = S.bd, F = fillChain(b.N, b.d, b.Z), lv = F.levels, sl = lv.filter((l) => l.band === 's'), pl = lv.filter((l) => l.band !== 's'), fb = bandFill(b.d, b.Z), t = hop(b.d);
       o = dd('Atoms N, spacing d', `${b.N}, ${f(b.d, 3)} nm`) + dd('Electrons per atom', b.Z) + dd('Levels from each orbital', b.N)
         + dd('s band: lowest, highest level', `${f(sl[0].E, 3)}, ${f(sl[sl.length - 1].E, 3)} eV`) + dd('p band: lowest, highest level', `${f(pl[0].E, 3)}, ${f(pl[pl.length - 1].E, 3)} eV`)
@@ -763,6 +906,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('crNote').textContent = cs ? 'The neutral cube sum is shown for the NaCl structure; for CsCl add shells, and compare with the Ewald value.' : crMethod() === 'cube' ? 'Evjen\'s neutral cubes: the sum settles quickly.' : 'Shell by shell, as in the book\'s series 6 − 12/√2 + 8/√3 − ...';
     $('sN').value = b.N; $('oN').textContent = b.N; $('sD').value = b.d; $('oD').textContent = `${f(b.d, 3)} nm`;
     for (const x of document.querySelectorAll('#zSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.z === b.Z));
+    const kp = b.model === 'kp'; for (const x of document.querySelectorAll('#bdModelSeg button')) x.setAttribute('aria-pressed', String(x.dataset.m === b.model));
+    for (const x of document.querySelectorAll('#cardBd .chainRow')) x.hidden = kp; for (const x of document.querySelectorAll('#cardBd .kpRow')) x.hidden = !kp;
+    $('bdTitle').textContent = kp ? 'An electron in a row of square wells and barriers: the Kronig–Penney model' : 'A chain of N model atoms, each with one s level and three p levels';
+    $('sV0').value = b.kp.V0; $('oV0').textContent = `${f(b.kp.V0, 1)} eV`; $('sKw').value = b.kp.w; $('oKw').textContent = `${f(b.kp.w, 3)} nm`; $('sKb').value = b.kp.b; $('oKb').textContent = `${f(b.kp.b, 3)} nm`;
+    $('sKs').value = b.kp.s; $('oKs').textContent = `${f(b.kp.s, 2)} π/a`;
+    for (const x of document.querySelectorAll('#kpBandSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.n === b.kp.n)); for (const x of document.querySelectorAll('#kpShowSeg button')) x.setAttribute('aria-pressed', String(x.dataset.w === b.kp.show));
     $('selMat').value = dp.mat; $('sT').value = dp.T; $('oT').textContent = `${dp.T} K`;
     const si = dp.mat === 'Si'; for (const id of ['boxDon', 'boxAcc', 'pickDon', 'pickAcc']) $(id).hidden = !si;
     $('sND').value = dp.nd; $('oND').textContent = dp.nd <= 11 ? 'none' : `${pw(dp.nd)} cm⁻³`; $('sNA').value = dp.na; $('oNA').textContent = dp.na <= 11 ? 'none' : `${pw(dp.na)} cm⁻³`;
@@ -779,8 +928,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PRESETS = {
     crNaCl: { view: 'cr', hint: 'Table salt. Each Na⁺ ion has 6 Cl⁻ neighbors at r₀ = 0.282 nm, 12 Na⁺ at √2 r₀, 8 Cl⁻ at √3 r₀, and so on. Grow the neutral cube and watch the sum settle on the Madelung constant 1.7476; then compare the lattice energy α ke²/r₀ (1 − 1/n) with the measured 787 kJ/mol.', set: () => Object.assign(S.cr, { salt: 'NaCl', method: 'cube', m: 2, K: 6 }) },
     crCsCl: { view: 'cr', hint: 'Cesium chloride: each ion has 8 neighbors of the other kind at the corners of a cube. Add shells of neighbors one at a time, as in the book\'s series: the running total swings wildly and never settles, though the Madelung constant is a definite 1.7627.', set: () => Object.assign(S.cr, { salt: 'CsCl', method: 'shell', K: 6 }) },
-    bdForm: { view: 'bd', hint: 'Six model atoms far apart: each atomic level is six levels at the same energy. Bring the atoms closer and each level splits into six, spreading into a band as the atoms\' outer orbitals overlap.', set: () => Object.assign(S.bd, { N: 6, d: 0.55, Z: 1 }) },
-    bdFill: { view: 'bd', hint: 'Forty atoms, two electrons each. The 40 s levels hold exactly 80 electrons, so the s band is full and a gap separates it from the empty p band: an insulator. Squeeze the atoms until the bands overlap and the solid becomes a metal; give each atom one electron and the band is half full.', set: () => Object.assign(S.bd, { N: 40, d: 0.28, Z: 2 }) },
+    bdForm: { view: 'bd', hint: 'Six model atoms far apart: each atomic level is six levels at the same energy. Bring the atoms closer and each level splits into six, spreading into a band as the atoms\' outer orbitals overlap.', set: () => Object.assign(S.bd, { N: 6, d: 0.55, Z: 1, model: 'chain' }) },
+    bdFill: { view: 'bd', hint: 'Forty atoms, two electrons each. The 40 s levels hold exactly 80 electrons, so the s band is full and a gap separates it from the empty p band: an insulator. Squeeze the atoms until the bands overlap and the solid becomes a metal; give each atom one electron and the band is half full.', set: () => Object.assign(S.bd, { N: 40, d: 0.28, Z: 2, model: 'chain' }) },
+    bdKP: { view: 'bd', hint: 'The same idea from the other side: instead of atoms coming together, one electron moves through a row of wells (where the ions are) and barriers 10 eV high. Only some energies let a wave run through the whole crystal; they form bands, and between them are gaps. Step k from 0 to 1 and watch the state move along its band; compare with a free electron on the graph.', set: () => { S.bd.model = 'kp'; Object.assign(S.bd.kp, { V0: 10, w: 0.25, b: 0.05, n: 1, s: 0.5, show: 're' }); } },
+    bdKPdeep: { view: 'bd', hint: 'Higher, wider barriers: the electron can hardly tunnel from one well to the next, so each band shrinks toward a single level of one well, the tight binding picture of the chain of atoms. Lower V₀ to 0 and the gaps close: a free electron.', set: () => { S.bd.model = 'kp'; Object.assign(S.bd.kp, { V0: 20, w: 0.25, b: 0.12, n: 1, s: 0, show: 'dens' }); } },
     dpIntr: { view: 'dp', hint: 'Pure silicon. Every conduction electron leaves a hole behind, so n = p = n_i. Warm it from 300 K to 700 K and watch n rise by a factor of about a million.', set: () => Object.assign(S.dp, { mat: 'Si', T: 300, nd: 11, na: 11, don: 'P', acc: 'B' }) },
     dpN: { view: 'dp', hint: 'Silicon with 10¹⁵ phosphorus atoms per cm³ (one per 50 million silicon atoms). At room temperature nearly every donor has given up its electron, so n ≈ N_D. Cool it to see freeze out; heat it to see the intrinsic carriers take over.', set: () => Object.assign(S.dp, { mat: 'Si', T: 300, nd: 15, na: 11, don: 'P', acc: 'B' }) },
     dvDiode: { view: 'dv', hint: 'A silicon diode at 300 K with a saturation current of 1 pA. Step the bias from −2 V to 0.7 V and record the current: almost nothing flows in reverse, and the forward current grows by a factor e for every 25.9 mV.', set: () => Object.assign(S.dv, { kind: 'diode', V: 0.5, T: 300, i0: -12, ja: 16, jd: 16 }) },
@@ -808,6 +959,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sShell').addEventListener('input', (e) => { S.cr.K = +e.target.value; changed(); });
   $('sN').addEventListener('input', (e) => { S.bd.N = +e.target.value; changed(); });
   $('sD').addEventListener('input', (e) => { S.bd.d = +e.target.value; changed(); });
+  $('bdModelSeg').addEventListener('click', (e) => { const x = e.target.closest('[data-m]'); if (x) { S.bd.model = x.dataset.m; changed(); } });
+  $('sV0').addEventListener('input', (e) => { S.bd.kp.V0 = +e.target.value; changed(); });
+  $('sKw').addEventListener('input', (e) => { S.bd.kp.w = +e.target.value; changed(); });
+  $('sKb').addEventListener('input', (e) => { S.bd.kp.b = +e.target.value; changed(); });
+  $('sKs').addEventListener('input', (e) => { S.bd.kp.s = +e.target.value; changed(); });
+  $('kpBandSeg').addEventListener('click', (e) => { const x = e.target.closest('[data-n]'); if (x) { S.bd.kp.n = +x.dataset.n; changed(); } });
+  $('kpShowSeg').addEventListener('click', (e) => { const x = e.target.closest('[data-w]'); if (x) { S.bd.kp.show = x.dataset.w; changed(); } });
   $('zSeg').addEventListener('click', (e) => { const x = e.target.closest('[data-z]'); if (x) { S.bd.Z = +x.dataset.z; changed(); } });
   $('selMat').addEventListener('change', (e) => { S.dp.mat = e.target.value; changed(); });
   $('sT').addEventListener('input', (e) => { S.dp.T = +e.target.value; changed(); });
@@ -832,7 +990,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (!reduce && (S.view === 'dp' || S.view === 'dv') && !document.hidden) { S.t += dt; redraw(); } requestAnimationFrame(frame); }
 
   // ---------- readings ----------
-  window.vdVersion = 'solids@2026-10-24';
+  window.vdVersion = 'solids@2026-10-31';
   const SHOW = { cr: [['salt', 'salt'], ['r0_nm', 'r₀ (nm)'], ['U_table_kJ_mol', 'U (kJ/mol)']], bd: [['d_nm', 'd (nm)'], ['s_high_eV', 's top (eV)'], ['p_low_eV', 'p bottom (eV)']],
     dp: [['T_K', 'T (K)'], ['n_cm3', 'n (cm⁻³)'], ['p_cm3', 'p (cm⁻³)']], dv: [['T_K', 'T (K)'], ['V_V', 'V (V)'], ['I_A', 'I (A)']] };
   window.vdShowCols = SHOW.cr;
@@ -843,6 +1001,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (other) return `These readings are from the ${name[other.view]} view: export them to its worksheet or clear them first.`;
     window.vdShowCols = SHOW[S.view];
     if (S.view === 'cr') { const s = crSalt(); return { view: 'cr', salt: s.name, structure: s.st === 'rs' ? 'NaCl' : 'CsCl', r0_nm: f(s.r0, 4), n: s.n, alpha: f(ALPHA[s.st], 4), U_table_kJ_mol: s.U, sum: crMethod() === 'cube' ? `cube m = ${S.cr.m}` : `${S.cr.K} shells`, alpha_sum: f(crAlphaNow(), 4) }; }
+    if (S.view === 'bd' && S.bd.model === 'kp') return 'The periodic potential has no worksheet table: read its bands and states from the Readouts.';
     if (S.view === 'bd') { const b = S.bd, lv = chainLevels(b.N, b.d), sl = lv.filter((l) => l.band === 's'), pl = lv.filter((l) => l.band !== 's'), F = fillChain(b.N, b.d, b.Z);
       return { view: 'bd', N: b.N, d_nm: f(b.d, 3), Z: b.Z, s_low_eV: f(sl[0].E, 3), s_high_eV: f(sl[sl.length - 1].E, 3), p_low_eV: f(pl[0].E, 3), p_high_eV: f(pl[pl.length - 1].E, 3), highest_filled_eV: F.homo ? f(F.homo.E, 3) : '', lowest_empty_eV: F.lumo ? f(F.lumo.E, 3) : '' }; }
     if (S.view === 'dp') { const r = dpRun(), nd = dpND(), na = dpNA(); return { view: 'dp', material: S.dp.mat, donor: nd ? S.dp.don : '', ND_cm3: nd ? ex(nd, 2) : '0', acceptor: na ? S.dp.acc : '', NA_cm3: na ? ex(na, 2) : '0', T_K: S.dp.T, n_cm3: ex(r.n, 4), p_cm3: ex(r.p, 4) }; }
@@ -852,6 +1011,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutCr').textContent = 'Crystal (§9.3): an ion in a salt crystal feels the Coulomb pull of every other ion, which adds up to −α ke²/r per ion pair, where r is the nearest neighbor distance and α the Madelung constant of the structure. A short range repulsion A/rⁿ stops the ions merging; at the equilibrium spacing r₀ the energy is U = −α ke²/r₀ (1 − 1/n). The demo gets α by Ewald\'s method (1.7476 for NaCl, 1.7627 for CsCl) and shows two ways of adding the ions up: shell by shell, which never settles, and Evjen\'s neutral cubes, which settle quickly for the NaCl structure. r₀ is from measured lattice constants at room temperature (Kittel, Table 3.6; Wyckoff for the cesium salts); n is the average of Pauling\'s values for the two ions\' noble gas cores; lattice energies are the book\'s Table 9.2. The model leaves out the van der Waals attraction and the zero point energy, which is why it falls a few percent short of the table. Ions are drawn at 0.55 of their ionic radii (Shannon 1976) so the lattice shows through.';
+  $('aboutKp').textContent = 'Periodic potential (beyond §9.5): the Kronig–Penney model (Kronig and Penney 1931; Kittel, Introduction to Solid State Physics, ch. 7) replaces the ions by a row of square wells of width w at V = 0, separated by barriers of height V₀ and width b, period a = w + b. The Schrödinger equation is solved exactly in each flat piece, and Bloch\'s theorem, ψ(x + a) = e^(ika) ψ(x), leaves the condition cos ka = f(E), where f comes from matching ψ and ψ′ across one period. Energies with |f(E)| > 1 have no wave that runs through the crystal: they are the gaps. The picture shows the real part of the Bloch state (or |ψ|²) of the chosen band and k, drawn on its own energy line with an arbitrary amplitude. The free electron curve ħ²k²/2m is drawn in the extended zone for comparison; with V₀ = 0 the bands join into it. A one dimensional model with square barriers, not a real crystal: the numbers show how bands and gaps arise, not the bands of a particular solid.';
   $('aboutBd').textContent = 'Bands (§9.5): a chain of N model atoms, each with one s level at −9 eV and three p levels at −4 eV (a made up atom, not a real element). Each orbital overlaps only the same orbital on its nearest neighbors, with an overlap energy t that falls off exponentially as the spacing grows (the tight binding model, Ashcroft and Mermin ch. 10); s and p do not mix. Then each atomic level becomes exactly N levels, E = E_atom − 2t cos(jπ/(N + 1)), which fill a band of width 4t when N is large. Each level holds 2 electrons (spin), and the two p orbitals across the chain give two levels at each energy. Electrons fill the levels from the bottom (T = 0). A partly filled band makes a metal; a full band with a gap above it makes an insulator or, if the gap is small, a semiconductor. (When the atoms are far apart the band is so narrow that this simple rule no longer applies: electrons that repel each other then stay on their own atoms. The model leaves that out.) A real solid is three dimensional, so a real p band holds 6N electrons as the book says; the chain shows the same counting. Real gaps are the book\'s Table 9.4.';
   $('aboutDp').textContent = 'Doping (§9.6): the electron density n = N_c e^(−(E_c − E_F)/kT) and hole density p = N_v e^(−(E_F − E_v)/kT), with N_c and N_v the effective densities of states (Sze and Ng, Appendix G) growing as T^(3/2). The Fermi level is found from charge neutrality, n + N_A⁻ = p + N_D⁺, with the donors and acceptors only partly ionized (degeneracies 2 and 4). In a pure sample n = p = n_i = √(N_c N_v) e^(−E_g/2kT). Approximations: the gap is held at its 300 K value (1.12 eV for silicon; the book\'s Table 9.4 gives 1.14 eV); Boltzmann statistics, good below about 10¹⁸ cm⁻³; the impurity levels are those of silicon (Sze and Ng Fig. 1.12), so only silicon can be doped here. The Hall readings are the model\'s n and p, without noise. Simulated data.';
   $('aboutDv').textContent = 'Junction (§9.7): an ideal diode passes I = I₀(e^(eV/kT) − 1) (Eq. 9.36): forward bias lowers the barrier and the current grows exponentially; reverse bias leaves only −I₀. I₀ scales as n_i², so as T³ e^(−E_g/kT), from the value you set at 300 K; the slower changes of mobility and diffusion length are left out, and so are the series resistance that limits a real diode\'s current at high bias and the breakdown at large reverse bias. The depletion region and band diagram use an abrupt silicon junction in the depletion approximation (Sze and Ng §2.2), with V_bi = (kT/e) ln(N_A N_D/n_i²); it fails as V approaches V_bi. LEDs: the photon energy is taken as the band gap, E ≈ E_g, so λ = hc/E_g (gaps from the book\'s Table 9.4, GaN from Vurgaftman and coworkers 2001); a real LED\'s peak sits within a few kT of this. GaP has an indirect gap and is a weak emitter on its own. Simulated data.';

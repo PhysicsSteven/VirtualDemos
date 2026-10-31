@@ -151,6 +151,13 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 .bohr { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 14px; align-items: start; }
 .bohr canvas { display: block; width: 100%; height: 270px; cursor: pointer; touch-action: none; }
 .starchart { display: block; width: 100%; height: 340px; cursor: ew-resize; touch-action: pan-y; }
+#orbitBox .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.9rem; }
+#orbitBox .slider-head output { font-size: 0.85rem; color: var(--muted); }
+#orbitBox input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+@media (max-width: 820px) { #orbitBox input[type="range"] { min-height: 28px; } }
+#orbitBox h3 { margin: 0; font-size: 0.95rem; }
+.bohr canvas#cOrbit { height: 300px; cursor: default; touch-action: pan-y; }
+:root[data-projector="on"] .bohr canvas#cOrbit { height: 360px; }
 #starsBox .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.9rem; }
 #starsBox .slider-head output { font-size: 0.85rem; color: var(--muted); }
 #starsBox input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
@@ -293,6 +300,22 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
             </dl>
             <label class="hint" style="display:flex;align-items:center;gap:7px;cursor:pointer"><input type="checkbox" id="blind" style="margin:0"> Blind: hide the photon energy and wavelength the model predicts</label>
             <p class="hint" id="hHint">An electron can only sit on certain energy levels, E = −13.6 eV / n². When it drops from a higher level to a lower one, it emits a photon carrying exactly the energy difference. Click an arrow.</p>
+          </div>
+        </div>
+        <div class="bohr" id="orbitBox" style="margin-top: 16px;">
+          <canvas id="cOrbit" role="img" aria-label="Bohr orbits drawn to scale around the proton, with the electron's de Broglie wave drawn around the chosen orbit."></canvas>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <h3>Bohr orbits and the electron wave</h3>
+            <div><div class="slider-head"><label for="sOrb">Orbit n</label><output id="oOrb" class="mono" for="sOrb"></output></div><input type="range" id="sOrb" min="1" max="6" step="0.05" value="3"></div>
+            <dl class="readout">
+              <div><dt>Radius r = n²a₀</dt><dd id="orR">—</dd></div>
+              <div><dt>Speed v</dt><dd id="orV">—</dd></div>
+              <div><dt>de Broglie λ = h/mv</dt><dd id="orL">—</dd></div>
+              <div><dt>Wavelengths around 2πr</dt><dd id="orW">—</dd></div>
+              <div><dt>Angular momentum mvr</dt><dd id="orJ">—</dd></div>
+            </dl>
+            <p class="hint" id="orHint"></p>
+            <p class="hint">OpenStax Vol. 3 §6.4 (Bohr's model) and §6.6 (de Broglie waves). The proton is held fixed; its motion would make every radius 0.05 % larger.</p>
           </div>
         </div>
       </section>
@@ -447,6 +470,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 90; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (hsShares(Math.exp(c), Pe).f2 > hsShares(Math.exp(d), Pe).f2) b = d; else a = c; }
     return Math.exp((a + b) / 2);
   }
+/* Bohr orbits with the de Broglie wave (OpenStax University Physics Vol. 3 §6.4 and §6.6): for a nucleus held
+   fixed, the Coulomb force on a circular orbit of radius r gives the speed v = √(ke²/(m_e r)). On Bohr's orbit r = n²a₀ this is
+   v = αc/n, so the electron's de Broglie wavelength λ = h/(m_e v) = 2πa₀n and exactly n wavelengths fit around the circumference
+   2πn²a₀: the angular momentum m_e v r is nħ. For a radius ν²a₀ with ν not a whole number the circumference holds ν wavelengths,
+   a fraction too many or too few, and the wave does not join itself. Constants CODATA 2022. */
+const BOHR_A0 = 0.0529177210544;   /* nm */
+const BOHR_ALPHA = 7.2973525643e-3, BOHR_C = 299792458, BOHR_HBAR = HS_H / (2 * Math.PI);
+function bohrOrbit(nu) {
+  const r = nu * nu * BOHR_A0, v = BOHR_ALPHA * BOHR_C / nu, lam = HS_H / (HS_ME * v) * 1e9, circ = 2 * Math.PI * r;
+  return { r, v, lam, circ, waves: circ / lam, L: HS_ME * v * r * 1e-9 / BOHR_HBAR };
+}
 // ==CORE END==
 </script>
 <script>
@@ -510,7 +544,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- state ----------
   const S = { a: 'H', b: 'Ne', mode: 'explore', view: 'visible', display: 'emission', ion: 'all', mark: null, pickTop: false,
-              guesses: new Set(), mystery: null, kind: 'gas', checked: null, series: 2, ni: 3, blind: false };
+              guesses: new Set(), mystery: null, kind: 'gas', checked: null, series: 2, ni: 3, blind: false, orb: 3 };
   const $ = (id) => document.getElementById(id);
   const has = (sym) => Array.isArray(DATA[sym]);
   const range = () => (S.view === 'visible' ? [380, 750] : [300, 1000]);
@@ -941,6 +975,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('specLive').textContent = `Transition ${$('hTr').textContent}: ${$('hE').textContent}, ${$('hL').textContent}, ${$('hReg').textContent}`;
   });
   for (const b of document.querySelectorAll('#series button')) b.addEventListener('click', () => { S.series = +b.dataset.n; S.ni = S.series + 1; render(); });
+
+  /* Bohr orbits to scale and the de Broglie wave on the chosen one (bohrOrbit in CORE) */
+  function drawOrbit() {
+    const cv = $('cOrbit'), [ctx, W, H] = fit(cv), ps = projScale(), ink = tok('--ink'), muted = tok('--muted'), acc = tok('--accent');
+    ctx.clearRect(0, 0, W, H);
+    const nu = S.orb, whole = Math.abs(nu - Math.round(nu)) < 1e-9, nMax = Math.max(Math.ceil(nu - 1e-9), S.ni);
+    const cx = W / 2, cy = H / 2 + 6 * ps, Rmax = Math.min(W, H) / 2 - 24 * ps, sc = Rmax / (nMax * nMax * BOHR_A0);   /* px per nm */
+    ctx.font = `${10 * ps}px ${mono()}`; ctx.textBaseline = 'middle';
+    for (let n = 1; n <= nMax; n++) { const R = n * n * BOHR_A0 * sc, hi = n === S.ni || n === S.series;
+      ctx.strokeStyle = hi ? ink : muted; ctx.globalAlpha = hi ? 0.75 : 0.4; ctx.lineWidth = (hi ? 1.6 : 1) * ps; ctx.setLineDash(hi ? [] : [3 * ps, 4 * ps]);
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (R > 14 * ps) { ctx.fillStyle = hi ? ink : muted; ctx.textAlign = 'left'; ctx.fillText(`n = ${n}`, cx + R * 0.71 + 4 * ps, cy - R * 0.71 - 4 * ps); } }
+    /* the wave: r(θ) = R + A sin(νθ); the first time round solid, the second dashed, so a wave that does not fit shows its mismatch */
+    const R = nu * nu * BOHR_A0 * sc, A = Math.min(10 * ps, 0.22 * R), lap = (k) => { ctx.beginPath(); const N = 720; for (let i = 0; i <= N; i++) { const th = 2 * Math.PI * (k + i / N), rr = R + A * Math.sin(nu * th), x = cx + rr * Math.cos(th), y = cy - rr * Math.sin(th); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); };
+    if (!whole) { ctx.strokeStyle = tok('--danger') || '#d2452b'; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([4 * ps, 3 * ps]); lap(1); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = acc; ctx.lineWidth = 2.4 * ps; lap(0);
+    /* where the wave starts, and the proton */
+    ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(cx + R, cy, 3.5 * ps, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#d2452b'; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * ps, 0, Math.PI * 2); ctx.fill();
+    /* scale bar */
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; }, bar = nice(60 * ps / sc), bx = 10 * ps, by = H - 12 * ps;
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(bx, by - 4 * ps); ctx.lineTo(bx, by); ctx.lineTo(bx + bar * sc, by); ctx.lineTo(bx + bar * sc, by - 4 * ps); ctx.stroke();
+    ctx.fillStyle = ink; ctx.textAlign = 'left'; ctx.fillText(`${+bar.toPrecision(3)} nm`, bx + bar * sc + 6 * ps, by - 2 * ps);
+    const nar = W < 480; ctx.fillStyle = muted; ctx.fillText(whole ? `${Math.round(nu)} wavelengths fit: the wave joins itself` : nar ? 'second time round (dashed) misses' : 'not a whole number: the second time round (dashed) does not match', 6 * ps, 10 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(nar ? 'wave height not to scale' : 'orbits to scale; wave height not to scale', W - 6 * ps, nar ? 26 * ps : H - 10 * ps);
+  }
+  function updateOrbit() {
+    const o = bohrOrbit(S.orb), whole = Math.abs(S.orb - Math.round(S.orb)) < 1e-9;
+    $('sOrb').value = S.orb; $('oOrb').textContent = S.orb.toFixed(2);
+    $('orR').textContent = `${o.r.toFixed(4)} nm`; $('orV').textContent = `${(o.v / 1000).toFixed(0)} km/s = c/${(BOHR_C / o.v).toFixed(1)}`;
+    $('orL').textContent = `${o.lam.toFixed(4)} nm`; $('orW').textContent = o.waves.toFixed(2); $('orJ').textContent = `${o.L.toFixed(2)} ħ`;
+    $('orHint').textContent = whole ? `On Bohr's orbit n = ${Math.round(S.orb)} the electron's de Broglie wave fits exactly ${Math.round(S.orb)} times around, so it reinforces itself: a standing wave, and the angular momentum is ${Math.round(S.orb)}ħ. Try a value between whole numbers.`
+      : 'Between the allowed orbits the wave does not come back in step with itself; after many trips round it cancels out. Only whole numbers of wavelengths survive, which is why only the orbits r = n²a₀ (and their energies) are allowed.';
+    drawOrbit();
+  }
+  $('sOrb').addEventListener('input', (e) => { S.orb = +e.target.value; if (Math.abs(S.orb - Math.round(S.orb)) < 0.026) S.orb = Math.round(S.orb); updateOrbit(); });
   function updateH() {
     const L = hLine(S.ni, S.series);
     const region = L.air < 380 ? (L.air < 200 ? 'far ultraviolet' : 'ultraviolet') : L.air > 750 ? 'infrared' : 'visible';
@@ -956,6 +1026,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else msg += ' The gold marks on the spectrum show where it lands; NIST measured the same line.';
     $('hHint').innerHTML = msg;
     S.mark = L.air;
+    if (S.orbFollow !== S.ni) { S.orb = Math.min(6, S.ni); S.orbFollow = S.ni; }
+    updateOrbit();
   }
 
   // ---------- facts ----------

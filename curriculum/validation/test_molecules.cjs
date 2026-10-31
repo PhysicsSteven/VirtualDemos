@@ -3,7 +3,7 @@
 // levels (§9.2), and the HCl infrared band against measured line positions.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('molecules', 'KE2,CM_EV,MASS,NACL,ionA,ionTerms,ionU,ionMin,nForD,crossBare,crossR,MOLS,HCL37,isotope,mu,G,Bv,Dv,nuVib,term,transition,IfromB,rFromB,kFromNu,De,morseA,morse,antiMorse,levelE,bandLines,absorb,peakNear');
+const c = core('molecules', 'KE2,CM_EV,MASS,NACL,ionA,ionTerms,ionU,ionMin,nForD,crossBare,crossR,MOLS,HCL37,isotope,mu,G,Bv,Dv,nuVib,term,transition,IfromB,rFromB,kFromNu,De,morseA,morse,antiMorse,levelE,bandLines,absorb,peakNear,A0,EH,H2P,h2pS,h2pU,h2pPsi,h2pMin,h2pMidRatio');
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 const nearAbs = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b} ± ${tol}, got ${a}`);
 function group(name, f) { f(); console.log('PASS', name); }
@@ -65,4 +65,22 @@ group('spectrometer: the peak finder returns the center of the nearest line when
   for (const [nu, want] of [[2907, 2906.248], [2864.6, 2865.099], [2904.5, 2904.112], [2863.5, 2863.025], [3015.9, 3014.41]]) nearAbs(c.peakNear(L, nu, 0.3).nu, want, 0.01, `peak near ${nu}`);
   const area = (fw) => { let s = 0; for (let x = 2500; x < 3200; x += 0.01) s += c.absorb(L, x, fw) * 0.01; return s; }; near(area(0.3), area(2), 1e-3, 'area');
   const tot = L.reduce((s, l) => s + l.S, 0); near(area(1), tot, 1e-3, 'area = sum of strengths');
+});
+group('H₂⁺ LCAO: Griffiths §7.3 F(x) for the bonding orbital; minimum 2.49 a₀ and 1.76 eV (Atkins); both curves go to 0 far apart', () => {
+  for (const x of [1, 2, 2.4, 3, 5]) { const F = -1 + (2 / x) * (((1 - 2 * x * x / 3) * Math.exp(-x) + (1 + x) * Math.exp(-2 * x)) / (1 + (1 + x + x * x / 3) * Math.exp(-x)));
+    nearAbs(-1 + 2 * c.h2pU(x * c.A0, 1) / c.EH, F, 1e-12, `F(${x})`); }
+  const m = c.h2pMin(); nearAbs(m.re / c.A0, 2.493, 0.001, 'R_e in a₀'); nearAbs(m.De, 1.764, 0.001, 'depth');
+  nearAbs(c.h2pU(5, 1), 0, 1e-9); nearAbs(c.h2pU(5, -1), 0, 1e-9);
+  for (const R of [0.03, 0.06, 0.1, 0.2, 0.3]) assert(c.h2pU(R, -1) > 0 && c.h2pU(R, -1) > c.h2pU(R, 1), `antibonding repulsive at ${R}`);
+  nearAbs(c.h2pS(0), 1, 1e-12, 'S(0)'); nearAbs(c.h2pS(2 * c.A0), 0.5865, 1e-4, 'S(2 a₀)');
+});
+group('H₂⁺ orbitals: normalized (numerical integral over all space = 1), node on the midplane for σu*, midpoint ratio 2/(1 + S)', () => {
+  for (const sg of [1, -1]) { const R = 0.106, h = 0.004, L = 0.6; let s = 0;
+    for (let x = -L; x < L; x += h) for (let r = h / 2; r < L; r += h) { const v = c.h2pPsi(x + h / 2, r, R, sg).psi / Math.pow(c.A0, 1.5); s += v * v * 2 * Math.PI * r * h * h; }
+    nearAbs(s, 1, 0.01, `norm ${sg}`); }
+  nearAbs(c.h2pPsi(0, 0.05, 0.1, -1).psi, 0, 1e-15, 'node'); near(c.h2pMidRatio(0.1, 1), 2 / (1 + c.h2pS(0.1)), 1e-12); nearAbs(c.h2pMidRatio(0.1, -1), 0, 1e-15);
+});
+group('H₂⁺ measured: D_e = D₀ + G(0) = 2.793 eV, close to the exact Born–Oppenheimer 2.7928 eV; LCAO underbinds by 1.03 eV', () => {
+  nearAbs(c.De(c.H2P), 2.7926, 0.0002); assert(c.De(c.H2P) - c.h2pMin().De > 1);
+  nearAbs(c.EH, 27.211386245981, 0); nearAbs(c.A0, 0.0529177210544, 0);
 });
