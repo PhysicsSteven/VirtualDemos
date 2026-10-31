@@ -5635,7 +5635,7 @@ Steve asked to fold the NAAP gaps into existing demos where they fit, so this is
 
 Group C of the Astro push. All four are new views or modes of existing demos (Steve: fold into existing demos; eclipsing binaries
 as a mode of Finding Exoplanets by his choice), with worksheets on the Astronomy page only. Commits 23c431d, 05d5b70, a077c75
-(demos), 181262a (worksheets), d116c71 (shared files), 413cef1 (videos); keys TeacherKeys 4c1fe17.
+(demos), 181262a (worksheets), d116c71 (shared files), cd8507a (videos); keys TeacherKeys 4c1fe17.
 - Finding Exoplanets, Two stars mode (`?kind=bin`, `?ws=eclipsing-binary`): two luminous limb darkened stars in a Kepler orbit,
   bolometric light, flux normalized so a total eclipse leaves exactly the other star; both velocity curves with γ; setups Sun and
   red dwarf, Twin stars, Hot star and cool giant, Partial eclipses, Eccentric pair; mystery binary with noise. Planet mode readings
