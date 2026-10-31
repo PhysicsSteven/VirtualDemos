@@ -24,6 +24,7 @@
 .stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
 .scene { position: relative; flex: 1 1 auto; min-height: 470px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(600px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its graph and set up card instead of cutting them off (stage-clipping) */
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
 #can { z-index: 1; }
 .scene canvas.ip3 { z-index: 0; }
@@ -728,6 +729,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- controls ---------- */
   const card = VD.setupCard($('setupCard'));
+  /* the picture is kept tall enough for the whole set up card (whose CSS stops it 290 px above the stage's foot, clear of
+     the graph), so Projector and short windows never cut a control off */
+  const fitCard = () => {
+    const c = $('setupCard'), sc = $('scene');
+    if (getComputedStyle(c).position !== 'absolute') { sc.style.minHeight = ''; return; }
+    const st = c.offsetParent, need = c.scrollHeight + 290 + 6 - (st ? st.offsetHeight - sc.offsetHeight : 290); if (Math.abs((parseFloat(sc.style.minHeight) || 0) - need) < 2) return;
+    sc.style.minHeight = need > 470 ? need + 'px' : '';
+  };
+  if (window.ResizeObserver) [...$('setupCard').children].forEach((k) => new ResizeObserver(fitCard).observe(k));
   function sync() {
     const P = PLANETS[S.lp];
     $('selLPlanet').value = S.lp; $('sCore').max = Math.round(P.R * 0.95 / 10) * 10; $('sCore').value = S.rc; $('oCore').textContent = `${fs(S.rc)} km`;
@@ -919,6 +929,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function resize() {
     $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`;
+    fitCard();
     dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
     const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr);
     dirty3 = true; redraw();

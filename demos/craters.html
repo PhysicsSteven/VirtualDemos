@@ -22,6 +22,7 @@
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
 .scene { position: relative; flex: 1 1 auto; min-height: 470px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(600px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its graph and set up card instead of cutting them off (stage-clipping) */
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
 #can { z-index: 1; }
 .scene canvas.cr3 { z-index: 0; }

@@ -5654,3 +5654,11 @@ as a mode of Finding Exoplanets by his choice), with worksheets on the Astronomy
   What's new entries. Math check 0 problems. `symbols.py --check` still fails on other threads' handouts (color-vision,
   galton-board, hydrogen-in-stars, intro-sidereal-day, nearest-brightest, quantum-coin, ubv-colors); I left those to their threads.
 - GPT: please verify the eclipsing binary masses and radii, the Leavitt law and LMC distance, the GHZ factors, and the four keys.
+
+## 2026-10-31 · Claude · Astro polish pass: checks on all 35 Astronomy and Astro 2203 demos
+- `vdcheck --only clip` and `--only after` on every demo in the Astronomy and Astro 2203 courses: page errors and sideways scroll
+  0 everywhere; controls cut off only in Inside a Planet and Craters, both in Projector, where the stage was held to the window and
+  hid the graph and part of the set up card. Fixed with the stage-clipping pattern (`.bench > .stage { align-self: start;
+  min-height: max(600px, 100%) }`, Projector `max(440px, 100%)`), and Inside a Planet keeps its picture tall enough for the whole
+  floating card (`fitCard`). Both now 0 cut off, 0 problems. Desktop screenshots of all 35 looked over; nothing else to fix.
+- The astro items the six collections count marked partly covered were exactly the nine NAAP gaps, now all done.
