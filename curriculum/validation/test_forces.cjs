@@ -63,4 +63,13 @@ group('work energy theorem: Σ W on the block = ΔK; friction work = −μk N ×
   assert.equal(v, 0); near(W.f, -0.5 * 10 * 4, 1e-9, 'friction removes all of ½mv²');
 });
 
+group("Atwood's machine: the ramp upright gives a = (m2 − m) g/(m + m2), T = 2 m m2 g/(m + m2), no normal force or friction", () => {
+  for (const [m, m2] of [[2, 2.5], [5, 1], [3, 3], [1, 10]]) {
+    const r = c.forces({ th: 90, m, F: 0, phi: 0, m2, ms: 0.5, mk: 0.3 }, 0);
+    near(r.N, 0, 1e-12); near(r.f, 0, 1e-9); near(r.a, (m2 - m) * c.G / (m + m2), 1e-12, 'a'); near(r.T, 2 * m * m2 * c.G / (m + m2), 1e-9, 'T');
+  }
+  near(c.gateTime(c.forces({ th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, 0).a, c.GATE_D), Math.sqrt(2 * 4.5 / (0.5 * c.G)), 1e-12, 'time for 1 m');
+  near(c.forces({ th: 90, m: 2, F: 0, phi: 0, m2: 0, ms: 0, mk: 0 }, 0).a, -c.G, 1e-12, 'nothing on the other side: free fall');
+});
+
 console.log(`${n} forces test groups passed`);

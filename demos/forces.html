@@ -132,6 +132,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="angle" aria-pressed="false">Pull at an angle</button>
           <button type="button" data-p="table" aria-pressed="false">Hanging mass on a table</button>
           <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
+          <button type="button" data-p="atwood" aria-pressed="false">Atwood's machine</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -279,9 +280,10 @@ table.rows input:focus { border-color: var(--accent); }
     slip: { p: { th: 20, m: 5, F: 0, phi: 0, m2: 0, ms: 0.5, mk: 0.35 }, s: 2.4, hint: 'Tilt the ramp slowly (↑ ↓ keys or the slider) until the block starts to slide. With no push it slips when tan θ = μs, whatever its mass. Then use Release at the top mark to time it and measure μk.' },
     angle: { p: { th: 0, m: 10, F: 50, phi: 30, m2: 0, ms: 0.4, mk: 0.3 }, s: 0.4, hint: 'Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.' },
     table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
+    atwood: { p: { th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, s: 1.0, atwood: true, hint: 'Two masses hang over one pulley: m on the left, m₂ on the right. With a light string and a frictionless pulley, a = (m₂ − m) g/(m + m₂) = 0.5 × 9.81/4.5 = 1.09 m/s² here, much less than g, which is why Atwood used it to measure g. The tension, 2 m m₂ g/(m + m₂) = 21.8 N, lies between the two weights. Time a 1.000 m run and work out g.' },
     rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
   };
-  const S = { preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
+  const S = { atwood: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
@@ -309,7 +311,7 @@ table.rows input:focus { border-color: var(--accent); }
   const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')]];
   function sync() {
     for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); }
-    $('muRows').hidden = !!S.mystery; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
+    $('muRows').hidden = !!S.mystery || S.atwood; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => {
     S.p[k] = +e.target.value;
@@ -321,7 +323,15 @@ table.rows input:focus { border-color: var(--accent); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
-    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null; sync(); draw(); readouts();
+    S.p = { ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
+    S.atwood = !!c.atwood; atwoodControls(); if (S.atwood && G3.on) setView('flat'); sync(); draw(); readouts();
+  }
+  /* Atwood's machine: the ramp turned upright (θ = 90°), so the forces are the same code: N = 0, no friction, the string straight up.
+     The ramp, friction and push knobs have no part in it and are hidden, and it is drawn flat (two masses over a pulley). */
+  function atwoodControls() {
+    for (const id of ['sTh', 'sF', 'sPhi']) $(id).closest('.kctl').hidden = S.atwood;
+    $('muRows').hidden = S.atwood || !!S.mystery; $('mystery').closest('label').hidden = S.atwood; $('viewSeg').hidden = S.atwood;
+    $('tComp').closest('label').hidden = S.atwood;
   }
   function setMystery(on) {
     if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
@@ -533,7 +543,47 @@ table.rows input:focus { border-color: var(--accent); }
     drawFBD(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
   }
   let rulerAt = null;   /* the flat scene's scale, for the ruler */
+  function drawAtwood(x0, y0, w, h) {
+    // two masses over a pulley hung from a beam; heights to scale (the ruler works), the pulley and masses drawn wide enough to see
+    const p = ps(), P = S.p, fz = forces(S.p, S.v), sc = Math.min((h - 50 * p) / (LEN + 0.95), (w - 60 * p) / 1.6);
+    rulerAt = { m: 1 / sc, area: [x0, y0, w, h] };
+    const cx = x0 + w / 2, pr = 0.24 * sc, yP = y0 + 34 * p + pr, floorY = yP + (LEN + 0.75) * sc;
+    ctx.fillStyle = T.wall; ctx.fillRect(x0, 0, w, floorY);
+    if (window.VDGear) window.VDGear.wall(ctx, x0, 0, w, floorY, { color: T.wall, tile: 0 });
+    ctx.fillStyle = T.wallLine; ctx.fillRect(x0, floorY - 6 * p, w, 6 * p);
+    ctx.fillStyle = T.floor; ctx.fillRect(x0, floorY, w, y0 + h - floorY);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, floorY); ctx.lineTo(x0 + w, floorY); ctx.stroke();
+    // beam and the pulley's hanger
+    const bmY = y0 + 10 * p; ctx.fillStyle = T.bench; ctx.fillRect(cx - 0.6 * sc, bmY, 1.2 * sc, 10 * p); grain(cx - 0.6 * sc, bmY, 1.2 * sc, 10 * p, 3, 0.4);
+    ctx.strokeStyle = T.metal; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx, bmY + 10 * p); ctx.lineTo(cx, yP); ctx.stroke();
+    // strings: the string's length is fixed, so when m rises by Δs, m₂ drops by Δs
+    const yL = yP + (LEN + 0.3 - S.s) * sc, yR = yP + (0.3 + S.s) * sc, xL = cx - pr, xR = cx + pr;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xL, yP); ctx.lineTo(xL, yL); ctx.moveTo(xR, yP); ctx.lineTo(xR, yR); ctx.stroke();
+    if (window.VDGear) window.VDGear.pulley(ctx, cx, yP, pr, { angle: -S.s / 0.24 });
+    else { ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.arc(cx, yP, pr, 0, 7); ctx.fill(); ctx.stroke(); }
+    // the masses: slotted masses on hangers, sized by their mass
+    const hanger = (x, y, m, lab) => {
+      const hs = Math.min(0.46, 0.24 + 0.03 * m) * sc, nd = Math.max(1, Math.min(10, Math.round(m * 2))), hk = Math.min(hs * 0.25, 6 * p), dz = (hs - hk - 2 * p) / nd;
+      ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y + hk / 2, hk / 2, -Math.PI / 2, Math.PI / 2, true); ctx.moveTo(x, y + hk); ctx.lineTo(x, y + hs); ctx.stroke();
+      for (let i = 0; i < nd; i++) { const yy = y + hk + i * dz; ctx.fillStyle = lab === 'm' ? T.wood : T.tn; ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.rect(x - hs / 2, yy, hs, Math.max(1, dz - 1)); ctx.fill(); ctx.globalAlpha = 0.35; ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.metalDark; ctx.fillRect(x - hs * 0.55, y + hs - 2 * p, hs * 1.1, 2 * p);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textBaseline = 'middle';
+      ctx.textAlign = lab === 'm' ? 'right' : 'left'; ctx.fillText(lab === 'm' ? `m = ${f(m, 1)} kg` : `m₂ = ${f(m, 1)} kg`, x + (lab === 'm' ? -1 : 1) * (hs / 2 + 6 * p), y + hs / 2);
+    };
+    if (P.m2 > 0) hanger(xR, yR, P.m2, 'm2');
+    hanger(xL, yL, P.m, 'm');
+    // timing marks beside m's path: where the 1.000 m run starts and ends
+    if (S.timing) for (const sm of [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)]) { const yy = yP + (LEN + 0.3 - sm) * sc; ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xL - 0.45 * sc, yy); ctx.lineTo(xL - 0.05 * sc, yy); ctx.stroke(); ctx.setLineDash([]); }
+    // status and timer
+    ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    let st = S.run ? (Math.abs(S.v) > 1e-9 ? (S.v > 0 ? 'm rising, m₂ falling' : 'm falling, m₂ rising') : 'Balanced: at rest') : 'Held in place. Press Release.';
+    if (S.blind && S.run) st = Math.abs(S.v) > 1e-9 ? 'Moving' : 'At rest';
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
+    if (S.pairs) { ctx.fillStyle = T.w; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.blind ? 'Mass m also pulls the Earth up, and pulls down on the string.' : `m also pulls the Earth up with ${f(fz.W, 1)} N, and the string down with ${f(fz.T, 1)} N.`, x0 + 14 * p, y0 + 44 * p, w - 28 * p); }
+  }
   function drawScene(x0, y0, w, h) {
+    if (S.atwood) { if (g3) g3.el.hidden = true; drawAtwood(x0, y0, w, h); return; }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v);
     const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
     const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
@@ -643,8 +693,8 @@ table.rows input:focus { border-color: var(--accent); }
   function drawFBD(x0, y0, w, h) {
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
-    const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.36;
+    ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.atwood ? 'FREE BODY DIAGRAM OF MASS m' : 'FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
+    const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * (S.atwood ? 0.3 : 0.36);   /* Atwood: both arrows vertical, so a little shorter to clear the title and the note */
     const items = [['W = mg', T.w, 0, -fz.W], ['N', T.n, -Math.sin(th) * fz.N, Math.cos(th) * fz.N]];
     const up = [Math.cos(th), Math.sin(th)];
     if (Math.abs(fz.f) > 1e-9) items.push([fz.kind === 'static' && !bl ? 'f (static)' : bl ? 'f' : 'f (kinetic)', T.fr, up[0] * fz.f, up[1] * fz.f, 1]);
@@ -656,7 +706,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 4 * p]);
     ctx.beginPath(); ctx.moveTo(cx - up[0] * Rm * 1.15, cy + up[1] * Rm * 1.15); ctx.lineTo(cx + up[0] * Rm * 1.15, cy - up[1] * Rm * 1.15);
     ctx.moveTo(cx + up[1] * Rm * 1.15, cy + up[0] * Rm * 1.15); ctx.lineTo(cx - up[1] * Rm * 1.15, cy - up[0] * Rm * 1.15); ctx.stroke(); ctx.setLineDash([]);
-    if (S.comp && P.th > 0) {
+    if (S.comp && P.th > 0 && !S.atwood) {
       const [ax, ay] = len(up[0] * fz.Wpar, up[1] * fz.Wpar), [bx2, by2] = len(Math.sin(th) * fz.Wperp, -Math.cos(th) * fz.Wperp);
       arrow(cx, cy, ax, -ay, T.w, 1.6 * p, bl ? 'mg sin θ' : `mg sin θ = ${f(-fz.Wpar, 1)} N`, true);
       arrow(cx, cy, bx2, -by2, T.w, 1.6 * p, bl ? 'mg cos θ' : `mg cos θ = ${f(fz.Wperp, 1)} N`, true, -Math.max(0, 130 * p - Math.abs(bx2)) / (15 * p));   /* on a shallow ramp its label moves aside so it does not sit on W's */
@@ -675,10 +725,10 @@ table.rows input:focus { border-color: var(--accent); }
     let h = dd('Weight mg', `${f(fz.W, 1)} N`);
     if (bl) h += '<div class="wide"><dt>N, friction, tension, acceleration</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
-      h += dd('Normal force N', `${f(fz.N, 1)} N`) + dd(`Friction (${fz.kind})`, `${f(Math.abs(fz.f), 1)} N`) + dd('Largest static friction μs N', `${f(S.p.ms * fz.N, 1)} N`);
+      if (!S.atwood) h += dd('Normal force N', `${f(fz.N, 1)} N`) + dd(`Friction (${fz.kind})`, `${f(Math.abs(fz.f), 1)} N`) + dd('Largest static friction μs N', `${f(S.p.ms * fz.N, 1)} N`);
       if (S.p.m2 > 0) h += dd('Tension T', `${f(fz.T, 1)} N`) + dd('m₂g', `${f(S.p.m2 * G, 1)} N`);
-      h += dd('Acceleration a (up the ramp +)', `${f(fz.a, 3)} m/s²`, true);
-      if (S.p.F === 0 && S.p.m2 === 0) h += dd('Slips when tan θ > μs, at θ =', `${f(slipAngle(S.p.ms), 1)}°`, true);
+      h += dd(S.atwood ? 'Acceleration a (m rising +)' : 'Acceleration a (up the ramp +)', `${f(fz.a, 3)} m/s²`, true);
+      if (S.p.F === 0 && S.p.m2 === 0 && !S.atwood) h += dd('Slips when tan θ > μs, at θ =', `${f(slipAngle(S.p.ms), 1)}°`, true);
     }
     if (S.pairs && !bl) h += dd('Third law pairs', `Earth pulls block ${f(fz.W, 1)} N down ↔ block pulls Earth ${f(fz.W, 1)} N up; ramp pushes block ${f(fz.N, 1)} N ↔ block pushes ramp ${f(fz.N, 1)} N${Math.abs(fz.f) > 1e-9 ? `; friction ${f(Math.abs(fz.f), 1)} N each way` : ''}${S.p.m2 > 0 ? `; string ${f(fz.T, 1)} N each way` : ''}. Partners act on different objects, so they never cancel each other.`, true, 'ok');
     if (fz.lift) h += dd('Warning', 'F lifts the block: the vertical part of F exceeds the weight\'s part across the ramp. Not modeled.', true, 'warn');

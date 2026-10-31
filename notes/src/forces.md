@@ -22,7 +22,8 @@ Students should know Newton's second law and the idea of components. The free bo
 3. **Pull at an angle.** 50 N at 30° above the floor lifts 25 N of the weight off: N = 73.1 N, a = 2.14 m/s². Ask Q2.
 4. **Hanging mass on a table.** a = 1.96 m/s² and T = 15.7 N, less than m₂g = 19.6 N.
 5. **Ramp and hanging mass.** At rest, static friction (4.9 N) points up the ramp. Raise m₂ to 4 kg: it slides up, friction now points down the ramp.
-6. Turn on **Show third law partners** in any setup and **Work and energy since release** during a slide.
+6. **Atwood's machine.** 2.0 kg and 2.5 kg over one pulley: a = (m₂ − m)g/(m + m₂) = 1.09 m/s² and T = 2mm₂g/(m + m₂) = 21.8 N, between the two weights. Release at the top mark: 1.355 s for 1.000 m. Ask the class to get g back from the time and the two masses.
+7. Turn on **Show third law partners** in any setup and **Work and energy since release** during a slide.
 
 ## Questions
 
@@ -48,6 +49,7 @@ Students should know Newton's second law and the idea of components. The free bo
 
 ## Physics behind the demo
 
+- Atwood's machine is the ramp turned upright (θ = 90°): the same code with no normal force and so no friction. Light string, frictionless massless pulley.
 - Rigid block on a rigid ramp, g = 9.81 m/s², Coulomb friction (static up to μsN, kinetic μkN, independent of speed and area), massless inextensible string over a frictionless massless pulley.
 - The motion is stepped exactly: within each step all forces are constant, and a step in which the block would stop is split at the stopping instant, after which static friction is tested again.
 - Work by each force is F_s Δs summed over these exact pieces, so ΣW = ½mv² holds to rounding. A hard stop at the ends of the ramp removes kinetic energy and is listed separately.
