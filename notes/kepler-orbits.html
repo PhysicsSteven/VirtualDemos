@@ -82,6 +82,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Star mass.</strong> With <strong>Keep the orbit's shape when M changes</strong> on, raise the star mass to 2 M☉. The orbit stays the same; only the period changes (Q3). Return the slider to 1.00 M☉.</li>
 <li><strong>Escape.</strong> Launch at 1.2 times the escape speed: positive energy, a hyperbola, and a final speed v∞ (Q5).</li>
 <li><strong>Race two planets.</strong> Load <strong>Circular orbit</strong>, press <strong>Keep as second planet</strong>, then drag the arrow tip around the gold circle to point the launch in a new direction. Ask for a prediction, then play (Q6).</li>
+<li><strong>Sandbox, Rendezvous: catch the target ahead.</strong> The target is 30° ahead on the same 1 AU circle. Ask Q7 first, then press <strong>Burn forward</strong> and <strong>Coast to the closest approach</strong>: the ship rises into a slower orbit and the gap grows. <strong>Reset</strong>, <strong>Burn backward</strong> 0.903 km/s, <strong>Coast to the farthest point</strong> (one lap, 11/12 of a year) and <strong>Burn forward</strong> 0.903 km/s: the ship is alongside. <strong>Rendezvous: a target in an outer orbit</strong> is the Hohmann transfer to Mars's distance: forward 2.94 km/s, coast to the farthest point (259 days), forward 2.65 km/s.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: a planet on a circular orbit at 1 AU gets a sudden push forward at one point, so it now moves at 1.1 times the circular speed. Does it move farther from the star or closer? Where on the new orbit is the point where it got the push? Will its period be longer or shorter than a year?</p></div>
@@ -95,6 +96,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> At 1 AU from the Sun the circular speed is 29.8 km/s. Find the escape speed there. In the <strong>Escape</strong> preset the planet is launched at 1.2 times the escape speed. Use energy conservation to find its speed far from the Sun, and compare with the <strong>Speed far away v∞</strong> readout.</p></div>
 
 <div class="q"><p><strong>Q6.</strong> Two planets start at the same point, 1 AU from the star, with the same speed, 29.8 km/s, but one moves sideways (a circle) and the other is aimed partly outward. Predict which one returns to the starting point first. Then race them with <strong>Keep as second planet</strong> and explain the result with the third law.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A ship and a space station share a circular orbit around the Sun at 1 AU, with the station 30° ahead. The pilot fires the engine forward to catch up. Predict what happens to the gap over the next year, and explain with the third law. What should the pilot do instead, and how large a backward burn makes the ship meet the station after exactly one of its own orbits?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"The Sun is at the center of the ellipse."</strong> It sits at one focus. The other focus is empty. For Earth they are so close together that the orbit looks like a circle centered on the Sun.</li>
@@ -102,6 +105,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>"A heavier planet orbits more slowly."</strong> The planet's mass cancels out of the motion. Only the star's mass enters the third law.</li>
 <li><strong>"Planetary orbits are very elongated."</strong> Most planets have small e; drawings in textbooks often exaggerate them. Comets are the elongated ones.</li>
 <li><strong>"To escape you have to point straight away from the star."</strong> Escape depends on speed, not direction: any launch at or above √2 times the circular speed escapes, unless it hits the star.</li>
+<li><strong>"To catch something ahead in orbit, speed up."</strong> A forward burn raises the far side of the orbit; the larger orbit has a longer period, so the ship drops behind. Slowing down drops it into a quicker, lower orbit.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
@@ -110,6 +114,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>The motion is integrated with velocity Verlet, with a time step that shrinks near the star. The <strong>Energy drift</strong> readout shows how well the integrator keeps the energy constant. The predicted orbit path, a and e come from the launch position and velocity through the energy ε = v²/2 − GM/r and the angular momentum h = |r × v|.</li>
 <li>The wedge areas are summed from the integrated path, not taken from a formula, and compared with ½·h·Δt.</li>
 <li>A path that comes within 0.005 AU (about one solar radius) of the star counts as a hit.</li>
+<li>Rendezvous (Sandbox): the ship and the target are 20 t each, too light to pull on anything, and move with the same n body steps as the rest of the Sandbox. A burn is an instant Δv forward, backward, outward or inward relative to the ship's motion around the star. The forecast runs a copy of the system ahead (two years, or one orbit of the target if longer) and refines the closest approach between samples. Hohmann transfer: Δv₁ = √(GM/r₁)(√(2r₂/(r₁ + r₂)) − 1), Δv₂ = √(GM/r₂)(1 − √(2r₁/(r₁ + r₂))), coast π√(a_t³/GM), lead 180° − 360° t/P₂ (Hohmann 1925). "Alongside" means within 0.005 AU at under 0.1 km/s.</li>
 </ul>
 <h2>Going further</h2>
 <ul>

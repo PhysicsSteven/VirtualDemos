@@ -163,6 +163,7 @@
             <option value="tromso">Tromsø, Norway</option>
             <option value="giza">Giza, Egypt</option>
             <option value="southpole">South Pole</option>
+            <option value="madrid">Madrid, Spain</option>
             <option value="custom">Your own latitude and longitude</option>
           </select>
           <div class="steps" role="group" aria-label="Step the time">
@@ -199,6 +200,7 @@
           <button type="button" data-p="thuban" aria-pressed="false">Pole star in 2600 BC</button>
           <button type="button" data-p="vega" aria-pressed="false">Pole star in AD 14000</button>
           <button type="button" data-p="precess" aria-pressed="false">Precession of the pole</button>
+          <button type="button" data-p="antipodes" aria-pressed="false">Antipodes: Madrid and New Zealand</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -219,6 +221,14 @@
       <section>
         <h2>The sky now</h2>
         <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>The antipode</h2>
+        <p class="hint">The point on the other side of the Earth, straight through its center from you, at the same moment.</p>
+        <button type="button" class="btn" id="antiGo">Go to the antipode</button>
+        <p class="hint" id="antiMsg" aria-live="polite"></p>
+        <dl class="readout" id="antiOut"></dl>
+        <details class="more"><summary>About the antipode</summary><p class="hint">The antipode of latitude φ and longitude λ is latitude −φ and longitude λ ± 180°. Its horizon lies in the same plane as yours (the Earth's 12 700 km is nothing next to the stars), but its zenith points where your nadir does: the half of the sky below your horizon is the half above theirs. A star at altitude h and azimuth A here is at −h and 360° − A there, so when your Sun is up, theirs is down by the same angle: noon here is midnight there, and the season is the opposite one. The Moon is close enough that each of you sees it shifted toward the horizon by up to 1° (its parallax), so the two altitudes add to as much as −2° instead of 0. Clocks there run 12 hours apart, and the date may differ by one. Most of the Earth's land has ocean at its antipode.</p></details>
       </section>
       <section>
         <h2>Show</h2>
@@ -499,6 +509,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const fg of figures) if (fg[0] === con) for (const i of fg.slice(1)) if (out.indexOf(i) < 0) out.push(i);
     return out;
   }
+  /* the antipode: the point straight through the Earth's center, latitude −φ and longitude 180° away (east +, kept in −180° to 180°). The same
+     rule holds for geodetic latitude on the Earth's ellipsoid, which is symmetric through its center, and the local verticals there are
+     opposite. Its zenith is your nadir, so a star at altitude h and azimuth A here is at −h and 360° − A
+     there (the local north is the same direction, the local east the opposite one). The Sun and Moon differ by their parallax. */
+  function antipode(lat, lon) { return { lat: -lat, lon: lon > 0 ? lon - 180 : lon + 180 }; }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -533,6 +548,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     northpole: { name: 'the North Pole', lat: 90, lon: 0 }, quito: { name: 'Quito, Ecuador', lat: -0.18, lon: -78.47 },
     sydney: { name: 'Sydney, Australia', lat: -33.87, lon: 151.21 }, tromso: { name: 'Tromsø, Norway', lat: 69.65, lon: 18.96 },
     giza: { name: 'Giza, Egypt', lat: 29.98, lon: 31.13 }, southpole: { name: 'the South Pole', lat: -90, lon: 0 },
+    madrid: { name: 'Madrid, Spain', lat: 40.42, lon: -3.70 },
   };
   const SPEEDS = { m1: 60, m10: 600, h1: 3600, d1: 86400, y: 500 };
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -1058,7 +1074,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lunarTxt = e.lunar === 'none' ? '' : `${e.lunar[0].toUpperCase() + e.lunar.slice(1)} lunar eclipse${e.lunar === 'penumbral' ? ' (the Moon in the Earth’s outer shadow, hard to see)' : ''}`;
     o += dd('Eclipse', [solarTxt, lunarTxt].filter(Boolean).join('; ') || 'None now', 'wide');
     $('out').innerHTML = o;
+    antiReadouts(D);
     $('blindTag').hidden = !B;
+  }
+  /* ---------- the antipode: the same moment seen from the other side of the Earth ---------- */
+  const AN = { home: null };   /* where Go to the antipode came from: { place, lat, lon }, while the view is at that antipode */
+  const placeAt = (lat, lon) => Object.keys(PLACES).find((k) => Math.abs(PLACES[k].lat - lat) < 0.005 && (Math.abs(Math.abs(lat) - 90) < 1e-9 || Math.abs(wrap(PLACES[k].lon - lon + 180, 360) - 180) < 0.005)) || 'custom';
+  const placeName = (pl, lat, lon) => (pl === 'custom' ? `${latText(lat)}, ${lonText(lon)}` : PLACES[pl].name);
+  function antiReadouts(D) {
+    const A = antipode(S.lat, S.lon), KA = skyAt(S.jd, A.lat, A.lon), za = Math.round(A.lon / 15), ca = civilFromJd(S.jd + za / 24);
+    const aa = (v) => altAz(KA, v), sunA = aa(topo(KA, KA.sun.km, 695700).u), moonA = aa(topo(KA, KA.moon.kmv, RMOON_KM).u);
+    const si = D.si, selV = si.kind === 'sun' ? topo(KA, KA.sun.km, 695700).u : si.kind === 'moon' ? topo(KA, KA.moon.kmv, RMOON_KM).u : si.v, sel = aa(selV);
+    const up = (h) => (h > 0 ? 'up' : 'down');
+    let o = dd('Antipode', `${latText(A.lat)}, ${lonText(A.lon)}`, 'wide');
+    o += dd('Local standard time there', `${MONTHS[ca.m - 1]} ${ca.d}, ${hm(ca.h)} <small>UTC${za >= 0 ? '+' : '−'}${Math.abs(za)}</small>`, 'wide');
+    o += dd('Sun there', `${sgn(sunA.alt, 1)}°, ${up(sunA.alt)}`) + dd('Moon there', `${sgn(moonA.alt, 1)}°, ${up(moonA.alt)}`);
+    o += dd(`${si.name} there`, `altitude ${sgn(sel.alt, 2)}°, azimuth ${f(sel.az, 1)}° <small>${compass(sel.az)}</small>`, 'wide');
+    $('antiOut').innerHTML = o;
+    const atAnti = AN.home && Math.abs(S.lat + AN.home.lat) < 1e-9 && Math.abs(wrap(S.lon - AN.home.lon, 360) - 180) < 1e-6;
+    if (AN.home && !atAnti) AN.home = null;
+    $('antiGo').textContent = AN.home ? `Go back to ${placeName(AN.home.place, AN.home.lat, AN.home.lon).replace(/^the /, 'the ')}` : 'Go to the antipode';
+  }
+  function goAntipode() {
+    const c = local(S.jd), back = AN.home;
+    if (back) { S.place = back.place; S.lat = back.lat; S.lon = back.lon; AN.home = null; }
+    else { const A = antipode(S.lat, S.lon); AN.home = { place: S.place, lat: S.lat, lon: S.lon }; S.lat = A.lat; S.lon = A.lon; S.place = placeAt(A.lat, A.lon); }
+    /* the same moment: S.jd is kept, so the local clock jumps by about 12 hours */
+    custom(); syncSliders(); dirty = true; compute(); readouts(true);
+    const m = back ? `Back at ${placeName(S.place, S.lat, S.lon)}.` : `At the antipode, ${latText(S.lat)}, ${lonText(S.lon)}, at the same moment: local time ${hm(local(S.jd).h)}. What was below your horizon is now above it.`;
+    $('antiMsg').textContent = m; void c;
   }
 
   /* ---------- time ---------- */
@@ -1124,6 +1168,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     precess: { place: 'ruston', at: [-3000, 3, 20, '21:00'], speed: 'y', view: 'chart', sel: 'ncp', show: { tPrec: true, tEcl: true }, dim: '3d',
       hint: 'Five hundred years each second, on the same date and clock time. The Earth’s axis sweeps out a cone like a spinning top’s: the celestial pole circles the ecliptic pole once in about 25 800 years, staying 23.4° from it. The pole star changes, and the March equinox point slides west along the zodiac, about 1° every 72 years, from Taurus through Aries into Pisces.' },
   };
+  PRESETS.antipodes = { place: 'madrid', at: [2026, 12, 21, '22:00'], speed: 'm10', view: 'dome', sel: 'sun', show: { tAltAz: true },
+    hint: 'Madrid, Spain, at 40.4° N, at 22:00 on the December solstice (UTC+0, the time zone nearest its longitude; Spain itself keeps UTC+1). The Sun is 57.3° below the horizon and the Moon, 93% lit, is high in the sky. Press Go to the antipode: 40.4° S, 176.3° E is on the North Island of New Zealand, where at the same moment it is 10:00 the next morning in midsummer, the Sun is 57.3° up and the Moon is down. The half of the sky under Madrid\'s horizon is the half over New Zealand\'s. The Sun climbs to 73.0° there today and only 26.1° in Madrid.' };
   const TOGGLES = ['tAltAz', 'tEq', 'tEcl', 'tFig', 'tBound', 'tNames', 'tPath', 'tCaps', 'tMoonOrb', 'tPrec', 'tDay'];
   const BASE_SHOW = { tAltAz: false, tEq: true, tEcl: true, tFig: true, tBound: false, tNames: true, tPath: true, tCaps: false, tMoonOrb: false, tPrec: false, tDay: true };
   function setView(v) { S.view = v; for (const b of document.querySelectorAll('#skySeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('faceSeg').hidden = v !== 'horizon'; dirty = true; notes(); }
@@ -1146,6 +1192,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- controls ---------- */
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('play').addEventListener('click', () => setRun(!S.run));
+  $('antiGo').addEventListener('click', goAntipode);
   $('reset').addEventListener('click', () => { if (presetAt != null && S.preset !== 'custom') { applyPreset(S.preset); } else { setRun(false); S.jd = presetAt != null ? presetAt : S.jd; syncSliders(); dirty = true; } });
   $('nowBtn').addEventListener('click', () => { setRun(false); S.jd = Date.now() / 86400000 + 2440587.5; custom(); syncSliders(); dirty = true; readouts(true); });
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => setSpeed(b.dataset.s));

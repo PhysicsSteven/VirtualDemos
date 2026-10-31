@@ -82,6 +82,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>June solstice Sun, December solstice Sun, Midnight Sun.</strong> Read the highest altitude of the Sun each time (Q4). Turn on <strong>Always up and never up zones</strong> to show the circumpolar caps.</li>
 <li><strong>The Moon through a month.</strong> One day each second at the same clock time: the Moon moves east among the stars, waxes and comes back to the same stars in 27.3 days (Q5).</li>
 <li><strong>Pole star in 2600 BC, Precession of the pole.</strong> The sky circles Thuban at Giza; then 500 years a second in 3D shows the axis sweeping its cone (Q6).</li>
+<li><strong>Antipodes: Madrid and New Zealand.</strong> Madrid at 22:00 on the December solstice: the Sun 57.3° down. Ask Q7, then press <strong>Go to the antipode</strong> in The antipode: 40.4° S, 176.3° E, 10:00 the next morning, the Sun 57.3° up, the Moon down. The whole sky view shows the half of the sky that was under Madrid's horizon. <strong>Go back</strong> returns.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: how high above the northern horizon is Polaris seen from Ruston, at 32.5° N? Select Polaris in A winter night at Ruston and check. Why is it not exactly 32.5°?</p></div>
@@ -95,6 +96,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> Using The Moon through a month, how far east among the stars does the Moon move from one evening to the next? How many days until it is back among the same stars?</p></div>
 
 <div class="q"><p><strong>Q6.</strong> Which star was near the north celestial pole when the pyramids at Giza were built, about 2600 BC? Which will be near it in AD 14000? About when does the March equinox point leave Pisces for Aquarius?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> At some moment the Sun is 57.3° below the horizon in Madrid (40.4° N, 3.7° W) and the Moon is 74.3° up. Where on the Earth is Madrid's antipode? What are the Sun's and the Moon's altitudes there at the same moment, and why does the Moon not come out at exactly −74.3°? What season is it there?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Polaris is the brightest star in the sky."</strong> It is about the 48th brightest. What makes it special is its place within 0.7° of the north celestial pole.</li>
@@ -102,6 +105,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>"The Sun is straight overhead at noon."</strong> At Ruston the Sun is never overhead: its highest is 80.9° in June. It can be overhead only between 23.4° S and 23.4° N.</li>
 <li><strong>"The pole star is forever."</strong> Precession moves the pole: Thuban 4,600 years ago, Polaris now, Vega in about 12,000 years.</li>
 <li><strong>"Star signs match where the Sun is."</strong> The dates of the signs were set about 2,000 years ago; precession has since shifted the Sun's place by almost a whole constellation.</li>
+<li><strong>"People at the antipode see the same stars upside down."</strong> They see the other half of the sky: whatever is below your horizon is above theirs, at the same angle.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
@@ -111,6 +115,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Highest and lowest altitude in a day: 90° − |φ − δ| and |φ + δ| − 90°. No refraction: in the real sky the air lifts objects at the horizon by about 0.5°, so real days are a few minutes longer and Polaris is a little higher near the horizon.</li>
 <li>Eclipses: the two disks seen from the observer (solar); the Moon against the Earth's shadow with the Explanatory Supplement (1961) radii (lunar). Contact times agree with NASA's within about a minute (Dallas totality, April 8, 2024: 18:41:05 to 18:45:10 UT here, 18:40:43 to 18:44:35 UT in NASA's tables).</li>
 <li>Tested against ERFA (precession, sidereal time, Moon), astropy (constellations) and NASA eclipse times in curriculum/validation/test_celestial-sphere.cjs.</li>
+<li>The antipode of (φ, λ) is (−φ, λ ± 180°); this holds for geodetic latitude on the ellipsoid too, which is symmetric through the center. Its vertical is opposite yours and its north is the same direction, so a star at altitude h, azimuth A here is at −h, 360° − A there. The Sun and Moon are worked out from the antipode itself, so the Moon's 1° parallax shows: the two altitudes add to slightly less than zero.</li>
 </ul>
 <h2>Going further</h2>
 <ul>

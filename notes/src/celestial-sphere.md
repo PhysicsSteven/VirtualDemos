@@ -23,6 +23,7 @@ Students need only latitude and longitude on Earth and the idea that Earth spins
 4. **June solstice Sun, December solstice Sun, Midnight Sun.** Read the highest altitude of the Sun each time (Q4). Turn on **Always up and never up zones** to show the circumpolar caps.
 5. **The Moon through a month.** One day each second at the same clock time: the Moon moves east among the stars, waxes and comes back to the same stars in 27.3 days (Q5).
 6. **Pole star in 2600 BC, Precession of the pole.** The sky circles Thuban at Giza; then 500 years a second in 3D shows the axis sweeping its cone (Q6).
+7. **Antipodes: Madrid and New Zealand.** Madrid at 22:00 on the December solstice: the Sun 57.3° down. Ask Q7, then press **Go to the antipode** in The antipode: 40.4° S, 176.3° E, 10:00 the next morning, the Sun 57.3° up, the Moon down. The whole sky view shows the half of the sky that was under Madrid's horizon. **Go back** returns.
 
 ## Questions
 
@@ -37,6 +38,7 @@ Students need only latitude and longitude on Earth and the idea that Earth spins
 **Q5.** Using The Moon through a month, how far east among the stars does the Moon move from one evening to the next? How many days until it is back among the same stars?
 
 **Q6.** Which star was near the north celestial pole when the pyramids at Giza were built, about 2600 BC? Which will be near it in AD 14000? About when does the March equinox point leave Pisces for Aquarius?
+**Q7.** At some moment the Sun is 57.3° below the horizon in Madrid (40.4° N, 3.7° W) and the Moon is 74.3° up. Where on the Earth is Madrid's antipode? What are the Sun's and the Moon's altitudes there at the same moment, and why does the Moon not come out at exactly −74.3°? What season is it there?
 
 ## Common misconceptions
 
@@ -45,6 +47,7 @@ Students need only latitude and longitude on Earth and the idea that Earth spins
 - **"The Sun is straight overhead at noon."** At Ruston the Sun is never overhead: its highest is 80.9° in June. It can be overhead only between 23.4° S and 23.4° N.
 - **"The pole star is forever."** Precession moves the pole: Thuban 4,600 years ago, Polaris now, Vega in about 12,000 years.
 - **"Star signs match where the Sun is."** The dates of the signs were set about 2,000 years ago; precession has since shifted the Sun's place by almost a whole constellation.
+- **"People at the antipode see the same stars upside down."** They see the other half of the sky: whatever is below your horizon is above theirs, at the same angle.
 
 ## Physics behind the demo
 
@@ -54,6 +57,7 @@ Students need only latitude and longitude on Earth and the idea that Earth spins
 - Highest and lowest altitude in a day: 90° − |φ − δ| and |φ + δ| − 90°. No refraction: in the real sky the air lifts objects at the horizon by about 0.5°, so real days are a few minutes longer and Polaris is a little higher near the horizon.
 - Eclipses: the two disks seen from the observer (solar); the Moon against the Earth's shadow with the Explanatory Supplement (1961) radii (lunar). Contact times agree with NASA's within about a minute (Dallas totality, April 8, 2024: 18:41:05 to 18:45:10 UT here, 18:40:43 to 18:44:35 UT in NASA's tables).
 - Tested against ERFA (precession, sidereal time, Moon), astropy (constellations) and NASA eclipse times in curriculum/validation/test_celestial-sphere.cjs.
+- The antipode of (φ, λ) is (−φ, λ ± 180°); this holds for geodetic latitude on the ellipsoid too, which is symmetric through the center. Its vertical is opposite yours and its north is the same direction, so a star at altitude h, azimuth A here is at −h, 360° − A there. The Sun and Moon are worked out from the antipode itself, so the Moon's 1° parallax shows: the two altitudes add to slightly less than zero.
 
 ## Going further
 

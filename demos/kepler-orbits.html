@@ -152,6 +152,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 /* the 3D view: a WebGL canvas under the orbit canvas, which then only carries the words and takes no pointer */
 .pane.main.space { background: #04060b; }
 .pane.main.space #view { pointer-events: none; }
+/* Sandbox rendezvous: the ship's controls */
+#rvBox { display: grid; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+#rvBox .rvh { margin: 0; font-size: 0.95rem; }
+#rvBox .btnrow .btn { flex: 1 1 46%; }
 .v3note { position: absolute; left: 12px; bottom: 40px; z-index: 2; max-width: 60%; margin: 0; font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -222,6 +226,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-r="circumbinary" aria-pressed="false">Planet around a binary</button>
           <button type="button" data-r="eight" aria-pressed="false">Figure eight</button>
           <button type="button" data-r="empty" aria-pressed="false">Empty space</button>
+          <button type="button" data-r="rvCatch" aria-pressed="false">Rendezvous: catch the target ahead</button>
+          <button type="button" data-r="rvOuter" aria-pressed="false">Rendezvous: a target in an outer orbit</button>
         </div>
         <div class="slider-head"><span class="hint" id="sbkFollowLab">The view follows</span></div>
         <div class="seg wrap" role="group" aria-labelledby="sbkFollowLab" id="sbkFollow">
@@ -231,6 +237,26 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <label class="check"><input type="checkbox" id="sbkTrails" checked>Trails</label>
         <dl class="readout" id="sbkOut"></dl>
+        <div id="rvBox" hidden>
+          <h3 class="rvh">Fly the ship</h3>
+          <div><div class="slider-head"><label for="rvDv">Burn size Δv</label><output id="rvDvOut" class="mono" for="rvDv">0.50 km/s</output></div>
+            <input type="range" id="rvDv" min="-3" max="0.7" step="0.001" value="-0.301"></div>
+          <div class="btnrow rvburns" role="group" aria-label="Fire the engine">
+            <button type="button" class="btn" data-burn="fwd">Burn forward</button>
+            <button type="button" class="btn" data-burn="back">Burn backward</button>
+            <button type="button" class="btn" data-burn="out">Burn outward</button>
+            <button type="button" class="btn" data-burn="in">Burn inward</button>
+          </div>
+          <div class="btnrow rvcoast" role="group" aria-label="Coast ahead and pause">
+            <button type="button" class="btn" data-coast="apo">Coast to the farthest point</button>
+            <button type="button" class="btn" data-coast="peri">Coast to the nearest point</button>
+            <button type="button" class="btn" data-coast="close">Coast to the closest approach</button>
+          </div>
+          <dl class="readout" id="rvOut"></dl>
+          <details class="more"><summary>About the rendezvous</summary>
+            <p class="hint">The ship and the target are 20 t each, far too light to pull on anything, so each moves on its own orbit around the star. A burn changes the ship's velocity at once by Δv (a real burn of minutes is instant on these time scales): forward along its motion around the star, backward against it, outward away from the star or inward toward it. Speeding up lifts the far side of the orbit, and a bigger orbit takes longer (P² = a³/M), so a ship that speeds up to chase a target ahead falls behind it. To catch up, burn backward: the lower orbit is quicker. The dashed line is the ship's path over the next two years (or the next orbit of the target, if longer), worked out with the same n body steps; the crosses mark where the ship and the target are at the closest approach. The ship counts as alongside within 0.005 AU (750 000 km) at under 0.1 km/s; closing the last stretch takes the same kind of burns, smaller, with the view following the ship. The Hohmann transfer is the half ellipse touching both circles (Hohmann 1925; OpenStax University Physics Vol 1 §13.5).</p>
+          </details>
+        </div>
         <details class="more"><summary>Build with buttons instead</summary>
           <div class="chips" id="sbkAdd">
             <button type="button" data-add="star">Add a star</button>
@@ -699,6 +725,64 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function nbCircular(h, m, x, y) {
     const dx = x - h.x, dy = y - h.y, r = Math.hypot(dx, dy), v = Math.sqrt(TAU * TAU * (h.m + m) / r);
     return { vx: h.vx - v * dy / r, vy: h.vy + v * dx / r };
+  }
+  // ---- Rendezvous: a ship and a target, both far too light to pull on anything (20 t, 1.0 × 10⁻²⁶ M☉), orbiting a star. A burn is an
+  // instant change of velocity Δv (a real burn lasting minutes is instant on these time scales): forward along the ship's velocity
+  // relative to its host, backward against it, outward along the line from the host, or inward toward it.
+  function rvBurn(b, h, dir, dv) {
+    const ux = b.vx - h.vx, uy = b.vy - h.vy, u = Math.hypot(ux, uy), rx = b.x - h.x, ry = b.y - h.y, r = Math.hypot(rx, ry);
+    let ex = 0, ey = 0;
+    if (dir === 'fwd' || dir === 'back') { const s = dir === 'fwd' ? 1 : -1; ex = s * ux / u; ey = s * uy / u; }
+    else { const s = dir === 'out' ? 1 : -1; ex = s * rx / r; ey = s * ry / r; }
+    b.vx += dv * ex; b.vy += dv * ey;
+  }
+  // the angle (degrees, −180 to 180) from the ship to the target as seen from the host, positive when the target is ahead (the way the ship goes round)
+  function rvLead(s, t, h) {
+    const a = Math.atan2(t.y - h.y, t.x - h.x) - Math.atan2(s.y - h.y, s.x - h.x), sense = Math.sign((s.x - h.x) * (s.vy - h.vy) - (s.y - h.y) * (s.vx - h.vx)) || 1;
+    let d = sense * a * 180 / Math.PI; d -= 360 * Math.round(d / 360); return d;
+  }
+  // the Hohmann transfer between circular orbits r1 and r2 around GM (AU, AU³/yr²): the two burns (AU/yr), the time of the half ellipse (yr),
+  // and how far ahead (degrees) the target must be at the first burn to meet the ship at the far end: 180° − 360° × t / P₂
+  function hohmann(r1, r2, GM) {
+    const at = (r1 + r2) / 2, dv1 = Math.sqrt(GM / r1) * (Math.sqrt(r2 / at) - 1), dv2 = Math.sqrt(GM / r2) * (1 - Math.sqrt(r1 / at));
+    const t = Math.PI * Math.sqrt(at * at * at / GM), P2 = TAU * Math.sqrt(r2 * r2 * r2 / GM);
+    let lead = 180 - 360 * t / P2; lead -= 360 * Math.round(lead / 360);
+    return { at, dv1, dv2, t, lead };
+  }
+  // time (yr) until b next reaches the nearest ('peri') or farthest ('apo') point of its two body orbit around h, from Kepler's
+  // equation: cos E = (1 − r/a)/e, sin E = (r·v)/(e√(GM a)), M = E − e sin E; null when the orbit is open or nearly circular (e < 0.001)
+  function rvApsisTime(b, h, which) {
+    const GM = TAU * TAU * (h.m + b.m), el = nbElements(b, h);
+    if (!el.bound || el.e < 0.001) return null;
+    const rx = b.x - h.x, ry = b.y - h.y, rv = rx * (b.vx - h.vx) + ry * (b.vy - h.vy);
+    const E = Math.atan2(rv / (el.e * Math.sqrt(GM * el.a)), (1 - el.r / el.a) / el.e), M = E - el.e * Math.sin(E), n = TAU / el.P;
+    let dM = (which === 'apo' ? Math.PI : TAU) - M; dM -= TAU * Math.floor(dM / TAU); if (dM < 1e-9) dM += TAU;
+    return dM / n;
+  }
+  // run a copy of the system ahead for a time T and find the closest approach of body sid to body tid; also returns the path of sid
+  // relative to the body that hosts it at the start (for a dashed line ahead of the ship)
+  function rvPredict(bs, sid, tid, T) {
+    const st = { t: 0, bs: bs.map((b) => Object.assign({}, b, { trail: null })) }, find = (id) => st.bs.find((q) => q.id === id);
+    const s0 = find(sid), h0 = s0 ? nbHost(st.bs, s0) : null, hid = h0 ? h0.id : null, path = [], gpath = [], N = 360;
+    let best = { d: Infinity, t: 0, vrel: NaN, sx: 0, sy: 0, tx: 0, ty: 0 }, kBest = -1;
+    const snaps = [], copy = (q) => ({ t: q.t, bs: q.bs.map((b) => Object.assign({}, b)) });
+    const look = (q) => {
+      const f = (id) => q.bs.find((b) => b.id === id), s = f(sid), g = f(tid), h = hid != null ? f(hid) : null; if (!s || !g) return null;
+      return { d: Math.hypot(g.x - s.x, g.y - s.y), t: q.t, vrel: Math.hypot(g.vx - s.vx, g.vy - s.vy), sx: h ? s.x - h.x : s.x, sy: h ? s.y - h.y : s.y, tx: h ? g.x - h.x : g.x, ty: h ? g.y - h.y : g.y };
+    };
+    for (let k = 0; k <= N; k++) {
+      if (k) nbAdvance(st, T * k / N, 1e6);
+      snaps.push(copy(st));
+      const o = look(st); if (!o) break;
+      path.push([o.sx, o.sy]); gpath.push([o.tx, o.ty]);
+      if (o.d < best.d) { best = o; kBest = k; }
+    }
+    /* refine between the samples either side of the closest one, 200 finer steps */
+    if (kBest >= 0) {
+      const k0 = Math.max(0, kBest - 1), t1 = T * Math.min(N, kBest + 1) / N, q = copy(snaps[k0]), t0 = q.t;
+      for (let j = 1; j <= 200; j++) { nbAdvance(q, t0 + (t1 - t0) * j / 200, 1e6); const o = look(q); if (o && o.d < best.d) best = o; }
+    }
+    return Object.assign(best, { path, gpath, hid });
   }
   // ==CORE END==
 
@@ -1371,12 +1455,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     dwarf:   { name: 'Red dwarf', m: 0.3, R: 0.3 * 695700 / AU_KM, px: 7, col: '#e2643b' },
     jupiter: { name: 'Jupiter', m: 1 / 1047.35, R: 71492 / AU_KM, px: 6, col: '#c99a6b' },
     earth:   { name: 'Earth', m: 1 / 332946.05, R: 6378 / AU_KM, px: 4.5, col: '#4a8fe0' },
-    moon:    { name: 'Moon', m: 1 / 332946.05 / 81.30, R: 1737 / AU_KM, px: 3, col: '#9aa3ad' }
+    moon:    { name: 'Moon', m: 1 / 332946.05 / 81.30, R: 1737 / AU_KM, px: 3, col: '#9aa3ad' },
+    /* the rendezvous: a 20 t ship and a 20 t target (1.0 × 10⁻²⁶ M☉, nominal M☉ = 1.98841 × 10³⁰ kg); a 10 m radius, so they never merge */
+    ship:    { name: 'Ship', m: 2e4 / 1.98841e30, R: 0.01 / AU_KM, px: 5, col: '' },
+    target:  { name: 'Target', m: 2e4 / 1.98841e30, R: 0.01 / AU_KM, px: 5, col: '#3ec7a4' }
   };
   const SBK_TRAY = ['star', 'dwarf', 'jupiter', 'earth', 'moon'];
   const SBK_MAX = 12;
   const SBK = { on: false, st: null, start: null, playing: false, sel: null, follow: 'cm', drag: null, nid: 1, kv: 30, tray: null, last: 0, chart: [], msg: '', rig: 'sunEarth', wasDim: null, hidden: [] };
-  const sbkCol = (b, T) => SBK_KIND[b.kind].col || T.sun;
+  const sbkCol = (b, T) => (b.kind === 'ship' ? T.ink : SBK_KIND[b.kind].col || T.sun);
   function sbkMake(kind, x, y, vx, vy) { const k = SBK_KIND[kind]; return { id: SBK.nid++, kind, name: k.name, m: k.m, R: k.R, x, y, vx, vy, trail: [] }; }
   /* a pair (m1 at the left, m2 at the right) circling their center of mass at (cx, cy) a distance d apart, the center moving at (vx, vy) */
   function sbkPair(k1, k2, d, cx, cy, vx, vy) {
@@ -1393,7 +1480,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
        length unit 1 AU, so velocities scale by √(G M☉/AU) = 2π AU/yr and the period 6.3259 by 1/(2π), to 1.0068 yr */
     eight: { span: 2.6, spd: 0.15, build: () => { const x1 = 0.97000436, y1 = -0.24308753, wx = -0.93240737 * TAU, wy = -0.86473146 * TAU;
       return [sbkMake('star', x1, y1, -wx / 2, -wy / 2), sbkMake('star', -x1, -y1, -wx / 2, -wy / 2), sbkMake('star', 0, 0, wx, wy)]; } },
-    empty: { span: 4, spd: 0.25, build: () => [] }
+    empty: { span: 4, spd: 0.25, build: () => [] },
+    /* the rendezvous: the ship on a 1 AU circle, the target on the same circle 30° ahead, or on a 1.52368 AU circle (Mars's a) 44.34°
+       ahead, the lead the Hohmann transfer needs, so the first burn can go now */
+    rvCatch: { span: 2.8, spd: 0.15, follow: 'cm', sel: 1, dv: 0.903, build: () => sbkRv(1, 1, 30) },
+    rvOuter: { span: 3.6, spd: 0.15, follow: 'cm', sel: 1, dv: 2.94, build: () => sbkRv(1, 1.52368, hohmann(1, 1.52368, TAU * TAU).lead) }
+  };
+  function sbkRv(r1, r2, lead) {
+    const s = sbkMake('star', 0, 0, 0, 0), a = lead * Math.PI / 180, sh = sbkMake('ship', r1, 0, 0, 0), tg = sbkMake('target', r2 * Math.cos(a), r2 * Math.sin(a), 0, 0);
+    Object.assign(sh, nbCircular(s, sh.m, sh.x, sh.y)); Object.assign(tg, nbCircular(s, tg.m, tg.x, tg.y)); return [s, sh, tg];
+  }
+  const SBK_RV_HINT = {
+    rvCatch: 'The target is 30° ahead of you on the same circle. Try a forward burn first and watch: you rise into a bigger, slower orbit and fall behind. Then Reset and burn backward instead: the smaller orbit is quicker. With 0.903 km/s backward your orbit takes 11/12 of a year, so after one lap, back at its farthest point, you meet the target: coast there and burn 0.903 km/s forward to match its speed.',
+    rvOuter: 'The target circles 1.52 AU out, where Mars does, 44.3° ahead of you: just the lead for a Hohmann transfer. Burn forward 2.94 km/s now, coast half an ellipse (259 days) to the farthest point, and burn forward 2.65 km/s to match the target\'s circle. The readouts give the Hohmann numbers for wherever you are.'
   };
   const sbkClone = (bs) => bs.map((b) => Object.assign({}, b, { trail: [] }));
   const sbkTot = () => nbTotals(SBK.st.bs);
@@ -1431,12 +1530,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     SBK.st = { t: 0, bs: r.build() }; SBK.sel = r.sel != null && SBK.st.bs[r.sel] ? SBK.st.bs[r.sel].id : null; SBK.follow = r.follow || 'cm';
     for (const b of document.querySelectorAll('#sbkFollow button')) b.setAttribute('aria-pressed', String(b.dataset.f === SBK.follow));
     for (const b of document.querySelectorAll('#sbkRigs button')) b.setAttribute('aria-pressed', String(b.dataset.r === name));
-    setSpeed(r.spd); sbkCommit(); sbkFit(true, r.span); sbkPlay(false);
+    setSpeed(r.spd); if (r.dv) rvSetDv(r.dv); sbkCommit(); sbkFit(true, r.span); sbkPlay(false);
   }
   /* the system as it is now becomes the start that Reset goes back to */
-  function sbkCommit() { SBK.st.t = 0; for (const b of SBK.st.bs) b.trail = []; SBK.start = sbkClone(SBK.st.bs); sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; }
+  function sbkCommit() { SBK.st.t = 0; for (const b of SBK.st.bs) b.trail = []; SBK.start = sbkClone(SBK.st.bs); sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; rvReset(); }
   function sbkChart0() { SBK.chart = []; if (SBK.st.bs.length > 1) { const t = sbkTot(); SBK.chart.push([SBK.st.t, t.K, t.U]); } }
-  function sbkReset() { SBK.st = { t: 0, bs: sbkClone(SBK.start) }; sbkChart0(); sbkPlay(false); sbkSay('Back to the start.'); }
+  function sbkReset() { SBK.st = { t: 0, bs: sbkClone(SBK.start) }; sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; rvReset(); sbkPlay(false); sbkSay('Back to the start.'); }
   function sbkPlay(on) { SBK.playing = on == null ? !SBK.playing : on; playBtn.textContent = SBK.playing ? 'Pause' : 'Play'; SBK.last = 0; schedule(); }
   function sbkEdited() { for (const b of document.querySelectorAll('#sbkRigs button')) b.setAttribute('aria-pressed', 'false'); sbkCommit(); sbkArrowScale(); }
   /* keep the velocity arrows readable: rescale only when the longest is far too long or too short */
@@ -1454,13 +1553,68 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const sbkPx = (x, y, f) => toPx(x - f.x, y - f.y);
   const sbkTip = (b, f) => { const [px, py] = sbkPx(b.x, b.y, f); return [px + (b.vx - f.vx) * SBK.kv, py - (b.vy - f.vy) * SBK.kv]; };
   const sbkRad = (b, ps) => Math.max(SBK_KIND[b.kind].px * ps, b.R * V.s);
-  function sbkStep(dtr) {
-    const st = SBK.st, T = st.t + dtr * S.speed, out = nbAdvance(st, T, 40000);
+  function sbkStep(dtr) { sbkAfter(nbAdvance(SBK.st, SBK.st.t + dtr * S.speed, 40000)); }
+  /* after a stretch of time: report merges, extend the trails and the energy chart, keep the rendezvous forecast fresh */
+  function sbkAfter(out) {
+    const st = SBK.st;
     for (const e of out.ev) { const m = `${e.names[1]} hit ${e.names[0]} at t = ${fmtT(e.t)}: they merged into one body, keeping their total mass and momentum.`; sbkSay(m); live(m); if (SBK.sel === e.gone) SBK.sel = e.into; }
+    if (out.ev.length) rvRefresh();
     const t = st.bs.length ? sbkTot() : null;
     const fr = sbkFrame0();
     for (const b of st.bs) { const L = b.trail[b.trail.length - 1]; if (!L || Math.hypot(b.x - fr.x - L[0], b.y - fr.y - L[1]) * V.s > 1.5) { b.trail.push([b.x - fr.x, b.y - fr.y]); if (b.trail.length > 4000) b.trail.splice(0, 1000); } }
     if (st.bs.length > 1) { SBK.chart.push([st.t, t.K, t.U]); if (SBK.chart.length > 3000) SBK.chart = SBK.chart.filter((_, i) => i % 2 === 0); }
+    if (RV.pred && st.t > RV.pred.t0 + RV.pred.T / 8) rvRefresh();
+  }
+
+  // ---- Rendezvous (the CORE rv functions): burns, coasting ahead, and a forecast of the closest approach ----
+  const RV = { pred: null, dv: 0, burns: 0, along: false, dvExact: null };
+  const rvPick = () => { const bs = SBK.st ? SBK.st.bs : [], s = bs.find((q) => q.kind === 'ship'), g = bs.find((q) => q.kind === 'target'), h = s ? nbHost(bs, s) : null; return s && g && h ? { s, g, h, bs } : null; };
+  function rvReset() { RV.dv = 0; RV.burns = 0; RV.along = false; rvRefresh(); }
+  /* the forecast: the next two years, or the target's next orbit if that is longer */
+  function rvRefresh() {
+    const p = rvPick(); $('rvBox').hidden = !p; if (!p) { RV.pred = null; return; }
+    const eg = nbElements(p.g, nbHost(p.bs, p.g) || p.h), T = Math.max(2, eg.bound ? 1.05 * eg.P : 2);
+    RV.pred = Object.assign(rvPredict(p.bs, p.s.id, p.g.id, T), { t0: SBK.st.t, T });
+  }
+  /* the burn size: from the slider (log scale), or exactly as typed into its readout or set by a setup */
+  const rvDv = () => (RV.dvExact != null ? RV.dvExact : Math.pow(10, +$('rvDv').value) / KMS);   /* AU/yr */
+  function rvSetDv(kms) { RV.dvExact = kms / KMS; $('rvDv').value = Math.log10(kms); rvShowDv(); }
+  function rvShowDv() { $('rvDvOut').textContent = `${sig(rvDv() * KMS, 3)} km/s`; }
+  const RV_DIR = { fwd: 'forward', back: 'backward', out: 'outward', in: 'inward' };
+  function rvBurnNow(dir) {
+    const p = rvPick(); if (!p) return; const dv = rvDv();
+    rvBurn(p.s, p.h, dir, dv); RV.dv += dv; RV.burns++; SBK.E0 = sbkTot().E; rvRefresh();
+    const el = nbElements(p.s, p.h), m = `Burned ${RV_DIR[dir]} ${sig(dv * KMS, 3)} km/s at t = ${fmtT(SBK.st.t)}. ` + (el.bound ? `New orbit: a = ${sig(el.a, 4)} AU, P = ${fmtT(el.P)}.` : 'The ship now escapes the star.');
+    sbkSay(m); live(m); schedule();
+  }
+  function rvCoast(which) {
+    const p = rvPick(); if (!p) return; let dt = null;
+    if (which === 'close') { if (RV.pred) dt = RV.pred.t0 + RV.pred.t - SBK.st.t; if (!(dt > 1e-6)) { sbkSay('The closest approach in the forecast is now: burn, or play on.'); return; } }
+    else { dt = rvApsisTime(p.s, p.h, which); if (dt == null) { sbkSay(nbElements(p.s, p.h).bound ? 'The ship\'s orbit is a circle (e < 0.001), so it has no nearest or farthest point. Burn first.' : 'The ship is not on a closed orbit.'); return; } }
+    sbkPlay(false); const st = SBK.st, t0 = st.t;
+    for (let k = 1; k <= 400; k++) sbkAfter(nbAdvance(st, t0 + dt * k / 400, 1e6));
+    rvRefresh();
+    const q = rvPick(), d = q ? Math.hypot(q.g.x - q.s.x, q.g.y - q.s.y) : NaN;
+    sbkSay(`Coasted ${fmtT(dt)} to the ${which === 'apo' ? 'farthest point from' : which === 'peri' ? 'nearest point to' : 'closest approach, at'} ${which === 'close' ? `${sig(d, 3)} AU from the target` : `the ${p.h.name.toLowerCase()}`}. Paused.`); schedule();
+  }
+  function rvReadouts() {
+    const p = rvPick(); if (!p) return '';
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind;
+    const d = Math.hypot(p.g.x - p.s.x, p.g.y - p.s.y), vr = Math.hypot(p.g.vx - p.s.vx, p.g.vy - p.s.vy), lead = rvLead(p.s, p.g, p.h);
+    const es = nbElements(p.s, p.h), eg = nbElements(p.g, nbHost(p.bs, p.g) || p.h);
+    const along = d < 0.005 && vr * KMS < 0.1;
+    if (along && !RV.along) { const m = `Alongside the target: ${Number((d * AU_KM).toPrecision(3)).toLocaleString('en-US')} km apart at ${sig(vr * KMS, 2)} km/s, with ${sig(RV.dv * KMS, 3)} km/s of burns.`; sbkSay(m); live(m); }
+    RV.along = along;
+    let h = dd('Distance to the target', `${sig(d, 3)} AU <small>${Number((d * AU_KM).toPrecision(3)).toLocaleString('en-US')} km</small>`) + dd('Speed relative to the target', `${sig(vr * KMS, 3)} km/s`);
+    h += dd('The target is', `${Math.abs(lead).toFixed(1)}° ${lead >= 0 ? 'ahead' : 'behind'}`) + dd('Burns so far', `${RV.burns}, ${sig(RV.dv * KMS, 3)} km/s in all`);
+    h += B ? dd('Orbits', 'hidden in Blind', true) : dd('Ship\'s orbit', es.bound ? `a = ${sig(es.a, 4)} AU, e = ${es.e.toFixed(3)}, P = ${fmtT(es.P)}` : 'not bound: it escapes', true) + dd('Target\'s orbit', eg.bound ? `a = ${sig(eg.a, 4)} AU, e = ${eg.e.toFixed(3)}, P = ${fmtT(eg.P)}` : 'not bound', true);
+    if (!B && RV.pred) { const P = RV.pred, left = P.t0 + P.t - SBK.st.t; h += dd(`Closest approach in the next ${fmtT(P.T)}`, left > 1e-6 ? `${sig(P.d, 3)} AU in ${fmtT(left)}, at ${sig(P.vrel * KMS, 3)} km/s` : 'now', true); }
+    if (!B && eg.bound && es.r > 0) { const r2 = eg.a, r1 = es.r;
+      if (Math.abs(r2 - r1) > 0.01 * r1) { const ho = hohmann(r1, r2, TAU * TAU * p.h.m);
+        h += dd('Hohmann transfer to the target\'s orbit from here (from a circle)', `${ho.dv1 >= 0 ? 'forward' : 'backward'} ${sig(Math.abs(ho.dv1) * KMS, 3)} km/s, then ${ho.dv2 >= 0 ? 'forward' : 'backward'} ${sig(Math.abs(ho.dv2) * KMS, 3)} km/s`, true)
+          + dd('Coast between the burns', `${sig(ho.t * 365.25, 3)} d`) + dd('Target lead it needs', `${Math.abs(ho.lead).toFixed(1)}° ${ho.lead >= 0 ? 'ahead' : 'behind'}`); } }
+    h += dd('Status', along ? 'Alongside the target' : d < 0.05 ? 'Close: match speeds' : 'Chasing', true);
+    return h;
   }
   function sbkFrameLoop(ts) {
     const dtr = SBK.last ? Math.min(0.05, (ts - SBK.last) / 1000) : 0; SBK.last = ts;
@@ -1483,12 +1637,30 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     /* the selected body: a gold dot where its arrow tip gives a circular orbit around its host */
     const sb = bs.find((q) => q.id === SBK.sel), host = sb && nbHost(bs, sb);
     if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); text(ctx, T, 'circular', tx + 8 * ps, ty, 'left', 'middle', T.sun, 9.5 * ps, 600); }
+    /* the rendezvous forecast: the ship's path ahead (dashed) and where the ship and the target are at the closest approach (crosses) */
+    const rvp = RV.pred && !S.blind ? rvPick() : null;
+    if (rvp && RV.pred.hid === rvp.h.id) { const P = RV.pred, h = rvp.h, k0 = Math.max(0, Math.floor((SBK.st.t - P.t0) / P.T * (P.path.length - 1)));
+      ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = alpha(T.ink, 0.6); ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+      for (let i = k0; i < P.path.length; i++) { const [qx, qy] = sbkPx(h.x + P.path[i][0], h.y + P.path[i][1], f); if (i === k0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy); } ctx.stroke(); ctx.restore();
+      const left = P.t0 + P.t - SBK.st.t;
+      if (left > 1e-6) { const cross = (x, y, col) => { const [qx, qy] = sbkPx(h.x + x, h.y + y, f); ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(qx - 5 * ps, qy - 5 * ps); ctx.lineTo(qx + 5 * ps, qy + 5 * ps); ctx.moveTo(qx - 5 * ps, qy + 5 * ps); ctx.lineTo(qx + 5 * ps, qy - 5 * ps); ctx.stroke(); return [qx, qy]; };
+        cross(P.tx, P.ty, SBK_KIND.target.col); const [qx, qy] = cross(P.sx, P.sy, T.ink);
+        const rt = qx > W * 0.6; text(ctx, T, `closest approach in ${fmtT(left)}`, qx + (rt ? -8 : 8) * ps, qy + 8 * ps, rt ? 'right' : 'left', 'top', T.muted, 9.5 * ps, 600); }
+      /* the target's path over the same time, faint */
+      if (P.gpath && P.gpath.length > 1) { ctx.save(); ctx.setLineDash([2 * ps, 4 * ps]); ctx.strokeStyle = alpha(SBK_KIND.target.col, 0.55); ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+        for (let i = k0; i < P.gpath.length; i++) { const [qx, qy] = sbkPx(h.x + P.gpath[i][0], h.y + P.gpath[i][1], f); if (i === k0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy); } ctx.stroke(); ctx.restore(); } }
     const labs = [];
     for (const b of bs) {
       const [px, py] = sbkPx(b.x, b.y, f), col = sbkCol(b, T), r = sbkRad(b, ps), [tx, ty] = sbkTip(b, f);
       arrow(ctx, px, py, tx, ty, col, (SBK.playing ? 1.4 : 2) * ps, 8 * ps, T.canvas);
       if (!SBK.playing) { ctx.fillStyle = T.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 4.5 * ps, 0, TAU); ctx.fill(); ctx.stroke(); }
-      ctx.beginPath(); ctx.arc(px, py, r, 0, TAU); ctx.fillStyle = col; ctx.fill(); if (VG && r < 60 * ps) litBall(ctx, px, py, r * 0.85, col, -(b.x - f.x), b.y - f.y);
+      if (b.kind === 'ship' || b.kind === 'target') {
+        /* the ship: a dart pointing along its motion around its host; the target: a diamond */
+        const hh = nbHost(bs, b), ux = b.vx - (hh ? hh.vx : 0), uy = b.vy - (hh ? hh.vy : 0), a = Math.atan2(-uy, ux), R = r * 1.5;
+        ctx.save(); ctx.translate(px, py); ctx.rotate(b.kind === 'ship' ? a : 0); ctx.beginPath();
+        if (b.kind === 'ship') { ctx.moveTo(R, 0); ctx.lineTo(-0.8 * R, 0.65 * R); ctx.lineTo(-0.4 * R, 0); ctx.lineTo(-0.8 * R, -0.65 * R); } else { ctx.moveTo(R, 0); ctx.lineTo(0, R); ctx.lineTo(-R, 0); ctx.lineTo(0, -R); }
+        ctx.closePath(); ctx.fillStyle = b.kind === 'ship' ? T.ink : col; ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 1 * ps; ctx.stroke(); ctx.restore();
+      } else { ctx.beginPath(); ctx.arc(px, py, r, 0, TAU); ctx.fillStyle = col; ctx.fill(); if (VG && r < 60 * ps) litBall(ctx, px, py, r * 0.85, col, -(b.x - f.x), b.y - f.y); }
       if (b.id === SBK.sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(px, py, r + 4 * ps, 0, TAU); ctx.stroke(); }
       labs.push([b.name, px + r + 5 * ps, py + r + 2 * ps]);
       /* a marker at the edge for a body out of the picture */
@@ -1541,13 +1713,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let h = dd('Time', fmtT(SBK.st.t)) + dd('Bodies', String(bs.length));
     if (bs.length > 1) { const t = sbkTot();
       h += dd('Total energy E', S.blind ? 'hidden in Blind' : `${minus(sci(t.E * EJ))} J`) + dd('Total momentum', `${minus(sci(Math.hypot(t.px, t.py) * PKG))} kg·m/s`);
-      if (isFinite(SBK.E0) && SBK.st.t > 0) h += dd('Change in E since the start (numerical error)', `${minus(sci((t.E - SBK.E0) / Math.abs(SBK.E0)))} of |E|`, true); }
+      if (isFinite(SBK.E0) && SBK.st.t > 0) h += dd(`Change in E since the ${RV.burns ? 'last burn' : 'start'} (numerical error)`, `${minus(sci((t.E - SBK.E0) / Math.abs(SBK.E0)))} of |E|`, true); }
     const b = bs.find((q) => q.id === SBK.sel);
     if (b) { const host = nbHost(bs, b); h += dd('Selected', `${b.name}, ${minus(sci(b.m))} M☉`, true);
       if (host) { const el = nbElements(b, host); h += dd(`Distance to ${host.name}`, `${sig(el.r, 4)} AU`) + dd(`Speed around ${host.name}`, `${sig(el.v * KMS, 4)} km/s`);
         h += S.blind ? dd('Orbit', 'hidden in Blind', true) : el.bound ? dd(`Orbit around ${host.name}, as if the two were alone`, `a = ${sig(el.a, 4)} AU, e = ${el.e.toFixed(3)}, P = ${fmtT(el.P)}`, true) : dd(`Orbit around ${host.name}`, 'not bound: it escapes', true); }
       else h += dd('Host', 'none: nothing heavier pulls on it', true); }
     const out = $('sbkOut'); if (out.innerHTML !== h) out.innerHTML = h;
+    const rv = rvReadouts(), ro = $('rvOut'); if (ro.innerHTML !== rv) ro.innerHTML = rv;
   }
   // ---- pointer and keys (capture listeners, so the orbit view's own handlers sit out while the Sandbox is on) ----
   function sbkHit(px, py) {
@@ -1610,7 +1783,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const ev of ['pointerup', 'pointercancel']) view.addEventListener(ev, (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkUp(e); }, true);
   view.addEventListener('dblclick', (e) => { if (!S.sand) return; e.stopImmediatePropagation(); sbkFit(false); }, true);
   view.addEventListener('keydown', (e) => { if (!S.sand) return; if (['+', '=', '-', '_'].includes(e.key)) return; e.stopImmediatePropagation(); sbkKey(e); }, true);
-  for (const b of document.querySelectorAll('#sbkRigs button')) b.addEventListener('click', () => { sbkLoad(b.dataset.r); sbkSay('Press Play to set it going.'); });
+  for (const b of document.querySelectorAll('#sbkRigs button')) b.addEventListener('click', () => { sbkLoad(b.dataset.r); sbkSay(SBK_RV_HINT[b.dataset.r] || 'Press Play to set it going.'); });
+  for (const b of document.querySelectorAll('#rvBox [data-burn]')) b.addEventListener('click', () => rvBurnNow(b.dataset.burn));
+  for (const b of document.querySelectorAll('#rvBox [data-coast]')) b.addEventListener('click', () => rvCoast(b.dataset.coast));
+  $('rvDv').addEventListener('input', () => { RV.dvExact = null; rvShowDv(); }); rvShowDv();
+  if (VD.typeIn) VD.typeIn($('rvDvOut'), { get: () => +(rvDv() * KMS).toFixed(3), set: rvSetDv, min: 0.001, max: 5, step: 0.001, unit: 'km/s', label: 'Burn size Δv' });
   for (const b of document.querySelectorAll('#sbkFollow button')) b.addEventListener('click', () => { SBK.follow = b.dataset.f; for (const q of document.querySelectorAll('#sbkFollow button')) q.setAttribute('aria-pressed', String(q === b)); if (SBK.follow === 'sel' && !SBK.sel && SBK.st.bs.length) SBK.sel = SBK.st.bs[0].id; for (const q of SBK.st.bs) q.trail = []; sbkFit(false); });
   $('sbkTrails').addEventListener('change', schedule);
   for (const b of document.querySelectorAll('#sbkAdd button')) b.addEventListener('click', () => {

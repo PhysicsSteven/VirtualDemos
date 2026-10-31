@@ -6480,3 +6480,39 @@ demo by Steve's call (14:11). No worksheet. GPT, please verify the physics and n
   notes/src/ideal-gas.md is behind the built page on main. Left the built page as it was.
 - Worksheet part ideas (not built): a short Rainbows worksheet or a part in an optics worksheet: measure θ against b and find the least
   deviation at three wavelengths, test cos² i = (n² − 1)/3, and the top of the bow against the Sun's height (slope −1, intercept 42°).
+
+## 2026-10-31 · Claude · Rounds 4 and 5, Group C: orbital rendezvous (Kepler) and the antipode (Celestial Sphere)
+
+Steve (19:05): "Yeah let's finish up". Group C of `round4/groups-2026-10-31.md` in the project files (plan #27 and #35), both folded
+into existing demos, no new worksheet. GPT, please verify the physics and numbers below (all from the cores and the tests).
+- **Kepler's Laws, Sandbox rendezvous** (Falstad orbit rendezvous). Two new ready made systems: Rendezvous: catch the target ahead
+  (ship on a 1 AU circle, target 30° ahead on the same circle) and Rendezvous: a target in an outer orbit (target on a 1.52368 AU
+  circle, Mars's a, 44.34° ahead). Ship and target are 20 t each (1.0 × 10⁻²⁶ M☉) with a 10 m contact radius, so they never merge
+  and pull on nothing that matters; they move with the Sandbox's own n body steps. New Fly the ship panel: Burn size Δv (log slider
+  0.001 to 5 km/s, readout takes a typed value), Burn forward / backward (along ± the ship's velocity relative to its host), outward /
+  inward (along ± r̂), and Coast to the farthest point / nearest point (Kepler's equation: cos E = (1 − r/a)/e, sin E = r·v/(e√(GM a)))
+  and to the closest approach. A burn is instant (stated). Forecast: a copy of the system run ahead for max(2 yr, 1.05 × target period),
+  360 samples, the closest one refined with 200 steps; dashed ship path, faint target path, crosses at the closest approach.
+  Readouts: distance (AU and km), relative speed, lead angle, burns and total Δv, both orbits (two body elements), closest approach,
+  and the Hohmann transfer from the ship's present r to the target's a: Δv₁ = √(GM/r₁)(√(r₂/a_t) − 1), Δv₂ = √(GM/r₂)(1 − √(r₁/a_t)),
+  t = π√(a_t³/GM), lead 180° − 360° t/P₂ (Hohmann 1925; Vol 1 §13.5). "Alongside" = within 0.005 AU at under 0.1 km/s (stated).
+  After a burn the energy error readout is measured from the last burn. Blind hides orbits, the forecast and the Hohmann numbers.
+  Numbers: Mars transfer 2.945 / 2.649 km/s, 258.86 d, lead 44.34°; flown with 2.94 then 2.65 km/s, arrival 0.0023 AU apart at
+  0.047 km/s. Catch up: P = 11/12 yr needs a = 0.94364 AU and a 0.9031 km/s backward burn; with 0.903 km/s back, one lap, 0.903 km/s
+  forward: 6.6 × 10⁻⁵ AU, 0.002 km/s. A 0.9 km/s forward burn gives a = 1.065 AU, P = 1.100 yr, and a year later the target is 66.7° ahead.
+- **Celestial Sphere, the antipode** (UNL). New rail section The antipode: Go to the antipode (and Go back to …) keeps the same
+  instant and moves to (−φ, λ ± 180°); readouts of the antipode's place, local standard time (zone round(λ/15), date may change),
+  Sun and Moon altitudes there (topocentric, from skyAt at the antipode), and the selected object's altitude and azimuth there.
+  On the ellipsoid the geodetic rule is exact (central symmetry). Stars: −h and 360° − A; the Sun to its 8.8″ parallax; the Moon
+  differs by its parallax (sum −0.6° in the setup). New place Madrid, Spain (40.42° N, 3.70° W) and setup Antipodes: Madrid and New
+  Zealand (2026 Dec 21 22:00 UTC+0, Whole sky): Sun −57.34° in Madrid, +57.34° at 40.42° S, 176.30° E at 10:00 Dec 22 (UTC+12);
+  Moon +74.3° / −74.9°; Sun's highest that day 26.14° / 73.01°.
+- Tests: new test_kepler_rendezvous.cjs (6 groups: Hohmann by hand, burn directions, speeding up drops you behind, the 30° catch,
+  the Mars transfer with the n body steps and the forecast, apsis times), test_celestial-sphere new antipode group (12 pass);
+  test_kepler_orbits, _figures, _sandbox, test_celestial_distances pass. Notes: one Running it in class item, Q7, a misconception and
+  a physics bullet each; keys Q7 in TeacherKeys demo-keys, keys rebuilt (notes/index.html also picked up the Rainbows link). What's
+  new: one entry. vdcheck `--only after` 0 problems on both, `--only clip` 0 cut off; looked at 1280 and 400 px.
+- Worksheet part ideas (not built): Kepler worksheet, a rendezvous part (for leads of 10° to 60°, find the backward burn that meets
+  the target after one lap and compare with Δv from vis viva and P² = a³); Celestial Sphere worksheet, an antipode part (record a
+  star's altitude and azimuth here and at the antipode for three stars and the Moon; show h' = −h, A' = 360° − A, and measure the
+  Moon's parallax from the sum).

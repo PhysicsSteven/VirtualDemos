@@ -4,7 +4,7 @@
 // constellation lookup (Roman 1987), checked against ERFA (pyerfa 2.0) and astropy 8.0.2.
 const assert = require('node:assert'), fs = require('node:fs'), path = require('node:path');
 const { core } = require('./demo_source.cjs');
-const c = core('celestial-sphere', 'jdFromCivil,civilFromJd,deltaT,precFrame,cio,era,sunLon,moonPos,eclDir,raDec,starDir,skyAt,altAz,topo,culminations,moonPhase,eclipses,constellation,angle,dot,cross,norm,J2000');
+const c = core('celestial-sphere', 'antipode,jdFromCivil,civilFromJd,deltaT,precFrame,cio,era,sunLon,moonPos,eclDir,raDec,starDir,skyAt,altAz,topo,culminations,moonPhase,eclipses,constellation,angle,dot,cross,norm,J2000');
 const root = path.resolve(__dirname, '../..'), D = Math.PI / 180;
 require(path.join(root, 'demos/lib/sky-bsc.js')); const SKY = globalThis.VD_SKY;
 let n = 0;
@@ -77,5 +77,17 @@ group('constellations: Roman (1987) boundary lookup agrees with astropy get_cons
 group('catalog: 2,887 stars to V 5.5 from the Yale Bright Star Catalogue, brightest first; Sirius first', () => {
   assert.equal(SKY.n, 2887); assert.equal(SKY.stars.length, 6 * 2887); assert.equal(SKY.names[0], 'Sirius');
   for (let i = 1; i < SKY.n; i++) assert(SKY.stars[6 * i + 2] >= SKY.stars[6 * i - 4], 'sorted by V');
+});
+group('antipode: −φ and λ ± 180°; any star at −h and 360° − A there, the Sun to its 9″ parallax, the Moon off by its parallax (Madrid, 2026 Dec 21 22:00 UT)', () => {
+  assert.deepEqual(c.antipode(40.42, -3.70), { lat: -40.42, lon: 176.3 }); assert.deepEqual(c.antipode(-33.87, 151.21), { lat: 33.87, lon: 151.21 - 180 });
+  assert.deepEqual(c.antipode(90, 0), { lat: -90, lon: 180 });
+  const jd = c.jdFromCivil(2026, 12, 21, 22), A = c.antipode(40.42, -3.70), K1 = c.skyAt(jd, 40.42, -3.70), K2 = c.skyAt(jd, A.lat, A.lon);
+  for (let k = 0; k < 3; k++) { near(K2.up[k], -K1.up[k], 1e-12, 'zenith = nadir'); near(K2.north[k], K1.north[k], 1e-12, 'same north'); near(K2.east[k], -K1.east[k], 1e-12, 'east reversed'); near(K2.obs[k], -K1.obs[k], 1e-9, 'through the center'); }
+  for (const [name, ra, dec] of [['Sirius', 101.287, -16.716], ['Polaris', 37.955, 89.264], ['Canopus', 95.988, -52.696], ['Vega', 279.235, 38.784]]) {
+    const v = unit(ra, dec), a1 = c.altAz(K1, v), a2 = c.altAz(K2, v); near(a2.alt, -a1.alt, 1e-9, name + ' altitude'); near(((a2.az + a1.az + 180) % 360) - 180, 0, 1e-6, name + ' azimuth'); }
+  const s1 = c.altAz(K1, c.topo(K1, K1.sun.km, 695700).u).alt, s2 = c.altAz(K2, c.topo(K2, K2.sun.km, 695700).u).alt; near(s1 + s2, 0, 0.006, 'Sun');
+  near(s1, -57.34, 0.01, 'Sun at Madrid');
+  const m1 = c.altAz(K1, c.topo(K1, K1.moon.kmv, 1737.4).u).alt, m2 = c.altAz(K2, c.topo(K2, K2.moon.kmv, 1737.4).u).alt;
+  assert(m1 + m2 < 0 && m1 + m2 > -2, `the Moon's two altitudes add to minus twice its parallax term: ${m1 + m2}`);
 });
 console.log(`${n} groups passed`);

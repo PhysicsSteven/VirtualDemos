@@ -24,6 +24,7 @@ For a lab, **Measure** has **Start timer** / **Stop timer**, **Zero timer** (sim
 4. **Star mass.** With **Keep the orbit's shape when M changes** on, raise the star mass to 2 M☉. The orbit stays the same; only the period changes (Q3). Return the slider to 1.00 M☉.
 5. **Escape.** Launch at 1.2 times the escape speed: positive energy, a hyperbola, and a final speed v∞ (Q5).
 6. **Race two planets.** Load **Circular orbit**, press **Keep as second planet**, then drag the arrow tip around the gold circle to point the launch in a new direction. Ask for a prediction, then play (Q6).
+7. **Sandbox, Rendezvous: catch the target ahead.** The target is 30° ahead on the same 1 AU circle. Ask Q7 first, then press **Burn forward** and **Coast to the closest approach**: the ship rises into a slower orbit and the gap grows. **Reset**, **Burn backward** 0.903 km/s, **Coast to the farthest point** (one lap, 11/12 of a year) and **Burn forward** 0.903 km/s: the ship is alongside. **Rendezvous: a target in an outer orbit** is the Hohmann transfer to Mars's distance: forward 2.94 km/s, coast to the farthest point (259 days), forward 2.65 km/s.
 
 ## Questions
 
@@ -38,6 +39,7 @@ For a lab, **Measure** has **Start timer** / **Stop timer**, **Zero timer** (sim
 **Q5.** At 1 AU from the Sun the circular speed is 29.8 km/s. Find the escape speed there. In the **Escape** preset the planet is launched at 1.2 times the escape speed. Use energy conservation to find its speed far from the Sun, and compare with the **Speed far away v∞** readout.
 
 **Q6.** Two planets start at the same point, 1 AU from the star, with the same speed, 29.8 km/s, but one moves sideways (a circle) and the other is aimed partly outward. Predict which one returns to the starting point first. Then race them with **Keep as second planet** and explain the result with the third law.
+**Q7.** A ship and a space station share a circular orbit around the Sun at 1 AU, with the station 30° ahead. The pilot fires the engine forward to catch up. Predict what happens to the gap over the next year, and explain with the third law. What should the pilot do instead, and how large a backward burn makes the ship meet the station after exactly one of its own orbits?
 
 ## Common misconceptions
 
@@ -46,6 +48,7 @@ For a lab, **Measure** has **Start timer** / **Stop timer**, **Zero timer** (sim
 - **"A heavier planet orbits more slowly."** The planet's mass cancels out of the motion. Only the star's mass enters the third law.
 - **"Planetary orbits are very elongated."** Most planets have small e; drawings in textbooks often exaggerate them. Comets are the elongated ones.
 - **"To escape you have to point straight away from the star."** Escape depends on speed, not direction: any launch at or above √2 times the circular speed escapes, unless it hits the star.
+- **"To catch something ahead in orbit, speed up."** A forward burn raises the far side of the orbit; the larger orbit has a longer period, so the ship drops behind. Slowing down drops it into a quicker, lower orbit.
 
 ## Physics behind the demo
 
@@ -54,6 +57,7 @@ For a lab, **Measure** has **Start timer** / **Stop timer**, **Zero timer** (sim
 - The motion is integrated with velocity Verlet, with a time step that shrinks near the star. The **Energy drift** readout shows how well the integrator keeps the energy constant. The predicted orbit path, a and e come from the launch position and velocity through the energy ε = v²/2 − GM/r and the angular momentum h = |r × v|.
 - The wedge areas are summed from the integrated path, not taken from a formula, and compared with ½·h·Δt.
 - A path that comes within 0.005 AU (about one solar radius) of the star counts as a hit.
+- Rendezvous (Sandbox): the ship and the target are 20 t each, too light to pull on anything, and move with the same n body steps as the rest of the Sandbox. A burn is an instant Δv forward, backward, outward or inward relative to the ship's motion around the star. The forecast runs a copy of the system ahead (two years, or one orbit of the target if longer) and refines the closest approach between samples. Hohmann transfer: Δv₁ = √(GM/r₁)(√(2r₂/(r₁ + r₂)) − 1), Δv₂ = √(GM/r₂)(1 − √(2r₁/(r₁ + r₂))), coast π√(a_t³/GM), lead 180° − 360° t/P₂ (Hohmann 1925). "Alongside" means within 0.005 AU at under 0.1 km/s.
 
 ## Going further
 
