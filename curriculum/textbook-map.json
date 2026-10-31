@@ -6742,7 +6742,8 @@
       "url": "demos/blackbody.html",
       "handouts": [
         "blackbody",
-        "intro-blackbody"
+        "intro-blackbody",
+        "ubv-colors"
       ]
     },
     {
@@ -8381,7 +8382,8 @@
       "title": "Stellar Evolution",
       "url": "demos/hr-diagram.html",
       "handouts": [
-        "hr-diagram"
+        "hr-diagram",
+        "nearest-brightest"
       ]
     },
     {
@@ -10050,7 +10052,8 @@
       "url": "demos/spectra.html",
       "handouts": [
         "spectra",
-        "intro-spectra"
+        "intro-spectra",
+        "hydrogen-in-stars"
       ]
     },
     {

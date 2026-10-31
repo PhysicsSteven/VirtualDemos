@@ -450,6 +450,7 @@
   });
   /* ==MODERN END== */
   /* ==ASTRO START== Astronomy worksheets (astro.html) and their demo column maps. */
+  const CURVE_TABLES_LATER = [];   /* curve tables named before CURVE_TABLES exists */
   const ASTRO = ['exoplanets' /* Finding Exoplanets demo, 2026-10-24 */];
   ASTRO.push('seasons', 'moon-phases', 'lagrange-points', 'rotation-curves'); /* the sky, gravitation and galaxy demos, 2026-10-24 */
   ENABLED.push(...ASTRO);
@@ -497,6 +498,20 @@
       /* several masses: Reading | M (M☉) | R (km) | ρ_c (g/cm³) | T_m (K) | Crystallization begins at age (yr) | T_eff then (K) | ρ_c^(1/3) | log₁₀ M | log₁₀ R */
       alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.M_Msun)).size > 1, cols: ['row', 'M_Msun', 'R_km', 'rhoc_g_cm3', 'Tm_K', 'onset_yr', 'onset_Teff_K', null, null, null] }] },
   });
+  /* Star colors and spectra (2026-10-31): a second worksheet on Blackbody Radiation (U B V view), Spectra Explorer (Hydrogen in stars)
+     and Stellar Evolution (Nearest and brightest); each demo sends to it from that view, or when opened with ?ws=<slug> */
+  ASTRO.push('ubv-colors', 'hydrogen-in-stars', 'nearest-brightest'); ENABLED.push('ubv-colors', 'hydrogen-in-stars', 'nearest-brightest');
+  Object.assign(FROM_DEMO, {
+    /* Reading | T (K) | 10 000 K / T | Light through B ÷ light through V | B − V | U − B */
+    'ubv-colors': { demo: 'Blackbody Radiation', cols: ['row', 'T_K', 'invT_1e4', 'B_over_V', 'B_V', 'U_B'] },
+    /* Reading | T (K) | Spectral class | N₂/N₁ | N_II/N_I | N₂/N_total; readings at several electron pressures go to the second table:
+       Reading | Pe (N/m²) | Balmer peak T (K) | log₁₀ Pe (typed) */
+    'hydrogen-in-stars': { demo: 'Spectra Explorer', cols: ['row', 'T_K', 'spectral_class', 'n2_n1', 'nII_nI', 'n2_share'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && new Set(rows.map((r) => r.Pe_N_m2)).size > 1, cols: ['row', 'Pe_N_m2', 'peak_T_K', null] }] },
+    /* Reading | Star | Set | Spectral type | V | M_V | B − V | d (pc) | V − M_V (typed) | log₁₀ d (typed) */
+    'nearest-brightest': { demo: 'Stellar Evolution', cols: ['row', 'star', 'set', 'spect', 'V', 'M_V', 'B_V', 'd_pc', null, null] },
+  });
+  CURVE_TABLES_LATER.push(['hydrogen-in-stars', [0]]);   /* the n = 2 share against T rises and falls: read, not fitted */
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
@@ -736,6 +751,7 @@
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
+  GRAPH_EVERY_TABLE.push('hydrogen-in-stars');   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
@@ -752,7 +768,8 @@
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
   CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
-  CURVE_TABLES['color-vision'] = [0];   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
+  CURVE_TABLES['color-vision'] = [0];
+  for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-radiobiology'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
   /* ==FORMULAS START== */

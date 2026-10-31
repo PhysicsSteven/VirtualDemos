@@ -239,7 +239,8 @@ HANDOUT_TOPIC = {
     # astro, 2026-10-24
     'seasons': 'Sunlight Through the Year', 'moon-phases': 'Phases and the Lunar Month', 'lagrange-points': 'Orbits Near the Lagrange Points',
     'rotation-curves': 'Weighing a Galaxy',
-    'black-holes': 'Black Holes and Lensing', 'hr-diagram': 'Stellar Lives and Cluster Ages', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',
+    'black-holes': 'Black Holes and Lensing', 'hr-diagram': 'Stellar Lives and Cluster Ages', 'nearest-brightest': 'The Nearest Stars and the Brightest Stars',
+    'ubv-colors': 'Star Colors Through U, B and V Filters', 'hydrogen-in-stars': 'Why Balmer Lines Peak in A Stars', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',
     'ising': 'The Ising Phase Transition',
     # Astro 2203 intro worksheets (COURSE_HANDOUTS), 2026-10-25
     'intro-seasons': 'Why We Have Seasons (Astro 2203)',
