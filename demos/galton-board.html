@@ -1,0 +1,302 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Galton Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the board's colours, the Set up card's place on the picture */
+:root { --peg: #6b7787; --ball: #c23f2c; --bar: #2b60b5; --theory: #a7740b; --wood: #e9dcc6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --peg: #9aa6b6; --ball: #ff7660; --bar: #69a0ff; --theory: #e2b350; --wood: #2a2620; } }
+:root[data-theme="dark"] { --peg: #9aa6b6; --ball: #ff7660; --bar: #69a0ff; --theory: #e2b350; --wood: #2a2620; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(420px, 1fr); min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { display: block; width: 100%; height: 100%; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 240px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 440px; } .setup-card { position: static; width: auto; margin: 8px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Galton Board</h1>
+      <p>Balls fall through rows of pegs and bounce left or right at each one. One ball is unpredictable; thousands pile up into the binomial distribution, and with many rows into a bell curve.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">counts</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/galton-board.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/galton-board.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM14 2h3v1h-3zM19 2h1v1h-1zM23 2h1v1h-1zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h5v1h-5zM17 4h2v1h-2zM23 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM16 5h2v1h-2zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM16 6h1v1h-1zM18 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM19 7h1v1h-1zM23 7h2v1h-2zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h5v1h-5zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h1v1h-1zM16 10h3v1h-3zM23 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM9 11h1v1h-1zM13 11h3v1h-3zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM11 12h2v1h-2zM14 12h2v1h-2zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM5 13h2v1h-2zM9 13h2v1h-2zM12 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM10 14h2v1h-2zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h5v1h-5zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h1v1h-1zM8 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h9v1h-9zM38 16h1v1h-1zM3 17h2v1h-2zM7 17h1v1h-1zM11 17h5v1h-5zM17 17h2v1h-2zM21 17h2v1h-2zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h5v1h-5zM8 18h2v1h-2zM11 18h3v1h-3zM17 18h1v1h-1zM20 18h5v1h-5zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM10 19h3v1h-3zM15 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM5 20h1v1h-1zM7 20h3v1h-3zM12 20h1v1h-1zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM5 21h3v1h-3zM10 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM6 22h1v1h-1zM8 22h6v1h-6zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h2v1h-2zM10 23h7v1h-7zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM10 24h3v1h-3zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM2 25h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h5v1h-5zM17 25h9v1h-9zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h4v1h-4zM7 26h4v1h-4zM13 26h3v1h-3zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM13 27h2v1h-2zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h4v1h-4zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM6 28h4v1h-4zM11 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h3v1h-3zM11 29h4v1h-4zM17 29h1v1h-1zM21 29h3v1h-3zM25 29h1v1h-1zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h3v1h-3zM11 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h14v1h-14zM10 31h1v1h-1zM12 31h7v1h-7zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h2v1h-2zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h2v1h-2zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM16 34h1v1h-1zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h1v1h-1zM17 35h2v1h-2zM25 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM16 37h1v1h-1zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM19 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn attn" id="drop1">Drop 1</button>
+        <button type="button" class="btn" id="drop10">Drop 10</button>
+        <button type="button" class="btn" id="drop100">Drop 100</button>
+        <button type="button" class="btn" id="go" aria-pressed="false">Stream</button>
+        <button type="button" class="btn" id="reset">Empty the bins</button>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A board of pegs in a triangle with bins underneath. Balls fall through the pegs into the bins, and the bins fill into a histogram. Space drops one ball."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the board">
+        <span class="card-title">The board</span>
+        <div><div class="slider-head"><label for="sN">Rows of pegs n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="1" max="20" step="1"></div>
+        <div><div class="slider-head"><label for="sP">Chance of bouncing right p</label><output id="oP" for="sP"></output></div><input type="range" id="sP" min="0" max="1" step="0.01"></div>
+        <label class="check"><input type="checkbox" id="cTheory"><span>Expected counts (binomial)</span></label>
+        <label class="check"><input type="checkbox" id="cNormal"><span>Normal curve, same mean and spread</span></label>
+        <label class="check"><input type="checkbox" id="cFrac"><span>Show fractions, not counts</span></label>
+        <label class="check"><input type="checkbox" id="cWalk"><span>Label bins by net steps (random walk)</span></label>
+        <label class="check"><input type="checkbox" id="cFast"><span>Skip the fall</span></label>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="fair" aria-pressed="true">12 rows, fair</button>
+          <button type="button" data-p="coin" aria-pressed="false">One row: a coin toss</button>
+          <button type="button" data-p="four" aria-pressed="false">Four rows</button>
+          <button type="button" data-p="bias" aria-pressed="false">Tilted board, p = 0.7</button>
+          <button type="button" data-p="rare" aria-pressed="false">Rare event, p = 0.1</button>
+          <button type="button" data-p="many" aria-pressed="false">20 rows: the bell curve</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the expected values (predict them first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">P(k) = n! / (k!(n − k)!) · pᵏ (1 − p)ⁿ⁻ᵏ   mean np   standard deviation √(np(1 − p))</p>
+        <p class="hint">Model: at every peg a ball goes right with probability p and left with 1 − p, independently of every other peg and every other ball, so the bin number k (counted from the left, starting at 0) is the number of right bounces in n tries: a binomial distribution. Balls do not collide or bounce twice; the fall drawn between pegs is only a picture of the choice. Random choices come from a seeded generator (mulberry32), so they are simulated, not measured. The sample standard deviation divides by N − 1. The normal curve is drawn with the binomial mean and standard deviation, one bin wide per unit of k; it is an approximation that improves as np(1 − p) grows. With net steps on, a bin is labelled 2k − n, the position after n steps of ±1 (a one dimensional random walk).</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* A Galton board: n rows of pegs, right with probability p at each. Runs in Node: curriculum/validation/test_galton_board.cjs */
+  /* the binomial probabilities P(k) = C(n, k) pᵏ (1 − p)ⁿ⁻ᵏ, k = 0..n, through logarithms of the factorials */
+  function gbPmf(n, p) {
+    var P = new Array(n + 1).fill(0), k;
+    if (p <= 0) { P[0] = 1; return P; }
+    if (p >= 1) { P[n] = 1; return P; }
+    var lg = function (m) { var s = 0; for (var i = 2; i <= m; i++) s += Math.log(i); return s; };
+    for (k = 0; k <= n; k++) P[k] = Math.exp(lg(n) - lg(k) - lg(n - k) + k * Math.log(p) + (n - k) * Math.log(1 - p));
+    return P;
+  }
+  function gbMean(n, p) { return n * p; }
+  function gbSd(n, p) { return Math.sqrt(n * p * (1 - p)); }
+  /* the normal density with mean mu and standard deviation sd */
+  function gbNormal(x, mu, sd) { return Math.exp(-0.5 * Math.pow((x - mu) / sd, 2)) / (sd * Math.sqrt(2 * Math.PI)); }
+  /* mulberry32: a small seeded generator, uniform on [0, 1) */
+  function gbRng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* one ball: its bounces (1 right, 0 left) */
+  function gbPath(n, p, rnd) { var s = []; for (var i = 0; i < n; i++) s.push(rnd() < p ? 1 : 0); return s; }
+  /* sample mean and standard deviation (N − 1) of the bin counts */
+  function gbStats(counts) {
+    var N = 0, S = 0, Q = 0, k;
+    for (k = 0; k < counts.length; k++) { N += counts[k]; S += k * counts[k]; }
+    if (!N) return { N: 0, mean: NaN, sd: NaN };
+    var m = S / N; for (k = 0; k < counts.length; k++) Q += counts[k] * (k - m) * (k - m);
+    return { N: N, mean: m, sd: N > 1 ? Math.sqrt(Q / (N - 1)) : NaN };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    fair: { n: 12, p: 0.5, hint: '12 rows, an even chance at each peg. The middle bins fill fastest: there are 924 ways to make 6 rights out of 12, and only one way to make 12. Expected mean 6, standard deviation √3 = 1.73.' },
+    coin: { n: 1, p: 0.5, hint: 'One peg is one coin toss: left or right. Drop 10 and the split is rarely exactly 5 and 5; drop a few hundred and the fractions settle near one half.' },
+    four: { n: 4, p: 0.5, hint: 'Four rows: the counts go as 1 : 4 : 6 : 4 : 1 out of 16, the numbers in a row of Pascal\'s triangle.' },
+    bias: { n: 12, p: 0.7, hint: 'The board is tilted so a ball goes right 70% of the time. The pile moves to bin np = 8.4 and narrows a little: √(np(1 − p)) = 1.59.' },
+    rare: { n: 20, p: 0.1, hint: 'A right bounce is rare (p = 0.1), like a rare event counted in 20 tries. The pile is lopsided, so the normal curve fits badly near 0; the binomial still fits.' },
+    many: { n: 20, p: 0.5, hint: '20 rows: drop a few hundred and the histogram matches the normal curve with mean 10 and standard deviation √5 = 2.24. Bins 8 to 12, within one standard deviation of the middle, should hold 73.7% of the balls; the 68% rule is for a continuous variable, and here the edge bins count in full.' },
+  };
+  const S = { preset: 'fair', n: 12, p: 0.5, counts: [], balls: [], queue: 0, stream: false, theory: true, normal: false, frac: false, walk: false, fast: false, blind: false, msg: '' };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null, rnd = gbRng(20261030), spawnT = 0;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), peg: g('--peg'), ball: g('--ball'), bar: g('--bar'), theory: g('--theory'), wood: g('--wood'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const total = () => S.counts.reduce((a, b) => a + b, 0);
+
+  // ---------- geometry: pegs in a triangle, bins below ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const right = cardOn ? card.offsetWidth + 24 : 12 * p, left = 12 * p, avail = W - left - right;
+    const n = S.n, dx = Math.min(avail / (n + 1.6), 46 * p), cx = left + avail / 2;
+    const top = 44 * p, binH = Math.max(120 * p, H * 0.42), labH = 34 * p, yBins = H - labH - binH;
+    const dy = Math.min(dx * 0.9, Math.max(8, (yBins - top - 24 * p) / (n + 0.5)));
+    geo = { p, n, dx, dy, cx, top, yBins, binH, labH, r: Math.max(2.5, Math.min(dx * 0.22, 7 * p)) };
+  }
+  const pegX = (row, j) => geo.cx + (j - row / 2) * geo.dx, pegY = (row) => geo.top + 18 * geo.p + row * geo.dy;
+  const binX = (k) => geo.cx + (k - S.n / 2) * geo.dx;
+
+  // ---------- balls ----------
+  function launch() {
+    const path = gbPath(S.n, S.p, rnd), k = path.reduce((a, b) => a + b, 0);
+    if (S.fast || reduce || S.balls.length > 400) { S.counts[k]++; return; }
+    S.balls.push({ path, k, t: 0 });
+  }
+  function ballPos(b) {
+    /* t in rows: from the funnel (t = 0) to each peg, hopping sideways between them, then down into the bin */
+    const n = S.n, s = Math.floor(b.t), u = b.t - s;
+    let j = 0; for (let i = 0; i < Math.min(s, n); i++) j += b.path[i];
+    const yTop = pegY(0) - geo.dy, rTop = geo.r + 2.5 * geo.p;
+    if (s >= n) { const x = binX(j), y0 = pegY(n - 1) + rTop, y1 = geo.yBins + geo.binH - geo.r; return [x, y0 + (y1 - y0) * Math.min(1, (b.t - n) * 0.8)]; }
+    if (s === 0 && b.t < 0) return [pegX(0, 0), yTop];
+    const x0 = pegX(s, j), xn = s + 1 <= n ? (s + 1 < n ? pegX(s + 1, j + b.path[s]) : binX(j + b.path[s])) : x0;
+    const ya = pegY(s) - rTop, yb = (s + 1 < n ? pegY(s + 1) : pegY(n - 1) + geo.dy) - rTop;
+    const x = x0 + (xn - x0) * u, y = ya + (yb - ya) * u * u - 0.6 * geo.dy * Math.sin(Math.PI * u) * (1 - u);
+    return [x, y];
+  }
+  function step(dt) {
+    if (S.queue > 0 || S.stream) { spawnT -= dt; while (spawnT <= 0 && (S.queue > 0 || S.stream)) { launch(); if (S.queue > 0) S.queue--; spawnT += S.stream ? 0.06 : 0.035; } }
+    const rate = Math.max(6, 9 - S.n * 0.1);
+    for (const b of S.balls) b.t += dt * rate;
+    const done = S.balls.filter((b) => b.t >= S.n + 1.25); for (const b of done) S.counts[b.k]++;
+    if (done.length) S.balls = S.balls.filter((b) => b.t < S.n + 1.25);
+  }
+
+  // ---------- drawing ----------
+  function draw() {
+    if (!T || !W) return; layout(); const p = geo.p, n = S.n, N = total();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* the board */
+    const bl = binX(-0.5) - geo.dx * 0.3, br = binX(n + 0.5) + geo.dx * 0.3;
+    ctx.fillStyle = T.wood; ctx.beginPath(); ctx.moveTo(geo.cx - geo.dx, geo.top - 10 * p); ctx.lineTo(geo.cx + geo.dx, geo.top - 10 * p);
+    ctx.lineTo(br, geo.yBins); ctx.lineTo(br, geo.yBins + geo.binH); ctx.lineTo(bl, geo.yBins + geo.binH); ctx.lineTo(bl, geo.yBins); ctx.closePath(); ctx.fill();
+    /* funnel */
+    ctx.strokeStyle = T.peg; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(geo.cx - geo.dx, geo.top - 10 * p); ctx.lineTo(geo.cx - geo.r * 1.6, pegY(0) - geo.dy * 0.9);
+    ctx.moveTo(geo.cx + geo.dx, geo.top - 10 * p); ctx.lineTo(geo.cx + geo.r * 1.6, pegY(0) - geo.dy * 0.9); ctx.stroke();
+    /* pegs */
+    ctx.fillStyle = T.peg; const pr = Math.max(1.8, geo.r * 0.55);
+    for (let row = 0; row < n; row++) for (let j = 0; j <= row; j++) { ctx.beginPath(); ctx.arc(pegX(row, j), pegY(row), pr, 0, 2 * Math.PI); ctx.fill(); }
+    /* bins and the histogram */
+    const P = gbPmf(n, S.p), mu = gbMean(n, S.p), sd = gbSd(n, S.p), showTh = S.theory && !S.blind, showN = S.normal && !S.blind && sd > 0;
+    const exp = P.map((q) => q * N);
+    let ymax = Math.max(1, ...S.counts); if (showTh && N) ymax = Math.max(ymax, ...exp); if (showN && N) ymax = Math.max(ymax, N * gbNormal(mu, mu, sd));
+    if (!N && (showTh || showN)) ymax = 1;
+    const yB = geo.yBins + geo.binH, sc = (geo.binH - 8 * p) / (N ? ymax : 1), bw = geo.dx;
+    ctx.strokeStyle = T.peg; ctx.lineWidth = 1.5 * p;
+    for (let k = 0; k <= n + 1; k++) { const x = binX(k - 0.5); ctx.beginPath(); ctx.moveTo(x, geo.yBins); ctx.lineTo(x, yB); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(bl, yB); ctx.lineTo(br, yB); ctx.stroke();
+    ctx.fillStyle = T.bar; ctx.globalAlpha = 0.85;
+    for (let k = 0; k <= n; k++) { const h = N ? S.counts[k] * sc : 0; if (h > 0) ctx.fillRect(binX(k) - bw * 0.42, yB - h, bw * 0.84, h); }
+    ctx.globalAlpha = 1;
+    if (showTh) {   /* the binomial expectation for the balls dropped so far: a short line on each bin (or the shape alone before any ball lands) */
+      ctx.strokeStyle = T.theory; ctx.lineWidth = 3 * p; const s2 = N ? sc : (geo.binH - 8 * p) / Math.max(...P);
+      for (let k = 0; k <= n; k++) { const y = yB - (N ? exp[k] : P[k]) * s2; ctx.beginPath(); ctx.moveTo(binX(k) - bw * 0.45, y); ctx.lineTo(binX(k) + bw * 0.45, y); ctx.stroke(); }
+    }
+    if (showN) {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); const s2 = N ? sc * N : (geo.binH - 8 * p) / gbNormal(mu, mu, sd);
+      for (let i = 0; i <= 200; i++) { const x = -0.5 + (n + 1) * i / 200, y = yB - gbNormal(x, mu, sd) * s2; i ? ctx.lineTo(binX(x), y) : ctx.moveTo(binX(x), y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    /* bin labels and counts */
+    const fs = Math.max(8, Math.min(11 * p, bw * 0.45)); ctx.font = `${fs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const every = bw < 18 ? 2 : 1;
+    for (let k = 0; k <= n; k++) {
+      if (k % every && k !== n) continue;
+      ctx.fillStyle = T.muted; ctx.fillText(String(S.walk ? 2 * k - n : k).replace('-', '−'), binX(k), yB + 4 * p);
+      if (N && bw >= 22) { ctx.fillStyle = T.ink; ctx.fillText(S.frac ? (S.counts[k] / N).toFixed(2).replace(/^0/, '') : String(S.counts[k]), binX(k), yB + 4 * p + fs + 3 * p); }
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(S.walk ? 'bin label: net steps 2k − n' : 'bin k: number of right bounces', 12 * p, 10 * p);
+    if (N) { ctx.textAlign = 'left'; ctx.fillText(`${N} ball${N === 1 ? '' : 's'}`, 12 * p, 10 * p + 14 * p); }
+    /* balls in flight */
+    ctx.fillStyle = T.ball;
+    for (const b of S.balls) { const [x, y] = ballPos(b); ctx.beginPath(); ctx.arc(x, y, geo.r, 0, 2 * Math.PI); ctx.fill(); }
+  }
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, st = gbStats(S.counts);
+    const off = S.walk ? (v) => 2 * v - S.n : (v) => v, offS = S.walk ? 2 : 1, unit = S.walk ? ' steps' : '';
+    let h = dd('Balls in the bins N', String(st.N));
+    h += dd('Sample mean', st.N ? f(off(st.mean)) + unit : '—') + dd('Sample standard deviation', st.N > 1 ? f(offS * st.sd) + unit : '—');
+    if (S.blind) h += '<div class="wide"><dt>Expected mean and spread</dt><dd class="ok">hidden: predict them</dd></div>';
+    else h += dd(S.walk ? 'Expected mean n(2p − 1)' : 'Expected mean np', f(off(gbMean(S.n, S.p))) + unit) + dd(S.walk ? 'Expected spread 2√(np(1 − p))' : 'Expected spread √(np(1 − p))', f(offS * gbSd(S.n, S.p)) + unit);
+    if (st.N > 1 && !S.blind) { const sd = gbSd(S.n, S.p), within = sd > 0 ? S.counts.reduce((a, c, k) => a + (Math.abs(k - gbMean(S.n, S.p)) <= sd + 1e-9 ? c : 0), 0) / st.N : NaN;
+      const P = gbPmf(S.n, S.p), ew = P.reduce((a, q, k) => a + (Math.abs(k - gbMean(S.n, S.p)) <= sd + 1e-9 ? q : 0), 0);
+      h += dd('Within one expected spread of the mean', isFinite(within) ? `${(100 * within).toFixed(0)}% (expected ${(100 * ew).toFixed(1)}%)` : '—', 'wide'); }
+    $('out').innerHTML = h;
+  }
+  function drawAll() { draw(); readouts(); }
+
+  // ---------- controls ----------
+  function sync() {
+    $('sN').value = S.n; $('oN').textContent = String(S.n); $('sP').value = S.p; $('oP').textContent = S.p.toFixed(2);
+    $('cTheory').checked = S.theory; $('cNormal').checked = S.normal; $('cFrac').checked = S.frac; $('cWalk').checked = S.walk; $('cFast').checked = S.fast;
+    $('go').setAttribute('aria-pressed', String(S.stream)); $('go').textContent = S.stream ? 'Stop' : 'Stream';
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  function empty() { S.counts = new Array(S.n + 1).fill(0); S.balls = []; S.queue = 0; }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, n: c.n, p: c.p, stream: false, msg: '' }); empty(); $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; };
+  $('sN').addEventListener('input', (e) => { S.n = +e.target.value; custom(); empty(); S.msg = total() ? '' : 'Changing the board empties the bins.'; status(); sync(); drawAll(); });
+  $('sP').addEventListener('input', (e) => { S.p = +e.target.value; custom(); empty(); S.msg = 'Changing the board empties the bins.'; status(); sync(); drawAll(); });
+  $('cTheory').addEventListener('change', (e) => { S.theory = e.target.checked; draw(); });
+  $('cNormal').addEventListener('change', (e) => { S.normal = e.target.checked; draw(); });
+  $('cFrac').addEventListener('change', (e) => { S.frac = e.target.checked; draw(); });
+  $('cWalk').addEventListener('change', (e) => { S.walk = e.target.checked; drawAll(); });
+  $('cFast').addEventListener('change', (e) => { S.fast = e.target.checked; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  const drop = (m) => { S.msg = ''; status(); if (S.fast || reduce) { for (let i = 0; i < m; i++) launch(); drawAll(); } else { S.queue += m; if (spawnT > 0.04) spawnT = 0; } };
+  $('drop1').addEventListener('click', () => drop(1));
+  $('drop10').addEventListener('click', () => drop(10));
+  $('drop100').addEventListener('click', () => drop(100));
+  $('go').addEventListener('click', () => { S.stream = !S.stream; sync(); });
+  $('reset').addEventListener('click', () => { S.stream = false; empty(); S.msg = ''; status(); sync(); drawAll(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { drop(1); e.preventDefault(); } });
+  function status() { $('status').textContent = S.msg; }
+  window.vdReadings = () => total();
+
+  let last = performance.now(), lastRead = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.stream && (S.fast || reduce)) { spawnT -= dt; while (spawnT <= 0) { launch(); spawnT += 0.06; } draw(); }
+    else if (S.balls.length || S.queue || S.stream) { step(dt); draw(); }
+    if (now - lastRead > 150) { readouts(); lastRead = now; }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('fair'); resize();
+  window.__gb = { S, applyPreset, drawAll, drop, step, launch };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -519,6 +519,18 @@
      ]
     },
     {
+     "demo": "quantum-coin",
+     "title": "Quantum Coin Toss",
+     "desc": "An ordinary coin beside a quantum coin in a superposition, then the spin of an atom on a Bloch sphere and Stern–Gerlach magnets in a row. Measure many and compare the counts with |amplitude|².",
+     "tags": [
+      "superposition",
+      "measurement",
+      "probability",
+      "spin",
+      "Stern–Gerlach"
+     ]
+    },
+    {
      "demo": "speed-of-light",
      "title": "Speed of Light",
      "desc": "Foucault's rotating mirror bench: spin the mirror, read the shifted image on the microscope micrometer, and fit your readings for c.",
@@ -1028,6 +1040,18 @@
      ]
     },
     {
+     "demo": "galton-board",
+     "title": "Galton Board",
+     "desc": "Balls fall through rows of pegs into bins: one ball is unpredictable, thousands make the binomial distribution and, with many rows, a bell curve. Set the rows and the chance of bouncing right; compare the counts with theory.",
+     "tags": [
+      "probability",
+      "binomial distribution",
+      "normal distribution",
+      "random walk",
+      "microstates"
+     ]
+    },
+    {
      "demo": "blackbody",
      "title": "Blackbody Radiation",
      "desc": "Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.",
@@ -1516,6 +1540,18 @@
       "near point",
       "far point",
       "corrective lenses"
+     ]
+    },
+    {
+     "demo": "color-vision",
+     "title": "Color Vision",
+     "desc": "Mix red, green and blue lamps, compare a single wavelength, or put a filter in front of a white bulb, and watch the three cone signals that decide the color you see. Includes metamers and single photons.",
+     "tags": [
+      "color vision",
+      "cones",
+      "additive color mixing",
+      "filters",
+      "photons"
      ]
     },
     {

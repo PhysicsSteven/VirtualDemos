@@ -44,6 +44,9 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
     "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},
+    "galton-board": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gb.S.fast = true; window.__gb.drop(400); window.__gb.S.fast = false; window.__gb.drawAll();"},
+    "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
+    "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},
     "energy-track": {"wait": 1200, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__et.applyPreset('loop'); for (let i = 0; i < 160; i++) window.__et.step(0.016); window.__et.drawAll();"},
     "resonances": {"crop": ".scene", "wait": 2000, "js": "document.getElementById('setupCard').style.display = 'none'; window.__res.applyPreset('r31'); window.__res.run(3000);"},
     "planet-temperatures": {"crop": "#sysPane", "wait": 1500},

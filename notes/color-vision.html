@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Color Vision: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Color Vision</h1><ul class="meta"><li><a href="../demos/color-vision.html">Open the demo</a></li><li>Intro optics (algebra based)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The eye has three kinds of cones (L, M and S), each sensitive to a broad band of wavelengths. The color we see is set by the three cone signals, nothing more.</li>
+<li>Lights add: red and green lamps together excite L and M and look yellow, although no yellow wavelength is present. All three lamps at full excite the three cones equally and look white.</li>
+<li>Two lights with different spectra but the same three cone signals look identical (metamers). This is why a screen with three colors can show most colors.</li>
+<li>No mix of three real lamps reaches the purest spectral colors: some would need a negative amount of one lamp.</li>
+<li>A filter only removes light. A red filter on a white bulb passes the red part and absorbs the rest; it never turns other light into red.</li>
+<li>The eye is far more sensitive near 555 nm than at the ends of the spectrum.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know that white light contains all visible wavelengths. Choose <strong>Three lamps</strong>, <strong>One wavelength</strong> or <strong>Bulb and filter</strong> at the top of the picture, and <strong>Beams</strong> or <strong>Photons</strong>. The card sets the lamp powers, the wavelength and its power, or the bulb and the filter. Under the room are the spectrum reaching the eye with the three cone sensitivities, and the three cone signals (white = 1). In One wavelength, <strong>Mix it from the three lamps</strong> finds the lamp powers that give the same cone signals. <strong>Blind</strong> in <strong>Lab</strong> hides the color seen.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Red + green + blue.</strong> Ask what the person sees (Q1), then turn the blue lamp off.</li>
+<li><strong>Red + blue</strong> and <strong>Green + blue.</strong> Read the cone signals for each mix.</li>
+<li><strong>Pure yellow, 580 nm.</strong> Compare its spectrum and cone signals with red + green, then press Mix it from the three lamps (Q2).</li>
+<li><strong>Pure cyan, 490 nm.</strong> Press Mix it again (Q3).</li>
+<li>One wavelength at 100% power: move it from 450 to 555 to 650 nm (Q4).</li>
+<li><strong>Red filter on a bulb</strong> and <strong>Green filter, photons</strong> (Q5, Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> All three lamps at 100% look white. Predict what the person sees with only red and green, and read the three cone signals. Why does the result look yellow when the lamps give out no light near 580 nm?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Compare the 580 nm light (60% power) with the lamp mix that matches it. Read the cone signals of each. Why do the two look the same? What does a camera or a screen exploit here?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Ask for a lamp mix that matches 490 nm. What goes wrong, and why can a screen not show this color exactly?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Set one wavelength at 100% power and read the brightness Y at 450 nm, 555 nm and 650 nm. Which looks brightest, and by about what factor? What does this tell you about the eye?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Put the red filter (600 to 700 nm) in front of the incandescent bulb. What fraction of the bulb's brightness gets through? Switch to Daylight: why does less of the brightness get through?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> With the green filter (500 to 560 nm) on daylight, watch the photons. About what fraction of the photons from the bulb pass the filter? What happens to the others?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Red and green paint make brown, so red and green light must too."</strong> Lights add; paints and filters subtract.</li>
+<li><strong>"Yellow light must contain yellow wavelengths."</strong> Red plus green light looks just as yellow.</li>
+<li><strong>"A red filter colors the light red."</strong> It removes everything but the red.</li>
+<li><strong>"Each cone sees one color."</strong> Each cone type responds to a broad band; the cones overlap heavily, which is why L and M respond together to most light.</li>
+<li><strong>"A screen can show every color."</strong> No three primaries cover the spectral colors.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each cone signal is ∫S(λ) times its sensitivity over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (fit of Wyman, Sloan and Shirley 2013) through the Hunt–Pointer–Estevez matrix normalized to D65, so daylight white gives L = M = S = 1.</li>
+<li>The lamps are Gaussian spectra 20 nm wide at 630, 532 and 465 nm, with powers set so all three at full give D65 white exactly. One wavelength at 100% has the brightness of that white at 555 nm.</li>
+<li>Incandescent is a blackbody at 2856 K (CIE illuminant A); Daylight is CIE D65. The filter is an ideal band pass.</li>
+<li>The color shown is the light's sRGB color at its brightness; colors outside the screen's range are desaturated. Photons are drawn at random in proportion to their number (power times λ), at a rate slowed enormously.</li>
+<li>Tests (curriculum/validation/test_color_vision.cjs): the white calibration, additivity, the brightness of single wavelengths, metamer matches and the negative red at 490 nm, the bulbs, and the filter.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>The Eye forms the image these cones receive.</li>
+<li>Blackbody Radiation and the Spectra Explorer give the color of hot objects and glowing gases from the same color matching functions.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

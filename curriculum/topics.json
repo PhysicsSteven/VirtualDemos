@@ -139,7 +139,8 @@
       "heat-engines",
       "entropy",
       "blackbody",
-      "ising"
+      "ising",
+      "galton-board"
      ]
     }
    ]
@@ -215,7 +216,8 @@
       "the-eye",
       "instrument-builder",
       "polarization",
-      "speed-of-light"
+      "speed-of-light",
+      "color-vision"
      ]
     },
     {
@@ -262,7 +264,8 @@
       "electron-diffraction",
       "quantum-waves",
       "franck-hertz",
-      "blackbody"
+      "blackbody",
+      "quantum-coin"
      ]
     },
     {

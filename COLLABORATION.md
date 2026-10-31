@@ -5523,3 +5523,25 @@ All in `curriculum/labs/worksheet.js`, so every interactive worksheet has it; no
 - Checked: local Jekyll build, Playwright at 1200 and 390 px light and dark (no page errors, no sideways scroll); key PDFs
   for pendulum, motion graphs and springs rebuilt with fill_key print the same text and pages as committed (column letters,
   row numbers and the formula line are screen only). For GPT: check the fit formulas, units and the stated departures.
+## 2026-10-30 · Claude · Three new demos: Color Vision, Galton Board, Quantum Coin Toss (PhET parity, Steve)
+
+Steve asked (30 Oct, 23:40) for the three PhET sims that were still missing, reversing the 28 Oct "don't build them". With these no
+PhET physics sim is missing outright. None has a worksheet yet (another thread is changing the shared worksheet code); notes and keys
+are done. GPT: please verify the numbers below and the keys.
+- `demos/color-vision.html` (Physics II, Vol 3 §2.5; topic Optics): Three lamps (Gaussian 20 nm FWHM at 630, 532, 465 nm, powers
+  solved so all three at 100% give D65 white exactly), One wavelength (100% = brightness of that white at 555 nm) with Mix it from
+  the three lamps (3 × 3 solve; says when a lamp would go negative, e.g. −0.089 red for 490 nm, −0.015 blue for 580 nm), Bulb and
+  filter (2856 K Planck = illuminant A, or D65 table; ideal band pass). Beams or Photons (wavelength drawn in proportion to power × λ).
+  Cone signals = CIE 1931 2° (Wyman, Sloan, Shirley 2013 fit) through the Hunt–Pointer–Estevez matrix normalized to D65 (white gives
+  L = M = S = 1). Dark room in both themes; bubble shows the sRGB color (out of gamut desaturated, stated). Tests `test_color_vision.cjs` (8).
+- `demos/galton-board.html` (Thermodynamics, Vol 2 §4.7; topic Heat): 1 to 20 rows, p 0 to 1, Drop 1/10/100, Stream, Skip the fall;
+  expected counts (binomial), normal curve, fractions, random walk labels 2k − n; readouts include the fraction within one expected
+  spread with its exact binomial value (73.7% for 20 fair rows, not 68%). Seeded mulberry32. Tests `test_galton_board.cjs` (7).
+- `demos/quantum-coin.html` (Modern, Vol 3 §7.1, 8.3; topic Quantum): Coins (ordinary with chance of heads beside a|H⟩ + b|T⟩ with θ, φ),
+  Spin ½ (Bloch sphere, state and magnet axis anywhere, fresh atom or the same atom again), Magnets in a row (1 to 3 Stern–Gerlach
+  magnets in the x–z plane, each lets through up, down or both; unpolarized oven drawn as random directions; each magnet is a
+  measurement, beams never recombined, stated). P(up) = (1 + s·n)/2. Tests `test_quantum_coin.cjs` (6): z,x,z gives 1/8, 1/8, 3/4.
+- Notes `notes/src/{color-vision,galton-board,quantum-coin}.md` (6 questions each), keys in TeacherKeys `demo-keys/answers/`.
+  Catalog, map, topics, thumbnails (OVERRIDES), What's new (three entries), course pages, Reset all, QR.
+- Checked: Playwright at 1280, 400 and 360 px, light and dark, no page errors or sideways scroll; vdcheck after 0 problems, clip 0
+  (the magnets card grows the stage instead of scrolling).

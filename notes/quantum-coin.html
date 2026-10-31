@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Quantum Coin Toss: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Quantum Coin Toss</h1><ul class="meta"><li><a href="../demos/quantum-coin.html">Open the demo</a></li><li>Modern physics (algebra based)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A quantum state such as a|H⟩ + b|T⟩ gives each result with probability |a|² or |b|² when measured. Single results are random; their fractions are predictable.</li>
+<li>Counts alone cannot tell a quantum coin from a weighted ordinary coin. The difference is that the ordinary coin already had its face before anyone looked.</li>
+<li>A measurement leaves the system in the state it was found in, so repeating the same measurement gives the same answer.</li>
+<li>For spin ½ the probability of up along an axis is cos²(γ/2), where γ is the angle between the spin and the axis on the Bloch sphere. The phase of b matters only when you measure along a different axis.</li>
+<li>Stern–Gerlach magnets in a row show that measuring x destroys what was known about z.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should have met the wave function and probability (OpenStax Vol 3 §7.1) and electron spin (§8.3). Choose <strong>Coins</strong>, <strong>Spin ½</strong> or <strong>Magnets in a row</strong> at the top of the picture. The measure buttons do 1, 10, 100 or 1000 measurements; <strong>Clear</strong> empties the counts. In Spin ½, the card sets the state (arrow) and the magnet's axis (dashed), and <strong>Prepare a fresh atom for every measurement</strong> decides whether each measurement starts from the prepared state. In Magnets in a row, choose 1 to 3 magnets, their tilts, and which beam each one lets through. Changing a setting clears the counts. <strong>Blind</strong> in <strong>Lab</strong> hides the expected values.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Fair coins.</strong> Measure 1000 of each (Q1).</li>
+<li><strong>Three to one</strong>, then set your own θ (Q2).</li>
+<li><strong>Same odds, other phase</strong>, then <strong>Spin along x, measured along z</strong> (Q3).</li>
+<li><strong>Magnet tilted 60°</strong> (Q4).</li>
+<li><strong>Measure the same atom again</strong> (Q5).</li>
+<li><strong>z then z</strong>, <strong>z then x</strong>, <strong>z, x, then z again</strong> (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Measure 1000 ordinary and 1000 quantum fair coins. How close to one half is each fraction, and how close do you expect it to be? Could you tell which coin was quantum from the counts?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At θ = 60° what is P(heads) for the quantum coin? What θ gives P(heads) = 0.90? Set it and check with 1000 measurements.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The coin with φ = 90° gives the same heads fraction as φ = 0. On the Bloch sphere, the spin state θ = 90° points along +x for φ = 0 and along +y for φ = 90°. Measure each along x (axis tilt 90°, turn 0°). What fractions do you get, and what does this say about the phase?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Spin up along z, magnet axis tilted 60°: what fraction goes up? At what tilt is it one half, and at what tilt is it zero?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Turn off fresh atoms and measure one atom along z ten times. What do you see, and why? What happens if you then tilt the magnet to 90° and measure again?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Compare z then z, z then x, and z, x, then z. What fraction of the atoms from the oven reach each counter in each case? What did the x magnet do to the z information? Then set the x magnet to Both: does the last z magnet get its atoms back all up?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The quantum coin was secretly heads or tails all along."</strong> Then the phase could not change the x results in Q3.</li>
+<li><strong>"A 50/50 result means half the atoms are up and half down before the measurement."</strong> Atoms prepared along +x are all in the same state; only along z do they split.</li>
+<li><strong>"Measuring gently would not disturb the spin."</strong> Measuring along x leaves the atom along ±x, whatever it was before.</li>
+<li><strong>"Probability means the experiment is imprecise."</strong> The fractions are exact predictions; only the single results are random.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>|ψ⟩ = cos(θ/2)|↑⟩ + e^(iφ) sin(θ/2)|↓⟩, Bloch vector s = (sin θ cos φ, sin θ sin φ, cos θ). P(up along n) = (1 + s·n)/2 = cos²(γ/2). After a measurement the state is ±n.</li>
+<li>The oven's atoms are unpolarized, drawn as random directions (the same statistics as the mixture). Every magnet is a measurement; its beams are never recombined, so Both sends a mixture on. The beams are drawn splitting up and down whatever the axis (a schematic).</li>
+<li>Outcomes come from a seeded generator (mulberry32), so the counts are simulated. The ordinary coin is classical: its face is set by the toss.</li>
+<li>Tests (curriculum/validation/test_quantum_coin.cjs): normalization, cos²(θ/2), the phase, collapse, 100 000 seeded measurements, and the expected and simulated fractions for several rows of magnets.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Spin Resonance measures the energy difference between the two spin states of electrons and protons in a magnetic field.</li>
+<li>Quantum Wave Packets shows |ψ|² as a probability density, and a measurement that collapses it, for a particle in a box.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -4760,7 +4760,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "the-eye"
+        "the-eye",
+        "color-vision"
       ],
       "unit": "optics",
       "note": "The Eye (2026-10-23, Claude): accommodation and the near and far points of a simplified eye, nearsighted and farsighted eyes, and glasses prescribed as in Examples 2.8 (−3.51 D) and 2.9 (+3.24 D)."
@@ -5444,7 +5445,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "entropy"
+        "entropy",
+        "galton-board"
       ],
       "unit": "second-law"
     },
@@ -6034,7 +6036,8 @@
       "status": "usable",
       "demos": [
         "quantum-waves",
-        "hydrogen-orbitals"
+        "hydrogen-orbitals",
+        "quantum-coin"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: ψ and |ψ|² of a packet; measurement collapses it.",
       "unit": "quantum-mechanics"
@@ -6172,7 +6175,8 @@
       "status": "usable",
       "demos": [
         "magnetic-moments",
-        "spin-resonance"
+        "spin-resonance",
+        "quantum-coin"
       ],
       "note": "Atoms in a Magnetic Field (2026-10-24): Stern–Gerlach splitting of silver into two spots (spin 1/2, g ≈ 2), mystery atoms for J and g, anomalous Zeeman effect of the sodium D lines. Spin resonance measures g for DPPH.",
       "unit": "atomic-structure"
@@ -7738,6 +7742,26 @@
       ],
       "title": "Entropy and the Second Law",
       "url": "demos/entropy.html"
+    },
+    {
+      "demo": "galton-board",
+      "course": [
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "4.7",
+          "title": "Entropy on a Microscopic Scale"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Galton board (PhET Plinko Probability counterpart, 2026-10-30, Steve asked): binomial against the normal curve, random walk labels, microstate counts. No worksheet yet.",
+      "title": "Galton Board",
+      "url": "demos/galton-board.html",
+      "handouts": []
     },
     {
       "demo": "equilibrium",
@@ -10077,6 +10101,31 @@
       ]
     },
     {
+      "demo": "quantum-coin",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "7.1",
+          "title": "Wave Functions"
+        },
+        {
+          "vol": 3,
+          "sec": "8.3",
+          "title": "Electron Spin"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Quantum coin toss and measurement (PhET Quantum Coin Toss and Quantum Measurement counterpart, 2026-10-30, Steve asked): coins, spin on a Bloch sphere, Stern–Gerlach magnets in a row. No worksheet yet.",
+      "title": "Quantum Coin Toss",
+      "url": "demos/quantum-coin.html",
+      "handouts": []
+    },
+    {
       "demo": "springs",
       "course": [
         "physics-1"
@@ -10347,6 +10396,26 @@
       ],
       "title": "The Eye",
       "url": "demos/the-eye.html"
+    },
+    {
+      "demo": "color-vision",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "2.5",
+          "title": "The Eye"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Color vision (PhET Color Vision counterpart, 2026-10-30, Steve asked): three lamps, one wavelength with a lamp match (metamers), bulb and filter, beams or photons. Cone signals from CIE 1931 and the HPE matrix. No worksheet yet.",
+      "title": "Color Vision",
+      "url": "demos/color-vision.html",
+      "handouts": []
     },
     {
       "demo": "instrument-builder",

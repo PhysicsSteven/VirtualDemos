@@ -1,0 +1,415 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Color Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the cone colours, the dark room, the Set up card's place */
+:root { --cL: #c23f2c; --cM: #2f8f3a; --cS: #2b60b5; --room: #0b0e14; --roomInk: #d8dee8; --roomMuted: #8b95a5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cL: #ff7660; --cM: #5fcf6a; --cS: #69a0ff; } }
+:root[data-theme="dark"] { --cL: #ff7660; --cM: #5fcf6a; --cS: #69a0ff; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(460px, 1fr); min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { display: block; width: 100%; height: 100%; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 520px; } .setup-card { position: static; width: auto; margin: 8px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Color Vision</h1>
+      <p>Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, or put a filter in front of a white bulb.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">nm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/color-vision.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/color-vision.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM15 2h1v1h-1zM17 2h3v1h-3zM23 2h1v1h-1zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h1v1h-1zM18 4h1v1h-1zM23 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM16 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h2v1h-2zM18 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM16 7h1v1h-1zM19 7h1v1h-1zM23 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM19 9h5v1h-5zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM17 10h2v1h-2zM23 10h1v1h-1zM25 10h6v1h-6zM32 10h5v1h-5zM2 11h3v1h-3zM6 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM14 11h4v1h-4zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM5 12h2v1h-2zM8 12h1v1h-1zM10 12h4v1h-4zM15 12h1v1h-1zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h2v1h-2zM6 13h1v1h-1zM9 13h2v1h-2zM12 13h1v1h-1zM14 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM10 14h2v1h-2zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h1v1h-1zM7 15h1v1h-1zM9 15h2v1h-2zM12 15h2v1h-2zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h9v1h-9zM16 16h3v1h-3zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM6 17h1v1h-1zM12 17h3v1h-3zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h10v1h-10zM13 18h1v1h-1zM17 18h1v1h-1zM20 18h5v1h-5zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h4v1h-4zM9 19h3v1h-3zM13 19h1v1h-1zM15 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM25 19h1v1h-1zM37 19h1v1h-1zM4 20h2v1h-2zM7 20h2v1h-2zM12 20h2v1h-2zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM5 21h3v1h-3zM9 21h2v1h-2zM12 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM26 21h1v1h-1zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h4v1h-4zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h2v1h-2zM10 23h1v1h-1zM12 23h3v1h-3zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h5v1h-5zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h3v1h-3zM33 24h3v1h-3zM37 24h2v1h-2zM5 25h1v1h-1zM9 25h2v1h-2zM12 25h2v1h-2zM17 25h9v1h-9zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h8v1h-8zM12 26h2v1h-2zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM11 27h1v1h-1zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h4v1h-4zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h4v1h-4zM11 28h1v1h-1zM13 28h2v1h-2zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM11 29h4v1h-4zM17 29h1v1h-1zM21 29h3v1h-3zM25 29h1v1h-1zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h3v1h-3zM11 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h4v1h-4zM30 30h9v1h-9zM10 31h1v1h-1zM12 31h7v1h-7zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h7v1h-7zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h2v1h-2zM17 33h2v1h-2zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h2v1h-2zM17 35h2v1h-2zM25 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM16 37h1v1h-1zM18 37h1v1h-1zM23 37h1v1h-1zM25 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Light source" id="modeSeg">
+          <button type="button" data-m="rgb" aria-pressed="true">Three lamps</button>
+          <button type="button" data-m="mono" aria-pressed="false">One wavelength</button>
+          <button type="button" data-m="bulb" aria-pressed="false">Bulb and filter</button>
+        </div>
+        <div class="seg" role="group" aria-label="Show the light as" id="viewSeg">
+          <button type="button" data-v="beam" aria-pressed="true">Beams</button>
+          <button type="button" data-v="photon" aria-pressed="false">Photons</button>
+        </div>
+        <button type="button" class="btn" id="match" hidden>Mix it from the three lamps</button>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Lamps in a dark room shine into a person's eye; a bubble shows the color the person sees. Below, the spectrum of the light with the three cone sensitivities, and bars for how strongly each cone type responds."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set the light">
+        <span class="card-title" id="cardTitle">The lamps</span>
+        <div id="rgbBox">
+          <div><div class="slider-head"><label for="sR">Red lamp (630 nm)</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0" max="100" step="1"></div>
+          <div><div class="slider-head"><label for="sG">Green lamp (532 nm)</label><output id="oG" for="sG"></output></div><input type="range" id="sG" min="0" max="100" step="1"></div>
+          <div><div class="slider-head"><label for="sB">Blue lamp (465 nm)</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="100" step="1"></div>
+        </div>
+        <div id="monoBox" hidden>
+          <div><div class="slider-head"><label for="sL">Wavelength λ</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="380" max="700" step="1"></div>
+          <div><div class="slider-head"><label for="sI">Power</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="0" max="100" step="1"></div>
+        </div>
+        <div id="bulbBox" hidden>
+          <div class="seg" role="group" aria-label="Bulb" id="bulbSeg">
+            <button type="button" data-b="inc" aria-pressed="true">Incandescent</button>
+            <button type="button" data-b="day" aria-pressed="false">Daylight</button>
+          </div>
+          <label class="check"><input type="checkbox" id="cFilt"><span>Filter in the beam</span></label>
+          <div><div class="slider-head"><label for="sC">Filter center</label><output id="oC" for="sC"></output></div><input type="range" id="sC" min="400" max="700" step="1"></div>
+          <div><div class="slider-head"><label for="sW">Filter width</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="10" max="300" step="5"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="white" aria-pressed="true">Red + green + blue</button>
+          <button type="button" data-p="yellow" aria-pressed="false">Red + green</button>
+          <button type="button" data-p="magenta" aria-pressed="false">Red + blue</button>
+          <button type="button" data-p="cyan" aria-pressed="false">Green + blue</button>
+          <button type="button" data-p="y580" aria-pressed="false">Pure yellow, 580 nm</button>
+          <button type="button" data-p="cyan490" aria-pressed="false">Pure cyan, 490 nm</button>
+          <button type="button" data-p="redf" aria-pressed="false">Red filter on a bulb</button>
+          <button type="button" data-p="greenf" aria-pressed="false">Green filter, photons</button>
+          <button type="button" data-p="sodium" aria-pressed="false">Narrow filter at 589 nm</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the color seen (predict it first)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">L = ∫ S(λ) l̄(λ) dλ   M = ∫ S(λ) m̄(λ) dλ   S = ∫ S(λ) s̄(λ) dλ</p>
+        <p class="hint">Model: each cone signal is the light's spectrum S(λ) weighted by that cone's sensitivity and added up over 380 to 780 nm in 1 nm steps. The sensitivities are the CIE 1931 2° color matching functions (analytic fit of Wyman, Sloan and Shirley 2013) turned into cone responses with the Hunt–Pointer–Estevez matrix normalized to daylight (Fairchild, Color Appearance Models), so daylight white at the brightness of the three full lamps gives L = M = S = 1. Two lights with the same three signals look the same, whatever their spectra (metamers). The lamps are modeled as Gaussian spectra 20 nm wide (full width at half maximum) at 630, 532 and 465 nm, and their powers are set so all three at 100% give exactly that white. One wavelength at 100% power has the brightness of that white at 555 nm, where the eye is most sensitive; the same power at another wavelength looks dimmer. Incandescent is a blackbody at 2856 K (CIE illuminant A, Planck's law); Daylight is CIE illuminant D65 (CIE 15:2004 table, every 10 nm, interpolated). The filter passes everything between its edges and nothing outside (an ideal band pass). The color in the bubble is the light's color in sRGB at its brightness; colors outside the screen's range are shown desaturated, so the purest spectral colors look paler than in life. Photons: each dot is one photon, its wavelength drawn at random from the spectrum in proportion to the number of photons (power times λ); the rate is slowed enormously to be seen. The eye adapts to the room in life; here nothing adapts.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Cone signals and colors of a light spectrum. Runs in Node: curriculum/validation/test_color_vision.cjs */
+  var CV_L0 = 380, CV_N = 401;   /* the wavelength grid: 380 to 780 nm every 1 nm */
+  /* CIE 1931 2° color matching functions, multi lobe Gaussian fit (Wyman, Sloan, Shirley 2013), as in thin-films.html */
+  function cvGl(x, mu, s1, s2) { var t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); }
+  function cvCmf(l) {
+    return [1.056 * cvGl(l, 599.8, 37.9, 31.0) + 0.362 * cvGl(l, 442.0, 16.0, 26.7) - 0.065 * cvGl(l, 501.1, 20.4, 26.2),
+      0.821 * cvGl(l, 568.8, 46.9, 40.5) + 0.286 * cvGl(l, 530.9, 16.3, 31.1),
+      1.217 * cvGl(l, 437.0, 11.8, 36.0) + 0.681 * cvGl(l, 459.0, 26.0, 13.8)];
+  }
+  /* Hunt–Pointer–Estevez XYZ to LMS, normalized to D65 (Fairchild, Color Appearance Models) */
+  var CV_HPE = [[0.4002, 0.7076, -0.0808], [-0.2263, 1.1653, 0.0457], [0, 0, 0.9182]];
+  var CV_WHITE = [0.95047, 1, 1.08883];   /* D65 white of sRGB at Y = 1 */
+  function cvMul(M, v) { return [M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2], M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2], M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2]]; }
+  function cvLms(xyz) { return cvMul(CV_HPE, xyz); }
+  /* XYZ of a spectrum given on the grid (power per nm) */
+  function cvXYZ(S) { var X = 0, Y = 0, Z = 0; for (var i = 0; i < CV_N; i++) { var c = cvCmf(CV_L0 + i); X += S[i] * c[0]; Y += S[i] * c[1]; Z += S[i] * c[2]; } return [X, Y, Z]; }
+  function cvGrid(fn) { var S = new Float64Array(CV_N); for (var i = 0; i < CV_N; i++) S[i] = fn(CV_L0 + i); return S; }
+  /* the lamps: Gaussian spectra, 20 nm full width at half maximum */
+  var CV_LAMPS = [630, 532, 465], CV_FWHM = 20;
+  function cvGauss(l, pk) { return Math.exp(-4 * Math.LN2 * Math.pow((l - pk) / CV_FWHM, 2)); }
+  /* solve the 3 × 3 system whose columns are A[0], A[1], A[2] for b (Gaussian elimination with pivoting) */
+  function cvSolve(A, b) {
+    var m = [[A[0][0], A[1][0], A[2][0], b[0]], [A[0][1], A[1][1], A[2][1], b[1]], [A[0][2], A[1][2], A[2][2], b[2]]], i, j, k;
+    for (i = 0; i < 3; i++) { var p = i; for (j = i + 1; j < 3; j++) if (Math.abs(m[j][i]) > Math.abs(m[p][i])) p = j; var t = m[i]; m[i] = m[p]; m[p] = t;
+      for (j = 0; j < 3; j++) if (j !== i) { var f = m[j][i] / m[i][i]; for (k = i; k < 4; k++) m[j][k] -= f * m[i][k]; } }
+    return [m[0][3] / m[0][0], m[1][3] / m[1][1], m[2][3] / m[2][2]];
+  }
+  /* lamp powers so that all three at full give the D65 white exactly; CV_LXYZ are the lamps' XYZ at full */
+  var CV_LXYZ0 = CV_LAMPS.map(function (pk) { return cvXYZ(cvGrid(function (l) { return cvGauss(l, pk); })); });
+  var CV_LW = cvSolve(CV_LXYZ0, CV_WHITE);
+  var CV_LXYZ = CV_LXYZ0.map(function (c, i) { return [c[0] * CV_LW[i], c[1] * CV_LW[i], c[2] * CV_LW[i]]; });
+  /* the peak of ȳ: one wavelength at power 1 per nm-wide line has Y = ȳ(λ)/ȳmax */
+  var CV_YMAX = (function () { var m = 0; for (var l = 540; l <= 570; l += 0.01) m = Math.max(m, cvCmf(l)[1]); return m; })();
+  /* the bulbs: Planck at 2856 K (CIE illuminant A) and D65 (CIE 15:2004, every 10 nm) */
+  var CV_D65 = [49.9755, 54.6482, 82.7549, 91.486, 93.4318, 86.6823, 104.865, 117.008, 117.812, 114.861, 115.923, 108.811, 109.354, 107.802, 104.79, 107.689, 104.405, 104.046, 100, 96.3342,
+    95.788, 88.6856, 90.0062, 89.5991, 87.6987, 83.2886, 83.6992, 80.0268, 80.2146, 82.2778, 78.2842, 69.7213, 71.6091, 74.349, 61.604, 69.8856, 75.087, 63.5927, 46.4182, 66.8054, 63.3828];
+  function cvD65(l) { var f = (l - 380) / 10, i = Math.max(0, Math.min(39, Math.floor(f))), u = f - i; return CV_D65[i] * (1 - u) + CV_D65[i + 1] * u; }
+  function cvPlanck(l, T) { var x = l * 1e-9, c2 = 1.438776877e-2; return 1 / (Math.pow(x, 5) * (Math.exp(c2 / (x * T)) - 1)); }
+  /* a bulb's spectrum scaled so the bare bulb has Y = 1 */
+  function cvBulb(kind) { var S = cvGrid(kind === 'day' ? cvD65 : function (l) { return cvPlanck(l, 2856); }), Y = cvXYZ(S)[1]; for (var i = 0; i < CV_N; i++) S[i] /= Y; return S; }
+  /* the spectrum reaching the eye for a setup: {mode, r, g, b (0..1), lam, pow (0..1), bulb, filt, c, w} */
+  function cvSpectrum(o) {
+    var S, i;
+    if (o.mode === 'rgb') { var lv = [o.r, o.g, o.b]; return cvGrid(function (l) { var s = 0; for (var k = 0; k < 3; k++) s += lv[k] * CV_LW[k] * cvGauss(l, CV_LAMPS[k]); return s; }); }
+    if (o.mode === 'mono') { S = new Float64Array(CV_N); var j = Math.round(o.lam - CV_L0); if (j >= 0 && j < CV_N) S[j] = o.pow / CV_YMAX; return S; }
+    S = cvBulb(o.bulb);
+    if (o.filt) for (i = 0; i < CV_N; i++) { var l = CV_L0 + i; if (l < o.c - o.w / 2 || l > o.c + o.w / 2) S[i] = 0; }
+    return S;
+  }
+  /* XYZ to linear sRGB (IEC 61966-2-1) */
+  function cvLin(x) { return [3.2404542 * x[0] - 1.5371385 * x[1] - 0.4985314 * x[2], -0.9692660 * x[0] + 1.8760108 * x[1] + 0.0415560 * x[2], 0.0556434 * x[0] - 0.2040259 * x[1] + 1.0572252 * x[2]]; }
+  function cvGam(v) { return v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; }
+  /* displayable 0..255 color: out of gamut desaturated toward the gray of the same luminance, too bright scaled down */
+  function cvRGB(xyz) {
+    var c = cvLin(xyz), Y = xyz[1], r = c[0], g = c[1], b = c[2]; if (Y <= 0) return [0, 0, 0];
+    var mn = Math.min(r, g, b); if (mn < 0) { var k = Y / (Y - mn); r = Y + k * (r - Y); g = Y + k * (g - Y); b = Y + k * (b - Y); }
+    var mx = Math.max(r, g, b); if (mx > 1) { r /= mx; g /= mx; b /= mx; }
+    return [r, g, b].map(function (v) { return Math.round(255 * Math.min(1, Math.max(0, cvGam(v)))); });
+  }
+  /* the lamp levels that give a target XYZ (may be negative or above 1: then no mix of these lamps can do it) */
+  function cvMatch(xyz) { return cvSolve(CV_LXYZ, xyz); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    white: { mode: 'rgb', r: 1, g: 1, b: 1, view: 'beam', hint: 'All three lamps at full: each cone type is excited equally (L = M = S = 1), and that is what white is. There is no white light in the beams, only red, green and blue.' },
+    yellow: { mode: 'rgb', r: 1, g: 1, b: 0, view: 'beam', hint: 'Red and green with no blue: the L and M cones respond and the S cones hardly at all. That pattern looks yellow, although no light near 580 nm is present.' },
+    magenta: { mode: 'rgb', r: 1, g: 0, b: 1, view: 'beam', hint: 'Red and blue: L and S respond, M only weakly. Magenta is not in the rainbow; no single wavelength excites the two ends of the spectrum together.' },
+    cyan: { mode: 'rgb', r: 0, g: 1, b: 1, view: 'beam', hint: 'Green and blue: M and S respond. Compare with the pure 490 nm setup.' },
+    y580: { mode: 'mono', lam: 580, pow: 0.6, view: 'beam', hint: 'One wavelength, 580 nm: L and M both respond, S does not. Press Mix it from the three lamps: red and green alone give almost the same three cone signals, so the two lights look the same though their spectra share no wavelength.' },
+    cyan490: { mode: 'mono', lam: 490, pow: 0.6, view: 'beam', hint: 'Pure 490 nm light. Mix it from the lamps and the match asks for negative red: no positive mix of these three lamps reaches a color this pure, which is why screens cannot show the rainbow\'s cyan.' },
+    redf: { mode: 'bulb', bulb: 'inc', filt: true, c: 650, w: 100, view: 'beam', hint: 'A red filter in front of a white bulb passes 600 to 700 nm and absorbs the rest. A filter takes light away; it never adds the red.' },
+    greenf: { mode: 'bulb', bulb: 'day', filt: true, c: 530, w: 60, view: 'photon', hint: 'Photons from daylight through a green filter: every photon outside 500 to 560 nm is absorbed at the filter, and only green ones reach the eye.' },
+    sodium: { mode: 'bulb', bulb: 'inc', filt: true, c: 589, w: 10, view: 'beam', hint: 'A 10 nm wide filter at 589 nm, the sodium yellow. About a tenth of the light gets through (Y = 0.095), and its color is nearly that of the single 589 nm wavelength.' },
+  };
+  const S = { preset: 'white', mode: 'rgb', r: 1, g: 1, b: 1, lam: 580, pow: 0.6, bulb: 'inc', filt: true, c: 650, w: 100, view: 'beam', blind: false, msg: '', photons: [] };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null, cache = null, cdf = null, spawn = 0;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const css = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), cL: g('--cL'), cM: g('--cM'), cS: g('--cS'), room: g('--room'), rInk: g('--roomInk'), rMuted: g('--roomMuted'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  /* a spectral color for drawing a single wavelength: full saturation the screen can show, at full brightness */
+  function specRGB(l) { const c = cvLin(cvCmf(l)); let [r, g, b] = c; const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; } const mx = Math.max(r, g, b) || 1; return [r, g, b].map((v) => Math.round(255 * cvGam(Math.max(0, v / mx)))); }
+  /* everything that follows from the setup, computed once per change */
+  function compute() {
+    const sp = cvSpectrum(S), xyz = cvXYZ(sp), lms = cvLms(xyz);
+    let tot = 0; cdf = new Float64Array(CV_N); for (let i = 0; i < CV_N; i++) { tot += sp[i] * (CV_L0 + i); cdf[i] = tot; }   /* photons: power × λ */
+    let pre = null;
+    if (S.mode === 'bulb') { const b = cvBulb(S.bulb); let t2 = 0; pre = new Float64Array(CV_N); for (let i = 0; i < CV_N; i++) { t2 += b[i] * (CV_L0 + i); pre[i] = t2; } }
+    cache = { sp, xyz, lms, rgb: cvRGB(xyz), tot, pre };
+  }
+  function filterRGB() { const s = cvSpectrum({ mode: 'bulb', bulb: 'day', filt: true, c: S.c, w: S.w }); return cvRGB(cvXYZ(s).map((v) => v * 1.6)); }
+
+  // ---------- layout: the dark room on top, the spectrum and cone bars below ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const right = cardOn ? card.offsetWidth + 24 : 12 * p, roomW = W - right - 12 * p;
+    const roomH = Math.max(220 * p, H * 0.56), specTop = roomH + 30 * p;
+    geo = { p, x0: 12 * p, y0: 12 * p, rw: roomW, rh: roomH - 12 * p, specTop, specH: H - specTop - 34 * p, right, cardOn };
+    geo.R = Math.min(geo.rh * 0.22, 56 * p, geo.rw * 0.13);
+    geo.eye = [Math.min(geo.x0 + geo.rw * 0.70, geo.x0 + geo.rw - geo.R * 2.0), geo.y0 + geo.rh * 0.62];
+    geo.src = [geo.x0 + geo.rw * 0.10, geo.y0 + geo.rh * 0.62];
+  }
+  const lampPos = (k) => [geo.src[0], geo.y0 + geo.rh * (0.24 + 0.28 * k)];
+  function head() {
+    const [ex, ey] = geo.eye, p = geo.p, R = geo.R, cx = ex + R * 0.78, cy = ey - R * 0.15;
+    ctx.fillStyle = '#3a4250'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx - R * 0.92, cy - R * 0.05); ctx.lineTo(cx - R * 1.18, cy + R * 0.22); ctx.lineTo(cx - R * 0.9, cy + R * 0.32); ctx.fill();   /* nose */
+    ctx.fillRect(cx - R * 0.35, cy + R * 0.7, R * 0.7, R * 0.9);   /* neck */
+    ctx.fillStyle = '#e8ecf2'; ctx.beginPath(); ctx.ellipse(ex, ey, 7 * p, 4.5 * p, 0, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#1b2230'; ctx.beginPath(); ctx.arc(ex - 2 * p, ey, 2.6 * p, 0, 2 * Math.PI); ctx.fill();
+    return { cx, cy, R };
+  }
+  function draw() {
+    if (!T || !W || !cache) return; layout(); const p = geo.p;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* the dark room */
+    ctx.fillStyle = T.room; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(geo.x0, geo.y0, geo.rw, geo.rh, 8 * p) : ctx.rect(geo.x0, geo.y0, geo.rw, geo.rh); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.rect(geo.x0, geo.y0, geo.rw, geo.rh); ctx.clip();
+    const [ex, ey] = geo.eye;
+    const beam = (x, y, col, a, w0) => { if (a <= 0.003) return; const g = ctx.createLinearGradient(x, y, ex, ey); g.addColorStop(0, css(col, Math.min(1, a))); g.addColorStop(1, css(col, Math.min(1, a) * 0.85));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x, y - w0); ctx.lineTo(ex - 4 * p, ey - 3 * p); ctx.lineTo(ex - 4 * p, ey + 3 * p); ctx.lineTo(x, y + w0); ctx.closePath(); ctx.fill(); };
+    ctx.globalCompositeOperation = 'lighter';
+    const lampCol = CV_LAMPS.map((_, k) => cvRGB(CV_LXYZ[k].map((v) => v * 2.5)));
+    if (S.mode === 'rgb' && S.view === 'beam') { [S.r, S.g, S.b].forEach((lv, k) => { const [x, y] = lampPos(k); beam(x + 20 * p, y, lampCol[k], lv * 0.75, 14 * p); }); }
+    if (S.mode === 'mono' && S.view === 'beam') beam(geo.src[0] + 22 * p, geo.src[1], specRGB(S.lam), Math.min(1, cache.xyz[1] * 1.2 + 0.15 * (S.pow > 0)), 14 * p);
+    const fx = geo.x0 + geo.rw * 0.40;
+    if (S.mode === 'bulb' && S.view === 'beam') {
+      const wcol = cvRGB(cvXYZ(cvBulb(S.bulb)).map((v) => v * 0.9)), [bx, by] = geo.src;
+      if (S.filt) { const t = (ex - fx) / (ex - bx); ctx.fillStyle = css(wcol, 0.55); ctx.beginPath(); ctx.moveTo(bx + 18 * p, by - 16 * p); ctx.lineTo(fx, by - 16 * p + (16 * p - 3 * p) * (fx - bx) / (ex - bx)); ctx.lineTo(fx, by + 16 * p - (13 * p) * (fx - bx) / (ex - bx)); ctx.lineTo(bx + 18 * p, by + 16 * p); ctx.fill();
+        beam(fx, by, cache.rgb, Math.min(1, 0.25 + cache.xyz[1] * 2), 16 * p * (1 - (fx - bx) / (ex - bx)) + 3 * p * t * 0); }
+      else beam(bx + 18 * p, by, wcol, 0.55, 16 * p);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    /* sources */
+    if (S.mode === 'rgb') [S.r, S.g, S.b].forEach((lv, k) => { const [x, y] = lampPos(k); ctx.fillStyle = '#4a5262'; ctx.fillRect(x - 16 * p, y - 13 * p, 34 * p, 26 * p);
+      ctx.fillStyle = css(lampCol[k], 0.25 + 0.75 * lv); ctx.beginPath(); ctx.arc(x + 18 * p, y, 10 * p, -Math.PI / 2, Math.PI / 2); ctx.fill();
+      ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${Math.round(lv * 100)}%`, x, y + 16 * p); });
+    if (S.mode === 'mono') { const [x, y] = geo.src; ctx.fillStyle = '#4a5262'; ctx.fillRect(x - 16 * p, y - 15 * p, 36 * p, 30 * p); ctx.fillStyle = css(specRGB(S.lam), 0.3 + 0.7 * S.pow); ctx.beginPath(); ctx.arc(x + 20 * p, y, 11 * p, -Math.PI / 2, Math.PI / 2); ctx.fill();
+      ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${S.lam} nm`, x, y + 20 * p); }
+    if (S.mode === 'bulb') { const [x, y] = geo.src, wcol = cvRGB(cvXYZ(cvBulb(S.bulb)).map((v) => v * 0.9));
+      const g = ctx.createRadialGradient(x, y, 2, x, y, 20 * p); g.addColorStop(0, css(wcol, 1)); g.addColorStop(1, css(wcol, 0.15)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 18 * p, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#4a5262'; ctx.fillRect(x - 7 * p, y + 16 * p, 14 * p, 12 * p);
+      ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(S.bulb === 'day' ? 'D65' : '2856 K', x, y + 31 * p);
+      if (S.filt) { const fc = filterRGB(); ctx.fillStyle = css(fc, 0.85); ctx.fillRect(fx - 5 * p, y - 34 * p, 10 * p, 68 * p); ctx.strokeStyle = T.rMuted; ctx.lineWidth = 1; ctx.strokeRect(fx - 5 * p, y - 34 * p, 10 * p, 68 * p);
+        ctx.fillStyle = T.rMuted; ctx.fillText(`${Math.round(S.c - S.w / 2)}–${Math.round(S.c + S.w / 2)} nm`, fx, y + 38 * p); } }
+    /* photons */
+    for (const ph of S.photons) { ctx.fillStyle = css(ph.col, ph.dead ? Math.max(0, 1 - ph.dead * 3) : 1); ctx.beginPath(); ctx.arc(ph.x, ph.y, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); }
+    const hd = head();
+    /* the thought bubble: the color seen */
+    const bR = Math.min(geo.rh * 0.2, 46 * p), bx = Math.min(hd.cx + hd.R * 0.2, geo.x0 + geo.rw - bR - 8 * p), by = Math.max(geo.y0 + bR + 10 * p, hd.cy - hd.R - bR - 18 * p);
+    ctx.fillStyle = '#e8ecf2'; for (const [dx, dy, r] of [[-0.2, 0.62, 4], [-0.32, 0.4, 7]]) { ctx.beginPath(); ctx.arc(hd.cx + dx * hd.R * 2, hd.cy - hd.R * 1.05 + dy * 0 - r * p * 1.5 * (r === 7 ? 2 : 0.5), r * p, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.beginPath(); ctx.arc(bx, by, bR + 4 * p, 0, 2 * Math.PI); ctx.fill();
+    if (S.blind) { ctx.fillStyle = '#1b2230'; ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#e8ecf2'; ctx.font = `700 ${22 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', bx, by); }
+    else { ctx.fillStyle = css(cache.rgb); ctx.beginPath(); ctx.arc(bx, by, bR, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('A dark room', geo.x0 + 10 * p, geo.y0 + 8 * p);
+    ctx.restore();
+    drawSpectrum();
+  }
+  /* the spectrum reaching the eye, the three cone sensitivities, and the cone signal bars */
+  function drawSpectrum() {
+    const p = geo.p, card = $('setupCard'), side = geo.cardOn && H - (card.offsetTop + card.offsetHeight) > 200 * p;   /* bars under the card when there is room */
+    const barW = side ? Math.min(170 * p, geo.right - 50 * p) : Math.min(150 * p, geo.rw * 0.3), x0 = geo.x0 + 34 * p, x1 = geo.x0 + geo.rw - (side ? 10 * p : barW + 22 * p); let y0 = geo.specTop; const y1 = y0 + geo.specH;
+    if (geo.specH < 60) return;
+    const X = (l) => x0 + (l - 380) / 320 * (x1 - x0);
+    /* rainbow strip under the axis */
+    for (let l = 380; l < 700; l += 2) { ctx.fillStyle = css(specRGB(l), 0.9); ctx.fillRect(X(l), y1 + 2 * p, X(l + 2) - X(l) + 0.5, 6 * p); }
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let l = 400; l <= 700; l += 50) ctx.fillText(String(l), X(l), y1 + 10 * p);
+    ctx.textAlign = 'right'; ctx.fillText('λ (nm)', x1, y1 + 22 * p);
+    /* cone sensitivities, each scaled to a peak of 1 */
+    const cones = [[0, T.cL, 'L'], [1, T.cM, 'M'], [2, T.cS, 'S']], pk = [0, 0, 0], curves = [[], [], []];
+    for (let l = 380; l <= 700; l += 2) { const v = cvLms(cvCmf(l)); for (let k = 0; k < 3; k++) { curves[k].push([l, Math.max(0, v[k])]); pk[k] = Math.max(pk[k], v[k]); } }
+    ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.5 * p;
+    for (const [k, col, nm] of cones) { ctx.strokeStyle = col; ctx.beginPath(); curves[k].forEach(([l, v], i) => { const y = y1 - v / pk[k] * (y1 - y0) * 0.95; i ? ctx.lineTo(X(l), y) : ctx.moveTo(X(l), y); }); ctx.stroke();
+      const top = curves[k].reduce((a, b) => (b[1] > a[1] ? b : a)); ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(nm, X(top[0]) + (k === 0 ? 10 : k === 1 ? -10 : 0) * p, y0 + 10 * p); }
+    ctx.setLineDash([]);
+    /* the light's spectrum, scaled to its own peak (a single wavelength is a spike) */
+    const sp = cache.sp; let m = 0; for (let i = 0; i <= 320; i++) m = Math.max(m, sp[i]);
+    if (m > 0) {
+      ctx.fillStyle = css(cache.rgb, 0.35); ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(380), y1);
+      for (let i = 0; i <= 320; i++) ctx.lineTo(X(380 + i), y1 - sp[i] / m * (y1 - y0) * 0.9);
+      ctx.lineTo(X(700), y1); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * p}px ${T.ui}`;
+    ctx.fillText(x1 - x0 < 420 * p ? 'Light (solid), cones (dashed)' : 'Light reaching the eye (solid) and the cone sensitivities (dashed)', x0, y0 - 6 * p);
+    /* cone signal bars, white = 1 */
+    const bx0 = side ? W - geo.right + 12 + (geo.right - 24 - barW) / 2 + 10 * p : x1 + 14 * p, bw = (barW - 10 * p) / 3, top = Math.max(1.2, ...cache.lms.map((v) => v * 1.05));
+    if (side) { y0 = Math.max(card.offsetTop + card.offsetHeight + 40 * p, y0); }
+    ctx.fillText('Cone signals', bx0, y0 - 6 * p);
+    ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(bx0, y1); ctx.lineTo(bx0 + barW, y1); ctx.stroke();
+    const yOne = y1 - (y1 - y0) / top; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(bx0, yOne); ctx.lineTo(bx0 + barW, yOne); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('1', bx0 - 3 * p, yOne);
+    cones.forEach(([k, col, nm]) => { const v = Math.max(0, cache.lms[k]), h = v / top * (y1 - y0), x = bx0 + 4 * p + k * bw;
+      ctx.fillStyle = col; ctx.fillRect(x, y1 - h, bw - 6 * p, h); ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(nm, x + (bw - 6 * p) / 2, y1 + 4 * p);
+      ctx.textBaseline = 'bottom'; ctx.font = `${9 * p}px ${T.mono}`; ctx.fillText(f(v), x + (bw - 6 * p) / 2, y1 - h - 2 * p); ctx.font = `${10 * p}px ${T.ui}`; });
+  }
+
+  // ---------- photons ----------
+  function samplePhoton(c) { const u = Math.random() * c[CV_N - 1]; let lo = 0, hi = CV_N - 1; while (lo < hi) { const mid = (lo + hi) >> 1; if (c[mid] < u) lo = mid + 1; else hi = mid; } return CV_L0 + lo + Math.random() - 0.5; }
+  function stepPhotons(dt) {
+    const p = geo.p, [ex, ey] = geo.eye, speed = 240 * p, fx = geo.x0 + geo.rw * 0.40;
+    /* emission: about 60 a second at full brightness (rescaled enormously from the true rate) */
+    let rate = 0, src = [];
+    if (S.mode === 'rgb') { [S.r, S.g, S.b].forEach((lv, k) => { const r = 25 * lv; rate += r; src.push([r, k]); }); }
+    else if (S.mode === 'mono') rate = S.pow > 0 ? 20 + 40 * S.pow : 0; else rate = 60;
+    spawn += dt * rate;
+    while (spawn >= 1 && S.photons.length < 600) {
+      spawn -= 1; let x, y, lam;
+      if (S.mode === 'rgb') { let u = Math.random() * rate, k = 0; for (const [r, kk] of src) { if (u < r) { k = kk; break; } u -= r; } [x, y] = lampPos(k); x += 20 * p; lam = CV_LAMPS[k] + (Math.random() + Math.random() + Math.random() - 1.5) * CV_FWHM / 1.4; }
+      else { [x, y] = geo.src; x += 20 * p; lam = S.mode === 'mono' ? S.lam : samplePhoton(S.filt ? cache.pre : cdf); }
+      const tx = ex, ty = ey + (Math.random() - 0.5) * 6 * p, d = Math.hypot(tx - x, ty - y), j = (Math.random() - 0.5) * 18 * p;
+      S.photons.push({ x, y: y + j, vx: (tx - x) / d * speed, vy: (ty - y - j) / d * speed, lam, col: specRGB(Math.max(380, Math.min(700, lam))), dead: 0 });
+    }
+    if (spawn > 1) spawn = 1;
+    for (const ph of S.photons) {
+      if (ph.dead) { ph.dead += dt; continue; }
+      const ox = ph.x; ph.x += ph.vx * dt; ph.y += ph.vy * dt;
+      if (S.mode === 'bulb' && S.filt && ox < fx && ph.x >= fx && (ph.lam < S.c - S.w / 2 || ph.lam > S.c + S.w / 2)) { ph.x = fx - 5 * p; ph.dead = 0.001; }
+    }
+    S.photons = S.photons.filter((ph) => (ph.dead ? ph.dead < 0.35 : ph.x < ex - 3 * p));
+  }
+
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, [L, M, Sc] = cache.lms;
+    let h = dd('L cone signal', f(L)) + dd('M cone signal', f(M)) + dd('S cone signal', f(Sc)) + dd('Brightness Y', f(cache.xyz[1]));
+    const sum = L + M + Sc; if (sum > 1e-6) h += dd('Share L : M : S', `${Math.round(100 * L / sum)} : ${Math.round(100 * M / sum)} : ${Math.round(100 * Sc / sum)}`, 'wide');
+    h += S.blind ? '<div class="wide"><dt>Color seen</dt><dd class="ok">hidden: predict it</dd></div>' : dd('Color shown (sRGB)', '#' + cache.rgb.map((v) => v.toString(16).padStart(2, '0')).join(''), 'wide');
+    $('out').innerHTML = h;
+  }
+  function drawAll() { compute(); draw(); readouts(); }
+
+  // ---------- controls ----------
+  function sync() {
+    $('sR').value = Math.round(S.r * 100); $('oR').textContent = `${Math.round(S.r * 100)}%`; $('sG').value = Math.round(S.g * 100); $('oG').textContent = `${Math.round(S.g * 100)}%`; $('sB').value = Math.round(S.b * 100); $('oB').textContent = `${Math.round(S.b * 100)}%`;
+    $('sL').value = S.lam; $('oL').textContent = `${S.lam} nm`; $('sI').value = Math.round(S.pow * 100); $('oI').textContent = `${Math.round(S.pow * 100)}%`;
+    $('cFilt').checked = S.filt; $('sC').value = S.c; $('oC').textContent = `${S.c} nm`; $('sW').value = S.w; $('oW').textContent = `${S.w} nm`; $('sC').disabled = $('sW').disabled = !S.filt;
+    $('rgbBox').hidden = S.mode !== 'rgb'; $('monoBox').hidden = S.mode !== 'mono'; $('bulbBox').hidden = S.mode !== 'bulb'; $('match').hidden = S.mode !== 'mono';
+    $('cardTitle').textContent = { rgb: 'The lamps', mono: 'One wavelength', bulb: 'The bulb and the filter' }[S.mode];
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#bulbSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.bulb));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  function status() { $('status').textContent = S.msg; }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, msg: '', photons: [] }, c); delete S.hint; $('presetHint').textContent = c.hint; status(); sync(); drawAll(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const DEF = { rgb: 'white', mono: 'y580', bulb: 'redf' };
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { const v = S.view; applyPreset(DEF[b.dataset.m]); S.view = v; sync(); });
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.v; S.photons = []; sync(); draw(); });
+  for (const b of document.querySelectorAll('#bulbSeg button')) b.addEventListener('click', () => { S.bulb = b.dataset.b; custom(); S.photons = []; sync(); drawAll(); });
+  const custom = () => { S.preset = 'custom'; S.msg = ''; status(); };
+  const slide = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); custom(); sync(); drawAll(); });
+  slide('sR', (v) => { S.r = v / 100; }); slide('sG', (v) => { S.g = v / 100; }); slide('sB', (v) => { S.b = v / 100; });
+  slide('sL', (v) => { S.lam = v; }); slide('sI', (v) => { S.pow = v / 100; }); slide('sC', (v) => { S.c = v; }); slide('sW', (v) => { S.w = v; });
+  $('cFilt').addEventListener('change', (e) => { S.filt = e.target.checked; custom(); sync(); drawAll(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  /* the match: lamp levels with the same three cone signals as this wavelength, dimmed together if a lamp would pass 100% */
+  $('match').addEventListener('click', () => {
+    const lv = cvMatch(cache.xyz), lam = S.lam, before = cache.lms.slice(), neg = lv.findIndex((v) => v < -0.005), names = ['red', 'green', 'blue'];
+    let k = Math.max(1, ...lv); const use = lv.map((v) => Math.max(0, v) / k);
+    Object.assign(S, { mode: 'rgb', r: use[0], g: use[1], b: use[2], preset: 'custom', photons: [] }); sync(); drawAll();
+    const scale = k > 1 ? ` The lamps are dimmed together to ${Math.round(100 / k)}% of the ${lam} nm light's brightness, so compare shares, not sizes.` : '';
+    const trip = (v) => v.map((x) => f(x)).join(', '), worst = Math.min(...lv), near = neg >= 0 && worst > -0.05 * Math.max(...lv);
+    if (near) S.msg = `Almost a match for ${lam} nm: an exact one would need ${f(worst, 2)} of ${names[neg]}, a tiny negative amount, so this mix is very slightly paler. Cone signals L, M, S: ${trip(before.map((v) => v / k))} for the wavelength, ${trip(cache.lms)} for the mix. To the eye the two look the same, though their spectra share no wavelength.${scale}`;
+    else if (neg >= 0) S.msg = `No mix of these lamps matches ${lam} nm: it would need ${f(lv[neg], 2)} of ${names[neg]}, a negative amount. The closest mix, with no ${names[neg]}, looks paler.${scale}`;
+    else S.msg = `Same cone signals as ${lam} nm (${trip(cache.lms)}): the two lights look identical though their spectra share no wavelength.${scale}`;
+    status();
+  });
+  window.vdReadings = () => 0;
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.view === 'photon' && geo)   /* photons move only when chosen, so Reduce motion opens still */ { stepPhotons(dt); draw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); S.photons = []; drawAll(); }
+  const retheme = () => { tokens(); drawAll(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('white'); resize();
+  window.__cv = { S, applyPreset, drawAll, sync, cache: () => cache };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
