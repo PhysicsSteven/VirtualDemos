@@ -750,6 +750,7 @@ u | Energy density | J/m³
 p | Radiation pressure | Pa
 theta | Angle from the antenna's axis | °
 I_max | Intensity in the strongest direction | W/m²
+r | Distance from the nearest wire | λ
 
 == energy-bands ==
 N | Number of atoms
@@ -1322,6 +1323,12 @@ Q_A | Charge on sphere A | nC
 Q_B | Charge on sphere B | nC
 R_B | Radius of sphere B | cm
 R_A | Radius of sphere A | cm
+Q [~at most] | Charge on the rubbed end of the rod | nC
+E_b | Breakdown field of air | V/m
+r | Radius of the rod | cm
+L | Length of the rubbed patch | cm
+sigma | Surface charge density on the rubbed end | μC/m²
+s | How far apart the rod and cloth sit in the triboelectric series
 
 == ink-jet-printer ==
 q | Charge on the drop | pC
@@ -1639,6 +1646,12 @@ f_eye | Focal length of the eyepiece | cm
 M_net | Net magnification of the microscope
 f_obj | Focal length of the objective | cm
 L | Tube length of the microscope | cm
+m_1 | Magnification at the object's near end
+m_2 | Magnification at the object's far end
+d_o1 | Object distance of the object's near end | cm
+d_o2 | Object distance of the object's far end | cm
+d_i1 | Image distance of the near end's image | cm
+d_i2 | Image distance of the far end's image | cm
 
 == loops-solenoids ==
 N | Number of turns
@@ -1652,6 +1665,11 @@ theta_1 | Angle from the axis to the rim of one end
 theta_2 | Angle from the axis to the rim of the other end
 l | Position along the path (dl: a short piece of it) | m
 r | Radius of the circle inside the toroid | m
+M | Magnetization of the iron core | A/m
+mu_r | Relative permeability of the iron
+H_0 | The coil's own field at the center divided by μ₀ | A/m
+N_d | Demagnetizing factor along the axis
+M_s | Saturation magnetization of iron | A/m
 
 == magnetic-force ==
 v | Speed of the particle | m/s
@@ -3026,6 +3044,17 @@ V_max | Highest voltage before a spark | V
 Q_max | Charge at the spark | C
 t | Time to charge from zero to a spark | s
 U | Energy released in each spark | J
+V [~Body voltage] | Voltage of the body when it sparks | kV
+V [V/d] | Voltage of the body when it sparks | kV
+V [=V=Q/C] | Voltage of the body | V
+V [\tfrac12CV^2] | Voltage of the body | V
+Q [=V=Q/C] | Charge on the body | C
+C [=V=Q/C] | Capacitance of the body to ground, 100 pF | F
+C [\tfrac12CV^2] | Capacitance of the body to ground, 100 pF | F
+A | Area of the two soles | m²
+V_b | Breakdown voltage of the air gap | kV
+p | Air pressure | bar
+d | Spark gap | mm | in cm in the fit's formula
 
 == vectors ==
 A | Vector A, or its magnitude

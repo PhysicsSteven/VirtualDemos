@@ -384,16 +384,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const shChips = (id, k) => $(id).addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; S.sh[k] = b.dataset.v; for (const x of $(id).querySelectorAll('button')) x.setAttribute('aria-pressed', String(x === b)); upd(); });
   shChips('shRug', 'rug'); shChips('shSole', 'sole');
   function shBack() { S.sh.reach = false; S.sh.touch = false; S.sh.gap = SH_GAP0; }
-  function shTake() { const h = S.sh; h.Q = shuffleStep(h.Q, h.sole, h.rug); h.steps++; h.hist.push([h.steps, bodyV(h.Q)]); if (h.hist.length > 200) h.hist.shift(); }
+  function shTake() { const h = S.sh; h.Q = shuffleStep(h.Q, h.sole, h.rug); h.steps++; h.ended = null; h.hist.push([h.steps, bodyV(h.Q)]); if (h.hist.length > 200) h.hist.shift(); }
   function shSteps(n) { shBack(); if (reduce) { for (let i = 0; i < n; i++) shTake(); } else S.sh.queue += n; upd(); }
   $('shTen').addEventListener('click', () => shSteps(10)); $('shOne').addEventListener('click', () => shSteps(1));
   $('shReach').addEventListener('click', () => { const h = S.sh; if (h.touch) return; h.queue = 0; h.reach = true; if (reduce) { const d = sparkGap(bodyV(h.Q)); h.gap = d; shArrive(); } upd(); });
   $('shBack').addEventListener('click', () => { shBack(); upd(); });
   /* the hand reaches the gap where the air breaks down (a spark), or the knob itself when the voltage is too small for a visible spark */
-  function shArrive() { const h = S.sh, V = bodyV(h.Q), d = sparkGap(V);
-    if (d > 0 && h.gap <= d) { h.last = { V, d, E: sparkEnergy(V), Q: h.Q }; h.sparks++; h.spark = 0.35; h.gap = d; }
-    else { h.gap = 0; h.touch = true; }
-    h.Q = 0; h.reach = false; h.hist.push([h.steps, 0]); }
+  function shArrive() { const h = S.sh, V = bodyV(h.Q), d = sparkGap(V), n = h.steps - (h.mark || 0);
+    if (d > 0 && h.gap <= d) { h.last = { V, d, E: sparkEnergy(V), Q: h.Q, n, sole: h.sole, rug: h.rug }; h.sparks++; h.spark = 0.35; h.gap = d; h.ended = 'spark'; }
+    else { h.gap = 0; h.touch = true; h.ended = 'touch'; }
+    h.mark = h.steps; h.Q = 0; h.reach = false; h.hist.push([h.steps, 0]); }
   $('print').addEventListener('click', printWord);
   $('clearPaper').addEventListener('click', () => { S.paper = []; S.col = 0; S.queue = []; draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
@@ -541,15 +541,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   /* a reading for the Readings section (tools/readings_panel.py), one worksheet for each machine; what Blind hides is left blank */
-  const WS = { vdg: 'van-de-graaff', ink: 'ink-jet-printer', esp: 'precipitator' }, NAME = { vdg: 'generator', ink: 'printer', esp: 'precipitator' };
+  const WS = { vdg: 'van-de-graaff', ink: 'ink-jet-printer', esp: 'precipitator', shuffle: 'van-de-graaff' }, NAME = { vdg: 'generator', ink: 'printer', esp: 'precipitator', shuffle: 'shuffle and spark' };
   const g4 = (v) => +(+v).toPrecision(4);
   window.vdVersion = EW_VERSION;
   window.vdWorksheet = () => WS[S.setup] || 'van-de-graaff';
   window.vdReadingRow = () => {
-    if (S.setup === 'shuffle') return 'Shuffle and spark has no worksheet: the readouts are for watching and predicting. Readings go with the other three machines.';
     const prev = (window.vdRows ? window.vdRows() : [])[0];
     if (prev && prev.machine !== NAME[S.setup]) return `These readings are from the ${prev.machine}: send them to the worksheet and clear them first.`;
     const b = S.blind;
+    if (S.setup === 'shuffle') {
+      /* the last spark (Part 4 of the Van de Graaff worksheet): the steps shuffled since the body was last discharged, the body's voltage
+         when it sparked, the gap it jumped, the energy ½CV², and the breakdown voltage the Schumann fit gives for that gap */
+      const h = S.sh, L = h.last;
+      window.vdShowCols = [['steps', 'Steps'], ['V_kV', 'V (kV)'], ['gap_mm', 'Gap (mm)']];
+      if (h.reach || h.queue) return 'Wait until the hand reaches the knob.';
+      if (!h.ended) return 'Shuffle, then reach for the doorknob: a reading is of the spark.';
+      if (h.ended === 'touch') return 'No spark that time: the hand touched the knob. Shuffle more, then reach again.';
+      return { machine: 'shuffle and spark', sole: L.sole === 'wool' ? 'wool socks' : 'rubber soles', rug: L.rug + ' rug', steps: L.n, V_kV: b ? '' : g4(L.V / 1000), gap_mm: g4(L.d * 1000),
+        E_mJ: b ? '' : g4(L.E * 1000), Vb_fit_kV: g4(breakdownV(L.d) / 1000) };
+    }
     if (S.setup === 'vdg') { const R = S.R / 100, I = S.I * 1e-6;
       window.vdShowCols = [['R_cm', 'R (cm)'], ['I_uA', 'I (µA)'], ['sparks', 'Sparks'], ['run_s', 'Time (s)']];
       const w = wandNow();

@@ -16,6 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§16.1 to 16.5. Access for fr
 - You set the frequency $$f$$ (from $$10^5$$ to $$10^{21}$$ Hz) and the amplitude $$E_0$$ of the electric field (from 0.001 V/m to 1 MV/m); both sliders are logarithmic. The polarization controls set the mix of $$x$$ and $$y$$ components.
 - The readouts give the wavelength and period, the band, and under Energy and intensity: $$B_0$$, the intensity $$I$$, the mean energy density and the radiation pressure on a surface that absorbs the wave and on one that reflects it.
 - Antenna shows the field of an oscillating dipole and its radiation pattern, with the relative intensity in a direction you choose.
+- In a plane shows the field of long wires through the page (each carrying a current that goes up and down at one frequency) and of metal you paint, solved on a grid 20 cells to a wavelength, 10 λ by 6 λ. Its setups include One wire, Two wires in phase, Two wires, opposite phase and A wire grid polarizer; E along the wires or E in the page sets the polarization. The probe reads $$\langle E^2\rangle$$, the field squared averaged over the last full period (in the demo's units, the same for every setup), and its distance $$r$$ from the nearest wire in wavelengths. A reading there stores the setup, the polarization, how many periods have run, the probe's place, $$r$$, $$\langle E^2\rangle$$ and $$r\langle E^2\rangle$$; a series of In a plane readings goes to the In a plane table.
 - Record reading stores the plane wave's frequency, wavelength, $$E_0$$, $$B_0$$, intensity and pressures (to six significant figures). Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 **What the demo models.** An exact plane wave in vacuum, with $$c = 1/\sqrt{\mu_0\varepsilon_0}$$ from the CODATA 2022 values of $$\mu_0$$ and $$\varepsilon_0$$ (it differs from the exact $$c = 299\,792\,458$$ m/s by about one part in $$10^{10}$$). The pressures are for a surface facing the wave. The antenna is an ideal point dipole, much shorter than the wavelength. The drawing is slowed so one period takes 2.5 s. Simulated data.
@@ -59,6 +60,8 @@ This is a virtual activity. In a real lab, never look into a laser beam, even a 
 
 **Part 4: an antenna.** Pick the Antenna setup. Read the relative intensity $$I(\theta)/I_{max}$$ at the angles $$\theta$$ = 0°, 30°, 45°, 60° and 90° from the dipole's axis, and write the values in your answer to Analysis 6.
 
+**Part 5: waves in a plane.** Clear the readings and open the In a plane view with One wire and E along the wires. Let the waves run for at least 10 periods, so they fill the picture, then record $$\langle E^2\rangle$$ with the probe straight out to the right of the wire at $$r$$ = 1, 1.5, 2, 3, 4 and 4.5 λ. Then record at the probe's starting place in Two wires in phase and in Two wires, opposite phase, and, with One wire again, at the point straight out to the right of the wire at the same distance as that starting place. Last, in A wire grid polarizer, record behind the grid at the probe's starting place with E along the wires and then with E in the page (switching starts the waves over: let them run 10 periods again). Send this series; it goes to the In a plane table.
+
 ## Data
 
 | Reading | Frequency $$f$$ (Hz) | Amplitude $$E_0$$ (V/m) | $$B_0$$ (T) | $$E_0^2$$ (V²/m²) | Intensity $$I$$ (W/m²) | Pressure, absorbed (Pa) | Pressure, reflected (Pa) |
@@ -69,6 +72,14 @@ This is a virtual activity. In a real lab, never look into a laser beam, even a 
 
 Use one copy of the table for Parts 1 and 2 together and one for Part 3, and say which setup each Part 3 row is.
 
+**In a plane.** Part 5.
+
+| Reading | Setup | E direction | Periods run | Distance from the nearest wire $$r$$ (λ) | ⟨E²⟩ | r⟨E²⟩ (λ) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
 ## Analysis
 
 1. Graph $$B_0$$ against $$E_0$$ for Parts 1 and 2. Is it a straight line through the origin? From the slope find $$c$$ and compare it with 2.998 × 10⁸ m/s. Do the visible light rows fall on the same line as the 10 GHz rows? What does that tell you?
@@ -77,6 +88,7 @@ Use one copy of the table for Parts 1 and 2 together and one for Part 3, and say
 4. For the sunlight row, find the force of sunlight on a perfectly reflecting solar sail 1 km on a side. What would be the acceleration of a 1000 kg spacecraft from it?
 5. For the laser pointer and the radio rows, compare $$E_0$$ with that of sunlight. Why can a 5 mW laser pointer be brighter than sunlight while a 50 kW station gives a field thousands of times weaker?
 6. Write down your Part 4 readings and compare each with $$\sin^2\theta$$. In which direction does the antenna send nothing, and in which does it send the most?
+7. Part 5: graph $$\langle E^2\rangle$$ against $$1/r$$ for the one wire readings. Is $$r\langle E^2\rangle$$ the same at every distance? Explain it with the energy a long wire sends out spreading over ever larger circles, and say how a point source's intensity would fall instead. Compare the two wires in phase with one wire at the same distance (what factor do you expect when two equal waves arrive in step?), and explain the opposite phase reading. Which polarization does the wire grid let through, and why do the electrons in the rods matter?
 
 ## Uncertainty
 

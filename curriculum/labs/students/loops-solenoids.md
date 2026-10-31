@@ -8,11 +8,11 @@ Textbook: OpenStax *University Physics*, Vol. 2, §12.4 and §12.6. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Where it is in the demo:** Magnetic Fields of Currents, Loop and solenoid view, with the Current loop and Solenoid setups.
+**Where it is in the demo:** Magnetic Fields of Currents, Loop and solenoid view, with the Current loop, Solenoid and Electromagnet on a supply setups.
 
 **Using the demo.** The winding is seen cut through its axis: dots are current coming out of the page and crosses current going in. Number of turns, Length, Radius and Current set the winding; drag the grips to change the radius and length, drag the probe, or click the plot below the picture to put the probe on the axis. The readouts give the field at the probe (along the axis and away from it), the field at the center and, for more than one turn, at an end of the winding.
 
-**What the demo models.** Each turn is a circular loop, and its field everywhere is the exact Biot and Savart result (in closed form with complete elliptic integrals). A winding of $$N$$ turns is $$N$$ such loops spread evenly along the length $$L$$, so the turn density is exactly $$n = N/L$$; the field is the sum over the turns. The wire has no thickness. $$\mu_0 = 1.25663706127\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2022). Simulated data.
+**What the demo models.** Each turn is a circular loop, and its field everywhere is the exact Biot and Savart result (in closed form with complete elliptic integrals). A winding of $$N$$ turns is $$N$$ such loops spread evenly along the length $$L$$, so the turn density is exactly $$n = N/L$$; the field is the sum over the turns. The wire has no thickness. $$\mu_0 = 1.25663706127\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2022). With the iron core in, the core (as long as the winding, of its radius) is magnetized uniformly, as an ellipsoid of the same length to diameter ratio $$L/2R$$ would be: $$M = (\mu_r - 1)H_0/(1 + (\mu_r - 1)N_d)$$, where $$H_0$$ is the coil's own field at the center over $$\mu_0$$, $$N_d$$ the demagnetizing factor along the axis (Osborn 1945) and $$\mu_r = 1000$$ (chosen, soft iron), up to iron's saturation $$M_s = 1.71\times10^6$$ A/m (Kittel). A uniform $$M$$ acts like an extra current $$ML/N$$ in each turn, so the field keeps its shape and every value is multiplied by the gain $$1 + ML/(NI)$$. Hysteresis is left out. A reading with the core stores $$L/2R$$, $$N_d$$, the gain and whether the iron is saturated; a series of readings all with the core goes to the Electromagnet table. Simulated data.
 
 </details>
 
@@ -63,6 +63,8 @@ Before each part, predict what you will see. Then measure.
 
 **Part 5: inside and outside.** In the Solenoid setup (30 turns, 24 cm, 3.0 cm, 5.0 A), record with the probe in the middle plane of the solenoid at distances of 0, 1.0, 2.0 and 2.5 cm from the axis (inside the winding) and 4.0, 5.0 and 6.0 cm (outside). Then record with the probe on the axis 6.0 cm and 11 cm from the center.
 
+**Part 6: electromagnet.** In the Electromagnet on a supply setup (40 turns, 10 cm long, radius 1.0 cm, 2.0 A on the battery, iron core in), record with the probe at the center. Then keep 40 turns, the radius and the current, and record at the center for lengths of 2.0, 4.0, 6.0, 20 and 40 cm. Send this series; it goes to the Electromagnet table.
+
 **Using the virtual apparatus.** Clicking the plot below the picture puts the probe on the axis. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
 ## Data
@@ -76,6 +78,14 @@ Before each part, predict what you will see. Then measure.
 | | | | | | | | | | | | | | |
 | | | | | | | | | | | | | | |
 
+**Electromagnet.** Part 6. Work out the last two columns.
+
+| Trial | Turns N | Length L (cm) | Radius R (cm) | Current I (A) | L/2R | $$N_d$$ | Field at the center (μT) | Gain | $$1/N_d$$ | Field without the core (μT) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+
 ## Analysis
 
 1. For Part 1, fill in $$1/R$$ and graph the central field against $$1/R$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$.
@@ -83,6 +93,7 @@ Before each part, predict what you will see. Then measure.
 3. For Part 3, fill in $$n$$ and graph the central field against $$n$$. Is the field proportional to $$n$$? Divide the slope by $$I$$ and compare with $$\mu_0$$. Use the current sheet formula to explain the difference.
 4. For Part 4, divide each central field by $$\mu_0 n I$$ and compare with $$L/\sqrt{L^2 + 4R^2}$$. Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within 1% of $$\mu_0 n I$$?
 5. For Part 5, how uniform is the field across the middle of the solenoid, and how large is it outside compared with inside? How does the field change along the axis toward the end? Which of the facts used in the Ampère's law argument hold here, and which only nearly hold?
+6. For Part 6, divide each central field by the gain to find the field without the core, and check one row against the coil's own central field, $$\mu_0NI/\sqrt{L^2+4R^2}$$. Graph the gain against $$1/N_d$$. For which cores is the gain close to $$1/N_d$$, and why does $$\mu_r$$ hardly matter for them? Why does a short, fat core give so little gain, even though it is the same iron?
 
 ## Uncertainty
 

@@ -1491,7 +1491,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const id of ['rub1', 'rub10']) $(id).disabled = !!S.rubAnim;
     for (const b of document.querySelectorAll('#ballChips button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.pb));
     $('rodP').checked = S.prod; $('sQp').value = S.pq; $('oQp').textContent = `${S.pq > 0 ? '+' : ''}${S.pq} nC`.replace('-', '−'); $('sS').value = S.ps; $('oS').textContent = `${f(S.ps, 1)} cm`; $('sS').disabled = !S.prod;
-    window.vdShowCols = pol ? [['ball', 'ball'], ['q_rod_nC', 'q (nC)'], ['gap_cm', 's (cm)'], ['balance_mg', 'reading (mg)']] : [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
+    window.vdShowCols = pol ? [['ball', 'ball'], ['q_rod_nC', 'q (nC)'], ['gap_cm', 's (cm)'], ['balance_mg', 'reading (mg)']] : rub ? [['rod', 'rod'], ['cloth', 'cloth'], ['strokes', 'strokes'], ['q_rod_nC', 'rod (nC)']] : [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
     $('units').textContent = pol ? 'ball 2.00 cm radius · exact multipole series' : sh ? '2D cross section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
     if (rub) $('units').textContent = 'rubbed patch 5 cm of a 0.5 cm radius rod · charge limited by air breakdown';
     can.setAttribute('aria-label', rub ? 'A rod held by its handle and a cloth. Rubbing moves electrons between them; plus and minus marks show the net charge on the rubbed end of the rod and on the cloth.' : pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
@@ -1552,7 +1552,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
   const SETUP = { induce: 'two spheres by induction', ground: 'one sphere by grounding', contact: 'sharing by contact' };
   window.vdReadingRow = () => {
-    if (S.preset === 'shapes' || S.preset === 'rub') return 'Readings are recorded in the three sphere setups and with the neutral ball.';
+    if (S.preset === 'shapes') return 'Readings are recorded in the three sphere setups, with the neutral ball and in Charging by rubbing.';
+    if (S.preset === 'rub') {
+      /* Part 6 of the worksheet: the rod and cloth as rubbing left them; what Blind hides is left blank */
+      if (S.rubAnim) return 'Wait until the strokes finish.';
+      const Q = S.rubQ, A = 2 * Math.PI * RUB_R * RUB_L, r4 = (v) => (Math.abs(v) < 5e-13 ? 0 : +v.toPrecision(4)), hide = S.blind;
+      return { setup: 'charging by rubbing', rod: RUB_NAME[S.rubRod], cloth: RUB_NAME[S.rubCloth], strokes: S.rubN, q_rod_nC: hide ? '' : r4(Q / NC), q_cloth_nC: hide ? '' : r4(-Q / NC),
+        electrons: hide ? '' : Math.abs(Q) < QE ? 0 : +(Math.abs(Q) / QE).toPrecision(4), sigma_uC_m2: hide ? '' : r4(Q / A * 1e6), E_MV_m: hide ? '' : r4(Math.abs(Q) / A / EPS0 / 1e6) };
+    }
     if (S.preset === 'polar') {
       const o = S.pol; if (!o.stable) return 'Wait for the balance to settle: the rod is still moving.';
       return { setup: 'neutral ball on a balance', ball: S.pb === 'mystery' ? 'Mystery insulator' : o.m.name, q_rod_nC: S.prod ? S.pq : '', gap_cm: S.prod ? S.ps : 'rod raised', balance_mg: (o.mg === 0 ? 0 : o.mg).toFixed(2) };

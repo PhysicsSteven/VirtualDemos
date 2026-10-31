@@ -1136,7 +1136,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const wave = S.mode === 'wave', ant = S.mode === 'antenna', pl = S.mode === 'plane';
     $('mWave').setAttribute('aria-pressed', String(wave)); $('mAnt').setAttribute('aria-pressed', String(ant)); $('mPlane').setAttribute('aria-pressed', String(pl));
     $('secPol').hidden = !wave; $('secEnergy').hidden = !wave; $('secShow').hidden = !wave; $('secAnt').hidden = !ant; $('secPlane').hidden = !pl;
-    $('secSetups').hidden = pl; $('secFreq').hidden = pl; document.querySelector('.vd-readings').hidden = pl;
+    $('secSetups').hidden = pl; $('secFreq').hidden = pl;
     $('modelWave').hidden = !wave; $('modelAnt').hidden = !ant; $('antKey').hidden = !ant; $('modelPlane').hidden = !pl; $('planeKey').hidden = !pl;
     can.setAttribute('aria-label', pl ? PL_LABEL : CAN_LABEL); $('stage').classList.toggle('pl', pl);
     $('resetView').hidden = !(wave && G.ok);
@@ -1518,14 +1518,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
+  window.__pl = { get PL() { return PL; }, probe(i, j) { PL.probe = { i, j }; plReadouts(); } };   /* for the worksheet key scripts */
   window.__em = { get frameMs() { return frameMs; }, get S() { return S; }, get three() { return G.ok; }, get view() { return view; }, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg, pt: h.pt })); }, setPlaying, setWt(v) { wt = v; draw(); } };
 
   // ---------- Readings (shared section): the plane wave's numbers as the readouts give them, to 6 significant figures ----------
   const sig6 = (v) => { const r = +v.toPrecision(6), a = Math.abs(r); return a && (a >= 1e6 || a < 1e-3) ? r.toExponential() : String(r); };
   window.vdVersion = 'em-waves@2026-10-24';
-  window.vdShowCols = [['f_Hz', 'f (Hz)'], ['E0_V_per_m', 'E₀ (V/m)'], ['B0_T', 'B₀ (T)'], ['I_W_per_m2', 'I (W/m²)']];
+  /* the columns the Readings table shows follow the view: the plane wave's numbers, or In a plane's probe */
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => (S.mode === 'plane' ? [['setup', 'setup'], ['E_dir', 'E'], ['r_lambda', 'r (λ)'], ['E2_avg', '⟨E²⟩']] : [['f_Hz', 'f (Hz)'], ['E0_V_per_m', 'E₀ (V/m)'], ['B0_T', 'B₀ (T)'], ['I_W_per_m2', 'I (W/m²)']]) });
   window.vdReadingRow = () => {
-    if (S.mode !== 'wave') return 'Readings are of the plane wave: switch to Plane wave to record one.';   /* In a plane and Antenna have no readings */
+    if (S.mode === 'plane') {
+      /* Part 5 of the worksheet: the probe's ⟨E²⟩ over the last full period, in the grid's units (a wire's source strength fixed),
+         and its distance from the nearest wire in wavelengths, as the readouts show them */
+      if (!PL.probe) return 'Put the probe on the picture first: pick Probe and tap where to read.';
+      if (!PL.avgN) return 'Let the waves run for at least one period first.';
+      let r = Infinity; for (const w of PL.wires) r = Math.min(r, Math.hypot(w.i - PL.probe.i, w.j - PL.probe.j) / FD_NL);
+      const e2 = PL.avg[plK(PL.probe.i, PL.probe.j)], pb = PL.preset && document.querySelector(`#plPresets [data-q="${PL.preset}"]`);
+      return { setup: 'in a plane: ' + (pb ? pb.textContent : 'own arrangement'), E_dir: PL.te ? 'in the page' : 'along the wires', periods: +(PL.F.n / FD_NT).toFixed(1),
+        probe_x_lambda: +(PL.probe.i / FD_NL).toFixed(2), probe_y_lambda: +((PLV.ny - 1 - PL.probe.j) / FD_NL).toFixed(2), r_lambda: Number.isFinite(r) ? +r.toFixed(2) : '', E2_avg: +e2.toPrecision(3), rE2: Number.isFinite(r) ? +(r * e2).toPrecision(3) : '' };
+    }
+    if (S.mode !== 'wave') return 'Readings are of the plane wave and of In a plane: switch to one of them to record.';   /* Antenna has no readings */
     const f = fNow(), E0 = E0Now(), I = intensity(E0);
     const pb = S.preset && document.querySelector(`#presets [data-p="${S.preset}"]`);
     return { setup: pb ? pb.textContent : '', f_Hz: sig6(f), lambda_m: sig6(lambdaOf(f)), band: bandOf(f).name, ground: groundOf(lambdaOf(f)).why.split(':')[0], E0_V_per_m: sig6(E0), B0_T: sig6(B0of(E0)),

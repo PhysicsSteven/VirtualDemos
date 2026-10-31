@@ -15,6 +15,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §2.5. Access for free at https
 - The eye has three kinds of cones, L, M and S, most sensitive to long, middle and short wavelengths. Each cone signal is the light's spectrum weighted by that cone's sensitivity and added up over all wavelengths. The sensitivities come from the CIE 1931 color matching functions turned into cone responses (the Hunt–Pointer–Estevez matrix), scaled so daylight white gives L = M = S = 1.
 - Three lamps: red, green and blue lamps with narrow spectra at 630, 532 and 465 nm. All three at 100% give exactly daylight white. One wavelength: a single wavelength from 380 to 700 nm; 100% power at 555 nm is as bright as that white. Mix it from the three lamps finds the lamp powers with the same three cone signals, or says that one lamp would have to be negative. Bulb and filter: an incandescent bulb (a blackbody at 2856 K) or daylight, with an ideal filter that passes everything between its two edges and nothing else.
 - Brightness Y is the light's luminance, 1 for the white of the three full lamps.
+- Colored filters: one or two of red, green, blue, yellow, cyan and magenta can stand in front of any light. They are ideal band filters with edges at 500 and 600 nm (red passes above 600 nm, green 500 to 600 nm, blue below 500 nm, and yellow, cyan and magenta each pass two of those bands); two stacked filters multiply their transmissions. The Light column names them.
 - Record reading stores the light, its wavelength (or the filter's center), the three cone signals and Y. Export to worksheet sends the readings to the Data table below; Clear starts a new series.
 
 </details>
@@ -52,7 +53,9 @@ No hazards in the virtual lab.
 
 **Metamers.** Choose Pure yellow, 580 nm and record a reading; press Mix it from the three lamps and record the mix. Do the same for Pure cyan, 490 nm. Note the message the demo gives for each mix. Export the readings, then Clear.
 
-**Filters.** With the incandescent bulb and no filter, record a reading. Put in the filter, centered at 650 nm, and record readings for widths of 300, 200, 100, 50 and 20 nm. Then switch to daylight and record the 100 nm wide filter at 650 nm and at 530 nm. Export the readings.
+**Filters.** With the incandescent bulb and no filter, record a reading. Put in the filter, centered at 650 nm, and record readings for widths of 300, 200, 100, 50 and 20 nm. Then switch to daylight and record the 100 nm wide filter at 650 nm and at 530 nm. Export the readings, then Clear.
+
+**Colored filters.** With the daylight bulb and its band filter out, record a reading with no colored filter, then with each colored filter alone: red, green, blue, yellow, cyan and magenta. Then stack two: yellow then cyan, and red then green. Last, light the red lamp alone at 100% and record it with no filter and through the green filter. Export the readings.
 
 ## Data
 
@@ -71,6 +74,7 @@ Table 1. Lights and cone signals.
 3. On the same graph, or in a second one, plot L, M and S against wavelength. Which wavelengths excite two kinds of cones strongly at once?
 4. Compare the cone signals of the 580 nm light and its lamp mix, and of the 490 nm light and its mix. Which pair are metamers, and why does the other fail?
 5. For the filters, list Y against the filter width (the distance between the two edges named in the Light column). Explain how Y changes as the filter narrows, and why daylight through the red filter is dimmer than the incandescent bulb through it.
+6. For the colored filters: is the sum of Y through the red, green and blue filters equal to Y with no filter? Compare the yellow filter with the red and green filters added, and cyan and magenta likewise. Compare yellow then cyan with the green filter alone, and explain why stacked filters multiply their transmissions while lamps add. Why does red then green, or the red lamp through the green filter, give nothing at all?
 
 ## Uncertainty
 

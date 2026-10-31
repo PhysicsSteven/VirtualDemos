@@ -12,11 +12,13 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.1, 5.2 and 6.4. Access fo
 
 - Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative). Everything works by hand on the picture: drag the rod anywhere near the spheres, slide either sphere along the bench (pushed together, they touch), and touch a sphere with the ground wand to ground it. The color on each sphere and the marks around it change as you move things, and moving dots show electrons flowing through the contact, a wire or the ground lead (drawn slowed down). Each setup also has a sequence of steps (Next step, Start over) that moves the apparatus for you; changing anything yourself leaves the steps. Changing a control keeps the charges the spheres already have.
 - The color on each sphere and the marks around it show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
+- Charging by rubbing: choose a rod (glass, hard rubber, Teflon) and a cloth (fur, wool, silk), then rub once or ten times. Record reading there stores the rod, the cloth, the number of strokes, both charges, the electrons moved, the surface charge density on the rubbed end and the field just outside it; a series in which every reading is from Charging by rubbing goes to the Rubbing table.
 - Blind hides the net charges and potentials, leaving the marks. Keep it off for this lab.
 
 **What the demo models.**
 
 - Perfect conductors, the rod's charge as a point charge at its tip, $$k = 1/(4\pi\varepsilon_0)$$. A grounded sphere is held at zero potential; a sphere on its own stand keeps its net charge; joined spheres share one potential. The charges are found exactly with Kelvin's image charges at every position, including the pull of each sphere on the other's charge. Touching spheres are solved 0.5 mm apart. The bench, stands, wand and leads are left out of the electrostatics. The readouts also give the strongest field at each sphere's surface; above about $$3 \times 10^6\ \text{V/m}$$ air would spark.
+- Charging by rubbing: electrons move from the material nearer the fur end of the series to the one nearer the Teflon end, so rod and cloth carry equal and opposite charges. The rubbed patch can hold at most $$\lvert Q\rvert = \varepsilon_0E_b\,(2\pi rL)$$, where the field just outside, $$\sigma/\varepsilon_0$$, reaches air's breakdown field $$E_b = 3\times10^6$$ V/m (OpenStax Vol. 2, Table 8.1); for $$r = 0.5$$ cm and $$L = 5$$ cm that is 41.7 nC. Each stroke closes a share $$0.12\times\lvert s\rvert$$ of the gap between the rod's charge and that limit, where $$s$$ is how far apart the two materials sit in the series (1 for the two ends): a stated model, not measured data. Real results depend on humidity and clean surfaces.
 
 </details>
 
@@ -61,6 +63,8 @@ Keep Blind off: the readings are the net charges. Record each reading at the end
 
 **Part 5: joined far apart.** Repeat Part 4, but instead of touching, join the spheres while they are 40 cm apart (the connection is a thin wire whose own charge is neglected), then disconnect them. Send this series.
 
+**Part 6: charging by rubbing.** In the Charging by rubbing setup, rub a glass rod with silk and record after 1, 2, 5, 10, 20 and 40 strokes, counted from a neutral rod. Then, each from a neutral rod, record after 40 strokes: hard rubber with fur, glass with wool, glass with fur and Teflon with silk. Send this series; it goes to the Rubbing table.
+
 ## Data
 
 | Trial | Setup | Rod charge (nC) | $$d$$ (cm) | Radius of B (cm) | Gap (cm) | Connections | $$Q_A$$ (nC) | $$Q_B$$ (nC) | $$R/(R+d)$$ |
@@ -71,12 +75,22 @@ Keep Blind off: the readings are the net charges. Record each reading at the end
 
 Keep each part in its own copy of the table, labeled with the part.
 
+**Rubbing.** Part 6. The rubbed end of the rod is a patch 5 cm long on a rod of radius 0.5 cm.
+
+| Trial | Rod | Cloth | Strokes | Rod charge (nC) | Cloth charge (nC) | Electrons moved | $$\sigma$$ on the rubbed end (μC/m²) | Field just outside (MV/m) |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
+
 ## Analysis
 
 1. Part 1: plot $$Q_A$$ against $$R/(R+d)$$ and fit a line. Compare the slope with $$-q$$ and the intercept with zero.
 2. Part 2: plot $$Q_A$$ against the rod charge and fit a line. Compare the slope with $$-R/(R+d)$$. What did A end up with when the rod was removed first, and why?
 3. Part 3: compare $$Q_A$$ and $$Q_B$$ for each distance. Is charge conserved? Compare $$\lvert Q_A\rvert$$ with the grounded sphere's charge at the same $$d$$ from Part 1, and explain the difference.
 4. Parts 4 and 5: for each radius of B, calculate the fraction of the 10 nC that B ends up with. Plot it against $$R_B/(R_A + R_B)$$ for both parts. Which part follows the ratio of the radii? How does the other part differ when B is smaller than A, and when it is larger?
+
+5. Part 6: use the triboelectric order fur, glass, wool, silk, hard rubber, Teflon (from the end that gives up electrons to the end that takes them) to explain the sign of each rod's charge, and why glass with wool charges so slowly. Is charge conserved? For glass with silk, what charge does the rod approach as the strokes go on? Show that this limit is $$\varepsilon_0E_b\,(2\pi rL)$$ for air's breakdown field $$E_b = 3\times10^{6}$$ V/m and the patch's area, and compare the field just outside with $$E_b$$. The charge per stroke follows a stated model, not measured data: which of your conclusions depend on it?
 
 ## Uncertainty
 

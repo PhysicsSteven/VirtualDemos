@@ -475,7 +475,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const light = S.mode === 'rgb' ? `red ${Math.round(S.r * 100)}%, green ${Math.round(S.g * 100)}%, blue ${Math.round(S.b * 100)}%`
       : S.mode === 'mono' ? `${S.lam} nm at ${Math.round(S.pow * 100)}% power`
       : `${S.bulb === 'day' ? 'daylight' : 'incandescent'} bulb, ` + (S.filt ? `filter ${Math.round(S.c - S.w / 2)} to ${Math.round(S.c + S.w / 2)} nm` : 'no filter');
-    const cf = [S.fa, S.fb].filter((n) => n !== 'none'), light2 = light + (cf.length ? `, ${cf.join(' then ')} filter${cf.length > 1 ? 's' : ''}` : '');
+    const cf = [S.fa, S.fb].filter((n) => n !== 'none'), light2 = (cf.length ? light.replace(/, no filter$/, '') : light) + (cf.length ? `, ${cf.join(' then ')} filter${cf.length > 1 ? 's' : ''}` : '');   /* 'daylight bulb, red filter', not '…, no filter, red filter' */
     const lam = S.mode === 'mono' ? S.lam : S.mode === 'bulb' && S.filt ? S.c : '', [L, M, Sc] = cache.lms;
     return { light: light2, lambda_nm: lam, L: L.toFixed(3), M: M.toFixed(3), S: Sc.toFixed(3), Y: cache.xyz[1].toFixed(3) };
   };

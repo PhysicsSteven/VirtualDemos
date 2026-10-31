@@ -8,11 +8,11 @@ Textbook: OpenStax *University Physics*, Vol. 3, §2.4 and §2.6 to §2.8. Acces
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Where it is in the demo:** the Optics Bench, with the Converging lens, Magnifier, Microscope and Telescope setups.
+**Where it is in the demo:** the Optics Bench, with the Converging lens, Magnifier, Microscope, Telescope, A shape, point by point and A shape in a magnifier setups.
 
 **Using the demo.** An object arrow (or, for the telescope, a parallel beam) sends rays through one or two lenses. Click a lens to open its editor: converging or diverging, focal length and aperture. Drag an element to move it; with it selected, the arrow keys move it 0.5 cm, or 0.1 cm with Shift. With one lens, the Image section gives the object distance, the image distance and magnification found from the traced rays, and the image's kind. With two converging lenses on one axis, the Microscope or Telescope section follows the rays through both and gives the angular magnification measured from the rays, with the eye relaxed (final image at infinity) and the near point at 25 cm.
 
-**What the demo models.** Each lens is an ideal thin lens: it bends every ray by the thin lens rule exactly, so it has no aberrations, and its traced images agree with the thin lens equation. The microscope's magnification is the angle of the rays leaving the eyepiece divided by the angle the object would fill at the near point; the telescope's is the angle of the beam leaving the eyepiece divided by the angle it comes in at (as tangents). Simulated data.
+**What the demo models.** Each lens is an ideal thin lens: it bends every ray by the thin lens rule exactly, so it has no aberrations, and its traced images agree with the thin lens equation. The microscope's magnification is the angle of the rays leaving the eyepiece divided by the angle the object would fill at the near point; the telescope's is the angle of the beam leaving the eyepiece divided by the angle it comes in at (as tangents). A shape source (a flat house, letter F or square lying in the plane of the drawing) is imaged point by point: five rays from each point of its outline, and the image point where they meet; the Shape and its image section gives the object's depth along the axis (with the object distances of its near and far ends), the traced image depth, their ratio, $$m_1m_2$$ from the lens equation at the two ends, and the traced height ratio of the tallest corner. A shape reading records these; a series of shape readings goes to the Depth table. Simulated data.
 
 </details>
 
@@ -33,6 +33,12 @@ $$d_i > 0$$ is a real image on the far side of the lens; $$d_i < 0$$ is a virtua
 $$M = \frac{\theta_i}{\theta_o} = \frac{25\ \mathrm{cm}}{d_o}.$$
 
 With the image at the near point ($$d_i = -25$$ cm) this is $$M = 1 + (25\ \mathrm{cm})/f$$; with the image at infinity (object at $$f$$, eye relaxed) it is $$M = (25\ \mathrm{cm})/f$$.
+
+**Depth of an image.** A lens makes images of points at different distances at different places, so an object with depth along the axis has an image with depth too. For two points of the object at $$d_{o1}$$ and $$d_{o2}$$, with magnifications $$m_1$$ and $$m_2$$, the thin lens equation gives exactly
+
+$$\frac{\lvert d_{i2}-d_{i1}\rvert}{\lvert d_{o2}-d_{o1}\rvert} = m_1m_2,$$
+
+close to $$m^2$$ for a thin object. So an image is stretched or squeezed along the axis by about the square of its height magnification.
 
 **Microscope.** The objective makes a real, enlarged image with $$m_{\text{obj}} = -d_i/d_o$$, and the eyepiece is a magnifier for that image, $$M_{\text{eye}} = (25\ \mathrm{cm})/f_{\text{eye}}$$ with the eye relaxed. The net magnification is $$M_{\text{net}} = m_{\text{obj}} M_{\text{eye}}$$.
 
@@ -67,6 +73,8 @@ Before each part, predict what you will see. Then measure.
 
 **Part 6: telescope.** Record the Telescope setup as it opens ($$f_{\text{obj}} = 16$$ cm, $$f_{\text{eye}} = 5.0$$ cm). Then record with eyepieces of 4.0 and 8.0 cm, and with a 20 cm objective and the 5.0 cm eyepiece, each time with the lenses $$f_{\text{obj}} + f_{\text{eye}}$$ apart.
 
+**Part 7: depth of an image.** In the A shape, point by point setup ($$f = 8$$ cm), record with the house's middle about 24, 20, 17, 14, 12 and 11 cm from the lens. Then record the A shape in a magnifier setup as it opens. Send this series; it goes to the Depth table.
+
 **Using the virtual apparatus.** A microscope or telescope reading needs the rays leaving the eyepiece to be parallel; the section's last line says when they are. Changing a focal length does not move the lens, so move it afterward. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
 ## Data
@@ -80,6 +88,14 @@ Before each part, predict what you will see. Then measure.
 | | | | | | | | | | | | |
 | | | | | | | | | | | | |
 
+**Depth.** Part 7.
+
+| Trial | Setup | Near end dₒ (cm) | Far end dₒ (cm) | Object depth (cm) | Image depth (cm) | Depth ratio | m₁ | m₂ | m₁m₂ | Height ratio |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+
 ## Analysis
 
 1. For Part 1, fill in $$1/d_o$$ and $$1/d_i$$ and graph $$1/d_i$$ against $$1/d_o$$. Find $$f$$ from the intercept and say what the slope should be. Check $$m = -d_i/d_o$$. Describe the image when the object is beyond $$2f$$, between $$2f$$ and $$f$$, and inside $$f$$.
@@ -88,6 +104,7 @@ Before each part, predict what you will see. Then measure.
 4. For Part 4, find $$M = 25\ \mathrm{cm}/d_o$$ for each row. Compare the near point row with $$1 + (25\ \mathrm{cm})/f$$, and the rows near $$d_o = f$$ with $$(25\ \mathrm{cm})/f$$. Why can a magnifier not be made arbitrarily strong just by moving the object?
 5. For Part 5, compare each traced $$M$$ with $$m_{\text{obj}} \times (25\ \mathrm{cm})/f_{\text{eye}}$$. Find the tube length $$L$$ (the lens separation minus $$f_{\text{obj}}$$ and $$f_{\text{eye}}$$) for each row and compare $$M$$ with $$-L\,(25\ \mathrm{cm})/(f_{\text{obj}} f_{\text{eye}})$$. Why is the image inverted?
 6. For Part 6, compare each traced $$M$$ with $$-f_{\text{obj}}/f_{\text{eye}}$$. What sets the magnification, and why must the lenses be $$f_{\text{obj}} + f_{\text{eye}}$$ apart?
+7. For Part 7, graph the traced depth ratio against $$m_1m_2$$. What slope do you find? Compare the depth ratio with the height ratio and with its square for each row. As the house moves toward the focal point, which grows faster, the height or the depth of the image? In the magnifier, is the letter F's virtual image stretched or squeezed along the axis, and by how much compared with its height?
 
 ## Uncertainty
 

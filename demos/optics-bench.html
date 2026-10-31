@@ -2519,9 +2519,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mat = E.kind === 'mirror' ? 'mirror (reflection)' : E.glass ? GLASSES[E.glass].name : 'ideal lens';
     return LAMBDAS.map((lam) => ({ element: itemName(E), material: mat, lam_nm: lam, f_cm: E.kind === 'mirror' ? +(signedR(E) / 2).toFixed(3) : +lensF(E, lam).toFixed(3) }));
   }
+  /* A shape source through one lens (lenses-instruments, Part 7): the ends' object distances, the object and traced image depths, their
+     ratio and m₁m₂ from the lens equation at the two ends, and the tallest corner's traced height ratio. A shape through a mirror or
+     refracting surface has no worksheet part. */
+  function shapeRow() {
+    const sh = frameData && frameData.shape;
+    if (!sh || !sh.E) return 'The depth readouts need the rays from every corner to pass through one lens with the shape in front of it.';
+    if (sh.E.kind !== 'lens') return 'Shape readings are recorded through a lens (the Lenses and Optical Instruments worksheet).';
+    return { ws: 'lenses-instruments', row: { setup: 'Shape through a ' + (sh.E.f > 0 ? 'converging' : 'diverging') + ' lens', shape: FORMS[sh.it.form] ? sh.it.form : '', f_cm: sh.E.f,
+      do1_cm: r2(sh.dO1), do2_cm: r2(sh.dO2), depth_obj_cm: r2(sh.objDepth), depth_img_cm: r2(sh.imgDepth), ratio: r3(sh.imgDepth / sh.objDepth), m1: r3(sh.m1), m2: r3(sh.m2),
+      m1m2: r3(sh.m1 * sh.m2), h_ratio: r3(sh.hRatio), image: sh.real ? 'real' : sh.virt ? 'virtual' : 'partly real, partly virtual' } };
+  }
   window.vdReadingRow = () => {
     let ws, r;
     if (VD.ws('') === 'intro-mirrors') { window.vdShowCols = [['element', 'Element'], ['lam_nm', 'λ (nm)'], ['f_cm', 'f (cm)']]; return focusRows(); }
+    if (frameData && frameData.shape && (!sel || sel.kind === 'shape' || !items.some((i) => i.kind === 'object' || i.kind === 'beam'))) {
+      const x = shapeRow(); if (typeof x === 'string') return x; ws = x.ws; r = x.row;
+      const n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;
+      if (n && ws !== wsRows) return 'These readings belong to another worksheet. Export or clear them before recording here.';
+      wsRows = ws; window.vdShowCols = [['setup', 'Setup'], ['do1_cm', 'near d_o (cm)'], ['ratio', 'depth ratio'], ['m1m2', 'm₁m₂']];
+      return r;
+    }
     if (sel && isGlass(sel)) { ws = 'dispersion'; r = glassRows(); }
     else { const x = imageRow(); if (typeof x === 'string') return x; ws = x.ws; r = x.row; }
     const n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;

@@ -185,7 +185,10 @@
        goes to the second table: Reading | Ball | q | Gap s | Balance reading | F | κ | (κ − 1)/(κ + 2) */
     'neutral-attraction': { demo: 'Charging by Induction (Attracting a neutral insulator)', cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null, null, null],
       alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.ball)).size > 1, cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null] }] },
-    induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'] },
+    /* Part 6, Charging by rubbing (2026-10-31): a series in which every row is a rubbing goes to the Rubbing table:
+       Trial | Rod | Cloth | Strokes | Rod charge | Cloth charge | Electrons moved | σ on the rubbed end | Field just outside */
+    induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'charging by rubbing'), cols: ['row', 'rod', 'cloth', 'strokes', 'q_rod_nC', 'q_cloth_nC', 'electrons', 'sigma_uC_m2', 'E_MV_m'] }] },
     /* Reading | Setup | λ₀ (nm) | Thickness t (nm) | Reflectance R (%) | Probe x (mm) | Order m (typed) */
     'thin-films': { demo: 'Thin Film Interference', cols: ['row', (r) => `${r.view}, n ${r.n1} / ${r.nf} / ${r.n2}${+r.theta_deg ? `, θ₁ = ${r.theta_deg}°` : ''}${r.h_um ? `, spacer ${r.h_um} µm` : ''}${r.lens_R_m ? `, lens R = ${r.lens_R_m} m` : ''}`,
       'lambda_nm', 't_nm', 'R_pct', (r) => r.x_mm || r.r_mm || '', null] },
@@ -194,11 +197,17 @@
     /* Reading | Tube and crystal | Crystal angle θ (°) | Count rate (1/s) | Line, Order m, sin θ (typed) */
     'x-ray-diffraction': { demo: 'Electron Diffraction (X-ray Bragg spectrometer)', cols: ['row', (r) => `${r.tube} tube, ${r.crystal} crystal`, 'theta_deg', 'rate_per_s', null, null, null] },
     /* Reading | f (Hz) | E₀ (V/m) | B₀ (T) | E₀² (typed) | I (W/m²) | pressure absorbed (Pa) | pressure reflected (Pa) */
-    'em-waves': { demo: 'Electromagnetic Waves', cols: [both('row', 'setup'), 'f_Hz', 'E0_V_per_m', 'B0_T', null, 'I_W_per_m2', 'p_abs_Pa', 'p_refl_Pa'] },
+    /* Part 5, In a plane (2026-10-31): a series of In a plane readings goes to the In a plane table:
+       Reading | Setup | E direction | Periods run | r (λ) | ⟨E²⟩ | r⟨E²⟩ */
+    'em-waves': { demo: 'Electromagnetic Waves', cols: [both('row', 'setup'), 'f_Hz', 'E0_V_per_m', 'B0_T', null, 'I_W_per_m2', 'p_abs_Pa', 'p_refl_Pa'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => /^in a plane/.test(r.setup || '')), cols: ['row', (r) => String(r.setup).replace(/^in a plane: /, ''), 'E_dir', 'periods', 'r_lambda', 'E2_avg', 'rE2'] }] },
     /* Trial | Setup | Hot current (A) | Neutral current (A) | Ground current (A) | Current through the person (mA) | Outlet voltage (V) | Power (W) | Wire heat (W/m) | Protection */
     'household-wiring': { demo: 'Household Wiring', cols: ['row', 'setup', 'I_hot_A', 'I_neutral_A', 'I_ground_A', 'I_body_mA', 'V_outlet_V', 'P_W', 'heat_W_per_m', 'protection'] },
     /* Trial | Dome radius R (cm) | Belt current I (μA) | Capacitance C (pF) | Highest voltage (kV) | Time to spark (s) | Spark energy (J) | Sparks counted | Running time (s) */
-    'van-de-graaff': { demo: 'Electrostatics at Work', cols: ['row', 'R_cm', 'I_uA', 'C_pF', 'Vmax_kV', 't_spark_s', 'E_spark_J', 'sparks', 'run_s'] },
+    /* Part 4, Shuffle and spark (2026-10-31): a series of shuffle readings goes to the Spark table:
+       Trial | Feet | Rug | Steps | V (kV) | Gap (mm) | Energy (mJ) | V_b from the fit (kV) | V/d (typed) */
+    'van-de-graaff': { demo: 'Electrostatics at Work', cols: ['row', 'R_cm', 'I_uA', 'C_pF', 'Vmax_kV', 't_spark_s', 'E_spark_J', 'sparks', 'run_s'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.machine === 'shuffle and spark'), cols: ['row', 'sole', 'rug', 'steps', 'V_kV', 'gap_mm', 'E_mJ', 'Vb_fit_kV', null] }] },
     /* Trial | Drop diameter (μm) | Drop speed v (m/s) | Charge q (pC) | Plate voltage V (V) | Drop mass (ng) | Height on the paper y (mm) | Gravity's part (μm) */
     'ink-jet-printer': { demo: 'Electrostatics at Work', cols: ['row', 'd_um', 'v_m_s', 'q_pC', 'V_plates_V', 'm_ng', 'y_paper_mm', 'y_grav_um'] },
     /* Trial | Particle diameter (μm) | Particles | Field (kV/cm) | Gas speed u (m/s) | Plate length L (m) | Drift speed w (cm/s) | Predicted efficiency (%) | Caught | Through | Measured efficiency (%) */
@@ -212,13 +221,19 @@
     /* Trial | Setup | I₁ | I₂ | d | Probe (x, y) | r | B | Direction | F/L on wire 1 | Loop | Current through it | Circulation | 1/r, 1/d (typed) */
     'straight-wire-fields': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'I1_A', 'I2_A', 'd_cm', 'probe_cm', 'r_cm', 'B_uT', 'dir_deg', 'F_uN_m', 'loop', 'Ienc_A', 'circ_uTm', null, null] },
     /* Trial | Setup | N | L | R | I | z | Distance from the axis | B along, B away from the axis | B at the center | B at an end | 1/R, n (typed) */
-    'loops-solenoids': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'N', 'L_cm', 'R_cm', 'I_A', 'z_cm', 'rho_cm', 'Bz_uT', 'Brho_uT', 'Bc_uT', 'Bend_uT', null, null] },
+    /* Part 6, Electromagnet (2026-10-31): a series of readings all with the iron core goes to the Electromagnet table:
+       Trial | N | L | R | I | L/2R | N_d | Field at the center | Gain | 1/N_d, field without the core (typed) */
+    'loops-solenoids': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'N', 'L_cm', 'R_cm', 'I_A', 'z_cm', 'rho_cm', 'Bz_uT', 'Brho_uT', 'Bc_uT', 'Bend_uT', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.core === 'iron'), cols: ['row', 'N', 'L_cm', 'R_cm', 'I_A', 'L_over_2R', 'Nd', 'Bc_uT', 'gain', null, null] }] },
     'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
     dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
     /* Trial | Element | n₁ | n₂ | R (cm) | f (cm) | dₒ (cm) | dᵢ (cm) | m | Image | 1/dₒ, 1/dᵢ (typed) */
     'mirrors-refraction': { demo: 'Optics Bench', cols: ['row', 'element', 'n1', 'n2', 'R_cm', 'f_cm', 'do_cm', 'di_cm', 'm', 'image', null, null] },
     /* Trial | Setup | f or objective f (cm) | Eyepiece f (cm) | Separation (cm) | dₒ (cm) | dᵢ (cm) | m | M | Image | 1/dₒ, 1/dᵢ (typed) */
-    'lenses-instruments': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image', null, null] },
+    /* Part 7 (2026-10-31): a series of shape readings goes to the Depth table:
+       Trial | Setup | Near end dₒ | Far end dₒ | Object depth | Image depth | Depth ratio | m₁ | m₂ | m₁m₂ | Height ratio */
+    'lenses-instruments': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => /^Shape/.test(r.setup || '')), cols: ['row', (r) => `${r.setup}, f = ${r.f_cm} cm`, 'do1_cm', 'do2_cm', 'depth_obj_cm', 'depth_img_cm', 'ratio', 'm1', 'm2', 'm1m2', 'h_ratio'] }] },
     /* Reading | Camera | N | d (cm) | d_s (mm) | Blur (µm) | Blur (pixels) | 1/d | 1/d_s | d_i (the last three are the student's) */
     camera: { demo: 'The Eye (Camera)', cols: ['row', 'camera', 'N', 'd_cm', 'ds_mm', 'blur_um', 'blur_px', null, null, null] },
     'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
@@ -807,7 +822,7 @@
   GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
   GRAPH_EVERY_TABLE.push('chladni', 'timbre');   /* the Drumhead table graphs f against √T, the Wave packets table Δx against 1/Δk (2026-10-31) */
-  GRAPH_EVERY_TABLE.push('current-sheet');   /* V against x in the probe tables; R against L/W in the Resistance table */
+  GRAPH_EVERY_TABLE.push('current-sheet', 'induction', 'em-waves', 'lenses-instruments', 'loops-solenoids', 'van-de-graaff');   /* van-de-graaff: the Spark table graphs V against the gap */   /* loops-solenoids: the Electromagnet table graphs the gain against 1/N_d */   /* lenses-instruments: the Depth table graphs the depth ratio against m₁m₂ */   /* em-waves: the In a plane table graphs ⟨E²⟩ against r */   /* induction: the Rubbing table graphs the rod's charge against strokes */   /* V against x in the probe tables; R against L/W in the Resistance table */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
@@ -1276,7 +1291,8 @@
   const GREEK = { alpha: 'α', beta: 'β', gamma: 'γ', Gamma: 'Γ', delta: 'δ', Delta: 'Δ', epsilon: 'ε', varepsilon: 'ε', eta: 'η',
     theta: 'θ', Theta: 'Θ', kappa: 'κ', lambda: 'λ', Lambda: 'Λ', mu: 'μ', nu: 'ν', pi: 'π', rho: 'ρ', sigma: 'σ', Sigma: 'Σ',
     tau: 'τ', phi: 'φ', varphi: 'φ', Phi: 'Φ', omega: 'ω', Omega: 'Ω', times: '×', cdot: '·', circ: '°', pm: '±', le: '≤', leq: '≤',
-    ge: '≥', geq: '≥', approx: '≈', propto: '∝', infty: '∞', to: '→', ell: 'ℓ', sqrt: '√', degree: '°' };
+    ge: '≥', geq: '≥', approx: '≈', propto: '∝', infty: '∞', to: '→', ell: 'ℓ', sqrt: '√', degree: '°',
+    langle: '⟨', rangle: '⟩', lvert: '|', rvert: '|' };
   /* Plain text for CSV column names and answer keys: TeX between \( \) or \[ \] becomes readable Unicode. */
   const plainTeX = (t) => t.replace(/\\(?:mathrm|text|rm|mathbf|operatorname)\s*\{([^{}]*)\}/g, '$1')
     .replace(/\\t?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)').replace(/\\tfrac\s*(\d)(\d)/g, '$1/$2')
