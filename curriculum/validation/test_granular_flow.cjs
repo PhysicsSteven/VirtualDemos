@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { readDemo } = require('./demo_source.cjs');
 /* the CORE block compiled as a plain function: the long seeded runs go several times faster than inside a vm context */
 const coreFast = (name, names) => { const src = readDemo(name), m = src.match(/\/\/ ==CORE START==([\s\S]*?)\/\/ ==CORE END==/); return new Function(m[1] + `\nreturn {${names}};`)(); };
-const C = coreFast('granular-flow', 'gfNew,gfBody,gfAdd,gfReady,gfStep,gfSettle,gfDragF,gfZeta,gfRestitution,gfDrum,gfShaker,gfShear,gfSlide,gfFrame,gfFlip,gfKind,gfMean,gfKE,gfMaxOverlap,gfFroude,gfCriticalRpm,GF_LIQ,GF_MAT,GF_G');
+const C = coreFast('granular-flow', 'gfNew,gfBody,gfAdd,gfReady,gfStep,gfSettle,gfDragF,gfZeta,gfRestitution,gfDrum,gfShaker,gfShear,gfSlide,gfFrame,gfFlip,gfKind,gfSettleMore,gfMean,gfKE,gfMaxOverlap,gfFroude,gfCriticalRpm,GF_LIQ,GF_MAT,GF_G');
 let n = 0;
 const test = (name, fn) => { const t0 = Date.now(); fn(); n++; console.log('PASS', name, `(${((Date.now() - t0) / 1000).toFixed(1)} s)`); };
 const near = (a, b, tol, msg) => assert(Math.abs(a - b) <= tol, `${msg || ''} expected ${b} ± ${tol}, got ${a}`);
@@ -65,6 +65,14 @@ test('Brazil nut: at Γ = 2.5 the 12 mm bead climbs from the floor to near the t
   assert(h > 0.035, `intruder at ${h}`);
   const st = C.gfShaker({ Gamma: 0.8 }), s2 = run(st, 3); near(C.gfMean(s2, 0, (i) => s2.y[i] - s2.bodies[0].oy), 0.006, 0.001);
   assert(C.gfMaxOverlap(s) < 0.1, 'overlaps stay small while shaking');
+});
+test('a big fill settled a slice at a time ends exactly where settling at once does, and fits its arrays', () => {
+  const a = C.gfDrum({}), b = C.gfDrum({ defer: true }); assert.ok(b.s.pend, 'held for the page');
+  let k = 0; while (!C.gfSettleMore(b.s, 997)) k++; assert.ok(k > 3);
+  for (let i = 0; i < a.s.n; i++) { assert.equal(a.s.x[i], b.s.x[i]); assert.equal(a.s.y[i], b.s.y[i]); }
+  assert.equal(b.s.t, 0);
+  for (const F of [C.gfDrum, C.gfShaker, C.gfShear, C.gfSlide, C.gfFrame]) for (const d of [0.5, 1])
+    { const s = F({ defer: true, kinds: [C.gfKind(2500, d, 0.4), C.gfKind(2500, d, 0.4)] }).s; assert.ok(s.n <= s.cap, `${s.n} beads in ${s.cap}`); }
 });
 const fromMiddle = (s, k) => { const cx = C.gfMean(s, null, (i) => s.x[i]), cy = C.gfMean(s, null, (i) => s.y[i]); return C.gfMean(s, k, (i) => Math.hypot(s.x[i] - cx, s.y[i] - cy)); };
 test('drum, two sizes at 15 rpm: after 20 s the small beads gather in the middle of the bed and the big ones round it', () => {

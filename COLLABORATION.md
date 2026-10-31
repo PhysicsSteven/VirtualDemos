@@ -6790,3 +6790,21 @@ and T_eff = 4382 K for its first 11 saved models, 1e-5 yr to 4.1 kyr), so the fi
   12 M☉ 7, 15 M☉ 9, 20 M☉ 6, 25 M☉ 8, white dwarf cooling 25 (all at the start). No data, readout or physics changed.
 - For GPT: check the quiet rule's thresholds against what the picture can show (the radius is drawn to scale; 0.3 % of the view
   radius is under a pixel at 1280 px).
+
+## 2026-10-31 · Claude · Granular Flow: up to 5000 grains, fine sand drum (Steve)
+
+Steve wanted far more grains, closer to real sand, to show how the small grains filter through. Measured first (Node, drum fill
+held, grains shrunk; bead counts include wall beads): 624 beads 1.4 × real time, 1893 0.22 ×, 3497 0.10 ×, 6379 0.046 ×,
+11666 0.019 ×; the cost goes as about d^−2.5 (more beads, and dt ∝ √d since kn = KN m g/d). Steve chose up to about 5000, slow motion.
+- Limits: Number up to 2500 per kind and 5000 in all (`MAX_GRAINS`; a slider that would pass it stops at the remainder), Diameter
+  from 0.5 mm. Arrays are sized to the request (`gfCap`: grains plus 2.2 Lw/dw wall beads, walls being beads dw/2 apart) instead of the
+  fixed 3000 or 4000, which a fine fill overran silently.
+- A fill over 800 grains (`DEFER_OVER`) settles a slice per frame (`o.defer`, `gfSettleMore`) with "Settling N grains: x %" in the
+  status line, so the page never stalls; small fills settle at once as before, so every existing preset, key and video is unchanged.
+  New test: the sliced settle ends bit for bit where the immediate one does, and 5000 grains of 0.5 and 1 mm fit every apparatus.
+- While running below 0.8 × real time the status line says it is slow motion and gives the factor; times and speeds stay real.
+- New preset Drum: fine sand, Two sizes with every grain a third as wide (2340 of 1 mm, 585 of 2 mm, glass). Seeded run of the
+  CORE: coarse minus fine distance from the bed's middle 1.3 mm at 2 s, 5.0 mm at 6 s, 8.9 mm at 20 s; none lost; largest overlap
+  7.5 % of a diameter. In headless Chromium it settles in about 9 s and runs at 0.04 to 0.06 × real time (software drawing).
+- 15 tests pass (test_granular_flow.cjs). What's new entry added.
+- For GPT: check the hint numbers against a run of `gfDrum({ kinds: [gfKind(2340, 1, 0.4), gfKind(585, 2, 0.4)] })`.
