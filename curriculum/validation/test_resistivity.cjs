@@ -109,4 +109,30 @@ group('wire view: dots in the magnified piece, their rate through the ring, the 
   near(c.potential(M, 0, 0.405, 20, 0.2) - c.potential(M, 0.5, 0.405, 20, 0.2), 0.2 * c.resistance(M, 0.5, 0.405, 20), 1e-12);
   near((c.potential(M, 0, 0.405, 20, 0.2) - c.potential(M, 0.3, 0.405, 20, 0.2)) / 0.3, 0.2 * M.rho / c.area(0.405), 1e-12, 'slope E = ρI/A');
 });
+group('current in a sheet: Kirchhoff on a grid of squares, R = R_s L/W for bars, current conserved, linear in V, symmetric', () => {
+  const S = core('resistivity', 'sheetSolve,sheetFace');
+  const nx = 40, ny = 24, N = nx * ny, I = (x, y) => y * nx + x;
+  let k = new Float64Array(N).fill(1), fix = new Int8Array(N);
+  for (let y = 0; y < ny; y++) { fix[I(0, y)] = 1; fix[I(nx - 1, y)] = 2; }
+  let r = S.sheetSolve(nx, ny, k, fix, 10);
+  near(r.G, ny / (nx - 2), 1e-9, 'two full width bars: L = 38 squares long, 24 wide');
+  for (let x = 1; x < nx - 1; x++) near(r.V[I(x, 5)], 10 * (1 - (x - 0.5) / (nx - 2)), 1e-8, 'V falls evenly between bars');
+  /* two round electrodes: current out of + equals current into ground, and doubling V doubles every V and the current */
+  fix = new Int8Array(N); for (let y = 0; y < ny; y++) for (let x = 0; x < nx; x++) { const a = (x - 10) ** 2 + (y - 12) ** 2, b = (x - 29) ** 2 + (y - 12) ** 2; if (a <= 4) fix[I(x, y)] = 1; if (b <= 4) fix[I(x, y)] = 2; }
+  r = S.sheetSolve(nx, ny, k, fix, 10); near(r.G, r.Gin, 1e-8, 'current conserved');
+  const r2 = S.sheetSolve(nx, ny, k, fix, 20); near(r2.G, r.G, 1e-9, 'G does not depend on V'); near(r2.V[I(15, 7)], 2 * r.V[I(15, 7)], 1e-7);
+  near(r.V[I(19, 3)] + r.V[I(20, 3)], 10, 1e-7, 'mirror symmetry: V and 10 − V');
+  /* every free cell obeys Kirchhoff's current rule */
+  let worst = 0; for (let y = 0; y < ny; y++) for (let x = 0; x < nx; x++) { const i = I(x, y); if (fix[i]) continue; let s = 0;
+    for (const [X, Y] of [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]) { if (X < 0 || Y < 0 || X >= nx || Y >= ny) continue; const j = I(X, Y); s += S.sheetFace(k, fix, i, j) * (r.V[j] - r.V[i]); } worst = Math.max(worst, Math.abs(s)); }
+  assert(worst < 1e-7, `Kirchhoff residual ${worst}`);
+  /* a cut right across leaves no path; a cut piece joined to no electrode has no potential */
+  const k2 = Float64Array.from(k); for (let y = 0; y < ny; y++) k2[I(20, y)] = 0;
+  r = S.sheetSolve(nx, ny, k2, fix, 10); near(r.G, 0, 1e-12, 'no path'); assert(isNaN(r.V[I(20, 3)]));
+  /* silver paint lowers R; series of two sheets of different conductance */
+  const k3 = new Float64Array(N).fill(1); const f2 = new Int8Array(N); for (let y = 0; y < ny; y++) { f2[I(0, y)] = 1; f2[I(nx - 1, y)] = 2; for (let x = 20; x < nx - 1; x++) k3[I(x, y)] = 3; }
+  r = S.sheetSolve(nx, ny, k3, f2, 10);
+  /* 19 squares of 1, then 19 of 3 per row: half cells at the bars and the series face 2·1·3/4 = 1.5 between them */
+  const Rrow = 0.5 + 18 + 1 / 1.5 + 18 / 3 + 0.5 / 3; near(r.G, ny / Rrow, 1e-9, 'two sheets in series');
+});
 console.log(`${n} resistivity test groups passed`);

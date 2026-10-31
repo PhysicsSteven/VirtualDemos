@@ -52,7 +52,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
 table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 190px; }
-@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } .stage[data-view="cold"] { height: 600px; max-height: none; } .stage[data-view="bench"] { height: 580px; max-height: none; } }
+@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } .stage[data-view="cold"] { height: 600px; max-height: none; } .stage[data-view="bench"] { height: 580px; max-height: none; } .stage[data-view="sheet"] { height: 420px; max-height: none; } }
 .viewseg { position: absolute; top: 8px; right: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 /* 3D or flat, for the wire view only */
 .dimseg { position: absolute; top: 8px; left: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
@@ -61,7 +61,7 @@ table.rows input:focus { border-color: var(--accent); }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
 /* the supply: knobs for the current and the wire's temperature, over the supply in the picture */
 .supply { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 14px; padding: 6px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
-.stage[data-view="cold"] .supply, .stage[data-view="inside"] .supply { display: none; }
+.stage[data-view="cold"] .supply, .stage[data-view="inside"] .supply, .stage[data-view="sheet"] .supply { display: none; }
 @media (max-width: 520px) { .supply { gap: 8px; padding: 6px 8px; } .sup-title { display: none; } .knob { width: 38px; height: 38px; } .knob-mark { transform-origin: 50% 15px; height: 11px; } .sup-lcd { font-size: 0.85rem; } }
 .sup-title { font-size: 0.75rem; font-weight: 700; color: #c9d0d9; }
 .knobwrap { display: flex; align-items: center; gap: 8px; }
@@ -110,12 +110,13 @@ table.rows input:focus { border-color: var(--accent); }
         <button type="button" data-view="bench" aria-pressed="true">Wire</button>
         <button type="button" data-view="inside" aria-pressed="false">Inside the wire</button>
         <button type="button" data-view="cold" aria-pressed="false">Cold stage</button>
+        <button type="button" data-view="sheet" aria-pressed="false">Current in a sheet</button>
       </div>
     </div>
 
     <aside class="rail">
       <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/resistivity.html" target="resistivity-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
-      <section>
+      <section id="wireSec">
         <h2>Wire</h2>
         <div class="chips" id="mats">
           <button type="button" data-m="nichrome" aria-pressed="true">Nichrome</button>
@@ -134,7 +135,7 @@ table.rows input:focus { border-color: var(--accent); }
         <p class="hint" id="matHint"></p>
       </section>
 
-      <section>
+      <section id="metersSec">
         <h2>Meters</h2>
         <dl class="readout" id="out"></dl>
         <details class="more"><summary>The model and its formulas</summary>
@@ -167,6 +168,32 @@ table.rows input:focus { border-color: var(--accent); }
           <p class="hint">Choose <b>Inside the wire</b> above the picture to see the free electrons in a magnified piece of this wire. With <b>Follow the marked electron</b>, the view travels with the circled electron, so the ions stream past it: its zigzag is the random motion, and its slow creep to the left is the drift.</p>
           <p class="formula">I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d</p>
           <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centered cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
+        </details>
+      </section>
+
+      <section id="sheetSec" hidden>
+        <h2>Current in a sheet</h2>
+        <div class="chips" id="shLayouts" role="group" aria-label="Electrodes and cuts">
+          <button type="button" data-sl="bars" aria-pressed="true">Two bars</button>
+          <button type="button" data-sl="dots" aria-pressed="false">Two dots</button>
+          <button type="button" data-sl="bardot" aria-pressed="false">Bar and dot</button>
+          <button type="button" data-sl="slot" aria-pressed="false">Slot between dots</button>
+          <button type="button" data-sl="ring" aria-pressed="false">Silver ring</button>
+          <button type="button" data-sl="neck" aria-pressed="false">Narrow neck</button>
+        </div>
+        <p class="hint" id="shHint"></p>
+        <div class="seg" role="group" aria-label="What a press on the sheet does" id="shTools">
+          <button type="button" data-st="probe" aria-pressed="true">Probe</button>
+          <button type="button" data-st="cut" aria-pressed="false">Cut</button>
+          <button type="button" data-st="paint" aria-pressed="false">Silver paint</button>
+          <button type="button" data-st="erase" aria-pressed="false">Mend</button>
+        </div>
+        <div><div class="slider-head"><label for="shV">Battery V</label><output id="oShV" for="shV"></output></div><input type="range" id="shV" min="1" max="20" step="1"></div>
+        <div><div class="slider-head"><label for="shRs">Sheet resistance R_s</label><output id="oShRs" for="shRs"></output></div><input type="range" id="shRs" min="100" max="10000" step="100"></div>
+        <dl class="readout" id="shOut"></dl>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">J = E/R_s · ∇·J = 0 · I = ∮ J·n dl · R = V/I</p>
+          <p class="hint">A thin resistive sheet, like the conducting paper of a field mapping lab, 24 cm by 16 cm, with two electrodes held at the battery's V and at 0 V. In a sheet the current per unit width is J = E/R_s, where the sheet resistance R_s = ρ/t is the resistivity over the thickness (ohms per square: any square of the sheet, whatever its size, has R_s between two opposite edges). In a steady state no charge piles up anywhere, so as much current leaves every bit of sheet as enters it; no current crosses the sheet's edges or a cut. The demo solves that exactly on a grid of 0.25 cm squares (Kirchhoff's rule at every square, conjugate gradients to 10⁻¹⁰ of V), so the map is the true answer for a sheet made of those squares; for two full width bars it gives R = R_s L/W exactly. Silver paint is modeled as 10⁴ times as conductive as the sheet. The tint and the lines every V/10 are equipotentials; the arrows are lines of current, one for each equal share of the current, so they crowd where J is large; they cross the equipotentials at right angles, and they are not drawn inside silver paint, which carries the current along with almost no field. R_s is a setting, not a measured paper. Press the sheet with Probe to read the potential there (the arrow keys move the probe 2.5 mm, Shift 1 cm); with Cut, Silver paint or Mend, drag across the sheet.</p>
         </details>
       </section>
 
@@ -317,6 +344,54 @@ table.rows input:focus { border-color: var(--accent); }
   const dotRate = (I) => I / (QE * DOT_E);   /* dots through any cross section per second: (n/DOT_E) A v_d = I/(e DOT_E), for every gauge */
   const WIRE_A = -0.02, WIRE_B = 1.02;   /* the wire's ends on the rule (m), where the supply leads join; the current flows toward +x */
   const potential = (M, x, dmm, T, I) => I * resistance(M, WIRE_B - x, dmm, T);   /* V(x) measured from the far end */
+  /* ---- steady current in a thin conducting sheet (OpenStax Vol. 2, §9.3: J = σE) ----
+     The sheet is cut into nx × ny square cells. c[i] is each cell's conductance relative to the bare sheet: 1 for the sheet, 0 for a
+     cut (a hole), large for silver paint; fix[i] is 1 for the + electrode (potential V0), 2 for the grounded one (0 V), else 0. Between
+     two square cells of one sheet the conductance is 1/R_s whatever the cell size (R_s: the sheet resistance, ohms per square), so
+     for neighbours it is the series value 2 c₁c₂/(c₁ + c₂) over R_s, and 2c/R_s from an electrode, whose edge is the cell boundary.
+     In steady state no charge piles up, so the current into every free cell adds to zero: Kirchhoff's rule on the grid, the discrete
+     form of ∇·(σ∇V) = 0 with no current through the sheet's edges or the cuts. Solved with conjugate gradients to 10⁻¹⁰ of V0.
+     Returns V (NaN in cuts and in pieces joined to no electrode) and G, the sheet's conductance between the electrodes in units of
+     1/R_s, so I = G V0/R_s and R = R_s/G. */
+  function sheetFace(c, fix, a, b) {
+    if (!(c[a] > 0) || !(c[b] > 0)) return 0;
+    if (fix[a] && fix[b]) return 0;
+    if (fix[a]) return 2 * c[b]; if (fix[b]) return 2 * c[a];
+    return 2 * c[a] * c[b] / (c[a] + c[b]);
+  }
+  function sheetSolve(nx, ny, c, fix, V0, guess) {
+    const N = nx * ny, V = new Float64Array(N).fill(NaN), nb = (i) => { const x = i % nx, y = (i - x) / nx, o = []; if (x > 0) o.push(i - 1); if (x < nx - 1) o.push(i + 1); if (y > 0) o.push(i - nx); if (y < ny - 1) o.push(i + nx); return o; };
+    /* the cells joined to an electrode through the sheet */
+    const seen = new Uint8Array(N), q = [];
+    for (let i = 0; i < N; i++) if (fix[i] && c[i] > 0) { seen[i] = 1; q.push(i); V[i] = fix[i] === 1 ? V0 : 0; }
+    for (let k = 0; k < q.length; k++) for (const j of nb(q[k])) if (!seen[j] && sheetFace(c, fix, q[k], j) > 0) { seen[j] = 1; q.push(j); }
+    const idx = new Int32Array(N).fill(-1), cells = [];
+    for (let i = 0; i < N; i++) if (seen[i] && !fix[i]) { idx[i] = cells.length; cells.push(i); }
+    const n = cells.length, x = new Float64Array(n), r = new Float64Array(n), z = new Float64Array(n), pv = new Float64Array(n), Ap = new Float64Array(n), dg = new Float64Array(n);
+    const NB = cells.map((i) => nb(i).map((j) => [j, sheetFace(c, fix, i, j)]).filter((e) => e[1] > 0));
+    for (let k = 0; k < n; k++) { let s = 0, rhs = 0; for (const [j, g] of NB[k]) { s += g; if (idx[j] < 0) rhs += g * V[j]; } dg[k] = s; r[k] = rhs; x[k] = guess && isFinite(guess[cells[k]]) ? guess[cells[k]] : V0 / 2; }
+    const mul = (v, out) => { for (let k = 0; k < n; k++) { let s = dg[k] * v[k]; for (const [j, g] of NB[k]) { const m = idx[j]; if (m >= 0) s -= g * v[m]; } out[k] = s; } };
+    mul(x, Ap); for (let k = 0; k < n; k++) r[k] -= Ap[k];
+    let rz = 0; for (let k = 0; k < n; k++) { z[k] = r[k] / dg[k]; pv[k] = z[k]; rz += r[k] * z[k]; }
+    const tol = (1e-10 * (V0 || 1)) ** 2; let it = 0;
+    for (; it < 20000; it++) {
+      if (rz <= tol * n) break;
+      mul(pv, Ap); let pAp = 0; for (let k = 0; k < n; k++) pAp += pv[k] * Ap[k];
+      const al = rz / pAp; for (let k = 0; k < n; k++) { x[k] += al * pv[k]; r[k] -= al * Ap[k]; }
+      let rz2 = 0; for (let k = 0; k < n; k++) { z[k] = r[k] / dg[k]; rz2 += r[k] * z[k]; }
+      const be = rz2 / rz; rz = rz2; for (let k = 0; k < n; k++) pv[k] = z[k] + be * pv[k];
+    }
+    for (let k = 0; k < n; k++) V[cells[k]] = x[k];
+    /* the current out of the + electrode and into the grounded one, in units of V0/R_s */
+    let Iout = 0, Iin = 0;
+    for (let i = 0; i < N; i++) { if (!fix[i] || !(c[i] > 0)) continue; for (const j of nb(i)) { if (fix[j] || !isFinite(V[j])) continue; const g = sheetFace(c, fix, i, j); if (fix[i] === 1) Iout += g * (V0 - V[j]); else Iin += g * V[j]; } }
+    /* no path through the sheet from the + electrode to the grounded one: no current at all (not a rounding error's worth) */
+    const reach = new Uint8Array(N), q2 = []; let joined = false;
+    for (let i = 0; i < N; i++) if (fix[i] === 1 && c[i] > 0) { reach[i] = 1; q2.push(i); }
+    for (let k = 0; k < q2.length && !joined; k++) for (const j of nb(q2[k])) { if (reach[j] || !(c[j] > 0) || !(c[q2[k]] > 0)) continue; if (fix[j] === 2) { joined = true; break; } if (fix[j] === 1) continue; reach[j] = 1; q2.push(j); }
+    if (!joined) { Iout = 0; Iin = 0; }
+    return { V, G: V0 ? Iout / V0 : 0, Gin: V0 ? Iin / V0 : 0, iters: it };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -342,6 +417,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (!use3()) { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     if (S.view === 'inside') { drawInside(); return; }
     if (S.view === 'cold') { drawCold(); return; }
+    if (S.view === 'sheet') { drawSheet(); return; }
     if (use3()) { drawBench3(); return; }
     drawBenchFlat();
   }
@@ -834,9 +910,10 @@ table.rows input:focus { border-color: var(--accent); }
   VD.knob($('knobT'), { deg: KNOB_DEG, turn: stepT, page: 5, home: () => stepT(-1e3), end: () => stepT(1e3), get: () => S.T, set: (t) => stepT(Math.round((t - S.T) / 5)) });
   VD.typeIn($('oI'), { get: () => S.I, set: (I) => { if (I !== S.I) { S.I = I; resetCount(); upd(); } }, min: 0.05, max: 1, step: 0.05, unit: 'A', label: 'Supply current I', knobs: [$('knobI')] });
   VD.typeIn($('oT'), { get: () => S.T, set: (t) => { if (t !== S.T) { S.T = t; upd(); } }, min: 0, max: 200, step: 5, unit: '°C', label: 'Wire temperature', knobs: [$('knobT')] });
-  const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
+  const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), sheet: 'A resistive sheet with two electrodes, tinted by potential, with equipotential lines and arrows along the current. A probe reads the potential where it is placed; the arrow keys move it.', inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
-    S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; $('sheetSec').hidden = v !== 'sheet'; $('wireSec').hidden = $('metersSec').hidden = v === 'sheet';
+    if (v === 'sheet') { shSync(); shReadouts(); } for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
     if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
     can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop(); if (v === 'bench') benchLoop();
   }
@@ -862,6 +939,169 @@ table.rows input:focus { border-color: var(--accent); }
   can.addEventListener('pointermove', (e) => { if (drag) setL(e); });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
   can.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); S.L = Math.max(0.05, Math.min(1, +(S.L + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.05 : 0.005)).toFixed(3))); upd(); });
+
+  // ---------- current in a sheet: field mapping on a resistive sheet ----------
+  const SH_NX = 96, SH_NY = 64, SH_H = 0.0025, SH_PAINT = 1e4;   /* 24 cm × 16 cm in 0.25 cm cells; silver paint 10⁴ times the sheet's conductance (a model) */
+  const SH = { layout: 'bars', tool: 'probe', V0: 10, Rs: 1000, c: null, fix: null, sol: null, probe: [12, 8], busy: 0, last: 0, geo: null, paint: false };
+  const shI = (x, y) => y * SH_NX + x;
+  function shLayout(name) {
+    const c = new Float64Array(SH_NX * SH_NY).fill(1), fix = new Int8Array(SH_NX * SH_NY);
+    const shapes = [];
+    const disk = (cx, cy, r, v) => { shapes.push({ k: 'disk', cx, cy, r, v }); for (let y = 0; y < SH_NY; y++) for (let x = 0; x < SH_NX; x++) if ((x + 0.5 - cx) ** 2 + (y + 0.5 - cy) ** 2 <= r * r) fix[shI(x, y)] = v; };
+    const bar = (x0, x1, v) => { shapes.push({ k: 'bar', x0, x1, v }); for (let y = 0; y < SH_NY; y++) for (let x = x0; x <= x1; x++) fix[shI(x, y)] = v; };
+    const cut = (x0, x1, y0, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) c[shI(x, y)] = 0; };
+    if (name === 'bars' || name === 'neck') { bar(3, 4, 1); bar(91, 92, 2); }
+    if (name === 'dots' || name === 'slot' || name === 'ring') { disk(24, 32, 4, 1); disk(72, 32, 4, 2); }
+    if (name === 'bardot') { bar(3, 4, 1); disk(72, 32, 4, 2); }
+    if (name === 'slot') cut(47, 48, 16, 47);
+    if (name === 'neck') { cut(47, 48, 0, 23); cut(47, 48, 40, 63); }
+    if (name === 'ring') for (let y = 0; y < SH_NY; y++) for (let x = 0; x < SH_NX; x++) { const r = Math.hypot(x + 0.5 - 48, y + 0.5 - 32); if (r >= 8 && r < 10) c[shI(x, y)] = SH_PAINT; }
+    SH.c = c; SH.fix = fix; SH.sol = null; SH.layout = name; SH.shapes = shapes;
+  }
+  function shSolve() { SH.sol = sheetSolve(SH_NX, SH_NY, SH.c, SH.fix, SH.V0, SH.sol ? SH.sol.V : null); }
+  /* V at a point (cm from the sheet's top left corner, y down), bilinear between cell centers; NaN in a cut */
+  function shV(xc, yc) {
+    const V = SH.sol.V, gx = xc / 0.25 - 0.5, gy = yc / 0.25 - 0.5, x0 = Math.max(0, Math.min(SH_NX - 2, Math.floor(gx))), y0 = Math.max(0, Math.min(SH_NY - 2, Math.floor(gy)));
+    const cx = Math.max(0, Math.min(SH_NX - 1, Math.floor(xc / 0.25))), cy = Math.max(0, Math.min(SH_NY - 1, Math.floor(yc / 0.25)));
+    if (!isFinite(V[shI(cx, cy)])) return NaN;
+    const u = Math.max(0, Math.min(1, gx - x0)), v = Math.max(0, Math.min(1, gy - y0)), w = [[x0, y0, (1 - u) * (1 - v)], [x0 + 1, y0, u * (1 - v)], [x0, y0 + 1, (1 - u) * v], [x0 + 1, y0 + 1, u * v]];
+    let s = 0, ws = 0; for (const [x, y, k] of w) { const a = V[shI(x, y)]; if (isFinite(a) && k > 0) { s += a * k; ws += k; } }
+    return ws ? s / ws : V[shI(cx, cy)];
+  }
+  /* E = −∇V at a point (V/m, x right, y down on the sheet), from V half a cell either side */
+  function shE(xc, yc) {
+    const d = 0.125, l = shV(xc - d, yc), r = shV(xc + d, yc), u = shV(xc, yc - d), b = shV(xc, yc + d), m = shV(xc, yc);
+    const gx = isFinite(l) && isFinite(r) ? (r - l) / (2 * d) : isFinite(r) && isFinite(m) ? (r - m) / d : isFinite(l) && isFinite(m) ? (m - l) / d : 0;
+    const gy = isFinite(u) && isFinite(b) ? (b - u) / (2 * d) : isFinite(b) && isFinite(m) ? (b - m) / d : isFinite(u) && isFinite(m) ? (m - u) / d : 0;
+    return [-gx * 100, -gy * 100];
+  }
+  const shCellAt = (xc, yc) => { const x = Math.floor(xc / 0.25), y = Math.floor(yc / 0.25); return x >= 0 && y >= 0 && x < SH_NX && y < SH_NY ? shI(x, y) : -1; };
+  /* lines of current in the sheet, one for every equal share of the current, so their spacing shows |J|. They start where current
+     leaves a conductor (the + electrode, or silver paint) into bare sheet and end where they reach one (the 0 V electrode, or paint). */
+  function shStreams(n) {
+    const V = SH.sol.V, fix = SH.fix, c = SH.c, seeds = [], src = (i) => fix[i] === 1 || (!fix[i] && c[i] > 1);
+    let tot = 0, Ie = 0; const faces = [];
+    for (let y = 0; y < SH_NY; y++) for (let x = 0; x < SH_NX; x++) { const i = shI(x, y); if (!src(i) || !isFinite(V[i])) continue;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= SH_NX || Y >= SH_NY) continue; const j = shI(X, Y); if (fix[j] || c[j] !== 1 || !isFinite(V[j])) continue;
+        const I = sheetFace(c, fix, i, j) * (V[i] - V[j]); if (I <= 0) continue; tot += I; if (fix[i] === 1) Ie += I; faces.push([x + 0.5 + dx * 0.5, y + 0.5 + dy * 0.5, dx, dy, tot]); } }
+    if (!tot || !Ie) return [];
+    n = Math.round(n * tot / Ie);
+    for (let k = 0; k < n; k++) { const t = (k + 0.5) / n * tot, f = faces.find((q) => q[4] >= t); seeds.push([(f[0] + f[2] * 0.3) * 0.25, (f[1] + f[3] * 0.3) * 0.25]); }
+    return seeds.map(([x, y]) => { const pts = [[x, y]]; for (let s = 0; s < 900; s++) {
+      const e = shE(x, y), m = Math.hypot(e[0], e[1]); if (!(m > 1e-9)) break;
+      const st = 0.08, xm = x + 0.5 * st * e[0] / m, ym = y + 0.5 * st * e[1] / m, e2 = shE(xm, ym), m2 = Math.hypot(e2[0], e2[1]); if (!(m2 > 1e-9)) break;
+      x += st * e2[0] / m2; y += st * e2[1] / m2; const i = shCellAt(x, y); if (i < 0 || !(c[i] > 0)) break; pts.push([x, y]); if (fix[i] || c[i] > 1) break; }
+      return pts; });
+  }
+  function drawSheet() {
+    if (!SH.sol) shSolve();
+    const p = ps(), top = 52 * p, pad = 14 * p, aw = W - 2 * pad, ah = H - top - pad - 8 * p, sc = Math.min(aw / 24, ah / 16), x0 = (W - 24 * sc) / 2, y0 = top + (ah - 16 * sc) / 2;
+    SH.geo = { x0, y0, sc };
+    const X = (xc) => x0 + xc * sc, Y = (yc) => y0 + yc * sc, V = SH.sol.V, fix = SH.fix, c = SH.c, dark = VG && VG.dark ? VG.dark() : false;
+    /* the board under the sheet */
+    ctx.fillStyle = dark ? '#151a21' : '#d9dde2'; ctx.fillRect(x0 - 8 * p, y0 - 8 * p, 24 * sc + 16 * p, 16 * sc + 16 * p);
+    /* the sheet, tinted by potential: blue at 0 V, red at V0 */
+    const im = ctx.createImageData(SH_NX, SH_NY), lo = [70, 120, 220], hi = [220, 70, 60], paper = dark ? [52, 56, 64] : [236, 233, 226];
+    for (let i = 0; i < SH_NX * SH_NY; i++) { const o = 4 * i;
+      if (!(c[i] > 0)) { im.data[o + 3] = 0; continue; }
+      let col = paper;
+      if (fix[i]) col = dark ? [150, 158, 168] : [128, 136, 146];
+      else if (c[i] > 1) col = dark ? [196, 202, 210] : [176, 184, 194];
+      else if (isFinite(V[i]) && !S.blind) { const t = V[i] / SH.V0, a = 0.38; col = paper.map((v, k) => v * (1 - a) + (lo[k] * (1 - t) + hi[k] * t) * a); }
+      im.data[o] = col[0]; im.data[o + 1] = col[1]; im.data[o + 2] = col[2]; im.data[o + 3] = 255; }
+    const off = shSheetCanvas(); off.getContext('2d').putImageData(im, 0, 0);
+    ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(off, X(0), Y(0), 24 * sc, 16 * sc); ctx.restore();
+    /* equipotentials every V0/10, by marching squares on the cell centers */
+    if (!S.blind) {
+      ctx.save(); ctx.strokeStyle = dark ? 'rgba(235,240,248,0.7)' : 'rgba(40,46,56,0.65)'; ctx.lineWidth = 1.2 * p; ctx.beginPath();
+      for (let k = 1; k < 10; k++) { const L = SH.V0 * k / 10;
+        for (let y = 0; y < SH_NY - 1; y++) for (let x = 0; x < SH_NX - 1; x++) {
+          const q = [V[shI(x, y)], V[shI(x + 1, y)], V[shI(x + 1, y + 1)], V[shI(x, y + 1)]]; if (!q.every(isFinite)) continue;
+          const P = [[x, y], [x + 1, y], [x + 1, y + 1], [x, y + 1]], hits = [];
+          for (let e = 0; e < 4; e++) { const a = q[e], b = q[(e + 1) % 4]; if ((a - L) * (b - L) < 0) { const t = (L - a) / (b - a), A = P[e], B = P[(e + 1) % 4]; hits.push([A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t]); } }
+          for (let h = 0; h + 1 < hits.length; h += 2) { ctx.moveTo(X((hits[h][0] + 0.5) * 0.25), Y((hits[h][1] + 0.5) * 0.25)); ctx.lineTo(X((hits[h + 1][0] + 0.5) * 0.25), Y((hits[h + 1][1] + 0.5) * 0.25)); }
+        } }
+      ctx.stroke(); ctx.restore();
+      /* current streamlines with arrows */
+      ctx.save(); ctx.strokeStyle = dark ? '#ffd27a' : '#b86a00'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1.6 * p;
+      for (const pts of shStreams(18)) { if (pts.length < 3) continue; ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])))); ctx.stroke();
+        const m = Math.floor(pts.length / 2), a = pts[m - 1], b = pts[m + 1], ang = Math.atan2(Y(b[1]) - Y(a[1]), X(b[0]) - X(a[0])), hx = X(pts[m][0]), hy = Y(pts[m][1]);
+        ctx.beginPath(); ctx.moveTo(hx + Math.cos(ang) * 6 * p, hy + Math.sin(ang) * 6 * p); ctx.lineTo(hx + Math.cos(ang + 2.5) * 6 * p, hy + Math.sin(ang + 2.5) * 6 * p); ctx.lineTo(hx + Math.cos(ang - 2.5) * 6 * p, hy + Math.sin(ang - 2.5) * 6 * p); ctx.fill(); }
+      ctx.restore();
+    }
+    /* the electrodes, drawn smooth over their cells (the solver uses the cells), and their labels */
+    for (const e of SH.shapes) {
+      const g = ctx.createLinearGradient(0, Y(0), 0, Y(16)); g.addColorStop(0, '#d7dce2'); g.addColorStop(1, '#8e98a4'); ctx.fillStyle = g; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1;
+      ctx.beginPath(); if (e.k === 'disk') ctx.arc(X(e.cx * 0.25), Y(e.cy * 0.25), (e.r + 0.5) * 0.25 * sc, 0, 2 * Math.PI); else ctx.rect(X(e.x0 * 0.25), Y(0), (e.x1 - e.x0 + 1) * 0.25 * sc, 16 * sc); ctx.fill(); ctx.stroke();
+      const bx = X((e.x0 + e.x1 + 1) * 0.125), lx = e.k === 'disk' ? X(e.cx * 0.25) : bx + (bx < X(12) ? 34 : -34) * p, ly = e.k === 'disk' ? Y((e.cy - e.r) * 0.25) - 6 * p : Y(0) + 24 * p, t = e.v === 1 ? `+${SH.V0} V` : '0 V';
+      ctx.save(); ctx.font = `700 ${11 * p}px ${T.mono}`; const tw = ctx.measureText(t).width + 10 * p; ctx.fillStyle = e.v === 1 ? '#b8322a' : '#2f5fb8'; ctx.fillRect(lx - tw / 2, ly - 16 * p, tw, 16 * p);
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, lx, ly - 8 * p); ctx.restore();
+    }
+    txt('24 cm × 16 cm sheet · lines every ' + sig(SH.V0 / 10, 3) + ' V · arrows: current', x0, y0 + 16 * sc + 6 * p, { s: 10, c: T.muted, bl: 'top' });
+    /* the probe */
+    const [px, py] = SH.probe, vp = shV(px, py), qx = X(px), qy = Y(py);
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(qx, qy, 6 * p, 0, 2 * Math.PI); ctx.moveTo(qx - 10 * p, qy); ctx.lineTo(qx + 10 * p, qy); ctx.moveTo(qx, qy - 10 * p); ctx.lineTo(qx, qy + 10 * p); ctx.stroke(); ctx.restore();
+    const lab = isFinite(vp) ? `${vp.toFixed(3)} V` : 'no contact';
+    ctx.save(); ctx.font = `700 ${12 * p}px ${T.mono}`; const tw = ctx.measureText(lab).width + 12 * p, bx = Math.min(W - tw - 4, qx + 12 * p), by = Math.max(4, qy - 30 * p);
+    ctx.fillStyle = '#1f2630'; ctx.fillRect(bx, by, tw, 20 * p); ctx.fillStyle = '#9ff5c0'; ctx.textBaseline = 'middle'; ctx.fillText(lab, bx + 6 * p, by + 10 * p); ctx.restore();
+  }
+  let shOff = null;
+  function shSheetCanvas() { if (!shOff) { shOff = document.createElement('canvas'); shOff.width = SH_NX; shOff.height = SH_NY; } return shOff; }
+  function shReadouts() {
+    if (!SH.sol) shSolve();
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, G = SH.sol.G, I = G * SH.V0 / SH.Rs;
+    let h = dd('Battery V', `${SH.V0} V`) + dd('Sheet resistance R_s', `${sig(SH.Rs, 4)} Ω per square`);
+    if (S.blind) h += '<div class="wide"><dt>Current and resistance</dt><dd class="ok">hidden: work them out from the map</dd></div>';
+    else if (!(G > 0)) h += dd('Current I', '0: no path between the electrodes', true);
+    else h += dd('Current I', `${sci(I, 4)} A`) + dd('R = V/I', `${sig(SH.Rs / G, 4)} Ω`) + dd('R in squares, R/R_s', sig(1 / G, 4)) + dd('Current into the 0 V electrode', `${sci(SH.sol.Gin * SH.V0 / SH.Rs, 4)} A`);
+    const [px, py] = SH.probe, vp = shV(px, py), e = shE(px, py), Em = Math.hypot(e[0], e[1]), ci = shCellAt(px, py), cc = ci >= 0 ? SH.c[ci] : 0;
+    h += dd('Probe at', `x = ${px.toFixed(2)} cm, y = ${(16 - py).toFixed(2)} cm`, true) + dd('Probe potential', isFinite(vp) ? `${vp.toFixed(3)} V` : 'no contact');
+    if (isFinite(vp) && !S.blind) h += dd('|E| at the probe', `${sig(Em, 3)} V/m`) + dd('|J| = |E|/R_s', `${sci(Em * (cc > 1 ? cc : 1) / SH.Rs, 3)} A/m`) + dd('Direction of E and J', Em > 1e-6 ? `${Math.round(Math.atan2(-e[1], e[0]) * 180 / Math.PI)}°` : '—');
+    $('shOut').innerHTML = h;
+  }
+  function shSync() {
+    for (const b of document.querySelectorAll('#shLayouts button')) b.setAttribute('aria-pressed', String(b.dataset.sl === SH.layout));
+    for (const b of document.querySelectorAll('#shTools button')) b.setAttribute('aria-pressed', String(b.dataset.st === SH.tool));
+    $('shV').value = SH.V0; $('oShV').textContent = `${SH.V0} V`; $('shRs').value = SH.Rs; $('oShRs').textContent = `${sig(SH.Rs, 4)} Ω/□`;
+    can.style.cursor = S.view === 'sheet' ? (SH.tool === 'probe' ? 'crosshair' : 'cell') : can.style.cursor;
+  }
+  const shUpd = () => { shSync(); if (S.view === 'sheet') { draw(); shReadouts(); } };
+  const SH_HINT = { bars: 'Two straight electrodes the full width of the sheet: the current runs straight, the equipotentials are evenly spaced and parallel, and R = R_s L/W with L = 21.5 cm between the electrodes and W = 16 cm, 1.344 squares.',
+    dots: 'Two round electrodes 2 cm across, 12 cm apart: the field of a dipole. Current crowds near the electrodes, where the equipotentials are closest.',
+    bardot: 'A straight electrode and a round one: the lines leave the bar evenly and gather onto the dot.',
+    slot: 'A slot cut between the electrodes: no current crosses it, so the current lines bend round its ends and the equipotentials meet its edges at right angles.',
+    ring: 'A ring painted with silver: it conducts so much better than the sheet that it is nearly one potential, and the sheet inside it barely carries any current.',
+    neck: 'Two cuts leave a 4 cm neck: the current crowds through it, the field there is strongest, and R rises above the 1.344 squares of the uncut sheet.' };
+  for (const b of document.querySelectorAll('#shLayouts button')) b.addEventListener('click', () => { shLayout(b.dataset.sl); $('shHint').textContent = SH_HINT[b.dataset.sl]; shSolve(); shUpd(); });
+  for (const b of document.querySelectorAll('#shTools button')) b.addEventListener('click', () => { SH.tool = b.dataset.st; shSync(); });
+  $('shV').addEventListener('input', (e) => { SH.V0 = +e.target.value; shSolve(); shUpd(); });
+  $('shRs').addEventListener('input', (e) => { SH.Rs = +e.target.value; shUpd(); });
+  const shAt = (e) => { const r = can.getBoundingClientRect(), g = SH.geo; return [((e.clientX - r.left) - g.x0) / g.sc, ((e.clientY - r.top) - g.y0) / g.sc]; };
+  function shBrush(xc, yc) {
+    const r = 1.6, cx = xc / 0.25, cy = yc / 0.25, v = SH.tool === 'cut' ? 0 : SH.tool === 'paint' ? SH_PAINT : 1;
+    let ch = false; for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) {
+      if (x < 0 || y < 0 || x >= SH_NX || y >= SH_NY || (x + 0.5 - cx) ** 2 + (y + 0.5 - cy) ** 2 > r * r) continue; const i = shI(x, y); if (SH.fix[i] || SH.c[i] === v) continue; SH.c[i] = v; ch = true; }
+    if (ch) { SH.layout = 'own'; $('shHint').textContent = 'Your own sheet. Choose a layout to start again.'; }
+    return ch;
+  }
+  let shSolveT = 0;
+  /* while dragging, the cut or paint shows at once over the last solution; the sheet is solved again when the press ends */
+  function shSoon(force) { if (force) { shSolveT = performance.now(); shSolve(); } shUpd(); }
+  can.addEventListener('pointerdown', (e) => {
+    if (S.view !== 'sheet' || !SH.geo) return; const [x, y] = shAt(e); if (x < 0 || y < 0 || x > 24 || y > 16) return;
+    can.focus(); SH.paint = true; try { can.setPointerCapture(e.pointerId); } catch (_) {}
+    if (SH.tool === 'probe') { SH.probe = [x, y]; shUpd(); } else if (shBrush(x, y)) shSoon();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (S.view !== 'sheet' || !SH.paint) return; const [x, y] = shAt(e);
+    if (SH.tool === 'probe') { SH.probe = [Math.max(0, Math.min(24, x)), Math.max(0, Math.min(16, y))]; shUpd(); } else if (shBrush(x, y)) shSoon();
+  });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { if (S.view === 'sheet' && SH.paint) { SH.paint = false; if (SH.tool !== 'probe') shSoon(true); } });
+  can.addEventListener('keydown', (e) => {
+    if (S.view !== 'sheet') return; const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!k) return;
+    e.preventDefault(); e.stopImmediatePropagation(); const st = e.shiftKey ? 1 : 0.25; SH.probe = [Math.max(0, Math.min(24, SH.probe[0] + k[0] * st)), Math.max(0, Math.min(16, SH.probe[1] + k[1] * st))]; shUpd();
+  }, true);
+  shLayout('bars'); $('shHint').textContent = SH_HINT.bars;
 
   // ---------- cold stage ----------
   const CS = { key: 'lead', lgR: 2, Tk: T_ROOM, dir: 0, pts: [], raf: 0, last: 0, acc: 0 };
@@ -946,6 +1186,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readings and fits ----------
   function capStatus(m) { $('capStatus').textContent = m; }
+  $('capture').addEventListener('click', (e) => { if (S.view === 'sheet') { e.stopImmediatePropagation(); capStatus('Readings here are for the wire. In the sheet, read the probe and the meters in the Current in a sheet section.'); } }, true);
   $('capture').addEventListener('click', () => { S.rows.push({ mat: M().name, key: S.mat, d: d().toFixed(3), T: String(S.T), L: S.L.toFixed(3), I: sig(S.I, 3), V: vShown() }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
   $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
@@ -1027,7 +1268,7 @@ table.rows input:focus { border-color: var(--accent); }
   resetElectrons();
   tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); resize();
   VD.howTo({ src: 'media/how-this-works/resistivity.mp4', poster: 'media/how-this-works/resistivity.jpg' });
-  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside') setView(v0); else benchLoop();
+  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside' || v0 === 'sheet') setView(v0); else benchLoop();
     G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
