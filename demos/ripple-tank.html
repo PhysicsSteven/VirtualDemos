@@ -104,6 +104,7 @@
           <div><div class="slider-head"><label for="sA">Slit width a</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="4" max="60" step="1"></div>
           <div id="dBox"><div class="slider-head"><label for="sD">Slit spacing d</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="20" max="90" step="1"></div>
         </div>
+        <div id="chanBox" hidden><div class="slider-head"><label for="sCW">Channel width w</label><output id="oCW" class="mono" for="sCW"></output></div><input type="range" id="sCW" min="20" max="80" step="1"></div>
         <div id="edgeBox" hidden><div class="slider-head"><label for="sEdge">Plate edge turned by</label><output id="oEdge" class="mono" for="sEdge"></output></div><input type="range" id="sEdge" min="0" max="60" step="5"></div>
         <div class="pick" id="edgesPick"><label for="selEdges">Sides of the tank</label><select id="selEdges"><option value="beach">Beaches (absorb the waves)</option><option value="wall">Walls (reflect the waves)</option></select></div>
         <div id="sideBox" hidden>
@@ -134,6 +135,7 @@
           <button type="button" data-p="mirror" aria-pressed="false">Focusing mirror</button>
           <button type="button" data-p="lens" aria-pressed="false">Focusing lens</button>
           <button type="button" data-p="draw" aria-pressed="false">Draw your own</button>
+          <button type="button" data-p="channel" aria-pressed="false">A channel: modes and cutoff</button>
           <button type="button" data-p="sideDeep" aria-pressed="false">Under a wave: deep water</button>
           <button type="button" data-p="sideShallow" aria-pressed="false">Under a wave: shallow water</button>
         </div>
@@ -219,6 +221,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return k;
   }
   const lambdaOf = (f, d) => 2 * Math.PI / kOf(f, d);
+  /* A channel: a waveguide for water waves. Between two straight walls w apart the water's height across the channel must have zero
+     slope at each wall (the walls reflect), so a wave going down the channel is a sum of modes η_n ∝ cos(nπy/w) cos(k_x x − ωt), n = 0, 1, 2, ...
+     Each mode still obeys the water's dispersion relation with k² = k_x² + (nπ/w)², so k_x = √(k² − (nπ/w)²): mode n travels only when
+     k > nπ/w, that is above its cutoff frequency, the frequency whose wavenumber is nπ/w (put straight into ω² = (gk + σk³/ρ) tanh kd).
+     Below it k_x is imaginary and the mode dies away as e^(−κx), κ = √((nπ/w)² − k²). Mode n is two plane waves bouncing between the walls
+     at sin θ = nπ/(kw) from the channel's direction. The same reasoning gives the modes of a microwave waveguide (EM Waves) or a pipe. */
+  const omegaOfK = (k, d) => Math.sqrt((PH.g * k + PH.sigma / PH.rho * k ** 3) * Math.tanh(k * d));
+  const channelCutoff = (n, w, d) => omegaOfK(n * Math.PI / w, d) / (2 * Math.PI);
+  function channelModes(f, d, w, nmax) {
+    const k = kOf(f, d), out = [];
+    for (let n = 0; n <= nmax; n++) { const ky = n * Math.PI / w, q = k * k - ky * ky;
+      out.push(q > 0 ? { n, travels: true, fc: channelCutoff(n, w, d), kx: Math.sqrt(q), lx: 2 * Math.PI / Math.sqrt(q), th: Math.asin(ky / k) * 180 / Math.PI }
+        : { n, travels: false, fc: channelCutoff(n, w, d), kappa: Math.sqrt(-q), decay: 1 / Math.sqrt(-q) }); }
+    return out;
+  }
   const speedOf = (f, d) => f * lambdaOf(f, d);
   const shallowSpeed = (d) => Math.sqrt(PH.g * d);
   /* −(symbol of the nine point Laplacian) for a plane wave of wavenumber k at angle th, times DX² */
@@ -371,7 +388,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
-  const MM = 1e-3, TW = NX * DX / MM, TH = NY * DX / MM, BAR_X = 62.5, SLIT_X = 150, YC = TH / 2;   /* tank 450 mm × 300 mm */
+  const MM = 1e-3, TW = NX * DX / MM, TH = NY * DX / MM, BAR_X = 62.5, SLIT_X = 150, YC = TH / 2, CH_X0 = 60;   /* tank 450 mm × 300 mm */
   const LENS = { R: 150, t: 40, x: 190 }, MIRROR = { xv: 360, p: 80, half: 95 }, IMAGE_X = 300;
   const PRESETS = {
     plane: { src: 'bar', f: 10, deep: 10, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150],
@@ -398,12 +415,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'A plate shaped like a convex lens (two arcs of radius 150 mm, 40 mm thick in the middle) under the water. The waves go slower over it, most where it is widest, so the wavefronts are held back in the middle and curve inward: they converge, as light does through a glass lens.' },
     draw: { src: 'bar', f: 12, deep: 10, plate: 1.5, geo: null, A: [120, 150], B: [220, 150], tool: 'wall',
       hint: 'An empty tank with the bar. Draw walls and shallow plates with the tools at the bottom of the picture; Erase removes them. Try a slit of your own, a corner reflector, a prism of shallow water, or a harbor wall.' },
+    channel: { src: 'one', f: 9, deep: 10, plate: 1.5, cw: 20, geo: { kind: 'channel' }, mid: [CH_X0 + 12, YC + 5], A: [CH_X0 + 30, YC + 6], B: [CH_X0 + 330, YC + 6],
+      hint: 'Two straight walls 20 mm apart make a channel, closed at the left end; a dipper near one wall sends waves down it, and the beach at the far end takes them away. Across a channel the water can only take certain shapes, the modes: flat across (mode 0), one quiet line down the middle (mode 1), two quiet lines (mode 2), and so on. Each mode has a cutoff frequency, 6.51 Hz for mode 1 and 11.61 Hz for mode 2 here: below it, that mode cannot travel and dies away within a few millimeters. At 9 Hz modes 0 and 1 travel, and the two together make the waves swing from wall to wall, repeating every beat length (about 104 mm). Drop below 6.51 Hz and only flat waves come down the channel; go above 11.61 Hz and mode 2 joins in. A microwave waveguide works the same way (EM Waves, Guides and cavities).' },
     sideDeep: { src: 'bar', f: 16, deep: 12, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150], look: 'side', track: 0, speed: 0.125,
       hint: 'A slice through the tank from the side, under the bar\'s plane waves: each dot is a bit of water. 16 Hz waves on water 12 mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface\'s): half a wavelength down the water is almost still. The wave moves on; the water does not.' },
     sideShallow: { src: 'bar', f: 6, deep: 3, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150], look: 'side', track: 0, speed: 0.25,
       hint: '6 Hz waves on water only 3 mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.' },
   };
-  const S = { preset: 'plane', src: 'bar', f: 10, deep: 10, plate: 1.5, sep: 40, ph: 0, a: 8, d: 45, edge: 30, edges: 'beach', geo: null, strokes: [], tool: 'move', brush: 5,
+  const S = { preset: 'plane', src: 'bar', f: 10, deep: 10, plate: 1.5, sep: 40, ph: 0, a: 8, d: 45, edge: 30, cw: 25, edges: 'beach', geo: null, strokes: [], tool: 'move', brush: 5,
     look: 'surface', speed: 0.25, run: false, blind: false, pred: false, mid: { x: 200, y: 150 }, A: { x: 120, y: 150 }, B: { x: 214.4, y: 150 }, sel: 'B', since: 0, hasPlate: false, rate: 1, track: 0, mag: 2, tS: 0 };
   const T = makeTank();
   const can = $('can'), ctx = can.getContext('2d'), pl = $('plot'), pctx = pl.getContext('2d');
@@ -421,6 +440,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function shapeTests() {
     const g = S.geo; if (!g) return [];
     if (g.kind === 'slits') return [['wall', 1, slitTest(SLIT_X * MM, 3 * MM, YC * MM, g.n, S.a * MM, S.d * MM), [(SLIT_X - 3) * MM, 0, (SLIT_X + 3) * MM, TH * MM]]];
+    if (g.kind === 'channel') { const h = S.cw / 2, t = 3, y1 = YC - h - t / 2, y2 = YC + h + t / 2, x1 = TW + 2;
+      return [[y1, y1], [y2, y2]].map(([ya]) => ['wall', 1, segTest(CH_X0 * MM, ya * MM, x1 * MM, ya * MM, t / 2 * MM), segBox(CH_X0 * MM, ya * MM, x1 * MM, ya * MM, t / 2 * MM)])
+        .concat([['wall', 1, segTest((CH_X0 - t / 2) * MM, (y1 - t / 2) * MM, (CH_X0 - t / 2) * MM, (y2 + t / 2) * MM, t / 2 * MM), segBox((CH_X0 - t / 2) * MM, (y1 - t / 2) * MM, (CH_X0 - t / 2) * MM, (y2 + t / 2) * MM, t / 2 * MM)]]); }
     if (g.kind === 'wall45') return [['wall', 1, segTest(230 * MM, 50 * MM, 410 * MM, 230 * MM, 1.5 * MM), segBox(230 * MM, 50 * MM, 410 * MM, 230 * MM, 1.5 * MM)]];
     if (g.kind === 'image') return [['wall', 1, segTest(IMAGE_X * MM, 40 * MM, IMAGE_X * MM, 260 * MM, 1.5 * MM), segBox(IMAGE_X * MM, 40 * MM, IMAGE_X * MM, 260 * MM, 1.5 * MM)]];
     if (g.kind === 'edge') { const e = S.edge * Math.PI / 180, nx = Math.cos(e), ny = -Math.sin(e);
@@ -768,6 +790,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (g && g.kind === 'slits' && g.n === 2) { const fa = fringeAngles(lw * MM, S.d * MM); h += dd('Slits: spacing d, width a', `${f1(S.d)} mm, ${f1(S.a)} mm`) + dd('Quiet lines, d sin θ = (m + ½)λ', B ? hide : fa.nod.map((a) => `±${f1(a)}°`).join(', ') || 'none', 'wide'); }
     if (g && g.kind === 'slits' && g.n === 1) { const mn = slitMinima(lw * MM, S.a * MM); h += dd('Slit width a', `${f1(S.a)} mm`) + dd('Quiet lines, a sin θ = mλ', B ? hide : mn.map((a) => `±${f1(a)}°`).join(', ') || 'none: λ is wider than the slit', 'wide'); }
     if (g && g.kind === 'edge' && S.edge > 0) { const t2 = Math.asin(Math.sin(S.edge * Math.PI / 180) * lp / lw) * 180 / Math.PI; h += dd('Plate edge turned by', `${f1(S.edge)}°`) + dd('Snell: angle past the edge', B ? hide : `${f1(t2)}°`); }
+    if (g && g.kind === 'channel') {
+      const ms = channelModes(S.f, S.deep * MM, S.cw * MM, 4), go = ms.filter((m) => m.travels);
+      h += dd('Channel width w', `${f1(S.cw)} mm`) + dd('Modes that travel', B ? hide : go.map((m) => m.n).join(', '));
+      h += dd('Cutoff frequencies, modes 1 to 4', B ? hide : ms.slice(1).map((m) => `${f1(m.fc, 2)}`).join(', ') + ' Hz', 'wide');
+      for (const m of ms.slice(0, 4)) h += dd(`Mode ${m.n}`, B ? hide : m.travels ? `travels: λ along the channel ${f1(m.lx / MM, 2)} mm${m.n ? `, bouncing at ${f1(m.th)}°` : ''}` : `dies away: e<sup>−x/ℓ</sup>, ℓ = ${f1(m.decay / MM, 2)} mm`, 'wide');
+      if (go.length >= 2) h += dd('Beat length of modes 0 and 1, 2π/(k₀ − k₁)', B ? hide : `${f1(2 * Math.PI / (go[0].kx - go[1].kx) / MM, 1)} mm`, 'wide');
+    }
     if (g && g.kind === 'mirror') h += dd('Mirror: parabola, focus in front', B ? hide : `${MIRROR.p} mm`);
     if (g && g.kind === 'lens') { const n = lw / lp, fl = LENS.R / (2 * (n - 1)); h += dd('Lens: λ ratio n = λ/λ<sub>plate</sub>', B ? hide : f1(n, 2)) + dd('Thin lens estimate of the focal length', B ? hide : `${f1(fl, 0)} mm from the center`); }
     h += dd('Time t', `${T.t.toFixed(3)} s`) + dd('Average built up over', `${Math.max(0, (T.t - S.since) * S.f).toFixed(1)} periods`);
@@ -784,12 +813,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     set('F', S.f, `${f1(S.f)} Hz`); set('Deep', S.deep, `${f1(S.deep)} mm`); $('sPlate').max = String(Math.max(1, S.deep - 1)); set('Plate', S.plate, `${f1(S.plate)} mm`);
     set('Sep', S.sep, `${S.sep} mm`); set('Ph', S.ph, `${S.ph}°`); set('A', S.a, `${S.a} mm`); set('D', S.d, `${S.d} mm`); set('Edge', S.edge, `${S.edge}°`);
     $('twoBox').hidden = S.src !== 'two'; const sl = S.geo && S.geo.kind === 'slits'; $('slitBox').hidden = !sl; $('dBox').hidden = !(sl && S.geo.n === 2);
-    $('edgeBox').hidden = !(S.geo && S.geo.kind === 'edge'); $('chkPred').checked = S.pred;
+    $('edgeBox').hidden = !(S.geo && S.geo.kind === 'edge'); $('chkPred').checked = S.pred; $('chanBox').hidden = !(S.geo && S.geo.kind === 'channel'); set('CW', S.cw, `${f1(S.cw)} mm`);
     $('predBox').hidden = !((S.src === 'two' && !S.geo) || sl || (S.geo && S.geo.kind === 'mirror'));
     /* the side view needs only the frequency and the depth: the rest of the card is about the tank seen from above */
     const side = S.look === 'side'; S.track = Math.min(S.track, S.deep); $('sTrack').max = String(S.deep); set('Track', S.track, `${f1(S.track, 2)} mm`); $('selMag').value = String(S.mag);
     $('sideBox').hidden = !side; $('drawbar').hidden = side;
-    if (side) for (const id of ['srcPick', 'plateBox', 'twoBox', 'slitBox', 'edgeBox', 'edgesPick', 'predBox']) $(id).hidden = true; else { $('srcPick').hidden = false; $('plateBox').hidden = false; $('edgesPick').hidden = false; }
+    if (side) for (const id of ['srcPick', 'plateBox', 'twoBox', 'slitBox', 'edgeBox', 'edgesPick', 'predBox', 'chanBox']) $(id).hidden = true; else { $('srcPick').hidden = false; $('plateBox').hidden = false; $('edgesPick').hidden = false; }
     can.setAttribute('aria-label', side ? 'A slice through the tank from the side under plane waves: the surface, the floor, and dots for bits of water, each going round its own path; one column of dots is dyed and one particle is followed.' : CAN_LABEL);
     window.vdShowCols = side ? [['f_Hz', 'f (Hz)'], ['depth_mm', 'd (mm)'], ['s_mm', 's (mm)'], ['a_mm', 'a (mm)'], ['b_mm', 'b (mm)']] : SHOW_TANK;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
@@ -802,7 +831,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k;
     Object.assign(S, { src: c.src, f: c.f, deep: c.deep, plate: c.plate, geo: c.geo ? Object.assign({}, c.geo) : null, strokes: [], tool: c.tool || 'move', pred: false });
-    if (c.a != null) S.a = c.a; if (c.d != null) S.d = c.d; if (c.sep != null) S.sep = c.sep; if (c.ph != null) S.ph = c.ph; if (c.edge != null) S.edge = c.edge;
+    if (c.a != null) S.a = c.a; if (c.d != null) S.d = c.d; if (c.sep != null) S.sep = c.sep; if (c.ph != null) S.ph = c.ph; if (c.edge != null) S.edge = c.edge; if (c.cw != null) S.cw = c.cw;
     if (c.mid) S.mid = { x: c.mid[0], y: c.mid[1] };
     S.A = { x: c.A[0], y: c.A[1] }; S.B = { x: c.B[0], y: c.B[1] }; S.sel = 'B';
     if (c.look) { S.look = c.look; S.track = c.track || 0; S.tS = 0; if (c.speed) S.speed = c.speed; if (view3 && view3.is3d()) view3.set('flat'); }
@@ -814,7 +843,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a slider keeps the setup's name: the reading records f and the depth, and the setup text carries the slits, the dippers' spacing and phase and the edge */
   const num = (id, fn, clear) => $(id).addEventListener('input', (e) => { fn(+e.target.value); rebuild(clear); sync(); redraw(); });
   num('sF', (v) => { S.f = v; }, true); num('sDeep', (v) => { S.deep = v; if (S.plate > v - 1) S.plate = Math.max(1, v - 1); }, true); num('sPlate', (v) => { S.plate = v; }, true);
-  num('sSep', (v) => { S.sep = v; }, true); num('sPh', (v) => { S.ph = v; }, true); num('sA', (v) => { S.a = v; }, false); num('sD', (v) => { S.d = v; }, false); num('sEdge', (v) => { S.edge = v; }, false);
+  num('sSep', (v) => { S.sep = v; }, true); num('sPh', (v) => { S.ph = v; }, true); num('sA', (v) => { S.a = v; }, false); num('sD', (v) => { S.d = v; }, false); num('sEdge', (v) => { S.edge = v; }, false); num('sCW', (v) => { S.cw = v; if (S.geo && S.geo.kind === 'channel') S.mid.y = YC + 0.25 * v; }, true);
   $('selSrc').addEventListener('change', (e) => { S.src = e.target.value; custom(); rebuild(true); sync(); redraw(); });
   $('selEdges').addEventListener('change', (e) => { S.edges = e.target.value; custom(); rebuild(true); sync(); redraw(); });
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; clock(); });
@@ -879,8 +908,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- readings for the worksheet ---------- */
   const SETUP_NAME = { plane: 'Plane waves', dipper: 'One dipper', two: 'Two dippers', single: 'Single slit', double: 'Double slit', reflect: 'Reflection from a wall', image: 'Dipper beside a wall',
-    slow: 'Shallow water slows waves', refract: 'Refraction', mirror: 'Focusing mirror', lens: 'Focusing lens', draw: 'Draw your own', custom: 'Changed by hand' };
-  window.vdVersion = 'ripple-tank@2026-10-25';
+    slow: 'Shallow water slows waves', refract: 'Refraction', mirror: 'Focusing mirror', lens: 'Focusing lens', channel: 'A channel', draw: 'Draw your own', custom: 'Changed by hand' };
+  window.vdVersion = 'ripple-tank@2026-10-31';
   const CAN_LABEL = can.getAttribute('aria-label');
   const SHOW_TANK = [['f_Hz', 'f (Hz)'], ['L_mm', 'L (mm)'], ['angle_deg', 'θ (°)'], ['amp_mm', 'amp. B (mm)']];
   window.vdShowCols = SHOW_TANK;
@@ -891,6 +920,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (g && g.kind === 'slits') setup += g.n === 2 ? `, d = ${S.d} mm, a = ${S.a} mm` : `, a = ${S.a} mm`;
     else if (S.src === 'two') setup += `, d = ${S.sep} mm${S.ph ? `, dipper 2 ahead ${S.ph}°` : ''}`;
     else if (g && g.kind === 'edge') setup += `, plate ${f1(S.plate)} mm, edge ${S.edge}°`;
+    else if (g && g.kind === 'channel') setup += `, w = ${f1(S.cw)} mm`;
     return { setup, f_Hz: f1(S.f), depth_mm: dep, L_mm: f1(ln.L), angle_deg: f1(ln.th), amp_mm: ln.ampB.toFixed(3), xA_mm: f1(S.A.x), yA_mm: f1(S.A.y), xB_mm: f1(S.B.x), yB_mm: f1(S.B.y), t_s: T.t.toFixed(3) }; };
   $('about').textContent = `Model: the small wave equation for the water's surface on a grid of ${DX / MM} mm squares (${NX} × ${NY}), stepped with leapfrog in time and an isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency so the wavelengths are exact to better than 0.1 %. The speed in each place is the phase speed of ripples at that frequency and depth, from ω² = (gk + σk³/ρ) tanh(kd) with g = 9.81 m/s² and water at 20 °C (σ = 72.74 mN/m, ρ = 998.2 kg/m³). Viscous damping 2νk² (ν = 1.003 mm²/s) is included; friction with the tank's floor in very shallow water is left out. Walls reflect the whole wave; the beaches are a ramp of damping that reflects about 1 to 3 % of the amplitude. The bar adds to the water rather than holding it, set so its plane waves are 0.50 mm in amplitude, and waves coming back pass under it into the beach behind it; a dipper holds the water it touches at 0.50 mm. Each place has one speed, which is exact for one frequency, so the demo makes only steady waves, never a pulse. Two things follow from that and are only approximate: the waves carry their energy at the phase speed instead of the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 to 1.5 over the demo's range), and where the depth changes, how much of a wave is reflected and how its height changes are the model's, while the wavelengths and directions are exact. The amplitude view and readouts average over the last two periods, so they settle a few periods after the waves arrive. If this device cannot keep up with the chosen speed, time runs slower, as the clock says.`;
 

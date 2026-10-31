@@ -2,7 +2,7 @@
 // Ripple Tank: the water's dispersion relation, the grid's corrected wavelengths, stability, beaches, walls, double slit and Snell's law.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ripple-tank', 'PH,DX,NX,NY,BEACH,AMP,CFL,kOf,lambdaOf,speedOf,shallowSpeed,lapSym,coefFor,schemeK,makeTank,prepare,step,clearWater,sampleAt,ampAt,paint,segTest,slitTest,fringeAngles,slitMinima,orbitAt,particleAt,driftPer,floorLayer');
+const c = core('ripple-tank', 'channelCutoff,channelModes,omegaOfK,PH,DX,NX,NY,BEACH,AMP,CFL,kOf,lambdaOf,speedOf,shallowSpeed,lapSym,coefFor,schemeK,makeTank,prepare,step,clearWater,sampleAt,ampAt,paint,segTest,slitTest,fringeAngles,slitMinima,orbitAt,particleAt,driftPer,floorLayer');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -166,4 +166,41 @@ group('side view: the water under a plane wave. Surface particles ride the surfa
   { const f = 20, d = 12e-3, k = c.kOf(f, d); near(c.driftPer(f, d, 0, A), 2 * Math.PI * k * A * A, 2e-3, 'deep Stokes drift'); near(c.floorLayer(f), Math.sqrt(2 * 1.0016e-3 / 998.2 / (40 * Math.PI)), 1e-12, 'floor layer'); }
 });
 
+/* a channel in the demo's own tank (walls 3 mm thick, closed at the left end, a dipper near one wall), as the A channel setup builds it */
+function channelTank(f, w) {
+  const T = c.makeTank(); T.f = f; T.depth.fill(10); const MM = 1e-3, YC = 150, x0 = 60, h = w / 2, t = 3;
+  for (const ya of [YC - h - t / 2, YC + h + t / 2]) c.paint(T, 'wall', 1, c.segTest(x0 * MM, ya * MM, 452 * MM, ya * MM, t / 2 * MM));
+  c.paint(T, 'wall', 1, c.segTest((x0 - t / 2) * MM, (YC - h - t) * MM, (x0 - t / 2) * MM, (YC + h + t) * MM, t / 2 * MM));
+  T.src = [{ x: (x0 + 12) * MM, y: (YC + w / 4) * MM, phase: 0 }]; c.prepare(T); return T;
+}
+/* complex amplitude at cell (i, j) over whole periods */
+function demodCells(T, cells, periods) {
+  const w = 2 * Math.PI * T.f, re = new Float64Array(cells.length), im = new Float64Array(cells.length), t0 = T.t;
+  while (T.t < t0 + periods / T.f) { c.step(T); const tt = T.t; cells.forEach(([i, j], m) => { const v = T.h[(j + 1) * T.W + i + 1]; re[m] += v * Math.cos(w * tt); im[m] -= v * Math.sin(w * tt); }); }
+  return cells.map((_, m) => [re[m], im[m]]);
+}
+group('channel: cutoff frequencies put k = nπ/w into the dispersion relation; k_x = √(k² − (nπ/w)²); 20 mm, 10 mm deep: 6.51, 11.61, 17.61 Hz', () => {
+  const d = 0.01, w = 0.02; for (const n of [1, 2, 3]) near(c.kOf(c.channelCutoff(n, w, d), d), n * Math.PI / w, 1e-9, `cutoff ${n}`);
+  near(c.channelCutoff(1, w, d), 6.5085, 1e-4); near(c.channelCutoff(2, w, d), 11.6101, 1e-4); near(c.channelCutoff(3, w, d), 17.6128, 1e-4);
+  const m = c.channelModes(9, d, w, 3), k = c.kOf(9, d); assert(m[0].travels && m[1].travels && !m[2].travels && !m[3].travels);
+  near(m[1].kx ** 2 + (Math.PI / w) ** 2, k * k, 1e-12, 'kx'); near(m[2].kappa ** 2, (2 * Math.PI / w) ** 2 - k * k, 1e-12, 'kappa'); near(Math.sin(m[1].th * Math.PI / 180), Math.PI / (w * k), 1e-12, 'bounce angle');
+});
+group('channel in the running tank (20 mm, 9 Hz): the even and odd parts across the channel travel with k_x of modes 0 and 1 to 1.5 %; at 6 Hz, below mode 1\'s cutoff, the odd part dies away as e^(−κx), κ = √((π/w)² − k²), to 5 %, and is under 5 % of the even part 128 mm from the dipper', () => {
+  const DXmm = c.DX * 1e3, j = (y) => Math.floor(y / DXmm), xs = []; for (let x = 160; x <= 330; x += 5) xs.push(Math.floor(x / DXmm));
+  const fitK = (z) => { /* slope of the unwrapped phase against x (the wave goes toward +x, so the phase falls) */
+    let prev = null, off = 0; const ph = z.map(([a, b]) => { let p = Math.atan2(b, a); if (prev != null) { while (p + off - prev > Math.PI) off -= 2 * Math.PI; while (p + off - prev < -Math.PI) off += 2 * Math.PI; } prev = p + off; return p + off; });
+    const X = xs.map((i) => (i + 0.5) * c.DX), mx = X.reduce((a, b) => a + b) / X.length, my = ph.reduce((a, b) => a + b) / ph.length;
+    let sxy = 0, sxx = 0; X.forEach((x, m) => { sxy += (x - mx) * (ph[m] - my); sxx += (x - mx) ** 2; }); return -sxy / sxx; };
+  { const T = channelTank(9, 20); for (let i = 0; i < 4000; i++) c.step(T);
+    const up = demodCells(T, xs.map((i) => [i, j(155.6)]), 4), dn = demodCells(T, xs.map((i) => [i, j(144.4)]), 4);
+    /* the two rows were demodulated one after the other, a whole number of periods apart, so they share their phase reference */
+    const ev = up.map((u, m) => [u[0] + dn[m][0], u[1] + dn[m][1]]), od = up.map((u, m) => [u[0] - dn[m][0], u[1] - dn[m][1]]);
+    const ms = c.channelModes(9, 0.01, 0.02, 1); near(fitK(ev), ms[0].kx, 0.015, 'mode 0'); near(fitK(od), ms[1].kx, 0.015, 'mode 1'); }
+  { const T = channelTank(6, 20); for (let i = 0; i < 4000; i++) c.step(T);
+    /* 24 periods, so the slow leftovers of the start (mode 1 just above its cutoff barely moves) are averaged away */
+    const cells = [90, 120, 200].map((x) => Math.floor(x / DXmm)), up = demodCells(T, cells.map((i) => [i, j(155.6)]), 24), dn = demodCells(T, cells.map((i) => [i, j(144.4)]), 24);
+    const odd = up.map((u, m) => Math.hypot(u[0] - dn[m][0], u[1] - dn[m][1])), ev = up.map((u, m) => Math.hypot(u[0] + dn[m][0], u[1] + dn[m][1]));
+    near(Math.log(odd[0] / odd[1]) / 0.03, c.channelModes(6, 0.01, 0.02, 1)[1].kappa, 0.05, 'mode 1 dies away as e^(−κx)');
+    assert(odd[2] < 0.05 * ev[2], `odd/even ${odd[2] / ev[2]} at 200 mm`); }
+});
 console.log(`${n} groups passed`);
