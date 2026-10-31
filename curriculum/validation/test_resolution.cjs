@@ -2,7 +2,7 @@
 // Circular Apertures and Resolution: J1 and the Airy pattern, the 1.22 factor, Rayleigh's criterion, the textbook's numbers (OpenStax Vol. 3 §4.5).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('resolution', 'besselJ1,J1_ZEROS,RING_FACTOR,airy,airyX,airyAt,firstDark,rayleigh,pair,dip,screenAngle,LY,HUBBLE_D,ANDROMEDA_LY,PUPIL_D,HEADLIGHTS,LAMBDA_AVG,CAMERA_F,F_STOPS,headlightAngle,headlightRange');
+const c = core('resolution', 'besselJ0,fresnelNumber,fresnelField,fresnelI,fresnelAxis,exactAxis,zoneRadius,zonesInHole,J0_ZERO,poissonRing,besselJ1,J1_ZEROS,RING_FACTOR,airy,airyX,airyAt,firstDark,rayleigh,pair,dip,screenAngle,LY,HUBBLE_D,ANDROMEDA_LY,PUPIL_D,HEADLIGHTS,LAMBDA_AVG,CAMERA_F,F_STOPS,headlightAngle,headlightRange');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -55,5 +55,51 @@ group('camera: D = f/N; the Airy disk diameter on the sensor is 2.44 λN (21.5 �
 });
 group('screen: angle from position, ring radius L tan θ1 (He-Ne 632.8 nm, 200 µm, 2.00 m: 7.72 mm)', () => {
   near(c.screenAngle(0.01, 2), Math.atan(0.005), 1e-15); near(2 * Math.tan(c.firstDark(200e-6, 632.8e-9)) * 1e3, 7.718, 1e-3, 'r1');
+});
+/* ---------- near the hole: Fresnel diffraction (added 2026-10-31) ---------- */
+const J0int = (x) => { const N = 4000; let s = 0; for (let i = 0; i <= N; i++) { const t = Math.PI * i / N; s += (i === 0 || i === N ? 0.5 : 1) * Math.cos(x * Math.sin(t)); } return s / N; };
+group('J0 (Abramowitz and Stegun 9.4.1 and 9.4.3) against Bessel\'s integral to 6e−8 from 0 to 300; J0(2.4048) = 0', () => {
+  let e = 0; for (let x = 0; x < 300; x += 0.173) e = Math.max(e, Math.abs(c.besselJ0(x) - J0int(x))); assert(e < 6e-8, `J0 error ${e}`);
+  near(c.besselJ0(1), 0.7651976866, 1e-7, 'J0(1)'); assert(Math.abs(c.besselJ0(c.J0_ZERO)) < 6e-8);
+});
+group('Fresnel number and zones: 2.00 mm hole, 632.8 nm, 0.50 m: N_F = 3.1606; zone radii √(nλz + (nλ/2)²); the zone count from the exact path difference', () => {
+  near(c.fresnelNumber(2e-3, 632.8e-9, 0.5), 3.16055626, 1e-8);
+  near(c.zoneRadius(1, 632.8e-9, 0.5), Math.sqrt(632.8e-9 * 0.5 + (316.4e-9) ** 2), 1e-14);
+  for (const n of [1, 2, 5]) { const r = c.zoneRadius(n, 632.8e-9, 0.5); near(Math.hypot(0.5, r) - 0.5, n * 632.8e-9 / 2, 1e-9, `zone ${n} edge`); }
+  near(c.zonesInHole(2e-3, 632.8e-9, 0.5), 3.16055, 2e-5, 'zones ≈ N_F');
+});
+group('on the axis: the full Fresnel integral gives 4 sin²(πN_F/2) for the hole and 1 for the disk (Poisson spot), within 0.003 of the exact Rayleigh–Sommerfeld value over the slider ranges', () => {
+  for (const [D, lam, z] of [[2e-3, 632.8e-9, 0.5], [2e-3, 632.8e-9, 1], [3e-3, 405e-9, 0.2], [0.5e-3, 650e-9, 4]]) {
+    near(c.fresnelI(D, lam, z, 0, false, 4), c.fresnelAxis(D, lam, z, false), 1e-5, `hole ${D} ${z}`);
+    near(c.fresnelI(D, lam, z, 0, true, 4), 1, 1e-5, `disk ${D} ${z}`);
+    near(c.exactAxis(D, lam, z, false), c.fresnelAxis(D, lam, z, false), 3e-3, `exact hole ${D} ${z}`);
+    near(c.exactAxis(D, lam, z, true), 1, 1e-4, `exact disk ${D} ${z}`);
+  }
+  near(c.fresnelAxis(2e-3, 632.8e-9, 0.5, false), 3.75093, 1e-5, 'default hole');
+  /* an even number of zones: dark; odd: 4 times the beam */
+  const z2 = (1e-3) ** 2 / (2 * 632.8e-9), z3 = (1e-3) ** 2 / (3 * 632.8e-9);
+  near(c.fresnelI(2e-3, 632.8e-9, z2, 0, false, 4), 0, 1e-6, 'two zones'); near(c.fresnelI(2e-3, 632.8e-9, z3, 0, false, 4), 4, 1e-6, 'three zones');
+});
+group('exact on axis: a direct numerical Rayleigh–Sommerfeld integral over the hole matches 1 + z²/R² − 2(z/R) cos k(R − z)', () => {
+  const D = 2e-3, lam = 632.8e-9, z = 0.5, a = D / 2, k = 2 * Math.PI / lam, N = 200000; let re = 0, im = 0;
+  /* U = ∫₀^a 2πρ (z/2πR²)(1/R − ik) e^(ikR) dρ, e^(ikz) taken out */
+  for (let i = 0; i <= N; i++) { const rho = a * i / N, R = Math.hypot(z, rho), w = (i === 0 || i === N ? 1 : i % 2 ? 4 : 2) * rho * z / (R * R), ph = k * (R - z);
+    const ar = 1 / R, ai = -k; re += w * (ar * Math.cos(ph) - ai * Math.sin(ph)); im += w * (ar * Math.sin(ph) + ai * Math.cos(ph)); }
+  re *= a / N / 3; im *= a / N / 3; near(re * re + im * im, c.exactAxis(D, lam, z, false), 1e-6, 'RS on axis');
+});
+group('far field limit: when N_F ≪ 1 the hole gives (πN_F)² [2J1(v)/v]², v = πDr/λz (0.30 mm, 632.8 nm, 4 m: N_F = 0.0089)', () => {
+  const D = 0.3e-3, lam = 632.8e-9, z = 4, ph = Math.PI * c.fresnelNumber(D, lam, z);
+  for (const r of [0, 2e-3, 5e-3, 8e-3]) { const v = Math.PI * D * r / (lam * z); near(c.fresnelI(D, lam, z, r, false, 4), ph * ph * c.airy(v), 2e-4 * ph * ph, `r ${r}`); }
+});
+group('Babinet: hole and disk fields add to the open beam everywhere; energy: the hole passes πa² of the beam (radial integral of I within 1%)', () => {
+  for (const r of [0, 3e-4, 1.1e-3, 2e-3]) { const h = c.fresnelField(2e-3, 632.8e-9, 1, r, false, 2), d = c.fresnelField(2e-3, 632.8e-9, 1, r, true, 2); near(h[0] + d[0], 1, 1e-12); near(h[1] + d[1], 0, 1e-12); }
+  const D = 1e-3, lam = 632.8e-9, z = 1, R = 0.05, M = 20000; let P = 0;
+  for (let m = 0; m <= M; m++) { const r = R * m / M; P += (m === 0 || m === M ? 1 : m % 2 ? 4 : 2) * 2 * Math.PI * r * c.fresnelI(D, lam, z, r, false, 1); }
+  P *= R / M / 3; near(P, Math.PI * (D / 2) ** 2, 0.01, 'power through the hole');
+});
+group('Poisson spot: near the axis in the shadow I ≈ J0²(kar/z) when many zones are covered (3 mm disk, 405 nm, 0.2 m: N_F = 27.8)', () => {
+  const D = 3e-3, lam = 405e-9, z = 0.2, a = D / 2, k = 2 * Math.PI / lam, r1 = c.poissonRing(D, lam, z);
+  near(r1, c.J0_ZERO * z / (k * a), 1e-12); assert(c.fresnelI(D, lam, z, r1, true, 4) < 0.01, 'dark ring');
+  for (const r of [0, r1 / 3, r1 / 2]) near(c.fresnelI(D, lam, z, r, true, 4), c.besselJ0(k * a * r / z) ** 2, 0.02, `J0² at ${r}`);
 });
 console.log(`${n} groups passed`);

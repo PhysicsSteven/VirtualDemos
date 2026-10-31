@@ -83,7 +83,7 @@
           <span class="card-title" id="cardTitle">Set up</span>
           <div class="pick"><label for="selLam">Wavelength λ</label><select id="selLam"></select></div>
           <div><div class="slider-head"><label for="sD" id="lD">Aperture diameter D</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD"></div>
-          <div id="wrapL"><div class="slider-head"><label for="sL">Screen distance L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="1" max="4" step="0.05"></div>
+          <div id="wrapL"><div class="slider-head"><label for="sL">Screen distance L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="1" max="4" step="0.05"><button type="button" class="btn" id="sweepBtn" aria-pressed="false" data-vd-noshare hidden style="margin-top:6px" title="Slide the screen slowly away and back, and watch the center of the pattern">Move the screen</button></div>
           <div class="wide" id="wrapN"><span class="lab">Sources</span>
             <div class="seg" role="group" aria-label="Number of sources" id="nSeg"><button type="button" data-n="1" aria-pressed="false">One</button><button type="button" data-n="2" aria-pressed="true">Two</button></div>
           </div>
@@ -105,6 +105,8 @@
           <button type="button" data-p="telescope" aria-pressed="false">Hubble and two stars</button>
           <button type="button" data-p="camera" aria-pressed="false">Camera lens</button>
           <button type="button" data-p="mystery" aria-pressed="false">Mystery pinhole</button>
+          <button type="button" data-p="near" aria-pressed="false">Near the hole: Fresnel zones</button>
+          <button type="button" data-p="disk" aria-pressed="false">A disk: the Poisson spot</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -141,6 +143,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="about2"></p>
           <p class="hint" id="about3"></p>
           <p class="hint" id="about4"></p>
+          <p class="hint" id="about5"></p>
         </details>
         </div></details>
       </section>
@@ -198,6 +201,56 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const CAMERA_F = 0.050, F_STOPS = [1.4, 2, 2.8, 4, 5.6, 8, 11, 16, 22];
   const headlightAngle = (R) => 2 * Math.atan(HEADLIGHTS / 2 / R);        /* R in m */
   const headlightRange = (theta) => HEADLIGHTS / 2 / Math.tan(theta / 2); /* farthest R at which the headlights are theta apart */
+
+  /* ---------- near the hole: Fresnel diffraction ----------
+     A plane wave of unit amplitude falls on a round hole (or an opaque disk) of radius a; the screen is a distance z behind it.
+     Fresnel (paraxial) approximation of the Kirchhoff integral, obliquity taken as 1 (Hecht, Optics, 5th ed., §10.3; Goodman,
+     Introduction to Fourier Optics, 3rd ed., §4.2). With the common factor e^(ikz) dropped, the field r from the axis is
+        U_hole(r) = −2iφ e^(ikr²/2z) ∫₀¹ J₀(v u) e^(iφu²) u du,   φ = ka²/2z = πN_F,   v = kar/z,   N_F = a²/λz (the Fresnel number),
+     and by Babinet's principle the disk's field is the unobstructed wave minus the hole's: U_disk = 1 − U_hole. On the axis
+     U_hole(0) = 1 − e^(iφ), so I = 4 sin²(πN_F/2): bright when an odd number of Fresnel zones fill the hole, dark when an even number
+     do; and |U_disk(0)|² = 1, the bright Poisson spot at the center of the shadow. When N_F ≪ 1 the hole gives the far field Airy pattern
+     φ²[2J₁(v)/v]². On the axis the neglected phase is at most ka⁴/8z³ (under 0.002 rad for every setting here, so 4 sin²(πN_F/2) is within 0.003
+     of the exact value); off the axis the light that matters comes from near the stationary path, and the test compares limits.
+     J₀ from Abramowitz and Stegun 9.4.1 (x ≤ 3, error under 5e−8) and 9.4.3 (x > 3, error under 1.6e−8 in f₀ and 1.3e−8 in θ₀). */
+  function besselJ0(x) {
+    x = Math.abs(x);
+    if (x <= 3) { const y = (x / 3) * (x / 3); return 1 + y * (-2.2499997 + y * (1.2656208 + y * (-0.3163866 + y * (0.0444479 + y * (-0.0039444 + y * 0.0002100))))); }
+    const y = 3 / x, f0 = 0.79788456 + y * (-0.00000077 + y * (-0.00552740 + y * (-0.00009512 + y * (0.00137237 + y * (-0.00072805 + y * 0.00014476)))));
+    const t0 = x - 0.78539816 + y * (-0.04166397 + y * (-0.00003954 + y * (0.00262573 + y * (-0.00054125 + y * (-0.00029333 + y * 0.00013558)))));
+    return f0 * Math.cos(t0) / Math.sqrt(x);
+  }
+  const fresnelNumber = (D, lam, z) => (D / 2) * (D / 2) / (lam * z);
+  /* the field [re, im] at r on the screen; Simpson's rule with q × 12 points per cycle of the integrand (at least 64) */
+  function fresnelField(D, lam, z, r, disk, q = 1) {
+    const a = D / 2, k = 2 * Math.PI / lam, ph = k * a * a / (2 * z), v = k * a * r / z;
+    let N = 2 * Math.ceil(q * 6 * (ph / Math.PI + v / (2 * Math.PI)) + 32); const h = 1 / N;
+    let sr = 0, si = 0;
+    for (let i = 0; i <= N; i++) {
+      const u = i * h, w = (i === 0 || i === N ? 1 : i % 2 ? 4 : 2) * u * besselJ0(v * u), p = ph * u * u;
+      sr += w * Math.cos(p); si += w * Math.sin(p);
+    }
+    sr *= h / 3; si *= h / 3;
+    /* −2iφ (sr + i si) = 2φ si − 2iφ sr, then times e^(ikr²/2z) */
+    const ar = 2 * ph * si, ai = -2 * ph * sr, q2 = k * r * r / (2 * z), c = Math.cos(q2), s = Math.sin(q2);
+    let ur = ar * c - ai * s, ui = ar * s + ai * c;
+    if (disk) { ur = 1 - ur; ui = -ui; }
+    return [ur, ui];
+  }
+  const fresnelI = (D, lam, z, r, disk, q) => { const [a, b] = fresnelField(D, lam, z, r, disk, q); return a * a + b * b; };
+  /* on the axis, in the Fresnel approximation and exactly (the Rayleigh–Sommerfeld integral for a plane wave, which on the axis
+     integrates in closed form: U = e^(ikz) − (z/R) e^(ikR) for the hole, R = √(z² + a²); the disk gets (z/R) e^(ikR)) */
+  const fresnelAxis = (D, lam, z, disk) => (disk ? 1 : 4 * Math.sin(Math.PI * fresnelNumber(D, lam, z) / 2) ** 2);
+  function exactAxis(D, lam, z, disk) {
+    const a = D / 2, R = Math.hypot(z, a), k = 2 * Math.PI / lam, g = z / R;
+    return disk ? g * g : 1 + g * g - 2 * g * Math.cos(k * (R - z));
+  }
+  /* the Fresnel zones seen from the center of the screen: the edge of zone n is where the path is nλ/2 longer than z */
+  const zoneRadius = (n, lam, z) => Math.sqrt(n * lam * z + (n * lam / 2) ** 2);
+  const zonesInHole = (D, lam, z) => (Math.hypot(z, D / 2) - z) / (lam / 2);
+  /* near the axis in a disk's shadow the field is close to J₀(kar/z) (the Poisson spot); its first dark ring is at J₀'s first zero */
+  const J0_ZERO = 2.404825557695773;
+  const poissonRing = (D, lam, z) => J0_ZERO * z * lam / (Math.PI * D);
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -227,6 +280,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sepLabel: 'Separation of the two images', sepMin: 0.5, sepMax: 60, sepStep: 0.1, sepU: 'µm', title: 'A 50 mm camera lens imaging two distant points onto its sensor', place: 'On the sensor' },
     mystery: { kind: 'screen', short: 'mystery pinhole', field: 0.060, unit: 'mm', uk: 1e3, dec: 3, Dlabel: 'Pinhole diameter D', Du: 'µm', Dk: 1e6, Dmin: 50, Dmax: 300, Dstep: 5, Ddec: 0, two: false, mystery: true,
       title: 'A laser beam through a pinhole of unknown size', place: 'On the screen' },
+    near: { kind: 'screen', fresnel: 'hole', short: 'near field, hole', unit: 'mm', uk: 1e3, dec: 3, Dlabel: 'Hole diameter D', Du: 'mm', Dk: 1e3, Dmin: 0.5, Dmax: 3, Dstep: 0.05, Ddec: 2, two: false,
+      Lmin: 0.2, Lmax: 4, Lstep: 0.01, title: 'A wide laser beam through a round hole, the screen close behind it', place: 'On the screen' },
+    disk: { kind: 'screen', fresnel: 'disk', short: 'near field, disk', unit: 'mm', uk: 1e3, dec: 3, Dlabel: 'Disk diameter D', Du: 'mm', Dk: 1e3, Dmin: 0.5, Dmax: 3, Dstep: 0.05, Ddec: 2, two: false,
+      Lmin: 0.2, Lmax: 4, Lstep: 0.01, title: 'A wide laser beam on a small opaque disk, and its shadow', place: 'On the screen' },
   };
   const DEFAULTS = {
     pinhole: { lam: 632.8, D: 200e-6, L: 2.00, n: 1, sepv: 0, zoom: 2 },
@@ -235,6 +292,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     telescope: { lam: 550, D: HUBBLE_D, n: 2, sepv: 0.80, zoom: 4 },
     camera: { lam: 550, D: CAMERA_F / 16, N: 16, n: 2, sepv: 15, zoom: 1 },
     mystery: { lam: 632.8, D: 0, L: 2.00, n: 1, sepv: 0, zoom: 2 },
+    near: { lam: 632.8, D: 2.00e-3, L: 0.50, n: 1, sepv: 0, zoom: 1 },
+    disk: { lam: 632.8, D: 2.00e-3, L: 1.00, n: 1, sepv: 0, zoom: 1 },
   };
   const S = { setup: 'pinhole', blind: false, gain: 1, comp: false, cfg: {}, mys: 150e-6, lastMys: null, mysN: 0 };
   const C = () => S.cfg[S.setup], ST = () => SETUPS[S.setup];
@@ -243,7 +302,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const lamNow = () => C().lam * 1e-9;
   const Lnow = () => (S.setup === 'camera' ? CAMERA_F : C().L);
   const nNow = () => (ST().two ? C().n : 1);
-  const half = () => ST().field / C().zoom;
+  const isFr = () => !!ST().fresnel, isDisk = () => ST().fresnel === 'disk';
+  /* the near field views are 1.6 D across at zoom 1, or wider when the light spreads further (the far field ring 1.22 λL/D, twice over) */
+  const half = () => (isFr() ? Math.max(0.8 * C().D, 2.44 * lamNow() * C().L / C().D) : ST().field) / C().zoom;
   /* the angle between the sources (rad), and their places in the picture (detector units: rad or m) */
   function sepAngle() {
     const c = C();
@@ -267,7 +328,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const u = x / TDX, i = Math.floor(u), t = u - i; return TAB[i] + (TAB[i + 1] - TAB[i]) * t;
   }
   const kOf = () => Math.PI * Dnow() / lamNow();
-  function Iexact(u, v = 0) { const D = Dnow(), lam = lamNow(); let s = 0; for (const c of centres()) s += airyAt(D, lam, angOf(Math.hypot(u - c, v))); return s; }
+  /* near field drawing: J₀ from a table (step 0.005, linear, good to 4e−6), and the intensity on M rings out to rmax (the readouts use the exact fresnelI) */
+  const J0DX = 0.005, J0N = 120000, J0T = new Float32Array(J0N + 2);
+  for (let i = 0; i < J0T.length; i++) J0T[i] = besselJ0(i * J0DX);
+  const j0f = (x) => { const u = x / J0DX, i = Math.floor(u); if (i >= J0N) return besselJ0(x); return J0T[i] + (J0T[i + 1] - J0T[i]) * (u - i); };
+  let PROF = null;
+  function profile(rmax) {
+    const D = Dnow(), lam = lamNow(), z = C().L, disk = isDisk(), key = [D, lam, z, disk, rmax].join('|');
+    if (PROF && PROF.key === key) return PROF;
+    const a = D / 2, k = 2 * Math.PI / lam, ph = k * a * a / (2 * z), vmax = k * a * rmax / z;
+    const M = Math.min(4000, Math.max(300, Math.ceil(10 * a * rmax / (lam * z)))), N = 2 * Math.ceil(6 * (ph / Math.PI + vmax / (2 * Math.PI)) + 32), h = 1 / N;
+    const wc = new Float64Array(N + 1), ws = new Float64Array(N + 1), uu = new Float64Array(N + 1);
+    for (let i = 0; i <= N; i++) { const u = i * h, w = (i === 0 || i === N ? 1 : i % 2 ? 4 : 2) * u * h / 3; uu[i] = u; wc[i] = w * Math.cos(ph * u * u); ws[i] = w * Math.sin(ph * u * u); }
+    const I = new Float32Array(M + 1); let top = 0;
+    for (let m = 0; m <= M; m++) {
+      const r = rmax * m / M, v = k * a * r / z; let sr = 0, si = 0;
+      for (let i = 0; i <= N; i++) { const j = j0f(v * uu[i]); sr += j * wc[i]; si += j * ws[i]; }
+      let ur = 2 * ph * si, ui = -2 * ph * sr; const q2 = k * r * r / (2 * z), c = Math.cos(q2), sn = Math.sin(q2), xr = ur * c - ui * sn, xi = ur * sn + ui * c;
+      ur = disk ? 1 - xr : xr; ui = disk ? -xi : xi; I[m] = ur * ur + ui * ui; if (I[m] > top) top = I[m];
+    }
+    PROF = { key, I, M, rmax, top }; return PROF;
+  }
+  const profAt = (P, r) => { const u = r / P.rmax * P.M, i = Math.floor(u); if (i >= P.M) return P.I[P.M]; return P.I[i] + (P.I[i + 1] - P.I[i]) * (u - i); };
+  function Iexact(u, v = 0) { const D = Dnow(), lam = lamNow(); if (isFr()) return fresnelI(D, lam, C().L, Math.hypot(u, v), isDisk(), 2); let s = 0; for (const c of centres()) s += airyAt(D, lam, angOf(Math.hypot(u - c, v))); return s; }
   function Ione(u, c) { return airyAt(Dnow(), lamNow(), angOf(Math.abs(u - c))); }
   /* positions of the first dark ring around a source (detector units) */
   const ring1 = () => { const th = firstDark(Dnow(), lamNow()); return ST().kind === 'screen' ? Lnow() * Math.tan(th) : th; };
@@ -303,6 +386,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const n = Math.max(64, Math.min(640, Math.round(side * dpr))), hw = half(), cs = centres(), k = kOf(), col = lamRGB(C().lam), gain = S.gain;
     const key = [S.setup, n, hw, cs.join(','), k, C().lam, gain, Lnow()].join('|');
     if (key === imgKey && IMG) return;
+    if (isFr()) {
+      const P = profile(hw * Math.SQRT2 * 1.001), sc = 1 / Math.max(1, P.top); off.width = n; off.height = n; const oc = off.getContext('2d'), im = oc.createImageData(n, n), d = im.data;
+      for (let j = 0; j < n; j++) { const v = hw * (1 - 2 * (j + 0.5) / n); for (let i = 0; i < n; i++) { const u = hw * (2 * (i + 0.5) / n - 1), b = Math.min(1, profAt(P, Math.hypot(u, v)) * sc * gain), q = 4 * (j * n + i);
+        d[q] = 255 * lin2srgb(col[0] * b); d[q + 1] = 255 * lin2srgb(col[1] * b); d[q + 2] = 255 * lin2srgb(col[2] * b); d[q + 3] = 255; } }
+      oc.putImageData(im, 0, 0); IMG = off; imgKey = key; return;
+    }
     off.width = n; off.height = n; const oc = off.getContext('2d'), im = oc.createImageData(n, n), d = im.data, screen = ST().kind === 'screen', L = Lnow();
     for (let j = 0; j < n; j++) {
       const v = hw * (1 - 2 * (j + 0.5) / n);
@@ -338,25 +427,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.halo) { ctx.lineWidth = 3; ctx.strokeStyle = o.halo; ctx.strokeText(s, x, y); } ctx.fillText(s, x, y); ctx.restore();
   }
   function drawPinhole(x, y, w, h) {
-    const p = proj(), by = y + h * 0.8, rgb = lamRGB(C().lam), c = C();
+    const p = proj(), by = y + h * (isFr() ? 0.88 : 0.8), rgb = lamRGB(C().lam), c = C();
     if (VG) { VG.wall(ctx, x, y, w, by); VG.bench(ctx, x, by, w, 12, Math.max(12, y + h - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(x, y, w, h); }
-    const beamY = by - h * 0.32, lw = Math.min(w * 0.24, 150 * p), lh = Math.max(26, h * 0.1);
+    const beamY = by - h * (isFr() ? 0.22 : 0.32), lw = Math.min(w * 0.24, 150 * p), lh = Math.max(26, h * 0.1);
     /* laser */
     if (VG) VG.box(ctx, x + w * 0.03, beamY - lh / 2, lw, lh, { color: dark() ? '#3a4552' : '#2f3a47', r: 5 }); else { ctx.fillStyle = '#334'; ctx.fillRect(x + w * 0.03, beamY - lh / 2, lw, lh); }
     if (VG) VG.plate(ctx, `laser ${C().lam} nm`, x + w * 0.03 + lw / 2, beamY, { s: 8 * p });
     ctx.fillStyle = dark() ? '#1f2630' : '#2a323c'; ctx.fillRect(x + w * 0.03 + lw * 0.2, beamY + lh / 2, 8, by - beamY - lh / 2); ctx.fillRect(x + w * 0.03 + lw * 0.75, beamY + lh / 2, 8, by - beamY - lh / 2);
-    const x0 = x + w * 0.03 + lw, xp = x + w * 0.38, Lfrac = (c.L - 1) / 3, xs = x + w * (0.62 + 0.3 * Lfrac);
-    /* the beam */
-    ctx.save(); ctx.strokeStyle = css(rgb, 0.95); ctx.lineWidth = 3 * p; ctx.shadowColor = css(rgb, 0.8); ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(x0, beamY); ctx.lineTo(xp, beamY); ctx.stroke(); ctx.restore();
+    const st = ST(), fr = isFr(), x0 = x + w * 0.03 + lw, xp = x + w * 0.38, Lfrac = fr ? Math.log(c.L / st.Lmin) / Math.log(st.Lmax / st.Lmin) : (c.L - 1) / 3, xs = x + w * (fr ? 0.5 + 0.42 * Lfrac : 0.62 + 0.3 * Lfrac);
+    /* the beam (in the near field setups, a beam widened to several mm, drawn as a band) */
+    ctx.save(); ctx.strokeStyle = css(rgb, fr ? 0.55 : 0.95); ctx.lineWidth = (fr ? 12 : 3) * p; ctx.shadowColor = css(rgb, 0.8); ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(x0, beamY); ctx.lineTo(xp, beamY); ctx.stroke(); ctx.restore();
     /* the spreading light after the pinhole, drawn much wider than it is */
     const sh = Math.min(h * 0.24, (by - y) * 0.36), g = ctx.createLinearGradient(xp, 0, xs, 0); g.addColorStop(0, css(rgb, 0.55)); g.addColorStop(1, css(rgb, 0.10));
-    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xp, beamY - 1.5); ctx.lineTo(xs, beamY - sh * 0.35); ctx.lineTo(xs, beamY + sh * 0.35); ctx.lineTo(xp, beamY + 1.5); ctx.closePath(); ctx.fill();
+    if (fr) { /* close to the hole the light has hardly spread: a band the width of the hole (or of the beam beside the disk's shadow) */
+      ctx.fillStyle = css(rgb, 0.22); const bh = 6 * p;
+      if (isDisk()) { ctx.fillRect(xp, beamY - 6 * p, xs - xp, 4 * p); ctx.fillRect(xp, beamY + 2 * p, xs - xp, 4 * p); ctx.fillStyle = css(rgb, 0.5); ctx.fillRect(xp, beamY - 0.6, xs - xp, 1.2); }
+      else ctx.fillRect(xp, beamY - bh / 2, xs - xp, bh);
+    } else {
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xp, beamY - 1.5); ctx.lineTo(xs, beamY - sh * 0.35); ctx.lineTo(xs, beamY + sh * 0.35); ctx.lineTo(xp, beamY + 1.5); ctx.closePath(); ctx.fill(); }
     /* pinhole plate on a stand */
     if (VG) VG.stand(ctx, xp, by, beamY - h * 0.2, { s: 0.8 * p });
     const pg = ctx.createLinearGradient(xp - 4, 0, xp + 4, 0); pg.addColorStop(0, '#5c6672'); pg.addColorStop(0.5, '#c7ced6'); pg.addColorStop(1, '#4a535e');
-    ctx.fillStyle = pg; ctx.fillRect(xp - 3, beamY - h * 0.14, 6, h * 0.28);
-    glow(xp, beamY, 7 * p, rgb, 0.9);
-    txt(isMys() ? 'pinhole, D = ?' : `pinhole, D = ${f(Dnow() * 1e6, 0)} µm`, xp, beamY - h * 0.14 - 12 * p, { a: 'center', s: 11, c: T.ink, halo: dark() ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)' });
+    if (isDisk()) { ctx.fillStyle = 'rgba(190,220,240,0.35)'; ctx.fillRect(xp - 2, beamY - h * 0.14, 4, h * 0.28); ctx.fillStyle = '#20262e'; ctx.fillRect(xp - 2.5, beamY - 3 * p, 5, 6 * p); glow(xp, beamY - 6 * p, 5 * p, rgb, 0.7); glow(xp, beamY + 6 * p, 5 * p, rgb, 0.7); }
+    else { ctx.fillStyle = pg; ctx.fillRect(xp - 3, beamY - h * 0.14, 6, h * 0.28); glow(xp, beamY, 7 * p, rgb, 0.9); }
+    txt(isMys() ? 'pinhole, D = ?' : fr ? (isDisk() ? `disk on glass, D = ${f(Dnow() * 1e3, 2)} mm` : `round hole, D = ${f(Dnow() * 1e3, 2)} mm`) : `pinhole, D = ${f(Dnow() * 1e6, 0)} µm`, xp, beamY - h * 0.14 - 12 * p, { a: 'center', s: 11, c: T.ink, halo: dark() ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)' });
     /* the screen */
     const sw = Math.max(8, 10 * p), top = beamY - h * 0.26, bot = by - 4;
     if (VG) VG.stand(ctx, xs + sw / 2, by, top + 10, { s: 0.8 * p });
@@ -364,6 +458,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     glow(xs + sw / 2, beamY, 10 * p, rgb, 0.9);
     txt('screen', xs + sw / 2, top - 10 * p, { a: 'center', s: 11, c: T.muted });
     dim(xp, xs, by - 14 * p, `L = ${f(c.L, 2)} m`);
+    if (fr) drawZones(x + 12 * p, y + 12 * p, Math.min(w * 0.42, beamY - h * 0.14 - 30 * p - y - 16 * p, 200 * p));
+  }
+  /* the Fresnel zones seen from the center of the screen: rings whose edges are nλ/2 further away, odd zones in the light's color.
+     Drawn to scale, with the hole (or the disk) at its true size against them. */
+  function drawZones(x, y, sz) {
+    if (sz < 60) return;
+    const p = proj(), D = Dnow(), lam = lamNow(), z = C().L, disk = isDisk(), a = D / 2, R = (sz - 30 * p) / 2, cx = x + sz / 2, cy = y + 22 * p + R;
+    const rho = disk ? 1.6 * a : a, sc = R / rho, rgb = lamRGB(C().lam);
+    ctx.save(); ctx.fillStyle = dark() ? 'rgba(10,14,20,0.82)' : 'rgba(255,255,255,0.86)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(x, y, sz, sz, 8); ctx.fill(); ctx.stroke();
+    txt(S.blind ? 'Fresnel zones (hidden)' : sz > 170 * p ? 'Fresnel zones, seen from the center' : 'Fresnel zones', x + 8, y + 11 * p, { s: 10.5, w: 700, c: T.ink });
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
+    if (!S.blind) {
+      let n = Math.ceil(((Math.hypot(z, rho) - z) / (lam / 2)));
+      const step = zoneRadius(n, lam, z) * sc - zoneRadius(Math.max(0, n - 1), lam, z) * sc;
+      if (step >= 1.2) for (let m = n; m >= 1; m--) { ctx.fillStyle = m % 2 ? css(rgb, 0.85) : (dark() ? '#2a313b' : '#9aa4b0'); ctx.beginPath(); ctx.arc(cx, cy, zoneRadius(m, lam, z) * sc, 0, 7); ctx.fill(); }
+      else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
+    } else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
+    /* the plate around the hole, or the disk */
+    ctx.fillStyle = dark() ? 'rgba(70,78,90,0.92)' : 'rgba(80,88,100,0.9)';
+    ctx.beginPath(); if (disk) ctx.arc(cx, cy, a * sc, 0, 7); else { ctx.rect(cx - R - 2, cy - R - 2, 2 * R + 4, 2 * R + 4); ctx.moveTo(cx + a * sc, cy); ctx.arc(cx, cy, a * sc, 0, 7); } ctx.fill('evenodd');
+    ctx.restore();
+    ctx.save(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.restore();
+    if (!S.blind && sz >= 120 * p) txt(`${f(zonesInHole(D, lam, z), 2)} zones ${disk ? 'under the disk' : 'in the hole'}`, cx, cy + R + 9 * p, { a: 'center', s: 10.5, c: T.muted });
   }
   function drawSky(x, y, w, h, kind) {
     const p = proj(), rgb = lamRGB(C().lam), night = ctx.createLinearGradient(0, y, 0, y + h);
@@ -443,7 +561,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.beginPath(); ctx.roundRect(ix, iy, side, side, 4); ctx.clip(); ctx.imageSmoothingEnabled = true; ctx.drawImage(IMG, ix, iy, side, side);
     const X = (u) => ix + (u / hw + 1) / 2 * side, Y = (v) => iy + (1 - v / hw) / 2 * side, sc = side / (2 * hw);
     /* dark ring marks (Blind off, aperture known) */
-    if (!S.blind && !isMys()) { ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(160,200,255,0.7)'; ctx.lineWidth = 1; const r = ring1();
+    if (!S.blind && isFr()) { ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(160,200,255,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(X(0), Y(0), Dnow() / 2 * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+    else if (!S.blind && !isMys()) { ctx.setLineDash([4, 5]); ctx.strokeStyle = 'rgba(160,200,255,0.7)'; ctx.lineWidth = 1; const r = ring1();
       for (const c of centres()) { ctx.beginPath(); ctx.arc(X(c), Y(0), r * sc, 0, 7); ctx.stroke(); } ctx.setLineDash([]); }
     /* cursor line */
     const cx = X(C().cur); ctx.strokeStyle = 'rgba(255,170,110,0.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, iy); ctx.lineTo(cx, iy + side); ctx.stroke();
@@ -461,7 +580,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L = layout();
     if (L.aw < W) { ctx.fillStyle = dark() ? '#0b1018' : '#e9edf2'; ctx.fillRect(L.aw, 0, W - L.aw, H); }
     ctx.save(); ctx.beginPath(); ctx.rect(L.ax, L.ay, L.aw, L.ah); ctx.clip();
-    if (S.setup === 'pinhole' || S.setup === 'mystery') drawPinhole(L.ax, L.ay, L.aw, L.ah); else drawSky(L.ax, L.ay, L.aw, L.ah, S.setup);
+    if (S.setup === 'pinhole' || S.setup === 'mystery' || isFr()) drawPinhole(L.ax, L.ay, L.aw, L.ah); else drawSky(L.ax, L.ay, L.aw, L.ah, S.setup);
     ctx.restore();
     if (L.aw === W) { ctx.fillStyle = dark() ? '#0b1018' : '#e9edf2'; ctx.fillRect(0, L.ah, W, H - L.ah); }
     drawImage(L);
@@ -475,9 +594,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!CW) return;
     const p = proj(); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.clearRect(0, 0, CW, CH); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
     const l = 52 * p, r = 14, t = 26 * p, b = 34 * p, w = CW - l - r, h = CH - t - b, hw = half(), cs = centres();
-    const ymax = nNow() === 2 ? Math.max(1.1, Iexact(0) * 1.06, 1.1) : 1.1;
+    const FR = isFr() ? profile(hw * Math.SQRT2 * 1.001) : null;
+    const ymax = FR ? Math.max(1.1, FR.top * 1.06) : nNow() === 2 ? Math.max(1.1, Iexact(0) * 1.06, 1.1) : 1.1;
     const X = (u) => l + (u / hw + 1) / 2 * w, Y = (v) => t + h - v / ymax * h, k = kOf(), screen = ST().kind === 'screen', Lc = Lnow();
-    const one = (u, c) => airyFast(k * Math.sin(screen ? Math.atan2(Math.abs(u - c), Lc) : Math.abs(u - c)));
+    const one = FR ? (u) => profAt(FR, Math.abs(u)) : (u, c) => airyFast(k * Math.sin(screen ? Math.atan2(Math.abs(u - c), Lc) : Math.abs(u - c)));
     cbox = { l, w, hw };
     /* grid and axes */
     cctx.strokeStyle = T.grid; cctx.lineWidth = 1; cctx.font = `${10.5 * p}px ${T.mono}`; cctx.fillStyle = T.muted;
@@ -487,7 +607,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let v = 0; v <= ymax + 1e-9; v += ymax > 1.5 ? 0.5 : 0.25) { const yy = Y(v); cctx.beginPath(); cctx.moveTo(l, yy); cctx.lineTo(l + w, yy); cctx.stroke(); cctx.fillText(f(v, 2), l - 6, yy); }
     cctx.strokeStyle = T.line; cctx.strokeRect(l, t, w, h);
     cctx.textAlign = 'left'; cctx.textBaseline = 'bottom'; cctx.fillStyle = T.muted; cctx.font = `${11 * p}px ${T.ui}`;
-    cctx.fillText(CW < 600 ? 'I/I₀ (I₀: one source\'s peak)' : `I/I₀ (I₀: one source's central peak) along the line through the ${nNow() === 2 ? 'sources' : 'center'}`, l, t - 6);
+    cctx.fillText(FR ? (CW < 600 ? 'I/I₀ (I₀: the beam with nothing in it)' : 'I/I₀ (I₀: the beam with nothing in its way) along a line through the center') : CW < 600 ? 'I/I₀ (I₀: one source\'s peak)' : `I/I₀ (I₀: one source's central peak) along the line through the ${nNow() === 2 ? 'sources' : 'center'}`, l, t - 6);
     cctx.textAlign = 'right'; cctx.textBaseline = 'bottom'; cctx.fillText(`position (${ST().unit})`, l + w, CH - 2);
     /* each source alone */
     const N = Math.max(200, Math.round(w * 1.5));
@@ -501,7 +621,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cctx.beginPath(); for (let i = 0; i <= N; i++) { const u = -hw + 2 * hw * i / N; let s = 0; for (const c of cs) s += one(u, c); const yy = Y(s); i ? cctx.lineTo(X(u), yy) : cctx.moveTo(X(u), yy); }
     cctx.strokeStyle = lineCol; cctx.lineWidth = 2 * p; cctx.stroke();
     /* first dark rings and the Rayleigh limit (Blind off, aperture known) */
-    if (!S.blind && !isMys()) {
+    if (FR && !S.blind) {
+      const a = Dnow() / 2; cctx.strokeStyle = T.mark; cctx.fillStyle = T.mark; cctx.lineWidth = 1; cctx.setLineDash([2, 3]);
+      for (const s of [-1, 1]) { if (a > hw) continue; cctx.beginPath(); cctx.moveTo(X(s * a), t); cctx.lineTo(X(s * a), t + h); cctx.stroke(); }
+      cctx.setLineDash([]); cctx.font = `${10.5 * p}px ${T.ui}`; cctx.textAlign = 'left'; cctx.textBaseline = 'top';
+      if (a < hw * 0.7) cctx.fillText(isDisk() ? 'edge of the geometric shadow' : 'edge of the geometric beam', X(a) + 4, t + 4);
+      if (FR.top > 1.1) { cctx.setLineDash([6, 4]); cctx.strokeStyle = T.compA; cctx.beginPath(); cctx.moveTo(l, Y(1)); cctx.lineTo(l + w, Y(1)); cctx.stroke(); cctx.setLineDash([]); }
+    } else if (!S.blind && !isMys()) {
       const r1 = ring1(); cctx.strokeStyle = T.mark; cctx.fillStyle = T.mark; cctx.lineWidth = 1; cctx.setLineDash([2, 3]);
       for (const c of cs) for (const s of [-1, 1]) { const u = c + s * r1; if (Math.abs(u) > hw) continue; cctx.beginPath(); cctx.moveTo(X(u), t); cctx.lineTo(X(u), t + h); cctx.stroke(); }
       cctx.setLineDash([]); cctx.font = `${10.5 * p}px ${T.ui}`; cctx.textAlign = 'left'; cctx.textBaseline = 'top';
@@ -524,6 +650,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
     const st = ST(), c = C(), D = Dnow(), lam = lamNow(), n = nNow(), sep = sepAngle(), th1 = rayleigh(D, lam), hidden = S.blind || isMys();
     let h = dd('Wavelength λ', `${c.lam} nm`);
+    if (isFr()) {
+      const L = c.L, NF = fresnelNumber(D, lam, L), disk = isDisk();
+      h += dd(st.Dlabel, `${f(D * 1e3, 2)} mm`) + dd('Screen distance L', `${f(L, 2)} m`);
+      h += dd('Fresnel number N<sub>F</sub> = D²/4λL', f(NF, 3), 'big');
+      h += dd(disk ? 'Fresnel zones the disk covers, seen from the center' : 'Fresnel zones in the hole, seen from the center', S.blind ? hide : f(zonesInHole(D, lam, L), 3));
+      h += dd('Cursor', fmtPos(c.cur)) + dd('Intensity at the cursor I/I₀', f(Iexact(c.cur), 4));
+      h += dd('At the center, from the full calculation', f(fresnelI(D, lam, L, 0, disk, 4), 4));
+      h += dd(disk ? 'At the center, Poisson spot: |U|² = 1' : 'At the center, 4 sin²(πN<sub>F</sub>/2)', S.blind ? hide : f(fresnelAxis(D, lam, L, disk), 4));
+      h += dd('At the center, exact (Rayleigh–Sommerfeld)', S.blind ? hide : f(exactAxis(D, lam, L, disk), 4));
+      h += dd(disk ? 'Edge of the geometric shadow' : 'Edge of the geometric beam', `${f(D / 2 * 1e3, 3)} mm from the center`);
+      if (disk) h += dd('Poisson spot: first dark ring, 2.405 λL/πD (many zones)', S.blind ? hide : `${f(poissonRing(D, lam, L) * 1e3, 3)} mm`);
+      else h += dd('Far field ring 1.22 λL/D (for N<sub>F</sub> ≪ 1)', S.blind ? hide : `${f(1.22 * lam * L / D * 1e3, 3)} mm`);
+      h += dd('Which regime', NF < 0.1 ? 'far field (Fraunhofer): N<sub>F</sub> ≪ 1' : NF > 3 ? 'near field (Fresnel), many zones' : 'near field (Fresnel), a few zones');
+      $('out').innerHTML = h; return;
+    }
     h += dd(st.Dlabel.replace(' N', ''), isMys() ? 'unknown' : S.setup === 'camera' ? `f/${c.N}, D = ${f(D * 1e3, 2)} mm` : `${f(D * st.Dk, st.Ddec)} ${st.Du}`);
     if (st.kind === 'screen' && S.setup !== 'camera') h += dd('Screen distance L', `${f(c.L, 2)} m`);
     if (n === 2) {
@@ -556,11 +697,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (isMys()) { setSlider('sD', 0, 1, 1, 0); $('oD').textContent = 'unknown'; }
     else { setSlider('sD', st.Dmin, st.Dmax, st.Dstep, +(c.D * st.Dk).toFixed(4)); $('oD').textContent = `${f(c.D * st.Dk, st.Ddec)} ${st.Du}`; }
     $('sD').disabled = isMys(); $('sD').parentElement.hidden = isMys();
-    $('wrapL').hidden = !(st.kind === 'screen' && S.setup !== 'camera'); if (c.L != null) { $('sL').value = c.L; $('oL').textContent = `${f(c.L, 2)} m`; }
+    $('wrapL').hidden = !(st.kind === 'screen' && S.setup !== 'camera'); if (c.L != null) { $('sL').min = st.Lmin || 1; $('sL').max = st.Lmax || 4; $('sL').step = st.Lstep || 0.05; $('sL').value = c.L; $('oL').textContent = `${f(c.L, 2)} m`; }
     $('wrapN').hidden = !st.two; $('wrapSep').hidden = !st.two || c.n !== 2; $('compWrap').hidden = !st.two || c.n !== 2;
     for (const b of document.querySelectorAll('#nSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === c.n));
     if (st.two) { setSlider('sSep', st.sepMin, st.sepMax, st.sepStep, c.sepv); $('lSep').textContent = st.sepLabel; $('oSep').textContent = `${f(c.sepv, st.sepStep < 0.05 ? 2 : 1)} ${st.sepU}`; }
     const hw = half(); c.cur = Math.max(-hw, Math.min(hw, c.cur)); setSlider('sCur', -hw * st.uk, hw * st.uk, hw * st.uk / 1000, c.cur * st.uk); $('oCur').textContent = fmtPos(c.cur);
+    $('sweepBtn').hidden = !isFr(); $('sweepBtn').textContent = sweep ? 'Stop the screen' : 'Move the screen'; $('sweepBtn').setAttribute('aria-pressed', String(!!sweep));
     $('wrapMys').hidden = !isMys(); $('mysNote').textContent = S.lastMys ? `The last mystery pinhole was ${f(S.lastMys * 1e6, 0)} µm.` : '';
     for (const b of document.querySelectorAll('#zoomSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.z === c.zoom));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.setup));
@@ -576,16 +718,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     camera: 'A 50 mm camera lens imaging two distant points that land 15 µm apart on the sensor. Its aperture is D = f/N, so stopping down to f/16 or f/22 makes the Airy disk on the sensor larger: the diameter of its first dark ring is 2.44 λN. That is why photographs get softer at very small apertures.',
     mystery: 'The same laser and screen, but the pinhole\'s size is hidden. Measure the first dark ring at a known screen distance and wavelength, and work out D. New mystery pinhole picks another between 80 µm and 300 µm.',
   };
+  HINTS.near = 'An expanded helium neon laser beam (632.8 nm) lights a round hole 2.00 mm across, and the screen is only 0.50 m behind it: too close for the far field Airy pattern. Seen from the center of the screen, the hole holds about 3.2 Fresnel zones (rings whose distances to that point differ by λ/2). Neighboring zones nearly cancel, so the center is bright when an odd number of zones fill the hole and dark when an even number do. Move the screen and watch the center blink; pull it far away (N_F well under 1) and the far field pattern comes back.';
+  HINTS.disk = 'The same beam on an opaque disk 2.00 mm across, the screen 1.00 m behind it. Ray optics says the middle of the shadow is dark. Waves say every point on the axis sees the same uncovered zones around the edge of the disk, so the center of the shadow is as bright as the beam itself: the Poisson spot (or Arago spot). Poisson put it forward in 1818 as an absurd consequence of Fresnel\'s theory; Arago looked and found it.';
   function applyPreset(k) {
+    stopSweep();
     const d = DEFAULTS[k]; S.setup = k; S.cfg[k] = { ...d, cur: 0 }; if (k === 'mystery' && !S.mysN) newMystery(true);
     $('presetHint').textContent = HINTS[k]; imgKey = ''; sync(); redraw();
   }
   function newMystery(quiet) { if (S.mysN && !quiet) S.lastMys = S.mys; S.mys = Math.round(80 + Math.random() * 220) * 1e-6; S.mysN++; imgKey = ''; }
   const changed = () => { imgKey = ''; sync(); redraw(); };
+  /* Move the screen: L goes out to the far end and back, at a steady rate in log L (about 12 s each way) */
+  let sweep = null;
+  function stopSweep() { if (!sweep) return; cancelAnimationFrame(sweep.raf); sweep = null; sync(); }
+  function sweepStep(now) {
+    if (!sweep) return; const st = ST(), c = C(), dt = Math.min(0.1, (now - sweep.t) / 1000); sweep.t = now;
+    const r = Math.log(st.Lmax / st.Lmin) / 12; let lnL = Math.log(c.L) + sweep.dir * r * dt;
+    if (lnL >= Math.log(st.Lmax)) { lnL = Math.log(st.Lmax); sweep.dir = -1; } if (lnL <= Math.log(st.Lmin)) { lnL = Math.log(st.Lmin); sweep.dir = 1; }
+    c.L = Math.exp(lnL); changed(); sweep.raf = requestAnimationFrame(sweepStep);
+  }
+  $('sweepBtn').addEventListener('click', () => { if (sweep) { stopSweep(); return; } if (!isFr()) return; sweep = { dir: C().L >= ST().Lmax - 1e-9 ? -1 : 1, t: performance.now(), raf: 0 }; sync(); sweep.raf = requestAnimationFrame(sweepStep); });
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('selLam').addEventListener('change', (e) => { C().lam = +e.target.value; changed(); });
   $('sD').addEventListener('input', (e) => { const st = ST(); if (S.setup === 'camera') { C().N = F_STOPS[+e.target.value]; C().D = CAMERA_F / C().N; } else if (!isMys()) C().D = +e.target.value / st.Dk; changed(); });
-  $('sL').addEventListener('input', (e) => { C().L = +e.target.value; changed(); });
+  $('sL').addEventListener('input', (e) => { stopSweep(); C().L = +e.target.value; changed(); });
   $('nSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-n]'); if (!b) return; C().n = +b.dataset.n; changed(); });
   $('sSep').addEventListener('input', (e) => { C().sepv = +e.target.value; changed(); });
   $('sCur').addEventListener('input', (e) => { C().cur = +e.target.value / ST().uk; sync(); redraw(); });
@@ -608,7 +763,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cur.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const step = half() / 1000 * (e.shiftKey ? 10 : 1); setCur(C().cur + (e.key === 'ArrowLeft' ? -step : step)); e.preventDefault(); });
 
   /* ---------- readings for the worksheet (tools/readings_panel.py) ---------- */
-  window.vdVersion = 'resolution@2026-10-24';
+  window.vdVersion = 'resolution@2026-10-31';
   window.vdShowCols = [['setup', 'setup'], ['lam_nm', 'λ (nm)'], ['D_mm', 'D (mm)'], ['pos', 'cursor'], ['I_rel', 'I/I₀']];
   window.vdReadingRow = () => {
     const st = ST(), c = C(), n = nNow(), D = Dnow(), screen = st.kind === 'screen';
@@ -618,13 +773,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       x_mm: screen && S.setup !== 'camera' ? f(c.cur * 1e3, 3).replace('−', '-') : '', x_um: S.setup === 'camera' ? f(c.cur * 1e6, 2).replace('−', '-') : '',
       cursor_urad: screen ? '' : f(c.cur * 1e6, st.dec).replace('−', '-'), sep_urad: n === 2 ? g6(sepAngle() * 1e6) : '', I_rel: f(Iexact(c.cur), 4),
       R_km: S.setup === 'eye' && n === 2 ? c.sepv : '', sep_ly: S.setup === 'telescope' && n === 2 ? c.sepv : '', f_number: S.setup === 'camera' ? c.N : '',
-      sep_um: S.setup === 'camera' && n === 2 ? c.sepv : '', pos: fmtPos(c.cur) };
+      sep_um: S.setup === 'camera' && n === 2 ? c.sepv : '', N_F: isFr() ? g6(fresnelNumber(D, lamNow(), c.L)) : '', pos: fmtPos(c.cur) };
   };
 
   /* ---------- about ---------- */
   $('about1').textContent = 'The pattern: the exact far field (Fraunhofer) diffraction of a plane wave by a uniformly lit circular hole of diameter D, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ (OpenStax University Physics Volume 3, section 4.5). J₁ is the Bessel function of order one, computed from its integral to about 13 digits. Its first zero, x = 3.8317, puts the first dark ring at sin θ₁ = 1.2197 λ/D, which the textbook rounds to θ₁ = 1.22 λ/D; the next dark rings are at x = 7.0156 and 10.1735. About 84% of the light falls inside the first dark ring, and the first bright ring is only 1.75% as bright as the center, which is why it is hard to see without a longer exposure.';
   $('about2').textContent = 'Two sources: equally bright and independent (incoherent), so their intensities add. Each pattern is centered on its own geometric image and depends on the angle from it; the angles are small, so they are treated as adding. Rayleigh\'s criterion calls two sources just resolved when the center of one pattern falls on the first dark ring of the other, Δθ = 1.22 λ/D; then the intensity midway between them dips to about 73.5% of the peaks. The lens, mirror or eye is taken to be perfect: no aberrations, no air turbulence, no obstruction in front of the mirror, so the only blur is diffraction.';
-  $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; a nearer screen would need Fresnel diffraction, which is not modeled). A point r from the center of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colors of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
+  $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; the near field setups, Near the hole and A disk, do the Fresnel calculation instead). A point r from the center of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colors of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
+  $('about5').textContent = 'Near the hole and A disk (Fresnel diffraction): a plane wave of unit intensity on a round hole or an opaque disk, the field on the screen from the Fresnel (paraxial) form of the Kirchhoff integral with the obliquity factor taken as 1 (Hecht, Optics, section 10.3; Goodman, Introduction to Fourier Optics, section 4.2): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F and N_F = a²/λL, a = D/2, computed by Simpson\'s rule; the disk is the open beam minus the hole (Babinet). On the axis the neglected phase is under 0.002 rad for every setting here, and the readouts compare the result with the exact Rayleigh–Sommerfeld value, 1 + z²/R² − 2(z/R) cos k(R − z) for the hole and z²/R² for the disk, R = √(L² + a²). The edge of the hole or disk is taken as perfectly sharp and the beam as perfectly even; a real beam is Gaussian and must be several times wider than D. The picture is scaled to its brightest point; the graph is in units of the open beam. The zone picture is to scale: zone n ends at radius √(nλL + (nλ/2)²).';
   $('about4').textContent = 'Numbers: the textbook\'s Example 4.6, Hubble (2.40 m mirror, 550 nm, stars at 2.0 million light years) and its Chapter 4 Problem 59 on the eye (3.00 mm pupil, 550 nm, headlights 1.30 m apart); 1 ly = 9.4607 × 10¹⁵ m. Real eyes do worse than diffraction allows: normal (20/20) acuity is about one minute of arc, 291 µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to 1/1000 of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.';
 
   /* ---------- size, theme, start ---------- */
