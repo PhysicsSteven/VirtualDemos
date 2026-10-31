@@ -314,7 +314,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/spectra.html" target="spectra-worksheet">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant</a></li><li><a href="../curriculum/labs/students/intro-spectra.html" target="intro-spectra-worksheet">Worksheet 2: Fingerprints of the Elements (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/spectra.html" target="spectra-worksheet">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant</a></li><li><a href="../curriculum/labs/students/intro-spectra.html" target="intro-spectra-worksheet">Worksheet 2: Fingerprints of the Elements (Astro 2203)</a></li><li><a href="../curriculum/labs/students/hydrogen-in-stars.html" target="hydrogen-in-stars-worksheet">Worksheet 3: Why Balmer Lines Peak in A Stars</a></li></ul></details><!-- /vd-handout -->
       <section class="card">
         <h2>Mode</h2>
         <div class="seg" role="group" aria-label="Mode" id="modeSeg" style="align-self: flex-start; flex-wrap: wrap;">
@@ -1387,6 +1387,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cv.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); setStarT(tFromU(+$('starT').value + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 50 : 5))); });
   }
   $('starT').value = uFromT(ST.T); $('starPe').value = uFromPe(ST.Pe);
+  window.__stars = { ST, setStarT, update: updateStars, uFromPe };   /* for the key scripts and tests */
 
   // ---------- render ----------
   const MODE_HINTS = {

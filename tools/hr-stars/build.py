@@ -38,13 +38,21 @@ def main(src):
     bright = {r['id'] for r in sorted(rows, key=lambda r: float(r['mag']))[:100]}
     keep = [r for r in rows if r['id'] in near or r['id'] in bright]
     keep.sort(key=lambda r: float(r['dist']))
+    names = {r['id']: name(r) for r in keep}
+    seen = {}
+    for v in names.values():
+        seen[v] = seen.get(v, 0) + 1
+    for r in keep:   # two stars with one name (the components of 61 Cyg, ...): add the Gliese component letter, or the HIP number
+        if seen[names[r['id']]] > 1:
+            g = r['gl'].strip()
+            names[r['id']] += ' ' + (g[-1] if g and g[-1] in 'ABCD' else f"(HIP {r['hip']})" if r['hip'] else f"(HYG {r['id']})")
     out = []
     with open(HERE / 'hr-stars.csv', 'w', newline='') as f:
         w = csv.writer(f)
         f.write('# Subset of HYG v3.8 (astronexus/HYG-Database, CC BY-SA 4.0): stars within 10 pc and the 100 brightest, built by tools/hr-stars/build.py\n')
         w.writerow(['hyg_id', 'name', 'spect', 'V', 'M_V', 'B_V', 'dist_pc', 'nearest', 'brightest'])
         for r in keep:
-            row = [int(r['id']), name(r), r['spect'], float(r['mag']), round(float(r['mag']) - 5 * math.log10(float(r['dist']) / 10), 2), float(r['ci']) if r['ci'] else None,
+            row = [int(r['id']), names[r['id']], r['spect'], float(r['mag']), round(float(r['mag']) - 5 * math.log10(float(r['dist']) / 10), 2), float(r['ci']) if r['ci'] else None,
                    round(float(r['dist']), 3), int(r['id'] in near), int(r['id'] in bright)]
             w.writerow(['' if v is None else v for v in row])
             out.append(row[1:])
