@@ -1,0 +1,28 @@
+/* English strings of notes/gravity-near-earth, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/gravity-near-earth', [
+"Gravity Near Earth: teaching notes",
+"Gravity Near Earth",
+"g = GM/r² with r measured from Earth's center. Near the surface r ≈ R, so g barely changes with height: g ≈ g₀({#} − 2h/R).",
+"At the space station's height (about {#} km) gravity is still about {#}% of its surface value. Astronauts float because they are in free fall, not because gravity is gone.",
+"Earth's rotation reduces the effective g by up to ω²R = {#} m/s² at the equator and tilts the plumb line slightly away from Earth's center.",
+"The measured sea level g ({#} at the equator to {#} at the poles) also reflects Earth's flattening, which a sphere misses.",
+"Students need Newton's law of gravitation. The left panel shows the planet with its axis vertical and a {#} kg mass at the chosen height and latitude, with arrows for gravity and the centrifugal term (drawn {#} times longer so it shows). The right panel plots GM/(R + h)² against height, with the near surface line. <strong>Blind</strong> hides g and the percentages for predictions.",
+"<strong>Predict.</strong> Turn on Blind. Ask what fraction of surface gravity acts at the space station's height. Typical guesses are zero or \"a little\". Then show {#}%.",
+"<strong>Small heights.</strong> Everest ({#} m): {#} m/s², {#}% less. The near surface line is accurate to {#}% here.",
+"<strong>Large heights.</strong> At GPS orbit g is {#} m/s²; at geostationary orbit {#} m/s², and the orbit period there is one sidereal day.",
+"<strong>Latitude.</strong> At sea level move from {#}° to {#}°: the effective g rises from {#} to {#} m/s² in the sphere model. Compare with the real Earth's {#} and {#} (WGS {#}): the flattening adds more than the spin.",
+"<strong>Moon and Mars.</strong> {#} and {#} m/s² at the surface.",
+"<strong>Q1.</strong> Show that for h ≪ R, g(h) ≈ g₀({#} − 2h/R). Use it to estimate g at the top of Everest.",
+"<strong>Q2.</strong> Find g at {#} km. Why do astronauts on the space station float?",
+"<strong>Q3.</strong> How much does Earth's rotation reduce g at the equator? At what latitude is the plumb line tilted most from the direction to Earth's center?",
+"<strong>Q4.</strong> A {#} kg mass on a spring scale reads {#} N at the equator and {#} N at the pole in the sphere model. The real values are about {#} and {#} N. What explains the difference?",
+"<strong>Q5.</strong> At what height is g one quarter of its surface value?",
+"<strong>\"There is no gravity in space.\"</strong> At {#} km it is {#}% of the surface value; orbiting objects are in free fall.",
+"<strong>\"g is the same everywhere on Earth.\"</strong> It varies by about {#}% between the equator and the poles, and slightly with height.",
+"<strong>\"g falls off linearly with height.\"</strong> Only approximately, for h ≪ R; the true dependence is {#}/r².",
+"A uniform sphere with GM = {#} × {#}¹⁴ m³/s² and mean radius {#} km (Moon {#} × {#}¹² and {#} km; Mars {#} × {#}¹³ and {#} km), turning at the sidereal rate.",
+"Effective g at rest on the ground or on a tower turning with the planet: gravity GM/r² toward the center plus ω²r cos(latitude) outward from the axis. The plumb line tilt is largest near {#}° ({#} arcmin on Earth).",
+"The real Earth comparison uses the WGS {#} normal gravity formula at sea level (Somigliana): it includes both rotation and flattening.",
+"The GPS and geostationary presets set the orbit radius ({#},{#} km and {#},{#} km), so the heights above the mean radius are {#},{#} and {#},{#} km. Geostationary altitude is usually quoted as {#},{#} km above the equator, whose radius is {#} km.",
+"The height slider runs on a square root scale so small heights are reachable."
+]);

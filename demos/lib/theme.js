@@ -165,3 +165,11 @@
 
   window.VDTheme = { get: function () { return mode; }, set: function (v) { apply(v, true); }, dark: dark };
 })();
+
+/* Languages (demos/lib/i18n.js, 2026-11-01): loaded here, right after the theme, so every page that has the theme switch gets it
+   without another tag. In English it changes nothing on the page. */
+(function () {
+  var me = document.currentScript;
+  if (window.VDI18N || !me || !me.src || document.readyState !== 'loading') return;
+  document.write('<script src="' + me.src.replace(/theme\.js(\?.*)?$/, 'i18n.js') + '"><\/script>');
+})();

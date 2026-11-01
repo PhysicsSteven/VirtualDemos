@@ -1,0 +1,27 @@
+/* English strings of notes/center-of-mass, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/center-of-mass', [
+"Center of Mass: teaching notes",
+"Center of Mass",
+"The center of mass is the mass weighted average position, x_cm = Σmᵢxᵢ/Σmᵢ, pulled toward the heavier masses.",
+"The center of mass moves as if all the mass were concentrated there and all the external forces acted on it: M a_cm = F_external. Internal forces, however violent, cannot change its motion.",
+"An exploding firework's pieces follow different parabolas, but their center of mass carries on along the original one until a piece hits the ground (a new external force).",
+"With no horizontal external force, walking on a boat cannot move the center of mass of you and the boat: the boat slides back by mL/(m + M).",
+"Students need momentum conservation. In <strong>Masses on a plate</strong> drag the masses (keyboard: {#} to {#} to select, arrows to move); the slider sets the selected mass. In <strong>Exploding firework</strong> the firework is launched at {#} m/s and {#}° and splits at the top; the dashed curve is the unexploded path. In <strong>Walking on a boat</strong> the person walks the {#} m boat from back to front. <strong>Blind</strong> hides the center of mass.",
+"<strong>Plate.</strong> Blind on: ask for the center of mass of {#} kg at ({#}, {#}), {#} kg at ({#}, {#}) and {#} kg at ({#}, {#}). It is ({#}, {#}) m. Double one mass and predict which way it moves.",
+"<strong>Firework.</strong> Default split: equal halves thrown apart horizontally at {#} m/s. They land together at {#} and {#} m; their midpoint is {#} m, the unexploded range.",
+"<strong>Unequal pieces.</strong> Front piece {#} of the mass: it flies farther, the heavy piece less, and the mass weighted average is still {#} m.",
+"<strong>Throw a piece upward.</strong> Then the pieces land at different times and the center of mass leaves the parabola as soon as the first one lands: the ground's force is external.",
+"<strong>Boat.</strong> {#} kg person, {#} kg boat: the boat moves back {#} m while the person walks {#} m along it; the center of mass stays at −{#} m.",
+"<strong>Q1.</strong> Find the center of mass of the three masses in step {#}.",
+"<strong>Q2.</strong> Why does the center of mass of the firework's pieces follow the original parabola after the explosion?",
+"<strong>Q3.</strong> The firework splits horizontally into a {#} piece and a {#} piece. With the explosion speed at {#} m/s the light piece lands {#} m beyond the unexploded landing point. Where does the heavy piece land?",
+"<strong>Q4.</strong> Show that the boat moves back by mL/(m + M). How far does a {#} kg boat move when a {#} kg person walks {#} m along it?",
+"<strong>Q5.</strong> What happens to the center of mass of the firework after the first piece lands, and why?",
+"<strong>\"The center of mass is the middle of the object.\"</strong> Only for symmetric mass distributions.",
+"<strong>\"An explosion changes where the system goes.\"</strong> Internal forces come in third law pairs and cancel; only external forces change the center of mass motion.",
+"<strong>\"Walking forward on a boat doesn't move the boat.\"</strong> Your push on the boat moves it backward; the total momentum stays zero.",
+"<strong>\"There must be mass at the center of mass.\"</strong> A ring's center of mass is in empty space.",
+"Point masses on a massless {#} m × {#} m plate; positions to {#} m.",
+"The firework is a point that splits at the top of its flight into pieces with fractions f and {#} − f of the mass. The explosion gives them a relative speed u along the chosen direction with zero total momentum change: the front piece gains ({#} − f)u, the back piece −fu. No air drag. Each piece stops when it reaches the ground.",
+"The boat floats with no water drag (real water would slowly stop it). The person walks at {#} m/s relative to the boat."
+]);

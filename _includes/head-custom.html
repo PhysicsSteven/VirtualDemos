@@ -35,7 +35,9 @@
 <!-- Symbol hover: what each symbol in an equation stands for on this handout (curriculum/labs/symbols.js, meanings from tools/symbols.py). -->
 <script defer src="{{ '/curriculum/labs/symbols.js' | relative_url }}"></script>
 <script>
-  window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] } };
+  window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+    /* in another language the page is translated first (demos/lib/i18n.js), so the math is typeset in the translated text; in English VDI18N.done is already resolved */
+    startup: { pageReady: function () { return (window.VDI18N && VDI18N.done ? VDI18N.done : Promise.resolve()).then(function () { return MathJax.startup.defaultPageReady(); }); } } };
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 <!-- MathJax does not line break; on a narrow phone a wide display scrolls sideways inside its own box instead of widening the page. -->

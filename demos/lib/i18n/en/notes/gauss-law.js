@@ -1,0 +1,27 @@
+/* English strings of notes/gauss-law, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/gauss-law', [
+"Gauss's Law: teaching notes",
+"Gauss's Law",
+"The net flux through any closed surface is Q_enc/ε₀, whatever its shape and size and wherever the charges sit inside.",
+"Charges outside change the field on the surface but add zero net flux; zero net flux does not mean zero field.",
+"Gauss's law always holds, but gives E directly only when symmetry makes E constant and perpendicular on the surface: E ∝ {#}/r² outside a sphere, E ∝ r inside a uniform ball, E ∝ {#}/r for a line, E constant for a plane.",
+"Students need the point charge field, flux as E·A, and line and surface charge densities. <strong>Any surface</strong> integrates the flux numerically without using Gauss's law; <strong>Symmetry</strong> walks through the derivation step by step. <strong>Pause</strong> stops the motion so you can drag things.",
+"<strong>Charge inside.</strong> A {#} nC charge wanders inside a sphere; Q_enc/ε₀ and the numerical ∮E·dA both stay {#} N·m²/C. Ask Q1, then change <strong>Radius R</strong> and try <strong>Box</strong> or <strong>Freeform</strong>.",
+"<strong>Charge outside.</strong> Lines enter and leave; the flux out and the flux in (their sizes change as the charge wanders) always cancel. Drag the charge inside: Φ jumps to q/ε₀.",
+"<strong>Dipole inside.</strong> Q_enc = {#}, Φ = {#}, yet E is strong on parts of the box. Add a charge with <strong>+{#} nC</strong> and predict the new flux.",
+"<strong>Uniform sphere.</strong> Follow <strong>Gauss's law, step by step</strong>; pause and drag r inside and outside the ball. Then try <strong>Conductor</strong>.",
+"<strong>Line of charge</strong> and <strong>Plane of charge.</strong> Change the cylinder length L or the cap distance h: E does not change.",
+"<strong>Q1.</strong> Predict: in <strong>Charge inside</strong>, if the sphere's radius is doubled, does the flux double, quadruple, fall to a quarter, or stay the same? Explain from how E and the area change, then check.",
+"<strong>Q2.</strong> In <strong>Charge outside</strong> the field on the sphere is not zero, yet the net flux is. Explain. Does zero net flux mean zero field everywhere on the surface? Use <strong>Dipole inside</strong> in your answer.",
+"<strong>Q3.</strong> A closed surface surrounds +{#} nC. What is the flux? Then −{#} nC is added inside and +{#} nC outside. What is the new flux? Set it up in <strong>Any surface</strong> to check.",
+"<strong>Q4.</strong> In <strong>Uniform sphere</strong>, Q = {#} nC is spread evenly through a ball of radius {#} cm. Find E at r = {#} cm, at the surface, and at r = {#} cm. Where is E largest? Check with the step panel.",
+"<strong>Q5.</strong> For a line with λ = {#} nC/m, find E at r = {#} cm. Why does the cylinder's length not matter? For a real wire {#} m long, where would this result stop being accurate?",
+"<strong>Q6.</strong> Switch the sphere to <strong>Conductor</strong>. Why is E zero inside, and why does E jump at the surface instead of rising smoothly as for the ball?",
+"<strong>\"Gauss's law only works for symmetric surfaces.\"</strong> It holds for every closed surface (try <strong>Freeform</strong>); symmetry is needed only to solve for E.",
+"<strong>\"Zero flux means zero field on the surface.\"</strong> In <strong>Dipole inside</strong> inward and outward flux cancel where E is strong.",
+"<strong>\"Charges outside do not affect the field on the surface.\"</strong> They do; they only add zero net flux.",
+"<strong>\"A bigger surface catches more flux.\"</strong> E falls as {#}/r² while the area grows as r².",
+"<strong>Any surface</strong>: point charges in the plane z = {#} (the slice you see), with 3D Gaussian surfaces (sphere, cylinder, or box or freeform prism extended ± half the depth). ∮E·dA is computed by adaptive quadrature from the full 3D field. In a slice, line spacing does not show field strength, and line counts are only a picture of the flux.",
+"A point charge exactly on the surface has no defined flux. Closer than {#} cm the demo skips the numerical integral and says so: a numerical exclusion zone, not physics. If an adaptive integral ever runs out of panels before its error target, the rail says so. <strong>Readings</strong> captures the flux with the geometry and exports a CSV in SI units. In Symmetry mode, <strong>Show data table</strong> under Plot data lists E against distance for screen readers or for copying.",
+"<strong>Symmetry</strong>: ideal distributions; the line and plane are infinite, the ball is a uniformly charged insulator, the conductor's charge sits on its surface, so on that surface E has no single value: it jumps from {#} to kQ/R² (by σ/ε₀). At r = {#}, E = {#} for the ball and the conductor. {#} nC enclosed gives {#} N·m²/C."
+]);

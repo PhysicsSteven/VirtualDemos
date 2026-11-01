@@ -1,0 +1,28 @@
+/* English strings of notes/elevator, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/elevator', [
+"Elevator: Apparent Weight: teaching notes",
+"Elevator: Apparent Weight",
+"A scale measures the normal force N it pushes up with, not your weight mg.",
+"Newton's second law for the rider (up positive): N − mg = ma, so N = m(g + a). The reading depends on the acceleration, not on the velocity.",
+"At any constant velocity, up or down, fast or slow, the net force is zero and the scale reads exactly mg (first law).",
+"In free fall a = −g and N = {#}: weightlessness means nothing is pushing on you, not that gravity has gone.",
+"Students need free body diagrams and Newton's second law. Up is positive throughout. The rider stands on a bathroom scale that shows N/g in kilograms. The graphs show the scale reading (dashed line at the rider's mass) and the velocity against time for the current ride. <strong>Blind</strong> hides the scale and the N arrow so the class can predict each stage.",
+"<strong>Predict first.</strong> Turn on Blind. Ask what the scale shows during each of the four stages of a ride up: at rest, speeding up, cruising, slowing down. Sketch it.",
+"<strong>Up to floor {#}.</strong> {#} kg rider, {#} m/s², top speed {#} m/s, jerk {#} m/s³: the scale climbs from {#} to {#} kg over {#} s, holds {#} kg for {#} s, eases back to {#} kg for the {#} s cruise, then dips to {#} kg and back the same way. Turn Blind off and compare with the sketches. Then tick <strong>Instant starts and stops</strong> and ride again: the textbook version reads {#} kg for {#} s, {#} kg for the {#} s cruise and {#} kg for the last {#} s, with sudden jumps between them.",
+"<strong>Down to the ground.</strong> The same three readings in the opposite order: light first, heavy last.",
+"<strong>Change the top speed</strong> to {#} m/s and ride again: the cruise reading is still exactly {#} kg. The velocity is different, the acceleration is the same zero.",
+"<strong>Cable snaps</strong> on the way down: the scale reads {#} for a second of free fall, then the safety brakes stop the car and the reading jumps to at least twice the rider's mass.",
+"<strong>Q1.</strong> Draw the free body diagram of the rider and show that the scale reads N/g = m(g + a)/g.",
+"<strong>Q2.</strong> A {#} kg rider, acceleration {#} m/s². What does the scale show while the car speeds up going up? Slows down going up? Speeds up going down?",
+"<strong>Q3.</strong> Why does the scale read exactly {#} kg while the car moves at {#} m/s, and also at {#} m/s?",
+"<strong>Q4.</strong> The cable snaps. What does the scale read during free fall, and why? The brakes then stop the car at {#} m/s². What does it read then?",
+"<strong>Q5.</strong> From the velocity graph of a ride, how can you find the scale reading at each stage without seeing the scale?",
+"<strong>Q6.</strong> With jerk {#} m/s³ the scale reading of a {#} kg rider climbs gradually instead of jumping. How fast does it climb, in kg per second, and how long does it take to reach {#} kg? Why do real elevators limit jerk?",
+"<strong>\"Moving up makes you heavier.\"</strong> Only speeding up going up (or slowing down going down) does. Steady motion either way reads mg.",
+"<strong>\"The scale measures weight.\"</strong> It measures the force it pushes with; that equals mg only when the acceleration is zero.",
+"<strong>\"In free fall there is no gravity.\"</strong> Gravity is still mg; the scale reads zero because it falls with you and need not push.",
+"<strong>\"N and mg are a third law pair.\"</strong> They act on the same body; the third law partner of N is the rider pushing down on the scale.",
+"The car's acceleration changes at a constant rate J (the jerk) up to ±a, holds, and changes back to zero; a short trip that cannot reach the top speed (or the full acceleration) does the same with lower peaks. Each piece has constant jerk and is integrated exactly, and every trip ends at rest exactly at the floor. With <strong>Instant starts and stops</strong> the acceleration jumps between {#} and ±a, the usual textbook idealization. Real elevators also limit jerk and use about {#} m/s² or less.",
+"N = m(g + a), never negative (a scale cannot pull down).",
+"Cable snaps: up to one second of free fall (less if needed to leave room), then a constant upward deceleration of at least g, more if needed to stop {#} m above the pit. Real safety gear works differently; this is for the force picture only."
+]);

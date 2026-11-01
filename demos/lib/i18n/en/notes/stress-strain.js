@@ -1,0 +1,28 @@
+/* English strings of notes/stress-strain, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/stress-strain', [
+"Stress and Strain: teaching notes",
+"Stress and Strain",
+"Stress is force per area, σ = F/A; strain is fractional stretch, ε = ΔL/L. Below the elastic limit they are proportional, σ = Yε, with Young's modulus Y a property of the material, not of the wire.",
+"So the same load stretches a thin wire more than a thick one, and a long wire more than a short one: ΔL = FL/(AY).",
+"Past the yield stress the wire stays longer when unloaded (plastic deformation); unloading follows a line parallel to the elastic one. At the tensile strength it breaks.",
+"Metals are stiff: a {#} kg load stretches a {#} m steel wire by about {#} mm.",
+"Students should know Hooke's law for springs. The wire is {#} m long; a dial gauge reads its extension to {#} mm. The drawing exaggerates the stretch; the gauge does not. Use <strong>Graph: zoom in on the elastic part</strong> to see the straight line, which is too steep to see on the full curve. The <strong>Mystery metal</strong> hides its own properties.",
+"<strong>Mild steel, {#} mm.</strong> Add {#}, {#}, {#} kg: the gauge reads {#}, {#}, {#} mm, in proportion. Take the load off: back to zero.",
+"Ask Q2, then switch to <strong>Aluminum alloy</strong>: {#} kg now stretches it {#} mm, since Y is about {#} times smaller.",
+"<strong>Copper (annealed).</strong> It yields at only {#} kg on this wire. Load it to {#} kg and take the load off: it stays much longer. Load it again: it is elastic up to the new, higher point (work hardening).",
+"Steel again, load slowly past {#} kg (yield) toward {#} kg (the tensile strength): watch the curve bend over, then the wire snaps.",
+"Lab: on the <strong>Mystery metal</strong>, capture several elastic loads and fit for Y; then find roughly where it stops returning to zero.",
+"<strong>Q1.</strong> A {#} mm steel wire {#} m long carries {#} kg. Find the stress, the strain and the extension (Y = {#} GPa). Check with the gauge.",
+"<strong>Q2.</strong> Predict the extension under the same {#} kg for (a) a wire of the same steel with twice the diameter, (b) twice the length, (c) aluminum alloy (Y = {#} GPa).",
+"<strong>Q3.</strong> What mass would make the {#} mm steel wire yield ({#} MPa), and what mass would break it ({#} MPa)? Why doesn't a thicker wire have a higher yield stress?",
+"<strong>Q4.</strong> Annealed copper is loaded to {#} MPa and unloaded. Explain from the curve why it ends up longer, and estimate how much longer (the demo shows the permanent stretch).",
+"<strong>Q5 (lab).</strong> From a fit of F against ΔL for loads in the elastic range, show that Y = slope × L/A. Why should the fit pass through the origin, and what would a nonzero intercept tell you?",
+"<strong>\"A thicker wire is stiffer, so it has a larger Young's modulus.\"</strong> It takes more force per millimeter, but Y (stress over strain) is the same: area is divided out.",
+"<strong>\"Elastic means stretchy.\"</strong> Steel is very elastic (it returns exactly) while stretching very little.",
+"<strong>\"When the load is removed, the wire returns to its original length.\"</strong> Only below yield.",
+"<strong>\"The wire breaks at the highest point of the stress strain curve, and is weakest there.\"</strong> It reaches its tensile strength there; real wires then neck and break a little later.",
+"Engineering stress and strain (original area and length). Curve: straight to the yield stress σ_y with slope Y; then smooth hardening to the tensile strength σ_u, reached at strain ε_u, held until fracture at ε_f. Unloading and reloading below the current flow stress are elastic with slope Y.",
+"Typical values: mild steel Y {#} GPa, σ_y {#} MPa, σ_u {#} MPa; annealed copper {#} GPa, {#} MPa, {#} MPa; an aluminum alloy {#} GPa, {#} MPa, {#} MPa. Real samples vary with composition and treatment.",
+"Ignored: necking, rate effects and creep, temperature, and the wire's own weight. The load is applied slowly (no dynamic overshoot).",
+"The dial gauge reads to {#} mm with no noise; scatter in a fit comes only from rounding."
+]);

@@ -1,0 +1,27 @@
+/* English strings of notes/induction-at-work, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/induction-at-work', [
+"Induction at Work: teaching notes",
+"Induction at Work",
+"In each device a changing flux makes an EMF, ε = −dΦ/dt. The size of the EMF depends on how fast the flux changes, so it grows with the speed of the magnet, the pen or the card.",
+"The shake flashlight turns the work of your hand into stored electric energy: a magnet moving through a coil, a rectifier, and a capacitor. The energy readouts show where every joule goes.",
+"A graphics tablet of the kind OpenStax describes finds a magnetic pen from the EMFs in a grid of wires. Because the EMF needs a changing flux, a pen held still is invisible to it.",
+"A magnetic stripe stores bits as regions of opposite magnetization. Each flip passing the reading head gives a pulse, and the pattern of pulses (F2F) carries its own clock, so the speed of the swipe does not matter.",
+"Students need Faraday's law with flux, ε = −N dΦ/dt, and P = IV. <strong>Blind</strong> hides the EMF plots, the light's glow, the capacitor voltage, the tablet's estimate and the decoded number.",
+"<strong>Shake flashlight.</strong> The EMF is a pair of opposite pulses each time the magnet passes through the coil: the flux rises as it enters and falls as it leaves. Peak EMF {#} V at {#} shakes per second; double the rate and it doubles. The capacitor creeps up; turn on Fast forward.",
+"<strong>Flashlight, light on.</strong> The capacitor starts at {#} V and the light dims within seconds. Shake with the light on and read the energy column: from your hand, heat in the coil, the diodes, the light, the capacitor.",
+"<strong>Graphics tablet.</strong> Watch which wires light up under the moving pen and the EMF bars: a peak under the pen that changes sign with the direction of motion. The tablet's fit puts the pen within a small fraction of the {#} mm wire spacing.",
+"<strong>Tablet, pen held still.</strong> Nothing. Ask why. Real tablets make the pen's field alternate so that it changes even when the pen does not move.",
+"<strong>Card reader.</strong> {#} bits, {#} flips, {#} pulses, read back as {#}. Change the speed: taller, narrower pulses, the same number.",
+"<strong>Card, uneven swipe.</strong> The pulses bunch and spread, yet the number reads.",
+"<strong>Q1.</strong> In the shake flashlight the magnet's peak speed is v = {#}πfA. For f = {#} Hz and A = {#} cm, find v. The largest value of N dΦ/dz for this coil is {#} Wb/m, about {#} mm from the coil's center. Estimate the peak EMF and explain why it is less than ({#} Wb/m)v_max.",
+"<strong>Q2.</strong> The capacitor is {#} F. How much energy does it hold at {#} V, where the light starts to glow? If the bridge rectifier loses {#} V and the peak EMF is {#} V, what is the highest voltage the capacitor can reach? What could you change to charge it higher?",
+"<strong>Q3.</strong> Explain, with energy, why shaking gets harder when the capacitor is charging than when the coil is disconnected. Where does the work you do go?",
+"<strong>Q4.</strong> The tablet's pen magnet (m = {#} A·m²) is {#} mm above a wire and moves across it at {#} cm/s. The flux through the wire's circuit is Φ = −μ₀m u/({#}π(u² + h²)), with u the sideways distance. Find the EMF when the pen is right over the wire. What is it when the pen stops?",
+"<strong>Q5.</strong> Track {#} of a card stores {#} bits per inch. How long is one bit? How long does a {#} bit record take to pass the head at {#} m/s? Why does a reader that relies on F2F pulses not need to know the swipe speed?",
+"<strong>\"A strong magnet makes a big EMF.\"</strong> A strong magnet that does not move makes none. The EMF depends on the rate of change of flux.",
+"<strong>\"The flashlight makes energy from the magnet.\"</strong> The magnet is unchanged; the energy comes from the work done against the coil's magnetic force.",
+"<strong>\"The coil's EMF is largest when the magnet is in the middle.\"</strong> That is where the flux is largest and momentarily not changing as the magnet passes through: the EMF changes sign there.",
+"Flashlight: point dipole magnet m = B_rV/μ₀ (B_r = {#} T, typical NdFeB), coil of {#} turns of radius {#} mm over {#} mm, resistance from {#} m of {#} mm copper ({#} Ω). Bridge with two {#} V diodes conducting, LED as {#} V plus {#} Ω. Chosen values except the copper's resistivity. Time step {#} ms.",
+"Tablet: dipole pen, wires closed far away, flux through a half plane (closed form), EMF = −dΦ/dt; the pen is found by a least squares fit of the known shape to five wires; detection threshold {#} µV (chosen).",
+"Card: ISO/IEC {#} track {#} density and character code (the check character is left out); F2F recording; pulse shape g²/((x − x_k)² + g²) with a chosen g = {#} mm; decoding by tracking the bit period."
+]);

@@ -1,0 +1,25 @@
+/* English strings of notes/rocket, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/rocket', [
+"Rocket Propulsion: teaching notes",
+"Rocket Propulsion",
+"A rocket pushes exhaust backward and the exhaust pushes the rocket forward; no ground or air is needed. Thrust = u × (burn rate).",
+"As fuel burns the rocket gets lighter, so the same thrust gives more and more acceleration.",
+"In empty space Δv = u ln(m₀/m), whatever the burn rate. The final speed can exceed the exhaust speed.",
+"Against gravity, every second of burning costs g × ({#} s) of speed: burn fast, and lift off promptly.",
+"<strong>In deep space.</strong> {#} {#} kg with {#} kg of fuel, u = {#} m/s: Δv = {#} ln {#} = {#} m/s, more than twice the exhaust speed. Change the burn rate: the final speed does not change.",
+"<strong>Launch from the ground.</strong> Thrust {#} kN against a {#} kN weight. Burnout speed {#} m/s: {#} m/s lost to gravity in the {#} s burn.",
+"<strong>Too heavy at first.</strong> Thrust {#} kN is less than the {#} kN launch weight: it burns fuel on the pad for {#} s before lifting off.",
+"<strong>Same fuel, burned slowly.</strong> {#} s instead of {#} s: burnout at {#} m/s, {#} m/s lost to gravity.",
+"<strong>Two stage rocket.</strong> {#} {#} kg at launch: a first stage of {#} kg fuel in a {#} kg casing, under an upper stage of {#} kg fuel and {#} kg dry. The casing drops at {#} s ({#} m/s, {#} km) and the upper stage burns out at {#} s at {#} m/s. The same masses in one stage, carrying the empty casing to the end, reach only {#} m/s. Without gravity: u ln({#}/{#}) + u ln {#} = {#} m/s against u ln({#}) = {#} m/s.",
+"<strong>Q1.</strong> Why can a rocket accelerate in empty space, where there is nothing to push against?",
+"<strong>Q2.</strong> Use Δv = u ln(m₀/m) to find the final speed in deep space for the default rocket. How much fuel would double that Δv?",
+"<strong>Q3.</strong> For the launch from the ground, explain why the burnout speed is lower than the rocket equation says, and by how much.",
+"<strong>Q4.</strong> Two identical rockets burn the same fuel, one in {#} s and one in {#} s. Which ends up faster, and why? Why is waiting on the pad (Too heavy at first) wasteful?",
+"<strong>\"The exhaust pushes on the air or the ground.\"</strong> It pushes on the rocket from inside.",
+"<strong>\"A rocket can't go faster than its exhaust.\"</strong> Δv = u ln(m₀/m) exceeds u once m₀/m > e.",
+"<strong>\"Burning faster or slower gives the same speed.\"</strong> Only without gravity.",
+"Variable mass: m dv/dt = u b − mg (b = burn rate), exact solution v = u ln(m₁/m) − g(t − t₀) after lift off at t₀, height from its integral, coasting after burnout.",
+"Two stages: both stages have the same engine (u and burn rate). Each burn is solved exactly from the speed and height it starts with; the casing is let go the moment the first stage's fuel runs out and the upper stage fires at once. The casing then coasts with no air.",
+"Constant g = {#} m/s² and no air drag. At hundreds of kilometers gravity is noticeably weaker, so the highest point shown is a rough figure (the readout says so).",
+"The animation is sped up so a flight takes about {#} s; the clock shows real time."
+]);

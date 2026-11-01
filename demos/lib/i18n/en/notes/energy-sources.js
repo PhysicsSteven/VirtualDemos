@@ -1,0 +1,28 @@
+/* English strings of notes/energy-sources, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/energy-sources', [
+"Sources of Energy: teaching notes",
+"Sources of Energy",
+"Energy per kilogram spans about eight powers of ten: lithium ion batteries {#} MJ, chemical fuels {#} to {#} MJ, uranium {#} about {#} × {#}⁷ MJ. Nuclear energy per kilogram is millions of times chemical because nuclear binding energies are MeV, chemical bonds eV.",
+"Making electricity from heat loses most of it: a power station converts roughly a third of the heat.",
+"Renewables move huge masses for modest energy: water falling {#} m gives under a kilojoule per kilogram, so hydro and wind need enormous flows.",
+"Food is a fuel: fat carries more energy per kilogram than TNT (TNT's advantage is how fast it releases it).",
+"Students need units of energy (J, kWh) and the idea of efficiency. The chart is logarithmic: each grid line is ten times the last. <strong>Blind</strong> hides the bars and numbers so the class can rank the sources first.",
+"<strong>Rank first.</strong> Blind on, a household's {#} kWh for a day as electricity: ask for a ranking of the sources by mass needed. Reveal: {#} mg of uranium, {#} kg of gasoline, {#} kg of batteries, {#} tonnes of water through a {#} m dam, {#} tonnes of air at {#} m/s.",
+"<strong>Heat vs electricity.</strong> Uncheck \"Delivered as electricity\": every fuel mass drops by the factor {#}/{#}. The battery and the renewables do not change.",
+"<strong>TNT vs food.</strong> TNT {#} kg, food fat {#} kg for the same energy (as electricity). Discuss power: energy per second, not per kilogram.",
+"<strong>Wind speed.</strong> Double the wind speed and the air needed drops by {#} (½v² per kg); per second through a rotor it delivers {#} times the power (more air arrives too).",
+"<strong>Solar.</strong> {#} m² of {#}% panels collect {#} kWh in a day at an average {#} W/m², which depends strongly on place and season.",
+"<strong>Q1.</strong> Show that fissioning {#} kg of U-{#} at {#} MeV per fission releases {#} × {#}¹³ J.",
+"<strong>Q2.</strong> How much gasoline does it take to provide {#} kWh of electricity at {#}% efficiency? How much heat?",
+"<strong>Q3.</strong> Why is so much water needed for hydroelectric power? Find the mass of water falling {#} m for {#} kWh at {#}% efficiency.",
+"<strong>Q4.</strong> Why does doubling the wind speed increase a turbine's power by eight times?",
+"<strong>Q5.</strong> Fat has about nine times the energy per kilogram of TNT. Why is TNT an explosive and fat is not?",
+"<strong>\"Energy is used up.\"</strong> It is converted; a power station's \"lost\" two thirds goes into the cooling water and air as heat.",
+"<strong>\"Batteries are an energy source.\"</strong> They store energy made elsewhere, and hold far less per kilogram than fuels.",
+"<strong>\"Explosives contain the most energy.\"</strong> They release it fastest; per kilogram they hold less than fuels and food.",
+"Energy per kilogram: typical higher heating values (natural gas {#}, gasoline {#}, coal {#}, dry wood {#} MJ/kg; samples vary). Food from the Atwater factors {#} and {#} kcal/g. TNT {#} MJ/kg by definition. Lithium ion cells about {#} Wh/kg.",
+"Uranium: {#} MeV per fission (thermal fission of U-{#} releases about {#} MeV in total, some of it to neutrinos), {#} kg = ({#}/{#}) mol of nuclei, all fissioned. Real fuel is a few percent U-{#} and is not fully burned.",
+"Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.",
+"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit {#}/{#}. Solar: {#}% panels at the average irradiance set on the slider, including nights.",
+"No national energy statistics are used."
+]);

@@ -1,0 +1,28 @@
+/* English strings of notes/magnetism-in-matter, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/magnetism-in-matter', [
+"Magnetism in Matter: teaching notes",
+"Magnetism in Matter",
+"Filling a long solenoid with a material changes the field from B₀ = μ₀nI to B = ({#} + χ)B₀ (OpenStax Eq. {#} and {#}). The susceptibility χ says how strongly the material answers.",
+"Paramagnets (χ > {#}, about {#}⁻⁵) add a tiny field: their atomic moments line up a little, fighting thermal motion. Diamagnets (χ < {#}, about −{#}⁻⁵) subtract a tiny field: the applied field induces moments that oppose it.",
+"Para and diamagnetic effects are tiny in B, but a strong field that changes quickly with position can still push on them hard enough to matter: liquid oxygen is pulled into a magnet, and water can be floated.",
+"Iron is ferromagnetic: B is thousands of times B₀, χ is not a constant, and B depends on the history of the field. At zero current it stays magnetized; a reverse current is needed to bring B back to zero. This is hysteresis.",
+"Students need B₀ = μ₀nI for a long solenoid and the idea of a magnetic dipole moment from a current loop. <strong>Blind</strong> hides B, B − B₀ and the plot and covers the core, so students can predict first.",
+"<strong>Aluminum core.</strong> At {#} A and {#} turns per cm, B₀ = {#} mT, and the bars for B₀ and B look the same. Ask: did the aluminum do anything? Point to B − B₀ = {#} nT, and the plot: a straight line whose slope is χ.",
+"<strong>Bismuth core.</strong> Now B − B₀ is negative. Flip the current with the arrow keys or the slider: B − B₀ flips too, so it always opposes B₀.",
+"<strong>Liquid oxygen.</strong> The same line, {#} times steeper than aluminum. Mention the classic demo: liquid oxygen poured between magnet poles hangs there.",
+"<strong>Floating water.</strong> Read off B dB/dz = {#} T²/m. At {#} T the field would need to fall by about {#} T per meter: possible only with research magnets, which is how a frog was once floated.",
+"<strong>Iron, Example {#}.</strong> At {#} A, B₀ = {#} µT and B = {#} T: the model reproduces the book's {#} T and χ ≈ {#} × {#}³. Move the current: χ changes, so iron is not a linear material.",
+"<strong>Iron hysteresis loop.</strong> Let the sweep run. Stop at I = {#}: B is still about {#} T. Ask what current brings B to zero (about −{#} A). Then <strong>Demagnetize</strong>.",
+"<strong>Q1.</strong> A long solenoid has {#} turns per cm and carries {#} A. Find B₀. It is filled with aluminum (χ = {#} × {#}⁻⁵). By how much does B differ from B₀? Would you notice it on a typical laboratory gaussmeter?",
+"<strong>Q2.</strong> For atomic hydrogen, μ = {#} × {#}⁻²⁴ A·m². In a {#} T field at {#} °C, compare the energy to flip an aligned moment, {#}μB, with kT. What does this say about how well the moments in a paramagnet line up, and why is χ so small?",
+"<strong>Q3.</strong> A small piece of a material with susceptibility χ in a field that changes with height feels a force per volume (χ/μ₀) B dB/dz along z. Above a magnet the field falls with height. Show that water floats where |B dB/dz| = μ₀ρg/|χ| and evaluate it (ρ = {#} kg/m³, χ = −{#} × {#}⁻⁶). Could a paramagnet such as aluminum be floated above a magnet the same way?",
+"<strong>Q4.</strong> Use OpenStax Figure {#} (or the demo's iron) to find χ at B₀ = {#} × {#}⁻⁴ T and at B₀ = {#} × {#}⁻⁴ T. Why is it misleading to quote a single susceptibility for iron?",
+"<strong>Q5.</strong> In the demo's iron loop ({#} turns per cm, current swept between ±{#} A), B is about {#} T when the current returns to zero, and B reaches zero at a reverse current of about {#} A. What are H and B₀ at that reverse current? Explain, in terms of domains, why B is not zero when I = {#}. Why do transformer cores use iron with a narrow loop, and permanent magnets a material with a wide one?",
+"<strong>\"Only iron is magnetic.\"</strong> Every material responds; most do so a hundred thousand times more weakly than iron.",
+"<strong>\"Diamagnets are not magnetic.\"</strong> They respond, with χ &lt; {#}, and are pushed out of strong fields.",
+"<strong>\"χ for iron is a constant of the material.\"</strong> For iron it depends on the field and on its history.",
+"<strong>\"Turning the current off unmagnetizes the core.\"</strong> Hysteresis leaves a remanent field; demagnetizing needs a shrinking alternating field (or heating).",
+"Long solenoid, core filling it: B₀ = μ₀nI, B = ({#} + χ)B₀, μ = ({#} + χ)μ₀. Susceptibilities from OpenStax Table {#}.",
+"Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at {#} °C from the CRC Handbook (water {#}, copper {#}, bismuth {#} kg/m³); g = {#} m/s².",
+"Iron: Jiles and Atherton model ({#}) with M_s = {#} × {#}⁶ A/m (Kittel) and chosen a = {#} A/m, k = {#} A/m, α = {#} × {#}⁻⁴, c = {#}, fitted to the two points of OpenStax Figure {#} (model {#} T and {#} T against {#} T and {#} T). The model gives a remanence of {#} T and a coercive field of {#} A/m for a ±{#} A/m loop; these are properties of the chosen parameters, not of a measured sample. The drawings inside the core are cartoons, with exaggeration stated on the page."
+]);

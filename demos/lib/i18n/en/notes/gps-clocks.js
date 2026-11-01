@@ -1,0 +1,27 @@
+/* English strings of notes/gps-clocks, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/gps-clocks', [
+"GPS Clocks and Relativity: teaching notes",
+"GPS Clocks and Relativity",
+"In general relativity, clocks deeper in a gravitational field run slower: a clock higher up gains, by about ΔΦ/c² = (GM/c²)({#}/R − {#}/r) as a fraction.",
+"In special relativity, a moving clock runs slower by about v²/(2c²).",
+"For GPS satellites (r = {#},{#} km, {#} km/s) gravity wins: +{#} μs/day from height, −{#} μs/day from speed, net +{#} μs/day. Light goes {#} km in that time, so uncorrected positions would drift by kilometers a day. The satellite clocks are deliberately set slow before launch.",
+"The effect is tiny on the ground (a {#} m tower: {#} × {#}⁻¹⁵, measured by Pound and Rebka in {#}) but everyday technology depends on it.",
+"Students need gravitational potential energy −GMm/r and orbital speed v = √(GM/r). The left panel views Earth from above the North Pole with the second clock (square) and the ground clock (dot); the clocks run {#} simulated hour per second. The graph shows the gain per day against orbit radius: gravity (rises), speed (falls), net. <strong>Blind</strong> hides the rates.",
+"<strong>Predict.</strong> Blind on. Does a GPS clock run fast or slow compared with the ground? Most will say slow (\"moving clocks run slow\"). Run the clocks for a few hours, then turn Blind off: +{#} μs/day.",
+"<strong>Split it.</strong> Gravity +{#}, speed −{#}. Point at the graph: the speed curve is largest for low orbits.",
+"<strong>Space station.</strong> At {#} km the speed effect wins: the clock loses {#} μs/day.",
+"<strong>Where they cancel.</strong> About r = {#} km ({#}.5R for a ground clock at rest).",
+"<strong>Lab tower.</strong> {#} m: {#} ps/day, fractional {#} × {#}⁻¹⁵. Pound and Rebka measured this frequency shift with gamma rays.",
+"<strong>Q1.</strong> Using the first order formulas, estimate the gravitational and speed parts for a GPS clock and the net gain per day.",
+"<strong>Q2.</strong> How far does light travel in {#} μs? Why does that matter for GPS?",
+"<strong>Q3.</strong> Why does a clock on the space station lose time compared with the ground, while a GPS clock gains?",
+"<strong>Q4.</strong> Show that for a clock in circular orbit compared with a ground clock at rest the two effects cancel at r = 3R/{#}.",
+"<strong>Q5.</strong> Find the Schwarzschild radius 2GM/c² of Earth. What would it mean for Earth to be squeezed inside it?",
+"<strong>\"Relativity only matters near the speed of light.\"</strong> Fractional effects of {#}⁻¹⁰ add up to microseconds a day, and GPS needs nanoseconds.",
+"<strong>\"Satellite clocks run slow because they move fast.\"</strong> For GPS the gravitational speed up is six times bigger than the speed slowdown.",
+"<strong>\"Time dilation is an illusion of the clocks.\"</strong> Atomic clocks flown on aircraft and kept on satellites show the predicted offsets.",
+"Earth as a nonrotating sphere (Schwarzschild exterior). A clock at radius r moving at speed v in the nonrotating frame ticks at dτ/dt = √({#} − 2GM/(rc²) − v²/c²) of coordinate time; for a circular orbit this is the exact √({#} − 3GM/(rc²)). Computed without cancellation in double precision.",
+"The gravity part is the rate difference with the second clock moved to r but given the ground clock's speed; the speed part is the rest. They add to the total.",
+"The ground clock sits at radius {#} km, either at rest or at the equator turning with Earth ({#} m/s). The real GPS correction uses the geoid and includes Earth's flattening; the sphere model gives {#} μs/day, the usual quoted value.",
+"Not included: the Sun's and Moon's fields, orbit eccentricity (which adds a periodic term GPS receivers correct), and the Sagnac effect for signals."
+]);

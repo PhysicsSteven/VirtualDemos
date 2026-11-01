@@ -1,0 +1,28 @@
+/* English strings of notes/household-wiring, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/household-wiring', [
+"Household Wiring and Electrical Safety: teaching notes",
+"Household Wiring and Electrical Safety",
+"Appliances on a branch circuit are in parallel, so their currents add. A circuit breaker on the hot wire limits that total to protect the wires from overheating (P = I²R in the wire), not to protect people.",
+"A short circuit is limited only by the wires, so the current is hundreds of amperes and the breaker trips at once.",
+"The ground wire gives a fault a low resistance path, so a live metal case trips the breaker instead of shocking someone.",
+"Without a ground, the person is the path. A shock of a few milliamperes is far too small for a breaker, but a GFCI sees the difference between the hot and neutral currents and trips above {#} mA.",
+"The same {#} V gives {#} mA through dry skin and {#} mA through wet skin (OpenStax §{#}): the body's resistance decides the danger.",
+"Students need Ohm's law, power P = IV = I²R = V²/R, and series and parallel resistors. <strong>Blind</strong> hides the currents and whether a device will trip, so students can predict first.",
+"<strong>A lamp.</strong> {#} A, the same in hot and neutral, none in the ground. Add the toaster and the kettle: {#} A on a {#} A breaker. Ask: is anything broken? The breaker trips after {#} s. Change to {#} gauge and {#} A: the wire is now rated for it, but the toaster and kettle still draw {#} A, so the {#} A breaker trips too; drop the kettle and it holds.",
+"<strong>The wrong breaker.</strong> {#} gauge wire on a {#} A breaker with the toaster, kettle and heater: the breaker holds (about {#} A), but the heat in the wire is {#} W per meter, nearly five times the {#} W/m at {#} A. This is why the breaker is matched to the wire.",
+"<strong>Short circuit.</strong> About {#} A for {#} m of {#} gauge wire. Shorten the run: the current goes up.",
+"<strong>Worn cord, grounded case.</strong> The ground wire carries about {#} A and the breaker trips at once; the person in parallel gets only about {#} mA, for an instant.",
+"<strong>No ground, dry hand, then wet hand.</strong> {#} mA, then {#} mA, and the breaker does nothing. Turn on the GFCI and repeat.",
+"<strong>Q1.</strong> A toaster ({#} W) and a kettle ({#} W) are plugged into one {#} V outlet. Ignoring the wires, what current do they draw together? Will a {#} A breaker hold? What about a {#} A breaker?",
+"<strong>Q2.</strong> {#} gauge copper wire is {#} mm in diameter. Find its resistance per meter (ρ = {#} × {#}⁻⁸ Ω·m) and the heat per meter at {#} A and at {#} A. Why must the breaker match the wire, and not the appliances?",
+"<strong>Q3.</strong> The outlet is {#} m of {#} gauge wire from the panel. Hot touches neutral through {#} Ω at the outlet. Estimate the current. Why does the breaker trip at once?",
+"<strong>Q4.</strong> A person with wet hands ({#} kΩ, hand to feet) touches a live toaster case with no ground. Find the current and say what it does. Why does the {#} A breaker not trip? What does a GFCI measure, and why does it trip?",
+"<strong>Q5.</strong> With the ground wire connected, the same person touches the same faulty toaster. Explain, using parallel resistances, why almost no current goes through the person.",
+"<strong>\"The breaker protects people.\"</strong> It trips at amperes; a few milliamperes can be dangerous. The GFCI protects people.",
+"<strong>\"Voltage kills, so {#} V is always deadly.\"</strong> The current through the body depends on its resistance: dry skin keeps it below a milliampere.",
+"<strong>\"The ground wire normally carries current.\"</strong> It carries current only during a fault.",
+"<strong>\"A bigger breaker is safer because it trips less.\"</strong> It lets the wires overheat.",
+"Appliances are resistors, R = V²/P at {#} V. The circuit (hot, neutral and ground wires, loads, fault and person) is solved exactly by nodal analysis for rms currents; with only resistors, rms values obey Ohm's and Kirchhoff's rules.",
+"Copper ρ = {#} × {#}⁻⁸ Ω·m; {#} gauge {#} mm, {#} gauge {#} mm. Fault contact {#} Ω (chosen). Neutral and ground bonded at the panel; the floor and earth path is taken as zero resistance.",
+"Body resistance {#} kΩ dry, {#} kΩ wet; effects of current and the {#} mA GFCI setting from OpenStax §{#}. Breaker: instant above {#} times its rating, after {#} s for lesser overloads (a chosen delay)."
+]);

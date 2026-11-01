@@ -1,0 +1,27 @@
+/* English strings of notes/standing-waves, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/standing-waves', [
+"Standing Waves: teaching notes",
+"Standing Waves",
+"Intro physics (waves and sound)",
+"Two equal waves traveling in opposite directions add to a standing wave, with fixed nodes half a wavelength apart. With unequal amplitudes part of the wave travels and the minima no longer reach zero.",
+"Boundaries select the frequencies: a string fixed at both ends holds n half wavelengths, fₙ = n v/2L with v = √(T/μ).",
+"Driving at a natural frequency gives resonance, taller and narrower for higher Q. Where a string is plucked decides which harmonics it contains. Two tones a few hertz apart beat at the difference frequency.",
+"Students should know v = fλ and superposition. Three views are chosen at the top: <strong>Two waves</strong>, <strong>String</strong> and <strong>Beats</strong>; the five setups load them. <strong>Sound on</strong> plays the string and beat tones (bring speakers). Air columns and pipes are in the Resonators demo, and beads held by sound in Acoustic Levitation.",
+"<strong>Two waves make a standing wave.</strong> Two {#} Hz waves at {#} m/s, λ = {#} m. Ask Q1 first. <strong>Node spacing</strong> reads {#} m and the nodes stay put. Drag A₂ down: the <strong>Standing wave ratio</strong> drops from ∞.",
+"<strong>Harmonics of a string.</strong> A guitar's low E string, f₁ = {#} Hz, shown at n = {#}. Click <strong>n={#}</strong> to <strong>n={#}</strong> with sound on; drag the bridge to shorten the string, as a fret does (Q2).",
+"<strong>Find the resonances.</strong> Driven at {#} Hz the string barely moves. Drag the red marker across the curve: peaks at {#}, {#}, {#} Hz. Raise <strong>Quality factor Q of mode {#}</strong> from {#} to {#} (Q4).",
+"<strong>Pluck at the middle.</strong> The table marks the even harmonics \"(missing)\". Drag <strong>Pluck point d</strong> toward the bridge and listen: the tone brightens (Q3).",
+"<strong>Beats.</strong> {#} and {#} Hz with sound on: the loudness swells and fades {#} times a second. Drag <strong>Difference f₂ − f₁</strong> toward zero and the beats slow and stop.",
+"<strong>Two pulses pass through each other.</strong> Watch the two humps add where they overlap (A₁ + A₂ at the moment the peaks coincide) and come out the other side unchanged. Tick <strong>Pulse {#} upside down</strong> and where they meet the sum drops to A₁ − A₂ (zero for equal pulses), yet both reappear.",
+"<strong>Q1.</strong> Predict: two waves of equal amplitude and frequency travel in opposite directions along a string. Will any points stay still? If so, how far apart are they, in wavelengths? Check in <strong>Two waves make a standing wave</strong>, where v = {#} m/s and f = {#} Hz.",
+"<strong>Q2.</strong> A guitar's low E string is {#} m long, with linear density {#} g/m and tension {#} N. Find the wave speed, the fundamental and the third harmonic. What tension tunes it to F2 ({#} Hz) at the same length? Where must a finger press to sound {#} Hz? Check with <strong>Harmonics of a string</strong>.",
+"<strong>Q3.</strong> In <strong>Pluck at the middle</strong> every even harmonic is missing. Explain why, using where the even harmonics have their nodes. Which harmonics go missing for a pluck at d = L/{#}? Check by setting <strong>Pluck point d</strong> to {#} L.",
+"<strong>Q4.</strong> In <strong>Find the resonances</strong> the string hardly moves at {#} Hz but swings strongly at {#} Hz, though the driving force is the same. Explain why. When Q goes from {#} to {#}, what happens to the height and width of the peaks, and to the time the string needs to build up? Check with the curve and the readouts.",
+"<strong>\"Nothing travels, so a standing wave has no energy.\"</strong> It holds energy that sloshes between kinetic (near the antinodes) and elastic (near the nodes) within each loop; none crosses a node.",
+"<strong>\"Beats are a third tone.\"</strong> The pitch heard is (f₁ + f₂)/{#}; only the loudness varies at |f₁ − f₂|.",
+"<strong>Two waves:</strong> y = A₁ sin(k₁x − ω₁t) + A₂ sin(k₂x + ω₂t) at {#} m/s: a standing part {#} min(A) plus a traveling part |A₁ − A₂|. Nodes are v/(f₁ + f₂) apart.",
+"<strong>String:</strong> ideal flexible string, small amplitude, fixed ends. The pluck is {#} undamped modes, bₙ = 2hL² sin(nπd/L)/(n²π² d(L − d)). The driven string has a point force at L/{#} and damping rate γ = ω₁/Q for every mode, solved exactly, transients included.",
+"<strong>Beats:</strong> two pure tones added.",
+"<strong>Single pulses:</strong> each pulse is one hump A sin(πu/w) of width w = v/2f, half a wavelength, sent in from its end at v and added to the other where they overlap; pulse {#} can be inverted. Both leave after (x_R − x_L + w)/v.",
+"Homework: a guitar string beats {#} times a second against a {#} Hz tuning fork, and the beats slow when the string is tightened slightly. What was its frequency?"
+]);

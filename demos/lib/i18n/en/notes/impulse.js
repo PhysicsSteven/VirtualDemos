@@ -1,0 +1,26 @@
+/* English strings of notes/impulse, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
+VDI18N.add('en', 'notes/impulse', [
+"Impulse and Momentum: teaching notes",
+"Impulse and Momentum",
+"Impulse J = ∫F dt, the area under a force against time graph, equals the change of momentum Δp.",
+"A bounce reverses the velocity, so the momentum change is bigger than for a stop: Δp = m({#} + e)v₀.",
+"A softer bumper spreads the same impulse over a longer time with a smaller peak force: the idea behind airbags, crumple zones and bending your knees.",
+"A measured impulse depends on how well the sensor samples a short pulse.",
+"Students need momentum p = mv as a vector. Velocities are positive toward the sensor; the sensor reads the size of the force on it, which is equal and opposite to the force on the cart. Playback slows to {#}/{#} near the hit (the timer is real time). <strong>Blind</strong> hides the area, the momentum change and the peak force.",
+"<strong>Stiff spring.</strong> {#} kg at {#} m/s bounces back at −{#} m/s. The force spike lasts {#} ms with a peak of {#} N. Area {#} N·s; m(v₂ − v₁) = −{#} kg·m/s.",
+"<strong>Soft spring.</strong> Same cart: the contact lasts √{#} = {#} times longer, the peak is √{#} times lower ({#} N), and the area is the same.",
+"<strong>Clay.</strong> The cart barely bounces (−{#} m/s): the impulse drops to {#} N·s. A bounce needs more impulse than a stop.",
+"<strong>Sample rate.</strong> At {#} Hz the stiff spring's {#} ms pulse is only {#} or {#} points: the trapezoid area can miss by about {#}% low to {#}% high over the demo's ranges, depending on where the samples fall ({#}% low for this run). At {#} kHz it agrees to about {#}%.",
+"<strong>Lab.</strong> Vary m and v₁ for one bumper, capture the area and m(v₂ − v₁) each time, and plot one against the other.",
+"<strong>Q1.</strong> A {#} kg cart hits the stiff bumper at {#} m/s and leaves at {#} m/s. Find the impulse on the cart (size and direction) and the average force over the {#} ms contact.",
+"<strong>Q2.</strong> Why is the impulse smaller with clay, even though the cart arrives with the same momentum?",
+"<strong>Q3.</strong> The soft bumper has one tenth the stiffness. How do the contact time, the peak force and the impulse compare with the stiff bumper?",
+"<strong>Q4.</strong> Explain with the impulse–momentum theorem why an airbag reduces injuries.",
+"<strong>Q5 (lab).</strong> Export one run's F(t) and integrate it yourself (trapezoids). Compare with m(v₂ − v₁). How does the agreement depend on the sample rate?",
+"<strong>\"The bigger force gives the bigger impulse.\"</strong> Impulse is force times time; soft and stiff bumpers here give the same impulse.",
+"<strong>\"Bouncing off takes less force than stopping.\"</strong> It takes more impulse: the momentum must be reversed, not just removed.",
+"<strong>\"The force on the sensor and the force on the cart are different sizes.\"</strong> They are a third law pair, equal and opposite at every instant.",
+"Frictionless cart. The bumper pushes with F = kx while compressing (simple harmonic, ω = √(k/m)), then unloads along a steeper line of stiffness k/e², so the cart leaves at e times its speed. Each phase is a quarter of a simple harmonic oscillation, so F(t) and the motion are exact; the contact time is (π/{#})√(m/k)({#} + e).",
+"Stiff spring k = {#} N/m and soft spring {#} N/m, both e = {#}; clay {#} N/m, e = {#}. Some energy is lost in the unloading, as in real bumpers.",
+"The sensor samples at the chosen rate with a clock not synchronized to the hit and rounds to {#} N. The motion detector rounds the velocities to {#} m/s. No noise is added."
+]);
