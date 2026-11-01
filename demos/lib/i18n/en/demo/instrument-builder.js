@@ -152,5 +152,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Lens {#}: position z",
 "Stop {#}",
 "Stop {#}: position z",
-"{#}″ (arcseconds), entrance pupil D = {#} mm"
+"{#}″ (arcseconds), entrance pupil D = {#} mm",
+"the Moon (far away)"
 ]);

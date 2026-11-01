@@ -305,5 +305,9 @@ VDI18N.add('es', 'demo/instrument-builder', {
 "Stop {#}: position z":
   "Diafragma {#}: posición z",
 "{#}″ (arcseconds), entrance pupil D = {#} mm":
-  "{#}″ (segundos de arco), pupila de entrada D = {#} mm"
+  "{#}″ (segundos de arco), pupila de entrada D = {#} mm",
+"the Moon (far away)":
+  "la Luna (lejos)",
+"the sign (far away)":
+  "el letrero (lejos)"
 });

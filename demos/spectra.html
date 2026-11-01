@@ -79,7 +79,6 @@
 }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
-@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
 .units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
@@ -173,8 +172,18 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 .starkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
 .starkey span { display: inline-flex; align-items: center; }
 .starkey i { display: inline-block; width: 22px; height: 0; margin-right: 6px; }
-.balmer { display: block; width: 100%; height: 64px; margin-top: 8px; }
+.balmer { display: block; width: 100%; height: 180px; margin-top: 10px; }
+.seqcv { display: block; width: 100%; height: 200px; cursor: pointer; }
+.seqh { margin: 14px 0 2px; font-size: 0.95rem; }
+@media (min-width: 821px) { .starchart { height: 440px; } .balmer { height: 240px; } .seqcv { height: 230px; } }
 :root[data-projector="on"] .starchart { height: 420px; }
+.linetab { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 4px; }
+.linetab th, .linetab td { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--grid); font-weight: 400; }
+.linetab th { color: var(--muted); font-size: 0.78rem; }
+.linetab td.mono { white-space: nowrap; }
+.linetab .lbar { display: block; height: 8px; border-radius: 4px; background: var(--grid); min-width: 60px; }
+.linetab .lbar i { display: block; height: 100%; border-radius: 4px; background: var(--pos); }
+@media (max-width: 520px) { .linetab .colf { display: none; } }
 .starchart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 :root[data-projector="on"] .bohr canvas { height: 330px; }
 
@@ -242,7 +251,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       <p>Every element glows in its own set of colors. Click any element to see its spectral lines, measured by NIST.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono"><span class="nw">wavelengths in air</span> <span class="nw">(vacuum below 200 nm)</span> · <span class="nw">1 nm = 10 Å</span> · <span class="nw">E = hc/λ<sub>vacuum</sub></span></div>
+      <div class="units mono"><span class="nw">λ in air (vacuum below 200 nm)</span> · <span class="nw">E = hc/λ<sub>vac</sub></span></div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spectra.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spectra.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM15 2h1v1h-1zM18 2h4v1h-4zM24 2h1v1h-1zM26 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h3v1h-3zM16 4h10v1h-10zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM16 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h2v1h-2zM16 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h3v1h-3zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h2v1h-2zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h5v1h-5zM34 11h4v1h-4zM2 12h1v1h-1zM4 12h5v1h-5zM11 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h3v1h-3zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM11 14h1v1h-1zM14 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h4v1h-4zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM8 16h6v1h-6zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM14 17h1v1h-1zM16 17h2v1h-2zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM5 18h9v1h-9zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h3v1h-3zM9 19h2v1h-2zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h2v1h-2zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h9v1h-9zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h2v1h-2zM13 21h2v1h-2zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM10 22h3v1h-3zM15 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM4 23h4v1h-4zM13 23h2v1h-2zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h4v1h-4zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h2v1h-2zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM10 27h3v1h-3zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM6 28h3v1h-3zM12 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h2v1h-2zM9 29h5v1h-5zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM5 30h5v1h-5zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h1v1h-1zM12 31h1v1h-1zM15 31h1v1h-1zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h3v1h-3zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h2v1h-2zM26 35h8v1h-8zM35 35h3v1h-3zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM17 37h10v1h-10zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
@@ -333,8 +342,16 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <p class="hint" style="margin: 4px 0 8px;">Where the hydrogen atoms are, against the star's surface temperature. Balmer lines need atoms on level n = 2.</p>
         <canvas id="cStars" class="starchart" tabindex="0" role="application" aria-label="Chart of hydrogen level populations against temperature, log scales. Drag sideways or use the left and right arrow keys to change the temperature."></canvas>
         <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>up the side: shares and ratios, log scale</span></p>
-        <canvas id="cBalmer" class="balmer" role="img" aria-label="The star's visible spectrum: its blackbody continuum at this temperature, with hydrogen's Balmer absorption lines drawn darker when more atoms sit on level n = 2."></canvas>
-        <p class="hint" style="margin: 4px 0 0;">The star's own light: a blackbody at its surface temperature, with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red.</p>
+        <canvas id="cBalmer" class="balmer" role="img" aria-label="The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = 2."></canvas>
+        <p class="hint" style="margin: 4px 0 0;">The star's own light: a blackbody at its surface temperature (Planck's law), with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red. Line depths are drawn on a log scale of line strength, not as measured profiles.</p>
+        <table class="linetab" aria-describedby="lineTabNote">
+          <thead><tr><th scope="col">Line</th><th scope="col">λ in air (nm)</th><th scope="col" class="colf">Oscillator strength f</th><th scope="col">Strength, relative to Hα at its peak</th><th scope="col" style="width: 30%;">Log scale, 10⁻⁴ to 1</th></tr></thead>
+          <tbody id="lineTab"></tbody>
+        </table>
+        <p class="hint" id="lineTabNote" style="margin: 4px 0 0;">A weak line's strength goes as f λ² N₂/N<sub>total</sub>: how readily one atom on n = 2 absorbs that color, times the share of atoms on n = 2. Strong lines saturate, so real lines grow more slowly than this.</p>
+        <h3 class="seqh">The spectral sequence</h3>
+        <p class="hint" style="margin: 0 0 6px;">The same calculation for six stars, coolest at the top, at this electron pressure. Click a row to go to that star.</p>
+        <canvas id="cSeq" class="seqcv" role="img" aria-label="Spectra of six stars from 3,500 to 20,000 K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near 9,500 K."></canvas>
       </section>
 
       <section class="card" id="modelsCard" aria-labelledby="modelsTitle" hidden>
@@ -1563,22 +1580,91 @@ function airFromVac(vnm) {
        brightest color in the strip, shown with the sRGB gamma), with each Balmer line drawn darker on a log scale of its weak line
        strength f λ² N₂/N_total, from 10⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Oscillator strengths
        f from NIST (Wiese and Fuhr 2009). */
-    const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 700, BX = (l) => (l - l0) / (l1 - l0) * BW, top = 4 * ps, bot = BH - 18 * ps;
+    const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 700;
+    const BL = L, BR = BW - 12 * ps, BX = (l) => BL + (l - l0) / (l1 - l0) * (BR - BL);
+    const cT = 36 * ps, bandH = Math.max(22 * ps, Math.min(34 * ps, BH * 0.15)), bandB = BH - 20 * ps, bandT = bandB - bandH, cB = bandT - 8 * ps;
+    const CY = (v) => cB - v * (cB - cT);
     bx.clearRect(0, 0, BW, BH);
     const planck = (l) => 1 / (Math.pow(l, 5) * (Math.exp(HS_HC_NMK / (l * ST.T)) - 1));
-    let pmax = 0; for (let l = l0; l <= l1; l += 2) pmax = Math.max(pmax, planck(l));
-    for (let px = 0; px < BW; px++) {
-      const l = l0 + (px + 0.5) / BW * (l1 - l0), c = lamRGB(l), k = Math.pow(planck(l) / pmax, 1 / 2.2);
-      bx.fillStyle = `rgb(${c.map((v) => Math.round(v * k)).join(',')})`; bx.fillRect(px, top, 1, bot - top);
-    }
-    bx.font = `${10 * ps}px ${m}`; bx.textAlign = 'center'; bx.textBaseline = 'top';
+    let pmax = 0; for (let l = l0; l <= l1; l += 1) pmax = Math.max(pmax, planck(l));
     const sA = BALMER[0][2] * BALMER[0][1] * BALMER[0][1] * fpk;
-    for (const [nm, l, fo] of BALMER) {
-      const depth = Math.max(0, Math.min(1, 1 + Math.log10(fo * l * l * sh.f2 / sA) / 4));
-      bx.fillStyle = `rgba(0,0,0,${(0.97 * depth).toFixed(3)})`; bx.fillRect(BX(l) - 2.5 * ps, top, 5 * ps, bot - top);
-      bx.fillStyle = muted; bx.fillText(nm, BX(l), bot + 3 * ps);
+    const lines = BALMER.map(([nm, l, fo]) => { const rel = fo * l * l * sh.f2 / sA; return { nm, l, fo, rel, depth: Math.max(0, Math.min(1, 1 + Math.log10(Math.max(rel, 1e-300)) / 4)) }; });
+    // the strip of colors, each at the star's brightness for that color (sRGB gamma), with the lines cut out
+    for (let px = Math.floor(BL); px < BR; px++) {
+      const l = l0 + (px + 0.5 - BL) / (BR - BL) * (l1 - l0), c = lamRGB(l), k = Math.pow(planck(l) / pmax, 1 / 2.2);
+      bx.fillStyle = `rgb(${c.map((v) => Math.round(v * k)).join(',')})`; bx.fillRect(px, bandT, 1, bandH);
     }
+    for (const ln of lines) { bx.fillStyle = `rgba(0,0,0,${(0.97 * ln.depth).toFixed(3)})`; bx.fillRect(BX(ln.l) - 2.5 * ps, bandT, 5 * ps, bandH); }
+    // grid and axes for the brightness curve
+    bx.strokeStyle = grid; bx.lineWidth = 1; bx.beginPath();
+    for (let l = 400; l <= 700; l += 50) { const xg = Math.round(BX(l)) + 0.5; bx.moveTo(xg, cT); bx.lineTo(xg, cB); }
+    for (const v of [0.25, 0.5, 0.75, 1]) { const yg = Math.round(CY(v)) + 0.5; bx.moveTo(BL, yg); bx.lineTo(BR, yg); }
+    bx.stroke(); bx.strokeStyle = gridS; bx.strokeRect(BL + 0.5, cT + 0.5, BR - BL - 1, cB - cT - 1);
+    bx.fillStyle = muted; bx.font = `${10 * ps}px ${m}`; bx.textAlign = 'right'; bx.textBaseline = 'middle';
+    for (const v of [0, 0.5, 1]) bx.fillText(String(v), BL - 5 * ps, CY(v));
+    bx.textAlign = 'center'; bx.textBaseline = 'bottom';
+    for (let l = 400; l <= 700; l += 50) if (l < 700 || BW > 480) bx.fillText(String(l), BX(l), cT - 3 * ps);
+    bx.textAlign = 'left'; bx.fillText(BW > 480 ? 'brightness, relative to the brightest color shown' : 'brightness, relative', BL, cT - 17 * ps);
+    // the curve: Planck's law, with each Balmer line as a dip
+    const prof = (l) => { let v = planck(l) / pmax; for (const ln of lines) v *= 1 - 0.85 * ln.depth * Math.exp(-Math.pow((l - ln.l) / 1.4, 2)); return v; };
+    bx.save(); bx.beginPath(); bx.rect(BL, cT, BR - BL, cB - cT); bx.clip();
+    bx.beginPath(); bx.moveTo(BL, cB);
+    for (let px = BL; px <= BR; px += 0.5) bx.lineTo(px, CY(prof(l0 + (px - BL) / (BR - BL) * (l1 - l0))));
+    bx.lineTo(BR, cB); bx.closePath(); bx.fillStyle = gridS; bx.globalAlpha = 0.45; bx.fill(); bx.globalAlpha = 1;
+    bx.beginPath();
+    for (let px = BL; px <= BR; px += 0.5) { const yy = CY(prof(l0 + (px - BL) / (BR - BL) * (l1 - l0))); px === BL ? bx.moveTo(px, yy) : bx.lineTo(px, yy); }
+    bx.strokeStyle = ink; bx.lineWidth = 2 * ps; bx.stroke();
+    // Wien's law: where the star's blackbody peaks
+    const lp = 2.897771955e6 / ST.T;
+    bx.font = `${10.5 * ps}px ${m}`; bx.fillStyle = acc; bx.textBaseline = 'top';
+    if (lp >= l0 && lp <= l1) {
+      bx.strokeStyle = acc; bx.lineWidth = 1.5 * ps; bx.setLineDash([4 * ps, 3 * ps]); bx.beginPath(); bx.moveTo(BX(lp), cT); bx.lineTo(BX(lp), cB); bx.stroke(); bx.setLineDash([]);
+      const t = `peak ${Math.round(lp)} nm`, tw = bx.measureText(t).width; bx.textAlign = BX(lp) + tw + 8 * ps > BR ? 'right' : 'left';
+      bx.fillText(t, BX(lp) + (bx.textAlign === 'right' ? -4 : 4) * ps, cB - 16 * ps);
+    } else if (lp < l0) { bx.textAlign = 'left'; bx.fillText(`← peak ${Math.round(lp)} nm, ultraviolet`, BL + 5 * ps, cB - 16 * ps); }
+    else { bx.textAlign = 'right'; bx.fillText(`peak ${Math.round(lp)} nm, infrared →`, BR - 5 * ps, cB - 16 * ps); }
+    bx.restore();
+    // line names under the strip
+    bx.font = `${10 * ps}px ${m}`; bx.fillStyle = muted; bx.textAlign = 'center'; bx.textBaseline = 'top';
+    { let lx = Infinity; for (const ln of lines) { const tw = bx.measureText(ln.nm).width, x = BX(ln.l); if (x + tw / 2 + 2 * ps < lx) { bx.fillText(ln.nm, x, bandB + 3 * ps); lx = x - tw / 2; } } }   /* skip a name that would overlap its neighbor on a phone */
+    bx.textAlign = 'right'; if (BW > 480) bx.fillText('λ (nm)', BR, bandB + 3 * ps);
+    drawSeq(lamRGB, fpk);
+    // the table of line strengths
+    const tb = $('lineTab');
+    if (tb) tb.innerHTML = lines.map((ln) => `<tr><td>${ln.nm}</td><td class="mono">${ln.l.toFixed(3)}</td><td class="mono colf">${ln.fo}</td><td class="mono">${sci2(ln.rel)}</td><td><span class="lbar"><i style="width: ${(100 * ln.depth).toFixed(1)}%;"></i></span></td></tr>`).join('');
   }
+  /* the spectral sequence: the Balmer strip above, for six stars at this electron pressure */
+  const SEQ_T = [3500, 4500, 5772, 7000, 9500, 20000];
+  let seqGeo = null;
+  function drawSeq(lamRGB, fpk) {
+    const cv = $('cSeq'); if (!cv) return;
+    const [c, W, H] = fit(cv), ps = projScale(), m = mono(), l0 = 380, l1 = 700, L = 96 * ps, R = W - 12 * ps, top = 4 * ps, bot = H - 18 * ps;
+    const X = (l) => L + (l - l0) / (l1 - l0) * (R - L), rh = (bot - top) / SEQ_T.length;
+    seqGeo = { top, rh };
+    c.clearRect(0, 0, W, H);
+    const muted = tok('--muted'), acc = tok('--accent'), sA = BALMER[0][2] * BALMER[0][1] * BALMER[0][1] * fpk;
+    SEQ_T.forEach((T, r) => {
+      const y0 = top + r * rh + 2 * ps, y1 = top + (r + 1) * rh - 2 * ps;
+      const pl = (l) => 1 / (Math.pow(l, 5) * (Math.exp(HS_HC_NMK / (l * T)) - 1));
+      let pm = 0; for (let l = l0; l <= l1; l += 2) pm = Math.max(pm, pl(l));
+      for (let px = Math.floor(L); px < R; px++) {
+        const l = l0 + (px + 0.5 - L) / (R - L) * (l1 - l0), k = Math.pow(pl(l) / pm, 1 / 2.2), col = lamRGB(l);
+        c.fillStyle = `rgb(${col.map((v) => Math.round(v * k)).join(',')})`; c.fillRect(px, y0, 1, y1 - y0);
+      }
+      const f2 = hsShares(T, ST.Pe).f2;
+      for (const [, l, fo] of BALMER) {
+        const d = Math.max(0, Math.min(1, 1 + Math.log10(Math.max(fo * l * l * f2 / sA, 1e-300)) / 4));
+        c.fillStyle = `rgba(0,0,0,${(0.97 * d).toFixed(3)})`; c.fillRect(X(l) - 2 * ps, y0, 4 * ps, y1 - y0);
+      }
+      const on = Math.abs(Math.log(T / ST.T)) < 0.01;
+      c.fillStyle = on ? acc : muted; c.font = `${on ? 700 : 400} ${10.5 * ps}px ${m}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillText(`${classOfT(T)}  ${fmtK(T)}`, L - 6 * ps, (y0 + y1) / 2);
+      if (on) { c.strokeStyle = acc; c.lineWidth = 2 * ps; c.strokeRect(L - 1 * ps, y0 - 1 * ps, R - L + 2 * ps, y1 - y0 + 2 * ps); }
+    });
+    c.fillStyle = muted; c.font = `${10 * ps}px ${m}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    { let lx = Infinity; for (const [nm, l] of BALMER) { const tw = c.measureText(nm).width, x = X(l); if (x + tw / 2 + 2 * ps < lx) { c.fillText(nm, x, bot + 3 * ps); lx = x - tw / 2; } } }
+  }
+  { const cv = $('cSeq'); if (cv) cv.addEventListener('click', (e) => { if (!seqGeo) return; const r = cv.getBoundingClientRect(), i = Math.floor((e.clientY - r.top - seqGeo.top) / seqGeo.rh); if (i >= 0 && i < SEQ_T.length) setStarT(SEQ_T[i]); }); }
   function updateStars() {
     const sh = hsShares(ST.T, ST.Pe);
     $('starTOut').textContent = `${fmtK(ST.T)} (${classOfT(ST.T)})`;

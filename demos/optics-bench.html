@@ -1868,6 +1868,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const it of items) if (it.kind === 'lens') drawLensBody(it, T);
     ctx.save();
     if (R) { ctx.beginPath(); ctx.rect(0, 0, W, R.top); ctx.clip(); }    // light stops at the bench
+    /* light that comes back onto a lamp stops at its front face: the drawing leaves out the shadow behind each lamp
+       housing (the traced rays and every reading are unchanged) */
+    { const lamps = items.filter((it) => it.kind === 'beam');
+      if (lamps.length) {
+        ctx.beginPath(); ctx.rect(0, 0, W, H);
+        for (const it of lamps) {
+          const hw = Math.max(it.w / 2 + 0.45, 0.8), q = [local(it, -0.1, -hw), local(it, -1e3, -hw), local(it, -1e3, hw), local(it, -0.1, hw)].map((v) => toPx(...v));
+          ctx.moveTo(q[0][0], q[0][1]); for (let k = 1; k < 4; k++) ctx.lineTo(q[k][0], q[k][1]); ctx.closePath();
+        }
+        ctx.clip('evenodd');
+      } }
     drawPaths(fr.paths, T);
     ctx.restore();
     const light = screenLight(fr);

@@ -1060,20 +1060,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- 3D: the rail on a bench, real size, with bundles of skew rays ---------- */
   let g3 = null, view3 = null;
   const CM = 0.01, AXH = 0.16;                 /* scene in meters; the optical axis 16 cm above the bench */
+  const RZ = 0.006, RT = 0.042, CAR = 0.016;   /* the rail stands on feet RZ high and its top is at RT; a carriage is CAR tall */
   function init3D() {
     const pane = $('pane'), S3 = VD3K.stage(pane, { before: can, shadow: 0.6, fov: 30, fogAt: [2.2, 4.5] }); if (!S3) return false;
     const M = (o, c) => VD3K.material(S3, o, c), sc = S3.scene;
     sc.add(VD3K.bench(S3, { w: 6, d: 3, y: 0.3 }), VD3K.backdrop(S3, { r: 2.2, h: 1.4, y: -0.6 }));
-    const mats = { rail: M({ roughness: 0.4, metalness: 0.4 }, ['#b9c1ca', '#7d8792']), dark: M({ roughness: 0.5, metalness: 0.3 }, ['#4a525c', '#3a414a']),
-      steel: M({ roughness: 0.32, metalness: 0.45 }, ['#d5dbe2', '#aab3bd']), glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe6f7, transparent: true, opacity: 0.32, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false }),
+    const mats = { rail: M({ roughness: 0.42, metalness: 0.2 }, ['#c9d0d8', '#7d8792']), dark: M({ roughness: 0.5, metalness: 0.3 }, ['#4a525c', '#3a414a']),
+      steel: M({ roughness: 0.28, metalness: 0.6 }, ['#d5dbe2', '#aab3bd']), glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe6f7, transparent: true, opacity: 0.32, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false }),
       black: M({ roughness: 0.7, metalness: 0.1 }, ['#1b1f24', '#111418']), white: M({ roughness: 0.4, metalness: 0 }, ['#f2f2ee', '#d8d8d2']),
+      anod: M({ roughness: 0.42, metalness: 0.35, side: THREE.DoubleSide }, ['#23272d', '#1a1d22']), tube: M({ roughness: 0.35, metalness: 0.1, side: THREE.DoubleSide }, ['#eef0ee', '#c9cdd2']),
+      inner: M({ roughness: 0.95, metalness: 0, side: THREE.DoubleSide }, ['#0d0f12', '#0a0b0d']), brass: M({ roughness: 0.35, metalness: 0.7 }, ['#c9a45a', '#a8874a']),
+      car: M({ roughness: 0.5, metalness: 0.2 }, ['#6a7480', '#4a535e']), knob: M({ roughness: 0.8, metalness: 0 }, ['#2b2f35', '#202328']),
       iris: M({ roughness: 0.6, metalness: 0 }, ['#3f7fb0', '#3f7fb0']), slide: new THREE.MeshBasicMaterial({ color: 0xffffff }) };
     const group = new THREE.Group(); sc.add(group);
     const rays = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
     sc.add(rays);
     const o = { th: -1.25, ph: 1.2, zoom: 1 };
     S3.orbit(S3.el, o, () => draw3(), {});
-    g3 = { S3, mats, group, rays, o, key: '' };
+    g3 = { S3, mats, group, rays, o, key: '', railKey: '', railG: null };
     S3.el.style.position = 'absolute'; S3.el.style.inset = '0';
     return true;
   }
@@ -1085,39 +1089,132 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = new THREE.LatheGeometry(pts, 48); g.rotateZ(-Math.PI / 2);   /* the lathe axis becomes x, the rail */
     const mesh = new THREE.Mesh(g, m.glass); mesh.renderOrder = 3; return mesh;
   }
-  function holder(z, top, m, g) {
-    const x = z * CM; g.add(VD3K.rod([x, 0, 0.012], [x, 0, top], 0.0035, m.steel));
-    g.add(VD3K.box(0.024, 0.045, 0.012, m.dark, x, 0, 0.0));
+  /* a ring or short tube round the optical axis, from x0 to x1, radii ri to ro (a lathe of its cross section) */
+  function ringX(x0, x1, ri, ro, mat) {
+    const V2 = (a, b) => new THREE.Vector2(a, b), h = Math.abs(x1 - x0) / 2;
+    const g = new THREE.LatheGeometry([V2(ri, -h), V2(ro, -h), V2(ro, h), V2(ri, h), V2(ri, -h)], 56); g.rotateZ(-Math.PI / 2);
+    const mesh = new THREE.Mesh(g, mat); mesh.position.set((x0 + x1) / 2, 0, AXH); mesh.castShadow = true; return mesh;
+  }
+  /* a carriage on the rail at x, a post holder and a steel post up to height top, with its thumbscrews */
+  function carriage(x, top, m, g) {
+    g.add(VD3K.box(0.032, 0.05, CAR, m.car, x, 0, RT));
+    for (const sy of [-1, 1]) g.add(VD3K.box(0.032, 0.005, 0.016, m.car, x, sy * 0.0235, RT - 0.012));
+    g.add(VD3K.rod([x, -0.025, RT + 0.006], [x, -0.036, RT + 0.006], 0.0016, m.steel));
+    g.add(VD3K.rod([x, -0.036, RT + 0.006], [x, -0.042, RT + 0.006], 0.0055, m.knob));
+    const hb = RT + CAR, ht = Math.min(hb + 0.045, top - 0.012);
+    if (ht > hb + 0.005) {
+      g.add(VD3K.rod([x, 0, hb], [x, 0, ht], 0.0065, m.dark));
+      g.add(VD3K.rod([x, -0.006, ht - 0.008], [x, -0.016, ht - 0.008], 0.0035, m.knob));
+    }
+    g.add(VD3K.rod([x, 0, Math.min(ht, top) - 0.002], [x, 0, top], 0.0038, m.steel));
   }
   function slideTexture() {
     const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), img = g.createImageData(128, 128);
     for (let j = 0; j < 128; j++) for (let i = 0; i < 128; i++) { const t = texSlide((i / 127) * 1.4 - 0.4, (1 - j / 127) * 1.4 - 0.2, 1, 0.011), o = (j * 128 + i) * 4; img.data[o] = t[0] * 255; img.data[o + 1] = t[1] * 255; img.data[o + 2] = t[2] * 255; img.data[o + 3] = 255; }
     g.putImageData(img, 0, 0); const tx = new THREE.CanvasTexture(c); return tx;
   }
+  /* the far object as a print on a board at the end of the bench: the Moon among a few stars, or the sign against the sky.
+     It stands for something far away; the rays still arrive parallel. */
+  function farTexture(o) {
+    const w = 256, h = 192, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'), img = g.createImageData(w, h);
+    const moon = o.tex === 'moon', sp = moon ? 2.2 * o.a / (h / 2) : 2.4 * o.a / (h / 2), cx = moon ? 0 : 0.35 * o.a, cy = moon ? 0 : 0.45 * o.a;
+    let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+      const t = texAt(o, cx + (i - w / 2) * sp, cy + (h / 2 - j) * sp, sp), k = (j * w + i) * 4;
+      img.data[k] = t[0] * 255; img.data[k + 1] = t[1] * 255; img.data[k + 2] = t[2] * 255; img.data[k + 3] = 255;
+    }
+    if (moon) for (let n = 0; n < 40; n++) { const i = Math.floor(rnd() * w), j = Math.floor(rnd() * h), k = (j * w + i) * 4, b = 120 + rnd() * 135; if (img.data[k] < 30) { img.data[k] = img.data[k + 1] = b; img.data[k + 2] = Math.min(255, b + 20); } }
+    g.putImageData(img, 0, 0); const tx = new THREE.CanvasTexture(c); if (THREE.SRGBColorSpace) tx.colorSpace = THREE.SRGBColorSpace; return tx;
+  }
+  /* the rail, its feet and the scale along it: rebuilt only when the rounded span changes */
+  function rail3(z0, z1) {
+    const a = Math.floor(z0 / 10) * 10 - 10, b = Math.ceil(z1 / 10) * 10 + 10, key = a + ',' + b;
+    if (key === g3.railKey) return; g3.railKey = key;
+    const { S3, mats: m } = g3; if (g3.railG) S3.dispose(g3.railG);
+    const g = new THREE.Group(), len = (b - a) * CM, xm = (a + b) / 2 * CM; g3.railG = g; S3.scene.add(g);
+    g.add(VD3K.box(len, 0.064, 0.007, m.rail, xm, 0, RZ));                   /* the base flange */
+    g.add(VD3K.box(len, 0.018, 0.022, m.rail, xm, 0, RZ + 0.007));           /* the web */
+    g.add(VD3K.box(len, 0.04, RT - RZ - 0.029, m.rail, xm, 0, RZ + 0.029));  /* the top, which the carriages ride on */
+    for (const x of [a * CM + 0.004, b * CM - 0.004]) g.add(VD3K.box(0.008, 0.066, RT - RZ + 0.001, m.dark, x, 0, RZ));
+    for (const x of [a * CM + 0.05, b * CM - 0.05]) { g.add(VD3K.box(0.05, 0.13, RZ, m.dark, x, 0, 0)); for (const sy of [-1, 1]) g.add(VD3K.rod([x, sy * 0.05, RZ], [x, sy * 0.05, RZ + 0.004], 0.005, m.knob)); }
+    const rule = VD3K.ruler(S3, { len, from: a, to: b, unit: 'cm', step: 1, w: 0.018 }); rule.position.set(xm, -0.0215, RZ + 0.0085); g.add(rule);
+    S3.theme(true);
+  }
   function build3() {
     const { S3, mats: m, group } = g3; S3.dispose(group); const g = new THREE.Group(); g3.group = g; S3.scene.add(g);
     const ps = parts(), o = S.obj, zs = ps.map((e) => e.z).concat([S.zV + 3]); if (o.kind === 'near') zs.push(o.z - 3); else zs.push(Math.min(...zs) - 10);
     const z0 = Math.min(...zs), z1 = Math.max(...zs), tags = [];
-    g.add(VD3K.box((z1 - z0) * CM + 0.06, 0.05, 0.02, m.rail, (z0 + z1) / 2 * CM, 0, 0));
-    for (const e of ps) {
-      const x = e.z * CM, r = e.D / 2 * CM;
+    rail3(z0, z1);
+    const lensesOnly = ps.filter((e) => e.kind === 'lens'), first = lensesOnly[0], last = lensesOnly[lensesOnly.length - 1];
+    ps.forEach((e, idx) => {
+      const x = e.z * CM, r = e.D / 2 * CM, rim = Math.max(0.0028, 0.12 * r), cl = Math.max(0.006, Math.min(0.016, 0.35 * r));
+      const prevZ = idx > 0 ? ps[idx - 1].z : (o.kind === 'near' ? o.z : e.z - 40), nextZ = idx + 1 < ps.length ? ps[idx + 1].z : S.zV;
+      let ro = r + rim;
       if (e.kind === 'lens') {
         const L = lensMesh(e, m); L.position.set(x, 0, AXH); g.add(L);
-        const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.0025, 0.0028, 10, 48), m.dark); ring.rotation.y = Math.PI / 2; ring.position.set(x, 0, AXH); g.add(ring);
+        g.add(ringX(x - cl / 2, x + cl / 2, r, ro, m.anod));
+        g.add(ringX(x - cl / 2 - 0.0006, x - cl / 2, r * 0.97, ro + 0.0004, m.black));
+        if (o.kind === 'far' && e === first && lensesOnly.length > 1) {
+          /* the objective's cell with a dew shield in front: a short white tube, black inside */
+          const sl = Math.min(1.3 * e.D, 0.6 * Math.abs(e.z - prevZ)) * CM;
+          g.add(ringX(x - cl / 2 - sl, x - cl / 2, ro + 0.0005, ro + 0.0025, m.tube));
+          g.add(ringX(x - cl / 2 - sl, x - cl / 2, ro - 0.0002, ro + 0.0004, m.inner));
+          g.add(ringX(x - cl / 2 - sl - 0.002, x - cl / 2 - sl, ro - 0.0002, ro + 0.0035, m.anod));
+          g.add(ringX(x - 0.004, x + 0.004, ro + 0.0025, ro + 0.0055, m.black));   /* the tube ring that clamps it */
+          ro += 0.0055;
+        } else if (o.kind === 'near' && e === first && lensesOnly.length > 1) {
+          /* a microscope objective: a barrel with a brass band, on the image side */
+          const bl = Math.min(0.03, 0.18 * Math.abs(nextZ - e.z) * CM + 0.006), bo = Math.max(ro + 0.003, 0.009);
+          g.add(ringX(x - cl / 2 - 0.002, x + bl, r * 1.02, bo, m.anod));
+          g.add(ringX(x + bl * 0.45, x + bl * 0.55, bo - 0.0003, bo + 0.0008, m.brass));
+          ro = bo;
+        } else if (e === last && lensesOnly.length > 1) {
+          /* the eyepiece: a barrel on the side the light comes from, a knurled grip and a soft eyecup */
+          const bl = Math.min(0.025, 0.4 * Math.abs(e.z - prevZ) * CM), bo = ro + 0.002;
+          if (bl > 0.003) g.add(ringX(x - cl / 2 - bl, x - cl / 2, r * 1.04, bo, m.anod));
+          g.add(ringX(x - cl / 2, x + cl / 2, ro, bo + 0.0025, m.knob));
+          const cup = Math.min(0.008, 0.3 * Math.abs(S.zV - e.z) * CM);
+          if (cup > 0.002) g.add(ringX(x + cl / 2, x + cl / 2 + cup, r * 1.05, ro + 0.001, m.knob));
+          ro = bo + 0.0025;
+        }
       } else {
-        const plate = new THREE.Mesh(new THREE.RingGeometry(r, r + Math.max(0.012, r * 0.8), 48), m.black); plate.material.side = THREE.DoubleSide; plate.rotation.y = Math.PI / 2; plate.position.set(x, 0, AXH); g.add(plate);
+        /* an iris diaphragm: blades as a black plate with the hole, in a ring housing with its lever */
+        const R0 = r + Math.max(0.012, r * 0.8);
+        const plate = new THREE.Mesh(new THREE.RingGeometry(r, R0, 56), m.black); plate.material.side = THREE.DoubleSide; plate.rotation.y = Math.PI / 2; plate.position.set(x, 0, AXH); g.add(plate);
+        g.add(ringX(x - 0.003, x + 0.003, R0 - 0.002, R0 + 0.003, m.anod));
+        const ang = 0.6, lx = (R0 + 0.008) * Math.sin(ang), lz = (R0 + 0.008) * Math.cos(ang);
+        g.add(VD3K.rod([x, (R0 + 0.002) * Math.sin(ang), AXH + (R0 + 0.002) * Math.cos(ang)], [x, lx, AXH + lz], 0.0012, m.steel));
+        g.add(VD3K.rod([x, lx * 0.98, AXH + lz * 0.98], [x, lx * 1.06, AXH + lz * 1.06], 0.0025, m.knob));
+        ro = R0 + 0.003;
       }
-      holder(e.z, AXH - r - 0.004, m, g);
-      tags.push([e.name, x, AXH + r + 0.012]);
-    }
+      g.add(VD3K.box(0.008, 0.008, 0.006, m.anod, x, 0, AXH - ro - 0.005));
+      carriage(x, AXH - ro - 0.004, m, g);
+      tags.push([e.name, x, AXH + ro + 0.008]);
+    });
     if (o.kind === 'near') {
       const x = o.z * CM, hh = Math.max(o.h * CM * 1.4, 0.004);
       const sl = new THREE.Mesh(new THREE.PlaneGeometry(hh, hh), new THREE.MeshBasicMaterial({ map: slideTexture(), side: THREE.DoubleSide }));
       sl.rotation.y = -Math.PI / 2; sl.rotation.z = 0; sl.position.set(x, -o.h * CM * 0.25 + hh * 0.25, AXH + hh * 0.3); g.add(sl);
+      /* the slide in a holder: glass, two spring clips, and a black frame with a window */
       const glassS = new THREE.Mesh(new THREE.BoxGeometry(0.001, 0.025, 0.075), m.glass); glassS.position.set(x, 0, AXH); g.add(glassS);
-      const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.025, 0.025), m.dark); lamp.position.set(x - 0.022, 0, AXH); g.add(lamp);
-      const glow = new THREE.Mesh(new THREE.CircleGeometry(0.008, 24), new THREE.MeshBasicMaterial({ color: 0xffe9b8 })); glow.rotation.y = Math.PI / 2; glow.position.set(x - 0.0118, 0, AXH); g.add(glow);
-      holder(o.z - 3, AXH - 0.02, m, g);
+      for (const sz of [-1, 1]) g.add(VD3K.box(0.0016, 0.018, 0.006, m.steel, x - 0.0012, 0, AXH + sz * 0.03 - 0.003));
+      for (const sy of [-1, 1]) g.add(VD3K.box(0.003, 0.012, 0.09, m.anod, x - 0.0025, sy * 0.0185, AXH - 0.045));
+      g.add(VD3K.box(0.003, 0.049, 0.012, m.anod, x - 0.0025, 0, AXH - 0.057));
+      /* the lamp behind it: a housing with cooling fins and a glowing condenser lens */
+      const xl = x - 0.03;
+      g.add(ringX(xl - 0.024, xl + 0.012, 0, 0.016, m.dark));
+      for (let k = 0; k < 4; k++) g.add(ringX(xl - 0.022 + k * 0.008, xl - 0.019 + k * 0.008, 0.016, 0.0195, m.dark));
+      g.add(ringX(xl + 0.012, xl + 0.02, 0.009, 0.013, m.anod));
+      const glow = new THREE.Mesh(new THREE.CircleGeometry(0.0095, 32), new THREE.MeshBasicMaterial({ color: 0xffe9b8 })); glow.rotation.y = Math.PI / 2; glow.position.set(xl + 0.0165, 0, AXH); g.add(glow);
+      g.add(VD3K.cable([xl - 0.024, 0, AXH], [xl - 0.12, 0.08, 0.002], { sag: 0.06 }));
+      carriage(x, AXH - 0.063, m, g); carriage(xl - 0.006, AXH - 0.0195, m, g);
+    } else {
+      /* a print of the far object on a board, past the end of the rail */
+      const xb = (z0 - 18) * CM, bw = 0.2, bh = 0.15, zc = AXH + 0.02;
+      const pic = new THREE.Mesh(new THREE.PlaneGeometry(bw, bh), new THREE.MeshBasicMaterial({ map: farTexture(o) })); pic.rotation.order = 'ZXY'; pic.rotation.set(Math.PI / 2, Math.PI / 2, 0); pic.position.set(xb + 0.003, 0, zc); g.add(pic);
+      g.add(VD3K.box(0.005, bw + 0.012, bh + 0.012, m.anod, xb - 0.0005, 0, zc - bh / 2 - 0.006));
+      for (const sy of [-1, 1]) { g.add(VD3K.rod([xb - 0.004, sy * bw * 0.35, 0], [xb - 0.004, sy * bw * 0.35, zc - bh / 2], 0.004, m.steel)); g.add(VD3K.box(0.04, 0.03, 0.006, m.dark, xb - 0.004, sy * bw * 0.35, 0)); }
+      tags.push([o.tex === 'moon' ? 'the Moon (far away)' : 'the sign (far away)', xb, zc + bh / 2 + 0.012]);
     }
     /* the viewer */
     const xv = S.zV * CM;
@@ -1127,8 +1224,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const pup = new THREE.Mesh(new THREE.CircleGeometry(S.pupil / 2 * CM, 24), m.black); pup.rotation.y = -Math.PI / 2; pup.position.set(xv - 0.0010, 0, AXH); g.add(pup);
     } else {
       const ds = model.vo.back * CM, body = VD3K.box(0.06, 0.09, 0.06, m.dark, xv + ds + 0.025, 0, AXH - 0.03); g.add(body);
-      const barrel = VD3K.rod([xv, 0, AXH], [xv + ds, 0, AXH], 0.022, m.black); g.add(barrel);
-      holder(S.zV + 3, AXH - 0.03, m, g);
+      g.add(ringX(xv, xv + ds, 0.016, 0.022, m.black)); g.add(ringX(xv + ds * 0.3, xv + ds * 0.5, 0.0218, 0.0235, m.knob));
+      g.add(VD3K.box(0.012, 0.014, 0.01, m.black, xv + ds + 0.04, 0.03, AXH + 0.03));
+      carriage(xv + ds + 0.025, AXH - 0.03, m, g);
     }
     /* intermediate real images: small arrows */
     if (!S.blind) model.chain.forEach((c, i) => { const nz = i + 1 < model.chain.length ? model.chain[i + 1].lens.z : S.zV; if (!(c.real && isFinite(c.z) && isFinite(c.h) && c.z <= nz)) return;
@@ -1137,11 +1235,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const cone = new THREE.Mesh(new THREE.ConeGeometry(Math.max(0.0015, Math.abs(h) * 0.12), Math.abs(h) * 0.15 + 0.001, 16), mat);
       cone.rotation.x = h > 0 ? Math.PI / 2 : -Math.PI / 2; cone.position.set(x, 0, AXH + h * 0.925); g.add(cone);
     });
-    const lsz = Math.max(0.008, (z1 - z0) * CM * 0.028), lc = T.dark ? '#e3e8ef' : '#17202b';
+    const lsz = Math.max(0.012, (z1 - z0) * CM * 0.028), lc = T.dark ? '#e3e8ef' : '#17202b';
     tags.push([S.viewer === 'eye' ? 'eye' : 'camera', xv + 0.01, AXH + 0.03]);
-    if (o.kind === 'near') tags.push(['object', o.z * CM, AXH + 0.04]);
+    if (o.kind === 'near') tags.push(['object', o.z * CM, AXH + 0.045]);
     for (const [t, x, z] of tags) { const L = VD3K.label(t, { size: lsz, color: lc }); L.position.set(x, 0, z + lsz); g.add(L); }
-    g3.span = [z0, z1];
+    g3.span = [o.kind === 'far' ? z0 - 18 : z0, z1];   /* the far object's board is in the picture, and its light starts there */
   }
   function rays3() {
     const o = S.obj, els = usable(S.els, o), vo = model.vo, all = els.concat([{ kind: 'lens', z: S.zV, f: 1 / vo.P, D: vo.D }]), zEnd = S.zV + vo.back;
@@ -1174,7 +1272,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (key !== g3.key) { build3(); g3.key = key; }
     rays3();
     const [a, b] = g3.span, mid = (a + b) / 2 * CM, len = (b - a) * CM;
-    g3.S3.place(g3.o, [mid, 0, AXH], g3.S3.fit(Math.max(0.24, len * 1.0), 1.6));
+    g3.S3.place(g3.o, [mid, 0, AXH - 0.04], g3.S3.fit(Math.max(0.5, len * 1.0), 2.0));   /* aim a little below the axis so the rail is in the picture */
     g3.S3.render();
   }
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: 'flat', change: (on) => { if (g3) g3.S3.el.hidden = !on; can.style.visibility = on ? 'hidden' : 'visible'; ['zoomIn', 'zoomOut', 'zoomFit'].forEach((id) => { $(id).hidden = on; }); if (on) draw3(); else draw(); },

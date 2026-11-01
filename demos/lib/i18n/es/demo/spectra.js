@@ -64,8 +64,8 @@ VDI18N.add('es', 'demo/spectra', {
   "<a><span>←</span> <span>Efecto fotoeléctrico</span></a><a><span>Experimento de Franck–Hertz</span> <span>→</span></a>",
 "Every element glows in its own set of colors. Click any element to see its spectral lines, measured by NIST.":
   "Cada elemento brilla con su propio conjunto de colores. Haz clic en cualquier elemento para ver sus líneas espectrales, medidas por el NIST.",
-"<span>wavelengths in air</span> <span>(vacuum below {#} nm)</span> · <span>{#} nm = {#} Å</span> · <span>E = hc/λ<sub>vacuum</sub></span>":
-  "<span>longitudes de onda en aire</span> <span>(en el vacío por debajo de {#} nm)</span> · <span>{#} nm = {#} Å</span> · <span>E = hc/λ<sub>vacío</sub></span>",
+"<span>λ in air (vacuum below {#} nm)</span> · <span>E = hc/λ<sub>vac</sub></span>":
+  "<span>λ en aire (vacío bajo {#} nm)</span> · <span>E = hc/λ<sub>vac</sub></span>",
 "A glowing spectrum tube on a high voltage supply, viewed through a hand spectroscope":
   "Un tubo espectral encendido en una fuente de alto voltaje, visto a través de un espectroscopio de mano",
 "Hydrogen":
@@ -148,10 +148,26 @@ VDI18N.add('es', 'demo/spectra', {
   "Gráfica de las poblaciones de los niveles del hidrógeno en función de la temperatura, escalas logarítmicas. Arrastra hacia los lados o usa las flechas izquierda y derecha para cambiar la temperatura.",
 "<span><i></i>share of all hydrogen on n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>up the side: shares and ratios, log scale</span>":
   "<span><i></i>fracción de todo el hidrógeno en n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>fracción aún neutra, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>eje vertical: fracciones y razones, escala logarítmica</span>",
-"The star's visible spectrum: its blackbody continuum at this temperature, with hydrogen's Balmer absorption lines drawn darker when more atoms sit on level n = {#}.":
-  "El espectro visible de la estrella: su continuo de cuerpo negro a esta temperatura, con las líneas de absorción de Balmer del hidrógeno dibujadas más oscuras cuando hay más átomos en el nivel n = {#}.",
-"The star's own light: a blackbody at its surface temperature, with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red.":
-  "La luz propia de la estrella: un cuerpo negro a su temperatura superficial, al que las líneas de Balmer del hidrógeno le quitan luz. Las estrellas frías son tenues en el violeta y las calientes en el rojo.",
+"The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = {#}.":
+  "El espectro visible de la estrella: su curva de brillo de cuerpo negro a esta temperatura sobre una franja de sus colores, con las líneas de absorción de Balmer del hidrógeno más hondas cuando hay más átomos en el nivel n = {#}.",
+"The star's own light: a blackbody at its surface temperature (Planck's law), with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red. Line depths are drawn on a log scale of line strength, not as measured profiles.":
+  "La luz propia de la estrella: un cuerpo negro a su temperatura superficial (ley de Planck), con las líneas de Balmer del hidrógeno restadas. Las estrellas frías son tenues en el violeta y las calientes en el rojo. La profundidad de cada línea se dibuja en escala logarítmica de su intensidad, no como un perfil medido.",
+"λ in air (nm)":
+  "λ en aire (nm)",
+"Oscillator strength f":
+  "Fuerza de oscilador f",
+"Strength, relative to Hα at its peak":
+  "Intensidad, relativa a Hα en su máximo",
+"Log scale, {#}⁻⁴ to {#}":
+  "Escala log, de {#}⁻⁴ a {#}",
+"A weak line's strength goes as f λ² N₂/N<sub>total</sub>: how readily one atom on n = {#} absorbs that color, times the share of atoms on n = {#}. Strong lines saturate, so real lines grow more slowly than this.":
+  "La intensidad de una línea débil va como f λ² N₂/N<sub>total</sub>: qué tan fácil un átomo en n = {#} absorbe ese color, por la fracción de átomos en n = {#}. Las líneas fuertes se saturan, así que las líneas reales crecen más despacio que esto.",
+"The spectral sequence":
+  "La secuencia espectral",
+"The same calculation for six stars, coolest at the top, at this electron pressure. Click a row to go to that star.":
+  "El mismo cálculo para seis estrellas, la más fría arriba, a esta presión electrónica. Haz clic en una fila para ir a esa estrella.",
+"Spectra of six stars from {#} to {#} K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near {#} K.":
+  "Espectros de seis estrellas de {#} a {#} K, cada uno con sus colores de cuerpo negro y las líneas de Balmer del hidrógeno, que son más oscuras en la estrella A, cerca de {#} K.",
 "Models of the hydrogen atom":
   "Modelos del átomo de hidrógeno",
 "One lamp shines the same photons up into six atoms, oldest model on the left. Under each, the light it gives off, against hydrogen's real lines.":
@@ -784,6 +800,10 @@ VDI18N.add('es', 'demo/spectra', {
   "↑ fracción en n = {#}",
 "peak {#} K":
   "máximo {#} K",
+"brightness, relative to the brightest color shown":
+  "brillo, relativo al color más brillante mostrado",
+"peak {#} nm":
+  "máximo {#} nm",
 "Hγ":
   "Hγ",
 "Hδ":
@@ -794,6 +814,12 @@ VDI18N.add('es', 'demo/spectra', {
   "Cambia la temperatura superficial de la estrella y observa la fracción de átomos de hidrógeno que pueden absorber líneas de Balmer.",
 "Six historical models of hydrogen under the same lamp. Pick a color and see which atoms answer, and with what light.":
   "Seis modelos históricos del hidrógeno bajo la misma lámpara. Elige un color y mira qué átomos responden, y con qué luz.",
+"brightness, relative":
+  "brillo, relativo",
+"peak {#} nm, infrared →":
+  "máximo {#} nm, infrarrojo →",
+"← peak {#} nm, ultraviolet":
+  "← máximo {#} nm, ultravioleta",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.":
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, estable.",
 "2p, lives {#} ns":
@@ -802,14 +828,12 @@ VDI18N.add('es', 'demo/spectra', {
   "protón desnudo",
 "ionized, electron gone":
   "ionizado, sin electrón",
-"electron ringing":
-  "electrón oscilando",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: electron ringing; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized, electron gone.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: electrón oscilando; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado, sin electrón; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado, sin electrón.",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized, electron gone; Schrödinger: ionized, electron gone.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado, sin electrón; Schrödinger: ionizado, sin electrón.",
-"6g, lives {#} ns":
-  "6g, vive {#} ns",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized, electron gone; Schrödinger: 2p, lives {#} ns.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado, sin electrón; Schrödinger: 2p, vive {#} ns.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized, electron gone.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado, sin electrón; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado, sin electrón.",
+"6d, lives {#} ns":
+  "6d, vive {#} ns",
 "<b>{#} correct</b>. {#} more to find: some lines still have no match.":
   "<b>{#} correctos</b>. Faltan {#} por encontrar: algunas líneas aún no tienen pareja.",
 "The answer: <b>Hydrogen, Sodium, Magnesium, Calcium, Iron</b>. A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.":
@@ -836,6 +860,14 @@ VDI18N.add('es', 'demo/spectra', {
   "La luz de una estrella reunida por un telescopio y dispersada por el espectroscopio. La franja de abajo es la vista en el ocular.",
 "Starlight through a telescope and a hand spectroscope":
   "La luz de una estrella a través de un telescopio y un espectroscopio de mano",
+"electron ringing":
+  "electrón oscilando",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: electron ringing; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized, electron gone.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: electrón oscilando; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado, sin electrón; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado, sin electrón.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized, electron gone; Schrödinger: ionized, electron gone.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado, sin electrón; Schrödinger: ionizado, sin electrón.",
+"6g, lives {#} ns":
+  "6g, vive {#} ns",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 2p, lives {#} ns.":
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 2p, vive {#} ns.",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.":
