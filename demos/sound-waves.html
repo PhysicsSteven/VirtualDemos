@@ -694,7 +694,7 @@ details.more[open] summary { margin-bottom: 6px; }
   $('newMystery').addEventListener('click', () => {
     const was = materialById(S.mystery); S.mystery = newMystery();
     if (!S.lanes.includes('mystery')) { const k = S.lanes.indexOf(''); S.lanes[k < 0 ? 5 : k] = 'mystery'; }
-    capStatus(`The last mystery material was ${was.name.toLowerCase()}, v = ${Math.round(materialSpeed(was, S.tC))} m/s. A new one is in its lane.`);
+    capStatus(window.VDI18N ? VDI18N.t('The last mystery material was {name}, v = {v} m/s. A new one is in its lane.', { name: VDI18N.t(was.name).toLowerCase(), v: Math.round(materialSpeed(was, S.tC)) }) : `The last mystery material was ${was.name.toLowerCase()}, v = ${Math.round(materialSpeed(was, S.tC))} m/s. A new one is in its lane.`);
     raceReset(); changed();
   });
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
