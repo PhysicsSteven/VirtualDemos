@@ -573,7 +573,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), bl = S.blind, cx = x0 + w * (S.preset === 'cone' || S.preset === 'rotor' ? 0.62 : 0.5), cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : S.preset === 'cone' || S.preset === 'rotor' ? 'SIDE VIEW, CENTER TO THE LEFT' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
-    { const full = `FREE BODY DIAGRAM, ${view}`; if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText('FREE BODY DIAGRAM,', x0 + 14 * p, y0 + 12 * p); ctx.fillText(view, x0 + 14 * p, y0 + 26 * p); } }   /* two lines when narrow */
+    { /* in another language the heading and its two halves are translated whole first (a longer heading splits where English does not) */
+      const I = window.VDI18N, tr = (t) => (I ? I.t(t) : t), full = tr(`FREE BODY DIAGRAM, ${view}`), head = tr('FREE BODY DIAGRAM,'), vw = tr(view);
+      const draw = () => { if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText(head, x0 + 14 * p, y0 + 12 * p); ctx.fillText(vw, x0 + 14 * p, y0 + 26 * p); } };
+      if (I) I.raw(draw); else draw(); }   /* two lines when narrow */
     let items = [];   // [label, color, fx (toward the center = −x on screen), fy (up +)]
     if (S.preset === 'string') items = S.cut ? [] : [['T', T.tn, -q.T, 0]];
     else if (S.preset === 'cone') { const th = S.b * Math.PI / 180; items = S.cut ? [['mg', T.w, 0, -m * G]] : [['mg', T.w, 0, -m * G], ['T', T.tn, -q.T * Math.sin(th), q.T * Math.cos(th)]]; }

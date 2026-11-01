@@ -2,6 +2,8 @@
 VDI18N.add('en', 'demo/circular-motion', [
 "View from above",
 "FREE BODY DIAGRAM, FROM ABOVE",
+"FREE BODY DIAGRAM,",
+"FROM ABOVE",
 "net = {#} N",
 "Arrow lengths to scale; the net force is drawn below the dot",
 "Circular Motion",
@@ -31,7 +33,6 @@ VDI18N.add('en', 'demo/circular-motion', [
 "outcome",
 "String cut: no horizontal force, so it moves in a straight line.",
 "FREE BODY DIAGRAM, SEEN FROM BEHIND, CENTER TO THE LEFT",
-"FREE BODY DIAGRAM,",
 "SEEN FROM BEHIND, CENTER TO THE LEFT",
 "f (static) = {#} N",
 "Static friction from the road is all that turns the car: it needs mv²/r and can give at most μs mg. Above √(μs g r) the car slides off along a nearly straight line. Try a wet road, μs = {#}.",
@@ -39,6 +40,7 @@ VDI18N.add('en', 'demo/circular-motion', [
 "Needed mv²/r",
 "Most friction μs mg",
 "Top speed √(μs g r)",
+"The banked road in 3D: drag to turn the view",
 "f (down the slope) = {#} N",
 "Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.",
 "Normal force N",
@@ -63,6 +65,7 @@ VDI18N.add('en', 'demo/circular-motion', [
 "Cruising top speed √(μs g r)",
 "Side view",
 "FREE BODY DIAGRAM, SIDE VIEW",
+"SIDE VIEW",
 "A ball rolling without friction inside a loop (treated as sliding, so no rotational energy). It slows as it climbs. At the top gravity and the track both point to the center; below v = √(gr) there, gravity alone is too much and the ball falls away. That needs v ≥ √(5gr) at the bottom.",
 "Speed at the bottom v₀",
 "Launch again",
@@ -72,6 +75,7 @@ VDI18N.add('en', 'demo/circular-motion', [
 "At the top, needs v ≥ √(gr)",
 "Seen from the side, a little above",
 "FREE BODY DIAGRAM, SIDE VIEW, CENTER TO THE LEFT",
+"SIDE VIEW, CENTER TO THE LEFT",
 "A bob on a string swinging round in a horizontal circle, seen from the side and a little above. The string's pull T has an upward part that holds the weight, T cos θ = mg, and a part toward the center that turns the bob, T sin θ = mv²/r. Together they give a period {#}π√(h/g) that depends only on h, the height of the pivot above the circle: a longer string at a steeper angle with the same h goes round in the same time. Cut the string and the bob flies off along its velocity as it falls.",
 "String length L",
 "String angle θ from the vertical",
@@ -91,5 +95,7 @@ VDI18N.add('en', 'demo/circular-motion', [
 "Least wall speed √(gR/μs)",
 "{#} m/s ({#} per minute)",
 "When the floor drops",
-"riders stay up"
+"riders stay up",
+"Cut away side view",
+"Friction holds them up."
 ]);
