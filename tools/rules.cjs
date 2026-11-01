@@ -162,6 +162,51 @@ rule('howto-video', 'Every worksheet has its How this works video: demos/media/h
   return SHEETS.filter((s) => !NO_VIDEO[s] && !have.has(map[s] || s)).map((s) => ['curriculum/labs/students/' + s + '.md', 0, '', 'no video ' + (map[s] || s) + '.mp4']);
 });
 
+/* Constants: demos/lib/constants.js holds every physical constant the demos use. A number in demo code that is close to one of
+   them but is neither that value nor that value rounded (6.674e-11 is fine for G, 1.989e30 is not for the solar mass) is a stale or
+   mistyped copy. Only numbers with 4 or more significant figures are compared, on code lines (strings and comments left out);
+   data tables (the files below, and lines over 1500 characters) are not constants. */
+const CONST_DATA = new Set(['lib/sky-bsc.js', 'lib/sky-dist.js', 'lib/nubase.js', 'lib/photondata.js', 'lib/earth.js', 'lib/i18n.js', 'star-slice.html']);
+const CONST_ALLOW = {      /* 'file literal': reason */
+  'dosimetry.html 273.2': 'AAPM TG-51 writes the temperature correction with 273.2',
+  'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
+  'tides.html 1.989e30': 'TEMPORARY 2026-11-01: the Astro 2203 thread is editing tides; it switches to VDC.Msun (1.98841e30) and removes this line',
+};
+/* Too close to everyday numbers to compare (they stay in the file to be used): */
+const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20']);
+rule('constants', 'Physical constants in demo code match demos/lib/constants.js (CODATA 2022, IAU, cited values), exactly or rounded.',
+  'demos/*.html and demos/lib/*.js code', () => {
+  const VDC = require(path.join(ROOT, 'demos/lib/constants.js')), T = Object.entries(VDC.table).filter(([k]) => !CONST_SKIP.has(k));
+  const trunc = (v, n) => { const p = Math.pow(10, n - 1 - Math.floor(Math.log10(Math.abs(v)))); return Number((Math.trunc(v * p) / p).toPrecision(n)); };
+  const sig = (s) => s.toLowerCase().replace(/e.*/, '').replace('.', '').replace(/^0+/, '').length;
+  const rnd = (v, n) => Number(v.toPrecision(n));
+  const bad = [], files = [...DEMOS.map((d) => 'demos/' + d + '.html'),
+    ...fs.readdirSync(path.join(ROOT, 'demos/lib')).filter((f) => f.endsWith('.js') && f !== 'constants.js').map((f) => 'demos/lib/' + f)];
+  for (const f of files) {
+    const short = f.replace(/^demos\//, '');
+    if (CONST_DATA.has(short)) continue;
+    let src = read(f);
+    if (f.endsWith('.html')) src = src.replace(/<script\b[^>]*\bsrc=[^>]*>\s*<\/script>/g, '').replace(/^[\s\S]*?(?=<script)|<\/script>[\s\S]*?(?=<script|$)/g, (m) => m.replace(/[^\n]/g, ' '));
+    src = src.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')).replace(/(^|[^:\\])\/\/.*$/gm, '$1')
+      .replace(/'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`/g, (m) => m.replace(/[^\n]/g, ' '));
+    src.split('\n').forEach((line, i) => {
+      if (line.length > 1500) return;
+      for (const m of line.matchAll(/(?<![\w.$])(\d+(?:\.\d+)?(?:e[-+]?\d+)?)(?![\w.])/gi)) {
+        const s = m[1], x = +s, n = sig(s);
+        if (!x || n < 4 || CONST_ALLOW[short + ' ' + s]) continue;
+        let ok = false, near = null;
+        for (const [k, [v]] of T) {
+          const nv = Math.min(15, sig(String(v)));
+          if (x === v || rnd(v, n) === x || trunc(v, n) === x || rnd(x, nv) === v) { ok = true; break; }
+          if (Math.abs(x - v) / Math.abs(v) < 3 * Math.pow(10, 1 - Math.min(n, nv))) near = near || k;
+        }
+        if (!ok && near) bad.push([f, i + 1, line.trim().slice(0, 140), s + ' is near VDC.' + near + ' = ' + VDC[near]]);
+      }
+    });
+  }
+  return bad;
+});
+
 /* ---------- run ---------- */
 if (args.includes('--list')) { for (const r of RULES) console.log(r.id.padEnd(12) + r.what + '\n' + ' '.repeat(12) + 'reads: ' + r.reads + '\n'); process.exit(0); }
 let fails = 0;

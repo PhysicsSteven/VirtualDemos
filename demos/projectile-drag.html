@@ -504,7 +504,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   const G = 9.81;                 // m/s², uniform; the model value students infer in the lab
   const DEG = Math.PI / 180;
   // Air density from the ideal gas law, ρ = pM/(RT), dry air
-  const R_GAS = 8.314462618, M_AIR = 0.0289652;   // J/(mol K) CODATA; kg/mol, dry air
+  const R_GAS = 8.314462618, M_AIR = 0.0289647;   // J/(mol K) CODATA; kg/mol, dry air (CRC; demos/lib/constants.js Mair)
   const airDensity = (pPa, TK) => pPa * M_AIR / (R_GAS * TK);
   // International Standard Atmosphere pressure below 11 km: p = p0 (1 − L z / T0)^(g0 M/(R L))
   const isaPressure = (z) => 101325 * Math.pow(1 - 0.0065 * z / 288.15, 9.80665 * M_AIR / (R_GAS * 0.0065));
