@@ -278,5 +278,21 @@ VDI18N.add('en', 'demo/solids', [
 "extrinsic",
 "A silicon diode at {#} K with a saturation current of {#} pA. Step the bias from −{#} V to {#} V and record the current: almost nothing flows in reverse, and the forward current grows by a factor e for every {#} mV.",
 "An LED emits light when electrons fall across the band gap, so the photon energy is about E_g. Try each material and read the wavelength; then pick Any band gap and find the gaps that give red, green and blue.",
-"The spectrometer reading goes in the LED table of the worksheet: write it down by hand."
+"The spectrometer reading goes in the LED table of the worksheet: write it down by hand.",
+"Germanium and gallium arsenide are pure (intrinsic) here.",
+"peak {#} nm: infrared (invisible)",
+"infrared (invisible)",
+"peak {#} nm: ultraviolet (invisible)",
+"ultraviolet (invisible)",
+"peak {#} nm: orange",
+"any band gap",
+"orange",
+"photon E ≈ E_g = {#} eV",
+"CsCl: CsCl structure",
+"|ψ|², band {#}, k = {#} π/a, E = {#} eV",
+"donors (P): E_c − {#} eV",
+"line: I₀(e^(eV/kT) − {#})",
+"NaCl: NaCl structure",
+"{#} levels",
+"Re ψ, band {#}, k = {#} π/a, E = {#} eV"
 ]);

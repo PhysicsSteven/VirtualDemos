@@ -131,6 +131,7 @@ VDI18N.add('en', 'demo/seasons', [
 "plays; on the closeup",
 "change latitude. Hold",
 "for bigger steps.",
+"day {#} · Sun and Earth not to scale",
 "date",
 "noon (°)",
 "distant star",
@@ -197,5 +198,7 @@ VDI18N.add('en', 'demo/seasons', [
 "Arctic summer at {#}° N near the June solstice. The Sun never sets, so the day is {#} hours long, yet the noon Sun is still low. Long days make up for the low Sun.",
 "{#} h {#} m <small>polar day</small>",
 "Jul {#} · day {#}",
-"On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once."
+"On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.",
+"Dec {#}",
+"(very far away)"
 ]);

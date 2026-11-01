@@ -52,5 +52,7 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "A source of hidden power. Measure the level at several distances and work out its power P.",
 "mystery",
 "hidden: the source is a mystery",
-"A mystery"
+"A mystery",
+"same power, {#}, {#}, {#} squares: I ∝ {#}/r²",
+"A: mystery background {#} dB"
 ]);
