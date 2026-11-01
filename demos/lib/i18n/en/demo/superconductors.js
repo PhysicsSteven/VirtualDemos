@@ -54,6 +54,11 @@ VDI18N.add('en', 'demo/superconductors', [
 "Table {#}: T<sub>c</sub>, B<sub>c</sub>({#})",
 "<span>Blind: hide the critical field and the curves</span>",
 "Model: an ideal type I superconductor, a sphere {#} mm across in the uniform field of a long solenoid. Critical temperatures and fields are from the textbook's Table {#} (to the two or three figures it gives), with Bc(T) = Bc({#})[{#} − (T/Tc)²], its Equation {#}. Below Bc the sphere is in equilibrium, so the state depends only on T and B, not on the order you change them; real samples show some hysteresis and supercooling. Because the field crowds around a sphere, the field at its equator is {#} times the applied field, so the field starts to get in at {#}/{#} of Bc (the intermediate state, drawn here as a uniform average field inside; really it is a pattern of normal and superconducting layers) and the sphere is all normal at Bc. The magnetometer reads the sphere's magnetic moment, m = ({#}π/{#})R³M, and the Hall probe the field just outside the equator. Field lines are drawn at equal steps of flux, so their crowding shows the field, and are exact for this model. The perfect conductor is imaginary: a metal whose only change below Tc is zero resistance, so the flux inside it can never change. A normal metal's own magnetism (about {#}⁻⁵ of the applied field) is left out. The 3D view draws the same field lines in the plane through the axis that faces you (the field is the same all round the axis), with fainter copies at other angles; the front of the solenoid is cut away so the inside shows, and the solenoid, cryostat and coils are not to scale with any one apparatus.",
+"MAGNETOMETER",
+"HALL PROBE",
+"THERMOMETER",
+"Hall probe",
+"pickup coil",
 "equator (mT)",
 "moment (mA·m²)",
 "at {#} K",
@@ -65,5 +70,10 @@ VDI18N.add('en', 'demo/superconductors', [
 "A tin sphere at {#} K in zero field. Raise the field slowly: the moment grows in proportion, then falls once the field starts to get in, and reaches zero at the critical field, where tin is a normal metal again. Repeat at other temperatures.",
 "mystery metal",
 "Curves hidden for the mystery metal",
-"A sphere of one of the type I metals in Table {#}, at {#} K (a helium {#} refrigerator). Its name is hidden. Find its critical field at several temperatures, then its Tc and Bc({#}), and say which metal it is."
+"A sphere of one of the type I metals in Table {#}, at {#} K (a helium {#} refrigerator). Its name is hidden. Find its critical field at several temperatures, then its Tc and Bc({#}), and say which metal it is.",
+"indium",
+"mercury",
+"aluminum",
+"zero resistance: holding the flux it had",
+"The last mystery metal was indium (in)."
 ]);

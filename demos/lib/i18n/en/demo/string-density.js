@@ -4,8 +4,6 @@ VDI18N.add('en', 'demo/string-density', [
 "vibrator",
 "sideways motion drawn ×{#}, slowed as by a strobe",
 "Linear Density of a String",
-"<a>First lab: waves on a string</a>",
-"<a><span>←</span> <span>Standing Waves</span></a><a><span>Charging by Induction</span> <span>→</span></a>",
 "A string runs from a vibrator over a pulley to a hanging mass. Hang masses at a fixed frequency, or sweep the frequency with a fixed mass, find the resonances and count the loops. A straight line through your readings gives the string's mass per meter, μ.",
 "A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up adds a {#} g mass, down takes off the last mass; space pauses.",
 "Drag the vibrator to change L",
@@ -60,6 +58,9 @@ VDI18N.add('en', 'demo/string-density', [
 "Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against {#}/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.",
 "<span>Blind: hide μ and the predictions</span>",
 "Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.",
+"<a>First lab: waves on a string</a>",
+"<a><span>←</span> <span>Standing Waves</span></a><a><span>Charging by Induction</span> <span>→</span></a>",
+"masses drawn as {#} cm discs of {#} g/cm³",
 "hanger {#} g = {#} g",
 "The driver stays at {#} Hz and only the {#} g hanger hangs. Add masses until the string jumps into a pattern of loops, then fine tune with the small masses for the largest amplitude and record. More tension, fewer loops: T against {#}/n² is a straight line with slope 4L²f²μ.",
 "Keep f fixed and change the mass: n loops when T = μ(2Lf/n)², so each extra loop needs much less mass.",
@@ -71,5 +72,9 @@ VDI18N.add('en', 'demo/string-density', [
 "An unknown string with {#} g hanging: μ is hidden. Find at least four resonances, plot f against n and work out μ from the slope. New unknown string picks another.",
 "<span>hidden: unknown string</span>",
 "An unknown string driven at {#} Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against {#}/n² and work out μ from the slope.",
-"The unknown string had μ = {#} g/m."
+"The unknown string had μ = {#} g/m.",
+"A new unknown string is on the apparatus.",
+"add masses, L {#} m",
+"n, row {#}",
+"Row {#} recorded. Check n against the loops you see."
 ]);

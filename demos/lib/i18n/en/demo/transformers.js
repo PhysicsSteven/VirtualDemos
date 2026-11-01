@@ -93,5 +93,6 @@ VDI18N.add('en', 'demo/transformers', [
 "Windings",
 "R<sub>P</sub> {#} Ω, R<sub>S</sub> {#} mΩ; L<sub>P</sub> {#} H, L<sub>S</sub> {#} mH",
 "OpenStax Example {#} again: {#} kW sent at {#} kV down a {#} Ω line is {#} A and loses ({#} A)²({#} Ω) = {#} W. Send it at {#} V instead and the line would need {#} A and lose {#} MW, more than the power sent. Then try a long line at {#} kV.",
-"loss (W)"
+"loss (W)",
+"two cycles, each trace to its own peak"
 ]);

@@ -95,5 +95,10 @@ VDI18N.add('en', 'demo/wave-power', [
 "The absorber is too soft, so part of each wave comes back and a standing wave forms on top of the traveling one. Change L or f and watch the meter swing up and down, then switch back to Matched: the power no longer depends on L. A matched end is what makes the string act as if it were endless.",
 "An unknown string with {#} g hanging: μ is hidden. Measure P against A² at one frequency; the slope is ½ μ ω² v = ½ ω² √(Tμ), which gives μ. New unknown string picks another.",
 "The blade rises and comes back once, sending a single upward pulse {#} m long (v/f) down the string. Send one pulse with the end clamped (Fixed end): it comes back upside down. Then choose Free end (a ring that slides on a smooth rod): it comes back upright. Too soft and Too stiff send back half as tall a pulse, upright and upside down; Matched sends back nothing. The held blade is a fixed end too, so the pulse flips each time it gets back to the vibrator.",
-"With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber."
+"With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.",
+"A new unknown string is on the apparatus.",
+"{#}: too steep for the linear model, lower A or f",
+"hanger {#} g + {#} g = {#} g",
+"Start the vibrator first: the meter reads nothing while it is stopped.",
+"The unknown string had μ = {#} g/m."
 ]);

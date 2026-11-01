@@ -10,6 +10,8 @@ VDI18N.add('en', 'demo/temperature', [
 "THERMOMETER B",
 "time t (s)",
 "Temperature and Heat",
+"<a>Temperature and heat</a>",
+"<span><a><span>States of Matter</span> <span>→</span></a></span>",
 "Bring a hot block and a cold one into contact and watch them reach one temperature. Calibrate a gas thermometer, measure how solids and liquids expand, and follow heat through a wall.",
 "T in °C · mass in kg · time in s",
 "Equilibrium",
@@ -157,8 +159,6 @@ VDI18N.add('en', 'demo/temperature', [
 "Conduction view: steady heat flow (the temperatures have been held long enough for nothing to change with time). Each layer of thickness d passes P = kAΔT/d with k from the textbook's Table {#}, so it has a resistance d/k per unit area (the R factor) and the layers' resistances add. Air moving on each side carries heat to and from the surface by convection; its film resistance per unit area is the standard ASHRAE value: still indoor air on a wall {#} m²·°C/W, outdoor air in a {#} km/h wind {#}, in a {#} km/h wind {#}. \"None\" holds the surface at that side's temperature, like a stirred bath. P = AΔT/ΣR, and the temperature falls across each layer and film in proportion to its share of ΣR, in a straight line inside each layer. \"Air (still, conduction only)\" is air that cannot move; a real air gap also passes heat by convection and radiation, so it insulates less. Radiation through the wall is not modeled (the Blackbody demo covers radiation). The probe reads to {#} °C.",
 "Cooling view: a solid metal sphere hanging in a large room loses heat by convection to the air and by radiation to the walls, which are at the air's temperature. The sphere is small enough and conducts well enough to have one temperature throughout, so mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴), with A = πD² and m = ρπD³/{#} (densities from Volume {#} Table {#}, c from Table {#}). The convection coefficient h is not a constant: in still air it comes from Churchill's correlation for natural convection from a sphere (it grows as (T − T_air)^{#}/{#} for big spheres), and with the fan from Whitaker's correlation for flow across a sphere, the two combined as (h_N⁴ + h_F⁴)^{#}/{#} (both from Incropera et al., Fundamentals of Heat and Mass Transfer). Air properties at {#} atm are from the Lemmon and Jacobsen correlations. The emissivities are chosen values typical of a polished metal ({#}) and of flat black paint ({#}). The fan's air is taken as smooth and steady; a real fan's stream is turbulent, which raises h a little. The thermocouple reads to {#} °C with no lag.",
 "Energy chain view: a source, a converter and a user, each passing on part of the energy it gets in a new form; the rest becomes thermal energy. Efficiencies are the representative values of OpenStax College Physics 2e, Table {#} (section {#}): cycling {#}% of the food energy the body uses, solar cell {#}%, compact fluorescent light {#}% (as light), electric motor {#}%. The generator is a motor run the other way and is given the same {#}% (an assumption). The heater puts all its electrical energy into {#} kg of water (c = {#} J/(kg·°C), Volume {#} Table {#}), with no heat lost from the pot; the motor lifts a {#} kg load. Sunlight is {#} W/m², the standard test condition for solar panels (IEC {#}-{#}). The streaming dots are a picture of the powers: each dot is a fixed amount of energy and they move at one speed, so closer dots mean more power.",
-"<a>Temperature and heat</a>",
-"<span><a><span>States of Matter</span> <span>→</span></a></span>",
 "PRESSURE GAUGE",
 "ice and water",
 "bath temperature (°C), where known",
@@ -264,5 +264,9 @@ VDI18N.add('en', 'demo/temperature', [
 "energy chunks: each dot in a block {#} kJ (from {#} °C) · A {#} + B {#} = {#}",
 "The same hot aluminum and cool water, with each block's thermal energy drawn as dots of one size (counted from {#} °C). Start it and watch dots leave A, travel through the bar and pile up in B: the total stays the same, because the box lets no energy in or out. Thermal energy is not temperature: when they agree in temperature, the water holds more dots per kilogram than the aluminum.",
 "A cyclist turns a generator that lights a compact fluorescent bulb. Each station passes on only part of what it gets: the body turns about {#}% of its food energy into work, the generator {#}% of the work into electricity, the bulb {#}% of that into light. Only {#}% of the food energy ends up as light; the rest warms the rider, the generator and the bulb. Try the Sun on a solar cell, or a heater instead of the bulb.",
-"The energy chain has no worksheet readings: read the numbers from the Readouts."
+"The energy chain has no worksheet readings: read the numbers from the Readouts.",
+"The last mystery block was lead.",
+"Last mystery bath was {#} °C.",
+"The last mystery rod was aluminum.",
+"Light bulb (CFL)"
 ]);

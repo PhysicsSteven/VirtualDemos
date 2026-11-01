@@ -9,8 +9,6 @@ VDI18N.add('en', 'demo/stress-strain', [
 "tensile strength",
 "fracture",
 "Stress and Strain",
-"<a>Static equilibrium and elasticity</a>",
-"<a><span>←</span> <span>Static Equilibrium</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>",
 "Hang a load on a long thin wire and read how much it stretches. Stress F/A over strain ΔL/L is Young's modulus, as long as the wire springs back. Load it past its yield point and it stays longer; keep going and it breaks.",
 "wire {#} m long · g = {#} m/s²",
 "A wire hanging from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain. Up and down arrows change the load.",
@@ -66,6 +64,8 @@ VDI18N.add('en', 'demo/stress-strain', [
 "Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.",
 "Shear and Bulk tests: linear elastic only, with the shear and bulk moduli of OpenStax University Physics Vol. {#}, Table {#} (approximate values; the Mystery metal is the tension test's alloy and the Mystery liquid is made up). Shear: a {#} cm cube bonded between two steel plates, its base held and its top plate pushed sideways; the block shears uniformly (bending and the plates' own give are ignored). Bulk: a rigid steel cell with a {#} cm bore; a liquid fills it {#} cm deep under the piston, or a {#} cm metal cube with a strain gauge sits in oil inside it. The pressure rise is F/A of the piston, and ΔV/V₀ = −Δp/B exactly in the model; real liquids stiffen slightly as the pressure rises, which the model leaves out. Stresses stay at or below {#} MPa, where these metals stay elastic in shear (lead is left out of the shear test because it would flow); real glass and granite are brittle and could crack near the top of that range. Squeezing from every side, as in the bulk test, does not make a metal yield.",
 "Blind in Shear and Bulk hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings.",
+"<a>Static equilibrium and elasticity</a>",
+"<a><span>←</span> <span>Static Equilibrium</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>",
 "LOAD CELL",
 "displacement sensor",
 "F = {#} kN Δx = {#} µm",
@@ -123,5 +123,10 @@ VDI18N.add('en', 'demo/stress-strain', [
 "An aluminum alloy: Y about {#} GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.",
 "An unknown metal. Find its Young's modulus from your readings, then load it until it yields. Its properties stay hidden.",
 "Water, bulk",
-"Row {#} captured."
+"Row {#} captured.",
+"Hide data table",
+"Capture at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.",
+"Stress, strain, Y, yield and strength",
+"hidden: work them out",
+"sensor"
 ]);
