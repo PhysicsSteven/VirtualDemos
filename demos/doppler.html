@@ -696,7 +696,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const above = spy - 16 * ps > m.y + 20 * ps;
     label(c, light() ? 'source' : `source · ${Math.round(S.M * vW())} m/s`, spx, above ? spy - 16 * ps : spy + 20 * ps, T.pos, 'center', 'middle', true);
     let olab;
-    if (!roots.length) olab = light() ? VDI18N.t('no light yet') : (S.M > 1 ? 'silent: outside the cone' : 'silent: no sound yet');
+    if (!roots.length) olab = light() ? (typeof VDI18N === 'object' ? VDI18N.t('no light yet') : 'no light yet') : (S.M > 1 ? 'silent: outside the cone' : 'silent: no sound yet');
     else if (light()) olab = `sees ${(S.lam / roots[0].k).toFixed(1)} nm`;
     else if (roots.length === 1) olab = `hears ${fmtHz(S.f * roots[0].k)}`;
     else olab = `hears ${fmtHz(S.f * roots[0].k)} and ${fmtHz(S.f * roots[1].k)}${roots[1].k < 0 || roots[0].k < 0 ? ' (one backward)' : ''}`;
@@ -957,7 +957,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('lRel').textContent = r.k.toFixed(4);
       $('lCls').textContent = (1 / (1 - sp * r.cosTh)).toFixed(4);
       const th = Math.acos(Math.max(-1, Math.min(1, r.cosTh))) / RAD;
-      $('lTh').innerHTML = sp > 0 ? `${th.toFixed(1)}°${Math.abs(th - 90) < 2 ? ` <span class="ok">${VDI18N.t('transverse: f′/f ≈ 1/γ')}</span>` : ''}` : 'at rest';
+      $('lTh').innerHTML = sp > 0 ? `${th.toFixed(1)}°${Math.abs(th - 90) < 2 ? ` <span class="ok">${(typeof VDI18N === 'object' ? VDI18N.t('transverse: f′/f ≈ 1/γ') : 'transverse: f′/f ≈ 1/γ')}</span>` : ''}` : 'at rest';
       const vr = -sp * r.cosTh * C_KMS;
       $('lVr').textContent = `${vr >= 0 ? '+' : '−'}${Math.abs(vr).toLocaleString('en-US', { maximumFractionDigits: 0 })} km/s`;
       if (z <= 0) $('lHub').innerHTML = '<span class="ok">blueshifted: approaching, so no Hubble distance</span>';
@@ -1564,8 +1564,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'doppler@2026-10-23';
   window.vdShowCols = [['motion', 'Moving'], ['speed_m_s', 'Speed (m/s)'], ['direction', 'Direction'], ['f_obs_Hz', 'f′ (Hz)']];
   window.vdReadingRow = () => {
-    if (light()) return VDI18N.t('Readings record sound only. Choose Sound.');
-    if (!roots.length) return S.M > 1 ? VDI18N.t('No sound reaches the observer yet: it is outside the Mach cone.') : VDI18N.t('No sound has reached the observer yet.');
+    if (light()) return (typeof VDI18N === 'object' ? VDI18N.t('Readings record sound only. Choose Sound.') : 'Readings record sound only. Choose Sound.');
+    if (!roots.length) return S.M > 1 ? (typeof VDI18N === 'object' ? VDI18N.t('No sound reaches the observer yet: it is outside the Mach cone.') : 'No sound reaches the observer yet: it is outside the Mach cone.') : (typeof VDI18N === 'object' ? VDI18N.t('No sound has reached the observer yet.') : 'No sound has reached the observer yet.');
     if (roots.length > 1) return 'Two sounds arrive at once (the source is supersonic): there is no single received frequency to record.';
     const r = roots[0], vo = obsVel(), vsl = r.vx * r.n[0] + r.vy * r.n[1], vol = -(vo[0] * r.n[0] + vo[1] * r.n[1]);
     const motion = S.M > 0 && S.Mo > 0 ? 'both' : S.M > 0 ? 'source' : S.Mo > 0 ? 'observer' : 'neither';
