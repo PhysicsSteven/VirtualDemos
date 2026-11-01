@@ -1648,10 +1648,34 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Leyes de conservación de partículas",
 "<span>{#}:{#}</span> Quarks":
   "<span>{#}:{#}</span> Quarks",
+"<span>{#}:{#}</span> Particle Accelerators and Detectors":
+  "<span>{#}:{#}</span> Aceleradores y detectores de partículas",
+"<span>{#}:{#}</span> The Standard Model":
+  "<span>{#}:{#}</span> El modelo estándar",
+"<a>Open demo</a> <a>Worksheet {#}: Conservation Laws for Particle Reactions</a> <a>Worksheet {#}: Building Hadrons from Quarks</a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas</a> <a>Hoja de trabajo {#}: Construir hadrones con quarks</a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas</a> <a>Notas</a>",
 "<a>Cosmic Distance Ladder</a>":
   "<a>Escalera de distancias cósmicas</a>",
 "Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.":
   "Mide un paralaje a partir de dos fotos, cronometra la curva de luz de una cefeida, encuentra el máximo de una supernova y ajusta la ley de Hubble a los corrimientos al rojo de galaxias. Cada peldaño calibra el siguiente.",
+"<span>{#}:{#}</span> The Big Bang":
+  "<span>{#}:{#}</span> El Big Bang",
+"<a>Open demo</a> <a>Worksheet: Measuring the Hubble Constant</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir la constante de Hubble</a> <a>Notas</a>",
+"<a>The Big Bang and the Early Universe</a>":
+  "<a>El Big Bang y el universo temprano</a>",
+"Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the {#} K microwave background.":
+  "Observa cómo cada galaxia se aleja de todas las demás mientras el espacio se estira, y cronometra las distancias para encontrar la ley de Hubble y la edad del universo. Sigue la temperatura desde el primer instante hasta hoy, produce el helio de los primeros tres minutos y estira el resplandor del desacoplamiento hasta el fondo de microondas de {#} K.",
+"<span>{#}:{#}</span> Evolution of the Early Universe":
+  "<span>{#}:{#}</span> Evolución del universo temprano",
+"<a>Open demo</a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe</a> <a>Worksheet {#}: Thermal History of the Universe</a> <a>Worksheet {#}: Helium from the First Three Minutes</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo</a> <a>Hoja de trabajo {#}: Historia térmica del universo</a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos</a> <a>Notas</a>",
+"Also used in this unit: <a>Gamma Spectroscopy</a> <span>(card under <a>Nuclear physics</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Espectroscopía gamma</a> <span>(tarjeta en <a>Física nuclear</a>; {#}:{#})</span>",
+"Astronomy · Virtual Physics Demos":
+  "Astronomía · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Sky, planets, stars and galaxies</b>":
+  "<a>Demos virtuales de física</a> · <b>Cielo, planetas, estrellas y galaxias</b>",
 "Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro {#} introductory worksheets too. OpenStax University Physics Volume {#}, chapter {#}, and Volume {#}, chapters {#} and {#}, where they apply.":
   "Todas las demos de astronomía del sitio: el cielo visto desde la Tierra, gravitación y órbitas, telescopios y luz, cómo brillan y envejecen las estrellas, las galaxias y el universo en expansión, y los planetas y sus superficies. Cada tarjeta también enlista las hojas de trabajo introductorias de Astro {#}. OpenStax Física universitaria volumen {#}, capítulo {#}, y volumen {#}, capítulos {#} y {#}, donde aplican.",
 "Free textbook: <a>University Physics Volume {#}</a> · <a>University Physics Volume {#}</a>":
@@ -1946,38 +1970,1664 @@ VDI18N.add('es', 'site', {
   "<span>Repaso para el examen</span><span>Vie {#} de feb.</span>",
 "Review the units <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a> · <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a> · <a>Week {#} · Topic {#}: Exoplanets</a>. Their demos: <a>Giant Planets, Rings and Moons</a> · <a>Kepler's Laws</a> · <a>Lagrange Points</a> · <a>Tides</a> · <a>Orbital Resonances</a> · <a>Reasons for Seasons</a> · <a>Finding Exoplanets</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Cosmic Distance Ladder</a>":
   "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a> · <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a> · <a>Semana {#} · Tema {#}: Exoplanetas</a>. Sus demos: <a>Planetas gigantes, anillos y lunas</a> · <a>Leyes de Kepler</a> · <a>Puntos de Lagrange</a> · <a>Mareas</a> · <a>Resonancias orbitales</a> · <a>Las razones de las estaciones</a> · <a>Encontrar exoplanetas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Escalera de distancias cósmicas</a>",
+"Thermodynamics · Virtual Physics Demos":
+  "Termodinámica · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Heat and the laws of thermodynamics</b>":
+  "<a>Demos virtuales de física</a> · <b>El calor y las leyes de la termodinámica</b>",
+"Thermodynamics":
+  "Termodinámica",
+"Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume {#}, chapters {#} to {#}.":
+  "Temperatura y calor, cambios de fase, la teoría cinética de los gases, y la primera y la segunda ley con máquinas térmicas y entropía. OpenStax Física universitaria volumen {#}, capítulos {#} a {#}.",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<a>The kinetic theory of gases</a>":
+  "<a>La teoría cinética de los gases</a>",
+"<a>The first law of thermodynamics</a>":
+  "<a>La primera ley de la termodinámica</a>",
+"<a>The second law of thermodynamics</a>":
+  "<a>La segunda ley de la termodinámica</a>",
+"<a>Beyond the textbook</a>":
+  "<a>Más allá del libro de texto</a>",
+"Temperature and heat":
+  "Temperatura y calor",
+"<a>Temperature and Heat</a>":
+  "<a>Temperatura y calor</a>",
+"Join a hot block to cold water and watch them reach one temperature; calibrate a gas thermometer and extrapolate to absolute zero; measure a rod's expansion and water's odd behavior near {#} °C; and probe the temperature through a layered wall.":
+  "Pon en contacto un bloque caliente con agua fría y observa cómo llegan a una misma temperatura; calibra un termómetro de gas y extrapola al cero absoluto; mide la dilatación de una varilla y el comportamiento raro del agua cerca de {#} °C; y explora la temperatura a través de una pared de varias capas.",
+"<span>{#}:{#}</span> Temperature and Thermal Equilibrium":
+  "<span>{#}:{#}</span> Temperatura y equilibrio térmico",
+"<span>{#}:{#}</span> Thermometers and Temperature Scales":
+  "<span>{#}:{#}</span> Termómetros y escalas de temperatura",
+"<span>{#}:{#}</span> Thermal Expansion":
+  "<span>{#}:{#}</span> Dilatación térmica",
+"<span>{#}:{#}</span> Heat Transfer, Specific Heat, and Calorimetry":
+  "<span>{#}:{#}</span> Transferencia de calor, calor específico y calorimetría",
+"<span>{#}:{#}</span> Mechanisms of Heat Transfer":
+  "<span>{#}:{#}</span> Mecanismos de transferencia de calor",
+"<a>Open demo</a> <a>Worksheet {#}: Thermal Equilibrium</a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero</a> <a>Worksheet {#}: Thermal Expansion</a> <a>Worksheet {#}: Heat Conduction Through Layers</a> <a>Worksheet {#}: Cooling by Convection and Radiation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Equilibrio térmico</a> <a>Hoja de trabajo {#}: Termómetro de gas y cero absoluto</a> <a>Hoja de trabajo {#}: Dilatación térmica</a> <a>Hoja de trabajo {#}: Conducción de calor a través de capas</a> <a>Hoja de trabajo {#}: Enfriamiento por convección y radiación</a> <a>Notas</a>",
+"<a>States of Matter</a>":
+  "<a>Estados de la materia</a>",
+"Heat a crystal of argon atoms under a piston and watch the bonds between them break: the temperature holds still while it melts and again while it boils, because the heat goes into the bonds. A beaker view heats ice to steam with the textbook's specific and latent heats.":
+  "Calienta un cristal de átomos de argón bajo un pistón y observa cómo se rompen los enlaces entre ellos: la temperatura se queda fija mientras se funde y otra vez mientras hierve, porque el calor se va a los enlaces. Una vista de vaso de precipitados calienta hielo hasta vapor con los calores específicos y latentes del libro de texto.",
+"<span>{#}:{#}</span> Phase Changes":
+  "<span>{#}:{#}</span> Cambios de fase",
+"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat</a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente</a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente</a> <a>Notas</a>",
+"The kinetic theory of gases":
+  "La teoría cinética de los gases",
+"<span>{#}:{#}</span> Molecular Model of an Ideal Gas":
+  "<span>{#}:{#}</span> Modelo molecular de un gas ideal",
+"<span>{#}:{#}</span> Pressure, Temperature, and RMS Speed":
+  "<span>{#}:{#}</span> Presión, temperatura y rapidez rms",
+"<span>{#}:{#}</span> Heat Capacity and Equipartition of Energy":
+  "<span>{#}:{#}</span> Capacidad calorífica y equipartición de la energía",
+"<span>{#}:{#}</span> Distribution of Molecular Speeds":
+  "<span>{#}:{#}</span> Distribución de las rapideces moleculares",
+"<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Notas</a>",
+"<a>Heat Capacities of Gases</a>":
+  "<a>Capacidades caloríficas de los gases</a>",
+"Heat a gas with its piston locked, then free: the same heat warms it less when it pushes the piston. Measure C_V, C_P and γ, tell an atom from a molecule, and find γ again from a ball bouncing on a flask of gas.":
+  "Calienta un gas con su pistón bloqueado y luego libre: el mismo calor lo calienta menos cuando empuja el pistón. Mide C_V, C_P y γ, distingue un átomo de una molécula y vuelve a encontrar γ con una esfera que rebota sobre un matraz de gas.",
+"<a>Open demo</a> <a>Worksheet {#}: Heat Capacities of Gases</a> <a>Worksheet {#}: Rüchardt's Ball</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capacidades caloríficas de los gases</a> <a>Hoja de trabajo {#}: La esfera de Rüchardt</a> <a>Notas</a>",
+"The first law of thermodynamics":
+  "La primera ley de la termodinámica",
+"<a>Heat Engine Cycles</a>":
+  "<a>Ciclos de máquinas térmicas</a>",
+"Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.":
+  "Lleva un gas ideal por los ciclos de Carnot, Otto, Diesel, Stirling y Brayton, o arrastra el tuyo: el área del ciclo PV es el trabajo neto, un diagrama T–S muestra el calor y ninguna máquina supera el límite de Carnot. Inviértelo para obtener un refrigerador.",
+"<span>{#}:{#}</span> Thermodynamic Systems":
+  "<span>{#}:{#}</span> Sistemas termodinámicos",
+"<span>{#}:{#}</span> Work, Heat, and Internal Energy":
+  "<span>{#}:{#}</span> Trabajo, calor y energía interna",
+"<span>{#}:{#}</span> First Law of Thermodynamics":
+  "<span>{#}:{#}</span> Primera ley de la termodinámica",
+"<span>{#}:{#}</span> Thermodynamic Processes":
+  "<span>{#}:{#}</span> Procesos termodinámicos",
+"<span>{#}:{#}</span> Adiabatic Processes for an Ideal Gas":
+  "<span>{#}:{#}</span> Procesos adiabáticos de un gas ideal",
+"<a>Open demo</a> <a>Worksheet: Heat Engine Cycles</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ciclos de máquinas térmicas</a> <a>Notas</a>",
+"Also used in this unit: <a>Heat Capacities of Gases</a> <span>(card under <a>The kinetic theory of gases</a>; {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Capacidades caloríficas de los gases</a> <span>(tarjeta en <a>La teoría cinética de los gases</a>; {#}:{#}, {#}:{#})</span>",
+"The second law of thermodynamics":
+  "La segunda ley de la termodinámica",
+"<a>Entropy and the Second Law</a>":
+  "<a>Entropía y la segunda ley</a>",
+"Pull the partition and count why a gas never gathers back; let two Einstein solids share energy and watch heat flow from hot to cold; then test engines and refrigerators against the Kelvin and Clausius statements.":
+  "Retira la división y cuenta por qué un gas nunca se vuelve a juntar; deja que dos sólidos de Einstein compartan energía y observa cómo fluye el calor de lo caliente a lo frío; luego pon a prueba máquinas y refrigeradores frente a los enunciados de Kelvin y de Clausius.",
+"<span>{#}:{#}</span> Reversible and Irreversible Processes":
+  "<span>{#}:{#}</span> Procesos reversibles e irreversibles",
+"<span>{#}:{#}</span> Heat Engines":
+  "<span>{#}:{#}</span> Máquinas térmicas",
+"<span>{#}:{#}</span> Refrigerators and Heat Pumps":
+  "<span>{#}:{#}</span> Refrigeradores y bombas de calor",
+"<span>{#}:{#}</span> Statements of the Second Law of Thermodynamics":
+  "<span>{#}:{#}</span> Enunciados de la segunda ley de la termodinámica",
+"<span>{#}:{#}</span> The Carnot Cycle":
+  "<span>{#}:{#}</span> El ciclo de Carnot",
+"<span>{#}:{#}</span> Entropy":
+  "<span>{#}:{#}</span> Entropía",
+"<span>{#}:{#}</span> Entropy on a Microscopic Scale":
+  "<span>{#}:{#}</span> La entropía a escala microscópica",
+"<a>Open demo</a> <a>Worksheet {#}: Free Expansion</a> <a>Worksheet {#}: Einstein Solids</a> <a>Worksheet {#}: Testing the Second Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Expansión libre</a> <a>Hoja de trabajo {#}: Sólidos de Einstein</a> <a>Hoja de trabajo {#}: Poner a prueba la segunda ley</a> <a>Notas</a>",
+"<a>Galton Board</a>":
+  "<a>Tablero de Galton</a>",
+"Balls fall through rows of pegs into bins: one ball is unpredictable, thousands make the binomial distribution and, with many rows, a bell curve. Set the rows and the chance of bouncing right; compare the counts with theory.":
+  "Unas esferas caen entre filas de clavos hasta unos compartimentos: una esfera es impredecible, miles forman la distribución binomial y, con muchas filas, una curva de campana. Fija las filas y la probabilidad de rebotar a la derecha; compara los conteos con la teoría.",
+"<a>Open demo</a> <a>Worksheet: Chance, the Binomial and the Bell Curve</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El azar, la binomial y la curva de campana</a> <a>Notas</a>",
+"Also used in this unit: <a>Heat Engine Cycles</a> <span>(card under <a>The first law of thermodynamics</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Ciclos de máquinas térmicas</a> <span>(tarjeta en <a>La primera ley de la termodinámica</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Beyond the textbook":
+  "Más allá del libro de texto",
+"<a>Ising Model</a>":
+  "<a>Modelo de Ising</a>",
+"Spins on a lattice that each favor their neighbors: cool through T<sub>c</sub> and order appears on its own, with fractal domains at T<sub>c</sub>, hysteresis, and heat capacity and susceptibility measured against Onsager's exact solution.":
+  "Espines en una red, cada uno favoreciendo a sus vecinos: enfría por debajo de T<sub>c</sub> y el orden aparece por sí solo, con dominios fractales en T<sub>c</sub>, histéresis, y la capacidad calorífica y la susceptibilidad medidas frente a la solución exacta de Onsager.",
+"<a>Open demo</a> <a>Worksheet: The Ising Phase Transition</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La transición de fase de Ising</a> <a>Notas</a>",
+"Acoustics · Virtual Physics Demos":
+  "Acústica · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Waves and sound</b>":
+  "<a>Demos virtuales de física</a> · <b>Ondas y sonido</b>",
+"Acoustics":
+  "Acústica",
+"Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume {#}, chapters {#} and {#}.":
+  "Ondas en cuerdas, la rapidez del sonido, la resonancia, los tonos musicales y el efecto Doppler, y luego dos demos más allá del libro de texto. OpenStax Física universitaria volumen {#}, capítulos {#} y {#}.",
 "<a>Waves</a>":
   "<a>Ondas</a>",
 "Waves":
   "Ondas",
+"<span>{#}:{#}</span> Traveling Waves":
+  "<span>{#}:{#}</span> Ondas viajeras",
+"<span>{#}:{#}</span> Mathematics of Waves":
+  "<span>{#}:{#}</span> Matemáticas de las ondas",
+"<span>{#}:{#}</span> Interference of Waves":
+  "<span>{#}:{#}</span> Interferencia de ondas",
+"<a>Energy and Power of a Wave</a>":
+  "<a>Energía y potencia de una onda</a>",
+"Send waves along a string into an absorber and read the power meter as you change the amplitude, the frequency and the tension, then find how the power a wave carries depends on each.":
+  "Manda ondas por una cuerda hasta un absorbedor y lee el medidor de potencia mientras cambias la amplitud, la frecuencia y la tensión; luego encuentra cómo depende de cada una la potencia que transporta una onda.",
+"<span>{#}:{#}</span> Energy and Power of a Wave":
+  "<span>{#}:{#}</span> Energía y potencia de una onda",
+"<a>Open demo</a> <a>Worksheet: Power Carried by a Wave</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Potencia transportada por una onda</a> <a>Notas</a>",
+"<a>Two Speaker Interference</a>":
+  "<a>Interferencia de dos bocinas</a>",
+"Walk a microphone across a room with two speakers playing the same tone, find the loud and quiet lines from the path difference, and get the wavelength and the speed of sound.":
+  "Lleva un micrófono a través de un cuarto con dos bocinas que tocan el mismo tono, encuentra las líneas de sonido fuerte y de silencio a partir de la diferencia de camino, y obtén la longitud de onda y la rapidez del sonido.",
+"<a>Open demo</a> <a>Worksheet: Two Speaker Interference</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia de dos bocinas</a> <a>Notas</a>",
+"Sound":
+  "Sonido",
+"<a>Sound Waves and the Speed of Sound</a>":
+  "<a>Ondas sonoras y la rapidez del sonido</a>",
+"What a sound wave is: watch the air in a tube swing back and forth with the pressure a quarter cycle behind, then time a clap between two microphones to measure the speed of sound, and race sound through {#} gases, liquids and solids over a course up to {#} km long.":
+  "Qué es una onda sonora: observa cómo el aire en un tubo oscila de un lado a otro con la presión un cuarto de ciclo atrás; luego cronometra un aplauso entre dos micrófonos para medir la rapidez del sonido, y haz competir al sonido a través de {#} gases, líquidos y sólidos en un recorrido de hasta {#} km.",
+"<span>{#}:{#}</span> Sound Waves":
+  "<span>{#}:{#}</span> Ondas sonoras",
+"<span>{#}:{#}</span> Speed of Sound":
+  "<span>{#}:{#}</span> Rapidez del sonido",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo</a> <a>Notas</a>",
+"<a>Resonators</a>":
+  "<a>Resonadores</a>",
+"What sets an instrument's pitch: find the speed of sound with a resonance tube, pluck and bow a string, and blow across a bottle as you fill it, with sound.":
+  "Qué fija el tono de un instrumento: encuentra la rapidez del sonido con un tubo de resonancia, pulsa y frota con arco una cuerda, y sopla sobre una botella mientras la llenas, con sonido.",
+"<span>{#}:{#}</span> Normal Modes of a Standing Sound Wave":
+  "<span>{#}:{#}</span> Modos normales de una onda sonora estacionaria",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido</a> <a>Notas</a>",
+"<a>Kundt's Tube</a>":
+  "<a>Tubo de Kundt</a>",
+"Stroke a metal rod and the cork dust in a tube of gas gathers at the nodes: one frequency, two wavelengths, and the speed of sound in both the gas and the metal.":
+  "Frota una varilla metálica y el polvo de corcho en un tubo de gas se junta en los nodos: una frecuencia, dos longitudes de onda, y la rapidez del sonido tanto en el gas como en el metal.",
+"<a>Open demo</a> <a>Worksheet: Kundt's Tube</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tubo de Kundt</a> <a>Notas</a>",
+"<a>Ultrasound: Echoes and Blood Flow</a>":
+  "<a>Ultrasonido: ecos y flujo sanguíneo</a>",
+"Time the echoes of an ultrasound pulse from the boundaries between fat, muscle and bone to find their depths, then point the beam at an artery and get the blood speed from the Doppler shift.":
+  "Cronometra los ecos de un pulso de ultrasonido en las fronteras entre grasa, músculo y hueso para encontrar sus profundidades; luego apunta el haz a una arteria y obtén la rapidez de la sangre a partir del corrimiento Doppler.",
+"<span>{#}:{#}</span> The Doppler Effect":
+  "<span>{#}:{#}</span> El efecto Doppler",
+"<a>Open demo</a> <a>Worksheet: Ultrasound Echoes and Doppler Flow</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ecos de ultrasonido y flujo Doppler</a> <a>Notas</a>",
+"<a>Sound Intensity and Decibels</a>":
+  "<a>Intensidad del sonido y decibeles</a>",
+"Walk a sound level meter away from a loudspeaker in an open field: the level drops {#} dB every time the distance doubles, and two equal sources add only {#} dB.":
+  "Aleja un sonómetro de una bocina en campo abierto: el nivel baja {#} dB cada vez que la distancia se duplica, y dos fuentes iguales suman solo {#} dB.",
+"<span>{#}:{#}</span> Sound Intensity":
+  "<span>{#}:{#}</span> Intensidad del sonido",
+"<a>Open demo</a> <a>Worksheet: Sound Intensity and Decibels</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Intensidad del sonido y decibeles</a> <a>Notas</a>",
+"<a>Room Acoustics and the Anechoic Chamber</a>":
+  "<a>Acústica de salas y la cámara anecoica</a>",
+"Clap in a hard room and time the echoes dying away, add absorbing panels and test Sabine's formula, then line the walls with wedges for an anechoic chamber with a clean {#}/r² and a low frequency cutoff.":
+  "Aplaude en un cuarto de paredes duras y cronometra cómo se apagan los ecos, agrega paneles absorbentes y pon a prueba la fórmula de Sabine; luego cubre las paredes con cuñas para tener una cámara anecoica con un {#}/r² limpio y un corte a baja frecuencia.",
+"<a>Open demo</a> <a>Worksheet {#}: Reverberation Time</a> <a>Worksheet {#}: Anechoic Chamber</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Tiempo de reverberación</a> <a>Hoja de trabajo {#}: Cámara anecoica</a> <a>Notas</a>",
+"<a>Timbre and Harmonics</a>":
+  "<a>Timbre y armónicos</a>",
+"Build a tone from its harmonics and hear it: square, sawtooth and triangle waves, spectra like real instruments, the missing fundamental, and why phase barely matters.":
+  "Construye un tono a partir de sus armónicos y escúchalo: ondas cuadradas, de diente de sierra y triangulares, espectros como los de instrumentos reales, la fundamental ausente y por qué la fase casi no importa.",
+"<span>{#}:{#}</span> Sources of Musical Sound":
+  "<span>{#}:{#}</span> Fuentes de sonido musical",
+"<a>Open demo</a> <a>Worksheet: Timbre and Harmonics</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Timbre y armónicos</a> <a>Notas</a>",
+"<span>{#}:{#}</span> Shock Waves":
+  "<span>{#}:{#}</span> Ondas de choque",
+"<a>Open demo</a> <a>Worksheet: Doppler Effect and Shock Waves</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler y ondas de choque</a> <a>Notas</a>",
+"Also used in this unit: <a>Two Speaker Interference</a> <span>(card under <a>Waves</a>; {#}:{#})</span> · <a>Standing Waves</a> <span>(card under <a>Waves</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Interferencia de dos bocinas</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span> · <a>Ondas estacionarias</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span>",
+"<a>Chladni Plates</a>":
+  "<a>Placas de Chladni</a>",
+"Drive a metal plate at its resonances and watch sand gather on the nodal lines: square and circular plates, a response curve with every mode, a 3D view and Chladni's law.":
+  "Excita una placa metálica en sus resonancias y observa cómo la arena se junta en las líneas nodales: placas cuadradas y circulares, una curva de respuesta con cada modo, una vista en 3D y la ley de Chladni.",
+"<a>Open demo</a> <a>Worksheet: Chladni Plates</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Placas de Chladni</a> <a>Notas</a>",
+"<a>Acoustic Levitation</a>":
+  "<a>Levitación acústica</a>",
+"Hold beads in midair with two bowls of {#} kHz speakers: traps in the standing wave, the Gor'kov force against gravity, and beads carried along by shifting the phase.":
+  "Sostén cuentas en el aire con dos cuencos de bocinas de {#} kHz: trampas en la onda estacionaria, la fuerza de Gor'kov contra la gravedad y cuentas que se transportan al desplazar la fase.",
+"<a>Open demo</a> <a>Worksheet: Acoustic Levitation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Levitación acústica</a> <a>Notas</a>",
+"Medical Physics · Virtual Physics Demos":
+  "Física médica · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Radiation physics and proton therapy</b>":
+  "<a>Demos virtuales de física</a> · <b>Física de radiaciones y protonterapia</b>",
+"Medical Physics":
+  "Física médica",
+"For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors’ lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.":
+  "Para la especialidad de física médica de tercer y cuarto año, junto a la clase de física de radiaciones y antes del laboratorio de cuarto año en el centro de protonterapia: fuentes y decaimiento, interacciones de fotones, partículas cargadas en la materia, dosimetría, radiobiología, blindaje, protonterapia e imagenología. Cálculo en todo el curso; las hojas de trabajo de nivel avanzado usan tablas de datos citadas y llevan incertidumbres, y las demás hojas de cada tarjeta sirven como calentamiento.",
+"<a>{#} · Sources</a>":
+  "<a>{#} · Fuentes</a>",
+"<a>{#} · Photons</a>":
+  "<a>{#} · Fotones</a>",
+"<a>{#} · Charged particles</a>":
+  "<a>{#} · Partículas cargadas</a>",
+"<a>{#} · Dosimetry</a>":
+  "<a>{#} · Dosimetría</a>",
+"<a>{#} · Radiobiology</a>":
+  "<a>{#} · Radiobiología</a>",
+"<a>{#} · Shielding</a>":
+  "<a>{#} · Blindaje</a>",
+"<a>{#} · Protons</a>":
+  "<a>{#} · Protones</a>",
+"<a>{#} · Linac beams</a>":
+  "<a>{#} · Haces de linac</a>",
+"<a>{#} · Imaging</a>":
+  "<a>{#} · Imagenología</a>",
+"Units follow the radiation physics topics, from sources to imaging. A demo can appear in more than one unit: it has one card, in the first unit that uses it, and later units link to it. Cards marked Coming are demos being built for this module. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
+  "Las unidades siguen los temas de física de radiaciones, de las fuentes a la imagenología. Una demo puede aparecer en más de una unidad: tiene una sola tarjeta, en la primera unidad que la usa, y las unidades posteriores la enlazan. Las tarjetas marcadas como Próximamente son demos que se están construyendo para este módulo. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
+"{#} · Sources and decay":
+  "{#} · Fuentes y decaimiento",
+"Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer.":
+  "Leyes de decaimiento, los isótopos médicos y el generador de ⁹⁹Mo a ⁹⁹ᵐTc con equilibrio transitorio, valores Q para la producción de isótopos, y el tubo de rayos X con su filtración y su capa hemirreductora.",
+"<a>Open demo</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Worksheet {#}: Measuring a Half Life (warm up)</a> <a>Worksheet {#}: Parent and Daughter (warm up)</a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Worksheet {#}: Shells and the Periodic Table (warm up)</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica (calentamiento)</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley (calentamiento)</a> <a>Notas</a>",
+"Also used in this unit: <a>Nuclear Reactions, Fission and Fusion</a> with <a>Worksheet: Nuclear Reactions (warm up)</a> <span>(card under <a>{#} · Protection and shielding</a>)</span>":
+  "También se usa en esta unidad: <a>Reacciones nucleares, fisión y fusión</a> con <a>Hoja de trabajo: Reacciones nucleares (calentamiento)</a> <span>(tarjeta en <a>{#} · Protección y blindaje</a>)</span>",
+"{#} · Photon interactions":
+  "{#} · Interacciones de fotones",
+"Compton kinematics and the Klein–Nishina cross section, attenuation coefficients from XCOM, and the photoelectric effect as review.":
+  "Cinemática de Compton y la sección eficaz de Klein–Nishina, coeficientes de atenuación de XCOM, y el efecto fotoeléctrico como repaso.",
+"<a>Photon Interactions in Matter</a>":
+  "<a>Interacciones de fotones con la materia</a>",
+"How X-rays and gamma rays are stopped: the NIST coefficients of any element or tissue from {#} keV to {#} MeV split into coherent, Compton, photoelectric and pair, where each one wins, a Monte Carlo beam through a slab for buildup, and beam hardening with half value layers.":
+  "Cómo se detienen los rayos X y los rayos gamma: los coeficientes del NIST de cualquier elemento o tejido de {#} keV a {#} MeV separados en coherente, Compton, fotoeléctrico y producción de pares, dónde gana cada uno, un haz Monte Carlo a través de una placa para la acumulación (buildup), y el endurecimiento del haz con capas hemirreductoras.",
+"<a>Open demo</a> <a>Worksheet: Photon Interactions in Matter</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interacciones de fotones con la materia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Compton Scattering (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector (warm up)</a> <a>Worksheet {#}: Absorbing Gamma Rays (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector (calentamiento)</a> <a>Hoja de trabajo {#}: Absorción de rayos gamma (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck (calentamiento)</a> <a>Notas</a>",
+"{#} · Charged particles in matter":
+  "{#} · Partículas cargadas en la materia",
+"Single Coulomb scattering, the step that multiple scattering adds up, then stopping power and range.":
+  "La dispersión de Coulomb simple, el paso que la dispersión múltiple va sumando, y luego el poder de frenado y el alcance.",
+"<a>Open demo</a> <a>Worksheet: Rutherford Scattering (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford (calentamiento)</a> <a>Notas</a>",
+"<a>Charged Particles in Matter</a>":
+  "<a>Partículas cargadas en la materia</a>",
+"Send protons, alpha particles or carbon ions into water, through bone, lung, plastic or metal first. Watch the tracks slow, scatter and stop, build the Bragg peak from them, and compare the Bethe stopping power and CSDA range with NIST PSTAR.":
+  "Manda protones, partículas alfa o iones de carbono al agua, pasando primero por hueso, pulmón, plástico o metal. Observa cómo las trazas se frenan, se dispersan y se detienen, construye con ellas el pico de Bragg y compara el poder de frenado de Bethe y el alcance CSDA con NIST PSTAR.",
+"<a>Open demo</a> <a>Worksheet: Stopping Power, Range and the Bragg Peak (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Poder de frenado, alcance y el pico de Bragg (Física médica)</a> <a>Notas</a>",
+"Also used in this unit: <a>The Bragg Peak</a> <span>(card under <a>{#} · Proton therapy</a>)</span>":
+  "También se usa en esta unidad: <a>El pico de Bragg</a> <span>(tarjeta en <a>{#} · Protonterapia</a>)</span>",
+"{#} · Dosimetry and detectors":
+  "{#} · Dosimetría y detectores",
+"Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution.":
+  "Tasa de dosis de una fuente puntual, dosis absorbida frente a dosis equivalente, y un detector de centelleo con su calibración y su resolución.",
+"<a>Dosimetry: Kerma, Equilibrium and the Ion Chamber</a>":
+  "<a>Dosimetría: kerma, equilibrio y la cámara de ionización</a>",
+"Watch collision kerma and absorbed dose part in the buildup and run together past it, with Monte Carlo histories; collect the ions in a Farmer chamber against its voltage; and calibrate a proton beam step by step as TRS-{#} does it: temperature and pressure, polarity, recombination and k_Q.":
+  "Observa cómo el kerma de colisión y la dosis absorbida se separan en la región de acumulación y van juntos después, con historias Monte Carlo; recoge los iones en una cámara Farmer en función de su voltaje; y calibra un haz de protones paso a paso como lo hace el TRS-{#}: temperatura y presión, polaridad, recombinación y k_Q.",
+"<a>Open demo</a> <a>Worksheet {#}: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)</a> <a>Worksheet {#}: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Kerma, dosis y equilibrio de partículas cargadas (Física médica)</a> <a>Hoja de trabajo {#}: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)</a> <a>Notas</a>",
+"Also used in this unit: <a>Nuclear Reactions, Fission and Fusion</a> with <a>Worksheet: Radiation Dose and Shielding (warm up)</a> <span>(card under <a>{#} · Protection and shielding</a>)</span> · <a>Gamma Spectroscopy</a> <span>(card under <a>{#} · Photon interactions</a>)</span>":
+  "También se usa en esta unidad: <a>Reacciones nucleares, fisión y fusión</a> con <a>Hoja de trabajo: Dosis de radiación y blindaje (calentamiento)</a> <span>(tarjeta en <a>{#} · Protección y blindaje</a>)</span> · <a>Espectroscopía gamma</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span>",
+"{#} · Radiobiology":
+  "{#} · Radiobiología",
+"Cell survival, fractionation and the relative biological effectiveness of protons.":
+  "Supervivencia celular, fraccionamiento y la efectividad biológica relativa de los protones.",
+"<a>Radiobiology: Cell Survival and Fractionation</a>":
+  "<a>Radiobiología: supervivencia celular y fraccionamiento</a>",
+"How many cells survive a dose: linear quadratic survival curves in air and without oxygen, a simulated clonogenic assay to count and fit, BED and EQD2 for {#} to {#} fractions, and the RBE of protons against LET and dose.":
+  "Cuántas células sobreviven a una dosis: curvas de supervivencia lineal cuadráticas en aire y sin oxígeno, un ensayo clonogénico simulado para contar y ajustar, BED y EQD2 para {#} a {#} fracciones, y la RBE de los protones en función de la LET y la dosis.",
+"<a>Open demo</a> <a>Worksheet: Radiobiology: Cell Survival and Fractionation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Radiobiología: supervivencia celular y fraccionamiento</a> <a>Notas</a>",
+"{#} · Protection and shielding":
+  "{#} · Protección y blindaje",
+"Time, distance and shielding: dose rate from a point source, broad beam transmission and buildup in lead, concrete and water, and a barrier calculation for a PET uptake room with workload, occupancy and the NCRP design goals (Dose view of Nuclear Reactions).":
+  "Tiempo, distancia y blindaje: tasa de dosis de una fuente puntual, transmisión de haz ancho y acumulación en plomo, concreto y agua, y el cálculo de una barrera para un cuarto de captación de PET con carga de trabajo, factor de ocupación y los objetivos de diseño del NCRP (vista Dosis de Reacciones nucleares).",
+"<a>Shielding Rooms</a>":
+  "<a>Blindaje de salas</a>",
+"Design the walls of a CT room, a linear accelerator vault with its maze door, and a proton therapy room, and compare how lead, steel, concrete and polyethylene do at each energy.":
+  "Diseña las paredes de una sala de CT, un búnker de acelerador lineal con su puerta en laberinto y una sala de protonterapia, y compara cómo se comportan el plomo, el acero, el concreto y el polietileno a cada energía.",
+"<a>Open demo</a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Worksheet {#}: Nuclear Reactions (warm up)</a> <a>Worksheet {#}: Chain Reactions and Critical Size (warm up)</a> <a>Worksheet {#}: Fusion and the Gamow Peak (warm up)</a> <a>Worksheet {#}: Radiation Dose and Shielding (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Hoja de trabajo {#}: Reacciones nucleares (calentamiento)</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico (calentamiento)</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow (calentamiento)</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje (calentamiento)</a> <a>Notas</a>",
+"Also used in this unit: <a>Photon Interactions in Matter</a> <span>(card under <a>{#} · Photon interactions</a>)</span> · <a>Gamma Spectroscopy</a> with <a>Worksheet: Absorbing Gamma Rays (warm up)</a> <span>(card under <a>{#} · Photon interactions</a>)</span>":
+  "También se usa en esta unidad: <a>Interacciones de fotones con la materia</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span> · <a>Espectroscopía gamma</a> con <a>Hoja de trabajo: Absorción de rayos gamma (calentamiento)</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span>",
+"{#} · Proton therapy":
+  "{#} · Protonterapia",
+"Preparation for the seniors’ QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system: the spread out Bragg peak, the morning QA and patient plan checks, a TRS-{#} beam calibration and the RBE of protons.":
+  "Preparación para las corridas de control de calidad y el recorrido de dosimetría del cuarto año en el centro de protonterapia, con base en su sistema de barrido con haz fino IBA Proteus ONE: el pico de Bragg extendido, el control de calidad matutino y la verificación de planes de pacientes, una calibración del haz según el TRS-{#} y la RBE de los protones.",
+"<a>The Bragg Peak</a>":
+  "<a>El pico de Bragg</a>",
+"A proton beam's depth dose in water, muscle, fat or bone: move the peak with the energy, stack weighted energy layers into a spread out Bragg peak over a target, and compare it with a measured {#} MV photon beam.":
+  "La dosis en profundidad de un haz de protones en agua, músculo, grasa o hueso: mueve el pico con la energía, apila capas de energía con pesos para formar un pico de Bragg extendido sobre un blanco, y compáralo con un haz de fotones de {#} MV medido.",
+"<a>Open demo</a> <a>Worksheet: The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El pico de Bragg y el pico de Bragg extendido (Física médica)</a> <a>Notas</a>",
+"<a>Proton Therapy QA</a>":
+  "<a>Control de calidad en protonterapia</a>",
+"Run the morning QA of a pencil beam scanning proton machine (output, range, spot position and size against TG-{#} tolerances), follow a drifting machine over weeks, and check a patient plan with a 2D chamber array and gamma analysis.":
+  "Haz el control de calidad matutino de una máquina de protones de barrido con haz fino (rendimiento, alcance, posición y tamaño del punto frente a las tolerancias del TG-{#}), sigue a una máquina que se desajusta a lo largo de semanas y verifica el plan de un paciente con un arreglo de cámaras 2D y análisis gamma.",
+"<a>Open demo</a> <a>Worksheet: Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Control de calidad en protonterapia: verificaciones matutinas, deriva y planes de pacientes (Física médica)</a> <a>Notas</a>",
+"<a>CT Numbers and Proton Range</a>":
+  "<a>Números CT y alcance de protones</a>",
+"Calibrate a CT scanner for proton planning: scan a phantom of known plastics, turn CT numbers into stopping power ratios with Schneider's stoichiometric method, test the curve with a mystery tissue in a proton beam, and see how CT number and I value errors move the range in a patient against a {#} % + {#} mm margin.":
+  "Calibra un tomógrafo para la planeación con protones: escanea un maniquí de plásticos conocidos, convierte los números CT en cocientes de poder de frenado con el método estequiométrico de Schneider, pon a prueba la curva con un tejido misterioso en un haz de protones y ve cómo los errores en el número CT y en el valor I mueven el alcance en un paciente frente a un margen de {#} % + {#} mm.",
+"<a>Open demo</a> <a>Worksheet: CT Numbers and Proton Range: Calibration, Stopping Power and Margins (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Números CT y alcance de protones: calibración, poder de frenado y márgenes (Física médica)</a> <a>Notas</a>",
+"Also used in this unit: <a>Charged Particles in Matter</a> <span>(card under <a>{#} · Charged particles in matter</a>)</span> · <a>Dosimetry: Kerma, Equilibrium and the Ion Chamber</a> with <a>Worksheet: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)</a> <span>(card under <a>{#} · Dosimetry and detectors</a>)</span> · <a>Radiobiology: Cell Survival and Fractionation</a> <span>(card under <a>{#} · Radiobiology</a>)</span>":
+  "También se usa en esta unidad: <a>Partículas cargadas en la materia</a> <span>(tarjeta en <a>{#} · Partículas cargadas en la materia</a>)</span> · <a>Dosimetría: kerma, equilibrio y la cámara de ionización</a> con <a>Hoja de trabajo: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)</a> <span>(tarjeta en <a>{#} · Dosimetría y detectores</a>)</span> · <a>Radiobiología: supervivencia celular y fraccionamiento</a> <span>(tarjeta en <a>{#} · Radiobiología</a>)</span>",
+"{#} · Photon and electron beams":
+  "{#} · Haces de fotones y electrones",
+"Second phase.":
+  "Segunda fase.",
+"No activity for this unit yet.":
+  "Esta unidad aún no tiene actividades.",
+"{#} · Imaging":
+  "{#} · Imagenología",
+"Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen. X-ray imaging, MRI and nuclear medicine imaging come in a second phase.":
+  "Medición de distancia por eco, impedancia, atenuación en tejido en dB por cm por MHz y Doppler; la relación de Larmor para el hidrógeno. La imagenología con rayos X, la resonancia magnética y la imagenología de medicina nuclear llegan en una segunda fase.",
+"<a>Open demo</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Spin Resonance (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín (calentamiento)</a> <a>Notas</a>",
+"OpenStax University Physics · Virtual Physics Demos":
+  "OpenStax Física universitaria · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>By textbook section</b>":
+  "<a>Demos virtuales de física</a> · <b>Por sección del libro de texto</b>",
+"OpenStax University Physics":
+  "OpenStax Física universitaria",
+"The free OpenStax textbook, section by section, with the demos for each.":
+  "El libro de texto gratuito de OpenStax, sección por sección, con las demos de cada una.",
+"<span><strong>{#}</strong> volumes</span>":
+  "<span><strong>{#}</strong> volúmenes</span>",
 "<span><strong>{#}</strong> sections</span>":
   "<span><strong>{#}</strong> secciones</span>",
+"<span><strong>{#}</strong> with an activity</span>":
+  "<span><strong>{#}</strong> con una actividad</span>",
+"<a>Volume {#}</a>":
+  "<a>Volumen {#}</a>",
+"Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; search for a section number such as {#} to jump straight to its demos. Section numbers match the book.":
+  "Cada sección de OpenStax Física universitaria con las demos que le sirven, capítulo por capítulo. Abre un capítulo para ver sus secciones; busca un número de sección como {#} para ir directo a sus demos. Los números de sección coinciden con los del libro.",
+"Volume {#}: Mechanics, waves and sound":
+  "Volumen {#}: Mecánica, ondas y sonido",
+"<span>Ch. {#}–{#}</span><span>{#} sections</span><span>{#} with an activity</span><span><a>Free textbook: University Physics Volume {#}</a></span>":
+  "<span>Cap. {#}–{#}</span><span>{#} secciones</span><span>{#} con una actividad</span><span><a>Libro de texto gratuito: Física universitaria volumen {#}</a></span>",
+"<span>Chapter {#}</span> Units and Measurement <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Unidades y medición <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>The Scope and Scale of Physics</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>El alcance y la escala de la física</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Units and Standards</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Unidades y estándares</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Unit Conversion</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Conversión de unidades</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Dimensional Analysis</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Análisis dimensional</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Estimates and Fermi Calculations</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Estimaciones y cálculos de Fermi</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Significant Figures</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Cifras significativas</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Solving Problems in Physics</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Resolución de problemas en física</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>Chapter {#}</span> Vectors <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Vectores <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Scalars and Vectors</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Escalares y vectores</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Coordinate Systems and Components of a Vector</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Sistemas de coordenadas y componentes de un vector</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Algebra of Vectors</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Álgebra de vectores</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Products of Vectors</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Productos de vectores</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>Chapter {#}</span> Motion Along a Straight Line <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Movimiento rectilíneo <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Position, Displacement, and Average Velocity</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Posición, desplazamiento y velocidad media</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Velocidad instantánea y rapidez</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Average and Instantaneous Acceleration</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Aceleración media e instantánea</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Motion with Constant Acceleration</span>":
+  "<span>{#}:{#}</span><span>Movimiento con aceleración constante</span>",
+"<a>Projectile Range</a> · <a>Motion Graphs</a>":
+  "<a>Alcance de proyectiles</a> · <a>Gráficas de movimiento</a>",
+"<span>{#}:{#}</span><span>Free Fall</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Caída libre</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Finding Velocity and Displacement from Acceleration</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Cálculo de la velocidad y el desplazamiento a partir de la aceleración</span><span><a>Gráficas de movimiento</a></span>",
+"<span>Chapter {#}</span> Motion in Two and Three Dimensions <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Movimiento en dos y tres dimensiones <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Displacement and Velocity Vectors</span>":
+  "<span>{#}:{#}</span><span>Vectores de desplazamiento y velocidad</span>",
+"<a>Vectors and Relative Motion</a> · <a>Projectile Range</a>":
+  "<a>Vectores y movimiento relativo</a> · <a>Alcance de proyectiles</a>",
+"<span>{#}:{#}</span><span>Acceleration Vector</span>":
+  "<span>{#}:{#}</span><span>Vector de aceleración</span>",
+"<span>{#}:{#}</span><span>Projectile Motion</span>":
+  "<span>{#}:{#}</span><span>Movimiento de proyectiles</span>",
+"<a>Projectile Range</a> · <a>Ball Launched from a Moving Cart</a>":
+  "<a>Alcance de proyectiles</a> · <a>Pelota lanzada desde un carrito en movimiento</a>",
+"<span>{#}:{#}</span><span>Uniform and Nonuniform Circular Motion</span><span><a>Circular Motion</a></span>":
+  "<span>{#}:{#}</span><span>Movimiento circular uniforme y no uniforme</span><span><a>Movimiento circular</a></span>",
+"<span>{#}:{#}</span><span>Relative Motion in One and Two Dimensions</span>":
+  "<span>{#}:{#}</span><span>Movimiento relativo en una y dos dimensiones</span>",
+"<a>Vectors and Relative Motion</a> · <a>Ball Launched from a Moving Cart</a>":
+  "<a>Vectores y movimiento relativo</a> · <a>Pelota lanzada desde un carrito en movimiento</a>",
+"<span>Chapter {#}</span> Newton's Laws of Motion <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Leyes del movimiento de Newton <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Forces</span>":
+  "<span>{#}:{#}</span><span>Fuerzas</span>",
+"<a>Forces and Friction</a> · <a>Vectors and Relative Motion</a>":
+  "<a>Fuerzas y fricción</a> · <a>Vectores y movimiento relativo</a>",
+"<span>{#}:{#}</span><span>Newton's First Law</span>":
+  "<span>{#}:{#}</span><span>Primera ley de Newton</span>",
+"<a>Forces and Friction</a> · <a>Elevator: Apparent Weight</a>":
+  "<a>Fuerzas y fricción</a> · <a>Elevador: peso aparente</a>",
+"<span>{#}:{#}</span><span>Newton's Second Law</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Segunda ley de Newton</span><span><a>Fuerzas y fricción</a></span>",
+"<span>{#}:{#}</span><span>Mass and Weight</span>":
+  "<span>{#}:{#}</span><span>Masa y peso</span>",
+"<span>{#}:{#}</span><span>Newton’s Third Law</span>":
+  "<span>{#}:{#}</span><span>Tercera ley de Newton</span>",
+"<a>Forces and Friction</a> · <a>Inverse Square Force Lab</a>":
+  "<a>Fuerzas y fricción</a> · <a>Laboratorio de fuerza de inverso del cuadrado</a>",
+"<span>{#}:{#}</span><span>Common Forces</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Fuerzas comunes</span><span><a>Fuerzas y fricción</a></span>",
+"<span>{#}:{#}</span><span>Drawing Free-Body Diagrams</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Diagramas de cuerpo libre</span><span><a>Fuerzas y fricción</a></span>",
+"<span>Chapter {#}</span> Applications of Newton's Laws <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Aplicaciones de las leyes de Newton <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Solving Problems with Newton’s Laws</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Resolución de problemas con las leyes de Newton</span><span><a>Fuerzas y fricción</a></span>",
+"<span>{#}:{#}</span><span>Friction</span>":
+  "<span>{#}:{#}</span><span>Fricción</span>",
+"<a>Forces and Friction</a> · <a>Granular Flow: Sorting and Landslides</a>":
+  "<a>Fuerzas y fricción</a> · <a>Flujo granular: segregación y deslizamientos</a>",
+"<span>{#}:{#}</span><span>Centripetal Force</span>":
+  "<span>{#}:{#}</span><span>Fuerza centrípeta</span>",
+"<a>Circular Motion</a> · <a>Energy on a Track</a> · <a>Rotating Frames</a>":
+  "<a>Movimiento circular</a> · <a>Energía en una pista</a> · <a>Marcos de referencia en rotación</a>",
+"<span>{#}:{#}</span><span>Drag Force and Terminal Speed</span>":
+  "<span>{#}:{#}</span><span>Fuerza de arrastre y rapidez terminal</span>",
+"<a>Terminal Velocity</a> · <a>Projectile Range</a> · <a>Falling Ball Viscometer</a> · <a>Granular Flow: Sorting and Landslides</a>":
+  "<a>Velocidad terminal</a> · <a>Alcance de proyectiles</a> · <a>Viscosímetro de esfera que cae</a> · <a>Flujo granular: segregación y deslizamientos</a>",
+"<span>Chapter {#}</span> Work and Kinetic Energy <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Trabajo y energía cinética <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Work</span>":
   "<span>{#}:{#}</span><span>Trabajo</span>",
+"<a>Potential Energy Curves</a> · <a>Forces and Friction</a>":
+  "<a>Curvas de energía potencial</a> · <a>Fuerzas y fricción</a>",
+"<span>{#}:{#}</span><span>Kinetic Energy</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Energía cinética</span><span><a>Fuerzas y fricción</a></span>",
+"<span>{#}:{#}</span><span>Work-Energy Theorem</span>":
+  "<span>{#}:{#}</span><span>Teorema del trabajo y la energía</span>",
+"<a>Potential Energy Curves</a> · <a>Forces and Friction</a> · <a>Energy on a Track</a>":
+  "<a>Curvas de energía potencial</a> · <a>Fuerzas y fricción</a> · <a>Energía en una pista</a>",
+"<span>{#}:{#}</span><span>Power</span><span><a>Forces and Friction</a></span>":
+  "<span>{#}:{#}</span><span>Potencia</span><span><a>Fuerzas y fricción</a></span>",
+"<span>Chapter {#}</span> Potential Energy and Conservation of Energy <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Energía potencial y conservación de la energía <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Potential Energy of a System</span>":
+  "<span>{#}:{#}</span><span>Energía potencial de un sistema</span>",
+"<a>Potential Energy Curves</a> · <a>Energy on a Track</a>":
+  "<a>Curvas de energía potencial</a> · <a>Energía en una pista</a>",
+"<span>{#}:{#}</span><span>Conservative and Non-Conservative Forces</span>":
+  "<span>{#}:{#}</span><span>Fuerzas conservativas y no conservativas</span>",
+"<span>{#}:{#}</span><span>Conservation of Energy</span>":
+  "<span>{#}:{#}</span><span>Conservación de la energía</span>",
+"<span>{#}:{#}</span><span>Potential Energy Diagrams and Stability</span><span><a>Potential Energy Curves</a></span>":
+  "<span>{#}:{#}</span><span>Diagramas de energía potencial y estabilidad</span><span><a>Curvas de energía potencial</a></span>",
+"<span>{#}:{#}</span><span>Sources of Energy</span><span><a>Sources of Energy</a></span>":
+  "<span>{#}:{#}</span><span>Fuentes de energía</span><span><a>Fuentes de energía</a></span>",
+"<span>Chapter {#}</span> Linear Momentum and Collisions <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Momento lineal y colisiones <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Linear Momentum</span>":
+  "<span>{#}:{#}</span><span>Momento lineal</span>",
+"<a>Collisions and Momentum</a> · <a>Impulse and Momentum</a>":
+  "<a>Colisiones y momento</a> · <a>Impulso y momento</a>",
+"<span>{#}:{#}</span><span>Impulse and Collisions</span>":
+  "<span>{#}:{#}</span><span>Impulso y colisiones</span>",
+"<span>{#}:{#}</span><span>Conservation of Linear Momentum</span><span><a>Collisions and Momentum</a></span>":
+  "<span>{#}:{#}</span><span>Conservación del momento lineal</span><span><a>Colisiones y momento</a></span>",
+"<span>{#}:{#}</span><span>Types of Collisions</span>":
+  "<span>{#}:{#}</span><span>Tipos de colisiones</span>",
+"<a>Collisions and Momentum</a> · <a>Granular Flow: Sorting and Landslides</a>":
+  "<a>Colisiones y momento</a> · <a>Flujo granular: segregación y deslizamientos</a>",
+"<span>{#}:{#}</span><span>Collisions in Multiple Dimensions</span><span><a>Collisions and Momentum</a></span>":
+  "<span>{#}:{#}</span><span>Colisiones en varias dimensiones</span><span><a>Colisiones y momento</a></span>",
+"<span>{#}:{#}</span><span>Center of Mass</span>":
+  "<span>{#}:{#}</span><span>Centro de masa</span>",
+"<a>Collisions and Momentum</a> · <a>Center of Mass</a>":
+  "<a>Colisiones y momento</a> · <a>Centro de masa</a>",
+"<span>{#}:{#}</span><span>Rocket Propulsion</span><span><a>Rocket Propulsion</a></span>":
+  "<span>{#}:{#}</span><span>Propulsión de cohetes</span><span><a>Propulsión de cohetes</a></span>",
+"<span>Chapter {#}</span> Fixed-Axis Rotation <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Rotación alrededor de un eje fijo <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Rotational Variables</span><span><a>Rotation and Torque</a></span>":
+  "<span>{#}:{#}</span><span>Variables de rotación</span><span><a>Rotación y torca</a></span>",
+"<span>{#}:{#}</span><span>Rotation with Constant Angular Acceleration</span>":
+  "<span>{#}:{#}</span><span>Rotación con aceleración angular constante</span>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
+  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a>",
+"<span>{#}:{#}</span><span>Relating Angular and Translational Quantities</span><span><a>Rotation and Torque</a></span>":
+  "<span>{#}:{#}</span><span>Relación entre cantidades angulares y de traslación</span><span><a>Rotación y torca</a></span>",
+"<span>{#}:{#}</span><span>Moment of Inertia and Rotational Kinetic Energy</span><span><a>Rotation and Torque</a></span>":
+  "<span>{#}:{#}</span><span>Momento de inercia y energía cinética de rotación</span><span><a>Rotación y torca</a></span>",
+"<span>{#}:{#}</span><span>Calculating Moments of Inertia</span>":
+  "<span>{#}:{#}</span><span>Cálculo de momentos de inercia</span>",
 "<span>{#}:{#}</span><span>Torque</span>":
   "<span>{#}:{#}</span><span>Torca</span>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Pendulums</a>":
+  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a> · <a>Péndulos</a>",
+"<span>{#}:{#}</span><span>Newton’s Second Law for Rotation</span>":
+  "<span>{#}:{#}</span><span>Segunda ley de Newton para la rotación</span>",
+"<span>{#}:{#}</span><span>Work and Power for Rotational Motion</span><span><a>Rotational Dynamics</a></span>":
+  "<span>{#}:{#}</span><span>Trabajo y potencia en el movimiento de rotación</span><span><a>Dinámica de rotación</a></span>",
+"<span>Chapter {#}</span> Angular Momentum <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Momento angular <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Rolling Motion</span><span><a>Rotation and Torque</a></span>":
+  "<span>{#}:{#}</span><span>Movimiento de rodadura</span><span><a>Rotación y torca</a></span>",
+"<span>{#}:{#}</span><span>Angular Momentum</span>":
+  "<span>{#}:{#}</span><span>Momento angular</span>",
+"<a>Rotation and Torque</a> · <a>Gyroscope Precession</a>":
+  "<a>Rotación y torca</a> · <a>Precesión del giroscopio</a>",
+"<span>{#}:{#}</span><span>Conservation of Angular Momentum</span><span><a>Rotation and Torque</a></span>":
+  "<span>{#}:{#}</span><span>Conservación del momento angular</span><span><a>Rotación y torca</a></span>",
+"<span>{#}:{#}</span><span>Precession of a Gyroscope</span><span><a>Gyroscope Precession</a></span>":
+  "<span>{#}:{#}</span><span>Precesión de un giroscopio</span><span><a>Precesión del giroscopio</a></span>",
+"<span>Chapter {#}</span> Static Equilibrium and Elasticity <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Equilibrio estático y elasticidad <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Conditions for Static Equilibrium</span>":
+  "<span>{#}:{#}</span><span>Condiciones del equilibrio estático</span>",
+"<a>Hanging Chains and Arches</a> · <a>Static Equilibrium</a>":
+  "<a>Cadenas colgantes y arcos</a> · <a>Equilibrio estático</a>",
+"<span>{#}:{#}</span><span>Examples of Static Equilibrium</span>":
+  "<span>{#}:{#}</span><span>Ejemplos de equilibrio estático</span>",
+"<span>{#}:{#}</span><span>Stress, Strain, and Elastic Modulus</span><span><a>Stress and Strain</a></span>":
+  "<span>{#}:{#}</span><span>Esfuerzo, deformación y módulo elástico</span><span><a>Esfuerzo y deformación</a></span>",
+"<span>{#}:{#}</span><span>Elasticity and Plasticity</span><span><a>Stress and Strain</a></span>":
+  "<span>{#}:{#}</span><span>Elasticidad y plasticidad</span><span><a>Esfuerzo y deformación</a></span>",
+"<span>Chapter {#}</span> Gravitation <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Gravitación <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Newton's Law of Universal Gravitation</span>":
+  "<span>{#}:{#}</span><span>Ley de la gravitación universal de Newton</span>",
+"<a>Kepler's Laws</a> · <a>The Cavendish Experiment</a> · <a>Inverse Square Force Lab</a>":
+  "<a>Leyes de Kepler</a> · <a>El experimento de Cavendish</a> · <a>Laboratorio de fuerza de inverso del cuadrado</a>",
+"<span>{#}:{#}</span><span>Gravitation Near Earth's Surface</span>":
+  "<span>{#}:{#}</span><span>La gravitación cerca de la superficie de la Tierra</span>",
+"<a>Gravity Near Earth</a> · <a>The Cavendish Experiment</a>":
+  "<a>Gravedad cerca de la Tierra</a> · <a>El experimento de Cavendish</a>",
+"<span>{#}:{#}</span><span>Gravitational Potential Energy and Total Energy</span><span><a>Kepler's Laws</a></span>":
+  "<span>{#}:{#}</span><span>Energía potencial gravitacional y energía total</span><span><a>Leyes de Kepler</a></span>",
+"<span>{#}:{#}</span><span>Satellite Orbits and Energy</span><span><a>Kepler's Laws</a></span>":
+  "<span>{#}:{#}</span><span>Órbitas de satélites y energía</span><span><a>Leyes de Kepler</a></span>",
+"<span>{#}:{#}</span><span>Kepler's Laws of Planetary Motion</span><span><a>Kepler's Laws</a></span>":
+  "<span>{#}:{#}</span><span>Leyes de Kepler del movimiento planetario</span><span><a>Leyes de Kepler</a></span>",
+"<span>{#}:{#}</span><span>Tidal Forces</span><span><a>Tides</a></span>":
+  "<span>{#}:{#}</span><span>Fuerzas de marea</span><span><a>Mareas</a></span>",
+"<span>{#}:{#}</span><span>Einstein's Theory of Gravity</span>":
+  "<span>{#}:{#}</span><span>La teoría de la gravedad de Einstein</span>",
+"<a>GPS Clocks and Relativity</a> · <a>Black Holes and Lensing</a>":
+  "<a>Relojes GPS y relatividad</a> · <a>Agujeros negros y lentes gravitacionales</a>",
+"<span>Chapter {#}</span> Fluid Mechanics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Mecánica de fluidos <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Fluids, Density, and Pressure</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Fluidos, densidad y presión</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Measuring Pressure</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Medición de la presión</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Pascal's Principle and Hydraulics</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Principio de Pascal e hidráulica</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Archimedes’ Principle and Buoyancy</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Principio de Arquímedes y flotación</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Fluid Dynamics</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Dinámica de fluidos</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Bernoulli’s Equation</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
+  "<span>{#}:{#}</span><span>Ecuación de Bernoulli</span><span><a>Fluidos: presión, flotación y flujo</a></span>",
+"<span>{#}:{#}</span><span>Viscosity and Turbulence</span><span><a>Falling Ball Viscometer</a></span>":
+  "<span>{#}:{#}</span><span>Viscosidad y turbulencia</span><span><a>Viscosímetro de esfera que cae</a></span>",
+"<span>Chapter {#}</span> Oscillations <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Oscilaciones <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Simple Harmonic Motion</span><span><a>Springs and Oscillations</a></span>":
+  "<span>{#}:{#}</span><span>Movimiento armónico simple</span><span><a>Resortes y oscilaciones</a></span>",
+"<span>{#}:{#}</span><span>Energy in Simple Harmonic Motion</span><span><a>Springs and Oscillations</a></span>":
+  "<span>{#}:{#}</span><span>Energía en el movimiento armónico simple</span><span><a>Resortes y oscilaciones</a></span>",
+"<span>{#}:{#}</span><span>Comparing Simple Harmonic Motion and Circular Motion</span><span><a>Springs and Oscillations</a></span>":
+  "<span>{#}:{#}</span><span>Comparación entre el movimiento armónico simple y el movimiento circular</span><span><a>Resortes y oscilaciones</a></span>",
+"<span>{#}:{#}</span><span>Pendulums</span><span><a>Pendulums</a></span>":
+  "<span>{#}:{#}</span><span>Péndulos</span><span><a>Péndulos</a></span>",
+"<span>{#}:{#}</span><span>Damped Oscillations</span><span><a>Springs and Oscillations</a></span>":
+  "<span>{#}:{#}</span><span>Oscilaciones amortiguadas</span><span><a>Resortes y oscilaciones</a></span>",
+"<span>{#}:{#}</span><span>Forced Oscillations</span><span><a>Springs and Oscillations</a></span>":
+  "<span>{#}:{#}</span><span>Oscilaciones forzadas</span><span><a>Resortes y oscilaciones</a></span>",
+"<span>Chapter {#}</span> Waves <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Ondas <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Traveling Waves</span>":
+  "<span>{#}:{#}</span><span>Ondas viajeras</span>",
+"<a>Standing Waves</a> · <a>Ripple Tank</a>":
+  "<a>Ondas estacionarias</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Mathematics of Waves</span><span><a>Standing Waves</a></span>":
+  "<span>{#}:{#}</span><span>Matemáticas de las ondas</span><span><a>Ondas estacionarias</a></span>",
+"<span>{#}:{#}</span><span>Wave Speed on a Stretched String</span>":
+  "<span>{#}:{#}</span><span>Rapidez de una onda en una cuerda tensa</span>",
+"<a>Standing Waves</a> · <a>Linear Density of a String</a>":
+  "<a>Ondas estacionarias</a> · <a>Densidad lineal de una cuerda</a>",
+"<span>{#}:{#}</span><span>Energy and Power of a Wave</span><span><a>Energy and Power of a Wave</a></span>":
+  "<span>{#}:{#}</span><span>Energía y potencia de una onda</span><span><a>Energía y potencia de una onda</a></span>",
+"<span>{#}:{#}</span><span>Interference of Waves</span>":
+  "<span>{#}:{#}</span><span>Interferencia de ondas</span>",
+"<a>Standing Waves</a> · <a>Two Speaker Interference</a> · <a>Ripple Tank</a>":
+  "<a>Ondas estacionarias</a> · <a>Interferencia de dos bocinas</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Standing Waves and Resonance</span>":
+  "<span>{#}:{#}</span><span>Ondas estacionarias y resonancia</span>",
+"<span>Chapter {#}</span> Sound <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Sonido <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Sound Waves</span><span><a>Sound Waves and the Speed of Sound</a></span>":
+  "<span>{#}:{#}</span><span>Ondas sonoras</span><span><a>Ondas sonoras y la rapidez del sonido</a></span>",
+"<span>{#}:{#}</span><span>Speed of Sound</span>":
+  "<span>{#}:{#}</span><span>Rapidez del sonido</span>",
+"<a>Resonators</a> · <a>Sound Waves and the Speed of Sound</a> · <a>Kundt's Tube</a> · <a>Ultrasound: Echoes and Blood Flow</a>":
+  "<a>Resonadores</a> · <a>Ondas sonoras y la rapidez del sonido</a> · <a>Tubo de Kundt</a> · <a>Ultrasonido: ecos y flujo sanguíneo</a>",
+"<span>{#}:{#}</span><span>Sound Intensity</span>":
+  "<span>{#}:{#}</span><span>Intensidad del sonido</span>",
+"<a>Sound Intensity and Decibels</a> · <a>Two Speaker Interference</a> · <a>Room Acoustics and the Anechoic Chamber</a>":
+  "<a>Intensidad del sonido y decibeles</a> · <a>Interferencia de dos bocinas</a> · <a>Acústica de salas y la cámara anecoica</a>",
+"<span>{#}:{#}</span><span>Normal Modes of a Standing Sound Wave</span>":
+  "<span>{#}:{#}</span><span>Modos normales de una onda sonora estacionaria</span>",
+"<a>Timbre and Harmonics</a> · <a>Resonators</a> · <a>Kundt's Tube</a>":
+  "<a>Timbre y armónicos</a> · <a>Resonadores</a> · <a>Tubo de Kundt</a>",
+"<span>{#}:{#}</span><span>Sources of Musical Sound</span><span><a>Timbre and Harmonics</a></span>":
+  "<span>{#}:{#}</span><span>Fuentes de sonido musical</span><span><a>Timbre y armónicos</a></span>",
+"<span>{#}:{#}</span><span>Beats</span><span><a>Standing Waves</a></span>":
+  "<span>{#}:{#}</span><span>Pulsaciones</span><span><a>Ondas estacionarias</a></span>",
+"<span>{#}:{#}</span><span>The Doppler Effect</span>":
+  "<span>{#}:{#}</span><span>El efecto Doppler</span>",
+"<a>Doppler Effect and Shock Waves</a> · <a>Ultrasound: Echoes and Blood Flow</a>":
+  "<a>Efecto Doppler y ondas de choque</a> · <a>Ultrasonido: ecos y flujo sanguíneo</a>",
+"<span>{#}:{#}</span><span>Shock Waves</span><span><a>Doppler Effect and Shock Waves</a></span>":
+  "<span>{#}:{#}</span><span>Ondas de choque</span><span><a>Efecto Doppler y ondas de choque</a></span>",
+"Volume {#}: Thermodynamics, electricity and magnetism":
+  "Volumen {#}: Termodinámica, electricidad y magnetismo",
+"<span>Chapter {#}</span> Temperature and Heat <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Temperatura y calor <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Temperature and Thermal Equilibrium</span><span><a>Temperature and Heat</a></span>":
+  "<span>{#}:{#}</span><span>Temperatura y equilibrio térmico</span><span><a>Temperatura y calor</a></span>",
+"<span>{#}:{#}</span><span>Thermometers and Temperature Scales</span><span><a>Temperature and Heat</a></span>":
+  "<span>{#}:{#}</span><span>Termómetros y escalas de temperatura</span><span><a>Temperatura y calor</a></span>",
+"<span>{#}:{#}</span><span>Thermal Expansion</span><span><a>Temperature and Heat</a></span>":
+  "<span>{#}:{#}</span><span>Dilatación térmica</span><span><a>Temperatura y calor</a></span>",
+"<span>{#}:{#}</span><span>Heat Transfer, Specific Heat, and Calorimetry</span>":
+  "<span>{#}:{#}</span><span>Transferencia de calor, calor específico y calorimetría</span>",
+"<a>States of Matter</a> · <a>Temperature and Heat</a>":
+  "<a>Estados de la materia</a> · <a>Temperatura y calor</a>",
+"<span>{#}:{#}</span><span>Phase Changes</span><span><a>States of Matter</a></span>":
+  "<span>{#}:{#}</span><span>Cambios de fase</span><span><a>Estados de la materia</a></span>",
+"<span>{#}:{#}</span><span>Mechanisms of Heat Transfer</span>":
+  "<span>{#}:{#}</span><span>Mecanismos de transferencia de calor</span>",
+"<a>Blackbody Radiation</a> · <a>Temperature and Heat</a>":
+  "<a>Radiación de cuerpo negro</a> · <a>Temperatura y calor</a>",
+"<span>Chapter {#}</span> The Kinetic Theory of Gases <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La teoría cinética de los gases <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Molecular Model of an Ideal Gas</span><span><a>Gas in a Box</a></span>":
+  "<span>{#}:{#}</span><span>Modelo molecular de un gas ideal</span><span><a>Gas en una caja</a></span>",
+"<span>{#}:{#}</span><span>Pressure, Temperature, and RMS Speed</span><span><a>Gas in a Box</a></span>":
+  "<span>{#}:{#}</span><span>Presión, temperatura y rapidez rms</span><span><a>Gas en una caja</a></span>",
+"<span>{#}:{#}</span><span>Heat Capacity and Equipartition of Energy</span>":
+  "<span>{#}:{#}</span><span>Capacidad calorífica y equipartición de la energía</span>",
+"<a>Gas in a Box</a> · <a>Heat Capacities of Gases</a>":
+  "<a>Gas en una caja</a> · <a>Capacidades caloríficas de los gases</a>",
+"<span>{#}:{#}</span><span>Distribution of Molecular Speeds</span><span><a>Gas in a Box</a></span>":
+  "<span>{#}:{#}</span><span>Distribución de las rapideces moleculares</span><span><a>Gas en una caja</a></span>",
+"<span>Chapter {#}</span> The First Law of Thermodynamics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La primera ley de la termodinámica <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Thermodynamic Systems</span><span><a>Heat Engine Cycles</a></span>":
+  "<span>{#}:{#}</span><span>Sistemas termodinámicos</span><span><a>Ciclos de máquinas térmicas</a></span>",
+"<span>{#}:{#}</span><span>Work, Heat, and Internal Energy</span><span><a>Heat Engine Cycles</a></span>":
+  "<span>{#}:{#}</span><span>Trabajo, calor y energía interna</span><span><a>Ciclos de máquinas térmicas</a></span>",
+"<span>{#}:{#}</span><span>First Law of Thermodynamics</span><span><a>Heat Engine Cycles</a></span>":
+  "<span>{#}:{#}</span><span>Primera ley de la termodinámica</span><span><a>Ciclos de máquinas térmicas</a></span>",
+"<span>{#}:{#}</span><span>Thermodynamic Processes</span><span><a>Heat Engine Cycles</a></span>":
+  "<span>{#}:{#}</span><span>Procesos termodinámicos</span><span><a>Ciclos de máquinas térmicas</a></span>",
+"<span>{#}:{#}</span><span>Heat Capacities of an Ideal Gas</span><span><a>Heat Capacities of Gases</a></span>":
+  "<span>{#}:{#}</span><span>Capacidades caloríficas de un gas ideal</span><span><a>Capacidades caloríficas de los gases</a></span>",
+"<span>{#}:{#}</span><span>Adiabatic Processes for an Ideal Gas</span>":
+  "<span>{#}:{#}</span><span>Procesos adiabáticos de un gas ideal</span>",
+"<a>Heat Engine Cycles</a> · <a>Heat Capacities of Gases</a>":
+  "<a>Ciclos de máquinas térmicas</a> · <a>Capacidades caloríficas de los gases</a>",
+"<span>Chapter {#}</span> The Second Law of Thermodynamics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La segunda ley de la termodinámica <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Reversible and Irreversible Processes</span><span><a>Entropy and the Second Law</a></span>":
+  "<span>{#}:{#}</span><span>Procesos reversibles e irreversibles</span><span><a>Entropía y la segunda ley</a></span>",
+"<span>{#}:{#}</span><span>Heat Engines</span>":
+  "<span>{#}:{#}</span><span>Máquinas térmicas</span>",
+"<a>Heat Engine Cycles</a> · <a>Entropy and the Second Law</a>":
+  "<a>Ciclos de máquinas térmicas</a> · <a>Entropía y la segunda ley</a>",
+"<span>{#}:{#}</span><span>Refrigerators and Heat Pumps</span>":
+  "<span>{#}:{#}</span><span>Refrigeradores y bombas de calor</span>",
+"<span>{#}:{#}</span><span>Statements of the Second Law of Thermodynamics</span>":
+  "<span>{#}:{#}</span><span>Enunciados de la segunda ley de la termodinámica</span>",
+"<a>Entropy and the Second Law</a> · <a>Heat Engine Cycles</a>":
+  "<a>Entropía y la segunda ley</a> · <a>Ciclos de máquinas térmicas</a>",
+"<span>{#}:{#}</span><span>The Carnot Cycle</span>":
+  "<span>{#}:{#}</span><span>El ciclo de Carnot</span>",
+"<span>{#}:{#}</span><span>Entropy</span>":
+  "<span>{#}:{#}</span><span>Entropía</span>",
+"<span>{#}:{#}</span><span>Entropy on a Microscopic Scale</span>":
+  "<span>{#}:{#}</span><span>La entropía a escala microscópica</span>",
+"<a>Entropy and the Second Law</a> · <a>Galton Board</a>":
+  "<a>Entropía y la segunda ley</a> · <a>Tablero de Galton</a>",
+"<span>Chapter {#}</span> Electric Charges and Fields <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Cargas y campos eléctricos <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Electric Charge</span>":
+  "<span>{#}:{#}</span><span>Carga eléctrica</span>",
+"<a>Charging by Induction</a> · <a>Millikan Oil Drop</a>":
+  "<a>Carga por inducción</a> · <a>Gota de aceite de Millikan</a>",
+"<span>{#}:{#}</span><span>Conductors, Insulators, and Charging by Induction</span><span><a>Charging by Induction</a></span>":
+  "<span>{#}:{#}</span><span>Conductores, aislantes y carga por inducción</span><span><a>Carga por inducción</a></span>",
+"<span>{#}:{#}</span><span>Coulomb's Law</span>":
+  "<span>{#}:{#}</span><span>Ley de Coulomb</span>",
+"<a>Coulomb Sandbox</a> · <a>Inverse Square Force Lab</a>":
+  "<a>Arenero de Coulomb</a> · <a>Laboratorio de fuerza de inverso del cuadrado</a>",
+"<span>{#}:{#}</span><span>Electric Field</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Campo eléctrico</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Calculating Electric Fields of Charge Distributions</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Cálculo de campos eléctricos de distribuciones de carga</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Electric Field Lines</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Líneas de campo eléctrico</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Electric Dipoles</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Dipolos eléctricos</span><span><a>Arenero de Coulomb</a></span>",
+"<span>Chapter {#}</span> Gauss's Law <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Ley de Gauss <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Electric Flux</span><span><a>Gauss's Law</a></span>":
+  "<span>{#}:{#}</span><span>Flujo eléctrico</span><span><a>Ley de Gauss</a></span>",
+"<span>{#}:{#}</span><span>Explaining Gauss’s Law</span><span><a>Gauss's Law</a></span>":
+  "<span>{#}:{#}</span><span>Explicación de la ley de Gauss</span><span><a>Ley de Gauss</a></span>",
+"<span>{#}:{#}</span><span>Applying Gauss’s Law</span><span><a>Gauss's Law</a></span>":
+  "<span>{#}:{#}</span><span>Aplicación de la ley de Gauss</span><span><a>Ley de Gauss</a></span>",
+"<span>{#}:{#}</span><span>Conductors in Electrostatic Equilibrium</span>":
+  "<span>{#}:{#}</span><span>Conductores en equilibrio electrostático</span>",
+"<a>Gauss's Law</a> · <a>Charging by Induction</a>":
+  "<a>Ley de Gauss</a> · <a>Carga por inducción</a>",
+"<span>Chapter {#}</span> Electric Potential <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Potencial eléctrico <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Electric Potential Energy</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Energía potencial eléctrica</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Electric Potential and Potential Difference</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Potencial eléctrico y diferencia de potencial</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Calculations of Electric Potential</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Cálculos del potencial eléctrico</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Determining Field from Potential</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Determinación del campo a partir del potencial</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Equipotential Surfaces and Conductors</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Superficies equipotenciales y conductores</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Applications of Electrostatics</span><span><a>Electrostatics at Work</a></span>":
+  "<span>{#}:{#}</span><span>Aplicaciones de la electrostática</span><span><a>Electrostática en acción</a></span>",
+"<span>Chapter {#}</span> Capacitance <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Capacitancia <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Capacitors and Capacitance</span><span><a>Capacitors and Dielectrics</a></span>":
+  "<span>{#}:{#}</span><span>Capacitores y capacitancia</span><span><a>Capacitores y dieléctricos</a></span>",
+"<span>{#}:{#}</span><span>Capacitors in Series and in Parallel</span><span><a>Capacitors and Dielectrics</a></span>":
+  "<span>{#}:{#}</span><span>Capacitores en serie y en paralelo</span><span><a>Capacitores y dieléctricos</a></span>",
+"<span>{#}:{#}</span><span>Energy Stored in a Capacitor</span><span><a>Capacitors and Dielectrics</a></span>":
+  "<span>{#}:{#}</span><span>Energía almacenada en un capacitor</span><span><a>Capacitores y dieléctricos</a></span>",
+"<span>{#}:{#}</span><span>Capacitor with a Dielectric</span><span><a>Capacitors and Dielectrics</a></span>":
+  "<span>{#}:{#}</span><span>Capacitor con un dieléctrico</span><span><a>Capacitores y dieléctricos</a></span>",
+"<span>{#}:{#}</span><span>Molecular Model of a Dielectric</span>":
+  "<span>{#}:{#}</span><span>Modelo molecular de un dieléctrico</span>",
+"<a>Capacitors and Dielectrics</a> · <a>Charging by Induction</a>":
+  "<a>Capacitores y dieléctricos</a> · <a>Carga por inducción</a>",
+"<span>Chapter {#}</span> Current and Resistance <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Corriente y resistencia <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Electrical Current</span>":
+  "<span>{#}:{#}</span><span>Corriente eléctrica</span>",
+"<a>Circuits</a> · <a>Resistivity of a Wire</a>":
+  "<a>Circuitos</a> · <a>Resistividad de un alambre</a>",
+"<span>{#}:{#}</span><span>Model of Conduction in Metals</span><span><a>Resistivity of a Wire</a></span>":
+  "<span>{#}:{#}</span><span>Modelo de la conducción en metales</span><span><a>Resistividad de un alambre</a></span>",
+"<span>{#}:{#}</span><span>Resistivity and Resistance</span><span><a>Resistivity of a Wire</a></span>":
+  "<span>{#}:{#}</span><span>Resistividad y resistencia</span><span><a>Resistividad de un alambre</a></span>",
+"<span>{#}:{#}</span><span>Ohm's Law</span>":
+  "<span>{#}:{#}</span><span>Ley de Ohm</span>",
+"<span>{#}:{#}</span><span>Electrical Energy and Power</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Energía y potencia eléctricas</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Superconductors</span><span><a>Resistivity of a Wire</a></span>":
+  "<span>{#}:{#}</span><span>Superconductores</span><span><a>Resistividad de un alambre</a></span>",
+"<span>Chapter {#}</span> Direct-Current Circuits <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Circuitos de corriente directa <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Electromotive Force</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Fuerza electromotriz</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Resistors in Series and Parallel</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Resistores en serie y en paralelo</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Kirchhoff's Rules</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Reglas de Kirchhoff</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Electrical Measuring Instruments</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Instrumentos de medición eléctrica</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>RC Circuits</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Circuitos RC</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Household Wiring and Electrical Safety</span><span><a>Household Wiring and Electrical Safety</a></span>":
+  "<span>{#}:{#}</span><span>Instalación eléctrica doméstica y seguridad eléctrica</span><span><a>Instalación eléctrica doméstica y seguridad eléctrica</a></span>",
+"<span>Chapter {#}</span> Magnetic Forces and Fields <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Fuerzas y campos magnéticos <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Magnetism and Its Historical Discoveries</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>El magnetismo y sus descubrimientos históricos</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Magnetic Fields and Lines</span>":
+  "<span>{#}:{#}</span><span>Campos y líneas magnéticas</span>",
+"<a>Charges in Magnetic Fields</a> · <a>Magnetic Fields of Currents</a>":
+  "<a>Cargas en campos magnéticos</a> · <a>Campos magnéticos de corrientes</a>",
+"<span>{#}:{#}</span><span>Motion of a Charged Particle in a Magnetic Field</span>":
+  "<span>{#}:{#}</span><span>Movimiento de una partícula cargada en un campo magnético</span>",
+"<a>Charges in Magnetic Fields</a> · <a>e/m of the Electron</a>":
+  "<a>Cargas en campos magnéticos</a> · <a>e/m del electrón</a>",
+"<span>{#}:{#}</span><span>Magnetic Force on a Current-Carrying Conductor</span>":
+  "<span>{#}:{#}</span><span>Fuerza magnética sobre un conductor con corriente</span>",
+"<a>Magnetic Fields of Currents</a> · <a>Force on a Current</a>":
+  "<a>Campos magnéticos de corrientes</a> · <a>Fuerza sobre una corriente</a>",
+"<span>{#}:{#}</span><span>Force and Torque on a Current Loop</span>":
+  "<span>{#}:{#}</span><span>Fuerza y torca sobre una espira de corriente</span>",
+"<span>{#}:{#}</span><span>The Hall Effect</span><span><a>Charges in Magnetic Fields</a></span>":
+  "<span>{#}:{#}</span><span>El efecto Hall</span><span><a>Cargas en campos magnéticos</a></span>",
+"<span>{#}:{#}</span><span>Applications of Magnetic Forces and Fields</span>":
+  "<span>{#}:{#}</span><span>Aplicaciones de las fuerzas y los campos magnéticos</span>",
+"<a>Charges in Magnetic Fields</a> · <a>Force on a Current</a> · <a>e/m of the Electron</a>":
+  "<a>Cargas en campos magnéticos</a> · <a>Fuerza sobre una corriente</a> · <a>e/m del electrón</a>",
+"<span>Chapter {#}</span> Sources of Magnetic Fields <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Fuentes de campos magnéticos <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>The Biot-Savart Law</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>La ley de Biot-Savart</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Magnetic Field Due to a Thin Straight Wire</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>Campo magnético de un alambre recto y delgado</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Magnetic Force between Two Parallel Currents</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>Fuerza magnética entre dos corrientes paralelas</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Magnetic Field of a Current Loop</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>Campo magnético de una espira de corriente</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Ampère’s Law</span>":
+  "<span>{#}:{#}</span><span>Ley de Ampère</span>",
+"<a>Magnetic Fields of Currents</a> · <a>Displacement Current</a>":
+  "<a>Campos magnéticos de corrientes</a> · <a>Corriente de desplazamiento</a>",
+"<span>{#}:{#}</span><span>Solenoids and Toroids</span><span><a>Magnetic Fields of Currents</a></span>":
+  "<span>{#}:{#}</span><span>Solenoides y toroides</span><span><a>Campos magnéticos de corrientes</a></span>",
+"<span>{#}:{#}</span><span>Magnetism in Matter</span><span><a>Magnetism in Matter</a></span>":
+  "<span>{#}:{#}</span><span>Magnetismo en la materia</span><span><a>Magnetismo en la materia</a></span>",
+"<span>Chapter {#}</span> Electromagnetic Induction <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Inducción electromagnética <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Faraday’s Law</span>":
+  "<span>{#}:{#}</span><span>Ley de Faraday</span>",
+"<a>Faraday's and Lenz's Laws</a> · <a>Induction at Work</a>":
+  "<a>Leyes de Faraday y de Lenz</a> · <a>Inducción en acción</a>",
+"<span>{#}:{#}</span><span>Lenz's Law</span>":
+  "<span>{#}:{#}</span><span>Ley de Lenz</span>",
+"<span>{#}:{#}</span><span>Motional Emf</span><span><a>Faraday's and Lenz's Laws</a></span>":
+  "<span>{#}:{#}</span><span>Fem de movimiento</span><span><a>Leyes de Faraday y de Lenz</a></span>",
+"<span>{#}:{#}</span><span>Induced Electric Fields</span><span><a>Induced Electric Fields</a></span>":
+  "<span>{#}:{#}</span><span>Campos eléctricos inducidos</span><span><a>Campos eléctricos inducidos</a></span>",
+"<span>{#}:{#}</span><span>Eddy Currents</span><span><a>Eddy Currents: Magnet in a Pipe</a></span>":
+  "<span>{#}:{#}</span><span>Corrientes de Foucault</span><span><a>Corrientes de Foucault: imán en un tubo</a></span>",
+"<span>{#}:{#}</span><span>Electric Generators and Back Emf</span><span><a>Faraday's and Lenz's Laws</a></span>":
+  "<span>{#}:{#}</span><span>Generadores eléctricos y fuerza contraelectromotriz</span><span><a>Leyes de Faraday y de Lenz</a></span>",
+"<span>{#}:{#}</span><span>Applications of Electromagnetic Induction</span><span><a>Induction at Work</a></span>":
+  "<span>{#}:{#}</span><span>Aplicaciones de la inducción electromagnética</span><span><a>Inducción en acción</a></span>",
+"<span>Chapter {#}</span> Inductance <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Inductancia <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Mutual Inductance</span>":
+  "<span>{#}:{#}</span><span>Inductancia mutua</span>",
+"<a>Faraday's and Lenz's Laws</a> · <a>Transformers</a>":
+  "<a>Leyes de Faraday y de Lenz</a> · <a>Transformadores</a>",
+"<span>{#}:{#}</span><span>Self-Inductance and Inductors</span>":
+  "<span>{#}:{#}</span><span>Autoinductancia e inductores</span>",
+"<a>Circuits</a> · <a>Faraday's and Lenz's Laws</a>":
+  "<a>Circuitos</a> · <a>Leyes de Faraday y de Lenz</a>",
+"<span>{#}:{#}</span><span>Energy in a Magnetic Field</span>":
+  "<span>{#}:{#}</span><span>Energía en un campo magnético</span>",
+"<span>{#}:{#}</span><span>RL Circuits</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Circuitos RL</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Oscillations in an LC Circuit</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Oscilaciones en un circuito LC</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>RLC Series Circuits</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Circuitos RLC en serie</span><span><a>Circuitos</a></span>",
+"<span>Chapter {#}</span> Alternating-Current Circuits <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Circuitos de corriente alterna <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>AC Sources</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Fuentes de CA</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Simple AC Circuits</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Circuitos simples de CA</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>RLC Series Circuits with AC</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Circuitos RLC en serie con CA</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Power in an AC Circuit</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Potencia en un circuito de CA</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Resonance in an AC Circuit</span><span><a>Circuits</a></span>":
+  "<span>{#}:{#}</span><span>Resonancia en un circuito de CA</span><span><a>Circuitos</a></span>",
+"<span>{#}:{#}</span><span>Transformers</span><span><a>Transformers</a></span>":
+  "<span>{#}:{#}</span><span>Transformadores</span><span><a>Transformadores</a></span>",
 "<span>Chapter {#}</span> Electromagnetic Waves <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Ondas electromagnéticas <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Maxwell’s Equations and Electromagnetic Waves</span>":
+  "<span>{#}:{#}</span><span>Ecuaciones de Maxwell y ondas electromagnéticas</span>",
+"<a>Electromagnetic Waves</a> · <a>Displacement Current</a>":
+  "<a>Ondas electromagnéticas</a> · <a>Corriente de desplazamiento</a>",
+"<span>{#}:{#}</span><span>Plane Electromagnetic Waves</span><span><a>Electromagnetic Waves</a></span>":
+  "<span>{#}:{#}</span><span>Ondas electromagnéticas planas</span><span><a>Ondas electromagnéticas</a></span>",
+"<span>{#}:{#}</span><span>Energy Carried by Electromagnetic Waves</span><span><a>Electromagnetic Waves</a></span>":
+  "<span>{#}:{#}</span><span>Energía transportada por las ondas electromagnéticas</span><span><a>Ondas electromagnéticas</a></span>",
+"<span>{#}:{#}</span><span>Momentum and Radiation Pressure</span><span><a>Electromagnetic Waves</a></span>":
+  "<span>{#}:{#}</span><span>Momento y presión de radiación</span><span><a>Ondas electromagnéticas</a></span>",
+"<span>{#}:{#}</span><span>The Electromagnetic Spectrum</span><span><a>Electromagnetic Waves</a></span>":
+  "<span>{#}:{#}</span><span>El espectro electromagnético</span><span><a>Ondas electromagnéticas</a></span>",
+"Volume {#}: Optics and modern physics":
+  "Volumen {#}: Óptica y física moderna",
+"<span>Chapter {#}</span> The Nature of Light <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La naturaleza de la luz <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>The Propagation of Light</span>":
+  "<span>{#}:{#}</span><span>La propagación de la luz</span>",
+"<a>Huygens's Principle</a> · <a>Speed of Light</a>":
+  "<a>Principio de Huygens</a> · <a>Rapidez de la luz</a>",
+"<span>{#}:{#}</span><span>The Law of Reflection</span>":
+  "<span>{#}:{#}</span><span>La ley de la reflexión</span>",
+"<a>Optics Bench</a> · <a>Huygens's Principle</a>":
+  "<a>Banco óptico</a> · <a>Principio de Huygens</a>",
+"<span>{#}:{#}</span><span>Refraction</span>":
+  "<span>{#}:{#}</span><span>Refracción</span>",
+"<span>{#}:{#}</span><span>Total Internal Reflection</span>":
+  "<span>{#}:{#}</span><span>Reflexión total interna</span>",
+"<span>{#}:{#}</span><span>Dispersion</span>":
+  "<span>{#}:{#}</span><span>Dispersión</span>",
+"<a>Optics Bench</a> · <a>Rainbows</a>":
+  "<a>Banco óptico</a> · <a>Arcoíris</a>",
+"<span>{#}:{#}</span><span>Huygens’s Principle</span>":
+  "<span>{#}:{#}</span><span>Principio de Huygens</span>",
+"<a>Huygens's Principle</a> · <a>Ripple Tank</a>":
+  "<a>Principio de Huygens</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Polarization</span><span><a>Polarization</a></span>":
+  "<span>{#}:{#}</span><span>Polarización</span><span><a>Polarización</a></span>",
+"<span>Chapter {#}</span> Geometric Optics and Image Formation <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Óptica geométrica y formación de imágenes <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Images Formed by Plane Mirrors</span><span><a>Optics Bench</a></span>":
+  "<span>{#}:{#}</span><span>Imágenes formadas por espejos planos</span><span><a>Banco óptico</a></span>",
+"<span>{#}:{#}</span><span>Spherical Mirrors</span><span><a>Optics Bench</a></span>":
+  "<span>{#}:{#}</span><span>Espejos esféricos</span><span><a>Banco óptico</a></span>",
+"<span>{#}:{#}</span><span>Images Formed by Refraction</span><span><a>Optics Bench</a></span>":
+  "<span>{#}:{#}</span><span>Imágenes formadas por refracción</span><span><a>Banco óptico</a></span>",
+"<span>{#}:{#}</span><span>Thin Lenses</span>":
+  "<span>{#}:{#}</span><span>Lentes delgadas</span>",
+"<a>Optics Bench</a> · <a>The Eye</a> · <a>Build a Microscope or Telescope</a>":
+  "<a>Banco óptico</a> · <a>El ojo</a> · <a>Construye un microscopio o un telescopio</a>",
+"<span>{#}:{#}</span><span>The Eye</span>":
+  "<span>{#}:{#}</span><span>El ojo</span>",
+"<a>The Eye</a> · <a>Color Vision</a>":
+  "<a>El ojo</a> · <a>Visión del color</a>",
+"<span>{#}:{#}</span><span>The Camera</span>":
+  "<span>{#}:{#}</span><span>La cámara</span>",
+"<a>The Eye</a> · <a>Optics Bench</a>":
+  "<a>El ojo</a> · <a>Banco óptico</a>",
+"<span>{#}:{#}</span><span>The Simple Magnifier</span>":
+  "<span>{#}:{#}</span><span>La lupa simple</span>",
+"<a>Optics Bench</a> · <a>Build a Microscope or Telescope</a>":
+  "<a>Banco óptico</a> · <a>Construye un microscopio o un telescopio</a>",
+"<span>{#}:{#}</span><span>Microscopes and Telescopes</span>":
+  "<span>{#}:{#}</span><span>Microscopios y telescopios</span>",
+"<span>Chapter {#}</span> Interference <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Interferencia <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Young's Double-Slit Interference</span>":
+  "<span>{#}:{#}</span><span>Interferencia de doble rendija de Young</span>",
+"<a>Double Slit, One Particle at a Time</a> · <a>Ripple Tank</a>":
+  "<a>Doble rendija, una partícula a la vez</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Mathematics of Interference</span>":
+  "<span>{#}:{#}</span><span>Matemáticas de la interferencia</span>",
+"<a>Double Slit, One Particle at a Time</a> · <a>Diffraction Grating</a> · <a>Ripple Tank</a>":
+  "<a>Doble rendija, una partícula a la vez</a> · <a>Rejilla de difracción</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Multiple-Slit Interference</span><span><a>Diffraction Grating</a></span>":
+  "<span>{#}:{#}</span><span>Interferencia de rendijas múltiples</span><span><a>Rejilla de difracción</a></span>",
+"<span>{#}:{#}</span><span>Interference in Thin Films</span><span><a>Thin Film Interference</a></span>":
+  "<span>{#}:{#}</span><span>Interferencia en películas delgadas</span><span><a>Interferencia en películas delgadas</a></span>",
+"<span>{#}:{#}</span><span>The Michelson Interferometer</span><span><a>Michelson Interferometer</a></span>":
+  "<span>{#}:{#}</span><span>El interferómetro de Michelson</span><span><a>Interferómetro de Michelson</a></span>",
+"<span>Chapter {#}</span> Diffraction <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Difracción <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Single-Slit Diffraction</span>":
+  "<span>{#}:{#}</span><span>Difracción de una sola rendija</span>",
+"<a>Diffraction Grating</a> · <a>Double Slit, One Particle at a Time</a> · <a>Ripple Tank</a>":
+  "<a>Rejilla de difracción</a> · <a>Doble rendija, una partícula a la vez</a> · <a>Tanque de ondas</a>",
+"<span>{#}:{#}</span><span>Intensity in Single-Slit Diffraction</span><span><a>Diffraction Grating</a></span>":
+  "<span>{#}:{#}</span><span>Intensidad en la difracción de una sola rendija</span><span><a>Rejilla de difracción</a></span>",
+"<span>{#}:{#}</span><span>Double-Slit Diffraction</span>":
+  "<span>{#}:{#}</span><span>Difracción de doble rendija</span>",
+"<a>Double Slit, One Particle at a Time</a> · <a>Diffraction Grating</a>":
+  "<a>Doble rendija, una partícula a la vez</a> · <a>Rejilla de difracción</a>",
+"<span>{#}:{#}</span><span>Diffraction Gratings</span><span><a>Diffraction Grating</a></span>":
+  "<span>{#}:{#}</span><span>Rejillas de difracción</span><span><a>Rejilla de difracción</a></span>",
 "<span>{#}:{#}</span><span>Circular Apertures and Resolution</span>":
   "<span>{#}:{#}</span><span>Aberturas circulares y resolución</span>",
+"<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a>":
+  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>",
+"<span>{#}:{#}</span><span>X-Ray Diffraction</span><span><a>Electron Diffraction</a></span>":
+  "<span>{#}:{#}</span><span>Difracción de rayos X</span><span><a>Difracción de electrones</a></span>",
+"<span>{#}:{#}</span><span>Holography</span><span><a>Holography</a></span>":
+  "<span>{#}:{#}</span><span>Holografía</span><span><a>Holografía</a></span>",
+"<span>Chapter {#}</span> Relativity <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Relatividad <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Invariance of Physical Laws</span>":
+  "<span>{#}:{#}</span><span>Invariancia de las leyes físicas</span>",
+"<a>Spacetime Diagrams</a> · <a>Speed of Light</a>":
+  "<a>Diagramas de espacio-tiempo</a> · <a>Rapidez de la luz</a>",
+"<span>{#}:{#}</span><span>Relativity of Simultaneity</span><span><a>Spacetime Diagrams</a></span>":
+  "<span>{#}:{#}</span><span>Relatividad de la simultaneidad</span><span><a>Diagramas de espacio-tiempo</a></span>",
+"<span>{#}:{#}</span><span>Time Dilation</span>":
+  "<span>{#}:{#}</span><span>Dilatación del tiempo</span>",
+"<a>Spacetime Diagrams</a> · <a>GPS Clocks and Relativity</a>":
+  "<a>Diagramas de espacio-tiempo</a> · <a>Relojes GPS y relatividad</a>",
+"<span>{#}:{#}</span><span>Length Contraction</span>":
+  "<span>{#}:{#}</span><span>Contracción de la longitud</span>",
+"<a>Spacetime Diagrams</a> · <a>Magnetism from Relativity</a>":
+  "<a>Diagramas de espacio-tiempo</a> · <a>Magnetismo a partir de la relatividad</a>",
+"<span>{#}:{#}</span><span>The Lorentz Transformation</span>":
+  "<span>{#}:{#}</span><span>La transformación de Lorentz</span>",
+"<span>{#}:{#}</span><span>Relativistic Velocity Transformation</span><span><a>Velocity, Momentum and Energy Near c</a></span>":
+  "<span>{#}:{#}</span><span>Transformación relativista de la velocidad</span><span><a>Velocidad, momento y energía cerca de c</a></span>",
+"<span>{#}:{#}</span><span>Doppler Effect for Light</span><span><a>Doppler Effect and Shock Waves</a></span>":
+  "<span>{#}:{#}</span><span>Efecto Doppler de la luz</span><span><a>Efecto Doppler y ondas de choque</a></span>",
+"<span>{#}:{#}</span><span>Relativistic Momentum</span>":
+  "<span>{#}:{#}</span><span>Momento relativista</span>",
+"<a>Velocity, Momentum and Energy Near c</a> · <a>Compton Scattering</a>":
+  "<a>Velocidad, momento y energía cerca de c</a> · <a>Dispersión Compton</a>",
+"<span>{#}:{#}</span><span>Relativistic Energy</span>":
+  "<span>{#}:{#}</span><span>Energía relativista</span>",
+"<a>Velocity, Momentum and Energy Near c</a> · <a>Compton Scattering</a> · <a>Nuclear Binding Energy</a>":
+  "<a>Velocidad, momento y energía cerca de c</a> · <a>Dispersión Compton</a> · <a>Energía de enlace nuclear</a>",
+"<span>Chapter {#}</span> Photons and Matter Waves <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Fotones y ondas de materia <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Blackbody Radiation</span><span><a>Blackbody Radiation</a></span>":
+  "<span>{#}:{#}</span><span>Radiación de cuerpo negro</span><span><a>Radiación de cuerpo negro</a></span>",
+"<span>{#}:{#}</span><span>Photoelectric Effect</span><span><a>Photoelectric Effect</a></span>":
+  "<span>{#}:{#}</span><span>Efecto fotoeléctrico</span><span><a>Efecto fotoeléctrico</a></span>",
+"<span>{#}:{#}</span><span>The Compton Effect</span><span><a>Compton Scattering</a></span>":
+  "<span>{#}:{#}</span><span>El efecto Compton</span><span><a>Dispersión Compton</a></span>",
+"<span>{#}:{#}</span><span>Bohr’s Model of the Hydrogen Atom</span>":
+  "<span>{#}:{#}</span><span>Modelo de Bohr del átomo de hidrógeno</span>",
+"<a>Spectra Explorer</a> · <a>Franck–Hertz Experiment</a> · <a>Rutherford Scattering</a>":
+  "<a>Explorador de espectros</a> · <a>Experimento de Franck–Hertz</a> · <a>Dispersión de Rutherford</a>",
+"<span>{#}:{#}</span><span>De Broglie’s Matter Waves</span>":
+  "<span>{#}:{#}</span><span>Las ondas de materia de De Broglie</span>",
+"<a>Electron Diffraction</a> · <a>Double Slit, One Particle at a Time</a>":
+  "<a>Difracción de electrones</a> · <a>Doble rendija, una partícula a la vez</a>",
+"<span>{#}:{#}</span><span>Wave-Particle Duality</span><span><a>Double Slit, One Particle at a Time</a></span>":
+  "<span>{#}:{#}</span><span>Dualidad onda-partícula</span><span><a>Doble rendija, una partícula a la vez</a></span>",
+"<span>Chapter {#}</span> Quantum Mechanics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Mecánica cuántica <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Wave Functions</span>":
+  "<span>{#}:{#}</span><span>Funciones de onda</span>",
+"<a>Quantum Wave Packets</a> · <a>Hydrogen Orbitals</a> · <a>Quantum Coin Toss</a>":
+  "<a>Paquetes de onda cuánticos</a> · <a>Orbitales del hidrógeno</a> · <a>Volado cuántico</a>",
+"<span>{#}:{#}</span><span>The Heisenberg Uncertainty Principle</span><span><a>Quantum Wave Packets</a></span>":
+  "<span>{#}:{#}</span><span>El principio de incertidumbre de Heisenberg</span><span><a>Paquetes de onda cuánticos</a></span>",
+"<span>{#}:{#}</span><span>The Schrӧdinger Equation</span><span><a>Quantum Wave Packets</a></span>":
+  "<span>{#}:{#}</span><span>La ecuación de Schrӧdinger</span><span><a>Paquetes de onda cuánticos</a></span>",
+"<span>{#}:{#}</span><span>The Quantum Particle in a Box</span><span><a>Quantum Wave Packets</a></span>":
+  "<span>{#}:{#}</span><span>La partícula cuántica en una caja</span><span><a>Paquetes de onda cuánticos</a></span>",
+"<span>{#}:{#}</span><span>The Quantum Harmonic Oscillator</span><span><a>Quantum Wave Packets</a></span>":
+  "<span>{#}:{#}</span><span>El oscilador armónico cuántico</span><span><a>Paquetes de onda cuánticos</a></span>",
+"<span>{#}:{#}</span><span>The Quantum Tunneling of Particles through Potential Barriers</span>":
+  "<span>{#}:{#}</span><span>El efecto túnel de partículas a través de barreras de potencial</span>",
+"<a>Quantum Wave Packets</a> · <a>Radioactive Decay</a>":
+  "<a>Paquetes de onda cuánticos</a> · <a>Decaimiento radiactivo</a>",
+"<span>Chapter {#}</span> Atomic Structure <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Estructura atómica <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>The Hydrogen Atom</span>":
+  "<span>{#}:{#}</span><span>El átomo de hidrógeno</span>",
+"<a>Hydrogen Orbitals</a> · <a>Spectra Explorer</a>":
+  "<a>Orbitales del hidrógeno</a> · <a>Explorador de espectros</a>",
+"<span>{#}:{#}</span><span>Orbital Magnetic Dipole Moment of the Electron</span><span><a>Atoms in a Magnetic Field</a></span>":
+  "<span>{#}:{#}</span><span>Momento dipolar magnético orbital del electrón</span><span><a>Átomos en un campo magnético</a></span>",
+"<span>{#}:{#}</span><span>Electron Spin</span>":
+  "<span>{#}:{#}</span><span>Espín del electrón</span>",
+"<a>Atoms in a Magnetic Field</a> · <a>Spin Resonance</a> · <a>Quantum Coin Toss</a>":
+  "<a>Átomos en un campo magnético</a> · <a>Resonancia de espín</a> · <a>Volado cuántico</a>",
+"<span>{#}:{#}</span><span>The Exclusion Principle and the Periodic Table</span><span><a>Shells, the Periodic Table and X-Rays</a></span>":
+  "<span>{#}:{#}</span><span>El principio de exclusión y la tabla periódica</span><span><a>Capas, la tabla periódica y rayos X</a></span>",
+"<span>{#}:{#}</span><span>Atomic Spectra and X-rays</span>":
+  "<span>{#}:{#}</span><span>Espectros atómicos y rayos X</span>",
+"<a>Shells, the Periodic Table and X-Rays</a> · <a>Spectra Explorer</a> · <a>Electron Diffraction</a>":
+  "<a>Capas, la tabla periódica y rayos X</a> · <a>Explorador de espectros</a> · <a>Difracción de electrones</a>",
+"<span>{#}:{#}</span><span>Lasers</span><span><a>Lasers and Stimulated Emission</a></span>":
+  "<span>{#}:{#}</span><span>Láseres</span><span><a>Láseres y emisión estimulada</a></span>",
+"<span>Chapter {#}</span> Condensed Matter Physics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Física de la materia condensada <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Types of Molecular Bonds</span><span><a>Molecules: Bonds and Spectra</a></span>":
+  "<span>{#}:{#}</span><span>Tipos de enlaces moleculares</span><span><a>Moléculas: enlaces y espectros</a></span>",
+"<span>{#}:{#}</span><span>Molecular Spectra</span><span><a>Molecules: Bonds and Spectra</a></span>":
+  "<span>{#}:{#}</span><span>Espectros moleculares</span><span><a>Moléculas: enlaces y espectros</a></span>",
+"<span>{#}:{#}</span><span>Bonding in Crystalline Solids</span><span><a>Crystals, Bands and Semiconductors</a></span>":
+  "<span>{#}:{#}</span><span>Enlace en sólidos cristalinos</span><span><a>Cristales, bandas y semiconductores</a></span>",
+"<span>{#}:{#}</span><span>Free Electron Model of Metals</span><span><a>Resistivity of a Wire</a></span>":
+  "<span>{#}:{#}</span><span>Modelo del electrón libre de los metales</span><span><a>Resistividad de un alambre</a></span>",
+"<span>{#}:{#}</span><span>Band Theory of Solids</span><span><a>Crystals, Bands and Semiconductors</a></span>":
+  "<span>{#}:{#}</span><span>Teoría de bandas de los sólidos</span><span><a>Cristales, bandas y semiconductores</a></span>",
+"<span>{#}:{#}</span><span>Semiconductors and Doping</span><span><a>Crystals, Bands and Semiconductors</a></span>":
+  "<span>{#}:{#}</span><span>Semiconductores y dopaje</span><span><a>Cristales, bandas y semiconductores</a></span>",
+"<span>{#}:{#}</span><span>Semiconductor Devices</span>":
+  "<span>{#}:{#}</span><span>Dispositivos semiconductores</span>",
+"<a>Crystals, Bands and Semiconductors</a> · <a>Circuits</a>":
+  "<a>Cristales, bandas y semiconductores</a> · <a>Circuitos</a>",
+"<span>{#}:{#}</span><span>Superconductivity</span>":
+  "<span>{#}:{#}</span><span>Superconductividad</span>",
+"<a>Resistivity of a Wire</a> · <a>Superconductors and the Meissner Effect</a>":
+  "<a>Resistividad de un alambre</a> · <a>Superconductores y el efecto Meissner</a>",
+"<span>Chapter {#}</span> Nuclear Physics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Física nuclear <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Properties of Nuclei</span>":
+  "<span>{#}:{#}</span><span>Propiedades de los núcleos</span>",
+"<a>Nuclear Binding Energy</a> · <a>Rutherford Scattering</a>":
+  "<a>Energía de enlace nuclear</a> · <a>Dispersión de Rutherford</a>",
+"<span>{#}:{#}</span><span>Nuclear Binding Energy</span><span><a>Nuclear Binding Energy</a></span>":
+  "<span>{#}:{#}</span><span>Energía de enlace nuclear</span><span><a>Energía de enlace nuclear</a></span>",
 "<span>{#}:{#}</span><span>Radioactive Decay</span>":
   "<span>{#}:{#}</span><span>Decaimiento radiactivo</span>",
+"<a>Radioactive Decay</a> · <a>Gamma Spectroscopy</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Espectroscopía gamma</a>",
+"<span>{#}:{#}</span><span>Nuclear Reactions</span>":
+  "<span>{#}:{#}</span><span>Reacciones nucleares</span>",
+"<a>Nuclear Reactions, Fission and Fusion</a> · <a>Radioactive Decay</a>":
+  "<a>Reacciones nucleares, fisión y fusión</a> · <a>Decaimiento radiactivo</a>",
+"<span>{#}:{#}</span><span>Fission</span>":
+  "<span>{#}:{#}</span><span>Fisión</span>",
+"<a>Nuclear Binding Energy</a> · <a>Sources of Energy</a> · <a>Nuclear Reactions, Fission and Fusion</a>":
+  "<a>Energía de enlace nuclear</a> · <a>Fuentes de energía</a> · <a>Reacciones nucleares, fisión y fusión</a>",
+"<span>{#}:{#}</span><span>Nuclear Fusion</span>":
+  "<span>{#}:{#}</span><span>Fusión nuclear</span>",
+"<a>Nuclear Binding Energy</a> · <a>Star Slice</a> · <a>Nuclear Reactions, Fission and Fusion</a>":
+  "<a>Energía de enlace nuclear</a> · <a>Corte de una estrella</a> · <a>Reacciones nucleares, fisión y fusión</a>",
+"<span>{#}:{#}</span><span>Medical Applications and Biological Effects of Nuclear Radiation</span>":
+  "<span>{#}:{#}</span><span>Aplicaciones médicas y efectos biológicos de la radiación nuclear</span>",
+"<a>Gamma Spectroscopy</a> · <a>Nuclear Reactions, Fission and Fusion</a>":
+  "<a>Espectroscopía gamma</a> · <a>Reacciones nucleares, fisión y fusión</a>",
+"<span>Chapter {#}</span> Particle Physics and Cosmology <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Física de partículas y cosmología <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Introduction to Particle Physics</span><span><a>Particles, Quarks and Conservation Laws</a></span>":
+  "<span>{#}:{#}</span><span>Introducción a la física de partículas</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
+"<span>{#}:{#}</span><span>Particle Conservation Laws</span><span><a>Particles, Quarks and Conservation Laws</a></span>":
+  "<span>{#}:{#}</span><span>Leyes de conservación de partículas</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
+"<span>{#}:{#}</span><span>Quarks</span><span><a>Particles, Quarks and Conservation Laws</a></span>":
+  "<span>{#}:{#}</span><span>Quarks</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
+"<span>{#}:{#}</span><span>Particle Accelerators and Detectors</span>":
+  "<span>{#}:{#}</span><span>Aceleradores y detectores de partículas</span>",
+"<a>Particles, Quarks and Conservation Laws</a> · <a>Charges in Magnetic Fields</a> · <a>Gamma Spectroscopy</a>":
+  "<a>Partículas, quarks y leyes de conservación</a> · <a>Cargas en campos magnéticos</a> · <a>Espectroscopía gamma</a>",
+"<span>{#}:{#}</span><span>The Standard Model</span><span><a>Particles, Quarks and Conservation Laws</a></span>":
+  "<span>{#}:{#}</span><span>El modelo estándar</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
+"<span>{#}:{#}</span><span>The Big Bang</span>":
+  "<span>{#}:{#}</span><span>El Big Bang</span>",
+"<a>Cosmic Distance Ladder</a> · <a>The Big Bang and the Early Universe</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>El Big Bang y el universo temprano</a>",
+"<span>{#}:{#}</span><span>Evolution of the Early Universe</span><span><a>The Big Bang and the Early Universe</a></span>":
+  "<span>{#}:{#}</span><span>Evolución del universo temprano</span><span><a>El Big Bang y el universo temprano</a></span>",
+"Teaching notes":
+  "Notas para la enseñanza",
+"One printable page per demo: what it shows, a way to run it in class, questions to ask, common misconceptions and the physics behind it. <a>Back to the demos</a>.":
+  "Una página imprimible por demo: qué muestra, una forma de usarla en clase, preguntas para hacer, ideas erróneas comunes y la física detrás. <a>Regresar a las demos</a>.",
+"<a>DNA in 3D</a>":
+  "<a>ADN en 3D</a>",
+"<a>Belousov–Zhabotinsky Reaction</a>":
+  "<a>Reacción de Belousov–Zhabotinsky</a>",
+"Waves and sound":
+  "Ondas y sonido",
 "Optics":
   "Óptica",
+"Atoms, molecules and solids · Virtual Physics Demos":
+  "Átomos, moléculas y sólidos · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Modern physics</b>":
+  "<a>Demos virtuales de física</a> · <b>Física moderna</b>",
+"Atoms, molecules and solids":
+  "Átomos, moléculas y sólidos",
+"Orbitals, spectra, spin, X-rays, lasers, bands and superconductors.":
+  "Orbitales, espectros, espín, rayos X, láseres, bandas y superconductores.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}</span>",
+"<a>Photons and quanta</a>":
+  "<a>Fotones y cuantos</a>",
+"<a>Atoms, molecules and solids</a>":
+  "<a>Átomos, moléculas y sólidos</a>",
+"<a>Nuclear and particle physics</a>":
+  "<a>Física nuclear y de partículas</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Modern physics are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física moderna están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Atoms, molecules and solids demos":
+  "Demos de átomos, moléculas y sólidos",
+"In <a>Modern Physics</a>":
+  "En <a>Física moderna</a>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"In <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Física moderna</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
+"Also under <a>Telescopes and light</a>":
+  "También en <a>Telescopios y luz</a>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<a>Open demo</a> <a>Worksheet {#}: The Hydrogen Spectrum and the Rydberg Constant</a> <a>Worksheet {#}: Fingerprints of the Elements (Astro {#})</a> <a>Worksheet {#}: Why Balmer Lines Peak in A Stars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El espectro del hidrógeno y la constante de Rydberg</a> <a>Hoja de trabajo {#}: Las huellas digitales de los elementos (Astro {#})</a> <a>Hoja de trabajo {#}: Por qué las líneas de Balmer alcanzan su máximo en las estrellas A</a> <a>Notas</a>",
+"In <a>Modern Physics</a> · <a>Medical Physics</a>":
+  "En <a>Física moderna</a> · <a>Física médica</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Notas</a>",
+"OpenStax <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<a>Back to all topics</a>":
+  "<a>Regresar a todos los temas</a>",
+"Charges and fields · Virtual Physics Demos":
+  "Cargas y campos · Demos virtuales de física",
+"Charges and fields":
+  "Cargas y campos",
+"Coulomb's law, field lines, Gauss's law, capacitors.":
+  "Ley de Coulomb, líneas de campo, ley de Gauss, capacitores.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#} · Vol {#} · Ch. {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#}–{#}</span>",
+"<a>Charges and fields</a>":
+  "<a>Cargas y campos</a>",
+"<a>Magnetism</a>":
+  "<a>Magnetismo</a>",
+"<a>Induction and EM waves</a>":
+  "<a>Inducción y ondas EM</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Electricity and magnetism are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Electricidad y magnetismo están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Charges and fields demos":
+  "Demos de cargas y campos",
+"In <a>Physics II</a>":
+  "En <a>Física II</a>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …",
+"In <a>Physics I</a> · <a>Physics II</a>":
+  "En <a>Física I</a> · <a>Física II</a>",
+"Also under <a>Gravitation and orbits</a>":
+  "También en <a>Gravitación y órbitas</a>",
+"Also under <a>Circuits</a>":
+  "También en <a>Circuitos</a>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"In <a>Physics II</a> · <a>Modern Physics</a>":
+  "En <a>Física II</a> · <a>Física moderna</a>",
+"Also under <a>Photons and quanta</a>":
+  "También en <a>Fotones y cuantos</a>",
+"Chemistry and biology · Virtual Physics Demos":
+  "Química y biología · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Medical physics and beyond</b>":
+  "<a>Demos virtuales de física</a> · <b>Física médica y más</b>",
+"Chemistry and biology":
+  "Química y biología",
+"An oscillating chemical reaction and the structure of DNA.":
+  "Una reacción química oscilante y la estructura del ADN.",
+"<a>Radiation in medicine</a>":
+  "<a>Radiación en medicina</a>",
+"<a>Chemistry and biology</a>":
+  "<a>Química y biología</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Medical physics and beyond are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física médica y más están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Chemistry and biology demos":
+  "Demos de química y biología",
+"A chemical clock: a stirred beaker oscillates on a limit cycle, an unstirred dish carries target and spiral waves, and a flow reactor goes through period doubling to chaos.":
+  "Un reloj químico: un vaso agitado oscila en un ciclo límite, una caja sin agitar lleva ondas de blanco y espirales, y un reactor de flujo pasa por duplicaciones de periodo hasta el caos.",
+"Build a DNA double helix atom by atom from any sequence or a random one: B and A forms, ball and stick, space filling or cartoon, hydrogen bonds, the two grooves, and a PDB export.":
+  "Construye una doble hélice de ADN átomo por átomo a partir de cualquier secuencia o de una al azar: formas B y A, barras y esferas, esferas compactas o caricatura, puentes de hidrógeno, los dos surcos y exportación a PDB.",
+"Circuits · Virtual Physics Demos":
+  "Circuitos · Demos virtuales de física",
+"Resistance, DC and RC circuits, household wiring, transformers.":
+  "Resistencia, circuitos de CD y RC, instalación eléctrica doméstica, transformadores.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#} · Vol. {#} · Cap. {#}</span>",
+"Circuits demos":
+  "Demos de circuitos",
+"Also under <a>Charges and fields</a>":
+  "También en <a>Cargas y campos</a>",
+"Also under <a>Induction and EM waves</a>":
+  "También en <a>Inducción y ondas EM</a>",
+"Energy and momentum · Virtual Physics Demos":
+  "Energía y momento · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Mechanics</b>":
+  "<a>Demos virtuales de física</a> · <b>Mecánica</b>",
+"Energy and momentum":
+  "Energía y momento",
+"Work, potential energy, collisions and rockets.":
+  "Trabajo, energía potencial, colisiones y cohetes.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}</span>",
+"<a>Forces and Newton's laws</a>":
+  "<a>Fuerzas y leyes de Newton</a>",
+"<a>Energy and momentum</a>":
+  "<a>Energía y momento</a>",
 "<a>Rotation</a>":
   "<a>Rotación</a>",
+"<a>Equilibrium and materials</a>":
+  "<a>Equilibrio y materiales</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mechanics are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Mecánica están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Energy and momentum demos":
+  "Demos de energía y momento",
+"In <a>Physics I</a>":
+  "En <a>Física I</a>",
+"OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
+  "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"In <a>Physics I</a> · <a>Modern Physics</a>":
+  "En <a>Física I</a> · <a>Física moderna</a>",
+"Equilibrium and materials · Virtual Physics Demos":
+  "Equilibrio y materiales · Demos virtuales de física",
+"Equilibrium and materials":
+  "Equilibrio y materiales",
+"Static equilibrium, stress and strain, hanging chains.":
+  "Equilibrio estático, esfuerzo y deformación, cadenas colgantes.",
+"<span>OpenStax Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}</span>",
+"Equilibrium and materials demos":
+  "Demos de equilibrio y materiales",
+"Fluids · Virtual Physics Demos":
+  "Fluidos · Demos virtuales de física",
+"Pressure, buoyancy, flow and viscosity.":
+  "Presión, flotación, flujo y viscosidad.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}, {#}</span>",
+"Fluids demos":
+  "Demos de fluidos",
+"In <a>Physics I</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Física I</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
+"Also under <a>Forces and Newton's laws</a>":
+  "También en <a>Fuerzas y leyes de Newton</a>",
+"Forces and Newton's laws · Virtual Physics Demos":
+  "Fuerzas y leyes de Newton · Demos virtuales de física",
+"Forces and Newton's laws":
+  "Fuerzas y leyes de Newton",
+"Free body diagrams, friction, apparent weight and drag.":
+  "Diagramas de cuerpo libre, fricción, peso aparente y arrastre.",
+"Forces and Newton's laws demos":
+  "Demos de fuerzas y leyes de Newton",
+"Also under <a>Kinematics</a>":
+  "También en <a>Cinemática</a>",
+"Also under <a>Fluids</a>":
+  "También en <a>Fluidos</a>",
+"In <a>Physics I</a> · <a>Astronomy</a>":
+  "En <a>Física I</a> · <a>Astronomía</a>",
+"Also under <a>The sky</a>":
+  "También en <a>El cielo</a>",
+"Galaxies and cosmology · Virtual Physics Demos":
+  "Galaxias y cosmología · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Astronomy</b>":
+  "<a>Demos virtuales de física</a> · <b>Astronomía</b>",
+"Rotation curves, the distance ladder and the early universe.":
+  "Curvas de rotación, la escalera de distancias y el universo temprano.",
+"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
+"<a>The sky</a>":
+  "<a>El cielo</a>",
+"<a>Planets and the solar system</a>":
+  "<a>Planetas y el sistema solar</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Astronomy are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Astronomía están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Galaxies and cosmology demos":
+  "Demos de galaxias y cosmología",
+"In <a>Astronomy</a>":
+  "En <a>Astronomía</a>",
+"In <a>Modern Physics</a> · <a>Astronomy</a> · <a>Astro {#}</a>":
+  "En <a>Física moderna</a> · <a>Astronomía</a> · <a>Astro {#}</a>",
+"Also under <a>Stars</a>":
+  "También en <a>Estrellas</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Measuring the Hubble Constant</a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Worksheet {#}: Distances from the Main Sequence</a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir la constante de Hubble</a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal</a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD</a> <a>Notas</a>",
+"In <a>Modern Physics</a> · <a>Astronomy</a>":
+  "En <a>Física moderna</a> · <a>Astronomía</a>",
+"In <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Astro {#}</a> · <a>Astronomía</a>",
+"Also under <a>Planets and the solar system</a>":
+  "También en <a>Planetas y el sistema solar</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Worksheet {#}: The Galactic Habitable Zone</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Hoja de trabajo {#}: La zona habitable galáctica</a> <a>Notas</a>",
+"Gravitation and orbits · Virtual Physics Demos":
+  "Gravitación y órbitas · Demos virtuales de física",
+"Newton's gravity, Kepler's laws, tides and orbital resonance.":
+  "La gravedad de Newton, las leyes de Kepler, las mareas y la resonancia orbital.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#} · Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
+"Gravitation and orbits demos":
+  "Demos de gravitación y órbitas",
+"In <a>Physics I</a> · <a>Astronomy</a> · <a>Astro {#}</a>":
+  "En <a>Física I</a> · <a>Astronomía</a> · <a>Astro {#}</a>",
+"In <a>Astronomy</a> · <a>Astro {#}</a>":
+  "En <a>Astronomía</a> · <a>Astro {#}</a>",
+"In <a>Physics I</a> · <a>Modern Physics</a> · <a>Astronomy</a>":
+  "En <a>Física I</a> · <a>Física moderna</a> · <a>Astronomía</a>",
+"Also under <a>Relativity</a>":
+  "También en <a>Relatividad</a>",
+"Heat and thermodynamics · Virtual Physics Demos":
+  "Calor y termodinámica · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Waves and heat</b>":
+  "<a>Demos virtuales de física</a> · <b>Ondas y calor</b>",
+"Heat and thermodynamics":
+  "Calor y termodinámica",
+"Temperature, gases, heat engines, entropy and radiation.":
+  "Temperatura, gases, máquinas térmicas, entropía y radiación.",
+"<a>Oscillations and waves</a>":
+  "<a>Oscilaciones y ondas</a>",
+"<a>Sound and acoustics</a>":
+  "<a>Sonido y acústica</a>",
+"<a>Heat and thermodynamics</a>":
+  "<a>Calor y termodinámica</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Waves and heat are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Ondas y calor están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Heat and thermodynamics demos":
+  "Demos de calor y termodinámica",
+"In <a>Thermodynamics</a>":
+  "En <a>Termodinámica</a>",
+"In <a>Thermodynamics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Termodinámica</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Worksheet {#}: Why Small, Hot Planets Lose Their Air (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Hoja de trabajo {#}: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a> <a>Notas</a>",
+"In <a>Thermodynamics</a> · <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Termodinámica</a> · <a>Física moderna</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
+"Also under <a>Photons and quanta</a> · <a>Telescopes and light</a>":
+  "También en <a>Fotones y cuantos</a> · <a>Telescopios y luz</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Blackbody Radiation</a> <a>Worksheet {#}: Star Colors and Temperatures (Astro {#})</a> <a>Worksheet {#}: Star Colors Through U, B and V Filters</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Radiación de cuerpo negro</a> <a>Hoja de trabajo {#}: Colores y temperaturas de las estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Colores de las estrellas con los filtros U, B y V</a> <a>Notas</a>",
+"Induction and EM waves · Virtual Physics Demos":
+  "Inducción y ondas EM · Demos virtuales de física",
+"Induction and EM waves":
+  "Inducción y ondas EM",
+"Faraday's law, eddy currents, displacement current and light as a wave.":
+  "La ley de Faraday, las corrientes de Foucault, la corriente de desplazamiento y la luz como onda.",
+"Induction and EM waves demos":
+  "Demos de inducción y ondas EM",
+"In <a>Physics II</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Física II</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a>Worksheet {#}: The Electromagnetic Spectrum (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ondas electromagnéticas: campos, intensidad y presión</a> <a>Hoja de trabajo {#}: El espectro electromagnético (Astro {#})</a> <a>Notas</a>",
+"Kinematics · Virtual Physics Demos":
+  "Cinemática · Demos virtuales de física",
+"Position, velocity and acceleration, projectiles and circular motion.":
+  "Posición, velocidad y aceleración, proyectiles y movimiento circular.",
+"Kinematics demos":
+  "Demos de cinemática",
+"<a>Open demo</a> <a>Worksheet {#}: Units and Dimensions</a> <a>Worksheet {#}: Estimates and Uncertainty</a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Unidades y dimensiones</a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})</a> <a>Notas</a>",
+"Magnetism · Virtual Physics Demos":
+  "Magnetismo · Demos virtuales de física",
+"Magnetism":
+  "Magnetismo",
+"Forces on charges and currents, fields of currents, magnetic materials.":
+  "Fuerzas sobre cargas y corrientes, campos de corrientes, materiales magnéticos.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
+"Magnetism demos":
+  "Demos de magnetismo",
+"Radiation in medicine · Virtual Physics Demos":
+  "Radiación en medicina · Demos virtuales de física",
+"Radiation in medicine":
+  "Radiación en medicina",
+"Photon and proton interactions, dose, radiobiology, shielding, therapy QA and CT.":
+  "Interacciones de fotones y protones, dosis, radiobiología, blindaje, control de calidad de terapia y CT.",
+"Radiation in medicine demos":
+  "Demos de radiación en medicina",
+"In <a>Medical Physics</a>":
+  "En <a>Física médica</a>",
+"In <a>Acoustics</a> · <a>Medical Physics</a>":
+  "En <a>Acústica</a> · <a>Física médica</a>",
+"Also under <a>Sound and acoustics</a>":
+  "También en <a>Sonido y acústica</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Notas</a>",
+"Nuclear and particle physics · Virtual Physics Demos":
+  "Física nuclear y de partículas · Demos virtuales de física",
+"Nuclear and particle physics":
+  "Física nuclear y de partículas",
+"Decay, binding energy, fission and fusion, gamma spectra, quarks.":
+  "Decaimiento, energía de enlace, fisión y fusión, espectros gamma, quarks.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}</span>",
+"Nuclear and particle physics demos":
+  "Demos de física nuclear y de partículas",
+"In <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Medical Physics</a> · <a>Astronomy</a>":
+  "En <a>Física moderna</a> · <a>Astro {#}</a> · <a>Física médica</a> · <a>Astronomía</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Nuclear Reactions</a> <a>Worksheet {#}: Chain Reactions and Critical Size</a> <a>Worksheet {#}: Fusion and the Gamow Peak</a> <a>Worksheet {#}: Radiation Dose and Shielding</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reacciones nucleares</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Notas</a>",
+"Optics · Virtual Physics Demos":
+  "Óptica · Demos virtuales de física",
+"<a>Virtual Physics Demos</a> · <b>Light</b>":
+  "<a>Demos virtuales de física</a> · <b>Luz</b>",
+"Mirrors and lenses, the eye, microscopes and telescopes, polarization.":
+  "Espejos y lentes, el ojo, microscopios y telescopios, polarización.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}</span>",
 "<a>Optics</a>":
   "<a>Óptica</a>",
+"<a>Interference and diffraction</a>":
+  "<a>Interferencia y difracción</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Light are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Luz están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Optics demos":
+  "Demos de óptica",
+"<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
+"In <a>Physics II</a> · <a>Astronomy</a>":
+  "En <a>Física II</a> · <a>Astronomía</a>",
+"Oscillations and waves · Virtual Physics Demos":
+  "Oscilaciones y ondas · Demos virtuales de física",
+"Oscillations and waves":
+  "Oscilaciones y ondas",
+"Springs and pendulums, waves on strings, interference in a ripple tank.":
+  "Resortes y péndulos, ondas en cuerdas, interferencia en un tanque de ondas.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}–{#}</span>",
+"Oscillations and waves demos":
+  "Demos de oscilaciones y ondas",
+"In <a>Physics II</a> · <a>Acoustics</a>":
+  "En <a>Física II</a> · <a>Acústica</a>",
+"In <a>Acoustics</a>":
+  "En <a>Acústica</a>",
+"Also under <a>Interference and diffraction</a>":
+  "También en <a>Interferencia y difracción</a>",
+"Planets and the solar system · Virtual Physics Demos":
+  "Planetas y el sistema solar · Demos virtuales de física",
+"Planets and the solar system":
+  "Planetas y el sistema solar",
+"Formation, temperatures, interiors, craters, giant planets and exoplanets.":
+  "Formación, temperaturas, interiores, cráteres, planetas gigantes y exoplanetas.",
+"Planets and the solar system demos":
+  "Demos de planetas y el sistema solar",
+"Also under <a>Galaxies and cosmology</a>":
+  "También en <a>Galaxias y cosmología</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Finding Exoplanets</a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})</a> <a>Worksheet {#}: Eclipsing Binary Stars</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Encontrar exoplanetas</a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a> <a>Notas</a>",
+"Photons and quanta · Virtual Physics Demos":
+  "Fotones y cuantos · Demos virtuales de física",
+"Photons and quanta":
+  "Fotones y cuantos",
+"Photoelectric effect, Compton scattering, matter waves and wave packets.":
+  "Efecto fotoeléctrico, dispersión Compton, ondas de materia y paquetes de onda.",
+"Photons and quanta demos":
+  "Demos de fotones y cuantos",
+"<a>Open demo</a> <a>Worksheet {#}: Young's Double Slit</a> <a>Worksheet {#}: Wave and Particle Duality</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La doble rendija de Young</a> <a>Hoja de trabajo {#}: Dualidad onda-partícula</a> <a>Notas</a>",
+"Also under <a>Heat and thermodynamics</a> · <a>Telescopes and light</a>":
+  "También en <a>Calor y termodinámica</a> · <a>Telescopios y luz</a>",
+"Relativity · Virtual Physics Demos":
+  "Relatividad · Demos virtuales de física",
+"Spacetime diagrams, time dilation, relativistic momentum and energy.":
+  "Diagramas de espacio-tiempo, dilatación del tiempo, momento y energía relativistas.",
+"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}</span>",
+"Relativity demos":
+  "Demos de relatividad",
+"Also under <a>Magnetism</a>":
+  "También en <a>Magnetismo</a>",
+"Also under <a>Optics</a>":
+  "También en <a>Óptica</a>",
+"Rotation · Virtual Physics Demos":
+  "Rotación · Demos virtuales de física",
 "Rotation":
   "Rotación",
+"Torque, moment of inertia, rolling and precession.":
+  "Torca, momento de inercia, rodadura y precesión.",
+"Rotation demos":
+  "Demos de rotación",
 "<a>Open demo</a> <a>Worksheet {#}: Gyroscope Precession</a> <a>Worksheet {#}: A Spinning Top and the Wandering Pole Star (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Giroscopio y precesión</a> <a>Hoja de trabajo {#}: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>"
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Giroscopio y precesión</a> <a>Hoja de trabajo {#}: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>",
+"The sky · Virtual Physics Demos":
+  "El cielo · Demos virtuales de física",
+"The sky":
+  "El cielo",
+"Seasons, the celestial sphere, Moon phases and retrograde motion.":
+  "Las estaciones, la esfera celeste, las fases de la Luna y el movimiento retrógrado.",
+"The sky demos":
+  "Demos del cielo",
+"Sound and acoustics · Virtual Physics Demos":
+  "Sonido y acústica · Demos virtuales de física",
+"Sound and acoustics":
+  "Sonido y acústica",
+"Speed of sound, loudness, resonance, timbre, Doppler and ultrasound.":
+  "Rapidez del sonido, sonoridad, resonancia, timbre, Doppler y ultrasonido.",
+"Sound and acoustics demos":
+  "Demos de sonido y acústica",
+"In <a>Acoustics</a> · <a>Modern Physics</a>":
+  "En <a>Acústica</a> · <a>Física moderna</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Doppler Effect and Shock Waves</a> <a>Worksheet {#}: Doppler Effect for Light</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Efecto Doppler y ondas de choque</a> <a>Hoja de trabajo {#}: Efecto Doppler de la luz</a> <a>Notas</a>",
+"Also under <a>Oscillations and waves</a>":
+  "También en <a>Oscilaciones y ondas</a>",
+"Also under <a>Radiation in medicine</a>":
+  "También en <a>Radiación en medicina</a>",
+"Stars · Virtual Physics Demos":
+  "Estrellas · Demos virtuales de física",
+"The HR diagram, inside a star, white dwarfs and black holes.":
+  "El diagrama HR, el interior de una estrella, enanas blancas y agujeros negros.",
+"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}–{#}</span>",
+"Stars demos":
+  "Demos de estrellas",
+"Telescopes and light · Virtual Physics Demos":
+  "Telescopios y luz · Demos virtuales de física",
+"Collecting and resolving light, the spectrum and what it tells us.":
+  "Reunir y resolver la luz, el espectro y lo que nos dice.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#} · Vol {#} · Ch. {#}–{#}, {#}, {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#}–{#}, {#}, {#}, {#}</span>",
+"Telescopes and light demos":
+  "Demos de telescopios y luz",
+"<a>Open demo</a> <a>Worksheet {#}: Circular Apertures and Resolution</a> <a>Worksheet {#}: Seeing Fine Detail (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Aberturas circulares y resolución</a> <a>Hoja de trabajo {#}: Ver detalles finos (Astro {#})</a> <a>Notas</a>",
+"Also under <a>Atoms, molecules and solids</a>":
+  "También en <a>Átomos, moléculas y sólidos</a>",
+"Also under <a>Heat and thermodynamics</a> · <a>Photons and quanta</a>":
+  "También en <a>Calor y termodinámica</a> · <a>Fotones y cuantos</a>",
+"Interference and diffraction · Virtual Physics Demos":
+  "Interferencia y difracción · Demos virtuales de física",
+"Interference and diffraction":
+  "Interferencia y difracción",
+"Slits, gratings, thin films, interferometers, resolution and holograms.":
+  "Rendijas, rejillas, películas delgadas, interferómetros, resolución y hologramas.",
+"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}, {#}–{#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
+"Interference and diffraction demos":
+  "Demos de interferencia y difracción"
 });
