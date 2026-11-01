@@ -84,7 +84,7 @@ Each demo has a printable notes page in `notes/` (learning goals, a way to run i
 
 ## Maintenance
 
-Assistants working on this repo: read [COLLABORATION.md](COLLABORATION.md) first.
+Assistants working on this repo: read [CLAUDE.md](CLAUDE.md) first.
 
 
 The card thumbnails in `thumbs/` come from `tools/thumbs.py` (Python, Playwright and Pillow). Run `python3 tools/thumbs.py` after adding or changing a demo, or `python3 tools/thumbs.py name` for one demo; copy an existing card in `index.html` for the new one.
