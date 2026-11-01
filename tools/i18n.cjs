@@ -40,7 +40,7 @@ function trivial(k) {
 }
 const file = (lang, pg) => path.join(CAT, lang, pg + '.js');
 /* Liquid (Pages runs it on every file) must never see a brace next to a brace or a percent sign */
-const safe = (s) => s.replace(/\{(?=[{%])/g, '\\u007b').replace(/%(?=\})/g, '\\u0025');
+const safe = (s) => s.replace(/\{(?=[\x7b\x25])/g, '\\u007b').replace(/\x25(?=\})/g, '\\u0025');
 function readCat(lang, pg) {
   const f = file(lang, pg); if (!fs.existsSync(f)) return null;
   const s = fs.readFileSync(f, 'utf8'), m = s.match(/VDI18N\.add\([^,]+,\s*'[^']*',\s*([\s\S]*)\);\s*$/);
@@ -249,7 +249,7 @@ function check() {
         const nk = holes(k), nv = holes(v);
         if (nk !== nv && !/\{#\d+\}/.test(v)) { bad++; console.log(`${l}/${pg}: {#} count differs: ${k.slice(0, 60)}`); }
         if (names(k) !== names(v)) { bad++; console.log(`${l}/${pg}: {name} placeholders differ: ${k.slice(0, 60)}`); }
-        if (/\{[{%]|%\}/.test(v)) { bad++; console.log(`${l}/${pg}: Liquid would read this: ${v.slice(0, 60)}`); }
+        if (/\{[\x7b\x25]|\x25\}/.test(v)) { bad++; console.log(`${l}/${pg}: Liquid would read this: ${v.slice(0, 60)}`); }
         if (enSet.has(k)) have++;
       }
       if (en) { tot.have += have; tot.need += en.length; console.log(`${l}/${pg}: ${have} of ${en.length} strings`); }
