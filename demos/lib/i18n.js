@@ -52,7 +52,13 @@
   }
   var PAGE = page();
 
-  var saved = 'en'; try { saved = localStorage.getItem(KEY) || 'en'; } catch (_) {}
+  var saved = null; try { saved = localStorage.getItem(KEY); } catch (_) {}
+  /* nothing chosen yet: the device's language, when the site has it (es-MX, es-US and es all give es); a choice in the switch wins */
+  if (!saved) {
+    saved = 'en';
+    var dev = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
+    for (var di = 0; di < dev.length; di++) { var base = String(dev[di] || '').toLowerCase().split('-')[0]; if (base === 'en') break; if (LANGS[base]) { saved = base; break; } }
+  }
   if (q.lang && q.lang !== 'qps') { saved = LANGS[q.lang] || q.lang === 'en' ? q.lang : saved; try { localStorage.setItem(KEY, saved); } catch (_) {} }
   var has = function (l) { return !!(LANGS[l] && PAGE && LANGS[l].pages.indexOf(PAGE) >= 0); };
   var lang = PSEUDO ? 'qps' : has(saved) ? saved : 'en';
