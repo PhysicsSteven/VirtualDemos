@@ -1327,15 +1327,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('x0Out').textContent = `${(S.x0 * 1000).toFixed(2)} mm (${(MD * W50 * W50 * S.x0).toFixed(1)} N)`;
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k], fk = r.f, df = S.f - fk, bw = fk / S.Q;
-      let s = drum() ? `${md.label} at ${fmtF(fk)}, f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)} (${S.shape === 'circle' ? `j = ${md.lam2.toFixed(3)}, a zero of J${'₀₁₂₃₄₅₆₇₈₉'[md.n] || md.n}` : `√(m² + n²) = ${md.lam2.toFixed(3)}`}). `
-        : S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free ${S.shape === 'bar' ? 'bar' : 'plate'} mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it). `
-        : `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}. `;
-      s += `Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`;
-      if (drum() && D.ms.shape === 'square') s += ` ${md.m - 1} nodal line${md.m === 2 ? '' : 's'} one way and ${md.n - 1} the other, besides the hoop.${md.m !== md.n ? ` (${md.n}, ${md.m}) has the same frequency.` : ''}`;
-      else if (drum()) s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'} and ${md.m - 1} nodal circle${md.m === 2 ? '' : 's'} besides the hoop.`;
-      else if (D.ms.shape === 'square') s += ` It is ${symText(md)}.`;
-      else if (D.ms.shape === 'bar') s += ` ${md.idx + 1} nodes along the bar; f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)}, βL = ${md.B.toFixed(4)}; ${md.idx % 2 ? 'symmetric' : 'antisymmetric'} about the middle.`;
-      else s += ` ${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`;
+      /* in another language each sentence is translated on its own (the whole has too many variants to harvest) */
+      const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t);
+      let s = tr(drum() ? `${md.label} at ${fmtF(fk)}, f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)} (${S.shape === 'circle' ? `j = ${md.lam2.toFixed(3)}, a zero of J${'₀₁₂₃₄₅₆₇₈₉'[md.n] || md.n}` : `√(m² + n²) = ${md.lam2.toFixed(3)}`}).`
+        : S.driver === 'wave' ? `${fmtF(fk)}, mostly ${md.label} (free ${S.shape === 'bar' ? 'bar' : 'plate'} mode at ${fmtF(modeF(md))}; the driver's ${MD * 1000} g moving mass on the post shifts it).`
+        : `${md.label} at ${fmtF(fk)}, λ² = ${md.lam2.toFixed(2)}.`) + ' ';
+      s += tr(`Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`);
+      if (drum() && D.ms.shape === 'square') s += ' ' + tr(`${md.m - 1} nodal line${md.m === 2 ? '' : 's'} one way and ${md.n - 1} the other, besides the hoop.${md.m !== md.n ? ` (${md.n}, ${md.m}) has the same frequency.` : ''}`);
+      else if (drum()) s += ' ' + tr(`${md.n} nodal diameter${md.n === 1 ? '' : 's'} and ${md.m - 1} nodal circle${md.m === 2 ? '' : 's'} besides the hoop.`);
+      else if (D.ms.shape === 'square') s += ' ' + tr(`It is ${symText(md)}.`);
+      else if (D.ms.shape === 'bar') s += ' ' + tr(`${md.idx + 1} nodes along the bar; f/f₁ = ${(md.lam2 / D.lowest.lam2).toFixed(3)}, βL = ${md.B.toFixed(4)}; ${md.idx % 2 ? 'symmetric' : 'antisymmetric'} about the middle.`);
+      else s += ' ' + tr(`${md.n} nodal diameter${md.n === 1 ? '' : 's'}, ${md.m} nodal circle${md.m === 1 ? '' : 's'}.`);
       $('rMode').textContent = s;
     }
     if (S.shape === 'bar' && !drum()) { const k1 = D.lowest; $('plateHint').textContent = `A bar 24 cm long, 3 cm wide and ${(S.h * 1000).toFixed(2)} mm thick, free at both ends, bending as an Euler–Bernoulli beam. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³. f = (βL)² (h/L²) √(E/12ρ)/2π, so every frequency scales as h; the lowest is ${fmtF(modeF(k1))}. Its overtones are not harmonics: f₂/f₁ = 2.756, f₃/f₁ = 5.404, f₄/f₁ = 8.933. Left out: shear and rotary inertia (a few percent once a bending wavelength is under ten thicknesses), twisting modes and bending across the width.`; return; }
