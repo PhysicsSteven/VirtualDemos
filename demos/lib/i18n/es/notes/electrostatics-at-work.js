@@ -1,0 +1,55 @@
+/* notes/electrostatics-at-work in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'notes/electrostatics-at-work', {
+"Electrostatics at Work: teaching notes":
+  "La electrostática en acción: notas para el docente",
+"Electrostatics at Work":
+  "La electrostática en acción",
+"A conductor's charge sits on its outside surface, so a hollow dome can keep taking charge from inside. That is how a Van de Graaff generator works.":
+  "La carga de un conductor se queda en su superficie exterior, así que un domo hueco puede seguir recibiendo carga desde adentro. Así funciona un generador de Van de Graaff.",
+"A charged sphere's voltage is V = kQ/R and its surface field is E = V/R. The air breaks down at about {#} MV/m, so the highest voltage is V_max = E_b R: a bigger dome holds a higher voltage, and a sharp point (small R) sparks first.":
+  "El voltaje de una esfera cargada es V = kQ/R y su campo en la superficie es E = V/R. El aire se rompe dieléctricamente a unos {#} MV/m, así que el voltaje máximo es V_max = E_b R: un domo más grande sostiene un voltaje más alto, y una punta afilada (R pequeño) saca chispa primero.",
+"A charged drop between plates is a projectile in a uniform field. Its deflection is proportional to q/m and to the plate voltage, and falls as {#}/v². An ink jet printer steers each drop by choosing its charge.":
+  "Una gota cargada entre placas es un proyectil en un campo uniforme. Su desviación es proporcional a q/m y al voltaje de las placas, y baja como {#}/v². Una impresora de inyección de tinta dirige cada gota eligiendo su carga.",
+"In a precipitator, charged particles drift across the gas flow at a speed set by the electric force against air drag. The fraction caught is {#} − exp(−wL/(us)), so larger particles and longer plates are caught far better.":
+  "En un precipitador, las partículas cargadas se desplazan a través del flujo de gas con una rapidez fijada por la fuerza eléctrica contra el arrastre del aire. La fracción capturada es {#} − exp(−wL/(us)), así que las partículas más grandes y las placas más largas capturan mucho mejor.",
+"Students need V = kQ/R and E = kQ/r² for a sphere (OpenStax Vol {#} §{#}, §{#}) and projectile motion. <strong>Blind</strong> hides the answers in each machine; the ruler beside the paper and the precipitator counters stay, so they can be used to measure.":
+  "Los estudiantes necesitan V = kQ/R y E = kQ/r² para una esfera (OpenStax Vol {#} §{#}, §{#}) y el movimiento de proyectiles. <strong>A ciegas</strong> oculta las respuestas en cada máquina; la regla junto al papel y los contadores del precipitador se quedan, para que se puedan usar al medir.",
+"<strong>Van de Graaff.</strong> Start the motor with R = {#} cm and I = {#} µA. Ask: what limits the voltage? The dome reaches {#} kV in {#} s and sparks. Double R to {#} cm: V_max doubles to {#} kV but the time to spark goes up four times (Q_max ∝ R²).":
+  "<strong>Van de Graaff.</strong> Enciende el motor con R = {#} cm e I = {#} µA. Pregunta: ¿qué limita el voltaje? El domo llega a {#} kV en {#} s y saca chispa. Duplica R a {#} cm: V_max se duplica a {#} kV pero el tiempo hasta la chispa se multiplica por cuatro (Q_max ∝ R²).",
+"<strong>Field inside.</strong> Point at the E(r) graph: zero inside the dome, kQ/r² outside. This is why the belt can deliver charge to the inside of the dome against a high voltage.":
+  "<strong>El campo adentro.</strong> Señala la gráfica de E(r): cero dentro del domo, kQ/r² afuera. Por eso la banda puede llevar carga al interior del domo contra un voltaje alto.",
+"<strong>Ink jet.</strong> Fire one drop with the defaults: it lands {#} mm up. Double q: twice as high. Double v: a quarter as high. Set q = {#} and the drop goes into the gutter.":
+  "<strong>Inyección de tinta.</strong> Dispara una gota con los valores predeterminados: llega {#} mm arriba. Duplica q: el doble de alto. Duplica v: una cuarta parte de alto. Pon q = {#} y la gota se va al canal de recolección.",
+"<strong>Print PHYS.</strong> The controller gives each dot its own charge. Change the plate voltage and print again: the letters keep their shape because the charges are recalculated.":
+  "<strong>Imprimir PHYS.</strong> El controlador le da a cada punto su propia carga. Cambia el voltaje de las placas e imprime otra vez: las letras conservan su forma porque las cargas se vuelven a calcular.",
+"<strong>Precipitator.</strong> At {#} µm the efficiency is {#}%. Slide the diameter: {#} µm particles are caught to better than {#}%, while {#} µm particles are mostly lost in this model. Double the plate length: the escaping fraction is squared.":
+  "<strong>Precipitador.</strong> A {#} µm la eficiencia es {#}%. Desliza el diámetro: las partículas de {#} µm se capturan en más del {#}%, mientras que las de {#} µm en su mayoría se pierden en este modelo. Duplica la longitud de las placas: la fracción que escapa se eleva al cuadrado.",
+"<strong>Shuffle and spark.</strong> Ten shuffles in rubber soles on a wool rug leave the body at −{#} kV ({#} pF), so the spark jumps {#} mm to the doorknob and carries ½CV² = {#} mJ. Ask what a fur rug does before trying it: −{#} kV and a {#} mm spark. Wool socks on a wool rug move no charge at all, and no amount of shuffling goes past {#} kV, where the air at the soles breaks down.":
+  "<strong>Arrastrar los pies y chispa.</strong> Diez arrastres con suelas de hule sobre un tapete de lana dejan el cuerpo a −{#} kV ({#} pF), así que la chispa salta {#} mm hasta la perilla de la puerta y lleva ½CV² = {#} mJ. Pregunta qué hace un tapete de piel antes de probarlo: −{#} kV y una chispa de {#} mm. Calcetines de lana sobre un tapete de lana no mueven ninguna carga, y por más que arrastres los pies no pasas de {#} kV, donde el aire en las suelas se rompe dieléctricamente.",
+"<strong>Q1.</strong> A Van de Graaff dome has radius {#} cm. Taking the breakdown field of air as {#} × {#}⁶ V/m, find the highest voltage the dome can hold and the charge on it at that voltage.":
+  "<strong>Q1.</strong> Un domo de Van de Graaff tiene radio de {#} cm. Tomando el campo de ruptura del aire como {#} × {#}⁶ V/m, encuentra el voltaje más alto que puede sostener el domo y su carga a ese voltaje.",
+"<strong>Q2.</strong> The belt delivers {#} µA. How long does the {#} cm dome take to charge from zero to breakdown? How long would a {#} cm dome take, and why is it not twice as long?":
+  "<strong>Q2.</strong> La banda entrega {#} µA. ¿Cuánto tarda el domo de {#} cm en cargarse desde cero hasta la ruptura? ¿Cuánto tardaría un domo de {#} cm, y por qué no es el doble?",
+"<strong>Q3.</strong> A {#} µm ink drop (water, {#} kg/m³) carrying {#} pC moves at {#} m/s between plates {#} mm long and {#} mm apart at {#} V, then travels {#} mm to the paper. How far up does it land? How much does gravity change that?":
+  "<strong>Q3.</strong> Una gota de tinta de {#} µm (agua, {#} kg/m³) con {#} pC se mueve a {#} m/s entre placas de {#} mm de largo separadas {#} mm a {#} V, y luego recorre {#} mm hasta el papel. ¿Qué tan arriba llega? ¿Cuánto cambia eso la gravedad?",
+"<strong>Q4.</strong> In the ink jet, students measure where drops land with the voltage at {#} V and find {#} mm. What is the drop's charge, if the drop is the same as in Q3?":
+  "<strong>Q4.</strong> En la inyección de tinta, los estudiantes miden dónde caen las gotas con el voltaje en {#} V y encuentran {#} mm. ¿Cuál es la carga de la gota, si la gota es la misma que en la Q3?",
+"<strong>Q5.</strong> A precipitator catches {#}% of {#} µm particles with plates {#} m long. What would it catch with plates {#} m long, all else the same? Why is it not {#}%?":
+  "<strong>Q5.</strong> Un precipitador captura el {#}% de las partículas de {#} µm con placas de {#} m de largo. ¿Qué capturaría con placas de {#} m de largo, con todo lo demás igual? ¿Por qué no es el {#}%?",
+"<strong>\"A bigger dome is charged faster to the same voltage.\"</strong> For a fixed current, the time to reach a voltage V grows with R, because C = {#}πε₀R.":
+  "<strong>\"Un domo más grande se carga más rápido al mismo voltaje.\"</strong> Para una corriente fija, el tiempo para llegar a un voltaje V crece con R, porque C = {#}πε₀R.",
+"<strong>\"Charge spreads through the metal.\"</strong> In equilibrium it sits on the outer surface, and the field inside is zero.":
+  "<strong>\"La carga se reparte por todo el metal.\"</strong> En equilibrio se queda en la superficie exterior, y el campo adentro es cero.",
+"<strong>\"The field pushes the drop all the way to the paper.\"</strong> The force acts only between the plates; afterwards the drop coasts in a straight line.":
+  "<strong>\"El campo empuja la gota todo el camino hasta el papel.\"</strong> La fuerza actúa solo entre las placas; después la gota sigue en línea recta.",
+"<strong>\"A precipitator filters the gas.\"</strong> Nothing blocks the flow: the particles are moved sideways by the electric force.":
+  "<strong>\"Un precipitador filtra el gas.\"</strong> Nada bloquea el flujo: las partículas se desvían hacia un lado por la fuerza eléctrica.",
+"Dome: isolated conducting sphere, C = {#}πε₀R. Breakdown field of dry air at {#} atm taken as {#} × {#}⁶ V/m (approximate). Constant belt current, no leakage before the spark, spark empties the dome.":
+  "Domo: esfera conductora aislada, C = {#}πε₀R. Campo de ruptura del aire seco a {#} atm tomado como {#} × {#}⁶ V/m (aproximado). Corriente de la banda constante, sin fugas antes de la chispa, y la chispa vacía el domo.",
+"Ink jet: uniform field V/gap between the plates and none outside; gravity included, air drag left out (stated on the page with an estimate). Drop charge kept far below the Rayleigh limit {#}π√(ε₀γr³).":
+  "Inyección de tinta: campo uniforme V/separación entre las placas y nulo afuera; se incluye la gravedad y se omite el arrastre del aire (lo dice la página con una estimación). La carga de la gota se mantiene muy por debajo del límite de Rayleigh {#}π√(ε₀γr³).",
+"Precipitator: saturation field charge q = {#}πε₀a²E·{#}κ/(κ + {#}) (Pauthenier), Stokes drag with the Cunningham slip correction {#} + Kn({#} + {#} e^(−{#}/Kn)), air at {#} °C (η = {#} × {#}⁻⁵ Pa·s, mean free path {#} µm), Deutsch equation. Diffusion charging is left out, so submicron efficiencies are underestimated.":
+  "Precipitador: carga de saturación por campo q = {#}πε₀a²E·{#}κ/(κ + {#}) (Pauthenier), arrastre de Stokes con la corrección de deslizamiento de Cunningham {#} + Kn({#} + {#} e^(−{#}/Kn)), aire a {#} °C (η = {#} × {#}⁻⁵ Pa·s, recorrido libre medio {#} µm), ecuación de Deutsch. Se omite la carga por difusión, así que las eficiencias por debajo de una micra están subestimadas.",
+"OpenStax Vol {#} §{#} describes these machines (plus xerography and laser printers) qualitatively; the numbers here are the demo's own calculations.":
+  "OpenStax Vol {#} §{#} describe estas máquinas (además de la xerografía y las impresoras láser) de forma cualitativa; los números aquí son cálculos propios de la demo."
+});
