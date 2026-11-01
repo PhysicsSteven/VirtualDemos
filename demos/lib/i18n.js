@@ -302,13 +302,20 @@
     mo.takeRecords();
   }
 
+  /* measureText looks up but never records (word wrapping measures every growing prefix of a line) */
+  function quiet(k) { if (COLLECT) return null; var m = MISS; MISS = null; try { return look(k); } finally { MISS = m; } }
+  /* VDI18N.raw(fn): canvas text drawn inside fn is drawn as given, neither looked up nor recorded. For text a demo has already
+     translated whole with VDI18N.t and then split into lines itself. */
+  var RAW = 0;
+  I.raw = function (fn) { RAW++; try { return fn(); } finally { RAW--; } };
   /* canvas text, alert and confirm */
   function patchCanvas() {
     var P = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype; if (!P) return;
     ['fillText', 'strokeText', 'measureText'].forEach(function (f) {
       var o = P[f]; if (!o) return;
+      var measure = f === 'measureText';
       P[f] = function (s) {
-        if (typeof s === 'string' && LETTER.test(s)) { var tr = look(s.replace(/\s+/g, ' ').trim()); if (tr != null) { var a = Array.prototype.slice.call(arguments); a[0] = unesc(tr); return o.apply(this, a); } }
+        if (!RAW && typeof s === 'string' && LETTER.test(s)) { var tr = measure ? quiet(s.replace(/\s+/g, ' ').trim()) : look(s.replace(/\s+/g, ' ').trim()); if (tr != null) { var a = Array.prototype.slice.call(arguments); a[0] = unesc(tr); return o.apply(this, a); } }
         return o.apply(this, arguments);
       };
     });
