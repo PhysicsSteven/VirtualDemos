@@ -6,6 +6,7 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "<a>Quantum mechanics</a>",
 "<a><span>←</span> <span>Millikan Oil Drop</span></a><a><span>Hydrogen Orbitals</span> <span>→</span></a>",
 "An electron in one dimension, evolving under the Schrödinger equation. Watch it spread, tunnel, reflect, settle into energy eigenstates, and collapse when you measure it.",
+"x in nm · E in eV · t in fs · ħ²/2m = {#} eV·nm²",
 "Energy diagram: the potential V(x), the mean energy of the electron, and energy levels. Keys: left and right arrows move the launch point, up and down change the launch energy, digits pick energy levels, space plays or pauses, M measures position.",
 "Step",
 "Wave function: probability density |ψ|² filled and colored by the phase of ψ.",
@@ -120,6 +121,8 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "<span><i></i>Potential energy V(x)</span> <span><i></i>Mean energy ⟨E⟩, band ±ΔE</span> <span><i></i>Energy levels (chosen ones bold)</span> <span><i></i>Re ψ</span> <span><i></i>Im ψ</span> <span><i></i>Histogram of measured positions</span>",
 "Color shows the phase of ψ, as on the color wheel: a packet moving right winds through the colors in one order, one moving left in the other order, and a standing wave has blocks of one color that flip by half a turn at each node.",
 "Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. Probability that reaches the absorbing layers beyond the view is removed and counted in R or T. Energy levels come from diagonalizing the same finite difference Hamiltonian.",
+"ψ in 3D: Re ψ up, Im ψ toward you, color is the phase",
+"|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn",
 "brightness |ψ|², color phase",
 "levels (nx, ny)",
 "tap a level to add or drop it",
@@ -179,5 +182,6 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "field ℰ",
 "ħω",
 "Light polarized along x at exactly the ({#},{#}) to ({#},{#}) energy. The electron climbs to ({#},{#}), then the same light drives it back down (stimulated emission), over and over: Rabi oscillations, one full cycle every h/(eℰ|⟨{#},{#}|x|{#},{#}⟩|).",
-"Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down."
+"Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down.",
+"|ψ|² as height"
 ]);

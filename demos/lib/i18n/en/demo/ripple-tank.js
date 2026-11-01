@@ -108,6 +108,7 @@ VDI18N.add('en', 'demo/ripple-tank', [
 "Fastest speed of that particle, ωa",
 "Wave speed c = fλ",
 "Left out: drift forward per period at the surface (Stokes)",
+"heights drawn {#} times larger · drag to turn",
 "A straight bar dips in and out of the water across the whole tank and sends out plane waves. Put A and B on two crests several wavelengths apart and count the wavelengths between them to find λ; then c = fλ. Change the frequency and the depth and see what each does to the wavelength.",
 "One dipper makes circular waves. Each crest is a circle centered on the dipper, and the waves get weaker as they spread (the energy of each ring is spread round a longer circle), until the beaches absorb them.",
 "Two dippers {#} mm apart, moving together. Where crest meets crest the water moves most; along the quiet (nodal) lines a crest from one always meets a trough from the other. Show the Amplitude to see the lines, then put A midway between the dippers and B on a quiet line far away: the line angle θ obeys d sin θ = (m + ½)λ.",
@@ -138,5 +139,10 @@ VDI18N.add('en', 'demo/ripple-tank', [
 "Beat length of modes {#} and {#}, {#}π/(k₀ − k₁)",
 "A slice through the tank from the side, under the bar's plane waves: each dot is a bit of water. {#} Hz waves on water {#} mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface's): half a wavelength down the water is almost still. The wave moves on; the water does not.",
 "{#} Hz waves on water only {#} mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.",
-"in between (λ/{#} < d < λ/{#})"
+"in between (λ/{#} < d < λ/{#})",
+"t = {#} s · real time",
+"{#} mm · to scale · wave height 2A = {#} mm",
+"{#} mm · to scale",
+"the motion of the water drawn {#} times larger",
+"wave height 2A = {#} mm"
 ]);

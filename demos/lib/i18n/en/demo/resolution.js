@@ -155,5 +155,8 @@ VDI18N.add('en', 'demo/resolution', [
 "Edge of the geometric shadow",
 "Poisson spot: first dark ring, {#} λL/πD (many zones)",
 "near field (Fresnel), a few zones",
-"near field, disk"
+"near field, disk",
+"Fresnel zones",
+"I/I₀ (I₀: the beam with nothing in it)",
+"I/I₀ (I₀: one source's peak)"
 ]);

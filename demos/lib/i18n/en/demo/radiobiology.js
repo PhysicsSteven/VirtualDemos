@@ -118,9 +118,10 @@ VDI18N.add('en', 'demo/radiobiology', [
 "Assay counting: N. A. P. Franken et al. {#}, Nat. Protoc. {#}, {#}. Air {#} mmHg ({#} % of {#} mmHg); arterial blood {#} and venous blood {#} mmHg: Guyton and Hall, Textbook of Medical Physiology.",
 "view",
 "result",
-"V79 (hamster lung): {#} Gy, {#} cells seeded per flask",
-"not plated yet",
 "Flask {#}",
+"not plated yet",
+"Stained after {#} to {#} days: each dot is one simulated colony, at the place the flat view draws it. Drag to turn.",
+"V79 (hamster lung): {#} Gy, {#} cells seeded per flask",
 "Surviving fraction",
 "Surviving fraction: plate the {#} Gy flasks first",
 "Three culture dishes with the colonies that grew from the seeded cells, and the measured surviving fraction against dose with counting error bars.",
@@ -196,5 +197,11 @@ VDI18N.add('en', 'demo/radiobiology', [
 "Protons at LET_d = {#} keV/µm, as in the entrance plateau, on tissue with (α/β)ₓ = {#} Gy at {#} Gy per fraction: the model gives an RBE of {#}, close to the {#} used in the clinic. Paganetti {#} found averages of about {#} at the entrance, {#} in the middle of a spread out Bragg peak, {#} at its distal edge and {#} in the distal falloff.",
 "LET_d = {#} keV/µm, as near the end of the proton range, on late responding tissue with (α/β)ₓ = {#} Gy: the RBE is {#}, so {#} Gy of protons acts like {#} Gy of photons, not the {#} Gy that RBE {#} assumes. This is why the RBE at the end of the range matters for organs just behind a target.",
 "At {#} Gy per fraction the RBE at LET_d = {#} keV/µm and (α/β)ₓ = {#} Gy is {#}, against {#} at {#} Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.",
-"RBE {#}"
+"RBE {#}",
+"RBE against LET_d, {#} Gy",
+"{#} Gy, {#} cells per flask",
+"Surviving fraction, PE {#}",
+"{#} × {#} Gy = {#} Gy, {#} weeks",
+"Effect of oxygen at {#} Gy",
+"{#} × {#} Gy = {#} Gy, {#} week"
 ]);

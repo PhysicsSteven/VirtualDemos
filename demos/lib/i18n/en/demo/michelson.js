@@ -80,9 +80,11 @@ VDI18N.add('en', 'demo/michelson', [
 "A laser of unknown wavelength somewhere in the visible. Measure it the same way. New mystery laser picks another.",
 "gas cell, {#} cm",
 "VALVES CLOSED",
+"in, {#} kPa",
 "n − {#} of the air in the cell",
 "A {#} cm cell in the fixed arm, full of room air. Pump it out, zero the counter, then let air back in and count the fringes as the pressure rises: N = 2L(n − {#})/λ, with n − {#} in proportion to the pressure.",
 "M₂ tilted by half a minute of arc. Near equal paths the two images of the source sit side by side, and the fringes are nearly straight lines. Away from equal paths they curve into arcs of off center rings.",
 "White light makes fringes only within about a micrometer of equal paths, where each color's fringes still line up. Find the straight fringes with the red laser first, then switch to white light and turn the micrometer slowly.",
-"Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel."
+"Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel.",
+"to scale, but mirror travel ×{#}, tilt ×{#}"
 ]);

@@ -83,5 +83,6 @@ VDI18N.add('en', 'demo/quantum-coin', [
 "One atom, measured again and again along z. The first result is random; after that the state is the one found, so every later measurement agrees with it.",
 "The first magnet keeps the atoms that went up along z. A second z magnet sends all of them up again: the measurement left them in |↑z⟩.",
 "Keep the up atoms along z, then measure along x: half up, half down. Knowing z tells you nothing about x.",
-"Send some atoms through first."
+"Send some atoms through first.",
+"down"
 ]);

@@ -42,6 +42,7 @@ VDI18N.add('en', 'demo/magnetism-in-matter', [
 "Model: the solenoid is long, so inside it B₀ = μ₀nI and the core fills it, B = ({#} + χ)B₀ (OpenStax Eq. {#} and {#}). The susceptibilities are OpenStax Table {#} (room temperature unless noted). Densities for the floating readout are from the CRC Handbook at {#} °C: water {#} kg/m³, copper {#} kg/m³, bismuth {#} kg/m³. A small piece of a linear material feels a force per volume (χ/μ₀) B dB/dz along the axis of a field that changes with height z, so above a magnet, where the field falls with height, a diamagnet floats where |B dB/dz| = μ₀ρg/|χ|, with g = {#} m/s².",
 "Iron is not linear, so it uses the Jiles and Atherton model of hysteresis (J. Magn. Magn. Mater. {#}, {#}, {#}). The saturation magnetization is that of iron, M_s = {#} × {#}⁶ A/m (Kittel, Introduction to Solid State Physics). The other four values, a = {#} A/m, k = {#} A/m, α = {#} × {#}⁻⁴ and c = {#}, are chosen so the first magnetization curve passes near the two points read from OpenStax Figure {#} (marked on the plot): the model gives {#} T where the figure gives {#} T, and {#} T where it gives {#} T. At the {#} A of Example {#} it gives {#} T; the book reads {#} T. This is a model of a soft iron, not measured data for one sample; real irons differ a great deal with purity and heat treatment. In the long coil, H = nI = B₀/μ₀ exactly.",
 "The drawing inside the core is a cartoon. Paramagnetic atoms are drawn with their alignment exaggerated (the true alignment is tiny, since μB is far below kT), and diamagnetic atoms with their induced moments exaggerated. Iron is drawn as domains: the fraction pointing along the field is ({#} + M/M_s)/{#}, which is the right average but not the real shapes of domains, which also rotate.",
+"{#} turns per cm (fewer drawn). Cut open along the axis; drag to turn.",
 "Core",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵",
 "Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.",
@@ -69,5 +70,8 @@ VDI18N.add('en', 'demo/magnetism-in-matter', [
 "Empty coil",
 "B − B₀ against B₀: zero for an empty coil",
 "Tungsten: paramagnetic, χ = {#} × {#}⁻⁵",
-"Copper: diamagnetic, χ = -{#} × {#}⁻⁶"
+"Copper: diamagnetic, χ = -{#} × {#}⁻⁶",
+"coil, B₀",
+"core, B",
+"Cut open along the axis; drag to turn."
 ]);

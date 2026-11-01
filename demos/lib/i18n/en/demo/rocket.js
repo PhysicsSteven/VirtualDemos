@@ -24,7 +24,7 @@ VDI18N.add('en', 'demo/rocket', [
 "Too heavy at first",
 "Same fuel, burned slowly",
 "Two stage rocket",
-"No gravity and no air. Burning {#} kg of fuel from a {#} {#} kg rocket gives Δv = u ln({#}) = {#}.30u, faster than the exhaust itself. Burn rate does not matter here, only how much fuel and how fast it leaves.",
+"No gravity and no air. Burning {#} kg of fuel from a {#} {#} kg rocket gives Δv = u ln({#}) = {#}u, faster than the exhaust itself. Burn rate does not matter here, only how much fuel and how fast it leaves.",
 "Rocket",
 "<span>Gravity (launch from the ground)</span>",
 "<span>Two stages: drop the empty first stage</span>",
@@ -49,7 +49,7 @@ VDI18N.add('en', 'demo/rocket', [
 "v cutoff (m/s)",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).",
 "Highest point (constant g, no air)",
-"{#},{#} km at {#} s",
+"{#} km at {#} s",
 "Note",
 "At hundreds of kilometers gravity is noticeably weaker than {#} m/s², so this height is only a rough figure.",
 "Twice the fuel but a slow burn: thrust {#} kN is less than the {#} kN launch weight. The engine fires but the rocket sits on the pad, burning fuel until it is light enough to rise. That fuel is wasted: it never helped the rocket move.",
@@ -61,7 +61,7 @@ VDI18N.add('en', 'demo/rocket', [
 "Upper stage u ln(m₂/m_dry)",
 "One stage carrying the empty casing: u ln(m₀/(m_dry + casing))",
 "Separation",
-"at {#} s, {#},{#} m/s",
+"at {#} s, {#} m/s",
 "Rocket equation, both stages",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record."
 ]);

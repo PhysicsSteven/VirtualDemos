@@ -5,6 +5,7 @@ VDI18N.add('en', 'demo/rainbows', [
 "Deviation D against the angle of incidence i ({#} reflection inside)",
 "least D = {#}°: bow at {#}° from the antisolar point",
 "Rainbows",
+"<a><span>←</span> <span>Optics Bench</span></a><a><span>Ripple Tank</span> <span>→</span></a>",
 "Follow one ray of sunlight into a raindrop, around the back and out again, and see why the light leaving the drop piles up near {#}° from the point straight opposite the Sun. Then step outside: the primary bow, the fainter secondary bow with its colors reversed, the dark band between them, and the cone of drops that makes your own rainbow.",
 "degrees, nm",
 "One drop",
@@ -48,7 +49,6 @@ VDI18N.add('en', 'demo/rainbows', [
 "<span>Blind: hide the bow angles (predict them first)</span>",
 "sin i = n sin r D = {#}(i − r) + k({#}° − 2r) least D where cos² i = (n² − {#})/(k² + 2k)",
 "Model: a raindrop is a sphere of pure water at {#} °C, its index n(λ) from the Sellmeier formula of Daimon and Masumura ({#}), as in the Optics Bench (n = {#} at {#} nm, {#} at {#} nm, {#} at {#} nm). Sunlight arrives as parallel rays (geometric optics). A ray at impact parameter b (its distance from the drop's center line, as a fraction of the radius) meets the surface at i with sin i = b, refracts by Snell's law, reflects k times inside and leaves; it has turned through D = {#}(i − r) + k({#}° − 2r) and leaves at θ from the antisolar point, the point in the sky straight opposite the Sun (θ = {#}° − D for one reflection, D − {#}° for two). The ray of least deviation (Descartes {#}) satisfies cos² i = (n² − {#})/(k² + 2k): near it many rays leave at almost the same angle, and that pile up is the bow. The share of light on each ray is from the Fresnel equations for light polarized across (s) and along (p) the plane of the ray, ({#} − R)² Rᵏ, with R the same at every surface of the ray (Stokes relations); sunlight is unpolarized, an even mix. The sky picture adds, at each angle from the antisolar point, the light of every ray from an evenly lit drop ({#} {#} rays per wavelength, {#} to {#} nm every {#} nm; light reflected off the outside, one reflection and two reflections inside), divided by the solid angle it spreads into, and averages it over the Sun's disk, {#}° across. Sunlight is a blackbody at {#} K (the Sun's effective temperature). Colors use the CIE {#} color matching functions (fit of Wyman, Sloan and Shirley {#}) and sRGB; colors outside the screen's range are desaturated, so the bow looks paler than in life. Left out: diffraction (Airy theory), which makes the real bow slightly wider and adds the faint supernumerary bows inside the primary; drops flattened by the air (large drops); light scattered twice; the sky's own light. The cloud behind and the hills are drawn, not computed. The sky picture is a map of azimuth across and elevation up, like a panorama photograph, so circles look slightly wider near the top. In 3D the shower is a thin curtain of rain {#} to {#} m in front of you, its drops drawn far larger than life (and larger still where they send you more light), falling at {#} m/s, about the terminal speed of a {#} mm drop (Gunn and Kinzer {#}); each drop's color is the bow light it sends to the observer's eye, with its saturation strengthened {#} times, and a drop inside the width of either bow is tinted with the pure color of the wavelength whose rainbow angle it sits at, so the order of the colors shows on single drops (the sky picture keeps the computed colors). The overcast sky and the bank of cloud behind the shower are drawn, not computed.",
-"<a><span>←</span> <span>Optics Bench</span></a><a><span>Ripple Tank</span> <span>→</span></a>",
 "horizon",
 "primary, {#}°",
 "secondary, {#}°",
@@ -68,6 +68,11 @@ VDI18N.add('en', 'demo/rainbows', [
 "Top of the primary",
 "{#}° above the horizon",
 "Top of the secondary",
+"antisolar point",
+"you",
+"The Sun and you",
+"You walked",
+"{#} m sideways",
 "The rainbow ray: at b = {#} (i = {#}°) the deviation is least, {#}°, so this ray leaves {#}° from the antisolar point. Rays a little above or below it leave at almost the same angle. Only about {#}% of the light on this ray reaches the observer: most passes out through the back (the faint rays), and what is left is strongly polarized, since the reflection inside is close to Brewster's angle.",
 "Twenty rays of red light ({#} nm), evenly spaced across the top half of the drop. Count where they leave: the five rays from b = {#} to {#} all come out between {#}° and {#}°, while the other fifteen spread from {#}° to {#}°. That pile up near the least deviation is the bow, and nothing at all leaves beyond it.",
 "White sunlight on the rainbow ray. Water bends violet a little more than red (n = {#} at {#} nm, {#} at {#} nm), so each color has its own least deviation: red leaves at {#}°, violet at {#}°. Red light reaches the eye from drops higher in the sky, so the primary bow is red on the outside.",
@@ -89,5 +94,9 @@ VDI18N.add('en', 'demo/rainbows', [
 "below the horizon: no primary bow",
 "Brightness of the rain against the angle from the antisolar point (primary peak = {#})",
 "Alexander's dark band (Alexander of Aphrodisias, about {#} AD). Light with one reflection leaves only inside {#}°, light with two reflections only outside {#}°, so between them the rain sends back nothing but the little light reflected off the drops' outsides. The graph under the sky shows the brightness against the angle from the antisolar point: bright inside the primary, the sharp primary edge, the dark band, the secondary.",
-"In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of {#}° around the line from the Sun through your eye send you the primary colors, and on a cone of {#}° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops."
+"In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of {#}° around the line from the Sun through your eye send you the primary colors, and on a cone of {#}° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops.",
+"Deviation D against i ({#} inside)",
+"least D {#}°",
+"least D {#}°, bow {#}°",
+"Brightness against θ (primary peak = {#})"
 ]);

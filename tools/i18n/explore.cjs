@@ -52,4 +52,17 @@ async function explore(page, grab, opts = {}) {
     if (size) await page.setViewportSize(size); await page.waitForTimeout(300); await grab(page);
   }
 }
+/* explore.narrow(page, grab, width): press the Setups, switches and tabs again at a narrower width (default 320 px), for demos that
+   fall back to a shorter wording when a label does not fit (a longer language picks the short wording at widths English never does) */
+explore.narrow = async (page, grab, width = 320) => {
+  const size = page.viewportSize();
+  await page.setViewportSize({ width, height: 700 }); await page.waitForTimeout(400); await grab(page);
+  const sel = '[data-p], .seg button, [role="tab"], .chips button, .viewbar button, .dimbar button, .scenes button, #sceneSeg button';
+  const n = await page.evaluate((sel) => { const all = [...document.querySelectorAll(sel)].filter((b) => !b.closest('a') && !/^(vdFull|vdShare)$/.test(b.id)); all.forEach((b, i) => b.setAttribute('data-i18n-z', i)); return Math.min(all.length, 220); }, sel).catch(() => 0);
+  for (let i = 0; i < n; i++) {
+    await page.evaluate((i) => { const b = document.querySelector('[data-i18n-z="' + i + '"]'); if (b && !b.disabled) try { b.click(); } catch (_) {} }, i).catch(() => {});
+    await page.waitForTimeout(150); await grab(page);
+  }
+  if (size) await page.setViewportSize(size); await page.waitForTimeout(300); await grab(page);
+};
 module.exports = explore;
