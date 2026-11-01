@@ -6,7 +6,9 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Asteroid belt: 3:1 resonance; 5:2 resonance; 2:1 resonance; Between the gaps; Hildas at 3:2; Whole belt. Kuiper belt: Pluto; Pluto's orbit, bad timing; Plutinos; Classical belt; Whole Kuiper belt. Finding Neptune: Uranus alone; Le Verrier's planet; The real Neptune; Hunt for it yourself.
+**Setups in the demo:** Asteroid belt: 3:1 resonance; 5:2 resonance; 2:1 resonance; Between the gaps; Hildas at 3:2; Whole belt; Clearing the gaps. Kuiper belt: Pluto; Pluto's orbit, bad timing; Plutinos; Classical belt; Whole Kuiper belt. Finding Neptune: Uranus alone; Le Verrier's planet; The real Neptune; Hunt for it yourself.
+
+**Supplementary: Clearing the gaps.** This setup computes 1,500 simulated asteroids (600 on a phone) pulled by the Sun, Jupiter and Saturn, and shows over the real counts how many are still at each distance and where the removed ones started. Run it for 20,000 years or more. Which resonances lose asteroids first, how much emptier do they get, and does the 2:1 gap open in that time?
 
 **Using the demo.**
 

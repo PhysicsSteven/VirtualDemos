@@ -3,7 +3,7 @@
 // the real counts, and the Finding Neptune fits (Uranus alone, Le Verrier's planet, the real Neptune).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('resonances', 'GM,D2R,ME_SUN,PLANETS,MARS_Q,kepState,stateAt,elements,drift,resonanceA,makeSystem,stepSystem,neptuneTruth,fitUranus,planetX,LEVERRIER,BELT_HIST,KB_HIST');
+const c = core('resonances', 'kwCore,KW_CONST,GM,D2R,ME_SUN,PLANETS,MARS_Q,kepState,stateAt,elements,drift,resonanceA,makeSystem,stepSystem,neptuneTruth,fitUranus,planetX,LEVERRIER,BELT_HIST,KB_HIST');
 
 let n = 0;
 const abs = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b} ± ${tol}, got ${a}`);
@@ -84,6 +84,36 @@ group('Finding Neptune: Uranus alone, Le Verrier\'s planet, the real Neptune', (
   /* a planet X at 30 AU with 17 Earth masses: the drift is smallest near Neptune's direction */
   const at = (lon) => c.fitUranus(NT, X({ a: 30, e: 0, w: 0, lon, m: 17 * c.ME_SUN }), false, null).rms;
   const r = [270, 300, 315, 330, 345, 360].map(at); abs(r[3], 0.44, 0.02, '330°'); assert(r[3] < Math.min(...r.filter((_, i) => i !== 3)));
+});
+
+/* Clearing the gaps runs kwCore in a Web Worker from its source text; here it is rebuilt from that text in this context too
+   (a vm context runs it about 20 times slower) */
+const kwFrom = () => new Function('return ' + c.kwCore.toString())()(JSON.parse(JSON.stringify(c.KW_CONST)));
+group('Clearing the gaps: the worker text builds and steps exactly as the page does; the step is fine enough', () => {
+  const A = kwFrom(), B = kwFrom(), sa = A.make(40, 11), sb = B.make(40, 11);
+  for (let k = 0; k < 10; k++) { A.step(sa, 20); B.step(sb, 7); B.step(sb, 13); }
+  for (let i = 0; i < sa.s.length; i++) abs(sa.s[i], sb.s[i], 1e-9, 'batches of different length agree');
+  assert.strictEqual(sa.t, 50); assert.strictEqual(A.DT, 0.25);
+  /* the same asteroids between the gaps (2.6 to 2.7 AU) with steps of 0.25 and 0.125 yr for 2,000 years: a agrees to 0.002 AU */
+  const s1 = A.make(20, 5, { from: 2.6, to: 2.7 }), s2 = A.make(20, 5, { from: 2.6, to: 2.7 }); s2.dt = 0.125;
+  while (s1.t < 2000) A.step(s1, 100); while (s2.t < 2000) A.step(s2, 200);
+  for (let j = 0; j < 20; j++) { assert(!s1.gone[j] && !s2.gone[j]); abs(A.ae(s1, j)[0], A.ae(s2, j)[0], 0.002, 'a with half the step'); }
+  /* the start: spread evenly, e from 0 to 0.3, no Mars crosser */
+  const s0 = A.make(1500, 2203), h = A.hist(s0, 2.04, 0.04, 36);
+  assert(h.live.every((v) => Math.abs(v - 1500 / 36) <= 1.5), "one per slice, so each 0.04 AU starts with 41 to 43");
+  for (let j = 0; j < 1500; j++) { const [a, e] = A.ae(s0, j); assert(e < 0.3 + 1e-9 && a * (1 - e) >= 1.8 - 1e-9); }
+});
+group('Clearing the gaps: Jupiter and Saturn empty the 3:1 within 25,000 years and leave its neighbors (seed 2203)', () => {
+  const A = kwFrom(), st = A.make(300, 2203, { from: 2.40, to: 2.60 }), a31 = c.resonanceA(c.PLANETS.jupiter.a, 3, 1);
+  while (st.t < 25000) A.step(st, 400);
+  const w = A.inWindow(st, a31, 0.02); let near = 0, far = 0, sideS = 0, sideN = 0;
+  for (let j = 0; j < st.n; j++) {
+    if (st.gone[j]) { assert.strictEqual(st.gone[j], 1, 'removed by crossing Mars\'s orbit'); if (Math.abs(st.a0[j] - a31) < 0.04) near++; else far++; }
+    if (Math.abs(st.a0[j] - a31) > 0.05) { sideS++; if (!st.gone[j]) sideN++; }
+  }
+  assert(w.now <= 0.7 * w.start, `3:1 window ${w.now} of ${w.start}`);
+  assert(near >= 15 && near >= 4 * far, `removed near the 3:1 ${near}, elsewhere ${far}`);
+  assert(sideN >= 0.97 * sideS, `neighbors kept ${sideN} of ${sideS}`);
 });
 
 console.log(`${n} groups pass`);

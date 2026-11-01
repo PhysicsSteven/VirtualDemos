@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/resonances', {
   "por encima de esto cruza la órbita de Marte",
 "Orbital Resonances":
   "Resonancias orbitales",
+"<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Temperaturas planetarias y zonas habitables</span></a><a><span>Construir un sistema solar</span> <span>→</span></a>",
 "When an asteroid goes round the Sun exactly three times for each turn of Jupiter, Jupiter tugs it at the same places again and again and its orbit stretches until it crosses Mars's. Watch the kicks beside the real counts of asteroids, see how the same kind of timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did in {#}.":
   "Cuando un asteroide da exactamente tres vueltas alrededor del Sol por cada vuelta de Júpiter, Júpiter lo jala en los mismos lugares una y otra vez y su órbita se alarga hasta cruzar la de Marte. Observa los empujones junto a los conteos reales de asteroides, mira cómo el mismo tipo de sincronía mantiene a Plutón a salvo de Neptuno, y encuentra a Neptuno por su atracción sobre Urano como lo hizo Le Verrier en {#}.",
 "distances in AU · time in years":
@@ -86,6 +88,8 @@ VDI18N.add('es', 'demo/resonances', {
   "Hildas en {#}:{#}",
 "Whole belt":
   "Todo el cinturón",
+"Clearing the gaps":
+  "Vaciar los huecos",
 "An asteroid at {#} AU goes round the Sun {#} times for each turn of Jupiter. Jupiter passes it at the same two places on its orbit, again and again, and the kicks add up: in this run its orbit stretches until it crosses Mars's orbit after about {#} years. Real asteroids here were cleared the same way, which is why the {#}:{#} gap at {#} AU is nearly empty.":
   "Un asteroide a {#} UA da {#} vueltas alrededor del Sol por cada vuelta de Júpiter. Júpiter lo rebasa en los mismos dos lugares de su órbita, una y otra vez, y los empujones se suman: en esta ejecución su órbita se alarga hasta cruzar la órbita de Marte tras unos {#} años. Los asteroides reales de aquí se despejaron de la misma forma, y por eso el hueco {#}:{#} en {#} UA está casi vacío.",
 "Distance a now":
@@ -108,14 +112,12 @@ VDI18N.add('es', 'demo/resonances', {
   "un cuerpo que da p vueltas mientras el planeta da q vueltas: a = a_planet × (q/p)^({#}/{#})",
 "Jupiter's {#}:{#} → {#} AU, {#}:{#} → {#} AU, {#}:{#} → {#} AU, {#}:{#} → {#} AU; Neptune's {#}:{#} → {#} AU, {#}:{#} → {#} AU":
   "De Júpiter {#}:{#} → {#} UA, {#}:{#} → {#} UA, {#}:{#} → {#} UA, {#}:{#} → {#} UA; de Neptuno {#}:{#} → {#} UA, {#}:{#} → {#} UA",
-"Model: the Sun, one planet on its fixed Kepler ellipse, and massless bodies, all in one plane, stepped with the Wisdom–Holman method (steps of {#} yr for the asteroid belt, {#} yr for the Kuiper belt). Planet orbits are the J2000 elements of Standish (JPL) and masses from the IAU {#} constants. Left out: every other planet (above all Saturn, which the real {#}:{#} gap needs), the tilts of the orbits, collisions, and the Yarkovsky drift that feeds real asteroids into the resonances. A body is stopped when it crosses Mars's orbit (q < {#} AU), since close passes by the inner planets then remove it, or when it comes within one Hill radius of the planet. The real gaps took millions of years to clear; the demo shows the first kicks. Finding Neptune: Jupiter, Saturn, Uranus and Neptune pull on each other in a full model integrated back from {#} to {#} (Runge–Kutta, {#} yr); its Uranus is \"seen\" once a year from {#} to {#} and at seven older sightings ({#} to {#}), heliocentric longitudes with no measuring error. A model without Neptune, or with a planet X on a fixed ellipse, is fitted to them by least squares (Uranus's {#} position and velocity).":
-  "Modelo: el Sol, un planeta en su elipse de Kepler fija y cuerpos sin masa, todos en un plano, avanzados con el método de Wisdom–Holman (pasos de {#} años para el cinturón de asteroides, {#} años para el cinturón de Kuiper). Las órbitas de los planetas son los elementos J2000 de Standish (JPL) y las masas son las de las constantes de la IAU {#}. Se deja fuera: todos los demás planetas (sobre todo Saturno, que el hueco real {#}:{#} necesita), las inclinaciones de las órbitas, los choques y la deriva de Yarkovsky que lleva a los asteroides reales a las resonancias. Un cuerpo se detiene cuando cruza la órbita de Marte (q < {#} UA), ya que entonces los pasos cercanos de los planetas interiores lo eliminan, o cuando llega a menos de un radio de Hill del planeta. Los huecos reales tardaron millones de años en despejarse; la demo muestra los primeros empujones. Encontrar a Neptuno: Júpiter, Saturno, Urano y Neptuno se atraen entre sí en un modelo completo integrado hacia atrás de {#} a {#} (Runge–Kutta, {#} años); su Urano se \"observa\" una vez al año de {#} a {#} y en siete observaciones más antiguas ({#} a {#}), longitudes heliocéntricas sin error de medición. Un modelo sin Neptuno, o con un planeta X en una elipse fija, se ajusta a ellas por mínimos cuadrados (posición y velocidad de Urano en {#}).",
+"Model: the Sun, one planet on its fixed Kepler ellipse, and massless bodies, all in one plane, stepped with the Wisdom–Holman method (steps of {#} yr for the asteroid belt, {#} yr for the Kuiper belt). Planet orbits are the J2000 elements of Standish (JPL) and masses from the IAU {#} constants. Left out: every other planet (above all Saturn, which the real {#}:{#} gap needs), the tilts of the orbits, collisions, and the Yarkovsky drift that feeds real asteroids into the resonances. A body is stopped when it crosses Mars's orbit (q < {#} AU), since close passes by the inner planets then remove it, or when it comes within one Hill radius of the planet. The real gaps took millions of years to clear; the demo shows the first kicks. Clearing the gaps adds Saturn: many simulated asteroids pulled by the Sun, Jupiter and Saturn, both planets on their fixed J2000 ellipses (so the slow changes of their orbits are left out), steps of {#} yr, run in the background (a Web Worker) up to {#} years; an asteroid counts as removed when its orbit crosses Mars's or it comes within Jupiter's or Saturn's Hill radius. Finding Neptune: Jupiter, Saturn, Uranus and Neptune pull on each other in a full model integrated back from {#} to {#} (Runge–Kutta, {#} yr); its Uranus is \"seen\" once a year from {#} to {#} and at seven older sightings ({#} to {#}), heliocentric longitudes with no measuring error. A model without Neptune, or with a planet X on a fixed ellipse, is fitted to them by least squares (Uranus's {#} position and velocity).":
+  "Modelo: el Sol, un planeta en su elipse de Kepler fija y cuerpos sin masa, todos en un plano, avanzados con el método de Wisdom–Holman (pasos de {#} años para el cinturón de asteroides, {#} años para el cinturón de Kuiper). Las órbitas de los planetas son los elementos J2000 de Standish (JPL) y las masas son las de las constantes de la IAU {#}. Se deja fuera: todos los demás planetas (sobre todo Saturno, que el hueco real {#}:{#} necesita), las inclinaciones de las órbitas, los choques y la deriva de Yarkovsky que lleva a los asteroides reales a las resonancias. Un cuerpo se detiene cuando cruza la órbita de Marte (q < {#} UA), ya que entonces los pasos cercanos de los planetas interiores lo eliminan, o cuando llega a menos de un radio de Hill del planeta. Los huecos reales tardaron millones de años en despejarse; la demo muestra los primeros empujones. Vaciar los huecos añade a Saturno: muchos asteroides simulados atraídos por el Sol, Júpiter y Saturno, ambos planetas en sus elipses J2000 fijas (así que se dejan fuera los cambios lentos de sus órbitas), pasos de {#} años, calculados en segundo plano (un Web Worker) hasta {#} años; un asteroide cuenta como eliminado cuando su órbita cruza la de Marte o cuando llega a menos de un radio de Hill de Júpiter o de Saturno. Encontrar a Neptuno: Júpiter, Saturno, Urano y Neptuno se atraen entre sí en un modelo completo integrado hacia atrás de {#} a {#} (Runge–Kutta, {#} años); su Urano se \"observa\" una vez al año de {#} a {#} y en siete observaciones más antiguas ({#} a {#}), longitudes heliocéntricas sin error de medición. Un modelo sin Neptuno, o con un planeta X en una elipse fija, se ajusta a ellas por mínimos cuadrados (posición y velocidad de Urano en {#}).",
 "Where the counts come from":
   "De dónde vienen los conteos",
 "Asteroid belt: numbered asteroids ({#} with a from {#} to {#} AU) counted in bins of {#} AU with the JPL Small Body Database Query API on {#}-{#}-{#}. Kuiper belt: every object in the same database with a from {#} to {#} AU, numbered or not ({#}), in bins of {#} AU. The counts are of objects found so far: small, faint ones far from the Sun are missing, which is why the far Kuiper belt looks thin, but the gaps and piles do not depend on that.":
   "Cinturón de asteroides: asteroides numerados ({#} con a de {#} a {#} UA) contados en intervalos de {#} UA con la API de consulta de la JPL Small Body Database el {#}-{#}-{#}. Cinturón de Kuiper: todos los objetos de la misma base de datos con a de {#} a {#} UA, numerados o no ({#}), en intervalos de {#} UA. Los conteos son de los objetos encontrados hasta ahora: faltan los pequeños y tenues lejos del Sol, y por eso la parte lejana del cinturón de Kuiper se ve escasa, pero los huecos y las acumulaciones no dependen de eso.",
-"<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Temperaturas planetarias y zonas habitables</span></a><a><span>Construir un sistema solar</span> <span>→</span></a>",
 "passed here":
   "rebasó aquí",
 "planet X":
@@ -193,5 +195,97 @@ VDI18N.add('es', 'demo/resonances', {
 "{#}″ rms":
   "{#}″ rms",
 "year {#}":
-  "año {#}"
+  "año {#}",
+"Jupiter passed here":
+  "Júpiter pasó por aquí",
+"Jupiter last passed it":
+  "Júpiter lo rebasó por última vez",
+"{#}° from its perihelion (near aphelion)":
+  "a {#}° de su perihelio (cerca del afelio)",
+"At {#} AU an asteroid goes round {#} times while Jupiter goes round twice, so the kicks repeat at three places on its orbit. The eccentricity climbs past {#} and the orbit crosses Mars's after about {#} years. Compare the deep gap at {#} AU in the real counts.":
+  "A {#} UA un asteroide da {#} vueltas mientras Júpiter da dos, así que los empujones se repiten en tres lugares de su órbita. La excentricidad sube por encima de {#} y la órbita cruza la de Marte tras unos {#} años. Compara con el hueco profundo en {#} UA en los conteos reales.",
+"{#}° from its perihelion":
+  "a {#}° de su perihelio",
+"At {#} AU an asteroid goes round twice for each turn of Jupiter. Its eccentricity swings widely, from {#} to {#} in this run, but with Jupiter alone it is not thrown out. The real {#}:{#} gap (the Hecuba gap) needs Saturn's pull as well, over many millions of years, which this model leaves out.":
+  "A {#} UA un asteroide da dos vueltas por cada vuelta de Júpiter. Su excentricidad oscila mucho, de {#} a {#} en esta ejecución, pero con Júpiter solo no sale expulsado. El hueco real {#}:{#} (el hueco de Hécuba) necesita también la atracción de Saturno, durante muchos millones de años, que este modelo deja fuera.",
+"{#}° from its perihelion (near perihelion)":
+  "a {#}° de su perihelio (cerca del perihelio)",
+"At {#} AU the period ratio is {#}, not a ratio of small whole numbers, so Jupiter passes the asteroid at a different place each time and the kicks cancel out. Its eccentricity only wobbles. This is where the real belt is crowded.":
+  "A {#} UA la razón de periodos es {#}, que no es una razón de números enteros pequeños, así que Júpiter rebasa al asteroide en un lugar distinto cada vez y los empujones se anulan. Su excentricidad solo oscila un poco. Aquí es donde el cinturón real está lleno.",
+"At {#} AU an asteroid goes round {#} times while Jupiter goes round twice, and here the resonance protects it: Jupiter always passes it when it is near perihelion, as far from Jupiter's orbit as it gets. The real counts show a crowd here, the Hilda group. Change the start angle and it can meet Jupiter instead.":
+  "A {#} UA un asteroide da {#} vueltas mientras Júpiter da dos, y aquí la resonancia lo protege: Júpiter siempre lo rebasa cuando está cerca del perihelio, lo más lejos que llega de la órbita de Júpiter. Los conteos reales muestran una multitud aquí, el grupo de las Hildas. Cambia el ángulo inicial y puede encontrarse con Júpiter.",
+"bodies thrown out so far (of {#})":
+  "cuerpos expulsados hasta ahora (de {#})",
+"{#} asteroids, one every {#} AU from {#} to {#} AU, each with e = {#} and a random start angle. Below, each one is a dot at its starting distance, as high as the largest eccentricity it has reached; it turns into a cross when it crosses Mars's orbit. The tall spikes line up with the gaps in the real counts. The real gaps took millions of years to empty; the first steps show here within about {#} years.":
+  "{#} asteroides, uno cada {#} UA de {#} a {#} UA, cada uno con e = {#} y un ángulo inicial al azar. Abajo, cada uno es un punto en su distancia inicial, tan alto como la excentricidad máxima que ha alcanzado; se vuelve una cruz cuando cruza la órbita de Marte. Los picos altos coinciden con los huecos de los conteos reales. Los huecos reales tardaron millones de años en vaciarse; los primeros pasos se ven aquí en unos {#} años.",
+"The bodies":
+  "Los cuerpos",
+"{#} asteroids, one every {#} AU from {#} to {#} AU, each with e = {#} and a random start angle.":
+  "{#} asteroides, uno cada {#} UA de {#} a {#} UA, cada uno con e = {#} y un ángulo inicial al azar.",
+"Still in play":
+  "Todavía en juego",
+"{#} of {#}":
+  "{#} de {#}",
+"Crossed Mars's orbit":
+  "Cruzaron la órbita de Marte",
+"Scattered by Jupiter":
+  "Dispersados por Júpiter",
+"Saturn this way ({#} AU)":
+  "Saturno por aquí ({#} UA)",
+"simulated, per {#} AU":
+  "simulados, por {#} UA",
+"line: simulated, still there":
+  "línea: simulados, todavía ahí",
+"dashed: at the start":
+  "punteada: al inicio",
+"red: removed, where they started":
+  "rojo: eliminados, donde empezaron",
+"Simulated: {#} asteroids ({#} on a phone sized screen), spread evenly from {#} to {#} AU with eccentricities from {#} to {#}, each pulled by the Sun, Jupiter and Saturn, computed step by step in the background. An asteroid counts as removed once its orbit is stretched until it crosses Mars's orbit (close passes by Mars, Earth or Venus, which this model leaves out, would then throw it out of the belt), or once it comes within Jupiter's or Saturn's reach. Below, over the real counts, the line counts the simulated asteroids still at each distance and the red bars show where the removed ones started. Within about {#} years the {#}:{#} resonance at {#} AU loses about a third of its asteroids and the {#}:{#} at {#} AU about a sixth. The rest, on rounder orbits, need millions of years and the slow changes in Jupiter's and Saturn's orbits, which this model leaves out (both planets keep fixed orbits), so the real gaps are emptier. The {#}:{#} gap at {#} AU does not open in a run this short: the line wobbles there because the asteroids caught in it rock in and out in distance, but few are removed. Beyond about {#} AU, closer to Jupiter, asteroids are lost too. The run stops at {#} years.":
+  "Simulado: {#} asteroides ({#} en una pantalla del tamaño de un teléfono), repartidos de manera uniforme de {#} a {#} UA con excentricidades de {#} a {#}, cada uno atraído por el Sol, Júpiter y Saturno, calculados paso a paso en segundo plano. Un asteroide cuenta como eliminado cuando su órbita se alarga hasta cruzar la órbita de Marte (los pasos cercanos de Marte, la Tierra o Venus, que este modelo deja fuera, lo sacarían entonces del cinturón), o cuando llega al alcance de Júpiter o de Saturno. Abajo, sobre los conteos reales, la línea cuenta los asteroides simulados que siguen en cada distancia y las barras rojas muestran dónde empezaron los eliminados. En unos {#} años la resonancia {#}:{#} en {#} UA pierde cerca de un tercio de sus asteroides y la {#}:{#} en {#} UA cerca de un sexto. El resto, en órbitas más redondas, necesita millones de años y los cambios lentos de las órbitas de Júpiter y Saturno, que este modelo deja fuera (ambos planetas mantienen órbitas fijas), así que los huecos reales están más vacíos. El hueco {#}:{#} en {#} UA no se abre en una ejecución tan corta: la línea oscila ahí porque los asteroides atrapados en él se acercan y se alejan, pero se eliminan pocos. Más allá de unas {#} UA, más cerca de Júpiter, también se pierden asteroides. La ejecución se detiene a los {#} años.",
+"Simulated: {#} asteroids ({#} on a phone sized screen), spread evenly from {#} to {#} AU with eccentricities from {#} to {#}, each pulled by the Sun, Jupiter and Saturn, computed step by step in the background.":
+  "Simulado: {#} asteroides ({#} en una pantalla del tamaño de un teléfono), repartidos de manera uniforme de {#} a {#} UA con excentricidades de {#} a {#}, cada uno atraído por el Sol, Júpiter y Saturno, calculados paso a paso en segundo plano.",
+"Came too close to Jupiter or Saturn":
+  "Se acercaron demasiado a Júpiter o Saturno",
+"Near {#}:{#}, {#} to {#} AU":
+  "Cerca de {#}:{#}, {#} a {#} UA",
+"{#} of {#} left":
+  "quedan {#} de {#}",
+"Neptune passed here":
+  "Neptuno pasó por aquí",
+"closest so far {#} AU":
+  "lo más cerca hasta ahora {#} UA",
+"Neptune last passed it":
+  "Neptuno lo rebasó por última vez",
+"The same orbit as Pluto's, started {#}° further round. Now Neptune comes by when the body is near perihelion, inside Neptune's orbit: it meets Neptune and is scattered after about {#} years. Without the resonance Pluto would not have survived.":
+  "La misma órbita que la de Plutón, empezada {#}° más adelante. Ahora Neptuno pasa cuando el cuerpo está cerca del perihelio, dentro de la órbita de Neptuno: se encuentra con Neptuno y sale dispersado tras unos {#} años. Sin la resonancia Plutón no habría sobrevivido.",
+"{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles. Some are caught in the {#}:{#} resonance and stay far from Neptune; the others meet Neptune and are scattered. The real counts show the survivors: the plutinos, piled up at {#} AU.":
+  "{#} cuerpos cerca de {#} UA con excentricidades de {#} a {#} y ángulos iniciales al azar. Algunos quedan atrapados en la resonancia {#}:{#} y se mantienen lejos de Neptuno; los demás se encuentran con Neptuno y salen dispersados. Los conteos reales muestran a los sobrevivientes: los plutinos, amontonados en {#} UA.",
+"{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles.":
+  "{#} cuerpos cerca de {#} UA con excentricidades de {#} a {#} y ángulos iniciales al azar.",
+"Scattered by Neptune":
+  "Dispersados por Neptuno",
+"body":
+  "cuerpo",
+"A body at {#} AU on a nearly round orbit, between Neptune's resonances, never comes near Neptune and needs no protection. Most real Kuiper belt objects from {#} to {#} AU are like this.":
+  "Un cuerpo a {#} UA en una órbita casi redonda, entre las resonancias de Neptuno, nunca se acerca a Neptuno y no necesita protección. La mayoría de los objetos reales del cinturón de Kuiper de {#} a {#} UA son así.",
+"{#} bodies from {#} to {#} AU with eccentricities from {#} to {#}. Those whose orbits reach in near Neptune are scattered unless a resonance protects them, so after some tens of thousands of years the survivors with large eccentricities sit at the {#}:{#} ({#} AU) and {#}:{#} ({#} AU) resonances, as in the real counts.":
+  "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}. Los que tienen órbitas que llegan cerca de Neptuno salen dispersados a menos que una resonancia los proteja, así que tras algunas decenas de miles de años los sobrevivientes con excentricidades grandes están en las resonancias {#}:{#} ({#} UA) y {#}:{#} ({#} UA), como en los conteos reales.",
+"{#} bodies from {#} to {#} AU with eccentricities from {#} to {#}.":
+  "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}.",
+"Where Uranus is seen minus where its fitted orbit puts it (arcseconds), with planet X":
+  "Dónde se ve Urano menos dónde lo pone su órbita ajustada (segundos de arco), con planeta X",
+"open circles: old sightings, not fitted · gray: no planet X":
+  "círculos huecos: observaciones antiguas, no ajustadas · gris: sin planeta X",
+"Le Verrier's prediction of {#} August {#}: {#} AU (he started from the Titius–Bode rule), e = {#} and a mass of {#}/{#} of the Sun ({#} Earths). Too far and twice too heavy, yet it removes much of the drift, and on the night Galle looked it sat less than half a degree from where this model's Neptune was. Galle found Neptune {#}′ from the predicted place.":
+  "La predicción de Le Verrier del {#} de agosto de {#}: {#} UA (partió de la regla de Titius–Bode), e = {#} y una masa de {#}/{#} de la del Sol ({#} Tierras). Demasiado lejos y el doble de pesado, pero elimina gran parte de la deriva, y la noche en que Galle miró estaba a menos de medio grado de donde estaba el Neptuno de este modelo. Galle encontró a Neptuno a {#}′ del lugar predicho.",
+"Planet X is this far from Neptune's direction in {#}":
+  "Así de lejos está el planeta X de la dirección de Neptuno en {#}",
+"{#}° behind":
+  "{#}° detrás",
+"Planet X with Neptune's orbit (from this model on {#} Sep {#}) and mass ({#} Earths): nearly all of Uranus's drift goes away, and what is left (under {#}″) comes from treating Neptune as moving on a fixed ellipse.":
+  "Planeta X con la órbita de Neptuno (de este modelo el {#} de septiembre de {#}) y su masa ({#} Tierras): casi toda la deriva de Urano desaparece, y lo que queda (menos de {#}″) viene de tratar a Neptuno como si se moviera en una elipse fija.",
+"Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.":
+  "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
+"The run stops at {#} years. The real gaps took millions of years to empty.":
+  "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse."
 });
