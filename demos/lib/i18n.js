@@ -34,7 +34,7 @@
   if (window.VDI18N) return;
 
   /* ==LANGS START== (written by tools/i18n.cjs index: the languages and the pages each one covers) */
-  var LANGS = {"es":{"name":"Español","dir":"ltr","decimal":".","draft":"borrador","missing":"aún no en esta página","note":"Borrador hecho a máquina: falta la revisión de un hablante nativo. Los números, símbolos y unidades son los mismos que en inglés.","pages":["demo/blackbody","demo/doppler","demo/pendulum","ws/pendulum"]}};
+  var LANGS = {"es":{"name":"Español","dir":"ltr","decimal":".","draft":"borrador","missing":"aún no en esta página","note":"Borrador hecho a máquina: falta la revisión de un hablante nativo. Los números, símbolos y unidades son los mismos que en inglés.","pages":["demo/blackbody","demo/doppler","demo/pendulum","site","ws/pendulum"]}};
   /* ==LANGS END== */
 
   var KEY = 'vd-lang', root = document.documentElement;
