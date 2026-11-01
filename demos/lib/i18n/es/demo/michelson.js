@@ -46,8 +46,8 @@ VDI18N.add('es', 'demo/michelson', {
   "Láser misterioso",
 "<span>Top view (drag the micrometer drum to turn it)</span>":
   "<span>Vista superior (arrastra el tambor del micrómetro para girarlo)</span>",
-"Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, an optional gas cell and a screen. Arrow keys turn the micrometer.":
-  "Vista superior de un interferómetro de Michelson sobre una mesa óptica: una fuente de luz, un divisor de haz, una placa compensadora, un espejo móvil sobre una platina con micrómetro, un espejo fijo, una celda de gas opcional y una pantalla. Las flechas giran el micrómetro.",
+"Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, a gas cell in the fixed arm and a screen. Arrow keys turn the micrometer.":
+  "Vista superior de un interferómetro de Michelson sobre una mesa óptica: una fuente de luz, un divisor de haz, una placa compensadora, un espejo móvil sobre una platina con micrómetro, un espejo fijo, una celda de gas en el brazo fijo y una pantalla. Las flechas giran el micrómetro.",
 "The screen, {#} mm across":
   "La pantalla, de {#} mm de ancho",
 "The fringes on the screen.":

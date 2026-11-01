@@ -4,7 +4,7 @@ VDI18N.add('en', 'notes/energy-track', [
 "Energy on a Track",
 "Intro mechanics (algebra or calculus based)",
 "With no friction, K + U is the same at every point of the track: the skater turns around at its starting height every time, however the track is shaped between.",
-"Friction turns mechanical energy into thermal energy, μN for every metre slid. The total K + U + E<sub>th</sub> still never changes; only the mechanical part shrinks.",
+"Friction turns mechanical energy into thermal energy, μN for every meter slid. The total K + U + E<sub>th</sub> still never changes; only the mechanical part shrinks.",
 "The zero of potential energy is a choice. Moving the U = {#} line changes U and the total by the same amount and changes nothing about the motion.",
 "A track can push but not pull. The normal force N = m(v²/R + g cosθ) on the inside of a curve, m(g cosθ − v²/R) over a crest; where it would go below zero the skater leaves the track. Rails (Stick to the track) can pull, and then N goes negative.",
 "The heights the skater reaches depend only on energy per unit weight, so they are the same on the Moon or Jupiter and for any mass; how fast it gets there scales as {#}/√g.",

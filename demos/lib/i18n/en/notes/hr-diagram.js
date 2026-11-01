@@ -2,7 +2,7 @@
 VDI18N.add('en', 'notes/hr-diagram', [
 "Stellar Evolution: teaching notes",
 "Stellar Evolution",
-"Intro astronomy (non-majors and majors)",
+"Intro astronomy (nonmajors and majors)",
 "The Hertzsprung Russell diagram plots luminosity against surface temperature, hot on the left. Since L = {#}πR²σT⁴, lines of constant radius run diagonally: giants are at the top right, white dwarfs at the bottom left.",
 "A star's mass sets where it sits on the main sequence and how long it stays there. Luminosity rises steeply with mass (about M⁴), so the lifetime falls as about {#}¹⁰ yr × M⁻²·⁵.",
 "Stars spend most of their lives on the main sequence, which is why most stars we see are there. The later stages are short.",

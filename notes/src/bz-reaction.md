@@ -19,7 +19,7 @@ Students need rate laws, steady states, and the idea that an isolated system mov
 1. **Oscillating beaker.** Ask Q1 first. The solution snaps to blue each time x (HBrO₂) shoots up, then fades to red. In the 3D phase portrait the path joins one closed loop. Period: 7.74 τ = 6.45 min.
 2. **Drag f.** On the lower plot, drag the f line above the Hopf point at 2.33: one pulse, then red for good. Back inside the band the clock restarts; below 0.505 it stops in the other state (Q3).
 3. **Target waves.** Switch to the dish. A spot with φ = 0 oscillates by itself and sends out rings. Use the probe readouts: period at the probe, front speed, and the lone plane wave speed for comparison (Q4).
-4. **Make a spiral.** A wave with one free end winds into a spiral. Back in Target waves, use Cut a wave to drag from near the pacemaker to the rim: a spiral pair forms and takes over (Q5). Optionally show **Three color mosaic** next to Toy model, not BZ.
+4. **Make a spiral.** A wave with one free end winds into a spiral. Back in Target waves, use Cut a wave to drag from near the pacemaker to the rim: a spiral pair forms and takes over (Q5). You can also show **Three color mosaic** next to Toy model, not BZ.
 5. **Route to chaos.** Switch to the flow reactor. The scan fills in the peaks of z against flow rate: one branch splits to 2, then 4, then 8, then a smear (Q6). Drag k_f on the diagram into the smear and watch the next peak map trace out one humped curve.
 6. **Butterfly effect.** Two runs start 10⁻⁶ apart. On the log plot the distance between them climbs along a straight line until it saturates. Ask Q7.
 

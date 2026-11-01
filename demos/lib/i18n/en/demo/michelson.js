@@ -23,7 +23,7 @@ VDI18N.add('en', 'demo/michelson', [
 "White light",
 "Mystery laser",
 "<span>Top view (drag the micrometer drum to turn it)</span>",
-"Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, an optional gas cell and a screen. Arrow keys turn the micrometer.",
+"Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, a gas cell in the fixed arm and a screen. Arrow keys turn the micrometer.",
 "The screen, {#} mm across",
 "The fringes on the screen.",
 "Divider between the interferometer and the screen",

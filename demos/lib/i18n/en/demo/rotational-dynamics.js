@@ -45,7 +45,7 @@ VDI18N.add('en', 'demo/rotational-dynamics', [
 "Capture stores m, r, what is on the table and the timer reading for the {#} m drop ({#} s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.",
 "3D view: drag to turn it, scroll or pinch to zoom, double click to reset. The camera follows the hanging mass down. The timer starts as the mass leaves the start gate and stops when the bottom of the hanger reaches the stop gate, {#} m lower; the screen behind the turntable draws ω against time for the same run. The turntable, spool, loads, slotted masses and the drop are to scale; the string is drawn thicker than a real thread. Flat shows the older drawing; both show the same motion.",
 "Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.",
-"Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = {#} × {#}⁻³ kg·m². Disk {#} kg, radius {#} cm; ring {#} kg, radii {#} and {#} cm; two {#} kg masses (small cylinders, {#} cm radius).",
+"Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and, when switched on, a constant friction torque at the bearing. Turntable I₀ = {#} × {#}⁻³ kg·m². Disk {#} kg, radius {#} cm; ring {#} kg, radii {#} and {#} cm; two {#} kg masses (small cylinders, {#} cm radius).",
 "TIMER",
 "start gate to stop gate",
 "ω of the table against time",

@@ -26,7 +26,7 @@ VDI18N.add('en', 'notes/galton-board', [
 "<strong>\"The normal curve is exact.\"</strong> It approximates the binomial, best when np({#} − p) is large and worst for rare events near p = {#} or {#}.",
 "P(k) = n!/(k!(n − k)!) pᵏ({#} − p)ⁿ⁻ᵏ for k right bounces in n rows, mean np, standard deviation √(np({#} − p)). The sample standard deviation divides by N − {#}.",
 "Each peg sends a ball right with probability p, independently; balls do not collide, and the fall drawn between pegs is a picture of the choice, not a simulation of bouncing. Random numbers come from a seeded generator (mulberry32), so the counts are simulated.",
-"The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labelled 2k − n.",
+"The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labeled 2k − n.",
 "Tests (curriculum/validation/test_galton_board.cjs): Pascal's triangle rows, the {#} paths to bin {#}, normalization, mean and variance for many boards, the preset numbers, and {#} {#} seeded balls against the binomial.",
 "Gas in a Box measures diffusion from the mean square displacement of real molecules, the same √t spreading as the random walk.",
 "Entropy and the Second Law counts the microstates of molecules in the two halves of a box, the same counting as the board's paths."

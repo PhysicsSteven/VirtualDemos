@@ -98,7 +98,7 @@ VDI18N.add('es', 'demo/energy-track', {
   "Energía (J)",
 "Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.":
   "Barras de energía, en J: Cinética {#}, Potencial {#}, Térmica {#}, Total {#}.",
-"The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every metre slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.":
+"The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every meter slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.":
   "El mismo valle con μ = {#}. Cada oscilación convierte algo de energía en energía térmica (μN por cada metro deslizado), así que los puntos de retorno quedan más bajos cada vez y el patinador se asienta cerca del fondo. La barra del total no cambia.",
 "Two wells with a hill between, its top {#} m up. Started at {#} m the skater crosses the hill and back; drag it lower than the hilltop and it stays in one well. The hill only lets through a skater whose total energy is above U at the top.":
   "Dos pozos con una colina entre ellos, cuya cima está a {#} m de altura. Si empieza a {#} m, el patinador cruza la colina y regresa; arrástralo más abajo de la cima y se queda en un pozo. La colina solo deja pasar a un patinador cuya energía total sea mayor que U en la cima.",

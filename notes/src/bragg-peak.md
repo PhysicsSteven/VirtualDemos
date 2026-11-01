@@ -13,7 +13,7 @@ time: 10 to 45 minutes
 
 ## Before class
 
-Three views. **One energy**: a single proton energy from 70 to 230 MeV in water, muscle, adipose tissue or compact bone, with an optional energy spread. **Spread out peak**: a target set by its two depths, energy layers 0.3 to 1.0 cm apart in range, and weights fitted for a flat dose or all equal; each weighted layer can be shown on the graph. **Protons and photons**: the same spread out peak and a measured 6 MV beam (10 × 10 cm², SSD 100 cm), both scaled to the same mean dose over the target, with the phantom showing either beam. The phantom shows the dose as a clinical color wash. Beam on animates the particles: protons slow and stop, and photons keep going. A Bragg peak chamber on a scanning carriage reads the dose at its depth on the electrometer. Blind hides the ranges, widths and dose ratios.
+Three views. **One energy**: a single proton energy from 70 to 230 MeV in water, muscle, adipose tissue or compact bone, with or without an energy spread. **Spread out peak**: a target set by its two depths, energy layers 0.3 to 1.0 cm apart in range, and weights fitted for a flat dose or all equal; each weighted layer can be shown on the graph. **Protons and photons**: the same spread out peak and a measured 6 MV beam (10 × 10 cm², SSD 100 cm), both scaled to the same mean dose over the target, with the phantom showing either beam. The phantom shows the dose as a clinical color wash. Beam on animates the particles: protons slow and stop, and photons keep going. A Bragg peak chamber on a scanning carriage reads the dose at its depth on the electrometer. Blind hides the ranges, widths and dose ratios.
 
 ## Running it in class
 

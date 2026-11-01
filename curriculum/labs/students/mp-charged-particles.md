@@ -10,7 +10,7 @@ Student laboratory · Medical Physics
 
 **Using the demo.**
 
-- **Beam in water** is a side view of a water tank, with an optional slab of another material in front of the water. Fire sends particles in one at a time; each track is drawn colored by its energy, and a dot marks a proton lost to a nuclear reaction. The graph under the tank shows the dose against depth: the model's curve for a broad beam, and the dose the drawn tracks have put down so far. Clear tracks starts the count again.
+- **Beam in water** is a side view of a water tank, with or without a slab of another material in front of the water. Fire sends particles in one at a time; each track is drawn colored by its energy, and a dot marks a proton lost to a nuclear reaction. The graph under the tank shows the dose against depth: the model's curve for a broad beam, and the dose the drawn tracks have put down so far. Clear tracks starts the count again.
 - The detector is a small chamber at the depth set on the card (drag it in the tank or on the graph, or type a depth). The readouts give the dose there as a percentage of the peak, the mean energy of the protons still going there, and the stopping power at that energy. They also give the number of tracks that stopped, the mean depth where they stopped and the spread (standard deviation) of those depths.
 - **Stopping power** and **Range** graph the mass stopping power and the CSDA range against kinetic energy on log scales, for the particle and the material chosen on the card. The energy slider moves the marked point. The Range graph also shows the NIST PSTAR ranges of protons in water and a power law fitted to them.
 - Blind (in the Lab fold) hides the model's ranges, peak depth and widths, so you find them with the detector.

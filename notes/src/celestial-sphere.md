@@ -1,6 +1,6 @@
 ---
 title: The Sky and the Celestial Sphere
-level: Intro astronomy (non-majors and majors); Astro 2203 Topic 2
+level: Intro astronomy (nonmajors and majors); Astro 2203 Topic 2
 time: 20 to 30 minutes
 ---
 ## What students should come away with

@@ -52,7 +52,7 @@ VDI18N.add('es', 'notes/galton-board', {
   "P(k) = n!/(k!(n − k)!) pᵏ({#} − p)ⁿ⁻ᵏ para k rebotes a la derecha en n filas, media np, desviación estándar √(np({#} − p)). La desviación estándar muestral divide entre N − {#}.",
 "Each peg sends a ball right with probability p, independently; balls do not collide, and the fall drawn between pegs is a picture of the choice, not a simulation of bouncing. Random numbers come from a seeded generator (mulberry32), so the counts are simulated.":
   "Cada clavo manda una bola a la derecha con probabilidad p, de manera independiente; las bolas no chocan entre sí, y la caída dibujada entre clavos es una imagen de la elección, no una simulación de los rebotes. Los números aleatorios vienen de un generador con semilla (mulberry32), así que las cuentas son simuladas.",
-"The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labelled 2k − n.":
+"The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labeled 2k − n.":
   "La curva normal usa la media y la desviación estándar de la binomial, con una casilla de ancho por unidad de k. Con los pasos netos activados, la casilla k se etiqueta 2k − n.",
 "Tests (curriculum/validation/test_galton_board.cjs): Pascal's triangle rows, the {#} paths to bin {#}, normalization, mean and variance for many boards, the preset numbers, and {#} {#} seeded balls against the binomial.":
   "Pruebas (curriculum/validation/test_galton_board.cjs): filas del triángulo de Pascal, las {#} trayectorias a la casilla {#}, normalización, media y varianza para muchos tableros, los números de las configuraciones, y {#} {#} bolas con semilla comparadas con la binomial.",

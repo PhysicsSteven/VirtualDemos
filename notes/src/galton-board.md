@@ -48,7 +48,7 @@ Students should know what a probability and an average are. **Drop 1**, **Drop 1
 
 - P(k) = n!/(k!(n − k)!) pᵏ(1 − p)ⁿ⁻ᵏ for k right bounces in n rows, mean np, standard deviation √(np(1 − p)). The sample standard deviation divides by N − 1.
 - Each peg sends a ball right with probability p, independently; balls do not collide, and the fall drawn between pegs is a picture of the choice, not a simulation of bouncing. Random numbers come from a seeded generator (mulberry32), so the counts are simulated.
-- The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labelled 2k − n.
+- The normal curve uses the binomial mean and standard deviation, one bin wide per unit of k. With net steps on, bin k is labeled 2k − n.
 - Tests (curriculum/validation/test_galton_board.cjs): Pascal's triangle rows, the 924 paths to bin 6, normalization, mean and variance for many boards, the preset numbers, and 200 000 seeded balls against the binomial.
 
 ## Going further

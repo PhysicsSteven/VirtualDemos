@@ -100,7 +100,7 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "One pulse goes out to MF and back. While it is away the mirror turns by Δθ, so the pulse meets a turned mirror and leaves at {#}Δθ to the path it came in on. L2 then forms the image beside S, shifted by Δs′.",
 "Reversed, the mirror turns the other way and the image moves to the other side of the rest reading (the dashed ring is the CW image). Capture both: the difference doubles the shift, with ω = {#}π(f_CW + f_CCW).",
 "CW image",
-"A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Re-enter D, B and A if you measure them yourself.",
+"A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Enter D, B and A again if you measure them yourself.",
 "A table already filled by the procedure: rest, then {#}, {#} and {#} rev/s each way, read as a careful student would. These are simulated readings on this seed's bench. The slope of reading against signed speed gives c.",
 "D = {#} m, B = {#} m, A = {#} m, simulated reading",
 "{#} sim *",

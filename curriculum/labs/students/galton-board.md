@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §4.7. Access for free at https
 
 - Balls drop from the funnel through n rows of pegs. At each peg a ball goes right with probability p and left with probability 1 − p, independently of every other peg and every other ball. The bin a ball lands in, counted from the left starting at 0, is its number of right bounces k.
 - The random choices are made by the computer, so the counts are simulated data. The fall drawn between the pegs is only a picture of each choice.
-- The card sets the rows and p, and can show the expected counts, a normal curve, fractions instead of counts, and bins labelled by net steps 2k − n. Skip the fall drops balls straight into the bins. Changing the rows or p empties the bins.
+- The card sets the rows and p, and can show the expected counts, a normal curve, fractions instead of counts, and bins labeled by net steps 2k − n. Skip the fall drops balls straight into the bins. Changing the rows or p empties the bins.
 - Record reading stores the number of rows, p, the number of balls N, the sample mean of k and the sample standard deviation s of k (dividing by N − 1). Export to worksheet sends the readings to the Data table below; Clear starts a new series.
 
 </details>

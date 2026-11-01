@@ -1,6 +1,6 @@
 ---
 title: Blackbody Radiation
-level: Intro astronomy (non-majors and majors); modern physics (Planck and the ultraviolet catastrophe)
+level: Intro astronomy (nonmajors and majors); modern physics (Planck and the ultraviolet catastrophe)
 time: 15 to 25 minutes
 ---
 ## What students should come away with

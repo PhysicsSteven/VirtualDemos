@@ -1,6 +1,6 @@
 ---
 title: Stellar Evolution
-level: Intro astronomy (non-majors and majors)
+level: Intro astronomy (nonmajors and majors)
 time: 20 to 30 minutes
 ---
 ## What students should come away with

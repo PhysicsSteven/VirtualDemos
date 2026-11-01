@@ -56,7 +56,7 @@ Students should know Newton's second law, circular motion and centripetal accele
 - Turntable: radius 2 m, steady Ω. A sliding ball moves in a straight line in the room. Seen from the table, r′ = R(−Ωt) r and v′ = R(−Ωt)(v − Ω × r), and a′ = −2Ω × v′ − Ω × (Ω × r′). A rider's throw adds the rider's velocity Ω × r.
 - A uniform solid ball (I = 2mR²/5) rolling without slipping, no rolling resistance: from the no slip condition and the torque of friction, dv/dt = (2/7) Ω ẑ × v, so in the room it goes round a circle at 2Ω/7 (Weltner 1979; Romer 1981). A ball rolling but at rest in the room stays put while the table turns under it.
 - Foucault pendulum, small swings: a two dimensional oscillator ω₀ = √(g/L), g = 9.81 m/s², with the horizontal Coriolis term 2Ω sin λ (v_north, −v_east), solved exactly. Ω = 7.2921151 × 10⁻⁵ rad/s (IERS), so the sidereal day is 86 164.099 s. The swing turns at 15.04° sin λ per hour: 11.32° per hour in Paris, one turn in 31.79 h; 23.93 h at a pole; 42.95 h in Sydney.
-- Left out (stated on the page): air drag, the vertical Coriolis component, centrifugal force (inside the measured g), Airy's precession of a slightly elliptical swing. Sped up spin is labelled on the picture.
+- Left out (stated on the page): air drag, the vertical Coriolis component, centrifugal force (inside the measured g), Airy's precession of a slightly elliptical swing. Sped up spin is labeled on the picture.
 - Tests (curriculum/validation/test_rotating-frames.cjs): the turning frame path against an RK4 integration of a′ = −2Ω × v′ + Ω²r′; the rolling ball's spin integrated to confirm no slip; edge times; the Foucault solution against RK4; the plane's angle at each farthest out point equal to −Ω sin λ t; the turn times.
 
 ## Going further

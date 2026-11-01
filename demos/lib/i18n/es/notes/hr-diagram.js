@@ -4,7 +4,7 @@ VDI18N.add('es', 'notes/hr-diagram', {
   "Evolución estelar: notas para el docente",
 "Stellar Evolution":
   "Evolución estelar",
-"Intro astronomy (non-majors and majors)":
+"Intro astronomy (nonmajors and majors)":
   "Introducción a la astronomía (para estudiantes de otras carreras y de la carrera)",
 "The Hertzsprung Russell diagram plots luminosity against surface temperature, hot on the left. Since L = {#}πR²σT⁴, lines of constant radius run diagonally: giants are at the top right, white dwarfs at the bottom left.":
   "El diagrama de Hertzsprung Russell grafica la luminosidad en función de la temperatura superficial, con lo caliente a la izquierda. Como L = {#}πR²σT⁴, las líneas de radio constante van en diagonal: las gigantes están arriba a la derecha, las enanas blancas abajo a la izquierda.",

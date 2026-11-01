@@ -649,15 +649,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const INST_HINT = {
     flute: 'Like a flute: nearly a sine wave, a strong fundamental and a few weak harmonics.',
     clarinet: 'Like a clarinet: odd harmonics strong, even ones weak, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed.',
-    oboe: 'Oboe-like: a weak fundamental, the strongest partials at harmonics 3 and 4 and a slow fall above: a nasal, reedy tone.',
-    trumpet: 'Trumpet-like: many strong harmonics that fall off slowly, as when a trumpet plays loudly: a bright, brassy tone.',
-    bowed: 'Bowed string-like: every harmonic, aₙ = 1/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth.'
+    oboe: 'Like an oboe: a weak fundamental, the strongest partials at harmonics 3 and 4 and a slow fall above: a nasal, reedy tone.',
+    trumpet: 'Like a trumpet: many strong harmonics that fall off slowly, as when a trumpet plays loudly: a bright, brassy tone.',
+    bowed: 'Like a bowed string: every harmonic, aₙ = 1/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth.'
   };
   const NI = INSTRUMENTS.length;
+  /* "Like a flute", "Like an oboe", "Like a bowed string" (no hyphenated "Flute-like": house rule) */
+  const likeA = (name) => 'Like ' + (/^[AEIOU]/.test(name) ? 'an ' : 'a ') + name.toLowerCase();
   function morphText(x) {
     const p = morphPos(x, NI), A = INSTRUMENTS[p.i].name, B = INSTRUMENTS[p.j].name;
-    if (p.w === 0) return A + '-like';
-    if (p.w === 1) return B + '-like';
+    if (p.w === 0) return likeA(A);
+    if (p.w === 1) return likeA(B);
     return `${Math.round((1 - p.w) * 100)}% ${A} + ${Math.round(p.w * 100)}% ${B}`;
   }
   // the slider sits on an instrument when the bars hold exactly its spectrum (for example after a preset)

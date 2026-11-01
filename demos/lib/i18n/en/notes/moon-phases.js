@@ -2,7 +2,7 @@
 VDI18N.add('en', 'notes/moon-phases', [
 "Moon Phases: teaching notes",
 "Moon Phases",
-"Intro astronomy (non-majors and majors)",
+"Intro astronomy (nonmajors and majors)",
 "The Sun always lights half of the Moon. The phase is how much of that lit half faces Earth, which depends only on the Moon's angle from the Sun as seen from Earth, the elongation E: lit fraction f = ({#} − cos E)/{#}.",
 "Phases are not caused by Earth's shadow. The shadow points away from the Sun and reaches the Moon only at some full moons, as a lunar eclipse.",
 "Phase and timing go together. Each {#}° of elongation delays the Moon's rise by about an hour, so a first quarter moon rises near noon and a full moon rises at sunset.",

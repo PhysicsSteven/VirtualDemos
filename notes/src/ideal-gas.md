@@ -22,6 +22,7 @@ Students should know KE = ½mv², that momentum reverses in an elastic bounce, a
 4. **Compress.** Ask Q4 first. Set **Piston top speed** to 50 m/s and drag **Box width** from 50 to 25 nm: T climbs to a bit over 600 K. Back out slowly, T returns near 300 K.
 5. **Free expansion.** Squeeze again, set **Piston top speed** to 1000 m/s and pull the wall straight out to 50 nm. T barely drops (Q5).
 6. **Dilute gas** and **Near absolute zero** (if time allows). With 25 molecules the spike relaxes slowly and P is noisy. At 0.01 K the molecules average about 2 m/s but keep the same distribution shape.
+7. **Cold walls** and **Hot wall, cold wall** (if time allows). Walls held at a temperature exchange energy with the atoms that hit them. With every wall at 100 K the 300 K gas cools to 100 K and Q reads about −410 zJ (N k ΔT); squeezed now, T stays near 100 K, an isothermal compression. With the left wall at 400 K and the piston at 100 K the gas carries a steady heat flow and the left half stays warmer. The worksheet uses insulated walls throughout.
 
 ## Questions
 

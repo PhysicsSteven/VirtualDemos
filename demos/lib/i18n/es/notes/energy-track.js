@@ -8,7 +8,7 @@ VDI18N.add('es', 'notes/energy-track', {
   "Mecánica introductoria (con álgebra o con cálculo)",
 "With no friction, K + U is the same at every point of the track: the skater turns around at its starting height every time, however the track is shaped between.":
   "Sin fricción, K + U es lo mismo en cada punto de la pista: el patinador da la vuelta a su altura inicial cada vez, sin importar la forma de la pista entre medio.",
-"Friction turns mechanical energy into thermal energy, μN for every metre slid. The total K + U + E<sub>th</sub> still never changes; only the mechanical part shrinks.":
+"Friction turns mechanical energy into thermal energy, μN for every meter slid. The total K + U + E<sub>th</sub> still never changes; only the mechanical part shrinks.":
   "La fricción convierte energía mecánica en energía térmica, μN por cada metro deslizado. El total K + U + E<sub>th</sub> sigue sin cambiar nunca; solo la parte mecánica se reduce.",
 "The zero of potential energy is a choice. Moving the U = {#} line changes U and the total by the same amount and changes nothing about the motion.":
   "El cero de la energía potencial es una elección. Mover la línea U = {#} cambia U y el total en la misma cantidad y no cambia nada del movimiento.",

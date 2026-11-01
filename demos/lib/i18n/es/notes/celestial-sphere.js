@@ -4,7 +4,7 @@ VDI18N.add('es', 'notes/celestial-sphere', {
   "El cielo y la esfera celeste: notas para el docente",
 "The Sky and the Celestial Sphere":
   "El cielo y la esfera celeste",
-"Intro astronomy (non-majors and majors); Astro {#} Topic {#}":
+"Intro astronomy (nonmajors and majors); Astro {#} Topic {#}":
   "Introducción a la astronomía (para estudiantes de otras carreras y de la carrera); Astro {#}, tema {#}",
 "The sky behaves like a sphere turning once a day about an axis through Earth's poles. Altitude and azimuth say where to look from one place at one moment; right ascension and declination are fixed on the sphere, like longitude and latitude.":
   "El cielo se comporta como una esfera que gira una vez al día alrededor de un eje que pasa por los polos de la Tierra. La altura y el acimut dicen hacia dónde mirar desde un lugar en un momento dado; la ascensión recta y la declinación están fijas en la esfera, como la longitud y la latitud.",

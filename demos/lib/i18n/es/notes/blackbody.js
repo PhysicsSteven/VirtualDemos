@@ -4,7 +4,7 @@ VDI18N.add('es', 'notes/blackbody', {
   "Radiación de cuerpo negro: notas para el docente",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
-"Intro astronomy (non-majors and majors); modern physics (Planck and the ultraviolet catastrophe)":
+"Intro astronomy (nonmajors and majors); modern physics (Planck and the ultraviolet catastrophe)":
   "Introducción a la astronomía (para estudiantes de otras carreras y de la carrera); física moderna (Planck y la catástrofe ultravioleta)",
 "A hotter body emits more at every wavelength. Two Planck curves never cross, so a cooler star is fainter per square meter at all wavelengths, red included.":
   "Un cuerpo más caliente emite más en todas las longitudes de onda. Dos curvas de Planck nunca se cruzan, así que una estrella más fría es más tenue por metro cuadrado en todas las longitudes de onda, incluido el rojo.",

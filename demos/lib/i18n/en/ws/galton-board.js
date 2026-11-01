@@ -14,7 +14,7 @@ VDI18N.add('en', 'ws/galton-board', [
 "<strong>Setups in the demo:</strong> {#} rows, fair; One row: a coin toss; Four rows; Tilted board, p = {#}; Rare event, p = {#}; {#} rows: the bell curve.",
 "Balls drop from the funnel through n rows of pegs. At each peg a ball goes right with probability p and left with probability {#} − p, independently of every other peg and every other ball. The bin a ball lands in, counted from the left starting at {#}, is its number of right bounces k.",
 "The random choices are made by the computer, so the counts are simulated data. The fall drawn between the pegs is only a picture of each choice.",
-"The card sets the rows and p, and can show the expected counts, a normal curve, fractions instead of counts, and bins labelled by net steps 2k − n. Skip the fall drops balls straight into the bins. Changing the rows or p empties the bins.",
+"The card sets the rows and p, and can show the expected counts, a normal curve, fractions instead of counts, and bins labeled by net steps 2k − n. Skip the fall drops balls straight into the bins. Changing the rows or p empties the bins.",
 "Record reading stores the number of rows, p, the number of balls N, the sample mean of k and the sample standard deviation s of k (dividing by N − {#}). Export to worksheet sends the readings to the Data table below; Clear starts a new series.",
 "Find how the outcome of many random choices is distributed, measure how its mean and spread depend on the number of choices and on the chance of each, and see why the most likely outcome is the one with the most ways to happen.",
 "A ball that makes n independent left or right choices, going right with probability p, lands in bin k with probability",

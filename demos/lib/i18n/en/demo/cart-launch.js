@@ -8,7 +8,7 @@ VDI18N.add('en', 'demo/cart-launch', [
 "<a><span>←</span> <span>Projectile Range</span></a><a><span>Circular Motion</span> <span>→</span></a>",
 "A cart rolls along a track and fires a ball straight up. The ball keeps the cart's forward velocity, so while both move steadily it lands back in the launcher. Make the cart speed up or brake after the launch and the ball misses; tilt the track and it lands in the cart again.",
 "SI units · g = {#} m/s² · no air resistance",
-"A cart on a track fires a ball straight up; the ball's path, optional velocity and acceleration arrows, strobe images, and a graph of position along the track against time for the cart and the ball.",
+"A cart on a track fires a ball straight up; the ball's path, velocity and acceleration arrows when switched on, strobe images, and a graph of position along the track against time for the cart and the ball.",
 "Predict: where will the ball land? Then press Resume.",
 "Divider between the track and the graph",
 "Apparatus controls",

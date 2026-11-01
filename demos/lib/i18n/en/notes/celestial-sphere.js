@@ -2,7 +2,7 @@
 VDI18N.add('en', 'notes/celestial-sphere', [
 "The Sky and the Celestial Sphere: teaching notes",
 "The Sky and the Celestial Sphere",
-"Intro astronomy (non-majors and majors); Astro {#} Topic {#}",
+"Intro astronomy (nonmajors and majors); Astro {#} Topic {#}",
 "The sky behaves like a sphere turning once a day about an axis through Earth's poles. Altitude and azimuth say where to look from one place at one moment; right ascension and declination are fixed on the sphere, like longitude and latitude.",
 "The north celestial pole stands as many degrees above the northern horizon as your latitude. Polaris is within {#}° of it today.",
 "Stars within that many degrees of the pole never set (circumpolar); stars as close to the other pole never rise. A star on the celestial equator is up for half of each day, everywhere.",

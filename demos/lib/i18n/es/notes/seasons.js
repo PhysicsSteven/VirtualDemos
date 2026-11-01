@@ -4,7 +4,7 @@ VDI18N.add('es', 'notes/seasons', {
   "Las razones de las estaciones: notas para el docente",
 "Reasons for Seasons":
   "Las razones de las estaciones",
-"Intro astronomy (non-majors and majors); intro physics (flux and angle of incidence)":
+"Intro astronomy (nonmajors and majors); intro physics (flux and angle of incidence)":
   "Introducción a la astronomía (para estudiantes de otras carreras y de la carrera); introducción a la física (flujo y ángulo de incidencia)",
 "Seasons come from the {#}° tilt of Earth's axis, which stays pointed the same way in space all year. The distance to the Sun changes by only ±{#}%, and Earth is closest in early January, during northern winter.":
   "Las estaciones provienen de la inclinación de {#}° del eje de la Tierra, que sigue apuntando en la misma dirección en el espacio todo el año. La distancia al Sol cambia solo ±{#}%, y la Tierra está más cerca a principios de enero, durante el invierno del norte.",

@@ -4,7 +4,7 @@ VDI18N.add('es', 'notes/moon-phases', {
   "Fases de la Luna: notas para el docente",
 "Moon Phases":
   "Fases de la Luna",
-"Intro astronomy (non-majors and majors)":
+"Intro astronomy (nonmajors and majors)":
   "Astronomía introductoria (para estudiantes de otras carreras y de física)",
 "The Sun always lights half of the Moon. The phase is how much of that lit half faces Earth, which depends only on the Moon's angle from the Sun as seen from Earth, the elongation E: lit fraction f = ({#} − cos E)/{#}.":
   "El Sol siempre ilumina la mitad de la Luna. La fase es qué tanto de esa mitad iluminada mira hacia la Tierra, lo cual depende solo del ángulo de la Luna respecto al Sol visto desde la Tierra, la elongación E: fracción iluminada f = ({#} − cos E)/{#}.",

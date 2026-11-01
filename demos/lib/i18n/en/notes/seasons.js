@@ -2,7 +2,7 @@
 VDI18N.add('en', 'notes/seasons', [
 "Reasons for Seasons: teaching notes",
 "Reasons for Seasons",
-"Intro astronomy (non-majors and majors); intro physics (flux and angle of incidence)",
+"Intro astronomy (nonmajors and majors); intro physics (flux and angle of incidence)",
 "Seasons come from the {#}° tilt of Earth's axis, which stays pointed the same way in space all year. The distance to the Sun changes by only ±{#}%, and Earth is closest in early January, during northern winter.",
 "The tilt changes two things together: the height of the noon Sun (a low Sun spreads the same beam over more ground) and the length of the day.",
 "The Sun's declination δ swings between +ε and −ε. The noon altitude is {#}° − |φ − δ|, and day length follows from cos H₀ = −tan φ tan δ.",

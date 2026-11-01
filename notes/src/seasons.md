@@ -1,6 +1,6 @@
 ---
 title: Reasons for Seasons
-level: Intro astronomy (non-majors and majors); intro physics (flux and angle of incidence)
+level: Intro astronomy (nonmajors and majors); intro physics (flux and angle of incidence)
 time: 15 to 25 minutes
 ---
 ## What students should come away with

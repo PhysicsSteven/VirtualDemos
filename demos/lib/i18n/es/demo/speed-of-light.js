@@ -200,7 +200,7 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Invertido, el espejo gira en el otro sentido y la imagen se mueve al otro lado de la lectura de reposo (el anillo punteado es la imagen CW). Captura ambas: la diferencia duplica el desplazamiento, con ω = {#}π(f_CW + f_CCW).",
 "CW image":
   "imagen CW",
-"A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Re-enter D, B and A if you measure them yourself.":
+"A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Enter D, B and A again if you measure them yourself.":
   "Una trayectoria más larga le da al espejo más tiempo para girar y un brazo de palanca más largo, así que el desplazamiento crece aproximadamente como D² / (D + B). L1 tiene que moverse: A sale de la condición de enfoque. Vuelve a escribir D, B y A si los mides tú mismo.",
 "A table already filled by the procedure: rest, then {#}, {#} and {#} rev/s each way, read as a careful student would. These are simulated readings on this seed's bench. The slope of reading against signed speed gives c.":
   "Una tabla ya llena por el procedimiento: reposo, y luego {#}, {#} y {#} rev/s en cada sentido, leídas como lo haría un estudiante cuidadoso. Son lecturas simuladas en el banco de esta semilla. La pendiente de la lectura en función de la velocidad con signo da c.",

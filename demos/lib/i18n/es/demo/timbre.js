@@ -8,7 +8,7 @@ VDI18N.add('es', 'demo/timbre', {
   "Forma de onda: la suma de {#} armónicos",
 "level (dB)":
   "nivel (dB)",
-"Bowed string-like (illustrative)":
+"Like a bowed string (illustrative)":
   "Parecido a cuerda frotada (ilustrativo)",
 "Spectrum":
   "Espectro",
@@ -48,13 +48,13 @@ VDI18N.add('es', 'demo/timbre', {
   "<span>Armónicos y fases</span>",
 "Compare instruments":
   "Comparar instrumentos",
-"Bowed string-like":
+"Like a bowed string":
   "Parecido a cuerda frotada",
 "<span>Flute</span><span>Clarinet</span><span>Oboe</span><span>Trumpet</span><span>Bowed string</span>":
   "<span>Flauta</span><span>Clarinete</span><span>Oboe</span><span>Trompeta</span><span>Cuerda frotada</span>",
 "About this instrument":
   "Sobre este instrumento",
-"Bowed string-like: every harmonic, aₙ = {#}/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.":
+"Like a bowed string: every harmonic, aₙ = {#}/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.":
   "Parecido a cuerda frotada: todos los armónicos, aₙ = {#}/n, el diente de sierra. La fuerza que una cuerda frotada ejerce sobre el puente se parece mucho a un diente de sierra. Espectros ilustrativos, no grabaciones; todos suenan con la misma f₁ y las fases actuales, así que solo cambia la mezcla de armónicos.",
 "Pure tone":
   "Tono puro",
@@ -318,21 +318,17 @@ VDI18N.add('es', 'demo/timbre', {
   "La configuración Onda triangular no es uno de estos instrumentos. Mueve el deslizador o elige el nombre de un instrumento para volver a los instrumentos. Espectros ilustrativos, no grabaciones; todos suenan con la misma f₁ y las fases actuales, así que solo cambia la mezcla de armónicos.",
 "Illustrative spectrum, not a recording: D3 with strong odd harmonics and weak even ones, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed. Switch the ladder to Closed pipe: only odd modes fit.":
   "Espectro ilustrativo, no una grabación: D3 con armónicos impares fuertes y pares débiles, como en el registro grave de un clarinete, cuyo tubo actúa aproximadamente como un tubo cerrado en la lengüeta. Cambia la escalera a Tubo cerrado: solo caben modos impares.",
-"Clarinet-like":
-  "Parecido a clarinete",
 "Like a clarinet: odd harmonics strong, even ones weak, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.":
   "Como un clarinete: armónicos impares fuertes, pares débiles, como en el registro grave de un clarinete, cuyo tubo actúa aproximadamente como un tubo cerrado en la lengüeta. Espectros ilustrativos, no grabaciones; todos suenan con la misma f₁ y las fases actuales, así que solo cambia la mezcla de armónicos.",
-"Clarinet-like (illustrative)":
+"Like a clarinet (illustrative)":
   "Parecido a clarinete (ilustrativo)",
 "Illustrative spectrum, not a recording: A4 with a strong fundamental and a few weak harmonics, close to a pure sine wave. A softly played flute comes near this; compare the tone with Pure tone and with the sawtooth.":
   "Espectro ilustrativo, no una grabación: A4 con una fundamental fuerte y unos pocos armónicos débiles, cerca de una onda senoidal pura. Una flauta tocada suavemente se acerca a esto; compara el tono con Tono puro y con el diente de sierra.",
-"Flute-like":
-  "Parecido a flauta",
 "Like a flute: nearly a sine wave, a strong fundamental and a few weak harmonics. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.":
   "Como una flauta: casi una onda senoidal, una fundamental fuerte y unos pocos armónicos débiles. Espectros ilustrativos, no grabaciones; todos suenan con la misma f₁ y las fases actuales, así que solo cambia la mezcla de armónicos.",
 "n = {#} at {#} kHz":
   "n = {#} a {#} kHz",
-"Flute-like (illustrative)":
+"Like a flute (illustrative)":
   "Parecido a flauta (ilustrativo)",
 "Harmonics {#} to {#} of A3 with nothing at {#} Hz. The waveform still repeats every {#} ms and you still hear A3: pitch follows the repetition period, not the energy at f₁. Small speakers that cannot play the lowest notes rely on this. Untick Remove harmonic {#} to compare, then also remove harmonic {#}.":
   "Armónicos {#} a {#} de A3 sin nada en {#} Hz. La forma de onda aún se repite cada {#} ms y aún oyes A3: la altura sigue al periodo de repetición, no a la energía en f₁. Las bocinas pequeñas que no pueden tocar las notas más graves dependen de esto. Desmarca Quitar el armónico {#} para comparar, y luego quita también el armónico {#}.",

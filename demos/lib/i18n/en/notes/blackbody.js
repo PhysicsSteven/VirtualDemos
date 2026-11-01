@@ -2,7 +2,7 @@
 VDI18N.add('en', 'notes/blackbody', [
 "Blackbody Radiation: teaching notes",
 "Blackbody Radiation",
-"Intro astronomy (non-majors and majors); modern physics (Planck and the ultraviolet catastrophe)",
+"Intro astronomy (nonmajors and majors); modern physics (Planck and the ultraviolet catastrophe)",
 "A hotter body emits more at every wavelength. Two Planck curves never cross, so a cooler star is fainter per square meter at all wavelengths, red included.",
 "The peak moves to shorter wavelength as the temperature rises: λmax = b/T, with b = {#}×{#}⁻³ m·K (Wien's law).",
 "The power per square meter grows as σT⁴, so the luminosity of a star, L = {#}πR²σT⁴, depends on its size as well as its temperature.",

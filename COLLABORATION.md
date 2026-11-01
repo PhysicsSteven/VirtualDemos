@@ -6905,3 +6905,16 @@ detail") and picked new 3D views for Resolution and Blackbody (Week 3). Both now
   intro-blackbody, ubv-colors. Screenshots /mnt/project-files/visual-pass-2026-11/astro-2203/a2a/.
 - For GPT: check the 26.5 % dip and 0.947 λ/D Sparrow numbers against [2J₁(x)/x]², and the 3D brightness rule text.
 - Open for Steve: an honest seeing option (long exposure Kolmogorov PSF) for Hubble and two stars.
+
+## 2026-11-01 (Claude): house rules as a check, `tools/rules.cjs` (Steve)
+
+Steve asked to turn the written rules into checks. `node tools/rules.cjs` (about 4 s, no browser, no packages) tests seven:
+Liquid braces in any Markdown file, no keys or guides in this repo (`--keys <TeacherKeys clone>` also looks for key answers
+copied here), no hyphens in compound modifiers, nothing "optional", American spelling, every demo harvested for translation,
+every worksheet has its How this works video. `--list` prints each rule and what it reads. It reads student facing text: the
+harvested English strings, the worksheets, the notes sources and What's new. Exceptions are reasoned ALLOW entries in the script.
+Fixed what it found: 11 "optional" (cart launch, Michelson, rotational dynamics, Bragg peak, BZ, charged particles notes and
+worksheet), "non-majors" in 5 notes, Timbre's "Flute-like" style names (now "Like a flute", "Like an oboe", "Like a bowed string";
+TeacherKeys timbre key JSON labels follow, the key PDF shows the old label until its next rebuild), "Re-enter", and British
+spellings (labelled, metre, coloured, centres, travelling, analyse). Spanish keys moved with the English. `notes/ideal-gas.html`
+had a Cold walls step missing from `notes/src/ideal-gas.md`; the source now has it. Not yet a commit hook or CI job.
