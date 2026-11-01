@@ -596,5 +596,6 @@ VDI18N.add('en', 'common', [
 "This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.",
 "sun",
 "ELECTROMETER",
-"He"
+"He",
+"Hide data table"
 ]);

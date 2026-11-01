@@ -87,7 +87,6 @@ VDI18N.add('en', 'demo/collisions', [
 "Fit of total momentum after against before",
 "capture readings first",
 "Plotted readings, fitted line and residuals",
-"residual",
 "No plotted readings.",
 "Each point is one run: x = m₁u₁ + m₂u₂, y = m₁v₁′ + m₂v₂′. If momentum is conserved the points lie on y = x: slope {#}, intercept {#}. The fit is a least squares line y = a + bx with equal weights, through your captured rows only; rows with a blank cell are left out. The standard errors come from the scatter of the rows about the line, which here is only the timer and display rounding.",
 "Blind hides the Results panel, the predicted velocities, momenta and energies drawn on the track, the after bars, the future paths on the graphs, the momentum triangle after the collision, the setup hints and the value of e. On the 1D track and the 2D table the e slider gives way to four bumpers, A to D, each with a fixed e that you measure. The photogates, the motion itself and your fit stay.",

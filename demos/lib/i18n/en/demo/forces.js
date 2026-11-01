@@ -134,7 +134,6 @@ VDI18N.add('en', 'demo/forces', [
 "hidden in Blind",
 "Work, kinetic energy and power",
 "A new mystery surface. Earlier rows used a different one.",
-"Hide data table",
 "Moving",
 "Sliding: the bumps catch and tear past each other.",
 "Not sliding: the bumps are locked.",

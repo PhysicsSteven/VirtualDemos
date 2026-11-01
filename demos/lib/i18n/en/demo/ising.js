@@ -1,6 +1,6 @@
 /* English strings of demo/ising, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/ising', [
-"{#} × {#} = {#},{#} spins, periodic",
+"{#} × {#} = {#} spins, periodic",
 "magnetization per spin m(t)",
 "energy per spin e(t)",
 "sweeps",
@@ -95,9 +95,9 @@ VDI18N.add('en', 'demo/ising', [
 "magnetization m against field h · T = {#}, L = {#}, {#} per sweep",
 "Turn on Sweep h, or pick Hysteresis",
 "T = {#}, well below T<sub>c</sub>. One domain fills the lattice; single spins blink against it and flip back. m sits on the Onsager value, {#}.",
+"Cluster updates, h = {#} only",
 "Onsager ±{#}",
 "Onsager −{#}",
-"Cluster updates, h = {#} only",
 "T = {#}, far above T<sub>c</sub>. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about {#}/√N, less on a larger lattice.",
 "Onsager: m = {#} here",
 "Exactly at T<sub>c</sub> = {#}/ln({#} + √{#}). Domains of every size, inside each other: zoom in and it looks the same. Wolff updates flip whole clusters to beat critical slowing down; tick Show the last Wolff cluster to see one.",
@@ -108,7 +108,7 @@ VDI18N.add('en', 'demo/ising', [
 "T = {#} with h swept between ±{#} at {#} per sweep. The lattice stays magnetized against the field until a domain nucleates, near h = ∓{#} here (it varies a little from loop to loop). Slower sweeps give a narrower loop.",
 "±m₀ = ±{#}, Onsager",
 "J = −{#}: neighbors prefer to be opposite. The order is a checkerboard (Néel state); staggered colors show its two domains as solid patches. m stays near {#} while m<sub>s</sub> orders.",
-"{#} × {#} = {#},{#} spins, periodic · staggered colors",
+"{#} × {#} = {#} spins, periodic · staggered colors",
 "staggered magnetization mₛ(t)",
 "Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.",
 "sweep {#} <small>paused</small>",

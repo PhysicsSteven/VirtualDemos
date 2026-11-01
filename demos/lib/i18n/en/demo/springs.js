@@ -299,7 +299,6 @@ VDI18N.add('en', 'demo/springs', [
 "A cm, row {#}",
 "b kg/s, row {#}",
 "Row {#} captured (no stopwatch time).",
-"Hide data table",
 "Kept: x₀ = — cm",
 "Energy now, from the grid at rest",
 "Kinetic, Σ½mv²",

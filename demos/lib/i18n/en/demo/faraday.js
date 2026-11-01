@@ -331,7 +331,6 @@ VDI18N.add('en', 'demo/faraday', [
 "self",
 "Captured {#} measurements.",
 "Exported {#} samples; interval quantities belong at the interval midpoint. Runs retain at most {#} samples.",
-"Hide data table",
 "U (mJ)",
 "{#} points from {#} s to {#} s, every 6th sample ({#} ms apart) plus the last. ε is an interval average; I and U are values at t.",
 "Kept trace: kept, aligned to the start of this move",

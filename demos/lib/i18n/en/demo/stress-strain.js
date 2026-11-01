@@ -123,7 +123,6 @@ VDI18N.add('en', 'demo/stress-strain', [
 "An unknown metal. Find its Young's modulus from your readings, then load it until it yields. Its properties stay hidden.",
 "Water, bulk",
 "Row {#} captured.",
-"Hide data table",
 "Capture at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.",
 "Stress, strain, Y, yield and strength",
 "hidden: work them out",

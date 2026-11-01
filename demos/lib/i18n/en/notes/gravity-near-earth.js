@@ -23,6 +23,6 @@ VDI18N.add('en', 'notes/gravity-near-earth', [
 "A uniform sphere with GM = {#} × {#}¹⁴ m³/s² and mean radius {#} km (Moon {#} × {#}¹² and {#} km; Mars {#} × {#}¹³ and {#} km), turning at the sidereal rate.",
 "Effective g at rest on the ground or on a tower turning with the planet: gravity GM/r² toward the center plus ω²r cos(latitude) outward from the axis. The plumb line tilt is largest near {#}° ({#} arcmin on Earth).",
 "The real Earth comparison uses the WGS {#} normal gravity formula at sea level (Somigliana): it includes both rotation and flattening.",
-"The GPS and geostationary presets set the orbit radius ({#},{#} km and {#},{#} km), so the heights above the mean radius are {#},{#} and {#},{#} km. Geostationary altitude is usually quoted as {#},{#} km above the equator, whose radius is {#} km.",
+"The GPS and geostationary presets set the orbit radius ({#} km and {#} km), so the heights above the mean radius are {#} and {#} km. Geostationary altitude is usually quoted as {#} km above the equator, whose radius is {#} km.",
 "The height slider runs on a square root scale so small heights are reachable."
 ]);

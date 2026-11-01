@@ -240,7 +240,6 @@ VDI18N.add('en', 'demo/kepler-orbits', [
 "Stop timer",
 "Timer started.",
 "Nothing measured yet: time an orbit with the timer and place both ruler points.",
-"Hide data table",
 "Your readings, T² against a³ for star mass {#} M<sub>sun</sub>. Not enough readings to fit.",
 "T² (yr²)",
 "residual (yr²)",

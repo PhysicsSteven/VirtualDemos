@@ -2,7 +2,6 @@
 VDI18N.add('en', 'demo/optics-bench', [
 "real image",
 "on the screen",
-"Optics Bench",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.",
 "{#} grid square = {#} cm · adjustable n quoted at {#} nm, real materials at {#} nm · angles from the normal",
 "Optics bench. Drag sources and optical elements to move them. A selected item shows handles: drag F or C to change the focal length, the grips to resize it and the round knob to rotate it. Arrow keys nudge it, brackets rotate it, plus and minus resize it, Delete removes it.",

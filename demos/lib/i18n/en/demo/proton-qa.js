@@ -3,7 +3,6 @@ VDI18N.add('en', 'demo/proton-qa', [
 "NOZZLE",
 "chamber at {#} cm",
 "beam on",
-"ELECTROMETER",
 "ALL CHECKS PASS",
 "IBA Proteus ONE style room, {#} MeV",
 "depth in water (cm)",

@@ -1193,5 +1193,7 @@ VDI18N.add('es', 'common', {
 "ELECTROMETER":
   "ELECTRÓMETRO",
 "He":
-  "He"
+  "He",
+"Hide data table":
+  "Ocultar tabla de datos"
 });

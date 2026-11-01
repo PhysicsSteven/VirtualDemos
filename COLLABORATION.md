@@ -6826,3 +6826,32 @@ star chart activity). Checked at 1280 and 400 px, no sideways scroll; `courses.p
 - The facts row stops short of the picture (`.hero:has(.art) .facts` max width), so Teaching notes wraps underneath instead of
   running into it. The new CSS is copied to the course and topic pages by courses.py but only applies where a hero picture exists.
 - Checked at 1700, 1100 and 400 px, light and dark: no overlap, no sideways scroll, no page errors.
+
+## 2026-11-01 · Claude · Languages: the site is ready for translation; Spanish pilot (Steve)
+
+Steve asked for the one time setup that makes the site translatable. English looks and behaves exactly as before.
+- **Machinery** (`demos/lib/i18n.js`, loaded by `theme.js` on every page; doc `demos/lib/i18n.md`; tool `tools/i18n.cjs`): the English
+  text is the key. After a page builds itself, text nodes are translated in place (never replaced, so demo references stay good),
+  later text through a MutationObserver, plus attributes, canvas text, `alert` and the title. Strings with numbers match as patterns
+  (`{#}`; thousands commas and decimals glued to a unit count as one number). Inline formatting runs are one key with bare tags.
+  `VDI18N.t(s, vars)` for strings only code can reach, `VDI18N.raw(fn)` for canvas text a demo wraps itself. Worksheets are
+  translated after `worksheet.js` runs and MathJax waits for it. Styles that only a longer language needs: `:root[data-vd-lang]`.
+  The language switch sits beside the theme switch on pages with a translation (choice saved as `vd-lang`, or `?lang=es`).
+- **Catalogs**: `demos/lib/i18n/en/` holds the harvested English of every page (146 demos, 225 worksheets, 146 notes, the site
+  pages, and shared strings in `common.js`). Every demo has harvest steps in `tools/i18n/<demo>.cjs` (shared helpers
+  `explore.cjs`, `nothree.cjs`, `presets-views.cjs`, `ws.cjs`, `site.cjs`) that reach selects, slider ends, Mystery, 3D and phone
+  labels. Test language `?lang=qps` (accented, 40 % longer) and `node tools/i18n.cjs leaks <demo> -v` show what is still English.
+- **Readiness fixes** (four demo groups, one worksheet group, in parallel): code that read displayed text back as state now keeps
+  it in variables (blackbody, timbre, rotation, springs, entropy, kepler-orbits, motion-graphs, projectile-drag, proton-qa,
+  optics-bench, potential-curves, relativity-em, symbols.js glossary context, worksheet.js boxes), wrapped canvas captions are
+  translated whole, a few scoped styles (eddy-currents, distance-ladder, lagrange-points, photoelectric). Each edited demo passed
+  vdcheck against the pre i18n commit or showed only known screenshot noise (gamma-spectroscopy, optics-bench blank canvas at
+  400 px on main too, proton-qa timing); Node tests pass.
+- **Spanish pilot** (`demos/lib/i18n/es/`): common, Pendulums, Blackbody Radiation, Doppler Effect and the pendulum worksheet,
+  1179 strings, machine drafted, badge "borrador" until a fluent speaker (a TA) reviews it. Decimal point kept (US and Mexican
+  usage). Screenshots in the project files, `i18n-pilot/`. vdcheck on those three demos shows only the added language switch.
+- **Known gaps**: data exports in another language carry translated setup names (nothing branches on them); dates in worksheet
+  banners stay en-US; phone breadcrumbs say Previous/Next from CSS `content:`; superscript exponents are not numbers; some canvas
+  text overflows in long languages (energy-sources, millikan hint, nuclear-reactions, planet-temperatures, room-acoustics);
+  `common` keeps old entries (no prune). Videos are not translated.
+- For GPT: check the Spanish physics wording in `demos/lib/i18n/es/` against the English (numbers, symbols and caveats must match).

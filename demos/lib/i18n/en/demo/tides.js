@@ -22,7 +22,7 @@ VDI18N.add('en', 'demo/tides', [
 "<a>Gravitation and orbital mechanics</a>",
 "<a><span>←</span> <span>Gravity Near Earth</span></a><a><span>GPS Clocks and Relativity</span> <span>→</span></a>",
 "The Moon pulls the near side of Earth harder than the far side. That difference stretches the oceans into two bulges.",
-"<span>d<sub>Moon</sub> {#},{#} km</span> · <span>R<sub>E</sub> {#} km</span> · <span>lunar day {#} h {#} min</span> · <span>month {#} d</span>",
+"<span>d<sub>Moon</sub> {#} km</span> · <span>R<sub>E</sub> {#} km</span> · <span>lunar day {#} h {#} min</span> · <span>month {#} d</span>",
 "Pull on Earth",
 "Ocean bulges",
 "Animation speed",
@@ -43,7 +43,7 @@ VDI18N.add('en', 'demo/tides', [
 "Arrows",
 "Total pull",
 "Moon's distance",
-"Real distance ({#},{#} km)",
+"Real distance ({#} km)",
 "City's local solar time",
 "Include the Sun's tide",
 "Outline each body's bulge",
@@ -102,6 +102,7 @@ VDI18N.add('en', 'demo/tides', [
 "Daily tidal range over a month (m)",
 "dashed: with the Sun",
 "in {#} h {#} min<small>at {#}:{#}</small>",
+"in {#} min<small>at {#}:{#}</small>",
 "Sun ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.",
 "center",
@@ -121,6 +122,5 @@ VDI18N.add('en', 'demo/tides', [
 "{#} × {#}⁻⁶ m/s²<small>exact {#} × {#}⁻⁶</small>",
 "(M<sub>Sun</sub>/M<sub>Moon</sub>)(d<sub>Moon</sub>/d<sub>Sun</sub>)³ = ({#} × {#}⁷)({#} × {#}⁻⁹) = {#} at d<sub>Moon</sub> = {#} R<sub>E</sub>",
 "At first quarter the two bulges are at right angles. The Sun's (gold) is {#} of the Moon's (red), even though the Sun pulls {#} times harder.",
-"Neap tide: bulges at right angles",
-"in {#} min<small>at {#}:{#}</small>"
+"Neap tide: bulges at right angles"
 ]);

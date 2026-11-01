@@ -22,7 +22,7 @@ VDI18N.add('en', 'notes/superconductors', [
 "<strong>\"Above T_c a superconductor's resistance jumps.\"</strong> It returns to its ordinary normal value; nothing jumps above it.",
 "<strong>\"Superconductors work in any field.\"</strong> Type I metals fail in fields of a few to {#} mT; strong magnets need type II materials.",
 "The sphere is uniformly magnetized, so inside the field is uniform, B_in = B + ({#}/{#})μ0M, and outside it is the applied field plus a point dipole m = ({#}π/{#})R³M at the center; field lines are contours of the Stokes stream function and are exact for this model.",
-"Meissner state (B ≤ 2B_c/{#}): B_in = {#}, μ0M = −{#}.5B, m = −{#}πR³B/μ{#}. Intermediate state (2B_c/{#} < B < B_c): the equator field stays at B_c, B_in = 3B − 2B_c on average (really normal and superconducting layers). Normal for B ≥ B_c.",
+"Meissner state (B ≤ 2B_c/{#}): B_in = {#}, μ0M = −{#}B, m = −{#}πR³B/μ{#}. Intermediate state (2B_c/{#} < B < B_c): the equator field stays at B_c, B_in = 3B − 2B_c on average (really normal and superconducting layers). Normal for B ≥ B_c.",
 "Tc and B_c({#}) are the textbook's Table {#} values (two or three figures), with Equation {#} for B_c(T). The state is taken in equilibrium, so the order of cooling and raising the field does not matter (no hysteresis or supercooling). A normal metal's own weak magnetism is left out.",
 "The perfect conductor keeps B_in fixed at the applied field it had when cooled through T_c.",
 "Pair with <strong>Resistivity of a Wire</strong> (Cold stage: the resistance drops to zero at T_c) and <strong>Magnetism in Matter</strong> (a superconductor is a perfect diamagnet, χ = −{#}).",

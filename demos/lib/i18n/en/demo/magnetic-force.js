@@ -226,7 +226,6 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "Plot of T against v⊥ from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.",
 "Stop timer",
 "Readings work in the free setups: Circular motion, Electron vs proton and E × B drift.",
-"Hide data table",
 "timer {#} ns",
 "timer {#} µs",
 "{#} meV",

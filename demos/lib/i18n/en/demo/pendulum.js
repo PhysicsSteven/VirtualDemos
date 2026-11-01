@@ -217,7 +217,6 @@ VDI18N.add('en', 'demo/pendulum', [
 "{#} × {#}⁻¹⁴ <span>of E</span>",
 "{#} × {#}⁻¹³ <span>of E</span>",
 "arrows move the cross, Enter starts there",
-"Hide data table",
 "Period ÷ small angle period against release angle: exact 2K(sin(θ₀/{#}))/π, and the series {#} + θ₀²/{#} + {#}θ₀⁴/{#}. This start goes over the top, so it has no release angle.",
 "T/T₀ exact",
 "series",
