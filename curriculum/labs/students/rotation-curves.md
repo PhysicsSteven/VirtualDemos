@@ -39,7 +39,7 @@ If nearly all the mass is in the middle, as in the solar system, $$v = \sqrt{GM/
 
 ## Before the lab
 
-1. Earth moves at 29.78 km/s at 1 AU. Find the Sun's mass from $$M = v^2r/G$$, in kg and in solar masses ($$M_\odot = 1.989\times10^{30}$$ kg).
+1. Earth moves at 29.78 km/s at 1 AU. Find the Sun's mass from $$M = v^2r/G$$, in kg and in solar masses ($$M_\odot = 1.988\times10^{30}$$ kg).
 2. Mercury orbits at 0.387 AU and Neptune at 30.07 AU. What fraction of Mercury's speed is Neptune's?
 3. The Sun orbits the Milky Way's center at about 230 km/s, 8.2 kpc out. Find the mass inside its orbit and its orbital period.
 4. Gas moving at 200 km/s away from us shifts the 21 cm line by how many kHz? Hα by how many nm?

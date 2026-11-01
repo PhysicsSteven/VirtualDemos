@@ -228,14 +228,6 @@ rule('key-pdfs', 'Every worksheet edited after its key PDF was printed gets its 
    1.989\times10^{30}, must equal the value it sits near, rounded or cut to the figures it shows. */
 const CONST_TEXT_ALLOW = {  /* 'file number': reason */
   'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
-  /* OPEN (2026-11-01): these three give M_Sun = 1.989e30 kg while tides.html and constants.js use 1.98841e30. Fixing them changes key
-     answers (rotation curves: 1.988e30 kg is 0.999 of 1.989e30 but 1.000 of 1.98841e30), so the fix goes with a key rebuild. Remove each
-     entry when its worksheet is fixed. */
-  'curriculum/labs/students/tides.md 1.989': 'OPEN, see above',
-  'curriculum/labs/students/rotation-curves.md 1.989': 'OPEN, see above',
-  'curriculum/labs/students/eclipsing-binary.md 1.989': 'OPEN, see above',
-  'demos/lib/i18n/en/ws/rotation-curves.js 1.989': 'OPEN, harvest of the worksheet above',
-  'demos/lib/i18n/en/ws/eclipsing-binary.js 1.989': 'OPEN, harvest of the worksheet above',
 };
 const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };
 rule('constants-text', 'Constants written in worksheets, notes and demo text match demos/lib/constants.js, rounded or cut to the figures shown '

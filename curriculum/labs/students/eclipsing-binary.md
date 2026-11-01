@@ -39,7 +39,7 @@ $$R_{\text{large}} + R_{\text{small}} = \tfrac12 v\,(t_4 - t_1),\qquad R_{\text{
 
 **Light and temperature.** A star's luminosity is $$L = 4\pi R^2\sigma T^4$$. When the smaller star is completely hidden (a total eclipse), the brightness left is the larger star's share of the light, $$f = L_1/(L_1 + L_2)$$. When equal areas are hidden, the eclipse depths are in the ratio of the surface brightnesses, $$T^4$$.
 
-$$G = 6.674\times10^{-11}\ \text{N m}^2/\text{kg}^2,\quad M_\odot = 1.989\times10^{30}\ \text{kg},\quad R_\odot = 6.957\times10^{8}\ \text{m}.$$
+$$G = 6.674\times10^{-11}\ \text{N m}^2/\text{kg}^2,\quad M_\odot = 1.988\times10^{30}\ \text{kg},\quad R_\odot = 6.957\times10^{8}\ \text{m}.$$
 
 ## Before the lab
 
@@ -59,7 +59,7 @@ Use Two stars, without noise, for Parts 1 and 2.
 
 **Part 1. Velocities.** Choose Sun and red dwarf. Record readings at about twelve times spread evenly over one orbit, including the times of both stars' largest velocities toward and away from us. Send them to the worksheet.
 
-**Part 2. Eclipses.** Clear the readings. Zoom on the eclipse of star 1 and record readings at its first, second, third and fourth contacts and at its middle. Do the same for the eclipse of star 2. Send them to the worksheet; they go into a new copy of the table.
+**Part 2. Eclipses.** Clear the readings. Zoom on the eclipse of star 1, when star 2 passes in front of it, and record readings at its first, second, third and fourth contacts and at its middle. Do the same for the eclipse of star 2, when star 2 passes behind star 1. Send them to the worksheet; they go into a new copy of the table.
 
 **Part 3. A mystery binary.** Clear the readings and make a mystery system. Repeat Parts 1 and 2 for it, sending each set of readings, before you reveal it.
 

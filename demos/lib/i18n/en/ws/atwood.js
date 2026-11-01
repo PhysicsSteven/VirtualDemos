@@ -26,7 +26,7 @@ VDI18N.add('en', 'ws/atwood', [
 "On a real bench, put a pad under the falling mass, keep hands and feet out from under it and stop the masses before the lower one hits the floor. Keep the total mass well below the pulley’s rated load.",
 "<strong>Part {#}: acceleration against the mass fraction.</strong> Keep m₂ the heavier mass so that it falls. Hold the total mass m + m₂ at {#} kg and time a {#} m run from rest for four splits: {#} and {#} kg, {#} and {#} kg, {#} and {#} kg, {#} and {#} kg. Then hold the total at {#} kg and time three more: {#} and {#} kg, {#} and {#} kg, {#} and {#} kg. Start each run from rest at the top mark; a setting changed during a run spoils that run. Send the seven runs to the worksheet together.",
 "<strong>Part {#}: acceleration against the total mass.</strong> Clear the readings first, so these runs start a new table. Keep the difference m₂ − m at {#} kg and time a {#} m run for five totals: {#} and {#} kg, {#} and {#} kg, {#} and {#} kg, {#} and {#} kg, {#} and {#} kg. Send the five runs to the worksheet.",
-"<strong>Part {#}: tension.</strong> Turn Blind off. For three of your runs, record the tension the demo reads while the masses move, and compare it with the two weights.",
+"<strong>Part {#}: tension.</strong> Turn Blind off. Record the tension the demo reads while the masses move for three pairs: the Before the lab case ({#} and {#} kg), {#} and {#} kg from Part {#}, and {#} and {#} kg from Part {#}. Compare each tension with the two weights.",
 "<span>D</span>\\(t\\) for {#} m (s)",
 "m_2 (kg), row {#}",
 "t for {#} m (s), row {#}",
