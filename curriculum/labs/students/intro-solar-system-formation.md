@@ -32,13 +32,13 @@ Follow the steps that turned a cloud of gas and dust into our solar system, and 
 
 **Planetesimals and planets.** Dust grains stick together into bodies called **planetesimals**, from about a kilometer up to hundreds of kilometers across. Their gravity pulls them together, and they join into larger bodies. A body grows until it has swept up the solids in a ring around its orbit; the mass it ends with is called its isolation mass. A core of about 10 Earth masses is heavy enough to pull in the hydrogen and helium gas around it and become a giant planet, but only if the gas is still there. Young stars lose their disks' gas within a few million years.
 
-**Melting from inside.** The first solids in the disk contained aluminum 26, a radioactive kind of aluminum with a half life of about 0.73 million years. Its decay heats a planetesimal from inside. If the planetesimal formed early enough, while plenty of aluminum 26 was left, its inside could melt, and the heavy iron would sink to the center to form an iron core. Iron meteorites are pieces of such cores.
+**Melting from inside.** The first solids in the disk contained aluminum 26, a radioactive kind of aluminum with a half life of about 0.72 million years. Its decay heats a planetesimal from inside. If the planetesimal formed early enough, while plenty of aluminum 26 was left, its inside could melt, and the heavy iron would sink to the center to form an iron core. Iron meteorites are pieces of such cores.
 
 ## Before the lab
 
 1. A cloud 5000 AU across in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10 000 times or 1 million times?
 2. Which do you expect to find closer to the Sun: rocky bodies or icy bodies? Why?
-3. Aluminum 26 has a half life of 0.73 million years. What fraction of it is left after 1.46 million years? After 2.19 million years?
+3. Aluminum 26 has a half life of 0.72 million years. What fraction of it is left after 1.44 million years? After 2.16 million years?
 
 ## Safety
 

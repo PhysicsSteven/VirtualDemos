@@ -325,5 +325,7 @@ VDI18N.add('es', 'demo/solar-system-formation', {
 "Ammonia ice {#} K":
   "Hielo de amoniaco {#} K",
 "Methane ice {#} K":
-  "Hielo de metano {#} K"
+  "Hielo de metano {#} K",
+"Melting: heating {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Myr</sup> (²⁶Al half life {#} Myr); conduction to a surface at {#} K":
+  "Fusión: calentamiento {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Ma</sup> (vida media del ²⁶Al {#} Ma); conducción hacia una superficie a {#} K"
 });

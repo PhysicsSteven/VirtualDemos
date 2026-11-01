@@ -2694,7 +2694,14 @@ table.rows button:hover { color: var(--pos); }
       const P3 = (x, y, z) => [x + X, y, z + Z];
       if (show) {
         tag(`W = ${fN(b.W)}`, P3(q.xb - off, yf, bs.zb + L / 2 - b.W * k), 'right', T.pos, 12, 700, null, -6, 4);
-        if (b.FB > 1e-6) tag(`F_B = ${fN(b.FB)}`, P3(q.xb + off, yf, bs.zb + b.s / 2 + b.FB * k), 'left', T.vcol, 12, 700, null, 6, 4);
+        if (b.FB > 1e-6) {
+          /* the F_B tag sits right of its arrow's tip; when the square size grip on the block's corner is in the way, the tag moves
+             above or below the grip so the grip stays clear to grab */
+          const at = P3(q.xb + off, yf, bs.zb + b.s / 2 + b.FB * k), sg = handles3.find((h) => h.id === 'size'); let dy = 4;
+          if (sg) { const tp = G3.S.project(at), gp = G3.S.project(sg.at(sg.v)), ls = OV.ls, ty = tp[1] + 4 * ls;
+            if (gp[2] <= 1 && gp[0] > tp[0] - 4 * ls && gp[0] < tp[0] + 130 * ls && Math.abs(gp[1] - ty) < 20 * ls) dy = ((gp[1] - 21 * ls > 52 * ls ? gp[1] - 21 * ls : gp[1] + 21 * ls) - tp[1]) / ls; }
+          tag(`F_B = ${fN(b.FB)}`, at, 'left', T.vcol, 12, 700, null, 6, dy);
+        }
         if (b.T > 1e-6) tag(`T = ${fN(b.T)}`, P3(q.xb + off * 2.2, yf, bs.zb + L + b.T * k * 0.6), 'left', T.xcol, 12, 700, null, 8, 4);
         if (b.N > 1e-6) tag(`N = ${fN(b.N)}`, P3(q.xb + off * 2.2, yf, bs.zb + b.N * k * 0.5), 'left', T.xcol, 12, 700, null, 8, 4);
       }
@@ -2702,7 +2709,10 @@ table.rows button:hover { color: var(--pos); }
       else if (!show && L > 0.07) tag(`${fx(q.rho, 0)} kg/m³`, P3(q.xb, -L / 2, bs.zb + L / 2), 'center', T.ink, 10.5, 600, T.mono);
       tag(`${LIQ[S.liq].name}, ${fx(rhoF(), 0)} kg/m³`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, 0.02), 'left', T.muted, 11, 400);
       if (S.layers.ghost && Math.abs(b.hs - b.hs0) > 0.0004) {
-        const dh = b.hs - b.hs0; tag(`level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, P3(-TANK.W / 2 + 0.07, -TANK.D / 2, Math.min(b.hs, b.hs0)), 'left', T.muted, 11, 400, null, 0, 16);
+        const dh = b.hs - b.hs0, at = P3(-TANK.W / 2 + 0.07, -TANK.D / 2, Math.min(b.hs, b.hs0)), bg = handles3.find((h) => h.id === 'block');
+        /* below the level line, unless the round block grip is there: then above it */
+        let dy = 16; if (bg) { const tp = G3.S.project(at), gp = G3.S.project(bg.at(bg.v)), ls = OV.ls; if (gp[2] <= 1 && Math.abs(gp[1] - (tp[1] + 16 * ls)) < 16 * ls && gp[0] > tp[0] - 10 * ls) dy = -14; }
+        tag(`level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, at, 'left', T.muted, 11, 400, null, 0, dy);
       }
       if (q.scale) {
         tag(`scale ${fx(b.T, 2)} N`, P3(q.xb + 0.03, -0.012, q.zh + 0.12), 'left', T.xcol, 12.5, 700, T.mono, 8, 4);

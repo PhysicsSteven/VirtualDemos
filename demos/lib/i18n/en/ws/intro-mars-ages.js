@@ -67,7 +67,7 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Put the four Martian surfaces in order from oldest to youngest by their ages. Compare with your ranking in Before the lab {#}.",
 "Name the era (Noachian, Hesperian or Amazonian) each surface belongs to.",
 "The northern plains are about how much younger than the southern highlands? What does that say about how the north got its smooth surface?",
-"The Olympus Mons caldera is the youngest surface you dated. What fraction of Mars’s {#} billion year history ago was it last flooded with lava?",
+"The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars’s {#} billion year history?",
 "From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?",
 "From Part {#}, how did the cold lid of Mars change from {#} to {#} billion years? Compare Mars’s lid today with the Moon’s and Earth’s.",
 "A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by a few hundred million years for old surfaces. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?",

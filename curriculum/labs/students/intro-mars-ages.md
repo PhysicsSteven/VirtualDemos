@@ -75,7 +75,7 @@ No hazards in the virtual lab.
 1. Put the four Martian surfaces in order from oldest to youngest by their ages. Compare with your ranking in Before the lab 1.
 2. Name the era (Noachian, Hesperian or Amazonian) each surface belongs to.
 3. The northern plains are about how much younger than the southern highlands? What does that say about how the north got its smooth surface?
-4. The Olympus Mons caldera is the youngest surface you dated. What fraction of Mars's 4.5 billion year history ago was it last flooded with lava?
+4. The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars's 4.5 billion year history?
 5. From Part 2, how much bigger is the crater on Mars at 18 km/s than on the Moon at 18 km/s? Explain using gravity. Then compare Mars at 10 km/s with the Moon at 18 km/s: which effect wins?
 6. From Part 3, how did the cold lid of Mars change from 0.5 to 4.5 billion years? Compare Mars's lid today with the Moon's and Earth's.
 

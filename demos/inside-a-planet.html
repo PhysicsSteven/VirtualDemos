@@ -537,6 +537,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.haloCol || K.canvas; c.lineJoin = 'round'; c.strokeText(s, x, y); }
     c.fillStyle = o.col || K.ink; c.fillText(s, x, y); c.restore();
   }
+  /* a title that does not fit the picture's width breaks before its bracket onto a second line */
+  function titleFit(s, x, y, o) {
+    const p = proj(), t = VDI18N.t(s); ctx.save(); ctx.font = `${o.w || 600} ${(o.size || 12) * p}px ${K.ui}`; const fits = ctx.measureText(t).width <= W - x - 8 * p; ctx.restore();
+    const k = t.indexOf(' ('); if (fits || k < 0) { VDI18N.raw(() => label(ctx, t, x, y, o)); return; }
+    VDI18N.raw(() => { label(ctx, t.slice(0, k), x, y, o); label(ctx, t.slice(k + 1), x, y + (o.size || 12) * 1.3 * p, Object.assign({}, o, { w: 400, size: (o.size || 12) - 1.5 })); });
+  }
   function arrow(c, x0, y0, x1, y1, col, wdt, head) {
     const a = Math.atan2(y1 - y0, x1 - x0), h = head || 6;
     c.strokeStyle = col; c.fillStyle = col; c.lineWidth = wdt || 1.5; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
@@ -647,12 +653,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       arrow(ctx, xd, yL, xd, yb - 1, K.muted, 1.2 * p, 5 * p);
       label(ctx, `root ${f(b.below, 1)} km`, xd + 5 * p, (yL + yb) / 2, { col: K.muted, size: 11 });
     };
-    const w = A.w;
-    blk(A.x0 + w * 0.08, A.x0 + w * 0.36, cb, K.rockc, 'Continent', S.rcr);
-    blk(A.x0 + w * 0.56, A.x0 + w * 0.84, ob, K.rocko, 'Ocean floor', S.ro);
+    const w = A.w, slim = w < 520 * p;   /* on a phone the blocks sit further left so the words beside them fit */
+    const xc = slim ? [0.04, 0.26] : [0.08, 0.36], xo = slim ? [0.5, 0.7] : [0.56, 0.84];
+    blk(A.x0 + w * xc[0], A.x0 + w * xc[1], cb, K.rockc, 'Continent', S.rcr);
+    blk(A.x0 + w * xo[0], A.x0 + w * xo[1], ob, K.rocko, 'Ocean floor', S.ro);
     ctx.save(); ctx.setLineDash([6 * p, 5 * p]); ctx.strokeStyle = K.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(A.x0, yL); ctx.lineTo(A.x0 + w, yL); ctx.stroke(); ctx.restore();
-    label(ctx, "the mantle's level", A.x0 + w * 0.39, yL - 9 * p, { col: K.muted, size: 11 });
-    label(ctx, 'Crust floating on the mantle (side view, heights and depths to scale)', A.x0 + 14 * p, 20 * p, { w: 700, size: 13 });
+    label(ctx, "the mantle's level", slim ? A.x0 + w * xc[1] + 16 * p : A.x0 + w * 0.39, slim ? yL + 10 * p : yL - 9 * p, { col: K.muted, size: 11 });
+    titleFit('Crust floating on the mantle (side view, heights and depths to scale)', A.x0 + 14 * p, 20 * p, { w: 700, size: 13 });
     const bx = A.x0 + w - 24 * p, by0 = yL + 20 * p; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx, by0); ctx.lineTo(bx, by0 + 10 * s); ctx.moveTo(bx - 4 * p, by0); ctx.lineTo(bx + 4 * p, by0); ctx.moveTo(bx - 4 * p, by0 + 10 * s); ctx.lineTo(bx + 4 * p, by0 + 10 * s); ctx.stroke();
     label(ctx, '10 km', bx - 6 * p, by0 + 5 * s, { a: 'right', col: '#fff', halo: false, size: 11 });
   }
@@ -918,7 +925,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const s = 1.2 / Math.max(30, Math.max(S.tc, S.to) * 1.2), cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
       const a = S3.project([-0.55, -0.35, cb.above * s + 0.06]), b = S3.project([0.55, -0.35, ob.above * s + 0.06]);
       label(ctx, 'Continent', a[0], a[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' }); label(ctx, 'Ocean floor', b[0], b[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' });
-      label(ctx, 'Crust floating on the mantle (heights and depths to scale)', area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
+      /* on the front faces: how high each block stands above the mantle's level and how deep its root goes, as in the side view */
+      const L3 = { col: '#e8eef6', haloCol: '#04070d', size: 11 }, roomy = W - card >= 600;
+      for (const [x, bl] of [[-0.55, cb], [0.55, ob]]) {
+        const up = S3.project([x + 0.41, -0.5, bl.above * s / 2]), dn = S3.project([x + 0.41, -0.5, -bl.below * s / 2]);
+        if (!roomy) continue;
+        if (!S.blind && up[2] < 1 && bl.above * s > 0.02) label(ctx, `${f(bl.above, 2)} km up`, up[0] + 4 * p, up[1], Object.assign({}, L3, { col: '#ffd479' }));
+        if (dn[2] < 1) label(ctx, `root ${f(bl.below, 1)} km`, dn[0] + 4 * p, dn[1], L3);
+      }
+      const mt = S3.project([0, -0.5, -0.88]);
+      if (mt[2] < 1) label(ctx, `mantle ${fs(S.rm)} kg/m³ (flows over millions of years)`, mt[0], mt[1], Object.assign({}, L3, { a: 'center' }));
+      titleFit('Crust floating on the mantle (heights and depths to scale)', area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
     }
   }
 

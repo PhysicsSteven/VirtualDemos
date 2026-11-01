@@ -162,5 +162,6 @@ VDI18N.add('en', 'demo/solar-system-formation', [
 "Rock {#} K",
 "Iron metal {#} K",
 "Ammonia ice {#} K",
-"Methane ice {#} K"
+"Methane ice {#} K",
+"Melting: heating {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Myr</sup> (²⁶Al half life {#} Myr); conduction to a surface at {#} K"
 ]);

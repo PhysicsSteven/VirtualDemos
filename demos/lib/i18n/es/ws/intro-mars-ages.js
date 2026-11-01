@@ -134,8 +134,8 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
   "Nombra la era (Noéico, Hespérico o Amazónico) a la que pertenece cada superficie.",
 "The northern plains are about how much younger than the southern highlands? What does that say about how the north got its smooth surface?":
   "¿Aproximadamente cuánto más jóvenes son las llanuras del norte que las tierras altas del sur? ¿Qué dice eso sobre cómo obtuvo el norte su superficie lisa?",
-"The Olympus Mons caldera is the youngest surface you dated. What fraction of Mars’s {#} billion year history ago was it last flooded with lava?":
-  "La caldera del Olympus Mons es la superficie más joven que fechaste. ¿Hace qué fracción de la historia de {#} mil millones de años de Marte se inundó de lava por última vez?",
+"The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars’s {#} billion year history?":
+  "La caldera del Olympus Mons es la superficie más joven que fechaste. ¿Hace cuánto se inundó de lava por última vez, como fracción de la historia de {#} mil millones de años de Marte?",
 "From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?":
   "Según la Parte {#}, ¿cuánto más grande es el cráter en Marte a {#} km/s que en la Luna a {#} km/s? Explícalo usando la gravedad. Luego compara Marte a {#} km/s con la Luna a {#} km/s: ¿qué efecto gana?",
 "From Part {#}, how did the cold lid of Mars change from {#} to {#} billion years? Compare Mars’s lid today with the Moon’s and Earth’s.":

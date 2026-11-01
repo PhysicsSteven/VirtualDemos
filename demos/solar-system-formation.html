@@ -155,7 +155,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="formula">Collapse: R<sub>d</sub> = Ω₀² r₀⁴ / GM, spin up (r₀/R<sub>d</sub>)², Ω₀ = 2π/P₀</p>
           <p class="formula">Disk: T = 280 K (r/1 AU)<sup>−1/2</sup> (L/L☉)<sup>1/4</sup>; solids 7.1 (inside the frost line) or 30 (beyond it) × (r/1 AU)<sup>−3/2</sup> g/cm², gas 1700 × (r/1 AU)<sup>−3/2</sup> g/cm²</p>
           <p class="formula">Growth: M<sub>iso</sub> = (2π a² b Σ)<sup>3/2</sup> (2/3M☉)<sup>1/2</sup>, b = 10; T<sub>grow</sub> = 1.7 × 10⁵ yr (M/10²⁶ g)<sup>1/3</sup> (Σ₁/10 g cm⁻²)<sup>−1</sup> (a/1 AU)²</p>
-          <p class="formula">Melting: heating 3 × 10⁻⁷ W/kg × e<sup>−t/1.05 Myr</sup>; conduction to a surface at 180 K</p>
+          <p class="formula">Melting: heating 3 × 10⁻⁷ W/kg × e<sup>−t/1.034 Myr</sup> (²⁶Al half life 0.717 Myr); conduction to a surface at 180 K</p>
           <p class="hint" id="about"></p></details>
         </div></details>
       </section>
@@ -327,14 +327,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      A planetesimal of radius R forms all at once at time t_f after the first solids (the calcium and aluminum rich inclusions,
      4567 million years ago) and is heated throughout by the decay of ²⁶Al. Heat flows out by conduction to its surface, which stays
      at the disk's temperature T_S. Values from the planetesimal model of Johansen et al. (2023, A&A 671, A74, §2.9): heating
-     H₀ = 3 × 10⁻⁷ W per kg of rock and metal at the start (²⁶Al/²⁷Al = 5 × 10⁻⁵, solar Al), falling as e^(−t/τ) with τ = 1.05 million
-     years (half life 0.73 million years); rock with c = 1200 J/(kg·K) and conductivity 4 W/(m·K); rock starts to melt at 1661 K and is
+     H₀ = 3 × 10⁻⁷ W per kg of rock and metal at the start (²⁶Al/²⁷Al = 5 × 10⁻⁵, solar Al), falling as e^(−t/τ) with τ = T½ / ln 2 = 1.034 million
+     years (half life T½ = 0.717 million years, ENSDF via NuDat 3, the value Radioactive Decay uses; H₀ from Johansen et al.); rock with c = 1200 J/(kg·K) and conductivity 4 W/(m·K); rock starts to melt at 1661 K and is
      all molten at 1982 K, taking 4 × 10⁵ J/kg to melt; density 3300 kg/m³ (assumed, solid rock). The iron sinks to a core once half
      the rock at the center is molten (taken here at 1822 K, halfway). Left out: the porous, poorly conducting dust a real
      planetesimal starts as (it would melt more easily), the stirring of a molten interior and the rise of melt (here a cell that is
      all molten loses any further heat, so no temperature passes 1982 K), the heat taken to melt the metal, other heat sources
      (⁶⁰Fe, impacts) and growth that takes time. */
-  const MELT = { H0: 3e-7, tau: 1.05, c: 1200, k: 4, rho: 3300, Ts: 1661, Tl: 1982, Lf: 4e5, Tsurf: 180, Tcore: 1821.5, Tmetal: 1213, n: 40 };
+  const MELT = { H0: 3e-7, tau: 0.717 / Math.LN2, c: 1200, k: 4, rho: 3300, Ts: 1661, Tl: 1982, Lf: 4e5, Tsurf: 180, Tcore: 1821.5, Tmetal: 1213, n: 40 };
   const MYR_S = 1e6 * YR;
   const heatLeft = (tf) => MELT.H0 * MELT.tau * MYR_S * Math.exp(-tf / MELT.tau);   /* J/kg still to come from ²⁶Al for a body that forms at tf Myr */
   /* enthalpy per kg above the surface temperature, and back */

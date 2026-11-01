@@ -88,12 +88,12 @@ group('growth model: joins in time order, so the result does not depend on how t
   const F = c.makeGrowth(3, 1, 3, 2203); for (let k = 0; k <= 4000; k++) c.growTo(F, 1e3 * Math.pow(1e5, k / 4000)); assert.equal(sig(F), sig(B.D), 'fine steps');
 });
 
-group('melting: aluminum 26 gives 9.94 MJ/kg from the start; a big body keeps all its heat (peak T from energy alone); the latest big body to grow a core forms at 1.60 Myr', () => {
-  near(c.heatLeft(0) / 1e6, 3e-7 * 1.05 * 1e6 * 365.25 * 86400 / 1e6, 1e-12); near(c.heatLeft(1.05) / c.heatLeft(0), Math.exp(-1), 1e-12);
+group('melting: aluminum 26 gives 9.79 MJ/kg from the start; a big body keeps all its heat (peak T from energy alone); the latest big body to grow a core forms at 1.56 Myr', () => {
+  near(c.heatLeft(0) / 1e6, 3e-7 * (0.717 / Math.LN2) * 1e6 * 365.25 * 86400 / 1e6, 1e-12); near(c.heatLeft(0.717) / c.heatLeft(0), 0.5, 1e-12);
   for (const T of [180, 900, 1661, 1700, 1982, 1990]) near(c.TofH(c.hOfT(T)), T, 1e-12, `enthalpy round trip at ${T}`);
   const big = (tf) => c.meltRun(300, tf);
   near(big(2).peak, c.TofH(c.heatLeft(2)), 2e-3, 'no loss at 2 Myr'); near(big(1.5).peak, c.TofH(c.heatLeft(1.5)), 2e-3, 'no loss at 1.5 Myr');
-  const tc = c.MELT.tau * Math.log(c.heatLeft(0) / c.hOfT(c.MELT.Tcore)); near(tc, 1.598, 2e-3, 'critical time');
+  const tc = c.MELT.tau * Math.log(c.heatLeft(0) / c.hOfT(c.MELT.Tcore)); near(tc, 1.559, 2e-3, 'critical time');
   assert(big(tc - 0.05).core && !big(tc + 0.05).core, 'core just before, not just after');
   assert(!c.meltRun(2, 0).core && c.meltRun(2, 0).peak < 400, 'a 2 km body stays cool'); assert(c.meltRun(50, 0.5).core, '50 km at 0.5 Myr melts');
   const a = c.meltRun(20, 1.2), b = c.meltRun(20, 1.2, { n: 80 }); near(a.peak, b.peak, 0.005, 'grid convergence');
