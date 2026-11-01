@@ -1454,7 +1454,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!narrow) { const [x, y] = P3(-0.12, -0.05, RAILZ + 0.07), d = describe(states[0].S); label(ctx, S.input.kind === 'lin' ? `Lamp, polarizer ${fmtDeg(S.input.ang, 0)}` : `Lamp: ${shortDesc(d)}`, x, y, S.sel === -1 && S.input.kind === 'lin' ? T.accent : T.ink, 'center', 'middle', true); }
     ctx.font = `${10.5 * ps}px ${T.mono}`;
     const cap = 'Not to scale: the field and its wavelength are drawn hugely magnified (light: about 0.5 µm). Drag a mount to turn it, drag elsewhere to turn the view.';
-    label(ctx, fitText([cap, 'Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.', 'Not to scale · drag a mount to turn it'], W - 24 * ps, 10, false), 12 * ps, h - 12 * ps, T.muted, 'left', 'middle', false, 10);
+    label(ctx, fitText([cap, (window.VDI18N ? VDI18N.t('Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.') : 'Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.'), (window.VDI18N ? VDI18N.t('Not to scale · drag a mount to turn it') : 'Not to scale · drag a mount to turn it')], W - 24 * ps, 10, false), 12 * ps, h - 12 * ps, T.muted, 'left', 'middle', false, 10);
   }
   function setView3(v) {
     if (v === '3d' && !G3.ok) {

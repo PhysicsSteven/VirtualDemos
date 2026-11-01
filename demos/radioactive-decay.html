@@ -1213,14 +1213,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* what is exaggerated or left out, in the strip over the legend, wrapped to the pane: returns the lines */
   function noteLines(W, ps) {
-    const ctx = ctxs.g, words = ('Column drawn far larger than a real one (about 1 cm): one ball per simulated nucleus. ' + (G.vial ? 'Eluted nuclei are not followed after they leave. ' : '') + 'Drag to turn.').split(' ');
+    const note = 'Column drawn far larger than a real one (about 1 cm): one ball per simulated nucleus. ' + (G.vial ? 'Eluted nuclei are not followed after they leave. ' : '') + 'Drag to turn.';
+    const ctx = ctxs.g, words = (window.VDI18N ? VDI18N.t(note) : note).split(' ');   /* translated whole, then wrapped as it is (VDI18N.raw) */
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = `${10 * ps}px ${T.ui}`;
-    const out = ['']; for (const w of words) { const t = out[out.length - 1] ? out[out.length - 1] + ' ' + w : w; if (ctx.measureText(t).width > W - 20 && out[out.length - 1]) out.push(w); else out[out.length - 1] = t; }
+    const out = [''], wrap = () => { for (const w of words) { const t = out[out.length - 1] ? out[out.length - 1] + ' ' + w : w; if (ctx.measureText(t).width > W - 20 && out[out.length - 1]) out.push(w); else out[out.length - 1] = t; } };
+    if (window.VDI18N) VDI18N.raw(wrap); else wrap();
     return out;
   }
   function note3(W, y, ps, lines) {
     const ctx = ctxs.g; ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    lines.forEach((t, i) => ctx.fillText(t, W / 2, y - (lines.length - 1 - i) * 13 * ps));
+    const draw = () => lines.forEach((t, i) => ctx.fillText(t, W / 2, y - (lines.length - 1 - i) * 13 * ps));
+    if (window.VDI18N) VDI18N.raw(draw); else draw();
   }
   function pick3(ev) {
     if (!G.L) return -1;
@@ -1580,7 +1583,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function chainReadouts(t) {
     const [a, b] = lam, f = expFr(t), B = br();
     const AP = a * sim.counts[0], AD = b * sim.counts[1];
-    $('cRatio').textContent = AP > 0 ? (AD / AP).toFixed(3) : AD > 0 ? 'parent gone' : '—';
+    $('cRatio').textContent = AP > 0 ? (AD / AP).toFixed(3) : AD > 0 ? (window.VDI18N ? VDI18N.t('parent gone') : 'parent gone') : '—';
     $('cRatioExp').textContent = f[0] > 1e-300 ? (b * f[1] / (a * f[0])).toFixed(3) : '—';
     $('cPeak').textContent = fmtT(peakTime(a, b) + (elutions.length ? elutions[elutions.length - 1] : 0));
     if (b > a) {

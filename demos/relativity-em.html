@@ -976,9 +976,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dir = N.FE[1] + N.FM[1];
     strip(4, 'Force on q', fq(Fm, 'N', 4), Fm === 0 ? 'no force' : kind + ', ' + (dir > 0 ? 'away from the wire' : 'toward the wire') + (real ? '' : ' · τ = ' + (RUN.tau * 1e9).toFixed(3) + ' ns'));
     $('tag').className = 'tag' + (real ? ' exact' : '');
-    $('tag').textContent = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
+    const tagT = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
+    $('tag').textContent = tagT;
     const kOn = !real && S.kx !== 1;
-    $('tagK').textContent = kOn ? 'Spacing drawn ×' + S.kx + '; every number is exact' : '';
+    const tagKT = kOn ? 'Spacing drawn ×' + S.kx + '; every number is exact' : '';
+    $('tagK').textContent = tagKT;
     // the plain words caption
     const cap = $('cap'), lu = wireInFrame(P.lam0, P.v, P.u).lamNet, sign = lu > 0 ? 'positively' : 'negatively', moving = Math.abs(P.u) > 1e-300;
     cap.hidden = false;
@@ -990,7 +992,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (!settled) { cap.className = 'cap mix'; cap.innerHTML = 'Changing frames. In between, the wire is partly charged and <span class="e">both fields push</span>.<small>The charge\'s own clock is held still while the frame changes.</small>'; }
     else if (S.frame === 'lab') { cap.className = 'cap'; cap.innerHTML = 'Lab frame: the wire is neutral. Only the <span class="m">magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small>'; }
     else { cap.className = 'cap el'; cap.innerHTML = `Charge's frame: the wire is ${sign} charged. Only the <span class="e">electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small>`; }
-    if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + $('tag').textContent + '.' + (kOn ? ' ' + $('tagK').textContent + '.' : '') + (G.on3d ? ' Cutaway wire, drawn 8 mm thick' + (real ? '.' : '; supports drawn with the ions\' contraction.') : '') + '</small>');
+    if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + tagT + '.' + (kOn ? ' ' + tagKT + '.' : '') + (G.on3d ? ' Cutaway wire, drawn 8 mm thick' + (real ? '.' : '; supports drawn with the ions\' contraction.') : '') + '</small>');
   }
   function pointReadouts() {
     const b = S.bp, g = gammaOf(b), q = 1e-9;

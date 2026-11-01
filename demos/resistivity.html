@@ -819,6 +819,11 @@ table.rows input:focus { border-color: var(--accent); }
     if (t < 7200) return `${sig(t / 60, 3)} min`; if (t < 172800) return `${sig(t / 3600, 3)} h`; return `${sig(t / 86400, 3)} days`;
   }
   function wrapText(str, x, y, maxW, lh, dry) {
+    /* in another language: the whole text translated first, its lines measured and drawn as they are (VDI18N.raw) */
+    if (window.VDI18N) { str = VDI18N.t(str); return VDI18N.raw(() => wrapLines(str, x, y, maxW, lh, dry)); }
+    return wrapLines(str, x, y, maxW, lh, dry);
+  }
+  function wrapLines(str, x, y, maxW, lh, dry) {
     const words = str.split(' '); let line = '';
     for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { if (!dry) ctx.fillText(line, x, y); y += lh; line = w; } else line = t; }
     if (line) { if (!dry) ctx.fillText(line, x, y); y += lh; } return y;

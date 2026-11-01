@@ -965,10 +965,12 @@ table.rows input:focus { border-color: var(--accent); }
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/motion-graphs.html'; a.target = 'motion-graphs-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
+  /* the Setups names in English for the export (in another language the buttons show them translated) */
+  const PRESET_EN = {}; for (const b of document.querySelectorAll('#presets button[data-p]')) PRESET_EN[b.dataset.p] = b.textContent;
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const settings = S.preset === 'walk' ? 'your own walk' : S.stop ? (S.blind ? 'hidden (Blind)' : `stopping distance: car A ${S.sd.vA} m/s, car B ${S.sd.vB} m/s, reaction time ${S.sd.tr} s, braking deceleration ${S.sd.b} m/s2; hazard seen at t = 0, x = 0 (rows are car A)`) : S.ramps ? `ball on ramps, pieces ${RAMP_L} m long, slopes ${S.rp.ang.join(', ')} deg, start speed ${S.rp.v0} m/s; x along the track` : S.blind ? 'hidden (Blind)' : `x0 ${S.x0} m, v0 ${S.v0} m/s, stages ${S.segs.map((g) => `a ${g.a} m/s2 for ${g.T} s`).join('; ')}${S.two ? `; car B x0 ${S.B.x0} m, v0 ${S.B.v0} m/s, a ${S.B.a} m/s2 (rows are car A)` : ''}`;
-    const txt = readingsCSV(S.rows, { version: MG_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own motion', settings });
+    const txt = readingsCSV(S.rows, { version: MG_VERSION, setup: PRESET_EN[S.preset] || 'Your own motion', settings });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'motion-graphs-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {

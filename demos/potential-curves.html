@@ -1862,13 +1862,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let cap = coarse ? VD3.turnText(CAPS[kind]) : CAPS[kind];   /* phones turn with two fingers */
     if (W < 520) cap = cap.replace(/ Drag .*$/, '');   /* narrow: the Motion section says how to drag and turn */
     c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    /* in another language: the whole caption translated first, its lines measured and drawn as they are (VDI18N.raw) */
+    const raw = (fn) => (window.VDI18N ? VDI18N.raw(fn) : fn()); if (window.VDI18N) cap = VDI18N.t(cap);
     const maxW = W - 110 * ps, words = cap.split(' '), lines = [];
+    raw(() => {
     let ln = ''; for (const w of words) { const t = ln ? ln + ' ' + w : w; if (c.measureText(t).width > maxW && ln) { lines.push(ln); ln = w; } else ln = t; } if (ln) lines.push(ln);
     const lh = 13.5 * ps, y0 = H - 6 - (lines.length - 1) * lh;
     const cw = Math.max(...lines.map((l) => c.measureText(l).width));
     c.fillStyle = T.canvas; c.globalAlpha = 0.72; c.fillRect(6, y0 - lh - 1, cw + 10, lines.length * lh + 4); c.globalAlpha = 1;
     c.fillStyle = T.muted; lines.forEach((l, i) => c.fillText(l, 11, y0 + i * lh));
-    const al = CAPS[kind].replace(/ Drag.*$/, ''); if (sPane.getAttribute('aria-label') !== al) sPane.setAttribute('aria-label', al);
+    });
+    const al = CAPS[kind].replace(/ Drag.*$/, ''); if (sPane._al !== al) { sPane._al = al; sPane.setAttribute('aria-label', al); }   /* the label last written: in another language the attribute reads back translated */
   }
   /* drag the object in the scene to set the release point; anywhere else turns the view */
   function near3(e) {

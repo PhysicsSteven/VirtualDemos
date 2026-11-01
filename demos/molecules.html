@@ -904,8 +904,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const q of ML.ph) photon(ctx, q.x * W, cy + q.y * H, q.nm, p);
     for (const o of ML.out) { ctx.save(); ctx.translate(o.x * W, cy + o.y * H); ctx.rotate(Math.atan2(o.vy * H, o.vx * W)); photon(ctx, 18 * p, 0, o.nm, p); ctx.restore(); }
     /* what happened */
-    const said = { calm: ML.why ? `passes: ${ML.why}` : 'waiting for a photon', turn: 'absorbed: the molecule turns faster', shake: ML.mode ? `absorbed: the ${mlLabel[ML.mode.kind]} (${ML.mode.nu} cm⁻¹) starts` : 'absorbed', glow: 'absorbed: an electron is lifted, the molecule glows', break: `absorbed: the bond breaks, ${m.name} → ${m.fname.join(' + ')}` }[ML.st];
-    lab(ctx, `${m.name}: ${said}`, W / 2, H - 34 * p, { a: 'center', c: T.ink, w: 700, s: 11.5 });
+    /* in another language each piece is translated, then the line is drawn as it is (VDI18N.raw); English is unchanged */
+    const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (all, n) => (v && v[n] != null ? String(v[n]) : all)));
+    const said = { calm: ML.why ? tr('passes: {why}', { why: tr(ML.why) }) : tr('waiting for a photon'), turn: tr('absorbed: the molecule turns faster'), shake: ML.mode ? tr('absorbed: the {mode} ({nu} cm⁻¹) starts', { mode: tr(mlLabel[ML.mode.kind]), nu: ML.mode.nu }) : tr('absorbed'), glow: tr('absorbed: an electron is lifted, the molecule glows'), break: tr('absorbed: the bond breaks, {name} → {parts}', { name: m.name, parts: m.fname.join(' + ') }) }[ML.st];
+    const said1 = () => lab(ctx, tr('{name}: {said}', { name: m.name, said }), W / 2, H - 34 * p, { a: 'center', c: T.ink, w: 700, s: 11.5 });
+    if (window.VDI18N) VDI18N.raw(said1); else said1();
     lab(ctx, ML.st === 'turn' || ML.st === 'shake' || ML.st === 'glow' ? 'it gives a photon back soon, in any direction' : 'bond lengths and angles to scale; atoms and the motion not; slowed', W / 2, H - 16 * p, { a: 'center', c: T.muted, s: 9.5 });
     MAP.pane = null;
   }
