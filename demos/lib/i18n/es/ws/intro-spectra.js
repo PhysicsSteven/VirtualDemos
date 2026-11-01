@@ -8,8 +8,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Huellas digitales de los elementos | VirtualDemos",
 "Fingerprints of the Elements":
   "Huellas digitales de los elementos",
-"<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).":
-  "<strong>Modos en la demo:</strong> Explorar (un elemento), Comparar (dos elementos, uno encima del otro) y Misterio (una mezcla de gases desconocida o una estrella).",
+"<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star’s temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).":
+  "<strong>Modos en la demo:</strong> Explorar (un elemento), Comparar (dos elementos, uno encima del otro), Misterio (una mezcla de gases desconocida o una estrella), Hidrógeno en las estrellas (cómo la temperatura de una estrella fija la intensidad de sus líneas de hidrógeno) y Modelos atómicos (cómo los modelos del átomo explican las líneas).",
 "The picture shows the light source and a hand spectroscope, which spreads light out into its colors. The strip below it is what you would see in the eyepiece, from violet on the left to red on the right, with a scale in nanometers (nm).":
   "La imagen muestra la fuente de luz y un espectroscopio de mano, que separa la luz en sus colores. La franja de abajo es lo que verías en el ocular, del violeta a la izquierda al rojo a la derecha, con una escala en nanómetros (nm).",
 "Three kinds of source: <strong>Continuous</strong> is a hot lamp shining straight into the spectroscope; <strong>Emission</strong> is a tube of thin gas made to glow by electricity; <strong>Absorption</strong> is the lamp shining through a cell of cool gas.":
@@ -87,5 +87,7 @@ VDI18N.add('es', 'ws/intro-spectra', {
 "Heading of column E":
   "Encabezado de la columna E",
 "Spectra Explorer":
-  "Explorador de espectros"
+  "Explorador de espectros",
+"<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).":
+  "<strong>Modos en la demo:</strong> Explorar (un elemento), Comparar (dos elementos, uno encima del otro) y Misterio (una mezcla de gases desconocida o una estrella)."
 });

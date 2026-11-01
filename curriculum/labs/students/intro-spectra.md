@@ -6,7 +6,7 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Modes in the demo:** Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).
+**Modes in the demo:** Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star's temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).
 
 **Using the demo.**
 

@@ -154,8 +154,8 @@ VDI18N.add('es', 'ws/intro-resonances', {
   "En la simulación {#}:{#}, describe en qué parte de la órbita del asteroide lo rebasó Júpiter. ¿En qué se diferencia de la simulación a {#} UA? Usa tu respuesta a Antes del laboratorio {#} para explicar por qué un asteroide fue lanzado a una órbita que cruza la de Marte y el otro no.",
 "The asteroid at {#} AU started only {#} AU from the one at {#} AU. Use the bar chart to say whether real asteroids are common at {#} AU.":
   "El asteroide a {#} UA empezó a solo {#} UA del que estaba a {#} UA. Usa la gráfica de barras para decir si los asteroides reales son comunes a {#} UA.",
-"The Hildas sit at Jupiter’s {#}:{#} resonance, yet the bar chart shows a small crowd of them at {#} AU, not a gap. From your reading, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.":
-  "Los Hildas están en la resonancia {#}:{#} de Júpiter, y aun así la gráfica de barras muestra un pequeño grupo de ellos a {#} UA, no un hueco. Según tu lectura, ¿qué tanto se acercó el asteroide Hilda a Júpiter? Propón por qué esta resonancia protege a los asteroides en vez de vaciarlos.",
+"The Hildas sit at Jupiter’s {#}:{#} resonance, yet the bar chart shows a small crowd of them at {#} AU, not a gap. From the Closest to Jupiter readout, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.":
+  "Los Hildas están en la resonancia {#}:{#} de Júpiter, y aun así la gráfica de barras muestra un pequeño grupo de ellos a {#} UA, no un hueco. Según la lectura Máximo acercamiento a Júpiter, ¿qué tanto se acercó el asteroide Hilda a Júpiter? Propón por qué esta resonancia protege a los asteroides en vez de vaciarlos.",
 "Pluto’s closest point to the Sun is {#} AU and Neptune’s orbit is at {#} AU. From Part {#}, how close did Pluto ever come to Neptune? What happened when the same orbit started with bad timing? Was your guess in Before the lab {#} right?":
   "El punto de la órbita de Plutón más cercano al Sol está a {#} UA y la órbita de Neptuno está a {#} UA. Según la Parte {#}, ¿qué tanto llegó a acercarse Plutón a Neptuno? ¿Qué pasó cuando la misma órbita empezó mal sincronizada? ¿Acertaste en tu suposición de Antes del laboratorio {#}?",
 "In Part {#}, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on {#} September {#} was the drift smallest? Compare it with the position of the real Neptune (show the real Neptune, or choose The real Neptune setup).":
@@ -183,5 +183,7 @@ VDI18N.add('es', 'ws/intro-resonances', {
 "Eccentricity of the orbit: {#} is a circle, the bigger e the more stretched":
   "Excentricidad de la órbita: {#} es un círculo, cuanto mayor es e más alargada es la órbita",
 "Period ratio: how many times the asteroid goes round for each turn of Jupiter":
-  "Cociente de periodos: cuántas vueltas da el asteroide por cada vuelta de Júpiter"
+  "Cociente de periodos: cuántas vueltas da el asteroide por cada vuelta de Júpiter",
+"The Hildas sit at Jupiter’s {#}:{#} resonance, yet the bar chart shows a small crowd of them at {#} AU, not a gap. From your reading, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.":
+  "Los Hildas están en la resonancia {#}:{#} de Júpiter, y aun así la gráfica de barras muestra un pequeño grupo de ellos a {#} UA, no un hueco. Según tu lectura, ¿qué tanto se acercó el asteroide Hilda a Júpiter? Propón por qué esta resonancia protege a los asteroides en vez de vaciarlos."
 });

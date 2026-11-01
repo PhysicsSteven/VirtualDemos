@@ -68,7 +68,7 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Name the era (Noachian, Hesperian or Amazonian) each surface belongs to.",
 "The northern plains are about how much younger than the southern highlands? What does that say about how the north got its smooth surface?",
 "The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars’s {#} billion year history?",
-"From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?",
+"From Part {#}, how much smaller is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with Mars at {#} km/s. Mars’s stronger gravity and a slower impact both make a smaller crater: which of the two makes the bigger difference?",
 "From Part {#}, how did the cold lid of Mars change from {#} to {#} billion years? Compare Mars’s lid today with the Moon’s and Earth’s.",
 "A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by a few hundred million years for old surfaces. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?",
 "Mars is bigger than the Moon but smaller than Earth. Use your Part {#} results to explain why Mars had volcanoes long after the Moon’s maria stopped erupting, while Earth still has them today.",

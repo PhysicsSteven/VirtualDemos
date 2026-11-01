@@ -136,8 +136,8 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
   "¿Aproximadamente cuánto más jóvenes son las llanuras del norte que las tierras altas del sur? ¿Qué dice eso sobre cómo obtuvo el norte su superficie lisa?",
 "The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars’s {#} billion year history?":
   "La caldera del Olympus Mons es la superficie más joven que fechaste. ¿Hace cuánto se inundó de lava por última vez, como fracción de la historia de {#} mil millones de años de Marte?",
-"From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?":
-  "Según la Parte {#}, ¿cuánto más grande es el cráter en Marte a {#} km/s que en la Luna a {#} km/s? Explícalo usando la gravedad. Luego compara Marte a {#} km/s con la Luna a {#} km/s: ¿qué efecto gana?",
+"From Part {#}, how much smaller is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with Mars at {#} km/s. Mars’s stronger gravity and a slower impact both make a smaller crater: which of the two makes the bigger difference?":
+  "Según la Parte {#}, ¿cuánto más pequeño es el cráter en Marte a {#} km/s que en la Luna a {#} km/s? Explícalo usando la gravedad. Luego compara Marte a {#} km/s con Marte a {#} km/s. La gravedad más fuerte de Marte y un impacto más lento hacen ambos un cráter más pequeño: ¿cuál de los dos hace la mayor diferencia?",
 "From Part {#}, how did the cold lid of Mars change from {#} to {#} billion years? Compare Mars’s lid today with the Moon’s and Earth’s.":
   "Según la Parte {#}, ¿cómo cambió la tapa fría de Marte de {#} a {#} mil millones de años? Compara la tapa de Marte hoy con la de la Luna y la de la Tierra.",
 "A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by a few hundred million years for old surfaces. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?":
@@ -153,5 +153,7 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Craters, Cooling and Surface Ages":
-  "Cráteres, enfriamiento y edades de superficies"
+  "Cráteres, enfriamiento y edades de superficies",
+"From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?":
+  "Según la Parte {#}, ¿cuánto más grande es el cráter en Marte a {#} km/s que en la Luna a {#} km/s? Explícalo usando la gravedad. Luego compara Marte a {#} km/s con la Luna a {#} km/s: ¿qué efecto gana?"
 });

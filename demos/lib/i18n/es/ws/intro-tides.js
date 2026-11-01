@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}: the Moon and the Sun.</strong> Put the Moon back at today’s distance and switch to the Ocean bulges view. Write down the height of the Moon’s tide and of the Sun’s tide in the notes. Include the Sun’s tide, then read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and fill in the second table.":
   "<strong>Parte {#}: la Luna y el Sol.</strong> Regresa la Luna a la distancia actual y cambia a la vista Abultamientos del océano. Anota en las notas la altura de la marea de la Luna y de la marea del Sol. Incluye la marea del Sol, luego lee el intervalo del día en luna nueva ({#} días), cuarto creciente ({#} días), luna llena ({#} días) y cuarto menguante ({#} días), y llena la segunda tabla.",
-"<strong>Part {#}: the timing.</strong> With the Sun’s tide left out, find the times of three high tides in a row at the city and write them in the notes.":
-  "<strong>Parte {#}: los tiempos.</strong> Sin la marea del Sol, encuentra las horas de tres mareas altas seguidas en la ciudad y escríbelas en las notas.",
+"<strong>Part {#}: the timing.</strong> Leave out the Sun’s tide again, then find the times of three high tides in a row at the city and write them in the notes.":
+  "<strong>Parte {#}: los tiempos.</strong> Deja fuera otra vez la marea del Sol y luego encuentra las horas de tres mareas altas seguidas en la ciudad y escríbelas en las notas.",
 "<span>B</span>Moon’s distance (Earth radii)":
   "<span>B</span>Distancia a la Luna (radios terrestres)",
 "<span>C</span>Pull at Earth’s center (μm/s²)":
@@ -105,5 +105,7 @@ VDI18N.add('es', 'ws/intro-tides', {
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos tablas de datos con las alturas de las mareas y las horas de las mareas altas en las notas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Tides":
-  "Mareas"
+  "Mareas",
+"<strong>Part {#}: the timing.</strong> With the Sun’s tide left out, find the times of three high tides in a row at the city and write them in the notes.":
+  "<strong>Parte {#}: los tiempos.</strong> Sin la marea del Sol, encuentra las horas de tres mareas altas seguidas en la ciudad y escríbelas en las notas."
 });

@@ -45,7 +45,7 @@ No hazards in the virtual lab. At a real beach, check the tide table before walk
 
 **Part 2: the Moon and the Sun.** Put the Moon back at today's distance and switch to the Ocean bulges view. Write down the height of the Moon's tide and of the Sun's tide in the notes. Include the Sun's tide, then read the day's range at new moon (0 days), first quarter (7.38 days), full moon (14.77 days) and third quarter (22.15 days), and fill in the second table.
 
-**Part 3: the timing.** With the Sun's tide left out, find the times of three high tides in a row at the city and write them in the notes.
+**Part 3: the timing.** Leave out the Sun's tide again, then find the times of three high tides in a row at the city and write them in the notes.
 
 ## Data
 

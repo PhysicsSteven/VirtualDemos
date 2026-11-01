@@ -98,7 +98,7 @@ No hazards in the virtual lab.
 2. In Part 1, which asteroids had their orbits stretched until they crossed Mars's orbit, and how long did it take? Which stayed calm?
 3. In the 3:1 run, describe where on the asteroid's orbit Jupiter passed it. How is that different from the 2.55 AU run? Use your answer to Before the lab 2 to explain why one asteroid was thrown onto a Mars crossing orbit and the other was not.
 4. The asteroid at 2.55 AU started only 0.05 AU from the one at 2.50 AU. Use the bar chart to say whether real asteroids are common at 2.55 AU.
-5. The Hildas sit at Jupiter's 3:2 resonance, yet the bar chart shows a small crowd of them at 3.97 AU, not a gap. From your reading, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.
+5. The Hildas sit at Jupiter's 3:2 resonance, yet the bar chart shows a small crowd of them at 3.97 AU, not a gap. From the Closest to Jupiter readout, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.
 6. Pluto's closest point to the Sun is 29.7 AU and Neptune's orbit is at 30.1 AU. From Part 3, how close did Pluto ever come to Neptune? What happened when the same orbit started with bad timing? Was your guess in Before the lab 3 right?
 7. In Part 4, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on 1846 September 23 was the drift smallest? Compare it with the position of the real Neptune (show the real Neptune, or choose The real Neptune setup).
 
