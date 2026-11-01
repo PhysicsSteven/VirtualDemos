@@ -1,0 +1,5 @@
+#!/bin/sh
+# House rules check before every commit (tools/rules.cjs; Steve, 2026-11-01).
+# Turn it on once per clone: git config core.hooksPath .githooks
+# A failure lists file:line and the rule. Fix the source, or add a reasoned ALLOW entry in tools/rules.cjs.
+exec node "$(git rev-parse --show-toplevel)/tools/rules.cjs"
