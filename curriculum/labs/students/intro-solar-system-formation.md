@@ -36,7 +36,7 @@ Follow the steps that turned a cloud of gas and dust into our solar system, and 
 
 ## Before the lab
 
-1. A cloud 5000 AU across in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10 000 times or 1 million times?
+1. A cloud 5000 AU across in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10,000 times or 1 million times?
 2. Which do you expect to find closer to the Sun: rocky bodies or icy bodies? Why?
 3. Aluminum 26 has a half life of 0.72 million years. What fraction of it is left after 1.44 million years? After 2.16 million years?
 
@@ -82,7 +82,7 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Fill in the last column of the first table: the spin up is how many times faster the disk's edge goes around than the cloud did. Change the cloud's time from million years to years first (multiply by 1 000 000), then divide it by the disk edge's time. Compare Our solar nebula with your guess in Before the lab 1.
+1. Fill in the last column of the first table: the spin up is how many times faster the disk's edge goes around than the cloud did. Change the cloud's time from million years to years first (multiply by 1,000,000), then divide it by the disk edge's time. Compare Our solar nebula with your guess in Before the lab 1.
 2. Slow spin turns 4 times more slowly than Our solar nebula. How many times smaller is its disk? Fast spin turns 2 times faster: how many times bigger is its disk? What rule connects the spin and the size of the disk?
 3. What happened with No spin? Explain why a cloud must spin to make a disk.
 4. In the second table, divide the temperature at 1 AU by the temperature at 4 AU. The distance went up 4 times; by how many times did the temperature fall?

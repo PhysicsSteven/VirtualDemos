@@ -61,7 +61,7 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Change the L2 distances from Part 1 into kilometers. For Sun–Earth the separation is 149.6 million km (1 AU); for Earth–Moon it is 384 400 km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?
+1. Change the L2 distances from Part 1 into kilometers. For Sun–Earth the separation is 149.6 million km (1 AU); for Earth–Moon it is 384,400 km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?
 2. Change the L2 drift times into days. One period is 365.25 days for Sun–Earth and 27.32 days for Earth–Moon. Use them to answer Before the lab 2: about how often must a spacecraft near L2 correct its orbit?
 3. Change the Trojans' L4 wobble period into years: one Jupiter period is 11.86 years. Could anyone watch a Trojan asteroid go once around its wobble in a lifetime?
 4. From Part 2, between which two mass ratios does L4 stop being a place where objects stay? Turn that into words: how many times heavier must the big body be than the smaller one? Are the Sun–Jupiter and Earth–Moon pairs on the safe side?

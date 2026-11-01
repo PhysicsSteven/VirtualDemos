@@ -177,7 +177,7 @@
         </div>
         <div><div class="slider-head"><label for="sLat">Latitude φ</label><output id="oLat" for="sLat"></output></div><input type="range" id="sLat" min="-90" max="90" step="0.1" value="32.5"></div>
         <div><div class="slider-head"><label for="sLon">Longitude</label><output id="oLon" for="sLon"></output></div><input type="range" id="sLon" min="-180" max="180" step="0.1" value="-92.6"></div>
-        <div><div class="slider-head"><label for="sYear">Year</label><output id="oYear" for="sYear"></output></div><input type="range" id="sYear" min="-3000" max="15000" step="1" value="2026"></div>
+        <div><div class="slider-head"><label for="sYear">Year</label><output id="oYear" for="sYear"></output></div><input type="range" id="sYear" min="-3000" max="15000" step="1" value="2027"></div>
         <div><div class="slider-head"><label for="sDay">Date</label><output id="oDay" for="sDay"></output></div><input type="range" id="sDay" min="1" max="365" step="1" value="15"></div>
         <div><div class="slider-head"><label for="sTime">Clock time</label><output id="oTime" for="sTime"></output></div><input type="range" id="sTime" min="0" max="1439" step="1" value="1200"></div>
       </div>
@@ -555,7 +555,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPEEDS = { m1: 60, m10: 600, h1: 3600, d1: 86400, y: 500 };
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const S = { place: 'ruston', lat: 32.52, lon: -92.64, jd: 0, run: false, speed: 'm10', view: 'horizon', face: 180, fov: 120, tilt: 30, sel: 'star:' + BYNAME.Polaris,
-    clockF: null, chartOff: 0, yearF: 2026, preset: 'tonight', blind: false };
+    clockF: null, chartOff: 0, yearF: 2027, preset: 'tonight', blind: false };
   let dirty = true, last = 0;
   const zone = () => Math.round(S.lon / 15);
   const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
@@ -1141,11 +1141,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- presets ---------- */
   const PRESETS = {
-    tonight: { place: 'ruston', at: [2026, 1, 15, '20:00'], speed: 'm10', view: 'horizon', face: 180, sel: 'Polaris', show: {},
+    tonight: { place: 'ruston', at: [2027, 1, 15, '20:00'], speed: 'm10', view: 'horizon', face: 180, sel: 'Polaris', show: {},
       hint: 'Ruston, Louisiana, at 32.5° N on a January evening, facing south: Orion is up in the southeast. Press Play to turn the Earth 10 minutes each second. Every star circles the north celestial pole once a day, which sits 32.5° above the northern horizon, the same as the latitude. Polaris is within a degree of it.' },
-    northpole: { place: 'northpole', at: [2026, 1, 15, '20:00'], speed: 'h1', view: 'dome', sel: 'Polaris', show: { tPath: true },
+    northpole: { place: 'northpole', at: [2027, 1, 15, '20:00'], speed: 'h1', view: 'dome', sel: 'Polaris', show: { tPath: true },
       hint: 'At the North Pole the north celestial pole is straight overhead and the celestial equator lies along the horizon. Every star circles parallel to the horizon: nothing rises or sets. The Sun, south of the equator from September to March, stays down all winter.' },
-    equator: { place: 'quito', at: [2026, 1, 15, '18:00'], speed: 'h1', view: 'horizon', face: 90, sel: 'Mintaka', show: { tPath: true },
+    equator: { place: 'quito', at: [2027, 1, 15, '18:00'], speed: 'h1', view: 'horizon', face: 90, sel: 'Mintaka', show: { tPath: true },
       hint: 'On the equator both celestial poles sit on the horizon, due north and due south. Every star rises straight up out of the eastern horizon, is up for half of each day and sets straight down in the west. Mintaka, the westernmost belt star of Orion, is almost exactly on the celestial equator, so it rises due east.' },
     sydney: { place: 'sydney', at: [2026, 4, 15, '21:00'], speed: 'm10', view: 'horizon', face: 180, sel: 'Acrux', show: { tCaps: true },
       hint: 'From Sydney, 33.9° S, the south celestial pole is 33.9° above the southern horizon, with no bright star near it. Crux, the Southern Cross, and the pointers Rigil Kentaurus and Hadar circle it and never set; Polaris never rises.' },
@@ -1157,8 +1157,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'At the March equinox the Sun crosses the celestial equator going north. It rises due east and sets due west, and day and night are both 12 hours. (The real day is a few minutes longer: the air bends sunlight over the horizon and the Sun is a disk, not a point, which the demo leaves out.)' },
     midnight: { place: 'tromso', at: [2026, 6, 21, '21:00'], speed: 'm10', view: 'horizon', face: 0, sel: 'sun', show: { tPath: true },
       hint: 'Tromsø, Norway, is at 69.6° N. In June the Sun’s declination, 23.4°, is more than 90° − 69.6° = 20.4°, so the Sun is inside the always up zone and never sets: around midnight it skims the northern horizon about 3° up.' },
-    moonmonth: { place: 'ruston', at: [2026, 1, 20, '18:30'], speed: 'd1', view: 'chart', sel: 'moon', show: { tMoonOrb: true, tEcl: true },
-      hint: 'The sky at the same clock time every evening, one day each second, starting two days after the new Moon of January 18, 2026. The Moon moves about 13° east among the stars each day, waxes to full in about two weeks and comes back to the same stars after 27.3 days. Its path stays within 5.1° of the ecliptic and crosses it at two nodes.' },
+    moonmonth: { place: 'ruston', at: [2027, 1, 9, '18:30'], speed: 'd1', view: 'chart', sel: 'moon', show: { tMoonOrb: true, tEcl: true },
+      hint: 'The sky at the same clock time every evening, one day each second, starting two days after the new Moon of January 7, 2027. The Moon moves about 13° east among the stars each day, waxes to full in about two weeks and comes back to the same stars after 27.3 days. Its path stays within 5.1° of the ecliptic and crosses it at two nodes.' },
     solar: { place: 'dallas', at: [2024, 4, 8, '12:25'], speed: 'm1', view: 'horizon', face: 180, sel: 'sun', show: { tEcl: true },
       hint: 'The total solar eclipse of April 8, 2024, from Dallas, Texas, one minute each second (clock in standard time; Dallas was on daylight time, one hour later). The Moon is new and close to a node, so it passes in front of the Sun; the inset shows both to scale. Totality from here lasts about four minutes.' },
     lunar: { place: 'ruston', at: [2025, 3, 14, '00:00'], speed: 'm1', view: 'horizon', face: 180, sel: 'moon', show: { tEcl: true },

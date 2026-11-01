@@ -1195,5 +1195,13 @@ VDI18N.add('es', 'common', {
 "He":
   "He",
 "Hide data table":
-  "Ocultar tabla de datos"
+  "Ocultar tabla de datos",
+"Log scales":
+  "Escalas logarítmicas",
+"Log scales on both axes":
+  "Escalas logarítmicas en ambos ejes",
+"Log scales need numbers greater than zero in both columns. Turn off Log scales to draw these points.":
+  "Las escalas logarítmicas necesitan números mayores que cero en ambas columnas. Desactiva Escalas logarítmicas para dibujar estos puntos.",
+"Rows left off the log scales and out of the fit, because a column holds zero or less: {n}.":
+  "Filas que quedan fuera de las escalas logarítmicas y del ajuste porque una columna tiene cero o menos: {n}."
 });

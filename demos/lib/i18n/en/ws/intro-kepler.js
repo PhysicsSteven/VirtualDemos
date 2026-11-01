@@ -51,7 +51,7 @@ VDI18N.add('en', 'ws/intro-kepler', [
 "T² (yr²)",
 "Use your perihelion and aphelion distances to find \\(a\\) and \\(e\\) for each object, and fill in those columns.",
 "Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest \\(e\\) to largest.",
-"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?",
+"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). Pluto’s point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?",
 "Vesta and Ceres both orbit in the asteroid belt between Mars and Jupiter. Which one takes longer to go around the Sun, by how much, and why?",
 "Compare the perihelion and aphelion distances of Apophis with Earth’s distance from the Sun. Does the orbit of Apophis cross Earth’s orbit?",
 "Neptune orbits the Sun at an average distance of {#} AU. Compare that with Pluto’s perihelion distance. What does this tell you about the two orbits?",

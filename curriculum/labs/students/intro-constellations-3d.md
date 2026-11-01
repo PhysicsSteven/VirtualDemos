@@ -25,7 +25,7 @@ Find out whether the stars of a constellation are really near each other in spac
 
 **Constellations.** A constellation is a pattern of stars as seen from Earth. Its stars look close together on the sky because they lie in nearly the same direction from us, but they can be at very different distances.
 
-**Distances.** The distances in the demo come from parallax: as Earth goes around the Sun, a nearby star seems to shift a tiny angle against far more distant stars. The Hipparcos satellite measured these angles for about 118 000 stars. The farther the star, the smaller the shift, so the distances of the farthest stars are the least certain.
+**Distances.** The distances in the demo come from parallax: as Earth goes around the Sun, a nearby star seems to shift a tiny angle against far more distant stars. The Hipparcos satellite measured these angles for about 118,000 stars. The farther the star, the smaller the shift, so the distances of the farthest stars are the least certain.
 
 **Magnitudes.** Astronomers measure how bright a star looks with its apparent magnitude V. Smaller numbers are brighter, and a difference of 5 magnitudes is a factor of exactly 100 in brightness. The absolute magnitude M is the magnitude the star would have if it were 10 parsecs (32.6 light years) away:
 

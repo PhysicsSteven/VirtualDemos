@@ -44,7 +44,7 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "L4 stays?, row {#}",
 "L4 wobble period (periods), row {#}",
 "L4 drift time (periods), row {#}",
-"Change the L2 distances from Part {#} into kilometers. For Sun–Earth the separation is {#} million km ({#} AU); for Earth–Moon it is {#} {#} km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?",
+"Change the L2 distances from Part {#} into kilometers. For Sun–Earth the separation is {#} million km ({#} AU); for Earth–Moon it is {#} km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?",
 "Change the L2 drift times into days. One period is {#} days for Sun–Earth and {#} days for Earth–Moon. Use them to answer Before the lab {#}: about how often must a spacecraft near L2 correct its orbit?",
 "Change the Trojans’ L4 wobble period into years: one Jupiter period is {#} years. Could anyone watch a Trojan asteroid go once around its wobble in a lifetime?",
 "From Part {#}, between which two mass ratios does L4 stop being a place where objects stay? Turn that into words: how many times heavier must the big body be than the smaller one? Are the Sun–Jupiter and Earth–Moon pairs on the safe side?",

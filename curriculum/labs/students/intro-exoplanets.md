@@ -26,7 +26,7 @@ Find a planet around another star from the two signals it makes: the small dip i
 
 **We almost never see the planet itself.** A planet is billions of times fainter than its star and, from light years away, sits right beside it. So astronomers watch the star instead.
 
-**Transits measure size.** If we see the orbit edge on, the planet passes in front of the star once every orbit and blocks a little of its light. The share of light blocked is about the planet's area over the star's area: (planet radius ÷ star radius) squared. A star's middle is a little brighter than its edge, so the dip at the middle of a transit is about 1.2 times that ratio. Brightness drops are given in parts per million (ppm): 10 000 ppm is 1%. The Sun's radius is 109.2 Earth radii.
+**Transits measure size.** If we see the orbit edge on, the planet passes in front of the star once every orbit and blocks a little of its light. The share of light blocked is about the planet's area over the star's area: (planet radius ÷ star radius) squared. A star's middle is a little brighter than its edge, so the dip at the middle of a transit is about 1.2 times that ratio. Brightness drops are given in parts per million (ppm): 10,000 ppm is 1%. The Sun's radius is 109.2 Earth radii.
 
 **The wobble measures mass.** The planet does not simply orbit the star: both go around their shared center of mass. The star swings toward us and away from us once each orbit, and its light shifts slightly blue, then red (the Doppler effect). The top speed of the star, $$K$$, is bigger for a heavier planet and for a closer one. Earth moves the Sun at only 0.0895 m/s (9 cm/s, a slow crawl), Jupiter at about 12 m/s.
 
@@ -36,15 +36,15 @@ Find a planet around another star from the two signals it makes: the small dip i
 - A **cube root** ($$x^{1/3}$$) is the number that, multiplied by itself three times, gives $$x$$. On most calculators press $$x$$, then the power key (^, $$y^x$$ or $$x^y$$), then (1 ÷ 3). Check: the cube root of 8 is 2, because 2 × 2 × 2 = 8. For $$x^{2/3}$$, square $$x$$ first, then take the cube root.
 
 1. **Planet radius** (Earth radii), from the brightness drop at the middle of the transit:
-   change the drop from ppm to a fraction (divide by 1 000 000); divide by 1.21; take the square root; multiply by 109.2 and by the star's radius in Sun radii.
+   change the drop from ppm to a fraction (divide by 1,000,000); divide by 1.21; take the square root; multiply by 109.2 and by the star's radius in Sun radii.
 2. **Planet mass** (Earth masses), from the star's top speed $$K$$ (m/s) and the period:
    change the period to years (days ÷ 365.25); take its cube root; separately take the cube root of (star mass)²; then multiply $$K$$ ÷ 0.0895 by both cube roots. As one formula: mass = ($$K$$ ÷ 0.0895) × $$P^{1/3}$$ × $$M_s^{2/3}$$, with $$P$$ in years and $$M_s$$ in Sun masses.
 3. **Orbit size** $$a$$ (AU), from Kepler's third law: square the period in years; multiply by the star's mass; take the cube root. As one formula: $$a = (M_s \times P^2)^{1/3}$$.
 4. **Density** (g/cm³): cube the radius from step 1 (radius × radius × radius); divide the mass from step 2 by it; multiply by 5.51. Earth is 5.51, rock about 3 to 5, water 1.0, Jupiter 1.33, Saturn 0.69.
 
-**Worked example: the Hot Jupiter** (the demo's readings at the middle of the transit and at the top of the velocity curve, no noise). The star has $$M_s$$ = 1.11 and radius 1.15 Sun radii; the period is 4.1934 days; the drop is 13 949.5 ppm and $$K$$ = 55.24 m/s.
+**Worked example: the Hot Jupiter** (the demo's readings at the middle of the transit and at the top of the velocity curve, no noise). The star has $$M_s$$ = 1.11 and radius 1.15 Sun radii; the period is 4.1934 days; the drop is 13,949.5 ppm and $$K$$ = 55.24 m/s.
 
-- Step 1, radius: 13 949.5 ÷ 1 000 000 = 0.0139495; ÷ 1.21 = 0.011529; √ = 0.10737; × 109.2 × 1.15 = **13.48 Earth radii**.
+- Step 1, radius: 13,949.5 ÷ 1,000,000 = 0.0139495; ÷ 1.21 = 0.011529; √ = 0.10737; × 109.2 × 1.15 = **13.48 Earth radii**.
 - Step 2, mass: 4.1934 ÷ 365.25 = 0.011481 years, whose cube root is 0.22559; 1.11² = 1.2321, whose cube root is 1.07205; 55.24 ÷ 0.0895 = 617.2; 617.2 × 0.22559 × 1.07205 = **149.3 Earth masses**.
 - Step 3, orbit: 0.011481² = 0.00013181; × 1.11 = 0.00014631; cube root = **0.0527 AU**.
 - Step 4, density: 13.48³ = 2451; 149.3 ÷ 2451 = 0.06091; × 5.51 = **0.336 g/cm³**, a gas planet like Saturn.

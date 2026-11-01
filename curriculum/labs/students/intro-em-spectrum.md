@@ -25,7 +25,7 @@ Explore the whole electromagnetic spectrum and check that every kind of light ob
 
 ## Background
 
-**One family.** Radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays are all the same thing: electromagnetic waves, ripples of electric and magnetic field. In empty space they all travel at the speed of light, c = 299 792 458 m/s, about 3.00 × 10⁸ m/s. They differ only in their wavelength and frequency.
+**One family.** Radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays are all the same thing: electromagnetic waves, ripples of electric and magnetic field. In empty space they all travel at the speed of light, c = 299,792,458 m/s, about 3.00 × 10⁸ m/s. They differ only in their wavelength and frequency.
 
 **Wavelength and frequency.** The **wavelength** λ is the distance from one crest to the next, in meters. The **frequency** f is how many crests pass each second, in hertz (Hz). Since the wave moves one wavelength each time a crest passes,
 
@@ -33,7 +33,7 @@ Explore the whole electromagnetic spectrum and check that every kind of light ob
 
 A higher frequency means a shorter wavelength. Visible light has wavelengths of about 400 to 700 nm (1 nm = 10⁻⁹ m), radio waves can be meters to kilometers long, and gamma rays are smaller than an atom.
 
-**Powers of ten.** The spectrum spans a huge range, so frequencies are written in scientific notation: 10⁸ Hz is 100 000 000 Hz, and 3 × 10⁸ ÷ 10⁸ = 3.
+**Powers of ten.** The spectrum spans a huge range, so frequencies are written in scientific notation: 10⁸ Hz is 100,000,000 Hz, and 3 × 10⁸ ÷ 10⁸ = 3.
 
 ## Before the lab
 

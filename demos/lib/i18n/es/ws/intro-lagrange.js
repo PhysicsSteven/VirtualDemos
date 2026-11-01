@@ -88,8 +88,8 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Periodo de oscilación en L4 (periodos), fila {#}",
 "L4 drift time (periods), row {#}":
   "Tiempo de deriva en L4 (periodos), fila {#}",
-"Change the L2 distances from Part {#} into kilometers. For Sun–Earth the separation is {#} million km ({#} AU); for Earth–Moon it is {#} {#} km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?":
-  "Convierte a kilómetros las distancias de L2 de la Parte {#}. Para Sol–Tierra la separación es de {#} millones de km ({#} UA); para Tierra–Luna es de {#} {#} km. ¿Cuántas veces más lejos de la Tierra está el L2 Sol–Tierra que la Luna?",
+"Change the L2 distances from Part {#} into kilometers. For Sun–Earth the separation is {#} million km ({#} AU); for Earth–Moon it is {#} km. How many times farther from Earth is the Sun–Earth L2 than the Moon is?":
+  "Convierte a kilómetros las distancias de L2 de la Parte {#}. Para Sol–Tierra la separación es de {#} millones de km ({#} UA); para Tierra–Luna es de {#} km. ¿Cuántas veces más lejos de la Tierra está el L2 Sol–Tierra que la Luna?",
 "Change the L2 drift times into days. One period is {#} days for Sun–Earth and {#} days for Earth–Moon. Use them to answer Before the lab {#}: about how often must a spacecraft near L2 correct its orbit?":
   "Convierte a días los tiempos de deriva en L2. Un periodo dura {#} días para Sol–Tierra y {#} días para Tierra–Luna. Úsalos para responder Antes del laboratorio {#}: ¿aproximadamente cada cuánto debe corregir su órbita una nave cerca de L2?",
 "Change the Trojans’ L4 wobble period into years: one Jupiter period is {#} years. Could anyone watch a Trojan asteroid go once around its wobble in a lifetime?":

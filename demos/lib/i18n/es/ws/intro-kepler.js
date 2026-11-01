@@ -102,8 +102,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Usa tus distancias en el perihelio y en el afelio para encontrar \\(a\\) y \\(e\\) de cada objeto, y llena esas columnas.",
 "Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest \\(e\\) to largest.":
   "¿Qué objeto tiene la órbita más excéntrica y cuál la más cercana a un círculo? Ordena los ocho objetos de la \\(e\\) más pequeña a la más grande.",
-"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
-  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) contra \\(a^3\\). La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
+"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). Pluto’s point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
+  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) contra \\(a^3\\). El punto de Plutón queda tan lejos que los otros siete se amontonan cerca de cero, así que mira también la gráfica con Escalas logarítmicas activadas, que separa los ocho. La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
 "Vesta and Ceres both orbit in the asteroid belt between Mars and Jupiter. Which one takes longer to go around the Sun, by how much, and why?":
   "Vesta y Ceres orbitan ambas en el cinturón de asteroides entre Marte y Júpiter. ¿Cuál tarda más en dar la vuelta al Sol, por cuánto y por qué?",
 "Compare the perihelion and aphelion distances of Apophis with Earth’s distance from the Sun. Does the orbit of Apophis cross Earth’s orbit?":

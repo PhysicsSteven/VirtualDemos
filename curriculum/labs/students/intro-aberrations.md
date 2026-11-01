@@ -26,7 +26,7 @@ Find out the main ways a telescope can blur a star, what causes each one, how to
 
 ## Background
 
-**A perfect telescope.** Even a perfect telescope cannot focus a star to a point. Light spreads (diffraction), so the star becomes a small disk with faint rings, about 1.22 λ/D across in radians, where λ is the wavelength and D the diameter of the mirror or lens. To turn radians into seconds of arc, multiply by 206 265.
+**A perfect telescope.** Even a perfect telescope cannot focus a star to a point. Light spreads (diffraction), so the star becomes a small disk with faint rings, about 1.22 λ/D across in radians, where λ is the wavelength and D the diameter of the mirror or lens. To turn radians into seconds of arc, multiply by 206,265.
 
 **Aberrations.** A real telescope also has to bring all the light from the star to one point. When the mirror or lens has the wrong shape, or the star is in the wrong place, light from different parts of the mirror arrives at slightly different places: the star is blurred more than a perfect telescope would blur it. Each kind of blur is called an **aberration**, and each leaves its own clue:
 

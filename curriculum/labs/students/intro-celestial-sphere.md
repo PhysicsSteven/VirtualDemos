@@ -49,13 +49,13 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 ## Procedure
 
-**Polaris from different latitudes.** Choose A winter night at Ruston (January 15, 2026, 8:00 pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney, then at latitudes 10° N, 45° N and 60° N at Ruston's longitude. Send the readings to the worksheet, then clear them.
+**Polaris from different latitudes.** Choose A winter night at Ruston (January 15, 2027, 8:00 pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney, then at latitudes 10° N, 45° N and 60° N at Ruston's longitude. Send the readings to the worksheet, then clear them.
 
 **Stars and the Sun from Ruston.** At Ruston, record a reading for Kochab, Dubhe, Capella, Vega, Betelgeuse, Sirius, Antares and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.
 
-**The Moon through a week.** Choose The Moon through a month (Ruston, January 20, 2026, 6:30 pm) with the Moon selected. Record the Moon at 6:30 pm on each of the seven evenings from January 20 to January 26. Send the readings to the worksheet, then clear them.
+**The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm) with the Moon selected. Record the Moon at 6:30 pm on each of the seven evenings from January 9 to January 15. Send the readings to the worksheet, then clear them.
 
-**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Record a reading in each of these years, as close as you can set them: 3000 BC, 2000 BC, 1000 BC, AD 1, AD 1000, 2026, AD 4000, AD 7000, AD 10000 and AD 14000. Send the readings to the worksheet.
+**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Record a reading in each of these years, as close as you can set them: 3000 BC, 2000 BC, 1000 BC, AD 1, AD 1000, 2027, AD 4000, AD 7000, AD 10000 and AD 14000. Send the readings to the worksheet.
 
 ## Data
 

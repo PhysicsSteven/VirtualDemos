@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- The **Pull on Earth** view shows the Moon's pull at points around Earth, or the tidal pull: the pull at each point minus the pull at Earth's center. Drag the Moon, or use its distance slider, to move it from 40 to 120 Earth radii; today it is 60.34 Earth radii (384 400 km).
+- The **Pull on Earth** view shows the Moon's pull at points around Earth, or the tidal pull: the pull at each point minus the pull at Earth's center. Drag the Moon, or use its distance slider, to move it from 40 to 120 Earth radii; today it is 60.34 Earth radii (384,400 km).
 - The **Ocean bulges** view shows an ocean covering the whole Earth, a city on the equator, and the water level there over two days and over a month. The readouts give the height of the Moon's tide and of the Sun's tide, the city's water level, the day's range from high to low water, and when the next high tide comes. The time controls set the city's clock and the days since new moon.
 - Record reading works in the Pull on Earth view. It stores the Moon's distance and the pulls in μm/s² (millionths of a meter per second squared). Export to worksheet sends the readings to the first Data table below. Read the water levels in the Ocean bulges view from the readouts.
 - The ocean in the demo follows the tidal pull at once. Real oceans are shaped by continents and basins and lag behind the Moon, so real tides range from a few centimeters to more than 15 m.

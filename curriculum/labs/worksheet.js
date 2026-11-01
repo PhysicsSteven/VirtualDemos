@@ -1393,7 +1393,7 @@ tbody.ws-pad { display: none; }
 .ws-answer-one { margin: 6px 0 14px; } .ws-answer-one label { font-size: 0.85em; font-weight: 600; color: var(--hd-ink, #24292f); }
 .ws-print { display: none; }
 .ws-plot { margin: 10px 0 4px; } .ws-plot h3 { font-size: 1em; margin: 0 0 4px; } .ws-plot svg { width: 100%; height: auto; display: block; max-width: 640px; }
-.ws-axes { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; } .ws-axes label { font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.ws-axes { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; } .ws-axes label { font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 6px; } .ws .ws-axes input[type=checkbox] { width: auto; min-width: 0; margin: 0; flex: 0 0 auto; }
 .ws select.ws-sel { width: auto; max-width: 15em; padding: 4px 6px; font-weight: 400; } .ws-axes label { max-width: 100%; } .ws select.ws-sel.ws-fitsel { max-width: 100%; min-width: 0; flex: 0 1 auto; }
 @media print { .ws-axes { display: none; } }
 .ws-plot .ws-res { font-size: 0.95em; margin: 6px 0 2px; } .ws-plot .ws-res b { font-weight: 600; }
@@ -1891,9 +1891,13 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0, fit = el('select', { class: 'ws-f ws-sel ws-fitsel', 'aria-label': 'Kind of fit', on: { change: () => { R.axes.fit = fit.value; changed(); } } },
       FIT_KINDS.map(([v, text]) => el('option', { value: v, text })));
     R.axesSel = R.axesSel || {}; R.axesSel.fit = fit;
+    /* Log scales (2026-11-01): both axes in powers of ten, for data that spans many of them (Kepler's T² from Mercury to Pluto).
+       Only the drawing changes: the fit and its numbers are the same as on ordinary axes. */
+    const logBox = el('input', { type: 'checkbox', class: 'ws-f', 'aria-label': 'Log scales on both axes', on: { change: () => { R.axes.log = logBox.checked || undefined; changed(); } } });
+    R.axesSel.log = logBox;
     R.graph = el('div', { 'data-i18n-skip': SKIP });
     const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
-      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit]), el('label', {}, ['Error bars on y ', pick('err', 'Column holding the uncertainty of each y value, for error bars and a weighted fit')])])),
+      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')]), el('label', {}, [logBox, ' Log scales'])].concat(curve ? [] : [el('label', {}, ['Fit ', fit]), el('label', {}, ['Error bars on y ', pick('err', 'Column holding the uncertainty of each y value, for error bars and a weighted fit')])])),
       R.graph]);
     after.appendChild(box);
     axesOptions(T, R);
@@ -1912,7 +1916,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     });
   }
   const errOf = (R) => (R.axes && R.axes.err != null ? R.axes.err : '');
-  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit && FIT_KINDS.some((k) => k[0] === a.fit)) R.axes.fit = a.fit; if (a && a.err) R.axes.err = a.err; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; if (R.axesSel.err) R.axesSel.err.value = R.axes.err || ''; };
+  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; if (a && a.fit && FIT_KINDS.some((k) => k[0] === a.fit)) R.axes.fit = a.fit; if (a && a.err) R.axes.err = a.err; if (a && a.log) R.axes.log = true; if (R.axesSel.log) R.axesSel.log.checked = !!R.axes.log; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; R.axesSel.fit.value = R.axes.fit || ''; if (R.axesSel.err) R.axesSel.err.value = R.axes.err || ''; };
   const numOf = (f) => { if (!f) return NaN; if (f.calc) return f.calc.num; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
@@ -1965,16 +1969,26 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   }
   const NS = 'http://www.w3.org/2000/svg';
   const sv = (tag, a, txt) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
-  function axes(svg, box, xr, yr, xl, yl, nTy) {
-    const X = (v) => box.x + (v - xr[0]) / (xr[1] - xr[0]) * box.w, Y = (v) => box.y + box.h - (v - yr[0]) / (yr[1] - yr[0]) * box.h;
+  /* ticks on a log axis: each power of ten, or 1, 2, 5 steps inside a span of less than two of them */
+  function logTicks(lo, hi, n) {
+    const a = Math.log10(lo), b = Math.log10(hi), out = [];
+    if (b - a < 2) { [1, 2, 5].forEach((m) => { for (let k = Math.floor(a); k <= Math.ceil(b); k++) { const v = m * Math.pow(10, k); if (v >= lo * (1 - 1e-9) && v <= hi * (1 + 1e-9)) out.push(+v.toPrecision(12)); } }); return out.sort((p, q) => p - q); }
+    const step = Math.max(1, Math.ceil((Math.floor(b) - Math.ceil(a) + 1) / n));
+    for (let k = Math.ceil(a); k <= b + 1e-9; k += step) out.push(+Math.pow(10, k).toPrecision(12));
+    return out;
+  }
+  const tickText = (v) => { const k = Math.round(Math.log10(Math.abs(v))); return v > 0 && Math.abs(v - Math.pow(10, k)) < 1e-9 * v && (k >= 5 || k <= -3) ? '10' + sup(k) : String(v); };
+  function axes(svg, box, xr, yr, xl, yl, nTy, lx, ly) {
+    const tr = (on) => (on ? (v) => Math.log10(v) : (v) => v), fx = tr(lx), fy = tr(ly);
+    const X = (v) => box.x + (fx(v) - fx(xr[0])) / (fx(xr[1]) - fx(xr[0])) * box.w, Y = (v) => box.y + box.h - (fy(v) - fy(yr[0])) / (fy(yr[1]) - fy(yr[0])) * box.h;
     svg.appendChild(sv('rect', { x: box.x, y: box.y, width: box.w, height: box.h, fill: '#fff', stroke: '#8c959f' }));
-    ticks(xr[0], xr[1], 6).forEach((v) => { svg.appendChild(sv('line', { x1: X(v), x2: X(v), y1: box.y, y2: box.y + box.h, stroke: '#eaeef2' }));
-      svg.appendChild(sv('text', { x: X(v), y: box.y + box.h + 14, 'text-anchor': 'middle', 'font-size': 11, fill: '#57606a' }, String(v))); });
-    ticks(yr[0], yr[1], nTy).forEach((v) => { svg.appendChild(sv('line', { x1: box.x, x2: box.x + box.w, y1: Y(v), y2: Y(v), stroke: '#eaeef2' }));
-      svg.appendChild(sv('text', { x: box.x - 5, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#57606a' }, String(v))); });
+    (lx ? logTicks(xr[0], xr[1], 6) : ticks(xr[0], xr[1], 6)).forEach((v) => { svg.appendChild(sv('line', { x1: X(v), x2: X(v), y1: box.y, y2: box.y + box.h, stroke: '#eaeef2' }));
+      svg.appendChild(sv('text', { x: X(v), y: box.y + box.h + 14, 'text-anchor': 'middle', 'font-size': 11, fill: '#57606a' }, lx ? tickText(v) : String(v))); });
+    (ly ? logTicks(yr[0], yr[1], nTy) : ticks(yr[0], yr[1], nTy)).forEach((v) => { svg.appendChild(sv('line', { x1: box.x, x2: box.x + box.w, y1: Y(v), y2: Y(v), stroke: '#eaeef2' }));
+      svg.appendChild(sv('text', { x: box.x - 5, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#57606a' }, ly ? tickText(v) : String(v))); });
     if (xl) svg.appendChild(sv('text', { x: box.x + box.w / 2, y: box.y + box.h + 30, 'text-anchor': 'middle', 'font-size': 12, fill: '#1f2328' }, xl));
     svg.appendChild(sv('text', { x: 12, y: box.y + box.h / 2, 'text-anchor': 'middle', 'font-size': 12, fill: '#1f2328', transform: `rotate(-90 12 ${box.y + box.h / 2})` }, yl));
-    return { X, Y };
+    return { X, Y, ly, bottom: box.y + box.h };
   }
   const pad = (lo, hi, inc0) => { if (inc0) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const d = (hi - lo) || Math.abs(hi) || 1; return [lo - 0.08 * d, hi + 0.08 * d]; };
   function drawPlot(T, R) {
@@ -1989,6 +2003,9 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       const x = val(cx), y = val(cy);
       if (isFinite(x) && isFinite(y)) pts.push([x, y, ce >= 0 ? Math.abs(val(ce)) : NaN]);
     });
+    const logOn = !!R.axes.log, nAll = pts.length;
+    if (logOn) for (let i = pts.length - 1; i >= 0; i--) if (!(pts[i][0] > 0 && pts[i][1] > 0)) pts.splice(i, 1);   /* zero and below have no place on a log scale */
+    if (!pts.length && logOn && nAll) { box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Log scales need numbers greater than zero in both columns. Turn off Log scales to draw these points.') })); return; }
     if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('No row has a number in both columns yet. Each row with a number for {x} and for {y} is a point.', { x: xName, y: yName }) })); return; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const errName = ce >= 0 ? nameUnit(colShown(T, R, ce))[0] : '', sigOK = ce >= 0 && pts.every((p) => p[2] > 0 && isFinite(p[2])), sig = sigOK ? pts.map((p) => p[2]) : null;
@@ -2000,17 +2017,19 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(',') + '|' + (sig ? sig.join(',') : ''); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys, sig); } g = R.fitOut; }
     const f = sameX || curve ? null : quad ? (sig ? WSF.wquad(xs, ys, sig) : fitQuad(xs, ys)) : kind ? (g && !g.bad ? g : null) : sig ? WSF.wline(xs, ys, sig) : fitLine(xs, ys);
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': VDI18N.t('{title}, {n} points', { title: P.title, n: pts.length }) });
-    const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = sig ? pad(Math.min(...ys.map((y, i) => y - sig[i])), Math.max(...ys.map((y, i) => y + sig[i])), true) : pad(Math.min(...ys), Math.max(...ys), true);
+    const lpad = (lo, hi) => { const a = Math.log10(lo), b = Math.log10(hi), d = Math.max(b - a, 0.3); return [Math.pow(10, a - 0.06 * d), Math.pow(10, b + 0.06 * d)]; };
+    const xr = logOn ? lpad(Math.min(...xs), Math.max(...xs)) : pad(Math.min(...xs), Math.max(...xs), true), yr = logOn ? lpad(Math.min(...ys), Math.max(...ys)) : sig ? pad(Math.min(...ys.map((y, i) => y - sig[i])), Math.max(...ys.map((y, i) => y + sig[i])), true) : pad(Math.min(...ys), Math.max(...ys), true);
     /* an error bar: a line from y − σ to y + σ with short caps */
-    const bar = (Ax, x, y, s) => { const x0 = Ax.X(x), y0 = Ax.Y(y - s), y1 = Ax.Y(y + s); svg.appendChild(sv('path', { d: `M${x0},${y0}V${y1}M${x0 - 3},${y0}h6M${x0 - 3},${y1}h6`, stroke: '#cf222e', 'stroke-width': 1.2, fill: 'none' })); };
+    const bar = (Ax, x, y, s) => { const x0 = Ax.X(x), y0 = Ax.ly && y - s <= 0 ? Ax.bottom : Ax.Y(y - s), y1 = Ax.Y(y + s); svg.appendChild(sv('path', { d: `M${x0},${y0}V${y1}M${x0 - 3},${y0}h6M${x0 - 3},${y1}h6`, stroke: '#cf222e', 'stroke-width': 1.2, fill: 'none' })); };
     const lab = (n, u) => (u ? `${n} (${u})` : n);
-    const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
-    if (f && !f.quad && !f.kind) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
-    if (f && (f.quad || f.kind)) {   /* the curve, clipped to the plot box */
+    const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5, logOn, logOn);
+    if (f && !f.quad && !f.kind && !logOn) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
+    if (f && (f.quad || f.kind || logOn)) {   /* the curve, clipped to the plot box (a straight line too, on log scales) */
+      const at = f.at || ((x) => f.a + f.b * x), xAt = (u) => (logOn ? Math.pow(10, Math.log10(xr[0]) + (Math.log10(xr[1]) - Math.log10(xr[0])) * u) : xr[0] + (xr[1] - xr[0]) * u);
       const id = 'wsclip' + (++clipN), cp = sv('clipPath', { id }); cp.appendChild(sv('rect', { x: 62, y: 10, width: W - 80, height: 210 })); svg.appendChild(cp);
       /* drawn in pieces where the curve exists (xⁿ and ln x stop at x = 0), its height held to a few plot heights */
-      const N = f.kind ? 400 : 120, segs = [[]];
-      for (let i = 0; i <= N; i++) { const x = xr[0] + (xr[1] - xr[0]) * i / N, y = f.at(x); if (isFinite(y)) segs[segs.length - 1].push(`${A.X(x)},${Math.max(-2000, Math.min(2000, A.Y(y)))}`); else if (segs[segs.length - 1].length) segs.push([]); }
+      const N = f.kind || logOn ? 400 : 120, segs = [[]];
+      for (let i = 0; i <= N; i++) { const x = xAt(i / N), y = at(x); if (isFinite(y) && (!logOn || y > 0)) segs[segs.length - 1].push(`${A.X(x)},${Math.max(-2000, Math.min(2000, A.Y(y)))}`); else if (segs[segs.length - 1].length) segs.push([]); }
       segs.filter((g) => g.length > 1).forEach((g) => svg.appendChild(sv('polyline', { points: g.join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 2, 'clip-path': `url(#${id})` })));
     }
     if (curve) svg.appendChild(sv('polyline', { points: pts.slice().sort((p, q) => p[0] - q[0]).map(([x, y]) => `${A.X(x)},${A.Y(y)}`).join(' '), fill: 'none', stroke: '#1f6feb', 'stroke-width': 1.5 }));
@@ -2018,12 +2037,13 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     if (sig) pts.forEach(([x, y], i) => bar(A, x, y, sig[i]));
     pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: dot, fill: '#cf222e', stroke: '#fff', 'stroke-width': dot > 3 ? 1 : 0.5 })));
     if (f) {
-      const m = Math.max(...f.res.map((r, i) => Math.abs(r) + (sig ? sig[i] : 0))) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab(VDI18N.t('residual'), P.yUnit), 4);
+      const m = Math.max(...f.res.map((r, i) => Math.abs(r) + (sig ? sig[i] : 0))) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab(VDI18N.t('residual'), P.yUnit), 4, logOn, false);
       svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
       if (sig) xs.forEach((x, i) => bar(B, x, f.res[i], sig[i]));
       xs.forEach((x, i) => svg.appendChild(sv('circle', { cx: B.X(x), cy: B.Y(f.res[i]), r: 3.5, fill: '#cf222e' })));
     }
     box.appendChild(svg);
+    if (logOn && pts.length < nAll) box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Rows left off the log scales and out of the fit, because a column holds zero or less: {n}.', { n: nAll - pts.length }) }));
     if (ce >= 0 && !sigOK) box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Error bars need a positive number in {col} on every plotted row; until then the points are drawn and fitted without them.', { col: errName }) }));
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Every point has the same {x} ({value}), so there is no slope to fit. Use rows where {x} changes, or choose another column.', { x: P.xName, value: xs[0] + (P.xUnit ? ' ' + P.xUnit : '') }) })); return; }
     if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('{n} points, joined in order of {x}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.', { n: pts.length, x: P.xName }) })); return; }

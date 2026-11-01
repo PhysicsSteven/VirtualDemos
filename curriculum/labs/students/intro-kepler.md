@@ -77,7 +77,7 @@ Send all eight readings to the worksheet.
 
 1. Use your perihelion and aphelion distances to find $$a$$ and $$e$$ for each object, and fill in those columns.
 2. Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest $$e$$ to largest.
-3. Fill in the $$a^3$$ and $$T^2$$ columns and graph $$T^2$$ against $$a^3$$. The third law says the points fall on a straight line through the origin with a slope of 1. What slope and intercept does your graph give?
+3. Fill in the $$a^3$$ and $$T^2$$ columns and graph $$T^2$$ against $$a^3$$. Pluto's point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of 1. What slope and intercept does your graph give?
 4. Vesta and Ceres both orbit in the asteroid belt between Mars and Jupiter. Which one takes longer to go around the Sun, by how much, and why?
 5. Compare the perihelion and aphelion distances of Apophis with Earth's distance from the Sun. Does the orbit of Apophis cross Earth's orbit?
 6. Neptune orbits the Sun at an average distance of 30.07 AU. Compare that with Pluto's perihelion distance. What does this tell you about the two orbits?

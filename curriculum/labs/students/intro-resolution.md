@@ -70,7 +70,7 @@ Fill in the last column from the rule (λ in nm, D in m: 1.22 × λ ÷ D ÷ 1000
 2. Compare your Hubble reading at 550 nm with your answer to Before the lab 1.
 3. Divide the smallest angle for the 1.00 m mirror by the one for the 10.0 m mirror. How does the ratio compare with the ratio of the diameters?
 4. From Part 2, which color lets the telescope see finer detail, violet or red? Divide the two angles and compare with 650 ÷ 405.
-5. A radio telescope 100 m across observes the radio waves hydrogen gas gives off, which have a wavelength of 21.1 cm (0.211 m). Use θ = 1.22 λ/D (λ and D in meters) to find its smallest resolvable angle in radians, then multiply by 1 000 000 to get microradians. How many times bigger (worse) is this than Hubble's angle at 550 nm?
+5. A radio telescope 100 m across observes the radio waves hydrogen gas gives off, which have a wavelength of 21.1 cm (0.211 m). Use θ = 1.22 λ/D (λ and D in meters) to find its smallest resolvable angle in radians, then multiply by 1,000,000 to get microradians. How many times bigger (worse) is this than Hubble's angle at 550 nm?
 6. How wide would a single radio dish have to be to see as fine detail at 21.1 cm as Hubble does at 550 nm? Give your answer in kilometers.
 
 ## Uncertainty

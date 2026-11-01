@@ -27,7 +27,7 @@ Measure the distance to nearby stars the way astronomers do, from the small shif
 
 **Parallax.** Hold a finger up at arm's length and look at it with one eye, then the other: it jumps against the background. The closer the finger, the bigger the jump. Earth does the same thing for us on a much bigger scale: in January and July it is on opposite sides of the Sun, 2 AU apart, so a nearby star seems to shift against much more distant stars. Half of that shift is the star's **parallax**, p: the angle the radius of Earth's orbit (1 AU) makes when seen from the star.
 
-**The parsec.** Astronomers define the distance at which p is exactly 1″ as one **parsec** (pc): 1 pc = 206 265 AU = 3.26 light years. Because the angles are tiny, the distance is simply
+**The parsec.** Astronomers define the distance at which p is exactly 1″ as one **parsec** (pc): 1 pc = 206,265 AU = 3.26 light years. Because the angles are tiny, the distance is simply
 
 - distance in parsecs = 1 ÷ (parallax in arcseconds) = 1000 ÷ (parallax in mas).
 
@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 **Part 2: twice as far, half the angle.** Choose Any distance, keep Hipparcos, and set the distance to 2, 5, 10, 20 and 50 pc in turn. Record a reading at each (you do not need the ruler here). Send all eight readings to the worksheet, then clear them.
 
-**Part 3: how far can it reach?** Keep Any distance. Set the distance to 100 pc and record a reading with each instrument: Ground, Hipparcos and Gaia. Do the same at 1000 pc (1 kpc) and at 10 000 pc (10 kpc). Watch the photos and the warning under the readouts as you go. Send the nine readings to the worksheet.
+**Part 3: how far can it reach?** Keep Any distance. Set the distance to 100 pc and record a reading with each instrument: Ground, Hipparcos and Gaia. Do the same at 1000 pc (1 kpc) and at 10,000 pc (10 kpc). Watch the photos and the warning under the readouts as you go. Send the nine readings to the worksheet.
 
 ## Data
 

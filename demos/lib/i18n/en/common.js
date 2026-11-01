@@ -597,5 +597,9 @@ VDI18N.add('en', 'common', [
 "sun",
 "ELECTROMETER",
 "He",
-"Hide data table"
+"Hide data table",
+"Log scales",
+"Log scales on both axes",
+"Log scales need numbers greater than zero in both columns. Turn off Log scales to draw these points.",
+"Rows left off the log scales and out of the fit, because a column holds zero or less: {n}."
 ]);
