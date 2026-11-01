@@ -1,0 +1,65 @@
+/* notes/wave-power in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'notes/wave-power', {
+"Energy and Power of a Wave: teaching notes":
+  "Energía y potencia de una onda: notas para el docente",
+"Energy and Power of a Wave":
+  "Energía y potencia de una onda",
+"Acoustics module (OpenStax University Physics Vol {#}, §{#})":
+  "Módulo de acústica (OpenStax University Physics Vol {#}, §{#})",
+"A wave carries energy along the string without carrying the string with it. The average power of a sinusoidal wave is P = ½ μ A² ω² v.":
+  "Una onda transporta energía a lo largo de la cuerda sin llevarse la cuerda consigo. La potencia media de una onda senoidal es P = ½ μ A² ω² v.",
+"Power goes as the square of the amplitude and the square of the frequency: double either and the power is four times as much.":
+  "La potencia va como el cuadrado de la amplitud y el cuadrado de la frecuencia: duplica cualquiera de las dos y la potencia es cuatro veces mayor.",
+"The string sets how fast the energy moves, v = √(T/μ). At the same A and f, more tension or a heavier string carries more power: P = ½ ω² A² √(Tμ).":
+  "La cuerda fija qué tan rápido se mueve la energía, v = √(T/μ). Con la misma A y la misma f, más tensión o una cuerda más pesada transportan más potencia: P = ½ ω² A² √(Tμ).",
+"The energy per meter, ½ μ A² ω², is half kinetic and half potential, and P = (energy per meter) × v.":
+  "La energía por metro, ½ μ A² ω², es mitad cinética y mitad potencial, y P = (energía por metro) × v.",
+"An absorber matched to the string (b = √(Tμ)) takes every wave that reaches it, so the string acts as if it were endless. A mismatched end sends part of each wave back and the power depends on the length.":
+  "Un absorbedor acoplado a la cuerda (b = √(Tμ)) toma toda onda que lo alcanza, así que la cuerda actúa como si no tuviera fin. Un extremo desacoplado devuelve parte de cada onda y la potencia depende de la longitud.",
+"Students need the traveling wave y = A sin(kx − ωt), ω = {#}πf and v = √(T/μ) (OpenStax §{#}). The <strong>Linear Density of a String</strong> demo uses the same apparatus with a fixed end; this one replaces the fixed end with an absorber. <strong>Blind</strong> hides μ, v, λ, the predicted power and the energy per meter; the <strong>Unknown string</strong> hides μ for good (choosing another string shows it in the status line).":
+  "Los estudiantes necesitan la onda viajera y = A sin(kx − ωt), ω = {#}πf y v = √(T/μ) (OpenStax §{#}). La demo <strong>Densidad lineal de una cuerda</strong> usa el mismo aparato con un extremo fijo; esta reemplaza el extremo fijo por un absorbedor. <strong>A ciegas</strong> oculta μ, v, λ, la potencia predicha y la energía por metro; la <strong>Cuerda desconocida</strong> oculta μ de forma permanente (elegir otra cuerda la muestra en la línea de estado).",
+"<strong>Power against amplitude.</strong> String B, {#} g, {#} Hz. Start the vibrator and record the meter at A = {#}, {#}, {#}, {#}, {#} and {#} mm: {#}, {#}, {#}, {#}, {#} and {#} mW. Plot P against A (a curve) and against A² (a line through the origin).":
+  "<strong>Potencia en función de la amplitud.</strong> Cuerda B, {#} g, {#} Hz. Enciende el vibrador y registra el medidor con A = {#}, {#}, {#}, {#}, {#} y {#} mm: {#}, {#}, {#}, {#}, {#} y {#} mW. Grafica P en función de A (una curva) y en función de A² (una recta que pasa por el origen).",
+"<strong>Power against frequency.</strong> Keep A = {#} mm and change f from {#} to {#} Hz. P against f² is a line through the origin. Point out that the wavelength changes too: count the waves on the string.":
+  "<strong>Potencia en función de la frecuencia.</strong> Mantén A = {#} mm y cambia f de {#} a {#} Hz. P en función de f² es una recta que pasa por el origen. Señala que la longitud de onda también cambia: cuenta las ondas en la cuerda.",
+"<strong>Power against tension.</strong> Add masses at {#} Hz and {#} mm: four times the load gives twice the power.":
+  "<strong>Potencia en función de la tensión.</strong> Agrega masas a {#} Hz y {#} mm: cuatro veces la carga da el doble de potencia.",
+"<strong>Mismatched absorber.</strong> Too soft: change L by a few centimeters and the meter swings between about a third and three times the matched power. Switch back to Matched and L stops mattering. This is why the lab needs a matched end.":
+  "<strong>Absorbedor desacoplado.</strong> Demasiado blando: cambia L unos cuantos centímetros y el medidor oscila entre cerca de un tercio y tres veces la potencia acoplada. Regresa a Acoplado y L deja de importar. Por eso el laboratorio necesita un extremo acoplado.",
+"<strong>Unknown string.</strong> Students get μ from the slope of P against A²: slope = ½ ω² √(Tμ).":
+  "<strong>Cuerda desconocida.</strong> Los estudiantes obtienen μ a partir de la pendiente de P en función de A²: pendiente = ½ ω² √(Tμ).",
+"<strong>One pulse: free and fixed ends.</strong> Press <strong>Send one pulse</strong> with the end clamped: the pulse comes back upside down. Choose <strong>Free end</strong> and send another: it comes back upright. Too soft and Too stiff return half as tall a pulse, upright and upside down; Matched returns nothing. The energy readout shows how much the end took.":
+  "<strong>Un pulso: extremos libre y fijo.</strong> Oprime <strong>Enviar un pulso</strong> con el extremo sujeto: el pulso regresa invertido. Elige <strong>Extremo libre</strong> y envía otro: regresa derecho. Demasiado blando y Demasiado rígido devuelven un pulso de la mitad de altura, derecho e invertido; Acoplado no devuelve nada. La lectura de energía muestra cuánto tomó el extremo.",
+"<strong>Q1.</strong> String B (μ = {#} g/m) carries {#} g, and the vibrator runs at {#} Hz with A = {#} mm. Find the tension, the wave speed and the power the wave carries. Use g = {#} m/s².":
+  "<strong>P1.</strong> La Cuerda B (μ = {#} g/m) carga {#} g, y el vibrador funciona a {#} Hz con A = {#} mm. Encuentra la tensión, la rapidez de la onda y la potencia que transporta la onda. Usa g = {#} m/s².",
+"<strong>Q2.</strong> Starting from Q1, by what factor does the power change if (a) A is doubled, (b) f is doubled, (c) the hanging mass is made four times as large? Explain each from P = ½ μ A² ω² v.":
+  "<strong>P2.</strong> A partir de la P1, ¿por qué factor cambia la potencia si (a) se duplica A, (b) se duplica f, (c) la masa colgante se hace cuatro veces mayor? Explica cada caso a partir de P = ½ μ A² ω² v.",
+"<strong>Q3.</strong> At {#} Hz with {#} g on String B, a student records {#}, {#}, {#}, {#}, {#} and {#} mW at A = {#} to {#} mm in {#} mm steps. Plot P against A² and find μ from the slope.":
+  "<strong>P3.</strong> A {#} Hz con {#} g en la Cuerda B, un estudiante registra {#}, {#}, {#}, {#}, {#} y {#} mW con A = {#} a {#} mm en pasos de {#} mm. Grafica P en función de A² y encuentra μ a partir de la pendiente.",
+"<strong>Q4.</strong> For the wave of Q1, find the average energy per meter of string and the energy in one wavelength. Show that the energy in one wavelength times f gives the power.":
+  "<strong>P4.</strong> Para la onda de la P1, encuentra la energía media por metro de cuerda y la energía en una longitud de onda. Muestra que la energía en una longitud de onda por f da la potencia.",
+"<strong>Q5.</strong> With a matched absorber the meter reading does not change when L changes. With the \"too soft\" absorber it does. Explain both.":
+  "<strong>P5.</strong> Con un absorbedor acoplado la lectura del medidor no cambia cuando cambia L. Con el absorbedor \"demasiado blando\" sí cambia. Explica ambos casos.",
+"<strong>Q6.</strong> String A ({#} g/m) and String C ({#} g/m) are run with the same tension, frequency and amplitude. Which carries more power, and by what factor?":
+  "<strong>P6.</strong> La Cuerda A ({#} g/m) y la Cuerda C ({#} g/m) se operan con la misma tensión, frecuencia y amplitud. ¿Cuál transporta más potencia, y por qué factor?",
+"<strong>\"A bigger wave moves faster, so it carries more power for that reason.\"</strong> The speed is set by T and μ, not by A. The power grows with A² because each bit of string moves farther and faster.":
+  "<strong>\"Una onda más grande se mueve más rápido, y por eso transporta más potencia.\"</strong> La rapidez la fijan T y μ, no A. La potencia crece con A² porque cada trozo de cuerda se mueve más lejos y más rápido.",
+"<strong>\"The string itself travels to the absorber.\"</strong> Each bit of string only moves up and down; energy travels, not string.":
+  "<strong>\"La propia cuerda viaja hasta el absorbedor.\"</strong> Cada trozo de cuerda solo se mueve hacia arriba y hacia abajo; viaja la energía, no la cuerda.",
+"<strong>\"Higher frequency means a faster wave.\"</strong> f changes λ, not v. Power grows with f² because the string moves faster at the same amplitude.":
+  "<strong>\"Mayor frecuencia significa una onda más rápida.\"</strong> f cambia λ, no v. La potencia crece con f² porque la cuerda se mueve más rápido con la misma amplitud.",
+"<strong>\"The absorber's power depends on how long the string is.\"</strong> Only when the end reflects. With a matched end no wave comes back and L does not matter.":
+  "<strong>\"La potencia del absorbedor depende de qué tan larga es la cuerda.\"</strong> Solo cuando el extremo refleja. Con un extremo acoplado no regresa ninguna onda y L no importa.",
+"The string obeys μ y_tt = T y_xx with no losses along it. The vibrator end moves as A cos ωt. The far end is a massless end held by a dashpot: T y_x + b y_t = {#}. The steady state is Y(x) = P e^{−ikx} + Q e^{ikx} with Q = P r e^{−2ikL}, r = (Z − b)/(Z + b) and Z = √(Tμ), solved exactly.":
+  "La cuerda obedece μ y_tt = T y_xx sin pérdidas a lo largo de ella. El extremo del vibrador se mueve como A cos ωt. El extremo lejano es un extremo sin masa sostenido por un amortiguador: T y_x + b y_t = {#}. El estado estacionario es Y(x) = P e^{−ikx} + Q e^{ikx} con Q = P r e^{−2ikL}, r = (Z − b)/(Z + b) y Z = √(Tμ), resuelto exactamente.",
+"The meter reads the dashpot's average power ½ b ω² |Y(L)|², which equals the power ½ Re[(−T Y′) conj(iωY)] carried across every point (checked in the tests). With b = Z this is ½ Z ω² A² = ½ μ A² ω² v exactly.":
+  "El medidor marca la potencia media del amortiguador ½ b ω² |Y(L)|², que es igual a la potencia ½ Re[(−T Y′) conj(iωY)] transportada a través de cada punto (comprobado en las pruebas). Con b = Z esto es exactamente ½ Z ω² A² = ½ μ A² ω² v.",
+"Too soft and too stiff are b = Z/{#} and b = 3Z, so |r| = {#} and a quarter of the power is sent back each time. Because the vibrator fixes the displacement of its end, the wave heading for the absorber has an amplitude between A/{#} and A/{#}, and the absorber takes between P/{#} and 3P, depending on L and f.":
+  "Demasiado blando y demasiado rígido son b = Z/{#} y b = 3Z, así que |r| = {#} y una cuarta parte de la potencia se devuelve cada vez. Como el vibrador fija el desplazamiento de su extremo, la onda que va hacia el absorbedor tiene una amplitud entre A/{#} y A/{#}, y el absorbedor toma entre P/{#} y 3P, según L y f.",
+"T = mg with g = {#} m/s²; the pulley has no friction, the mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. Strings A, B and C have μ = {#}, {#} and {#} g/m (chosen).":
+  "T = mg con g = {#} m/s²; la polea no tiene fricción, la masa está en reposo, y se omiten el tramo corto de cuerda del absorbedor a la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas).",
+"The linear wave equation needs small slopes. The readout warns when the largest slope kA passes {#} (it can on String C with the hanger alone near {#} Hz and {#} mm). The steady state is shown at once. Simulated data with no noise.":
+  "La ecuación de onda lineal necesita pendientes pequeñas. La lectura avisa cuando la pendiente máxima kA pasa de {#} (puede pasar en la Cuerda C solo con el portapesas cerca de {#} Hz y {#} mm). El estado estacionario se muestra de inmediato. Datos simulados sin ruido.",
+"<strong>One pulse.</strong> The vibrator end moves as y = ½A({#} − cos {#}πft) for one period and is then held, a fixed end (r₀ = −{#}). The motion is the exact sum of images with r = (Z − b)/(Z + b) at the far end: +{#} for a free end (b = {#}), −{#} for a clamp (b → ∞), and the dashpot values in between. The pulse carries ½π²ZA²f, and each arrival at the far end gives up the share {#} − r² of its energy there.":
+  "<strong>Un pulso.</strong> El extremo del vibrador se mueve como y = ½A({#} − cos {#}πft) durante un periodo y luego se mantiene quieto, un extremo fijo (r₀ = −{#}). El movimiento es la suma exacta de imágenes con r = (Z − b)/(Z + b) en el extremo lejano: +{#} para un extremo libre (b = {#}), −{#} para una sujeción (b → ∞), y los valores del amortiguador entre ellos. El pulso transporta ½π²ZA²f, y cada llegada al extremo lejano entrega ahí la fracción {#} − r² de su energía."
+});
