@@ -70,6 +70,8 @@
   .setup select, .rail select { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+/* a longer language: the strip of switches on a phone stays one row, as in English, so it covers no more of the picture */
+@media (max-width: 820px) { :root[data-vd-lang] .pbar .seg button { padding-left: 6px; padding-right: 6px; font-size: 0.75rem; } }
 /* the Real distances view */
 .pane.out.depth #outFlat, .pane.out.depth #outLbl, .pane.out.depth canvas.vd3d { display: none !important; }
 .pane.out.depth #dimSeg { display: none; }
@@ -1254,7 +1256,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const yaw = DO.th, pitch = Math.PI / 2 - DO.ph, dist = G.Tn / DO.zoom, cp = Math.cos(pitch), sp = Math.sin(pitch), cy = Math.cos(yaw), sy = Math.sin(yaw);
     const back = [0, 1, 2].map((k) => cp * (sy * G.r[k] - cy * G.f[k]) + sp * G.u[k]);
     const C = [0, 1, 2].map((k) => G.T[k] + dist * back[k]), fw = back.map((x) => -x), rt = norm(cross(fw, G.u)), up = cross(rt, fw);
-    const F = Math.min(OW, OH) * 0.38 / Math.tan(G.half), cx = OW / 2, cy0 = OH / 2 + 12 * proj();
+    const fr = depthFrame(), F = fr.k / Math.tan(G.half), cx = OW / 2, cy0 = fr.cy;
     const zOf = (q) => (q[0] - C[0]) * fw[0] + (q[1] - C[1]) * fw[1] + (q[2] - C[2]) * fw[2];
     const P = (q) => { const d = [q[0] - C[0], q[1] - C[1], q[2] - C[2]], z = dot(d, fw); return z <= dist * 1e-4 ? null : [cx + dot(d, rt) / z * F, cy0 - dot(d, up) / z * F, z]; };
     const seg = (a, b) => {
@@ -1262,12 +1264,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (za < zn) { const t = (zn - za) / (zb - za); a = a.map((x, k) => x + t * (b[k] - x)); } else if (zb < zn) { const t = (zn - zb) / (za - zb); b = b.map((x, k) => x + t * (a[k] - x)); }
       const pa = P(a), pb = P(b); return pa && pb ? [pa, pb] : null;
     };
-    return { C, fw, rt, up, F, dist, P, seg, zOf };
+    return { C, fw, rt, up, F, dist, P, seg, zOf, cx, cy0 };
+  }
+  /* the part of the picture free of the strip of switches on top and the note at the bottom, measured, so a strip that wraps
+     (a narrow window, a longer language) never sits on the figure */
+  function depthFrame() {
+    const pb = $('paneOut').querySelector('.pbar'), nt = $('outNote');
+    const top = pb ? pb.offsetTop + pb.offsetHeight + 4 : 8, bot = OH - (nt && nt.textContent ? nt.offsetHeight + 12 : 8), h = Math.max(80, bot - top);
+    return { top, bot, cy: top + h / 2, k: Math.min(OW, h) * 0.40 };
   }
   /* the views a button picks: from the Sun, or from the side far enough back that the Sun and every star fit */
   function lookTarget(k) {
-    const G = depthGeom(), F = Math.min(OW, OH) * 0.38 / Math.tan(G.half);
-    return k === 'side' ? { th: Math.PI / 2, ph: Math.PI / 2, zoom: Math.max(0.02, Math.min(1, G.Tn / (G.R * F / (Math.min(OW, OH) * 0.42)))) } : { th: 0, ph: Math.PI / 2, zoom: 1 };
+    const G = depthGeom(), fr = depthFrame(), F = fr.k / Math.tan(G.half);
+    /* from the side: a quarter turn, raised 16° so the floor and its distance rings open out */
+    if (k !== 'side') return { th: 0, ph: Math.PI / 2, zoom: 1 };
+    /* far enough back that the Sun (on the left, |T| from the middle) fits across and the figure's depth fits up and down */
+    let Rs = 0; for (const st of G.known) Rs = Math.max(Rs, Math.hypot(st.p[0] - G.T[0], st.p[1] - G.T[1], st.p[2] - G.T[2]));
+    let ahead = 0; for (const st of G.known) ahead = Math.max(ahead, dot(st.p, G.f) - G.Tn);
+    const across = (OW < 520 ? 0.30 : 0.36) * OW * G.Tn / (Math.max(G.Tn, ahead) * F), upDown = (fr.bot - fr.top) * 0.42 * G.Tn / (Math.max(Rs, 1e-9) * F);
+    return { th: Math.PI / 2, ph: Math.PI / 2 - 16 * D2R, zoom: Math.max(0.02, Math.min(1, across, upDown)) };
   }
   function setLook(k, now) {
     DP.look = k; for (const b of document.querySelectorAll('#depthLook button')) b.setAttribute('aria-pressed', String(b.dataset.look === k));
@@ -1284,8 +1299,47 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawDepth() {
     const ctx = cDep, s = proj(), G = depthGeom(), Cm = depthCam(G), blind = S.blind;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = '#05070d'; ctx.fillRect(0, 0, OW, OH); LB = [];
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    { const g = ctx.createRadialGradient(OW / 2, OH * 0.45, 0, OW / 2, OH * 0.45, Math.hypot(OW, OH) * 0.62); g.addColorStop(0, '#0b1222'); g.addColorStop(1, '#03050a'); ctx.fillStyle = g; ctx.fillRect(0, 0, OW, OH); }
+    LB = [];
     const byI = {}; G.stars.forEach((st) => { byI[st.i] = st; });
+    /* the rest of the sky behind, every other star to magnitude 5.5 in its own direction (as if infinitely far: their distances
+       are not drawn), so the figure sits among the stars around it in the sky and the background turns with the view */
+    if (!G.inFig) G.inFig = new Set(G.stars.map((st) => st.i));
+    for (let i = 0; i < NS; i++) {
+      if (VM[i] > 5.5 || G.inFig.has(i)) continue;
+      const d0 = SV[3 * i], d1 = SV[3 * i + 1], d2 = SV[3 * i + 2], z = d0 * Cm.fw[0] + d1 * Cm.fw[1] + d2 * Cm.fw[2]; if (z < 0.05) continue;
+      const x = Cm.cx + (d0 * Cm.rt[0] + d1 * Cm.rt[1] + d2 * Cm.rt[2]) / z * Cm.F, y = Cm.cy0 - (d0 * Cm.up[0] + d1 * Cm.up[1] + d2 * Cm.up[2]) / z * Cm.F;
+      if (x < -4 || x > OW + 4 || y < -4 || y > OH + 4) continue;
+      ctx.globalAlpha = Math.max(0.18, Math.min(0.7, 0.75 - 0.09 * VM[i])); ctx.fillStyle = SCOL[i];
+      ctx.beginPath(); ctx.arc(x, y, Math.max(0.5, 1.7 - 0.24 * VM[i]) * s, 0, TAU); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    /* a floor under the figure: a plane square to the celestial north side of the frame, a little below the lowest star and the
+       Sun, with rings of equal distance from the Sun and a stalk from each star down to it, as on a 3D star map */
+    const top = G.far * 1.12, ringStep = niceStep(top / 5);
+    let lowU = 0; for (const st of G.known) lowU = Math.min(lowU, dot(st.p, G.u));
+    const hF = lowU - 0.12 * G.far, onFloor = (a, b) => [0, 1, 2].map((k) => G.u[k] * hF + a * G.f[k] + b * G.r[k]);
+    /* seen edge on (from the Sun, looking level) the floor says nothing, so it fades in as the view tips above or below it */
+    const floorA = Math.max(0, Math.min(1, (Math.abs(Math.cos(DO.ph)) - 0.04) / 0.16));
+    ctx.save(); ctx.globalAlpha = floorA; ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(120,160,215,0.26)';
+    for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, sg = Cm.seg(onFloor(0, 0), onFloor(top * Math.cos(a), top * Math.sin(a))); if (sg) { ctx.beginPath(); ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); ctx.stroke(); } }
+    const rings = [];
+    for (let L = ringStep; L <= top + 1e-9; L += ringStep) {
+      ctx.strokeStyle = 'rgba(120,160,215,0.34)'; ctx.beginPath();
+      for (let k = 0; k < 120; k++) {
+        const a0 = k * TAU / 120, a1 = (k + 1) * TAU / 120, sg = Cm.seg(onFloor(L * Math.cos(a0), L * Math.sin(a0)), onFloor(L * Math.cos(a1), L * Math.sin(a1)));
+        if (sg) { ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); }
+      }
+      ctx.stroke(); rings.push(L);
+    }
+    { const sg = Cm.seg([0, 0, 0], onFloor(0, 0)); if (sg) { ctx.save(); ctx.setLineDash([2 * s, 3 * s]); ctx.strokeStyle = 'rgba(255,210,122,0.5)'; ctx.beginPath(); ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); ctx.stroke(); ctx.restore(); } }
+    for (const st of G.known) {
+      const h = dot(st.p, G.u) - hF, foot = st.p.map((x, k) => x - h * G.u[k]), sg = Cm.seg(st.p, foot); if (!sg) continue;
+      ctx.save(); ctx.globalAlpha = 0.55 * floorA; ctx.strokeStyle = SCOL[st.i]; ctx.setLineDash([2 * s, 3 * s]); ctx.beginPath(); ctx.moveTo(sg[0][0], sg[0][1]); ctx.lineTo(sg[1][0], sg[1][1]); ctx.stroke(); ctx.restore();
+      const q = Cm.P(foot); if (q) { ctx.fillStyle = 'rgba(160,190,230,0.55)'; ctx.beginPath(); ctx.ellipse(q[0], q[1], 3 * s, 1.4 * s, 0, 0, TAU); ctx.fill(); }
+    }
+    ctx.restore();
     const ticks = [];   /* the scale's labels, drawn last so they give way to the stars and their names */
     if ($('tSight').checked && G.known.length) {
       ctx.save(); ctx.setLineDash([4 * s, 5 * s]); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(242,193,78,0.42)';
@@ -1304,6 +1358,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         }
       }
     }
+    if (!blind && !ticks.length && floorA > 0.5) for (const L of rings) { const q = Cm.P(onFloor(L * Math.cos(0.5), -L * Math.sin(0.5))); if (q && q[0] > 0 && q[0] < OW && q[1] > 0 && q[1] < OH) ticks.push([`${lyText(L)} ly`, q[0], q[1], 'rgba(150,180,220,0.9)']); }
     ctx.lineWidth = 1.3 * s; ctx.strokeStyle = 'rgba(170,190,215,0.62)';
     for (const fg of SKY.figures) if (fg[0] === DP.con) {
       ctx.beginPath(); let on = false;
@@ -1324,10 +1379,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if ($('tDepthNames').checked) {
       const order = vis.slice().sort((a, b) => (b.st.i === selI) - (a.st.i === selI) || a.st.V - b.st.V);
-      for (const v of order) label(ctx, blind ? starName(v.st.i) : `${starName(v.st.i)} · ${lyText(v.st.ly)} ly`, v.q[0] + v.r + 5 * s, v.q[1], { size: 11, color: v.st.i === selI ? '#ffb48a' : '#dfe6ef', avoid: true });
+      for (const v of order) {
+        const txt = blind ? starName(v.st.i) : `${starName(v.st.i)} · ${lyText(v.st.ly)} ly`;
+        ctx.font = `400 ${11 * s}px ${TK.ui}`; const w = ctx.measureText(txt).width, x = v.q[0] + v.r + 5 * s + w > OW - 4 ? v.q[0] - v.r - 5 * s - w : v.q[0] + v.r + 5 * s;   /* near the right edge the name goes on the left */
+        label(ctx, txt, x, v.q[1], { size: 11, color: v.st.i === selI ? '#ffb48a' : '#dfe6ef', avoid: true });
+      }
     }
     for (const v of vis) LB.push([v.q[0] - v.r - 2, v.q[1] - v.r - 2, v.q[0] + v.r + 2, v.q[1] + v.r + 2]);
-    for (const t of ticks) label(ctx, t[0], t[1], t[2], { size: 10, align: 'center', color: '#f2c14e', avoid: true });
+    for (const t of ticks) label(ctx, t[0], t[1], t[2], { size: 10, align: 'center', color: t[3] || '#f2c14e', avoid: true });
     /* a scale bar: light years across, at the distance of the figure's middle from the camera */
     const zT = Cm.zOf(G.T);
     if (zT > 0) {

@@ -6,7 +6,7 @@ VDI18N.add('en', 'ws/intro-precession', [
 "Time for one turn around the post (s)",
 "A Spinning Top and the Wandering Pole Star | VirtualDemos",
 "A Spinning Top and the Wandering Pole Star",
-"<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up.",
+"<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up; Friction: it rises; Friction: it sinks.",
 "A wheel spins on a light axle. One end of the axle rests in a cup on top of a post, so the wheel hangs out to the side with nothing under it. Set the spin rate (in revolutions per minute, rpm), the distance d from the post to the wheel’s center and the axle’s tilt, then release it.",
 "Instead of falling, a spinning wheel swings slowly around the post. This slow turning of the axle is called precession. A gate on the floor times each full turn around the post, to {#} s; it needs two passes, so the first time appears after the second turn.",
 "The wheel can be released from rest (it dips and wobbles first) or started at exactly the steady rate (no dip, no wobble). Arrows can show the angular momentum L (the spin, pointing along the axle), the torque (the twist from the wheel’s weight) and the change in L.",

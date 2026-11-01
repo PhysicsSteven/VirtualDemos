@@ -292,14 +292,14 @@ VDI18N.add('es', 'demo/seasons', {
   "vista superior desde arriba del polo norte · no a escala",
 "A made up planet that spins once every {#} hours against the stars and goes round its Sun in just {#} of those turns. Count the turns: in one year it faces the star {#} times but the Sun only {#} times, so its solar day is {#}/{#} × {#} = {#} hours.":
   "Un planeta inventado que gira una vez cada {#} horas respecto a las estrellas y da la vuelta a su Sol en solo {#} de esas vueltas. Cuenta las vueltas: en un año queda de cara a la estrella {#} veces pero de cara al Sol solo {#} veces, así que su día solar dura {#}/{#} × {#} = {#} horas.",
-"Sundial ahead of the clock (equation of time)":
-  "El reloj de sol adelantado respecto al reloj (ecuación del tiempo)",
 "minutes":
   "minutos",
-"Length of the solar day minus {#} hours":
-  "Duración del día solar menos {#} horas",
+"Sundial ahead of the clock (equation of time)":
+  "El reloj de sol adelantado respecto al reloj (ecuación del tiempo)",
 "seconds":
   "segundos",
+"Length of the solar day minus {#} hours":
+  "Duración del día solar menos {#} horas",
 "Sun at clock noon":
   "El Sol al mediodía del reloj",
 "(the analemma)":
@@ -308,6 +308,14 @@ VDI18N.add('es', 'demo/seasons', {
   "este ← · → oeste",
 "equator":
   "ecuador",
+"Sundial at {#}:{#} on the clock":
+  "Reloj de sol a las {#}:{#} del reloj",
+"{#}° N, on the time zone meridian":
+  "{#}° N, en el meridiano del huso horario",
+"clock {#}:{#}:{#}":
+  "reloj {#}:{#}:{#}",
+"sundial {#}:{#}:{#}":
+  "reloj de sol {#}:{#}:{#}",
 "{#} Feb {#}":
   "{#} feb {#}",
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":

@@ -127,7 +127,7 @@ VDI18N.add('es', 'demo/retrograde-motion', {
 "The sky along the ecliptic as seen from Earth, east to the left: the stars, the constellations, the Sun and the planet's path. Drag sideways to look along the sky, wheel or plus and minus to zoom.":
   "El cielo a lo largo de la eclíptica visto desde la Tierra, con el este a la izquierda: las estrellas, las constelaciones, el Sol y el camino del planeta. Arrastra hacia los lados para recorrer el cielo, usa la rueda o más y menos para acercar.",
 "<span>The sky from Earth, along the ecliptic (east to the left)</span>":
-  "<span>El cielo desde la Tierra, a lo largo de la eclíptica (este a la izquierda)</span>",
+  "<span>Cielo desde la Tierra, por la eclíptica (este a la izquierda)</span>",
 "Divider between the top view and the side views":
   "Divisor entre la vista superior y las vistas laterales",
 "Divider between the top view and the sky strip":

@@ -3,7 +3,7 @@
 // against the NASA fact sheets' lengths of day, the counting of turns and noons, and the equation of time against its known extremes.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const C = core('seasons', 'SD_PLANETS,SD_D,SD_H,sdSolar,sdPerYear,sdAngles,sdNext,sdCount,sdKepler,sdSun,sdDayLength');
+const C = core('seasons', 'SD_PLANETS,SD_D,SD_H,sdSolar,sdPerYear,sdAngles,sdNext,sdCount,sdKepler,sdSun,sdDayLength,sdDial');
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
 const near = (a, b, tol, msg) => assert(Math.abs(a - b) <= tol, `${msg || ''} expected ${b}, got ${a}`);
@@ -57,5 +57,17 @@ test('solar day lengths 2026: about 24 h + 30 s near the December solstice, 24 h
 test("the Sun's declination reaches ± the tilt at the solstices", () => {
   let hi = -90, lo = 90; for (let n = 0; n < 365; n += 0.25) { const d = C.sdSun(n, 0.0167086, 23.4393).dec; hi = Math.max(hi, d); lo = Math.min(lo, d); }
   near(hi, 23.4393, 1e-3); near(lo, -23.4393, 1e-3);
+});
+test('the sundial: hour lines tan θ = sin φ tan H, the gnomon tip\'s shadow on its hour line, and the noon altitude 90° − φ + δ', () => {
+  const D2R = Math.PI / 180, phi = 32.52;
+  for (const H of [-75, -30, -4, 0, 4, 30, 75]) {
+    const D = C.sdDial(phi, 10, H);
+    near(Math.tan(D.theta * D2R), Math.sin(phi * D2R) * Math.tan(H * D2R), 1e-12, `hour line at H = ${H}`);
+    const L = 0.62, tip = [0, L, L * Math.tan(phi * D2R)], sh = C.sdDial(phi, -20, H).shadow(tip);   /* the style points at the pole, so any δ gives the same line */
+    near(Math.atan2(sh[0], sh[1]) / D2R, D.theta, 1e-9, `shadow along the hour line at H = ${H}`);
+  }
+  for (const dec of [-23.44, 0, 23.44]) near(C.sdDial(phi, dec, 0).alt, 90 - phi + dec, 1e-9, 'noon altitude');
+  const s = C.sdSun(41.5, 0.0167086, 23.4393), D = C.sdDial(phi, s.dec, s.eot * 0.25);
+  assert(D.theta < 0 && D.theta > -3, `11 Feb: the shadow is west of the noon line by about 2°, got ${D.theta}`);   /* the sundial is 14.2 min behind the clock */
 });
 console.log(`${n} tests passed`);

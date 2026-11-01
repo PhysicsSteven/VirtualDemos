@@ -81,6 +81,8 @@
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 
 .viewbar { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+/* a longer language on a phone: the strip of buttons stays one row where English does, so it covers no more of the orbit picture */
+@media (max-width: 520px) { :root[data-vd-lang] #mainPane .viewbar { gap: 4px; } :root[data-vd-lang] #mainPane .viewbar .btn, :root[data-vd-lang] #mainPane .viewbar .seg button { padding-left: 6px; padding-right: 6px; font-size: 0.72rem; } }
 .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button {
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
@@ -1635,8 +1637,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     /* the center of mass */
     if (bs.length > 1 && !S.blind) { const t = sbkTot(), [cx, cy] = sbkPx(t.X, t.Y, f); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(cx - 5 * ps, cy - 5 * ps); ctx.lineTo(cx + 5 * ps, cy + 5 * ps); ctx.moveTo(cx - 5 * ps, cy + 5 * ps); ctx.lineTo(cx + 5 * ps, cy - 5 * ps); ctx.stroke(); }
     /* the selected body: a gold dot where its arrow tip gives a circular orbit around its host */
+    const late = [];   /* small labels placed after the bodies and their names, clear of them (a narrow picture crowds them) */
     const sb = bs.find((q) => q.id === SBK.sel), host = sb && nbHost(bs, sb);
-    if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); text(ctx, T, 'circular', tx - 8 * ps, ty, 'right', 'middle', T.sun, 9.5 * ps, 600); }
+    if (sb && host && !SBK.playing) { const c = nbCircular(host, sb.m, sb.x, sb.y), [tx, ty] = sbkTip(Object.assign({}, sb, c), f); ctx.strokeStyle = T.sun; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.arc(tx, ty, 5 * ps, 0, TAU); ctx.stroke(); late.push(['circular', tx, ty, T.sun, [[-8, 0, 'right', 'middle'], [8, 0, 'left', 'middle'], [0, -8, 'center', 'bottom'], [0, 8, 'center', 'top'], [-8, -12, 'right', 'bottom'], [8, -12, 'left', 'bottom'], [-8, 12, 'right', 'top']]]); }
     /* the rendezvous forecast: the ship's path ahead (dashed) and where the ship and the target are at the closest approach (crosses) */
     const rvp = RV.pred && !S.blind ? rvPick() : null;
     if (rvp && RV.pred.hid === rvp.h.id) { const P = RV.pred, h = rvp.h, k0 = Math.max(0, Math.floor((SBK.st.t - P.t0) / P.T * (P.path.length - 1)));
@@ -1645,7 +1648,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const left = P.t0 + P.t - SBK.st.t;
       if (left > 1e-6) { const cross = (x, y, col) => { const [qx, qy] = sbkPx(h.x + x, h.y + y, f); ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(qx - 5 * ps, qy - 5 * ps); ctx.lineTo(qx + 5 * ps, qy + 5 * ps); ctx.moveTo(qx - 5 * ps, qy + 5 * ps); ctx.lineTo(qx + 5 * ps, qy - 5 * ps); ctx.stroke(); return [qx, qy]; };
         cross(P.tx, P.ty, SBK_KIND.target.col); const [qx, qy] = cross(P.sx, P.sy, T.ink);
-        const rt = qx > W * 0.6; text(ctx, T, `closest approach in ${fmtT(left)}`, qx + (rt ? -8 : 8) * ps, qy + 8 * ps, rt ? 'right' : 'left', 'top', T.muted, 9.5 * ps, 600); }
+        const rt = qx > W * 0.6, sd = rt ? -8 : 8, al = rt ? 'right' : 'left', ol = rt ? 'left' : 'right';
+        late.push([`closest approach in ${fmtT(left)}`, qx, qy, T.muted, [[sd, 8, al, 'top'], [sd, -8, al, 'bottom'], [-sd, 8, ol, 'top'], [-sd, -8, ol, 'bottom'], [sd, 22, al, 'top'], [sd, -22, al, 'bottom'], [0, 10, 'center', 'top'], [0, -10, 'center', 'bottom'], [0, 24, 'center', 'top'], [0, -24, 'center', 'bottom'], [-sd, 22, ol, 'top'], [-sd, -22, ol, 'bottom']]]); }
       /* the target's path over the same time, faint */
       if (P.gpath && P.gpath.length > 1) { ctx.save(); ctx.setLineDash([2 * ps, 4 * ps]); ctx.strokeStyle = alpha(SBK_KIND.target.col, 0.55); ctx.lineWidth = 1.2 * ps; ctx.beginPath();
         for (let i = k0; i < P.gpath.length; i++) { const [qx, qy] = sbkPx(h.x + P.gpath[i][0], h.y + P.gpath[i][1], f); if (i === k0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy); } ctx.stroke(); ctx.restore(); } }
@@ -1668,8 +1672,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx + dx * k, cy + dy * k, 4 * ps, 0, TAU); ctx.fill(); text(ctx, T, b.name, cx + dx * k, cy + dy * k + 6 * ps, 'center', 'top', T.muted, 9.5 * ps, 600); }
     }
     /* names, each moved down past a name already written there */
-    { const done = []; ctx.font = `600 ${10 * ps}px ${T.mono}`; for (const [nm, x, y0] of labs) { const w = ctx.measureText(nm).width; let y = y0; for (let k = 0; k < 6 && done.some((q) => x < q[0] + q[2] && x + w > q[0] && Math.abs(y - q[1]) < 12 * ps); k++) y += 12 * ps; done.push([x, y, w]); text(ctx, T, nm, x, y, 'left', 'top', T.ink, 10 * ps, 600); } }
-    text(ctx, T, `t = ${fmtT(SBK.st.t)}`, 12 * ps, 12 * ps, 'left', 'top', T.ink, 12 * ps, 600, true);
+    const occ = bs.map((b) => { const [px, py] = sbkPx(b.x, b.y, f), r = sbkRad(b, ps) * 1.5 + 2 * ps; return [px - r, py - r, px + r, py + r]; });
+    { const done = []; ctx.font = `600 ${10 * ps}px ${T.mono}`; for (const [nm, x, y0] of labs) { const w = ctx.measureText(nm).width; let y = y0; for (let k = 0; k < 6 && done.some((q) => x < q[0] + q[2] && x + w > q[0] && Math.abs(y - q[1]) < 12 * ps); k++) y += 12 * ps; done.push([x, y, w]); occ.push([x, y, x + w, y + 11 * ps]); text(ctx, T, nm, x, y, 'left', 'top', T.ink, 10 * ps, 600); } }
+    /* the forecast and circular labels: the first spot around their mark that covers no body, name or other label and stays in the picture */
+    ctx.font = `600 ${9.5 * ps}px ${T.mono}`;
+    for (const [txt, x, y, col, cands] of late) {
+      const w = ctx.measureText(txt).width, h = 11 * ps; let pick = null;
+      for (const [dx, dy, al, bl] of cands) {
+        const x0 = al === 'right' ? x + dx * ps - w : al === 'center' ? x + dx * ps - w / 2 : x + dx * ps, y0 = bl === 'bottom' ? y + dy * ps - h : bl === 'middle' ? y + dy * ps - h / 2 : y + dy * ps, bx = [x0, y0, x0 + w, y0 + h];
+        if (bx[0] < 2 || bx[2] > W - 2 || bx[1] < 2 || bx[3] > H - 64 * ps) continue;
+        if (!occ.some((q) => bx[0] < q[2] && bx[2] > q[0] && bx[1] < q[3] && bx[3] > q[1])) { pick = [dx, dy, al, bl, bx]; break; }
+      }
+      if (!pick) { const c = cands[0]; pick = [c[0], c[1], c[2], c[3], null]; }
+      if (pick[4]) occ.push(pick[4]);
+      text(ctx, T, txt, x + pick[0] * ps, y + pick[1] * ps, pick[2], pick[3], col, 9.5 * ps, 600);
+    }
+    text(ctx, T, `t = ${fmtT(SBK.st.t)}`, 12 * ps, clockY(), 'left', 'top', T.ink, 12 * ps, 600, true);
     if (!bs.length) text(ctx, T, 'Drag a star from the tray below', W / 2, (H - 60 * ps) / 2, 'center', 'middle', T.muted, 12 * ps, 600);
     sbkDrawTray(ctx, T, ps);
   }

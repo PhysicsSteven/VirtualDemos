@@ -12,8 +12,8 @@ VDI18N.add('es', 'ws/intro-precession', {
   "Un trompo y la estrella polar errante | VirtualDemos",
 "A Spinning Top and the Wandering Pole Star":
   "Un trompo y la estrella polar errante",
-"<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up.":
-  "<strong>Configuraciones en la demo:</strong> Giro rápido; Giro lento: bamboleo y caída; Sin giro: se cae; Inicio suave; Eje inclinado hacia arriba.",
+"<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up; Friction: it rises; Friction: it sinks.":
+  "<strong>Configuraciones en la demo:</strong> Giro rápido; Giro lento: bamboleo y caída; Sin giro: se cae; Inicio suave; Eje inclinado hacia arriba; Fricción: sube; Fricción: baja.",
 "A wheel spins on a light axle. One end of the axle rests in a cup on top of a post, so the wheel hangs out to the side with nothing under it. Set the spin rate (in revolutions per minute, rpm), the distance d from the post to the wheel’s center and the axle’s tilt, then release it.":
   "Una rueda gira sobre un eje ligero. Un extremo del eje descansa en una copa en lo alto de un poste, así que la rueda cuelga hacia un lado sin nada debajo. Fija la rapidez de giro (en revoluciones por minuto, rpm), la distancia d del poste al centro de la rueda y la inclinación del eje, y luego suéltala.",
 "Instead of falling, a spinning wheel swings slowly around the post. This slow turning of the axle is called precession. A gate on the floor times each full turn around the post, to {#} s; it needs two passes, so the first time appears after the second turn.":

@@ -6,7 +6,7 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up.
+**Setups in the demo:** Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up; Friction: it rises; Friction: it sinks.
 
 **Using the demo.**
 

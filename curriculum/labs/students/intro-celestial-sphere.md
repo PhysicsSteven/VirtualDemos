@@ -6,7 +6,7 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** A winter night at Ruston; North Pole; On the equator; Southern sky, Sydney; June solstice Sun; December solstice Sun; March equinox Sun; Midnight Sun; The Moon through a month; Total solar eclipse, 2024; Total lunar eclipse, 2025; Pole star in 2600 BC; Pole star in AD 14000; Precession of the pole.
+**Setups in the demo:** A winter night at Ruston; North Pole; On the equator; Southern sky, Sydney; June solstice Sun; December solstice Sun; March equinox Sun; Midnight Sun; The Moon through a month; Total solar eclipse, 2024; Total lunar eclipse, 2025; Pole star in 2600 BC; Pole star in AD 14000; Precession of the pole; Antipodes: Madrid and New Zealand.
 
 **Using the demo.**
 

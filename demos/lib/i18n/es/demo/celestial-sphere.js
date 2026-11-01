@@ -916,8 +916,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Rigel · {#} a. l.",
 "Betelgeuse · {#} ly":
   "Betelgeuse · {#} a. l.",
-"Bellatrix · {#} ly":
-  "Bellatrix · {#} a. l.",
 "Alnilam · {#} ly":
   "Alnilam · {#} a. l.",
 "Saiph · {#} ly":
@@ -970,6 +968,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Régulo <small>α Leo</small>",
 "Regulus there":
   "Régulo allá",
+"altitude −{#}°, azimuth {#}° <small>WNW</small>":
+  "altura −{#}°, azimut {#}° <small>ONO</small>",
 "ε Leo":
   "ε Leo",
 "μ Leo":
@@ -990,10 +990,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Denebola · {#} a. l.",
 "Zosma · {#} ly":
   "Zosma · {#} a. l.",
-"ε Leo · {#} ly":
-  "ε Leo · {#} a. l.",
 "η Leo · {#} ly":
   "η Leo · {#} a. l.",
+"μ Leo · {#} ly":
+  "μ Leo · {#} a. l.",
 "Antares <small>α Sco</small>":
   "Antares <small>α Sco</small>",
 "{#}° <small>NNW</small>":
@@ -1036,10 +1036,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Sco · {#} a. l.",
 "Dschubba · {#} ly":
   "Dschubba · {#} a. l.",
-"κ Sco · {#} ly":
-  "κ Sco · {#} a. l.",
 "β¹ Sco · {#} ly":
   "β¹ Sco · {#} a. l.",
+"ι¹ Sco · {#} ly":
+  "ι¹ Sco · {#} a. l.",
 "ζ¹ Lyr":
   "ζ¹ Lyr",
 "Sheliak":
@@ -1054,12 +1054,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Vega · {#} a. l.",
 "Sulafat · {#} ly":
   "Sulafat · {#} a. l.",
-"Sheliak · {#} ly":
-  "Sheliak · {#} a. l.",
 "δ² Lyr · {#} ly":
   "δ² Lyr · {#} a. l.",
-"ζ¹ Lyr · {#} ly":
-  "ζ¹ Lyr · {#} a. l.",
 "Deneb <small>α Cyg</small>":
   "Deneb <small>α Cyg</small>",
 "Deneb there":
@@ -1080,8 +1076,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Cyg · {#} a. l.",
 "Albireo · {#} ly":
   "Albireo · {#} a. l.",
-"η Cyg · {#} ly":
-  "η Cyg · {#} a. l.",
 "Aldebaran <small>α Tau</small>":
   "Aldebarán <small>α Tau</small>",
 "Aldebaran there":
@@ -1106,8 +1100,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Tau · {#} a. l.",
 "ε Tau · {#} ly":
   "ε Tau · {#} a. l.",
-"δ¹ Tau · {#} ly":
-  "δ¹ Tau · {#} a. l.",
 "Sirius <small>α CMa</small>":
   "Sirio <small>α CMa</small>",
 "Sirius there":
@@ -1128,8 +1120,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Adhara · {#} a. l.",
 "δ CMa · {#} ly":
   "δ CMa · {#} a. l.",
-"β CMa · {#} ly":
-  "β CMa · {#} a. l.",
 "Pollux <small>β Gem</small>":
   "Pólux <small>β Gem</small>",
 "Pollux there":
@@ -1164,10 +1154,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Gem · {#} a. l.",
 "δ Gem · {#} ly":
   "δ Gem · {#} a. l.",
-"ζ Gem · {#} ly":
-  "ζ Gem · {#} a. l.",
-"τ Gem · {#} ly":
-  "τ Gem · {#} a. l.",
 "Kaus Australis <small>ε Sgr</small>":
   "Kaus Australis <small>ε Sgr</small>",
 "Kaus Australis there":
@@ -1198,8 +1184,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Sgr · {#} a. l.",
 "λ Sgr · {#} ly":
   "λ Sgr · {#} a. l.",
-"γ² Sgr · {#} ly":
-  "γ² Sgr · {#} a. l.",
 "τ Sgr · {#} ly":
   "τ Sgr · {#} a. l.",
 "Alpheratz <small>α And</small>":
@@ -1220,14 +1204,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alpheratz · {#} a. l.",
 "Enif · {#} ly":
   "Enif · {#} a. l.",
-"Scheat · {#} ly":
-  "Scheat · {#} a. l.",
 "Markab · {#} ly":
   "Markab · {#} a. l.",
-"Algenib · {#} ly":
-  "Algenib · {#} a. l.",
-"ζ Peg · {#} ly":
-  "ζ Peg · {#} a. l.",
 "θ Peg · {#} ly":
   "θ Peg · {#} a. l.",
 "δ And":
@@ -1268,8 +1246,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Boo · {#} a. l.",
 "δ Boo · {#} ly":
   "δ Boo · {#} a. l.",
-"β Boo · {#} ly":
-  "β Boo · {#} a. l.",
 "ρ Boo · {#} ly":
   "ρ Boo · {#} a. l.",
 "Altair <small>α Aql</small>":
@@ -1290,8 +1266,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Águila: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí. Las distancias provienen de paralajes medidos por el satélite Hipparcos; cuanto más lejos está una estrella, menor es su paralaje, así que las distancias más grandes son las menos seguras. M es la magnitud absoluta, qué tan brillante se vería la estrella a {#} pársecs ({#} años luz), sin tomar en cuenta el polvo.",
 "Altair · {#} ly":
   "Altair · {#} a. l.",
-"γ Aql · {#} ly":
-  "γ Aql · {#} a. l.",
 "ζ Aql · {#} ly":
   "ζ Aql · {#} a. l.",
 "δ Aql · {#} ly":
@@ -1354,8 +1328,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Capella <small>α Aur</small>",
 "Capella there":
   "Capella allá",
-"altitude −{#}°, azimuth {#}° <small>WNW</small>":
-  "altura −{#}°, azimut {#}° <small>ONO</small>",
 "Menkalinan":
   "Menkalinan",
 "θ Aur":
@@ -1414,6 +1386,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Deneb Algedi <small>δ Cap</small>",
 "Deneb Algedi there":
   "Deneb Algedi allá",
+"altitude +{#}°, azimuth {#}° <small>ESE</small>":
+  "altura +{#}°, azimut {#}° <small>ESE</small>",
 "Algedi":
   "Algedi",
 "β Cap":
@@ -1442,8 +1416,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Cap · {#} a. l.",
 "ω Cap · {#} ly":
   "ω Cap · {#} a. l.",
-"ψ Cap · {#} ly":
-  "ψ Cap · {#} a. l.",
 "Rigil Kentaurus <small>α¹ Cen</small>":
   "Rigil Kentaurus <small>α¹ Cen</small>",
 "Rigil Kentaurus there":
@@ -1538,12 +1510,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Dra · {#} a. l.",
 "ζ Dra · {#} ly":
   "ζ Dra · {#} a. l.",
-"ι Dra · {#} ly":
-  "ι Dra · {#} a. l.",
 "Thuban · {#} ly":
   "Thuban · {#} a. l.",
-"ξ Dra · {#} ly":
-  "ξ Dra · {#} a. l.",
 "λ Dra · {#} ly":
   "λ Dra · {#} a. l.",
 "κ Dra · {#} ly":
@@ -1620,8 +1588,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Algol · {#} a. l.",
 "ζ Per · {#} ly":
   "ζ Per · {#} a. l.",
-"ε Per · {#} ly":
-  "ε Per · {#} a. l.",
 "γ Per · {#} ly":
   "γ Per · {#} a. l.",
 "δ Per · {#} ly":
@@ -1664,8 +1630,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ω Psc · {#} a. l.",
 "ο Psc · {#} ly":
   "ο Psc · {#} a. l.",
-"δ Psc · {#} ly":
-  "δ Psc · {#} a. l.",
 "ν Psc · {#} ly":
   "ν Psc · {#} a. l.",
 "δ UMi":
@@ -1692,8 +1656,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ UMi · {#} a. l.",
 "δ UMi · {#} ly":
   "δ UMi · {#} a. l.",
-"η UMi · {#} ly":
-  "η UMi · {#} a. l.",
 "Spica <small>α Vir</small>":
   "Espiga <small>α Vir</small>",
 "Spica there":
@@ -1886,8 +1848,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Pez Austral",
 "Fomalhaut there":
   "Fomalhaut allá",
-"altitude +{#}°, azimuth {#}° <small>ESE</small>":
-  "altura +{#}°, azimut {#}° <small>ESE</small>",
 "Gacrux <small>γ Cru</small>":
   "Gacrux <small>γ Cru</small>",
 "Gacrux there":
@@ -1914,8 +1874,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Megrez allá",
 "Megrez · {#} ly":
   "Megrez · {#} a. l.",
-"Mizar · {#} ly":
-  "Mizar · {#} a. l.",
 "Menkalinan <small>β Aur</small>":
   "Menkalinan <small>β Aur</small>",
 "Menkalinan there":
@@ -1942,6 +1900,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mizar <small>ζ UMa</small>",
 "Mizar there":
   "Mizar allá",
+"Mizar · {#} ly":
+  "Mizar · {#} a. l.",
 "Nunki <small>σ Sgr</small>":
   "Nunki <small>σ Sgr</small>",
 "Nunki there":
@@ -2011,5 +1971,49 @@ VDI18N.add('es', 'demo/celestial-sphere', {
 "Zubenelgenubi <small>α² Lib</small>":
   "Zubenelgenubi <small>α² Lib</small>",
 "Zubenelgenubi there":
-  "Zubenelgenubi allá"
+  "Zubenelgenubi allá",
+"Bellatrix · {#} ly":
+  "Bellatrix · {#} a. l.",
+"ε Leo · {#} ly":
+  "ε Leo · {#} a. l.",
+"κ Sco · {#} ly":
+  "κ Sco · {#} a. l.",
+"Sheliak · {#} ly":
+  "Sheliak · {#} a. l.",
+"ζ¹ Lyr · {#} ly":
+  "ζ¹ Lyr · {#} a. l.",
+"η Cyg · {#} ly":
+  "η Cyg · {#} a. l.",
+"δ¹ Tau · {#} ly":
+  "δ¹ Tau · {#} a. l.",
+"β CMa · {#} ly":
+  "β CMa · {#} a. l.",
+"ζ Gem · {#} ly":
+  "ζ Gem · {#} a. l.",
+"τ Gem · {#} ly":
+  "τ Gem · {#} a. l.",
+"γ² Sgr · {#} ly":
+  "γ² Sgr · {#} a. l.",
+"Scheat · {#} ly":
+  "Scheat · {#} a. l.",
+"Algenib · {#} ly":
+  "Algenib · {#} a. l.",
+"ζ Peg · {#} ly":
+  "ζ Peg · {#} a. l.",
+"β Boo · {#} ly":
+  "β Boo · {#} a. l.",
+"γ Aql · {#} ly":
+  "γ Aql · {#} a. l.",
+"ψ Cap · {#} ly":
+  "ψ Cap · {#} a. l.",
+"ι Dra · {#} ly":
+  "ι Dra · {#} a. l.",
+"ξ Dra · {#} ly":
+  "ξ Dra · {#} a. l.",
+"ε Per · {#} ly":
+  "ε Per · {#} a. l.",
+"δ Psc · {#} ly":
+  "δ Psc · {#} a. l.",
+"η UMi · {#} ly":
+  "η UMi · {#} a. l."
 });

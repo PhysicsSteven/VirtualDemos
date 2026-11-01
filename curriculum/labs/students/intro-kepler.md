@@ -6,7 +6,7 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Sandbox.
+**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Sandbox.
 
 **Using the demo.**
 

@@ -32,6 +32,7 @@
 .pane.top.is3d canvas#top { pointer-events: none; }
 .pane.top.is3d canvas.vd3d { pointer-events: auto; }
 .pane .tag { position: absolute; z-index: 2; left: 10px; top: 8px; font-size: 0.74rem; font-weight: 700; color: var(--space-muted); letter-spacing: 0.02em; pointer-events: none; }
+:root[data-vd-lang] .pane .tag { letter-spacing: 0; }   /* a longer language: one line where English is one line */
 .side { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow-y: auto; background: var(--surface); }
 .pane.scope { height: 196px; flex: none; border-bottom: 1px solid var(--line); }
 .setup-card { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; }
@@ -505,7 +506,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawZodiacRing(ctx, cx, cy, R, p) {
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const a = -nm[1] * DEG, r = R - 12 * p; ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.fillText(nm[0], 0, 0); ctx.restore(); }
+    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const a = -nm[1] * DEG, r = R - 12 * p; ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(Math.sin(a) > 0.05 ? a - Math.PI / 2 : a + Math.PI / 2); ctx.fillText(nm[0], 0, 0);   /* upright: names on the lower half turn the other way */ ctx.restore(); }
     for (let d = 0; d < 360; d += 30) { const a = -d * DEG; ctx.beginPath(); ctx.moveTo(cx + (R - 4) * Math.cos(a), cy + (R - 4) * Math.sin(a)); ctx.lineTo(cx + (R + 4) * Math.cos(a), cy + (R + 4) * Math.sin(a)); ctx.stroke(); }
   }
   function dot(ctx, x, y, r, col, glow) {
@@ -580,7 +581,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     dot(ctx, ex, ey, 5 * p, T.earth); dot(ctx, px, py, (k === 'jupiter' || k === 'saturn' ? 6.5 : 5) * p, COLOR[k]);
     label(ctx, 'Sun', sx + 11 * p, sy - 10 * p, T.sun, p); label(ctx, 'Earth', ex + 9 * p, ey + 11 * p, T.earth, p); label(ctx, EL[k].name, px + 9 * p, py - 10 * p, COLOR[k], p);
     const L0 = look(S.model, k, jd), cn = constellationAt(L0.lam, L0.beta);
-    if (cn) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(cn).width, lx = clamp(end[0], tw / 2 + 6, W - tw / 2 - 6), ly = clamp(end[1] + (end[1] > cy ? -16 : 16) * p, 12, H - 10);
+    if (cn) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(cn).width, dd = Math.hypot(end[0] - cx, end[1] - cy) || 1, ux = (end[0] - cx) / dd, uy = (end[1] - cy) / dd;   /* outside the ring, away from the planets */
+      const lx = clamp(end[0] + ux * (tw / 2 + 10 * p), tw / 2 + 6, W - tw / 2 - 6), ly = clamp(end[1] + uy * 16 * p, 12, H - 10);
       ctx.fillStyle = 'rgba(4,7,13,0.7)'; ctx.fillRect(lx - tw / 2 - 4, ly - 8 * p, tw + 8, 16 * p); label(ctx, cn, lx, ly, T.sight, p, 'center'); }
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(S.frame === 'earth' ? 'Earth held still (Tycho Brahe\'s system).' : 'Seen from above the North Pole.', 10, H - 22 * p); ctx.fillText('Distances to scale; stars only give directions.', 10, H - 8);
@@ -649,7 +651,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.55)'; ctx.textAlign = 'center';
     const wide = S.span > 200;   /* the whole zodiac: only its own constellations are named */
-    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) ctx.fillText(nm[0].toUpperCase(), x, y); }
+    const taken = [];   /* names already written, which the event labels below keep clear of: [middle x, baseline y, width] */
+    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(); ctx.fillText(t, x, y); taken.push([x, y, ctx.measureText(t).width]); } }
     /* stars */
     const st = SKY.stars, mlim = wide ? 4.2 : S.span > 120 ? 4.6 : 5.2;
     for (let i = 0; i < st.length; i += 4) {
@@ -657,7 +660,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const r = Math.max(0.55, (2.9 - 0.44 * m)) * (p > 1 ? 1.2 : 1); ctx.fillStyle = bvColor(st[i + 3] / 10); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
     }
     ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(220,228,240,0.7)'; ctx.textAlign = 'left';
-    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) ctx.fillText(nm, x + 5, y - 5); }
+    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { ctx.fillText(nm, x + 5, y - 5); const w = ctx.measureText(nm).width; taken.push([x + 5 + w / 2, y - 5, w]); } }
     /* the Sun */
     { const x = X(now.sunLam), y = Y(0); if (inX(x)) { dot(ctx, x, y, Math.max(6, 0.27 * pxd) * p, T.sun, 3.4); label(ctx, 'Sun', x + 10 * p, y + 14 * p, T.sun, p); } }
     const line = (c, from, to, col, w, dash) => {
@@ -670,7 +673,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     line(cache, S.trail ? Math.max(S.t0, S.jd - S.trail) : S.t0, S.jd, T.trail, 2.2 * p);
     /* events in the window */
     ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center';
-    const boxes = [];
+    const boxes = taken.slice();
     for (const e of cache.events) {
       if (e.kind === 'conjunction' || e.kind === 'superior' || (S.marks && e.kind !== S.marks)) continue;
       if (!L.ahead && e.jd > S.jd) continue;
@@ -678,7 +681,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const up = e.kind !== 'station' ? -1 : 1; ctx.strokeStyle = 'rgba(223,230,239,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + up * 16 * p); ctx.stroke();
       ctx.fillStyle = 'rgba(223,230,239,0.85)'; const nm = e.kind === 'station' ? 'stationary' : e.kind === 'greatest' ? 'greatest elong.' : e.kind === 'inferior' ? 'inferior conj.' : 'opposition';
       const txt = S.marks ? String(fromJD(e.jd).y) : `${nm} ${short(e.jd)}`, tw = ctx.measureText(txt).width; let ty = y + up * 22 * p + (up > 0 ? 6 * p : 0);
-      for (let n = 0; n < 6 && boxes.some((b) => Math.abs(b[0] - x) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
+      for (let n = 0; n < 8 && boxes.some((b) => Math.abs(b[0] - x) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
       boxes.push([x, ty, tw]); ctx.fillText(txt, x, ty);
     }
     /* numbered points, matching the lines of sight above */

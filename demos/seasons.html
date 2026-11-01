@@ -192,6 +192,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .sd-card { position: static; width: auto; margin: 8px; }
 }
 @media (max-width: 420px) { .stage canvas#sdCan { height: 400px; } }
+@media (max-width: 820px) { .stage.sdyear canvas#sdCan { height: 760px; } }   /* Sundial and clock on a phone: two charts, then the analemma and the sundial */
 </style>
 </head>
 <body>
@@ -1476,6 +1477,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* the length of the solar day starting at noon UT on day n (sundial noon to sundial noon), in seconds */
   function sdDayLength(n, e, eps) { return SD_D - 60 * (sdSun(n + 1.5, e, eps).eot - sdSun(n + 0.5, e, eps).eot); }
+  /* a horizontal sundial at latitude phi (degrees) whose style points at the celestial pole: the Sun at hour angle H (degrees,
+     + after noon) and declination dec. Returns the Sun's direction (east, north, up), its altitude, the angle of the hour line
+     from the noon line (tan θ = sin φ tan H, + toward the east) and the shadow of a point (x east, y north, z up) on the dial. */
+  function sdDial(phi, dec, H) {
+    var rad = Math.PI / 180, f = phi * rad, d = dec * rad, h = H * rad;
+    var s = [-Math.cos(d) * Math.sin(h), Math.sin(d) * Math.cos(f) - Math.cos(d) * Math.cos(h) * Math.sin(f), Math.sin(d) * Math.sin(f) + Math.cos(d) * Math.cos(h) * Math.cos(f)];
+    return { sun: s, alt: Math.asin(s[2]) / rad, theta: Math.atan2(Math.sin(f) * Math.sin(h), Math.cos(h)) / rad,
+      shadow: function (P) { var k = P[2] / s[2]; return [P[0] - k * s[0], P[1] - k * s[1]]; } };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -1539,18 +1549,54 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function arrowHead(x, y, ang, s) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - s * Math.cos(ang - 0.4), y - s * Math.sin(ang - 0.4)); ctx.lineTo(x - s * Math.cos(ang + 0.4), y - s * Math.sin(ang + 0.4)); ctx.closePath(); ctx.fill(); }
   /* screen angle: physics angles are counterclockwise from +x; the screen y axis points down */
   const sx = (a) => Math.cos(a), sy = (a) => -Math.sin(a);
+  /* the planet's face seen from above its north pole, as in the 3D view of the seasons: Earth from NASA's Blue Marble (the same
+     image, lib/earth.js) in a polar view, the other bodies in their own colors; it turns with the spin, and the night half is
+     shaded with a soft terminator and darker limb so it reads as a ball lit by the Sun */
+  const FACE = {};
+  let earthImg = null;
+  function loadEarth() {
+    if (earthImg || !window.document) return; earthImg = 'loading';
+    const go = () => { const im = new Image(); im.onload = () => { earthImg = im; FACE.earth = null; drawAll(); }; im.src = window.VD_EARTH.day; };
+    if (window.VD_EARTH) { go(); return; }
+    const sc = document.createElement('script'); sc.src = 'lib/earth.js'; sc.onload = go; document.head.appendChild(sc);
+  }
+  function faceOf(key) {
+    if (FACE[key]) return FACE[key];
+    const N = 256, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d'), out = g.createImageData(N, N);
+    let src = null, sw = 0, sh = 0;
+    if (key === 'earth') { if (!earthImg || earthImg === 'loading') { loadEarth(); return null; } const t = document.createElement('canvas'); sw = t.width = earthImg.width; sh = t.height = earthImg.height; const tg = t.getContext('2d'); tg.drawImage(earthImg, 0, 0); src = tg.getImageData(0, 0, sw, sh).data; }
+    const base = { mars: [193, 92, 52], mercury: [150, 146, 140], venus: [226, 201, 146], jupiter: [205, 170, 130], moon: [176, 174, 168], toy: [70, 140, 220] }[key] || [70, 140, 220];
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const u = (i + 0.5) / N * 2 - 1, v = 1 - (j + 0.5) / N * 2, rho = Math.hypot(u, v), o = 4 * (j * N + i); if (rho > 1) continue;
+      const lat = Math.acos(Math.min(1, rho)) * 180 / Math.PI, lon = Math.atan2(v, u) * 180 / Math.PI;   /* longitude 0 along +x, east counterclockwise */
+      let col;
+      if (src) { const sx_ = Math.floor(((lon + 180) / 360) * sw) % sw, sy_ = Math.min(sh - 1, Math.floor((90 - lat) / 180 * sh)), k = 4 * (sy_ * sw + sx_); col = [src[k], src[k + 1], src[k + 2]]; }
+      else if (key === 'jupiter') { const b = Math.sin(lat * 0.32) > 0.2 ? 1 : 0.78; col = base.map((x) => x * b); }
+      else if (key === 'mars' && lat > 82) col = [235, 235, 235];
+      else { const n = 0.92 + 0.08 * Math.sin(lon * 0.21 + lat * 0.3) * Math.cos(lat * 0.17); col = base.map((x) => x * n); }
+      out.data[o] = col[0]; out.data[o + 1] = col[1]; out.data[o + 2] = col[2]; out.data[o + 3] = 255;
+    }
+    g.putImageData(out, 0, 0); FACE[key] = c; return c;
+  }
   function drawPlanet(x, y, r, A, p, big) {
     const toSun = A.orbit + Math.PI;   /* direction from the planet to the Sun */
-    /* night side, then the lit half facing the Sun */
-    ctx.fillStyle = '#121a2a'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    const key = S.planet || 'toy', face = faceOf(key);
+    ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.clip();
+    if (face) {
+      /* longitude 90° W stands at the marked spot, so the Americas face it; the face turns with the spin (counterclockwise seen from the north) */
+      ctx.translate(x, y); ctx.rotate(-(A.spot + (key === 'earth' ? 90 : 0) * Math.PI / 180)); ctx.drawImage(face, -r, -r, 2 * r, 2 * r); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    } else { ctx.fillStyle = T.planet; ctx.fillRect(x - r, y - r, 2 * r, 2 * r); }
+    /* night: dark beyond a soft terminator, away from the Sun */
     const lg = ctx.createLinearGradient(x + sx(toSun) * r, y + sy(toSun) * r, x - sx(toSun) * r, y - sy(toSun) * r);
-    lg.addColorStop(0, T.planet); lg.addColorStop(0.5, T.planet); lg.addColorStop(0.5, '#152238'); lg.addColorStop(1, '#152238');
-    ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    lg.addColorStop(0, 'rgba(4,8,20,0)'); lg.addColorStop(0.44, 'rgba(4,8,20,0.05)'); lg.addColorStop(0.56, 'rgba(4,8,20,0.82)'); lg.addColorStop(1, 'rgba(4,8,20,0.9)');
+    ctx.fillStyle = lg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+    const rg = ctx.createRadialGradient(x, y, r * 0.55, x, y, r); rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, 'rgba(0,0,0,0.35)');
+    ctx.fillStyle = rg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
     /* longitude lines that turn with the planet, so the spin shows */
-    ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.clip(); ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 1;
     for (let k = 0; k < 6; k++) { const a = A.spot + k * Math.PI / 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sx(a) * r, y + sy(a) * r); ctx.stroke(); }
     ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
     /* the marked spot: a person standing on the equator, head pointing straight up (the zenith) */
     const a = A.spot, bx = x + sx(a) * r, by = y + sy(a) * r, hl = Math.max(8, r * (big ? 0.42 : 0.55));
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = Math.max(2, 2.4 * p * (big ? 1.3 : 1)); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + sx(a) * hl, by + sy(a) * hl); ctx.stroke();
@@ -1633,20 +1679,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function chartBox(x, y, w, h, title, yLab, ymin, ymax, ticks) {
     const p = proj();
     ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillRect(x, y, w, h); ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
-    const X = (n) => x + 44 * p + (w - 54 * p) * n / 365, Y = (v) => y + 22 * p + (h - 44 * p) * (ymax - v) / (ymax - ymin);
+    const X = (n) => x + 44 * p + (w - 54 * p) * n / 365, Y = (v) => y + 32 * p + (h - 54 * p) * (ymax - v) / (ymax - ymin);
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.strokeStyle = T.line;
     for (const v of ticks) { ctx.globalAlpha = v === 0 ? 1 : 0.5; ctx.beginPath(); ctx.moveTo(X(0), Y(v)); ctx.lineTo(X(365), Y(v)); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(String(v).replace('-', '−'), X(0) - 5 * p, Y(v)); }
     ctx.textAlign = 'center'; ctx.textBaseline = 'top'; let n0 = 0;
-    for (let m = 0; m < 12; m++) { ctx.fillText(MONTHS[m][0], X(n0 + ML[m] / 2), y + h - 18 * p); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(n0), y + 22 * p); ctx.lineTo(X(n0), y + h - 22 * p); ctx.stroke(); ctx.globalAlpha = 1; n0 += ML[m]; }
-    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(title, x + 8 * p, y + 5 * p);
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(yLab, x + w - 8 * p, y + 6 * p);
+    for (let m = 0; m < 12; m++) { ctx.fillText(MONTHS[m][0], X(n0 + ML[m] / 2), y + h - 18 * p); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(X(n0), y + 32 * p); ctx.lineTo(X(n0), y + h - 22 * p); ctx.stroke(); ctx.globalAlpha = 1; n0 += ML[m]; }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; const uw = ctx.measureText(yLab).width; ctx.fillText(yLab, x + w - 8 * p, y + 6 * p);
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; fitText(title, x + 8 * p, y + 5 * p, w - uw - 26 * p, 11 * p, 600);
     return { X, Y };
   }
+  /* a title that fits its box in any language: the font shrinks (to 8 px at least) until it does */
+  function fitText(txt, x, y, maxW, size, weight, fam) { let z = size; do { ctx.font = `${weight || 400} ${z}px ${fam || T.ui}`; z -= 0.5; } while (ctx.measureText(txt).width > maxW && z >= 8); ctx.fillText(txt, x, y); }
   function curve(F, X, Y, col, w, dash) { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.beginPath(); for (let n = 0; n <= 365; n += 1) { const v = F(n); n ? ctx.lineTo(X(n), Y(v)) : ctx.moveTo(X(n), Y(v)); } ctx.stroke(); ctx.setLineDash([]); }
   function drawYearView() {
     const p = proj(); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const narrow = W < 821, pad = 12 * p, cardW = narrow ? 0 : 270 * p, aw = narrow ? 0 : Math.min(200 * p, (W - cardW - 3 * pad) * 0.32);
-    const cw = W - cardW - aw - pad * (narrow ? 2 : 3), h1 = (H - 3 * pad) / 2, x = pad;
+    /* on a phone the analemma and the sundial share a row under the two charts; on a wider screen the sundial goes under the
+       set up card when there is room there, else above the analemma */
+    const hb = narrow ? Math.min(300 * p, Math.max(220 * p, H * 0.34)) : 0;
+    const cw = W - cardW - aw - pad * (narrow ? 2 : 3), h1 = (H - 3 * pad - (narrow ? hb + pad : 0)) / 2, x = pad;
+    let dialBox = null, anaBox = null;
+    if (narrow) { const yb = H - pad - hb, wa = Math.round((W - 3 * pad) * 0.4); anaBox = [pad, yb, wa, hb]; dialBox = [pad * 2 + wa, yb, W - 3 * pad - wa, hb]; }
+    else {
+      const cd = $('sdCard'), cb = cd ? cd.offsetTop + cd.offsetHeight + pad : H, room = H - pad - cb;
+      anaBox = aw > 90 ? [x + cw + pad, pad, aw, H - 2 * pad] : null;
+      if (room >= 190 * p) dialBox = [W - cardW, cb, cardW - pad, room];
+      else if (anaBox) { const hd = Math.min(240 * p, anaBox[3] * 0.45); dialBox = [anaBox[0], pad, aw, hd]; anaBox = [anaBox[0], pad * 2 + hd, aw, anaBox[3] - hd - pad]; }
+    }
     const eot = (n) => sdSun(n + 0.5, S.e, S.tilt).eot, len = (n) => sdDayLength(n, S.e, S.tilt) - SD_D;
     let emax = 2; for (let n = 0; n < 365; n++) emax = Math.max(emax, Math.abs(eot(n)), S.parts ? Math.abs(sdSun(n + 0.5, S.e, 0).eot) : 0, S.parts ? Math.abs(sdSun(n + 0.5, 0, S.tilt).eot) : 0);
     const er = Math.ceil(emax / 5) * 5, et = []; for (let v = -er; v <= er; v += er > 20 ? 10 : 5) et.push(v);
@@ -1661,15 +1720,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* today's marker */
     const n = S.date; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p;
     for (const [C, v, top] of [[A, eot(n), pad], [B, len(n), pad * 2 + h1]]) {
-      ctx.beginPath(); ctx.moveTo(C.X(n), top + 20 * p); ctx.lineTo(C.X(n), top + h1 - 22 * p); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(C.X(n), top + 30 * p); ctx.lineTo(C.X(n), top + h1 - 22 * p); ctx.stroke();
       if (!S.blind) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(C.X(n), C.Y(v), 4.5 * p, 0, 2 * Math.PI); ctx.fill(); }
     }
     if (S.parts && !S.blind) { ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; const ly = pad + h1 - 22 * p;
       ctx.fillStyle = T.ell; ctx.fillText('— — from the ellipse alone', x + 50 * p, ly); ctx.fillStyle = T.tilt; ctx.fillText('· · · from the tilt alone', x + 50 * p + 150 * p, ly); }
     /* the analemma: where the Sun stands at clock noon through the year */
-    if (aw > 90) {
-      const ax = x + cw + pad, ah = H - 2 * pad; ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.fillRect(ax, pad, aw, ah); ctx.strokeRect(ax + 0.5, pad + 0.5, aw - 1, ah - 1);
-      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Sun at clock noon', ax + 8 * p, pad + 5 * p);
+    if (anaBox) {
+      const [ax, ay, aW, ah] = anaBox, aw = aW, pad = ay; ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.fillRect(ax, pad, aw, ah); ctx.strokeRect(ax + 0.5, pad + 0.5, aw - 1, ah - 1);
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; fitText('Sun at clock noon', ax + 8 * p, pad + 5 * p, aw - 14 * p, 11 * p, 600);
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('(the analemma)', ax + 8 * p, pad + 20 * p);
       const dm = Math.max(5, S.tilt), em = Math.max(er, 5), sc = Math.min((aw - 30 * p) / (2 * em * 0.25), (ah - 70 * p) / (2 * dm));
       const ox = ax + aw / 2, oy = pad + 40 * p + (ah - 70 * p) / 2;
@@ -1682,10 +1741,75 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const s = sdSun(n + 0.5, S.e, S.tilt); ctx.fillStyle = '#f2a516'; ctx.beginPath(); ctx.arc(ox + (S.blind ? 0 : s.eot * 0.25 * sc), oy - s.dec * sc, 6 * p, 0, 2 * Math.PI); ctx.fill();
     }
+    if (dialBox) drawDial(dialBox, n);
     /* the date */
     ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(dateName(n) + ' 2026', x + cw - 10 * p, pad + 22 * p);
   }
 
+  /* a horizontal sundial at Ruston's latitude, on its time zone's central meridian (so longitude adds nothing), at 12:00 on the
+     clock of day n: the Sun's hour angle is the equation of time (0.25° a minute), and the gnomon's shadow is computed from the
+     Sun's direction. Beside it, a clock face with both minute hands: the clock's at 12 and the sundial's ahead or behind. */
+  const SD_LAT = 32.52;
+  function drawDial(bx, n) {
+    const [x0, y0, w, h] = bx, p = proj(), s = sdSun(n + 0.5, S.e, S.tilt), eot = S.blind ? 0 : s.eot, D = sdDial(SD_LAT, s.dec, eot * 0.25);
+    ctx.fillStyle = T.chart; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillRect(x0, y0, w, h); ctx.strokeRect(x0 + 0.5, y0 + 0.5, w - 1, h - 1);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; fitText('Sundial at 12:00 on the clock', x0 + 8 * p, y0 + 5 * p, w - 14 * p, 11 * p, 600);
+    ctx.fillStyle = T.muted; fitText(`${SD_LAT.toFixed(1)}° N, on the time zone meridian`, x0 + 8 * p, y0 + 20 * p, w - 14 * p, 10 * p);
+    /* the dial, seen from the southeast and above (46° up): x east, y north, z up */
+    const side = w >= h * 1.25, dw = side ? w * 0.62 : w, top = y0 + 36 * p, bot = y0 + h - (side ? 26 : 70) * p;
+    const sa = 0.72, ca = Math.sqrt(1 - sa * sa), cb = Math.cos(0.75), sb = Math.sin(0.75);
+    const R = Math.max(30, Math.min(dw / 2 - 16 * p, (bot - top) / (2 * sa * 1.08 + 0.1))), cx = x0 + dw / 2, cy = bot - R * sa * 1.08 - 4 * p;
+    const Pt = (q) => { const xr = q[0] * cb + q[1] * sb, yr = -q[0] * sb + q[1] * cb; return [cx + xr * R, cy - yr * R * sa - q[2] * R * ca]; };
+    const dark = T.dark;
+    ctx.fillStyle = dark ? '#3a3326' : '#e9dcc0'; ctx.strokeStyle = dark ? '#8a7a55' : '#a38b5a'; ctx.lineWidth = 1.5 * p;
+    ctx.beginPath(); ctx.ellipse(cx, cy + 3 * p, R * 1.06, R * 1.06 * sa, 0, 0, 2 * Math.PI); ctx.fillStyle = dark ? '#3d3424' : '#cdbb94'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.06, R * 1.06 * sa, 0, 0, 2 * Math.PI); ctx.fillStyle = dark ? '#7d6c4a' : '#efe3c8'; ctx.fill(); ctx.stroke();
+    /* hour lines 6 to 18 h apparent solar time: tan θ = sin φ tan H */
+    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const used = [];
+    for (let hr = 6; hr <= 18; hr++) {
+      const th = sdDial(SD_LAT, 0, (hr - 12) * 15).theta * Math.PI / 180, ux = Math.sin(th), uy = Math.cos(th), a = Pt([ux * 0.18, uy * 0.18, 0]), b = Pt([ux * 0.92, uy * 0.92, 0]), lb = Pt([ux * 1.0, uy * 1.0, 0]);
+      ctx.strokeStyle = hr === 12 ? (dark ? '#ffe9b0' : '#3b2c0e') : dark ? 'rgba(250,236,200,0.6)' : 'rgba(90,70,30,0.55)'; ctx.lineWidth = (hr === 12 ? 1.8 : 1) * p; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      if (!used.some((u) => Math.hypot(u[0] - lb[0], u[1] - lb[1]) < 13 * p)) { used.push(lb); ctx.fillStyle = dark ? '#fff3d0' : '#5a461e'; ctx.fillText(String(hr > 12 ? hr - 12 : hr), lb[0], lb[1]); }
+    }
+    /* the gnomon: its edge (the style) runs from the middle toward the celestial pole, φ above the north horizon */
+    const L = 0.62, tip = [0, L, L * Math.tan(SD_LAT * Math.PI / 180)];
+    if (D.alt > 0) {
+      /* the shadow of the gnomon's edge falls along the hour line of the sundial's time (drawn a few pixels wide, as a gnomon
+         plate has some thickness); it is cut off at the dial's rim */
+      const sh = D.shadow(tip), q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt([sh[0], sh[1], 0]);
+      ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.06, R * 1.06 * sa, 0, 0, 2 * Math.PI); ctx.clip();
+      ctx.fillStyle = dark ? 'rgba(10,8,4,0.7)' : 'rgba(40,30,10,0.42)'; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 4.5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q2[0], q2[1]); ctx.stroke(); ctx.lineCap = 'butt';
+      ctx.restore();
+    }
+    { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(185,195,207,0.8)' : 'rgba(125,135,148,0.8)'; ctx.strokeStyle = dark ? '#e3e8ef' : '#3d4652'; ctx.lineWidth = 1 * p;
+      ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; { const nq = Pt([0, 1.22, 0]); ctx.fillText('N', nq[0], nq[1] - 6 * p); }
+    /* the clock face: the minute hands of the clock (at 12) and of the sundial, 6° a minute */
+    const tsun = 12 * 60 + eot, hh = Math.floor(tsun / 60), mm = Math.floor(tsun - hh * 60), ss = Math.round((tsun - hh * 60 - mm) * 60);
+    const fix = (h_, m_, s_) => { if (s_ === 60) { s_ = 0; m_++; } if (m_ === 60) { m_ = 0; h_++; } return `${h_}:${String(m_).padStart(2, '0')}:${String(s_).padStart(2, '0')}`; };
+    const reads = S.blind ? '?' : fix(hh, mm, ss);
+    let fcx, fcy, fr;
+    if (side) { fr = Math.min((w - dw) / 2 - 10 * p, (h - 60 * p) / 2 - 14 * p); fcx = x0 + dw + (w - dw) / 2; fcy = y0 + 40 * p + fr + 6 * p; }
+    else { fr = Math.min(26 * p, (w - 20 * p) / 6); fcx = x0 + 14 * p + fr; fcy = y0 + h - 12 * p - fr; }
+    if (fr > 12) {
+      ctx.fillStyle = dark ? '#0b1020' : '#ffffff'; ctx.strokeStyle = T.line; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(fcx, fcy, fr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.muted; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.lineWidth = (k % 3 ? 1 : 1.8) * p; ctx.beginPath(); ctx.moveTo(fcx + Math.sin(a) * fr * 0.84, fcy - Math.cos(a) * fr * 0.84); ctx.lineTo(fcx + Math.sin(a) * fr * 0.96, fcy - Math.cos(a) * fr * 0.96); ctx.stroke(); }
+      const hand = (ang, len, col, wd) => { ctx.strokeStyle = col; ctx.lineWidth = wd; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(fcx, fcy); ctx.lineTo(fcx + Math.sin(ang) * len, fcy - Math.cos(ang) * len); ctx.stroke(); ctx.lineCap = 'butt'; };
+      hand(0, fr * 0.55, T.muted, 3 * p);   /* hour hand at 12 */
+      hand(0, fr * 0.86, T.ink, 2 * p);     /* the clock's minute hand */
+      if (!S.blind) {
+        hand(eot * 6 * Math.PI / 180, fr * 0.86, '#f2a516', 2.4 * p);
+        if (Math.abs(eot) > 0.05) { ctx.strokeStyle = 'rgba(242,165,22,0.55)'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(fcx, fcy, fr * 0.7, -Math.PI / 2, -Math.PI / 2 + eot * 6 * Math.PI / 180, eot < 0); ctx.stroke(); }
+      }
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(fcx, fcy, 2.5 * p, 0, 2 * Math.PI); ctx.fill();
+    }
+    /* what each one reads */
+    ctx.textAlign = side ? 'center' : 'left'; ctx.textBaseline = 'top'; ctx.font = `${10.5 * p}px ${T.mono}`;
+    const tx = side ? fcx : fcx + fr + 10 * p, ty = side ? fcy + fr + 8 * p : fcy - 14 * p;
+    ctx.fillStyle = T.ink; ctx.fillText('clock   12:00:00', tx, ty);
+    ctx.fillStyle = '#f2a516'; ctx.fillText(`sundial ${reads}`, tx, ty + 15 * p);
+  }
   function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (S.view === 'orbit') drawOrbitView(); else drawYearView(); }
 
   function readouts() {
@@ -1721,6 +1845,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#sdPresets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#sdSpeedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     $('sdOrbitCtl').style.display = S.mode === 'sidereal' ? 'contents' : 'none';
+    document.getElementById('stage').classList.toggle('sdyear', S.mode !== 'seasons' && S.view === 'year');
     $('sdOrbitCard').style.display = S.view === 'orbit' ? 'contents' : 'none'; $('sdYearCard').style.display = S.view === 'year' ? '' : 'none';
     $('sdCardTitle').textContent = S.view === 'orbit' ? 'The planet' : "Earth's orbit and tilt";
     const nShow = S.planet ? sdPerYear(S.P.rot, S.P.orb).sid : S.n; $('sdN').value = Math.min(30, Math.max(1, Math.round(nShow)));
@@ -1781,6 +1906,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the date can be dragged along either chart */
   let dragging = false;
   function dateAt(e) { const r = can.getBoundingClientRect(), p = proj(), narrow = W < 821, pad = 12 * p, cardW = narrow ? 0 : 270 * p, aw = narrow ? 0 : Math.min(200 * p, (W - cardW - 3 * pad) * 0.32), cw = W - cardW - aw - pad * (narrow ? 2 : 3);
+    const hb = narrow ? Math.min(300 * p, Math.max(220 * p, H * 0.34)) : 0, y = e.clientY - r.top; if (narrow && y > H - 2 * pad - hb) return null;   /* the analemma and sundial row on a phone */
     const x = e.clientX - r.left; if (x < pad + 44 * p - 10 || x > pad + cw) return null; return Math.max(0, Math.min(364, Math.round(365 * (x - pad - 44 * p) / (cw - 54 * p)))); }
   can.addEventListener('pointerdown', (e) => { if (S.view !== 'year') return; const n = dateAt(e); if (n == null) return; dragging = true; S.date = n; sync(); drawAll(); try { can.setPointerCapture(e.pointerId); } catch (_) {} });
   can.addEventListener('pointermove', (e) => { if (!dragging) return; const n = dateAt(e); if (n != null && n !== S.date) { S.date = n; sync(); drawAll(); } });

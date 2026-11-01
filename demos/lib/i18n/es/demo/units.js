@@ -43,9 +43,9 @@ VDI18N.add('es', 'demo/units', {
 "Ruler":
   "Regla",
 "Fly in":
-  "Acercarse volando",
+  "Acercar",
 "Fly out":
-  "Alejarse volando",
+  "Alejar",
 "Convert with a chain of exact factors":
   "Convierte con una cadena de factores exactos",
 "Each factor equals {#} (top and bottom are the same amount), so multiplying by it changes the units, not the quantity. Units that appear on top and bottom cancel.":
@@ -144,6 +144,8 @@ VDI18N.add('es', 'demo/units', {
   "años en una vida, bajo",
 "years in a lifetime, high":
   "años en una vida, alto",
+"The estimate built up factor by factor on a scale of powers of ten: after each factor, a bar from the product of the low values to the product of the high values. The bars widen as the factors multiply, and the last one is the answer, with its geometric middle marked.":
+  "La estimación construida factor por factor en una escala de potencias de diez: después de cada factor, una barra desde el producto de los valores bajos hasta el producto de los valores altos. Las barras se ensanchan al multiplicar los factores, y la última es la respuesta, con su media geométrica marcada.",
 "<a>Worksheet {#}: Units and Dimensions</a>":
   "<a>Hoja de trabajo {#}: Unidades y dimensiones</a>",
 "<a>Worksheet {#}: Estimates and Uncertainty</a>":
@@ -258,6 +260,8 @@ VDI18N.add('es', 'demo/units', {
   "decimales",
 "Calculator: {#} → keep {#} significant figures → <span>{#}</span>":
   "Calculadora: {#} → conservar {#} cifras significativas → <span>{#}</span>",
+"Running product after each factor, low to high; the last bar is the answer, with a tick at its geometric middle":
+  "Producto acumulado después de cada factor, de bajo a alto; la última barra es la respuesta, con una marca en su media geométrica",
 "Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.":
   "Ajusta los valores bajo y alto a tus propias estimaciones. La respuesta es el producto, mostrado como un intervalo y redondeado a la potencia de diez más cercana.",
 "Between {#} × {#}⁹ and {#} × {#}⁹: about {#}¹⁰ (geometric middle {#} × {#}⁹)":
@@ -305,5 +309,7 @@ VDI18N.add('es', 'demo/units', {
 "cursor: {#} m nearest: person (height)":
   "cursor: {#} m más cercano: persona (estatura)",
 "Your guess: L⁰ m⁰ g⁰ has dimensions {#} (dimensionless). The answer needs T. <span>Not yet.</span><br>Powers: L: {#}, m: {#}, g: −{#}. t = C √(L/g), and C = {#}π: the mass drops out.":
-  "Tu suposición: L⁰ m⁰ g⁰ tiene dimensiones {#} (adimensional). La respuesta necesita T. <span>Todavía no.</span><br>Potencias: L: {#}, m: {#}, g: −{#}. t = C √(L/g), y C = {#}π: la masa no interviene."
+  "Tu suposición: L⁰ m⁰ g⁰ tiene dimensiones {#} (adimensional). La respuesta necesita T. <span>Todavía no.</span><br>Potencias: L: {#}, m: {#}, g: −{#}. t = C √(L/g), y C = {#}π: la masa no interviene.",
+"Running product after each factor, low to high (the answer is hidden in Blind)":
+  "Producto acumulado después de cada factor, de bajo a alto (la respuesta está oculta en A ciegas)"
 });

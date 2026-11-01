@@ -340,12 +340,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerup', dragDone); can.addEventListener('pointercancel', dragDone);
   window.__gne = { pickRig: (x, y) => pickRig({ clientX: x, clientY: y }), rig: () => (g3 && g3.pos ? screen3(g3.pos) : null), top: () => (g3 && g3.top ? screen3(g3.top) : null), get h() { return S.h; } };
   const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  /* Earth in 3D: NASA's Blue Marble (lib/earth.js, the image the seasons and units demos use), loaded once; the drawn outline stands in
+     until it arrives */
+  let earthImg = null;
+  function loadEarthImg() {
+    if (earthImg) return; earthImg = new Image();
+    const go = () => { earthImg.onload = () => { G3.key = ''; draw(); }; earthImg.src = window.VD_EARTH.day; };
+    if (window.VD_EARTH) { go(); return; }
+    const sc = document.createElement('script'); sc.src = 'lib/earth.js'; sc.onload = go; document.head.appendChild(sc);
+  }
   /* the planet's texture: equirectangular, longitude −180° at the left, north at the top */
   function paintPlanet() {
     const c = g3.tc.getContext('2d'), w = g3.tc.width, h = g3.tc.height, X = (lo) => (lo + 180) / 360 * w, Y = (la) => (90 - la) / 180 * h, kind = S.body;
     const base = kind === 'earth' ? T.earth : kind === 'moon' ? T.moon : T.mars, deep = kind === 'earth' ? T.oceanDeep : kind === 'moon' ? T.moonDark : T.marsDark;
     const og = c.createLinearGradient(0, 0, 0, h); og.addColorStop(0, deep); og.addColorStop(0.5, base); og.addColorStop(1, deep); c.fillStyle = og; c.fillRect(0, 0, w, h);
-    if (kind === 'earth') { c.fillStyle = T.land; for (const poly of LAND_LL) { c.beginPath(); poly.forEach(([lo, la], i) => (i ? c.lineTo(X(lo), Y(la)) : c.moveTo(X(lo), Y(la)))); c.closePath(); c.fill(); }
+    if (kind === 'earth' && earthImg && earthImg.complete && earthImg.naturalWidth) { c.drawImage(earthImg, 0, 0, w, h); g3.tex.needsUpdate = true; return; }
+    if (kind === 'earth') { loadEarthImg(); c.fillStyle = T.land; for (const poly of LAND_LL) { c.beginPath(); poly.forEach(([lo, la], i) => (i ? c.lineTo(X(lo), Y(la)) : c.moveTo(X(lo), Y(la)))); c.closePath(); c.fill(); }
       c.fillStyle = T.ice; c.fillRect(0, 0, w, Y(73)); c.fillRect(0, Y(-68), w, h); }
     else if (kind === 'moon') { c.fillStyle = T.moonDark; c.globalAlpha = 0.5; for (const [x, y, r] of CRATERS.concat(CRATERS.map(([x, y, r]) => [-y, x, r * 0.8]))) { c.beginPath(); c.ellipse((x + 1) / 2 * w, (y + 1) / 2 * h, r * w / 3, r * h / 1.5, 0, 0, 7); c.fill(); } c.globalAlpha = 1; }
     else { c.fillStyle = T.marsDark; c.globalAlpha = 0.45; for (const [x, y, r, e] of PATCHES.concat(PATCHES.map(([x, y, r, e]) => [-x, -y, r, e]))) { c.beginPath(); c.ellipse((x + 1) / 2 * w, (y / 0.7 + 1) / 2 * h * 0.8 + h * 0.1, r * w / 2.5, r * h * e / 1.5, 0, 0, 7); c.fill(); } c.globalAlpha = 1; c.fillStyle = T.ice; c.fillRect(0, 0, w, Y(78)); }
@@ -398,7 +408,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (g3 && !use3()) g3.el.hidden = true;
     if (use3()) {
       const h3 = wide ? Hh : ph + 14 * p; ctx.clearRect(0, 0, pw, h3);
-      const R3 = draw3(0, 0, pw, h3, E), Q = R3.Q, lab = (p3, t, col, al, bl) => { const q = Q(p3); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = al || 'left'; ctx.textBaseline = bl || 'middle'; ctx.fillText(t, q[0] + (al === 'right' ? -6 : al === 'center' ? 0 : 6) * p, q[1] + (bl === 'top' ? 6 : bl === 'bottom' ? -6 : 0) * p); };
+      const R3 = draw3(0, 0, pw, h3, E), Q = R3.Q, lab = (p3, t, col, al, bl) => { const q = Q(p3); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = al || 'left'; ctx.textBaseline = bl || 'middle';
+        /* a label that would cover one already written steps down (or up, for one above its point) a line at a time */
+        const x = q[0] + (al === 'right' ? -6 : al === 'center' ? 0 : 6) * p, tw = ctx.measureText(t).width, x0 = al === 'right' ? x - tw : al === 'center' ? x - tw / 2 : x, hh = 13 * p, dir = bl === 'bottom' ? -1 : 1;
+        let y = q[1] + (bl === 'top' ? 6 : bl === 'bottom' ? -6 : 0) * p; const top = () => (bl === 'top' ? y : bl === 'bottom' ? y - hh : y - hh / 2);
+        for (let k = 0; k < 5 && LB3.some((b) => x0 < b[2] && x0 + tw > b[0] && top() < b[3] && top() + hh > b[1]); k++) y += dir * hh;
+        LB3.push([x0, top(), x0 + tw, top() + hh]); ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(5,10,20,0.75)'; ctx.strokeText(t, x, y); ctx.fillText(t, x, y); };
+      const LB3 = [];
       lab(R3.gTip, S.blind ? 'gravity' : `gravity ${f(E.grav, 2)} N`, LIT.gv, 'left', 'top');
       if (S.spin && E.cent > 0) lab(R3.cTip, 'centrifugal ×100', LIT.cv);
       if (!S.blind) lab(R3.top, `scale reads ${f(Math.max(0, E.g), 3)} N`, LIT.ink, 'center', 'bottom');
