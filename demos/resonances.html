@@ -228,7 +228,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       a0: el0.map((e) => e.a), e0: el0.map((e) => e.e), emax: el0.map((e) => e.e), emin: el0.map((e) => e.e), dmin: new Float64Array(n).fill(Infinity),
       gone: new Array(n).fill(null), rel: el0.map((e, i) => null), conj: bodies.map(() => []), steps: 0 };
   }
-  const planetAt = (sys, t) => stateAt(sys.pl, t, sys.mu);
+  const planetAt = (sys, t) => sys.pos || stateAt(sys.pl, t, sys.mu);   /* sys.pos: Clearing the gaps, where the planet is integrated */
   /* one Wisdom–Holman step for every body still in play; conjunctions (the planet passing a body, as seen from the Sun) are
      recorded with the body's true anomaly, so the demo can show where on its orbit the kicks fall */
   function stepSystem(sys, removeMars) {
@@ -367,41 +367,85 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      30 to 56 AU. The totals were queried separately and equal the sums of the bins. */
   const BELT_HIST = { from: 1.80, bin: 0.02, total: 881333, date: '2026-10-25', n: [324, 644, 1261, 2079, 2970, 3490, 3303, 2484, 1909, 1045, 378, 129, 52, 54, 117, 341, 1033, 2591, 4807, 7297, 9467, 11423, 12822, 15148, 17482, 19304, 20373, 21563, 21955, 21978, 19468, 15979, 12495, 7929, 2374, 2912, 14442, 21214, 24509, 24769, 25246, 25023, 23865, 22654, 22095, 19156, 20452, 20800, 21987, 18231, 10686, 2704, 6885, 9061, 5964, 6449, 6091, 4290, 10602, 13591, 14598, 14804, 19139, 20638, 22954, 23764, 23811, 23308, 23808, 16350, 11025, 6220, 2530, 311, 129, 172, 256, 342, 493, 458, 467, 554, 399, 244, 173, 120, 85, 174, 124, 9, 10, 9, 13, 11, 8, 7, 4, 1, 3, 3, 5, 10, 11, 9, 10, 123, 496, 1140, 1220, 788, 217, 25, 1, 3, 1] };
   const KB_HIST = { from: 30, bin: 0.5, total: 6620, date: '2026-10-25', n: [47, 11, 10, 6, 14, 15, 19, 17, 18, 44, 22, 25, 45, 68, 31, 48, 74, 104, 482, 332, 114, 132, 139, 196, 240, 379, 446, 602, 475, 256, 260, 310, 240, 179, 173, 174, 116, 49, 43, 45, 47, 47, 43, 57, 44, 42, 45, 42, 45, 42, 90, 76] };
-  /* ---------- Clearing the gaps: a simulated belt pulled by Jupiter and Saturn ----------
-     Many massless asteroids in the plane, each pulled by the Sun, Jupiter and Saturn. Both planets move on their fixed J2000
-     Kepler ellipses (Standish, table above; masses IAU 2009) and do not pull on each other, so their orbits neither precess nor
-     change shape: the slow (secular) changes that help empty the real gaps over millions of years are left out, and so are Mars,
-     the tilts of the orbits and the Yarkovsky drift. Integrator: Wisdom–Holman as above (heliocentric; drift, kick, drift), with
-     the half drifts of neighboring steps joined into one, so a batch of k steps costs k + 1 Kepler drifts; the state is whole at
-     the end of every batch. The kick holds both planets' direct pulls and their indirect terms. Steps of 0.25 yr, a twelfth of the
-     shortest asteroid orbit and a 47th of Jupiter's.
+  /* ---------- Clearing the gaps: a simulated belt pulled by Jupiter and Saturn, which pull on each other ----------
+     The Sun, Jupiter and Saturn are a real three body system, integrated together in the plane: each planet pulls on the Sun and
+     on the other planet, so the slow changes of their orbits come out of the run itself, as they do in the real solar system.
+     Three are seen in it (curriculum/validation/test_resonances.cjs): the great inequality, the near 5:2 between Jupiter and
+     Saturn that makes both wobble along their orbits with a period of about 900 years (Laplace 1785; Murray & Dermott 1999, Solar
+     System Dynamics, ch. 1); the turning of both perihelia, about 4″ a year for Jupiter and 28″ for Saturn (the real g5 and g6 are
+     4.26″ and 28.25″ a year, Laskar et al. 2004, A&A 428, 261); and Jupiter's eccentricity swinging between about 0.026 and 0.060
+     every 53,000 years or so. Uranus and Neptune are left out (they change these by a few percent), and so are Mars, the other
+     inner planets, the tilts of the orbits, collisions and the Yarkovsky drift.
+     The planets: Wisdom–Holman in Jacobi coordinates (Wisdom & Holman 1991, AJ 102, 1528): Jupiter round the Sun, Saturn round
+     the center of mass of the Sun and Jupiter, each a Kepler orbit solved exactly, with kicks from what is left of the pull
+     (the planets' pull on each other and the Sun's response). Start: the J2000 elements of the table above (Standish, JPL) taken
+     as Jacobi elements, with the semimajor axes raised by DA (0.00139 AU for Jupiter, 0.00888 AU for Saturn). Standish's elements
+     are averages fitted from 1800 to 2050, not the orbits of one instant, and started as they are the two planets go round a little
+     too fast (the great inequality would come every 760 years). With DA the model's average mean motions are the long term ones of
+     Simon et al. (1994, A&A 282, 663): 30.34906° a year for Jupiter and 12.22114° for Saturn (DA found by Newton's method on a
+     20,000 year run; the test checks it). The masses are the IAU 2009 ratios of the table.
+     The asteroids: massless, heliocentric Wisdom–Holman (drift, kick, drift) in step with the planets, each kicked by Jupiter and
+     Saturn where the integration has them at the middle of the step (their direct pulls and the indirect terms, the Sun being
+     pulled by them). The half drifts of neighboring steps are joined into one, so a batch of k steps costs k + 1 Kepler drifts;
+     the state is whole at the end of every batch. Steps of 0.25 yr, a twelfth of the shortest asteroid orbit and a 47th of
+     Jupiter's.
      Start: a spread evenly from 2.04 to 3.48 AU (one asteroid in each equal slice, placed at random inside it), e uniform from 0
      to 0.3 but redrawn until the perihelion is beyond 1.80 AU (so none starts as a Mars crosser), random direction of perihelion
      and place on the orbit. Removed: perihelion inside Mars's aphelion (q < 1.666 AU, checked every 8 steps and at the end of a
      batch), closer than one Hill radius to Jupiter or Saturn (at each kick), or no longer on an ellipse.
-     The whole thing is one function of its constants, so the same code runs in Node (curriculum/validation/test_resonances.cjs),
-     on the page and, as text, in a Web Worker. */
+     The whole thing is one function of its constants, so the same code runs in Node, on the page and, as text, in a Web Worker. */
   function kwCore(K) {
     const GM = K.GM, MQ = K.MARS_Q, D2R = Math.PI / 180, DT = 0.25, FROM = 2.04, TO = 3.48, EMAX = 0.3, QMIN = 1.80;
-    const PL = [K.J, K.S].map((p) => { const m = 1 / p.mr, mu = GM * (1 + m);
-      return { a: p.a, e: p.e, w: p.w * D2R, M0: (p.L - p.w) * D2R, n: Math.sqrt(mu / (p.a * p.a * p.a)), k: GM * m, h2: Math.pow(p.a * Math.cbrt(m / 3), 2), b: Math.sqrt(1 - p.e * p.e) }; });
-    /* a planet's heliocentric position at time t (years after J2000) */
-    function where(p, t, out, o) {
-      let M = (p.M0 + p.n * t) % (2 * Math.PI); if (M > Math.PI) M -= 2 * Math.PI; else if (M < -Math.PI) M += 2 * Math.PI;
-      let E = M; for (let i = 0; i < 30; i++) { const d = (E - p.e * Math.sin(E) - M) / (1 - p.e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-14) break; }
-      const xp = p.a * (Math.cos(E) - p.e), yp = p.a * p.b * Math.sin(E), c = Math.cos(p.w), s = Math.sin(p.w);
-      out[o] = xp * c - yp * s; out[o + 1] = xp * s + yp * c;
-    }
-    /* Kepler drift of body i for time dt (f and g functions in the change of eccentric anomaly); false once it is not on an ellipse */
-    function drift(s, i, dt) {
-      const x = s[i], y = s[i + 1], vx = s[i + 2], vy = s[i + 3], r0 = Math.sqrt(x * x + y * y), ia = 2 / r0 - (vx * vx + vy * vy) / GM;
+    const mJ = 1 / K.J.mr, mS = 1 / K.S.mr, e1 = 1 + mJ, e2 = e1 + mS, f1 = mJ / e1;
+    const MU = [GM * e1, GM * e2 / e1], MP = [mJ / e1, mS * e1 / e2];   /* the two Jacobi orbits: Kepler parameters and reduced masses */
+    const PL = [K.J, K.S].map((p) => { const m = 1 / p.mr; return { m, k: GM * m, mu: GM * (1 + m), h2: Math.pow(p.a * Math.cbrt(m / 3), 2) }; });
+    /* Kepler drift of body i for time dt about mu (f and g functions in the change of eccentric anomaly); false once it is not on an ellipse */
+    function drift(s, i, dt, mu) {
+      const x = s[i], y = s[i + 1], vx = s[i + 2], vy = s[i + 3], r0 = Math.sqrt(x * x + y * y), ia = 2 / r0 - (vx * vx + vy * vy) / mu;
       if (!(ia > 0)) return false;
-      const a = 1 / ia, n = Math.sqrt(GM * ia * ia * ia), C = 1 - r0 * ia, Sg = (x * vx + y * vy) / (n * a * a), M = n * dt;
+      const a = 1 / ia, n = Math.sqrt(mu * ia * ia * ia), C = 1 - r0 * ia, Sg = (x * vx + y * vy) / (n * a * a), M = n * dt;
       let dE = M, sn = 0, cs = 1;
       for (let k = 0; k < 16; k++) { sn = Math.sin(dE); cs = Math.cos(dE); const d = (dE - C * sn + Sg * (1 - cs) - M) / (1 - C * cs + Sg * sn); dE -= d; if (d < 1e-13 && d > -1e-13) break; }
       sn = Math.sin(dE); cs = Math.cos(dE);
       const r = a * (1 - C * cs + Sg * sn), F = 1 - a / r0 * (1 - cs), G = dt - (dE - sn) / n, Fd = -a * a * n * sn / (r * r0), Gd = 1 - a / r * (1 - cs);
       s[i] = F * x + G * vx; s[i + 1] = F * y + G * vy; s[i + 2] = Fd * x + Gd * vx; s[i + 3] = Fd * y + Gd * vy; return true;
+    }
+    /* position and velocity on an orbit a, e, perihelion direction w and mean anomaly M (radians), about mu, into s at i */
+    function kep(a, e, w, M, mu, s, i) {
+      let E = M; for (let k = 0; k < 30; k++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+      const c = Math.cos(E), sE = Math.sin(E), b = Math.sqrt(1 - e * e), r = a * (1 - e * c), v = Math.sqrt(mu * a) / r;
+      const xp = a * (c - e), yp = a * b * sE, vxp = -v * sE, vyp = v * b * c, cw = Math.cos(w), sw = Math.sin(w);
+      s[i] = xp * cw - yp * sw; s[i + 1] = xp * sw + yp * cw; s[i + 2] = vxp * cw - vyp * sw; s[i + 3] = vxp * sw + vyp * cw;
+    }
+    /* Jupiter and Saturn at J2000, in Jacobi coordinates */
+    function planets0() { const P = new Float64Array(8); [K.J, K.S].forEach((p, k) => kep(p.a + K.DA[k], p.e, p.w * D2R, (p.L - p.w) * D2R, MU[k], P, 4 * k)); return P; }
+    /* heliocentric positions and velocities of Jupiter (0 to 3) and Saturn (4 to 7) */
+    function helio(P, H) { for (let i = 0; i < 4; i++) { H[i] = P[i]; H[4 + i] = P[4 + i] + f1 * P[i]; } return H; }
+    /* the planets' kick: the full pull on each Jacobi coordinate less its Kepler part */
+    function pkick(P, H, dt) {
+      const x1 = H[0], y1 = H[1], x2 = H[4], y2 = H[5], dx = x2 - x1, dy = y2 - y1;
+      const r1 = Math.sqrt(x1 * x1 + y1 * y1), r2 = Math.sqrt(x2 * x2 + y2 * y2), r12 = Math.sqrt(dx * dx + dy * dy);
+      const q1 = GM / (r1 * r1 * r1), q2 = GM / (r2 * r2 * r2), q12 = GM / (r12 * r12 * r12);
+      const a0x = mJ * q1 * x1 + mS * q2 * x2, a0y = mJ * q1 * y1 + mS * q2 * y2;   /* the Sun, Jupiter, Saturn, in an inertial frame */
+      const a1x = -q1 * x1 + mS * q12 * dx, a1y = -q1 * y1 + mS * q12 * dy, a2x = -q2 * x2 - mJ * q12 * dx, a2y = -q2 * y2 - mJ * q12 * dy;
+      const rp = Math.sqrt(P[4] * P[4] + P[5] * P[5]), k1 = MU[0] / (r1 * r1 * r1), k2 = MU[1] / (rp * rp * rp);
+      P[2] += dt * (a1x - a0x + k1 * x1); P[3] += dt * (a1y - a0y + k1 * y1);
+      P[6] += dt * (a2x - (a0x + mJ * a1x) / e1 + k2 * P[4]); P[7] += dt * (a2y - (a0y + mJ * a1y) / e1 + k2 * P[5]);
+    }
+    /* energy and angular momentum of the Sun, Jupiter and Saturn (about their center of mass, in solar masses, AU and years) */
+    function energy(st) {
+      const P = st.P, H = helio(P, new Float64Array(8)); let E = 0, L = 0;
+      for (let k = 0; k < 2; k++) { const i = 4 * k; E += 0.5 * MP[k] * (P[i + 2] * P[i + 2] + P[i + 3] * P[i + 3]); L += MP[k] * (P[i] * P[i + 3] - P[i + 1] * P[i + 2]); }
+      E -= GM * (mJ / Math.hypot(H[0], H[1]) + mS / Math.hypot(H[4], H[5]) + mJ * mS / Math.hypot(H[4] - H[0], H[5] - H[1]));
+      return { E, L };
+    }
+    /* heliocentric elements of planet k (0 Jupiter, 1 Saturn) now: a, e, perihelion direction w and mean longitude lam (radians), x, y */
+    function pel(st, k) {
+      const H = helio(st.P, new Float64Array(8)), i = 4 * k, x = H[i], y = H[i + 1], vx = H[i + 2], vy = H[i + 3], mu = PL[k].mu;
+      const r = Math.sqrt(x * x + y * y), ia = 2 / r - (vx * vx + vy * vy) / mu, a = 1 / ia, h = x * vy - y * vx;
+      const ex = vy * h / mu - x / r, ey = -vx * h / mu - y / r, e = Math.sqrt(ex * ex + ey * ey), w = Math.atan2(ey, ex);
+      const E = Math.atan2((x * vx + y * vy) / Math.sqrt(mu * a), 1 - r * ia);
+      return { a, e, w, lam: w + E - e * Math.sin(E), x, y };
     }
     function rng(seed) { let x = seed % 2147483647; if (x <= 0) x += 2147483646; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
     /* a and e of body j (e from the angular momentum: e² = 1 − h²/(GM a)) */
@@ -414,24 +458,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let j = 0; j < n; j++) {
         const a = lo + (hi - lo) * (j + r()) / n; let e; do e = EMAX * r(); while (a * (1 - e) < QMIN);
         const w = 2 * Math.PI * r(), M = 2 * Math.PI * r();
-        let E = M; for (let i = 0; i < 30; i++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
-        const c = Math.cos(E), sE = Math.sin(E), b = Math.sqrt(1 - e * e), rr = a * (1 - e * c), v = Math.sqrt(GM * a) / rr;
-        const xp = a * (c - e), yp = a * b * sE, vxp = -v * sE, vyp = v * b * c, cw = Math.cos(w), sw = Math.sin(w);
-        s[4 * j] = xp * cw - yp * sw; s[4 * j + 1] = xp * sw + yp * cw; s[4 * j + 2] = vxp * cw - vyp * sw; s[4 * j + 3] = vxp * sw + vyp * cw;
-        a0[j] = a; e0[j] = e;
+        kep(a, e, w, M, GM, s, 4 * j); a0[j] = a; e0[j] = e;
       }
-      return { n, seed, dt: DT, t: 0, steps: 0, s, a0, e0, gone: new Uint8Array(n), tg: new Float64Array(n) };
+      const st = { n, seed, dt: DT, t: 0, steps: 0, s, a0, e0, gone: new Uint8Array(n), tg: new Float64Array(n), P: planets0() }, en = energy(st);
+      st.E0 = en.E; st.L0 = en.L; return st;
     }
     /* why a body went: 1 crossed Mars's orbit, 2 within Jupiter's Hill radius, 3 within Saturn's, 4 no longer on an ellipse */
     function step(st, k) {
       if (!(k > 0)) return;
-      const s = st.s, g = st.gone, n = st.n, dt = st.dt, P = new Float64Array(4), J = PL[0], Sa = PL[1];
-      for (let j = 0; j < n; j++) if (!g[j] && !drift(s, 4 * j, dt / 2)) { g[j] = 4; st.tg[j] = st.t; }
+      const s = st.s, g = st.gone, n = st.n, dt = st.dt, P = st.P, H = new Float64Array(8), J = PL[0], Sa = PL[1];
+      drift(P, 0, dt / 2, MU[0]); drift(P, 4, dt / 2, MU[1]);
+      for (let j = 0; j < n; j++) if (!g[j] && !drift(s, 4 * j, dt / 2, GM)) { g[j] = 4; st.tg[j] = st.t; }
       for (let m = 0; m < k; m++) {
-        const tm = st.t + dt / 2; where(J, tm, P, 0); where(Sa, tm, P, 2);
-        const jx = P[0], jy = P[1], sx = P[2], sy = P[3], rj = Math.sqrt(jx * jx + jy * jy), rs = Math.sqrt(sx * sx + sy * sy);
+        const tm = st.t + dt / 2; helio(P, H); pkick(P, H, dt);
+        const jx = H[0], jy = H[1], sx = H[4], sy = H[5], rj = Math.sqrt(jx * jx + jy * jy), rs = Math.sqrt(sx * sx + sy * sy);
         const ijx = jx / (rj * rj * rj), ijy = jy / (rj * rj * rj), isx = sx / (rs * rs * rs), isy = sy / (rs * rs * rs);
         const last = m === k - 1, chk = last || ((st.steps & 7) === 0), h = last ? dt / 2 : dt;
+        drift(P, 0, h, MU[0]); drift(P, 4, h, MU[1]);
         for (let j = 0; j < n; j++) {
           if (g[j]) continue; const i = 4 * j, X = s[i], Y = s[i + 1];
           let dx = X - jx, dy = Y - jy, d2 = dx * dx + dy * dy;
@@ -441,7 +484,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           if (d2 < Sa.h2) { g[j] = 3; st.tg[j] = tm; continue; }
           d3 = d2 * Math.sqrt(d2); ax -= Sa.k * (dx / d3 + isx); ay -= Sa.k * (dy / d3 + isy);
           s[i + 2] += dt * ax; s[i + 3] += dt * ay;
-          if (!drift(s, i, h)) { g[j] = 4; st.tg[j] = tm; continue; }
+          if (!drift(s, i, h, GM)) { g[j] = 4; st.tg[j] = tm; continue; }
           if (chk) { const [a, e] = ae(st, j); if (a * (1 - e) < MQ) { g[j] = 1; st.tg[j] = st.t + dt; } }
         }
         st.t += dt; st.steps++;
@@ -462,9 +505,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let j = 0; j < st.n; j++) { if (Math.abs(st.a0[j] - a0) < half) start++; if (!st.gone[j] && Math.abs(ae(st, j)[0] - a0) < half) now++; }
       return { now, start };
     }
-    return { DT, FROM, TO, EMAX, QMIN, make, step, ae, hist, inWindow };
+    return { DT, FROM, TO, EMAX, QMIN, make, step, ae, hist, inWindow, energy, pel };
   }
-  const KW_CONST = { GM, MARS_Q, J: PLANETS.jupiter, S: PLANETS.saturn };
+  /* DA: see above (the start of Jupiter and Saturn) */
+  const KW_CONST = { GM, MARS_Q, J: PLANETS.jupiter, S: PLANETS.saturn, DA: [0.00139, 0.00888] };
   const KW = kwCore(KW_CONST);
   // ==CORE END==
   if (typeof document === 'undefined') return;
@@ -504,7 +548,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     belt: { scene: 'belt', name: 'Whole belt', many: { from: 2.10, to: 3.45, step: 0.005, e: 0.15, seed: 2203 },
       hint: '271 asteroids, one every 0.005 AU from 2.10 to 3.45 AU, each with e = 0.15 and a random start angle. Below, each one is a dot at its starting distance, as high as the largest eccentricity it has reached; it turns into a cross when it crosses Mars\'s orbit. The tall spikes line up with the gaps in the real counts. The real gaps took millions of years to empty; the first steps show here within about 20,000 years.' },
     clear: { scene: 'belt', name: 'Clearing the gaps', many: { kw: true }, kw: true,
-      hint: 'Simulated: 1,500 asteroids (600 on a phone sized screen), spread evenly from 2.04 to 3.48 AU with eccentricities from 0 to 0.3, each pulled by the Sun, Jupiter and Saturn, computed step by step in the background. An asteroid counts as removed once its orbit is stretched until it crosses Mars\'s orbit (close passes by Mars, Earth or Venus, which this model leaves out, would then throw it out of the belt), or once it comes within Jupiter\'s or Saturn\'s reach. Below, over the real counts, the line counts the simulated asteroids still at each distance and the red bars show where the removed ones started. Within about 20,000 years the 3:1 resonance at 2.50 AU loses about a third of its asteroids and the 5:2 at 2.82 AU about a sixth. The rest, on rounder orbits, need millions of years and the slow changes in Jupiter\'s and Saturn\'s orbits, which this model leaves out (both planets keep fixed orbits), so the real gaps are emptier. The 2:1 gap at 3.28 AU does not open in a run this short: the line wobbles there because the asteroids caught in it rock in and out in distance, but few are removed. Beyond about 3.3 AU, closer to Jupiter, asteroids are lost too. The run stops at 100,000 years.' },
+      hint: 'Simulated: 1,500 asteroids (600 on a phone sized screen, so the counts there are rougher), spread evenly from 2.04 to 3.48 AU with eccentricities from 0 to 0.3, each pulled by the Sun, Jupiter and Saturn, computed step by step in the background. Jupiter and Saturn pull on each other too, so their orbits slowly turn and change shape: watch their eccentricities in the readouts. An asteroid counts as removed once its orbit is stretched until it crosses Mars\'s orbit (close passes by Mars, Earth or Venus, which this model leaves out, would then throw it out of the belt), or once it comes within Jupiter\'s or Saturn\'s reach. Below, over the real counts, the line counts the simulated asteroids still at each distance and the red bars show where the removed ones started. Within about 20,000 years the 3:1 resonance at 2.50 AU loses about two fifths of its asteroids and the 5:2 at 2.82 AU about a fifth; by 100,000 years the 3:1 has lost half. The inner edge, near 2.1 AU, starts to go too: there an asteroid\'s perihelion turns at nearly the same rate as Saturn\'s, and this slow (secular) resonance keeps stretching its orbit. In a longer computer run of the 1,500 asteroids, 80 of the 83 inside 2.12 AU are gone by 300,000 years and all 83 by 1,000,000; with the planets on fixed orbits only 2 were. A few asteroids elsewhere that start with their perihelia just outside Mars\'s orbit are lost as well. The 2:1 gap at 3.28 AU does not open in a run this short: the line wobbles there because the asteroids caught in it rock in and out in distance, but none are removed. Beyond about 3.3 AU, closer to Jupiter, asteroids are lost too. The real gaps took millions of years to empty, and the slower chaotic and secular effects that did most of it, above all at the 2:1, need far longer than this run. The run stops at 100,000 years.' },
     pluto: { scene: 'kuiper', name: 'Pluto', a: +pl.a.toFixed(3), e: +pl.e.toFixed(3), ph: Math.round(plutoPh), M: plutoM, pluto: true,
       hint: 'Pluto (from its J2000 orbit) goes round twice while Neptune goes round 3 times. Its orbit crosses inside Neptune\'s, but Neptune always passes it when Pluto is near aphelion, far away on the other side. In 100,000 years it never comes closer to Neptune than about 17 AU.' },
     plutoTurn: { scene: 'kuiper', name: 'Pluto\'s orbit, bad timing', a: +pl.a.toFixed(3), e: +pl.e.toFixed(3), ph: (Math.round(plutoPh) + 60) % 360, M: plutoM,
@@ -542,8 +586,8 @@ onmessage = (e) => { const d = e.data;
   if (d.cmd === 'load') { st = d.st; gen = d.gen; return; }
   if (d.cmd === 'go' && st && d.gen === gen) { const t0 = Date.now(), end = st.t + d.years;
     while (st.t < end - 1e-9 && Date.now() - t0 < d.ms) C.step(st, Math.max(1, Math.min(40, Math.round((end - st.t) / st.dt))));
-    const s = st.s.slice(), g = st.gone.slice(), tg = st.tg.slice();
-    postMessage({ gen, t: st.t, steps: st.steps, s, gone: g, tg }, [s.buffer, g.buffer, tg.buffer]); } };`;
+    const s = st.s.slice(), g = st.gone.slice(), tg = st.tg.slice(), P = st.P.slice();
+    postMessage({ gen, t: st.t, steps: st.steps, s, gone: g, tg, P }, [s.buffer, g.buffer, tg.buffer, P.buffer]); } };`;
       kwWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
       kwWorker.onmessage = kwGot; kwWorker.onerror = () => { kwWorker = false; kwBusy = false; };
     } catch (_) { kwWorker = false; }
@@ -551,21 +595,24 @@ onmessage = (e) => { const d = e.data;
   /* the demo's usual run object, filled from the simulated belt, so the picture, the time graph and the readouts work as for Whole belt */
   function kwBuild() {
     kwMode = true; many = true; kwWorkerMake();
-    const n = window.innerWidth < 700 ? 600 : 1500, pl = PLANETS.jupiter, m = 1 / pl.mr;
+    const n = window.innerWidth < 700 ? 600 : 1500, pl = Object.assign({}, PLANETS.jupiter), m = 1 / pl.mr;
     kwSt = KW.make(n, KW_SEED); kwGen++; kwBusy = false;
-    sys = { kw: true, key: 'jupiter', pl, m, mu: GM * (1 + m), GMp: GM * m, rHill: pl.a * Math.cbrt(m / 3), t: 0, dt: kwSt.dt, n, s: kwSt.s, bodies: [],
+    sys = { kw: true, key: 'jupiter', pl, pos: null, m, mu: GM * (1 + m), GMp: GM * m, rHill: pl.a * Math.cbrt(m / 3), t: 0, dt: kwSt.dt, n, s: kwSt.s, bodies: [],
       a0: kwSt.a0, e0: kwSt.e0, emax: kwSt.e0, emin: kwSt.e0, dmin: new Float64Array(n).fill(Infinity), gone: new Array(n).fill(null), rel: [], conj: [[]], steps: 0 };
     if (kwWorker) kwWorker.postMessage({ cmd: 'make', n, seed: KW_SEED, gen: kwGen });
+    kwPlanets();
   }
+  /* Jupiter as the integration has it now: its orbit for the picture (sys.pl, degrees as in PLANETS) and its place (sys.pos) */
+  function kwPlanets() { const J = KW.pel(kwSt, 0); Object.assign(sys.pl, { a: J.a, e: J.e, w: J.w / D2R }); sys.pos = [J.x, J.y]; }
   function kwSync() {
-    sys.t = kwSt.t; sys.s = kwSt.s; sys.steps = kwSt.steps;
+    sys.t = kwSt.t; sys.s = kwSt.s; sys.steps = kwSt.steps; kwPlanets();
     for (let j = 0; j < kwSt.n; j++) if (kwSt.gone[j] && !sys.gone[j]) sys.gone[j] = { why: KW_WHY[kwSt.gone[j]], t: kwSt.tg[j] };
     sample(false);
     if (sys.t >= KW_END - 1e-6) { setRun(false); msg = `The run stops at ${fint(KW_END)} years. The real gaps took millions of years to empty.`; }
   }
   function kwGot(e) {
     const d = e.data; kwBusy = false; if (!kwMode || d.gen !== kwGen) return;
-    Object.assign(kwSt, { t: d.t, steps: d.steps, s: d.s, gone: d.gone, tg: d.tg }); kwSync();
+    Object.assign(kwSt, { t: d.t, steps: d.steps, s: d.s, gone: d.gone, tg: d.tg, P: d.P }); kwSync();
   }
   /* one frame of the run: ask the worker for the years that have passed at the chosen speed, or step here for a few milliseconds */
   function kwTick(now) {
@@ -770,7 +817,7 @@ onmessage = (e) => { const d = e.data;
     }
     const Pp = planetAt(sys, sys.t), qp = P2(Pp[0], Pp[1]); dot(qp, (S.scene === 'belt' ? 8 : 6) * p, S.scene === 'belt' ? K.jup : K.nep); label(qp, sc.pname, S.scene === 'belt' ? K.jup : K.nep, 11, -11);
     if (kwMode) { /* Saturn is off the picture: a mark at the edge in its direction */
-      const Ps = stateAt(PLANETS.saturn, sys.t, GM * (1 + 1 / PLANETS.saturn.mr)), th = Math.atan2(Ps[1], Ps[0]), rr = sc.R * 0.93, qs = P2(rr * Math.cos(th), rr * Math.sin(th));
+      const Ps = KW.pel(kwSt, 1), th = Math.atan2(Ps.y, Ps.x), rr = sc.R * 0.93, qs = P2(rr * Math.cos(th), rr * Math.sin(th));
       dot(qs, 5 * p, K.sat); ctx.font = `${12 * p}px ${K.ui}`;
       const tw = ctx.measureText('Saturn this way (9.5 AU)').width, right = qs[0] > view.cx, out = right ? qs[0] + 9 * p + tw < W - 4 : qs[0] - 9 * p - tw > 4;   /* outside the belt when there is room */
       if (out) label(qs, 'Saturn this way (9.5 AU)', K.sat, right ? 9 : -9, 0, right ? 'left' : 'right');
@@ -910,7 +957,8 @@ onmessage = (e) => { const d = e.data;
       if (many) { const left = sys.gone.filter((g) => !g).length, mars = sys.gone.filter((g) => g && g.why === 'mars').length, pl2 = sys.gone.filter((g) => g && g.why === 'planet').length;
         h += dd('Still in play', `${left} of ${sys.n}`) + (sc.mars ? dd('Crossed Mars\'s orbit', String(mars)) : '') + dd(kwMode ? 'Came too close to Jupiter or Saturn' : `Scattered by ${sc.pname}`, String(pl2));
         if (kwMode && !S.blind) for (const [pp, qq] of [[3, 1], [5, 2], [2, 1]]) { const a = resonanceA(aJ, pp, qq), w = KW.inWindow(kwSt, a, 0.02);
-          h += dd(`Near ${pp}:${qq}, ${fx(a - 0.02, 2)} to ${fx(a + 0.02, 2)} AU`, `${w.now} of ${w.start} left`); } }
+          h += dd(`Near ${pp}:${qq}, ${fx(a - 0.02, 2)} to ${fx(a + 0.02, 2)} AU`, `${w.now} of ${w.start} left`); }
+        if (kwMode) h += dd('Jupiter\'s eccentricity now', fx(KW.pel(kwSt, 0).e, 4)) + dd('Saturn\'s eccentricity now', fx(KW.pel(kwSt, 1).e, 4)); }
       else {
         const g = sys.gone[0], el = g ? null : bodyEl(sys, 0), Pp = 2 * Math.PI * Math.pow(sys.pl.a, 1.5) / Math.sqrt(sys.mu);
         if (el) { h += dd('Distance a now', `${fx(el.a, S.scene === 'belt' ? 3 : 2)} AU`) + dd('Eccentricity e now', fx(el.e, 3));
@@ -1003,7 +1051,7 @@ onmessage = (e) => { const d = e.data;
     return { setup: setupName(), planet: sc.pname, a0_AU: fx(sys.a0[0], S.scene === 'belt' ? 3 : 2), e0: fx(sys.e0[0], 3), start_deg: String(S.ph), ratio: fx(S.scene === 'belt' ? Pp / P0 : P0 / Pp, 3),
       t_yr: String(Math.round(g ? g.t : sys.t)), emax: fx(sys.emax[0], 3), dmin_AU: fx(sys.dmin[0], 2), out_yr: g ? String(Math.round(g.t)) : 'no', out_why: g ? g.why : '' };
   };
-  $('about').textContent = `Model: the Sun, one planet on its fixed Kepler ellipse, and massless bodies, all in one plane, stepped with the Wisdom–Holman method (steps of ${SCENES.belt.dt} yr for the asteroid belt, ${SCENES.kuiper.dt} yr for the Kuiper belt). Planet orbits are the J2000 elements of Standish (JPL) and masses from the IAU 2009 constants. Left out: every other planet (above all Saturn, which the real 2:1 gap needs), the tilts of the orbits, collisions, and the Yarkovsky drift that feeds real asteroids into the resonances. A body is stopped when it crosses Mars's orbit (q < ${fx(MARS_Q, 3)} AU), since close passes by the inner planets then remove it, or when it comes within one Hill radius of the planet. The real gaps took millions of years to clear; the demo shows the first kicks. Clearing the gaps adds Saturn: many simulated asteroids pulled by the Sun, Jupiter and Saturn, both planets on their fixed J2000 ellipses (so the slow changes of their orbits are left out), steps of ${KW.DT} yr, run in the background (a Web Worker) up to ${fint(KW_END)} years; an asteroid counts as removed when its orbit crosses Mars's or it comes within Jupiter's or Saturn's Hill radius. Finding Neptune: Jupiter, Saturn, Uranus and Neptune pull on each other in a full model integrated back from 2000 to 1690 (Runge–Kutta, 0.05 yr); its Uranus is "seen" once a year from 1781 to 1845 and at seven older sightings (1690 to 1769), heliocentric longitudes with no measuring error. A model without Neptune, or with a planet X on a fixed ellipse, is fitted to them by least squares (Uranus's 1781 position and velocity).`;
+  $('about').textContent = `Model: the Sun, one planet on its fixed Kepler ellipse, and massless bodies, all in one plane, stepped with the Wisdom–Holman method (steps of ${SCENES.belt.dt} yr for the asteroid belt, ${SCENES.kuiper.dt} yr for the Kuiper belt). Planet orbits are the J2000 elements of Standish (JPL) and masses from the IAU 2009 constants. Left out: every other planet (above all Saturn, which the real 2:1 gap needs), the tilts of the orbits, collisions, and the Yarkovsky drift that feeds real asteroids into the resonances. A body is stopped when it crosses Mars's orbit (q < ${fx(MARS_Q, 3)} AU), since close passes by the inner planets then remove it, or when it comes within one Hill radius of the planet. The real gaps took millions of years to clear; the demo shows the first kicks. Clearing the gaps adds Saturn, and Jupiter and Saturn pull on each other: the Sun, Jupiter and Saturn are integrated together (Wisdom–Holman in Jacobi coordinates), started from the same J2000 elements with the semimajor axes raised by ${fx(KW_CONST.DA[0], 4)} and ${fx(KW_CONST.DA[1], 4)} AU so that their average periods are the observed ones (Simon et al. 1994). So the great inequality (the near 5:2 of Jupiter and Saturn, which makes both wobble along their orbits, every 940 years in this model) and the slow turning and stretching of their orbits (Jupiter's eccentricity from 0.026 to 0.060 and back every 53,000 years or so) come out of the run. Many simulated asteroids are pulled by the Sun, Jupiter and Saturn where the integration has them, steps of ${KW.DT} yr, run in the background (a Web Worker) up to ${fint(KW_END)} years; an asteroid counts as removed when its orbit crosses Mars's or it comes within Jupiter's or Saturn's Hill radius. Left out of it: Uranus and Neptune, Mars and the other inner planets as pulls, the tilts of the orbits, collisions and the Yarkovsky drift. Finding Neptune: Jupiter, Saturn, Uranus and Neptune pull on each other in a full model integrated back from 2000 to 1690 (Runge–Kutta, 0.05 yr); its Uranus is "seen" once a year from 1781 to 1845 and at seven older sightings (1690 to 1769), heliocentric longitudes with no measuring error. A model without Neptune, or with a planet X on a fixed ellipse, is fitted to them by least squares (Uranus's 1781 position and velocity).`;
   $('dataNote').textContent = `Asteroid belt: numbered asteroids (${fint(BELT_HIST.total)} with a from 1.80 to 4.10 AU) counted in bins of 0.02 AU with the JPL Small Body Database Query API on ${BELT_HIST.date}. Kuiper belt: every object in the same database with a from 30 to 56 AU, numbered or not (${fint(KB_HIST.total)}), in bins of 0.5 AU. The counts are of objects found so far: small, faint ones far from the Sun are missing, which is why the far Kuiper belt looks thin, but the gaps and piles do not depend on that.`;
 
   /* ---------- run, size, theme ---------- */
@@ -1044,7 +1092,9 @@ onmessage = (e) => { const d = e.data;
   tokens();
   const qs = new URLSearchParams(location.search), q0 = qs.get('setup');
   applyPreset(PRESETS[q0] ? q0 : 'r31'); showCols();
-  const ro = new ResizeObserver(resize); [$('scene'), hc.parentElement, pc.parentElement].forEach((el) => ro.observe(el)); resize();
+  /* the Set up card sits just below the strip, which wraps to two rows when its text is long (Spanish, a long clock) */
+  function placeCard() { const c = $('setupCard'); if (getComputedStyle(c).position !== 'absolute') { c.style.top = ''; return; } const t = Math.max(58, $('strip').offsetTop + $('strip').offsetHeight + 8) + 'px'; if (c.style.top !== t) c.style.top = t; }
+  const ro = new ResizeObserver(() => { placeCard(); resize(); }); [$('scene'), $('strip'), hc.parentElement, pc.parentElement].forEach((el) => ro.observe(el)); placeCard(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.scene === 'neptune' ? null : sys.t), timeUnit: 'yr' });

@@ -1,6 +1,7 @@
 'use strict';
 // Orbital Resonances: the Kepler drift, the resonance distances, the 3:1 asteroid crossing Mars's orbit, Pluto kept from Neptune,
-// the real counts, and the Finding Neptune fits (Uranus alone, Le Verrier's planet, the real Neptune).
+// the real counts, the Finding Neptune fits (Uranus alone, Le Verrier's planet, the real Neptune), and Clearing the gaps (the worker
+// text, the 3:1 and the inner edge emptying, and Jupiter and Saturn integrated together: conservation, great inequality, secular changes).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
 const c = core('resonances', 'kwCore,KW_CONST,GM,D2R,ME_SUN,PLANETS,MARS_Q,kepState,stateAt,elements,drift,resonanceA,makeSystem,stepSystem,neptuneTruth,fitUranus,planetX,LEVERRIER,BELT_HIST,KB_HIST');
@@ -106,14 +107,71 @@ group('Clearing the gaps: the worker text builds and steps exactly as the page d
 group('Clearing the gaps: Jupiter and Saturn empty the 3:1 within 25,000 years and leave its neighbors (seed 2203)', () => {
   const A = kwFrom(), st = A.make(300, 2203, { from: 2.40, to: 2.60 }), a31 = c.resonanceA(c.PLANETS.jupiter.a, 3, 1);
   while (st.t < 25000) A.step(st, 400);
-  const w = A.inWindow(st, a31, 0.02); let near = 0, far = 0, sideS = 0, sideN = 0;
+  /* measured: 39 of 60 left in the window, 22 removed within 0.04 AU of the 3:1, the other 15 all started with perihelia inside
+     1.95 AU (little room to spare as the planets' orbits change), and all 117 rounder neighbors kept */
+  const w = A.inWindow(st, a31, 0.02); let near = 0, farRound = 0, sideS = 0, sideN = 0;
   for (let j = 0; j < st.n; j++) {
-    if (st.gone[j]) { assert.strictEqual(st.gone[j], 1, 'removed by crossing Mars\'s orbit'); if (Math.abs(st.a0[j] - a31) < 0.04) near++; else far++; }
-    if (Math.abs(st.a0[j] - a31) > 0.05) { sideS++; if (!st.gone[j]) sideN++; }
+    const round = st.a0[j] * (1 - st.e0[j]) >= 1.95;
+    if (st.gone[j]) { assert.strictEqual(st.gone[j], 1, 'removed by crossing Mars\'s orbit'); if (Math.abs(st.a0[j] - a31) < 0.04) near++; else if (round) farRound++; }
+    if (Math.abs(st.a0[j] - a31) > 0.05 && round) { sideS++; if (!st.gone[j]) sideN++; }
   }
   assert(w.now <= 0.7 * w.start, `3:1 window ${w.now} of ${w.start}`);
-  assert(near >= 15 && near >= 4 * far, `removed near the 3:1 ${near}, elsewhere ${far}`);
+  assert(near >= 18, `removed near the 3:1 ${near}`); assert(farRound === 0, `rounder orbits removed away from the 3:1: ${farRound}`);
   assert(sideN >= 0.97 * sideS, `neighbors kept ${sideN} of ${sideS}`);
+});
+
+group('Clearing the gaps: the turning planet orbits sweep the inner edge of the belt (seed 2203)', () => {
+  /* 40 asteroids from 2.04 to 2.10 AU, where an asteroid's perihelion turns at about Saturn's rate (the nu6 secular resonance):
+     measured 1, 10, 20 and 34 removed by 50,000, 100,000, 150,000 and 200,000 years (none with the planets on fixed ellipses) */
+  const A = kwFrom(), st = A.make(40, 2203, { from: 2.04, to: 2.10 });
+  while (st.t < 200000) A.step(st, 400);
+  let out = 0; for (let j = 0; j < st.n; j++) if (st.gone[j]) { out++; assert.strictEqual(st.gone[j], 1, 'by crossing Mars\'s orbit'); }
+  assert(out >= 30, `inner edge removed ${out} of 40`);
+});
+
+/* the planet system alone (no asteroids), sampled every 2 years */
+function planetRun(A, T, dt) {
+  const st = A.make(0, 1); if (dt) st.dt = dt; const D = 180 / Math.PI, t = [], lam = [[], []], w = [[], []], e = [[], []]; let dE = 0, dL = 0;
+  const unwrap = (arr, v) => { if (arr.length) { const p = arr[arr.length - 1]; v = p + (((v - p + Math.PI) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; } arr.push(v); };
+  while (st.t < T - 1e-9) {
+    A.step(st, 8); const en = A.energy(st); dE = Math.max(dE, Math.abs(en.E / st.E0 - 1)); dL = Math.max(dL, Math.abs(en.L / st.L0 - 1)); t.push(st.t);
+    for (const k of [0, 1]) { const p = A.pel(st, k); unwrap(lam[k], p.lam); unwrap(w[k], p.w); e[k].push(p.e); }
+  }
+  /* least squares line through y up to time lim (slope in degrees a year), and the strongest sine wave left after taking the line away
+     with a period from P0 to P1 (its amplitude in the units of y) */
+  const fit = (y, lim) => { let n = 0, s1 = 0, sy = 0, s2 = 0, sty = 0; for (let i = 0; i < t.length && t[i] <= lim; i++) { n++; s1 += t[i]; sy += y[i]; s2 += t[i] * t[i]; sty += t[i] * y[i]; }
+    const b = (n * sty - s1 * sy) / (n * s2 - s1 * s1); return { b: b * D, c: (sy - b * s1) / n, n }; };
+  const wobble = (y, lim, P0, P1) => { const f = fit(y, lim), r = []; for (let i = 0; i < f.n; i++) r.push(y[i] - f.c - f.b / D * t[i]);
+    let best = { P: 0, A: 0 };
+    for (let P = P0; P <= P1; P *= 1.002) { const om = 2 * Math.PI / P; let cc = 0, ss = 0, c2 = 0, s2 = 0; for (let i = 0; i < f.n; i++) { const C = Math.cos(om * t[i]), S = Math.sin(om * t[i]); cc += r[i] * C; ss += r[i] * S; c2 += C * C; s2 += S * S; }
+      const amp = Math.hypot(cc / c2, ss / s2); if (amp > best.A) best = { P, A: amp }; }
+    return best; };
+  return { t, lam, w, e, dE, dL, fit, wobble };
+}
+group('Clearing the gaps: Jupiter and Saturn pull on each other: energy and angular momentum kept, the great inequality, the turning perihelia', () => {
+  const A = kwFrom(), R = planetRun(A, 300000), D = 180 / Math.PI;
+  /* Wisdom–Holman keeps the energy error bounded (measured 4.2e-7 over 300,000 years) and the angular momentum to rounding */
+  assert(R.dE < 1e-6, `energy ${R.dE}`); assert(R.dL < 1e-11, `angular momentum ${R.dL}`);
+  /* mean motions over the first 20,000 years: the long term ones of Simon et al. 1994 (30.34906 and 12.22114 degrees a year) */
+  const nJ = R.fit(R.lam[0], 20000).b, nS = R.fit(R.lam[1], 20000).b;
+  abs(nJ, 30.34906, 3e-4, 'Jupiter mean motion'); abs(nS, 12.22114, 3e-4, 'Saturn mean motion');
+  /* the great inequality: 5 lambda_S - 2 lambda_J goes round once in 883 years (measured 883.4 and 887.4 over 20,000 and 100,000
+     years); the wobble it causes in both longitudes peaks at 942 years, the period of 5 lambda_S - 2 lambda_J - 3 varpi_S, which
+     the turning perihelia lengthen. Amplitudes over 100,000 years: Jupiter 21.3', Saturn 52.4'. */
+  abs(360 / (5 * nS - 2 * nJ), 883, 10, 'great inequality period from the mean motions');
+  const phi = R.lam[1].map((v, i) => 5 * v - 2 * R.lam[0][i]); abs(360 / R.fit(phi, 100000).b, 887, 10, '5 lambda_S - 2 lambda_J');
+  const wJ = R.wobble(R.lam[0], 100000, 600, 1500), wS = R.wobble(R.lam[1], 100000, 600, 1500);
+  abs(wJ.P, 942, 15, 'Jupiter wobble period'); abs(wS.P, 942, 15, 'Saturn wobble period');
+  abs(wJ.A * D * 60, 21.3, 1.5, 'Jupiter wobble, arcminutes'); abs(wS.A * D * 60, 52.4, 3, 'Saturn wobble, arcminutes');
+  /* the perihelia turn (300,000 years; the real g5 and g6 are 4.26 and 28.25 arcseconds a year) and Jupiter's e swings from
+     0.026 to 0.060 and back every 53,450 years (the real one about every 54,000) */
+  abs(R.fit(R.w[0], 300000).b * 3600, 4.07, 0.15, 'Jupiter perihelion, arcsec a year'); abs(R.fit(R.w[1], 300000).b * 3600, 28.38, 0.3, 'Saturn perihelion, arcsec a year');
+  let lo = 1, hi = 0; for (let i = 0; i < R.t.length && R.t[i] <= 120000; i++) { lo = Math.min(lo, R.e[0][i]); hi = Math.max(hi, R.e[0][i]); }
+  abs(lo, 0.0258, 0.001, 'Jupiter e, lowest'); abs(hi, 0.0600, 0.001, 'Jupiter e, highest');
+  abs(R.wobble(R.e[0], 300000, 20000, 100000).P, 53450, 1500, 'Jupiter e period');
+  /* halving the step changes the great inequality period by less than a year (measured 0.3 yr) */
+  const H = planetRun(A, 20000, 0.125), gi = (Q) => 360 / (5 * Q.fit(Q.lam[1], 20000).b - 2 * Q.fit(Q.lam[0], 20000).b);
+  abs(gi(H), gi(R), 1, 'great inequality with half the step');
 });
 
 console.log(`${n} groups pass`);
