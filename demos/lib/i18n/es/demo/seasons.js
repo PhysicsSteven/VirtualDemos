@@ -38,6 +38,10 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} nov",
 "day {#}":
   "día {#}",
+"Sun overhead at {#}° S":
+  "Sol en el cenit a {#}° S",
+"Day at {#}° N: {#} h {#} m":
+  "Día a {#}° N: {#} h {#} min",
 "Equator":
   "Ecuador",
 "Tropic":
@@ -401,7 +405,7 @@ VDI18N.add('es', 'demo/seasons', {
 "Arctic summer at {#}° N near the June solstice. The Sun never sets, so the day is {#} hours long, yet the noon Sun is still low. Long days make up for the low Sun.":
   "Verano ártico a {#}° N cerca del solsticio de junio. El Sol nunca se pone, así que el día dura {#} horas, y aun así el Sol del mediodía está bajo. Los días largos compensan el Sol bajo.",
 "{#} h {#} m <small>polar day</small>":
-  "{#} h {#} m <small>día polar</small>",
+  "{#} h {#} min <small>día polar</small>",
 "Jul {#} · day {#}":
   "{#} jul · día {#}",
 "On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
@@ -409,5 +413,39 @@ VDI18N.add('es', 'demo/seasons', {
 "Dec {#}":
   "{#} dic",
 "(very far away)":
-  "(muy lejos)"
+  "(muy lejos)",
+"Jun {#}":
+  "{#} jun",
+"Sun overhead at {#}° N":
+  "Sol en el cenit a {#}° N",
+"Daily mean insolation (W/m²) at {#}° N":
+  "Insolación media diaria (W/m²) a {#}° N",
+"Day at {#}° S: {#} h {#} m":
+  "Día a {#}° S: {#} h {#} min",
+"you {#}° S":
+  "tú {#}° S",
+"SKY FROM {#}° S":
+  "EL CIELO DESDE {#}° S",
+"Daily mean insolation (W/m²) at {#}° S":
+  "Insolación media diaria (W/m²) a {#}° S",
+"Day at {#}°: {#} h {#} m":
+  "Día a {#}°: {#} h {#} min",
+"you {#}°":
+  "tú {#}°",
+"SKY FROM {#}°":
+  "EL CIELO DESDE {#}°",
+"Daily mean insolation (W/m²) at {#}°":
+  "Insolación media diaria (W/m²) a {#}°",
+"Mar {#}":
+  "{#} mar",
+"Sun overhead at {#}°":
+  "Sol en el cenit a {#}°",
+"The Sun never sets today":
+  "Hoy el Sol no se pone",
+"The Sun never rises today":
+  "Hoy el Sol no sale",
+"{#} h {#} m <small>polar night</small>":
+  "{#} h {#} min <small>noche polar</small>",
+"time {#} h ({#} days)":
+  "tiempo {#} h ({#} días)"
 });

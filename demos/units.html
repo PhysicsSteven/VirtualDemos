@@ -76,6 +76,30 @@ table.grid th { color: var(--muted); font-weight: 700; }
 .fwrap > .fermi { flex: 1 1 400px; }
 .fwrap > .fermi input[type="number"] { width: 7.5em; }
 #pFermi canvas#fCan { position: static; inset: auto; display: block; flex: 1 1 300px; min-width: 0; max-width: 640px; height: 0; }
+#pConvert canvas#cCan, #pDims canvas#dCan { position: static; inset: auto; display: block; flex: none; width: 100%; max-width: 760px; height: 0; }
+.chain .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.35; margin: 0 0.25em; }
+.chain .frac > span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 0.3em; }
+.chain .frac > span:last-child { padding: 0 0.3em; }
+.chain .u.x { text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--hl); color: var(--muted); }
+.chain .u.keep { color: var(--ok); font-weight: 700; }
+.chain .cnote { font-family: var(--font-ui); font-size: 0.85rem; color: var(--muted); margin-left: 0.6em; }
+.digits { display: flex; flex-direction: column; gap: 5px; font-family: var(--font-mono); overflow-x: auto; padding-bottom: 2px; }
+.digits .drow { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; }
+.digits .dcells { display: flex; align-items: center; flex: none; }
+.digits .dlab { width: 2.2em; flex: none; text-align: center; color: var(--muted); }
+.digits .dc { box-sizing: border-box; width: 1.4em; height: 1.85em; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 2px; font-size: 1.05rem; }
+.digits .dc.pt { width: 0.7em; }
+.digits .dc.sig { background: color-mix(in srgb, var(--tick) 24%, transparent); color: var(--ink); font-weight: 700; }
+.digits .dc.lead, .digits .dc.ph { color: var(--muted); }
+.digits .dc.ph { text-decoration: underline dotted; }
+.digits .dc.amb { border: 1.5px dashed var(--hl); color: var(--hl); }
+.digits .dc.drop { color: var(--muted); text-decoration: line-through; opacity: 0.75; }
+.digits .dc.cut { border-right: 2.5px solid var(--ok); border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.digits .dnote { margin-left: 10px; font-family: var(--font-ui); font-size: 0.82rem; color: var(--muted); }
+.digits .dnote.least { color: var(--hl); font-weight: 700; }
+.digits .dleg { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-ui); font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+.digits .dleg .k { display: inline-flex; align-items: center; gap: 5px; }
+.digits .dleg .dc { width: 1.2em; height: 1.4em; font-size: 0.85rem; margin: 0; }
 .fermi { display: grid; grid-template-columns: 1fr max-content; gap: 6px 12px; align-items: center; max-width: 620px; }
 @media (max-width: 820px) { .tabs button { min-height: 36px; } .panel { position: static; } .stage.tools { height: auto; min-height: 0; max-height: none; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
@@ -116,6 +140,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
         <div class="row"><span class="lab">Quantity</span><div class="seg" role="group" aria-label="Quantity" id="cKind"></div></div>
         <div class="chain" id="cChain"></div>
         <div class="big" id="cOut"></div>
+        <canvas id="cCan" role="img" aria-label="The same amount drawn as one bar, measured in the first unit along the top and in the second unit along the bottom, with one of each unit drawn to the same scale above it. A bigger unit fits fewer times, so its number is smaller."></canvas>
       </div>
       <div class="panel" id="pDims" hidden>
         <h3>Find a formula from its dimensions</h3>
@@ -123,6 +148,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
         <div class="row"><span class="lab">Question</span><div class="seg" role="group" aria-label="Question" id="dQ"></div></div>
         <p id="dText"></p>
         <div class="exps" id="dExps"></div>
+        <canvas id="dCan" role="img" aria-label="The dimensions of your guess, one row each for mass M, length L and time T: each quantity's power adds an arrow, colored by quantity, and the dot where the arrows end is your guess. The open diamond is what the answer needs; a row turns green when the two meet."></canvas>
         <div class="row"><button type="button" class="btn" id="dSolve">Show the answer</button></div>
         <div class="chain" id="dOut"></div>
       </div>
@@ -131,6 +157,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
         <p>Multiplying or dividing: keep as many significant figures as the least precise factor. Adding or subtracting: keep as many decimal places as the least precise term.</p>
         <div class="row"><input type="text" id="sA" value="12.07" aria-label="First measurement"><select id="sOp" aria-label="Operation"><option value="*">×</option><option value="/">÷</option><option value="+">+</option><option value="-">−</option></select><input type="text" id="sB" value="0.0350" aria-label="Second measurement"></div>
         <table class="grid" id="sTbl"></table>
+        <div class="digits" id="sDig" aria-live="polite"></div>
         <div class="big" id="sOut"></div>
       </div>
       <div class="panel" id="pFermi" hidden>
@@ -404,8 +431,60 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const v = parseFloat($('cVal').value.replace('−', '-')), U = UNITS[S.kind], si = Object.keys(U).find((u) => U[u] === 1);
     const fac = (u) => (U[u] === 1 ? '' : U[u] >= 1 ? `(${sci(U[u], 10)} ${si} / 1 ${u})` : `(1 ${si} / ${sci(1 / U[u], 10)} ${u})`);
     const parts = [`${isFinite(v) ? v : '?'} ${S.from}`]; if (S.from !== si) parts.push(`× (${sci(U[S.from], 10)} ${si} / 1 ${S.from})`); if (S.to !== si) parts.push(`× (1 ${S.to} / ${sci(U[S.to], 10)} ${si})`);
-    $('cChain').textContent = parts.join('  ') + (S.kind === 'energy' && (S.from === 'BTU' || S.to === 'BTU') ? '   (BTU: the international table value)' : '') + (S.kind === 'time' && (S.from === 'year' || S.to === 'year') ? '   (year: Julian, 365.25 days)' : '') + (S.kind === 'energy' && (S.from === 'eV' || S.to === 'eV') ? '   (eV: exact since 2019)' : '');
+    /* the chain as fractions: each unit that appears on top and on the bottom is struck through, and the unit left over is the answer's */
+    const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'), tr = (u) => (window.VDI18N && VDI18N.t ? VDI18N.t(u) : u), U1 = (u, c) => `<span class="u${c ? ' ' + c : ''}">${esc(tr(u))}</span>`;
+    const fr = (top, bot) => `<span class="frac"><span>${top}</span><span>${bot}</span></span>`;
+    const sameEnds = S.from === S.to && S.from === si;
+    let html = `${isFinite(v) ? esc(v) : '?'} ${U1(S.from, sameEnds ? 'keep' : 'x')}`;
+    if (S.from !== si) html += ` × ${fr(`${sci(U[S.from], 10)} ${U1(si, S.to !== si ? 'x' : 'keep')}`, `1 ${U1(S.from, 'x')}`)}`;
+    if (S.to !== si) html += ` × ${fr(`1 ${U1(S.to, 'keep')}`, `${sci(U[S.to], 10)} ${U1(si, 'x')}`)}`;
+    else if (S.from === si && !sameEnds) html = html.replace('class="u x"', 'class="u keep"');
+    const cnote = ((S.kind === 'energy' && (S.from === 'BTU' || S.to === 'BTU') ? '   (BTU: the international table value)' : '') + (S.kind === 'time' && (S.from === 'year' || S.to === 'year') ? '   (year: Julian, 365.25 days)' : '') + (S.kind === 'energy' && (S.from === 'eV' || S.to === 'eV') ? '   (eV: exact since 2019)' : '')).trim();
+    $('cChain').innerHTML = `<span data-i18n-skip>${html}</span>` + (cnote ? `<span class="cnote">${esc(cnote)}</span>` : '');
     $('cOut').textContent = S.blind ? '= ? (hidden in Blind)' : isFinite(v) ? `= ${sci(convert(v, S.kind, S.from, S.to), 6)} ${S.to}` : 'Enter a number.';
+    drawConv(v);
+  }
+  /* a caption under a canvas, translated whole and then wrapped to the width, drawn as it is; returns the lines it took */
+  function caption(g, t, x, y, mw, lh, dry) {
+    const tt = window.VDI18N ? VDI18N.t(t) : t, lines = []; let line = '';
+    for (const wd of tt.split(' ')) { const tr = line ? line + ' ' + wd : wd; if (g.measureText(tr).width > mw && line) { lines.push(line); line = wd; } else line = tr; } if (line) lines.push(line);
+    const put = () => lines.forEach((l, i) => g.fillText(l, x, y + i * lh));
+    if (!dry) { if (window.VDI18N && VDI18N.raw) VDI18N.raw(put); else put(); } return lines.length;
+  }
+  const niceStep = (x) => { const e = 10 ** Math.floor(Math.log10(x)), m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; };
+  const tickTxt = (x) => sci(+x.toPrecision(6), 4);
+  /* one amount, two rulers: a bar as long as the amount, with the first unit counted along its top and the second along its bottom,
+     and one of each unit drawn above it to the same scale as each other */
+  function drawConv(v) {
+    const c = $('cCan'); if (!c || S.tab !== 'convert' || !T) return;
+    const U = UNITS[S.kind], a = U[S.from], b = U[S.to], q = Math.abs(v);
+    if (!isFinite(q) || q === 0) { c.style.height = '0px'; return; }
+    const p = ps(), w = Math.min(c.clientWidth || 600, 760), dpr = window.devicePixelRatio || 1, CAP = 'Same amount, two rulers: a bigger unit fits fewer times, so its number is smaller.';
+    const g0 = c.getContext('2d'); g0.font = `${11 * p}px ${T.ui}`; const nl = caption(g0, CAP, 0, 0, w - 24 * p, 14 * p, true), h = 196 * p + nl * 14 * p;
+    c.style.height = h + 'px'; c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    const cA = T.tick, cB = T.hl, x0 = 12 * p, x1 = w - 12 * p, L = x1 - x0;
+    // one of each unit, to the same scale as each other
+    g.font = `${11 * p}px ${T.ui}`; g.textBaseline = 'middle'; g.textAlign = 'left'; g.fillStyle = T.muted; g.fillText('One of each unit, to the same scale:', x0, 12 * p);
+    const big = Math.max(a, b), Lb = Math.min(L * 0.55, 340 * p);
+    [[S.from, a, cA, 32 * p], [S.to, b, cB, 52 * p]].forEach(([u, val, col, y]) => {
+      const len = Lb * val / big; g.fillStyle = col; g.globalAlpha = 0.85; g.fillRect(x0, y - 6 * p, Math.max(2 * p, len), 12 * p); g.globalAlpha = 1;
+      g.fillStyle = col; g.font = `600 ${12 * p}px ${T.mono}`; g.textAlign = 'left';
+      let tx = x0 + Math.max(2 * p, len) + 8 * p; g.fillText(`1 ${u}`, tx, y);
+      if (len < 2 * p) { tx += g.measureText(`1 ${u}`).width + 10 * p; g.fillStyle = T.muted; g.fillText(`× ${sci(big / val, 3)}`, tx, y); tx += g.measureText(`× ${sci(big / val, 3)}`).width + 6 * p; g.fillText(`= 1 ${val === a ? S.to : S.from}`, tx, y); }
+    });
+    // the bar and its two rulers
+    const yb = 128 * p, bh = 22 * p; g.fillStyle = T.ink; g.globalAlpha = 0.1; g.fillRect(x0, yb - bh / 2, L, bh); g.globalAlpha = 1; g.strokeStyle = T.ink; g.lineWidth = 1.2 * p; g.strokeRect(x0, yb - bh / 2, L, bh);
+    const ruler = (n, unit, col, side, hide) => {
+      const per = L / n, st = niceStep(Math.max(n / Math.max(2, Math.floor(L / (70 * p))), 1e-300)), y = yb + side * bh / 2;
+      g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 1 * p;
+      if (per >= 5 * p && n <= 400) { g.globalAlpha = 0.45; for (let i = 1; i < n; i++) { const x = x0 + i * per; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - side * 6 * p); g.stroke(); } g.globalAlpha = 1; }   // every single unit, where they can be told apart
+      g.font = `${10.5 * p}px ${T.mono}`; g.textAlign = 'center'; g.textBaseline = side < 0 ? 'bottom' : 'top';
+      for (let i = 0; i * st <= n * (1 + 1e-9); i++) { const x = x0 + i * st * per; g.beginPath(); g.moveTo(x, y + side * 1 * p); g.lineTo(x, y + side * 9 * p); g.stroke(); if (!hide && x < x1 - 40 * p) g.fillText(tickTxt(i * st), x, y + side * 11 * p); }
+      g.font = `700 ${12 * p}px ${T.mono}`; g.textAlign = 'right'; g.fillText(hide ? `? ${unit}` : `${tickTxt(n)} ${unit}`, x1, y + side * 26 * p);
+    };
+    ruler(q, S.from, cA, -1, false); ruler(q * a / b, S.to, cB, 1, S.blind);
+    g.font = `${11 * p}px ${T.ui}`; g.fillStyle = T.muted; g.textAlign = 'left'; g.textBaseline = 'top';
+    caption(g, CAP, x0, 190 * p, w - 24 * p, 14 * p);
   }
   // ----- dims -----
   function dimStr(d) { const n = ['M', 'L', 'T'], s = d.map((e, i) => (Math.abs(e) < 1e-9 ? '' : `${n[i]}${Math.abs(e - 1) < 1e-9 ? '' : sup(+e.toFixed(2))}`)).filter(Boolean).join(' '); return s || '1 (dimensionless)'; }
@@ -421,10 +500,45 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   $('dSolve').addEventListener('click', () => { $('dOut').dataset.shown = '1'; render(); });
   function renderDims() {
     const Q = QUESTIONS[S.q], d = dimsOf(Q.vars, S.ex), match = d.every((x, i) => Math.abs(x - Q.target[i]) < 1e-9);
-    let h = `Your guess: ${Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}${sup(S.ex[j])}`).join(' ')} has dimensions ${S.blind ? '?' : dimStr(d)}. The answer needs ${dimStr(Q.target)}.`;
-    if (!S.blind) h += match ? ' <span class="ok">They match.</span>' : ' <span class="bad">Not yet.</span>';
-    if ($('dOut').dataset.shown) { const ex = solveDims(Q.vars, Q.target); h += `<br>Powers: ${Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}: ${String(ex[j]).replace('-', '−')}`).join(', ')}. ${Q.ans}`; }
+    /* the symbols and powers sit in spans the translation leaves alone, so each sentence is one key whatever the powers are */
+    const sk = (t) => `<span data-i18n-skip>${t}</span>`, dimH = (x) => { const t = dimStr(x); return t === '1 (dimensionless)' ? t : sk(t); };
+    let h = `<div>Your guess: ${sk(Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}${sup(S.ex[j])}`).join(' '))}</div><div>Its dimensions: ${S.blind ? '?' : dimH(d)}</div><div>The answer needs: ${dimH(Q.target)}</div>`;
+    if (!S.blind) h += match ? '<div class="ok">They match.</div>' : '<div class="bad">Not yet.</div>';
+    if ($('dOut').dataset.shown) { const ex = solveDims(Q.vars, Q.target); h += `<div>Powers: ${sk(Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}: ${String(ex[j]).replace('-', '−')}`).join(', '))}</div><div>${Q.ans}</div>`; }
     $('dOut').innerHTML = h;
+    drawDims(Q, d);
+  }
+  /* the dimension balance: for each of M, L and T, an arrow for each quantity's share of your guess (its power times its own
+     dimension), laid end to end from 0; the dot is your guess and the open diamond is what the answer needs */
+  const VCOL = ['#3b82f6', '#e0811e', '#a557e8'];
+  function drawDims(Q, d) {
+    const c = $('dCan'); if (!c || S.tab !== 'dims' || !T) return;
+    const p = ps(), w = Math.min(c.clientWidth || 600, 760), rh = 58 * p, top = 6 * p, dpr = window.devicePixelRatio || 1;
+    const CAP = S.blind ? 'Open diamond: what the answer needs. Your guess is hidden in Blind.' : 'Arrows: each power\'s share. Dot: your guess. Open diamond: what the answer needs.';
+    const g0 = c.getContext('2d'); g0.font = `${11 * p}px ${T.ui}`; const nl = caption(g0, CAP, 0, 0, w - 16 * p, 14 * p, true), h = top + 3 * rh + 10 * p + nl * 14 * p;
+    c.style.height = h + 'px'; c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    let lo = -2, hi = 2; for (let i = 0; i < 3; i++) { let cur = 0; lo = Math.min(lo, Q.target[i]); hi = Math.max(hi, Q.target[i]); Q.vars.forEach((v, j) => { cur += S.ex[j] * DIM[v][i]; lo = Math.min(lo, cur); hi = Math.max(hi, cur); }); }
+    lo = Math.floor(lo); hi = Math.ceil(hi);
+    const lw = Math.min(110 * p, w * 0.26), X = (e) => lw + 10 * p + (w - lw - 24 * p) * (e - lo) / (hi - lo), names = ['M (mass)', 'L (length)', 'T (time)'];
+    for (let i = 0; i < 3; i++) {
+      const y = top + rh * i + rh * 0.7, match = Math.abs(d[i] - Q.target[i]) < 1e-9;
+      g.font = `600 ${12 * p}px ${T.ui}`; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillStyle = !S.blind && match ? T.ok : T.ink; g.fillText(names[i], lw, y);
+      g.strokeStyle = T.line; g.lineWidth = 1 * p; g.beginPath(); g.moveTo(X(lo), y); g.lineTo(X(hi), y); g.stroke();
+      g.font = `${10 * p}px ${T.mono}`; g.textAlign = 'center'; g.textBaseline = 'top';
+      for (let e = lo; e <= hi; e += 0.5) { const x = X(e), whole = Number.isInteger(e); g.strokeStyle = e === 0 ? T.muted : T.line; g.lineWidth = (e === 0 ? 1.6 : 1) * p; g.beginPath(); g.moveTo(x, y - (whole ? 5 : 3) * p); g.lineTo(x, y + (whole ? 5 : 3) * p); g.stroke(); if (whole) { g.fillStyle = T.muted; g.fillText(String(e).replace('-', '−'), x, y + 9 * p); } }
+      // what the answer needs
+      const xt = X(Q.target[i]); g.strokeStyle = T.ink; g.lineWidth = 1.6 * p; g.beginPath(); g.moveTo(xt, y - 7 * p); g.lineTo(xt + 7 * p, y); g.lineTo(xt, y + 7 * p); g.lineTo(xt - 7 * p, y); g.closePath(); g.stroke();
+      if (S.blind) continue;
+      let cur = 0, k = 0;
+      Q.vars.forEach((v, j) => { const share = S.ex[j] * DIM[v][i]; if (Math.abs(share) < 1e-9) return; const xa = X(cur), xb = X(cur + share), ya = y - (11 + 13 * (k % 3)) * p;
+        g.strokeStyle = VCOL[j % 3]; g.fillStyle = VCOL[j % 3]; g.lineWidth = 2.4 * p; g.beginPath(); g.moveTo(xa, ya); g.lineTo(xb, ya); g.stroke();
+        const sd = Math.sign(share); g.beginPath(); g.moveTo(xb, ya); g.lineTo(xb - sd * 6 * p, ya - 4 * p); g.lineTo(xb - sd * 6 * p, ya + 4 * p); g.closePath(); g.fill();
+        g.font = `600 ${10 * p}px ${T.mono}`; g.textAlign = 'left'; g.textBaseline = 'middle'; g.fillText(`${v === 'mu' ? 'μ' : v}${sup(S.ex[j])}`, Math.max(xa, xb) + 6 * p, ya);
+        cur += share; k++; });
+      g.fillStyle = match ? T.ok : T.hl; g.beginPath(); g.arc(X(d[i]), y, 4.5 * p, 0, 7); g.fill();
+    }
+    g.font = `${11 * p}px ${T.ui}`; g.fillStyle = T.muted; g.textAlign = 'left'; g.textBaseline = 'top';
+    caption(g, CAP, 8 * p, top + 3 * rh + 4 * p, w - 16 * p, 14 * p);
   }
   // ----- sig figs -----
   ['sA', 'sB'].forEach((id) => $(id).addEventListener('input', render)); $('sOp').addEventListener('change', render);
@@ -433,8 +547,43 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     if (!r) { $('sTbl').innerHTML = ''; $('sOut').textContent = 'Type two numbers, like 12.07 or 3.50e-2.'; return; }
     const row = (lab, q) => `<tr><td>${lab}</td><td>${q.sig}${q.ambiguous ? ' (ambiguous)' : ''}</td><td>${q.decimals}</td></tr>`;
     $('sTbl').innerHTML = `<tr><th></th><th>significant figures</th><th>decimal places</th></tr>${row($('sA').value, r.A)}${row($('sB').value, r.B)}`;
-    const rule = r.rule === 'sig' ? `keep ${r.keep} significant figure${r.keep === 1 ? '' : 's'}` : `keep ${r.keep} decimal place${r.keep === 1 ? '' : 's'}`;
+    const rule = r.rule === 'sig' ? `keep ${r.keep} significant figure${r.keep === 1 ? '' : 's'}` : r.keep < 0 ? `round to the nearest ${10 ** -r.keep}` : `keep ${r.keep} decimal place${r.keep === 1 ? '' : 's'}`;
     $('sOut').innerHTML = S.blind ? `Calculator: ${+r.raw.toPrecision(12)}. Rule: ? (hidden in Blind)` : `Calculator: ${+r.raw.toPrecision(12)} → ${rule} → <span class="ok">${formatKeep(r.rounded, r)}</span>`;
+    sigDigits(r);
+  }
+  /* each digit in a box: the significant ones shaded, leading and placeholder zeros plain, zeros that may or may not count dashed;
+     for + and − the numbers line up on the decimal point and a green line marks the last place kept, for × and ÷ it falls after
+     the last significant figure kept; digits of the calculator value past it are struck out */
+  function sigDigits(r) {
+    const box = $('sDig'); if (!box) return;
+    const add = r.rule === 'dec', op = $('sOp').value, OPS = { '*': '×', '/': '÷', '+': '+', '-': '−' };
+    const cellsOf = (str, cls) => { const pt = str.indexOf('.'), ip = pt < 0 ? str.length : pt; return [...str].map((ch, n) => (ch === '.' ? { ch, pow: null } : { ch, pow: n < ip ? ip - 1 - n : ip - n, cls: cls(n < ip ? ip - 1 - n : ip - n) })); };
+    const input = (q) => { const x = Math.abs(q.value), str = x.toFixed(Math.max(0, q.decimals)); if (str.length > 22 || /e/.test(str)) return null;
+      const f = x === 0 ? 0 : Math.floor(Math.log10(x) + 1e-12), last = f - q.sig + 1;
+      return cellsOf(str, (pw) => (x === 0 ? 'sig' : pw > f ? 'lead' : pw < last ? (q.ambiguous ? 'amb' : 'ph') : 'sig')); };
+    const rawX = Math.abs(r.raw), rawS = String(+rawX.toPrecision(12)), rf = rawX === 0 ? 0 : Math.floor(Math.log10(rawX) + 1e-12), cutPow = add ? -r.keep : rf - r.keep + 1;
+    const rows = [[$('sA').value, input(r.A), ''], [OPS[op], input(r.B), '']];
+    if (rows.some((x) => !x[1]) || /e/.test(rawS) || rawS.length > 22) { box.innerHTML = ''; return; }
+    if (!S.blind) rows.push(['=', cellsOf(rawS, (pw) => (pw > rf && rawX !== 0 ? 'lead' : pw >= cutPow ? 'sig' : 'drop')), '']);
+    // which measurement sets the rule
+    const gov = add ? (r.A.decimals <= r.B.decimals ? 0 : 1) : (r.A.sig <= r.B.sig ? 0 : 1);
+    const notes = [r.A, r.B].map((q) => (add ? (q.decimals < 0 ? `known to the nearest ${10 ** -q.decimals}` : `${q.decimals} decimal place${q.decimals === 1 ? '' : 's'}`) : `${q.sig} significant figure${q.sig === 1 ? '' : 's'}`));
+    // columns: powers of ten from the largest to the smallest in any row, with the decimal point between 0 and −1
+    let pmax = 0, pmin = 0; const align = add; for (const [, cs] of rows) for (const c of cs) if (c.pow != null) { pmax = Math.max(pmax, c.pow); pmin = Math.min(pmin, c.pow); }
+    const hasPt = rows.some(([, cs]) => cs.some((c) => c.pow == null));
+    const cell = (c, pw, cut) => `<span class="dc${c && c.cls ? ' ' + c.cls : c && c.pow == null ? ' pt' : ''}${cut && pw === cutPow ? ' cut' : ''}">${c ? c.ch : ''}</span>`;
+    const line = (lab, cs, note, least, res) => {
+      let h = `<span class="dlab">${lab.length > 2 ? '' : lab}</span>`;
+      if (align) { for (let pw = pmax; pw >= pmin; pw--) { h += cell(cs.find((c) => c.pow === pw), pw, !S.blind); if (pw === 0 && hasPt) { const d = cs.find((c) => c.pow == null); h += `<span class="dc pt">${d ? '.' : ''}</span>`; } } }
+      else for (const c of cs) h += cell(c, c.pow, res);
+      return `<div class="drow"><span class="dcells" data-i18n-skip>${h}</span>${note ? `<span class="dnote${least ? ' least' : ''}">${note}</span>` : ''}</div>`;
+    };
+    let html = line('', rows[0][1], notes[0] + (gov === 0 ? ', the least precise' : ''), gov === 0) + line(rows[1][0], rows[1][1], notes[1] + (gov === 1 ? ', the least precise' : ''), gov === 1);
+    if (rows[2]) html += line('=', rows[2][1], (add ? (r.keep < 0 ? `round to the nearest ${10 ** -r.keep}` : `keep ${r.keep} decimal place${r.keep === 1 ? '' : 's'}`) : `keep ${r.keep} significant figure${r.keep === 1 ? '' : 's'}`) + ` → ${formatKeep(r.rounded, r)}`, false, true);
+    const used = new Set(); rows.forEach(([, cs]) => cs.forEach((c) => c.cls && used.add(c.cls)));
+    const LEG = [['sig', '7', 'significant'], ['lead', '0', 'leading zero, not significant'], ['ph', '0', 'placeholder zero'], ['amb', '0', 'trailing zero with no decimal point: ambiguous'], ['drop', '5', 'dropped when rounding']];
+    html += `<div class="dleg">${LEG.filter((l) => used.has(l[0])).map((l) => `<div class="k"><span class="dc ${l[0]}" data-i18n-skip>${l[1]}</span><span>${l[2]}</span></div>`).join('')}${rows[2] ? `<div class="k"><span class="dc cut" data-i18n-skip></span><span>${add ? 'last decimal place kept' : 'last significant figure kept'}</span></div>` : ''}</div>`;
+    box.innerHTML = html;
   }
   // ----- fermi -----
   function fermiUI() {
@@ -476,6 +625,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function wrapNote(g, t, x, y, mw, lh) { let line = ''; for (const wd of t.split(' ')) { const tr = line ? line + ' ' + wd : wd; if (g.measureText(tr).width > mw && line) { g.fillText(line, x, y); y += lh; line = wd; } else line = tr; } if (line) g.fillText(line, x, y);
   }
   new ResizeObserver(() => { if (S.tab === 'fermi') drawLadder(); }).observe($('pFermi'));
+  new ResizeObserver(() => { if (S.tab === 'convert' || S.tab === 'dims') render(); }).observe($('pConvert'));
+  new ResizeObserver(() => { if (S.tab === 'dims') render(); }).observe($('pDims'));
   // ----- scale ruler -----
   can.addEventListener('pointermove', (e) => { if (S.view !== 'ruler') return; if (e.buttons !== 1 && e.pointerType === 'mouse') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
   can.addEventListener('pointerdown', (e) => { if (S.view !== 'ruler') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
@@ -784,16 +935,71 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     if (kind === 'pine') { for (let i = 0; i < 4; i++) { const b = 0.2 + i * 0.2, w = h * (0.22 - i * 0.045); ctx.fillStyle = mixc('#2f5e3a', '#4c8a55', i / 4); ctx.beginPath(); ctx.moveTo(X(tx - w), gy - b * h * k); ctx.lineTo(X(tx), gy - (b + 0.38) * h * k); ctx.lineTo(X(tx + w), gy - b * h * k); ctx.fill(); } return; }
     for (let i = 0; i < 7; i++) { const t = i / 7 * 6.283 + sh, rr = h * 0.2; ctx.fillStyle = mixc('#3f7a3c', '#6fae5b', 0.5 + 0.5 * Math.sin(t + 1)); ctx.beginPath(); ctx.arc(X(tx + Math.cos(t) * rr * 0.9), gy - (h * 0.68 + Math.sin(t) * rr * 0.75) * k, h * 0.2 * k, 0, 7); ctx.fill(); }
     ctx.fillStyle = '#5f9e52'; ctx.beginPath(); ctx.arc(X(tx), gy - h * 0.7 * k, h * 0.22 * k, 0, 7); ctx.fill(); }
+  // a mid size sedan in side view at true size: 4.5 m long, 1.42 m tall, 2.7 m wheelbase, 0.66 m wheels (typical of the class)
+  function car(F, cx, gy) { const k = F.k, P = (u, v) => [F.X(cx + u), gy - v * k]; if (4.5 * k < 3) return;
+    const mv = (u, v) => ctx.moveTo(...P(u, v)), ln = (u, v) => ctx.lineTo(...P(u, v)), qc = (a, b, u, v) => ctx.quadraticCurveTo(...P(a, b), ...P(u, v)), bz = (a, b, c, d, u, v) => ctx.bezierCurveTo(...P(a, b), ...P(c, d), ...P(u, v));
+    const RW = -1.38, FW = 1.32, WR = 0.33, AR = 0.41;
+    ctx.save(); ctx.globalAlpha *= 0.3; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(...P(0, 0.01), 2.3 * k, 0.07 * k, 0, 0, 7); ctx.fill(); ctx.restore();
+    const body = () => { ctx.beginPath(); mv(2.17, 0.26); bz(2.24, 0.3, 2.27, 0.5, 2.26, 0.6); bz(2.25, 0.72, 2.2, 0.79, 2.02, 0.83); bz(1.6, 0.9, 1.1, 0.93, 0.86, 0.95);
+      bz(0.62, 1.1, 0.3, 1.36, 0.02, 1.41); bz(-0.4, 1.45, -0.85, 1.43, -1.05, 1.38); bz(-1.3, 1.25, -1.55, 1.07, -1.72, 1.02); bz(-1.95, 0.99, -2.15, 0.98, -2.22, 0.93);
+      bz(-2.28, 0.8, -2.28, 0.5, -2.24, 0.34); qc(-2.22, 0.26, -2.1, 0.26); ln(RW - AR - 0.02, 0.26); ctx.arc(...P(RW, 0.3), AR * k, Math.PI + 0.1, -0.1);
+      ln(FW - AR, 0.26); ctx.arc(...P(FW, 0.3), AR * k, Math.PI + 0.1, -0.1); ln(2.08, 0.26); ctx.closePath(); };
+    const gb = ctx.createLinearGradient(0, gy - 1.42 * k, 0, gy - 0.25 * k); gb.addColorStop(0, '#d8545a'); gb.addColorStop(0.42, '#b8343a'); gb.addColorStop(0.62, '#9e2a30'); gb.addColorStop(1, '#6e1c22');
+    body(); ctx.fillStyle = gb; ctx.fill(); if (k < 8) { for (const w of [RW, FW]) { ctx.fillStyle = '#1d1d20'; ctx.beginPath(); ctx.arc(...P(w, WR), WR * k, 0, 7); ctx.fill(); } return; }
+    ctx.save(); body(); ctx.clip(); const lw = Math.max(0.6, 0.012 * k);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); mv(2.2, 0.8); bz(1.4, 0.9, 0.2, 0.86, -2.25, 0.88); ln(-2.25, 0.84); bz(0.2, 0.82, 1.4, 0.84, 2.2, 0.76); ctx.fill();   // light along the shoulder
+    ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.fillRect(...P(-2.4, 0.42), 4.8 * k, 0.17 * k);   // the rocker panel in shade
+    ctx.restore();
+    // windows: windshield, front and rear side windows, the pillars between them in black trim
+    ctx.beginPath(); mv(0.74, 0.99); bz(0.55, 1.12, 0.3, 1.31, 0.02, 1.35); bz(-0.4, 1.38, -0.82, 1.37, -1.0, 1.33); bz(-1.2, 1.22, -1.4, 1.1, -1.55, 1.02); ctx.closePath(); ctx.fillStyle = '#1f2630'; ctx.fill();
+    const gw = ctx.createLinearGradient(0, gy - 1.36 * k, 0, gy - 0.98 * k); gw.addColorStop(0, '#9fb8cc'); gw.addColorStop(1, '#5f7a90');
+    const pane = (pts) => { ctx.beginPath(); pts.forEach((q, j) => (j ? q.length > 2 ? bz(...q) : ln(...q) : mv(...q))); ctx.closePath(); ctx.fillStyle = gw; ctx.fill(); };
+    pane([[0.66, 1.01], [0.5, 1.12, 0.3, 1.28, 0.06, 1.31], [-0.3, 1.33], [-0.3, 1.01]]); pane([[-0.4, 1.01], [-0.4, 1.33], [-0.78, 1.33, -0.93, 1.3, -0.98, 1.28], [-1.13, 1.18, -1.3, 1.08, -1.42, 1.02]]);
+    ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.beginPath(); mv(0.3, 1.02); ln(0.5, 1.02); ln(0.05, 1.28); ln(-0.12, 1.28); ctx.closePath(); ctx.fill();   // a reflection
+    // door seams, handles, mirror, lights, bumpers
+    ctx.strokeStyle = 'rgba(40,6,10,0.55)'; ctx.lineWidth = lw; ctx.beginPath(); mv(0.72, 0.98); bz(0.78, 0.7, 0.76, 0.45, 0.7, 0.3); mv(-0.35, 1.0); ln(-0.38, 0.28); mv(-1.5, 1.0); bz(-1.38, 0.8, -1.0, 0.6, -0.98, 0.28); ctx.stroke();
+    ctx.fillStyle = '#5c1418'; for (const u of [0.42, -0.72]) ctx.fillRect(...P(u, 0.86), 0.16 * k, 0.03 * k);
+    ctx.fillStyle = '#9e2a30'; ctx.beginPath(); mv(0.66, 0.99); bz(0.6, 1.06, 0.48, 1.08, 0.46, 1.03); ln(0.5, 0.97); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#f4f1e0'; ctx.beginPath(); mv(2.22, 0.66); bz(2.2, 0.76, 2.0, 0.8, 1.86, 0.8); bz(1.92, 0.74, 2.05, 0.68, 2.22, 0.66); ctx.fill();
+    ctx.fillStyle = '#e8401f'; ctx.beginPath(); mv(-2.24, 0.88); ln(-2.1, 0.92); ln(-2.0, 0.84); ln(-2.25, 0.78); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(30,30,34,0.85)'; ctx.beginPath(); mv(2.25, 0.4); ln(2.25, 0.47); ln(1.96, 0.45); ln(1.93, 0.38); ctx.closePath(); ctx.fill(); ctx.beginPath(); mv(-2.26, 0.4); ln(-2.26, 0.47); ln(-2.0, 0.45); ln(-1.97, 0.38); ctx.closePath(); ctx.fill();
+    // wheels: tire, alloy rim with five spokes, hub; the arches are dark inside
+    for (const w of [RW, FW]) { const [x, y] = P(w, WR); ctx.fillStyle = '#121214'; ctx.beginPath(); ctx.arc(...P(w, 0.3), AR * k + 0.5, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = '#1d1d20'; ctx.beginPath(); ctx.arc(x, y, WR * k, 0, 7); ctx.fill(); ctx.strokeStyle = '#38383c'; ctx.lineWidth = Math.max(0.5, 0.02 * k); ctx.beginPath(); ctx.arc(x, y, WR * 0.86 * k, 0, 7); ctx.stroke();
+      const gr = ctx.createRadialGradient(x - 0.05 * k, y - 0.06 * k, 0, x, y, 0.22 * k); gr.addColorStop(0, '#eef1f4'); gr.addColorStop(1, '#8d949c'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, 0.215 * k, 0, 7); ctx.fill();
+      ctx.fillStyle = '#3a3d42'; for (let j = 0; j < 5; j++) { const t0 = j * 1.2566 + 0.3; ctx.beginPath(); ctx.moveTo(x + Math.cos(t0) * 0.06 * k, y + Math.sin(t0) * 0.06 * k); ctx.arc(x, y, 0.19 * k, t0, t0 + 0.75); ctx.closePath(); ctx.fill(); }
+      ctx.fillStyle = '#c3c8ce'; ctx.beginPath(); ctx.arc(x, y, 0.045 * k, 0, 7); ctx.fill(); } }
+  // a Labrador retriever standing, facing right, at true size: about 0.57 m at the shoulder and 0.95 m from chest to rump
+  function dog(F, dx, gy) { const k = F.k, P = (u, v) => [F.X(dx + u), gy - v * k]; if (0.9 * k < 3) return;
+    const mv = (u, v) => ctx.moveTo(...P(u, v)), ln = (u, v) => ctx.lineTo(...P(u, v)), bz = (a, b, c, d, u, v) => ctx.bezierCurveTo(...P(a, b), ...P(c, d), ...P(u, v));
+    const coat = '#c99a55', far = '#a57839', dark = '#7d5a2a', fill = (col, f) => { ctx.fillStyle = col; ctx.beginPath(); f(); ctx.closePath(); ctx.fill(); };
+    ctx.save(); ctx.globalAlpha *= 0.28; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(...P(0, 0.01), 0.55 * k, 0.035 * k, 0, 0, 7); ctx.fill(); ctx.restore();
+    // a leg as a tapered shape: x at the top, its width there, the knee or wrist, and the paw
+    const foreleg = (x, col) => fill(col, () => { mv(x - 0.05, 0.4); bz(x - 0.045, 0.25, x - 0.03, 0.12, x - 0.025, 0.035); bz(x - 0.02, 0.0, x + 0.07, 0.0, x + 0.075, 0.02); bz(x + 0.07, 0.04, x + 0.035, 0.05, x + 0.03, 0.07); bz(x + 0.03, 0.18, x + 0.04, 0.3, x + 0.05, 0.4); });
+    const hindleg = (x, col) => fill(col, () => { mv(x - 0.1, 0.5); bz(x - 0.14, 0.38, x - 0.1, 0.27, x - 0.07, 0.2); bz(x - 0.06, 0.14, x - 0.06, 0.08, x - 0.05, 0.035); bz(x - 0.045, 0.0, x + 0.04, 0.0, x + 0.05, 0.02); bz(x + 0.045, 0.04, x + 0.015, 0.05, x + 0.01, 0.07); bz(x + 0.005, 0.13, x + 0.03, 0.2, x + 0.06, 0.28); bz(x + 0.1, 0.36, x + 0.1, 0.45, x + 0.06, 0.52); });
+    foreleg(0.19, far); hindleg(-0.25, far);   // the far legs, in shade
+    ctx.strokeStyle = coat; ctx.lineWidth = Math.max(1, 0.04 * k); ctx.lineCap = 'round'; ctx.beginPath(); mv(-0.42, 0.52); bz(-0.55, 0.5, -0.62, 0.42, -0.64, 0.3); ctx.stroke(); ctx.lineCap = 'butt';   // the otter tail, hanging in an easy curve
+    fill(coat, () => { mv(-0.44, 0.5); bz(-0.42, 0.57, -0.25, 0.565, 0.0, 0.555); bz(0.12, 0.56, 0.2, 0.58, 0.25, 0.6);   // the back, from rump to withers
+      bz(0.31, 0.66, 0.38, 0.75, 0.45, 0.81); bz(0.49, 0.85, 0.56, 0.86, 0.6, 0.82);   // the neck and the top of the head
+      bz(0.63, 0.79, 0.66, 0.775, 0.72, 0.765); bz(0.76, 0.76, 0.77, 0.72, 0.75, 0.7); bz(0.7, 0.68, 0.62, 0.67, 0.58, 0.655);   // muzzle and jaw
+      bz(0.52, 0.6, 0.46, 0.52, 0.42, 0.45); bz(0.4, 0.36, 0.33, 0.3, 0.22, 0.29);   // throat and deep chest
+      bz(0.06, 0.29, -0.1, 0.32, -0.22, 0.35); bz(-0.34, 0.37, -0.45, 0.42, -0.44, 0.5); });   // belly, tucked up a little to the rump
+    foreleg(0.27, coat); hindleg(-0.33, coat);   // the near legs
+    if (k < 25) return;
+    ctx.fillStyle = 'rgba(255,240,210,0.22)'; ctx.beginPath(); mv(-0.38, 0.54); bz(-0.2, 0.56, 0.05, 0.55, 0.24, 0.585); bz(0.05, 0.52, -0.2, 0.52, -0.38, 0.51); ctx.fill();   // light along the back
+    ctx.fillStyle = 'rgba(80,50,20,0.18)'; ctx.beginPath(); mv(-0.2, 0.36); bz(0.0, 0.3, 0.2, 0.3, 0.3, 0.33); bz(0.2, 0.4, -0.05, 0.42, -0.2, 0.36); ctx.fill();   // shade under the ribs
+    fill(dark, () => { mv(0.5, 0.82); bz(0.45, 0.8, 0.43, 0.72, 0.46, 0.66); bz(0.5, 0.63, 0.54, 0.67, 0.55, 0.73); bz(0.55, 0.78, 0.54, 0.82, 0.5, 0.82); });   // the ear, hanging
+    ctx.fillStyle = '#1b1410'; ctx.beginPath(); ctx.ellipse(...P(0.752, 0.737), 0.024 * k, 0.019 * k, 0, 0, 7); ctx.fill();   // nose
+    ctx.beginPath(); ctx.arc(...P(0.625, 0.775), Math.max(0.6, 0.012 * k), 0, 7); ctx.fill();   // eye
+    ctx.strokeStyle = 'rgba(90,60,25,0.6)'; ctx.lineWidth = Math.max(0.5, 0.006 * k); ctx.beginPath(); mv(0.745, 0.7); bz(0.7, 0.69, 0.64, 0.685, 0.6, 0.69); ctx.stroke(); }
   function parkDraw(F, a) { const X = F.X, Y = F.Y, k = F.k, gy = Y(GROUND); if (30 * k < 8) return; ground(F, a, ['#7fae5a', '#4f7d3a']);
     ctx.fillStyle = '#c9b48c'; ctx.fillRect(X(-30), gy, 60 * k, Math.max(1, 0.05 * k)); if (k > 30) { ctx.strokeStyle = '#5f8f45'; ctx.lineWidth = Math.max(1, 0.01 * k); for (const [u, h] of PTS.grass) { ctx.beginPath(); ctx.moveTo(X(u), gy); ctx.lineTo(X(u + 0.02), gy - (0.05 + 0.06 * h) * k); ctx.stroke(); } }
     ctx.fillStyle = '#c9a27a'; ctx.fillRect(X(-14), gy - 5 * k, 8 * k, 5 * k); ctx.fillStyle = '#8c4a3a'; ctx.beginPath(); ctx.moveTo(X(-14.6), gy - 5 * k); ctx.lineTo(X(-10), gy - 8 * k); ctx.lineTo(X(-5.4), gy - 5 * k); ctx.closePath(); ctx.fill();
     ctx.fillRect(X(-8), gy - 8.2 * k, 0.7 * k, 2 * k); ctx.fillStyle = '#5b4a3a'; ctx.fillRect(X(-10.6), gy - 2.1 * k, 1.0 * k, 2.1 * k); ctx.fillStyle = '#dceaf7'; for (const wx of [-13, -8]) { ctx.fillRect(X(wx), gy - 3.9 * k, 1.3 * k, 1.2 * k); ctx.fillStyle = '#dceaf7'; }
-    const car = (cx) => { ctx.fillStyle = '#b8343a'; ctx.beginPath(); ctx.moveTo(X(cx - 2.25), gy - 0.35 * k); ctx.lineTo(X(cx - 2.25), gy - 0.85 * k); ctx.lineTo(X(cx - 1.2), gy - 0.95 * k); ctx.lineTo(X(cx - 0.6), gy - 1.45 * k); ctx.lineTo(X(cx + 1.0), gy - 1.45 * k); ctx.lineTo(X(cx + 1.6), gy - 0.95 * k); ctx.lineTo(X(cx + 2.25), gy - 0.85 * k); ctx.lineTo(X(cx + 2.25), gy - 0.35 * k); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#cfe3f2'; ctx.fillRect(X(cx - 0.45), gy - 1.35 * k, 0.65 * k, 0.4 * k); ctx.fillRect(X(cx + 0.3), gy - 1.35 * k, 0.6 * k, 0.4 * k); ctx.fillStyle = '#222'; for (const w of [-1.4, 1.4]) { ctx.beginPath(); ctx.arc(X(cx + w), gy - 0.33 * k, 0.33 * k, 0, 7); ctx.fill(); } };
-    car(-3.0); tree(F, 6, 12, 'oak', 0.3); tree(F, 12.5, 9, 'oak', 1.2); tree(F, -21, 15, 'pine', 0); tree(F, 17, 5, 'oak', 2.1); tree(F, -17, 7, 'oak', 0.8);
+    car(F, -3.0, gy); tree(F, 6, 12, 'oak', 0.3); tree(F, 12.5, 9, 'oak', 1.2); tree(F, -21, 15, 'pine', 0); tree(F, 17, 5, 'oak', 2.1); tree(F, -17, 7, 'oak', 0.8);
     ctx.fillStyle = '#7a5530'; ctx.fillRect(X(8.6), gy - 0.45 * k, 1.8 * k, 0.08 * k); ctx.fillRect(X(8.7), gy - 0.45 * k, 0.08 * k, 0.45 * k); ctx.fillRect(X(10.3), gy - 0.45 * k, 0.08 * k, 0.45 * k); ctx.fillRect(X(8.6), gy - 0.85 * k, 1.8 * k, 0.07 * k);
-    ctx.fillStyle = '#8a5a35'; ctx.beginPath(); ctx.ellipse(X(1.4), gy - 0.42 * k, 0.38 * k, 0.15 * k, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(X(1.82), gy - 0.58 * k, 0.11 * k, 0, 7); ctx.fill(); ctx.fillRect(X(1.1), gy - 0.4 * k, 0.05 * k, 0.4 * k); ctx.fillRect(X(1.65), gy - 0.4 * k, 0.05 * k, 0.4 * k);
-    if (labOK(15 * k)) { tag('house, 8 m wide', X(-13.5), gy - 8.5 * k); tag('tree, 12 m', X(6.5), gy - 12.4 * k); tag('car, 4.5 m long', X(-5), gy - 1.7 * k); tag('dog', X(1.2), gy - 0.8 * k); } }
+    dog(F, 1.4, gy);
+    if (labOK(15 * k)) { tag('house, 8 m wide', X(-13.5), gy - 8.5 * k); tag('tree, 12 m', X(6.5), gy - 12.4 * k); tag('car, 4.5 m long', X(-5), gy - 1.7 * k); tag('dog, 0.57 m at the shoulder', X(1.45), gy - 1.0 * k); } }
   function townDraw(F, a) { const X = F.X, Y = F.Y, k = F.k, gy = Y(GROUND); if (600 * k < 20 || 30 * k > 40 * W) return; ground(F, a, ['#7aa556', '#4c7838']); const r = rng(61);
     for (let i = 0; i < 70; i++) { const hx = (i < 35 ? -420 + i * 11.2 : 40 + (i - 35) * 11.6) + r() * 2, w = 7 + r() * 3, h = 4.5 + r() * 2.5; if (!onScr(X(hx), gy, w * k + 2)) { r(); continue; } ctx.fillStyle = mixc('#c9a27a', '#e5d6bd', r()); ctx.fillRect(X(hx), gy - h * k, w * k, h * k); ctx.fillStyle = mixc('#7a3d32', '#5a5f6a', r()); ctx.beginPath(); ctx.moveTo(X(hx - 0.4), gy - h * k); ctx.lineTo(X(hx + w / 2), gy - (h + 2.6) * k); ctx.lineTo(X(hx + w + 0.4), gy - h * k); ctx.fill(); }
     for (let i = 0; i < 40; i++) tree(F, (i < 20 ? -400 + i * 19 : 50 + (i - 20) * 18) + 5, 8 + (i * 37 % 9), i % 5 ? 'oak' : 'pine', i);

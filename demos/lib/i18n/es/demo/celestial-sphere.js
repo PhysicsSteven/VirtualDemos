@@ -1972,48 +1972,628 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Zubenelgenubi <small>α² Lib</small>",
 "Zubenelgenubi there":
   "Zubenelgenubi allá",
+"λ Ori (clicked)":
+  "λ Ori (con clic)",
+"λ Ori there":
+  "λ Ori allá",
 "Bellatrix · {#} ly":
   "Bellatrix · {#} a. l.",
+"Alnitak · {#} ly":
+  "Alnitak · {#} a. l.",
+"Mintaka · {#} ly":
+  "Mintaka · {#} a. l.",
+"ε Cas (clicked)":
+  "ε Cas (con clic)",
+"ε Cas there":
+  "ε Cas allá",
+"δ Cas (clicked)":
+  "δ Cas (con clic)",
+"δ Cas there":
+  "δ Cas allá",
+"δ Cas · {#} ly":
+  "δ Cas · {#} a. l.",
+"γ Cas (clicked)":
+  "γ Cas (con clic)",
+"γ Cas there":
+  "γ Cas allá",
+"δ Cru (clicked)":
+  "δ Cru (con clic)",
+"δ Cru there":
+  "δ Cru allá",
+"ε Leo (clicked)":
+  "ε Leo (con clic)",
+"ε Leo there":
+  "ε Leo allá",
 "ε Leo · {#} ly":
   "ε Leo · {#} a. l.",
+"Algieba · {#} ly":
+  "Algieba · {#} a. l.",
+"μ Leo (clicked)":
+  "μ Leo (con clic)",
+"μ Leo there":
+  "μ Leo allá",
+"ζ Leo (clicked)":
+  "ζ Leo (con clic)",
+"ζ Leo there":
+  "ζ Leo allá",
+"ζ Leo · {#} ly":
+  "ζ Leo · {#} a. l.",
+"η Leo (clicked)":
+  "η Leo (con clic)",
+"η Leo there":
+  "η Leo allá",
+"θ Leo (clicked)":
+  "θ Leo (con clic)",
+"θ Leo there":
+  "θ Leo allá",
+"θ Leo · {#} ly":
+  "θ Leo · {#} a. l.",
+"β¹ Sco (clicked)":
+  "β¹ Sco (con clic)",
+"β¹ Sco there":
+  "β¹ Sco allá",
+"π Sco (clicked)":
+  "π Sco (con clic)",
+"π Sco there":
+  "π Sco allá",
+"π Sco · {#} ly":
+  "π Sco · {#} a. l.",
+"σ Sco (clicked)":
+  "σ Sco (con clic)",
+"σ Sco there":
+  "σ Sco allá",
+"σ Sco · {#} ly":
+  "σ Sco · {#} a. l.",
+"τ Sco (clicked)":
+  "τ Sco (con clic)",
+"τ Sco there":
+  "τ Sco allá",
+"τ Sco · {#} ly":
+  "τ Sco · {#} a. l.",
+"ε Sco (clicked)":
+  "ε Sco (con clic)",
+"ε Sco there":
+  "ε Sco allá",
+"μ¹ Sco (clicked)":
+  "μ¹ Sco (con clic)",
+"μ¹ Sco there":
+  "μ¹ Sco allá",
+"μ¹ Sco · {#} ly":
+  "μ¹ Sco · {#} a. l.",
+"ζ² Sco (clicked)":
+  "ζ² Sco (con clic)",
+"ζ² Sco there":
+  "ζ² Sco allá",
+"ζ² Sco · {#} ly":
+  "ζ² Sco · {#} a. l.",
+"η Sco (clicked)":
+  "η Sco (con clic)",
+"η Sco there":
+  "η Sco allá",
+"η Sco · {#} ly":
+  "η Sco · {#} a. l.",
+"θ Sco (clicked)":
+  "θ Sco (con clic)",
+"θ Sco there":
+  "θ Sco allá",
+"ι¹ Sco (clicked)":
+  "ι¹ Sco (con clic)",
+"ι¹ Sco there":
+  "ι¹ Sco allá",
+"κ Sco (clicked)":
+  "κ Sco (con clic)",
+"κ Sco there":
+  "κ Sco allá",
 "κ Sco · {#} ly":
   "κ Sco · {#} a. l.",
-"Sheliak · {#} ly":
-  "Sheliak · {#} a. l.",
+"ζ¹ Lyr (clicked)":
+  "ζ¹ Lyr (con clic)",
+"ζ¹ Lyr there":
+  "ζ¹ Lyr allá",
 "ζ¹ Lyr · {#} ly":
   "ζ¹ Lyr · {#} a. l.",
+"Sheliak · {#} ly":
+  "Sheliak · {#} a. l.",
+"δ² Lyr (clicked)":
+  "δ² Lyr (con clic)",
+"δ² Lyr there":
+  "δ² Lyr allá",
+"η Cyg (clicked)":
+  "η Cyg (con clic)",
+"η Cyg there":
+  "η Cyg allá",
 "η Cyg · {#} ly":
   "η Cyg · {#} a. l.",
+"δ Cyg (clicked)":
+  "δ Cyg (con clic)",
+"δ Cyg there":
+  "δ Cyg allá",
+"δ Cyg · {#} ly":
+  "δ Cyg · {#} a. l.",
+"ε Cyg (clicked)":
+  "ε Cyg (con clic)",
+"ε Cyg there":
+  "ε Cyg allá",
+"ε Tau (clicked)":
+  "ε Tau (con clic)",
+"ε Tau there":
+  "ε Tau allá",
+"δ¹ Tau (clicked)":
+  "δ¹ Tau (con clic)",
+"δ¹ Tau there":
+  "δ¹ Tau allá",
 "δ¹ Tau · {#} ly":
   "δ¹ Tau · {#} a. l.",
+"θ² Tau · {#} ly":
+  "θ² Tau · {#} a. l.",
+"γ Tau (clicked)":
+  "γ Tau (con clic)",
+"γ Tau there":
+  "γ Tau allá",
+"γ Tau · {#} ly":
+  "γ Tau · {#} a. l.",
+"θ² Tau (clicked)":
+  "θ² Tau (con clic)",
+"θ² Tau there":
+  "θ² Tau allá",
+"ζ Tau (clicked)":
+  "ζ Tau (con clic)",
+"ζ Tau there":
+  "ζ Tau allá",
+"β CMa (clicked)":
+  "β CMa (con clic)",
+"β CMa there":
+  "β CMa allá",
 "β CMa · {#} ly":
   "β CMa · {#} a. l.",
-"ζ Gem · {#} ly":
-  "ζ Gem · {#} a. l.",
+"δ CMa (clicked)":
+  "δ CMa (con clic)",
+"δ CMa there":
+  "δ CMa allá",
+"η CMa (clicked)":
+  "η CMa (con clic)",
+"η CMa there":
+  "η CMa allá",
+"η CMa · {#} ly":
+  "η CMa · {#} a. l.",
+"τ Gem (clicked)":
+  "τ Gem (con clic)",
+"τ Gem there":
+  "τ Gem allá",
 "τ Gem · {#} ly":
   "τ Gem · {#} a. l.",
+"ε Gem (clicked)":
+  "ε Gem (con clic)",
+"ε Gem there":
+  "ε Gem allá",
+"μ Gem (clicked)":
+  "μ Gem (con clic)",
+"μ Gem there":
+  "μ Gem allá",
+"η Gem (clicked)":
+  "η Gem (con clic)",
+"η Gem there":
+  "η Gem allá",
+"η Gem · {#} ly":
+  "η Gem · {#} a. l.",
+"δ Gem (clicked)":
+  "δ Gem (con clic)",
+"δ Gem there":
+  "δ Gem allá",
+"ζ Gem (clicked)":
+  "ζ Gem (con clic)",
+"ζ Gem there":
+  "ζ Gem allá",
+"ζ Gem · {#} ly":
+  "ζ Gem · {#} a. l.",
+"γ Gem (clicked)":
+  "γ Gem (con clic)",
+"γ Gem there":
+  "γ Gem allá",
+"γ² Sgr (clicked)":
+  "γ² Sgr (con clic)",
+"γ² Sgr there":
+  "γ² Sgr allá",
 "γ² Sgr · {#} ly":
   "γ² Sgr · {#} a. l.",
+"δ Sgr (clicked)":
+  "δ Sgr (con clic)",
+"δ Sgr there":
+  "δ Sgr allá",
+"λ Sgr (clicked)":
+  "λ Sgr (con clic)",
+"λ Sgr there":
+  "λ Sgr allá",
+"φ Sgr (clicked)":
+  "φ Sgr (con clic)",
+"φ Sgr there":
+  "φ Sgr allá",
+"φ Sgr · {#} ly":
+  "φ Sgr · {#} a. l.",
+"τ Sgr (clicked)":
+  "τ Sgr (con clic)",
+"τ Sgr there":
+  "τ Sgr allá",
+"ζ Sgr (clicked)":
+  "ζ Sgr (con clic)",
+"ζ Sgr there":
+  "ζ Sgr allá",
 "Scheat · {#} ly":
   "Scheat · {#} a. l.",
 "Algenib · {#} ly":
   "Algenib · {#} a. l.",
+"ζ Peg (clicked)":
+  "ζ Peg (con clic)",
+"ζ Peg there":
+  "ζ Peg allá",
 "ζ Peg · {#} ly":
   "ζ Peg · {#} a. l.",
+"θ Peg (clicked)":
+  "θ Peg (con clic)",
+"θ Peg there":
+  "θ Peg allá",
+"δ And (clicked)":
+  "δ And (con clic)",
+"δ And there":
+  "δ And allá",
+"δ And · {#} ly":
+  "δ And · {#} a. l.",
+"δ Boo (clicked)":
+  "δ Boo (con clic)",
+"δ Boo there":
+  "δ Boo allá",
+"β Boo (clicked)":
+  "β Boo (con clic)",
+"β Boo there":
+  "β Boo allá",
 "β Boo · {#} ly":
   "β Boo · {#} a. l.",
+"γ Boo (clicked)":
+  "γ Boo (con clic)",
+"γ Boo there":
+  "γ Boo allá",
+"ρ Boo (clicked)":
+  "ρ Boo (con clic)",
+"ρ Boo there":
+  "ρ Boo allá",
+"η Boo (clicked)":
+  "η Boo (con clic)",
+"η Boo there":
+  "η Boo allá",
+"η Boo · {#} ly":
+  "η Boo · {#} a. l.",
+"γ Aql (clicked)":
+  "γ Aql (con clic)",
+"γ Aql there":
+  "γ Aql allá",
 "γ Aql · {#} ly":
   "γ Aql · {#} a. l.",
+"β Aql (clicked)":
+  "β Aql (con clic)",
+"β Aql there":
+  "β Aql allá",
+"δ Aql (clicked)":
+  "δ Aql (con clic)",
+"δ Aql there":
+  "δ Aql allá",
+"λ Aql (clicked)":
+  "λ Aql (con clic)",
+"λ Aql there":
+  "λ Aql allá",
+"ζ Aql (clicked)":
+  "ζ Aql (con clic)",
+"ζ Aql there":
+  "ζ Aql allá",
+"ε Aqr (clicked)":
+  "ε Aqr (con clic)",
+"ε Aqr there":
+  "ε Aqr allá",
+"γ Aqr (clicked)":
+  "γ Aqr (con clic)",
+"γ Aqr there":
+  "γ Aqr allá",
+"γ Aqr · {#} ly":
+  "γ Aqr · {#} a. l.",
+"η Aqr (clicked)":
+  "η Aqr (con clic)",
+"η Aqr there":
+  "η Aqr allá",
+"η Aqr · {#} ly":
+  "η Aqr · {#} a. l.",
+"θ Aqr (clicked)":
+  "θ Aqr (con clic)",
+"θ Aqr there":
+  "θ Aqr allá",
+"θ Aqr · {#} ly":
+  "θ Aqr · {#} a. l.",
+"λ Aqr (clicked)":
+  "λ Aqr (con clic)",
+"λ Aqr there":
+  "λ Aqr allá",
+"δ Aqr (clicked)":
+  "δ Aqr (con clic)",
+"δ Aqr there":
+  "δ Aqr allá",
+"γ² Ari (clicked)":
+  "γ² Ari (con clic)",
+"γ² Ari there":
+  "γ² Ari allá",
+"Menkalinan · {#} ly":
+  "Menkalinan · {#} a. l.",
+"θ Aur (clicked)":
+  "θ Aur (con clic)",
+"θ Aur there":
+  "θ Aur allá",
+"ι Aur (clicked)":
+  "ι Aur (con clic)",
+"ι Aur there":
+  "ι Aur allá",
+"ι Cnc (clicked)":
+  "ι Cnc (con clic)",
+"ι Cnc there":
+  "ι Cnc allá",
+"γ Cnc (clicked)":
+  "γ Cnc (con clic)",
+"γ Cnc there":
+  "γ Cnc allá",
+"δ Cnc (clicked)":
+  "δ Cnc (con clic)",
+"δ Cnc there":
+  "δ Cnc allá",
+"α Cnc (clicked)":
+  "α Cnc (con clic)",
+"α Cnc there":
+  "α Cnc allá",
+"β CMi (clicked)":
+  "β CMi (con clic)",
+"β CMi there":
+  "β CMi allá",
+"β Cap (clicked)":
+  "β Cap (con clic)",
+"β Cap there":
+  "β Cap allá",
+"ψ Cap (clicked)":
+  "ψ Cap (con clic)",
+"ψ Cap there":
+  "ψ Cap allá",
 "ψ Cap · {#} ly":
   "ψ Cap · {#} a. l.",
+"ω Cap (clicked)":
+  "ω Cap (con clic)",
+"ω Cap there":
+  "ω Cap allá",
+"ζ Cap (clicked)":
+  "ζ Cap (con clic)",
+"ζ Cap there":
+  "ζ Cap allá",
+"γ Cap (clicked)":
+  "γ Cap (con clic)",
+"γ Cap there":
+  "γ Cap allá",
+"γ Cap · {#} ly":
+  "γ Cap · {#} a. l.",
+"θ Cap (clicked)":
+  "θ Cap (con clic)",
+"θ Cap there":
+  "θ Cap allá",
+"θ Cap · {#} ly":
+  "θ Cap · {#} a. l.",
+"β Cep (clicked)":
+  "β Cep (con clic)",
+"β Cep there":
+  "β Cep allá",
+"ι Cep (clicked)":
+  "ι Cep (con clic)",
+"ι Cep there":
+  "ι Cep allá",
+"ζ Cep (clicked)":
+  "ζ Cep (con clic)",
+"ζ Cep there":
+  "ζ Cep allá",
+"δ Crv (clicked)":
+  "δ Crv (con clic)",
+"δ Crv there":
+  "δ Crv allá",
+"β Crv (clicked)":
+  "β Crv (con clic)",
+"β Crv there":
+  "β Crv allá",
+"ε Crv (clicked)":
+  "ε Crv (con clic)",
+"ε Crv there":
+  "ε Crv allá",
+"λ Dra (clicked)":
+  "λ Dra (con clic)",
+"λ Dra there":
+  "λ Dra allá",
+"κ Dra (clicked)":
+  "κ Dra (con clic)",
+"κ Dra there":
+  "κ Dra allá",
+"ι Dra (clicked)":
+  "ι Dra (con clic)",
+"ι Dra there":
+  "ι Dra allá",
 "ι Dra · {#} ly":
   "ι Dra · {#} a. l.",
 "ξ Dra · {#} ly":
   "ξ Dra · {#} a. l.",
+"θ Dra (clicked)":
+  "θ Dra (con clic)",
+"θ Dra there":
+  "θ Dra allá",
+"θ Dra · {#} ly":
+  "θ Dra · {#} a. l.",
+"Rastaban · {#} ly":
+  "Rastaban · {#} a. l.",
+"η Dra (clicked)":
+  "η Dra (con clic)",
+"η Dra there":
+  "η Dra allá",
+"ζ Dra (clicked)":
+  "ζ Dra (con clic)",
+"ζ Dra there":
+  "ζ Dra allá",
+"δ Dra (clicked)":
+  "δ Dra (con clic)",
+"δ Dra there":
+  "δ Dra allá",
+"ξ Dra (clicked)":
+  "ξ Dra (con clic)",
+"ξ Dra there":
+  "ξ Dra allá",
+"ν² Dra (clicked)":
+  "ν² Dra (con clic)",
+"ν² Dra there":
+  "ν² Dra allá",
+"ν² Dra · {#} ly":
+  "ν² Dra · {#} a. l.",
+"γ Lib (clicked)":
+  "γ Lib (con clic)",
+"γ Lib there":
+  "γ Lib allá",
+"σ Lib (clicked)":
+  "σ Lib (con clic)",
+"σ Lib there":
+  "σ Lib allá",
+"κ Oph (clicked)":
+  "κ Oph (con clic)",
+"κ Oph there":
+  "κ Oph allá",
+"δ Oph (clicked)":
+  "δ Oph (con clic)",
+"δ Oph there":
+  "δ Oph allá",
+"ε Oph (clicked)":
+  "ε Oph (con clic)",
+"ε Oph there":
+  "ε Oph allá",
+"ε Oph · {#} ly":
+  "ε Oph · {#} a. l.",
+"ζ Oph (clicked)":
+  "ζ Oph (con clic)",
+"ζ Oph there":
+  "ζ Oph allá",
+"η Oph (clicked)":
+  "η Oph (con clic)",
+"η Oph there":
+  "η Oph allá",
+"β Oph (clicked)":
+  "β Oph (con clic)",
+"β Oph there":
+  "β Oph allá",
+"γ Per (clicked)":
+  "γ Per (con clic)",
+"γ Per there":
+  "γ Per allá",
+"δ Per (clicked)":
+  "δ Per (con clic)",
+"δ Per there":
+  "δ Per allá",
+"ε Per (clicked)":
+  "ε Per (con clic)",
+"ε Per there":
+  "ε Per allá",
 "ε Per · {#} ly":
   "ε Per · {#} a. l.",
+"ζ Per (clicked)":
+  "ζ Per (con clic)",
+"ζ Per there":
+  "ζ Per allá",
+"ο Psc (clicked)":
+  "ο Psc (con clic)",
+"ο Psc there":
+  "ο Psc allá",
+"ν Psc (clicked)":
+  "ν Psc (con clic)",
+"ν Psc there":
+  "ν Psc allá",
+"ε Psc (clicked)":
+  "ε Psc (con clic)",
+"ε Psc there":
+  "ε Psc allá",
+"ε Psc · {#} ly":
+  "ε Psc · {#} a. l.",
+"δ Psc (clicked)":
+  "δ Psc (con clic)",
+"δ Psc there":
+  "δ Psc allá",
 "δ Psc · {#} ly":
   "δ Psc · {#} a. l.",
+"ω Psc (clicked)":
+  "ω Psc (con clic)",
+"ω Psc there":
+  "ω Psc allá",
+"ι Psc (clicked)":
+  "ι Psc (con clic)",
+"ι Psc there":
+  "ι Psc allá",
+"ι Psc · {#} ly":
+  "ι Psc · {#} a. l.",
+"λ Psc · {#} ly":
+  "λ Psc · {#} a. l.",
+"θ Psc (clicked)":
+  "θ Psc (con clic)",
+"θ Psc there":
+  "θ Psc allá",
+"θ Psc · {#} ly":
+  "θ Psc · {#} a. l.",
+"γ Psc (clicked)":
+  "γ Psc (con clic)",
+"γ Psc there":
+  "γ Psc allá",
+"κ Psc (clicked)":
+  "κ Psc (con clic)",
+"κ Psc there":
+  "κ Psc allá",
+"κ Psc · {#} ly":
+  "κ Psc · {#} a. l.",
+"λ Psc (clicked)":
+  "λ Psc (con clic)",
+"λ Psc there":
+  "λ Psc allá",
+"δ UMi (clicked)":
+  "δ UMi (con clic)",
+"δ UMi there":
+  "δ UMi allá",
+"ε UMi (clicked)":
+  "ε UMi (con clic)",
+"ε UMi there":
+  "ε UMi allá",
+"ζ UMi (clicked)":
+  "ζ UMi (con clic)",
+"ζ UMi there":
+  "ζ UMi allá",
+"γ UMi (clicked)":
+  "γ UMi (con clic)",
+"γ UMi there":
+  "γ UMi allá",
+"η UMi (clicked)":
+  "η UMi (con clic)",
+"η UMi there":
+  "η UMi allá",
 "η UMi · {#} ly":
-  "η UMi · {#} a. l."
+  "η UMi · {#} a. l.",
+"γ Vir (clicked)":
+  "γ Vir (con clic)",
+"γ Vir there":
+  "γ Vir allá",
+"ε Vir (clicked)":
+  "ε Vir (con clic)",
+"ε Vir there":
+  "ε Vir allá",
+"δ Vir (clicked)":
+  "δ Vir (con clic)",
+"δ Vir there":
+  "δ Vir allá",
+"η Vir (clicked)":
+  "η Vir (con clic)",
+"η Vir there":
+  "η Vir allá",
+"η Vir · {#} ly":
+  "η Vir · {#} a. l.",
+"β Vir (clicked)":
+  "β Vir (con clic)",
+"β Vir there":
+  "β Vir allá"
 });

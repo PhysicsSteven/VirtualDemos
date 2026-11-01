@@ -1,7 +1,7 @@
 /* demo/units in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/units', {
-"dog":
-  "perro",
+"dog, {#} m at the shoulder":
+  "perro, {#} m a la cruz",
 "person: {#} m":
   "persona: {#} m",
 "hand: {#} m":
@@ -70,6 +70,8 @@ VDI18N.add('es', 'demo/units', {
   "energía",
 "time":
   "tiempo",
+"The same amount drawn as one bar, measured in the first unit along the top and in the second unit along the bottom, with one of each unit drawn to the same scale above it. A bigger unit fits fewer times, so its number is smaller.":
+  "La misma cantidad dibujada como una barra, medida con la primera unidad por arriba y con la segunda por abajo, con una de cada unidad dibujada encima a la misma escala. Una unidad más grande cabe menos veces, así que su número es menor.",
 "Find a formula from its dimensions":
   "Encuentra una fórmula a partir de sus dimensiones",
 "Guess that the answer is a product of powers of the quantities it could depend on. Choose the powers so the dimensions match the answer's. A pure number in front (like {#}π) cannot be found this way.":
@@ -96,6 +98,8 @@ VDI18N.add('es', 'demo/units', {
   "potencia de m (masa)",
 "power of g (acceleration)":
   "potencia de g (aceleración)",
+"The dimensions of your guess, one row each for mass M, length L and time T: each quantity's power adds an arrow, colored by quantity, and the dot where the arrows end is your guess. The open diamond is what the answer needs; a row turns green when the two meet.":
+  "Las dimensiones de tu suposición, una fila para la masa M, otra para la longitud L y otra para el tiempo T: la potencia de cada magnitud añade una flecha, con el color de esa magnitud, y el punto donde terminan las flechas es tu suposición. El rombo hueco es lo que necesita la respuesta; una fila se vuelve verde cuando ambos coinciden.",
 "Show the answer":
   "Mostrar la respuesta",
 "Combine measurements with the right number of figures":
@@ -246,12 +250,30 @@ VDI18N.add('es', 'demo/units', {
   "A ciegas oculta los resultados (el valor convertido, la comprobación de dimensiones, la respuesta redondeada, la estimación y los nombres de los objetos en la regla y en el recorrido) para que los estudiantes trabajen primero.",
 "Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is {#} to {#} μm). Conversion factors are the exact legal definitions ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), except where marked.":
   "Los tamaños en la regla son valores típicos o aproximados; en la naturaleza los intervalos son amplios (un cabello humano mide de {#} a {#} μm). Los factores de conversión son las definiciones legales exactas ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), salvo donde se indica.",
+"Same amount, two rulers: a bigger unit fits fewer times, so its number is smaller.":
+  "La misma cantidad, dos reglas: una unidad más grande cabe menos veces, así que su número es menor.",
+"One of each unit, to the same scale:":
+  "Una de cada unidad, a la misma escala:",
 "Choose a quantity and units. The chain shows each exact factor, so students can see which units cancel. Try {#} mi/h to m/s, or {#} kcal to kWh.":
   "Elige una magnitud y unas unidades. La cadena muestra cada factor exacto, para que los estudiantes vean qué unidades se cancelan. Prueba {#} mi/h a m/s, o {#} kcal a kWh.",
+"Arrows: each power's share. Dot: your guess. Open diamond: what the answer needs.":
+  "Flechas: lo que aporta cada potencia. Punto: tu suposición. Rombo hueco: lo que necesita la respuesta.",
+"M (mass)":
+  "M (masa)",
+"L (length)":
+  "L (longitud)",
+"T (time)":
+  "T (tiempo)",
 "Choose exponents with the sliders until the dimensions [M L T] on the left match the answer's. Then press Show the answer. Variables that do not appear in the answer get exponent {#}.":
   "Elige exponentes con los deslizadores hasta que las dimensiones [M L T] de la izquierda coincidan con las de la respuesta. Luego pulsa Mostrar la respuesta. Las variables que no aparecen en la respuesta tienen exponente {#}.",
-"Your guess: L⁰ m⁰ g⁰ has dimensions {#} (dimensionless). The answer needs T. <span>Not yet.</span>":
-  "Tu suposición: L⁰ m⁰ g⁰ tiene dimensiones {#} (adimensional). La respuesta necesita T. <span>Todavía no.</span>",
+"Your guess:":
+  "Tu suposición:",
+"Its dimensions: {#} (dimensionless)":
+  "Sus dimensiones: {#} (adimensional)",
+"The answer needs:":
+  "La respuesta necesita:",
+"Not yet.":
+  "Todavía no.",
 "Type two measurements as you would write them. A decimal point makes trailing zeros significant; {#} with no decimal point is ambiguous (taken as {#} figures here).":
   "Escribe dos mediciones como las escribirías. Un punto decimal hace significativos los ceros finales; {#} sin punto decimal es ambiguo (aquí se toma con {#} cifras).",
 "significant figures":
@@ -260,6 +282,20 @@ VDI18N.add('es', 'demo/units', {
   "decimales",
 "Calculator: {#} → keep {#} significant figures → <span>{#}</span>":
   "Calculadora: {#} → conservar {#} cifras significativas → <span>{#}</span>",
+"<span>{#} significant figures</span>":
+  "<span>{#} cifras significativas</span>",
+"<span>{#} significant figures, the least precise</span>":
+  "<span>{#} cifras significativas, el menos preciso</span>",
+"<span>keep {#} significant figures → {#}</span>":
+  "<span>conservar {#} cifras significativas → {#}</span>",
+"<span>significant</span>":
+  "<span>significativa</span>",
+"<span>leading zero, not significant</span>":
+  "<span>cero a la izquierda, no significativo</span>",
+"<span>dropped when rounding</span>":
+  "<span>se descarta al redondear</span>",
+"<span>last significant figure kept</span>":
+  "<span>última cifra significativa que se conserva</span>",
 "Running product after each factor, low to high; the last bar is the answer, with a tick at its geometric middle":
   "Producto acumulado después de cada factor, de bajo a alto; la última barra es la respuesta, con una marca en su media geométrica",
 "Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.":
@@ -308,8 +344,118 @@ VDI18N.add('es', 'demo/units', {
   "universo observable (diámetro): {#} × {#}²⁶ m",
 "cursor: {#} m nearest: person (height)":
   "cursor: {#} m más cercano: persona (estatura)",
-"Your guess: L⁰ m⁰ g⁰ has dimensions {#} (dimensionless). The answer needs T. <span>Not yet.</span><br>Powers: L: {#}, m: {#}, g: −{#}. t = C √(L/g), and C = {#}π: the mass drops out.":
-  "Tu suposición: L⁰ m⁰ g⁰ tiene dimensiones {#} (adimensional). La respuesta necesita T. <span>Todavía no.</span><br>Potencias: L: {#}, m: {#}, g: −{#}. t = C √(L/g), y C = {#}π: la masa no interviene.",
+"Powers:":
+  "Potencias:",
+"t = C √(L/g), and C = {#}π: the mass drops out.":
+  "t = C √(L/g), y C = {#}π: la masa no interviene.",
+"Its dimensions:":
+  "Sus dimensiones:",
+"Open diamond: what the answer needs. Your guess is hidden in Blind.":
+  "Rombo hueco: lo que necesita la respuesta. Tu suposición está oculta en modo a ciegas.",
+"Its dimensions: ?":
+  "Sus dimensiones: ?",
+"Period t of a mass m on a spring of stiffness k (units N/m). Could the amplitude A (a length) matter?":
+  "Periodo t de una masa m en un resorte de rigidez k (unidades N/m). ¿Podría importar la amplitud A (una longitud)?",
+"power of k (N/m)":
+  "potencia de k (N/m)",
+"power of A (amplitude)":
+  "potencia de A (amplitud)",
+"t = C √(m/k), and C = {#}π: the amplitude drops out.":
+  "t = C √(m/k), y C = {#}π: la amplitud no interviene.",
+"Speed v of a wave on a string with tension T (a force) and mass per length μ.":
+  "Rapidez v de una onda en una cuerda con tensión T (una fuerza) y masa por unidad de longitud μ.",
+"power of T (force)":
+  "potencia de T (fuerza)",
+"power of μ (mass per length)":
+  "potencia de μ (masa por unidad de longitud)",
+"v = C √(T/μ), and C = {#}.":
+  "v = C √(T/μ), y C = {#}.",
+"Period t of a circular orbit of radius r around a planet with GM (units m³/s²).":
+  "Periodo t de una órbita circular de radio r alrededor de un planeta con GM (unidades m³/s²).",
+"power of r (radius)":
+  "potencia de r (radio)",
+"power of GM (m³/s²)":
+  "potencia de GM (m³/s²)",
+"t = C √(r³/GM), and C = {#}π (Kepler's third law).":
+  "t = C √(r³/GM), y C = {#}π (tercera ley de Kepler).",
+"Time t to fall a height h from rest. It might depend on h, g and the mass m.":
+  "Tiempo t para caer una altura h desde el reposo. Podría depender de h, g y la masa m.",
+"power of h (height)":
+  "potencia de h (altura)",
+"t = C √(h/g), and C = √{#}: the mass drops out (no air drag).":
+  "t = C √(h/g), y C = √{#}: la masa no interviene (sin resistencia del aire).",
+"Calculator: {#} → keep {#} decimal place → <span>{#}</span>":
+  "Calculadora: {#} → conservar {#} decimal → <span>{#}</span>",
+"<span>{#} decimal place, the least precise</span>":
+  "<span>{#} decimal, el menos preciso</span>",
+"<span>{#} decimal places</span>":
+  "<span>{#} decimales</span>",
+"<span>keep {#} decimal place → {#}</span>":
+  "<span>conservar {#} decimal → {#}</span>",
+"<span>last decimal place kept</span>":
+  "<span>último decimal que se conserva</span>",
+"{#} (ambiguous)":
+  "{#} (ambiguo)",
+"Calculator: {#} → keep {#} significant figures → <span>{#} × {#}^{#}</span>":
+  "Calculadora: {#} → conservar {#} cifras significativas → <span>{#} × {#}^{#}</span>",
+"<span>keep {#} significant figures → {#} × {#}^{#}</span>":
+  "<span>conservar {#} cifras significativas → {#} × {#}^{#}</span>",
+"<span>trailing zero with no decimal point: ambiguous</span>":
+  "<span>cero final sin punto decimal: ambiguo</span>",
+"Calculator: {#} → round to the nearest {#} → <span>{#}</span>":
+  "Calculadora: {#} → redondear al múltiplo de {#} más cercano → <span>{#}</span>",
+"<span>known to the nearest {#}, the least precise</span>":
+  "<span>conocido al múltiplo de {#} más cercano, el menos preciso</span>",
+"<span>round to the nearest {#} → {#}</span>":
+  "<span>redondear al múltiplo de {#} más cercano → {#}</span>",
+"<span>placeholder zero</span>":
+  "<span>cero de posición</span>",
+"<span>{#} decimal place</span>":
+  "<span>{#} decimal</span>",
+"Calculator: {#} → keep {#} significant figure → <span>{#} × {#}^{#}</span>":
+  "Calculadora: {#} → conservar {#} cifra significativa → <span>{#} × {#}^{#}</span>",
+"<span>{#} significant figure, the least precise</span>":
+  "<span>{#} cifra significativa, el menos preciso</span>",
+"<span>{#} significant figure</span>":
+  "<span>{#} cifra significativa</span>",
+"<span>keep {#} significant figure → {#} × {#}^{#}</span>":
+  "<span>conservar {#} cifra significativa → {#} × {#}^{#}</span>",
+"{#} light year":
+  "{#} año luz",
+"= {#} light year":
+  "= {#} año luz",
+"proton (diameter)":
+  "protón (diámetro)",
+"hydrogen atom (diameter)":
+  "átomo de hidrógeno (diámetro)",
+"DNA double helix (width)":
+  "doble hélice de ADN (ancho)",
+"typical virus":
+  "virus típico",
+"red blood cell":
+  "glóbulo rojo",
+"human hair (width)":
+  "cabello humano (grosor)",
+"grain of sand":
+  "grano de arena",
+"person (height)":
+  "persona (estatura)",
+"football field":
+  "campo de fútbol americano",
+"Earth to Moon":
+  "de la Tierra a la Luna",
+"Earth to Sun ({#} au)":
+  "de la Tierra al Sol ({#} ua)",
+"one light year":
+  "un año luz",
+"nearest star, Proxima Centauri":
+  "estrella más cercana, Próxima Centauri",
+"Milky Way disk (diameter)":
+  "disco de la Vía Láctea (diámetro)",
+"observable universe (diameter)":
+  "universo observable (diámetro)",
+"one tick per power of ten; drag to read a size":
+  "una marca por potencia de diez; arrastra para leer un tamaño",
 "Running product after each factor, low to high (the answer is hidden in Blind)":
   "Producto acumulado después de cada factor, de bajo a alto (la respuesta está oculta en A ciegas)"
 });

@@ -661,7 +661,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Sun and Earth are drawn far larger than to scale; the orbit and its dates are the model's.
   const OBS_LON = -92.6 * DEG, ER3 = 0.1, SUN3 = 0.12;
   const SPACE = { canvas: 'rgba(5,8,14,0.78)', ink: '#e3e8ef', muted: '#9aa7b8', relief: '#2a3442', gridStrong: '#3a4656', pos: '#ff7660', accent: '#69a0ff', sun: '#f5c451' };
-  const T3 = { S: null, on: false, cam: 'orbit', earth: null, tiltG: null, spinG: null, ring: null, pin: null, ghosts: [], ghostMat: null, exag: null, line: null, disc: null, follow: null, tries: 0 };
+  const T3 = { S: null, on: false, cam: 'orbit', earth: null, tiltG: null, spinG: null, ring: null, pin: null, ghosts: [], ghostMat: null, exag: null, line: null, disc: null, follow: null, tries: 0, sub: null, axis: null };
+  // Whole orbit: today's Earth drawn larger than the faded season Earths, so its axis, latitude ring and the point under the Sun read
+  const BIG3 = 1.6;
   const spinFor = (T, eps) => { const lam = orbitAt(T).lam; return Math.atan2(Math.sin(lam) * Math.cos(eps), Math.cos(lam)) - OBS_LON; };
   function init3D() {
     const S3 = VD3K.stage(cv.orbit.parentElement, { before: cv.orbit, fov: 30, near: 0.005, far: 3000, sky: '#04060b' });
@@ -671,10 +673,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sc.add(VD3K.sky(S3, { n: 2600, r: 1200, seed: 11, milky: true }));
     sc.add(VD3K.star(S3, { r: SUN3, color: '#ffd27a', glow: 4.2 }));
     sc.add(new THREE.PointLight(0xffffff, 2.1, 0));
-    S3.onTheme(() => { S3.hemi.intensity = 0.04; S3.sun.intensity = 0; });
+    S3.onTheme(() => { S3.hemi.intensity = 0.14; S3.sun.intensity = 0; });
     T3.tiltG = new THREE.Group(); sc.add(T3.tiltG);
     const axisM = new THREE.MeshBasicMaterial({ color: '#d9e2ee' });
-    T3.tiltG.add(VD3K.rod([0, 0, -1.45 * ER3], [0, 0, 1.45 * ER3], ER3 * 0.022, axisM));
+    T3.axis = VD3K.rod([0, 0, -1.45 * ER3], [0, 0, 1.45 * ER3], ER3 * 0.022, axisM); T3.tiltG.add(T3.axis);
+    // the subsolar point: where the Sun is straight overhead, on the side of Earth facing the Sun
+    T3.sub = new THREE.Mesh(new THREE.SphereGeometry(ER3 * 0.1, 16, 12), new THREE.MeshBasicMaterial({ color: '#ffd27a' })); sc.add(T3.sub);
     T3.ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.022, 8, 120), new THREE.MeshStandardMaterial({ color: '#5b98ff', roughness: 0.5 }));
     T3.tiltG.add(T3.ring);
     T3.pin = new THREE.Mesh(new THREE.SphereGeometry(ER3 * 0.09, 16, 12), new THREE.MeshBasicMaterial({ color: '#7fb0ff' }));
@@ -717,14 +721,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       T3.follow.to(hE[0], hE[1], hE[2], T3.snap); T3.snap = false;
       S3.place(o, T3.follow.at, ER3 * 9 / Math.min(1, asp));
     } else {
-      const rx = layers.exag ? 1.36 : 1.08, half = Math.max(rx / (t * asp), (rx * Math.sin(view.el) + 0.22) / t);
-      const top = (W < 560 * ps ? 48 : 64) * ps, bot = (W < 560 * ps ? (W < 470 ? 110 : 60) : 26) * ps, k = H / Math.max(1, H - top - bot);
+      const rx = layers.exag ? 1.36 : 1.08, half = Math.max(rx / (t * asp), (rx * Math.sin(view.el) + 0.3) / t);
+      // the date and title go under the picture on a narrow pane, so only a thin band is kept above it there
+      const top = (W < 560 * ps ? (W < 470 ? 48 : 18) : 64) * ps, bot = (W < 560 * ps ? (W < 470 ? 110 : 60) : 26) * ps, k = H / Math.max(1, H - top - bot);
       T3.follow.to(0, 0, 0, true);
       S3.place(o, [0, 0, 0], half * 1.04 * k);
       S3.cam.setViewOffset(W, H, 0, (bot - top) / 2, W, H);
     }
     if (near) S3.cam.clearViewOffset();
     T3.tiltG.position.set(hE[0], hE[1], hE[2]); T3.tiltG.rotation.x = -eps;
+    const big = near ? 1 : BIG3; T3.tiltG.scale.setScalar(big);
+    T3.axis.scale.set(near ? 1 : 1.8, 1, near ? 1 : 1.8);
+    { const r = Math.hypot(hE[0], hE[1], hE[2]), k = 1 - ER3 * big * 1.01 / r; T3.sub.position.set(hE[0] * k, hE[1] * k, hE[2] * k); T3.sub.scale.setScalar(big); }
     T3.ring.scale.set(ER3 * 1.004 * Math.cos(ph), ER3 * 1.004 * Math.cos(ph), ER3 * (near ? 0.6 : 1.4));
     T3.ring.position.z = ER3 * Math.sin(ph);
     T3.pin.position.set(ER3 * Math.cos(ph) * Math.cos(OBS_LON), ER3 * Math.cos(ph) * Math.sin(OBS_LON), ER3 * Math.sin(ph)).multiplyScalar(1.01);
@@ -763,8 +771,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         else put(s.name, p[0], p[1] + M.eR * 0.72 + 14 * ps, `${10 * ps}px ${C.mono}`, C.muted);
       }
     }
-    const q = tip(S.T, near ? ER3 * 1.62 : ER3 * 2.05);
-    if (q[2] < 1 && q[1] > 52 * ps) put('N', q[0], q[1], `700 ${(near ? 14 : 11) * ps}px ${C.ui}`, C.ink);
+    const q = tip(S.T, near ? ER3 * 1.62 : ER3 * (1.45 * BIG3 + 0.62));
+    if (q[2] < 1 && q[1] > (near || size.orbit.W >= 560 * ps ? 52 : 10) * ps) put('N', q[0], q[1], `700 ${(near ? 14 : 11) * ps}px ${C.ui}`, C.ink);
     if (near) {
       const W = size.orbit.W, y0 = W < 560 * ps ? size.orbit.H - (W < 470 ? 140 : 92) * ps : 86 * ps;
       ctx.textAlign = 'left';
@@ -861,6 +869,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.font = `${11 * ps}px ${C.mono}`; ctx.fillStyle = C.muted;
     ctx.fillText('day ' + (Math.floor(wrapT(S.T)) + 1) + (on3 && hy ? ' · Sun and Earth not to scale' : ''), 12, hy + 52 * ps);
     if (on3 && !hy) ctx.fillText('Sun and Earth not to scale', 12, 68 * ps);
+    // what today's tilt does, in the colors of the picture: the yellow dot is where the Sun is overhead, the blue ring is your
+    // latitude, and the axis keeps one direction in space all year
+    if (!(on3 && T3.cam === 'earth')) {
+      const dec = declination(o.lam, S.tilt), day = sunDay(S.lat * DEG, dec).hours;
+      const sunInk = on3 ? C.sun : getComputedStyle(document.documentElement).getPropertyValue('--sd-sunline').trim() || C.ink;
+      const rows = [['Sun overhead at ' + fmtLat(+(dec / DEG).toFixed(1)), sunInk], ['Day at ' + fmtLat(S.lat) + ': ' + fmtHM(day), on3 ? '#7fb0ff' : C.accent]];
+      ctx.font = `${11 * ps}px ${C.mono}`;
+      const lw = Math.max(ctx.measureText('day ' + (Math.floor(wrapT(S.T)) + 1) + (on3 && hy ? ' · Sun and Earth not to scale' : '')).width, 90 * ps);
+      const bw = Math.max(...rows.map((r) => ctx.measureText(r[0]).width));
+      let x = W - 12, al = 'right', y0 = hy + 38 * ps;
+      if (12 + lw + 18 * ps + bw > W - 12) { if (on3 && hy && W < 470) { x = 12; al = 'left'; y0 = hy + 68 * ps; } else x = null; }
+      if (x !== null) {
+        ctx.textAlign = al; ctx.lineJoin = 'round';
+        rows.forEach((r, i) => { const y = y0 + i * 14 * ps; if (on3) { ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(r[0], x, y); } ctx.fillStyle = r[1]; ctx.fillText(r[0], x, y); });
+      }
+    }
     ctx.restore();
   }
 
