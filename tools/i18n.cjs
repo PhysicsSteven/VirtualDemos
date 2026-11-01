@@ -34,7 +34,7 @@ const flag = (k) => { const i = args.indexOf(k); if (i < 0) return false; args.s
 /* strings no language translates: numbers with SI symbols, single letters, symbols (they are left out of the catalogs) */
 const UNITS = new Set(('m s g kg mg μg mm cm km nm μm pm fm Å Hz kHz MHz GHz THz V kV mV MV μV A mA μA kA Ω kΩ MΩ W kW MW mW μW J kJ MJ eV keV MeV GeV TeV ' +
   'K Pa kPa MPa GPa hPa N kN mN T mT μT G nT C μC nC pC F μF nF pF H mH μH L mL dB dBA rad mrad sr mol cd lm lx Bq kBq MBq GBq Ci mCi Gy mGy cGy Sv mSv μSv ' +
-  'AU au pc kpc Mpc ly px pt ms μs ns ps fs min h atm bar mbar u Da kDa amu cal kcal Wh kWh rpm psi lb in ft mi mph c e x y z t E B M R P Q D S U X Y Z').split(' '));
+  'AU au pc kpc Mpc ly px pt ms μs ns ps fs min h atm bar mbar u Da kDa amu cal kcal Wh kWh rpm psi lb ft mi mph c e x y z t E B M R P Q D S U X Y Z').split(' '));
 function trivial(k) {
   const words = k.replace(/<[^>]*>|\{#\d*\}|\{[A-Za-z_]\w*\}/g, ' ').split(/[^A-Za-zÀ-ɏͰ-ϿЀ-ӿ]+/).filter(Boolean);
   return words.every((w) => w.length === 1 || UNITS.has(w) || /^[Ͱ-Ͽ]+$/.test(w));

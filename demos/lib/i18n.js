@@ -72,7 +72,8 @@
   };
 
   /* ---------- lookups ---------- */
-  var NUM = /(^|[^A-Za-z0-9_.{#])(\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)(?![A-Za-z0-9])/g;
+  /* a number: 4,850 (thousands) or 0.07 (a decimal, even glued to a unit letter: 0.47c) or 12 (a whole number not glued to letters: 3D, CO2 stay text) */
+  var NUM = /(^|[^A-Za-z0-9_.{#])(\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![0-9])|\d+\.\d+(?:[eE][-+]?\d+)?(?![0-9])|\d+(?:[eE][-+]?\d+)?(?![A-Za-z0-9]))/g;
   var LETTER = /[A-Za-zÀ-ɏͰ-ϿЀ-ӿ]/;
   /* numbers become {#}, except inside math (\( \), \[ \], $$ $$), which is kept as written */
   var MATH = /(\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]|\$\$[\s\S]*?\$\$)/;
