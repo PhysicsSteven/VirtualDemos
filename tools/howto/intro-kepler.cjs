@@ -25,8 +25,9 @@ require('./lib.cjs')({ demo: 'kepler-orbits', query: '?ws=intro-kepler', title: 
   state.zoom = view;
   const el = await p.evaluate(() => { const L = window.__kepler.S.launch, rp = Math.hypot(L.x, L.y); return { rp, ux: L.x / rp, uy: L.y / rp }; });
   const Q = 2 * 0.3871 - el.rp;   /* aphelion from the preset's a, opposite the launch point */
-  await r.moveTo(...(await at(el.rp * el.ux, el.rp * el.uy)), 0.8); await tap();
-  await r.moveTo(...(await at(-Q * el.ux, -Q * el.uy)), 1.0); await tap();
+  /* the view can still settle while the pointer travels, so aim again where it lands */
+  await r.moveTo(...(await at(el.rp * el.ux, el.rp * el.uy)), 0.8); await r.moveTo(...(await at(el.rp * el.ux, el.rp * el.uy)), 0.1); await tap();
+  await r.moveTo(...(await at(-Q * el.ux, -Q * el.uy)), 1.0); await r.moveTo(...(await at(-Q * el.ux, -Q * el.uy)), 0.1); await tap();
   r.check.ruler = await r.text('#ru12');
   state.zoom = null;
   state.arrow = { rect: await r.box('#ru12') };

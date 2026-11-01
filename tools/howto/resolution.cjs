@@ -29,9 +29,11 @@ require('./lib.cjs')({ demo: 'resolution', title: 'Circular Apertures and Resolu
   await scrollTo(360, 0.7);
   const sD = await r.box('#sD'), v = await p.evaluate(() => +document.querySelector('#sD').value);
   state.zoom = [16, sD[1] - 340, 800, 450];
+  state.capTop = true;   /* the pinhole slider sits at the bottom of the zoom, under where the caption would go */
   await r.moveTo(sD[0] + 8 + (sD[2] - 16) * (v - 50) / 250, sD[1] + sD[3] / 2, 0.8);
   r.check.D = await r.dragUntil(-1.2, 0, '#oD', '100 µm');
   await r.secs(0.6);
+  state.capTop = false;
 
   state.caption = 'Drag the cursor onto the first dark ring, where the intensity is least';
   const cv = await r.box('#curve');

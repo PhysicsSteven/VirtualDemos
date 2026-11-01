@@ -264,7 +264,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   }
   function formatKeep(x, r) {
     if (r.rule === 'dec') return r.keep >= 0 ? x.toFixed(r.keep) : String(Math.round(x));
-    const e = x === 0 ? 0 : Math.floor(Math.log10(Math.abs(x))); if (e >= 6 || e <= -4 || e >= r.keep) return x.toExponential(r.keep - 1).replace('e+', ' × 10^').replace('e-', ' × 10^−');   // 470 with 2 figures is written 4.7 × 10^2
+    const e = x === 0 ? 0 : Math.floor(Math.log10(Math.abs(x))); if (e >= 6 || e <= -4 || e >= r.keep) return x.toExponential(Math.max(0, r.keep - 1)).replace('e+', ' × 10^').replace('e-', ' × 10^−');   // 470 with 2 figures is written 4.7 × 10^2
     return x.toFixed(Math.max(0, r.keep - 1 - e));
   }
   // Fermi: product of factors, low and high

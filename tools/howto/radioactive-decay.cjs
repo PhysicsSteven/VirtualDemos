@@ -19,8 +19,9 @@ require('./lib.cjs')({ demo: 'radioactive-decay', title: 'Radioactive Decay' }, 
   await r.secs(2.6);
 
   state.caption = 'Press Pause, then Reset, to start from t = 0';
-  const ctl = await r.box('#play');
-  state.zoom = [ctl[0] - 20, ctl[1] - 30, 640, 360];
+  const ctl = await r.box('#play'), clk = await r.box('#tclock');
+  const zx = Math.max(0, Math.min(ctl[0], clk[0]) - 30);   /* the clock sits left of Play: keep both in the zoom */
+  state.zoom = [zx, ctl[1] - 30, 640, 360];
   await r.click('#play');
   await r.secs(0.3);
   await r.click('#reset');
@@ -34,7 +35,7 @@ require('./lib.cjs')({ demo: 'radioactive-decay', title: 'Radioactive Decay' }, 
   await record(1.6);
 
   state.caption = 'Press Step: every nucleus gets one coin flip. Record again';
-  state.zoom = [ctl[0] - 20, ctl[1] - 30, 640, 360];
+  state.zoom = [zx, ctl[1] - 30, 640, 360];
   await r.click('#stepBtn');
   await r.tick(3);
   r.check.t1 = await r.text('#tclock');

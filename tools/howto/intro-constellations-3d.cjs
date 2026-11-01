@@ -16,10 +16,13 @@ require('./lib.cjs')({ demo: 'celestial-sphere', query: '?con=UMa', title: 'Cons
 
   state.caption = 'Look from the side: the Sun on the left, each star at its distance';
   await r.click('#depthLook [data-look=side]');
-  await r.secs(3.2);
+  await r.secs(0.4);
+  /* the side view draws the stars along the foot of the picture: zoom there and put the caption on top */
+  state.zoom = [cv[0], cv[1] + cv[3] - cv[2] * 9 / 16, cv[2], cv[2] * 9 / 16]; state.capTop = true;
+  await r.secs(2.8);
   state.caption = 'Five stars sit near 80 ly; Alkaid is at 104 ly and Dubhe at 123 ly';
   await r.secs(2.8);
-  state.zoom = null;
+  state.zoom = null; state.capTop = false;
 
   state.caption = 'The table beside the picture lists V, the distance and the absolute magnitude M';
   await r.scrollRail('#depthTab');

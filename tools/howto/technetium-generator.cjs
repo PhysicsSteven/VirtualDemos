@@ -47,8 +47,8 @@ require('./lib.cjs')({ demo: 'radioactive-decay', title: 'Radioactive Decay', qu
 
   state.caption = 'Press Step four times: each step is 0.5 h, so the clock reads 2 h. Record again';
   await r.scrollRail('#tclock');
-  const c2 = await r.box('#play');
-  state.zoom = [Math.max(0, c2[0] - 20), Math.max(0, c2[1] - 30), 640, 360];
+  const c2 = await r.box('#play'), ck = await r.box('#tclock');
+  state.zoom = [Math.max(0, Math.min(c2[0], ck[0]) - 30), Math.max(0, c2[1] - 30), 640, 360];   /* the clock sits left of Play: keep both */
   for (let i = 0; i < 4; i++) { await r.click('#stepBtn'); await r.tick(4); }
   r.check.t1 = await r.text('#tclock');
   state.arrow = { rect: await r.box('#tclock') };

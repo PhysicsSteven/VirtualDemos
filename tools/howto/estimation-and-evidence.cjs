@@ -21,6 +21,7 @@ require('./lib.cjs')({ demo: 'units', title: 'Units, Scales and Estimates: Repor
 
   const panel = await r.box('#pSig');
   state.zoom = [panel[0], panel[1], 800, 450];
+  state.capTop = true;   /* the Calculator line sits at the bottom of the zoom, under where the caption would go */
   state.caption = 'Type the two numbers and pick the operation: 12.4 + 0.56';
   await type('#sA', '12.4');
   await pick('#sOp', '+');
@@ -42,7 +43,7 @@ require('./lib.cjs')({ demo: 'units', title: 'Units, Scales and Estimates: Repor
   state.arrow = { rect: await r.box('#sOut') };
   r.check.product = await r.text('#sOut');
   await r.secs(2.6);
-  state.arrow = null; state.zoom = null;
+  state.arrow = null; state.zoom = null; state.capTop = false;
 
   state.caption = 'Write both in the Data table and explain the two rules; the rest is on paper';
   await r.moveTo(640, 600, 0.8);

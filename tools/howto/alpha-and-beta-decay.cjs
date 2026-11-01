@@ -33,11 +33,12 @@ require('./lib.cjs')({ demo: 'radioactive-decay', title: 'Radioactive Decay', qu
   await r.scrollRail('.vd-readings');
   await r.click('.vd-rec');
   await r.tick(4);
-  const t = await r.box('.vd-readings table');
-  state.zoom = [W - 600, t[1] - 150, 600, 337.5];
-  state.arrow = { rect: await r.box('.vd-readings tbody tr:last-child') };
+  await r.scrollRail('.vd-readings tbody tr:last-child');   /* the new row lands below the window otherwise */
+  const tr = await r.box('.vd-readings tbody tr:last-child');
+  state.zoom = [W - 600, Math.max(0, tr[1] - 200), 600, 337.5];
+  state.arrow = { rect: tr }; state.capTop = true;   /* the row sits at the foot of the window, under where the caption would go */
   await r.secs(2.2);
-  state.arrow = null; state.zoom = null;
+  state.arrow = null; state.zoom = null; state.capTop = false;
 
   state.caption = 'Repeat for all twenty emitters, then send the table to the worksheet';
   const ex = await r.box('.vd-export');
