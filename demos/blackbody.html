@@ -504,7 +504,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false, view: 'spec' };
   let pins = [];
   const SPEC_SHOW = [['T_K', 'T (K)'], ['peak_nm', 'peak (nm)'], ['flux_W_m2', 'flux (W/m²)']], UBV_SHOW = [['T_K', 'T (K)'], ['B_V', 'B − V'], ['U_B', 'U − B']];   /* Readings table columns per view */
-  let locked = null, frozen = null;
+  let locked = null, frozen = null, colName = '—';
   let probe = null, drag = null, hoverPeak = false;
   let raf = 0;
 
@@ -1144,7 +1144,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rPk').textContent = fmtLen(wien(S.T));
     const k = classOf(S.T);
     $('rCls').textContent = k ? `${k.c}, ${k.lo.toLocaleString('en-US')}${isFinite(k.hi) ? '–' + k.hi.toLocaleString('en-US') : '+'} K` : (S.T < 2400 ? 'cooler than M' : '—');
-    $('rCol').textContent = k ? k.col : S.T >= 1000 ? 'deep red' : S.T >= 700 ? 'dull red' : 'no visible glow';
+    colName = k ? k.col : S.T >= 1000 ? 'deep red' : S.T >= 700 ? 'dull red' : 'no visible glow'; $('rCol').textContent = colName;   /* kept in English for the readings (the shown text may be translated) */
     const F = SIG * Math.pow(S.T, 4);
     $('rF').textContent = sci(F, 3) + ' W/m²';
     const L = 4 * Math.PI * Math.pow(S.R * RSUN, 2) * F / LSUN;
@@ -1327,7 +1327,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = (v, d) => +(+v).toPrecision(d), pk = curvePeak(S.T);
     return { T_K: g(S.T, 5), peak_nm: g(pk * 1e9, 5), B_peak_W_m2_sr_nm: g(planck(pk, S.T) * 1e-9, 4), flux_W_m2: g(curveFlux(S.T), 5), visible_percent: g(visibleFraction(S.T) * 100, 4), R_sun: S.star ? g(S.R, 4) : '',
       /* added for Astro 2203's intro worksheet: the star's spectral class and color name as the readouts give them, and its luminosity */
-      spectral_class: classOf(S.T) ? classOf(S.T).c : (S.T < 2400 ? 'cooler than M' : ''), color: $('rCol').textContent,
+      spectral_class: classOf(S.T) ? classOf(S.T).c : (S.T < 2400 ? 'cooler than M' : ''), color: colName,
       L_sun: S.star ? g(4 * Math.PI * Math.pow(S.R * RSUN, 2) * SIG * Math.pow(S.T, 4) / LSUN, 4) : '',
       /* the U, B, V view (2026-10-31): 10⁴/T for the graph, the light through B over the light through V, and the two color indexes */
       ...(S.view === 'ubv' ? (() => { const c = ubvColors(S.T); return { view: 'U B V filters', invT_1e4: g(1e4 / S.T, 4), B_over_V: g(c.BoverV, 4), B_V: +c.BV.toFixed(3), U_B: +c.UB.toFixed(3) }; })() : {}) };

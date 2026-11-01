@@ -1103,7 +1103,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two lengths with a bob, θ₀ ≤ 10°, on this planet.</dd></div>';
         else { const g = 4 * Math.PI ** 2 / F.b, sg = g * F.seB / F.b;
           h = `<div><dt>Slope (s²/m)</dt><dd>${f(F.b, 4)}${isFinite(F.seB) ? ` ± ${f(F.seB, 4)}` : ''}</dd></div><div><dt>Intercept (s²)</dt><dd>${f(F.a, 4)}</dd></div>`;
-          h += hideG() ? `<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery planet'}: work it out</dd></div>` : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }
+          h += hideG() ? `<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">${S.blind ? VDI18N.t('hidden in Blind: work it out') : VDI18N.t('hidden for the Mystery planet: work it out')}</dd></div>` : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }
       } else {
         pts = S.rows.filter((r) => r.L === S.L.toFixed(2) && r.type === (S.rod ? 'rod' : 'bob') && r.gKey === S.gKey).map((r) => [cellNum(r.A), cellNum(r.T)]).filter(([a, b]) => isFinite(a) && isFinite(b));
         h = pts.length ? `<div class="wide"><dt>Points at L = ${f(S.L, 2)} m</dt><dd class="ok">${pts.length} captured; ${S.blind || S.mystery ? 'the curve is hidden' : 'the dashed curve is the exact period, the flat line T₀'}.</dd></div>` : '<div class="wide"><dt>Plot</dt><dd class="ok">Capture T at several release angles at one length.</dd></div>';
@@ -2115,7 +2115,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     function updateClock() {
       const r = S.mode === 'simple' ? Rs : R; if (!r) return;
       $('tclock').firstChild.textContent = `t = ${r.t.toFixed(1)} s`;
-      $('rateTag').textContent = r.lag ? 'slowed to keep up' : fmtRate(SPEEDS[S.speedIdx]);
+      $('rateTag').textContent = r.lag ? VDI18N.t('slowed to keep up') : fmtRate(SPEEDS[S.speedIdx]);
     }
 
     // ---------- controls ----------
@@ -2515,7 +2515,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const r = R, p = r.p, y0 = r.y0, nm = normalModes(p), mp = measuredPeriod(r), ts = sepTime(r);
       const still = y0[2] === 0 && y0[3] === 0 && y0[0] !== 0, near = (q) => Math.abs(y0[1] / y0[0] - q) < 1e-9 * Math.max(1, Math.abs(q));
-      const start = still && near(nm.r1) ? 'mode 1' : still && near(nm.r2) ? 'mode 2' : still ? 'released from rest' : 'moving start';
+      const start = still && near(nm.r1) ? 'mode 1' : still && near(nm.r2) ? 'mode 2' : still ? 'released from rest' : 'moving start';   /* VDI18N.t('moving start'): shown in the readings table */
       return { start, theta1_0_deg: +(y0[0] / DEG).toFixed(2), theta2_0_deg: +(y0[1] / DEG).toFixed(2), m1_kg: p.m1, m2_kg: p.m2, L1_m: p.L1, L2_m: p.L2, g_m_s2: +p.g.toFixed(5),
         t_s: +r.t.toFixed(2), T_s: mp && mp.ok ? +mp.T.toPrecision(4) : '', copies: r.N, log10_delta: r.N > 1 ? S.logd : '', delta_rad: r.N > 1 ? +r.dlt.toPrecision(3) : '',
         t_sep_s: r.N > 1 && isFinite(ts) ? +ts.toFixed(2) : '' };
