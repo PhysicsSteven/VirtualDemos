@@ -1860,7 +1860,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const dU = st.U - s0.U, f = (v) => fmtSI(v, 'J');
     const par = (v) => (v < 0 ? `(${f(v)})` : f(v));
     const heat = Lg.H > 1e-18;
-    $('book').innerHTML = `<span class="eq">W<sub>hand</sub> = ΔU − W<sub>battery</sub>${heat ? ' + heat' : ''}</span><br>${f(Lg.Wh)} = ${par(dU)} − ${par(Lg.Wb)}${heat ? ` + ${f(Lg.H)}` : ''}<span class="book-note"><br><span class="res">W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>`;
+    /* the words are translated one by one: with its numbers the whole line has too many forms to harvest */
+    const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t);
+    $('book').innerHTML = `<span class="eq">W<sub>${tr('hand')}</sub> = ΔU − W<sub>${tr('battery')}</sub>${heat ? ' + ' + tr('heat') : ''}</span><br>${f(Lg.Wh)} = ${par(dU)} − ${par(Lg.Wb)}${heat ? ` + ${f(Lg.H)}` : ''}<span class="book-note"><br><span class="res">W<sub>${tr('battery')}</sub> = V<sub>b</sub>${tr('ΔQ while connected')}</span></span>`;
     // slab box
     const sl = [];
     sl.push(`<div><dt>Slab thickness t</dt><dd>${fmtCm(g.t)}</dd></div>`);
