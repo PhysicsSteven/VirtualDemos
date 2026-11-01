@@ -4,7 +4,10 @@ VDI18N.add('en', 'demo/e-over-m', [
 "View through the front coil, scale in cm",
 "beam flicker simulated",
 "eye +{#} cm",
-"3D view needs WebGL: a front view along the coil axis",
+"e/m POWER SUPPLY",
+"ACCELERATING VOLTAGE",
+"COIL CURRENT",
+"HEATER {#} V",
 "e/m of the Electron",
 "<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>",
@@ -17,8 +20,9 @@ VDI18N.add('en', 'demo/e-over-m', [
 "Zoom left",
 "Zoom right",
 "Circle <small>back to the gun</small>",
+"The e/m apparatus in 3D: Helmholtz coils, the glass bulb with the glowing beam, the mirrored scale on the rear coil, the power supply and your eye. Drag to turn, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, the eye along its rail. Keys: up and down set V, left and right set I, shift for bigger steps; [ and ] turn the tube; comma and period move the eye; space pauses.",
 "Front view of the e/m apparatus: Helmholtz coils, the glass bulb with the beam, and the power supply. Drag the V and I knobs up or down. Keys: up and down set the voltage, left and right the coil current, shift for bigger steps.",
-"Drag the V and I knobs up or down.",
+"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.",
 "View through the front coil onto the mirrored scale behind the bulb. The beam and its reflection in the mirror line up only when your eye is straight in front of the beam. Drag the eye along the bottom, and drag the reading pointers L and R onto the beam. Keys: E selects the eye, L or R a pointer; left and right move it, shift for bigger steps.",
 "Divider between the tube and the scale",
 "No field: a straight beam",
@@ -86,5 +90,7 @@ VDI18N.add('en', 'demo/e-over-m', [
 "Mean of the rows ± standard deviation",
 "Accepted (CODATA): {#} × {#}¹¹ C/kg",
 "−{#}% from the slope",
-"The procedure took five readings at the voltages and currents of the sample data in the PASCO manual ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table."
+"The procedure took five readings at the voltages and currents of the sample data in the PASCO manual ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.",
+"3D view needs WebGL: a front view along the coil axis",
+"Drag the V and I knobs up or down."
 ]);

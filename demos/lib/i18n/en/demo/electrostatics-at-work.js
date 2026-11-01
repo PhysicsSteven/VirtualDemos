@@ -78,6 +78,7 @@ VDI18N.add('en', 'demo/electrostatics-at-work', [
 "Motor running for",
 "Blind hides Q, V, the surface field, V_max and the time to spark, and the numbers on the graphs: predict how V_max and the charging time change with R first.",
 "Model: the dome is an isolated conducting sphere far from everything else, so C = {#}πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches {#} MV/m (dry air at {#} atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column and base are not part of the calculation. Hung up, the wand is far away and left out. Picked up, its brass ball (radius {#} cm, joined to earth) is part of the calculation wherever you drag it: the dome and the ball are both conducting spheres, so the field outside them is exactly that of Kelvin image charges on the line between their centers (worked out afresh at every position; the ball's rod, handle and lead are left out). The ball takes on an opposite charge, the field in the gap grows, and air breaks down where the field first reaches {#} MV/m, on the dome or on the small ball. That is the textbook rule and a good guide for a gap no wider than about the ball's radius; across a wider gap a real discharge starts as a faint glow (corona) at the ball and the voltage can climb further before a spark jumps, so the breakdown voltage shown is then a lower limit. A gap under {#} mm counts as touching: the dome is grounded through the wand. Blue dots in the lead are electrons, each {#}/{#} of the dome's Q_max, moving far slower than real ones.",
+"To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.",
 "Side view, to scale, slow motion",
 "nozzle",
 "charging electrode",
@@ -146,5 +147,10 @@ VDI18N.add('en', 'demo/electrostatics-at-work', [
 "Sparks",
 "fur rug",
 "wool socks",
-"Stop motor"
+"Stop motor",
+"Not to scale; the inset is",
+"knob",
+"charger",
+"grounded",
+"Top view, not to scale: {#} m by {#} m"
 ]);

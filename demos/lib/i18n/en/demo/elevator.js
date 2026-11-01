@@ -3,7 +3,6 @@ VDI18N.add('en', 'demo/elevator', [
 "scale reading (kg)",
 "velocity, up + (m/s)",
 "Elevator: Apparent Weight",
-"<a><span>←</span> <span>Forces and Friction</span></a><a><span>Inverse Square Force Lab</span> <span>→</span></a>",
 "Stand on a bathroom scale in an elevator. The scale reads the normal force N, not your weight mg. It reads more while the elevator speeds up going up, less while it speeds up going down, and exactly mg at any constant speed.",
 "floors {#} m apart · g = {#} m/s²",
 "An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time.",
@@ -36,9 +35,14 @@ VDI18N.add('en', 'demo/elevator', [
 "N − mg = ma (up positive) · scale shows N/g",
 "Blind hides the scale reading, the N arrow and the scale graph, so the class can predict each stage of the ride first.",
 "Model: the car's acceleration ramps up to ±a at the chosen jerk (rate of change of acceleration), holds, and ramps back to zero, so the scale reading changes gradually as in a real elevator; tick “Instant starts and stops” for the textbook model, where the acceleration and the scale reading jump. The scale is massless and reads instantly, in kilograms as N/g. Cable snaps: free fall for up to one second (less if the car is too near the pit to stop at g after a full second), then the safety brakes stop the car at a constant deceleration of at least g, more if needed to stop above the pit.",
+"<a><span>←</span> <span>Forces and Friction</span></a><a><span>Inverse Square Force Lab</span> <span>→</span></a>",
+"floor {#}",
 "stage",
 "scale (kg)",
 "Floor {#} to floor {#}: {#} s.",
 "<span>speeding up going up</span>",
-"speeding up going up"
+"speeding up going up",
+"<span>constant speed up</span>",
+"<span>free fall: the cable has snapped</span>",
+"<span>safety brakes stopping the car</span>"
 ]);

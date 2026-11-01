@@ -7,8 +7,6 @@ VDI18N.add('en', 'demo/displacement-current', [
 "plate edge",
 "faint: in the gap, for comparison",
 "Displacement Current",
-"<a>Sources of magnetic fields</a>",
-"<a><span>←</span> <span>Force on a Current</span></a><a><span>Magnetism in Matter</span> <span>→</span></a>",
 "A capacitor charges through a wire. No charge crosses the gap, yet there is a magnetic field around it. Ampère's law only works if the changing electric field between the plates counts as a current.",
 "plates {#} cm radius, {#} mm apart · C = {#} pF",
 "Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty.",
@@ -45,6 +43,9 @@ VDI18N.add('en', 'demo/displacement-current', [
 "ε₀ dΦ<sub>E</sub>/dt = ε₀A dE/dt",
 "The capacitor charges as q = CV({#} − e<sup>−t/RC</sup>), so the current I = (V/R)e<sup>−t/RC</sup> dies away. Time runs about {#}⁵ times slower than real. Ideal plates: the field between them is uniform and fringing is ignored; the wire is long and straight, {#} mm in radius. The field at the loop is the instantaneous (quasi static) Ampère–Maxwell value: retardation and radiation are left out, a correction of order (size/λ)² ≈ {#}⁻¹⁰ for a {#} cm apparatus and a {#} µs time constant.",
 "Blind hides B, the displacement current, the enclosed currents and the B(r) curve, leaving the circuit current, the field between the plates and the loop's size and place.",
+"<a>Sources of magnetic fields</a>",
+"<a><span>←</span> <span>Force on a Current</span></a><a><span>Magnetism in Matter</span> <span>→</span></a>",
+"Gap drawn {#} cm wide (really {#} mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.",
 "B (pT)",
 "t = {#} s · τ = RC = {#} µs",
 "The same loop, but stretch its surface into the gap like a bag. No wire crosses the bag, so without displacement current ∮B·dl would be {#} for the same loop. The changing E field through the bag supplies exactly I.",
@@ -52,5 +53,6 @@ VDI18N.add('en', 'demo/displacement-current', [
 "faint: around the wire, for comparison",
 "A loop between the plates, wider than them. No charge flows here, yet B is the same as around the wire at this r: the whole displacement current passes through the disk.",
 "between the plates",
-"A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire."
+"A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.",
+"Gap drawn wider than scale. Drag the knob; drag elsewhere to turn."
 ]);
