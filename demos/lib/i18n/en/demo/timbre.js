@@ -59,7 +59,6 @@ VDI18N.add('en', 'demo/timbre', [
 "In space",
 "<span>Waveform against</span>",
 "Plot the waveform against",
-"Position",
 "Wavelength λ₁ = v/f₁",
 "Wave number k₁ = {#}π/λ₁",
 "Packet center n₀",

@@ -1,5 +1,11 @@
 /* English strings of ws/intro-parallax, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-parallax', [
+"Distance d (pc)",
+"Parallax p (mas)",
+"January to July shift 2p (mas)",
+"Your ruler’s shift s (mas)",
+"Distance from your ruler, {#} ÷ s (pc)",
+"Distance uncertainty (%)",
 "Parallax: Measuring the Distance to a Star | VirtualDemos",
 "Parallax: Measuring the Distance to a Star",
 "<strong>Setups in the demo:</strong> {#} Parallax; {#} Cepheids; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.",
@@ -38,12 +44,6 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Distance from your ruler, {#} ÷ s (pc), row {#}",
 "Distance uncertainty (%), row {#}",
 "{#} ÷ d ({#}/pc), row {#}",
-"Distance d (pc)",
-"Parallax p (mas)",
-"January to July shift 2p (mas)",
-"Your ruler’s shift s (mas)",
-"Distance from your ruler, {#} ÷ s (pc)",
-"Distance uncertainty (%)",
 "Part {#}: compare the distance from your ruler with the demo’s distance for each star. Change each distance into light years ({#} pc = {#} light years). Proxima Centauri is the nearest star to the Sun: how long does its light take to reach us?",
 "Part {#}: fill in the last column, {#} ÷ d, for the eight readings of Part {#} and Part {#}. Graph the parallax p (mas) against {#} ÷ d. Is it a straight line through the origin? What is its slope, and what does that number mean? (Hint: what parallax would a star at {#} pc have?)",
 "Part {#}: the uncertainty in p stays the same while p shrinks as {#} ÷ d, so the uncertainty in the distance grows in step with the distance: ten times farther, ten times the uncertainty. For each instrument, use one of your readings to work out the distance at which its uncertainty is {#} %. That is how far each instrument can reach with good distances.",
@@ -52,5 +52,17 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Why do astronomers compare photos taken six months apart, rather than one month apart?",
 "Use your Part {#} readings to check your guess in Before the lab {#}. How many times smaller than the full Moon is Proxima Centauri’s parallax?",
 "Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in {#}, by Friedrich Bessel, for the star {#} Cygni (about {#}″). Using what you found, explain both why the Greeks saw none and what their mistake was.",
-"Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Star against Reading, {#} points",
+"<b>fit: </b>Star = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
+"<b>fit: </b>y = A·xⁿ, with y = Star and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
+"<b>fit: </b>y = a + b·ln x, with y = Star and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
+"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Star and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Star and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Star and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"{#} points with error bars from Instrument. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
+"<b>fit: </b>Star = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
+"<strong>New readings from the Cosmic Distance Ladder demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Cosmic Distance Ladder demo are in your table.",
+"<strong>New readings from the Cosmic Distance Ladder demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

@@ -9,7 +9,6 @@ VDI18N.add('en', 'demo/star-slice', [
 "Color by",
 "Glow",
 "Elements",
-"Density",
 "Burning",
 "Gamma",
 "Log radius",

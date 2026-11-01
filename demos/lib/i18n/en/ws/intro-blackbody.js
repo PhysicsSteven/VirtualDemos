@@ -1,5 +1,10 @@
 /* English strings of ws/intro-blackbody, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-blackbody', [
+"Peak wavelength (nm)",
+"Light from each square meter (W/m²)",
+"Visible share (%)",
+"Spectral class",
+"Color",
 "Star Colors and Temperatures | VirtualDemos",
 "Star Colors and Temperatures",
 "<strong>Setups in the demo:</strong> Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.",
@@ -41,5 +46,9 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "If you see a red star and a blue star that have the same size, which is more luminous? Why?",
 "Your body is at about {#} K. Use Wien’s law to estimate your peak wavelength, in micrometers ({#} µm = {#} nm). Why can a thermal camera see you in the dark?",
 "Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Blackbody Radiation",
+"<strong>New readings from the Blackbody Radiation demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Blackbody Radiation demo are in your table.",
+"<strong>New readings from the Blackbody Radiation demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

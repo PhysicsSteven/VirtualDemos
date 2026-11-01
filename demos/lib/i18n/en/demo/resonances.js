@@ -32,7 +32,6 @@ VDI18N.add('en', 'demo/resonances', [
 "Its mass",
 "Where it is on {#} Sep {#}",
 "The shape of its orbit",
-"Eccentricity e",
 "Direction of its perihelion",
 "<span>Fit the old sightings ({#} to {#}) too</span>",
 "<span>Show the real Neptune</span>",

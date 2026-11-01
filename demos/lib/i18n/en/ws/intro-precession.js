@@ -1,5 +1,9 @@
 /* English strings of ws/intro-precession, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-precession', [
+"Wheel",
+"Spin (rpm)",
+"Distance from the post d (m)",
+"Time for one turn around the post (s)",
 "A Spinning Top and the Wandering Pole Star | VirtualDemos",
 "A Spinning Top and the Wandering Pole Star",
 "<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up.",
@@ -31,10 +35,6 @@ VDI18N.add('en', 'ws/intro-precession', [
 "Spin (rpm), row {#}",
 "Distance from the post d (m), row {#}",
 "Time for one turn around the post (s), row {#}",
-"Wheel",
-"Spin (rpm)",
-"Distance from the post d (m)",
-"Time for one turn around the post (s)",
 "Describe what happened with no spin. Why does the wheel need spin to stay up?",
 "In the spin series, what happens to the time for one turn when the spin doubles ({#} to {#} rpm, or {#} to {#} rpm)? Was your guess in Before the lab {#} right?",
 "Graph the time for one turn against the spin for the spin series. What shape is the graph? Use it to predict the time for one turn at {#} rpm.",
@@ -46,5 +46,18 @@ VDI18N.add('en', 'ws/intro-precession', [
 "Half of a precession turn from now, Earth’s axis will point to the opposite side of its circle in the sky. About how many years from now is that? Which bright star will then be near the pole?",
 "Precession moves the place where the Sun crosses the celestial equator in March by {#} arcseconds per year (an arcsecond is {#}/{#} of a degree). How many years does it take to move {#}°? About how far has it moved in the {#},{#} years since the zodiac signs were named, and why does that mean the Sun is no longer in “your” constellation on your birthday?",
 "If Earth spun more slowly, but the Sun and Moon pulled on its bulge with the same torque, would its precession be faster or slower? Use what you found with the wheel.",
-"Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Wheel against Reading, {#} points",
+"<b>fit: </b>Wheel = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
+"<b>fit: </b>y = A·xⁿ, with y = Wheel and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
+"<b>fit: </b>y = a + b·ln x, with y = Wheel and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
+"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Wheel and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Wheel and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Wheel and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"{#} points with error bars from Start. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
+"<b>fit: </b>Wheel = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
+"Gyroscope Precession",
+"<strong>New readings from the Gyroscope Precession demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Gyroscope Precession demo are in your table.",
+"<strong>New readings from the Gyroscope Precession demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

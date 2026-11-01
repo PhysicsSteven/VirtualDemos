@@ -46,7 +46,6 @@ VDI18N.add('en', 'demo/fluids', [
 "Oil",
 "Seawater",
 "fresh water, {#} kg/m³ ({#} at {#} °C)",
-"Block",
 "Manometer",
 "Two liquids",
 "Liquid poured into the left arm",

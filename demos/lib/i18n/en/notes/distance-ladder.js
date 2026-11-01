@@ -1,7 +1,6 @@
 /* English strings of notes/distance-ladder, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/distance-ladder', [
 "Cosmic Distance Ladder: teaching notes",
-"Cosmic Distance Ladder",
 "Intro astronomy; majors astronomy (magnitudes, distance modulus)",
 "{#} to {#} minutes (one rung alone takes {#} to {#})",
 "Parallax is the ladder's only direct distance: d (pc) = {#}/p (arcsec), with a reach set by the instrument's position accuracy.",

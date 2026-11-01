@@ -1,5 +1,9 @@
 /* English strings of ws/resolution, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/resolution', [
+"Screen distance L (m)",
+"Cursor x (mm)",
+"Separation Δθ (µrad)",
+"Intensity at the cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos",
 "Circular Apertures and Resolution",
 "Student laboratory · Physics II (if time allows: wave optics)",
@@ -43,10 +47,6 @@ VDI18N.add('en', 'ws/resolution', [
 "θ₁ = x/L (µrad), row {#}",
 "λ/D (µrad), row {#}",
 "{#}/D ({#}/mm), row {#}",
-"Screen distance L (m)",
-"Cursor x (mm)",
-"Separation Δθ (µrad)",
-"Intensity at the cursor I/I₀",
 "Fill in θ₁ = x/L for the screen readings, λ/D for Part {#} (λ in nm divided by D in mm gives µrad) and {#}/D for Parts {#} and {#}.",
 "Graph θ₁ against λ/D for Part {#}. Is it a straight line through the origin? Compare the slope with {#}.",
 "Compare your ring radius for the {#} µm pinhole at {#} nm with your prediction in Before the lab question {#}.",
@@ -60,5 +60,20 @@ VDI18N.add('en', 'ws/resolution', [
 "A camera lens of focal length {#} mm is stopped down from f/{#} to f/{#}. What happens to the size of the Airy disk on the sensor, and why can a photograph taken at f/{#} look softer than one at f/{#}? Check with the Camera lens setup.",
 "Your answer to Before the lab question {#} is several kilometers, yet a real eye cannot tell two headlights apart that far away. Normal ({#}/{#}) vision resolves about one minute of arc. Give two reasons a real eye does worse than the diffraction limit.",
 "Would two headlights be easier or harder to resolve if they were blue rather than red? Explain.",
-"Prelab answers, the settings for each part, the table copies with their graphs and fits, the slopes compared with {#}, the headlight distances, the mystery pinhole’s diameter with its uncertainty, and answers to the questions. Identify simulated data."
+"Prelab answers, the settings for each part, the table copies with their graphs and fits, the slopes compared with {#}, the headlight distances, the mystery pinhole’s diameter with its uncertainty, and answers to the questions. Identify simulated data.",
+"Argument of the Bessel function, πD sin θ/λ (a pure number)",
+"Diameter of the hole or aperture",
+"Intensity",
+"Intensity at the center",
+"Bessel function of the first kind, order one",
+"Distance to the screen",
+"Angle from the axis",
+"Angle of the first dark ring",
+"Smallest angle resolved (Rayleigh's criterion)",
+"Distance from the center of the pattern on the screen",
+"Unit: W/m²",
+"{#} points with error bars from λ. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
+"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Circular Apertures and Resolution demo are in your table.",
+"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

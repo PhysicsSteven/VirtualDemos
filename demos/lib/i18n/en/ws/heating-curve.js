@@ -1,5 +1,7 @@
 /* English strings of ws/heating-curve, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/heating-curve', [
+"Balance m (g)",
+"Stage",
 "Heating Curve and Latent Heat | VirtualDemos",
 "Heating Curve and Latent Heat",
 "<strong>Setups in the demo:</strong> Heat a crystal; Higher pressure; Cool a vapor (these three use the Atoms view, the subject of the second worksheet); Ice to steam; Boil ethanol (Beaker view).",
@@ -33,8 +35,6 @@ VDI18N.add('en', 'ws/heating-curve', [
 "<span>E</span>Stage",
 "Balance m (g), row {#}",
 "Stage, row {#}",
-"Balance m (g)",
-"Stage",
 "Record the substance, sample mass, heater power and starting temperature for each run.",
 "Fit \\(T\\) against \\(t\\) for the ice warming stage. From the slope find the specific heat of ice, \\(c = P/(m\\,\\text{slope})\\).",
 "Do the same for the water warming stage and find the specific heat of water.",
@@ -48,5 +48,23 @@ VDI18N.add('en', 'ws/heating-curve', [
 "Ethanol boils away much faster than the same mass of water on the same hot plate. Which property of ethanol does that measure?",
 "In a real beaker some water evaporates well below {#} °C. How would that change the balance reading and your value of \\(c\\) for water?",
 "While the open beaker boils away, what does the covered beaker’s balance read, and why? What does this say about where the mass of the open beaker went?",
-"Prelab answers, the run settings, the table copies (four for water, two for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data."
+"Prelab answers, the run settings, the table copies (four for water, two for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.",
+"Latent heat of fusion",
+"Latent heat of vaporization",
+"Heater power",
+"Heat delivered",
+"Specific heat",
+"Mass of the sample",
+"Unit: J/kg",
+"<b>fit: </b>Time t = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>(-{#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
+"<b>fit: </b>y = A·xⁿ, with y = Time t and x = Reading<br><b>A: </b>({#} ± {#}) s<br><b>n: </b>({#} ± {#})",
+"<b>fit: </b>y = a + b·ln x, with y = Time t and x = Reading<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s",
+"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Time t and x = Reading<br><b>A: </b>{#} s (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Time t and x = Reading<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Time t and x = Reading<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
+"<b>fit: </b>Time t = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
+"States of Matter (Beaker)",
+"<strong>New readings from the States of Matter (Beaker) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the States of Matter (Beaker) demo are in your table.",
+"<strong>New readings from the States of Matter (Beaker) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

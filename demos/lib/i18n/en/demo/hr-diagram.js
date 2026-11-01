@@ -70,7 +70,6 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "Apparent V",
 "Absolute M<sub>V</sub>",
 "Color B − V",
-"Distance",
 "Nearest: every star the HYG database puts within {#} parsecs ({#} light years) of the Sun. Brightest: the {#} stars that look brightest from Earth, apparent V magnitude {#} or brighter. These are real stars, plotted the way observers do: absolute magnitude M<sub>V</sub> (how bright the star would look from {#} pc; smaller is more luminous) against the color index B − V (smaller is hotter). The Sun is M<sub>V</sub> = {#}, B − V = {#}.",
 "Data: HYG database v3.8 (D. Nash, astronexus.com, CC BY-SA {#}), with distances from Hipparcos parallaxes (van Leeuwen {#}) and the Gliese catalog of nearby stars. Stars HYG lists without a B − V, mostly faint companions, are counted but not plotted. The nearby census is not complete: faint red and white dwarfs within {#} pc are still being found. Dot colors are drawn from B − V.",
 "Turnoff mass",

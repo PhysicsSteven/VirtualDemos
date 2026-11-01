@@ -1,7 +1,6 @@
 /* English strings of notes/optics-bench, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/optics-bench', [
 "Optics Bench: teaching notes",
-"Optics Bench",
 "PHYS {#} (optics unit)",
 "An image is where the rays from one object point cross, or where they appear to come from when traced back. Two of the three principal rays are enough to find it.",
 "The thin lens and mirror equation {#}/d_o + {#}/d_i = {#}/f and m = −d_i/d_o, with signs: d_i > {#} is a real image, m < {#} is inverted, f < {#} for a diverging lens.",

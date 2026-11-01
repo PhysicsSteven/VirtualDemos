@@ -1,5 +1,11 @@
 /* English strings of ws/intro-tides, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-tides', [
+"Moon’s distance (Earth radii)",
+"Pull at Earth’s center (μm/s²)",
+"Tidal pull, near side (μm/s²)",
+"Tidal pull, far side (μm/s²)",
+"Moon phase",
+"Day’s range (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos",
 "Tides: Two Bulges, the Moon and the Sun",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.",
@@ -45,5 +51,9 @@ VDI18N.add('en', 'ws/intro-tides', [
 "Tidal friction drags Earth’s bulges a little ahead of the Moon. Their pull speeds the Moon along, and the Moon drifts away from Earth by about {#} cm each year. Will the tides in the far future be bigger or smaller? Use your Part {#} readings.",
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
-"Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Tides",
+"<strong>New readings from the Tides demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Tides demo are in your table.",
+"<strong>New readings from the Tides demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

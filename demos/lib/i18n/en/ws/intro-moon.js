@@ -1,5 +1,13 @@
 /* English strings of ws/intro-moon, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-moon', [
+"Time from start (d)",
+"Elongation (°)",
+"Illuminated (%)",
+"Moonrise (h)",
+"Moonset (h)",
+"Sun to nearest node (°)",
+"Moon above or below Earth’s orbit β (°)",
+"Eclipse",
 "Phases of the Moon and Eclipse Seasons | VirtualDemos",
 "Phases of the Moon and Eclipse Seasons",
 "<strong>Setups in the demo:</strong> New moon; First quarter; Full moon; Waning crescent; Eclipse season; Sidereal vs synodic.",
@@ -51,5 +59,9 @@ VDI18N.add('en', 'ws/intro-moon', [
 "A friend says they saw a full moon high in the sky at noon. Could they be right? Use your rise and set times.",
 "Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?",
 "According to NASA’s eclipse list (eclipse.gsfc.nasa.gov), the eclipses of {#} are an annular solar eclipse on February {#}, a faint (penumbral) lunar eclipse on February {#}, penumbral lunar eclipses on July {#} and August {#}, and a total solar eclipse on August {#}. Group them into eclipse seasons. How far apart are the seasons, and does that agree with your answer to Analysis {#}?",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Moon Phases",
+"<strong>New readings from the Moon Phases demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Moon Phases demo are in your table.",
+"<strong>New readings from the Moon Phases demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

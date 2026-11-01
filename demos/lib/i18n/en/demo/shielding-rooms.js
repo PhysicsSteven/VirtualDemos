@@ -31,7 +31,6 @@ VDI18N.add('en', 'demo/shielding-rooms', [
 "DLP of a body scan",
 "DLP of a head scan",
 "Scanned again with contrast",
-"Tube voltage",
 "Beam energy",
 "Barrier",
 "Primary",

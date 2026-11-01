@@ -43,7 +43,6 @@ VDI18N.add('en', 'demo/potential-curves', [
 "play or pause,",
 "reset.",
 "At the particle",
-"Position",
 "Potential energy U",
 "Kinetic energy K = E − U",
 "Velocity v",

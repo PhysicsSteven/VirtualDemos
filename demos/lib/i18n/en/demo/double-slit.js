@@ -34,7 +34,6 @@ VDI18N.add('en', 'demo/double-slit', [
 "Particle",
 "Photons",
 "Electrons",
-"Accelerating voltage",
 "de Broglie wavelength λ (relativistic)",
 "{#} pm <span>nonrelativistic {#} pm, +{#}%</span>",
 "Momentum p",

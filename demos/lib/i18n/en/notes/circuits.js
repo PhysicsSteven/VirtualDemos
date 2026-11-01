@@ -1,7 +1,6 @@
 /* English strings of notes/circuits, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/circuits', [
 "Circuits: teaching notes",
-"Circuits",
 "{#} to {#} minutes per mode; one class period for all three",
 "Kirchhoff's rules hold in every circuit at every instant: currents into a junction equal currents out, and voltage changes around a loop add to zero.",
 "Series parts share the battery voltage; parallel parts each get all of it. A real battery's terminal voltage ε − Ir falls as its current rises.",

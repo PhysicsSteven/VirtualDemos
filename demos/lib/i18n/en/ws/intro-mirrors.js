@@ -1,5 +1,6 @@
 /* English strings of ws/intro-mirrors, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-mirrors', [
+"Focal length f (cm)",
 "Lenses, Mirrors and Color | VirtualDemos",
 "Lenses, Mirrors and Color",
 "<strong>Setups in the demo:</strong> this worksheet uses Lens in white light and Mirror in white light. The other setups (Converging lens, Magnifier, Camera, Concave mirror, Telescope, Prism, Total internal reflection, Microscope, Refracting surface, Apparent depth) belong to other worksheets.",
@@ -35,5 +36,8 @@ VDI18N.add('en', 'ws/intro-mirrors', [
 "Give two reasons why every large telescope built in the last century is a reflector. (Think about color, about how a big lens must be held only at its edge while a mirror can be supported from behind, and about how much glass the light has to pass through.)",
 "Lens makers reduce chromatic aberration by cementing a crown glass lens to a flint glass lens of the opposite shape. Using your results, explain in words why two glasses can do better than one.",
 "The largest refracting telescope ever used for research has a lens about {#} m across, while today’s largest telescopes have mirrors about {#} m across. Using what you learned about light gathering, how many times more light does a {#} m mirror collect than a {#} m lens?",
-"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"<strong>New readings from the Optics Bench demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Optics Bench demo are in your table.",
+"<strong>New readings from the Optics Bench demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

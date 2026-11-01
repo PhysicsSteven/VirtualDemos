@@ -108,7 +108,6 @@ VDI18N.add('en', 'demo/capacitors', [
 "Fit of C against {#}/d",
 "capture readings first",
 "Plotted readings, fitted line and residuals",
-"residual",
 "No plotted readings.",
 "The fit is a least squares line y = a + bx with equal weights, through your captured rows only. The standard errors come from the scatter of the rows about the line; with ideal simulated values that scatter is only the display rounding.",
 "Blind hides the model curves in the C and U plot, the value of ε₀ and the formula in the header, κ on the material buttons and its slider, the plate and slab forces, σ and the fields inside the slab, the energy check, the energy in the field, the setup hints and the constants derived from your fit. The meters stay: C, Q, V, E, U and the energy bars.",

@@ -1,5 +1,7 @@
 /* English strings of ws/color-vision, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/color-vision', [
+"Wavelength or filter center (nm)",
+"Brightness Y",
 "Color Vision: Cones, Mixing and Filters | VirtualDemos",
 "Color Vision: Cones, Mixing and Filters",
 "<strong>Setups in the demo:</strong> Red + green + blue; Red + green; Red + blue; Green + blue; Pure yellow, {#} nm; Pure cyan, {#} nm; Red filter on a bulb; Green filter, photons; Narrow filter at {#} nm.",
@@ -32,8 +34,6 @@ VDI18N.add('en', 'ws/color-vision', [
 "M, row {#}",
 "S, row {#}",
 "Brightness Y, row {#}",
-"Wavelength or filter center (nm)",
-"Brightness Y",
 "For the lamps, check whether the signals of each pair are the sums of the signals of the two lamps alone, and whether halving the power halves every signal.",
 "Plot Y against wavelength for the single wavelengths. At what wavelength is the eye most sensitive? By what factor is {#} nm dimmer than {#} nm at the same power, and {#} nm?",
 "On the same graph, or in a second one, plot L, M and S against wavelength. Which wavelengths excite two kinds of cones strongly at once?",
@@ -45,5 +45,17 @@ VDI18N.add('en', 'ws/color-vision', [
 "Why can no screen built from three primary colors show the pure {#} nm color exactly?",
 "Magenta appears in no rainbow. Use the cone signals of red + blue to explain why no single wavelength looks magenta.",
 "A camera sensor has red, green and blue filters over its pixels. Why is it enough to record only three numbers per pixel to reproduce a scene for a human viewer, but not for many birds, which have four kinds of cones?",
-"Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions. Identify simulated data."
+"Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions. Identify simulated data.",
+"L cone signal: the light weighted by the long wavelength cones' sensitivity and added over all wavelengths",
+"M cone signal: the light weighted by the middle wavelength cones' sensitivity and added over all wavelengths",
+"S cone signal: the light weighted by the short wavelength cones' sensitivity and added over all wavelengths; S(λ) is the spectrum, the power per unit wavelength reaching the eye",
+"Sensitivity of the L cones at wavelength λ",
+"Sensitivity of the M cones at wavelength λ",
+"Sensitivity of the S cones at wavelength λ",
+"Light against Reading, {#} points",
+"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
+"Color Vision",
+"<strong>New readings from the Color Vision demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Color Vision demo are in your table.",
+"<strong>New readings from the Color Vision demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

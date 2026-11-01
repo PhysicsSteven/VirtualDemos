@@ -1,5 +1,7 @@
 /* English strings of ws/intro-spectra, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-spectra', [
+"Wavelength (nm)",
+"Ion",
 "Fingerprints of the Elements | VirtualDemos",
 "Fingerprints of the Elements",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).",
@@ -38,5 +40,11 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Helium was discovered in the Sun’s spectrum in {#}, before it was found on Earth, and it is named after the Greek word for the Sun. How could anyone know an element was there before it had ever been collected?",
 "A glowing cloud of gas in space shows a bright red line at {#} nm. What element is in the cloud, and is it hot thin gas or cool gas in front of a star?",
 "Why does a light bulb’s filament give a continuous spectrum, with no lines, even though it is made of atoms of one element, tungsten?",
-"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Column E, row {#}",
+"Heading of column E",
+"Spectra Explorer",
+"<strong>New readings from the Spectra Explorer demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Spectra Explorer demo are in your table.",
+"<strong>New readings from the Spectra Explorer demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

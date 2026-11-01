@@ -232,7 +232,6 @@ VDI18N.add('en', 'demo/celestial-sphere', [
 "Lowest altitude",
 "Through a day",
 "Always above the horizon",
-"Distance",
 "{#} light years <small>Hipparcos</small>",
 "Lines of sight from the Sun, with a distance scale",
 "Star names and distances",

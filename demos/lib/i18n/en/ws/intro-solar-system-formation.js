@@ -1,5 +1,27 @@
 /* English strings of ws/intro-solar-system-formation, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-solar-system-formation', [
+"Cloud radius (AU)",
+"Cloud turns once every (million years)",
+"Disk radius (AU)",
+"Disk edge goes around once every (years)",
+"Spin up (times faster)",
+"Sun’s brightness (times today’s)",
+"Distance from the Sun (AU)",
+"Temperature (K)",
+"Solids that form there",
+"Frost line (AU)",
+"Disk mass (times the minimum)",
+"Gas lasts (million years)",
+"Time (million years)",
+"Largest rocky body (Earth masses)",
+"Largest icy body (Earth masses)",
+"Its distance (AU)",
+"Giant planets",
+"Radius (km)",
+"Forms after the first solids (million years)",
+"Aluminum {#} heat still to come (MJ/kg)",
+"Hottest center temperature (K)",
+"Iron core",
 "Building a Solar System | VirtualDemos",
 "Building a Solar System",
 "<strong>Setups in the demo:</strong> Our solar nebula; Slow spin; Fast spin; No spin; Frost line, today’s Sun; Frost line, bright young Sun; Minimum mass disk; Three times heavier disk; Gas gone early; Early planetesimal melts; Late planetesimal stays solid; Small planetesimal stays solid; Vesta sized.",
@@ -82,5 +104,8 @@ VDI18N.add('en', 'ws/intro-solar-system-formation', [
 "The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?",
 "Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?",
 "Iron meteorites formed in the cores of melted planetesimals, while many stony meteorites (chondrites) were never melted at all. What does your fourth table suggest about when each kind of parent body formed?",
-"Prelab answers, the four data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the four data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"<strong>New readings from the Building a Solar System demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Building a Solar System demo are in your table.",
+"<strong>New readings from the Building a Solar System demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

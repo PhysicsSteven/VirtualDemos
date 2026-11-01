@@ -1,5 +1,18 @@
 /* English strings of ws/intro-craters, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-craters', [
+"Asteroid diameter L (km)",
+"Speed (km/s)",
+"Crater diameter D (km)",
+"Count craters at least (km)",
+"Craters counted N",
+"Area (km²)",
+"Craters per km²",
+"Age from the clock (Gyr)",
+"Radius (km)",
+"Time since forming (Gyr)",
+"Temperature inside (K)",
+"Heat flow (mW/m²)",
+"Cold lid (km)",
 "Craters and the Ages of the Moon’s Surface | VirtualDemos",
 "Craters and the Ages of the Moon’s Surface",
 "<strong>Setups in the demo:</strong> Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Count craters: lunar highlands, Mare Tranquillitatis, Alphonsus floor, Copernicus floor, Tycho floor, four Martian surfaces and a Mystery surface. Cooling: Just formed, When the lunar maria erupted, Today.",
@@ -64,5 +77,9 @@ VDI18N.add('en', 'ws/intro-craters', [
 "The demo’s surfaces are simulated, built from the same clock you read the ages from. What would you need to check the clock on the real Moon?",
 "Chicxulub, the crater of the impact that ended the age of dinosaurs {#} million years ago, is about {#} km wide. Using Part {#}, about how big was the asteroid?",
 "Why would a planet with a thick, hot interior and a thin lid be more likely to have volcanoes today than a planet with a thick, cold lid?",
-"Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Craters, Cooling and Surface Ages",
+"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Craters, Cooling and Surface Ages demo are in your table.",
+"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

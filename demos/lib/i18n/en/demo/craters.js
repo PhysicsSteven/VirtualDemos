@@ -72,7 +72,6 @@ VDI18N.add('en', 'demo/craters', [
 "A rocky asteroid {#} m across hitting the Moon at {#} km/s. The crater is about {#} times wider than the asteroid: a simple bowl, about a fifth as deep as it is wide.",
 "Moon, g = {#} m/s²",
 "Asteroid",
-"Energy",
 "{#} × {#}<sup>{#}</sup> J = {#} × {#}<sup>{#}</sup> Mt of TNT",
 "Transient crater D<sub>tc</sub>",
 "Final crater D",

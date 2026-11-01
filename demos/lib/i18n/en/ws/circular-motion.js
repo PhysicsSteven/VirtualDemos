@@ -1,5 +1,7 @@
 /* English strings of ws/circular-motion, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/circular-motion', [
+"tanθ",
+"Outcome",
 "Speed Limits on Curves and Loops | VirtualDemos",
 "Speed Limits on Curves and Loops",
 "Five setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, and a ball inside a vertical loop. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.",
@@ -37,8 +39,6 @@ VDI18N.add('en', 'ws/circular-motion', [
 "v (m/s), row {#}",
 "v^{#} (m²/s²), row {#}",
 "Outcome, row {#}",
-"tanθ",
-"Outcome",
 "Keep each series in its own copy of the table, labeled with the part. The speed recorded is on one side of the limit: note in each table which side.",
 "Part {#}: plot \\(v^2\\) against \\(r\\) for the five radii at \\(\\mu_s = 0.70\\) and fit a line. Compare the slope with \\(\\mu_s g\\). Does the intercept agree with zero? What do the {#} kg, {#} kg and wet road readings show? Compare the wet road limit with \\(\\sqrt{\\mu_s g r}\\).",
 "Part {#}: plot \\(v^2\\) against \\(\\tan\\theta\\) and fit a line. Compare the slope with \\(rg\\).",
@@ -49,5 +49,22 @@ VDI18N.add('en', 'ws/circular-motion', [
 "On the banked curve, why can a car with friction go both slower and faster than the ideal speed without sliding? Which way would a car slide if it went too slowly on an icy banked road?",
 "A ball enters the loop with \\(v_0^2\\) between \\(2gr\\) and \\(5gr\\). Where does it leave the track, and what path does it follow after that?",
 "A car speeds up while it goes round a flat curve. Why does it slide off at a lower speed than a car going round at constant speed?",
-"Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with \\(\\mu_s g\\), \\(rg\\) and \\(5g\\), the corrected Part {#} slope, and answers to the questions. Identify simulated data."
+"Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with \\(\\mu_s g\\), \\(rg\\) and \\(5g\\), the corrected Part {#} slope, and answers to the questions. Identify simulated data.",
+"Normal force",
+"Centripetal acceleration",
+"Coefficient of static friction",
+"Radius of the circle",
+"Bank angle",
+"Speed at the bottom of the loop",
+"Speed at which a banked curve needs no friction",
+"Fastest speed a flat curve holds",
+"Speed at the top of the loop",
+"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Setup and x = Trial<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Setup and x = Trial<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Setup and x = Trial<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
+"{#} points with error bars from r. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
+"Circular Motion",
+"<strong>New readings from the Circular Motion demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Circular Motion demo are in your table.",
+"<strong>New readings from the Circular Motion demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

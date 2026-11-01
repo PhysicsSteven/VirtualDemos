@@ -1,5 +1,13 @@
 /* English strings of ws/intro-lagrange, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-lagrange', [
+"System",
+"Mass ratio μ",
+"L1 distance from the smaller body (separations)",
+"L2 distance from the smaller body (separations)",
+"L2 drift time (periods)",
+"L4 stays?",
+"L4 wobble period (periods)",
+"L4 drift time (periods)",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space | VirtualDemos",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space",
 "<strong>Setups in the demo:</strong> Sun–Earth: JWST at L2; Earth–Moon; Jupiter’s Trojans; Comet meets Jupiter; Horseshoe orbit; Unstable L1.",
@@ -45,5 +53,9 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "From Part {#}, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?",
 "Earth has a known Trojan asteroid, {#} TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth’s L4 and L5 always are.)",
 "The Lucy spacecraft, launched in {#}, will visit several of Jupiter’s Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?",
-"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Lagrange Points",
+"<strong>New readings from the Lagrange Points demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Lagrange Points demo are in your table.",
+"<strong>New readings from the Lagrange Points demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

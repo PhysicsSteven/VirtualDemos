@@ -241,7 +241,6 @@ VDI18N.add('en', 'demo/faraday', [
 ", flux per secondary turn (nWb)",
 "dΦ",
 "primary",
-"and",
 "secondary",
 "Primary: N",
 "Secondary: N",

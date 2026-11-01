@@ -36,7 +36,6 @@ VDI18N.add('en', 'demo/moon-phases', [
 "Eclipse season",
 "Sidereal vs synodic",
 "Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.",
-"Days since new moon",
 "The Moon now",
 "Illuminated",
 "Days since new",

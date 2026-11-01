@@ -61,7 +61,6 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "Why it peaks: follow one proton",
 "The last centimeter",
 "One proton energy, {#} MeV, in water: the dose rises slowly as the protons slow down, then peaks sharply in the last centimeter, at about {#} cm, and falls to nothing just past their range. Move the energy and watch the peak go deeper or shallower.",
-"Beam",
 "protons, {#} MeV, in water",
 "CSDA range",
 "Depth of {#} % (distal), R80",

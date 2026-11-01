@@ -1,5 +1,10 @@
 /* English strings of ws/intro-constellations-3d, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-constellations-3d', [
+"Constellation",
+"Apparent magnitude V",
+"Distance (ly)",
+"Absolute magnitude M",
+"Visible light (Sun = {#})",
 "Constellations in 3D | VirtualDemos",
 "Constellations in 3D",
 "This worksheet uses the Real distances switch on the left hand picture of The Sky and the Celestial Sphere. It places the stars of one constellation’s figure at their real distances from the Sun, measured in light years (ly). One light year is the distance light travels in a year, about {#} trillion km.",
@@ -46,5 +51,14 @@ VDI18N.add('en', 'ws/intro-constellations-3d', [
 "The nearest star to the Sun, Proxima Centauri, is {#} ly away. Would the Big Dipper look very different from there? Use your distances to explain.",
 "Rigel is a hot blue star that gives out much of its light as ultraviolet, which the V filter does not count. Is its total light output bigger or smaller than your visible light value?",
 "Dust between the stars dims distant stars a little, and the demo leaves it out. Would including it make the farthest stars’ absolute magnitudes brighter or fainter?",
-"Prelab answers, the side view sketches, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the side view sketches, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Visible light output of the star",
+"Visible light output of the Sun",
+"Absolute magnitude: the magnitude the star would have from {#} pc ({#} ly)",
+"Apparent magnitude: how bright the star looks from Earth",
+"Distance of the star from the Sun",
+"The Sky and the Celestial Sphere",
+"<strong>New readings from The Sky and the Celestial Sphere demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from The Sky and the Celestial Sphere demo are in your table.",
+"<strong>New readings from The Sky and the Celestial Sphere demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

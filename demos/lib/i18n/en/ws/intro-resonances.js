@@ -1,5 +1,20 @@
 /* English strings of ws/intro-resonances, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-resonances', [
+"Starting distance a (AU)",
+"Period ratio P_Jupiter/P",
+"Years run",
+"Largest eccentricity",
+"Crossed Mars’s orbit (year)",
+"Resonance",
+"Predicted a (AU)",
+"Gap in the real asteroids (AU)",
+"Period ratio P/P_Neptune",
+"Closest to Neptune (AU)",
+"Thrown out (year)",
+"Planet X distance (AU)",
+"Planet X mass (Earths)",
+"Planet X position on {#} Sep {#} (°)",
+"Leftover drift, rms (″)",
 "Orbital Resonances | VirtualDemos",
 "Orbital Resonances",
 "<strong>Setups in the demo:</strong> Asteroid belt: {#}:{#} resonance; {#}:{#} resonance; {#}:{#} resonance; Between the gaps; Hildas at {#}:{#}; Whole belt. Kuiper belt: Pluto; Pluto’s orbit, bad timing; Plutinos; Classical belt; Whole Kuiper belt. Finding Neptune: Uranus alone; Le Verrier’s planet; The real Neptune; Hunt for it yourself.",
@@ -69,5 +84,16 @@ VDI18N.add('en', 'ws/intro-resonances', [
 "Saturn’s rings also have gaps, the largest being the Cassini Division. Using what you saw here, what kind of object could clear a gap in a ring?",
 "Le Verrier’s planet was too far from the Sun and too heavy, yet Galle still found Neptune within a degree of the predicted spot. From your Part {#} trials, which property of planet X did the leftover drift depend on most?",
 "Some astronomers think an undiscovered “Planet Nine” far beyond Neptune lines up the orbits of the most distant Kuiper belt objects. How is that idea like Le Verrier’s hunt for Neptune?",
-"Prelab answers, the Data, Gaps, Pluto and Neptune, and Finding Neptune tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the Data, Gaps, Pluto and Neptune, and Finding Neptune tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Period: the time the body takes to go round the Sun once",
+"Period of Jupiter, the time it takes to go round the Sun once, {#} years",
+"Period of Neptune, the time it takes to go round the Sun once, {#} years",
+"Average distance of the body from the Sun (half the long axis of its orbit)",
+"Eccentricity of the orbit: {#} is a circle, the bigger e the more stretched",
+"Period ratio: how many times the asteroid goes round for each turn of Jupiter",
+"Unit: AU",
+"Unit: yr",
+"<strong>New readings from the Orbital Resonances demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Orbital Resonances demo are in your table.",
+"<strong>New readings from the Orbital Resonances demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

@@ -65,7 +65,6 @@ VDI18N.add('en', 'demo/exoplanets', [
 "{#} M<sub>J</sub> = {#} M<sub>E</sub> and {#} R<sub>J</sub> = {#} R<sub>E</sub>. Both sliders are logarithmic.",
 "Orbit",
 "Semi major axis a",
-"Eccentricity e",
 "Inclination i",
 "Argument of periastron ω",
 "i = {#}° is edge on. ω is measured for the star's orbit, as radial velocity catalogs quote it; it only matters when e > {#}.",

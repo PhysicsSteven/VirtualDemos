@@ -1,5 +1,14 @@
 /* English strings of ws/intro-sidereal-day, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-sidereal-day', [
+"Time (h)",
+"Turns against the star",
+"Noons",
+"Sidereal day (h)",
+"Year (days)",
+"Solar day = time ÷ noons (h)",
+"Sundial against the clock (min)",
+"Solar day − {#} h (s)",
+"Sun’s declination (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos",
 "Sidereal Days, Solar Days and Sundials",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.",
@@ -56,5 +65,9 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "If Earth spun the other way (backward, like Venus) at the same rate against the stars, would our solar day be longer or shorter than {#} h {#} min? By about how much?",
 "A day on the Moon, from one sunrise to the next, lasts about {#} Earth days. Use your Part {#} reading to explain why that is the same as the time from one full Moon to the next.",
 "Old clocks were set by sundials. Explain why a town that set its clock by its sundial on {#} February would find its clock about half an hour off from the sundial on {#} November.",
-"Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Reasons for Seasons",
+"<strong>New readings from the Reasons for Seasons demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Reasons for Seasons demo are in your table.",
+"<strong>New readings from the Reasons for Seasons demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

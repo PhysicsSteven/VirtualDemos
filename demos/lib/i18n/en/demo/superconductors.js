@@ -47,7 +47,6 @@ VDI18N.add('en', 'demo/superconductors', [
 "Applied field",
 "State",
 "superconducting: field pushed out",
-"Resistance",
 "zero",
 "Field inside, average",
 "Critical field at this T",

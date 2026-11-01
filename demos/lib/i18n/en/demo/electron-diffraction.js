@@ -54,7 +54,6 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "Why only two rings",
 "The voltage sweeps between {#} and {#} kV. Faster electrons have a shorter wavelength, so both rings shrink: D is close to proportional to λ, and λ to {#}/√V. Press Sweep V to stop, then measure.",
 "High voltage supply",
-"Accelerating voltage",
 "{#} kV set",
 "kV meter",
 "Heater",

@@ -1,5 +1,8 @@
 /* English strings of ws/intro-em-spectrum, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-em-spectrum', [
+"Band",
+"Frequency f (Hz)",
+"Wavelength λ (m)",
 "The Electromagnetic Spectrum | VirtualDemos",
 "The Electromagnetic Spectrum",
 "<strong>Setups in the demo:</strong> Plane wave; Visible light; Sunlight at Earth; Circular polarization; Radio; Antenna. This worksheet uses Plane wave.",
@@ -38,5 +41,9 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "A microwave oven works at {#} × {#}⁹ Hz. What is the wavelength of its microwaves, in centimeters?",
 "Earth’s atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the “Reaches the ground?” readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?",
 "Your eyes see only a tiny slice of the spectrum. From your readings, roughly how many powers of ten in frequency does the whole spectrum in the demo span, and how wide is the visible slice?",
-"Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Electromagnetic Waves",
+"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Electromagnetic Waves demo are in your table.",
+"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

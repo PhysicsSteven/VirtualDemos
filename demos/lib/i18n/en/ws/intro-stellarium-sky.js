@@ -1,5 +1,11 @@
 /* English strings of ws/intro-stellarium-sky, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-stellarium-sky', [
+"Date and time",
+"Constellation",
+"Altitude (°)",
+"Azimuth (°)",
+"Right ascension (h m)",
+"Declination (°)",
 "Reading the Sky with Stellarium | VirtualDemos",
 "Reading the Sky with Stellarium",
 "Student activity · Astro {#}",

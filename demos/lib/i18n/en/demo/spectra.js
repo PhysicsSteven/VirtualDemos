@@ -86,7 +86,6 @@ VDI18N.add('en', 'demo/spectra', [
 "Balmer",
 "Paschen",
 "Transition",
-"Wavelength",
 "Region",
 "visible",
 "Blind: hide the photon energy and wavelength the model predicts",

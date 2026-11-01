@@ -64,7 +64,6 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Stopping power curves",
 "Range against PSTAR",
 "Protons of {#} MeV in water: PSTAR gives a CSDA range of {#} mm. The dose rises slowly as the protons slow, then peaks sharply just before they stop: the Bragg peak.",
-"Beam",
 "Proton, {#} MeV",
 "CSDA range in water R₀",
 "Depth of {#} % (distal), R80",

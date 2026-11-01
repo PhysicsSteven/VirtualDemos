@@ -1,6 +1,5 @@
 /* English strings of demo/circuits, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/circuits', [
-"Circuits",
 "<a>Current and resistance</a>",
 "<a><span>←</span> <span>Capacitors and Dielectrics</span></a><a><span>Resistivity of a Wire</span> <span>→</span></a>",
 "Build any circuit, from Ohm's law to a transistor amplifier, and look at it three ways: its steady currents, how it changes in time after a switch flips, and how it answers a sine wave source.",
@@ -134,7 +133,6 @@ VDI18N.add('en', 'demo/circuits', [
 "The frequency slider is logarithmic and snaps to f<sub>{#}</sub> when it gets close. You can also drag the f marker on the resonance curve.",
 "Graphs",
 "Graph against frequency",
-"Current",
 "Power",
 "Reactance",
 "Second graph",

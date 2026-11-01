@@ -30,7 +30,6 @@ VDI18N.add('en', 'demo/stress-strain', [
 "Tension (Young's modulus)",
 "Shear",
 "Bulk (squeeze)",
-"Block",
 "Liquids: in the piston cell",
 "Solids",
 "Wire",

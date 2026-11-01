@@ -15,7 +15,8 @@
      with each {name} filled, so English pages show exactly what they always did. Names this script reads from the page (headings,
      column headings, link text) are read on its first pass, before the page is translated, so they stay English in saved files. */
   const VDI18N = { t: (s, v) => (window.VDI18N ? window.VDI18N.t(s, v) : String(s).replace(/\{([A-Za-z_]\w*)\}/g, (a, n) => (v && v[n] != null ? String(v[n]) : a))) };
-  const OTHER_LANG = !!(window.VDI18N && window.VDI18N.lang !== 'en');   /* the page is being translated: what students type is marked translate="no" */
+  /* the page is being translated, or its strings collected (tools/i18n.cjs harvest): what students type is marked translate="no" */
+  const OTHER_LANG = !!(window.VDI18N && (window.VDI18N.lang !== 'en' || /[?&]i18n=collect/.test(location.search)));
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',

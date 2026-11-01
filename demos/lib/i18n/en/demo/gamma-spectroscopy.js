@@ -155,7 +155,6 @@ VDI18N.add('en', 'demo/gamma-spectroscopy', [
 "Analysis plot",
 "Calibration",
 "Attenuation",
-"Distance",
 "Resolution",
 "Activity",
 "Analysis plot of the table rows or calibration points",

@@ -1,5 +1,18 @@
 /* English strings of ws/intro-mars-ages, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-mars-ages', [
+"Count craters at least (km)",
+"Craters counted N",
+"Area (km²)",
+"Craters per km²",
+"Age from the clock (Gyr)",
+"Asteroid diameter L (km)",
+"Speed (km/s)",
+"Crater diameter D (km)",
+"Radius (km)",
+"Time since forming (Gyr)",
+"Temperature inside (K)",
+"Heat flow (mW/m²)",
+"Cold lid (km)",
 "Dating the Surface of Mars | VirtualDemos",
 "Dating the Surface of Mars",
 "<strong>Setups in the demo:</strong> Count craters: Southern highlands, Northern plains, Tharsis lava plains, Olympus Mons caldera (Mars), five lunar surfaces and a Mystery surface. Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Cooling: Just formed, When the lunar maria erupted, Today.",
@@ -62,5 +75,9 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Why are the ages from Martian crater counts less certain than lunar ones? What mission would fix that?",
 "Wind, water and ice wear down small craters on Mars much faster than on the Moon. Would that make a crater count age too old or too young? Which size of crater would you trust most?",
 "The demo’s surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?",
-"Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Craters, Cooling and Surface Ages",
+"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Craters, Cooling and Surface Ages demo are in your table.",
+"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

@@ -10,7 +10,6 @@ VDI18N.add('en', 'demo/displacement-current', [
 "A capacitor charges through a wire. No charge crosses the gap, yet there is a magnetic field around it. Ampère's law only works if the changing electric field between the plates counts as a current.",
 "plates {#} cm radius, {#} mm apart · C = {#} pF",
 "Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty.",
-"Charge",
 "t = {#} µs · τ = RC = {#} µs",
 "Divider between the capacitor and the graph",
 "Loop around the wire",

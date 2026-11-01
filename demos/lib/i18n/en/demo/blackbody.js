@@ -73,7 +73,6 @@ VDI18N.add('en', 'demo/blackbody', [
 "A Planck curve is broad. When its peak sits in the green, near {#} to {#} K, it still sends out nearly as much red and blue light, and the eye sees the mix as white. No temperature gives a spectrum narrow enough to look green, so the color scale runs red, orange, yellow, white, blue and skips green entirely.",
 "<span><i></i>Current temperature</span> <span><i></i><i></i><i></i>Pinned curves</span> <span><i></i>Rayleigh-Jeans, same T</span> <span><i></i>Eye response, CIE {#}</span> <span><i></i>Visible light, {#} to {#} nm</span>",
 "Model: ideal blackbodies. Real stars have absorption lines and are classified by them; T here is the effective temperature. Colors use an analytic fit to the CIE {#} observer (Wyman, Sloan and Shirley {#}) and sRGB with a D65 white point, so a {#} K body shows as white. Each swatch is scaled to full brightness; your screen and eye adaptation change what you see.",
-"Wavelength λ (nm)",
 "Bλ and the U, B, V filters, each scaled to {#} at its highest",
 "Your skin surface at about {#} K peaks near {#} μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about {#} × {#}⁻²¹ % of the power, far below even the log axis.",
 "infrared, no visible glow",

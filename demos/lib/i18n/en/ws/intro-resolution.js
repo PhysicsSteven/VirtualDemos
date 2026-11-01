@@ -1,5 +1,9 @@
 /* English strings of ws/intro-resolution, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/intro-resolution', [
+"Mirror diameter D (m)",
+"Distance between the stars (ly)",
+"Angle between the stars (µrad)",
+"Brightness midway I/I₀",
 "Seeing Fine Detail: Telescopes and Radio Dishes | VirtualDemos",
 "Seeing Fine Detail: Telescopes and Radio Dishes",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole. This worksheet uses Hubble and two stars.",
@@ -44,5 +48,12 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "Radio astronomers link many dishes spread over a large area, even over whole continents, and combine their signals. Using your answer to Analysis {#}, explain why.",
 "The pupil of your eye is about {#} mm ({#} m) across at night. Using {#} nm light, what is the smallest angle your eye could resolve if it were perfect? Compare with Hubble.",
 "The demo’s mirror is perfect and above the air. Why do astronomers put telescopes in space or on high mountains?",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Diameter of the mirror",
+"Wavelength of the light",
+"Smallest angle between two stars the telescope can resolve",
+"Circular Apertures and Resolution",
+"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
+"{#} readings from the Circular Apertures and Resolution demo are in your table.",
+"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
 ]);

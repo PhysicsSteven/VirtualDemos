@@ -67,7 +67,6 @@ VDI18N.add('en', 'demo/motion-graphs', [
 "Capture at least three rows.",
 "Plotted readings with fitted values",
 "fit (m)",
-"residual (m)",
 "Capture stores the time and position shown at the marker (t to {#} s, x to {#} m). Cells can be edited.",
 "The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.",
 "Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.",

@@ -63,7 +63,6 @@ VDI18N.add('en', 'demo/tides', [
 "Moon's distance",
 "Real distance ({#},{#} km)",
 "City's local solar time",
-"Days since new moon",
 "Include the Sun's tide",
 "Outline each body's bulge",
 "Accelerations",

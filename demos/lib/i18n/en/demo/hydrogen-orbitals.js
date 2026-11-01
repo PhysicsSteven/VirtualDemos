@@ -133,7 +133,6 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Draw new points",
 "<span>Slice color</span>",
 "Slice color",
-"Density",
 "Sign",
 "<span>Slice scale</span>",
 "Slice brightness scale",
