@@ -29,6 +29,8 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "Model: the magnet as a point dipole on the pipe's axis and a thin walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. {#}). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[{#} + α(T − {#} °C)] down to −{#} °C; below that the resistivity is taken as a straight line in T to the measured value at −{#} °C ({#} times the {#} °C value for copper, {#} for aluminum).",
 "<a>Induction and inductance</a>",
 "<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>",
+"Widths of the pipes and magnets drawn {#} times larger; lengths to scale. Drag to turn.",
+"Rings: the current in the wall, brighter where it is larger, dots turning its way.",
 "Pipe",
 "Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does."
 ]);

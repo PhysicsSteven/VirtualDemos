@@ -69,6 +69,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
 @media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
 .units .nw { white-space: nowrap; }
+/* a longer language: the units line takes its own row above the switches instead of squeezing into a tall column */
+@media (min-width: 821px) { :root[data-vd-lang] .bar .bar-right { flex-wrap: wrap; } :root[data-vd-lang] .bar-right .units { flex: 1 1 100%; } }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }

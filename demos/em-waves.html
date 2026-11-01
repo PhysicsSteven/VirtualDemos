@@ -1131,8 +1131,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = bd === cur ? T.grid : (i % 2 ? T.canvas : T.surface); c.fillRect(xa, g.barY, xb - xa, g.barH);
       c.strokeStyle = T.line; c.strokeRect(xa + 0.5, g.barY + 0.5, xb - xa - 1, g.barH - 1);
       c.font = `${(bd === cur ? '600 ' : '')}${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      const nm = c.measureText(bd.name).width + 6 < xb - xa ? bd.name : c.measureText(bd.short).width + 4 < xb - xa ? bd.short : '';
-      c.fillStyle = bd === cur ? T.ink : T.muted; c.fillText(nm, (xa + xb) / 2, g.barY + g.barH / 2 + 0.5);
+      /* in another language both names are translated first (a longer name falls back to the short one where English does not) */
+      const I = window.VDI18N, bn = I ? I.t(bd.name) : bd.name, bs = I ? I.t(bd.short) : bd.short;
+      const band = () => { const nm = c.measureText(bn).width + 6 < xb - xa ? bn : c.measureText(bs).width + 4 < xb - xa ? bs : '';
+        c.fillStyle = bd === cur ? T.ink : T.muted; c.fillText(nm, (xa + xb) / 2, g.barY + g.barH / 2 + 0.5); };
+      if (I) I.raw(band); else band();
     });
     // wavelength ticks above, frequency ticks below
     c.font = `${9.5 * ps}px ${T.mono}`; c.textBaseline = 'bottom'; c.fillStyle = T.muted; c.strokeStyle = T.muted; c.lineWidth = 1;

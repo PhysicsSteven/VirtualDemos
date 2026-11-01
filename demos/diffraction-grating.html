@@ -937,9 +937,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.font = `600 ${10.5 * ps}px ` + monoFont(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     ctx.fillStyle = T.muted;
-    let tt = title;
-    while (ctx.measureText(tt).width > x1 - x0 - 20 && tt.includes(' · ')) tt = tt.slice(0, tt.lastIndexOf(' · '));
-    ctx.fillText(tt, x0 + 8 * ps, y0 + 10 * ps);
+    /* in another language the title is translated whole, then shortened at its dots and drawn as it is (VDI18N.raw) */
+    const I18 = window.VDI18N;
+    let tt = I18 ? I18.t(title) : title;
+    const drawTitle = () => {
+      while (ctx.measureText(tt).width > x1 - x0 - 20 && tt.includes(' · ')) tt = tt.slice(0, tt.lastIndexOf(' · '));
+      ctx.fillText(tt, x0 + 8 * ps, y0 + 10 * ps);
+    };
+    if (I18) I18.raw(drawTitle); else drawTitle();
     ctx.textAlign = 'right'; ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ` + monoFont();
     ctx.fillText('1', x1 - 5 * ps, top + 1); ctx.fillText('0.5', x1 - 5 * ps, bot - hgt / 2);
     if (S.zoom && zr) {
