@@ -8,8 +8,9 @@ Source pages: `https://physics.nist.gov/PhysRefData/Handbook/Tables/<element>tab
 
 - `b01.csv` to `b16.csv`, `Fe.csv`: the line lists, one `## Symbol` section per element. Each row is `intensity,wavelength (Å, air),spectrum`, copied from NIST. Intensity keeps NIST's flags (`P` means a persistent line). A few sections came back with the first two columns swapped or with the ion written as `Ti II`; `validate.py` normalizes those when loading.
 - `validate.py`: loads every file and checks that each element's lines are in wavelength order, inside 300 to 1000 nm, have readable intensities and ion stages, and include a set of well known reference lines (hydrogen's Balmer lines, the sodium D lines, the mercury lamp lines, the calcium H and K lines and so on). Run `python3 validate.py -v`.
-- `spectra.template.html`: the page, with the placeholder `__LINE_DATA__`.
-- `build.py`: validates the data and writes `demos/spectra.html`.
+- The line data was built into `demos/spectra.html` once. The demo has been edited directly since, so the old template and
+  build script were removed (2026-11-01): rebuilding from them would have wiped every later change. To change the lines, edit
+  the data block in the demo and check it against these files.
 
 ## Notes on the data
 
@@ -17,5 +18,3 @@ Source pages: `https://physics.nist.gov/PhysRefData/Handbook/Tables/<element>tab
 - NIST gives no intensities for francium, and lists every curium, berkelium and californium line at the same intensity.
 - Some einsteinium lines have no assigned ionization stage; they are stored with ion `0`.
 - NIST's intensities come from different light sources and are only meaningful within one element, and sometimes only within one ionization stage.
-
-To rebuild after editing the data or template: `python3 tools/spectra-data/build.py`
