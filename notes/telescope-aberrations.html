@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Telescope Aberrations: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Telescope Aberrations</h1><ul class="meta"><li><a href="../demos/telescope-aberrations.html">Open the demo</a></li><li>Intro astronomy and physics (optics: aberrations, the Strehl ratio, seeing and adaptive optics)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Even a perfect telescope blurs a star into an Airy disk, 1.22 λ/D across to its first dark ring. Anything more is an aberration (or the air), and the Strehl ratio, the star's peak brightness compared with a perfect telescope's, measures how much. A Strehl ratio of 0.8 or more counts as diffraction limited.</li>
+<li>Each aberration has its own fingerprint and its own fix. Out of focus: a ring with a dark center, fixed by focusing. Spherical aberration: no focus is sharp and the star differs inside and outside focus, fixed by a parabola. Coma: a comet that grows with the angle from the center of the view, fixed by a corrector. Astigmatism: lines that turn by 90° through focus, fixed by removing the stress. Color: each color sharp at its own focus, fixed by an achromat.</li>
+<li>Spherical aberration falls steeply with the focal ratio (as 1/N³), so a slow sphere can be good enough and a fast telescope must be a parabola. Coma grows as θ/N², so fast parabolas are sharp only near the center of the view.</li>
+<li>Hubble's 1990 mirror was about 2.2 µm too flat at the edge: spherical aberration, which no focus could fix. Corrective optics with the opposite error fixed it in 1993.</li>
+<li>On the ground, moving air limits a telescope to about λ/r₀, where r₀ (about 10 cm on an average night) is the size of the air's smooth patches. A bigger telescope does not see finer detail through the air; adaptive optics does, best in the infrared, where r₀ is larger.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the Airy disk and 1.22 λ/D (the Circular Apertures and Resolution demo). The demo has twelve setups: <strong>Through moving air</strong> (it opens there, paused), <strong>Perfect telescope</strong>, <strong>Out of focus</strong>, <strong>Spherical mirror</strong>, <strong>Star off center: coma</strong>, <strong>Pinched mirror: astigmatism</strong>, <strong>Single lens: color</strong>, <strong>Achromatic lens</strong>, <strong>Hubble in 1990</strong>, <strong>Hubble fixed (1993)</strong>, <strong>Adaptive optics</strong> and <strong>Mystery telescope</strong>. The left side of the picture is the telescope seen from the side, with the rays near the camera magnified; the right side is the computed star image, and the graph under it is the brightness along a line through the star, with a perfect telescope's for comparison. <strong>Star test</strong> shows the star a little inside and outside the focus.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Perfect telescope.</strong> Ask Q1. A 200 mm parabola at f/8 in 550 nm light: the Airy disk, Strehl ratio 1, half light diameter 0.596″.</li>
+<li><strong>Out of focus.</strong> Ask Q2, then move the focus back to 0.</li>
+<li><strong>Spherical mirror.</strong> Ask Q3. At f/6 the best Strehl ratio is 0.243; at f/12 it is 0.964. Mask the edge of the aperture to see the blur shrink, then switch the mirror to a parabola.</li>
+<li><strong>Star off center: coma.</strong> Ask Q4. Move the star from 0′ to 20′ and watch the comet grow; add the corrector.</li>
+<li><strong>Pinched mirror: astigmatism.</strong> Turn on the star test: the line turns by 90° from inside to outside the focus.</li>
+<li><strong>Single lens: color</strong>, then <strong>Achromatic lens.</strong> Ask Q5. Step through the filters and find each color's best focus.</li>
+<li><strong>Hubble in 1990</strong> and <strong>Hubble fixed (1993).</strong> Ask Q6. Bring out faint light to see the 1990 halo.</li>
+<li><strong>Through moving air.</strong> Ask Q7. Let the air move, then take a long exposure.</li>
+<li><strong>Adaptive optics.</strong> Ask Q8. Switch it off and on, then change to green light.</li>
+<li><strong>Mystery telescope.</strong> Let students (or the class by vote) test, name the cause and fix it. Each New mystery picks a cause at random.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A perfect 200 mm telescope at f/8 looks at a star in 550 nm light. How big is the Airy disk on the sky (1.22 λ/D, in arcseconds), and how far from the center is its first dark ring on the camera?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: the camera is moved 0.400 mm beyond the focus of the same telescope. What does the star look like, and how big is the wavefront error, in wavelengths?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A spherical mirror's wavefront error at its edge is D/(512 N³). How big is it, in waves of 550 nm, for a 200 mm mirror at f/6 and at f/12? Which would you expect to be diffraction limited?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A parabola at f/4 images a star 20′ from the center of its view. How long is the comet (3θ/16N²), in arcseconds, compared with the 0.69″ Airy disk?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A single crown glass lens (N-BK7, V = 64.2) has a focal length of 900 mm. How far apart are its blue (486 nm) and red (656 nm) foci?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Hubble's mirror was only about 2.2 µm (0.0022 mm) too flat at the edge. Why did such a tiny error ruin its images?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> On a night with r₀ = 11.2 cm at 550 nm, how big is the seeing disk (λ/r₀), and how does it compare with a perfect 1.0 m telescope's 1.22 λ/D?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> Why does adaptive optics on a 3.5 m telescope work far better at 2.2 µm than at 550 nm?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A perfect telescope makes a point."</strong> Diffraction always spreads the star into an Airy disk; aberrations add to it.</li>
+<li><strong>"Any blur can be focused away."</strong> Only defocus can. Spherical aberration, coma, astigmatism and color have no sharp focus; the best focus is a compromise.</li>
+<li><strong>"Hubble was badly out of focus."</strong> Its mirror had the wrong shape (spherical aberration). Its best focus still left most of the light in a halo about 1.5″ across.</li>
+<li><strong>"A bigger telescope always sees finer detail."</strong> On the ground the air sets the limit, about λ/r₀, for any telescope larger than r₀; a bigger mirror collects more light but the seeing disk stays the same size.</li>
+<li><strong>"Twinkling is the star changing."</strong> It is the air in front of the telescope; the speckle pattern changes in milliseconds as the wind carries the air across the aperture.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Image.</strong> Fraunhofer diffraction: the star's image is |FFT of the pupil × e^(2πiW/λ)|² on a 512 × 512 grid, the pupil 128 samples across at 550 nm (scaled with wavelength so every color has the same angular pixel). W is the wavefront error from an exact ray trace, tilt removed. Where W changes by more than about half a wave between samples, a geometric ray picture is used instead.</li>
+<li><strong>Mirrors.</strong> Exact conic surfaces (sphere K = 0, paraboloid K = −1), stop at the mirror, path measured to a reference sphere centered on the chief ray's image point. Third order theory is quoted only for comparison; the tests check the trace against it (spherical aberration, coma, astigmatism and defocus).</li>
+<li><strong>Lenses.</strong> Exact spherical surfaces with Snell's law and the Schott Sellmeier formulas for N-BK7 and F2. The single lens is plano convex; the achromat's powers come from the Abbe numbers, its last radius is solved so the F and C foci coincide, and the crown's bending minimizes spherical aberration.</li>
+<li><strong>Hubble.</strong> 2.4 m, f/24, primary radius of curvature 11.04 m, conic constant as made −1.0139 against the design's −1.0023 (Allen report, 1990). The error is the difference of the two surfaces, doubled on reflection: 0.47 waves rms at 547 nm after focusing (the report gives 0.5), best focus 22.5 mm beyond the paraxial focus. Obscuration 0.33 and supports 0.022 of the radius (the Tiny Tim pupil). The 1993 corrective optics are modeled as cancelling the error exactly.</li>
+<li><strong>Air.</strong> A Kolmogorov phase screen (FFT method with three levels of subharmonics), r₀ given at 500 nm and scaled as λ^(6/5), carried across by a 10 m/s wind (shown slowed 100 times). The tests check its structure function against 6.88 (r/r₀)^(5/3) and the Noll residuals after removing Zernike shapes. A long exposure averages 48 moments. Adaptive optics is perfect removal of the first 2, 14 or 65 Zernike shapes, with no delay or noise.</li>
+<li><strong>Color.</strong> White light is 9 equally weighted wavelengths from 420 to 660 nm, colored with the CIE 1931 functions (Wyman, Sloan and Shirley 2013 fit) in sRGB. Equal weighting is why an achromat's white light Strehl ratio stays near 0.5: violet and deep red still focus apart.</li>
+<li><strong>Puzzle.</strong> A mystery is solved when the right cause is named, its fix made, the star, mask and filter are back where they started, and the Strehl ratio reaches 0.8 (0.5 through the air with adaptive optics; 0.4 for an achromat in white light). Every cause has been checked solvable at the hardest settings the puzzle picks.</li>
+<li>All data are simulated.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Circular Apertures and Resolution</strong> (the Airy disk and Rayleigh's criterion) and <strong>Optics Bench</strong> (rays through lenses and mirrors, chromatic aberration).</li>
+<li>Homework: the Extremely Large Telescope's mirror is 39 m across. What is its diffraction limit at 2.2 µm, and how much smaller is that than a 1″ seeing disk?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

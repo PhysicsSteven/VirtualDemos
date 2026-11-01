@@ -1616,6 +1616,7 @@
             "instrument-builder",
             "optics-bench",
             "resolution",
+            "telescope-aberrations",
             "blackbody",
             "spectra",
             "em-waves"
@@ -4823,7 +4824,8 @@
       "status": "usable",
       "demos": [
         "optics-bench",
-        "instrument-builder"
+        "instrument-builder",
+        "telescope-aberrations"
       ],
       "unit": "optics",
       "note": "Optics bench: Microscope preset (m_obj, M_eye = 25 cm/f_eye, net M measured from traced rays and the -(16 cm)(25 cm)/(f_obj f_eye) estimate) and Telescope with M = -f_obj/f_eye measured. Added by Claude 2026-10-23."
@@ -5728,7 +5730,8 @@
       "status": "usable",
       "demos": [
         "resolution",
-        "diffraction-grating"
+        "diffraction-grating",
+        "telescope-aberrations"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Circular Apertures and Resolution demo (2026-10-24): exact Airy pattern, first dark ring, Rayleigh criterion; pinhole and screen, two sources, the eye and headlights, Hubble, a camera lens, mystery pinhole. The single slit worksheet of the Diffraction Grating demo points here for round openings (Steve, 2026-10-25).",
       "unit": "wave-optics"
@@ -9661,6 +9664,34 @@
       ],
       "title": "Circular Apertures and Resolution",
       "url": "demos/resolution.html"
+    },
+    {
+      "demo": "telescope-aberrations",
+      "course": [
+        "astro-2203",
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "2.8",
+          "title": "Microscopes and Telescopes"
+        },
+        {
+          "vol": 3,
+          "sec": "4.5",
+          "title": "Circular Apertures and Resolution"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-01 (Claude), Steve's idea: an aberrations puzzle. The star's image is |FFT|² of the aperture with a ray traced wavefront error (exact conic mirror; exact spherical lens surfaces with Snell's law and Schott Sellmeier glass), Kolmogorov phase screens with subharmonics, and adaptive optics removing Zernike shapes. Setups: moving air, perfect, out of focus, spherical mirror, coma, pinched mirror, single lens, achromat, Hubble 1990 and 1993, adaptive optics, mystery telescope (diagnose the cause, then fix it). Tests against Airy, Seidel, Abbe numbers, the Allen report and Noll's residuals. Worksheet intro-aberrations (Astro 2203 Week 3, supplementary) with a key in TeacherKeys.",
+      "handouts": [
+        "intro-aberrations"
+      ],
+      "title": "Telescope Aberrations",
+      "url": "demos/telescope-aberrations.html"
     },
     {
       "demo": "resonators",

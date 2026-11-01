@@ -1,15 +1,13 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Belousov–Zhabotinsky Reaction":
-  "Reacción de Belousov–Zhabotinsky",
+"Star Slice":
+  "Corte de una estrella",
 "Virtual Physics Demos":
   "Demos virtuales de física",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
   "Novedades",
-"<span>Belousov–Zhabotinsky Reaction →</span>":
-  "<span>Reacción de Belousov–Zhabotinsky →</span>",
 "<b>Physics</b>":
   "<b>Física</b>",
 "Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.":
@@ -138,32 +136,10 @@ VDI18N.add('es', 'site', {
   "Cerrar",
 "<time>November {#}, {#}</time>":
   "<time>{#1} de noviembre de {#2}</time>",
-"A first try at Spanish":
-  "Un primer intento en español",
-"Pendulums, Blackbody Radiation, Doppler Effect and the pendulum worksheet can be shown in Spanish: pick Español in the language switch next to the theme switch. It is a machine made draft, marked borrador, until a fluent speaker has checked it; the numbers, symbols and units are the same as in English. <a>Pendulums in Spanish</a>":
-  "Péndulos, Radiación de cuerpo negro, Efecto Doppler y la hoja de trabajo del péndulo se pueden ver en español: elige Español en el selector de idioma junto al selector de tema. Es un borrador hecho a máquina, marcado como borrador, hasta que lo revise un hablante nativo; los números, símbolos y unidades son los mismos que en inglés. <a>Péndulos en español</a>",
-"<time>October {#}, {#}</time>":
-  "<time>{#} de octubre de {#}</time>",
-"Granular Flow: fine sand":
-  "Flujo granular: arena fina",
-"Granular Flow now takes up to {#} grains, as small as {#} mm, and has a Drum: fine sand setup with nearly {#} grains, where you can watch the fine grains filter down through the gaps and gather in a core. With that many grains it plays in slow motion, and the page says how slow. <a>Open Granular Flow</a>":
-  "Flujo granular ahora acepta hasta {#} granos, de apenas {#} mm, y tiene una configuración Tambor: arena fina con casi {#} granos, donde puedes ver cómo los granos finos se filtran por los huecos y se juntan en un núcleo. Con tantos granos corre en cámara lenta, y la página dice qué tan lenta. <a>Abrir Flujo granular</a>",
-"Poisson spot, channels, waveguides":
-  "Mancha de Poisson, canales, guías de onda",
-"Circular Apertures has two near field setups: move the screen close to a round hole and watch the center blink bright and dark as Fresnel zones open, then put a disk in the beam and find the bright Poisson spot in its shadow. Ripple Tank has A channel, where water waves only travel in their side to side modes above a cutoff, and Electromagnetic Waves has Guides and cavities: TE and TM modes of a metal waveguide and the resonances of a closed box, in 3D. <a>Find the Poisson spot</a>":
-  "Aberturas circulares tiene dos configuraciones de campo cercano: acerca la pantalla a un orificio redondo y observa cómo el centro parpadea entre brillante y oscuro conforme se abren las zonas de Fresnel; luego pon un disco en el haz y encuentra la mancha brillante de Poisson en su sombra. Tanque de ondas tiene Un canal, donde las ondas de agua solo viajan en sus modos transversales por encima de un corte, y Ondas electromagnéticas tiene Guías y cavidades: modos TE y TM de una guía de onda metálica y las resonancias de una caja cerrada, en 3D. <a>Encuentra la mancha de Poisson</a>",
-"Falling slinky, pendulum wave":
-  "Slinky que cae, onda de péndulos",
-"The Springs sandbox has a Falling slinky: hang ten blocks on springs, let go of the top, and watch the bottom block hang in midair until the collapse reaches it. Pendulums has a Pendulum wave scene: fifteen pendulums let go together drift into waves, two rows and three, and line up again after {#} s. <a>Open the pendulum wave</a>":
-  "El arenero de Resortes tiene un Slinky que cae: cuelga diez bloques de resortes, suelta el de arriba y observa cómo el bloque de abajo se queda suspendido en el aire hasta que el colapso lo alcanza. Péndulos tiene una escena de Onda de péndulos: quince péndulos soltados a la vez se desfasan en ondas, en dos filas y en tres, y se vuelven a alinear después de {#} s. <a>Abrir la onda de péndulos</a>",
-"Quantum wells in 2D":
-  "Pozos cuánticos en 2D",
-"Quantum Wave Packets has 2D wells: an electron in a square or rectangular box, a round box, an oscillator or a lattice of wells. Pick its states and watch them beat or circle, or shine light on it and drive it up to another level and back (Rabi oscillations), and find which jumps light cannot make. <a>Open 2D wells</a>":
-  "Paquetes de onda cuánticos tiene pozos en 2D: un electrón en una caja cuadrada o rectangular, una caja redonda, un oscilador o una red de pozos. Elige sus estados y obsérvalos pulsar o girar, o ilumínalo para llevarlo a otro nivel y de regreso (oscilaciones de Rabi), y averigua qué saltos no puede producir la luz. <a>Abrir los pozos en 2D</a>",
-"Orbital rendezvous, the antipode's sky":
-  "Encuentro orbital, el cielo de las antípodas",
-"Kepler's Laws Sandbox has two Rendezvous setups: fly a ship to a target by firing its engine forward, backward, outward or inward, and find out why speeding up makes you fall behind; one is a Hohmann transfer out to Mars's distance. The Sky and the Celestial Sphere can jump to the antipode, the point on the other side of the Earth, and show its sky at the same moment: the half that was below your horizon. <a>Open Kepler's Laws</a>":
-  "El arenero de las leyes de Kepler tiene dos configuraciones de Encuentro: lleva una nave hasta un objetivo encendiendo su motor hacia adelante, hacia atrás, hacia afuera o hacia adentro, y descubre por qué acelerar te hace quedarte atrás; una es una transferencia de Hohmann hasta la distancia de Marte. El cielo y la esfera celeste puede saltar a las antípodas, el punto del otro lado de la Tierra, y mostrar su cielo en el mismo instante: la mitad que estaba bajo tu horizonte. <a>Abrir Leyes de Kepler</a>",
+"New: fix a blurry telescope":
+  "Nuevo: arregla un telescopio borroso",
+"Telescope Aberrations is a new demo and puzzle. A star's image is computed from the light waves through the telescope: spherical mirrors, coma off center, a pinched mirror, a lens's colors, Hubble's {#} mirror and its repair, and moving air with adaptive optics. Mystery telescope hides the cause: test it, name it and fix it. It comes with the worksheet Fixing a Blurry Telescope (Astro {#}, Week {#}).":
+  "Aberraciones de telescopios es una demo y acertijo nuevos. La imagen de una estrella se calcula a partir de las ondas de luz que atraviesan el telescopio: espejos esféricos, coma fuera del centro, un espejo presionado, los colores de una lente, el espejo del Hubble de {#} y su reparación, y aire en movimiento con óptica adaptativa. Telescopio misterioso oculta la causa: ponlo a prueba, nómbrala y corrígela. Incluye la hoja de trabajo Cómo arreglar un telescopio borroso (Astro {#}, Semana {#}).",
 "Open this list again any time with <b>What’s new</b> at the top of the home page.":
   "Vuelve a abrir esta lista cuando quieras con <b>Novedades</b> en la parte superior de la página de inicio.",
 "Reasons for Seasons":
@@ -196,8 +172,6 @@ VDI18N.add('es', 'site', {
   "Planetas gigantes, anillos y lunas",
 "Tides":
   "Mareas",
-"Star Slice":
-  "Corte de una estrella",
 "Galaxy Rotation Curves":
   "Curvas de rotación galácticas",
 "Black Holes and Lensing":
@@ -360,6 +334,8 @@ VDI18N.add('es', 'site', {
   "Ciclos de máquinas térmicas",
 "Ising Model":
   "Modelo de Ising",
+"Belousov–Zhabotinsky Reaction":
+  "Reacción de Belousov–Zhabotinsky",
 "Charging by Induction":
   "Carga por inducción",
 "Coulomb Sandbox":
@@ -448,6 +424,8 @@ VDI18N.add('es', 'site', {
   "Rejilla de difracción",
 "Circular Apertures and Resolution":
   "Aberturas circulares y resolución",
+"Telescope Aberrations":
+  "Aberraciones de telescopios",
 "Physics I · Virtual Physics Demos":
   "Física I · Demos virtuales de física",
 "<a>Virtual Physics Demos</a> · <b>Mechanics and oscillations</b>":
@@ -1290,6 +1268,10 @@ VDI18N.add('es', 'site', {
   "Mezcla lámparas roja, verde y azul, compara una sola longitud de onda o pon un filtro frente a un foco blanco, y observa las tres señales de los conos que deciden el color que ves. Incluye metámeros y fotones individuales.",
 "<a>Open demo</a> <a>Worksheet: Cones, Mixing and Filters</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Conos, mezclas y filtros</a> <a>Notas</a>",
+"<a>Telescope Aberrations</a>":
+  "<a>Aberraciones de telescopios</a>",
+"Why a real telescope blurs a star, computed: the image is the diffraction pattern of the aperture with the wavefront error found by tracing real rays. Spherical and parabolic mirrors, coma off the axis, a pinched mirror, a single lens against an achromat, Hubble's {#} flaw and its fix, and moving air with adaptive optics. Then a mystery telescope to diagnose and fix.":
+  "Por qué un telescopio real difumina una estrella, calculado: la imagen es el patrón de difracción de la abertura con el error del frente de onda obtenido al trazar rayos reales. Espejos esféricos y parabólicos, coma fuera del eje, un espejo presionado, una lente simple frente a un acromático, el defecto del Hubble de {#} y su corrección, y aire en movimiento con óptica adaptativa. Luego, un telescopio misterioso para diagnosticar y corregir.",
 "Wave optics":
   "Óptica ondulatoria",
 "<a>Double Slit, One Particle at a Time</a>":
@@ -1358,8 +1340,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Holografía",
 "<a>Open demo</a> <a>Worksheet: Holography: Fringes and Images</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Holografía: franjas e imágenes</a> <a>Notas</a>",
-"Also used in this unit: <a>Ripple Tank</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Tanque de ondas</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Ripple Tank</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Telescope Aberrations</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Tanque de ondas</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Aberraciones de telescopios</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#})</span>",
 "Modern Physics · Virtual Physics Demos":
   "Física moderna · Demos virtuales de física",
 "<a>Virtual Physics Demos</a> · <b>Relativity, quanta, atoms and nuclei</b>":
@@ -1892,8 +1874,8 @@ VDI18N.add('es', 'site', {
   "Examen {#}",
 "<span>Test review</span><span>Wed Jan {#}</span>":
   "<span>Repaso para el examen</span><span>Mié {#} de ene.</span>",
-"Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
-  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
+"Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
+  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
 "Week {#} · Topic {#}: Formation of planetary systems":
   "Semana {#} · Tema {#}: Formación de sistemas planetarios",
 "<span>Jan {#} to {#}, after Test {#}</span><span>Required: Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</span>":
@@ -2976,6 +2958,8 @@ VDI18N.add('es', 'site', {
   "<a>Banco óptico</a> · <a>Construye un microscopio o un telescopio</a>",
 "<span>{#}:{#}</span><span>Microscopes and Telescopes</span>":
   "<span>{#}:{#}</span><span>Microscopios y telescopios</span>",
+"<a>Optics Bench</a> · <a>Build a Microscope or Telescope</a> · <a>Telescope Aberrations</a>":
+  "<a>Banco óptico</a> · <a>Construye un microscopio o un telescopio</a> · <a>Aberraciones de telescopios</a>",
 "<span>Chapter {#}</span> Interference <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Interferencia <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Young's Double-Slit Interference</span>":
@@ -3008,8 +2992,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Rejillas de difracción</span><span><a>Rejilla de difracción</a></span>",
 "<span>{#}:{#}</span><span>Circular Apertures and Resolution</span>":
   "<span>{#}:{#}</span><span>Aberturas circulares y resolución</span>",
-"<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a>":
-  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>",
+"<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a> · <a>Telescope Aberrations</a>":
+  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a> · <a>Aberraciones de telescopios</a>",
 "<span>{#}:{#}</span><span>X-Ray Diffraction</span><span><a>Electron Diffraction</a></span>":
   "<span>{#}:{#}</span><span>Difracción de rayos X</span><span><a>Difracción de electrones</a></span>",
 "<span>{#}:{#}</span><span>Holography</span><span><a>Holography</a></span>":
@@ -3502,8 +3486,6 @@ VDI18N.add('es', 'site', {
   "<a>Demos virtuales de física</a> · <b>Luz</b>",
 "Mirrors and lenses, the eye, microscopes and telescopes, polarization.":
   "Espejos y lentes, el ojo, microscopios y telescopios, polarización.",
-"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}</span>",
 "<a>Optics</a>":
   "<a>Óptica</a>",
 "<a>Interference and diffraction</a>":
@@ -3514,6 +3496,8 @@ VDI18N.add('es', 'site', {
   "Demos de óptica",
 "<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
+"In <a>Astro {#}</a> · <a>Physics II</a> · <a>Astronomy</a>":
+  "En <a>Astro {#}</a> · <a>Física II</a> · <a>Astronomía</a>",
 "In <a>Physics II</a> · <a>Astronomy</a>":
   "En <a>Física II</a> · <a>Astronomía</a>",
 "Oscillations and waves · Virtual Physics Demos":
@@ -3634,6 +3618,48 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
   "Demos de interferencia y difracción",
+"<a>Open demo</a>":
+  "<a>Abrir demo</a>",
+"<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope (Astro {#})</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso (Astro {#})</a>",
+"Telescope Aberrations (notes to come)":
+  "Aberraciones de telescopios (notas en preparación)",
+"<span>Belousov–Zhabotinsky Reaction →</span>":
+  "<span>Reacción de Belousov–Zhabotinsky →</span>",
+"A first try at Spanish":
+  "Un primer intento en español",
+"Pendulums, Blackbody Radiation, Doppler Effect and the pendulum worksheet can be shown in Spanish: pick Español in the language switch next to the theme switch. It is a machine made draft, marked borrador, until a fluent speaker has checked it; the numbers, symbols and units are the same as in English. <a>Pendulums in Spanish</a>":
+  "Péndulos, Radiación de cuerpo negro, Efecto Doppler y la hoja de trabajo del péndulo se pueden ver en español: elige Español en el selector de idioma junto al selector de tema. Es un borrador hecho a máquina, marcado como borrador, hasta que lo revise un hablante nativo; los números, símbolos y unidades son los mismos que en inglés. <a>Péndulos en español</a>",
+"<time>October {#}, {#}</time>":
+  "<time>{#} de octubre de {#}</time>",
+"Granular Flow: fine sand":
+  "Flujo granular: arena fina",
+"Granular Flow now takes up to {#} grains, as small as {#} mm, and has a Drum: fine sand setup with nearly {#} grains, where you can watch the fine grains filter down through the gaps and gather in a core. With that many grains it plays in slow motion, and the page says how slow. <a>Open Granular Flow</a>":
+  "Flujo granular ahora acepta hasta {#} granos, de apenas {#} mm, y tiene una configuración Tambor: arena fina con casi {#} granos, donde puedes ver cómo los granos finos se filtran por los huecos y se juntan en un núcleo. Con tantos granos corre en cámara lenta, y la página dice qué tan lenta. <a>Abrir Flujo granular</a>",
+"Poisson spot, channels, waveguides":
+  "Mancha de Poisson, canales, guías de onda",
+"Circular Apertures has two near field setups: move the screen close to a round hole and watch the center blink bright and dark as Fresnel zones open, then put a disk in the beam and find the bright Poisson spot in its shadow. Ripple Tank has A channel, where water waves only travel in their side to side modes above a cutoff, and Electromagnetic Waves has Guides and cavities: TE and TM modes of a metal waveguide and the resonances of a closed box, in 3D. <a>Find the Poisson spot</a>":
+  "Aberturas circulares tiene dos configuraciones de campo cercano: acerca la pantalla a un orificio redondo y observa cómo el centro parpadea entre brillante y oscuro conforme se abren las zonas de Fresnel; luego pon un disco en el haz y encuentra la mancha brillante de Poisson en su sombra. Tanque de ondas tiene Un canal, donde las ondas de agua solo viajan en sus modos transversales por encima de un corte, y Ondas electromagnéticas tiene Guías y cavidades: modos TE y TM de una guía de onda metálica y las resonancias de una caja cerrada, en 3D. <a>Encuentra la mancha de Poisson</a>",
+"Falling slinky, pendulum wave":
+  "Slinky que cae, onda de péndulos",
+"The Springs sandbox has a Falling slinky: hang ten blocks on springs, let go of the top, and watch the bottom block hang in midair until the collapse reaches it. Pendulums has a Pendulum wave scene: fifteen pendulums let go together drift into waves, two rows and three, and line up again after {#} s. <a>Open the pendulum wave</a>":
+  "El arenero de Resortes tiene un Slinky que cae: cuelga diez bloques de resortes, suelta el de arriba y observa cómo el bloque de abajo se queda suspendido en el aire hasta que el colapso lo alcanza. Péndulos tiene una escena de Onda de péndulos: quince péndulos soltados a la vez se desfasan en ondas, en dos filas y en tres, y se vuelven a alinear después de {#} s. <a>Abrir la onda de péndulos</a>",
+"Quantum wells in 2D":
+  "Pozos cuánticos en 2D",
+"Quantum Wave Packets has 2D wells: an electron in a square or rectangular box, a round box, an oscillator or a lattice of wells. Pick its states and watch them beat or circle, or shine light on it and drive it up to another level and back (Rabi oscillations), and find which jumps light cannot make. <a>Open 2D wells</a>":
+  "Paquetes de onda cuánticos tiene pozos en 2D: un electrón en una caja cuadrada o rectangular, una caja redonda, un oscilador o una red de pozos. Elige sus estados y obsérvalos pulsar o girar, o ilumínalo para llevarlo a otro nivel y de regreso (oscilaciones de Rabi), y averigua qué saltos no puede producir la luz. <a>Abrir los pozos en 2D</a>",
+"Orbital rendezvous, the antipode's sky":
+  "Encuentro orbital, el cielo de las antípodas",
+"Kepler's Laws Sandbox has two Rendezvous setups: fly a ship to a target by firing its engine forward, backward, outward or inward, and find out why speeding up makes you fall behind; one is a Hohmann transfer out to Mars's distance. The Sky and the Celestial Sphere can jump to the antipode, the point on the other side of the Earth, and show its sky at the same moment: the half that was below your horizon. <a>Open Kepler's Laws</a>":
+  "El arenero de las leyes de Kepler tiene dos configuraciones de Encuentro: lleva una nave hasta un objetivo encendiendo su motor hacia adelante, hacia atrás, hacia afuera o hacia adentro, y descubre por qué acelerar te hace quedarte atrás; una es una transferencia de Hohmann hasta la distancia de Marte. El cielo y la esfera celeste puede saltar a las antípodas, el punto del otro lado de la Tierra, y mostrar su cielo en el mismo instante: la mitad que estaba bajo tu horizonte. <a>Abrir Leyes de Kepler</a>",
+"Also used in this unit: <a>Ripple Tank</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Tanque de ondas</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
+  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
+"<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a>":
+  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}</span>",
 "<span>Induction at Work →</span>":
   "<span>Inducción en acción →</span>",
 "A new demo: spray oil drops between charged plates, time them falling and rising through the telescope, and work out each drop's size and charge. The charges come in whole numbers of e, and a drop that picks up an ion changes by exactly one. <a>Open Millikan Oil Drop</a>":

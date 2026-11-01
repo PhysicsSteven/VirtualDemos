@@ -219,6 +219,7 @@
       "optics-bench",
       "the-eye",
       "instrument-builder",
+      "telescope-aberrations",
       "polarization",
       "speed-of-light",
       "color-vision",
@@ -330,6 +331,7 @@
       "instrument-builder",
       "optics-bench",
       "resolution",
+      "telescope-aberrations",
       "em-waves",
       "spectra",
       "blackbody"

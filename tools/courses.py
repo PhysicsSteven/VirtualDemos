@@ -46,6 +46,7 @@ COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
 COURSE_HANDOUTS['astro-2203'] |= {'intro-exoplanets', 'intro-tides', 'intro-lagrange', 'intro-parallax', 'intro-atmospheres'}
 COURSE_HANDOUTS['astro-2203'].add('intro-sidereal-day')   # Reasons for Seasons, Sidereal and solar days and Sundial and clock, 2026-10-31
 COURSE_HANDOUTS['astro-2203'].add('intro-constellations-3d')   # The Sky and the Celestial Sphere, Real distances, 2026-10-31
+COURSE_HANDOUTS['astro-2203'].add('intro-aberrations')   # Telescope Aberrations, 2026-11-01
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range'}
@@ -64,7 +65,7 @@ NO_BOOK = {'astro-2203', 'medical-physics'}
 MERGED = {}
 INCLUDED = {'astro-2203': 'astro'}
 MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
-               'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light',
+               'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light', 'telescope-aberrations': 'telescopes-light',
                'em-waves': 'telescopes-light', 'blackbody': 'telescopes-light', 'spectra': 'telescopes-light',
                'radioactive-decay': 'planets', 'fluids': 'planets', 'ideal-gas': 'planets'}
 MERGE_UNITS = {'telescopes-light': ('gravitation', {'id': 'telescopes-light', 'title': 'Telescopes and light', 'short': 'Telescopes and light',
@@ -258,7 +259,7 @@ HANDOUT_TOPIC = {
     'intro-moon': 'Phases of the Moon and Eclipse Seasons (Astro 2203)', 'intro-precession': 'A Spinning Top and the Wandering Pole Star (Astro 2203)',
     'intro-stellarium-sky': 'Reading the Sky with Stellarium (Astro 2203)',
     'intro-celestial-sphere': 'The Sky and the Celestial Sphere (Astro 2203)',
-    'intro-telescope': 'Building a Telescope (Astro 2203)', 'intro-resolution': 'Seeing Fine Detail (Astro 2203)',
+    'intro-telescope': 'Building a Telescope (Astro 2203)', 'intro-resolution': 'Seeing Fine Detail (Astro 2203)', 'intro-aberrations': 'Fixing a Blurry Telescope (Astro 2203)',
     'intro-mirrors': 'Lenses, Mirrors and Color (Astro 2203)', 'intro-blackbody': 'Star Colors and Temperatures (Astro 2203)',
     'intro-spectra': 'Fingerprints of the Elements (Astro 2203)', 'intro-em-spectrum': 'The Electromagnetic Spectrum (Astro 2203)',
     'intro-planet-temperatures': 'Planet Temperatures and Habitable Zones (Astro 2203)',

@@ -1,0 +1,991 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Telescope Aberrations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --ray: #b45309; --mirror: #475569; --glass: rgba(56, 132, 200, 0.18); --glass-edge: #3b82c4; --tube: #e7ebf0; --tube-edge: #9aa6b6; --mark: #1f6fd1; --halo: #c2410c; --sky: #0b1220; --air: rgba(120, 160, 220, 0.55); --good: #2f8a4e; --bad: #b42318; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fbbf24; --mirror: #cbd5e1; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #1b2433; --tube-edge: #4b5a70; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; } }
+:root[data-theme="dark"] { --ray: #fbbf24; --mirror: #cbd5e1; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #1b2433; --tube-edge: #4b5a70; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .check { font-size: 0.84rem; }
+.stage-ctl .lab { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 470px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 300px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .seg { flex-wrap: wrap; }
+.puzzle { display: flex; flex-direction: column; gap: 8px; }
+.puzzle select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; width: 100%; }
+.puzzle .fixes { display: flex; flex-wrap: wrap; gap: 6px; }
+.puzzle .fixes .btn { font-size: 0.82rem; }
+.puzzle .say { margin: 0; font-size: 0.86rem; line-height: 1.4; }
+.puzzle .say.good { color: var(--good); font-weight: 700; }
+.puzzle .say.bad { color: var(--bad); }
+.puzzle .tries { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 640px; flex: none; } .curvebox { height: 170px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 620px; } .stage-ctl .note { margin-left: 0; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Telescope Aberrations</h1>
+      <p>A perfect telescope turns a star into a tiny Airy disk. A real one blurs it: the mirror's shape, a star far from the center, a lens that bends colors differently, or the moving air above. Each blur leaves its own fingerprint. Work out what is wrong, then fix it.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">angles in ″ (arcseconds)</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/telescope-aberrations.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/telescope-aberrations.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM23 2h1v1h-1zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h4v1h-4zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM27 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h3v1h-3zM16 4h1v1h-1zM22 4h2v1h-2zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM19 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h3v1h-3zM26 9h1v1h-1zM29 9h1v1h-1zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM24 10h6v1h-6zM31 10h2v1h-2zM35 10h3v1h-3zM2 11h1v1h-1zM9 11h4v1h-4zM15 11h2v1h-2zM20 11h2v1h-2zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM3 12h2v1h-2zM7 12h7v1h-7zM15 12h2v1h-2zM19 12h2v1h-2zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h4v1h-4zM7 13h1v1h-1zM9 13h3v1h-3zM14 13h2v1h-2zM17 13h2v1h-2zM20 13h1v1h-1zM22 13h1v1h-1zM25 13h2v1h-2zM29 13h1v1h-1zM32 13h4v1h-4zM38 13h1v1h-1zM5 14h1v1h-1zM7 14h5v1h-5zM13 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM5 15h3v1h-3zM11 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM22 15h4v1h-4zM29 15h2v1h-2zM33 15h1v1h-1zM35 15h1v1h-1zM5 16h6v1h-6zM13 16h1v1h-1zM16 16h4v1h-4zM22 16h2v1h-2zM28 16h8v1h-8zM38 16h1v1h-1zM3 17h2v1h-2zM6 17h1v1h-1zM9 17h1v1h-1zM11 17h3v1h-3zM16 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM29 17h2v1h-2zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h3v1h-3zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM16 18h3v1h-3zM21 18h2v1h-2zM24 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM6 19h2v1h-2zM10 19h1v1h-1zM12 19h1v1h-1zM14 19h2v1h-2zM20 19h3v1h-3zM25 19h1v1h-1zM29 19h2v1h-2zM35 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h1v1h-1zM21 20h3v1h-3zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h1v1h-1zM5 21h2v1h-2zM20 21h1v1h-1zM24 21h3v1h-3zM28 21h2v1h-2zM32 21h1v1h-1zM35 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM12 22h3v1h-3zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM4 23h4v1h-4zM9 23h2v1h-2zM12 23h3v1h-3zM17 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM5 24h6v1h-6zM12 24h1v1h-1zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM12 25h1v1h-1zM15 25h2v1h-2zM18 25h1v1h-1zM21 25h2v1h-2zM24 25h2v1h-2zM28 25h1v1h-1zM31 25h5v1h-5zM37 25h1v1h-1zM3 26h1v1h-1zM5 26h4v1h-4zM11 26h2v1h-2zM17 26h4v1h-4zM22 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM6 27h2v1h-2zM9 27h1v1h-1zM12 27h2v1h-2zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM29 27h2v1h-2zM33 27h1v1h-1zM35 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM7 28h2v1h-2zM10 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM12 29h2v1h-2zM16 29h2v1h-2zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h4v1h-4zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h2v1h-2zM11 30h2v1h-2zM15 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h12v1h-12zM10 31h1v1h-1zM14 31h2v1h-2zM18 31h6v1h-6zM25 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM11 32h2v1h-2zM15 32h1v1h-1zM17 32h2v1h-2zM21 32h1v1h-1zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h1v1h-1zM18 33h3v1h-3zM25 33h1v1h-1zM28 33h3v1h-3zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM11 34h2v1h-2zM14 34h3v1h-3zM18 34h1v1h-1zM21 34h1v1h-1zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h2v1h-2zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h4v1h-4zM25 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h2v1h-2zM16 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h2v1h-2zM16 37h1v1h-1zM21 37h1v1h-1zM25 37h2v1h-2zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h2v1h-2zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM16 38h3v1h-3zM21 38h2v1h-2zM25 38h2v1h-2zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Let the air move</button>
+        <span class="lab">Zoom</span>
+        <div class="seg" role="group" aria-label="Zoom" id="zoomSeg">
+          <button type="button" data-z="1" aria-pressed="false">1×</button>
+          <button type="button" data-z="2" aria-pressed="false">2×</button>
+          <button type="button" data-z="4" aria-pressed="false">4×</button>
+          <button type="button" data-z="8" aria-pressed="true">8×</button>
+          <button type="button" data-z="16" aria-pressed="false">16×</button>
+        </div>
+        <label class="check"><input type="checkbox" id="faint"><span>Bring out faint light (30× exposure)</span></label>
+        <label class="check"><input type="checkbox" id="absScale"><span>Same brightness scale as a perfect telescope</span></label>
+        <label class="check"><input type="checkbox" id="starTest"><span>Star test: in and out of focus</span></label>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The telescope and the image of the star it makes."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Brightness along a line through the star, compared with a perfect telescope."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardScope" role="group" aria-label="The telescope">
+          <span class="card-title">Telescope</span>
+          <div class="wide" id="wrapScope"><span class="lab">Type</span>
+            <div class="seg" role="group" aria-label="Telescope type" id="scopeSeg"><button type="button" data-s="mirror" aria-pressed="true">Mirror</button><button type="button" data-s="lens" aria-pressed="false">Lens</button><button type="button" data-s="hubble" aria-pressed="false">Hubble</button></div>
+          </div>
+          <div class="wide" id="wrapMirror"><span class="lab">Mirror shape</span>
+            <div class="seg" role="group" aria-label="Mirror shape" id="shapeSeg"><button type="button" data-k="0" aria-pressed="false">Sphere</button><button type="button" data-k="-1" aria-pressed="true">Parabola</button></div>
+          </div>
+          <div class="wide" id="wrapLens"><span class="lab">Lens</span>
+            <div class="seg" role="group" aria-label="Lens" id="lensSeg"><button type="button" data-l="singlet" aria-pressed="true">Single lens</button><button type="button" data-l="achromat" aria-pressed="false">Achromat</button></div>
+          </div>
+          <div class="wide" id="wrapHubble"><span class="lab">Hubble</span>
+            <div class="seg" role="group" aria-label="Hubble" id="hubbleSeg"><button type="button" data-h="0" aria-pressed="true">As launched (1990)</button><button type="button" data-h="1" aria-pressed="false">With corrective optics (1993)</button></div>
+          </div>
+          <div id="wrapD"><div class="slider-head"><label for="sD">Aperture diameter D</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0.05" max="4" step="0.01"></div>
+          <div id="wrapN"><div class="slider-head"><label for="sN">Focal ratio f/N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="3" max="20" step="0.5"></div>
+          <div id="wrapPinch"><div class="slider-head"><label for="sPinch">Clamp pinch on the mirror</label><output id="oPinch" class="mono" for="sPinch"></output></div><input type="range" id="sPinch" min="0" max="200" step="5"></div>
+          <div class="wide" id="wrapCorr"><label class="check"><input type="checkbox" id="corr"><span>Coma corrector lens in front of the camera</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardLook" role="group" aria-label="Where the star is and how the camera looks at it">
+          <span class="card-title">Star and camera</span>
+          <div><div class="slider-head"><label for="sFocus">Camera focus</label><output id="oFocus" class="mono" for="sFocus"></output></div><input type="range" id="sFocus" min="-2" max="2" step="0.002"></div>
+          <div id="wrapTh"><div class="slider-head"><label for="sTh">Star's angle from the center of the view</label><output id="oTh" class="mono" for="sTh"></output></div><input type="range" id="sTh" min="0" max="30" step="0.5"></div>
+          <div><div class="slider-head"><label for="sIris">Aperture mask: part of the diameter used</label><output id="oIris" class="mono" for="sIris"></output></div><input type="range" id="sIris" min="20" max="100" step="5"></div>
+          <div class="pick"><label for="selFilter">Filter on the camera</label><select id="selFilter">
+            <option value="white">White light (420 to 660 nm)</option>
+            <option value="F">Blue, 486 nm (F line)</option>
+            <option value="g550">Green, 550 nm</option>
+            <option value="d">Yellow, 588 nm (d line)</option>
+            <option value="C">Red, 656 nm (C line)</option>
+            <option value="K">Infrared, 2.2 µm (K band)</option>
+          </select></div>
+        </div>
+        <div class="shelf-card" id="cardAir" role="group" aria-label="The air above the telescope">
+          <span class="card-title">The air</span>
+          <div class="wide"><span class="lab">Where</span>
+            <div class="seg" role="group" aria-label="Where the telescope is" id="airSeg"><button type="button" data-a="space" aria-pressed="true">In space</button><button type="button" data-a="ground" aria-pressed="false">On the ground</button></div>
+          </div>
+          <div id="wrapR0"><div class="slider-head"><label for="sR0">Seeing: r₀ at 500 nm</label><output id="oR0" class="mono" for="sR0"></output></div><input type="range" id="sR0" min="5" max="30" step="0.5"></div>
+          <div class="wide" id="wrapExpo"><span class="lab">Exposure</span>
+            <div class="seg" role="group" aria-label="Exposure" id="expoSeg"><button type="button" data-e="snap" aria-pressed="true">Snapshot (1 ms)</button><button type="button" data-e="long" aria-pressed="false">Long exposure</button></div>
+          </div>
+          <div class="pick" id="wrapAO"><label for="selAO">Adaptive optics</label><select id="selAO">
+            <option value="off">Off</option>
+            <option value="tt">Tip and tilt only (2 shapes)</option>
+            <option value="low">Low order (14 shapes)</option>
+            <option value="high">High order (65 shapes)</option>
+          </select></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-aberrations.html" target="intro-aberrations-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="seeing" aria-pressed="true">Through moving air</button>
+          <button type="button" data-p="perfect" aria-pressed="false">Perfect telescope</button>
+          <button type="button" data-p="defocus" aria-pressed="false">Out of focus</button>
+          <button type="button" data-p="sphere" aria-pressed="false">Spherical mirror</button>
+          <button type="button" data-p="coma" aria-pressed="false">Star off center: coma</button>
+          <button type="button" data-p="astig" aria-pressed="false">Pinched mirror: astigmatism</button>
+          <button type="button" data-p="singlet" aria-pressed="false">Single lens: color</button>
+          <button type="button" data-p="achromat" aria-pressed="false">Achromatic lens</button>
+          <button type="button" data-p="hubble90" aria-pressed="false">Hubble in 1990</button>
+          <button type="button" data-p="hubble93" aria-pressed="false">Hubble fixed (1993)</button>
+          <button type="button" data-p="ao" aria-pressed="false">Adaptive optics</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery telescope</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section id="puzzleSec" hidden>
+        <h2>Puzzle: what is wrong?</h2>
+        <div class="puzzle">
+          <p class="say" id="pzSay" aria-live="polite"></p>
+          <label class="lab" for="pzCause">What causes the blur?</label>
+          <select id="pzCause">
+            <option value="">Choose a cause</option>
+            <option value="defocus">The camera is not at the focus</option>
+            <option value="sphere">The mirror is a sphere, not a parabola (spherical aberration)</option>
+            <option value="coma">The star is far from the center of the view (coma)</option>
+            <option value="astig">The mirror is pinched by its clamps (astigmatism)</option>
+            <option value="color">The lens focuses each color at a different place (chromatic aberration)</option>
+            <option value="seeing">Moving air above the telescope (seeing)</option>
+          </select>
+          <div class="btnrow"><button type="button" class="btn primary" id="pzCheck">Check my answer</button><button type="button" class="btn" id="pzHint">Give me a hint</button></div>
+          <span class="lab">Then fix it</span>
+          <div class="fixes" id="pzFixes">
+            <button type="button" class="btn" data-fix="parabola">Replace the mirror with a parabola</button>
+            <button type="button" class="btn" data-fix="corrector">Add a coma corrector</button>
+            <button type="button" class="btn" data-fix="clamps">Loosen the mirror clamps</button>
+            <button type="button" class="btn" data-fix="achromat">Replace the lens with an achromat</button>
+            <button type="button" class="btn" data-fix="ao">Turn on adaptive optics</button>
+            <button type="button" class="btn" data-fix="space">Launch the telescope into space</button>
+          </div>
+          <p class="hint">Out of focus? Turn the camera focus yourself.</p>
+          <p class="tries" id="pzTries"></p>
+          <div class="btnrow"><button type="button" class="btn" id="pzNew">New mystery</button><button type="button" class="btn" id="pzShow">Show the answer</button></div>
+        </div>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-aberrations" data-title="Telescope Aberrations" data-demo="telescope-aberrations">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the diffraction limit, the predictions and the wavefront error</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+          <p class="hint" id="about5"></p>
+          <p class="hint" id="about6"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* Telescope aberrations, computed. The star's image is the Fraunhofer diffraction pattern of the telescope's pupil:
+     I(θ) = |FFT{ A(x, y) exp(2πi W(x, y)/λ) }|², with W the wavefront error found by tracing real rays through the optics
+     (mirror: exact conic surface; lens: exact spherical surfaces and Snell's law with Sellmeier glass) to a reference sphere
+     centered on the image point. The atmosphere adds a Kolmogorov phase screen; adaptive optics removes its first Zernike shapes. */
+  const FFTN = 512, NP0 = 128, LAM0 = 550e-9;          /* grid, pupil diameter in samples at 550 nm (pixel = λ0/(4D)) */
+  const ARCSEC = Math.PI / 648000;
+  /* Sellmeier n(λ), λ in nm (Schott catalog, the same formulas as Optics Bench) */
+  const GLASS = {
+    bk7: { name: 'Crown glass (N-BK7)', B: [1.03961212, 0.231792344, 1.01046945], C: [0.00600069867, 0.0200179144, 103.560653] },
+    f2: { name: 'Flint glass (F2)', B: [1.34533359, 0.209073176, 0.937357162], C: [0.00997743871, 0.0470450767, 111.886764] },
+  };
+  function nGlass(g, lamNm) { const L = (lamNm / 1000) ** 2; let s = 1; g.B.forEach((b, i) => { s += b * L / (L - g.C[i]); }); return Math.sqrt(s); }
+  /* Fraunhofer lines used for the Abbe number V = (n_d − 1)/(n_F − n_C) */
+  const LINE = { F: 486.1327, d: 587.5618, C: 656.2725 };
+  function abbe(g) { return (nGlass(g, LINE.d) - 1) / (nGlass(g, LINE.F) - nGlass(g, LINE.C)); }
+
+  /* ---------- FFT: radix 2, in place, n a power of two; rows, then columns by transposing ---------- */
+  const PLAN = {};
+  function fftPlan(n) { if (PLAN[n]) return PLAN[n]; const c = new Float64Array(n / 2), s = new Float64Array(n / 2), rev = new Int32Array(n);
+    for (let i = 0; i < n / 2; i++) { c[i] = Math.cos(2 * Math.PI * i / n); s[i] = -Math.sin(2 * Math.PI * i / n); }
+    for (let i = 0, j = 0; i < n; i++) { rev[i] = j; let bit = n >> 1; while (j & bit) { j ^= bit; bit >>= 1; } j |= bit; }
+    return (PLAN[n] = { c, s, rev }); }
+  function fftRow(re, im, off, n, p) { const rev = p.rev, c = p.c, s = p.s;
+    for (let i = 0; i < n; i++) { const j = rev[i]; if (i < j) { const a = off + i, b = off + j; let t = re[a]; re[a] = re[b]; re[b] = t; t = im[a]; im[a] = im[b]; im[b] = t; } }
+    for (let len = 2; len <= n; len <<= 1) { const h = len >> 1, step = n / len;
+      for (let i = off; i < off + n; i += len) for (let k = 0, w = 0; k < h; k++, w += step) {
+        const a = i + k, b = a + h, wr = c[w], wi = s[w], br = re[b], bi = im[b], xr = br * wr - bi * wi, xi = br * wi + bi * wr;
+        re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi; } } }
+  function transpose(a, n) { for (let j = 0; j < n; j++) for (let i = j + 1; i < n; i++) { const p = j * n + i, q = i * n + j, t = a[p]; a[p] = a[q]; a[q] = t; } }
+  /* 2D FFT of an n × n field whose nonzero rows are rows r0..r1 only (the pupil): those rows first, then every column */
+  function fft2(re, im, n, r0 = 0, r1 = n - 1) { const p = fftPlan(n);
+    for (let r = Math.max(0, r0); r <= Math.min(n - 1, r1); r++) fftRow(re, im, r * n, n, p);
+    transpose(re, n); transpose(im, n); for (let r = 0; r < n; r++) fftRow(re, im, r * n, n, p); transpose(re, n); transpose(im, n); }
+
+  /* ---------- pupil grid ---------- */
+  /* Np = pupil diameter in samples for wavelength λ, chosen so that one image pixel is the same angle, λ0/(4D), at every λ */
+  function pupilSamples(lam) { return NP0 * LAM0 / lam; }
+  /* points of the pupil: normalized coordinates (u, v) with u² + v² ≤ 1, outside the central obstruction eps and the spider vanes */
+  function pupilPoints(np, eps = 0, vane = 0) {
+    const n = FFTN, c = n / 2, a = np / 2, idx = [], u = [], v = [];
+    const r0 = Math.floor(c - a - 1), r1 = Math.ceil(c + a + 1);
+    for (let j = r0; j <= r1; j++) for (let i = r0; i <= r1; i++) {
+      const x = (i - c) / a, y = (j - c) / a, rr = x * x + y * y;
+      if (rr > 1 || rr < eps * eps) continue;
+      if (vane > 0 && (Math.abs(x) < vane / 2 || Math.abs(y) < vane / 2)) continue;
+      idx.push(j * n + i); u.push(x); v.push(y); }
+    return { idx: Int32Array.from(idx), u: Float64Array.from(u), v: Float64Array.from(v), r0, r1, np, eps, vane };
+  }
+  /* remove the piston and tilt that fit W best (least squares): the image is then centered on its own centroid */
+  function removeTilt(P, W) { let su = 0, sv = 0, suu = 0, svv = 0, suv = 0, sw = 0, swu = 0, swv = 0; const m = W.length;
+    for (let k = 0; k < m; k++) { const u = P.u[k], v = P.v[k], w = W[k]; su += u; sv += v; suu += u * u; svv += v * v; suv += u * v; sw += w; swu += w * u; swv += w * v; }
+    /* solve [m su sv; su suu suv; sv suv svv] [a b c] = [sw swu swv] */
+    const A = [[m, su, sv, sw], [su, suu, suv, swu], [sv, suv, svv, swv]];
+    for (let i = 0; i < 3; i++) { let p = i; for (let r = i + 1; r < 3; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r; [A[i], A[p]] = [A[p], A[i]];
+      for (let r = 0; r < 3; r++) if (r !== i) { const f = A[r][i] / A[i][i]; for (let k = i; k < 4; k++) A[r][k] -= f * A[i][k]; } }
+    const a = A[0][3] / A[0][0], b = A[1][3] / A[1][1], cc = A[2][3] / A[2][2];
+    for (let k = 0; k < m; k++) W[k] -= a + b * P.u[k] + cc * P.v[k];
+    return W; }
+  function rms(W) { let s = 0, s2 = 0; for (const w of W) { s += w; s2 += w * w; } const m = W.length; return Math.sqrt(Math.max(0, s2 / m - (s / m) ** 2)); }
+
+  /* ---------- vector helpers ---------- */
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  function refract(d, nrm, n1, n2) { /* d unit ray, nrm unit normal facing the incoming ray's side */
+    let c = -dot(d, nrm); let N = nrm; if (c < 0) { N = [-nrm[0], -nrm[1], -nrm[2]]; c = -c; }
+    const r = n1 / n2, k = 1 - r * r * (1 - c * c); if (k < 0) return null;
+    const t = r * c - Math.sqrt(k); return [r * d[0] + t * N[0], r * d[1] + t * N[1], r * d[2] + t * N[2]]; }
+  function reflect(d, nrm) { const k = 2 * dot(d, nrm); return [d[0] - k * nrm[0], d[1] - k * nrm[1], d[2] - k * nrm[2]]; }
+  /* distance along unit ray (p, d) to the sphere of radius R about c, the root nearest to p going forward */
+  function toSphere(p, d, c, R) { const o = [p[0] - c[0], p[1] - c[1], p[2] - c[2]], b = dot(o, d), q = dot(o, o) - R * R, disc = b * b - q;
+    if (disc < 0) return null; const s = Math.sqrt(disc), t1 = -b - s, t2 = -b + s; return Math.abs(t1) < Math.abs(t2) ? t1 : t2; }
+
+  /* ---------- the mirror: a conic of vertex radius R and conic constant K (K = 0 sphere, −1 paraboloid), stop at the mirror ---------- */
+  function sag(r, R, K) { return r * r / (R * (1 + Math.sqrt(1 - (1 + K) * r * r / (R * R)))); }
+  function sagSlope(r, R, K) { return r / Math.sqrt(R * R - (1 + K) * r * r); }
+  /* Ray traced wavefront error (m) of a concave conic mirror, diameter D, focal ratio N, for a star at angle th (rad) from the axis,
+     with the camera dz (m) beyond the paraxial focus. Light comes down the −z axis tilted toward +x; the mirror vertex is the origin.
+     Reference sphere: centered on the chief ray's crossing of the camera plane, through the mirror's vertex. Also returns the ray
+     hits on the camera plane relative to that point (m), for the geometric picture. */
+  function mirrorWave(P, D, N, K, th, dz) {
+    const f = N * D, R = 2 * f, y = D / 2, zd = f + dz, d = [Math.sin(th), 0, -Math.cos(th)];
+    const Pc = [zd * Math.tan(th), 0, zd], Rref = Math.hypot(Pc[0], Pc[2]);
+    const W = new Float64Array(P.u.length), hx = new Float64Array(P.u.length), hy = new Float64Array(P.u.length);
+    let W0 = null;
+    const one = (x, yy) => {
+      const r = Math.hypot(x, yy), z = sag(r, R, K), M = [x, yy, z];
+      const sl = r > 0 ? sagSlope(r, R, K) : 0, gx = r > 0 ? -sl * x / r : 0, gy = r > 0 ? -sl * yy / r : 0, gl = Math.hypot(gx, gy, 1);
+      const nrm = [gx / gl, gy / gl, 1 / gl], o = reflect(d, nrm);
+      const L1 = dot(d, M) /* from the plane d·X = 0 through the vertex */, t = toSphere(M, o, Pc, Rref);
+      const tz = (zd - M[2]) / o[2];
+      return { L: L1 + t, hx: M[0] + tz * o[0] - Pc[0], hy: M[1] + tz * o[1] - Pc[1] }; };
+    W0 = one(0, 0).L;
+    for (let k = 0; k < W.length; k++) { const s = one(P.u[k] * y, P.v[k] * y); W[k] = s.L - W0; hx[k] = s.hx; hy[k] = s.hy; }
+    return { W, hx, hy, f };
+  }
+
+  /* ---------- lenses: exact trace through spherical surfaces (radius Infinity = flat) and Snell's law ---------- */
+  /* surf: [{ R, t (to the next surface), g: glass after it, or null for air }], first vertex at z = 0, light along +z.
+     The ray starts one meter before the first vertex, aimed to cross the plane z = 0 at (x, y), going in direction d. */
+  function traceLens(surf, lam, x, y, d) {
+    let p = [x - d[0] / d[2], y - d[1] / d[2], -1], opl = 0, n1 = 1, z0 = 0;
+    const L0 = dot(d, p);
+    for (let i = 0; i < surf.length; i++) { const S = surf[i], n2 = S.g ? nGlass(GLASS[S.g], lam) : 1;
+      let t, nrm;
+      if (!isFinite(S.R)) { t = (z0 - p[2]) / d[2]; nrm = [0, 0, -1]; }
+      else { const c = [0, 0, z0 + S.R]; t = toSphere(p, d, c, Math.abs(S.R)); if (t == null) return null; }
+      const q = [p[0] + t * d[0], p[1] + t * d[1], p[2] + t * d[2]];
+      if (isFinite(S.R)) nrm = [q[0] / S.R, q[1] / S.R, (q[2] - z0 - S.R) / S.R];
+      opl += n1 * t; p = q; d = refract(d, nrm, n1, n2); if (!d) return null; n1 = n2; z0 += S.t || 0; }
+    return { p, d, opl: opl + L0, zLast: z0 - (surf[surf.length - 1].t || 0) };
+  }
+  /* paraxial back focus at λ (from the last vertex) and focal length */
+  function backFocus(surf, lam, D) { const r = traceLens(surf, lam, 0, D * 1e-4, [0, 0, 1]); return r.p[2] - r.p[1] * r.d[2] / r.d[1] - r.zLast; }
+  function focalLength(surf, lam, D) { const r = traceLens(surf, lam, 0, D * 1e-4, [0, 0, 1]); return -D * 1e-4 * r.d[2] / r.d[1]; }
+  /* wavefront error (m) of the lens for a star at angle th from the axis, the camera zd beyond the last vertex. Reference sphere:
+     centered where the chief ray (through the first vertex, the stop) meets the camera plane, through the last vertex. */
+  function lensWave(P, surf, lam, D, th, zd) {
+    const d = [Math.sin(th), 0, Math.cos(th)], ch = traceLens(surf, lam, 0, 0, d), zc = ch.zLast + zd;
+    const Pc = [ch.p[0] + (zc - ch.p[2]) * ch.d[0] / ch.d[2], ch.p[1] + (zc - ch.p[2]) * ch.d[1] / ch.d[2], zc], E = [0, 0, ch.zLast], Rref = Math.hypot(Pc[0] - E[0], Pc[1] - E[1], Pc[2] - E[2]);
+    const W = new Float64Array(P.u.length), y = D / 2; let L0 = null;
+    const one = (x, yy) => { const r = traceLens(surf, lam, x, yy, d); return r ? r.opl + toSphere(r.p, r.d, Pc, Rref) : NaN; };
+    L0 = one(0, 0);
+    for (let k = 0; k < W.length; k++) W[k] = one(P.u[k] * y, P.v[k] * y) - L0;
+    return W;
+  }
+  /* a single plano convex lens of crown glass, curved side to the sky, focal length f at the d line */
+  function singletLens(f, D) { const nd = nGlass(GLASS.bk7, LINE.d), R1 = (nd - 1) * f, t = Math.max(0.004, 0.001 + 2 * sag(D / 2, R1, 0));
+    return [{ R: R1, t, g: 'bk7' }, { R: Infinity, t: 0, g: null }]; }
+  /* a cemented achromat (crown N-BK7 then flint F2): thin lens powers from the Abbe numbers, then the crown's bending and the last
+     radius set by trace so that the F and C lines meet at one paraxial focus and the spherical aberration at d is least */
+  function achromatLens(f, D) {
+    const V1 = abbe(GLASS.bk7), V2 = abbe(GLASS.f2), n1 = nGlass(GLASS.bk7, LINE.d), n2 = nGlass(GLASS.f2, LINE.d);
+    const ph = 1 / f, ph1 = ph * V1 / (V1 - V2), ph2 = -ph * V2 / (V1 - V2);
+    const t1 = Math.max(0.004, 0.0015 + 2 * D * D / 8 * ph1 / (n1 - 1) / 2 * 1.2), t2 = 0.003;
+    const build = (c1, c3) => { const c2 = c1 - ph1 / (n1 - 1); return [{ R: 1 / c1, t: t1, g: 'bk7' }, { R: 1 / c2, t: t2, g: 'f2' }, { R: 1 / c3, t: 0, g: null }]; };
+    const c3For = (c1) => { /* solve for the last curvature so that bf(F) = bf(C), starting from the thin lens value */
+      const c2 = c1 - ph1 / (n1 - 1); let c3 = c2 - ph2 / (n2 - 1);
+      for (let it = 0; it < 30; it++) { const g = (c) => { const s = build(c1, c); return backFocus(s, LINE.F, D) - backFocus(s, LINE.C, D); };
+        const e = g(c3), de = (g(c3 + 1e-4) - e) / 1e-4; const step = e / de; c3 -= step; if (Math.abs(step) < 1e-12) break; }
+      return c3; };
+    const sa = (c1) => { const s = build(c1, c3For(c1)), bf = backFocus(s, LINE.d, D), d0 = [0, 0, 1], ch = traceLens(s, LINE.d, 0, 0, d0), Pc = [0, 0, ch.zLast + bf];
+      /* rms after removing the best focus (fit a ρ² term) over the disk, from 65 rays across the radius */
+      let a = 0, b = 0, cc = 0, d1 = 0, e = 0, wsum = 0, L0 = null;
+      for (let i = 0; i <= 64; i++) { const r = i / 64, ray = traceLens(s, LINE.d, 0, r * D / 2, d0), L = ray.opl + toSphere(ray.p, ray.d, Pc, bf); if (L0 == null) L0 = L;
+        const wgt = r + 1e-9, z = r * r, w = L - L0; a += wgt; b += wgt * z; cc += wgt * z * z; d1 += wgt * w; e += wgt * w * z; wsum += wgt * w * w; }
+      const det = a * cc - b * b, A0 = (d1 * cc - e * b) / det, A2 = (a * e - b * d1) / det; return (wsum - A0 * d1 - A2 * e) / a; };
+    /* golden section over the crown's front curvature */
+    let lo = 0.2 * ph1 / (n1 - 1), hi = 0.9 * ph1 / (n1 - 1); const gr = (Math.sqrt(5) - 1) / 2;
+    let x1 = hi - gr * (hi - lo), x2 = lo + gr * (hi - lo), f1 = sa(x1), f2v = sa(x2);
+    for (let it = 0; it < 40; it++) { if (f1 < f2v) { hi = x2; x2 = x1; f2v = f1; x1 = hi - gr * (hi - lo); f1 = sa(x1); } else { lo = x1; x1 = x2; f1 = f2v; x2 = lo + gr * (hi - lo); f2v = sa(x2); } }
+    const c1 = (lo + hi) / 2, L = build(c1, c3For(c1)), k = f / focalLength(L, LINE.d, D);
+    return L.map((S) => ({ R: S.R * k, t: S.t * k, g: S.g }));   /* scaled so that the focal length at d is exactly f */
+  }
+
+  /* ---------- the atmosphere: Kolmogorov phase screen (FFT method with subharmonics; Lane, Glindemann and Dainty 1992;
+     Johansson and Gavel 1994). Phase structure function D(r) = 6.88 (r/r0)^(5/3), r0 given at 500 nm and scaling as λ^(6/5). ---------- */
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(R) { let u = 0; while (u === 0) u = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * R()); }
+  function cellPower(fx, fy, d, r0) { let s = 0; for (let a = 0; a < 8; a++) for (let b = 0; b < 8; b++) { const x = fx + (a + 0.5) / 8 * d - d / 2, y = fy + (b + 0.5) / 8 * d - d / 2;
+    s += 0.023 * Math.pow(r0, -5 / 3) * Math.pow(x * x + y * y, -11 / 6); } return s / 64; }
+  /* phase (rad at 500 nm) on an n × n periodic grid of spacing dx (m), for r0 (m, at 500 nm) */
+  function phaseScreen(n, dx, r0, seed) {
+    const R = rng(seed), re = new Float64Array(n * n), im = new Float64Array(n * n), L = n * dx, df = 1 / L;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const fx = (i < n / 2 ? i : i - n) * df, fy = (j < n / 2 ? j : j - n) * df, f2 = fx * fx + fy * fy; if (f2 === 0) continue;
+      const amp = Math.sqrt(0.023 * Math.pow(r0, -5 / 3) * Math.pow(f2, -11 / 6)) * df;
+      re[j * n + i] = amp * gauss(R); im[j * n + i] = amp * gauss(R); }
+    fft2(re, im, n);   /* sum over frequencies: the real part is one screen */
+    const ph = new Float64Array(n * n); for (let k = 0; k < n * n; k++) ph[k] = re[k];
+    /* subharmonics: three levels of 3 × 3 frequencies at df/3, df/9, df/27, each with the spectrum's mean over its cell (8 × 8 points):
+       the screen's structure function is then within 10 % of 6.88 (r/r0)^(5/3) out to half the screen (test_telescope_aberrations) */
+    for (let p = 1; p <= 3; p++) { const dfp = df / Math.pow(3, p);
+      for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { if (!a && !b) continue;
+        const fx = a * dfp, fy = b * dfp, amp = Math.sqrt(cellPower(fx, fy, dfp, r0)) * dfp, cr = amp * gauss(R), ci = amp * gauss(R);
+        for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const arg = 2 * Math.PI * (fx * i * dx + fy * j * dx); ph[j * n + i] += cr * Math.cos(arg) - ci * Math.sin(arg); } } }
+    return ph;
+  }
+  /* sample the screen (phase in rad at 500 nm) under the pupil, centered at screen sample (cx, cy) (bilinear); returns W in m.
+     The subharmonics make the screen nonperiodic, so the pupil must stay inside it: cx and cy within [s, n − 1 − s], s = the pupil's half width
+     in screen samples (np/2 × stretch). stretch = screen samples per pupil sample. */
+  function screenWave(P, ph, n, cx, cy, stretch = 1) { const W = new Float64Array(P.u.length), a = P.np / 2 * stretch, k = 500e-9 / (2 * Math.PI);
+    for (let q = 0; q < W.length; q++) { const x = Math.min(n - 1.000001, Math.max(0, P.u[q] * a + cx)), y = Math.min(n - 1.000001, Math.max(0, P.v[q] * a + cy));
+      const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j, i1 = i + 1, j1 = j + 1;
+      W[q] = k * (ph[j * n + i] * (1 - fx) * (1 - fy) + ph[j * n + i1] * fx * (1 - fy) + ph[j1 * n + i] * (1 - fx) * fy + ph[j1 * n + i1] * fx * fy); }
+    return W; }
+
+  /* ---------- Zernike shapes (Noll order) for the adaptive optics, made orthonormal on the sampled pupil ---------- */
+  function nollNM(j) { let n = 0; while ((n + 1) * (n + 2) / 2 < j) n++; const k = j - n * (n + 1) / 2 - 1;  /* k = 0..n */
+    const ms = []; for (let m = n % 2; m <= n; m += 2) { if (m === 0) ms.push(0); else ms.push(m, m); }
+    const m = ms[k]; return { n, m, cos: m === 0 ? null : j % 2 === 0 }; }
+  function zern(j, r, t) { const { n, m, cos } = nollNM(j); let R = 0;
+    for (let s = 0; s <= (n - m) / 2; s++) { let num = (s % 2 ? -1 : 1) * fact(n - s); num /= fact(s) * fact((n + m) / 2 - s) * fact((n - m) / 2 - s); R += num * Math.pow(r, n - 2 * s); }
+    const norm = Math.sqrt(m === 0 ? n + 1 : 2 * (n + 1)); return norm * R * (m === 0 ? 1 : cos ? Math.cos(m * t) : Math.sin(m * t)); }
+  function fact(k) { let p = 1; for (let i = 2; i <= k; i++) p *= i; return p; }
+  /* orthonormal basis of the first J Zernike shapes over the pupil's points (Gram–Schmidt), piston included as shape 1 */
+  function zernBasis(P, J) { const m = P.u.length, B = [];
+    for (let j = 1; j <= J; j++) { const z = new Float64Array(m); for (let k = 0; k < m; k++) z[k] = zern(j, Math.hypot(P.u[k], P.v[k]), Math.atan2(P.v[k], P.u[k]));
+      for (const b of B) { let s = 0; for (let k = 0; k < m; k++) s += z[k] * b[k]; for (let k = 0; k < m; k++) z[k] -= s * b[k]; }
+      let s = 0; for (let k = 0; k < m; k++) s += z[k] * z[k]; s = Math.sqrt(s); for (let k = 0; k < m; k++) z[k] /= s; B.push(z); }
+    return B; }
+  /* perfect correction of the shapes in the basis: what is left */
+  function correct(W, B) { const R = Float64Array.from(W); for (const b of B) { let s = 0; for (let k = 0; k < R.length; k++) s += R[k] * b[k]; for (let k = 0; k < R.length; k++) R[k] -= s * b[k]; } return R; }
+
+  /* ---------- the image ---------- */
+  /* intensity on the FFTN × FFTN grid (centered), for wavefront W (m) on pupil P at wavelength lam; total = 1 */
+  function psf(P, W, lam, out) { const n = FFTN, re = new Float64Array(n * n), im = new Float64Array(n * n), k = 2 * Math.PI / lam;
+    for (let q = 0; q < P.idx.length; q++) { const id = P.idx[q], i = id % n, j = (id - i) / n, sgn = (i + j) & 1 ? -1 : 1, ph = k * (W ? W[q] : 0);
+      re[id] = sgn * Math.cos(ph); im[id] = sgn * Math.sin(ph); }
+    fft2(re, im, n, P.r0, P.r1);
+    const I = out || new Float64Array(n * n); let s = 0; for (let q = 0; q < n * n; q++) { const v = re[q] * re[q] + im[q] * im[q]; I[q] = v; s += v; }
+    for (let q = 0; q < n * n; q++) I[q] /= s; return I; }
+  /* the peak a perfect pupil of the same shape gives (for the Strehl ratio): |Σ A|² / (n² Σ A²) after normalizing */
+  function perfectPeak(P) { return P.idx.length / (FFTN * FFTN); }
+  /* centroid, encircled energy about it, half light diameter (pixels) */
+  function imageStats(I) { const n = FFTN; let sx = 0, sy = 0, s = 0, pk = 0, pi = 0;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const v = I[j * n + i]; s += v; sx += v * i; sy += v * j; if (v > pk) { pk = v; pi = j * n + i; } }
+    const cx = sx / s, cy = sy / s, nb = 4 * n, hist = new Float64Array(nb);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const r = Math.hypot(i - cx, j - cy) * 4; const b = Math.floor(r); if (b < nb) hist[b] += I[j * n + i]; }
+    let acc = 0, r50 = null, r80 = null; for (let b = 0; b < nb; b++) { const prev = acc; acc += hist[b] / s;
+      if (r50 == null && acc >= 0.5) r50 = (b + (0.5 - prev) / (acc - prev)) / 4; if (r80 == null && acc >= 0.8) { r80 = (b + (0.8 - prev) / (acc - prev)) / 4; break; } }
+    return { cx, cy, peak: pk / s, peakAt: pi, hpd: 2 * r50, d80: 2 * r80 }; }
+  /* angle of one image pixel (rad) for aperture D */
+  function pixelAngle(D) { return LAM0 * NP0 / (FFTN * D); }
+  /* largest step of the wavefront between neighbor pupil samples, in waves: above about 0.5 the grid cannot follow it */
+  function maxStep(P, W, lam) { const n = FFTN, map = new Map(); for (let q = 0; q < P.idx.length; q++) map.set(P.idx[q], W[q]); let mx = 0;
+    for (let q = 0; q < P.idx.length; q++) { const id = P.idx[q], a = map.get(id + 1), b = map.get(id + n);
+      if (a != null) mx = Math.max(mx, Math.abs(a - W[q])); if (b != null) mx = Math.max(mx, Math.abs(b - W[q])); }
+    return mx / lam; }
+  /* Hubble 1990: the primary's figure error. Designed conic −1.0023, as made −1.0139, R = 11.04 m, D = 2.4 m.
+     Wavefront error (as an extra path, like mirrorWave) on reflection: −2 Δz cos²i, Δz the difference of the two sags, i the angle of incidence */
+  function hubbleWave(P, Kmade = -1.0139, Kdesign = -1.0023, R = 11.04, D = 2.4) { const W = new Float64Array(P.u.length);
+    for (let k = 0; k < W.length; k++) { const r = Math.hypot(P.u[k], P.v[k]) * D / 2, dz = sag(r, R, Kmade) - sag(r, R, Kdesign), i = Math.atan(sagSlope(r, R, Kdesign));
+      W[k] = -2 * dz * Math.cos(i) ** 2; }   /* a lower (flatter) surface makes the path longer */
+    return W; }
+  /* defocus of a converging spherical wave: the camera dz beyond the focus of a beam of focal ratio N; rho on 0..1 of the beam
+     (sign as an extra path, the same as mirrorWave: beyond the focus, the edge's path is shorter) */
+  function defocusWave(rho, dz, N) { const s = rho / (2 * N); return -dz * (1 - Math.sqrt(1 - s * s)); }
+  /* the coma shape (Zernike Z8, x coma) of W over the pupil, made orthogonal to piston and tilt: an ideal coma corrector removes it */
+  function removeComa(P, W, B8) { const b = B8[7]; let s = 0; for (let k = 0; k < W.length; k++) s += W[k] * b[k]; const R = Float64Array.from(W); for (let k = 0; k < R.length; k++) R[k] -= s * b[k]; return R; }
+  /* geometric (ray) picture: each pupil sample sends its ray off at the angle grad W (rad); the hits are spread onto the image grid
+     (bilinear), pa = angle of one pixel, h = pupil sample spacing (m). Used when the blur is too wide for the wave grid. */
+  function rayImage(P, W, h, pa, out) { const n = FFTN, c = n / 2, map = new Map(); for (let q = 0; q < P.idx.length; q++) map.set(P.idx[q], q);
+    const I = out || new Float64Array(n * n); I.fill(0); let tot = 0;
+    for (let q = 0; q < P.idx.length; q++) { const id = P.idx[q], a = map.get(id + 1), b = map.get(id - 1), u = map.get(id + n), d = map.get(id - n);
+      const gx = a != null && b != null ? (W[a] - W[b]) / (2 * h) : a != null ? (W[a] - W[q]) / h : b != null ? (W[q] - W[b]) / h : 0;
+      const gy = u != null && d != null ? (W[u] - W[d]) / (2 * h) : u != null ? (W[u] - W[q]) / h : d != null ? (W[q] - W[d]) / h : 0;
+      const x = c + gx / pa, y = c + gy / pa, i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+      if (i < 0 || j < 0 || i >= n - 1 || j >= n - 1) continue;
+      I[j * n + i] += (1 - fx) * (1 - fy); I[j * n + i + 1] += fx * (1 - fy); I[(j + 1) * n + i] += (1 - fx) * fy; I[(j + 1) * n + i + 1] += fx * fy; tot += 1; }
+    if (tot) for (let q = 0; q < n * n; q++) I[q] /= tot; return I; }
+  /* color: the CIE 1931 color matching functions in the multilobe fit of Wyman, Sloan and Shirley (JCGT 2, 2013), and linear sRGB
+     (IEC 61966-2-1) from XYZ */
+  function cmf(l) { const g = (m, s1, s2) => { const t = (l - m) / (l < m ? s1 : s2); return Math.exp(-0.5 * t * t); };
+    return [1.056 * g(599.8, 37.9, 31.0) + 0.362 * g(442.0, 16.0, 26.7) - 0.065 * g(501.1, 20.4, 26.2),
+      0.821 * g(568.8, 46.9, 40.5) + 0.286 * g(530.9, 16.3, 31.1), 1.217 * g(437.0, 11.8, 36.0) + 0.681 * g(459.0, 26.0, 13.8)]; }
+  function xyzToRgb(X, Y, Z) { return [3.2406 * X - 1.5372 * Y - 0.4986 * Z, -0.9689 * X + 1.8758 * Y + 0.0415 * Z, 0.0557 * X - 0.2040 * Y + 1.0570 * Z]; }
+  /* seeing: r0 at wavelength lam from r0 at 500 nm (r0 ∝ λ^(6/5)), and the long exposure blur λ/r0 */
+  const r0At = (r0_500, lam) => r0_500 * Math.pow(lam / 500e-9, 1.2);
+  /* the Seidel estimates the readouts and the worksheet compare with (stop at the mirror, object at infinity):
+     spherical aberration of a sphere at the edge W040 = D/(512 N³) (wavefront, m); tangential coma length 3θ/(16 N²) (rad) */
+  const sphereW040 = (D, N) => D / (512 * N * N * N);
+  const comaLength = (th, N) => 3 * th / (16 * N * N);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const fx = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const g3 = (v) => (!isFinite(v) ? '—' : Math.abs(v) >= 100 ? v.toFixed(0) : (+v).toPrecision(3)).toString().replace('-', '−');
+  const sgn = (v, d) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const asec = (rad) => rad / ARCSEC;
+  const T = (s) => (window.VDI18N && VDI18N.t ? VDI18N.t(s) : s);
+
+  /* ---------- filters ---------- */
+  const WHITE = [420, 450, 480, 510, 540, 570, 600, 630, 660];
+  const FILTERS = {
+    white: { lams: WHITE, short: 'white light' }, F: { lams: [LINE.F], short: '486 nm' }, g550: { lams: [550], short: '550 nm' },
+    d: { lams: [LINE.d], short: '588 nm' }, C: { lams: [LINE.C], short: '656 nm' }, K: { lams: [2200], short: '2.2 µm' } };
+  /* each wavelength's display color: linear sRGB from the color matching functions; white light is balanced so that its flat
+     spectrum shows white, one filter shows its own color at full brightness, and the infrared band in false color */
+  function colorsFor(key) { const L = FILTERS[key].lams;
+    if (key === 'K') return [[1, 0.62, 0.42]];
+    const raw = L.map((l) => { const [X, Y, Z] = cmf(l); return xyzToRgb(X, Y, Z).map((v) => Math.max(0, v)); });
+    if (L.length === 1) { const m = Math.max(...raw[0]); return [raw[0].map((v) => v / m)]; }
+    const sum = [0, 1, 2].map((c) => raw.reduce((a, r) => a + r[c], 0) / raw.length); return raw.map((r) => r.map((v, c) => v / sum[c])); }
+
+  /* ---------- the setups ---------- */
+  const BASE = { scope: 'mirror', K: -1, lens: 'singlet', hfix: 0, D: 0.2, N: 8, pinch: 0, corr: false, focus: 0, th: 0, iris: 100, filter: 'g550', air: 'space', r0: 10, expo: 'snap', ao: 'off', zoom: 8, part: 'shape' };
+  const PRESETS = {
+    seeing: { air: 'ground', D: 1.0, N: 8, r0: 10, zoom: 4, part: 'air',
+      hint: 'A perfect 1.0 m mirror on the ground, under air with r₀ = 10 cm (average seeing). Each snapshot (1 ms) freezes the air: the star breaks into speckles, each about as small as the mirror\'s own Airy disk, and the whole pattern jumps about. Let the air move (slowed down 100 times), then take a long exposure: the speckles blur into one seeing disk about λ/r₀ wide, far bigger than 1.22 λ/D.' },
+    perfect: { zoom: 8, part: 'shape', hint: 'A 200 mm parabolic mirror at f/8 in space, at the right focus: the star is an Airy disk, its first dark ring at 1.22 λ/D. Its Strehl ratio is 1, the most any telescope can do. Every other setup is compared with this one.' },
+    defocus: { focus: 0.4, zoom: 4, part: 'shape', hint: 'The same perfect mirror with the camera 0.400 mm beyond the focus. The star becomes a ring with a dark center. Turn the camera focus back to 0 to make it sharp: out of focus is the one blur that focusing fixes.' },
+    sphere: { K: 0, N: 6, zoom: 2, part: 'shape', hint: 'A 200 mm spherical mirror at f/6. Rays from its edge focus closer to the mirror than rays near the center (spherical aberration), so no focus makes the star sharp. Find the best focus (the highest Strehl ratio), then compare a slower mirror, and swap in a parabola.' },
+    coma: { N: 4, th: 20, zoom: 2, part: 'coma', hint: 'A fast 200 mm parabolic mirror at f/4, with the star 20′ (one third of a degree) from the center of the view. A parabola is perfect only on its axis: off it, each ring of the mirror makes its own off center circle, and the star becomes a comet with its tail pointing away from the center. Move the star toward the center, or add the coma corrector.' },
+    astig: { pinch: 80, zoom: 4, part: 'shape', hint: 'A good 200 mm parabola at f/8, but its clamps squeeze it out of round by 80 nm. Across one direction it focuses a little short and across the other a little long, so inside focus the star is a line one way and outside focus a line the other way. At the best focus it is a small cross. Loosen the clamps (set the pinch to 0).' },
+    singlet: { scope: 'lens', lens: 'singlet', D: 0.06, N: 15, filter: 'white', zoom: 1, part: 'color', hint: 'A 60 mm lens of crown glass (N-BK7) at f/15, focal length 900 mm. Glass bends blue light more than red, so blue focuses closest to the lens and red farthest. In white light the star is a colored blur. Pick one color with the filter and find its best focus: the gap between the blue and red foci is about f/V, V = 64.2 the glass\'s Abbe number.' },
+    achromat: { scope: 'lens', lens: 'achromat', D: 0.06, N: 15, filter: 'white', zoom: 8, part: 'color', hint: 'The 60 mm lens made of two glasses cemented together: crown (N-BK7, V = 64.2) and flint (F2, V = 36.4). The flint lens spreads the colors the opposite way, so the blue F line and the red C line meet at one focus. What remains is a small spread called the secondary spectrum: violet and deep red still focus a little apart, so in white light (every color counted equally) the Strehl ratio stays near 0.5, while each single color is sharp.' },
+    hubble90: { scope: 'hubble', hfix: 0, D: 2.4, N: 24, focus: 22.5, zoom: 2, part: 'shape', hint: 'The Hubble Space Telescope as launched in 1990: a 2.4 m mirror, f/24, made with the wrong shape. Its conic constant is −1.0139 instead of −1.0023, so it is about 2 µm too flat at the edge. The camera is at the best focus, 22.5 mm beyond the focus of rays near the center, yet only a small core holds the light and most of it sits in a halo about 1.5″ across.' },
+    hubble93: { scope: 'hubble', hfix: 1, D: 2.4, N: 24, focus: 0, zoom: 8, part: 'shape', hint: 'Hubble after the first servicing mission (December 1993). The corrective optics (COSTAR, and a corrected mirror inside the new WFPC2 camera) were made with the same error in the opposite sense, so the two cancel. The central obstruction (the secondary mirror, 0.33 of the diameter) and its four supports make the spikes.' },
+    ao: { air: 'ground', D: 3.5, N: 8, r0: 15, filter: 'K', ao: 'high', expo: 'long', zoom: 2, part: 'air', hint: 'A 3.5 m telescope on a good night (r₀ = 15 cm at 500 nm), in the infrared at 2.2 µm, where r₀ is 88 cm. Adaptive optics measures the wavefront and bends a thin mirror to cancel its first 65 shapes. Switch it off and on, and try visible light, where r₀ is far smaller.' },
+    mystery: { mystery: true, hint: 'A telescope with its tube covered. Something blurs the star. Test it: turn the focus in and out, move the star across the view, try one color at a time, mask the edge of the aperture, take snapshots and a long exposure. Then name the cause and fix it.' },
+  };
+  const S = Object.assign({ preset: 'seeing', run: false, t: 0, pos: 0, faint: false, abs: false, test: false, blind: false, mys: null }, BASE, PRESETS.seeing);
+  const cans = { can: $('can'), curve: $('curve') }, ctx = cans.can.getContext('2d'), cctx = cans.curve.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, TK = null;
+
+  /* ---------- the hidden telescope of the puzzle ---------- */
+  const CAUSES = ['defocus', 'sphere', 'coma', 'astig', 'color', 'seeing'];
+  const rnd = (a, b) => a + (b - a) * Math.random();
+  function newMystery() { const cause = CAUSES[Math.floor(Math.random() * CAUSES.length)], m = { cause, ok: false, fixed: false, tries: 0, hint: 0, fixes: [], solved: false };
+    const P = Object.assign({}, BASE, { D: +rnd(0.25, 0.4).toFixed(2), N: 10, th: +rnd(2, 5).toFixed(1), filter: 'white', zoom: 4, part: 'mystery', dz: 0 });   /* near the center, so a fixed telescope's own coma stays small */
+    if (cause === 'defocus') P.dz = (Math.random() < 0.5 ? -1 : 1) * +rnd(0.6, 1.1).toFixed(3);
+    if (cause === 'sphere') { P.K = 0; P.N = +rnd(5, 7).toFixed(1); P.D = +rnd(0.25, 0.3).toFixed(2); P.th = +rnd(1, 2.5).toFixed(1); P.zoom = 2; }   /* a fast parabola off center has coma: kept below a Strehl ratio loss of 0.2 */
+    if (cause === 'coma') { P.N = 4; P.D = +rnd(0.2, 0.25).toFixed(2); P.th = +rnd(12, 16).toFixed(1); P.zoom = 2; }   /* small enough that, with the coma removed, the leftover astigmatism still allows a Strehl ratio of 0.8 */
+    if (cause === 'astig') P.pinch = 5 * Math.round(rnd(60, 150) / 5);
+    if (cause === 'color') Object.assign(P, { scope: 'lens', lens: 'singlet', D: +rnd(0.06, 0.08).toFixed(3), N: 12, th: +rnd(2, 5).toFixed(1), zoom: 1 });
+    if (cause === 'seeing') Object.assign(P, { air: 'ground', r0: +rnd(5, 8).toFixed(1), zoom: 2 });
+    m.start = { th: P.th, filter: P.filter, iris: 100 }; m.hidden = P; return m; }
+
+  /* the telescope as the physics sees it: in a mystery the hidden values, with the student's own focus, star, mask, filter, exposure */
+  function eff() { if (!S.mys) return S; const h = S.mys.hidden;
+    return Object.assign({}, h, { focus: S.focus + h.dz, th: S.th, iris: S.iris, filter: S.filter, expo: S.expo, zoom: S.zoom, K: h.K, pinch: h.pinch, corr: h.corr, lens: h.lens, air: h.air, ao: h.ao }); }
+
+  /* ---------- caches ---------- */
+  const PUP = new Map(), BASIS = new Map();
+  function pupil(lam, iris, hub) { const np = pupilSamples(lam) * iris, key = [np.toFixed(4), hub].join('|');
+    if (!PUP.has(key)) { if (PUP.size > 40) PUP.clear(); PUP.set(key, hub ? pupilPoints(np, 0.33 / iris, 0.022 / iris) : pupilPoints(np)); } return PUP.get(key); }
+  const AO_J = { off: 0, tt: 3, low: 15, high: 66 };   /* Noll shapes removed (piston included): 2, 14 and 65 shapes beyond piston */
+  function basis(P, J) { let e = BASIS.get(P); if (!e) { e = {}; BASIS.set(P, e); } if (!e[J]) { const have = Object.keys(e).map(Number).filter((k) => k >= J).sort((a, b) => a - b)[0];
+      e[J] = have ? e[have].slice(0, J) : zernBasis(P, J); } return e[J]; }
+  /* the lenses, designed once per focal length and diameter */
+  const LENS = new Map();
+  function lensOf(kind, f, D) { const key = [kind, f.toFixed(5), D.toFixed(5)].join('|'); if (!LENS.has(key)) LENS.set(key, kind === 'achromat' ? achromatLens(f, D) : singletLens(f, D)); return LENS.get(key); }
+  /* the air: two screens made once in units of one sample (dx = 1, r0 = 1), scaled by (dx/r0)^(5/6) since the Kolmogorov spectrum has
+     no scale of its own. Pupil D spans NP0 screen samples. */
+  let SCR = null; const SN = 512;
+  function screens() { if (!SCR) SCR = [phaseScreen(SN, 1, 1, 11), phaseScreen(SN, 1, 1, 12)]; return SCR; }
+  const HALF = NP0 / 2 + 2, ROW = SN - 2 * HALF - 1;
+  /* where the pupil sits on the screens after the wind has carried the air a distance pos (m): left to right along a row, back the
+     other way on the next row, four rows on each screen, then the other screen */
+  function airAt(pos, D) { const dx = D / NP0, s = pos / dx, per = 4 * ROW, k = Math.floor(s / per) % 2, w = s % per, row = Math.floor(w / ROW), along = w % ROW;
+    return { k, cx: HALF + (row % 2 ? ROW - along : along), cy: HALF + row * (SN - 2 * HALF - 1) / 3 }; }
+  /* the long exposure: 48 moments, spread over both screens */
+  const LONG_N = 48;
+  function longAt(i) { return { k: i % 2, cx: HALF + (Math.floor(i / 8) % 6) * ROW / 5, cy: HALF + (Math.floor(i / 2) % 4) * (SN - 2 * HALF - 1) / 3 }; }
+  const WIND = 10, SLOW = 100;   /* wind speed (m/s); the air is shown slowed down 100 times */
+
+  /* ---------- the wavefront of the telescope itself (no air), tilt removed, m ---------- */
+  function staticWave(E, P, lam) { const iris = E.iris / 100, Du = E.D * iris;
+    let Wv;
+    if (E.scope === 'mirror') { Wv = mirrorWave(P, Du, E.N / iris, E.K, E.th / 60 * Math.PI / 180, E.focus / 1000).W;
+      if (E.pinch) for (let k = 0; k < Wv.length; k++) { const u = P.u[k] * iris, v = P.v[k] * iris; Wv[k] += 2 * E.pinch * 1e-9 * (u * u - v * v); }   /* ρ² cos 2φ; wavefront = 2 × surface */
+      if (E.corr) Wv = removeComa(P, Wv, basis(P, 8)); }
+    else if (E.scope === 'lens') { const f = E.N * E.D, L = lensOf(E.lens, f, E.D); Wv = lensWave(P, L, lam * 1e9, Du, E.th / 60 * Math.PI / 180, backFocus(L, LINE.d, E.D) + E.focus / 1000); }
+    else { Wv = E.hfix ? new Float64Array(P.u.length) : hubbleWave(P);
+      for (let k = 0; k < Wv.length; k++) Wv[k] += defocusWave(Math.hypot(P.u[k], P.v[k]) * iris, E.focus / 1000, E.N); }
+    return removeTilt(P, Wv); }
+  function airWave(E, P, lam, at) { const ph = screens()[at.k], sc = Math.pow((E.D / NP0) / (E.r0 / 100), 5 / 6);
+    const Wv = screenWave(P, ph, SN, at.cx, at.cy, NP0 / pupilSamples(lam)); for (let k = 0; k < Wv.length; k++) Wv[k] *= sc; return Wv; }
+
+  /* ---------- the image ---------- */
+  let R = null, dirty = true, longJob = null;
+  const BUF = { I: new Float64Array(FFTN * FFTN) };
+  function staticKey(E) { return JSON.stringify([E.scope, E.K, E.lens, E.hfix, E.D, E.N, E.pinch, E.corr, E.focus, E.th, E.iris, E.filter]); }
+  const SC = { key: null, list: null };
+  /* one image (RGB and total) for the telescope E, the air at 'at' (or none), the camera dz extra (star test) */
+  function image(E, ats, extraFocus = 0) {
+    const L = FILTERS[E.filter].lams, cols = colorsFor(E.filter), hub = E.scope === 'hubble', iris = E.iris / 100;
+    const Ef = extraFocus ? Object.assign({}, E, { focus: E.focus + extraFocus }) : E;
+    const n = FFTN, rgb = [new Float32Array(n * n), new Float32Array(n * n), new Float32Array(n * n)], tot = new Float64Array(n * n);
+    let perfect = 0, rays = false, rmsW = 0, step = 0;
+    const key = staticKey(Ef); let list = null;
+    if (!extraFocus && SC.key === key) list = SC.list; else { list = L.map((l) => { const lam = l * 1e-9, P = pupil(lam, iris, hub); return { lam, P, W: staticWave(Ef, P, lam) }; }); if (!extraFocus) { SC.key = key; SC.list = list; } }
+    const J = E.air === 'ground' ? AO_J[E.ao] : 0, frames = E.air === 'ground' ? ats : [null];
+    list.forEach((c, li) => { const w = 1 / L.length, Pk = c.P; perfect += w * perfectPeak(Pk); rmsW += w * rms(c.W) / c.lam;
+      for (const at of frames) { let Wt = c.W;
+        if (at) { const A = airWave(E, Pk, c.lam, at); Wt = new Float64Array(A.length); for (let k = 0; k < A.length; k++) Wt[k] = c.W[k] + A[k]; if (J) Wt = correct(Wt, basis(Pk, J)); }
+        const ms = maxStep(Pk, Wt, c.lam); step = Math.max(step, ms);
+        const I = ms > 0.45 ? (rays = true, rayImage(Pk, Wt, (E.D * iris) / Pk.np, pixelAngle(E.D) * 1, BUF.I)) : psf(Pk, Wt, c.lam, BUF.I);
+        const k = w / frames.length, col = cols[li];
+        for (let q = 0; q < n * n; q++) { const v = I[q] * k; if (v === 0) continue; tot[q] += v; rgb[0][q] += v * col[0]; rgb[1][q] += v * col[1]; rgb[2][q] += v * col[2]; } } });
+    const st = imageStats(tot);
+    return { rgb, tot, peakTot: st.peak, perfect, strehl: st.peak / perfect, hpd: st.hpd, cx: st.cx, cy: st.cy, rays, rmsW, step }; }
+  /* the perfect telescope's profile, for the graph */
+  const PERF = { key: null, prof: null };
+  function perfectProfile(E) { const key = [E.filter, E.iris, E.scope === 'hubble', E.D].join('|'); if (PERF.key === key) return PERF.prof;
+    const L = FILTERS[E.filter].lams, n = FFTN, prof = new Float64Array(n);
+    L.forEach((l) => { const lam = l * 1e-9, P = pupil(lam, E.iris / 100, E.scope === 'hubble'), I = psf(P, null, lam, BUF.I); for (let i = 0; i < n; i++) prof[i] += I[(n / 2) * n + i] / L.length; });
+    PERF.key = key; PERF.prof = prof; return prof; }
+
+  function atsNow(E) { if (E.air !== 'ground') return [null]; if (E.expo === 'long') return null; return [airAt(S.pos, E.D)]; }
+  let TEST = null;
+  function recompute() {
+    const E = eff();
+    if (E.air === 'ground' && E.expo === 'long') { startLong(E); return; }
+    longJob = null;
+    R = image(E, atsNow(E)); R.E = E; R.done = true;
+    TEST = S.test ? testImages(E) : null;
+    dirty = false; draw(); readouts();
+  }
+  /* the long exposure is built a few moments at a time, so the picture fills in as it exposes */
+  function startLong(E) { const key = staticKey(E) + [E.r0, E.ao, E.D].join('|');
+    if (longJob && longJob.key === key) return;
+    longJob = { key, E, i: 0, acc: null }; dirty = false; stepLong(); }
+  function stepLong() { const J = longJob; if (!J) return; const t0 = performance.now();
+    while (J.i < LONG_N && performance.now() - t0 < 60) { const one = image(J.E, [longAt(J.i)]);
+      if (!J.acc) J.acc = one; else { for (let c = 0; c < 3; c++) { const a = J.acc.rgb[c], b = one.rgb[c]; for (let q = 0; q < a.length; q++) a[q] += b[q]; } const a = J.acc.tot, b = one.tot; for (let q = 0; q < a.length; q++) a[q] += b[q]; J.acc.rays = J.acc.rays || one.rays; }
+      J.i++; }
+    const m = J.i, A = J.acc, out = { rgb: A.rgb.map((a) => a.map((v) => v / m)), tot: A.tot.map((v) => v / m), perfect: A.perfect, rays: A.rays, rmsW: A.rmsW };
+    const st = imageStats(out.tot); Object.assign(out, { peakTot: st.peak, strehl: st.peak / out.perfect, hpd: st.hpd, cx: st.cx, cy: st.cy, E: J.E, done: m >= LONG_N, frames: m });
+    R = out; TEST = null; draw(); readouts();
+    if (m < LONG_N) requestAnimationFrame(stepLong); else { if (S.test) { TEST = testImages(J.E); draw(); } if (S.mys) puzzleWatch(); }
+  }
+  /* star test: 3 waves of defocus each side (at 550 nm, of the full aperture) */
+  function testDelta(E) { return 8 * (E.N) * (E.N) * 3 * 550e-9 * 1000; }
+  function testImages(E) { const d = testDelta(E), ats = E.air === 'ground' ? (E.expo === 'long' ? [longAt(0), longAt(1), longAt(2), longAt(3)] : atsNow(E)) : [null];
+    return [image(E, ats, -d), image(E, ats, 0), image(E, ats, d)]; }
+
+  /* ---------- drawing ---------- */
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (k) => cs.getPropertyValue(k).trim();
+    TK = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), ray: g('--ray'), mirror: g('--mirror'), glass: g('--glass'), glassEdge: g('--glass-edge'),
+      tube: g('--tube'), tubeEdge: g('--tube-edge'), mark: g('--mark'), halo: g('--halo'), sky: g('--sky'), air: g('--air'), good: g('--good'), bad: g('--bad'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const SPL = !VD.split ? { f: () => 0.36, place() {}, set() {} } : VD.split(cans.can, { key: 'scope', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.36 : 0.34), min: 0.22, max: 0.6, snaps: [1 / 3, 0.5],
+    label: 'Divider between the telescope and the picture of the star', onChange: () => draw() });
+  let OFF = null; const offc = () => (OFF || (OFF = document.createElement('canvas')));
+  /* paint the crop of an image (rgb arrays) centered on the grid center, half size h pixels, into box (x, y, s) */
+  function paint(img, x, y, s, h, gain) { const n = FFTN, c = n / 2, size = 2 * h, oc = offc(); oc.width = size; oc.height = size; const o = oc.getContext('2d'), id = o.createImageData(size, size), d = id.data;
+    const k = gain / (S.abs ? img.perfect : Math.max(1e-30, img.peakTot || img.perfect)), enc = (v) => { v = Math.max(0, Math.min(1, v)); return 255 * (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055); };
+    for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) { const q = (c - h + j) * n + (c - h + i), p = 4 * (j * size + i);
+      d[p] = enc(img.rgb[0][q] * k); d[p + 1] = enc(img.rgb[1][q] * k); d[p + 2] = enc(img.rgb[2][q] * k); d[p + 3] = 255; }
+    o.putImageData(id, 0, 0); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(oc, x, y, s, s); }
+  function layout() { const wide = W > 640, f = SPL.f();
+    return wide ? { tel: [0, 0, W * f, H], img: [W * f, 0, W * (1 - f), H] } : { tel: [0, 0, W, H * f], img: [0, H * f, W, H * (1 - f)] }; }
+  function draw() { if (!TK || !W) return; const p = proj();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = TK.canvas; ctx.fillRect(0, 0, W, H);
+    const Lb = layout(); drawTelescope(Lb.tel, p); drawImage(Lb.img, p); drawCurve(); }
+
+  function txt(s, x, y, o = {}) { const p = proj(); ctx.font = `${o.bold ? '700 ' : ''}${(o.size || 12) * p}px ${o.mono ? TK.mono : TK.ui}`; ctx.fillStyle = o.color || TK.muted; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'alphabetic'; ctx.fillText(s, x, y); }
+
+  /* the telescope, side view, from the same ray trace as the physics (angles of the star exaggerated, as the label says) */
+  function drawTelescope([x0, y0, w, h], p) {
+    const E = eff(), m = 14 * p, top = y0 + 28 * p, bot = y0 + h - 34 * p;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    txt(S.mys ? T('The telescope (covered)') : E.scope === 'hubble' ? T('Hubble (side view, not to scale)') : E.scope === 'lens' ? T('The lens telescope (side view)') : T('The mirror telescope (side view)'), x0 + m, y0 + 18 * p, { bold: true, color: TK.ink });
+    let cx = x0 + w / 2; const availH = bot - top - (E.air === 'ground' && !S.mys ? 46 * p : 0), tubeTop = bot - availH;
+    if (E.air === 'ground' && !S.mys) drawAir(x0 + m, top, w - 2 * m, 22 * p, E, p);
+    if (S.mys) { const tw = Math.min(w * 0.42, 120 * p), th = availH * 0.8; ctx.fillStyle = TK.tube; ctx.strokeStyle = TK.tubeEdge; ctx.lineWidth = 1.5 * p;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - tw / 2, tubeTop + availH * 0.1, tw, th, 8 * p) : ctx.rect(cx - tw / 2, tubeTop + availH * 0.1, tw, th); ctx.fill(); ctx.stroke();
+      txt('?', cx, tubeTop + availH * 0.5, { size: 54, bold: true, align: 'center', base: 'middle', color: TK.muted });
+      txt(T('Only the picture of the star is yours to judge.'), cx, bot + 20 * p, { align: 'center', size: 11 });
+      ctx.restore(); return; }
+    if (E.scope === 'hubble') { drawHubble(x0, tubeTop, w, availH, E, p); ctx.restore(); return; }
+    /* scale: the tube to fit, focal length vertical */
+    const f = E.N * E.D, sc = Math.min((availH - 30 * p) / f, (w - 2 * m) * 0.42 / (E.D * 1.15)), Dp = E.D * sc, fp = f * sc;
+    cx = x0 + m + 10 * p + Dp / 2; const insX = cx + Dp / 2 + 24 * p, insW = x0 + w - m - insX, isz = Math.min(insW, 170 * p, availH * 0.5), insL = insX + (insW - isz) / 2;
+    const thx = E.th / 60 * Math.PI / 180, ex = thx > 0 ? Math.min(0.2, 40 * thx) / thx : 1;   /* the star's angle drawn ×ex */
+    const iris = E.iris / 100, nr = 9;
+    if (E.scope === 'mirror') { const mirY = tubeTop + availH - 8 * p, focY = mirY - fp, R = 2 * f, sagEx = Math.max(1, 0.06 * Dp / (sag(E.D / 2, R, E.K) * sc));
+      /* tube */
+      ctx.fillStyle = TK.tube; ctx.globalAlpha = 0.6; ctx.fillRect(cx - Dp / 2 - 6 * p, focY - 14 * p, Dp + 12 * p, mirY - focY + 22 * p); ctx.globalAlpha = 1;
+      ctx.strokeStyle = TK.tubeEdge; ctx.lineWidth = 1.2 * p; ctx.strokeRect(cx - Dp / 2 - 6 * p, focY - 14 * p, Dp + 12 * p, mirY - focY + 22 * p);
+      /* mirror (depth exaggerated) */
+      ctx.strokeStyle = TK.mirror; ctx.lineWidth = 4 * p; ctx.beginPath();
+      for (let i = 0; i <= 40; i++) { const r = -E.D / 2 + E.D * i / 40, yy = mirY - sag(Math.abs(r), R, E.K) * sc * sagEx; i ? ctx.lineTo(cx + r * sc, yy) : ctx.moveTo(cx + r * sc, yy); } ctx.stroke();
+      /* rays in the plane of the drawing: in from the sky at the star's angle, reflected by the true surface to the camera plane */
+      const d = [Math.sin(thx), -Math.cos(thx)], zd = f + E.focus / 1000, hits = [];
+      for (let i = 0; i < nr; i++) { const r = (-1 + 2 * i / (nr - 1)) * E.D / 2 * iris, z = sag(Math.abs(r), R, E.K), sl = Math.sign(r) * sagSlope(Math.abs(r), R, E.K);
+        const nl = Math.hypot(sl, 1), nx = -sl / nl, nz = 1 / nl, dd = d[0] * nx + d[1] * nz, o = [d[0] - 2 * dd * nx, d[1] - 2 * dd * nz], t = (zd - z) / o[1], hx = r + t * o[0];
+        hits.push({ r, hx });
+        const X = (v) => cx + v * sc, Y = (v) => mirY - v * sc;
+        ctx.strokeStyle = TK.ray; ctx.globalAlpha = 0.85; ctx.lineWidth = 1.1 * p; ctx.beginPath();
+        ctx.moveTo(X(r) - (focY - 30 * p - tubeTop) * Math.tan(thx * ex) * 0, Math.max(tubeTop, focY - 30 * p)); ctx.lineTo(X(r), Y(z * sagEx)); ctx.lineTo(X(r + t * o[0]), Y(zd)); ctx.stroke(); ctx.globalAlpha = 1; }
+      /* camera */
+      ctx.fillStyle = TK.ink; ctx.fillRect(cx - 16 * p, focY - 12 * p - E.focus / 1000 * sc, 32 * p, 10 * p);
+      txt(T('camera'), cx + 22 * p, focY - 5 * p, { size: 11 });
+      txt(E.K === -1 ? T('parabolic mirror') : E.K === 0 ? T('spherical mirror') : T('conic mirror'), Math.max(x0 + m, cx - Dp / 2 - 6 * p), mirY + 18 * p, { size: 11 });
+      if (E.pinch) txt(T('clamps pinch it'), cx + Dp / 2 + 10 * p, mirY - 6 * p, { size: 11, color: TK.halo });
+      if (E.corr) { ctx.strokeStyle = TK.glassEdge; ctx.fillStyle = TK.glass; ctx.lineWidth = 1.5 * p; ctx.fillRect(cx - 14 * p, focY + 4 * p, 28 * p, 6 * p); ctx.strokeRect(cx - 14 * p, focY + 4 * p, 28 * p, 6 * p); }
+      if (isz > 70 * p) inset(insL, focY + 10 * p, isz, [{ col: TK.ray, hits }], f, E, p, true, T('at the camera, magnified'));
+      if (thx > 0) txt(T('star\'s angle drawn larger than it is'), x0 + m, bot + 20 * p, { size: 10.5 });
+    } else {
+      /* the lens at the top, the camera at the bottom; rays in three colors from the same trace as the physics */
+      const lensY = tubeTop + 16 * p, L = lensOf(E.lens, f, E.D), bfd = backFocus(L, LINE.d, E.D), camY = lensY + (bfd + E.focus / 1000) * sc;
+      ctx.fillStyle = TK.tube; ctx.globalAlpha = 0.6; ctx.fillRect(cx - Dp / 2 - 6 * p, lensY - 8 * p, Dp + 12 * p, camY - lensY + 14 * p); ctx.globalAlpha = 1;
+      ctx.strokeStyle = TK.tubeEdge; ctx.lineWidth = 1.2 * p; ctx.strokeRect(cx - Dp / 2 - 6 * p, lensY - 8 * p, Dp + 12 * p, camY - lensY + 14 * p);
+      ctx.fillStyle = TK.glass; ctx.strokeStyle = TK.glassEdge; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.ellipse(cx, lensY, Dp / 2, 6 * p, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      if (E.lens === 'achromat') { ctx.beginPath(); ctx.moveTo(cx - Dp / 2, lensY + 2 * p); ctx.lineTo(cx + Dp / 2, lensY + 2 * p); ctx.stroke(); }
+      const colors = [[LINE.F, '#3b82f6'], [LINE.d, '#eab308'], [LINE.C, '#ef4444']], hitsAll = [];
+      for (const [lam, col] of colors) { const hits = [];
+        for (let i = 0; i < 7; i++) { const yy = (-1 + 2 * i / 6) * E.D / 2 * iris || 1e-9, r = traceLens(L, lam, 0, yy, [0, 0, 1]), zc = r.zLast + bfd + E.focus / 1000, t = (zc - r.p[2]) / r.d[2], hy = r.p[1] + t * r.d[1];
+          hits.push({ r: yy, hx: hy });
+          ctx.strokeStyle = col; ctx.globalAlpha = 0.7; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(cx + yy * sc, tubeTop - 6 * p); ctx.lineTo(cx + yy * sc, lensY); ctx.lineTo(cx + hy * sc, camY); ctx.stroke(); ctx.globalAlpha = 1; }
+        hitsAll.push({ col, hits, lam, bf: backFocus(L, lam, E.D) }); }
+      ctx.fillStyle = TK.ink; ctx.fillRect(cx - 16 * p, camY + 2 * p, 32 * p, 10 * p); txt(T('camera'), cx + 22 * p, camY + 11 * p, { size: 11 });
+      txt(E.lens === 'achromat' ? T('achromat: crown + flint') : T('single lens: crown glass'), cx + Dp / 2 + 10 * p, lensY + 4 * p, { size: 11 });
+      if (isz > 70 * p) inset(insL, Math.max(lensY + 30 * p, camY - isz - 40 * p), isz, hitsAll, f, E, p, false, T('at the camera, magnified'));
+    }
+    ctx.restore(); }
+  /* magnified look at the focus: the traced rays near the camera plane. groups: [{ col, hits: [{ r, hx }] }], each ray reaching the
+     camera at hx (m from the axis) from the height r on the mirror or lens, a distance L before the camera; up: light goes up the screen */
+  function inset(x, y, s, groups, L, E, p, up, label) { const ri = s / 2, cxx = x + ri, cyy = y + ri, all = groups.flatMap((g) => g.hits.map((h) => ({ hx: h.hx, k: (h.hx - h.r) / L })));
+    const mean = all.reduce((a, h) => a + h.hx, 0) / all.length, depth = 8 * 550e-9 * E.N * E.N;
+    const cross = all.filter((h) => Math.abs(h.k) > 1e-9).map((h) => Math.abs(-(h.hx - mean) / h.k));
+    const span = Math.max(depth, Math.abs(E.focus / 1000) * 1.2, ...cross) * 1.25, wmax = Math.max(...all.map((h) => Math.abs(h.hx - mean) + Math.abs(h.k) * span)), sx = ri * 0.95 / wmax, sz = ri / span;
+    ctx.save(); ctx.fillStyle = TK.surface; ctx.strokeStyle = TK.line; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(cxx, cyy, ri, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.clip();
+    for (const g of groups) { ctx.strokeStyle = g.col; ctx.lineWidth = 1.1 * p; ctx.globalAlpha = 0.85;
+      for (const h of g.hits) { const k = (h.hx - h.r) / L, X = (z) => cxx + (h.hx - mean + k * z) * sx, Y = (z) => cyy + (up ? -z : z) * sz;
+        ctx.beginPath(); ctx.moveTo(X(-span), Y(-span)); ctx.lineTo(X(span), Y(span)); ctx.stroke(); } }
+    ctx.globalAlpha = 1; ctx.strokeStyle = TK.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cxx - ri, cyy); ctx.lineTo(cxx + ri, cyy); ctx.stroke();
+    ctx.restore();
+    txt(label, cxx, y + s + 14 * p, { size: 10.5, align: 'center' }); txt(T('the line across: the camera'), cxx, y + s + 40 * p, { size: 10, align: 'center' });
+    txt(`${T('shown')}: ${g3(2 * span * 1000)} mm × ${g3(2 * ri / sx * 1e6)} µm`, cxx, y + s + 27 * p, { size: 10, align: 'center', mono: true }); }
+  function drawHubble(x0, y0, w, h, E, p) { const cx = x0 + w / 2, Dp = Math.min(w * 0.7, h * 0.55), prY = y0 + h * 0.78, seY = y0 + h * 0.18, foY = prY + 26 * p;
+    ctx.fillStyle = TK.tube; ctx.globalAlpha = 0.6; ctx.fillRect(cx - Dp / 2 - 8 * p, seY - 24 * p, Dp + 16 * p, prY - seY + 30 * p); ctx.globalAlpha = 1; ctx.strokeStyle = TK.tubeEdge; ctx.lineWidth = 1.2 * p; ctx.strokeRect(cx - Dp / 2 - 8 * p, seY - 24 * p, Dp + 16 * p, prY - seY + 30 * p);
+    ctx.strokeStyle = TK.mirror; ctx.lineWidth = 5 * p; const hole = Dp * 0.13;
+    ctx.beginPath(); ctx.moveTo(cx - Dp / 2, prY - 10 * p); ctx.quadraticCurveTo(cx - Dp / 4, prY + 2 * p, cx - hole, prY + 3 * p); ctx.moveTo(cx + hole, prY + 3 * p); ctx.quadraticCurveTo(cx + Dp / 4, prY + 2 * p, cx + Dp / 2, prY - 10 * p); ctx.stroke();
+    const sw = Dp * 0.165; ctx.beginPath(); ctx.moveTo(cx - sw, seY - 2 * p); ctx.quadraticCurveTo(cx, seY + 4 * p, cx + sw, seY - 2 * p); ctx.stroke();
+    ctx.lineWidth = 1 * p; ctx.globalAlpha = 0.85;
+    for (const s of [-1, 1]) for (const fr of [0.45, 0.72, 0.98]) { const xr = cx + s * fr * Dp / 2, yr = prY - 10 * p * fr * fr, xs = cx + s * fr * sw, err = E.hfix ? 0 : -fr * fr * 14 * p;
+      ctx.strokeStyle = fr > 0.9 && !E.hfix ? TK.halo : TK.ray; ctx.beginPath(); ctx.moveTo(xr, y0 - 4 * p); ctx.lineTo(xr, yr); ctx.lineTo(xs, seY + 1 * p); ctx.lineTo(cx + s * 0, foY - err); ctx.stroke(); }
+    ctx.globalAlpha = 1; ctx.fillStyle = TK.ink; ctx.fillRect(cx - 14 * p, foY + 6 * p, 28 * p, 10 * p);
+    txt(T('primary mirror, 2.4 m'), cx + Dp / 2 + 4 * p, prY + 16 * p, { size: 10.5, align: 'right' });
+    txt(T('secondary'), cx + sw + 6 * p, seY - 6 * p, { size: 10.5 });
+    txt(E.hfix ? T('corrective optics: every ring of the mirror meets at one focus') : T('rays from the edge (orange) focus beyond those from the middle'), cx, foY + 34 * p, { size: 10.5, align: 'center', color: E.hfix ? TK.good : TK.halo }); }
+  /* the air: the real phase screen above the aperture, a slice along the wind, drawn as a shimmering band (orange: more delay, blue: less) */
+  function drawAir(x, y, w, h, E, p) { const scr = screens(), at = airAt(S.pos, E.D), ph = scr[at.k], sc = Math.pow((E.D / NP0) / (E.r0 / 100), 5 / 6), nx = 64, ny = 6;
+    let mx = 1e-9; const v = []; for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const sx = Math.max(0, Math.min(SN - 1, Math.round(at.cx - NP0 * 1.5 + i * NP0 * 3 / nx))), sy = Math.max(0, Math.min(SN - 1, Math.round(at.cy - 20 + j * 8)));
+      const q = ph[sy * SN + sx] * sc; v.push(q); } const mean = v.reduce((a, b) => a + b, 0) / v.length; for (const q of v) mx = Math.max(mx, Math.abs(q - mean));
+    ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, 6 * proj()) : ctx.rect(x, y, w, h); ctx.clip();
+    v.forEach((q, n) => { const i = n % nx, j = Math.floor(n / nx), t = (q - mean) / mx; ctx.fillStyle = t > 0 ? `rgba(239,138,98,${0.2 + 0.7 * t})` : `rgba(80,150,220,${0.2 - 0.7 * t})`; ctx.fillRect(x + i * w / nx, y + j * h / ny, w / nx + 1, h / ny + 1); });
+    ctx.restore(); txt(`${T('moving air above the telescope')}: r₀ = ${fx(E.r0, 1)} cm`, x, y + h + 13 * p, { size: 10.5 }); }
+
+  /* the picture of the star */
+  function drawImage([x0, y0, w, h], p) { const E = R ? R.E : eff(), m = 12 * p;
+    txt(T('The star on the camera'), x0 + m, y0 + 18 * p, { bold: true, color: TK.ink });
+    if (!R) return;
+    const testH = TEST ? Math.min(110 * p, w / 3.4) + 26 * p : 0, s = Math.max(60, Math.min(w - 2 * m, h - 50 * p - testH)), ix = x0 + (w - s) / 2, iy = y0 + 28 * p;
+    const half = FFTN / 2 / S.zoom, gain = S.faint ? 30 : 1;
+    ctx.fillStyle = TK.sky; ctx.fillRect(ix, iy, s, s); paint(R, ix, iy, s, half, gain);
+    ctx.strokeStyle = TK.line; ctx.lineWidth = 1; ctx.strokeRect(ix + 0.5, iy + 0.5, s - 1, s - 1);
+    const pa = pixelAngle(E.D), pxs = s / (2 * half), lamC = FILTERS[E.filter].lams.length > 1 ? 550e-9 : FILTERS[E.filter].lams[0] * 1e-9, c = FFTN / 2;
+    /* marks: the diffraction limit (first dark ring of a perfect aperture) and the circle that holds half the light */
+    if (!S.blind) { const rr = 1.22 * lamC / (E.D * E.iris / 100) / pa * pxs; if (rr > 3 && rr < s) { ctx.setLineDash([4 * p, 4 * p]); ctx.strokeStyle = TK.mark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(ix + s / 2, iy + s / 2, rr, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); } }
+    const rh = R.hpd / 2 * pxs, hx = ix + (R.cx - c + half) * pxs, hy = iy + (R.cy - c + half) * pxs;
+    if (rh > 2 && rh < s) { ctx.strokeStyle = TK.halo; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(hx, hy, rh, 0, 2 * Math.PI); ctx.stroke(); }
+    /* scale bar */
+    const field = 2 * half * pa / ARCSEC, nice = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], bar = nice.find((v) => v >= field / 6) || field / 6, bl = bar / field * s;
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(ix + 12 * p, iy + s - 16 * p, bl, 3 * p);
+    ctx.font = `${11 * p}px ${TK.mono}`; ctx.fillStyle = '#e5e7eb'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`${bar < 1 ? bar : bar.toFixed(0)}″`, ix + 12 * p, iy + s - 20 * p);
+    ctx.textAlign = 'right'; ctx.fillText(`${T('Strehl')} ${fx(R.strehl, 2)}`, ix + s - 10 * p, iy + s - 10 * p);
+    ctx.textBaseline = 'top'; ctx.fillStyle = '#cbd5e1'; ctx.font = `${10.5 * p}px ${TK.ui}`;
+    const status = R.rays ? T('ray picture: the blur is far wider than diffraction') : E.air === 'ground' && E.expo === 'long' ? (R.done ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : `${T('exposing')} ${R.frames} / ${LONG_N}`) : E.air === 'ground' ? `${T('snapshot')}, t = ${fx(S.t * 1000, 1)} ms` : '';
+    if (status) ctx.fillText(status, ix + s - 10 * p, iy + 10 * p);
+    ctx.textAlign = 'left'; ctx.fillText(`${T('field')} ${g3(field)}″ ${T('across')}`, ix + 10 * p, iy + 10 * p);
+    if (!S.mys && !S.blind && w > 300) wavefrontMap(ix + 10 * p, iy + 28 * p, Math.min(70 * p, s * 0.2), E, p);
+    /* legend */
+    let ly = iy + s + 16 * p; ctx.font = `${10.5 * p}px ${TK.ui}`; ctx.textBaseline = 'middle'; let lx = ix;
+    if (!S.blind) { ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = TK.mark; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18 * p, ly); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = TK.muted; ctx.textAlign = 'left'; const t1 = T('perfect telescope\'s first dark ring'); ctx.fillText(t1, lx + 22 * p, ly); lx += 30 * p + ctx.measureText(t1).width; }
+    ctx.strokeStyle = TK.halo; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 18 * p, ly); ctx.stroke(); ctx.fillStyle = TK.muted; ctx.fillText(T('holds half the light'), lx + 22 * p, ly);
+    if (TEST) { const ts = Math.min(110 * p, (w - 2 * m - 20 * p) / 3), ty = ly + 14 * p, labels = [T('inside focus'), T('at this focus'), T('outside focus')], tot = 3 * ts + 2 * 10 * p, tx0 = x0 + (w - tot) / 2;
+      TEST.forEach((im, i) => { const tx = tx0 + i * (ts + 10 * p); ctx.fillStyle = TK.sky; ctx.fillRect(tx, ty, ts, ts); const hh = Math.max(FFTN / 2 / S.zoom, FFTN / 8); paint(im, tx, ty, ts, Math.min(FFTN / 2, hh * 2), gain * 2);
+        ctx.strokeStyle = TK.line; ctx.strokeRect(tx + 0.5, ty + 0.5, ts - 1, ts - 1); txt(labels[i], tx + ts / 2, ty + ts + 13 * p, { size: 10.5, align: 'center' }); });
+      txt(`± ${fx(testDelta(E), 2)} mm`, x0 + w - m, ty - 3 * p, { size: 10, align: 'right', mono: true }); } }
+  /* the wavefront error over the aperture, the telescope's own (no air), in waves at 550 nm: orange ahead, blue behind */
+  function wavefrontMap(x, y, s, E, p) { const P = pupil(550e-9, 1, E.scope === 'hubble'), E1 = Object.assign({}, E, { iris: 100 }); let Wv = staticWave(E1, P, 550e-9);
+    if (E.air === 'ground' && E.expo === 'snap') { const A = airWave(E1, P, 550e-9, airAt(S.pos, E.D)); for (let k = 0; k < A.length; k++) A[k] += Wv[k]; Wv = AO_J[E.ao] ? correct(A, basis(P, AO_J[E.ao])) : removeTilt(P, A); }
+    const n = 48, oc = document.createElement('canvas'); oc.width = n; oc.height = n;
+    const o = oc.getContext('2d'), id = o.createImageData(n, n), d = id.data; let mx = 0; for (const v of Wv) mx = Math.max(mx, Math.abs(v)); mx = Math.max(mx, 0.05 * 550e-9);
+    const a = P.np / 2, grid = new Map(); for (let q = 0; q < P.idx.length; q++) grid.set(P.idx[q], Wv[q]);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const u = (i + 0.5) / n * 2 - 1, v = (j + 0.5) / n * 2 - 1, gi = Math.round(FFTN / 2 + u * a), gj = Math.round(FFTN / 2 + v * a), w = grid.get(gj * FFTN + gi), k = 4 * (j * n + i);
+      if (w == null) { d[k + 3] = 0; continue; } const t = w / mx; d[k] = t > 0 ? 255 : 255 * (1 + t * 0.62); d[k + 1] = t > 0 ? 255 * (1 - t * 0.45) : 255 * (1 + t * 0.32); d[k + 2] = t > 0 ? 255 * (1 - t * 0.62) : 255; d[k + 3] = 235; }
+    o.putImageData(id, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, x, y, s, s);
+    ctx.font = `${10 * p}px ${TK.mono}`; ctx.fillStyle = '#e5e7eb'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${T('wavefront')} ±${g3(mx / 550e-9)} λ`, x, y + s + 3 * p); }
+
+  /* the brightness along the line through the star's center, over the perfect telescope's peak */
+  function drawCurve() { if (!TK || !CW) return; const p = proj(); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = TK.canvas; cctx.fillRect(0, 0, CW, CH); if (!R) return;
+    const E = R.E, n = FFTN, half = n / 2 / S.zoom, c = n / 2, row = Math.round(R.cy), pa = pixelAngle(E.D), field = 2 * half * pa / ARCSEC;
+    const L = 46 * p, Rr = CW - 14 * p, Tt = 14 * p, B = CH - 30 * p, prof = perfectProfile(E), pk = Math.max(...prof);
+    const xs = (i) => L + (i - (c - half)) / (2 * half) * (Rr - L), ys = (v) => B - Math.min(1.05, v) / 1.05 * (B - Tt);
+    cctx.strokeStyle = TK.line; cctx.lineWidth = 1; cctx.beginPath(); cctx.moveTo(L, Tt); cctx.lineTo(L, B); cctx.lineTo(Rr, B); cctx.stroke();
+    cctx.font = `${10.5 * p}px ${TK.mono}`; cctx.fillStyle = TK.muted; cctx.textAlign = 'right'; cctx.textBaseline = 'middle';
+    for (const v of [0, 0.5, 1]) { cctx.fillText(v.toFixed(1), L - 6 * p, ys(v)); }
+    cctx.textAlign = 'center'; cctx.textBaseline = 'top'; for (const k of [-0.5, -0.25, 0, 0.25, 0.5]) cctx.fillText(`${sgn(k * field, field < 2 ? 2 : field < 20 ? 1 : 0)}″`, L + (k + 0.5) * (Rr - L), B + 5 * p);
+    cctx.save(); cctx.translate(12 * p, (Tt + B) / 2); cctx.rotate(-Math.PI / 2); cctx.textBaseline = 'middle'; cctx.fillText(T('brightness / perfect peak'), 0, 0); cctx.restore();
+    cctx.setLineDash([4 * p, 4 * p]); cctx.strokeStyle = TK.mark; cctx.lineWidth = 1.3 * p; cctx.beginPath();
+    for (let i = Math.ceil(c - half); i <= c + half; i++) { const v = prof[i] / pk; i === Math.ceil(c - half) ? cctx.moveTo(xs(i), ys(v)) : cctx.lineTo(xs(i), ys(v)); } cctx.stroke(); cctx.setLineDash([]);
+    cctx.strokeStyle = TK.halo; cctx.lineWidth = 1.8 * p; cctx.beginPath(); const sh = Math.round(R.cx) - c;
+    for (let i = Math.ceil(c - half); i <= c + half; i++) { const q = row * n + Math.min(n - 1, Math.max(0, i + sh)), v = R.tot[q] / R.perfect; i === Math.ceil(c - half) ? cctx.moveTo(xs(i), ys(v)) : cctx.lineTo(xs(i), ys(v)); } cctx.stroke();
+    cctx.textAlign = 'right'; cctx.textBaseline = 'top'; cctx.font = `${10.5 * p}px ${TK.ui}`; cctx.fillStyle = TK.halo; cctx.fillText(T('this telescope'), Rr, Tt); cctx.fillStyle = TK.mark; cctx.fillText(T('perfect telescope (dashed)'), Rr, Tt + 14 * p); }
+
+  /* ---------- readouts ---------- */
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function lamText(E) { return E.filter === 'white' ? T('white light') : FILTERS[E.filter].short; }
+  function readouts() { const E = eff(), r = R; if (!r) return; const pa = pixelAngle(E.D), lamC = FILTERS[E.filter].lams.length > 1 ? 550e-9 : FILTERS[E.filter].lams[0] * 1e-9, Du = E.D * E.iris / 100;
+    let h = '';
+    h += dd(T('Strehl ratio'), fx(r.strehl, 2)) + dd(T('Half light diameter'), `${g3(asec(r.hpd * pa))}″`);
+    if (!S.blind) h += dd(T('Diffraction limit 1.22 λ/D'), `${g3(asec(1.22 * lamC / Du))}″`);
+    if (E.air === 'ground' && !S.mys && !S.blind) { const r0l = r0At(E.r0 / 100, lamC); h += dd(T('r₀ at this wavelength'), `${g3(r0l * 100)} cm`) + dd(T('Seeing λ/r₀'), `${g3(asec(lamC / r0l))}″`); }
+    if (!S.mys && !S.blind) h += dd(T('Wavefront error (rms)'), `${fx(r.rmsW, 3)} λ`);
+    h += dd(T('Camera focus'), `${sgn(S.focus, S.scopeStep || 3)} mm`) + dd(T('Star\'s angle'), `${fx(S.th, 1)}′`);
+    h += dd(T('Light'), lamText(E));
+    if (!S.mys) { const f = E.N * E.D; h += dd(T('Telescope'), E.scope === 'hubble' ? `2.40 m, f/24` : `${g3(E.D * 1000)} mm, f/${fx(E.N, 1)}`) + dd(T('Focal length'), `${g3(f)} m`); }
+    else h += dd(T('Aperture'), `${g3(E.D * 1000)} mm`);
+    if (E.iris < 100) h += dd(T('Diameter in use'), `${g3(Du * 1000)} mm`);
+    $('out').innerHTML = h;
+    $('note').textContent = r.rays ? T('ray picture: the blur is far wider than diffraction') : (E.air === 'ground' && E.D / r0At(E.r0 / 100, lamC) > 40 ? T('D/r₀ above 40: speckles finer than this picture can draw') : '');
+  }
+
+  /* ---------- controls ---------- */
+  const RANGES = { mirror: { min: -2, max: 2, step: 0.002, dec: 3 }, lens: { min: -20, max: 20, step: 0.05, dec: 2 }, hubble: { min: -40, max: 40, step: 0.05, dec: 2 } };
+  function sync() { const E = S.mys ? Object.assign({}, S, { scope: S.mys.hidden.scope }) : S, sc = E.scope, rg = RANGES[sc]; S.scopeStep = rg.dec;
+    const sF = $('sFocus'); sF.min = rg.min; sF.max = rg.max; sF.step = rg.step; sF.value = S.focus;
+    $('oFocus').textContent = `${sgn(S.focus, rg.dec)} mm`;
+    for (const b of document.querySelectorAll('#scopeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.scope));
+    for (const b of document.querySelectorAll('#shapeSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.K));
+    for (const b of document.querySelectorAll('#lensSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.lens));
+    for (const b of document.querySelectorAll('#hubbleSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.h === S.hfix));
+    for (const b of document.querySelectorAll('#airSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === S.air));
+    for (const b of document.querySelectorAll('#expoSeg button')) b.setAttribute('aria-pressed', String(b.dataset.e === S.expo));
+    for (const b of document.querySelectorAll('#zoomSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.z === S.zoom));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    const dRange = S.scope === 'lens' ? [0.03, 0.15, 0.005] : [0.05, 4, 0.01], nRange = S.scope === 'lens' ? [8, 30, 0.5] : [3, 20, 0.5];
+    Object.assign($('sD'), { min: dRange[0], max: dRange[1], step: dRange[2] }); $('sD').value = S.D; $('oD').textContent = S.D < 1 ? `${g3(S.D * 1000)} mm` : `${fx(S.D, 2)} m`;
+    Object.assign($('sN'), { min: nRange[0], max: nRange[1], step: nRange[2] }); $('sN').value = S.N; $('oN').textContent = `f/${fx(S.N, 1)}`;
+    $('sPinch').value = S.pinch; $('oPinch').textContent = `${S.pinch} nm`;
+    $('corr').checked = S.corr; $('sTh').value = S.th; $('oTh').textContent = `${fx(S.th, 1)}′`;
+    $('sIris').value = S.iris; $('oIris').textContent = `${S.iris} %`; $('selFilter').value = S.filter; $('selAO').value = S.ao;
+    $('sR0').value = S.r0; $('oR0').textContent = `${fx(S.r0, 1)} cm`;
+    const mys = !!S.mys;
+    $('cardScope').hidden = mys; $('cardAir').hidden = false;
+    for (const id of ['wrapR0', 'wrapAO']) $(id).hidden = mys || S.air !== 'ground'; $('airSeg').parentElement.hidden = mys;
+    $('wrapMirror').hidden = S.scope !== 'mirror'; $('wrapPinch').hidden = S.scope !== 'mirror'; $('wrapCorr').hidden = S.scope !== 'mirror';
+    $('wrapLens').hidden = S.scope !== 'lens'; $('wrapHubble').hidden = S.scope !== 'hubble'; $('wrapD').hidden = S.scope === 'hubble'; $('wrapN').hidden = S.scope === 'hubble';
+    $('wrapTh').hidden = !mys && S.scope === 'hubble';
+    $('puzzleSec').hidden = !mys; $('play').textContent = S.run ? T('Pause the air') : T('Let the air move'); $('play').classList.toggle('attn', !S.run);
+    $('faint').checked = S.faint; $('absScale').checked = S.abs; $('starTest').checked = S.test;
+  }
+  function changed(markCustom = true) { if (markCustom && !S.mys && S.preset !== 'custom') { S.preset = 'custom'; } if (S.mys) puzzleWatch(); sync(); dirty = true; }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; S.run = false; S.t = 0; S.pos = 0;
+    if (c.mystery) { S.mys = newMystery(); Object.assign(S, BASE, { focus: 0, th: S.mys.start.th, iris: 100, filter: S.mys.start.filter, expo: 'snap', zoom: S.mys.hidden.zoom, part: 'mystery', scope: S.mys.hidden.scope });
+      puzzleSay(T('Something blurs this star. Test the telescope, name the cause, then fix it.'), ''); $('pzCause').value = ''; }
+    else { S.mys = null; Object.assign(S, BASE, c); }
+    $('presetHint').textContent = c.hint; sync(); dirty = true; }
+
+  /* ---------- the puzzle ---------- */
+  const WRONG = {
+    defocus: 'If the camera were only out of focus, some focus setting would make the star sharp. Does one?',
+    sphere: 'Spherical aberration looks different inside and outside the focus, and masking the edge of the aperture helps a lot. Is that what you see?',
+    coma: 'Coma goes away when the star is at the center of the view. Does it?',
+    astig: 'Astigmatism stretches the star into a line one way inside the focus and the other way outside it. Is that what you see?',
+    color: 'With a single color the star would be sharp, and each color would focus at a different place. Is that what you see?',
+    seeing: 'Moving air makes the star dance and break into speckles that change from moment to moment. Does it?' };
+  const HINTS = [
+    'Turn the camera focus in and out, or tick Star test. Does some focus make the star sharp? Does the blur look the same on both sides of the focus?',
+    'Move the star to the center of the view. Does the blur change?',
+    'Try one color at a time with the filter. Is each color sharp at its own focus?',
+    'Let the air move, then take a long exposure. Does the star dance and break into speckles?',
+    'Mask the edge of the aperture (use only the middle). Which blur shrinks a lot when only the middle of the mirror or lens is used?' ];
+  const FIXFOR = { defocus: null, sphere: 'parabola', coma: 'corrector', astig: 'clamps', color: 'achromat', seeing: ['ao', 'space'] };
+  function puzzleSay(msg, cls) { const el = $('pzSay'); el.textContent = msg; el.className = 'say' + (cls ? ' ' + cls : ''); $('pzTries').textContent = S.mys ? `${T('Answers checked')}: ${S.mys.tries}` : ''; }
+  $('pzCheck').addEventListener('click', () => { const m = S.mys; if (!m) return; const v = $('pzCause').value; if (!v) { puzzleSay(T('Choose a cause first.'), 'bad'); return; }
+    m.tries++; if (v === m.cause) { m.ok = true; puzzleSay(m.cause === 'defocus' ? T('Right: the camera is out of focus. Turn the focus until the Strehl ratio is 0.8 or more.') : T('Right. Now pick the fix, and focus again for the sharpest star.'), 'good'); }
+    else puzzleSay(T(WRONG[v]), 'bad'); puzzleWatch(); });
+  $('pzHint').addEventListener('click', () => { const m = S.mys; if (!m) return; puzzleSay(T(HINTS[m.hint % HINTS.length]), ''); m.hint++; });
+  $('pzNew').addEventListener('click', () => applyPreset('mystery'));
+  $('pzShow').addEventListener('click', () => { const m = S.mys; if (!m) return; const h = m.hidden, opt = [...$('pzCause').options].find((o) => o.value === m.cause);
+    let det = ''; if (m.cause === 'defocus') det = ` (${sgn(h.dz, 3)} mm)`; if (m.cause === 'sphere') det = ` (f/${h.N})`; if (m.cause === 'coma') det = ` (f/4, ${h.th}′)`; if (m.cause === 'astig') det = ` (${h.pinch} nm)`; if (m.cause === 'seeing') det = ` (r₀ ${h.r0} cm)`;
+    puzzleSay(`${T('The answer')}: ${opt ? opt.textContent : m.cause}${det}`, ''); m.shown = true; });
+  for (const b of document.querySelectorAll('#pzFixes button')) b.addEventListener('click', () => { const m = S.mys; if (!m) return; const h = m.hidden, fix = b.dataset.fix;
+    if (['parabola', 'corrector', 'clamps'].includes(fix) && h.scope !== 'mirror') { puzzleSay(T('This telescope has no mirror: it is a lens telescope.'), 'bad'); return; }
+    if (fix === 'achromat' && h.scope !== 'lens') { puzzleSay(T('This telescope has no lens to replace: it uses a mirror.'), 'bad'); return; }
+    if (fix === 'parabola') h.K = -1; if (fix === 'corrector') h.corr = true; if (fix === 'clamps') h.pinch = 0; if (fix === 'achromat') h.lens = 'achromat';
+    if (fix === 'ao') { h.ao = 'high'; } if (fix === 'space') h.air = 'space';
+    if (!m.fixes.includes(fix)) m.fixes.push(fix);
+    const right = [].concat(FIXFOR[m.cause] || []).includes(fix);
+    puzzleSay(right ? T('Done. Now focus again for the sharpest star.') : fix === 'ao' ? T('Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?') : T('Done, but did it help? The cause may be somewhere else.'), right ? 'good' : '');
+    dirty = true; });
+  /* solved: the right cause named, its fix made (focusing is the fix for defocus), and, with the star where the puzzle put it, the whole
+     aperture in use and the starting filter, a Strehl ratio of 0.8 or more (Maréchal's criterion for a diffraction limited image;
+     0.5 under the air with adaptive optics; 0.4 for an achromat in white light, whose leftover secondary spectrum, with every color weighted
+     equally, keeps it near 0.5 at best) */
+  function puzzleWatch() { const m = S.mys; if (!m || !R || m.solved || !m.ok) return; const need = [].concat(FIXFOR[m.cause] || []);
+    const fixed = !need.length || need.some((f) => m.fixes.includes(f)); const same = S.th === m.start.th && S.iris === 100 && S.filter === m.start.filter;
+    const lim = m.cause === 'seeing' && m.hidden.air === 'ground' ? 0.5 : m.cause === 'color' && S.filter === 'white' ? 0.4 : 0.8;
+    if (fixed && same && R.done !== false && R.strehl >= lim) { m.solved = true; puzzleSay(`${T('Solved')}: ${T('Strehl ratio')} ${fx(R.strehl, 2)}. ${T('Press New mystery for another telescope.')}`, 'good'); }
+    else if (fixed && !same) puzzleSay(T('Fixed? Put the star back where it started, open the mask fully and use the starting filter, then focus for the sharpest star.'), ''); }
+
+  /* ---------- wiring ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const seg = (id, key, conv, after) => { for (const b of document.querySelectorAll(`#${id} button`)) b.addEventListener('click', () => { S[key] = conv(b.dataset[Object.keys(b.dataset)[0]]); if (after) after(); changed(); }); };
+  seg('scopeSeg', 'scope', (v) => v, () => { if (S.scope === 'hubble') Object.assign(S, { D: 2.4, N: 24, th: 0, focus: S.hfix ? 0 : 22.5 }); else if (S.scope === 'lens') Object.assign(S, { D: 0.06, N: 15, focus: 0, filter: 'white' }); else Object.assign(S, { D: 0.2, N: 8, focus: 0 }); });
+  seg('shapeSeg', 'K', Number); seg('lensSeg', 'lens', (v) => v); seg('hubbleSeg', 'hfix', Number); seg('airSeg', 'air', (v) => v); seg('expoSeg', 'expo', (v) => v);
+  for (const b of document.querySelectorAll('#zoomSeg button')) b.addEventListener('click', () => { S.zoom = +b.dataset.z; sync(); draw(); });
+  const slide = (id, key, conv = Number) => $(id).addEventListener('input', (e) => { S[key] = conv(e.target.value); changed(); });
+  slide('sD', 'D'); slide('sN', 'N'); slide('sPinch', 'pinch'); slide('sFocus', 'focus'); slide('sTh', 'th'); slide('sIris', 'iris'); slide('sR0', 'r0');
+  $('selFilter').addEventListener('change', (e) => { S.filter = e.target.value; changed(); });
+  $('selAO').addEventListener('change', (e) => { S.ao = e.target.value; changed(); });
+  $('corr').addEventListener('change', (e) => { S.corr = e.target.checked; changed(); });
+  $('faint').addEventListener('change', (e) => { S.faint = e.target.checked; draw(); });
+  $('absScale').addEventListener('change', (e) => { S.abs = e.target.checked; draw(); });
+  $('starTest').addEventListener('change', (e) => { S.test = e.target.checked; if (!S.test) { TEST = null; draw(); } else dirty = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; draw(); readouts(); });
+  $('play').addEventListener('click', () => { S.run = !S.run; sync(); });
+  cans.can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+
+  /* ---------- the clock: only the air moves ---------- */
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const E = eff();
+    if (S.run && E.air === 'ground' && E.expo === 'snap' && !matchMedia('(prefers-reduced-motion: reduce)').matches) { S.t += dt / SLOW; S.pos = S.t * WIND; dirty = true; }
+    else if (S.run && E.air === 'ground' && E.expo === 'snap') { S.t += 0.25 / SLOW; S.pos = S.t * WIND; dirty = true; S.run = false; sync(); }
+    if (dirty) { recompute(); if (S.mys) puzzleWatch(); }
+    requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; cans.can.width = Math.round(W * dpr); cans.can.height = Math.round(H * dpr);
+    const c = cans.curve.parentElement.getBoundingClientRect(); CW = c.width; CH = c.height; cans.curve.width = Math.round(CW * dpr); cans.curve.height = Math.round(CH * dpr); SPL.place(); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'telescope-aberrations@2026-11-01';
+  window.vdReadingRow = () => { if (!R) return null; const E = eff();
+    if (R.done === false) return T('Wait for the long exposure to finish.');
+    const pa = pixelAngle(E.D), lamC = FILTERS[E.filter].lams.length > 1 ? 550e-9 : FILTERS[E.filter].lams[0] * 1e-9, Du = E.D * E.iris / 100, mys = !!S.mys;
+    const part = mys ? 'mystery' : S.scope === 'lens' ? 'color' : S.air === 'ground' ? 'air' : (S.th > 0 || S.corr || S.part === 'coma') ? 'coma' : 'shape';
+    return { part, telescope: mys ? 'mystery' : S.scope === 'hubble' ? (S.hfix ? 'Hubble 1993' : 'Hubble 1990') : S.scope === 'lens' ? (S.lens === 'achromat' ? 'achromat' : 'single lens') : (S.K === -1 ? 'parabola' : S.K === 0 ? 'sphere' : 'conic'),
+      D_mm: +(E.D * 1000).toFixed(0), N: mys ? '' : +S.N.toFixed(1), field_arcmin: +S.th.toFixed(1), corrector: mys ? '' : (S.corr ? 'yes' : 'no'), filter: E.filter === 'white' ? 'white' : FILTERS[E.filter].short,
+      lam_nm: E.filter === 'white' ? '' : +(lamC * 1e9).toFixed(1), focus_mm: +S.focus.toFixed(S.scopeStep || 3), mask_pct: S.iris,
+      air: mys ? '' : S.air, r0_cm: !mys && S.air === 'ground' ? S.r0 : '', ao: !mys && S.air === 'ground' ? S.ao : '', exposure: E.air === 'ground' ? E.expo : '',
+      strehl: +R.strehl.toFixed(3), hpd_arcsec: +asec(R.hpd * pa).toPrecision(3), dl_arcsec: +asec(1.22 * lamC / Du).toPrecision(3), rms_waves: mys || E.air === 'ground' ? '' : +R.rmsW.toFixed(3) };   /* the air's own wavefront error changes from moment to moment, so it is left out */
+  };
+  window.vdShowCols = [['telescope', 'Telescope'], ['focus_mm', 'Focus (mm)'], ['strehl', 'Strehl'], ['hpd_arcsec', 'Half light (″)']];
+  /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/intro-aberrations.mp4', poster: 'media/how-this-works/intro-aberrations.jpg', title: 'How this works: fixing a blurry star' });
+  window.__ta = { S, get R() { return R; }, applyPreset, recompute: () => { dirty = true; recompute(); if (S.mys) puzzleWatch(); }, eff, image, wait: () => (longJob && R && !R.done ? false : true) };
+
+  /* ---------- about ---------- */
+  $('about1').textContent = 'The picture is computed, not drawn. A star is so far away that its light arrives as a flat wavefront. The telescope should turn it into a sphere converging on one point; any error in that sphere is the wavefront error W, measured in wavelengths. The star\'s image is the diffraction pattern of the aperture with that error: the intensity is the squared size of the two dimensional Fourier transform of the aperture times e^(2πiW/λ) (Fraunhofer diffraction), worked out with a fast Fourier transform on a 512 × 512 grid, the aperture 128 samples across at 550 nm.';
+  $('about2').textContent = 'W comes from tracing real rays. The mirror is the exact conic surface z = r²/(R[1 + √(1 − (1 + K) r²/R²)]), K = 0 for a sphere and −1 for a paraboloid, with the stop at the mirror. Lenses are exact spherical surfaces with Snell\'s law, and the glass index n(λ) from the Schott Sellmeier formulas for N-BK7 and F2. The path of each ray is followed to a sphere centered on where the central ray meets the camera. The best fitting tilt is removed, so the picture stays centered on the star\'s own center of light. Where W changes by more than half a wave from one sample to the next, the grid cannot follow it, and the picture is made from the rays instead (geometric optics): the blur is then far bigger than diffraction anyway.';
+  $('about3').textContent = 'What to expect (third order theory, for comparison only: the picture uses the full trace). A spherical mirror\'s wavefront error at its edge is W = D/(512 N³), so halving the focal ratio makes it 8 times worse. Off the axis a parabola shows coma, a comet whose length is 3θ/(16N²) for a star at angle θ, and, farther out, astigmatism. A single lens focuses blue (F line, 486.1 nm) and red (C line, 656.3 nm) a distance f/V apart, where V = (n_d − 1)/(n_F − n_C) is the glass\'s Abbe number: 64.2 for N-BK7 and 36.4 for F2. The Strehl ratio is the image\'s peak over a perfect telescope\'s peak; 0.8 or more counts as diffraction limited (Maréchal).';
+  $('about4').textContent = 'The air is a Kolmogorov phase screen: its structure function is 6.88 (r/r₀)^(5/3), with r₀ given at 500 nm and growing as λ^(6/5), so the same air blurs infrared light far less. Screens are made by the FFT method with three levels of subharmonics (Lane, Glindemann and Dainty 1992; Johansson and Gavel 1994), and the wind (10 m/s) carries them across the aperture; the motion is shown slowed down 100 times. A long exposure averages 48 moments. The screens\' largest scales are somewhat weaker than Kolmogorov\'s law, much as with a real outer scale of tens of meters, so the image moves a little less. Adaptive optics is modeled as perfect: it removes the first 2, 14 or 65 Zernike shapes of the wavefront exactly and at once, with no delay or measurement noise.';
+  $('about5').textContent = 'Hubble: a 2.4 m Ritchey–Chrétien telescope at f/24 (Allen report, 1990). Its primary (radius of curvature 11.04 m) was made with conic constant −1.0139 instead of the design\'s −1.0023, about 2.2 µm too flat at the edge. Here the error is the difference of the two surfaces, doubled on reflection; it gives 0.47 waves rms at 547 nm after focusing, against the report\'s 0.5. The secondary\'s shadow is 0.33 of the diameter and the four supports are 0.022 of the radius wide (the Tiny Tim pupil model). The corrective optics are modeled as cancelling the error exactly. The coma corrector is ideal: it removes the coma shape of the wavefront at every star position.';
+  $('about6').textContent = 'Approximations: scalar diffraction and the Fraunhofer limit; each filter is a single wavelength; white light is 9 equally weighted wavelengths from 420 to 660 nm, colored with the CIE 1931 color matching functions (the fit of Wyman, Sloan and Shirley 2013) shown in sRGB; the brightest point of the picture is shown white; with Same brightness scale as a perfect telescope, the scale is fixed to the perfect telescope\'s peak instead, so a blurred star looks dimmer as well as bigger. A mirror telescope\'s camera is drawn at the prime focus, with no shadow of its own. All data are simulated.';
+
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cans.curve.parentElement);
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'seeing'); }   /* a worksheet can open a setup with ?setup= */
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* divider between the picture and the brightness curve (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the brightness curve' }); })();</script>
+</body>
+</html>

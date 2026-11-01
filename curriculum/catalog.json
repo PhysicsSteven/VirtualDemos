@@ -1684,6 +1684,17 @@
       "Rayleigh criterion",
       "resolving power"
      ]
+    },
+    {
+     "demo": "telescope-aberrations",
+     "title": "Telescope Aberrations",
+     "desc": "Why a real telescope blurs a star, computed: the image is the diffraction pattern of the aperture with the wavefront error found by tracing real rays. Spherical and parabolic mirrors, coma off the axis, a pinched mirror, a single lens against an achromat, Hubble's 1990 flaw and its fix, and moving air with adaptive optics. Then a mystery telescope to diagnose and fix.",
+     "tags": [
+      "aberrations",
+      "Strehl ratio",
+      "seeing",
+      "adaptive optics"
+     ]
     }
    ]
   }

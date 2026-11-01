@@ -632,6 +632,13 @@
   INTRO.push('intro-atmospheres'); INTRO_GRAPHS.push('intro-atmospheres'); /* Gas in a Box, 2026-10-26: Reading | Gas | m | T | 2D rms | 3D rms | 1/sqrt(m) typed; the second table typed */
   FROM_DEMO['intro-atmospheres'] = { demo: 'Gas in a Box', cols: ['row', 'gas', 'm_u', 'T_K', 'rms_m_s', 'rms3_m_s', null] };
   FROM_DEMO['intro-exoplanets'] = { demo: 'Finding Exoplanets', cols: ['row', 'system', 'Ms_Msun', 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 'P_d', 't_h', 'drop_ppm', 'v_m_s', null] };
+  /* Telescope Aberrations, 2026-11-01. Mirror shape: Reading | Telescope | N | Focus (mm) | Strehl | Half light (″) | Wavefront error (waves).
+     Coma, color and air readings (every row from that part) go to the second, third and fourth tables; the mystery table is typed by hand */
+  INTRO.push('intro-aberrations'); INTRO_GRAPHS.push('intro-aberrations');
+  FROM_DEMO['intro-aberrations'] = { demo: 'Telescope Aberrations', cols: ['row', 'telescope', 'N', 'focus_mm', 'strehl', 'hpd_arcsec', 'rms_waves'],
+    alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'coma'), cols: ['row', 'field_arcmin', 'corrector', 'strehl', 'hpd_arcsec'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'color'), cols: ['row', 'telescope', 'lam_nm', 'focus_mm', 'strehl', 'hpd_arcsec'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'air'), cols: ['row', 'D_mm', 'filter', 'ao', 'exposure', 'strehl', 'hpd_arcsec', 'dl_arcsec'] }] };
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
   const CR_IMPACT = ['row', 'body', 'L_km', 'v_km_s', 'D_km', 'form'], CR_COUNT = ['row', 'surface', 'D_km', 'N', 'area_km2', 'per_km2', 'age_Gyr'],
@@ -846,6 +853,7 @@
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
+  GRAPH_EVERY_TABLE.push('intro-aberrations');   /* the graph is of the second table: half light diameter against the star's angle (coma) */
   GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
   GRAPH_EVERY_TABLE.push('chladni', 'timbre');   /* the Drumhead table graphs f against √T, the Wave packets table Δx against 1/Δk (2026-10-31) */
