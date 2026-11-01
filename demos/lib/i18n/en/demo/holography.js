@@ -112,7 +112,6 @@ VDI18N.add('en', 'demo/holography', [
 "{#} mm (middle point)",
 "The plate holds the hologram made in the Record view: {#} nm, reference at {#}°, three points {#} to {#} mm away. Change it there.",
 "Image of the middle point, predicted",
-"λ₂ = {#} nm at −{#}°",
 "The simplest hologram: the object wave is a plane wave straight on (θo = {#}, from a mirror), the reference comes in at {#}°, both {#} nm. The plate records straight fringes, d = λ/sin {#}° = {#} μm apart: a diffraction grating. Light it again along the reference and three beams leave it: straight through, the image beam (a copy of the object wave, straight on) and the conjugate. Find each with the detector. Then change the wavelength: the image beam swings, as the grating equation says.",
 "The plate holds the hologram made in the Record view: {#} nm, reference at {#}°, a plane object wave at {#}°. Change it there.",
 "screen {#} mm past the plate",
@@ -120,8 +119,16 @@ VDI18N.add('en', 'demo/holography', [
 "Screen at z",
 "One point of the object, {#} mm in front of the plate, lit by the same {#} nm laser; the reference beam comes in at {#}°. The light from the point spreads as a circular wave, so the fringes on the plate are curved and crowd together toward one side: a piece of an off axis zone plate. Zoom in at different places on the plate and compare the spacing.",
 "object point, {#} mm from the plate",
+"one point, {#} mm away",
+"Beam ratio",
 "The point hologram lit by the reference beam alone (the object is gone). Behind the plate the light is traced back: a camera focused {#} mm behind the plate sees a sharp point exactly where the object was. That is the virtual image. Move the camera focus and watch the point blur. The beam straight through and the conjugate beam go off at other angles.",
 "The same hologram lit from the other side of the normal, at −{#}°. Now the conjugate wave is a copy of the object wave run backwards: it converges to a real image {#} mm past the plate, where a screen catches a sharp point. The image beam goes off steeply instead.",
+"λ₂ = {#} nm at −{#}°",
 "Three points at {#}, {#} and {#} mm recorded at {#} nm, viewed with {#} nm light. The fringes are the same, but each bends the shorter wavelength less, so the images come out farther from the plate (about {#}/{#} times as far) and shifted sideways. A white light source would smear the image into a rainbow, which is why a thin hologram is viewed with the laser it was made with.",
-"z = −{#} mm, x = −{#} mm (virtual)"
+"z = −{#} mm, x = −{#} mm (virtual)",
+"computed on {#} points, {#} nm apart",
+"up: {#}× scale",
+"three object points",
+"developed plate (dark where more light fell)",
+"three points, {#} to {#} mm"
 ]);

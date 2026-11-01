@@ -7,6 +7,8 @@ VDI18N.add('en', 'demo/induced-electric-field', [
 "E, counterclockwise (mV/m)",
 "time slowed down {#} times",
 "Induced Electric Fields",
+"<a>Induction and inductance</a>",
+"<a><span>←</span> <span>Induction at Work</span></a><a><span>Eddy Currents: Magnet in a Pipe</span> <span>→</span></a>",
 "A long solenoid seen end on. While its current changes, the changing magnetic flux makes an electric field that circles the solenoid, inside it and in the empty space outside. Move a closed path around and compare the work per charge around it, ∮E·dl, with −dΦ/dt.",
 "The end of a long solenoid, its magnetic field shown as dots or crosses, arrows for the induced electric field circling it, and a closed path that can be dragged or moved with the arrow keys. Plots of the current against time and of the electric field against distance from the axis.",
 "Divider between the field and the graphs",
@@ -43,8 +45,8 @@ VDI18N.add('en', 'demo/induced-electric-field', [
 "<span>Blind: hide the electric field</span>",
 "Blind hides the field arrows, the field plot, E on the path and ∮E·dl. Predict first: is there an electric field outside the solenoid, where B = {#}? Which way does it point? What is ∮E·dl around a path that does not go around the solenoid?",
 "Model: an ideal long solenoid, B = μ₀nI inside and zero outside, with the current changing slowly enough that the field inside is uniform at each instant. By symmetry the induced field circles the axis, and Faraday's law, ∮E·dl = −dΦ/dt (OpenStax Eq. {#}), gives E = (r/{#})|dB/dt| inside and E = (R²/2r)|dB/dt| outside (OpenStax Example {#}). The page adds up E·dl around the path in {#} short pieces and, separately, finds Φ from B times the area of the path that lies inside the solenoid (the overlap of two circles); the two agree. The solenoid's own end effects, its resistance and the field from any current in the ring are left out. Time runs slowed down; the factor is printed on the picture.",
-"<a>Induction and inductance</a>",
-"<a><span>←</span> <span>Induction at Work</span></a><a><span>Eddy Currents: Magnet in a Pipe</span> <span>→</span></a>",
+"B up, inside only",
+"Winding drawn with fewer turns. Arrows: the induced E in the sheet. Drag the path; drag elsewhere to turn.",
 "Path (cm)",
 "−dΦ/dt (V)",
 "Now the path is inside the solenoid. The flux through it is B times its own area, so E grows in proportion to r inside: E = (r/{#})|dB/dt|.",
@@ -63,5 +65,6 @@ VDI18N.add('en', 'demo/induced-electric-field', [
 "{#} mV/m, clockwise",
 "{#} nWb",
 "I rises steadily from {#} to I₀ in a time {#}/α, then stays",
-"Ramp: α = {#}/(rise time)"
+"Ramp: α = {#}/(rise time)",
+"Drag the path; drag elsewhere to turn."
 ]);

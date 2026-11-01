@@ -698,7 +698,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function legend(items, x, y, wmax) {
     const p = proj(), c = pctx; c.font = `${11 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
     items.forEach(([col, s, dash], i) => { const yy = y + i * 34 * p; c.save(); if (dash) c.setLineDash([5 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + 18 * p, yy); c.stroke(); c.restore();
-      c.fillStyle = K.ink; const words = s.split(' '); let line = '', ly = yy, lim = Math.min(wmax || 1e9, PW - x - 30 * p); for (const w of words) { const t = line ? `${line} ${w}` : w; if (c.measureText(t).width > lim && line) { c.fillText(line, x + 24 * p, ly); ly += 13 * p; line = w; } else line = t; } c.fillText(line, x + 24 * p, ly); });
+      c.fillStyle = K.ink; const words = (window.VDI18N ? VDI18N.t(s) : s).split(' '); const wrap = () => { let line = '', ly = yy, lim = Math.min(wmax || 1e9, PW - x - 30 * p); for (const w of words) { const t = line ? `${line} ${w}` : w; if (c.measureText(t).width > lim && line) { c.fillText(line, x + 24 * p, ly); ly += 13 * p; line = w; } else line = t; } c.fillText(line, x + 24 * p, ly); }; if (window.VDI18N) VDI18N.raw(wrap); else wrap(); });
   }
 
   /* ---------- readouts ---------- */

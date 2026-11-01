@@ -73,6 +73,10 @@ VDI18N.add('en', 'demo/gyroscope', [
 "Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, {#} ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim heavy wheel {#}.905MR²; the wheel's moment about its diameter is I_s/{#}.",
 "Changing the spin or d while it runs: the change acts along the axle (a motor in the hub, or sliding the wheel along the axle), so it exerts no torque across the axle. The axle's direction and its angular momentum across the axle carry over (so with a new d its turning rates scale by I_1 old/I_1 new) and the spin takes the new value at once. The axle then wobbles about a new steady tilt: the dashed gold line on the strip, where the effective potential for the tilt is least. The gate starts timing afresh after each change. Tilt at release and the steady start apply at release only.",
 "Friction at the pivot: the axle's tip sits in a cup on the post and rubs on its side. The friction is dry (a fixed size, the slider), and its torque about the post is taken as τ_f sin θ, since the tip presses on the cup's side as far from the post's axis as the axle leans (θ from the upward vertical); its torque across the axle is left out. It pushes the axle round toward the rate at which the tip would roll round the cup without slipping: half the spin rate for a tip that turns with the wheel (a {#} mm tip in a {#} mm cup), far faster than the precession, so it hurries the precession and the axle rises; zero for a still tip (the wheel on bearings), so it holds the precession back and the axle sinks. Gravity's torque is horizontal and cannot change the vertical part of L; the friction's torque about the post can, at the rate dL_z/dt = τ_f sin θ, and since L_z ≈ I_s ω_s cos θ the axle rises or sinks at about τ_f/(I_s ω_s). The spin is held constant (a motor in the hub). For scale, a friction coefficient of {#} on a {#} mm tip under the wheel's {#} N weight gives about {#} mN·m. At low spin the hurried axle can be driven into a fast whirl round the post, the other steady precession, where the tip rolls without slipping.",
+"GATE TIMER",
+"last full turn, s",
+"wheel {#} turns/s: a blur to the eye (Slow motion or Strobe shows it turn)",
+"level",
 "Hold",
 "slow motion: wheel {#} turns/s, shown at {#}",
 "Less spin, less angular momentum: the same torque turns it faster, and the dip (down to {#}° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now {#}% below Mgd/(I_s ω_s): the simple formula needs fast spin.",
@@ -86,5 +90,9 @@ VDI18N.add('en', 'demo/gyroscope', [
 "{#} mN·m (hurries the precession)",
 "The same friction from a still tip (the wheel on bearings): now it drags against the precession, holding it back, and the axle sinks at about {#}° a second until it falls, after about {#} s.",
 "{#} mN·m (holds back the precession)",
-"Release it and let the gate time at least one full turn round the post."
+"Release it and let the gate time at least one full turn round the post.",
+"−{#} mN·m (holds back the precession)",
+"(Slow motion shows it turn)",
+"wheel {#} turns/s: a blur to the eye",
+"strobe {#} flashes/s · wheel {#} turns/s"
 ]);

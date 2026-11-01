@@ -1626,7 +1626,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rM').textContent = spec.real > 0 ? `${m.toFixed(1)} /s` : '—';
     $('rN').textContent = spec.real > 0 && m * C.TAU < 1 ? `${(m / (1 - m * C.TAU)).toFixed(1)} /s` : '—';
     const dt = spec.real > 0 ? 1 - spec.live / spec.real : 0;
-    $('count').innerHTML = `Live ${spec.live.toFixed(1)} <small>s</small> · Real ${spec.real.toFixed(1)} <small>s</small> · Dead ${(100 * dt).toFixed(1)}<small>%</small> · ${fmtCount(spec.total)} <small>counts</small>`;
+    /* one key with names: the count is glued to k or M, so the run could never match as a pattern */
+    const cv = { live: spec.live.toFixed(1), real: spec.real.toFixed(1), dead: (100 * dt).toFixed(1), n: fmtCount(spec.total) };
+    if (window.VDI18N && VDI18N.lang !== 'en') for (const k in cv) cv[k] = cv[k].replace('.', VDI18N.decimal);
+    $('count').innerHTML = window.VDI18N ? VDI18N.t('Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>', cv) : 'Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>'.replace(/\{(\w+)\}/g, (m, k) => cv[k]);
     roiReadout();
   }
   function roiReadout() {

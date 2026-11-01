@@ -127,5 +127,19 @@ VDI18N.add('en', 'demo/forces', [
 "Block warms by at most {#} mK (all of it in the block)",
 "Block above, ramp below. Slowed; glow and jiggle are a picture.",
 "The second pane shows the two surfaces magnified to the size of atoms (a schematic). Even polished surfaces are bumpy at this scale, and only the tips of the bumps touch. With a {#} N push, under the {#} N that static friction can give, the bumps stay locked and nothing slides: no work, no heat. Turn the push past {#} N: the block slides, the bumps catch and tear past each other, and the atoms at the contact jiggle harder: friction turns work into thermal energy at the rate μk N v.",
-"Use Release at the top mark first, and let the timer finish."
+"Use Release at the top mark first, and let the timer finish.",
+"At rest",
+"Held still: press Release.",
+"N, friction, tension, acceleration",
+"hidden in Blind",
+"Work, kinetic energy and power",
+"A new mystery surface. Earlier rows used a different one.",
+"Hide data table",
+"Moving",
+"Sliding: the bumps catch and tear past each other.",
+"Not sliding: the bumps are locked.",
+"Blind: arrows show directions only",
+"T each",
+"Tension, lift, acceleration and the pull that holds the load",
+"Work and kinetic energy"
 ]);

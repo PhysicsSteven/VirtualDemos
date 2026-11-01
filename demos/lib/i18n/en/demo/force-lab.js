@@ -41,5 +41,7 @@ VDI18N.add('en', 'demo/force-lab', [
 "A proton and an electron {#} pm apart, the Bohr radius: F = ke²/a₀² = {#} × {#}⁻⁸ N. Tiny, but on an electron ({#} × {#}⁻³¹ kg) it gives an acceleration near {#}²³ m/s².",
 "Double m₁ to {#} kg. The force on both balls doubles, and it is still the same on the small ball as on the big one: each pulls the other equally hard.",
 "+{#} μC and +{#} μC push each other apart with equal forces ({#} N at {#} cm), although one charge is four times the other.",
-"repel"
+"repel",
+"Recorded r = {#} pm.",
+"Arrow lengths grow with log F (not to scale)."
 ]);

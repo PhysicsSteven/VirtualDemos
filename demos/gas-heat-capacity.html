@@ -694,11 +694,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- controls ----------
   const fill = (sel, extra) => { sel.innerHTML = Object.keys(GASES).map((k) => `<option value="${k}">${GASES[k].name}</option>`).join('') + (extra || ''); };
+  /* the gas's name is glued into the sentence, so the sentence is one key with the name translated on its own */
+  const lastGas = (g) => window.VDI18N ? VDI18N.t('The last mystery gas was {gas}.', { gas: VDI18N.t(g) }) : `The last mystery gas was ${g}.`;
   fill($('selGas'), '<option value="mystery">Mystery gas</option>'); fill($('selGasR')); $('selGasR').insertAdjacentHTML('afterbegin', '<option value="air">Dry air</option>');
   function sync() {
     const h = S.heat, r = S.ru; $('selGas').value = h.gas; $('sN').value = h.n; $('oN').textContent = `${f(h.n, 2)} mol`; $('sW').value = h.W; $('oW').textContent = `${f(h.W, 1)} W`;
     for (const b of document.querySelectorAll('#pistonSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === h.mode));
-    $('newGas').hidden = h.gas !== 'mystery'; $('gasNote').textContent = h.lastMys ? `The last mystery gas was ${GASES[h.lastMys].name.split(',')[0].toLowerCase()}.` : '';
+    $('newGas').hidden = h.gas !== 'mystery'; $('gasNote').textContent = h.lastMys ? lastGas(GASES[h.lastMys].name.split(',')[0].toLowerCase()) : '';
     $('selGasR').value = r.gas; $('sV').value = r.V; $('oV').textContent = `${r.V}.00 L`;
     const m = S.mol; $('sBond').value = m.d; $('oBond').textContent = `${f(m.d, 2)} nm`; $('sBond').parentElement.hidden = !m.dumb; $('molStartSeg').parentElement.hidden = !m.dumb;
     for (const b of document.querySelectorAll('#molKindSeg button')) b.setAttribute('aria-pressed', String((b.dataset.k === 'dumb') === m.dumb));

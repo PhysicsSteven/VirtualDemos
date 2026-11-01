@@ -1455,10 +1455,10 @@ table.rows button:hover { color: var(--pos); }
   function gTitle(ctx, txt, x, y, ls, maxW) {
     ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * ls}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     maxW = maxW || (dims.g[0] - x - 12 * ls);
-    const words = txt.split(' '), lines = []; let cur = '';
+    const words = (window.VDI18N ? VDI18N.t(txt) : txt).split(' '), lines = []; let cur = '';
     for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t2; }
     lines.push(cur);
-    lines.forEach((l, i) => ctx.fillText(l, x, y + i * 14 * ls));
+    const draw = () => lines.forEach((l, i) => ctx.fillText(l, x, y + i * 14 * ls)); if (window.VDI18N) VDI18N.raw(draw); else draw();
     return y + lines.length * 14 * ls;
   }
   function bars(ctx, L, R, top, bot, items, ls, unit, group) {     // items: [label, value, color]; group: bars per cluster
@@ -2213,11 +2213,11 @@ table.rows button:hover { color: var(--pos); }
   }
   // a block of wrapped text; returns the y below it
   function wrapText(ctx, txt, x, y, maxW, size, col, weight, fam) {
-    const words = txt.split(' '), lines = []; let cur = '';
+    const words = (window.VDI18N ? VDI18N.t(txt) : txt).split(' '), lines = []; let cur = '';
     for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (richWidth(ctx, t2, size, weight, fam) > maxW && cur) { lines.push(cur); cur = w; } else cur = t2; }
     lines.push(cur);
     ctx.fillStyle = col; ctx.textBaseline = 'top';
-    lines.forEach((l, i) => richText(ctx, l, x, y + i * size * 1.3, size, weight, 'left', fam));
+    const draw = () => lines.forEach((l, i) => richText(ctx, l, x, y + i * size * 1.3, size, weight, 'left', fam)); if (window.VDI18N) VDI18N.raw(draw); else draw();
     return y + lines.length * size * 1.3;
   }
   function drawFitGraph(ctx, W, H, ls, ps) {
@@ -2563,10 +2563,10 @@ table.rows button:hover { color: var(--pos); }
   }
   function note3(txt) {   /* a caption along the bottom of the picture: what is not to scale, and how to turn the view */
     const ctx = OV.ctx, ls = OV.ls, fs = 10.5 * ls; ctx.font = `${fs}px ${T.ui}`;
-    const words = txt.split(' '), lines = []; let cur = '';
+    const words = (window.VDI18N ? VDI18N.t(txt) : txt).split(' '), lines = []; let cur = '';
     for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > OV.W - 24 * ls && cur) { lines.push(cur); cur = w; } else cur = t2; }
     lines.push(cur);
-    lines.forEach((l, i) => labelBox(ctx, l, 10 * ls, OV.H - 8 * ls - (lines.length - 1 - i) * fs * 1.35, 'left', T.muted, fs, 400));
+    const draw = () => lines.forEach((l, i) => labelBox(ctx, l, 10 * ls, OV.H - 8 * ls - (lines.length - 1 - i) * fs * 1.35, 'left', T.muted, fs, 400)); if (window.VDI18N) VDI18N.raw(draw); else draw();
   }
   const NOTE = 'Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.';
 

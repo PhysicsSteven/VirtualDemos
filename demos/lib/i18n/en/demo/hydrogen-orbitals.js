@@ -8,6 +8,7 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "<a>Quantum mechanics</a>",
 "<a><span>←</span> <span>Quantum Wave Packets</span></a><a><span>Quantum Coin Toss</span> <span>→</span></a>",
 "The quantum mechanical hydrogen atom. Each point in the cloud is one place the electron could be found, drawn at random from |ψ|².",
+"Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, {#} resets the view, C cuts the cloud open, M measures.",
 "Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values; or use the arrow keys to move the readout point (Shift for bigger steps), Home to return it to the nucleus, Escape to hide it.",
 "3D cloud",
 "Slice",
@@ -147,7 +148,7 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "<i></i><i></i>ψ positive, ψ negative",
 "<i></i>Phase of ψ: red {#}, cyan π, around the wheel",
 "<span><i></i>P(r) = r²|R(r)|², per a₀</span> <span><i></i>Mean radius ⟨r⟩</span> <span><i></i>Bohr model orbit, r = n²a₀</span> <span><i></i>Radial node</span>",
-"A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.",
+"Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell. While the cloud turns, fresh random positions keep replacing old ones, a twentieth of the cloud each second.",
 "<b>Cutaway</b> removes the eighth of the cloud facing you, like a slice cut from a cake. The three cut faces show |ψ|² in those planes through the nucleus. Nodes are dark there: radial nodes as arcs, angular nodes as lines through the nucleus, outlined when Nodal lines is on.",
 "<b>Measure</b> starts from an empty atom and finds the electron one position at a time, each drawn at random from |ψ|² (inverse CDF in r and θ, rejection sampling in φ and for a superposition). Each find flashes, and the finds build up the cloud.",
 "About the model",
@@ -155,6 +156,7 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use {#} eV, the measured value for hydrogen, which includes the small correction for the moving proton.",
 "The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −{#} eV/n². Compare with the Bohr model in <a>Spectra Explorer</a>.",
 "orbital",
+"A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.",
 "s along x = y",
 "The ground state. The cloud is densest right at the nucleus, yet P(r) peaks at exactly one Bohr radius, because a shell farther out holds more volume.",
 "An s state has l = {#} and only m = {#}. It is spherical.",
@@ -296,5 +298,11 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Complex states have a definite L<sub>z</sub> = mħ. Their |ψ|² is symmetric around the z axis; the phase winds m times around it, shown as color.",
 "B = 6h m = {#} (same as A)",
 "With m = {#} the complex state is real, the same as the real orbital.",
-"log"
+"log",
+"Yes. The center of the electron cloud (gold dot) moves back and forth on a line, so the atom radiates at λ = {#} μm.",
+"Yes. The center of the electron cloud (gold dot) moves around a circle, so the atom radiates at λ = {#} μm.",
+"The two states have the same energy, so nothing moves: the cloud is stationary.",
+"{#} positions measured",
+"= r²|R(r)|², per a₀",
+"{#} position measured"
 ]);

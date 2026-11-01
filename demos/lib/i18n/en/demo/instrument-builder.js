@@ -139,5 +139,18 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Camera behind the last part",
 "The camera's photo",
 "Without it, same lens",
-"Add a lens first."
+"Add a lens first.",
+"Lens {#}",
+"Lens {#} <span>f {#}</span>",
+"Real, {#} cm in front of the camera, −{#} mm tall.",
+"Too close to focus: the camera focuses no nearer than {#} cm.",
+"One lens and a distant object: nothing is magnified, M = {#}",
+"The final image is not at infinity, so they differ by {#} %. Move a lens to send the final image to infinity.",
+"Lens {#}, {#} mm across",
+"{#} × the bare camera",
+"{#}″ (arcseconds), entrance pupil D = {#} mm (the camera lens sets it)",
+"Lens {#}: position z",
+"Stop {#}",
+"Stop {#}: position z",
+"{#}″ (arcseconds), entrance pupil D = {#} mm"
 ]);

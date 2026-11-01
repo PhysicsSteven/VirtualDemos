@@ -1681,7 +1681,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const full = SBK.st.bs.length >= SBK_MAX;
     SBK_TRAY.forEach((k, i) => { const K = SBK_KIND[k], cx = x0 + iw * (i + 0.5), cy = top + h * 0.38, col = K.col || T.sun; ctx.globalAlpha = full ? 0.35 : 1;
       ctx.beginPath(); ctx.arc(cx, cy, K.px * ps, 0, TAU); ctx.fillStyle = col; ctx.fill(); if (VG) litBall(ctx, cx, cy, K.px * ps * 0.85, col, -1, 1);
-      ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; let lab = K.name; while (ctx.measureText(lab).width > iw - 4 * ps && lab.length > 3) lab = lab.slice(0, -2) + '…'; ctx.fillText(lab, cx, top + h * 0.66); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; let lab = window.VDI18N ? VDI18N.t(K.name) : K.name; while (ctx.measureText(lab).width > iw - 4 * ps && lab.length > 3) lab = lab.slice(0, -2) + '…'; if (window.VDI18N) VDI18N.raw(() => ctx.fillText(lab, cx, top + h * 0.66)); else ctx.fillText(lab, cx, top + h * 0.66); ctx.globalAlpha = 1;
       SBK.tray.parts.push({ kind: k, box: [x0 + iw * i, top, iw, h] }); });
     const [bx, by, bw, bh] = SBK.tray.bin, hot = d && d.overTray;
     ctx.fillStyle = hot ? T.pos : T.canvas; ctx.globalAlpha = hot ? 0.22 : 0.92; rr(bx, by, bw, bh); ctx.fill(); ctx.globalAlpha = 1;
@@ -1719,8 +1719,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (host) { const el = nbElements(b, host); h += dd(`Distance to ${host.name}`, `${sig(el.r, 4)} AU`) + dd(`Speed around ${host.name}`, `${sig(el.v * KMS, 4)} km/s`);
         h += S.blind ? dd('Orbit', 'hidden in Blind', true) : el.bound ? dd(`Orbit around ${host.name}, as if the two were alone`, `a = ${sig(el.a, 4)} AU, e = ${el.e.toFixed(3)}, P = ${fmtT(el.P)}`, true) : dd(`Orbit around ${host.name}`, 'not bound: it escapes', true); }
       else h += dd('Host', 'none: nothing heavier pulls on it', true); }
-    const out = $('sbkOut'); if (out.innerHTML !== h) out.innerHTML = h;
-    const rv = rvReadouts(), ro = $('rvOut'); if (ro.innerHTML !== rv) ro.innerHTML = rv;
+    const out = $('sbkOut'); if (out._vdWas !== h) { out._vdWas = h; out.innerHTML = h; }   /* the last HTML written (the shown HTML is translated in another language) */
+    const rv = rvReadouts(), ro = $('rvOut'); if (ro._vdWas !== rv) { ro._vdWas = rv; ro.innerHTML = rv; }
   }
   // ---- pointer and keys (capture listeners, so the orbit view's own handlers sit out while the Sandbox is on) ----
   function sbkHit(px, py) {
@@ -2054,8 +2054,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const [l, col, wt, sz] of lines) {
       ctx.font = `${wt} ${sz * ps}px ${T.mono}`; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       let cur = '';
-      for (const w of l.split(' ')) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur) { ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps; cur = w; } else cur = t2; }
-      ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps;
+      const wrap = () => { for (const w of (window.VDI18N ? VDI18N.t(l) : l).split(' ')) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > maxW && cur) { ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps; cur = w; } else cur = t2; } ctx.fillText(cur, 10 * ps, y); y += (sz + 3) * ps; }; if (window.VDI18N) VDI18N.raw(wrap); else wrap();
     }
     const L = 56 * ps, R = CW - 14 * ps, bot = CH - 30 * ps, top = y + 16 * ps;
     if (bot - top < 60 * ps) return;

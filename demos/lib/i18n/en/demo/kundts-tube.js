@@ -76,5 +76,9 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "residuals, ±{#} cm",
 "Slope d (cm)",
 "Intercept (cm)",
-"v_gas = {#} d f"
+"v_gas = {#} d f",
+"A new unknown rod is in the clamp.",
+"<span>These rows mix rods, gases or temperatures: clear and record one series.</span>",
+"close up: {#} cm of tube around the pointer, x = {#} cm. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe",
+"The unknown rod had v = {#} m/s."
 ]);

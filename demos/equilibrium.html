@@ -649,8 +649,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cap = (bl ? 'Blind: every arrow is drawn the same length. ' : W < 560 ? 'Arrows to scale with force. ' : 'Arrow lengths are to scale with force. ') + (W < 560 ? 'People sized by mass as a guide only. ' : 'Lengths in meters; people are sized by mass as a guide only. ') + 'Drag a load to move it; drag elsewhere to turn.';
     ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
     const lines = [], maxw = W - (S.blind ? 90 : 20) * p; let line = '';
-    for (const wd of (coarse ? VD3.turnText(cap) : cap).split(' ')) { const t2 = line ? line + ' ' + wd : wd; if (ctx.measureText(t2).width > maxw && line) { lines.push(line); line = wd; } else line = t2; } lines.push(line);
-    lines.forEach((ln, i) => { const y = H - 8 * p - (lines.length - 1 - i) * 14 * p, w = ctx.measureText(ln).width; ctx.fillStyle = T.panel; ctx.fillRect(W - 10 * p - w - 4 * p, y - 13 * p, w + 8 * p, 14 * p); ctx.fillStyle = T.muted; ctx.fillText(ln, W - 10 * p, y); });
+    for (const wd of ((s0) => window.VDI18N ? VDI18N.t(s0) : s0)(coarse ? VD3.turnText(cap) : cap).split(' ')) { const t2 = line ? line + ' ' + wd : wd; if (ctx.measureText(t2).width > maxw && line) { lines.push(line); line = wd; } else line = t2; } lines.push(line);
+    const drawCap = () => lines.forEach((ln, i) => { const y = H - 8 * p - (lines.length - 1 - i) * 14 * p, w = ctx.measureText(ln).width; ctx.fillStyle = T.panel; ctx.fillRect(W - 10 * p - w - 4 * p, y - 13 * p, w + 8 * p, 14 * p); ctx.fillStyle = T.muted; ctx.fillText(ln, W - 10 * p, y); }); if (window.VDI18N) VDI18N.raw(drawCap); else drawCap();
   }
   /* 3D drag: the pointer's ray meets the vertical plane of the structure (y = 0); its place along the beam, ladder or strut is the value */
   function ray3(e) {
@@ -860,10 +860,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the verdict box, wrapped onto more lines when the picture is narrow */
   function sbeVerdict(msg) {
     const p = ps(), max = (SBE.g ? SBE.g.Ws : W) - 28 * p, lines = []; ctx.font = `600 ${13 * p}px ${T.ui}`;
-    for (const w of msg.split(' ')) { const t = lines.length ? lines[lines.length - 1] + ' ' + w : w; if (lines.length && ctx.measureText(t).width <= max) lines[lines.length - 1] = t; else lines.push(w); }
+    for (const w of (window.VDI18N ? VDI18N.t(msg) : msg).split(' ')) { const t = lines.length ? lines[lines.length - 1] + ' ' + w : w; if (lines.length && ctx.measureText(t).width <= max) lines[lines.length - 1] = t; else lines.push(w); }
     const bw = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 12 * p;
     ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, bw, (8 + 17 * lines.length) * p); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    lines.forEach((l, i) => ctx.fillText(l, 14 * p, (13 + 17 * i) * p));
+    const draw = () => lines.forEach((l, i) => ctx.fillText(l, 14 * p, (13 + 17 * i) * p)); if (window.VDI18N) VDI18N.raw(draw); else draw();
   }
   function sbeDrawTray(g, side, Ws, Hs) {
     const p = ps(), d = SBE.drag, n = SBE_PARTS.length;

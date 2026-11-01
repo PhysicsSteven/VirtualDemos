@@ -796,11 +796,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(G.x0 + 0.5, G.y0 + 0.5, G.x1 - G.x0 - 1, G.y1 - G.y0 - 1);
   }
+  /* other languages: a star's card is drawn from translated pieces (a star's name and spectral type are never translated) */
+  const tr = (s, v) => window.VDI18N ? VDI18N.t(s, v) : v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k]) : s, raw = (fn) => window.VDI18N ? VDI18N.raw(fn) : fn();
   /* the star list: nearest first for the nearest stars and for both, brightest first for the brightest */
   function fillPick() {
     const list = REAL.slice().sort((a, b) => (S.realSet === 'bright' ? a.V - b.V : a.d - b.d)), sel = $('realPick');
     sel.textContent = ''; { const o = document.createElement('option'); o.value = ''; o.textContent = 'Choose a star'; o.disabled = true; sel.appendChild(o); }
-    for (const q of list) { const o = document.createElement('option'); o.value = q.name; o.textContent = `${q.name} · ${S.realSet === 'bright' ? 'V ' + q.V.toFixed(2) : q.d.toFixed(2) + ' pc'}${q.BV == null ? ' · no B − V' : ''}`; sel.appendChild(o); }
+    for (const q of list) { const o = document.createElement('option'); o.value = q.name; o.setAttribute('translate', 'no'); o.textContent = `${q.name} · ${S.realSet === 'bright' ? 'V ' + q.V.toFixed(2) : q.d.toFixed(2) + ' pc'}${q.BV == null ? ' · no B − V' : ''}`; sel.appendChild(o); }
     sel.value = S.realSel || '';
   }
   function setRealSet(w) {
@@ -1021,14 +1023,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, big * 1.5), c = q.BV != null ? bvRGB(q.BV) : [200, 200, 200];
       g.addColorStop(0, css(c)); g.addColorStop(0.6, css(c, 0.9)); g.addColorStop(1, css(c, 0)); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, big * 1.5, 0, 2 * Math.PI); ctx.fill();
       const x = cx + big * 1.6 + 10 * ps; let y = cy - 34 * ps;
-      ctx.fillStyle = T.ink; ctx.font = `700 ${15 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(q.name, x, y); y += 22 * ps;
+      ctx.fillStyle = T.ink; ctx.font = `700 ${15 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; raw(() => ctx.fillText(q.name, x, y)); y += 22 * ps;
       ctx.font = `${12 * ps}px ${mono}`; ctx.fillStyle = T.muted;
       const ly = q.d * 3.26156;
-      for (const line of [`type ${q.spect.trim() || '—'} · ${q.near ? 'within 10 pc' : ''}${q.near && q.bright ? ' · ' : ''}${q.bright ? 'one of the 100 brightest' : ''}`,
-        `V = ${q.V.toFixed(2)}   absolute ${q.MV.toFixed(2)}   B − V = ${q.BV == null ? 'not in HYG' : q.BV.toFixed(2)}`,
-        `distance ${q.d < 100 ? q.d.toFixed(2) : Math.round(q.d)} pc = ${ly < 100 ? ly.toFixed(1) : Math.round(ly).toLocaleString('en-US')} light years`]) {
+      for (const line of [`${tr('type {sp}', { sp: q.spect.trim() || '—' })} · ${q.near ? tr('within 10 pc') : ''}${q.near && q.bright ? ' · ' : ''}${q.bright ? tr('one of the 100 brightest') : ''}`,
+        tr(`V = ${q.V.toFixed(2)}   absolute ${q.MV.toFixed(2)}   B − V = ${q.BV == null ? 'not in HYG' : q.BV.toFixed(2)}`),
+        tr(`distance ${q.d < 100 ? q.d.toFixed(2) : Math.round(q.d)} pc = ${ly < 100 ? ly.toFixed(1) : Math.round(ly).toLocaleString('en-US')} light years`)]) {
         const w = ctx.measureText(line).width, room = SW - x - 8 * ps;
-        ctx.save(); if (w > room) { ctx.translate(x, y); ctx.scale(room / w, 1); ctx.fillText(line, 0, 0); } else ctx.fillText(line, x, y); ctx.restore(); y += 18 * ps;
+        ctx.save(); raw(() => { if (w > room) { ctx.translate(x, y); ctx.scale(room / w, 1); ctx.fillText(line, 0, 0); } else ctx.fillText(line, x, y); }); ctx.restore(); y += 18 * ps;
       }
       return;
     }

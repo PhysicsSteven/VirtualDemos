@@ -1320,7 +1320,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function revealMystery() {
     if (!MYS) return; MYS.revealed = true; $('mysReveal').disabled = true; $('tModel').disabled = false; showModel = $('tModel').checked;
     if (BIN) {
-      $('mysNote').textContent = `Revealed: M₁ = ${sig(B.m1)} M☉, R₁ = ${sig(B.r1)} R☉, T₁ = ${comma(B.t1)} K; M₂ = ${sig(B.m2)} M☉, R₂ = ${sig(B.r2)} R☉, T₂ = ${comma(B.t2)} K; a = ${sig(P.a)} AU, i = ${P.inc.toFixed(2)}°, γ = ${minus(String(B.gam))} km/s.`;
+      /* one key with names: the sign of γ and the thousands comma change from one Mystery to the next */
+      const rv = { m1: sig(B.m1), r1: sig(B.r1), t1: comma(B.t1), m2: sig(B.m2), r2: sig(B.r2), t2: comma(B.t2), a: sig(P.a), i: P.inc.toFixed(2), g: minus(String(B.gam)) };
+      $('mysNote').textContent = window.VDI18N ? VDI18N.t('Revealed: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} AU, i = {i}°, γ = {g} km/s.', rv)
+        : `Revealed: M₁ = ${rv.m1} M☉, R₁ = ${rv.r1} R☉, T₁ = ${rv.t1} K; M₂ = ${rv.m2} M☉, R₂ = ${rv.r2} R☉, T₂ = ${rv.t2} K; a = ${rv.a} AU, i = ${rv.i}°, γ = ${rv.g} km/s.`;
       changed(); return;
     }
     const rho = GM_EARTH * P.mp / G / (4 / 3 * Math.PI * (P.rp * R_EARTH) ** 3) / 1000;

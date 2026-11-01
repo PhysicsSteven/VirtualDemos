@@ -141,6 +141,7 @@ VDI18N.add('en', 'demo/giant-planets', [
 "Tide swings by",
 "Jupiter's direction rocks by",
 "Stretch now (average = {#})",
+"Io drawn {#} times larger; its orbit and stretch exaggerated",
 "Saturn has {#} times Earth's mass but {#} times its volume, so its mean density is {#} g/cm³, less than water's {#} g/cm³. It is the only planet that would float, if there were a tub big enough. It also turns in {#} hours, and the fast spin and low density make it the flattest planet: its equator is {#} % wider than its poles.",
 "Mimas",
 "Enceladus",
@@ -199,5 +200,19 @@ VDI18N.add('en', 'demo/giant-planets', [
 "Center of mass from Pluto's center",
 "Io on its slightly oval orbit (e = {#}, drawn {#} times more oval). Its distance from Jupiter changes by ±{#} %, so the tide that stretches it changes by ±{#} %, and the direction of Jupiter seen from Io rocks back and forth by ±{#}°. The flexing heats Io: with Io's measured k₂/Q this gives about {#} × {#}¹³ W, close to the more than {#} × {#}¹⁴ W Io sends out, which keeps hundreds of volcanoes going.",
 "e = {#}: a circle",
-"If Europa and Ganymede were taken away, Io's orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = {#} pumped up."
+"If Europa and Ganymede were taken away, Io's orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = {#} pumped up.",
+"Jupiter from above its north pole, to scale",
+"↓ Jupiter → motion",
+"Jupiter's orbits to scale, moons drawn {#} times larger",
+"gold mostly rock, tan rock and ice, white mostly ice",
+"Starting places: noon, {#} January {#}",
+"rigid moon",
+"Saturn from above its north pole, to scale",
+"↓ Saturn → motion",
+"Europa passes Ganymede",
+"Saturn's orbits to scale, moons drawn {#} times larger",
+"Neptune's orbits to scale, moons drawn {#} times larger",
+"Starting places spread out, not from a date",
+"Mars's orbits to scale, moons drawn {#} times larger",
+"Pluto's orbits to scale, moons to scale too"
 ]);

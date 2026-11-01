@@ -40,6 +40,7 @@ VDI18N.add('en', 'demo/impulse', [
 "Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = {#} N/m, e = {#}; soft spring k = {#} N/m, e = {#}; clay k = {#} N/m, e = {#}. The sensor reads the force to {#} N at the chosen sample rate.",
 "<a>Momentum and collisions</a>",
 "<a><span>←</span> <span>Collisions and Momentum</span></a><a><span>Center of Mass</span> <span>→</span></a>",
+"drag to turn, wheel to zoom",
 "A soft spring: a long, low force. Same bounciness as the stiff one.",
 "Clay: the cart barely bounces back (e = {#}), so the impulse is smaller.",
 "force sensor (N) against time, {#} Hz samples",

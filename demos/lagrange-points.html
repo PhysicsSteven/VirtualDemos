@@ -11,6 +11,10 @@
 <script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+/* a longer language: switch rows wrap instead of running off a phone's edge */
+:root[data-vd-lang] .seg { flex-wrap: wrap; max-width: 100%; }
+:root[data-vd-lang] .stage-ctl { min-width: 0; }
+:root[data-vd-lang] .stage-ctl .count { white-space: normal; }
 </style>
 <title>Lagrange Points</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1213,7 +1217,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!sel) { for (const id of ['rC', 'rDC', 'rKep']) $(id).textContent = '—'; $('rNow').textContent = sw ? 'The swarm has no single launch to edit. Click to add your own particle.' : 'No particle yet.'; return; }
     const C = jacobi(S.mu, sel.s), dC = Math.abs((C - sel.C0) / sel.C0), el = Math.max(0, sel.t - sel.t0);
     $('rC').textContent = fmtC(C);
-    $('rDC').innerHTML = `${dC === 0 ? '0' : sci(dC, 2)} <span class="ok">after ${(el / TWO_PI).toFixed(1)} P${s.Pd ? ` = ${fmtT(el, 3)}` : ''}</span>`;
+    $('rDC').innerHTML = `${dC === 0 ? '0' : sci(dC, 2)} <span class="ok">${((t) => window.VDI18N ? VDI18N.t(t) : t)(`after ${(el / TWO_PI).toFixed(1)} P${s.Pd ? ` = ${fmtT(el, 3)}` : ''}`)}</span>`;   /* the span on its own: the power of ten before it is glued to its digits, so the whole run never matches */
     const d2 = Math.hypot(sel.s[0] - 1 + S.mu, sel.s[1]), h = rotToSun(S.mu, sel.s, sel.t), tb = twoBody(S.mu, h);
     let status = '';
     if (!sel.alive) status = sel.end === 'hit1' ? `Hit ${s.m1}.` : sel.end === 'hit2' ? `Hit ${s.m2}.` : sel.end === 'escape' ? 'Left the system (beyond 8 a); stopped.' : 'Stopped.';

@@ -649,7 +649,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SHORT3 = { fe: 'Model gas in model units, not to scale.', es: 'A square per oscillator, a cube per quantum; not to scale.', sl: 'Arrow widths in proportion to the energy; not to scale.' };
   const coarse3 = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
   const cap3 = (v) => { const t = W && W < 560 ? 'Drag to turn, double click to go back. ' + SHORT3[v] : CAP3[v]; return coarse3 ? VD3.turnText(t) : t; };
-  function home3(v) { const nar = W && W < 560; Object.assign(O3, { th: HOME3[v].th * (nar ? 0.97 : 1), ph: HOME3[v].ph - (nar ? 0.08 : 0), zoom: 1 }); if (on3d) $('cap3d').textContent = cap3(v); }
+  /* the 3D caption, written only when it changes (the last English text is kept here: in another language the shown text is translated) */
+  let capWas = null; const capSet = (t) => { if (t !== capWas) { capWas = t; $('cap3d').textContent = t; } };
+  function home3(v) { const nar = W && W < 560; Object.assign(O3, { th: HOME3[v].th * (nar ? 0.97 : 1), ph: HOME3[v].ph - (nar ? 0.08 : 0), zoom: 1 }); if (on3d) capSet(cap3(v)); }
   const col3 = (c) => new THREE.Color(c);
   function tex3(V, w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = V.r.capabilities.getMaxAnisotropy(); return { cv, c: cv.getContext('2d'), t }; }
   /* a label drawn over the 3D picture on the flat canvas, on a soft card so it reads against the scene */
@@ -890,7 +892,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function render3() {
     const V = G3.S; if (!W || !H) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    V.size(W, H); const hm = HOME3[S.view]; V.place(O3, hm.t, V.fit(hm.d, hm.ref)); const cp = cap3(S.view); if ($('cap3d').textContent !== cp) $('cap3d').textContent = cp;
+    V.size(W, H); const hm = HOME3[S.view]; V.place(O3, hm.t, V.fit(hm.d, hm.ref)); const cp = cap3(S.view); capSet(cp);
     G3.fe.g.visible = S.view === 'fe'; G3.es.g.visible = S.view === 'es'; G3.sl.g.visible = S.view === 'sl';
     ({ fe: fe3, es: es3, sl: sl3 })[S.view]();
     V.render();
@@ -910,8 +912,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let note3 = '';
-  VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { note3 = m; $('cap3d').textContent = m; },
-    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; $('cap3d').textContent = on ? cap3(S.view) : note3; redraw(); } });
+  VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { note3 = m; capSet(m); },
+    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; capSet(on ? cap3(S.view) : note3); redraw(); } });
   window.__en = { S, setView, applyPreset, setRun, redraw, sync, pull, advance, dev, newGas, newSolid };
   /* How this works: a short video of one sample reading for the worksheet of the view in use (Free Expansion: four molecules after
      2000 s; Einstein Solids: the first reading of the small solids; Testing the Second Law: the 600 K to 300 K engine with W = 0); made by tools/howto/ */

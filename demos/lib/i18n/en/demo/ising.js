@@ -1,7 +1,6 @@
 /* English strings of demo/ising, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/ising', [
 "{#} × {#} = {#},{#} spins, periodic",
-"magnetometer",
 "magnetization per spin m(t)",
 "energy per spin e(t)",
 "sweeps",
@@ -102,6 +101,7 @@ VDI18N.add('en', 'demo/ising', [
 "T = {#}, far above T<sub>c</sub>. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about {#}/√N, less on a larger lattice.",
 "Onsager: m = {#} here",
 "Exactly at T<sub>c</sub> = {#}/ln({#} + √{#}). Domains of every size, inside each other: zoom in and it looks the same. Wolff updates flip whole clusters to beat critical slowing down; tick Show the last Wolff cluster to see one.",
+"magnetometer",
 "Wolff flips whole clusters, so it decorrelates quickly near T<sub>c</sub>, where single spin updates slow down badly (critical slowing down).",
 "Cluster size / N",
 "A random lattice (infinite T) dropped to T = {#}. Domains coarsen: their size grows roughly as the square root of the sweeps. Sometimes stripes wrap around the lattice and last a very long time.",
@@ -111,5 +111,10 @@ VDI18N.add('en', 'demo/ising', [
 "{#} × {#} = {#},{#} spins, periodic · staggered colors",
 "staggered magnetization mₛ(t)",
 "Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.",
-"sweep {#} <small>paused</small>"
+"sweep {#} <small>paused</small>",
+"discarding, {#} of {#} sweeps",
+"sweep {#} <small>{#} sweeps/s · measuring</small>",
+"Measurement stopped: the spins were reset.",
+"Press Play or Step",
+"m against h · T = {#}, L = {#}"
 ]);

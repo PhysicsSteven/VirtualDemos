@@ -2,6 +2,8 @@
 VDI18N.add('en', 'demo/galton-board', [
 "bin k: number of right bounces",
 "Galton Board",
+"<a>The second law of thermodynamics</a>",
+"<a><span>←</span> <span>Entropy and the Second Law</span></a><a><span>Ising Model</span> <span>→</span></a>",
 "Balls fall through rows of pegs and bounce left or right at each one. One ball is unpredictable; thousands pile up into the binomial distribution, and with many rows into a bell curve.",
 "counts",
 "Drop {#}",
@@ -30,16 +32,15 @@ VDI18N.add('en', 'demo/galton-board', [
 "Sample standard deviation",
 "Expected mean np",
 "Expected spread √(np({#} − p))",
+"mean",
 "<span>Blind: hide the expected values (predict them first)</span>",
 "P(k) = n! / (k!(n − k)!) · pᵏ ({#} − p)ⁿ⁻ᵏ mean np standard deviation √(np({#} − p))",
 "Model: at every peg a ball goes right with probability p and left with {#} − p, independently of every other peg and every other ball, so the bin number k (counted from the left, starting at {#}) is the number of right bounces in n tries: a binomial distribution. Balls do not collide or bounce twice; the fall drawn between pegs is only a picture of the choice. Random choices come from a seeded generator (mulberry32), so they are simulated, not measured. The sample standard deviation divides by N − {#}. The normal curve is drawn with the binomial mean and standard deviation, one bin wide per unit of k; it is an approximation that improves as np({#} − p) grows. With net steps on, a bin is labelled 2k − n, the position after n steps of ±{#} (a one dimensional random walk).",
-"<a>The second law of thermodynamics</a>",
-"<a><span>←</span> <span>Entropy and the Second Law</span></a><a><span>Ising Model</span> <span>→</span></a>",
-"mean",
 "One peg is one coin toss: left or right. Drop {#} and the split is rarely exactly {#} and {#}; drop a few hundred and the fractions settle near one half.",
 "Four rows: the counts go as {#} : {#} : {#} : {#} : {#} out of {#}, the numbers in a row of Pascal's triangle.",
 "The board is tilted so a ball goes right {#}% of the time. The pile moves to bin np = {#} and narrows a little: √(np({#} − p)) = {#}.",
 "A right bounce is rare (p = {#}), like a rare event counted in {#} tries. The pile is lopsided, so the normal curve fits badly near {#}; the binomial still fits.",
 "{#} rows: drop a few hundred and the histogram matches the normal curve with mean {#} and standard deviation √{#} = {#}. Bins {#} to {#}, within one standard deviation of the middle, should hold {#}% of the balls; the {#}% rule is for a continuous variable, and here the edge bins count in full.",
-"Drop at least two balls before recording."
+"Drop at least two balls before recording.",
+"Stop"
 ]);
