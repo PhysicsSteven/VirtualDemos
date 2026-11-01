@@ -9,7 +9,8 @@
    node tools/i18n.cjs leaks pendulum [-v]   the page in the test language (?lang=qps) through the same presses: English still
                                              showing (never harvested), page errors that only the test language has; -v also
                                              lists lookups that missed (canvas text, attributes, pieces of runs)
-   node tools/i18n.cjs common     move strings found on many demos into en/common.js (run after harvesting every demo)
+   node tools/i18n.cjs common     move strings found on many pages into en/common.js (run after harvesting every page), with
+                                  every VDI18N.t('...') literal in demos/lib/*.js and curriculum/labs/*.js
    node tools/i18n.cjs index      write the LANGS block of i18n.js from the language folders (run after adding a catalog)
    node tools/i18n.cjs check      every translation against its English: same tags, same {#} and {name}, nothing stale; coverage
    node tools/i18n.cjs todo es demo/pendulum   the English strings of a page with no translation yet, as JSON to fill in
@@ -208,6 +209,11 @@ function makeCommon() {
   const cats = {};
   for (const p of pages) { cats[p] = readCat('en', p); for (const k of new Set(cats[p])) count.set(k, (count.get(k) || 0) + 1); }
   const add = [...count].filter(([k, n]) => n >= min).map(([k]) => k);
+  /* VDI18N.t('...') literals in the shared scripts (demos/lib, curriculum/labs) are shared strings too */
+  for (const d of ['demos/lib', 'curriculum/labs']) for (const f of fs.readdirSync(path.join(ROOT, d)).filter((f) => f.endsWith('.js') && f !== 'i18n.js')) {
+    const src = fs.readFileSync(path.join(ROOT, d, f), 'utf8'), re = /VDI18N\.t\(\s*(['"`])((?:\\.|(?!\1).)*)\1/g; let m;
+    while ((m = re.exec(src))) add.push(m[2].replace(/\\(['"`\\])/g, '$1').replace(/\s+/g, ' ').trim());
+  }
   const all = [...new Set(old.concat(add))];
   writeCat('en', 'common', all, 'English strings shared by many pages (framework, theme, nav), from tools/i18n.cjs common');
   const set = new Set(all);
