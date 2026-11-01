@@ -189,8 +189,35 @@
   }
   const nospace = (x) => x.replace(/\s+/g, '');
   const words = (x) => x.replace(/[*_`]/g, '').toLowerCase().split(/\s+/).filter(Boolean).join(' ');
+  /* In another language (demos/lib/i18n.md) the page is translated before the math is typeset, and the glossary's context words
+     are English, so the words before each equation are read here, on this script's first run, before the translation:
+     LEADS maps each element to the English text before each of its equations (as leadOf reads it), in order. */
+  const OTHER_LANG = !!(window.VDI18N && window.VDI18N.lang !== 'en');
+  const LEADS = new WeakMap(), TEXMATH = /\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]|\$\$[\s\S]*?\$\$/;
+  if (OTHER_LANG) {
+    const md = document.querySelector('.markdown-body') || document.body, seenEl = new Set();
+    const tw = document.createTreeWalker(md, NodeFilter.SHOW_TEXT);
+    for (let n = tw.nextNode(); n; n = tw.nextNode()) if (n.parentElement && !seenEl.has(n.parentElement) && TEXMATH.test(n.data)) seenEl.add(n.parentElement);
+    seenEl.forEach((e) => {
+      const out = []; let t = '';
+      for (const n of e.childNodes) {
+        if (n.nodeType === 3) {
+          const parts = n.data.split(TEXMATH);
+          parts.forEach((x, i) => { if (i) { out.push(t); t = ''; } t += x; });
+        } else if (n.nodeType === 1) {
+          if (n.tagName === 'BR' || (TEXMATH.test(n.textContent))) t = ''; else t += n.textContent;
+        }
+      }
+      LEADS.set(e, out);
+    });
+  }
   /* the words just before an equation, back to the previous equation or the start of its block ("eccentricity" for e) */
   function leadOf(c) {
+    const en = OTHER_LANG && c.parentElement && LEADS.get(c.parentElement);
+    if (en) {
+      const all = Array.from(c.parentElement.children).filter((x) => x.tagName === 'MJX-CONTAINER'), i = all.indexOf(c);
+      if (all.length === en.length && i >= 0) return words(en[i].split('\n').pop()).replace(/[ (,:]+$/, '');
+    }
     let t = '';
     for (let n = c.previousSibling; n; n = n.previousSibling) {
       if (n.nodeType === 1 && (n.matches('mjx-container, br') || n.querySelector('mjx-container'))) break;
@@ -276,7 +303,7 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     box.appendChild(mm); head.appendChild(box);
     const nm = document.createElement('span'); nm.className = 'sym-name'; nm.textContent = e[0]; head.appendChild(nm);
     tip.appendChild(head);
-    if (e[1]) { const u = document.createElement('div'); u.className = 'sym-unit'; u.textContent = 'Unit: ' + e[1]; tip.appendChild(u); }
+    if (e[1]) { const u = document.createElement('div'); u.className = 'sym-unit'; u.textContent = window.VDI18N ? VDI18N.t('Unit: {unit}', { unit: e[1] }) : 'Unit: ' + e[1]; tip.appendChild(u); }
     if (e[2]) { const n = document.createElement('div'); n.className = 'sym-note'; n.textContent = e[2]; tip.appendChild(n); }
     tip.hidden = false;
     tip.classList.toggle('sym-pinned', !!pin);

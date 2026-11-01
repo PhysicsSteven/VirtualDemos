@@ -9,6 +9,13 @@
    Nothing on the page is changed except what is added here. The demos are not touched. */
 (function () {
   'use strict';
+  /* Other languages (demos/lib/i18n.md): text this script shows only after the page has loaded (status lines, warnings, fit results,
+     a second copy of a table) goes through VDI18N.t, English first and its { name: value } pairs after, so tools/i18n.cjs common takes each literal from this
+     source into the shared catalog. This local VDI18N passes to the site's (demos/lib/i18n.js) and, without it, gives the English
+     with each {name} filled, so English pages show exactly what they always did. Names this script reads from the page (headings,
+     column headings, link text) are read on its first pass, before the page is translated, so they stay English in saved files. */
+  const VDI18N = { t: (s, v) => (window.VDI18N ? window.VDI18N.t(s, v) : String(s).replace(/\{([A-Za-z_]\w*)\}/g, (a, n) => (v && v[n] != null ? String(v[n]) : a))) };
+  const OTHER_LANG = !!(window.VDI18N && window.VDI18N.lang !== 'en');   /* the page is being translated: what students type is marked translate="no" */
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
@@ -845,11 +852,11 @@
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
   GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range');
   /* the kinds of fit a graph offers: [value saved in axes.fit, menu text]. '' and 'quad' are worked out below; the rest by WSF.fit */
-  const FIT_KINDS = [['', 'straight line'], ['quad', 'quadratic, y = a + bx + cx²'], ['power', 'power law, y = A·xⁿ'],
-    ['exp', 'exponential, y = C + A·e^(−x/τ)'], ['rise', 'rising exponential, y = C + A·(1 − e^(−x/τ))'], ['log', 'logarithm, y = a + b·ln x'],
-    ['sine', 'sine, y = C + A·sin(2πf·x + φ)'], ['damped', 'damped sine, y = C + A·e^(−x/τ)·sin(2πf·x + φ)'],
-    ['resonance', 'resonance curve, y = A/√((1 − (x/x₀)²)² + (x/(Q·x₀))²)'], ['gauss', 'Gaussian, y = C + A·e^(−(x − μ)²/(2σ²))'],
-    ['slit', 'single slit, y = C + A·(sin u/u)², u = π(x − x₀)/w']];
+  const FIT_KINDS = [['', VDI18N.t('straight line')], ['quad', VDI18N.t('quadratic') + ', y = a + bx + cx²'], ['power', VDI18N.t('power law') + ', y = A·xⁿ'],
+    ['exp', VDI18N.t('exponential') + ', y = C + A·e^(−x/τ)'], ['rise', VDI18N.t('rising exponential') + ', y = C + A·(1 − e^(−x/τ))'], ['log', VDI18N.t('logarithm') + ', y = a + b·ln x'],
+    ['sine', VDI18N.t('sine') + ', y = C + A·sin(2πf·x + φ)'], ['damped', VDI18N.t('damped sine') + ', y = C + A·e^(−x/τ)·sin(2πf·x + φ)'],
+    ['resonance', VDI18N.t('resonance curve') + ', y = A/√((1 − (x/x₀)²)² + (x/(Q·x₀))²)'], ['gauss', VDI18N.t('Gaussian') + ', y = C + A·e^(−(x − μ)²/(2σ²))'],
+    ['slit', VDI18N.t('single slit') + ', y = C + A·(sin u/u)², u = π(x − x₀)/w']];
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
@@ -1241,6 +1248,25 @@
     return { colName, colIndex, num, isFormula, sheet, shift, show, BLANK, Err, parse, fit, MODELS, FN, wline, wquad, chiP };
   })();
   /* ==FORMULAS END== */
+  /* The formula messages above, for the shared catalog (the formula block runs in Node too, so it has no VDI18N of its own); the
+     line under a table shows each through VDI18N.t. Messages that name a cell or a function stay English for now.
+     VDI18N.t('The formula ends too soon.')
+     VDI18N.t('A range needs a cell after the colon, as in B1:B5.')
+     VDI18N.t('A closing parenthesis is missing.')
+     VDI18N.t('Nothing comes after the = sign.')
+     VDI18N.t('SQRT of a negative number.')
+     VDI18N.t('LN needs a positive number.')
+     VDI18N.t('LOG10 needs a positive number.')
+     VDI18N.t('LOG needs a positive number.')
+     VDI18N.t('The base of LOG must be positive and not 1.')
+     VDI18N.t('ASIN needs a number from −1 to 1.')
+     VDI18N.t('ACOS needs a number from −1 to 1.')
+     VDI18N.t('ATAN2(0, 0) has no angle.')
+     VDI18N.t('The result is not a number.')
+     VDI18N.t('The result is too large.')
+     VDI18N.t('A range such as B1:B5 goes inside a function, as in AVERAGE(B1:B5).')
+     VDI18N.t('This divides by zero.')
+     VDI18N.t('A negative number to a power that is not a whole number.') */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
@@ -1319,7 +1345,7 @@
     try {
       const u = URL.createObjectURL(new Blob([text], { type })), a = el('a', { href: u, download: name });
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000);
-    } catch (_) { alert('This browser would not save the file.'); }
+    } catch (_) { alert(VDI18N.t('This browser would not save the file.')); }
   };
   const grow = (ta) => { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; };
   const typeset = (node) => { try { if (window.MathJax && MathJax.typesetPromise && MathJax.startup && MathJax.startup.document) MathJax.typesetPromise([node]); } catch (_) {} };
@@ -1401,11 +1427,11 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
 
   /* ---------- a field that saves and prints ---------- */
   let saveTimer = 0, plotFrame = 0;
-  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus('Saving…'); replot(); };
+  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus(VDI18N.t('Saving…')); replot(); };
   function field(kind, label, cls) {
     const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
       : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
-    const p = el('span', { class: 'ws-print tex2jax_ignore', 'aria-hidden': 'true' });
+    const p = el('span', { class: 'ws-print tex2jax_ignore', 'aria-hidden': 'true', translate: OTHER_LANG ? 'no' : null });
     f.addEventListener('input', () => { if (f.raw != null) f.raw = f.value; p.textContent = f.value; if (kind === 'area') grow(f); changed(); });
     f.wsSet = (v) => { f.value = v == null ? '' : String(v); p.textContent = f.value; if (kind === 'area') requestAnimationFrame(() => grow(f)); };
     f.wsPrint = p;
@@ -1467,7 +1493,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const sec = sections.find((s) => s.nodes.indexOf(t) >= 0);
     const tpl = [...(t.tBodies[0] ? t.tBodies[0].rows : [])].map((r) => [...r.cells].map((c) => (blank(c.textContent) ? null : { html: c.innerHTML, text: plain(c) })));
     const ncol = Math.max(cols.length, ...tpl.map((r) => r.length), 1);
-    const T = { index: ti, cols, ncol, tpl, heading: sec ? plain(sec.h) : 'Data', headHTML: t.tHead ? t.tHead.innerHTML : '', runs: [] };
+    const T = { index: ti, cols, shown: cols.map((c) => VDI18N.t(c)), ncol, tpl, heading: sec ? plain(sec.h) : 'Data', headHTML: t.tHead ? t.tHead.innerHTML : '', runs: [] };
     const box = el('div', { class: 'ws ws-tablebox' });
     t.parentNode.insertBefore(box, t.nextSibling);
     T.box = box; T.first = t;
@@ -1490,9 +1516,9 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       if (T.headHTML) { const th = el('thead'); th.innerHTML = T.headHTML; t.appendChild(th); }
       t.appendChild(el('tbody'));
       T.tpl.forEach((r) => { const tr = el('tr'); r.forEach((c) => { const td = el('td'); if (c) td.innerHTML = c.html; tr.appendChild(td); }); for (let i = r.length; i < T.ncol; i++) tr.appendChild(el('td')); t.tBodies[0].appendChild(tr); });
-      R.label = field('input', `Label for copy ${n} of the ${T.heading} table`);
-      const rm = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove this copy', on: { click: () => removeRun(T, R) } });
-      R.wrap = el('div', {}, [el('div', { class: 'ws-copyhead' }, [`Copy ${n}:`, withPrint(R.label), rm]), t]);
+      R.label = field('input', VDI18N.t('Label for copy {n} of the {table} table', { n, table: VDI18N.t(T.heading) }));
+      const rm = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: VDI18N.t('Remove this copy'), on: { click: () => removeRun(T, R) } });
+      R.wrap = el('div', {}, [el('div', { class: 'ws-copyhead' }, [VDI18N.t('Copy {n}:', { n }), withPrint(R.label), rm]), t]);
       T.copies.appendChild(R.wrap);
       R.wrap.dataset.copy = n;
       typeset(t.tHead || t);
@@ -1510,14 +1536,14 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       for (let i = R.rows.length; i < PRINT_ROWS; i++) { const tr = el('tr'); for (let c = 0; c < T.ncol; c++) tr.appendChild(el('td')); pad.appendChild(tr); }
       t.appendChild(pad);
     }
-    R.notes = field('area', `Settings and notes for ${R.label ? 'copy ' + n + ' of ' : ''}the ${T.heading} table`);
+    R.notes = field('area', R.label ? VDI18N.t('Settings and notes for copy {n} of the {table} table', { n, table: VDI18N.t(T.heading) }) : `Settings and notes for the ${T.heading} table`);
     const addRow = el('button', { type: 'button', class: 'ws-btn', text: 'Add a row', on: { click: () => { const row = newRow(T, R); row.cells[0] && row.cells[0].focus(); changed(); } } });
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
     const addCol0 = el('button', { type: 'button', class: 'ws-btn', text: 'Add a column', on: { click: () => { const col = addCol(T, R); col.name.focus(); changed(); } } });
     R.removeCol = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added column', hidden: true, on: { click: () => { dropCol(T, R); changed(); } } });
     R.bar = el('div', { class: 'ws-bar' });
     const after = el('div', { class: 'ws tex2jax_ignore' }, [R.bar, el('div', { class: 'ws-btns' }, [addRow, R.removeRow, addCol0, R.removeCol]),
-      el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
+      el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? VDI18N.t('Settings and notes for this copy') : 'Settings and notes for this table' }), withPrint(R.notes)])]);
     if (GRAPHS.indexOf(SLUG) >= 0 && (T.index === 0 || GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0)) graphBox(T, R, after);
     if (existing) {
       /* the original table can go once a copy exists (when a later copy is the one to keep) */
@@ -1545,6 +1571,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   }
   /* a data cell: what the student typed is kept in f.raw; a formula (=...) shows its result except while the cell is being edited */
   function colTitle(T, R, c) { return c < T.ncol ? T.cols[c] || 'Column ' + (c + 1) : (R.xcols[c - T.ncol] && R.xcols[c - T.ncol].name.value.trim()) || 'Column ' + WSF.colName(c); }
+  /* the same, as shown on the page and in the CSV: in another language the table's own headings are translated (T.cols stays English for saved files) */
+  function colShown(T, R, c) { return c < T.ncol ? T.shown[c] || VDI18N.t('Column {n}', { n: c + 1 }) : (R.xcols[c - T.ncol] && R.xcols[c - T.ncol].name.value.trim()) || VDI18N.t('Column {n}', { n: WSF.colName(c) }); }
   function cell(T, R, row, td, c) {
     const f = field('input', `${colTitle(T, R, c)}, row ${R.rows.length + 1}`);
     f.size = 6; /* a small intrinsic width, so the columns share the page instead of each taking 20 characters */
@@ -1578,20 +1606,20 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const b = R.bar; if (!b) return;
     b.innerHTML = '';
     const F = R.focus;
-    if (!F) { b.appendChild(document.createTextNode('Start a cell with = to calculate, as in =B1^2 or =AVERAGE(C1:C5). Columns are named by the letters above the headings, rows by the numbers at the left.')); return; }
+    if (!F) { b.appendChild(document.createTextNode(VDI18N.t('Start a cell with = to calculate, as in =B1^2 or =AVERAGE(C1:C5). Columns are named by the letters above the headings, rows by the numbers at the left.'))); return; }
     const i = R.rows.indexOf(F.row), name = WSF.colName(F.c) + (i + 1), f = F.f;
     b.appendChild(el('b', { text: name }));
-    if (!WSF.isFormula(f.value)) { b.appendChild(document.createTextNode(f.value.trim() ? '' : 'Type a value, or = to start a formula.')); return; }
+    if (!WSF.isFormula(f.value)) { b.appendChild(document.createTextNode(f.value.trim() ? '' : VDI18N.t('Type a value, or = to start a formula.'))); return; }
     b.appendChild(el('code', { text: f.value.trim() }));
-    if (f.calc && f.calc.err) b.appendChild(el('span', { class: 'ws-warn', text: `${f.calc.err.code} ${f.calc.err.msg}` }));
-    else if (f.calc && f.raw === f.value) b.appendChild(document.createTextNode(f.calc.text === '' ? '= (empty: it uses an empty cell)' : '= ' + f.calc.text));
+    if (f.calc && f.calc.err) b.appendChild(el('span', { class: 'ws-warn', text: `${f.calc.err.code} ${VDI18N.t(f.calc.err.msg)}` }));
+    else if (f.calc && f.raw === f.value) b.appendChild(document.createTextNode(f.calc.text === '' ? VDI18N.t('= (empty: it uses an empty cell)') : '= ' + f.calc.text));
     const below = R.rows.slice(i + 1).filter((r) => r.cells[F.c]);
-    if (below.length) b.appendChild(el('button', { type: 'button', class: 'ws-btn', text: `Fill down to row ${R.rows.length}`, on: { mousedown: (e) => e.preventDefault(), click: () => fillDown(T, R, F) } }));
+    if (below.length) b.appendChild(el('button', { type: 'button', class: 'ws-btn', text: VDI18N.t('Fill down to row {n}', { n: R.rows.length }), on: { mousedown: (e) => e.preventDefault(), click: () => fillDown(T, R, F) } }));
   }
   function fillDown(T, R, F) {
     const i = R.rows.indexOf(F.row), src = F.f.value, rows = R.rows.slice(i + 1);
     const over = rows.filter((r) => r.cells[F.c] && r.cells[F.c].raw.trim() && r.cells[F.c].raw !== WSF.shift(src, R.rows.indexOf(r) - i, 0)).length;
-    if (over && !confirm(`Fill down replaces what is in ${over} cell${over === 1 ? '' : 's'} below. Go ahead?`)) return;
+    if (over && !confirm(over === 1 ? VDI18N.t('Fill down replaces what is in 1 cell below. Go ahead?') : VDI18N.t('Fill down replaces what is in {n} cells below. Go ahead?', { n: over }))) return;
     F.f.raw = src;
     rows.forEach((r) => { const g = r.cells[F.c]; if (g) g.wsSet(WSF.shift(src, R.rows.indexOf(r) - i, 0)); });
     changed();
@@ -1600,15 +1628,15 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
      of the others never change under a formula) */
   function addCol(T, R, name) {
     const c = T.ncol + R.xcols.length, head = R.table.tHead.rows[0];
-    const nf = field('input', `Heading of column ${WSF.colName(c)}`);
-    nf.placeholder = 'Heading (unit)'; nf.size = 8;
+    const nf = field('input', VDI18N.t('Heading of column {c}', { c: WSF.colName(c) }));
+    nf.placeholder = VDI18N.t('Heading (unit)'); nf.size = 8;
     nf.addEventListener('input', () => axesOptions(T, R));
     const th = el('th', { class: 'ws-xcol' }, [el('span', { class: 'ws-colname tex2jax_ignore', 'aria-hidden': 'true', text: WSF.colName(c) }), withPrint(nf)]);
     for (let k = head.cells.length; k < c; k++) head.appendChild(el('th'));
     head.appendChild(th);
     const col = { name: nf, th };
     R.xcols.push(col);
-    R.rows.forEach((row, i) => { const td = el('td'); for (let k = row.tr.cells.length; k < c; k++) row.tr.appendChild(el('td')); row.tr.appendChild(td); const f = cell(T, R, row, td, c); f.setAttribute('aria-label', `Column ${WSF.colName(c)}, row ${i + 1}`); row.cells[c] = f; });
+    R.rows.forEach((row, i) => { const td = el('td'); for (let k = row.tr.cells.length; k < c; k++) row.tr.appendChild(el('td')); row.tr.appendChild(td); const f = cell(T, R, row, td, c); f.setAttribute('aria-label', VDI18N.t('Column {c}, row {n}', { c: WSF.colName(c), n: i + 1 })); row.cells[c] = f; });
     R.table.querySelectorAll('tbody.ws-pad tr').forEach((tr) => tr.appendChild(el('td')));
     if (name != null) nf.wsSet(name);
     R.removeCol.hidden = false;
@@ -1618,7 +1646,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   function dropCol(T, R, quiet) {
     const col = R.xcols[R.xcols.length - 1]; if (!col) return;
     const c = T.ncol + R.xcols.length - 1;
-    if (!quiet && (col.name.value || R.rows.some((r) => r.cells[c] && r.cells[c].raw)) && !confirm('That column has entries. Remove it anyway?')) return;
+    if (!quiet && (col.name.value || R.rows.some((r) => r.cells[c] && r.cells[c].raw)) && !confirm(VDI18N.t('That column has entries. Remove it anyway?'))) return;
     col.th.remove();
     R.rows.forEach((r) => { const f = r.cells[c]; if (f) f.closest('td').remove(); r.cells.length = c; });
     R.table.querySelectorAll('tbody.ws-pad tr').forEach((tr) => tr.lastChild && tr.lastChild.remove());
@@ -1636,12 +1664,12 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   function dropRow(R) {
     if (!R.extra) return;
     const row = R.rows[R.rows.length - 1];
-    if (row.cells.some((f) => f && f.value) && !confirm('That row has entries. Remove it anyway?')) return;
+    if (row.cells.some((f) => f && f.value) && !confirm(VDI18N.t('That row has entries. Remove it anyway?'))) return;
     R.rows.pop(); row.tr.remove(); R.extra--; R.removeRow.hidden = !R.extra;
   }
   function removeRun(T, R) {
     const filled = R.rows.some((r) => r.cells.some((f) => f && f.value)) || R.notes.value || R.label.value;
-    if (filled && !confirm('Remove this copy of the table and everything typed in it?')) return;
+    if (filled && !confirm(VDI18N.t('Remove this copy of the table and everything typed in it?'))) return;
     R.wrap.remove(); T.runs.splice(T.runs.indexOf(R), 1);
     if (T.runs[0].removed && T.runs.length === 1) showOriginal(T, true);
     syncOriginal(T); changed();
@@ -1658,7 +1686,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   }
   function dropOriginal(T, R) {
     const filled = R.rows.some((r) => r.cells.some((f) => f && f.value)) || R.notes.value;
-    if (filled && !confirm('Remove the first table and everything typed in it? Your copies stay.')) return;
+    if (filled && !confirm(VDI18N.t('Remove the first table and everything typed in it? Your copies stay.'))) return;
     R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); R.source = null;
     while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true;
     showOriginal(T, false); changed();
@@ -1728,8 +1756,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; }
     catch (_) { storageOK = false; }
     const t = new Date(S.saved).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    if (storageOK) setStatus(`Saved in this browser at ${t}.`);
-    else setStatus('Not saved: this browser is blocking storage (a private window?). Use Save to a file before you leave.', true);
+    if (storageOK) setStatus(VDI18N.t('Saved in this browser at {t}.', { t }));
+    else setStatus(VDI18N.t('Not saved: this browser is blocking storage (a private window?). Use Save to a file before you leave.'), true);
   }
   function apply(S) {
     if (!S || typeof S !== 'object') return;
@@ -1780,12 +1808,12 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const uniq = [...new Set(warn || [])];
     if (!leftovers.length && !uniq.length) { leftBox.hidden = true; return; }
     leftBox.hidden = false;
-    leftBox.appendChild(el('h2', { text: 'This worksheet changed since you saved' }));
-    if (uniq.length) leftBox.appendChild(el('p', { text: `The columns of the ${uniq.join(' and ')} table changed. Your entries were put back by position: check that each is in the right column.` }));
+    leftBox.appendChild(el('h2', { text: VDI18N.t('This worksheet changed since you saved') }));
+    if (uniq.length) leftBox.appendChild(el('p', { text: VDI18N.t('The columns of the {tables} table changed. Your entries were put back by position: check that each is in the right column.', { tables: uniq.map((h) => VDI18N.t(h)).join(VDI18N.t(' and ')) }) }));
     if (leftovers.length) {
-      leftBox.appendChild(el('p', { text: 'These answers no longer match a question on the page. They are kept here (and in your save file and PDF) so nothing is lost; copy them where they belong.' }));
-      leftovers.forEach((a) => leftBox.appendChild(el('p', {}, [el('strong', { text: a.q + ': ' }), a.text])));
-      leftBox.appendChild(el('div', { class: 'ws-btns' }, [el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Dismiss these', on: { click: () => { if (confirm('Delete these unplaced answers?')) { leftovers = []; showLeftovers(); save(); } } } })]));
+      leftBox.appendChild(el('p', { text: VDI18N.t('These answers no longer match a question on the page. They are kept here (and in your save file and PDF) so nothing is lost; copy them where they belong.') }));
+      leftovers.forEach((a) => leftBox.appendChild(el('p', { translate: OTHER_LANG ? 'no' : null }, [el('strong', { text: a.q + ': ' }), a.text])));   /* the student's own words, and the question as saved */
+      leftBox.appendChild(el('div', { class: 'ws-btns' }, [el('button', { type: 'button', class: 'ws-btn ws-quiet', text: VDI18N.t('Dismiss these'), on: { click: () => { if (confirm(VDI18N.t('Delete these unplaced answers?'))) { leftovers = []; showLeftovers(); save(); } } } })]));
     }
   }
 
@@ -1803,7 +1831,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       const name = `${T.heading}${tables.length > 1 ? ' table ' + (ti + 1) : ''}, copy ${ri + 1}${R.label && R.label.value ? ': ' + R.label.value : ''}`;
       L.push('# ' + name.replace(/[\r\n]+/g, ' '));
       if (R.notes.value) L.push(['# notes', R.notes.value].map(csvCell).join(','));
-      L.push(Array.from({ length: T.ncol + R.xcols.length }, (_, c) => csvCell(colTitle(T, R, c))).join(','));
+      L.push(Array.from({ length: T.ncol + R.xcols.length }, (_, c) => csvCell(colShown(T, R, c))).join(','));
       R.rows.forEach((r, i) => {
         const vals = r.cells.map((f, c) => (f ? shownOf(f) : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '')));
         if (r.cells.some((f) => f && shownOf(f))) L.push(vals.map(csvCell).join(','));
@@ -1811,29 +1839,29 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     }));
     download(fileBase() + '-data.csv', L.join('\r\n') + '\r\n', 'text/csv');
   }
-  function exportJSON() { save(); download(fileBase() + '-' + stamp() + '.json', JSON.stringify(collect(), null, 1), 'application/json'); setStatus('Save file downloaded. Open it with Open a saved file on any computer.'); }
+  function exportJSON() { save(); download(fileBase() + '-' + stamp() + '.json', JSON.stringify(collect(), null, 1), 'application/json'); setStatus(VDI18N.t('Save file downloaded. Open it with Open a saved file on any computer.')); }
   function openFile(input) {
     const file = input.files && input.files[0]; input.value = '';
     if (!file) return;
     file.text().then((txt) => {
-      let S; try { S = JSON.parse(txt); } catch (_) { alert('That file is not a worksheet save file.'); return; }
-      if (!S || !S.worksheet) { alert('That file is not a worksheet save file.'); return; }
-      if (S.worksheet !== SLUG && !confirm(`That file is for a different worksheet ("${S.title || S.worksheet}"). Open it here anyway?`)) return;
-      if (!confirm('Replace what is on this page with the saved file?')) return;
-      reset(); apply(S); save(); replot(); setStatus(`Opened ${file.name}.`);
-    }, () => alert('The file could not be read.'));
+      let S; try { S = JSON.parse(txt); } catch (_) { alert(VDI18N.t('That file is not a worksheet save file.')); return; }
+      if (!S || !S.worksheet) { alert(VDI18N.t('That file is not a worksheet save file.')); return; }
+      if (S.worksheet !== SLUG && !confirm(VDI18N.t('That file is for a different worksheet ("{title}"). Open it here anyway?', { title: S.title || S.worksheet }))) return;
+      if (!confirm(VDI18N.t('Replace what is on this page with the saved file?'))) return;
+      reset(); apply(S); save(); replot(); setStatus(VDI18N.t('Opened {file}.', { file: file.name }));
+    }, () => alert(VDI18N.t('The file could not be read.')));
   }
   function reset() {
     tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; while (R.xcols.length) dropCol(T, R, true); showOriginal(T, true); });
     leftovers = [];
   }
   function clearAll() {
-    if (!confirm('Clear your name, data and answers from this worksheet? Save to a file first if you might need them.')) return;
+    if (!confirm(VDI18N.t('Clear your name, data and answers from this worksheet? Save to a file first if you might need them.'))) return;
     reset(); apply({ student: {}, tables: tables.map(() => ({ runs: [] })), answers: {} });
     tables.forEach((T) => T.runs.forEach((R) => { R.source = null; setAxes(R, null); }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
-    setStatus('Cleared.'); checkHand(); replot();
+    setStatus(VDI18N.t('Cleared.')); checkHand(); replot();
   }
 
   /* ---------- graphs ---------- */
@@ -1864,7 +1892,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       if (!s) return;
       s.innerHTML = '';
       s.appendChild(el('option', { value: '', text: k === 'err' ? 'none' : 'choose a column' }));
-      for (let c = 0; c < T.ncol + R.xcols.length; c++) s.appendChild(el('option', { value: String(c), text: c < T.ncol ? pretty(T.cols[c]) || 'Column ' + (c + 1) : pretty(colTitle(T, R, c)) }));
+      for (let c = 0; c < T.ncol + R.xcols.length; c++) s.appendChild(el('option', { value: String(c), text: c < T.ncol ? pretty(T.shown[c]) || VDI18N.t('Column {n}', { n: c + 1 }) : pretty(colShown(T, R, c)) }));
       s.value = keep != null && +keep < T.ncol + R.xcols.length ? keep : '';
       R.axes[k] = s.value;
     });
@@ -1911,7 +1939,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const p = ok ? Math.floor(Math.log10(e)) - 1 : 0, vr = ok ? Math.round(v / Math.pow(10, p)) * Math.pow(10, p) : +v.toPrecision(exact ? 6 : 4);
     const big = Math.max(Math.abs(vr), ok ? e : 0);
     const k = big > 0 && (big < 1e-3 || big >= 1e5) ? +big.toExponential(3).split('e')[1] : 0, sc = Math.pow(10, k), tail = k ? ` × 10${sup(k)}` : '';
-    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? `± 0 (the points lie exactly on the ${np > 2 ? 'curve' : 'line'})` : `(uncertainty needs at least ${need} points)`}`;
+    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? (np > 2 ? VDI18N.t('± 0 (the points lie exactly on the curve)') : VDI18N.t('± 0 (the points lie exactly on the line)')) : VDI18N.t('(uncertainty needs at least {n} points)', { n: need })}`;
     const d = Math.max(0, k - p), r = (x) => (x / sc).toFixed(d);
     return `(${r(vr)} ± ${r(Math.round(e / Math.pow(10, p)) * Math.pow(10, p))})${tail}${u}`;
   }
@@ -1939,17 +1967,17 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const box = R.graph; box.innerHTML = '';
     if (box.parentNode) box.parentNode.classList.toggle('ws-noprint', R.axes.x === '' || R.axes.y === '');   /* no axes chosen: nothing to print */
     if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
-    const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colTitle(T, R, cx)), [yName, yUnit] = nameUnit(colTitle(T, R, cy));
-    const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
+    const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colShown(T, R, cx)), [yName, yUnit] = nameUnit(colShown(T, R, cy));
+    const P = { xName, xUnit, yName, yUnit, title: VDI18N.t('{y} against {x}', { y: yName, x: xName }) };
     const pts = [], ce = errOf(R) === '' ? -1 : +errOf(R);
     R.rows.forEach((r, i) => {
       const val = (c) => (r.cells[c] ? numOf(r.cells[c]) : numOf({ value: T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '' }));
       const x = val(cx), y = val(cy);
       if (isFinite(x) && isFinite(y)) pts.push([x, y, ce >= 0 ? Math.abs(val(ce)) : NaN]);
     });
-    if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `No row has a number in both columns yet. Each row with a number for ${xName} and for ${yName} is a point.` })); return; }
+    if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('No row has a number in both columns yet. Each row with a number for {x} and for {y} is a point.', { x: xName, y: yName }) })); return; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-    const errName = ce >= 0 ? nameUnit(colTitle(T, R, ce))[0] : '', sigOK = ce >= 0 && pts.every((p) => p[2] > 0 && isFinite(p[2])), sig = sigOK ? pts.map((p) => p[2]) : null;
+    const errName = ce >= 0 ? nameUnit(colShown(T, R, ce))[0] : '', sigOK = ce >= 0 && pts.every((p) => p[2] > 0 && isFinite(p[2])), sig = sigOK ? pts.map((p) => p[2]) : null;
     const sameX = xs.every((x) => x === xs[0]);
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0;
     const kind = curve ? '' : R.axes.fit || '', quad = kind === 'quad', few = quad && !sameX && new Set(xs).size < 3;
@@ -1957,7 +1985,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     let g = null;
     if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(',') + '|' + (sig ? sig.join(',') : ''); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys, sig); } g = R.fitOut; }
     const f = sameX || curve ? null : quad ? (sig ? WSF.wquad(xs, ys, sig) : fitQuad(xs, ys)) : kind ? (g && !g.bad ? g : null) : sig ? WSF.wline(xs, ys, sig) : fitLine(xs, ys);
-    const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
+    const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': VDI18N.t('{title}, {n} points', { title: P.title, n: pts.length }) });
     const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = sig ? pad(Math.min(...ys.map((y, i) => y - sig[i])), Math.max(...ys.map((y, i) => y + sig[i])), true) : pad(Math.min(...ys), Math.max(...ys), true);
     /* an error bar: a line from y − σ to y + σ with short caps */
     const bar = (Ax, x, y, s) => { const x0 = Ax.X(x), y0 = Ax.Y(y - s), y1 = Ax.Y(y + s); svg.appendChild(sv('path', { d: `M${x0},${y0}V${y1}M${x0 - 3},${y0}h6M${x0 - 3},${y1}h6`, stroke: '#cf222e', 'stroke-width': 1.2, fill: 'none' })); };
@@ -1976,21 +2004,21 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     if (sig) pts.forEach(([x, y], i) => bar(A, x, y, sig[i]));
     pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: dot, fill: '#cf222e', stroke: '#fff', 'stroke-width': dot > 3 ? 1 : 0.5 })));
     if (f) {
-      const m = Math.max(...f.res.map((r, i) => Math.abs(r) + (sig ? sig[i] : 0))) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab('residual', P.yUnit), 4);
+      const m = Math.max(...f.res.map((r, i) => Math.abs(r) + (sig ? sig[i] : 0))) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab(VDI18N.t('residual'), P.yUnit), 4);
       svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
       if (sig) xs.forEach((x, i) => bar(B, x, f.res[i], sig[i]));
       xs.forEach((x, i) => svg.appendChild(sv('circle', { cx: B.X(x), cy: B.Y(f.res[i]), r: 3.5, fill: '#cf222e' })));
     }
     box.appendChild(svg);
-    if (ce >= 0 && !sigOK) box.appendChild(el('p', { class: 'ws-warn2', text: `Error bars need a positive number in ${errName} on every plotted row; until then the points are drawn and fitted without them.` }));
-    if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
-    if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: `${pts.length} points, joined in order of ${P.xName}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.` })); return; }
-    if (few) { box.appendChild(el('p', { class: 'ws-warn2', text: `A quadratic needs points at three or more different values of ${P.xName}.` })); return; }
+    if (ce >= 0 && !sigOK) box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Error bars need a positive number in {col} on every plotted row; until then the points are drawn and fitted without them.', { col: errName }) }));
+    if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('Every point has the same {x} ({value}), so there is no slope to fit. Use rows where {x} changes, or choose another column.', { x: P.xName, value: xs[0] + (P.xUnit ? ' ' + P.xUnit : '') }) })); return; }
+    if (curve) { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('{n} points, joined in order of {x}. No line is fitted: this is a curve, not a straight line. Read its features from the graph.', { n: pts.length, x: P.xName }) })); return; }
+    if (few) { box.appendChild(el('p', { class: 'ws-warn2', text: VDI18N.t('A quadratic needs points at three or more different values of {x}.', { x: P.xName }) })); return; }
     if (kind && !quad && !f) {
       const label = FIT_KINDS.find((k) => k[0] === kind)[1].split(',')[0];
-      box.appendChild(el('p', { class: 'ws-warn2', text: g && g.bad === 'positive' ? `A ${label} fit needs every ${P.xName} to be greater than zero.`
-        : g && g.bad === 'few' ? `A ${label} fit needs points at ${g.need} or more different values of ${P.xName}.`
-        : `The ${label} fit could not settle on these points. Check the columns, or try another kind of fit.` }));
+      box.appendChild(el('p', { class: 'ws-warn2', text: g && g.bad === 'positive' ? VDI18N.t('A {fit} fit needs every {x} to be greater than zero.', { fit: label, x: P.xName })
+        : g && g.bad === 'few' ? VDI18N.t('A {fit} fit needs points at {n} or more different values of {x}.', { fit: label, n: g.need, x: P.xName })
+        : VDI18N.t('The {fit} fit could not settle on these points. Check the columns, or try another kind of fit.', { fit: label }) }));
       return;
     }
     if (!f) return;
@@ -2001,47 +2029,49 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const cu = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${sq(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${sq(P.xUnit)}` : '');
     const lines = f.quad ? [['a', f.a, f.seA, P.yUnit], ['b', f.b, f.seB, su], ['c', f.c, f.seC, cu]] : [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
-    if (f.quad) { res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${P.yName} = a + b·${P.xName} + c·${P.xName}²`)); }
-    lines.forEach(([name, v, e, u], i) => { if (i || f.quad) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact, f.quad))); });
+    if (f.quad) { res.appendChild(el('b', { text: VDI18N.t('fit: ') })); res.appendChild(document.createTextNode(`${P.yName} = a + b·${P.xName} + c·${P.xName}²`)); }
+    lines.forEach(([name, v, e, u], i) => { if (i || f.quad) res.appendChild(el('br')); res.appendChild(el('b', { text: (name === 'slope' ? VDI18N.t('slope') : name === 'intercept' ? VDI18N.t('intercept') : name) + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact, f.quad))); });
     box.appendChild(res);
     if (f.weighted) { chiText(box, f, errName); return; }
     box.appendChild(el('p', { class: 'ws-pnote', text: f.quad
-      ? `${f.n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − 3 degrees of freedom). What the coefficients tell you is for you to work out.`
-      : `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
+      ? VDI18N.t('{n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − 3 degrees of freedom). What the coefficients tell you is for you to work out.', { n: f.n })
+      : VDI18N.t('{n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.', { n: f.n }) }));
   }
 
   /* χ² of a fit weighted by the error bars, and how the fit was made */
   function chiText(box, f, errName, extra) {
     const k = f.n - f.nu, g = (v) => (v >= 1e4 || (v > 0 && v < 1e-3) ? v.toExponential(2) : +v.toPrecision(3));
     const res = el('p', { class: 'ws-res' });
-    res.appendChild(el('b', { text: 'χ²: ' })); res.appendChild(document.createTextNode(`${g(f.chi2)} for ν = ${f.nu} degree${f.nu === 1 ? "" : "s"} of freedom`));
+    res.appendChild(el('b', { text: 'χ²: ' })); res.appendChild(document.createTextNode(f.nu === 1 ? VDI18N.t('{chi2} for ν = 1 degree of freedom', { chi2: g(f.chi2) }) : VDI18N.t('{chi2} for ν = {nu} degrees of freedom', { chi2: g(f.chi2), nu: f.nu })));
     if (f.nu > 0) { res.appendChild(el('br')); res.appendChild(el('b', { text: 'χ²/ν: ' })); res.appendChild(document.createTextNode(String(g(f.chi2 / f.nu))));
-      res.appendChild(el('br')); res.appendChild(el('b', { text: 'P(χ² this large or larger): ' })); res.appendChild(document.createTextNode(String(g(f.P)))); }
+      res.appendChild(el('br')); res.appendChild(el('b', { text: VDI18N.t('P(χ² this large or larger): ') })); res.appendChild(document.createTextNode(String(g(f.P)))); }
     box.appendChild(res);
-    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points with error bars from ${errName}. Weighted least squares: each point counts with weight 1/σ², all ${k} parameters free${f.kind ? ', found by a search over starting values and then iteration (Levenberg–Marquardt)' : ''}. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − ${k}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. ${extra || ''} What the numbers tell you is for you to work out.`.replace(/  +/g, ' ') }));
+    box.appendChild(el('p', { class: 'ws-pnote', text: (f.kind
+      ? VDI18N.t('{n} points with error bars from {col}. Weighted least squares: each point counts with weight 1/σ², all {k} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {k}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. {note} What the numbers tell you is for you to work out.', { n: f.n, col: errName, k, note: extra || '' })
+      : VDI18N.t('{n} points with error bars from {col}. Weighted least squares: each point counts with weight 1/σ², all {k} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {k}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. {note} What the numbers tell you is for you to work out.', { n: f.n, col: errName, k, note: extra || '' })).replace(/  +/g, ' ') }));
   }
   /* the parameters of a WSF.fit curve, each with its unit, and how the fit was made */
   const FIT_UNITS = { exp: 'yxy', rise: 'yxy', log: 'yy', power: 'p-', sine: 'yiry', damped: 'yxiry', resonance: 'yx-', gauss: 'yxxy', slit: 'yxxy' };
   const FIT_NOTES = {
-    exp: 'A negative τ means the curve grows instead of decaying.',
-    rise: 'C is the value at x = 0 and C + A the value it levels off at; a negative τ means it runs away instead.',
-    log: 'Every x must be greater than zero.',
-    power: 'There is no offset: the curve goes through the origin when n > 0. Every x must be greater than zero.',
-    sine: 'f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians.',
-    damped: 'f is searched up to one cycle for every two point spacings; φ is in radians; a negative τ means the swing grows.',
-    resonance: 'The amplitude of a driven oscillator against driving frequency (x): A is the response far below x₀, Q the quality factor. There is no offset.',
+    exp: VDI18N.t('A negative τ means the curve grows instead of decaying.'),
+    rise: VDI18N.t('C is the value at x = 0 and C + A the value it levels off at; a negative τ means it runs away instead.'),
+    log: VDI18N.t('Every x must be greater than zero.'),
+    power: VDI18N.t('There is no offset: the curve goes through the origin when n > 0. Every x must be greater than zero.'),
+    sine: VDI18N.t('f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians.'),
+    damped: VDI18N.t('f is searched up to one cycle for every two point spacings; φ is in radians; a negative τ means the swing grows.'),
+    resonance: VDI18N.t('The amplitude of a driven oscillator against driving frequency (x): A is the response far below x₀, Q the quality factor. There is no offset.'),
     gauss: '',
-    slit: 'w is the distance from the center of the central peak to its first zero.' };
+    slit: VDI18N.t('w is the distance from the center of the central peak to its first zero.') };
   function fitText(box, f, P) {
     const none = P.yUnit === null || P.xUnit === null, wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u);
     const U = { y: none ? '' : P.yUnit, x: none ? '' : P.xUnit, i: none || !P.xUnit ? '' : `1/${wrap(P.xUnit)}`, r: 'rad', '-': '',
       p: none ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}ⁿ` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}ⁿ` : '') };
     const res = el('p', { class: 'ws-res' });
-    res.appendChild(el('b', { text: 'fit: ' })); res.appendChild(document.createTextNode(`${f.form}, with y = ${P.yName} and x = ${P.xName}`));
+    res.appendChild(el('b', { text: VDI18N.t('fit: ') })); res.appendChild(document.createTextNode(VDI18N.t('{form}, with y = {y} and x = {x}', { form: f.form, y: P.yName, x: P.xName })));
     f.names.forEach((nm, i) => { res.appendChild(el('br')); res.appendChild(el('b', { text: nm + ': ' })); res.appendChild(document.createTextNode(pm(f.p[i], f.se[i], U[FIT_UNITS[f.kind][i]], f.n, f.exact, f.npar))); });
     box.appendChild(res);
     if (f.weighted) { chiText(box, f, P.errName, FIT_NOTES[f.kind]); return; }
-    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares fit with all ${f.npar} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − ${f.npar} degrees of freedom) and the curvature of the fit at its best values. ${FIT_NOTES[f.kind]} What the parameters tell you is for you to work out.`.replace(/  +/g, ' ') }));
+    box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('{n} points. Least squares fit with all {k} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {k} degrees of freedom) and the curvature of the fit at its best values. {note} What the parameters tell you is for you to work out.', { n: f.n, k: f.npar, note: FIT_NOTES[f.kind] }).replace(/  +/g, ' ') }));
   }
 
   /* ---------- readings from the demo ---------- */
@@ -2057,12 +2087,13 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const t = new Date(h.sent).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }), n = h.rows.length;
     const src = h.demo + ':' + (h.series || ''), target = route(h).T.runs.find((R) => R.source === src);
     handBox.innerHTML = '';
-    handBox.appendChild(el('p', {}, [el('strong', { text: `New readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo: ` }), `${n} row${n === 1 ? '' : 's'}, sent ${t}.`]));
+    handBox.appendChild(el('p', {}, [el('strong', { text: /^The /.test(MAP.demo) ? VDI18N.t('New readings from {demo} demo: ', { demo: VDI18N.t(MAP.demo) }) : VDI18N.t('New readings from the {demo} demo: ', { demo: VDI18N.t(MAP.demo) }) }),
+      n === 1 ? VDI18N.t('1 row, sent {when}.', { when: t }) : VDI18N.t('{n} rows, sent {when}.', { n, when: t })]));
     handBox.appendChild(el('div', { class: 'ws-btns' }, [
-      el('button', { type: 'button', class: 'ws-btn ws-main', text: target ? 'Update my table with these readings' : 'Put these readings in my table', on: { click: () => takeHand(h) } }),
-      el('button', { type: 'button', class: 'ws-btn', text: 'Download them as CSV', on: { click: () => download(h.csvName || SLUG + '-readings.csv', h.csv || '', 'text/csv') } }),
-      el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Not now', on: { click: () => { handHidden = h.sent; handBox.hidden = true; } } })]));
-    if (target) handBox.appendChild(el('p', { class: 'ws-note', text: `Updating replaces the demo's columns in ${target.label ? 'copy ' + (route(h).T.runs.indexOf(target) + 1) : 'the table'} with these readings; your other columns and notes stay.` }));
+      el('button', { type: 'button', class: 'ws-btn ws-main', text: target ? VDI18N.t('Update my table with these readings') : VDI18N.t('Put these readings in my table'), on: { click: () => takeHand(h) } }),
+      el('button', { type: 'button', class: 'ws-btn', text: VDI18N.t('Download them as CSV'), on: { click: () => download(h.csvName || SLUG + '-readings.csv', h.csv || '', 'text/csv') } }),
+      el('button', { type: 'button', class: 'ws-btn ws-quiet', text: VDI18N.t('Not now'), on: { click: () => { handHidden = h.sent; handBox.hidden = true; } } })]));
+    if (target) handBox.appendChild(el('p', { class: 'ws-note', text: target.label ? VDI18N.t("Updating replaces the demo's columns in copy {n} with these readings; your other columns and notes stay.", { n: route(h).T.runs.indexOf(target) + 1 }) : VDI18N.t("Updating replaces the demo's columns in the table with these readings; your other columns and notes stay.") }));
     handBox.hidden = false;
   }
   /* The demo sends every reading of its current series (it starts a new series at Clear), so a later export of the same series
@@ -2082,7 +2113,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     let R = dT.runs.find((x) => x.source === src);
     if (!R) {
       R = dT.runs[0].removed || filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
-      if (R.label && !R.label.value) R.label.wsSet(`Readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo`);
+      if (R.label && !R.label.value) R.label.wsSet(/^The /.test(MAP.demo) ? VDI18N.t('Readings from {demo} demo', { demo: VDI18N.t(MAP.demo) }) : VDI18N.t('Readings from the {demo} demo', { demo: VDI18N.t(MAP.demo) }));
       R.source = src;
       if (R.wrap) typeset(R.wrap);
     }
@@ -2094,7 +2125,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
     received = h.sent; handBox.hidden = true; save(); replot();
-    setStatus(`${h.rows.length} readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo are in your table.`);
+    setStatus(/^The /.test(MAP.demo) ? VDI18N.t('{n} readings from {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }) : VDI18N.t('{n} readings from the {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }));
     (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
   }
   window.addEventListener('storage', (e) => { if (e.key === HKEY) checkHand(); });
@@ -2102,8 +2133,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   /* ---------- start ---------- */
   let stored = null;
   try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { storageOK = false; }
-  if (stored) { apply(stored); setStatus(`Your work from ${new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} is back.`); }
-  else if (!storageOK) setStatus('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.', true);
+  if (stored) { apply(stored); setStatus(VDI18N.t('Your work from {when} is back.', { when: new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) })); }
+  else if (!storageOK) setStatus(VDI18N.t('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.'), true);
   else setStatus('Nothing typed yet. Your work saves in this browser as you type.');
   checkHand(); replot();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });

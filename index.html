@@ -391,7 +391,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   const [name, title] = HERO_DEMOS[Math.floor(Math.random() * HERO_DEMOS.length)];
   const dark = () => { const t = document.documentElement.getAttribute('data-theme'); return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
   const img = a.querySelector('img'), set = () => { img.src = `thumbs/${name}-${dark() ? 'dark' : 'light'}.webp`; };
-  a.href = `demos/${name}.html`; a.querySelector('span').textContent = title + ' →'; img.alt = title; set();
+  a.href = `demos/${name}.html`; a.querySelector('span').textContent = (window.VDI18N ? VDI18N.t(title) : title) + ' →';   /* the title in the page's language (demos/lib/i18n.md); the arrow stays */ img.alt = title; set();
   img.addEventListener('load', () => { a.hidden = false; if (svg) svg.style.display = 'none'; }, { once: true });
   addEventListener('vd-theme', set);
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', set); } catch (_) {}
