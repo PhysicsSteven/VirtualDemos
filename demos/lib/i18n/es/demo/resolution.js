@@ -22,6 +22,10 @@ VDI18N.add('es', 'demo/resolution', {
   "La luz que pasa por un agujero redondo se abre en un patrón de Airy: un disco brillante rodeado de círculos oscuros y brillantes. Mide el primer anillo oscuro y luego averigua qué tan cerca pueden estar dos puntos antes de que una pupila, un telescopio o la lente de una cámara los difumine en uno solo.",
 "positions in mm · λ in nm":
   "posiciones en mm · λ en nm",
+"The pattern as a landscape: height is brightness":
+  "El patrón como un paisaje: la altura es el brillo",
+"The apparatus and the pattern as a photograph":
+  "El aparato y el patrón como una fotografía",
 "<span>Zoom</span>":
   "<span>Acercamiento</span>",
 "Zoom":
@@ -112,8 +116,6 @@ VDI18N.add('es', 'demo/resolution', {
   "Primer anillo oscuro θ₁ = {#} λ/D",
 "First dark ring on the screen, L tan θ₁":
   "Primer anillo oscuro en la pantalla, L tan θ₁",
-"cursor":
-  "cursor",
 "<span>Blind: hide the dark ring marks, the Rayleigh limit and the predictions</span>":
   "<span>A ciegas: ocultar las marcas de los anillos oscuros, el límite de Rayleigh y las predicciones</span>",
 "The pattern: the exact far field (Fraunhofer) diffraction of a plane wave by a uniformly lit circular hole of diameter D, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ (OpenStax University Physics Volume {#}, section {#}). J₁ is the Bessel function of order one, computed from its integral to about {#} digits. Its first zero, x = {#}, puts the first dark ring at sin θ₁ = {#} λ/D, which the textbook rounds to θ₁ = {#} λ/D; the next dark rings are at x = {#} and {#}. About {#}% of the light falls inside the first dark ring, and the first bright ring is only {#}% as bright as the center, which is why it is hard to see without a longer exposure.":
@@ -126,6 +128,12 @@ VDI18N.add('es', 'demo/resolution', {
   "Números: el Ejemplo {#} del libro de texto, Hubble (espejo de {#} m, {#} nm, estrellas a {#} millones de años luz) y su Problema {#} del Capítulo {#} sobre el ojo (pupila de {#} mm, {#} nm, faros separados {#} m); {#} a. l. = {#} × {#}¹⁵ m. Los ojos reales lo hacen peor de lo que permite la difracción: la agudeza normal ({#}/{#}) es de cerca de un minuto de arco, {#} µrad, por las aberraciones y la separación de los receptores en la retina. El cursor lee hasta {#}/{#} de la vista, e I/I₀ es la intensidad ahí relativa al pico central de una sola fuente.",
 "Near the hole and A disk (Fresnel diffraction): a plane wave of unit intensity on a round hole or an opaque disk, the field on the screen from the Fresnel (paraxial) form of the Kirchhoff integral with the obliquity factor taken as {#} (Hecht, Optics, section {#}; Goodman, Introduction to Fourier Optics, section {#}): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F and N_F = a²/λL, a = D/{#}, computed by Simpson's rule; the disk is the open beam minus the hole (Babinet). On the axis the neglected phase is under {#} rad for every setting here, and the readouts compare the result with the exact Rayleigh–Sommerfeld value, {#} + z²/R² − {#}(z/R) cos k(R − z) for the hole and z²/R² for the disk, R = √(L² + a²). The edge of the hole or disk is taken as perfectly sharp and the beam as perfectly even; a real beam is Gaussian and must be several times wider than D. The picture is scaled to its brightest point; the graph is in units of the open beam. The zone picture is to scale: zone n ends at radius √(nλL + (nλ/{#})²).":
   "Cerca del agujero y Un disco (difracción de Fresnel): una onda plana de intensidad unitaria sobre un agujero redondo o un disco opaco, el campo en la pantalla a partir de la forma de Fresnel (paraxial) de la integral de Kirchhoff con el factor de oblicuidad tomado como {#} (Hecht, Optics, sección {#}; Goodman, Introduction to Fourier Optics, sección {#}): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du con φ = πN_F y N_F = a²/λL, a = D/{#}, calculada con la regla de Simpson; el disco es el haz abierto menos el agujero (Babinet). Sobre el eje la fase despreciada es menor que {#} rad para todos los ajustes de aquí, y las lecturas comparan el resultado con el valor exacto de Rayleigh–Sommerfeld, {#} + z²/R² − {#}(z/R) cos k(R − z) para el agujero y z²/R² para el disco, R = √(L² + a²). El borde del agujero o del disco se toma como perfectamente nítido y el haz como perfectamente uniforme; un haz real es gaussiano y debe ser varias veces más ancho que D. La imagen está escalada a su punto más brillante; la gráfica está en unidades del haz abierto. La imagen de las zonas está a escala: la zona n termina en el radio √(nλL + (nλ/{#})²).",
+"3D view: the same intensities drawn as a landscape over the detector, height I/I₀ (the scale post), glow the picture's brightness; each source makes one peak, and two sources closer than about {#} λ/D merge into one (the dip midway first appears at {#} λ/D, Sparrow's limit). At the Rayleigh limit the brightness midway between two equal sources is {#} % of the peaks, a dip {#} % deep (computed from [2J₁(x)/x]²; the textbook rounds {#} to {#}). The orange line is the cursor, the bright line along the sources is the graph below, the dashed circles are the first dark rings. The aperture beside the detector is drawn larger or smaller with D on a log scale and is not to scale with the pattern. Drag to turn, scroll or pinch to zoom, double click to go back.":
+  "Vista 3D: las mismas intensidades dibujadas como un paisaje sobre el detector, con altura I/I₀ (el poste de escala) y el brillo de la imagen como resplandor; cada fuente forma un pico, y dos fuentes más cercanas que unos {#} λ/D se funden en uno (la caída a la mitad aparece primero a {#} λ/D, el límite de Sparrow). En el límite de Rayleigh el brillo a la mitad entre dos fuentes iguales es el {#} % de los picos, una caída de {#} % de profundidad (calculado con [2J₁(x)/x]²; el libro redondea {#} a {#}). La línea naranja es el cursor, la línea brillante a lo largo de las fuentes es la gráfica de abajo, y los círculos punteados son los primeros anillos oscuros. La abertura junto al detector se dibuja más grande o más pequeña con D en escala logarítmica y no está a escala con el patrón. Arrastra para girar, desplaza o pellizca para acercar, doble clic para volver.",
+"laser {#} nm":
+  "láser de {#} nm",
+"cursor":
+  "cursor",
 "two point sources":
   "dos fuentes puntuales",
 "Δθ = {#} µrad (drawn much larger)":
@@ -156,6 +164,10 @@ VDI18N.add('es', 'demo/resolution', {
   "Criterio de Rayleigh, Δθ/θ₁",
 "{#}: <span>resolved</span>":
   "{#}: <span>resueltas</span>",
+"Dip midway between the sources, below the peaks":
+  "Caída a la mitad entre las fuentes, por debajo de los picos",
+"{#} % ({#} % at the Rayleigh limit)":
+  "{#} % ({#} % en el límite de Rayleigh)",
 "view {#} µrad across":
   "vista de {#} µrad de ancho",
 "headlights {#} m apart, {#} km away":
@@ -317,5 +329,15 @@ VDI18N.add('es', 'demo/resolution', {
 "I/I₀ (I₀: the beam with nothing in it)":
   "I/I₀ (I₀: el haz sin nada en él)",
 "I/I₀ (I₀: one source's peak)":
-  "I/I₀ (I₀: el pico de una sola fuente)"
+  "I/I₀ (I₀: el pico de una sola fuente)",
+"dip {#} % below the peaks":
+  "caída de {#} % bajo los picos",
+"{#}: <span>not resolved</span>":
+  "{#}: <span>no resueltas</span>",
+"no dip: one peak":
+  "sin caída: un solo pico",
+"{#}: <span>just resolved</span>":
+  "{#}: <span>apenas resueltas</span>",
+"{#}× exposure: the peaks are cut off":
+  "exposición {#}×: los picos quedan recortados"
 });

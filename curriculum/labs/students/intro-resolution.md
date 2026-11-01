@@ -6,11 +6,12 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole. This worksheet uses Hubble and two stars.
+**Setups in the demo:** Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot. This worksheet uses Hubble and two stars.
 
 **Using the demo.**
 
 - Two equally bright stars, 2.0 million light years away (as far as the Andromeda galaxy), are seen by a telescope with a perfect mirror. The picture shows the light the mirror focuses, and the graph shows the brightness along the line through both stars.
+- The 3D view draws that light as a landscape: each star's blur is a glowing peak whose height is its brightness, with the mirror beside it. Move the stars together and watch the two peaks merge into one; the label over the middle says how deep the dip between them is. Flat shows the telescope and the light as a photograph. Drag to turn the 3D view (two fingers on a phone).
 - The mirror's diameter, the wavelength (color) of the light and the distance between the stars can all be changed.
 - The cursor is the orange line on the graph. It opens at the midpoint between the stars, and its readout gives the brightness there as a fraction of one star's peak (I/I₀).
 - Angles are in microradians (µrad): 1 µrad is one millionth of a radian, about 0.2 seconds of arc. The width of a hair seen from 15 m away is about 5 µrad.
@@ -27,7 +28,7 @@ Find out how the size of a telescope's mirror and the wavelength of the light se
 
 **Light spreads.** Light passing through any opening spreads out a little: this is **diffraction**. So even a perfect telescope does not focus a star to a point. It makes a small blurred disk with faint rings around it. The bigger the mirror compared with the wavelength of the light, the smaller the disk.
 
-**Two stars.** When two stars are close together in the sky, their disks overlap. If the disks overlap too much, the two stars blur into one. Astronomers use a rule called **Rayleigh's criterion**: two stars are just seen as two when the brightness halfway between them dips to about 73.5% of the peaks. The smallest angle between two stars that a telescope can separate is then
+**Two stars.** When two stars are close together in the sky, their disks overlap. If the disks overlap too much, the two stars blur into one. Astronomers use a rule called **Rayleigh's criterion**: two stars are just seen as two when the brightness halfway between them dips to about 73.5% of the peaks, a dip about 26.5% deep. The smallest angle between two stars that a telescope can separate is then
 
 $$\theta = 1.22\,\frac{\lambda}{D},$$
 

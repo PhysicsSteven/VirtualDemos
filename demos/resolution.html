@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Circular Apertures and Resolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,6 +65,7 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false" title="The pattern as a landscape: height is brightness">3D</button><button type="button" data-dim="flat" aria-pressed="true" title="The apparatus and the pattern as a photograph">Flat</button></div>
         <span class="lab">Zoom</span>
         <div class="seg" role="group" aria-label="Zoom" id="zoomSeg">
           <button type="button" data-z="1" aria-pressed="true">1×</button>
@@ -73,6 +76,7 @@
         <label class="check"><input type="checkbox" id="gainToggle"><span>Bring out the faint rings (30× exposure)</span></label>
         <label class="check" id="compWrap"><input type="checkbox" id="compToggle"><span>Show each source alone</span></label>
         <span class="count mono" id="fieldNote"></span>
+        <span class="lab" id="status3" role="status"></span>
       </div>
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" role="img" aria-label="The apparatus and the pattern it makes."></canvas>
@@ -144,6 +148,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="about3"></p>
           <p class="hint" id="about4"></p>
           <p class="hint" id="about5"></p>
+          <p class="hint" id="about6"></p>
         </details>
         </div></details>
       </section>
@@ -289,7 +294,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     pinhole: { lam: 632.8, D: 200e-6, L: 2.00, n: 1, sepv: 0, zoom: 2 },
     two: { lam: 550, D: 5e-3, n: 2, sepv: 160, zoom: 2 },
     eye: { lam: 550, D: PUPIL_D, n: 2, sepv: 4.00, zoom: 1 },
-    telescope: { lam: 550, D: HUBBLE_D, n: 2, sepv: 0.80, zoom: 4 },
+    telescope: { lam: 550, D: HUBBLE_D, n: 2, sepv: 0.80, zoom: 8 },
     camera: { lam: 550, D: CAMERA_F / 16, N: 16, n: 2, sepv: 15, zoom: 1 },
     mystery: { lam: 632.8, D: 0, L: 2.00, n: 1, sepv: 0, zoom: 2 },
     near: { lam: 632.8, D: 2.00e-3, L: 0.50, n: 1, sepv: 0, zoom: 1 },
@@ -586,6 +591,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawImage(L);
     drawCurve(); readouts();
     $('fieldNote').textContent = `view ${fmtPos(2 * half())} across`;
+    schedule3(true);
   }
 
   /* ---------- the line profile ---------- */
@@ -680,6 +686,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (n === 2) {
       const ratio = sep / th1, v = Math.abs(ratio - 1) < 0.01 ? '<span class="verdict-yes">just resolved</span>' : ratio > 1 ? '<span class="verdict-yes">resolved</span>' : '<span class="verdict-no">not resolved</span>';
       h += dd('Rayleigh\'s criterion, Δθ/θ₁', S.blind ? hide : `${f(ratio, 3)}: ${v}`);
+      h += dd('Dip midway between the sources, below the peaks', hidden ? hide : `${f(100 * (1 - dip(D, lam, sep)), 1)} % (26.5 % at the Rayleigh limit)`);
     }
     if (S.setup === 'eye') h += dd('Farthest distance for resolving the headlights', S.blind ? hide : `${f(headlightRange(th1) / 1000, 2)} km`);
     if (S.setup === 'telescope') h += dd('Closest stars it resolves at 2.0 million ly', S.blind ? hide : `${f(th1 * ANDROMEDA_LY, 3)} ly`);
@@ -781,7 +788,153 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('about2').textContent = 'Two sources: equally bright and independent (incoherent), so their intensities add. Each pattern is centered on its own geometric image and depends on the angle from it; the angles are small, so they are treated as adding. Rayleigh\'s criterion calls two sources just resolved when the center of one pattern falls on the first dark ring of the other, Δθ = 1.22 λ/D; then the intensity midway between them dips to about 73.5% of the peaks. The lens, mirror or eye is taken to be perfect: no aberrations, no air turbulence, no obstruction in front of the mirror, so the only blur is diffraction.';
   $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; the near field setups, Near the hole and A disk, do the Fresnel calculation instead). A point r from the center of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colors of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
   $('about5').textContent = 'Near the hole and A disk (Fresnel diffraction): a plane wave of unit intensity on a round hole or an opaque disk, the field on the screen from the Fresnel (paraxial) form of the Kirchhoff integral with the obliquity factor taken as 1 (Hecht, Optics, section 10.3; Goodman, Introduction to Fourier Optics, section 4.2): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F and N_F = a²/λL, a = D/2, computed by Simpson\'s rule; the disk is the open beam minus the hole (Babinet). On the axis the neglected phase is under 0.002 rad for every setting here, and the readouts compare the result with the exact Rayleigh–Sommerfeld value, 1 + z²/R² − 2(z/R) cos k(R − z) for the hole and z²/R² for the disk, R = √(L² + a²). The edge of the hole or disk is taken as perfectly sharp and the beam as perfectly even; a real beam is Gaussian and must be several times wider than D. The picture is scaled to its brightest point; the graph is in units of the open beam. The zone picture is to scale: zone n ends at radius √(nλL + (nλ/2)²).';
+  $('about6').textContent = '3D view: the same intensities drawn as a landscape over the detector, height I/I₀ (the scale post), glow the picture\'s brightness; each source makes one peak, and two sources closer than about 1.22 λ/D merge into one (the dip midway first appears at 0.947 λ/D, Sparrow\'s limit). At the Rayleigh limit the brightness midway between two equal sources is 73.5 % of the peaks, a dip 26.5 % deep (computed from [2J₁(x)/x]²; the textbook rounds 1.2197 to 1.22). The orange line is the cursor, the bright line along the sources is the graph below, the dashed circles are the first dark rings. The aperture beside the detector is drawn larger or smaller with D on a log scale and is not to scale with the pattern. Drag to turn, scroll or pinch to zoom, double click to go back.';
   $('about4').textContent = 'Numbers: the textbook\'s Example 4.6, Hubble (2.40 m mirror, 550 nm, stars at 2.0 million light years) and its Chapter 4 Problem 59 on the eye (3.00 mm pupil, 550 nm, headlights 1.30 m apart); 1 ly = 9.4607 × 10¹⁵ m. Real eyes do worse than diffraction allows: normal (20/20) acuity is about one minute of arc, 291 µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to 1/1000 of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.';
+
+  /* ---------- 3D view (demos/lib/vd3kit.js): the pattern as a landscape of brightness ----------
+     The surface is the same intensity as the flat picture and the graph (the Airy table airyFast, from the exact [2J₁(x)/x]², or the
+     near field profile), its height I/I₀ over the detector and its glow the picture's brightness. Each source makes one peak; slide
+     two sources together and the peaks merge. The aperture stands beside it, sized on a log scale over its slider's range (it is
+     not to scale with the pattern), with the light it gathers. */
+  const N3 = matchMedia('(max-width: 520px)').matches ? 120 : 176, HZ = 1.0;
+  let S3 = null, G3 = null, v3 = null, key3 = '', raf3 = 0, apKey = '', on3 = false, need3 = true;
+  const o3 = { th: -Math.PI / 2 + 0.62, ph: 1.0, zoom: 1 };
+  const LAB3 = { size: 0.085, color: '#e6ebf2', bg: 'rgba(14,18,24,0.74)' };
+  /* the height scale: 1 world unit is the top of the graph's usual scale (1.1 for one source, 2.1 for two, the near field's peak) */
+  const zTop = () => (isFr() ? Math.max(1.1, profile(half() * Math.SQRT2 * 1.001).top * 1.06) : nNow() === 2 ? 2.1 : 1.1);
+  function I3(u, v, P) {
+    if (P) return profAt(P, Math.hypot(u, v));
+    const k = kOf(), screen = ST().kind === 'screen', L = Lnow(); let s = 0;
+    for (const c of centres()) { const r = Math.hypot(u - c, v); s += airyFast(k * Math.sin(screen ? Math.atan2(r, L) : r)); }
+    return s;
+  }
+  function tube(pts, r, mat) { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), Math.max(8, pts.length * 2), r, 6, false), mat); return m; }
+  function init3() {
+    S3 = VD3K.stage($('pane'), { fov: 32, near: 0.05, far: 80, fogAt: null }); if (!S3) return false;
+    const el = S3.el; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'img'); el.tabIndex = 0;
+    const G = G3 = { grp: new THREE.Group() }; S3.scene.add(G.grp);
+    /* the detector: a dark plate under the surface */
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(2.14, 2.14, 0.05), new THREE.MeshStandardMaterial({ color: 0x1b222b, roughness: 0.55, metalness: 0.35 }));
+    plate.position.z = -0.027; G.grp.add(plate);
+    const geo = new THREE.PlaneGeometry(2, 2, N3, N3); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array((N3 + 1) * (N3 + 1) * 3), 3));
+    G.surf = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
+    G.grp.add(G.surf);
+    /* a coarse mesh of lines on the surface, so its shape reads where it is dark */
+    const idx = [], step = N3 / 22;
+    for (let j = 0; j <= N3; j += step) for (let i = 0; i < N3; i++) idx.push(j * (N3 + 1) + i, j * (N3 + 1) + i + 1);
+    for (let i = 0; i <= N3; i += step) for (let j = 0; j < N3; j++) idx.push(j * (N3 + 1) + i, (j + 1) * (N3 + 1) + i);
+    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', geo.attributes.position); lg.setIndex(idx);
+    G.mesh = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, depthWrite: false })); G.grp.add(G.mesh);
+    G.profMat = new THREE.MeshBasicMaterial({ color: 0xffffff }); G.curMat = new THREE.MeshBasicMaterial({ color: 0xff9a5c });
+    G.ringMat = new THREE.LineDashedMaterial({ color: 0xa0c8ff, dashSize: 0.05, gapSize: 0.05, transparent: true, opacity: 0.85 });
+    G.rings = [0, 1].map(() => { const r = VD3K.ring(1, { seg: 160 }); r.material = G.ringMat; r.computeLineDistances(); r.position.z = 0.004; G.grp.add(r); return r; });
+    /* the height scale: a post at the back corner with ticks */
+    G.axis = new THREE.Group(); G.grp.add(G.axis);
+    G.lab = {}; for (const k of ['place', 'ap', 'src', 'dip', 'bar', 'zt', 'z1', 'z2', 'cut']) { const l = G.lab[k] = VD3K.label(' ', LAB3); l.material.depthTest = false; l.renderOrder = 9; G.grp.add(l); }
+    G.bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.012, 0.004), new THREE.MeshBasicMaterial({ color: 0xffffff })); G.grp.add(G.bar);
+    G.ap = new THREE.Group(); G.grp.add(G.ap);
+    { const p = $('pane'); if (p.clientWidth < p.clientHeight * 1.05) { o3.th = -Math.PI / 2 + 0.12; o3.ph = 0.95; } }   /* a phone looks from the front, the aperture behind */
+    S3.orbit(el, o3, () => schedule3(), { zMin: 0.55, zMax: 3, phMin: 0.2, phMax: 1.5 });
+    return true;
+  }
+  /* the aperture beside the detector: a plate with a round opening (a mirror for the telescope, a disk on glass for the Poisson spot) */
+  function buildAperture(rgb) {
+    const st = ST(), D = Dnow(), tall = tall3(), k = [S.setup, isMys() ? 'm' : D, C().lam, tall].join('|'); if (k === apKey) return; apKey = k;
+    const G = G3; while (G.ap.children.length) S3.dispose(G.ap.children[0]); if (G.cone) S3.dispose(G.cone);
+    const lo = S.setup === 'camera' ? CAMERA_F / 22 : st.Dmin / st.Dk, hi = S.setup === 'camera' ? CAMERA_F / 1.4 : st.Dmax / st.Dk;
+    const f = isMys() ? 0.5 : Math.max(0, Math.min(1, Math.log(D / lo) / Math.log(hi / lo))), rh = 0.05 + 0.3 * f, side = 0.92;
+    const kind = S.setup === 'telescope' ? 'mirror' : S.setup === 'eye' ? 'iris' : isDisk() ? 'disk' : (S.setup === 'two' || S.setup === 'camera') ? 'stop' : 'plate';
+    const plateCol = kind === 'iris' ? 0x4f7fa8 : kind === 'mirror' ? 0x2b2f36 : kind === 'stop' ? 0x30363f : 0x8a939e;
+    const sh = new THREE.Shape(); sh.moveTo(-side / 2, -side / 2); sh.lineTo(side / 2, -side / 2); sh.lineTo(side / 2, side / 2); sh.lineTo(-side / 2, side / 2); sh.lineTo(-side / 2, -side / 2);
+    if (kind !== 'disk') { const h = new THREE.Path(); h.absarc(0, 0, rh, 0, Math.PI * 2, true); sh.holes.push(h); }
+    const pg = new THREE.ExtrudeGeometry(sh, { depth: 0.03, bevelEnabled: false, curveSegments: 48 }); pg.rotateY(Math.PI / 2);
+    const plate = new THREE.Mesh(pg, kind === 'disk' ? new THREE.MeshStandardMaterial({ color: 0xbfe0f4, transparent: true, opacity: 0.28, roughness: 0.1, depthWrite: false })
+      : new THREE.MeshStandardMaterial({ color: plateCol, roughness: 0.45, metalness: kind === 'plate' ? 0.7 : 0.2 }));
+    G.ap.add(plate);
+    if (kind === 'mirror' || kind === 'disk') {
+      const m = new THREE.Mesh(new THREE.CircleGeometry(rh, 64), kind === 'mirror' ? new THREE.MeshStandardMaterial({ color: 0xd9dde3, roughness: 0.12, metalness: 0.95, emissive: 0x30343a }) : new THREE.MeshStandardMaterial({ color: 0x14181e, roughness: 0.6 }));
+      m.rotation.y = Math.PI / 2; m.position.x = 0.032; G.ap.add(m);
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(rh, 0.012, 8, 64), new THREE.MeshStandardMaterial({ color: kind === 'mirror' ? 0xc8b46a : 0x14181e, roughness: 0.4, metalness: 0.6 }));
+      rim.rotation.y = Math.PI / 2; rim.position.x = 0.034; G.ap.add(rim);
+    }
+    /* where it stands: left of the detector on a wide picture, behind it on a tall (phone) one, facing the pattern */
+    const at = apAt(); G.ap.position.set(...at); G.ap.rotation.z = tall ? -Math.PI / 2 : 0;
+    /* the light it passes, as a faint cone to the pattern (focused by a lens or mirror; spreading from a pinhole) */
+    const A = new THREE.Vector3(...at).add(new THREE.Vector3(tall ? 0 : 0.03, tall ? -0.03 : 0, 0)), B = new THREE.Vector3(0, 0, 0), len = A.distanceTo(B), spread = !(st.kind === 'sky' || S.setup === 'camera');
+    const cg = new THREE.CylinderGeometry(spread ? 0.45 : 0.015, kind === 'disk' ? side * 0.42 : rh, len, 48, 1, true);
+    const cone = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ color: new THREE.Color(...rgb), transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+    cone.position.copy(A).add(B).multiplyScalar(0.5); cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), B.clone().sub(A).normalize()); G.cone = cone; G.grp.add(cone);
+  }
+  const tall3 = () => S3 && S3.w < S3.h * 1.05;
+  const apAt = () => (tall3() ? [0, 1.85, 0.5] : [-1.75, 0, 0.5]);
+  function update3() {
+    const G = G3, hw = half(), rgb = lamRGB(C().lam), P = isFr() ? profile(hw * Math.SQRT2 * 1.001) : null, bsc = P ? 1 / Math.max(1, P.top) : 1, gain = S.gain;
+    const zt = zTop(), zs = HZ / zt, cap = zt / (P ? 1 : 1);
+    const key = [S.setup, hw, centres().join(','), kOf(), C().lam, gain, Lnow(), N3].join('|');
+    if (key !== key3) {
+      key3 = key; const pos = G.surf.geometry.attributes.position, col = G.surf.geometry.attributes.color, n1 = N3 + 1;
+      for (let j = 0; j < n1; j++) { const y = 1 - 2 * j / N3, v = y * hw;
+        for (let i = 0; i < n1; i++) { const x = -1 + 2 * i / N3, u = x * hw, I = I3(u, v, P), q = j * n1 + i, b = Math.min(1, I * bsc * gain);
+          pos.setXYZ(q, x, y, Math.min(I * gain, cap) * zs);
+          const lift = 0.05 * (1 - b);   /* a faint floor color, so the dark ground between the rings still shows */
+          col.setXYZ(q, lin2srgb(rgb[0] * b) + lift, lin2srgb(rgb[1] * b) + lift, lin2srgb(rgb[2] * b) + lift * 1.3); } }
+      pos.needsUpdate = true; col.needsUpdate = true; G.surf.geometry.computeBoundingSphere();
+      /* the line through the sources, as on the graph */
+      if (G.prof) S3.dispose(G.prof);
+      const pts = []; for (let i = 0; i <= 240; i++) { const x = -1 + 2 * i / 240; pts.push(new THREE.Vector3(x, 0, Math.min(I3(x * hw, 0, P) * gain, cap) * zs + 0.006)); }
+      G.prof = tube(pts, 0.006, G.profMat); G.grp.add(G.prof);
+    }
+    G.profMat.color.setRGB(...rgb.map((v) => Math.min(1, v * 0.6 + 0.4)));
+    /* the cursor: a line across the surface at the cursor's position and a post at the line through the sources */
+    if (G.cur) S3.dispose(G.cur);
+    const cx = Math.max(-1, Math.min(1, C().cur / hw)), cp = []; for (let i = 0; i <= 80; i++) { const y = -1 + 2 * i / 80; cp.push(new THREE.Vector3(cx, y, Math.min(I3(cx * hw, y * hw, P) * gain, cap) * zs + 0.008)); }
+    G.cur = new THREE.Group(); G.cur.add(tube(cp, 0.005, G.curMat));
+    const h0 = Math.min(I3(cx * hw, 0, P) * gain, cap) * zs, post = VD3K.rod([cx, 0, 0], [cx, 0, h0 + 0.002], 0.006, G.curMat), dot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 16, 12), G.curMat);
+    dot.position.set(cx, 0, h0 + 0.01); G.cur.add(post, dot); G.grp.add(G.cur);
+    /* first dark rings (or the edge of the geometric beam or shadow) */
+    const showR = !S.blind && !isMys(), rr = P ? Dnow() / 2 / hw : ring1() / hw;
+    G.rings.forEach((r, i) => { const c = P ? (i ? null : 0) : centres()[i]; r.visible = showR && c != null && rr < 1.4; if (r.visible) { r.position.x = c / hw; r.scale.setScalar(rr); } });
+    G.ringMat.dashSize = G.ringMat.gapSize = 0.05 / Math.max(0.05, rr);
+    /* the aperture, its label and the sources */
+    buildAperture(rgb);
+    const st = ST(), D = Dnow();
+    const apText = isMys() ? 'pinhole, D = ?' : S.setup === 'telescope' ? `mirror D = ${f(D, 2)} m` : S.setup === 'eye' ? `pupil D = ${f(D * 1e3, 2)} mm` : S.setup === 'camera' ? `f/${C().N}: D = 50 mm/${C().N} = ${f(D * 1e3, 2)} mm`
+      : S.setup === 'two' ? `iris D = ${f(D * 1e3, 1)} mm` : isFr() ? (isDisk() ? `disk on glass, D = ${f(D * 1e3, 2)} mm` : `round hole, D = ${f(D * 1e3, 2)} mm`) : `pinhole, D = ${f(D * 1e6, 0)} µm`;
+    const at = apAt();
+    G.lab.ap.set(apText); G.lab.ap.position.set(at[0], at[1], -0.1);
+    const n2 = nNow() === 2, srcText = S.setup === 'telescope' ? (n2 ? `two stars ${f(C().sepv, 2)} ly apart` : 'one star') : S.setup === 'eye' ? (n2 ? `headlights 1.30 m apart, ${f(C().sepv, 2)} km away` : 'one light')
+      : S.setup === 'camera' ? 'two distant lamps' : S.setup === 'two' ? (n2 ? `Δθ = ${f(C().sepv, 1)} µrad` : 'one point source') : `laser ${C().lam} nm`;
+    G.lab.src.set(srcText); G.lab.src.position.set(at[0], at[1], 1.08);
+    G.lab.place.set(st.place); G.lab.place.position.set(tall3() ? 0 : -0.45, tall3() ? -1.3 : 1.22, 0.02);
+    /* scale bar along the front edge, as in the flat picture */
+    const sb = niceStep(2 * hw) / 2, bw = sb / hw; G.bar.scale.x = bw; G.bar.position.set(-1 + 0.08 + bw / 2, -1.1, 0.01);
+    G.lab.bar.set(`${+(sb * st.uk).toPrecision(3)} ${st.unit}`); G.lab.bar.position.set(-1 + 0.08 + bw / 2, -1.2, 0.05);
+    /* height axis at the back right corner: I/I₀ ticks */
+    while (G.axis.children.length) S3.dispose(G.axis.children[0]);
+    const axM = new THREE.MeshBasicMaterial({ color: 0x9aa6b6 }), ax = 1.1, ay = 1.1;
+    G.axis.add(VD3K.rod([ax, ay, 0], [ax, ay, HZ], 0.006, axM));
+    const ticks = zt > 3 ? [1, 2, 3, 4].filter((t) => t < zt) : zt > 1.5 ? [0.5, 1, 1.5, 2] : [0.25, 0.5, 0.75, 1];
+    for (const t of ticks) G.axis.add(VD3K.rod([ax - 0.04, ay, t * zs], [ax + 0.04, ay, t * zs], 0.004, axM));
+    G.lab.zt.set('I/I₀'); G.lab.zt.position.set(ax, ay, HZ + 0.1);
+    G.lab.z1.set(f(ticks[1], 1)); G.lab.z1.position.set(ax + 0.13, ay, ticks[1] * zs);
+    G.lab.z2.set(f(ticks[3], 1)); G.lab.z2.position.set(ax + 0.13, ay, ticks[3] * zs);
+    /* how deep the dip between two sources is: the Rayleigh limit puts it at 26.5 % */
+    const showDip = n2 && !S.blind && !isMys() && !P;
+    G.lab.dip.visible = showDip;
+    if (showDip) { const mid = Iexact(0), depth = 1 - dip(D, lamNow(), sepAngle());
+      G.lab.dip.set(depth < 0.0005 ? 'no dip: one peak' : `dip ${f(100 * depth, 1)} % below the peaks`); G.lab.dip.position.set(0, -0.1, Math.min(Math.max(mid, 1) * gain, cap) * zs + 0.16); }
+    G.lab.cut.visible = gain > 1; if (gain > 1) { G.lab.cut.set('30× exposure: the peaks are cut off'); G.lab.cut.position.set(0, 1.18, HZ + 0.12); }
+    /* every label the same height on the screen's scale: larger on a phone */
+    const ls = LAB3.size * (tall3() ? 1.35 : 1); for (const k in G.lab) { const L = G.lab[k], im = L.material.map.image; L.scale.set(ls * im.width / im.height, ls, 1); }
+  }
+  function render3() {
+    raf3 = 0; if (!S3 || !on3 || !T) return;
+    const p = $('pane'); S3.size(p.clientWidth, p.clientHeight); if (need3) { need3 = false; update3(); }
+    if (tall3() !== G3.tall) { G3.tall = tall3(); apKey = ''; need3 = true; update3(); }
+    S3.place(o3, tall3() ? [0, 0.3, 0.3] : [-0.38, 0, 0.3], S3.fit(tall3() ? 4.9 : 4.2, tall3() ? 0.95 : 1.5)); S3.render();
+  }
+  /* schedule3(true) after a change of state; a turn of the view only renders again */
+  function schedule3(changed) { if (changed) need3 = true; if (!raf3) raf3 = requestAnimationFrame(render3); }
 
   /* ---------- size, theme, start ---------- */
   function resize() {
@@ -797,6 +950,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const k in DEFAULTS) S.cfg[k] = { ...DEFAULTS[k], cur: 0 };
   const q = new URLSearchParams(location.search), first = DEFAULTS[q.get('setup')] ? q.get('setup') : 'pinhole';
   applyPreset(first);
+  /* 3D | Flat (?view=3d or ?view=flat); 3D opens first, flat without WebGL or on a low power device */
+  v3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3').textContent = m; },
+    change: (on) => { on3 = on; can.hidden = on; if (S3) S3.el.hidden = !on; key3 = ''; apKey = ''; redraw(); } });
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */

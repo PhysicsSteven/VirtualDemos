@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -73,6 +75,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 :root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 250px; }
 .pane + .pane { border-top: 1px solid var(--line); }
+/* the 3D view of the glowing object gets a taller strip */
+@media (min-width: 821px) { .stage.d3 { grid-template-rows: minmax(0, 1fr) 300px; } :root[data-projector="on"] .stage.d3 { grid-template-rows: minmax(0, 1fr) 340px; } }
+/* screen reader only text (the Readings table caption and Delete heading showed on the page: this demo keeps the library's sr rule off) */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.status3 { position: absolute; left: 10px; bottom: 6px; z-index: 1; font-size: 0.78rem; color: var(--muted); }
+.status3:empty { display: none; }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 /* pictures, not controls: let a finger on them scroll the page */
 .stage canvas#strip { touch-action: auto; }
@@ -121,6 +129,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .viewbar { position: static; justify-content: flex-start; padding: 10px 10px 0; }
   .pane.main { height: 56vh; min-height: 330px; }
   .pane.strip { height: 330px; }
+  .stage.d3 .pane.strip { height: 380px; }
   :root[data-projector="on"] .stage { grid-template-rows: auto auto auto; }
   :root[data-projector="on"] .pane.strip { height: 420px; }
 }
@@ -151,6 +160,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="viewbar">
+        <div class="seg" role="group" aria-label="Perspective of the glowing object" id="dimSeg">
+          <button type="button" data-dim="3d" aria-pressed="false" title="The glowing ball, the prism and the radiometer in 3D">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+        </div>
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-view="spec" aria-pressed="true">Spectrum</button>
           <button type="button" data-view="ubv" aria-pressed="false">U B V filters</button>
@@ -170,6 +183,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <canvas id="chart" tabindex="0" role="application" aria-label="Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak."></canvas>
       </div>
       <div class="pane strip">
+        <span class="status3" id="status3" role="status"></span>
         <canvas id="strip" role="img" aria-label="The glowing object in its perceived color, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
       </div>
     </div>
@@ -300,6 +314,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         </div>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Model: ideal blackbodies. Real stars have absorption lines and are classified by them; T here is the effective temperature. Colors use an analytic fit to the CIE 1931 observer (Wyman, Sloan and Shirley 2013) and sRGB with a D65 white point, so a 6500 K body shows as white. Each swatch is scaled to full brightness; your screen and eye adaptation change what you see.</p>
+          <p class="hint">3D view: the ball glows in the same computed color. Its brightness follows the luminance of each square meter, Y = ∫B<sub>λ</sub>ȳ dλ, on a log scale: the Sun's is full brightness and each factor of 10 less takes a thirteenth off (the eye works over about 13 factors of 10), so 3000 K (1.6% of the Sun's luminance per square meter) is still a clear orange, 800 K a faint dull red, and a body below about 700 K shows no glow; a body hotter than the Sun only grows its halo. The screen behind the prism uses the flat strip's fixed exposure, set by the Sun's peak. Ideal blackbody: no limb darkening, no lines. Drag to turn, scroll or pinch to zoom, double click to go back.</p>
         </details>
         </div></details>
       </section>
@@ -1136,6 +1151,105 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
 
+  // ---------- 3D view (demos/lib/vd3kit.js): the glowing ball, a prism spectrometer, a radiometer and the color scale ----------
+  /* The ball's color is bbColor(T), the Planck spectrum integrated against the CIE 1931 functions, as in the flat strip. Its
+     brightness follows the luminance of each square meter, Y = ∫ B_λ ȳ dλ, drawn on a log scale (each factor of 10 one step of a
+     thirteenth, the Sun's at full brightness; hotter only grows the glow), as the eye judges brightness. */
+  const lumY = (T) => { let y = 0; for (let l = 360; l <= 830; l += 2) y += planck(l * 1e-9, T) * cie(l)[1]; return y * 2e-9; };
+  const Y_SUN = lumY(5772);
+  let S3 = null, G3 = null, on3 = false, key3 = '';
+  const o3 = { th: -Math.PI / 2 + 0.12, ph: 1.22, zoom: 1 };
+  const LAB = { size: 0.11, color: '#e6ebf2', bg: 'rgba(14,18,24,0.74)' };
+  function texCanvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); return { cv, t, c: cv.getContext('2d') }; }
+  function init3() {
+    S3 = VD3K.stage(document.querySelector('.pane.strip'), { fov: 30, near: 0.05, far: 60, sky: '#070a10' }); if (!S3) return false;
+    const G = G3 = {}, sc = S3.scene;
+    S3.el.removeAttribute('aria-hidden'); S3.el.setAttribute('role', 'img'); S3.el.tabIndex = 0;
+    S3.el.setAttribute('aria-label', 'A ball glowing in the color its temperature gives, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale with spectral classes. Drag to turn.');
+    /* a dark floor */
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshStandardMaterial({ color: 0x11161d, roughness: 0.9 })); floor.position.set(0, 0.6, -0.001); sc.add(floor);
+    /* the ball: dark when cold, glowing when hot */
+    G.ballMat = new THREE.MeshStandardMaterial({ color: 0x2a2f36, roughness: 0.7, emissive: 0x000000 });
+    G.ball = new THREE.Mesh(new THREE.SphereGeometry(0.42, 64, 32), G.ballMat); G.ball.position.set(-1.75, 0, 0.62); sc.add(G.ball);
+    const gc = document.createElement('canvas'); gc.width = gc.height = 128; { const c = gc.getContext('2d'), g = c.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(255,255,255,0.5)'); g.addColorStop(0.6, 'rgba(255,255,255,0.12)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, 128, 128); }
+    G.halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(gc), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })); G.halo.position.copy(G.ball.position); sc.add(G.halo);
+    G.light = new THREE.PointLight(0xffffff, 0, 4); G.light.position.copy(G.ball.position); sc.add(G.light);
+    const stand = VD3K.rod([-1.75, 0, 0], [-1.75, 0, 0.2], 0.03, new THREE.MeshStandardMaterial({ color: 0x59616c, metalness: 0.6, roughness: 0.4 })); sc.add(stand);
+    /* slit, beam and prism */
+    const dark = new THREE.MeshStandardMaterial({ color: 0x2e353f, roughness: 0.6 });
+    sc.add(VD3K.box(0.04, 0.4, 0.3, dark, -1.05, 0, 0.665), VD3K.box(0.04, 0.4, 0.575, dark, -1.05, 0, 0));
+    G.beamMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
+    sc.add(VD3K.rod([-1.3, 0, 0.62], [-0.55, 0, 0.62], 0.018, G.beamMat));
+    const prism = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.55, 3), new THREE.MeshStandardMaterial({ color: 0xcfe3f0, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, depthWrite: false }));
+    prism.rotation.x = Math.PI / 2; prism.rotation.y = Math.PI / 6; prism.position.set(-0.5, 0, 0.62); sc.add(prism);
+    /* the screen: a strip whose picture is drawn on a canvas, violet at the top, ultraviolet above it, infrared below */
+    G.scr = texCanvas(96, 512);
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 1.05), new THREE.MeshBasicMaterial({ map: G.scr.t }));
+    screen.rotation.x = Math.PI / 2; screen.rotation.z = 0.35; screen.position.set(0.45, 0.25, 0.62); sc.add(screen); G.screen = screen;
+    G.fan = new THREE.Group(); sc.add(G.fan);
+    G.lab = {}; for (const k of ['ball', 'uv', 'vis', 'ir']) { const l = G.lab[k] = VD3K.label(' ', LAB); l.material.depthTest = false; l.renderOrder = 9; sc.add(l); }
+    /* the radiometer */
+    G.meter = VD3K.meter(S3, { w: 0.8, h: 0.46, label: 'RADIOMETER · W/m²', sub: 'σT⁴ = π × area under Bλ' }); G.meter.position.set(1.4, 0.05, 0); G.meter.rotation.z = 0.32; sc.add(G.meter);
+    /* the color scale on a board at the back */
+    G.scale = texCanvas(1024, 160);
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.5625), new THREE.MeshBasicMaterial({ map: G.scale.t }));
+    board.rotation.x = Math.PI / 2; board.position.set(-0.1, 1.15, 1.32); sc.add(board);
+    S3.orbit(S3.el, o3, () => render3(), { zMin: 0.6, zMax: 2.6, phMin: 0.5, phMax: 1.5 });
+    return true;
+  }
+  function paint3() {
+    const T = S.T, col = bbColor(Math.max(T, 1000)), r = lumY(T) / Y_SUN, lr = r > 0 ? Math.log10(r) : -99;
+    const b = Math.max(0, Math.min(1, 1 + lr / 13)), C = new THREE.Color(col[0] / 255, col[1] / 255, col[2] / 255);
+    G3.ballMat.emissive.copy(C).multiplyScalar(b); G3.ballMat.color.setRGB(0.16 * (1 - b), 0.17 * (1 - b), 0.19 * (1 - b));
+    const hs = b <= 0 ? 0 : 1.6 + 0.55 * Math.max(0, Math.min(3.5, lr + 1)); G3.halo.scale.setScalar(0.84 * hs); G3.halo.material.color.copy(C).multiplyScalar(Math.min(1, b * 1.1)); G3.halo.visible = b > 0;
+    G3.light.color.copy(C); G3.light.intensity = 1.6 * b;
+    G3.beamMat.color.copy(C).multiplyScalar(b);
+    /* the screen at one fixed exposure for every T, set by the Sun's peak (as on the flat strip) */
+    const c = G3.scr.c, W = 96, H = 512, uvH = H * 0.17, irH = H * 0.25, visT = uvH, visB = H - irH;
+    c.fillStyle = '#0d1117'; c.fillRect(0, 0, W, H);
+    const bright = (l) => Math.min(1, Math.pow(planck(l * 1e-9, T) / B_EXPOSE, 1 / 2.2));
+    for (let l = 380; l < 750; l++) { const a = bright(l), y0 = visT + (l - 380) / 370 * (visB - visT); c.fillStyle = css(BAND[l - 380].rgb.map((v) => Math.round(v * a))); c.fillRect(0, y0, W, (visB - visT) / 370 + 0.6); }
+    c.strokeStyle = 'rgba(160,170,185,0.7)'; c.setLineDash([6, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(0, visT); c.lineTo(W, visT); c.moveTo(0, visB); c.lineTo(W, visB); c.stroke(); c.setLineDash([]);
+    G3.scr.t.needsUpdate = true;
+    /* the fan of rays from the prism, each as bright as the screen there */
+    while (G3.fan.children.length) S3.dispose(G3.fan.children[0]);
+    const sp = G3.screen.position, ang = G3.screen.rotation.z, P0 = [-0.42, 0, 0.62];
+    for (let l = 390; l <= 740; l += 25) { const a = bright(l); if (a < 0.02) continue; const zz = 0.62 + 0.525 - (visT + (l - 380) / 370 * (visB - visT)) / H * 1.05;
+      const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(...BAND[l - 380].rgb.map((v) => v / 255)), transparent: true, opacity: 0.55 * a, blending: THREE.AdditiveBlending, depthWrite: false });
+      G3.fan.add(VD3K.rod(P0, [sp.x - 0.01 * Math.cos(ang), sp.y - 0.01 * Math.sin(ang), zz], 0.006, m)); }
+    const uv = uvFraction(T), vis = visibleFraction(T), ir = Math.max(0, 1 - uv - vis), lx = sp.x + 0.2, ly = sp.y + 0.05;
+    G3.lab.uv.set('UV ' + pct(uv)); G3.lab.uv.position.set(lx + 0.12, ly, 0.62 + 0.525 - uvH / H * 0.525);
+    G3.lab.vis.set('vis ' + pct(vis)); G3.lab.vis.position.set(lx + 0.12, ly, 0.62 + 0.525 - (visT + visB) / 2 / H * 1.05);
+    G3.lab.ir.set('IR ' + pct(ir)); G3.lab.ir.position.set(lx + 0.12, ly, 0.62 - 0.525 + irH / H * 0.525);
+    G3.lab.ball.set(T < 100 ? fmtT(T) + ' · microwaves, no glow' : T < 700 ? fmtT(T) + ' · infrared, no visible glow' : T < 1000 ? fmtT(T) + ' · dull red glow' : fmtT(T));   /* the color code is on the flat strip */ G3.lab.ball.position.set(-1.75, -0.2, 0.02);
+    G3.meter.set(sci(SIG * T ** 4, 3));
+    for (const k in G3.lab) { const L = G3.lab[k], im = L.material.map.image, z = LAB.size * (L.userData.k || 1); L.scale.set(z * im.width / im.height, z, 1); }
+    paintScale(G3.scale.c, 1024, 160); G3.scale.t.needsUpdate = true;
+  }
+  /* the blackbody color scale from 1000 K to 40,000 K with the classes and the current temperature, for the board */
+  function paintScale(c, W, H) {
+    c.fillStyle = '#151c25'; c.fillRect(0, 0, W, H);
+    const x0 = 24, x1 = W - 24, lt0 = Math.log(BAR_T0), lt1 = Math.log(BAR_T1), XT = (t) => x0 + (Math.log(t) - lt0) / (lt1 - lt0) * (x1 - x0), barY = 58, barH = 50;
+    c.fillStyle = '#c9d2dd'; c.font = '700 24px ' + uiFont(); c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillText('Blackbody color by temperature', x0, 30);
+    for (let px = x0; px < x1; px++) { const k = Math.round((px - x0) / (x1 - x0) * BAR_N); c.fillStyle = css(BAR[k]); c.fillRect(px, barY, 1.5, barH); }
+    c.font = '700 20px ' + monoFont(); c.textAlign = 'center';
+    for (const k of CLASSES) { const xa = XT(Math.max(BAR_T0, k.lo)), xb = XT(Math.min(BAR_T1, k.hi)); c.fillStyle = classOf(S.T) === k ? '#ffffff' : '#8e9aab'; c.fillText(k.c, (xa + xb) / 2, barY - 6); }
+    c.font = '18px ' + monoFont(); c.fillStyle = '#9aa6b6'; c.textBaseline = 'top';
+    for (const t of [1000, 2000, 3000, 5000, 10000, 20000, 40000]) { const x = Math.min(x1 - 20, Math.max(x0 + 20, XT(t))); c.fillText(t >= 10000 ? t / 1000 + 'k' : String(t), x, barY + barH + 6); }
+    c.textAlign = 'right'; c.fillText('K', x1, barY + barH + 26);
+    const xc = XT(Math.min(BAR_T1, Math.max(BAR_T0, S.T)));
+    c.strokeStyle = '#151c25'; c.lineWidth = 8; c.beginPath(); c.moveTo(xc, barY - 4); c.lineTo(xc, barY + barH + 4); c.stroke();
+    c.strokeStyle = '#ffffff'; c.lineWidth = 4; c.stroke();
+  }
+  function render3() {
+    if (!S3 || !on3) return;
+    const p = S3.el.parentElement; S3.size(p.clientWidth, p.clientHeight);
+    const tall = S3.w < S3.h * 1.6;
+    if (tall !== G3.tall) { G3.tall = tall; for (const k in G3.lab) G3.lab[k].userData.k = tall ? 1.6 : 1; key3 = ''; }
+    const k = [S.T, S.view].join('|'); if (k !== key3) { key3 = k; paint3(); }
+    S3.place(o3, tall ? [-0.25, 0.1, 0.75] : [-0.15, 0.1, 0.65], S3.fit(tall ? 5.1 : 4.5, tall ? 1.6 : 2.4)); S3.render();
+  }
   // ---------- panel ----------
   function updatePanel() {
     $('tempOut').textContent = fmtT(S.T);
@@ -1184,7 +1298,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     raf = requestAnimationFrame(() => {
       raf = 0;
       if (CW && CH) drawChart();
-      if (SW && SH) drawStrip();
+      if (on3) render3(); else if (SW && SH) drawStrip();
       updatePanel();
     });
   }
@@ -1308,6 +1422,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => { const w = window.vdWorksheet(); return w === 'intro-blackbody' || w === 'ubv-colors' ? w : 'blackbody'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   applyPreset('sun');
+  /* 3D | Flat for the glowing object (?view=3d or ?view=flat; ?view=ubv keeps the default): 3D opens first, flat without WebGL or on a low power device */
+  VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3').textContent = m; },
+    change: (on) => { on3 = on; strip.hidden = on; if (S3) S3.el.hidden = !on; stage.classList.toggle('d3', on); key3 = ''; schedule(); } });
   if (VD.ws('') === 'ubv-colors' || new URLSearchParams(location.search).get('view') === 'ubv') setView('ubv');
   renderPins();
   { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */

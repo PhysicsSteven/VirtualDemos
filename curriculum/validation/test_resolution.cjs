@@ -102,4 +102,9 @@ group('Poisson spot: near the axis in the shadow I ≈ J0²(kar/z) when many zon
   near(r1, c.J0_ZERO * z / (k * a), 1e-12); assert(c.fresnelI(D, lam, z, r1, true, 4) < 0.01, 'dark ring');
   for (const r of [0, r1 / 3, r1 / 2]) near(c.fresnelI(D, lam, z, r, true, 4), c.besselJ0(k * a * r / z) ** 2, 0.02, `J0² at ${r}`);
 });
+group('3D view label: the dip at the Rayleigh limit is 26.5 % deep (1 − 0.73503), and no dip at all once the sources are closer than 0.947 λ/D (Sparrow limit)', () => {
+  const D = 2.4, lam = 550e-9, th = c.RING_FACTOR * lam / D;
+  near(1 - c.dip(D, lam, th), 0.26497, 2e-5, 'dip depth'); assert.strictEqual((100 * (1 - c.dip(D, lam, th))).toFixed(1), '26.5');
+  assert(1 - c.dip(D, lam, 0.945 * lam / D) < 1e-9, 'merged'); assert(1 - c.dip(D, lam, 0.95 * lam / D) > 0, 'a small dip at 0.95 λ/D');
+});
 console.log(`${n} groups passed`);

@@ -6883,3 +6883,25 @@ English words left inside `\text{}` in math (the check treats braces as placehol
 near duplicate keys in demo/nuclear-reactions, sentences split around inline code in some notes. Phone layout: at 400 px a
 longer Spanish button strip can wrap and cover canvas text below it (rocket: Herramientas covers t = 0.0 s); look at this in the
 visual pass with `:root[data-vd-lang]` rules. Two stale keys in es/site.
+
+## 2026-11-01 (Claude): Astro 2203 flagship pass, part 1: Resolution and Blackbody in 3D (Steve)
+
+Steve asked for every Astro 2203 demo and worksheet to be the best on the site ("true physics sims where they're needed, granular
+detail") and picked new 3D views for Resolution and Blackbody (Week 3). Both now open in 3D (`?view=flat` for the old view).
+- Resolution: each source's Airy pattern is a glowing surface from the same `airyFast` table as the flat picture (exact
+  [2J₁(x)/x]²; Fresnel profile in the near field setups, Poisson spot inside the disk's shadow). Height I/I₀ with a scale post; the
+  graph's line through the sources drawn on the surface; dashed first dark rings (hidden in Blind mode); the aperture (mirror, pupil,
+  iris, pinhole, disk) beside the detector, sized on a log scale, not to scale (stated). From CORE: at the Rayleigh limit the
+  midpoint is 0.73503 of the peaks, a 26.5 % dip; Sparrow's limit (dip first appears) at 0.947 λ/D. New readout "Dip midway between
+  the sources, below the peaks", new test group (16 pass). Hubble and two stars opens at zoom 8× (was 4×; the worksheet doesn't use zoom).
+- Blackbody: the strip under the chart becomes a 3D scene: glowing ball colored by the demo's own `bbColor` (Planck × CIE 1931 to
+  sRGB), brightness from Y = ∫B_λȳ dλ relative to the Sun on a log scale (each factor of 10 takes 1/13 off, stated), slit, prism
+  and screen with the UV/visible/IR shares, a radiometer reading σT⁴, and the color scale board with spectral classes. Local `.sr`
+  rule added (its data-vd-off list turned the library's off, so Readings' screen reader text showed).
+- Worksheets intro-resolution (two near field setups listed, 3D paragraph, 26.5 %) and intro-blackbody (picture sentence).
+  Readings unchanged: both keys recaptured and match; key PDFs rebuilt for the text (TeacherKeys).
+- Checks: vdcheck --only after 0 problems (40 and 32 screenshots), --only clip 0 cut off, Spanish strip check ok, i18n harvested and
+  Spanish merged for the four pages. Videos to retake (opening view changed): resolution, intro-resolution, blackbody,
+  intro-blackbody, ubv-colors. Screenshots /mnt/project-files/visual-pass-2026-11/astro-2203/a2a/.
+- For GPT: check the 26.5 % dip and 0.947 λ/D Sparrow numbers against [2J₁(x)/x]², and the 3D brightness rule text.
+- Open for Steve: an honest seeing option (long exposure Kolmogorov PSF) for Hubble and two stars.
