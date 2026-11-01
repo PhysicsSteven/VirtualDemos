@@ -1,0 +1,59 @@
+/* notes/viscometer in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'notes/viscometer', {
+"Falling Ball Viscometer: teaching notes":
+  "Viscosímetro de esfera que cae: notas para el docente",
+"Falling Ball Viscometer":
+  "Viscosímetro de esfera que cae",
+"Viscosity η measures a fluid's resistance to shearing. A slow sphere feels Stokes drag F = {#}πηrv, proportional to its speed.":
+  "La viscosidad η mide la resistencia de un fluido al corte. Una esfera lenta siente el arrastre de Stokes F = {#}πηrv, proporcional a su rapidez.",
+"A dropped ball quickly reaches terminal speed, where weight = buoyancy + drag. With Stokes drag v_t = {#}(ρ_b − ρ_f)g r²/({#}η), so v_t ∝ d², and timing the fall measures η.":
+  "Una esfera que se suelta alcanza rápidamente la rapidez terminal, donde peso = empuje + arrastre. Con arrastre de Stokes v_t = {#}(ρ_b − ρ_f)g r²/({#}η), así que v_t ∝ d², y medir el tiempo de caída mide η.",
+"Stokes' law needs slow flow: a small Reynolds number N_R = ρ_f v d/η. At large N_R (a steel ball in water) the drag grows faster than v and Stokes' law fails by factors of ten or more.":
+  "La ley de Stokes necesita flujo lento: un número de Reynolds N_R = ρ_f v d/η pequeño. Con N_R grande (una esfera de acero en agua) el arrastre crece más rápido que v y la ley de Stokes falla por factores de diez o más.",
+"Real measurements must also correct for the tube walls, which slow the ball noticeably even when the tube is ten times wider than the ball.":
+  "Las mediciones reales también deben corregir por las paredes del tubo, que frenan la esfera de forma notable incluso cuando el tubo es diez veces más ancho que la esfera.",
+"Students need buoyancy (Archimedes) and the idea of terminal speed. The tube is drawn to scale; the marks A and B are {#} m apart, starting {#} m below the surface so the ball is at terminal speed before A. Playback can run ×{#} or ×{#} for the slow cases (the timer always shows real time). Nylon is lighter than glycerol: it rises from the bottom. The <strong>Mystery liquid</strong> shows its density but hides η; <strong>Blind</strong> hides η, the Stokes prediction, the wall factor and N_R.":
+  "Los estudiantes necesitan el empuje (Arquímedes) y la idea de rapidez terminal. El tubo está dibujado a escala; las marcas A y B están separadas {#} m, empezando {#} m debajo de la superficie para que la esfera esté a rapidez terminal antes de A. La reproducción puede ir a ×{#} o ×{#} para los casos lentos (el cronómetro siempre muestra el tiempo real). El nailon es más ligero que el glicerol: sube desde el fondo. El <strong>Líquido misterioso</strong> muestra su densidad pero oculta η; <strong>A ciegas</strong> oculta η, la predicción de Stokes, el factor de pared y N_R.",
+"<strong>Steel, {#} mm, glycerol, {#} mm tube.</strong> A to B in {#} s: v = {#} mm/s. Stokes' law alone predicts {#} mm/s. Ask where the {#}% went: the walls (K = {#}).":
+  "<strong>Acero, {#} mm, glicerol, tubo de {#} mm.</strong> De A a B en {#} s: v = {#} mm/s. La ley de Stokes sola predice {#} mm/s. Pregunta a dónde se fue el {#}%: las paredes (K = {#}).",
+"<strong>Same ball, {#} mm tube.</strong> {#} s: {#} mm/s, closer to Stokes. Even here K = {#}.":
+  "<strong>La misma esfera, tubo de {#} mm.</strong> {#} s: {#} mm/s, más cerca de Stokes. Incluso aquí K = {#}.",
+"<strong>Ball size.</strong> {#}, {#}, {#} mm in glycerol: v grows as d². At {#} and {#} mm the points fall well below the d² line (walls and, at N_R ≈ {#}, inertia).":
+  "<strong>Tamaño de la esfera.</strong> {#}, {#}, {#} mm en glicerol: v crece como d². A {#} y {#} mm los puntos caen muy por debajo de la recta en d² (paredes y, con N_R ≈ {#}, inercia).",
+"<strong>Water.</strong> A {#} mm steel ball takes {#} s; Stokes' law predicts {#} m/s and would give η = {#} mPa·s, over {#} times water's real {#} mPa·s. N_R ≈ {#}, and the readout says so: this flow is far from slow, and the wake becomes turbulent.":
+  "<strong>Agua.</strong> Una esfera de acero de {#} mm tarda {#} s; la ley de Stokes predice {#} m/s y daría η = {#} mPa·s, más de {#} veces el valor real del agua, {#} mPa·s. N_R ≈ {#}, y la lectura lo indica: este flujo está lejos de ser lento, y la estela se vuelve turbulenta.",
+"<strong>Nylon in glycerol.</strong> It rises: ρ_b &lt; ρ_f, so the drag balances the net upward buoyant force.":
+  "<strong>Nailon en glicerol.</strong> Sube: ρ_b &lt; ρ_f, así que el arrastre equilibra la fuerza neta de empuje hacia arriba.",
+"<strong>Lab.</strong> Capture several small ball sizes in one liquid and tube, plot v against d², find η; then correct each speed by K and compare. Repeat with the Mystery liquid.":
+  "<strong>Laboratorio.</strong> Captura varios tamaños pequeños de esfera en un mismo líquido y tubo, grafica v en función de d² y encuentra η; luego corrige cada rapidez por K y compara. Repite con el Líquido misterioso.",
+"<strong>Q1.</strong> Draw the forces on the ball at terminal speed and derive v_t = {#}(ρ_b − ρ_f)g r²/({#}η) from Stokes' law.":
+  "<strong>P1.</strong> Dibuja las fuerzas sobre la esfera a rapidez terminal y deduce v_t = {#}(ρ_b − ρ_f)g r²/({#}η) a partir de la ley de Stokes.",
+"<strong>Q2.</strong> A {#} mm steel ball takes {#} s between the marks in glycerol ({#} mm tube). Find v and η from Stokes' law alone, then with the wall factor K = {#} (v_∞ = Kv).":
+  "<strong>P2.</strong> Una esfera de acero de {#} mm tarda {#} s entre las marcas en glicerol (tubo de {#} mm). Encuentra v y η solo con la ley de Stokes, y luego con el factor de pared K = {#} (v_∞ = Kv).",
+"<strong>Q3.</strong> Find the Reynolds number for Q2. Why is Stokes' law reasonable here but not for a steel ball in water?":
+  "<strong>P3.</strong> Encuentra el número de Reynolds para la P2. ¿Por qué la ley de Stokes es razonable aquí pero no para una esfera de acero en agua?",
+"<strong>Q4.</strong> Why does a nylon ball rise in glycerol but sink in motor oil? What is its terminal speed in glycerol according to Stokes' law, for d = {#} mm?":
+  "<strong>P4.</strong> ¿Por qué una esfera de nailon sube en glicerol pero se hunde en aceite de motor? ¿Cuál es su rapidez terminal en glicerol según la ley de Stokes, para d = {#} mm?",
+"<strong>Q5 (lab).</strong> Show that v against d² is a line through the origin with slope (ρ_b − ρ_f)g/({#}η). Find η for the Mystery liquid, with and without the wall correction, and say which balls you left out and why.":
+  "<strong>P5 (laboratorio).</strong> Muestra que v en función de d² es una recta que pasa por el origen con pendiente (ρ_b − ρ_f)g/({#}η). Encuentra η para el Líquido misterioso, con y sin la corrección de pared, y di qué esferas dejaste fuera y por qué.",
+"<strong>\"Heavier balls fall faster because gravity pulls harder.\"</strong> In a viscous liquid the speed is set by a balance of forces; a ball twice the diameter has {#} times the weight but only {#} times the Stokes drag at the same speed, so it falls {#} times faster.":
+  "<strong>\"Las esferas más pesadas caen más rápido porque la gravedad jala más fuerte.\"</strong> En un líquido viscoso la rapidez la fija un equilibrio de fuerzas; una esfera del doble de diámetro tiene {#} veces el peso pero solo {#} veces el arrastre de Stokes a la misma rapidez, así que cae {#} veces más rápido.",
+"<strong>\"Terminal speed means the forces vanish.\"</strong> The net force is zero; all three forces are still there.":
+  "<strong>\"Rapidez terminal significa que las fuerzas desaparecen.\"</strong> La fuerza neta es cero; las tres fuerzas siguen ahí.",
+"<strong>\"Stokes' law always works for falling balls.\"</strong> Only when N_R is small, roughly below {#} to {#}. In water everyday balls are in the opposite regime.":
+  "<strong>\"La ley de Stokes siempre funciona para esferas que caen.\"</strong> Solo cuando N_R es pequeño, aproximadamente por debajo de {#} a {#}. En agua, las esferas de uso cotidiano están en el régimen opuesto.",
+"<strong>\"The tube is wide enough not to matter.\"</strong> The wall correction is about {#} d/D for small balls: {#}% for a {#} mm ball in a {#} mm tube.":
+  "<strong>\"El tubo es lo bastante ancho para que no importe.\"</strong> La corrección de pared es de unos {#} d/D para esferas pequeñas: {#}% para una esfera de {#} mm en un tubo de {#} mm.",
+"Equation of motion with x downward: (m + ½m_f) dv/dt = (m − m_f)g − F_drag, where m_f = ρ_f V is the displaced liquid and ½m_f the added mass of a sphere. Integrated with RK4 (steps a twentieth of the response time) until terminal speed, then exactly.":
+  "Ecuación de movimiento con x hacia abajo: (m + ½m_f) dv/dt = (m − m_f)g − F_drag, donde m_f = ρ_f V es el líquido desplazado y ½m_f la masa añadida de una esfera. Se integra con RK4 (pasos de una vigésima parte del tiempo de respuesta) hasta la rapidez terminal, y después de forma exacta.",
+"Drag F = {#}πηrv × K(d/D) × C_D N_R/{#}. C_D is the standard drag curve for a sphere (Clift, Grace and Weber {#}), with Oseen's {#} + 3N_R/{#} below N_R = {#}; its published pieces meet within {#}%. K is Haberman and Sayre's wall factor for a sphere on the axis of a long tube in slow flow, the factor students apply. At higher N_R the walls slow the ball less; the factor is raised to the power nα/{#}, with α = ({#} + {#} N_R)/({#} + {#} N_R) from Di Felice ({#}) and n = d ln F/d ln v of the unbounded drag, which reproduces Di Felice's terminal speed ratio to within {#}% (his fit covers N_R up to about {#}).":
+  "Arrastre F = {#}πηrv × K(d/D) × C_D N_R/{#}. C_D es la curva de arrastre estándar para una esfera (Clift, Grace y Weber {#}), con la de Oseen {#} + 3N_R/{#} por debajo de N_R = {#}; sus partes publicadas coinciden con una diferencia de {#}%. K es el factor de pared de Haberman y Sayre para una esfera en el eje de un tubo largo en flujo lento, el factor que aplican los estudiantes. Con N_R mayor las paredes frenan menos la esfera; el factor se eleva a la potencia nα/{#}, con α = ({#} + {#} N_R)/({#} + {#} N_R) de Di Felice ({#}) y n = d ln F/d ln v del arrastre sin paredes, lo que reproduce la razón de rapideces terminales de Di Felice con una diferencia de {#}% (su ajuste cubre N_R hasta unos {#}).",
+"At small N_R the inertial correction is 3N_R/{#}: {#}% for the {#} mm steel ball in glycerol. The wall corrected fit of the {#} to {#} mm balls gives {#} Pa·s against the true {#}.":
+  "Con N_R pequeño la corrección inercial es 3N_R/{#}: {#}% para la esfera de acero de {#} mm en glicerol. El ajuste corregido por las paredes de las esferas de {#} a {#} mm da {#} Pa·s contra el valor real {#}.",
+"The readouts say whether Stokes' law applies (N_R under {#}, about {#}, or inertia dominated) and warn when the ball is still speeding up at mark A (large balls in water).":
+  "Las lecturas indican si la ley de Stokes aplica (N_R menor que {#}, alrededor de {#}, o dominado por la inercia) y advierten cuando la esfera todavía está acelerando en la marca A (esferas grandes en agua).",
+"Liquids at {#} °C: glycerol {#} kg/m³, {#} Pa·s; castor oil {#}, {#} Pa·s; motor oil (typical SAE {#}, varies by brand) {#}, {#} Pa·s; water {#}, {#} mPa·s. Balls: steel {#}, glass {#}, nylon {#} kg/m³. The Mystery liquid has η between {#} and {#} Pa·s.":
+  "Líquidos a {#} °C: glicerol {#} kg/m³, {#} Pa·s; aceite de ricino {#}, {#} Pa·s; aceite de motor (SAE {#} típico, varía según la marca) {#}, {#} Pa·s; agua {#}, {#} mPa·s. Esferas: acero {#}, vidrio {#}, nailon {#} kg/m³. El Líquido misterioso tiene η entre {#} y {#} Pa·s.",
+"The timer records the exact crossing times of A and B and rounds their difference to {#} s; there is no added noise.":
+  "El cronómetro registra los instantes exactos de cruce de A y B y redondea su diferencia a {#} s; no se añade ruido."
+});
