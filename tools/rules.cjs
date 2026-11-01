@@ -206,6 +206,20 @@ rule('constants', 'Physical constants in demo code match demos/lib/constants.js 
   return bad;
 });
 
+rule('key-pdfs', 'Every worksheet edited after its key PDF was printed gets its key rebuilt (TeacherKeys worksheet-keys/tools/fill_key.cjs). '
+  + 'Needs --keys <TeacherKeys clone>; without it this rule is skipped.', 'curriculum/labs/students, TeacherKeys worksheet-keys/handout-hashes.json', () => {
+  if (!KEYS) return [];
+  const mf = path.join(KEYS, 'worksheet-keys/handout-hashes.json');
+  if (!fs.existsSync(mf)) return [[mf, 0, '', 'missing: pull TeacherKeys']];
+  const H = JSON.parse(fs.readFileSync(mf, 'utf8')), crypto = require('crypto'), bad = [];
+  for (const s of SHEETS) {
+    const h = crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, 'curriculum/labs/students', s + '.md'))).digest('hex').slice(0, 16);
+    if (!H[s]) bad.push(['curriculum/labs/students/' + s + '.md', 0, '', 'no key recorded: build it with fill_key.cjs']);
+    else if (H[s] !== h) bad.push(['curriculum/labs/students/' + s + '.md', 0, '', 'edited since its key PDF was printed: rebuild the key']);
+  }
+  return bad;
+});
+
 /* ---------- run ---------- */
 if (args.includes('--list')) { for (const r of RULES) console.log(r.id.padEnd(12) + r.what + '\n' + ' '.repeat(12) + 'reads: ' + r.reads + '\n'); process.exit(0); }
 let fails = 0;

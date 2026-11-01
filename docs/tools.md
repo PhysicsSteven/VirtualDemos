@@ -13,3 +13,17 @@ Moved from CLAUDE.md on 2026-11-01. Only the TeacherKeys path and the last check
   (demo entry and the sections' demo lists), `curriculum/topics.json`, QR, Reset all, thumbnails, `tools/courses.py`, and a commit message that says what was built.
 - Handout math: `$$...$$` only (kramdown + MathJax); check with `node curriculum/validation/check_math.cjs` after
   `npm install --no-save mathjax-full@3.2.2`. Don't run scripted notation rewrites over keys or guides.
+
+## Checks (2026-11-01)
+All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud container, and `VD_THREE=<three.min.js r128>` for 3D demos
+(cdnjs is blocked there; `npm pack three@0.128.0`).
+- `node tools/rules.cjs [--keys <TeacherKeys clone>]` runs the house rules (also the pre-commit hook and CI). With `--keys` it also looks for
+  copied answers and for handouts edited since their key PDF was printed (TeacherKeys `worksheet-keys/handout-hashes.json`, written by
+  `fill_key.cjs`). The `constants` rule flags literals in demo code that are close to a value in `demos/lib/constants.js` without equaling it.
+- `node tools/democheck.cjs <demo> [--fast]` is the one command for a new or changed demo: house rules, map entries (catalog, textbook map,
+  topic), Node tests, harvest and leaks, What's new reminder, `vdcheck --only after` and `--only clip`, and the opening state check.
+  `--fast` skips the browser steps.
+- `node tools/opencheck.cjs <demo>... | --all` checks that the opening state is not at equilibrium: the demo moves on open or the first
+  Play or Release press visibly changes the stage. Pictures go to `/tmp/vdcheck/opencheck`.
+- `node tools/beforeafter.cjs <demo> [--ref origin/main]` writes one picture of the demo before and after a change, desktop and phone,
+  light and dark. Attach it to the reply for any visual fix.
