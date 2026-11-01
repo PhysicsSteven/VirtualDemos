@@ -17,6 +17,10 @@
   const VDI18N = { t: (s, v) => (window.VDI18N ? window.VDI18N.t(s, v) : String(s).replace(/\{([A-Za-z_]\w*)\}/g, (a, n) => (v && v[n] != null ? String(v[n]) : a))) };
   /* the page is being translated, or its strings collected (tools/i18n.cjs harvest): what students type is marked translate="no" */
   const OTHER_LANG = !!(window.VDI18N && (window.VDI18N.lang !== 'en' || /[?&]i18n=collect/.test(location.search)));
+  /* boxes this script fills only with text it has translated already (status lines, the bar under a table, the graph and its fit,
+     readings from the demo, the changed worksheet box): i18n.js leaves them alone, so the harvest keeps the VDI18N.t patterns
+     and not every filled in result */
+  const SKIP = OTHER_LANG ? '' : null;
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
@@ -1349,7 +1353,8 @@
     } catch (_) { alert(VDI18N.t('This browser would not save the file.')); }
   };
   const grow = (ta) => { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; };
-  const typeset = (node) => { try { if (window.MathJax && MathJax.typesetPromise && MathJax.startup && MathJax.startup.document) MathJax.typesetPromise([node]); } catch (_) {} };
+  /* in another language the new text is translated first (after the first pass, i18n.js does it in a microtask), then typeset */
+  const typeset = (node) => { const go = () => { try { if (window.MathJax && MathJax.typesetPromise && MathJax.startup && MathJax.startup.document) MathJax.typesetPromise([node]); } catch (_) {} }; if (!OTHER_LANG) go(); else if (window.VDI18N.done) window.VDI18N.done.then(() => setTimeout(go, 0)); else setTimeout(go, 0); };
 
   /* ---------- styles (the page uses the GitHub Pages Primer theme; the --hd- colors for its dark look are set on screen only, in _includes/head-custom.html, so print stays as written) ---------- */
   document.head.appendChild(el('style', { text: `
@@ -1453,7 +1458,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       el('button', { type: 'button', class: 'ws-btn', text: 'Open a saved file', on: { click: () => fileIn.click() } }),
       el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Clear my answers', on: { click: clearAll } }),
       fileIn]);
-    const st = el('p', { class: 'ws-status', role: where === 'top' ? 'status' : null });
+    const st = el('p', { class: 'ws-status', role: where === 'top' ? 'status' : null, 'data-i18n-skip': SKIP });
     statusEls.push(st);
     return [box, st];
   }
@@ -1542,7 +1547,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
     const addCol0 = el('button', { type: 'button', class: 'ws-btn', text: 'Add a column', on: { click: () => { const col = addCol(T, R); col.name.focus(); changed(); } } });
     R.removeCol = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added column', hidden: true, on: { click: () => { dropCol(T, R); changed(); } } });
-    R.bar = el('div', { class: 'ws-bar' });
+    R.bar = el('div', { class: 'ws-bar', 'data-i18n-skip': SKIP });
     const after = el('div', { class: 'ws tex2jax_ignore' }, [R.bar, el('div', { class: 'ws-btns' }, [addRow, R.removeRow, addCol0, R.removeCol]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? VDI18N.t('Settings and notes for this copy') : 'Settings and notes for this table' }), withPrint(R.notes)])]);
     if (GRAPHS.indexOf(SLUG) >= 0 && (T.index === 0 || GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0)) graphBox(T, R, after);
@@ -1738,7 +1743,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   const endBox = el('section', { class: 'ws ws-panel ws-noprint tex2jax_ignore', 'aria-label': 'Save and export' }, [el('h2', { text: 'Save and export' })]);
   buttons('end').forEach((x) => endBox.appendChild(x));
   if (lastSec) { const ln = lastSec.nodes[lastSec.nodes.length - 1] || lastSec.h; ln.parentNode.insertBefore(endBox, ln.nextSibling); } else body.appendChild(endBox);
-  const leftBox = el('section', { class: 'ws ws-left tex2jax_ignore', hidden: true });
+  const leftBox = el('section', { class: 'ws ws-left tex2jax_ignore', hidden: true, 'data-i18n-skip': SKIP });
   endBox.parentNode.insertBefore(leftBox, endBox);
 
   /* ---------- state ---------- */
@@ -1878,7 +1883,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const curve = (CURVE_TABLES[SLUG] || []).indexOf(T.index) >= 0, fit = el('select', { class: 'ws-f ws-sel ws-fitsel', 'aria-label': 'Kind of fit', on: { change: () => { R.axes.fit = fit.value; changed(); } } },
       FIT_KINDS.map(([v, text]) => el('option', { value: v, text })));
     R.axesSel = R.axesSel || {}; R.axesSel.fit = fit;
-    R.graph = el('div');
+    R.graph = el('div', { 'data-i18n-skip': SKIP });
     const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
       el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])].concat(curve ? [] : [el('label', {}, ['Fit ', fit]), el('label', {}, ['Error bars on y ', pick('err', 'Column holding the uncertainty of each y value, for error bars and a weighted fit')])])),
       R.graph]);
@@ -1967,7 +1972,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   function drawPlot(T, R) {
     const box = R.graph; box.innerHTML = '';
     if (box.parentNode) box.parentNode.classList.toggle('ws-noprint', R.axes.x === '' || R.axes.y === '');   /* no axes chosen: nothing to print */
-    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
+    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('Choose a column for each axis to draw a graph of your data.') })); return; }
     const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colShown(T, R, cx)), [yName, yUnit] = nameUnit(colShown(T, R, cy));
     const P = { xName, xUnit, yName, yUnit, title: VDI18N.t('{y} against {x}', { y: yName, x: xName }) };
     const pts = [], ce = errOf(R) === '' ? -1 : +errOf(R);
@@ -2077,7 +2082,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
 
   /* ---------- readings from the demo ---------- */
   const HKEY = 'vd-handoff:' + SLUG, MAP = FROM_DEMO[SLUG], dT = MAP && tables[0];
-  const handBox = el('div', { class: 'ws ws-hand ws-noprint tex2jax_ignore', role: 'status', hidden: true });
+  const handBox = el('div', { class: 'ws ws-hand ws-noprint tex2jax_ignore', role: 'status', hidden: true, 'data-i18n-skip': SKIP });
   if (dT) dT.first.parentNode.insertBefore(handBox, dT.first);
   let handHidden = null;
   function readHand() { try { const h = JSON.parse(localStorage.getItem(HKEY) || 'null'); return h && h.sent && Array.isArray(h.rows) && Array.isArray(h.columns) ? h : null; } catch (_) { return null; } }
@@ -2136,7 +2141,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { storageOK = false; }
   if (stored) { apply(stored); setStatus(VDI18N.t('Your work from {when} is back.', { when: new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) })); }
   else if (!storageOK) setStatus(VDI18N.t('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.'), true);
-  else setStatus('Nothing typed yet. Your work saves in this browser as you type.');
+  else setStatus(VDI18N.t('Nothing typed yet. Your work saves in this browser as you type.'));
   checkHand(); replot();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });
   window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));

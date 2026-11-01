@@ -287,6 +287,8 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     if (!tip) {
       tip = document.createElement('div');
       tip.className = 'sym-tip tex2jax_ignore';
+      /* in another language its text is translated here (VDI18N.t), so i18n.js leaves it alone */
+      if (window.VDI18N && (VDI18N.lang !== 'en' || /[?&]i18n=collect/.test(location.search))) tip.setAttribute('data-i18n-skip', '');
       tip.setAttribute('role', 'tooltip');
       tip.id = 'sym-tip';
       document.body.appendChild(tip);
@@ -301,10 +303,10 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     const mm = document.createElement('mjx-math'); mm.className = 'MJX-TEX';
     els.forEach((x) => { const copy = x.cloneNode(true); copy.classList.remove('sym-on'); mm.appendChild(copy); });
     box.appendChild(mm); head.appendChild(box);
-    const nm = document.createElement('span'); nm.className = 'sym-name'; nm.textContent = e[0]; head.appendChild(nm);
+    const nm = document.createElement('span'); nm.className = 'sym-name'; nm.textContent = window.VDI18N ? VDI18N.t(e[0]) : e[0]; head.appendChild(nm);   /* beside the copied math, which i18n.js does not walk into */
     tip.appendChild(head);
     if (e[1]) { const u = document.createElement('div'); u.className = 'sym-unit'; u.textContent = window.VDI18N ? VDI18N.t('Unit: {unit}', { unit: e[1] }) : 'Unit: ' + e[1]; tip.appendChild(u); }
-    if (e[2]) { const n = document.createElement('div'); n.className = 'sym-note'; n.textContent = e[2]; tip.appendChild(n); }
+    if (e[2]) { const n = document.createElement('div'); n.className = 'sym-note'; n.textContent = window.VDI18N ? VDI18N.t(e[2]) : e[2]; tip.appendChild(n); }
     tip.hidden = false;
     tip.classList.toggle('sym-pinned', !!pin);
     tip.classList.toggle('sym-dark', darkPage());
