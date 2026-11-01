@@ -89,8 +89,9 @@
   }
   function raw(k) {
     if (PSEUDO) return enSet && enSet[k] ? pseudo(k) : null;
-    var c = cats[PAGE]; if (c && c[k] != null) return c[k];
+    var c = SHARED ? null : cats[PAGE]; if (c && c[k] != null) return c[k];
     c = cats.common; if (c && c[k] != null) return c[k];
+    c = cats[PAGE]; if (SHARED && c && c[k] != null) return c[k];
     c = cats.site; if (PAGE !== 'site' && c && c[k] != null) return c[k];
     return null;
   }
@@ -122,7 +123,7 @@
   I.t = function (s, vars) {
     var str = String(s == null ? '' : s), k = str.replace(/\s+/g, ' ').trim();
     var tr = active || COLLECT ? look(k) : null;
-    var out = tr == null ? str : tr;
+    var out = tr == null ? str : str.match(/^\s*/)[0] + tr + (k ? str.match(/\s*$/)[0] : '');   /* keep the spaces around it */
     if (vars) out = out.replace(/\{([A-Za-z_]\w*)\}/g, function (all, n) { return vars[n] == null ? all : String(vars[n]); });
     return out;
   };
@@ -237,8 +238,12 @@
     }
     if (e.tagName === 'INPUT' && /^(button|submit|reset)$/i.test(e.type) && e.value) { var tv = look(e.value.trim()); if (tv != null) e.value = unesc(tv); }
   }
+  /* the shared controls (theme switch, breadcrumbs) take the common translation first, so a page's own sense of a word
+     ("Light" as a kind of wave) does not change them */
+  var SHARED = false;
   function walk(e) {
     if (e.nodeType !== 1 || skipEl(e)) return;
+    if (!SHARED && e.matches && e.matches('.vd-theme, .vd-crumbs, .vd-step, .vd-hbtn')) { SHARED = true; try { walk(e); } finally { SHARED = false; } return; }
     attrs(e);
     /* text already typeset by MathJax was translated before it; its pieces are not keys */
     var typeset = false; for (var m = e.firstElementChild; m; m = m.nextElementSibling) if (/^MJX-/.test(m.tagName)) typeset = true;
