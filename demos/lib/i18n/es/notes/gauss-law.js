@@ -1,0 +1,51 @@
+/* notes/gauss-law in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'notes/gauss-law', {
+"Gauss's Law: teaching notes":
+  "Ley de Gauss: notas para el docente",
+"Gauss's Law":
+  "Ley de Gauss",
+"The net flux through any closed surface is Q_enc/ε₀, whatever its shape and size and wherever the charges sit inside.":
+  "El flujo neto a través de cualquier superficie cerrada es Q_enc/ε₀, sin importar su forma ni su tamaño ni dónde estén las cargas dentro de ella.",
+"Charges outside change the field on the surface but add zero net flux; zero net flux does not mean zero field.":
+  "Las cargas de afuera cambian el campo sobre la superficie pero agregan un flujo neto cero; un flujo neto cero no significa un campo cero.",
+"Gauss's law always holds, but gives E directly only when symmetry makes E constant and perpendicular on the surface: E ∝ {#}/r² outside a sphere, E ∝ r inside a uniform ball, E ∝ {#}/r for a line, E constant for a plane.":
+  "La ley de Gauss siempre se cumple, pero da E directamente solo cuando la simetría hace que E sea constante y perpendicular sobre la superficie: E ∝ {#}/r² fuera de una esfera, E ∝ r dentro de una esfera uniforme, E ∝ {#}/r para una línea, E constante para un plano.",
+"Students need the point charge field, flux as E·A, and line and surface charge densities. <strong>Any surface</strong> integrates the flux numerically without using Gauss's law; <strong>Symmetry</strong> walks through the derivation step by step. <strong>Pause</strong> stops the motion so you can drag things.":
+  "Los estudiantes necesitan el campo de una carga puntual, el flujo como E·A y las densidades de carga lineal y superficial. <strong>Cualquier superficie</strong> integra el flujo numéricamente sin usar la ley de Gauss; <strong>Simetría</strong> recorre la deducción paso a paso. <strong>Pausa</strong> detiene el movimiento para que puedas arrastrar cosas.",
+"<strong>Charge inside.</strong> A {#} nC charge wanders inside a sphere; Q_enc/ε₀ and the numerical ∮E·dA both stay {#} N·m²/C. Ask Q1, then change <strong>Radius R</strong> and try <strong>Box</strong> or <strong>Freeform</strong>.":
+  "<strong>Carga adentro.</strong> Una carga de {#} nC se mueve al azar dentro de una esfera; Q_enc/ε₀ y la ∮E·dA numérica se mantienen ambas en {#} N·m²/C. Haz la P1, luego cambia <strong>Radio R</strong> y prueba <strong>Caja</strong> o <strong>Forma libre</strong>.",
+"<strong>Charge outside.</strong> Lines enter and leave; the flux out and the flux in (their sizes change as the charge wanders) always cancel. Drag the charge inside: Φ jumps to q/ε₀.":
+  "<strong>Carga afuera.</strong> Las líneas entran y salen; el flujo que sale y el flujo que entra (sus tamaños cambian a medida que la carga se mueve) siempre se cancelan. Arrastra la carga hacia adentro: Φ salta a q/ε₀.",
+"<strong>Dipole inside.</strong> Q_enc = {#}, Φ = {#}, yet E is strong on parts of the box. Add a charge with <strong>+{#} nC</strong> and predict the new flux.":
+  "<strong>Dipolo adentro.</strong> Q_enc = {#}, Φ = {#}, y aun así E es intenso en partes de la caja. Agrega una carga con <strong>+{#} nC</strong> y predice el nuevo flujo.",
+"<strong>Uniform sphere.</strong> Follow <strong>Gauss's law, step by step</strong>; pause and drag r inside and outside the ball. Then try <strong>Conductor</strong>.":
+  "<strong>Esfera uniforme.</strong> Sigue <strong>La ley de Gauss, paso a paso</strong>; pausa y arrastra r dentro y fuera de la esfera. Luego prueba <strong>Conductora</strong>.",
+"<strong>Line of charge</strong> and <strong>Plane of charge.</strong> Change the cylinder length L or the cap distance h: E does not change.":
+  "<strong>Línea de carga</strong> y <strong>Plano de carga.</strong> Cambia la longitud L del cilindro o la distancia h de la tapa: E no cambia.",
+"<strong>Q1.</strong> Predict: in <strong>Charge inside</strong>, if the sphere's radius is doubled, does the flux double, quadruple, fall to a quarter, or stay the same? Explain from how E and the area change, then check.":
+  "<strong>P1.</strong> Predice: en <strong>Carga adentro</strong>, si el radio de la esfera se duplica, ¿el flujo se duplica, se cuadruplica, baja a una cuarta parte o se queda igual? Explícalo a partir de cómo cambian E y el área, luego compruébalo.",
+"<strong>Q2.</strong> In <strong>Charge outside</strong> the field on the sphere is not zero, yet the net flux is. Explain. Does zero net flux mean zero field everywhere on the surface? Use <strong>Dipole inside</strong> in your answer.":
+  "<strong>P2.</strong> En <strong>Carga afuera</strong> el campo sobre la esfera no es cero, pero el flujo neto sí. Explica. ¿Un flujo neto cero significa un campo cero en todas partes de la superficie? Usa <strong>Dipolo adentro</strong> en tu respuesta.",
+"<strong>Q3.</strong> A closed surface surrounds +{#} nC. What is the flux? Then −{#} nC is added inside and +{#} nC outside. What is the new flux? Set it up in <strong>Any surface</strong> to check.":
+  "<strong>P3.</strong> Una superficie cerrada rodea +{#} nC. ¿Cuál es el flujo? Luego se agregan −{#} nC adentro y +{#} nC afuera. ¿Cuál es el nuevo flujo? Arma la situación en <strong>Cualquier superficie</strong> para comprobarlo.",
+"<strong>Q4.</strong> In <strong>Uniform sphere</strong>, Q = {#} nC is spread evenly through a ball of radius {#} cm. Find E at r = {#} cm, at the surface, and at r = {#} cm. Where is E largest? Check with the step panel.":
+  "<strong>P4.</strong> En <strong>Esfera uniforme</strong>, Q = {#} nC se reparte uniformemente en una esfera de radio {#} cm. Encuentra E en r = {#} cm, en la superficie y en r = {#} cm. ¿Dónde es mayor E? Compruébalo con el panel de pasos.",
+"<strong>Q5.</strong> For a line with λ = {#} nC/m, find E at r = {#} cm. Why does the cylinder's length not matter? For a real wire {#} m long, where would this result stop being accurate?":
+  "<strong>P5.</strong> Para una línea con λ = {#} nC/m, encuentra E en r = {#} cm. ¿Por qué no importa la longitud del cilindro? Para un alambre real de {#} m de largo, ¿dónde dejaría de ser exacto este resultado?",
+"<strong>Q6.</strong> Switch the sphere to <strong>Conductor</strong>. Why is E zero inside, and why does E jump at the surface instead of rising smoothly as for the ball?":
+  "<strong>P6.</strong> Cambia la esfera a <strong>Conductora</strong>. ¿Por qué E es cero adentro, y por qué E salta en la superficie en lugar de subir suavemente como en la esfera uniforme?",
+"<strong>\"Gauss's law only works for symmetric surfaces.\"</strong> It holds for every closed surface (try <strong>Freeform</strong>); symmetry is needed only to solve for E.":
+  "<strong>\"La ley de Gauss solo funciona para superficies simétricas.\"</strong> Se cumple para toda superficie cerrada (prueba <strong>Forma libre</strong>); la simetría solo se necesita para despejar E.",
+"<strong>\"Zero flux means zero field on the surface.\"</strong> In <strong>Dipole inside</strong> inward and outward flux cancel where E is strong.":
+  "<strong>\"Un flujo cero significa un campo cero sobre la superficie.\"</strong> En <strong>Dipolo adentro</strong> el flujo hacia adentro y hacia afuera se cancelan donde E es intenso.",
+"<strong>\"Charges outside do not affect the field on the surface.\"</strong> They do; they only add zero net flux.":
+  "<strong>\"Las cargas de afuera no afectan el campo sobre la superficie.\"</strong> Sí lo afectan; solo agregan un flujo neto cero.",
+"<strong>\"A bigger surface catches more flux.\"</strong> E falls as {#}/r² while the area grows as r².":
+  "<strong>\"Una superficie más grande atrapa más flujo.\"</strong> E disminuye como {#}/r² mientras el área crece como r².",
+"<strong>Any surface</strong>: point charges in the plane z = {#} (the slice you see), with 3D Gaussian surfaces (sphere, cylinder, or box or freeform prism extended ± half the depth). ∮E·dA is computed by adaptive quadrature from the full 3D field. In a slice, line spacing does not show field strength, and line counts are only a picture of the flux.":
+  "<strong>Cualquier superficie</strong>: cargas puntuales en el plano z = {#} (el corte que ves), con superficies gaussianas en 3D (esfera, cilindro, o caja o prisma de forma libre extendido ± la mitad de la profundidad). ∮E·dA se calcula por cuadratura adaptativa a partir del campo 3D completo. En un corte, la separación de las líneas no muestra la intensidad del campo, y el número de líneas es solo una imagen del flujo.",
+"A point charge exactly on the surface has no defined flux. Closer than {#} cm the demo skips the numerical integral and says so: a numerical exclusion zone, not physics. If an adaptive integral ever runs out of panels before its error target, the rail says so. <strong>Readings</strong> captures the flux with the geometry and exports a CSV in SI units. In Symmetry mode, <strong>Show data table</strong> under Plot data lists E against distance for screen readers or for copying.":
+  "Una carga puntual exactamente sobre la superficie no tiene un flujo definido. A menos de {#} cm la demo omite la integral numérica y lo indica: una zona de exclusión numérica, no física. Si alguna vez una integral adaptativa se queda sin paneles antes de alcanzar su error objetivo, el panel lateral lo indica. <strong>Lecturas</strong> captura el flujo con la geometría y exporta un CSV en unidades SI. En el modo Simetría, <strong>Mostrar la tabla de datos</strong> en Graficar datos enumera E contra la distancia para lectores de pantalla o para copiar.",
+"<strong>Symmetry</strong>: ideal distributions; the line and plane are infinite, the ball is a uniformly charged insulator, the conductor's charge sits on its surface, so on that surface E has no single value: it jumps from {#} to kQ/R² (by σ/ε₀). At r = {#}, E = {#} for the ball and the conductor. {#} nC enclosed gives {#} N·m²/C.":
+  "<strong>Simetría</strong>: distribuciones ideales; la línea y el plano son infinitos, la esfera es un aislante cargado uniformemente, la carga del conductor está en su superficie, así que sobre esa superficie E no tiene un solo valor: salta de {#} a kQ/R² (en σ/ε₀). En r = {#}, E = {#} para la esfera uniforme y el conductor. {#} nC encerrados dan {#} N·m²/C."
+});
