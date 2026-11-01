@@ -40,6 +40,8 @@
 .status3d:empty { display: none; }
 .cap3d { position: absolute; left: 10px; right: 10px; bottom: 6px; margin: 0; z-index: 2; font-size: 0.78rem; color: var(--muted); pointer-events: none; text-shadow: 0 0 4px var(--canvas); }
 @media (max-width: 520px) { .cap3d { display: none; } }
+/* a longer language on a phone: the strip's buttons a little tighter, so it wraps no more than the English one and never covers the picture */
+@media (max-width: 420px) { :root[data-vd-lang] .viewbar { gap: 4px; } :root[data-vd-lang] .viewbar > button, :root[data-vd-lang] .viewbar .seg button { padding-left: 7px; padding-right: 7px; font-size: 0.8rem; } }
 
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
@@ -1657,6 +1659,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   refreshTokens();
   new ResizeObserver(resize).observe(boxPane);
   new ResizeObserver(resize).observe(histPane);
+  /* the strip grows when Tools or Follow appears or a translation is longer: place the clock and the picture again, so the clock
+     never sits on a strip button */
+  new ResizeObserver(resize).observe(document.querySelector('#boxPane .viewbar'));
   resize();
   setRunning(running);
   applyPreset('relax');

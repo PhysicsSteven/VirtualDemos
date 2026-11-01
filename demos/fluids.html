@@ -2588,7 +2588,7 @@ table.rows button:hover { color: var(--pos); }
           for (let i = 0; i < 40; i++) { c.fillStyle = 'rgba(120,75,35,0.12)'; c.fillRect(0, VDK.rnd() * 256, 256, 1 + VDK.rnd() * 2); }
         }
         m = VDK.std({ map: T2.t, roughness: key === 'cork' ? 0.95 : 0.62, metalness: 0 });
-      } else if (key === 'ice') m = VDK.std({ color: '#c8ecf8', transparent: true, opacity: 0.8, roughness: 0.06, metalness: 0.05, envMap: G3.env, envMapIntensity: 1.5 });
+      } else if (key === 'ice') m = VDK.std({ color: '#9fd2ea', transparent: true, opacity: 0.9, roughness: 0.28, metalness: 0.02, envMap: G3.env, envMapIntensity: 0.7 });   /* frosted, so the block shows against the seawater in both themes */
       else if (key === 'al') m = VDK.std({ color: '#cfd4da', metalness: 0.72, roughness: 0.3, envMap: G3.env });
       else if (key === 'steel') m = VDK.std({ color: '#9ca3ab', metalness: 0.8, roughness: 0.36, envMap: G3.env });
       else if (key === 'lead') m = VDK.std({ color: '#70757e', metalness: 0.42, roughness: 0.58, envMap: G3.env });

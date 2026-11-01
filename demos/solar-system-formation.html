@@ -39,6 +39,8 @@
 @media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
 @media (max-width: 420px) { .scene { height: 380px; } .stage-ctl .clock { margin-left: 0; width: 100%; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -784,10 +786,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('play').textContent = S.run ? 'Pause' : finished() ? 'Done' : started ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run && !finished()); }
   function resetStage(st) { if (st === 'collapse') resetCollapse(); else if (st === 'planets') resetGrowth(); else if (st === 'melt') resetMelt(); }
   function goStage(st, keep) { S.st = st; if (!keep) S.run = false; dirty3 = true; if (g3) g3.key = ''; sync(); setRun(false); redraw(); }
-  function applyPreset(k) {
+  function applyPreset(k, opening) {
     const c = PRESETS[k]; S.preset = k;
     for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'f', 'gas', 'R', 'tf']) if (c[key] != null) S[key] = c[key];
-    $('presetHint').textContent = c.hint; resetStage(c.st); S.st = c.st; sync(); goStage(c.st); if (c.st !== 'disk' && !reduce) setRun(true);
+    $('presetHint').textContent = c.hint; resetStage(c.st); S.st = c.st; sync(); goStage(c.st); if (c.st !== 'disk' && !reduce && !opening) setRun(true);
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#stageSeg button')) b.addEventListener('click', () => { if (b.dataset.st !== S.st) goStage(b.dataset.st); });
@@ -891,7 +893,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resetCollapse(); resetGrowth(); resetMelt();
   const qs = new URLSearchParams(location.search), first = PRESETS[qs.get('setup')] ? qs.get('setup') : 'nebula';
   new ResizeObserver(resize).observe($('scene')); resize();
-  applyPreset(first);
+  /* the page opens paused at the start, with the set up card on show and Start lit, so a student sees the controls first and the
+     first press of Start visibly sets the cloud falling (a Setups chip still starts its run at once) */
+  applyPreset(first, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {} });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', timeUnit: 'yr', time: () => (S.st === 'collapse' ? CL.C.t : null) });

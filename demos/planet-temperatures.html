@@ -65,6 +65,8 @@
 }
 @media (max-width: 420px) { .pane.sys { height: 300px; } .pane.bud { height: 300px; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -527,7 +529,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (ref > 0.05) arrow(c, xs[1], airTop, top + 2 * p, wOf(ref), K.refl);
     if (gh) { arrow(c, xs[2], ground, mid, wOf(surf), K.ir, { alpha: 0.4 }); arrow(c, xs[2], airTop, top + 2 * p, wOf(out), K.ir); arrow(c, xs[3], mid, ground, wOf(back), K.ir, { alpha: 0.75 }); }
     else arrow(c, xs[2], ground, top + 2 * p, wOf(surf), K.ir);
-    const tl = (t, x, y, col, al = 'center') => { c.font = `600 ${10 * p}px ${K.ui}`; c.textAlign = al; c.textBaseline = 'middle'; c.lineWidth = 3.5 * p; c.lineJoin = 'round'; c.strokeStyle = K.canvas; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); };
+    const tl = (t, x, y, col, al = 'center') => { c.font = `600 ${10 * p}px ${K.ui}`; c.textAlign = al; c.textBaseline = 'middle';
+      if (al === 'center') { const hw = c.measureText(t).width / 2 + 2 * p; x = Math.max(hw, Math.min(Rr - hw, x)); } c.lineWidth = 3.5 * p; c.lineJoin = 'round'; c.strokeStyle = K.canvas; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); };
     const Wt = (P) => `${sig(P, 3)} W/m²`, two = (a1, a2, x, y) => { tl(a1, x, y, K.ink); tl(a2, x, y + 12 * p, K.ink); };
     two('starlight in', Wt(inP), xs[0], top + 14 * p);
     if (ref > 0.05) two('reflected', Wt(ref), xs[1], airTop + 14 * p);
@@ -537,7 +540,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
     const lt = gh ? (lay.kind === 'one' ? `air: like one layer absorbing ${fx(lay.eps * 100, 0)} % of the heat radiation` : `air: like ${sig(lay.n, 2)} layers each absorbing all of it${lay.n > 14 ? ' (14 drawn)' : ''}`)
       : (S.gh ? 'no greenhouse at this setting (e = 1)' : 'greenhouse off: all the heat radiation escapes');
-    tl(lt, L + 4 * p, airTop - 9 * p, K.muted, 'left');
+    /* the air's caption sits on a pill so the arrows behind it never cut through the words; a long caption (a narrow pane, a longer
+       language) wraps onto two lines, translated whole first and drawn raw so the pieces are not looked up again */
+    { const I = window.VDI18N, tr = I && I.t ? I.t(lt) : lt, raw = (f) => (I && I.raw ? I.raw(f) : f());
+      raw(() => { c.font = `600 ${10 * p}px ${K.ui}`; const room = Rr - L - 10 * p, words = tr.split(' '), lines = [];
+        let ln = ''; for (const w of words) { const t2 = ln ? `${ln} ${w}` : w; if (ln && c.measureText(t2).width > room) { lines.push(ln); ln = w; } else ln = t2; } lines.push(ln);
+        const lh = 12 * p, wMax = Math.max(...lines.map((t2) => c.measureText(t2).width)), y0 = airTop - 9 * p - (lines.length - 1) * lh;
+        c.fillStyle = K.canvas; c.globalAlpha = 0.86; c.beginPath(); if (c.roundRect) c.roundRect(L + 1 * p, y0 - 7 * p, wMax + 8 * p, lines.length * lh + 2 * p, 4 * p); else c.rect(L + 1 * p, y0 - 7 * p, wMax + 8 * p, lines.length * lh + 2 * p); c.fill(); c.globalAlpha = 1;
+        lines.forEach((t2, i) => tl(t2, L + 5 * p, y0 + i * lh, K.muted, 'left')); }); }
     c.font = `${10 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(`balance: absorbed ${sig(ab, 3)} = escaping ${sig(out, 3)} W/m²`, L, BH - 3 * p);
     drawThermo(c, Rr + 2 * p, top, thW - 4 * p, ground, st);
@@ -556,7 +566,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const vis = marks.filter((m) => m[0] <= Tm).map((m) => ({ m, ty: y(m[0]) })).sort((a1, b1) => b1.ty - a1.ty), gap = 11 * p;
     for (let i = 1; i < vis.length; i++) if (vis[i - 1].ty - vis[i].ty < gap) vis[i].ty = vis[i - 1].ty - gap;
     for (const v of vis) { const [T, col, t, dash] = v.m; c.strokeStyle = col; c.lineWidth = 1.5 * p; c.setLineDash(dash ? [3, 3] : []); c.beginPath(); c.moveTo(xb - 1 * p, y(T)); c.lineTo(xb + bw + 4 * p, y(T)); c.lineTo(xb + bw + 8 * p, v.ty); c.stroke(); c.setLineDash([]);
-      c.font = `600 ${9 * p}px ${K.ui}`; c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(t, xb + bw + 10 * p, v.ty); }
+      c.font = `600 ${9 * p}px ${K.ui}`; c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'middle';
+      /* a label longer than the room left of the pane's edge (a longer language) is drawn narrower, never cut off */
+      const room = BW - (xb + bw + 10 * p) - 2 * p, tw = c.measureText(t).width; if (tw > room) c.fillText(t, xb + bw + 10 * p, v.ty, Math.max(10, room)); else c.fillText(t, xb + bw + 10 * p, v.ty); }
     c.font = `700 ${9.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('K', xb + bw / 2, bot + 3 * p);
     void w;
   }
@@ -597,9 +609,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* measured temperatures of the Sun's inner worlds */
     c.font = `600 ${9.5 * p}px ${K.ui}`; c.textBaseline = 'middle';
+    const halo = (t, x, y) => { c.save(); c.lineWidth = 3.5 * p; c.lineJoin = 'round'; c.strokeStyle = K.canvas; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
     for (const m of meas) { const x = X(m.d) + (m.n === 'Moon' ? 7 * p : 0); c.fillStyle = K.meas; c.strokeStyle = K.meas; c.lineWidth = 2 * p;
-      if (m.v) { c.beginPath(); c.moveTo(x, Y(m.v) - 5 * p); c.lineTo(x + 5 * p, Y(m.v)); c.lineTo(x, Y(m.v) + 5 * p); c.lineTo(x - 5 * p, Y(m.v)); c.closePath(); c.fill(); c.textAlign = 'left'; c.fillText(m.n, x + 7 * p, Y(m.v)); }
-      else { c.beginPath(); c.moveTo(x, Y(m.lo)); c.lineTo(x, Y(m.hi)); c.stroke(); c.fillRect(x - 4 * p, Y(m.lo) - 1, 8 * p, 2); c.fillRect(x - 4 * p, Y(m.hi) - 1, 8 * p, 2); c.textAlign = 'left'; c.fillText(m.n, x + 6 * p, m.n === 'Moon' ? Y(m.lo) - 8 * p : Y(m.hi) + 8 * p); } }
+      if (m.v) { c.beginPath(); c.moveTo(x, Y(m.v) - 5 * p); c.lineTo(x + 5 * p, Y(m.v)); c.lineTo(x, Y(m.v) + 5 * p); c.lineTo(x - 5 * p, Y(m.v)); c.closePath(); c.fill(); c.textAlign = 'left'; halo(m.n, x + 7 * p, Y(m.v)); }
+      else { c.beginPath(); c.moveTo(x, Y(m.lo)); c.lineTo(x, Y(m.hi)); c.stroke(); c.fillRect(x - 4 * p, Y(m.lo) - 1, 8 * p, 2); c.fillRect(x - 4 * p, Y(m.hi) - 1, 8 * p, 2); c.textAlign = 'left'; halo(m.n, x + 6 * p, m.n === 'Moon' ? Y(m.lo) - 8 * p : Y(m.hi) + 8 * p); } }
     /* this planet */
     if (!S.blind) { const x = X(S.d), y = Y(st.ts); c.fillStyle = K.accent; c.beginPath(); c.arc(x, y, 5 * p, 0, 2 * Math.PI); c.fill(); c.strokeStyle = K.canvas; c.lineWidth = 1.5; c.stroke(); }
     if (!narrow) { c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
@@ -718,7 +731,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const galC = $('gal'), gctx = galC.getContext('2d');
   let GW = 0, GH = 0, grid = null, gridKey = '', gG = {}, gDrag = null;
   const gOpts = () => ({ g: GS.g, pE: GS.pE, tLife: GS.tLife });
-  function ghzNow() { const k = `${GS.g}|${GS.pE}|${GS.tLife}`; if (k !== gridKey) { grid = ghzGrid(gOpts()); gridKey = k; mapImg = null; } return grid; }
+  function ghzNow() { const k = `${GS.g}|${GS.pE}|${GS.tLife}|${K && K.dark ? 'd' : 'l'}`; if (k !== gridKey) { grid = ghzGrid(gOpts()); gridKey = k; mapImg = null; } return grid; }
   /* the disk drawn face on: a two armed log spiral with a bar, seeded dots, for orientation only (a drawing, not a map) */
   const DISK = (() => { let a = 12345; const r = () => { a = (a * 1103515245 + 12345) & 0x7fffffff; return a / 0x7fffffff; }; const g = () => Math.sqrt(-2 * Math.log(r() + 1e-12)) * Math.cos(2 * Math.PI * r()); const pts = [];
     for (let i = 0; i < 4200; i++) { const R = -2.6 * Math.log(1 - 0.995 * r()), arm = i % 2, th = arm * Math.PI + Math.log(Math.max(R, 3) / 3) / Math.tan(12.5 * Math.PI / 180) + 0.22 * g(); if (R < 18) pts.push([R * Math.cos(th), R * Math.sin(th), r(), 0]); }
@@ -726,16 +739,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 700; i++) { const u = 4.5 * g() * 0.45, v = 1.2 * g() * 0.45, t = 0.47; pts.push([u * Math.cos(t) - v * Math.sin(t), u * Math.sin(t) + v * Math.cos(t), r(), 2]); }
     return pts; })();
   let mapImg = null;
-  function pColor(f) { const st = [[0, [10, 14, 22]], [0.25, [24, 70, 60]], [0.55, [40, 150, 90]], [0.8, [150, 210, 110]], [1, [240, 245, 170]]]; let i = 0; while (i < st.length - 2 && f > st[i + 1][0]) i++;
+  /* the map's color scale: dark to bright in the dark theme, paper to deep green in the light theme (more stars that could have life
+     reads as more ink on a light page) */
+  function pColor(f) { const st = K && !K.dark ? [[0, [247, 249, 246]], [0.25, [200, 232, 205]], [0.55, [110, 190, 125]], [0.8, [36, 130, 70]], [1, [8, 70, 40]]]
+      : [[0, [10, 14, 22]], [0.25, [24, 70, 60]], [0.55, [40, 150, 90]], [0.8, [150, 210, 110]], [1, [240, 245, 170]]]; let i = 0; while (i < st.length - 2 && f > st[i + 1][0]) i++;
     const [a, c0] = st[i], [b, c1] = st[i + 1], u = Math.max(0, Math.min(1, (f - a) / (b - a))); return c0.map((v, k) => Math.round(v + (c1[k] - v) * u)); }
   function drawGal() {
     if (!GS.on || !GW) return;
     const c = gctx, p = proj(), z = ghzNow(), q = ghzFactors(GS.R, GS.ago, gOpts()), wide = GW >= 760;
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, GW, GH);
-    const pad = 12 * p;
-    const A = wide ? [pad, pad, Math.min(GW * 0.46, GH - 2 * pad), 0] : [pad, pad, GW - 2 * pad, 0]; A[3] = A[2];
-    const M = wide ? [A[0] + A[2] + 64 * p, pad + 30 * p, GW - A[2] - 3 * pad - 64 * p, GH * 0.55 - 60 * p] : [52 * p, A[1] + A[3] + 46 * p, GW - 66 * p, 300 * p];
-    const Bt = wide ? [A[0] + A[2] + 2 * pad, GH * 0.55 + 10 * p, GW - A[2] - 4 * pad, GH * 0.45 - 20 * p] : [pad, M[1] + M[3] + 46 * p, GW - 2 * pad, GH - M[1] - M[3] - 56 * p];
+    const pad = 12 * p, dk = K.dark, inkM = dk ? '#ffffff' : '#10202a', sunM = dk ? '#ffd27a' : '#a85c00';
+    /* wide: the disk at the top left with the four bars under it, the map taking the whole right column; when the window is too
+       short for bars under the disk (a wide, short pane) the bars go under the map as before */
+    const A = wide ? [pad, pad, Math.min(GW * 0.46, GH - 2 * pad), 0] : [pad, pad, GW - 2 * pad, 0];
+    const under = wide && GH - 2 * pad - Math.min(A[2], GH * 0.6) >= 230 * p;
+    if (under) A[2] = Math.min(A[2], GH - 3 * pad - 230 * p);
+    A[3] = A[2];
+    const M = !wide ? [52 * p, A[1] + A[3] + 46 * p, GW - 66 * p, 300 * p]
+      : under ? [A[0] + A[2] + 64 * p, pad + 30 * p, GW - A[2] - 3 * pad - 64 * p, GH - pad - 30 * p - 48 * p]
+      : [A[0] + A[2] + 64 * p, pad + 30 * p, GW - A[2] - 3 * pad - 64 * p, GH * 0.55 - 60 * p];
+    const Bt = !wide ? [pad, M[1] + M[3] + 46 * p, GW - 2 * pad, GH - M[1] - M[3] - 56 * p]
+      : under ? [A[0], A[1] + A[3] + 14 * p, A[2], GH - A[3] - 2 * pad - 14 * p]
+      : [A[0] + A[2] + 2 * pad, GH * 0.55 + 10 * p, GW - A[2] - 4 * pad, GH * 0.45 - 20 * p];
     // the disk, face on, with today's zone as rings
     const cx = A[0] + A[2] / 2, cy = A[1] + A[3] / 2, s = A[2] / 2 / 18.5;
     c.fillStyle = '#04060b'; c.beginPath(); c.roundRect ? c.roundRect(A[0], A[1], A[2], A[3], 8 * p) : c.rect(A[0], A[1], A[2], A[3]); c.fill();
@@ -775,7 +800,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.imageSmoothingEnabled = true; c.drawImage(mapImg, M[0], M[1], M[2], M[3]); c.restore();
     // contours as cell edges of the 68% and 95% sets
     c.save(); c.beginPath(); c.rect(M[0], M[1], M[2], M[3]); c.clip();
-    for (const [lv, col, w] of [[z.lev[0.95], 'rgba(255,255,255,0.55)', 1], [z.lev[0.68], '#ffffff', 1.8]]) {
+    for (const [lv, col, w] of [[z.lev[0.95], dk ? 'rgba(255,255,255,0.55)' : 'rgba(16,32,42,0.45)', 1], [z.lev[0.68], inkM, 1.8]]) {
       c.strokeStyle = col; c.lineWidth = w * p; c.beginPath();
       const inS = (i, j) => i >= 0 && j >= 0 && i < z.nR && j < z.nT && z.H[j * z.nR + i] >= lv;
       for (let j = 0; j < z.nT; j++) for (let i = 0; i < z.nR; i++) { if (!inS(i, j)) continue;
@@ -791,11 +816,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, 'distance from the center R (kpc)', M[0] + M[2], M[1] + M[3] + 24 * p, { a: 'right', s: 10.5, col: K.muted, bg: K.canvas });
     label(c, 'born how long ago (Gyr)', M[0] - 40 * p, M[1] - 12 * p, { s: 10.5, col: K.muted, bg: K.canvas });
     label(c, wide ? 'Where and when the stars that could have complex life today were born' : 'Where and when they were born', M[0] - 40 * p, M[1] - 28 * p, { s: 11, w: 700, col: K.ink, bg: K.canvas });
-    const ux = MX(GHZ.R0), uy = MY(GHZ.tSun); c.fillStyle = '#ffd27a'; c.beginPath(); c.arc(ux, uy, 4 * p, 0, 2 * Math.PI); c.fill(); label(c, 'Sun', ux + 7 * p, uy - 8 * p, { s: 10, w: 700, col: '#ffd27a' });
-    const kx = MX(GS.R), ky = MY(GS.ago), hk = gDrag === 'map'; c.strokeStyle = '#ffffff'; c.lineWidth = (hk ? 2.2 : 1.4) * p;
+    const ux = MX(GHZ.R0), uy = MY(GHZ.tSun); c.fillStyle = sunM; c.beginPath(); c.arc(ux, uy, 4 * p, 0, 2 * Math.PI); c.fill(); label(c, 'Sun', ux + 7 * p, uy - 8 * p, { s: 10, w: 700, col: sunM, bg: dk ? undefined : 'rgba(255,255,255,0.85)' });
+    const kx = MX(GS.R), ky = MY(GS.ago), hk = gDrag === 'map'; c.strokeStyle = inkM; c.lineWidth = (hk ? 2.2 : 1.4) * p;
     c.beginPath(); c.moveTo(kx - 10 * p, ky); c.lineTo(kx + 10 * p, ky); c.moveTo(kx, ky - 10 * p); c.lineTo(kx, ky + 10 * p); c.stroke();
     c.beginPath(); c.arc(kx, ky, 6 * p, 0, 2 * Math.PI); c.stroke();
-    label(c, 'solid line: 68%, faint: 95%', M[0] + M[2] - 6 * p, M[1] + 12 * p, { a: 'right', s: 10, col: '#ffffff' });
+    label(c, 'solid line: 68%, faint: 95%', M[0] + M[2] - 6 * p, M[1] + 12 * p, { a: 'right', s: 10, col: inkM, bg: dk ? undefined : 'rgba(255,255,255,0.85)' });
     gG.map = { M, MX, MY };
     // the four ingredients and their product for the chosen star
     const bars = [[wide ? 'Enough metals for Earths' : 'Enough metals', q.pm, `[Fe/H] = ${fx(q.feh, 2)}`], [wide ? 'No giant planet wrecking them' : 'No wrecking giant', q.pk, `${fx(100 * (1 - q.pk), 1)}% have one`],

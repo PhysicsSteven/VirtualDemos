@@ -11,7 +11,7 @@ Student worksheet · Astro 2203
 **Using the demo.**
 
 - The large view shows the star, its habitable zone in green (dark green for the conservative zone, light green for the optimistic one) and the planet on its orbit, in 3D or flat from above. Drag the planet in or out to change its distance from the star. The orbits of Mercury, Venus, Earth and Mars are drawn for comparison when the star is the Sun.
-- The card on the picture sets the star (its luminosity, the total power it gives out, in units of the Sun's, and its surface temperature) and the planet: its distance in astronomical units (AU), its albedo (the share of starlight it reflects), how its heat is shared (over the whole planet, the day side only, or just the spot with the star straight overhead), its greenhouse and its escape speed. Click a number on the card to type an exact value.
+- The card on the picture sets the star (its luminosity, the total power it gives out, in units of the Sun's, and its surface temperature) and the planet: its distance in astronomical units (AU), its albedo (the share of starlight it reflects), how its heat is shared (over the whole planet, the day side only, or just the spot with the star straight overhead), its greenhouse and its escape speed.
 - Beside it, the energy budget follows one square meter: the starlight coming in, the share reflected, the heat radiation from the ground, the share that escapes to space and the share the air sends back down. The thermometer shows the planet's temperature with no greenhouse, its surface temperature in the model, the measured temperature, and where water freezes and boils.
 - The chart below shows either the temperature against distance from the star, with the habitable zone, or the speeds of gas molecules against temperature compared with each world's escape speed (Keeping an atmosphere).
 - The greenhouse setting is one number, the share of the ground's heat radiation that escapes to space: 1 means no greenhouse. Each setup with air starts with the value that matches the measured temperature. The readouts say what kind of simple atmosphere would give it.
@@ -47,7 +47,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: starlight and distance.** Choose the Earth setup and switch the greenhouse off. Record a reading with Earth at 0.5, 0.75, 1, 1.5, 2 and 3 AU from the Sun (click the distance on the card to type it). Send the readings to the worksheet, then clear them.
+**Part 1: starlight and distance.** Choose the Earth setup and switch the greenhouse off. Record a reading with Earth at 0.5, 0.75, 1, 1.5, 2 and 3 AU from the Sun. Send the readings to the worksheet, then clear them.
 
 **Part 2: worlds with no greenhouse.** Choose each of Mercury, Venus, Earth, the Moon and Mars in turn, switch the greenhouse off if it is on, and record a reading. Send the five readings to the worksheet, then clear them. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)
 

@@ -33,9 +33,9 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "Many nuclei":
   "Muchos núcleos",
 "Alpha decay":
-  "Desintegración alfa",
+  "Desintegración α",
 "Beta decay":
-  "Desintegración beta",
+  "Desintegración β",
 "Step":
   "Paso",
 "t = {#} steps":
@@ -533,5 +533,61 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "Potential energy of the alpha":
   "Energía potencial de la alfa",
 "parent gone":
-  "la madre se acabó"
+  "la madre se acabó",
+"t in steps, min, h, d, yr, Myr or Gyr by setup · λ = ln {#} / T½":
+  "t en pasos, min, h, d, años, Myr o Gyr según la configuración · λ = ln {#} / T½",
+"Potassium {#}: dating Moon rocks":
+  "Potasio {#}: fechar rocas lunares",
+"Aluminum {#}: early heat":
+  "Aluminio {#}: el calor temprano",
+"Potassium {#} dates rocks: a melt lets the argon gas out, and once the rock sets, the argon made by the decay is trapped. The oldest rocks from the lunar highlands set about {#} billion years ago, about {#} half lives: watch how few of the starting potassium {#} nuclei would still be there.":
+  "El potasio {#} fecha rocas: al fundirse, la roca deja escapar el gas argón, y una vez que se solidifica, el argón que produce la desintegración queda atrapado. Las rocas más antiguas de las tierras altas lunares se solidificaron hace unos {#} mil millones de años, unas {#} vidas medias: observa qué pocos de los núcleos de potasio {#} iniciales seguirían ahí.",
+"t = {#} Gyr":
+  "t = {#} Gyr",
+"<i></i>⁴⁰Ca, ⁴⁰Ar":
+  "<i></i>⁴⁰Ca, ⁴⁰Ar",
+"activity in decays per Gyr":
+  "actividad en desintegraciones por Gyr",
+"Half life of ⁴⁰K":
+  "Vida media del ⁴⁰K",
+"λ = ln {#} / T½ (Gyr⁻¹)":
+  "λ = ln {#} / T½ (Gyr⁻¹)",
+"{#} <span>with Δt = {#} Gyr</span>":
+  "{#} <span>con Δt = {#} Gyr</span>",
+"⁴⁰K: {#} × {#}⁹ yr. {#}% of decays are β⁻ to ⁴⁰Ca and {#}% electron capture to ⁴⁰Ar, both stable; geologists measure the argon, since the calcium is too common in rock to tell apart. The grid shows both together. You can also drag the T½ marker on the N(t) plot.":
+  "⁴⁰K: {#} × {#}⁹ años. El {#}% de las desintegraciones son β⁻ a ⁴⁰Ca y el {#}% captura electrónica a ⁴⁰Ar, ambos estables; los geólogos miden el argón, porque el calcio es demasiado común en la roca para distinguirlo. La cuadrícula muestra los dos juntos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
+"Aluminum {#} heated the first planetesimals. With a half life under a million years it was nearly gone {#} million years after the solar system formed, so only bodies that grew early got hot enough to melt and let their iron sink to a core (Building a Solar System, Iron cores).":
+  "El aluminio {#} calentó los primeros planetesimales. Con una vida media de menos de un millón de años, casi había desaparecido {#} millones de años después de formarse el sistema solar, así que solo los cuerpos que crecieron pronto se calentaron lo suficiente para fundirse y dejar que su hierro se hundiera hasta formar un núcleo (Construir un sistema solar, Núcleos de hierro).",
+"{#} Myr":
+  "{#} Myr",
+"t = {#} Myr":
+  "t = {#} Myr",
+"<i></i>²⁶Al":
+  "<i></i>²⁶Al",
+"<i></i>²⁶Mg":
+  "<i></i>²⁶Mg",
+"activity in decays per Myr":
+  "actividad en desintegraciones por Myr",
+"Half life of ²⁶Al":
+  "Vida media del ²⁶Al",
+"λ = ln {#} / T½ (Myr⁻¹)":
+  "λ = ln {#} / T½ (Myr⁻¹)",
+"{#} <span>with Δt = {#} Myr</span>":
+  "{#} <span>con Δt = {#} Myr</span>",
+"²⁶Al: {#} × {#}⁵ yr, β⁺ decay ({#}%) and electron capture to stable ²⁶Mg. Meteorites show ²⁶Al/²⁷Al = {#} × {#}⁻⁵ when the first solids formed. You can also drag the T½ marker on the N(t) plot.":
+  "²⁶Al: {#} × {#}⁵ años, desintegración β⁺ ({#}%) y captura electrónica a ²⁶Mg estable. Los meteoritos muestran ²⁶Al/²⁷Al = {#} × {#}⁻⁵ cuando se formaron los primeros sólidos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
+"²⁶Al {#}":
+  "²⁶Al {#}",
+"²⁶Mg {#}":
+  "²⁶Mg {#}",
+"t (Myr)":
+  "t (Myr)",
+"ln N falls by λ = {#} per Myr":
+  "ln N baja λ = {#} por Myr",
+"bin = {#} Myr":
+  "intervalo = {#} Myr",
+"{#} yr ± {#} yr <span>true age {#} yr</span>":
+  "{#} años ± {#} años <span>edad real {#} años</span>",
+"t = {#} step":
+  "t = {#} paso"
 });

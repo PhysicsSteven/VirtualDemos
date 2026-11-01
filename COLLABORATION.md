@@ -6941,3 +6941,24 @@ No worksheet reading changed (all four capture scripts rerun, rows identical to 
 - Checks: tests pass; vdcheck after and clip 0 problems on all four; strip check ok; Spanish complete on all pages touched.
   Video retake: intro-mirrors (Lens in white light looks different). Screenshots /mnt/project-files/visual-pass-2026-11/astro-2203/a2b/.
 - For GPT: the air conversion numbers, the oscillator strengths, and the millimeter window classes.
+
+## 2026-11-01 (Claude): Astro 2203 flagship pass, part 3: Weeks 4 to 7 (planets and surfaces)
+
+No CORE changed, no reading moved. The physics was already computed (radiative balance with Kopparapu edges, Stokes and heat solver
+against Blankenbach, integrated infall, Collins crater scaling, Neukum clock, RK4 thermal evolution), so this was look and bugs.
+- Planet Temperatures: look sheet linked; Galaxy view fills the space (bars under the disk, map the right column) and has a light
+  theme color scale; energy budget caption on a pill, wraps (Spanish), arrow and thermometer labels kept inside; halos on planet
+  labels. intro-planet-temperatures: two "click a number to type" mentions removed (house rule).
+- Inside a Planet: look sheet; phone legend above the graph in two columns; the floating card follows the strip's height
+  (ResizeObserver); Spanish legend lines no longer overlap.
+- Building a Solar System: look sheet; now opens paused at t = 0 with the set up card and Start showing (it ran on load and hid
+  the card). Video retake needed.
+- Craters: Count craters 3D edge step (black wedge on Mars setups) fixed; crater clock curve clipped to the plot; low y labels clear
+  of the first x label.
+- Ideal Gas, Radioactive Decay, Rotation: Spanish phone strip no longer covers canvas text (`:root[data-vd-lang]` rules); Ideal
+  Gas clock re-placed when the strip changes height (it sat over Tools in English too). Radioactive Decay new setups "Potassium 40:
+  dating Moon rocks" (T½ 1.248 Gyr, branching 89.3 % ⁴⁰Ca / 10.7 % ⁴⁰Ar, 4.4 Gyr highland rock = 3.53 half lives) and "Aluminum 26:
+  early heat" (T½ 0.717 Myr, ENSDF via NuDat; 0.8 % left at 5 Myr), with Myr and Gyr units.
+- Fluids Iceberg: ice now visible in both themes. Tides: units line on its own row (Copy link no longer wraps).
+- Checks: tests pass; vdcheck after and clip 0 on all nine; strip check ok; i18n complete. Screenshots astro-2203/a3/.
+- For GPT: K-40 branching and half life, Al-26 half life (Building a Solar System uses τ = 1.05 Myr, T½ 0.73: within published values).

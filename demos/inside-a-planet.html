@@ -39,8 +39,11 @@
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @media (min-width: 821px) { .stage { min-height: 760px; } }
 @media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 190px; } }
+@media (max-width: 560px) { .plotbox { height: 240px; } }
 @media (max-width: 420px) { .scene { height: 300px; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -668,7 +671,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const ticks = (a, b, n) => { const st = 10 ** Math.floor(Math.log10((b - a) / n)), m = (b - a) / n / st, step = (m > 5 ? 10 : m > 2 ? 5 : m > 1 ? 2 : 1) * st, out = []; for (let v = Math.ceil(a / step) * step; v <= b + 1e-9; v += step) out.push(+v.toFixed(6)); return out; };
   function drawPlot() {
     const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
-    const x0 = 64 * p, x1 = PW - 150 * p, y0 = 14 * p, y1 = PH - 40 * p;
+    /* a phone: the legend goes in two columns above the graph instead of beside it, so the graph keeps the whole width */
+    const narrow = PW < 560, x0 = 64 * p, x1 = PW - (narrow ? (S.mode === 'convect' ? 40 : 14) : 150) * p, y0 = (narrow ? 46 : 14) * p, y1 = PH - 40 * p;
+    const legendAt = (items, xr, yr, wm) => (narrow ? legendTop(items) : legend(items, xr, yr, wm));
     if (S.mode === 'layers') {
       const P = PLANETS[S.lp], ym = Math.max(14000, S.rhoC * 1.08), ax = axes(x0, y0, x1, y1, [0, P.R], [0, ym], 'distance from the center (km)', 'density (kg/m³)', ticks(0, P.R, 6), ticks(0, ym, 4));
       if (S.lp === 'earth' && S.prem) {
@@ -682,7 +687,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const lg = [[K.model, 'model layers', false], [K.model, 'model mean density', true]];
       if (!S.blind) lg.push([K.meas, 'measured mean density', true]);
       if (S.lp === 'earth' && S.prem) lg.push([K.prem, 'PREM (Earth)', false]);
-      legend(lg, x1 + 12 * p, y0 + 6 * p);
+      legendAt(lg, x1 + 12 * p, y0 + 6 * p);
     } else if (S.mode === 'convect') {
       const h = hist, tmax = h.length ? Math.max(h[h.length - 1][0], 1) : 100, tmin = h.length ? h[0][0] : 0;
       let vm = 0.5, nm = 2; for (const r of h) { vm = Math.max(vm, r[1]); nm = Math.max(nm, r[2]); }
@@ -692,13 +697,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.meas; c.textAlign = 'left'; c.textBaseline = 'middle'; for (const v of ticks(0, nm, 4)) c.fillText(fs(v), x1 + 4 * p, Y2(v));
       const line = (k, Yf, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); h.forEach((r, i) => { const x = ax.X(r[0]), y = Yf(r[k]); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); };
       if (h.length > 1) { line(1, ax.Y, K.model); line(2, Y2, K.meas); }
-      legend([[K.model, 'surface speed (left)', false], [K.meas, 'heat out, × a still mantle (right)', false]], x1 + 34 * p, y0 + 6 * p, 110 * p);
+      legendAt([[K.model, 'surface speed (left)', false], [K.meas, 'heat out, × a still mantle (right)', false]], x1 + 34 * p, y0 + 6 * p, 110 * p);
     }
+  }
+  function legendTop(items) {
+    const p = proj(), c = pctx, cols = items.length > 2 ? 2 : 1, cw = (PW - 16 * p) / cols; c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    items.forEach(([col, s, dash], i) => { const x = 8 * p + (i % cols) * cw, y = 10 * p + Math.floor(i / cols) * 16 * p; c.save(); if (dash) c.setLineDash([5 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); c.moveTo(x, y); c.lineTo(x + 16 * p, y); c.stroke(); c.restore();
+      c.fillStyle = K.ink; const t = window.VDI18N ? VDI18N.t(s) : s, room = cw - 26 * p, draw = () => { if (c.measureText(t).width > room) c.fillText(t, x + 21 * p, y, room); else c.fillText(t, x + 21 * p, y); }; if (window.VDI18N) VDI18N.raw(draw); else draw(); });
   }
   function legend(items, x, y, wmax) {
     const p = proj(), c = pctx; c.font = `${11 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
-    items.forEach(([col, s, dash], i) => { const yy = y + i * 34 * p; c.save(); if (dash) c.setLineDash([5 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + 18 * p, yy); c.stroke(); c.restore();
-      c.fillStyle = K.ink; const words = (window.VDI18N ? VDI18N.t(s) : s).split(' '); const wrap = () => { let line = '', ly = yy, lim = Math.min(wmax || 1e9, PW - x - 30 * p); for (const w of words) { const t = line ? `${line} ${w}` : w; if (c.measureText(t).width > lim && line) { c.fillText(line, x + 24 * p, ly); ly += 13 * p; line = w; } else line = t; } c.fillText(line, x + 24 * p, ly); }; if (window.VDI18N) VDI18N.raw(wrap); else wrap(); });
+    let yn = y;   /* each item starts below the last one's wrapped lines */
+    items.forEach(([col, s, dash], i) => { const yy = Math.max(yn, y + i * 34 * p); c.save(); if (dash) c.setLineDash([5 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + 18 * p, yy); c.stroke(); c.restore();
+      c.fillStyle = K.ink; const words = (window.VDI18N ? VDI18N.t(s) : s).split(' '); const wrap = () => { let line = '', ly = yy, lim = Math.min(wmax || 1e9, PW - x - 30 * p); for (const w of words) { const t = line ? `${line} ${w}` : w; if (c.measureText(t).width > lim && line) { c.fillText(line, x + 24 * p, ly); ly += 13 * p; line = w; } else line = t; } c.fillText(line, x + 24 * p, ly); yn = ly + 20 * p; }; if (window.VDI18N) VDI18N.raw(wrap); else wrap(); });
   }
 
   /* ---------- readouts ---------- */
@@ -738,6 +749,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sc.style.minHeight = need > 470 ? need + 'px' : '';
   };
   if (window.ResizeObserver) [...$('setupCard').children].forEach((k) => new ResizeObserver(fitCard).observe(k));
+  /* the strip wraps to more rows in Convection (and in a longer language): keep the card just under it, never over its clock or Tools */
+  if (window.ResizeObserver) { let sh = 0; new ResizeObserver(() => { const h = $('strip').offsetHeight; if (h !== sh) { sh = h; if (!narrow()) { $('setupCard').style.top = `${h + 12}px`; fitCard(); } } }).observe($('strip')); }
   function sync() {
     const P = PLANETS[S.lp];
     $('selLPlanet').value = S.lp; $('sCore').max = Math.round(P.R * 0.95 / 10) * 10; $('sCore').value = S.rc; $('oCore').textContent = `${fs(S.rc)} km`;

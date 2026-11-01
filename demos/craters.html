@@ -548,7 +548,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (v) => Lm + (v - o.x0) / (o.x1 - o.x0) * pw, Y = (v) => Tm + ph - (v - o.y0) / (o.y1 - o.y0) * ph;
     c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
     c.textAlign = 'center'; c.textBaseline = 'top'; for (const xt of o.xt) { const [v, t] = Array.isArray(xt) ? xt : [xt, String(xt)]; c.beginPath(); c.moveTo(X(v), Tm); c.lineTo(X(v), Tm + ph); c.stroke(); c.fillText(t, X(v), Tm + ph + 4); }
-    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const [v, t] of o.yt) { c.beginPath(); c.moveTo(Lm, Y(v)); c.lineTo(Lm + pw, Y(v)); c.stroke(); c.fillText(t, Lm - 5, Y(v)); }
+    c.textAlign = 'right'; for (const [v, t] of o.yt) { c.beginPath(); c.moveTo(Lm, Y(v)); c.lineTo(Lm + pw, Y(v)); c.stroke();
+      /* the lowest label sits just above its line, clear of the first label on the bottom axis */
+      c.textBaseline = Math.abs(v - o.y0) < 1e-9 ? 'bottom' : 'middle'; c.fillText(t, Lm - 5, Y(v)); }
     c.textAlign = 'center'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${K.ui}`; c.fillText(o.xl, Lm + pw / 2, PH2 - 1);
     c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(o.yl, 0, 0); c.restore();
     return { X, Y, Lm, Tm, pw, ph };
@@ -560,8 +562,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const SUPS = '⁰¹²³⁴⁵⁶⁷⁸⁹', pow10 = (e) => `10${String(e).split('').map((ch) => SUPS[+ch]).join('')}`;
       const yt = []; for (let e = hi; e >= lo; e -= stp) yt.push([e, e >= 0 ? `${Math.pow(10, e)} per km²` : e === -1 ? '1 per 10 km²' : `1 per ${pow10(-e)} km²`]);
       const A = axes(c, { lm: 104, x0: 0, x1: 4.5, y0: lo, y1: hi, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'age of the surface (billions of years)', yl: `craters ≥ ${D} km (log)` });
+      c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();   /* the clock falls to zero craters at age 0: keep its line in the box */
       c.strokeStyle = body === 'mars' ? K.mars : K.moon; c.lineWidth = 2.2 * p; c.beginPath();
-      for (let k = 1; k <= 450; k++) { const T = k / 100, y = Math.log10(density(body, D, T)); k > 1 ? c.lineTo(A.X(T), A.Y(y)) : c.moveTo(A.X(T), A.Y(y)); } c.stroke();
+      for (let k = 1; k <= 450; k++) { const T = k / 100, y = Math.log10(density(body, D, T)); k > 1 ? c.lineTo(A.X(T), A.Y(y)) : c.moveTo(A.X(T), A.Y(y)); } c.stroke(); c.restore();
       const n = marked() / areaKm2();
       if (n > 0) { const y = Math.log10(n), a = ageFrom(body, D, n);
         c.strokeStyle = K.mark; c.setLineDash([5 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.Lm, A.Y(y)); c.lineTo(a == null ? A.Lm + A.pw : A.X(a), A.Y(y)); if (a != null) c.lineTo(A.X(a), A.Tm + A.ph); c.stroke(); c.setLineDash([]);
@@ -648,8 +651,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       pos[v * 3 + 2] = z; const t = 0.6 + 0.3 * (top > lo ? (h - lo) / (top - lo) : 0.67);   /* lower ground a little darker, as in the flat view */
       g.col[v * 3] = (P[0][0] + (P[1][0] - P[0][0]) * t) / 255; g.col[v * 3 + 1] = (P[0][1] + (P[1][1] - P[0][1]) * t) / 255; g.col[v * 3 + 2] = (P[0][2] + (P[1][2] - P[0][2]) * t) / 255;
     }
+    /* the field's outer ring of vertices is brought to the middle height of its edge, and the ground around it sits there too, so
+       the field meets the ground around it with no step to see under (an exaggerated relief used to leave a dark gap at the edge) */
+    const edge = []; for (let i = 0; i < N; i++) edge.push(pos[i * 3 + 2], pos[((N - 1) * N + i) * 3 + 2], pos[(i * N) * 3 + 2], pos[(i * N + N - 1) * 3 + 2]);
+    edge.sort((a, b) => a - b); const e = edge[edge.length >> 1];
+    for (let i = 0; i < N; i++) for (const v of [i, (N - 1) * N + i, i * N, i * N + N - 1]) pos[v * 3 + 2] = e;
     g.geo.attributes.position.needsUpdate = true; g.geo.attributes.color.needsUpdate = true; g.geo.computeVertexNormals();
-    let e = Infinity; for (let i = 0; i < N; i++) e = Math.min(e, pos[i * 3 + 2], pos[((N - 1) * N + i) * 3 + 2], pos[(i * N) * 3 + 2], pos[(i * N + N - 1) * 3 + 2]); g.apron.position.z = e - 0.002;
+    g.apron.position.z = e - 0.002;
     g.apron.material.color.setRGB(g.col[0], g.col[1], g.col[2]);
   }
   let last3 = '';

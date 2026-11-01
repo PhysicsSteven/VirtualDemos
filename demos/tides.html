@@ -66,6 +66,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
 @media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+/* since the theme and language switches joined the header, the units take a line of their own above the buttons, so no button
+   label wraps (Copy link did) and the units line is not squeezed into four */
+@media (min-width: 821px) { .bar .bar-right { max-width: 64%; flex-wrap: wrap; row-gap: 6px; } .bar .bar-right > .units { flex: 1 1 100%; } }
 .units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
