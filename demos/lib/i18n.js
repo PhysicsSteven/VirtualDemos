@@ -134,7 +134,9 @@
     else if (active) { load(LIB + 'i18n/' + lang + '/common.js'); if (PAGE !== 'site' && LANGS[lang].pages.indexOf('site') >= 0) load(LIB + 'i18n/' + lang + '/site.js'); load(LIB + 'i18n/' + lang + '/' + PAGE + '.js'); }
   }
   if (active) {
-    root.setAttribute('lang', lang === 'qps' ? 'en-XA' : lang);
+    root.setAttribute('lang', lang === 'qps' ? 'qps-ploc' : lang);
+    /* for the rare style a longer language needs: :root[data-vd-lang] .x { } (never applies in English) */
+    root.setAttribute('data-vd-lang', lang);
     if (info.dir === 'rtl') root.setAttribute('dir', 'rtl');
     /* hidden until the first pass, so English does not flash (at most 2.5 s) */
     root.classList.add('vd-i18n-wait');
