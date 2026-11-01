@@ -3004,11 +3004,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
   }
   function note3(txt) {
+    /* in another language the note is translated whole, then wrapped and drawn as it is (VDI18N.raw) */
+    if (window.VDI18N) txt = VDI18N.t(txt);
+    const draw = () => {
     const ctx = OV.ctx, ls = OV.ls, fs = 10.5 * ls; ctx.font = `${fs}px ${T.ui}`;
     const words = txt.split(' '), lines = []; let cur = '';
     for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > OV.W - 24 * ls && cur) { lines.push(cur); cur = w; } else cur = t2; }
     lines.push(cur);
     lines.forEach((l, i) => labelBox(ctx, l, 10 * ls, OV.H - 8 * ls - (lines.length - 1 - i) * fs * 1.35, 'left', T.muted, fs, 400));
+    };
+    if (window.VDI18N) VDI18N.raw(draw); else draw();
   }
   // a line of text on a soft panel, centered at y (baseline)
   function panel3(txt, y, col, size, mono, alpha) {

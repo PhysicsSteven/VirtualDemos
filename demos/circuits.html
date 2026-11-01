@@ -2379,7 +2379,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return out;
   }
   const brById = (id) => BR.find((b) => b.id === id);
-  const brName = (b) => { if (b.type === 'qc' || b.type === 'qb') return `${b.el.name} (${b.type === 'qc' ? 'collector to emitter' : 'base to emitter'})`; if (b.type === 'leg') { const e = b.el; const lab = b.id > 0 ? (e.lb || 'position 1') : (e.lc || 'position 2'); return `${e.name} (${lab})`; } return b.name || TYPE[b.type]; };
+  /* the words in brackets are translated on their own: the part's name before them is glued to a changing number */
+  const brTr = (t) => (window.VDI18N ? VDI18N.t(t) : t);
+  const brName = (b) => { if (b.type === 'qc' || b.type === 'qb') return `${b.el.name} (${brTr(b.type === 'qc' ? 'collector to emitter' : 'base to emitter')})`; if (b.type === 'leg') { const e = b.el; const lab = b.id > 0 ? (e.lb || 'position 1') : (e.lc || 'position 2'); return `${e.name} (${brTr(lab)})`; } return b.name || TYPE[b.type]; };
   function branchList() {
     return BR.filter((b) => b.type !== 'wire').map((b) => ({ b, na: netOf.get(kp(b.a)), nb: netOf.get(kp(b.b)), cond: conducts(b) }));
   }
@@ -4377,6 +4379,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rows.push(['Largest junction residual on the board', fmtSci(res, 'A'), true]);
     $('circRead').innerHTML = dl(rows);
   }
+  /* the Kirchhoff tables are one run of cells with numbers: in another language each cell's words are translated on their own */
+  const KT = (t) => (window.VDI18N ? VDI18N.t(t) : t);
   function updateKirchhoff() {
     for (const b of document.querySelectorAll('#kSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kmode));
     $('kNav').hidden = S.kmode !== 'loop';
@@ -4395,10 +4399,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         const oc = cleanI(o);
         if (oc > 0) sumOut += o; else sumIn -= o;
         const what = ia && ib ? 'both ends here' : !conducts(b) ? (b.type === 'vm' || b.type === 'probe' ? 'no current, voltmeter' : 'no current, open') : oc > 0 ? 'out' : oc < 0 ? 'in' : 'none';
-        html += `<span>${brName(b)}</span><span class="k">${what}</span><span class="v">${fmtSI(Math.abs(oc), 'A', 4)}</span>`;
+        html += `<span>${brName(b)}</span><span class="k">${KT(what)}</span><span class="v">${fmtSI(Math.abs(oc), 'A', 4)}</span>`;
       }
       if (bad) { out.innerHTML = '<p class="hint">No finite currents here: see the warning on the drawing.</p>'; return; }
-      out.innerHTML = `<p class="kq">Σ I<sub>in</sub> = Σ I<sub>out</sub>${when}</p><div class="ktab">${html}<span class="tot">in</span><span class="tot"></span><span class="tot v">${fmtSI(sumIn, 'A', 4)}</span><span>out</span><span></span><span class="v">${fmtSI(sumOut, 'A', 4)}</span></div><p class="kres">in − out = ${fmtSci(sumIn - sumOut, 'A')}</p>`;
+      out.innerHTML = `<p class="kq">Σ I<sub>in</sub> = Σ I<sub>out</sub>${when}</p><div class="ktab">${html}<span class="tot">${KT('in')}</span><span class="tot"></span><span class="tot v">${fmtSI(sumIn, 'A', 4)}</span><span>${KT('out')}</span><span></span><span class="v">${fmtSI(sumOut, 'A', 4)}</span></div><p class="kres">in − out = ${fmtSci(sumIn - sumOut, 'A')}</p>`;
       return;
     }
     $('kHow').innerHTML = 'Select a part to see the shortest loop through it, or step through every loop. Arrows on the drawing show the way round.' + (S.mode === 'ac' ? ' The instantaneous voltages add to zero; their rms values do not.' : '');
@@ -4426,11 +4430,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       }
       sum += dv;
       const d = cleanV(dv);
-      html += `<span>${brName(b)}</span><span class="k">${d > 0 ? 'rise' : d < 0 ? 'drop' : ''}${how ? (d ? ', ' : '') + how : ''}</span><span class="v">${signed(d, 'V', 4)}</span>`;
+      html += `<span>${brName(b)}</span><span class="k">${KT(`${d > 0 ? 'rise' : d < 0 ? 'drop' : ''}${how ? (d ? ', ' : '') + how : ''}`)}</span><span class="v">${signed(d, 'V', 4)}</span>`;
     }
     if (bad) { out.innerHTML = '<p class="hint">No finite voltages around this loop: see the warning on the drawing.</p>'; return; }
     const all = allLoops(), k = loopKey(kLoop), i = all.findIndex((L) => loopKey(L) === k);
-    out.innerHTML = `<p class="kq">Σ ΔV around the loop = 0${when} <small class="ok">${i >= 0 ? `loop ${i + 1} of ${all.length}` : ''}</small></p><div class="ktab">${html}<span class="tot">sum</span><span class="tot"></span><span class="tot v">${fmtSci(sum, 'V')}</span></div>`;
+    out.innerHTML = `<p class="kq">Σ ΔV around the loop = 0${when} <small class="ok">${i >= 0 ? `loop ${i + 1} of ${all.length}` : ''}</small></p><div class="ktab">${html}<span class="tot">${KT('sum')}</span><span class="tot"></span><span class="tot v">${fmtSci(sum, 'V')}</span></div>`;
     $('kPrev').disabled = $('kNext').disabled = all.length < 2;
   }
   function updateTime() {
