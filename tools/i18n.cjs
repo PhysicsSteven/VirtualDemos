@@ -142,7 +142,7 @@ async function leaks(list) {
             const out = [], tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n;
             while ((n = tw.nextNode())) {
               const t = n.data.replace(/\s+/g, ' ').trim(), e = n.parentElement;
-              if (!/[A-Za-z]{3}/.test(t) || /[⟦⟧]/.test(t) || !e || e.closest('script,style,code,pre,kbd,samp,textarea,[translate="no"],.notranslate,[data-i18n-skip],.vd-lang') || !e.getClientRects().length) continue;
+              if (!/[A-Za-z]{3}/.test(t) || /[⟦⟧]/.test(t) || !e || e.closest('script,style,code,pre,kbd,samp,textarea,mjx-container,[translate="no"],.notranslate,[data-i18n-skip],.vd-lang') || !e.getClientRects().length) continue;
               if (/[⟦⟧]/.test(e.textContent)) continue;
               out.push(t.slice(0, 90));
             }

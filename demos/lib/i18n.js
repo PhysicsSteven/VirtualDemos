@@ -113,7 +113,7 @@
   var PS = { a: 'á', b: 'ƀ', c: 'ç', d: 'ď', e: 'é', f: 'ƒ', g: 'ĝ', h: 'ĥ', i: 'í', j: 'ĵ', k: 'ķ', l: 'ľ', m: 'ɱ', n: 'ñ', o: 'ö', p: 'þ', q: 'ʠ', r: 'ŕ', s: 'š', t: 'ţ', u: 'ú', v: 'ṽ', w: 'ŵ', x: 'ẋ', y: 'ý', z: 'ž',
     A: 'Á', B: 'Ɓ', C: 'Ç', D: 'Ď', E: 'É', F: 'Ƒ', G: 'Ĝ', H: 'Ĥ', I: 'Í', J: 'Ĵ', K: 'Ķ', L: 'Ľ', M: 'Ṁ', N: 'Ñ', O: 'Ö', P: 'Þ', Q: 'Ǫ', R: 'Ŕ', S: 'Š', T: 'Ţ', U: 'Ú', V: 'Ṽ', W: 'Ŵ', X: 'Ẋ', Y: 'Ý', Z: 'Ž' };
   function pseudo(k) {
-    var n = 0, out = k.split(MATH).map(function (part, i) { return i % 2 ? part : part.replace(/(<[^>]*>|\{#\d*\}|&[a-z]+;)|([A-Za-z])/g, function (all, keep, ch) { if (keep) return keep; n++; return PS[ch] || ch; }); }).join('');
+    var n = 0, out = k.split(MATH).map(function (part, i) { return i % 2 ? part : part.replace(/(<[^>]*>|\{#\d*\}|\{[A-Za-z_]\w*\}|&[a-z]+;)|([A-Za-z])/g, function (all, keep, ch) { if (keep) return keep; n++; return PS[ch] || ch; }); }).join('');
     var pad = ''; for (var i = 0; i < Math.ceil(n * 0.4); i++) pad += i % 5 === 4 ? ' ' : '·';
     return '⟦' + out + (pad ? ' ' + pad : '') + '⟧';
   }
