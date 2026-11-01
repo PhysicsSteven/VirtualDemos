@@ -2711,7 +2711,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     let h = dd('Stopwatch t', `${swShown()} s`) + dd('T = t/N', isFinite(T) ? `${sig(T, 4)} s` : '—');
     h += dd(S.sys === 'coupled' ? 'Ruler peak, block 1 |x₁|' : 'Ruler peak |x|', `${peakShown()} cm`);
     if (S.sys === 'driven') h += dd('Last drive cycle', amp && amp.last !== null ? cm(amp.last, 2) : '—');
-    const box = $('swBox'); if (box.innerHTML !== h) box.innerHTML = h;
+    const box = $('swBox'); if (window.VDI18N && VDI18N.lang !== 'en' ? box._vdHtml !== h : box.innerHTML !== h) { box.innerHTML = h; box._vdHtml = h; }
   }
   function setSw(on) {
     sw.on = on;

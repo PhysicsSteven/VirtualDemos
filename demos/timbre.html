@@ -675,9 +675,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     hoverKey = null;
     markPreset(null); recompute(); readouts(); soundDirty = true; morphUI();
   }
+  /* the preset names as written (English), so a translated page never reads its own translated labels back */
+  const PRESET_NAME = {}; for (const b of $('presets').querySelectorAll('[data-p]')) PRESET_NAME[b.dataset.p] = b.textContent;
+  const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : s);
   function morphUI() {
     const on = morph !== null, txt = on ? morphText(morph) : 'custom';
-    const pre = presetId ? $('presets').querySelector(`[data-p="${presetId}"]`).textContent : null;
+    const pre = presetId ? PRESET_NAME[presetId] : null;
     $('morphOut').textContent = on ? txt : pre ? 'Not on the slider' : 'Custom spectrum';
     $('morphOut').classList.toggle('custom', !on);
     $('morph').setAttribute('aria-valuetext', on ? txt : 'custom spectrum, edited by hand');
@@ -687,7 +690,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!on) h = (pre ? `The ${pre} preset is not one of these instruments.` : 'Custom spectrum: the bars were edited by hand.') + ' Move the slider or pick an instrument name to return to the instruments.';
     else if (Number.isInteger(morph)) h = INST_HINT[INSTRUMENTS[morph].id];
     else h = 'Between two instruments every harmonic amplitude is mixed linearly, so the waveform, spectrum and ladder change smoothly.';
-    $('morphHint').textContent = h + ' Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.';
+    const tail = ' Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.';
+    $('morphHint').textContent = !on && pre ? tr('The {name} preset is not one of these instruments. Move the slider or pick an instrument name to return to the instruments. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.', { name: tr(pre) }) : h + tail;
     dirty = true;
   }
   function buildTicks() {
@@ -1746,14 +1750,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     'run,preset,n,f_Hz,rel_amplitude,level_dB,phase_deg,notes', ...recRows.map((r) => [r.run, r.preset, r.n, r.f, r.rel, r.db, r.ph, r.notes].join(','))].join('\n') + '\n';
   $('recTone').addEventListener('click', () => {
     const top = Math.max(0, ...D.ns.map((n) => D.a[n])), pb = document.querySelector('#presets [aria-pressed="true"]');
-    const name = (pb ? pb.textContent : morph !== null ? $('morphOut').textContent : 'Custom').replace(/[,;]/g, ' ').trim();
+    const name = (pb ? PRESET_NAME[pb.dataset.p] : morph !== null ? morphText(morph) : 'Custom').replace(/[,;]/g, ' ').trim();
     const I = D.info, rep = I.kind === 'periodic' ? `repeats every ${fmtMs(I.T)}` : I.kind === 'silent' ? 'silent' : 'never repeats exactly';
     const notes = [`RMS ${D.rms.toFixed(3)} bar units`, `peak/RMS ${$('rCrest').textContent}`, rep, `f1 ${f1().toFixed(2)} Hz`, S.B ? `B ${S.B.toFixed(4)}` : '', S.df ? `harmonic ${S.detN} detuned ${S.df.toFixed(1)} Hz` : '',
       S.mute1 ? 'harmonic 1 removed' : '', S.mute2 ? 'harmonic 2 removed' : ''].filter(Boolean).join('; ');
     recRuns++;
     for (let n = 1; n <= 6; n++) { const a = D.a[n], rel = top > 0 ? a / top : 0, deg = ((S.ph[n] * 180 / PI) % 360 + 360) % 360;
       recRows.push({ run: recRuns, preset: name, n, f: fOf(n).toFixed(2), rel: rel.toFixed(4), db: rel > 0 ? toDb(rel).toFixed(1) : 'off', ph: deg.toFixed(0), notes: n === 1 ? notes : '' }); }
-    capStatus(`Run ${recRuns} recorded (${name}): ${recRows.length} rows so far.`);
+    capStatus(tr('Run {run} recorded ({name}): {rows} rows so far.', { run: recRuns, name: tr(name), rows: recRows.length }));
   });
   $('clearRec').addEventListener('click', () => { recRows = []; recRuns = 0; wsSeries = Date.now(); capStatus('Readings cleared.'); });
   $('toWs').addEventListener('click', () => {

@@ -1365,7 +1365,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         : 'Model: a thin uniform rod on a frictionless table, a small hard ball, and an instant hit along the ball’s path with coefficient of restitution e at the contact point. The run stops if the rod comes round to meet the ball again.';
     }
     const html = rows.map(([k, v, c]) => `<div${c ? ` class="${c}"` : ''}><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-    if ($('hOut').innerHTML !== html) $('hOut').innerHTML = html;
+    if (window.VDI18N && VDI18N.lang !== 'en' ? $('hOut')._vdHtml !== html : $('hOut').innerHTML !== html) { $('hOut').innerHTML = html; $('hOut')._vdHtml = html; }
     setText('hMore', more); setText('hModel', model); setText('hOutTitle', title);
   }
 
@@ -2485,7 +2485,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         `<td>${fx(r.st.k, 3)}</td><td>${fx(r.st.a, 3)}</td><td>${fx(r.st.T, 3)}</td><td>${tie ? '=' : ''}${rank}</td></tr>`;
     });
     const tb = $('raceTbl');
-    if (tb.innerHTML !== html) tb.innerHTML = html;
+    if (window.VDI18N && VDI18N.lang !== 'en' ? tb._vdHtml !== html : tb.innerHTML !== html) { tb.innerHTML = html; tb._vdHtml = html; }
   }
   function actLabel() {
     let txt = 'Push';
