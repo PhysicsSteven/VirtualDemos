@@ -1,0 +1,147 @@
+/* ws/franck-hertz in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'ws/franck-hertz', {
+"Gas and settings":
+  "Gas y ajustes",
+"Accelerating voltage U (V)":
+  "Voltaje de aceleración U (V)",
+"Collector current I (nA)":
+  "Corriente del colector I (nA)",
+"Peak order n":
+  "Orden del pico n",
+"Peak voltage U_n (V)":
+  "Voltaje del pico U_n (V)",
+"Spacing to the previous peak (V)":
+  "Espaciamiento al pico anterior (V)",
+"Franck–Hertz Experiment | VirtualDemos":
+  "Experimento de Franck–Hertz | VirtualDemos",
+"Franck–Hertz Experiment":
+  "Experimento de Franck–Hertz",
+"<strong>Setups in the demo:</strong> Mercury tube at {#} °C; Measure the peak spacing; Too cold: few collisions; Too hot: weak current; Neon: glowing layers; Why the first peak is not at {#} V.":
+  "<strong>Configuraciones en la demo:</strong> Tubo de mercurio a {#} °C; Medir el espaciamiento de los picos; Demasiado frío: pocas colisiones; Demasiado caliente: corriente débil; Neón: capas luminosas; Por qué el primer pico no está en {#} V.",
+"Electrons leave a hot cathode, are accelerated by the voltage \\(U\\) between the cathode and the grid G2 through mercury vapor (or neon), and must then climb a small retarding voltage \\(U_r\\) to reach the collector. The plot shows the collector current \\(I\\) against \\(U\\).":
+  "Los electrones salen de un cátodo caliente, son acelerados por el voltaje \\(U\\) entre el cátodo y la rejilla G2 a través de vapor de mercurio (o neón), y luego deben superar un pequeño voltaje de frenado \\(U_r\\) para llegar al colector. La gráfica muestra la corriente del colector \\(I\\) en función de \\(U\\).",
+"The mercury tube sits in an oven, from {#} to {#} °C, which sets the vapor pressure (Huber, Laesecke and Friend, {#}). The neon tube is sealed at room temperature.":
+  "El tubo de mercurio está en un horno, de {#} a {#} °C, que fija la presión de vapor (Huber, Laesecke y Friend, {#}). El tubo de neón está sellado a temperatura ambiente.",
+"Each electron is followed across the tube. Once it has more than the excitation energy it hits an atom after a random distance and loses exactly that energy (mercury: the 6s6p ³P₁ level, NIST). The curve is a fresh random sample every sweep, with {#} nA of amplifier noise, so two sweeps never match exactly.":
+  "Se sigue a cada electrón a lo largo del tubo. Una vez que tiene más que la energía de excitación, choca con un átomo tras una distancia aleatoria y pierde exactamente esa energía (mercurio: el nivel 6s6p ³P₁, NIST). La curva es una nueva muestra aleatoria en cada barrido, con {#} nA de ruido del amplificador, así que dos barridos nunca coinciden exactamente.",
+"The electrons gain \\(e(U - U_c)\\), not \\(eU\\): the contact potential \\(U_c\\) between the cathode and the grid metal shifts every peak.":
+  "Los electrones ganan \\(e(U - U_c)\\), no \\(eU\\): el potencial de contacto \\(U_c\\) entre el cátodo y el metal de la rejilla desplaza todos los picos.",
+"Mark peaks lets you click the maxima on the curve; with Snap on, a mark moves to the top of a parabola through the smoothed curve nearby.":
+  "Marcar picos te deja hacer clic en los máximos de la curva; con Ajustar activado, una marca se mueve a la cima de una parábola que pasa por la curva suavizada cercana.",
+"Record reading stores the current at the present \\(U\\) or, once peaks are marked, every marked peak in order; Record the curve stores the recorded current every {#} V ({#} V for neon). Each reading carries the gas, oven temperature, \\(U_r\\) and \\(U_c\\). Export to worksheet sends the readings below: points on the curve go to the first Data table, peaks to the second. Clear (under Readings) starts a new series, which goes into a new copy of the table; a series holds either points on the curve or peaks.":
+  "Registrar lectura guarda la corriente al \\(U\\) actual o, una vez marcados los picos, cada pico marcado en orden; Registrar la curva guarda la corriente registrada cada {#} V ({#} V para el neón). Cada lectura lleva el gas, la temperatura del horno, \\(U_r\\) y \\(U_c\\). Exportar a la hoja envía las lecturas abajo: los puntos de la curva van a la primera tabla de datos, los picos a la segunda. Borrar (en Lecturas) inicia una serie nueva, que va a una nueva copia de la tabla; una serie contiene puntos de la curva o picos, no ambos.",
+"Blind (in the Measure section) hides the spacings, the fitted energy, the intercept and the NIST value, and turns off the lines at \\(n \\cdot E_\\mathrm{exc}/e\\).":
+  "A ciegas (en la sección Medir) oculta los espaciamientos, la energía ajustada, la ordenada al origen y el valor del NIST, y quita las líneas en \\(n \\cdot E_\\mathrm{exc}/e\\).",
+"Record the collector current of a Franck–Hertz tube against the accelerating voltage, and find from the spacing of its repeated maxima the energy a mercury atom can take from an electron.":
+  "Registra la corriente del colector de un tubo de Franck–Hertz en función del voltaje de aceleración, y encuentra con el espaciamiento de sus máximos repetidos la energía que un átomo de mercurio puede tomar de un electrón.",
+"Bohr’s model (§{#}) says an atom can only hold certain energies, so it can only absorb certain amounts of energy. Franck and Hertz tested this in {#} with electrons in mercury vapor. An electron with less than the first excitation energy \\(\\Delta E\\) bounces off mercury atoms elastically and loses almost nothing (a mercury atom is about {#} {#} times heavier than an electron). Once its kinetic energy passes \\(\\Delta E\\), it soon excites an atom and loses exactly \\(\\Delta E\\).":
+  "El modelo de Bohr (§{#}) dice que un átomo solo puede tener ciertas energías, así que solo puede absorber ciertas cantidades de energía. Franck y Hertz lo pusieron a prueba en {#} con electrones en vapor de mercurio. Un electrón con menos que la primera energía de excitación \\(\\Delta E\\) rebota elásticamente en los átomos de mercurio y casi no pierde nada (un átomo de mercurio es unas {#} {#} veces más pesado que un electrón). Una vez que su energía cinética supera \\(\\Delta E\\), pronto excita un átomo y pierde exactamente \\(\\Delta E\\).",
+"Just after such a collision the electron has too little energy left to climb the retarding voltage, so the current falls. Raising \\(U\\) further lets the electron gain \\(\\Delta E\\) again before G2; the current rises until a second collision becomes possible, and so on. The maxima are therefore spaced by \\(\\Delta E/e\\):":
+  "Justo después de una colisión así, al electrón le queda muy poca energía para superar el voltaje de frenado, así que la corriente baja. Subir más \\(U\\) deja que el electrón gane de nuevo \\(\\Delta E\\) antes de G2; la corriente sube hasta que se vuelve posible una segunda colisión, y así sucesivamente. Por eso los máximos están separados por \\(\\Delta E/e\\):",
+"\\[U_n = U_0 + n\\,\\frac{\\Delta E}{e},\\]":
+  "\\[U_n = U_0 + n\\,\\frac{\\Delta E}{e},\\]",
+"where \\(U_0\\) collects every shift common to all peaks (the contact potential, the electrons’ starting energies, the retarding voltage). A graph of \\(U_n\\) against \\(n\\) is a straight line whose slope gives \\(\\Delta E\\). The excited atom gives the energy back as a photon of wavelength \\(\\lambda = hc/\\Delta E\\), with \\(hc = 1239.84\\) eV·nm.":
+  "donde \\(U_0\\) reúne todo desplazamiento común a todos los picos (el potencial de contacto, las energías iniciales de los electrones, el voltaje de frenado). Una gráfica de \\(U_n\\) en función de \\(n\\) es una recta cuya pendiente da \\(\\Delta E\\). El átomo excitado devuelve la energía como un fotón de longitud de onda \\(\\lambda = hc/\\Delta E\\), con \\(hc = 1239.84\\) eV·nm.",
+"An electron starts from rest and is accelerated through {#} V. What is its kinetic energy in eV and in joules?":
+  "Un electrón parte del reposo y se acelera a través de {#} V. ¿Cuál es su energía cinética en eV y en joules?",
+"Why is the spacing between maxima a better measure of \\(\\Delta E\\) than the voltage of the first maximum?":
+  "¿Por qué el espaciamiento entre máximos es una mejor medida de \\(\\Delta E\\) que el voltaje del primer máximo?",
+"What does the retarding voltage do? What would you expect the curve to look like with \\(U_r = 0\\)?":
+  "¿Qué hace el voltaje de frenado? ¿Cómo esperarías que fuera la curva con \\(U_r = 0\\)?",
+"If \\(\\Delta E = 4.9\\) eV, what wavelength of light does the excited atom give off? Could you see it?":
+  "Si \\(\\Delta E = 4.9\\) eV, ¿qué longitud de onda de luz emite el átomo excitado? ¿Podrías verla?",
+"None for the virtual apparatus. A real tube runs in an oven near {#} °C and holds mercury: do not touch the oven, and never open or repair a tube.":
+  "Ninguna para el aparato virtual. Un tubo real funciona en un horno cerca de {#} °C y contiene mercurio: no toques el horno, y nunca abras ni repares un tubo.",
+"Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.":
+  "Activa A ciegas antes de empezar. Envía cada conjunto de lecturas a la hoja antes de borrarlo.",
+"<strong>Mercury at {#} °C: the current curve.</strong> Start with the Mercury tube at {#} °C setup and let the sweep finish. Record the collector current \\(I\\) against the accelerating voltage \\(U\\) every {#} V from {#} to {#} V, and send it to the worksheet. Note \\(U_r\\) and \\(U_c\\).":
+  "<strong>Mercurio a {#} °C: la curva de corriente.</strong> Empieza con la configuración Tubo de mercurio a {#} °C y deja que termine el barrido. Registra la corriente del colector \\(I\\) en función del voltaje de aceleración \\(U\\) cada {#} V de {#} a {#} V, y envíala a la hoja. Anota \\(U_r\\) y \\(U_c\\).",
+"<strong>Mercury at {#} °C: the peaks.</strong> Clear the readings. On the same curve, mark every maximum you can find, in order from the lowest voltage, and record the peaks. They go to the peak table.":
+  "<strong>Mercurio a {#} °C: los picos.</strong> Borra las lecturas. En la misma curva, marca cada máximo que encuentres, en orden desde el voltaje más bajo, y registra los picos. Van a la tabla de picos.",
+"<strong>Contact potential.</strong> Clear the readings, raise the contact potential by {#} V and sweep again. Mark and record the maxima, and send them to a new copy of the peak table.":
+  "<strong>Potencial de contacto.</strong> Borra las lecturas, sube el potencial de contacto {#} V y barre de nuevo. Marca y registra los máximos, y envíalos a una nueva copia de la tabla de picos.",
+"<strong>Temperature.</strong> Clear the readings, put the contact potential back, and set the oven to {#} °C. Sweep, record the current curve every {#} V and send it to a second copy of the curve table. Clear the readings, then mark and record the maxima and send them to a third copy of the peak table.":
+  "<strong>Temperatura.</strong> Borra las lecturas, regresa el potencial de contacto y fija el horno en {#} °C. Barre, registra la curva de corriente cada {#} V y envíala a una segunda copia de la tabla de la curva. Borra las lecturas, luego marca y registra los máximos y envíalos a una tercera copia de la tabla de picos.",
+"<strong>Retarding voltage.</strong> Set the oven back to {#} °C and the retarding voltage to zero. Sweep, record the current curve every {#} V and send it to a third copy of the curve table.":
+  "<strong>Voltaje de frenado.</strong> Regresa el horno a {#} °C y el voltaje de frenado a cero. Barre, registra la curva de corriente cada {#} V y envíala a una tercera copia de la tabla de la curva.",
+"<strong>Neon.</strong> Switch to the neon tube, sweep to {#} V and mark the maxima. Watch where the glowing layers form.":
+  "<strong>Neón.</strong> Cambia al tubo de neón, barre hasta {#} V y marca los máximos. Observa dónde se forman las capas luminosas.",
+"<strong>Current curve.</strong>":
+  "<strong>Curva de corriente.</strong>",
+"<span>B</span>Gas and settings":
+  "<span>B</span>Gas y ajustes",
+"<span>C</span>Accelerating voltage \\(U\\) (V)":
+  "<span>C</span>Voltaje de aceleración \\(U\\) (V)",
+"<span>D</span>Collector current \\(I\\) (nA)":
+  "<span>D</span>Corriente del colector \\(I\\) (nA)",
+"Gas and settings, row {#}":
+  "Gas y ajustes, fila {#}",
+"Accelerating voltage U (V), row {#}":
+  "Voltaje de aceleración U (V), fila {#}",
+"Collector current I (nA), row {#}":
+  "Corriente del colector I (nA), fila {#}",
+"<strong>Peaks.</strong>":
+  "<strong>Picos.</strong>",
+"<span>C</span>Peak order \\(n\\)":
+  "<span>C</span>Orden del pico \\(n\\)",
+"<span>D</span>Peak voltage \\(U_n\\) (V)":
+  "<span>D</span>Voltaje del pico \\(U_n\\) (V)",
+"<span>E</span>Spacing to the previous peak (V)":
+  "<span>E</span>Espaciamiento al pico anterior (V)",
+"Peak order n, row {#}":
+  "Orden del pico n, fila {#}",
+"Peak voltage U_n (V), row {#}":
+  "Voltaje del pico U_n (V), fila {#}",
+"Spacing to the previous peak (V), row {#}":
+  "Espaciamiento al pico anterior (V), fila {#}",
+"Graph \\(I\\) against \\(U\\) for the {#} °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.":
+  "Grafica \\(I\\) en función de \\(U\\) para la curva a {#} °C. ¿A qué voltaje deja la corriente de subir por primera vez, y cuántos máximos ves? Lee el voltaje de cada máximo en tu tabla y compáralo con los picos que marcaste.",
+"For each maximum of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
+  "Para cada máximo de las curvas a {#} °C y {#} °C, divide la corriente en el mínimo que le sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
+"For the {#} °C peaks, find the spacings between neighboring maxima and their mean.":
+  "Para los picos a {#} °C, encuentra los espaciamientos entre máximos vecinos y su media.",
+"Graph \\(U_n\\) against \\(n\\) and fit a straight line. From the slope find \\(\\Delta E\\) in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at {#} nm (the 6s6p ³P₁ level at {#} eV).":
+  "Grafica \\(U_n\\) en función de \\(n\\) y ajusta una recta. Con la pendiente encuentra \\(\\Delta E\\) en eV, con su incertidumbre. Encuentra la longitud de onda de la luz que emiten los átomos y compárala con la línea del mercurio en {#} nm (el nivel 6s6p ³P₁ a {#} eV).",
+"Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?":
+  "Ajusta la corrida con el potencial de contacto más alto. ¿Qué cambió, la pendiente o la ordenada al origen, y cuánto?",
+"Fit the {#} °C peaks. Compare their slope with the {#} °C one. Why are the dips shallower in the colder tube?":
+  "Ajusta los picos a {#} °C. Compara su pendiente con la de {#} °C. ¿Por qué las caídas son menos profundas en el tubo más frío?",
+"Repeat the {#} °C fit without the first peak. Does the slope change by more than its uncertainty?":
+  "Repite el ajuste a {#} °C sin el primer pico. ¿Cambia la pendiente más que su incertidumbre?",
+"A maximum read from the current curve, sampled every {#} V, is good to about a quarter of a volt; marking it on the demo’s finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your \\(\\Delta E\\)?":
+  "Un máximo leído en la curva de corriente, muestreada cada {#} V, tiene una precisión de cerca de un cuarto de volt; marcarlo en la curva finamente muestreada de la demo es mucho mejor. Aun así, cada marca se lee en una curva con ruido: estima cuánto podrías mover una marca antes de que la curva claramente ya no esté en su máximo, y compáralo con la dispersión de tus puntos alrededor de la recta. Los espaciamientos vecinos comparten un pico, así que el espaciamiento medio no es más preciso que el ajuste. ¿Qué incertidumbre limita tu \\(\\Delta E\\)?",
+"Why does an inelastic collision lower the collector current even though the electron keeps moving towards G2?":
+  "¿Por qué una colisión inelástica baja la corriente del colector aunque el electrón siga moviéndose hacia G2?",
+"Why did the maxima disappear with no retarding voltage?":
+  "¿Por qué desaparecieron los máximos sin voltaje de frenado?",
+"A colder tube has fewer atoms in the way. How does that change how far past the threshold an electron travels before its collision, and so the spacing?":
+  "Un tubo más frío tiene menos átomos en el camino. ¿Cómo cambia eso qué tan lejos más allá del umbral viaja un electrón antes de su colisión, y por lo tanto el espaciamiento?",
+"Is \\(\\Delta E\\) an excitation energy or the ionization energy ({#} eV for mercury)? How do you know?":
+  "¿\\(\\Delta E\\) es una energía de excitación o la energía de ionización ({#} eV para el mercurio)? ¿Cómo lo sabes?",
+"What does this experiment show that Bohr’s model needs, and that a classical atom would not give?":
+  "¿Qué muestra este experimento que el modelo de Bohr necesita, y que un átomo clásico no daría?",
+"Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, \\(\\Delta E\\) and the wavelength with uncertainties, the comparison of the runs, your notes on neon, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres curvas de corriente con sus gráficas, las tablas de picos con sus gráficas y ajustes, \\(\\Delta E\\) y la longitud de onda con incertidumbres, la comparación de las corridas, tus notas sobre el neón y las respuestas a las preguntas. Identifica los datos simulados.",
+"First excitation energy of the atom":
+  "Primera energía de excitación del átomo",
+"Collector current":
+  "Corriente del colector",
+"Shift common to every peak":
+  "Desplazamiento común a todos los picos",
+"Contact potential between cathode and grid":
+  "Potencial de contacto entre el cátodo y la rejilla",
+"Voltage of peak n":
+  "Voltaje del pico n",
+"Retarding voltage":
+  "Voltaje de frenado",
+"Wavelength of the light the excited atom gives off":
+  "Longitud de onda de la luz que emite el átomo excitado",
+"Peak order":
+  "Orden del pico",
+"Column E, row {#}":
+  "Columna E, fila {#}",
+"Heading of column E":
+  "Encabezado de la columna E",
+"Column E":
+  "Columna E"
+});
