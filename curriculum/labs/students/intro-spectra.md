@@ -13,7 +13,7 @@ Student worksheet · Astro 2203
 - The picture shows the light source and a hand spectroscope, which spreads light out into its colors. The strip below it is what you would see in the eyepiece, from violet on the left to red on the right, with a scale in nanometers (nm).
 - Three kinds of source: **Continuous** is a hot lamp shining straight into the spectroscope; **Emission** is a tube of thin gas made to glow by electricity; **Absorption** is the lamp shining through a cell of cool gas.
 - Click an element in the periodic table to change the gas. Click or tap a line in the strip to read its wavelength; the readout also says which atom made it ("I" for a neutral atom, "II" for an atom that has lost one electron).
-- The lines are the strong lines measured by the National Institute of Standards and Technology (NIST) for each element. The widths and colors of the lines on the screen are drawn, not measured. In Absorption every listed line is drawn dark; a real cool gas shows fewer of them.
+- The lines are the strong lines measured by the National Institute of Standards and Technology (NIST) for each element. Their wavelengths are given in air, as NIST and astronomers list them; in a vacuum each is about 0.03 % longer (hydrogen's red line is 656.28 nm in air, 656.47 nm in vacuum). The widths and colors of the lines on the screen are drawn, not measured. In Absorption every listed line is drawn dark; a real cool gas shows fewer of them.
 - Record reading stores the source, the wavelength and the atom of the line you read last. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table. In Mystery mode the source is stored as "Mystery".
 
 </details>

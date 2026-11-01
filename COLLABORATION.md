@@ -6918,3 +6918,26 @@ worksheet), "non-majors" in 5 notes, Timbre's "Flute-like" style names (now "Lik
 TeacherKeys timbre key JSON labels follow, the key PDF shows the old label until its next rebuild), "Re-enter", and British
 spellings (labelled, metre, coloured, centres, travelling, analyse). Spanish keys moved with the English. `notes/ideal-gas.html`
 had a Cold walls step missing from `notes/src/ideal-gas.md`; the source now has it. Not yet a commit hook or CI job.
+
+## 2026-11-01 (Claude): Astro 2203 flagship pass, part 2: Spectra, Optics Bench, Instrument Builder, EM Waves (Week 3)
+
+No worksheet reading changed (all four capture scripts rerun, rows identical to the saved key data).
+- Spectra: one wavelength convention site wide on the page, NIST's: air from 200 nm up, vacuum below (header, Data card, Atom
+  models lamp and Thomson λ). Conversion Birch and Downs (1994) via Morton (2000, ApJS 130, 403); R_H 10 967 758.34 m⁻¹ (CODATA
+  2022); Hα 656.470 vac = 656.288 air (NIST measured 656.279, fine structure). `airFromVac` in CORE, test_spectra_air.cjs (5 pass).
+  Hydrogen in stars: the Balmer strip sits on the star's Planck continuum at T, line darkness from the weak line strength
+  f λ² N₂/N_total with NIST oscillator strengths (Hα 0.641 to Hε 0.0127), stated as a guide (strong lines saturate). Label and peak
+  label fixes (9,870 K both). Notes state the convention.
+- Optics Bench (white light setups and Fermat only): close up of the focus with the traced rays near the axis crossing, stretched with
+  a scale bar (flint and crown show each color's focus; the mirror shows spherical aberration, about 0.6 mm); the On the screen
+  picture zooms (×9, 1 mm grid) when a white spot is small, so intro-mirrors' violet outer ring is visible; mirror in a metal cell;
+  lamp housing no longer cut off. Fermat view fixed at 400 px (title, t labels, B label).
+- Instrument Builder: stage grows to fit the view notes at 1280×800; "final image at infinity" no longer clipped. Every
+  intro-telescope step redone: M −10, −20, −12.5; slope 2.041; true fields 2.59°, 2.72°, 2.64° match the key.
+- EM Waves: ground strip millimeter windows at a high dry site (3 mm yes; 2 and 1 mm mostly; 850 µm partly; 450 and 350 µm barely;
+  oxygen band 4.3 to 6 mm and line 2.52 mm absorbed), after the ATM model (Pardo, Cernicharo and Serabyn 2001) and ALMA bands;
+  the transparency classes are a guide (stated). intro-em-spectrum answers Q3 updated (TeacherKeys). Guides: "cB" color word fixed;
+  phone axis labels thinned. Ground answers harvested and translated.
+- Checks: tests pass; vdcheck after and clip 0 problems on all four; strip check ok; Spanish complete on all pages touched.
+  Video retake: intro-mirrors (Lens in white light looks different). Screenshots /mnt/project-files/visual-pass-2026-11/astro-2203/a2b/.
+- For GPT: the air conversion numbers, the oscillator strengths, and the millimeter window classes.

@@ -2,6 +2,7 @@
 VDI18N.add('en', 'demo/optics-bench', [
 "real image",
 "on the screen",
+"<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.",
 "{#} grid square = {#} cm · adjustable n quoted at {#} nm, real materials at {#} nm · angles from the normal",
 "Optics bench. Drag sources and optical elements to move them. A selected item shows handles: drag F or C to change the focal length, the grips to resize it and the round knob to rotate it. Arrow keys nudge it, brackets rotate it, plus and minus resize it, Delete removes it.",
@@ -105,7 +106,6 @@ VDI18N.add('en', 'demo/optics-bench', [
 "<span><i></i>Light rays</span> <span><i></i>Faint reflection at a glass face</span> <span><i></i>Rays traced back to a virtual image</span> <span><i></i>Principal ray: parallel to the axis</span> <span><i></i>Principal ray: through the center (C for a mirror)</span> <span><i></i>Principal ray: through the focal point F</span> <span><i></i>White light, split from {#} to {#} nm</span>",
 "Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson {#}; Daimon and Masumura {#}; Peter {#}), and with monochrome light they take n at {#} nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.",
-"<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>",
 "virtual image",
 "Virtual, upright, enlarged",
 "A camera: a {#} cm lens makes a real, inverted, smaller image of an object {#} cm away on the sensor (the screen) {#} cm behind it. Move the object closer and the sensor must move back to stay in focus. For blur, the f-number and a phone lens, use the Camera mode of The Eye.",
@@ -127,6 +127,10 @@ VDI18N.add('en', 'demo/optics-bench', [
 "∞ (flat)",
 "Virtual, upright, same size",
 "White light through a flint glass lens, f = {#} cm at {#} nm. The glass bends violet more than red, so violet ({#} nm) focuses {#} cm nearer the lens than red ({#} nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.",
+"on the screen, × {#}",
+"grid {#} mm",
+"close up of the focus",
+"heights × {#}",
 "White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.",
 "A house {#} cm tall and {#} cm deep lying on the bench, {#} to {#} cm from an {#} cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.",
 "{#} cm (dₒ {#} to {#} cm)",
@@ -152,5 +156,6 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Crown glass, n₁ = {#}",
 "Flint glass, n₁ = {#}",
 "Diamond, n₁ = {#}",
-"The quickest path has no worksheet table yet: the readouts and the graph give the times."
+"The quickest path has no worksheet table yet: the readouts and the graph give the times.",
+"t (ns) against x (cm)"
 ]);

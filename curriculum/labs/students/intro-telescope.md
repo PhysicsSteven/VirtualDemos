@@ -13,7 +13,7 @@ Student worksheet · Astro 2203
 - The rail is drawn to scale from the side, in centimeters. Light from the object (here the Moon, far away) passes through the lenses into the eye, and every ray is traced. Two small pictures show what the eye sees through the instrument and what it would see without it, at the same scale.
 - Click a lens to change its focal length, its diameter or its place on the rail; click the eye to change the size of its pupil or its place. "Put it at the exit pupil" moves the eye to the spot where all the light leaving the eyepiece passes through.
 - The readouts give the angular magnification M (how many times bigger things look; a minus sign means the view is upside down), the exit pupil (the width of the beam that leaves the eyepiece), the apparent field of view, the image brightness and **Light from a star**: how many times more light from a star reaches the eye through the telescope than reaches the bare eye.
-- The lenses are ideal thin lenses, with one color of light and no blur from diffraction (its limit is quoted under Light and field). Real lenses split colors, as the next worksheet shows.
+- The lenses are ideal thin lenses, with one color of light and no blur from diffraction (its limit is quoted under Light and field). Real lenses split colors, as the Lenses, Mirrors and Color worksheet shows.
 - Record reading stores the focal lengths, the objective's diameter and every readout. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>

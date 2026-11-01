@@ -166,6 +166,9 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 .amkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
 .amkey span { display: inline-flex; align-items: center; }
 .amkey i { display: inline-block; width: 3px; height: 12px; margin-right: 6px; }
+#modelsBox .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.9rem; }
+#modelsBox .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+#modelsBox input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (max-width: 820px) { #modelsBox input[type="range"] { min-height: 28px; } }
 .starkey { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0 0; }
 .starkey span { display: inline-flex; align-items: center; }
@@ -239,7 +242,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       <p>Every element glows in its own set of colors. Click any element to see its spectral lines, measured by NIST.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono"><span class="nw">air wavelengths</span> · <span class="nw">1 nm = 10 Å</span> · <span class="nw">E = hc/λ</span></div>
+      <div class="units mono"><span class="nw">wavelengths in air</span> <span class="nw">(vacuum below 200 nm)</span> · <span class="nw">1 nm = 10 Å</span> · <span class="nw">E = hc/λ<sub>vacuum</sub></span></div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spectra.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spectra.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM15 2h1v1h-1zM18 2h4v1h-4zM24 2h1v1h-1zM26 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h3v1h-3zM16 4h10v1h-10zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM16 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h2v1h-2zM16 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h3v1h-3zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h2v1h-2zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h5v1h-5zM34 11h4v1h-4zM2 12h1v1h-1zM4 12h5v1h-5zM11 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h3v1h-3zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM11 14h1v1h-1zM14 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h4v1h-4zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM8 16h6v1h-6zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM14 17h1v1h-1zM16 17h2v1h-2zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM5 18h9v1h-9zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h3v1h-3zM9 19h2v1h-2zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h2v1h-2zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h9v1h-9zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h2v1h-2zM13 21h2v1h-2zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM10 22h3v1h-3zM15 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM4 23h4v1h-4zM13 23h2v1h-2zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h4v1h-4zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h2v1h-2zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM10 27h3v1h-3zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM6 28h3v1h-3zM12 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h2v1h-2zM9 29h5v1h-5zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM5 30h5v1h-5zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h1v1h-1zM12 31h1v1h-1zM15 31h1v1h-1zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h3v1h-3zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h2v1h-2zM26 35h8v1h-8zM35 35h3v1h-3zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM17 37h10v1h-10zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
@@ -329,8 +332,9 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <h2 id="starTitle">Hydrogen in a star's atmosphere</h2>
         <p class="hint" style="margin: 4px 0 8px;">Where the hydrogen atoms are, against the star's surface temperature. Balmer lines need atoms on level n = 2.</p>
         <canvas id="cStars" class="starchart" tabindex="0" role="application" aria-label="Chart of hydrogen level populations against temperature, log scales. Drag sideways or use the left and right arrow keys to change the temperature."></canvas>
-        <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span></p>
-        <canvas id="cBalmer" class="balmer" role="img" aria-label="Balmer absorption lines of hydrogen, drawn darker when more atoms sit on level n = 2."></canvas>
+        <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>up the side: shares and ratios, log scale</span></p>
+        <canvas id="cBalmer" class="balmer" role="img" aria-label="The star's visible spectrum: its blackbody continuum at this temperature, with hydrogen's Balmer absorption lines drawn darker when more atoms sit on level n = 2."></canvas>
+        <p class="hint" style="margin: 4px 0 0;">The star's own light: a blackbody at its surface temperature, with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red.</p>
       </section>
 
       <section class="card" id="modelsCard" aria-labelledby="modelsTitle" hidden>
@@ -390,7 +394,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
           </dl>
           <details class="more"><summary>More about this</summary>
             <p class="hint">A Balmer line is absorbed by a hydrogen atom whose electron already sits on level n = 2. In a cool star almost every atom is on n = 1 (Boltzmann factor), and in a hot star almost every atom has lost its electron (Saha equation). Only in between are there many atoms on n = 2: the Balmer lines are strongest in A stars, near 10,000 K.</p>
-            <p class="hint">Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §8.1): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × 13.598 eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup> with χ = 13.598 eV. Approximations: partition functions Z<sub>I</sub> = 2 (ground level only) and Z<sub>II</sub> = 1 (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use 20 N/m², where the peak falls near 9900 K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go: each line is drawn darker on a log scale of N₂/N<sub>total</sub>, from 10⁻⁴ of its peak (barely there) to the peak (black). Constants CODATA 2022.</p>
+            <p class="hint">Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §8.1): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × 13.598 eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup> with χ = 13.598 eV. Approximations: partition functions Z<sub>I</sub> = 2 (ground level only) and Z<sub>II</sub> = 1 (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use 20 N/m², where the peak falls near 9900 K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go. The strip is the star's continuum, a blackbody at T by Planck's law (each color's brightness relative to the brightest in the strip), and each Balmer line is drawn darker on a log scale of f λ² N₂/N<sub>total</sub>, the strength of a weak line (f is the line's oscillator strength from n = 2, NIST: Hα 0.641, Hβ 0.119, Hγ 0.0447, Hδ 0.0221, Hε 0.0127), from 10⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Strong lines saturate, so in a real A star the higher lines are darker than this shows. Constants CODATA 2022.</p>
           </details>
         </div>
         <div id="modelsBox" hidden>
@@ -423,7 +427,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
           </dl>
           <details class="more"><summary>More about this</summary>
             <p class="hint">The same photons, at the same moments, go into all six atoms. Only the quantum atoms (Bohr, de Broglie, Schrödinger) give hydrogen's real lines, and they absorb a photon only when its energy matches a jump between two levels, E = −13.6 eV/n² (levels up to n = 6 here). Thomson's electron has one natural frequency, so it answers one color, set by the size of the pudding. The classical planetary atom radiates as its electron circles, spirals in and collapses in 16 ps, giving a smear of every color rather than lines. Bohr's and de Broglie's atoms share the same levels: Bohr postulated them, de Broglie explained them as standing electron waves. Bohr's model says nothing about which way down an electron goes, so here each lower level is equally likely. Schrödinger's atom adds the angular momentum l, the rule that a photon changes l by one, and the rate of each jump, so its lines come out with their real relative strengths, and an electron that lands in 2s is stuck (it lives 0.12 s, against 1.6 ns for 2p).</p>
-            <p class="hint">Model: energies from R<sub>H</sub> = R<sub>∞</sub>/(1 + m<sub>e</sub>/m<sub>p</sub>) (CODATA 2022), vacuum wavelengths, fine structure left out. Thomson λ = (2πa₀/α)(R/a₀)<sup>3/2</sup>. Classical collapse time r₀³/(4r<sub>e</sub>²c) from r₀ = a₀, by Larmor's formula. Schrödinger rates A = (4/3)αω³/c² · l<sub>max</sub>/(2l + 1) · |∫R<sub>nl</sub>R<sub>n′l′</sub>r³dr|² (Bethe and Salpeter §59, §63), within 0.05 % of NIST's. The lamp's photons spread ±0.6 % in energy, so a lamp set within 0.6 % of a line excites it; real atoms answer a far narrower band. Times are slowed: every excited state is held about one second on screen (its real lifetime is shown), 2s eight seconds, and the classical collapse takes five seconds. A photon on a line is absorbed every time and an ionizing photon one time in ten, so you can watch both; really a photon on a line is thousands of times likelier to be taken than one above the ionization energy. The photon from capturing an electron after ionization belongs to a continuum and is not drawn. Orbits are drawn with radius in proportion to n (really n²), and each Schrödinger cloud (m = 0, a slice through the nucleus) at its own scale.</p>
+            <p class="hint">Model: energies from R<sub>H</sub> = R<sub>∞</sub>/(1 + m<sub>e</sub>/m<sub>p</sub>) (CODATA 2022), fine structure left out. The photons' energies come from their vacuum wavelengths; the lamp wavelength is shown in air from 200 nm up, like every wavelength on this page (Hα: 656.47 nm in vacuum, 656.29 nm in air). Thomson λ = (2πa₀/α)(R/a₀)<sup>3/2</sup>. Classical collapse time r₀³/(4r<sub>e</sub>²c) from r₀ = a₀, by Larmor's formula. Schrödinger rates A = (4/3)αω³/c² · l<sub>max</sub>/(2l + 1) · |∫R<sub>nl</sub>R<sub>n′l′</sub>r³dr|² (Bethe and Salpeter §59, §63), within 0.05 % of NIST's. The lamp's photons spread ±0.6 % in energy, so a lamp set within 0.6 % of a line excites it; real atoms answer a far narrower band. Times are slowed: every excited state is held about one second on screen (its real lifetime is shown), 2s eight seconds, and the classical collapse takes five seconds. A photon on a line is absorbed every time and an ionizing photon one time in ten, so you can watch both; really a photon on a line is thousands of times likelier to be taken than one above the ionization energy. The photon from capturing an electron after ionization belongs to a continuum and is not drawn. Orbits are drawn with radius in proportion to n (really n²), and each Schrödinger cloud (m = 0, a slice through the nucleus) at its own scale.</p>
           </details>
         </div>
         <div id="mysteryBox" hidden>
@@ -485,6 +489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       <section class="card">
         <h2>Data</h2>
         <p class="src">Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong lines tables, air wavelengths from 300 to 1000 nm, for the 99 elements from hydrogen to einsteinium. Public domain. <span class="mono">physics.nist.gov/PhysRefData/Handbook</span></p>
+        <p class="src">Wavelengths: every wavelength on this page is given in air from 200 nm up, as NIST and most spectroscopy and astronomy tables list them, and in vacuum below 200 nm, where air absorbs. Light is about 0.03 % shorter in air than in vacuum (n<sub>air</sub> ≈ 1.00028). Hydrogen's lines from the Rydberg formula, R<sub>H</sub> = 10 967 758.34 m⁻¹ (CODATA 2022), are converted to air with the dispersion formula of Birch and Downs (1994) as given by Morton (2000, ApJS 130, 403): Hα 656.470 nm in vacuum is 656.288 nm in air, Hβ 486.274 is 486.138, Lyman α 121.568 nm stays in vacuum. NIST's measured Hα, 656.279 nm in air, is 0.009 nm shorter because of fine structure, which the Bohr model leaves out. Photon energies use the vacuum wavelength, E = hc/λ<sub>vacuum</sub>.</p>
         <p class="src">"I" marks lines from neutral atoms, "II" from atoms that have lost one electron. Line widths and colors on screen are drawn, not measured.</p>
         <p class="src">The tube and swatch colors are computed: each line from 360 to 830 nm, weighted by its NIST intensity, is summed with the CIE 1931 color matching functions (fit of Wyman, Sloan and Shirley 2013) and shown at full brightness in sRGB. Under All the tube uses the neutral atom lines, which dominate a low current discharge. NIST intensities are rough and depend on the light source, so the color is an estimate. Metals are really studied in flames, arcs or hollow cathode lamps; the tube stands in for any such source.</p>
       </section>
@@ -605,6 +610,14 @@ function amDecay(n, l, u) {
   const tot = ds.reduce((s, d) => s + d.A, 0); let acc = 0;
   for (const d of ds) { acc += d.A / tot; if (u < acc) return d; }
   return ds[ds.length - 1];
+}
+/* Vacuum to air (2026-11-01): the page gives every wavelength in air from 200 nm up, as NIST lists them, and in vacuum below.
+   Refractive index of standard air from Birch and Downs (1994) as given by Morton (2000, ApJS 130, 403), σ = 1/λ in μm⁻¹. */
+function airFromVac(vnm) {
+  if (vnm < 200) return vnm;
+  const s2 = Math.pow(1000 / vnm, 2);
+  const n = 1 + 0.0000834254 + 0.02406147 / (130 - s2) + 0.00015998 / (38.9 - s2);
+  return vnm / n;
 }
 // ==CORE END==
 </script>
@@ -1021,12 +1034,7 @@ function amDecay(n, l, u) {
 
   // ---------- hydrogen ----------
   const RH = 10967758.34;  // m^-1, Rydberg constant for hydrogen
-  function airFromVac(vnm) {
-    if (vnm < 200) return vnm;
-    const s2 = Math.pow(1000 / vnm, 2);   // (1/λ in μm)^2
-    const n = 1 + 0.0000834254 + 0.02406147 / (130 - s2) + 0.00015998 / (38.9 - s2);
-    return vnm / n;
-  }
+  /* airFromVac is in CORE */
   function hLine(ni, nf) {
     const inv = RH * (1 / (nf * nf) - 1 / (ni * ni));
     const vac = 1e9 / inv;
@@ -1491,7 +1499,8 @@ function amDecay(n, l, u) {
   const uFromT = (t) => Math.round(1000 * Math.log(t / HS_T0) / Math.log(HS_T1 / HS_T0));
   const peFromU = (u) => +Math.pow(10, 3 * u / 1000).toPrecision(2);
   const uFromPe = (p) => Math.round(1000 * Math.log10(p) / 3);
-  const BALMER = [['Hα', 656.279], ['Hβ', 486.135], ['Hγ', 434.047], ['Hδ', 410.174], ['Hε', 397.007]];   /* NIST air wavelengths, nm */
+  const BALMER = [['Hα', 656.279, 0.64108], ['Hβ', 486.135, 0.11938], ['Hγ', 434.047, 0.044694], ['Hδ', 410.174, 0.022105], ['Hε', 397.007, 0.012711]];   /* NIST air wavelengths, nm, and absorption oscillator strengths f from n = 2 (NIST ASD, Wiese and Fuhr 2009) */
+  const HS_HC_NMK = HS_H * 299792458 / HS_K * 1e9;   /* hc/k in nm K, for Planck's law */
   const sci2 = (v) => { if (!(v > 0)) return '0'; const e = Math.floor(Math.log10(v)); if (e >= -2 && e <= 3) return String(+v.toPrecision(3)); const m = v / Math.pow(10, e); return `${m.toFixed(2)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; };
   const fmtK = (t) => `${Math.round(t).toLocaleString('en-US')} K`;
   const STAR_CLASSES = [['M', 2400, 3700], ['K', 3700, 5200], ['G', 5200, 6000], ['F', 6000, 7500], ['A', 7500, 10000], ['B', 10000, 30000], ['O', 30000, 1e9]];
@@ -1536,12 +1545,11 @@ function amDecay(n, l, u) {
     ctx.restore();
     // labels on the curves
     ctx.font = `700 ${11 * ps}px ${m}`; ctx.textBaseline = 'bottom';
-    const lab = (txt, col, t, v, al) => { ctx.fillStyle = col; ctx.textAlign = al; ctx.fillText(txt, X(t), Y(v) - 4 * ps); };
     const pk = hsPeak(ST.Pe), fpk = hsShares(pk, ST.Pe).f2;
-    lab('share in n = 2', pos, pk, fpk * 2.2, 'center');
+    { const yl = (Y(hsShares(HS_T1, ST.Pe).f2) + B) / 2; ctx.fillStyle = pos; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('↑ share in n = 2', R - 6 * ps, yl); }   /* under the hot end of the curve, where nothing else is drawn */
     // the peak, and the current temperature
     ctx.strokeStyle = pos; ctx.globalAlpha = 0.5; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(pk), Y(fpk)); ctx.lineTo(X(pk), B); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    ctx.fillStyle = pos; ctx.font = `${10.5 * ps}px ${m}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`peak ${fmtK(pk)}`, X(pk) + 4 * ps, B - 3 * ps);
+    ctx.fillStyle = pos; ctx.font = `${10.5 * ps}px ${m}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`peak ${fmtK(Math.round(pk / 10) * 10)}`, X(pk) + 4 * ps, B - 3 * ps);
     const x = X(ST.T);
     ctx.strokeStyle = acc; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, T0); ctx.lineTo(x, B); ctx.stroke();
     const sh = hsShares(ST.T, ST.Pe);
@@ -1551,14 +1559,22 @@ function amDecay(n, l, u) {
     }
     ctx.fillStyle = acc; ctx.font = `700 ${11 * ps}px ${m}`; ctx.textBaseline = 'top';
     const tl = fmtK(ST.T), tw = ctx.measureText(tl).width; ctx.textAlign = x + tw + 8 * ps > R ? 'right' : 'left'; ctx.fillText(tl, x + (ctx.textAlign === 'right' ? -5 : 5) * ps, T0 + 4 * ps);
-    /* the Balmer strip, drawn, not computed line by line: darkness on a log scale of N₂/N_total, from 10⁻⁴ of its peak for this
-       Pe (barely there) to the peak (black) */
+    /* the Balmer strip: the star's continuum, a blackbody at T (Planck's law, brightness across 380 to 700 nm relative to the
+       brightest color in the strip, shown with the sRGB gamma), with each Balmer line drawn darker on a log scale of its weak line
+       strength f λ² N₂/N_total, from 10⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Oscillator strengths
+       f from NIST (Wiese and Fuhr 2009). */
     const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 700, BX = (l) => (l - l0) / (l1 - l0) * BW, top = 4 * ps, bot = BH - 18 * ps;
     bx.clearRect(0, 0, BW, BH);
-    for (let px = 0; px < BW; px++) { const c = lamRGB(l0 + (px + 0.5) / BW * (l1 - l0)); bx.fillStyle = `rgb(${c.join(',')})`; bx.fillRect(px, top, 1, bot - top); }
-    const depth = Math.max(0, Math.min(1, 1 + Math.log10(sh.f2 / fpk) / 4));
+    const planck = (l) => 1 / (Math.pow(l, 5) * (Math.exp(HS_HC_NMK / (l * ST.T)) - 1));
+    let pmax = 0; for (let l = l0; l <= l1; l += 2) pmax = Math.max(pmax, planck(l));
+    for (let px = 0; px < BW; px++) {
+      const l = l0 + (px + 0.5) / BW * (l1 - l0), c = lamRGB(l), k = Math.pow(planck(l) / pmax, 1 / 2.2);
+      bx.fillStyle = `rgb(${c.map((v) => Math.round(v * k)).join(',')})`; bx.fillRect(px, top, 1, bot - top);
+    }
     bx.font = `${10 * ps}px ${m}`; bx.textAlign = 'center'; bx.textBaseline = 'top';
-    for (const [nm, l] of BALMER) {
+    const sA = BALMER[0][2] * BALMER[0][1] * BALMER[0][1] * fpk;
+    for (const [nm, l, fo] of BALMER) {
+      const depth = Math.max(0, Math.min(1, 1 + Math.log10(fo * l * l * sh.f2 / sA) / 4));
       bx.fillStyle = `rgba(0,0,0,${(0.97 * depth).toFixed(3)})`; bx.fillRect(BX(l) - 2.5 * ps, top, 5 * ps, bot - top);
       bx.fillStyle = muted; bx.fillText(nm, BX(l), bot + 3 * ps);
     }
@@ -1820,9 +1836,9 @@ function amDecay(n, l, u) {
   }
   function amReadout() {
     const nm = AM.lam;
-    $('amLamOut').textContent = AM.white ? 'white light' : `${nm < 100 ? nm.toFixed(1) : nm.toFixed(1)} nm`;
+    $('amLamOut').textContent = AM.white ? 'white light' : `${airFromVac(nm).toFixed(1)} nm`;   /* in air from 200 nm up, like the rest of the page */
     $('amE').textContent = AM.white ? '0.62 to 31 eV' : `${(AM_HC / nm).toFixed(3)} eV`;
-    $('amROut').textContent = `${AM.R.toFixed(3)} nm → λ ${amThomsonNm(AM.R).toFixed(1)} nm`;
+    $('amROut').textContent = `${AM.R.toFixed(3)} nm → λ ${airFromVac(amThomsonNm(AM.R)).toFixed(1)} nm`;
     $('amSent').textContent = String(AM.sent);
     $('amRun').textContent = AM.run ? 'Pause' : 'Play';
     for (const b of document.querySelectorAll('#amChips button')) b.setAttribute('aria-pressed', String(!AM.white && b.dataset.l === AM.chip));
@@ -1854,7 +1870,7 @@ function amDecay(n, l, u) {
   setInterval(() => {
     if (S.mode !== 'models') return;
     const sum = AM.atoms.map((a, i) => `${AM_MODELS[i].name}: ${amStatus(a)}`).join('; ');
-    $('cModels').setAttribute('aria-label', `Six models of the hydrogen atom under one photon beam at ${AM.white ? 'white light' : AM.lam.toFixed(1) + ' nm'}. ${sum}.`);
+    $('cModels').setAttribute('aria-label', `Six models of the hydrogen atom under one photon beam at ${AM.white ? 'white light' : airFromVac(AM.lam).toFixed(1) + ' nm'}. ${sum}.`);
   }, 2000);
   document.addEventListener('visibilitychange', () => { if (S.mode === 'models' && AM.run) amStart(); });
   window.__models = { AM, step: amStep, setLam: amSetLam, restart: amRestart, draw: drawModels };   /* for the key scripts and tests */

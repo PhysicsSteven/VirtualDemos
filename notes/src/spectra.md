@@ -13,7 +13,7 @@ time: 15 to 30 minutes
 
 ## Before class
 
-Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm; hc = 1240 eV·nm helps. All wavelengths are NIST air wavelengths. There are no preset buttons: the **Mode** buttons (**Explore**, **Compare**, **Mystery**), the display buttons above the strip and the periodic table drive everything. In **Explore** the left and right arrow keys step through the table.
+Students should know E = hf = hc/λ and the visible range, roughly 380 to 750 nm; hc = 1240 eV·nm helps. All wavelengths are in air from 200 nm up, as NIST lists them, and in vacuum below 200 nm (stated in the header and the Data card); Atom models shows its lamp the same way. There are no preset buttons: the **Mode** buttons (**Explore**, **Compare**, **Mystery**), the display buttons above the strip and the periodic table drive everything. In **Explore** the left and right arrow keys step through the table.
 
 ## Running it in class
 

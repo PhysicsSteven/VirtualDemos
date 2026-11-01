@@ -142,8 +142,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "Mostrar lo que llega al suelo",
 "About the ground strip":
   "Sobre la franja del suelo",
-"The thin strip under the spectrum shows how much of each wavelength gets down through Earth's atmosphere to a telescope on a high, dry mountain: solid where the air is clear, faint where only some gets through, empty where none does. Edges: the ozone cutoff near {#} nm; the near and mid infrared windows J to Q and the {#} to {#} µm window with their transparency (IPAC Cool Cosmos, Infrared Windows); the radio window from {#} cm out to {#} m, below {#} MHz the ionosphere reflects radio waves back to space (Torge and Müller {#}), and from {#} cm down to {#} mm only patches between oxygen and water vapor lines at the best sites (Condon and Ransom {#}). The edges move with the weather, the site and the time of day, so they are drawn as a guide, not measurements. Telescopes for everything else fly above the air.":
-  "La franja delgada bajo el espectro muestra cuánto de cada longitud de onda atraviesa la atmósfera de la Tierra hasta un telescopio en una montaña alta y seca: llena donde el aire es transparente, tenue donde solo pasa una parte, vacía donde no pasa nada. Bordes: el corte del ozono cerca de {#} nm; las ventanas del infrarrojo cercano y medio J a Q y la ventana de {#} a {#} µm con su transparencia (IPAC Cool Cosmos, Infrared Windows); la ventana de radio desde {#} cm hasta {#} m, debajo de {#} MHz la ionosfera refleja las ondas de radio de vuelta al espacio (Torge y Müller {#}), y desde {#} cm hasta {#} mm solo hay huecos entre las líneas del oxígeno y del vapor de agua en los mejores sitios (Condon y Ransom {#}). Los bordes cambian con el clima, el sitio y la hora del día, así que se dibujan como guía, no como mediciones. Los telescopios para todo lo demás vuelan por encima del aire.",
+"The thin strip under the spectrum shows how much of each wavelength gets down through Earth's atmosphere to a telescope on a high, dry mountain: solid where the air is clear, faint where only some gets through, empty where none does. Edges: the ozone cutoff near {#} nm; the near and mid infrared windows J to Q and the {#} to {#} µm window with their transparency (IPAC Cool Cosmos, Infrared Windows); the radio window from {#} cm out to {#} m, below {#} MHz the ionosphere reflects radio waves back to space (Torge and Müller {#}), and from {#} mm down to {#} mm only windows between the oxygen lines (near {#} mm and {#} mm) and the water vapor lines, the {#} mm, {#} mm, {#} mm, {#} µm, {#} µm and {#} µm windows, open at high, dry sites like Mauna Kea and the Atacama (the ATM model of Pardo, Cernicharo and Serabyn {#}; Condon and Ransom {#}). The edges move with the weather, the site and the time of day, so they are drawn as a guide, not measurements. Telescopes for everything else fly above the air.":
+  "La franja delgada bajo el espectro muestra cuánto de cada longitud de onda atraviesa la atmósfera de la Tierra hasta un telescopio en una montaña alta y seca: llena donde el aire es transparente, tenue donde solo pasa una parte, vacía donde no pasa nada. Bordes: el corte del ozono cerca de {#} nm; las ventanas del infrarrojo cercano y medio J a Q y la ventana de {#} a {#} µm con su transparencia (IPAC Cool Cosmos, Infrared Windows); la ventana de radio desde {#} cm hasta {#} m, debajo de {#} MHz la ionosfera refleja las ondas de radio de vuelta al espacio (Torge y Müller {#}), y desde {#} mm hasta {#} mm solo ventanas entre las líneas del oxígeno (cerca de {#} mm y {#} mm) y las del vapor de agua, las ventanas de {#} mm, {#} mm, {#} mm, {#} µm, {#} µm y {#} µm, abiertas en sitios altos y secos como Mauna Kea y Atacama (el modelo ATM de Pardo, Cernicharo y Serabyn {#}; Condon y Ransom {#}). Los bordes cambian con el clima, el sitio y la hora del día, así que se dibujan como guía, no como mediciones. Los telescopios para todo lo demás vuelan por encima del aire.",
 "Polarization shortcuts":
   "Atajos de polarización",
 "Right circular":
@@ -274,8 +274,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "Campos exactos de un dipolo puntual oscilante (longitud mucho menor que λ), incluidos los términos de campo cercano, en un plano que contiene su eje. Las líneas son líneas de campo eléctrico, dibujadas como curvas de nivel de la función de corriente sen²θ [sen(kr − ωt) + cos(kr − ωt)/kr]. El sombreado muestra B, que entra o sale de la página, multiplicado por r para que el campo lejano se vea parejo. Una antena real de media onda tiene un patrón un poco más angosto que sen²θ.",
 "Maxwell's equations solved step by step on a grid (Yee's finite difference time domain method) for currents along z, so E points along z and B lies in the page. The grid has {#} cells per wavelength and a time step of half a cell's crossing time; waves on it travel {#} % slower than c along the grid lines and less along diagonals. Metal is a perfect conductor (E = {#} in it). The wires are long straight currents through the page, so fields fall as {#}/√r, not {#}/r as for a short antenna. Past the edge of the picture an absorbing border {#} λ deep takes up outgoing waves, sending back about {#} % of their amplitude. The beam is a Gaussian {#} λ across, not an endless plane wave. Brightness grows with the field but levels off (tanh), so strong fields near a wire do not wash out the rest.":
   "Las ecuaciones de Maxwell resueltas paso a paso en una malla (método de diferencias finitas en el dominio del tiempo de Yee) para corrientes a lo largo de z, así que E apunta a lo largo de z y B está en el plano de la página. La malla tiene {#} celdas por longitud de onda y un paso de tiempo de la mitad del tiempo que tarda en cruzar una celda; las ondas en ella viajan un {#} % más lento que c a lo largo de las líneas de la malla y menos en las diagonales. El metal es un conductor perfecto (E = {#} dentro de él). Los alambres son corrientes largas y rectas que atraviesan la página, así que los campos decaen como {#}/√r, no {#}/r como para una antena corta. Más allá del borde de la imagen, un borde absorbente de {#} λ de profundidad recoge las ondas salientes y devuelve cerca del {#} % de su amplitud. El haz es gaussiano de {#} λ de ancho, no una onda plana infinita. El brillo crece con el campo pero se satura (tanh), para que los campos intensos cerca de un alambre no opaquen el resto.",
-"Guides and cavities: exact modes of a rectangular metal pipe a × b (and of a closed box a × b × d) with perfectly conducting walls and vacuum inside, from Maxwell's equations with E along the walls and B into them zero (Jackson, Classical Electrodynamics, 3rd ed., sections {#} to {#} and {#}; Pozar, Microwave Engineering, 4th ed., sections {#} and {#}). TE modes have B<sub>z</sub> ∝ cos(mπx/a) cos(nπy/b), TM modes E<sub>z</sub> ∝ sin(mπx/a) sin(nπy/b); a guide mode travels only above f<sub>c</sub> = (c/{#})√((m/a)² + (n/b)²), and a cavity rings only at f = (c/{#})√((m/a)² + (n/b)² + (p/d)²). Real walls lose a little power (copper at {#} GHz: a WR-{#} guide loses about {#} dB per meter; a copper cavity's Q is several thousand), which is left out. Arrows are drawn in proportion to the largest field anywhere in the guide over a period, E red and cB blue; the 3D view and the end view are to scale, the length shown is {#} guide wavelengths (or {#} decay lengths below cutoff). The standard X band guide is WR-{#}, {#} mm × {#} mm inside (EIA RS-{#}-B).":
-  "Guías y cavidades: modos exactos de un tubo metálico rectangular a × b (y de una caja cerrada a × b × d) con paredes perfectamente conductoras y vacío dentro, a partir de las ecuaciones de Maxwell con cero la E a lo largo de las paredes y la B hacia ellas (Jackson, Classical Electrodynamics, 3.ª ed., secciones {#} a {#} y {#}; Pozar, Microwave Engineering, 4.ª ed., secciones {#} y {#}). Los modos TE tienen B<sub>z</sub> ∝ cos(mπx/a) cos(nπy/b), los modos TM E<sub>z</sub> ∝ sen(mπx/a) sen(nπy/b); un modo de guía solo viaja arriba de f<sub>c</sub> = (c/{#})√((m/a)² + (n/b)²), y una cavidad solo resuena en f = (c/{#})√((m/a)² + (n/b)² + (p/d)²). Las paredes reales pierden un poco de potencia (cobre a {#} GHz: una guía WR-{#} pierde unos {#} dB por metro; el Q de una cavidad de cobre es de varios miles), lo cual se deja fuera. Las flechas se dibujan en proporción al campo más grande en cualquier punto de la guía durante un periodo, E en rojo y cB en azul; la vista 3D y la vista de frente están a escala, la longitud mostrada es de {#} longitudes de onda de guía (o {#} longitudes de decaimiento debajo del corte). La guía estándar de banda X es WR-{#}, de {#} mm × {#} mm por dentro (EIA RS-{#}-B).",
+"Guides and cavities: exact modes of a rectangular metal pipe a × b (and of a closed box a × b × d) with perfectly conducting walls and vacuum inside, from Maxwell's equations with E along the walls and B into them zero (Jackson, Classical Electrodynamics, 3rd ed., sections {#} to {#} and {#}; Pozar, Microwave Engineering, 4th ed., sections {#} and {#}). TE modes have B<sub>z</sub> ∝ cos(mπx/a) cos(nπy/b), TM modes E<sub>z</sub> ∝ sin(mπx/a) sin(nπy/b); a guide mode travels only above f<sub>c</sub> = (c/{#})√((m/a)² + (n/b)²), and a cavity rings only at f = (c/{#})√((m/a)² + (n/b)² + (p/d)²). Real walls lose a little power (copper at {#} GHz: a WR-{#} guide loses about {#} dB per meter; a copper cavity's Q is several thousand), which is left out. Arrows are drawn in proportion to the largest field anywhere in the guide over a period, E red and cB green; the 3D view and the end view are to scale, the length shown is {#} guide wavelengths (or {#} decay lengths below cutoff). The standard X band guide is WR-{#}, {#} mm × {#} mm inside (EIA RS-{#}-B).":
+  "Guías y cavidades: modos exactos de un tubo metálico rectangular a × b (y de una caja cerrada a × b × d) con paredes perfectamente conductoras y vacío dentro, a partir de las ecuaciones de Maxwell con cero la E a lo largo de las paredes y la B hacia ellas (Jackson, Classical Electrodynamics, 3.ª ed., secciones {#} a {#} y {#}; Pozar, Microwave Engineering, 4.ª ed., secciones {#} y {#}). Los modos TE tienen B<sub>z</sub> ∝ cos(mπx/a) cos(nπy/b), los modos TM E<sub>z</sub> ∝ sen(mπx/a) sen(nπy/b); un modo de guía solo viaja arriba de f<sub>c</sub> = (c/{#})√((m/a)² + (n/b)²), y una cavidad solo resuena en f = (c/{#})√((m/a)² + (n/b)² + (p/d)²). Las paredes reales pierden un poco de potencia (cobre a {#} GHz: una guía WR-{#} pierde unos {#} dB por metro; el Q de una cavidad de cobre es de varios miles), lo cual se deja fuera. Las flechas se dibujan en proporción al campo más grande en cualquier punto de la guía durante un periodo, E en rojo y cB en verde; la vista 3D y la vista de frente están a escala, la longitud mostrada es de {#} longitudes de onda de guía (o {#} longitudes de decaimiento debajo del corte). La guía estándar de banda X es WR-{#}, de {#} mm × {#} mm por dentro (EIA RS-{#}-B).",
 "<span><i></i>E out of the page</span> <span><i></i>E into the page</span> <span><i></i>Average intensity ⟨E²⟩</span> <span><i></i>Metal (a perfect conductor)</span>":
   "<span><i></i>E saliendo de la página</span> <span><i></i>E entrando a la página</span> <span><i></i>Intensidad promedio ⟨E²⟩</span> <span><i></i>Metal (un conductor perfecto)</span>",
 "<span><i></i>Electric field line</span> <span><i></i>B into the page</span> <span><i></i>B out of the page</span>":
@@ -310,8 +310,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "después de un periodo",
 "TE10 in a waveguide":
   "TE10 en una guía de onda",
-"arrows: E red, cB blue · drag to turn":
-  "flechas: E rojo, cB azul · arrastra para girar",
+"arrows: E red, cB green · drag to turn":
+  "flechas: E rojo, cB verde · arrastra para girar",
 "End view at z = {#}":
   "Vista de frente en z = {#}",
 "a = {#} mm across, b = {#} mm up":
@@ -582,6 +582,74 @@ VDI18N.add('es', 'demo/em-waves', {
   "TE355",
 "resonances":
   "resonancias",
+"no: reflected back to space by the ionosphere":
+  "no: la ionosfera la refleja de vuelta al espacio",
+"slowed {#}×{#}⁵ times":
+  "desacelerada {#}×{#}⁵ veces",
+"slowed {#}×{#}⁶ times":
+  "desacelerada {#}×{#}⁶ veces",
+"slowed {#}×{#}⁷ times":
+  "desacelerada {#}×{#}⁷ veces",
+"slowed {#}×{#}⁹ times":
+  "desacelerada {#}×{#}⁹ veces",
+"slowed {#}×{#}¹¹ times":
+  "desacelerada {#}×{#}¹¹ veces",
+"no: absorbed by oxygen":
+  "no: la absorbe el oxígeno",
+"yes: the {#} mm window":
+  "sí: la ventana de {#} mm",
+"mostly: the {#} mm window, from high, dry sites":
+  "en su mayoría: la ventana de {#} mm, desde sitios altos y secos",
+"no: absorbed by water vapor and carbon dioxide":
+  "no: la absorben el vapor de agua y el dióxido de carbono",
+"partly: the {#} µm window, from high, dry sites":
+  "en parte: la ventana de {#} µm, desde sitios altos y secos",
+"slowed {#}×{#}¹² times":
+  "desacelerada {#}×{#}¹² veces",
+"barely: the {#} µm window, from high, dry sites":
+  "apenas: la ventana de {#} µm, desde sitios altos y secos",
+"slowed {#}×{#}¹³ times":
+  "desacelerada {#}×{#}¹³ veces",
+"barely: the Z window, from high, dry sites":
+  "apenas: la ventana Z, desde sitios altos y secos",
+"barely: the Q window, from high, dry sites":
+  "apenas: la ventana Q, desde sitios altos y secos",
+"partly: the N window":
+  "en parte: la ventana N",
+"partly: the N window (ozone absorbs near {#} µm)":
+  "en parte: la ventana N (el ozono absorbe cerca de {#} µm)",
+"slowed {#}×{#}¹⁴ times":
+  "desacelerada {#}×{#}¹⁴ veces",
+"partly: the M window":
+  "en parte: la ventana M",
+"yes: the L window":
+  "sí: la ventana L",
+"partly: the L window":
+  "en parte: la ventana L",
+"yes: the K window of the near infrared":
+  "sí: la ventana K del infrarrojo cercano",
+"yes: the H window of the near infrared":
+  "sí: la ventana H del infrarrojo cercano",
+"yes: the J window of the near infrared":
+  "sí: la ventana J del infrarrojo cercano",
+"Visible (orange)<i></i>":
+  "Visible (naranja)<i></i>",
+"Visible (yellow)<i></i>":
+  "Visible (amarillo)<i></i>",
+"Visible (blue)<i></i>":
+  "Visible (azul)<i></i>",
+"Visible (violet)<i></i>":
+  "Visible (violeta)<i></i>",
+"no: absorbed by the ozone layer":
+  "no: la absorbe la capa de ozono",
+"{#} as":
+  "{#} as",
+"no: absorbed by oxygen and nitrogen high in the atmosphere":
+  "no: la absorben el oxígeno y el nitrógeno en lo alto de la atmósfera",
+"slowed {#}×{#}¹⁶ times":
+  "desacelerada {#}×{#}¹⁶ veces",
+"no: absorbed high in the atmosphere":
+  "no: se absorbe en lo alto de la atmósfera",
 "3D view unavailable: fixed oblique drawing":
   "Vista 3D no disponible: dibujo oblicuo fijo",
 "From above: the middle plane, y = b/{#} (z along the guide, left to right)":
@@ -639,5 +707,17 @@ VDI18N.add('es', 'demo/em-waves', {
 "TM420":
   "TM420",
 "TE323":
-  "TE323"
+  "TE323",
+"slowed {#}×{#}¹⁷ times":
+  "desacelerada {#}×{#}¹⁷ veces",
+"slowed {#}×{#}¹⁸ times":
+  "desacelerada {#}×{#}¹⁸ veces",
+"{#} zs":
+  "{#} zs",
+"slowed {#}×{#}¹⁹ times":
+  "desacelerada {#}×{#}¹⁹ veces",
+"slowed {#}×{#}²⁰ times":
+  "desacelerada {#}×{#}²⁰ veces",
+"slowed {#}×{#}²¹ times":
+  "desacelerada {#}×{#}²¹ veces"
 });

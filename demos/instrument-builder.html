@@ -50,6 +50,7 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
 .sw { flex: none; width: 26px; height: 0; border-top: 3px solid var(--c); }
 .sw.d { border-top-style: dashed; border-top-width: 2px; }
 .blindtag { position: absolute; right: 10px; top: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(560px, 100%); } }   /* the stage grows to fit the views and their notes instead of cutting them off */
 @media (min-width: 821px) { :root[data-projector="on"] .view canvas { width: 240px; height: 240px; } :root[data-projector="on"] .view.cam canvas { width: 360px; } }
 @media (max-width: 820px) {
   html, body { height: auto; }
@@ -701,9 +702,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tag(text, x, y, color, o = {}) {
     const ps = proj(), fs = (o.size || 11) * ps;
     ctx.save(); ctx.font = `${o.weight || 600} ${fs}px ${T.mono}`; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
-    const w = ctx.measureText(text).width, x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+    const w = ctx.measureText(text).width;
+    let x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
+    x0 = Math.max(4 * ps, Math.min(W - w - 4 * ps, x0));   /* keep the label on the picture */
     ctx.fillStyle = T.halo; ctx.beginPath(); ctx.rect(x0 - 3 * ps, y - fs / 2 - 2 * ps, w + 6 * ps, fs + 4 * ps); ctx.fill();
-    ctx.fillStyle = color; ctx.fillText(text, x, y + 0.5); ctx.restore();
+    ctx.textAlign = 'left'; ctx.fillStyle = color; ctx.fillText(text, x0, y + 0.5); ctx.restore();
   }
   function arrow(x1, y1, x2, y2, color, width, dashed) {
     const ps = proj(); ctx.save(); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width * ps; if (dashed) ctx.setLineDash([5 * ps, 4 * ps]);

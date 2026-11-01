@@ -509,7 +509,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const FRAMES = {
     converging: [1, 0, 54, 22], camera: [-12, 0, 52, 14], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
     telescope: [-4, 0, 44, 18], shapelens: [-1, 1, 44, 16], shapemag: [-6, 2, 34, 16], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
-    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-5, 0, 42, 16], mirrorwhite: [-4, 0, 44, 16],
+    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-7, 0, 46, 16], mirrorwhite: [-6, 0, 48, 16],
     fermat: [0, 0, 38, 25]
   };
   let frame = FRAMES.converging;
@@ -1340,6 +1340,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return it.shape === 'concave' ? N : [-N[0], -N[1]];
     };
     const behind = pts.map((q) => { const b = back(q); return [q[0] + b[0] * th, q[1] + b[1] * th]; });
+    if (scene === 'bench') {                  // on the bench the mirror sits in a metal cell with clamps at its rim, like a telescope mirror
+      const lx = (q) => (q[0] - it.x) * u[0] + (q[1] - it.y) * u[1], ly = (q) => (q[0] - it.x) * w[0] + (q[1] - it.y) * w[1];
+      const mid = back(pts[pts.length >> 1]), sb = mid[0] * u[0] + mid[1] * u[1] < 0 ? -1 : 1;
+      const bl = behind.map(lx), lxB = sb < 0 ? Math.min(...bl) - 0.55 : Math.max(...bl) + 0.55;
+      const y0 = ly(pts[0]), y1 = ly(pts[pts.length - 1]);
+      const cell = behind.concat([local(it, lxB, y1), local(it, lxB, y0)]);
+      pathW(cell, true);
+      const c0 = toPx(...local(it, lxB, 0)), c1 = toPx(...local(it, (bl[0] + lxB) / 2, 0));
+      const cg = ctx.createLinearGradient(c0[0], c0[1], c1[0], c1[1]);
+      cg.addColorStop(0, '#15181c'); cg.addColorStop(0.6, '#3a4149'); cg.addColorStop(1, '#262b31');
+      ctx.fillStyle = cg; ctx.fill(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)'; ctx.lineWidth = 1; ctx.stroke();
+      for (const [e, sg] of [[pts[0], Math.sign(y0) || -1], [pts[pts.length - 1], Math.sign(y1) || 1]]) {
+        const a = lx(e) - sb * 0.22, b = ly(e);
+        const q = [local(it, a, b - sg * 0.12), local(it, lxB, b - sg * 0.12), local(it, lxB, b + sg * 0.4), local(it, a, b + sg * 0.4)];
+        pathW(q, true); ctx.fillStyle = '#23282e'; ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
     // painted backing behind the silver
     pathW(pts.concat(behind.slice().reverse()), true);
     ctx.fillStyle = '#2b3037'; ctx.fill();
@@ -1658,13 +1676,78 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.halo; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1;
     ctx.beginPath(); rrect(bx, by, bw, bh, 8 * ps); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `600 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('on the screen', bx + bw / 2, by + pad * 0.6 + head / 2);
+    /* a white beam focused near the screen makes a spot a few millimeters wide: zoom in on it so its colored fringe shows */
+    const ext = disks.length && disks.every((d) => d.col) ? Math.max(...disks.map((d) => Math.max(Math.abs(d.y - sc.y), Math.abs(d.z)) + d.r)) : Infinity;
+    const zoom = ext < 0.3 * sc.h / 2 ? Math.max(2, Math.floor(sc.h / 2 / Math.max(ext * 1.6, 0.08))) : 1, kz = k * zoom;
+    ctx.fillText(zoom > 1 ? `on the screen, × ${zoom}` : 'on the screen', bx + bw / 2, by + pad * 0.6 + head / 2);
     const ccx = bx + bw / 2, ccy = by + head + pad * 0.5 + cardH / 2;
     ctx.beginPath(); ctx.rect(ccx - cardW / 2, ccy - cardH / 2, cardW, cardH);
     ctx.fillStyle = '#4e545c'; ctx.fill(); ctx.clip();
-    ctx.transform(k, 0, 0, -k, ccx, ccy + k * sc.y);
-    cardGrid(sc, zc);
-    paintCard(disks, 1.1 * ps / k, T);
+    ctx.transform(kz, 0, 0, -kz, ccx, ccy + kz * sc.y);
+    if (zoom > 1) {                            /* millimeter grid on the zoomed card */
+      const hh = sc.h / 2 / zoom, hz = zc / zoom;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'; ctx.lineWidth = 0.03 / zoom; ctx.beginPath();
+      for (let y = Math.ceil((sc.y - hh) * 10) / 10; y <= sc.y + hh; y += 0.1) { ctx.moveTo(-hz, y); ctx.lineTo(hz, y); }
+      for (let z = Math.ceil(-hz * 10) / 10; z <= hz; z += 0.1) { ctx.moveTo(z, sc.y - hh); ctx.lineTo(z, sc.y + hh); }
+      ctx.stroke();
+    } else cardGrid(sc, zc);
+    paintCard(disks, 1.1 * ps / kz, T);
+    ctx.restore();
+    if (zoom > 1) { ctx.fillStyle = T.muted; ctx.font = `${9 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('grid 1 mm', ccx, ccy + cardH / 2 - 2 * ps); }
+  }
+
+  /* Close up of the focus (Astro 2203 pass, 2026-11-01): with a white beam along the axis, the traced rays near where they cross
+     the axis, stretched so a spread of a few millimeters shows. It draws the same traced paths as the bench (nothing new is
+     computed): a glass lens shows each color crossing at its own place (chromatic aberration), a mirror shows every color
+     together and the outer rays crossing a little nearer the mirror than the inner ones (spherical aberration). */
+  function drawFocusClose(fr, T) {
+    const beams = items.filter((i) => i.kind === 'beam' && i.white);
+    if (beams.length !== 1 || fermat) return;
+    const bm = beams[0], rot = ((bm.rot % 360) + 360) % 360;
+    if (Math.min(rot, 360 - rot) > 0.5) return;
+    if (!items.some((i) => i.kind === 'lens' || (i.kind === 'mirror' && i.shape !== 'plane'))) return;
+    const y0 = bm.y, segs = [], xs = [];
+    for (const p of fr.paths) {
+      if (p.faint || p.src !== bm || p.pts.length < 2) continue;
+      for (let i = 1; i < p.pts.length; i++) {
+        const a = p.pts[i - 1], b = p.pts[i], da = a[1] - y0, db = b[1] - y0;
+        if (Math.abs(b[1] - a[1]) < 1e-9 || da * db >= 0) continue;
+        const t = da / (da - db), x = a[0] + t * (b[0] - a[0]);
+        xs.push(x); segs.push({ a, b, p, slope: Math.abs((b[1] - a[1]) / (b[0] - a[0] || 1e-9)) });
+      }
+    }
+    if (xs.length < 3) return;
+    const xa = Math.min(...xs), xb = Math.max(...xs), xc = (xa + xb) / 2;
+    const along = Math.max(0.3, (xb - xa) * 0.85 + 0.15), across = Math.max(0.02, along * Math.max(...segs.map((s) => s.slope)) * 1.05);
+    const ps = projScale(), bw = Math.min(250 * ps, W * 0.5), head = 17 * ps, ih = Math.min(110 * ps, H * 0.2), pad = 8 * ps;
+    const bx = 10 * ps, by = 42 * ps, bh = head + ih + 22 * ps;
+    const iw = bw - 2 * pad, cx = bx + bw / 2, cy = by + head + ih / 2, kx = iw / (2 * along), ky = ih / (2 * across);
+    const X = (x) => cx + (x - xc) * kx, Y = (y) => cy - (y - y0) * ky;
+    ctx.save();
+    ctx.fillStyle = T.halo; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1;
+    ctx.beginPath(); rrect(bx, by, bw, bh, 8 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `600 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('close up of the focus', cx, by + head / 2 + 3 * ps);
+    ctx.beginPath(); ctx.rect(bx + pad, cy - ih / 2, iw, ih); ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fill(); ctx.clip();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)'; ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(bx, Y(y0)); ctx.lineTo(bx + bw, Y(y0)); ctx.stroke(); ctx.setLineDash([]);
+    for (const sc of screens()) {
+      if (Math.abs(sc.x - xc) > along) continue;
+      ctx.strokeStyle = 'rgba(205, 212, 222, 0.75)'; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(sc.x), cy - ih / 2); ctx.lineTo(X(sc.x), cy + ih / 2); ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+    for (const s of segs) {
+      ctx.strokeStyle = rayColor(s.p, T);
+      for (const [a, wd] of [[0.18, 4], [0.9, 1.3]]) { ctx.globalAlpha = a; ctx.lineWidth = wd * ps; ctx.beginPath(); ctx.moveTo(X(s.a[0]), Y(s.a[1])); ctx.lineTo(X(s.b[0]), Y(s.b[1])); ctx.stroke(); }
+    }
+    ctx.restore();
+    // a scale bar along the axis, and how much the heights are stretched
+    const nice = [0.05, 0.1, 0.2, 0.5, 1, 2, 5].find((v) => v * kx >= iw * 0.18) || 5, lx = bx + pad, ly = by + head + ih + 13 * ps;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+    ctx.moveTo(lx, ly - 3 * ps); ctx.lineTo(lx, ly); ctx.lineTo(lx + nice * kx, ly); ctx.lineTo(lx + nice * kx, ly - 3 * ps); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ` + monoFont(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    ctx.fillText(nice >= 1 ? `${nice} cm` : `${+(nice * 10).toFixed(1)} mm`, lx + nice * kx + 5 * ps, ly - 1 * ps);
+    const str = ky / kx;
+    ctx.textAlign = 'right'; if (str > 1.5) ctx.fillText(`heights × ${Math.round(str)}`, bx + bw - pad, ly - 1 * ps);
     ctx.restore();
   }
 
@@ -1833,6 +1916,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
     }
     for (const sc of screens()) drawScreenInset(sc, light.get(sc), T, R);
+    drawFocusClose(fr, T);
     if (sel) { drawSelection(sel, T); drawHandles(T); }
 
     // scale bar (top left on the bench, where the ruler fills the bottom)
@@ -2522,7 +2606,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   let wsRows = 'dispersion';
   window.vdWorksheet = () => wsRows;
-  window.vdShowCols = WS_COLS[wsRows];
+  window.vdShowCols = VD.ws('') === 'intro-mirrors' ? [['element', 'Element'], ['lam_nm', 'λ (nm)'], ['f_cm', 'f (cm)']] : WS_COLS[wsRows];
   const r2 = (v) => +v.toFixed(2), r3 = (v) => +v.toFixed(3);
   function glassRows() {
     const mat = sel.glass ? GLASSES[sel.glass].name : `Adjustable n = ${sel.n} (dispersion exaggerated)`;
@@ -2637,19 +2721,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const am = (a0 + a1) / 2, c = Math.cos(am); tag(lab, Pp[0] + c * (r + 6 * ps), Pp[1] + Math.sin(am) * (r + 10 * ps), T.accent, T, { size: 10, align: c < -0.05 ? 'right' : c > 0.05 ? 'left' : 'center' }); };
     arc(A, true, `θ₁ ${G.ang[0].toFixed(1)}°`); if (f.refl) arc(B, true, `θ₂ ${G.ang[1].toFixed(1)}°`); else arc(B, false, `θ₂ ${G.ang[1].toFixed(1)}°`);
     /* A (the lamp), B, P */
-    const knob = (q, txt, col) => { ctx.fillStyle = col; ctx.strokeStyle = T.halo; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(q[0], q[1], 8 * ps, 0, 7); ctx.fill(); ctx.stroke(); tag(txt, q[0], q[1] - 20 * ps, col, T); };
+    const knob = (q, txt, col) => { ctx.fillStyle = col; ctx.strokeStyle = T.halo; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(q[0], q[1], 8 * ps, 0, 7); ctx.fill(); ctx.stroke(); tag(txt, q[0], q[1] + (q[1] > ly + 30 * ps ? 21 : -20) * ps, col, T); };   /* a point below the line has its letter under it, clear of the angle label */
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gl = ctx.createRadialGradient(A[0], A[1], 0, A[0], A[1], 40 * ps); gl.addColorStop(0, hexA(T.ray, 0.45)); gl.addColorStop(1, hexA(T.ray, 0)); ctx.fillStyle = gl; ctx.fillRect(A[0] - 40 * ps, A[1] - 40 * ps, 80 * ps, 80 * ps); ctx.restore();
     knob(A, 'A', T.ray); knob(B, 'B', T.pos); knob(Pp, 'P', T.accent);
     tag(`this path: t = ${G.t.toFixed(4)} ns`, 12 * ps, 16 * ps, T.ray, T, { size: 12, align: 'left' });
     if (f.best) tag(`quickest path (dashed): t = ${G.tb.toFixed(4)} ns`, 12 * ps, 40 * ps, T.p1, T, { size: 12, align: 'left' });
     /* the inset graph: t against x along the whole line in view, the trial point and (when shown) the least */
-    const gw = Math.min(300 * ps, W * 0.44), gh = Math.min(140 * ps, H * 0.3), gx = 12 * ps, gy = H - gh - 12 * ps, xs = [], ts = [];
+    const gw = Math.min(300 * ps, Math.max(W * 0.44, Math.min(210 * ps, W - 24 * ps))), gh = Math.min(140 * ps, Math.max(H * 0.3, 120 * ps)), gx = 12 * ps, gy = H - gh - 12 * ps, xs = [], ts = [];
     for (let i = 0; i <= 160; i++) { const x = b.x0 + (b.x1 - b.x0) * i / 160; xs.push(x); ts.push(fermatTime(G.A, G.B, x, G.n1, G.n2, f.refl)); }
-    const t0 = Math.min(...ts, G.tb), t1 = Math.max(...ts), Xg = (x) => gx + 40 * ps + (x - b.x0) / (b.x1 - b.x0) * (gw - 50 * ps), Yg = (t) => gy + 18 * ps + (1 - (t - t0) / (t1 - t0 || 1)) * (gh - 40 * ps);
+    const t0 = Math.min(...ts, G.tb), t1 = Math.max(...ts), Xg = (x) => gx + 40 * ps + (x - b.x0) / (b.x1 - b.x0) * (gw - 50 * ps), Yg = (t) => gy + 26 * ps + (1 - (t - t0) / (t1 - t0 || 1)) * (gh - 52 * ps);
     ctx.fillStyle = T.halo; ctx.globalAlpha = 0.92; ctx.beginPath(); rrect(gx, gy, gw, gh, 6 * ps); ctx.fill(); ctx.globalAlpha = 1;
-    ctx.font = `${10 * ps}px ` + monoFont(); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('time t (ns) against where P is, x (cm)', gx + 8 * ps, gy + 4 * ps);
+    ctx.font = `${10 * ps}px ` + monoFont(); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; { const full = 'time t (ns) against where P is, x (cm)'; ctx.fillText(ctx.measureText(full).width <= gw - 14 * ps ? full : 't (ns) against x (cm)', gx + 8 * ps, gy + 5 * ps); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(t1.toFixed(3), gx + 38 * ps, Yg(t1)); ctx.fillText(t0.toFixed(3), gx + 38 * ps, Yg(t0));
-    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (const x of [Math.ceil(b.x0 / 10) * 10, 0, Math.floor(b.x1 / 10) * 10]) ctx.fillText(minus(String(x)), Xg(x), gy + gh - 18 * ps);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (const x of [Math.ceil(b.x0 / 10) * 10, 0, Math.floor(b.x1 / 10) * 10]) ctx.fillText(minus(String(x)), Xg(x), gy + gh - 15 * ps);
     ctx.strokeStyle = T.ray; ctx.lineWidth = 2 * ps; ctx.beginPath(); xs.forEach((x, i) => (i ? ctx.lineTo(Xg(x), Yg(ts[i])) : ctx.moveTo(Xg(x), Yg(ts[i])))); ctx.stroke();
     if (f.best) { ctx.fillStyle = T.p1; ctx.beginPath(); ctx.arc(Xg(G.xb), Yg(G.tb), 4 * ps, 0, 7); ctx.fill(); }
     if (f.x >= b.x0 && f.x <= b.x1) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(Xg(f.x), Yg(G.t), 5 * ps, 0, 7); ctx.fill(); }

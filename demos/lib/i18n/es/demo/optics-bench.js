@@ -4,6 +4,8 @@ VDI18N.add('es', 'demo/optics-bench', {
   "imagen real",
 "on the screen":
   "en la pantalla",
+"<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Principio de Huygens</span></a><a><span>Arcoíris</span> <span>→</span></a>",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.":
   "Arrastra fuentes de luz, lentes, espejos y vidrio. Los rayos se desvían y rebotan en vivo, y las imágenes se forman donde se cruzan los rayos.",
 "{#} grid square = {#} cm · adjustable n quoted at {#} nm, real materials at {#} nm · angles from the normal":
@@ -210,8 +212,6 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Las lentes siguen la regla ideal de la lente delgada. Los espejos usan la superficie esférica exacta, así que los rayos lejos del eje, o de un punto del objeto fuera del eje, enfocan un poco distinto de lo que da la ecuación del espejo. Con n ajustable, la dispersión es varias veces más fuerte que en el vidrio crown ordinario para que el espectro se vea fácilmente; los materiales reales (crown N-BK7, flint F2, sílice fundida, agua, diamante) usan sus fórmulas de Sellmeier publicadas (Schott; Malitson {#}; Daimon y Masumura {#}; Peter {#}), y con luz monocromática toman n a {#} nm. La imagen en la pantalla se construye con rayos trazados en el plano del dibujo, girados alrededor del eje de la lente para el resto del objeto. Una superficie refractora desvía cada rayo exactamente según la ley de Snell, sin dispersión; sus dos medios llenan el banco a cada lado (una superficie curva es el extremo de una varilla larga, con su apertura como un diafragma opaco en la cara), y los demás elementos se trazan como si estuvieran en aire. Las lecturas del microscopio y el telescopio suponen el ojo relajado (imagen final en el infinito) y el punto cercano a {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.":
   "La dispersión en una gota de lluvia y los arcos que forma en el cielo: abre <a>Arcoíris</a>.",
-"<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Principio de Huygens</span></a><a><span>Arcoíris</span> <span>→</span></a>",
 "virtual image":
   "imagen virtual",
 "Virtual, upright, enlarged":
@@ -254,6 +254,14 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Virtual, derecha, del mismo tamaño",
 "White light through a flint glass lens, f = {#} cm at {#} nm. The glass bends violet more than red, so violet ({#} nm) focuses {#} cm nearer the lens than red ({#} nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.":
   "Luz blanca a través de una lente de vidrio flint, f = {#} cm a {#} nm. El vidrio desvía el violeta más que el rojo, así que el violeta ({#} nm) enfoca {#} cm más cerca de la lente que el rojo ({#} nm): aberración cromática. La mancha en la pantalla tiene un borde de color. Haz clic en la lente para cambiar a vidrio crown o a una lente ideal.",
+"on the screen, × {#}":
+  "en la pantalla, × {#}",
+"grid {#} mm":
+  "cuadrícula de {#} mm",
+"close up of the focus":
+  "acercamiento al foco",
+"heights × {#}":
+  "alturas × {#}",
 "White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.":
   "Luz blanca sobre un espejo cóncavo, R = {#} cm, f = {#} cm. La reflexión desvía todos los colores en el mismo ángulo, así que todos los colores se juntan en un solo foco. Esta es una razón por la que todos los telescopios grandes modernos son reflectores.",
 "A house {#} cm tall and {#} cm deep lying on the bench, {#} to {#} cm from an {#} cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.":
@@ -305,5 +313,7 @@ VDI18N.add('es', 'demo/optics-bench', {
 "Diamond, n₁ = {#}":
   "Diamante, n₁ = {#}",
 "The quickest path has no worksheet table yet: the readouts and the graph give the times.":
-  "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos."
+  "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
+"t (ns) against x (cm)":
+  "t (ns) contra x (cm)"
 });
