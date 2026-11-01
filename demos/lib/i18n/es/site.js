@@ -1,15 +1,15 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Induction at Work":
-  "Inducción en acción",
+"Belousov–Zhabotinsky Reaction":
+  "Reacción de Belousov–Zhabotinsky",
 "Virtual Physics Demos":
   "Demos virtuales de física",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
   "Novedades",
-"<span>Induction at Work →</span>":
-  "<span>Inducción en acción →</span>",
+"<span>Belousov–Zhabotinsky Reaction →</span>":
+  "<span>Reacción de Belousov–Zhabotinsky →</span>",
 "<b>Physics</b>":
   "<b>Física</b>",
 "Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.":
@@ -136,6 +136,12 @@ VDI18N.add('es', 'site', {
   "<a>Novedades</a> · <a>Código fuente en GitHub</a>",
 "Close":
   "Cerrar",
+"<time>November {#}, {#}</time>":
+  "<time>{#1} de noviembre de {#2}</time>",
+"A first try at Spanish":
+  "Un primer intento en español",
+"Pendulums, Blackbody Radiation, Doppler Effect and the pendulum worksheet can be shown in Spanish: pick Español in the language switch next to the theme switch. It is a machine made draft, marked borrador, until a fluent speaker has checked it; the numbers, symbols and units are the same as in English. <a>Pendulums in Spanish</a>":
+  "Péndulos, Radiación de cuerpo negro, Efecto Doppler y la hoja de trabajo del péndulo se pueden ver en español: elige Español en el selector de idioma junto al selector de tema. Es un borrador hecho a máquina, marcado como borrador, hasta que lo revise un hablante nativo; los números, símbolos y unidades son los mismos que en inglés. <a>Péndulos en español</a>",
 "<time>October {#}, {#}</time>":
   "<time>{#} de octubre de {#}</time>",
 "Granular Flow: fine sand":
@@ -158,10 +164,6 @@ VDI18N.add('es', 'site', {
   "Encuentro orbital, el cielo de las antípodas",
 "Kepler's Laws Sandbox has two Rendezvous setups: fly a ship to a target by firing its engine forward, backward, outward or inward, and find out why speeding up makes you fall behind; one is a Hohmann transfer out to Mars's distance. The Sky and the Celestial Sphere can jump to the antipode, the point on the other side of the Earth, and show its sky at the same moment: the half that was below your horizon. <a>Open Kepler's Laws</a>":
   "El arenero de las leyes de Kepler tiene dos configuraciones de Encuentro: lleva una nave hasta un objetivo encendiendo su motor hacia adelante, hacia atrás, hacia afuera o hacia adentro, y descubre por qué acelerar te hace quedarte atrás; una es una transferencia de Hohmann hasta la distancia de Marte. El cielo y la esfera celeste puede saltar a las antípodas, el punto del otro lado de la Tierra, y mostrar su cielo en el mismo instante: la mitad que estaba bajo tu horizonte. <a>Abrir Leyes de Kepler</a>",
-"Millikan Oil Drop":
-  "Gota de aceite de Millikan",
-"A new demo: spray oil drops between charged plates, time them falling and rising through the telescope, and work out each drop's size and charge. The charges come in whole numbers of e, and a drop that picks up an ion changes by exactly one. <a>Open Millikan Oil Drop</a>":
-  "Una demo nueva: rocía gotas de aceite entre placas cargadas, cronometra su caída y su subida a través del telescopio, y calcula el tamaño y la carga de cada gota. Las cargas vienen en múltiplos enteros de e, y una gota que captura un ion cambia exactamente en uno. <a>Abrir Gota de aceite de Millikan</a>",
 "Open this list again any time with <b>What’s new</b> at the top of the home page.":
   "Vuelve a abrir esta lista cuando quieras con <b>Novedades</b> en la parte superior de la página de inicio.",
 "Reasons for Seasons":
@@ -258,6 +260,8 @@ VDI18N.add('es', 'site', {
   "Rapidez de la luz",
 "e/m of the Electron":
   "e/m del electrón",
+"Millikan Oil Drop":
+  "Gota de aceite de Millikan",
 "Electron Diffraction":
   "Difracción de electrones",
 "DNA in 3D":
@@ -356,8 +360,6 @@ VDI18N.add('es', 'site', {
   "Ciclos de máquinas térmicas",
 "Ising Model":
   "Modelo de Ising",
-"Belousov–Zhabotinsky Reaction":
-  "Reacción de Belousov–Zhabotinsky",
 "Charging by Induction":
   "Carga por inducción",
 "Coulomb Sandbox":
@@ -368,6 +370,8 @@ VDI18N.add('es', 'site', {
   "Leyes de Faraday y de Lenz",
 "Induced Electric Fields":
   "Campos eléctricos inducidos",
+"Induction at Work":
+  "Inducción en acción",
 "Gauss's Law":
   "Ley de Gauss",
 "Magnetic Fields of Currents":
@@ -3629,5 +3633,9 @@ VDI18N.add('es', 'site', {
 "<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}, {#}–{#}, {#}</span>":
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
-  "Demos de interferencia y difracción"
+  "Demos de interferencia y difracción",
+"<span>Induction at Work →</span>":
+  "<span>Inducción en acción →</span>",
+"A new demo: spray oil drops between charged plates, time them falling and rising through the telescope, and work out each drop's size and charge. The charges come in whole numbers of e, and a drop that picks up an ion changes by exactly one. <a>Open Millikan Oil Drop</a>":
+  "Una demo nueva: rocía gotas de aceite entre placas cargadas, cronometra su caída y su subida a través del telescopio, y calcula el tamaño y la carga de cada gota. Las cargas vienen en múltiplos enteros de e, y una gota que captura un ion cambia exactamente en uno. <a>Abrir Gota de aceite de Millikan</a>"
 });
