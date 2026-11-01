@@ -4,6 +4,8 @@ VDI18N.add('en', 'demo/cart-launch', [
 "seen from the ground",
 "position along the track (m) against time after launch: cart solid, ball dashed",
 "Ball Launched from a Moving Cart",
+"<a>Kinematics</a>",
+"<a><span>←</span> <span>Projectile Range</span></a><a><span>Circular Motion</span> <span>→</span></a>",
 "A cart rolls along a track and fires a ball straight up. The ball keeps the cart's forward velocity, so while both move steadily it lands back in the launcher. Make the cart speed up or brake after the launch and the ball misses; tilt the track and it lands in the cart again.",
 "SI units · g = {#} m/s² · no air resistance",
 "A cart on a track fires a ball straight up; the ball's path, optional velocity and acceleration arrows, strobe images, and a graph of position along the track against time for the cart and the ball.",
@@ -54,8 +56,7 @@ VDI18N.add('en', 'demo/cart-launch', [
 "ball in the air: aₓ = {#}, a_y = −g · its vₓ stays the cart's launch speed",
 "Blind pauses each launch at the top of the flight and hides where the ball lands until you resume, so the class can predict first.",
 "Model: no air resistance and a point ball. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and the cart's speed is unchanged. On the level track the cart moves at constant speed, or with the set acceleration after the launch (a motor push or a brake; a braking cart stops and stays stopped). On the incline the cart rolls without friction, so its acceleration along the track is g sin θ, the same as the ball's. Seen from the cart, the ball's velocity and acceleration are relative to the cart; when the cart speeds up or brakes, the ball's acceleration relative to it is g minus the cart's acceleration, so it drifts backward or forward. The ball counts as caught if it comes down within {#} cm of the launcher's center. Sizes are to scale.",
-"<a>Kinematics</a>",
-"<a><span>←</span> <span>Projectile Range</span></a><a><span>Circular Motion</span> <span>→</span></a>",
+"cart, track and ball to scale · drag to turn the view, double click to reset",
 "Δx (cm)",
 "Launching…",
 "The cart is at rest: the ball goes straight up and straight down. Compare with Steady cart in the cart’s view.",
@@ -73,5 +74,7 @@ VDI18N.add('en', 'demo/cart-launch', [
 "The cart rolls freely down the incline and speeds up, and the launcher points perpendicular to the track. Does the ball still land in the cart?",
 "cart at rest in this view",
 "seen from the cart: velocities relative to the cart",
-"Launch the ball and let it land, then record the launch."
+"Launch the ball and let it land, then record the launch.",
+"position (m) vs time: cart solid, ball dashed",
+"to scale · drag to turn"
 ]);

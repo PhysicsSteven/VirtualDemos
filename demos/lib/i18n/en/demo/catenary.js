@@ -10,8 +10,6 @@ VDI18N.add('en', 'demo/catenary', [
 "H, horizontal part",
 "both → ∞ as d → {#}",
 "Hanging Chains and Arches",
-"<a>Static equilibrium and elasticity</a>",
-"<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>",
 "A chain hanging under its own weight takes the shape of a hyperbolic cosine, the catenary. Turn it upside down and you have the arch that stands in pure compression.",
 "SI units · lengths in m, forces in N · g = {#} m/s²",
 "The chain or arch. Drag the two supports, drag the grip at the middle of the chain to pull it down or up (this changes the chain length), and drag the two small markers on the chain to choose the piece shown in the free body diagram. Keys: {#} and {#} select the supports, {#} the middle grip, {#} and {#} the markers; arrow keys move the selection, shift moves it farther; plus and minus change the length.",
@@ -74,6 +72,8 @@ VDI18N.add('en', 'demo/catenary', [
 "Tension, low to high",
 "<span><i></i>Forces on the chosen piece</span> <span><i></i>Weight</span> <span><i></i>Parabola or Gateway Arch</span> <span><i></i>Directrix</span>",
 "Model: a perfectly flexible chain that does not stretch, with uniform mass per length λ, at rest. The curve is the exact catenary y = a cosh((x − x₀)/a) + c through both supports with arc length S. The links are drawn for looks; the chain is treated as continuous. Arch: rigid blocks, uniform weight per length, no friction limit considered. Keys on the drawing: {#} and {#} supports, {#} middle grip, {#} and {#} markers, arrows move, shift moves farther, + and − change S.",
+"<a>Static equilibrium and elasticity</a>",
+"<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>",
 "With one support lower, the lowest point moves toward it, and the higher support carries more of the weight. Pull the low support up and in: once the vertex leaves the span, the chain runs downhill all the way to the lower support.",
 "level supports only",
 "The gold dashed parabola has the same supports and the same lowest point. Shallow, the two are nearly identical; pull the middle down and the chain becomes clearly fuller near the supports. Try the suspension bridge.",
@@ -98,5 +98,6 @@ VDI18N.add('en', 'demo/catenary', [
 "Gateway Arch, scaled",
 "LARGEST COMPRESSION AGAINST SAG",
 "largest compression",
-"Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight."
+"Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.",
+"S = {#} m sag {#} m"
 ]);

@@ -32,6 +32,8 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "Model: point masses on a massless plate; the firework is a point mass launched at {#} m/s and {#}° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at {#} m/s relative to the boat (boat {#} m long).",
 "<a>Momentum and collisions</a>",
 "<a><span>←</span> <span>Impulse and Momentum</span></a><a><span>Rocket Propulsion</span> <span>→</span></a>",
+"center of mass",
+"drag a mass to move it, drag the table to turn",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.",
 "Split at",
 "{#} s, {#} m up",
@@ -49,5 +51,8 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "Center of mass (person + boat)",
 "Predicted boat shift −mL/(m + M)",
 "walked (m)",
-"boat moved (m)"
+"boat moved (m)",
+"person {#} kg",
+"boat {#} kg",
+"drag to turn, wheel to zoom"
 ]);

@@ -183,6 +183,9 @@ VDI18N.add('en', 'demo/binding-energy', [
 "{#} MeV <span>poor for light nuclei</span>",
 "{#} minutes",
 "<span><i></i>Stable</span><span><i></i>β⁻ decay</span><span><i></i>β⁺ decay or electron capture</span><span><i></i>α decay</span><span><i></i>Spontaneous fission</span><span><i></i>Gives off a proton or neutron; faint: not bound at all</span><span><i></i>Decay mode not known</span><span>Outlined: not in NUBASE2020. Arrows: the main decay path.</span>",
+"neutron number N →",
+"proton number Z →",
+"{#} MeV per nucleon",
 "⁵⁸Fe",
 "⁶⁰Ni",
 "⁵²Cr",
@@ -215,5 +218,10 @@ VDI18N.add('en', 'demo/binding-energy', [
 "{#} × {#}⁸ times",
 "Four protons become one ⁴He, the Sun's main energy source. Two protons turn into neutrons on the way, so Q is less than the ⁴He binding energy by {#}(m<sub>n</sub> − m<sub>H</sub>)c² = {#} MeV. About {#} MeV of Q leaves as neutrinos in the main branch.",
 "{#} ⁴He → ¹²C",
-"How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound."
+"How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.",
+"Chart of nuclides, colored by half life",
+"half life; stable in ink",
+"e⁺ + ν (or an electron captured)",
+"Stable · {#}% of natural B",
+"¹¹B: Stable · {#}% of natural B."
 ]);

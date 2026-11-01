@@ -152,5 +152,9 @@ VDI18N.add('en', 'demo/black-holes', [
 "M87*, {#} billion M<sub>sun</sub> (EHT {#}). In units of r<sub>s</sub> every Schwarzschild black hole looks the same, so this is the view from {#} r<sub>s</sub> of any of them. From Earth the shadow of M87* spans about {#} µas, close to the {#} µas ring the Event Horizon Telescope imaged.",
 "{#} × {#}⁹ M<sub>sun</sub>",
 "M87* seen from Earth (D = {#} Mpc): shadow diameter {#}√{#} GM/(c²D)",
-"You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>"
+"You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>",
+"lens and caustic",
+"sky: illustrative",
+"= {#} yr at {#} km/s",
+"ΔA = {#} × {#}⁻¹¹ g"
 ]);

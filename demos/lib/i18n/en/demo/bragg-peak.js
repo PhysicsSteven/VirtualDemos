@@ -126,6 +126,12 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "{#} meV, {#} × the entrance's",
 "Energy lost per cm (Bethe)",
 "Bethe's log L",
+"ENERGY LEFT",
+"SPEED",
+"of the proton",
+"Magnified: {#} nm of the track around the proton",
+"depth {#} mm",
+"water phantom",
 "The lowest energy the IBA Proteus ONE delivers, {#} MeV, reaches about {#} cm of water (Pidikiti et al. {#}). Shallower targets need a range shifter in the beam, {#} cm water equivalent on that machine. The peak is sharp because straggling grows with the range.",
 "to scale",
 "The top energy of the C230 cyclotron, {#} MeV, reaches about {#} cm of water, deep enough for any site in an adult. The peak is lower and wider: straggling is about {#} % of the range, and about a quarter of the protons are lost to nuclear reactions on the way.",
@@ -145,5 +151,13 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "One {#} MeV proton in water, with a window magnified onto the track around it. Each electron it passes is pulled toward its path while it goes by, for a time of about 2b/v, so the sideways kick is Δp = FΔt ∝ {#}/v and the energy the electron takes, Δp²/2mₑ, grows as {#}/v². Everyday drag grows with speed; this loss grows as the proton slows. Press Send a proton and watch the arrows and colors grow, while the reach b_max, beyond which electrons are only nudged and let go, closes in. The graph multiplies the two.",
 "depth {#} cm · {#} MeV · v = {#} c",
 "The same proton with {#} cm to go. Its speed falls fast here, so each kick, and the dose, rises steeply: the Bragg peak. In the last {#} MeV (under {#} mm) the proton starts to catch electrons and lose them again, so its average charge drops, and the reach b_max shrinks toward the closest distance b_min: the loss per cm peaks and then falls, and the proton stops as a hydrogen atom.",
-"Go on"
+"Go on",
+"{#} MeV into muscle (icrp)",
+"{#} MeV into adipose tissue (icrp)",
+"{#} MeV into compact bone (icru)",
+"energy per kick",
+"reach",
+"energy lost per cm",
+"protons",
+"layers"
 ]);

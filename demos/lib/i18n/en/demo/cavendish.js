@@ -38,11 +38,16 @@ VDI18N.add('en', 'demo/cavendish', [
 "Blind hides the twist angle, the forces, the predicted resting positions and the value of G, leaving the clock and the spot.",
 "<a>Gravitation and orbital mechanics</a>",
 "<a><span>←</span> <span>Kepler's Laws</span></a><a><span>Gravity Near Earth</span> <span>→</span></a>",
+"to the scale, {#} m",
+"fiber",
+"3D, to scale · beam turn drawn ×{#} · drag a large sphere to swing it, elsewhere to turn",
 "Spheres",
 "Spot (cm)",
 "swinging to away",
 "down the scale",
 "away",
 "swinging to position B",
-"position B"
+"position B",
+"up the scale",
+"swinging to position A"
 ]);
