@@ -6855,3 +6855,16 @@ Steve asked for the one time setup that makes the site translatable. English loo
   text overflows in long languages (energy-sources, millikan hint, nuclear-reactions, planet-temperatures, room-acoustics);
   `common` keeps old entries (no prune). Videos are not translated.
 - For GPT: check the Spanish physics wording in `demos/lib/i18n/es/` against the English (numbers, symbols and caveats must match).
+
+## 2026-11-01 (Claude): Spanish for Astro 2203, plus 164 more pages
+
+Steve asked to finish the Spanish translation, then (13:42) to do only Astro 2203 for now. Two groups translated every Astro 2203
+demo and worksheet (56 pages, 8,450 strings). Six other groups ran 22 minutes before being stopped and finished 164 whole pages
+(17,190 strings), which are kept. `tools/i18n.cjs index` now lists 225 Spanish pages; `check` reports 28,284 of 28,284 page
+strings translated. Still English: about 20,500 strings on the remaining pages (`node tools/i18n.cjs todo es <page>` per page).
+Cost, as Steve measured it: about 2 % of a week's usage for about 25,600 strings. Phone breadcrumb Previous and Next labels come
+from CSS, so `vd.css` now has Spanish versions scoped to `:root[data-vd-lang="es"]` (English unchanged).
+Points for a fluent reviewer, from the groups: "UA" versus "au" (both appear), "Ga" versus "mil millones de años", compass W kept
+as W in canvas labels, tidal "abultamiento", "tapa estancada", "Gran Cucharón", "torca", "seeing" left in English. Typo in the
+English celestial sphere key "Ophiucus" (should be Ophiuchus). Some worksheets name controls of demos that have no Spanish
+catalog yet; when those demos are translated, match the worksheet's names.

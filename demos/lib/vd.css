@@ -180,7 +180,7 @@
   .vd-crumbs .vd-here, .vd-crumbs .vd-unit { display: none; }
   .vd-crumbs .vd-step a { max-width: 16ch; }
 }
-@media (max-width: 420px) { .vd-crumbs .vd-step .vd-t { display: none; } .vd-crumbs .vd-prev::after { content: "Previous"; } .vd-crumbs .vd-next::before { content: "Next"; } }
+@media (max-width: 420px) { .vd-crumbs .vd-step .vd-t { display: none; } .vd-crumbs .vd-prev::after { content: "Previous"; } .vd-crumbs .vd-next::before { content: "Next"; } :root[data-vd-lang="es"] .vd-crumbs .vd-prev::after { content: "Anterior"; } :root[data-vd-lang="es"] .vd-crumbs .vd-next::before { content: "Siguiente"; } }
 [data-projector="on"] .vd-crumbs { display: none; }
 @media print { .vd-crumbs { display: none; } }
 /* Copy link and Fullscreen beside Projector (vd.js headButtons): they take the Projector button's look from .proj */
