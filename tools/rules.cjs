@@ -28,7 +28,9 @@ const tracked = execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: '
 const DEMOS = fs.readdirSync(path.join(ROOT, 'demos')).filter((f) => f.endsWith('.html')).map((f) => f.slice(0, -5));
 const SHEETS = fs.readdirSync(path.join(ROOT, 'curriculum/labs/students')).filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -3));
 const SLUGS = new Set([...DEMOS, ...SHEETS]);
+let CATALOGS = null;
 function catalogs() {
+  if (CATALOGS) return CATALOGS;
   const out = [], walk = (d) => { for (const f of fs.readdirSync(path.join(ROOT, d))) {
     const p = d + '/' + f; if (fs.statSync(path.join(ROOT, p)).isDirectory()) walk(p); else if (f.endsWith('.js')) {
       const src = read(p), lines = src.split('\n');
@@ -37,7 +39,7 @@ function catalogs() {
       for (const s of arr || []) { const i = lines.findIndex((l) => l.includes(JSON.stringify(s).slice(1, 40))); out.push([p, i + 1, String(s)]); }
     } } };
   walk('demos/lib/i18n/en');
-  return out;
+  return (CATALOGS = out);
 }
 function markdown(dir) {
   const out = [];
@@ -217,6 +219,125 @@ rule('key-pdfs', 'Every worksheet edited after its key PDF was printed gets its 
     if (!H[s]) bad.push(['curriculum/labs/students/' + s + '.md', 0, '', 'no key recorded: build it with fill_key.cjs']);
     else if (H[s] !== h) bad.push(['curriculum/labs/students/' + s + '.md', 0, '', 'edited since its key PDF was printed: rebuild the key']);
   }
+  return bad;
+});
+
+/* Written text uses the same constants. The rule above reads only code; the same stale copies turned up in the worksheets and
+   notes (M_V,☉ 4.83 against 4.81 on 2026-10-31; the solar mass 1.989e30 in three worksheets while the demos use 1.98841e30). Here
+   every number of 4 or more figures in a worksheet, a notes source or a demo's harvested strings, including 1.989 × 10³⁰ and
+   1.989\times10^{30}, must equal the value it sits near, rounded or cut to the figures it shows. */
+const CONST_TEXT_ALLOW = {  /* 'file number': reason */
+  'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
+  /* OPEN (2026-11-01): these three give M_Sun = 1.989e30 kg while tides.html and constants.js use 1.98841e30. Fixing them changes key
+     answers (rotation curves: 1.988e30 kg is 0.999 of 1.989e30 but 1.000 of 1.98841e30), so the fix goes with a key rebuild. Remove each
+     entry when its worksheet is fixed. */
+  'curriculum/labs/students/tides.md 1.989': 'OPEN, see above',
+  'curriculum/labs/students/rotation-curves.md 1.989': 'OPEN, see above',
+  'curriculum/labs/students/eclipsing-binary.md 1.989': 'OPEN, see above',
+  'demos/lib/i18n/en/ws/rotation-curves.js 1.989': 'OPEN, harvest of the worksheet above',
+  'demos/lib/i18n/en/ws/eclipsing-binary.js 1.989': 'OPEN, harvest of the worksheet above',
+};
+const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };
+rule('constants-text', 'Constants written in worksheets, notes and demo text match demos/lib/constants.js, rounded or cut to the figures shown '
+  + '(the rule above does demo code).', 'curriculum/labs/students, notes/src, harvested demo strings', () => {
+  const VDC = require(path.join(ROOT, 'demos/lib/constants.js')), T = Object.entries(VDC.table).filter(([k]) => !CONST_SKIP.has(k));
+  const sig = (s) => s.replace('.', '').replace(/^0+/, '').length, bad = [];
+  const lines = [...catalogs().filter(([, , s]) => s != null), ...[ 'curriculum/labs/students', 'notes/src' ].flatMap((d) =>
+    fs.readdirSync(path.join(ROOT, d)).filter((f) => f.endsWith('.md')).flatMap((f) => read(d + '/' + f).split('\n').map((l, i) => [d + '/' + f, i + 1, l])))];
+  for (const [f, n, line] of lines) {
+    const l = line.replace(/(\d)[\s\u2009\u202f](?=\d{3}(?!\d))/g, '$1');               /* 12 391 K */
+    for (const m of l.matchAll(/(?<![\w.,])(\d+\.\d+|\d{4,})(?:\s*(?:×|\\times|\\cdot|·)\s*10\s*(?:\^\{?\s*([−-]?\d+)\s*\}?|([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)))?(?![\w.,])/g)) {
+      const s = m[1], e = m[2] || m[3] ? [...(m[2] || m[3])].map((c) => SUPER[c] || c).join('') : '0', k = sig(s);
+      if (k < 4 || CONST_TEXT_ALLOW[f + ' ' + s]) continue;
+      const x = +s * Math.pow(10, +e), unit = Math.pow(10, Math.floor(Math.log10(Math.abs(x))) - k + 1);
+      if (!x) continue;
+      let ok = false, near = null;
+      for (const [key, [v]] of T) {
+        const d = (v - x) * Math.sign(v);
+        if (Math.abs(d) <= unit * 0.5000001 || (d >= 0 && d < unit * 1.0000001)) { ok = true; break; }   /* v rounded or cut to the figures shown */
+        if (Math.abs(x - v) / Math.abs(v) < 3 * Math.pow(10, 1 - k)) near = near || key;
+      }
+      if (!ok && near) bad.push([f, n, line.trim().slice(0, 140), m[0] + ' is near VDC.' + near + ' = ' + VDC[near]]);
+    }
+  }
+  return bad;
+});
+
+/* A demo that does not parse does not load at all. Nuclear Reactions was blank for half an hour on 2026-10-25 because of an
+   apostrophe ("Chadwick's") inside a single quoted string; every text edit inside demo code can do this. */
+rule('scripts', 'Every inline script of every page, and every .js file, parses (a syntax error leaves a demo blank).',
+  'every tracked .html (inline scripts) and .js/.cjs', () => {
+  const vm = require('vm'), bad = [];
+  for (const f of tracked.filter((f) => /\.html$/.test(f))) {
+    const src = read(f);
+    for (const m of src.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+      const type = ((m[1].match(/\btype\s*=\s*["']?([^"'\s>]+)/i) || [])[1] || '').toLowerCase();
+      if (/\bsrc\s*=/.test(m[1]) || !m[2].trim() || type === 'module') continue;
+      const line = src.slice(0, m.index).split('\n').length;
+      try { if (/json/.test(type)) JSON.parse(m[2]); else if (!type || /javascript/.test(type)) new vm.Script(m[2], { filename: f }); }
+      catch (e) { bad.push([f, line, '', 'script does not parse: ' + e.message]); }
+    }
+  }
+  for (const f of tracked.filter((f) => /\.c?js$/.test(f))) {
+    const src = read(f).replace(/^#!.*/, '');
+    if (/^\s*(import|export)\s/m.test(src)) continue;                                  /* ES modules */
+    try { new vm.Script(src, { filename: f }); } catch (e) { bad.push([f, 0, '', 'does not parse: ' + e.message]); }
+  }
+  return bad;
+});
+
+/* Seven handouts once linked their demo one folder too high (2026-10-24), and deleting or renaming a page leaves links to it.
+   GitHub Pages serves a.md as a.html, a folder as its index, and honors <base href>. Links built in code are not read. */
+rule('links', 'Every relative link and image in the site pages and worksheets points at a file in the repo.',
+  'tracked .html (outside script and style) and .md outside docs/, tools/, .github/', () => {
+  const T = new Set(tracked), bad = [];
+  const has = (p) => [p, p + '.html', p + '.md', p.replace(/\.html$/, '.md'), p + '/index.html', p + '/index.md', p + '/README.md']
+    .some((q) => T.has(q.replace(/\/+$/, '') || q));
+  for (const f of tracked.filter((f) => /\.(html|md)$/.test(f) && !/^(docs|tools|\.github)\/|(^|\/)(CLAUDE|README)\.md$/.test(f))) {
+    const md = f.endsWith('.md');
+    let src = read(f).replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, (m) => m.replace(/[^\n]/g, ' '));
+    if (md) src = src.replace(/```[\s\S]*?```/g, (m) => m.replace(/[^\n]/g, ' '));
+    const base = src.match(/<base\s+href="([^"]*)"/i), dir = path.posix.normalize(path.posix.join(path.posix.dirname(f), base ? base[1] : '.'));
+    src.split('\n').forEach((l, i) => {
+      if (/<base\s/i.test(l)) return;
+      const re = md ? /\]\(<?([^)\s>#?]*)|\s(?:href|src)="([^"#?]*)/g : /\s(?:href|src)\s*=\s*["']([^"'#?]*)/g;
+      for (const m of l.matchAll(re)) {
+        const u = m[1] || m[2] || '';
+        if (!u || /^([a-z]+:|\/\/)/i.test(u) || /[${}+'"<>`\\]/.test(u)) continue;
+        if (u.startsWith('/') && !u.startsWith('/VirtualDemos/')) { bad.push([f, i + 1, u, 'absolute link outside the site']); continue; }
+        let p; try { p = u.startsWith('/') ? u.slice('/VirtualDemos/'.length) : path.posix.normalize(path.posix.join(dir, decodeURI(u))); } catch (e) { p = u; }
+        if (p.startsWith('..') || !has(p.replace(/\/$/, ''))) bad.push([f, i + 1, u, 'no such file: ' + p]);
+      }
+    });
+  }
+  return bad;
+});
+
+/* Generated pages drifted from their sources again and again (course pages regenerated after merges on 10-22, 10-24, 10-25 and
+   10-30; symbols.py --check failing on 10-31; notes/ideal-gas.html edited by hand on 10-26). Each builder's own check runs here.
+   The notes check needs python's markdown package (pip install markdown) and says so when it is missing. */
+rule('generated', 'Generated files match their sources: course pages, nav and search (courses.py --check), the theme switch '
+  + '(theme.py --check), symbol glossaries (symbols.py --check) and the teaching notes pages (notes/src).',
+  'tools/courses.py, theme.py, symbols.py, notes.py outputs', () => {
+  const bad = [], py = (a) => { try { execFileSync('python3', a, { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], encoding: 'utf8' }); return null; }
+    catch (e) { return ((e.stdout || '') + (e.stderr || '')).trim() || e.message; } };
+  for (const [tool, fix] of [['courses.py', 'python3 tools/courses.py'], ['theme.py', 'python3 tools/theme.py'], ['symbols.py', 'python3 tools/symbols.py']]) {
+    const out = py(['tools/' + tool, '--check']);
+    if (out) bad.push(['tools/' + tool, 0, out.split('\n').slice(-3).join(' | ').slice(0, 200), 'out of date: run ' + fix]);
+  }
+  const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'vd-notes-'));
+  const out = py(['-c', 'import sys, pathlib; sys.path.insert(0, "tools"); sys.argv = ["notes.py"]\n'
+    + 'try:\n import notes\nexcept ModuleNotFoundError as e:\n print("SKIP", e); sys.exit(0)\n'
+    + 'notes.OUT = pathlib.Path(' + JSON.stringify(tmp) + ')\n'
+    + '[notes.build_notes(p.stem) for p in sorted(notes.SRC.glob("*.md"))]\nnotes.build_index()']);
+  if (out) bad.push(['tools/notes.py', 0, out.slice(0, 200), 'notes build failed']);
+  else if (!fs.readdirSync(tmp).length) console.log('  (generated: notes skipped, pip install markdown to check them)');
+  else for (const f of fs.readdirSync(tmp)) {
+    const mine = path.join(ROOT, 'notes', f);
+    if (!fs.existsSync(mine) || fs.readFileSync(mine, 'utf8') !== fs.readFileSync(path.join(tmp, f), 'utf8'))
+      bad.push(['notes/' + f, 0, '', 'differs from notes/src: run python3 tools/notes.py ' + f.replace(/\.html$/, '') + ' (never edit notes/*.html by hand)']);
+  }
+  fs.rmSync(tmp, { recursive: true, force: true });
   return bad;
 });
 

@@ -20,6 +20,9 @@ All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud co
 - `node tools/rules.cjs [--keys <TeacherKeys clone>]` runs the house rules (also the pre-commit hook and CI). With `--keys` it also looks for
   copied answers and for handouts edited since their key PDF was printed (TeacherKeys `worksheet-keys/handout-hashes.json`, written by
   `fill_key.cjs`). The `constants` rule flags literals in demo code that are close to a value in `demos/lib/constants.js` without equaling it.
+  Added 2026-11-01 from mistakes that recurred: `constants-text` (the same for numbers in worksheets, notes and demo strings),
+  `scripts` (every inline script and .js file parses), `links` (relative links and images resolve) and `generated` (courses.py,
+  theme.py and symbols.py `--check`, and notes pages against notes/src when `pip install markdown` has been run). About 9 s in all.
 - `node tools/democheck.cjs <demo> [--fast]` is the one command for a new or changed demo: house rules, map entries (catalog, textbook map,
   topic), Node tests, harvest and leaks, What's new reminder, `vdcheck --only after` and `--only clip`, and the opening state check.
   `--fast` skips the browser steps.
