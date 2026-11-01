@@ -68,8 +68,8 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "<strong>Parte {#}. La curva de luz.</strong> Elige Fotometría de cefeidas y la cefeida C3, con la apertura de comparación en C1. Registra una lectura en cada noche, de la primera a la última. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}. A second comparison star.</strong> Clear the readings. Move the comparison aperture to C2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.":
   "<strong>Parte {#}. Una segunda estrella de comparación.</strong> Borra las lecturas. Mueve la apertura de comparación a C2 y registra lecturas de nuevo en las primeras diez noches. Envíalas; van a una nueva copia de la primera tabla.",
-"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on one night, with the comparison aperture on C1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.":
-  "<strong>Parte {#}. El tamaño de la apertura.</strong> Borra las lecturas. Quédate en una noche, con la apertura de comparación en C1, y registra una lectura con cada radio de apertura de {#} a {#} px. Envía las lecturas; llenan la segunda tabla.",
+"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on night {#}, with the comparison aperture on C1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.":
+  "<strong>Parte {#}. El tamaño de la apertura.</strong> Borra las lecturas. Quédate en la noche {#}, con la apertura de comparación en C1, y registra una lectura con cada radio de apertura de {#} a {#} px. Envía las lecturas; llenan la segunda tabla.",
 "<strong>The Cepheid, night by night.</strong>":
   "<strong>La cefeida, noche tras noche.</strong>",
 "<span>B</span>Night":

@@ -34,7 +34,7 @@ VDI18N.add('en', 'ws/cepheid-photometry', [
 "A light curve is sampled once a night for {#} nights. About how many cycles of an {#} day Cepheid does that cover? Could a {#} day period be told apart from it with once a night sampling? (Think about what you would see.)",
 "<strong>Part {#}. The light curve.</strong> Choose Cepheid photometry and Cepheid C3, with the comparison aperture on C1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.",
 "<strong>Part {#}. A second comparison star.</strong> Clear the readings. Move the comparison aperture to C2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.",
-"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on one night, with the comparison aperture on C1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.",
+"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on night {#}, with the comparison aperture on C1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.",
 "<strong>The Cepheid, night by night.</strong>",
 "<span>B</span>Night",
 "<span>C</span>Time \\(t\\) (d)",

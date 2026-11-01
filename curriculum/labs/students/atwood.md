@@ -59,7 +59,7 @@ On a real bench, put a pad under the falling mass, keep hands and feet out from 
 
 **Part 2: acceleration against the total mass.** Clear the readings first, so these runs start a new table. Keep the difference m₂ − m at 1.0 kg and time a 1.000 m run for five totals: 1.0 and 2.0 kg, 2.0 and 3.0 kg, 4.0 and 5.0 kg, 6.0 and 7.0 kg, 9.0 and 10.0 kg. Send the five runs to the worksheet.
 
-**Part 3: tension.** Turn Blind off. For three of your runs, record the tension the demo reads while the masses move, and compare it with the two weights.
+**Part 3: tension.** Turn Blind off. Record the tension the demo reads while the masses move for three pairs: the Before the lab case (2.0 and 2.5 kg), 1.0 and 5.0 kg from Part 1, and 9.0 and 10.0 kg from Part 2. Compare each tension with the two weights.
 
 ## Data
 

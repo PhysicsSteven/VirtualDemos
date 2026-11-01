@@ -24,7 +24,7 @@ Measure the attenuation curve of a filtered diagnostic X‑ray beam in aluminum,
 
 ## Background
 
-A diagnostic X‑ray beam holds photons from a few keV up to $$eV$$. The softest ones never reach the image receptor: they are absorbed in the patient's skin and add dose without adding information. A metal filter at the tube takes most of them out. The beam's quality is summed up by its half value layer (HVL), the thickness of aluminum that halves the air kerma. Federal rules set a minimum first HVL for each tube voltage, which in practice sets a minimum filtration.
+A diagnostic X‑ray beam holds photons from a few keV up to e times the tube voltage: an 80 kV tube makes photons of up to 80 keV. The softest ones never reach the image receptor: they are absorbed in the patient's skin and add dose without adding information. A metal filter at the tube takes most of them out. The beam's quality is summed up by its half value layer (HVL), the thickness of aluminum that halves the air kerma. Federal rules set a minimum first HVL for each tube voltage, which in practice sets a minimum filtration.
 
 For one photon energy, $$K(x) = K_0 e^{-\mu x}$$ and $$\text{HVL} = \ln 2/\mu$$. For a spectrum each energy is attenuated with its own μ(E), so
 

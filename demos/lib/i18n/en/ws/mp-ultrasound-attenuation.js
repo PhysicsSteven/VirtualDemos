@@ -64,7 +64,7 @@ VDI18N.add('en', 'ws/mp-ultrasound-attenuation', [
 "The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give two reasons from the About the demo notes.",
 "Set TGC to {#} and imagine the beam passing through {#} cm of fat over the muscle. Would the deeper tissue look too bright or too dark? Why?",
 "Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?",
-"Water attenuates {#} dB/(cm MHz²) times f², hundreds of times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?",
+"Water attenuates {#} dB/(cm MHz²) times f², tens of times to over a hundred times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?",
 "Prelab answers, all copies of Table {#} with their graphs, Table {#} with its graph, α₀ with its uncertainty, and answers to the questions. Identify simulated data.",
 "Intensity of the wave",
 "Level of the echo relative to the pulse sent",

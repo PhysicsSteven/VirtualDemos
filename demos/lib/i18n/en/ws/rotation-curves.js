@@ -25,7 +25,7 @@ VDI18N.add('en', 'ws/rotation-curves', [
 "If nearly all the mass is in the middle, as in the solar system, \\(v = \\sqrt{GM/r}\\) falls as \\(r^{-1/2}\\). If instead \\(v\\) stays the same at every \\(r\\) (a flat rotation curve), \\(M(<r)\\) must grow in proportion to \\(r\\).",
 "<strong>Units.</strong> In kiloparsecs, km/s and solar masses, \\(G = 4.30091\\times10^{-6}\\) kpc (km/s)²/M☉, and {#} kpc/(km/s) = {#} Myr. For the solar system, {#} AU = \\(1.4960\\times10^{11}\\) m, \\(G = 6.6743\\times10^{-11}\\) N·m²/kg², and {#} year = \\(3.156\\times10^7\\) s.",
 "<strong>Doppler shifts.</strong> Gas moving toward or away from us at speed \\(v \\ll c\\) shifts a spectral line by \\(\\Delta\\lambda/\\lambda_0 = v/c\\), or in frequency \\(\\Delta f/f_0 = -v/c\\) (Vol. {#}, §{#}). The {#} cm line of neutral hydrogen has \\(f_0 = 1420.41\\) MHz and Hα has \\(\\lambda_0 = 656.28\\) nm; \\(c = 2.9979\\times10^5\\) km/s. Seen edge on, a line of sight through the disk crosses gas at many radii; the largest shift along it comes from the radius where the line of sight just grazes an orbit, which gives \\(v\\) at that radius.",
-"Earth moves at {#} km/s at {#} AU. Find the Sun’s mass from \\(M = v^2r/G\\), in kg and in solar masses (\\(M_\\odot = 1.989\\times10^{30}\\) kg).",
+"Earth moves at {#} km/s at {#} AU. Find the Sun’s mass from \\(M = v^2r/G\\), in kg and in solar masses (\\(M_\\odot = 1.988\\times10^{30}\\) kg).",
 "Mercury orbits at {#} AU and Neptune at {#} AU. What fraction of Mercury’s speed is Neptune’s?",
 "The Sun orbits the Milky Way’s center at about {#} km/s, {#} kpc out. Find the mass inside its orbit and its orbital period.",
 "Gas moving at {#} km/s away from us shifts the {#} cm line by how many kHz? Hα by how many nm?",

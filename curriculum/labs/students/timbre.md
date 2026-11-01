@@ -109,9 +109,10 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
 4. Calculate the frequency of the detuned third partial and the relative phase drift time $$1/\lvert\Delta f\rvert$$.
 5. Compare the stiffness results with
-6. Plot $$\Delta x$$ against $$1/\Delta k$$ for the wave packets, with a free intercept. Compare the slope with 1/2. At which $$\sigma$$ does $$\Delta x\,\Delta k$$ start to rise above 1/2, and why? (Look at which harmonics the packet would need.)
 
-$$f_n=nf_1\sqrt{\frac{1+Bn^2}{1+B}}.$$
+   $$f_n=nf_1\sqrt{\frac{1+Bn^2}{1+B}}.$$
+
+6. Plot $$\Delta x$$ against $$1/\Delta k$$ for the wave packets, with a free intercept. Compare the slope with 1/2. At which $$\sigma$$ does $$\Delta x\,\Delta k$$ start to rise above 1/2, and why? (Look at which harmonics the packet would need.)
 
 ## Uncertainty
 

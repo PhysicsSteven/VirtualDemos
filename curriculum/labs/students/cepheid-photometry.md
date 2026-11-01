@@ -56,7 +56,7 @@ No hazards in the virtual lab.
 
 **Part 2. A second comparison star.** Clear the readings. Move the comparison aperture to C2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.
 
-**Part 3. The aperture size.** Clear the readings. Stay on one night, with the comparison aperture on C1, and record a reading at each aperture radius from 2 to 9 px. Send the readings; they fill the second table.
+**Part 3. The aperture size.** Clear the readings. Stay on night 5, with the comparison aperture on C1, and record a reading at each aperture radius from 2 to 9 px. Send the readings; they fill the second table.
 
 ## Data
 

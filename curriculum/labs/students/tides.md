@@ -19,7 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.6. Access for free at http
 
 **What the demo models.**
 
-- Point masses, with G = 6.674 × 10⁻¹¹ N·m²/kg² (CODATA 2022) and standard astronomical values (the textbook's tables give them to three figures): M_Moon = 7.342 × 10²² kg, M_Sun = 1.989 × 10³⁰ kg, M_E = 5.972 × 10²⁴ kg, R_E = 6371 km, Moon 384,400 km and Sun 1.496 × 10⁸ km away. The exact pulls come from $$GM/r^2$$ at each point.
+- Point masses, with G = 6.674 × 10⁻¹¹ N·m²/kg² (CODATA 2022) and standard astronomical values (the textbook's tables give them to three figures): M_Moon = 7.342 × 10²² kg, M_Sun = 1.988 × 10³⁰ kg, M_E = 5.972 × 10²⁴ kg, R_E = 6371 km, Moon 384,400 km and Sun 1.496 × 10⁸ km away. The exact pulls come from $$GM/r^2$$ at each point.
 - The ocean is the equilibrium tide: the water surface follows the tidal pull at once, with height $$h = A(3\cos^2\theta - 1)/2$$ and $$A = (M/M_E)(R_E/d)^3 R_E$$, where $$\theta$$ is measured from the point under the Moon or Sun. It leaves out the water's own gravity, Earth's elastic stretch, continents and ocean basins, and the time the water takes to respond. The Moon and Sun move in circles in the plane of Earth's equator. The synodic month is 29.53 days.
 
 </details>
