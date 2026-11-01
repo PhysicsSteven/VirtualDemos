@@ -10,7 +10,8 @@
    3. Tests: every curriculum/validation/test_<demo>*.cjs that runs in Node.
    4. Translation: when the demo changed against origin/main, its harvest (demos/lib/i18n/en/demo/<demo>.js) changed too, and
       tools/i18n.cjs leaks <demo> finds no English left showing.
-   5. What's new: when the demo changed, whats-new.js changed too (a warning only: invisible fixes need no entry).
+   5. What's new: when the demo changed, whats-new.js changed too (a warning only: invisible fixes need no entry). Keys: when the
+      demo changed, the TeacherKeys captures that load it are named, to rerun and compare with the keys (a warning).
    6. Page checks: tools/vdcheck.cjs --only after (page errors, sideways scroll) and --only clip (controls cut off).
    7. Opening state: tools/opencheck.cjs (the first Play or Release press visibly does something).
    --fast skips 4's leak check, 6 and 7 (the browser steps). Exit 1 when any step fails; warnings don't fail. */
@@ -52,6 +53,13 @@ for (const d of demos) {
   /* 4, 5 */
   const demoChanged = changed('demos/' + d + '.html');
   if (demoChanged && !changed('demos/lib/i18n/en/demo/' + d + '.js')) step(d, 'harvest', 'warn', 'demo changed but its harvest did not: node tools/i18n.cjs harvest ' + d);
+  /* keys captured from this demo: a model or text change can move the numbers a key quotes (stale key numbers recurred:
+     physics audit 10-25, overnight recheck 10-25, GPT findings 10-26), so name the captures to rerun and compare */
+  const capDir = KEYS && path.join(KEYS, 'worksheet-keys/tools/capture');
+  if (demoChanged && capDir && fs.existsSync(capDir)) {
+    const caps = fs.readdirSync(capDir).filter((f) => f.endsWith('.cjs') && new RegExp("['\"/]" + d.replace(/[.-]/g, '\\$&') + "\\.html['\"?#]").test(fs.readFileSync(path.join(capDir, f), 'utf8')));
+    if (caps.length) step(d, 'keys', 'warn', 'demo changed: rerun ' + caps.join(', ') + ' (TeacherKeys worksheet-keys/tools/capture) and compare with the keys');
+  }
   if (demoChanged && !whatsNewChanged) step(d, 'whats-new', 'warn', 'demo changed and whats-new.js did not: add an entry if students would notice');
   if (FAST) continue;
   const lk = run('node', ['tools/i18n.cjs', 'leaks', d]);

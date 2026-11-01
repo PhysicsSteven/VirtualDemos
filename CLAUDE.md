@@ -27,7 +27,7 @@ only when the work needs them.
   limits and conservation laws are checked. Never fake data: label simulated data as simulated.
 - Constants: every physical constant, with its source, is in `demos/lib/constants.js` (`VDC`): CODATA 2022, IAU nominal values,
   g = 9.81 m/s², sound 343.2 m/s at 20 °C, 0 °C = 273.15 K. Add a missing one there first; a copy in demo code must equal it
-  [checked]. Significant figures follow the precision.
+  [checked, in code and in written text]. Significant figures follow the precision.
   Fits use a free intercept. Details: memory `consistency-pass-2026-10-24`.
 - Writing: plain, precise teaching language with American spelling [checked]. No hyphens in compound modifiers ("time
   constant", "white dwarf", "nonrotating") [checked]; a part of one letter is fine (X-ray, f-number). Nothing is called
@@ -77,8 +77,24 @@ only when the work needs them.
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
 - Every worksheet has a How this works video, or a `HOWTO_VIDEO` map entry pointing to its demo's video [checked].
   The recipe is in memory `how-this-works-videos`.
-- After a handout edit, rebuild the key PDFs in TeacherKeys [checked with `--keys`].
+- After a handout edit, rebuild the key PDFs in TeacherKeys [checked with `--keys`]. After a demo change, rerun the key captures
+  that load it and compare (democheck names them).
 
 ## Tools and generated files
 - Commands for the build scripts (courses, notes, Canvas, theme, QR, reset, thumbnails, math check): `docs/tools.md`.
-- Generated files are rebuilt from their source, never edited by hand: `docs/generated-files.md`.
+- Generated files are rebuilt from their source, never edited by hand: `docs/generated-files.md` [checked: course pages, theme
+  switch, symbol glossaries, and notes pages when python's `markdown` is installed].
+- Every script on a page parses, and every relative link and image points at a file in the repo [checked].
+
+## Mistakes that came back (no script can check these)
+- Before writing that something is the smallest, largest, first or only one, check it against a data table (the tritium
+  "smallest Q" claim was wrong: rhenium 187 is smaller).
+- Compute every "agrees within one standard error" or "within N %" claim; never judge it by eye (keys said one standard error
+  where it was 1.2 to 5).
+- Work key numbers from the rounded values and the fit the worksheet shows, not from unrounded exports.
+- One value per quantity in the demo, handout, notes and key, with a real citation; add it to `constants.js` first (the Sun's
+  M_V was 4.83 with a wrong citation in one demo and 4.81 elsewhere).
+- After a push, confirm that both CI jobs passed through the Actions API (the physics regression job once failed on every
+  push for days).
+- After a layout change, look at 1280 by 720 and at a 400 px phone, in English and Spanish: controls cut off by the stage and
+  labels overlapping on phones came back many times. democheck catches cut off controls; overlaps still need the pictures.
