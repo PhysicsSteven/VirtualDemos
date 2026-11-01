@@ -170,7 +170,6 @@ const CONST_DATA = new Set(['lib/sky-bsc.js', 'lib/sky-dist.js', 'lib/nubase.js'
 const CONST_ALLOW = {      /* 'file literal': reason */
   'dosimetry.html 273.2': 'AAPM TG-51 writes the temperature correction with 273.2',
   'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
-  'tides.html 1.989e30': 'TEMPORARY 2026-11-01: the Astro 2203 thread is editing tides; it switches to VDC.Msun (1.98841e30) and removes this line',
 };
 /* Too close to everyday numbers to compare (they stay in the file to be used): */
 const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20']);
