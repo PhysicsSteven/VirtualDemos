@@ -803,10 +803,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.font = F(10.5, 700); ctx.fillStyle = color || T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     if ('letterSpacing' in ctx) ctx.letterSpacing = '0.06em';
     const maxW = room || W - x - 8;
-    const a = txt.replace(/\s*\([^)]*\)/, ''), b = a.split(':')[0];
-    let t = txt;
-    for (const c of [txt, a, b]) { t = c; if (ctx.measureText(c.toUpperCase()).width <= maxW) break; }
-    ctx.fillText(t.toUpperCase(), x, y); ctx.restore();
+    /* translate the whole title first, then shorten the translation (drop a bracket, then everything after a colon) so a
+       shortened title is never an untranslated piece; drawn raw so the pieces are neither looked up nor harvested */
+    const V = window.VDI18N, full = V ? V.t(txt.toUpperCase()) : txt.toUpperCase(), go = (f) => (V ? V.raw(f) : f());
+    const a = full.replace(/\s*\([^)]*\)/, ''), b = a.split(':')[0];
+    let t = full;
+    go(() => { for (const c of [full, a, b]) { t = c; if (ctx.measureText(c).width <= maxW) break; } ctx.fillText(t, x, y); });
+    ctx.restore();
   }
   function text(txt, x, y, o = {}) {
     ctx.font = o.font || F(10.5); ctx.fillStyle = o.color || T.muted; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'middle';
@@ -1743,6 +1746,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setLine(P3.jan, Ej, wallHit(Ej)); setLine(P3.jul, El, wallHit(El)); setLine(P3.now, E, wn);
     P3.spot.position.copy(wn).add(new THREE.Vector3(0, -0.02, 0));
     const t = Math.tan(17 * DEG3), asp = aw / Math.max(1, ah), half = 3.1;
+    const cl = wrapLines(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, aw - 24 * ps, F(9.5)).concat(wrapLines('drag Earth along its orbit; drag elsewhere to turn', aw - 24 * ps, F(9.5)));
+    /* on a narrow screen the caption wraps to three or four lines: lift the picture by half its height, so it never covers the Sun or January */
+    const lift = aw < 560 ? Math.round((cl.length * 13 + 8) * ps / 2) : 0;
+    if (lift) S3.cam.setViewOffset(aw, ah, 0, lift, aw, ah); else if (S3.cam.view) S3.cam.clearViewOffset();
     S3.place(P3.o, [0, 2.3, 0.3], Math.max(half / t, half / (t * asp)) * 0.95);
     S3.render();
     // labels in the scene
@@ -1756,9 +1763,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { const [bx, by] = pr(new THREE.Vector3(0, YB3, 2.1)); text('distant background stars', Math.min(ax + aw - 12 * ps, Math.max(ax + 12 * ps, bx)), Math.max(ay + 30 * ps, by), { font: F(10), color: '#aeb9c8', align: 'center', bg: '#04060b' }); }
     const [ex, ey] = pr(E), hot = isHot('earth');
     ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = (hot ? 2 : 1.3) * ps; ctx.beginPath(); ctx.arc(ex, ey, (hot ? 12 : 10) * ps, 0, 2 * Math.PI); ctx.stroke();
-    text('Earth', ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#e8eef6', bg: '#04060b' });
-    { const cl = wrapLines(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, aw - 24 * ps, F(9.5)).concat(wrapLines('drag Earth along its orbit; drag elsewhere to turn', aw - 24 * ps, F(9.5)));
-      textLines(cl, ax + 12 * ps, ay + ah - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5), color: '#aeb9c8', bg: '#04060b' }, 13 * ps); }
+    { ctx.font = F(10.5, 700); const ew = ctx.measureText('Earth').width, lft = ex + 13 * ps + ew > ax + aw - 4 * ps;   /* near the right edge the label goes on the left of the ring */
+      text('Earth', lft ? ex - 13 * ps : ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#e8eef6', bg: '#04060b', align: lft ? 'right' : 'left' }); }
+    { textLines(cl, ax + 12 * ps, ay + ah - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5), color: '#aeb9c8', bg: '#04060b' }, 13 * ps); }
     g.earth = { cx: 0, cy: 0, R: 1, E: [ex, ey], plane: (x, y) => {
       P3.ray.setFromCamera(new THREE.Vector2((x - ax) / aw * 2 - 1, -((y - ay) / ah) * 2 + 1), S3.cam);
       const q = new THREE.Vector3(); return P3.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), q) ? [q.x, q.y] : null; } };

@@ -1464,7 +1464,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // takes the forbidden color, as in the flat view. Particles ride on the surface at their exact (x, y). Flat stays the place to
   // throw particles and drag the launch and the zero velocity curve; here a click drops a particle at rest.
   const L3 = { on: false, S: null, mesh: null, key: '', ckey: '', dots: null, trails: null, b1: null, b2: null, marks: [], o: { th: -Math.PI / 2, ph: 0.72, zoom: 1 }, ext: 1, A: 0.1, cx: 0, cy: 0 };
-  const L3N = 170;
+  const L3N = 220;   /* finer, since the surface reaches 1.8 times past the view */
   function hz(x, y) {
     const C4 = CL.L4, sc = Math.max(CL.L1 - C4, 1e-14) / 3, d = omega2(S.mu, x, y) - C4;
     return -L3.A * Math.min(Math.log1p(Math.max(0, isFinite(d) ? d : 1e30) / sc), 6);
@@ -1512,10 +1512,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const S3 = L3.S; if (!S3) return;
     if (S.frame !== 'rot') { L3.view.set('flat'); return; }
     S3.size(W, H);
-    const ext = Math.max(W, H) / 2 / V.s, key = [S.mu, Math.round(Math.log(ext) * 8)].join('|');
+    /* the surface reaches 1.8 times past the flat view's half width, so at the opening tilt its far edge stays above the top
+       of the picture (a tall phone view stands the camera farther back) and fades into the fog instead of ending in a band */
+    const reach = 1.8, ext = Math.max(W, H) / 2 / V.s, key = [S.mu, Math.round(Math.log(ext) * 8)].join('|');
     if (key !== L3.key || Math.hypot(V.x0 - L3.cx, V.y0 - L3.cy) > 0.12 * ext) {
       if (key !== L3.key) L3.ext = ext;
-      L3.cx = V.x0; L3.cy = V.y0; L3.A = 0.06 * L3.ext; surface3D(L3.ext);
+      L3.cx = V.x0; L3.cy = V.y0; L3.A = 0.06 * L3.ext; surface3D(L3.ext * reach);
       if (key !== L3.key) {   /* particle spheres sized to the view */
         if (L3.dots) L3.S.dispose(L3.dots);
         L3.dots = VD3K.particles(S3, { n: 900, r: L3.ext * 0.0065, seg: 8 }); S3.scene.add(L3.dots);

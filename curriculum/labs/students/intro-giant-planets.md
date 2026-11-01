@@ -33,6 +33,8 @@ Compare the four giant planets with each other and with Earth, find out why Satu
 
 **Resonances.** When one moon goes round exactly twice for every orbit of another, the two line up at the same places over and over, and their small tugs add up instead of averaging out. Io, Europa and Ganymede are in a 1:2:4 resonance. The tugs keep Io's orbit slightly oval, so its distance from Jupiter and the stretch on it change every orbit. The flexing heats Io the way bending a paper clip back and forth warms it.
 
+**Why the computed graph swings.** Europa's regular tugs pull Io's orbit toward one steady oval, called the forced eccentricity, which sits about halfway up the swing on the demo's graph. In the demo Io starts on a perfect circle, away from that steady oval, so it swings back and forth around it, like a swing let go from one side: from 0 up to about twice the steady value and back, over and over. The real Io has had billions of years, and the same tidal flexing that heats it also wore that swing away, so it now sits near the steady value: 0.0041, as measured.
+
 ## Before the lab
 
 1. Saturn has about 95 times Earth's mass and about 760 times Earth's volume. Is Saturn's density more or less than Earth's? Roughly how many times?
@@ -114,7 +116,7 @@ The demo's numbers come from measured data and from calculations, so a repeated 
 2. Uranus spins tipped over on its side. What would the seasons be like at its poles during its 84 year orbit around the Sun?
 3. Europa has an ocean of liquid water under its ice, and Enceladus has geysers. Both are in resonances. Explain how a resonance can keep a small, cold moon warm inside.
 4. A comet that passes very close to Jupiter can be pulled into pieces, as Shoemaker–Levy 9 was in 1992. Use the Roche limit to explain why a comet, a loose ball of ice and dust, is easy to tear apart.
-5. Choose Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle, and run it for about 500 days while you watch the graph of Io's eccentricity. Then take Europa away and run it again. What does Io's eccentricity do each time? Use this to explain where the oval orbit of Part 4 comes from.
+5. Choose Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle, and run it for about 500 days while you watch the graph of Io's eccentricity. Then take Europa away and run it again. What does Io's eccentricity do each time? Is the middle of the swing close to Io's measured 0.0041, and why does the graph climb well above it? Use this to explain where the oval orbit of Part 4 comes from.
 
 ## What to hand in
 

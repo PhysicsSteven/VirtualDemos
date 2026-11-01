@@ -402,8 +402,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Imágenes CCD simuladas de las cefeidas simuladas de la GNM del peldaño {#}: imágenes estelares gaussianas con el seeing de cada noche, nube delgada, un cielo uniforme, ruido de fotones y de lectura. Las imágenes reales también necesitan correcciones de bias, de corriente oscura y de campo plano, que se dan por hechas.",
 "±{#} mag":
   "±{#} mag",
-"SIMULATED CCD FRAME, LMC FIELD, NIGHT {#}":
-  "IMAGEN CCD SIMULADA, CAMPO DE LA NMG, NOCHE {#}",
 "Cepheid aperture":
   "apertura de la cefeida",
 "comparison aperture":

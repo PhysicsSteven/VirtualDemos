@@ -156,8 +156,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "El problema restringido circular de tres cuerpos: dos masas en órbitas circulares alrededor de su centro de masa, y una partícula de prueba demasiado ligera para perturbarlas. El movimiento es solo en su plano orbital. Las naves reales en L1 y L2, como el JWST, siguen órbitas de halo tridimensionales; las órbitas de Lyapunov planas de aquí son sus parientes planas. Se dejan fuera los otros planetas, la atracción del Sol sobre la Luna, la excentricidad de las órbitas reales y la presión de radiación.",
 "The exact equations in the rotating frame, ẍ − {#}ẏ = ∂Ω/∂x and ÿ + {#}ẋ = ∂Ω/∂y, include the Coriolis ({#}ẏ, {#}ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince {#}({#}) method with local error {#}⁻¹² ({#}⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there, and one beyond {#} a stops too. The Sun centered view is the same motion transformed exactly, never integrated separately. The Sun–Earth system uses the Earth–Moon barycenter as m₂.":
   "Las ecuaciones exactas en el marco en rotación, ẍ − {#}ẏ = ∂Ω/∂x y ÿ + {#}ẋ = ∂Ω/∂y, incluyen los términos de Coriolis ({#}ẏ, {#}ẋ) y centrífugo. Se integran con un método adaptativo de Dormand–Prince {#}({#}) con error local {#}⁻¹² ({#}⁻¹⁰ para el enjambre); la lectura de la deriva lo comprueba. Una partícula que toca un cuerpo se detiene ahí, y una que pasa de {#} a también se detiene. La vista centrada en el Sol es el mismo movimiento transformado exactamente, nunca integrado por separado. El sistema Sol–Tierra usa el baricentro Tierra–Luna como m₂.",
-"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
-  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "L1 and L2, saddles":
   "L1 y L2, puntos silla",
 "L3, saddle":
@@ -172,6 +170,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "terreno prohibido sombreado",
 "click to drop, Shift drag to throw":
   "haz clic para soltar, Shift y arrastrar para lanzar",
+"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
+  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "period (P)":
   "periodo (P)",
 "Sun centered frame: Sun held fixed, axes fixed to the stars":
@@ -230,8 +230,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Dos órbitas de Lyapunov planas, alrededor de L1 (el vecindario de SOHO) y de L2 (el del JWST), cada una de unas {#} UA de ancho. L1 y L2 son puntos silla: después de dos o tres vueltas el diminuto error numérico ha crecido lo suficiente para que cada partícula se vaya. El JWST enciende sus propulsores cada tres semanas, más o menos, para mantenerse.",
 "Two body estimate about Sun, ignoring Earth":
   "Estimación de dos cuerpos alrededor del Sol, ignorando la Tierra",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
 "L2 · Queqiao":
   "L2 · Queqiao",
 "Near Moon":
@@ -268,10 +266,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "C está entre C(L2) y C(L1): el cuello en L1 está abierto pero L2 está cerrado. La partícula, soltada en reposo sobre su propia curva de velocidad cero, vaga entre la Tierra y la Luna, ida y vuelta, y nunca puede salir del límite sombreado.",
 "Two body estimate about Earth, ignoring Moon":
   "Estimación de dos cuerpos alrededor de la Tierra, ignorando la Luna",
-"{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
-"{#} km from Moon, speed {#} km/s in the rotating frame":
-  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
 "Speed {#} km/s relative to Sun; here a circular orbit needs {#} km/s and escape needs {#} km/s.<br><span>Bound</span>: perihelion {#} AU, aphelion {#} AU, period {#} yr; Tisserand T = {#}.":
   "Rapidez {#} km/s respecto al Sol; aquí una órbita circular necesita {#} km/s y escapar necesita {#} km/s.<br><span>Ligada</span>: perihelio {#} UA, afelio {#} UA, periodo {#} años; Tisserand T = {#}.",
 "{#} AU from Sun and {#} AU from Jupiter, speed {#} km/s relative to Sun":
@@ -358,8 +352,16 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "L5, cima",
 "drag to throw, click to drop":
   "arrastra para lanzar, haz clic para soltar",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
+"{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
+"{#} km from Moon, speed {#} km/s in the rotating frame":
+  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
+"{#} × {#}⁻¹⁶ <span>after {#} P</span>":
+  "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "{#} a from m₂, speed {#} × {#}⁻⁵ a·n in the rotating frame":
-  "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación"
+  "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>"
 });
