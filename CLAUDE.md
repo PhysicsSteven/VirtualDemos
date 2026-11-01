@@ -1,96 +1,77 @@
 # Notes for Claude sessions working on VirtualDemos
 
 Steve Anderson's interactive physics demos for introductory courses, live at https://physicssteven.github.io/VirtualDemos/.
-Steve is the owner and decides. Read `COLLABORATION.md` first (latest entries at the bottom): GPT also works here and that file is how
-the two assistants share context. Log what you change there when you finish.
+Steve owns the site and makes the decisions. This file lists the rules. The detail lives in the files it points to, so read those
+only when the work needs them.
 
-## Repos and who owns what
-- This repo (public, GitHub Pages): `demos/`, `notes/`, `curriculum/`, `tools/`, course pages. Claude owns demos, notes, tools and the
-  course pages, and (from 2026-10-23, Steve's call) the student handouts (`curriculum/labs/students/`). GPT no longer writes
-  handouts or demos: it is an independent verifier that checks physics, numbers and consistency and reports an issues list in
-  `COLLABORATION.md` (it does not edit). Each handout batch is logged there for GPT to verify; fix what it finds or say why not.
-- `PhysicsSteven/TeacherKeys` (private): answer keys (`answers/<demo>.md`, built to `key/<demo>.html`), worksheet keys from real demo
-  runs (`worksheet-keys/`) and the older instructor guides.
-  **Never put answers, keys or instructor guides in this repo.**
-- Never read, use or publish anything from Steve's thesis repo (`wd-thesis`) or other private work.
+## Start of every session
+1. `git config core.hooksPath .githooks` turns on the house rules check before each commit. CI runs the same check on every push.
+2. See what changed lately with `git log --oneline -30`. Commit messages are the work log: say what changed, why, and what is
+   left. Project memory holds Steve's decisions.
+3. Before each commit, run `node tools/rules.cjs` (about 4 s). It checks the rules marked **[checked]** below.
+   `--list` explains each rule. To make an exception, add a reasoned ALLOW entry in the script, never a blanket skip.
+
+## Repos and roles
+- This repo is public and served by GitHub Pages: `demos/`, `notes/`, `curriculum/`, `tools/` and the course pages. Claude writes
+  the demos, notes, tools, course pages and student handouts (`curriculum/labs/students/`). No other assistant works here now:
+  Steve ended the GPT collaboration on 2026-11-01 and removed `COLLABORATION.md`, which is still in git history.
+- `PhysicsSteven/TeacherKeys` (private) holds demo answer keys (`demo-keys/answers/<demo>.md`, built to `demo-keys/key/`),
+  worksheet keys from real demo runs (`worksheet-keys/`), lab guides, TA guides and practice exams.
+- **Never put answers, keys or instructor guides in this repo.** [checked; `--keys <TeacherKeys clone>` also looks for copied answers]
+- Never read, use or publish anything from Steve's thesis repo (`wd-thesis`) or his other private work.
 
 ## House rules
-- Physics must be exact: every number shown comes from code or a cited source, every approximation is stated on the page, limits and
-  conservation laws are checked. Never fake data; simulated data is labelled simulated.
-- Writing: plain, precise teaching language. No hyphens in compound modifiers ("time constant", "white dwarf", "charge density").
-- Textbook: OpenStax University Physics (Vol 1 mechanics, Vol 2 E&M, Vol 3 optics/modern). Physics I = Vol 1 ch 1–15; Physics II
-  (PHYS 202) syllabus is in `COLLABORATION.md`. `curriculum/textbook-map.json` maps every section to demos and activities.
-- Modules (textbook chapters, not a syllabus): Acoustics = Vol 1 ch 16–17, Thermodynamics (`thermo.html`) = Vol 2 ch 1–4, Modern
-  Physics (`modern.html`) = Vol 3 ch 5–11, Astronomy (`astro.html`) = every astronomy demo in topic units (Vol 1 ch 13
-  and Vol 3 §§10.6, 11.6, 11.7 where they apply), including every Astro 2203 demo and worksheet; Astro 2203 (`astro-2203.html`) is
-  its own course page with only its subset, in schedule order (`INCLUDED` in `tools/courses.py`; a new Astro 2203 only demo needs a
-  `MERGE_PLACE` entry). Wave optics (Vol 3 ch 3–4) is a Physics II unit like any other (nothing is optional, Steve 2026-10-24). A demo may sit in
-  several courses or modules (list each in its `course`); `later` marks a demo in no course (BZ and DNA). Moving a demo is a map change only.
-- Home page (Steve, 2026-10-28), in this order: Courses (only the courses in `LISTED` in `tools/courses.py`,
-  for now Astro 2203; the other course pages stay online, unlisted, for Canvas and old links), OpenStax by section (`openstax.html`,
-  volume tiles with thumbnails like the course tiles), All demos by topic
-  (`curriculum/topics.json` → `topics/<id>.html`; every catalog demo must be in at least one topic, so a new demo needs a topic too).
-  `misc.html` redirects to the Chemistry and biology topic. New courses Steve adds go in `LISTED` and draw on the same demos.
-- Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
+- Physics must be exact. Every number shown comes from code or a cited source, every approximation is stated on the page, and
+  limits and conservation laws are checked. Never fake data: label simulated data as simulated.
+- Constants: g = 9.81 m/s²; sound 343.2 m/s at 20 °C; 0 °C = 273.15 K; CODATA 2022. Significant figures follow the precision.
+  Fits use a free intercept. Details: memory `consistency-pass-2026-10-24`.
+- Writing: plain, precise teaching language with American spelling [checked]. No hyphens in compound modifiers ("time
+  constant", "white dwarf", "nonrotating") [checked]; a part of one letter is fine (X-ray, f-number). Nothing is called
+  "optional": the site supplements whatever the course does (Steve 2026-10-24) [checked]. Say "switch modes".
+- GitHub Pages runs Liquid on every Markdown file, including this one: never put a brace next to a percent
+  sign, and never write a double brace [checked].
+- A demo's opening state is never at equilibrium: the first Play or Release press must visibly do something (Steve 2026-10-28).
+- Measuring tools (the Tools button) are supplementary only. Never use them in handouts, keys or videos.
+- Keep existing control names, because handouts and keys refer to them. Add names rather than renaming them. A rename updates every
+  reference in the same commit.
+- No cap on presets: add as many as the demo needs (Steve 2026-10-24).
+- Prefer folding a new feature into an existing demo. A build that is unique enough can be its own demo (Steve 2026-10-31).
+- Don't claim a test passed unless you ran it. Commits end with the attribution lines the session gives you. Commit and push
+  finished, checked work, with a commit message that says what changed and what is left.
 
-## What's new
-- When you finish something a student or TA would notice (a new demo, mode, worksheet or worksheet feature, a demo that now opens in
-  3D), add an entry at the TOP of `whats-new.js` in the same commit: unique id, date, a few word title, one or two plain sentences on
-  what they can now do. The home page shows new entries once in a popup. Leave out invisible fixes and anything about keys.
+## Courses and the map
+- Textbook: OpenStax University Physics. `curriculum/textbook-map.json` maps every section to demos and activities. Physics I is
+  Vol 1 ch 1 to 15. Physics II follows the PHYS 202 syllabus (`docs/syllabi.md`). Modules are textbook chapters, not a syllabus:
+  Acoustics is Vol 1 ch 16 to 17, Thermodynamics Vol 2 ch 1 to 4, Modern Physics Vol 3 ch 5 to 11, and Astronomy holds every
+  astronomy demo.
+- Astro 2203 (`astro-2203.html`) is its own course page holding only its subset, in schedule order (`INCLUDED` in
+  `tools/courses.py`). A new demo used only in Astro 2203 needs a `MERGE_PLACE` entry.
+- A demo can sit in several courses (list each one in its `course`). `later` marks a demo in no course. Moving a demo is a map
+  change only.
+- The home page shows Courses (only those in `LISTED`, currently Astro 2203), then OpenStax by section, then All demos by topic.
+  Every catalog demo must be in at least one topic in `curriculum/topics.json`.
+- When students or TAs would notice a change, add an entry at the top of `whats-new.js` in the same commit. Leave out invisible
+  fixes, videos and anything about keys.
 
 ## Demos
-- One HTML file each, plus the shared library in `demos/lib/` (`vd.css`, `vd.js`; read `demos/lib/README.md`). Demos are being
-  moved onto it in batches (Steve, 2026-10-23); the README lists which. A moved demo links the library and keeps only its physics,
-  drawing and what it does differently. Shared styles and behaviour go in the library, never pasted into each file again; moving a
-  demo must change nothing visible, which `tools/vdcheck.cjs` checks. Other libraries: three.js r128 from cdnjs (only where already
-  used). Fonts from Google Fonts. A new 3D view uses `demos/lib/vd3kit.js` (`VD3K`: scene, 3D | Flat switch, lab props, particles, sky;
-  sample in `demos/lib/vd3kit.html`) on top of `vd3.js`, instead of copying 3D code from another demo.
-- **Edit `demos/<name>.html` directly.** Do not rebuild a demo from an older copy elsewhere: that once wiped a finished scenery pass.
-- Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment mid line before code
-  (use `/* */`). Tests: `curriculum/validation/test_<demo>.cjs` using `core('<demo>', 'fn,...')` from `demo_source.cjs`.
-- House style: light and dark themes via CSS tokens (in `:root`, the dark `@media` block and `[data-theme=dark]`; the site's
-  Light | Dark | Browser default switch is `demos/lib/theme.js`, which sets `data-theme`, so a canvas redraws on the
-  `prefers-color-scheme` `change` event), projector mode,
-  400 px and 360 px phones with no sideways scroll, keyboard access, Reduce motion, Blind mode for predictions. No cap on presets (Steve, 2026-10-24): add as many as the demo needs.
-- Keep existing control names: handouts refer to them. Add, don't rename.
-- Check visually (Playwright/Chromium is installed) at desktop and phone width, light and dark, and look at the screenshots.
+- Each demo is one HTML file on the shared library `demos/lib/` (read `demos/lib/README.md`). Shared styles and behavior go in
+  the library, never pasted into a demo. A new 3D view uses `demos/lib/vd3kit.js`. The only outside libraries are three.js r128
+  from cdnjs (only where it is already used) and Google Fonts.
+- **Edit `demos/<name>.html` directly.** Never rebuild a demo from an older copy elsewhere: that once wiped a finished pass.
+- Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment in the middle of a
+  line before code (use `/* */`). Tests are in `curriculum/validation/test_<demo>.cjs`.
+- House style: light and dark themes, projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
+  motion, and Blind mode for predictions. Check the screenshots at desktop and phone width, light and dark.
+- Languages: English text is the key. After you build or change a demo, harvest its strings and check for leaks with
+  `?lang=qps`. Every demo must be harvested [checked]. Never read displayed text back as state. See `demos/lib/i18n.md`.
+- How to add a demo, and the new demo checklist: `docs/adding-a-demo.md`.
 
-## How to add a demo
-1. Copy `demos/lib/template.html` to `demos/<name>.html` and change its `../lib/` links to `lib/`. It is a small working demo on the
-   shared library: header with Projector, picture with a Set up card (`VD.setupCard`), Setups chips, readouts, Lab fold.
-2. Replace the physics between the CORE markers (it must run in Node) and the drawing; keep the page structure and class names, so
-   the shared styles in `vd.css` apply. Put only what this demo does differently in its own `<style>`; don't copy shared rules in,
-   and don't add `data-vd-off` (that list is only for demos that were moved and never had a rule).
-3. For readings and Export to worksheet, copy the Readings section and its code from `demos/pendulum.html` (the `vd-handoff:<name>`
-   key, `FROM_DEMO` map in worksheet.js) until the library has a readings helper.
-4. If the demo has a running clock or a picture drawn to scale, give it the measuring tools in one line: `VD.tools({ el: can, time: () => S.t, scale: () => metersPerPixel })`
-   (see `demos/lib/vdtools.js`; leave out `scale` when nothing is to scale, and return null from either in a view where it does not apply).
-5. Run `python3 tools/reset.py <name>` and `python3 tools/qr.py <name>` (markup only, since the demo links the library), then the
-   new demo checklist below, and check it with `NODE_PATH=/opt/node-tools/node_modules node tools/vdcheck.cjs --only after <name>`
-   (page errors, sideways scroll) and by looking at the screenshots it saves.
+## Handouts, worksheets and videos
+- Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
+- Every worksheet has a How this works video, or a `HOWTO_VIDEO` map entry pointing to its demo's video [checked].
+  The recipe is in memory `how-this-works-videos`.
+- After a handout edit, rebuild the key PDFs in TeacherKeys.
 
-## Handouts
-- Procedure steps state the task (what to measure, at what values), not which control or where; keep specifics only where a student
-  would get stuck (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet
-  before clearing).
-- Keep h2 headings, numbered lists and data table headings stable: `curriculum/labs/worksheet.js` finds answer spots by them and
-  its `FROM_DEMO` maps fill the first data table's columns in order. A new handout: add its slug to `ENABLED` (and `GRAPHS`), a
-  `FROM_DEMO` map, the map entry's `handouts`, a `HANDOUT_TOPIC` label in `tools/courses.py`, and a key from a real demo run in
-  TeacherKeys `worksheet-keys/`.
-- A handout's second line ("Student laboratory · Physics II and Modern Physics") names the courses it is for by their exact course
-  titles in the map. A shared demo shows each course only its own worksheets (course page card, Canvas, and the demo's Handout and
-  worksheet button when opened from that course, via `?course=` and `demos/lib/nav.js`); a course with none of its own on that demo
-  shows them all. A new course needs nothing more than its title on its handouts' second line.
-
-## Tools
-- `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
-- `python3 tools/courses.py` (course pages, topic pages, openstax.html and index from the map, catalog and topics; `--check` to verify). It also writes `search.js`, `404.html`
-  and `demos/lib/nav.js` (the breadcrumb and previous and next demo links on every demo, in course page order), so rerun it after any map or catalog change.
-- `python3 tools/canvas.py` (Canvas course import files, IMS Common Cartridge 1.3, one per course, in `_build/canvas/`, from the map and
-  catalog like the course pages; rerun after a map, catalog or handout change; `tools/canvas_check.rb` runs Canvas's own import code on one).
-- `python3 tools/theme.py` (links the theme switch on any page that lacks it; `--check`).
-- `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
-- New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`
-  (demo entry and the sections' demo lists), `curriculum/topics.json`, QR, Reset all, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.
-- Handout math: `$$...$$` only (kramdown + MathJax); check with `node curriculum/validation/check_math.cjs` after
-  `npm install --no-save mathjax-full@3.2.2`. Don't run scripted notation rewrites over keys or guides.
+## Tools and generated files
+- Commands for the build scripts (courses, notes, Canvas, theme, QR, reset, thumbnails, math check): `docs/tools.md`.
+- Generated files are rebuilt from their source, never edited by hand: `docs/generated-files.md`.
