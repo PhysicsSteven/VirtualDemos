@@ -36,6 +36,8 @@ $$B_{\mathrm{pri}} = \frac{P\,d^2}{W\,U\,T}, \qquad B_{\mathrm{leak}} = \frac{P\
 
 The secondary walls see only the head leakage, 0.1 % of the beam in every direction, so U = 1; $$W_L = W(1 - f + 3f)$$ is the leakage workload when a fraction f of the treatments are IMRT, which needs about three times the beam per gray.
 
+For the CT room (NCRP Report 147), the unshielded scatter air kerma at 1 m per scan is $$\kappa\,\text{DLP}$$, with $$\kappa = 9\times10^{-5}\ \text{cm}^{-1}$$ for a head scan and $$\kappa = 1.2\times3\times10^{-4}\ \text{cm}^{-1}$$ for a body scan (1.2 is the body scan factor), and it falls off as $$1/d^2$$. A scan repeated with contrast counts twice. The design goal is $$P = 0.02$$ mSv a week for the public and 0.1 mSv a week for radiation workers.
+
 How a material stops photons depends on their energy. Below about 100 keV the photoelectric effect dominates, and its cross section per atom grows roughly as $$Z^4$$ to $$Z^5$$: lead (Z = 82) absorbs far more per gram than concrete. At megavolt energies Compton scattering dominates, and its cross section depends on the number of electrons, about the same per gram in every material except hydrogen. Fast neutrons lose energy best in collisions with hydrogen nuclei, which have nearly their mass; heavy nuclei barely slow them.
 
 ## Before the lab

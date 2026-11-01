@@ -1863,7 +1863,6 @@ e [^] | Euler's number, the base of natural logarithms | | 2.71828…
 e | @e
 Phi | Photon fluence in one 1 keV bin of the tube spectrum
 E | Photon energy | keV
-V | Tube voltage | kV
 mu | Linear attenuation coefficient of aluminum | cm⁻¹
 rho | Density | g/cm³
 x | Thickness of aluminum sheets on the chamber | mm

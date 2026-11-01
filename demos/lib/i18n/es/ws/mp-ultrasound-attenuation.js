@@ -128,8 +128,8 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "Pon la TGC en {#} e imagina que el haz atraviesa {#} cm de grasa sobre el músculo. ¿El tejido más profundo se vería demasiado brillante o demasiado oscuro? ¿Por qué?",
 "Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?":
   "El α₀ del hueso cortical es {#} dB/(cm MHz). ¿Cuánto se pierde al atravesar {#} cm de cráneo de ida y vuelta a {#} MHz? ¿Qué significa esto para el ultrasonido transcraneal?",
-"Water attenuates {#} dB/(cm MHz²) times f², hundreds of times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?":
-  "El agua atenúa {#} dB/(cm MHz²) por f², cientos de veces menos que el tejido a estas frecuencias. ¿Por qué un baño de agua o un separador de gel es una buena manera de colocar el transductor lejos de la piel?",
+"Water attenuates {#} dB/(cm MHz²) times f², tens of times to over a hundred times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?":
+  "El agua atenúa {#} dB/(cm MHz²) por f², de decenas a más de cien veces menos que el tejido a estas frecuencias. ¿Por qué un baño de agua o un separador de gel es una buena manera de colocar el transductor lejos de la piel?",
 "Prelab answers, all copies of Table {#} with their graphs, Table {#} with its graph, α₀ with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, todas las copias de la Tabla {#} con sus gráficas, la Tabla {#} con su gráfica, α₀ con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Intensity of the wave":

@@ -84,7 +84,7 @@ The model has no noise, so the scatter about each line comes from where you plac
 2. The TGC curve for 1.09 dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give two reasons from the About the demo notes.
 3. Set TGC to 0.54 and imagine the beam passing through 3 cm of fat over the muscle. Would the deeper tissue look too bright or too dark? Why?
 4. Cortical bone's α₀ is 6.9 dB/(cm MHz). How much is lost going through 1 cm of skull and back at 2 MHz? What does this mean for transcranial ultrasound?
-5. Water attenuates 0.0022 dB/(cm MHz²) times f², hundreds of times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?
+5. Water attenuates 0.0022 dB/(cm MHz²) times f², tens of times to over a hundred times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?
 
 ## What to hand in
 
