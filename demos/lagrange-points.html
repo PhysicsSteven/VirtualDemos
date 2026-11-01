@@ -1463,11 +1463,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // the order of heights are exact, the vertical scale is a choice. Ground where 2Ω < C (no particle with this C can reach it)
   // takes the forbidden color, as in the flat view. Particles ride on the surface at their exact (x, y). Flat stays the place to
   // throw particles and drag the launch and the zero velocity curve; here a click drops a particle at rest.
-  const L3 = { on: false, S: null, mesh: null, key: '', ckey: '', dots: null, trails: null, b1: null, b2: null, marks: [], o: { th: -Math.PI / 2, ph: 0.72, zoom: 1 }, ext: 1, A: 0.1, cx: 0, cy: 0 };
+  const L3 = { on: false, S: null, mesh: null, key: '', ckey: '', lkey: '', dots: null, trails: null, lines: null, b1: null, b2: null, marks: [], o: { th: -Math.PI / 2, ph: 0.72, zoom: 1 }, ext: 1, A: 0.1, cx: 0, cy: 0, lastView: '', R: [0, 0], cut: [6, 6], cr: [0, 0] };
+  /* the camera's turn and tilt for each view: Whole looks down from the side of m₂'s orbit; Near m₂ looks in lower and from one
+     side, so the well, the passes at L1 and L2 and the ridge toward L4 and L5 read as a saddle. A double click goes back to these. */
+  const O3 = { whole: { th: -Math.PI / 2, ph: 0.72 }, near: { th: -Math.PI / 2 - 0.5, ph: 0.92 } };
+  const o3Default = () => O3[S.view === 'near' ? 'near' : 'whole'];
   const L3N = 220;   /* finer, since the surface reaches 1.8 times past the view */
+  const logH = (d) => Math.log1p(Math.max(0, isFinite(d) ? d : 1e30) / (Math.max(CL.L1 - CL.L4, 1e-14) / 3));
   function hz(x, y) {
-    const C4 = CL.L4, sc = Math.max(CL.L1 - C4, 1e-14) / 3, d = omega2(S.mu, x, y) - C4;
-    return -L3.A * Math.min(Math.log1p(Math.max(0, isFinite(d) ? d : 1e30) / sc), 6);
+    /* each well is cut off flat at L3.cut[i] log steps (at most 6): the level a little outside the ball drawn for that body, so
+       the ball rests on a small floor in plain sight instead of at the bottom of a pit narrower than itself */
+    const d1 = (x + S.mu) * (x + S.mu) + y * y, d2 = (x - 1 + S.mu) * (x - 1 + S.mu) + y * y;
+    const k = d1 < L3.cr[0] * L3.cr[0] ? L3.cut[0] : d2 < L3.cr[1] * L3.cr[1] ? L3.cut[1] : 6;
+    return -L3.A * Math.min(logH(omega2(S.mu, x, y) - CL.L4), k);
   }
   function init3D() {
     const S3 = VD3K.stage(pane, { before: can, fov: 34, near: 0.0005, far: 400, fogAt: [1.1, 2.1] });
@@ -1478,8 +1486,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(3 * n), 3));
     const idx = []; for (let j = 0; j < L3N; j++) for (let i = 0; i < L3N; i++) { const a = j * (L3N + 1) + i, b = a + 1, c = a + L3N + 1, d = c + 1; idx.push(a, c, b, b, c, d); }
     g.setIndex(idx); L3.d = new Float32Array(n);
-    L3.mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, metalness: 0, side: THREE.DoubleSide }));
+    L3.mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, metalness: 0, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
     S3.scene.add(L3.mesh);
+    /* level lines on the surface, as on a topographic map: one every step of the log height, the levels through L1, L2 and L3
+       (the passes), and the zero velocity curve. Without them a smooth, shaded bowl near m₂ shows no shape at all. */
+    L3.lines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.85 }));
+    S3.scene.add(L3.lines);
     L3.trails = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.75 }));
     S3.scene.add(L3.trails);
     L3.b1 = VD3K.star(S3, { r: 1, color: '#ffc34d', glow: 3.2 }); L3.b2 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshStandardMaterial({ color: '#c79c6e', roughness: 0.7 }));
@@ -1508,8 +1520,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.needsUpdate = true;
   }
+  function lines3D() {
+    const n = L3N + 1, pos = L3.mesh.geometry.attributes.position, x0 = pos.getX(0), y0 = pos.getY(0), st = (pos.getX(n - 1) - x0) / L3N, dz = L3.ext * 0.0015;
+    const v = new Float64Array(n * n); for (let k = 0; k < v.length; k++) v[k] = isFinite(L3.d[k]) ? Math.min(L3.d[k], 1e9) : 1e9;
+    const dk = VD3.dark(), seg = [], col = [], C4 = CL.L4, sc = Math.max(CL.L1 - C4, 1e-14) / 3;
+    const add = (L, hex) => {
+      const m = march(v, n, n, L), c = new THREE.Color(hex);
+      for (let k = 0; k < m.length; k += 2) { const x = x0 + m[k] / GS * st, y = y0 + m[k + 1] / GS * st; seg.push(x, y, hz(x, y) + dz); col.push(c.r, c.g, c.b); }
+    };
+    if (S.show.cont) {
+      for (let h = 0.5; h < 6; h += 0.5) add(C4 + sc * Math.expm1(h), dk ? '#5f7d99' : '#4d6a88');   /* every half step of the log height */
+      for (const k of ['L1', 'L2', 'L3']) add(CL[k], dk ? '#e3e8ef' : '#1f2a37');                       /* the levels through the passes */
+    }
+    add(S.C, T.equi);                                                                                    /* the zero velocity curve */
+    const g = L3.lines.geometry; g.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.computeBoundingSphere();
+  }
   function draw3D() {
     const S3 = L3.S; if (!S3) return;
+    if (S.view !== L3.lastView) { if (S.view === 'near' || S.view === 'whole') Object.assign(L3.o, o3Default()); L3.lastView = S.view; }
     if (S.frame !== 'rot') { L3.view.set('flat'); return; }
     S3.size(W, H);
     /* the surface reaches 1.8 times past the flat view's half width, so at the opening tilt its far edge stays above the top
@@ -1517,7 +1545,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const reach = 1.8, ext = Math.max(W, H) / 2 / V.s, key = [S.mu, Math.round(Math.log(ext) * 8)].join('|');
     if (key !== L3.key || Math.hypot(V.x0 - L3.cx, V.y0 - L3.cy) > 0.12 * ext) {
       if (key !== L3.key) L3.ext = ext;
-      L3.cx = V.x0; L3.cy = V.y0; L3.A = 0.06 * L3.ext; surface3D(L3.ext * reach);
+      L3.cx = V.x0; L3.cy = V.y0; L3.A = 0.06 * L3.ext;
+      { const [R1, R2] = radii(), r1 = Math.max(R1, L3.ext * 0.03), r2 = Math.max(R2, L3.ext * 0.021);
+        /* the floor's radius: 2.5 drawn radii, but never past 40% of the way to L1 or L2, so the passes keep their true shape */
+        const c1 = Math.min(2.5 * r1, 0.4 * (1 - LPT.L1.g)), c2 = Math.min(2.5 * r2, 0.4 * Math.min(LPT.L1.g, LPT.L2.g));
+        L3.cr = [c1, c2]; L3.cut = [Math.min(6, logH(omega2(S.mu, -S.mu + c1, 0) - CL.L4)), Math.min(6, logH(omega2(S.mu, 1 - S.mu + c2, 0) - CL.L4))]; }
+      surface3D(L3.ext * reach);
       if (key !== L3.key) {   /* particle spheres sized to the view */
         if (L3.dots) L3.S.dispose(L3.dots);
         L3.dots = VD3K.particles(S3, { n: 900, r: L3.ext * 0.0065, seg: 8 }); S3.scene.add(L3.dots);
@@ -1526,9 +1559,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const ckey = S.C + '|' + T.forbid + '|' + VD3.dark() + '|' + L3.key + '|' + L3.cx;
     if (ckey !== L3.ckey) { colour3D(); L3.ckey = ckey; }
+    const lkey = ckey + '|' + S.show.cont + '|' + T.equi;
+    if (lkey !== L3.lkey) { lines3D(); L3.lkey = lkey; }
     const e = L3.ext, rmin = e * 0.03, [R1, R2] = radii(), sys = sysNow(), floor = -L3.A * 6;
-    L3.b1.position.set(-S.mu, 0, floor + Math.max(R1, rmin)); L3.b1.scale.setScalar(Math.max(R1, rmin));
-    L3.b2.position.set(1 - S.mu, 0, floor + Math.max(R2, rmin * 0.7)); L3.b2.scale.setScalar(Math.max(R2, rmin * 0.7));
+    /* a body smaller than 3% (m₁) or 2.1% (m₂) of the view's half width is drawn at that size instead; the caption says by how much */
+    const r1 = Math.max(R1, rmin), r2 = Math.max(R2, rmin * 0.7); L3.R = [r1, r2];
+    L3.b1.position.set(-S.mu, 0, hz(-S.mu, 0) + r1); L3.b1.scale.setScalar(r1);   /* resting on its well's floor */
+    L3.b2.position.set(1 - S.mu, 0, hz(1 - S.mu, 0) + r2); L3.b2.scale.setScalar(r2);
     L3.b2.material.color.set(sys.m2 === 'Earth' ? '#3f74c9' : sys.m2 === 'Moon' ? '#9a9a9a' : '#c79c6e');
     L3.b1.tint(sys.m1 === 'Earth' ? '#6aa0ff' : '#ffc34d');
     ['L1', 'L2', 'L3', 'L4', 'L5'].forEach((k, i) => { const p = LPT[k], m = L3.marks[i]; m.position.set(p.x, p.y, hz(p.x, p.y) + e * 0.004); m.scale.setScalar(e * 0.018); m.visible = S.show.lab; });
@@ -1557,26 +1594,53 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     overlay3D();
   }
   function overlay3D() {
-    const c = ctx, ps = projScale(), sys = sysNow();
+    const c = ctx, ps = projScale(), sys = sysNow(), I = window.VDI18N;
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
     const P3 = (x, y) => L3.S.project([x, y, hz(x, y)]);
+    /* the bodies on screen, and a size note in the caption for each one drawn larger than it is */
+    const big = [], bods = [], [R1, R2] = radii();
+    for (const [b, name, R, r] of [[L3.b1, sys.m1, R1, L3.R[0]], [L3.b2, sys.m2, R2, L3.R[1]]]) {
+      const p = b.position, q = L3.S.project([p.x, p.y, p.z]), qb = L3.S.project([p.x, p.y, p.z - r]);
+      if (!(q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H)) continue;
+      bods.push([name, q[0], Math.max(q[1], qb[1]) + 8 * ps]);
+      const n = String(+(r / R).toPrecision(2)), body = I ? I.t(name) : name;
+      if (r > 1.5 * R) big.push(!sys.aKm ? (I ? VDI18N.t('body sizes made up') : 'body sizes made up') : I ? VDI18N.t('{body} drawn {n} times its true size', { body, n }) : `${body} drawn ${n} times its true size`);
+    }
+    /* the caption, translated whole and wrapped to the picture's width (phones), on a backing so it reads over any ground */
+    const parts = ['Height: −ln(1 + (2Ω − C_L4)/s), not to scale', ...new Set(big), 'forbidden ground shaded', L3.drag === 'throw' ? 'drag to throw, click to drop' : 'click to drop, Shift drag to throw'].map((t) => (I && !big.includes(t) ? I.t(t) : t));
+    const lh = 14 * ps, cap = [];
+    c.font = `${11 * ps}px ${T.mono}`;
+    { const go = () => { let cur = ''; for (const t of parts) { const t2 = cur ? cur + ' · ' + t : t; if (cur && c.measureText(t2).width > W - 20) { cap.push(cur); cur = t; } else cur = t2; } cap.push(cur); };
+      if (I) I.raw(go); else go(); }
+    const capTop = H - 10 - cap.length * lh;
+    /* a label kept inside the picture and off the caption: slid in from a side edge, left out when its point is behind the caption */
+    const lab = (txt, x, y, col, base, bold, side = 0) => {
+      c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; const w = c.measureText(txt).width / 2 + 6; x += side * (w + 4);
+      const yb = base === 'bottom' ? y : y + lh, xc = Math.max(w, Math.min(W - w, x)); if (yb > capTop) return true;
+      if (side && Math.abs(xc - x) > 2) return false;   /* no room beside the point: the caller places it another way */
+      label(c, txt, xc, y, col, 'center', base, bold); return true;
+    };
+    const labRaw = (...a) => (I ? I.raw(() => lab(...a)) : lab(...a));   /* text already translated whole */
     /* L1 and L2 close together on the screen (a light partner seen from afar): one label for both, so the two never print on top of each other */
     const q1 = P3(LPT.L1.x, LPT.L1.y), q2 = P3(LPT.L2.x, LPT.L2.y), both = Math.abs(q1[0] - q2[0]) < 110 * ps && Math.abs(q1[1] - q2[1]) < 18 * ps && !(sys.tags && (sys.tags.L1 || sys.tags.L2));
-    if (S.show.lab && both && q1[2] <= 1) label(c, 'L1 and L2, saddles', (q1[0] + q2[0]) / 2, Math.min(q1[1], q2[1]) - 12 * ps, T.pos, 'center', 'bottom', true);
+    if (S.show.lab && both && q1[2] <= 1) lab('L1 and L2, saddles', (q1[0] + q2[0]) / 2, Math.min(q1[1], q2[1]) - 12 * ps, T.pos, 'bottom', true);
     if (S.show.lab) for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) {
       if (both && (k === 'L1' || k === 'L2')) continue;
       const p = LPT[k], q = P3(p.x, p.y); if (q[2] > 1 || q[0] < -40 || q[0] > W + 40 || q[1] < -20 || q[1] > H + 20) continue;
-      const tag = sys.tags && sys.tags[k] ? k + ' · ' + sys.tags[k] : k;
-      label(c, tag + (k === 'L4' || k === 'L5' ? ', hilltop' : ', saddle'), q[0], q[1] - 12 * ps, p.st && p.st.stable ? T.stable : T.pos, 'center', 'bottom', true);   /* green where an object stays, red where it drifts away, as in Flat */
+      const tag = sys.tags && sys.tags[k] ? k + ' · ' + sys.tags[k] : k, hill = k === 'L4' || k === 'L5', point = I ? VDI18N.t(tag) : tag;
+      const txt = I ? (hill ? VDI18N.t('{point}, hilltop', { point }) : VDI18N.t('{point}, saddle', { point })) : tag + (hill ? ', hilltop' : ', saddle');
+      /* tagged L1 and L2 close together (Earth–Moon seen whole): each label beside its point, on the side away from m₂, so the two never overlap */
+      const side = (k === 'L1' || k === 'L2') && Math.abs(q1[0] - q2[0]) < 260 * ps && Math.abs(q1[1] - q2[1]) < 18 * ps ? Math.sign(q[0] - (q1[0] + q2[0]) / 2) || (k === 'L1' ? -1 : 1) : 0;
+      const col = p.st && p.st.stable ? T.stable : T.pos;
+      /* on a narrow picture with no room beside: L1's label above its point and L2's one row higher, both centered */
+      if (!side || !labRaw(txt, q[0], q[1] + 7 * ps, col, 'bottom', true, side)) labRaw(txt, q[0], q[1] - 12 * ps - (side && k === 'L2' ? lh + 2 * ps : 0), col, 'bottom', true);   /* green where an object stays, red where it drifts away, as in Flat */
     }
-    const f = L3.A * 6;
-    for (const [x, name] of [[-S.mu, sys.m1], [1 - S.mu, sys.m2]]) { const q = L3.S.project([x, 0, -f]); if (q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) label(c, name, q[0], q[1] + 16 * ps, T.ink, 'center', 'top'); }
-    c.font = `${11 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    /* the caption, translated whole and wrapped to the picture's width (phones), drawn as it is */
-    { const parts = ['Height: −ln(1 + (2Ω − C_L4)/s), not to scale', 'forbidden ground shaded', L3.drag === 'throw' ? 'drag to throw, click to drop' : 'click to drop, Shift drag to throw'].map((t) => (window.VDI18N ? VDI18N.t(t) : t));
-      const go = () => { const lines = []; let cur = ''; for (const t of parts) { const t2 = cur ? cur + ' · ' + t : t; if (cur && c.measureText(t2).width > W - 20) { lines.push(cur); cur = t; } else cur = t2; } lines.push(cur);
-        lines.forEach((l, i) => c.fillText(l, 10, H - 8 - (lines.length - 1 - i) * 14 * ps)); };
-      if (window.VDI18N) VDI18N.raw(go); else go(); }
+    for (const [name, x, y] of bods) lab(name, x, y, T.ink, 'top', false);   /* each body's name just below its ball */
+    { c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+      const go = () => { const wm = Math.max(...cap.map((l) => c.measureText(l).width));
+        c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(4, capTop, wm + 12, cap.length * lh + 6); c.globalAlpha = 1;
+        c.fillStyle = T.muted; cap.forEach((l, i) => c.fillText(l, 10, H - 8 - (cap.length - 1 - i) * lh)); };
+      if (I) I.raw(go); else go(); }
     // a throw in progress: the arrow lies in the level plane through the start point and shows how far the particle would go in 0.1 P, as in Flat
     const a = L3.thr; if (!a) return;
     const st = throw3State(a), p0 = L3.S.project([a.w0[0], a.w0[1], a.z]), p1 = L3.S.project([a.w1[0], a.w1[1], a.z]);
@@ -1638,7 +1702,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.addEventListener('pointerup', up, true); can.addEventListener('pointercancel', up, true);
     can.addEventListener('pointerleave', (ev) => { if (on()) ev.stopImmediatePropagation(); }, true);
     can.addEventListener('wheel', (ev) => { if (!on()) return; ev.stopImmediatePropagation(); ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015)); }, { capture: true, passive: false });
-    can.addEventListener('dblclick', () => { if (on()) { L3.o.th = -Math.PI / 2; L3.o.ph = 0.72; drawAll(); } });
+    can.addEventListener('dblclick', () => { if (on()) { Object.assign(L3.o, o3Default()); drawAll(); } });
   })();
   L3.drag = 'turn';
   for (const b of document.querySelectorAll('#drag3Seg button')) b.addEventListener('click', () => {
