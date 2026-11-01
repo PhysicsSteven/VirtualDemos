@@ -697,6 +697,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (three) { ctx.clearRect(0, 0, W, H); draw3(); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawRoom(); } drawPlot(); }
 
   /* ---------- readouts ---------- */
+  /* the target names in English (in another language the options show them translated, and the whole line is looked up) */
+  const SHAPE_EN = {}; for (const o of $('selShape').options) SHAPE_EN[o.value] = o.textContent;
   const pf = (ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'pass' : 'fail'}</span>`;
   function readouts() {
     const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
@@ -705,7 +707,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.G) h = dd('Patient QA', 'press Run QA', true);
       else if (busy) h = dd('Patient QA', 'measuring', true);
       else { const [a, b2] = CRIT[S.crit];
-        h += dd(`Plan: ${$('selShape').selectedOptions[0].textContent}, 8 to 14 cm deep`, `${S.P.L.length} layers × ${S.Q.spots.length} spots, ${sig(S.P.L[S.P.L.length - 1].E, 4)} to ${sig(S.P.L[0].E, 4)} MeV`, true);
+        h += dd(`Plan: ${SHAPE_EN[$('selShape').value]}, 8 to 14 cm deep`, `${S.P.L.length} layers × ${S.Q.spots.length} spots, ${sig(S.P.L[S.P.L.length - 1].E, 4)} to ${sig(S.P.L[0].E, 4)} MeV`, true);
         h += dd('Spot size here, 1σ: plan, delivered', `${f(S.Q.sP.x, 2)} × ${f(S.Q.sP.y, 2)}, ${f(S.Q.sD.x, 2)} × ${f(S.Q.sD.y, 2)} mm`, true);
         h += dd('Points above 10 %', String(S.G.n)) + dd(`Passing at ${a} %/${b2} mm`, `${f(S.G.pass, 1)} % ${pf(S.G.pass >= 95)}`);
         h += dd('3 %/3 mm, 3 %/2 mm, 2 %/2 mm', Object.keys(CRIT).map((c) => `${f(S.GA[c].pass, 1)} %`).join(', '), true); }

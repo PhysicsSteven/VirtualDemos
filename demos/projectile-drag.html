@@ -2079,10 +2079,12 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     if (!F.pts.length) html += '<tr><td colspan="5" class="n">No points yet</td></tr>';
     $('dataTbl').innerHTML = html + '</tbody>';
   }
+  /* the Setups names in English for the export (in another language the buttons show them translated) */
+  const PRESET_EN = new Map(); for (const b of document.querySelectorAll('#presets button[data-p]')) PRESET_EN.set(b, b.textContent);
   function csvNow() {
     const pk = document.querySelector('#presets button[aria-pressed="true"]');
     const meta = ['Projectile Range (simulated data)', `demo version,${DEMO_VERSION}`,
-      `setup at export,${pk ? pk.textContent : 'Custom ball'} (each row lists its own settings)`,
+      `setup at export,${pk ? PRESET_EN.get(pk) : 'Custom ball'} (each row lists its own settings)`,
       `model,point ball; uniform gravity ${LAB.blind ? 'g (value withheld: Blind was on at export)' : 'g = 9.81 m/s^2'}; drag F = 1/2 rho C_d A v^2 against the velocity with A = pi d^2/4 and constant C_d (or no drag when air_resistance is off); no spin, lift or wind; flat ground; g and rho constant with height`,
       'integration,classical fourth order Runge-Kutta with steps of at most 1 ms; landing point on the cubic Hermite interpolant of the last step; positions sampled every few ms and interpolated linearly to the cursor time',
       'coordinates,x horizontal from the foot of the launcher; y height above the flat ground; t from launch',

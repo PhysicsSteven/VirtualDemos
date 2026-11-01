@@ -930,9 +930,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const seen = !S.blind && S.qk.seen.has(id); lab(seen ? `${+q.m.toFixed(1)}` : '?', x, y + nr + 8 * p, { a: 'center', s: 9 * p, m: true, c: seen ? T.ink : T.muted }); });
   }
   function wrapLab(text, cx, y, maxw, size) {
+    /* in another language: the whole text translated first, its lines drawn as they are (VDI18N.raw) */
+    const raw = (fn) => (window.VDI18N ? VDI18N.raw(fn) : fn()); text = (window.VDI18N ? VDI18N.t(text) : text);
     ctx.save(); ctx.font = `${size}px ${T.ui}`; const words = text.split(' '); let line = '', yy = y; const lines = [];
-    for (const w of words) { const t2 = line ? line + ' ' + w : w; if (ctx.measureText(t2).width > maxw && line) { lines.push(line); line = w; } else line = t2; } if (line) lines.push(line); ctx.restore();
-    lines.forEach((l) => { lab(l, cx, yy, { a: 'center', s: size }); yy += size * 1.4; });
+    raw(() => { for (const w of words) { const t2 = line ? line + ' ' + w : w; if (ctx.measureText(t2).width > maxw && line) { lines.push(line); line = w; } else line = t2; } }); if (line) lines.push(line); ctx.restore();
+    raw(() => lines.forEach((l) => { lab(l, cx, yy, { a: 'center', s: size }); yy += size * 1.4; }));
   }
   const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.w || 400} ${o.s || 10.5}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
 

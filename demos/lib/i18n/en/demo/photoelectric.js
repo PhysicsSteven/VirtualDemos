@@ -67,6 +67,7 @@ VDI18N.add('en', 'demo/photoelectric', [
 "Photons",
 "Theory line and answers",
 "Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between {#} and K<sub>max</sub>. One electron per thousand photons (quantum efficiency {#}%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.",
+"phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it",
 "Full power red light and not a single electron. Each {#} nm photon has only {#} eV, below sodium's work function. Turning up the brightness sends more weak photons, not stronger ones.",
 "{#} nm · red",
 "hf < φ",
@@ -88,5 +89,6 @@ VDI18N.add('en', 'demo/photoelectric', [
 "Potassium cathode (emitter)",
 "Calcium cathode (emitter)",
 "Copper cathode (emitter)",
-"Platinum cathode (emitter)"
+"Platinum cathode (emitter)",
+"hf < φ : no electrons"
 ]);

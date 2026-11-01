@@ -613,7 +613,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scaleBar(S.scene === 'belt' ? 1 : 10);
     if (msg) { ctx.font = `${13 * p}px ${K.ui}`; ctx.fillStyle = K.gone; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; wrapText(msg, 14 * p, 12 * p, Math.min(W - 40, view.cx * 2 - 30), 17 * p); }
   }
-  function wrapText(t, x, y, w, lh) { const words = t.split(' '); let line = ''; for (const wd of words) { const tt = line ? line + ' ' + wd : wd; if (ctx.measureText(tt).width > w && line) { ctx.fillText(line, x, y); y += lh; line = wd; } else line = tt; } if (line) ctx.fillText(line, x, y); }
+  function wrapText(t, x, y, w, lh) { if (window.VDI18N) { t = VDI18N.t(t); return VDI18N.raw(() => wrapLines(t, x, y, w, lh)); } return wrapLines(t, x, y, w, lh); }   /* in another language: translated whole, then wrapped as it is */
+  function wrapLines(t, x, y, w, lh) { const words = t.split(' '); let line = ''; for (const wd of words) { const tt = line ? line + ' ' + wd : wd; if (ctx.measureText(tt).width > w && line) { ctx.fillText(line, x, y); y += lh; line = wd; } else line = tt; } if (line) ctx.fillText(line, x, y); }
   function drawNepFlat() {
     const p = proj(); rot = 0; nepSetup();
     const y = S.year, N = NT, orbit = (k, col, dash) => { const o = 16 * N.at(Math.max(NF.t0, Math.min(NF.t1, y))), el = elements(N.tab[o + 4 * k], N.tab[o + 4 * k + 1], N.tab[o + 4 * k + 2], N.tab[o + 4 * k + 3], GM); ellipse(el.a, el.e, el.w, col, 1.1, dash); };
