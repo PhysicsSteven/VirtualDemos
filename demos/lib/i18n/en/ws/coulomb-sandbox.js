@@ -90,21 +90,5 @@ VDI18N.add('en', 'ws/coulomb-sandbox', [
 "Direction of the field, from the +x axis",
 "Probe position, x",
 "Probe position, y",
-"Unit: V/m",
-"Probe x against Configuration and q, {#} points",
-"<b>slope: </b>({#} ± {#}) m/C<br><b>intercept: </b>({#} ± {#}) m",
-"<b>fit: </b>Probe x = a + b·Configuration and q + c·Configuration and q²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>(-{#} ± {#}) m/C<br><b>c: </b>({#} ± {#}) m/C²",
-"<b>fit: </b>y = A·xⁿ, with y = Probe x and x = Configuration and q<br><b>A: </b>({#} ± {#}) m/Cⁿ<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Probe x and x = Configuration and q<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Probe x and x = Configuration and q<br><b>A: </b>{#} m (uncertainty needs at least {#} points)<br><b>f: </b>{#} {#}/C (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Configuration and q.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Probe x and x = Configuration and q<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>μ: </b>{#} C (uncertainty needs at least {#} points)<br><b>σ: </b>{#} C (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Probe x and x = Configuration and q<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} C (uncertainty needs at least {#} points)<br><b>w: </b>{#} C (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"{#} points with error bars from Probe y. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Probe x = a + b·Configuration and q + c·Configuration and q²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m/C<br><b>c: </b>({#} ± {#}) m/C²",
-"Every point has the same Configuration and q ({#} C), so there is no slope to fit. Use rows where Configuration and q changes, or choose another column.",
-"Coulomb Sandbox",
-"<strong>New readings from the Coulomb Sandbox demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Coulomb Sandbox demo are in your table.",
-"<strong>New readings from the Coulomb Sandbox demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Coulomb Sandbox"
 ]);

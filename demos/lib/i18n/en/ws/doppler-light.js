@@ -53,20 +53,5 @@ VDI18N.add('en', 'ws/doppler-light', [
 "Wavelength received",
 "Angle at emission between the source's velocity and the line to the observer",
 "Speed of the source",
-"Redshift, λ′/λ − {#}",
-"<b>A10</b>Type a value, or = to start a formula.",
-"β against Run, {#} points",
-"<b>fit: </b>β = a + b·Run + c·Run²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = β and x = Run<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ), with y = β and x = Run<br><b>A: </b>({#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·({#} − e^(−x/τ)), with y = β and x = Run<br><b>A: </b>(-{#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = β and x = Run<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = β and x = Run<br><b>A: </b>({#} ± {#})<br><b>f: </b>({#} ± {#})<br><b>φ: </b>({#} ± {#}) rad<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ)·sin({#}πf·x + φ), with y = β and x = Run<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>τ: </b>{#} × {#}⁶ (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = β and x = Run<br><b>A: </b>(-{#} ± {#})<br><b>μ: </b>({#} ± {#})<br><b>σ: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = β and x = Run<br><b>A: </b>({#} ± {#})<br><b>x₀: </b>({#} ± {#})<br><b>w: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"{#} points with error bars from θ at emission. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from θ at emission. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"<b>fit: </b>β = a + b·Run + c·Run²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Every point has the same Run ({#}), so there is no slope to fit. Use rows where Run changes, or choose another column."
+"Redshift, λ′/λ − {#}"
 ]);

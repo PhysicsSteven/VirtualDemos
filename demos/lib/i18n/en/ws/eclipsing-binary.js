@@ -85,22 +85,5 @@ VDI18N.add('en', 'ws/eclipsing-binary', [
 "Time of fourth contact",
 "Relative speed of the two stars",
 "Line of sight velocity of star {#}",
-"Unit: days",
-"Unit: R☉",
-"Unit: M☉",
-"Unit: km/s",
-"residual (h)",
-"<b>slope: </b>({#} ± {#}) h<br><b>intercept: </b>({#} ± {#}) h",
-"<b>fit: </b>Time t = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) h<br><b>b: </b>(-{#} ± {#}) h<br><b>c: </b>({#} ± {#}) h",
-"<b>fit: </b>y = A·xⁿ, with y = Time t and x = Reading<br><b>A: </b>({#} ± {#}) h<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Time t and x = Reading<br><b>a: </b>({#} ± {#}) h<br><b>b: </b>({#} ± {#}) h",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Time t and x = Reading<br><b>A: </b>{#} h (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} h (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Time t and x = Reading<br><b>A: </b>-{#} h (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} h (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Time t and x = Reading<br><b>A: </b>-{#} h (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} h (uncertainty needs at least {#} points)",
-"{#} points with error bars from Phase. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Time t = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) h<br><b>b: </b>({#} ± {#}) h<br><b>c: </b>({#} ± {#}) h",
-"Finding Exoplanets",
-"<strong>New readings from the Finding Exoplanets demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Finding Exoplanets demo are in your table.",
-"<strong>New readings from the Finding Exoplanets demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Finding Exoplanets"
 ]);

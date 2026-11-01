@@ -122,7 +122,6 @@ VDI18N.add('en', 'demo/early-universe', [
 "time in s · kT in MeV",
 "A box of {#} neutrons and protons, with meters for the time, kT and the counts. Space plays or pauses.",
 "kT_f",
-"He",
 "Freeze out time t_f",
 "kT at t_D",
 "Neutrons at freeze out (sample)",

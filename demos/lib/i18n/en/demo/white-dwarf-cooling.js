@@ -4,7 +4,6 @@ VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "log scales",
 "{#} Myr",
 "cooling age t (yr)",
-"sun",
 "{#},{#} yr · {#} L",
 "crystallization begins",
 "Mestel: L ∝ t^−{#}/{#}",

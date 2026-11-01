@@ -59,12 +59,5 @@ VDI18N.add('en', 'ws/circular-motion', [
 "Speed at which a banked curve needs no friction",
 "Fastest speed a flat curve holds",
 "Speed at the top of the loop",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Setup and x = Trial<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Setup and x = Trial<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Setup and x = Trial<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from r. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Circular Motion",
-"<strong>New readings from the Circular Motion demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Circular Motion demo are in your table.",
-"<strong>New readings from the Circular Motion demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Circular Motion"
 ]);

@@ -80,18 +80,5 @@ VDI18N.add('en', 'ws/lattice-energy', [
 "Born exponent of the repulsion",
 "Separation of neighboring ions",
 "Nearest neighbor distance",
-"Unit: eV per pair or kJ/mol",
-"Salt against Reading, {#} points",
-"<b>fit: </b>Salt = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Salt and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Salt and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Salt and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Salt and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Salt and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from Structure. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Salt = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Crystals, Bands and Semiconductors (Crystal)",
-"<strong>New readings from the Crystals, Bands and Semiconductors (Crystal) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Crystals, Bands and Semiconductors (Crystal) demo are in your table.",
-"<strong>New readings from the Crystals, Bands and Semiconductors (Crystal) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Crystals, Bands and Semiconductors (Crystal)"
 ]);

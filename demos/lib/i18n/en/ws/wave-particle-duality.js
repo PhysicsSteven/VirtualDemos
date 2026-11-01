@@ -81,11 +81,5 @@ VDI18N.add('en', 'ws/wave-particle-duality', [
 "Momentum",
 "Speed of the C₆₀ molecules",
 "Position on the screen (Δy: fringe spacing)",
-"Unit: µm",
-"Unit: eV/c",
-"{#} points with error bars from Voltage V. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Double Slit",
-"<strong>New readings from the Double Slit demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Double Slit demo are in your table.",
-"<strong>New readings from the Double Slit demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Double Slit"
 ]);

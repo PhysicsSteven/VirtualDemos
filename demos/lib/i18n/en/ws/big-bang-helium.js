@@ -81,19 +81,5 @@ VDI18N.add('en', 'ws/big-bang-helium', [
 "Time from which deuterium survives",
 "Time of freeze out",
 "Neutron lifetime",
-"Freeze out kT_f against Reading, {#} points",
-"residual (MeV)",
-"<b>slope: </b>({#} ± {#}) MeV<br><b>intercept: </b>({#} ± {#}) MeV",
-"<b>fit: </b>Freeze out kT_f = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) MeV<br><b>b: </b>(-{#} ± {#}) MeV<br><b>c: </b>({#} ± {#}) MeV",
-"<b>fit: </b>y = A·xⁿ, with y = Freeze out kT_f and x = Reading<br><b>A: </b>({#} ± {#}) MeV<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Freeze out kT_f and x = Reading<br><b>a: </b>({#} ± {#}) MeV<br><b>b: </b>({#} ± {#}) MeV",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Freeze out kT_f and x = Reading<br><b>A: </b>{#} MeV (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} MeV (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Freeze out kT_f and x = Reading<br><b>A: </b>-{#} MeV (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} MeV (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Freeze out kT_f and x = Reading<br><b>A: </b>-{#} MeV (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} MeV (uncertainty needs at least {#} points)",
-"{#} points with error bars from Lifetime τ. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Freeze out kT_f = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) MeV<br><b>b: </b>({#} ± {#}) MeV<br><b>c: </b>({#} ± {#}) MeV",
-"The Big Bang and the Early Universe (Helium)",
-"<strong>New readings from The Big Bang and the Early Universe (Helium) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from The Big Bang and the Early Universe (Helium) demo are in your table.",
-"<strong>New readings from The Big Bang and the Early Universe (Helium) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"The Big Bang and the Early Universe (Helium)"
 ]);

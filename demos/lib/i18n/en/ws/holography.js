@@ -77,9 +77,5 @@ VDI18N.add('en', 'ws/holography', [
 "Position across the plate (Δx: span between the cursors)",
 "Distance from the plate along its normal",
 "Distance of an object point from the plate when recorded",
-"{#} points with error bars from λ₁. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Holography",
-"<strong>New readings from the Holography demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Holography demo are in your table.",
-"<strong>New readings from the Holography demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Holography"
 ]);

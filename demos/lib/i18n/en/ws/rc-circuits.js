@@ -56,19 +56,5 @@ VDI18N.add('en', 'ws/rc-circuits', [
 "Capacitor voltage when the discharge starts",
 "Work done by the battery",
 "EMF of the battery",
-"Time constant",
-"Unit: F",
-"V_C against t, {#} points",
-"residual (V)",
-"<b>slope: </b>({#} ± {#}) V/s<br><b>intercept: </b>({#} ± {#}) V",
-"<b>fit: </b>V_C = a + b·t + c·t²<br><b>a: </b>({#} ± {#}) V<br><b>b: </b>(-{#} ± {#}) V/s<br><b>c: </b>({#} ± {#}) V/s²",
-"<b>fit: </b>y = A·xⁿ, with y = V_C and x = t<br><b>A: </b>({#} ± {#}) V/sⁿ<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = V_C and x = t<br><b>a: </b>({#} ± {#}) V<br><b>b: </b>({#} ± {#}) V",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = V_C and x = t<br><b>A: </b>{#} V (uncertainty needs at least {#} points)<br><b>f: </b>{#} {#}/s (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} V (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of t.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = V_C and x = t<br><b>A: </b>-{#} V (uncertainty needs at least {#} points)<br><b>μ: </b>{#} s (uncertainty needs at least {#} points)<br><b>σ: </b>{#} s (uncertainty needs at least {#} points)<br><b>C: </b>{#} V (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = V_C and x = t<br><b>A: </b>-{#} V (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} s (uncertainty needs at least {#} points)<br><b>w: </b>{#} s (uncertainty needs at least {#} points)<br><b>C: </b>{#} V (uncertainty needs at least {#} points)",
-"{#} points with error bars from I. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>V_C = a + b·t + c·t²<br><b>a: </b>({#} ± {#}) V<br><b>b: </b>({#} ± {#}) V/s<br><b>c: </b>({#} ± {#}) V/s²",
-"Every point has the same t ({#} s), so there is no slope to fit. Use rows where t changes, or choose another column."
+"Time constant"
 ]);

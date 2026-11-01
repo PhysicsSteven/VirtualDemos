@@ -5,7 +5,6 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "eff",
 "(K), hotter to the left",
 "Luminosity (L",
-"sun",
 "Main sequence",
 "Giants",
 "Supergiants",

@@ -4,7 +4,6 @@ VDI18N.add('en', 'demo/kepler-orbits', [
 "aphelion {#} AU",
 "perihelion {#} AU",
 "star {#} M",
-"sun",
 "circular {#}",
 "escape {#} km/s",
 "{#} orbits · {#} turns",

@@ -52,8 +52,5 @@ VDI18N.add('en', 'ws/intro-tides', [
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Tides",
-"<strong>New readings from the Tides demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Tides demo are in your table.",
-"<strong>New readings from the Tides demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Tides"
 ]);

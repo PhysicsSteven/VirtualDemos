@@ -94,19 +94,7 @@ VDI18N.add('en', 'ws/cepheid-photometry', [
 "Uncertainty (standard deviation) of a net count",
 "Uncertainty of the Cepheid's V from the photon counts",
 "Time of the night's image",
-"Unit: mag",
 "Column M, row {#}",
 "Heading of column M",
-"Column M",
-"Night against Reading, {#} points",
-"<b>fit: </b>Night = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Night and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Night and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Night and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Night and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Night and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>Night = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<strong>New readings from the Cosmic Distance Ladder demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Cosmic Distance Ladder demo are in your table.",
-"<strong>New readings from the Cosmic Distance Ladder demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Column M"
 ]);

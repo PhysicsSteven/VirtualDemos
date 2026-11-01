@@ -72,19 +72,5 @@ VDI18N.add('en', 'ws/magnetic-force', [
 "Thickness of the strip",
 "Speed of the particle",
 "Drift velocity of the carriers",
-"v (m/s) or I (A) against Run/sample, {#} points",
-"<b>fit: </b>v (m/s) or I (A) = a + b·Run/sample + c·Run/sample²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = v (m/s) or I (A) and x = Run/sample<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = v (m/s) or I (A) and x = Run/sample<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = v (m/s) or I (A) and x = Run/sample<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Run/sample.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = v (m/s) or I (A) and x = Run/sample<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = v (m/s) or I (A) and x = Run/sample<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from B direction and magnitude. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>v (m/s) or I (A) = a + b·Run/sample + c·Run/sample²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Every point has the same Run/sample ({#}), so there is no slope to fit. Use rows where Run/sample changes, or choose another column.",
-"Charges in Magnetic Fields",
-"<strong>New readings from the Charges in Magnetic Fields demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Charges in Magnetic Fields demo are in your table.",
-"<strong>New readings from the Charges in Magnetic Fields demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Charges in Magnetic Fields"
 ]);

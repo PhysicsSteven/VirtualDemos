@@ -83,9 +83,5 @@ VDI18N.add('en', 'ws/quantum-coin', [
 "Phase of the tails amplitude: the angle of the state around the Bloch sphere's axis",
 "The spin state",
 "Angle of the state from the up (heads) pole of the Bloch sphere",
-"{#} points with error bars from Angle. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Quantum Coin Toss",
-"<strong>New readings from the Quantum Coin Toss demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Quantum Coin Toss demo are in your table.",
-"<strong>New readings from the Quantum Coin Toss demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Quantum Coin Toss"
 ]);

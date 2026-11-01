@@ -64,11 +64,5 @@ VDI18N.add('en', 'ws/ultrasound', [
 "Angle between the blood flow and the beam",
 "Speed of the blood along the beam",
 "Speed of the blood",
-"Unit: kg/(m²·s)",
-"{#} points with error bars from Known depth. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Known depth. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"Ultrasound: Echoes and Blood Flow",
-"<strong>New readings from the Ultrasound: Echoes and Blood Flow demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Ultrasound: Echoes and Blood Flow demo are in your table.",
-"<strong>New readings from the Ultrasound: Echoes and Blood Flow demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Ultrasound: Echoes and Blood Flow"
 ]);

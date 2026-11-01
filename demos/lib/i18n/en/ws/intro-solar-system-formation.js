@@ -104,8 +104,5 @@ VDI18N.add('en', 'ws/intro-solar-system-formation', [
 "The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?",
 "Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?",
 "Iron meteorites formed in the cores of melted planetesimals, while many stony meteorites (chondrites) were never melted at all. What does your fourth table suggest about when each kind of parent body formed?",
-"Prelab answers, the four data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"<strong>New readings from the Building a Solar System demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Building a Solar System demo are in your table.",
-"<strong>New readings from the Building a Solar System demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Prelab answers, the four data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
 ]);

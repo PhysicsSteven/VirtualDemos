@@ -43,8 +43,5 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Column E, row {#}",
 "Heading of column E",
-"Spectra Explorer",
-"<strong>New readings from the Spectra Explorer demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Spectra Explorer demo are in your table.",
-"<strong>New readings from the Spectra Explorer demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Spectra Explorer"
 ]);

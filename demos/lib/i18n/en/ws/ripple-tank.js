@@ -150,10 +150,5 @@ VDI18N.add('en', 'ws/ripple-tank', [
 "Speed of the waves, fλ",
 "Speed in the deeper water",
 "Speed in the shallower water",
-"Unit: rad/s",
-"{#} points with error bars from Frequency f. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Ripple Tank",
-"<strong>New readings from the Ripple Tank demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Ripple Tank demo are in your table.",
-"<strong>New readings from the Ripple Tank demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Ripple Tank"
 ]);

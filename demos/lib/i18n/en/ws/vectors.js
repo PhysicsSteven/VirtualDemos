@@ -126,10 +126,5 @@ VDI18N.add('en', 'ws/vectors', [
 "Horizontal axis, or the x component of a result",
 "Vertical axis, or the y component of a result",
 "Axis out of the page",
-"{#} points with error bars from A_x. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from A_x. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"Vectors",
-"<strong>New readings from the Vectors demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Vectors demo are in your table.",
-"<strong>New readings from the Vectors demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Vectors"
 ]);

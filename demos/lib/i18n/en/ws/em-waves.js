@@ -83,19 +83,5 @@ VDI18N.add('en', 'ws/em-waves', [
 "A direction across the wave",
 "The other direction across the wave",
 "Direction the wave travels",
-"Unit: F/m",
-"Unit: W/m²",
-"Frequency f against Reading, {#} points",
-"<b>fit: </b>Frequency f = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>(-{#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = A·xⁿ, with y = Frequency f and x = Reading<br><b>A: </b>({#} ± {#}) Hz<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Frequency f and x = Reading<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Frequency f and x = Reading<br><b>A: </b>{#} Hz (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Frequency f and x = Reading<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Frequency f and x = Reading<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"{#} points with error bars from Amplitude E₀. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Frequency f = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"Electromagnetic Waves",
-"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Electromagnetic Waves demo are in your table.",
-"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Electromagnetic Waves"
 ]);

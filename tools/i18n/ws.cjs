@@ -96,7 +96,7 @@ module.exports = async (page, grab) => {
       await pick('y', String(cols[1])); await wait(80); await grab(page);
       await pick('x', String(cols[0])); await wait(150); await grab(page);
       const kinds = await page.evaluate(() => { const s = document.querySelectorAll('.ws-plot select')[2]; return s ? [...s.options].map((o) => o.value) : []; });
-      for (const k of kinds) { await pick('fit', k); await wait(k ? 500 : 120); await grab(page); }
+      for (const k of kinds) { await pick('fit', k); await wait(k ? 250 : 80); await grab(page); }
       await pick('fit', '');
       if (cols[2] != null) { await pick('err', String(cols[2])); await wait(150); await grab(page); await pick('fit', 'exp'); await wait(500); await grab(page); await pick('fit', ''); }
       await pick('fit', 'quad'); await fill('line'); await wait(150); await grab(page);

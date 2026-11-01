@@ -195,22 +195,5 @@ VDI18N.add('en', 'ws/mp-photon-interactions', [
 "Thickness of the slab",
 "Photoelectric cross section",
 "Photoelectric cross section per atom",
-"Distance into the absorber (dx is a thin layer of it)",
-"Unit: cm⁻²",
-"Material against Reading, {#} points",
-"<b>fit: </b>Material = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Material and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ), with y = Material and x = Reading<br><b>A: </b>({#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·({#} − e^(−x/τ)), with y = Material and x = Reading<br><b>A: </b>(-{#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Material and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Material and x = Reading<br><b>A: </b>({#} ± {#})<br><b>f: </b>({#} ± {#})<br><b>φ: </b>({#} ± {#}) rad<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ)·sin({#}πf·x + φ), with y = Material and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>τ: </b>{#} × {#}⁶ (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Material and x = Reading<br><b>A: </b>(-{#} ± {#})<br><b>μ: </b>({#} ± {#})<br><b>σ: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Material and x = Reading<br><b>A: </b>({#} ± {#})<br><b>x₀: </b>({#} ± {#})<br><b>w: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"{#} points with error bars from Energy hν. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Energy hν. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Material = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<strong>New readings from the Photon Interactions in Matter demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Photon Interactions in Matter demo are in your table.",
-"<strong>New readings from the Photon Interactions in Matter demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Distance into the absorber (dx is a thin layer of it)"
 ]);

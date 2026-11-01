@@ -98,22 +98,5 @@ VDI18N.add('en', 'ws/acoustic-levitation', [
 "Spacing between neighboring traps",
 "Angle from the transducer's axis",
 "Bead velocity along the axis",
-"Position along the axis",
-"Unit: rad/m",
-"Radius against Setup / material, {#} points",
-"residual (mm)",
-"<b>slope: </b>({#} ± {#}) mm<br><b>intercept: </b>({#} ± {#}) mm",
-"<b>fit: </b>Radius = a + b·Setup / material + c·Setup / material²<br><b>a: </b>({#} ± {#}) mm<br><b>b: </b>(-{#} ± {#}) mm<br><b>c: </b>({#} ± {#}) mm",
-"<b>fit: </b>y = A·xⁿ, with y = Radius and x = Setup / material<br><b>A: </b>({#} ± {#}) mm<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Radius and x = Setup / material<br><b>a: </b>({#} ± {#}) mm<br><b>b: </b>({#} ± {#}) mm",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Radius and x = Setup / material<br><b>A: </b>{#} mm (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} mm (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Setup / material.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Radius and x = Setup / material<br><b>A: </b>-{#} mm (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} mm (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Radius and x = Setup / material<br><b>A: </b>-{#} mm (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} mm (uncertainty needs at least {#} points)",
-"{#} points with error bars from Drive. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Radius = a + b·Setup / material + c·Setup / material²<br><b>a: </b>({#} ± {#}) mm<br><b>b: </b>({#} ± {#}) mm<br><b>c: </b>({#} ± {#}) mm",
-"Every point has the same Setup / material ({#}), so there is no slope to fit. Use rows where Setup / material changes, or choose another column.",
-"<strong>New readings from the Acoustic Levitation demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Acoustic Levitation demo are in your table.",
-"<strong>New readings from the Acoustic Levitation demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Position along the axis"
 ]);

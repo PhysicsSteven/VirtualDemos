@@ -151,7 +151,6 @@ VDI18N.add('en', 'demo/lasers', [
 "⁴I₉/₂ ground state",
 "Helium neon: energy transfer",
 "energy in eV; axis broken below {#} eV",
-"He",
 "Ne",
 "electron impact",
 "collision",

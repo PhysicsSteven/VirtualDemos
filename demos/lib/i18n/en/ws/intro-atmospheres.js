@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-atmospheres', [
 "Body",
 "Escape speed (km/s)",
 "Temperature (K)",
-"He",
 "CO₂",
 "Why Small, Hot Planets Lose Their Air | VirtualDemos",
 "Why Small, Hot Planets Lose Their Air",
@@ -64,17 +63,5 @@ VDI18N.add('en', 'ws/intro-atmospheres', [
 "Mercury’s numbers for carbon dioxide come out close to {#}, yet Mercury has almost no atmosphere. Mercury is the planet closest to the Sun. What else might strip its gas away?",
 "Mars can keep nitrogen and carbon dioxide by the rule, yet its air is very thin. Mars is small and has no global magnetic field to shield it from the solar wind. How might that explain it?",
 "Prelab answers, the two copies of the Data table with the Part {#} graph, the Escape speed ÷ rms speed table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Gas against Reading, {#} points",
-"<b>fit: </b>Gas = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Gas and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Gas and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Gas and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Gas and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Gas and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from Mass of one molecule. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Gas = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Gas in a Box",
-"<strong>New readings from the Gas in a Box demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Gas in a Box demo are in your table.",
-"<strong>New readings from the Gas in a Box demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Gas in a Box"
 ]);

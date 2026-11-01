@@ -162,19 +162,5 @@ VDI18N.add('en', 'ws/rotation', [
 "Rolling speed once it rolls",
 "Position of a block from the pivot (negative to the left)",
 "Position of block {#}",
-"Unit: kg·m²",
-"Unit: rad/s",
-"<b>B1</b>Type a value, or = to start a formula.",
-"Scene, row {#}",
-"Predicted comparison against Settings before/after, {#} points",
-"<b>fit: </b>Predicted comparison = a + b·Settings before/after + c·Settings before/after²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Predicted comparison and x = Settings before/after<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Predicted comparison and x = Settings before/after<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Predicted comparison and x = Settings before/after<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Settings before/after.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Predicted comparison and x = Settings before/after<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Predicted comparison and x = Settings before/after<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from Displayed quantities and units. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Predicted comparison = a + b·Settings before/after + c·Settings before/after²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Every point has the same Settings before/after ({#}), so there is no slope to fit. Use rows where Settings before/after changes, or choose another column."
+"Scene, row {#}"
 ]);

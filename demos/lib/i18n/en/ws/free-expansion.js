@@ -57,19 +57,5 @@ VDI18N.add('en', 'ws/free-expansion', [
 "Starting volume",
 "Final volume",
 "Number of molecules on the left; in nR ln {#}, the number of moles",
-"Time at n against Count on the left n, {#} points",
-"<b>fit: </b>Time at n = a + b·Count on the left n + c·Count on the left n²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>(-{#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
-"<b>fit: </b>y = A·xⁿ, with y = Time at n and x = Count on the left n<br><b>A: </b>({#} ± {#}) s<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Time at n and x = Count on the left n<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Time at n and x = Count on the left n<br><b>A: </b>{#} s (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Count on the left n.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Time at n and x = Count on the left n<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Time at n and x = Count on the left n<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"{#} points with error bars from Share of time. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Time at n = a + b·Count on the left n + c·Count on the left n²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
-"Every point has the same Count on the left n ({#}), so there is no slope to fit. Use rows where Count on the left n changes, or choose another column.",
-"Entropy and the Second Law (Free expansion)",
-"<strong>New readings from the Entropy and the Second Law (Free expansion) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Entropy and the Second Law (Free expansion) demo are in your table.",
-"<strong>New readings from the Entropy and the Second Law (Free expansion) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Entropy and the Second Law (Free expansion)"
 ]);

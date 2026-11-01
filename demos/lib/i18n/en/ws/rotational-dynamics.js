@@ -62,20 +62,5 @@ VDI18N.add('en', 'ws/rotational-dynamics', [
 "Torque from the string",
 "Friction torque at the bearing",
 "Speed at the end of the drop",
-"Unit: N·m",
-"m against Series/load, {#} points",
-"<b>fit: </b>m = a + b·Series/load + c·Series/load²<br><b>a: </b>({#} ± {#}) kg<br><b>b: </b>(-{#} ± {#}) kg<br><b>c: </b>({#} ± {#}) kg",
-"<b>fit: </b>y = A·xⁿ, with y = m and x = Series/load<br><b>A: </b>({#} ± {#}) kg<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = m and x = Series/load<br><b>a: </b>({#} ± {#}) kg<br><b>b: </b>({#} ± {#}) kg",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = m and x = Series/load<br><b>A: </b>{#} kg (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} kg (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Series/load.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = m and x = Series/load<br><b>A: </b>-{#} kg (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} kg (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = m and x = Series/load<br><b>A: </b>-{#} kg (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} kg (uncertainty needs at least {#} points)",
-"{#} points with error bars from r. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>m = a + b·Series/load + c·Series/load²<br><b>a: </b>({#} ± {#}) kg<br><b>b: </b>({#} ± {#}) kg<br><b>c: </b>({#} ± {#}) kg",
-"Every point has the same Series/load ({#}), so there is no slope to fit. Use rows where Series/load changes, or choose another column.",
-"Rotational Dynamics",
-"<strong>New readings from the Rotational Dynamics demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Rotational Dynamics demo are in your table.",
-"<strong>New readings from the Rotational Dynamics demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Rotational Dynamics"
 ]);

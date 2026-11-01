@@ -80,10 +80,5 @@ VDI18N.add('en', 'ws/relativity-em', [
 "Distance of the test charge from the wire",
 "Speed of the test charge along the wire",
 "Drift speed of the electrons in the lab",
-"Speed of a line of charge",
-"Unit: μC/m",
-"{#} points with error bars from Electron drift βᵥ. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<strong>New readings from the Magnetism from Relativity demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Magnetism from Relativity demo are in your table.",
-"<strong>New readings from the Magnetism from Relativity demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Speed of a line of charge"
 ]);

@@ -97,10 +97,5 @@ VDI18N.add('en', 'ws/galactic-habitable-zone', [
 "Metallicity gradient across the disk",
 "Chance that Earth's own supernova dose would have sterilized it",
 "Time complex life needs",
-"Distance from the center R against Reading, {#} points",
-"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
-"Planet Temperatures and Habitable Zones",
-"<strong>New readings from the Planet Temperatures and Habitable Zones demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Planet Temperatures and Habitable Zones demo are in your table.",
-"<strong>New readings from the Planet Temperatures and Habitable Zones demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Planet Temperatures and Habitable Zones"
 ]);

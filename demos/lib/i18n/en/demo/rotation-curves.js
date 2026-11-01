@@ -14,7 +14,6 @@ VDI18N.add('en', 'demo/rotation-curves', [
 "gas",
 "bulge",
 "Solar system, for contrast: v = √(GM",
-"sun",
 "Earth {#} km/s",
 "Neptune {#}",
 "Galaxy Rotation Curves",

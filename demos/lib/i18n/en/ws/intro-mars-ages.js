@@ -76,8 +76,5 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Wind, water and ice wear down small craters on Mars much faster than on the Moon. Would that make a crater count age too old or too young? Which size of crater would you trust most?",
 "The demo’s surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?",
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Craters, Cooling and Surface Ages",
-"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Craters, Cooling and Surface Ages demo are in your table.",
-"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Craters, Cooling and Surface Ages"
 ]);

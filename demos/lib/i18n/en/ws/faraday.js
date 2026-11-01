@@ -63,19 +63,5 @@ VDI18N.add('en', 'ws/faraday', [
 "Length of the moving bar",
 "Angular frequency of the turning coil",
 "Speed of the bar",
-"t against Setup and settings, {#} points",
-"<b>fit: </b>t = a + b·Setup and settings + c·Setup and settings²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>(-{#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
-"<b>fit: </b>y = A·xⁿ, with y = t and x = Setup and settings<br><b>A: </b>({#} ± {#}) s<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = t and x = Setup and settings<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = t and x = Setup and settings<br><b>A: </b>{#} s (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Setup and settings.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = t and x = Setup and settings<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = t and x = Setup and settings<br><b>A: </b>-{#} s (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} s (uncertainty needs at least {#} points)",
-"{#} points with error bars from Φ_B per turn. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>t = a + b·Setup and settings + c·Setup and settings²<br><b>a: </b>({#} ± {#}) s<br><b>b: </b>({#} ± {#}) s<br><b>c: </b>({#} ± {#}) s",
-"Every point has the same Setup and settings ({#}), so there is no slope to fit. Use rows where Setup and settings changes, or choose another column.",
-"Faraday's Law",
-"<strong>New readings from the Faraday's Law demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Faraday's Law demo are in your table.",
-"<strong>New readings from the Faraday's Law demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Faraday's Law"
 ]);

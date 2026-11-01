@@ -593,5 +593,8 @@ VDI18N.add('en', 'common', [
 "There is no offset: the curve goes through the origin when n > 0. Every x must be greater than zero.",
 "1 row, sent {when}.",
 "Updating replaces the demo's columns in the table with these readings; your other columns and notes stay.",
-"This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file."
+"This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.",
+"sun",
+"ELECTROMETER",
+"He"
 ]);

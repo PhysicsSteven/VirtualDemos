@@ -57,8 +57,5 @@ VDI18N.add('en', 'ws/intro-constellations-3d', [
 "Absolute magnitude: the magnitude the star would have from {#} pc ({#} ly)",
 "Apparent magnitude: how bright the star looks from Earth",
 "Distance of the star from the Sun",
-"The Sky and the Celestial Sphere",
-"<strong>New readings from The Sky and the Celestial Sphere demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from The Sky and the Celestial Sphere demo are in your table.",
-"<strong>New readings from The Sky and the Celestial Sphere demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"The Sky and the Celestial Sphere"
 ]);

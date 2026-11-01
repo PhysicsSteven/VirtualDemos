@@ -9,7 +9,7 @@ VDI18N.add('en', 'ws/hydrogen-in-stars', [
 "Why Balmer Lines Peak in A Stars | VirtualDemos",
 "Why Balmer Lines Peak in A Stars",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (Bohr’s model of the hydrogen atom). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> M star, {#} K; The Sun, {#} K; A star, {#} K; B star, {#},{#} K. This worksheet uses the <strong>Hydrogen in stars</strong> mode.",
+"<strong>Setups in the demo:</strong> M star, {#} K; The Sun, {#} K; A star, {#} K; B star, {#} K. This worksheet uses the <strong>Hydrogen in stars</strong> mode.",
 "The chart plots, against a star’s surface temperature (both axes logarithmic), three numbers for the hydrogen in its atmosphere: the ratio of atoms on level n = {#} to atoms on level n = {#} (Boltzmann), the share of all hydrogen that is still neutral (Saha), and their product, the share of all hydrogen on level n = {#}. The colored strip under the chart shows the Balmer absorption lines, drawn darker when more atoms are on n = {#}.",
 "Change the temperature with the slider, the setups, or by dragging on the chart. The electron pressure slider sets how crowded the free electrons are, from {#} to {#} N/m².",
 "The model is the one in Carroll and Ostlie, <em>An Introduction to Modern Astrophysics</em>, §{#}. It counts the neutral atom’s partition function as its ground level only and holds the electron pressure fixed while the temperature changes.",
@@ -72,10 +72,5 @@ VDI18N.add('en', 'ws/hydrogen-in-stars', [
 "Number of states on level n = {#}, {#}",
 "Number of states on level n, 2n²",
 "Level number (the principal quantum number)",
-"Temperature T against Reading, {#} points",
-"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
-"Spectra Explorer",
-"<strong>New readings from the Spectra Explorer demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Spectra Explorer demo are in your table.",
-"<strong>New readings from the Spectra Explorer demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Spectra Explorer"
 ]);

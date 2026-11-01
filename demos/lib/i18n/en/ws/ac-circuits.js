@@ -71,16 +71,5 @@ VDI18N.add('en', 'ws/ac-circuits', [
 "Impedance",
 "Source frequency",
 "Resonant frequency",
-"Phase of the source voltage ahead of the current",
-"f against Run: R, L, C, {#} points",
-"<b>fit: </b>f = a + b·Run: R, L, C + c·Run: R, L, C²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>(-{#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = A·xⁿ, with y = f and x = Run: R, L, C<br><b>A: </b>({#} ± {#}) Hz<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = f and x = Run: R, L, C<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = f and x = Run: R, L, C<br><b>A: </b>{#} Hz (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Run: R, L, C.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = f and x = Run: R, L, C<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = f and x = Run: R, L, C<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"{#} points with error bars from Source V₀. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>f = a + b·Run: R, L, C + c·Run: R, L, C²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"Every point has the same Run: R, L, C ({#}), so there is no slope to fit. Use rows where Run: R, L, C changes, or choose another column."
+"Phase of the source voltage ahead of the current"
 ]);

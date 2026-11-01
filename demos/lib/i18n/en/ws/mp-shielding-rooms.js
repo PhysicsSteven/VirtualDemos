@@ -125,10 +125,5 @@ VDI18N.add('en', 'ws/mp-shielding-rooms', [
 "Number of tenth value layers, log₁₀({#}/B)",
 "Distance from the patient to the point beyond the wall",
 "Barrier thickness",
-"Unit: mm⁻¹",
-"{#} points with error bars from Transmission needed B. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Shielding Rooms",
-"<strong>New readings from the Shielding Rooms demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Shielding Rooms demo are in your table.",
-"<strong>New readings from the Shielding Rooms demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Shielding Rooms"
 ]);

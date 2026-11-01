@@ -71,19 +71,5 @@ VDI18N.add('en', 'ws/capacitors', [
 "Energy density of the field",
 "Quantity on the fit's horizontal axis",
 "Quantity on the fit's vertical axis",
-"d against Run: connected/isolated/network, {#} points",
-"<b>fit: </b>d = a + b·Run: connected/isolated/network + c·Run: connected/isolated/network²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>(-{#} ± {#}) m<br><b>c: </b>({#} ± {#}) m",
-"<b>fit: </b>y = A·xⁿ, with y = d and x = Run: connected/isolated/network<br><b>A: </b>({#} ± {#}) m<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = d and x = Run: connected/isolated/network<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = d and x = Run: connected/isolated/network<br><b>A: </b>{#} m (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Run: connected/isolated/network.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = d and x = Run: connected/isolated/network<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = d and x = Run: connected/isolated/network<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"{#} points with error bars from A. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>d = a + b·Run: connected/isolated/network + c·Run: connected/isolated/network²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m<br><b>c: </b>({#} ± {#}) m",
-"Every point has the same Run: connected/isolated/network ({#}), so there is no slope to fit. Use rows where Run: connected/isolated/network changes, or choose another column.",
-"Capacitors and Dielectrics",
-"<strong>New readings from the Capacitors and Dielectrics demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Capacitors and Dielectrics demo are in your table.",
-"<strong>New readings from the Capacitors and Dielectrics demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Capacitors and Dielectrics"
 ]);

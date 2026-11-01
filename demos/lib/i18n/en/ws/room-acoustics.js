@@ -77,22 +77,5 @@ VDI18N.add('en', 'ws/room-acoustics', [
 "Absorption coefficient of the panels",
 "Absorption coefficient of the wall they cover",
 "Speed of sound",
-"Unit: m³",
-"Band against Reading, {#} points",
-"<b>fit: </b>Band = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>(-{#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = A·xⁿ, with y = Band and x = Reading<br><b>A: </b>({#} ± {#}) Hz<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ), with y = Band and x = Reading<br><b>A: </b>({#} ± {#}) Hz<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·({#} − e^(−x/τ)), with y = Band and x = Reading<br><b>A: </b>(-{#} ± {#}) Hz<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = a + b·ln x, with y = Band and x = Reading<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Band and x = Reading<br><b>A: </b>({#} ± {#}) Hz<br><b>f: </b>({#} ± {#})<br><b>φ: </b>({#} ± {#}) rad<br><b>C: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·e^(−x/τ)·sin({#}πf·x + φ), with y = Band and x = Reading<br><b>A: </b>{#} Hz (uncertainty needs at least {#} points)<br><b>τ: </b>{#} × {#}⁶ (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Band and x = Reading<br><b>A: </b>(-{#} ± {#}) Hz<br><b>μ: </b>({#} ± {#})<br><b>σ: </b>({#} ± {#})<br><b>C: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Band and x = Reading<br><b>A: </b>({#} ± {#}) Hz<br><b>x₀: </b>({#} ± {#})<br><b>w: </b>({#} ± {#})<br><b>C: </b>({#} ± {#}) Hz",
-"{#} points with error bars from Room L× W× H. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Room L× W× H. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Band = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"Room Acoustics",
-"<strong>New readings from the Room Acoustics demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Room Acoustics demo are in your table.",
-"<strong>New readings from the Room Acoustics demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Room Acoustics"
 ]);

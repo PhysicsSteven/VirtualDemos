@@ -60,16 +60,5 @@ VDI18N.add('en', 'ws/radioactive-decay', [
 "Probability that a parent decays in one step",
 "Standard deviation of the count left",
 "Mean life",
-"Setup and N_0 against Reading, {#} points",
-"<b>fit: </b>Setup and N_0 = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Setup and N_0 and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Setup and N_0 and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Setup and N_0 and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Setup and N_0 and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Setup and N_0 and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>Setup and N_0 = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Radioactive Decay",
-"<strong>New readings from the Radioactive Decay demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Radioactive Decay demo are in your table.",
-"<strong>New readings from the Radioactive Decay demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Radioactive Decay"
 ]);

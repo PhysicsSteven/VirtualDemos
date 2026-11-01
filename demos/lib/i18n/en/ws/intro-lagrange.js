@@ -54,8 +54,5 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "Earth has a known Trojan asteroid, {#} TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth’s L4 and L5 always are.)",
 "The Lucy spacecraft, launched in {#}, will visit several of Jupiter’s Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?",
 "Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Lagrange Points",
-"<strong>New readings from the Lagrange Points demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Lagrange Points demo are in your table.",
-"<strong>New readings from the Lagrange Points demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Lagrange Points"
 ]);

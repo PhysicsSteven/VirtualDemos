@@ -47,7 +47,7 @@ VDI18N.add('en', 'ws/intro-stellarium-sky', [
 "In which constellation was the Sun on each of the five dates? On which dates was the Sun on the celestial equator (declination near {#}°), and on which was it farthest north and farthest south?",
 "Near noon, the Sun’s altitude should be about {#}° − {#}° + its declination. Check this for each of your five dates.",
 "Stellarium computes positions from star catalogs and the motions of Earth and the Sun, accurate to a small fraction of a degree. Your readings can still differ from a classmate’s if the location or the time is set a little differently. The sky turns {#}° per hour. By about how many degrees can a star’s azimuth change if the time is off by {#} minutes? Which of your readings would that affect, and which would it not?",
-"Astrology sign dates were set about {#},{#} years ago. A person born on January {#} is told their sign is Capricorn. In which constellation was the Sun on January {#}, {#}? Use precession to explain the difference.",
+"Astrology sign dates were set about {#} years ago. A person born on January {#} is told their sign is Capricorn. In which constellation was the Sun on January {#}, {#}? Use precession to explain the difference.",
 "A friend in Anchorage, Alaska (latitude {#}° N) looks at the same four stars. Which of them are circumpolar for your friend?",
 "From the equator (latitude {#}°), where would Polaris be? Could anyone at the equator see a circumpolar star?",
 "Why do we see Orion in winter evenings but not in summer evenings? Use the Sun’s position along the ecliptic in your table.",

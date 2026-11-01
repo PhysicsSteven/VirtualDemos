@@ -52,17 +52,5 @@ VDI18N.add('en', 'ws/potential-curves', [
 "Angular frequency of small oscillations",
 "Position of the minimum",
 "Starting position",
-"Final position",
-"x against Potential and total E, {#} points",
-"<b>slope: </b>({#} ± {#}) m/J<br><b>intercept: </b>({#} ± {#}) m",
-"<b>fit: </b>x = a + b·Potential and total E + c·Potential and total E²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>(-{#} ± {#}) m/J<br><b>c: </b>({#} ± {#}) m/J²",
-"<b>fit: </b>y = A·xⁿ, with y = x and x = Potential and total E<br><b>A: </b>({#} ± {#}) m/Jⁿ<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = x and x = Potential and total E<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = x and x = Potential and total E<br><b>A: </b>{#} m (uncertainty needs at least {#} points)<br><b>f: </b>{#} {#}/J (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Potential and total E.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = x and x = Potential and total E<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>μ: </b>{#} J (uncertainty needs at least {#} points)<br><b>σ: </b>{#} J (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = x and x = Potential and total E<br><b>A: </b>-{#} m (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} J (uncertainty needs at least {#} points)<br><b>w: </b>{#} J (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"{#} points with error bars from U. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>x = a + b·Potential and total E + c·Potential and total E²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m/J<br><b>c: </b>({#} ± {#}) m/J²",
-"Every point has the same Potential and total E ({#} J), so there is no slope to fit. Use rows where Potential and total E changes, or choose another column."
+"Final position"
 ]);

@@ -2,7 +2,6 @@
 VDI18N.add('en', 'demo/charged-particles', [
 "NOZZLE",
 "Proton",
-"ELECTROMETER",
 "to scale",
 "track energy: {#} → full · glow: model dose",
 "dose (% of the peak)",

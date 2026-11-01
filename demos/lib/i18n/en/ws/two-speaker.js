@@ -57,22 +57,5 @@ VDI18N.add('en', 'ws/two-speaker', [
 "Air temperature",
 "Speed of sound",
 "Distance of the microphone from the speakers' wall",
-"Position along the walk line",
-"<b>A6</b>Type a value, or = to start a formula.",
-"x against Trial, {#} points",
-"<b>fit: </b>x = a + b·Trial + c·Trial²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>(-{#} ± {#}) m<br><b>c: </b>({#} ± {#}) m",
-"<b>fit: </b>y = A·xⁿ, with y = x and x = Trial<br><b>A: </b>({#} ± {#}) m<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ), with y = x and x = Trial<br><b>A: </b>({#} ± {#}) m<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·({#} − e^(−x/τ)), with y = x and x = Trial<br><b>A: </b>(-{#} ± {#}) m<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#}) m",
-"<b>fit: </b>y = a + b·ln x, with y = x and x = Trial<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = x and x = Trial<br><b>A: </b>({#} ± {#}) m<br><b>f: </b>({#} ± {#})<br><b>φ: </b>({#} ± {#}) rad<br><b>C: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·e^(−x/τ)·sin({#}πf·x + φ), with y = x and x = Trial<br><b>A: </b>{#} m (uncertainty needs at least {#} points)<br><b>τ: </b>{#} × {#}⁶ (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} m (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = x and x = Trial<br><b>A: </b>(-{#} ± {#}) m<br><b>μ: </b>({#} ± {#})<br><b>σ: </b>({#} ± {#})<br><b>C: </b>({#} ± {#}) m",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = x and x = Trial<br><b>A: </b>({#} ± {#}) m<br><b>x₀: </b>({#} ± {#})<br><b>w: </b>({#} ± {#})<br><b>C: </b>({#} ± {#}) m",
-"{#} points with error bars from y. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from y. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"<b>fit: </b>x = a + b·Trial + c·Trial²<br><b>a: </b>({#} ± {#}) m<br><b>b: </b>({#} ± {#}) m<br><b>c: </b>({#} ± {#}) m",
-"<strong>New readings from the Two Speaker Interference demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Two Speaker Interference demo are in your table.",
-"<strong>New readings from the Two Speaker Interference demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Position along the walk line"
 ]);

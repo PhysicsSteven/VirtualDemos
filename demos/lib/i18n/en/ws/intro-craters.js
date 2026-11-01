@@ -78,8 +78,5 @@ VDI18N.add('en', 'ws/intro-craters', [
 "Chicxulub, the crater of the impact that ended the age of dinosaurs {#} million years ago, is about {#} km wide. Using Part {#}, about how big was the asteroid?",
 "Why would a planet with a thick, hot interior and a thin lid be more likely to have volcanoes today than a planet with a thick, cold lid?",
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Craters, Cooling and Surface Ages",
-"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Craters, Cooling and Surface Ages demo are in your table.",
-"<strong>New readings from the Craters, Cooling and Surface Ages demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Craters, Cooling and Surface Ages"
 ]);

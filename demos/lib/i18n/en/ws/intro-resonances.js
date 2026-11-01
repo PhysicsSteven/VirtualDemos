@@ -35,9 +35,9 @@ VDI18N.add('en', 'ws/intro-resonances', [
 "An asteroid in the {#}:{#} resonance goes round five times while Jupiter goes round twice. Jupiter takes {#} years. How long does the asteroid take to go round once?",
 "When you push a child on a swing, why does it work best to push at the same point of every swing? What would happen if you pushed at a random point each time?",
 "Pluto’s orbit crosses Neptune’s. Make a guess before you measure: could Pluto and Neptune ever collide?",
-"<strong>Part {#}: kicks in the asteroid belt.</strong> Choose the {#}:{#} resonance setup and run it. Watch where Jupiter passes the asteroid (the yellow dots) and what happens to the asteroid’s orbit. When the run stops because the asteroid’s orbit reaches Mars’s, record a reading. Then do the same for the {#}:{#} resonance. For the {#}:{#} resonance, Between the gaps and Hildas at {#}:{#}, run each for about {#},{#} years and record a reading. Last, choose the {#}:{#} resonance again, move the starting distance to {#} AU, run for about {#},{#} years and record a reading. Send the six readings to the worksheet, then clear them.",
+"<strong>Part {#}: kicks in the asteroid belt.</strong> Choose the {#}:{#} resonance setup and run it. Watch where Jupiter passes the asteroid (the yellow dots) and what happens to the asteroid’s orbit. When the run stops because the asteroid’s orbit reaches Mars’s, record a reading. Then do the same for the {#}:{#} resonance. For the {#}:{#} resonance, Between the gaps and Hildas at {#}:{#}, run each for about {#} years and record a reading. Last, choose the {#}:{#} resonance again, move the starting distance to {#} AU, run for about {#} years and record a reading. Send the six readings to the worksheet, then clear them.",
 "<strong>Part {#}: where the gaps are.</strong> For each row of the Gaps table, work out where the resonance should be from Kepler’s third law, as in Analysis {#}. Then find the gap in the bar chart of real asteroids and write down its distance from the Sun (click the shortest bar in the gap; the starting distance on the card shows its distance).",
-"<strong>Part {#}: Pluto and Neptune.</strong> Switch to the Kuiper belt and choose Pluto. Run it for about {#},{#} years and record a reading. Then choose Pluto’s orbit, bad timing: the same orbit, but starting in a different place compared with Neptune. Run it until the run stops and record a reading. Last, choose Classical belt, run it for about {#},{#} years and record a reading. Send the three readings to the worksheet, then clear them.",
+"<strong>Part {#}: Pluto and Neptune.</strong> Switch to the Kuiper belt and choose Pluto. Run it for about {#} years and record a reading. Then choose Pluto’s orbit, bad timing: the same orbit, but starting in a different place compared with Neptune. Run it until the run stops and record a reading. Last, choose Classical belt, run it for about {#} years and record a reading. Send the three readings to the worksheet, then clear them.",
 "<strong>Part {#}: finding Neptune.</strong> Switch to Finding Neptune. Choose Uranus alone and record a reading, then Le Verrier’s planet and record a reading. Then choose Hunt for it yourself and set planet X to {#} AU and {#} Earth masses. Record a reading with planet X at each of these positions on {#} September {#}: {#}°, {#}°, {#}°, {#}°, {#}° and {#}°. Last, choose The real Neptune and record a reading. Send the readings to the worksheet.",
 "<span>C</span>Starting distance \\(a\\) (AU)",
 "<span>D</span>Period ratio \\(P_{\\text{Jupiter}}/P\\)",
@@ -90,10 +90,5 @@ VDI18N.add('en', 'ws/intro-resonances', [
 "Period of Neptune, the time it takes to go round the Sun once, {#} years",
 "Average distance of the body from the Sun (half the long axis of its orbit)",
 "Eccentricity of the orbit: {#} is a circle, the bigger e the more stretched",
-"Period ratio: how many times the asteroid goes round for each turn of Jupiter",
-"Unit: AU",
-"Unit: yr",
-"<strong>New readings from the Orbital Resonances demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Orbital Resonances demo are in your table.",
-"<strong>New readings from the Orbital Resonances demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Period ratio: how many times the asteroid goes round for each turn of Jupiter"
 ]);

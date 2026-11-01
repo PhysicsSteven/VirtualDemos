@@ -64,20 +64,5 @@ VDI18N.add('en', 'ws/bonds-and-latent-heat', [
 "Heat added",
 "Bond (potential) energy of the atoms",
 "Average kinetic energy of an atom",
-"Unit: Pa",
-"Unit: J/(mol·K)",
-"Heat added Q against Reading, {#} points",
-"residual (kJ/mol)",
-"<b>slope: </b>({#} ± {#}) kJ/mol<br><b>intercept: </b>({#} ± {#}) kJ/mol",
-"<b>fit: </b>Heat added Q = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) kJ/mol<br><b>b: </b>(-{#} ± {#}) kJ/mol<br><b>c: </b>({#} ± {#}) kJ/mol",
-"<b>fit: </b>y = A·xⁿ, with y = Heat added Q and x = Reading<br><b>A: </b>({#} ± {#}) kJ/mol<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Heat added Q and x = Reading<br><b>a: </b>({#} ± {#}) kJ/mol<br><b>b: </b>({#} ± {#}) kJ/mol",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Heat added Q and x = Reading<br><b>A: </b>{#} kJ/mol (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} kJ/mol (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Heat added Q and x = Reading<br><b>A: </b>-{#} kJ/mol (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} kJ/mol (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Heat added Q and x = Reading<br><b>A: </b>-{#} kJ/mol (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} kJ/mol (uncertainty needs at least {#} points)",
-"<b>fit: </b>Heat added Q = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) kJ/mol<br><b>b: </b>({#} ± {#}) kJ/mol<br><b>c: </b>({#} ± {#}) kJ/mol",
-"States of Matter (Atoms)",
-"<strong>New readings from the States of Matter (Atoms) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the States of Matter (Atoms) demo are in your table.",
-"<strong>New readings from the States of Matter (Atoms) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"States of Matter (Atoms)"
 ]);

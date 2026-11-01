@@ -2,7 +2,6 @@
 VDI18N.add('en', 'demo/bragg-peak', [
 "NOZZLE",
 "protons, {#} MeV",
-"ELECTROMETER",
 "sideways squeezed ×{#}",
 "dose: {#} → {#} % of the peak, then more",
 "dose (% of the peak)",

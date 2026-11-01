@@ -121,7 +121,6 @@ VDI18N.add('en', 'demo/black-holes', [
 "far away",
 "arrives at {#} nm",
 "ΔA = {#} × {#}⁵ g",
-"sun",
 "radial scale compressed; nothing drawn inside the horizon",
 "background stars: illustrative",
 "your whole sky, hole at the center",

@@ -62,16 +62,5 @@ VDI18N.add('en', 'ws/ac-reactance', [
 "Current at each instant",
 "Power at each instant",
 "Phase of the source voltage ahead of its current",
-"Voltage at each instant",
-"f against Reading and parts, {#} points",
-"<b>fit: </b>f = a + b·Reading and parts + c·Reading and parts²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>(-{#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = A·xⁿ, with y = f and x = Reading and parts<br><b>A: </b>({#} ± {#}) Hz<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = f and x = Reading and parts<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = f and x = Reading and parts<br><b>A: </b>{#} Hz (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Reading and parts.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = f and x = Reading and parts<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = f and x = Reading and parts<br><b>A: </b>-{#} Hz (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} Hz (uncertainty needs at least {#} points)",
-"{#} points with error bars from V_rms. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>f = a + b·Reading and parts + c·Reading and parts²<br><b>a: </b>({#} ± {#}) Hz<br><b>b: </b>({#} ± {#}) Hz<br><b>c: </b>({#} ± {#}) Hz",
-"Every point has the same Reading and parts ({#}), so there is no slope to fit. Use rows where Reading and parts changes, or choose another column."
+"Voltage at each instant"
 ]);

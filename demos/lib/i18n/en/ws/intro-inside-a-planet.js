@@ -90,17 +90,5 @@ VDI18N.add('en', 'ws/intro-inside-a-planet', [
 "On Earth, a hot plume under the moving Pacific plate made the long chain of Hawaiian islands. On Mars, a plume under a lid that never moves made Olympus Mons, the largest volcano in the solar system. Use what you saw in Part {#} to explain the difference.",
 "Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part {#} to suggest how the lack of water on Venus changes the way it loses its heat.",
 "Why are mountains like the Himalayas and the Tibetan Plateau underlain by very thick crust? Use Part {#}.",
-"Prelab answers, the four data tables, your graph from Analysis {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Planet against Reading, {#} points",
-"<b>fit: </b>Planet = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Planet and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Planet and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Planet and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Planet and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Planet and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from Core radius. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Planet = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<strong>New readings from the Inside a Planet demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Inside a Planet demo are in your table.",
-"<strong>New readings from the Inside a Planet demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Prelab answers, the four data tables, your graph from Analysis {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
 ]);

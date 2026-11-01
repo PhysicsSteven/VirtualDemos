@@ -78,14 +78,8 @@ VDI18N.add('en', 'ws/rotation-curves', [
 "Rest wavelength",
 "Radius of the orbit",
 "Orbital speed",
-"Unit: km/s",
-"Unit: kpc",
 "Column O, row {#}",
 "Heading of column O",
 "Column O",
-"{#} points with error bars from Radius r. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"Galaxy Rotation Curves",
-"<strong>New readings from the Galaxy Rotation Curves demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Galaxy Rotation Curves demo are in your table.",
-"<strong>New readings from the Galaxy Rotation Curves demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Galaxy Rotation Curves"
 ]);

@@ -69,13 +69,7 @@ VDI18N.add('en', 'ws/franck-hertz', [
 "Retarding voltage",
 "Wavelength of the light the excited atom gives off",
 "Peak order",
-"Unit: J·s",
 "Column E, row {#}",
 "Heading of column E",
-"Column E",
-"Gas and settings against Reading, {#} points",
-"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
-"<strong>New readings from the Franck–Hertz Experiment demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Franck–Hertz Experiment demo are in your table.",
-"<strong>New readings from the Franck–Hertz Experiment demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Column E"
 ]);

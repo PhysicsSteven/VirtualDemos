@@ -87,10 +87,5 @@ VDI18N.add('en', 'ws/intro-retrograde', [
 "Check the demo against a planetarium: in Stellarium (free, or online at https://stellarium-web.org), set the date to {#} January {#} and find Mars. Which constellation is it in, and does that match the demo?",
 "Answers to Before the activity, the three tables with your graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Sidereal period, once around the Sun",
-"Synodic period, from one opposition (or inferior conjunction) to the next",
-"Date against Reading, {#} points",
-"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
-"<strong>New readings from the Retrograde Motion and World Models demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Retrograde Motion and World Models demo are in your table.",
-"<strong>New readings from the Retrograde Motion and World Models demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Synodic period, from one opposition (or inferior conjunction) to the next"
 ]);

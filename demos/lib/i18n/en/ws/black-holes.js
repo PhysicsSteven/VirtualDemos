@@ -149,22 +149,5 @@ VDI18N.add('en', 'ws/black-holes', [
 "Offset at closest approach, in Einstein radii",
 "Speed of the source across the line of sight",
 "Shorthand for u²",
-"Redshift; light arrives stretched by {#} + z",
-"Unit: km",
-"Unit: kpc",
-"Unit: days",
-"Lens mass M against Reading, {#} points",
-"residual (M_odot)",
-"<b>slope: </b>({#} ± {#}) M_odot<br><b>intercept: </b>({#} ± {#}) M_odot",
-"<b>fit: </b>Lens mass M = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) M_odot<br><b>b: </b>(-{#} ± {#}) M_odot<br><b>c: </b>({#} ± {#}) M_odot",
-"<b>fit: </b>y = A·xⁿ, with y = Lens mass M and x = Reading<br><b>A: </b>({#} ± {#}) M_odot<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Lens mass M and x = Reading<br><b>a: </b>({#} ± {#}) M_odot<br><b>b: </b>({#} ± {#}) M_odot",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Lens mass M and x = Reading<br><b>A: </b>{#} M_odot (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} M_odot (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Lens mass M and x = Reading<br><b>A: </b>-{#} M_odot (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} M_odot (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Lens mass M and x = Reading<br><b>A: </b>-{#} M_odot (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} M_odot (uncertainty needs at least {#} points)",
-"{#} points with error bars from Lens distance D_L. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Lens mass M = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) M_odot<br><b>b: </b>({#} ± {#}) M_odot<br><b>c: </b>({#} ± {#}) M_odot",
-"<strong>New readings from the Black Holes and Lensing demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Black Holes and Lensing demo are in your table.",
-"<strong>New readings from the Black Holes and Lensing demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Redshift; light arrives stretched by {#} + z"
 ]);

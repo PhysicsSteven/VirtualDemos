@@ -92,10 +92,5 @@ VDI18N.add('en', 'ws/straight-wire-fields', [
 "Column P, row {#}",
 "Heading of column P",
 "Column P",
-"{#} points with error bars from Current I₁. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Current I₁. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"Magnetic Fields of Currents",
-"<strong>New readings from the Magnetic Fields of Currents demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Magnetic Fields of Currents demo are in your table.",
-"<strong>New readings from the Magnetic Fields of Currents demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Magnetic Fields of Currents"
 ]);

@@ -45,8 +45,5 @@ VDI18N.add('en', 'ws/intro-seasons', [
 "The longest day at Ruston is in June, but the hottest weather usually comes in July and August. The demo shows sunlight, not temperature. What could explain the delay?",
 "Shine a flashlight straight down on a sheet of paper, then tilt the paper. Use what happens to the bright spot to explain why a low Sun warms the ground less than a high Sun.",
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Reasons for Seasons",
-"<strong>New readings from the Reasons for Seasons demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Reasons for Seasons demo are in your table.",
-"<strong>New readings from the Reasons for Seasons demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Reasons for Seasons"
 ]);

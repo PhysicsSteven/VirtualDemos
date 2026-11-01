@@ -52,10 +52,5 @@ VDI18N.add('en', 'ws/color-vision', [
 "Sensitivity of the L cones at wavelength λ",
 "Sensitivity of the M cones at wavelength λ",
 "Sensitivity of the S cones at wavelength λ",
-"Light against Reading, {#} points",
-"{#} points, joined in order of Reading. No line is fitted: this is a curve, not a straight line. Read its features from the graph.",
-"Color Vision",
-"<strong>New readings from the Color Vision demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Color Vision demo are in your table.",
-"<strong>New readings from the Color Vision demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Color Vision"
 ]);

@@ -70,19 +70,5 @@ VDI18N.add('en', 'ws/ubv-colors', [
 "One wavelength standing for the whole V filter, about {#} nm",
 "Magnitude of the first star",
 "Magnitude of the second star",
-"Temperature T against Reading, {#} points",
-"residual (K)",
-"<b>slope: </b>({#} ± {#}) K<br><b>intercept: </b>({#} ± {#}) K",
-"<b>fit: </b>Temperature T = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) K<br><b>b: </b>(-{#} ± {#}) K<br><b>c: </b>({#} ± {#}) K",
-"<b>fit: </b>y = A·xⁿ, with y = Temperature T and x = Reading<br><b>A: </b>({#} ± {#}) K<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Temperature T and x = Reading<br><b>a: </b>({#} ± {#}) K<br><b>b: </b>({#} ± {#}) K",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Temperature T and x = Reading<br><b>A: </b>{#} K (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} K (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Temperature T and x = Reading<br><b>A: </b>-{#} K (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} K (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Temperature T and x = Reading<br><b>A: </b>-{#} K (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} K (uncertainty needs at least {#} points)",
-"{#} points with error bars from {#} {#} K / T. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Temperature T = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#}) K<br><b>b: </b>({#} ± {#}) K<br><b>c: </b>({#} ± {#}) K",
-"Blackbody Radiation",
-"<strong>New readings from the Blackbody Radiation demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Blackbody Radiation demo are in your table.",
-"<strong>New readings from the Blackbody Radiation demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Blackbody Radiation"
 ]);

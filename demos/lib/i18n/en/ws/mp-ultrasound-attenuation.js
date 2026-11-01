@@ -23,7 +23,7 @@ VDI18N.add('en', 'ws/mp-ultrasound-attenuation', [
 "An echo from a boundary at depth d travels 2d through the tissue, so its level, relative to the pulse sent, is",
 "\\[L = 20\\log_{10}\\lvert r\\rvert - 2\\,\\alpha_0 f\\,d ,\\]",
 "a straight line in d with slope \\(-2\\alpha_0 f\\) and intercept set by the boundary’s reflection.",
-"Starting from \\(dp/dx = -a\\,p\\), show that the intensity obeys \\(dI/dx = -2aI\\), and that α in dB per length is {#}.686a whether you work with amplitude ({#} log₁₀) or intensity ({#} log₁₀).",
+"Starting from \\(dp/dx = -a\\,p\\), show that the intensity obeys \\(dI/dx = -2aI\\), and that α in dB per length is {#}a whether you work with amplitude ({#} log₁₀) or intensity ({#} log₁₀).",
 "Find r for a muscle to bone boundary from the impedances above, and the intercept \\(20\\log_{10}\\lvert r\\rvert\\) in dB.",
 "Predict the slope of L against d at {#} MHz and at {#} MHz for muscle (α₀ = {#} dB/(cm MHz)).",
 "A scanner can detect echoes down to {#} dB below the pulse sent (its dynamic range here, chosen for the question). How deep can it see a strong reflector in average soft tissue (α₀ = {#}) at {#} MHz and at {#} MHz?",
@@ -82,18 +82,5 @@ VDI18N.add('en', 'ws/mp-ultrasound-attenuation', [
 "Time of the echo after the pulse is sent",
 "Distance the wave has traveled",
 "Depth the scanner assumes for an echo",
-"Unit: MHz",
-"Setup and frequency against Reading, {#} points",
-"<b>fit: </b>Setup and frequency = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Setup and frequency and x = Reading<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Setup and frequency and x = Reading<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Setup and frequency and x = Reading<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Setup and frequency and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Setup and frequency and x = Reading<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from Muscle depth d. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Setup and frequency = a + b·Reading + c·Reading²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Ultrasound: Echoes and Blood Flow (absorption)",
-"<strong>New readings from the Ultrasound: Echoes and Blood Flow (absorption) demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Ultrasound: Echoes and Blood Flow (absorption) demo are in your table.",
-"<strong>New readings from the Ultrasound: Echoes and Blood Flow (absorption) demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Ultrasound: Echoes and Blood Flow (absorption)"
 ]);

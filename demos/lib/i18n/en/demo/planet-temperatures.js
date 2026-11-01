@@ -170,7 +170,6 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "greenhouse off: all the heat radiation escapes",
 "temperature (K, log scale)",
 "speed (km/s, log scale)",
-"He",
 "CH₄",
 "CO₂",
 "Titan",

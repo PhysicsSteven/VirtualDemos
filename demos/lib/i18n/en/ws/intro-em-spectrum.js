@@ -42,8 +42,5 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "Earth’s atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the “Reaches the ground?” readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?",
 "Your eyes see only a tiny slice of the spectrum. From your readings, roughly how many powers of ten in frequency does the whole spectrum in the demo span, and how wide is the visible slice?",
 "Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Electromagnetic Waves",
-"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Electromagnetic Waves demo are in your table.",
-"<strong>New readings from the Electromagnetic Waves demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Electromagnetic Waves"
 ]);

@@ -52,8 +52,5 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "Diameter of the mirror",
 "Wavelength of the light",
 "Smallest angle between two stars the telescope can resolve",
-"Circular Apertures and Resolution",
-"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Circular Apertures and Resolution demo are in your table.",
-"<strong>New readings from the Circular Apertures and Resolution demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Circular Apertures and Resolution"
 ]);

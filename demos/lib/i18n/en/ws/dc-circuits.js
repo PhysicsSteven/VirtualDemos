@@ -61,16 +61,5 @@ VDI18N.add('en', 'ws/dc-circuits', [
 "Equivalent resistance in parallel",
 "Equivalent resistance in series",
 "Voltage",
-"Output voltage of the divider, across R₂",
-"Meter/branch against Setup and resistor values, {#} points",
-"<b>fit: </b>Meter/branch = a + b·Setup and resistor values + c·Setup and resistor values²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Meter/branch and x = Setup and resistor values<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Meter/branch and x = Setup and resistor values<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Meter/branch and x = Setup and resistor values<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Setup and resistor values.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Meter/branch and x = Setup and resistor values<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Meter/branch and x = Setup and resistor values<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from I. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Meter/branch = a + b·Setup and resistor values + c·Setup and resistor values²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Every point has the same Setup and resistor values ({#}), so there is no slope to fit. Use rows where Setup and resistor values changes, or choose another column."
+"Output voltage of the divider, across R₂"
 ]);

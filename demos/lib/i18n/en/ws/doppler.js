@@ -98,21 +98,5 @@ VDI18N.add('en', 'ws/doppler', [
 "Speed of sound",
 "Velocity of the observer",
 "Velocity of the source",
-"Motion against Scan, {#} points",
-"<b>fit: </b>Motion = a + b·Scan + c·Scan²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Motion and x = Scan<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ), with y = Motion and x = Scan<br><b>A: </b>({#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·({#} − e^(−x/τ)), with y = Motion and x = Scan<br><b>A: </b>(-{#} ± {#})<br><b>τ: </b>(-{#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Motion and x = Scan<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Motion and x = Scan<br><b>A: </b>({#} ± {#})<br><b>f: </b>({#} ± {#})<br><b>φ: </b>({#} ± {#}) rad<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·e^(−x/τ)·sin({#}πf·x + φ), with y = Motion and x = Scan<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>τ: </b>{#} × {#}⁶ (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Motion and x = Scan<br><b>A: </b>(-{#} ± {#})<br><b>μ: </b>({#} ± {#})<br><b>σ: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Motion and x = Scan<br><b>A: </b>({#} ± {#})<br><b>x₀: </b>({#} ± {#})<br><b>w: </b>({#} ± {#})<br><b>C: </b>({#} ± {#})",
-"{#} points with error bars from Emitted f₀. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Emitted f₀. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Motion = a + b·Scan + c·Scan²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Doppler Effect",
-"<strong>New readings from the Doppler Effect demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Doppler Effect demo are in your table.",
-"<strong>New readings from the Doppler Effect demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Doppler Effect"
 ]);

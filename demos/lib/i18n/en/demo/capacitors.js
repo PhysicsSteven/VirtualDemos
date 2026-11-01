@@ -4,7 +4,6 @@ VDI18N.add('en', 'demo/capacitors', [
 "VOLTAGE",
 "OUTPUT",
 "switch closed",
-"ELECTROMETER",
 "RANGE {#} V",
 "hand holds the plate: {#} µN",
 "Drag empty space to turn the view, double click to reset",

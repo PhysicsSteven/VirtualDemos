@@ -47,8 +47,5 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "Your body is at about {#} K. Use Wien’s law to estimate your peak wavelength, in micrometers ({#} µm = {#} nm). Why can a thermal camera see you in the dark?",
 "Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.",
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Blackbody Radiation",
-"<strong>New readings from the Blackbody Radiation demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Blackbody Radiation demo are in your table.",
-"<strong>New readings from the Blackbody Radiation demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Blackbody Radiation"
 ]);

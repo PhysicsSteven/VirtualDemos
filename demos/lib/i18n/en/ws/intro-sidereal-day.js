@@ -66,8 +66,5 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "A day on the Moon, from one sunrise to the next, lasts about {#} Earth days. Use your Part {#} reading to explain why that is the same as the time from one full Moon to the next.",
 "Old clocks were set by sundials. Explain why a town that set its clock by its sundial on {#} February would find its clock about half an hour off from the sundial on {#} November.",
 "Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Reasons for Seasons",
-"<strong>New readings from the Reasons for Seasons demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Reasons for Seasons demo are in your table.",
-"<strong>New readings from the Reasons for Seasons demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Reasons for Seasons"
 ]);

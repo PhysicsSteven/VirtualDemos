@@ -68,20 +68,5 @@ VDI18N.add('en', 'ws/viscometer', [
 "Speed of the ball between the marks",
 "Speed the ball would have in an unbounded liquid",
 "Terminal speed",
-"Unit: Pa·s",
-"Liquid/ball against Series, {#} points",
-"<b>fit: </b>Liquid/ball = a + b·Series + c·Series²<br><b>a: </b>({#} ± {#})<br><b>b: </b>(-{#} ± {#})<br><b>c: </b>({#} ± {#})",
-"<b>fit: </b>y = A·xⁿ, with y = Liquid/ball and x = Series<br><b>A: </b>({#} ± {#})<br><b>n: </b>({#} ± {#})",
-"<b>fit: </b>y = a + b·ln x, with y = Liquid/ball and x = Series<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})",
-"<b>fit: </b>y = C + A·sin({#}πf·x + φ), with y = Liquid/ball and x = Series<br><b>A: </b>{#} (uncertainty needs at least {#} points)<br><b>f: </b>{#} (uncertainty needs at least {#} points)<br><b>φ: </b>-{#} rad (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"A damped sine fit needs points at {#} or more different values of Series.",
-"<b>fit: </b>y = C + A·e^(−(x − μ)²/({#}σ²)), with y = Liquid/ball and x = Series<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>μ: </b>{#} (uncertainty needs at least {#} points)<br><b>σ: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"<b>fit: </b>y = C + A·(sin u / u)², u = π(x − x₀)/w, with y = Liquid/ball and x = Series<br><b>A: </b>-{#} (uncertainty needs at least {#} points)<br><b>x₀: </b>{#} (uncertainty needs at least {#} points)<br><b>w: </b>{#} (uncertainty needs at least {#} points)<br><b>C: </b>{#} (uncertainty needs at least {#} points)",
-"{#} points with error bars from ρ_f / ρ_b. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"<b>fit: </b>Liquid/ball = a + b·Series + c·Series²<br><b>a: </b>({#} ± {#})<br><b>b: </b>({#} ± {#})<br><b>c: </b>({#} ± {#})",
-"Every point has the same Series ({#}), so there is no slope to fit. Use rows where Series changes, or choose another column.",
-"Falling Ball Viscometer",
-"<strong>New readings from the Falling Ball Viscometer demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Falling Ball Viscometer demo are in your table.",
-"<strong>New readings from the Falling Ball Viscometer demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Falling Ball Viscometer"
 ]);

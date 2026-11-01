@@ -99,15 +99,8 @@ VDI18N.add('en', 'ws/loops-solenoids', [
 "Angle from the axis to the rim of one end",
 "Angle from the axis to the rim of the other end",
 "Distance along the axis from the loop's center",
-"Unit: A/m",
-"Unit: m⁻¹",
 "Column O, row {#}",
 "Heading of column O",
 "Column O",
-"{#} points with error bars from Turns N. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free. The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. What the numbers tell you is for you to work out.",
-"{#} points with error bars from Turns N. Weighted least squares: each point counts with weight {#}/σ², all {#} parameters free, found by a search over starting values and then iteration (Levenberg–Marquardt). The uncertainties come from the error bars alone, not from the scatter. χ² = Σ((y − fit)/σ)², ν = n − {#}, and P is the chance of a χ² at least this large if the curve is right and the error bars are true. A negative τ means the curve grows instead of decaying. What the numbers tell you is for you to work out.",
-"Magnetic Fields of Currents",
-"<strong>New readings from the Magnetic Fields of Currents demo: </strong>{#} rows, sent Nov {#}, {#}, {#}:{#} AM.",
-"{#} readings from the Magnetic Fields of Currents demo are in your table.",
-"<strong>New readings from the Magnetic Fields of Currents demo: </strong>{#} row, sent Nov {#}, {#}, {#}:{#} AM."
+"Magnetic Fields of Currents"
 ]);
