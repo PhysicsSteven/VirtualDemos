@@ -152,7 +152,8 @@ async function leaks(list) {
         };
         await step(page);
         if (pg.startsWith('demo/') && !NOCLICK) await clickThrough(page, step);
-        const more = path.join(ROOT, 'tools/i18n', pg.replace(/^demo\//, '').replace(/\//g, '-') + '.cjs');
+        let more = path.join(ROOT, 'tools/i18n', pg.replace(/^demo\//, '').replace(/\//g, '-') + '.cjs');
+      if (!fs.existsSync(more)) more = path.join(ROOT, 'tools/i18n', pg.split('/')[0] + '.cjs');   /* shared steps for a kind of page: ws.cjs, notes.cjs */
         if (fs.existsSync(more)) { try { await require(more)(page, step); await step(page); } catch (e) { errs[mode].add('steps: ' + e.message); } }
         await page.close();
       }
@@ -187,7 +188,8 @@ async function harvest(list) {
       await page.waitForTimeout(400); await grab(page);
       if (pg.startsWith('demo/') && !NOCLICK) await clickThrough(page, grab);
       /* more states for this page: tools/i18n/<demo>.cjs exports async (page, grab) => {} (drags, sliders, long runs, warnings) */
-      const more = path.join(ROOT, 'tools/i18n', pg.replace(/^demo\//, '').replace(/\//g, '-') + '.cjs');
+      let more = path.join(ROOT, 'tools/i18n', pg.replace(/^demo\//, '').replace(/\//g, '-') + '.cjs');
+      if (!fs.existsSync(more)) more = path.join(ROOT, 'tools/i18n', pg.split('/')[0] + '.cjs');   /* shared steps for a kind of page: ws.cjs, notes.cjs */
       if (fs.existsSync(more)) { try { await require(more)(page, grab); await grab(page); } catch (e) { errors.push('steps: ' + e.message); } }
       await page.close();
     }
