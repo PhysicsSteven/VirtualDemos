@@ -1925,12 +1925,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('shH').textContent = fmtM(sh.hRatio); $('shHEq').textContent = fmtM(sh.mEqTop);
     $('shKind').textContent = sh.real ? 'Real, ' + (sh.hRatio > 0 ? 'upright' : 'inverted') : sh.virt ? 'Virtual, ' + (sh.hRatio > 0 ? 'upright' : 'inverted') : 'Partly real, partly virtual: it straddles the focal point';
   }
-  const LABEL0 = {};
+  const LABEL0 = {}, LABEL1 = {};           /* LABEL1: the label last written (in another language the page shows it translated) */
   function setLabel(id, html) {             /* html = null restores the original label */
     const el = $(id);
-    if (!(id in LABEL0)) LABEL0[id] = el.innerHTML;
+    if (!(id in LABEL0)) LABEL0[id] = LABEL1[id] = el.innerHTML;
     const want = html == null ? LABEL0[id] : html;
-    if (el.innerHTML !== want) el.innerHTML = want;
+    if (LABEL1[id] !== want) { LABEL1[id] = want; el.innerHTML = want; }
   }
   function updateInstrument(ins) {
     $('instSec').hidden = !ins;
