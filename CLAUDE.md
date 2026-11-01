@@ -10,6 +10,8 @@ only when the work needs them.
    left. Project memory holds Steve's decisions.
 3. Before each commit, run `node tools/rules.cjs` (about 4 s). It checks the rules marked **[checked]** below.
    `--list` explains each rule. To make an exception, add a reasoned ALLOW entry in the script, never a blanket skip.
+4. Read only what the work needs: this file, the memory notes for the demo or topic at hand, and a `docs/` page when a step calls
+   for it. Bulk subagent work (translation, mass checks, sweeps) runs on a cheaper model (`model: "sonnet"` or `"haiku"`).
 
 ## Repos and roles
 - This repo is public and served by GitHub Pages: `demos/`, `notes/`, `curriculum/`, `tools/` and the course pages. Claude writes
@@ -23,14 +25,17 @@ only when the work needs them.
 ## House rules
 - Physics must be exact. Every number shown comes from code or a cited source, every approximation is stated on the page, and
   limits and conservation laws are checked. Never fake data: label simulated data as simulated.
-- Constants: g = 9.81 m/s²; sound 343.2 m/s at 20 °C; 0 °C = 273.15 K; CODATA 2022. Significant figures follow the precision.
+- Constants: every physical constant, with its source, is in `demos/lib/constants.js` (`VDC`): CODATA 2022, IAU nominal values,
+  g = 9.81 m/s², sound 343.2 m/s at 20 °C, 0 °C = 273.15 K. Add a missing one there first; a copy in demo code must equal it
+  [checked]. Significant figures follow the precision.
   Fits use a free intercept. Details: memory `consistency-pass-2026-10-24`.
 - Writing: plain, precise teaching language with American spelling [checked]. No hyphens in compound modifiers ("time
   constant", "white dwarf", "nonrotating") [checked]; a part of one letter is fine (X-ray, f-number). Nothing is called
   "optional": the site supplements whatever the course does (Steve 2026-10-24) [checked]. Say "switch modes".
 - GitHub Pages runs Liquid on every Markdown file, including this one: never put a brace next to a percent
   sign, and never write a double brace [checked].
-- A demo's opening state is never at equilibrium: the first Play or Release press must visibly do something (Steve 2026-10-28).
+- A demo's opening state is never at equilibrium: the first Play or Release press must visibly do something (Steve 2026-10-28)
+  [checked by `tools/opencheck.cjs`].
 - Measuring tools (the Tools button) are supplementary only. Never use them in handouts, keys or videos.
 - Keep existing control names, because handouts and keys refer to them. Add names rather than renaming them. A rename updates every
   reference in the same commit.
@@ -60,6 +65,8 @@ only when the work needs them.
 - **Edit `demos/<name>.html` directly.** Never rebuild a demo from an older copy elsewhere: that once wiped a finished pass.
 - Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment in the middle of a
   line before code (use `/* */`). Tests are in `curriculum/validation/test_<demo>.cjs`.
+- Before pushing a new or changed demo, run `node tools/democheck.cjs <demo>` (rules, map, tests, translation, page checks,
+  opening state). A visual fix comes with a picture from `node tools/beforeafter.cjs <demo>` attached to the reply. See `docs/tools.md`.
 - House style: light and dark themes, projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
   motion, and Blind mode for predictions. Check the screenshots at desktop and phone width, light and dark.
 - Languages: English text is the key. After you build or change a demo, harvest its strings and check for leaks with
@@ -70,7 +77,7 @@ only when the work needs them.
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
 - Every worksheet has a How this works video, or a `HOWTO_VIDEO` map entry pointing to its demo's video [checked].
   The recipe is in memory `how-this-works-videos`.
-- After a handout edit, rebuild the key PDFs in TeacherKeys.
+- After a handout edit, rebuild the key PDFs in TeacherKeys [checked with `--keys`].
 
 ## Tools and generated files
 - Commands for the build scripts (courses, notes, Canvas, theme, QR, reset, thumbnails, math check): `docs/tools.md`.
