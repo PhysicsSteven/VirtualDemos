@@ -57,7 +57,7 @@ VDI18N.add('es', 'demo/bz-reaction', {
 "Oscillating beaker":
   "Vaso oscilante",
 "Target waves":
-  "Ondas en blanco",
+  "Ondas concéntricas",
 "Make a spiral":
   "Hacer una espiral",
 "Three color mosaic":

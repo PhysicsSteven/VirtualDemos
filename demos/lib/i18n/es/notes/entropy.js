@@ -1,7 +1,7 @@
 /* notes/entropy in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/entropy', {
 "Entropy and the Second Law: teaching notes":
-  "Entropía y la segunda ley: notas didácticas",
+  "Entropía y la segunda ley: notas para el docente",
 "Entropy and the Second Law":
   "Entropía y la segunda ley",
 "Intro physics (second law, statistical meaning of entropy)":

@@ -1,7 +1,7 @@
 /* notes/speed-of-light in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/speed-of-light', {
 "Speed of Light: teaching notes":
-  "Rapidez de la luz: notas didácticas",
+  "Rapidez de la luz: notas para el docente",
 "Speed of Light":
   "Rapidez de la luz",
 "Modern physics lab":

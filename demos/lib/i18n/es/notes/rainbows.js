@@ -1,7 +1,7 @@
 /* notes/rainbows in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/rainbows', {
 "Rainbows: teaching notes":
-  "Arcoíris: notas didácticas",
+  "Arcoíris: notas para el docente",
 "Rainbows":
   "Arcoíris",
 "Intro optics (algebra based), Physics II and Astronomy":

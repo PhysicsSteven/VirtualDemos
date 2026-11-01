@@ -1,7 +1,7 @@
 /* notes/superconductors in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/superconductors', {
 "Superconductors and the Meissner Effect: teaching notes":
-  "Superconductores y efecto Meissner: notas didácticas",
+  "Superconductores y efecto Meissner: notas para el docente",
 "Superconductors and the Meissner Effect":
   "Superconductores y el efecto Meissner",
 "Intro modern physics (condensed matter)":

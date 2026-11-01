@@ -1,7 +1,7 @@
 /* notes/quantum-waves in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/quantum-waves', {
 "Quantum Wave Packets: teaching notes":
-  "Paquetes de onda cuánticos: notas didácticas",
+  "Paquetes de onda cuánticos: notas para el docente",
 "Quantum Wave Packets":
   "Paquetes de onda cuánticos",
 "Modern physics":

@@ -1,7 +1,7 @@
 /* notes/doppler in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/doppler', {
 "Doppler Effect and Shock Waves: teaching notes":
-  "Efecto Doppler y ondas de choque: notas didácticas",
+  "Efecto Doppler y ondas de choque: notas para el docente",
 "Doppler Effect and Shock Waves":
   "Efecto Doppler y ondas de choque",
 "Intro physics (waves and sound); intro astronomy (redshift)":

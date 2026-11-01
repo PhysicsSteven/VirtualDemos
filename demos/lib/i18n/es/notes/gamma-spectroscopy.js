@@ -1,7 +1,7 @@
 /* notes/gamma-spectroscopy in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/gamma-spectroscopy', {
 "Gamma Spectroscopy: teaching notes":
-  "Espectroscopía gamma: notas didácticas",
+  "Espectroscopía gamma: notas para el docente",
 "Gamma Spectroscopy":
   "Espectroscopía gamma",
 "Modern physics lab (prelab for the NaI(Tl) spectrometer)":

@@ -1,7 +1,7 @@
 /* notes/induction in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/induction', {
 "Charging by Induction: teaching notes":
-  "Carga por inducción: notas didácticas",
+  "Carga por inducción: notas para el docente",
 "Charging by Induction":
   "Carga por inducción",
 "In a conductor, electrons move freely. A charged object nearby pulls some toward it and leaves the far side with the opposite charge (polarization), with no change in total charge.":

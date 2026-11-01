@@ -1,7 +1,7 @@
 /* notes/transformers in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/transformers', {
 "Transformers: teaching notes":
-  "Transformadores: notas didácticas",
+  "Transformadores: notas para el docente",
 "Transformers":
   "Transformadores",
 "Intro physics (mutual inductance, AC, power transmission)":

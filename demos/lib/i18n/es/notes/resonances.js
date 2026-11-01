@@ -1,7 +1,7 @@
 /* notes/resonances in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/resonances', {
 "Orbital Resonances: teaching notes":
-  "Resonancias orbitales: notas didácticas",
+  "Resonancias orbitales: notas para el docente",
 "Orbital Resonances":
   "Resonancias orbitales",
 "Astro {#}, Topics {#} and {#} (no textbook section); Astronomy module, gravitation and orbits":

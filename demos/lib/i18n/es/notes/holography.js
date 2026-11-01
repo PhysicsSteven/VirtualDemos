@@ -1,7 +1,7 @@
 /* notes/holography in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/holography', {
 "Holography: teaching notes":
-  "Holografía: notas didácticas",
+  "Holografía: notas para el docente",
 "Holography":
   "Holografía",
 "Intro physics (wave optics: interference, gratings, holograms)":

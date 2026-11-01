@@ -6868,3 +6868,18 @@ Points for a fluent reviewer, from the groups: "UA" versus "au" (both appear), "
 as W in canvas labels, tidal "abultamiento", "tapa estancada", "Gran Cucharón", "torca", "seeing" left in English. Typo in the
 English celestial sphere key "Ophiucus" (should be Ophiuchus). Some worksheets name controls of demos that have no Spanish
 catalog yet; when those demos are translated, match the worksheet's names.
+
+## 2026-11-01 (Claude): Spanish finished on every page
+
+After the weekly reset Steve asked to finish Spanish and measure the cost from zero. Six groups translated the last 293 pages
+(21,764 strings: demos, worksheets, teaching notes) in about 35 minutes. `index` lists 518 Spanish pages; `check` reports
+49,185 of 49,185 page strings translated. Measured: 1.21 M subagent tokens (about 56 per string); Steve read his weekly usage
+going 0 % to about 4 %. Fixed after merging: BZ "Target waves" is now "Ondas concéntricas"; every notes title ends
+"notas para el docente".
+For a fluent reviewer (from the groups' reports): emf as "FEM" and "fem"; engine as "motor" and "máquina"; beats as "batidos"
+and "pulsaciones"; parent and daughter as "madre/hija" and "padre e hijo"; "Ga" and "mil millones de años"; "píxeles" and
+"pixeles"; a few demo titles with two Spanish forms (site catalog against demo catalog); "Fondo" for the Background heading;
+English words left inside `\text{}` in math (the check treats braces as placeholders). Harvest junk worth cleaning: about 268
+near duplicate keys in demo/nuclear-reactions, sentences split around inline code in some notes. Phone layout: at 400 px a
+longer Spanish button strip can wrap and cover canvas text below it (rocket: Herramientas covers t = 0.0 s); look at this in the
+visual pass with `:root[data-vd-lang]` rules. Two stale keys in es/site.

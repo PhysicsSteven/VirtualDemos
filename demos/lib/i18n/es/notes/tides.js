@@ -1,7 +1,7 @@
 /* notes/tides in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/tides', {
 "Tides: teaching notes":
-  "Mareas: notas didácticas",
+  "Mareas: notas para el docente",
 "Tides":
   "Mareas",
 "Intro astronomy; intro mechanics (gravity, Newton's laws)":

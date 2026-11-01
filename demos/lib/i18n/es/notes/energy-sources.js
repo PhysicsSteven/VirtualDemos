@@ -1,7 +1,7 @@
 /* notes/energy-sources in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/energy-sources', {
 "Sources of Energy: teaching notes":
-  "Fuentes de energía: notas didácticas",
+  "Fuentes de energía: notas para el docente",
 "Sources of Energy":
   "Fuentes de energía",
 "Energy per kilogram spans about eight powers of ten: lithium ion batteries {#} MJ, chemical fuels {#} to {#} MJ, uranium {#} about {#} × {#}⁷ MJ. Nuclear energy per kilogram is millions of times chemical because nuclear binding energies are MeV, chemical bonds eV.":

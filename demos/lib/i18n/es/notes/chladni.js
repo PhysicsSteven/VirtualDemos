@@ -1,7 +1,7 @@
 /* notes/chladni in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/chladni', {
 "Chladni Plates: teaching notes":
-  "Placas de Chladni: notas didácticas",
+  "Placas de Chladni: notas para el docente",
 "Chladni Plates":
   "Placas de Chladni",
 "Acoustics; intro physics (waves and sound, resonance)":

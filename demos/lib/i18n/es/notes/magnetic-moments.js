@@ -1,7 +1,7 @@
 /* notes/magnetic-moments in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/magnetic-moments', {
 "Atoms in a Magnetic Field: teaching notes":
-  "Átomos en un campo magnético: notas didácticas",
+  "Átomos en un campo magnético: notas para el docente",
 "Atoms in a Magnetic Field":
   "Átomos en un campo magnético",
 "Intro modern physics (atomic structure)":

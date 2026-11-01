@@ -1,7 +1,7 @@
 /* notes/seasons in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/seasons', {
 "Reasons for Seasons: teaching notes":
-  "Las razones de las estaciones: notas didácticas",
+  "Las razones de las estaciones: notas para el docente",
 "Reasons for Seasons":
   "Las razones de las estaciones",
 "Intro astronomy (non-majors and majors); intro physics (flux and angle of incidence)":

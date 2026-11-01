@@ -1,7 +1,7 @@
 /* notes/dna in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/dna', {
 "DNA in 3D: teaching notes":
-  "ADN en 3D: notas didácticas",
+  "ADN en 3D: notas para el docente",
 "DNA in 3D":
   "ADN en 3D",
 "PHYS {#} (Coulomb forces and screening); biophysics; general science":

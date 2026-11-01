@@ -1,7 +1,7 @@
 /* notes/ct-range in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/ct-range', {
 "CT Numbers and Proton Range: teaching notes":
-  "Números CT y alcance de protones: notas didácticas",
+  "Números CT y alcance de protones: notas para el docente",
 "CT Numbers and Proton Range":
   "Números CT y alcance de protones",
 "Medical Physics, proton therapy (upper level, calculus)":

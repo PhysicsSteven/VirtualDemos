@@ -1,7 +1,7 @@
 /* notes/eddy-currents in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/eddy-currents', {
 "Eddy Currents: Magnet in a Pipe: teaching notes":
-  "Corrientes parásitas: imán en un tubo: notas didácticas",
+  "Corrientes parásitas: imán en un tubo: notas para el docente",
 "Eddy Currents: Magnet in a Pipe":
   "Corrientes de Foucault: imán en un tubo",
 "A magnet moving past a conductor changes the flux through rings of the conductor, which drives currents around them (eddy currents).":

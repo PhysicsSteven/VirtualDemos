@@ -1,7 +1,7 @@
 /* notes/blackbody in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/blackbody', {
 "Blackbody Radiation: teaching notes":
-  "Radiación de cuerpo negro: notas didácticas",
+  "Radiación de cuerpo negro: notas para el docente",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
 "Intro astronomy (non-majors and majors); modern physics (Planck and the ultraviolet catastrophe)":

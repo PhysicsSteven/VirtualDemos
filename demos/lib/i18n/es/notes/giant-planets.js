@@ -1,7 +1,7 @@
 /* notes/giant-planets in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/giant-planets', {
 "Giant Planets, Rings and Moons: teaching notes":
-  "Planetas gigantes, anillos y lunas: notas didácticas",
+  "Planetas gigantes, anillos y lunas: notas para el docente",
 "Giant Planets, Rings and Moons":
   "Planetas gigantes, anillos y lunas",
 "Intro astronomy (non majors and majors); Astro {#}, Topics {#} and {#} (Jupiter and Saturn; Uranus, Neptune and the Kuiper belt); OpenStax Astronomy 2e chapters {#} and {#}":

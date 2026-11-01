@@ -1,7 +1,7 @@
 /* notes/lasers in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/lasers', {
 "Lasers and Stimulated Emission: teaching notes":
-  "Láseres y emisión estimulada: notas didácticas",
+  "Láseres y emisión estimulada: notas para el docente",
 "Lasers and Stimulated Emission":
   "Láseres y emisión estimulada",
 "Modern physics":

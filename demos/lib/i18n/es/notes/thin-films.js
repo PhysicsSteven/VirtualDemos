@@ -1,7 +1,7 @@
 /* notes/thin-films in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/thin-films', {
 "Thin Film Interference: teaching notes":
-  "Interferencia en películas delgadas: notas didácticas",
+  "Interferencia en películas delgadas: notas para el docente",
 "Thin Film Interference":
   "Interferencia en películas delgadas",
 "PHYS {#} (optics unit)":

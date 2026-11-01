@@ -1,7 +1,7 @@
 /* notes/magnetism-in-matter in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'notes/magnetism-in-matter', {
 "Magnetism in Matter: teaching notes":
-  "Magnetismo en la materia: notas didácticas",
+  "Magnetismo en la materia: notas para el docente",
 "Magnetism in Matter":
   "Magnetismo en la materia",
 "Filling a long solenoid with a material changes the field from B₀ = μ₀nI to B = ({#} + χ)B₀ (OpenStax Eq. {#} and {#}). The susceptibility χ says how strongly the material answers.":
