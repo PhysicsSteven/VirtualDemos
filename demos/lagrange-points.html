@@ -127,6 +127,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 .vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
 .vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -1556,15 +1558,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = ctx, ps = projScale(), sys = sysNow();
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
     const P3 = (x, y) => L3.S.project([x, y, hz(x, y)]);
+    /* L1 and L2 close together on the screen (a light partner seen from afar): one label for both, so the two never print on top of each other */
+    const q1 = P3(LPT.L1.x, LPT.L1.y), q2 = P3(LPT.L2.x, LPT.L2.y), both = Math.abs(q1[0] - q2[0]) < 110 * ps && Math.abs(q1[1] - q2[1]) < 18 * ps && !(sys.tags && (sys.tags.L1 || sys.tags.L2));
+    if (S.show.lab && both && q1[2] <= 1) label(c, 'L1 and L2, saddles', (q1[0] + q2[0]) / 2, Math.min(q1[1], q2[1]) - 12 * ps, T.pos, 'center', 'bottom', true);
     if (S.show.lab) for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) {
+      if (both && (k === 'L1' || k === 'L2')) continue;
       const p = LPT[k], q = P3(p.x, p.y); if (q[2] > 1 || q[0] < -40 || q[0] > W + 40 || q[1] < -20 || q[1] > H + 20) continue;
       const tag = sys.tags && sys.tags[k] ? k + ' · ' + sys.tags[k] : k;
-      label(c, tag + (k === 'L4' || k === 'L5' ? ', hilltop' : ', saddle'), q[0], q[1] - 12 * ps, T.pos, 'center', 'bottom', true);
+      label(c, tag + (k === 'L4' || k === 'L5' ? ', hilltop' : ', saddle'), q[0], q[1] - 12 * ps, p.st && p.st.stable ? T.stable : T.pos, 'center', 'bottom', true);   /* green where an object stays, red where it drifts away, as in Flat */
     }
     const f = L3.A * 6;
     for (const [x, name] of [[-S.mu, sys.m1], [1 - S.mu, sys.m2]]) { const q = L3.S.project([x, 0, -f]); if (q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) label(c, name, q[0], q[1] + 16 * ps, T.ink, 'center', 'top'); }
     c.font = `${11 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    c.fillText('Height: −ln(1 + (2Ω − C_L4)/s), not to scale · forbidden ground shaded · ' + (L3.drag === 'throw' ? 'drag to throw, click to drop' : 'click to drop, Shift drag to throw'), 10, H - 8);
+    /* the caption, translated whole and wrapped to the picture's width (phones), drawn as it is */
+    { const parts = ['Height: −ln(1 + (2Ω − C_L4)/s), not to scale', 'forbidden ground shaded', L3.drag === 'throw' ? 'drag to throw, click to drop' : 'click to drop, Shift drag to throw'].map((t) => (window.VDI18N ? VDI18N.t(t) : t));
+      const go = () => { const lines = []; let cur = ''; for (const t of parts) { const t2 = cur ? cur + ' · ' + t : t; if (cur && c.measureText(t2).width > W - 20) { lines.push(cur); cur = t; } else cur = t2; } lines.push(cur);
+        lines.forEach((l, i) => c.fillText(l, 10, H - 8 - (lines.length - 1 - i) * 14 * ps)); };
+      if (window.VDI18N) VDI18N.raw(go); else go(); }
     // a throw in progress: the arrow lies in the level plane through the start point and shows how far the particle would go in 0.1 P, as in Flat
     const a = L3.thr; if (!a) return;
     const st = throw3State(a), p0 = L3.S.project([a.w0[0], a.w0[1], a.z]), p1 = L3.S.project([a.w1[0], a.w1[1], a.z]);

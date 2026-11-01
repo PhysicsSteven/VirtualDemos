@@ -6,11 +6,11 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** 1 Parallax; 2 Cepheids; 3 Type Ia; 4 Hubble's law; Whole ladder. This worksheet uses 1 Parallax.
+**Setups in the demo:** 1 Parallax; Spectroscopic parallax; Main sequence fitting; 2 Cepheids; Cepheid photometry; 3 Type Ia; 4 Hubble's law; Whole ladder. This worksheet uses 1 Parallax.
 
 **Using the demo.**
 
-- On the left, a top view of Earth's orbit around the Sun with a nearby star above it; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.
+- On the left, Earth's orbit around the Sun with a nearby star beyond it, in 3D (drag the empty sky to turn it) or, with Flat, seen from above; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.
 - On the right, what a telescope sees: a photo in January, a photo in July, and the two laid on top of each other. The nearby star sits in a different place against the far background stars in the two photos.
 - Choose a real star (Proxima Centauri, Sirius, Vega) or Any distance, then set the distance with the slider. Choose the instrument: Ground (telescopes on the ground before the 1990s), Hipparcos (a satellite, 1989 to 1993) or Gaia (a satellite that measured from 2014 to 2025). Each can place a star only to within its position uncertainty, drawn as a dashed circle when it is big enough to see.
 - Drag the two ends of the ruler in the overlaid photo onto the January and July images to measure the shift.

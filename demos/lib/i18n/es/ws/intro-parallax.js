@@ -16,10 +16,10 @@ VDI18N.add('es', 'ws/intro-parallax', {
   "Paralaje: medir la distancia a una estrella | VirtualDemos",
 "Parallax: Measuring the Distance to a Star":
   "Paralaje: medir la distancia a una estrella",
-"<strong>Setups in the demo:</strong> {#} Parallax; {#} Cepheids; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.":
-  "<strong>Configuraciones en la demo:</strong> {#} Paralaje; {#} Cefeidas; {#} Tipo Ia; {#} Ley de Hubble; Toda la escalera. Esta hoja de trabajo usa {#} Paralaje.",
-"On the left, a top view of Earth’s orbit around the Sun with a nearby star above it; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.":
-  "A la izquierda, una vista superior de la órbita de la Tierra alrededor del Sol con una estrella cercana arriba; los ángulos están enormemente exagerados para que puedas verlos. Arrastra la Tierra por su órbita, o reproduce un año.",
+"<strong>Setups in the demo:</strong> {#} Parallax; Spectroscopic parallax; Main sequence fitting; {#} Cepheids; Cepheid photometry; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.":
+  "<strong>Configuraciones del demo:</strong> {#} Paralaje; Paralaje espectroscópico; Ajuste de la secuencia principal; {#} Cefeidas; Fotometría de cefeidas; {#} Tipo Ia; {#} Ley de Hubble; Toda la escalera. Esta hoja de trabajo usa {#} Paralaje.",
+"On the left, Earth’s orbit around the Sun with a nearby star beyond it, in 3D (drag the empty sky to turn it) or, with Flat, seen from above; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.":
+  "A la izquierda, la órbita de la Tierra alrededor del Sol con una estrella cercana más allá, en 3D (arrastra el cielo vacío para girarlo) o, con Plano, vista desde arriba; los ángulos están muy exagerados para que puedas verlos. Arrastra la Tierra por su órbita, o reproduce un año.",
 "On the right, what a telescope sees: a photo in January, a photo in July, and the two laid on top of each other. The nearby star sits in a different place against the far background stars in the two photos.":
   "A la derecha, lo que ve un telescopio: una foto en enero, una foto en julio y las dos superpuestas. La estrella cercana está en un lugar distinto respecto a las estrellas lejanas del fondo en las dos fotos.",
 "Choose a real star (Proxima Centauri, Sirius, Vega) or Any distance, then set the distance with the slider. Choose the instrument: Ground (telescopes on the ground before the 1990s), Hipparcos (a satellite, {#} to {#}) or Gaia (a satellite that measured from {#} to {#}). Each can place a star only to within its position uncertainty, drawn as a dashed circle when it is big enough to see.":

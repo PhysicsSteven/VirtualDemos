@@ -147,5 +147,7 @@ VDI18N.add('en', 'demo/exoplanets', [
 "{#} ppm drop",
 "Revealed: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} AU, i = {i}°, γ = {g} km/s.",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.",
+"To Earth, {#}° up",
+"stars and orbit to scale · drag to turn",
 "time from mid transit"
 ]);

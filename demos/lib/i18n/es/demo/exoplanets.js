@@ -294,6 +294,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Revelado: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} UA, i = {i}°, γ = {g} km/s.",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
+"To Earth, {#}° up":
+  "Hacia la Tierra, {#}° arriba",
+"stars and orbit to scale · drag to turn":
+  "estrellas y órbita a escala · arrastra para girar",
 "time from mid transit":
   "tiempo desde la mitad del tránsito"
 });

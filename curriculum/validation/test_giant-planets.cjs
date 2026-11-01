@@ -2,7 +2,7 @@
 // Giant Planets, Rings and Moons: NASA data consistency, Roche limits, Kepler's third law, the resonances, the Mimas 2:1 place, Io's tidal heating and the rubble pile moon.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('giant-planets', 'G,DAY,HOUR,PLANETS,GIANTS,MOONS,RING_MOONS,RINGS,ROCHE_FLUID,ROCHE_RIGID,rocheUnit,rocheLimit,rocheUnits,kepPeriod,gmFromOrbit,density,spinQ,uniformFlattening,ilr21,kepler21,moonAt,meanLon,laplaceAngle,IO_K2Q,tidalHeat,IO_FLUX_OBS,tideSwing,makePile,settlePile,pileAt,pileClone,pileStep,largestPiece,PILE_DT,PILE_N,PILE_SEED');
+const c = core('giant-planets', 'G,DAY,HOUR,PLANETS,GIANTS,MOONS,RING_MOONS,RINGS,ROCHE_FLUID,ROCHE_RIGID,rocheUnit,rocheLimit,rocheUnits,kepPeriod,gmFromOrbit,density,spinQ,uniformFlattening,ilr21,kepler21,moonAt,meanLon,laplaceAngle,IO_K2Q,tidalHeat,IO_FLUX_OBS,tideSwing,makePile,settlePile,pileAt,pileClone,pileStep,largestPiece,PILE_DT,PILE_N,PILE_SEED,GAL_GM,GAL_DT,galStart,galStep,galEcc,galEnergy');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -82,6 +82,22 @@ group('rubble pile: breaks inside 1.66 Roche units within two orbits, holds at 2
   const run = (d, orbits) => { const st = c.pileAt(c.pileClone(base), d), T = 2 * Math.PI / st.Om; while (st.t < orbits * T) c.pileStep(st, c.PILE_DT, 0); return c.largestPiece(st); };
   assert(run(1.6, 2) < 0.3, 'ice moon at 1.6 units comes apart');
   assert(run(2.37, 2) > 0.95, 'rock moon at 2.37 units holds');
+});
+
+group('Galilean moons pulling on each other: energy holds, periods match NASA, Europa pumps Io from a circle to e near 0.009 and back', () => {
+  /* each moon's GM over Jupiter's agrees with the NASA masses to 0.1 % (Io 8.93e22 kg, Europa 4.80e22, Ganymede 1.48e23, Callisto 1.08e23) */
+  [[0, 8.93e22], [1, 4.80e22], [2, 1.4819e23], [3, 1.0759e23]].forEach(([i, M]) => near(c.GAL_GM[i] * 1e9 / c.G, M, 2e-3, `GM ${i}`));
+  const st = c.galStart(), E0 = c.galEnergy(st), e0 = c.galEcc(st, 0), DAY = c.DAY, eAll = [], th0 = Math.atan2(st.y[0], st.x[0]); let laps = 0, prev = th0, tLap = 0;
+  while (st.t < 450 * DAY) { c.galStep(st); const th = Math.atan2(st.y[0], st.x[0]); if (prev < th0 && th >= th0 && st.t > DAY) { laps++; tLap = st.t; } prev = th;
+    if (Math.round(st.t / c.GAL_DT) % 25 === 0) eAll.push([st.t / DAY, c.galEcc(st, 0)]); }
+  near(c.galEnergy(st), E0, 1e-8, 'energy');
+  /* Io's mean period from its laps (sidereal, within 0.1 % of NASA's 1.769138 d; Europa's pull and the bulge shift it a little) */
+  near(tLap / laps / DAY, 1.769138, 1e-3, 'Io period');
+  const emax = Math.max(...eAll.filter(([d]) => d < 300).map((q) => q[1])), tmax = eAll.find((q) => q[1] === emax)[0];
+  assert(e0 < 1e-12, 'Io starts on a circle'); assert(emax > 0.0085 && emax < 0.0095, `Io's largest e ${emax}`); assert(tmax > 180 && tmax < 250, `at day ${tmax}`);
+  const back = Math.min(...eAll.filter(([d]) => d > 380).map((q) => q[1])); assert(back < 0.0025, `Io's orbit rounds off again near day 440 (${back})`);
+  const noE = c.galStart([1, 0, 1, 1]); let e2 = 0; while (noE.t < 300 * DAY) { c.galStep(noE); e2 = Math.max(e2, c.galEcc(noE, 0)); }
+  assert(e2 < 0.001, `without Europa Io stays nearly round (${e2})`);
 });
 
 console.log(`giant-planets: ${n} groups passed`);

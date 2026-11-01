@@ -11,7 +11,7 @@ Student worksheet · Astro 2203
 **Using the demo.**
 
 - Two bodies, a big one and a smaller one, orbit each other on circles. A small object, too light to pull on them (an asteroid or a spacecraft), moves in their plane. The picture turns with the two bodies, so they stay still on the screen.
-- The map shows the five Lagrange points: green when an object placed there stays, red when it drifts away. The colored contours are like a height map: an object slides away from the hills.
+- The map shows the five Lagrange points: green when an object placed there stays, red when it drifts away. The colored contours are like a height map: an object let go at rest starts to slide downhill, and once it moves, the turning of the picture also swings it sideways.
 - Click empty space to drop an object at rest, or drag to throw it. Choose a real system, or set the mass ratio yourself: the smaller body's share of the total mass, μ (the Greek letter mu).
 - The list of Lagrange points gives each point's position. For a point where objects stay, it gives the period of their slow wobble around it; for a point where they drift away, the time for a small offset to grow about 2.7 times.
 - Lengths are in units of the distance between the two bodies (the separation) and times in units of their orbital period. Real spacecraft at L1 and L2 fly loops around the points in three dimensions, and real Trojan asteroids have tilted orbits; the demo leaves both out.
@@ -29,7 +29,7 @@ Find the five places near two orbiting bodies where a small object can keep pace
 
 **Where they are.** L1 is between the two bodies, L2 just beyond the smaller one, L3 on the far side of the big one. L4 and L5 are 60° ahead of and behind the smaller body along its orbit, each making an equal sided triangle with the two bodies.
 
-**Stay or drift.** At L1, L2 and L3 a small nudge grows: an object slides away like a ball balanced on a hilltop. At L4 and L5, if the smaller body is light enough, a nudged object wobbles around the point and stays. Thousands of **Trojan asteroids** share Jupiter's orbit this way, gathered around Jupiter's L4 and L5.
+**Stay or drift.** At L1, L2 and L3 a small nudge grows: an object slides away like a ball balanced on a mountain pass, which the demo calls a saddle. At L4 and L5, if the smaller body is light enough, a nudged object wobbles around the point and stays. On the demo's height map L4 and L5 are hilltops, so this is a surprise: as an object starts to slide off, it speeds up, and the turning of the frame (the Coriolis effect) bends its path sideways, so it circles the hilltop instead of leaving it. Thousands of **Trojan asteroids** share Jupiter's orbit this way, gathered around Jupiter's L4 and L5.
 
 **Parking spacecraft.** L1 and L2 of the Sun and Earth sit about 1.5 million km from Earth, always in the same place compared with Sun and Earth. The SOHO observatory watches the Sun from L1; the James Webb Space Telescope (JWST) sits near L2, with Earth and the Sun always on the same side, behind its sunshield. Because they drift, these spacecraft fire small thrusters every few weeks to stay.
 

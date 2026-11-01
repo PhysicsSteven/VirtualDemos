@@ -48,6 +48,8 @@
 @media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
 @media (max-width: 420px) { .scene { height: 380px; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -104,6 +106,8 @@
         <div id="boxMoons" hidden>
           <div class="pick"><label for="selMoon">Moon</label><select id="selMoon"></select></div>
           <label class="check"><input type="checkbox" id="chkConj" checked><span>Mark where pairs of moons line up</span></label>
+          <label class="check" id="nbWrap"><input type="checkbox" id="chkNb"><span>Moons pull on each other (computed)</span></label>
+          <label class="check" id="noEuWrap"><input type="checkbox" id="chkNoEu"><span>Take Europa away</span></label>
         </div>
         <div id="boxIo" hidden>
           <div><div class="slider-head"><label for="sEcc">Io's eccentricity e</label><output id="oEcc" class="mono" for="sEcc"></output></div><input type="range" id="sEcc" min="0" max="0.01" step="0.0005"></div>
@@ -127,6 +131,7 @@
           <button type="button" data-p="shear" aria-pressed="false">Rings shear</button>
           <button type="button" data-p="gaps" aria-pressed="false">Gaps, shepherds and Mimas</button>
           <button type="button" data-p="galilean" aria-pressed="false">Io, Europa, Ganymede 1:2:4</button>
+          <button type="button" data-p="ioforced" aria-pressed="false">Europa stretches Io's orbit</button>
           <button type="button" data-p="saturnmoons" aria-pressed="false">Enceladus and Dione 2:1</button>
           <button type="button" data-p="triton" aria-pressed="false">Triton goes backward</button>
           <button type="button" data-p="marsmoons" aria-pressed="false">Mars weighed by Phobos</button>
@@ -375,6 +380,51 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       best = Math.max(best, c); }
     return best / N;
   }
+  /* Jupiter's four big moons pulling on each other (2026-11-01), computed step by step, in Jupiter's equator plane. Each moon's GM in
+     km³/s² from JPL's planetary satellite physical parameters (ssd.jpl.nasa.gov/sats/phys_par): Io 5959.916, Europa 3202.739,
+     Ganymede 9887.834, Callisto 7179.289. In a frame centered on Jupiter each moon feels Jupiter (a point mass plus its equatorial
+     bulge J2, in the plane: the pull is multiplied by 1 + (3/2) J2 (R/r)²), every other moon, and minus the pull each other moon gives
+     Jupiter (the frame's own acceleration). Leapfrog steps (kick, drift, kick) of 0.01 day; the total energy, measured from the center of mass, holds to 2 parts in a million over 1000 days.
+     Every moon starts on a circle at its NASA distance and its J2000 mean longitude, at the circular speed with the bulge,
+     v² = (GM_J + GM_m)/r × (1 + (3/2) J2 (R/r)²). Left out: J4 and higher, the Sun's pull, tilts of the orbits, tides. */
+  const GAL_GM = [5959.916, 3202.739, 9887.834, 7179.289], GAL_DT = 864;
+  function galStart(keep) {
+    const J = PLANETS.jupiter, ms = MOONS.jupiter, st = { t: 0, on: keep || [1, 1, 1, 1], x: [], y: [], vx: [], vy: [], ax: [0, 0, 0, 0], ay: [0, 0, 0, 0] };
+    ms.forEach((m, i) => { const r = m.a, th = m.lam * Math.PI / 180, v = Math.sqrt((J.GM + GAL_GM[i]) / r * (1 + 1.5 * J.J2 * (J.Req / r) * (J.Req / r)));
+      st.x[i] = r * Math.cos(th); st.y[i] = r * Math.sin(th); st.vx[i] = -v * Math.sin(th); st.vy[i] = v * Math.cos(th); });
+    galAcc(st); return st;
+  }
+  function galAcc(st) {
+    const J = PLANETS.jupiter, R2 = J.Req * J.Req, { x, y, ax, ay, on } = st;
+    for (let i = 0; i < 4; i++) { ax[i] = ay[i] = 0; if (!on[i]) continue;
+      const r2 = x[i] * x[i] + y[i] * y[i], r = Math.sqrt(r2), k = -(J.GM + GAL_GM[i]) / (r2 * r) * (1 + 1.5 * J.J2 * R2 / r2); ax[i] += k * x[i]; ay[i] += k * y[i];
+      for (let j = 0; j < 4; j++) { if (j === i || !on[j]) continue;
+        const dx = x[j] - x[i], dy = y[j] - y[i], d2 = dx * dx + dy * dy, d = Math.sqrt(d2), q2 = x[j] * x[j] + y[j] * y[j], q = Math.sqrt(q2);
+        ax[i] += GAL_GM[j] * (dx / (d2 * d) - x[j] / (q2 * q)); ay[i] += GAL_GM[j] * (dy / (d2 * d) - y[j] / (q2 * q)); } }
+  }
+  function galStep(st, h) {
+    const { x, y, vx, vy, ax, ay } = st; h = h || GAL_DT;
+    for (let i = 0; i < 4; i++) { vx[i] += 0.5 * h * ax[i]; vy[i] += 0.5 * h * ay[i]; x[i] += h * vx[i]; y[i] += h * vy[i]; }
+    galAcc(st); for (let i = 0; i < 4; i++) { vx[i] += 0.5 * h * ax[i]; vy[i] += 0.5 * h * ay[i]; } st.t += h;
+  }
+  /* the eccentricity of moon i's orbit now, from its place and speed (the osculating ellipse), with the bulge folded into GM at its
+     distance so a circle reads 0 */
+  function galEcc(st, i) {
+    const J = PLANETS.jupiter, x = st.x[i], y = st.y[i], vx = st.vx[i], vy = st.vy[i], r = Math.hypot(x, y), mu = (J.GM + GAL_GM[i]) * (1 + 1.5 * J.J2 * (J.Req / r) * (J.Req / r));
+    const v2 = vx * vx + vy * vy, rv = x * vx + y * vy, ex = ((v2 - mu / r) * x - rv * vx) / mu, ey = ((v2 - mu / r) * y - rv * vy) / mu;
+    return Math.hypot(ex, ey);
+  }
+  /* the total energy of Jupiter and the moons, measured from their center of mass, in units of km² s⁻² times GM (for the test): Jupiter's
+     own speed there is −Σ GM_i v_i / (GM_J + Σ GM_i); kinetic energy of all five, Jupiter's pull with its bulge, the moons' pulls on each other */
+  function galEnergy(st) {
+    const J = PLANETS.jupiter, { x, y, vx, vy, on } = st; let mt = J.GM, px = 0, py = 0;
+    for (let i = 0; i < 4; i++) if (on[i]) { mt += GAL_GM[i]; px += GAL_GM[i] * vx[i]; py += GAL_GM[i] * vy[i]; }
+    const Vx = -px / mt, Vy = -py / mt; let E = 0.5 * J.GM * (Vx * Vx + Vy * Vy);
+    for (let i = 0; i < 4; i++) { if (!on[i]) continue; const r = Math.hypot(x[i], y[i]), ux = vx[i] + Vx, uy = vy[i] + Vy;
+      E += GAL_GM[i] * (0.5 * (ux * ux + uy * uy) - J.GM / r * (1 + 0.5 * J.J2 * (J.Req / r) * (J.Req / r)));
+      for (let j = i + 1; j < 4; j++) if (on[j]) E -= GAL_GM[i] * GAL_GM[j] / Math.hypot(x[j] - x[i], y[j] - y[i]); }
+    return E;
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
   const $ = (id) => document.getElementById(id);
@@ -395,6 +445,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     shear: { mode: 'rings', planet: 'saturn', rho: 920, dist: 2.6, roche: false, res: false, speed: 3600, stripe: true, run: true, hint: 'A straight line painted across the rings. Each ring particle is a tiny moon on its own orbit, and by Kepler\'s third law the inner ones go round faster: 4.9 hours at the inner edge of the faint D ring, 5.8 hours at the inner edge of the C ring and 14.3 hours at the outer edge of the A ring. The line winds into a spiral, which is why rings are made of many separate particles and not one solid sheet.' },
     gaps: { mode: 'rings', planet: 'saturn', rho: 920, dist: 2.6, roche: false, res: true, speed: 3600, zoom: 1, hint: 'Small moons shape the rings. Pan orbits in the Encke gap and Daphnis in the Keeler gap and keep them clear; Prometheus inside and Pandora outside shepherd the narrow F ring. These small moons orbit inside the Roche limit for their own low densities and survive, because they are small enough for a little strength to hold them (Porco et al. 2007). The dashed line marks where a ring particle goes round exactly twice for each orbit of Mimas, so Mimas tugs it at the same place every other turn: 117 528 km with Saturn\'s bulge included, beside the outer edge of the B ring at 117 507 km, where the Cassini division begins.' },
     galilean: { mode: 'moons', planet: 'jupiter', moon: 0, conj: true, speed: 86400, run: true, hint: 'Jupiter\'s four big moons, starting where they were at noon on 1 January 2000. Io goes round 2.007 times for each orbit of Europa, and Europa 2.015 times for each orbit of Ganymede: a 1:2:4 rhythm, the Laplace resonance. The lines mark where Io passes Europa and where Europa passes Ganymede; each pair always lines up near the same places. The three can never line up on one side of Jupiter together: λ(Io) − 3λ(Europa) + 2λ(Ganymede) stays at 180°. Kepler\'s third law with each moon gives Jupiter\'s mass.' },
+    ioforced: { mode: 'moons', planet: 'jupiter', moon: 0, conj: false, nb: true, speed: 345600, run: true, hint: 'Jupiter\'s four big moons pulling on each other as well as being pulled by Jupiter, computed step by step. Io starts on a perfect circle. Io passes Europa every 3.5 days, always near the same places, so Europa\'s tugs add up instead of averaging out: within about 225 days Io\'s orbit is stretched to an eccentricity near 0.0095, then by about day 450 it is round again, over and over. Its average, about 0.005, is close to Io\'s real 0.0041. Io\'s real orbit holds steady near 0.004, because over millions of years Io\'s tides wore that swing away, leaving the stretch that Europa keeps forcing. Take Europa away and Io\'s orbit stays a circle.' },
     saturnmoons: { mode: 'moons', planet: 'saturn', moon: 1, conj: true, speed: 86400, run: true, hint: 'Saturn\'s mid sized moons from noon on 1 January 2000. Enceladus goes round 1.997 times for each orbit of Dione, and Mimas 2.003 times for each orbit of Tethys. Dione\'s regular tugs keep Enceladus\'s orbit slightly out of round, and the flexing tides warm the ocean under its ice that feeds its geysers. Titan, the big one, holds most of the mass.' },
     triton: { mode: 'moons', planet: 'neptune', moon: 1, conj: false, speed: 86400, run: true, hint: 'Triton goes round Neptune backward, against Neptune\'s spin, the only large moon in the solar system that does. A moon born from the disk round its planet would go the same way as the planet spins, so Triton was most likely captured, perhaps from the Kuiper belt. Its density, 2.05 g/cm³, is close to Pluto\'s 1.85 g/cm³ (NASA). (Their starting places are spread out for clarity, not taken from a date.)' },
     marsmoons: { mode: 'moons', planet: 'mars', moon: 0, conj: false, speed: 3600, run: true, hint: 'Mars has two small moons, Phobos and Deimos, about 22 and 12 km across (drawn 20 times larger), probably captured asteroids or pieces thrown up by a giant impact. Phobos goes round in 7 h 39 min, faster than Mars turns (24.6 h), so from Mars it rises in the west and sets in the east, twice a day; Mars\'s tides drag it slowly inward. Kepler\'s third law with Phobos\'s orbit gives Mars\'s mass, 6.43 × 10²³ kg, within 0.2 % of NASA\'s value. (Starting places spread out for clarity, not taken from a date.)' },
@@ -403,7 +454,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     iocircle: { mode: 'io', planet: 'jupiter', e: 0, exag: true, speed: 21600, run: true, hint: 'If Europa and Ganymede were taken away, Io\'s orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = 0.004 pumped up.' },
   };
   const S = { preset: 'giants', mode: 'planets', planet: 'saturn', sel: 'jupiter', earth: true, rho: 920, dist: 2.6, roche: true, res: false, conj: true, moon: 0,
-    e: 0.004, exag: true, t: 0, run: false, speed: 3600, zoom: { planets: 0, rings: 0, moons: 0, io: 0 }, blind: false, stripe: null, piece: 1, slow: false };
+    e: 0.004, exag: true, nb: false, noEu: false, t: 0, run: false, speed: 3600, zoom: { planets: 0, rings: 0, moons: 0, io: 0 }, blind: false, stripe: null, piece: 1, slow: false };
   let W = 0, H = 0, dpr = 1, K = null, view3 = null, g3 = null;
   const P = (k) => PLANETS[k], f = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const fmt = (v, d) => (!isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/,/g, ' ').replace('-', '−'));
@@ -588,6 +639,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return out;
   }
   function drawMoons() {
+    const bOff = nbOn() && narrow() ? 136 : 0;   /* on a phone the eccentricity graph takes the bottom of the picture: lift the scale and labels above it */
     const p = P(S.planet), o = moonsView(), pp = proj(), ms = MOONS[S.planet], q = baryQ(S.planet), X = moonX();
     /* with a heavy moon the planet circles the center of mass too: everything is drawn from that center */
     const hv = ms.findIndex((m) => m.M), zc = hv < 0 ? null : moonAt(ms[hv], S.t, hv), pcx = o.cx - (zc ? q * zc.x * o.s : 0), pcy = o.cy + (zc ? q * zc.y * o.s : 0), mk = 1 - q;
@@ -600,27 +652,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.conj && ms[0].lam != null) CONJ[S.planet].forEach(([i, j], n) => { const ls = conjunctions(i, j, S.t, 6), r = ms[j].a * o.s * 1.06;
       ls.forEach((l, q) => { const th = l * Math.PI / 180; ctx.save(); ctx.strokeStyle = n ? K.rigid : K.roche; ctx.globalAlpha = 0.85 - q * 0.12; ctx.lineWidth = 1.5 * pp; ctx.setLineDash([5, 4]);
         ctx.beginPath(); ctx.moveTo(o.cx + p.Req * o.s * Math.cos(th), o.cy - p.Req * o.s * Math.sin(th)); ctx.lineTo(o.cx + r * Math.cos(th), o.cy - r * Math.sin(th)); ctx.stroke(); ctx.restore(); });
-      if (ls.length) label(`${ms[i].name} passes ${ms[j].name}`, 16 * pp, H - (40 + 16 * n) * pp, { col: n ? K.rigid : K.roche, w: 700, size: 11 }); });
+      if (ls.length) label(`${ms[i].name} passes ${ms[j].name}`, 16 * pp, H - (40 + 16 * n + bOff) * pp, { col: n ? K.rigid : K.roche, w: 700, size: 11 }); });
     ms.forEach((m, i) => {
-      ctx.save(); ctx.strokeStyle = i === S.moon ? K.sel : K.line; ctx.lineWidth = (i === S.moon ? 1.6 : 1.1) * pp; ctx.beginPath();
+      ctx.save(); ctx.strokeStyle = i === S.moon ? K.sel : K.line; ctx.lineWidth = (i === S.moon ? 1.6 : 1.1) * pp; if (nbGone(i)) { ctx.globalAlpha = 0.3; ctx.setLineDash([3, 5]); } ctx.beginPath();
       const sk = m.M ? mk : 1, ox = m.M ? o.cx : pcx, oy = m.M ? o.cy : pcy;
       for (let n = 0; n <= 180; n++) { const z = moonAt(m, n / 180 * Math.abs(m.P) * DAY, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s; n ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
       ctx.stroke(); ctx.restore();
-      const z = moonAt(m, S.t, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s, r = Math.max(2.5 * pp, m.R * X * o.s);
+      if (nbGone(i)) return;   /* Europa taken away: its orbit stays as a faint line, the moon is gone */
+      const z = moonPos(m, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s, r = Math.max(2.5 * pp, m.R * X * o.s);
       ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#d6dde6'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = i === S.moon ? K.sel : shade('#5b6573', 0); ctx.lineWidth = (i === S.moon ? 2.5 : 1) * pp; ctx.stroke();
       label(m.name, x + r + 4, y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
     });
-    scaleBar(o.s, 16 * pp, H - 14 * pp, 150 * pp);
+    scaleBar(o.s, 16 * pp, H - (14 + bOff) * pp, 150 * pp);
+    if (nbOn()) drawEccGraph();
     const big = X === 1 ? 'moons to scale too' : `moons drawn ${X} times larger`;
     const capL = narrow() ? [`${p.name}'s orbits to scale, ${big}`, 'gold mostly rock, tan rock and ice, white mostly ice',
-      ms[0].lam != null ? 'Starting places: noon, 1 January 2000' : 'Starting places spread out, not from a date'] :
+      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other' : 'Starting places: noon, 1 January 2000') : 'Starting places spread out, not from a date'] :
       [`${p.name} and its orbits to scale, seen from above, ${big}.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
-      ms[0].lam != null ? 'Starting places: noon, 1 January 2000 (JPL mean elements)' : 'Starting places spread out for clarity, not from a date'];
+      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other; they start on circles at their places of noon, 1 January 2000' : 'Starting places: noon, 1 January 2000 (JPL mean elements)') : 'Starting places spread out for clarity, not from a date'];
     capL.forEach((t, i) => label(t, 16 * pp, (18 + 15 * i) * pp, { col: K.muted, w: 400, size: 10 }));
     moonsHit = o;
   }
   let moonsHit = null;
+  /* Moons pull on each other (Jupiter only): the computed state NB, advanced to the clock, and Io's eccentricity every quarter day */
+  let NB = null, NBH = [];
+  const nbOn = () => S.mode === 'moons' && S.planet === 'jupiter' && S.nb;
+  function nbTo(t) {
+    if (!NB || t < NB.t - GAL_DT) { NB = galStart(S.noEu ? [1, 0, 1, 1] : [1, 1, 1, 1]); NBH = [[0, galEcc(NB, 0)]]; }
+    for (let n = 0; NB.t + GAL_DT / 2 <= t && n < 40000; n++) { galStep(NB); if (NB.t >= NBH[NBH.length - 1][0] * DAY + DAY / 4) NBH.push([NB.t / DAY, galEcc(NB, 0)]); }
+  }
+  /* where moon i is now: computed when the moons pull on each other, else on its fixed ellipse */
+  function moonPos(m, i) {
+    if (!nbOn()) return moonAt(m, S.t, i);
+    nbTo(S.t); const x = NB.x[i], y = NB.y[i]; return { x, y, r: Math.hypot(x, y), lam: ((Math.atan2(y, x) * 180 / Math.PI) % 360 + 360) % 360 };
+  }
+  const nbGone = (i) => nbOn() && S.noEu && i === 1;
+  /* the graph of Io's eccentricity against time, bottom right of the Moons picture */
+  function drawEccGraph() {
+    const pp = proj(), gw = Math.min(330 * pp, W * (narrow() ? 0.92 : 0.42)), gh = 120 * pp, x0 = W - gw - 12 * pp, y0 = H - gh - 12 * pp;
+    ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = K.canvas; ctx.fillRect(x0, y0, gw, gh); ctx.globalAlpha = 1; ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, y0 + 0.5, gw, gh);
+    const L = x0 + 40 * pp, R = x0 + gw - 10 * pp, T0 = y0 + 22 * pp, B0 = y0 + gh - 20 * pp, eMax = 0.012, tEnd = Math.max(200, Math.ceil(S.t / DAY / 200) * 200);
+    const X = (d) => L + (R - L) * d / tEnd, Y = (e) => B0 - (B0 - T0) * Math.min(e, eMax) / eMax;
+    label('Io\'s eccentricity, computed', x0 + 8 * pp, y0 + 10 * pp, { col: K.ink, w: 700, size: 10.5 });
+    ctx.strokeStyle = K.line; ctx.beginPath(); ctx.moveTo(L, T0); ctx.lineTo(L, B0); ctx.lineTo(R, B0); ctx.stroke();
+    for (const e of [0, 0.004, 0.008, 0.012]) label(f(e, 3), L - 4 * pp, Y(e), { a: 'right', col: K.muted, w: 400, size: 9 });
+    label(`days: 0 to ${tEnd}`, R, B0 + 10 * pp, { a: 'right', col: K.muted, w: 400, size: 9 });
+    ctx.save(); ctx.setLineDash([4, 3]); ctx.strokeStyle = K.muted; ctx.beginPath(); ctx.moveTo(L, Y(0.0041)); ctx.lineTo(R, Y(0.0041)); ctx.stroke(); ctx.restore();
+    label('measured 0.0041', R, Y(0.0041) - 7 * pp, { a: 'right', col: K.muted, w: 400, size: 9 });
+    ctx.strokeStyle = K.sel; ctx.lineWidth = 1.2 * pp; ctx.beginPath(); NBH.forEach(([d, e], k) => { const px = X(d), py = Y(e); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke();
+    ctx.restore();
+  }
 
   /* ---------- Io's tides ---------- */
   function ioState() {
@@ -771,7 +853,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const p = P(S.planet), R = p.Req; b.pl.spin(2 * Math.PI * S.t / (p.rot * HOUR));
       const bq = baryQ(S.planet), ms = MOONS[S.planet], hv = ms.findIndex((m) => m.M), zc = hv < 0 ? null : moonAt(ms[hv], S.t, hv), px = zc ? -bq * zc.x / R : 0, py = zc ? -bq * zc.y / R : 0;
       b.pl.position.set(px, py, 0);
-      ms.forEach((m, i) => { const z = moonAt(m, S.t, i), q = b.moons[i], sk = m.M ? 1 - bq : 1, ox = m.M ? 0 : px, oy = m.M ? 0 : py;
+      ms.forEach((m, i) => { const z = moonPos(m, i), q = b.moons[i], sk = m.M ? 1 - bq : 1, ox = m.M ? 0 : px, oy = m.M ? 0 : py;
         q.s.position.set(ox + sk * z.x / R, oy + sk * z.y / R, 0); q.ln.position.set(m.M ? 0 : px, m.M ? 0 : py, 0); q.lab.position.set(ox + sk * z.x / R, oy + sk * z.y / R, m.R * moonX() / R + VIEW_MOONS[S.planet] * 0.03);
         q.ln.material.color.set(i === S.moon ? 0xfb923c : 0x7d8796); q.lab.material.color.set(i === S.moon ? 0xfb923c : 0xffffff); });
     } else {
@@ -820,7 +902,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         dd('Density', m.rho == null ? '—' : `${f(m.rho / 1000, 2)} g/cm³`), dd('Made of (a rough guide)', kind(m.rho)));
       if (m.M) o.push(dd(`${m.name}'s mass, NASA`, `${sci(m.M, 4)} kg`), dd(`Center of mass from ${p.name}'s center`, S.blind ? hid : `${fmt(baryQ(S.planet) * m.a, 0)} km = ${f(baryQ(S.planet) * m.a / p.Req, 2)} R`));
       if (S.moon > 0) o.push(dd(`Period ÷ ${ms[S.moon - 1].name}'s`, f(Math.abs(m.P / ms[S.moon - 1].P), 3)));
-      if (S.planet === 'jupiter') o.push(dd('λ(Io) − 3λ(Europa) + 2λ(Ganymede)', `${f(laplaceAngle(meanLon(ms[0], S.t), meanLon(ms[1], S.t), meanLon(ms[2], S.t)), 1)}°`, 'wide'));
+      if (S.planet === 'jupiter' && !nbOn()) o.push(dd('λ(Io) − 3λ(Europa) + 2λ(Ganymede)', `${f(laplaceAngle(meanLon(ms[0], S.t), meanLon(ms[1], S.t), meanLon(ms[2], S.t)), 1)}°`, 'wide'));
+      if (nbOn()) { nbTo(S.t); const eMax = Math.max(...NBH.map((h) => h[1]));
+        o.push(dd('Io\'s eccentricity now, computed', f(galEcc(NB, 0), 4)), dd('Largest so far', f(eMax, 4)), dd('Io measured', '0.0041'),
+          dd('Europa', S.noEu ? 'taken away' : 'pulling on Io')); }
     } else {
       const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e), A = 4 * Math.PI * Math.pow(io.R * 1e3, 2), sw = tideSwing(S.e), st = ioState();
       o.push(dd('Eccentricity e', f(S.e, 4)), dd('Distance now', `${fmt(st.r, 0)} km`), dd('Tidal heating', S.blind ? hid : `${sci(Ed, 2)} W`), dd('Per square meter', S.blind ? hid : `${f(Ed / A, 2)} W/m²`),
@@ -854,13 +939,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('chkRoche').checked = S.roche; $('chkRes').checked = S.res; $('chkRes').closest('label').hidden = S.planet !== 'saturn';
     const sm = $('selMoon'), ms = MOONS[S.planet]; if (sm.dataset.p !== S.planet) { sm.innerHTML = ms.map((m, i) => `<option value="${i}">${m.name}</option>`).join(''); sm.dataset.p = S.planet; }
     S.moon = Math.min(S.moon, ms.length - 1); sm.value = String(S.moon); $('chkConj').checked = S.conj; $('chkConj').closest('label').hidden = !CONJ[S.planet].length;
+    $('chkNb').checked = S.nb; $('nbWrap').hidden = S.planet !== 'jupiter'; $('chkNoEu').checked = S.noEu; $('noEuWrap').hidden = S.planet !== 'jupiter' || !S.nb;
     $('sEcc').value = S.e; $('oEcc').textContent = f(S.e, 4); $('chkExag').checked = S.exag; $('selSpeed').value = String(S.speed);
     $('modelText').textContent = MODEL[S.mode];
   }
   const MODEL = {
     planets: 'Sizes, masses, densities, spins, flattening and tilts are NASA\'s. Each planet is drawn as an oblate spheroid with its equatorial and polar radii, seen from 12° above the plane of its orbit with its axis tipped toward the right. A planet of uniform density spun as fast would flatten by 5q/4, with q = ω²a³/GM its spin compared with its gravity at the equator; the real giants flatten less because their mass is packed toward the center. Bands, colors and the turning spot are a painting.',
     rings: 'Ring radii are NASA\'s; their brightness in the picture is a drawing choice. Every ring particle and moon goes round on a circle at its Kepler speed, ω = √(GM/r³), with the planet\'s bulge left out (it changes the periods by under 1 %). The test moon is a pile of 200 equal frictionless balls that bounce off each other with some loss and pull on each other by gravity, in Hill\'s frame moving with the moon; the planet\'s tide and the turning of the frame are taken to first order in the moon\'s size, and its pieces are placed along the orbit by their distance in that frame. Whether such a moon survives depends only on its distance in units of R(ρ_planet/ρ_moon)^(1/3), not on its size. This pile holds together for at least 8 orbits at 1.80 of those units and comes apart within 3 orbits at 1.78 or closer, between a rigid moon (1.44) and a fluid one (2.455, Chandrasekhar): a pile of touching balls resists being stretched a little, so it survives somewhat inside the fluid limit. A real moon\'s strength puts its breakup somewhere in that range. The density uses the volume inside the pile\'s outer surface. The 2:1 place with Mimas solves 2Ω − κ = 2n(Mimas) with Saturn\'s J₂ included and J₄ left out.',
-    moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.2 %). Charon is the exception: it has 12 % of Pluto\'s mass, so Pluto and Charon both circle their center of mass and Kepler\'s law gives their total mass. Mars and Pluto are drawn as round balls; Pluto\'s four small moons are left out. Pairs line up (conjunctions) where their mean longitudes agree.',
+    moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.2 %). Charon is the exception: it has 12 % of Pluto\'s mass, so Pluto and Charon both circle their center of mass and Kepler\'s law gives their total mass. Mars and Pluto are drawn as round balls; Pluto\'s four small moons are left out. Pairs line up (conjunctions) where their mean longitudes agree. With Moons pull on each other (Jupiter only), the four big moons are computed step by step instead: each feels Jupiter, with its equatorial bulge, and the other three, from their JPL masses; they start on circles at their places of noon, 1 January 2000, in one plane. Left out there: the Sun, Jupiter\'s smaller bulge terms, tilts and tides, so the computed swing of Io\'s eccentricity never dies down as the real one did.',
     io: 'Io turns once per orbit at a steady rate, but on an oval orbit it speeds up and slows down, and its distance changes. The tide that stretches it goes as 1/r³, so it swings by ±3e over each orbit, and Jupiter seen from Io rocks back and forth by ±2e radians: the bulge moves through Io\'s rock and heats it. The heating is Ė = (21/2)(k₂/Q) G M² R⁵ n e²/a⁶ (Murray and Dermott 1999, eq. 4.192), for a moon locked to its planet, with Io\'s measured k₂/Q = 0.015 ± 0.003, so the answer carries that ±20 %. The heating goes as e², so e = 0 gives none. In the picture the orbit is drawn 60 times more oval and Io\'s stretch and sway are exaggerated; the readouts are not.',
   };
   function setMode(m) { S.mode = m; if (m !== 'moons' && !GIANTS.includes(S.planet)) S.planet = 'saturn'; S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
@@ -868,7 +954,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.planet = c.planet || S.planet; if (c.sel) S.sel = c.sel; if (c.earth != null) S.earth = c.earth;
     if (c.rho) S.rho = c.rho; if (c.dist) S.dist = c.dist; if (c.roche != null) S.roche = c.roche; if (c.res != null) S.res = c.res; if (c.moon != null) S.moon = c.moon; if (c.conj != null) S.conj = c.conj;
-    if (c.e != null) S.e = c.e; if (c.exag != null) S.exag = c.exag; S.speed = c.speed || SPEED[c.mode]; S.zoom[c.mode] = c.zoom || 0; S.stripe = c.stripe ? 0 : null; S.t = 0;
+    if (c.e != null) S.e = c.e; if (c.exag != null) S.exag = c.exag; S.nb = !!c.nb; S.noEu = false; NB = null; S.speed = c.speed || SPEED[c.mode]; S.zoom[c.mode] = c.zoom || 0; S.stripe = c.stripe ? 0 : null; S.t = 0;
     if (S.mode === 'rings') pileReset(); if (c.stripe) S.stripe = 0;
     $('presetHint').textContent = c.hint; setRun(!!c.run); sync(); readouts(); clock(); draw();
   }
@@ -886,6 +972,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('selMoon').addEventListener('change', (e) => { S.moon = +e.target.value; readouts(); draw(); });
   $('moonTable').addEventListener('click', (e) => { const b = e.target.closest('[data-moon]'); if (b) { S.moon = +b.dataset.moon; sync(); readouts(); draw(); } });
   $('chkConj').addEventListener('change', (e) => { S.conj = e.target.checked; draw(); });
+  /* switching the computed moons on or off, or taking Europa away, starts the clock again from noon, 1 January 2000 */
+  $('chkNb').addEventListener('change', (e) => { custom(); S.nb = e.target.checked; if (!S.nb) S.noEu = false; S.t = 0; NB = null; sync(); readouts(); clock(); draw(); });
+  $('chkNoEu').addEventListener('change', (e) => { custom(); S.noEu = e.target.checked; S.t = 0; NB = null; sync(); readouts(); clock(); draw(); });
   $('sEcc').addEventListener('input', (e) => { custom(); S.e = +e.target.value; sync(); readouts(); draw(); });
   $('chkExag').addEventListener('change', (e) => { S.exag = e.target.checked; draw(); });
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
@@ -900,7 +989,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerdown', (e) => {
     if (view3 && view3.is3d()) return; const [x, y] = ptr(e);
     if (S.mode === 'planets' && planetsHit) { let best = null, bd = 1e9; for (const k of planetsHit.show) { const o = planetsHit.pos[k], d = Math.hypot(x - o.cx, y - o.cy) / Math.max(12, P(k).Req * o.s); if (d < bd) { bd = d; best = k; } } if (best && bd < 2.2) { S.sel = best; readouts(); draw(); } }
-    else if (S.mode === 'moons' && moonsHit) { let best = -1, bd = 1e9; MOONS[S.planet].forEach((m, i) => { const z = moonAt(m, S.t, i), d = Math.hypot(x - (moonsHit.cx + z.x * moonsHit.s), y - (moonsHit.cy - z.y * moonsHit.s)); if (d < bd) { bd = d; best = i; } });
+    else if (S.mode === 'moons' && moonsHit) { let best = -1, bd = 1e9; MOONS[S.planet].forEach((m, i) => { if (nbGone(i)) return; const z = moonPos(m, i), d = Math.hypot(x - (moonsHit.cx + z.x * moonsHit.s), y - (moonsHit.cy - z.y * moonsHit.s)); if (d < bd) { bd = d; best = i; } });
       if (best >= 0 && bd < 30) { S.moon = best; sync(); readouts(); draw(); } }
     else if (S.mode === 'rings') { const o = ringsView(), th0 = moonAngle(), mx = o.cx + PL.a * o.s * Math.cos(th0), my = o.cy - PL.a * o.s * Math.sin(th0);
       if (Math.hypot(x - mx, y - my) < 24) { dragging = true; can.setPointerCapture(e.pointerId); e.preventDefault(); } }
@@ -947,7 +1036,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode === 'planets') { const p = P(S.sel), E = PLANETS.earth;
       return { mode: 'Planets', object: p.name, value: `${f(p.rho / 1000, 3)} g/cm³`, M_earth: f(p.M / E.M, 2), R_earth: f(p.Req / E.Req, 3), rho_gcc: f(p.rho / 1000, 3), rot_h: f(Math.abs(p.rot), 2), f_pct: f(100 * p.f, 2), tilt_deg: f(p.tilt, 2) }; }
     if (S.mode === 'moons') { const p = P(S.planet), m = MOONS[S.planet][S.moon];
-      return { mode: 'Moons', object: m.name, value: `a ${f(m.a / p.Req, 2)} R, P ${f(Math.abs(m.P), 3)} d`, planet: p.name, a_Rp: f(m.a / p.Req, 3), a_km: fmt(m.a, 0).replace(/ /g, ''), P_d: f(Math.abs(m.P), 4), rho_gcc: m.rho ? f(m.rho / 1000, 2) : '' }; }
+      const row = { mode: 'Moons', object: m.name, value: `a ${f(m.a / p.Req, 2)} R, P ${f(Math.abs(m.P), 3)} d`, planet: p.name, a_Rp: f(m.a / p.Req, 3), a_km: fmt(m.a, 0).replace(/ /g, ''), P_d: f(Math.abs(m.P), 4), rho_gcc: m.rho ? f(m.rho / 1000, 2) : '' };
+      if (nbOn()) { nbTo(S.t); Object.assign(row, { computed: S.noEu ? 'without Europa' : 'moons pull on each other', t_d: f(S.t / DAY, 2), e_Io: f(galEcc(NB, 0), 5) }); }
+      return row; }
     if (S.mode === 'rings') { const p = P(S.planet);
       return { mode: 'Rings', object: `${f(S.rho / 1000, 2)} g/cm³ moon`, value: `${f(S.dist, 2)} R: ${f(100 * S.piece, 0)} %`, planet: p.name, rho_moon_gcc: f(S.rho / 1000, 2), d_Rp: f(S.dist, 2), roche_Rp: f(rocheLimit(p, S.rho, ROCHE_FLUID) / p.Req, 2), orbits: f(PL.Om * S.t / (2 * Math.PI), 2), piece_pct: f(100 * S.piece, 0) }; }
     const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e);

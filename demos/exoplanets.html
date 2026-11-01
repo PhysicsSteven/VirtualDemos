@@ -158,6 +158,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   input[type="range"] { min-height: 28px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -1477,6 +1479,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     X3.los = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lm); sc.add(X3.los);
     X3.tip = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.1, 18), new THREE.MeshBasicMaterial({ color: '#e8eef6' })); sc.add(X3.tip);
     X3.bary = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 8), new THREE.MeshBasicMaterial({ color: '#e8eef6' })); sc.add(X3.bary);
+    /* Two stars (2026-11-01): each star is a limb darkened ball, its brightness falling toward the edge by the same quadratic law
+       (U1, U2) that the light curve uses, mu taken from the surface normal toward the camera; a faint halo; and each star's own
+       beam of light toward Earth, so the star in front can be seen crossing the other star's beam at each eclipse. */
+    const ldMat = (col) => new THREE.ShaderMaterial({ uniforms: { c: { value: new THREE.Color(col) } },
+      vertexShader: 'varying vec3 vN; void main() { vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `uniform vec3 c; varying vec3 vN; void main() { float mu = clamp(normalize(vN).z, 0.0, 1.0), q = 1.0 - mu;
+        gl_FragColor = vec4(c * (1.0 - ${U1.toFixed(2)} * q - ${U2.toFixed(2)} * q * q), 1.0); }` });
+    const halo = (col) => { const h = VD3K.star(S3, { r: 1, color: col, glow: 2.4 }); h.children[0].visible = false; h.children[1].material.opacity = 0.45; return h; };
+    X3.bin = [0, 1].map(() => { const g = new THREE.Group(), ball = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), ldMat('#ffffff')), hl = halo('#ffffff');
+      g.add(ball, hl); g.ball = ball; g.hl = hl; g.visible = false; sc.add(g); return g; });
+    X3.beam2 = X3.beam.clone(); X3.beam2.material = X3.beam.material.clone(); sc.add(X3.beam2);
     X3.orbit = new THREE.Group(); sc.add(X3.orbit);
     X3.ray = new THREE.Raycaster();
     VD3.orbit(cv.top, X3.o, schedule, { grab: (e) => !X3.on || X3.hit(e), phMin: 0.05, phMax: 1.62, zMin: 0.6, zMax: 4, keys: false });
@@ -1491,11 +1504,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const [r, th] of D.path) { const x = -Ms * r * Math.cos(th), y = -Ms * r * Math.sin(th); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
     X3.u = 2 / Math.max(x1 - x0, y1 - y0); X3.c = [(x0 + x1) / 2 * X3.u, (y0 + y1) / 2 * X3.u, 0];   /* the camera looks at the middle of the orbit */
     const pts = D.path.map(([r, th]) => w3(-Ms * r * Math.cos(th), -Ms * r * Math.sin(th)));
-    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#9fb2cc', transparent: true, opacity: 0.8 })));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: BIN ? tcol(B.t2) : '#9fb2cc', transparent: true, opacity: 0.8 })));
     const shape = new THREE.Shape(pts.map((v) => new THREE.Vector2(v.x, v.y)));
     g.add(new THREE.Mesh(new THREE.ShapeGeometry(shape, 1), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.06, depthWrite: false, side: THREE.DoubleSide })));
     const sp = D.path.map(([r, th]) => w3(sq * r * Math.cos(th), sq * r * Math.sin(th)));
-    const sl = new THREE.Line(new THREE.BufferGeometry().setFromPoints(sp), new THREE.LineDashedMaterial({ color: '#e2b350', dashSize: 0.012, gapSize: 0.01 }));
+    const sl = new THREE.Line(new THREE.BufferGeometry().setFromPoints(sp), BIN ? new THREE.LineBasicMaterial({ color: tcol(B.t1), transparent: true, opacity: 0.8 })
+      : new THREE.LineDashedMaterial({ color: '#e2b350', dashSize: 0.012, gapSize: 0.01 }));
     sl.computeLineDistances(); g.add(sl);
     X3.key = D;
   }
@@ -1509,13 +1523,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (X3.star.tint) X3.star.tint(BIN ? tcol(B.t1) : T.star);
     X3.planet.position.copy(pPos); X3.planet.scale.setScalar(rp3);
     X3.planet.material.color.set(BIN ? tcol(B.t2) : '#9cc0f0'); X3.planet.material.emissive.set(BIN ? tcol(B.t2) : '#2c4266');
+    /* Two stars: both drawn as stars (limb darkened, halo), to scale wherever they are big enough to see */
+    X3.star.visible = X3.planet.visible = !BIN; X3.light.intensity = BIN ? 0 : 1.6;
+    [[sPos, rs3, B.t1], [pPos, rp3, B.t2]].forEach(([pos, r, Tk], j) => { const g = X3.bin[j]; g.visible = BIN; if (!BIN) return;
+      g.position.copy(pos); g.scale.setScalar(r); g.ball.material.uniforms.c.value.set(tcol(Tk)); g.hl.tint(tcol(Tk)); });
     // toward Earth: −y in the plane (the bottom of the top view), raised by 90° − i
     const el = (90 - P.inc) * DEG, e3 = new THREE.Vector3(0, -Math.cos(el), Math.sin(el)), L = 1.35;
     X3.e3 = e3;
     X3.los.geometry.setFromPoints([new THREE.Vector3(), e3.clone().multiplyScalar(L)]);
     X3.tip.position.copy(e3).multiplyScalar(L); X3.tip.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), e3);
     X3.beam.position.copy(sPos).addScaledVector(e3, L / 2); X3.beam.scale.set(rs3, L, rs3); X3.beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), e3);
-    X3.los.visible = X3.tip.visible = X3.beam.visible = !hid;
+    X3.beam2.position.copy(pPos).addScaledVector(e3, L / 2); X3.beam2.scale.set(rp3, L, rp3); X3.beam2.quaternion.copy(X3.beam.quaternion);
+    if (BIN) { X3.beam.material.color.set(tcol(B.t1)); X3.beam2.material.color.set(tcol(B.t2)); } else X3.beam.material.color.set('#ffd89a');
+    X3.los.visible = X3.tip.visible = X3.beam.visible = !hid; X3.beam2.visible = BIN && !hid;
     const asp = W / Math.max(1, H), half = 1.12, t = Math.tan(15 * DEG);
     const top = 34 * T.S, bot = 40 * T.S, k = H / Math.max(1, H - top - bot);
     S3.place(X3.o, X3.c, Math.max(half / t, half / (t * asp)) * k);
@@ -1551,7 +1571,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // conjunction mark and periastron, as in the top view
     const rc = D.a * (1 - P.e * P.e) / (1 + P.e * Math.sin(D.w)), [qx, qy] = S3.project(w3(0, -Ms3() * rc));
     const qr = qx > W * 0.5;
-    label(ctx, DK, BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qy + 12 * S, qr ? 'right' : 'left', '#aeb9c8', f11);
+    /* where the To Earth label goes, so the conjunction label can keep clear of it */
+    const [etx, ety0] = S3.project(X3.e3.clone().multiplyScalar(1.45)), ety = ety0 + 14 * S;
+    const clash = (x, y) => Math.abs(y - ety) < 16 * S && Math.abs(x - etx) < 170 * S;
+    const qoff = 12 * S + (BIN ? X3.Pr : 0), qly = clash(qx, qy + qoff) ? qy - qoff : qy + qoff;   /* two stars: clear of star 2's disk */
+    label(ctx, DK, BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qly, qr ? 'right' : 'left', '#aeb9c8', f11);
+    if (BIN && !hidden()) {
+      /* the other conjunction (star 2 behind star 1), star 2's velocity arrow opposite star 1's, and the names of the two stars */
+      const rc2 = D.a * (1 - P.e * P.e) / (1 - P.e * Math.sin(D.w)), [ux2, uy2] = S3.project(w3(0, Ms3() * rc2)), ur = ux2 > W * 0.5;
+      label(ctx, DK, 'star 2 behind here', ux2 + (ur ? -10 : 10) * S, uy2 - 12 * S, ur ? 'right' : 'left', '#aeb9c8', f11);
+      const w2 = v2(R.st) - B.gam * 1000, b0 = S3.project([R.pPos.x, R.pPos.y, 0]), b1 = S3.project([R.pPos.x - vx / m * 0.1, R.pPos.y - vy / m * 0.1, 0]);
+      const ex2 = b1[0] - b0[0], ey2 = b1[1] - b0[1], el2 = Math.hypot(ex2, ey2) || 1, pr2 = X3.Pr + 4 * S;
+      arrow(ctx, px + ex2 / el2 * pr2, py + ey2 / el2 * pr2, px + ex2 / el2 * (pr2 + Lr), py + ey2 / el2 * (pr2 + Lr), w2 >= 0 ? T.pos : T.neg, 2 * S);
+      /* each star's number on its disk, or beside a disk too small to hold it */
+      const num = (n, x, y, r) => {
+        if (r >= 9 * S) { ctx.save(); ctx.font = `700 ${Math.min(14, r / S * 0.9) * S}px ${mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(20,24,32,0.8)'; ctx.fillText(n, x, y + 0.5 * S); ctx.restore(); }
+        else label(ctx, DK, n, x - r - 5 * S, y - r - 5 * S, 'right', '#e8eef6', `700 ${12 * S}px ${mono}`);
+      };
+      num('1', sx, sy, sr - 4 * S); num('2', px, py, X3.Pr);
+    }
     if (P.e > 0.04) {
       const rper = D.a * (1 - P.e), [ex, ey] = S3.project(w3(-Ms3() * rper * Math.cos(D.w), -Ms3() * rper * Math.sin(D.w)));
       ctx.fillStyle = '#aeb9c8'; ctx.beginPath(); ctx.arc(ex, ey, 3 * S, 0, TAU); ctx.fill();
@@ -1559,12 +1597,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const f12 = `700 ${12 * S}px ${uiFont()}`;
     if (!hidden()) {
-      const [tx, ty0] = S3.project(X3.e3.clone().multiplyScalar(1.45)), ty = ty0 + 14 * S, elev = 90 - P.inc;
+      const tx = etx, ty = ety, elev = 90 - P.inc;
       label(ctx, DK, P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`, tx, ty, tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center', '#e8eef6', f12);
     } else label(ctx, DK, 'To Earth: hidden in a mystery', W / 2, H - 14 * S, 'center', '#e8eef6', f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = '#aeb9c8'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     if (!hidden() && !(BIN && D.F === 1)) ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S);
-    ctx.fillText('sizes not to scale · drag to turn', 8 * S, H - 8 * S);
+    const sizes = BIN && !hidden() && D.Rs * X3.u >= 0.045 && D.Rp * X3.u >= 0.032 ? 'stars and orbit to scale' : 'sizes not to scale';
+    ctx.fillText(sizes + ' · drag to turn', 8 * S, H - 8 * S);
     ctx.restore();
   }
   const Ms3 = () => 1 - D.q;

@@ -69,8 +69,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
 @media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
 .units .nw { white-space: nowrap; }
-/* a longer language: the units line takes its own row above the switches instead of squeezing into a tall column */
-@media (min-width: 821px) { :root[data-vd-lang] .bar .bar-right { flex-wrap: wrap; } :root[data-vd-lang] .bar-right .units { flex: 1 1 100%; } }
+/* the units line takes its own row above the switches instead of squeezing into a tall column beside the breadcrumb (it ran into
+   the next demo link at 1280 px once the theme and language switches joined the header) */
+@media (min-width: 821px) { .bar .bar-right { flex-wrap: wrap; } .bar-right .units { flex: 1 1 100%; } }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
@@ -113,6 +114,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -796,10 +799,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const F = (s, w = 400, fam) => `${w} ${s * projScale()}px ${fam || T.mono}`;
   function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
   // panel title; on narrow canvases it drops a parenthetical, then the part after the colon, to fit
-  function title(txt, x, y, color) {
+  function title(txt, x, y, color, room) {
     ctx.save(); ctx.font = F(10.5, 700); ctx.fillStyle = color || T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     if ('letterSpacing' in ctx) ctx.letterSpacing = '0.06em';
-    const maxW = W - x - 8;
+    const maxW = room || W - x - 8;
     const a = txt.replace(/\s*\([^)]*\)/, ''), b = a.split(':')[0];
     let t = txt;
     for (const c of [txt, a, b]) { t = c; if (ctx.measureText(c.toUpperCase()).width <= maxW) break; }
@@ -816,6 +819,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.fillText(txt, x, y);
   }
+  /* a label too long for its room: translated whole (VDI18N.t), then split into lines that fit max, drawn as they are (VDI18N.raw) */
+  function wrapLines(txt, max, font) {
+    const tr = window.VDI18N ? VDI18N.t(txt) : txt, out = []; let cur = '';
+    ctx.font = font;
+    const mw = (t) => (window.VDI18N ? VDI18N.raw(() => ctx.measureText(t).width) : ctx.measureText(t).width);
+    for (const wd of tr.split(' ')) { const t2 = cur ? cur + ' ' + wd : wd; if (cur && mw(t2) > max) { out.push(cur); cur = wd; } else cur = t2; }
+    out.push(cur); return out;
+  }
+  function textLines(lines, x, y, o, lh) { const go = () => lines.forEach((l, i) => text(l, x, y + i * lh, o)); if (window.VDI18N) VDI18N.raw(go); else go(); }
   function line(x1, y1, x2, y2, color, w = 1, dash) {
     ctx.strokeStyle = color; ctx.lineWidth = w * projScale(); ctx.setLineDash(dash ? dash.map((d) => d * projScale()) : []);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
@@ -1069,7 +1081,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     dot(E[0], E[1], (hot ? 10 : 9) * ps, null, T.accent, hot ? 2 : 1.3);
     text('Earth', E[0] + 13 * ps, E[1] - 11 * ps, { font: F(10.5, 700), color: T.ink, bg: T.canvas });
     g.earth = { cx, cy, R, E };
-    text(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, A[0] + 12 * ps, A[1] + A[3] - 12 * ps, { font: F(9.5) });
+    { const cl = wrapLines(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, A[2] - 24 * ps, F(9.5));
+      textLines(cl, A[0] + 12 * ps, A[1] + A[3] - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5) }, 13 * ps); }
     }
 
     // --- photos ---
@@ -1121,7 +1134,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const shift = Math.abs(S.par.ruler[1] - S.par.ruler[0]);
     text(`ruler: ${fmtAng(shift)}`, (rx[0] + rx[1]) / 2, ry + 22 * ps, { align: 'center', font: F(10.5, 700), color: T.ruler });
     ctx.restore();
-    text(`field ${fmtAng(FOV)} wide · dashed circles: ±σ = ${fmtAng(sigp)} (${INST[S.par.inst].name})`, ov.px, ov.py + ov.h + 12 * ps, { font: F(9.5) });
+    textLines(wrapLines(`field ${fmtAng(FOV)} wide · dashed circles: ±σ = ${fmtAng(sigp)} (${INST[S.par.inst].name})`, ov.w, F(9.5)), ov.px, ov.py + ov.h + 12 * ps, { font: F(9.5) }, 13 * ps);
     g.ov = { ...ov, FOV, ry };
   }
 
@@ -1346,10 +1359,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     mark(mSN, 'Type Ia at peak', T.pos, false);
     mark(mC, '30 day Cepheid', T.neg, true);
     const dM = mC - mSN;
-    const msg = [`At the same distance the supernova is ${dM.toFixed(1)} mag brighter:`, `${sig(Math.pow(10, 0.4 * dM), 2)} times the flux.`];
-    ctx.font = F(10.5);
-    if (ctx.measureText(msg.join(' ')).width < reach[2]) text(msg.join(' '), reach[0], ry + 28 * ps, { font: F(10.5), color: T.ink });
-    else { text(msg[0], reach[0], ry + 26 * ps, { font: F(10.5), color: T.ink }); text(msg[1], reach[0], ry + 41 * ps, { font: F(10.5), color: T.ink }); }
+    const msg = wrapLines(`At the same distance the supernova is ${dM.toFixed(1)} mag brighter: ${sig(Math.pow(10, 0.4 * dM), 2)} times the flux.`, reach[2] - 8 * ps, F(10.5));
+    textLines(msg, reach[0], ry + (msg.length > 1 ? 26 : 28) * ps, { font: F(10.5), color: T.ink }, 15 * ps);
   }
 
   // ---------- rung 4: Hubble's law ----------
@@ -1505,8 +1516,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const p of HYG25) if (p[2] === k) dot(X(p[0] / 1000), Y(p[1] / 100), 2.6 * ps, T.accent, T.canvas, 0.8);
     line(A[0], Y(m.c.mean), A[0] + A[2], Y(m.c.mean), T.accent, 1.6, [6, 4]);
     ctx.restore();
-    text(`${m.t.bin}–${m.t.bin[0]}${+m.t.bin[1] + 4} V stars: mean M = ${m.c.mean.toFixed(2)}, spread ${m.c.sd.toFixed(2)} (${m.c.n} stars)`, A[0] + 8 * ps, A[1] + 12 * ps, { font: F(10, 700), color: T.accent, bg: T.canvas });
-    text('main sequence ridge line', X(1.25) + 8 * ps, Y(ridge(1.25)) - 12 * ps, { font: F(9.5), color: T.equi, bg: T.canvas });
+    textLines(wrapLines(`${m.t.bin}–${m.t.bin[0]}${+m.t.bin[1] + 4} V stars: mean M = ${m.c.mean.toFixed(2)}, spread ${m.c.sd.toFixed(2)} (${m.c.n} stars)`, A[2] - 22 * ps, F(10, 700)),
+      A[0] + 8 * ps, A[1] + 12 * ps, { font: F(10, 700), color: T.accent, bg: T.canvas }, 14 * ps);
+    ctx.font = F(9.5); { const rw = ctx.measureText('main sequence ridge line').width;
+      text('main sequence ridge line', Math.min(X(1.25) + 8 * ps, A[0] + A[2] - rw - 6 * ps), Y(ridge(1.25)) - 12 * ps, { font: F(9.5), color: T.equi, bg: T.canvas }); }
     if (wide) line(x + w * 0.56, y + 8 * ps, x + w * 0.56, y + h - 8 * ps, T.line, 1); else line(x + pad, B[1] - 6 * ps, x + w - pad, B[1] - 6 * ps, T.line, 1);
     // the target: its star, then its two magnitudes on one scale
     title(`Target: ${m.t.name}, ${m.t.spect} (a real star)`, B[0], B[1] + 4 * ps);
@@ -1523,11 +1536,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       line(L, top, L, bot, T.gridStrong, 1.2);
       for (let v = m0; v <= m1; v++) { line(L - 4 * ps, MY(v), L, MY(v), T.muted, 1); text(String(v), L - 7 * ps, MY(v), { align: 'right', font: F(9.5) }); }
       text('magnitude', L, top - 14 * ps, { align: 'center', font: F(9.5) });
-      dot(L, MY(m.c.mean), 5 * ps, T.accent, T.canvas, 1.2); text(`M = ${m.c.mean.toFixed(2)} (from its type)`, L + 10 * ps, MY(m.c.mean), { font: F(10, 700), color: T.accent });
-      dot(L, MY(m.t.V), 5 * ps, T.ink, T.canvas, 1.2); text(`m = ${m.t.V.toFixed(2)} (measured)`, L + 10 * ps, MY(m.t.V), { font: F(10, 700), color: T.ink });
+      /* labels wrap where the column is narrow (phones), so nothing runs off the right edge */
+      const room = B[0] + B[2] - L - 14 * ps, lh = 13 * ps;
+      const mL = wrapLines(`M = ${m.c.mean.toFixed(2)} (from its type)`, room, F(10, 700)), tL = wrapLines(`m = ${m.t.V.toFixed(2)} (measured)`, room, F(10, 700));
+      dot(L, MY(m.c.mean), 5 * ps, T.accent, T.canvas, 1.2); textLines(mL, L + 10 * ps, MY(m.c.mean) - (mL.length - 1) * lh, { font: F(10, 700), color: T.accent }, lh);
+      dot(L, MY(m.t.V), 5 * ps, T.ink, T.canvas, 1.2); textLines(tL, L + 10 * ps, MY(m.t.V), { font: F(10, 700), color: T.ink }, lh);
       arrow(L + 24 * ps, MY(m.c.mean) + 10 * ps, L + 24 * ps, MY(m.t.V) - 10 * ps, T.muted, 1.2);
-      text(`m − M = ${m.mu.toFixed(2)}  →  d = ${fmtDist(m.d)}`, L + 30 * ps, (MY(m.c.mean) + MY(m.t.V)) / 2, { font: F(11, 700), color: T.ink, bg: T.canvas });
-      if (S.sp.show) text(`parallax: ${fmtDist(m.t.d)}`, L + 30 * ps, (MY(m.c.mean) + MY(m.t.V)) / 2 + 18 * ps, { font: F(10.5), color: T.green, bg: T.canvas });
+      const dL = wrapLines(`m − M = ${m.mu.toFixed(2)}  →  d = ${fmtDist(m.d)}`, room - 20 * ps, F(11, 700)), mid = (MY(m.c.mean) + MY(m.t.V)) / 2 - (dL.length - 1) * 7 * ps;
+      textLines(dL, L + 30 * ps, mid, { font: F(11, 700), color: T.ink, bg: T.canvas }, 15 * ps);
+      if (S.sp.show) text(`parallax: ${fmtDist(m.t.d)}`, L + 30 * ps, mid + (dL.length - 1) * 15 * ps + 18 * ps, { font: F(10.5), color: T.green, bg: T.canvas });
     }
   }
 
@@ -1605,7 +1622,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let iw = wide ? w * 0.56 - 2 * pad : w - 2 * pad, ih = iw * CCD_H / CCD_W;
     const maxH = wide ? h - 60 * ps : h * 0.5 - 50 * ps; if (ih > maxH) { ih = maxH; iw = ih * CCD_W / CCD_H; }
     const I = [x + pad, y + 30 * ps, iw, ih], sc = iw / CCD_W;
-    title(`Simulated CCD frame, LMC field, night ${S.ph.night + 1}: drag the two apertures`, x + pad, y + 10 * ps);
+    title(`Simulated CCD frame, LMC field, night ${S.ph.night + 1}: drag the two apertures`, x + pad, y + 10 * ps, null, wide ? iw : null);
     ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(phCanvas(m.F), I[0], I[1], I[2], I[3]); ctx.restore();
     frame(I[0], I[1], I[2], I[3]);
     const IX = (u) => I[0] + u * sc, IY = (v) => I[1] + v * sc;
@@ -1638,7 +1655,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const o of c.obs) line(TX(o[0]), L[1] + L[3] - 5 * ps, TX(o[0]), L[1] + L[3], T.muted, 1);
     line(TX(c.obs[S.ph.night][0]), L[1], TX(c.obs[S.ph.night][0]), L[1] + L[3], T.accent, 1, [2, 3]);
     for (const r of rows) { const px = TX(+r.t_d), py = TY(+r.V), e = (+r.sigma || 0) / (mhi - mlo) * L[3]; line(px, py - e, px, py + e, T.ink, 1); dot(px, py, 3 * ps, T.ink); }
-    if (!rows.length) text('record a reading on a few nights and they appear here', L[0] + 8 * ps, L[1] + 14 * ps, { font: F(10), color: T.muted, bg: T.canvas });
+    if (!rows.length) textLines(wrapLines('record a reading on a few nights and they appear here', L[2] - 20 * ps, F(10)), L[0] + 8 * ps, L[1] + 14 * ps, { font: F(10), color: T.muted, bg: T.canvas }, 14 * ps);
     else text(`${rows.length} night${rows.length === 1 ? '' : 's'}`, L[0] + 8 * ps, L[1] + 14 * ps, { font: F(10, 700), color: T.ink, bg: T.canvas });
   }
 
@@ -1740,8 +1757,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [ex, ey] = pr(E), hot = isHot('earth');
     ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = (hot ? 2 : 1.3) * ps; ctx.beginPath(); ctx.arc(ex, ey, (hot ? 12 : 10) * ps, 0, 2 * Math.PI); ctx.stroke();
     text('Earth', ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#e8eef6', bg: '#04060b' });
-    text(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, ax + 12 * ps, ay + ah - 26 * ps, { font: F(9.5), color: '#aeb9c8' });
-    text('drag Earth along its orbit; drag elsewhere to turn', ax + 12 * ps, ay + ah - 12 * ps, { font: F(9.5), color: '#aeb9c8' });
+    { const cl = wrapLines(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, aw - 24 * ps, F(9.5)).concat(wrapLines('drag Earth along its orbit; drag elsewhere to turn', aw - 24 * ps, F(9.5)));
+      textLines(cl, ax + 12 * ps, ay + ah - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5), color: '#aeb9c8', bg: '#04060b' }, 13 * ps); }
     g.earth = { cx: 0, cy: 0, R: 1, E: [ex, ey], plane: (x, y) => {
       P3.ray.setFromCamera(new THREE.Vector2((x - ax) / aw * 2 - 1, -((y - ay) / ah) * 2 + 1), S3.cam);
       const q = new THREE.Vector3(); return P3.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), q) ? [q.x, q.y] : null; } };

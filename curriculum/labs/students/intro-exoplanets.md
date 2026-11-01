@@ -30,14 +30,32 @@ Find a planet around another star from the two signals it makes: the small dip i
 
 **The wobble measures mass.** The planet does not simply orbit the star: both go around their shared center of mass. The star swings toward us and away from us once each orbit, and its light shifts slightly blue, then red (the Doppler effect). The top speed of the star, $$K$$, is bigger for a heavier planet and for a closer one. Earth moves the Sun at only 0.0895 m/s (9 cm/s, a slow crawl), Jupiter at about 12 m/s.
 
-**Recipes.** For a planet that transits, on a nearly circular orbit, and much lighter than its star (all true here), with the star's mass $$M_s$$ in Sun masses and the period $$P$$ in years:
+**Recipes, one step at a time.** These hold for a planet that transits, on a nearly circular orbit, and much lighter than its star (all true here). Each one is a few calculator steps; do them in the order shown and write down each result. Two calculator skills are all you need:
 
-- Planet radius in Earth radii = 109.2 × star radius (in Sun radii) × √(brightness drop ÷ 1.21), with the drop as a fraction (ppm ÷ 1 000 000).
-- Planet mass in Earth masses = ($$K$$ ÷ 0.0895 m/s) × $$P^{1/3}$$ × $$M_s^{2/3}$$. (On a calculator, $$x^{1/3}$$ is the cube root and $$x^{2/3}$$ is the cube root of $$x^2$$.)
-- Orbit size in AU, from Kepler's third law: $$a = (M_s \times P^2)^{1/3}$$.
-- Density in g/cm³ = 5.51 × mass ÷ radius³, with mass and radius in Earth units. Earth is 5.51, rock about 3 to 5, water 1.0, Jupiter 1.33, Saturn 0.69.
+- A **square root** is the √ key.
+- A **cube root** ($$x^{1/3}$$) is the number that, multiplied by itself three times, gives $$x$$. On most calculators press $$x$$, then the power key (^, $$y^x$$ or $$x^y$$), then (1 ÷ 3). Check: the cube root of 8 is 2, because 2 × 2 × 2 = 8. For $$x^{2/3}$$, square $$x$$ first, then take the cube root.
 
-**Could it have liquid water?** The starlight a planet gets, compared with Earth, is the star's luminosity $$L$$ (its power, Sun = 1) divided by $$a^2$$. For stars near the Sun's mass a rough rule is $$L \approx M_s^4$$. A planet like Earth could keep liquid water if it gets between about 0.36 and 1.11 times Earth's starlight: that is the habitable zone (Kopparapu and others, 2014, for a Sun like star). With no greenhouse and an albedo like Earth's, a planet's temperature is about 255 K × (starlight compared with Earth)$$^{1/4}$$.
+1. **Planet radius** (Earth radii), from the brightness drop at the middle of the transit:
+   change the drop from ppm to a fraction (divide by 1 000 000); divide by 1.21; take the square root; multiply by 109.2 and by the star's radius in Sun radii.
+2. **Planet mass** (Earth masses), from the star's top speed $$K$$ (m/s) and the period:
+   change the period to years (days ÷ 365.25); take its cube root; separately take the cube root of (star mass)²; then multiply $$K$$ ÷ 0.0895 by both cube roots. As one formula: mass = ($$K$$ ÷ 0.0895) × $$P^{1/3}$$ × $$M_s^{2/3}$$, with $$P$$ in years and $$M_s$$ in Sun masses.
+3. **Orbit size** $$a$$ (AU), from Kepler's third law: square the period in years; multiply by the star's mass; take the cube root. As one formula: $$a = (M_s \times P^2)^{1/3}$$.
+4. **Density** (g/cm³): cube the radius from step 1 (radius × radius × radius); divide the mass from step 2 by it; multiply by 5.51. Earth is 5.51, rock about 3 to 5, water 1.0, Jupiter 1.33, Saturn 0.69.
+
+**Worked example: the Hot Jupiter** (the demo's readings at the middle of the transit and at the top of the velocity curve, no noise). The star has $$M_s$$ = 1.11 and radius 1.15 Sun radii; the period is 4.1934 days; the drop is 13 949.5 ppm and $$K$$ = 55.24 m/s.
+
+- Step 1, radius: 13 949.5 ÷ 1 000 000 = 0.0139495; ÷ 1.21 = 0.011529; √ = 0.10737; × 109.2 × 1.15 = **13.48 Earth radii**.
+- Step 2, mass: 4.1934 ÷ 365.25 = 0.011481 years, whose cube root is 0.22559; 1.11² = 1.2321, whose cube root is 1.07205; 55.24 ÷ 0.0895 = 617.2; 617.2 × 0.22559 × 1.07205 = **149.3 Earth masses**.
+- Step 3, orbit: 0.011481² = 0.00013181; × 1.11 = 0.00014631; cube root = **0.0527 AU**.
+- Step 4, density: 13.48³ = 2451; 149.3 ÷ 2451 = 0.06091; × 5.51 = **0.336 g/cm³**, a gas planet like Saturn.
+
+The demo's true values are 13.47 Earth radii, 149.4 Earth masses and 0.0527 AU, so the recipes are good to about 0.1%.
+
+**Could it have liquid water?** The starlight a planet gets, compared with Earth, is the star's luminosity $$L$$ (its power, Sun = 1) divided by $$a^2$$. For stars near the Sun's mass a rough rule is $$L \approx M_s^4$$. A planet like Earth could keep liquid water if it gets between about 0.36 and 1.11 times Earth's starlight: that is the habitable zone (Kopparapu and others, 2014, for a Sun like star). With no greenhouse and an albedo like Earth's, a planet's temperature is about 255 K × (starlight compared with Earth)$$^{1/4}$$; the power 1/4 is the square root taken twice.
+
+**Step 5, starlight and temperature:** luminosity $$L$$ = star mass to the fourth power ($$M_s \times M_s \times M_s \times M_s$$); starlight = $$L$$ ÷ $$a^2$$, with $$a$$ from step 3; temperature = 255 K × √(√(starlight)).
+
+For the Hot Jupiter: $$L$$ = 1.11⁴ = 1.518; starlight = 1.518 ÷ 0.0527² = 547 times Earth's, far too close for liquid water; temperature 255 K × √(√547) = 255 K × 4.836 = 1233 K.
 
 ## Before the lab
 
@@ -70,10 +88,10 @@ No hazards in the virtual lab.
 1. For each Part 1 reading, find the planet radius divided by the star radius (remember the star's radius is in Sun radii: multiply it by 109.2 first), square it and write it in ppm in the last column. Graph the brightness drop against this column. Is it a straight line through the origin? What is its slope, and why is it a little more than 1?
 2. Compare Earth and TRAPPIST-1 like in Part 1. Their planets are about the same size, so why is one dip about 60 times deeper than the other?
 3. From Part 2, rank the four systems by the star's top speed $$K$$. Jupiter has 318 times Earth's mass; how many times bigger is its $$K$$? Explain why it is less than 318 times. (Hint: which planet is farther out, and so moves more slowly?)
-4. Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use the recipe to find the planet's radius in Earth radii.
-5. Mystery planet, mass: $$K$$ is half the difference between your average top velocity and your average bottom velocity. Change the period to years (divide by 365.25) and use the recipe to find the planet's mass in Earth masses.
-6. Mystery planet, orbit and makeup: find the orbit size $$a$$ in AU and the planet's density. Is it rocky like Earth, mostly water and ice, or mostly gas like Jupiter?
-7. Mystery planet, water: estimate the star's luminosity and the starlight the planet gets compared with Earth. Is the planet inside the habitable zone, too close or too far? Estimate its temperature with no greenhouse.
+4. Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use recipe step 1 to find the planet's radius in Earth radii.
+5. Mystery planet, mass: $$K$$ is half the difference between your average top velocity and your average bottom velocity. Use recipe step 2 (the period changed to years) to find the planet's mass in Earth masses.
+6. Mystery planet, orbit and makeup: find the orbit size $$a$$ in AU (step 3) and the planet's density (step 4). Is it rocky like Earth, mostly water and ice, or mostly gas like Jupiter?
+7. Mystery planet, water: estimate the star's luminosity and the starlight the planet gets compared with Earth (step 5). Is the planet inside the habitable zone, too close or too far? Estimate its temperature with no greenhouse.
 8. Now reveal the planet. Compare your radius, mass, orbit and density with the true values.
 
 ## Uncertainty
