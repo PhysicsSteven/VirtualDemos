@@ -6873,8 +6873,8 @@ catalog yet; when those demos are translated, match the worksheet's names.
 
 After the weekly reset Steve asked to finish Spanish and measure the cost from zero. Six groups translated the last 293 pages
 (21,764 strings: demos, worksheets, teaching notes) in about 35 minutes. `index` lists 518 Spanish pages; `check` reports
-49,185 of 49,185 page strings translated. Measured: 1.21 M subagent tokens (about 56 per string); Steve read his weekly usage
-going 0 % to about 4 %. Fixed after merging: BZ "Target waves" is now "Ondas concéntricas"; every notes title ends
+49,185 of 49,185 page strings translated. Measured: 1.21 M subagent tokens (about 56 per string); Steve's weekly usage read
+1 % at 14:12, 2 % at 14:18, 3 % at 14:28 (from 0 % at the reset, 14:04). Fixed after merging: BZ "Target waves" is now "Ondas concéntricas"; every notes title ends
 "notas para el docente".
 For a fluent reviewer (from the groups' reports): emf as "FEM" and "fem"; engine as "motor" and "máquina"; beats as "batidos"
 and "pulsaciones"; parent and daughter as "madre/hija" and "padre e hijo"; "Ga" and "mil millones de años"; "píxeles" and
