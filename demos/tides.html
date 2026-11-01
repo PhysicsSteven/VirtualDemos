@@ -471,12 +471,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const sub of subs) {
       if (!sub) continue;
       let line = '';
-      for (const word of sub.split(' ')) {
+      for (const word of (window.VDI18N ? VDI18N.t(sub) : sub).split(' ')) {
         const t = line ? line + ' ' + word : word;
-        if (line && ctx.measureText(t).width > maxW) { ctx.fillText(line, 12 * PS, y); y += 16 * PS; line = word; }
+        if (line && ctx.measureText(t).width > maxW) { ((window.VDI18N && VDI18N.raw) || ((f) => f()))(() => ctx.fillText(line, 12 * PS, y)); y += 16 * PS; line = word; }
         else line = t;
       }
-      if (line) { ctx.fillText(line, 12 * PS, y); y += 16 * PS; }
+      if (line) { ((window.VDI18N && VDI18N.raw) || ((f) => f()))(() => ctx.fillText(line, 12 * PS, y)); y += 16 * PS; }
     }
     return y;
   }

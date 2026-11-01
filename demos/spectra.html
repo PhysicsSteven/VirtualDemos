@@ -1813,9 +1813,9 @@ function amDecay(n, l, u) {
       for (const [nm, t] of [[10, '10'], [100, '100'], [1000, '1000 nm']]) { const x = X(nm); ctx.fillRect(x - 0.5, sy + stripH, 1, 3); ctx.textAlign = nm === 10 ? 'left' : 'center'; ctx.fillText(t, Math.min(x, sx + sw - ctx.measureText(t).width / 2), sy + stripH + 3); }
       /* verdict */
       ctx.fillStyle = muted; ctx.font = `italic ${10.5 * ps}px system-ui, sans-serif`; ctx.textAlign = 'center';
-      const words = M.verdict.split(' '); let ln = '', yy = sy + stripH + 16 * ps;
-      for (const w of words) { const t = ln ? ln + ' ' + w : w; if (ctx.measureText(t).width > pw - 10 && ln) { ctx.fillText(ln, cx, yy); ln = w; yy += 12.5 * ps; } else ln = t; }
-      if (ln) ctx.fillText(ln, cx, yy);
+      const words = (window.VDI18N ? VDI18N.t(M.verdict) : M.verdict).split(' '); let ln = '', yy = sy + stripH + 16 * ps;
+      for (const w of words) { const t = ln ? ln + ' ' + w : w; if (ctx.measureText(t).width > pw - 10 && ln) { ((window.VDI18N && VDI18N.raw) || ((f) => f()))(() => ctx.fillText(ln, cx, yy)); ln = w; yy += 12.5 * ps; } else ln = t; }
+      if (ln) ((window.VDI18N && VDI18N.raw) || ((f) => f()))(() => ctx.fillText(ln, cx, yy));
     });
   }
   function amReadout() {
