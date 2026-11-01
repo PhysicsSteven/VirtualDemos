@@ -4,7 +4,9 @@
      module.exports = async (page, grab) => { await explore(page, grab); ...; await grab(page); };
    explore(page, grab, opts) chooses every option of every <select>, turns every checkbox on and off, sets every range slider
    to its ends and back, and presses the buttons named in opts.press (CSS selectors, pressed in order), calling grab after each.
-   opts.skip: a CSS selector of controls to leave alone. opts.wait: milliseconds after each change (default 120). */
+   Then it presses the Setups chips, switch segments and tabs again on a 400 px wide phone, where many demos draw shorter labels
+   (opts.phone: false leaves that out). opts.skip: a CSS selector of controls to leave alone. opts.wait: milliseconds after each
+   change (default 120). */
 'use strict';
 const fire = (el, kinds) => kinds.forEach((k) => el.dispatchEvent(new Event(k, { bubbles: true })));
 
@@ -37,5 +39,17 @@ async function explore(page, grab, opts = {}) {
     await page.waitForTimeout(Math.max(wait, 300)); await grab(page);
   }
   await grab(page);
+  /* a phone: many demos draw shorter labels on a narrow canvas */
+  if (opts.phone !== false) {
+    const size = page.viewportSize();
+    await page.setViewportSize({ width: 400, height: 860 }); await page.waitForTimeout(400); await grab(page);
+    const sel = '[data-p], .seg button, [role="tab"], .chips button, .viewbar button, .dimbar button, .scenes button, #sceneSeg button';
+    const n = await page.evaluate((sel) => { const all = [...document.querySelectorAll(sel)].filter((b) => !b.closest('a') && !/^(vdFull|vdShare)$/.test(b.id)); all.forEach((b, i) => b.setAttribute('data-i18n-y', i)); return Math.min(all.length, 220); }, sel).catch(() => 0);
+    for (let i = 0; i < n; i++) {
+      await page.evaluate((i) => { const b = document.querySelector('[data-i18n-y="' + i + '"]'); if (b && !b.disabled) try { b.click(); } catch (_) {} }, i).catch(() => {});
+      await page.waitForTimeout(wait); await grab(page);
+    }
+    if (size) await page.setViewportSize(size); await page.waitForTimeout(300); await grab(page);
+  }
 }
 module.exports = explore;
