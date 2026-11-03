@@ -81,7 +81,7 @@
       <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cloud, the disk and the planetesimals">
         <span class="card-title" id="cardTitle">The whole story</span>
         <div id="boxStory">
-          <div><label class="lbl" for="selChapter">Chapter</label> <select id="selChapter"><option value="0">1 The cloud falls in</option><option value="1">2 A spinning disk and its frost line</option><option value="2">3 Planetesimals grow into protoplanets</option></select></div>
+          <div><label class="lbl" for="selChapter">Chapter</label> <select id="selChapter"><option value="0">1 The cloud falls in</option><option value="1">2 A spinning disk and its frost line</option><option value="2">3 Planetesimals grow into protoplanets</option><option value="3">4 Giant impacts build the rocky planets</option><option value="4">5 A giant impact makes the Moon</option></select></div>
           <div><label class="lbl" for="selFollow">Follow</label> <select id="selFollow"><option value="system">the whole system</option><option value="mercury">Mercury</option><option value="venus">Venus</option><option value="earth">Earth</option><option value="mars">Mars</option><option value="jupiter">Jupiter</option></select></div>
           <p class="note">Follow shows the material that ends up near that planet's orbit in teal, from the falling cloud to the protoplanets.</p>
         </div>
@@ -407,6 +407,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function storyGrowth() { return { inner: makeGrowth(STORY.f, STORY.L, STORY.gas, 2203), outer: makeGrowth(STORY.f, STORY.L, STORY.gas, 2203, STORY.fOut) }; }
   /* the bodies the story shows: the inner run inside the frost line, the outer run beyond it */
   function storyBodies(G) { const fl = frostLine(STORY.L); return G.inner.B.filter((b) => b.a < fl).concat(G.outer.B.filter((b) => b.a >= fl)); }
+  /* Chapter 4, the giant impacts: one run of the N-body code (tools/solar-system-formation/nbody.c) from the end of the gas, kept in
+     solar-system-formation-data/impacts.js (D). Its bodies 1 to 22 are storyBodies' first 22 (the rocky protoplanets at 3 Myr, in
+     order); 101 and 102 are Jupiter and Saturn. impactState(D, t) gives the bodies at time t (years since the cloud's own clock
+     started, as in the run): masses exact from the impacts so far, orbits a, e, i interpolated between the run's snapshots. */
+  function impactState(D, t) {
+    const S = D.snaps; let k = 0; while (k < S.length - 1 && S[k + 1][0] <= t) k++;
+    const t1 = S[k][0], nx = S[k + 1], u = nx ? Math.max(0, Math.min(1, (t - t1) / (nx[0] - t1))) : 0, next = new Map(nx ? nx[1].map((b) => [b[0], b]) : []);
+    const B = new Map(S[k][1].map(([id, m, a, e, i]) => { const q = next.get(id), w = q ? u : 0;
+      return [id, { id, m, a: a + w * ((q ? q[2] : a) - a), e: e + w * ((q ? q[3] : e) - e), i: i + w * ((q ? q[4] : i) - i), giant: id > 100, hits: 0 }]; }));
+    for (const ev of D.events) { if (ev[0] <= t1 || ev[0] > t) continue; const T = B.get(ev[1]); if (T) T.m = ev[3] + ev[4]; B.delete(ev[2]); }
+    for (const g of D.gone) if (g[0] > t1 && g[0] <= t) B.delete(g[1]);
+    for (const ev of D.events) if (ev[0] <= t && B.has(ev[1])) B.get(ev[1]).hits++;
+    return [...B.values()];
+  }
+  /* which body each starting protoplanet ends up in at the end of the run (none if it was thrown out or fell into the Sun) */
+  function finalOf(D) { const f = {}; for (const id in D.of) for (const s of D.of[id]) f[s] = +id; return f; }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -426,9 +442,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- state ---------- */
   const PRESETS = {
-    story: { st: 'story', follow: 'system', hint: 'The whole story from one cloud: it collapses into the young Sun and a disk, the disk sorts rock from ice at the frost line, and planetesimals grow into protoplanets and a giant planet before the gas is gone. Each chapter runs the model of its stage; the camera zooms from the cloud\'s scale to the planets\'.' },
-    followEarth: { st: 'story', follow: 'earth', hint: 'The same story, following the material that ends up near Earth\'s orbit: in the cloud it is the gas that falls in a little less than halfway out from the spin axis, and in the disk it is a narrow ring of rocky planetesimals around 1 AU.' },
-    followJupiter: { st: 'story', follow: 'jupiter', hint: 'The same story, following the giant planet: the first core beyond the frost line to reach 10 Earth masses while the gas lasts. In this model it forms at about 3 AU; Jupiter orbits at 5.2 AU today, and where it really formed is still debated (it may have moved through the gas disk).' },
+    story: { st: 'story', follow: 'system', hint: 'The whole story from one cloud: it collapses into the young Sun and a disk, the disk sorts rock from ice at the frost line, planetesimals grow into protoplanets and a giant planet before the gas is gone, the rocky protoplanets collide into planets, and a last giant impact makes the Moon. Each chapter runs the model of its stage; the camera zooms from the cloud\'s scale to the planets\'.' },
+    followEarth: { st: 'story', follow: 'earth', hint: 'The same story, following the material that ends up in the planet nearest Earth\'s orbit: in the cloud it is gas that falls in a little less than halfway out from the spin axis, in the disk rings of rocky planetesimals from 0.5 to 2.2 AU, and in the giant impacts the nine protoplanets that crash together to build it.' },
+    followJupiter: { st: 'story', follow: 'jupiter', hint: 'The same story, following the giant planet: the first core beyond the frost line to reach 10 Earth masses while the gas lasts. In this model it forms at about 3 AU; Jupiter orbits at 5.2 AU today, and where it really formed is still debated (it may have moved through the gas disk). The giant impact chapter starts Jupiter and Saturn on today\'s orbits.' },
     nebula: { st: 'collapse', r0: 5000, P0: 4, spin: true, hint: 'A cloud core 5000 AU in radius (about 0.02 parsec) turning once every 4 million years, a spin like those measured in dense cloud cores (Goodman et al. 1993, about 1.6 × 10⁻¹⁴ per second). Its equator ends up in a disk 39 AU across in radius, about the size of the planets\' realm.' },
     slow: { st: 'collapse', r0: 5000, P0: 16, spin: true, hint: 'The same cloud turning four times more slowly: the disk comes out 4² = 16 times smaller, about 2.4 AU in radius.' },
     fast: { st: 'collapse', r0: 5000, P0: 2, spin: true, hint: 'The same cloud turning twice as fast: the disk comes out 2² = 4 times larger, about 160 AU in radius.' },
@@ -693,7 +709,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw3() {
     const g = g3, S3 = g.S3, p = P(); S3.size(W, H);
     g.st.gS.visible = S.st === 'story';
-    if (S.st === 'story') { g.gC.visible = g.gD.visible = g.gB.visible = g.gM.visible = false; g.sun.visible = true; drawStory3(); return; }
+    if (S.st === 'story') { g.gC.visible = g.gD.visible = g.gB.visible = g.gM.visible = false; g.sun.visible = CHAPTERS[SY.ch].k !== 'moon'; drawStory3(); return; }
     g.sun.scale.setScalar(1);
     g.gC.visible = S.st === 'collapse'; g.gD.visible = S.st === 'disk' || S.st === 'planets'; g.gB.visible = S.st === 'planets'; g.gM.visible = S.st === 'melt'; g.sun.visible = S.st !== 'melt';
     let dist = 3.3, target = [0, 0, 0];
@@ -778,12 +794,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { k: 'cloud', title: 'The cloud falls in', scale: 'cloud' },
     { k: 'disk', title: 'A spinning disk and its frost line', scale: 'disk' },
     { k: 'grow', title: 'Planetesimals grow into protoplanets', scale: 'planets' },
+    { k: 'impacts', title: 'Giant impacts build the rocky planets', scale: 'planets' },
+    { k: 'moon', title: 'A giant impact makes the Moon', scale: 'moon' },
   ];
   /* the chapter titles in the page's language (literals, so the harvest finds them) */
-  const chTitle = (i) => [VDI18N.t('The cloud falls in'), VDI18N.t('A spinning disk and its frost line'), VDI18N.t('Planetesimals grow into protoplanets')][i];
+  const chTitle = (i) => [VDI18N.t('The cloud falls in'), VDI18N.t('A spinning disk and its frost line'), VDI18N.t('Planetesimals grow into protoplanets'), VDI18N.t('Giant impacts build the rocky planets'), VDI18N.t('A giant impact makes the Moon')][i];
   /* what Follow can pick: today's planet and where it orbits (AU) */
   const FOLLOW = { system: null, mercury: ['Mercury', 0.387], venus: ['Venus', 0.723], earth: ['Earth', 1.0], mars: ['Mars', 1.524], jupiter: ['Jupiter', 5.203] };
-  const SY = { ch: 0, C: null, G: null, B: [], t: 0, gt: 1e3, view: 5750, u: 0, hold: 0, done: false, started: false, follow: 'system', tauD: 0, rate: 0, target: null, fol: null, tCollapse: 0 };
+  const SY = { ch: 0, C: null, G: null, B: [], t: 0, gt: 1e3, view: 5750, u: 0, hold: 0, done: false, started: false, follow: 'system', tauD: 0, rate: 0, target: null, fol: null, tCollapse: 0, it: 0, clock: 0, flash: [], seen: 0 };
+  /* the giant impact run, loaded the first time the story starts (window.VD_SSF_IMPACTS) */
+  const IMP = () => window.VD_SSF_IMPACTS || null, MOON = () => window.VD_SSF_MOON || null;
+  function loadMoon() {
+    if (MOON() || loadMoon.asked) return; loadMoon.asked = true;
+    const sc = document.createElement('script'); sc.src = 'solar-system-formation-data/moon.js';
+    sc.onload = () => { SY.mt = MOON().frames[0][0]; dirty3 = true; redraw(); }; document.head.appendChild(sc);
+  }
+  function loadImpacts() {
+    if (IMP() || loadImpacts.asked) return; loadImpacts.asked = true;
+    const sc = document.createElement('script'); sc.src = 'solar-system-formation-data/impacts.js';
+    sc.onload = () => { SY.it = IMP().t0; pickFollow(); dirty3 = true; redraw(); }; document.head.appendChild(sc);
+  }
   const storyPhone = () => W < 640;
   function storyCloud() {
     const C = makeCloud(STORY.n, STORY.r0, STORY.P0, STORY.seed); C.eps = STORY.eps;
@@ -794,36 +824,65 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function resetStory() {
     SY.C = storyCloud(); SY.G = storyGrowth(); SY.gt = 1e3; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G);
     SY.ch = 0; SY.t = 0; SY.view = STORY.r0 * 1.15; SY.u = 0; SY.hold = 0; SY.done = false; SY.started = false; SY.tCollapse = 0;
-    pickFollow();
+    SY.it = IMP() ? IMP().t0 : STORY.tGas; SY.flash = []; SY.clock = 0;
+    loadImpacts(); pickFollow();
   }
-  /* the followed material: the protoplanet nearest the planet's orbit when the gas is gone (the giant, for Jupiter), and the
-     starting planetesimals it is made of; in the cloud, the parcels that will settle in that ring of the disk */
+  /* the followed material. A rocky planet: the planet nearest its orbit at the end of the giant impact run, the protoplanets it
+     was built from, and the starting planetesimals of those (before the run is loaded: the protoplanet nearest its orbit when the
+     gas is gone). Jupiter: the giant core of chapter 3, and in chapter 4 Jupiter itself. In the cloud: the parcels that will
+     settle in those rings of the disk. */
   function pickFollow() {
     SY.fol = null; const f = FOLLOW[SY.follow]; if (!f) return;
     const G = storyGrowth(); growTo(G.inner, STORY.tGas); growTo(G.outer, STORY.tGas);
-    const B = storyBodies(G); let best = null;
-    for (const b of B) { if (SY.follow === 'jupiter' ? !b.giant : b.a >= frostLine(STORY.L)) continue; if (!best || Math.abs(Math.log(b.a / f[1])) < Math.abs(Math.log(best.a / f[1]))) best = b; }
-    if (!best) return;
-    const [r1, r2] = ringRange(best.lo, best.hi);
-    SY.fol = { name: f[0], aToday: f[1], lo: best.lo, hi: best.hi, r1, r2, end: best, outer: best.a >= frostLine(STORY.L) };
+    const B = storyBodies(G), fl = frostLine(STORY.L), D = IMP(), near = (b, c) => !c || Math.abs(Math.log(b.a / f[1])) < Math.abs(Math.log(c.a / f[1]));
+    let pieces = [], fid = null, end = null;
+    if (SY.follow !== 'jupiter' && D) {
+      /* each planet left at the end belongs to the rocky planet of today whose orbit is nearest (on a log scale); the planet's
+         analog is the biggest one that belongs to it, and there may be none */
+      const rockyToday = PLANETS.slice(0, 4), owner = (a) => rockyToday.reduce((o, q) => (Math.abs(Math.log(a / q[1])) < Math.abs(Math.log(a / o[1])) ? q : o))[0];
+      for (const b of impactState(D, D.tEnd)) if (!b.giant && owner(b.a) === f[0] && (!end || b.m > end.m)) end = b;
+      if (end) { fid = end.id; pieces = (D.of[end.id] || [end.id]).map((id) => B[id - 1]).filter((b) => b && b.a < fl); }
+      else { let best = null; for (const b of B) if (b.a < fl && near(b, best)) best = b; if (best) pieces = [best]; }
+    } else { let best = null; for (const b of B) { if (SY.follow === 'jupiter' ? !b.giant : b.a >= fl) continue; if (near(b, best)) best = b; } if (best) pieces = [best]; }
+    if (!pieces.length) return;
+    const R = pieces.map((b) => ringRange(b.lo, b.hi)).sort((a, b) => a[0] - b[0]), ranges = [];
+    for (const r of R) { const l = ranges[ranges.length - 1]; if (l && r[0] <= l[1] * 1.0001) l[1] = Math.max(l[1], r[1]); else ranges.push(r.slice()); }
+    SY.fol = { name: f[0], aToday: f[1], pieces: pieces.map((b) => [b.lo, b.hi]), ranges, r1: ranges[0][0], r2: ranges[ranges.length - 1][1], fid: SY.follow === 'jupiter' ? 101 : fid, none: !!(D && SY.follow !== 'jupiter' && !fid), end, outer: pieces[0].a >= fl };
+    SY.finOf = D ? finalOf(D) : {};
   }
-  const followed = (b) => !!(SY.fol && b.lo <= SY.fol.hi && b.hi >= SY.fol.lo && (b.a >= frostLine(STORY.L)) === SY.fol.outer);
+  const followed = (b) => !!(SY.fol && (b.a >= frostLine(STORY.L)) === SY.fol.outer && SY.fol.pieces.some(([lo, hi]) => b.lo <= hi && b.hi >= lo));
+  /* in chapter 4: a body is followed when it ends up in the followed planet */
+  const followedImp = (b) => !!(SY.fol && SY.fol.fid && (SY.fol.fid === 101 ? b.id === 101 : SY.finOf[b.id] === SY.fol.fid));
+  const inRanges = (r) => SY.fol.ranges.some((q) => r >= q[0] && r <= q[1]);
   function storyChapter(k) {
     SY.ch = Math.max(0, Math.min(CHAPTERS.length - 1, k)); SY.u = 0; SY.hold = 0; SY.done = false; dirty3 = true;
     if (CHAPTERS[SY.ch].k === 'grow') { SY.G = storyGrowth(); SY.gt = 1e3; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); }
     if (CHAPTERS[SY.ch].k !== 'cloud' && !SY.tCollapse) SY.tCollapse = 1.6 * fallTime(STORY.r0);
+    if (CHAPTERS[SY.ch].k === 'impacts') { SY.it = IMP() ? IMP().t0 : STORY.tGas; SY.flash = []; SY.lastEv = null; SY.view = Math.max(SY.view, 11.5); loadMoon(); }
+    if (CHAPTERS[SY.ch].k === 'moon') { loadMoon(); SY.mt = MOON() ? MOON().frames[0][0] : 0; SY.moonU = 0; SY.view = 52000; }
     SY.camGoal = CHAPTER_CAM[CHAPTERS[SY.ch].k]; SY.camU = 0; SY.userTurned = false;
     SY.view = CHAPTERS[SY.ch].k === 'cloud' ? STORY.r0 * 1.15 : Math.min(SY.view, 52);
     if ($('selChapter')) $('selChapter').value = String(SY.ch);
   }
-  const CHAPTER_CAM = { cloud: { ph: 1.32 }, disk: { ph: 0.95 }, grow: { ph: 0.82 } };
+  const CHAPTER_CAM = { cloud: { ph: 1.32 }, disk: { ph: 0.95 }, grow: { ph: 0.82 }, impacts: { ph: 0.9 }, moon: { ph: 0.62 } };
+  /* chapter 5 plays the impact at this many seconds of the run per second, then faster once the disk has formed */
+  const MOON_RATE = [900, 3600], MOON_SLOW_UNTIL = 4 * 3600;
+  const hoursAfter = (t) => (t < 0 ? VDI18N.t('{h} hours before contact', { h: sig(-t / 3600, 2) }) : VDI18N.t('{h} hours after contact', { h: sig(t / 3600, 2) }));
+  /* chapter 4 plays the run's time on a log scale, start to end in about this many seconds at speed 1 */
+  const IMPACT_SECONDS = 45;
   /* the story's clock: years since the cloud began to fall */
-  function storyTime() { const c = CHAPTERS[SY.ch].k; return c === 'cloud' ? SY.C.t : c === 'disk' ? SY.tCollapse : SY.tCollapse + SY.gt; }
+  function storyTime() { const c = CHAPTERS[SY.ch].k; return c === 'cloud' ? SY.C.t : c === 'disk' ? SY.tCollapse : c === 'impacts' ? SY.tCollapse + SY.it : SY.tCollapse + SY.gt; }
   /* the view's half width in AU that the story wants now, and the point it centers on */
   function storyView() {
     const c = CHAPTERS[SY.ch].k, rd = diskRadius(STORY.r0, STORY.P0);
     if (c === 'cloud') { let rmax = 0; const C = SY.C; for (let i = 0; i < C.n; i++) if (C.st[i] === 0) { const k = 3 * i; rmax = Math.max(rmax, Math.hypot(C.p[k], C.p[k + 1], C.p[k + 2])); } return { R: Math.max(1.3 * rd, 1.12 * rmax, 1), at: [0, 0, 0] }; }
     if (c === 'disk') return { R: 42, at: [0, 0, 0] };
+    if (c === 'moon') return { R: SY.mt < 0 ? 46000 : SY.mt < 4 * 3600 || SY.moonU > 0 ? (storyPhone() ? 40000 : 34000) : 24000, at: [0, 0, 0] };   /* km */
+    if (c === 'impacts') {   /* from Saturn's orbit in to the rocky planets over the first part of the run */
+      const D = IMP(), u = D ? Math.min(1, 3.5 * Math.log(SY.it / D.t0) / Math.log(D.tEnd / D.t0)) : 0, fb = SY.fol ? followImp() : null;
+      const goal = fb ? (fb.giant ? 7 : Math.max(1.8, 1.6 * fb.a * (1 + fb.e))) : 2.6;
+      return { R: 11.5 * Math.pow(goal / 11.5, u), at: [0, 0, 0] };
+    }
     /* growing: from the whole disk in to the planets' region as the time passes (log of time), or onto the followed body */
     const u = Math.max(0, Math.min(1, Math.log10(SY.gt / 1e3) / Math.log10(STORY.tGas / 1e3)));
     if (SY.fol) { const b = followBody(); if (b) { const p = bodyPos(b), Rf = SY.fol.outer ? 4 : Math.max(0.9, 1.4 * b.a); return { R: 42 * Math.pow(Rf / 42, Math.min(1, u * 1.6)), at: p.map((x) => x * Math.min(1, u * 1.6)) }; } }
@@ -831,6 +890,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* the followed body now: the biggest body made of the followed planetesimals */
   function followBody() { let b = null; for (const q of SY.B) if (followed(q) && (!b || q.m > b.m)) b = q; return b; }
+  /* chapter 4's bodies now, and the biggest one that ends up in the followed planet */
+  const impBodies = () => (IMP() ? impactState(IMP(), SY.it) : []);
+  function followImp() { let b = null; for (const q of impBodies()) if (followedImp(q) && (!b || q.m > b.m)) b = q; return b; }
+  /* where a chapter 4 body is drawn: on an ellipse with the run's a, e and i; its direction and the body's place along it turn on
+     the display clock (fixed per body, so the orbits do not jump about), not as computed */
+  const hash = (k, j) => { const x = Math.sin(k * 12.9898 + j * 78.233) * 43758.5453; return x - Math.floor(x); };
+  function orbitPoint(b, M) {
+    let E = M; for (let k = 0; k < 8; k++) E -= (E - b.e * Math.sin(E) - M) / (1 - b.e * Math.cos(E));
+    const xo = b.a * (Math.cos(E) - b.e), yo = b.a * Math.sqrt(1 - b.e * b.e) * Math.sin(E), w = 2 * Math.PI * hash(b.id, 1), O = 2 * Math.PI * hash(b.id, 2);
+    const x1 = xo * Math.cos(w) - yo * Math.sin(w), y1 = xo * Math.sin(w) + yo * Math.cos(w), y2 = y1 * Math.cos(b.i), z2 = y1 * Math.sin(b.i);
+    return [x1 * Math.cos(O) - y2 * Math.sin(O), x1 * Math.sin(O) + y2 * Math.cos(O), z2];
+  }
+  const impPos = (b) => orbitPoint(b, 2 * Math.PI * hash(b.id, 3) + 2 * Math.PI * SY.tauD / 4 * Math.pow(b.a, -1.5));
+  /* the impacts between two times start a flash on the body that was hit */
+  function noteImpacts(D, t1, t2) { for (const ev of D.events) if (ev[0] > t1 && ev[0] <= t2) { SY.flash.push({ id: ev[1], at: SY.clock }); SY.lastEv = ev; SY.lastAt = SY.clock; } SY.flash = SY.flash.filter((f) => SY.clock - f.at < 1.6).slice(-4); }
   /* where a body is drawn: on its circular orbit, turning at its Kepler rate on a slowed display clock (SY.tauD) */
   const bodyPos = (b) => { const th = b.ph + 2 * Math.PI * SY.tauD / 4 * Math.pow(b.a, -1.5); return [b.a * Math.cos(th), b.a * Math.sin(th), 0]; };
   function stepStory(fr) {
@@ -842,17 +916,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else if (c === 'disk') {
       SY.u = Math.min(1, SY.u + fr * sp / (60 * 9)); SY.rate = 0; turnCloud(fr);
       if (SY.u >= 1) storyChapter(2);
-    } else {
+    } else if (c === 'grow') {
       if (SY.gt < STORY.tGas) { const f = Math.pow(10, 0.0028 * fr * sp); SY.gt = Math.min(STORY.tGas, SY.gt * f); growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); SY.rate = SY.gt * (f - 1) / (fr / 60); }
-      else { SY.rate = 0; SY.hold += fr / 60; if (SY.hold > 4) SY.done = true; }
+      else { SY.rate = 0; SY.hold += fr / 60; if (SY.hold > 4) { if (IMP()) storyChapter(3); else SY.done = true; } }
+    } else if (c === 'impacts') {
+      const D = IMP(); if (!D) { SY.rate = 0; return; }
+      if (SY.it < D.tEnd) { const t2 = Math.min(D.tEnd, SY.it * Math.pow(D.tEnd / D.t0, fr * sp / (60 * IMPACT_SECONDS))); SY.rate = (t2 - SY.it) / (fr / 60); noteImpacts(D, SY.it, t2); SY.it = t2; }
+      else { SY.rate = 0; SY.hold += fr / 60; if (SY.hold > 4) { if (MOON()) storyChapter(4); else SY.done = true; } }
+    } else if (c === 'moon') {
+      const D = MOON(); if (!D) { SY.rate = 0; return; } const tEnd = D.frames[D.frames.length - 1][0];
+      if (SY.mt < tEnd) { const t2 = Math.min(tEnd, SY.mt + fr / 60 * sp * MOON_RATE[SY.mt < MOON_SLOW_UNTIL ? 0 : 1]); SY.rate = (t2 - SY.mt) / (fr / 60); SY.mt = t2; }
+      else { SY.rate = 0; SY.hold += fr / 60; SY.moonU = Math.min(1, SY.hold / 3); if (SY.hold > 5) SY.done = true; }
     }
+    SY.clock += fr / 60;
     SY.camU = Math.min(1, (SY.camU || 0) + fr / 120);
   }
   /* after the collapse the settled parcels keep turning (on the display) while the disk fades in */
   function turnCloud(fr) { if (!reduce) stepCloud(SY.C, fr * 0.004 * Math.sqrt(SY.view ** 3 / GM)); }
   function storyToEnd() {
     const c = CHAPTERS[SY.ch].k;
-    if (c === 'grow') { SY.gt = STORY.tGas; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); SY.done = true; }
+    if (c === 'grow' && SY.gt < STORY.tGas) { SY.gt = STORY.tGas; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); }
+    else if (c === 'impacts' && IMP() && SY.it < IMP().tEnd) { const D = IMP(); SY.it = D.tEnd; SY.lastEv = D.events[D.events.length - 1] || null; SY.lastAt = -9; }
+    else if (c === 'moon' || (c === 'impacts' && !MOON()) || (c === 'grow' && !IMP())) { const D = MOON(); if (c === 'moon' && D) { SY.mt = D.frames[D.frames.length - 1][0]; SY.moonU = 1; } SY.done = true; }
     else storyChapter(SY.ch + 1);
   }
   const gasLeftStory = () => (SY.gt <= STORY.tGas * 0.8 ? 1 : Math.max(0, (STORY.tGas - SY.gt) / (0.2 * STORY.tGas)));
@@ -866,12 +951,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (n.fall > 0) return VDI18N.t('Gas falling from the sides keeps its spin and cannot reach the center: it swings past and meets gas from the other side of the midplane. A flat disk forms, {r} AU in radius.', { r: grp(rd) });
       return VDI18N.t('The collapse is over: {pc} % of the parcels fell onto the young Sun and the rest turn in a disk. The disk\'s edge goes around {k} times faster than the cloud did.', { pc: Math.round(100 * n.sun / C.n), k: grp(spinUp(STORY.r0, STORY.P0)) });
     }
+    if (c === 'impacts') return impactCaption();
+    if (c === 'moon') return moonCaption();
     if (c === 'disk') return VDI18N.t('The young Sun warms the disk: hotter near it, colder far out. Inside the frost line ({fl} AU) only rock and metal can be solid; beyond it water freezes too, and there is about four times more solid material.', { fl: sig(fl, 3) });
     const s = growthSummary({ B: SY.B.filter((b) => b.a < fl) }), giants = SY.B.filter((b) => b.giant).length;
     if (SY.gt < 3e4) return VDI18N.t('Dust grains stick together into planetesimals, kilometers across. The model starts with {n} of them, spread through the disk like its solids.', { n: N_START });
     if (SY.gt < STORY.tGas * 0.8) return giants ? VDI18N.t('A core beyond the frost line reached {m} Earth masses while the gas was still there: its gravity pulls in hydrogen and helium, and it becomes a giant planet.', { m: CORE_GAS })
       : VDI18N.t('Neighbors pull each other in and merge. Growth is fastest near the Sun, where orbits are short and solids are packed close; each protoplanet stops once it has swept up its own ring.');
     return VDI18N.t('The young Sun\'s light and wind clear away the gas. Left near the Sun: {n} rocky protoplanets, from {m1} to {m2} Earth masses (the Moon is 0.012, Mars 0.107). Their orbits will cross and they will collide: the giant impacts that build Venus and Earth.', { n: s.n, m1: sig(Math.min(...SY.B.filter((b) => b.a < fl).map((b) => b.m)), 2), m2: sig(s.rock ? s.rock.m : 0, 2) });
+  }
+  /* chapter 4's caption: how the stage starts, the latest impact for a moment after it happens, then where the run ends */
+  function impactCaption() {
+    const D = IMP(); if (!D) return VDI18N.t('Loading the giant impact run…');
+    const B = impBodies(), rocky = B.filter((b) => !b.giant), my = (t) => sig((t - D.t0) / 1e6, 2), fb = SY.fol ? followImp() : null;
+    if (SY.it >= D.tEnd) {
+      const big = rocky.reduce((m, b) => (b.m > m.m ? b : m), rocky[0]);
+      let t = VDI18N.t('{t} million years after the gas cleared, {n} rocky planets are left. The largest has {m} Earth masses at {a} AU (Earth: 1 at 1 AU, Venus: 0.815 at 0.723 AU). This is run {k} of {runs}, the one most like our planets: every run ends differently, because collisions hang on tiny differences in the orbits.', { t: my(D.tEnd), n: rocky.length, m: sig(big.m, 2), a: sig(big.a, 2), k: D.seed, runs: D.runs });
+      if (fb && !fb.giant) { const last = D.events.filter((e) => SY.finOf[e[1]] === SY.fol.fid || SY.finOf[e[2]] === SY.fol.fid).pop();
+        if (last) t += ' ' + VDI18N.t('This run\'s {name} took its last giant impact {t} million years after the gas cleared: {mi} Earth masses hit at {v} km/s.', { name: VDI18N.t(SY.fol.name), t: my(last[0]), mi: sig(Math.min(last[3], last[4]), 2), v: sig(last[5], 2) });
+        if (SY.follow === 'mars' && fb.m > 0.2) t += ' ' + VDI18N.t('The real Mars has only 0.107 Earth masses. Models like this one usually make Mars too big: the small Mars problem, still being worked on.'); }
+      else if (SY.fol && SY.fol.none) { t += ' ' + VDI18N.t('No planet is left near {name}\'s orbit in this run: the protoplanets that started near it were thrown out or swept up by their neighbors.', { name: VDI18N.t(SY.fol.name) });
+        if (SY.follow === 'mars') t += ' ' + VDI18N.t('Models like this one usually get Mars wrong, too big or missing: the small Mars problem, still being worked on.'); }
+      return t;
+    }
+    const ev = SY.lastEv;
+    if (ev && SY.clock - SY.lastAt < 3) return VDI18N.t('Impact: bodies of {m1} and {m2} Earth masses collide at {v} km/s ({f} times the speed from just falling together), {ang}° from head on. The model merges them into one body; real impacts also spray debris.', { m1: sig(Math.max(ev[3], ev[4]), 2), m2: sig(Math.min(ev[3], ev[4]), 2), v: sig(ev[5], 2), f: sig(ev[6], 2), ang: ev[7] });
+    if (SY.it < D.t0 * 1.05 && SY.follow === 'jupiter') return VDI18N.t('The gas is gone. Chapter 3\'s giant core formed near 3 AU; giant planets can drift through the gas disk as they grow, and this chapter starts Jupiter and Saturn full grown on today\'s orbits. With them, {n} rocky protoplanets: every body pulls on every other.', { n: D.snaps[0][1].filter((b) => b[0] < 100).length });
+    if (SY.it < D.t0 * 1.05) return VDI18N.t('The gas is gone, and nothing calms the orbits any more. This chapter is an N-body simulation: {n} protoplanets with Jupiter and Saturn, which the model starts full grown on today\'s orbits. Every body pulls on every other.', { n: D.snaps[0][1].filter((b) => b[0] < 100).length });
+    return VDI18N.t('Tugs from Jupiter and from each other stretch the orbits until they cross. {k} impacts so far, {n} rocky bodies left.', { k: D.events.filter((e) => e[0] <= SY.it).length, n: rocky.length });
   }
   /* the story's picture in 3D */
   function initStory3(g) {
@@ -896,7 +1003,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     bodies.frustumCulled = false; { const c0 = new THREE.Color('#ffffff'); for (let i = 0; i < 2 * N_START; i++) bodies.setColorAt(i, c0); } bodies.count = 0; gS.add(bodies);
     const halos = []; for (let i = 0; i < 6; i++) { const h = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshStandardMaterial({ color: '#f0c27a', transparent: true, opacity: 0.32, roughness: 0.9, depthWrite: false })); h.visible = false; halos.push(h); gS.add(h); }
     const mark = VD3K.marker(S3, { r: 0.03, color: '#5eead4' }); gS.add(mark);
-    g.st = { gS, pts, geo, glow, disk, dcv, dtex, frost, today, bodies, halos, mark, painted: false };
+    /* chapter 4: an ellipse for each body's orbit, and flashes for the impacts */
+    const orbits = []; for (let i = 0; i < 26; i++) { const og = new THREE.BufferGeometry(); og.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 128), 3));
+      const l = new THREE.LineLoop(og, new THREE.LineBasicMaterial({ color: '#9aa8ba', transparent: true, opacity: 0.4, depthWrite: false, fog: false })); l.frustumCulled = false; l.visible = false; orbits.push(l); gS.add(l); }
+    const flashes = []; for (let i = 0; i < 4; i++) { const f = new THREE.Sprite(new THREE.SpriteMaterial({ map: dot, color: '#ffb36b', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); f.visible = false; flashes.push(f); gS.add(f); }
+    /* chapter 5: the impact's particles, and the Moon drawn at the end */
+    const mgeo = new THREE.BufferGeometry(); mgeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 8000), 3)); mgeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(3 * 8000), 3));
+    const moonPts = new THREE.Points(mgeo, new THREE.PointsMaterial({ size: 0.03, map: dot, vertexColors: true, transparent: true, alphaTest: 0.25, depthWrite: true, sizeAttenuation: false, fog: false }));
+    moonPts.frustumCulled = false; moonPts.visible = false; gS.add(moonPts);
+    const roche = VD3K.ring(1, { color: '#8cc8ff', dashed: true, opacity: 0.55, seg: 200 }); roche.visible = false; gS.add(roche);
+    const moonBody = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshStandardMaterial({ color: '#c9c4bb', roughness: 0.95, transparent: true })); moonBody.visible = false; gS.add(moonBody);
+    g.st = { gS, pts, geo, glow, disk, dcv, dtex, frost, today, bodies, halos, mark, orbits, flashes, moonPts, mgeo, moonBody, roche, painted: false };
   }
   function paintStoryDisk(st) {
     const c = st.dcv.getContext('2d'), n = st.dcv.width, h = n / 2, img = c.createImageData(n, n), d = img.data, RMAX = 40;
@@ -912,11 +1029,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawStory3() {
     const g = g3, st = g.st, S3 = g.S3, p = P(), c = CHAPTERS[SY.ch].k, w = storyView();
     if (c !== 'cloud') SY.view += (w.R - SY.view) * (reduce ? 1 : 0.06);
+    st.moonPts.visible = st.moonBody.visible = st.roche.visible = false;
+    if (c === 'moon') { drawMoon3(st, S3); return; }
     const Rv = SY.view, s = 1 / Rv;
     if (!st.painted) paintStoryDisk(st);
     /* the camera: eases to the chapter's angle once as a chapter starts, unless the student has turned the view */
     if (SY.camGoal && !SY.userTurned && SY.camU < 1) { G3.o.ph += (SY.camGoal.ph - G3.o.ph) * 0.06; }
-    const fl = frostLine(STORY.L), fade = c === 'disk' ? SY.u : c === 'grow' ? 1 : 0;
+    const fl = frostLine(STORY.L), fade = c === 'disk' ? SY.u : c === 'grow' ? 1 : 0, imp = c === 'impacts';
     /* the cloud */
     const C = SY.C, pos = st.geo.attributes.position.array, col = st.geo.attributes.color.array; let k = 0, rmax = 0;
     const cloudA = c === 'cloud' ? 1 : c === 'disk' ? 1 - SY.u : 0;
@@ -924,7 +1043,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (st.pts.visible) {
       for (let i = 0; i < C.n; i++) { if (C.st[i] === 2) continue; const j = 3 * i, x = C.p[j], y = C.p[j + 1], z = C.p[j + 2];
         pos[3 * k] = x * s; pos[3 * k + 1] = y * s; pos[3 * k + 2] = z * s; if (C.st[i] === 0) rmax = Math.max(rmax, Math.hypot(x, y, z));
-        const fol = SY.fol && C.end[i] >= SY.fol.r1 && C.end[i] <= SY.fol.r2;
+        const fol = SY.fol && inRanges(C.end[i]);
         const cc = fol ? [0.37, 0.92, 0.83] : C.st[i] === 0 ? [0.62, 0.36, 0.22] : [0.95, 0.72, 0.42];
         col[3 * k] = cc[0] * cloudA; col[3 * k + 1] = cc[1] * cloudA; col[3 * k + 2] = cc[2] * cloudA; k++; }
       st.geo.setDrawRange(0, k); st.geo.attributes.position.needsUpdate = true; st.geo.attributes.color.needsUpdate = true;
@@ -934,9 +1053,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the disk and the frost line */
     st.disk.visible = fade > 0.01; st.disk.scale.setScalar(40 * s); st.disk.material.opacity = fade * (c === 'grow' ? 0.12 + 0.5 * gasLeftStory() : 1);
     st.frost.visible = fade > 0.05; st.frost.scale.setScalar(fl * s); st.frost.material.opacity = 0.9 * fade;
-    for (const [n, a] of PLANETS) { const r = st.today[n]; r.visible = c === 'grow'; r.scale.setScalar(a * s); }
+    for (const [n, a] of PLANETS) { const r = st.today[n]; r.visible = c === 'grow' || imp; r.scale.setScalar(a * s); }
     /* the bodies */
-    const show = c === 'grow'; st.bodies.visible = show; let h = 0;
+    const show = c === 'grow'; st.bodies.visible = show || imp; let h = 0;
+    for (const o of st.orbits) o.visible = false; for (const f of st.flashes) f.visible = false;
+    if (imp) drawImpacts3(st, s);
     if (show) {
       const M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3(), cl = new THREE.Color();
       const cR = new THREE.Color('#d39a6a'), cI = new THREE.Color('#bfe0ff'), cG = new THREE.Color('#e9b874'), cF = new THREE.Color(FOL_COL); let n = 0;
@@ -947,12 +1068,99 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       st.bodies.count = n; st.bodies.instanceMatrix.needsUpdate = true; if (st.bodies.instanceColor) st.bodies.instanceColor.needsUpdate = true;
     }
     for (; h < st.halos.length; h++) st.halos[h].visible = false;
-    const fb = show && SY.fol ? followBody() : null; st.mark.visible = !!fb;
+    const fb = show && SY.fol ? followBody() : null, fi = imp && SY.fol ? followImp() : null; st.mark.visible = !!(fb || fi);
     if (fb) { const q = bodyPos(fb); st.mark.at(q[0] * s, q[1] * s, 0); st.mark.scale.setScalar(1.2); }
+    if (fi) { const q = impPos(fi); st.mark.at(q[0] * s, q[1] * s, q[2] * s); st.mark.scale.setScalar(1.2); }
     g.sun.scale.setScalar(c === 'cloud' ? 0.8 : Math.max(0.2, Math.min(1, Rv / 40)));   /* the Sun and its glow drawn smaller as the view closes in */
     const at = SY.at || (SY.at = VD3K.follow({ x: 0, y: 0, z: 0 }, 0.1)), tgt = at.to(w.at[0] * s, w.at[1] * s, w.at[2] * s, false);
     S3.place(G3.o, [tgt.x, tgt.y, tgt.z], S3.fit(3.0, 1.3)); S3.render();
     storyOverlay(S3);
+  }
+  /* chapter 4 in 3D: the bodies on their orbits, the orbits, and a flash where an impact just happened */
+  function drawImpacts3(st, s) {
+    const B = impBodies(), M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3();
+    const cR = new THREE.Color('#d39a6a'), cG = new THREE.Color('#e9b874'), cF = new THREE.Color(FOL_COL); let n = 0;
+    B.forEach((b, k) => { const q = impPos(b), sz = b.giant ? 0.024 : Math.min(0.03, 0.0016 + 0.0065 * Math.cbrt(b.m)), f = followedImp(b);
+      V.set(q[0] * s, q[1] * s, q[2] * s); Sc.setScalar(sz); M4.compose(V, Q, Sc); st.bodies.setMatrixAt(n, M4); st.bodies.setColorAt(n, f ? cF : b.giant ? cG : cR); n++;
+      const o = st.orbits[k]; if (!o) return; const pa = o.geometry.attributes.position.array;
+      for (let j = 0; j < 128; j++) { const p = orbitPoint(b, 2 * Math.PI * j / 128); pa[3 * j] = p[0] * s; pa[3 * j + 1] = p[1] * s; pa[3 * j + 2] = p[2] * s; }
+      o.geometry.attributes.position.needsUpdate = true; o.visible = true; o.material.color.set(f ? FOL_COL : b.giant ? '#e9b874' : '#c9a284'); o.material.opacity = f ? 0.75 : 0.32; });
+    st.bodies.count = n; st.bodies.instanceMatrix.needsUpdate = true; if (st.bodies.instanceColor) st.bodies.instanceColor.needsUpdate = true;
+    SY.flash.forEach((fl, i) => { const b = B.find((q) => q.id === fl.id), sp = st.flashes[i]; if (!b || !sp) return; const age = (SY.clock - fl.at) / 1.6; if (age >= 1) return;
+      const q = impPos(b); sp.visible = true; sp.position.set(q[0] * s, q[1] * s, q[2] * s); sp.scale.setScalar(0.05 + 0.2 * age); sp.material.opacity = 1 - age; });
+  }
+  /* chapter 5: the SPH run's frames, decoded the first time each is shown */
+  const MF = { cache: new Map(), pos: null, heat: null, key: null };
+  const unb64 = (str, T) => { const b = atob(str), u8 = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u8[i] = b.charCodeAt(i); return new T(u8.buffer); };
+  function moonFrame(k) { let f = MF.cache.get(k); if (!f) { const q = MOON().frames[k]; f = { t: q[0], p: unb64(q[1], Int16Array), e: unb64(q[2], Uint8Array) }; MF.cache.set(k, f); } return f; }
+  /* every particle's place (km, center of mass frame) at time t: between two saved frames its distance from the spin axis, its
+     height and its angle around the axis are interpolated, so orbits stay curved (straight lines would cut across them) */
+  function moonState(t) {
+    const D = MOON(), F = D.frames, n = D.n; if (!MF.pos) { MF.pos = new Float32Array(3 * n); MF.heat = new Float32Array(n); MF.mat = unb64(D.mat, Uint8Array); MF.cls = unb64(D.cls, Uint8Array); }
+    if (MF.key === t) return MF; MF.key = t;
+    let k = 0; while (k < F.length - 2 && F[k + 1][0] <= t) k++;
+    const a = moonFrame(k), b = moonFrame(Math.min(F.length - 1, k + 1)), w = b.t > a.t ? Math.max(0, Math.min(1, (t - a.t) / (b.t - a.t))) : 0, Q = 4, P2 = MF.pos;
+    for (let i = 0; i < n; i++) { const j = 3 * i;
+      if (a.p[j] === -32768 || b.p[j] === -32768) { P2[j] = P2[j + 1] = P2[j + 2] = NaN; MF.heat[i] = 0; continue; }
+      const x1 = a.p[j] * Q, y1 = a.p[j + 1] * Q, x2 = b.p[j] * Q, y2 = b.p[j + 1] * Q, r1 = Math.hypot(x1, y1), r2 = Math.hypot(x2, y2), t1 = Math.atan2(y1, x1);
+      let dth = Math.atan2(y2, x2) - t1; dth -= 2 * Math.PI * Math.round(dth / (2 * Math.PI));
+      const r = r1 + w * (r2 - r1), th = t1 + w * dth; P2[j] = r * Math.cos(th); P2[j + 1] = r * Math.sin(th); P2[j + 2] = (a.p[j + 2] + w * (b.p[j + 2] - a.p[j + 2])) * Q;
+      MF.heat[i] = a.e[i] + w * (b.e[i] - a.e[i]); }
+    return MF;
+  }
+  /* each body's center (km): the mean place of its particles that are still near the others */
+  function bodyCenter(M, i0, i1) { let c = [0, 0, 0], k = 0; for (let i = i0; i < i1; i++) { const j = 3 * i; if (!isFinite(M.pos[j])) continue; c[0] += M.pos[j]; c[1] += M.pos[j + 1]; c[2] += M.pos[j + 2]; k++; } return c.map((v) => v / Math.max(1, k)); }
+  /* a particle's size (km): the spacing of equal mass particles in uncompressed rock (2680 kg/m³, the granite of sph.c) */
+  const moonParticle = (D) => Math.cbrt((D.setup.Mt + D.setup.Mi) * M_EARTH / D.n / 2680) / 1000;
+  const MOON_KEY = () => VDI18N.t('tan: Earth\'s rock · violet: Theia\'s rock · gray: iron · glowing: shock heated');
+  const MOON_COL = [[0.55, 0.6, 0.68], [0.79, 0.55, 0.36], [0.42, 0.44, 0.62], [0.61, 0.55, 1.0]];   /* Earth iron, Earth rock, Theia iron, Theia rock */
+  function drawMoon3(st, S3) {
+    const D = MOON(); for (const k of ['pts', 'glow', 'disk', 'frost', 'bodies', 'mark']) st[k].visible = false;
+    for (const n in st.today) st.today[n].visible = false; for (const h of st.halos) h.visible = false; for (const o of st.orbits) o.visible = false; for (const f of st.flashes) f.visible = false;
+    if (SY.camGoal && !SY.userTurned && SY.camU < 1) G3.o.ph += (SY.camGoal.ph - G3.o.ph) * 0.06;
+    const s = 1 / SY.view;
+    if (D) {
+      const M = moonState(SY.mt), pa = st.mgeo.attributes.position.array, ca = st.mgeo.attributes.color.array, fadeDisk = SY.moonU || 0;
+      for (let i = 0; i < D.n; i++) { const j = 3 * i, x = M.pos[j];
+        if (!isFinite(x)) { pa[j] = pa[j + 1] = pa[j + 2] = 1e6; continue; }
+        pa[j] = x * s; pa[j + 1] = M.pos[j + 1] * s; pa[j + 2] = M.pos[j + 2] * s;
+        /* color: which body and material; material heated past 1.5 MJ/kg glows (it starts at 1 MJ/kg), fully at 6 MJ/kg, about 5000 degrees hotter (internal energy kept on a log scale, 10⁵ to 10⁸ J/kg over 0 to 255) */
+        const base = MOON_COL[MF.mat[i]], hot = Math.max(0, Math.min(1, (M.heat[i] - 101) / 52)), dim = MF.cls[i] === 1 ? 1 - 0.85 * fadeDisk : 1;
+        for (let q = 0; q < 3; q++) ca[j + q] = (base[q] + hot * ([1, 0.88, 0.6][q] - base[q])) * dim; }
+      st.mgeo.setDrawRange(0, D.n); st.mgeo.attributes.position.needsUpdate = true; st.mgeo.attributes.color.needsUpdate = true;
+      st.moonPts.visible = true; /* point size in pixels from the particle's size on screen, never below 3 pixels (smaller points vanish on phones) */
+      const q0 = S3.project([0, 0, 0]), q1 = S3.project([moonParticle(D) * s, 0, 0]), px = Math.hypot(q1[0] - q0[0], q1[1] - q0[1]);
+      st.moonPts.material.size = Math.max(3 * P(), 2 * px);
+      /* the Roche limit: inside it Earth's tides pull a moon apart, so the disk can only gather into a moon outside it */
+      st.roche.visible = SY.mt > 0; st.roche.scale.setScalar(2.9 * D.summary.Rp * s);
+      /* the Moon, drawn (not simulated) as the disk gathers into it, a little outside the Roche limit */
+      if (fadeDisk > 0) { const S1 = D.summary, aM = 1.3 * 2.9 * S1.Rp, rM = 1737.4 * Math.cbrt(Math.max(0.05, S1.moon)), ang = 0.6;
+        st.moonBody.visible = true; st.moonBody.position.set(aM * Math.cos(ang) * s, aM * Math.sin(ang) * s, 0); st.moonBody.scale.setScalar(rM * s); st.moonBody.material.opacity = fadeDisk; }
+    }
+    const at = SY.at || (SY.at = VD3K.follow({ x: 0, y: 0, z: 0 }, 0.1)), tgt = at.to(0, 0, 0, false);
+    S3.place(G3.o, [tgt.x, tgt.y, tgt.z], S3.fit(3.0, 1.3)); S3.render();
+    storyOverlay(S3);
+  }
+  /* chapter 5 in the flat view: the particles seen from above the impact's plane, with a scale bar */
+  function drawMoonFlat() {
+    const D = MOON(), p = P(); if (!D) return; const M = moonState(SY.mt), cx = (W > 820 ? (W - 300) : W) / 2, cy = H / 2, R = Math.min(cx, cy) * 0.92, k = R / SY.view;
+    const r = Math.max(1.2 * p, 0.65 * moonParticle(D) * k);
+    for (let i = 0; i < D.n; i++) { const j = 3 * i, x = M.pos[j]; if (!isFinite(x)) continue; const base = MOON_COL[MF.mat[i]], hot = Math.max(0, Math.min(1, (M.heat[i] - 101) / 52));
+      ctx.fillStyle = `rgb(${[0, 1, 2].map((q) => Math.round(255 * (base[q] + hot * ([1, 0.88, 0.6][q] - base[q])))).join(',')})`; ctx.beginPath(); ctx.arc(cx + x * k, cy - M.pos[j + 1] * k, r, 0, 2 * Math.PI); ctx.fill(); }
+    const L = 10000 * k; ctx.fillStyle = K.ink; ctx.fillRect(20 * p, H - 40 * p, L, 2 * p); label(ctx, '10,000 km', 20 * p, H - 50 * p, { col: K.ink, s: 10.5 });
+    label(ctx, 'seen from above the plane of the impact', 20 * p, 20 * p, { col: K.muted, s: 10.5 });
+  }
+  /* chapter 5's caption */
+  function moonCaption() {
+    const D = MOON(); if (!D) return VDI18N.t('Loading the impact that made the Moon…');
+    const S1 = D.summary, U = D.setup, t = SY.mt, tEnd = D.frames[D.frames.length - 1][0];
+    if (t < 0) return VDI18N.t('Theia, a body about the size of Mars ({mi} Earth masses), falls toward the young Earth ({mt} Earth masses). They will meet {ang}° from head on, as fast as falling together from far away makes them: the standard model of the impact that made the Moon (Canup and Asphaug 2001). Each of the {n} particles feels every other\'s gravity and its neighbors\' pressure.', { mi: U.Mi, mt: U.Mt, ang: U.angle, n: grp(D.n) });
+    if (t < 1.5 * 3600) return VDI18N.t('Contact. The shock heats the rock (hot material glows). Theia is smeared along Earth\'s surface, and most of it, iron core and all, is flung on ahead in a long arm.');
+    if (t < (S1.ironBack || 0)) return VDI18N.t('Earth\'s gravity pulls the arm back: Theia\'s iron swings around Earth and falls back in.');
+    if (t < tEnd) return VDI18N.t('Theia\'s iron is back inside Earth, sinking toward its core. Flung rock swings around Earth: much falls back, and what stays on orbits that no longer dip into the planet becomes a disk around Earth, mostly rock. Inside the Roche limit (dashed), Earth\'s tides pull clumps apart; a moon can gather only outside it.');
+    let c = VDI18N.t('{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk\'s mass and spin, about {mm} Moon masses (the formula of Ida, Canup and Stewart 1997).', { h: sig(tEnd / 3600, 2), md: sig(S1.disk, 2), th: Math.round(100 * S1.diskTheia), fe: Math.round(100 * S1.diskIron), me: sig(S1.escaped, 2), mm: sig(S1.moon, 2) });
+    if (S1.diskTheia > 0.5) c += ' ' + VDI18N.t('The real Moon\'s rocks match Earth\'s isotopes almost exactly, yet here the disk comes mostly from Theia: a puzzle still being worked on.');
+    return c;
   }
   /* words over the picture: the chapter card, labels, the scale and time lapse, and the chapter bar */
   let storyBarBoxes = [];
@@ -965,17 +1173,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const x0 = o.a === 'center' ? x - w / 2 : o.a === 'right' ? x - w : x, box = [x0 - 3 * p, y - hh / 2, w + 6 * p, hh];
       if (placed.some((b) => box[0] < b[0] + b[2] && b[0] < box[0] + box[2] && box[1] < b[1] + b[3] && b[1] < box[1] + box[3])) return; placed.push(box); label(ctx, t, x, y, o); };
     /* labels in the scene */
-    { const q = pr([0, 0, 0]); tag(c === 'cloud' ? 'young Sun (protostar)' : 'young Sun', q[0] + 10 * p, q[1] - 12 * p, { col: '#ffd27a', haloCol: halo, s: 10.5, w: 600 }); }
+    if (c === 'moon' && MOON()) { const D = MOON(), M = moonState(SY.mt), sk = (q) => pr(q.map((x) => x * s));
+      if (SY.mt < 1800) { const e = sk(bodyCenter(M, 0, D.nt)), th = sk(bodyCenter(M, D.nt, D.n)); tag(VDI18N.t('young Earth'), e[0], e[1] + 64 * p, { a: 'center', col: '#e8b48a', haloCol: halo, w: 700 }); tag(VDI18N.t('Theia'), th[0], th[1] - 34 * p, { a: 'center', col: '#b7aaff', haloCol: halo, w: 700 }); }
+      else { const e = sk(bodyCenter(M, 0, D.nt)); tag(VDI18N.t('Earth'), e[0], e[1], { a: 'center', col: '#e8b48a', haloCol: halo, w: 700 }); }
+      if (SY.mt > 0) { const q = sk([0, -2.9 * D.summary.Rp, 0]); tag(VDI18N.t('Roche limit'), q[0], q[1] + 13 * p, { a: 'center', col: '#8cc8ff', haloCol: halo, w: 700, s: 11 }); }
+      if (SY.moonU > 0.3) { const S1 = D.summary, aM = 1.3 * 2.9 * S1.Rp, q = sk([aM * Math.cos(0.6), aM * Math.sin(0.6), 0]); tag(VDI18N.t('the Moon (drawn)'), q[0], q[1] - 30 * p, { a: 'center', col: '#e6e2da', haloCol: halo, w: 700 }); }
+    }
+    if (c !== 'moon') { const q = pr([0, 0, 0]); tag(c === 'cloud' ? 'young Sun (protostar)' : 'young Sun', q[0] + 10 * p, q[1] - 12 * p, { col: '#ffd27a', haloCol: halo, s: 10.5, w: 600 }); }
     if (c === 'grow') {
-      const fb = SY.fol ? followBody() : null; if (fb) { const q = pr(bodyPos(fb).map((x) => x * s)); tag(VDI18N.t('{name}\'s material: {m} Earth masses', { name: VDI18N.t(SY.fol.name), m: sig(fb.m, 2) }), q[0], q[1] + 22 * p, { a: 'center', col: FOL_COL, haloCol: halo, w: 700 }); }
+      const fb = SY.fol ? followBody() : null; if (fb) { const q = pr(bodyPos(fb).map((x) => x * s)), tot = SY.B.filter(followed).reduce((m, b) => m + b.m, 0); tag(VDI18N.t('{name}\'s material: {m} Earth masses', { name: VDI18N.t(SY.fol.name), m: sig(tot, 2) }), q[0], q[1] + 22 * p, { a: 'center', col: FOL_COL, haloCol: halo, w: 700 }); }
       for (const b of SY.B) if (b.giant) { const q = pr(bodyPos(b).map((x) => x * s)); tag('giant planet', q[0], q[1] - 18 * p, { a: 'center', col: '#f0c27a', haloCol: halo, w: 700 }); }
     }
-    if (c !== 'cloud') { const fl = frostLine(STORY.L), q = pr([0, -fl * s, 0]); if (fl * s > 0.04) tag(`frost line ${sig(fl, 3)} AU`, q[0], q[1] + 13 * p, { a: 'center', col: '#8cc8ff', haloCol: halo, w: 700, s: 11 }); }
-    if (c === 'grow') {
+    if (c === 'impacts') {
+      const B = impBodies(), fi = SY.fol ? followImp() : null;
+      if (fi) { const q = pr(impPos(fi).map((x) => x * s)); tag(fi.giant ? VDI18N.t(SY.fol.name) : VDI18N.t('{name} as it grows: {m} Earth masses', { name: VDI18N.t(SY.fol.name), m: sig(fi.m, 2) }), q[0], q[1] + 22 * p, { a: 'center', col: FOL_COL, haloCol: halo, w: 700 }); }
+      for (const f of SY.flash) { const b = B.find((q) => q.id === f.id); if (b && SY.clock - f.at < 1.6) { const q = pr(impPos(b).map((x) => x * s)); tag(VDI18N.t('impact'), q[0], q[1] - 18 * p, { a: 'center', col: '#ffb36b', haloCol: halo, w: 700 }); } }
+      for (const b of B) if (b.giant) { const q = pr(impPos(b).map((x) => x * s)); tag(VDI18N.t(b.id === 101 ? 'Jupiter' : 'Saturn'), q[0], q[1] - 16 * p, { a: 'center', col: '#f0c27a', haloCol: halo, w: 700 }); }
+    }
+    if (c !== 'cloud' && c !== 'impacts') { const fl = frostLine(STORY.L), q = pr([0, -fl * s, 0]); if (fl * s > 0.04) tag(`frost line ${sig(fl, 3)} AU`, q[0], q[1] + 13 * p, { a: 'center', col: '#8cc8ff', haloCol: halo, w: 700, s: 11 }); }
+    if (c === 'grow' || c === 'impacts') {
       const az = G3.o.th - Math.PI / 2;
       for (const [n, a] of PLANETS) { if (a * s < 0.04 || a * s > 1.4) continue; const q = pr([a * s * Math.cos(az), a * s * Math.sin(az), 0]); tag(VDI18N.t('{name} today', { name: VDI18N.t(n) }), q[0], q[1] - 8 * p, { a: 'center', col: 'rgba(219,228,239,0.75)', haloCol: halo, s: 9.5, w: 400 }); }
     }
-    if (c === 'cloud' && SY.fol) label(ctx, VDI18N.t('teal: the gas that will settle where {name} forms ({a} to {b} AU)', { name: VDI18N.t(SY.fol.name), a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) }), 14 * p, H - 74 * p, { col: FOL_COL, haloCol: halo, s: 10.5, w: 600 });
+    if (c === 'cloud' && SY.fol) label(ctx, SY.fol.ranges.length > 1 ? VDI18N.t('teal: the gas that will settle where {name}\'s building blocks form ({k} rings between {a} and {b} AU)', { name: VDI18N.t(SY.fol.name), k: SY.fol.ranges.length, a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) })
+      : VDI18N.t('teal: the gas that will settle where {name} forms ({a} to {b} AU)', { name: VDI18N.t(SY.fol.name), a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) }), 14 * p, H - 74 * p, { col: FOL_COL, haloCol: halo, s: 10.5, w: 600 });
     /* the chapter card */
     const cw = Math.min(W - 24 * p, (phone ? 360 : 440) * p), x0 = 12 * p, y0 = 10 * p;
     /* the caption is translated whole, then wrapped and drawn as it is (VDI18N.raw), so its lines are not looked up one by one */
@@ -983,20 +1204,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.font = `${12 * p}px ${K.ui}`; const lines = asIs(() => wrapText(ctx, cap, cw - 20 * p)); ctx.restore();
     const ch = (34 + 16 * lines.length) * p;
     ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.66)'; ctx.strokeStyle = 'rgba(219,228,239,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, cw, ch, 8 * p) : ctx.rect(x0, y0, cw, ch); ctx.fill(); ctx.stroke(); ctx.restore();
-    label(ctx, VDI18N.t('{i} of {n} · {title}', { i: SY.ch + 1, n: CHAPTERS.length, title: chTitle(SY.ch) }), x0 + 10 * p, y0 + 15 * p, { col: '#ffd27a', halo: false, s: 12.5, w: 700 });
+    /* the title shrinks to fit the card (long titles in other languages on phones) */
+    const ttl = VDI18N.t('{i} of {n} · {title}', { i: SY.ch + 1, n: CHAPTERS.length, title: chTitle(SY.ch) });
+    ctx.save(); ctx.font = `700 ${12.5 * p}px ${K.ui}`; const tw = asIs(() => ctx.measureText(ttl).width); ctx.restore();
+    asIs(() => label(ctx, ttl, x0 + 10 * p, y0 + 15 * p, { col: '#ffd27a', halo: false, s: 12.5 * Math.min(1, (cw - 20 * p) / tw), w: 700 }));
     asIs(() => lines.forEach((t, i) => label(ctx, t, x0 + 10 * p, y0 + (33 + 16 * i) * p, { col: lc, halo: false, s: 12, w: 400 })));
     /* the scale and the time lapse */
     const span = 2 * Rv / Math.max(0.35, G3.o.zoom || 1);
-    const r = SY.rate, parts = [VDI18N.t('view about {d} across', { d: fmtAU(+sig(span, 2)) })];
-    if (r > 0 && S.run) parts.push(r < 1e4 ? VDI18N.t('1 second ≈ {t} yr', { t: grp(r) }) : r < 1e6 ? VDI18N.t('1 second ≈ {t} thousand yr', { t: grp(r / 1e3) }) : VDI18N.t('1 second ≈ {t} million yr', { t: sig(r / 1e6, 3) }));
-    if (c === 'grow') parts.push(VDI18N.t('bodies drawn far larger than to scale'));
-    asIs(() => label(ctx, parts.join(' · '), 14 * p, H - 54 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }));
+    const r = SY.rate, sp2 = +sig(span, 2), parts = [c === 'moon' ? VDI18N.t('view about {d} km across', { d: grp(sp2) }) : VDI18N.t('view about {d} AU across', { d: sp2 >= 1000 ? grp(sp2) : sig(sp2, 3) })];
+    if (c === 'moon') { if (r > 0 && S.run) parts.push(VDI18N.t('1 second ≈ {m} minutes', { m: grp(r / 60) })); if (phone) parts.push(MOON_KEY()); parts.push(VDI18N.t('simulated: {n} particles, each about {d} km across', { n: grp(MOON() ? MOON().n : 0), d: MOON() ? grp(Math.round(moonParticle(MOON()) / 10) * 10) : '—' })); }
+    else if (r > 0 && S.run) parts.push(r < 1e4 ? VDI18N.t('1 second ≈ {t} yr', { t: grp(r) }) : r < 1e6 ? VDI18N.t('1 second ≈ {t} thousand yr', { t: grp(r / 1e3) }) : VDI18N.t('1 second ≈ {t} million yr', { t: sig(r / 1e6, 3) }));
+    if (c === 'grow' || c === 'impacts') parts.push(VDI18N.t('bodies drawn far larger than to scale'));
+    /* on phones each part gets its own line */
+    /* (shrunk to fit the width when a line is long) */
+    if (phone) asIs(() => parts.slice().reverse().forEach((t, i) => { ctx.save(); ctx.font = `400 ${10.5 * p}px ${K.ui}`; const tw = ctx.measureText(t).width; ctx.restore();
+      label(ctx, t, 14 * p, H - (38 + 14 * i) * p, { col: lc, haloCol: halo, s: 10.5 * Math.min(1, (W - 28 * p) / tw), w: 400 }); }));
+    else asIs(() => label(ctx, parts.join(' · '), 14 * p, H - 54 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }));
     if (c === 'grow' && !phone) label(ctx, 'orbits shown turning slowly, not at their real rate · dashed: where today\'s planets orbit', 14 * p, H - 38 * p, { col: lc, haloCol: halo, s: 10, w: 400 });
+    if (c === 'moon' && !phone) label(ctx, MOON_KEY(), 14 * p, H - 38 * p, { col: lc, haloCol: halo, s: 10, w: 400 });
+    if (c === 'impacts' && !phone) label(ctx, 'simulated: orbit sizes, stretch and tilt from the run; their directions and the bodies\' places on them only for the picture', 14 * p, H - 38 * p, { col: lc, haloCol: halo, s: 10, w: 400 });
     /* the chapter bar */
     const bw = W - 24 * p, segW = bw / CHAPTERS.length, by = H - 22 * p; storyBarBoxes = [];
     CHAPTERS.forEach((q, i) => { const bx = 12 * p + i * segW; storyBarBoxes.push([bx, by - 8 * p, segW, 22 * p, i]);
       ctx.fillStyle = i < SY.ch ? 'rgba(255,210,122,0.75)' : i === SY.ch ? 'rgba(255,210,122,0.95)' : 'rgba(219,228,239,0.22)'; ctx.fillRect(bx + 2 * p, by, segW - 4 * p, 4 * p);
-      if (!phone || i === SY.ch) asIs(() => label(ctx, `${i + 1} ${chTitle(i)}`, bx + 2 * p, by - 7 * p, { col: i === SY.ch ? '#ffd27a' : 'rgba(219,228,239,0.7)', haloCol: halo, s: 9.5, w: i === SY.ch ? 700 : 400 })); });
+      /* on phones only the current chapter is named, kept inside the picture */
+      if (!phone) asIs(() => label(ctx, `${i + 1} ${chTitle(i)}`, bx + 2 * p, by - 7 * p, { col: i === SY.ch ? '#ffd27a' : 'rgba(219,228,239,0.7)', haloCol: halo, s: 9.5, w: i === SY.ch ? 700 : 400 }));
+      else if (i === SY.ch) { const t = `${i + 1} ${chTitle(i)}`; ctx.save(); ctx.font = `700 ${9.5 * p}px ${K.ui}`; const w = asIs(() => ctx.measureText(t).width); ctx.restore();
+        asIs(() => label(ctx, t, Math.max(12 * p, Math.min(bx + 2 * p, W - 12 * p - w)), by - 7 * p, { col: '#ffd27a', haloCol: halo, s: 9.5, w: 700 })); } });
   }
   /* the story in the flat view: the Collapse and Planets grow graphs, drawn for the story's cloud and disk */
   function drawStoryFlat() {
@@ -1005,6 +1239,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     try {
       if (c === 'cloud') { CL.C = SY.C; CL.view = SY.view; drawCollapseFlat(); }
       else if (c === 'disk') { S.L = STORY.L; const r0 = S.r; S.r = SY.fol ? SY.fol.aToday : 1; drawDiskFlat(); S.r = r0; }
+      else if (c === 'moon') drawMoonFlat();
+      else if (c === 'impacts') { GR.D = { B: impBodies() }; GR.t = SY.it; S.f = STORY.f; S.L = STORY.L; S.gas = STORY.gas; drawPlanetsFlat(); }
       else { GR.D = { B: SY.B }; GR.t = SY.gt; S.f = STORY.f; S.L = STORY.L; S.gas = STORY.gas; drawPlanetsFlat(); }
     } finally { CL.C = keep.C; CL.view = keep.view; GR.D = keep.D; GR.t = keep.t; S.f = keep.f; S.L = keep.L; S.gas = keep.gas; }
     const p = P(); label(ctx, `${SY.ch + 1} of ${CHAPTERS.length} · ${CHAPTERS[SY.ch].title}`, W - 14 * p - (W > 820 ? 300 : 0), H - 12 * p, { a: 'right', col: K.muted, s: 10.5, w: 700 });
@@ -1013,6 +1249,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L); let h = dd('Chapter', `${SY.ch + 1} of ${CHAPTERS.length}: ${CHAPTERS[SY.ch].title}`, 'wide') + dd('Time since the cloud began to fall', yrs(storyTime()));
     if (c === 'cloud') { const n = cloudCounts(SY.C); h += dd('Parcels falling, in the disk, on the young Sun', `${n.fall}, ${n.disk}, ${n.sun}`, 'wide') + dd('Disk radius (prediction)', fmtAU(diskRadius(STORY.r0, STORY.P0))) + dd('View across', fmtAU(+sig(2 * SY.view, 2))); }
     else if (c === 'disk') h += dd('Frost line', `${sig(fl, 3)} AU`) + dd('Temperature at 1 AU', `${sig(diskT(1, STORY.L), 3)} K`) + dd('Solids at 1 AU, at 5.2 AU', `${sig(sigmaSolid(1, STORY.f, STORY.L), 2)}, ${sig(sigmaSolid(5.2, STORY.fOut, STORY.L), 2)} g/cm²`, 'wide');
+    else if (c === 'moon') { const D = MOON(); if (!D) return h; const S1 = D.summary, end = SY.mt >= D.frames[D.frames.length - 1][0];
+      h += dd('Time after contact', hoursAfter(SY.mt)) + dd('Earth and Theia', `${D.setup.Mt} and ${D.setup.Mi} Earth masses`) + dd('Particles', grp(D.n));
+      if (end) h += dd('Disk around Earth', `${sig(S1.disk, 2)} Moon masses`) + dd('Escaped', `${sig(S1.escaped, 2)} Moon masses`) + dd('Moon it would make', `${sig(S1.moon, 2)} Moon masses`) + dd('Angular momentum', `${sig(S1.L, 3)} times today's Earth and Moon`, 'wide');
+      return h; }
+    else if (c === 'impacts') { const D = IMP(), B = impBodies(), rocky = B.filter((b) => !b.giant), big = rocky.reduce((m, b) => (!m || b.m > m.m ? b : m), null);
+      h += dd('Time since the gas cleared', D ? yrs(SY.it - D.t0) : '—') + dd('Rocky bodies', String(rocky.length)) + dd('Impacts so far', D ? String(D.events.filter((e) => e[0] <= SY.it).length) : '—')
+        + dd('Largest rocky body', big ? `${sig(big.m, 3)} Earth masses at ${sig(big.a, 3)} AU` : '—', 'wide');
+      const fi = SY.fol ? followImp() : null; if (fi) h += dd(`Following ${SY.fol.name}`, `${sig(fi.m, 3)} Earth masses, a = ${sig(fi.a, 3)} AU, e = ${sig(fi.e, 2)}`, 'wide');
+      return h; }
     else { const inner = SY.B.filter((b) => b.a < fl), big = inner.reduce((m, b) => (b.m > m.m ? b : m), inner[0]);
       h += dd('Bodies inside the frost line', String(inner.length)) + dd('Largest rocky body', big ? `${sig(big.m, 3)} Earth masses at ${sig(big.a, 3)} AU` : '—', 'wide') + dd('Giant planets', String(SY.B.filter((b) => b.giant).length)) + dd('Gas left', SY.gt < STORY.tGas ? 'yes' : 'gone'); }
     if (SY.fol) { const fb = c === 'grow' ? followBody() : null; h += dd(`Following ${SY.fol.name}`, fb ? `${sig(fb.m, 3)} Earth masses at ${sig(fb.a, 3)} AU` : `material from ${sig(SY.fol.r1, 2)} to ${sig(SY.fol.r2, 2)} AU in the disk`, 'wide'); }
@@ -1052,7 +1297,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function clock() {
     let t = '';
-    if (S.st === 'story') t = `t = ${yrs(storyTime())}`; else if (S.st === 'collapse') t = `t = ${yrs(CL.C.t)}`; else if (S.st === 'planets') t = `t = ${yrs(GR.t)}`; else if (S.st === 'melt') t = `t = ${sig(ML.t, 3)} million yr after the first solids`;
+    if (S.st === 'story' && CHAPTERS[SY.ch].k === 'moon') t = hoursAfter(SY.mt);
+    else if (S.st === 'story') t = `t = ${yrs(storyTime())}`; else if (S.st === 'collapse') t = `t = ${yrs(CL.C.t)}`; else if (S.st === 'planets') t = `t = ${yrs(GR.t)}`; else if (S.st === 'melt') t = `t = ${sig(ML.t, 3)} million yr after the first solids`;
     $('clock').textContent = t;
   }
 
@@ -1155,7 +1401,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { stage: 'melt', R_km: sig(S.R, 3), tf_Myr: sig(S.tf, 2), heat_MJkg: sig(heatLeft(S.tf) / 1e6, 3), peak_K: String(Math.round(run.peak)), core: run.core ? `yes, at ${sig(run.coreAt, 3)} Myr` : 'no' };
   };
   Object.defineProperty(window, 'vdShowCols', { configurable: true, get: showCols });
-  $('about').textContent = 'The whole story runs the stages\' models one after another for one cloud (5000 AU in radius, turning once every 4 million years), with a disk that has the minimum mass inside the frost line and three times it beyond (with the minimum mass there, no core reaches 10 Earth masses before the gas is gone: the timescale problem of making Jupiter this way), drawn in true distances; the bodies are drawn far larger than to scale and their orbits turn slowly on the screen, not at their real rate. Follow picks the protoplanet nearest a planet\'s orbit when the gas is gone, the starting planetesimals it is made of, and the cloud\'s gas that settles in their ring (the gas settles at j²/GM; the disk\'s later spreading is left out, so this marks where the material landed, not every place it went). The four stages: Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
+  $('about').textContent = 'The whole story runs the stages\' models one after another for one cloud (5000 AU in radius, turning once every 4 million years), with a disk that has the minimum mass inside the frost line and three times it beyond (with the minimum mass there, no core reaches 10 Earth masses before the gas is gone: the timescale problem of making Jupiter this way), drawn in true distances; the bodies are drawn far larger than to scale and their orbits turn slowly on the screen, not at their real rate. Chapter 4 replays one run of an N-body simulation made for this page (tools/solar-system-formation/nbody.c), one of three with different random starts, the one that ends most like our planets (the other two end with one and with two rocky planets): the 22 rocky protoplanets left when the gas is gone, with small random eccentricities and tilts (Kokubo, Genda and Ida 2006), and Jupiter and Saturn started full grown on today\'s orbits, for 150 million years. Every body pulls on every other (a Wisdom and Holman integrator, with close passes followed step by step); bodies that touch merge whole, keeping mass and momentum, and the impact speed and angle are recorded. Real impacts also spray debris and some bodies bounce off; models that include this end with much the same planets (Chambers 2013). Models like this one usually make Mars too big: the small Mars problem (Raymond et al. 2009), still being worked on. The orbit sizes, eccentricities and tilts on the screen come from the run; the directions of the orbits and where each body sits on its orbit are for the picture only. Chapter 5 is a smoothed particle hydrodynamics run made for this page (tools/solar-system-formation/sph.c), at low resolution like the first such simulations (Benz, Slattery and Cameron 1986; recent ones use millions of particles): the standard impact of Canup and Asphaug (2001), a body of 0.11 Earth masses hitting one of 0.89 at 45° from head on with no speed of its own far away. Each body has an iron core of 30 % of its mass under a rock mantle, first left to settle into balance; pressure comes from the Tillotson equation of state with the iron and granite values of Melosh (1989); rock pulled apart has no strength; an artificial viscosity turns the shock\'s motion into heat. Positions between saved frames are interpolated around the spin axis. After 24 hours the disk is the material on orbits that stay clear of Earth (its radius from its mass at Earth\'s mean density), and the Moon\'s mass is the estimate of Ida, Canup and Stewart (1997) from the disk\'s mass and angular momentum. The Moon at the end is drawn, not simulated: it gathers just outside the Roche limit within about a year (Kokubo, Ida and Makino 2000). Follow picks the rocky planet nearest a planet\'s orbit at the end of the run (the biggest one within 30 % of it), the protoplanets it was built from, their starting planetesimals, and the cloud\'s gas that settles in their rings (the gas settles at j²/GM; the disk\'s later spreading is left out, so this marks where the material landed, not every place it went). The four stages: Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
 
   /* ---------- run, size, theme ---------- */
   const redraw = () => { draw(); readouts(); clock(); };

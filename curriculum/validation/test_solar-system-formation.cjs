@@ -2,7 +2,7 @@
 // Building a Solar System: the collapse (Ulrich infall), the disk's temperature and frost line, oligarchic growth and aluminum 26 melting.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('solar-system-formation', 'AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun,STORY,settleRadius,ringRange,storyGrowth,storyBodies,DISK_IN,DISK_OUT,omegaOf');
+const c = core('solar-system-formation', 'AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun,STORY,settleRadius,ringRange,storyGrowth,storyBodies,impactState,finalOf,DISK_IN,DISK_OUT,omegaOf');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -121,6 +121,48 @@ group('the whole story: settling radius j_z²/GM; each body covers a run of star
   const tf = c.fallTime(5000); while (C.t < 1.6 * tf) c.stepCloud(C, tf / 1500);
   let worst = 0, k = 0; for (let i = 0; i < C.n; i++) if (C.st[i] === 3) { worst = Math.max(worst, Math.abs(Math.hypot(C.p[3 * i], C.p[3 * i + 1]) / c.settleRadius(s0[i], 4) - 1)); k++; }
   assert(k > 120, `settled ${k}`); assert(worst < 0.01, `settled radius off by ${worst}`);
+});
+
+group('the giant impacts: the run starts from the story\'s 22 protoplanets; mass is kept through every impact; every starting body ends somewhere', () => {
+  global.window = global.window || {}; require('../../demos/solar-system-formation-data/impacts.js'); const D = global.window.VD_SSF_IMPACTS;
+  const G = c.storyGrowth(); c.growTo(G.inner, c.STORY.tGas); const fl = c.frostLine(1), P = G.inner.B.filter((b) => b.a < fl);
+  /* the run's first snapshot: bodies 1 to 22 have the protoplanets' masses (to the 4 figures kept), plus Jupiter and Saturn */
+  const S0 = c.impactState(D, D.t0); assert.equal(S0.filter((b) => !b.giant).length, 22);
+  for (const b of S0) if (!b.giant) near(b.m, P[b.id - 1].m, 6e-4, `body ${b.id} mass`);
+  assert.equal(D.t0, c.STORY.tGas, 'the run starts when the gas is gone');
+  /* total rocky mass: the start's, less what was thrown out or fell into the Sun, at every snapshot and at times between */
+  const tot = (B) => B.filter((b) => !b.giant).reduce((m, b) => m + b.m, 0), M0 = tot(S0);
+  for (const t of D.snaps.map((q) => q[0]).concat(D.events.map((e) => e[0] + 1))) { const lost = D.gone.filter((g) => g[0] <= t).reduce((m, g) => m + g[2], 0); near(tot(c.impactState(D, t)) + lost, M0, 2e-3, `mass at ${t}`); }
+  /* events in time order, each target there before its impact; the impactor gone after */
+  let t0 = 0; for (const e of D.events) { assert(e[0] >= t0, 'time order'); t0 = e[0]; const before = c.impactState(D, e[0] - 1e-3), after = c.impactState(D, e[0]);
+    assert(before.some((b) => b.id === e[1]) && before.some((b) => b.id === e[2]), 'both bodies before'); assert(!after.some((b) => b.id === e[2]), 'impactor merged'); }
+  /* every starting protoplanet ends in exactly one body, or was lost */
+  /* the page's hint for Follow Earth: the run shown ends with three rocky planets, and the one nearest 1 AU is built from nine protoplanets */
+  const fin = c.impactState(D, D.tEnd).filter((b) => !b.giant); assert.equal(fin.length, 3, 'three rocky planets');
+  const earth = fin.reduce((e, b) => (Math.abs(Math.log(b.a)) < Math.abs(Math.log(e.a)) ? b : e)); assert.equal(D.of[earth.id].length, 9, 'Earth from nine protoplanets');
+  assert(Math.abs(D.tEnd - 153e6) < 1, 'the run reaches 150 million years after the gas');
+  const f = c.finalOf(D), lost = new Set(D.gone.map((g) => g[1])); for (let id = 1; id <= 22; id++) assert(f[id] != null || lost.has(id) || D.events.some((e) => e[2] === id && lost.has(f[e[1]])), `body ${id} ends somewhere`);
+});
+
+group('the Moon-forming impact: the classification of planet, disk and escaping material; the Ida, Canup and Stewart moon mass; the saved run', () => {
+  const { classify } = require('../../tools/solar-system-formation/moon.cjs');
+  /* a planet of 1000 particles packed at the center, one particle on a circular orbit at 3 Earth radii (disk), one on a radial
+     plunge from there (planet: its orbit dips inside), one faster than escape (escaping) */
+  const n = 1003, f = { n, x: new Float64Array(3 * n), v: new Float64Array(3 * n), mat: new Int32Array(n) }, ME = 5.9722e24, m = ME / 1000, G = 6.6743e-11;
+  let s = 7; const R = () => { s = (s * 16807) % 2147483647; return s / 2147483647 - 0.5; };
+  for (let i = 0; i < 1000; i++) for (let q = 0; q < 3; q++) f.x[3 * i + q] = 4e6 * R();
+  const r = 3 * 6.371e6, vc = Math.sqrt(G * 1000 * m / r);
+  f.x[3000] = r; f.v[3001] = vc; f.x[3003] = r; f.v[3003] = -0.1 * vc; f.x[3006] = -r; f.v[3007] = 1.6 * vc; f.mat[1000] = 1; f.mat[1001] = 1; f.mat[1002] = 1;
+  const c = classify(f, m); assert.deepEqual([c.cls[1000], c.cls[1001], c.cls[1002]], [1, 0, 2], 'disk, planet, escaping');
+  /* the moon formula: M = 1.9 L/√(G M a_R) − 1.1 M_D with a_R = 2.9 R_p, for this one particle disk */
+  near(c.Mmoon, 1.9 * c.LD / Math.sqrt(G * c.Mp * 2.9 * c.Rp) - 1.1 * c.MD, 1e-12);
+  near(c.LD, m * r * vc, 1e-2, 'disk angular momentum about the planet');
+  /* the saved run: Earth and Theia in the right proportion, frames in time order from before contact to a day after */
+  global.window = global.window || {}; require('../../demos/solar-system-formation-data/moon.js'); const D = global.window.VD_SSF_MOON;
+  near((D.n - D.nt) / D.n, D.setup.Mi / (D.setup.Mt + D.setup.Mi), 2 / D.n, 'Theia share of the particles');
+  assert(D.frames[0][0] < 0 && D.frames[D.frames.length - 1][0] >= 23.9 * 3600, 'from before contact to a day after');
+  for (let k = 1; k < D.frames.length; k++) assert(D.frames[k][0] > D.frames[k - 1][0], 'time order');
+  assert(D.summary.disk > 0 && D.summary.moon > 0, 'a disk and a moon');
 });
 
 console.log(`${n} groups passed`);
