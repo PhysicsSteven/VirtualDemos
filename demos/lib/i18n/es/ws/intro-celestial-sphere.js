@@ -6,36 +6,14 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "Latitud φ (°)",
 "Polaris altitude (°)":
   "Altura de Polaris (°)",
-"Polaris azimuth (°)":
-  "Azimut de Polaris (°)",
 "Polaris declination δ (°)":
   "Declinación de Polaris δ (°)",
-"Constellation":
-  "Constelación",
 "Declination δ (°)":
   "Declinación δ (°)",
 "Highest altitude (°)":
   "Altura máxima (°)",
-"Lowest altitude (°)":
-  "Altura mínima (°)",
 "Through a day":
   "A lo largo de un día",
-"Right ascension (h)":
-  "Ascensión recta (h)",
-"Lit (%)":
-  "Iluminada (%)",
-"Altitude (°)":
-  "Altura (°)",
-"Year":
-  "Año",
-"Star nearest the pole":
-  "Estrella más cercana al polo",
-"Distance from the pole (°)":
-  "Distancia al polo (°)",
-"March equinox point in":
-  "Punto del equinoccio de marzo en",
-"Tilt of Earth’s axis ε (°)":
-  "Inclinación del eje de la Tierra ε (°)",
 "The Sky and the Celestial Sphere | VirtualDemos":
   "El cielo y la esfera celeste | VirtualDemos",
 "The Sky and the Celestial Sphere":
@@ -50,8 +28,8 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "Haz clic en una estrella, el Sol, la Luna o un polo celeste para elegirlo, o búscalo por su nombre. El panel lateral da su constelación, su ascensión recta y su declinación, su altura y su azimut, su altura máxima y mínima en un día y si sale y se pone. También da datos del cielo en conjunto: la hora, la altura del Sol, la fase de la Luna, la estrella más cercana al polo norte celeste y cualquier eclipse.",
 "The stars are the {#} stars of the Yale Bright Star Catalogue down to magnitude {#}, about what you see from a dark site. Times are standard time with no daylight saving. The real air bends light near the horizon and lifts everything there by about half a degree; the demo leaves that out.":
   "Las estrellas son las {#} estrellas del Yale Bright Star Catalogue hasta la magnitud {#}, más o menos lo que ves desde un sitio oscuro. Las horas son hora estándar sin horario de verano. El aire real desvía la luz cerca del horizonte y eleva todo ahí cerca de medio grado; la demo lo deja fuera.",
-"Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. Each part goes into its own table.":
-  "Registrar lectura guarda el objeto elegido y todo lo que se sabe de él. Exportar a la hoja envía las lecturas a las tablas de Datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla. Cada parte va en su propia tabla.",
+"Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. The first two parts each go into their own table; for the last two you only write down a few numbers.":
+  "Registrar lectura guarda el objeto elegido y todo lo que se sabe de él. Exportar a la hoja envía las lecturas a las tablas de Datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla. Las dos primeras partes van cada una en su propia tabla; en las dos últimas solo anotas unos cuantos números.",
 "Use a model of the sky as a great sphere around Earth to explain why the stars circle the pole star, why the height of the pole star tells you your latitude, which stars never set, how the Moon moves among the stars in a week, and how the pole star changes over thousands of years.":
   "Usa un modelo del cielo como una gran esfera alrededor de la Tierra para explicar por qué las estrellas giran alrededor de la estrella polar, por qué la altura de la estrella polar te dice tu latitud, qué estrellas nunca se ponen, cómo se mueve la Luna entre las estrellas en una semana y cómo cambia la estrella polar a lo largo de miles de años.",
 "<strong>The celestial sphere.</strong> The stars are so far away that they all look equally distant, as if fixed to the inside of a huge sphere around Earth. Earth turns once a day from west to east, so the whole sphere seems to turn the other way, from east to west, about an axis through Earth’s poles. The points on the sky right above Earth’s North and South Poles are the north and south celestial poles. Halfway between them, right above Earth’s equator, is the celestial equator.":
@@ -76,6 +54,94 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "Haz una suposición antes de mirar: ¿Polaris fue siempre la estrella polar, por ejemplo cuando se construyeron las pirámides de Guiza, hacia el {#} a. C.?",
 "No hazards in the virtual lab. If you go outside to compare with the real sky, stay somewhere safe, and never look at the Sun.":
   "No hay riesgos en el laboratorio virtual. Si sales a comparar con el cielo real, quédate en un lugar seguro y nunca mires al Sol.",
+"<strong>Polaris from different latitudes.</strong> Choose A winter night at Ruston (January {#}, {#}, {#}:{#} pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney. Send the readings to the worksheet, then clear them.":
+  "<strong>Polaris desde distintas latitudes.</strong> Elige Una noche de invierno en Ruston ({#} de enero de {#}, {#}:{#} p. m.) con Polaris elegida. Registra una lectura en Ruston, el Polo Norte, Tromsø, Guiza, Quito y Sídney. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Stars and the Sun from Ruston.</strong> At Ruston, record a reading for Kochab, Dubhe, Capella, Betelgeuse, Sirius and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.":
+  "<strong>Estrellas y el Sol desde Ruston.</strong> En Ruston, registra una lectura de Kochab, Dubhe, Capella, Betelgeuse, Sirio y Canopo. Luego elige Sol del solsticio de junio y registra el Sol, y elige Sol del solsticio de diciembre y registra el Sol otra vez. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>The Moon through a week.</strong> Choose The Moon through a month (Ruston, January {#}, {#}, {#}:{#} pm) with the Moon selected. Write down the Moon’s right ascension and how much of it is lit. Then step ahead six days, to {#}:{#} pm on January {#}, and write them down again. No table for this part: put the numbers in your answer to Analysis {#}.":
+  "<strong>La Luna durante una semana.</strong> Elige La Luna durante un mes (Ruston, {#} de enero de {#}, {#}:{#} p. m.) con la Luna elegida. Anota la ascensión recta de la Luna y qué tanto de ella está iluminado. Luego avanza seis días, a las {#}:{#} p. m. del {#} de enero, y anótalas otra vez. Esta parte no lleva tabla: pon los números en tu respuesta del Análisis {#}.",
+"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC, then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.":
+  "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Fija el año en {#} a. C., luego en {#} y luego en {#} d. C., y cada vez anota la estrella más cercana al polo y qué tan lejos está del polo. Esta parte tampoco lleva tabla: pon los números en tu respuesta del Análisis {#}.",
+"<span>B</span>Place":
+  "<span>B</span>Lugar",
+"<span>C</span>Latitude φ (°)":
+  "<span>C</span>Latitud φ (°)",
+"<span>D</span>Polaris altitude (°)":
+  "<span>D</span>Altura de Polaris (°)",
+"<span>E</span>Polaris declination δ (°)":
+  "<span>E</span>Declinación de Polaris δ (°)",
+"Place, row {#}":
+  "Lugar, fila {#}",
+"Latitude φ (°), row {#}":
+  "Latitud φ (°), fila {#}",
+"Polaris altitude (°), row {#}":
+  "Altura de Polaris (°), fila {#}",
+"Polaris declination δ (°), row {#}":
+  "Declinación de Polaris δ (°), fila {#}",
+"<span>B</span>Object":
+  "<span>B</span>Objeto",
+"<span>C</span>Declination δ (°)":
+  "<span>C</span>Declinación δ (°)",
+"<span>D</span>Highest altitude (°)":
+  "<span>D</span>Altura máxima (°)",
+"<span>E</span>Through a day":
+  "<span>E</span>A lo largo de un día",
+"Object, row {#}":
+  "Objeto, fila {#}",
+"Declination δ (°), row {#}":
+  "Declinación δ (°), fila {#}",
+"Highest altitude (°), row {#}":
+  "Altura máxima (°), fila {#}",
+"Through a day, row {#}":
+  "A lo largo de un día, fila {#}",
+"Graph Polaris’s altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab {#}. At which place was Polaris below the horizon (a negative altitude), and why can no one there see it?":
+  "Grafica la altura de Polaris en función de la latitud. ¿Cuáles son la pendiente y la ordenada al origen de la recta? Explícalas usando el Fondo y tus respuestas en Antes del laboratorio {#}. ¿En qué lugar estaba Polaris debajo del horizonte (una altura negativa), y por qué nadie ahí puede verla?",
+"Which objects in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab {#}.":
+  "¿Qué objetos de la segunda tabla nunca se ponen desde Ruston, y cuáles salen y se ponen? Compáralo con tu respuesta en Antes del laboratorio {#}.",
+"For each star in the second table, check that its highest altitude equals {#}° minus the difference between {#}° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?":
+  "Para cada estrella de la segunda tabla, comprueba que su altura máxima es igual a {#}° menos la diferencia entre {#}° y su declinación (tomada como positiva). Canopo es la segunda estrella más brillante del cielo nocturno. ¿Qué tan alto llega en Ruston?",
+"From the two Sun readings, how many degrees higher is the noon Sun on June {#} than on December {#}? How does that compare with twice the tilt of Earth’s axis, {#} × {#}°?":
+  "A partir de las dos lecturas del Sol, ¿cuántos grados más alto está el Sol del mediodía el {#} de junio que el {#} de diciembre? ¿Cómo se compara eso con el doble de la inclinación del eje de la Tierra, {#} × {#}°?",
+"Give your two Moon readings. By how many hours did the Moon’s right ascension grow in the six days? Divide by {#} to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab {#}. How did the lit share change through the week?":
+  "Da tus dos lecturas de la Luna. ¿Cuántas horas creció la ascensión recta de la Luna en los seis días? Divide entre {#} para obtener horas por día, conviértelo a grados por día y compáralo con tu respuesta en Antes del laboratorio {#}. ¿Cómo cambió la parte iluminada a lo largo de la semana?",
+"Give the star nearest the north celestial pole, and its distance from the pole, in {#} BC, {#} and AD {#}. Which star was nearest the pole when the pyramids were built, about {#} BC (a few centuries after your first reading)? Was your guess in Before the lab {#} right?":
+  "Da la estrella más cercana al polo norte celeste, y su distancia al polo, en el {#} a. C., en {#} y en el {#} d. C. ¿Qué estrella era la más cercana al polo cuando se construyeron las pirámides, hacia el {#} a. C. (unos siglos después de tu primera lectura)? ¿Fue correcta tu suposición en Antes del laboratorio {#}?",
+"The demo computes positions from a star catalog and from formulas for the motions of Earth, the Sun and the Moon, accurate to well under a tenth of a degree today. The altitude of Polaris is not exactly your latitude, because Polaris is not exactly at the pole: your readings at different places were taken at different moments of the star’s daily circle. From its declination in the first table, how far is Polaris from the pole today, and how far could its altitude be from your latitude because of that? What does the demo leave out that would make every star near the horizon look about half a degree higher in the real sky?":
+  "La demo calcula las posiciones a partir de un catálogo de estrellas y de fórmulas para los movimientos de la Tierra, el Sol y la Luna, con una precisión de mucho menos de una décima de grado hoy. La altura de Polaris no es exactamente tu latitud, porque Polaris no está exactamente en el polo: tus lecturas en distintos lugares se tomaron en distintos momentos del círculo diario de la estrella. A partir de su declinación en la primera tabla, ¿qué tan lejos del polo está Polaris hoy, y por cuánto podría diferir su altura de tu latitud por eso? ¿Qué deja fuera la demo que haría que toda estrella cerca del horizonte se viera cerca de medio grado más alta en el cielo real?",
+"Sailors once found their latitude at night by measuring the altitude of Polaris. Explain why that works in the northern hemisphere and not in the southern.":
+  "Antes, los marineros hallaban su latitud de noche midiendo la altura de Polaris. Explica por qué eso funciona en el hemisferio norte y no en el sur.",
+"Using the picture of the sphere seen from outside, explain why the stars near the north celestial pole circle it without setting, while stars near the celestial equator are up for about half of each day.":
+  "Usando la imagen de la esfera vista desde fuera, explica por qué las estrellas cerca del polo norte celeste giran a su alrededor sin ponerse, mientras que las estrellas cerca del ecuador celeste están arriba cerca de la mitad de cada día.",
+"The Sun’s declination runs from +{#}° in June to −{#}° in December. Where on Earth would the noon Sun be straight overhead in June? Where would the Sun stay up all day in June?":
+  "La declinación del Sol va de +{#}° en junio a −{#}° en diciembre. ¿En qué lugar de la Tierra estaría el Sol del mediodía justo encima en junio? ¿Dónde se quedaría el Sol arriba todo el día en junio?",
+"Stellarium shows the real sky (see the activity Reading the Sky with Stellarium). Choose one thing you saw in this demo, such as the circumpolar stars from Ruston or the Moon’s motion over a week, and say how you could check it in Stellarium or in the real sky.":
+  "Stellarium muestra el cielo real (consulta la actividad Leer el cielo con Stellarium). Elige algo que hayas visto en esta demo, como las estrellas circumpolares desde Ruston o el movimiento de la Luna en una semana, y di cómo podrías comprobarlo en Stellarium o en el cielo real.",
+"Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las dos tablas de datos y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Polaris azimuth (°)":
+  "Azimut de Polaris (°)",
+"Constellation":
+  "Constelación",
+"Lowest altitude (°)":
+  "Altura mínima (°)",
+"Right ascension (h)":
+  "Ascensión recta (h)",
+"Lit (%)":
+  "Iluminada (%)",
+"Altitude (°)":
+  "Altura (°)",
+"Year":
+  "Año",
+"Star nearest the pole":
+  "Estrella más cercana al polo",
+"Distance from the pole (°)":
+  "Distancia al polo (°)",
+"March equinox point in":
+  "Punto del equinoccio de marzo en",
+"Tilt of Earth’s axis ε (°)":
+  "Inclinación del eje de la Tierra ε (°)",
+"Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. Each part goes into its own table.":
+  "Registrar lectura guarda el objeto elegido y todo lo que se sabe de él. Exportar a la hoja envía las lecturas a las tablas de Datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla. Cada parte va en su propia tabla.",
 "<strong>Polaris from different latitudes.</strong> Choose A winter night at Ruston (January {#}, {#}, {#}:{#} pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney, then at latitudes {#}° N, {#}° N and {#}° N at Ruston’s longitude. Send the readings to the worksheet, then clear them.":
   "<strong>Polaris desde distintas latitudes.</strong> Elige Una noche de invierno en Ruston ({#} de enero de {#}, {#}:{#} p. m.) con Polaris elegida. Registra una lectura en Ruston, el Polo Norte, Tromsø, Guiza, Quito y Sídney, y luego en las latitudes {#}° N, {#}° N y {#}° N a la longitud de Ruston. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Stars and the Sun from Ruston.</strong> At Ruston, record a reading for Kochab, Dubhe, Capella, Vega, Betelgeuse, Sirius, Antares and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.":
@@ -84,28 +150,12 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "<strong>La Luna durante una semana.</strong> Elige La Luna durante un mes (Ruston, {#} de enero de {#}, {#}:{#} p. m.) con la Luna elegida. Registra la Luna a las {#}:{#} p. m. en cada una de las siete noches del {#} de enero al {#} de enero. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Record a reading in each of these years, as close as you can set them: {#} BC, {#} BC, {#} BC, AD {#}, AD {#}, {#}, AD {#}, AD {#}, AD {#} and AD {#}. Send the readings to the worksheet.":
   "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Registra una lectura en cada uno de estos años, tan cerca como puedas fijarlos: {#} a. C., {#} a. C., {#} a. C., {#} d. C., {#} d. C., {#}, {#} d. C., {#} d. C., {#} d. C. y {#} d. C. Envía las lecturas a la hoja de trabajo.",
-"<span>B</span>Place":
-  "<span>B</span>Lugar",
-"<span>C</span>Latitude φ (°)":
-  "<span>C</span>Latitud φ (°)",
-"<span>D</span>Polaris altitude (°)":
-  "<span>D</span>Altura de Polaris (°)",
 "<span>E</span>Polaris azimuth (°)":
   "<span>E</span>Azimut de Polaris (°)",
 "<span>F</span>Polaris declination δ (°)":
   "<span>F</span>Declinación de Polaris δ (°)",
-"Place, row {#}":
-  "Lugar, fila {#}",
-"Latitude φ (°), row {#}":
-  "Latitud φ (°), fila {#}",
-"Polaris altitude (°), row {#}":
-  "Altura de Polaris (°), fila {#}",
 "Polaris azimuth (°), row {#}":
   "Azimut de Polaris (°), fila {#}",
-"Polaris declination δ (°), row {#}":
-  "Declinación de Polaris δ (°), fila {#}",
-"<span>B</span>Object":
-  "<span>B</span>Objeto",
 "<span>C</span>Constellation":
   "<span>C</span>Constelación",
 "<span>D</span>Declination δ (°)":
@@ -116,18 +166,10 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "<span>F</span>Altura mínima (°)",
 "<span>G</span>Through a day":
   "<span>G</span>A lo largo de un día",
-"Object, row {#}":
-  "Objeto, fila {#}",
 "Constellation, row {#}":
   "Constelación, fila {#}",
-"Declination δ (°), row {#}":
-  "Declinación δ (°), fila {#}",
-"Highest altitude (°), row {#}":
-  "Altura máxima (°), fila {#}",
 "Lowest altitude (°), row {#}":
   "Altura mínima (°), fila {#}",
-"Through a day, row {#}":
-  "A lo largo de un día, fila {#}",
 "<span>B</span>Date":
   "<span>B</span>Fecha",
 "<span>C</span>Right ascension (h)":
@@ -172,26 +214,12 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "¿En qué lugares estaba Polaris debajo del horizonte (una altura negativa)? ¿Por qué nadie en Sídney puede verla?",
 "Which stars in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab {#}.":
   "¿Qué estrellas de la segunda tabla nunca se ponen desde Ruston, y cuáles salen y se ponen? Compáralo con tu respuesta en Antes del laboratorio {#}.",
-"For each star in the second table, check that its highest altitude equals {#}° minus the difference between {#}° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?":
-  "Para cada estrella de la segunda tabla, comprueba que su altura máxima es igual a {#}° menos la diferencia entre {#}° y su declinación (tomada como positiva). Canopo es la segunda estrella más brillante del cielo nocturno. ¿Qué tan alto llega en Ruston?",
-"From the two Sun readings, how many degrees higher is the noon Sun on June {#} than on December {#}? How does that compare with twice the tilt of Earth’s axis, {#} × {#}°?":
-  "A partir de las dos lecturas del Sol, ¿cuántos grados más alto está el Sol del mediodía el {#} de junio que el {#} de diciembre? ¿Cómo se compara eso con el doble de la inclinación del eje de la Tierra, {#} × {#}°?",
 "From the third table, by how many hours did the Moon’s right ascension grow each evening, on average? Convert that to degrees per day and compare with your answer to Before the lab {#}. How did the lit share change through the week?":
   "A partir de la tercera tabla, ¿cuántas horas creció en promedio la ascensión recta de la Luna cada noche? Conviértelo a grados por día y compáralo con tu respuesta en Antes del laboratorio {#}. ¿Cómo cambió la parte iluminada a lo largo de la semana?",
 "From the fourth table, which star was nearest the north celestial pole when the pyramids were built, and which will be nearest in AD {#}? Was your guess in Before the lab {#} right?":
   "A partir de la cuarta tabla, ¿qué estrella era la más cercana al polo norte celeste cuando se construyeron las pirámides, y cuál será la más cercana en el {#} d. C.? ¿Fue correcta tu suposición en Antes del laboratorio {#}?",
 "Through which constellations does the March equinox point move from {#} BC to AD {#}? In which direction does it move along the zodiac?":
   "¿Por qué constelaciones se mueve el punto del equinoccio de marzo del {#} a. C. al {#} d. C.? ¿En qué dirección se mueve a lo largo del zodiaco?",
-"The demo computes positions from a star catalog and from formulas for the motions of Earth, the Sun and the Moon, accurate to well under a tenth of a degree today. The altitude of Polaris is not exactly your latitude, because Polaris is not exactly at the pole: your readings at different places were taken at different moments of the star’s daily circle. From its declination in the first table, how far is Polaris from the pole today, and how far could its altitude be from your latitude because of that? What does the demo leave out that would make every star near the horizon look about half a degree higher in the real sky?":
-  "La demo calcula las posiciones a partir de un catálogo de estrellas y de fórmulas para los movimientos de la Tierra, el Sol y la Luna, con una precisión de mucho menos de una décima de grado hoy. La altura de Polaris no es exactamente tu latitud, porque Polaris no está exactamente en el polo: tus lecturas en distintos lugares se tomaron en distintos momentos del círculo diario de la estrella. A partir de su declinación en la primera tabla, ¿qué tan lejos del polo está Polaris hoy, y por cuánto podría diferir su altura de tu latitud por eso? ¿Qué deja fuera la demo que haría que toda estrella cerca del horizonte se viera cerca de medio grado más alta en el cielo real?",
-"Sailors once found their latitude at night by measuring the altitude of Polaris. Explain why that works in the northern hemisphere and not in the southern.":
-  "Antes, los marineros hallaban su latitud de noche midiendo la altura de Polaris. Explica por qué eso funciona en el hemisferio norte y no en el sur.",
-"Using the picture of the sphere seen from outside, explain why the stars near the north celestial pole circle it without setting, while stars near the celestial equator are up for about half of each day.":
-  "Usando la imagen de la esfera vista desde fuera, explica por qué las estrellas cerca del polo norte celeste giran a su alrededor sin ponerse, mientras que las estrellas cerca del ecuador celeste están arriba cerca de la mitad de cada día.",
-"The Sun’s declination runs from +{#}° in June to −{#}° in December. Where on Earth would the noon Sun be straight overhead in June? Where would the Sun stay up all day in June?":
-  "La declinación del Sol va de +{#}° en junio a −{#}° en diciembre. ¿En qué lugar de la Tierra estaría el Sol del mediodía justo encima en junio? ¿Dónde se quedaría el Sol arriba todo el día en junio?",
-"Stellarium shows the real sky (see the activity Reading the Sky with Stellarium). Choose one thing you saw in this demo, such as the circumpolar stars from Ruston or the Moon’s motion over a week, and say how you could check it in Stellarium or in the real sky.":
-  "Stellarium muestra el cielo real (consulta la actividad Leer el cielo con Stellarium). Elige algo que hayas visto en esta demo, como las estrellas circumpolares desde Ruston o el movimiento de la Luna en una semana, y di cómo podrías comprobarlo en Stellarium o en el cielo real.",
 "Prelab answers, the four data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las cuatro tablas de datos y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados."
 });

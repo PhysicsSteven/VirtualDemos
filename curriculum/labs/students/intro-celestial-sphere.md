@@ -14,7 +14,7 @@ Student worksheet · Astro 2203
 - Choose the place (or set any latitude and longitude), the year, the date and the clock time. Play turns the Earth at 1 minute, 10 minutes or 1 hour each second, steps one day each second at the same clock time, or steps 500 years each second.
 - Click a star, the Sun, the Moon or a celestial pole to select it, or find it by name. The sidebar gives its constellation, right ascension and declination, altitude and azimuth, its highest and lowest altitude in a day and whether it rises and sets. It also gives the sky as a whole: the time, the Sun's altitude, the Moon's phase, the star nearest the north celestial pole and any eclipse.
 - The stars are the 2,887 stars of the Yale Bright Star Catalogue down to magnitude 5.5, about what you see from a dark site. Times are standard time with no daylight saving. The real air bends light near the horizon and lifts everything there by about half a degree; the demo leaves that out.
-- Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. Each part goes into its own table.
+- Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. The first two parts each go into their own table; for the last two you only write down a few numbers.
 
 </details>
 
@@ -49,50 +49,36 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 ## Procedure
 
-**Polaris from different latitudes.** Choose A winter night at Ruston (January 15, 2027, 8:00 pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney, then at latitudes 10° N, 45° N and 60° N at Ruston's longitude. Send the readings to the worksheet, then clear them.
+**Polaris from different latitudes.** Choose A winter night at Ruston (January 15, 2027, 8:00 pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney. Send the readings to the worksheet, then clear them.
 
-**Stars and the Sun from Ruston.** At Ruston, record a reading for Kochab, Dubhe, Capella, Vega, Betelgeuse, Sirius, Antares and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.
+**Stars and the Sun from Ruston.** At Ruston, record a reading for Kochab, Dubhe, Capella, Betelgeuse, Sirius and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.
 
-**The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm) with the Moon selected. Record the Moon at 6:30 pm on each of the seven evenings from January 9 to January 15. Send the readings to the worksheet, then clear them.
+**The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm) with the Moon selected. Write down the Moon's right ascension and how much of it is lit. Then step ahead six days, to 6:30 pm on January 15, and write them down again. No table for this part: put the numbers in your answer to Analysis 5.
 
-**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Record a reading in each of these years, as close as you can set them: 3000 BC, 2000 BC, 1000 BC, AD 1, AD 1000, 2027, AD 4000, AD 7000, AD 10000 and AD 14000. Send the readings to the worksheet.
+**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to 3000 BC, then 2027, then AD 14000, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis 6.
 
 ## Data
 
-| Reading | Place | Latitude φ (°) | Polaris altitude (°) | Polaris azimuth (°) | Polaris declination δ (°) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Reading | Place | Latitude φ (°) | Polaris altitude (°) | Polaris declination δ (°) |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
 
-| Reading | Object | Constellation | Declination δ (°) | Highest altitude (°) | Lowest altitude (°) | Through a day |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-
-| Reading | Date | Right ascension (h) | Declination δ (°) | Constellation | Lit (%) | Altitude (°) |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-
-| Reading | Year | Star nearest the pole | Distance from the pole (°) | March equinox point in | Tilt of Earth's axis ε (°) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Reading | Object | Declination δ (°) | Highest altitude (°) | Through a day |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
 
 ## Analysis
 
-1. Graph Polaris's altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab 1.
-2. At which places was Polaris below the horizon (a negative altitude)? Why can no one in Sydney see it?
-3. Which stars in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab 2.
-4. For each star in the second table, check that its highest altitude equals 90° minus the difference between 32.5° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?
-5. From the two Sun readings, how many degrees higher is the noon Sun on June 21 than on December 21? How does that compare with twice the tilt of Earth's axis, 2 × 23.4°?
-6. From the third table, by how many hours did the Moon's right ascension grow each evening, on average? Convert that to degrees per day and compare with your answer to Before the lab 3. How did the lit share change through the week?
-7. From the fourth table, which star was nearest the north celestial pole when the pyramids were built, and which will be nearest in AD 14000? Was your guess in Before the lab 4 right?
-8. Through which constellations does the March equinox point move from 3000 BC to AD 14000? In which direction does it move along the zodiac?
+1. Graph Polaris's altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab 1. At which place was Polaris below the horizon (a negative altitude), and why can no one there see it?
+2. Which objects in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab 2.
+3. For each star in the second table, check that its highest altitude equals 90° minus the difference between 32.5° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?
+4. From the two Sun readings, how many degrees higher is the noon Sun on June 21 than on December 21? How does that compare with twice the tilt of Earth's axis, 2 × 23.4°?
+5. Give your two Moon readings. By how many hours did the Moon's right ascension grow in the six days? Divide by 6 to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab 3. How did the lit share change through the week?
+6. Give the star nearest the north celestial pole, and its distance from the pole, in 3000 BC, 2027 and AD 14000. Which star was nearest the pole when the pyramids were built, about 2600 BC (a few centuries after your first reading)? Was your guess in Before the lab 4 right?
 
 ## Uncertainty
 
@@ -107,4 +93,4 @@ The demo computes positions from a star catalog and from formulas for the motion
 
 ## What to hand in
 
-Prelab answers, the four data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
