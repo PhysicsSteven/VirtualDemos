@@ -37,7 +37,7 @@
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 @media (min-width: 821px) { .stage { min-height: 700px; } }
 @media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
-@media (max-width: 420px) { .scene { height: 380px; } .stage-ctl .clock { margin-left: 0; width: 100%; } }
+@media (max-width: 420px) { .scene { height: 380px; } .stage-ctl .clock { margin-left: 0; width: 100%; } #stageSeg { flex-wrap: wrap; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -47,7 +47,7 @@
   <header class="bar">
     <div>
       <h1>Building a Solar System</h1>
-      <p>A spinning cloud of gas and dust falls in on itself and flattens into a disk around the young Sun. Near the Sun the disk is hot and only metal and rock can be solid; far out it is cold enough for ice. Watch the solids clump into planetesimals, the biggest beyond the frost line grab gas, and early ones melt so their iron sinks to a core.</p>
+      <p>Watch a slowly turning cloud of gas and dust collapse into the young Sun and a spinning disk, then follow it all the way to planets. The whole story runs each step for one cloud and zooms from the cloud's scale down to the planets'; Follow keeps one planet's material in view. The four stages are labs for each step: the collapse, the frost line, how planetesimals grow, and how early ones melt so their iron sinks to a core.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">AU · years · Earth masses</div>
@@ -61,7 +61,8 @@
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
         <div class="seg" role="group" aria-label="Stage of the story" id="stageSeg">
-          <button type="button" data-st="collapse" aria-pressed="true">1 Collapse</button>
+          <button type="button" data-st="story" aria-pressed="true">The whole story</button>
+          <button type="button" data-st="collapse" aria-pressed="false">1 Collapse</button>
           <button type="button" data-st="disk" aria-pressed="false">2 Frost line</button>
           <button type="button" data-st="planets" aria-pressed="false">3 Planets grow</button>
           <button type="button" data-st="melt" aria-pressed="false">4 Iron cores</button>
@@ -78,8 +79,13 @@
         <canvas id="can" tabindex="0" role="img" aria-label="The forming solar system. In the frost line stage, the left and right arrow keys move the probe in or out (Shift for bigger steps)."></canvas>
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cloud, the disk and the planetesimals">
-        <span class="card-title" id="cardTitle">The cloud</span>
-        <div id="boxCollapse">
+        <span class="card-title" id="cardTitle">The whole story</span>
+        <div id="boxStory">
+          <div><label class="lbl" for="selChapter">Chapter</label> <select id="selChapter"><option value="0">1 The cloud falls in</option><option value="1">2 A spinning disk and its frost line</option><option value="2">3 Planetesimals grow into protoplanets</option></select></div>
+          <div><label class="lbl" for="selFollow">Follow</label> <select id="selFollow"><option value="system">the whole system</option><option value="mercury">Mercury</option><option value="venus">Venus</option><option value="earth">Earth</option><option value="mars">Mars</option><option value="jupiter">Jupiter</option></select></div>
+          <p class="note">Follow shows the material that ends up near that planet's orbit in teal, from the falling cloud to the protoplanets.</p>
+        </div>
+        <div id="boxCollapse" hidden>
           <div><div class="slider-head"><label for="sR0">Cloud radius r₀</label><output id="oR0" class="mono" for="sR0"></output></div><input type="range" id="sR0" min="1000" max="10000" step="250"></div>
           <div><div class="slider-head"><label for="sP0">Cloud turns once every</label><output id="oP0" class="mono" for="sP0"></output></div><input type="range" id="sP0" min="1" max="30" step="0.5"></div>
           <label class="check"><input type="checkbox" id="chkNoSpin"><span>No spin at all</span></label>
@@ -107,7 +113,10 @@
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
-          <button type="button" data-p="nebula" aria-pressed="true">Our solar nebula</button>
+          <button type="button" data-p="story" aria-pressed="true">The whole story</button>
+          <button type="button" data-p="followEarth" aria-pressed="false">Follow Earth</button>
+          <button type="button" data-p="followJupiter" aria-pressed="false">Follow Jupiter</button>
+          <button type="button" data-p="nebula" aria-pressed="false">Our solar nebula</button>
           <button type="button" data-p="slow" aria-pressed="false">Slow spin</button>
           <button type="button" data-p="fast" aria-pressed="false">Fast spin</button>
           <button type="button" data-p="nospin" aria-pressed="false">No spin</button>
@@ -200,9 +209,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else { do { x = 2 * R() - 1; y = 2 * R() - 1; z = 2 * R() - 1; } while (x * x + y * y + z * z > 1); x *= r0; y *= r0; z *= r0; if (Math.abs(z) < 1e-6 * r0) z = 1e-6 * r0; }
       p.set([x, y, z], 3 * i); v.set([-w * y, w * x, 0], 3 * i);
     }
-    return { n, r0, P0: P0Myr, t: 0, p, v, st, land: new Float64Array(n), z0: Float64Array.from({ length: n }, (_, i) => p[3 * i + 2]) };   /* st: 0 falling, 1 settling in the disk, 2 onto the Sun, 3 on a circular orbit in the disk */
+    return { n, r0, P0: P0Myr, t: 0, eps: 0.005, p, v, st, land: new Float64Array(n), z0: Float64Array.from({ length: n }, (_, i) => p[3 * i + 2]) };   /* st: 0 falling, 1 settling in the disk, 2 onto the Sun, 3 on a circular orbit in the disk */
   }
-  /* advance every parcel by dt years: leapfrog in the Sun's pull, with steps of at most 1/200 of the local orbit's time scale */
+  /* advance every parcel by dt years: leapfrog in the Sun's pull, with steps of at most C.eps (1/200 in the lab stage) of the local orbit's time scale */
   function stepCloud(C, dt) {
     const { p, v, st } = C;
     for (let i = 0; i < C.n; i++) {
@@ -212,7 +221,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       while (left > 0) {
         const x = p[k], y = p[k + 1], z = p[k + 2], r = Math.hypot(x, y, z);
         if (r < R_STAR) { st[i] = 2; break; }
-        const h = Math.min(left, 0.005 * Math.sqrt(r * r * r / GM)), a = -GM / (r * r * r);
+        const h = Math.min(left, C.eps * Math.sqrt(r * r * r / GM)), a = -GM / (r * r * r);
         v[k] += 0.5 * h * a * x; v[k + 1] += 0.5 * h * a * y; v[k + 2] += 0.5 * h * a * z;
         const zb = p[k + 2]; p[k] += h * v[k]; p[k + 1] += h * v[k + 1]; p[k + 2] += h * v[k + 2];
         if (st[i] === 0 && zb * p[k + 2] <= 0) {   /* reached the midplane: up and down motion cancels, the spin stays */
@@ -290,11 +299,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const isoMass = (a, sig) => { const s = sig * 10, A = a * AU; return Math.pow(2 * Math.PI * A * A * B_HILL * s, 1.5) * Math.sqrt(2 / (3 * M_SUN)) / M_EARTH; };   /* Earth masses; Σ in g/cm² */
   const growTime = (M, a, sig) => 1.7e5 * Math.cbrt(M * M_EARTH * 1000 / 1e26) / (sig * Math.pow(a, 1.5) / 10) * a * a;   /* years to grow to M Earth masses */
   const hillGap = (m1, m2, a1, a2) => Math.abs(a2 - a1) / (0.5 * (a1 + a2) * Math.cbrt((m1 + m2) * M_EARTH / (3 * M_SUN)));
-  function makeGrowth(f, L, gas, seed) {
-    const R = rng(seed || 2203), n = N_START, d = Math.log(DISK_OUT / DISK_IN) / n, B = [];
-    for (let i = 0; i < n; i++) { const a = DISK_IN * Math.exp((i + 0.5) * d), sig = sigmaSolid(a, f, L);
-      B.push({ a, m: 2 * Math.PI * (a * AU) ** 2 * d * sig * 10 / M_EARTH, ice: a >= frostLine(L), ph: 2 * Math.PI * R(), giant: false, iceFrac: a >= frostLine(L) ? 1 - 1 / ICE_FACTOR : 0 }); }
-    return { f, L, gas, t: 0, tev: 0, B, merges: 0 };
+  /* fOut (the story only): a different disk mass factor beyond the frost line; lo, hi: the first and last starting planetesimal
+     each body is made of (neighbors join, so a body is always a run of them) */
+  const fAt = (D, a) => (D.fOut != null && a >= frostLine(D.L) ? D.fOut : D.f);
+  function makeGrowth(f, L, gas, seed, fOut) {
+    const R = rng(seed || 2203), n = N_START, d = Math.log(DISK_OUT / DISK_IN) / n, B = [], D = { f, fOut, L, gas, t: 0, tev: 0, B, merges: 0 };
+    for (let i = 0; i < n; i++) { const a = DISK_IN * Math.exp((i + 0.5) * d), sig = sigmaSolid(a, fAt(D, a), L);
+      B.push({ a, m: 2 * Math.PI * (a * AU) ** 2 * d * sig * 10 / M_EARTH, ice: a >= frostLine(L), ph: 2 * Math.PI * R(), giant: false, iceFrac: a >= frostLine(L) ? 1 - 1 / ICE_FACTOR : 0, lo: i, hi: i }); }
+    return D;
   }
   /* advance the growth model to time t (years): join pairs of neighbors in the order they fall due, until none is due by t.
      A pair closer than B_HILL mutual Hill radii falls due once the growth time to its joint mass has passed (or at once, if that
@@ -304,13 +316,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (;;) {
       let best = -1, bt = Infinity, bg = B_HILL;
       for (let i = 0; i + 1 < B.length; i++) { const p = B[i], q = B[i + 1], g = hillGap(p.m, q.m, p.a, q.a); if (g >= B_HILL) continue;
-        const m = p.m + q.m, a = (p.m * p.a + q.m * q.a) / m, due = Math.max(D.tev, growTime(m, a, sigmaSolid(a, D.f, D.L)));
+        const m = p.m + q.m, a = (p.m * p.a + q.m * q.a) / m, due = Math.max(D.tev, growTime(m, a, sigmaSolid(a, fAt(D, a), D.L)));
         if (due < bt || (due === bt && g < bg)) { best = i; bt = due; bg = g; } }
       if (best < 0 || bt > D.t) break;
       const p = B[best], q = B[best + 1], m = p.m + q.m, big = p.m >= q.m ? p : q;
       /* the joined body keeps the pair's mass and angular momentum (m√a for circular orbits) */
       const sa = (p.m * Math.sqrt(p.a) + q.m * Math.sqrt(q.a)) / m;
-      const b = { a: sa * sa, m, ice: p.ice || q.ice, iceFrac: (p.m * p.iceFrac + q.m * q.iceFrac) / m, ph: big.ph, giant: p.giant || q.giant, tGiant: Math.min(p.tGiant || Infinity, q.tGiant || Infinity) };
+      const b = { a: sa * sa, m, ice: p.ice || q.ice, iceFrac: (p.m * p.iceFrac + q.m * q.iceFrac) / m, ph: big.ph, giant: p.giant || q.giant, tGiant: Math.min(p.tGiant || Infinity, q.tGiant || Infinity), lo: p.lo, hi: q.hi, tJoin: bt };
       /* a core that reaches CORE_GAS while the disk still has gas pulls it in */
       if (!b.giant && m >= CORE_GAS && bt <= D.gas * 1e6) { b.giant = true; b.tGiant = bt; }
       B.splice(best, 2, b); D.tev = bt; D.merges++;
@@ -377,6 +389,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return out;
   }
   const meltAt = (run, t) => { let i = 0; while (i + 1 < run.t.length && run.t[i + 1] <= t) i++; return i; };
+
+  /* ---------- the whole story: the stages above run one after another for one cloud ----------
+     The story uses the stages' own models with one set of values: the solar nebula cloud (5000 AU, one turn in 4 million years),
+     today's Sun for the disk's temperature, and a disk with the minimum mass inside the frost line and three times it beyond
+     (STORY.fOut), so that a giant core can form while the gas lasts (3 million years). With the minimum mass beyond the frost
+     line too, no core reaches 10 Earth masses in time: the "timescale problem" of making Jupiter by oligarchic growth (Pollack
+     et al. 1996; one proposed answer is growth by pebbles, Lambrechts and Johansen 2012). The two parts of the disk are grown as
+     two runs of the growth model, one with each disk mass, and the story shows the inner run inside the frost line and the
+     outer run beyond it. The cloud has more parcels than the Collapse stage and steps of 1/50 of the local orbital time scale
+     (STORY.eps) instead of 1/200, which keeps each parcel's landing place within a few tenths of a percent. */
+  const STORY = { r0: 5000, P0: 4, n: 2000, eps: 0.02, seed: 4567, f: 1, fOut: 3, L: 1, gas: 3, tGas: 3e6 };
+  /* where a parcel that starts s AU from the spin axis settles in the disk: j_z²/GM with j_z = Ω₀ s² (stage 1) */
+  const settleRadius = (s, P0Myr) => { const w = omegaOf(P0Myr), j = w * s * s; return j * j / GM; };
+  /* the distance range (AU) covered by starting planetesimals lo..hi of the growth model (each sits in a ring of equal log width) */
+  function ringRange(lo, hi) { const d = Math.log(DISK_OUT / DISK_IN) / N_START; return [DISK_IN * Math.exp(lo * d), DISK_IN * Math.exp((hi + 1) * d)]; }
+  function storyGrowth() { return { inner: makeGrowth(STORY.f, STORY.L, STORY.gas, 2203), outer: makeGrowth(STORY.f, STORY.L, STORY.gas, 2203, STORY.fOut) }; }
+  /* the bodies the story shows: the inner run inside the frost line, the outer run beyond it */
+  function storyBodies(G) { const fl = frostLine(STORY.L); return G.inner.B.filter((b) => b.a < fl).concat(G.outer.B.filter((b) => b.a >= fl)); }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -396,6 +426,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- state ---------- */
   const PRESETS = {
+    story: { st: 'story', follow: 'system', hint: 'The whole story from one cloud: it collapses into the young Sun and a disk, the disk sorts rock from ice at the frost line, and planetesimals grow into protoplanets and a giant planet before the gas is gone. Each chapter runs the model of its stage; the camera zooms from the cloud\'s scale to the planets\'.' },
+    followEarth: { st: 'story', follow: 'earth', hint: 'The same story, following the material that ends up near Earth\'s orbit: in the cloud it is the gas that falls in a little less than halfway out from the spin axis, and in the disk it is a narrow ring of rocky planetesimals around 1 AU.' },
+    followJupiter: { st: 'story', follow: 'jupiter', hint: 'The same story, following the giant planet: the first core beyond the frost line to reach 10 Earth masses while the gas lasts. In this model it forms at about 3 AU; Jupiter orbits at 5.2 AU today, and where it really formed is still debated (it may have moved through the gas disk).' },
     nebula: { st: 'collapse', r0: 5000, P0: 4, spin: true, hint: 'A cloud core 5000 AU in radius (about 0.02 parsec) turning once every 4 million years, a spin like those measured in dense cloud cores (Goodman et al. 1993, about 1.6 × 10⁻¹⁴ per second). Its equator ends up in a disk 39 AU across in radius, about the size of the planets\' realm.' },
     slow: { st: 'collapse', r0: 5000, P0: 16, spin: true, hint: 'The same cloud turning four times more slowly: the disk comes out 4² = 16 times smaller, about 2.4 AU in radius.' },
     fast: { st: 'collapse', r0: 5000, P0: 2, spin: true, hint: 'The same cloud turning twice as fast: the disk comes out 2² = 4 times larger, about 160 AU in radius.' },
@@ -410,7 +443,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     small: { st: 'melt', R: 3, tf: 0.5, hint: 'A planetesimal only 3 km in radius, formed early: heat leaks out of a small body faster than aluminum 26 makes it, so it stays cool.' },
     vesta: { st: 'melt', R: 263, tf: 1, hint: 'A body the size of the asteroid Vesta (mean radius 263 km), formed 1 million years after the first solids. Vesta did melt and has an iron core (Dawn mission, Russell et al. 2012).' },
   };
-  const S = { st: 'collapse', preset: 'nebula', r0: 5000, P0: 4, spin: true, L: 1, r: 1, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
+  const S = { st: 'story', follow: 'system', preset: 'story', r0: 5000, P0: 4, spin: true, L: 1, r: 1, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
   const NPARC = 1400;
   const CL = { C: null, view: 1, done: false };          /* collapse */
   const GR = { D: null, t: 1e3, tau: 0, done: false };     /* growth: t in years; tau a display clock for the orbits */
@@ -525,7 +558,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     const flip = xp > b.x + b.w * 0.62;
     label(ctx, `probe: ${sig(S.r, 3)} AU, ${sig(Tp, 3)} K`, flip ? xp - 9 * p : xp + 9 * p, Y(Tp) - 14 * p, { a: flip ? 'right' : 'left', col: K.probe, w: 700 });
-    label(ctx, 'drag the probe', xp + (flip ? -9 : 9) * p, b.y + b.h - 40 * p, { a: flip ? 'right' : 'left', col: K.probe, s: 10, w: 400 });
+    if (S.st !== 'story') label(ctx, 'drag the probe', xp + (flip ? -9 : 9) * p, b.y + b.h - 40 * p, { a: flip ? 'right' : 'left', col: K.probe, s: 10, w: 400 });
   }
   function timeBar(x, y, w, t, gas) {   /* a log time line from 1000 years to 100 million years with the gas marked */
     const p = P(), L0 = 3, L1 = 8, X = (v) => x + (Math.log10(v) - L0) / (L1 - L0) * w;
@@ -636,8 +669,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fm = new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.9, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: ftex, emissiveIntensity: 0.55 });
     for (const ph of [ps0, ps0 + 1.5 * Math.PI]) { const f = new THREE.Mesh(new THREE.CircleGeometry(0.999, 72, -Math.PI / 2, Math.PI), fm); f.rotation.y = Math.PI + ph; const w = new THREE.Group(); w.add(f); w.rotation.x = Math.PI / 2; gM.add(w); }
     const coreM = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ color: '#a3acb8', roughness: 0.4, metalness: 0.35, side: THREE.DoubleSide })); coreM.rotation.x = Math.PI / 2; gM.add(coreM);
-    S3.orbit(can, G3.o, () => { dirty3 = true; }, { zMin: 0.35, zMax: 4, grab: (e) => (S.st === 'disk' && grabProbe3(e)) });
+    S3.orbit(can, G3.o, () => { dirty3 = true; SY.userTurned = true; }, { zMin: 0.35, zMax: 4, grab: (e) => (S.st === 'disk' && grabProbe3(e)) });
     g3 = { S3, sun, gC, parts, mark, gD, disk, dcv, dtex, rings, probe, pring, gB, bodies, halos, gM, fcv, ftex, coreM, shell, key: '' };
+    initStory3(g3);
     return true;
   }
   let dirty3 = true;
@@ -658,6 +692,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw3() {
     const g = g3, S3 = g.S3, p = P(); S3.size(W, H);
+    g.st.gS.visible = S.st === 'story';
+    if (S.st === 'story') { g.gC.visible = g.gD.visible = g.gB.visible = g.gM.visible = false; g.sun.visible = true; drawStory3(); return; }
+    g.sun.scale.setScalar(1);
     g.gC.visible = S.st === 'collapse'; g.gD.visible = S.st === 'disk' || S.st === 'planets'; g.gB.visible = S.st === 'planets'; g.gM.visible = S.st === 'melt'; g.sun.visible = S.st !== 'melt';
     let dist = 3.3, target = [0, 0, 0];
     if (S.st === 'collapse') {
@@ -730,10 +767,263 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const px = o.x + t * d.x, py = o.y + t * d.y, rho = Math.hypot(px, py); setProbe(0.1 * Math.pow(1000, Math.max(0, Math.min(1, rho))));
   }
 
+  /* ---------- the whole story ----------
+     Chapters play one after another: the cloud falls in (the Collapse model, run live), the disk and its frost line, then the
+     growth model from 1000 years to the end of the gas. The picture is in true distances (AU), and the camera zooms as the story
+     moves from the cloud's scale to the planets'. Follow picks one planet's material and keeps the camera on it. */
+  /* text built here goes through VDI18N.t with its numbers as named values, so the harvest reads every sentence from the source;
+     without the language library (Node tests, a stale cache) the values are simply filled in */
+  const VDI18N = window.VDI18N || { t: (s, v) => String(s).replace(/\{(\w+)\}/g, (a, k) => (v && v[k] != null ? v[k] : a)), raw: (f) => f() };
+  const CHAPTERS = [
+    { k: 'cloud', title: 'The cloud falls in', scale: 'cloud' },
+    { k: 'disk', title: 'A spinning disk and its frost line', scale: 'disk' },
+    { k: 'grow', title: 'Planetesimals grow into protoplanets', scale: 'planets' },
+  ];
+  /* the chapter titles in the page's language (literals, so the harvest finds them) */
+  const chTitle = (i) => [VDI18N.t('The cloud falls in'), VDI18N.t('A spinning disk and its frost line'), VDI18N.t('Planetesimals grow into protoplanets')][i];
+  /* what Follow can pick: today's planet and where it orbits (AU) */
+  const FOLLOW = { system: null, mercury: ['Mercury', 0.387], venus: ['Venus', 0.723], earth: ['Earth', 1.0], mars: ['Mars', 1.524], jupiter: ['Jupiter', 5.203] };
+  const SY = { ch: 0, C: null, G: null, B: [], t: 0, gt: 1e3, view: 5750, u: 0, hold: 0, done: false, started: false, follow: 'system', tauD: 0, rate: 0, target: null, fol: null, tCollapse: 0 };
+  const storyPhone = () => W < 640;
+  function storyCloud() {
+    const C = makeCloud(STORY.n, STORY.r0, STORY.P0, STORY.seed); C.eps = STORY.eps;
+    C.end = new Float64Array(C.n);   /* where each parcel will settle (AU), from its spin: the Follow highlight uses it */
+    for (let i = 0; i < C.n; i++) { const k = 3 * i; C.end[i] = settleRadius(Math.hypot(C.p[k], C.p[k + 1]), STORY.P0); }
+    return C;
+  }
+  function resetStory() {
+    SY.C = storyCloud(); SY.G = storyGrowth(); SY.gt = 1e3; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G);
+    SY.ch = 0; SY.t = 0; SY.view = STORY.r0 * 1.15; SY.u = 0; SY.hold = 0; SY.done = false; SY.started = false; SY.tCollapse = 0;
+    pickFollow();
+  }
+  /* the followed material: the protoplanet nearest the planet's orbit when the gas is gone (the giant, for Jupiter), and the
+     starting planetesimals it is made of; in the cloud, the parcels that will settle in that ring of the disk */
+  function pickFollow() {
+    SY.fol = null; const f = FOLLOW[SY.follow]; if (!f) return;
+    const G = storyGrowth(); growTo(G.inner, STORY.tGas); growTo(G.outer, STORY.tGas);
+    const B = storyBodies(G); let best = null;
+    for (const b of B) { if (SY.follow === 'jupiter' ? !b.giant : b.a >= frostLine(STORY.L)) continue; if (!best || Math.abs(Math.log(b.a / f[1])) < Math.abs(Math.log(best.a / f[1]))) best = b; }
+    if (!best) return;
+    const [r1, r2] = ringRange(best.lo, best.hi);
+    SY.fol = { name: f[0], aToday: f[1], lo: best.lo, hi: best.hi, r1, r2, end: best, outer: best.a >= frostLine(STORY.L) };
+  }
+  const followed = (b) => !!(SY.fol && b.lo <= SY.fol.hi && b.hi >= SY.fol.lo && (b.a >= frostLine(STORY.L)) === SY.fol.outer);
+  function storyChapter(k) {
+    SY.ch = Math.max(0, Math.min(CHAPTERS.length - 1, k)); SY.u = 0; SY.hold = 0; SY.done = false; dirty3 = true;
+    if (CHAPTERS[SY.ch].k === 'grow') { SY.G = storyGrowth(); SY.gt = 1e3; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); }
+    if (CHAPTERS[SY.ch].k !== 'cloud' && !SY.tCollapse) SY.tCollapse = 1.6 * fallTime(STORY.r0);
+    SY.camGoal = CHAPTER_CAM[CHAPTERS[SY.ch].k]; SY.camU = 0; SY.userTurned = false;
+    SY.view = CHAPTERS[SY.ch].k === 'cloud' ? STORY.r0 * 1.15 : Math.min(SY.view, 52);
+    if ($('selChapter')) $('selChapter').value = String(SY.ch);
+  }
+  const CHAPTER_CAM = { cloud: { ph: 1.32 }, disk: { ph: 0.95 }, grow: { ph: 0.82 } };
+  /* the story's clock: years since the cloud began to fall */
+  function storyTime() { const c = CHAPTERS[SY.ch].k; return c === 'cloud' ? SY.C.t : c === 'disk' ? SY.tCollapse : SY.tCollapse + SY.gt; }
+  /* the view's half width in AU that the story wants now, and the point it centers on */
+  function storyView() {
+    const c = CHAPTERS[SY.ch].k, rd = diskRadius(STORY.r0, STORY.P0);
+    if (c === 'cloud') { let rmax = 0; const C = SY.C; for (let i = 0; i < C.n; i++) if (C.st[i] === 0) { const k = 3 * i; rmax = Math.max(rmax, Math.hypot(C.p[k], C.p[k + 1], C.p[k + 2])); } return { R: Math.max(1.3 * rd, 1.12 * rmax, 1), at: [0, 0, 0] }; }
+    if (c === 'disk') return { R: 42, at: [0, 0, 0] };
+    /* growing: from the whole disk in to the planets' region as the time passes (log of time), or onto the followed body */
+    const u = Math.max(0, Math.min(1, Math.log10(SY.gt / 1e3) / Math.log10(STORY.tGas / 1e3)));
+    if (SY.fol) { const b = followBody(); if (b) { const p = bodyPos(b), Rf = SY.fol.outer ? 4 : Math.max(0.9, 1.4 * b.a); return { R: 42 * Math.pow(Rf / 42, Math.min(1, u * 1.6)), at: p.map((x) => x * Math.min(1, u * 1.6)) }; } }
+    return { R: 42 * Math.pow(5 / 42, Math.min(1, u * 1.3)), at: [0, 0, 0] };
+  }
+  /* the followed body now: the biggest body made of the followed planetesimals */
+  function followBody() { let b = null; for (const q of SY.B) if (followed(q) && (!b || q.m > b.m)) b = q; return b; }
+  /* where a body is drawn: on its circular orbit, turning at its Kepler rate on a slowed display clock (SY.tauD) */
+  const bodyPos = (b) => { const th = b.ph + 2 * Math.PI * SY.tauD / 4 * Math.pow(b.a, -1.5); return [b.a * Math.cos(th), b.a * Math.sin(th), 0]; };
+  function stepStory(fr) {
+    const c = CHAPTERS[SY.ch].k, sp = S.speed; SY.started = true;
+    if (c === 'cloud') {
+      const C = SY.C, w = storyView(); SY.view += (w.R - SY.view) * Math.min(1, 0.08 * fr);
+      const dt = fr * sp * 0.0035 * Math.sqrt(SY.view ** 3 / GM); stepCloud(C, dt); SY.rate = dt / (fr / 60);
+      const n = cloudCounts(C); if (!n.fall && C.t > fallTime(STORY.r0)) { SY.hold += fr / 60; if (SY.hold > 1.5) { SY.tCollapse = C.t; storyChapter(1); } }
+    } else if (c === 'disk') {
+      SY.u = Math.min(1, SY.u + fr * sp / (60 * 9)); SY.rate = 0; turnCloud(fr);
+      if (SY.u >= 1) storyChapter(2);
+    } else {
+      if (SY.gt < STORY.tGas) { const f = Math.pow(10, 0.0028 * fr * sp); SY.gt = Math.min(STORY.tGas, SY.gt * f); growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); SY.rate = SY.gt * (f - 1) / (fr / 60); }
+      else { SY.rate = 0; SY.hold += fr / 60; if (SY.hold > 4) SY.done = true; }
+    }
+    SY.camU = Math.min(1, (SY.camU || 0) + fr / 120);
+  }
+  /* after the collapse the settled parcels keep turning (on the display) while the disk fades in */
+  function turnCloud(fr) { if (!reduce) stepCloud(SY.C, fr * 0.004 * Math.sqrt(SY.view ** 3 / GM)); }
+  function storyToEnd() {
+    const c = CHAPTERS[SY.ch].k;
+    if (c === 'grow') { SY.gt = STORY.tGas; growTo(SY.G.inner, SY.gt); growTo(SY.G.outer, SY.gt); SY.B = storyBodies(SY.G); SY.done = true; }
+    else storyChapter(SY.ch + 1);
+  }
+  const gasLeftStory = () => (SY.gt <= STORY.tGas * 0.8 ? 1 : Math.max(0, (STORY.tGas - SY.gt) / (0.2 * STORY.tGas)));
+  /* what the caption says: the chapter's opening line, then what is happening now */
+  function storyCaption() {
+    const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L), rd = diskRadius(STORY.r0, STORY.P0);
+    if (c === 'cloud') {
+      const C = SY.C, n = cloudCounts(C);
+      if (!SY.started) return VDI18N.t('A cold cloud core of gas and dust, {d} AU across, turning once every {p} million years. Its own gravity is about to win: press Start.', { d: grp(2 * STORY.r0), p: STORY.P0 });
+      if (n.fall > 0.6 * C.n) return VDI18N.t('Every parcel falls toward the center. Gas falling near the spin axis reaches the middle and builds the young Sun, a protostar.');
+      if (n.fall > 0) return VDI18N.t('Gas falling from the sides keeps its spin and cannot reach the center: it swings past and meets gas from the other side of the midplane. A flat disk forms, {r} AU in radius.', { r: grp(rd) });
+      return VDI18N.t('The collapse is over: {pc} % of the parcels fell onto the young Sun and the rest turn in a disk. The disk\'s edge goes around {k} times faster than the cloud did.', { pc: Math.round(100 * n.sun / C.n), k: grp(spinUp(STORY.r0, STORY.P0)) });
+    }
+    if (c === 'disk') return VDI18N.t('The young Sun warms the disk: hotter near it, colder far out. Inside the frost line ({fl} AU) only rock and metal can be solid; beyond it water freezes too, and there is about four times more solid material.', { fl: sig(fl, 3) });
+    const s = growthSummary({ B: SY.B.filter((b) => b.a < fl) }), giants = SY.B.filter((b) => b.giant).length;
+    if (SY.gt < 3e4) return VDI18N.t('Dust grains stick together into planetesimals, kilometers across. The model starts with {n} of them, spread through the disk like its solids.', { n: N_START });
+    if (SY.gt < STORY.tGas * 0.8) return giants ? VDI18N.t('A core beyond the frost line reached {m} Earth masses while the gas was still there: its gravity pulls in hydrogen and helium, and it becomes a giant planet.', { m: CORE_GAS })
+      : VDI18N.t('Neighbors pull each other in and merge. Growth is fastest near the Sun, where orbits are short and solids are packed close; each protoplanet stops once it has swept up its own ring.');
+    return VDI18N.t('The young Sun\'s light and wind clear away the gas. Left near the Sun: {n} rocky protoplanets, from {m1} to {m2} Earth masses (the Moon is 0.012, Mars 0.107). Their orbits will cross and they will collide: the giant impacts that build Venus and Earth.', { n: s.n, m1: sig(Math.min(...SY.B.filter((b) => b.a < fl).map((b) => b.m)), 2), m2: sig(s.rock ? s.rock.m : 0, 2) });
+  }
+  /* the story's picture in 3D */
+  function initStory3(g) {
+    const S3 = g.S3, sc = S3.scene, gS = new THREE.Group(); sc.add(gS);
+    /* soft round dots for the gas */
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c2 = cv.getContext('2d'), gr = c2.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c2.fillStyle = gr; c2.fillRect(0, 0, 64, 64);
+    const dot = new THREE.CanvasTexture(cv);
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * STORY.n), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(3 * STORY.n), 3));
+    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ size: 7, map: dot, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: false, fog: false }));
+    pts.frustumCulled = false; gS.add(pts);
+    /* the cloud's glow: a big soft sprite the size of what is still falling */
+    const glowM = new THREE.SpriteMaterial({ map: dot, color: '#8a4b2a', transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+    const glow = new THREE.Sprite(glowM); gS.add(glow);
+    /* the gas disk, painted with its temperature, out to 40 AU in true distance */
+    const dcv = document.createElement('canvas'); dcv.width = dcv.height = 1024; const dtex = new THREE.CanvasTexture(dcv);
+    const disk = new THREE.Mesh(new THREE.CircleGeometry(1, 180), new THREE.MeshBasicMaterial({ map: dtex, transparent: true, depthWrite: false, side: THREE.DoubleSide, fog: false, blending: THREE.AdditiveBlending }));
+    gS.add(disk);
+    const frost = VD3K.ring(1, { color: '#8cc8ff', opacity: 0.9, seg: 200 }); gS.add(frost);
+    const today = {}; for (const [n, a] of PLANETS) { const r = VD3K.ring(1, { color: '#9aa8ba', dashed: true, opacity: 0.35, seg: 200 }); today[n] = r; gS.add(r); }
+    const bodies = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshStandardMaterial({ roughness: 0.7, metalness: 0.05, color: 0xffffff }), 2 * N_START);
+    bodies.frustumCulled = false; { const c0 = new THREE.Color('#ffffff'); for (let i = 0; i < 2 * N_START; i++) bodies.setColorAt(i, c0); } bodies.count = 0; gS.add(bodies);
+    const halos = []; for (let i = 0; i < 6; i++) { const h = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshStandardMaterial({ color: '#f0c27a', transparent: true, opacity: 0.32, roughness: 0.9, depthWrite: false })); h.visible = false; halos.push(h); gS.add(h); }
+    const mark = VD3K.marker(S3, { r: 0.03, color: '#5eead4' }); gS.add(mark);
+    g.st = { gS, pts, geo, glow, disk, dcv, dtex, frost, today, bodies, halos, mark, painted: false };
+  }
+  function paintStoryDisk(st) {
+    const c = st.dcv.getContext('2d'), n = st.dcv.width, h = n / 2, img = c.createImageData(n, n), d = img.data, RMAX = 40;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const q = Math.hypot(x + 0.5 - h, y + 0.5 - h) / h, i = 4 * (y * n + x), r = q * RMAX; if (q > 1 || r < DISK_IN) { d[i + 3] = 0; continue; }
+      /* color: the disk's temperature there; brightness: its surface density on a gentle scale, so the far disk still shows */
+      const col = heatRGB(diskT(r, STORY.L)), dens = Math.min(1, Math.pow(sigmaGas(r, 1) / sigmaGas(1, 1), 0.3)), fade = Math.min(1, (1 - q) / 0.12) * Math.min(1, (r - DISK_IN) / 0.2);
+      d[i] = col[0]; d[i + 1] = col[1]; d[i + 2] = col[2]; d[i + 3] = Math.round(255 * fade * (0.12 + 0.6 * dens));
+    }
+    c.putImageData(img, 0, 0); st.dtex.needsUpdate = true; st.painted = true;
+  }
+  const FOL_COL = '#5eead4';
+  function drawStory3() {
+    const g = g3, st = g.st, S3 = g.S3, p = P(), c = CHAPTERS[SY.ch].k, w = storyView();
+    if (c !== 'cloud') SY.view += (w.R - SY.view) * (reduce ? 1 : 0.06);
+    const Rv = SY.view, s = 1 / Rv;
+    if (!st.painted) paintStoryDisk(st);
+    /* the camera: eases to the chapter's angle once as a chapter starts, unless the student has turned the view */
+    if (SY.camGoal && !SY.userTurned && SY.camU < 1) { G3.o.ph += (SY.camGoal.ph - G3.o.ph) * 0.06; }
+    const fl = frostLine(STORY.L), fade = c === 'disk' ? SY.u : c === 'grow' ? 1 : 0;
+    /* the cloud */
+    const C = SY.C, pos = st.geo.attributes.position.array, col = st.geo.attributes.color.array; let k = 0, rmax = 0;
+    const cloudA = c === 'cloud' ? 1 : c === 'disk' ? 1 - SY.u : 0;
+    st.pts.visible = cloudA > 0.01;
+    if (st.pts.visible) {
+      for (let i = 0; i < C.n; i++) { if (C.st[i] === 2) continue; const j = 3 * i, x = C.p[j], y = C.p[j + 1], z = C.p[j + 2];
+        pos[3 * k] = x * s; pos[3 * k + 1] = y * s; pos[3 * k + 2] = z * s; if (C.st[i] === 0) rmax = Math.max(rmax, Math.hypot(x, y, z));
+        const fol = SY.fol && C.end[i] >= SY.fol.r1 && C.end[i] <= SY.fol.r2;
+        const cc = fol ? [0.37, 0.92, 0.83] : C.st[i] === 0 ? [0.62, 0.36, 0.22] : [0.95, 0.72, 0.42];
+        col[3 * k] = cc[0] * cloudA; col[3 * k + 1] = cc[1] * cloudA; col[3 * k + 2] = cc[2] * cloudA; k++; }
+      st.geo.setDrawRange(0, k); st.geo.attributes.position.needsUpdate = true; st.geo.attributes.color.needsUpdate = true;
+      st.pts.material.size = (storyPhone() ? 5 : 7) * Math.min(2, dpr) * p * 0.6;
+    }
+    st.glow.visible = c === 'cloud' && rmax > 0; st.glow.scale.setScalar(2.4 * rmax * s); st.glow.material.opacity = 0.32;
+    /* the disk and the frost line */
+    st.disk.visible = fade > 0.01; st.disk.scale.setScalar(40 * s); st.disk.material.opacity = fade * (c === 'grow' ? 0.12 + 0.5 * gasLeftStory() : 1);
+    st.frost.visible = fade > 0.05; st.frost.scale.setScalar(fl * s); st.frost.material.opacity = 0.9 * fade;
+    for (const [n, a] of PLANETS) { const r = st.today[n]; r.visible = c === 'grow'; r.scale.setScalar(a * s); }
+    /* the bodies */
+    const show = c === 'grow'; st.bodies.visible = show; let h = 0;
+    if (show) {
+      const M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3(), cl = new THREE.Color();
+      const cR = new THREE.Color('#d39a6a'), cI = new THREE.Color('#bfe0ff'), cG = new THREE.Color('#e9b874'), cF = new THREE.Color(FOL_COL); let n = 0;
+      for (const b of SY.B) { const q = bodyPos(b), sz = b.giant ? 0.024 : Math.min(0.03, 0.0016 + 0.0065 * Math.cbrt(b.m));
+        V.set(q[0] * s, q[1] * s, 0); Sc.setScalar(sz); M4.compose(V, Q, Sc); st.bodies.setMatrixAt(n, M4);
+        cl.copy(followed(b) ? cF : b.giant ? cG : b.ice ? cI : cR); st.bodies.setColorAt(n, cl); n++;
+        if (b.giant && h < st.halos.length) { const hm = st.halos[h++]; hm.visible = true; hm.position.copy(V); hm.scale.setScalar(0.06 * (0.4 + 0.6 * Math.min(1, gasLeftStory() + 0.4))); } }
+      st.bodies.count = n; st.bodies.instanceMatrix.needsUpdate = true; if (st.bodies.instanceColor) st.bodies.instanceColor.needsUpdate = true;
+    }
+    for (; h < st.halos.length; h++) st.halos[h].visible = false;
+    const fb = show && SY.fol ? followBody() : null; st.mark.visible = !!fb;
+    if (fb) { const q = bodyPos(fb); st.mark.at(q[0] * s, q[1] * s, 0); st.mark.scale.setScalar(1.2); }
+    g.sun.scale.setScalar(c === 'cloud' ? 0.8 : Math.max(0.2, Math.min(1, Rv / 40)));   /* the Sun and its glow drawn smaller as the view closes in */
+    const at = SY.at || (SY.at = VD3K.follow({ x: 0, y: 0, z: 0 }, 0.1)), tgt = at.to(w.at[0] * s, w.at[1] * s, w.at[2] * s, false);
+    S3.place(G3.o, [tgt.x, tgt.y, tgt.z], S3.fit(3.0, 1.3)); S3.render();
+    storyOverlay(S3);
+  }
+  /* words over the picture: the chapter card, labels, the scale and time lapse, and the chapter bar */
+  let storyBarBoxes = [];
+  function wrapText(c, t, w) { const words = t.split(' '), L = []; let line = ''; for (const wd of words) { const tr = line ? line + ' ' + wd : wd; if (c.measureText(tr).width > w && line) { L.push(line); line = wd; } else line = tr; } if (line) L.push(line); return L; }
+  function storyOverlay(S3) {
+    ctx.clearRect(0, 0, W, H);
+    const p = P(), c = CHAPTERS[SY.ch].k, halo = '#04060b', lc = '#dbe4ef', Rv = SY.view, s = 1 / Rv, pr = (q) => S3.project(q), phone = storyPhone();
+    /* labels that would sit on top of one placed before them are left out (the first ones placed matter most) */
+    const placed = [], tag = (t, x, y, o) => { ctx.save(); ctx.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; const w = ctx.measureText(t).width, hh = (o.s || 11.5) * p * 1.3; ctx.restore();
+      const x0 = o.a === 'center' ? x - w / 2 : o.a === 'right' ? x - w : x, box = [x0 - 3 * p, y - hh / 2, w + 6 * p, hh];
+      if (placed.some((b) => box[0] < b[0] + b[2] && b[0] < box[0] + box[2] && box[1] < b[1] + b[3] && b[1] < box[1] + box[3])) return; placed.push(box); label(ctx, t, x, y, o); };
+    /* labels in the scene */
+    { const q = pr([0, 0, 0]); tag(c === 'cloud' ? 'young Sun (protostar)' : 'young Sun', q[0] + 10 * p, q[1] - 12 * p, { col: '#ffd27a', haloCol: halo, s: 10.5, w: 600 }); }
+    if (c === 'grow') {
+      const fb = SY.fol ? followBody() : null; if (fb) { const q = pr(bodyPos(fb).map((x) => x * s)); tag(VDI18N.t('{name}\'s material: {m} Earth masses', { name: VDI18N.t(SY.fol.name), m: sig(fb.m, 2) }), q[0], q[1] + 22 * p, { a: 'center', col: FOL_COL, haloCol: halo, w: 700 }); }
+      for (const b of SY.B) if (b.giant) { const q = pr(bodyPos(b).map((x) => x * s)); tag('giant planet', q[0], q[1] - 18 * p, { a: 'center', col: '#f0c27a', haloCol: halo, w: 700 }); }
+    }
+    if (c !== 'cloud') { const fl = frostLine(STORY.L), q = pr([0, -fl * s, 0]); if (fl * s > 0.04) tag(`frost line ${sig(fl, 3)} AU`, q[0], q[1] + 13 * p, { a: 'center', col: '#8cc8ff', haloCol: halo, w: 700, s: 11 }); }
+    if (c === 'grow') {
+      const az = G3.o.th - Math.PI / 2;
+      for (const [n, a] of PLANETS) { if (a * s < 0.04 || a * s > 1.4) continue; const q = pr([a * s * Math.cos(az), a * s * Math.sin(az), 0]); tag(VDI18N.t('{name} today', { name: VDI18N.t(n) }), q[0], q[1] - 8 * p, { a: 'center', col: 'rgba(219,228,239,0.75)', haloCol: halo, s: 9.5, w: 400 }); }
+    }
+    if (c === 'cloud' && SY.fol) label(ctx, VDI18N.t('teal: the gas that will settle where {name} forms ({a} to {b} AU)', { name: VDI18N.t(SY.fol.name), a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) }), 14 * p, H - 74 * p, { col: FOL_COL, haloCol: halo, s: 10.5, w: 600 });
+    /* the chapter card */
+    const cw = Math.min(W - 24 * p, (phone ? 360 : 440) * p), x0 = 12 * p, y0 = 10 * p;
+    /* the caption is translated whole, then wrapped and drawn as it is (VDI18N.raw), so its lines are not looked up one by one */
+    const cap = storyCaption(), asIs = (f) => VDI18N.raw(f);
+    ctx.save(); ctx.font = `${12 * p}px ${K.ui}`; const lines = asIs(() => wrapText(ctx, cap, cw - 20 * p)); ctx.restore();
+    const ch = (34 + 16 * lines.length) * p;
+    ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.66)'; ctx.strokeStyle = 'rgba(219,228,239,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, cw, ch, 8 * p) : ctx.rect(x0, y0, cw, ch); ctx.fill(); ctx.stroke(); ctx.restore();
+    label(ctx, VDI18N.t('{i} of {n} · {title}', { i: SY.ch + 1, n: CHAPTERS.length, title: chTitle(SY.ch) }), x0 + 10 * p, y0 + 15 * p, { col: '#ffd27a', halo: false, s: 12.5, w: 700 });
+    asIs(() => lines.forEach((t, i) => label(ctx, t, x0 + 10 * p, y0 + (33 + 16 * i) * p, { col: lc, halo: false, s: 12, w: 400 })));
+    /* the scale and the time lapse */
+    const span = 2 * Rv / Math.max(0.35, G3.o.zoom || 1);
+    const r = SY.rate, parts = [VDI18N.t('view about {d} across', { d: fmtAU(+sig(span, 2)) })];
+    if (r > 0 && S.run) parts.push(r < 1e4 ? VDI18N.t('1 second ≈ {t} yr', { t: grp(r) }) : r < 1e6 ? VDI18N.t('1 second ≈ {t} thousand yr', { t: grp(r / 1e3) }) : VDI18N.t('1 second ≈ {t} million yr', { t: sig(r / 1e6, 3) }));
+    if (c === 'grow') parts.push(VDI18N.t('bodies drawn far larger than to scale'));
+    asIs(() => label(ctx, parts.join(' · '), 14 * p, H - 54 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }));
+    if (c === 'grow' && !phone) label(ctx, 'orbits shown turning slowly, not at their real rate · dashed: where today\'s planets orbit', 14 * p, H - 38 * p, { col: lc, haloCol: halo, s: 10, w: 400 });
+    /* the chapter bar */
+    const bw = W - 24 * p, segW = bw / CHAPTERS.length, by = H - 22 * p; storyBarBoxes = [];
+    CHAPTERS.forEach((q, i) => { const bx = 12 * p + i * segW; storyBarBoxes.push([bx, by - 8 * p, segW, 22 * p, i]);
+      ctx.fillStyle = i < SY.ch ? 'rgba(255,210,122,0.75)' : i === SY.ch ? 'rgba(255,210,122,0.95)' : 'rgba(219,228,239,0.22)'; ctx.fillRect(bx + 2 * p, by, segW - 4 * p, 4 * p);
+      if (!phone || i === SY.ch) asIs(() => label(ctx, `${i + 1} ${chTitle(i)}`, bx + 2 * p, by - 7 * p, { col: i === SY.ch ? '#ffd27a' : 'rgba(219,228,239,0.7)', haloCol: halo, s: 9.5, w: i === SY.ch ? 700 : 400 })); });
+  }
+  /* the story in the flat view: the Collapse and Planets grow graphs, drawn for the story's cloud and disk */
+  function drawStoryFlat() {
+    const c = CHAPTERS[SY.ch].k;
+    const keep = { C: CL.C, view: CL.view, D: GR.D, t: GR.t, f: S.f, L: S.L, gas: S.gas };
+    try {
+      if (c === 'cloud') { CL.C = SY.C; CL.view = SY.view; drawCollapseFlat(); }
+      else if (c === 'disk') { S.L = STORY.L; const r0 = S.r; S.r = SY.fol ? SY.fol.aToday : 1; drawDiskFlat(); S.r = r0; }
+      else { GR.D = { B: SY.B }; GR.t = SY.gt; S.f = STORY.f; S.L = STORY.L; S.gas = STORY.gas; drawPlanetsFlat(); }
+    } finally { CL.C = keep.C; CL.view = keep.view; GR.D = keep.D; GR.t = keep.t; S.f = keep.f; S.L = keep.L; S.gas = keep.gas; }
+    const p = P(); label(ctx, `${SY.ch + 1} of ${CHAPTERS.length} · ${CHAPTERS[SY.ch].title}`, W - 14 * p - (W > 820 ? 300 : 0), H - 12 * p, { a: 'right', col: K.muted, s: 10.5, w: 700 });
+  }
+  function storyReadouts(dd) {
+    const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L); let h = dd('Chapter', `${SY.ch + 1} of ${CHAPTERS.length}: ${CHAPTERS[SY.ch].title}`, 'wide') + dd('Time since the cloud began to fall', yrs(storyTime()));
+    if (c === 'cloud') { const n = cloudCounts(SY.C); h += dd('Parcels falling, in the disk, on the young Sun', `${n.fall}, ${n.disk}, ${n.sun}`, 'wide') + dd('Disk radius (prediction)', fmtAU(diskRadius(STORY.r0, STORY.P0))) + dd('View across', fmtAU(+sig(2 * SY.view, 2))); }
+    else if (c === 'disk') h += dd('Frost line', `${sig(fl, 3)} AU`) + dd('Temperature at 1 AU', `${sig(diskT(1, STORY.L), 3)} K`) + dd('Solids at 1 AU, at 5.2 AU', `${sig(sigmaSolid(1, STORY.f, STORY.L), 2)}, ${sig(sigmaSolid(5.2, STORY.fOut, STORY.L), 2)} g/cm²`, 'wide');
+    else { const inner = SY.B.filter((b) => b.a < fl), big = inner.reduce((m, b) => (b.m > m.m ? b : m), inner[0]);
+      h += dd('Bodies inside the frost line', String(inner.length)) + dd('Largest rocky body', big ? `${sig(big.m, 3)} Earth masses at ${sig(big.a, 3)} AU` : '—', 'wide') + dd('Giant planets', String(SY.B.filter((b) => b.giant).length)) + dd('Gas left', SY.gt < STORY.tGas ? 'yes' : 'gone'); }
+    if (SY.fol) { const fb = c === 'grow' ? followBody() : null; h += dd(`Following ${SY.fol.name}`, fb ? `${sig(fb.m, 3)} Earth masses at ${sig(fb.a, 3)} AU` : `material from ${sig(SY.fol.r1, 2)} to ${sig(SY.fol.r2, 2)} AU in the disk`, 'wide'); }
+    return h;
+  }
+
   /* ---------- readouts ---------- */
   function readouts() {
     const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind; let h = '';
-    if (S.st === 'collapse') {
+    if (S.st === 'story') h += storyReadouts(dd);
+    else if (S.st === 'collapse') {
       const C = CL.C, q = parcel(C), n = cloudCounts(C), rd = Rd();
       h += dd('Cloud radius r₀', `${grp(S.r0)} AU`) + dd('Cloud turns once every', S.spin ? `${sig(S.P0, 3)} million yr` : 'never (no spin)')
         + dd('Time since the collapse began', yrs(C.t)) + dd('Free fall time from the edge', yrs(fallTime(S.r0)))
@@ -762,18 +1052,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function clock() {
     let t = '';
-    if (S.st === 'collapse') t = `t = ${yrs(CL.C.t)}`; else if (S.st === 'planets') t = `t = ${yrs(GR.t)}`; else if (S.st === 'melt') t = `t = ${sig(ML.t, 3)} million yr after the first solids`;
+    if (S.st === 'story') t = `t = ${yrs(storyTime())}`; else if (S.st === 'collapse') t = `t = ${yrs(CL.C.t)}`; else if (S.st === 'planets') t = `t = ${yrs(GR.t)}`; else if (S.st === 'melt') t = `t = ${sig(ML.t, 3)} million yr after the first solids`;
     $('clock').textContent = t;
   }
 
   /* ---------- controls ---------- */
-  const CARD = { collapse: 'The cloud', disk: 'The disk and the probe', planets: 'The disk and its gas', melt: 'The planetesimal' };
+  const CARD = { story: 'The whole story', collapse: 'The cloud', disk: 'The disk and the probe', planets: 'The disk and its gas', melt: 'The planetesimal' };
   function sync() {
     const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
     set('R0', S.r0, `${grp(S.r0)} AU`); set('P0', S.P0, `${sig(S.P0, 3)} Myr`); $('chkNoSpin').checked = !S.spin; $('sP0').disabled = !S.spin;
     set('L', S.L, `${sig(S.L, 2)} × today`); set('Dist', valOfDist(S.r), `${sig(S.r, 3)} AU`); set('F', S.f, `${sig(S.f, 2)} × minimum`); set('Gas', S.gas, `${sig(S.gas, 2)} Myr`);
     set('Rad', valOfRad(S.R), `${sig(S.R, 3)} km`); set('Tf', S.tf, `${sig(S.tf, 2)} Myr`);
-    $('boxCollapse').hidden = S.st !== 'collapse'; $('boxSun').hidden = !(S.st === 'disk' || S.st === 'planets'); $('boxDisk').hidden = S.st !== 'disk'; $('boxPlanets').hidden = S.st !== 'planets'; $('boxMelt').hidden = S.st !== 'melt';
+    $('boxStory').hidden = S.st !== 'story'; $('selFollow').value = S.follow; $('selChapter').value = String(SY.ch); $('boxCollapse').hidden = S.st !== 'collapse'; $('boxSun').hidden = !(S.st === 'disk' || S.st === 'planets'); $('boxDisk').hidden = S.st !== 'disk'; $('boxPlanets').hidden = S.st !== 'planets'; $('boxMelt').hidden = S.st !== 'melt';
     $('cardTitle').textContent = CARD[S.st];
     for (const b of document.querySelectorAll('#stageSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === S.st));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
@@ -781,14 +1071,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('selSpeed').value = String(S.speed); can.classList.toggle('drag', S.st === 'disk');
   }
   const card = VD.setupCard($('setupCard'));
-  function finished() { return S.st === 'collapse' ? CL.done : S.st === 'planets' ? GR.done : S.st === 'melt' ? ML.done : true; }
-  function setRun(on) { S.run = on && S.st !== 'disk'; card.away(S.run); const started = S.st === 'collapse' ? CL.C.t > 0 : S.st === 'planets' ? GR.t > 1e3 : ML.t > S.tf;
+  function finished() { return S.st === 'story' ? SY.done : S.st === 'collapse' ? CL.done : S.st === 'planets' ? GR.done : S.st === 'melt' ? ML.done : true; }
+  function setRun(on) { S.run = on && S.st !== 'disk'; card.away(S.run); const started = S.st === 'story' ? SY.started : S.st === 'collapse' ? CL.C.t > 0 : S.st === 'planets' ? GR.t > 1e3 : ML.t > S.tf;
     $('play').textContent = S.run ? 'Pause' : finished() ? 'Done' : started ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run && !finished()); }
-  function resetStage(st) { if (st === 'collapse') resetCollapse(); else if (st === 'planets') resetGrowth(); else if (st === 'melt') resetMelt(); }
+  function resetStage(st) { if (st === 'story') { SY.follow = S.follow; resetStory(); } else if (st === 'collapse') resetCollapse(); else if (st === 'planets') resetGrowth(); else if (st === 'melt') resetMelt(); }
   function goStage(st, keep) { S.st = st; if (!keep) S.run = false; dirty3 = true; if (g3) g3.key = ''; sync(); setRun(false); redraw(); }
   function applyPreset(k, opening) {
     const c = PRESETS[k]; S.preset = k;
-    for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'f', 'gas', 'R', 'tf']) if (c[key] != null) S[key] = c[key];
+    for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'f', 'gas', 'R', 'tf', 'follow']) if (c[key] != null) S[key] = c[key];
     $('presetHint').textContent = c.hint; resetStage(c.st); S.st = c.st; sync(); goStage(c.st); if (c.st !== 'disk' && !reduce && !opening) setRun(true);
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -804,11 +1094,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('restart').addEventListener('click', () => { resetStage(S.st); setRun(false); redraw(); });
   $('skip').addEventListener('click', () => { toEnd(); setRun(false); redraw(); });
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('selFollow').addEventListener('change', (e) => { S.follow = e.target.value; SY.follow = S.follow; S.preset = S.follow === 'earth' ? 'followEarth' : S.follow === 'jupiter' ? 'followJupiter' : S.follow === 'system' ? 'story' : 'custom'; pickFollow(); dirty3 = true; sync(); redraw(); });
+  $('selChapter').addEventListener('change', (e) => { storyChapter(+e.target.value); setRun(false); redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; dirty3 = true; redraw(); });
   function setProbe(r) { S.r = Math.max(0.1, Math.min(100, r)); custom(); sync(); redraw(); }
   can.addEventListener('keydown', (e) => { if (S.st !== 'disk' || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return; const f = Math.pow(10, (e.shiftKey ? 0.1 : 0.01) * (e.key === 'ArrowRight' ? 1 : -1)); setProbe(S.r * f); e.preventDefault(); });
   /* drag the probe in the flat graph */
   can.addEventListener('pointerdown', (e) => {
+    if (S.st === 'story' && use3()) { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top; for (const [bx, by, bw, bh, i] of storyBarBoxes) if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) { storyChapter(i); setRun(false); redraw(); e.stopPropagation(); return; } }
     if (S.st !== 'disk' || use3() || !probeX) return; const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, g = probeX.b;
     if (y < g.y || y > g.y + g.h || x < g.x - 10 || x > g.x + g.w + 10) return; dragging = 'flat'; can.setPointerCapture(e.pointerId); moveProbe(e); e.preventDefault();
   });
@@ -827,22 +1120,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function stepGrowth(fr) { GR.t = Math.min(T_END, GR.t * Math.pow(10, 0.0075 * fr * S.speed)); growTo(GR.D, GR.t); if (GR.t >= T_END) GR.done = true; }
   function stepMelt(fr) { ML.t = Math.min(T_MELT_END, ML.t + 0.03 * fr * S.speed); if (ML.t >= T_MELT_END) ML.done = true; }
   function toEnd() {
-    if (S.st === 'collapse') { let k = 0; while (!CL.done && k++ < 4000) stepCollapse(4); }
+    if (S.st === 'story') storyToEnd();
+    else if (S.st === 'collapse') { let k = 0; while (!CL.done && k++ < 4000) stepCollapse(4); }
     else if (S.st === 'planets') { while (!GR.done) stepGrowth(8); }
     else if (S.st === 'melt') { ML.t = T_MELT_END; ML.done = true; }
   }
   /* deterministic stepping for tests and key capture: n frames of 1/60 s */
-  function run(n) { for (let i = 0; i < n; i++) { if (S.st === 'collapse' && !CL.done) stepCollapse(1); else if (S.st === 'planets' && !GR.done) stepGrowth(1); else if (S.st === 'melt' && !ML.done) stepMelt(1); } redraw(); }
+  function run(n) { for (let i = 0; i < n; i++) { if (S.st === 'story' && !SY.done) stepStory(1); else if (S.st === 'collapse' && !CL.done) stepCollapse(1); else if (S.st === 'planets' && !GR.done) stepGrowth(1); else if (S.st === 'melt' && !ML.done) stepMelt(1); } redraw(); }
 
   /* ---------- readings for the worksheet ---------- */
   window.vdVersion = 'solar-system-formation@2026-10-25';
-  function showCols() { return S.st === 'collapse' ? [['r0_AU', 'r₀ (AU)'], ['P0_Myr', 'P₀ (Myr)'], ['rdisk_AU', 'disk (AU)'], ['Pdisk_yr', 'P (yr)']]
-    : S.st === 'disk' ? [['L_Lsun', 'L'], ['r_AU', 'r (AU)'], ['T_K', 'T (K)'], ['frost_AU', 'frost (AU)']]
-    : S.st === 'planets' ? [['f', 'disk ×'], ['t_Myr', 't (Myr)'], ['rock_Me', 'rocky (M⊕)'], ['ice_Me', 'icy (M⊕)']]
+  function showCols() { const rows = typeof window.vdRows === 'function' ? window.vdRows() : [], st = rows.length ? rows[0].stage : S.st === 'story' ? 'collapse' : S.st;
+    return st === 'collapse' ? [['r0_AU', 'r₀ (AU)'], ['P0_Myr', 'P₀ (Myr)'], ['rdisk_AU', 'disk (AU)'], ['Pdisk_yr', 'P (yr)']]
+    : st === 'disk' ? [['L_Lsun', 'L'], ['r_AU', 'r (AU)'], ['T_K', 'T (K)'], ['frost_AU', 'frost (AU)']]
+    : st === 'planets' ? [['f', 'disk ×'], ['t_Myr', 't (Myr)'], ['rock_Me', 'rocky (M⊕)'], ['ice_Me', 'icy (M⊕)']]
     : [['R_km', 'R (km)'], ['tf_Myr', 'forms (Myr)'], ['peak_K', 'hottest (K)'], ['core', 'core']]; }
-  const STAGE_NAME = { collapse: '1 Collapse', disk: '2 Frost line', planets: '3 Planets grow', melt: '4 Iron cores' };
+  const STAGE_NAME = { story: 'The whole story', collapse: '1 Collapse', disk: '2 Frost line', planets: '3 Planets grow', melt: '4 Iron cores' };
   window.vdReadingRow = () => {
     const had = typeof window.vdRows === 'function' ? window.vdRows() : [];
+    if (S.st === 'story') return 'The story has no readings to record: choose one of the four stages, or one of their setups, to take readings.';
     if (had.length && had[0].stage !== S.st) return `The readings so far are from stage ${STAGE_NAME[had[0].stage]}: export them to the worksheet and clear them before recording in this stage.`;
     if (S.st === 'collapse') {
       const C = CL.C, q = parcel(C);
@@ -859,7 +1155,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { stage: 'melt', R_km: sig(S.R, 3), tf_Myr: sig(S.tf, 2), heat_MJkg: sig(heatLeft(S.tf) / 1e6, 3), peak_K: String(Math.round(run.peak)), core: run.core ? `yes, at ${sig(run.coreAt, 3)} Myr` : 'no' };
   };
   Object.defineProperty(window, 'vdShowCols', { configurable: true, get: showCols });
-  $('about').textContent = 'Four models, each stated on the page and in the notes. Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
+  $('about').textContent = 'The whole story runs the stages\' models one after another for one cloud (5000 AU in radius, turning once every 4 million years), with a disk that has the minimum mass inside the frost line and three times it beyond (with the minimum mass there, no core reaches 10 Earth masses before the gas is gone: the timescale problem of making Jupiter this way), drawn in true distances; the bodies are drawn far larger than to scale and their orbits turn slowly on the screen, not at their real rate. Follow picks the protoplanet nearest a planet\'s orbit when the gas is gone, the starting planetesimals it is made of, and the cloud\'s gas that settles in their ring (the gas settles at j²/GM; the disk\'s later spreading is left out, so this marks where the material landed, not every place it went). The four stages: Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
 
   /* ---------- run, size, theme ---------- */
   const redraw = () => { draw(); readouts(); clock(); };
@@ -868,16 +1164,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.st === 'planets' && !GR.D) resetGrowth();
     if (use3()) { draw3(); return; }
     ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
-    if (S.st === 'collapse') drawCollapseFlat(); else if (S.st === 'disk') drawDiskFlat(); else if (S.st === 'planets') drawPlanetsFlat(); else drawMeltFlat();
+    if (S.st === 'story') drawStoryFlat(); else if (S.st === 'collapse') drawCollapseFlat(); else if (S.st === 'disk') drawDiskFlat(); else if (S.st === 'planets') drawPlanetsFlat(); else drawMeltFlat();
   }
   let last = performance.now(), lastOut = 0;
   function frame(now) {
     const fr = Math.min(4, (now - last) / (1000 / 60)); last = now;
     if (S.run) {
-      if (S.st === 'collapse') stepCollapse(fr); else if (S.st === 'planets') stepGrowth(fr); else if (S.st === 'melt') stepMelt(fr);
+      if (S.st === 'story') stepStory(fr); else if (S.st === 'collapse') stepCollapse(fr); else if (S.st === 'planets') stepGrowth(fr); else if (S.st === 'melt') stepMelt(fr);
       if (finished()) setRun(false);
       draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
-    } else if (S.st === 'planets' && !reduce) { draw(); }
+    } else if ((S.st === 'planets' || (S.st === 'story' && CHAPTERS[SY.ch].k !== 'cloud')) && !reduce) { if (S.st === 'story' && CHAPTERS[SY.ch].k === 'disk') turnCloud(fr); draw(); }
+    if (S.st === 'story' && !reduce) SY.tauD += fr / 60;
     if (S.st === 'planets' && !reduce) GR.tau += fr / 60;
     else if (S.st === 'collapse' && CL.done && !reduce) { stepCloud(CL.C, fr * 0.004 * Math.sqrt(CL.view ** 3 / GM)); draw(); }
     else if (use3() && dirty3) { dirty3 = false; draw(); }
@@ -890,8 +1187,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens();
-  resetCollapse(); resetGrowth(); resetMelt();
-  const qs = new URLSearchParams(location.search), first = PRESETS[qs.get('setup')] ? qs.get('setup') : 'nebula';
+  resetCollapse(); resetGrowth(); resetMelt(); resetStory();
+  const qs = new URLSearchParams(location.search), first = PRESETS[qs.get('setup')] ? qs.get('setup') : 'story';
   new ResizeObserver(resize).observe($('scene')); resize();
   /* the page opens paused at the start, with the set up card on show and Start lit, so a student sees the controls first and the
      first press of Start visibly sets the cloud falling (a Setups chip still starts its run at once) */
@@ -900,7 +1197,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {} });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', timeUnit: 'yr', time: () => (S.st === 'collapse' ? CL.C.t : null) });
   VD.howTo({ src: 'media/how-this-works/solar-system-formation.mp4', poster: 'media/how-this-works/solar-system-formation.jpg' });
-  window.__ss = { S, CL, GR, ML, applyPreset, goStage, resetStage, redraw, run, toEnd, setRun, sync, setProbe, PRESETS, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
+  window.__ss = { S, SY, CL, GR, ML, storyChapter, CHAPTERS, applyPreset, goStage, resetStage, redraw, run, toEnd, setRun, sync, setProbe, PRESETS, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
   requestAnimationFrame(frame);
 })();
 </script>

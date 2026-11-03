@@ -2,7 +2,7 @@
 // Building a Solar System: the collapse (Ulrich infall), the disk's temperature and frost line, oligarchic growth and aluminum 26 melting.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('solar-system-formation', 'AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun');
+const c = core('solar-system-formation', 'AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun,STORY,settleRadius,ringRange,storyGrowth,storyBodies,DISK_IN,DISK_OUT,omegaOf');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -98,6 +98,29 @@ group('melting: aluminum 26 gives 9.79 MJ/kg from the start; a big body keeps al
   assert(!c.meltRun(2, 0).core && c.meltRun(2, 0).peak < 400, 'a 2 km body stays cool'); assert(c.meltRun(50, 0.5).core, '50 km at 0.5 Myr melts');
   const a = c.meltRun(20, 1.2), b = c.meltRun(20, 1.2, { n: 80 }); near(a.peak, b.peak, 0.005, 'grid convergence');
   assert(c.meltRun(300, 0).peak <= c.MELT.Tl + 1e-9, 'never above the liquidus');
+});
+
+group('the whole story: settling radius j_z²/GM; each body covers a run of starting planetesimals; the story\'s two disk runs; the timescale problem', () => {
+  /* a parcel at the cloud's edge on its equator settles at the disk radius */
+  near(c.settleRadius(5000, 4), c.diskRadius(5000, 4), 1e-12, 'edge parcel');
+  /* the starting planetesimals' rings tile the disk from DISK_IN to DISK_OUT */
+  near(c.ringRange(0, c.N_START - 1)[0], c.DISK_IN, 1e-12); near(c.ringRange(0, c.N_START - 1)[1], c.DISK_OUT, 1e-12);
+  const G = c.storyGrowth(); c.growTo(G.inner, c.STORY.tGas); c.growTo(G.outer, c.STORY.tGas);
+  const B = c.storyBodies(G), fl = c.frostLine(1);
+  /* the inner run is exactly the minimum mass disk (the lab's Minimum mass disk setup), and the bodies' rings do not overlap */
+  const M = c.makeGrowth(1, 1, 3, 2203); c.growTo(M, c.STORY.tGas);
+  assert.deepEqual(B.filter((b) => b.a < fl).map((b) => b.m), M.B.filter((b) => b.a < fl).map((b) => b.m), 'inner run = minimum mass disk');
+  for (const D of [G.inner, G.outer]) { let next = 0; for (const b of D.B) { assert.equal(b.lo, next, 'rings in order, none missing'); next = b.hi + 1; } assert.equal(next, c.N_START); }
+  /* mass is kept within each run: the sum over a body's planetesimals */
+  for (const D of [G.inner, G.outer]) { const F = c.makeGrowth(D.f, 1, 3, 2203, D.fOut); for (const b of D.B) { let m = 0; for (let i = b.lo; i <= b.hi; i++) m += F.B[i].m; near(b.m, m, 1e-9, 'body mass'); } }
+  /* 22 rocky protoplanets when the gas goes; one giant beyond the frost line, none with the minimum mass there */
+  assert.equal(B.filter((b) => b.a < fl).length, 22, 'rocky protoplanets');
+  assert.equal(B.filter((b) => b.giant).length, 1, 'one giant in the story'); assert.equal(M.B.filter((b) => b.giant).length, 0, 'none in the minimum mass disk');
+  /* the story cloud's parcels land where their spin says (the coarser steps of the story: within 1 %) */
+  const C = c.makeCloud(200, 5000, 4, 77); C.eps = c.STORY.eps; const s0 = []; for (let i = 0; i < C.n; i++) s0.push(Math.hypot(C.p[3 * i], C.p[3 * i + 1]));
+  const tf = c.fallTime(5000); while (C.t < 1.6 * tf) c.stepCloud(C, tf / 1500);
+  let worst = 0, k = 0; for (let i = 0; i < C.n; i++) if (C.st[i] === 3) { worst = Math.max(worst, Math.abs(Math.hypot(C.p[3 * i], C.p[3 * i + 1]) / c.settleRadius(s0[i], 4) - 1)); k++; }
+  assert(k > 120, `settled ${k}`); assert(worst < 0.01, `settled radius off by ${worst}`);
 });
 
 console.log(`${n} groups passed`);
