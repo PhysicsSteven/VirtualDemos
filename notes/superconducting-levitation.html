@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Superconducting Levitation and Flux Pinning: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Superconducting Levitation and Flux Pinning</h1><ul class="meta"><li><a href="../demos/superconducting-levitation.html">Open the demo</a></li><li>Intro modern physics (condensed matter)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A superconducting puck floats a magnet because currents in the puck keep the magnet's flux from changing inside it. Bring the magnet closer and the currents grow, so the push grows.</li>
+<li>A real (type II) superconductor can only carry so much current per area, the critical current density jc. Where it reaches jc, flux moves into the puck and energy is lost; that is what damps a bouncing magnet.</li>
+<li>Cool the puck with the magnet already near it and the flux is pinned where it is: the magnet is held at that spot from above or below, and can hang under the puck.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Faraday's and Lenz's laws and magnetic flux. The demo shows a NdFeB magnet 10 mm across and 5 mm long (Br = 1.30 T, 2.95 g, weight 28.9 mN) on the axis of a YBCO puck 30 mm across and 10 mm thick in liquid nitrogen. The flat view is a cross section through the axis: each square in the puck is a ring of current, shaded by its current and outlined when it carries jc. The graph is the force on the magnet against the gap. A hand holds the magnet; Let go releases it. The Temperature button warms the puck or pours in nitrogen.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Cooled first, then drop the magnet.</strong> Ask Q1, then let go from a 30 mm gap. The magnet falls, is caught, and bounces between about 11 and 30 mm around a balance point near 17 mm; no ring reaches jc, so nothing is lost and it keeps bouncing (there is no air drag in the model).</li>
+<li><strong>A weaker superconductor</strong> (jc ten times smaller). The outer rings reach jc on each bounce (Q2), the force curve goes round a loop, and the magnet settles.</li>
+<li><strong>Push it down hard, then let go.</strong> Pushed to 3 mm, flux is forced deep into the puck; let go and the magnet springs up, and the force on the way up is smaller than on the way down.</li>
+<li><strong>Cooled with the magnet in place.</strong> The puck was cooled with the magnet 5 mm above it. Now there is no force at 5 mm; raise it and it is pulled back, lower it and it is pushed back (Q3). Let go: it sags by about 0.2 mm.</li>
+<li><strong>Hanging underneath.</strong> The same pinning holds the magnet 5 mm under the puck against gravity (Q4).</li>
+<li><strong>Floating, then warm the puck.</strong> Above the critical temperature the currents die out and the magnet drops (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> The puck is cooled with no magnet near it, then the magnet is let go 30 mm above it. Will it land on the puck, float, or bounce? Why does the puck push on it at all?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Why does the magnet keep bouncing over a strong puck but settle over a weak one? Where does the energy go?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> After cooling with the magnet 5 mm above the puck, raising it 1 mm takes a pull of 181 mN. About how far does the magnet sag when it is let go?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> How can a superconductor, which pushes field out, hold a magnet hanging underneath it?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Treat the puck as a perfect mirror: a magnet with moment m at height h above a large ideal superconductor feels F = 3μ0m²/(32πh⁴). With m = BrV/μ0, at what height h would it float? Compare with the demo and say why they differ.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"It floats because superconductors repel magnets (the Meissner effect)."</strong> In a type II puck in a strong field, flux gets in; the force comes from currents that stop the flux in the puck from changing. Pinned flux can also pull.</li>
+<li><strong>"Superconductors have no losses."</strong> A steady current has no resistance, but flux moving through a puck at jc dissipates energy.</li>
+<li><strong>"The magnet floats at the height where the field is weakest."</strong> It floats where the push of the induced currents equals its weight; field cooled, it stays wherever it was cooled.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The puck is 15 rings across and enough rings through its thickness that each cell is about square. Every ring's flux (its own current, the other rings, the magnet) stays at the value it had when the puck was cooled, unless the ring would need more than jc times its cross section: then it carries jc and the extra flux moves through it (the Bean critical state model, Bean 1964), and the loss is the current times the flux that crossed it.</li>
+<li>Mutual inductances are Maxwell's formula for coaxial circles (complete elliptic integrals); a ring's own inductance is that of two circles a geometric mean distance apart. The magnet is a uniformly magnetized cylinder, the same as a sheet of current Br/μ0 per meter around its side. The force is the sum over rings of the current times the rate of change of the magnet's flux through it.</li>
+<li>The ring model's error is first order in the cell size: against the exact mirror image for a large ideal puck it is 10 % low with 80 rings across and 18 % low with 40, so doubling the rings halves the error. The default puck changes by under 5 % with twice as many rings each way.</li>
+<li>Approximations, stated on the page: the magnet stays on the axis and upright; jc does not depend on the field; no flux creep, grain structure or lower critical field; no air drag; cooling and warming are instant.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Superconductors and the Meissner Effect</strong> (a type I sphere expels the field) and <strong>Magnetism in Matter</strong> (a superconductor as a perfect diamagnet).</li>
+<li>Why do the pinned magnet's sideways movements also come back? (The demo keeps the magnet on the axis, so it does not show this.)</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

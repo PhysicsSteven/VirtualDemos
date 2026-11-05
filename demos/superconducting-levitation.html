@@ -1,0 +1,603 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Superconducting Levitation and Flux Pinning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --field: #2b60b5; --puck: #3a4049; --puck-edge: #20242a; --magnet: #aab3bd; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #6f9cc8;
+  --cur-a: #d2452b; --cur-b: #2b7bd2; --hand: #a7740b; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --puck: #4a515c; --puck-edge: #8a939f; --magnet: #c3cbd4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; } }
+:root[data-theme="dark"] { --field: #69a0ff; --puck: #4a515c; --puck-edge: #8a939f; --magnet: #c3cbd4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 460px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+#can { z-index: 1; }
+.pane canvas.sc3 { z-index: 0; }
+.curvebox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.curvebar { position: absolute; top: 6px; right: 8px; z-index: 2; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 260px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 440px; flex: none; } .curvebox { height: 180px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .stage-ctl .note { margin-left: 0; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Superconducting Levitation and Flux Pinning</h1>
+      <p>A magnet floats above a superconductor cooled in liquid nitrogen. Cool the superconductor with the magnet already near it and the magnet is pinned: it floats, and it can even hang underneath. Watch the currents in the superconductor and the field lines.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/superconducting-levitation.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/superconducting-levitation.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM17 2h4v1h-4zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM17 3h2v1h-2zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM17 4h1v1h-1zM19 4h8v1h-8zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM20 5h2v1h-2zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h5v1h-5zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h3v1h-3zM19 7h1v1h-1zM21 7h2v1h-2zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h2v1h-2zM16 9h1v1h-1zM18 9h2v1h-2zM21 9h5v1h-5zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM14 10h1v1h-1zM18 10h9v1h-9zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h3v1h-3zM9 11h1v1h-1zM14 11h2v1h-2zM20 11h1v1h-1zM23 11h1v1h-1zM25 11h7v1h-7zM34 11h4v1h-4zM2 12h1v1h-1zM5 12h1v1h-1zM8 12h1v1h-1zM10 12h3v1h-3zM14 12h4v1h-4zM22 12h5v1h-5zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h3v1h-3zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM6 14h1v1h-1zM8 14h1v1h-1zM14 14h3v1h-3zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h2v1h-2zM6 16h3v1h-3zM10 16h4v1h-4zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h6v1h-6zM9 17h2v1h-2zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h2v1h-2zM7 18h4v1h-4zM13 18h1v1h-1zM15 18h2v1h-2zM19 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h4v1h-4zM15 19h2v1h-2zM18 19h1v1h-1zM20 19h1v1h-1zM24 19h2v1h-2zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h4v1h-4zM7 20h2v1h-2zM10 20h4v1h-4zM15 20h2v1h-2zM18 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h3v1h-3zM7 21h1v1h-1zM14 21h3v1h-3zM19 21h1v1h-1zM22 21h2v1h-2zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h4v1h-4zM7 22h2v1h-2zM10 22h1v1h-1zM12 22h2v1h-2zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM9 23h2v1h-2zM13 23h2v1h-2zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h5v1h-5zM11 24h1v1h-1zM13 24h1v1h-1zM15 24h5v1h-5zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM33 24h4v1h-4zM2 25h3v1h-3zM7 25h1v1h-1zM9 25h3v1h-3zM13 25h2v1h-2zM17 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM19 26h1v1h-1zM23 26h4v1h-4zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h3v1h-3zM6 27h1v1h-1zM9 27h4v1h-4zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM8 28h4v1h-4zM15 28h6v1h-6zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM17 29h1v1h-1zM19 29h2v1h-2zM23 29h3v1h-3zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h2v1h-2zM8 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h5v1h-5zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h6v1h-6zM22 32h4v1h-4zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM15 33h3v1h-3zM19 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM17 34h1v1h-1zM19 34h1v1h-1zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h1v1h-1zM16 35h3v1h-3zM20 35h1v1h-1zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h4v1h-4zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h4v1h-4zM17 37h1v1h-1zM19 37h2v1h-2zM22 37h5v1h-5zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h3v1h-3zM14 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h4v1h-4zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="go" data-vd-key="play">Let go</button>
+        <button type="button" class="btn" id="temp">Let the puck warm up</button>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Cross section of a superconducting puck in liquid nitrogen with a magnet above it, the currents in the puck and the magnetic field lines. Drag the magnet up or down; the arrow keys move it too."></canvas>
+      </div>
+      <div class="curvebox">
+        <canvas id="curve" role="img" aria-label="Graph: the force of the puck on the magnet against the gap between them, traced as the magnet moves."></canvas>
+        <div class="curvebar"><button type="button" class="btn" id="clearCurve">Clear graph</button></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The magnet and the hand holding it">
+          <span class="card-title">Magnet (sintered NdFeB, magnetized along its axis)</span>
+          <div class="wide"><span class="lab">Where</span>
+            <div class="seg" role="group" aria-label="Where the magnet is" id="sideSeg"><button type="button" data-side="above" aria-pressed="true">Above the puck</button><button type="button" data-side="below" aria-pressed="false">Under the puck (puck turned over)</button></div>
+          </div>
+          <div><div class="slider-head"><label for="sHand">Hand: gap to hold the magnet at</label><output id="oHand" class="mono" for="sHand"></output></div><input type="range" id="sHand" min="0" max="40" step="0.1"></div>
+          <div><div class="slider-head"><label for="sDia">Magnet diameter</label><output id="oDia" class="mono" for="sDia"></output></div><input type="range" id="sDia" min="3" max="20" step="0.5"></div>
+          <div><div class="slider-head"><label for="sLen">Magnet length</label><output id="oLen" class="mono" for="sLen"></output></div><input type="range" id="sLen" min="2" max="15" step="0.5"></div>
+          <div><div class="slider-head"><label for="sBr">Remanence B<sub>r</sub></label><output id="oBr" class="mono" for="sBr"></output></div><input type="range" id="sBr" min="0.2" max="1.45" step="0.01"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The superconducting puck">
+          <span class="card-title">Puck (YBCO, in liquid nitrogen at 77 K)</span>
+          <div><div class="slider-head"><label for="sPD">Puck diameter</label><output id="oPD" class="mono" for="sPD"></output></div><input type="range" id="sPD" min="15" max="60" step="1"></div>
+          <div><div class="slider-head"><label for="sPH">Puck thickness</label><output id="oPH" class="mono" for="sPH"></output></div><input type="range" id="sPH" min="2" max="20" step="0.5"></div>
+          <div><div class="slider-head"><label for="sJc">Critical current density j<sub>c</sub></label><output id="oJc" class="mono" for="sJc"></output></div><input type="range" id="sJc" min="6" max="8.5" step="0.05"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="drop" aria-pressed="true">Cooled first, then drop the magnet</button>
+          <button type="button" data-p="lower" aria-pressed="false">Cooled first, lower it gently</button>
+          <button type="button" data-p="weak" aria-pressed="false">A weaker superconductor</button>
+          <button type="button" data-p="push" aria-pressed="false">Push it down hard, then let go</button>
+          <button type="button" data-p="fc" aria-pressed="false">Cooled with the magnet in place</button>
+          <button type="button" data-p="hang" aria-pressed="false">Hanging underneath</button>
+          <button type="button" data-p="warm" aria-pressed="false">Floating, then warm the puck</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the force and the weight line, to predict where the magnet floats</span></label>
+        <label class="check"><input type="checkbox" id="labLines" checked><span>Field lines</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* A permanent magnet over a type II superconducting puck in the critical state (Bean model), with the magnet on the puck's axis.
+     The puck is cut into coaxial rings: NR across its radius and as many through its thickness as make the cells about square. A ring's current keeps the flux through it fixed (zero resistance) until the
+     current reaches the critical value jc times the ring's cross section; past that, flux moves through the ring and energy is
+     lost. Each step solves for the ring currents with the rings below jc free and those at jc held (an active set method on the
+     mutual inductance matrix). The magnet is a uniformly magnetized cylinder, which has exactly the field of a solenoid carrying
+     a surface current Br/μ0 per meter, taken here as 8 coaxial loops at Gauss–Legendre points along its length. */
+  const MU0 = 1.25663706127e-6;   /* CODATA 2022, demos/lib/constants.js */
+  const NR = 15;
+  function ellipKE(m) { /* complete elliptic integrals K(m), E(m), parameter m = k², by the arithmetic geometric mean */
+    let a = 1, b = Math.sqrt(1 - m), c = Math.sqrt(m), sum = 0.5 * m, p = 0.5;
+    for (let i = 0; i < 40 && Math.abs(c) > 1e-15; i++) { const an = (a + b) / 2; c = (a - b) / 2; b = Math.sqrt(a * b); a = an; p *= 2; sum += p * c * c; }
+    const K = Math.PI / (2 * a); return [K, K * (1 - sum)];
+  }
+  /* mutual inductance of two coaxial circular loops of radii a and b, a distance d apart along the axis (Maxwell's formula) */
+  function mutual(a, b, d) {
+    const m = 4 * a * b / ((a + b) * (a + b) + d * d), k = Math.sqrt(m), [K, E] = ellipKE(m);
+    return MU0 * Math.sqrt(a * b) * ((2 / k - k) * K - 2 / k * E);
+  }
+  /* its derivative with d: the axial force between the loops is I1 I2 dM/dd */
+  function dMutual(a, b, d) {
+    const s = (a + b) * (a + b) + d * d, [K, E] = ellipKE(4 * a * b / s), q = (a - b) * (a - b) + d * d;
+    return MU0 * d / Math.sqrt(s) * (K - (a * a + b * b + d * d) / q * E);
+  }
+  const GL8 = [[-0.9602898564975363, 0.1012285362903763], [-0.7966664774136267, 0.2223810344533745], [-0.5255324099163290, 0.3137066458778873],
+    [-0.1834346424956498, 0.3626837833783620], [0.1834346424956498, 0.3626837833783620], [0.5255324099163290, 0.3137066458778873],
+    [0.7966664774136267, 0.2223810344533745], [0.9602898564975363, 0.1012285362903763]];
+  /* o: R, H (puck radius and thickness), a, l, Br (magnet radius, length, remanence), jc (A/m²); all SI. The puck's top face is z = 0. */
+  function build(o) {
+    const nr = o.nr || NR, dr = o.R / nr, nz = o.nz || Math.max(2, Math.min(24, Math.round(o.H / dr))), rings = [], dz = o.H / nz;
+    for (let j = 0; j < nz; j++) for (let i = 0; i < nr; i++) rings.push({ r: (i + 0.5) * dr, z: -(j + 0.5) * dz, i, j });
+    const n = rings.length, L = new Float64Array(n * n), gmd = 0.2235 * (dr + dz);   /* a ring's own inductance: two filaments one geometric mean distance apart */
+    for (let p = 0; p < n; p++) for (let q = p; q < n; q++) {
+      const v = p === q ? mutual(rings[p].r, rings[p].r, gmd) : mutual(rings[p].r, rings[q].r, rings[p].z - rings[q].z);
+      L[p * n + q] = v; L[q * n + p] = v;
+    }
+    return { o, nr, nz, rings, n, L, Ic: o.jc * dr * dz, dr, dz, I: new Float64Array(n), Phi: new Float64Array(n), pm: new Float64Array(n), dpm: new Float64Array(n), sc: false, cache: null, loss: 0, nSat: 0 };
+  }
+  /* mutual inductance and its derivative together, sharing one elliptic integral (for speed): sets PAIR[0] = M, PAIR[1] = dM/dd */
+  const PAIR = new Float64Array(2);
+  function pair(a, b, d) {
+    const s = (a + b) * (a + b) + d * d, m = 4 * a * b / s;
+    let x = 1, y = Math.sqrt(1 - m), c = Math.sqrt(m), sum = 0.5 * m, p = 0.5;
+    for (let i = 0; i < 40 && c > 1e-15; i++) { const xn = (x + y) / 2; c = (x - y) / 2; y = Math.sqrt(x * y); x = xn; p *= 2; sum += p * c * c; }
+    const K = Math.PI / (2 * x), E = K * (1 - sum), k = Math.sqrt(m), q = (a - b) * (a - b) + d * d;
+    PAIR[0] = MU0 * Math.sqrt(a * b) * ((2 / k - k) * K - 2 / k * E);
+    PAIR[1] = MU0 * d / Math.sqrt(s) * (K - (a * a + b * b + d * d) / q * E);
+  }
+  /* the magnet's flux through every ring (and its derivative with the magnet's height), magnet center at height zc */
+  function magFlux(M, zc, out, dout) {
+    const o = M.o, K = o.Br / MU0 * o.l / 2, h = o.l / 2;
+    for (let p = 0; p < M.n; p++) {
+      let f = 0, df = 0; const rr = M.rings[p].r, d0 = zc - M.rings[p].z;
+      for (let g = 0; g < 8; g++) { pair(o.a, rr, d0 + GL8[g][0] * h); f += GL8[g][1] * PAIR[0]; df += GL8[g][1] * PAIR[1]; }
+      out[p] = K * f; if (dout) dout[p] = K * df;
+    }
+  }
+  /* the same from a table: nodes every 0.1 mm of the magnet's height, filled as the magnet first reaches them, joined by cubic
+     Hermite interpolation of the exact values and slopes (error under 10⁻⁵ of the flux); beyond 65 mm it is computed directly */
+  const TAB_H = 1e-4, TAB_MAX = 0.065;
+  function magFluxT(M, zc, out, dout) {
+    if (zc > TAB_MAX || zc < 0) { magFlux(M, zc, out, dout); return; }
+    const tab = M.tab || (M.tab = new Map()), i = Math.floor(zc / TAB_H), t = zc / TAB_H - i, n = M.n;
+    const node = (j) => { let e = tab.get(j); if (!e) { e = [new Float64Array(n), new Float64Array(n)]; magFlux(M, j * TAB_H, e[0], e[1]); tab.set(j, e); } return e; };
+    const A = node(i), B = node(i + 1), h = TAB_H, t2 = t * t, t3 = t2 * t;
+    const h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
+    const g00 = (6 * t2 - 6 * t) / h, g10 = 3 * t2 - 4 * t + 1, g01 = (-6 * t2 + 6 * t) / h, g11 = 3 * t2 - 2 * t;
+    for (let p = 0; p < n; p++) { const f0 = A[0][p], d0 = A[1][p], f1 = B[0][p], d1 = B[1][p];
+      out[p] = h00 * f0 + h10 * h * d0 + h01 * f1 + h11 * h * d1; if (dout) dout[p] = g00 * f0 + g10 * d0 + g01 * f1 + g11 * d1; }
+  }
+  function chol(A, n, idx) { const m = idx.length, C = new Float64Array(m * m);
+    for (let i = 0; i < m; i++) for (let j = 0; j <= i; j++) {
+      let s = A[idx[i] * n + idx[j]]; for (let k = 0; k < j; k++) s -= C[i * m + k] * C[j * m + k];
+      C[i * m + j] = i === j ? Math.sqrt(s) : s / C[j * m + j];
+    }
+    return C; }
+  function cholSolve(C, b) { const m = b.length, y = new Float64Array(m);
+    for (let i = 0; i < m; i++) { let s = b[i]; for (let k = 0; k < i; k++) s -= C[i * m + k] * y[k]; y[i] = s / C[i * m + i]; }
+    for (let i = m - 1; i >= 0; i--) { let s = y[i]; for (let k = i + 1; k < m; k++) s -= C[k * m + i] * y[k]; y[i] = s / C[i * m + i]; }
+    return y; }
+  /* cooling through Tc with the magnet at zc: no currents, and the flux there now is frozen in */
+  function cool(M, zc) { M.I.fill(0); magFluxT(M, zc, M.Phi, M.dpm); M.pm.set(M.Phi); M.sc = true; M.cache = null; M.nSat = 0; }
+  function warm(M) { M.I.fill(0); M.sc = false; M.nSat = 0; }
+  /* move the magnet to zc: the new ring currents by the critical state rule; returns the energy lost in the step (J).
+     Unknowns: the currents of the rings below jc (their flux stays at its last value M.Phi) and the flux change λ of the rings at
+     ±jc. Solved with whichever set is smaller: the free rings by L restricted to them, or the rings at jc by L⁻¹ restricted to them. */
+  function step(M, zc) {
+    const n = M.n, L = M.L, Ic = M.Ic, pm = M.pm; magFluxT(M, zc, pm, M.dpm);
+    if (!M.sc) return 0;
+    if (!M.Li) M.Li = inverse(L, n);
+    const Li = M.Li, old = M.I, sat = new Int8Array(n), rhs = new Float64Array(n);
+    let I = new Float64Array(n), lam = new Float64Array(n);
+    for (let p = 0; p < n; p++) { if (Math.abs(old[p]) >= Ic * (1 - 1e-9)) sat[p] = Math.sign(old[p]); rhs[p] = M.Phi[p] - pm[p]; }
+    const y = new Float64Array(n); for (let p = 0; p < n; p++) { let v = 0; for (let q = 0; q < n; q++) v += Li[p * n + q] * rhs[q]; y[p] = v; }   /* currents if no ring were at jc */
+    for (let it = 0; it < 80; it++) {
+      const free = [], at = []; for (let p = 0; p < n; p++) (sat[p] ? at : free).push(p);
+      const key = sat.join(''); I.fill(0); lam.fill(0);
+      if (at.length <= free.length) {
+        if (!M.cache || M.cache.key !== key) M.cache = { key, C: at.length ? chol(Li, n, at) : null };
+        if (at.length) { const b = at.map((p) => sat[p] * Ic - y[p]), x = cholSolve(M.cache.C, b); at.forEach((p, a) => { lam[p] = x[a]; });
+          for (let p = 0; p < n; p++) { let v = y[p]; for (let a = 0; a < at.length; a++) v += Li[p * n + at[a]] * x[a]; I[p] = v; } }
+        else I.set(y);
+        for (const p of at) I[p] = sat[p] * Ic;
+      } else {
+        if (!M.cache || M.cache.key !== key) M.cache = { key, C: chol(L, n, free) };
+        const b = new Float64Array(free.length);
+        for (let a = 0; a < free.length; a++) { const p = free[a]; let v = rhs[p]; for (const q of at) v -= L[p * n + q] * sat[q] * Ic; b[a] = v; }
+        const x = free.length ? cholSolve(M.cache.C, b) : b;
+        for (const p of at) I[p] = sat[p] * Ic; free.forEach((p, a) => { I[p] = x[a]; });
+        for (const p of at) { let v = -rhs[p]; for (let q = 0; q < n; q++) v += L[p * n + q] * I[q]; lam[p] = v; }
+      }
+      let changed = false;
+      for (const p of free) if (Math.abs(I[p]) > Ic) { sat[p] = Math.sign(I[p]); changed = true; }
+      if (!changed) for (const p of at) if (sat[p] * lam[p] > 0) { sat[p] = 0; changed = true; }   /* a ring stays at jc only while flux moves through it the way that loses energy */
+      if (!changed) break;
+    }
+    let loss = 0, ns = 0;
+    for (let p = 0; p < n; p++) { loss -= lam[p] * I[p]; M.Phi[p] += lam[p]; if (sat[p]) ns++; }
+    M.I = I; M.loss += loss; M.nSat = ns; return loss;
+  }
+  function inverse(A, n) { const all = []; for (let i = 0; i < n; i++) all.push(i); const C = chol(A, n, all), X = new Float64Array(n * n);
+    for (let j = 0; j < n; j++) { const e = new Float64Array(n); e[j] = 1; const x = cholSolve(C, e); for (let i = 0; i < n; i++) X[i * n + j] = x[i]; } return X; }
+  /* axial force of the puck on the magnet (N, positive pushes the magnet away from the puck), after step(M, zc) */
+  function force(M) { if (!M.sc) return 0; let F = 0; for (let p = 0; p < M.n; p++) F += M.I[p] * M.dpm[p]; return F; }
+  /* flux through a circle of radius rho at height z (the field lines are its contours), magnet center at zc */
+  function fluxAt(M, zc, rho, z) {
+    if (rho <= 0) return 0; const o = M.o, K = o.Br / MU0 * o.l / 2; let f = 0;
+    for (const [x, w] of GL8) f += K * w * mutual(o.a, rho, z - zc - x * o.l / 2);
+    if (M.sc) for (let p = 0; p < M.n; p++) if (M.I[p]) f += M.I[p] * mutual(M.rings[p].r, rho, z - M.rings[p].z);
+    return f;
+  }
+  /* an ideal superconducting half space (image method): the repulsion on a point dipole m at height h, 3μ0m²/(32πh⁴), for the tests */
+  function imageForce(m, h) { return 3 * MU0 * m * m / (32 * Math.PI * h ** 4); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id), G = 9.81, RHO_MAG = 7500;   /* g: demos/lib/constants.js; NdFeB density 7.5 g/cm³ */
+  const PRESETS = {
+    drop: { side: 'above', cool: 'far', at: 30, free: false, jc: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'The puck was cooled with no magnet nearby (zero field cooled). The magnet hangs 30 mm above it in your hand. Let go: as it falls, the flux it pushes toward the puck makes currents in the puck that push back, and it bounces on a cushion of field. It keeps bouncing, because none of the currents reaches the critical current: below jc the puck has no resistance and loses no energy.' },
+    lower: { side: 'above', cool: 'far', at: 30, free: false, jc: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'The same zero field cooled puck. Lower the magnet slowly with the hand slider (or drag it, or use the arrow keys) and watch the force on the graph grow as the gap shrinks. Where the force equals the weight, let go: the magnet stays where you left it, floating.' },
+    push: { side: 'above', cool: 'far', at: 3, free: false, jc: 7, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'A puck with a tenth of the critical current density, 10⁷ A/m². The magnet was pushed down from far away to 3.0 mm above it. So close, the currents near the top face reach jc (outlined rings) and flux has moved into the puck. Let go: the magnet shoots up, and the force on the way up is smaller than it was on the way down, so each bounce loses energy in the puck and the magnet settles lower than it floats after a gentle drop. The graph traces the loops. (Try the same push on the stronger puck: almost nothing reaches jc, nothing is lost, and the stored energy throws the magnet far up.)' },
+    fc: { side: 'above', cool: 5, at: 5, free: false, jc: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'The puck was cooled with the magnet held 5.0 mm above it (field cooled), so the magnet\'s flux was frozen into it. At that spot the puck pushes with no force at all. Let go: the magnet sags a little until the push equals its weight. Now raise or lower the hand: the puck pulls the magnet back toward the gap it was cooled at, from either side. That is flux pinning.' },
+    hang: { side: 'below', cool: 5, at: 5, free: false, jc: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'The puck is turned over and the magnet held 5.0 mm under it while the puck was cooled. Let go: the magnet drops a little, the frozen flux pulls back, and it hangs in midair under the puck. A plain diamagnet can only push; only pinned flux can pull.' },
+    warm: { side: 'above', cool: 5, at: 5, free: true, jc: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'A field cooled magnet floating over the puck. Let the puck warm up past its critical temperature (about 92 K for YBCO): the currents die, the magnet falls onto the puck, and the field passes straight through. Pour the nitrogen back with the magnet resting there and it is pinned at that gap instead.' },
+    weak: { side: 'above', cool: 'far', at: 30, free: false, jc: 7, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
+      hint: 'The same drop as the first setup, onto a puck with a tenth of the critical current density (10⁷ A/m²). Near the bottom of each bounce some rings reach jc (outlined), flux moves, and energy is lost, so the bounces die away and the magnet settles. Compare the energy lost with the first setup, where it stays zero.' } };
+
+  const S = { side: 'above', hand: 30, held: true, z: 0, v: 0, t: 0, jcLog: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10, preset: 'drop', blind: false, lines: true, fell: false, curve: [] };
+  let MD = null;   /* the model */
+  const can = $('can'), ctx = can.getContext('2d'), cv = $('curve'), cx = cv.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null, view3 = null, g3 = null, linesKey = '', linesSegs = [], linesAt = 0;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const mag = () => ({ a: S.dia / 2000, l: S.len / 1000 });
+  const massOf = () => RHO_MAG * Math.PI * (S.dia / 2000) ** 2 * S.len / 1000;
+  const gap = () => S.z - MD.o.l / 2;
+  const sgnG = () => (S.side === 'above' ? -1 : 1);   /* gravity along the axis pointing away from the puck */
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'field', 'puck', 'puck-edge', 'magnet', 'magnet-n', 'magnet-s', 'ln2', 'ln2-edge', 'cur-a', 'cur-b', 'hand', 'foam', 'foam-edge']) T[k.replace('-', '_')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; }
+
+  /* ---------- the model and moving the magnet ---------- */
+  function rebuild() { const m = mag(); MD = build({ R: S.PD / 2000, H: S.PH / 1000, a: m.a, l: m.l, Br: S.Br, jc: 10 ** S.jcLog }); }
+  const FAR = 0.25;   /* "far away": 250 mm, where the magnet's flux through the puck is under 0.1 % of its value at 5 mm */
+  /* move the magnet from where it is to zc in steps of at most 0.2 mm, so the critical state follows the path */
+  function moveTo(zc) {
+    const from = S.z, n = Math.max(1, Math.ceil(Math.abs(zc - from) / 2e-4));
+    for (let i = 1; i <= n; i++) { S.z = from + (zc - from) * i / n; step(MD, S.z); record(); }
+  }
+  function record() { if (!MD.sc && !S.curve.length) return; const g = gap() * 1000, F = force(MD), l = S.curve[S.curve.length - 1];
+    if (!l || Math.abs(l[0] - g) > 0.05 || Math.abs(l[1] - F) > 2e-4) { S.curve.push([g, F]); if (S.curve.length > 20000) S.curve.shift(); } }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    Object.assign(S, { side: c.side, jcLog: c.jc, dia: c.dia, len: c.len, Br: c.Br, PD: c.PD, PH: c.PH, fell: false, v: 0, t: 0, curve: [] });
+    rebuild(); const l2 = MD.o.l / 2;
+    if (c.cool === 'far') { S.z = FAR; cool(MD, FAR); S.z = l2 + 0.04; step(MD, S.z); S.curve = []; record(); moveTo(l2 + c.at / 1000); }   /* far off no ring is near jc, so one step brings it in */
+    else { S.z = l2 + c.cool / 1000; cool(MD, S.z); step(MD, S.z); }
+    MD.loss = 0; S.hand = c.at; S.held = !c.free; if (c.cool !== 'far') S.curve = []; record();
+    $('presetHint').textContent = c.hint; sync(); setHeld(S.held); redraw();
+  }
+  function changedSetup() {   /* a magnet or puck slider moved: the puck is cooled again where the magnet is now */
+    S.preset = 'custom'; const g = gap(); rebuild(); S.z = MD.o.l / 2 + Math.max(0, g); cool(MD, S.z); step(MD, S.z); MD.loss = 0; S.curve = []; S.fell = false; record(); sync(); redraw();
+  }
+  function setHeld(on) { S.held = on; S.msg = ''; if (on) { S.v = 0; S.fell = false; } const b = $('go'); b.textContent = on ? 'Let go' : 'Grab the magnet'; b.classList.toggle('attn', on); }
+  function setCold(on) { if (on) { cool(MD, S.z); step(MD, S.z); } else warm(MD); syncTemp(); redraw(); }
+  function syncTemp() { $('temp').textContent = MD.sc ? 'Let the puck warm up' : 'Pour in liquid nitrogen'; }
+
+  /* ---------- time ---------- */
+  const DT = 1e-3, HAND_V = 0.05;   /* time step 1 ms; the hand moves the magnet at up to 50 mm/s */
+  function advance(dt) {
+    const m = massOf(), l2 = MD.o.l / 2, gmax = 0.06;
+    let n = Math.round(dt / DT);
+    while (n-- > 0) {
+      if (S.held) {
+        const target = l2 + S.hand / 1000, d = target - S.z, s = Math.sign(d) * Math.min(Math.abs(d), HAND_V * DT);
+        if (s) { S.z += s; step(MD, S.z); }
+      } else if (!S.fell) {
+        let a = force(MD) / m + sgnG() * G; S.v += a * DT / 2; S.z += S.v * DT;
+        if (S.z < l2) { S.z = l2; if (S.v < 0) S.v = 0; }
+        step(MD, S.z); a = force(MD) / m + sgnG() * G; S.v += a * DT / 2;
+        if (S.z <= l2 && S.v < 0) S.v = 0;
+        if (S.z - l2 > gmax) { if (S.side === 'below') { S.fell = true; warmFall(); } else { S.z = l2 + gmax; step(MD, S.z); S.hand = gmax * 1000; setHeld(true); S.msg = 'Caught at a 60 mm gap: it was still rising.'; sync(); } }
+      }
+      S.t += DT; record();
+    }
+  }
+  function warmFall() { S.v = 0; $('note').textContent = 'The magnet fell to the bench. Grab it to put it back in your hand.'; }
+
+  /* ---------- the field lines (contours of the flux function) ---------- */
+  function computeLines(x0, x1, z0, z1) {
+    const nx = 44, nz = 70, gx = [], gz = [], val = new Float64Array((nx + 1) * (nz + 1));
+    for (let i = 0; i <= nx; i++) gx.push(x0 + (x1 - x0) * i / nx); for (let j = 0; j <= nz; j++) gz.push(z0 + (z1 - z0) * j / nz);
+    for (let j = 0; j <= nz; j++) for (let i = 0; i <= nx; i++) val[j * (nx + 1) + i] = fluxAt(MD, S.z, Math.max(1e-6, gx[i]), gz[j]);
+    const m = mag(), unit = S.Br * Math.PI * m.a * m.a, levels = []; for (let k = 1; k <= 14; k++) levels.push(unit * (k / 12) ** 2);   /* levels in steps of k², so lines reach out to the puck */
+    const segs = [];
+    for (const lv of levels) for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
+      const v = [val[j * (nx + 1) + i], val[j * (nx + 1) + i + 1], val[(j + 1) * (nx + 1) + i + 1], val[(j + 1) * (nx + 1) + i]];
+      const P = [[gx[i], gz[j]], [gx[i + 1], gz[j]], [gx[i + 1], gz[j + 1]], [gx[i], gz[j + 1]]], pts = [];
+      for (let e = 0; e < 4; e++) { const a = v[e], b = v[(e + 1) % 4]; if ((a - lv) * (b - lv) < 0) { const t = (lv - a) / (b - a), A = P[e], B = P[(e + 1) % 4]; pts.push([A[0] + t * (B[0] - A[0]), A[1] + t * (B[1] - A[1])]); } }
+      if (pts.length === 2) segs.push(pts); else if (pts.length === 4) segs.push([pts[0], pts[1]], [pts[2], pts[3]]);
+    }
+    return segs;
+  }
+  function lines(x1, z0, z1) {
+    const key = [S.z.toFixed(5), MD.sc, MD.loss.toFixed(9), S.dia, S.len, S.Br, S.PD, S.PH, S.jcLog, x1.toFixed(4), z0.toFixed(4), z1.toFixed(4)].join();
+    const now = performance.now();
+    if (key !== linesKey && (now - linesAt > 120 || !linesSegs.length)) { linesKey = key; linesAt = now; linesSegs = computeLines(0, x1, z0, z1); }
+    return linesSegs;
+  }
+
+  /* ---------- flat drawing: a cross section through the axis ---------- */
+  function view() {   /* the window in model coordinates (m): x across, z up from the puck's top face */
+    const p = proj(), R = MD.o.R, Hp = MD.o.H, l = MD.o.l, top = Math.max(0.045, S.z + l / 2 + 0.012), bot = -Hp - 0.008;
+    const halfW = Math.max(R + 0.012, MD.o.a + 0.02), padT = 34 * p, padB = 26 * p;
+    const sc = Math.min((W * 0.92) / (2 * halfW), (H - padT - padB) / (top - bot));
+    return { sc, x0: W / 2, y0: padT + top * sc, top, bot, halfW, p };
+  }
+  function draw() {
+    if (!T || !W || !MD) return;
+    if (view3 && view3.is3d() && g3) { draw3(); return; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    drawSection();
+  }
+  function drawSection(over) {
+    const V = view(), p = V.p, flip = S.side === 'below', X = (x) => V.x0 + x * V.sc, Y = (z) => (flip ? H - V.y0 + z * V.sc : V.y0 - z * V.sc);
+    const R = MD.o.R, Hp = MD.o.H, m = mag(), l2 = m.l / 2;
+    if (!over) {
+      /* the dish of liquid nitrogen (above) or the foam holder (below) */
+      const box = (x0, x1, z0, z1) => { const ya = Y(z0), yb = Y(z1); ctx.fillRect(X(x0), Math.min(ya, yb), (x1 - x0) * V.sc, Math.abs(yb - ya)); };
+      ctx.fillStyle = T.foam;
+      if (!flip) { const dx = R + 0.008, db = -Hp - 0.006;
+        box(-dx - 0.003, -dx, db, 0.002); box(dx, dx + 0.003, db, 0.002); box(-dx - 0.003, dx + 0.003, db - 0.003, db);
+        if (MD.sc) { ctx.fillStyle = T.ln2; box(-dx, dx, db, 0.0015); ctx.strokeStyle = T.ln2_edge; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(-dx), Y(0.0015)); ctx.lineTo(X(dx), Y(0.0015)); ctx.stroke(); } }
+      else { box(-R - 0.006, R + 0.006, -Hp - 0.006, -Hp); box(-R - 0.006, -R, -Hp, -0.001); box(R, R + 0.006, -Hp, -0.001); }
+    }
+    /* the puck, its rings shaded by current (darkest at the largest current in the puck), with the rings at jc outlined */
+    const dr = MD.dr, dz = MD.dz;
+    ctx.fillStyle = T.puck; ctx.fillRect(X(-R), Math.min(Y(0), Y(-Hp)), 2 * R * V.sc, Hp * V.sc);
+    if (MD.sc) { let imax = 0; for (const v of MD.I) imax = Math.max(imax, Math.abs(v));
+      if (imax > 0) for (const [k, rg] of MD.rings.entries()) {
+        const q = MD.I[k] / imax, at = Math.abs(MD.I[k]) >= MD.Ic * (1 - 1e-9); if (Math.abs(q) < 0.03) continue;
+        const ya = Math.min(Y(rg.z + dz / 2), Y(rg.z - dz / 2)), hh = dz * V.sc;
+        for (const sx of [1, -1]) { const pos = (q > 0) === (sx > 0); ctx.globalAlpha = 0.15 + 0.8 * Math.abs(q); ctx.fillStyle = pos ? T.cur_a : T.cur_b; ctx.fillRect(X(sx * rg.r - dr / 2), ya, dr * V.sc + 0.5, hh + 0.5);
+          if (at) { ctx.globalAlpha = 1; ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.strokeRect(X(sx * rg.r - dr / 2) + 0.5, ya + 0.5, dr * V.sc - 1, hh - 1); } }
+      } }
+    /* field lines */
+    if (S.lines) { const segs = lines(V.halfW, V.bot, V.top); ctx.strokeStyle = T.field; ctx.lineWidth = 1.3 * p; ctx.globalAlpha = 0.85; ctx.beginPath();
+      for (const [a, b] of segs) { ctx.moveTo(X(a[0]), Y(a[1])); ctx.lineTo(X(b[0]), Y(b[1])); ctx.moveTo(X(-a[0]), Y(a[1])); ctx.lineTo(X(-b[0]), Y(b[1])); }
+      ctx.stroke(); ctx.globalAlpha = 1; }
+    /* the magnet: north face away from the puck */
+    if (!S.fell) {
+      const zt = S.z + l2, zb = S.z - l2, ya = Math.min(Y(zt), Y(zb)), hh = m.l * V.sc;
+      ctx.fillStyle = T.magnet; ctx.fillRect(X(-m.a), ya, 2 * m.a * V.sc, hh);
+      const yn = Y(zt), ys = Y(zb), half = (ys - yn) / 2;
+      ctx.fillStyle = T.magnet_n; ctx.globalAlpha = 0.8; ctx.fillRect(X(-m.a), Math.min(yn, yn + half), 2 * m.a * V.sc, Math.abs(half)); ctx.fillStyle = T.magnet_s; ctx.fillRect(X(-m.a), Math.min(ys, ys - half), 2 * m.a * V.sc, Math.abs(half)); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.strokeRect(X(-m.a), ya, 2 * m.a * V.sc, hh);
+      const fs = Math.min(13 * p, Math.abs(half) * 0.8); if (fs > 6) { ctx.fillStyle = '#fff'; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('N', X(0), yn + half / 2); ctx.fillText('S', X(0), ys - half / 2); }
+      /* the gap */
+      const xg = X(Math.max(R, m.a) + 0.004), y1 = Y(zb), y0 = Y(0);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(m.a), y1); ctx.lineTo(xg + 6 * p, y1); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(xg, y1); ctx.lineTo(xg, y0); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; { const gt = `gap ${f(gap() * 1000, 1)} mm`, fit = xg + 8 * p + ctx.measureText(gt).width < W - 4; ctx.textAlign = fit ? 'left' : 'right'; ctx.fillText(gt, fit ? xg + 8 * p : xg - 6 * p, (y0 + y1) / 2); }
+      if (S.held) { /* the hand's grip: a tab on the far face */
+        const yh = Y(zt + 0.002 * (1)), xs = X(0); ctx.fillStyle = T.hand; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.roundRect(xs - 9 * p, Math.min(yh, Y(zt)) - (flip ? 0 : 14 * p), 18 * p, 14 * p + Math.abs(yh - Y(zt)), 4 * p); ctx.fill(); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('held', xs, flip ? Y(zt) + 22 * p : Y(zt) - 22 * p); }
+    }
+    /* labels */
+    ctx.font = `${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
+    ctx.textAlign = 'center'; ctx.fillText(MD.sc ? 'YBCO puck at 77 K' : 'YBCO puck, warm (not superconducting)', X(0), flip ? H - 12 * p : Y(V.bot) + 10 * p); ctx.textAlign = 'left';   /* hanging: the legend is above the puck, so the label goes at the foot */
+    if (MD.sc && !over) { const lx = 12 * p, ly = 16 * p; ctx.fillStyle = T.cur_a; ctx.fillRect(lx, ly - 5 * p, 10 * p, 10 * p); ctx.fillStyle = T.cur_b; ctx.fillRect(lx + 12 * p, ly - 5 * p, 10 * p, 10 * p);
+      ctx.fillStyle = T.muted; ctx.fillText(W < 640 ? 'current in and out of the page; outlined: at jc' : 'current into and out of the page (deeper color: larger); outlined rings carry jc', lx + 28 * p, ly); }
+  }
+
+  /* ---------- the graph: force against gap ---------- */
+  function drawCurve() {
+    if (!T || !CW) return;
+    const p = proj(); cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.fillStyle = T.canvas; cx.fillRect(0, 0, CW, CH);
+    const L = 58 * p, R = 14 * p, Tp = 30 * p, B = 30 * p, w = CW - L - R, h = CH - Tp - B, Wt = massOf() * G * 1000;
+    const pts = S.curve; let fmax = 3 * Wt, fmin = S.side === 'below' ? -3 * Wt : -0.5 * Wt;
+    for (const q of pts) { fmax = Math.max(fmax, q[1] * 1000 * 1.05); fmin = Math.min(fmin, q[1] * 1000 * 1.05); }
+    const gmax = Math.max(40, S.hand + 2, gap() * 1000 + 2), xs = (g) => L + g / gmax * w, ys = (F) => Tp + (fmax - F) / (fmax - fmin) * h;
+    cx.strokeStyle = T.line; cx.lineWidth = 1; cx.font = `${10.5 * p}px ${T.mono}`; cx.fillStyle = T.muted; cx.textAlign = 'center'; cx.textBaseline = 'top';
+    for (let g = 0; g <= gmax; g += gmax > 50 ? 10 : 5) { cx.beginPath(); cx.moveTo(xs(g), Tp); cx.lineTo(xs(g), Tp + h); cx.stroke(); cx.fillText(String(g), xs(g), Tp + h + 4 * p); }
+    const step = niceStep((fmax - fmin) / 5); cx.textAlign = 'right'; cx.textBaseline = 'middle';
+    for (let F = Math.ceil(fmin / step) * step; F <= fmax; F += step) { cx.beginPath(); cx.moveTo(L, ys(F)); cx.lineTo(L + w, ys(F)); cx.stroke(); cx.fillText(fmtTick(F, step), L - 5 * p, ys(F)); }
+    cx.strokeStyle = T.ink; cx.beginPath(); cx.moveTo(L, ys(0)); cx.lineTo(L + w, ys(0)); cx.stroke();
+    cx.fillStyle = T.muted; cx.textAlign = 'center'; cx.textBaseline = 'bottom'; cx.font = `${11 * p}px ${T.ui}`;
+    cx.fillText('gap (mm)', L + w / 2, CH - 1 * p); cx.save(); cx.translate(13 * p, Tp + h / 2); cx.rotate(-Math.PI / 2); cx.textBaseline = 'middle'; cx.fillText('force of puck on magnet (mN)', 0, 0); cx.restore();
+    cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText(S.side === 'below' ? 'positive: pushes the magnet away; negative: pulls it toward the puck' : 'positive: pushes the magnet up', L + 4 * p, 6 * p);
+    if (!S.blind) { const yw = ys(S.side === 'below' ? -Wt : Wt); cx.strokeStyle = T.hand; cx.setLineDash([6 * p, 4 * p]); cx.lineWidth = 1.5 * p; cx.beginPath(); cx.moveTo(L, yw); cx.lineTo(L + w, yw); cx.stroke(); cx.setLineDash([]);
+      cx.fillStyle = T.hand; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText(S.side === 'below' ? 'pull needed to hold its weight' : "the magnet's weight", L + w - 4 * p, yw - 2 * p); }
+    if (!S.blind && pts.length) { cx.save(); cx.beginPath(); cx.rect(L, Tp, w, h); cx.clip(); cx.strokeStyle = T.field; cx.lineWidth = 1.8 * p; cx.beginPath();
+      pts.forEach((q, i) => { const X = xs(q[0]), Y = ys(q[1] * 1000); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke();
+      const l = pts[pts.length - 1]; cx.fillStyle = T.field; cx.beginPath(); cx.arc(xs(l[0]), ys(l[1] * 1000), 4 * p, 0, 7); cx.fill(); cx.restore(); }
+    if (S.blind) { cx.fillStyle = T.muted; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText('Blind: the force is hidden', L + w / 2, Tp + h / 2); }
+  }
+  function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), r = x / e; return (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * e; }
+  function fmtTick(F, st) { const d = st >= 1 ? 0 : Math.min(3, Math.ceil(-Math.log10(st))); return f(Math.abs(F) < st / 1e6 ? 0 : F, d); }
+
+  /* ---------- 3D: the apparatus on the bench ---------- */
+  const G3 = { o: { th: -Math.PI / 2 + 0.5, ph: 0.95, zoom: 1 } }, K3 = 4;   /* 1 m of apparatus = 4 scene units */
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.4, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
+    S3.el.classList.add('sc3');
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 2.4, d: 1.6, y: 0.3 }), VD3K.backdrop(S3, { r: 0.9, h: 0.9, y: -0.3 }));
+    const foam = M({ roughness: 0.95, metalness: 0 }, ['#efe9dc', '#5b574e']), puckM = M({ roughness: 0.55, metalness: 0.25 }, ['#2e3238', '#3c424b']);
+    const magM = new THREE.MeshStandardMaterial({ roughness: 0.3, metalness: 0.45, color: '#dfe5ec' }), nM = new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0.3, color: '#c0392b' });
+    const ln2M = new THREE.MeshStandardMaterial({ color: '#a9cdee', roughness: 0.05, metalness: 0, transparent: true, opacity: 0.35, depthWrite: false });
+    const app = new THREE.Group(); sc.add(app);
+    const cyl = (r, h, m, seg) => { const c = mesh(new THREE.CylinderGeometry(r, r, h, seg || 48), m, true); c.rotation.x = Math.PI / 2; return c; };
+    g3 = { S3, app, M, mesh, cyl, foam, puckM, magM, nM, ln2M, lineM: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 }), built: '' };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.45, phMax: 1.5, zMin: 0.5, zMax: 3 });
+    can.style.touchAction = 'pan-y';
+    return true;
+  }
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  function build3() {   /* rebuild the props when the sizes or the side change */
+    const g = g3, key = [S.side, S.PD, S.PH, S.dia, S.len].join(); if (g.built === key) return; if (g.built.split(',')[0] !== S.side) G3.o.ph = S.side === 'below' ? 1.42 : 0.95; g.built = key;
+    for (const c of g.app.children.slice()) { g.S3.dispose(c); }
+    const R = MD.o.R * K3, Hp = MD.o.H * K3, m = mag(), a = m.a * K3, l = m.l * K3, base = 0.04, flip = S.side === 'below';
+    const pz = flip ? base + 0.22 + Hp : base + 0.012 + Hp;   /* height of the puck's working face */
+    g.face = pz; g.flip = flip;
+    if (!flip) {
+      const dishR = R + 0.03, dishH = Hp + 0.022;
+      const wall = g.mesh(new THREE.CylinderGeometry(dishR + 0.008, dishR + 0.006, dishH, 56, 1, true), g.foam, true); wall.rotation.x = Math.PI / 2; wall.position.z = base + dishH / 2; g.app.add(wall);
+      const bot = g.cyl(dishR + 0.008, 0.012, g.foam); bot.position.z = base + 0.006; g.app.add(bot);
+      const puck = g.cyl(R, Hp, g.puckM); puck.position.z = pz - Hp / 2; g.app.add(puck);
+      g.ln2 = g.cyl(dishR, Hp + 0.004, g.ln2M); g.ln2.position.z = base + 0.012 + (Hp + 0.004) / 2; g.ln2.renderOrder = 3; g.app.add(g.ln2);
+    } else {
+      const holder = g.cyl(R + 0.012, 0.016, g.foam); holder.position.z = pz + Hp + 0.008; g.app.add(holder);
+      const puck = g.cyl(R, Hp, g.puckM); puck.position.z = pz + Hp / 2; g.app.add(puck);
+      const steel = g.M({ roughness: 0.35, metalness: 0.6 }, ['#b9c0c8', '#7d8690']);
+      g.app.add(VD3K.rod([0, R * 0.5, pz + Hp + 0.016], [0, R + 0.25, pz + Hp + 0.016], 0.008, steel), VD3K.rod([0, R + 0.25, 0], [0, R + 0.25, pz + Hp + 0.03], 0.01, steel));
+      g.ln2 = null;
+    }
+    g.mag = new THREE.Group(); const body = g.cyl(a, l, g.magM); g.mag.add(body);
+    const cap = g.cyl(a * 1.004, l * 0.05, g.nM); cap.position.z = (flip ? -1 : 1) * l * 0.485; g.mag.add(cap); g.app.add(g.mag);
+    g.lines = new THREE.Group(); g.app.add(g.lines); g.linesKey = '';
+  }
+  function draw3() {
+    const g = g3, S3 = g.S3, p = proj(); build3();
+    S3.size(W, H); S3.cam.setViewOffset(W, H, 0, 0, W, H);
+    const zc = g.face + (g.flip ? -1 : 1) * S.z * K3;
+    if (S.fell) { g.mag.position.set(0.14, -0.05, mag().a * K3); g.mag.rotation.set(Math.PI / 2, 0, 0.6); }
+    else { g.mag.position.set(0, 0, zc); g.mag.rotation.set(0, 0, 0); }
+    if (g.ln2) g.ln2.visible = MD.sc;
+    if (S.lines) {
+      const key = linesKey + '|' + G3.o.th.toFixed(2);
+      if (g.linesKey !== key) { g.linesKey = key; for (const c of g.lines.children.slice()) S3.dispose(c);
+        const segs = linesSegs, pos = [], th = G3.o.th + Math.PI / 2, c = Math.cos(th), s = Math.sin(th);
+        for (const [A, B] of segs) for (const sx of [1, -1]) {
+          const zA = g.face + (g.flip ? -1 : 1) * A[1] * K3, zB = g.face + (g.flip ? -1 : 1) * B[1] * K3;
+          pos.push(sx * A[0] * K3 * c, sx * A[0] * K3 * s, zA, sx * B[0] * K3 * c, sx * B[0] * K3 * s, zB); }
+        const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.lineM.color.set(T.field); g.lines.add(new THREE.LineSegments(gg, g.lineM)); }
+      g.lines.visible = true;
+    } else g.lines.visible = false;
+    S3.place(G3.o, [0, 0, g.face], S3.fit(0.55));
+    S3.render();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 11 * p, c: T.ink }, o || {}); ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.surface; ctx.globalAlpha = 0.75; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c; ctx.fillText(txt, q[0], q[1]); ctx.restore(); };
+    lab(MD.sc ? (g.flip ? 'YBCO puck at 77 K' : 'YBCO puck at 77 K, in liquid nitrogen') : 'YBCO puck, warm', S3.project([0, -MD.o.R * K3 - (g.flip ? 0.02 : 0.045), g.flip ? g.face + MD.o.H * K3 + 0.04 : 0.03]), { c: T.ink, w: 600 });
+    if (!S.fell) lab(`gap ${f(gap() * 1000, 1)} mm`, S3.project([mag().a * K3 + 0.05, 0, zc]), { a: 'left', w: 600 });
+    if (S.lines) lab('field lines in the plane facing you', [W / 2, H - 16 * p], { c: T.muted, s: 10.5 * p });
+    if (S.lines) lines(view().halfW, view().bot, view().top);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, Wt = massOf() * G, F = force(MD);
+    $('out').innerHTML = dd('Gap', S.fell ? 'fell off' : `${f(gap() * 1000, 2)} mm`) + dd('Magnet mass', `${f(massOf() * 1000, 2)} g`) + dd('Weight mg', `${f(Wt * 1000, 2)} mN`)
+      + (S.blind ? dd('Force of puck on magnet', 'hidden') : dd('Force of puck on magnet', `${f(F * 1000, 2)} mN`) + dd('Force ÷ weight', f(F / Wt, 2)))
+      + dd('Speed', S.held ? 'held' : `${f(Math.abs(S.v) * 1000, 1)} mm/s`)
+      + dd('Energy lost in the puck', `${f(MD.loss * 1000, 4)} mJ`)
+      + dd('Rings at the critical current', MD.sc ? `${MD.nSat} of ${MD.n}` : 'puck is warm')
+      + dd('Critical current per ring', `${f(MD.Ic, 1)} A`) + dd('Time', `${f(S.t, 2)} s`);
+  }
+  function sync() {
+    const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
+    set('Hand', S.hand, `${f(S.hand, 1)} mm`); set('Dia', S.dia, `${f(S.dia, 1)} mm`); set('Len', S.len, `${f(S.len, 1)} mm`); set('Br', S.Br, `${f(S.Br, 2)} T`);
+    set('PD', S.PD, `${S.PD} mm`); set('PH', S.PH, `${f(S.PH, 1)} mm`); set('Jc', S.jcLog, `${(10 ** S.jcLog).toExponential(1).replace('e+', ' × 10^')} A/m²`.replace(/10\^(\d+)/, (m, e) => '10' + String(e).split('').map((d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]).join('')));
+    $('sHand').disabled = !S.held;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#sideSeg button')) b.setAttribute('aria-pressed', String(b.dataset.side === S.side));
+    syncTemp();
+  }
+  function redraw() { draw(); drawCurve(); readouts(); if (!S.fell) $('note').textContent = S.msg || (S.held ? 'Held in your hand' : MD.sc ? 'Free' : 'Free; the puck is warm'); }
+
+  /* ---------- controls ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('go').addEventListener('click', () => { if (S.held) setHeld(false); else { const was = S.fell; S.hand = Math.min(40, Math.max(0, was ? 30 : gap() * 1000)); if (was) { S.fell = false; S.z = MD.o.l / 2 + 0.04; step(MD, S.z); } setHeld(true); sync(); } redraw(); });
+  $('temp').addEventListener('click', () => setCold(!MD.sc));
+  $('clearCurve').addEventListener('click', () => { S.curve = []; record(); drawCurve(); });
+  $('sHand').addEventListener('input', (e) => { S.hand = +e.target.value; $('oHand').textContent = `${f(S.hand, 1)} mm`; });
+  for (const [id, k] of [['Dia', 'dia'], ['Len', 'len'], ['Br', 'Br'], ['PD', 'PD'], ['PH', 'PH'], ['Jc', 'jcLog']]) $('s' + id).addEventListener('change', (e) => { S[k] = +e.target.value; changedSetup(); });
+  for (const [id, k] of [['Dia', 'dia'], ['Len', 'len'], ['Br', 'Br'], ['PD', 'PD'], ['PH', 'PH'], ['Jc', 'jcLog']]) $('s' + id).addEventListener('input', (e) => { S[k] = +e.target.value; sync(); });
+  $('sideSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-side]'); if (!b || b.dataset.side === S.side) return; S.side = b.dataset.side; S.fell = false; setHeld(true); S.hand = Math.min(40, gap() * 1000); changedSetup(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labLines').addEventListener('change', (e) => { S.lines = e.target.checked; linesKey = ''; if (g3) g3.linesKey = ''; redraw(); });
+  /* drag the magnet with the pointer (flat view), arrow keys move the hand */
+  let drag = null;
+  can.addEventListener('pointerdown', (e) => { if (use3() || S.fell) return; const r = can.getBoundingClientRect(), V = view(), flip = S.side === 'below', y = e.clientY - r.top, x = e.clientX - r.left;
+    const zAt = flip ? (y - (H - V.y0)) / V.sc : (V.y0 - y) / V.sc, m = mag();
+    if (Math.abs((x - V.x0) / V.sc) < m.a + 0.006 && zAt > S.z - m.l / 2 - 0.004 && zAt < S.z + m.l / 2 + 0.008) { drag = { off: zAt - S.z }; can.setPointerCapture(e.pointerId); if (!S.held) setHeld(true); e.preventDefault(); } });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; const r = can.getBoundingClientRect(), V = view(), flip = S.side === 'below', y = e.clientY - r.top;
+    const zAt = flip ? (y - (H - V.y0)) / V.sc : (V.y0 - y) / V.sc; S.hand = Math.max(0, Math.min(40, (zAt - drag.off - MD.o.l / 2) * 1000)); S.hand = Math.round(S.hand * 10) / 10; sync(); });
+  const endDrag = () => { drag = null; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => { const up = S.side === 'below' ? 'ArrowDown' : 'ArrowUp', dn = S.side === 'below' ? 'ArrowUp' : 'ArrowDown';
+    if (e.key === up || e.key === dn) { if (!S.held) setHeld(true); S.hand = Math.max(0, Math.min(40, Math.round((S.hand + (e.key === up ? 1 : -1) * (e.shiftKey ? 5 : 0.5)) * 10) / 10)); sync(); e.preventDefault(); } });
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.04, (now - last) / 1000); last = now;
+    const moving = !S.held || Math.abs(MD.o.l / 2 + S.hand / 1000 - S.z) > 1e-7;
+    if (moving && !S.fell) advance(dt);
+    if (moving || use3()) { draw(); drawCurve(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), q = cv.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = q.width; CH = q.height; cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr); linesKey = ''; redraw(); }
+  const retheme = () => { tokens(); if (g3) g3.linesKey = ''; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  $('about1').textContent = 'The puck is a type II superconductor (YBCO, critical temperature about 92 K) in liquid nitrogen at 77 K. It is modeled by the critical state (Bean) model: wherever the current density is below the critical value jc, the metal has no resistance, so the magnetic flux through any loop inside it cannot change; currents flow to keep it fixed. Where a change would need more than jc, the current stays at jc and flux moves in or out (it is pinned, but only up to jc), losing energy as heat. Cooled far from the magnet (zero field cooled), the puck starts with no flux and pushes the magnet away like a diamagnet. Cooled with the magnet nearby (field cooled), the magnet\'s flux is frozen in, and the puck pushes or pulls to keep the magnet where it was: flux pinning.';
+  $('about2').textContent = 'How it is computed: the puck is cut into coaxial rings, 15 across its radius and as many through its thickness as make the cells about square (150 rings for a puck 30 mm across and 10 mm thick). The magnet, a uniformly magnetized cylinder, has exactly the field of a solenoid carrying Br/μ0 amperes per meter around its side, taken as 8 loops at Gauss–Legendre points. Mutual inductances of coaxial loops come from Maxwell\'s formula with elliptic integrals; a ring\'s own inductance is taken as that of two filaments one geometric mean distance apart (0.2235 times the sum of the cell\'s width and height). At each 1 ms step the ring currents are solved so that the flux through every ring below jc is unchanged, with the rings at jc held at ±jc as long as flux moves through them the way that dissipates energy. The force is the sum over rings of the ring current times the derivative of the magnet\'s flux through the ring. Field lines are contours of the flux through circles about the axis, drawn at flux levels in steps of k² (k = 1, 2, 3 …), so that lines reach out to the puck; their spacing is not a measure of the field\'s strength.';
+  $('about3').textContent = 'Approximations: the magnet stays on the axis and upright (side to side motion and tilting are left out, so the sideways stability of pinning is not shown); jc does not depend on the field (the Bean model); flux creep, the puck\'s grain structure and the lower critical field are left out; there is no air drag, so with no ring at jc a bouncing magnet keeps bouncing. Cooling and warming happen in an instant. Doubling the number of rings each way changes the forces by under 5 %.';
+  $('about4').textContent = 'Values: NdFeB magnet density 7.5 g/cm³ and remanence 1.30 T (sintered grade N42; makers give 1.28 to 1.32 T). jc = 1 × 10⁸ A/m² (10⁴ A/cm²) is typical of melt textured YBCO at 77 K in low fields; real pucks range from about 10⁷ to over 10⁹ A/m². g = 9.81 m/s². YBCO\'s critical temperature: 93 K in its discovery report (Wu et al., Phys. Rev. Lett. 58, 908, 1987); liquid nitrogen boils at 77 K at one atmosphere.';
+
+  window.__lev = { S, get MD() { return MD; }, applyPreset, advance, force: () => force(MD), gap, massOf, moveTo, setHeld, setCold };
+  tokens();
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'drop'); }
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cv.parentElement); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: 'flat', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { $('note').textContent = m; } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* divider between the picture and the graph (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

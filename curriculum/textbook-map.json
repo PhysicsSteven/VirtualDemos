@@ -5158,9 +5158,11 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "states-of-matter"
+        "states-of-matter",
+        "superfluid-helium"
       ],
-      "unit": "temperature-heat"
+      "unit": "temperature-heat",
+      "note": "Superfluid Helium (2026-11-05, Claude, beyond the book): the lambda transition as a phase change, pumping on a bath, fountain effect, Rollin film, Andronikashvili torsion; no worksheet (Steve 2026-11-05)."
     },
     {
       "vol": 2,
@@ -6380,9 +6382,10 @@
       "status": "usable",
       "demos": [
         "resistivity",
-        "superconductors"
+        "superconductors",
+        "superconducting-levitation"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures). Superconductors and the Meissner Effect (2026-10-24, Claude): field expulsion from a type I sphere, a perfect conductor for contrast, Bc(T) from Table 9.5 and Equation 9.39; worksheet meissner-effect.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures). Superconductors and the Meissner Effect (2026-10-24, Claude): field expulsion from a type I sphere, a perfect conductor for contrast, Bc(T) from Table 9.5 and Equation 9.39; worksheet meissner-effect. Superconducting Levitation and Flux Pinning (2026-11-05, Claude): a magnet over a type II puck, Bean critical state on rings; zero field cooled floating, field cooled pinning and hanging; no worksheet (Steve 2026-11-05).",
       "unit": "condensed-matter"
     },
     {
@@ -10031,6 +10034,25 @@
       "url": "demos/superconductors.html"
     },
     {
+      "demo": "superconducting-levitation",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "9.8",
+          "title": "Superconductivity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-11-05 (Claude). A NdFeB magnet on the axis of a type II puck in liquid nitrogen. Bean critical state: the puck is rings whose currents follow flux conservation until they reach jc; mutual inductances from Maxwell's formula. Zero field cooled floating, a weak puck that damps, a hard push, field cooled pinning and hanging, warming. Flat cross section with field lines and a 3D view. Steve: no worksheet yet.",
+      "title": "Superconducting Levitation and Flux Pinning",
+      "url": "demos/superconducting-levitation.html"
+    },
+    {
       "demo": "sound-intensity",
       "course": [
         "acoustics"
@@ -10371,6 +10393,25 @@
       ],
       "title": "States of Matter",
       "url": "demos/states-of-matter.html"
+    },
+    {
+      "demo": "superfluid-helium",
+      "course": [
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "1.5",
+          "title": "Phase Changes"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-05 (Claude). Helium 4 from Donnelly and Barenghi 1998 (ITS-90 vapor pressure, entropy, heat capacity, latent heat, density, normal fluid fraction). Pump down through the lambda point, fountain effect h = (1/g)∫S dT, Rollin film transfer at 7.5e-5 cm³/s per cm, Andronikashvili's torsion pendulum. Steve: no worksheet yet.",
+      "title": "Superfluid Helium",
+      "url": "demos/superfluid-helium.html"
     },
     {
       "demo": "stress-strain",

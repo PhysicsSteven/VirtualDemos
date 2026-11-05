@@ -143,7 +143,7 @@ async function leaks(list) {
             while ((n = tw.nextNode())) {
               const t = n.data.replace(/\s+/g, ' ').trim(), e = n.parentElement;
               /* unit symbols (rad/s, kPa, MeV, mol) read the same in every language: drop them before looking for words */
-              const words = t.replace(/\b(rad|mol|kHz|MHz|GHz|THz|keV|MeV|GeV|TeV|kPa|MPa|hPa|atm|mag|rpm|ppm|mph|Gyr|Myr|kcal|cal|lux|mSv|Bq|kWh)\b/g, '');
+              const words = t.replace(/\b(rad|mol|kHz|MHz|GHz|THz|keV|MeV|GeV|TeV|kPa|MPa|hPa|atm|mag|rpm|ppm|mph|Gyr|Myr|kcal|cal|lux|mSv|Bq|kWh|min)\b/g, '');
               if (!/[A-Za-z]{3}/.test(words) || /[⟦⟧]/.test(t) || !e || e.closest('script,style,code,pre,kbd,samp,textarea,mjx-container,[translate="no"],.notranslate,[data-i18n-skip],.vd-lang') || !e.getClientRects().length) continue;
               if (/[⟦⟧]/.test(e.textContent)) continue;
               out.push(t.slice(0, 90));

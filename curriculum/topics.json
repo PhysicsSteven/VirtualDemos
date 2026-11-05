@@ -143,7 +143,8 @@
       "entropy",
       "blackbody",
       "ising",
-      "galton-board"
+      "galton-board",
+      "superfluid-helium"
      ]
     }
    ]
@@ -188,7 +189,8 @@
       "currents-fields",
       "magnetism-in-matter",
       "e-over-m",
-      "relativity-em"
+      "relativity-em",
+      "superconducting-levitation"
      ]
     },
     {
@@ -278,7 +280,7 @@
     {
      "id": "atoms-solids",
      "title": "Atoms, molecules and solids",
-     "blurb": "Orbitals, spectra, spin, X-rays, lasers, bands and superconductors.",
+     "blurb": "Orbitals, spectra, spin, X-rays, lasers, bands, superconductors and superfluids.",
      "demos": [
       "hydrogen-orbitals",
       "spectra",
@@ -288,7 +290,9 @@
       "lasers",
       "molecules",
       "solids",
-      "superconductors"
+      "superconductors",
+      "superconducting-levitation",
+      "superfluid-helium"
      ]
     },
     {

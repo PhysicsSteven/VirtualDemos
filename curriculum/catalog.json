@@ -465,6 +465,18 @@
      ]
     },
     {
+     "demo": "superconducting-levitation",
+     "title": "Superconducting Levitation and Flux Pinning",
+     "desc": "Drop a magnet onto a puck of cold superconductor and watch it float; cool the puck with the magnet nearby and the magnet is locked in place, even hanging underneath. Currents in the puck computed ring by ring with the Bean critical state model.",
+     "tags": [
+      "flux pinning",
+      "type II superconductor",
+      "critical current",
+      "levitation",
+      "Meissner effect"
+     ]
+    },
+    {
      "demo": "molecules",
      "title": "Molecules: Bonds and Spectra",
      "desc": "Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.",
@@ -1148,6 +1160,18 @@
       "reaction–diffusion",
       "spiral waves",
       "chaos"
+     ]
+    },
+    {
+     "demo": "superfluid-helium",
+     "title": "Superfluid Helium",
+     "desc": "Pump liquid helium below 2.1768 K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.",
+     "tags": [
+      "superfluid",
+      "lambda point",
+      "fountain effect",
+      "Rollin film",
+      "two fluid model"
      ]
     }
    ]
