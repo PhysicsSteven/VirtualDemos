@@ -5162,7 +5162,7 @@
         "superfluid-helium"
       ],
       "unit": "temperature-heat",
-      "note": "Superfluid Helium (2026-11-05, Claude, beyond the book): the lambda transition as a phase change, pumping on a bath, fountain effect, Rollin film, Andronikashvili torsion; no worksheet (Steve 2026-11-05)."
+      "note": "Superfluid Helium (2026-11-05, Claude, beyond the book): the lambda transition as a phase change, pumping on a bath, fountain effect, Rollin film, Andronikashvili torsion; no worksheet (Steve 2026-11-05). Superfluid Helium also has a Helium 3 experiment (2026-11-05): PLTS-2000 melting curve, superfluid A and B phases, Pomeranchuk cooling."
     },
     {
       "vol": 2,
@@ -6383,9 +6383,10 @@
       "demos": [
         "resistivity",
         "superconductors",
-        "superconducting-levitation"
+        "superconducting-levitation",
+        "superconducting-vortices"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures). Superconductors and the Meissner Effect (2026-10-24, Claude): field expulsion from a type I sphere, a perfect conductor for contrast, Bc(T) from Table 9.5 and Equation 9.39; worksheet meissner-effect. Superconducting Levitation and Flux Pinning (2026-11-05, Claude): a magnet over a type II puck, Bean critical state on rings; zero field cooled floating, field cooled pinning and hanging; no worksheet (Steve 2026-11-05).",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures). Superconductors and the Meissner Effect (2026-10-24, Claude): field expulsion from a type I sphere, a perfect conductor for contrast, Bc(T) from Table 9.5 and Equation 9.39; worksheet meissner-effect. Superconducting Levitation and Flux Pinning (2026-11-05, Claude): a magnet over a type II puck, Bean critical state on rings; zero field cooled floating, field cooled pinning and hanging; no worksheet (Steve 2026-11-05). Vortices in a Superconductor (2026-11-05, Claude): London vortices in a YBCO slab, Abrikosov lattice, pinning and Bean slopes, trapped flux; no worksheet.",
       "unit": "condensed-matter"
     },
     {
@@ -10053,6 +10054,25 @@
       "url": "demos/superconducting-levitation.html"
     },
     {
+      "demo": "superconducting-vortices",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "9.8",
+          "title": "Superconductivity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-05 (Claude). A YBCO slab seen along the field (λ = 141.5 nm, Harshman et al. 1989): London vortices, each one flux quantum h/2e, repelling as K1(r/λ), overdamped motion, random point pins; the applied field enters at the faces (Bean boundary condition). Abrikosov lattice, Bean slopes and the critical current density, trapped flux, field cooled roof, hysteresis loop. Steve: no worksheet yet.",
+      "title": "Vortices in a Superconductor",
+      "url": "demos/superconducting-vortices.html"
+    },
+    {
       "demo": "sound-intensity",
       "course": [
         "acoustics"
@@ -10409,7 +10429,7 @@
       "role": "lab",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-05 (Claude). Helium 4 from Donnelly and Barenghi 1998 (ITS-90 vapor pressure, entropy, heat capacity, latent heat, density, normal fluid fraction). Pump down through the lambda point, fountain effect h = (1/g)∫S dT, Rollin film transfer at 7.5e-5 cm³/s per cm, Andronikashvili's torsion pendulum. Steve: no worksheet yet.",
+      "note": "New 2026-11-05 (Claude). Helium 4 from Donnelly and Barenghi 1998 (ITS-90 vapor pressure, entropy, heat capacity, latent heat, density, normal fluid fraction). Pump down through the lambda point, fountain effect h = (1/g)∫S dT, Rollin film transfer at 7.5e-5 cm³/s per cm, Andronikashvili's torsion pendulum. Steve: no worksheet yet. Helium 3 experiment added 2026-11-05: phase diagram from the PLTS-2000 melting curve and Greywall's superfluid line, Pomeranchuk cooling through the A and B transitions.",
       "title": "Superfluid Helium",
       "url": "demos/superfluid-helium.html"
     },

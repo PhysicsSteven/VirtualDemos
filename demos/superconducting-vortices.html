@@ -1,0 +1,396 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Vortices in a Superconductor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --face: #8a96a3; --outside: rgba(120, 140, 170, 0.18); --pin: #2b2f36; --vortex: #ffffff; --vortex-edge: #1d4f8f; --lam: #a7740b; --left: #c0562f; --right: #2f6fc0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --face: #a4b0bd; --outside: rgba(120, 150, 200, 0.12); --pin: #c9d1da; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --left: #ff8a5c; --right: #6fb0ff; } }
+:root[data-theme="dark"] { --face: #a4b0bd; --outside: rgba(120, 150, 200, 0.12); --pin: #c9d1da; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --left: #ff8a5c; --right: #6fb0ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .lab { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .seg { flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 440px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.curvebox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 300px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .curvebox { height: 200px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .stage-ctl .note { margin-left: 0; } .pane { height: 320px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Vortices in a Superconductor</h1>
+      <p>A magnetic field gets into a type II superconductor only as whirlpools of current, each carrying exactly one flux quantum, h/2e. With nothing to hold them they form a perfect triangular lattice; defects in the material pin them, so the field piles up at the faces and stays trapped when it is taken away.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/superconducting-vortices.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/superconducting-vortices.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h4v1h-4zM17 2h2v1h-2zM20 2h1v1h-1zM23 2h1v1h-1zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h1v1h-1zM16 3h3v1h-3zM20 3h3v1h-3zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h3v1h-3zM22 4h3v1h-3zM27 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h2v1h-2zM15 5h5v1h-5zM21 5h3v1h-3zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM14 7h2v1h-2zM19 7h2v1h-2zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h3v1h-3zM15 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h8v1h-8zM14 10h1v1h-1zM16 10h2v1h-2zM19 10h1v1h-1zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h1v1h-1zM4 11h2v1h-2zM9 11h4v1h-4zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h6v1h-6zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM5 12h2v1h-2zM8 12h3v1h-3zM12 12h1v1h-1zM14 12h1v1h-1zM17 12h2v1h-2zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM5 13h3v1h-3zM12 13h2v1h-2zM15 13h2v1h-2zM18 13h4v1h-4zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h2v1h-2zM8 14h2v1h-2zM11 14h2v1h-2zM17 14h2v1h-2zM21 14h1v1h-1zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM7 15h1v1h-1zM10 15h4v1h-4zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h3v1h-3zM16 16h2v1h-2zM21 16h2v1h-2zM27 16h3v1h-3zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM13 17h1v1h-1zM20 17h2v1h-2zM25 17h1v1h-1zM28 17h4v1h-4zM33 17h1v1h-1zM35 17h3v1h-3zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM21 18h1v1h-1zM24 18h4v1h-4zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM3 19h5v1h-5zM11 19h1v1h-1zM14 19h1v1h-1zM19 19h4v1h-4zM28 19h2v1h-2zM35 19h2v1h-2zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h2v1h-2zM12 20h5v1h-5zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h3v1h-3zM6 21h2v1h-2zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM16 21h3v1h-3zM20 21h2v1h-2zM24 21h2v1h-2zM27 21h1v1h-1zM29 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h2v1h-2zM7 22h3v1h-3zM14 22h2v1h-2zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h8v1h-8zM4 23h2v1h-2zM7 23h1v1h-1zM9 23h2v1h-2zM14 23h1v1h-1zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM5 24h1v1h-1zM7 24h7v1h-7zM16 24h2v1h-2zM19 24h1v1h-1zM25 24h2v1h-2zM29 24h2v1h-2zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h5v1h-5zM9 25h1v1h-1zM16 25h1v1h-1zM19 25h1v1h-1zM21 25h2v1h-2zM24 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h2v1h-2zM7 26h4v1h-4zM12 26h2v1h-2zM15 26h3v1h-3zM22 26h1v1h-1zM26 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h4v1h-4zM10 27h1v1h-1zM13 27h3v1h-3zM20 27h1v1h-1zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h2v1h-2zM5 28h5v1h-5zM12 28h1v1h-1zM16 28h2v1h-2zM21 28h2v1h-2zM24 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h3v1h-3zM9 29h2v1h-2zM12 29h1v1h-1zM14 29h3v1h-3zM18 29h1v1h-1zM21 29h2v1h-2zM24 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h4v1h-4zM14 30h1v1h-1zM16 30h2v1h-2zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h10v1h-10zM10 31h3v1h-3zM14 31h2v1h-2zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM14 32h1v1h-1zM16 32h4v1h-4zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h2v1h-2zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM15 33h2v1h-2zM18 33h1v1h-1zM20 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h2v1h-2zM20 35h2v1h-2zM23 35h3v1h-3zM29 35h1v1h-1zM31 35h2v1h-2zM35 35h1v1h-1zM37 35h2v1h-2zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM15 36h2v1h-2zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h5v1h-5zM19 37h1v1h-1zM24 37h2v1h-2zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h3v1h-3zM18 38h1v1h-1zM22 38h1v1h-1zM25 38h2v1h-2zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin" id="play" data-vd-key="play">Pause</button>
+        <span class="lab">Speed</span>
+        <div class="seg" role="group" aria-label="Speed" id="spdSeg"><button type="button" data-s="0" aria-pressed="false">×1</button><button type="button" data-s="1" aria-pressed="true">×3</button><button type="button" data-s="2" aria-pressed="false">×8</button></div>
+        <span class="lab">Graph</span>
+        <div class="seg" role="group" aria-label="Graph" id="graphSeg"><button type="button" data-g="profile" aria-pressed="true">Across the slab</button><button type="button" data-g="loop" aria-pressed="false">Field inside against applied</button></div>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A slab of superconductor seen along the magnetic field, with the vortices as bright spots of field and the pinning defects as small rings."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Graph of the field inside the slab."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The applied field">
+          <span class="card-title">Applied field (it changes steadily toward the value you set)</span>
+          <div><div class="slider-head"><label for="sB">Applied field: set to</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0" max="110" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="up">Raise to 90 mT</button><button type="button" class="btn" id="down">Lower to zero</button><button type="button" class="btn" id="fc">Cool in the field now applied</button></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The pinning defects">
+          <span class="card-title">Defects that pin vortices</span>
+          <div><div class="slider-head"><label for="sFp">Pin strength</label><output id="oFp" class="mono" for="sFp"></output></div><input type="range" id="sFp" min="0" max="4" step="0.1"></div>
+          <div><div class="slider-head"><label for="sNp">Pins per square micrometer</label><output id="oNp" class="mono" for="sNp"></output></div><input type="range" id="sNp" min="0" max="130" step="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="bean" aria-pressed="true">Raise the field: vortices pile up at the faces</button>
+          <button type="button" data-p="clean" aria-pressed="false">No defects: a perfect lattice</button>
+          <button type="button" data-p="down" aria-pressed="false">Lower the field: flux stays trapped</button>
+          <button type="button" data-p="fc" aria-pressed="false">Cooled in the field, then the field removed</button>
+          <button type="button" data-p="strong" aria-pressed="false">Strong pinning</button>
+          <button type="button" data-p="loop" aria-pressed="false">Up and down: a loop</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the graph's guide lines and the current density</span></label>
+        <label class="check"><input type="checkbox" id="labMap" checked><span>Field map</span></label>
+        <label class="check"><input type="checkbox" id="labPins" checked><span>Show the defects</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* Modified Bessel functions K0 and K1 (Abramowitz and Stegun 9.8.5 to 9.8.8, error under 2e-7) */
+  function besselI0(x) { const t = x / 3.75, t2 = t * t; return 1 + t2 * (3.5156229 + t2 * (3.0899424 + t2 * (1.2067492 + t2 * (0.2659732 + t2 * (0.0360768 + t2 * 0.0045813))))); }
+  function besselI1(x) { const t = x / 3.75, t2 = t * t; return x * (0.5 + t2 * (0.87890594 + t2 * (0.51498869 + t2 * (0.15084934 + t2 * (0.02658733 + t2 * (0.00301532 + t2 * 0.00032411)))))); }
+  function besselK0(x) {
+    if (x <= 2) { const y = x * x / 4; return -Math.log(x / 2) * besselI0(x) - 0.57721566 + y * (0.42278420 + y * (0.23069756 + y * (0.03488590 + y * (0.00262698 + y * (0.00010750 + y * 0.0000074))))); }
+    const y = 2 / x; return Math.exp(-x) / Math.sqrt(x) * (1.25331414 + y * (-0.07832358 + y * (0.02189568 + y * (-0.01062446 + y * (0.00587872 + y * (-0.00251540 + y * 0.00053208))))));
+  }
+  function besselK1(x) {
+    if (x <= 2) { const y = x * x / 4; return Math.log(x / 2) * besselI1(x) + (1 / x) * (1 + y * (0.15443144 + y * (-0.67278579 + y * (-0.18156897 + y * (-0.01919402 + y * (-0.00110404 - y * 0.00004686)))))); }
+    const y = 2 / x; return Math.exp(-x) / Math.sqrt(x) * (1.25331414 + y * (0.23498619 + y * (-0.03655620 + y * (0.01504268 + y * (-0.00780353 + y * (0.00325614 - y * 0.00068245))))));
+  }
+  /* Vortices in a type II strip, London model. Lengths in λ, fields in Φ0/λ², forces per unit length in f0 = Φ0²/(2πμ0λ³).
+     Two vortices repel with f0 K1(r/λ) (cut off smoothly at CUT); a vortex's own field is (Φ0/2πλ²) K0(r/λ). The strip is
+     0 ≤ x ≤ Wx and repeats in y every Ly. The applied field Ba is a fixed lattice of vortices at density Ba outside each face
+     (a wall CUT thick). New vortices enter at the faces; one pushed across a face leaves. */
+  const CUT = 5, KT = 4000, KTAB = new Float64Array(KT + 1);
+  for (let i = 0; i <= KT; i++) { const r = Math.max(1e-3, i * CUT / KT); KTAB[i] = besselK1(r) - besselK1(CUT); }
+  function k1c(r) { if (r >= CUT) return 0; if (r < 0.02) return besselK1(r) - besselK1(CUT); const u = r / CUT * KT, i = u | 0, f = u - i; return KTAB[i] * (1 - f) + KTAB[i + 1] * f; }
+  function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+  /* o: { Wx, Ly, np (pins per λ²), rp (pin radius, λ), fp (largest pin force, f0), seed } */
+  function makeStrip(o) {
+    const r = rng(o.seed || 7), n = Math.round(o.np * o.Wx * o.Ly), px = new Float64Array(n), py = new Float64Array(n);
+    for (let i = 0; i < n; i++) { px[i] = o.rp + r() * (o.Wx - 2 * o.rp); py[i] = r() * o.Ly; }
+    return { o, px, py, x: [], y: [], wx: [], wy: [], Ba: -1, rnd: rng((o.seed || 7) + 101), t: 0, enter: 0, leave: 0 };
+  }
+  /* triangular lattice at density B (Φ0/λ²) between x0 and x1, rows along y fitted to Ly */
+  function lattice(B, x0, x1, Ly, jit, r) {
+    const X = [], Y = []; if (B <= 1e-9) return [X, Y];
+    const a0 = Math.sqrt(2 / (Math.sqrt(3) * B)), ny = Math.max(1, Math.round(Ly / a0)), ay = Ly / ny, h = 1 / (B * ay);
+    for (let j = 0, xx = x0 + h / 2; xx < x1; j++, xx += h) for (let k = 0; k < ny; k++) { X.push(xx + jit * (r() - 0.5)); Y.push((((k + (j % 2) / 2) * ay + jit * (r() - 0.5)) % Ly + Ly) % Ly); }
+    return [X, Y];
+  }
+  function setField(st, B) {
+    if (Math.abs(B - st.Ba) < 1e-12) return; st.Ba = B; const { Wx, Ly } = st.o;
+    const L = lattice(B, -CUT, 0, Ly, 0, st.rnd), R = lattice(B, Wx, Wx + CUT, Ly, 0, st.rnd);
+    st.wx = L[0].concat(R[0]); st.wy = L[1].concat(R[1]);
+  }
+  /* field cooled: vortices everywhere inside at density B, as cooling through Tc in that field leaves them */
+  function fillInside(st, B) { const [X, Y] = lattice(B, 0, st.o.Wx, st.o.Ly, 0.3, st.rnd); st.x = X; st.y = Y; }
+  /* forces (f0) on the free vortices, and on a probe point if given: neighbors through a cell list, then the pins */
+  function forces(st, fx, fy, probe) {
+    const { Wx, Ly, rp, fp } = st.o, n = st.x.length, X = st.x.concat(st.wx, probe ? probe[0] : []), Y = st.y.concat(st.wy, probe ? probe[1] : []), N = X.length;
+    const x0 = -CUT, nxC = Math.ceil((Wx + 2 * CUT) / CUT) + 1, nyC = Math.max(1, Math.floor(Ly / CUT)), cy = Ly / nyC;
+    const head = new Int32Array(nxC * nyC).fill(-1), next = new Int32Array(N), cell = (i) => Math.min(nxC - 1, Math.max(0, Math.floor((X[i] - x0) / CUT))) * nyC + Math.min(nyC - 1, Math.floor(Y[i] / cy));
+    const nw = n + st.wx.length;
+    for (let i = 0; i < nw; i++) { const c = cell(i); next[i] = head[c]; head[c] = i; }
+    fx.fill(0, 0, N); fy.fill(0, 0, N);
+    const span = nyC >= 3 ? [-1, 0, 1] : nyC === 2 ? [0, 1] : [0];
+    for (let i = 0; i < N; i++) { if (i >= n && i < nw) continue;
+      const c0 = cell(i), cx = Math.floor(c0 / nyC), cyi = c0 % nyC;
+      for (let ax = cx - 1; ax <= cx + 1; ax++) { if (ax < 0 || ax >= nxC) continue;
+        for (const ay of span) { const c = ax * nyC + ((cyi + ay + nyC) % nyC);
+          for (let j = head[c]; j >= 0; j = next[j]) { if (j === i || (i < n && j < n && j < i)) continue;
+            const dx = X[i] - X[j]; let dy = Y[i] - Y[j]; dy -= Ly * Math.round(dy / Ly); const r2 = dx * dx + dy * dy; if (r2 >= CUT * CUT) continue;
+            const r = Math.sqrt(r2) || 1e-6, f = k1c(r) / r; fx[i] += f * dx; fy[i] += f * dy; if (i < n && j < n) { fx[j] -= f * dx; fy[j] -= f * dy; } } } }
+    }
+    if (fp > 0) { for (let k = 0; k < st.px.length; k++) { const qx = st.px[k], qy = st.py[k];
+      for (let i = 0; i < n; i++) { const dx = X[i] - qx; if (dx > rp || dx < -rp) continue; let dy = Y[i] - qy; dy -= Ly * Math.round(dy / Ly); if (dy > rp || dy < -rp) continue;
+        if (dx * dx + dy * dy < rp * rp) { fx[i] -= fp * dx / rp; fy[i] -= fp * dy / rp; } } } }
+  }
+  /* one overdamped step, η dr/dt = F, time in τ = ηλ/f0; no vortex moves more than 0.04 λ. Then vortices enter and leave. */
+  let FX = new Float64Array(0), FY = new Float64Array(0);
+  function stepV(st, dtMax) {
+    const { Wx, Ly } = st.o;
+    const n = st.x.length, N = n + st.wx.length; if (FX.length < N) { FX = new Float64Array(N * 2); FY = new Float64Array(N * 2); }
+    forces(st, FX, FY); let fm = 1e-9; for (let i = 0; i < n; i++) fm = Math.max(fm, Math.abs(FX[i]), Math.abs(FY[i]));
+    const dt = Math.min(dtMax, 0.04 / fm);
+    for (let i = 0; i < n; i++) { st.x[i] += FX[i] * dt; st.y[i] = ((st.y[i] + FY[i] * dt) % Ly + Ly) % Ly; }
+    /* leaving: a vortex pushed across a face is gone */
+    const keep = []; for (let i = 0; i < n; i++) if (st.x[i] > 0 && st.x[i] < Wx) keep.push(i);
+    if (keep.length < n) { st.leave += n - keep.length; st.x = keep.map((i) => st.x[i]); st.y = keep.map((i) => st.y[i]); }
+    /* entering: the field at each face equals the applied field (the Bean boundary condition; the lower critical field and the
+       surface barrier are left out), so while the band one lattice spacing deep holds fewer vortices than Ba asks for, one comes in,
+       at the emptiest place along the face */
+    if (st.Ba > 1e-9) { const a0 = Math.sqrt(2 / (Math.sqrt(3) * st.Ba)), want = st.Ba * a0 * Ly;
+      for (const left of [true, false]) { const xe = left ? 0.02 : Wx - 0.02;
+        for (let tries = 0; tries < 3; tries++) {
+          const band = []; for (let i = 0; i < st.x.length; i++) if (left ? st.x[i] < a0 : st.x[i] > Wx - a0) band.push(i);
+          if (band.length > want - 0.5) break;
+          let best = 0, bestD = -1; for (let k = 0; k < 16; k++) { const yy = st.rnd() * Ly; let d = 1e9; for (const i of band) { const dx = st.x[i] - xe; let dy = st.y[i] - yy; dy -= Ly * Math.round(dy / Ly); d = Math.min(d, dx * dx + dy * dy); } if (d > bestD) { bestD = d; best = yy; } }
+          st.x.push(xe); st.y.push(best); st.enter++; } } }
+    st.t += dt; return dt;
+  }
+  /* vortex density (Φ0/λ², the average field) in nb bins across the strip */
+  function profile(st, nb) { const { Wx, Ly } = st.o, w = Wx / nb, out = new Float64Array(nb);
+    for (let i = 0; i < st.x.length; i++) { const b = Math.min(nb - 1, Math.floor(st.x[i] / w)); if (b >= 0) out[b] += 1; } for (let b = 0; b < nb; b++) out[b] /= w * Ly; return out; }
+  /* the material: YBCO, field along the c axis */
+  const PHI0 = 6.62607015e-34 / (2 * 1.602176634e-19);   /* Wb, flux quantum h/2e (CODATA 2022, exact) */
+  const MU0 = 1.25663706127e-6;                           /* N/A², demos/lib/constants.js */
+  const LAMBDA = 141.5e-9;                                /* m, YBCO in plane penetration depth at low temperature (Harshman et al. 1989) */
+  const BU = PHI0 / (LAMBDA * LAMBDA);                    /* T, the field of one vortex per λ² */
+  const F0 = PHI0 * PHI0 / (2 * Math.PI * MU0 * LAMBDA ** 3);   /* N/m, force unit per meter of vortex */
+  /* spacing of a triangular lattice at average field B (T) */
+  const latticeSpacing = (B) => Math.sqrt(2 * PHI0 / (Math.sqrt(3) * B));
+  /* field (in Φ0/λ²) at a point from the vortices within 5 λ, each (1/2π) K0(r/λ), r kept above rc */
+  function fieldAt(st, x, y, rc) { let b = 0; const Ly = st.o.Ly, all = [[st.x, st.y], [st.wx, st.wy]];
+    for (const [X, Y] of all) for (let i = 0; i < X.length; i++) { const dx = X[i] - x; if (dx > 5 || dx < -5) continue; let dy = Y[i] - y; dy -= Ly * Math.round(dy / Ly); const r2 = dx * dx + dy * dy; if (r2 < 25) b += besselK0(Math.max(rc, Math.sqrt(r2))) / (2 * Math.PI); }
+    return b; }
+  /* Bean slope: straight line fits to the profile in the outer third on each side; returns |dB/dx| in Φ0/λ³ */
+  function beanSlope(p, w) { const n = p.length, k = Math.max(3, Math.floor(n / 3)), fit = (i0, i1) => { let sx = 0, sy = 0, sxx = 0, sxy = 0, m = 0;
+      for (let i = i0; i < i1; i++) { const x = (i + 0.5) * w; sx += x; sy += p[i]; sxx += x * x; sxy += x * p[i]; m++; } return (m * sxy - sx * sy) / (m * sxx - sx * sx); };
+    return [-fit(0, k), fit(n - k, n)]; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id), WX = 20, LY = 12, RP = 0.2, RAMP = 0.006;   /* ramp in Φ0/λ² per τ */
+  const SPEEDS = [6, 18, 48];   /* steps per frame */
+  const PRESETS = {
+    bean: { fp: 1.0, np: 1.5, from: 0, to: 90, hint: 'The slab has defects that pin vortices. The applied field rises steadily from zero: vortices come in at both faces, but the defects hold them back, so they pile up near the faces and the field falls off toward the middle in straight slopes. That slope is the critical current density, the most current the slab can carry: the Bean model, seen vortex by vortex.' },
+    clean: { fp: 0, np: 0, from: 0, to: 80, hint: 'No defects at all. Vortices come in and spread across the slab until the field inside is the same everywhere, and they settle into a triangular lattice, each with six neighbors: the Abrikosov lattice. Its spacing follows from one flux quantum per vortex.' },
+    down: { fp: 1.0, np: 1.5, from: 90, to: 0, pre: 'up', hint: 'The field was raised to 90 mT (computed before the page shows it) and now falls to zero. Vortices near the faces leave, but the defects keep the rest. The field never reached the middle on the way up, so the trapped field now peaks part way in from each face and falls to zero at both faces. This trapped flux is what holds a magnet over a superconductor that was cooled with the magnet near it.' },
+    fc: { fp: 1.0, np: 1.5, from: 90, to: 0, pre: 'fc', hint: 'The slab was cooled in 90 mT, so vortices are everywhere inside at that density (a little disordered by the defects). Now the applied field goes to zero: only vortices near the faces leave, and most of the flux stays trapped, highest in the middle and sloping down to the faces: the roof shape of the Bean model.' },
+    strong: { fp: 3.0, np: 1.5, from: 0, to: 90, hint: 'Three times stronger pins: the slopes are steeper, so the field gets less far in and the critical current density is higher. Strong pinning is what engineers add to wires for magnets.' },
+    loop: { fp: 1.0, np: 1.5, from: 0, to: 90, loop: true, graph: 'loop', hint: 'The applied field goes up to 90 mT and back to zero while the graph plots the average field inside against the applied field. Up and down follow different paths: the field inside lags on the way up and stays behind on the way down. The area between the paths is energy lost to the pins each cycle.' },
+  };
+  const S = { play: true, spd: 1, preset: 'bean', blind: false, map: true, pins: true, graph: 'profile', target: 90, Ba: 0, fp: 1, np: 1.5, loop: false, loopDir: 1, st: null, hist: [] };
+  const can = $('can'), ctx = can.getContext('2d'), cv = $('curve'), cx = cv.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null, mapImg = null, mapAt = 0;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const mT = (b) => b * BU * 1000, fromMT = (v) => v / 1000 / BU;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'face', 'outside', 'pin', 'vortex', 'vortex-edge', 'lam', 'left', 'right']) T[k.replace('-', '_')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; T.dark = (getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255]).slice(0, 3).reduce((a, b) => a + +b, 0) < 300; }
+
+  /* ---------- the simulation ---------- */
+  function newStrip(seed) { S.st = makeStrip({ Wx: WX, Ly: LY, np: S.np, rp: RP, fp: S.fp, seed: seed || 11 }); S.hist = []; }
+  function advance(nSteps) {
+    const st = S.st;
+    for (let k = 0; k < nSteps; k++) {
+      const want = fromMT(S.target), dB = want - S.Ba;
+      if (Math.abs(dB) > 1e-9) { const dt0 = 0.05; S.Ba += Math.sign(dB) * Math.min(Math.abs(dB), RAMP * dt0); setField(st, Math.max(0, S.Ba)); }
+      else if (S.loop) { if (S.loopDir > 0) { S.target = 0; S.loopDir = -1; } else S.loop = false; }
+      stepV(st, 0.05);
+      const l = S.hist[S.hist.length - 1], bin = st.x.length / (WX * LY);
+      if (!l || Math.abs(l[0] - S.Ba) > 0.004 || (Math.abs(dB) < 1e-9 && Math.abs(l[1] - bin) > 0.004)) S.hist.push([S.Ba, bin]);
+    }
+  }
+  /* run the field up (or cool in it) before the page shows, for the setups that start part way through */
+  function prerun(kind, toMT) {
+    const want = fromMT(toMT);
+    if (kind === 'fc') { setField(S.st, want); S.Ba = want; fillInside(S.st, want); for (let k = 0; k < 600; k++) stepV(S.st, 0.05); }
+    else { S.target = toMT; let g = 0; while ((Math.abs(S.Ba - want) > 1e-9 || g < 400) && g < 40000) { advance(1); if (Math.abs(S.Ba - want) < 1e-9) g++; } }
+  }
+
+  /* ---------- drawing ---------- */
+  function geo() { const p = proj(), nw = W < 560, padL = (nw ? 8 : 54) * p, padR = (nw ? 8 : 54) * p, padT = 34 * p, padB = (nw ? 56 : 40) * p, sc = Math.min((W - padL - padR) / (WX + 2 * 3), (H - padT - padB) / LY);
+    const x0 = padL + (W - padL - padR - sc * (WX + 6)) / 2 + 3 * sc, y0 = padT + (H - padT - padB - sc * LY) / 2; return { p, sc, x0, y0, X: (x) => x0 + x * sc, Y: (y) => y0 + y * sc }; }
+  function buildMap(g) {
+    const step = 0.15, nx = Math.ceil((WX + 6) / step), ny = Math.ceil(LY / step), img = ctx.createImageData(nx, ny), st = S.st, top = fromMT(110) * 1.8;
+    const lo = T.dark ? [14, 18, 26] : [244, 247, 251], hi = T.dark ? [110, 170, 255] : [40, 100, 210], hot = T.dark ? [255, 255, 255] : [10, 40, 120];
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const x = -3 + (i + 0.5) * step, y = (j + 0.5) * step; let b = (x < 0 || x > WX) ? S.Ba : fieldAt(st, x, y, 0.08);
+      const u = Math.min(1, Math.max(0, b / top)), v = Math.min(1, Math.max(0, (b - top) / (top * 2))), k = (j * nx + i) * 4;
+      for (let c = 0; c < 3; c++) img.data[k + c] = Math.round(lo[c] + (hi[c] - lo[c]) * u + (hot[c] - hi[c]) * v); img.data[k + 3] = 255; }
+    const oc = document.createElement('canvas'); oc.width = nx; oc.height = ny; oc.getContext('2d').putImageData(img, 0, 0); mapImg = oc;
+  }
+  function label(txt, x, y, o) { o = Object.assign({ a: 'left', c: T.muted, s: 11.5, w: 400, b: 'middle' }, o || {}); ctx.font = `${o.w} ${o.s * proj()}px ${T.ui}`;
+    if (o.max) { const wd = ctx.measureText(txt).width; if (wd > o.max) ctx.font = `${o.w} ${o.s * proj() * o.max / wd}px ${T.ui}`; } ctx.textAlign = o.a; ctx.textBaseline = o.b; ctx.fillStyle = o.c; ctx.fillText(txt, x, y); }
+  function draw(rebuild) {
+    if (!T || !W || !S.st) return; const g = geo(), p = g.p, st = S.st;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (window.VDGear && VDGear.backdrop) VDGear.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (S.map) { if (rebuild || !mapImg) buildMap(g); ctx.imageSmoothingEnabled = true; ctx.drawImage(mapImg, g.X(-3), g.Y(0), (WX + 6) * g.sc, LY * g.sc); }
+    ctx.fillStyle = T.outside; ctx.fillRect(g.X(-3), g.Y(0), 3 * g.sc, LY * g.sc); ctx.fillRect(g.X(WX), g.Y(0), 3 * g.sc, LY * g.sc);
+    ctx.strokeStyle = T.face; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(g.X(0), g.Y(0) - 8 * p); ctx.lineTo(g.X(0), g.Y(LY) + 8 * p); ctx.moveTo(g.X(WX), g.Y(0) - 8 * p); ctx.lineTo(g.X(WX), g.Y(LY) + 8 * p); ctx.stroke();
+    if (S.pins && st.o.fp > 0) { ctx.strokeStyle = T.pin; ctx.globalAlpha = 0.55; ctx.lineWidth = 1 * p; for (let k = 0; k < st.px.length; k++) { ctx.beginPath(); ctx.arc(g.X(st.px[k]), g.Y(st.py[k]), Math.max(1.5 * p, RP * g.sc), 0, 7); ctx.stroke(); } ctx.globalAlpha = 1; }
+    const r = Math.max(2 * p, Math.min(4.5 * p, 0.16 * g.sc)); ctx.fillStyle = T.vortex; ctx.strokeStyle = T.vortex_edge; ctx.lineWidth = 1.2 * p;
+    for (let i = 0; i < st.x.length; i++) { ctx.beginPath(); ctx.arc(g.X(st.x[i]), g.Y(st.y[i]), r, 0, 7); ctx.fill(); ctx.stroke(); }
+    /* labels and the scale bar */
+    const narrow = W < 560;
+    label(narrow ? 'outside' : 'outside: applied field', g.X(-1.5), g.Y(0) - 16 * p, { a: 'center', s: 10.5, max: 3 * g.sc + 40 * p });
+    label(narrow ? 'outside' : 'outside: applied field', g.X(WX + 1.5), g.Y(0) - 16 * p, { a: 'center', s: 10.5, max: 3 * g.sc + 40 * p });
+    label(narrow ? 'YBCO slab, field out of the screen' : 'YBCO slab seen along the field (the field points out of the screen)', g.X(WX / 2), g.Y(0) - 16 * p, { a: 'center', c: T.ink, w: 700, max: (WX - 2) * g.sc });
+    const um = 1e-6 / LAMBDA * g.sc   /* one micrometer */, sbx = g.X(WX) - um, sby = g.Y(LY) + 22 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + um, sby); ctx.stroke();
+    label('1 µm', sbx + um / 2, sby + 11 * p, { a: 'center', s: 10.5 });
+    label(`${st.x.length} vortices = ${st.x.length} flux quanta`, g.X(0), narrow ? sby + 28 * p : sby + 4 * p, { c: T.ink, s: 11 });
+  }
+  function axes(o) {
+    const p = proj(), L = 58 * p, R = 14 * p, Tp = 26 * p, B = 30 * p, w = CW - L - R, h = CH - Tp - B;
+    const xs = (v) => L + (v - o.x0) / (o.x1 - o.x0) * w, ys = (v) => Tp + (o.y1 - v) / (o.y1 - o.y0) * h;
+    cx.strokeStyle = T.line; cx.lineWidth = 1; cx.font = `${10.5 * p}px ${T.mono}`; cx.fillStyle = T.muted;
+    cx.textAlign = 'center'; cx.textBaseline = 'top'; for (let v = o.x0; v <= o.x1 + 1e-9; v += o.dx) { cx.beginPath(); cx.moveTo(xs(v), Tp); cx.lineTo(xs(v), Tp + h); cx.stroke(); cx.fillText(f(v, o.xd || 0), xs(v), Tp + h + 4 * p); }
+    cx.textAlign = 'right'; cx.textBaseline = 'middle'; for (let v = o.y0; v <= o.y1 + 1e-9; v += o.dy) { cx.beginPath(); cx.moveTo(L, ys(v)); cx.lineTo(L + w, ys(v)); cx.stroke(); cx.fillText(f(v, o.yd || 0), L - 5 * p, ys(v)); }
+    cx.font = `${11 * p}px ${T.ui}`; cx.textAlign = 'center'; cx.textBaseline = 'bottom'; cx.fillText(o.xl, L + w / 2, CH - 1 * p);
+    cx.save(); cx.translate(12 * p, Tp + h / 2); cx.rotate(-Math.PI / 2); cx.textBaseline = 'middle'; cx.fillText(o.yl, 0, 0); cx.restore();
+    return { xs, ys, L, w, Tp, h, p };
+  }
+  const NB = 10;
+  function drawCurve() {
+    if (!T || !CW || !S.st) return; cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.fillStyle = T.canvas; cx.fillRect(0, 0, CW, CH);
+    const xmax = WX * LAMBDA * 1e6;
+    if (S.graph === 'profile') {
+      const A = axes({ x0: 0, x1: xmax, dx: 0.5, xd: 1, y0: 0, y1: 120, dy: 20, xl: 'position across the slab (µm)', yl: 'field inside (mT)' }), pr = profile(S.st, NB), w = xmax / NB;
+      if (!S.blind) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(mT(S.Ba))); cx.lineTo(A.L + A.w, A.ys(mT(S.Ba))); cx.stroke(); cx.setLineDash([]);
+        cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('applied field', A.L + A.w - 4 * A.p, A.ys(mT(S.Ba)) - 2 * A.p); }
+      cx.fillStyle = T.accent; cx.globalAlpha = 0.75; for (let b = 0; b < NB; b++) { const x0 = A.xs(b * w), x1 = A.xs((b + 1) * w); cx.fillRect(x0 + 1, A.ys(Math.min(120, mT(pr[b]))), x1 - x0 - 2, A.ys(0) - A.ys(Math.min(120, mT(pr[b])))); } cx.globalAlpha = 1;
+      cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('bars: vortices per area × Φ0, in strips across the slab', A.L + 6 * A.p, 6 * A.p);
+    } else {
+      const A = axes({ x0: 0, x1: 100, dx: 20, y0: 0, y1: 100, dy: 20, xl: 'applied field (mT)', yl: 'average field inside (mT)' });
+      if (!S.blind) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.xs(0), A.ys(0)); cx.lineTo(A.xs(100), A.ys(100)); cx.stroke(); cx.setLineDash([]);
+        cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('inside = applied (no pinning)', A.xs(98), A.ys(98) + 16 * A.p); }
+      cx.save(); cx.beginPath(); cx.rect(A.L, A.Tp, A.w, A.h); cx.clip(); cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath();
+      S.hist.forEach((q, i) => { const X = A.xs(mT(q[0])), Y = A.ys(mT(q[1])); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke(); cx.restore();
+      cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('this run', A.L + 6 * A.p, 6 * A.p);
+    }
+  }
+
+  /* ---------- readouts and controls ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, st = S.st, N = st.x.length, Bav = N / (WX * LY), sl = beanSlope(profile(st, NB), WX / NB);
+    const jc = (s) => s * BU / LAMBDA / MU0;   /* A/m² from a slope in Φ0/λ³ */
+    let h = dd('Applied field', `${f(mT(S.Ba), 1)} mT`) + dd('Average field inside', `${f(mT(Bav), 1)} mT`) + dd('Vortices in view', `${N}`)
+      + dd('Flux through the view', `${N} × Φ0 = ${f(N * PHI0 * 1e15, 1)} × 10⁻¹⁵ Wb`) + dd('Flux quantum h/2e', `${f(PHI0 * 1e15, 4)} × 10⁻¹⁵ Wb`)
+      + dd('Lattice spacing at the applied field', S.Ba > 1e-6 ? `${f(latticeSpacing(S.Ba * BU) * 1e9, 0)} nm` : '—');
+    if (!S.blind) h += dd('Current density from the slopes', st.o.fp > 0 && N > 20 ? `${f(jc(Math.max(0, (sl[0] + sl[1]) / 2)) / 1e10, 1)} × 10¹⁰ A/m²` : '—');
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    $('sB').value = S.target; $('oB').textContent = `${S.target} mT`; $('sFp').value = S.fp; $('oFp').textContent = `${f(S.fp, 1)} f₀`;
+    $('sNp').value = Math.round(S.np / (LAMBDA * 1e6) ** 2); $('oNp').textContent = `${f(S.np / (LAMBDA * 1e6) ** 2, 0)}`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#spdSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.spd));
+    for (const b of document.querySelectorAll('#graphSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.graph));
+    $('play').textContent = S.play ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !S.play);
+    const ramp = Math.abs(fromMT(S.target) - S.Ba) > 1e-9; $('note').textContent = ramp ? (fromMT(S.target) > S.Ba ? 'field rising' : 'field falling') : 'field steady';
+  }
+  function redraw() { draw(true); drawCurve(); readouts(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.fp = c.fp; S.np = c.np; S.Ba = 0; S.loop = !!c.loop; S.loopDir = 1; S.graph = c.graph || 'profile'; S.play = true;
+    newStrip(); setField(S.st, 0);
+    if (c.pre) { prerun(c.pre, c.from); S.hist = [[S.Ba, S.st.x.length / (WX * LY)]]; }
+    S.target = c.to; $('presetHint').textContent = c.hint; sync(); redraw();
+  }
+  const custom = () => { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.spd = +b.dataset.s; sync(); } });
+  $('graphSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.graph = b.dataset.g; sync(); drawCurve(); } });
+  $('play').addEventListener('click', () => { S.play = !S.play; sync(); });
+  $('sB').addEventListener('input', (e) => { S.target = +e.target.value; S.loop = false; custom(); sync(); });
+  $('up').addEventListener('click', () => { S.target = 90; S.loop = false; S.play = true; custom(); sync(); });
+  $('down').addEventListener('click', () => { S.target = 0; S.loop = false; S.play = true; custom(); sync(); });
+  $('fc').addEventListener('click', () => { custom(); fillInside(S.st, S.Ba); S.hist = []; S.play = true; sync(); redraw(); });
+  const repin = () => { const keepX = S.st.x, keepY = S.st.y, Ba = S.Ba; newStrip(); S.st.x = keepX; S.st.y = keepY; setField(S.st, Ba); custom(); sync(); redraw(); };
+  $('sFp').addEventListener('input', (e) => { S.fp = +e.target.value; S.st.o.fp = S.fp; custom(); sync(); redraw(); });
+  $('sNp').addEventListener('input', (e) => { S.np = +e.target.value * (LAMBDA * 1e6) ** 2; repin(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labMap').addEventListener('change', (e) => { S.map = e.target.checked; redraw(); });
+  $('labPins').addEventListener('change', (e) => { S.pins = e.target.checked; redraw(); });
+
+  let frameNo = 0;
+  function frame() {
+    if (S.play) { advance(SPEEDS[S.spd]); frameNo++; draw(frameNo % 3 === 0); drawCurve(); readouts(); sync(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), q = cv.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = q.width; CH = q.height; cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  $('about1').textContent = 'The model: a slab of YBCO with the field along its c axis, seen end on. Each vortex is a line of field carrying exactly one flux quantum, Φ0 = h/2e = 2.0678 × 10⁻¹⁵ Wb, surrounded by circulating supercurrents that die away over the penetration depth λ = 141.5 nm (Harshman et al., Phys. Rev. B 39, 851, 1989, muon spin rotation). The core, a few nanometers across, is far smaller than λ, so the London equations hold: a vortex\'s field is (Φ0/2πλ²)K0(r/λ) and two vortices repel each other with a force per meter of length f0·K1(r/λ), where f0 = Φ0²/(2πμ0λ³) = 1.9 × 10⁻⁴ N/m. The field map adds up every vortex\'s field.';
+  $('about2').textContent = 'Motion: vortices move through the material against a drag proportional to their speed (no inertia), so each moves along the total force on it: the push of its neighbors, the pull of the defects and nothing else. Time is shown only as a rate, because the drag coefficient is not computed. Forces are cut off smoothly at 5λ, where they have fallen to under 1 % of the push between nearest neighbors.';
+  $('about3').textContent = 'The faces: outside the slab the applied field is a fixed lattice of vortices at its density, standing for the field there. Vortices come in at a face whenever the strip just inside it holds fewer than the applied field asks for, and leave when pushed across a face, so the field at each face equals the applied field: the Bean model\'s boundary condition. The lower critical field, the surface barrier and the slab\'s demagnetizing effects are left out. The view repeats above and below.';
+  $('about4').textContent = 'Defects: point defects (oxygen vacancies, for instance) where a vortex\'s energy is lower, modeled as wells 0.2λ across that pull a vortex toward their center with a force up to the pin strength, in units of f0. Their positions are random. The current density from the slopes is |dB/dx|/μ0 from straight line fits to the outer third of the profile on each side (Ampère\'s law). Temperature is not computed: λ is its low temperature value and vortices do not jump out of pins by thermal activation (no flux creep).';
+
+  window.__vx = { S, applyPreset, advance, profile, beanSlope, BU };
+  tokens();
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'bean'); }
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cv.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* divider between the picture and the graph (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

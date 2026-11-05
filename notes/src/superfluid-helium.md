@@ -11,7 +11,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know latent heat, vapor pressure and entropy. The demo has four experiments, every number from measured helium properties (Donnelly and Barenghi 1998): **Pump down** (a dewar of 100 g of helium at 4.22 K under a pump), **Fountain** (a tube with a powder plug and a heater), **Creeping film** (a beaker hanging in a 1.40 K bath) and **Spinning disks** (Andronikashvili's stack of 40 aluminum disks on a torsion fiber). Speed buttons run time faster.
+Students should know latent heat, vapor pressure and entropy. The demo has five experiments, every number from measured helium properties (Donnelly and Barenghi 1998): **Pump down** (a dewar of 100 g of helium at 4.22 K under a pump), **Fountain** (a tube with a powder plug and a heater), **Creeping film** (a beaker hanging in a 1.40 K bath) **Spinning disks** (Andronikashvili's stack of 40 aluminum disks on a torsion fiber) and **Helium 3** (a cell squeezed so part of it freezes). Speed buttons run time faster.
 
 ## Running it in class
 
@@ -20,6 +20,7 @@ Students should know latent heat, vapor pressure and entropy. The demo has four 
 3. **Fountain.** At 1.40 K a 5.0 mK rise inside the tube holds a column 6.75 cm high; at 1.60 K and 10.0 mK it would hold 29.2 cm, so it spouts out of the 12 cm tube (Q3).
 4. **Film.** The beaker empties itself at a steady rate (Q4): a straight line on the graph. Pushed down into the bath, an empty beaker fills itself.
 5. **Spinning disks.** At 1.30 K the period is 20.47 s, almost the bare disks' 20.00 s. Record periods at several temperatures up to 2.2 K; the dots trace the normal fluid fraction (Q5).
+6. **Helium 3: cooling by freezing.** Ask Q6 first. A cell of helium 3 at 20 mK is squeezed; freezing cools it along the melting curve, and the pressure trace passes the A transition at 3.43407 MPa (2.444 mK) and the B transition at 3.43609 MPa (1.896 mK), the trace in which Osheroff, Richardson and Lee found superfluid helium 3 in 1972. With a bigger heat leak the cell stalls above the transition.
 
 ## Questions
 
@@ -33,11 +34,14 @@ Students should know latent heat, vapor pressure and entropy. The demo has four 
 
 **Q5.** The helium between the disks has 1.048 times the bare disks' moment of inertia. If only the normal fluid turns with the disks, find ρn/ρ at 1.30 K from the period 20.47 s (bare disks 20.00 s), and predict the period above the lambda point.
 
+**Q6.** Liquid helium 3 near its melting pressure has entropy S = γT with γ = 4.48R per kelvin; the solid's disordered nuclear spins have S = R ln 2. What share of the liquid must freeze, with no heat leak, to cool the rest from 20 mK to the superfluid transition at 2.444 mK?
+
 ## Common misconceptions
 
 - **"Superfluid helium is just very cold, very thin liquid."** It is a different phase with a sharp transition and a heat capacity peak; the superfluid part has zero viscosity, not just a small one.
 - **"The boiling stops because the pump stops working."** The pump keeps pumping and the liquid keeps evaporating, now only from the surface: helium II carries heat so well that no part of it gets warm enough to make a bubble.
 - **"The film climbs because helium defies gravity."** All liquids that wet a wall form a film; in helium II the superfluid in the film flows without friction, so the film carries liquid over the rim to the lower level.
+- **"Freezing releases heat, so squeezing a liquid into a solid warms it."** Below 0.32 K solid helium 3 has more entropy than the liquid (its nuclear spins are disordered while the liquid's are not), so freezing absorbs heat: the Pomeranchuk effect.
 - **"Below the lambda point all the liquid is superfluid."** The superfluid fraction grows from zero at 2.1768 K to about 99 % at 1 K.
 
 ## Physics behind the demo
@@ -46,9 +50,10 @@ Students should know latent heat, vapor pressure and entropy. The demo has four 
 - Pump down: the pump takes gas at room temperature, ṅ = SpP/(RT); the bath obeys nC dT/dt = Q − Lṅ, with a 20 mW heat leak. The bubbles are drawn to show boiling, not computed.
 - Fountain: H. London's relation dP = ρS dT integrated over the temperature rise, with ρ taken constant (it varies by under 0.4 %).
 - Film: the Rollin film transfer rate of 7.5 × 10⁻⁵ cm³/s per cm of the narrowest perimeter below 1.5 K (Daunt and Mendelssohn 1939), independent of the height difference; the film is drawn far thicker than its 30 nm.
+- Helium 3: melting pressure from the PLTS-2000 equation (BIPM), which defines the A and A to B points on the melting curve; the superfluid boundary at lower pressure is Greywall's (1986), converted to PLTS-2000. Cooling by freezing uses entropy balance with S_solid = R ln 2 and S_liquid = γT; the liquid's drop in entropy below the superfluid transition and the solid's ordering near 0.9 mK are left out, so the model stops at 1.0 mK.
 - Spinning disks: the period is 2π√((I_disks + (ρn/ρ)I_He)/κ), with the fiber chosen to give 20.00 s for the bare disks.
 
 ## Going further
 
 - Pair with **States of Matter** (phase changes and latent heat) and **Superconductors and the Meissner Effect** (another quantum state with zero resistance to flow).
-- Why helium 3 needs a temperature a thousand times lower to become superfluid (its atoms are fermions and must pair first).
+- Why helium 3 needs a temperature a thousand times lower to become superfluid (its atoms are fermions and must pair first, like the electrons in a superconductor).

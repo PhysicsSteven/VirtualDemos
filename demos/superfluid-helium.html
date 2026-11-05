@@ -47,7 +47,7 @@
   <header class="bar">
     <div>
       <h1>Superfluid Helium</h1>
-      <p>Below 2.1768 K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments, computed from measured properties of helium.</p>
+      <p>Below 2.1768 K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments with helium 4 and one with helium 3, computed from measured properties of helium.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">SI units</div>
@@ -65,6 +65,7 @@
           <button type="button" data-x="fountain" aria-pressed="false">Fountain</button>
           <button type="button" data-x="film" aria-pressed="false">Creeping film</button>
           <button type="button" data-x="torsion" aria-pressed="false">Spinning disks</button>
+          <button type="button" data-x="he3" aria-pressed="false">Helium 3</button>
         </div>
         <button type="button" class="spin" id="play" data-vd-key="play">Pause</button>
         <span class="lab" id="spdLab">Speed</span>
@@ -99,6 +100,12 @@
           <div><div class="slider-head"><label for="sTt">Bath temperature</label><output id="oTt" class="mono" for="sTt"></output></div><input type="range" id="sTt" min="1" max="2.2" step="0.01"></div>
           <div class="wide"><button type="button" class="btn primary" id="rec">Record the period</button><button type="button" class="btn" id="recClear">Clear</button></div>
         </div>
+        <div class="shelf-card" id="cardHe3" role="group" aria-label="The helium 3 cell" hidden>
+          <span class="card-title">Helium 3: 0.050 mol of liquid in a cell squeezed by a bellows, starting at 20 mK on the melting curve</span>
+          <div><div class="slider-head"><label for="sRate">Squeeze: share frozen per hour</label><output id="oRate" class="mono" for="sRate"></output></div><input type="range" id="sRate" min="0" max="30" step="1"></div>
+          <div><div class="slider-head"><label for="sLeak">Heat leaking in</label><output id="oLeak" class="mono" for="sLeak"></output></div><input type="range" id="sLeak" min="0" max="60" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="he3Restart">Start again at 20 mK</button></div>
+        </div>
       </div>
     </div>
 
@@ -114,6 +121,8 @@
           <button type="button" data-p="filmIn" aria-pressed="false">Film: the beaker fills itself</button>
           <button type="button" data-p="torsionLow" aria-pressed="false">Spinning disks at 1.30 K</button>
           <button type="button" data-p="torsionHigh" aria-pressed="false">Spinning disks above the lambda point</button>
+          <button type="button" data-p="he3" aria-pressed="false">Helium 3: cooling by freezing</button>
+          <button type="button" data-p="he3Leak" aria-pressed="false">Helium 3: a bigger heat leak</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -130,6 +139,7 @@
           <p class="hint" id="about3"></p>
           <p class="hint" id="about4"></p>
           <p class="hint" id="about5"></p>
+          <p class="hint" id="about6"></p>
         </details>
         </div></details>
       </section>
@@ -196,11 +206,30 @@
   const FILM_RATE = 7.5e-9;
   /* Andronikashvili's torsion pendulum: the normal fluid between the disks moves with them, the superfluid stays at rest */
   function torsionPeriod(T, I0, IHe, kappa) { return 2 * Math.PI * Math.sqrt((I0 + rhonFrac(T) * IHe * density(T) / density(1.0)) / kappa); }
+  /* ---------- helium 3 ----------
+     Melting pressure on the PLTS-2000 temperature scale (BIPM, CIPM Recommendation C1, 2000; Rusby et al., J. Low Temp. Phys.
+     126, 633, 2002): p/MPa = Σ a_i (T/K)^i for i = −3 to 9, valid from 0.902 mK to 1 K. */
+  const PLTS = [-1.3855442e-12, 4.5557026e-9, -6.4430869e-6, 3.4467434, -4.4176438, 1.5417437e1, -3.5789853e1, 7.1499125e1, -1.0414379e2, 1.0518538e2, -6.9443767e1, 2.6833087e1, -4.5875709];
+  function meltP(T) { let p = 0; for (let i = 0; i < 13; i++) p += PLTS[i] * T ** (i - 3); return p * 1e6; }   /* Pa */
+  const HE3_A = { T: 2.444e-3, P: 3.43407e6 }, HE3_AB = { T: 1.896e-3, P: 3.43609e6 }, HE3_NEEL = { T: 0.902e-3, P: 3.43934e6 }, HE3_MIN = { T: 0.31524, P: 2.93113e6 };   /* PLTS-2000 fixed points */
+  /* superfluid transition of the liquid: Greywall's measurements as fitted by Halperin and Varoquaux (Tc in mK, P in bar), then put on
+     the PLTS-2000 scale with the conversion of Parpia and coworkers (arXiv 2012.14044, Eq. S5) */
+  const TC_G = [9.294e-1, 1.387e-1, -6.930e-3, 2.569e-4, -5.725e-6, 5.301e-8];
+  function tcHe3(P) { const b = P / 1e5; let t = 0; for (let i = 0; i < 6; i++) t += TC_G[i] * b ** i; return (-0.1017 + 1.16054 * t - 0.09347 * t * t + 0.01519 * t ** 3) * 1e-3; }   /* K */
+  /* the A to B transition: drawn straight from the polycritical point (21.22 bar, 2.232 mK, PLTS-2000) to the A–B point on the melting curve */
+  const HE3_PCP = { T: 2.232e-3, P: 21.22e5 };
+  const abLineT = (P) => HE3_PCP.T + (HE3_AB.T - HE3_PCP.T) * (P - HE3_PCP.P) / (HE3_AB.P - HE3_PCP.P);
+  /* Pomeranchuk cooling. Solid: spins disordered, S = R ln 2 per mole (true well above the 0.9 mK ordering). Liquid at melting pressure:
+     a Fermi liquid, S = γT with γ/R = 4.48 /K (Greywall's γ/R, 4.050 at 25 bar and 4.235 at 29 bar, as tabulated by Kollár and
+     Vollhardt, extended in a straight line to 34.4 bar). With n moles, x of them solid, entropy balance: n[(1 − x)γ dT + (R ln 2 − γT) dx] = Q dt/T. */
+  const GAMMA3 = 4.48;
+  function he3Rate(T, x, xdot, Q, n) { const gR = GAMMA3 * R_GAS; return (Q / (n * T) - R_GAS * (Math.LN2 - GAMMA3 * T) * xdot) / ((1 - x) * gR); }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id), TGAS = 293.15;   /* the pumped gas reaches the pump at room temperature, 20 °C */
-  const SPEEDS = { pump: [1, 10, 60], fountain: [1, 1, 1], film: [1, 100, 1000], torsion: [1, 2, 5] };
+  const SPEEDS = { pump: [1, 10, 60], fountain: [1, 1, 1], film: [1, 100, 1000], torsion: [1, 2, 5], he3: [60, 300, 1200] };
+  const HE3_N = 0.05, HE3_T0 = 0.020, HE3_XMAX = 0.75, HE3_TMIN = 1.0e-3;   /* the model stops at 1.0 mK: below it the solid's spins begin to order */   /* moles in the cell, starting temperature (K), where squeezing stops */
   /* the torsion pendulum (this demo's own apparatus, after Andronikashvili 1946): 40 aluminum disks 35.0 mm across, 10 µm thick, 0.20 mm apart */
   const DISK = { n: 40, r: 0.0175, t: 10e-6, gap: 0.20e-3, rhoAl: 2700 };   /* aluminum 2.70 g/cm³ */
   const I0 = 0.5 * DISK.n * DISK.rhoAl * Math.PI * DISK.r ** 2 * DISK.t * DISK.r ** 2;
@@ -215,13 +244,15 @@
     filmOut: { x: 'film', rb: 10, yb: 5, fill: 25, spd: 2, hint: 'A beaker of helium lifted so its bottom is 5.0 mm above the bath, at 1.40 K. A film about 30 nm thick covers every surface; the superfluid in it flows up the inside wall, over the rim and down the outside, and drips back into the bath. The level falls at a steady rate set by the rim\'s perimeter, not by how high the level stands: 7.5 × 10⁻⁵ cm³/s for each centimeter of rim.' },
     filmIn: { x: 'film', rb: 10, yb: -25, fill: 5, spd: 2, hint: 'An almost empty beaker pushed down so its bottom is 25.0 mm below the bath surface. The film carries helium in over the rim until the level inside is the same as outside, at the same steady rate.' },
     torsionLow: { x: 'torsion', Tt: 1.3, spd: 2, hint: 'Forty thin disks, 0.20 mm apart, hang from a torsion fiber in the bath and twist back and forth. The normal fluid between the disks is dragged along and adds to the moment of inertia; the superfluid is not. At 1.30 K most of the helium is superfluid, so the period is nearly that of the bare disks, 20.00 s. Record the period at several temperatures: the graph turns each period into the normal fluid fraction ρn/ρ.' },
+    he3: { x: 'he3', rate: 10, leak: 5, spd: 1, hint: 'A cell of liquid helium 3 at 20 mK, already at its melting pressure, is squeezed slowly. Some of it freezes, and because the solid\'s disordered nuclear spins carry far more entropy than the liquid, freezing takes heat out of the liquid: compressing it cools it (the Pomeranchuk effect). The pressure creeps up the melting curve. At 2.444 mK the liquid turns superfluid (the A phase) and at 1.896 mK it changes to the B phase. In 1972 Osheroff, Richardson and Lee found superfluid helium 3 as two small kinks in exactly this pressure trace.' },
+    he3Leak: { x: 'he3', rate: 10, leak: 40, spd: 1, hint: 'The same squeeze with eight times the heat leaking in. Freezing removes heat at a rate n(R ln 2 − S_liquid)T per unit of solid fraction; as T falls this cooling power shrinks, and the cell stops cooling where it equals the heat leak.' },
     torsionHigh: { x: 'torsion', Tt: 2.2, spd: 2, hint: 'Above the lambda point all the helium is normal fluid and moves with the disks, so the period is longest. Cool it below 2.1768 K and the period falls as the superfluid fraction grows. This is how Andronikashvili measured the two fluids in 1946.' } };
 
   const S = { x: 'pump', play: true, spd: 1, preset: 'pump', blind: false,
     pump: { Sp: 5, Q: 20, M0: 100, T: 0, n: 0, t: 0, hist: [], tl: null },
     fountain: { Tf: 1.4, dT: 5 },
     film: { rb: 10, yb: 5, lev: 0.03, t: 0, hist: [] },
-    torsion: { Tt: 1.3, t: 0, rec: [] } };
+    torsion: { Tt: 1.3, t: 0, rec: [] }, he3: { rate: 10, leak: 5, T: 0.02, x: 0, t: 0, hist: [], tA: null, tB: null } };
   const can = $('can'), ctx = can.getContext('2d'), cv = $('curve'), cx = cv.getContext('2d');
   let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null, bubbles = [], drips = [], filmSurf = 1e9;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
@@ -252,6 +283,18 @@
   }
   function filmFlow() { const F = S.film; if (F.lev > 1e-9 && F.lev > F.yb / 1000 + 1e-9) return -1; if (F.lev < -1e-9) return 1; return 0; }
   const period = (Tb) => torsionPeriod(Tb, I0, IHE, KAPPA);
+  function he3Reset() { const H = S.he3; H.T = HE3_T0; H.x = 0; H.t = 0; H.hist = [[0, H.T, meltP(H.T), 0]]; H.tA = null; H.tB = null; }
+  function he3Advance(dt) {   /* steps of at most 1 s, Heun's method */
+    const H = S.he3; let n = Math.ceil(dt / 1); const h = dt / n;
+    while (n-- > 0) {
+      const xd = H.x < HE3_XMAX ? H.rate / 100 / 3600 : 0, a = he3Rate(H.T, H.x, xd, H.leak * 1e-9, HE3_N), T1 = Math.max(HE3_TMIN, H.T + a * h), b = he3Rate(T1, H.x + xd * h, xd, H.leak * 1e-9, HE3_N);
+      const Tn = Math.min(0.3, Math.max(HE3_TMIN, H.T + (a + b) / 2 * h));
+      if (H.tA == null && Tn < HE3_A.T) H.tA = H.t; if (H.tB == null && Tn < HE3_AB.T) H.tB = H.t;
+      H.T = Tn; H.x = Math.min(HE3_XMAX, H.x + xd * h); H.t += h;
+    }
+    const l = H.hist[H.hist.length - 1]; if (H.t - l[0] >= 5) H.hist.push([H.t, H.T, meltP(H.T), H.x]);
+  }
+  const he3Phase = (T) => (T > HE3_A.T ? 'normal' : T > HE3_AB.T ? 'A' : 'B');
 
   /* ---------- drawing ---------- */
   function dewar(x, y, w, h, p) {   /* a glass dewar with a clear viewing strip; returns the inner box */
@@ -269,7 +312,7 @@
   function draw() {
     if (!T || !W) return; const p = proj();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (window.VDGear && VDGear.backdrop) VDGear.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
-    ({ pump: drawPump, fountain: drawFountain, film: drawFilm, torsion: drawTorsion })[S.x](p);
+    ({ pump: drawPump, fountain: drawFountain, film: drawFilm, torsion: drawTorsion, he3: drawHe3 })[S.x](p);
   }
   function drawPump(p) {
     const P = S.pump, narrow = W < 560, w = Math.min(W * (narrow ? 0.5 : 0.32), 240 * p), h = H - 110 * p, x = narrow ? 24 * p : W * 0.32 - w / 2, y = 70 * p, b = dewar(x, y, w, h, p);
@@ -365,6 +408,47 @@
     if (!narrow) { meter(bx + bw + 30 * p, b.y + b.h * 0.45, 130 * p, 30 * p, `${f(Tt.Tt, 3)} K`, 'bath thermometer'); meter(bx + bw + 30 * p, b.y + b.h * 0.45 + 62 * p, 130 * p, 30 * p, `${f(Pd, 2)} s`, 'period of the swing'); }
   }
 
+  function drawHe3(p) {
+    const C3 = S.he3, narrow = W < 560, cw = Math.min(narrow ? W * 0.42 : W * 0.24, 170 * p), cx0 = narrow ? 16 * p : 30 * p, cy0 = 70 * p, ch = Math.min(H - 200 * p, 280 * p);
+    /* the cell: bellows on top, liquid, crystals of solid growing from the bottom */
+    const b = { x: cx0, y: cy0, w: cw, h: ch };
+    ctx.fillStyle = T.metal; for (let i = 0; i < 6; i++) ctx.fillRect(b.x + 14 * p + (i % 2) * 6 * p, b.y - 44 * p + i * 6 * p, b.w - 28 * p - (i % 2) * 12 * p, 4 * p);
+    ctx.fillRect(b.x + b.w / 2 - 4 * p, b.y - 62 * p, 8 * p, 20 * p);
+    label('bellows: squeezes the cell', b.x + b.w / 2 + 10 * p, b.y - 56 * p, { s: 10.5 });
+    ctx.fillStyle = T.glass; ctx.strokeStyle = T.glass_edge; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.roundRect(b.x, b.y, b.w, b.h, 8 * p); ctx.fill(); ctx.stroke();
+    const sf = C3.T < HE3_A.T; ctx.save(); ctx.beginPath(); ctx.roundRect(b.x + 2 * p, b.y + 2 * p, b.w - 4 * p, b.h - 4 * p, 7 * p); ctx.clip();
+    ctx.fillStyle = sf ? T.he2 : T.he1; ctx.fillRect(b.x, b.y, b.w, b.h);
+    /* solid: volume share x (the solid is 5 % denser, drawn the same) as crystals at the bottom */
+    const hs = b.h * C3.x; ctx.fillStyle = T.bubble; ctx.globalAlpha = 0.85; ctx.fillRect(b.x, b.y + b.h - hs, b.w, hs); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.he_edge; ctx.lineWidth = 1 * p; const ys = b.y + b.h - hs; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const xx = b.x + i * b.w / 12; ctx.lineTo(xx, ys - (i % 2 ? 5 * p : 0) * Math.min(1, hs / (6 * p))); } ctx.stroke(); ctx.restore();
+    label(sf ? `liquid: superfluid ${he3Phase(C3.T)} phase` : 'liquid: normal Fermi liquid', b.x + b.w / 2, b.y + 18 * p, { a: 'center', c: T.ink, w: 700, s: 11, max: b.w - 8 * p });
+    if (hs > 16 * p) label(`solid ${f(C3.x * 100, 1)} %`, b.x + b.w / 2, b.y + b.h - hs / 2, { a: 'center', c: '#1d2a3a', w: 700, s: 11 });
+    const mY = b.y + b.h + 14 * p, mw = Math.min(b.w, 150 * p);
+    meter(b.x, mY, mw, 28 * p, `${f(C3.T * 1000, C3.T < 0.01 ? 3 : 2)} mK`, 'thermometer in the cell');
+    meter(b.x, mY + 54 * p, mw, 28 * p, `${f(meltP(C3.T) / 1e6, 5)} MPa`, 'pressure');
+    if (narrow) return;
+    /* the phase diagram: pressure against log temperature */
+    const gx = b.x + b.w + 70 * p, gy = 40 * p, gw = W - gx - 20 * p, gh = H - gy - 60 * p, lt0 = Math.log10(5e-4), lt1 = Math.log10(1.0);
+    const X = (t) => gx + (Math.log10(t) - lt0) / (lt1 - lt0) * gw, Y = (P) => gy + gh - P / 4.2e6 * gh;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.strokeRect(gx, gy, gw, gh);
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const t of [1e-3, 1e-2, 0.1, 1]) { ctx.beginPath(); ctx.moveTo(X(t), gy); ctx.lineTo(X(t), gy + gh); ctx.stroke(); ctx.fillText(t >= 1 ? '1 K' : t >= 0.1 ? '100 mK' : t >= 0.01 ? '10 mK' : '1 mK', X(t), gy + gh + 4 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let P = 0; P <= 4e6 + 1; P += 1e6) { ctx.beginPath(); ctx.moveTo(gx, Y(P)); ctx.lineTo(gx + gw, Y(P)); ctx.stroke(); ctx.fillText(`${P / 1e6}`, gx - 4 * p, Y(P)); }
+    label('pressure (MPa)', gx + 6 * p, gy - 12 * p, { s: 10.5 }); label('temperature (log scale)', gx + gw / 2, gy + gh + 22 * p, { a: 'center', s: 10.5 });
+    /* superfluid: below Tc(P), up to the melting pressure */
+    ctx.fillStyle = T.he2; ctx.beginPath(); ctx.moveTo(X(5e-4), Y(0)); for (let P = 0; P <= HE3_A.P; P += 5e4) ctx.lineTo(X(tcHe3(P)), Y(P)); ctx.lineTo(X(HE3_A.T), Y(HE3_A.P)); ctx.lineTo(X(5e-4), Y(HE3_A.P)); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = T.he_edge; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(HE3_PCP.T), Y(HE3_PCP.P)); ctx.lineTo(X(HE3_AB.T), Y(HE3_AB.P)); ctx.stroke();
+    /* solid above the melting curve */
+    ctx.fillStyle = T.bubble; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.moveTo(X(HE3_NEEL.T), Y(4.2e6)); for (let lt = Math.log10(HE3_NEEL.T); lt <= 0; lt += 0.01) ctx.lineTo(X(10 ** lt), Y(meltP(10 ** lt))); ctx.lineTo(X(1), Y(4.2e6)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let lt = Math.log10(HE3_NEEL.T); lt <= 0; lt += 0.005) { const t = 10 ** lt; if (lt === Math.log10(HE3_NEEL.T)) ctx.moveTo(X(t), Y(meltP(t))); else ctx.lineTo(X(t), Y(meltP(t))); } ctx.stroke();
+    label('solid', X(0.03), Y(3.85e6), { a: 'center', c: T.ink, w: 700 }); label('normal liquid', X(0.05), Y(1.5e6), { a: 'center', c: T.ink, w: 700 });
+    label('superfluid B', X(7e-4), Y(1.0e6), { a: 'left', c: T.ink, w: 700, s: 10.5 }); label('A', X(2.05e-3), Y(3.05e6), { a: 'center', c: T.ink, w: 700, s: 10.5 });
+    label('melting curve (PLTS-2000)', X(0.2), Y(meltP(0.2)) + 14 * p, { a: 'center', s: 10.5 });
+    label(`minimum: ${f(HE3_MIN.P / 1e6, 3)} MPa at ${f(HE3_MIN.T * 1000, 0)} mK`, X(HE3_MIN.T), Y(HE3_MIN.P) + 28 * p, { a: 'center', s: 10 });
+    ctx.fillStyle = T.heat; ctx.beginPath(); ctx.arc(X(C3.T), Y(meltP(C3.T)), 5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    label('the cell', X(C3.T) + 9 * p, Y(meltP(C3.T)) - 12 * p, { c: T.heat, w: 700, s: 10.5 });
+  }
+
   /* ---------- graphs ---------- */
   function axes(o) {
     const p = proj(), L = 58 * p, R = o.right ? 54 * p : 14 * p, Tp = 26 * p, B = 30 * p, w = CW - L - R, h = CH - Tp - B;
@@ -401,6 +485,13 @@
       cx.strokeStyle = T.ink; cx.beginPath(); cx.moveTo(A.L, A.ys(0)); cx.lineTo(A.L + A.w, A.ys(0)); cx.stroke();
       cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath(); F.hist.concat([[F.t, F.lev]]).forEach((q, i) => { const X = A.xs(q[0] / 60), Y = A.ys(q[1] * 1000); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke();
       cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('level inside the beaker: a straight line, a steady rate', A.L + 6 * A.p, 6 * A.p);
+    } else if (S.x === 'he3') {
+      const Hh = S.he3, tmax = Math.max(60, Math.ceil(Hh.t / 60 / 30) * 30), A = axes({ x0: 0, x1: tmax, dx: tmax > 180 ? 60 : 30, y0: 3.36, y1: 3.44, dy: 0.02, yd: 2, xl: 'time (minutes)', yl: 'pressure (MPa)' });
+      if (!S.blind) for (const [pt, nm] of [[HE3_A, 'A: superfluid begins, 2.444 mK'], [HE3_AB, 'A to B, 1.896 mK']]) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(pt.P / 1e6)); cx.lineTo(A.L + A.w, A.ys(pt.P / 1e6)); cx.stroke(); cx.setLineDash([]);
+        cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = pt === HE3_A ? 'top' : 'bottom'; cx.fillText(nm, A.L + A.w - 4 * A.p, A.ys(pt.P / 1e6) + (pt === HE3_A ? 2 : -2) * A.p); }
+      cx.save(); cx.beginPath(); cx.rect(A.L, A.Tp, A.w, A.h); cx.clip(); cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath();
+      Hh.hist.concat([[Hh.t, Hh.T, meltP(Hh.T)]]).forEach((q, i) => { const X = A.xs(q[0] / 60), Y = A.ys(q[2] / 1e6); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke(); cx.restore();
+      cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('pressure in the cell as it is squeezed', A.L + 6 * A.p, 6 * A.p);
     } else {
       const R = S.torsion.rec, A = axes({ x0: 1, x1: 2.2, dx: 0.2, xd: 1, y0: 0, y1: 1, dy: 0.2, yd: 1, xl: 'temperature (K)', yl: 'normal fluid fraction ρn/ρ' });
       cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.xs(T_LAMBDA), A.Tp); cx.lineTo(A.xs(T_LAMBDA), A.Tp + A.h); cx.stroke(); cx.setLineDash([]);
@@ -424,6 +515,10 @@
     else if (S.x === 'film') { const F = S.film, q = filmRate();
       h = dd('Beaker radius', `${f(F.rb, 1)} mm`) + dd('Rim perimeter', `${f(2 * Math.PI * F.rb / 10, 2)} cm`) + dd('Transfer rate', `${f(q * 1e6 * 1e3, 3)} mm³/s`)
         + dd('Level speed', `${f(q / (Math.PI * (F.rb / 1000) ** 2) * 1e6, 2)} µm/s`) + dd('Inside level', `${f(F.lev * 1000, 3)} mm`) + dd('Time', `${f(F.t / 60, 2)} min`); }
+    else if (S.x === 'he3') { const Hh = S.he3, xd = Hh.x < HE3_XMAX ? Hh.rate / 100 / 3600 : 0, Sl = GAMMA3 * Hh.T;
+      h = dd('Temperature', `${f(Hh.T * 1000, 3)} mK${Hh.T <= HE3_TMIN + 1e-9 ? ' (the model stops here)' : ''}`) + dd('Pressure', `${f(meltP(Hh.T) / 1e6, 5)} MPa`) + dd('Solid', `${f(Hh.x * 100, 2)} %`) + dd('Liquid', S.blind ? 'hidden' : Hh.T < HE3_A.T ? `superfluid, ${he3Phase(Hh.T)} phase` : 'normal')
+        + dd('Entropy S/R: solid, liquid', `${f(Math.LN2, 3)}, ${f(Sl, 4)}`) + dd('Cooling power of freezing', `${f(HE3_N * R_GAS * (Math.LN2 - Sl) * Hh.T * xd * 1e9, 2)} nW`) + dd('Heat leaking in', `${f(Hh.leak, 0)} nW`)
+        + dd('Superfluid at', Hh.tA == null ? 'not yet' : `${f(Hh.tA / 60, 1)} min`) + dd('Time', `${f(Hh.t / 60, 1)} min`); }
     else { const t = S.torsion;
       h = dd('Temperature', `${f(t.Tt, 3)} K`) + dd('Period', `${f(period(t.Tt), 3)} s`) + dd('Bare disks', `${f(P0, 3)} s`) + dd('Helium between disks, I_He/I_disks', f(IHE / I0, 4))
         + (S.blind ? dd('Normal fluid fraction (table)', 'hidden') : dd('Normal fluid fraction (table)', f(rhonFrac(t.Tt), 3))) + dd('Recorded', `${t.rec.length}`); }
@@ -432,12 +527,12 @@
   function sync() {
     const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; }, P = S.pump, F = S.fountain, Fi = S.film;
     set('Sp', P.Sp, `${f(P.Sp, 1)} L/s`); set('Q', P.Q, `${P.Q} mW`); set('M0', P.M0, `${P.M0} g`);
-    set('Tf', F.Tf, `${f(F.Tf, 2)} K`); set('DT', F.dT, `${f(F.dT, 1)} mK`); set('Rb', Fi.rb, `${f(Fi.rb, 1)} mm`); set('Yb', Fi.yb, `${f(Fi.yb, 1)} mm`); set('Tt', S.torsion.Tt, `${f(S.torsion.Tt, 2)} K`);
+    set('Tf', F.Tf, `${f(F.Tf, 2)} K`); set('DT', F.dT, `${f(F.dT, 1)} mK`); set('Rb', Fi.rb, `${f(Fi.rb, 1)} mm`); set('Yb', Fi.yb, `${f(Fi.yb, 1)} mm`); set('Tt', S.torsion.Tt, `${f(S.torsion.Tt, 2)} K`); set('Rate', S.he3.rate, `${S.he3.rate} %`); set('Leak', S.he3.leak, `${S.he3.leak} nW`);
     for (const b of document.querySelectorAll('#expSeg button')) b.setAttribute('aria-pressed', String(b.dataset.x === S.x));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#spdSeg button')) { b.textContent = `×${SPEEDS[S.x][+b.dataset.s]}`; b.setAttribute('aria-pressed', String(+b.dataset.s === S.spd)); }
     $('spdSeg').hidden = S.x === 'fountain'; $('spdLab').hidden = S.x === 'fountain'; $('play').hidden = S.x === 'fountain';
-    $('cardPump').hidden = S.x !== 'pump'; $('cardFountain').hidden = S.x !== 'fountain'; $('cardFilm').hidden = S.x !== 'film'; $('cardTorsion').hidden = S.x !== 'torsion';
+    $('cardPump').hidden = S.x !== 'pump'; $('cardFountain').hidden = S.x !== 'fountain'; $('cardFilm').hidden = S.x !== 'film'; $('cardTorsion').hidden = S.x !== 'torsion'; $('cardHe3').hidden = S.x !== 'he3';
     $('play').textContent = S.play ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !S.play);
     $('note').textContent = S.x === 'fountain' ? 'steady state' : `time runs ×${SPEEDS[S.x][S.spd]}`;
   }
@@ -449,11 +544,12 @@
     if (c.x === 'fountain') Object.assign(S.fountain, { Tf: c.Tf, dT: c.dT });
     if (c.x === 'film') { Object.assign(S.film, { rb: c.rb, yb: c.yb, lev: (c.yb + c.fill) / 1000, t: 0 }); S.film.hist = [[0, S.film.lev]]; }
     if (c.x === 'torsion') { S.torsion.Tt = c.Tt; S.torsion.t = 0; }
+    if (c.x === 'he3') { Object.assign(S.he3, { rate: c.rate, leak: c.leak }); he3Reset(); }
     drips = []; bubbles = []; $('presetHint').textContent = c.hint; sync(); redraw();
   }
   const custom = () => { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  $('expSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-x]'); if (b) { const first = { pump: 'pump', fountain: 'fountainLow', film: 'filmOut', torsion: 'torsionLow' }[b.dataset.x]; applyPreset(first); } });
+  $('expSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-x]'); if (b) { const first = { pump: 'pump', fountain: 'fountainLow', film: 'filmOut', torsion: 'torsionLow', he3: 'he3' }[b.dataset.x]; applyPreset(first); } });
   $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.spd = +b.dataset.s; sync(); } });
   $('play').addEventListener('click', () => { S.play = !S.play; sync(); });
   $('restart').addEventListener('click', () => { pumpReset(); S.play = true; sync(); redraw(); });
@@ -463,7 +559,8 @@
   bind('Tf', S.fountain, 'Tf', () => { S.fountain.dT = Math.min(S.fountain.dT, Math.floor((2.1761 - S.fountain.Tf) * 1e4) / 10); });
   bind('DT', S.fountain, 'dT', () => { S.fountain.dT = Math.min(S.fountain.dT, Math.floor((2.1761 - S.fountain.Tf) * 1e4) / 10); });
   bind('Rb', S.film, 'rb'); bind('Yb', S.film, 'yb', () => { const F = S.film; if (F.lev < F.yb / 1000) F.lev = F.yb / 1000; F.lev = Math.min(F.lev, F.yb / 1000 + 0.03); });
-  bind('Tt', S.torsion, 'Tt');
+  bind('Tt', S.torsion, 'Tt'); bind('Rate', S.he3, 'rate'); bind('Leak', S.he3, 'leak');
+  $('he3Restart').addEventListener('click', () => { he3Reset(); S.play = true; sync(); redraw(); });
   $('rec').addEventListener('click', () => { const t = S.torsion, Pd = +period(t.Tt).toFixed(3), frac = ((Pd / P0) ** 2 - 1) * I0 / IHE * density(1.0) / density(t.Tt);
     t.rec.push({ T: t.Tt, P: Pd, frac }); redraw(); });
   $('recClear').addEventListener('click', () => { S.torsion.rec = []; redraw(); });
@@ -473,7 +570,7 @@
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.play && S.x !== 'fountain') { const k = SPEEDS[S.x][S.spd];
-      if (S.x === 'pump') pumpAdvance(dt * k); else if (S.x === 'film') filmAdvance(dt * k); else S.torsion.t += dt * k; }
+      if (S.x === 'pump') pumpAdvance(dt * k); else if (S.x === 'film') filmAdvance(dt * k); else if (S.x === 'he3') he3Advance(dt * k); else S.torsion.t += dt * k; }
     for (const q of bubbles) { q.y -= q.v * dt; q.x += (rnd() - 0.5) * 0.6; }
     if (S.x === 'pump') { const P = S.pump, b = W; bubbles = bubbles.filter((q) => q.y > 0 && q.y > (H - 40 * proj()) - (H - 110 * proj()) * 0.72 * (P.n / (P.M0 / (M_HE * 1000))) * (P.M0 / 200 + 0.5) / 1.5 + 4); }
     for (const d of drips) { d.v += 600 * proj() * dt; d.y += d.v * dt; } drips = drips.filter((d) => d.y < filmSurf);
@@ -493,7 +590,8 @@
   $('about4').textContent = 'Creeping film: helium II wets every surface with a film about 30 nm thick, through which the superfluid flows at a rate per centimeter of the narrowest perimeter that is almost independent of the height difference and of the film\'s length: 7.5 × 10⁻⁵ cm³/s per cm below 1.5 K, falling to zero at the lambda point (Daunt and Mendelssohn, Proc. R. Soc. A 170, 423, 1939, as quoted by Atkins, Nature 161, 925, 1948). The bath, at 1.40 K, is taken to be large, so its level does not move. The film and the drips are drawn far thicker than they are, and the drips\' size and timing are not computed.';
   $('about5').textContent = `Spinning disks: after Andronikashvili (1946), this demo's own pendulum has ${DISK.n} aluminum disks (2.70 g/cm³) ${f(DISK.r * 2000, 1)} mm across and ${f(DISK.t * 1e6, 0)} µm thick, ${f(DISK.gap * 1000, 2)} mm apart, on a fiber whose torsion constant makes the bare stack swing with a period of 20.00 s. The normal fluid between the disks is taken to move with them (the gaps are much narrower than the depth to which viscosity drags the liquid at this slow swing), and the superfluid not at all; so the period is 2π√((I_disks + (ρn/ρ) I_He)/κ), with I_He = ${f(IHE / I0, 4)} I_disks at 1.00 K and scaled with the density. The fiber's stem and mirror, the helium outside the stack and the damping of the swing are left out. Each recorded period gives ρn/ρ = [(P/20.00 s)² − 1] I_disks / I_He.`;
 
-  window.__sf = { S, applyPreset, setX, period, vaporP, fountainHeight, pumpAdvance };
+  $('about6').textContent = `Helium 3: the melting pressure is the PLTS-2000 equation (BIPM 2000; Rusby et al., J. Low Temp. Phys. 126, 633, 2002), which also fixes the superfluid A transition at 2.444 mK and 3.43407 MPa and the A to B transition at 1.896 mK and 3.43609 MPa. The superfluid boundary at lower pressures is Greywall's (Phys. Rev. B 33, 7520, 1986) as fitted in Halperin and Varoquaux, converted to PLTS-2000; the A to B line is drawn straight from the polycritical point (21.22 bar, 2.232 mK) to the melting curve. Cooling by freezing: the solid's nuclear spins are disordered, S = R ln 2 per mole; the liquid is a Fermi liquid with S = γT, γ/R = ${GAMMA3} per kelvin (Greywall's values up to 29 bar, extended in a straight line to the melting pressure). Entropy balance for ${HE3_N} mol: n[(1 − x)γ dT + (R ln 2 − γT) dx] = Q dt/T. Left out: the drop in the liquid's entropy below the superfluid transition, the ordering of the solid near 0.9 mK, and heat from the friction of squeezing. When squeezing stops (at ${HE3_XMAX * 100} % solid) the solid share is held fixed, and the model holds the temperature at 1.0 mK at the lowest, since below it the solid\'s spins begin to order (0.902 mK) and its entropy is no longer R ln 2.`;
+  window.__sf = { S, applyPreset, setX, period, vaporP, fountainHeight, pumpAdvance, he3Advance, meltP, tcHe3 };
   tokens();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'pump'); }
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cv.parentElement); resize();

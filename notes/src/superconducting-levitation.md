@@ -49,5 +49,5 @@ Students should know Faraday's and Lenz's laws and magnetic flux. The demo shows
 
 ## Going further
 
-- Pair with **Superconductors and the Meissner Effect** (a type I sphere expels the field) and **Magnetism in Matter** (a superconductor as a perfect diamagnet).
+- Pair with **Superconductors and the Meissner Effect** (a type I sphere expels the field), **Vortices in a Superconductor** (the pinned flux quanta that the Bean model averages over) and **Magnetism in Matter** (a superconductor as a perfect diamagnet).
 - Why do the pinned magnet's sideways movements also come back? (The demo keeps the magnet on the axis, so it does not show this.)

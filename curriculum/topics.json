@@ -190,7 +190,8 @@
       "magnetism-in-matter",
       "e-over-m",
       "relativity-em",
-      "superconducting-levitation"
+      "superconducting-levitation",
+      "superconducting-vortices"
      ]
     },
     {
@@ -292,6 +293,7 @@
       "solids",
       "superconductors",
       "superconducting-levitation",
+      "superconducting-vortices",
       "superfluid-helium"
      ]
     },

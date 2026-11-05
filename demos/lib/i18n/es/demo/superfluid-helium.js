@@ -22,8 +22,12 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "líquido restante (escala derecha)",
 "Superfluid Helium":
   "Helio superfluido",
-"Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments, computed from measured properties of helium.":
-  "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos, calculados a partir de propiedades medidas del helio.",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<a><span>←</span> <span>States of Matter</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
+"Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments with helium {#} and one with helium {#}, computed from measured properties of helium.":
+  "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos con helio {#} y uno con helio {#}, calculados a partir de propiedades medidas del helio.",
 "Experiment":
   "Experimento",
 "Pump down":
@@ -34,6 +38,8 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Película que trepa",
 "Spinning disks":
   "Discos giratorios",
+"Helium {#}":
+  "Helio {#}",
 "time runs ×{#}":
   "el tiempo corre ×{#}",
 "A glass dewar of liquid helium with the apparatus of the chosen experiment.":
@@ -76,6 +82,16 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "<span>Discos giratorios: {#} discos de aluminio en una fibra de torsión, sumergidos en el baño</span>",
 "Record the period":
   "Registrar el periodo",
+"The helium {#} cell":
+  "La celda de helio {#}",
+"<span>Helium {#}: {#} mol of liquid in a cell squeezed by a bellows, starting at {#} mK on the melting curve</span>":
+  "<span>Helio {#}: {#} mol de líquido en una celda comprimida por un fuelle, que comienza a {#} mK sobre la curva de fusión</span>",
+"Squeeze: share frozen per hour":
+  "Compresión: fracción congelada por hora",
+"{#} nW":
+  "{#} nW",
+"Start again at {#} mK":
+  "Empezar de nuevo a {#} mK",
 "Pump down through the lambda point":
   "Bombeo a través del punto lambda",
 "A bigger pump":
@@ -92,6 +108,10 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Discos giratorios a {#} K",
 "Spinning disks above the lambda point":
   "Discos giratorios por encima del punto lambda",
+"Helium {#}: cooling by freezing":
+  "Helio {#}: enfriamiento por congelación",
+"Helium {#}: a bigger heat leak":
+  "Helio {#}: una fuga de calor mayor",
 "A glass dewar holds {#} g of liquid helium boiling at {#} K under one atmosphere. A pump lowers the pressure above it; the liquid boils harder, and the heat carried off as latent heat cools it. Watch the bubbles: at {#} K, the lambda point, the boiling stops at once, although the pump keeps pumping. The graph shows the cooling pause at the lambda point, where the heat capacity peaks, and how much liquid is left.":
   "Un dewar de vidrio contiene {#} g de helio líquido que hierve a {#} K bajo una atmósfera. Una bomba reduce la presión sobre él; el líquido hierve con más fuerza y el calor que se lleva el vapor como calor latente lo enfría. Observa las burbujas: a {#} K, el punto lambda, la ebullición se detiene de golpe, aunque la bomba siga bombeando. La gráfica muestra la pausa en el enfriamiento en el punto lambda, donde la capacidad calorífica alcanza su máximo, y cuánto líquido queda.",
 "Vapor pressure":
@@ -122,6 +142,8 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Película que trepa: el helio II moja toda superficie con una película de unos {#} nm de grosor, por la cual fluye el superfluido a una tasa por centímetro del perímetro más estrecho que es casi independiente de la diferencia de altura y de la longitud de la película: {#} × {#}⁻⁵ cm³/s por cm por debajo de {#} K, y cae a cero en el punto lambda (Daunt y Mendelssohn, Proc. R. Soc. A {#}, {#}, {#}, según lo cita Atkins, Nature {#}, {#}, {#}). Se toma el baño, a {#} K, como grande, así que su nivel no se mueve. La película y las gotas se dibujan mucho más gruesas de lo que son, y el tamaño y el momento de las gotas no se calculan.",
 "Spinning disks: after Andronikashvili ({#}), this demo's own pendulum has {#} aluminum disks ({#} g/cm³) {#} mm across and {#} µm thick, {#} mm apart, on a fiber whose torsion constant makes the bare stack swing with a period of {#} s. The normal fluid between the disks is taken to move with them (the gaps are much narrower than the depth to which viscosity drags the liquid at this slow swing), and the superfluid not at all; so the period is {#}π√((I_disks + (ρn/ρ) I_He)/κ), with I_He = {#} I_disks at {#} K and scaled with the density. The fiber's stem and mirror, the helium outside the stack and the damping of the swing are left out. Each recorded period gives ρn/ρ = [(P/{#} s)² − {#}] I_disks / I_He.":
   "Discos giratorios: según Andronikashvili ({#}), el péndulo de este demo tiene {#} discos de aluminio ({#} g/cm³) de {#} mm de diámetro y {#} µm de grosor, separados {#} mm, en una fibra cuya constante de torsión hace que la pila vacía oscile con un periodo de {#} s. Se toma el fluido normal entre los discos como si se moviera con ellos (las separaciones son mucho más estrechas que la profundidad a la que la viscosidad arrastra el líquido con esta oscilación lenta), y el superfluido como si no se moviera; así el periodo es {#}π√((I_disks + (ρn/ρ) I_He)/κ), con I_He = {#} I_disks a {#} K y escalado con la densidad. Se omiten el vástago y el espejo de la fibra, el helio fuera de la pila y el amortiguamiento de la oscilación. Cada periodo registrado da ρn/ρ = [(P/{#} s)² − {#}] I_disks / I_He.",
+"Helium {#}: the melting pressure is the PLTS-{#} equation (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), which also fixes the superfluid A transition at {#} mK and {#} MPa and the A to B transition at {#} mK and {#} MPa. The superfluid boundary at lower pressures is Greywall's (Phys. Rev. B {#}, {#}, {#}) as fitted in Halperin and Varoquaux, converted to PLTS-{#}; the A to B line is drawn straight from the polycritical point ({#} bar, {#} mK) to the melting curve. Cooling by freezing: the solid's nuclear spins are disordered, S = R ln {#} per mole; the liquid is a Fermi liquid with S = γT, γ/R = {#} per kelvin (Greywall's values up to {#} bar, extended in a straight line to the melting pressure). Entropy balance for {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Left out: the drop in the liquid's entropy below the superfluid transition, the ordering of the solid near {#} mK, and heat from the friction of squeezing. When squeezing stops (at {#} % solid) the solid share is held fixed, and the model holds the temperature at {#} mK at the lowest, since below it the solid's spins begin to order ({#} mK) and its entropy is no longer R ln {#}.":
+  "Helio {#}: la presión de fusión es la ecuación PLTS-{#} (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), que también fija la transición superfluida A en {#} mK y {#} MPa y la transición de A a B en {#} mK y {#} MPa. La frontera superfluida a presiones menores es la de Greywall (Phys. Rev. B {#}, {#}, {#}) como se ajusta en Halperin y Varoquaux, convertida a PLTS-{#}; la línea de A a B se dibuja recta desde el punto policrítico ({#} bar, {#} mK) hasta la curva de fusión. Enfriamiento por congelación: los espines nucleares del sólido están desordenados, S = R ln {#} por mol; el líquido es un líquido de Fermi con S = γT, γ/R = {#} por kelvin (valores de Greywall hasta {#} bar, extendidos en línea recta hasta la presión de fusión). Balance de entropía para {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Se omiten: la caída de la entropía del líquido por debajo de la transición superfluida, el ordenamiento del sólido cerca de {#} mK y el calor de la fricción de la compresión. Cuando la compresión se detiene (con {#} % de sólido) la fracción de sólido se mantiene fija, y el modelo mantiene la temperatura en {#} mK como mínimo, porque por debajo de ella los espines del sólido empiezan a ordenarse ({#} mK) y su entropía ya no es R ln {#}.",
 "fine powder: only superfluid passes":
   "polvo fino: solo pasa el superfluido",
 "heater: {#} mK warmer inside":
@@ -202,6 +224,50 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Fracción de fluido normal (tabla)",
 "Recorded":
   "Registrado",
+"bellows: squeezes the cell":
+  "fuelle: comprime la celda",
+"liquid: normal Fermi liquid":
+  "líquido: líquido de Fermi normal",
+"thermometer in the cell":
+  "termómetro en la celda",
+"pressure":
+  "presión",
+"pressure (MPa)":
+  "presión (MPa)",
+"temperature (log scale)":
+  "temperatura (escala logarítmica)",
+"solid":
+  "sólido",
+"normal liquid":
+  "líquido normal",
+"superfluid B":
+  "superfluido B",
+"melting curve (PLTS-{#})":
+  "curva de fusión (PLTS-{#})",
+"minimum: {#} MPa at {#} mK":
+  "mínimo: {#} MPa a {#} mK",
+"the cell":
+  "la celda",
+"A: superfluid begins, {#} mK":
+  "A: comienza el superfluido, {#} mK",
+"A to B, {#} mK":
+  "A a B, {#} mK",
+"pressure in the cell as it is squeezed":
+  "presión en la celda al comprimirla",
+"A cell of liquid helium {#} at {#} mK, already at its melting pressure, is squeezed slowly. Some of it freezes, and because the solid's disordered nuclear spins carry far more entropy than the liquid, freezing takes heat out of the liquid: compressing it cools it (the Pomeranchuk effect). The pressure creeps up the melting curve. At {#} mK the liquid turns superfluid (the A phase) and at {#} mK it changes to the B phase. In {#} Osheroff, Richardson and Lee found superfluid helium {#} as two small kinks in exactly this pressure trace.":
+  "Una celda de helio {#} líquido a {#} mK, ya en su presión de fusión, se comprime despacio. Parte de él se congela, y como los espines nucleares desordenados del sólido tienen mucha más entropía que el líquido, la congelación le quita calor al líquido: comprimirlo lo enfría (el efecto Pomeranchuk). La presión sube poco a poco por la curva de fusión. A {#} mK el líquido se vuelve superfluido (la fase A) y a {#} mK cambia a la fase B. En {#} Osheroff, Richardson y Lee encontraron el helio {#} superfluido como dos pequeños quiebres en exactamente este registro de presión.",
+"Solid":
+  "Sólido",
+"Liquid":
+  "Líquido",
+"normal":
+  "normal",
+"Entropy S/R: solid, liquid":
+  "Entropía S/R: sólido, líquido",
+"Cooling power of freezing":
+  "Potencia de enfriamiento de la congelación",
+"Superfluid at":
+  "Superfluido a",
 "Four times the pump speed: the bath reaches the lambda point four times sooner and ends colder, at the temperature where the pump carries off the heat leaking in. The same share of the liquid boils away to get there: that depends only on the heat capacity and the latent heat.":
   "Con cuatro veces la velocidad de bombeo: el baño llega al punto lambda cuatro veces más rápido y termina más frío, a la temperatura en la que la bomba se lleva el calor que se filtra. Se evapora la misma proporción del líquido para llegar ahí: eso depende solo de la capacidad calorífica y del calor latente.",
 "pressure would hold {#} cm: it spouts":
@@ -218,6 +284,8 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "helio I: todo fluido normal",
 "Above the lambda point all the helium is normal fluid and moves with the disks, so the period is longest. Cool it below {#} K and the period falls as the superfluid fraction grows. This is how Andronikashvili measured the two fluids in {#}.":
   "Por encima del punto lambda todo el helio es fluido normal y se mueve con los discos, así que el periodo es el más largo. Enfríalo por debajo de {#} K y el periodo disminuye al crecer la fracción superfluida. Así midió Andronikashvili los dos fluidos en {#}.",
+"The same squeeze with eight times the heat leaking in. Freezing removes heat at a rate n(R ln {#} − S_liquid)T per unit of solid fraction; as T falls this cooling power shrinks, and the cell stops cooling where it equals the heat leak.":
+  "La misma compresión con ocho veces más calor que se filtra. La congelación retira calor a una tasa n(R ln {#} − S_liquid)T por unidad de fracción de sólido; al bajar T, esta potencia de enfriamiento disminuye, y la celda deja de enfriarse donde iguala la fuga de calor.",
 "column {#} cm":
   "columna {#} cm",
 "would hold {#} cm: spouts":
@@ -227,5 +295,7 @@ VDI18N.add('es', 'demo/superfluid-helium', {
 "Blind: the column height is hidden":
   "A ciegas: la altura de la columna está oculta",
 "hidden":
-  "oculta"
+  "oculta",
+"Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments, computed from measured properties of helium.":
+  "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos, calculados a partir de propiedades medidas del helio."
 });

@@ -2,7 +2,7 @@
    canvas labels, graph labels and readouts are seen, with Blind mode on and off */
 const explore = require('./explore.cjs');
 module.exports = async (page, grab) => {
-  await explore(page, grab, { press: ['#restart', '#refill', '#rec', '#recClear'] });
+  await explore(page, grab, { press: ['#restart', '#refill', '#rec', '#recClear', '#he3Restart'] });
   for (const blind of [false, true]) {
     const n = await page.evaluate(() => document.querySelectorAll('#presets button').length).catch(() => 0);
     for (let i = 0; i < n; i++) {

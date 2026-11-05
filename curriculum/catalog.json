@@ -477,6 +477,18 @@
      ]
     },
     {
+     "demo": "superconducting-vortices",
+     "title": "Vortices in a Superconductor",
+     "desc": "Watch a magnetic field enter a type II superconductor one flux quantum at a time: a perfect triangular lattice with no defects, field piling up at the faces when defects pin the vortices, and flux left trapped when the field is taken away.",
+     "tags": [
+      "Abrikosov lattice",
+      "flux quantum",
+      "vortex pinning",
+      "Bean model",
+      "type II superconductor"
+     ]
+    },
+    {
      "demo": "molecules",
      "title": "Molecules: Bonds and Spectra",
      "desc": "Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.",
