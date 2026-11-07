@@ -742,10 +742,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function label(ctx, txt, x, y, o) {
     o = o || {}; const s = proj(); ctx.font = `${o.bold ? 700 : 400} ${(o.size || 12) * s}px ${TK.ui}`; ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'middle';
     const w = ctx.measureText(txt).width, hh = (o.size || 12) * s * 0.6, x0 = o.align === 'center' ? x - w / 2 : x, box = [x0 - 1, y - hh, x0 + w + 1, y + hh];
-    if (o.avoid && LB.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return;
+    if (o.avoid && LB.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return false;
+    if (o.dry) return true;
     LB.push(box);
     if (o.halo !== false) { ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(5,7,13,0.85)'; ctx.strokeText(txt, x, y); }
-    ctx.fillStyle = o.color || '#dfe6ef'; ctx.fillText(txt, x, y);
+    ctx.fillStyle = o.color || '#dfe6ef'; ctx.fillText(txt, x, y); return true;
   }
   function drawOutLabels(C, s) {
     const ctx = cLbl; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, OW, OH); LB = [];
@@ -1231,7 +1232,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const outDepth = $('outDepth'), cDep = outDepth.getContext('2d');
   const DEPTH_FIRST = ['UMa', 'Ori', 'Cas', 'Cru', 'Leo', 'Sco', 'Lyr', 'Cyg', 'Tau', 'CMa', 'Gem', 'Sgr', 'Peg', 'And', 'Boo', 'Aql'];
   const DP = { on: false, con: 'UMa', look: 'earth', anim: null };
-  const DO = { th: 0, ph: Math.PI / 2, zoom: 1 };
+  const DO = { th: 0, ph: Math.PI / 2, zoom: 1, sx: 0 };
   let DG = null;
   const lyText = (ly) => (ly >= 100 ? Math.round(ly).toLocaleString('en-US') : ly.toFixed(1));
   const niceStep = (x) => { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; };
@@ -1250,12 +1251,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     DG = { con: DP.con, ep: svEp, stars, known, T, Tn, f, r, u, half: Math.min(70 * D2R, Math.max(4 * D2R, ang * 1.1)), R, near: known.length ? Math.min(...known.map((st) => st.ly)) : 0, far: known.length ? Math.max(...known.map((st) => st.ly)) : 0 };
     return DG;
   }
-  /* the camera turns about T at distance |T| / zoom: th = 0 and ph = 90° put it at the Sun looking at T, so the figure looks as
-     it does in the sky (east on the left); th = 90° looks from the side, with the Sun on the left */
+  /* the camera turns about a point on the line from the Sun through T, sx |T| beyond T, at distance |T| / zoom: th = 0, ph = 90°
+     and sx = 0 put it at the Sun looking at T, so the figure looks as it does in the sky (east on the left); th = 90° looks from
+     the side, with the Sun on the left, turning about the middle of the Sun to farthest star line so the picture is centered */
   function depthCam(G) {
     const yaw = DO.th, pitch = Math.PI / 2 - DO.ph, dist = G.Tn / DO.zoom, cp = Math.cos(pitch), sp = Math.sin(pitch), cy = Math.cos(yaw), sy = Math.sin(yaw);
-    const back = [0, 1, 2].map((k) => cp * (sy * G.r[k] - cy * G.f[k]) + sp * G.u[k]);
-    const C = [0, 1, 2].map((k) => G.T[k] + dist * back[k]), fw = back.map((x) => -x), rt = norm(cross(fw, G.u)), up = cross(rt, fw);
+    const back = [0, 1, 2].map((k) => cp * (sy * G.r[k] - cy * G.f[k]) + sp * G.u[k]), piv = G.T.map((x, k) => x + (DO.sx || 0) * G.Tn * G.f[k]);
+    const C = [0, 1, 2].map((k) => piv[k] + dist * back[k]), fw = back.map((x) => -x), rt = norm(cross(fw, G.u)), up = cross(rt, fw);
     const fr = depthFrame(), F = fr.k / Math.tan(G.half), cx = OW / 2, cy0 = fr.cy;
     const zOf = (q) => (q[0] - C[0]) * fw[0] + (q[1] - C[1]) * fw[1] + (q[2] - C[2]) * fw[2];
     const P = (q) => { const d = [q[0] - C[0], q[1] - C[1], q[2] - C[2]], z = dot(d, fw); return z <= dist * 1e-4 ? null : [cx + dot(d, rt) / z * F, cy0 - dot(d, up) / z * F, z]; };
@@ -1277,23 +1279,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function lookTarget(k) {
     const G = depthGeom(), fr = depthFrame(), F = fr.k / Math.tan(G.half);
     /* from the side: a quarter turn, raised 16° so the floor and its distance rings open out */
-    if (k !== 'side') return { th: 0, ph: Math.PI / 2, zoom: 1 };
+    if (k !== 'side') return { th: 0, ph: Math.PI / 2, zoom: 1, sx: 0 };
     /* far enough back that the Sun (on the left, |T| from the middle) fits across and the figure's depth fits up and down */
     let Rs = 0; for (const st of G.known) Rs = Math.max(Rs, Math.hypot(st.p[0] - G.T[0], st.p[1] - G.T[1], st.p[2] - G.T[2]));
     let ahead = 0; for (const st of G.known) ahead = Math.max(ahead, dot(st.p, G.f) - G.Tn);
-    const across = (OW < 520 ? 0.30 : 0.36) * OW * G.Tn / (Math.max(G.Tn, ahead) * F), upDown = (fr.bot - fr.top) * 0.42 * G.Tn / (Math.max(Rs, 1e-9) * F);
-    return { th: Math.PI / 2, ph: Math.PI / 2 - 16 * D2R, zoom: Math.max(0.02, Math.min(1, across, upDown)) };
+    /* the Sun to the farthest star spans most of the width (room left for the star names on the right), centered */
+    const span = G.Tn + Math.max(0, ahead), across = (OW < 520 ? 0.66 : 0.70) * OW * G.Tn / (span * F), upDown = (fr.bot - fr.top) * 0.42 * G.Tn / (Math.max(Rs, 1e-9) * F);
+    return { th: Math.PI / 2, ph: Math.PI / 2 - 16 * D2R, zoom: Math.max(0.02, Math.min(1, across, upDown)), sx: (span * 0.56 - G.Tn) / G.Tn };
   }
   function setLook(k, now) {
     DP.look = k; for (const b of document.querySelectorAll('#depthLook button')) b.setAttribute('aria-pressed', String(b.dataset.look === k));
     const to = lookTarget(k), still = now || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (still) { Object.assign(DO, to); DP.anim = null; } else DP.anim = { from: { th: DO.th, ph: DO.ph, zoom: DO.zoom }, to, t0: performance.now(), dur: 1400 };
+    if (still) { Object.assign(DO, to); DP.anim = null; } else DP.anim = { from: { th: DO.th, ph: DO.ph, zoom: DO.zoom, sx: DO.sx || 0 }, to, t0: performance.now(), dur: 1400 };
     dirty = true; notes();
   }
   function stepAnim(now) {
     const A = DP.anim; if (!A) return;
     const x = Math.min(1, (now - A.t0) / A.dur), e = x * x * (3 - 2 * x);
-    DO.th = A.from.th + (A.to.th - A.from.th) * e; DO.ph = A.from.ph + (A.to.ph - A.from.ph) * e;
+    DO.th = A.from.th + (A.to.th - A.from.th) * e; DO.ph = A.from.ph + (A.to.ph - A.from.ph) * e; DO.sx = A.from.sx + (A.to.sx - A.from.sx) * e;
     DO.zoom = Math.exp(Math.log(A.from.zoom) + (Math.log(A.to.zoom) - Math.log(A.from.zoom)) * e);
     if (x >= 1) DP.anim = null; dirty = true;
   }
@@ -1381,8 +1384,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const order = vis.slice().sort((a, b) => (b.st.i === selI) - (a.st.i === selI) || a.st.V - b.st.V);
       for (const v of order) {
         const txt = blind ? starName(v.st.i) : `${starName(v.st.i)} · ${lyText(v.st.ly)} ly`;
-        ctx.font = `400 ${11 * s}px ${TK.ui}`; const w = ctx.measureText(txt).width, x = v.q[0] + v.r + 5 * s + w > OW - 4 ? v.q[0] - v.r - 5 * s - w : v.q[0] + v.r + 5 * s;   /* near the right edge the name goes on the left */
-        label(ctx, txt, x, v.q[1], { size: 11, color: v.st.i === selI ? '#ffb48a' : '#dfe6ef', avoid: true });
+        ctx.font = `400 ${11 * s}px ${TK.ui}`; const w = ctx.measureText(txt).width, xr = v.q[0] + v.r + 5 * s, xl = v.q[0] - v.r - 5 * s - w;
+        const first = xr + w > OW - 4 ? [xl, xr] : [xr, xl];   /* near the right edge the name goes on the left */
+        /* stars nearly in line (the Big Dipper's middle five are all about 80 light years away) push a name up or down, with a
+           thin line back to its star */
+        const spots = []; for (const dy of [0, -15, 15, -30, 30, -45, 45]) for (const x of first) spots.push([x, dy * s]);
+        const o = { size: 11, color: v.st.i === selI ? '#ffb48a' : '#dfe6ef', avoid: true };
+        const at = spots.find(([x, dy]) => x > 2 && x + w < OW - 2 && label(ctx, txt, x, v.q[1] + dy, { ...o, dry: true }));
+        if (at) {
+          if (at[1]) { ctx.save(); ctx.strokeStyle = 'rgba(223,230,239,0.45)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(v.q[0], v.q[1]); ctx.lineTo(at[0] < v.q[0] ? at[0] + w + 2 * s : at[0] - 2 * s, v.q[1] + at[1]); ctx.stroke(); ctx.restore(); }
+          label(ctx, txt, at[0], v.q[1] + at[1], o);
+        }
       }
     }
     for (const v of vis) LB.push([v.q[0] - v.r - 2, v.q[1] - v.r - 2, v.q[0] + v.r + 2, v.q[1] + v.r + 2]);

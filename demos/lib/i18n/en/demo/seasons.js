@@ -133,7 +133,6 @@ VDI18N.add('en', 'demo/seasons', [
 "plays; on the closeup",
 "change latitude. Hold",
 "for bigger steps.",
-"day {#} · Sun and Earth not to scale",
 "date",
 "noon (°)",
 "distant star",

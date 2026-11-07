@@ -144,6 +144,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     grid-template-areas: "ctl" "orbit" "earth" "sky" "chart";
   }
   .pane.orbit { height: 40vh; min-height: 290px; }
+}
+@media (max-width: 480px) {
+  .pane.orbit { height: 46vh; min-height: 360px; }   /* a phone keeps the date and title under the orbit, so it needs the height */
   .pane.earth { height: 300px; border-left: 0; border-top: 1px solid var(--line); }
   .pane.sky { height: 260px; border-left: 0; }
   .pane.chart { height: 225px; }
@@ -767,7 +770,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (q[2] < 1) put('N', q[0], q[1], `700 ${9.5 * ps}px ${C.ui}`, C.muted);
         // under the Earth, or on its Sun side at the ends of the orbit (clear of the month names), as in the flat view
         const pS = M.proj(0, 0, 0), vx = pS[0] - p[0], vy = pS[1] - p[1];
-        if (Math.abs(vx) > 1.5 * Math.abs(vy)) { ctx.textAlign = vx > 0 ? 'left' : 'right'; put(s.name, p[0] + Math.sign(vx) * (M.eR * 0.72 + 8 * ps), p[1] + M.eR * 0.72 + 4 * ps, `${10 * ps}px ${C.mono}`, C.muted); ctx.textAlign = 'center'; }
+        ctx.font = `${10 * ps}px ${C.mono}`;
+        /* on the Sun side only where it fits between the Earth and the Sun (on a phone the two solstice names met in the middle) */
+        if (Math.abs(vx) > 1.5 * Math.abs(vy) && Math.abs(vx) > ctx.measureText(s.name).width + M.eR * 0.72 + 24 * ps) { ctx.textAlign = vx > 0 ? 'left' : 'right'; put(s.name, p[0] + Math.sign(vx) * (M.eR * 0.72 + 8 * ps), p[1] + M.eR * 0.72 + 4 * ps, `${10 * ps}px ${C.mono}`, C.muted); ctx.textAlign = 'center'; }
         else put(s.name, p[0], p[1] + M.eR * 0.72 + 14 * ps, `${10 * ps}px ${C.mono}`, C.muted);
       }
     }

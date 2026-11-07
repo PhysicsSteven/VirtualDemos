@@ -408,6 +408,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function label(c, t, x, y, o = {}) { const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
     if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.bg || 'rgba(4,6,11,0.85)'; c.lineJoin = 'round'; c.strokeText(t, x, y); }
     c.fillStyle = o.col || '#e3e8ef'; c.fillText(t, x, y); c.restore(); }
+  /* the inner planets' names on their orbits, outermost first; a name that would sit on another, on the Sun or on the planet's
+     own label is left out (on a phone Mercury, Venus and Earth crowd the Sun), and the planet's own orbit is named by its label */
+  function orbitNames(c, at, busy) {
+    const p = proj(), boxes = busy.slice(); c.save(); c.font = `400 ${10 * p}px ${K.ui}`;
+    for (const o of INNER.slice().reverse()) {
+      if (o.n === S.body) continue;
+      const q = at(o), w = c.measureText(o.n).width, b = [q[0] - 2, q[1] - 7 * p, q[0] + w + 2, q[1] + 7 * p];
+      if (boxes.some((r) => b[0] < r[2] && b[2] > r[0] && b[1] < r[3] && b[3] > r[1])) continue;
+      boxes.push(b); label(c, o.n, q[0], q[1], { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 });
+    }
+    c.restore();
+  }
   function drawSysFlat() {
     const c = sctx, Lr = sysLayout(), { cx, cy, s } = Lr, st = Lr.st, z = st.z, p = proj();
     c.fillStyle = '#04060b'; c.fillRect(0, 0, SW, SH);
@@ -422,8 +434,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(c, 'habitable zone', cx + z.mg * s * 0.707 + 6 * p, cy - z.mg * s * 0.707 - 6 * p, { col: '#8fe6ad', w: 700, s: 11 });
     }
     /* the inner planets' orbits */
-    if (solarish() && S.orbits) for (const o of INNER) { c.strokeStyle = 'rgba(170,185,205,0.45)'; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, o.d * s, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
-      label(c, o.n, cx - o.d * s * 0.92, cy + o.d * s * 0.39, { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 }); }
+    if (solarish() && S.orbits) { for (const o of INNER) { c.strokeStyle = 'rgba(170,185,205,0.45)'; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, o.d * s, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+      orbitNames(c, (o) => [cx - o.d * s * 0.92, cy + o.d * s * 0.39], [[cx - 16 * p, cy - 16 * p, cx + 16 * p, cy + 16 * p]]); }
     /* the planet's orbit and the planet */
     const pr = S.d * s, px = cx + pr * Math.cos(S.ang), py = cy - pr * Math.sin(S.ang);
     c.strokeStyle = 'rgba(105,160,255,0.85)'; c.lineWidth = 1.5 * p; c.beginPath(); c.arc(cx, cy, pr, 0, 2 * Math.PI); c.stroke();
@@ -518,7 +530,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, lt, right ? pp[0] + 14 * p : pp[0] - 14 * p, pp[1] - 14 * p, { a: right ? 'left' : 'right', col: '#f1f4f8', w: 700 });
     label(c, solarish() ? (S.star === 'Sun' ? 'Sun' : 'young Sun') : S.star, sp[0], sp[1] + 22 * p, { a: 'center', col: rgb(sc), w: 700 });
     if (!S.blind) { const q = S3.project([z.mg * u * 0.707, -z.mg * u * 0.707, 0]); label(c, 'habitable zone', q[0] + 6 * p, q[1] + 8 * p, { col: '#8fe6ad', w: 700, s: 11 }); }
-    if (solarish() && S.orbits) INNER.forEach((o) => { const q = S3.project([-o.d * u * 0.92, -o.d * u * 0.39, 0]); label(c, o.n, q[0], q[1], { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 }); });
+    if (solarish() && S.orbits) orbitNames(c, (o) => S3.project([-o.d * u * 0.92, -o.d * u * 0.39, 0]), [[sp[0] - 22 * p, sp[1] - 12 * p, sp[0] + 22 * p, sp[1] + 30 * p], right ? [pp[0] + 12 * p, pp[1] - 22 * p, pp[0] + 130 * p, pp[1] - 6 * p] : [pp[0] - 130 * p, pp[1] - 22 * p, pp[0] - 12 * p, pp[1] - 6 * p]]);
     if (S.spread) { const a1 = S3.project([r * Math.cos(S.ang), r * Math.sin(S.ang), -0.1 * r]), a2 = S3.project([2 * r * Math.cos(S.ang), 2 * r * Math.sin(S.ang), -0.17 * r]);
       label(c, `1 m² at d: ${sig(flux(S.L, S.d), 4)} W/m²`, a1[0], a1[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 });
       label(c, `spread over 4 m² at 2d: ${sig(flux(S.L, 2 * S.d), 4)} W/m²`, a2[0], a2[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 }); }

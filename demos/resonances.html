@@ -1034,6 +1034,10 @@ onmessage = (e) => { const d = e.data;
         g.trailG.setDrawRange(0, n); g.trailG.attributes.position.needsUpdate = true; g.trailG.computeBoundingSphere(); g.trailL.visible = n > 1;
       }
     }
+    /* names at a fixed size on the screen (11 px type, larger in Projector), whatever the zoom and the window: as sprites of a fixed
+       size in space they shrank to 6 px on a phone */
+    const perPx = 2 * Math.tan(S3.cam.fov * D2R / 2) / H, lpx = 18 * proj();   /* the sprite is 1.6 times its font size */
+    for (const l of Object.values(g.labels)) if (l.visible) { const h = lpx * perPx * S3.cam.position.distanceTo(l.position), r = l.scale.x / l.scale.y; l.scale.set(h * r, h, 1); l.position.z = Math.sign(l.position.z || 1) * Math.max(Math.abs(l.position.z), 0.8 * h); }
     S3.render();
   }
 

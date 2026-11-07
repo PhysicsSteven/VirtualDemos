@@ -1618,9 +1618,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; const w = c.measureText(txt).width / 2 + 6; x += side * (w + 4);
       const yb = base === 'bottom' ? y : y + lh, xc = Math.max(w, Math.min(W - w, x)); if (yb > capTop) return true;
       if (side && Math.abs(xc - x) > 2) return false;   /* no room beside the point: the caller places it another way */
-      label(c, txt, xc, y, col, 'center', base, bold); return true;
+      /* off any label already written (on a phone L5's name met the Sun's): moved up a row, then down, else left out */
+      const box = (xx, yy) => { const t = base === 'bottom' ? yy - lh : yy; return [xx - w, t, xx + w, t + lh]; };
+      const free = (b) => b[0] >= 0 && b[2] <= W && !used.some((u) => b[0] < u[2] && b[2] > u[0] && b[1] < u[3] && b[3] > u[1]);
+      const r = lh + 2 * ps, tries = []; for (const d of [0, -r, r, 2 * r, -2 * r]) for (const e of [0, w * 0.7, -w * 0.7]) tries.push([Math.max(w, Math.min(W - w, xc + e)), y + d]);
+      const at = tries.find(([xx, yy]) => free(box(xx, yy)) && (base === 'bottom' ? yy : yy + lh) <= capTop);
+      if (!at) return true;
+      used.push(box(...at)); label(c, txt, at[0], at[1], col, 'center', base, bold); return true;
     };
+    const used = [];
     const labRaw = (...a) => (I ? I.raw(() => lab(...a)) : lab(...a));   /* text already translated whole */
+    for (const [name, x, y] of bods) lab(name, x, y, T.ink, 'top', false);   /* each body's name just below its ball, first so the point names keep off it */
     /* L1 and L2 close together on the screen (a light partner seen from afar): one label for both, so the two never print on top of each other */
     const q1 = P3(LPT.L1.x, LPT.L1.y), q2 = P3(LPT.L2.x, LPT.L2.y), both = Math.abs(q1[0] - q2[0]) < 110 * ps && Math.abs(q1[1] - q2[1]) < 18 * ps && !(sys.tags && (sys.tags.L1 || sys.tags.L2));
     if (S.show.lab && both && q1[2] <= 1) lab('L1 and L2, saddles', (q1[0] + q2[0]) / 2, Math.min(q1[1], q2[1]) - 12 * ps, T.pos, 'bottom', true);
@@ -1635,7 +1643,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* on a narrow picture with no room beside: L1's label above its point and L2's one row higher, both centered */
       if (!side || !labRaw(txt, q[0], q[1] + 7 * ps, col, 'bottom', true, side)) labRaw(txt, q[0], q[1] - 12 * ps - (side && k === 'L2' ? lh + 2 * ps : 0), col, 'bottom', true);   /* green where an object stays, red where it drifts away, as in Flat */
     }
-    for (const [name, x, y] of bods) lab(name, x, y, T.ink, 'top', false);   /* each body's name just below its ball */
     { c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
       const go = () => { const wm = Math.max(...cap.map((l) => c.measureText(l).width));
         c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(4, capTop, wm + 12, cap.length * lh + 6); c.globalAlpha = 1;

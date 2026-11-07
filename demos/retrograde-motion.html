@@ -639,7 +639,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     for (let d = 0; d < 360; d += g) { const x = X(d); if (!inX(x)) continue; ctx.beginPath(); ctx.moveTo(x, 18 * p); ctx.lineTo(x, H - 16 * p); ctx.stroke(); ctx.fillText(`${d}°`, x, H - 4); }
     ctx.strokeStyle = 'rgba(255,207,90,0.35)'; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(255,207,90,0.6)'; ctx.textAlign = 'right'; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('ecliptic (the Sun\'s path)', W - 8, Y(0) + 13 * p);
     /* constellation figures and names */
     if (L.lines) {
       ctx.strokeStyle = 'rgba(127,160,210,0.30)'; ctx.lineWidth = 1;
@@ -686,6 +685,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* numbered points, matching the lines of sight above */
     if (L.sight) markTimes().filter((t) => t <= S.jd + 1e-6).forEach((t, i) => { const q = lonlat(geo(S.model, S.planet, t)); numberTag(ctx, i + 1, X(q.lam), Y(q.beta), p, T.sight); });
+    /* the ecliptic's name: at the right end below the line if clear, else the first clear spot of the left end, or above the line
+       (on a phone the strip is short and the planet, the Sun or a star's name often sits there) */
+    { ctx.font = `${10 * p}px ${T.ui}`; const t = 'ecliptic (the Sun\'s path)', ew = ctx.measureText(t).width, y0 = Y(0), sx = X(now.sunLam), nx = X(now.lam), ny = Y(now.beta);
+      const hit = (x0, y) => (nx > x0 - 8 * p && nx < x0 + ew + 60 * p && Math.abs(ny - y) < 18 * p) || (sx > x0 - 30 * p && sx < x0 + ew + 10 * p && Math.abs(y0 + 14 * p - y) < 14 * p) ||
+        (taken.some(([mx, by, w]) => Math.abs(mx - (x0 + ew / 2)) < (w + ew) / 2 + 4 * p && Math.abs(by - y) < 12 * p));
+      const spots = [[W - 8 - ew, y0 + 13 * p], [8, y0 + 13 * p], [W - 8 - ew, y0 - 6 * p], [8, y0 - 6 * p], [(W - ew) / 2, y0 + 13 * p]];
+      const at = spots.find(([x, y]) => !hit(x, y));
+      if (at) { ctx.fillStyle = 'rgba(255,207,90,0.6)'; ctx.textAlign = 'left'; ctx.fillText(t, at[0], at[1]); } }
     /* the planet now */
     const px = X(now.lam), py = Y(now.beta);
     dot(ctx, px, py, 5.5 * p, COLOR[S.planet], 2.6); label(ctx, EL[S.planet].name, px + 9 * p, py - 11 * p, COLOR[S.planet], p);

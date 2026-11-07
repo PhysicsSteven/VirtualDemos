@@ -308,7 +308,7 @@
       const top = S.graph ? H * SPL2.f() : H;
       geo.floor = { x: 0, y: 0, w: W - right, h: top };
       geo.gr = S.graph ? { x: pad, y: top + 0.5 * pad, w: W - 2 * pad, h: H - top - 1.5 * pad } : null;
-      const rr = Math.max(40, Math.min(geo.floor.w, geo.floor.h) / 2 - 26 * p);
+      const rr = Math.max(40, Math.min(geo.floor.w, geo.floor.h) / 2 - (geo.floor.w < 520 ? 44 : 26) * p);   /* a phone keeps the corners clear for the globe and the caption */
       geo.fc = [geo.floor.w / 2, geo.floor.h / 2]; geo.fR = rr; geo.fs = rr / (1.2 * S.A);   /* px per m: the swing fills most of the floor */
     }
   }
@@ -454,7 +454,7 @@
     a = a - Math.PI * Math.round((a - guess) / Math.PI); return a;
   }
   function drawGlobe() {
-    const p = geo.p, r = 42 * p, cx = 14 * p + r, cy = 18 * p + r, lat = S.lat * DEG;
+    const p = geo.p, r = (geo.floor.w < 520 ? 28 : 42) * p, cx = 14 * p + r, cy = 18 * p + r, lat = S.lat * DEG;
     ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(4 * p, 4 * p, 2 * r + 20 * p, 2 * r + 40 * p, 8 * p) : ctx.rect(4 * p, 4 * p, 2 * r + 20 * p, 2 * r + 40 * p); ctx.fill(); ctx.stroke();
     const g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r); g.addColorStop(0, '#6fa8dc'); g.addColorStop(1, '#2c5a8a');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();

@@ -661,6 +661,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const s = Math.min(avail / total, (top - 70) / (2 * P('jupiter').Req * 1.05)) * zoomK();
     let x = (W - cardW()) / 2 - total * s / 2; const out = {};
     for (const k of show) { out[k] = { cx: x + wid(k) * s / 2, cy: top / 2 + 20, s }; x += (wid(k) + gap) * s; }
+    /* names too close for their width (Uranus, Neptune and Earth on a phone) take turns going above the planets */
+    show.forEach((k, i) => { const q = i ? out[show[i - 1]] : null; out[k].row = q && !q.row && out[k].cx - q.cx < 66 * proj() ? 1 : 0; });
     return { pos: out, s, top, show };
   }
   function drawPlanet(k, o) {
@@ -687,7 +689,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the spin axis */
     const n1 = P2(A.a.map((v) => v * p.Rpol * 1.35)), s1 = P2(A.a.map((v) => -v * p.Rpol * 1.35));
     ctx.save(); ctx.strokeStyle = K.muted; ctx.setLineDash([4, 3]); ctx.lineWidth = 1.2 * proj(); ctx.beginPath(); ctx.moveTo(s1[0], s1[1]); ctx.lineTo(n1[0], n1[1]); ctx.stroke(); ctx.restore();
-    const on = S.sel === k, y0 = o.cy + Math.max(P('jupiter').Req * o.s * 1.05, Rx + 10);
+    const on = S.sel === k, y0 = o.row ? o.cy - Math.max(Rx, Rap) - 32 * proj() : o.cy + Math.max(P('jupiter').Req * o.s * 1.05, Rx + 10);   /* a crowded name goes above its planet */
     label(p.name, o.cx, y0 + 4, { a: 'center', col: on ? K.sel : K.ink, w: on ? 700 : 600, size: 12 });
     label(`${f(p.tilt, 1)}°`, o.cx, y0 + 20 * proj(), { a: 'center', col: K.muted, w: 400, size: 10, mono: true });
   }
@@ -705,7 +707,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.strokeStyle = K.water; ctx.lineWidth = 2 * p; ctx.setLineDash([7, 4]); ctx.beginPath(); ctx.moveTo(x0, Y(1)); ctx.lineTo(x1, Y(1)); ctx.stroke(); ctx.restore();
     label('water, 1.00', x1 - 4, Y(1) - 9 * p, { a: 'right', col: K.water, w: 700, size: 11 });
     scaleBar(L.s, 16 * p, 24 * p, 160 * p);
-    label('True sizes and tilts (the angle under each name is its axial tilt). Bands and colors are a painting.', 16 * p, L.top + 6 * p, { col: K.muted, w: 400, size: 10 });
+    { const t1 = 'True sizes and tilts (the angle under each name is its axial tilt).', t2 = 'Bands and colors are a painting.';
+      ctx.font = `400 ${10 * p}px ${K.ui}`;   /* one line where it fits, else two (phones) */
+      const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t), w1 = ctx.measureText(tr(t1) + ' ').width;   /* each sentence translated on its own */
+      if (w1 + ctx.measureText(tr(t2)).width < W - cardW() - 32 * p) { label(t1, 16 * p, L.top + 6 * p, { col: K.muted, w: 400, size: 10 }); label(t2, 16 * p + w1, L.top + 6 * p, { col: K.muted, w: 400, size: 10 }); }
+      else { label(t1, 16 * p, L.top - 6 * p, { col: K.muted, w: 400, size: 10 }); label(t2, 16 * p, L.top + 7 * p, { col: K.muted, w: 400, size: 10 }); } }
     planetsHit = L;
   }
   let planetsHit = null;

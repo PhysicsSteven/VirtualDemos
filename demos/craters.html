@@ -493,6 +493,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let field = { x: 0, y: 0, s: 1 };   /* where the counting field is on the canvas: px per km */
   function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
     const lightHalo = o.halo === 'light' || (o.halo == null && !K.dark); if (o.halo !== false) { c.lineJoin = 'round'; c.lineWidth = 3 * p; c.strokeStyle = lightHalo ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'; c.strokeText(t, x, y); } c.fillStyle = o.col || (lightHalo ? '#17202b' : K.ink); c.fillText(t, x, y); }
+  /* the note under the 3D picture, on a dark band so it reads over a bright surface, kept clear of the size grip and split onto two
+     lines where it would run past the edge (phones) */
+  function caption(c, t) {
+    const p = proj(); c.save(); c.font = `400 ${10.5 * p}px ${K.ui}`;
+    let lines = [t]; if (c.measureText(t).width > W - 30 * p) { const a = t.split(' · '), k = Math.ceil(a.length / 2); lines = [a.slice(0, k).join(' · '), a.slice(k).join(' · ')]; }
+    const lh = 14 * p, w = Math.max(...lines.map((l) => c.measureText(l).width)), y0 = H - 26 * p - (lines.length - 1) * lh;
+    c.fillStyle = 'rgba(8,12,18,0.62)'; c.beginPath(); c.roundRect(6 * p, y0 - 9 * p, w + 12 * p, lines.length * lh + 4 * p, 5 * p); c.fill();
+    c.fillStyle = '#d6dde6'; c.textAlign = 'left'; c.textBaseline = 'middle'; lines.forEach((l, i) => c.fillText(l, 12 * p, y0 + i * lh));
+    c.restore();
+  }
   function scaleBar(c, x, y, pxPerKm, maxPx) {
     const p = proj(); let kmv = Math.pow(10, Math.floor(Math.log10(maxPx / pxPerKm))); for (const m of [5, 2, 1]) if (m * kmv * pxPerKm <= maxPx) { kmv *= m; break; }
     const w = kmv * pxPerKm; c.strokeStyle = K.ink; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.moveTo(x, y - 4 * p); c.lineTo(x, y + 4 * p); c.moveTo(x + w, y - 4 * p); c.lineTo(x + w, y + 4 * p); c.stroke();
@@ -721,17 +731,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S3.place(G3.o, [0.05, 0, 0], 4.6 * Math.max(1, 1.7 / Math.max(0.3, (W - cw) / H)));
     }
     S3.render();
-    if (S.mode === 'count') label(ctx, `${g.ex === 1 ? 'true heights' : `heights drawn ${g.ex} times larger`} · drag to turn · switch to Flat to mark craters`, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 });
+    if (S.mode === 'count') caption(ctx, `${g.ex === 1 ? 'true heights' : `heights drawn ${g.ex} times larger`} · drag to turn · switch to Flat to mark craters`);
     else if (S.mode === 'impact') {
       /* the caption is put together from parts, each translated on its own */
       const parts = [impactEx() === 1 ? 'true heights' : `heights drawn ${impactEx()} times larger`, 'drag to turn'];
       if (S.anim >= 1 && !S.blind) parts.push(`D = ${km(C.D)}`);
       if (S.anim >= 1) parts.push(RAYS[S.body] ? 'bright ejecta and rays drawn, not computed' : 'bright ejecta drawn, not computed');
       const cap = parts.map((t) => VDI18N.t(t)).join(' · ');
-      VDI18N.raw(() => label(ctx, cap, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 }));
+      VDI18N.raw(() => caption(ctx, cap));
     }
     else { const pts = ['moon', 'mars', 'earth']; for (const k of pts) { const o = g.P3[k], q = S3.project([o.g.position.x, 0, PLANETS[k].R / PLANETS.earth.R + 0.06]); label(ctx, `${PLANETS[k].name}: lid ${Math.round(at(k, S.t).lid / 1000)} km`, q[0], q[1], { a: 'center' }); }
-      label(ctx, `${f(S.t, 2)} Gyr after forming · sizes to scale · drag to turn`, 12 * p, H - 14 * p, { col: K.muted, w: 400, s: 10.5 }); }
+      caption(ctx, `${f(S.t, 2)} Gyr after forming · sizes to scale · drag to turn`); }
   }
   const offKeyFor = () => `${S.seed}|${S.sKey}|${S.surf ? S.surf.L : 0}`;
 
